@@ -1,0 +1,18 @@
+{
+	"common": {
+		"email": "Email",
+		"password": "Password",
+		"update": "Update",
+		"uploadAvatarPicture": "Upload avatar picture",
+		"username": "Username"
+	},
+	"login": {
+		"login": "Login",
+		"password": "Password"
+	},
+	"reset": {
+		"checkYourMail": "Check your email",
+		"requestReset": "Request reset",
+		"requestResetPassword": "Request password reset"
+	}
+}

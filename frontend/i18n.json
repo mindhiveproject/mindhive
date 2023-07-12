@@ -1,0 +1,9 @@
+{
+  "locales": ["en-us"],
+  "defaultLocale": "en-us",
+  "pages": {
+    "*": ["common", "account", "classes"],
+    "/menu/gallery": ["artwork"],
+    "rgx:^/menu/connect": ["communication"]
+  }
+}

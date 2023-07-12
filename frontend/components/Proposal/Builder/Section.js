@@ -1,0 +1,407 @@
+import React, { useState } from "react";
+import ReactHTMLParser from "react-html-parser";
+import { useMutation } from "@apollo/client";
+import sortBy from "lodash/sortBy";
+import { Container } from "react-smooth-dnd";
+import { v1 as uuidv1 } from "uuid";
+
+import Card from "./Card";
+
+import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+
+import {
+  CREATE_CARD,
+  UPDATE_CARD_POSITION,
+  DELETE_CARD,
+} from "../../Mutations/Proposal";
+
+const Section = ({
+  section,
+  sections,
+  boardId,
+  onUpdateSection,
+  deleteSection,
+  onCardChange,
+  openCard,
+  proposalBuildMode,
+  adminMode,
+  isPreview,
+  settings,
+}) => {
+  const { cards } = section;
+  const numOfCards = cards.length;
+  // const sortedCards = sortBy(cards, item => item.position);
+
+  const [cardName, setCardName] = useState("");
+  const [createCard, createCardState] = useMutation(CREATE_CARD);
+  const [updateCard, updateCardState] = useMutation(UPDATE_CARD_POSITION);
+  const [deleteCard, deleteCardState] = useMutation(DELETE_CARD);
+
+  const onUpdateCard = (payload, sectionId, position, isDiffColumn) => {
+    const { id } = payload;
+    updateCard({
+      variables: {
+        id,
+        sectionId,
+        position,
+      },
+      update: (cache, { data: { updateProposalCard } }) => {
+        // Read the data from the cache for this query.
+        const data = cache.readQuery({
+          query: PROPOSAL_QUERY,
+          variables: { id: boardId },
+        });
+        if (data) {
+          let newSections;
+          if (isDiffColumn) {
+            newSections = data.proposalBoard.sections.map((section) => {
+              if (section.id === sectionId) {
+                if (!section.cards) {
+                  section.cards = [];
+                }
+                const newSection = {
+                  ...section,
+                  cards: [...section.cards, updateProposalCard],
+                };
+                return newSection;
+              }
+              const newFilteredSection = {
+                ...section,
+                cards: section.cards.filter((card) => card.id !== id),
+              };
+              return newFilteredSection;
+            });
+          } else {
+            newSections = data.proposalBoard.sections.map((section) => {
+              if (section.id === sectionId) {
+                const newCards = section.cards.map((card) => {
+                  if (card.id === id) {
+                    const newCard = { ...card, ...updateProposalCard };
+                    return newCard;
+                  }
+                  return card;
+                });
+                const newSection = {
+                  ...section,
+                  cards: newCards,
+                };
+                return newSection;
+              }
+              return section;
+            });
+          }
+
+          cache.writeQuery({
+            query: PROPOSAL_QUERY,
+            variables: { id: boardId },
+            data: {
+              proposalBoard: {
+                ...data?.proposalBoard,
+                sections: newSections,
+              },
+            },
+          });
+        }
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        updateProposalCard: {
+          __typename: "ProposalCard",
+          id,
+          section: {
+            __typename: "ProposalSection",
+            id: sectionId,
+          },
+          position,
+        },
+      },
+    });
+  };
+
+  const calculatePosition = (removedIndex, addedIndex, arr) => {
+    let position;
+    if (addedIndex === arr.length - 1) {
+      position = arr[arr.length - 1].position + 16384;
+    } else if (addedIndex === 0) {
+      position = arr[0].position / 2;
+    } else if (addedIndex < removedIndex) {
+      const beforePOS = arr[addedIndex - 1].position;
+      const afterPOS = arr[addedIndex].position;
+      position = (beforePOS + afterPOS) / 2;
+    } else if (addedIndex > removedIndex) {
+      const beforePOS = arr[addedIndex + 1].position;
+      const afterPOS = arr[addedIndex].position;
+      position = (beforePOS + afterPOS) / 2;
+    }
+    return position;
+  };
+
+  const onCardDrop = (columnId, addedIndex, removedIndex, payload) => {
+    if (isPreview || !settings?.allowMovingCards) {
+      return;
+    }
+
+    let updatedPOS;
+    if (addedIndex !== null && removedIndex !== null) {
+      if (addedIndex === removedIndex) {
+        return;
+      }
+      const boardCards = sections.filter((p) => p.id === columnId)[0];
+
+      updatedPOS = calculatePosition(
+        removedIndex,
+        addedIndex,
+        boardCards.cards
+      );
+
+      let newCards = cards.map((item) => {
+        if (item.id === payload.id) {
+          return {
+            ...item,
+            position: updatedPOS,
+          };
+        }
+        return item;
+      });
+      newCards = sortBy(newCards, (item) => item.position);
+      // const positions = newCards.map(card => card.position);
+
+      onCardChange(columnId, newCards);
+      onUpdateCard(payload, columnId, updatedPOS, false);
+    } else if (removedIndex !== null) {
+      const newCards = cards.filter((item) => item.id !== payload.id);
+      onCardChange(columnId, newCards);
+    } else if (addedIndex !== null) {
+      const newColumn = sections.filter((p) => p.id === columnId)[0];
+      const columnIndex = sections.indexOf(newColumn);
+
+      if (newColumn.cards.length === 0) {
+        updatedPOS = 16384;
+      } else if (addedIndex === 0) {
+        updatedPOS = newColumn.cards[0].position / 2;
+      } else if (addedIndex === newColumn.cards.length) {
+        updatedPOS =
+          newColumn.cards[newColumn.cards.length - 1].position + 16384;
+      } else {
+        const afterCardPOS = newColumn.cards[addedIndex].position;
+        const beforeCardPOS = newColumn.cards[addedIndex - 1].position;
+        updatedPOS = (afterCardPOS + beforeCardPOS) / 2;
+      }
+
+      let newCards = cards.concat({ ...payload, position: updatedPOS });
+
+      newCards = sortBy(newCards, (item) => item.position);
+      onCardChange(columnId, newCards);
+      onUpdateCard(payload, columnId, updatedPOS, true);
+    }
+  };
+
+  const addCardMutation = async (sectionId, title) => {
+    if (!title) {
+      return alert("Please enter a title");
+    }
+    setCardName("");
+    const newCard = await createCard({
+      variables: {
+        boardId,
+        title,
+        sectionId,
+        position:
+          cards && cards.length > 0
+            ? cards[cards.length - 1].position + 16384
+            : 16384,
+      },
+      update: (cache, { data: { createProposalCard } }) => {
+        const data = cache.readQuery({
+          query: PROPOSAL_QUERY,
+          variables: { id: boardId },
+        });
+        if (data) {
+          const sections = data.proposalBoard.sections.map((section) => {
+            if (section.id === sectionId) {
+              if (!section.cards) {
+                section.cards = [];
+              }
+              const newSection = {
+                ...section,
+                cards: [...section.cards, createProposalCard],
+              };
+              return newSection;
+            }
+            return section;
+          });
+
+          cache.writeQuery({
+            query: PROPOSAL_QUERY,
+            variables: { id: boardId },
+            data: {
+              proposalBoard: {
+                ...data?.proposalBoard,
+                sections,
+              },
+            },
+          });
+        }
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        createProposalCard: {
+          __typename: "ProposalCard",
+          id: uuidv1(),
+          boardId,
+          title,
+          content: null,
+          position:
+            cards && cards.length > 0
+              ? cards[cards.length - 1].position + 16384
+              : 16384,
+          section: {
+            __typename: "ProposalSection",
+            id: sectionId,
+          },
+          assignedTo: [],
+          settings: null,
+        },
+      },
+    });
+    openCard(newCard?.data?.createProposalCard?.id);
+  };
+
+  const deleteCardMutation = (id) => {
+    deleteCard({
+      variables: {
+        id,
+        boardId,
+      },
+      update: (cache, payload) => {
+        cache.evict({ id: cache.identify(payload.data.deleteProposalCard) });
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        deleteProposalCard: {
+          id,
+          __typename: "ProposalCard",
+          section: null,
+        },
+      },
+    });
+  };
+
+  return (
+    <div className="section">
+      <div className="column-drag-handle">
+        <h3>{ReactHTMLParser(section.title)}</h3>
+      </div>
+
+      {!isPreview && (
+        <div className="infoLine">
+          <div>
+            {numOfCards} card{numOfCards <= 1 ? "" : "s"}
+          </div>
+          <div
+            className="deleteBtn"
+            onClick={() => {
+              const title = prompt("Please enter a new title");
+              if (title != null) {
+                onUpdateSection({
+                  variables: {
+                    id: section.id,
+                    boardId,
+                    title,
+                  },
+                });
+              }
+            }}
+          >
+            Edit title
+          </div>
+          <div
+            className="deleteBtn"
+            onClick={() => {
+              if (section?.cards?.length === 0) {
+                deleteSection(section.id);
+                return;
+              }
+              if (
+                confirm(
+                  "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone."
+                )
+              ) {
+                deleteSection(section.id);
+              }
+            }}
+          >
+            Delete section
+          </div>
+        </div>
+      )}
+
+      <div>
+        <Container
+          orientation="vertical"
+          groupName="col"
+          onDrop={(e) => {
+            onCardDrop(section.id, e.addedIndex, e.removedIndex, e.payload);
+          }}
+          dragClass="card-ghost"
+          dropClass="card-ghost-drop"
+          onDragEnter={() => {}}
+          getChildPayload={(index) => cards[index]}
+          onDragLeave={() => {}}
+          dropPlaceholder={{
+            animationDuration: 150,
+            showOnTop: true,
+            className: "drop-preview",
+          }}
+          dropPlaceholderAnimationDuration={200}
+          lockAxis={
+            isPreview || !settings?.allowMovingCards ? "undefined" : null
+          }
+        >
+          {cards && cards.length ? (
+            cards.map((card) => (
+              <Card
+                key={card.id}
+                card={card}
+                onDeleteCard={deleteCardMutation}
+                boardId={boardId}
+                openCard={openCard}
+                proposalBuildMode={proposalBuildMode}
+                adminMode={adminMode}
+                isPreview={isPreview}
+              />
+            ))
+          ) : (
+            <div></div>
+          )}
+        </Container>
+      </div>
+
+      {!isPreview && settings?.allowAddingCards && (
+        <div className="newInput">
+          <label htmlFor={`input-${section.id}`}>
+            <div>New card</div>
+            <input
+              id={`input-${section.id}`}
+              type="text"
+              name={`input-${section.id}`}
+              value={cardName}
+              onChange={(e) => setCardName(e.target.value)}
+            />
+          </label>
+
+          <div
+            className="addBtn"
+            onClick={() => {
+              addCardMutation(section.id, cardName);
+            }}
+          >
+            Add card
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Section;

@@ -1,0 +1,11 @@
+{
+	"navigation": {
+		"about": "About",
+		"dashboard": "Dashboard",
+		"discover": "Discover",
+		"login": "Log in",
+		"signup": "Sign up",
+		"teachers": "Teachers"
+	},
+	"update": "Update"
+}

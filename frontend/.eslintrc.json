@@ -1,0 +1,3 @@
+{
+  "extends": ["wesbos", "next/babel", "next/core-web-vitals"]
+}
