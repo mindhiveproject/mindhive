@@ -313,6 +313,14 @@ export const StyledCanvasBuilder = styled.div`
     }
   }
 
+  .portsEditor {
+    display: grid;
+    padding: 10px;
+    .port {
+      display: grid;
+    }
+  }
+
   .editPane {
     display: grid;
     width: 100%;

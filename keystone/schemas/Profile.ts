@@ -260,5 +260,9 @@ export const Profile = list({
       ref: "Homework.author",
       many: true,
     }),
+    datasets: relationship({
+      ref: "Dataset.profile",
+      many: true,
+    }),
   },
 });

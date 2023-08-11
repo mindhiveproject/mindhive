@@ -12,6 +12,7 @@ import TeacherClasses from "./TeacherClasses/Main";
 import StudentClasses from "./StudentClasses/Main";
 import EditSettings from "./Settings/Edit";
 import ConsentMain from "./Consent/Main";
+import ProposalsMain from "./Proposals/Main";
 import LessonsMain from "./Lessons/Main";
 import ManagementMain from "./Management/Main";
 import TagsMain from "./Tags/Main";
@@ -58,12 +59,16 @@ export default function DashboardRouter({ query }) {
     return <Assignments query={query} user={user} />;
   }
 
-  if (area === "irb") {
-    return <ConsentMain query={query} user={user} />;
+  if (area === "proposals") {
+    return <ProposalsMain query={query} user={user} />;
   }
 
   if (area === "lessons") {
     return <LessonsMain query={query} user={user} />;
+  }
+
+  if (area === "irb") {
+    return <ConsentMain query={query} user={user} />;
   }
 
   if (area === "management") {

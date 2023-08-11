@@ -9,7 +9,7 @@ export class OutCustomPort extends DefaultPortModel {
       type: 'outCustomPort',
       ...options,
     });
-    this.maximumLinks = 50;
+    this.maximumLinks = 2;
   }
 
   setMaximumLinks(maxLinks) {
@@ -46,11 +46,17 @@ export class OutCustomPort extends DefaultPortModel {
     return {
       ...super.serialize(),
       maximumLinks: this.maximumLinks,
+      assignmentType: this.options.assignmentType,
+      probability: this.options.probability,
+      rule: this.options.rule,
     };
   }
 
   deserialize(event, engine) {
     super.deserialize(event, engine);
     this.maximumLinks = event.data.maximumLinks;
+    this.options.assignmentType = event.data.assignmentType;
+    this.options.probability = event.data.probability;
+    this.options.rule = event.data.rule;
   }
 }

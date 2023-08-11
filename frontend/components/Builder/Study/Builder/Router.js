@@ -10,8 +10,6 @@ export default function Router({
   tab,
   study,
   handleChange,
-  handleMultipleUpdate,
-  captureFile,
   updateStudy,
 }) {
   return (
@@ -21,8 +19,6 @@ export default function Router({
       tab={tab}
       study={study}
       handleChange={handleChange}
-      handleMultipleUpdate={handleMultipleUpdate}
-      captureFile={captureFile}
       updateStudy={updateStudy}
     />
   );

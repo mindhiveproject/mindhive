@@ -1,30 +1,7 @@
-import React, { Component } from 'react';
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown } from "semantic-ui-react";
 
-export default class Drop extends Component {
-  render() {
-    const { tags, study, engine } = this.props;
-    const values = study?.tags || [];
-    return (
-      <DropdownExampleMultipleSelection
-        tags={tags}
-        values={values}
-        handleTagsUpdate={this.props.handleTagsUpdate}
-        engine={engine}
-      />
-    );
-  }
-}
-
-const DropdownExampleMultipleSelection = ({
-  tags,
-  values,
-  handleTagsUpdate,
-  engine,
-}) => {
-  const onChange = (event, data) => {
-    handleTagsUpdate(data.value);
-  };
+export default function Drop({ study, engine, tags, handleTagsUpdate }) {
+  const values = study?.tags.map((tag) => tag?.id) || [];
 
   return (
     <Dropdown
@@ -34,7 +11,7 @@ const DropdownExampleMultipleSelection = ({
       search
       selection
       options={tags}
-      onChange={onChange}
+      onChange={(event, data) => handleTagsUpdate(data.value)}
       value={values}
       onFocus={() => {
         if (engine) {
@@ -48,4 +25,4 @@ const DropdownExampleMultipleSelection = ({
       }}
     />
   );
-};
+}

@@ -2,8 +2,6 @@ import { Icon, Accordion } from "semantic-ui-react";
 import ReactHtmlParser from "react-html-parser";
 
 export default function Viewer({ task, close, openEditor, openPreview }) {
-  console.log({ task });
-
   const taskType = task?.taskType?.toLowerCase();
   const settings = task?.settings || {};
   const resources =

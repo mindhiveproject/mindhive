@@ -76,6 +76,9 @@ export const PROPOSAL_QUERY = gql`
       title
       slug
       description
+      settings
+      isSubmitted
+      isTemplate
       study {
         id
         title
@@ -264,6 +267,26 @@ export const CLASS_PROPOSALS_REVIEWS_QUERY = gql`
           id
         }
       }
+    }
+  }
+`;
+
+// get the proposal boards created by the user
+export const GET_MY_PROPOSALS = gql`
+  query GET_MY_PROPOSALS($creatorId: ID!) {
+    proposalBoards(where: { creator: { id: { equals: $creatorId } } }) {
+      id
+      title
+      description
+      creator {
+        id
+        username
+      }
+      sections {
+        id
+      }
+      isTemplate
+      createdAt
     }
   }
 `;

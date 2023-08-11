@@ -1,13 +1,17 @@
 import { useMutation } from "@apollo/client";
-import { DELETE_COMPLETE_PROPOSAL } from "../../../Mutations/Proposal";
-import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Proposal";
 
-export default function DeleteProposal({ children, proposalId, studyId }) {
+import { DELETE_COMPLETE_PROPOSAL } from "../../../Mutations/Proposal";
+
+export default function DeleteProposal({
+  children,
+  proposalId,
+  refetchQueries,
+}) {
   const [deleteProposal, { loading }] = useMutation(DELETE_COMPLETE_PROPOSAL, {
     variables: {
       id: proposalId,
     },
-    refetchQueries: [{ query: STUDY_PROPOSALS_QUERY, variables: { studyId } }],
+    refetchQueries: [...refetchQueries],
   });
 
   return (

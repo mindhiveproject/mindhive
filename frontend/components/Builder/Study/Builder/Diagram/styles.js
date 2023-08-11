@@ -84,6 +84,18 @@ export const StyledNode = styled.div`
     margin-left: 170px;
   }
 
+  .design-bottom-port {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
+    grid-gap: 10px;
+    margin-right: -7px;
+    bottom: 0;
+    margin-top: 80px;
+    /* margin-left: 170px; */
+    width: 378px;
+    justify-items: center;
+  }
+
   .my-out-port {
     width: 20px;
     height: 20px;

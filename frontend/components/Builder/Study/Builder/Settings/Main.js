@@ -1,4 +1,5 @@
 import StudyDescription from "./Description";
+import StudyTagger from "../../../../Tag/StudyTagger";
 
 export default function Settings(props) {
   return (
@@ -6,9 +7,9 @@ export default function Settings(props) {
       <div className="card">
         <StudyDescription {...props} />
       </div>
-      {/* <div className="card">
+      <div className="card">
         <StudyTagger {...props} />
-      </div> */}
+      </div>
     </>
   );
 }

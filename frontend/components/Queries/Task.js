@@ -146,6 +146,7 @@ export const TASK_TO_PARTICIPATE = gql`
       description
       parameters
       template {
+        id
         script
         style
       }

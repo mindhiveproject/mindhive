@@ -3,6 +3,8 @@
 const express = require("express");
 const next = require("next");
 const body = require("body-parser");
+const fs = require("fs");
+const path = require("path");
 
 // const devProxy = {
 //   "/.netlify": {
@@ -39,7 +41,25 @@ app
     server.use(body.json());
 
     server.post("/api/save", (req, res) => {
-      console.log(req.body);
+      const { metadata, data } = req.body;
+      const { slice, id, payload } = metadata;
+
+      const dir = path.join(__dirname, "data", id);
+
+      !fs.existsSync(dir) && fs.mkdirSync(dir);
+      const filePath = path.join(dir, payload + ".txt");
+
+      fs.writeFile(
+        filePath,
+        JSON.stringify(req.body) + ",",
+        { flag: "a" },
+        (err) => {
+          if (err) {
+            throw err;
+          }
+        }
+      );
+
       res.send({
         message: "The data was sent successfully",
         status: 202,

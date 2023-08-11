@@ -29,7 +29,7 @@ export default function FlowWrapper({ query, user, study, step }) {
       header = "Participation";
   }
 
-  // console.log({ user });
+  console.log({ user });
 
   return (
     <StyledWrapper>

@@ -5,6 +5,7 @@ import Menu from "./Menu";
 import Component from "./Component/Main";
 
 import { StyledCanvasBuilder } from "../../../styles/StyledBuilder";
+import Modal from "./Modal/Main";
 
 export default function Builder({
   query,
@@ -20,6 +21,7 @@ export default function Builder({
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openComponentModal = ({
     node,
@@ -27,7 +29,6 @@ export default function Builder({
     isPreviewOpen,
     isEditorOpen,
   }) => {
-    console.log({ node, isInfoOpen, isPreviewOpen, isEditorOpen });
     setNode(node);
     setIsInfoOpen(isInfoOpen);
     setIsPreviewOpen(isPreviewOpen);
@@ -40,12 +41,14 @@ export default function Builder({
     engine.getModel().setLocked(false); // unlock the model
   };
 
-  const openDesignModal = ({ node }) => {
-    console.log("open design modal", node);
+  const openModal = ({ node }) => {
+    setNode(node);
+    setIsModalOpen(true);
   };
 
-  const closeDesignModal = () => {
-    console.log("close design modal");
+  const closeModal = () => {
+    setIsModalOpen(false);
+    engine.getModel().setLocked(false); // unlock the model
   };
 
   const updateCanvas = ({ task, operation }) => {
@@ -92,7 +95,7 @@ export default function Builder({
         <Widget
           engine={engine}
           openComponentModal={openComponentModal}
-          openDesignModal={openDesignModal}
+          openModal={openModal}
         />
         <Menu
           user={user}
@@ -117,6 +120,15 @@ export default function Builder({
           updateCanvas={updateCanvas}
           addFunctions={addFunctions}
           node={node}
+        />
+      )}
+
+      {isModalOpen && (
+        <Modal
+          user={user}
+          node={node}
+          engine={engine}
+          close={() => closeModal()}
         />
       )}
     </StyledCanvasBuilder>

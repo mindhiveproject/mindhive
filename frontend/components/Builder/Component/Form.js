@@ -60,6 +60,7 @@ export default function ComponentForm({
       <TaskPreview
         id={inputs?.id}
         close={() => setIsFullscreenPreviewOpen(false)}
+        user={user}
       />
       // <Labjs>
       //   <StyledPreview>

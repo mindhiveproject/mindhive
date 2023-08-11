@@ -110,6 +110,20 @@ const GlobalStyles = createGlobalStyle`
     }
   .board {
     display: grid;
+    .wrapper {
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: 1fr 100px;
+      align-items: center;
+    }
+    .heading {
+      display: grid;
+      padding: 1.5rem 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      p {
+        font-weight: bold
+      }
+    }
     .item {
       display: grid;
       padding: 1.5rem 1rem;

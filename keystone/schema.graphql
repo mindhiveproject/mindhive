@@ -81,6 +81,8 @@ type Profile {
   authorOfAssignmentCount(where: AssignmentWhereInput! = {}): Int
   authorOfHomework(where: HomeworkWhereInput! = {}, orderBy: [HomeworkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Homework!]
   authorOfHomeworkCount(where: HomeworkWhereInput! = {}): Int
+  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
+  datasetsCount(where: DatasetWhereInput! = {}): Int
   passwordResetToken: PasswordState
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -149,6 +151,7 @@ input ProfileWhereInput {
   collaboratorInCurriculum: CurriculumManyRelationFilter
   authorOfAssignment: AssignmentManyRelationFilter
   authorOfHomework: HomeworkManyRelationFilter
+  datasets: DatasetManyRelationFilter
   passwordResetToken: PasswordFilter
   passwordResetIssuedAt: DateTimeNullableFilter
   passwordResetRedeemedAt: DateTimeNullableFilter
@@ -358,6 +361,12 @@ input HomeworkManyRelationFilter {
   none: HomeworkWhereInput
 }
 
+input DatasetManyRelationFilter {
+  every: DatasetWhereInput
+  some: DatasetWhereInput
+  none: DatasetWhereInput
+}
+
 input PasswordFilter {
   isSet: Boolean!
 }
@@ -436,6 +445,7 @@ input ProfileUpdateInput {
   collaboratorInCurriculum: CurriculumRelateToManyForUpdateInput
   authorOfAssignment: AssignmentRelateToManyForUpdateInput
   authorOfHomework: HomeworkRelateToManyForUpdateInput
+  datasets: DatasetRelateToManyForUpdateInput
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -580,6 +590,13 @@ input HomeworkRelateToManyForUpdateInput {
   connect: [HomeworkWhereUniqueInput!]
 }
 
+input DatasetRelateToManyForUpdateInput {
+  disconnect: [DatasetWhereUniqueInput!]
+  set: [DatasetWhereUniqueInput!]
+  create: [DatasetCreateInput!]
+  connect: [DatasetWhereUniqueInput!]
+}
+
 input ProfileUpdateArgs {
   where: ProfileWhereUniqueInput!
   data: ProfileUpdateInput!
@@ -634,6 +651,7 @@ input ProfileCreateInput {
   collaboratorInCurriculum: CurriculumRelateToManyForCreateInput
   authorOfAssignment: AssignmentRelateToManyForCreateInput
   authorOfHomework: HomeworkRelateToManyForCreateInput
+  datasets: DatasetRelateToManyForCreateInput
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -737,6 +755,11 @@ input AssignmentRelateToManyForCreateInput {
 input HomeworkRelateToManyForCreateInput {
   create: [HomeworkCreateInput!]
   connect: [HomeworkWhereUniqueInput!]
+}
+
+input DatasetRelateToManyForCreateInput {
+  create: [DatasetCreateInput!]
+  connect: [DatasetWhereUniqueInput!]
 }
 
 type ProfileImage {
@@ -1421,6 +1444,8 @@ type Template {
   style: String
   tasks(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0): [Task!]
   tasksCount(where: TaskWhereInput! = {}): Int
+  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
+  datasetsCount(where: DatasetWhereInput! = {}): Int
   settings: JSON
   file: String
   createdAt: DateTime
@@ -1445,6 +1470,7 @@ input TemplateWhereInput {
   script: StringFilter
   style: StringFilter
   tasks: TaskManyRelationFilter
+  datasets: DatasetManyRelationFilter
   file: StringFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
@@ -1474,6 +1500,7 @@ input TemplateUpdateInput {
   script: String
   style: String
   tasks: TaskRelateToManyForUpdateInput
+  datasets: DatasetRelateToManyForUpdateInput
   settings: JSON
   file: String
   createdAt: DateTime
@@ -1496,6 +1523,7 @@ input TemplateCreateInput {
   script: String
   style: String
   tasks: TaskRelateToManyForCreateInput
+  datasets: DatasetRelateToManyForCreateInput
   settings: JSON
   file: String
   createdAt: DateTime
@@ -1525,6 +1553,8 @@ type Task {
   largeImage: String
   consent(where: ConsentWhereInput! = {}, orderBy: [ConsentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Consent!]
   consentCount(where: ConsentWhereInput! = {}): Int
+  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
+  datasetsCount(where: DatasetWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1562,6 +1592,7 @@ input TaskWhereInput {
   image: StringFilter
   largeImage: StringFilter
   consent: ConsentManyRelationFilter
+  datasets: DatasetManyRelationFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
 }
@@ -1612,6 +1643,7 @@ input TaskUpdateInput {
   image: String
   largeImage: String
   consent: ConsentRelateToManyForUpdateInput
+  datasets: DatasetRelateToManyForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1647,6 +1679,7 @@ input TaskCreateInput {
   image: String
   largeImage: String
   consent: ConsentRelateToManyForCreateInput
+  datasets: DatasetRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1670,6 +1703,7 @@ type Study {
   submitForPublishing: Boolean
   isHidden: Boolean
   components: JSON
+  flow: JSON
   diagram: String
   author: Profile
   collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
@@ -1685,8 +1719,12 @@ type Study {
   classesCount(where: ClassWhereInput! = {}): Int
   reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0): [Review!]
   reviewsCount(where: ReviewWhereInput! = {}): Int
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
+  tagsCount(where: TagWhereInput! = {}): Int
   talks(where: TalkWhereInput! = {}, orderBy: [TalkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Talk!]
   talksCount(where: TalkWhereInput! = {}): Int
+  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
+  datasetsCount(where: DatasetWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1719,9 +1757,17 @@ input StudyWhereInput {
   descriptionInProposalCard: ProposalCardWhereInput
   classes: ClassManyRelationFilter
   reviews: ReviewManyRelationFilter
+  tags: TagManyRelationFilter
   talks: TalkManyRelationFilter
+  datasets: DatasetManyRelationFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
+}
+
+input TagManyRelationFilter {
+  every: TagWhereInput
+  some: TagWhereInput
+  none: TagWhereInput
 }
 
 input StudyOrderByInput {
@@ -1752,6 +1798,7 @@ input StudyUpdateInput {
   submitForPublishing: Boolean
   isHidden: Boolean
   components: JSON
+  flow: JSON
   diagram: String
   author: ProfileRelateToOneForUpdateInput
   collaborators: ProfileRelateToManyForUpdateInput
@@ -1761,7 +1808,9 @@ input StudyUpdateInput {
   descriptionInProposalCard: ProposalCardRelateToOneForUpdateInput
   classes: ClassRelateToManyForUpdateInput
   reviews: ReviewRelateToManyForUpdateInput
+  tags: TagRelateToManyForUpdateInput
   talks: TalkRelateToManyForUpdateInput
+  datasets: DatasetRelateToManyForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1776,6 +1825,13 @@ input ProposalCardRelateToOneForUpdateInput {
   create: ProposalCardCreateInput
   connect: ProposalCardWhereUniqueInput
   disconnect: Boolean
+}
+
+input TagRelateToManyForUpdateInput {
+  disconnect: [TagWhereUniqueInput!]
+  set: [TagWhereUniqueInput!]
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
 }
 
 input StudyUpdateArgs {
@@ -1796,6 +1852,7 @@ input StudyCreateInput {
   submitForPublishing: Boolean
   isHidden: Boolean
   components: JSON
+  flow: JSON
   diagram: String
   author: ProfileRelateToOneForCreateInput
   collaborators: ProfileRelateToManyForCreateInput
@@ -1805,7 +1862,9 @@ input StudyCreateInput {
   descriptionInProposalCard: ProposalCardRelateToOneForCreateInput
   classes: ClassRelateToManyForCreateInput
   reviews: ReviewRelateToManyForCreateInput
+  tags: TagRelateToManyForCreateInput
   talks: TalkRelateToManyForCreateInput
+  datasets: DatasetRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1818,6 +1877,11 @@ input StudyImageRelateToOneForCreateInput {
 input ProposalCardRelateToOneForCreateInput {
   create: ProposalCardCreateInput
   connect: ProposalCardWhereUniqueInput
+}
+
+input TagRelateToManyForCreateInput {
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
 }
 
 type StudyImage {
@@ -2028,12 +2092,21 @@ input UpdateCreateInput {
 
 type Dataset {
   id: ID!
-  data: JSON
-  dateCreated: DateTime
+  token: String
+  profile: Profile
+  template: Template
+  task: Task
+  study: Study
+  dataPolicy: String
+  info: JSON
+  isCompleted: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 input DatasetWhereUniqueInput {
   id: ID
+  token: String
 }
 
 input DatasetWhereInput {
@@ -2041,17 +2114,43 @@ input DatasetWhereInput {
   OR: [DatasetWhereInput!]
   NOT: [DatasetWhereInput!]
   id: IDFilter
-  dateCreated: DateTimeNullableFilter
+  token: StringFilter
+  profile: ProfileWhereInput
+  template: TemplateWhereInput
+  task: TaskWhereInput
+  study: StudyWhereInput
+  dataPolicy: StringFilter
+  isCompleted: BooleanFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
 }
 
 input DatasetOrderByInput {
   id: OrderDirection
-  dateCreated: OrderDirection
+  token: OrderDirection
+  dataPolicy: OrderDirection
+  isCompleted: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
 }
 
 input DatasetUpdateInput {
-  data: JSON
-  dateCreated: DateTime
+  token: String
+  profile: ProfileRelateToOneForUpdateInput
+  template: TemplateRelateToOneForUpdateInput
+  task: TaskRelateToOneForUpdateInput
+  study: StudyRelateToOneForUpdateInput
+  dataPolicy: String
+  info: JSON
+  isCompleted: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input TaskRelateToOneForUpdateInput {
+  create: TaskCreateInput
+  connect: TaskWhereUniqueInput
+  disconnect: Boolean
 }
 
 input DatasetUpdateArgs {
@@ -2060,8 +2159,21 @@ input DatasetUpdateArgs {
 }
 
 input DatasetCreateInput {
-  data: JSON
-  dateCreated: DateTime
+  token: String
+  profile: ProfileRelateToOneForCreateInput
+  template: TemplateRelateToOneForCreateInput
+  task: TaskRelateToOneForCreateInput
+  study: StudyRelateToOneForCreateInput
+  dataPolicy: String
+  info: JSON
+  isCompleted: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input TaskRelateToOneForCreateInput {
+  create: TaskCreateInput
+  connect: TaskWhereUniqueInput
 }
 
 type ProposalBoard {
@@ -2539,12 +2651,6 @@ input LessonWhereInput {
   updatedAt: DateTimeNullableFilter
 }
 
-input TagManyRelationFilter {
-  every: TagWhereInput
-  some: TagWhereInput
-  none: TagWhereInput
-}
-
 input LessonOrderByInput {
   id: OrderDirection
   title: OrderDirection
@@ -2582,13 +2688,6 @@ input LessonRelateToOneForUpdateInput {
   disconnect: Boolean
 }
 
-input TagRelateToManyForUpdateInput {
-  disconnect: [TagWhereUniqueInput!]
-  set: [TagWhereUniqueInput!]
-  create: [TagCreateInput!]
-  connect: [TagWhereUniqueInput!]
-}
-
 input LessonUpdateArgs {
   where: LessonWhereUniqueInput!
   data: LessonUpdateInput!
@@ -2617,11 +2716,6 @@ input LessonRelateToOneForCreateInput {
   connect: LessonWhereUniqueInput
 }
 
-input TagRelateToManyForCreateInput {
-  create: [TagCreateInput!]
-  connect: [TagWhereUniqueInput!]
-}
-
 type Tag {
   id: ID!
   title: String
@@ -2633,6 +2727,8 @@ type Tag {
   assignmentsCount(where: AssignmentWhereInput! = {}): Int
   homeworks(where: HomeworkWhereInput! = {}, orderBy: [HomeworkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Homework!]
   homeworksCount(where: HomeworkWhereInput! = {}): Int
+  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  studiesCount(where: StudyWhereInput! = {}): Int
   level: Int
   parent: Tag
   children(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
@@ -2657,6 +2753,7 @@ input TagWhereInput {
   lessons: LessonManyRelationFilter
   assignments: AssignmentManyRelationFilter
   homeworks: HomeworkManyRelationFilter
+  studies: StudyManyRelationFilter
   level: IntNullableFilter
   parent: TagWhereInput
   children: TagManyRelationFilter
@@ -2692,6 +2789,7 @@ input TagUpdateInput {
   lessons: LessonRelateToManyForUpdateInput
   assignments: AssignmentRelateToManyForUpdateInput
   homeworks: HomeworkRelateToManyForUpdateInput
+  studies: StudyRelateToManyForUpdateInput
   level: Int
   parent: TagRelateToOneForUpdateInput
   children: TagRelateToManyForUpdateInput
@@ -2717,6 +2815,7 @@ input TagCreateInput {
   lessons: LessonRelateToManyForCreateInput
   assignments: AssignmentRelateToManyForCreateInput
   homeworks: HomeworkRelateToManyForCreateInput
+  studies: StudyRelateToManyForCreateInput
   level: Int
   parent: TagRelateToOneForCreateInput
   children: TagRelateToManyForCreateInput

@@ -2,6 +2,8 @@ import moment from "moment";
 
 import DeleteProposal from "./Delete";
 
+import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Proposal";
+
 export default function ProposalOverview({
   user,
   studyId,
@@ -11,6 +13,10 @@ export default function ProposalOverview({
   copyProposal,
   createProposal,
 }) {
+  const refetchQueries = [
+    { query: STUDY_PROPOSALS_QUERY, variables: { studyId } },
+  ];
+
   if (proposals.length === 0) {
     return (
       <div className="empty">
@@ -60,7 +66,10 @@ export default function ProposalOverview({
                   <button onClick={() => openProposal(prop?.id)}>Open</button>
                   <button onClick={() => copyProposal(prop?.id)}>Copy</button>
                   {!prop?.isSubmitted && (
-                    <DeleteProposal proposalId={prop?.id} studyId={studyId}>
+                    <DeleteProposal
+                      proposalId={prop?.id}
+                      refetchQueries={refetchQueries}
+                    >
                       <button>Delete</button>
                     </DeleteProposal>
                   )}

@@ -30,10 +30,16 @@ export const CREATE_NEW_PROPOSAL = gql`
   mutation CREATE_NEW_PROPOSAL(
     $title: String!
     $description: String
-    $settings: Json
+    $settings: JSON
+    $creatorId: ID!
   ) {
     createProposalBoard(
-      data: { title: $title, description: $description, settings: $settings }
+      data: {
+        title: $title
+        description: $description
+        settings: $settings
+        creator: { connect: { id: $creatorId } }
+      }
     ) {
       id
     }

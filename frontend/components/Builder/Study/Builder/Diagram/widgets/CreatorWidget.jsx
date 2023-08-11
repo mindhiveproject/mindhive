@@ -14,7 +14,7 @@ export const CreatorWidget = props => {
 
   const diagramEngine = props.engine;
   diagramEngine.openComponentModal = props.openComponentModal;
-  diagramEngine.openDesignModal = props.openDesignModal;
+  diagramEngine.openModal = props.openModal;
   diagramEngine.openStudyPreview = props.openStudyPreview;
 
   // disable touchpad zooming
@@ -72,6 +72,7 @@ export const CreatorWidget = props => {
       const node = new DesignModel({
         name: data?.name,
         details: data?.details,
+        conditions: data?.conditions,
       });
       const point = diagramEngine.getRelativeMousePoint(event);
       node.setPosition(point);

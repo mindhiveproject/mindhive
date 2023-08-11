@@ -9,10 +9,10 @@ import ProposalBuilder from "../../../Proposal/Builder/Main";
 
 export default function ProposalPage({
   user,
-  studyId,
   proposalId,
   goToOverview,
   proposalBuildMode,
+  refetchQueries,
 }) {
   const [isPDF, setIsPDF] = useState(false);
   const { data, error, loading } = useQuery(OVERVIEW_PROPOSAL_BOARD_QUERY, {
@@ -67,11 +67,10 @@ export default function ProposalPage({
       ) : (
         <ProposalBuilder
           user={user}
-          studyId={studyId}
           proposalId={proposalId}
-          proposal={proposal}
           onClose={goToOverview}
           proposalBuildMode={proposalBuildMode}
+          refetchQueries={refetchQueries}
         />
       )}
     </div>

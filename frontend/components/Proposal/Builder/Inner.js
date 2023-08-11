@@ -95,7 +95,7 @@ class Inner extends Component {
   }
 
   render() {
-    const { board, sections, proposalBuildMode, settings } = this.props;
+    const { board, sections, proposalBuildMode } = this.props;
 
     return (
       <div className="inner">
@@ -110,10 +110,10 @@ class Inner extends Component {
             proposalBuildMode={proposalBuildMode}
             adminMode={this.props.adminMode}
             isPreview={this.props.isPreview}
-            settings={settings}
+            settings={board?.settings}
           />
 
-          {!this.props.isPreview && settings?.allowAddingSections && (
+          {!this.props.isPreview && board?.settings?.allowAddingSections && (
             <div className="newInput">
               <label htmlFor="sectionTitle">
                 <div>New section</div>

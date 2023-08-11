@@ -5,10 +5,8 @@ import ReactHtmlParser from "react-html-parser";
 
 import { NodesTypesContainer } from "../Diagram/nodes-types-container/NodesTypesContainer";
 import { NodeTypeLabel } from "../Diagram/node-type-label/NodeTypeLabel";
-// import { StyledEditPane } from "./styles";
 
 import Blocks from "./Blocks/Main";
-// import Templates from "./Templates";
 
 const components = [
   {
@@ -165,6 +163,22 @@ export default function ComponentSelector({
                   addFunctions.addDesignToCanvas({
                     name: "Between-subjects design",
                     details: "Create new design",
+                    // conditions: [
+                    //   {
+                    //     name: "control",
+                    //     flow: [],
+                    //     assignmentType: "random",
+                    //     probability: 50,
+                    //     rule: undefined,
+                    //   },
+                    //   {
+                    //     name: "experimental",
+                    //     flow: [],
+                    //     assignmentType: "random",
+                    //     probability: 50,
+                    //     rule: undefined,
+                    //   },
+                    // ],
                   });
                 }}
               />
@@ -177,6 +191,22 @@ export default function ComponentSelector({
                     type: "design",
                     name: "Between-subjects design",
                     details: "Create new design",
+                    // conditions: [
+                    //   {
+                    //     name: "control",
+                    //     flow: [],
+                    //     assignmentType: "random",
+                    //     probability: 50,
+                    //     rule: undefined,
+                    //   },
+                    //   {
+                    //     name: "experimental",
+                    //     flow: [],
+                    //     assignmentType: "random",
+                    //     probability: 50,
+                    //     rule: undefined,
+                    //   },
+                    // ],
                   }}
                   name="Between-subjects design"
                 ></NodeTypeLabel>

@@ -31,15 +31,28 @@ export default function ParticipantPage({ query, user, tab }) {
       ...study,
     });
 
+  console.log({ inputs });
+
   const [
     updateStudy,
     { data: studyData, loading: studyLoading, error: studyError },
   ] = useMutation(UPDATE_STUDY, {
     variables: {
-      ...inputs,
-      collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
-      classes: inputs?.classes.map((cl) => ({ id: cl?.id })),
-      consent: inputs?.consent.map((con) => ({ id: con?.id })),
+      id: study?.id,
+      input: {
+        title: inputs?.title,
+        slug: inputs?.slug,
+        description: inputs?.description,
+        settings: inputs?.settings,
+        info: inputs?.info,
+        image: inputs?.file
+          ? { create: { image: inputs?.file, altText: inputs?.title } }
+          : null,
+        // ...inputs,
+        // collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
+        // classes: inputs?.classes.map((cl) => ({ id: cl?.id })),
+        // consent: inputs?.consent.map((con) => ({ id: con?.id })),
+      },
     },
     refetchQueries: [{ query: MY_STUDY, variables: { id: studyId } }],
   });

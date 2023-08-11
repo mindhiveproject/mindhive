@@ -106,12 +106,22 @@ export const MY_STUDY = gql`
       }
       diagram
       components
+      flow
       descriptionInProposalCard {
+        id
+        title
+        description
         section {
+          id
           board {
             id
+            title
           }
         }
+      }
+      tags {
+        id
+        title
       }
     }
   }
@@ -176,6 +186,7 @@ export const STUDY_TO_JOIN = gql`
         }
       }
       components
+      flow
     }
   }
 `;

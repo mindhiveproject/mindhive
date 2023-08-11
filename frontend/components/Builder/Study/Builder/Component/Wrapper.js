@@ -40,7 +40,7 @@ export default function Wrapper({
   });
 
   const theTask = data?.task || {};
-  console.log({ theTask });
+  // console.log({ theTask });
 
   // check whether the current user is the author of the task or the collaborator on the task
   const isAuthor =
@@ -95,6 +95,7 @@ export default function Wrapper({
   if (showPreview) {
     return (
       <TaskPreview
+        user={user}
         id={task?.id}
         close={() => {
           closePreview();

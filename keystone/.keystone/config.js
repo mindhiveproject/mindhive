@@ -54,7 +54,7 @@ async function sendPasswordResetEmail(resetToken, to) {
     MessageStream: "ps-stream"
   });
 }
-async function sendNotificationEmail(to, subject, text26) {
+async function sendNotificationEmail(to, subject, text27) {
   const info = await client.sendEmailWithTemplate({
     From: "no-reply@prettyspecial.one",
     To: to,
@@ -65,7 +65,7 @@ async function sendNotificationEmail(to, subject, text26) {
       company_name: "MindHive",
       company_address: "New York",
       support_url: `${process.env.FRONTEND_URL}/menu/docs/about`,
-      text: text26
+      text: text27
     },
     MessageStream: "ps-stream"
   });
@@ -547,6 +547,10 @@ var Profile = (0, import_core.list)({
     authorOfHomework: (0, import_fields.relationship)({
       ref: "Homework.author",
       many: true
+    }),
+    datasets: (0, import_fields.relationship)({
+      ref: "Dataset.profile",
+      many: true
     })
   }
 });
@@ -951,6 +955,10 @@ var Template = (0, import_core11.list)({
       ref: "Task.template",
       many: true
     }),
+    datasets: (0, import_fields13.relationship)({
+      ref: "Dataset.template",
+      many: true
+    }),
     settings: (0, import_fields13.json)(),
     file: (0, import_fields13.text)(),
     createdAt: (0, import_fields13.timestamp)({
@@ -1047,6 +1055,10 @@ var Task = (0, import_core12.list)({
       ref: "Consent.tasks",
       many: true
     }),
+    datasets: (0, import_fields14.relationship)({
+      ref: "Dataset.task",
+      many: true
+    }),
     createdAt: (0, import_fields14.timestamp)({
       defaultValue: { kind: "now" }
     }),
@@ -1120,6 +1132,7 @@ var Study = (0, import_core13.list)({
     submitForPublishing: (0, import_fields15.checkbox)({ isFilterable: true }),
     isHidden: (0, import_fields15.checkbox)({ isFilterable: true }),
     components: (0, import_fields15.json)(),
+    flow: (0, import_fields15.json)(),
     diagram: (0, import_fields15.text)(),
     author: (0, import_fields15.relationship)({
       ref: "Profile.researcherIn",
@@ -1169,8 +1182,16 @@ var Study = (0, import_core13.list)({
       ref: "Review.study",
       many: true
     }),
+    tags: (0, import_fields15.relationship)({
+      ref: "Tag.studies",
+      many: true
+    }),
     talks: (0, import_fields15.relationship)({
       ref: "Talk.studies",
+      many: true
+    }),
+    datasets: (0, import_fields15.relationship)({
+      ref: "Dataset.study",
       many: true
     }),
     createdAt: (0, import_fields15.timestamp)({
@@ -1325,10 +1346,29 @@ var Dataset = (0, import_core17.list)({
     }
   },
   fields: {
-    data: (0, import_fields19.json)(),
-    dateCreated: (0, import_fields19.timestamp)({
+    token: (0, import_fields19.text)({
+      isIndexed: "unique",
+      isFilterable: true
+    }),
+    profile: (0, import_fields19.relationship)({
+      ref: "Profile.datasets"
+    }),
+    template: (0, import_fields19.relationship)({
+      ref: "Template.datasets"
+    }),
+    task: (0, import_fields19.relationship)({
+      ref: "Task.datasets"
+    }),
+    study: (0, import_fields19.relationship)({
+      ref: "Study.datasets"
+    }),
+    dataPolicy: (0, import_fields19.text)(),
+    info: (0, import_fields19.json)(),
+    isCompleted: (0, import_fields19.checkbox)({ isFilterable: true }),
+    createdAt: (0, import_fields19.timestamp)({
       defaultValue: { kind: "now" }
-    })
+    }),
+    updatedAt: (0, import_fields19.timestamp)()
   }
 });
 
@@ -1736,6 +1776,10 @@ var Tag = (0, import_core24.list)({
     }),
     homeworks: (0, import_fields26.relationship)({
       ref: "Homework.tags",
+      many: true
+    }),
+    studies: (0, import_fields26.relationship)({
+      ref: "Study.tags",
       many: true
     }),
     level: (0, import_fields26.integer)(),

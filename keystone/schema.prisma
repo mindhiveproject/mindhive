@@ -63,6 +63,7 @@ model Profile {
   collaboratorInCurriculum Curriculum[]    @relation("Curriculum_collaborators")
   authorOfAssignment       Assignment[]    @relation("Assignment_author")
   authorOfHomework         Homework[]      @relation("Homework_author")
+  datasets                 Dataset[]       @relation("Dataset_profile")
   passwordResetToken       String?
   passwordResetIssuedAt    DateTime?
   passwordResetRedeemedAt  DateTime?
@@ -202,6 +203,7 @@ model Template {
   script           String    @default("")
   style            String    @default("")
   tasks            Task[]    @relation("Task_template")
+  datasets         Dataset[] @relation("Dataset_template")
   settings         Json?
   file             String    @default("")
   createdAt        DateTime? @default(now())
@@ -233,6 +235,7 @@ model Task {
   image                      String            @default("")
   largeImage                 String            @default("")
   consent                    Consent[]         @relation("Consent_tasks")
+  datasets                   Dataset[]         @relation("Dataset_task")
   createdAt                  DateTime?         @default(now())
   updatedAt                  DateTime?
 
@@ -255,6 +258,7 @@ model Study {
   submitForPublishing         Boolean         @default(false)
   isHidden                    Boolean         @default(false)
   components                  Json?
+  flow                        Json?
   diagram                     String          @default("")
   author                      Profile?        @relation("Study_author", fields: [authorId], references: [id])
   authorId                    String?         @map("author")
@@ -266,7 +270,9 @@ model Study {
   descriptionInProposalCardId String?         @map("descriptionInProposalCard")
   classes                     Class[]         @relation("Class_studies")
   reviews                     Review[]        @relation("Review_study")
+  tags                        Tag[]           @relation("Study_tags")
   talks                       Talk[]          @relation("Study_talks")
+  datasets                    Dataset[]       @relation("Dataset_study")
   createdAt                   DateTime?       @default(now())
   updatedAt                   DateTime?
 
@@ -317,8 +323,25 @@ model Update {
 
 model Dataset {
   id          String    @id @default(cuid())
-  data        Json?
-  dateCreated DateTime? @default(now())
+  token       String    @unique @default("")
+  profile     Profile?  @relation("Dataset_profile", fields: [profileId], references: [id])
+  profileId   String?   @map("profile")
+  template    Template? @relation("Dataset_template", fields: [templateId], references: [id])
+  templateId  String?   @map("template")
+  task        Task?     @relation("Dataset_task", fields: [taskId], references: [id])
+  taskId      String?   @map("task")
+  study       Study?    @relation("Dataset_study", fields: [studyId], references: [id])
+  studyId     String?   @map("study")
+  dataPolicy  String    @default("")
+  info        Json?
+  isCompleted Boolean   @default(false)
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime?
+
+  @@index([profileId])
+  @@index([templateId])
+  @@index([taskId])
+  @@index([studyId])
 }
 
 model ProposalBoard {
@@ -445,6 +468,7 @@ model Tag {
   lessons     Lesson[]     @relation("Lesson_tags")
   assignments Assignment[] @relation("Assignment_tags")
   homeworks   Homework[]   @relation("Homework_tags")
+  studies     Study[]      @relation("Study_tags")
   level       Int?
   parent      Tag?         @relation("Tag_parent", fields: [parentId], references: [id])
   parentId    String?      @map("parent")

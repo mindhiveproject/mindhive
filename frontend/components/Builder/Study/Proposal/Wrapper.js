@@ -16,6 +16,13 @@ export default function ProposalWrapper({ query, user, templates }) {
     },
   });
 
+  const refetchQueries = [
+    {
+      query: STUDY_PROPOSALS_QUERY,
+      variables: { studyId },
+    },
+  ];
+
   const proposals = data?.proposalBoards || [];
 
   const [page, setPage] = useState("overview");
@@ -60,6 +67,7 @@ export default function ProposalWrapper({ query, user, templates }) {
         studyId={studyId}
         proposalId={proposalId}
         goToOverview={goToOverview}
+        refetchQueries={refetchQueries}
       />
     );
   }

@@ -1,18 +1,27 @@
 import { useState } from "react";
+import { useQuery } from "@apollo/client";
 
 import ProposalHeader from "./Header";
 import ProposalBoard from "./Board";
 import ProposalCard from "../Card/Main";
 
+import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+
 export default function ProposalBuilder({
   user,
-  studyId,
-  proposal,
   proposalId,
   onClose,
   proposalBuildMode,
   isPreview,
+  refetchQueries,
 }) {
+  const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
+    variables: { id: proposalId },
+    pollInterval: 20000, // get new data every 20 seconds
+  });
+
+  const proposal = data?.proposalBoard || undefined;
+
   const [page, setPage] = useState("board");
   const [cardId, setCardId] = useState(null);
 
@@ -26,11 +35,13 @@ export default function ProposalBuilder({
     setCardId(null);
   };
 
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error.message}`;
+
   if (page === "card") {
     return (
       <ProposalCard
         proposal={proposal}
-        studyId={studyId}
         cardId={cardId}
         closeCard={closeCard}
         proposalBuildMode={proposalBuildMode}
@@ -61,13 +72,12 @@ export default function ProposalBuilder({
           user={user}
           proposal={proposal}
           proposalBuildMode={proposalBuildMode}
-          studyId={studyId}
+          refetchQueries={refetchQueries}
         />
       )}
-      {proposalId && (
+      {proposal && (
         <ProposalBoard
-          proposalId={proposalId}
-          settings={proposal?.settings}
+          proposal={proposal}
           openCard={openCard}
           isPreview={isPreview}
         />

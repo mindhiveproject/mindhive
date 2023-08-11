@@ -14,7 +14,6 @@ import Status from "./Forms/Status";
 
 export default function ProposalCard({
   proposal,
-  studyId,
   cardId,
   closeCard,
   proposalBuildMode,

@@ -13,31 +13,19 @@ export default function Builder({ query, user, tab }) {
   const { data, error, loading } = useQuery(MY_STUDY, {
     variables: { id: studyId },
   });
-  const study = data?.study || {
-    title: "",
-    description: "",
-    collaborators: [],
-    classes: [],
-    consent: [],
-  };
+  const study = data?.study || {};
 
   // save and edit the study information
-  const { inputs, handleChange, handleMultipleUpdate, captureFile, clearForm } =
-    useForm({
-      ...study,
-    });
-
-  console.log({ inputs });
+  const { inputs, handleChange } = useForm({
+    ...study,
+  });
 
   const [
     updateStudy,
     { data: studyData, loading: studyLoading, error: studyError },
   ] = useMutation(UPDATE_STUDY, {
     variables: {
-      ...inputs,
-      collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
-      classes: inputs?.classes.map((cl) => ({ id: cl?.id })),
-      consent: inputs?.consent.map((con) => ({ id: con?.id })),
+      id: study?.id,
     },
     refetchQueries: [{ query: MY_STUDY, variables: { id: studyId } }],
   });
@@ -51,10 +39,8 @@ export default function Builder({ query, user, tab }) {
       query={query}
       user={user}
       tab={tab}
-      study={study}
+      study={inputs}
       handleChange={handleChange}
-      handleMultipleUpdate={handleMultipleUpdate}
-      captureFile={captureFile}
       updateStudy={updateStudy}
     />
   );

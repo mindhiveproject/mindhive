@@ -73,6 +73,7 @@ export const Study = list({
     submitForPublishing: checkbox({ isFilterable: true }),
     isHidden: checkbox({ isFilterable: true }),
     components: json(),
+    flow: json(),
     diagram: text(),
     author: relationship({
       ref: "Profile.researcherIn",
@@ -127,9 +128,16 @@ export const Study = list({
     }),
     // scripts: relationship to script
     // notebooks: relationship to notebook
-    // tags: relationship to tag
+    tags: relationship({
+      ref: "Tag.studies",
+      many: true,
+    }),
     talks: relationship({
       ref: "Talk.studies",
+      many: true,
+    }),
+    datasets: relationship({
+      ref: "Dataset.study",
       many: true,
     }),
     createdAt: timestamp({

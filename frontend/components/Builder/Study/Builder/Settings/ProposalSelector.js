@@ -5,12 +5,7 @@ import { Dropdown } from "semantic-ui-react";
 import { PROPOSAL_QUERY } from "../../../../Queries/Proposal";
 import { useQuery } from "@apollo/client";
 
-export default function ProposalSelector({
-  study,
-  handleChange,
-  handleMultipleUpdate,
-  proposalId,
-}) {
+export default function ProposalSelector({ study, handleChange, proposalId }) {
   const [cardId, setCardId] = useState(
     study?.descriptionInProposalCard?.id || null
   );
@@ -40,7 +35,7 @@ export default function ProposalSelector({
     setCardId(data.value);
     handleChange({
       target: {
-        name: "descriptionInProposalCard",
+        name: "descriptionInProposalCardId",
         value: data?.value,
       },
     });

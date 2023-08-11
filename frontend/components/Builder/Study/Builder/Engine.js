@@ -32,8 +32,6 @@ export default function Engine({
   tab,
   study,
   handleChange,
-  handleMultipleUpdate,
-  captureFile,
   updateStudy,
 }) {
   // force update canvas
@@ -111,79 +109,103 @@ export default function Engine({
   };
 
   // diagram functions
-  const findChildren = (node) => {
-    let children = [];
-    if (
-      node?.ports?.out?.links &&
-      Object.values(node?.ports?.out?.links).length
-    ) {
-      children = Object.values(node?.ports?.out?.links).map(
-        (link) => link?.targetPort?.parent
-      );
-    }
-    return children;
-  };
+  // const findChildren = (node) => {
+  //   console.log({ node });
+  //   let children = [];
 
-  const compareArrays = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  //   if (node?.options?.type === "design") {
+  //     const ports = Object.values(node?.ports).filter(
+  //       (port) => port?.options?.type === "outCustomPort"
+  //     );
+  //     console.log({ ports });
+  //     if (ports.length) {
+  //       children = ports
+  //         .map((port) =>
+  //           Object.values(port?.links).map((link) => link?.targetPort?.parent)
+  //         )
+  //         .flat();
+  //     }
+  //   } else {
+  //     if (
+  //       node?.ports?.out?.links &&
+  //       Object.values(node?.ports?.out?.links).length
+  //     ) {
+  //       children = Object.values(node?.ports?.out?.links).map(
+  //         (link) => link?.targetPort?.parent
+  //       );
+  //     }
+  //   }
+  //   return children;
+  // };
 
-  const makeBlock = (tests) => {
-    const blocks = study?.components?.blocks || [];
-    // find whether there is a block which contains the tests (by id)
-    const blocksWithTests = blocks.filter((block) => {
-      if (
-        block?.tests.length === tests.length &&
-        compareArrays(
-          block?.tests?.map((t) => t?.id),
-          tests.map((t) => t?.id)
-        )
-      ) {
-        return true;
-      }
-      return false;
-    });
-    return {
-      blockId: blocksWithTests.length
-        ? blocksWithTests[0]?.blockId
-        : uniqid.time(),
-      title: blocksWithTests.length
-        ? blocksWithTests[0]?.title
-        : generate().dashed,
-      tests: [...tests],
-      skip: blocksWithTests.length ? blocksWithTests[0].skip : false,
-    };
-  };
+  // const compareArrays = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
-  const findChildrenRecursively = (nodes, level, blocks, tests) => {
-    nodes.forEach((node) => {
-      let blockTests = [];
-      if (level > 0) {
-        blockTests = [...tests];
-        blockTests.push({
-          id: node?.options?.componentID,
-          title: node?.options?.name,
-          testId: node?.options?.testId,
-          subtitle: node?.options?.subtitle,
-          level,
-        });
-      }
-      const children = findChildren(node) || [];
-      if (children.length) {
-        findChildrenRecursively(children, level + 1, blocks, blockTests);
-      } else {
-        blocks.push(makeBlock(blockTests));
-      }
-    });
-  };
+  // const makeBlock = (tests) => {
+  //   const blocks = study?.components?.blocks || [];
+  //   // find whether there is a block which contains the tests (by id)
+  //   const blocksWithTests = blocks.filter((block) => {
+  //     if (
+  //       block?.tests.length === tests.length &&
+  //       compareArrays(
+  //         block?.tests?.map((t) => t?.id),
+  //         tests.map((t) => t?.id)
+  //       )
+  //     ) {
+  //       return true;
+  //     }
+  //     return false;
+  //   });
+  //   return {
+  //     blockId: blocksWithTests.length
+  //       ? blocksWithTests[0]?.blockId
+  //       : uniqid.time(),
+  //     title: blocksWithTests.length
+  //       ? blocksWithTests[0]?.title
+  //       : generate().dashed,
+  //     tests: [...tests],
+  //     skip: blocksWithTests.length ? blocksWithTests[0].skip : false,
+  //   };
+  // };
 
-  const createStudyDesign = ({ model }) => {
-    const allNodes = model.getNodes() || [];
-    const startingNode = allNodes.filter(
-      (node) => node?.options?.type === "my-anchor"
-    );
-    const blocks = [];
-    findChildrenRecursively(startingNode, 0, blocks, []);
-    return { blocks };
-  };
+  // const findChildrenRecursively = (nodes, level, blocks, tests) => {
+  //   nodes.forEach((node) => {
+  //     let blockTests = [];
+  //     if (level > 0) {
+  //       blockTests = [...tests];
+
+  //       if (node?.options?.type === "design") {
+  //         blockTests.push({
+  //           ...node?.options,
+  //         });
+  //       } else {
+  //         blockTests.push({
+  //           id: node?.options?.componentID,
+  //           title: node?.options?.name,
+  //           testId: node?.options?.testId,
+  //           subtitle: node?.options?.subtitle,
+  //           level,
+  //         });
+  //       }
+  //     }
+  //     const children = findChildren(node) || [];
+  //     if (children.length) {
+  //       findChildrenRecursively(children, level + 1, blocks, blockTests);
+  //     } else {
+  //       blocks.push(makeBlock(blockTests));
+  //     }
+  //   });
+  // };
+
+  // const createStudyDesign = ({ model }) => {
+  //   const allNodes = model.getNodes() || [];
+  //   console.log({ allNodes });
+  //   const startingNode = allNodes.filter(
+  //     (node) => node?.options?.type === "my-anchor"
+  //   );
+  //   const blocks = [];
+  //   findChildrenRecursively(startingNode, 0, blocks, []);
+  //   return { blocks };
+  // };
 
   // save the state of the diagram to the more general study state
   const saveDiagramState = () => {
@@ -191,11 +213,13 @@ export default function Engine({
     // Serializing
     const diagram = JSON.stringify(model?.serialize());
     // Get the experiment model
-    const components = createStudyDesign({ model });
+    // const components = createStudyDesign({ model });
     // handleMultipleUpdate({ diagram, components });
+    // Get the study flow
+    const flow = createStudyFlow();
     return {
       diagram,
-      components,
+      flow,
     };
   };
 
@@ -275,10 +299,11 @@ export default function Engine({
     forceUpdate();
   };
 
-  const addDesignToCanvas = ({ name, details }) => {
+  const addDesignToCanvas = ({ name, details, conditions }) => {
     const newNode = new DesignModel({
       name,
       details,
+      conditions,
     });
     const event = {
       clientX: getRandomIntInclusive(300, 500),
@@ -308,13 +333,105 @@ export default function Engine({
     shorten,
   };
 
+  // STUDY FLOW FUNCTIONS
+  const findChildrenNodes = ({ node }) => {
+    let children = [];
+    if (node?.options?.type === "design") {
+      const ports = Object.values(node?.ports).filter(
+        (port) => port?.options?.type === "outCustomPort"
+      );
+      if (ports.length) {
+        children = ports
+          .map((port) =>
+            Object.values(port?.links).map((link) => link?.targetPort?.parent)
+          )
+          .flat();
+      }
+    } else {
+      if (
+        node?.ports?.out?.links &&
+        Object.values(node?.ports?.out?.links).length
+      ) {
+        children = Object.values(node?.ports?.out?.links).map(
+          (link) => link?.targetPort?.parent
+        );
+      }
+    }
+    return children;
+  };
+
+  const findNodes = ({ currentNode, flow, position }) => {
+    // redefine what is the flow based on the type of the current node
+    let currentFlow;
+    if (currentNode?.options?.type === "design") {
+      const ports = Object.values(currentNode?.ports).filter(
+        (port) => port?.options?.type === "outCustomPort"
+      );
+      console.log({ ports });
+      flow.push({
+        ...currentNode?.options,
+        position: position,
+        conditions: ports.map((port) => ({
+          name: port?.options?.name,
+          label: port?.options?.label,
+          assignmentType: port?.options?.assignmentType,
+          probability: port?.options?.probability,
+          rule: port?.options?.rule,
+          flow: [],
+        })),
+      });
+      const children = findChildrenNodes({ node: currentNode }) || [];
+      children.forEach((child, num) => {
+        // get the last pushed object with the corresponding flow
+        currentFlow = flow[flow.length - 1].conditions[num].flow;
+        findNodes({
+          currentNode: child,
+          flow: currentFlow,
+          position: position + 1,
+        });
+      });
+    } else {
+      // task node
+      flow.push({ ...currentNode?.options, position: position });
+      currentFlow = flow;
+      // find children of the current node
+      const children = findChildrenNodes({ node: currentNode }) || [];
+      // for each of the children, repeat finding nodes
+      children.forEach((child) => {
+        findNodes({
+          currentNode: child,
+          flow: currentFlow,
+          position: position + 1,
+        });
+      });
+    }
+  };
+
+  const createStudyFlow = () => {
+    const model = engine?.model;
+    const allNodes = model.getNodes() || [];
+    const startingNode = allNodes.filter(
+      (node) => node?.options?.type === "my-anchor"
+    )[0];
+    const flow = [];
+    // find all nodes and append them to the flow
+    findNodes({ currentNode: startingNode, flow, position: 0 });
+    return flow;
+  };
+
   const buildStudy = () => {
-    const { components, diagram } = saveDiagramState();
-    console.log({ components, diagram });
+    const { flow, diagram } = saveDiagramState();
+    console.log({ flow });
     updateStudy({
       variables: {
-        components,
-        diagram,
+        input: {
+          descriptionInProposalCard: study?.descriptionInProposalCardId
+            ? { connect: { id: study?.descriptionInProposalCardId } }
+            : null,
+          flow,
+          diagram,
+          tags: study?.tags?.length ? { set: study?.tags } : { set: [] },
+        },
       },
     });
   };
@@ -333,7 +450,6 @@ export default function Engine({
         user={user}
         study={study}
         handleChange={handleChange}
-        handleMultipleUpdate={handleMultipleUpdate}
         engine={engine}
         addFunctions={addFunctions}
       />

@@ -1,5 +1,6 @@
 import { UPDATE_PROPOSAL_BOARD } from "../../Mutations/Proposal";
-import { STUDY_PROPOSALS_QUERY } from "../../Queries/Proposal";
+
+import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 
 import { useMutation } from "@apollo/client";
 
@@ -9,8 +10,10 @@ export default function ProposalHeader({
   user,
   proposal,
   proposalBuildMode,
-  studyId,
+  refetchQueries,
 }) {
+  const studyId = proposal?.study?.id;
+
   // save and edit the study information
   const { inputs, handleChange, toggleBoolean, toggleSettingsBoolean } =
     useForm({
@@ -21,8 +24,13 @@ export default function ProposalHeader({
     variables: {
       ...inputs,
     },
-    refetchQueries: [{ query: STUDY_PROPOSALS_QUERY, variables: { studyId } }],
+    refetchQueries: [
+      { query: PROPOSAL_QUERY, variables: { id: proposal?.id } },
+      ...refetchQueries,
+    ],
   });
+
+  console.log({ inputs });
 
   return (
     <div className="header">
@@ -56,7 +64,7 @@ export default function ProposalHeader({
 
         {!proposalBuildMode && (
           <div>
-            {user?.permissions.includes("ADMIN") && (
+            {user?.permissions.map((p) => p?.name).includes("ADMIN") && (
               <>
                 <div>
                   <label htmlFor="isTemplate">
@@ -72,22 +80,23 @@ export default function ProposalHeader({
                     </div>
                   </label>
                 </div>
-                <div>
-                  <label htmlFor="isSubmitted">
-                    <div className="checkboxField">
-                      <input
-                        type="checkbox"
-                        id="isSubmitted"
-                        name="isSubmitted"
-                        checked={inputs.isSubmitted}
-                        onChange={toggleBoolean}
-                      />
-                      <span>Is submitted</span>
-                    </div>
-                  </label>
-                </div>
               </>
             )}
+
+            <div>
+              <label htmlFor="isSubmitted">
+                <div className="checkboxField">
+                  <input
+                    type="checkbox"
+                    id="isSubmitted"
+                    name="isSubmitted"
+                    checked={inputs?.isSubmitted || false}
+                    onChange={toggleBoolean}
+                  />
+                  <span>Submit as a template</span>
+                </div>
+              </label>
+            </div>
 
             <div>
               <label htmlFor="allowMovingSections">
@@ -96,7 +105,7 @@ export default function ProposalHeader({
                     type="checkbox"
                     id="allowMovingSections"
                     name="allowMovingSections"
-                    checked={inputs?.settings?.allowMovingSections}
+                    checked={inputs?.settings?.allowMovingSections || false}
                     onChange={toggleSettingsBoolean}
                   />
                   <span>Allow moving sections</span>
@@ -111,7 +120,7 @@ export default function ProposalHeader({
                     type="checkbox"
                     id="allowMovingCards"
                     name="allowMovingCards"
-                    checked={inputs?.settings?.allowMovingCards}
+                    checked={inputs?.settings?.allowMovingCards || false}
                     onChange={toggleSettingsBoolean}
                   />
                   <span>Allow moving cards</span>
@@ -126,7 +135,7 @@ export default function ProposalHeader({
                     type="checkbox"
                     id="allowAddingSections"
                     name="allowAddingSections"
-                    checked={inputs?.settings?.allowAddingSections}
+                    checked={inputs?.settings?.allowAddingSections || false}
                     onChange={toggleSettingsBoolean}
                   />
                   <span>Allow adding new sections</span>
@@ -141,7 +150,7 @@ export default function ProposalHeader({
                     type="checkbox"
                     id="allowAddingCards"
                     name="allowAddingCards"
-                    checked={inputs?.settings?.allowAddingCards}
+                    checked={inputs?.settings?.allowAddingCards || false}
                     onChange={toggleSettingsBoolean}
                   />
                   <span>Allow adding new cards</span>

@@ -1,16 +1,12 @@
 import { CreatorWidget } from "./Diagram/widgets/CreatorWidget";
 
-export default function Widget({
-  engine,
-  openComponentModal,
-  openDesignModal,
-}) {
+export default function Widget({ engine, openComponentModal, openModal }) {
   if (engine) {
     return (
       <CreatorWidget
         engine={engine}
         openComponentModal={openComponentModal}
-        openDesignModal={openDesignModal}
+        openModal={openModal}
         openStudyPreview={() => console.log("openStudyPreview")}
       />
     );

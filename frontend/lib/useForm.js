@@ -64,12 +64,12 @@ export default function useForm(initial = {}) {
   }
 
   function toggleSettingsBoolean(e) {
-    let { name } = e.target;
+    let { name, checked } = e.target;
     setInputs({
       ...inputs,
       settings: {
         ...inputs.settings,
-        [name]: !inputs[name],
+        [name]: checked,
       },
     });
   }

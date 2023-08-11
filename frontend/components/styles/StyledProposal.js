@@ -39,7 +39,7 @@ export const StyledProposal = styled.div`
       grid-template-columns: 1fr 200px;
       align-items: center;
     }
-    .proposalHeader  {
+    .proposalHeader {
       display: grid;
       margin: 5px;
       padding: 10px;
@@ -71,7 +71,7 @@ export const StyledProposal = styled.div`
     height: 70vh;
   }
 
-  .dropdown  {
+  .dropdown {
     width: 100%;
     height: 50px;
   }

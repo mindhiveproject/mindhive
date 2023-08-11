@@ -104,6 +104,10 @@ export const Task = list({
       ref: "Consent.tasks",
       many: true,
     }),
+    datasets: relationship({
+      ref: "Dataset.task",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

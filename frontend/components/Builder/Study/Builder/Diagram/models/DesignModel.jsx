@@ -2,6 +2,8 @@ import { NodeModel } from '@projectstorm/react-diagrams';
 import { InCustomPort } from './InPortModel';
 import { OutCustomPort } from './OutPortModel';
 
+import uniqid from "uniqid";
+
 export class DesignModel extends NodeModel {
   constructor(options) {
     super({
@@ -21,20 +23,28 @@ export class DesignModel extends NodeModel {
         alignment: 'top',
       })
     );
-    this.addPort(
-      new OutCustomPort({
-        in: false,
-        name: 'out-1',
-        alignment: 'down',
-      })
-    );
-    this.addPort(
-      new OutCustomPort({
-        in: false,
-        name: 'out-2',
-        alignment: 'down',
-      })
-    );
+    // this.addPort(
+    //   new OutCustomPort({
+    //     in: false,
+    //     alignment: 'down',
+    //     name: uniqid.time(),
+    //     label: 'control',
+    //     assignmentType: "random",
+    //     probability: 50,
+    //     rule: undefined,
+    //   })
+    // );
+    // this.addPort(
+    //   new OutCustomPort({
+    //     in: false,
+    //     alignment: 'down',
+    //     name: uniqid.time(),
+    //     label: 'experimental',
+    //     assignmentType: "random",
+    //     probability: 50,
+    //     rule: undefined,
+    //   })
+    // );
   }
 
   updateOptions(options) {
@@ -46,6 +56,7 @@ export class DesignModel extends NodeModel {
       ...super.serialize(),
       name: this.options.name,
       details: this.options.details,
+      // conditions: this.options.conditions,
     };
   }
 
@@ -53,5 +64,6 @@ export class DesignModel extends NodeModel {
     super.deserialize(ob, engine);
     this.options.name = ob.data.name;
     this.options.details = ob.data.details;
+    // this.options.conditions = ob.data.conditions;
   }
 }
