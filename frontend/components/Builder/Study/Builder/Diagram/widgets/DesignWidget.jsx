@@ -3,12 +3,10 @@ import { PortWidget } from '@projectstorm/react-diagrams-core';
 import { StyledNode } from '../styles';
 
 export const DesignWidget = props => {
-  // console.log({props})
 
   const ports = Object.values(props?.node?.ports).filter(
     (port) => port?.options?.type === "outCustomPort"
   )
-  // console.log({ports})
 
   return (
     <StyledNode taskType="DESIGN">

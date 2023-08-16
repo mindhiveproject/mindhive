@@ -3,7 +3,7 @@ import { StyledPreview } from "../../styles/StyledPreview";
 
 import TaskRun from "../Run/Main";
 
-export default function TaskPreview({ user, id, close }) {
+export default function TaskPreview({ user, study, id, close }) {
   return (
     <StyledPreview>
       <div className="frame"></div>
@@ -12,9 +12,7 @@ export default function TaskPreview({ user, id, close }) {
         <span>&times;</span>
       </div>
       <div className="preview">
-        <Labjs>
-          <TaskRun user={user} id={id} />
-        </Labjs>
+        <TaskRun user={user} study={study} id={id} />
       </div>
     </StyledPreview>
   );

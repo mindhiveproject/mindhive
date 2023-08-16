@@ -6,6 +6,7 @@ import Component from "./Component/Main";
 
 import { StyledCanvasBuilder } from "../../../styles/StyledBuilder";
 import Modal from "./Modal/Main";
+import StudyPreview from "../../../Studies/Preview/Main";
 
 export default function Builder({
   query,
@@ -22,6 +23,7 @@ export default function Builder({
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isStudyPreviewOpen, setStudyPreviewOpen] = useState(false);
 
   const openComponentModal = ({
     node,
@@ -75,6 +77,14 @@ export default function Builder({
     engine.repaintCanvas();
   };
 
+  const openStudyPreview = () => {
+    setStudyPreviewOpen(true);
+  };
+
+  if (isStudyPreviewOpen) {
+    return <StudyPreview close={() => setStudyPreviewOpen(false)} />;
+  }
+
   return (
     <StyledCanvasBuilder>
       <div className="board">
@@ -96,6 +106,7 @@ export default function Builder({
           engine={engine}
           openComponentModal={openComponentModal}
           openModal={openModal}
+          openStudyPreview={openStudyPreview}
         />
         <Menu
           user={user}
@@ -112,6 +123,7 @@ export default function Builder({
         <Component
           query={query}
           user={user}
+          study={study}
           componentId={componentId}
           close={() => closeComponentModal()}
           isInfoOpen={isInfoOpen}

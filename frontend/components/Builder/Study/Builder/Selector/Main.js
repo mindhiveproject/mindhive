@@ -162,23 +162,6 @@ export default function ComponentSelector({
                 onClick={() => {
                   addFunctions.addDesignToCanvas({
                     name: "Between-subjects design",
-                    details: "Create new design",
-                    // conditions: [
-                    //   {
-                    //     name: "control",
-                    //     flow: [],
-                    //     assignmentType: "random",
-                    //     probability: 50,
-                    //     rule: undefined,
-                    //   },
-                    //   {
-                    //     name: "experimental",
-                    //     flow: [],
-                    //     assignmentType: "random",
-                    //     probability: 50,
-                    //     rule: undefined,
-                    //   },
-                    // ],
                   });
                 }}
               />
@@ -190,23 +173,6 @@ export default function ComponentSelector({
                   model={{
                     type: "design",
                     name: "Between-subjects design",
-                    details: "Create new design",
-                    // conditions: [
-                    //   {
-                    //     name: "control",
-                    //     flow: [],
-                    //     assignmentType: "random",
-                    //     probability: 50,
-                    //     rule: undefined,
-                    //   },
-                    //   {
-                    //     name: "experimental",
-                    //     flow: [],
-                    //     assignmentType: "random",
-                    //     probability: 50,
-                    //     rule: undefined,
-                    //   },
-                    // ],
                   }}
                   name="Between-subjects design"
                 ></NodeTypeLabel>

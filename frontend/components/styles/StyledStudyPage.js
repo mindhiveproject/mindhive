@@ -159,3 +159,203 @@ export const StyledStudyPage = styled.div`
     }
   }
 `;
+
+export const StyledTaskCard = styled.div`
+  height: 100%;
+  background: #ffffff;
+  border-radius: 4px;
+  border-top: 14px solid;
+  border-top-color: ${(props) =>
+    props.taskType === "TASK"
+      ? "#64c9e2"
+      : props.taskType === "SURVEY"
+      ? "#28619e"
+      : "#ffc7c3"};
+
+  box-shadow: 0px 2px 4px 0px #00000026;
+  transition: box-shadow 300ms ease-out;
+  cursor: pointer;
+
+  :hover {
+    box-shadow: 0px 2px 24px 0px #0000001a;
+  }
+
+  img {
+    width: 100%;
+    height: 166px;
+    object-fit: cover;
+  }
+  .cardInfo {
+    padding: 16px;
+    .title {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-gap: 1rem;
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 24px;
+      line-height: 30px;
+      margin-bottom: 20px;
+      .rightSide {
+        display: grid;
+        grid-gap: 1rem;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        justify-items: center;
+      }
+    }
+  }
+  a {
+    letter-spacing: 0.04em;
+    text-decoration-line: underline;
+    color: #007c70;
+  }
+  h2 {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 30px;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+  }
+  p {
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0.04em;
+    text-align: left;
+  }
+  .actionLinks {
+    margin-top: 24px;
+    button {
+      background: #ffffff;
+      color: #007c70;
+      max-width: 200px;
+    }
+    p {
+      font-family: Lato;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 18px;
+      letter-spacing: 0.05em;
+      text-align: center;
+    }
+  }
+  .studyLink {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-self: end;
+    margin-bottom: 10px;
+    align-items: end;
+  }
+`;
+
+export const StyledStudyPreview = styled.div`
+  display: grid;
+  margin: 20px;
+`;
+
+export const StyledStudyRun = styled.div`
+  display: grid;
+  .prompt {
+    display: grid;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-top: 30px;
+    padding: 20px;
+    h1 {
+      font-family: Lato;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 36px;
+      line-height: 56px;
+    }
+    h3 {
+      font-family: Lato;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 24px;
+      line-height: 32px;
+    }
+    p {
+      font-family: Lato;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 20px;
+    }
+    input {
+      max-width: 500px;
+      font-family: Lato;
+      margin-bottom: 1rem;
+      height: 48px;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+      /* width: 100%; */
+      font-size: 16px;
+      line-height: 24px;
+      padding: 12px;
+      &:focus {
+        outline: 0;
+        border-color: ${(props) => props.theme.red};
+      }
+    }
+    button {
+      max-width: 500px;
+      font-family: Lato;
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+      width: 100%;
+      background: #007c70;
+      color: white;
+      padding: 1.5rem 0.5rem;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 100%;
+      border: 2px solid #007c70;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .checkboxField {
+      font-family: Lato;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 24px;
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: 1fr 14fr;
+      align-items: center;
+      input {
+        margin-bottom: 0rem;
+        width: 40%;
+        color: #666666;
+      }
+    }
+    .buttonsHolder {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: 20px;
+    }
+    .emailInput {
+      width: 300px;
+    }
+    .questionTitle {
+      font-size: 20px;
+      margin-top: 20px;
+    }
+    .message {
+      padding: 1rem;
+      background: #007c70;
+      color: white;
+      border-radius: 8px;
+      text-align: center;
+    }
+  }
+`;

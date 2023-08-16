@@ -315,9 +315,39 @@ export const StyledCanvasBuilder = styled.div`
 
   .portsEditor {
     display: grid;
-    padding: 10px;
+    margin: 20px 30px;
+    .navigation {
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: 50px 1fr auto;
+      align-items: center;
+      .goBackBtn {
+        font-size: 30px;
+        cursor: pointer;
+      }
+    }
     .port {
       display: grid;
+      grid-gap: 10px;
+      grid-template-columns: 100px 2fr 1fr 1fr;
+      margin: 10px 0px;
+      align-items: center;
+
+      input,
+      select {
+        width: 100%;
+        height: 46px;
+        font-family: Lato;
+        font-size: 16px;
+        background: #ffffff;
+        border: 1px solid #cccccc;
+        border-radius: 4px;
+        padding: 0px 0px 0px 10px;
+      }
+    }
+    .footer {
+      display: grid;
+      margin: 30px 0px;
     }
   }
 

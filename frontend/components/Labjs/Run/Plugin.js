@@ -24,28 +24,28 @@ export const StyledLogger = styled.div`
   }
 `;
 
-export default function Plugin({ study, settings }) {
+export default function Plugin({ experiment, settings }) {
   const [intervalID, setIntervalID] = useState(undefined);
   const [data, setData] = useState(undefined);
 
   const saveData = ({ data }) => {
-    if (study && study.options && study.options.datastore) {
-      study.options.datastore.commit({ pluginData: data });
-      //   study.options.datastore.commit(e.detail) // create a new line in the dataset
-      //   study.options.datastore.set(e.detail) // create/replace the current line in the dataset
+    if (experiment && experiment.options && experiment.options.datastore) {
+      experiment.options.datastore.commit({ pluginData: data });
+      //   experiment.options.datastore.commit(e.detail) // create a new line in the dataset
+      //   experiment.options.datastore.set(e.detail) // create/replace the current line in the dataset
     }
   };
 
   const generateInput = () => {
     const randomNumber = parseInt(Math.random() * 1000);
     setData({
-      data: { randomNumber, response: study?.state?.response },
+      data: { randomNumber, response: experiment?.state?.response },
     });
     saveData({ data: { randomNumber } });
   };
 
   const start = () => {
-    if (study && !intervalID) {
+    if (experiment && !intervalID) {
       setIntervalID(setInterval(generateInput, 3000));
     }
   };
@@ -60,7 +60,7 @@ export default function Plugin({ study, settings }) {
   return (
     <StyledLogger>
       <div>Data: {data?.data?.randomNumber}</div>
-      <div>Timestamp: {parseInt(study?.timer || "-")} ms.</div>
+      <div>Timestamp: {parseInt(experiment?.timer || "-")} ms.</div>
       <div>Last response: {data?.data?.response}</div>
       <div className="buttons">
         <button onClick={start}>Start</button>{" "}

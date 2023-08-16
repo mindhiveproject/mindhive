@@ -40,7 +40,7 @@ export default function Modal({ user, node, engine, close }) {
   const addPort = () => {
     const newPorts = [
       ...ports,
-      { name: uniqid.time(), label: generate().dashed },
+      { name: uniqid.time(), label: generate().dashed, probability: 0 },
     ];
     setPorts(newPorts);
   };
@@ -89,65 +89,81 @@ export default function Modal({ user, node, engine, close }) {
   return (
     <div className="background">
       <div className="modal">
-        <div className="taskViewerHeader">
-          <div>
-            <h1>{node?.options?.name}</h1>
-            <p>{node?.options?.details}</p>
-          </div>
-          <div className="rightPanel">
-            <div className="taskViewerButtons">
-              <div className="closeBtn" onClick={() => close()}>
-                &times;
-              </div>
-              <div>
-                <button onClick={update}>Update</button>
-              </div>
-            </div>
-          </div>
-        </div>
         <div className="portsEditor">
-          {ports.map((port, num) => (
-            <div key={num} className="port">
-              <div>Name {port?.name}</div>
-              <div>Label {port?.label}</div>
+          <div className="navigation">
+            <div className="goBackBtn" onClick={() => close()}>
+              ←
+            </div>
+            <div>
+              <h1>{node?.options?.name}</h1>
+              <p>{node?.options?.details}</p>
+            </div>
+            <div>
+              <button onClick={update}>Update</button>
+            </div>
+          </div>
+          <div>
+            <div className="port">
               <div>
-                <input
-                  type="text"
-                  name="label"
-                  value={port?.label}
-                  onChange={({ target }) =>
-                    handleChange({
-                      portNumber: num,
-                      name: target?.name,
-                      value: target?.value,
-                    })
-                  }
-                />
+                <p>ID</p>
               </div>
               <div>
-                <input
-                  type="number"
-                  name="probability"
-                  value={port?.probability}
-                  onChange={({ target }) =>
-                    handleChange({
-                      portNumber: num,
-                      name: target?.name,
-                      value: target?.value,
-                    })
-                  }
-                />
+                <p>Name</p>
               </div>
               <div>
-                <button onClick={() => removePort({ name: port?.name })}>
-                  Remove condition
-                </button>
+                <p>Probability (0 - 100%)</p>
+              </div>
+              <div>
+                <p></p>
               </div>
             </div>
-          ))}
+            {ports.map((port, num) => (
+              <div key={num} className="port">
+                <div>
+                  <p>{port?.name}</p>
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    name="label"
+                    value={port?.label}
+                    onChange={({ target }) =>
+                      handleChange({
+                        portNumber: num,
+                        name: target?.name,
+                        value: target?.value,
+                      })
+                    }
+                  />
+                </div>
 
-          <div>
-            <button onClick={() => addPort()}>Add condition</button>
+                <div>
+                  <input
+                    type="number"
+                    name="probability"
+                    value={port?.probability}
+                    onChange={({ target }) =>
+                      handleChange({
+                        portNumber: num,
+                        name: target?.name,
+                        value: target?.value,
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <button onClick={() => removePort({ name: port?.name })}>
+                    Remove condition
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            <div className="footer">
+              <div>
+                <button onClick={() => addPort()}>Add condition</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ import TaskPreview from "../../../../Tasks/Preview/Main.js";
 export default function Wrapper({
   query,
   user,
+  study,
   componentId,
   close,
   isInfoOpen,
@@ -96,6 +97,7 @@ export default function Wrapper({
     return (
       <TaskPreview
         user={user}
+        study={study}
         id={task?.id}
         close={() => {
           closePreview();

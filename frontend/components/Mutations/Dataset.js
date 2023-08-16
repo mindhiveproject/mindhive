@@ -31,10 +31,14 @@ export const CREATE_DATASET = gql`
 
 // update dataset record
 export const UPDATE_DATASET = gql`
-  mutation UPDATE_DATASET($token: String!, $isCompleted: Boolean) {
+  mutation UPDATE_DATASET(
+    $token: String!
+    $isCompleted: Boolean
+    $dataPolicy: String
+  ) {
     updateDataset(
       where: { token: $token }
-      data: { isCompleted: $isCompleted }
+      data: { isCompleted: $isCompleted, dataPolicy: $dataPolicy }
     ) {
       id
     }

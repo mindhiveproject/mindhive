@@ -130,3 +130,12 @@ export const UNFOLLOW_USER_MUTATION = gql`
     }
   }
 `;
+
+// update user study information
+export const UPDATE_USER_STUDY_INFO = gql`
+  mutation UPDATE_USER_STUDY_INFO($id: ID!, $studiesInfo: JSON) {
+    updateProfile(where: { id: $id }, data: { studiesInfo: $studiesInfo }) {
+      id
+    }
+  }
+`;

@@ -96,6 +96,44 @@ export default function SettingBlock({
               </p>
             </label>
           )}
+
+          {name === "showEmailNotificationPropmt" && (
+            <label className="name" htmlFor={name}>
+              <h4>Email notifications prompts</h4>
+              <p>Show the email notifications prompt after each task/survey</p>
+            </label>
+          )}
+
+          {name === "askStudentsNYC" && (
+            <label className="name" htmlFor={name}>
+              <h4>NYC students</h4>
+              <p>
+                Ask participants whether they are students of a public school in
+                NYC
+              </p>
+            </label>
+          )}
+
+          {name === "sonaId" && (
+            <label className="name" htmlFor={name}>
+              <h4>Ask for participant’s NYU SONA ID</h4>
+              <p>Ask participants for NYU SONA ID</p>
+            </label>
+          )}
+
+          {name === "minorsBlocked" && (
+            <label className="name" htmlFor={name}>
+              <h4>Allow only participants over 18</h4>
+              <p>Only allow participants over 18 to take part in this study</p>
+            </label>
+          )}
+
+          {name === "useExternalDevices" && (
+            <label className="name" htmlFor={name}>
+              <h4>Connect to external devices</h4>
+              <p>Shows the plugin for external devices during the task</p>
+            </label>
+          )}
         </div>
         <div className="input">
           <Radio

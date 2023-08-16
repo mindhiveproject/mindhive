@@ -150,6 +150,8 @@ export const TASK_TO_PARTICIPATE = gql`
         script
         style
       }
+      taskType
+      settings
     }
   }
 `;

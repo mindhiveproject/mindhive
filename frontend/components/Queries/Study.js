@@ -134,6 +134,7 @@ export const STUDY_TO_DISCOVER = gql`
       id
       title
       slug
+      settings
       image {
         id
         image {

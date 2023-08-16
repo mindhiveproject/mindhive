@@ -15,6 +15,9 @@ export default function Parameters({
     guestParticipation: false,
     consentObtained: false,
     proceedToFirstTask: false,
+    useExternalDevices: false,
+    sonaId: false,
+    minorsBlocked: false,
     ...study.settings,
   };
 
@@ -44,13 +47,19 @@ export default function Parameters({
       user.permissions.map((p) => p.name).includes("SCIENTIST") ||
       user.permissions.map((p) => p.name).includes("ADMIN"));
 
+  const isStudent =
+    user &&
+    user?.permissions &&
+    user.permissions.map((p) => p.name).includes("STUDENT");
+
+  console.log({ study });
   return (
     <div>
       <h2>Participation settings</h2>
 
       <div>
         {Object.keys(settings)
-          .filter((name) => settingsOnlyStudents.includes(name))
+          .filter((name) => !isStudent || settingsOnlyStudents.includes(name))
           .map((name, i) => (
             <SettingsBlock
               key={i}

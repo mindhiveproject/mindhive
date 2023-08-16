@@ -11,11 +11,14 @@ import { useMutation } from "@apollo/client";
 
 export default function ExperimentWindow({
   user,
+  study,
   task,
+  onFinish,
   isSavingData,
-  isPlugin,
 }) {
-  // console.log({ user });
+  console.log({ study });
+  // whether to show the plugin is decided by the study parameter
+  const isPlugin = study?.settings?.useExternalDevices;
 
   const [createDataset] = useMutation(CREATE_DATASET, {
     ignoreResults: true, // do not re-render this component
@@ -56,13 +59,13 @@ export default function ExperimentWindow({
     ];
   }
 
-  // construct the study
-  const study = lab?.util?.fromObject(clonedeep(labjsObject), lab);
+  // construct the experiment
+  const experiment = lab?.util?.fromObject(clonedeep(labjsObject), lab);
 
   // define the start event
-  study?.on("run", () => {
+  experiment?.on("run", () => {
     if (isSavingData) {
-      const id = study?.plugins?.plugins
+      const id = experiment?.plugins?.plugins
         .map((p) => p?.metadata?.id)
         .filter((p) => !!p)[0];
       // create a new data record by using a mutation
@@ -71,20 +74,21 @@ export default function ExperimentWindow({
   });
 
   // define the end event
-  study?.on("end", () => {
+  experiment?.on("end", () => {
+    const id = experiment?.plugins?.plugins
+      .map((p) => p?.metadata?.id)
+      .filter((p) => !!p)[0];
     if (isSavingData) {
-      const id = study?.plugins?.plugins
-        .map((p) => p?.metadata?.id)
-        .filter((p) => !!p)[0];
       // update the record by mutation (that the task is over)
       updateDataset({ variables: { token: id, isCompleted: true } });
     }
+    onFinish({ token: id });
   });
 
-  // launch the study
-  study?.run();
+  // launch the experiment
+  experiment?.run();
 
   if (isPlugin) {
-    return <Plugin study={study} settings={{}} />;
+    return <Plugin experiment={experiment} settings={{}} />;
   }
 }

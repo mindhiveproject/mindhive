@@ -8,12 +8,16 @@ import { StyledStudyPage } from "../../styles/StyledStudyPage";
 import StudyInfo from "./StudyInfo";
 
 import { GET_USER_STUDIES } from "../../Queries/User";
+import TaskCard from "./TaskCard";
 
 export default function StudyPage({ query, user, study }) {
-  console.log({ user, study });
-
   const { data: userData } = useQuery(GET_USER_STUDIES);
-  console.log({ userData });
+
+  const studiesInfo = userData?.authenticatedItem?.studiesInfo || {};
+  const participantInfo = studiesInfo[study?.id];
+  const path = participantInfo?.info?.path || [];
+
+  console.log({ path });
 
   const imageURL = study?.image?.image?.publicUrlTransformed;
   // pathname for participants
@@ -39,16 +43,26 @@ export default function StudyPage({ query, user, study }) {
 
           <StudyInfo query={query} user={user} study={study} />
 
-          <Link
-            href={{
-              pathname,
-              query: { id: study.id },
-            }}
-          >
-            <div className="controlBtns">
-              <button>Participate</button>
+          {participantInfo ? (
+            <div>
+              {path
+                .filter((step) => step?.type === "task")
+                .map((step, num) => (
+                  <TaskCard key={num} step={step} study={study} />
+                ))}
             </div>
-          </Link>
+          ) : (
+            <Link
+              href={{
+                pathname,
+                query: { id: study.id },
+              }}
+            >
+              <div className="controlBtns">
+                <button>Participate</button>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
     </StyledStudyPage>
