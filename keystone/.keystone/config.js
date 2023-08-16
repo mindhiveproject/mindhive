@@ -1989,7 +1989,9 @@ var keystone_default = withAuth(
   (0, import_core27.config)({
     server: {
       cors: {
-        origin: [process.env.FRONTEND_URL],
+        origin: [
+          process.env.NODE_ENV === "development" ? process.env.FRONTEND_URL_DEV : process.env.FRONTEND_URL
+        ],
         credentials: true
       }
     },

@@ -13,9 +13,9 @@ const path = require("path");
 //   },
 // };
 
-const port = 3000;
 const env = process.env.NODE_ENV;
 const dev = env !== "production";
+const port = env === "production" ? 5555 : 3000;
 
 const app = next({
   dir: ".", // base directory where everything is, could move to src later
