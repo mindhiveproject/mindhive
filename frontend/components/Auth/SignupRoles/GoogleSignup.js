@@ -48,7 +48,11 @@ export default function GoogleSignup({ role, classCode }) {
     <GoogleLogin
       clientId={clientID}
       render={(renderProps) => (
-        <button onClick={renderProps.onClick} disabled={renderProps.disabled}>
+        <button
+          className="googleButton"
+          onClick={renderProps.onClick}
+          disabled={renderProps.disabled}
+        >
           <div>
             <img src="/assets/signup/google.png" alt="icon" height="20" />
           </div>

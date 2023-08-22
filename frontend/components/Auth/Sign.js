@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { StyledForm, SignupButton } from "../styles/StyledForm";
+import { StyledForm, SignupButton, SignupForm } from "../styles/StyledForm";
 
 export default function Sign() {
   return (
-    <StyledForm>
+    <SignupForm>
       <h1>Which role best describes you?</h1>
 
       <div className="signupOptions">
@@ -52,6 +52,6 @@ export default function Sign() {
         Already have an account?{` `}
         <Link href="/login">Login here</Link>
       </span>
-    </StyledForm>
+    </SignupForm>
   );
 }

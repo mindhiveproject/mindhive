@@ -3,6 +3,8 @@ import { Accordion, Icon } from "semantic-ui-react";
 
 import { content } from "./Content";
 
+import { StyledProgram } from "../../styles/StyledDocument";
+
 export default class Program extends Component {
   state = { activeIndex: 0 };
 
@@ -18,7 +20,7 @@ export default class Program extends Component {
     const { activeIndex } = this.state;
 
     return (
-      <dvi>
+      <StyledProgram>
         <Accordion fluid styled>
           {content.map((lesson, index) => (
             <>
@@ -79,7 +81,7 @@ export default class Program extends Component {
             </>
           ))}
         </Accordion>
-      </dvi>
+      </StyledProgram>
     );
   }
 }

@@ -1,8 +1,9 @@
-import PropTypes from "prop-types";
 import { useContext } from "react";
 
 import {
   StyledDashboard,
+  StyledDashboardNavigation,
+  StyledDashboardWrapper,
   StyledDashboardContent,
 } from "../styles/StyledDashboard";
 import DashboardNavigation from "../Dashboard/Navigation";
@@ -17,8 +18,12 @@ export default function Dashboard({ children }) {
 
   return (
     <StyledDashboard>
-      <DashboardNavigation />
-      <StyledDashboardContent>{children}</StyledDashboardContent>
+      <StyledDashboardNavigation>
+        <DashboardNavigation />
+      </StyledDashboardNavigation>
+      <StyledDashboardWrapper>
+        <StyledDashboardContent>{children}</StyledDashboardContent>
+      </StyledDashboardWrapper>
     </StyledDashboard>
   );
 }

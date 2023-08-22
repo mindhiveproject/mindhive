@@ -6,7 +6,7 @@ import TaskCard from "./TaskCard";
 import { Dropdown } from "semantic-ui-react";
 import { StyledDiscover } from "../../styles/StyledDiscover";
 
-export default function DiscoverTaskBank({ query, user }) {
+export default function DiscoverTaskBank({ query, user, isDashboard }) {
   const router = useRouter();
   const tab = query?.tab || "all";
 
@@ -19,7 +19,7 @@ export default function DiscoverTaskBank({ query, user }) {
 
   const setTab = (tab) => {
     router.push({
-      pathname: "/dashboard/discover/task",
+      pathname: `${isDashboard ? "/dashboard" : ""}/discover/task`,
       query: {
         tab,
       },
@@ -75,7 +75,7 @@ export default function DiscoverTaskBank({ query, user }) {
           <TaskCard
             key={task?.id}
             task={task}
-            url={`/dashboard/discover/tasks/`}
+            url={user ? "/dashboard/discover/tasks/" : `/tasks/${task?.slug}`}
             id="slug"
             name="name"
           />

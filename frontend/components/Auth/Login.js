@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import { StyledForm } from "../styles/StyledForm";
 import useForm from "../../lib/useForm";
 import DisplayError from "../ErrorMessage";
+import Link from "next/link";
 
 import { SIGNIN_MUTATION } from "../Mutations/User";
 import { CURRENT_USER_QUERY } from "../Queries/User";
@@ -64,7 +65,7 @@ export default function Login({ redirectType, redirectTo }) {
 
   return (
     <StyledForm method="POST" onSubmit={handleSubmit}>
-      <h2>{t("login.login")}</h2>
+      <h1>{t("login.login")}</h1>
       <DisplayError error={error} />
       <fieldset>
         <label htmlFor="email">
@@ -91,7 +92,13 @@ export default function Login({ redirectType, redirectTo }) {
 
         <button type="submit">{t("login.login")}</button>
       </fieldset>
+
       <LoginWithGoogle />
+      <div className="forgotLink">
+        <span>
+          <Link href="/login/requestreset">Forgot your password?</Link>
+        </span>
+      </div>
     </StyledForm>
   );
 }

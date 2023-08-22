@@ -3,9 +3,11 @@ import Link from "next/link";
 import Tools from "./Tools";
 import Program from "./Program";
 
+import { StyledTeachersInfo } from "../../styles/StyledDocument";
+
 export default function TeachersInformation() {
   return (
-    <div>
+    <StyledTeachersInfo>
       <div className="white">
         <h1 className="centered">
           Support your students in engaging in authentic human brain and
@@ -245,6 +247,6 @@ export default function TeachersInformation() {
           <a href="mailto:info@mindhive.science">info@mindhive.science</a>
         </p>
       </div>
-    </div>
+    </StyledTeachersInfo>
   );
 }

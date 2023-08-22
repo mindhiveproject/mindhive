@@ -4,6 +4,7 @@ import { useRouter } from "next/dist/client/router";
 
 import { GET_CLASS } from "../../../Queries/Classes";
 import { JOIN_CLASS_MUTATION } from "../../../Mutations/User";
+import { SignupForm } from "../../../styles/StyledForm";
 
 export default function JoinClass({ user, code }) {
   const router = useRouter();
@@ -23,56 +24,60 @@ export default function JoinClass({ user, code }) {
 
   if (!myclass) {
     return (
-      <div className="classFoundScreen">
-        <h1>
-          No class found for the code <i>{code}</i>
-        </h1>
-        <Link href="/signup/student">
-          <button className="primaryBtn">Go back</button>
-        </Link>
-      </div>
+      <SignupForm>
+        <div className="classFoundScreen">
+          <h1>
+            No class found for the code <i>{code}</i>
+          </h1>
+          <Link href="/signup/student">
+            <button className="primaryBtn">Go back</button>
+          </Link>
+        </div>
+      </SignupForm>
     );
   }
 
   return (
-    <div className="classFoundScreen">
-      <h1>Do you want to join the following class?</h1>
+    <SignupForm>
+      <div className="classFoundScreen">
+        <h1>Do you want to join the following class?</h1>
 
-      <div className="classInformation">
-        {myclass.title} - {myclass.creator.username}
-      </div>
+        <div className="classInformation">
+          {myclass.title} - {myclass.creator.username}
+        </div>
 
-      <div className="navigationBtns">
-        <Link href="/signup/student">
-          <button className="secondaryBtn">No, go back</button>
-        </Link>
-
-        {user ? (
-          <button
-            onClick={async () => {
-              await joinClass();
-              router.push({
-                pathname: "/dashboard/classes",
-              });
-            }}
-            className="primaryBtn"
-          >
-            Yes, continue
-          </button>
-        ) : (
-          <Link
-            href={{
-              pathname: `/signup/student`,
-              query: {
-                code: code,
-                action: "select",
-              },
-            }}
-          >
-            <button className="primaryBtn">Yes, continue</button>
+        <div className="navigationBtns">
+          <Link href="/signup/student">
+            <button className="secondaryBtn">No, go back</button>
           </Link>
-        )}
+
+          {user ? (
+            <button
+              onClick={async () => {
+                await joinClass();
+                router.push({
+                  pathname: "/dashboard/classes",
+                });
+              }}
+              className="primaryBtn"
+            >
+              Yes, continue
+            </button>
+          ) : (
+            <Link
+              href={{
+                pathname: `/signup/student`,
+                query: {
+                  code: code,
+                  action: "select",
+                },
+              }}
+            >
+              <button className="primaryBtn">Yes, continue</button>
+            </Link>
+          )}
+        </div>
       </div>
-    </div>
+    </SignupForm>
   );
 }

@@ -3,6 +3,8 @@ import styled from "styled-components";
 const StyledFront = styled.div`
   display: grid;
   width: 100%;
+  height: 100%;
+  align-content: baseline;
   justify-self: center;
   grid-gap: 3rem;
   margin: 5rem 0rem;

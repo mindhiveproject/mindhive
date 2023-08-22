@@ -4,7 +4,7 @@ import DiscoverTaskBank from "../Tasks/Bank/Discover";
 
 import Link from "next/link";
 
-export default function Library({ query, user }) {
+export default function Library({ query, user, isDashboard }) {
   const selector = query?.selector || "study";
 
   return (
@@ -13,7 +13,9 @@ export default function Library({ query, user }) {
         <div className="menu">
           <Link
             href={{
-              pathname: `/dashboard/discover/study`,
+              pathname: `${isDashboard ? "/dashboard" : ""}/discover${
+                isDashboard ? "/study" : ""
+              }`,
             }}
             className={
               selector === "study" ? "menuTitle selectedMenuTitle" : "menuTitle"
@@ -24,7 +26,7 @@ export default function Library({ query, user }) {
 
           <Link
             href={{
-              pathname: `/dashboard/discover/task`,
+              pathname: `${isDashboard ? "/dashboard" : ""}/discover/task`,
             }}
             className={
               selector === "task" ? "menuTitle selectedMenuTitle" : "menuTitle"
@@ -35,9 +37,17 @@ export default function Library({ query, user }) {
         </div>
       </div>
 
-      {selector === "study" && <DiscoverStudyBank query={query} user={user} />}
+      {selector === "study" && (
+        <DiscoverStudyBank
+          query={query}
+          user={user}
+          isDashboard={isDashboard}
+        />
+      )}
 
-      {selector === "task" && <DiscoverTaskBank query={query} user={user} />}
+      {selector === "task" && (
+        <DiscoverTaskBank query={query} user={user} isDashboard={isDashboard} />
+      )}
     </StyledLibrary>
   );
 }

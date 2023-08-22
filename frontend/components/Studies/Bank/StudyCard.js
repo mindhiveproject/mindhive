@@ -11,25 +11,46 @@ export default function StudyCard({ user, study, url, id, name, studiesInfo }) {
       {studiesInfo && (
         <StudyOptions user={user} study={study} studiesInfo={studiesInfo} />
       )}
-      <Link
-        href={{
-          pathname: url,
-          query: { [name]: study[id] },
-        }}
-      >
-        <div className="studyImage">
-          {imageURL ? (
-            <img src={imageURL} alt={study?.title} />
-          ) : (
-            <div className="noImage"></div>
-          )}
-        </div>
-        <div className="cardInfo">
-          <div className="studyHeader">
-            <h2>{study.title}</h2>
+      {user ? (
+        <Link
+          href={{
+            pathname: url,
+            query: { [name]: study[id] },
+          }}
+        >
+          <div className="studyImage">
+            {imageURL ? (
+              <img src={imageURL} alt={study?.title} />
+            ) : (
+              <div className="noImage"></div>
+            )}
           </div>
-        </div>
-      </Link>
+          <div className="cardInfo">
+            <div className="studyHeader">
+              <h2>{study.title}</h2>
+            </div>
+          </div>
+        </Link>
+      ) : (
+        <Link
+          href={{
+            pathname: url,
+          }}
+        >
+          <div className="studyImage">
+            {imageURL ? (
+              <img src={imageURL} alt={study?.title} />
+            ) : (
+              <div className="noImage"></div>
+            )}
+          </div>
+          <div className="cardInfo">
+            <div className="studyHeader">
+              <h2>{study.title}</h2>
+            </div>
+          </div>
+        </Link>
+      )}
     </StyledStudyCard>
   );
 }

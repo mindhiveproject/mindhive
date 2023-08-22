@@ -4,7 +4,7 @@ import TeachersInformation from "../components/Front/Teachers/Main";
 
 const FrontPage = () => (
   <Site>
-    <Page>
+    <Page fullScreen>
       <TeachersInformation />
     </Page>
   </Site>

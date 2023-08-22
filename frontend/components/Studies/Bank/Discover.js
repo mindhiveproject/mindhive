@@ -6,6 +6,7 @@ import { PUBLIC_STUDIES } from "../../Queries/Study";
 import { GET_USER_STUDIES } from "../../Queries/User";
 
 import StudyCard from "./StudyCard";
+import { StyledDiscover } from "../../styles/StyledDiscover";
 
 const filterOptions = [
   {
@@ -28,7 +29,8 @@ const filterOptions = [
   },
 ];
 
-export default function DiscoverStudyBank({ query, user }) {
+export default function DiscoverStudyBank({ query, user, isDashboard }) {
+  console.log({ user });
   const router = useRouter();
   const tab = query?.tab || "all";
 
@@ -40,7 +42,7 @@ export default function DiscoverStudyBank({ query, user }) {
 
   const setTab = (tab) => {
     router.push({
-      pathname: "/dashboard/discover/study",
+      pathname: `${isDashboard ? "/dashboard" : ""}/discover/study`,
       query: {
         tab,
       },
@@ -62,26 +64,34 @@ export default function DiscoverStudyBank({ query, user }) {
   }
 
   return (
-    <>
-      <Dropdown
-        selection
-        fluid
-        value={tab}
-        options={filterOptions}
-        onChange={(event, data) => setTab(data?.value)}
-      />
+    <StyledDiscover>
+      {user && (
+        <div className="header">
+          <div>
+            <Dropdown
+              selection
+              value={tab}
+              options={filterOptions}
+              onChange={(event, data) => setTab(data?.value)}
+            />
+          </div>
+        </div>
+      )}
 
       <div className="cardBoard">
         {filteredStudies.map((study) => (
           <StudyCard
+            user={user}
             key={study?.id}
             study={study}
-            url="/dashboard/discover/studies/"
+            url={
+              user ? "/dashboard/discover/studies/" : `/studies/${study?.slug}`
+            }
             id="slug"
             name="name"
           />
         ))}
       </div>
-    </>
+    </StyledDiscover>
   );
 }

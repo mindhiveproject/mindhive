@@ -20,12 +20,13 @@ export default function RequestReset() {
   async function handleSubmit(e) {
     e.preventDefault();
     await requestreset();
+    alert("Check your email box");
     resetForm();
   }
 
   return (
     <StyledForm method="POST" onSubmit={handleSubmit}>
-      <h2>{t("reset.requestResetPassword")}</h2>
+      <h1>{t("reset.requestResetPassword")}</h1>
       <DisplayError error={error} />
       <fieldset>
         {data?.sendUserPasswordResetLink === null && (

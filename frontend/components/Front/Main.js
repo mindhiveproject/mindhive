@@ -8,14 +8,14 @@ import { useContext } from "react";
 
 import { UserContext } from "../Global/Authorized";
 
-export default function FrontMain() {
+export default function FrontMain(props) {
   const user = useContext(UserContext);
   return (
     <>
       <Header user={user} />
       <StyledFront>
         <FeaturedStudies />
-        <Library />
+        <Library {...props} user={user} />
       </StyledFront>
       <Footer />
     </>

@@ -16,8 +16,8 @@ export default function DiscoverMain({ query, user }) {
 
   return (
     <>
-      <FeaturedStudies />
-      <Library query={query} user={user} />
+      <FeaturedStudies isDashboard />
+      <Library query={query} user={user} isDashboard />
     </>
   );
 }

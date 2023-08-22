@@ -10,15 +10,17 @@ import Footer from "./Footer";
 const StyledPage = styled.div`
   margin: 0 auto;
   min-height: 100vh;
-  max-width: 1200px;
+  ${(props) => !props.fullScreen && `max-width: 1200px;`};
+  padding: 2rem 0rem;
+  margin-bottom: 100px;
 `;
 
-export default function Page({ children }) {
+export default function Page({ children, fullScreen }) {
   const user = useContext(UserContext);
   return (
     <>
       <Header user={user} />
-      <StyledPage>{children}</StyledPage>
+      <StyledPage fullScreen={fullScreen}>{children}</StyledPage>
       <Footer />
     </>
   );

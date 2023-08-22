@@ -7,6 +7,53 @@ export const StyledDashboard = styled.div`
   width: 100%;
   height: 100vh;
   background: #f6f9f8;
+  color: ${(props) => props.theme.grey};
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: normal;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  margin: 0;
+  grid-gap: 10px;
+  button:hover {
+    opacity: 0.6;
+  }
+  a:hover {
+    opacity: 0.6;
+  }
+`;
+
+export const StyledDashboardNavigation = styled.div`
+  display: grid;
+  background: white;
+  height: 101%;
+  max-height: 100vh;
+  overflow-y: hidden;
+
+  :hover {
+    overflow-y: auto;
+  }
+`;
+
+export const StyledDashboardWrapper = styled.div`
+  max-width: ${(props) => props.theme.maxWidth};
+  padding: 17px 2rem 2rem 17px;
+  height: 101%;
+  max-height: 100vh;
+  overflow-y: auto;
+  mask-image: linear-gradient(to top, transparent, black),
+    linear-gradient(to left, transparent 17px, black 17px);
+  mask-size: 100% 20000px;
+  mask-position: left bottom;
+  -webkit-mask-image: linear-gradient(to top, transparent, black),
+    linear-gradient(to left, transparent 17px, black 17px);
+  -webkit-mask-size: 100% 20000px;
+  -webkit-mask-position: left bottom;
+  transition: mask-position 0.3s, -webkit-mask-position 0.3s;
+
+  :hover {
+    -webkit-mask-position: left top;
+  }
 `;
 
 export const StyledDashboardContent = styled.div`
@@ -52,15 +99,14 @@ export const StyledDashboardContent = styled.div`
   }
 `;
 
-export const StyledDashboardNavigation = styled.div`
+export const StyledSideBar = styled.div`
   display: grid;
-  background: white;
-  height: 100%;
+  margin-top: 33px;
   grid-template-columns: 1fr;
   grid-gap: 40px;
   justify-items: left;
   align-content: start;
-  padding: 50px 0 40px 17px;
+  padding: 17px 0 40px 17px;
 
   .navLinks {
     display: grid;

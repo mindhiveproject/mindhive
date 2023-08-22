@@ -10,12 +10,94 @@ const loading = keyframes`
   }
 `;
 
+export const SignupForm = styled.div`
+  font-family: Lato;
+  display: grid;
+  justify-items: center;
+  grid-row-gap: 10px;
+  margin: 0 auto;
+  margin-top: 20px;
+  text-align: center;
+  align-items: center;
+  h1 {
+    font-size: 36px;
+    line-height: 36px;
+    color: #1a1a1a;
+    font-style: normal;
+    font-weight: normal;
+  }
+  span {
+    font-size: 18px;
+    line-height: 18px;
+    color: #795548;
+    font-style: normal;
+    font-weight: normal;
+    a {
+      color: #007c70;
+      border-bottom: 1px solid #64c9e2;
+    }
+    fieldset {
+      border: 0;
+      padding: 0;
+      &[disabled] {
+        opacity: 0.5;
+      }
+      &::before {
+        height: 10px;
+        content: "";
+        display: block;
+      }
+      &[aria-busy="true"]::before {
+        background-size: 50% auto;
+        animation: ${loading} 0.5s linear infinite;
+      }
+    }
+  }
+  .signupOptions {
+    margin-top: 35px;
+    margin-bottom: 40px;
+    display: grid;
+    grid-gap: 20px;
+  }
+  .studentSignupOptions {
+    max-width: 380px;
+    margin-top: 35px;
+    margin-bottom: 40px;
+    display: grid;
+    grid-gap: 20px;
+    justify-self: center;
+  }
+  .guestParticipationBlock {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid #f2f2f2;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 24px;
+    color: #666666;
+  }
+  .loginHereLine {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-gap: 5px;
+    @media (max-width: 400px) {
+      grid-template-columns: 1fr;
+    }
+  }
+`;
+
 export const StyledForm = styled.form`
+  display: grid;
+  grid-gap: 20px;
+  font-family: Lato;
   text-align: initial;
   font-size: 1.5rem;
   line-height: 1.5;
   font-weight: 600;
-  max-width: 330px;
+  min-width: 320px;
+  max-width: 400px;
   label {
     display: block;
     font-style: normal;
@@ -65,6 +147,13 @@ export const StyledForm = styled.form`
       opacity: 0.5;
     }
   }
+  h1 {
+    font-size: 36px;
+    line-height: 36px;
+    color: #1a1a1a;
+    font-style: normal;
+    font-weight: normal;
+  }
   p {
     font-style: normal;
     font-weight: normal;
@@ -73,9 +162,31 @@ export const StyledForm = styled.form`
     margin-bottom: 4px;
   }
   span {
-    font-size: 14px;
+    font-size: 18px;
     line-height: 18px;
-    color: #666666;
+    color: #795548;
+    font-style: normal;
+    font-weight: normal;
+    a {
+      color: #007c70;
+      border-bottom: 1px solid #64c9e2;
+    }
+    fieldset {
+      border: 0;
+      padding: 0;
+      &[disabled] {
+        opacity: 0.5;
+      }
+      &::before {
+        height: 10px;
+        content: "";
+        display: block;
+      }
+      &[aria-busy="true"]::before {
+        background-size: 50% auto;
+        animation: ${loading} 0.5s linear infinite;
+      }
+    }
   }
   input[type="checkbox"] {
     width: 24px;
@@ -91,7 +202,7 @@ export const StyledForm = styled.form`
   }
   a {
     color: #007c70;
-    border-bottom: 1px solid #64c9e2;
+    /* border-bottom: 1px solid #64c9e2; */
   }
   .forgotLink {
     font-family: Lato;
@@ -102,6 +213,26 @@ export const StyledForm = styled.form`
     letter-spacing: 0em;
     text-align: center;
     margin-top: 1rem;
+  }
+  .googleButton {
+    display: grid;
+    grid-template-columns: 20px auto;
+    grid-gap: 20px;
+    align-items: center;
+    text-align: left;
+    margin: 0 auto;
+    width: 100%;
+    height: 56px;
+    font-size: 18px;
+    line-height: 100%;
+    letter-spacing: 0.05em;
+    color: #1a1a1a;
+    border: 2px solid #e5e5e5;
+    cursor: pointer;
+    border-radius: 4px;
+    background: none;
+    padding: 1rem 3rem;
+    font-weight: 400;
   }
 `;
 
