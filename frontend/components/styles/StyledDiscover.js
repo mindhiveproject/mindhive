@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const StyledDiscover = styled.div`
   display: grid;
 
-  .header {
+  .filterHeader {
     display: grid;
     grid-gap: 20px;
     grid-template-columns: 1fr auto;

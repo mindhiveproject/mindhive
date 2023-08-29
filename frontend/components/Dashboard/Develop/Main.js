@@ -35,7 +35,7 @@ export default function DevelopMain({ query, user }) {
   // }
 
   return (
-    <StyledDashboardContent>
+    <>
       <h1>Develop</h1>
       <div className="header">
         <div>
@@ -51,6 +51,6 @@ export default function DevelopMain({ query, user }) {
         </div>
       </div>
       <Panels query={query} user={user} />
-    </StyledDashboardContent>
+    </>
   );
 }

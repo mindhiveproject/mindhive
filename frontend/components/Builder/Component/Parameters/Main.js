@@ -72,27 +72,41 @@ export default function TaskParameters({ task, handleChange }) {
     }
   };
 
+  if (parameters.length === 0) {
+    return (
+      <div>
+        <label>Template parameters</label>
+        {!task?.template?.file && <p>Please upload a lab.js json file first</p>}
+        {task?.template?.file && (
+          <p>The template does not contain any parameters.</p>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <h2>Task parameters</h2>
+    <fieldset>
+      <label>Task parameters</label>
       {parameters.map(
         ({ name, value, type, help, example, options, array }) => (
-          <div className="taskBlock" key={name} htmlFor={name}>
-            <div className="help">
-              <p>{name || help}</p>
-            </div>
-            {example && (
-              <div className="example">
-                <p>{example}</p>
+          <div className="wideBlock" key={name}>
+            <div className="taskBlock" htmlFor={name}>
+              <div className="help">
+                <p>{name || help}</p>
               </div>
-            )}
+              {example && (
+                <div className="example">
+                  <p>{example}</p>
+                </div>
+              )}
 
-            <div className="input">
-              {renderInput({ type, name, value, options, array })}
+              <div className="input">
+                {renderInput({ type, name, value, options, array })}
+              </div>
             </div>
           </div>
         )
       )}
-    </div>
+    </fieldset>
   );
 }

@@ -149,13 +149,24 @@ const GlobalStyles = createGlobalStyle`
       grid-template-columns: 1fr;
     }
   }
+  .modalButtons {
+    margin: 10px;
+  }
   .primaryBtn {
     background: var(--green);
+    margin-left: 10px;
   }
   .secondaryBtn {
     background: var(--lightGrey);
     color: var(--grey);
     font-weight: normal;
+    margin-left: 10px;
+  }
+  .iconTitle {
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: auto 1fr;
+    align-items: center;
   }
 `;
 

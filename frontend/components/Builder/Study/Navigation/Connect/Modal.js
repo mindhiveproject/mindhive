@@ -56,19 +56,17 @@ export default function ConnectModal({
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
-        <div className="buttons">
+        <div className="modalButtons">
           <button
-            className="secondary"
+            className="secondaryBtn"
             onClick={() => setOpen(false)}
             disabled={false}
           >
             Close
           </button>
-        </div>
 
-        <div className="buttons">
           <button
-            className="primary"
+            className="primaryBtn"
             onClick={() => {
               updateStudy();
               setOpen(false);

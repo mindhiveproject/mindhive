@@ -13,13 +13,8 @@ export default function ProposalRow({
 
   return (
     <div className="row">
-      {showProposalTitle ? (
-        <div>
-          {proposal?.study?.title} ({proposal?.title})
-        </div>
-      ) : (
-        <div>{proposal?.study?.title}</div>
-      )}
+      <div>{proposal?.study?.title}</div>
+      <div>{showProposalTitle && <>{proposal?.title}</>}</div>
 
       {showClass && <div>{theClass}</div>}
       {showStatus && (
@@ -35,7 +30,7 @@ export default function ProposalRow({
       <div className="buttons">
         <div>
           <a
-            href={`/studies/${proposal?.study?.slug}`}
+            href={`/dashboard/discover/studies/?name=${proposal?.study?.slug}`}
             target="_blank"
             rel="noreferrer"
           >

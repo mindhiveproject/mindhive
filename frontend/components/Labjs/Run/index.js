@@ -16,7 +16,7 @@ export default function ExperimentWindow({
   onFinish,
   isSavingData,
 }) {
-  console.log({ study });
+  console.log({ task });
   // whether to show the plugin is decided by the study parameter
   const isPlugin = study?.settings?.useExternalDevices;
 
@@ -34,7 +34,7 @@ export default function ExperimentWindow({
   });
 
   const { template } = task;
-  const { script } = template;
+  const { script, style } = template;
 
   // prepare lab.js script
   const labjsObject = convert(script);
@@ -84,6 +84,18 @@ export default function ExperimentWindow({
     }
     onFinish({ token: id });
   });
+
+  // css style
+  if (style) {
+    const styleNode = document.createElement("style");
+    const embeddedStyle = style.split("data:text/css,")[1];
+    styleNode.innerHTML = window.decodeURIComponent(embeddedStyle);
+    document.body.appendChild(styleNode);
+    // const labjsElement = document.getElementById("labjs");
+    // if (labjsElement) {
+    //   labjsElement.appendChild(styleNode);
+    // }
+  }
 
   // launch the experiment
   experiment?.run();

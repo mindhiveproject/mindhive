@@ -32,9 +32,9 @@ export default function Delete({ study, user }) {
         <Dropdown.Item
           text={
             <>
-              <div className="heading">
+              <div className="iconTitle">
                 <Icon name="trash" className="red" />
-                <span className="red">Delete Study</span>
+                <p className="red">Delete Study</p>
               </div>
               <p style={{ padding: "5px" }} className="red">
                 Deleting a study deletes it for{" "}

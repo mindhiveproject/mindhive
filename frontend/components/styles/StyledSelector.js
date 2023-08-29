@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const StyledSelector = styled.div`
   display: grid;
   grid-template-rows: minmax(1px, auto) 1fr;
-  height: 100vh;
+  /* height: 100vh; */
   background: #f7f9f8;
 
   .selectionHeader {
@@ -46,14 +46,14 @@ export const StyledSelector = styled.div`
     align-content: center;
     text-align: center;
     justify-self: center;
-    width: 90%;
+    width: 100%;
     max-width: 1400px;
   }
 
   .studyOptions {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-gap: 50px;
+    grid-gap: 10px;
     justify-items: center;
   }
 

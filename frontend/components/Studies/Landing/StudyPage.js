@@ -10,14 +10,12 @@ import StudyInfo from "./StudyInfo";
 import { GET_USER_STUDIES } from "../../Queries/User";
 import TaskCard from "./TaskCard";
 
-export default function StudyPage({ query, user, study }) {
+export default function StudyPage({ query, user, study, isDashboard }) {
   const { data: userData } = useQuery(GET_USER_STUDIES);
 
   const studiesInfo = userData?.authenticatedItem?.studiesInfo || {};
   const participantInfo = studiesInfo[study?.id];
   const path = participantInfo?.info?.path || [];
-
-  console.log({ path });
 
   const imageURL = study?.image?.image?.publicUrlTransformed;
   // pathname for participants
@@ -41,7 +39,12 @@ export default function StudyPage({ query, user, study }) {
             <h3>{ReactHtmlParser(study?.description)}</h3>
           </div>
 
-          <StudyInfo query={query} user={user} study={study} />
+          <StudyInfo
+            query={query}
+            user={user}
+            study={study}
+            isDashboard={isDashboard}
+          />
 
           {participantInfo ? (
             <div>

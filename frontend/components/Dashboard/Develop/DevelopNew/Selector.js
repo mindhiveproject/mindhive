@@ -120,7 +120,7 @@ export default function Selector({ query, user }) {
       return <CloneTaskBank user={user} taskType={develop} />;
     }
     return (
-      <div>
+      <div className="selectionBody">
         <h1>Develop a {develop}</h1>
         <div className="studyOptions">
           <Link

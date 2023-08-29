@@ -19,7 +19,6 @@ export default function DashboardNavigation() {
 
   const { query } = router;
   const { area } = query;
-  console.log(area);
 
   return (
     <StyledSideBar>

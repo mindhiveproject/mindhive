@@ -59,6 +59,7 @@ export const StyledBuilderArea = styled.div`
     cursor: pointer;
     .icons {
       display: grid;
+      align-content: center;
       grid-gap: 1px;
       grid-auto-flow: column;
     }

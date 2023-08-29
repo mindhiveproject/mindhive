@@ -11,7 +11,8 @@ import Parameters from "./Parameters/Main";
 import Sharing from "./Sharing";
 
 import Template from "./Template/Main";
-import TaskPreview from "../../Tasks/Preview/Main";
+// import TaskPreview from "../../Tasks/Preview/Main";
+import BuilderTaskPreview from "../../Tasks/Preview/BuilderVersion";
 
 export default function ComponentForm({
   user,
@@ -57,10 +58,10 @@ export default function ComponentForm({
     //   );
     // }
     return (
-      <TaskPreview
-        id={inputs?.id}
-        close={() => setIsFullscreenPreviewOpen(false)}
+      <BuilderTaskPreview
         user={user}
+        task={inputs}
+        close={() => setIsFullscreenPreviewOpen(false)}
       />
       // <Labjs>
       //   <StyledPreview>
@@ -94,45 +95,47 @@ export default function ComponentForm({
           close={close}
         />
 
-        {tab === "basic" && (
-          <Basic
-            task={inputs}
-            handleChange={handleChange}
-            handleMultipleUpdate={handleMultipleUpdate}
-            loading={loading}
-            error={error}
-          />
-        )}
+        <div className="buildArea">
+          {tab === "basic" && (
+            <Basic
+              task={inputs}
+              handleChange={handleChange}
+              handleMultipleUpdate={handleMultipleUpdate}
+              loading={loading}
+              error={error}
+            />
+          )}
 
-        {tab === "parameters" && (
-          <Parameters
-            task={inputs}
-            handleChange={handleChange}
-            handleMultipleUpdate={handleMultipleUpdate}
-            loading={loading}
-            error={error}
-          />
-        )}
+          {tab === "parameters" && (
+            <Parameters
+              task={inputs}
+              handleChange={handleChange}
+              handleMultipleUpdate={handleMultipleUpdate}
+              loading={loading}
+              error={error}
+            />
+          )}
 
-        {tab === "sharing" && (
-          <Sharing
-            task={inputs}
-            handleChange={handleChange}
-            handleMultipleUpdate={handleMultipleUpdate}
-            loading={loading}
-            error={error}
-          />
-        )}
+          {tab === "sharing" && (
+            <Sharing
+              task={inputs}
+              handleChange={handleChange}
+              handleMultipleUpdate={handleMultipleUpdate}
+              loading={loading}
+              error={error}
+            />
+          )}
 
-        {tab === "template" && (
-          <Template
-            template={inputs?.template}
-            handleChange={handleChange}
-            handleMultipleUpdate={handleMultipleUpdate}
-            loading={loading}
-            error={error}
-          />
-        )}
+          {tab === "template" && (
+            <Template
+              template={inputs?.template}
+              handleChange={handleChange}
+              handleMultipleUpdate={handleMultipleUpdate}
+              loading={loading}
+              error={error}
+            />
+          )}
+        </div>
       </StyledTaskBuilder>
     </StyledBuilderArea>
   );

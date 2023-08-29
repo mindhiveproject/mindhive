@@ -30,12 +30,10 @@ export default function Authorship({ user, study }) {
       trigger={
         <Dropdown.Item
           text={
-            <>
-              <div className="heading">
-                <Icon name="signup" />
-                <span>Transfer the authorship</span>
-              </div>
-            </>
+            <div className="iconTitle">
+              <Icon name="signup" />
+              <p>Transfer the authorship</p>
+            </div>
           }
         />
       }

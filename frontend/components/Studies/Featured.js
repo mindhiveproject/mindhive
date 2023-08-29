@@ -5,7 +5,7 @@ import { FEATURED_STUDIES } from "../Queries/Study";
 import FeaturedCard from "./FeaturedCard";
 import { StyledFeaturedStudies } from "../styles/StyledFeatured";
 
-function DisplayFeatured({ studies }) {
+function DisplayFeatured({ user, studies, isDashboard }) {
   const [study, setStudy] = useState(studies[0]);
   return (
     <StyledFeaturedStudies>
@@ -20,7 +20,7 @@ function DisplayFeatured({ studies }) {
 
       <div className="featuredContainerWrapper">
         <div className="featuredContainer">
-          <FeaturedCard study={study} />
+          <FeaturedCard user={user} study={study} isDashboard={isDashboard} />
         </div>
         <div className="buttonsWrapper">
           <div className="buttons">
@@ -44,11 +44,17 @@ function DisplayFeatured({ studies }) {
   );
 }
 
-export default function FeaturedStudies() {
+export default function FeaturedStudies({ user, isDashboard }) {
   const { data, error, loading } = useQuery(FEATURED_STUDIES);
   const studies = data?.studies || [];
 
   if (studies?.length) {
-    return <DisplayFeatured studies={studies} />;
+    return (
+      <DisplayFeatured
+        user={user}
+        studies={studies}
+        isDashboard={isDashboard}
+      />
+    );
   }
 }

@@ -6,7 +6,8 @@ export default function ProposalList({ proposals }) {
       <div className="navigationHeader"></div>
 
       <div className="reviewHeader">
-        <div>Study title (Proposal title)</div>
+        <div>Study</div>
+        <div>Proposal</div>
         <div>Class</div>
         <div className="centered">Submitted</div>
         <div className="centered">Reviews</div>

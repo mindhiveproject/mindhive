@@ -47,16 +47,18 @@ export const StyledStudyCard = styled.div`
     height: 166px;
     position: relative;
   }
+
   .optionsIcon {
     position: absolute;
     top: 10%;
-    left: 85%;
+    left: 82%;
     display: none;
     background: white;
     border-radius: 30px;
-    padding: 8px 10px 3px 10px;
+    padding: 10px 10px 10px 10px;
     z-index: 2;
   }
+
   .noImage {
     background: lightgrey;
     height: 100%;

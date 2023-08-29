@@ -28,7 +28,7 @@ export default function DiscoverTaskBank({ query, user, isDashboard }) {
 
   return (
     <StyledDiscover>
-      <div className="header">
+      <div className="filterHeader">
         <div>
           <Dropdown
             selection

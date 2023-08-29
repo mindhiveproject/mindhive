@@ -1,6 +1,63 @@
 import styled from "styled-components";
 
 const StyledTaskBuilder = styled.div`
+  .buildArea {
+    display: grid;
+    align-content: baseline;
+    grid-gap: 20px;
+    margin: 15px;
+    width: auto;
+    font-size: 1.5rem;
+    line-height: 1.5;
+
+    height: 90vh;
+    overflow-y: auto;
+
+    .block {
+      display: grid;
+      max-width: 500px;
+    }
+
+    .wideBlock {
+      display: grid;
+      max-width: 800px;
+      /* margin-bottom: 50px; */
+    }
+
+    label {
+      display: block;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 1.8rem;
+    }
+
+    input,
+    textarea,
+    select {
+      font-family: Lato;
+      height: 48px;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+      width: 100%;
+      font-size: 16px;
+      line-height: 24px;
+      padding: 12px;
+      &:focus {
+        outline: 0;
+        border-color: ${(props) => props.theme.red};
+      }
+    }
+    fieldset {
+      display: grid;
+      grid-gap: 20px;
+      border: 0;
+      padding: 0;
+      &[disabled] {
+        opacity: 0.5;
+      }
+    }
+  }
+
   .goBackBtn {
     cursor: pointer;
     margin: 1rem;
@@ -18,6 +75,13 @@ const StyledTaskBuilder = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 10px;
+  }
+
+  .hideContinueBtn {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 10px;
+    align-items: center;
   }
 
   .surveyBuilderItemLine {
@@ -143,72 +207,6 @@ const StyledTaskBuilder = styled.div`
     grid-template-columns: 4fr 1fr;
   }
 
-  .surveyBuilderItemLine {
-    border-bottom: 3px #e7d6d6 solid;
-    padding-bottom: 30px;
-    margin-bottom: 30px;
-    display: grid;
-    grid-template-columns: 9fr 1fr;
-    grid-column-gap: 10px;
-    .controlButtons {
-      display: grid;
-    }
-    .deleteDiv {
-      display: grid;
-      align-self: start;
-      justify-self: end;
-    }
-    .moveButtons {
-      display: grid;
-      align-self: end;
-      justify-self: end;
-      button {
-        background-color: orange;
-        :hover {
-          background-color: #d9b616;
-          transform: scale(1.1);
-          transition: transform 0.5s;
-        }
-      }
-    }
-    button {
-      cursor: pointer;
-      width: 4.3rem;
-      text-align: center;
-      border-radius: 2.25rem;
-      background-color: #ff2d2d;
-      color: white;
-      font-size: 2rem;
-      :hover {
-        background-color: #ea0707;
-        transform: scale(1.1);
-        transition: transform 0.5s;
-      }
-    }
-    textarea {
-      height: 120px;
-    }
-    .optionRow {
-      display: grid;
-      grid-template-columns: 9fr 1fr;
-      grid-column-gap: 10px;
-    }
-    .addOptionButton {
-      cursor: pointer;
-      width: 10rem;
-      text-align: center;
-      border-radius: 3rem;
-      background-color: #a78803;
-      color: white;
-      font-size: 1.5rem;
-      :hover {
-        background-color: #e5bc0c;
-        transform: scale(1.1);
-        transition: transform 0.5s;
-      }
-    }
-  }
-
   .parameterBlock {
     display: grid;
     grid-gap: 0.5rem;
@@ -251,10 +249,10 @@ const StyledTaskBuilder = styled.div`
 
   .taskBlock {
     display: grid;
-    grid-template-columns: 1fr;
-    grid-column-gap: 20px;
-    margin-bottom: 15px;
-    border-radius: 5px;
+    /* grid-template-columns: 1fr; */
+    /* grid-column-gap: 20px; */
+    /* margin-bottom: 15px; */
+    /* border-radius: 5px; */
     .help {
       font-size: 2rem;
       font-weight: 500;

@@ -2,7 +2,7 @@ import Link from "next/link";
 import ReactHtmlParser from "react-html-parser";
 import { Menu } from "semantic-ui-react";
 
-export default function StudyInfo({ query, user, study }) {
+export default function StudyInfo({ query, user, study, isDashboard }) {
   const tab = query?.tab || "What";
 
   const additionalTabs =
@@ -135,17 +135,36 @@ export default function StudyInfo({ query, user, study }) {
         <div className="descriptionMenu">
           <Menu tabular stackable>
             {tabs.map((atab, num) => (
-              <Link
-                key={num}
-                href={{
-                  pathname: `/studies/${study?.slug}`,
-                  query: { tab: atab.header },
-                }}
-              >
-                <Menu.Item name={atab.name} active={tab === atab.header}>
-                  {atab.header}
-                </Menu.Item>
-              </Link>
+              <div key={num}>
+                {isDashboard ? (
+                  <Link
+                    key={num}
+                    href={{
+                      pathname: `/dashboard/discover/studies`,
+                      query: {
+                        name: study?.slug,
+                        tab: atab.header,
+                      },
+                    }}
+                  >
+                    <Menu.Item name={atab.name} active={tab === atab.header}>
+                      {atab.header}
+                    </Menu.Item>
+                  </Link>
+                ) : (
+                  <Link
+                    key={num}
+                    href={{
+                      pathname: `/studies/${study?.slug}`,
+                      query: { tab: atab.header },
+                    }}
+                  >
+                    <Menu.Item name={atab.name} active={tab === atab.header}>
+                      {atab.header}
+                    </Menu.Item>
+                  </Link>
+                )}
+              </div>
             ))}
           </Menu>
         </div>

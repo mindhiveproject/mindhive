@@ -11,12 +11,12 @@ export default function DiscoverMain({ query, user }) {
   }
 
   if (selector === "studies" && name) {
-    return <StudyLandingMain slug={name} />;
+    return <StudyLandingMain query={query} isDashboard />;
   }
 
   return (
     <>
-      <FeaturedStudies isDashboard />
+      <FeaturedStudies user={user} isDashboard />
       <Library query={query} user={user} isDashboard />
     </>
   );

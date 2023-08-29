@@ -33,9 +33,9 @@ export default function Archive({ user, study, studiesInfo }) {
         <Dropdown.Item
           text={
             <>
-              <div className="heading">
+              <div className="iconTitle">
                 <Icon name="archive" />
-                <span>{isArchived ? "Unarchive study" : "Archive Study"}</span>
+                <p>{isArchived ? "Unarchive study" : "Archive Study"}</p>
               </div>
               {isArchived ? (
                 <p style={{ padding: "5px" }}>

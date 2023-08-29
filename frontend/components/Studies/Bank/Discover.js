@@ -30,7 +30,6 @@ const filterOptions = [
 ];
 
 export default function DiscoverStudyBank({ query, user, isDashboard }) {
-  console.log({ user });
   const router = useRouter();
   const tab = query?.tab || "all";
 
@@ -66,7 +65,7 @@ export default function DiscoverStudyBank({ query, user, isDashboard }) {
   return (
     <StyledDiscover>
       {user && (
-        <div className="header">
+        <div className="filterHeader">
           <div>
             <Dropdown
               selection

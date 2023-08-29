@@ -50,6 +50,7 @@ export default function Navigation({
   isTemplateAuthor,
   close,
 }) {
+  console.log({ task });
   // decide whether include the template tab based on whether the user is the author or a collaborator on the template
   const itemsInternalTaskSelected = isTemplateAuthor
     ? itemsInternalTask
@@ -90,9 +91,11 @@ export default function Navigation({
             </div>
           )}
 
-          <button onClick={() => openFullscreenPreview()}>
-            Fullscreen Preview
-          </button>
+          {task?.template?.script && (
+            <button onClick={() => openFullscreenPreview()}>
+              Fullscreen Preview
+            </button>
+          )}
 
           <div className="submitButton">
             <button onClick={() => handleSubmit()}>{submitBtnName}</button>

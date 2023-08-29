@@ -37,7 +37,7 @@ export const StyledDashboardNavigation = styled.div`
 
 export const StyledDashboardWrapper = styled.div`
   max-width: ${(props) => props.theme.maxWidth};
-  padding: 17px 2rem 2rem 17px;
+  /* padding: 17px 2rem 2rem 17px; */
   height: 101%;
   max-height: 100vh;
   overflow-y: auto;
@@ -66,7 +66,7 @@ export const StyledDashboardContent = styled.div`
   .header {
     display: grid;
     grid-gap: 2rem;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr auto;
     .idInfo {
       display: grid;
       grid-gap: 1rem;

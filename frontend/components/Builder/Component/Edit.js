@@ -73,9 +73,9 @@ export default function EditComponent({
         collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
       },
     });
-    if (area) {
-      redirect({ area });
-    }
+    // if (area) {
+    //   redirect({ area });
+    // }
   }
 
   return (

@@ -9,7 +9,7 @@ export default function StudyLandingPage() {
   return (
     <Site>
       <Page>
-        <StudyLandingMain {...router.query} />
+        <StudyLandingMain query={router.query} />
       </Page>
     </Site>
   );

@@ -53,7 +53,6 @@ export default function ReviewBoard({ query, user }) {
     <div className="reviewContainer">
       <div className="header">
         <div className="headerLeft">
-          <div>{proposal?.study?.title}</div>
           <div className="headerMenu">
             <Link
               href={{

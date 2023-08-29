@@ -1,4 +1,3 @@
-import { StyledForm } from "../../../styles/StyledForm";
 import DisplayError from "../../../ErrorMessage";
 
 import lz from "lzutf8";
@@ -88,92 +87,92 @@ export default function Template({
 
   return (
     <>
-      <StyledForm>
-        <DisplayError error={error} />
+      <DisplayError error={error} />
 
-        <fieldset disabled={loading} aria-busy={loading}>
-          <div className="infoPane">
-            <label htmlFor="title">
-              Template title
-              <input
-                type="text"
-                name="title"
-                value={template?.title}
-                onChange={handleTemplateChange}
-                required
-              />
-            </label>
+      <fieldset disabled={loading} aria-busy={loading}>
+        <div className="block">
+          <label htmlFor="title">Template title</label>
+          <input
+            type="text"
+            name="title"
+            value={template?.title}
+            onChange={handleTemplateChange}
+            required
+          />
+        </div>
 
+        <div className="block">
+          <label htmlFor="description">Template description</label>
+          <textarea
+            id="description"
+            rows="50"
+            name="description"
+            value={template?.description}
+            onChange={handleTemplateChange}
+          />
+        </div>
+
+        <div className="block">
+          <label>lab.js script (JSON file)</label>
+          {template?.file && (
+            <p>
+              <a
+                onClick={() =>
+                  downloadJSON({
+                    file: template?.file,
+                    name: template?.title,
+                  })
+                }
+              >
+                Download JSON file
+              </a>
+            </p>
+          )}
+          {template?.script ? (
             <div>
-              <label htmlFor="description">
-                Template description
-                <textarea
-                  id="description"
-                  rows="50"
-                  name="description"
-                  value={template?.description}
-                  onChange={handleTemplateChange}
-                />
-              </label>
-            </div>
-
-            <div>
-              <h2>lab.js script (JSON file)</h2>
-              {template?.file && (
-                <p>
-                  <a
-                    onClick={() =>
-                      downloadJSON({
-                        file: template?.file,
-                        name: template?.title,
-                      })
-                    }
-                  >
-                    Download JSON file
-                  </a>
-                </p>
-              )}
-              {template?.script ? (
+              {template?.createdAt && (
                 <div>
-                  {template?.createdAt && (
-                    <div>
-                      Created on{" "}
-                      {moment(template?.createdAt).format("MMMM D, YYYY, h:mm")}
-                    </div>
-                  )}
-
-                  {template?.updatedAt && (
-                    <div>
-                      Last updated on{" "}
-                      {moment(template?.updatedAt).format("MMMM D, YYYY, h:mm")}
-                    </div>
-                  )}
-
-                  <div>
-                    <button onClick={deleteTemplateLocally}>
-                      Delete and reupload
-                    </button>
-                  </div>
+                  Created on{" "}
+                  {moment(template?.createdAt).format("MMMM D, YYYY, h:mm")}
                 </div>
-              ) : (
-                <input
-                  type="file"
-                  id="script"
-                  name="script"
-                  onChange={handleScriptUpload}
-                  accept=".json"
-                />
               )}
+
+              {template?.updatedAt && (
+                <div>
+                  Last updated on{" "}
+                  {moment(template?.updatedAt).format("MMMM D, YYYY, h:mm")}
+                </div>
+              )}
+
+              <div>
+                <button onClick={deleteTemplateLocally}>
+                  Delete and reupload
+                </button>
+              </div>
             </div>
-          </div>
-        </fieldset>
-      </StyledForm>
-      <h2>Collaborators on the template</h2>
-      <Collaborators
-        collaborators={collaborators}
-        handleChange={handleTemplateChange}
-      />
-      <TemplateParameters template={template} handleChange={handleChange} />
+          ) : (
+            <input
+              type="file"
+              id="script"
+              name="script"
+              onChange={handleScriptUpload}
+              accept=".json"
+            />
+          )}
+        </div>
+
+        <div className="block">
+          <label>Collaborators on the template</label>
+          <Collaborators
+            collaborators={collaborators}
+            handleChange={handleTemplateChange}
+          />
+        </div>
+
+        <div className="wideBlock">
+          <TemplateParameters template={template} handleChange={handleChange} />
+        </div>
+      </fieldset>
     </>
   );
 }

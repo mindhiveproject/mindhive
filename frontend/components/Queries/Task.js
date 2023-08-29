@@ -82,6 +82,7 @@ export const MY_TASK = gql`
       description
       parameters
       isExternal
+      taskType
       link
       template {
         id

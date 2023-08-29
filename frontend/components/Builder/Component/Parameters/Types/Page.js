@@ -1,19 +1,5 @@
 import uniqid from "uniqid";
 
-// class SurveyPageBuilder extends Component {
-//   componentDidUpdate(prevProps) {
-//     if (prevProps.items !== items) {
-//       setState({ items: items });
-//     }
-//     if (prevProps.timeout !== timeout) {
-//       setState({ timeout: timeout });
-//     }
-//     if (prevProps.hideContinueBtn !== hideContinueBtn) {
-//       setState({ hideContinueBtn: hideContinueBtn });
-//     }
-//   }
-// }
-
 export default function Page({
   name,
   items,
@@ -221,6 +207,10 @@ export default function Page({
             />
           ))}
         </div>
+
+        <button className="addButton" onClick={addItem}>
+          +
+        </button>
       </div>
     );
   }

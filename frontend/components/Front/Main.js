@@ -14,7 +14,7 @@ export default function FrontMain(props) {
     <>
       <Header user={user} />
       <StyledFront>
-        <FeaturedStudies />
+        <FeaturedStudies user={user} />
         <Library {...props} user={user} />
       </StyledFront>
       <Footer />

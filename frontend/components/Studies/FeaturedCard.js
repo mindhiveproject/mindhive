@@ -1,6 +1,8 @@
 import ReactHtmlParser from "react-html-parser";
 
-export default function StudyCard({ study }) {
+import Link from "next/link";
+
+export default function StudyCard({ user, study, isDashboard }) {
   const imageURL = study?.image?.image?.publicUrlTransformed;
 
   const { description } = study;
@@ -27,9 +29,24 @@ export default function StudyCard({ study }) {
           </div>
         </div>
         <div className="studyLink">
-          <a href={`/studies/${study?.slug}`} target="_blank">
-            <button>Go to study</button>
-          </a>
+          {user ? (
+            <Link
+              href={{
+                pathname: `/dashboard/discover/studies`,
+                query: { name: study?.slug },
+              }}
+            >
+              <button>Go to study</button>
+            </Link>
+          ) : (
+            <Link
+              href={{
+                pathname: `/studies/${study?.slug}`,
+              }}
+            >
+              <button>Go to study</button>
+            </Link>
+          )}
         </div>
       </div>
 

@@ -44,9 +44,21 @@ export default function TemplateParameters({ template, handleChange }) {
     });
   };
 
+  if (parameters.length === 0) {
+    return (
+      <div>
+        <label>Template parameters</label>
+        {!template?.file && <p>Please upload a lab.js json file first</p>}
+        {template?.file && (
+          <p>The lab.js file does not contain any parameters.</p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div>
-      <h2>Template parameters</h2>
+      <label>Template parameters</label>
       <div>
         {parameters.map(
           ({ name, value, type, help, example, options, array, icon }) => (

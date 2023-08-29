@@ -193,6 +193,7 @@ export const FEATURED_PROPOSALS_REVIEWS_QUERY = gql`
       checklist
       study {
         slug
+        title
       }
       reviews {
         id
@@ -224,6 +225,7 @@ export const MY_STUDIES_PROPOSALS_REVIEWS_QUERY = gql`
       checklist
       study {
         slug
+        title
       }
       reviews {
         id
@@ -258,6 +260,7 @@ export const CLASS_PROPOSALS_REVIEWS_QUERY = gql`
       checklist
       study {
         slug
+        title
       }
       reviews {
         id

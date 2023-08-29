@@ -196,16 +196,17 @@ export const StyledDasboardReview = styled.div`
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     margin-bottom: 24px !important;
     background: #f6f9f8;
-    border: 1px solid #e6e6e6;
     border-radius: 7px;
+
     .navigationTitle {
       padding-left: 1rem !important;
       padding-right: 1rem !important;
       width: auto;
       display: grid;
       justify-content: center;
-      border-bottom: 1px solid #e6e6e6;
+      border: 1px solid #e6e6e6;
       text-align: center;
+      padding: 20px;
       p {
         font-family: Lato;
         font-size: 18px;
@@ -228,7 +229,7 @@ export const StyledDasboardReview = styled.div`
     display: grid;
     margin: 5px;
     padding: 10px;
-    grid-template-columns: 300px 200px 120px 120px 200px;
+    grid-template-columns: 150px 150px 150px 120px 120px 200px;
     grid-gap: 5px;
     font-weight: bold;
     .centered {
@@ -240,7 +241,7 @@ export const StyledDasboardReview = styled.div`
     display: grid;
     margin: 5px;
     padding: 10px;
-    grid-template-columns: 300px 200px 120px 120px 300px;
+    grid-template-columns: 150px 150px 150px 120px 120px 300px;
     grid-gap: 5px;
     background: white;
     .buttons {
@@ -274,7 +275,7 @@ export const StyledDasboardReview = styled.div`
       grid-gap: 3rem;
       justify-content: flex-start;
       align-items: baseline;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); */
       font-family: Lato;
       font-style: normal;
       font-weight: 400;
@@ -327,17 +328,17 @@ export const StyledDasboardReview = styled.div`
       background: #f7f9f8;
       padding: 1rem 2rem;
       overflow-y: scroll;
-      overflow-x: scroll;
+      /* overflow-x: scroll; */
     }
     .questions {
       grid-area: review;
       padding: 37px 44px 37px 50px;
-      height: 100%;
+      height: 90%;
       overflow-y: scroll;
     }
   }
 
-  .reviewQuestions  {
+  .reviewQuestions {
     display: grid;
     .reviewItems {
       display: grid;
@@ -406,7 +407,7 @@ export const StyledDasboardReview = styled.div`
     .updateMessage {
       padding: 20px 0px;
     }
-    .reviewItem  {
+    .reviewItem {
       display: grid;
       grid-gap: 5px;
     }

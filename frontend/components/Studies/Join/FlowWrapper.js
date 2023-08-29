@@ -29,7 +29,7 @@ export default function FlowWrapper({ query, user, study, step }) {
       header = "Participation";
   }
 
-  console.log({ user });
+  // console.log({ user });
 
   return (
     <StyledWrapper>
@@ -38,13 +38,24 @@ export default function FlowWrapper({ query, user, study, step }) {
           <img src="/logo.png" alt="icon" height="30" />
         </div>
         <div>{header}</div>
-        <Link
-          href={{
-            pathname: `/studies/${study?.slug}`,
-          }}
-        >
-          <div className="closeBtn">&times;</div>
-        </Link>
+        {user ? (
+          <Link
+            href={{
+              pathname: `/dashboard/discover/studies`,
+              query: { name: study?.slug },
+            }}
+          >
+            <div className="closeBtn">&times;</div>
+          </Link>
+        ) : (
+          <Link
+            href={{
+              pathname: `/studies/${study?.slug}`,
+            }}
+          >
+            <div className="closeBtn">&times;</div>
+          </Link>
+        )}
       </div>
       <div className="main">
         {step === "select" && (

@@ -13,6 +13,7 @@ export default function StudyOptions({ user, study, studiesInfo }) {
         upward={false}
         icon={null}
         trigger={<img src="/assets/icons/settings.svg" />}
+        scrolling
       >
         <Dropdown.Menu className="archiveDropdown">
           <Authorship user={user} study={study} />
