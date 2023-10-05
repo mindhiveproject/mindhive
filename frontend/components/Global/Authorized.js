@@ -1,4 +1,4 @@
-import { useUser } from "../User";
+import { useUser } from "../Utils/Access/User";
 import { useState, createContext } from "react";
 
 export const UserContext = createContext();

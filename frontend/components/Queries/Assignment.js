@@ -79,3 +79,15 @@ export const GET_TEMPLATE_ASSIGNMENTS = gql`
     }
   }
 `;
+
+// get assignment by id
+export const GET_TEMPLATE_ASSIGNMENT = gql`
+  query GET_ASSIGNMENT($id: ID!) {
+    assignment(where: { id: $id }) {
+      id
+      code
+      title
+      content
+    }
+  }
+`;

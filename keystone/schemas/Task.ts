@@ -108,6 +108,10 @@ export const Task = list({
       ref: "Dataset.task",
       many: true,
     }),
+    summaryResults: relationship({
+      ref: "SummaryResult.task",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

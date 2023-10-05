@@ -30,7 +30,7 @@ __export(keystone_exports, {
 });
 module.exports = __toCommonJS(keystone_exports);
 var import_config = require("dotenv/config");
-var import_core27 = require("@keystone-6/core");
+var import_core30 = require("@keystone-6/core");
 
 // mutations/index.ts
 var import_schema = require("@graphql-tools/schema");
@@ -54,7 +54,7 @@ async function sendPasswordResetEmail(resetToken, to) {
     MessageStream: "ps-stream"
   });
 }
-async function sendNotificationEmail(to, subject, text27) {
+async function sendNotificationEmail(to, subject, text30) {
   const info = await client.sendEmailWithTemplate({
     From: "no-reply@prettyspecial.one",
     To: to,
@@ -65,7 +65,7 @@ async function sendNotificationEmail(to, subject, text27) {
       company_name: "MindHive",
       company_address: "New York",
       support_url: `${process.env.FRONTEND_URL}/menu/docs/about`,
-      text: text27
+      text: text30
     },
     MessageStream: "ps-stream"
   });
@@ -366,6 +366,12 @@ var Profile = (0, import_core.list)({
         }
       }
     }),
+    type: (0, import_fields.select)({
+      options: [
+        { label: "User", value: "USER" }
+      ],
+      defaultValue: "USER"
+    }),
     email: (0, import_fields.text)({
       validation: { isRequired: false },
       isIndexed: "unique",
@@ -381,6 +387,10 @@ var Profile = (0, import_core.list)({
       many: true
     }),
     info: (0, import_fields.json)(),
+    generalInfo: (0, import_fields.json)(),
+    studiesInfo: (0, import_fields.json)(),
+    consentsInfo: (0, import_fields.json)(),
+    tasksInfo: (0, import_fields.json)(),
     isPublic: (0, import_fields.checkbox)({ isFilterable: true }),
     password: (0, import_fields.password)({
       validation: { isRequired: true },
@@ -440,7 +450,6 @@ var Profile = (0, import_core.list)({
       ],
       defaultValue: "EN-US"
     }),
-    studiesInfo: (0, import_fields.json)(),
     participantIn: (0, import_fields.relationship)({
       ref: "Study.participants",
       many: true
@@ -550,6 +559,14 @@ var Profile = (0, import_core.list)({
     }),
     datasets: (0, import_fields.relationship)({
       ref: "Dataset.profile",
+      many: true
+    }),
+    summaryResults: (0, import_fields.relationship)({
+      ref: "SummaryResult.user",
+      many: true
+    }),
+    authoredSpecs: (0, import_fields.relationship)({
+      ref: "Spec.author",
       many: true
     })
   }
@@ -959,6 +976,10 @@ var Template = (0, import_core11.list)({
       ref: "Dataset.template",
       many: true
     }),
+    summaryResults: (0, import_fields13.relationship)({
+      ref: "SummaryResult.template",
+      many: true
+    }),
     settings: (0, import_fields13.json)(),
     file: (0, import_fields13.text)(),
     createdAt: (0, import_fields13.timestamp)({
@@ -1057,6 +1078,10 @@ var Task = (0, import_core12.list)({
     }),
     datasets: (0, import_fields14.relationship)({
       ref: "Dataset.task",
+      many: true
+    }),
+    summaryResults: (0, import_fields14.relationship)({
+      ref: "SummaryResult.task",
       many: true
     }),
     createdAt: (0, import_fields14.timestamp)({
@@ -1163,6 +1188,10 @@ var Study = (0, import_core13.list)({
       ref: "Profile.participantIn",
       many: true
     }),
+    guests: (0, import_fields15.relationship)({
+      ref: "Guest.participantIn",
+      many: true
+    }),
     consent: (0, import_fields15.relationship)({
       ref: "Consent.studies",
       many: true
@@ -1192,6 +1221,14 @@ var Study = (0, import_core13.list)({
     }),
     datasets: (0, import_fields15.relationship)({
       ref: "Dataset.study",
+      many: true
+    }),
+    summaryResults: (0, import_fields15.relationship)({
+      ref: "SummaryResult.study",
+      many: true
+    }),
+    specs: (0, import_fields15.relationship)({
+      ref: "Spec.studies",
       many: true
     }),
     createdAt: (0, import_fields15.timestamp)({
@@ -1353,6 +1390,15 @@ var Dataset = (0, import_core17.list)({
     profile: (0, import_fields19.relationship)({
       ref: "Profile.datasets"
     }),
+    guest: (0, import_fields19.relationship)({
+      ref: "Guest.datasets"
+    }),
+    type: (0, import_fields19.select)({
+      options: [
+        { label: "Guest", value: "GUEST" },
+        { label: "User", value: "USER" }
+      ]
+    }),
     template: (0, import_fields19.relationship)({
       ref: "Template.datasets"
     }),
@@ -1361,6 +1407,9 @@ var Dataset = (0, import_core17.list)({
     }),
     study: (0, import_fields19.relationship)({
       ref: "Study.datasets"
+    }),
+    summaryResult: (0, import_fields19.relationship)({
+      ref: "SummaryResult.fullResult"
     }),
     dataPolicy: (0, import_fields19.text)(),
     info: (0, import_fields19.json)(),
@@ -1782,6 +1831,10 @@ var Tag = (0, import_core24.list)({
       ref: "Study.tags",
       many: true
     }),
+    specs: (0, import_fields26.relationship)({
+      ref: "Spec.tags",
+      many: true
+    }),
     level: (0, import_fields26.integer)(),
     parent: (0, import_fields26.relationship)({
       ref: "Tag.children"
@@ -1926,6 +1979,180 @@ var Homework = (0, import_core26.list)({
   }
 });
 
+// schemas/SummaryResult.ts
+var import_core27 = require("@keystone-6/core");
+var import_fields29 = require("@keystone-6/core/fields");
+var SummaryResult = (0, import_core27.list)({
+  access: {
+    operation: {
+      query: () => true,
+      create: () => true,
+      update: () => true,
+      delete: () => true
+    }
+  },
+  fields: {
+    user: (0, import_fields29.relationship)({
+      ref: "Profile.summaryResults"
+    }),
+    guest: (0, import_fields29.relationship)({
+      ref: "Guest.summaryResults"
+    }),
+    type: (0, import_fields29.select)({
+      options: [
+        { label: "Guest", value: "GUEST" },
+        { label: "User", value: "USER" }
+      ]
+    }),
+    study: (0, import_fields29.relationship)({
+      ref: "Study.summaryResults"
+    }),
+    template: (0, import_fields29.relationship)({
+      ref: "Template.summaryResults"
+    }),
+    task: (0, import_fields29.relationship)({
+      ref: "Task.summaryResults"
+    }),
+    testVersion: (0, import_fields29.text)(),
+    metadataId: (0, import_fields29.text)(),
+    dataPolicy: (0, import_fields29.text)(),
+    fullResult: (0, import_fields29.relationship)({
+      ref: "Dataset.summaryResult"
+    }),
+    data: (0, import_fields29.json)(),
+    createdAt: (0, import_fields29.timestamp)({
+      defaultValue: { kind: "now" }
+    }),
+    updatedAt: (0, import_fields29.timestamp)()
+  }
+});
+
+// schemas/Spec.ts
+var import_core28 = require("@keystone-6/core");
+var import_fields30 = require("@keystone-6/core/fields");
+var Spec = (0, import_core28.list)({
+  access: {
+    operation: {
+      query: () => true,
+      create: () => true,
+      update: () => true,
+      delete: () => true
+    }
+  },
+  fields: {
+    title: (0, import_fields30.text)(),
+    description: (0, import_fields30.text)(),
+    isPublic: (0, import_fields30.checkbox)({ isFilterable: true }),
+    isTemplate: (0, import_fields30.checkbox)({ isFilterable: true }),
+    isFeatured: (0, import_fields30.checkbox)({ isFilterable: true }),
+    settings: (0, import_fields30.json)(),
+    content: (0, import_fields30.json)(),
+    author: (0, import_fields30.relationship)({
+      ref: "Profile.authoredSpecs",
+      hooks: {
+        async resolveInput({ context }) {
+          return { connect: { id: context.session.itemId } };
+        }
+      }
+    }),
+    studies: (0, import_fields30.relationship)({
+      ref: "Study.specs",
+      many: true
+    }),
+    tags: (0, import_fields30.relationship)({
+      ref: "Tag.specs",
+      many: true
+    }),
+    createdAt: (0, import_fields30.timestamp)({
+      defaultValue: { kind: "now" }
+    }),
+    updatedAt: (0, import_fields30.timestamp)()
+  }
+});
+
+// schemas/Guest.ts
+var import_core29 = require("@keystone-6/core");
+var import_fields31 = require("@keystone-6/core/fields");
+var import_uniqid5 = __toESM(require("uniqid"));
+var import_unique_names_generator2 = require("unique-names-generator");
+var customConfig2 = {
+  dictionaries: [import_unique_names_generator2.adjectives, import_unique_names_generator2.colors, import_unique_names_generator2.animals],
+  separator: "-",
+  length: 3
+};
+var Guest = (0, import_core29.list)({
+  access: {
+    operation: {
+      query: () => true,
+      create: () => true,
+      update: () => true,
+      delete: () => true
+    }
+  },
+  fields: {
+    publicId: (0, import_fields31.text)({
+      isIndexed: "unique",
+      isFilterable: true,
+      access: {
+        read: () => true,
+        create: () => true,
+        update: () => true
+      },
+      hooks: {
+        async resolveInput({ operation }) {
+          if (operation === "create") {
+            return (0, import_uniqid5.default)();
+          }
+        }
+      }
+    }),
+    publicReadableId: (0, import_fields31.text)({
+      isIndexed: "unique",
+      isFilterable: true,
+      access: {
+        read: () => true,
+        create: () => true,
+        update: () => true
+      },
+      hooks: {
+        async resolveInput({ operation }) {
+          if (operation === "create") {
+            return (0, import_unique_names_generator2.uniqueNamesGenerator)(customConfig2);
+          }
+        }
+      }
+    }),
+    type: (0, import_fields31.select)({
+      options: [
+        { label: "Guest", value: "GUEST" }
+      ],
+      defaultValue: "GUEST"
+    }),
+    info: (0, import_fields31.json)(),
+    generalInfo: (0, import_fields31.json)(),
+    studiesInfo: (0, import_fields31.json)(),
+    consentsInfo: (0, import_fields31.json)(),
+    tasksInfo: (0, import_fields31.json)(),
+    guestAccountExpiry: (0, import_fields31.text)(),
+    participantIn: (0, import_fields31.relationship)({
+      ref: "Study.guests",
+      many: true
+    }),
+    datasets: (0, import_fields31.relationship)({
+      ref: "Dataset.guest",
+      many: true
+    }),
+    summaryResults: (0, import_fields31.relationship)({
+      ref: "SummaryResult.guest",
+      many: true
+    }),
+    createdAt: (0, import_fields31.timestamp)({
+      defaultValue: { kind: "now" }
+    }),
+    updatedAt: (0, import_fields31.timestamp)()
+  }
+});
+
 // schema.ts
 var lists = {
   Profile,
@@ -1953,7 +2180,10 @@ var lists = {
   Lesson,
   Tag,
   Assignment,
-  Homework
+  Homework,
+  SummaryResult,
+  Spec,
+  Guest
 };
 
 // auth.ts
@@ -1986,7 +2216,7 @@ var session = (0, import_session.statelessSessions)({
 
 // keystone.ts
 var keystone_default = withAuth(
-  (0, import_core27.config)({
+  (0, import_core30.config)({
     server: {
       cors: {
         origin: [
@@ -1996,8 +2226,8 @@ var keystone_default = withAuth(
       }
     },
     db: {
-      provider: "postgresql",
-      url: process.env.NODE_ENV === "development" ? process.env.DATABASE_DEV : process.env.DATABASE_URL
+      provider: "sqlite",
+      url: "file:./keystone.db"
     },
     lists,
     extendGraphqlSchema,

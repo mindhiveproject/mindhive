@@ -2,7 +2,21 @@ import styled from "styled-components";
 
 const StyledManagement = styled.div`
   display: grid;
-  .classHeader  {
+  .header {
+    display: grid;
+    margin: 10px 0px;
+  }
+  .navigationHeader {
+    display: grid;
+    justify-content: end;
+  }
+  .tableOuterRow {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+  .classHeader {
     display: grid;
     margin: 5px;
     padding: 10px;

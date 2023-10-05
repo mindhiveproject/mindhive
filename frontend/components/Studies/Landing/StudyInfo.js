@@ -32,7 +32,7 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
     }, {}) || {};
 
   const faq =
-    study.info &&
+    study?.info &&
     study.info
       .filter((i) => i.name.startsWith("faq") && i.text)
       .map((i) => ({
@@ -41,19 +41,19 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
         content: ReactHtmlParser(i.text),
       }));
   const timeToComplete =
-    study.info &&
+    study?.info &&
     study.info
       .filter((i) => i.name === "time" && i.text)
       .map((i) => i.text)
       .map((i) => ReactHtmlParser(i));
   const frequency =
-    study.info &&
+    study?.info &&
     study.info
       .filter((i) => i.name === "frequency" && i.text)
       .map((i) => i.text)
       .map((i) => ReactHtmlParser(i));
   const partnership =
-    study.info &&
+    study?.info &&
     study.info
       .filter((i) => i.name.startsWith("partners") && i.text)
       .map((i) => {
@@ -61,7 +61,7 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
         return <img key={src} src={src} alt="icon" />;
       });
   const tags =
-    study.info &&
+    study?.info &&
     study.info
       .filter((i) => i.name.startsWith("tag") && i.text)
       .map((i, n) => (
@@ -70,12 +70,12 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
         </div>
       ));
   const contacts =
-    study.info &&
+    study?.info &&
     study.info
       .filter((i) => i.name.startsWith("contact") && i.text)
       .map((i, n) => <div key={n}>{ReactHtmlParser(i.text)}</div>);
   const more =
-    study.info &&
+    study?.info &&
     study.info
       .filter((i) => i.name === "more")
       .map((i) => ReactHtmlParser(i.text));

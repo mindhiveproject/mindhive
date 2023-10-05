@@ -77,6 +77,10 @@ export const Template = list({
       ref: "Dataset.template",
       many: true,
     }),
+    summaryResults: relationship({
+      ref: "SummaryResult.template",
+      many: true,
+    }),
     settings: json(),
     file: text(),
     createdAt: timestamp({

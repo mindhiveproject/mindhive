@@ -6,10 +6,15 @@ type Profile {
   username: String
   publicId: String
   publicReadableId: String
+  type: String
   email: String
   permissions(where: PermissionWhereInput! = {}, orderBy: [PermissionOrderByInput!]! = [], take: Int, skip: Int! = 0): [Permission!]
   permissionsCount(where: PermissionWhereInput! = {}): Int
   info: JSON
+  generalInfo: JSON
+  studiesInfo: JSON
+  consentsInfo: JSON
+  tasksInfo: JSON
   isPublic: Boolean
   password: PasswordState
   image: ProfileImage
@@ -22,7 +27,6 @@ type Profile {
   location: String
   dateCreated: DateTime
   language: String
-  studiesInfo: JSON
   participantIn(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
   participantInCount(where: StudyWhereInput! = {}): Int
   teacherIn(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0): [Class!]
@@ -83,6 +87,10 @@ type Profile {
   authorOfHomeworkCount(where: HomeworkWhereInput! = {}): Int
   datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
   datasetsCount(where: DatasetWhereInput! = {}): Int
+  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
+  summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
+  authoredSpecs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0): [Spec!]
+  authoredSpecsCount(where: SpecWhereInput! = {}): Int
   passwordResetToken: PasswordState
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -109,6 +117,7 @@ input ProfileWhereInput {
   username: StringFilter
   publicId: StringFilter
   publicReadableId: StringFilter
+  type: StringNullableFilter
   email: StringFilter
   permissions: PermissionManyRelationFilter
   isPublic: BooleanFilter
@@ -152,6 +161,8 @@ input ProfileWhereInput {
   authorOfAssignment: AssignmentManyRelationFilter
   authorOfHomework: HomeworkManyRelationFilter
   datasets: DatasetManyRelationFilter
+  summaryResults: SummaryResultManyRelationFilter
+  authoredSpecs: SpecManyRelationFilter
   passwordResetToken: PasswordFilter
   passwordResetIssuedAt: DateTimeNullableFilter
   passwordResetRedeemedAt: DateTimeNullableFilter
@@ -179,13 +190,7 @@ input StringFilter {
   contains: String
   startsWith: String
   endsWith: String
-  mode: QueryMode
   not: NestedStringFilter
-}
-
-enum QueryMode {
-  default
-  insensitive
 }
 
 input NestedStringFilter {
@@ -200,6 +205,34 @@ input NestedStringFilter {
   startsWith: String
   endsWith: String
   not: NestedStringFilter
+}
+
+input StringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringNullableFilter
+}
+
+input NestedStringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringNullableFilter
 }
 
 input PermissionManyRelationFilter {
@@ -222,35 +255,6 @@ input DateTimeNullableFilter {
   gt: DateTime
   gte: DateTime
   not: DateTimeNullableFilter
-}
-
-input StringNullableFilter {
-  equals: String
-  in: [String!]
-  notIn: [String!]
-  lt: String
-  lte: String
-  gt: String
-  gte: String
-  contains: String
-  startsWith: String
-  endsWith: String
-  mode: QueryMode
-  not: NestedStringNullableFilter
-}
-
-input NestedStringNullableFilter {
-  equals: String
-  in: [String!]
-  notIn: [String!]
-  lt: String
-  lte: String
-  gt: String
-  gte: String
-  contains: String
-  startsWith: String
-  endsWith: String
-  not: NestedStringNullableFilter
 }
 
 input StudyManyRelationFilter {
@@ -367,6 +371,18 @@ input DatasetManyRelationFilter {
   none: DatasetWhereInput
 }
 
+input SummaryResultManyRelationFilter {
+  every: SummaryResultWhereInput
+  some: SummaryResultWhereInput
+  none: SummaryResultWhereInput
+}
+
+input SpecManyRelationFilter {
+  every: SpecWhereInput
+  some: SpecWhereInput
+  none: SpecWhereInput
+}
+
 input PasswordFilter {
   isSet: Boolean!
 }
@@ -376,6 +392,7 @@ input ProfileOrderByInput {
   username: OrderDirection
   publicId: OrderDirection
   publicReadableId: OrderDirection
+  type: OrderDirection
   email: OrderDirection
   isPublic: OrderDirection
   bio: OrderDirection
@@ -400,9 +417,14 @@ input ProfileUpdateInput {
   username: String
   publicId: String
   publicReadableId: String
+  type: String
   email: String
   permissions: PermissionRelateToManyForUpdateInput
   info: JSON
+  generalInfo: JSON
+  studiesInfo: JSON
+  consentsInfo: JSON
+  tasksInfo: JSON
   isPublic: Boolean
   password: String
   image: ProfileImageRelateToOneForUpdateInput
@@ -415,7 +437,6 @@ input ProfileUpdateInput {
   location: String
   dateCreated: DateTime
   language: String
-  studiesInfo: JSON
   participantIn: StudyRelateToManyForUpdateInput
   teacherIn: ClassRelateToManyForUpdateInput
   mentorIn: ClassRelateToManyForUpdateInput
@@ -446,6 +467,8 @@ input ProfileUpdateInput {
   authorOfAssignment: AssignmentRelateToManyForUpdateInput
   authorOfHomework: HomeworkRelateToManyForUpdateInput
   datasets: DatasetRelateToManyForUpdateInput
+  summaryResults: SummaryResultRelateToManyForUpdateInput
+  authoredSpecs: SpecRelateToManyForUpdateInput
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -597,6 +620,20 @@ input DatasetRelateToManyForUpdateInput {
   connect: [DatasetWhereUniqueInput!]
 }
 
+input SummaryResultRelateToManyForUpdateInput {
+  disconnect: [SummaryResultWhereUniqueInput!]
+  set: [SummaryResultWhereUniqueInput!]
+  create: [SummaryResultCreateInput!]
+  connect: [SummaryResultWhereUniqueInput!]
+}
+
+input SpecRelateToManyForUpdateInput {
+  disconnect: [SpecWhereUniqueInput!]
+  set: [SpecWhereUniqueInput!]
+  create: [SpecCreateInput!]
+  connect: [SpecWhereUniqueInput!]
+}
+
 input ProfileUpdateArgs {
   where: ProfileWhereUniqueInput!
   data: ProfileUpdateInput!
@@ -606,9 +643,14 @@ input ProfileCreateInput {
   username: String
   publicId: String
   publicReadableId: String
+  type: String
   email: String
   permissions: PermissionRelateToManyForCreateInput
   info: JSON
+  generalInfo: JSON
+  studiesInfo: JSON
+  consentsInfo: JSON
+  tasksInfo: JSON
   isPublic: Boolean
   password: String
   image: ProfileImageRelateToOneForCreateInput
@@ -621,7 +663,6 @@ input ProfileCreateInput {
   location: String
   dateCreated: DateTime
   language: String
-  studiesInfo: JSON
   participantIn: StudyRelateToManyForCreateInput
   teacherIn: ClassRelateToManyForCreateInput
   mentorIn: ClassRelateToManyForCreateInput
@@ -652,6 +693,8 @@ input ProfileCreateInput {
   authorOfAssignment: AssignmentRelateToManyForCreateInput
   authorOfHomework: HomeworkRelateToManyForCreateInput
   datasets: DatasetRelateToManyForCreateInput
+  summaryResults: SummaryResultRelateToManyForCreateInput
+  authoredSpecs: SpecRelateToManyForCreateInput
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -760,6 +803,16 @@ input HomeworkRelateToManyForCreateInput {
 input DatasetRelateToManyForCreateInput {
   create: [DatasetCreateInput!]
   connect: [DatasetWhereUniqueInput!]
+}
+
+input SummaryResultRelateToManyForCreateInput {
+  create: [SummaryResultCreateInput!]
+  connect: [SummaryResultWhereUniqueInput!]
+}
+
+input SpecRelateToManyForCreateInput {
+  create: [SpecCreateInput!]
+  connect: [SpecWhereUniqueInput!]
 }
 
 type ProfileImage {
@@ -1446,6 +1499,8 @@ type Template {
   tasksCount(where: TaskWhereInput! = {}): Int
   datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
   datasetsCount(where: DatasetWhereInput! = {}): Int
+  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
+  summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
   settings: JSON
   file: String
   createdAt: DateTime
@@ -1471,6 +1526,7 @@ input TemplateWhereInput {
   style: StringFilter
   tasks: TaskManyRelationFilter
   datasets: DatasetManyRelationFilter
+  summaryResults: SummaryResultManyRelationFilter
   file: StringFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
@@ -1501,6 +1557,7 @@ input TemplateUpdateInput {
   style: String
   tasks: TaskRelateToManyForUpdateInput
   datasets: DatasetRelateToManyForUpdateInput
+  summaryResults: SummaryResultRelateToManyForUpdateInput
   settings: JSON
   file: String
   createdAt: DateTime
@@ -1524,6 +1581,7 @@ input TemplateCreateInput {
   style: String
   tasks: TaskRelateToManyForCreateInput
   datasets: DatasetRelateToManyForCreateInput
+  summaryResults: SummaryResultRelateToManyForCreateInput
   settings: JSON
   file: String
   createdAt: DateTime
@@ -1555,6 +1613,8 @@ type Task {
   consentCount(where: ConsentWhereInput! = {}): Int
   datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
   datasetsCount(where: DatasetWhereInput! = {}): Int
+  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
+  summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1593,6 +1653,7 @@ input TaskWhereInput {
   largeImage: StringFilter
   consent: ConsentManyRelationFilter
   datasets: DatasetManyRelationFilter
+  summaryResults: SummaryResultManyRelationFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
 }
@@ -1644,6 +1705,7 @@ input TaskUpdateInput {
   largeImage: String
   consent: ConsentRelateToManyForUpdateInput
   datasets: DatasetRelateToManyForUpdateInput
+  summaryResults: SummaryResultRelateToManyForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1680,6 +1742,7 @@ input TaskCreateInput {
   largeImage: String
   consent: ConsentRelateToManyForCreateInput
   datasets: DatasetRelateToManyForCreateInput
+  summaryResults: SummaryResultRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1710,6 +1773,8 @@ type Study {
   collaboratorsCount(where: ProfileWhereInput! = {}): Int
   participants(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
   participantsCount(where: ProfileWhereInput! = {}): Int
+  guests(where: GuestWhereInput! = {}, orderBy: [GuestOrderByInput!]! = [], take: Int, skip: Int! = 0): [Guest!]
+  guestsCount(where: GuestWhereInput! = {}): Int
   consent(where: ConsentWhereInput! = {}, orderBy: [ConsentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Consent!]
   consentCount(where: ConsentWhereInput! = {}): Int
   proposal(where: ProposalBoardWhereInput! = {}, orderBy: [ProposalBoardOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalBoard!]
@@ -1725,6 +1790,10 @@ type Study {
   talksCount(where: TalkWhereInput! = {}): Int
   datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
   datasetsCount(where: DatasetWhereInput! = {}): Int
+  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
+  summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
+  specs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0): [Spec!]
+  specsCount(where: SpecWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1752,6 +1821,7 @@ input StudyWhereInput {
   author: ProfileWhereInput
   collaborators: ProfileManyRelationFilter
   participants: ProfileManyRelationFilter
+  guests: GuestManyRelationFilter
   consent: ConsentManyRelationFilter
   proposal: ProposalBoardManyRelationFilter
   descriptionInProposalCard: ProposalCardWhereInput
@@ -1760,8 +1830,16 @@ input StudyWhereInput {
   tags: TagManyRelationFilter
   talks: TalkManyRelationFilter
   datasets: DatasetManyRelationFilter
+  summaryResults: SummaryResultManyRelationFilter
+  specs: SpecManyRelationFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
+}
+
+input GuestManyRelationFilter {
+  every: GuestWhereInput
+  some: GuestWhereInput
+  none: GuestWhereInput
 }
 
 input TagManyRelationFilter {
@@ -1803,6 +1881,7 @@ input StudyUpdateInput {
   author: ProfileRelateToOneForUpdateInput
   collaborators: ProfileRelateToManyForUpdateInput
   participants: ProfileRelateToManyForUpdateInput
+  guests: GuestRelateToManyForUpdateInput
   consent: ConsentRelateToManyForUpdateInput
   proposal: ProposalBoardRelateToManyForUpdateInput
   descriptionInProposalCard: ProposalCardRelateToOneForUpdateInput
@@ -1811,6 +1890,8 @@ input StudyUpdateInput {
   tags: TagRelateToManyForUpdateInput
   talks: TalkRelateToManyForUpdateInput
   datasets: DatasetRelateToManyForUpdateInput
+  summaryResults: SummaryResultRelateToManyForUpdateInput
+  specs: SpecRelateToManyForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1819,6 +1900,13 @@ input StudyImageRelateToOneForUpdateInput {
   create: StudyImageCreateInput
   connect: StudyImageWhereUniqueInput
   disconnect: Boolean
+}
+
+input GuestRelateToManyForUpdateInput {
+  disconnect: [GuestWhereUniqueInput!]
+  set: [GuestWhereUniqueInput!]
+  create: [GuestCreateInput!]
+  connect: [GuestWhereUniqueInput!]
 }
 
 input ProposalCardRelateToOneForUpdateInput {
@@ -1857,6 +1945,7 @@ input StudyCreateInput {
   author: ProfileRelateToOneForCreateInput
   collaborators: ProfileRelateToManyForCreateInput
   participants: ProfileRelateToManyForCreateInput
+  guests: GuestRelateToManyForCreateInput
   consent: ConsentRelateToManyForCreateInput
   proposal: ProposalBoardRelateToManyForCreateInput
   descriptionInProposalCard: ProposalCardRelateToOneForCreateInput
@@ -1865,6 +1954,8 @@ input StudyCreateInput {
   tags: TagRelateToManyForCreateInput
   talks: TalkRelateToManyForCreateInput
   datasets: DatasetRelateToManyForCreateInput
+  summaryResults: SummaryResultRelateToManyForCreateInput
+  specs: SpecRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1872,6 +1963,11 @@ input StudyCreateInput {
 input StudyImageRelateToOneForCreateInput {
   create: StudyImageCreateInput
   connect: StudyImageWhereUniqueInput
+}
+
+input GuestRelateToManyForCreateInput {
+  create: [GuestCreateInput!]
+  connect: [GuestWhereUniqueInput!]
 }
 
 input ProposalCardRelateToOneForCreateInput {
@@ -2094,9 +2190,12 @@ type Dataset {
   id: ID!
   token: String
   profile: Profile
+  guest: Guest
+  type: String
   template: Template
   task: Task
   study: Study
+  summaryResult: SummaryResult
   dataPolicy: String
   info: JSON
   isCompleted: Boolean
@@ -2116,9 +2215,12 @@ input DatasetWhereInput {
   id: IDFilter
   token: StringFilter
   profile: ProfileWhereInput
+  guest: GuestWhereInput
+  type: StringNullableFilter
   template: TemplateWhereInput
   task: TaskWhereInput
   study: StudyWhereInput
+  summaryResult: SummaryResultWhereInput
   dataPolicy: StringFilter
   isCompleted: BooleanFilter
   createdAt: DateTimeNullableFilter
@@ -2128,6 +2230,7 @@ input DatasetWhereInput {
 input DatasetOrderByInput {
   id: OrderDirection
   token: OrderDirection
+  type: OrderDirection
   dataPolicy: OrderDirection
   isCompleted: OrderDirection
   createdAt: OrderDirection
@@ -2137,9 +2240,12 @@ input DatasetOrderByInput {
 input DatasetUpdateInput {
   token: String
   profile: ProfileRelateToOneForUpdateInput
+  guest: GuestRelateToOneForUpdateInput
+  type: String
   template: TemplateRelateToOneForUpdateInput
   task: TaskRelateToOneForUpdateInput
   study: StudyRelateToOneForUpdateInput
+  summaryResult: SummaryResultRelateToOneForUpdateInput
   dataPolicy: String
   info: JSON
   isCompleted: Boolean
@@ -2147,9 +2253,21 @@ input DatasetUpdateInput {
   updatedAt: DateTime
 }
 
+input GuestRelateToOneForUpdateInput {
+  create: GuestCreateInput
+  connect: GuestWhereUniqueInput
+  disconnect: Boolean
+}
+
 input TaskRelateToOneForUpdateInput {
   create: TaskCreateInput
   connect: TaskWhereUniqueInput
+  disconnect: Boolean
+}
+
+input SummaryResultRelateToOneForUpdateInput {
+  create: SummaryResultCreateInput
+  connect: SummaryResultWhereUniqueInput
   disconnect: Boolean
 }
 
@@ -2161,9 +2279,12 @@ input DatasetUpdateArgs {
 input DatasetCreateInput {
   token: String
   profile: ProfileRelateToOneForCreateInput
+  guest: GuestRelateToOneForCreateInput
+  type: String
   template: TemplateRelateToOneForCreateInput
   task: TaskRelateToOneForCreateInput
   study: StudyRelateToOneForCreateInput
+  summaryResult: SummaryResultRelateToOneForCreateInput
   dataPolicy: String
   info: JSON
   isCompleted: Boolean
@@ -2171,9 +2292,19 @@ input DatasetCreateInput {
   updatedAt: DateTime
 }
 
+input GuestRelateToOneForCreateInput {
+  create: GuestCreateInput
+  connect: GuestWhereUniqueInput
+}
+
 input TaskRelateToOneForCreateInput {
   create: TaskCreateInput
   connect: TaskWhereUniqueInput
+}
+
+input SummaryResultRelateToOneForCreateInput {
+  create: SummaryResultCreateInput
+  connect: SummaryResultWhereUniqueInput
 }
 
 type ProposalBoard {
@@ -2729,6 +2860,8 @@ type Tag {
   homeworksCount(where: HomeworkWhereInput! = {}): Int
   studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
   studiesCount(where: StudyWhereInput! = {}): Int
+  specs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0): [Spec!]
+  specsCount(where: SpecWhereInput! = {}): Int
   level: Int
   parent: Tag
   children(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
@@ -2754,6 +2887,7 @@ input TagWhereInput {
   assignments: AssignmentManyRelationFilter
   homeworks: HomeworkManyRelationFilter
   studies: StudyManyRelationFilter
+  specs: SpecManyRelationFilter
   level: IntNullableFilter
   parent: TagWhereInput
   children: TagManyRelationFilter
@@ -2790,6 +2924,7 @@ input TagUpdateInput {
   assignments: AssignmentRelateToManyForUpdateInput
   homeworks: HomeworkRelateToManyForUpdateInput
   studies: StudyRelateToManyForUpdateInput
+  specs: SpecRelateToManyForUpdateInput
   level: Int
   parent: TagRelateToOneForUpdateInput
   children: TagRelateToManyForUpdateInput
@@ -2816,6 +2951,7 @@ input TagCreateInput {
   assignments: AssignmentRelateToManyForCreateInput
   homeworks: HomeworkRelateToManyForCreateInput
   studies: StudyRelateToManyForCreateInput
+  specs: SpecRelateToManyForCreateInput
   level: Int
   parent: TagRelateToOneForCreateInput
   children: TagRelateToManyForCreateInput
@@ -3004,6 +3140,281 @@ input AssignmentRelateToOneForCreateInput {
   connect: AssignmentWhereUniqueInput
 }
 
+type SummaryResult {
+  id: ID!
+  user: Profile
+  guest: Guest
+  type: String
+  study: Study
+  template: Template
+  task: Task
+  testVersion: String
+  metadataId: String
+  dataPolicy: String
+  fullResult: Dataset
+  data: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input SummaryResultWhereUniqueInput {
+  id: ID
+}
+
+input SummaryResultWhereInput {
+  AND: [SummaryResultWhereInput!]
+  OR: [SummaryResultWhereInput!]
+  NOT: [SummaryResultWhereInput!]
+  id: IDFilter
+  user: ProfileWhereInput
+  guest: GuestWhereInput
+  type: StringNullableFilter
+  study: StudyWhereInput
+  template: TemplateWhereInput
+  task: TaskWhereInput
+  testVersion: StringFilter
+  metadataId: StringFilter
+  dataPolicy: StringFilter
+  fullResult: DatasetWhereInput
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input SummaryResultOrderByInput {
+  id: OrderDirection
+  type: OrderDirection
+  testVersion: OrderDirection
+  metadataId: OrderDirection
+  dataPolicy: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input SummaryResultUpdateInput {
+  user: ProfileRelateToOneForUpdateInput
+  guest: GuestRelateToOneForUpdateInput
+  type: String
+  study: StudyRelateToOneForUpdateInput
+  template: TemplateRelateToOneForUpdateInput
+  task: TaskRelateToOneForUpdateInput
+  testVersion: String
+  metadataId: String
+  dataPolicy: String
+  fullResult: DatasetRelateToOneForUpdateInput
+  data: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input DatasetRelateToOneForUpdateInput {
+  create: DatasetCreateInput
+  connect: DatasetWhereUniqueInput
+  disconnect: Boolean
+}
+
+input SummaryResultUpdateArgs {
+  where: SummaryResultWhereUniqueInput!
+  data: SummaryResultUpdateInput!
+}
+
+input SummaryResultCreateInput {
+  user: ProfileRelateToOneForCreateInput
+  guest: GuestRelateToOneForCreateInput
+  type: String
+  study: StudyRelateToOneForCreateInput
+  template: TemplateRelateToOneForCreateInput
+  task: TaskRelateToOneForCreateInput
+  testVersion: String
+  metadataId: String
+  dataPolicy: String
+  fullResult: DatasetRelateToOneForCreateInput
+  data: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input DatasetRelateToOneForCreateInput {
+  create: DatasetCreateInput
+  connect: DatasetWhereUniqueInput
+}
+
+type Spec {
+  id: ID!
+  title: String
+  description: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  author: Profile
+  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  studiesCount(where: StudyWhereInput! = {}): Int
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
+  tagsCount(where: TagWhereInput! = {}): Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input SpecWhereUniqueInput {
+  id: ID
+}
+
+input SpecWhereInput {
+  AND: [SpecWhereInput!]
+  OR: [SpecWhereInput!]
+  NOT: [SpecWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  description: StringFilter
+  isPublic: BooleanFilter
+  isTemplate: BooleanFilter
+  isFeatured: BooleanFilter
+  author: ProfileWhereInput
+  studies: StudyManyRelationFilter
+  tags: TagManyRelationFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input SpecOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  description: OrderDirection
+  isPublic: OrderDirection
+  isTemplate: OrderDirection
+  isFeatured: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input SpecUpdateInput {
+  title: String
+  description: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  author: ProfileRelateToOneForUpdateInput
+  studies: StudyRelateToManyForUpdateInput
+  tags: TagRelateToManyForUpdateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input SpecUpdateArgs {
+  where: SpecWhereUniqueInput!
+  data: SpecUpdateInput!
+}
+
+input SpecCreateInput {
+  title: String
+  description: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  author: ProfileRelateToOneForCreateInput
+  studies: StudyRelateToManyForCreateInput
+  tags: TagRelateToManyForCreateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type Guest {
+  id: ID!
+  publicId: String
+  publicReadableId: String
+  type: String
+  info: JSON
+  generalInfo: JSON
+  studiesInfo: JSON
+  consentsInfo: JSON
+  tasksInfo: JSON
+  guestAccountExpiry: String
+  participantIn(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  participantInCount(where: StudyWhereInput! = {}): Int
+  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
+  datasetsCount(where: DatasetWhereInput! = {}): Int
+  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
+  summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input GuestWhereUniqueInput {
+  id: ID
+  publicId: String
+  publicReadableId: String
+}
+
+input GuestWhereInput {
+  AND: [GuestWhereInput!]
+  OR: [GuestWhereInput!]
+  NOT: [GuestWhereInput!]
+  id: IDFilter
+  publicId: StringFilter
+  publicReadableId: StringFilter
+  type: StringNullableFilter
+  guestAccountExpiry: StringFilter
+  participantIn: StudyManyRelationFilter
+  datasets: DatasetManyRelationFilter
+  summaryResults: SummaryResultManyRelationFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input GuestOrderByInput {
+  id: OrderDirection
+  publicId: OrderDirection
+  publicReadableId: OrderDirection
+  type: OrderDirection
+  guestAccountExpiry: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input GuestUpdateInput {
+  publicId: String
+  publicReadableId: String
+  type: String
+  info: JSON
+  generalInfo: JSON
+  studiesInfo: JSON
+  consentsInfo: JSON
+  tasksInfo: JSON
+  guestAccountExpiry: String
+  participantIn: StudyRelateToManyForUpdateInput
+  datasets: DatasetRelateToManyForUpdateInput
+  summaryResults: SummaryResultRelateToManyForUpdateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input GuestUpdateArgs {
+  where: GuestWhereUniqueInput!
+  data: GuestUpdateInput!
+}
+
+input GuestCreateInput {
+  publicId: String
+  publicReadableId: String
+  type: String
+  info: JSON
+  generalInfo: JSON
+  studiesInfo: JSON
+  consentsInfo: JSON
+  tasksInfo: JSON
+  guestAccountExpiry: String
+  participantIn: StudyRelateToManyForCreateInput
+  datasets: DatasetRelateToManyForCreateInput
+  summaryResults: SummaryResultRelateToManyForCreateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -3166,6 +3577,24 @@ type Mutation {
   updatehomeworks(data: [HomeworkUpdateArgs!]!): [Homework]
   deleteHomework(where: HomeworkWhereUniqueInput!): Homework
   deletehomeworks(where: [HomeworkWhereUniqueInput!]!): [Homework]
+  createSummaryResult(data: SummaryResultCreateInput!): SummaryResult
+  createSummaryResults(data: [SummaryResultCreateInput!]!): [SummaryResult]
+  updateSummaryResult(where: SummaryResultWhereUniqueInput!, data: SummaryResultUpdateInput!): SummaryResult
+  updateSummaryResults(data: [SummaryResultUpdateArgs!]!): [SummaryResult]
+  deleteSummaryResult(where: SummaryResultWhereUniqueInput!): SummaryResult
+  deleteSummaryResults(where: [SummaryResultWhereUniqueInput!]!): [SummaryResult]
+  createSpec(data: SpecCreateInput!): Spec
+  createSpecs(data: [SpecCreateInput!]!): [Spec]
+  updateSpec(where: SpecWhereUniqueInput!, data: SpecUpdateInput!): Spec
+  updateSpecs(data: [SpecUpdateArgs!]!): [Spec]
+  deleteSpec(where: SpecWhereUniqueInput!): Spec
+  deleteSpecs(where: [SpecWhereUniqueInput!]!): [Spec]
+  createGuest(data: GuestCreateInput!): Guest
+  createGuests(data: [GuestCreateInput!]!): [Guest]
+  updateGuest(where: GuestWhereUniqueInput!, data: GuestUpdateInput!): Guest
+  updateGuests(data: [GuestUpdateArgs!]!): [Guest]
+  deleteGuest(where: GuestWhereUniqueInput!): Guest
+  deleteGuests(where: [GuestWhereUniqueInput!]!): [Guest]
   endSession: Boolean!
   authenticateProfileWithPassword(email: String!, password: String!): ProfileAuthenticationWithPasswordResult
   createInitialProfile(data: CreateInitialProfileInput!): ProfileAuthenticationWithPasswordSuccess!
@@ -3286,6 +3715,15 @@ type Query {
   homeworks(where: HomeworkWhereInput! = {}, orderBy: [HomeworkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Homework!]
   homework(where: HomeworkWhereUniqueInput!): Homework
   homeworksCount(where: HomeworkWhereInput! = {}): Int
+  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
+  summaryResult(where: SummaryResultWhereUniqueInput!): SummaryResult
+  summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
+  specs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0): [Spec!]
+  spec(where: SpecWhereUniqueInput!): Spec
+  specsCount(where: SpecWhereInput! = {}): Int
+  guests(where: GuestWhereInput! = {}, orderBy: [GuestOrderByInput!]! = [], take: Int, skip: Int! = 0): [Guest!]
+  guest(where: GuestWhereUniqueInput!): Guest
+  guestsCount(where: GuestWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
   validateProfilePasswordResetToken(email: String!, token: String!): ValidateProfilePasswordResetTokenResult
@@ -3375,6 +3813,11 @@ enum KeystoneAdminUIFieldMetaItemViewFieldMode {
 enum KeystoneAdminUIFieldMetaItemViewFieldPosition {
   form
   sidebar
+}
+
+enum QueryMode {
+  default
+  insensitive
 }
 
 type KeystoneAdminUIFieldGroupMeta {

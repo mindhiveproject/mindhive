@@ -21,7 +21,7 @@ export default function Details({ user, study, query }) {
     guest: query?.guest, // check whether guest participation is requested
   });
 
-  //   console.log({ inputs });
+  // console.log({ inputs });
 
   return (
     <StyledDetails>
@@ -151,7 +151,7 @@ export default function Details({ user, study, query }) {
 
       <Link
         href={{
-          pathname: `/participate/consent`,
+          pathname: `/join/consent`,
           query: { ...inputs, id: study?.id },
         }}
       >

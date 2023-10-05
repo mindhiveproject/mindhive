@@ -15,7 +15,7 @@ export default function StudyBuilder({ query, user }) {
   // if there is a panel, present this panel
   return (
     <StyledBuilderArea>
-      <Router query={query} user={user} tab={tab} />;
+      <Router query={query} user={user} tab={tab} />
     </StyledBuilderArea>
   );
 }

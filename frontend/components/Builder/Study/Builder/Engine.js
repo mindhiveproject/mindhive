@@ -32,7 +32,7 @@ export default function Engine({
   tab,
   study,
   handleChange,
-  updateStudy,
+  saveStudy,
 }) {
   // force update canvas
   const forceUpdate = useReducer((bool) => !bool)[1];
@@ -422,7 +422,7 @@ export default function Engine({
   const buildStudy = () => {
     const { flow, diagram } = saveDiagramState();
     console.log({ flow });
-    updateStudy({
+    saveStudy({
       variables: {
         input: {
           descriptionInProposalCard: study?.descriptionInProposalCardId

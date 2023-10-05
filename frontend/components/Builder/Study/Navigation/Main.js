@@ -89,7 +89,9 @@ export default function Navigation({
           ) : (
             <CreateStudy study={study} user={user} />
           )} */}
-          <button onClick={() => saveBtnFunction()}>{saveBtnName}</button>
+          {saveBtnFunction && 
+            <button onClick={() => saveBtnFunction()}>{saveBtnName}</button>
+          }
         </div>
       </div>
 

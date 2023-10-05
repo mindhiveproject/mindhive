@@ -3,6 +3,7 @@ import ParticipantPage from "./ParticipantPage/Main";
 import Builder from "./Builder/Main";
 import Review from "./Review/Main";
 import Collect from "./Collect/Main";
+import Visualize from "./Visualize/Main";
 
 export default function Router({ query, user, tab }) {
   if (tab === "proposal") {
@@ -23,5 +24,9 @@ export default function Router({ query, user, tab }) {
 
   if (tab === "collect") {
     return <Collect query={query} user={user} tab={tab} />;
+  }
+
+  if (tab === "visualize") {
+    return <Visualize query={query} user={user} tab={tab} />;
   }
 }

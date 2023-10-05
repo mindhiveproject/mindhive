@@ -10,6 +10,7 @@ export default function ParticipantsTable({ studyId }) {
 
   const st = data?.study || { participants: [] };
   const { participants } = st;
+  console.log({ participants });
 
   return (
     <div className="participants">
@@ -26,9 +27,14 @@ export default function ParticipantsTable({ studyId }) {
           <p>Include in analysis</p>
         </div>
         <div>
-          {participants.map((participant, num) => {
-            <Row key={num} num={num} participant={participant} />;
-          })}
+          {participants.map((participant, num) => 
+            <Row 
+              key={num} 
+              num={num} 
+              studyId={studyId} 
+              participant={participant} 
+            />
+          )}
         </div>
       </div>
     </div>

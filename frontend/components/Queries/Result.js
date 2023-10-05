@@ -1,35 +1,23 @@
 import gql from "graphql-tag";
 
-// get proposal templates
+// get results
 export const GET_PARTICIPANT_RESULTS = gql`
   query GET_PARTICIPANT_RESULTS($participantId: ID!, $studyId: ID!) {
-    results(
-        where: {
-            
-        }
-        participantId: $participantId, studyId: $studyId) {
+    datasets(
+        where: {
+          profile: { id: { equals: $participantId } }, 
+          study: { id: { equals: $studyId } }
+        }) {
       id
+      token
       task {
         title
       }
-      quantity
-      data
       dataPolicy
-      token
+      info
+      isCompleted
       createdAt
       updatedAt
-      payload
-      study {
-        title
-      }
-      info
-      incrementalData {
-        id
-      }
-      fullData {
-        id
-      }
-      resultType
     }
   }
 `;

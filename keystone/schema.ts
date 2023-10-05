@@ -34,6 +34,9 @@ import { Lesson } from "./schemas/Lesson";
 import { Tag } from "./schemas/Tag";
 import { Assignment } from "./schemas/Assignment";
 import { Homework } from "./schemas/Homework";
+import { SummaryResult } from "./schemas/SummaryResult";
+import { Spec } from "./schemas/Spec";
+import { Guest } from "./schemas/Guest";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -80,4 +83,7 @@ export const lists: Lists = {
   Tag,
   Assignment,
   Homework,
+  SummaryResult,
+  Spec,
+  Guest,
 };

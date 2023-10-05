@@ -8,6 +8,8 @@ import { StyledCanvasBuilder } from "../../../styles/StyledBuilder";
 import Modal from "./Modal/Main";
 import StudyPreview from "../../../Studies/Preview/Main";
 
+import InDev from "../../../Global/InDev";
+
 export default function Builder({
   query,
   user,
@@ -83,6 +85,13 @@ export default function Builder({
 
   if (isStudyPreviewOpen) {
     return <StudyPreview close={() => setStudyPreviewOpen(false)} />;
+  }
+
+  if (!study?.id) {
+    return <InDev
+      header="🤷🏻 Sorry, no study found, please save your study first."
+      message="If you need help, please contact the tech support at info@mindhive.science"
+    />
   }
 
   return (

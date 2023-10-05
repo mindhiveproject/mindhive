@@ -5,6 +5,7 @@ import {
   timestamp,
   relationship,
   checkbox,
+  select,
 } from "@keystone-6/core/fields";
 // import { rules } from "../access";
 
@@ -25,6 +26,15 @@ export const Dataset = list({
     profile: relationship({
       ref: "Profile.datasets",
     }),
+    guest: relationship({
+      ref: "Guest.datasets",
+    }),
+    type: select({
+      options: [
+        { label: "Guest", value: "GUEST" },
+        { label: "User", value: "USER" },
+      ],
+    }),
     template: relationship({
       ref: "Template.datasets",
     }),
@@ -33,6 +43,9 @@ export const Dataset = list({
     }),
     study: relationship({
       ref: "Study.datasets",
+    }),
+    summaryResult: relationship({
+      ref: "SummaryResult.fullResult",
     }),
     dataPolicy: text(),
     info: json(),

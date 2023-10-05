@@ -143,6 +143,7 @@ export const STUDY_TO_DISCOVER = gql`
       }
       description
       info
+      flow
     }
   }
 `;

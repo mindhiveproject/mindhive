@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_USER_STUDIES } from "../../Queries/User";
+// import { GET_USER_STUDIES } from "../../Queries/User";
 import Manager from "./Manager";
 
 import { StyledStudyRun } from "../../styles/StyledStudyPage";
@@ -8,11 +8,13 @@ import { StyledStudyRun } from "../../styles/StyledStudyPage";
 // the function should check what is the status of the user (new, ongoing)
 // and assign correct task to show
 export default function RunStudy({ user, study }) {
-  const { data: userData } = useQuery(GET_USER_STUDIES);
+  // const { data: userData } = useQuery(GET_USER_STUDIES);
 
   const { flow } = study;
-  const studiesInfo = userData?.authenticatedItem?.studiesInfo || {};
-  let info = studiesInfo[study?.id];
+  const studiesInfo = user?.studiesInfo || {};
+  let info = studiesInfo[study?.id]?.info;
+
+  console.log({ info });
 
   const getRandomInt = (min, max) => {
     min = Math.ceil(min);
@@ -100,16 +102,18 @@ export default function RunStudy({ user, study }) {
     info.path = info.path.concat(nextSteps);
   }
 
-  // console.log({ info });
+  console.log({ info });
 
   return (
     <StyledStudyRun>
-      <Manager
-        user={user}
-        study={study}
-        studiesInfo={studiesInfo}
-        info={info}
-      />
+      {info && user && 
+        <Manager
+          user={user}
+          study={study}
+          studiesInfo={studiesInfo}
+          info={info}
+        />
+      }
     </StyledStudyRun>
   );
 }

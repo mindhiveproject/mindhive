@@ -68,6 +68,10 @@ export const Tag = list({
       ref: "Study.tags",
       many: true,
     }),
+    specs: relationship({
+      ref: "Spec.tags",
+      many: true,
+    }),
     level: integer(),
     parent: relationship({
       ref: "Tag.children",

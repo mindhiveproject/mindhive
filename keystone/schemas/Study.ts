@@ -105,7 +105,10 @@ export const Study = list({
       ref: "Profile.participantIn",
       many: true,
     }),
-    // guests: relationship to guests
+    guests: relationship({
+      ref: "Guest.participantIn",
+      many: true,
+    }),
     consent: relationship({
       ref: "Consent.studies",
       many: true,
@@ -138,6 +141,14 @@ export const Study = list({
     }),
     datasets: relationship({
       ref: "Dataset.study",
+      many: true,
+    }),
+    summaryResults: relationship({
+      ref: "SummaryResult.study",
+      many: true,
+    }),
+    specs: relationship({
+      ref: "Spec.studies",
       many: true,
     }),
     createdAt: timestamp({

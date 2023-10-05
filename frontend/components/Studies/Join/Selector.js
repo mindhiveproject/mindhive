@@ -17,7 +17,7 @@ export default function Selector({ user, study, query }) {
             </p>
             <Link
               href={{
-                pathname: `/participate/details`,
+                pathname: `/join/details`,
                 query: { ...query, guest: true },
               }}
             >
@@ -35,7 +35,7 @@ export default function Selector({ user, study, query }) {
             </p>
             <Link
               href={{
-                pathname: `/participate/login`,
+                pathname: `/join/login`,
                 query: { ...query },
               }}
             >
@@ -50,7 +50,7 @@ export default function Selector({ user, study, query }) {
             <p>Sign up to speed up study participation next time</p>
             <Link
               href={{
-                pathname: `/participate/signup`,
+                pathname: `/join/signup`,
                 query: { ...query },
               }}
             >
@@ -65,7 +65,7 @@ export default function Selector({ user, study, query }) {
             <p>Continue as a member for a faster study experience.</p>
             <Link
               href={{
-                pathname: `/participate/details`,
+                pathname: `/join/details`,
                 query: { ...query, guest: false },
               }}
             >

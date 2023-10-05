@@ -4,7 +4,7 @@ import { TASK_TO_PARTICIPATE } from "../../Queries/Task";
 
 import { StyledTaskCard } from "../../styles/StyledStudyPage";
 
-export default function TaskCard({ study, step }) {
+export default function TaskCard({ user, study, step }) {
   const { data, loading, error } = useQuery(TASK_TO_PARTICIPATE, {
     variables: { id: step?.componentID },
   });

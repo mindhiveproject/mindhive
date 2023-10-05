@@ -10,6 +10,7 @@ export const CURRENT_USER_QUERY = gql`
         email
         publicId
         publicReadableId
+        type
         permissions {
           name
         }
@@ -18,6 +19,10 @@ export const CURRENT_USER_QUERY = gql`
           image {
             publicUrlTransformed
           }
+        }
+        studiesInfo
+        participantIn {
+          id
         }
       }
     }
@@ -189,6 +194,37 @@ export const GET_USER = gql`
   }
 `;
 
+// get study participants
+export const GET_STUDY_PARTICIPANTS = gql`
+  query GET_STUDY_PARTICIPANTS($id: ID!) {
+    study(where: { id: $id }) {
+      id
+      participants {
+        id
+        publicReadableId
+      }
+    }
+  }
+`;
+
+// get study participant
+export const GET_PARTICIPANT = gql`
+  query GET_PARTICIPANT($id: ID!) {
+    profile(where: {id: $id }) {
+      id
+      publicId
+      publicReadableId
+      studiesInfo
+      participantIn {
+        id
+        title
+        slug
+      }
+    }
+  }
+`;
+
+////////////////////////////////////////////////
 // to do from here
 
 // get short updates for notifying the user
@@ -435,14 +471,3 @@ export const GET_PERSON_ID_BY_WALLET = gql`
   }
 `;
 
-// get study participants
-export const GET_STUDY_PARTICIPANTS = gql`
-  query GET_STUDY_PARTICIPANTS($id: ID!) {
-    study(where: { id: $id }) {
-      id
-      participants {
-        id
-      }
-    }
-  }
-`;

@@ -28,15 +28,19 @@ export default withAuth(
         credentials: true,
       },
     },
+    // db: {
+    //   // we're using sqlite for the fastest startup experience
+    //   //   for more information on what database might be appropriate for you
+    //   //   see https://keystonejs.com/docs/guides/choosing-a-database#title
+    //   provider: "postgresql",
+    //   url:
+    //     process.env.NODE_ENV === "development"
+    //       ? process.env.DATABASE_DEV
+    //       : process.env.DATABASE_URL,
+    // },
     db: {
-      // we're using sqlite for the fastest startup experience
-      //   for more information on what database might be appropriate for you
-      //   see https://keystonejs.com/docs/guides/choosing-a-database#title
-      provider: "postgresql",
-      url:
-        process.env.NODE_ENV === "development"
-          ? process.env.DATABASE_DEV
-          : process.env.DATABASE_URL,
+      provider: 'sqlite',
+      url: 'file:./keystone.db',
     },
     lists,
     extendGraphqlSchema,

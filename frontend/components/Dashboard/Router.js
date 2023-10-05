@@ -14,10 +14,12 @@ import EditSettings from "./Settings/Edit";
 import ConsentMain from "./Consent/Main";
 import ProposalsMain from "./Proposals/Main";
 import LessonsMain from "./Lessons/Main";
-import ManagementMain from "./Management/Main";
 import TagsMain from "./Tags/Main";
 import UserPage from "./UserPage/Main";
 import Assignments from "./Assignment/Main";
+
+// admin area
+import ManagementMain from "./Management/Main";
 
 export default function DashboardRouter({ query }) {
   const user = useContext(UserContext);

@@ -1,13 +1,17 @@
 import { useRouter } from "next/router";
 
 import Site from "../../components/Global/Site";
-import JoinStudyMain from "../../components/Studies/Join/Main";
+// import JoinStudyMain from "../../components/Studies/Join/Main";
+import StudyLandingMain from "../../components/Studies/Landing/Main";
+import GuestContext from "../../components/Global/GuestContext";
 
 export default function StudyLandingPage() {
   const router = useRouter();
   return (
     <Site>
-      <JoinStudyMain {...router.query} />
+      <GuestContext query={router.query}>
+        <StudyLandingMain query={router.query} isRun />
+      </GuestContext>
     </Site>
   );
 }

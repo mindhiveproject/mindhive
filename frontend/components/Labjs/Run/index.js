@@ -17,16 +17,17 @@ export default function ExperimentWindow({
   isSavingData,
 }) {
   console.log({ task });
+  console.log({ user });
   // whether to show the plugin is decided by the study parameter
   const isPlugin = study?.settings?.useExternalDevices;
+  // check the type of the user
+  const userType = user?.type==="GUEST" ? "guest" : "user";
 
+  // todo write a custom creatInputObject where the user id depends on the type of the user
+  // datasets should be also  marked with a type: GUEST or USER
   const [createDataset] = useMutation(CREATE_DATASET, {
     ignoreResults: true, // do not re-render this component
-    variables: {
-      profileId: user?.id,
-      templateId: task?.template?.id,
-      taskId: task?.id,
-    },
+    // variables: {},
   });
 
   const [updateDataset] = useMutation(UPDATE_DATASET, {
@@ -53,7 +54,7 @@ export default function ExperimentWindow({
       ...labjsObject?.plugins,
       {
         type: "lab.plugins.Transmit",
-        url: "/api/save",
+        url: `/api/save/?st=${study?.id}&te=${task?.template?.id}&ta=${task?.id}&us=${user?.id}&type=${userType}`,
       },
       { type: "lab.plugins.Debug" },
     ];
@@ -69,7 +70,17 @@ export default function ExperimentWindow({
         .map((p) => p?.metadata?.id)
         .filter((p) => !!p)[0];
       // create a new data record by using a mutation
-      createDataset({ variables: { token: id } });
+      createDataset({ variables: { 
+        input: {
+          profile: user?.type === "GUEST" ? null : { connect: { id: user?.id } },
+          guest: user?.type === "GUEST" ? { connect: { publicId: user?.publicId } } : null,
+          template: { connect: { id: task?.template?.id } },
+          task: { connect: { id: task?.id } },
+          study: { connect: { id: study?.id } },
+          token: id, 
+          type: user?.type,
+        }
+      } });
     }
   });
 

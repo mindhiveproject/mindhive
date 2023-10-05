@@ -1,31 +1,39 @@
 import gql from "graphql-tag";
 
 // create new study
+// export const CREATE_STUDY = gql`
+//   mutation CREATE_STUDY(
+//     $title: String!
+//     $slug: String
+//     $shortDescription: String
+//     $description: String
+//     $settings: JSON
+//     $info: JSON
+//     $diagram: String
+//     $classes: [ClassWhereUniqueInput!]
+//     $file: Upload
+//   ) {
+//     createStudy(
+//       data: {
+//         title: $title
+//         slug: $slug
+//         shortDescription: $shortDescription
+//         description: $description
+//         settings: $settings
+//         info: $info
+//         diagram: $diagram
+//         classes: { connect: $classes }
+//         image: { create: { image: $file, altText: $title } }
+//       }
+//     ) {
+//       id
+//     }
+//   }
+// `;
+
 export const CREATE_STUDY = gql`
-  mutation CREATE_STUDY(
-    $title: String!
-    $slug: String
-    $shortDescription: String
-    $description: String
-    $settings: JSON
-    $info: JSON
-    $diagram: String
-    $classes: [ClassWhereUniqueInput!]
-    $file: Upload
-  ) {
-    createStudy(
-      data: {
-        title: $title
-        slug: $slug
-        shortDescription: $shortDescription
-        description: $description
-        settings: $settings
-        info: $info
-        diagram: $diagram
-        classes: { connect: $classes }
-        image: { create: { image: $file, altText: $title } }
-      }
-    ) {
+  mutation CREATE_STUDY($input: StudyCreateInput!) {
+    createStudy(data: $input) {
       id
     }
   }

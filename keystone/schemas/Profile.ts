@@ -70,6 +70,12 @@ export const Profile = list({
         },
       },
     }),
+    type: select({
+      options: [
+        { label: "User", value: "USER" },
+      ],
+      defaultValue: "USER",
+    }),
     email: text({
       validation: { isRequired: false },
       isIndexed: "unique",
@@ -85,6 +91,10 @@ export const Profile = list({
       many: true,
     }),
     info: json(),
+    generalInfo: json(),
+    studiesInfo: json(),
+    consentsInfo: json(),
+    tasksInfo: json(),
     isPublic: checkbox({ isFilterable: true }),
     password: password({
       validation: { isRequired: true },
@@ -144,15 +154,6 @@ export const Profile = list({
       ],
       defaultValue: "EN-US",
     }),
-    studiesInfo: json(),
-    // not a good idea at the end
-    // profileType: select({
-    //   options: [
-    //     { label: "Guest", value: "GUEST" },
-    //     { label: "User", value: "USER" },
-    //   ],
-    //   defaultValue: "USER",
-    // }),
     participantIn: relationship({
       ref: "Study.participants",
       many: true,
@@ -262,6 +263,14 @@ export const Profile = list({
     }),
     datasets: relationship({
       ref: "Dataset.profile",
+      many: true,
+    }),
+    summaryResults: relationship({
+      ref: "SummaryResult.user",
+      many: true,
+    }),
+    authoredSpecs: relationship({
+      ref: "Spec.author",
       many: true,
     }),
   },

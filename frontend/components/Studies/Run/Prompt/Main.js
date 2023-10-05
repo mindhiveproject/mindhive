@@ -8,8 +8,12 @@ import DataUsageForParticipant from "./DataUsage/Participant";
 import DataUsageForStudent from "./DataUsage/Student";
 
 import { UPDATE_DATASET } from "../../../Mutations/Dataset";
+
 import { UPDATE_USER_STUDY_INFO } from "../../../Mutations/User";
-import { GET_USER_STUDIES } from "../../../Queries/User";
+import { UPDATE_GUEST_STUDY_INFO } from "../../../Mutations/Guest";
+
+import { CURRENT_USER_QUERY } from "../../../Queries/User";
+import { GET_GUEST } from "../../../Queries/Guest";
 
 export default function Prompt({
   user,
@@ -21,6 +25,20 @@ export default function Prompt({
   token,
 }) {
   const router = useRouter();
+
+  const redirectPage = user.type === "GUEST" ? {
+      pathname: `/studies/${study?.slug}`,
+      query: 
+        {
+          guest: user?.publicId,
+        }
+    } : { 
+      pathname: `/dashboard/discover/studies`,
+      query: 
+        {
+          name: study?.slug,
+        }
+    };
 
   const [dataUse, setDataUse] = useState(undefined);
   const [askDataUsageQuestion, setAskDataUsageQuestion] = useState(
@@ -34,7 +52,12 @@ export default function Prompt({
 
   const [updateUserStudyInfo] = useMutation(UPDATE_USER_STUDY_INFO, {
     variables: { id: user?.id },
-    refetchQueries: [{ query: GET_USER_STUDIES }],
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+  });
+
+  const [updateGuestStudyInfo] = useMutation(UPDATE_GUEST_STUDY_INFO, {
+    variables: { id: user?.id },
+    refetchQueries: [{ query: GET_GUEST, variables: { publicId: user?.publicId } }],
   });
 
   const closeDataUseQuestion = () => {
@@ -48,7 +71,7 @@ export default function Prompt({
   const isStudent = user?.permissions?.map((p) => p.name).includes("STUDENT");
 
   const saveResponsesAndProceed = async ({ proceedToNextTask }) => {
-    debugger;
+    // debugger;
     // save responses
     await updateDataset({ variables: { token: token, dataPolicy: dataUse } });
     // TODO save user information
@@ -60,19 +83,27 @@ export default function Prompt({
         info,
       },
     };
-    await updateUserStudyInfo({
-      variables: { studiesInfo: updatedStudiesInfo },
-    });
+    if(user.type === "GUEST") {
+      await updateGuestStudyInfo({
+        variables: { studiesInfo: updatedStudiesInfo },
+      });
+    } else {
+      await updateUserStudyInfo({
+        variables: { studiesInfo: updatedStudiesInfo },
+      });
+    }
     // proceed
     if (proceedToNextTask) {
-      closePrompt();
+      // closePrompt();
+      // router.push({
+      //   pathname: `/participate/run`,
+      //   query: {
+      //     id: study?.id,
+      //   },
+      // });
+      router.reload();
     } else {
-      router.push({
-        pathname: `/dashboard/discover/studies`,
-        query: {
-          name: study?.slug,
-        },
-      });
+      router.push(redirectPage);
     }
   };
 

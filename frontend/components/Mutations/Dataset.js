@@ -3,26 +3,10 @@ import gql from "graphql-tag";
 // create dataset record
 export const CREATE_DATASET = gql`
   mutation CREATE_DATASET(
-    $token: String!
-    $profileId: ID
-    $templateId: ID
-    $taskId: ID
-    # $studyId: ID
-    $dataPolicy: String
-    $info: JSON
-    $isCompleted: Boolean
+    $input: DatasetCreateInput!
   ) {
     createDataset(
-      data: {
-        token: $token
-        profile: { connect: { id: $profileId } }
-        template: { connect: { id: $templateId } }
-        task: { connect: { id: $taskId } }
-        # study: { connect: { id: $studyId } }
-        dataPolicy: $dataPolicy
-        info: $info
-        isCompleted: $isCompleted
-      }
+      data: $input
     ) {
       id
     }

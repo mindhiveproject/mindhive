@@ -7,19 +7,25 @@ import { StyledStudyPage } from "../../styles/StyledStudyPage";
 
 import StudyInfo from "./StudyInfo";
 
-import { GET_USER_STUDIES } from "../../Queries/User";
-import TaskCard from "./TaskCard";
+// import { GET_USER_STUDIES } from "../../Queries/User";
+import UserPath from "./UserPath";
 
 export default function StudyPage({ query, user, study, isDashboard }) {
-  const { data: userData } = useQuery(GET_USER_STUDIES);
+  // const { data: userData } = useQuery(GET_USER_STUDIES);
 
-  const studiesInfo = userData?.authenticatedItem?.studiesInfo || {};
+  // console.log({ userData });
+
+  // check whether the user joined the study before
+  const hasJoined = user?.participantIn?.map(study => study?.id).includes(study?.id);
+  // console.log({ hasJoined });
+
+  // check which path the user has taken
+  const studiesInfo = user?.studiesInfo || {};
   const participantInfo = studiesInfo[study?.id];
   const path = participantInfo?.info?.path || [];
 
   const imageURL = study?.image?.image?.publicUrlTransformed;
-  // pathname for participants
-  const pathname = "/participate/select";
+
   return (
     <StyledStudyPage>
       <Head>
@@ -46,19 +52,19 @@ export default function StudyPage({ query, user, study, isDashboard }) {
             isDashboard={isDashboard}
           />
 
-          {participantInfo ? (
-            <div>
-              {path
-                .filter((step) => step?.type === "task")
-                .map((step, num) => (
-                  <TaskCard key={num} step={step} study={study} />
-                ))}
-            </div>
+          {hasJoined ? (
+            <UserPath 
+              query={query}
+              user={user}
+              study={study}
+              isDashboard={isDashboard}
+              path={path} 
+            />
           ) : (
             <Link
               href={{
-                pathname,
-                query: { id: study.id },
+                pathname: `/join/select`,
+                query: { id: study?.id },
               }}
             >
               <div className="controlBtns">

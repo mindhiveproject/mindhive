@@ -10,7 +10,7 @@ export default function Router({
   tab,
   study,
   handleChange,
-  updateStudy,
+  saveStudy,
 }) {
   return (
     <BrowserEngine
@@ -19,7 +19,7 @@ export default function Router({
       tab={tab}
       study={study}
       handleChange={handleChange}
-      updateStudy={updateStudy}
+      saveStudy={saveStudy}
     />
   );
 }
