@@ -26,19 +26,23 @@ export default function Prompt({
 }) {
   const router = useRouter();
 
-  const redirectPage = user.type === "GUEST" ? {
-      pathname: `/studies/${study?.slug}`,
-      query: 
-        {
-          guest: user?.publicId,
-        }
-    } : { 
-      pathname: `/dashboard/discover/studies`,
-      query: 
-        {
-          name: study?.slug,
-        }
-    };
+  const redirectPage = user.type === "GUEST" ? 
+    `/studies/${study?.slug}?guest=${user?.publicId}` :
+    `/dashboard/discover/studies?name=${study?.slug}`; 
+
+  // const redirectPage = user.type === "GUEST" ? {
+  //     pathname: `/studies/${study?.slug}`,
+  //     query: 
+  //       {
+  //         guest: user?.publicId,
+  //       }
+  //   } : { 
+  //     pathname: `/dashboard/discover/studies`,
+  //     query: 
+  //       {
+  //         name: study?.slug,
+  //       }
+  //   };
 
   const [dataUse, setDataUse] = useState(undefined);
   const [askDataUsageQuestion, setAskDataUsageQuestion] = useState(
@@ -103,7 +107,8 @@ export default function Prompt({
       // });
       router.reload();
     } else {
-      router.push(redirectPage);
+      window.location = redirectPage;
+      // router.push(redirectPage);
     }
   };
 

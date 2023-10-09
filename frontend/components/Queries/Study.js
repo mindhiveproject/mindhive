@@ -135,6 +135,12 @@ export const STUDY_TO_DISCOVER = gql`
       title
       slug
       settings
+      collaborators {
+        id
+      }
+      author {
+        id
+      }
       image {
         id
         image {

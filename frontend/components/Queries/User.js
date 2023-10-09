@@ -201,7 +201,15 @@ export const GET_STUDY_PARTICIPANTS = gql`
       id
       participants {
         id
+        publicId
         publicReadableId
+        type
+      }
+      guests {
+        id
+        publicId
+        publicReadableId
+        type
       }
     }
   }

@@ -7,6 +7,7 @@ import {
   StyledDetails,
   ResponseButtons,
 } from "../../styles/StyledJoinStudyFlow";
+import JoinStudy from "./JoinStudy";
 
 export default function Details({ user, study, query }) {
   const { inputs, handleChange } = useForm({
@@ -21,7 +22,8 @@ export default function Details({ user, study, query }) {
     guest: query?.guest, // check whether guest participation is requested
   });
 
-  // console.log({ inputs });
+  const { settings } = study;
+  const consents = study?.consent || [];
 
   return (
     <StyledDetails>
@@ -31,59 +33,65 @@ export default function Details({ user, study, query }) {
         ".
       </h3>
 
-      <div>
-        <label htmlFor="zip">
-          <p className="questionTitle">Your zip code</p>
-          <input
-            type="number"
-            id="zip"
-            name="zip"
-            onChange={handleChange}
-            value={inputs?.zip}
-          />
-        </label>
-      </div>
+      { settings?.zipCode && 
+        <div>
+          <label htmlFor="zip">
+            <p className="questionTitle">Your zip code</p>
+            <input
+              type="number"
+              id="zip"
+              name="zip"
+              onChange={handleChange}
+              value={inputs?.zip}
+            />
+          </label>
+        </div>
+      }
+      
+      { settings?.sonaId && 
+        <div>
+          <label htmlFor="sona">
+            <p className="questionTitle">Are you an NYU SONA participant?</p>
+            <ResponseButtons>
+              <button
+                onClick={() =>
+                  handleChange({ target: { name: "sona", value: "yes" } })
+                }
+                className={inputs?.sona === "yes" ? "selectedBtn" : undefined}
+              >
+                Yes
+              </button>
+              <button
+                onClick={() =>
+                  handleChange({ target: { name: "sona", value: "no" } })
+                }
+                className={inputs?.sona === "no" ? "selectedBtn" : undefined}
+              >
+                No
+              </button>
+            </ResponseButtons>
+          </label>
+        </div>
+      }
 
-      <div>
-        <label htmlFor="sona">
-          <p className="questionTitle">Are you an NYU SONA participant?</p>
-          <ResponseButtons>
-            <button
-              onClick={() =>
-                handleChange({ target: { name: "sona", value: "yes" } })
-              }
-              className={inputs?.sona === "yes" ? "selectedBtn" : undefined}
-            >
-              Yes
-            </button>
-            <button
-              onClick={() =>
-                handleChange({ target: { name: "sona", value: "no" } })
-              }
-              className={inputs?.sona === "no" ? "selectedBtn" : undefined}
-            >
-              No
-            </button>
-          </ResponseButtons>
-        </label>
-      </div>
-
-      <div>
-        <label htmlFor="sonaid">
-          <p className="questionTitle">What is your NYU ID?</p>
-          <span>
-            By entering your ID, we can ensure that you will receive course
-            credit for your participation in this study.
-          </span>
-          <input
-            type="text"
-            id="sonaid"
-            name="sonaid"
-            onChange={handleChange}
-            value={inputs?.sonaid}
-          />
-        </label>
-      </div>
+    { settings?.askStudentsNYC &&
+        <div>
+          <label htmlFor="sonaid">
+            <p className="questionTitle">What is your NYU ID?</p>
+            <span>
+              By entering your ID, we can ensure that you will receive course
+              credit for your participation in this study.
+            </span>
+            <input
+              type="text"
+              id="sonaid"
+              name="sonaid"
+              onChange={handleChange}
+              value={inputs?.sonaid}
+            />
+          </label>
+        </div>
+      } 
 
       <div>
         <label htmlFor="eng">
@@ -149,14 +157,28 @@ export default function Details({ user, study, query }) {
         </label>
       </div>
 
-      <Link
-        href={{
-          pathname: `/join/consent`,
-          query: { ...inputs, id: study?.id },
-        }}
-      >
-        <button>Next</button>
-      </Link>
+      { ( settings?.consentObtained && consents?.length > 0 ) ?
+        <Link
+          href={{
+            pathname: `/join/consent`,
+            query: { 
+              ...inputs, 
+              id: study?.id, 
+              consent: study?.consent[0]?.id,
+            },
+          }}
+          >
+          <button>Next</button>
+        </Link>
+      :
+        <JoinStudy 
+          user={user} 
+          study={study} 
+          userInfo={inputs} 
+          btnName="Join the study" 
+        />
+      }
+      
     </StyledDetails>
   );
 }

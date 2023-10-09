@@ -1,16 +1,18 @@
 import { useQuery } from "@apollo/client";
 import { GET_STUDY_PARTICIPANTS } from "../../../../Queries/User";
 
-import Row from "./Row";
+import UserRowWrapper from "./UserRowWrapper";
+import GuestRowWrapper from "./GuestRowWrapper";
 
 export default function ParticipantsTable({ studyId }) {
   const { data, loading, error } = useQuery(GET_STUDY_PARTICIPANTS, {
     variables: { id: studyId },
   });
 
-  const st = data?.study || { participants: [] };
+  const st = data?.study || { participants: [], guests: [] };
   const { participants } = st;
-  console.log({ participants });
+  const { guests } = st;
+  const allParticipants = [...participants, ...guests];
 
   return (
     <div className="participants">
@@ -27,13 +29,28 @@ export default function ParticipantsTable({ studyId }) {
           <p>Include in analysis</p>
         </div>
         <div>
-          {participants.map((participant, num) => 
-            <Row 
-              key={num} 
-              num={num} 
-              studyId={studyId} 
-              participant={participant} 
-            />
+          {allParticipants.map((participant, num) => {
+            if(participant?.type === "GUEST") {
+              return (
+                <GuestRowWrapper 
+                  key={num} 
+                  num={num} 
+                  studyId={studyId} 
+                  participant={participant} 
+                />
+              )
+            } else {
+              return (
+                <UserRowWrapper 
+                  key={num} 
+                  num={num} 
+                  studyId={studyId} 
+                  participant={participant} 
+                />
+              )
+            }
+          }
+            
           )}
         </div>
       </div>

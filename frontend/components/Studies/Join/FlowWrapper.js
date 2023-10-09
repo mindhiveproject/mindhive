@@ -5,7 +5,7 @@ import Selector from "./Selector";
 import SignIn from "../../Auth/Login";
 import RoleSignup from "../../Auth/SignupRoles/Role";
 import Details from "./Details";
-import Consent from "./Consent";
+import Consents from "./Consents/Main";
 
 export default function FlowWrapper({ query, user, study, step }) {
   let header;
@@ -28,8 +28,6 @@ export default function FlowWrapper({ query, user, study, step }) {
     default:
       header = "Participation";
   }
-
-  // console.log({ user });
 
   return (
     <StyledWrapper>
@@ -75,7 +73,7 @@ export default function FlowWrapper({ query, user, study, step }) {
           <Details user={user} study={study} query={query} />
         )}
         {step === "consent" && (
-          <Consent user={user} study={study} query={query} />
+          <Consents user={user} study={study} query={query} />
         )}
       </div>
     </StyledWrapper>

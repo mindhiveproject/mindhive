@@ -13,6 +13,22 @@ export const StyledStudyPage = styled.div`
   max-width: 1200px;
   min-height: 800px;
 
+  .studyContent {
+    display: grid;
+    width: 100%;
+    grid-gap: 10px;
+    margin: 10px;
+    padding: 10px;
+    .guestMessage {
+      p {
+        padding: 10px;
+        border-radius: 7px;
+        background: orange;
+        color: black;
+      }
+    }
+  }
+
   @media (max-width: 700px) {
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -147,7 +163,7 @@ export const StyledStudyPage = styled.div`
     display: grid;
     grid-gap: 5px;
     margin-bottom: 34px;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     button {
       width: auto;
       margin: 0;

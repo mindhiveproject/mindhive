@@ -1,6 +1,15 @@
 import Papa from 'papaparse';
 
-export default function DataUpload ({ setData, studyData }) {
+// helper function to get all column names of the given dataset
+const getColumnNames = (data) => {
+    const allKeys = data
+      .map((line) => Object.keys(line))
+      .reduce((a, b) => a.concat(b), []);
+    const keys = Array.from(new Set(allKeys)).sort();
+    return keys;
+  };
+
+export default function DataUpload ({ setData, setVariables, studyData }) {
 
     async function handleDataUpload(e) {
         const form = e.currentTarget;
@@ -11,12 +20,14 @@ export default function DataUpload ({ setData, studyData }) {
             const uploadedData = JSON.parse(text);
             console.log(uploadedData);
             setData(uploadedData);
+            setVariables(getColumnNames(uploadedData));
         } else {
             Papa.parse(file, {
                 header: true,
                 complete: (results) => {
                     console.log(results.data)
                     setData(results.data);
+                    setVariables(getColumnNames(results.data));
                 },
                 error: (error) => {
                     console.log(error)
@@ -32,7 +43,10 @@ export default function DataUpload ({ setData, studyData }) {
                 Choose the data file
             </label>
             
-            <button onClick={ () => setData([...studyData]) }>
+            <button onClick={ () => {
+                setData([...studyData]) 
+                setVariables(getColumnNames(studyData));
+            }}>
                 Use study data
             </button>
         </div>

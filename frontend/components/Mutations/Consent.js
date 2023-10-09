@@ -2,24 +2,32 @@ import gql from "graphql-tag";
 
 // create new consent
 export const CREATE_CONSENT = gql`
-  mutation CREATE_CONSENT(
-    $title: String!
-    $description: String
-    $info: JSON
-    $collaborators: [ProfileWhereUniqueInput!]
-  ) {
-    createConsent(
-      data: {
-        title: $title
-        description: $description
-        info: $info
-        collaborators: { connect: $collaborators }
-      }
-    ) {
+  mutation CREATE_CONSENT($input: ConsentCreateInput!) {
+    createConsent(data: $input) {
       id
     }
   }
 `;
+
+// export const CREATE_CONSENT = gql`
+//   mutation CREATE_CONSENT(
+//     $title: String!
+//     $description: String
+//     $info: JSON
+//     $collaborators: [ProfileWhereUniqueInput!]
+//   ) {
+//     createConsent(
+//       data: {
+//         title: $title
+//         description: $description
+//         info: $info
+//         collaborators: { connect: $collaborators }
+//       }
+//     ) {
+//       id
+//     }
+//   }
+// `;
 
 // edit consent
 export const EDIT_CONSENT = gql`

@@ -26,12 +26,14 @@ const defaultSpec = {
 
 
 
-export default function StateManager({ studyId, studyData, variables, user }) {
+export default function StateManager({ studyId, studyData, studyVariables, user }) {
 
   // state of the Vega spec
   const [spec, setSpec] = useState(defaultSpec);
   // state of the data we are working with
   const [data, setData] = useState([...studyData]);
+  // state of the variables 
+  const [variables, setVariables] = useState([...studyVariables]);
 
   return (
     <StyledChatGPTPage>
@@ -42,8 +44,9 @@ export default function StateManager({ studyId, studyData, variables, user }) {
             studyId={studyId}
             data={data}
             studyData={studyData}
-            variables={variables}
             setData={setData}
+            variables={variables}
+            setVariables={setVariables}
             spec={spec} 
             defaultSpec={defaultSpec}
             setSpec={setSpec} 

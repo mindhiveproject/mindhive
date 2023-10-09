@@ -80,8 +80,12 @@ export default function AddClass({ user }) {
     e.preventDefault();
     await createConsent({
       variables: {
-        ...inputs,
-        collaborators: inputs?.collaborators?.map((col) => ({ id: col?.id })),
+        input: {
+          ...inputs,
+          collaborators: inputs?.collaborators?.length ? 
+            inputs?.collaborators?.map((col) => ({ id: col?.id })) :
+            null,
+        }
       },
     });
     router.push({

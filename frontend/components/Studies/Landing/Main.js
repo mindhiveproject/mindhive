@@ -25,7 +25,6 @@ export default function StudyLandingMain({ query, isDashboard, isRun }) {
   } else {
     user = useContext(UserContext);
   }
-  console.log({ user });
 
   if(isRun) {
     return <RunStudy user={user} study={study} />

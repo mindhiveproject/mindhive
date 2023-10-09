@@ -88,7 +88,7 @@ export default function Preprocessor({ studyId, data, user }) {
         <StateManager
           studyId={studyId}
           studyData={dataByParticipant}
-          variables={variables}
+          studyVariables={variables}
           user={user}
         />
     );

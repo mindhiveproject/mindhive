@@ -63,7 +63,7 @@ export default function RoleSignup(query) {
     }
     if (redirectType === "JoinStudyFlow" && redirectTo) {
       router.push({
-        pathname: "/participate/details",
+        pathname: "/join/details",
         query: { id: redirectTo, guest: false },
       });
     }

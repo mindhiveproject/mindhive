@@ -2,13 +2,17 @@ import { StyledSelector } from "../../styles/StyledJoinStudyFlow";
 import Link from "next/link";
 
 export default function Selector({ user, study, query }) {
+
+  const { settings } = study;
+
   return (
     <StyledSelector>
       <div className="selectorHeader">
         <h1>How would you like to participate today?</h1>
       </div>
       <div className="selectorOptions">
-        {(study?.settings?.guestParticipation || true) && (
+        
+        { settings?.guestParticipation && (
           <div className="option borderRight">
             <h2>Guest participant</h2>
             <p>

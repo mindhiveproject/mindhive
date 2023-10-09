@@ -13,8 +13,9 @@ export default function Dashboard({
   studyId, 
   data, 
   studyData,
-  variables, 
   setData, 
+  variables, 
+  setVariables,
   spec, 
   defaultSpec, 
   setSpec
@@ -50,7 +51,7 @@ export default function Dashboard({
             }
             onClick={ () => { setTab("manager") }}
           >
-            <p>Manager</p>
+            <p>Save & Open</p>
           </div>
      
           <div
@@ -68,7 +69,7 @@ export default function Dashboard({
               }
               onClick={ () => { setTab("editor") }}
             >
-              <p>Editor</p>
+              <p>Spec Editor</p>
           </div>
       
       </div>
@@ -78,7 +79,11 @@ export default function Dashboard({
         <div className="dashboardArea">
                 
           {tab === "data" && <div>
-            <DataUpload setData={setData} studyData={studyData} />
+            <DataUpload 
+              setData={setData} 
+              setVariables={setVariables} 
+              studyData={studyData} 
+            />
           </div>}
 
           {tab === "chat" && <div>
@@ -89,7 +94,7 @@ export default function Dashboard({
             />
           </div>}
           
-          {tab === "manager" && <div>
+          {tab === "manager" && 
             <SpecManager
               studyId={studyId}
               user={user}
@@ -97,7 +102,7 @@ export default function Dashboard({
               setSpec={setSpec}
               defaultSpec={defaultSpec}
             />
-          </div>}
+          }
 
           {tab === "selector" && <div>
             <Selector spec={spec} setSpec={setSpec} variables={variables} />

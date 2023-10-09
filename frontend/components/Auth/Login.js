@@ -54,7 +54,7 @@ export default function Login({ redirectType, redirectTo }) {
 
       if (redirectType === "JoinStudyFlow" && redirectTo) {
         router.push({
-          pathname: "/participate/details",
+          pathname: "/join/details",
           query: { id: redirectTo, guest: false },
         });
       }

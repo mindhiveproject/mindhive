@@ -4,59 +4,28 @@ import TaskCard from "./TaskCard";
 
 export default function UserPath({ query, user, study, isDashboard, path }) {
 
+    console.log({ user });
+
     // pass the guest publicId to the task page if the user type is guest
     const taskQuery = user?.type === "GUEST" ? 
      { 
-        // id: study.id,
         name: study.slug,
         guest: user?.publicId,
      } :
      {
-        // id: study.id,
         name: study.slug,
      }
 
-    console.log({ path });
-    console.log({ study });
     // check whether there are tasks left in the study
     const nextTaskId = path[path?.length - 1]?.componentID;
     
-    // const areTasksLeft = true;
-    // const { flow } = study;
-
-    // const findCurrentStep = ({ flow }) => {
-    //     console.log({ flow });
-    //     const isInFlow = flow?.map(step => step?.id)?.includes(latestUserStepId);
-    //     console.log({ isInFlow });
-    //     if(!flow || flow?.length === 0) {
-    //         return false;
-    //     }
-    //     if(isInFlow) {
-    //         return flow;
-    //     } else {
-    //         const [conditions] = flow?.filter(step => step?.type === "design")
-    //             .map(step => step?.conditions);
-    //         let returnValue;
-    //         if(conditions?.length) {
-    //             for (let i = 0; i < conditions.length; i++) {
-    //                 if(findCurrentStep({ flow: conditions[i]?.flow })) {
-    //                     returnValue = findCurrentStep({ flow: conditions[i]?.flow });
-    //                 }
-    //             }
-    //             return returnValue;
-    //         }
-    //     } 
-    // }
-
-    // const nextStep = findCurrentStep({ flow });
-    // console.log({ nextStep });
-
     return (
-        <div>
+        <>
             {user?.type === "GUEST" && 
-                <div>
+                <div className="guestMessage">
                     <p>
-                        You participate as a guest.
+                        You participate as a guest. 
+                        Your public readable id is <strong>{user?.publicReadableId}</strong>
                     </p>
                 </div>
             }
@@ -79,7 +48,7 @@ export default function UserPath({ query, user, study, isDashboard, path }) {
                     </div>
                 </Link>         
             }
-        </div>
+        </>
     )
 
 }

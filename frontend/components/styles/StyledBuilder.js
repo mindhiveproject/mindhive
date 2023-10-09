@@ -740,6 +740,7 @@ export const StyledCollectPage = styled.div`
   display: grid;
   width: 100%;
   overflow-y: scroll;
+  background: rgb(229, 229, 229);
   .collectBoard {
     display: grid;
     max-width: 1100px;
@@ -868,6 +869,13 @@ export const StyledCollectPage = styled.div`
     grid-template-columns: 1fr;
     grid-gap: 20px;
     align-content: baseline;
+    .resultItem {
+      display: grid;
+      margin: 5px 0px;
+      padding: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+      background: white;
+    }
   }
 
 `;
@@ -933,8 +941,9 @@ export const StyledVisualizePage = styled.div`
     overflow-x: scroll;
   }
   .specManager {
-    margin: 3rem;
-    font-size: 1.6rem;
+    display: grid;
+    align-content: baseline;
+    width: 100%;
     .upperPart {
       margin: 1rem;
       display: grid;
@@ -1032,6 +1041,8 @@ export const StyledVisualizePage = styled.div`
     }
   }
   .specManagerForm {
+    display: grid;
+    width: 100%;
     box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
     border: 5px solid white;
     border-radius: 10px;

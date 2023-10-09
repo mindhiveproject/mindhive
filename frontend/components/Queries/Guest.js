@@ -6,6 +6,7 @@ export const GET_GUEST = gql`
     guest(where: { publicId: $publicId }) {
       id
       publicId
+      publicReadableId
       type
       studiesInfo
       participantIn {

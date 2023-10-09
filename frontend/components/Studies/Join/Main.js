@@ -5,7 +5,6 @@ import { UserContext } from "../../Global/Authorized";
 
 import { STUDY_TO_JOIN } from "../../Queries/Study";
 import FlowWrapper from "./FlowWrapper";
-// import RunStudy from "../Run/Main";
 
 export default function JoinStudyMain(query) {
   const { id, step } = query;

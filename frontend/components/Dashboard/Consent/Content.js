@@ -19,7 +19,7 @@ export default function ConsentContent({ info, handleChange }) {
             if (i === index) {
               return {
                 ...block,
-                content: content,
+                text: content,
               };
             } else {
               return block;

@@ -33,7 +33,7 @@ export default function ParticipantPage({ query, user, tab }) {
       ...study,
     });
 
-  // console.log({ inputs });
+  console.log({ inputs });
 
   const [
     createStudy,
@@ -49,6 +49,7 @@ export default function ParticipantPage({ query, user, tab }) {
         image: inputs?.file
           ? { create: { image: inputs?.file, altText: inputs?.title } }
           : null,
+        consent: inputs?.consent?.length ? { connect : inputs?.consent } : null,
       },
     },
     refetchQueries: [{ query: MY_STUDIES, variables: { id: user?.id } }],
@@ -73,6 +74,7 @@ export default function ParticipantPage({ query, user, tab }) {
         // collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
         // classes: inputs?.classes.map((cl) => ({ id: cl?.id })),
         // consent: inputs?.consent.map((con) => ({ id: con?.id })),
+        consent: inputs?.consent?.length ? { connect : inputs?.consent } : null,
       },
     },
     refetchQueries: [{ query: MY_STUDY, variables: { id: studyId } }],
