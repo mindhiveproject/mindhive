@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "keystone dev",
-    "start": "keystone start",
+    "start": "NODE_ENV=production keystone start",
     "build": "NODE_ENV=production keystone build",
     "postinstall": "keystone postinstall"
   },
