@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { DELETE_CLASS } from "../../../Mutations/Classes";
-import { GET_TEACHER_CLASSES } from "../../../Queries/Classes";
+// import { GET_TEACHER_CLASSES } from "../../../Queries/Classes";
 
 import { useRouter } from "next/router";
 
@@ -8,7 +8,7 @@ export default function Settings({ myclass, user }) {
   const router = useRouter();
   const [deleteClass, { loading }] = useMutation(DELETE_CLASS, {
     variables: { id: myclass?.id },
-    refetchQueries: [{ query: GET_TEACHER_CLASSES }],
+    // refetchQueries: [{ query: GET_TEACHER_CLASSES }],
   });
 
   return (

@@ -2231,8 +2231,8 @@ var keystone_default = withAuth(
       }
     },
     db: {
-      provider: "sqlite",
-      url: "file:./keystone.db"
+      provider: process.env.NODE_ENV === "development" ? "sqlite" : "postgresql",
+      url: process.env.NODE_ENV === "development" ? "file:./keystone.db" : process.env.DATABASE_URL
     },
     lists,
     extendGraphqlSchema,

@@ -6,7 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import useForm from "../../../../lib/useForm";
 
 import { EDIT_CLASS } from "../../../Mutations/Classes";
-import { GET_TEACHER_CLASSES } from "../../../Queries/Classes";
+// import { GET_TEACHER_CLASSES } from "../../../Queries/Classes";
 
 export default function Header({ user, myclass }) {
   const { t } = useTranslation("classes");
@@ -18,7 +18,7 @@ export default function Header({ user, myclass }) {
   const [updateClass, { data, loading, error }] = useMutation(EDIT_CLASS, {
     variables: inputs,
     refetchQueries: [
-      { query: GET_TEACHER_CLASSES, variables: { id: user?.id } },
+      // { query: GET_TEACHER_CLASSES, variables: { id: user?.id } },
     ],
   });
 

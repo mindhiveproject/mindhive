@@ -34,7 +34,6 @@ export default function AddComponent({ query, user, redirect, isExternal }) {
     { data: templateData, loading: templateLoading, error: templateError },
   ] = useMutation(CREATE_TEMPLATE, {
     variables: inputs?.template,
-    // refetchQueries: [{ query: GET_TEACHER_CLASSES }],
   });
 
   const [

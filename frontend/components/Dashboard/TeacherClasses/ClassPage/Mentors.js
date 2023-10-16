@@ -6,7 +6,7 @@ import Link from "next/link";
 import { EDIT_CLASS } from "../../../Mutations/Classes";
 import { REMOVE_MENTOR_FROM_CLASS } from "../../../Mutations/Classes";
 import { GET_CLASS } from "../../../Queries/Classes";
-import { GET_TEACHER_CLASSES } from "../../../Queries/Classes";
+// import { GET_TEACHER_CLASSES } from "../../../Queries/Classes";
 
 export default function ClassMentors({ myclass, user }) {
   const [updateClass, { loading }] = useMutation(EDIT_CLASS, {
@@ -23,7 +23,7 @@ export default function ClassMentors({ myclass, user }) {
         classId: myclass?.id,
       },
       refetchQueries: [
-        { query: GET_TEACHER_CLASSES, variables: { id: user?.id } },
+        // { query: GET_TEACHER_CLASSES, variables: { id: user?.id } },
         { query: GET_CLASS, variables: { code: myclass?.code } },
       ],
     }
