@@ -3,9 +3,10 @@ import { useState } from "react";
 import OpenAI from 'openai';
 
 import { StyledChatGPTPage } from "../../../../styles/StyledBuilder";
+import { openAiKey } from "../../../../../config";
 
 const openai = new OpenAI({
-    apiKey: "",
+    apiKey: openAiKey,
     dangerouslyAllowBrowser: true
 })
 

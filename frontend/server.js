@@ -41,14 +41,6 @@ app
   .then(() => {
     server = express();
 
-    // Set up the proxy.
-    // if (dev && devProxy) {
-    //   const { createProxyMiddleware } = require("http-proxy-middleware");
-    //   Object.keys(devProxy).forEach(function (context) {
-    //     server.use(createProxyMiddleware(context, devProxy[context]));
-    //   });
-    // }
-
     server.use(body.json());
 
     server.post("/api/save", async (req, res) => {
@@ -56,9 +48,28 @@ app
       const { metadata, data } = req.body;
       const { slice, id, payload } = metadata;
 
-      const dir = path.join(__dirname, "data", id);
+      const year = req.query.y;
+      const month = req.query.m;
+      const day = req.query.d;
 
+      console.log({ year, month, day });
+
+      // check whether the folder "data" exists
+      const dirData = path.join(__dirname, "data");
+      !fs.existsSync(dirData) && fs.mkdirSync(dirData);
+      // check whether the folder with year exists
+      const dirDataYear = path.join(dirData, year);
+      !fs.existsSync(dirDataYear) && fs.mkdirSync(dirDataYear);
+      // check whether the folder with month exists
+      const dirDataYearMonth = path.join(dirDataYear, month);
+      !fs.existsSync(dirDataYearMonth) && fs.mkdirSync(dirDataYearMonth);
+      // check whether the folder with date exists
+      const dirDataYearMonthDay = path.join(dirDataYearMonth, day);
+      !fs.existsSync(dirDataYearMonthDay) && fs.mkdirSync(dirDataYearMonthDay);
+      // check whether the folder with result ID exists
+      const dir = path.join(dirDataYearMonthDay, id);
       !fs.existsSync(dir) && fs.mkdirSync(dir);
+
       const filePath = path.join(dir, payload + ".json");
 
       jsonfile.writeFile(filePath, req.body, { flag: 'a', EOL: ',\n' }, function (err) {

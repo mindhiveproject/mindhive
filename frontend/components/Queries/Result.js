@@ -13,6 +13,7 @@ export const GET_PARTICIPANT_RESULTS = gql`
         }) {
       id
       token
+      date
       task {
         title
       }

@@ -190,13 +190,7 @@ input StringFilter {
   contains: String
   startsWith: String
   endsWith: String
-  mode: QueryMode
   not: NestedStringFilter
-}
-
-enum QueryMode {
-  default
-  insensitive
 }
 
 input NestedStringFilter {
@@ -224,7 +218,6 @@ input StringNullableFilter {
   contains: String
   startsWith: String
   endsWith: String
-  mode: QueryMode
   not: NestedStringNullableFilter
 }
 
@@ -2191,6 +2184,7 @@ input UpdateCreateInput {
 type Dataset {
   id: ID!
   token: String
+  date: String
   profile: Profile
   guest: Guest
   type: String
@@ -2217,6 +2211,7 @@ input DatasetWhereInput {
   NOT: [DatasetWhereInput!]
   id: IDFilter
   token: StringFilter
+  date: StringFilter
   profile: ProfileWhereInput
   guest: GuestWhereInput
   type: StringNullableFilter
@@ -2234,6 +2229,7 @@ input DatasetWhereInput {
 input DatasetOrderByInput {
   id: OrderDirection
   token: OrderDirection
+  date: OrderDirection
   type: OrderDirection
   testVersion: OrderDirection
   dataPolicy: OrderDirection
@@ -2244,6 +2240,7 @@ input DatasetOrderByInput {
 
 input DatasetUpdateInput {
   token: String
+  date: String
   profile: ProfileRelateToOneForUpdateInput
   guest: GuestRelateToOneForUpdateInput
   type: String
@@ -2284,6 +2281,7 @@ input DatasetUpdateArgs {
 
 input DatasetCreateInput {
   token: String
+  date: String
   profile: ProfileRelateToOneForCreateInput
   guest: GuestRelateToOneForCreateInput
   type: String
@@ -3820,6 +3818,11 @@ enum KeystoneAdminUIFieldMetaItemViewFieldMode {
 enum KeystoneAdminUIFieldMetaItemViewFieldPosition {
   form
   sidebar
+}
+
+enum QueryMode {
+  default
+  insensitive
 }
 
 type KeystoneAdminUIFieldGroupMeta {

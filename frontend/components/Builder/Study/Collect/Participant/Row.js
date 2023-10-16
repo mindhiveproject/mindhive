@@ -21,7 +21,7 @@ export default function ResultRow({ studyId, participantId, result }) {
             <div># Partial uploads</div>
             <div>Data analysis</div>
             <div>
-                <Download dataToken={result?.token} />
+                <Download date={result?.date} dataToken={result?.token} />
             </div>
             <div></div>
     </div>

@@ -23,6 +23,7 @@ export const Dataset = list({
       isIndexed: "unique",
       isFilterable: true,
     }),
+    date: text(),
     profile: relationship({
       ref: "Profile.datasets",
     }),

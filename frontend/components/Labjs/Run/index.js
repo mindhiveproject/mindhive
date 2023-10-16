@@ -47,12 +47,21 @@ export default function ExperimentWindow({
     }, {})
   );
 
+  // get the current date for data saving
+  const curDate = new Date();
+  const date = {
+    year: parseInt(curDate.getFullYear()),
+    month: parseInt(curDate.getMonth()) + 1,
+    day: parseInt(curDate.getDate()),
+  }
+  const dateString = `${date.year}-${date.month}-${date.day}`;
+
   if (labjsObject && isSavingData) {
     labjsObject.plugins = [
       ...labjsObject?.plugins,
       {
         type: "lab.plugins.Transmit",
-        url: `/api/save/?st=${study?.id}&te=${task?.template?.id}&ta=${task?.id}&us=${user?.id}&type=${userType}`,
+        url: `/api/save/?st=${study?.id}&te=${task?.template?.id}&ta=${task?.id}&us=${user?.id}&type=${userType}&y=${date.year}&m=${date.month}&d=${date.day}`,
       },
       { type: "lab.plugins.Debug" },
     ];
@@ -77,6 +86,7 @@ export default function ExperimentWindow({
           study: { connect: { id: study?.id } },
           token: id, 
           type: user?.type,
+          date: dateString,
         }
       } });
     }

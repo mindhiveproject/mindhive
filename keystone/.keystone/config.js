@@ -1386,6 +1386,7 @@ var Dataset = (0, import_core17.list)({
       isIndexed: "unique",
       isFilterable: true
     }),
+    date: (0, import_fields19.text)(),
     profile: (0, import_fields19.relationship)({
       ref: "Profile.datasets"
     }),
@@ -2230,8 +2231,8 @@ var keystone_default = withAuth(
       }
     },
     db: {
-      provider: "postgresql",
-      url: process.env.NODE_ENV === "development" ? process.env.DATABASE_DEV : process.env.DATABASE_URL
+      provider: "sqlite",
+      url: "file:./keystone.db"
     },
     lists,
     extendGraphqlSchema,
