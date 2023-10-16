@@ -33,3 +33,6 @@ yarn-error.log*
 
 # data files
 /data
+
+# config file
+config.js
