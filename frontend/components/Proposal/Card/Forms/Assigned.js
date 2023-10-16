@@ -26,7 +26,7 @@ class Assigned extends Component {
           selection
           options={this.props.users}
           onChange={this.onChange}
-          value={this.props.assignedTo?.map((obj) => obj["id"])}
+          value={this.props.assignedTo?.map((obj) => obj["id"]) || []}
         />
       </StyledDropdown>
     );

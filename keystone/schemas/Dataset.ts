@@ -41,6 +41,7 @@ export const Dataset = list({
     task: relationship({
       ref: "Task.datasets",
     }),
+    testVersion: text(),
     study: relationship({
       ref: "Study.datasets",
     }),

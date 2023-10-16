@@ -121,6 +121,9 @@ export const StyledForm = styled.form`
       border-color: ${(props) => props.theme.red};
     }
   }
+  textarea {
+    height: 100%;
+  }
   button,
   input[type="submit"] {
     font-family: Lato;

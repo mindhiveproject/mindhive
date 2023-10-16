@@ -190,7 +190,13 @@ input StringFilter {
   contains: String
   startsWith: String
   endsWith: String
+  mode: QueryMode
   not: NestedStringFilter
+}
+
+enum QueryMode {
+  default
+  insensitive
 }
 
 input NestedStringFilter {
@@ -218,6 +224,7 @@ input StringNullableFilter {
   contains: String
   startsWith: String
   endsWith: String
+  mode: QueryMode
   not: NestedStringNullableFilter
 }
 
@@ -1592,7 +1599,6 @@ type Task {
   id: ID!
   title: String
   taskType: TaskTaskTypeType
-  subtitle: String
   slug: String
   description: String
   descriptionForParticipants: String
@@ -1637,7 +1643,6 @@ input TaskWhereInput {
   id: IDFilter
   title: StringFilter
   taskType: TaskTaskTypeTypeNullableFilter
-  subtitle: StringFilter
   slug: StringFilter
   description: StringFilter
   descriptionForParticipants: StringFilter
@@ -1669,7 +1674,6 @@ input TaskOrderByInput {
   id: OrderDirection
   title: OrderDirection
   taskType: OrderDirection
-  subtitle: OrderDirection
   slug: OrderDirection
   description: OrderDirection
   descriptionForParticipants: OrderDirection
@@ -1687,7 +1691,6 @@ input TaskOrderByInput {
 input TaskUpdateInput {
   title: String
   taskType: TaskTaskTypeType
-  subtitle: String
   slug: String
   description: String
   descriptionForParticipants: String
@@ -1724,7 +1727,6 @@ input TaskUpdateArgs {
 input TaskCreateInput {
   title: String
   taskType: TaskTaskTypeType
-  subtitle: String
   slug: String
   description: String
   descriptionForParticipants: String
@@ -2194,6 +2196,7 @@ type Dataset {
   type: String
   template: Template
   task: Task
+  testVersion: String
   study: Study
   summaryResult: SummaryResult
   dataPolicy: String
@@ -2219,6 +2222,7 @@ input DatasetWhereInput {
   type: StringNullableFilter
   template: TemplateWhereInput
   task: TaskWhereInput
+  testVersion: StringFilter
   study: StudyWhereInput
   summaryResult: SummaryResultWhereInput
   dataPolicy: StringFilter
@@ -2231,6 +2235,7 @@ input DatasetOrderByInput {
   id: OrderDirection
   token: OrderDirection
   type: OrderDirection
+  testVersion: OrderDirection
   dataPolicy: OrderDirection
   isCompleted: OrderDirection
   createdAt: OrderDirection
@@ -2244,6 +2249,7 @@ input DatasetUpdateInput {
   type: String
   template: TemplateRelateToOneForUpdateInput
   task: TaskRelateToOneForUpdateInput
+  testVersion: String
   study: StudyRelateToOneForUpdateInput
   summaryResult: SummaryResultRelateToOneForUpdateInput
   dataPolicy: String
@@ -2283,6 +2289,7 @@ input DatasetCreateInput {
   type: String
   template: TemplateRelateToOneForCreateInput
   task: TaskRelateToOneForCreateInput
+  testVersion: String
   study: StudyRelateToOneForCreateInput
   summaryResult: SummaryResultRelateToOneForCreateInput
   dataPolicy: String
@@ -3813,11 +3820,6 @@ enum KeystoneAdminUIFieldMetaItemViewFieldMode {
 enum KeystoneAdminUIFieldMetaItemViewFieldPosition {
   form
   sidebar
-}
-
-enum QueryMode {
-  default
-  insensitive
 }
 
 type KeystoneAdminUIFieldGroupMeta {

@@ -83,6 +83,14 @@ export const PROPOSAL_QUERY = gql`
         id
         title
         slug
+        author {
+          id 
+          username
+        }
+        collaborators {
+          id 
+          username
+        }
       }
       sections {
         id

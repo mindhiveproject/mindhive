@@ -1012,7 +1012,6 @@ var Task = (0, import_core12.list)({
         { label: "Block", value: "BLOCK" }
       ]
     }),
-    subtitle: (0, import_fields14.text)(),
     slug: (0, import_fields14.text)({
       validation: { isRequired: true },
       isIndexed: "unique",
@@ -1405,6 +1404,7 @@ var Dataset = (0, import_core17.list)({
     task: (0, import_fields19.relationship)({
       ref: "Task.datasets"
     }),
+    testVersion: (0, import_fields19.text)(),
     study: (0, import_fields19.relationship)({
       ref: "Study.datasets"
     }),
@@ -1441,26 +1441,30 @@ var ProposalBoard = (0, import_core18.list)({
       isIndexed: "unique",
       isFilterable: true,
       hooks: {
-        async resolveInput({ context, inputData }) {
-          const { title } = inputData;
-          if (title) {
-            let slug = (0, import_slugify4.default)(title, {
-              remove: /[*+~.()'"!:@]/g,
-              lower: true,
-              strict: true
-            });
-            const items = await context.query.ProposalBoard.findMany({
-              where: { slug: { startsWith: slug } },
-              query: "id slug"
-            });
-            if (items.length) {
-              const re = new RegExp(`${slug}-*\\d*$`);
-              const slugs = items.filter((item) => item.slug.match(re));
-              if (slugs.length) {
-                slug = `${slug}-${slugs.length}`;
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create") {
+            const { title } = inputData;
+            if (title) {
+              let slug = (0, import_slugify4.default)(title, {
+                remove: /[*+~.()'"!:@]/g,
+                lower: true,
+                strict: true
+              });
+              const items = await context.query.ProposalBoard.findMany({
+                where: { slug: { startsWith: slug } },
+                query: "id slug"
+              });
+              if (items.length) {
+                const re = new RegExp(`${slug}-*\\d*$`);
+                const slugs = items.filter((item) => item.slug.match(re));
+                if (slugs.length) {
+                  slug = `${slug}-${slugs.length}`;
+                }
               }
+              return slug;
             }
-            return slug;
+          } else {
+            return inputData.slug;
           }
         }
       }
@@ -2226,8 +2230,8 @@ var keystone_default = withAuth(
       }
     },
     db: {
-      provider: "sqlite",
-      url: "file:./keystone.db"
+      provider: "postgresql",
+      url: process.env.NODE_ENV === "development" ? process.env.DATABASE_DEV : process.env.DATABASE_URL
     },
     lists,
     extendGraphqlSchema,

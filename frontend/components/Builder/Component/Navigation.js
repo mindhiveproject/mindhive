@@ -49,10 +49,11 @@ export default function Navigation({
   openFullscreenPreview,
   isTemplateAuthor,
   close,
+  isInStudyBuilder,
 }) {
   console.log({ task });
   // decide whether include the template tab based on whether the user is the author or a collaborator on the template
-  const itemsInternalTaskSelected = isTemplateAuthor
+  const itemsInternalTaskSelected = isTemplateAuthor 
     ? itemsInternalTask
     : itemsInternalTask.filter((item) => item.value !== "template");
   // decide whether to show only tabs for an external task

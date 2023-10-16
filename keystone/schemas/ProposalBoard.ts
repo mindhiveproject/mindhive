@@ -27,26 +27,30 @@ export const ProposalBoard = list({
       isIndexed: "unique",
       isFilterable: true,
       hooks: {
-        async resolveInput({ context, inputData }) {
-          const { title } = inputData;
-          if (title) {
-            let slug = slugify(title, {
-              remove: /[*+~.()'"!:@]/g, // remove characters that match regex
-              lower: true, // convert to lower case
-              strict: true, // strip special characters except replacement
-            });
-            const items = await context.query.ProposalBoard.findMany({
-              where: { slug: { startsWith: slug } },
-              query: "id slug",
-            });
-            if (items.length) {
-              const re = new RegExp(`${slug}-*\\d*$`);
-              const slugs = items.filter((item) => item.slug.match(re));
-              if (slugs.length) {
-                slug = `${slug}-${slugs.length}`;
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create") {
+            const { title } = inputData;
+            if (title) {
+              let slug = slugify(title, {
+                remove: /[*+~.()'"!:@]/g, // remove characters that match regex
+                lower: true, // convert to lower case
+                strict: true, // strip special characters except replacement
+              });
+              const items = await context.query.ProposalBoard.findMany({
+                where: { slug: { startsWith: slug } },
+                query: "id slug",
+              });
+              if (items.length) {
+                const re = new RegExp(`${slug}-*\\d*$`);
+                const slugs = items.filter((item) => item.slug.match(re));
+                if (slugs.length) {
+                  slug = `${slug}-${slugs.length}`;
+                }
               }
+              return slug;
             }
-            return slug;
+          } else {
+            return inputData.slug;
           }
         },
       },

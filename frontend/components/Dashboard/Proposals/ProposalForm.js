@@ -1,3 +1,5 @@
+import { StyledForm } from "../../styles/StyledForm";
+
 export default function ProposalForm({ inputs, handleChange }) {
   const setContent = (content) =>
     handleChange({
@@ -5,7 +7,7 @@ export default function ProposalForm({ inputs, handleChange }) {
     });
 
   return (
-    <div>
+    <StyledForm>
       <div>
         <label htmlFor="title">
           Title
@@ -23,13 +25,13 @@ export default function ProposalForm({ inputs, handleChange }) {
           Description
           <textarea
             id="description"
-            rows="50"
+            rows="10"
             name="description"
             value={inputs?.description}
             onChange={handleChange}
           />
         </label>
       </div>
-    </div>
+    </StyledForm>
   );
 }

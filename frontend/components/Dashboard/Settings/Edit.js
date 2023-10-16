@@ -9,6 +9,7 @@ import { StyledForm } from "../../styles/StyledForm";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 import { UPDATE_USER } from "../../Mutations/User";
 import UpdateAvatarModal from "../../Account/AvatarEditor/AvatarModal";
+import IdentIcon from "../../Account/IdentIcon";
 
 export default function EditSettings({ query, user }) {
   const { t } = useTranslation("account");
@@ -30,12 +31,30 @@ export default function EditSettings({ query, user }) {
   return (
     <>
       <h1>Settings</h1>
-      <UpdateAvatarModal user={user} />
+      
       <StyledForm method="POST" onSubmit={handleSubmit}>
         <DisplayError error={error} />
 
+        <label>
+          Avatar
+        </label>
+        <div>
+          { user?.avatar ? (
+            <img src={user?.avatar} alt={user?.name} />
+            ) : (
+              <div>
+                <IdentIcon size="120" value={user?.name} />
+              </div>
+            ) }
+          <UpdateAvatarModal user={user} />
+        </div>
+      
         <fieldset disabled={loading} aria-busy={loading}>
+
           <div className="infoPane">
+
+ 
+
             <label htmlFor="username">
               {t("common.username")}
               <input

@@ -1,12 +1,27 @@
 import Links from "./Links";
 import MyUpdates from "../../Account/Updates/Main";
+import IdentIcon from "../../Account/IdentIcon";
 
 export default function Home({ query, user }) {
   const { username, publicId, publicReadableId } = user;
 
   return (
     <>
-      <h1>Welcome{username && `, ${username}`}!</h1>
+      <div className="titleIcon">
+        <div>
+          <h1>Welcome{username && `, ${username}`}!</h1>
+        </div>
+        <div>
+          { user?.avatar ? (
+            <img src={user?.avatar} alt={user?.name} />
+              ) : (
+            <div>
+              <IdentIcon size="120" value={user?.name} />
+            </div>
+          ) }
+        </div>
+      </div>
+
 
       <div className="header">
         <div className="idInfo">

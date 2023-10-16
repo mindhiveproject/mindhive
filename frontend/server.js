@@ -25,7 +25,7 @@ const SAVE_AGGREGATED_RESULTS = `
 
 const env = process.env.NODE_ENV;
 const dev = env !== "production";
-const port = env === "production" ? 5555 : 3000;
+const port = 3000;
 const serverUrl = env === "production" ? prodEndpoint : endpoint;
 
 const app = next({
@@ -52,8 +52,6 @@ app
     server.use(body.json());
 
     server.post("/api/save", async (req, res) => {
-
-      console.log(req.query);
 
       const { metadata, data } = req.body;
       const { slice, id, payload } = metadata;

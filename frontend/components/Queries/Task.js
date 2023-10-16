@@ -163,7 +163,6 @@ export const TASK_TO_EDIT = gql`
     task(where: { id: $id }) {
       id
       title
-      subtitle
       slug
       description
       descriptionForParticipants
@@ -190,7 +189,6 @@ export const TASK_TO_EDIT = gql`
       }
       collaborators {
         id
-        username
       }
       consent {
         id

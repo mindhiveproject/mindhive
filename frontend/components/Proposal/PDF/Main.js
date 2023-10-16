@@ -57,7 +57,6 @@ export default function ProposalPDF({ proposalId }) {
       <div className="proposalPDF">
         <JoditEditor content={content} setContent={() => {}} readonly />
       </div>
-      ;
     </>
   );
 }

@@ -11,6 +11,7 @@ import JoditEditor from "../../Jodit/Editor";
 
 import Assigned from "./Forms/Assigned";
 import Status from "./Forms/Status";
+import { StyledProposal } from "../../styles/StyledProposal";
 
 export default function ProposalCard({
   proposal,
@@ -35,8 +36,6 @@ export default function ProposalCard({
     ...proposalCard,
   });
 
-  // console.log({ inputs });
-
   const [updateCard, { loading: updateLoading }] = useMutation(
     UPDATE_CARD_CONTENT,
     {
@@ -46,19 +45,23 @@ export default function ProposalCard({
     }
   );
 
+  console.log({ inputs });
+
   // extract author and collaborators of the study
   const author = {
     key: proposal?.study?.author?.id,
     text: proposal?.study?.author?.username,
     value: proposal?.study?.author?.id,
   };
+
   const users =
     proposal?.study?.collaborators?.map((user) => ({
       key: user.id,
       text: user.username,
       value: user.id,
     })) || [];
-  const allUsers = [author, ...users];
+  const allUsers = [...users];
+  // const allUsers = [author, ...users];
 
   // update the assignedTo in the local state
   const handleAssignedToChange = (assignedTo) => {
@@ -113,101 +116,103 @@ export default function ProposalCard({
               <div>{ReactHtmlParser(proposalCard?.content)}</div>
             </div>
           ) : (
-            <div className="post">
-              <div className="proposalCardBoard">
-                <div className="textBoard">
-                  {proposalBuildMode && (
-                    <label htmlFor="title">
-                      <p>Title</p>
-                      <input
-                        type="text"
-                        id="title"
-                        name="title"
-                        value={inputs?.title}
-                        onChange={handleChange}
-                      />
-                    </label>
-                  )}
-                  {proposalBuildMode && (
-                    <label htmlFor="description">
-                      <p>Description</p>
-                      <textarea
-                        type="text"
-                        id="description"
-                        name="description"
-                        value={inputs?.description}
-                        onChange={handleChange}
-                      />
-                    </label>
-                  )}
-                  {!proposalBuildMode && (
-                    <div className="cardHeader">{inputs?.title}</div>
-                  )}
-                  {!proposalBuildMode && (
-                    <div className="cardDescription">
-                      {ReactHtmlParser(inputs?.description)}
-                    </div>
-                  )}
-                  <div className="jodit">
-                    <JoditEditor
-                      content={inputs?.content}
-                      setContent={handleContentChange}
-                    />
-                  </div>
-                </div>
-                {!isPreview && (
-                  <div className="infoBoard">
-                    {!proposalBuildMode && (
-                      <>
-                        <div>
-                          <h4>Assigned to</h4>
-                          <Assigned
-                            users={allUsers}
-                            assignedTo={inputs?.assignedTo}
-                            onAssignedToChange={handleAssignedToChange}
-                          />
-                        </div>
-                        <div>
-                          <h4>Status</h4>
-                          <Status
-                            settings={inputs?.settings}
-                            onSettingsChange={handleSettingsChange}
-                          />
-                        </div>
-                      </>
+            <StyledProposal>
+              <div className="post">
+                <div className="proposalCardBoard">
+                  <div className="textBoard">
+                    {proposalBuildMode && (
+                      <label htmlFor="title">
+                        <p>Title</p>
+                        <input
+                          type="text"
+                          id="title"
+                          name="title"
+                          value={inputs?.title}
+                          onChange={handleChange}
+                        />
+                      </label>
+                    )}
+                    {proposalBuildMode && (
+                      <label htmlFor="description">
+                        <p>Description</p>
+                        <textarea
+                          type="text"
+                          id="description"
+                          name="description"
+                          value={inputs?.description}
+                          onChange={handleChange}
+                        />
+                      </label>
                     )}
                     {!proposalBuildMode && (
-                      <>
-                        <div>
-                          <h4>Assigned to</h4>
+                      <div className="cardHeader">{inputs?.title}</div>
+                    )}
+                    {!proposalBuildMode && (
+                      <div className="cardDescription">
+                        {ReactHtmlParser(inputs?.description)}
+                      </div>
+                    )}
+                    <div className="jodit">
+                      <JoditEditor
+                        content={inputs?.content}
+                        setContent={handleContentChange}
+                      />
+                    </div>
+                  </div>
+                  {!isPreview && (
+                    <div className="infoBoard">
+                      {!proposalBuildMode && (
+                        <>
                           <div>
-                            {proposalCard?.assignedTo?.map(
-                              (c) => c?.id || "John Doe"
-                            )}
+                            <h4>Assigned to</h4>
+                            <Assigned
+                              users={allUsers}
+                              assignedTo={inputs?.assignedTo}
+                              onAssignedToChange={handleAssignedToChange}
+                            />
                           </div>
-                        </div>
-                        <div>
-                          <h4>Status</h4>
-                          <div>{inputs.settings?.status}</div>
-                        </div>
-                      </>
-                    )}
+                          <div>
+                            <h4>Status</h4>
+                            <Status
+                              settings={inputs?.settings}
+                              onSettingsChange={handleSettingsChange}
+                            />
+                          </div>
+                        </>
+                      )}
+                      {!proposalBuildMode && (
+                        <>
+                          <div>
+                            <h4>Assigned to</h4>
+                            <div>
+                              {proposalCard?.assignedTo?.map(
+                                (c) => c?.id || "John Doe"
+                              )}
+                            </div>
+                          </div>
+                          <div>
+                            <h4>Status</h4>
+                            <div>{inputs.settings?.status}</div>
+                          </div>
+                        </>
+                      )}
 
-                    <div className="proposalCardComments">
-                      <h4>Comments</h4>
-                      <textarea
-                        rows="13"
-                        type="text"
-                        id="comment"
-                        name="comment"
-                        value={inputs.comment}
-                        onChange={handleChange}
-                      />
+                      <div className="proposalCardComments">
+                        <h4>Comments</h4>
+                        <textarea
+                          rows="13"
+                          type="text"
+                          id="comment"
+                          name="comment"
+                          value={inputs.comment}
+                          onChange={handleChange}
+                        />
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
+            </StyledProposal>
           )}
         </Modal.Description>
       </Modal.Content>

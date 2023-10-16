@@ -4,6 +4,23 @@ export const StyledProposal = styled.div`
   display: grid;
   width: 100%;
   overflow-y: scroll;
+  margin: 20px;
+  width: auto;
+
+  .closeBtn {
+    line-height: 3rem;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 2.25rem;
+    color: #5f6871;
+    font-size: 3rem;
+    cursor: pointer;
+    :hover {
+      transform: scale(1.5);
+      transition: transform 0.5s;
+      color: red;
+    }
+  }
 
   button {
     display: grid;
@@ -64,26 +81,28 @@ export const StyledProposal = styled.div`
 
   .empty {
     display: grid;
+    margin: 10px 0px 20px 0px;
     grid-gap: 1rem;
     align-content: center;
     justify-content: center;
+    justify-items: center;
     text-align: center;
-    height: 70vh;
+    width: 100%;
   }
 
   .dropdown {
     width: 100%;
-    height: 50px;
+    height: auto;
   }
 
   .proposalBoard {
     display: grid;
-    grid-template-rows: 50px 1fr;
+    grid-template-rows: auto 1fr;
     .previewToggle {
       display: grid;
       grid-template-columns: auto auto 1fr;
       grid-gap: 1rem;
-      margin: 5px 0rem;
+      margin: 5px 0px 15px 0px;
       align-items: center;
       span {
         font-family: Roboto;

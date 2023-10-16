@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 const StyledModal = styled.div`
   display: grid;
+  margin: 30px 10px;
   justify-content: center;
   align-items: stretch;
   text-align: center;

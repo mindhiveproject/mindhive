@@ -22,7 +22,6 @@ export default function ProposalOverview({
       <div className="empty">
         <h3>You haven’t created any proposals yet.</h3>
         <p>Once you create a proposal, it will appear here.</p>
-
         <button onClick={() => createProposal()}>Create a new proposal</button>
       </div>
     );

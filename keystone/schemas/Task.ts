@@ -30,7 +30,6 @@ export const Task = list({
         { label: "Block", value: "BLOCK" },
       ],
     }),
-    subtitle: text(),
     slug: text({
       validation: { isRequired: true },
       isIndexed: "unique",

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Dropdown } from "semantic-ui-react";
 
@@ -10,14 +10,13 @@ import ProposalBuilder from "../../../Proposal/Builder/Main";
 
 export default function CreateProposal({
   studyId,
+  copyProposalId,
   templates,
   isCopy,
   goToOverview,
 }) {
-  const [proposalId, setProposalId] = useState(null);
-  const [template, setTemplate] = useState(null);
-
-  // console.log({ template });
+  const [proposalId, setProposalId] = useState(copyProposalId || null);
+  const [template, setTemplate] = useState(null); 
 
   const [copyProposal, { loading }] = useMutation(COPY_PROPOSAL_MUTATION, {
     variables: {
@@ -50,7 +49,6 @@ export default function CreateProposal({
         study: studyId,
       },
     });
-    console.log({ res });
     if (res?.data?.copyProposalBoard) {
       goToOverview();
     }
@@ -58,20 +56,16 @@ export default function CreateProposal({
 
   return (
     <div>
-      <div className="closeBtn">
-        <span onClick={goToOverview}>&times;</span>
-      </div>
+      <div className="empty">
+        <div className="closeBtn">
+          <span onClick={goToOverview}>&times;</span>
+        </div>
 
-      <h1>
-        {isCopy ? `Copy the study proposal` : "Create a new study proposal"}
-      </h1>
+        <h3>
+          {isCopy ? `Copy the study proposal` : "Create a new study proposal"}
+        </h3>
 
-      <fieldset disabled={loading} aria-busy={loading}>
-        {isCopy ? (
-          <div>
-            <p>Copy the proposal</p>
-          </div>
-        ) : (
+        {!isCopy && (
           <div className="dropdown">
             <Dropdown
               placeholder="Select template"
@@ -83,12 +77,13 @@ export default function CreateProposal({
             />
           </div>
         )}
-
+     
         <button onClick={createProposalCopy}>
           {isCopy ? "Create a copy" : "Create"}
         </button>
-      </fieldset>
-      <>
+
+    </div>
+    <div>
         {template && !isCopy && (
           <div className="previewTemplate">
             <ProposalBuilder
@@ -98,7 +93,9 @@ export default function CreateProposal({
             />
           </div>
         )}
-      </>
     </div>
+  
+  </div>
+    
   );
 }

@@ -41,7 +41,6 @@ export default function Wrapper({
   });
 
   const theTask = data?.task || {};
-  // console.log({ theTask });
 
   // check whether the current user is the author of the task or the collaborator on the task
   const isAuthor =
@@ -51,25 +50,27 @@ export default function Wrapper({
   // check whether the task should be cloned
   const createCopy = node?.options?.createCopy;
 
-  console.log({ node });
-
   let task;
+
+  console.log(isAuthor, createCopy);
 
   if (isAuthor && !createCopy) {
     task = {
       ...theTask,
       templateId: theTask?.template?.id,
       consent: theTask?.consent?.id,
-      collaborators: (theTask?.collaborators &&
-        theTask.collaborators.map((c) => c.username).length &&
-        theTask.collaborators.map((c) => c.username)) || [""],
+      // collaborators: (theTask?.collaborators &&
+      //   theTask.collaborators.map((c) => c.username).length &&
+      //   theTask.collaborators.map((c) => c.username)) || [],
+      subtitle: node?.options?.subtitle,
+      testId: node?.options?.testId,
     };
   } else if (createCopy) {
     task = {
       ...theTask,
       templateId: theTask?.template?.id,
       consent: null,
-      collaborators: [""],
+      collaborators: [],
       isOriginal: false, // switch to false as it should be cloned
       subtitle: node?.options?.subtitle,
     };
@@ -78,16 +79,23 @@ export default function Wrapper({
       ...theTask,
       templateId: theTask?.template?.id,
       consent: null,
-      collaborators: [""],
+      collaborators: [],
       isOriginal: false, // switch to false as it should be cloned
     };
   }
+
+  console.log({ task });
 
   if (showEditor) {
     return (
       <div className="background">
         <div className="modal">
-          <Editor user={user} taskId={task?.id} close={close} />
+          <Editor 
+            user={user}
+            task={task}
+            updateCanvas={updateCanvas} 
+            close={close}
+          />
         </div>
       </div>
     );

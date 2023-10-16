@@ -3,7 +3,8 @@ import { useMutation } from "@apollo/client";
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import dynamic from "next/dynamic";
-import IdentIcon from "../IdentIcon";
+import { Icon } from "semantic-ui-react";
+
 import StyledModal from "../../styles/StyledModal";
 
 import { dataURItoBlob } from "../../../lib/useForm";
@@ -47,16 +48,10 @@ export default function UpdateAvatarModal({ user }) {
       onOpen={() => setIsOpen(true)}
       open={isOpen}
       trigger={
-        user?.avatar ? (
-          <img src={user?.avatar} alt={user?.name} />
-        ) : (
-          <div>
-            <IdentIcon size="120" value={user?.name} />
-          </div>
-        )
+        <Icon name="edit" size="large" color="teal" />
       }
       dimmer="blurring"
-      size="large"
+      size="small"
       closeIcon
     >
       <StyledModal>

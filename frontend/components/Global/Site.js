@@ -168,6 +168,12 @@ const GlobalStyles = createGlobalStyle`
     grid-template-columns: auto 1fr;
     align-items: center;
   }
+  .titleIcon {
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
 `;
 
 // the styles shared within all pages

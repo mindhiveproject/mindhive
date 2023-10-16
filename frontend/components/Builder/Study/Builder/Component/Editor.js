@@ -1,5 +1,10 @@
-import EditComponent from "../../../Component/Edit";
+import EditComponent from "./Edit";
 
-export default function Editor({ user, taskId, close }) {
-  return <EditComponent user={user} taskId={taskId} close={close} />;
+export default function Editor( { user, task, updateCanvas, close } ) {
+  return <EditComponent 
+    user={user} 
+    task={task} 
+    updateCanvas={updateCanvas}
+    close={close}
+   />;
 }

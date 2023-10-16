@@ -15,8 +15,8 @@ export default function EditComponent({
   query,
   user,
   taskId,
-  redirect,
   close,
+  updateCanvas,
 }) {
   const area = query?.area || undefined;
 
@@ -73,6 +73,7 @@ export default function EditComponent({
         collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
       },
     });
+    
     // if (area) {
     //   redirect({ area });
     // }

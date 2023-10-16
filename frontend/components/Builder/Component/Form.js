@@ -25,10 +25,9 @@ export default function ComponentForm({
   error,
   isTemplateAuthor,
   close,
+  isInStudyBuilder
 }) {
   const { t } = useTranslation("classes");
-
-  // console.log({ isTemplateAuthor });
 
   const [tab, setTab] = useState(isTemplateAuthor ? "template" : "basic");
   const [isFullscreenPreviewOpen, setIsFullscreenPreviewOpen] = useState(false);
@@ -93,6 +92,7 @@ export default function ComponentForm({
           openFullscreenPreview={openFullscreenPreview}
           isTemplateAuthor={isTemplateAuthor}
           close={close}
+          isInStudyBuilder={isInStudyBuilder}
         />
 
         <div className="buildArea">
@@ -103,6 +103,7 @@ export default function ComponentForm({
               handleMultipleUpdate={handleMultipleUpdate}
               loading={loading}
               error={error}
+              isInStudyBuilder={isInStudyBuilder}
             />
           )}
 

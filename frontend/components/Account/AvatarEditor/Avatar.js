@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 const StyledAvatarEditor = styled.div`
   display: grid;
+  margin: 20px 0px;
   grid-template-columns: 1fr;
   grid-gap: 3rem;
 

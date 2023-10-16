@@ -5,7 +5,7 @@ import OpenAI from 'openai';
 import { StyledChatGPTPage } from "../../../../styles/StyledBuilder";
 
 const openai = new OpenAI({
-    apiKey: "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",
+    apiKey: "",
     dangerouslyAllowBrowser: true
 })
 

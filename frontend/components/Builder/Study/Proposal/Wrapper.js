@@ -35,12 +35,13 @@ export default function ProposalWrapper({ query, user, templates }) {
   };
 
   const copyProposal = (proposalId) => {
+    setProposalId(proposalId);
     setPage("create");
     setIsCopy(true);
-    setProposalId(proposalId);
   };
 
   const createProposal = () => {
+    setProposalId(null);
     setPage("create");
     setIsCopy(false);
   };
@@ -53,6 +54,7 @@ export default function ProposalWrapper({ query, user, templates }) {
     return (
       <CreateProposal
         studyId={studyId}
+        copyProposalId={proposalId}
         templates={templates}
         isCopy={isCopy}
         goToOverview={goToOverview}

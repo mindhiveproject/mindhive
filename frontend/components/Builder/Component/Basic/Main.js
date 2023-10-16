@@ -10,6 +10,7 @@ export default function Basic({
   submitBtnName,
   loading,
   error,
+  isInStudyBuilder,
 }) {
   const { t } = useTranslation("classes");
 
@@ -18,11 +19,35 @@ export default function Basic({
       <DisplayError error={error} />
 
       <fieldset disabled={loading} aria-busy={loading}>
+
+      {
+        isInStudyBuilder && 
+          <>
+            <div className="block">
+              <label htmlFor="subtitle">
+                Subtitle
+                <input
+                  type="text"
+                  name="subtitle"
+                  value={task?.subtitle}
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
+            <div>
+              <label>Test ID</label>
+              <p>
+                {task?.testId}
+              </p>
+            </div>
+          </>
+        }
+
         <div className="block">
           <label htmlFor="title">
             {t("common.title")}
             <input
-              type="title"
+              type="text"
               name="title"
               value={task?.title}
               onChange={handleChange}
