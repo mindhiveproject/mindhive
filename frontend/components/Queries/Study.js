@@ -94,6 +94,12 @@ export const MY_STUDY = gql`
       collaborators {
         id
         username
+        image {
+          id
+          image {
+            publicUrlTransformed
+          }
+        }
       }
       classes {
         id

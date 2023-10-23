@@ -9,6 +9,10 @@ import {
 import DashboardNavigation from "../Dashboard/Navigation";
 import { UserContext } from "./Authorized";
 
+import { 
+  Sidebar, 
+} from "semantic-ui-react";
+
 export default function Dashboard({ children }) {
   const user = useContext(UserContext);
 
@@ -17,13 +21,15 @@ export default function Dashboard({ children }) {
   }
 
   return (
-    <StyledDashboard>
-      <StyledDashboardNavigation>
-        <DashboardNavigation />
-      </StyledDashboardNavigation>
-      <StyledDashboardWrapper>
-        <StyledDashboardContent>{children}</StyledDashboardContent>
-      </StyledDashboardWrapper>
-    </StyledDashboard>
+    <Sidebar.Pushable>
+      <StyledDashboard>
+        <StyledDashboardNavigation>
+          <DashboardNavigation />
+        </StyledDashboardNavigation>
+        <StyledDashboardWrapper>
+          <StyledDashboardContent>{children}</StyledDashboardContent>
+        </StyledDashboardWrapper>
+      </StyledDashboard>
+    </Sidebar.Pushable>
   );
 }

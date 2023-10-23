@@ -233,6 +233,10 @@ export const Profile = list({
       ref: "ProposalCard.assignedTo",
       many: true,
     }),
+    editsProposalCard: relationship({
+      ref: "ProposalCard.isEditedBy",
+      many: true,
+    }),
     updates: relationship({
       ref: "Update.user",
       many: true,

@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { Draggable } from "react-smooth-dnd";
 
+import { 
+  Icon, 
+} from "semantic-ui-react";
+
 export default function Card({
   card,
   proposalBuildMode,
@@ -50,11 +54,11 @@ export default function Card({
           <h4>{ReactHtmlParser(card.title)}</h4>
           {!proposalBuildMode && (
             <div className="card-information">
+            
               <div className="info-assigned-container">
                 {card?.assignedTo.length
                   ? card?.assignedTo.map((user, i) => (
                       <div key={i} className="info-assigned">
-                         
                         {adminMode
                           ? user?.username ||
                             user?.publicReadableId ||
@@ -67,6 +71,19 @@ export default function Card({
               {status && (
                 <div className={`info-status ${statusStyle}`}>{status}</div>
               )}
+
+              { card?.isEditedBy?.username && 
+                <div className="editedByAvatar">
+                  { card?.isEditedBy?.image?.image?.publicUrlTransformed ? (
+                    <img src={card?.isEditedBy?.image?.image?.publicUrlTransformed} alt={card?.isEditedBy?.username} />
+                      ) : (
+                    <div>
+                      <Icon name='user' aria-label={card?.isEditedBy?.username} /> 
+                    </div>
+                  ) }
+                </div>
+              }
+
             </div>
           )}
         </div>

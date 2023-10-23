@@ -217,6 +217,21 @@ export const UPDATE_CARD_CONTENT = gql`
   }
 `;
 
+// update card edit information
+export const UPDATE_CARD_EDIT = gql`
+  mutation UPDATE_CARD_EDIT(
+    $id: ID!
+    $input: ProposalCardUpdateInput!
+  ) {
+    updateProposalCard(
+      where: { id: $id }
+      data: $input
+    ) {
+      id
+    }
+  }
+`;
+
 export const DELETE_CARD = gql`
   mutation DELETE_CARD($id: ID!, $boardId: ID!) {
     deleteProposalCard(where: { id: $id }) {

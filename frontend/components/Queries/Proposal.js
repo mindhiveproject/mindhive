@@ -110,6 +110,15 @@ export const PROPOSAL_QUERY = gql`
             id
             username
           }
+          isEditedBy {
+            username
+            image {
+              id
+              image {
+                publicUrlTransformed
+              }
+            }
+          }
         }
       }
     }
@@ -127,6 +136,10 @@ export const GET_CARD_CONTENT = gql`
       settings
       assignedTo {
         id
+        username
+      }
+      lastTimeEdited
+      isEditedBy {
         username
       }
     }

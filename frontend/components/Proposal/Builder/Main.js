@@ -1,11 +1,17 @@
 import { useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 
 import ProposalHeader from "./Header";
 import ProposalBoard from "./Board";
 import ProposalCard from "../Card/Main";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
+
+import { 
+  Menu,
+  Sidebar, 
+} from "semantic-ui-react";
 
 export default function ProposalBuilder({
   user,
@@ -15,10 +21,13 @@ export default function ProposalBuilder({
   isPreview,
   refetchQueries,
 }) {
+
   const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
     pollInterval: 20000, // get new data every 20 seconds
   });
+
+  const [updateEdit, { loading: updateEditLoading }] = useMutation(UPDATE_CARD_EDIT);
 
   const proposal = data?.proposalBoard || undefined;
 
@@ -30,7 +39,18 @@ export default function ProposalBuilder({
     setPage("card");
   };
 
-  const closeCard = () => {
+  const closeCard = async ({ cardId, lockedByUser }) => {
+    console.log({ cardId, lockedByUser })
+    if(cardId && lockedByUser) {
+      // unlock the card
+      await updateEdit({ variables: {
+        id: cardId,
+        input: {
+          isEditedBy: { disconnect: true },
+          lastTimeEdited: null,
+        }
+      }});
+    }
     setPage("board");
     setCardId(null);
   };
@@ -38,50 +58,61 @@ export default function ProposalBuilder({
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
 
-  if (page === "card") {
-    return (
-      <ProposalCard
-        proposal={proposal}
-        cardId={cardId}
-        closeCard={closeCard}
-        proposalBuildMode={proposalBuildMode}
-        isPreview={isPreview}
-      />
-    );
-  }
-
   return (
-    <div>
-      {proposalBuildMode && (
-        <div className="goBackBtn">
-          <span style={{ cursor: "pointer" }} onClick={onClose}>
-            ← Back
-          </span>
-        </div>
-      )}
-      {isPreview ? (
-        <>
-          <h2>
-            Preview of proposal template{" "}
-            <span className="templateName">{proposal.title}</span>
-          </h2>
-          <p>{proposal.description}</p>
-        </>
-      ) : (
-        <ProposalHeader
-          user={user}
-          proposal={proposal}
-          proposalBuildMode={proposalBuildMode}
-          refetchQueries={refetchQueries}
-        />
-      )}
-      {proposal && (
-        <ProposalBoard
-          proposal={proposal}
-          openCard={openCard}
-          isPreview={isPreview}
-        />
-      )}
-    </div>
+    <>
+      <Sidebar
+        as={Menu}
+        animation='overlay'
+        icon='labeled'
+        onHide={() => closeCard({ cardId })}
+        vertical
+        visible={page === "card"}
+        direction="right"
+      >
+        { cardId && 
+          <ProposalCard 
+            user={user}
+            proposal={proposal}
+            cardId={cardId}
+            closeCard={closeCard}
+            proposalBuildMode={proposalBuildMode}
+            isPreview={isPreview}
+          />   
+        }
+      </Sidebar>
+     
+      <Sidebar.Pusher>
+        {proposalBuildMode && (
+          <div className="goBackBtn">
+            <span style={{ cursor: "pointer" }} onClick={onClose}>
+              ← Back
+            </span>
+          </div>
+        )}
+        { isPreview ? (
+          <>
+            <h2>
+              Preview of proposal template{" "}
+              <span className="templateName">{proposal.title}</span>
+            </h2>
+            <p>{proposal.description}</p>
+          </>
+        ) : (
+          <ProposalHeader
+            user={user}
+            proposal={proposal}
+            proposalBuildMode={proposalBuildMode}
+            refetchQueries={refetchQueries}
+          />
+        )}
+        {proposal && (
+          <ProposalBoard
+            proposal={proposal}
+            openCard={openCard}
+            isPreview={isPreview}
+          />
+        )}
+      </Sidebar.Pusher>
+    </>
   );
 }

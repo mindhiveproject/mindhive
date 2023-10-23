@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const StyledProposal = styled.div`
   display: grid;
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   margin: 20px;
   width: auto;
 
@@ -261,6 +261,11 @@ export const StyledProposal = styled.div`
       grid-template-columns: repeat(auto-fit, minmax(50px, auto));
       grid-gap: 10px;
       align-items: baseline;
+      .editedByAvatar {
+        img {
+          height: 36px;
+        }
+      }
       .info-assigned-container {
         display: grid;
         justify-items: baseline;
@@ -420,14 +425,41 @@ export const StyledProposal = styled.div`
 
   .post {
     display: grid;
-    height: 100%;
     grid-row-gap: 10px;
     font-family: Lato;
     font-size: 18px;
+    text-align: left;
+
+    .lockedMessage {
+      background: orange;
+      padding: 15px;
+      .username {
+        font-weight: bold;
+      }
+    }
+
+    .buttons {
+      width: auto;
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: 200px 200px;
+      justify-content: end;
+      .primary {
+        background: #007c70;
+        color: #ffffff;
+        border: 2px solid #007c70;
+      }
+      .secondary {
+        background: #ffffff;
+        color: #666666;
+        border: 2px solid #b3b3b3;
+      }
+    }
 
     .proposalCardBoard {
       display: grid;
       grid-template-columns: 7fr 3fr;
+      height: 100%;
     }
 
     .jodit-container {
@@ -455,7 +487,6 @@ export const StyledProposal = styled.div`
         border-color: ${(props) => props.theme.red};
       }
     }
-    button,
     input[type="submit"] {
       margin-top: 3rem;
       margin-bottom: 1rem;
@@ -506,13 +537,13 @@ export const StyledProposal = styled.div`
       border-bottom: 2px solid #e6e6e6;
     }
     .textBoard {
-      margin: 53px 30px 30px 96px;
+      margin: 15px 10px 0px 20px;
     }
     .infoBoard {
       display: grid;
-      grid-gap: 50px;
+      grid-gap: 30px;
       align-content: baseline;
-      background: #f7f9f8;
+      // background: #f7f9f8;
       border-radius: 0px 4px 4px 0px;
       padding: 53px 30px 30px 37px;
       font-family: Roboto;

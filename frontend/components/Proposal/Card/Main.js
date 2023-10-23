@@ -1,19 +1,21 @@
 import { useQuery, useMutation } from "@apollo/client";
 
-import { Modal } from "semantic-ui-react";
 import ReactHtmlParser from "react-html-parser";
+import moment from "moment";
 
 import { GET_CARD_CONTENT } from "../../Queries/Proposal";
 import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
+import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 
 import useForm from "../../../lib/useForm";
 import JoditEditor from "../../Jodit/Editor";
 
 import Assigned from "./Forms/Assigned";
 import Status from "./Forms/Status";
-import { StyledProposal } from "../../styles/StyledProposal";
+import { useState, useEffect } from "react";
 
 export default function ProposalCard({
+  user,
   proposal,
   cardId,
   closeCard,
@@ -28,10 +30,24 @@ export default function ProposalCard({
     variables: {
       id: cardId,
     },
+    fetchPolicy: 'network-only', // Doesn't check cache before making a network request
   });
 
   const proposalCard = data?.proposalCard || {};
 
+  // check whether the card is locked - after 1 hour it is allowed to edit
+  const releaseTime = new Date(proposalCard?.lastTimeEdited)?.getTime() + 60 * 60 * 1000;
+  const outsideTimeWindow = Date.now() > releaseTime;
+
+  // check whether the card is locked by the user
+  const [lockedByUser, setLockedByUser] = useState(false);
+  const areEditsAllowed = lockedByUser || outsideTimeWindow;
+
+  // useEffect
+  useEffect(() => {
+    setLockedByUser(proposalCard?.isEditedBy?.username === user?.username);
+  }, [proposalCard, user]); 
+  
   const { inputs, handleChange } = useForm({
     ...proposalCard,
   });
@@ -41,11 +57,15 @@ export default function ProposalCard({
     {
       variables: {
         ...inputs,
+        assignedTo: inputs?.assignedTo?.map(a => ({ id: a?.id }))
       },
+      refetchQueries: [
+        { query: GET_CARD_CONTENT, variables: { id: cardId } }
+      ]
     }
   );
 
-  console.log({ inputs });
+  const [updateEdit, { loading: updateEditLoading }] = useMutation(UPDATE_CARD_EDIT);
 
   // extract author and collaborators of the study
   const author = {
@@ -86,39 +106,57 @@ export default function ProposalCard({
   };
 
   // update card content in the local state
-  const handleContentChange = (content) => {
+  const handleContentChange = async(content) => {
     handleChange({ target: { name: "content", value: content } });
+
+    // lock the card
+    if(inputs?.content !== content && areEditsAllowed && !lockedByUser) {
+      const res = await updateEdit({ variables: {
+        id: cardId,
+        input: {
+          isEditedBy: { connect: { id: user?.id } },
+          lastTimeEdited: new Date(),
+        }
+      }});
+      setLockedByUser(true);
+
+      console.log({ res });
+    }
   };
+
 
   // update the card and close the modal
   const onUpdateCard = async () => {
     await updateCard();
-    closeCard();
+    closeCard({ cardId, lockedByUser });
   };
 
   return (
-    <Modal
-      open={open}
-      closeOnDimmerClick={false}
-      size="large"
-      onClose={() => onClose()}
-    >
-      <Modal.Content scrolling>
-        <Modal.Description>
-          {isPreview ? (
-            <div className="cardPreview">
-              <h2>{proposalCard?.title}</h2>
-              {proposalCard?.description && (
-                <div className="description">
-                  {ReactHtmlParser(proposalCard?.description)}
-                </div>
-              )}
-              <div>{ReactHtmlParser(proposalCard?.content)}</div>
-            </div>
+    <div className="post">
+
+      { !areEditsAllowed && 
+        <div className="lockedMessage">        
+          The card is currently been edited by <span className="username">{proposalCard?.isEditedBy?.username}</span>. 
+          Ask the user to close the card or wait until the card is released.
+          The card will be released <span className="username">{moment().to(releaseTime)}</span>. 
+          After the card is released, refresh the page to get the latest version of the card.
+        </div>
+      }
+      
+      { isPreview ? (
+
+        <div className="cardPreview">
+            <h2>{proposalCard?.title}</h2>
+            {proposalCard?.description && (
+              <div className="description">
+                {ReactHtmlParser(proposalCard?.description)}
+              </div>
+            )}
+            <div>{ReactHtmlParser(proposalCard?.content)}</div>
+        </div>
+
           ) : (
-            <StyledProposal>
-              <div className="post">
-                <div className="proposalCardBoard">
+              <div className="proposalCardBoard">
                   <div className="textBoard">
                     {proposalBuildMode && (
                       <label htmlFor="title">
@@ -180,7 +218,7 @@ export default function ProposalCard({
                           </div>
                         </>
                       )}
-                      {!proposalBuildMode && (
+                      {!proposalBuildMode && false && (
                         <>
                           <div>
                             <h4>Assigned to</h4>
@@ -200,7 +238,7 @@ export default function ProposalCard({
                       <div className="proposalCardComments">
                         <h4>Comments</h4>
                         <textarea
-                          rows="13"
+                          rows="5"
                           type="text"
                           id="comment"
                           name="comment"
@@ -208,30 +246,31 @@ export default function ProposalCard({
                           onChange={handleChange}
                         />
                       </div>
+
+                      <div className="buttons">
+                        {!updateLoading && (
+                          <button className="secondary" onClick={() => closeCard({ cardId, lockedByUser })}>
+                            Close without saving
+                            </button>
+                          )}
+                        
+                        { 
+                          areEditsAllowed && 
+                          <button
+                            className="primary"
+                            onClick={() => onUpdateCard()}
+                            disabled={updateLoading}
+                          >
+                            {updateLoading ? "Saving ..." : "Save & close"}
+                          </button>
+                        }
+                        
+                      </div>
                     </div>
-                  )}
-                </div>
-              </div>
-            </StyledProposal>
-          )}
-        </Modal.Description>
-      </Modal.Content>
-      <Modal.Actions>
-        <div className="buttons">
-          {!updateLoading && (
-            <button className="secondary" onClick={() => closeCard()}>
-              Close
-            </button>
-          )}
-          <button
-            className="primary"
-            onClick={() => onUpdateCard()}
-            disabled={updateLoading}
-          >
-            {updateLoading ? "Saving ..." : "Save & close"}
-          </button>
+              )}
         </div>
-      </Modal.Actions>
-    </Modal>
+      )}
+     
+    </div>
   );
 }

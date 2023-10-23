@@ -529,6 +529,10 @@ var Profile = (0, import_core.list)({
       ref: "ProposalCard.assignedTo",
       many: true
     }),
+    editsProposalCard: (0, import_fields.relationship)({
+      ref: "ProposalCard.isEditedBy",
+      many: true
+    }),
     updates: (0, import_fields.relationship)({
       ref: "Update.user",
       many: true
@@ -1562,7 +1566,11 @@ var ProposalCard = (0, import_core20.list)({
     createdAt: (0, import_fields22.timestamp)({
       defaultValue: { kind: "now" }
     }),
-    updatedAt: (0, import_fields22.timestamp)()
+    updatedAt: (0, import_fields22.timestamp)(),
+    isEditedBy: (0, import_fields22.relationship)({
+      ref: "Profile.editsProposalCard"
+    }),
+    lastTimeEdited: (0, import_fields22.timestamp)()
   }
 });
 

@@ -60,6 +60,7 @@ model Profile {
   authorOfProposal         ProposalBoard[] @relation("ProposalBoard_author")
   reviews                  Review[]        @relation("Review_author")
   assignedToProposalCard   ProposalCard[]  @relation("Profile_assignedToProposalCard")
+  editsProposalCard        ProposalCard[]  @relation("ProposalCard_isEditedBy")
   updates                  Update[]        @relation("Update_user")
   authorOfLesson           Lesson[]        @relation("Lesson_author")
   collaboratorInLesson     Lesson[]        @relation("Lesson_collaborators")
@@ -415,8 +416,12 @@ model ProposalCard {
   studyDescription Study[]          @relation("Study_descriptionInProposalCard")
   createdAt        DateTime?        @default(now())
   updatedAt        DateTime?
+  isEditedBy       Profile?         @relation("ProposalCard_isEditedBy", fields: [isEditedById], references: [id])
+  isEditedById     String?          @map("isEditedBy")
+  lastTimeEdited   DateTime?
 
   @@index([sectionId])
+  @@index([isEditedById])
 }
 
 model Review {

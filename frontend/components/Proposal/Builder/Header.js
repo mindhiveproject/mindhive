@@ -30,8 +30,6 @@ export default function ProposalHeader({
     ],
   });
 
-  console.log({ inputs });
-
   return (
     <div className="header">
       <div>
@@ -62,7 +60,7 @@ export default function ProposalHeader({
           </label>
         </div>
 
-        {!proposalBuildMode && (
+        {proposalBuildMode && (
           <div>
             {user?.permissions.map((p) => p?.name).includes("ADMIN") && (
               <>
@@ -83,7 +81,7 @@ export default function ProposalHeader({
               </>
             )}
 
-            <div>
+            {/* <div>
               <label htmlFor="isSubmitted">
                 <div className="checkboxField">
                   <input
@@ -96,7 +94,7 @@ export default function ProposalHeader({
                   <span>Submit as a template</span>
                 </div>
               </label>
-            </div>
+            </div> */}
 
             <div>
               <label htmlFor="allowMovingSections">

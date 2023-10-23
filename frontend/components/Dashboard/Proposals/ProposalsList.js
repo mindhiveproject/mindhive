@@ -34,7 +34,7 @@ export default function ProposalsList({ query, user }) {
       </div>
 
       {proposals?.map((proposal, i) => (
-        <div className="wrapper">
+        <div key={i} className="wrapper">
           <Link
             href={{
               pathname: `/dashboard/proposals/edit`,

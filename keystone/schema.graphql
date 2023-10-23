@@ -71,6 +71,8 @@ type Profile {
   reviewsCount(where: ReviewWhereInput! = {}): Int
   assignedToProposalCard(where: ProposalCardWhereInput! = {}, orderBy: [ProposalCardOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalCard!]
   assignedToProposalCardCount(where: ProposalCardWhereInput! = {}): Int
+  editsProposalCard(where: ProposalCardWhereInput! = {}, orderBy: [ProposalCardOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalCard!]
+  editsProposalCardCount(where: ProposalCardWhereInput! = {}): Int
   updates(where: UpdateWhereInput! = {}, orderBy: [UpdateOrderByInput!]! = [], take: Int, skip: Int! = 0): [Update!]
   updatesCount(where: UpdateWhereInput! = {}): Int
   authorOfLesson(where: LessonWhereInput! = {}, orderBy: [LessonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Lesson!]
@@ -153,6 +155,7 @@ input ProfileWhereInput {
   authorOfProposal: ProposalBoardManyRelationFilter
   reviews: ReviewManyRelationFilter
   assignedToProposalCard: ProposalCardManyRelationFilter
+  editsProposalCard: ProposalCardManyRelationFilter
   updates: UpdateManyRelationFilter
   authorOfLesson: LessonManyRelationFilter
   collaboratorInLesson: LessonManyRelationFilter
@@ -459,6 +462,7 @@ input ProfileUpdateInput {
   authorOfProposal: ProposalBoardRelateToManyForUpdateInput
   reviews: ReviewRelateToManyForUpdateInput
   assignedToProposalCard: ProposalCardRelateToManyForUpdateInput
+  editsProposalCard: ProposalCardRelateToManyForUpdateInput
   updates: UpdateRelateToManyForUpdateInput
   authorOfLesson: LessonRelateToManyForUpdateInput
   collaboratorInLesson: LessonRelateToManyForUpdateInput
@@ -685,6 +689,7 @@ input ProfileCreateInput {
   authorOfProposal: ProposalBoardRelateToManyForCreateInput
   reviews: ReviewRelateToManyForCreateInput
   assignedToProposalCard: ProposalCardRelateToManyForCreateInput
+  editsProposalCard: ProposalCardRelateToManyForCreateInput
   updates: UpdateRelateToManyForCreateInput
   authorOfLesson: LessonRelateToManyForCreateInput
   collaboratorInLesson: LessonRelateToManyForCreateInput
@@ -2525,6 +2530,8 @@ type ProposalCard {
   studyDescriptionCount(where: StudyWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
+  isEditedBy: Profile
+  lastTimeEdited: DateTime
 }
 
 input ProposalCardWhereUniqueInput {
@@ -2546,6 +2553,8 @@ input ProposalCardWhereInput {
   studyDescription: StudyManyRelationFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
+  isEditedBy: ProfileWhereInput
+  lastTimeEdited: DateTimeNullableFilter
 }
 
 input ProposalCardOrderByInput {
@@ -2557,6 +2566,7 @@ input ProposalCardOrderByInput {
   comment: OrderDirection
   createdAt: OrderDirection
   updatedAt: OrderDirection
+  lastTimeEdited: OrderDirection
 }
 
 input ProposalCardUpdateInput {
@@ -2571,6 +2581,8 @@ input ProposalCardUpdateInput {
   studyDescription: StudyRelateToManyForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
+  isEditedBy: ProfileRelateToOneForUpdateInput
+  lastTimeEdited: DateTime
 }
 
 input ProposalSectionRelateToOneForUpdateInput {
@@ -2596,6 +2608,8 @@ input ProposalCardCreateInput {
   studyDescription: StudyRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
+  isEditedBy: ProfileRelateToOneForCreateInput
+  lastTimeEdited: DateTime
 }
 
 input ProposalSectionRelateToOneForCreateInput {

@@ -42,5 +42,9 @@ export const ProposalCard = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+    isEditedBy: relationship({
+      ref: "Profile.editsProposalCard",
+    }),
+    lastTimeEdited: timestamp(),
   },
 });

@@ -25,7 +25,12 @@ export default function ProposalsMain({ query, user }) {
   }
   return (
     <StyledProposal>
-      <ProposalBuilder user={user} proposalId={query?.id} refetchQueries={[]} />
+      <ProposalBuilder 
+        user={user} 
+        proposalId={query?.id} 
+        refetchQueries={[]} 
+        proposalBuildMode 
+      />
     </StyledProposal>
   );
 }
