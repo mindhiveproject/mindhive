@@ -40,7 +40,6 @@ export default function LoginWithGoogle({}) {
   };
 
   const handleFailure = (e) => {
-    console.log({ e });
     alert("There was an error, please try again.");
   };
 

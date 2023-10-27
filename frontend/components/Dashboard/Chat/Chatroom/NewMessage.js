@@ -49,7 +49,6 @@ export default function NewMessage({
           userId,
         },
       });
-      console.log({ res });
     });
   };
 

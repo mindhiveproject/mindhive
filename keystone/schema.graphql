@@ -193,7 +193,13 @@ input StringFilter {
   contains: String
   startsWith: String
   endsWith: String
+  mode: QueryMode
   not: NestedStringFilter
+}
+
+enum QueryMode {
+  default
+  insensitive
 }
 
 input NestedStringFilter {
@@ -221,6 +227,7 @@ input StringNullableFilter {
   contains: String
   startsWith: String
   endsWith: String
+  mode: QueryMode
   not: NestedStringNullableFilter
 }
 
@@ -1498,7 +1505,8 @@ type Template {
   collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
   collaboratorsCount(where: ProfileWhereInput! = {}): Int
   parameters: JSON
-  script: String
+  fileAddress: String
+  scriptAddress: String
   style: String
   tasks(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0): [Task!]
   tasksCount(where: TaskWhereInput! = {}): Int
@@ -1507,7 +1515,6 @@ type Template {
   summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
   summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
   settings: JSON
-  file: String
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1527,12 +1534,12 @@ input TemplateWhereInput {
   description: StringFilter
   author: ProfileWhereInput
   collaborators: ProfileManyRelationFilter
-  script: StringFilter
+  fileAddress: StringFilter
+  scriptAddress: StringFilter
   style: StringFilter
   tasks: TaskManyRelationFilter
   datasets: DatasetManyRelationFilter
   summaryResults: SummaryResultManyRelationFilter
-  file: StringFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
 }
@@ -1543,9 +1550,9 @@ input TemplateOrderByInput {
   slug: OrderDirection
   shortDescription: OrderDirection
   description: OrderDirection
-  script: OrderDirection
+  fileAddress: OrderDirection
+  scriptAddress: OrderDirection
   style: OrderDirection
-  file: OrderDirection
   createdAt: OrderDirection
   updatedAt: OrderDirection
 }
@@ -1558,13 +1565,13 @@ input TemplateUpdateInput {
   author: ProfileRelateToOneForUpdateInput
   collaborators: ProfileRelateToManyForUpdateInput
   parameters: JSON
-  script: String
+  fileAddress: String
+  scriptAddress: String
   style: String
   tasks: TaskRelateToManyForUpdateInput
   datasets: DatasetRelateToManyForUpdateInput
   summaryResults: SummaryResultRelateToManyForUpdateInput
   settings: JSON
-  file: String
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1582,13 +1589,13 @@ input TemplateCreateInput {
   author: ProfileRelateToOneForCreateInput
   collaborators: ProfileRelateToManyForCreateInput
   parameters: JSON
-  script: String
+  fileAddress: String
+  scriptAddress: String
   style: String
   tasks: TaskRelateToManyForCreateInput
   datasets: DatasetRelateToManyForCreateInput
   summaryResults: SummaryResultRelateToManyForCreateInput
   settings: JSON
-  file: String
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -3832,11 +3839,6 @@ enum KeystoneAdminUIFieldMetaItemViewFieldMode {
 enum KeystoneAdminUIFieldMetaItemViewFieldPosition {
   form
   sidebar
-}
-
-enum QueryMode {
-  default
-  insensitive
 }
 
 type KeystoneAdminUIFieldGroupMeta {

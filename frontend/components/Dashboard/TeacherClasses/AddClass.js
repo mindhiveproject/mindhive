@@ -22,8 +22,6 @@ export default function AddClass({ user }) {
     description: "",
   });
 
-  //   console.log(inputs);
-
   const [createClass, { data, loading, error }] = useMutation(CREATE_CLASS, {
     variables: inputs,
     refetchQueries: [

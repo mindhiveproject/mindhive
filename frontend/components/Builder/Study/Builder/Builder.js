@@ -56,7 +56,6 @@ export default function Builder({
   };
 
   const updateCanvas = ({ task, operation }) => {
-    console.log({ task });
     const model = engine?.model;
     const nodes = model.getNodes() || [];
     const componentID = node?.options?.componentID;
@@ -67,10 +66,10 @@ export default function Builder({
         (operation === "create" &&
           n?.options?.componentID === componentID &&
           n?.options?.testId === testId) ||
-        (operation === "update" && n?.options?.componentID === componentID &&
-        n?.options?.testId === testId)
+        (operation === "update" &&
+          n?.options?.componentID === componentID &&
+          n?.options?.testId === testId)
       ) {
-        console.log("updating")
         n.updateOptions({
           componentID: task?.id,
           name: task?.title,
@@ -91,10 +90,12 @@ export default function Builder({
   }
 
   if (!study?.id) {
-    return <InDev
-      header="🤷🏻 Sorry, no study found, please save your study first."
-      message="If you need help, please contact the tech support at info@mindhive.science"
-    />
+    return (
+      <InDev
+        header="🤷🏻 Sorry, no study found, please save your study first."
+        message="If you need help, please contact the tech support at info@mindhive.science"
+      />
+    );
   }
 
   return (

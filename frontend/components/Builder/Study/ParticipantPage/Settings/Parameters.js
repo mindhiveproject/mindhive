@@ -52,7 +52,6 @@ export default function Parameters({
     user?.permissions &&
     user.permissions.map((p) => p.name).includes("STUDENT");
 
-  console.log({ study });
   return (
     <div>
       <h2>Participation settings</h2>

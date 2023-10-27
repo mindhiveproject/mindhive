@@ -6,11 +6,13 @@ import useTranslation from "next-translate/useTranslation";
 import useForm from "../../../lib/useForm";
 import DisplayError from "../../ErrorMessage";
 
-import { CREATE_TEMPLATE } from "../../Mutations/Template";
+import { CREATE_TEMPLATE, UPDATE_TEMPLATE } from "../../Mutations/Template";
 import { CREATE_TASK, CREATE_EXTERNAL_TASK } from "../../Mutations/Task";
 import { MY_TASKS } from "../../Queries/Task";
 
 import ComponentForm from "./Form";
+
+import UploadFile from "./Template/UploadFile";
 
 export default function AddComponent({ query, user, redirect, isExternal }) {
   const { area } = query;
@@ -23,11 +25,12 @@ export default function AddComponent({ query, user, redirect, isExternal }) {
     description: "",
     descriptionForParticipants: "",
     taskType,
-    template: {},
+    template: {
+      title: "",
+      description: "",
+    },
     isExternal: !!isExternal,
   });
-
-  console.log({ inputs });
 
   const [
     createTemplate,
@@ -35,6 +38,15 @@ export default function AddComponent({ query, user, redirect, isExternal }) {
   ] = useMutation(CREATE_TEMPLATE, {
     variables: inputs?.template,
   });
+
+  const [
+    updateTemplate,
+    {
+      data: updateTemplateData,
+      loading: updateTemplateLoading,
+      error: updateTemplateError,
+    },
+  ] = useMutation(UPDATE_TEMPLATE);
 
   const [
     createTask,
@@ -83,14 +95,37 @@ export default function AddComponent({ query, user, redirect, isExternal }) {
             inputs?.template?.collaborators?.map((col) => ({
               id: col?.id,
             })) || [],
+          script: null,
+          file: null,
         },
       });
+
+      const { scriptAddress, fileAddress } = await UploadFile({
+        name: template?.data?.createTemplate?.slug,
+        script: inputs?.template?.script,
+        file: inputs?.template?.file,
+      });
+
+      await updateTemplate({
+        variables: {
+          id: template?.data?.createTemplate?.id,
+          collaborators: template?.data?.createTemplate?.collaborators.map(
+            (col) => ({
+              id: col?.id,
+            })
+          ),
+          scriptAddress,
+          fileAddress,
+        },
+      });
+
       // create a new task with connection to the new template
       await createTask({
         variables: {
           templateId: template?.data?.createTemplate?.id,
           collaborators:
             inputs?.collaborators?.map((col) => ({ id: col?.id })) || [],
+          template: null,
         },
       });
     }

@@ -15,7 +15,6 @@ export default function ClassesList({ query, user }) {
 
   const classes = data?.classes || [];
 
-  // console.log(classes);
   if (classes.length === 0) {
     return (
       <>

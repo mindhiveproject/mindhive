@@ -52,8 +52,6 @@ export default function Wrapper({
 
   let task;
 
-  console.log(isAuthor, createCopy);
-
   if (isAuthor && !createCopy) {
     task = {
       ...theTask,
@@ -84,16 +82,14 @@ export default function Wrapper({
     };
   }
 
-  console.log({ task });
-
   if (showEditor) {
     return (
       <div className="background">
         <div className="modal">
-          <Editor 
+          <Editor
             user={user}
             task={task}
-            updateCanvas={updateCanvas} 
+            updateCanvas={updateCanvas}
             close={close}
           />
         </div>

@@ -29,7 +29,7 @@ export default function SpecManager({
     },
   });
 
-  // create a new spec 
+  // create a new spec
   const [
     createSpec,
     {
@@ -72,7 +72,6 @@ export default function SpecManager({
   );
 
   const specs = data?.specs || [];
-  // console.log({ specs });
 
   const openSpec = (spec) => {
     setSpecId(spec?.id);
@@ -119,10 +118,7 @@ export default function SpecManager({
               Update
             </button>
           ) : (
-            <button
-              onClick={() => createSpec()}
-              disabled={createSpecLoading}
-            >
+            <button onClick={() => createSpec()} disabled={createSpecLoading}>
               Save
             </button>
           )}

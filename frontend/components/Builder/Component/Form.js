@@ -25,7 +25,7 @@ export default function ComponentForm({
   error,
   isTemplateAuthor,
   close,
-  isInStudyBuilder
+  isInStudyBuilder,
 }) {
   const { t } = useTranslation("classes");
 
@@ -33,7 +33,6 @@ export default function ComponentForm({
   const [isFullscreenPreviewOpen, setIsFullscreenPreviewOpen] = useState(false);
 
   const openFullscreenPreview = () => {
-    console.log({ inputs });
     setIsFullscreenPreviewOpen(true);
   };
 

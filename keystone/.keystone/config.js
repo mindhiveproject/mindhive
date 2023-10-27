@@ -970,7 +970,8 @@ var Template = (0, import_core11.list)({
       many: true
     }),
     parameters: (0, import_fields13.json)(),
-    script: (0, import_fields13.text)(),
+    fileAddress: (0, import_fields13.text)(),
+    scriptAddress: (0, import_fields13.text)(),
     style: (0, import_fields13.text)(),
     tasks: (0, import_fields13.relationship)({
       ref: "Task.template",
@@ -985,7 +986,6 @@ var Template = (0, import_core11.list)({
       many: true
     }),
     settings: (0, import_fields13.json)(),
-    file: (0, import_fields13.text)(),
     createdAt: (0, import_fields13.timestamp)({
       defaultValue: { kind: "now" }
     }),

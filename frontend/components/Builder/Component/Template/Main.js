@@ -1,11 +1,12 @@
 import DisplayError from "../../../ErrorMessage";
 
-import lz from "lzutf8";
 import assemble from "../../../Labjs/Assemble/index";
 
 import useTranslation from "next-translate/useTranslation";
 import TemplateParameters from "./Parameters";
 import Collaborators from "../../../Global/Collaborators";
+
+import Download from "./Download";
 
 export default function Template({
   template,
@@ -14,7 +15,6 @@ export default function Template({
   loading,
   error,
 }) {
-  // console.log({ template });
   const { t } = useTranslation("classes");
 
   const collaborators =
@@ -22,29 +22,9 @@ export default function Template({
 
   const handleTemplateChange = (e) => {
     let { value, name, type } = e.target;
-    // console.log(value, name, type);
     handleMultipleUpdate({
       template: { ...template, [name]: value },
     });
-  };
-
-  const downloadJSON = ({ file, name }) => {
-    // create file in browser
-    const fileToOpen = lz.decompress(lz.decodeBase64(file));
-    // const json = JSON.stringify(file, null, 2);
-    const blob = new Blob([fileToOpen], { type: "application/json" });
-    const href = URL.createObjectURL(blob);
-
-    // create "a" HTLM element with href to file
-    const link = document.createElement("a");
-    link.href = href;
-    link.download = `${name}.json`;
-    document.body.appendChild(link);
-    link.click();
-
-    // clean up "a" element & remove ObjectURL
-    document.body.removeChild(link);
-    URL.revokeObjectURL(href);
   };
 
   const deleteTemplateLocally = () => {
@@ -55,6 +35,8 @@ export default function Template({
         style: null,
         parameters: null,
         file: null,
+        scriptAddress: null,
+        fileAddress: null,
       },
     });
   };
@@ -67,18 +49,13 @@ export default function Template({
       const file = JSON.parse(fileLoadedEvent.target.result);
       const result = await assemble(file, fileName);
       const script = result.files["script.js"].content;
-      const compressedString = lz.encodeBase64(lz.compress(script));
-      const fileToSave = lz.encodeBase64(
-        lz.compress(fileLoadedEvent.target.result)
-      );
-      //   const fileToSave = lz.compress(fileLoadedEvent.target.result);
       handleMultipleUpdate({
         template: {
           ...template,
-          script: compressedString,
-          style: result.files["style.css"].content,
           parameters: [...result.files.parameters],
-          file: fileToSave,
+          style: result.files["style.css"].content,
+          script: script, // string
+          file: JSON.parse(fileLoadedEvent.target.result), // JSON object
         },
       });
     };
@@ -114,21 +91,13 @@ export default function Template({
 
         <div className="block">
           <label>lab.js script (JSON file)</label>
-          {template?.file && (
-            <p>
-              <a
-                onClick={() =>
-                  downloadJSON({
-                    file: template?.file,
-                    name: template?.title,
-                  })
-                }
-              >
-                Download JSON file
-              </a>
-            </p>
+          {template?.fileAddress && (
+            <Download
+              name={template?.slug}
+              fileAddress={template?.fileAddress}
+            />
           )}
-          {template?.script ? (
+          {template?.scriptAddress ? (
             <div>
               {template?.createdAt && (
                 <div>

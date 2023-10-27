@@ -29,12 +29,8 @@ export default function EditTag({ selector, query, user }) {
   });
 
   async function handleSave(e) {
-    console.log({ e });
     e.preventDefault();
     await updateTag();
-    // router.push({
-    //   pathname: `/dashboard/tags`,
-    // });
   }
 
   return (

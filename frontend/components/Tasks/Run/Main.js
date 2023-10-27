@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { TASK_TO_PARTICIPATE } from "../../Queries/Task";
 import DynamicExperimentWindow from "../../Labjs/Run/Wrapper";
@@ -10,14 +11,28 @@ export default function TaskRun({ user, study, id, onFinish, isSavingData }) {
   });
 
   const task = data?.task || undefined;
+  const [script, setScript] = useState(undefined);
 
-  if (task) {
+  // populate task with script
+  useEffect(() => {
+    async function fetchFile() {
+      const url = `/api/templates/${task?.template?.slug}/script`;
+      const res = await fetch(url);
+      const data = await res.text();
+      setScript(data);
+    }
+    if (task) {
+      fetchFile();
+    }
+  }, [task]);
+
+  if (task && script) {
     return (
       <Labjs>
         <DynamicExperimentWindow
           user={user}
           study={study}
-          task={task}
+          task={{ ...task, template: { ...task.template, script } }}
           onFinish={onFinish}
           isSavingData={isSavingData}
         />

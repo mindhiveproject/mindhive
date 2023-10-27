@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { Draggable } from "react-smooth-dnd";
 
-import { 
-  Icon, 
-} from "semantic-ui-react";
+import { Image, Popup } from "semantic-ui-react";
 
 export default function Card({
   card,
@@ -47,14 +45,13 @@ export default function Card({
       <div
         className="card"
         onClick={() => {
-          openCard(card.id);
+          openCard(card);
         }}
       >
         <div className="card-drag-handle">
           <h4>{ReactHtmlParser(card.title)}</h4>
           {!proposalBuildMode && (
             <div className="card-information">
-            
               <div className="info-assigned-container">
                 {card?.assignedTo.length
                   ? card?.assignedTo.map((user, i) => (
@@ -72,18 +69,26 @@ export default function Card({
                 <div className={`info-status ${statusStyle}`}>{status}</div>
               )}
 
-              { card?.isEditedBy?.username && 
+              {card?.isEditedBy?.username && (
                 <div className="editedByAvatar">
-                  { card?.isEditedBy?.image?.image?.publicUrlTransformed ? (
-                    <img src={card?.isEditedBy?.image?.image?.publicUrlTransformed} alt={card?.isEditedBy?.username} />
+                  <Popup
+                    content={card?.isEditedBy?.username}
+                    trigger={
+                      card?.isEditedBy?.image?.image?.publicUrlTransformed ? (
+                        <Image
+                          src={
+                            card?.isEditedBy?.image?.image?.publicUrlTransformed
+                          }
+                          avatar
+                        />
                       ) : (
-                    <div>
-                      <Icon name='user' aria-label={card?.isEditedBy?.username} /> 
-                    </div>
-                  ) }
+                        <Image src="/assets/icons/builder/page.svg" avatar />
+                      )
+                    }
+                    size="huge"
+                  />
                 </div>
-              }
-
+              )}
             </div>
           )}
         </div>

@@ -262,9 +262,6 @@ export const StyledProposal = styled.div`
       grid-gap: 10px;
       align-items: baseline;
       .editedByAvatar {
-        img {
-          height: 36px;
-        }
       }
       .info-assigned-container {
         display: grid;

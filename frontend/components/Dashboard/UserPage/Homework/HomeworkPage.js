@@ -10,7 +10,6 @@ export default function HomeworkPage({ code, query, user, profile }) {
   });
 
   const homework = data?.homework || {};
-  console.log({ homework });
 
   return (
     <div>

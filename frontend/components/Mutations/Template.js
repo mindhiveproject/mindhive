@@ -5,24 +5,28 @@ export const CREATE_TEMPLATE = gql`
   mutation CREATE_TEMPLATE(
     $title: String!
     $description: String
-    $script: String
     $style: String
     $parameters: JSON
-    $file: String
     $collaborators: [ProfileWhereUniqueInput!]
+    $fileAddress: String
+    $scriptAddress: String
   ) {
     createTemplate(
       data: {
         title: $title
         description: $description
-        script: $script
         style: $style
         parameters: $parameters
-        file: $file
         collaborators: { connect: $collaborators }
+        fileAddress: $fileAddress
+        scriptAddress: $scriptAddress
       }
     ) {
       id
+      slug
+      collaborators {
+        id
+      }
     }
   }
 `;
@@ -33,22 +37,22 @@ export const UPDATE_TEMPLATE = gql`
     $id: ID!
     $title: String
     $description: String
-    $script: String
     $style: String
     $parameters: JSON
-    $file: String
     $collaborators: [ProfileWhereUniqueInput!]
+    $fileAddress: String
+    $scriptAddress: String
   ) {
     updateTemplate(
       where: { id: $id }
       data: {
         title: $title
         description: $description
-        script: $script
         style: $style
         parameters: $parameters
-        file: $file
         collaborators: { set: $collaborators }
+        fileAddress: $fileAddress
+        scriptAddress: $scriptAddress
       }
     ) {
       id

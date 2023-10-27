@@ -22,9 +22,6 @@ export default function AssignmentMain({ query, user }) {
 
   const homeworks = homeworkData?.homeworks || [];
 
-  //   console.log({ assignment });
-  //   console.log({ homeworks });
-
   return (
     <StyledClass>
       <h1>{assignment?.title}</h1>

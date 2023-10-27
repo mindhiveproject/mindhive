@@ -9,8 +9,6 @@ export default function StudyDescription({
   handleChange,
   handleMultipleUpdate,
 }) {
-  console.log({ study });
-
   const [proposalId, setProposalId] = useState(
     study?.descriptionInProposalCard?.section?.board?.id || null
   );

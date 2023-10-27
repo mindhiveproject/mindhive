@@ -12,8 +12,6 @@ export default function ReviewBoard({ query, user }) {
   const { id, tab, action } = query;
   const stage = action === "review" ? "INDIVIDUAL" : "SYNTHESIS";
 
-  // console.log({ query });
-
   const { data, loading, error } = useQuery(PROPOSAL_REVIEWS_QUERY, {
     variables: {
       id: id,
@@ -21,7 +19,6 @@ export default function ReviewBoard({ query, user }) {
   });
 
   const proposal = data?.proposalBoard || { sections: [] };
-  // console.log({ proposal });
 
   const { title, description, sections } = proposal;
   const orderedSections = [...sections].sort((a, b) => a.position - b.position);

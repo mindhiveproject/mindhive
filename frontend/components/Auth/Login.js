@@ -32,7 +32,6 @@ export default function Login({ redirectType, redirectTo }) {
     // send the email and password to graphql api
     try {
       const res = await signin();
-      console.log({ res });
       // if error
       if (
         res?.data?.authenticateProfileWithPassword?.__typename ===
@@ -46,7 +45,6 @@ export default function Login({ redirectType, redirectTo }) {
         !redirectType &&
         res?.data?.authenticateProfileWithPassword?.item?.id
       ) {
-        console.log("Login was successfull");
         router.push({
           pathname: "/dashboard",
         });

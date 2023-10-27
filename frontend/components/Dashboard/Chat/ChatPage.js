@@ -37,8 +37,6 @@ export default function ClassPage({ code, user, query }) {
   const allMembersIds = [...new Set(allMembers)];
   const membersIds = allMembersIds.filter((id) => id !== user?.id);
 
-  console.log({ membersIds });
-
   return (
     <div>
       <EditTitle chat={chat} />

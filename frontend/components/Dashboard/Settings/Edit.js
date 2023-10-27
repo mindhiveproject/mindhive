@@ -16,8 +16,6 @@ export default function EditSettings({ query, user }) {
 
   const { inputs, handleChange, clearForm } = useForm({ ...user });
 
-  //   console.log(inputs);
-
   const [updateProfile, { data, loading, error }] = useMutation(UPDATE_USER, {
     variables: inputs,
     refetchQueries: [{ query: CURRENT_USER_QUERY }],
@@ -31,30 +29,24 @@ export default function EditSettings({ query, user }) {
   return (
     <>
       <h1>Settings</h1>
-      
+
       <StyledForm method="POST" onSubmit={handleSubmit}>
         <DisplayError error={error} />
 
-        <label>
-          Avatar
-        </label>
+        <label>Avatar</label>
         <div>
-          { user?.avatar ? (
+          {user?.avatar ? (
             <img src={user?.avatar} alt={user?.name} />
-            ) : (
-              <div>
-                <IdentIcon size="120" value={user?.name} />
-              </div>
-            ) }
+          ) : (
+            <div>
+              <IdentIcon size="120" value={user?.name} />
+            </div>
+          )}
           <UpdateAvatarModal user={user} />
         </div>
-      
+
         <fieldset disabled={loading} aria-busy={loading}>
-
           <div className="infoPane">
-
- 
-
             <label htmlFor="username">
               {t("common.username")}
               <input

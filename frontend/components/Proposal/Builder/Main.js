@@ -8,10 +8,7 @@ import ProposalCard from "../Card/Main";
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 
-import { 
-  Menu,
-  Sidebar, 
-} from "semantic-ui-react";
+import { Menu, Sidebar } from "semantic-ui-react";
 
 export default function ProposalBuilder({
   user,
@@ -21,38 +18,40 @@ export default function ProposalBuilder({
   isPreview,
   refetchQueries,
 }) {
-
   const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
     pollInterval: 20000, // get new data every 20 seconds
   });
 
-  const [updateEdit, { loading: updateEditLoading }] = useMutation(UPDATE_CARD_EDIT);
+  const [updateEdit, { loading: updateEditLoading }] =
+    useMutation(UPDATE_CARD_EDIT);
 
   const proposal = data?.proposalBoard || undefined;
 
   const [page, setPage] = useState("board");
-  const [cardId, setCardId] = useState(null);
+  const [card, setCard] = useState(null);
 
-  const openCard = (cardId) => {
-    setCardId(cardId);
+  const openCard = (card) => {
+    setCard(card);
     setPage("card");
   };
 
   const closeCard = async ({ cardId, lockedByUser }) => {
-    console.log({ cardId, lockedByUser })
-    if(cardId && lockedByUser) {
+    console.log({ cardId, lockedByUser });
+    if (cardId && lockedByUser) {
       // unlock the card
-      await updateEdit({ variables: {
-        id: cardId,
-        input: {
-          isEditedBy: { disconnect: true },
-          lastTimeEdited: null,
-        }
-      }});
+      await updateEdit({
+        variables: {
+          id: cardId,
+          input: {
+            isEditedBy: { disconnect: true },
+            lastTimeEdited: null,
+          },
+        },
+      });
     }
     setPage("board");
-    setCardId(null);
+    setCard(null);
   };
 
   if (loading) return "Loading...";
@@ -62,25 +61,31 @@ export default function ProposalBuilder({
     <>
       <Sidebar
         as={Menu}
-        animation='overlay'
-        icon='labeled'
-        onHide={() => closeCard({ cardId })}
+        animation="overlay"
+        icon="labeled"
+        onHide={() => {
+          console.log({ card });
+          closeCard({
+            cardId: card?.id,
+            lockedByUser: card?.isEditedBy?.username === user?.username,
+          });
+        }}
         vertical
         visible={page === "card"}
         direction="right"
       >
-        { cardId && 
-          <ProposalCard 
+        {card && (
+          <ProposalCard
             user={user}
             proposal={proposal}
-            cardId={cardId}
+            cardId={card?.id}
             closeCard={closeCard}
             proposalBuildMode={proposalBuildMode}
             isPreview={isPreview}
-          />   
-        }
+          />
+        )}
       </Sidebar>
-     
+
       <Sidebar.Pusher>
         {proposalBuildMode && (
           <div className="goBackBtn">
@@ -89,7 +94,7 @@ export default function ProposalBuilder({
             </span>
           </div>
         )}
-        { isPreview ? (
+        {isPreview ? (
           <>
             <h2>
               Preview of proposal template{" "}

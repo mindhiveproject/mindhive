@@ -16,8 +16,6 @@ export default function Form({
 }) {
   const { t } = useTranslation("account");
 
-  console.log({ role });
-
   return (
     <SignupForm>
       <StyledForm

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 
 import useTranslation from "next-translate/useTranslation";
@@ -22,15 +23,29 @@ export default function CloneTask({ query, user, taskSlug, redirect }) {
     description: "",
   };
 
-  // console.log(task);
-
   // save and edit the task information
   const { inputs, handleChange, handleMultipleUpdate, clearForm } = useForm({
     ...task,
     id: undefined,
   });
 
-  console.log({ inputs });
+  useEffect(() => {
+    async function fetchFile() {
+      // get the file and put it in inputs?.script
+      const url = `/api/templates/${task?.template?.slug}/script`;
+      const res = await fetch(url);
+      const data = await res.text();
+      handleMultipleUpdate({
+        template: {
+          ...inputs?.template,
+          script: data,
+        },
+      });
+    }
+    if (inputs?.template?.slug) {
+      fetchFile();
+    }
+  }, [inputs?.template?.slug]);
 
   const [
     createTask,

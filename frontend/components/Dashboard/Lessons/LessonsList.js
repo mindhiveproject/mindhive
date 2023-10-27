@@ -13,8 +13,6 @@ export default function LessonsList({ query, user }) {
 
   const lessons = data?.lessons || [];
 
-  console.log(lessons);
-
   return (
     <div className="board">
       {lessons?.map((lesson, i) => (

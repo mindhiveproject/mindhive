@@ -31,7 +31,6 @@ export default function EditLesson({ selector, query, user }) {
   });
 
   async function handleSave(e) {
-    console.log({ e });
     e.preventDefault();
     // TO DO: create or update the lesson
     await updateLesson();

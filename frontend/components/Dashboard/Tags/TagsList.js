@@ -9,8 +9,6 @@ export default function TagsList({ query, user }) {
 
   const tags = data?.tags || [];
 
-  console.log(tags);
-
   return (
     <div className="board">
       {tags?.map((tag, i) => (

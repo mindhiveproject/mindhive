@@ -56,57 +56,9 @@ export const StyledBuilderArea = styled.div`
     grid-gap: 5px;
     justify-content: center;
     align-content: center;
+    align-items: center;
     cursor: pointer;
     .icons {
-      display: grid;
-      align-content: center;
-      grid-gap: 1px;
-      grid-auto-flow: column;
-      .contentImg {
-        position: relative;
-        width: 40px;
-
-        
-        // .contentImg:hover {
-        //   cursor: pointer;
-        // }
-      
-        
-      }
-
-      .username {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 40px;
-        height: 40px;
-        // background: black;
-        color: white;
-        // margin-bottom: 5px;
-        font-family: sans-serif;
-        opacity: 0;
-        // visibility: hidden;
-        // -webkit-transition: visibility 0s, opacity 0.5s linear; 
-        // transition: visibility 0s, opacity 0.5s linear;
-        color: black;
-        z-index: 10;
-        background: white;
-      }
-
-      .username: hover {
-        // width: 150px;
-        padding: 8px 15px;
-        visibility: visible;
-        opacity: 1; 
-        border-radius: 20px;
-        background: white;
-        font-size: 20px;
-        z-index: 10;
-      }
-
-      img {
-        height: 40px;
-      }
     }
     .connectModal {
       display: grid;
@@ -922,7 +874,6 @@ export const StyledCollectPage = styled.div`
       background: white;
     }
   }
-
 `;
 
 const loading = keyframes`
@@ -965,7 +916,7 @@ export const StyledVisualizePage = styled.div`
     justify-content: center;
     width: 100%;
     label {
-      font-family: 'Lato';
+      font-family: "Lato";
       background: var(--green);
       border: 2px solid var(--green);
       border-radius: 4px;

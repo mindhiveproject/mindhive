@@ -11,8 +11,6 @@ import Journal from "./Journal/Main";
 import Homework from "./Homework/Main";
 
 export default function StudentPage({ query, user }) {
-  console.log({ query });
-
   const { area, selector } = query;
   const page = query?.page || "participated";
 
@@ -25,7 +23,6 @@ export default function StudentPage({ query, user }) {
     reviews: [],
   };
 
-  console.log({ profile });
   return (
     <StyledProfile>
       <div className="headerProfile">

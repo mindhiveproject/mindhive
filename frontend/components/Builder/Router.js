@@ -13,8 +13,6 @@ export default function BuilderRouter({ query }) {
 
   const user = useContext(UserContext);
   const { area, selector } = query;
-  // console.log(selector);
-  console.log({ query });
 
   const redirect = ({ area }) => {
     router.push({

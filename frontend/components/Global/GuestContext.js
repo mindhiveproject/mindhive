@@ -6,8 +6,6 @@ export const GuestContext = createContext();
 import { GET_GUEST } from "../Queries/Guest";
 
 export default function Guest({ children, query }) {
-
-  // console.log({ query });
   const guestPublicId = query?.guest;
 
   const [guest, setGuest] = useState(null);
@@ -15,10 +13,10 @@ export default function Guest({ children, query }) {
 
   const fetchGuestData = async (publicId) => {
     const { data } = await loadGuestData({ variables: { publicId } });
-    if(data?.guest) {
+    if (data?.guest) {
       setGuest(data?.guest);
     }
-  } 
+  };
 
   useEffect(() => {
     if (guestPublicId) {
@@ -26,6 +24,7 @@ export default function Guest({ children, query }) {
     }
   }, [guestPublicId]);
 
-
-  return <GuestContext.Provider value={guest}>{children}</GuestContext.Provider>;
+  return (
+    <GuestContext.Provider value={guest}>{children}</GuestContext.Provider>
+  );
 }

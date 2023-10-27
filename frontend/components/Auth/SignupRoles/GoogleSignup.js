@@ -10,7 +10,6 @@ import { SIGNIN_MUTATION } from "../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 
 export default function GoogleSignup({ role, classCode }) {
-  console.log({ classCode });
   const router = useRouter();
   const [googleSignup, { loading }] = useMutation(GOOGLE_SIGNUP);
   const [signin, { data: signinData, loading: signinLoading }] = useMutation(
@@ -40,7 +39,6 @@ export default function GoogleSignup({ role, classCode }) {
   };
 
   const handleFailure = (e) => {
-    console.log({ e });
     alert("There was an error, please try again.");
   };
 

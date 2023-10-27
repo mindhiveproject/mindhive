@@ -39,7 +39,6 @@ export default function Engine({
   const [engine, setEngine] = useState(null);
   useEffect(() => {
     function handleEngine() {
-      // console.log("Setting it up");
       const engine = createEngine();
       engine.setModel(new DiagramModel());
       // Create custom node
@@ -88,7 +87,6 @@ export default function Engine({
     handleEngine();
     // Specify how to clean up after this effect:
     return function cleanup() {
-      // console.log("Cleaning up");
       // saveDiagramState();
     };
   }, []);
@@ -108,113 +106,11 @@ export default function Engine({
     return text;
   };
 
-  // diagram functions
-  // const findChildren = (node) => {
-  //   console.log({ node });
-  //   let children = [];
-
-  //   if (node?.options?.type === "design") {
-  //     const ports = Object.values(node?.ports).filter(
-  //       (port) => port?.options?.type === "outCustomPort"
-  //     );
-  //     console.log({ ports });
-  //     if (ports.length) {
-  //       children = ports
-  //         .map((port) =>
-  //           Object.values(port?.links).map((link) => link?.targetPort?.parent)
-  //         )
-  //         .flat();
-  //     }
-  //   } else {
-  //     if (
-  //       node?.ports?.out?.links &&
-  //       Object.values(node?.ports?.out?.links).length
-  //     ) {
-  //       children = Object.values(node?.ports?.out?.links).map(
-  //         (link) => link?.targetPort?.parent
-  //       );
-  //     }
-  //   }
-  //   return children;
-  // };
-
-  // const compareArrays = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-
-  // const makeBlock = (tests) => {
-  //   const blocks = study?.components?.blocks || [];
-  //   // find whether there is a block which contains the tests (by id)
-  //   const blocksWithTests = blocks.filter((block) => {
-  //     if (
-  //       block?.tests.length === tests.length &&
-  //       compareArrays(
-  //         block?.tests?.map((t) => t?.id),
-  //         tests.map((t) => t?.id)
-  //       )
-  //     ) {
-  //       return true;
-  //     }
-  //     return false;
-  //   });
-  //   return {
-  //     blockId: blocksWithTests.length
-  //       ? blocksWithTests[0]?.blockId
-  //       : uniqid.time(),
-  //     title: blocksWithTests.length
-  //       ? blocksWithTests[0]?.title
-  //       : generate().dashed,
-  //     tests: [...tests],
-  //     skip: blocksWithTests.length ? blocksWithTests[0].skip : false,
-  //   };
-  // };
-
-  // const findChildrenRecursively = (nodes, level, blocks, tests) => {
-  //   nodes.forEach((node) => {
-  //     let blockTests = [];
-  //     if (level > 0) {
-  //       blockTests = [...tests];
-
-  //       if (node?.options?.type === "design") {
-  //         blockTests.push({
-  //           ...node?.options,
-  //         });
-  //       } else {
-  //         blockTests.push({
-  //           id: node?.options?.componentID,
-  //           title: node?.options?.name,
-  //           testId: node?.options?.testId,
-  //           subtitle: node?.options?.subtitle,
-  //           level,
-  //         });
-  //       }
-  //     }
-  //     const children = findChildren(node) || [];
-  //     if (children.length) {
-  //       findChildrenRecursively(children, level + 1, blocks, blockTests);
-  //     } else {
-  //       blocks.push(makeBlock(blockTests));
-  //     }
-  //   });
-  // };
-
-  // const createStudyDesign = ({ model }) => {
-  //   const allNodes = model.getNodes() || [];
-  //   console.log({ allNodes });
-  //   const startingNode = allNodes.filter(
-  //     (node) => node?.options?.type === "my-anchor"
-  //   );
-  //   const blocks = [];
-  //   findChildrenRecursively(startingNode, 0, blocks, []);
-  //   return { blocks };
-  // };
-
   // save the state of the diagram to the more general study state
   const saveDiagramState = () => {
     const model = engine?.model;
     // Serializing
     const diagram = JSON.stringify(model?.serialize());
-    // Get the experiment model
-    // const components = createStudyDesign({ model });
-    // handleMultipleUpdate({ diagram, components });
     // Get the study flow
     const flow = createStudyFlow();
     return {
@@ -367,7 +263,6 @@ export default function Engine({
       const ports = Object.values(currentNode?.ports).filter(
         (port) => port?.options?.type === "outCustomPort"
       );
-      console.log({ ports });
       flow.push({
         ...currentNode?.options,
         position: position,
@@ -421,7 +316,6 @@ export default function Engine({
 
   const buildStudy = () => {
     const { flow, diagram } = saveDiagramState();
-    console.log({ flow });
     saveStudy({
       variables: {
         input: {

@@ -87,10 +87,9 @@ export const MY_TASK = gql`
       template {
         id
         title
+        slug
         description
-        script
         style
-        file
         parameters
         author {
           id
@@ -98,6 +97,8 @@ export const MY_TASK = gql`
         collaborators {
           id
         }
+        fileAddress
+        scriptAddress
       }
       collaborators {
         id
@@ -119,11 +120,11 @@ export const TASK_TO_CLONE = gql`
       parameters
       template {
         id
+        slug
         title
         description
-        script
         style
-        file
+        scriptAddress
         parameters
         author {
           id
@@ -148,8 +149,9 @@ export const TASK_TO_PARTICIPATE = gql`
       parameters
       template {
         id
-        script
+        slug
         style
+        scriptAddress
       }
       taskType
       settings

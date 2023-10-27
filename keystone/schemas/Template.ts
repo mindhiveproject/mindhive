@@ -67,7 +67,10 @@ export const Template = list({
       many: true,
     }),
     parameters: json(),
-    script: text(),
+    // file: text(),
+    // script: text(),
+    fileAddress: text(),
+    scriptAddress: text(),
     style: text(),
     tasks: relationship({
       ref: "Task.template",
@@ -82,7 +85,6 @@ export const Template = list({
       many: true,
     }),
     settings: json(),
-    file: text(),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

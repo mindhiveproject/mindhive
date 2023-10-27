@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 
@@ -10,6 +11,8 @@ import { UPDATE_TASK } from "../../Mutations/Task";
 import ComponentForm from "./Form";
 
 import { MY_TASK } from "../../Queries/Task";
+
+import UploadFile from "./Template/UploadFile";
 
 export default function EditComponent({
   query,
@@ -36,6 +39,24 @@ export default function EditComponent({
     ...task,
   });
 
+  useEffect(() => {
+    async function fetchFile() {
+      // get the file and put it in inputs?.script
+      const url = `/api/templates/${task?.template?.slug}/script`;
+      const res = await fetch(url);
+      const data = await res.text();
+      handleMultipleUpdate({
+        template: {
+          ...inputs?.template,
+          script: data,
+        },
+      });
+    }
+    if (inputs?.template?.slug) {
+      fetchFile();
+    }
+  }, [inputs?.template?.slug]);
+
   // check whether the user is the author or a collaborator on the original template of the task
   const isTemplateAuthor =
     user?.id === inputs.template?.author?.id ||
@@ -59,11 +80,31 @@ export default function EditComponent({
   async function handleSubmit() {
     // update the template
     if (inputs?.template && isTemplateAuthor) {
+      // save files in the file system and store their addresses
+      // Find the absolute path of the json directory
+      const { scriptAddress, fileAddress } = await UploadFile({
+        script: inputs?.template?.script,
+        file: inputs?.template?.file,
+        name: inputs?.template?.slug,
+      });
+
+      handleMultipleUpdate({
+        template: {
+          ...inputs?.template,
+          scriptAddress, // string
+          fileAddress, // JSON object
+        },
+      });
+
       await updateTemplate({
         variables: {
           collaborators: inputs?.template?.collaborators.map((col) => ({
             id: col?.id,
           })),
+          script: null,
+          file: null,
+          scriptAddress,
+          fileAddress,
         },
       });
     }
@@ -71,12 +112,9 @@ export default function EditComponent({
     await updateTask({
       variables: {
         collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
+        template: null,
       },
     });
-    
-    // if (area) {
-    //   redirect({ area });
-    // }
   }
 
   return (

@@ -17,7 +17,6 @@ export default function Visualize({ query, user, tab }) {
   });
 
   const summaryResults = data?.summaryResults || [];
-  console.log({ summaryResults });
 
   if (!studyId) {
     return <div>No study found, please save your study first.</div>;

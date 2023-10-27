@@ -65,8 +65,6 @@ export default function AddClass({ user }) {
     ],
   });
 
-  console.log({ inputs });
-
   const [createConsent, { data, loading, error }] = useMutation(
     CREATE_CONSENT,
     {
@@ -82,10 +80,10 @@ export default function AddClass({ user }) {
       variables: {
         input: {
           ...inputs,
-          collaborators: inputs?.collaborators?.length ? 
-            inputs?.collaborators?.map((col) => ({ id: col?.id })) :
-            null,
-        }
+          collaborators: inputs?.collaborators?.length
+            ? inputs?.collaborators?.map((col) => ({ id: col?.id }))
+            : null,
+        },
       },
     });
     router.push({

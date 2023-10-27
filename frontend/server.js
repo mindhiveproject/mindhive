@@ -5,7 +5,7 @@ const next = require("next");
 const body = require("body-parser");
 const fs = require("fs");
 const path = require("path");
-const jsonfile = require('jsonfile')
+const jsonfile = require("jsonfile");
 const axios = require("axios");
 
 const endpoint = `http://localhost:4444/api/graphql`;
@@ -41,10 +41,41 @@ app
   .then(() => {
     server = express();
 
-    server.use(body.json());
+    server.use(body.json({ limit: "50mb" }));
+
+    server.post("/api/templates/upload", async (req, res) => {
+      const { name, script, file } = req.body;
+
+      // check whether the folder "data" exists
+      const dirTemplates = path.join(__dirname, "templates");
+      !fs.existsSync(dirTemplates) && fs.mkdirSync(dirTemplates);
+      const dir = path.join(dirTemplates, name);
+      !fs.existsSync(dir) && fs.mkdirSync(dir);
+
+      const filePathScript = path.join(dir, "script.txt");
+      const filePathFile = path.join(dir, "file.json");
+
+      await jsonfile.writeFile(filePathFile, file, function (err) {
+        if (err) console.error(err);
+      });
+
+      await fs.writeFile(filePathScript, script, function (err) {
+        if (err) {
+          return console.log(err);
+        }
+      });
+
+      const scriptAddress = `/templates/${name}/script.txt`;
+      const fileAddress = `/templates/${name}/file.json`;
+
+      res.send({
+        message: { scriptAddress, fileAddress },
+        status: 201,
+        statusText: "Saved",
+      });
+    });
 
     server.post("/api/save", async (req, res) => {
-
       const { metadata, data } = req.body;
       const { slice, id, payload } = metadata;
 
@@ -72,12 +103,17 @@ app
 
       const filePath = path.join(dir, payload + ".json");
 
-      jsonfile.writeFile(filePath, req.body, { flag: 'a', EOL: ',\n' }, function (err) {
-        if (err) console.error(err)
-      })
+      jsonfile.writeFile(
+        filePath,
+        req.body,
+        { flag: "a", EOL: ",\n" },
+        function (err) {
+          if (err) console.error(err);
+        }
+      );
 
       // save aggregated data
-      if(payload === "full") {
+      if (payload === "full") {
         const aggregated = data
           .filter((row) => row.aggregated)
           .map((row) => row.aggregated)
@@ -97,17 +133,31 @@ app
               input: {
                 metadataId: id,
                 data: aggregated,
-                study: req.query.st === "undefined" ? null : { connect: { id: req.query.st } },
-                template:  req.query.te === "undefined" ? null : { connect: { id: req.query.te } },
-                task: req.query.ta === "undefined" ? null : { connect: { id: req.query.ta } },
-                user: (req.query.us === "undefined" || req.query.type === "guest") ? null: { connect: { id: req.query.us } },
-                guest: (req.query.us === "undefined" || req.query.type === "user") ? null: { connect: { id: req.query.us } },
+                study:
+                  req.query.st === "undefined"
+                    ? null
+                    : { connect: { id: req.query.st } },
+                template:
+                  req.query.te === "undefined"
+                    ? null
+                    : { connect: { id: req.query.te } },
+                task:
+                  req.query.ta === "undefined"
+                    ? null
+                    : { connect: { id: req.query.ta } },
+                user:
+                  req.query.us === "undefined" || req.query.type === "guest"
+                    ? null
+                    : { connect: { id: req.query.us } },
+                guest:
+                  req.query.us === "undefined" || req.query.type === "user"
+                    ? null
+                    : { connect: { id: req.query.us } },
                 type: req.query.type === "guest" ? "GUEST" : "USER",
-              }
+              },
             },
           }),
         });
-        
       }
 
       res.send({
