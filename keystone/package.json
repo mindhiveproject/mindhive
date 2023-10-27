@@ -6,7 +6,8 @@
     "dev": "keystone dev",
     "start": "NODE_ENV=production keystone start",
     "build": "NODE_ENV=production keystone build",
-    "postinstall": "keystone postinstall"
+    "postinstall": "keystone postinstall",
+    "migrate": "keystone prisma db push"
   },
   "dependencies": {
     "@graphql-tools/schema": "^9.0.12",
