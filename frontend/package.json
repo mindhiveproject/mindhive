@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "server": "node server"
+    "server": "node server",
+    "prod": "NODE_ENV=production node server"
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
