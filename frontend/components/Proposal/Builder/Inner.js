@@ -30,12 +30,12 @@ class Inner extends Component {
       },
       update: (cache, { data: { createProposalSection } }) => {
         const data = cache.readQuery({
-          // query: PROPOSAL_QUERY,
+          query: PROPOSAL_QUERY,
           variables: { id },
         });
         if (data) {
           cache.writeQuery({
-            // query: PROPOSAL_QUERY,
+            query: PROPOSAL_QUERY,
             variables: { id },
             data: {
               proposalBoard: {
@@ -75,7 +75,6 @@ class Inner extends Component {
     this.props.onDeleteSection({
       variables: {
         id,
-        boardId: this.props.board.id,
       },
       update: (cache, payload) => {
         cache.evict({ id: cache.identify(payload.data.deleteProposalSection) });

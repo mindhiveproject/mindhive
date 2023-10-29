@@ -125,6 +125,13 @@ export const StyledCanvasBuilder = styled.div`
   background: #f4f5f5;
   box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
 
+  .sidepanel {
+    display: grid;
+    align-content: baseline;
+    height: 85vh;
+    overflow-y: auto;
+  }
+
   .board {
     display: grid;
     grid-template-columns: 5fr 3fr;

@@ -53,7 +53,13 @@ export const DesignWidget = props => {
             engine={props.engine}
             port={props.node.getPort(port?.options?.name)}
           >
-            <div className="my-out-port"></div>
+            <div className="wrapper">
+              <div className="label">
+                  {port?.options?.label}
+                </div>
+              <div className="my-out-port">
+              </div>
+            </div>
           </PortWidget>
         )}
   

@@ -8,13 +8,9 @@ import { StyledStudyRun } from "../../styles/StyledStudyPage";
 // the function should check what is the status of the user (new, ongoing)
 // and assign correct task to show
 export default function RunStudy({ user, study }) {
-  // const { data: userData } = useQuery(GET_USER_STUDIES);
-
   const { flow } = study;
   const studiesInfo = user?.studiesInfo || {};
   let info = studiesInfo[study?.id]?.info;
-
-  console.log({ info });
 
   const getRandomInt = (min, max) => {
     min = Math.ceil(min);
@@ -23,13 +19,16 @@ export default function RunStudy({ user, study }) {
   };
 
   const selectCondition = ({ conditions }) => {
-    // console.log({ conditions });
-    // TODO select condition based on the probability
-    const rand = getRandomInt(0, conditions?.length);
-
+    const probabilities = conditions
+      .map((condition, num) =>
+        Array.from(`${num}`.repeat(parseInt(condition?.probability)))
+      )
+      .flat();
+    const rand = getRandomInt(0, probabilities.length);
+    const conditionNumber = parseInt(probabilities[rand]);
     return {
-      conditionName: conditions[rand]?.name,
-      conditionLabel: conditions[rand]?.label,
+      conditionName: conditions[conditionNumber]?.name,
+      conditionLabel: conditions[conditionNumber]?.label,
     };
   };
 
@@ -106,14 +105,14 @@ export default function RunStudy({ user, study }) {
 
   return (
     <StyledStudyRun>
-      {info && user && 
+      {info && user && (
         <Manager
           user={user}
           study={study}
           studiesInfo={studiesInfo}
           info={info}
         />
-      }
+      )}
     </StyledStudyRun>
   );
 }

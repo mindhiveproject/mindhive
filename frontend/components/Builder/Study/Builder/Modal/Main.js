@@ -80,8 +80,6 @@ export default function Modal({ user, node, engine, close }) {
         rule: port?.rule,
       };
     });
-    // update the content of node
-    // node.options.conditions = ports;
     engine.repaintCanvas();
     close();
   };

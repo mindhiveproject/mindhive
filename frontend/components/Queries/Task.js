@@ -180,9 +180,9 @@ export const TASK_TO_EDIT = gql`
         title
         description
         parameters
-        script
         style
-        file
+        fileAddress
+        scriptAddress
         author {
           id
         }

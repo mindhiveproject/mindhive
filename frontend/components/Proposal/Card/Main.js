@@ -36,7 +36,7 @@ export default function ProposalCard({
 
   const proposalCard = data?.proposalCard || {};
 
-  console.log({ proposalCard });
+  // console.log({ proposalCard });
 
   // check whether the card is locked - after 1 hour it is allowed to edit
   const releaseTime =
@@ -68,12 +68,12 @@ export default function ProposalCard({
   );
 
   const [updateEdit, { loading: updateEditLoading }] = useMutation(
-    UPDATE_CARD_EDIT,
-    {
-      refetchQueries: [
-        { query: PROPOSAL_QUERY, variables: { id: proposal?.id } },
-      ],
-    }
+    UPDATE_CARD_EDIT
+    // {
+    //   refetchQueries: [
+    //     { query: PROPOSAL_QUERY, variables: { id: proposal?.id } },
+    //   ],
+    // }
   );
 
   // extract author and collaborators of the study

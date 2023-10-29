@@ -99,6 +99,9 @@ export const CREATE_SECTION = gql`
       title
       description
       position
+      cards {
+        id
+      }
     }
   }
 `;
@@ -135,7 +138,7 @@ export const UPDATE_SECTION = gql`
 `;
 
 export const DELETE_SECTION = gql`
-  mutation DELETE_SECTION($id: ID!, $boardId: ID!) {
+  mutation DELETE_SECTION($id: ID!) {
     deleteProposalSection(where: { id: $id }) {
       id
     }
@@ -219,14 +222,8 @@ export const UPDATE_CARD_CONTENT = gql`
 
 // update card edit information
 export const UPDATE_CARD_EDIT = gql`
-  mutation UPDATE_CARD_EDIT(
-    $id: ID!
-    $input: ProposalCardUpdateInput!
-  ) {
-    updateProposalCard(
-      where: { id: $id }
-      data: $input
-    ) {
+  mutation UPDATE_CARD_EDIT($id: ID!, $input: ProposalCardUpdateInput!) {
+    updateProposalCard(where: { id: $id }, data: $input) {
       id
     }
   }

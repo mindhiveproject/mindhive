@@ -63,13 +63,13 @@ export default function ProposalBuilder({
         as={Menu}
         animation="overlay"
         icon="labeled"
-        onHide={() => {
-          console.log({ card });
-          closeCard({
-            cardId: card?.id,
-            lockedByUser: card?.isEditedBy?.username === user?.username,
-          });
-        }}
+        // onHide={() => {
+        //   console.log({ card });
+        //   closeCard({
+        //     cardId: card?.id,
+        //     lockedByUser: card?.isEditedBy?.username === user?.username,
+        //   });
+        // }}
         vertical
         visible={page === "card"}
         direction="right"

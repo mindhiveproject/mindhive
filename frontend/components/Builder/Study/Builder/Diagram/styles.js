@@ -96,6 +96,27 @@ export const StyledNode = styled.div`
     justify-items: center;
   }
 
+  .wrapper {
+    display: grid;
+    justify-items: center;
+    width: 20px;
+    position: relative;
+    .label {
+      color: #666666;
+      font-family: Lato;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 18px;
+      letter-spacing: 0.05em;
+      text-align: center;
+      position: absolute;
+      bottom: 30px;
+      width: auto;
+      margin: 0 auto;
+    }
+  }
+
   .my-out-port {
     width: 20px;
     height: 20px;

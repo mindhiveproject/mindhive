@@ -16,7 +16,7 @@ export default function Menu({
   const [tab, setTab] = useState("addBlock");
 
   return (
-    <div>
+    <div className="sidepanel">
       <div text stackable className="menu">
         <div
           onClick={() => setTab("addBlock")}
