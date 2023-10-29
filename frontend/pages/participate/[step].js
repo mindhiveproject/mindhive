@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 
 import Site from "../../components/Global/Site";
-// import JoinStudyMain from "../../components/Studies/Join/Main";
 import StudyLandingMain from "../../components/Studies/Landing/Main";
 import GuestContext from "../../components/Global/GuestContext";
 

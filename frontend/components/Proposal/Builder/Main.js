@@ -32,6 +32,7 @@ export default function ProposalBuilder({
   const [card, setCard] = useState(null);
 
   const openCard = (card) => {
+    console.log({ card });
     setCard(card);
     setPage("card");
   };

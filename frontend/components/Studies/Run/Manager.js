@@ -2,7 +2,7 @@ import { useState } from "react";
 import TaskRun from "../../Tasks/Run/Main";
 import Prompt from "./Prompt/Main";
 
-export default function Manager({ user, study, studiesInfo, info }) {
+export default function Manager({ user, study, task, studiesInfo, info }) {
   const { path } = info;
   const currentStep = path[path.length - 1];
 
@@ -21,10 +21,8 @@ export default function Manager({ user, study, studiesInfo, info }) {
   };
 
   const selectCondition = ({ conditions }) => {
-    console.log({ conditions });
-    // TODO select condition based on the probability
+    // select condition based on the probability
     const rand = getRandomInt(0, conditions?.length);
-
     return conditions[rand]?.label;
   };
 
@@ -52,7 +50,7 @@ export default function Manager({ user, study, studiesInfo, info }) {
     if (currentStage?.type === "my-node") {
       // check whether the task is completed or not (is in the path or not)
       const isInPath = path.map((step) => step?.id).includes(currentStage?.id);
-      console.log({ isInPath });
+
       if (isInPath) {
         // continue searching
         return getNextStep({
@@ -82,7 +80,6 @@ export default function Manager({ user, study, studiesInfo, info }) {
           conditions: currentStage?.conditions,
         });
       }
-      console.log({ conditionLabel });
       const [branchedFlow] = currentStage?.conditions
         .filter((c) => c?.label === conditionLabel)
         .map((c) => c.flow);
@@ -112,10 +109,19 @@ export default function Manager({ user, study, studiesInfo, info }) {
   };
 
   const onTaskFinish = ({ token }) => {
-    setPage("post");
-    setToken(token);
-    // find the next task
-    setNextStep(findNextStep());
+    if (task) {
+      // if a task was retaken, redirect to the main study page without prompt after the task
+      const redirectPage =
+        user.type === "GUEST"
+          ? `/studies/${study?.slug}?guest=${user?.publicId}`
+          : `/dashboard/discover/studies?name=${study?.slug}`;
+      window.location = redirectPage;
+    } else {
+      setPage("post");
+      setToken(token);
+      // find the next task
+      setNextStep(findNextStep());
+    }
   };
 
   if (page === "test") {
@@ -123,7 +129,7 @@ export default function Manager({ user, study, studiesInfo, info }) {
       <TaskRun
         user={user}
         study={study}
-        id={currentStep?.componentID}
+        id={task || currentStep?.componentID}
         onFinish={onTaskFinish}
         isSavingData
       />

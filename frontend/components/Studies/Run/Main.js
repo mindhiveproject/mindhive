@@ -1,13 +1,11 @@
-import { useQuery } from "@apollo/client";
-// import { GET_USER_STUDIES } from "../../Queries/User";
 import Manager from "./Manager";
 
 import { StyledStudyRun } from "../../styles/StyledStudyPage";
 
-// idea: have one landing page to run the study
+// have one landing page to run the study
 // the function should check what is the status of the user (new, ongoing)
 // and assign correct task to show
-export default function RunStudy({ user, study }) {
+export default function RunStudy({ user, study, task }) {
   const { flow } = study;
   const studiesInfo = user?.studiesInfo || {};
   let info = studiesInfo[study?.id]?.info;
@@ -90,15 +88,15 @@ export default function RunStudy({ user, study }) {
   };
 
   // TODO locate where the user should be
-  if (!info) {
+  if (!info && !task) {
     info = {};
     info.path = [];
-    const nextSteps = getNextStep({
+    const nextStep = getNextStep({
       stages: [],
       currentFlow: flow,
       currentPosition: 0,
     });
-    info.path = info.path.concat(nextSteps);
+    info.path = info.path.concat(nextStep);
   }
 
   console.log({ info });
@@ -109,6 +107,7 @@ export default function RunStudy({ user, study }) {
         <Manager
           user={user}
           study={study}
+          task={task}
           studiesInfo={studiesInfo}
           info={info}
         />

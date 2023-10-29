@@ -3,8 +3,6 @@ import Link from "next/link";
 import TaskCard from "./TaskCard";
 
 export default function UserPath({ query, user, study, isDashboard, path }) {
-  // console.log({ user });
-
   // pass the guest publicId to the task page if the user type is guest
   const taskQuery =
     user?.type === "GUEST"
@@ -31,7 +29,7 @@ export default function UserPath({ query, user, study, isDashboard, path }) {
       )}
 
       {path
-        .filter((step) => step?.type === "task")
+        .filter((step) => step?.type === "task" && step?.finished)
         .map((step, num) => (
           <TaskCard key={num} step={step} user={user} study={study} />
         ))}

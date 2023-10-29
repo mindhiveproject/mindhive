@@ -270,7 +270,7 @@ const Section = ({
         },
       },
     });
-    openCard(newCard?.data?.createProposalCard?.id);
+    openCard({ id: newCard?.data?.createProposalCard?.id });
   };
 
   const deleteCardMutation = (id) => {

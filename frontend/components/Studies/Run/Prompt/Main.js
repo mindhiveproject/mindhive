@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 
-// import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
 
 import DataUsageForParticipant from "./DataUsage/Participant";
@@ -26,23 +25,10 @@ export default function Prompt({
 }) {
   const router = useRouter();
 
-  const redirectPage = user.type === "GUEST" ? 
-    `/studies/${study?.slug}?guest=${user?.publicId}` :
-    `/dashboard/discover/studies?name=${study?.slug}`; 
-
-  // const redirectPage = user.type === "GUEST" ? {
-  //     pathname: `/studies/${study?.slug}`,
-  //     query: 
-  //       {
-  //         guest: user?.publicId,
-  //       }
-  //   } : { 
-  //     pathname: `/dashboard/discover/studies`,
-  //     query: 
-  //       {
-  //         name: study?.slug,
-  //       }
-  //   };
+  const redirectPage =
+    user.type === "GUEST"
+      ? `/studies/${study?.slug}?guest=${user?.publicId}`
+      : `/dashboard/discover/studies?name=${study?.slug}`;
 
   const [dataUse, setDataUse] = useState(undefined);
   const [askDataUsageQuestion, setAskDataUsageQuestion] = useState(
@@ -61,7 +47,9 @@ export default function Prompt({
 
   const [updateGuestStudyInfo] = useMutation(UPDATE_GUEST_STUDY_INFO, {
     variables: { id: user?.id },
-    refetchQueries: [{ query: GET_GUEST, variables: { publicId: user?.publicId } }],
+    refetchQueries: [
+      { query: GET_GUEST, variables: { publicId: user?.publicId } },
+    ],
   });
 
   const closeDataUseQuestion = () => {
@@ -75,19 +63,44 @@ export default function Prompt({
   const isStudent = user?.permissions?.map((p) => p.name).includes("STUDENT");
 
   const saveResponsesAndProceed = async ({ proceedToNextTask }) => {
-    // debugger;
     // save responses
     await updateDataset({ variables: { token: token, dataPolicy: dataUse } });
-    // TODO save user information
-    info.path.push(nextStep);
+
+    const { path } = info;
+    let updatedPath = [...path];
+
+    // update the previous task of the path with information that it is finished
+    const prevTask = updatedPath.pop();
+    updatedPath = updatedPath.concat({
+      ...prevTask,
+      finished: true,
+      timestampFinished: Date.now(),
+    });
+
+    // update the path with the information about the next task
+    if (nextStep) {
+      if (nextStep.type === "my-node") {
+        updatedPath = updatedPath.concat({
+          ...nextStep,
+          type: "task",
+        });
+      } else {
+        updatedPath = updatedPath.concat(nextStep);
+      }
+    } else {
+      updatedPath = updatedPath.concat({ type: "end" });
+    }
+
     const updatedStudiesInfo = {
       ...studiesInfo,
       [study?.id]: {
         ...studiesInfo[study?.id],
-        info,
+        info: { path: updatedPath },
       },
     };
-    if(user.type === "GUEST") {
+
+    // save user information
+    if (user.type === "GUEST") {
       await updateGuestStudyInfo({
         variables: { studiesInfo: updatedStudiesInfo },
       });
@@ -96,19 +109,12 @@ export default function Prompt({
         variables: { studiesInfo: updatedStudiesInfo },
       });
     }
-    // proceed
+
+    // proceed;
     if (proceedToNextTask) {
-      // closePrompt();
-      // router.push({
-      //   pathname: `/participate/run`,
-      //   query: {
-      //     id: study?.id,
-      //   },
-      // });
       router.reload();
     } else {
       window.location = redirectPage;
-      // router.push(redirectPage);
     }
   };
 

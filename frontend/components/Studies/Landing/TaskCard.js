@@ -1,5 +1,7 @@
 import { useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
+import Link from "next/link";
+
 import { TASK_TO_PARTICIPATE } from "../../Queries/Task";
 
 import { StyledTaskCard } from "../../styles/StyledStudyPage";
@@ -11,6 +13,19 @@ export default function TaskCard({ user, study, step }) {
   const task = data?.task || {};
 
   const allowRetake = !study?.settings?.forbidRetake;
+
+  // pass the guest publicId to the task page if the user type is guest
+  const taskQuery =
+    user?.type === "GUEST"
+      ? {
+          name: study.slug,
+          guest: user?.publicId,
+          task: task?.id,
+        }
+      : {
+          name: study.slug,
+          task: task?.id,
+        };
 
   return (
     <StyledTaskCard taskType={task?.taskType}>
@@ -28,9 +43,16 @@ export default function TaskCard({ user, study, step }) {
 
         {allowRetake && (
           <div className="actionLinks">
-            <button>
-              <p>Retake {task?.taskType?.toLowerCase()}</p>
-            </button>
+            <Link
+              href={{
+                pathname: `/participate/run`,
+                query: taskQuery,
+              }}
+            >
+              <div className="controlBtns">
+                <button>Retake {task?.taskType?.toLowerCase()}</button>
+              </div>
+            </Link>
           </div>
         )}
       </div>

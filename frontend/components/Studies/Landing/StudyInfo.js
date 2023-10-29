@@ -156,7 +156,7 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
                     key={num}
                     href={{
                       pathname: `/studies/${study?.slug}`,
-                      query: { tab: atab.header },
+                      query: { tab: atab.header, guest: user?.publicId },
                     }}
                   >
                     <Menu.Item name={atab.name} active={tab === atab.header}>
