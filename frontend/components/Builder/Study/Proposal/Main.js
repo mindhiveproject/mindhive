@@ -8,11 +8,9 @@ import { PROPOSAL_TEMPLATES_QUERY } from "../../../Queries/Proposal";
 
 import { StyledProposal } from "../../../styles/StyledProposal";
 
-import { 
-  Sidebar, 
-} from "semantic-ui-react";
+import { Sidebar } from "semantic-ui-react";
 
-export default function Proposal({ query, user, tab }) {
+export default function Proposal({ query, user, tab, toggleSidebar }) {
   const { data, error, loading } = useQuery(PROPOSAL_TEMPLATES_QUERY);
 
   const templates = data?.proposalBoards || [];
@@ -31,16 +29,18 @@ export default function Proposal({ query, user, tab }) {
 
   return (
     <>
-      <div>
-
-      </div>
+      <div></div>
       <Sidebar.Pushable>
-      <Navigation query={query} user={user} tab={tab} />
-      <StyledProposal>
-        <ProposalWrapper query={query} user={user} templates={templates} />
-      </StyledProposal>
-    </Sidebar.Pushable>
+        <Navigation
+          query={query}
+          user={user}
+          tab={tab}
+          toggleSidebar={toggleSidebar}
+        />
+        <StyledProposal>
+          <ProposalWrapper query={query} user={user} templates={templates} />
+        </StyledProposal>
+      </Sidebar.Pushable>
     </>
-   
   );
 }

@@ -33,7 +33,9 @@ export default function Engine({
   study,
   handleChange,
   saveStudy,
+  toggleSidebar,
 }) {
+  const [hasStudyChanged, setHasStudyChanged] = useState(false);
   // force update canvas
   const forceUpdate = useReducer((bool) => !bool)[1];
   const [engine, setEngine] = useState(null);
@@ -75,11 +77,11 @@ export default function Engine({
       engine.model.registerListener({
         linksUpdated: (e) => {
           if (e?.isCreated) {
-            createUnsavedChanges();
+            setHasStudyChanged(true);
           }
         },
         nodesUpdated: (e) => {
-          createUnsavedChanges();
+          setHasStudyChanged(true);
         },
       });
       setEngine(engine);
@@ -211,15 +213,6 @@ export default function Engine({
     forceUpdate();
   };
 
-  const createUnsavedChanges = () => {
-    handleChange({
-      target: {
-        name: "unsavedChanges",
-        value: true,
-      },
-    });
-  };
-
   const addFunctions = {
     addComponentToCanvas,
     addStudyTemplateToCanvas,
@@ -317,17 +310,17 @@ export default function Engine({
   const buildStudy = () => {
     const { flow, diagram } = saveDiagramState();
     saveStudy({
-      variables: {
-        input: {
-          descriptionInProposalCard: study?.descriptionInProposalCardId
-            ? { connect: { id: study?.descriptionInProposalCardId } }
-            : null,
-          flow,
-          diagram,
-          tags: study?.tags?.length ? { set: study?.tags } : { set: [] },
-        },
-      },
+      flow,
+      diagram,
+      descriptionInProposalCardId: study?.descriptionInProposalCardId,
+      tags: study?.tags,
     });
+    setHasStudyChanged(false);
+  };
+
+  const handleStudyChange = (props) => {
+    setHasStudyChanged(true);
+    handleChange(props);
   };
 
   return (
@@ -338,14 +331,17 @@ export default function Engine({
         tab={tab}
         saveBtnName="Save"
         saveBtnFunction={buildStudy}
+        toggleSidebar={toggleSidebar}
+        hasStudyChanged={hasStudyChanged}
       />
       <Builder
         query={query}
         user={user}
         study={study}
-        handleChange={handleChange}
+        handleChange={handleStudyChange}
         engine={engine}
         addFunctions={addFunctions}
+        setHasStudyChanged={setHasStudyChanged}
       />
     </>
   );

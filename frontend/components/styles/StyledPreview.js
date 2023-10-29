@@ -8,6 +8,7 @@ export const StyledPreview = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 5;
+
   .frame {
     /* position: absolute;
     top: 0px;
@@ -28,6 +29,8 @@ export const StyledPreview = styled.div`
     justify-content: center;
     align-content: center;
     z-index: 15;
+    font-weight: bold;
+    background-color: #ffc107;
   }
   .closeBtn {
     position: absolute;

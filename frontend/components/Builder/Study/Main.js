@@ -1,21 +1,57 @@
 import Router from "./Router";
-// import AddStudy from "./AddStudy";
 import { StyledBuilderArea } from "../../styles/StyledBuilder";
+
+import { Menu, Sidebar } from "semantic-ui-react";
+import { useState } from "react";
+import ChatPage from "../../Dashboard/Chat/ChatPage";
+
+import StyledSlidebar from "../../styles/StyledSlidebar";
+import { StyledChat } from "../../styles/StyledChat";
 
 export default function StudyBuilder({ query, user }) {
   const { area, selector } = query;
   const tab = query?.tab || "page";
 
-  // if (selector === "add") {
-  //   return <AddStudy query={query} user={user} />;
-  // }
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [chatId, setChatId] = useState(undefined);
 
-  // if there is study id (selector)
-  // query this study and check whether the user has the right to access it
-  // if there is a panel, present this panel
+  const toggleSidebar = ({ chatId }) => {
+    setChatId(chatId);
+    setSidebarOpen(!sidebarOpen);
+  };
+
   return (
-    <StyledBuilderArea>
-      <Router query={query} user={user} tab={tab} />
-    </StyledBuilderArea>
+    <>
+      <StyledSlidebar>
+        <Sidebar
+          animation="overlay"
+          icon="labeled"
+          vertical
+          visible={sidebarOpen}
+          direction="right"
+          width="very wide"
+        >
+          <div className="chat">
+            <div className="closeBtn" onClick={() => setSidebarOpen(false)}>
+              <span>&times;</span>
+            </div>
+            <StyledChat>
+              <ChatPage code={chatId} user={user} query={query} />
+            </StyledChat>
+          </div>
+        </Sidebar>
+      </StyledSlidebar>
+
+      <Sidebar.Pusher>
+        <StyledBuilderArea>
+          <Router
+            query={query}
+            user={user}
+            tab={tab}
+            toggleSidebar={toggleSidebar}
+          />
+        </StyledBuilderArea>
+      </Sidebar.Pusher>
+    </>
   );
 }

@@ -11,6 +11,12 @@ export const StyledBuilderArea = styled.div`
   overflow-y: hidden;
   .navigation {
     display: grid;
+    .on {
+    }
+    .off {
+      background: lightGrey;
+      border: 1px solid lightGrey;
+    }
     .firstLine {
       display: grid;
       grid-template-columns: 1fr auto;

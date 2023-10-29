@@ -1,16 +1,26 @@
 import { StyledStudyPreview } from "../../styles/StyledStudyPage";
 import { StyledPreview } from "../../styles/StyledPreview";
 
-export default function StudyPreview({ close }) {
+export default function StudyPreview({ study, close }) {
   return (
     <StyledPreview>
       <div className="frame"></div>
-      <div className="message">THIS IS A PREVIEW. YOUR DATA ARE NOT SAVED.</div>
+      <div className="message">
+        THIS IS A STUDY PREVIEW. YOUR DATA WILL BE SAVED AS GUEST PARTICIPANT
+        DATA.
+      </div>
       <div className="closeBtn" onClick={() => close()}>
         <span>&times;</span>
       </div>
       <div className="preview">
-        <StyledStudyPreview>hello</StyledStudyPreview>
+        <StyledStudyPreview>
+          <iframe
+            src="http://localhost:3000/studies/test"
+            title="description"
+            height="100%"
+            width="100%"
+          ></iframe>
+        </StyledStudyPreview>
       </div>
     </StyledPreview>
   );

@@ -7,7 +7,7 @@ import { STUDY_SUMMARY_RESULTS } from "../../../Queries/SummaryResult";
 
 import { StyledVisualizePage } from "../../../styles/StyledBuilder";
 
-export default function Visualize({ query, user, tab }) {
+export default function Visualize({ query, user, tab, toggleSidebar }) {
   const studyId = query?.selector;
   const participantId = query?.id;
 
@@ -24,7 +24,12 @@ export default function Visualize({ query, user, tab }) {
 
   return (
     <>
-      <Navigation query={query} user={user} tab={tab} />
+      <Navigation
+        query={query}
+        user={user}
+        tab={tab}
+        toggleSidebar={toggleSidebar}
+      />
       <StyledVisualizePage>
         <Preprocessor studyId={studyId} data={summaryResults} user={user} />
       </StyledVisualizePage>

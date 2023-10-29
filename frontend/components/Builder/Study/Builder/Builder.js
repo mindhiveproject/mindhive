@@ -18,6 +18,7 @@ export default function Builder({
   handleMultipleUpdate,
   engine,
   addFunctions,
+  setHasStudyChanged,
 }) {
   const [node, setNode] = useState(null);
   const [componentId, setComponentId] = useState(null);
@@ -79,6 +80,7 @@ export default function Builder({
       }
     });
     engine.repaintCanvas();
+    setHasStudyChanged(true);
   };
 
   const openStudyPreview = () => {
@@ -86,7 +88,9 @@ export default function Builder({
   };
 
   if (isStudyPreviewOpen) {
-    return <StudyPreview close={() => setStudyPreviewOpen(false)} />;
+    return (
+      <StudyPreview study={study} close={() => setStudyPreviewOpen(false)} />
+    );
   }
 
   if (!study?.id) {
@@ -154,6 +158,7 @@ export default function Builder({
           node={node}
           engine={engine}
           close={() => closeModal()}
+          setHasStudyChanged={setHasStudyChanged}
         />
       )}
     </StyledCanvasBuilder>

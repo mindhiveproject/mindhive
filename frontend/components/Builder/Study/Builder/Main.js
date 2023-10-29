@@ -1,5 +1,6 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import generate from "project-name-generator";
 
 import useForm from "../../../../lib/useForm";
 
@@ -8,7 +9,7 @@ import { CREATE_STUDY, UPDATE_STUDY } from "../../../Mutations/Study";
 
 import Router from "./Router";
 
-export default function Builder({ query, user, tab }) {
+export default function Builder({ query, user, tab, toggleSidebar }) {
   const router = useRouter();
   const studyId = query?.selector;
 
@@ -24,15 +25,22 @@ export default function Builder({ query, user, tab }) {
 
   const [
     createStudy,
-    { data: createStudyData, loading: createStudyLoading, error: createStudyError },
+    {
+      data: createStudyData,
+      loading: createStudyLoading,
+      error: createStudyError,
+    },
   ] = useMutation(CREATE_STUDY, {
-    variables: {},
     refetchQueries: [{ query: MY_STUDIES, variables: { id: user?.id } }],
   });
 
   const [
     updateStudy,
-    { data: updateStudyData, loading: updateStudyLoading, error: updateStudyError },
+    {
+      data: updateStudyData,
+      loading: updateStudyLoading,
+      error: updateStudyError,
+    },
   ] = useMutation(UPDATE_STUDY, {
     variables: {
       id: study?.id,
@@ -40,9 +48,31 @@ export default function Builder({ query, user, tab }) {
     refetchQueries: [{ query: MY_STUDY, variables: { id: studyId } }],
   });
 
-  const saveStudy = async ({ variables }) => {
-    if(studyId === "add") {
-      const newStudy = await createStudy({ variables });
+  const saveStudy = async ({
+    flow,
+    diagram,
+    descriptionInProposalCardId,
+    tags,
+  }) => {
+    if (studyId === "add") {
+      const newStudy = await createStudy({
+        variables: {
+          input: {
+            flow,
+            diagram,
+            descriptionInProposalCard: descriptionInProposalCardId
+              ? { connect: { id: descriptionInProposalCardId } }
+              : null,
+            tags: tags?.length ? { connect: tags } : null,
+            title: generate().dashed,
+            talks: {
+              create: [
+                { settings: { type: "default", title: "Project chat" } },
+              ],
+            },
+          },
+        },
+      });
       router.push({
         pathname: `/builder/studies/`,
         query: {
@@ -50,12 +80,23 @@ export default function Builder({ query, user, tab }) {
         },
       });
     } else {
-      updateStudy({ variables });
+      updateStudy({
+        variables: {
+          input: {
+            flow,
+            diagram,
+            descriptionInProposalCard: descriptionInProposalCardId
+              ? { connect: { id: descriptionInProposalCardId } }
+              : null,
+            tags: tags?.length ? { set: tags } : { set: [] },
+          },
+        },
+      });
     }
-  }
+  };
 
   if (!studyId) {
-    return <div>No study found, please save your study first.</div>
+    return <div>No study found, please save your study first.</div>;
   }
 
   return (
@@ -66,6 +107,7 @@ export default function Builder({ query, user, tab }) {
       study={inputs}
       handleChange={handleChange}
       saveStudy={saveStudy}
+      toggleSidebar={toggleSidebar}
     />
-  )
+  );
 }

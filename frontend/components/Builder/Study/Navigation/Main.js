@@ -1,8 +1,6 @@
 import { useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 
-// import CreateStudy from "./Create";
-// import UpdateStudy from "./Update";
 import Connect from "./Connect/Main";
 import StudyOptions from "../../../Studies/Bank/StudyOptions";
 
@@ -41,9 +39,10 @@ export default function Navigation({
   tab,
   saveBtnName,
   saveBtnFunction,
+  toggleSidebar,
+  hasStudyChanged,
 }) {
   const { area, selector } = query;
-  const toggleSlidebar = () => {};
 
   const studyId = query?.selector;
 
@@ -56,6 +55,24 @@ export default function Navigation({
     collaborators: [],
     classes: [],
     consent: [],
+    talks: [],
+  };
+
+  const toggleChatSidebar = () => {
+    const [talk] = study?.talks;
+    toggleSidebar({ chatId: talk?.id });
+  };
+
+  const tryToLeave = (e) => {
+    if (hasStudyChanged) {
+      if (
+        !confirm(
+          "Your unsaved changes will be lost. Click Cancel to return and save the changes."
+        )
+      ) {
+        e.preventDefault();
+      }
+    }
   };
 
   return (
@@ -67,6 +84,7 @@ export default function Navigation({
               href={{
                 pathname: `/dashboard/develop/studies`,
               }}
+              onClick={tryToLeave}
             >
               ←
             </Link>
@@ -77,21 +95,24 @@ export default function Navigation({
         </div>
         <div className="rightPanel">
           <Connect study={study} user={user} />
-          <div className="icon" onClick={toggleSlidebar}>
-            <img src="/assets/icons/chat.svg" />
-          </div>
+
+          {study?.talks?.length > 0 && (
+            <div className="icon" onClick={toggleChatSidebar}>
+              <img src="/assets/icons/chat.svg" />
+            </div>
+          )}
 
           <div className="icon">
             <StudyOptions user={user} study={study} />
           </div>
-          {/* {study?.id ? (
-            <UpdateStudy study={study} user={user} />
-          ) : (
-            <CreateStudy study={study} user={user} />
-          )} */}
-          {saveBtnFunction && 
-            <button onClick={() => saveBtnFunction()}>{saveBtnName}</button>
-          }
+          {saveBtnFunction && (
+            <button
+              onClick={() => saveBtnFunction()}
+              className={hasStudyChanged ? "on" : "off"}
+            >
+              {saveBtnName}
+            </button>
+          )}
         </div>
       </div>
 
@@ -107,6 +128,7 @@ export default function Navigation({
                   tab: item?.value,
                 },
               }}
+              onClick={tryToLeave}
             >
               <div
                 className={

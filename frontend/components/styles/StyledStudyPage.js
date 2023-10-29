@@ -273,7 +273,8 @@ export const StyledTaskCard = styled.div`
 
 export const StyledStudyPreview = styled.div`
   display: grid;
-  margin: 20px;
+  margin-top: 20px;
+  height: 100%;
 `;
 
 export const StyledStudyRun = styled.div`

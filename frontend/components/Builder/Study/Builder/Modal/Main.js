@@ -4,7 +4,13 @@ import { OutCustomPort } from "../Diagram/models/OutPortModel";
 import uniqid from "uniqid";
 import generate from "project-name-generator";
 
-export default function Modal({ user, node, engine, close }) {
+export default function Modal({
+  user,
+  node,
+  engine,
+  close,
+  setHasStudyChanged,
+}) {
   const [ports, setPorts] = useState(
     Object.values(node?.ports)
       .filter((port) => port?.options?.type === "outCustomPort")
@@ -81,6 +87,7 @@ export default function Modal({ user, node, engine, close }) {
       };
     });
     engine.repaintCanvas();
+    setHasStudyChanged(true);
     close();
   };
 

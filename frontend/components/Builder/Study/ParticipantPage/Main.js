@@ -1,5 +1,6 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 import useForm from "../../../../lib/useForm";
 
@@ -12,9 +13,11 @@ import { CREATE_STUDY, UPDATE_STUDY } from "../../../Mutations/Study";
 
 import { StyledParticipantPage } from "../../../styles/StyledBuilder";
 
-export default function ParticipantPage({ query, user, tab }) {
+export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
   const router = useRouter();
   const studyId = query?.selector;
+
+  const [hasStudyChanged, setHasStudyChanged] = useState(false);
 
   const { data, error, loading } = useQuery(MY_STUDY, {
     variables: { id: studyId },
@@ -32,6 +35,21 @@ export default function ParticipantPage({ query, user, tab }) {
     useForm({
       ...study,
     });
+
+  const handleStudyChange = (props) => {
+    setHasStudyChanged(true);
+    handleChange(props);
+  };
+
+  const handleStudyMultipleUpdate = (props) => {
+    setHasStudyChanged(true);
+    handleMultipleUpdate(props);
+  };
+
+  const captureStudyFile = (props) => {
+    setHasStudyChanged(true);
+    captureFile(props);
+  };
 
   const [
     createStudy,
@@ -52,6 +70,9 @@ export default function ParticipantPage({ query, user, tab }) {
           ? { create: { image: inputs?.file, altText: inputs?.title } }
           : null,
         consent: inputs?.consent?.length ? { connect: inputs?.consent } : null,
+        talks: {
+          create: [{ settings: { type: "default", title: "Project chat" } }],
+        },
       },
     },
     refetchQueries: [{ query: MY_STUDIES, variables: { id: user?.id } }],
@@ -76,10 +97,6 @@ export default function ParticipantPage({ query, user, tab }) {
         image: inputs?.file
           ? { create: { image: inputs?.file, altText: inputs?.title } }
           : null,
-        // ...inputs,
-        // collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
-        // classes: inputs?.classes.map((cl) => ({ id: cl?.id })),
-        // consent: inputs?.consent.map((con) => ({ id: con?.id })),
         consent: inputs?.consent?.length ? { connect: inputs?.consent } : null,
       },
     },
@@ -97,6 +114,7 @@ export default function ParticipantPage({ query, user, tab }) {
       });
     } else {
       updateStudy();
+      setHasStudyChanged(false);
     }
   };
 
@@ -108,19 +126,21 @@ export default function ParticipantPage({ query, user, tab }) {
         tab={tab}
         saveBtnName="Save"
         saveBtnFunction={saveStudy}
+        toggleSidebar={toggleSidebar}
+        hasStudyChanged={hasStudyChanged}
       />
       <StyledParticipantPage>
         <Preview
           study={inputs}
-          handleChange={handleChange}
-          handleMultipleUpdate={handleMultipleUpdate}
-          captureFile={captureFile}
+          handleChange={handleStudyChange}
+          handleMultipleUpdate={handleStudyMultipleUpdate}
+          captureFile={captureStudyFile}
         />
         <Settings
           user={user}
           study={inputs}
-          handleChange={handleChange}
-          handleMultipleUpdate={handleMultipleUpdate}
+          handleChange={handleStudyChange}
+          handleMultipleUpdate={handleStudyMultipleUpdate}
         />
       </StyledParticipantPage>
     </>
