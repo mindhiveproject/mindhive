@@ -36,7 +36,7 @@ yarn-error.log*
 /data
 
 # template files
-/template
+/templates
 
 # config file
 config.js
