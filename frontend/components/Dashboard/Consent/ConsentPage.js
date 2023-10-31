@@ -33,8 +33,17 @@ export default function ConsentPage({ code, user, query }) {
     e.preventDefault();
     await editConsent({
       variables: {
-        ...inputs,
-        collaborators: inputs?.collaborators?.map((col) => ({ id: col?.id })),
+        id: consent?.id,
+        input: {
+          title: inputs?.title,
+          description: inputs?.description,
+          info: inputs?.info,
+          collaborators: inputs?.collaborators?.length
+            ? {
+                set: inputs?.collaborators?.map((col) => ({ id: col?.id })),
+              }
+            : { set: [] },
+        },
       },
     });
     router.push({
@@ -75,7 +84,7 @@ export default function ConsentPage({ code, user, query }) {
       {consent?.info?.map((block, i) => (
         <div key={i}>
           <h3>{block?.description}</h3>
-          {ReactHtmlParser(block?.content)}
+          {ReactHtmlParser(block?.text)}
         </div>
       ))}
     </div>

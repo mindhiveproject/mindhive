@@ -15,7 +15,7 @@ export default function StudyPreview({ study, close }) {
       <div className="preview">
         <StyledStudyPreview>
           <iframe
-            src="http://localhost:3000/studies/test"
+            src={`/studies/${study?.slug}`}
             title="description"
             height="100%"
             width="100%"

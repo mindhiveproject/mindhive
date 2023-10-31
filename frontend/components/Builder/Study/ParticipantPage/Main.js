@@ -97,7 +97,9 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
         image: inputs?.file
           ? { create: { image: inputs?.file, altText: inputs?.title } }
           : null,
-        consent: inputs?.consent?.length ? { connect: inputs?.consent } : null,
+        consent: inputs?.consent?.length
+          ? { connect: inputs?.consent.map((c) => ({ id: c?.id })) }
+          : null,
       },
     },
     refetchQueries: [{ query: MY_STUDY, variables: { id: studyId } }],

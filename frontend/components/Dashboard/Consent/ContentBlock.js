@@ -14,7 +14,7 @@ export default function ContentBlock({ index, block, updateInfo }) {
       </div>
 
       <JoditEditor
-        content={block?.content}
+        content={block?.text}
         setContent={(content) => updateInfo({ content, index })}
       />
     </div>

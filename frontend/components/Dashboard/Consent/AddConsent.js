@@ -81,7 +81,9 @@ export default function AddClass({ user }) {
         input: {
           ...inputs,
           collaborators: inputs?.collaborators?.length
-            ? inputs?.collaborators?.map((col) => ({ id: col?.id }))
+            ? {
+                connect: inputs?.collaborators?.map((col) => ({ id: col?.id })),
+              }
             : null,
         },
       },

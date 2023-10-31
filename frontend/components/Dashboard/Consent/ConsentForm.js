@@ -45,7 +45,7 @@ export default function ConsentForm({
               {t("common.description")}
               <textarea
                 id="description"
-                rows="50"
+                rows="5"
                 name="description"
                 value={inputs?.description}
                 onChange={handleChange}

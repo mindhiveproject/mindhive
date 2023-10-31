@@ -5,7 +5,7 @@ export default function ShareStudy({ study, handleChange }) {
   const [isCustomize, setIsCustomize] = useState(true);
 
   const copyLink = () => {
-    const copyLink = `https://mindhive.science/studies/${study.slug}`;
+    const copyLink = `https://dev.mindhive.science/studies/${study.slug}`;
     const temp = document.createElement("input");
     document.body.append(temp);
     temp.value = copyLink;
@@ -24,7 +24,7 @@ export default function ShareStudy({ study, handleChange }) {
         {study?.slug ? (
           <label htmlFor="slug" onClick={() => copyLink()}>
             <p className="accessLink">
-              https://mindhive.science/studies/
+              https://dev.mindhive.science/studies/
               {study.slug}
             </p>
           </label>
