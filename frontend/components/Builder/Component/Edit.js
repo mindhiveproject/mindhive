@@ -39,23 +39,24 @@ export default function EditComponent({
     ...task,
   });
 
+  async function fetchFile() {
+    // get the file and put it in inputs?.script
+    const url = `/api/templates/${task?.template?.slug}/script`;
+    const res = await fetch(url);
+    const data = await res.text();
+    handleMultipleUpdate({
+      template: {
+        ...inputs?.template,
+        script: data,
+      },
+    });
+  }
+
   useEffect(() => {
-    async function fetchFile() {
-      // get the file and put it in inputs?.script
-      const url = `/api/templates/${task?.template?.slug}/script`;
-      const res = await fetch(url);
-      const data = await res.text();
-      handleMultipleUpdate({
-        template: {
-          ...inputs?.template,
-          script: data,
-        },
-      });
-    }
-    if (inputs?.template?.slug) {
+    if (inputs?.template?.scriptAddress) {
       fetchFile();
     }
-  }, [inputs?.template?.slug]);
+  }, [inputs?.template?.scriptAddress]);
 
   // check whether the user is the author or a collaborator on the original template of the task
   const isTemplateAuthor =
@@ -74,12 +75,16 @@ export default function EditComponent({
     { data: taskData, loading: taskLoading, error: taskError },
   ] = useMutation(UPDATE_TASK, {
     variables: inputs,
-    refetchQueries: [{ query: MY_TASK, variables: { id: taskId } }],
+    // refetchQueries: [{ query: MY_TASK, variables: { id: taskId } }],
   });
 
   async function handleSubmit() {
     // update the template
-    if (inputs?.template && isTemplateAuthor) {
+    if (
+      inputs?.template?.script &&
+      inputs?.template?.file &&
+      isTemplateAuthor
+    ) {
       // save files in the file system and store their addresses
       // Find the absolute path of the json directory
       const { scriptAddress, fileAddress } = await UploadFile({
@@ -115,6 +120,8 @@ export default function EditComponent({
         template: null,
       },
     });
+
+    await fetchFile();
   }
 
   return (

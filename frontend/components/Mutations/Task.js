@@ -9,6 +9,7 @@ export const CREATE_TASK = gql`
     $taskType: TaskTaskTypeType
     $isExternal: Boolean
     $link: String
+    $parameters: JSON
     $collaborators: [ProfileWhereUniqueInput!]
   ) {
     createTask(
@@ -19,6 +20,7 @@ export const CREATE_TASK = gql`
         taskType: $taskType
         isExternal: $isExternal
         link: $link
+        parameters: $parameters
         collaborators: { connect: $collaborators }
       }
     ) {
