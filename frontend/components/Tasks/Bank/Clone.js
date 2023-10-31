@@ -17,8 +17,8 @@ export default function CloneTaskBank({ taskType }) {
     <StyledSelector>
       <div className="selectionBody">
         <div className="selectHeader">
-          <h1>Clone & modify a task</h1>
-          <p>Select which task you would like to clone below.</p>
+          <h1>Clone & modify a {taskType}</h1>
+          <p>Select which {taskType} you would like to clone below.</p>
         </div>
         <StyledBank>
           {tasks.map((task) => (

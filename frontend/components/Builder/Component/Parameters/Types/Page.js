@@ -1,4 +1,5 @@
 import uniqid from "uniqid";
+import JoditEditor from "../../../../Jodit/Editor";
 
 export default function Page({
   name,
@@ -390,16 +391,14 @@ function Item({
         )}
 
         {type === "block" && (
-          <>
-            <div>Content</div>
-            <textarea
-              type="text"
-              name={id}
-              value={text}
-              onChange={handleItemChange}
-              className="text"
-            />
-          </>
+          <JoditEditor
+            content={text}
+            setContent={(value) =>
+              handleItemChange({
+                target: { value, id, className: "text", name: id },
+              })
+            }
+          />
         )}
       </div>
       <div className="controlButtons">

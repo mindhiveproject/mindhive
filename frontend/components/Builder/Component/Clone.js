@@ -23,6 +23,8 @@ export default function CloneTask({ query, user, taskSlug, redirect }) {
     description: "",
   };
 
+  console.log({ task });
+
   // save and edit the task information
   const { inputs, handleChange, handleMultipleUpdate, clearForm } = useForm({
     ...task,

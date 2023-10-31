@@ -93,6 +93,10 @@ const StyledTaskBuilder = styled.div`
     grid-column-gap: 10px;
     .controlButtons {
       display: grid;
+      button {
+        background-color: #ff2d2d;
+        border-radius: 2.25rem;
+      }
     }
     .deleteDiv {
       display: grid;
@@ -116,12 +120,12 @@ const StyledTaskBuilder = styled.div`
       cursor: pointer;
       width: 4.3rem;
       text-align: center;
-      border-radius: 2.25rem;
-      background-color: #ff2d2d;
+      /* border-radius: 2.25rem; */
+      /* background-color: #ff2d2d; */
       color: white;
       font-size: 2rem;
       :hover {
-        background-color: #ea0707;
+        /* background-color: #ea0707; */
         transform: scale(1.1);
         transition: transform 0.5s;
       }

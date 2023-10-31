@@ -214,6 +214,58 @@ export default function Selector({ query, user }) {
   }
 
   if (develop === "block") {
-    return <CloneTaskBank user={user} taskType={develop} />;
+    if (clone === "true") {
+      return <CloneTaskBank user={user} taskType={develop} />;
+    }
+
+    return (
+      <div className="selectionBody">
+        <h1>Develop a {develop}</h1>
+        <div className="studyOptions">
+          <Link
+            className="option"
+            href={{
+              pathname: "/dashboard/develop/new",
+              query: {
+                develop,
+                clone: "true",
+              },
+            }}
+          >
+            <div className="iconSelect">
+              <img
+                src={`/assets/develop/clone-study.svg`}
+                alt="icon"
+                width="50"
+              />
+            </div>
+            <h3>Clone & modify a {develop}</h3>
+            <p>
+              Duplicate and edit a pre-existing MindHive block and its
+              parameters.
+            </p>
+          </Link>
+
+          <Link
+            className="option"
+            href={{
+              pathname: `/builder/cloneofblock`,
+              query: {
+                selector: "block",
+              },
+            }}
+          >
+            <div className="iconSelect">
+              <img src={`/assets/develop/block.svg`} alt="icon" width="50" />
+            </div>
+            <h3>Create new block</h3>
+            <p>
+              Select this option if you would prefer to build a block entirely
+              from scratch.
+            </p>
+          </Link>
+        </div>
+      </div>
+    );
   }
 }
