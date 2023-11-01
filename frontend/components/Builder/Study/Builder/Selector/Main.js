@@ -38,12 +38,7 @@ const components = [
   },
 ];
 
-export default function ComponentSelector({
-  engine,
-  user,
-  addFunctions,
-  setComponentId,
-}) {
+export default function ComponentSelector({ engine, user, addFunctions }) {
   const [createdBy, setCreatedBy] = useState("anyone");
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState("");
@@ -135,7 +130,6 @@ export default function ComponentSelector({
                 search={search}
                 componentType={item?.componentType}
                 addFunctions={addFunctions}
-                setComponentId={setComponentId}
               />
             </Accordion.Content>
           </>

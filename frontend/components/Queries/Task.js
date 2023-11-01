@@ -21,6 +21,15 @@ export const PUBLIC_TASKS = gql`
       image
       description
       descriptionForParticipants
+      author {
+        id
+      }
+      collaborators {
+        id
+        username
+      }
+      parameters
+      settings
     }
   }
 `;
@@ -53,6 +62,15 @@ export const MY_TASKS = gql`
       image
       description
       taskType
+      author {
+        id
+      }
+      collaborators {
+        id
+        username
+      }
+      parameters
+      settings
     }
   }
 `;
@@ -67,6 +85,8 @@ export const GET_TASK = gql`
       taskType
       image
       description
+      parameters
+      settings
     }
   }
 `;

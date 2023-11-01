@@ -57,9 +57,6 @@ export default function Wrapper({
       ...theTask,
       templateId: theTask?.template?.id,
       consent: theTask?.consent?.id,
-      // collaborators: (theTask?.collaborators &&
-      //   theTask.collaborators.map((c) => c.username).length &&
-      //   theTask.collaborators.map((c) => c.username)) || [],
       subtitle: node?.options?.subtitle,
       testId: node?.options?.testId,
     };
@@ -88,6 +85,8 @@ export default function Wrapper({
         <div className="modal">
           <Editor
             user={user}
+            isAuthor={isAuthor}
+            createCopy={createCopy}
             task={task}
             updateCanvas={updateCanvas}
             close={close}

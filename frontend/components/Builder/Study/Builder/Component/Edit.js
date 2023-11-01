@@ -5,8 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import useForm from "../../../../../lib/useForm";
 
-import { UPDATE_TEMPLATE } from "../../../../Mutations/Template";
-import { UPDATE_TASK } from "../../../../Mutations/Task";
+import { CREATE_TASK, UPDATE_TASK } from "../../../../Mutations/Task";
 
 import ComponentForm from "../../../Component/Form";
 
@@ -14,11 +13,12 @@ import { MY_TASK } from "../../../../Queries/Task";
 
 export default function EditComponent({
   user,
+  isAuthor,
+  createCopy,
   task,
   updateCanvas,
   close,
 }) {
-
   const router = useRouter();
   const { t } = useTranslation("common");
 
@@ -26,8 +26,22 @@ export default function EditComponent({
     ...task,
   });
 
+  console.log({ inputs });
+
   // do not allow to edit template in the study builder
   const isTemplateAuthor = false;
+
+  const [
+    createTask,
+    {
+      data: createTaskData,
+      loading: createTaskLoading,
+      error: createTaskError,
+    },
+  ] = useMutation(CREATE_TASK, {
+    variables: inputs,
+    // refetchQueries: [{ query: MY_TASK, variables: { id: task?.id } }],
+  });
 
   const [
     updateTask,
@@ -38,18 +52,29 @@ export default function EditComponent({
   });
 
   async function handleSubmit() {
-    
-    // update the task
-    await updateTask({
-      variables: {
-        collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
-      },
-    });
+    if (isAuthor && !createCopy) {
+      // update the task
+      await updateTask({
+        variables: {
+          collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
+        },
+      });
+    } else {
+      // create the new task
+      await createTask({
+        variables: {
+          collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
+        },
+      });
+    }
 
     // update the canvas in the study builder
-    updateCanvas({ task: {
-      ...inputs,
-    }, operation: "update" });
+    updateCanvas({
+      task: {
+        ...inputs,
+      },
+      operation: "update",
+    });
     close();
   }
 

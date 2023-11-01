@@ -10,7 +10,6 @@ export default function Blocks({
   search,
   componentType,
   addFunctions,
-  setComponentId,
 }) {
   if (createdBy === "anyone") {
     return (
@@ -20,7 +19,6 @@ export default function Blocks({
         search={search}
         componentType={componentType}
         addFunctions={addFunctions}
-        setComponentId={setComponentId}
       />
     );
   }
@@ -33,7 +31,6 @@ export default function Blocks({
         search={search}
         componentType={componentType}
         addFunctions={addFunctions}
-        setComponentId={setComponentId}
       />
     );
   }

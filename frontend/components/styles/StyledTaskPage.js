@@ -112,3 +112,38 @@ export const StyledTaskPage = styled.div`
     }
   }
 `;
+
+export const StyledContent = styled.div`
+  display: grid;
+  grid-template-columns: 60% auto;
+  column-gap: 1px;
+  .leftPanel {
+    padding: 50px 70px 0px 70px;
+    background-color: #f7f9f8;
+  }
+  .rightPanel {
+    padding: 50px;
+    background-color: #f7f9f8;
+  }
+  .contentBlock {
+    margin-bottom: 30px;
+    ul {
+      padding-left: 20px;
+    }
+  }
+  .symbolBlock {
+    background: #ffffff;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.07);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 50px;
+  }
+  p,
+  li,
+  span {
+    font-size: 16px;
+  }
+  img {
+    width: 100%;
+  }
+`;

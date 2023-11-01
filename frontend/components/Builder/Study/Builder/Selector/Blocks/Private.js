@@ -9,7 +9,6 @@ export default function PrivateBlocks({
   search,
   componentType,
   addFunctions,
-  setComponentId,
 }) {
   const { data, error, loading } = useQuery(MY_TASKS, {
     variables: {
@@ -24,10 +23,10 @@ export default function PrivateBlocks({
     <div>
       {tasks.map((component) => (
         <Card
+          user={user}
           key={component?.id}
           component={component}
           addFunctions={addFunctions}
-          setComponentId={setComponentId}
         />
       ))}
     </div>

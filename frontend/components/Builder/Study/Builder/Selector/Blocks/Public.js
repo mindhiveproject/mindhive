@@ -9,7 +9,6 @@ export default function PublicBlocks({
   search,
   componentType,
   addFunctions,
-  setComponentId,
 }) {
   const { data, error, loading } = useQuery(PUBLIC_TASKS, {
     variables: {
@@ -23,10 +22,10 @@ export default function PublicBlocks({
     <div>
       {tasks.map((component) => (
         <Card
+          user={user}
           key={component?.id}
           component={component}
           addFunctions={addFunctions}
-          setComponentId={setComponentId}
         />
       ))}
     </div>

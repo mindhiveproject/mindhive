@@ -14,5 +14,17 @@ export default function TaskLandingMain({ slug }) {
 
   const task = data?.task || {};
 
-  return <TaskPage user={user} task={task} />;
+  return (
+    <>
+      <div className="controlBtns">
+        <a
+          target="_blank"
+          href={`/preview/${task?.taskType?.toLowerCase()}/${task?.id}`}
+        >
+          <button>Preview</button>
+        </a>
+      </div>
+      <TaskPage user={user} task={task} />;
+    </>
+  );
 }

@@ -129,7 +129,6 @@ export default function Builder({
           user={user}
           engine={engine}
           addFunctions={addFunctions}
-          setComponentId={setComponentId}
           study={study}
           handleChange={handleChange}
           handleMultipleUpdate={handleMultipleUpdate}

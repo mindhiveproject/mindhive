@@ -12,6 +12,7 @@ import ComponentForm from "./Form";
 import useForm from "../../../lib/useForm";
 
 export default function CloneTask({ query, user, taskSlug, redirect }) {
+  const { area } = query;
   const { t } = useTranslation("classes");
 
   const { data, error, loading } = useQuery(TASK_TO_CLONE, {
@@ -69,8 +70,8 @@ export default function CloneTask({ query, user, taskSlug, redirect }) {
           inputs?.collaborators?.map((col) => ({ id: col?.id })) || [],
       },
     });
-    // to do: change to parameter "area"‚
-    redirect({ area: "tasks" });
+
+    redirect({ area: `${task?.taskType.toLowerCase()}s` });
   }
 
   return (

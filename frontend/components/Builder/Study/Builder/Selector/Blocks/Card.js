@@ -4,7 +4,16 @@ import uniqid from "uniqid";
 import { NodesTypesContainer } from "../../Diagram/nodes-types-container/NodesTypesContainer";
 import { NodeTypeLabel } from "../../Diagram/node-type-label/NodeTypeLabel";
 
-export default function Card({ component, addFunctions, setComponentId }) {
+import TaskModal from "../Task/Modal";
+import { useState } from "react";
+
+export default function Card({ user, component, addFunctions }) {
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
   return (
     <>
       <div className="taskCard" taskType={component?.taskType}>
@@ -44,14 +53,24 @@ export default function Card({ component, addFunctions, setComponentId }) {
           </NodesTypesContainer>
         </div>
         <div className="icons">
-          <div className="icon" onClick={() => setComponentId(component?.id)}>
+          {/* <div className="icon" onClick={() => setComponentId(component?.id)}>
+            <img src="/assets/icons/info.svg" />
+          </div> */}
+          <div className="icon" onClick={() => toggleModal()}>
             <img src="/assets/icons/info.svg" />
           </div>
 
           {!component.link && (
-            <div className="icon" onClick={(e) => this.togglePreview(e, false)}>
-              <img src="/assets/icons/preview.svg" />
-            </div>
+            <a
+              target="_blank"
+              href={`/preview/${component?.taskType.toLowerCase()}/${
+                component?.id
+              }`}
+            >
+              <div className="icon">
+                <img src="/assets/icons/preview.svg" />
+              </div>
+            </a>
           )}
 
           {component.link && (
@@ -63,6 +82,15 @@ export default function Card({ component, addFunctions, setComponentId }) {
           )}
         </div>
       </div>
+
+      {showModal && (
+        <TaskModal
+          user={user}
+          component={component}
+          addFunctions={addFunctions}
+          onModalClose={toggleModal}
+        />
+      )}
     </>
   );
 }

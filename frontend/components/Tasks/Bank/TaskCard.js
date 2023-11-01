@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { StyledTaskCard } from "../../styles/StyledCard";
 
-export default function StudyCard({ task, url, id, name }) {
+export default function TaskCard({ task, url, id, name }) {
   return (
     <Link
       href={{

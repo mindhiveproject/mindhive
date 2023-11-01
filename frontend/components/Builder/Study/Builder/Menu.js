@@ -8,7 +8,6 @@ export default function Menu({
   user,
   addFunctions,
   setIsModalOpen,
-  setComponentId,
   study,
   handleChange,
   handleMultipleUpdate,
@@ -43,7 +42,6 @@ export default function Menu({
           user={user}
           addFunctions={addFunctions}
           setIsModalOpen={setIsModalOpen}
-          setComponentId={setComponentId}
         />
       )}
 
@@ -53,7 +51,6 @@ export default function Menu({
           user={user}
           addFunctions={addFunctions}
           setIsModalOpen={setIsModalOpen}
-          setComponentId={setComponentId}
           study={study}
           handleChange={handleChange}
           handleMultipleUpdate={handleMultipleUpdate}
