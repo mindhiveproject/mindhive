@@ -1,14 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-import JSONInput from "react-json-editor-ajrm";
-import locale from "react-json-editor-ajrm/locale/en";
+import { python } from "@codemirror/lang-python";
+import CodeMirror from '@uiw/react-codemirror';
+
 
 export default function SpecEditor({ spec, setSpec }) {
   // local string version of the spec
-  const [localSpec, setLocalSpec] = useState(JSON.stringify({}));
+  const [localSpec, setLocalSpec] = useState('');
+
+  // https://uiwjs.github.io/react-codemirror/#/theme/home
+
   useEffect(() => {
     setLocalSpec(spec);
   }, [spec]);
+
 
   const evaluate = () => {
     try {
@@ -18,25 +23,16 @@ export default function SpecEditor({ spec, setSpec }) {
     }
   };
 
+  const onChange = useCallback((val, viewUpdate) => {
+    setLocalSpec(val);
+  }, []);
+
   return (
     <div>
       <p>
         <button onClick={(e) => evaluate()}>Update</button>
       </p>
-      <JSONInput
-        width={600}
-        placeholder={spec}
-        onBlur={(value) => {
-          setLocalSpec(value.jsObject);
-        }}
-        locale={locale}
-        theme="light_mitsuketa_tribute"
-        style={{
-          body: {
-            fontSize: "18px",
-          },
-        }}
-      />
+      <CodeMirror value={localSpec} height="300px" extensions={python()} onChange={onChange} theme='light'/>
     </div>
   );
 }

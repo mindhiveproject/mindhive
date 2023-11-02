@@ -5,24 +5,30 @@ import Table from "./Table/Main";
 
 import { StyledChatGPTPage } from "../../../styles/StyledBuilder";
 
-const defaultSpec = {
-  width: "500",
-  height: "400",
-  title: "My graph",
-  mark: "point",
-  transform: [],
-  encoding: {
-    x: {
-      field: "",
-      type: "quantitative",
-    },
-    y: {
-      field: "",
-      type: "quantitative",
-    },
-  },
-  data: { name: "values" },
-};
+const defaultSpec = `
+import matplotlib
+import matplotlib.pyplot as plt
+
+matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend");
+
+# Sample data
+x = [1, 2, 3, 4, 5]
+y = [10, 15, 13, 18, 20]
+
+# Create a line graph
+plt.plot(x, y, marker='o', linestyle='-', color='b', label='Sample Data')
+
+# Customize the graph
+plt.title('Sample Line Graph')
+plt.xlabel('X-axis Label')
+plt.ylabel('Y-axis Label')
+plt.legend()
+plt.grid(True)
+
+# Show the graph
+plt.show()
+`
+
 
 
 

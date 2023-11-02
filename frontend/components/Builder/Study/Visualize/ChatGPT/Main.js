@@ -14,7 +14,7 @@ export default function ChatGPT({ spec, setSpec, data }) {
   const [textInput, setTextInput] = useState("");
   const [generating, setGenerating] = useState(false);
   const [explanation, setExplanation] = useState("");
-
+  
   // here we can provide only a sample of data or any additional information that help ChatGPT to figure out the best graph
   const dataForGPT = data.slice(0, 10);
 
