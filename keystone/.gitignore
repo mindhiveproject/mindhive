@@ -3,3 +3,5 @@ node_modules
 keystone.db
 *.log
 .env
+yarn.lock
+package-lock.json

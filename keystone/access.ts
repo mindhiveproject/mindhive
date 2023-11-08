@@ -11,7 +11,11 @@ const generatedPermissions = Object.fromEntries(
   permissionsList.map((permission) => [
     permission,
     function ({ session }: ListAccessArgs) {
-      return !!session?.data.role?.[permission];
+      return (
+        session?.data.permissions
+          ?.map((role) => role[permission])
+          .filter((p) => !!p).length > 0
+      );
     },
   ])
 );
@@ -20,14 +24,14 @@ const generatedPermissions = Object.fromEntries(
 export const permissions = {
   ...generatedPermissions,
   isAwesome({ session }: ListAccessArgs) {
-    return session?.data.email === "shevchenko_yury@mail.ru";
+    return session?.data.username === "shevchenko_yury";
   },
 };
 
 // Rule based functions
 // rules can return a boolean or a filter that limits which products they can CRUD
 export const rules = {
-  canEditAdminUI({ session, item, listKey, context }: ListAccessArgs) {
+  canEditAdminUI({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) {
       return "hidden";
     }
@@ -35,14 +39,20 @@ export const rules = {
     if (permissions.isAwesome({ session })) {
       return "edit";
     }
+    if (permissions.canManageUsers({ session })) {
+      return "edit";
+    }
     return "hidden";
   },
-  canReadAdminUI({ session, item, listKey, context }: ListAccessArgs) {
+  canReadAdminUI({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) {
       return "hidden";
     }
     // Do they have the the admin permission?
     if (permissions.isAwesome({ session })) {
+      return "read";
+    }
+    if (permissions.canManageUsers({ session })) {
       return "read";
     }
     return "hidden";
@@ -56,7 +66,7 @@ export const rules = {
       return true;
     }
     // 2. Otherwise, they may only update themselves
-    if (item.id === session.itemId) {
+    if (item?.id === session?.itemId) {
       return true;
     }
     // allow the follow user mutation
@@ -66,6 +76,7 @@ export const rules = {
     ) {
       return true;
     }
+    return false;
   },
   canManagePosts({ session, item }: ListAccessArgs) {
     if (!isSignedIn({ session })) {

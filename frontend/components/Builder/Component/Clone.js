@@ -12,7 +12,6 @@ import ComponentForm from "./Form";
 import useForm from "../../../lib/useForm";
 
 export default function CloneTask({ query, user, taskSlug, redirect }) {
-  const { area } = query;
   const { t } = useTranslation("classes");
 
   const { data, error, loading } = useQuery(TASK_TO_CLONE, {

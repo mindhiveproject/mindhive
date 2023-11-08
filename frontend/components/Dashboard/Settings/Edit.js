@@ -38,9 +38,7 @@ export default function EditSettings({ query, user }) {
           {user?.avatar ? (
             <img src={user?.avatar} alt={user?.name} />
           ) : (
-            <div>
-              <IdentIcon size="120" value={user?.name} />
-            </div>
+            <div>{/* <IdentIcon size="120" value={user?.name} /> */}</div>
           )}
           <UpdateAvatarModal user={user} />
         </div>

@@ -10,7 +10,7 @@ import {
   json,
 } from "@keystone-6/core/fields";
 // import slugify from "slugify";
-// import { permissions, rules } from "../access";
+import { permissions, rules } from "../access";
 
 import uniqid from "uniqid";
 import {
@@ -28,12 +28,25 @@ const customConfig: Config = {
 };
 
 export const Profile = list({
+  ui: {
+    listView: {
+      defaultFieldMode: ({ session }) => rules.canReadAdminUI({ session }),
+    },
+    itemView: {
+      defaultFieldMode: ({ session }) => rules.canEditAdminUI({ session }),
+    },
+    createView: {
+      defaultFieldMode: ({ session }) => rules.canEditAdminUI({ session }),
+    },
+  },
   access: {
     operation: {
       query: () => true,
+    },
+    item: {
       create: () => true,
-      update: () => true,
-      delete: () => true,
+      update: rules.canManageUsers,
+      delete: rules.canManageUsers,
     },
   },
   fields: {
@@ -71,9 +84,7 @@ export const Profile = list({
       },
     }),
     type: select({
-      options: [
-        { label: "User", value: "USER" },
-      ],
+      options: [{ label: "User", value: "USER" }],
       defaultValue: "USER",
     }),
     email: text({
@@ -81,9 +92,9 @@ export const Profile = list({
       isIndexed: "unique",
       isFilterable: true,
       access: {
-        read: () => true,
+        read: rules.canManageUsers,
         create: () => true,
-        update: () => true,
+        update: rules.canManageUsers,
       },
     }),
     permissions: relationship({

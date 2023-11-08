@@ -8,7 +8,7 @@ type Profile {
   publicReadableId: String
   type: String
   email: String
-  permissions(where: PermissionWhereInput! = {}, orderBy: [PermissionOrderByInput!]! = [], take: Int, skip: Int! = 0): [Permission!]
+  permissions(where: PermissionWhereInput! = {}, orderBy: [PermissionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PermissionWhereUniqueInput): [Permission!]
   permissionsCount(where: PermissionWhereInput! = {}): Int
   info: JSON
   generalInfo: JSON
@@ -27,71 +27,71 @@ type Profile {
   location: String
   dateCreated: DateTime
   language: String
-  participantIn(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  participantIn(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
   participantInCount(where: StudyWhereInput! = {}): Int
-  teacherIn(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0): [Class!]
+  teacherIn(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClassWhereUniqueInput): [Class!]
   teacherInCount(where: ClassWhereInput! = {}): Int
-  mentorIn(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0): [Class!]
+  mentorIn(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClassWhereUniqueInput): [Class!]
   mentorInCount(where: ClassWhereInput! = {}): Int
-  studentIn(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0): [Class!]
+  studentIn(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClassWhereUniqueInput): [Class!]
   studentInCount(where: ClassWhereInput! = {}): Int
-  classNetworksCreated(where: ClassNetworkWhereInput! = {}, orderBy: [ClassNetworkOrderByInput!]! = [], take: Int, skip: Int! = 0): [ClassNetwork!]
+  classNetworksCreated(where: ClassNetworkWhereInput! = {}, orderBy: [ClassNetworkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClassNetworkWhereUniqueInput): [ClassNetwork!]
   classNetworksCreatedCount(where: ClassNetworkWhereInput! = {}): Int
-  journals(where: JournalWhereInput! = {}, orderBy: [JournalOrderByInput!]! = [], take: Int, skip: Int! = 0): [Journal!]
+  journals(where: JournalWhereInput! = {}, orderBy: [JournalOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: JournalWhereUniqueInput): [Journal!]
   journalsCount(where: JournalWhereInput! = {}): Int
-  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0): [Post!]
+  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
   postsCount(where: PostWhereInput! = {}): Int
-  authorOfTalk(where: TalkWhereInput! = {}, orderBy: [TalkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Talk!]
+  authorOfTalk(where: TalkWhereInput! = {}, orderBy: [TalkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TalkWhereUniqueInput): [Talk!]
   authorOfTalkCount(where: TalkWhereInput! = {}): Int
-  memberOfTalk(where: TalkWhereInput! = {}, orderBy: [TalkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Talk!]
+  memberOfTalk(where: TalkWhereInput! = {}, orderBy: [TalkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TalkWhereUniqueInput): [Talk!]
   memberOfTalkCount(where: TalkWhereInput! = {}): Int
-  authorOfWord(where: WordWhereInput! = {}, orderBy: [WordOrderByInput!]! = [], take: Int, skip: Int! = 0): [Word!]
+  authorOfWord(where: WordWhereInput! = {}, orderBy: [WordOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: WordWhereUniqueInput): [Word!]
   authorOfWordCount(where: WordWhereInput! = {}): Int
-  templates(where: TemplateWhereInput! = {}, orderBy: [TemplateOrderByInput!]! = [], take: Int, skip: Int! = 0): [Template!]
+  templates(where: TemplateWhereInput! = {}, orderBy: [TemplateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TemplateWhereUniqueInput): [Template!]
   templatesCount(where: TemplateWhereInput! = {}): Int
-  collaboratorInTemplate(where: TemplateWhereInput! = {}, orderBy: [TemplateOrderByInput!]! = [], take: Int, skip: Int! = 0): [Template!]
+  collaboratorInTemplate(where: TemplateWhereInput! = {}, orderBy: [TemplateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TemplateWhereUniqueInput): [Template!]
   collaboratorInTemplateCount(where: TemplateWhereInput! = {}): Int
-  taskCreatorIn(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0): [Task!]
+  taskCreatorIn(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TaskWhereUniqueInput): [Task!]
   taskCreatorInCount(where: TaskWhereInput! = {}): Int
-  collaboratorInTask(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0): [Task!]
+  collaboratorInTask(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TaskWhereUniqueInput): [Task!]
   collaboratorInTaskCount(where: TaskWhereInput! = {}): Int
-  researcherIn(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  researcherIn(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
   researcherInCount(where: StudyWhereInput! = {}): Int
-  collaboratorInStudy(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  collaboratorInStudy(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
   collaboratorInStudyCount(where: StudyWhereInput! = {}): Int
-  consentCreatorIn(where: ConsentWhereInput! = {}, orderBy: [ConsentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Consent!]
+  consentCreatorIn(where: ConsentWhereInput! = {}, orderBy: [ConsentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ConsentWhereUniqueInput): [Consent!]
   consentCreatorInCount(where: ConsentWhereInput! = {}): Int
-  collaboratorInConsent(where: ConsentWhereInput! = {}, orderBy: [ConsentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Consent!]
+  collaboratorInConsent(where: ConsentWhereInput! = {}, orderBy: [ConsentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ConsentWhereUniqueInput): [Consent!]
   collaboratorInConsentCount(where: ConsentWhereInput! = {}): Int
-  creatorOfProposal(where: ProposalBoardWhereInput! = {}, orderBy: [ProposalBoardOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalBoard!]
+  creatorOfProposal(where: ProposalBoardWhereInput! = {}, orderBy: [ProposalBoardOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalBoardWhereUniqueInput): [ProposalBoard!]
   creatorOfProposalCount(where: ProposalBoardWhereInput! = {}): Int
-  authorOfProposal(where: ProposalBoardWhereInput! = {}, orderBy: [ProposalBoardOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalBoard!]
+  authorOfProposal(where: ProposalBoardWhereInput! = {}, orderBy: [ProposalBoardOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalBoardWhereUniqueInput): [ProposalBoard!]
   authorOfProposalCount(where: ProposalBoardWhereInput! = {}): Int
-  reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0): [Review!]
+  reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReviewWhereUniqueInput): [Review!]
   reviewsCount(where: ReviewWhereInput! = {}): Int
-  assignedToProposalCard(where: ProposalCardWhereInput! = {}, orderBy: [ProposalCardOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalCard!]
+  assignedToProposalCard(where: ProposalCardWhereInput! = {}, orderBy: [ProposalCardOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalCardWhereUniqueInput): [ProposalCard!]
   assignedToProposalCardCount(where: ProposalCardWhereInput! = {}): Int
-  editsProposalCard(where: ProposalCardWhereInput! = {}, orderBy: [ProposalCardOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalCard!]
+  editsProposalCard(where: ProposalCardWhereInput! = {}, orderBy: [ProposalCardOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalCardWhereUniqueInput): [ProposalCard!]
   editsProposalCardCount(where: ProposalCardWhereInput! = {}): Int
-  updates(where: UpdateWhereInput! = {}, orderBy: [UpdateOrderByInput!]! = [], take: Int, skip: Int! = 0): [Update!]
+  updates(where: UpdateWhereInput! = {}, orderBy: [UpdateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UpdateWhereUniqueInput): [Update!]
   updatesCount(where: UpdateWhereInput! = {}): Int
-  authorOfLesson(where: LessonWhereInput! = {}, orderBy: [LessonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Lesson!]
+  authorOfLesson(where: LessonWhereInput! = {}, orderBy: [LessonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LessonWhereUniqueInput): [Lesson!]
   authorOfLessonCount(where: LessonWhereInput! = {}): Int
-  collaboratorInLesson(where: LessonWhereInput! = {}, orderBy: [LessonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Lesson!]
+  collaboratorInLesson(where: LessonWhereInput! = {}, orderBy: [LessonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LessonWhereUniqueInput): [Lesson!]
   collaboratorInLessonCount(where: LessonWhereInput! = {}): Int
-  authorOfCurriculum(where: CurriculumWhereInput! = {}, orderBy: [CurriculumOrderByInput!]! = [], take: Int, skip: Int! = 0): [Curriculum!]
+  authorOfCurriculum(where: CurriculumWhereInput! = {}, orderBy: [CurriculumOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CurriculumWhereUniqueInput): [Curriculum!]
   authorOfCurriculumCount(where: CurriculumWhereInput! = {}): Int
-  collaboratorInCurriculum(where: CurriculumWhereInput! = {}, orderBy: [CurriculumOrderByInput!]! = [], take: Int, skip: Int! = 0): [Curriculum!]
+  collaboratorInCurriculum(where: CurriculumWhereInput! = {}, orderBy: [CurriculumOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CurriculumWhereUniqueInput): [Curriculum!]
   collaboratorInCurriculumCount(where: CurriculumWhereInput! = {}): Int
-  authorOfAssignment(where: AssignmentWhereInput! = {}, orderBy: [AssignmentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Assignment!]
+  authorOfAssignment(where: AssignmentWhereInput! = {}, orderBy: [AssignmentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: AssignmentWhereUniqueInput): [Assignment!]
   authorOfAssignmentCount(where: AssignmentWhereInput! = {}): Int
-  authorOfHomework(where: HomeworkWhereInput! = {}, orderBy: [HomeworkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Homework!]
+  authorOfHomework(where: HomeworkWhereInput! = {}, orderBy: [HomeworkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: HomeworkWhereUniqueInput): [Homework!]
   authorOfHomeworkCount(where: HomeworkWhereInput! = {}): Int
-  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
+  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: DatasetWhereUniqueInput): [Dataset!]
   datasetsCount(where: DatasetWhereInput! = {}): Int
-  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
+  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SummaryResultWhereUniqueInput): [SummaryResult!]
   summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
-  authoredSpecs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0): [Spec!]
+  authoredSpecs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SpecWhereUniqueInput): [Spec!]
   authoredSpecsCount(where: SpecWhereInput! = {}): Int
   passwordResetToken: PasswordState
   passwordResetIssuedAt: DateTime
@@ -221,21 +221,7 @@ input StringNullableFilter {
   contains: String
   startsWith: String
   endsWith: String
-  not: NestedStringNullableFilter
-}
-
-input NestedStringNullableFilter {
-  equals: String
-  in: [String!]
-  notIn: [String!]
-  lt: String
-  lte: String
-  gt: String
-  gte: String
-  contains: String
-  startsWith: String
-  endsWith: String
-  not: NestedStringNullableFilter
+  not: StringNullableFilter
 }
 
 input PermissionManyRelationFilter {
@@ -928,7 +914,7 @@ type Permission {
   id: ID!
   name: String
   canManageUsers: Boolean
-  assignedTo(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  assignedTo(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   assignedToCount(where: ProfileWhereInput! = {}): Int
 }
 
@@ -996,18 +982,18 @@ type Class {
   createdAt: DateTime
   updatedAt: DateTime
   settings: JSON
-  mentors(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  mentors(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   mentorsCount(where: ProfileWhereInput! = {}): Int
-  students(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  students(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   studentsCount(where: ProfileWhereInput! = {}): Int
-  networks(where: ClassNetworkWhereInput! = {}, orderBy: [ClassNetworkOrderByInput!]! = [], take: Int, skip: Int! = 0): [ClassNetwork!]
+  networks(where: ClassNetworkWhereInput! = {}, orderBy: [ClassNetworkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClassNetworkWhereUniqueInput): [ClassNetwork!]
   networksCount(where: ClassNetworkWhereInput! = {}): Int
   creator: Profile
-  talks(where: TalkWhereInput! = {}, orderBy: [TalkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Talk!]
+  talks(where: TalkWhereInput! = {}, orderBy: [TalkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TalkWhereUniqueInput): [Talk!]
   talksCount(where: TalkWhereInput! = {}): Int
-  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
   studiesCount(where: StudyWhereInput! = {}): Int
-  assignments(where: AssignmentWhereInput! = {}, orderBy: [AssignmentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Assignment!]
+  assignments(where: AssignmentWhereInput! = {}, orderBy: [AssignmentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: AssignmentWhereUniqueInput): [Assignment!]
   assignmentsCount(where: AssignmentWhereInput! = {}): Int
 }
 
@@ -1087,7 +1073,7 @@ type ClassNetwork {
   description: String
   settings: JSON
   creator: Profile
-  classes(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0): [Class!]
+  classes(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClassWhereUniqueInput): [Class!]
   classesCount(where: ClassWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -1190,7 +1176,7 @@ type Journal {
   title: String
   description: String
   creator: Profile
-  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0): [Post!]
+  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
   postsCount(where: PostWhereInput! = {}): Int
   settings: JSON
   createdAt: DateTime
@@ -1327,14 +1313,14 @@ input JournalRelateToOneForCreateInput {
 type Talk {
   id: ID!
   author: Profile
-  members(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  members(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   membersCount(where: ProfileWhereInput! = {}): Int
-  words(where: WordWhereInput! = {}, orderBy: [WordOrderByInput!]! = [], take: Int, skip: Int! = 0): [Word!]
+  words(where: WordWhereInput! = {}, orderBy: [WordOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: WordWhereUniqueInput): [Word!]
   wordsCount(where: WordWhereInput! = {}): Int
   settings: JSON
-  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
   studiesCount(where: StudyWhereInput! = {}): Int
-  classes(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0): [Class!]
+  classes(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClassWhereUniqueInput): [Class!]
   classesCount(where: ClassWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -1400,7 +1386,7 @@ type Word {
   settings: JSON
   isMain: Boolean
   parent: Word
-  children(where: WordWhereInput! = {}, orderBy: [WordOrderByInput!]! = [], take: Int, skip: Int! = 0): [Word!]
+  children(where: WordWhereInput! = {}, orderBy: [WordOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: WordWhereUniqueInput): [Word!]
   childrenCount(where: WordWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -1495,17 +1481,17 @@ type Template {
   shortDescription: String
   description: String
   author: Profile
-  collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   collaboratorsCount(where: ProfileWhereInput! = {}): Int
   parameters: JSON
   fileAddress: String
   scriptAddress: String
   style: String
-  tasks(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0): [Task!]
+  tasks(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TaskWhereUniqueInput): [Task!]
   tasksCount(where: TaskWhereInput! = {}): Int
-  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
+  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: DatasetWhereUniqueInput): [Dataset!]
   datasetsCount(where: DatasetWhereInput! = {}): Int
-  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
+  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SummaryResultWhereUniqueInput): [SummaryResult!]
   summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
   settings: JSON
   createdAt: DateTime
@@ -1601,7 +1587,7 @@ type Task {
   description: String
   descriptionForParticipants: String
   author: Profile
-  collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   collaboratorsCount(where: ProfileWhereInput! = {}): Int
   template: Template
   parameters: JSON
@@ -1613,11 +1599,11 @@ type Task {
   isExternal: Boolean
   image: String
   largeImage: String
-  consent(where: ConsentWhereInput! = {}, orderBy: [ConsentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Consent!]
+  consent(where: ConsentWhereInput! = {}, orderBy: [ConsentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ConsentWhereUniqueInput): [Consent!]
   consentCount(where: ConsentWhereInput! = {}): Int
-  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
+  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: DatasetWhereUniqueInput): [Dataset!]
   datasetsCount(where: DatasetWhereInput! = {}): Int
-  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
+  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SummaryResultWhereUniqueInput): [SummaryResult!]
   summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -1769,30 +1755,30 @@ type Study {
   flow: JSON
   diagram: String
   author: Profile
-  collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   collaboratorsCount(where: ProfileWhereInput! = {}): Int
-  participants(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  participants(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   participantsCount(where: ProfileWhereInput! = {}): Int
-  guests(where: GuestWhereInput! = {}, orderBy: [GuestOrderByInput!]! = [], take: Int, skip: Int! = 0): [Guest!]
+  guests(where: GuestWhereInput! = {}, orderBy: [GuestOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GuestWhereUniqueInput): [Guest!]
   guestsCount(where: GuestWhereInput! = {}): Int
-  consent(where: ConsentWhereInput! = {}, orderBy: [ConsentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Consent!]
+  consent(where: ConsentWhereInput! = {}, orderBy: [ConsentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ConsentWhereUniqueInput): [Consent!]
   consentCount(where: ConsentWhereInput! = {}): Int
-  proposal(where: ProposalBoardWhereInput! = {}, orderBy: [ProposalBoardOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalBoard!]
+  proposal(where: ProposalBoardWhereInput! = {}, orderBy: [ProposalBoardOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalBoardWhereUniqueInput): [ProposalBoard!]
   proposalCount(where: ProposalBoardWhereInput! = {}): Int
   descriptionInProposalCard: ProposalCard
-  classes(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0): [Class!]
+  classes(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClassWhereUniqueInput): [Class!]
   classesCount(where: ClassWhereInput! = {}): Int
-  reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0): [Review!]
+  reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReviewWhereUniqueInput): [Review!]
   reviewsCount(where: ReviewWhereInput! = {}): Int
-  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
-  talks(where: TalkWhereInput! = {}, orderBy: [TalkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Talk!]
+  talks(where: TalkWhereInput! = {}, orderBy: [TalkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TalkWhereUniqueInput): [Talk!]
   talksCount(where: TalkWhereInput! = {}): Int
-  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
+  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: DatasetWhereUniqueInput): [Dataset!]
   datasetsCount(where: DatasetWhereInput! = {}): Int
-  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
+  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SummaryResultWhereUniqueInput): [SummaryResult!]
   summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
-  specs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0): [Spec!]
+  specs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SpecWhereUniqueInput): [Spec!]
   specsCount(where: SpecWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -2043,11 +2029,11 @@ type Consent {
   info: JSON
   settings: JSON
   author: Profile
-  collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   collaboratorsCount(where: ProfileWhereInput! = {}): Int
-  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
   studiesCount(where: StudyWhereInput! = {}): Int
-  tasks(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0): [Task!]
+  tasks(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TaskWhereUniqueInput): [Task!]
   tasksCount(where: TaskWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -2329,9 +2315,9 @@ type ProposalBoard {
   creator: Profile
   author: Profile
   study: Study
-  sections(where: ProposalSectionWhereInput! = {}, orderBy: [ProposalSectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalSection!]
+  sections(where: ProposalSectionWhereInput! = {}, orderBy: [ProposalSectionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalSectionWhereUniqueInput): [ProposalSection!]
   sectionsCount(where: ProposalSectionWhereInput! = {}): Int
-  reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0): [Review!]
+  reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReviewWhereUniqueInput): [Review!]
   reviewsCount(where: ReviewWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -2435,7 +2421,7 @@ type ProposalSection {
   description: String
   position: Float
   board: ProposalBoard
-  cards(where: ProposalCardWhereInput! = {}, orderBy: [ProposalCardOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalCard!]
+  cards(where: ProposalCardWhereInput! = {}, orderBy: [ProposalCardOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalCardWhereUniqueInput): [ProposalCard!]
   cardsCount(where: ProposalCardWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -2524,9 +2510,9 @@ type ProposalCard {
   comment: String
   settings: JSON
   section: ProposalSection
-  assignedTo(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  assignedTo(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   assignedToCount(where: ProfileWhereInput! = {}): Int
-  studyDescription(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  studyDescription(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
   studyDescriptionCount(where: StudyWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -2687,7 +2673,7 @@ type Curriculum {
   description: String
   diagram: String
   author: Profile
-  collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   collaboratorsCount(where: ProfileWhereInput! = {}): Int
   settings: JSON
   createdAt: DateTime
@@ -2762,14 +2748,14 @@ type Lesson {
   content: String
   settings: JSON
   author: Profile
-  collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   collaboratorsCount(where: ProfileWhereInput! = {}): Int
   isPublic: Boolean
   isFeatured: Boolean
   parent: Lesson
-  children(where: LessonWhereInput! = {}, orderBy: [LessonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Lesson!]
+  children(where: LessonWhereInput! = {}, orderBy: [LessonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LessonWhereUniqueInput): [Lesson!]
   childrenCount(where: LessonWhereInput! = {}): Int
-  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -2871,19 +2857,19 @@ type Tag {
   title: String
   slug: String
   description: String
-  lessons(where: LessonWhereInput! = {}, orderBy: [LessonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Lesson!]
+  lessons(where: LessonWhereInput! = {}, orderBy: [LessonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LessonWhereUniqueInput): [Lesson!]
   lessonsCount(where: LessonWhereInput! = {}): Int
-  assignments(where: AssignmentWhereInput! = {}, orderBy: [AssignmentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Assignment!]
+  assignments(where: AssignmentWhereInput! = {}, orderBy: [AssignmentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: AssignmentWhereUniqueInput): [Assignment!]
   assignmentsCount(where: AssignmentWhereInput! = {}): Int
-  homeworks(where: HomeworkWhereInput! = {}, orderBy: [HomeworkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Homework!]
+  homeworks(where: HomeworkWhereInput! = {}, orderBy: [HomeworkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: HomeworkWhereUniqueInput): [Homework!]
   homeworksCount(where: HomeworkWhereInput! = {}): Int
-  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
   studiesCount(where: StudyWhereInput! = {}): Int
-  specs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0): [Spec!]
+  specs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SpecWhereUniqueInput): [Spec!]
   specsCount(where: SpecWhereInput! = {}): Int
   level: Int
   parent: Tag
-  children(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
+  children(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   childrenCount(where: TagWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -2987,16 +2973,16 @@ type Assignment {
   id: ID!
   code: String
   author: Profile
-  classes(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0): [Class!]
+  classes(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClassWhereUniqueInput): [Class!]
   classesCount(where: ClassWhereInput! = {}): Int
-  homework(where: HomeworkWhereInput! = {}, orderBy: [HomeworkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Homework!]
+  homework(where: HomeworkWhereInput! = {}, orderBy: [HomeworkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: HomeworkWhereUniqueInput): [Homework!]
   homeworkCount(where: HomeworkWhereInput! = {}): Int
   title: String
   content: String
   settings: JSON
   public: Boolean
   isTemplate: Boolean
-  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -3080,7 +3066,7 @@ type Homework {
   content: String
   settings: JSON
   public: Boolean
-  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -3267,9 +3253,9 @@ type Spec {
   settings: JSON
   content: JSON
   author: Profile
-  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
   studiesCount(where: StudyWhereInput! = {}): Int
-  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -3353,11 +3339,11 @@ type Guest {
   consentsInfo: JSON
   tasksInfo: JSON
   guestAccountExpiry: String
-  participantIn(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  participantIn(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
   participantInCount(where: StudyWhereInput! = {}): Int
-  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
+  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: DatasetWhereUniqueInput): [Dataset!]
   datasetsCount(where: DatasetWhereInput! = {}): Int
-  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
+  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SummaryResultWhereUniqueInput): [SummaryResult!]
   summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -3656,91 +3642,91 @@ enum PasswordResetRedemptionErrorCode {
 }
 
 type Query {
-  profiles(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0): [Profile!]
+  profiles(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   profile(where: ProfileWhereUniqueInput!): Profile
   profilesCount(where: ProfileWhereInput! = {}): Int
-  profileImages(where: ProfileImageWhereInput! = {}, orderBy: [ProfileImageOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProfileImage!]
+  profileImages(where: ProfileImageWhereInput! = {}, orderBy: [ProfileImageOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileImageWhereUniqueInput): [ProfileImage!]
   profileImage(where: ProfileImageWhereUniqueInput!): ProfileImage
   profileImagesCount(where: ProfileImageWhereInput! = {}): Int
-  permissions(where: PermissionWhereInput! = {}, orderBy: [PermissionOrderByInput!]! = [], take: Int, skip: Int! = 0): [Permission!]
+  permissions(where: PermissionWhereInput! = {}, orderBy: [PermissionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PermissionWhereUniqueInput): [Permission!]
   permission(where: PermissionWhereUniqueInput!): Permission
   permissionsCount(where: PermissionWhereInput! = {}): Int
-  classes(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0): [Class!]
+  classes(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClassWhereUniqueInput): [Class!]
   class(where: ClassWhereUniqueInput!): Class
   classesCount(where: ClassWhereInput! = {}): Int
-  classNetworks(where: ClassNetworkWhereInput! = {}, orderBy: [ClassNetworkOrderByInput!]! = [], take: Int, skip: Int! = 0): [ClassNetwork!]
+  classNetworks(where: ClassNetworkWhereInput! = {}, orderBy: [ClassNetworkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClassNetworkWhereUniqueInput): [ClassNetwork!]
   classNetwork(where: ClassNetworkWhereUniqueInput!): ClassNetwork
   classNetworksCount(where: ClassNetworkWhereInput! = {}): Int
-  reports(where: ReportWhereInput! = {}, orderBy: [ReportOrderByInput!]! = [], take: Int, skip: Int! = 0): [Report!]
+  reports(where: ReportWhereInput! = {}, orderBy: [ReportOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReportWhereUniqueInput): [Report!]
   report(where: ReportWhereUniqueInput!): Report
   reportsCount(where: ReportWhereInput! = {}): Int
-  journals(where: JournalWhereInput! = {}, orderBy: [JournalOrderByInput!]! = [], take: Int, skip: Int! = 0): [Journal!]
+  journals(where: JournalWhereInput! = {}, orderBy: [JournalOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: JournalWhereUniqueInput): [Journal!]
   journal(where: JournalWhereUniqueInput!): Journal
   journalsCount(where: JournalWhereInput! = {}): Int
-  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0): [Post!]
+  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
   post(where: PostWhereUniqueInput!): Post
   postsCount(where: PostWhereInput! = {}): Int
-  talks(where: TalkWhereInput! = {}, orderBy: [TalkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Talk!]
+  talks(where: TalkWhereInput! = {}, orderBy: [TalkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TalkWhereUniqueInput): [Talk!]
   talk(where: TalkWhereUniqueInput!): Talk
   talksCount(where: TalkWhereInput! = {}): Int
-  words(where: WordWhereInput! = {}, orderBy: [WordOrderByInput!]! = [], take: Int, skip: Int! = 0): [Word!]
+  words(where: WordWhereInput! = {}, orderBy: [WordOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: WordWhereUniqueInput): [Word!]
   word(where: WordWhereUniqueInput!): Word
   wordsCount(where: WordWhereInput! = {}): Int
-  templates(where: TemplateWhereInput! = {}, orderBy: [TemplateOrderByInput!]! = [], take: Int, skip: Int! = 0): [Template!]
+  templates(where: TemplateWhereInput! = {}, orderBy: [TemplateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TemplateWhereUniqueInput): [Template!]
   template(where: TemplateWhereUniqueInput!): Template
   templatesCount(where: TemplateWhereInput! = {}): Int
-  tasks(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0): [Task!]
+  tasks(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TaskWhereUniqueInput): [Task!]
   task(where: TaskWhereUniqueInput!): Task
   tasksCount(where: TaskWhereInput! = {}): Int
-  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0): [Study!]
+  studies(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
   study(where: StudyWhereUniqueInput!): Study
   studiesCount(where: StudyWhereInput! = {}): Int
-  studyImages(where: StudyImageWhereInput! = {}, orderBy: [StudyImageOrderByInput!]! = [], take: Int, skip: Int! = 0): [StudyImage!]
+  studyImages(where: StudyImageWhereInput! = {}, orderBy: [StudyImageOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyImageWhereUniqueInput): [StudyImage!]
   studyImage(where: StudyImageWhereUniqueInput!): StudyImage
   studyImagesCount(where: StudyImageWhereInput! = {}): Int
-  consents(where: ConsentWhereInput! = {}, orderBy: [ConsentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Consent!]
+  consents(where: ConsentWhereInput! = {}, orderBy: [ConsentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ConsentWhereUniqueInput): [Consent!]
   consent(where: ConsentWhereUniqueInput!): Consent
   consentsCount(where: ConsentWhereInput! = {}): Int
-  updates(where: UpdateWhereInput! = {}, orderBy: [UpdateOrderByInput!]! = [], take: Int, skip: Int! = 0): [Update!]
+  updates(where: UpdateWhereInput! = {}, orderBy: [UpdateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UpdateWhereUniqueInput): [Update!]
   update(where: UpdateWhereUniqueInput!): Update
   updatesCount(where: UpdateWhereInput! = {}): Int
-  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0): [Dataset!]
+  datasets(where: DatasetWhereInput! = {}, orderBy: [DatasetOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: DatasetWhereUniqueInput): [Dataset!]
   dataset(where: DatasetWhereUniqueInput!): Dataset
   datasetsCount(where: DatasetWhereInput! = {}): Int
-  proposalBoards(where: ProposalBoardWhereInput! = {}, orderBy: [ProposalBoardOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalBoard!]
+  proposalBoards(where: ProposalBoardWhereInput! = {}, orderBy: [ProposalBoardOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalBoardWhereUniqueInput): [ProposalBoard!]
   proposalBoard(where: ProposalBoardWhereUniqueInput!): ProposalBoard
   proposalBoardsCount(where: ProposalBoardWhereInput! = {}): Int
-  proposalSections(where: ProposalSectionWhereInput! = {}, orderBy: [ProposalSectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalSection!]
+  proposalSections(where: ProposalSectionWhereInput! = {}, orderBy: [ProposalSectionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalSectionWhereUniqueInput): [ProposalSection!]
   proposalSection(where: ProposalSectionWhereUniqueInput!): ProposalSection
   proposalSectionsCount(where: ProposalSectionWhereInput! = {}): Int
-  proposalCards(where: ProposalCardWhereInput! = {}, orderBy: [ProposalCardOrderByInput!]! = [], take: Int, skip: Int! = 0): [ProposalCard!]
+  proposalCards(where: ProposalCardWhereInput! = {}, orderBy: [ProposalCardOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalCardWhereUniqueInput): [ProposalCard!]
   proposalCard(where: ProposalCardWhereUniqueInput!): ProposalCard
   proposalCardsCount(where: ProposalCardWhereInput! = {}): Int
-  reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0): [Review!]
+  reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReviewWhereUniqueInput): [Review!]
   review(where: ReviewWhereUniqueInput!): Review
   reviewsCount(where: ReviewWhereInput! = {}): Int
-  curricula(where: CurriculumWhereInput! = {}, orderBy: [CurriculumOrderByInput!]! = [], take: Int, skip: Int! = 0): [Curriculum!]
+  curricula(where: CurriculumWhereInput! = {}, orderBy: [CurriculumOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CurriculumWhereUniqueInput): [Curriculum!]
   curriculum(where: CurriculumWhereUniqueInput!): Curriculum
   curriculaCount(where: CurriculumWhereInput! = {}): Int
-  lessons(where: LessonWhereInput! = {}, orderBy: [LessonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Lesson!]
+  lessons(where: LessonWhereInput! = {}, orderBy: [LessonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LessonWhereUniqueInput): [Lesson!]
   lesson(where: LessonWhereUniqueInput!): Lesson
   lessonsCount(where: LessonWhereInput! = {}): Int
-  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tag(where: TagWhereUniqueInput!): Tag
   tagsCount(where: TagWhereInput! = {}): Int
-  assignments(where: AssignmentWhereInput! = {}, orderBy: [AssignmentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Assignment!]
+  assignments(where: AssignmentWhereInput! = {}, orderBy: [AssignmentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: AssignmentWhereUniqueInput): [Assignment!]
   assignment(where: AssignmentWhereUniqueInput!): Assignment
   assignmentsCount(where: AssignmentWhereInput! = {}): Int
-  homeworks(where: HomeworkWhereInput! = {}, orderBy: [HomeworkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Homework!]
+  homeworks(where: HomeworkWhereInput! = {}, orderBy: [HomeworkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: HomeworkWhereUniqueInput): [Homework!]
   homework(where: HomeworkWhereUniqueInput!): Homework
   homeworksCount(where: HomeworkWhereInput! = {}): Int
-  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0): [SummaryResult!]
+  summaryResults(where: SummaryResultWhereInput! = {}, orderBy: [SummaryResultOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SummaryResultWhereUniqueInput): [SummaryResult!]
   summaryResult(where: SummaryResultWhereUniqueInput!): SummaryResult
   summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
-  specs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0): [Spec!]
+  specs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SpecWhereUniqueInput): [Spec!]
   spec(where: SpecWhereUniqueInput!): Spec
   specsCount(where: SpecWhereInput! = {}): Int
-  guests(where: GuestWhereInput! = {}, orderBy: [GuestOrderByInput!]! = [], take: Int, skip: Int! = 0): [Guest!]
+  guests(where: GuestWhereInput! = {}, orderBy: [GuestOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GuestWhereUniqueInput): [Guest!]
   guest(where: GuestWhereUniqueInput!): Guest
   guestsCount(where: GuestWhereInput! = {}): Int
   keystone: KeystoneMeta!
@@ -3791,6 +3777,7 @@ type KeystoneAdminUIFieldMeta {
   description: String
   isOrderable: Boolean!
   isFilterable: Boolean!
+  isNonNull: [KeystoneAdminUIFieldMetaIsNonNull!]
   fieldMeta: JSON
   viewsIndex: Int!
   customViewsIndex: Int
@@ -3798,6 +3785,12 @@ type KeystoneAdminUIFieldMeta {
   listView: KeystoneAdminUIFieldMetaListView!
   itemView(id: ID): KeystoneAdminUIFieldMetaItemView
   search: QueryMode
+}
+
+enum KeystoneAdminUIFieldMetaIsNonNull {
+  read
+  create
+  update
 }
 
 type KeystoneAdminUIFieldMetaCreateView {
