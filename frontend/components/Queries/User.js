@@ -24,6 +24,9 @@ export const CURRENT_USER_QUERY = gql`
         participantIn {
           id
         }
+        bio
+        location
+        language
       }
     }
   }
@@ -218,7 +221,7 @@ export const GET_STUDY_PARTICIPANTS = gql`
 // get study participant
 export const GET_PARTICIPANT = gql`
   query GET_PARTICIPANT($id: ID!) {
-    profile(where: {id: $id }) {
+    profile(where: { id: $id }) {
       id
       publicId
       publicReadableId
@@ -228,6 +231,36 @@ export const GET_PARTICIPANT = gql`
         title
         slug
       }
+    }
+  }
+`;
+
+// get person profile by a slug
+export const PUBLIC_USER_QUERY = gql`
+  query PUBLIC_USER_QUERY($id: String) {
+    profile(where: { publicId: $id }) {
+      id
+      username
+      email
+      publicId
+      publicReadableId
+      type
+      permissions {
+        name
+      }
+      image {
+        id
+        image {
+          publicUrlTransformed
+        }
+      }
+      studiesInfo
+      participantIn {
+        id
+      }
+      bio
+      location
+      language
     }
   }
 `;
@@ -327,95 +360,6 @@ export const PUBLIC_USERS_QUERY = gql`
   }
 `;
 
-// get person profile by a slug
-export const PUBLIC_USER_QUERY = gql`
-  query PUBLIC_USER_QUERY($person: String) {
-    users(where: { slug: { equals: $person } }) {
-      id
-      name
-      slug
-      bio
-      facebook
-      twitter
-      instagram
-      publicMail
-      website
-      location
-      language
-      walletAddress
-      status
-      image {
-        id
-        image {
-          publicUrlTransformed
-        }
-      }
-      artworksCreated {
-        id
-        name
-        slug
-        description
-        assetId
-        fileType
-        fileHash
-        creator {
-          slug
-        }
-      }
-      editionsOwned {
-        id
-        price
-      }
-      usersFollowed {
-        id
-      }
-      followedBy {
-        id
-      }
-      artworksLiked {
-        id
-      }
-      collectionsOwned {
-        id
-        name
-        description
-        slug
-        owner {
-          slug
-        }
-        isPublic
-        editions {
-          id
-          artwork {
-            id
-          }
-        }
-      }
-      notification {
-        messageActivity
-        proposalActivity
-        contractActivity
-        priceBidActivity
-        auctionActivity
-      }
-      reviewTo {
-        dateCreated
-        from {
-          slug
-        }
-        review
-        score
-        isDeliveredOnTime
-      }
-      securityPreference
-      royaltyPreference
-      editsPreference
-      typeOfEditsPreference
-      specPreference
-    }
-  }
-`;
-
 // query all users that a user follows
 export const MY_FOLLOWING_USERS_QUERY = gql`
   query {
@@ -478,4 +422,3 @@ export const GET_PERSON_ID_BY_WALLET = gql`
     }
   }
 `;
-

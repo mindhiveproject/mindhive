@@ -43,10 +43,23 @@ export const SIGN_OUT_MUTATION = gql`
 
 // update information about user
 export const UPDATE_USER = gql`
-  mutation UPDATE_USER($id: ID!, $email: String, $username: String) {
+  mutation UPDATE_USER(
+    $id: ID!
+    $email: String
+    $username: String
+    $location: String
+    $language: String
+    $bio: String
+  ) {
     updateProfile(
       where: { id: $id }
-      data: { email: $email, username: $username }
+      data: {
+        email: $email
+        username: $username
+        location: $location
+        language: $language
+        bio: $bio
+      }
     ) {
       id
     }

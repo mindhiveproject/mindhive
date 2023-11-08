@@ -9,7 +9,9 @@ import { StyledForm } from "../../styles/StyledForm";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 import { UPDATE_USER } from "../../Mutations/User";
 import UpdateAvatarModal from "../../Account/AvatarEditor/AvatarModal";
-import IdentIcon from "../../Account/IdentIcon";
+// import IdentIcon from "../../Account/IdentIcon";
+import LanguageSelector from "../../User/LanguageSelector";
+import Link from "next/link";
 
 export default function EditSettings({ query, user }) {
   const { t } = useTranslation("account");
@@ -69,12 +71,46 @@ export default function EditSettings({ query, user }) {
               />
             </label>
 
+            <label htmlFor="location">
+              Location
+              <input
+                type="name"
+                name="location"
+                value={inputs?.location || ""}
+                onChange={handleChange}
+              />
+            </label>
+
+            <label htmlFor="language">
+              Language
+              <LanguageSelector
+                handleChange={handleChange}
+                value={inputs?.language}
+              />
+            </label>
+
+            <label htmlFor="bio">
+              Bio
+              <textarea
+                id="bio"
+                rows="5"
+                name="bio"
+                placeholder="I'm ... "
+                value={inputs?.bio || ""}
+                onChange={handleChange}
+              />
+            </label>
+
             <div className="submitButton">
               <button type="submit">{t("common.update")}</button>
             </div>
           </div>
         </fieldset>
       </StyledForm>
+
+      <p>
+        <Link href={"/users/" + user?.publicId}>My public profile page</Link>
+      </p>
     </>
   );
 }
