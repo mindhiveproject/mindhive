@@ -6,15 +6,27 @@ import Table from "./Table/Main";
 import { StyledChatGPTPage } from "../../../styles/StyledBuilder";
 
 const defaultSpec = `
+
 import matplotlib
 import matplotlib.pyplot as plt
 
 matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend");
 
-# Sample data
-x = [1, 2, 3, 4, 5]
-y = [10, 15, 13, 18, 20]
+f = plt.figure(1)
 
+from js import document
+def create_root_element2(self):
+    return document.querySelector('.graphArea')
+
+#override create_root_element method of canvas by one of the functions above
+f.canvas.create_root_element = create_root_element2.__get__(
+    create_root_element2, f.canvas.__class__)
+
+# Sample data
+x = [1, 2, 3, 4, 10]
+y = [10, 15, 13, 18, 70]
+
+plt.clf()
 # Create a line graph
 plt.plot(x, y, marker='o', linestyle='-', color='b', label='Sample Data')
 
