@@ -2,20 +2,28 @@ import gql from "graphql-tag";
 
 // create new tag
 export const CREATE_TAG = gql`
-  mutation CREATE_TAG($title: String!, $description: String) {
-    createTag(data: { title: $title, description: $description }) {
+  mutation CREATE_TAG($input: TagCreateInput!) {
+    createTag(data: $input) {
       id
     }
   }
 `;
 
+// $title: String!, $description: String, $level: String
+
 // update a tag
 export const UPDATE_TAG = gql`
-  mutation UPDATE_TAG($id: ID!, $title: String, $description: String) {
-    updateTag(
-      where: { id: $id }
-      data: { title: $title, description: $description }
-    ) {
+  mutation UPDATE_TAG($id: ID!, $input: TagUpdateInput!) {
+    updateTag(where: { id: $id }, data: $input) {
+      id
+    }
+  }
+`;
+
+// delete tag
+export const DELETE_TAG = gql`
+  mutation DELETE_TAG($id: ID!) {
+    deleteTag(where: { id: $id }) {
       id
     }
   }

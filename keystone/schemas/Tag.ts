@@ -27,26 +27,30 @@ export const Tag = list({
       isIndexed: "unique",
       isFilterable: true,
       hooks: {
-        async resolveInput({ context, inputData }) {
-          const { title } = inputData;
-          if (title) {
-            let slug = slugify(title, {
-              remove: /[*+~.()'"!:@]/g, // remove characters that match regex
-              lower: true, // convert to lower case
-              strict: true, // strip special characters except replacement
-            });
-            const items = await context.query.Study.findMany({
-              where: { slug: { startsWith: slug } },
-              query: "id slug",
-            });
-            if (items.length) {
-              const re = new RegExp(`${slug}-*\\d*$`);
-              const slugs = items.filter((item) => item.slug.match(re));
-              if (slugs.length) {
-                slug = `${slug}-${slugs.length}`;
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create") {
+            const { title } = inputData;
+            if (title) {
+              let slug = slugify(title, {
+                remove: /[*+~.()'"!:@]/g, // remove characters that match regex
+                lower: true, // convert to lower case
+                strict: true, // strip special characters except replacement
+              });
+              const items = await context.query.Tag.findMany({
+                where: { slug: { startsWith: slug } },
+                query: "id slug",
+              });
+              if (items.length) {
+                const re = new RegExp(`${slug}-*\\d*$`);
+                const slugs = items.filter((item) => item.slug.match(re));
+                if (slugs.length) {
+                  slug = `${slug}-${slugs.length}`;
+                }
               }
+              return slug;
             }
-            return slug;
+          } else {
+            return inputData.slug;
           }
         },
       },
@@ -72,7 +76,14 @@ export const Tag = list({
       ref: "Spec.tags",
       many: true,
     }),
-    level: integer(),
+    level: select({
+      options: [
+        { label: "1", value: "1" },
+        { label: "2", value: "2" },
+        { label: "3", value: "3" },
+      ],
+      defaultValue: "1",
+    }),
     parent: relationship({
       ref: "Tag.children",
     }),

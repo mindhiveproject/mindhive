@@ -24,13 +24,25 @@ export default function EditTag({ selector, query, user }) {
     updateTag,
     { data: updateData, loading: updateLoading, error: updateError },
   ] = useMutation(UPDATE_TAG, {
-    variables: inputs,
     refetchQueries: [{ query: GET_TAG, variables: { id } }],
   });
 
   async function handleSave(e) {
     e.preventDefault();
-    await updateTag();
+    await updateTag({
+      variables: {
+        id,
+        input: {
+          title: inputs?.title,
+          description: inputs?.description,
+          level: inputs?.level,
+          updatedAt: new Date(),
+          parent: inputs?.parent
+            ? { connect: { id: inputs?.parent?.id } }
+            : { disconnect: true },
+        },
+      },
+    });
   }
 
   return (

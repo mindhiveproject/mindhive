@@ -1,4 +1,7 @@
 import JoditEditor from "../../Jodit/Editor";
+import { StyledInput } from "../../styles/StyledForm";
+import LevelSelector from "./Level";
+import TagSelector from "./Selector";
 
 export default function TagForm({ inputs, handleChange, loading }) {
   const setContent = (content) =>
@@ -7,14 +10,14 @@ export default function TagForm({ inputs, handleChange, loading }) {
     });
 
   return (
-    <div>
+    <StyledInput>
       <h1>{inputs.title}</h1>
 
       <div>
         <label htmlFor="title">
           Title
           <input
-            type="title"
+            type="text"
             name="title"
             value={inputs?.title}
             onChange={handleChange}
@@ -24,6 +27,10 @@ export default function TagForm({ inputs, handleChange, loading }) {
       </div>
 
       <JoditEditor content={inputs.description} setContent={setContent} />
-    </div>
+
+      <LevelSelector handleChange={handleChange} level={inputs?.level} />
+
+      <TagSelector handleChange={handleChange} parentTag={inputs?.parent} />
+    </StyledInput>
   );
 }

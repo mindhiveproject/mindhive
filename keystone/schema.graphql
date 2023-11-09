@@ -2867,7 +2867,7 @@ type Tag {
   studiesCount(where: StudyWhereInput! = {}): Int
   specs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SpecWhereUniqueInput): [Spec!]
   specsCount(where: SpecWhereInput! = {}): Int
-  level: Int
+  level: String
   parent: Tag
   children(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   childrenCount(where: TagWhereInput! = {}): Int
@@ -2893,22 +2893,11 @@ input TagWhereInput {
   homeworks: HomeworkManyRelationFilter
   studies: StudyManyRelationFilter
   specs: SpecManyRelationFilter
-  level: IntNullableFilter
+  level: StringNullableFilter
   parent: TagWhereInput
   children: TagManyRelationFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
-}
-
-input IntNullableFilter {
-  equals: Int
-  in: [Int!]
-  notIn: [Int!]
-  lt: Int
-  lte: Int
-  gt: Int
-  gte: Int
-  not: IntNullableFilter
 }
 
 input TagOrderByInput {
@@ -2930,7 +2919,7 @@ input TagUpdateInput {
   homeworks: HomeworkRelateToManyForUpdateInput
   studies: StudyRelateToManyForUpdateInput
   specs: SpecRelateToManyForUpdateInput
-  level: Int
+  level: String
   parent: TagRelateToOneForUpdateInput
   children: TagRelateToManyForUpdateInput
   createdAt: DateTime
@@ -2957,7 +2946,7 @@ input TagCreateInput {
   homeworks: HomeworkRelateToManyForCreateInput
   studies: StudyRelateToManyForCreateInput
   specs: SpecRelateToManyForCreateInput
-  level: Int
+  level: String
   parent: TagRelateToOneForCreateInput
   children: TagRelateToManyForCreateInput
   createdAt: DateTime

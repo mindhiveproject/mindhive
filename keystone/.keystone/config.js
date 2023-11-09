@@ -2041,29 +2041,33 @@ var Tag = (0, import_core24.list)({
       isIndexed: "unique",
       isFilterable: true,
       hooks: {
-        async resolveInput({ context, inputData }) {
-          const { title } = inputData;
-          if (title) {
-            let slug = (0, import_slugify7.default)(title, {
-              remove: /[*+~.()'"!:@]/g,
-              // remove characters that match regex
-              lower: true,
-              // convert to lower case
-              strict: true
-              // strip special characters except replacement
-            });
-            const items = await context.query.Study.findMany({
-              where: { slug: { startsWith: slug } },
-              query: "id slug"
-            });
-            if (items.length) {
-              const re = new RegExp(`${slug}-*\\d*$`);
-              const slugs = items.filter((item2) => item2.slug.match(re));
-              if (slugs.length) {
-                slug = `${slug}-${slugs.length}`;
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create") {
+            const { title } = inputData;
+            if (title) {
+              let slug = (0, import_slugify7.default)(title, {
+                remove: /[*+~.()'"!:@]/g,
+                // remove characters that match regex
+                lower: true,
+                // convert to lower case
+                strict: true
+                // strip special characters except replacement
+              });
+              const items = await context.query.Tag.findMany({
+                where: { slug: { startsWith: slug } },
+                query: "id slug"
+              });
+              if (items.length) {
+                const re = new RegExp(`${slug}-*\\d*$`);
+                const slugs = items.filter((item2) => item2.slug.match(re));
+                if (slugs.length) {
+                  slug = `${slug}-${slugs.length}`;
+                }
               }
+              return slug;
             }
-            return slug;
+          } else {
+            return inputData.slug;
           }
         }
       }
@@ -2089,7 +2093,14 @@ var Tag = (0, import_core24.list)({
       ref: "Spec.tags",
       many: true
     }),
-    level: (0, import_fields27.integer)(),
+    level: (0, import_fields27.select)({
+      options: [
+        { label: "1", value: "1" },
+        { label: "2", value: "2" },
+        { label: "3", value: "3" }
+      ],
+      defaultValue: "1"
+    }),
     parent: (0, import_fields27.relationship)({
       ref: "Tag.children"
     }),

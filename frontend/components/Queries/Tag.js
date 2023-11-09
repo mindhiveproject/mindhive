@@ -7,6 +7,7 @@ export const GET_TAGS = gql`
       id
       title
       slug
+      level
       createdAt
       updatedAt
     }
@@ -22,6 +23,9 @@ export const GET_TAG = gql`
       slug
       description
       level
+      parent {
+        id
+      }
       createdAt
       updatedAt
     }

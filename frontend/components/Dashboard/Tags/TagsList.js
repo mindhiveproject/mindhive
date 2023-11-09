@@ -4,6 +4,8 @@ import { GET_TAGS } from "../../Queries/Tag";
 
 import Link from "next/link";
 
+import DeleteTag from "./Delete";
+
 export default function TagsList({ query, user }) {
   const { data, error, loading } = useQuery(GET_TAGS);
 
@@ -11,20 +13,31 @@ export default function TagsList({ query, user }) {
 
   return (
     <div className="board">
+      <div className="heading">
+        <p>Title</p>
+        <p>Level</p>
+        <p>Created At</p>
+        <p>Updated At</p>
+      </div>
       {tags?.map((tag, i) => (
-        <Link
-          href={{
-            pathname: `/dashboard/tags/edit`,
-            query: {
-              id: tag?.id,
-            },
-          }}
-        >
-          <div key={i} className="item">
-            <p>{tag?.title}</p>
-            <p>{moment(tag?.createdAt).format("MMMM D, YYYY")}</p>
-          </div>
-        </Link>
+        <div className="line">
+          <Link
+            href={{
+              pathname: `/dashboard/tags/edit`,
+              query: {
+                id: tag?.id,
+              },
+            }}
+          >
+            <div key={i} className="item">
+              <p>{tag?.title}</p>
+              <p>{tag?.level}</p>
+              <p>{moment(tag?.createdAt).format("MMMM D, YYYY")}</p>
+              <p>{moment(tag?.updatedAt).format("MMMM D, YYYY")}</p>
+            </div>
+          </Link>
+          <DeleteTag id={tag?.id} />
+        </div>
       ))}
     </div>
   );

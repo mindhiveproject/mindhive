@@ -492,7 +492,7 @@ model Tag {
   homeworks   Homework[]   @relation("Homework_tags")
   studies     Study[]      @relation("Study_tags")
   specs       Spec[]       @relation("Spec_tags")
-  level       Int?
+  level       String?      @default("1")
   parent      Tag?         @relation("Tag_parent", fields: [parentId], references: [id])
   parentId    String?      @map("parent")
   children    Tag[]        @relation("Tag_parent")

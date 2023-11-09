@@ -259,3 +259,25 @@ export const SignupButton = styled.div`
   padding: 1rem 3rem;
   font-weight: 400;
 `;
+
+export const StyledInput = styled.div`
+  display: grid;
+  grid-gap: 10px;
+  margin: 0px 0px 20px 0px;
+  input,
+  textarea,
+  select {
+    font-family: Lato;
+    height: 48px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 16px;
+    line-height: 24px;
+    padding: 12px;
+    &:focus {
+      outline: 0;
+      border-color: ${(props) => props.theme.red};
+    }
+  }
+`;

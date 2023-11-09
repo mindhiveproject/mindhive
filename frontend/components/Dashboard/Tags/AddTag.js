@@ -19,11 +19,9 @@ export default function AddTag({ user }) {
   const { inputs, handleChange, clearForm } = useForm({
     title: "",
     description: "",
-    content: "",
   });
 
   const [createTag, { data, loading, error }] = useMutation(CREATE_TAG, {
-    variables: inputs,
     refetchQueries: [{ query: GET_TAGS, variables: { id: user?.id } }],
   });
 
@@ -31,7 +29,10 @@ export default function AddTag({ user }) {
     e.preventDefault();
     await createTag({
       variables: {
-        code: nanoid(),
+        input: {
+          ...inputs,
+          parent: inputs?.parent ? { connect: inputs?.parent } : null,
+        },
       },
     });
     router.push({
