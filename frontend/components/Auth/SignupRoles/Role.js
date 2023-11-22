@@ -42,7 +42,14 @@ export default function RoleSignup(query) {
         input: {
           ...inputs,
           permissions: { connect: { name: role?.toUpperCase() } },
-          studentIn: classCode ? { connect: { code: classCode } } : null,
+          studentIn:
+            role === "student" && classCode
+              ? { connect: { code: classCode } }
+              : null,
+          mentorIn:
+            role === "mentor" && classCode
+              ? { connect: { code: classCode } }
+              : null,
         },
       },
     });
@@ -69,7 +76,7 @@ export default function RoleSignup(query) {
     }
   }
 
-  if (role === "student") {
+  if (role === "student" || role === "mentor") {
     return (
       <StyledAuth>
         <StudentMain

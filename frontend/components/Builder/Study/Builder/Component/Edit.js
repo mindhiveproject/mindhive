@@ -26,8 +26,6 @@ export default function EditComponent({
     ...task,
   });
 
-  console.log({ inputs });
-
   // do not allow to edit template in the study builder
   const isTemplateAuthor = false;
 

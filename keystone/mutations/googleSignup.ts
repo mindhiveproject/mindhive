@@ -16,14 +16,13 @@ async function googleSignup(
   },
   context: KeystoneContext
 ): Promise<ProfileCreateInput> {
-  console.log({ classCode });
-
   const googleClient = new OAuth2Client(clientID);
   const ticket = await googleClient.verifyIdToken({
     idToken: token,
     audience: clientID, // Specify the CLIENT_ID of the app that accesses the backend
   });
   const payload = await ticket.getPayload();
+
   const { name, email } = payload;
   // create a profile
   const profile = await context.db.Profile.createOne(
@@ -33,10 +32,17 @@ async function googleSignup(
         email: email,
         password: token,
         permissions: role ? { connect: { name: role?.toUpperCase() } } : null,
-        studentIn: classCode ? { connect: { code: classCode } } : null,
+        studentIn:
+          role === "student" && classCode
+            ? { connect: { code: classCode } }
+            : null,
+        mentorIn:
+          role === "mentor" && classCode
+            ? { connect: { code: classCode } }
+            : null,
       },
     },
-    "id"
+    "id username email"
   );
   return profile;
 }

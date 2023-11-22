@@ -4,13 +4,14 @@ import gql from "graphql-tag";
 export const GET_PARTICIPANT_RESULTS = gql`
   query GET_PARTICIPANT_RESULTS($participantId: ID!, $studyId: ID!) {
     datasets(
-        where: {
-          OR: [
-            { profile: { id: { equals: $participantId } } }, 
-            { guest: { id: { equals: $participantId } } }, 
-          ],
-          study: { id: { equals: $studyId } }
-        }) {
+      where: {
+        OR: [
+          { profile: { id: { equals: $participantId } } }
+          { guest: { id: { equals: $participantId } } }
+        ]
+        study: { id: { equals: $studyId } }
+      }
+    ) {
       id
       token
       date
@@ -24,7 +25,7 @@ export const GET_PARTICIPANT_RESULTS = gql`
       info
       isCompleted
       createdAt
-      updatedAt
+      completedAt
     }
   }
 `;
@@ -53,7 +54,7 @@ export const GET_USER_RESULTS = gql`
         info
         isCompleted
         createdAt
-        updatedAt
+        completedAt
       }
     }
   }
@@ -83,7 +84,7 @@ export const GET_GUEST_RESULTS = gql`
         info
         isCompleted
         createdAt
-        updatedAt
+        completedAt
       }
     }
   }

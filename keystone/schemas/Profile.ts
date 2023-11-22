@@ -45,7 +45,7 @@ export const Profile = list({
     },
     item: {
       create: () => true,
-      update: rules.canManageUsers,
+      update: () => true,
       delete: rules.canManageUsers,
     },
   },
@@ -92,7 +92,7 @@ export const Profile = list({
       isIndexed: "unique",
       isFilterable: true,
       access: {
-        read: rules.canManageUsers,
+        read: () => true,
         create: () => true,
         update: rules.canManageUsers,
       },

@@ -11,6 +11,7 @@ import Router from "./Router";
 
 export default function Builder({ query, user, tab, toggleSidebar }) {
   const router = useRouter();
+  const { area } = query;
   const studyId = query?.selector;
 
   const { data, error, loading } = useQuery(MY_STUDY, {
@@ -54,7 +55,7 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
     descriptionInProposalCardId,
     tags,
   }) => {
-    if (studyId === "add") {
+    if (studyId === "add" || area === "cloneofstudy") {
       const newStudy = await createStudy({
         variables: {
           input: {

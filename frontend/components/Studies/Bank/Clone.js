@@ -5,7 +5,7 @@ import StudyCard from "./StudyCard";
 import { StyledSelector } from "../../styles/StyledSelector";
 import { StyledBank } from "../../styles/StyledBank";
 
-export default function CloneStudyBank() {
+export default function CloneStudyBank({ user }) {
   const { data, error, loading } = useQuery(PUBLIC_STUDIES);
   const studies = data?.studies || [];
 
@@ -19,10 +19,11 @@ export default function CloneStudyBank() {
         <StyledBank>
           {studies.map((study) => (
             <StudyCard
+              user={user}
               key={study?.id}
               study={study}
               url="/builder/cloneofstudy/"
-              id="slug"
+              id="id"
               name="selector"
             />
           ))}

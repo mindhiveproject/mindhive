@@ -91,11 +91,23 @@ export const JOIN_STUDY_MUTATION = gql`
 `;
 
 // join the class as a student
-export const JOIN_CLASS_MUTATION = gql`
-  mutation JOIN_CLASS_MUTATION($id: ID!, $classCode: String!) {
+export const JOIN_CLASS_AS_STUDENT_MUTATION = gql`
+  mutation JOIN_CLASS_AS_STUDENT_MUTATION($id: ID!, $classCode: String!) {
     updateProfile(
       where: { id: $id }
       data: { studentIn: { connect: { code: $classCode } } }
+    ) {
+      id
+    }
+  }
+`;
+
+// join the class as a mentor
+export const JOIN_CLASS_AS_MENTOR_MUTATION = gql`
+  mutation JOIN_CLASS_AS_MENTOR_MUTATION($id: ID!, $classCode: String!) {
+    updateProfile(
+      where: { id: $id }
+      data: { mentorIn: { connect: { code: $classCode } } }
     ) {
       id
     }

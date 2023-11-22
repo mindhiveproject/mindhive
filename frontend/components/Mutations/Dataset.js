@@ -2,12 +2,8 @@ import gql from "graphql-tag";
 
 // create dataset record
 export const CREATE_DATASET = gql`
-  mutation CREATE_DATASET(
-    $input: DatasetCreateInput!
-  ) {
-    createDataset(
-      data: $input
-    ) {
+  mutation CREATE_DATASET($input: DatasetCreateInput!) {
+    createDataset(data: $input) {
       id
     }
   }
@@ -19,10 +15,15 @@ export const UPDATE_DATASET = gql`
     $token: String!
     $isCompleted: Boolean
     $dataPolicy: String
+    $completedAt: DateTime
   ) {
     updateDataset(
       where: { token: $token }
-      data: { isCompleted: $isCompleted, dataPolicy: $dataPolicy }
+      data: {
+        isCompleted: $isCompleted
+        dataPolicy: $dataPolicy
+        completedAt: $completedAt
+      }
     ) {
       id
     }

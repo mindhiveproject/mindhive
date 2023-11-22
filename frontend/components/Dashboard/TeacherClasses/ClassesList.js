@@ -8,7 +8,18 @@ export default function ClassesList({ query, user }) {
   const { data, error, loading } = useQuery(GET_CLASSES, {
     variables: {
       input: {
-        creator: { id: { equals: user?.id } },
+        OR: [
+          {
+            creator: {
+              id: { equals: user?.id },
+            },
+          },
+          {
+            mentors: {
+              some: { id: { equals: user?.id } },
+            },
+          },
+        ],
       },
     },
   });

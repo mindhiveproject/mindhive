@@ -1,6 +1,7 @@
 import { Dropdown } from "semantic-ui-react";
 import Link from "next/link";
 import { useQuery, useMutation } from "@apollo/client";
+import absoluteUrl from "next-absolute-url";
 
 import { GET_CLASSES } from "../../../Queries/Classes";
 import {
@@ -10,6 +11,8 @@ import {
 import { GET_CLASS } from "../../../Queries/Classes";
 
 export default function ClassStudents({ myclass, user, query }) {
+  const { origin } = absoluteUrl();
+
   const students = myclass?.students || [];
 
   const { data, error, loading } = useQuery(GET_CLASSES, {
@@ -61,7 +64,7 @@ export default function ClassStudents({ myclass, user, query }) {
   );
 
   const copyLink = () => {
-    const copyLink = `https://mindhive.science/signup/student/${myclass.code}`;
+    const copyLink = `${origin}/signup/student?code=${myclass.code}`;
     const temp = document.createElement("input");
     document.body.append(temp);
     temp.value = copyLink;
@@ -81,8 +84,7 @@ export default function ClassStudents({ myclass, user, query }) {
           </p>
           <div className="copyArea">
             <div className="link">
-              https://mindhive.science/signup/student/
-              {myclass.code}
+              {origin}/signup/student/?code={myclass.code}
             </div>
             <div className="copyButton" onClick={() => copyLink()}>
               Copy

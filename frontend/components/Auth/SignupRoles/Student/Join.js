@@ -3,22 +3,39 @@ import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
 
 import { GET_CLASS } from "../../../Queries/Classes";
-import { JOIN_CLASS_MUTATION } from "../../../Mutations/User";
+import {
+  JOIN_CLASS_AS_STUDENT_MUTATION,
+  JOIN_CLASS_AS_MENTOR_MUTATION,
+} from "../../../Mutations/User";
 import { SignupForm } from "../../../styles/StyledForm";
 
-export default function JoinClass({ user, code }) {
+export default function JoinClass({ user, role, classCode, invitationCode }) {
   const router = useRouter();
-  const { data, loading, error } = useQuery(GET_CLASS, { variables: { code } });
 
-  const [joinClass, { loading: joinClassLoading }] = useMutation(
-    JOIN_CLASS_MUTATION,
-    {
+  const query =
+    role === "mentor"
+      ? { action: "select", code: classCode, i: invitationCode }
+      : { action: "select", code: classCode };
+
+  const { data, loading, error } = useQuery(GET_CLASS, {
+    variables: { code: classCode },
+  });
+
+  const [joinClassAsStudent, { loading: joinClassAsStudentLoading }] =
+    useMutation(JOIN_CLASS_AS_STUDENT_MUTATION, {
       variables: {
         id: user?.id,
-        classCode: code,
+        classCode: classCode,
       },
-    }
-  );
+    });
+
+  const [joinClassAsMentor, { loading: joinClassAsMentorLoading }] =
+    useMutation(JOIN_CLASS_AS_MENTOR_MUTATION, {
+      variables: {
+        id: user?.id,
+        classCode: classCode,
+      },
+    });
 
   const myclass = data?.class || undefined;
 
@@ -27,7 +44,7 @@ export default function JoinClass({ user, code }) {
       <SignupForm>
         <div className="classFoundScreen">
           <h1>
-            No class found for the code <i>{code}</i>
+            No class found for the code <i>{classCode}</i>
           </h1>
           <Link href="/signup/student">
             <button className="primaryBtn">Go back</button>
@@ -40,21 +57,26 @@ export default function JoinClass({ user, code }) {
   return (
     <SignupForm>
       <div className="classFoundScreen">
-        <h1>Do you want to join the following class?</h1>
+        <h1>Do you want to join the following class as a {role}?</h1>
 
         <div className="classInformation">
           {myclass.title} - {myclass.creator.username}
         </div>
 
         <div className="navigationBtns">
-          <Link href="/signup/student">
+          <Link href={`/signup/${role}`}>
             <button className="secondaryBtn">No, go back</button>
           </Link>
 
           {user ? (
             <button
               onClick={async () => {
-                await joinClass();
+                if (role === "mentor") {
+                  await joinClassAsMentor();
+                }
+                if (role === "student") {
+                  await joinClassAsStudent();
+                }
                 router.push({
                   pathname: "/dashboard/classes",
                 });
@@ -66,11 +88,8 @@ export default function JoinClass({ user, code }) {
           ) : (
             <Link
               href={{
-                pathname: `/signup/student`,
-                query: {
-                  code: code,
-                  action: "select",
-                },
+                pathname: `/signup/${role}`,
+                query: query,
               }}
             >
               <button className="primaryBtn">Yes, continue</button>

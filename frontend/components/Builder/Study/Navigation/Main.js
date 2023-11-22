@@ -6,7 +6,7 @@ import StudyOptions from "../../../Studies/Bank/StudyOptions";
 
 import { MY_STUDY } from "../../../Queries/Study";
 
-const items = [
+const itemsOriginal = [
   {
     value: "proposal",
     name: "Proposal",
@@ -33,6 +33,17 @@ const items = [
   },
 ];
 
+const itemsClone = [
+  {
+    value: "page",
+    name: "Participant Page",
+  },
+  {
+    value: "builder",
+    name: "Study builder",
+  },
+];
+
 export default function Navigation({
   query,
   user,
@@ -43,6 +54,7 @@ export default function Navigation({
   hasStudyChanged,
 }) {
   const { area, selector } = query;
+  const items = area === "cloneofstudy" ? itemsClone : itemsOriginal;
 
   const studyId = query?.selector;
 
@@ -94,17 +106,22 @@ export default function Navigation({
           </div>
         </div>
         <div className="rightPanel">
-          <Connect study={study} user={user} />
+          {area !== "cloneofstudy" && (
+            <>
+              <Connect study={study} user={user} />
 
-          {study?.talks?.length > 0 && (
-            <div className="icon" onClick={toggleChatSidebar}>
-              <img src="/assets/icons/chat.svg" />
-            </div>
+              {study?.talks?.length > 0 && (
+                <div className="icon" onClick={toggleChatSidebar}>
+                  <img src="/assets/icons/chat.svg" />
+                </div>
+              )}
+
+              <div className="icon">
+                <StudyOptions user={user} study={study} />
+              </div>
+            </>
           )}
 
-          <div className="icon">
-            <StudyOptions user={user} study={study} />
-          </div>
           {saveBtnFunction && (
             <button
               onClick={() => saveBtnFunction()}
@@ -122,7 +139,7 @@ export default function Navigation({
             <Link
               key={i}
               href={{
-                pathname: `/builder/studies`,
+                pathname: `/builder/${area}`,
                 query: {
                   selector,
                   tab: item?.value,

@@ -8,7 +8,12 @@ import {
   SignupButton,
 } from "../../../styles/StyledForm";
 
-export default function Select({ code }) {
+export default function Select({ role, classCode, invitationCode }) {
+  const query =
+    role === "mentor"
+      ? { action: "signup", code: classCode, i: invitationCode }
+      : { action: "signup", code: classCode };
+
   return (
     <SignupForm>
       <h1>How would you like to join MindHive?</h1>
@@ -16,11 +21,8 @@ export default function Select({ code }) {
         <div className="studentSignupOptions">
           <Link
             href={{
-              pathname: `/signup/student`,
-              query: {
-                code: code,
-                action: "signup",
-              },
+              pathname: `/signup/${role}`,
+              query: query,
             }}
           >
             <SignupButton>
@@ -30,7 +32,7 @@ export default function Select({ code }) {
               <div>Sign up with email/username</div>
             </SignupButton>
           </Link>
-          <GoogleSignup role="student" classCode={code} />
+          <GoogleSignup role={role} classCode={classCode} />
           <TermsConditions btnName={`"Sign up with Google"`} />
         </div>
       </StyledForm>

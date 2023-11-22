@@ -5,7 +5,6 @@ import { UserContext } from "../Global/Authorized";
 import AddComponent from "./Component/Add";
 import EditComponent from "./Component/Edit";
 import StudyBuilder from "./Study/Main";
-// import CloneStudy from "./Study/CloneStudy";
 import CloneTask from "./Component/Clone";
 
 export default function BuilderRouter({ query }) {
@@ -20,9 +19,9 @@ export default function BuilderRouter({ query }) {
     });
   };
 
-  // if (area === "cloneofstudy" && selector) {
-  //   return <CloneStudy query={query} user={user} studySlug={selector} />;
-  // }
+  if (area === "cloneofstudy" && selector) {
+    return <StudyBuilder query={query} user={user} />;
+  }
 
   if (area === "studies") {
     return <StudyBuilder query={query} user={user} />;

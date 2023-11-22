@@ -249,7 +249,6 @@ async function googleSignup(root, {
   role,
   classCode
 }, context) {
-  console.log({ classCode });
   const googleClient = new import_google_auth_library.OAuth2Client(clientID);
   const ticket = await googleClient.verifyIdToken({
     idToken: token,
@@ -265,10 +264,11 @@ async function googleSignup(root, {
         email,
         password: token,
         permissions: role ? { connect: { name: role?.toUpperCase() } } : null,
-        studentIn: classCode ? { connect: { code: classCode } } : null
+        studentIn: role === "student" && classCode ? { connect: { code: classCode } } : null,
+        mentorIn: role === "mentor" && classCode ? { connect: { code: classCode } } : null
       }
     },
-    "id"
+    "id username email"
   );
   return profile;
 }
@@ -546,7 +546,7 @@ var Profile = (0, import_core.list)({
     },
     item: {
       create: () => true,
-      update: rules.canManageUsers,
+      update: () => true,
       delete: rules.canManageUsers
     }
   },
@@ -593,7 +593,7 @@ var Profile = (0, import_core.list)({
       isIndexed: "unique",
       isFilterable: true,
       access: {
-        read: rules.canManageUsers,
+        read: () => true,
         create: () => true,
         update: rules.canManageUsers
       }
@@ -1651,7 +1651,7 @@ var Dataset = (0, import_core17.list)({
     createdAt: (0, import_fields20.timestamp)({
       defaultValue: { kind: "now" }
     }),
-    updatedAt: (0, import_fields20.timestamp)()
+    completedAt: (0, import_fields20.timestamp)()
   }
 });
 

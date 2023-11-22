@@ -2188,7 +2188,7 @@ type Dataset {
   info: JSON
   isCompleted: Boolean
   createdAt: DateTime
-  updatedAt: DateTime
+  completedAt: DateTime
 }
 
 input DatasetWhereUniqueInput {
@@ -2214,7 +2214,7 @@ input DatasetWhereInput {
   dataPolicy: StringFilter
   isCompleted: BooleanFilter
   createdAt: DateTimeNullableFilter
-  updatedAt: DateTimeNullableFilter
+  completedAt: DateTimeNullableFilter
 }
 
 input DatasetOrderByInput {
@@ -2226,7 +2226,7 @@ input DatasetOrderByInput {
   dataPolicy: OrderDirection
   isCompleted: OrderDirection
   createdAt: OrderDirection
-  updatedAt: OrderDirection
+  completedAt: OrderDirection
 }
 
 input DatasetUpdateInput {
@@ -2244,7 +2244,7 @@ input DatasetUpdateInput {
   info: JSON
   isCompleted: Boolean
   createdAt: DateTime
-  updatedAt: DateTime
+  completedAt: DateTime
 }
 
 input GuestRelateToOneForUpdateInput {
@@ -2285,7 +2285,7 @@ input DatasetCreateInput {
   info: JSON
   isCompleted: Boolean
   createdAt: DateTime
-  updatedAt: DateTime
+  completedAt: DateTime
 }
 
 input GuestRelateToOneForCreateInput {

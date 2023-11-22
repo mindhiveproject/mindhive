@@ -55,6 +55,6 @@ export const Dataset = list({
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
-    updatedAt: timestamp(),
+    completedAt: timestamp(),
   },
 });

@@ -2,8 +2,15 @@ import { useState } from "react";
 import Link from "next/link";
 import { SignupForm } from "../../../styles/StyledForm";
 
-export default function EnterCode({}) {
-  const [code, setCode] = useState("");
+export default function EnterCode({ role }) {
+  const [classCode, setClassCode] = useState("");
+  const [invitationCode, setInvitationCode] = useState("");
+
+  const query =
+    role === "mentor"
+      ? { code: classCode, i: invitationCode }
+      : { code: classCode };
+
   return (
     <SignupForm>
       <div className="enterCodeScreen">
@@ -15,8 +22,8 @@ export default function EnterCode({}) {
               id="classCode"
               name="classCode"
               placeholder="e.g. test-class"
-              onChange={({ target }) => setCode(target?.value)}
-              value={code}
+              onChange={({ target }) => setClassCode(target?.value)}
+              value={classCode}
             />
             <div className="helpMessage">
               This code is provided by your teacher and is how you will join
@@ -24,12 +31,28 @@ export default function EnterCode({}) {
             </div>
           </label>
         </div>
+
+        {role === "mentor" && (
+          <>
+            <h1>Enter your invitation code</h1>
+            <div>
+              <label htmlFor="invitationCode">
+                <input
+                  type="text"
+                  id="invitationCode"
+                  name="invitationCode"
+                  onChange={({ target }) => setInvitationCode(target?.value)}
+                  value={invitationCode}
+                />
+              </label>
+            </div>
+          </>
+        )}
+
         <Link
           href={{
-            pathname: `/signup/student`,
-            query: {
-              code: code,
-            },
+            pathname: `/signup/${role}`,
+            query: query,
           }}
         >
           <button>Next</button>

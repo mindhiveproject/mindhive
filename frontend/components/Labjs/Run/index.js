@@ -19,7 +19,7 @@ export default function ExperimentWindow({
   // whether to show the plugin is decided by the study parameter
   const isPlugin = study?.settings?.useExternalDevices;
   // check the type of the user
-  const userType = user?.type==="GUEST" ? "guest" : "user";
+  const userType = user?.type === "GUEST" ? "guest" : "user";
 
   // todo write a custom creatInputObject where the user id depends on the type of the user
   // datasets should be also  marked with a type: GUEST or USER
@@ -53,7 +53,7 @@ export default function ExperimentWindow({
     year: parseInt(curDate.getFullYear()),
     month: parseInt(curDate.getMonth()) + 1,
     day: parseInt(curDate.getDate()),
-  }
+  };
   const dateString = `${date.year}-${date.month}-${date.day}`;
 
   if (labjsObject && isSavingData) {
@@ -77,29 +77,37 @@ export default function ExperimentWindow({
         .map((p) => p?.metadata?.id)
         .filter((p) => !!p)[0];
       // create a new data record by using a mutation
-      createDataset({ variables: { 
-        input: {
-          profile: user?.type === "GUEST" ? null : { connect: { id: user?.id } },
-          guest: user?.type === "GUEST" ? { connect: { publicId: user?.publicId } } : null,
-          template: { connect: { id: task?.template?.id } },
-          task: { connect: { id: task?.id } },
-          study: { connect: { id: study?.id } },
-          token: id, 
-          type: user?.type,
-          date: dateString,
-        }
-      } });
+      createDataset({
+        variables: {
+          input: {
+            profile:
+              user?.type === "GUEST" ? null : { connect: { id: user?.id } },
+            guest:
+              user?.type === "GUEST"
+                ? { connect: { publicId: user?.publicId } }
+                : null,
+            template: { connect: { id: task?.template?.id } },
+            task: { connect: { id: task?.id } },
+            study: { connect: { id: study?.id } },
+            token: id,
+            type: user?.type,
+            date: dateString,
+          },
+        },
+      });
     }
   });
 
   // define the end event
-  experiment?.on("end", () => {
+  experiment?.on("end", async () => {
     const id = experiment?.plugins?.plugins
       .map((p) => p?.metadata?.id)
       .filter((p) => !!p)[0];
     if (isSavingData) {
       // update the record by mutation (that the task is over)
-      updateDataset({ variables: { token: id, isCompleted: true } });
+      await updateDataset({
+        variables: { token: id, isCompleted: true, completedAt: new Date() },
+      });
     }
     onFinish({ token: id });
   });

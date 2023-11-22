@@ -14,11 +14,11 @@ export default function StudentMain({
   loading,
   error,
 }) {
-  const { code, action } = query;
+  const { code, i, action } = query;
 
   if (action) {
     if (action === "select" && code) {
-      return <Select code={code} />;
+      return <Select role={role} classCode={code} invitationCode={i} />;
     }
 
     if (action === "signup" && code) {
@@ -34,6 +34,7 @@ export default function StudentMain({
             loading={loading}
             error={error}
             classCode={code}
+            invitationCode={i}
           />
         </div>
       );
@@ -41,8 +42,10 @@ export default function StudentMain({
   }
 
   if (code) {
-    return <JoinClass user={user} code={code} />;
+    return (
+      <JoinClass user={user} role={role} classCode={code} invitationCode={i} />
+    );
   }
 
-  return <EnterCode />;
+  return <EnterCode role={role} />;
 }

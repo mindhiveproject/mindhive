@@ -15,6 +15,7 @@ import { StyledParticipantPage } from "../../../styles/StyledBuilder";
 
 export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
   const router = useRouter();
+  const { area } = query;
   const studyId = query?.selector;
 
   const [hasStudyChanged, setHasStudyChanged] = useState(false);
@@ -106,7 +107,7 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
   });
 
   const saveStudy = async () => {
-    if (studyId === "add") {
+    if (studyId === "add" || area === "cloneofstudy") {
       const newStudy = await createStudy();
       router.push({
         pathname: `/builder/studies/`,

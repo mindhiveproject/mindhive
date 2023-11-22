@@ -353,7 +353,7 @@ model Dataset {
   info            String?
   isCompleted     Boolean        @default(false)
   createdAt       DateTime?      @default(now())
-  updatedAt       DateTime?
+  completedAt     DateTime?
 
   @@index([profileId])
   @@index([guestId])

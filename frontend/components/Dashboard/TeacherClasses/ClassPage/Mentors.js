@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client";
 import uniqid from "uniqid";
 import { Dropdown } from "semantic-ui-react";
 import Link from "next/link";
+import absoluteUrl from "next-absolute-url";
 
 import { EDIT_CLASS } from "../../../Mutations/Classes";
 import { REMOVE_MENTOR_FROM_CLASS } from "../../../Mutations/Classes";
@@ -9,6 +10,8 @@ import { GET_CLASS } from "../../../Queries/Classes";
 // import { GET_TEACHER_CLASSES } from "../../../Queries/Classes";
 
 export default function ClassMentors({ myclass, user }) {
+  const { origin } = absoluteUrl();
+
   const [updateClass, { loading }] = useMutation(EDIT_CLASS, {
     variables: {
       id: myclass?.id,
@@ -33,7 +36,7 @@ export default function ClassMentors({ myclass, user }) {
   const mentorInvitationCode = myclass?.settings?.mentorInvitationCode;
 
   const copyLink = (mentorInvitationCode) => {
-    const copyLink = `https://mindhive.science/signup/mentor/${myclass.code}/${mentorInvitationCode}`;
+    const copyLink = `${origin}/signup/mentor?code=${myclass.code}&i=${mentorInvitationCode}`;
     const temp = document.createElement("input");
     document.body.append(temp);
     temp.value = copyLink;
@@ -54,8 +57,8 @@ export default function ClassMentors({ myclass, user }) {
             </p>
             <div className="copyArea">
               <div className="link">
-                https://mindhive.science/signup/mentor/
-                {myclass.code}/{mentorInvitationCode}
+                {origin}/signup/mentor?code={myclass.code}&i=
+                {mentorInvitationCode}
               </div>
               <div
                 className="copyButton"
