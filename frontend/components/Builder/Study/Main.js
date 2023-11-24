@@ -36,7 +36,7 @@ export default function StudyBuilder({ query, user }) {
               <span>&times;</span>
             </div>
             <StyledChat>
-              <ChatPage code={chatId} user={user} query={query} />
+              {chatId && <ChatPage code={chatId} user={user} query={query} />}
             </StyledChat>
           </div>
         </Sidebar>

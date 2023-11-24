@@ -202,17 +202,49 @@ export const GET_STUDY_PARTICIPANTS = gql`
   query GET_STUDY_PARTICIPANTS($id: ID!) {
     study(where: { id: $id }) {
       id
+      slug
+      flow
+      datasets {
+        date
+        token
+        task {
+          id
+          slug
+        }
+        testVersion
+      }
+      summaryResults {
+        data
+        user {
+          publicId
+        }
+        guest {
+          publicId
+        }
+        study {
+          title
+        }
+        task {
+          id
+          slug
+          title
+        }
+        testVersion
+        createdAt
+      }
       participants {
         id
         publicId
         publicReadableId
         type
+        studiesInfo
       }
       guests {
         id
         publicId
         publicReadableId
         type
+        studiesInfo
       }
     }
   }

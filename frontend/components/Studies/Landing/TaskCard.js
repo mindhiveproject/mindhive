@@ -21,10 +21,12 @@ export default function TaskCard({ user, study, step }) {
           name: study.slug,
           guest: user?.publicId,
           task: task?.id,
+          version: step?.testId,
         }
       : {
           name: study.slug,
           task: task?.id,
+          version: step?.testId,
         };
 
   return (

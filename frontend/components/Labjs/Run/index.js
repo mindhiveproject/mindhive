@@ -13,9 +13,11 @@ export default function ExperimentWindow({
   user,
   study,
   task,
+  testVersion,
   onFinish,
   isSavingData,
 }) {
+  console.log({ user, study, task });
   // whether to show the plugin is decided by the study parameter
   const isPlugin = study?.settings?.useExternalDevices;
   // check the type of the user
@@ -61,7 +63,7 @@ export default function ExperimentWindow({
       ...labjsObject?.plugins,
       {
         type: "lab.plugins.Transmit",
-        url: `/api/save/?st=${study?.id}&te=${task?.template?.id}&ta=${task?.id}&us=${user?.id}&type=${userType}&y=${date.year}&m=${date.month}&d=${date.day}`,
+        url: `/api/save/?st=${study?.id}&te=${task?.template?.id}&ta=${task?.id}&us=${user?.id}&type=${userType}&y=${date.year}&m=${date.month}&d=${date.day}&v=${testVersion}&upid=${user?.publicId}`,
       },
       { type: "lab.plugins.Debug" },
     ];
@@ -92,6 +94,7 @@ export default function ExperimentWindow({
             token: id,
             type: user?.type,
             date: dateString,
+            testVersion: testVersion,
           },
         },
       });

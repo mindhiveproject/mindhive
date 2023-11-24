@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_STUDY_PARTICIPANTS } from "../../../../Queries/User";
 
+import Header from "./Header";
 import UserRowWrapper from "./UserRowWrapper";
 import GuestRowWrapper from "./GuestRowWrapper";
 
@@ -9,51 +10,79 @@ export default function ParticipantsTable({ studyId }) {
     variables: { id: studyId },
   });
 
-  const st = data?.study || { participants: [], guests: [] };
-  const { participants } = st;
-  const { guests } = st;
+  const study = data?.study || { participants: [], guests: [] };
+  const { participants } = study;
+  const { guests } = study;
   const allParticipants = [...participants, ...guests];
 
-  return (
-    <div className="participants">
-      <div className="participantsBoard">
-        <div className="tableHeader">
-          <p>Public ID</p>
-          <p>Duration</p>
-          <p>Number of completed tasks</p>
-          <p>Condition name</p>
+  // find all tests in the study with recursive search
+  var components = [];
+  const findComponents = ({ flow }) => {
+    flow?.forEach((stage) => {
+      if (stage?.type === "my-node") {
+        components.push({
+          testId: stage?.testId,
+          name: stage?.name,
+          subtitle: stage?.subtitle,
+        });
+      }
+      if (stage?.type === "design") {
+        stage?.conditions?.forEach((condition) => {
+          findComponents({
+            flow: condition?.flow,
+          });
+        });
+      }
+    });
+  };
+  findComponents({ flow: study?.flow });
 
-          <p>Consent decision</p>
-          <p>Timestamp of consent decision</p>
-          <p>Account</p>
-          <p>Include in analysis</p>
-        </div>
-        <div>
-          {allParticipants.map((participant, num) => {
-            if(participant?.type === "GUEST") {
-              return (
-                <GuestRowWrapper 
-                  key={num} 
-                  num={num} 
-                  studyId={studyId} 
-                  participant={participant} 
-                />
-              )
-            } else {
-              return (
-                <UserRowWrapper 
-                  key={num} 
-                  num={num} 
-                  studyId={studyId} 
-                  participant={participant} 
-                />
-              )
-            }
-          }
-            
-          )}
+  return (
+    <>
+      <Header
+        study={study}
+        slug={study.slug}
+        participants={allParticipants}
+        components={components}
+      />
+      <div className="participants">
+        <div className="participantsBoard">
+          <div className="tableHeader">
+            <p>Public ID</p>
+            <p>Duration</p>
+            <p>Number of completed tasks</p>
+            <p>Condition name</p>
+
+            <p>Consent decision</p>
+            <p>Timestamp of consent decision</p>
+            <p>Account</p>
+            <p>Include in analysis</p>
+          </div>
+          <div>
+            {allParticipants.map((participant, num) => {
+              if (participant?.type === "GUEST") {
+                return (
+                  <GuestRowWrapper
+                    key={num}
+                    num={num}
+                    studyId={studyId}
+                    participant={participant}
+                  />
+                );
+              } else {
+                return (
+                  <UserRowWrapper
+                    key={num}
+                    num={num}
+                    studyId={studyId}
+                    participant={participant}
+                  />
+                );
+              }
+            })}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

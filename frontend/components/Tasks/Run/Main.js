@@ -5,7 +5,14 @@ import DynamicExperimentWindow from "../../Labjs/Run/Wrapper";
 
 import Labjs from "../../Global/Labjs";
 
-export default function TaskRun({ user, study, id, onFinish, isSavingData }) {
+export default function TaskRun({
+  user,
+  study,
+  id,
+  testVersion,
+  onFinish,
+  isSavingData,
+}) {
   const { data, error, loading } = useQuery(TASK_TO_PARTICIPATE, {
     variables: { id },
   });
@@ -33,6 +40,7 @@ export default function TaskRun({ user, study, id, onFinish, isSavingData }) {
           user={user}
           study={study}
           task={{ ...task, template: { ...task.template, script } }}
+          testVersion={testVersion}
           onFinish={onFinish}
           isSavingData={isSavingData}
         />

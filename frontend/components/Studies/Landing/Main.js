@@ -9,7 +9,7 @@ import StudyPage from "./StudyPage";
 import RunStudy from "../Run/Main";
 
 export default function StudyLandingMain({ query, isDashboard, isRun }) {
-  const { name, task } = query;
+  const { name, task, version } = query;
   const guestPublicId = query?.guest;
 
   const { data, error, loading } = useQuery(STUDY_TO_DISCOVER, {
@@ -27,7 +27,7 @@ export default function StudyLandingMain({ query, isDashboard, isRun }) {
   }
 
   if (isRun) {
-    return <RunStudy user={user} study={study} task={task} />;
+    return <RunStudy user={user} study={study} task={task} version={version} />;
   }
 
   return (

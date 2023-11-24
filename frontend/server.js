@@ -83,8 +83,6 @@ app
       const month = req.query.m;
       const day = req.query.d;
 
-      console.log({ year, month, day });
-
       // check whether the folder "data" exists
       const dirData = path.join(__dirname, "data");
       !fs.existsSync(dirData) && fs.mkdirSync(dirData);
@@ -103,9 +101,21 @@ app
 
       const filePath = path.join(dir, payload + ".json");
 
+      const enhancedMetadata = {
+        study: req.query.st === "undefined" ? null : req.query.st,
+        template: req.query.te === "undefined" ? null : req.query.te,
+        task: req.query.ta === "undefined" ? null : req.query.ta,
+        type: req.query.type === "guest" ? "GUEST" : "USER",
+        testVersion: req.query.v === "undefined" ? null : req.query.v,
+        publicId: req.query.upid === "undefined" ? null : req.query.upid,
+      };
+
       jsonfile.writeFile(
         filePath,
-        req.body,
+        {
+          ...req.body,
+          metadata: { ...req.body.metadata, ...enhancedMetadata },
+        },
         { flag: "a", EOL: ",\n" },
         function (err) {
           if (err) console.error(err);
@@ -154,6 +164,7 @@ app
                     ? null
                     : { connect: { id: req.query.us } },
                 type: req.query.type === "guest" ? "GUEST" : "USER",
+                testVersion: req.query.v === "undefined" ? null : req.query.v,
               },
             },
           }),
@@ -165,6 +176,10 @@ app
         status: 202,
         statusText: "it worked",
       });
+    });
+
+    server.post("*", (req, res) => {
+      return handle(req, res);
     });
 
     // Default catch-all handler to allow Next.js to handle all other routes

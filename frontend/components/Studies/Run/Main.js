@@ -5,7 +5,7 @@ import { StyledStudyRun } from "../../styles/StyledStudyPage";
 // have one landing page to run the study
 // the function should check what is the status of the user (new, ongoing)
 // and assign correct task to show
-export default function RunStudy({ user, study, task }) {
+export default function RunStudy({ user, study, task, version }) {
   const { flow } = study;
   const studiesInfo = user?.studiesInfo || {};
   let info = studiesInfo[study?.id]?.info;
@@ -108,6 +108,7 @@ export default function RunStudy({ user, study, task }) {
           user={user}
           study={study}
           task={task}
+          version={version}
           studiesInfo={studiesInfo}
           info={info}
         />

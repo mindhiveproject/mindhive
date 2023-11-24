@@ -2,7 +2,14 @@ import { useState } from "react";
 import TaskRun from "../../Tasks/Run/Main";
 import Prompt from "./Prompt/Main";
 
-export default function Manager({ user, study, task, studiesInfo, info }) {
+export default function Manager({
+  user,
+  study,
+  task,
+  version,
+  studiesInfo,
+  info,
+}) {
   const { path } = info;
   const currentStep = path[path.length - 1];
 
@@ -130,6 +137,7 @@ export default function Manager({ user, study, task, studiesInfo, info }) {
         user={user}
         study={study}
         id={task || currentStep?.componentID}
+        testVersion={version || currentStep?.testId}
         onFinish={onTaskFinish}
         isSavingData
       />
