@@ -1,41 +1,11 @@
-import { useQuery } from "@apollo/client";
-import { GET_STUDY_PARTICIPANTS } from "../../../../Queries/User";
-
 import Header from "./Header";
 import UserRowWrapper from "./UserRowWrapper";
 import GuestRowWrapper from "./GuestRowWrapper";
 
-export default function ParticipantsTable({ studyId }) {
-  const { data, loading, error } = useQuery(GET_STUDY_PARTICIPANTS, {
-    variables: { id: studyId },
-  });
-
-  const study = data?.study || { participants: [], guests: [] };
+export default function ParticipantsTable({ study, components }) {
   const { participants } = study;
   const { guests } = study;
   const allParticipants = [...participants, ...guests];
-
-  // find all tests in the study with recursive search
-  var components = [];
-  const findComponents = ({ flow }) => {
-    flow?.forEach((stage) => {
-      if (stage?.type === "my-node") {
-        components.push({
-          testId: stage?.testId,
-          name: stage?.name,
-          subtitle: stage?.subtitle,
-        });
-      }
-      if (stage?.type === "design") {
-        stage?.conditions?.forEach((condition) => {
-          findComponents({
-            flow: condition?.flow,
-          });
-        });
-      }
-    });
-  };
-  findComponents({ flow: study?.flow });
 
   return (
     <>
@@ -65,7 +35,7 @@ export default function ParticipantsTable({ studyId }) {
                   <GuestRowWrapper
                     key={num}
                     num={num}
-                    studyId={studyId}
+                    studyId={study?.id}
                     participant={participant}
                   />
                 );
@@ -74,7 +44,7 @@ export default function ParticipantsTable({ studyId }) {
                   <UserRowWrapper
                     key={num}
                     num={num}
-                    studyId={studyId}
+                    studyId={study?.id}
                     participant={participant}
                   />
                 );

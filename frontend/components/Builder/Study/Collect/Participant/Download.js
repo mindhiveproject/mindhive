@@ -7,7 +7,7 @@ import { jsonToCSV } from "react-papaparse";
 // A fetcher function to wrap the native fetch function and return the result of a call to url in json format
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export default function Download({ date, dataToken }) {
+export default function Download({ date, dataToken, components }) {
   // Set up SWR to run the fetcher function when calling "/api/staticdata"
   // There are 3 possible states: (1) loading when data is null (2) ready when the data is returned (3) error when there was an error fetching the data
   const [year, month, day] = date.split("-");
@@ -31,7 +31,21 @@ export default function Download({ date, dataToken }) {
   }
   // aggregate all data together
   const rows = results
-    .map((result) => result?.data)
+    .filter((result) => result?.data)
+    .map((result) =>
+      result?.data.map((line) => ({
+        ...line,
+        url: JSON.stringify(line?.url),
+        meta: JSON.stringify(line?.meta),
+        ...result?.metadata,
+        subtitle: components
+          .filter((c) => c?.testId === result?.metadata?.testVersion)
+          .map((c) => c?.subtitle),
+        condition: components
+          .filter((c) => c?.testId === result?.metadata?.testVersion)
+          .map((c) => c?.conditionLabel),
+      }))
+    )
     .reduce((a, b) => a.concat(b), []);
 
   const download = () => {

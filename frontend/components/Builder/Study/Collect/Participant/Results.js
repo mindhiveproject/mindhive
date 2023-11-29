@@ -7,46 +7,54 @@ import Row from "./Row";
 // https://vercel.com/guides/loading-static-file-nextjs-api-route
 // https://swr.vercel.app/
 
-export default function ParticipantResults({ query, studyId, participantId }) {
-    const dataToken = query?.data;
+export default function ParticipantResults({
+  query,
+  study,
+  components,
+  participantId,
+}) {
+  const dataToken = query?.data;
 
-    const { data: results } = useQuery(GET_PARTICIPANT_RESULTS, { 
-        variables: { studyId: studyId, participantId: participantId }
-    });
+  const { data: results } = useQuery(GET_PARTICIPANT_RESULTS, {
+    variables: { studyId: study?.id, participantId: participantId },
+  });
 
-    const datasets = results?.datasets || [];
+  const datasets = results?.datasets || [];
 
-    if(dataToken) {
-        return <Dataset dataToken={dataToken} />
-    }
+  if (dataToken) {
+    return <Dataset dataToken={dataToken} />;
+  }
 
-    return <div>
-        <h2>Participant results</h2>
+  return (
+    <div>
+      <h2>Participant results</h2>
 
-        <div className="resultItem">
-            <div>Study</div>
-            <div>Task title</div>
-            <div>Task subtitle</div>
-            <div>Task ID</div>
-            <div>Created</div>
-            <div>Updated</div>
-            <div>Data policy</div>
-            <div>Payload type</div>
-            <div>Is full data?</div>
-            <div># Files</div>
-            <div># Partial uploads</div>
-            <div>Data analysis</div>
-            <div></div>
-            <div></div>
-        </div>
+      <div className="resultItem">
+        <div>Study</div>
+        <div>Task title</div>
+        <div>Task subtitle</div>
+        <div>Task ID</div>
+        <div>Created</div>
+        <div>Updated</div>
+        <div>Data policy</div>
+        <div>Payload type</div>
+        <div>Is full data?</div>
+        <div># Files</div>
+        <div># Partial uploads</div>
+        <div>Data analysis</div>
+        <div></div>
+        <div></div>
+      </div>
 
-        {datasets?.map(result => 
-            <Row 
-                key={result?.token}
-                studyId={studyId} 
-                participantId={participantId}
-                result={result} 
-            />
-        )}
+      {datasets?.map((result) => (
+        <Row
+          key={result?.token}
+          studyId={study?.id}
+          participantId={participantId}
+          result={result}
+          components={components}
+        />
+      ))}
     </div>
+  );
 }

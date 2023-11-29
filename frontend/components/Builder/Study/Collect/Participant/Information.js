@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_PARTICIPANT } from "../../../../Queries/User";
 
-export default function ParticipantInformation({ studyId, participantId }) {
+export default function ParticipantInformation({ study, participantId }) {
   const { data: participant } = useQuery(GET_PARTICIPANT, {
     variables: { id: participantId },
   });

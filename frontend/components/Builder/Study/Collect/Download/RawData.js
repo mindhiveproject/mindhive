@@ -30,6 +30,9 @@ export default function DownloadRawData({ slug, fileDirs, components }) {
           subtitle: components
             .filter((c) => c?.testId === result?.metadata?.testVersion)
             .map((c) => c?.subtitle),
+          condition: components
+            .filter((c) => c?.testId === result?.metadata?.testVersion)
+            .map((c) => c?.conditionLabel),
         }))
       )
       .reduce((a, b) => a.concat(b), []);

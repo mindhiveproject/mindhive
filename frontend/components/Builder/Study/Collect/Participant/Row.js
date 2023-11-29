@@ -1,7 +1,12 @@
 import moment from "moment";
 import Download from "./Download";
 
-export default function ResultRow({ studyId, participantId, result }) {
+export default function ResultRow({
+  studyId,
+  participantId,
+  result,
+  components,
+}) {
   return (
     <div className="resultItem">
       <div>{result?.study?.title}</div>
@@ -17,7 +22,11 @@ export default function ResultRow({ studyId, participantId, result }) {
       <div># Partial uploads</div>
       <div>Data analysis</div>
       <div>
-        <Download date={result?.date} dataToken={result?.token} />
+        <Download
+          date={result?.date}
+          dataToken={result?.token}
+          components={components}
+        />
       </div>
       <div></div>
     </div>
