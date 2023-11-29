@@ -10,6 +10,7 @@ import Link from "next/link";
 import { SIGNIN_MUTATION } from "../Mutations/User";
 import { CURRENT_USER_QUERY } from "../Queries/User";
 import LoginWithGoogle from "./GoogleLogin";
+import StyledAuth from "../styles/StyledAuth";
 
 export default function Login({ redirectType, redirectTo }) {
   const { t } = useTranslation("account");
@@ -62,41 +63,43 @@ export default function Login({ redirectType, redirectTo }) {
   }
 
   return (
-    <StyledForm method="POST" onSubmit={handleSubmit}>
-      <h1>{t("login.login")}</h1>
-      <DisplayError error={error} />
-      <fieldset>
-        <label htmlFor="email">
-          {t("common.email")}
-          <input
-            type="email"
-            name="email"
-            autoComplete="email"
-            value={inputs.email}
-            onChange={handleChange}
-          />
-        </label>
+    <StyledAuth>
+      <StyledForm method="POST" onSubmit={handleSubmit}>
+        <h1>{t("login.login")}</h1>
+        <DisplayError error={error} />
+        <fieldset>
+          <label htmlFor="email">
+            {t("common.email")}
+            <input
+              type="email"
+              name="email"
+              autoComplete="email"
+              value={inputs.email}
+              onChange={handleChange}
+            />
+          </label>
 
-        <label htmlFor="password">
-          {t("login.password")}
-          <input
-            type="password"
-            name="password"
-            autoComplete="password"
-            value={inputs.password}
-            onChange={handleChange}
-          />
-        </label>
+          <label htmlFor="password">
+            {t("login.password")}
+            <input
+              type="password"
+              name="password"
+              autoComplete="password"
+              value={inputs.password}
+              onChange={handleChange}
+            />
+          </label>
 
-        <button type="submit">{t("login.login")}</button>
-      </fieldset>
+          <button type="submit">{t("login.login")}</button>
+        </fieldset>
 
-      <LoginWithGoogle />
-      <div className="forgotLink">
-        <span>
-          <Link href="/login/requestreset">Forgot your password?</Link>
-        </span>
-      </div>
-    </StyledForm>
+        <LoginWithGoogle />
+        <div className="forgotLink">
+          <span>
+            <Link href="/login/requestreset">Forgot your password?</Link>
+          </span>
+        </div>
+      </StyledForm>
+    </StyledAuth>
   );
 }

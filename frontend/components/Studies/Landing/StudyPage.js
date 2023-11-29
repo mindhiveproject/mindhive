@@ -9,12 +9,14 @@ import StudyInfo from "./StudyInfo";
 import UserPath from "./UserPath";
 
 export default function StudyPage({ query, user, study, isDashboard }) {
-
   // check whether the user is the study author or is among collaborators
-  const isAuthor = study?.author?.id === user?.id || 
-    study?.collaborators?.map(c => c?.id).includes(user?.id);
+  const isAuthor =
+    study?.author?.id === user?.id ||
+    study?.collaborators?.map((c) => c?.id).includes(user?.id);
   // check whether the user joined the study before
-  const hasJoined = user?.participantIn?.map(study => study?.id).includes(study?.id);
+  const hasJoined = user?.participantIn
+    ?.map((study) => study?.id)
+    .includes(study?.id);
 
   // check which path the user has taken
   const studiesInfo = user?.studiesInfo || {};
@@ -51,50 +53,46 @@ export default function StudyPage({ query, user, study, isDashboard }) {
         </div>
 
         <div className="studyContent">
-
           {hasJoined ? (
-              <UserPath 
-                query={query}
-                user={user}
-                study={study}
-                isDashboard={isDashboard}
-                path={path} 
-              />
-            ) : (
-              <>
-                { isAuthor ?
-                  <Link
-                    href={{
-                      pathname: `/join/details`,
-                      query: { 
-                        id: study?.id,
-                        step: `select`,
-                        guest: `true`,
-                       },
-                    }}
-                  >
-                    <div className="controlBtns">
-                      <button>Participate as a guest</button>
-                    </div>
-                  </Link>
-                 :
-                  <Link
-                    href={{
-                      pathname: `/join/select`,
-                      query: { id: study?.id },
-                    }}
-                  >
-                    <div className="controlBtns">
-                      <button>Participate</button>
-                    </div>
-                  </Link>
-               }
-              </>
-            )}
-
+            <UserPath
+              query={query}
+              user={user}
+              study={study}
+              isDashboard={isDashboard}
+              path={path}
+            />
+          ) : (
+            <>
+              {isAuthor ? (
+                <Link
+                  href={{
+                    pathname: `/join/details`,
+                    query: {
+                      id: study?.id,
+                      step: `select`,
+                      guest: `true`,
+                    },
+                  }}
+                >
+                  <div className="controlBtns">
+                    <button>Participate as a guest</button>
+                  </div>
+                </Link>
+              ) : (
+                <Link
+                  href={{
+                    pathname: `/join/select`,
+                    query: { id: study?.id },
+                  }}
+                >
+                  <div className="controlBtns">
+                    <button>Participate</button>
+                  </div>
+                </Link>
+              )}
+            </>
+          )}
         </div>
-        
-
       </div>
     </StyledStudyPage>
   );

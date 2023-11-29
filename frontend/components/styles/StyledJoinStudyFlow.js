@@ -33,6 +33,7 @@ export const StyledWrapper = styled.div`
     }
   }
   .main {
+    margin: 0 auto;
   }
   h1 {
     font-family: Lato;

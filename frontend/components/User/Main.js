@@ -25,12 +25,8 @@ export default function PublicUserPage({ id }) {
     (l) => l.value === user?.language
   )[0];
 
-  console.log({ language });
-
   const isFollowedByMe = user?.followedBy?.map((p) => p.id).includes(me?.id);
   const isMe = user?.id === me?.id;
-
-  console.log({ user });
 
   return (
     <StyledUserPage>

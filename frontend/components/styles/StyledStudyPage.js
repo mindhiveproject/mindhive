@@ -13,6 +13,13 @@ export const StyledStudyPage = styled.div`
   max-width: 1200px;
   min-height: 800px;
 
+  hr {
+    height: 2px;
+    border-width: 0;
+    color: lightgray;
+    background-color: lightgray;
+  }
+
   .studyContent {
     display: grid;
     width: 100%;

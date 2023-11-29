@@ -100,7 +100,6 @@ export default function Manager({
   };
 
   const findNextStep = () => {
-    console.log("Finding the next step");
     const { flow } = study;
 
     const nextStep = getNextStep({
@@ -109,8 +108,6 @@ export default function Manager({
       path,
       nextStep: undefined,
     });
-
-    console.log({ nextStep });
 
     return nextStep;
   };

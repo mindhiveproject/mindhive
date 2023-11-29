@@ -95,7 +95,7 @@ export default function RoleSignup(query) {
   }
 
   return (
-    <div>
+    <StyledAuth>
       <h1>Sign up as a {role}</h1>
       <Form
         role={role}
@@ -106,6 +106,6 @@ export default function RoleSignup(query) {
         loading={loading}
         error={error}
       />
-    </div>
+    </StyledAuth>
   );
 }

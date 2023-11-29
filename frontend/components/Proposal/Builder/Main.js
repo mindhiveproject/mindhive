@@ -32,13 +32,11 @@ export default function ProposalBuilder({
   const [card, setCard] = useState(null);
 
   const openCard = (card) => {
-    console.log({ card });
     setCard(card);
     setPage("card");
   };
 
   const closeCard = async ({ cardId, lockedByUser }) => {
-    console.log({ cardId, lockedByUser });
     if (cardId && lockedByUser) {
       // unlock the card
       await updateEdit({
@@ -65,7 +63,6 @@ export default function ProposalBuilder({
         animation="overlay"
         icon="labeled"
         // onHide={() => {
-        //   console.log({ card });
         //   closeCard({
         //     cardId: card?.id,
         //     lockedByUser: card?.isEditedBy?.username === user?.username,

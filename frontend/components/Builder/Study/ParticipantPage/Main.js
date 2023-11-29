@@ -1,6 +1,9 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { customAlphabet } from "nanoid";
+const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 4);
 
 import useForm from "../../../../lib/useForm";
 
@@ -36,6 +39,20 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
     useForm({
       ...study,
     });
+
+  useEffect(() => {
+    function prepareStudyToClone() {
+      const rand = nanoid(4);
+      handleMultipleUpdate({
+        image: null,
+        title: `Clone of ${inputs?.title}-${rand}`,
+        slug: `${inputs?.slug}-${rand}`,
+      });
+    }
+    if (area === "cloneofstudy") {
+      prepareStudyToClone();
+    }
+  }, [area]);
 
   const handleStudyChange = (props) => {
     setHasStudyChanged(true);

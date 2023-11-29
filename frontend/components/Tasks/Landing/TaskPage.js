@@ -6,7 +6,6 @@ import { StyledContent } from "../../styles/StyledTaskPage";
 import { useState } from "react";
 
 export default function TaskPage({ user, task }) {
-  console.log({ task });
   const [active, setActive] = useState(false);
 
   const taskType = task?.taskType?.toLowerCase();

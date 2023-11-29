@@ -38,7 +38,6 @@ const Section = ({
   const [deleteCard, deleteCardState] = useMutation(DELETE_CARD);
 
   const onUpdateCard = (payload, sectionId, position, isDiffColumn) => {
-    console.log({ payload });
     const { id, title, content, isEditedBy, assignedTo, settings } = payload;
     updateCard({
       variables: {
@@ -47,7 +46,6 @@ const Section = ({
         position,
       },
       update: (cache, { data: { updateProposalCard } }) => {
-        console.log({ id, sectionId, position });
         // Read the data from the cache for this query.
         const data = cache.readQuery({
           query: PROPOSAL_QUERY,

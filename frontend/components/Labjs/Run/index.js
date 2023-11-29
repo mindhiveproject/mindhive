@@ -17,7 +17,6 @@ export default function ExperimentWindow({
   onFinish,
   isSavingData,
 }) {
-  console.log({ user, study, task });
   // whether to show the plugin is decided by the study parameter
   const isPlugin = study?.settings?.useExternalDevices;
   // check the type of the user

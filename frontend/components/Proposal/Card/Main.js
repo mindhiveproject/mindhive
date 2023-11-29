@@ -36,8 +36,6 @@ export default function ProposalCard({
 
   const proposalCard = data?.proposalCard || {};
 
-  // console.log({ proposalCard });
-
   // check whether the card is locked - after 1 hour it is allowed to edit
   const releaseTime =
     new Date(proposalCard?.lastTimeEdited)?.getTime() + 60 * 60 * 1000;
@@ -130,7 +128,6 @@ export default function ProposalCard({
         },
       });
       setLockedByUser(true);
-      console.log({ res });
     }
   };
 

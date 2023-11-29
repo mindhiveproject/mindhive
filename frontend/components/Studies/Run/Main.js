@@ -87,7 +87,7 @@ export default function RunStudy({ user, study, task, version }) {
     }
   };
 
-  // TODO locate where the user should be
+  // initiate a new path if there is no information about the user path
   if (!info && !task) {
     info = {};
     info.path = [];
@@ -99,7 +99,55 @@ export default function RunStudy({ user, study, task, version }) {
     info.path = info.path.concat(nextStep);
   }
 
-  console.log({ info });
+  // find any updates in the current structure of the study
+  let blockWithNextTask = [];
+  const findTask = ({ taskId, flow }) => {
+    for (let stage of flow) {
+      if (stage?.type === "my-node") {
+        if (stage?.id === taskId) {
+          blockWithNextTask.push(...flow);
+        }
+      }
+      if (stage?.type === "design") {
+        stage?.conditions?.forEach((condition) => {
+          findTask({
+            taskId: taskId,
+            flow: condition?.flow,
+          });
+        });
+      }
+    }
+  };
+  const comparePathWithFlow = ({ path, flow }) => {
+    let nextTask;
+    const lastTaskId = path[path?.length - 2]?.id;
+    // search for the lastTaskId in the study flow
+    findTask({
+      taskId: lastTaskId,
+      flow: flow,
+    });
+    // get the index of the lastTaskId
+    const indexLastTask = blockWithNextTask
+      .map((task) => task?.id)
+      .indexOf(lastTaskId);
+    if (blockWithNextTask[indexLastTask + 1]) {
+      nextTask = blockWithNextTask[indexLastTask + 1];
+    }
+    return nextTask;
+  };
+
+  if (info && info?.path) {
+    const { path } = info;
+    const nextTaskType = path[path?.length - 1]?.type;
+    if (nextTaskType === "end") {
+      const nextStep = comparePathWithFlow({ path: path, flow: study?.flow });
+      info.path = info.path.concat({
+        ...nextStep,
+        type: "task",
+        timestampStarted: Date.now(),
+      });
+    }
+  }
 
   return (
     <StyledStudyRun>
