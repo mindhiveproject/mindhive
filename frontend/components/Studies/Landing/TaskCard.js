@@ -33,6 +33,7 @@ export default function TaskCard({ user, study, step }) {
     <StyledTaskCard taskType={task?.taskType}>
       <div className="cardInfo">
         <h2>{task.title}</h2>
+        {/* <p>{step?.testId}</p> */}
         <p>
           {task.settings &&
             task.settings.duration &&

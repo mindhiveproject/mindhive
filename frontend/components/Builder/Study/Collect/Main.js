@@ -34,7 +34,6 @@ export default function Collect({ query, user, tab, toggleSidebar }) {
         });
       }
       if (stage?.type === "design") {
-        console.log({ stage });
         stage?.conditions?.forEach((condition) => {
           findComponents({
             flow: condition?.flow,

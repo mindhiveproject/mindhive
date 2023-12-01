@@ -8,12 +8,6 @@ import DataUsageForStudent from "./DataUsage/Student";
 
 import { UPDATE_DATASET } from "../../../Mutations/Dataset";
 
-import { UPDATE_USER_STUDY_INFO } from "../../../Mutations/User";
-import { UPDATE_GUEST_STUDY_INFO } from "../../../Mutations/Guest";
-
-import { CURRENT_USER_QUERY } from "../../../Queries/User";
-import { GET_GUEST } from "../../../Queries/Guest";
-
 export default function Prompt({
   user,
   study,
@@ -40,18 +34,6 @@ export default function Prompt({
     ignoreResults: true,
   });
 
-  const [updateUserStudyInfo] = useMutation(UPDATE_USER_STUDY_INFO, {
-    variables: { id: user?.id },
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
-  });
-
-  const [updateGuestStudyInfo] = useMutation(UPDATE_GUEST_STUDY_INFO, {
-    variables: { id: user?.id },
-    refetchQueries: [
-      { query: GET_GUEST, variables: { publicId: user?.publicId } },
-    ],
-  });
-
   const closeDataUseQuestion = () => {
     if (!dataUse) {
       alert("Please answer the question first");
@@ -63,54 +45,10 @@ export default function Prompt({
   const isStudent = user?.permissions?.map((p) => p.name).includes("STUDENT");
 
   const saveResponsesAndProceed = async ({ proceedToNextTask }) => {
-    // save responses
+    // save responses by updating the dataset
     await updateDataset({ variables: { token: token, dataPolicy: dataUse } });
 
-    const { path } = info;
-    let updatedPath = [...path];
-
-    // update the previous task of the path with information that it is finished
-    const prevTask = updatedPath.pop();
-    updatedPath = updatedPath.concat({
-      ...prevTask,
-      finished: true,
-      timestampFinished: Date.now(),
-    });
-
-    // update the path with the information about the next task
-    if (nextStep) {
-      if (nextStep.type === "my-node") {
-        updatedPath = updatedPath.concat({
-          ...nextStep,
-          type: "task",
-        });
-      } else {
-        updatedPath = updatedPath.concat(nextStep);
-      }
-    } else {
-      updatedPath = updatedPath.concat({ type: "end" });
-    }
-
-    const updatedStudiesInfo = {
-      ...studiesInfo,
-      [study?.id]: {
-        ...studiesInfo[study?.id],
-        info: { path: updatedPath },
-      },
-    };
-
-    // save user information
-    if (user.type === "GUEST") {
-      await updateGuestStudyInfo({
-        variables: { studiesInfo: updatedStudiesInfo },
-      });
-    } else {
-      await updateUserStudyInfo({
-        variables: { studiesInfo: updatedStudiesInfo },
-      });
-    }
-
-    // proceed;
+    // proceed to the next task or to the main page
     if (proceedToNextTask) {
       router.reload();
     } else {
