@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-import UserWrapper from "./UserWrapper";
-import GuestWrapper from "./GuestWrapper";
+import UserWrapper from "./StudyInfo/UserWrapper";
+import GuestWrapper from "./StudyInfo/GuestWrapper";
 
-import ParticipantResults from "./Results";
+import ParticipantResults from "./Results/Main";
 
 export default function ParticipantPage({
   query,

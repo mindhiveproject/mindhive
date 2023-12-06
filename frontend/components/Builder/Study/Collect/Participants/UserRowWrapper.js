@@ -11,5 +11,5 @@ export default function UserRowWrapper({ studyId, participant }) {
 
   const profile = data?.profile || {};
 
-  return <Row studyId={studyId} participant={profile} />;
+  return <Row studyId={studyId} participant={profile} type="user" />;
 }

@@ -24,6 +24,7 @@ export const GET_PARTICIPANT_RESULTS = gql`
       dataPolicy
       info
       isCompleted
+      isIncluded
       createdAt
       completedAt
     }
@@ -53,6 +54,7 @@ export const GET_USER_RESULTS = gql`
         dataPolicy
         info
         isCompleted
+        isIncluded
         createdAt
         completedAt
       }
@@ -83,6 +85,7 @@ export const GET_GUEST_RESULTS = gql`
         dataPolicy
         info
         isCompleted
+        isIncluded
         createdAt
         completedAt
       }

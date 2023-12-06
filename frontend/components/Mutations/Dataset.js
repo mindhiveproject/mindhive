@@ -38,3 +38,12 @@ export const DELETE_DATASET = gql`
     }
   }
 `;
+
+// change the status of the dataset for data analysis
+export const CHANGE_DATASET_STATUS = gql`
+  mutation CHANGE_DATASET_STATUS($token: String!, $isIncluded: Boolean) {
+    updateDataset(where: { token: $token }, data: { isIncluded: $isIncluded }) {
+      id
+    }
+  }
+`;

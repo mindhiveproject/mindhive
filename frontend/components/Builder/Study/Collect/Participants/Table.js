@@ -20,14 +20,12 @@ export default function ParticipantsTable({ study, components }) {
           <div className="tableHeader">
             <p>Participant ID</p>
             <p>Public readable ID</p>
-            <p>Duration</p>
+            <p>Started</p>
             <p>Number of completed tasks</p>
-            <p>Condition name</p>
-
+            <p>Condition</p>
             <p>Consent decision</p>
-            <p>Timestamp of consent decision</p>
             <p>Account</p>
-            <p>Include in analysis</p>
+            <p>Include all data in analysis</p>
           </div>
           <div>
             {allParticipants.map((participant, num) => {

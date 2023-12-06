@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_GUEST_PARTICIPANT } from "../../../../Queries/User";
+import { GET_GUEST_PARTICIPANT } from "../../../../../Queries/User";
 
 import ParticipantInformation from "./Information";
 

@@ -804,6 +804,7 @@ export const StyledCollectPage = styled.div`
       .downloadByComponent {
         display: grid;
         grid-gap: 10px;
+        cursor: pointer;
       }
       .buttons {
         display: grid;

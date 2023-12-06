@@ -1,6 +1,25 @@
+import moment from "moment";
 import Link from "next/link";
+import ChangeDatasetStatuses from "./ChangeStatuses";
 
-export default function Row({ studyId, participant }) {
+export default function Row({ studyId, participant, type }) {
+  const studyInfo = (participant?.studiesInfo &&
+    participant?.studiesInfo[studyId]) || { info: { path: [] } };
+  const { info } = studyInfo;
+  const { path } = info;
+
+  // when the participant started participating in the study
+  let started;
+  // which conditions was the participant assigned to
+  let condition;
+  if (path.length) {
+    started = path[0]?.timestampFinished;
+    condition = path
+      .filter((stage) => stage?.conditionLabel)
+      .map((stage) => stage?.conditionLabel)
+      .join(", ");
+  }
+
   return (
     <div className="tableRow">
       <Link
@@ -14,20 +33,29 @@ export default function Row({ studyId, participant }) {
           },
         }}
       >
-        <p>
+        <div>
           <a>{participant?.publicId}</a>
-        </p>
+        </div>
       </Link>
 
-      <p>{participant?.publicReadableId}</p>
-      <p>
+      <div>{participant?.publicReadableId}</div>
+      <div>{started && moment(started).format("MMMM D, YY, h:mm:ss")}</div>
+
+      <div>
         {
           participant?.datasets?.filter((dataset) => dataset?.isCompleted)
             .length
         }
-      </p>
+      </div>
+      <div>{condition}</div>
+      <div></div>
 
-      <p>{participant?.type}</p>
+      <div>{participant?.type}</div>
+      <ChangeDatasetStatuses
+        participantId={participant?.publicId}
+        datasets={participant?.datasets}
+        type={type}
+      />
     </div>
   );
 }

@@ -1,8 +1,7 @@
 import { useQuery } from "@apollo/client";
-import { GET_PARTICIPANT_RESULTS } from "../../../../Queries/Result";
-import Dataset from "./Dataset";
+import { GET_PARTICIPANT_RESULTS } from "../../../../../Queries/Result";
 
-import Download from "./Download";
+import Dataset from "./Dataset";
 
 // https://vercel.com/guides/loading-static-file-nextjs-api-route
 // https://swr.vercel.app/
@@ -43,10 +42,12 @@ export default function ParticipantResults({
       </div>
 
       {datasets?.map((dataset) => (
-        <Download
+        <Dataset
           key={dataset?.token}
           dataset={dataset}
           components={components}
+          studyId={study?.id}
+          participantId={participantId}
         />
       ))}
     </div>

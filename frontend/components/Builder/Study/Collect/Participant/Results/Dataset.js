@@ -6,11 +6,17 @@ import useSWR from "swr";
 
 import { saveAs } from "file-saver";
 import { jsonToCSV } from "react-papaparse";
+import ChangeDatasetStatus from "./ChangeStatus";
 
 // A fetcher function to wrap the native fetch function and return the result of a call to url in json format
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export default function Download({ dataset, components }) {
+export default function Dataset({
+  studyId,
+  participantId,
+  dataset,
+  components,
+}) {
   const { date, token } = dataset;
   // Set up SWR to run the fetcher function when calling "/api/staticdata"
   // There are 3 possible states: (1) loading when data is null (2) ready when the data is returned (3) error when there was an error fetching the data
@@ -86,7 +92,11 @@ export default function Download({ dataset, components }) {
       <div>{moment(dataset?.completedAt).format("MMMM D, YY, h:mm:ss")}</div>
       <div>{condition}</div>
       <div>{dataset?.dataPolicy}</div>
-      <div>{dataset?.isIncluded ? "Yes" : "No"}</div>
+      <ChangeDatasetStatus
+        studyId={studyId}
+        participantId={participantId}
+        dataset={dataset}
+      />
       <div className="downloadArea" onClick={download}>
         <Icon color="teal" size="large" name="download" />
         <a>Download</a>
