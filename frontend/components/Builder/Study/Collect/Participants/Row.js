@@ -52,6 +52,7 @@ export default function Row({ studyId, participant, type }) {
 
       <div>{participant?.type}</div>
       <ChangeDatasetStatuses
+        studyId={studyId}
         participantId={participant?.publicId}
         datasets={participant?.datasets}
         type={type}

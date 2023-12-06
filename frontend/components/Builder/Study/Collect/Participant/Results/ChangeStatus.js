@@ -4,6 +4,7 @@ import { useMutation } from "@apollo/client";
 
 import { CHANGE_DATASET_STATUS } from "../../../../../Mutations/Dataset";
 import { GET_PARTICIPANT_RESULTS } from "../../../../../Queries/Result";
+import { GET_STUDY_PARTICIPANTS } from "../../../../../Queries/User";
 
 export default function ChangeDatasetStatus({
   studyId,
@@ -20,6 +21,12 @@ export default function ChangeDatasetStatus({
         variables: {
           studyId,
           participantId,
+        },
+      },
+      {
+        query: GET_STUDY_PARTICIPANTS,
+        variables: {
+          id: studyId,
         },
       },
     ],

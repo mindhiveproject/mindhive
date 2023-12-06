@@ -13,9 +13,15 @@ export default function Header({ study, slug, participants, components }) {
   // filter out the datasets with explicit disagreement for data sharing (data policy is "no")
   //   ?.filter((dataset) => dataset?.dataPolicy !== "no")
   const fileDirs =
-    study?.datasets?.map(
-      (dataset) => dataset?.date.replaceAll("-", "/") + "/" + dataset?.token
-    ) || [];
+    study?.datasets
+      ?.filter((dataset) => dataset?.isCompleted && dataset?.isIncluded)
+      .map(
+        (dataset) => dataset?.date.replaceAll("-", "/") + "/" + dataset?.token
+      ) || [];
+
+  const filteredDatasetTokens = study?.datasets
+    ?.filter((dataset) => dataset?.isCompleted && dataset?.isIncluded)
+    .map((dataset) => dataset?.token);
 
   const [keyword, setKeyword] = useState("");
 
@@ -74,20 +80,26 @@ export default function Header({ study, slug, participants, components }) {
         </div>
         <div className="downloadOptions">
           <h3>All data in one file</h3>
-          <DownloadSummaryData
-            by=""
-            study={study}
-            participantsInStudy={participants}
-            components={components}
-            datasets={study?.datasets || []}
-          />
+          {filteredDatasetTokens.length > 0 && (
+            <DownloadSummaryData
+              by=""
+              study={study}
+              participantsInStudy={participants}
+              components={components}
+              datasets={study?.datasets || []}
+              filteredDatasetTokens={filteredDatasetTokens}
+            />
+          )}
 
-          <DownloadSummaryData
-            by="by participant"
-            study={study}
-            participantsInStudy={participants}
-            datasets={study?.datasets || []}
-          />
+          {filteredDatasetTokens.length > 0 && (
+            <DownloadSummaryData
+              by="by participant"
+              study={study}
+              participantsInStudy={participants}
+              datasets={study?.datasets || []}
+              filteredDatasetTokens={filteredDatasetTokens}
+            />
+          )}
 
           {fileDirs.length > 0 && (
             <DownloadRawData
@@ -104,6 +116,7 @@ export default function Header({ study, slug, participants, components }) {
           components={components}
           participantsInStudy={participants}
           datasets={study?.datasets || []}
+          filteredDatasetTokens={filteredDatasetTokens}
         />
       </div>
       {/* <div className="searchArea">

@@ -851,7 +851,7 @@ export const StyledCollectPage = styled.div`
         display: grid;
         padding: 10px;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        grid-gap: 1rem;
+        grid-gap: 2rem;
         p {
           font-weight: bold;
         }
@@ -861,7 +861,7 @@ export const StyledCollectPage = styled.div`
         margin: 5px 0px;
         padding: 10px 10px;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        grid-gap: 1rem;
+        grid-gap: 2rem;
         background: white;
         align-items: center;
       }

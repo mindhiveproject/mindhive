@@ -211,6 +211,8 @@ export const GET_STUDY_PARTICIPANTS = gql`
           id
           slug
         }
+        isCompleted
+        isIncluded
         testVersion
         dataPolicy
       }

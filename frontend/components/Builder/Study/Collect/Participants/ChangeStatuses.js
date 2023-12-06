@@ -6,22 +6,33 @@ import { CHANGE_DATASET_STATUS } from "../../../../Mutations/Dataset";
 
 import { GET_USER_RESULTS } from "../../../../Queries/Result";
 import { GET_GUEST_RESULTS } from "../../../../Queries/Result";
+import { GET_STUDY_PARTICIPANTS } from "../../../../Queries/User";
 
 export default function ChangeDatasetStatuses({
+  studyId,
   participantId,
   datasets,
   type,
 }) {
-  const areIncluded = datasets?.map((dataset) => dataset?.isIncluded) || [];
+  const areIncluded =
+    datasets
+      ?.filter((dataset) => dataset?.isCompleted)
+      .map((dataset) => dataset?.isIncluded) || [];
   const allIncluded = areIncluded.length && areIncluded?.every((v) => !!v);
 
-  const queryToRefetch =
+  const queriesToRefetch =
     type === "user"
-      ? { query: GET_USER_RESULTS, variables: { id: participantId } }
-      : { query: GET_GUEST_RESULTS, variables: { id: participantId } };
+      ? [
+          { query: GET_USER_RESULTS, variables: { id: participantId } },
+          { query: GET_STUDY_PARTICIPANTS, variables: { id: studyId } },
+        ]
+      : [
+          { query: GET_GUEST_RESULTS, variables: { id: participantId } },
+          { query: GET_STUDY_PARTICIPANTS, variables: { id: studyId } },
+        ];
 
   const [changeStatus] = useMutation(CHANGE_DATASET_STATUS, {
-    refetchQueries: [queryToRefetch],
+    refetchQueries: queriesToRefetch,
   });
 
   const change = () => {

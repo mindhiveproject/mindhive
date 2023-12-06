@@ -10,62 +10,65 @@ export default function DownloadSummaryData({
   participantsInStudy,
   components,
   datasets,
+  filteredDatasetTokens,
 }) {
   const [loading, setLoading] = useState(false);
 
   // pre-process and aggregate data on the subject level
   const process = ({ data }) => {
-    const dataByTask = data.map((result) => {
-      const userID =
-        result?.user?.publicReadableId ||
-        result?.user?.publicId ||
-        result?.user?.id ||
-        "john-doe";
+    const dataByTask = data
+      .filter((result) => filteredDatasetTokens?.includes(result?.metadataId))
+      .map((result) => {
+        const userID =
+          result?.user?.publicReadableId ||
+          result?.user?.publicId ||
+          result?.user?.id ||
+          "john-doe";
 
-      const guestID =
-        result?.guest?.publicReadableId ||
-        result?.guest?.publicId ||
-        result?.guest?.id ||
-        "john-doe";
+        const guestID =
+          result?.guest?.publicReadableId ||
+          result?.guest?.publicId ||
+          result?.guest?.id ||
+          "john-doe";
 
-      const participantId = result?.guest ? guestID : userID;
-      const classCode =
-        result?.user?.studentIn?.map((c) => c?.code) || undefined;
-      const userType = result?.guest ? "guest" : "user";
+        const participantId = result?.guest ? guestID : userID;
+        const classCode =
+          result?.user?.studentIn?.map((c) => c?.code) || undefined;
+        const userType = result?.guest ? "guest" : "user";
 
-      // record the between-subjects condition of the participant
-      const personalID =
-        (result?.guest ? result?.guest?.publicId : result?.user?.publicId) ||
-        "";
-      const [participant] = participantsInStudy.filter(
-        (participant) => participant?.publicId === personalID
-      );
-      let condition;
-      if (participant?.studiesInfo?.[study?.id]) {
-        condition = participant?.studiesInfo[study?.id]?.info?.path
-          .filter((stage) => stage?.conditionLabel)
-          .map((stage) => stage.conditionLabel)[0];
-      }
-      const [dataPolicy] = datasets
-        .filter((d) => d?.token === result?.metadataId)
-        .map((d) => d?.dataPolicy);
+        // record the between-subjects condition of the participant
+        const personalID =
+          (result?.guest ? result?.guest?.publicId : result?.user?.publicId) ||
+          "";
+        const [participant] = participantsInStudy.filter(
+          (participant) => participant?.publicId === personalID
+        );
+        let condition;
+        if (participant?.studiesInfo?.[study?.id]) {
+          condition = participant?.studiesInfo[study?.id]?.info?.path
+            .filter((stage) => stage?.conditionLabel)
+            .map((stage) => stage.conditionLabel)[0];
+        }
+        const [dataPolicy] = datasets
+          .filter((d) => d?.token === result?.metadataId)
+          .map((d) => d?.dataPolicy);
 
-      return {
-        participant: participantId,
-        classCode,
-        userType,
-        study: result.study.title,
-        task: result.task?.title,
-        testVersion: result.testVersion,
-        subtitle: components
-          ?.filter((c) => c?.testId === result.testVersion)
-          .map((c) => c?.subtitle),
-        timestamp: result.createdAt,
-        condition,
-        dataPolicy,
-        ...result.data,
-      };
-    });
+        return {
+          participant: participantId,
+          classCode,
+          userType,
+          study: result.study.title,
+          task: result.task?.title,
+          testVersion: result.testVersion,
+          subtitle: components
+            ?.filter((c) => c?.testId === result.testVersion)
+            .map((c) => c?.subtitle),
+          timestamp: result.createdAt,
+          condition,
+          dataPolicy,
+          ...result.data,
+        };
+      });
 
     if (by === "by participant") {
       const allParticipants = dataByTask.map((row) => row?.participant);
