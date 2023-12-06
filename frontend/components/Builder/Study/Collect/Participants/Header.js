@@ -80,7 +80,7 @@ export default function Header({ study, slug, participants, components }) {
         </div>
         <div className="downloadOptions">
           <h3>All data in one file</h3>
-          {filteredDatasetTokens.length > 0 && (
+          {filteredDatasetTokens?.length > 0 && (
             <DownloadSummaryData
               by=""
               study={study}
@@ -91,7 +91,7 @@ export default function Header({ study, slug, participants, components }) {
             />
           )}
 
-          {filteredDatasetTokens.length > 0 && (
+          {filteredDatasetTokens?.length > 0 && (
             <DownloadSummaryData
               by="by participant"
               study={study}
@@ -101,7 +101,7 @@ export default function Header({ study, slug, participants, components }) {
             />
           )}
 
-          {fileDirs.length > 0 && (
+          {fileDirs?.length > 0 && (
             <DownloadRawData
               slug={slug}
               fileDirs={fileDirs}
