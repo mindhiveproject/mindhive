@@ -259,6 +259,7 @@ export const GET_USER_PARTICIPANT = gql`
       id
       publicId
       publicReadableId
+      info
       generalInfo
       studiesInfo
       participantIn {
@@ -277,6 +278,7 @@ export const GET_GUEST_PARTICIPANT = gql`
       id
       publicId
       publicReadableId
+      info
       generalInfo
       studiesInfo
       participantIn {

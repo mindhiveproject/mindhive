@@ -3,7 +3,8 @@ import moment from "moment";
 export default function ParticipantInformation({ study, participant, type }) {
   const studyInfo =
     (participant?.studiesInfo && participant?.studiesInfo[study?.id]) || {};
-  const generalInfo = participant?.generalInfo || {};
+  const generalInfo =
+    { ...participant?.generalInfo, ...participant?.info } || {};
 
   return (
     <div>
@@ -51,6 +52,14 @@ export default function ParticipantInformation({ study, participant, type }) {
               </div>
             );
           }
+          if (key === "zipcode" && generalInfo.zipcode) {
+            return (
+              <div className="infoItem" key={key}>
+                <p>Zip code</p>
+                <p>{generalInfo[key]}</p>
+              </div>
+            );
+          }
           if (key === "bd" && generalInfo.bd) {
             return (
               <div className="infoItem" key={key}>
@@ -58,6 +67,14 @@ export default function ParticipantInformation({ study, participant, type }) {
                 <p>
                   {moment(parseInt(generalInfo[key])).format("MMMM D, YYYY")}
                 </p>
+              </div>
+            );
+          }
+          if (key === "age" && generalInfo.age) {
+            return (
+              <div className="infoItem" key={key}>
+                <p>Age</p>
+                <p>{generalInfo[key]}</p>
               </div>
             );
           }
