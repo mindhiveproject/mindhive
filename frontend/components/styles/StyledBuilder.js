@@ -784,6 +784,10 @@ export const StyledCollectPage = styled.div`
       border-radius: 4px;
       align-items: baseline;
 
+      a: hover {
+        cursor: pointer;
+      }
+
       .shareStudy {
         display: grid;
         align-items: baseline;

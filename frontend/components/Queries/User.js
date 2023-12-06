@@ -212,6 +212,7 @@ export const GET_STUDY_PARTICIPANTS = gql`
           slug
         }
         testVersion
+        dataPolicy
       }
       summaryResults {
         data
@@ -230,6 +231,7 @@ export const GET_STUDY_PARTICIPANTS = gql`
           title
         }
         testVersion
+        metadataId
         createdAt
       }
       participants {

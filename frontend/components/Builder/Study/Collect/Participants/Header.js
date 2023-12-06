@@ -10,10 +10,13 @@ import DownloadByComponent from "../Download/ByComponent";
 export default function Header({ study, slug, participants, components }) {
   const { origin } = absoluteUrl();
 
+  // filter out the datasets with explicit disagreement for data sharing (data policy is "no")
   const fileDirs =
-    study?.datasets?.map(
-      (dataset) => dataset?.date.replaceAll("-", "/") + "/" + dataset?.token
-    ) || [];
+    study?.datasets
+      ?.filter((dataset) => dataset?.dataPolicy !== "no")
+      .map(
+        (dataset) => dataset?.date.replaceAll("-", "/") + "/" + dataset?.token
+      ) || [];
 
   const [keyword, setKeyword] = useState("");
 
@@ -77,12 +80,14 @@ export default function Header({ study, slug, participants, components }) {
             study={study}
             participantsInStudy={participants}
             components={components}
+            datasets={study?.datasets || []}
           />
 
           <DownloadSummaryData
             by="by participant"
             study={study}
             participantsInStudy={participants}
+            datasets={study?.datasets || []}
           />
 
           {fileDirs.length > 0 && (
@@ -90,6 +95,7 @@ export default function Header({ study, slug, participants, components }) {
               slug={slug}
               fileDirs={fileDirs}
               components={components}
+              datasets={study?.datasets || []}
             />
           )}
         </div>
@@ -98,6 +104,7 @@ export default function Header({ study, slug, participants, components }) {
           study={study}
           components={components}
           participantsInStudy={participants}
+          datasets={study?.datasets || []}
         />
       </div>
       {/* <div className="searchArea">

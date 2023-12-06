@@ -4,7 +4,12 @@ import { Icon } from "semantic-ui-react";
 import { saveAs } from "file-saver";
 import { jsonToCSV } from "react-papaparse";
 
-export default function DownloadRawData({ slug, fileDirs, components }) {
+export default function DownloadRawData({
+  slug,
+  fileDirs,
+  components,
+  datasets,
+}) {
   const [loading, setLoading] = useState(false);
 
   const download = async () => {
@@ -33,6 +38,9 @@ export default function DownloadRawData({ slug, fileDirs, components }) {
           condition: components
             .filter((c) => c?.testId === result?.metadata?.testVersion)
             .map((c) => c?.conditionLabel),
+          dataPolicy: datasets
+            .filter((d) => d?.token === result?.metadata?.id)
+            .map((d) => d?.dataPolicy),
         }))
       )
       .reduce((a, b) => a.concat(b), []);

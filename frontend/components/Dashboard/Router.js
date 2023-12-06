@@ -41,9 +41,9 @@ export default function DashboardRouter({ query }) {
     return <Journals query={query} user={user} />;
   }
 
-  if (area === "chats") {
-    return <Chats query={query} user={user} />;
-  }
+  // if (area === "chats") {
+  //   return <Chats query={query} user={user} />;
+  // }
 
   if (area === "settings") {
     return <EditSettings query={query} user={user} />;

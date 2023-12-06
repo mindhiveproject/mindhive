@@ -154,7 +154,7 @@ export default function DashboardNavigation() {
           </StyledNavigationLink>
         </Link>
 
-        <Link href="/dashboard/chats">
+        {/* <Link href="/dashboard/chats">
           <StyledNavigationLink selected={area === "chats"}>
             <div>
               <svg
@@ -172,7 +172,7 @@ export default function DashboardNavigation() {
             </div>
             <div>Group chat</div>
           </StyledNavigationLink>
-        </Link>
+        </Link> */}
 
         {false && permissions?.includes("TEACHER") && (
           <Link href="/dashboard/analyze">
@@ -208,7 +208,7 @@ export default function DashboardNavigation() {
                 <div>Management</div>
               </StyledNavigationLink>
             </Link>
-            
+
             <Link href="/dashboard/proposal">
               <StyledNavigationLink selected={area === "proposal"}>
                 <div>
@@ -228,7 +228,7 @@ export default function DashboardNavigation() {
                 <div>Proposal</div>
               </StyledNavigationLink>
             </Link>
-            
+
             <Link href="/dashboard/tags">
               <StyledNavigationLink selected={area === "tags"}>
                 <div>

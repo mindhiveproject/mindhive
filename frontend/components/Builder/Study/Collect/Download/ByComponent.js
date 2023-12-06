@@ -12,6 +12,7 @@ export default function DownloadByComponent({
   study,
   components,
   participantsInStudy,
+  datasets,
 }) {
   const [selected, setSelected] = useState([]);
 
@@ -56,9 +57,17 @@ export default function DownloadByComponent({
       const [participant] = participantsInStudy.filter(
         (participant) => participant?.publicId === personalID
       );
-      const [condition] = participant?.studiesInfo[studyId]?.info?.path
-        .filter((stage) => stage?.conditionLabel)
-        .map((stage) => stage.conditionLabel);
+
+      let condition;
+      if (participant?.studiesInfo?.[study?.id]) {
+        condition = participant?.studiesInfo[study?.id]?.info?.path
+          .filter((stage) => stage?.conditionLabel)
+          .map((stage) => stage.conditionLabel)[0];
+      }
+
+      const [dataPolicy] = datasets
+        .filter((d) => d?.token === result?.metadataId)
+        .map((d) => d?.dataPolicy);
 
       return {
         participant: participantId,
@@ -72,6 +81,7 @@ export default function DownloadByComponent({
           .map((c) => c?.subtitle),
         timestamp: result.createdAt,
         condition,
+        dataPolicy,
         ...result.data,
       };
     });
@@ -95,6 +105,9 @@ export default function DownloadByComponent({
           condition: components
             .filter((c) => c?.testId === result?.metadata?.testVersion)
             .map((c) => c?.conditionLabel),
+          dataPolicy: datasets
+            .filter((d) => d?.token === result?.metadata?.id)
+            .map((d) => d?.dataPolicy),
         }))
       )
       .reduce((a, b) => a.concat(b), []);
