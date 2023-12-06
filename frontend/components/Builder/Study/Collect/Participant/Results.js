@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { GET_PARTICIPANT_RESULTS } from "../../../../Queries/Result";
 import Dataset from "./Dataset";
 
-import Row from "./Row";
+import Download from "./Download";
 
 // https://vercel.com/guides/loading-static-file-nextjs-api-route
 // https://swr.vercel.app/
@@ -34,24 +34,18 @@ export default function ParticipantResults({
         <div>Task title</div>
         <div>Task subtitle</div>
         <div>Task ID</div>
-        <div>Created</div>
-        <div>Updated</div>
+        <div>Started</div>
+        <div>Completed</div>
+        <div>Condition</div>
         <div>Data policy</div>
-        <div>Payload type</div>
-        <div>Is full data?</div>
-        <div># Files</div>
-        <div># Partial uploads</div>
         <div>Data analysis</div>
-        <div></div>
         <div></div>
       </div>
 
-      {datasets?.map((result) => (
-        <Row
-          key={result?.token}
-          studyId={study?.id}
-          participantId={participantId}
-          result={result}
+      {datasets?.map((dataset) => (
+        <Download
+          key={dataset?.token}
+          dataset={dataset}
           components={components}
         />
       ))}

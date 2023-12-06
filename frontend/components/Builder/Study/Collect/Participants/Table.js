@@ -18,7 +18,8 @@ export default function ParticipantsTable({ study, components }) {
       <div className="participants">
         <div className="participantsBoard">
           <div className="tableHeader">
-            <p>Public ID</p>
+            <p>Participant ID</p>
+            <p>Public readable ID</p>
             <p>Duration</p>
             <p>Number of completed tasks</p>
             <p>Condition name</p>

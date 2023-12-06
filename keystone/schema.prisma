@@ -352,6 +352,7 @@ model Dataset {
   dataPolicy      String         @default("")
   info            String?
   isCompleted     Boolean        @default(false)
+  isIncluded      Boolean        @default(false)
   createdAt       DateTime?      @default(now())
   completedAt     DateTime?
 

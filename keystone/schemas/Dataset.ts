@@ -52,6 +52,7 @@ export const Dataset = list({
     dataPolicy: text(),
     info: json(),
     isCompleted: checkbox({ isFilterable: true }),
+    isIncluded: checkbox({ isFilterable: true, defaultValue: false }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

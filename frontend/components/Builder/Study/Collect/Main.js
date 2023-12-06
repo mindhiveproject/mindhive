@@ -10,6 +10,7 @@ import Table from "./Participants/Table";
 export default function Collect({ query, user, tab, toggleSidebar }) {
   const studyId = query?.selector;
   const participantId = query?.id;
+  const { type } = query;
 
   if (!studyId) {
     return <div>No study found, please save your study first.</div>;
@@ -60,6 +61,7 @@ export default function Collect({ query, user, tab, toggleSidebar }) {
             study={study}
             components={components}
             participantId={participantId}
+            type={type}
           />
         ) : (
           <div className="collectBoard">

@@ -252,13 +252,32 @@ export const GET_STUDY_PARTICIPANTS = gql`
   }
 `;
 
-// get study participant
-export const GET_PARTICIPANT = gql`
-  query GET_PARTICIPANT($id: ID!) {
-    profile(where: { id: $id }) {
+// get study user participant
+export const GET_USER_PARTICIPANT = gql`
+  query GET_USER_PARTICIPANT($publicId: String!) {
+    profile(where: { publicId: $publicId }) {
       id
       publicId
       publicReadableId
+      generalInfo
+      studiesInfo
+      participantIn {
+        id
+        title
+        slug
+      }
+    }
+  }
+`;
+
+// get study guest participant
+export const GET_GUEST_PARTICIPANT = gql`
+  query GET_GUEST_PARTICIPANT($publicId: String!) {
+    guest(where: { publicId: $publicId }) {
+      id
+      publicId
+      publicReadableId
+      generalInfo
       studiesInfo
       participantIn {
         id

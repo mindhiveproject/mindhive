@@ -1648,6 +1648,7 @@ var Dataset = (0, import_core17.list)({
     dataPolicy: (0, import_fields20.text)(),
     info: (0, import_fields20.json)(),
     isCompleted: (0, import_fields20.checkbox)({ isFilterable: true }),
+    isIncluded: (0, import_fields20.checkbox)({ isFilterable: true, defaultValue: false }),
     createdAt: (0, import_fields20.timestamp)({
       defaultValue: { kind: "now" }
     }),

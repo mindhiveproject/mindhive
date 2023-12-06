@@ -784,10 +784,6 @@ export const StyledCollectPage = styled.div`
       border-radius: 4px;
       align-items: baseline;
 
-      a: hover {
-        cursor: pointer;
-      }
-
       .shareStudy {
         display: grid;
         align-items: baseline;
@@ -802,6 +798,7 @@ export const StyledCollectPage = styled.div`
           grid-gap: 5px;
           grid-template-columns: auto 1fr;
           align-items: center;
+          cursor: pointer;
         }
       }
       .downloadByComponent {
@@ -889,6 +886,20 @@ export const StyledCollectPage = styled.div`
       padding: 10px;
       grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
       background: white;
+    }
+    .infoItem {
+      display: grid;
+      margin: 5px 0px;
+      padding: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      background: white;
+    }
+    .ui.toggle.checkbox input:checked ~ .box:before,
+    .ui.toggle.checkbox input:checked ~ label:before {
+      background-color: #007c70 !important;
+    }
+    .downloadArea {
+      cursor: pointer;
     }
   }
 `;

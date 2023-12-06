@@ -2,12 +2,12 @@ import gql from "graphql-tag";
 
 // get results of users and guests
 export const GET_PARTICIPANT_RESULTS = gql`
-  query GET_PARTICIPANT_RESULTS($participantId: ID!, $studyId: ID!) {
+  query GET_PARTICIPANT_RESULTS($participantId: String!, $studyId: ID!) {
     datasets(
       where: {
         OR: [
-          { profile: { id: { equals: $participantId } } }
-          { guest: { id: { equals: $participantId } } }
+          { profile: { publicId: { equals: $participantId } } }
+          { guest: { publicId: { equals: $participantId } } }
         ]
         study: { id: { equals: $studyId } }
       }

@@ -1,3 +1,6 @@
+import moment from "moment";
+import { Icon } from "semantic-ui-react";
+
 // useSWR allows the use of SWR inside function components
 import useSWR from "swr";
 
@@ -7,17 +10,18 @@ import { jsonToCSV } from "react-papaparse";
 // A fetcher function to wrap the native fetch function and return the result of a call to url in json format
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export default function Download({ date, dataToken, components }) {
+export default function Download({ dataset, components }) {
+  const { date, token } = dataset;
   // Set up SWR to run the fetcher function when calling "/api/staticdata"
   // There are 3 possible states: (1) loading when data is null (2) ready when the data is returned (3) error when there was an error fetching the data
   const [year, month, day] = date.split("-");
   const { data, error } = useSWR(
-    `/api/data/${year}/${month}/${day}/${dataToken}`,
+    `/api/data/${year}/${month}/${day}/${token}`,
     fetcher
   );
 
   // Handle the error state
-  if (error) return <div>Failed to load</div>;
+  if (error) return <div></div>;
   // Handle the loading state
   if (!data) return <div>Loading...</div>;
   // Handle the ready state and display the result contained in the data object mapped to the structure of the json file
@@ -29,6 +33,18 @@ export default function Download({ date, dataToken, components }) {
   if (data) {
     results = JSON.parse(trimmedData);
   }
+
+  let metadata = {};
+  if (results.length) {
+    metadata = results.map((res) => res?.metadata)[0];
+  }
+
+  const component = components
+    .filter((c) => c?.testId === metadata?.testVersion)
+    .map((c) => ({ subtitle: c?.subtitle, condition: c?.conditionLabel }))[0];
+  const subtitle = component?.subtitle;
+  const condition = component?.condition;
+
   // aggregate all data together
   const rows = results
     .filter((result) => result?.data)
@@ -57,8 +73,24 @@ export default function Download({ date, dataToken, components }) {
     const blob = new Blob([csv], {
       type: "text/csv",
     });
-    saveAs(blob, `${dataToken}.csv`);
+    saveAs(blob, `${token}.csv`);
   };
 
-  return <button onClick={download}>Download</button>;
+  return (
+    <div className="resultItem">
+      <div>{dataset?.study?.title}</div>
+      <div>{dataset?.task?.title}</div>
+      <div>{subtitle}</div>
+      <div>{metadata?.testVersion}</div>
+      <div>{moment(dataset?.createdAt).format("MMMM D, YY, h:mm:ss")}</div>
+      <div>{moment(dataset?.completedAt).format("MMMM D, YY, h:mm:ss")}</div>
+      <div>{condition}</div>
+      <div>{dataset?.dataPolicy}</div>
+      <div>{dataset?.isIncluded ? "Yes" : "No"}</div>
+      <div className="downloadArea" onClick={download}>
+        <Icon color="teal" size="large" name="download" />
+        <a>Download</a>
+      </div>
+    </div>
+  );
 }

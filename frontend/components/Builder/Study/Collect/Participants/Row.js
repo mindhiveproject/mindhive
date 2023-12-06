@@ -9,14 +9,23 @@ export default function Row({ studyId, participant }) {
           query: {
             selector: studyId,
             tab: `collect`,
-            id: participant?.id,
+            id: participant?.publicId,
+            type: participant?.type?.toLowerCase(),
           },
         }}
       >
-        <p>{participant?.publicReadableId}</p>
+        <p>
+          <a>{participant?.publicId}</a>
+        </p>
       </Link>
 
-      <p>{participant?.datasets?.length}</p>
+      <p>{participant?.publicReadableId}</p>
+      <p>
+        {
+          participant?.datasets?.filter((dataset) => dataset?.isCompleted)
+            .length
+        }
+      </p>
 
       <p>{participant?.type}</p>
     </div>

@@ -2187,6 +2187,7 @@ type Dataset {
   dataPolicy: String
   info: JSON
   isCompleted: Boolean
+  isIncluded: Boolean
   createdAt: DateTime
   completedAt: DateTime
 }
@@ -2213,6 +2214,7 @@ input DatasetWhereInput {
   summaryResult: SummaryResultWhereInput
   dataPolicy: StringFilter
   isCompleted: BooleanFilter
+  isIncluded: BooleanFilter
   createdAt: DateTimeNullableFilter
   completedAt: DateTimeNullableFilter
 }
@@ -2225,6 +2227,7 @@ input DatasetOrderByInput {
   testVersion: OrderDirection
   dataPolicy: OrderDirection
   isCompleted: OrderDirection
+  isIncluded: OrderDirection
   createdAt: OrderDirection
   completedAt: OrderDirection
 }
@@ -2243,6 +2246,7 @@ input DatasetUpdateInput {
   dataPolicy: String
   info: JSON
   isCompleted: Boolean
+  isIncluded: Boolean
   createdAt: DateTime
   completedAt: DateTime
 }
@@ -2284,6 +2288,7 @@ input DatasetCreateInput {
   dataPolicy: String
   info: JSON
   isCompleted: Boolean
+  isIncluded: Boolean
   createdAt: DateTime
   completedAt: DateTime
 }

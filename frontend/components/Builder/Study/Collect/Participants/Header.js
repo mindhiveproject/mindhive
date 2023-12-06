@@ -11,12 +11,11 @@ export default function Header({ study, slug, participants, components }) {
   const { origin } = absoluteUrl();
 
   // filter out the datasets with explicit disagreement for data sharing (data policy is "no")
+  //   ?.filter((dataset) => dataset?.dataPolicy !== "no")
   const fileDirs =
-    study?.datasets
-      ?.filter((dataset) => dataset?.dataPolicy !== "no")
-      .map(
-        (dataset) => dataset?.date.replaceAll("-", "/") + "/" + dataset?.token
-      ) || [];
+    study?.datasets?.map(
+      (dataset) => dataset?.date.replaceAll("-", "/") + "/" + dataset?.token
+    ) || [];
 
   const [keyword, setKeyword] = useState("");
 

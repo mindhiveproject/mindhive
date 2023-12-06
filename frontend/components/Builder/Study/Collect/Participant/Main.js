@@ -1,6 +1,8 @@
 import Link from "next/link";
 
-import ParticipantInformation from "./Information";
+import UserWrapper from "./UserWrapper";
+import GuestWrapper from "./GuestWrapper";
+
 import ParticipantResults from "./Results";
 
 export default function ParticipantPage({
@@ -8,6 +10,7 @@ export default function ParticipantPage({
   study,
   components,
   participantId,
+  type,
 }) {
   return (
     <div className="participantPage">
@@ -20,21 +23,21 @@ export default function ParticipantPage({
           },
         }}
       >
-        <p>Go back</p>
+        <p>← Go back</p>
       </Link>
 
-      <div>
-        <ParticipantInformation study={study} participantId={participantId} />
-      </div>
+      {type === "user" ? (
+        <UserWrapper study={study} publicId={participantId} type={type} />
+      ) : (
+        <GuestWrapper study={study} publicId={participantId} type={type} />
+      )}
 
-      <div>
-        <ParticipantResults
-          query={query}
-          study={study}
-          participantId={participantId}
-          components={components}
-        />
-      </div>
+      <ParticipantResults
+        query={query}
+        study={study}
+        participantId={participantId}
+        components={components}
+      />
     </div>
   );
 }
