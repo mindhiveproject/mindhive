@@ -39,6 +39,8 @@ export const GET_USER_RESULTS = gql`
       publicId
       publicReadableId
       type
+      info
+      generalInfo
       studiesInfo
       participantIn {
         id
@@ -70,6 +72,8 @@ export const GET_GUEST_RESULTS = gql`
       publicId
       publicReadableId
       type
+      info
+      generalInfo
       studiesInfo
       participantIn {
         id

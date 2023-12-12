@@ -80,6 +80,40 @@ export default function ParticipantInformation({ study, participant, type }) {
           }
         })}
       </div>
+
+      {study?.consent.length > 0 && (
+        <>
+          <h2>IRB consent decisions</h2>
+          {study?.consent?.map((consent) => {
+            return (
+              <div className="infoItem" key={consent?.id}>
+                <p>{consent?.title}</p>
+                <p>{generalInfo?.[`consent-${consent?.id}`]}</p>
+
+                {generalInfo?.[`consent-${consent?.id}-parentname`] && (
+                  <p>
+                    Parent name:{" "}
+                    {generalInfo?.[`consent-${consent?.id}-parentname`]}
+                  </p>
+                )}
+
+                {generalInfo?.[`consent-${consent?.id}-parentemail`] && (
+                  <p>
+                    Parent email:{" "}
+                    {generalInfo?.[`consent-${consent?.id}-parentemail`]}
+                  </p>
+                )}
+
+                {generalInfo?.[`consent-${consent?.id}-kidname`] && (
+                  <p>
+                    Your name: {generalInfo?.[`consent-${consent?.id}-kidname`]}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </>
+      )}
     </div>
   );
 }

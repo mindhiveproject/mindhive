@@ -250,6 +250,10 @@ export const GET_STUDY_PARTICIPANTS = gql`
         type
         studiesInfo
       }
+      consent {
+        id
+        title
+      }
     }
   }
 `;

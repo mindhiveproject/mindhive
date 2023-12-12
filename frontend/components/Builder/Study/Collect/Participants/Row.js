@@ -2,11 +2,19 @@ import moment from "moment";
 import Link from "next/link";
 import ChangeDatasetStatuses from "./ChangeStatuses";
 
-export default function Row({ studyId, participant, type }) {
+export default function Row({ studyId, participant, consents, type }) {
   const studyInfo = (participant?.studiesInfo &&
     participant?.studiesInfo[studyId]) || { info: { path: [] } };
   const { info } = studyInfo;
   const { path } = info;
+
+  const generalInfo =
+    { ...participant?.generalInfo, ...participant?.info } || {};
+  const consentDecisions = consents
+    .map((consent) => {
+      return generalInfo?.[`consent-${consent?.id}`];
+    })
+    .join(", ");
 
   // when the participant started participating in the study
   let started;
@@ -48,7 +56,7 @@ export default function Row({ studyId, participant, type }) {
         }
       </div>
       <div>{condition}</div>
-      <div></div>
+      <div>{consentDecisions}</div>
 
       <div>{participant?.type}</div>
       <ChangeDatasetStatuses

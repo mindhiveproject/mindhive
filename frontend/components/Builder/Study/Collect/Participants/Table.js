@@ -7,6 +7,8 @@ export default function ParticipantsTable({ study, components }) {
   const { guests } = study;
   const allParticipants = [...participants, ...guests];
 
+  const consents = study?.consent || [];
+
   // TODO order participants by the time moment when they joined the study
 
   return (
@@ -25,7 +27,7 @@ export default function ParticipantsTable({ study, components }) {
             <p>Started</p>
             <p>Number of completed tasks</p>
             <p>Condition</p>
-            <p>Consent decision</p>
+            <p>IRB consent decision</p>
             <p>Account</p>
             <p>Include all data in analysis</p>
           </div>
@@ -38,6 +40,7 @@ export default function ParticipantsTable({ study, components }) {
                     num={num}
                     studyId={study?.id}
                     participant={participant}
+                    consents={consents}
                   />
                 );
               } else {
@@ -47,6 +50,7 @@ export default function ParticipantsTable({ study, components }) {
                     num={num}
                     studyId={study?.id}
                     participant={participant}
+                    consents={consents}
                   />
                 );
               }
