@@ -7,17 +7,6 @@ export default function Parameters({
   handleMultipleUpdate,
 }) {
   const settings = {
-    forbidRetake: true,
-    hideParticipateButton: false,
-    showEmailNotificationPropmt: false,
-    askStudentsNYC: false,
-    zipCode: false,
-    guestParticipation: false,
-    consentObtained: false,
-    proceedToFirstTask: false,
-    useExternalDevices: false,
-    sonaId: false,
-    minorsBlocked: false,
     ...study.settings,
   };
 

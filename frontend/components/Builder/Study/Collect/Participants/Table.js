@@ -7,6 +7,8 @@ export default function ParticipantsTable({ study, components }) {
   const { guests } = study;
   const allParticipants = [...participants, ...guests];
 
+  // TODO order participants by the time moment when they joined the study
+
   return (
     <>
       <Header

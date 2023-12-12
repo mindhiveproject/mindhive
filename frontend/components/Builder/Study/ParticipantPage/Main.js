@@ -32,6 +32,19 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
     collaborators: [],
     classes: [],
     consent: [],
+    settings: {
+      forbidRetake: true,
+      hideParticipateButton: false,
+      showEmailNotificationPropmt: false,
+      askStudentsNYC: false,
+      zipCode: false,
+      guestParticipation: false,
+      consentObtained: false,
+      proceedToFirstTask: false,
+      useExternalDevices: false,
+      sonaId: false,
+      minorsBlocked: false,
+    },
   };
 
   // save and edit the study information
