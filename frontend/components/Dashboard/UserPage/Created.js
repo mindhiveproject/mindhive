@@ -1,7 +1,9 @@
+import absoluteUrl from "next-absolute-url";
 import { Icon } from "semantic-ui-react";
 import moment from "moment";
 
 export default function Created({ query, user, profile }) {
+  const { origin } = absoluteUrl();
   const studies = [
     ...profile?.researcherIn.map((study) => ({
       ...study,
@@ -35,7 +37,7 @@ export default function Created({ query, user, profile }) {
           <div className="title">
             {study?.title}
             <a
-              href={`https://mindhive.science/studies/${study.slug}`}
+              href={`${origin}/studies/${study.slug}`}
               target="_blank"
               rel="noreferrer"
             >

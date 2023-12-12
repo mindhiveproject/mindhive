@@ -1,3 +1,4 @@
+import absoluteUrl from "next-absolute-url";
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { PROPOSAL_REVIEWS_QUERY } from "../../../Queries/Proposal";
@@ -9,6 +10,7 @@ import Questions from "./Questions";
 import StudyPreview from "./StudyPreview";
 
 export default function ReviewBoard({ query, user }) {
+  const { origin } = absoluteUrl();
   const { id, tab, action } = query;
   const stage = action === "review" ? "INDIVIDUAL" : "SYNTHESIS";
 
@@ -38,7 +40,7 @@ export default function ReviewBoard({ query, user }) {
   const cardsContent = allCardsContent.flat().join("");
   let studyURL = "";
   if (proposal?.study?.slug) {
-    studyURL = `<h3>Study URL: https://mindhive.science/studies/${proposal?.study?.slug}</h3>`;
+    studyURL = `<h3>Study URL: ${origin}/studies/${proposal?.study?.slug}</h3>`;
   }
   const content = `<h1>${title}</h1><h2>${description}</h2>${studyURL}${cardsContent}`;
 

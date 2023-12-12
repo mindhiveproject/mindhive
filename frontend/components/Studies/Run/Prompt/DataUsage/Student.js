@@ -1,3 +1,4 @@
+import absoluteUrl from "next-absolute-url";
 import styled from "styled-components";
 
 const StyledNotes = styled.div`
@@ -29,6 +30,7 @@ const StyledNotes = styled.div`
 `;
 
 export default function DataUsageForStudent({ dataUse, setDataUse }) {
+  const { origin } = absoluteUrl();
   return (
     <div>
       <h1>Data usage</h1>
@@ -57,11 +59,11 @@ export default function DataUsageForStudent({ dataUse, setDataUse }) {
               Note: MindHive researchers and educators are vetted by MindHive
               administrators and cannot access your personal data without your
               explicit consent. See our{" "}
-              <a target="_blank" href="https://mindhive.science/docs/privacy">
+              <a target="_blank" href={`${origin}/docs/privacy`}>
                 Privacy Policy
               </a>{" "}
               and{" "}
-              <a target="_blank" href="https://mindhive.science/docs/terms">
+              <a target="_blank" href={`${origin}/docs/terms`}>
                 Terms and Conditions
               </a>{" "}
               for details on our commitment to protect your data.
@@ -89,11 +91,11 @@ export default function DataUsageForStudent({ dataUse, setDataUse }) {
               Note: MindHive educators are vetted by MindHive administrators and
               cannot access your personal data without your explicit consent.
               See our{" "}
-              <a target="_blank" href="https://mindhive.science/docs/privacy">
+              <a target="_blank" href={`${origin}/docs/privacy`}>
                 Privacy Policy
               </a>{" "}
               and{" "}
-              <a target="_blank" href="https://mindhive.science/docs/terms">
+              <a target="_blank" href={`${origin}/docs/terms`}>
                 Terms and Conditions
               </a>{" "}
               for details on our commitment to protect your data.

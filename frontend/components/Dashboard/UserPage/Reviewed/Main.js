@@ -1,8 +1,11 @@
+import absoluteUrl from "next-absolute-url";
 import moment from "moment";
 
 import Modal from "./Modal";
 
 export default function Reviewed({ query, user, profile }) {
+  const { origin } = absoluteUrl();
+
   const reviews = [
     ...profile?.reviews.map((review) => ({
       id: review?.id,
@@ -42,7 +45,7 @@ export default function Reviewed({ query, user, profile }) {
           </div>
           <div>
             <a
-              href={`https://mindhive.science/studies/${review.slug}`}
+              href={`${origin}/studies/${review.slug}`}
               target="_blank"
               rel="noreferrer"
             >
@@ -51,7 +54,7 @@ export default function Reviewed({ query, user, profile }) {
           </div>
           <div>
             <a
-              href={`https://mindhive.science/proposals/${review.proposalSlug}`}
+              href={`${origin}/proposals/${review.proposalSlug}`}
               target="_blank"
               rel="noreferrer"
             >

@@ -1,11 +1,13 @@
+import absoluteUrl from "next-absolute-url";
 import { useState } from "react";
 import { Radio } from "semantic-ui-react";
 
 export default function ShareStudy({ study, handleChange }) {
+  const { origin } = absoluteUrl();
   const [isCustomize, setIsCustomize] = useState(true);
 
   const copyLink = () => {
-    const copyLink = `https://dev.mindhive.science/studies/${study.slug}`;
+    const copyLink = `${origin}/studies/${study.slug}`;
     const temp = document.createElement("input");
     document.body.append(temp);
     temp.value = copyLink;
@@ -24,7 +26,8 @@ export default function ShareStudy({ study, handleChange }) {
         {study?.slug ? (
           <label htmlFor="slug" onClick={() => copyLink()}>
             <p className="accessLink">
-              https://dev.mindhive.science/studies/
+              {origin}
+              /studies/
               {study.slug}
             </p>
           </label>

@@ -1,3 +1,4 @@
+import absoluteUrl from "next-absolute-url";
 import { useQuery } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 
@@ -6,6 +7,7 @@ import Head from "next/head";
 import JoditEditor from "../../Jodit/Editor";
 
 export default function ProposalPDF({ proposalId }) {
+  const { origin } = absoluteUrl();
   const { data, loading, error } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
   });
@@ -38,7 +40,7 @@ export default function ProposalPDF({ proposalId }) {
   const cardsContent = allCardsContent.flat().join("");
   let studyURL = "";
   if (study?.slug) {
-    studyURL = `<h3>Study URL: https://mindhive.science/studies/${study?.slug}</h3>`;
+    studyURL = `<h3>Study URL: ${origin}/studies/${study?.slug}</h3>`;
   }
   // put all proposal content together
   const content = `<h1>${title}</h1><h2>${description}</h2>${studyURL}${cardsContent}`;

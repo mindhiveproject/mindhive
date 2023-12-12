@@ -1,6 +1,8 @@
+import absoluteUrl from "next-absolute-url";
 import { Icon } from "semantic-ui-react";
 
 export default function Participated({ query, user, profile }) {
+  const { origin } = absoluteUrl();
   const studies = profile?.participantIn || [];
 
   if (studies?.length === 0) {
@@ -71,7 +73,7 @@ export default function Participated({ query, user, profile }) {
                 {study.title}
                 <div>
                   <a
-                    href={`https://mindhive.science/studies/${study.slug}`}
+                    href={`${origin}/studies/${study.slug}`}
                     target="_blank"
                     rel="noreferrer"
                   >

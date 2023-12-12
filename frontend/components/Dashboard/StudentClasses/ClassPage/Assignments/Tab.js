@@ -1,10 +1,13 @@
+import absoluteUrl from "next-absolute-url";
 import { Icon, Popup } from "semantic-ui-react";
 import moment from "moment";
 import Link from "next/link";
 
 export default function AssignmentTab({ assignment, myclass, user, query }) {
+  const { origin } = absoluteUrl();
+
   const copyLink = () => {
-    const copyLink = `https://mindhive.science/dashboard/assignments/${assignment?.code}`;
+    const copyLink = `${origin}/dashboard/assignments/${assignment?.code}`;
     const temp = document.createElement("input");
     document.body.append(temp);
     temp.value = copyLink;
