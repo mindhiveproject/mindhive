@@ -5,7 +5,7 @@ import { GET_STUDY_PARTICIPANTS } from "../../../Queries/User";
 
 import Navigation from "../Navigation/Main";
 import ParticipantPage from "./Participant/Main";
-import Table from "./Participants/Table";
+import Table from "./Table/Main";
 
 export default function Collect({ query, user, tab, toggleSidebar }) {
   const studyId = query?.selector;
