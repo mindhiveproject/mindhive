@@ -64,9 +64,7 @@ export default function Collect({ query, user, tab, toggleSidebar }) {
             type={type}
           />
         ) : (
-          <div className="collectBoard">
-            <Table study={study} components={components} />
-          </div>
+          <Table study={study} components={components} />
         )}
       </StyledCollectPage>
     </>

@@ -751,6 +751,9 @@ export const StyledCollectPage = styled.div`
   width: 100%;
   overflow-y: scroll;
   background: rgb(229, 229, 229);
+  .clickable {
+    cursor: pointer;
+  }
   .collectBoard {
     display: grid;
     max-width: 1100px;

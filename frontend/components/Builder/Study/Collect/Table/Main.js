@@ -1,7 +1,9 @@
 import Header from "./Header";
 import UserRowWrapper from "./UserRowWrapper";
 import GuestRowWrapper from "./GuestRowWrapper";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import { Icon } from "semantic-ui-react";
 
 import ParticipantsPagination from "./Pagination";
 
@@ -10,37 +12,99 @@ export default function ParticipantsTable({ study, components }) {
   const perPage = 20;
   const [page, setPage] = useState(1);
 
-  const { participants } = study;
-  const { guests } = study;
-  const allParticipants = [...participants, ...guests];
-  const count = allParticipants.length;
+  // participants
+  const [participants, setParticipants] = useState([]);
+  const count = participants.length;
 
+  // consents
   const consents = study?.consent || [];
 
-  // order participants by the time moment when they joined the study
-  const orderedParticipants = [...allParticipants].sort((a, b) => {
-    const timeA =
-      (a?.studiesInfo?.[study?.id]?.info?.path.length &&
-        a?.studiesInfo?.[study?.id]?.info?.path[0]?.timestampFinished) ||
-      0;
-    const timeB =
-      (b?.studiesInfo?.[study?.id]?.info?.path.length &&
-        b?.studiesInfo?.[study?.id]?.info?.path[0]?.timestampFinished) ||
-      0;
-    return timeA > timeB ? -1 : 1;
-  });
+  const orderParticipantsBy = ({ participants, orderBy, direction }) => {
+    let orderedParticipants = [...participants];
+    const director = direction === "fromLowToHigh" ? 1 : -1;
+    if (orderBy === "started") {
+      orderedParticipants = [...participants].sort((a, b) => {
+        const timeA =
+          (a?.studiesInfo?.[study?.id]?.info?.path.length &&
+            a?.studiesInfo?.[study?.id]?.info?.path[0]?.timestampFinished) ||
+          a?.publicReadableId;
+        const timeB =
+          (b?.studiesInfo?.[study?.id]?.info?.path.length &&
+            b?.studiesInfo?.[study?.id]?.info?.path[0]?.timestampFinished) ||
+          b?.publicReadableId;
+        return timeA > timeB ? director : -director;
+      });
+    }
+    if (
+      orderBy === "publicId" ||
+      orderBy === "publicReadableId" ||
+      orderBy === "type"
+    ) {
+      orderedParticipants = [...participants].sort((a, b) => {
+        return a[orderBy] > b[orderBy] ? director : -director;
+      });
+    }
+    if (orderBy === "completed") {
+      orderedParticipants = [...participants].sort((a, b) => {
+        const lengthA = a?.studiesInfo?.[study?.id]?.info?.path.length || 0;
+        const lengthB = b?.studiesInfo?.[study?.id]?.info?.path.length || 0;
+        return lengthA > lengthB ? director : -director;
+      });
+    }
+    if (orderBy === "condition") {
+      orderedParticipants = [...participants].sort((a, b) => {
+        const conditionA =
+          (a?.studiesInfo?.[study?.id]?.info?.path.length &&
+            a?.studiesInfo?.[study?.id]?.info?.path
+              .filter((stage) => stage?.conditionLabel)
+              .map((stage) => stage?.conditionLabel)
+              .join("")) ||
+          a?.publicReadableId;
+        const conditionB =
+          (b?.studiesInfo?.[study?.id]?.info?.path.length &&
+            b?.studiesInfo?.[study?.id]?.info?.path
+              .filter((stage) => stage?.conditionLabel)
+              .map((stage) => stage?.conditionLabel)
+              .join("")) ||
+          b?.publicReadableId;
+        return conditionA > conditionB ? director : -director;
+      });
+    }
+    return orderedParticipants;
+  };
 
-  const participantsOnPage = orderedParticipants.slice(
+  const setNewOrder = ({ orderBy, direction }) => {
+    setParticipants(orderParticipantsBy({ participants, orderBy, direction }));
+  };
+
+  // get participants and order them by the time moment when they joined the study
+  useEffect(() => {
+    async function getParticipants() {
+      // get both users and guests as participants
+      const { participants } = study;
+      const { guests } = study;
+      const allParticipants = [...participants, ...guests];
+      setParticipants(
+        orderParticipantsBy({
+          participants: allParticipants,
+          orderBy: "started",
+        })
+      );
+    }
+    getParticipants();
+  }, [study]);
+
+  const participantsOnPage = participants.slice(
     page * perPage - perPage,
     page * perPage
   );
 
   return (
-    <>
+    <div className="collectBoard">
       <Header
         study={study}
         slug={study.slug}
-        participants={orderedParticipants}
+        participants={participants}
         components={components}
       />
       <div className="participants">
@@ -55,14 +119,170 @@ export default function ParticipantsTable({ study, components }) {
           )}
 
           <div className="tableHeader">
-            <p>Participant ID</p>
-            <p>Public readable ID</p>
-            <p>Started</p>
-            <p>Number of completed tasks</p>
-            <p>Condition</p>
-            <p>IRB consent decision</p>
-            <p>Account</p>
-            <p>Include all data in analysis</p>
+            <div>
+              <Icon
+                name="arrow down"
+                size="small"
+                color="teal"
+                className="clickable"
+                onClick={() =>
+                  setNewOrder({
+                    orderBy: "publicId",
+                    direction: "fromLowToHigh",
+                  })
+                }
+              />
+              Participant ID
+              <Icon
+                name="arrow up"
+                size="small"
+                color="teal"
+                className="clickable"
+                onClick={() =>
+                  setNewOrder({
+                    orderBy: "publicId",
+                    direction: "fromHighToLow",
+                  })
+                }
+              />
+            </div>
+            <div>
+              <Icon
+                name="arrow down"
+                size="small"
+                color="teal"
+                className="clickable"
+                onClick={() =>
+                  setNewOrder({
+                    orderBy: "publicReadableId",
+                    direction: "fromLowToHigh",
+                  })
+                }
+              />
+              Public readable ID
+              <Icon
+                name="arrow up"
+                size="small"
+                color="teal"
+                className="clickable"
+                onClick={() =>
+                  setNewOrder({
+                    orderBy: "publicReadableId",
+                    direction: "fromHighToLow",
+                  })
+                }
+              />
+            </div>
+            <div>
+              <Icon
+                name="arrow down"
+                size="small"
+                color="teal"
+                className="clickable"
+                onClick={() =>
+                  setNewOrder({
+                    orderBy: "started",
+                    direction: "fromLowToHigh",
+                  })
+                }
+              />
+              Started
+              <Icon
+                name="arrow up"
+                size="small"
+                color="teal"
+                className="clickable"
+                onClick={() =>
+                  setNewOrder({
+                    orderBy: "started",
+                    direction: "fromHighToLow",
+                  })
+                }
+              />
+            </div>
+            <div>
+              <Icon
+                name="arrow down"
+                size="small"
+                color="teal"
+                className="clickable"
+                onClick={() =>
+                  setNewOrder({
+                    orderBy: "completed",
+                    direction: "fromLowToHigh",
+                  })
+                }
+              />
+              Number of completed tasks
+              <Icon
+                name="arrow up"
+                size="small"
+                color="teal"
+                className="clickable"
+                onClick={() =>
+                  setNewOrder({
+                    orderBy: "completed",
+                    direction: "fromHighToLow",
+                  })
+                }
+              />
+            </div>
+            <div>
+              <Icon
+                name="arrow down"
+                size="small"
+                color="teal"
+                className="clickable"
+                onClick={() =>
+                  setNewOrder({
+                    orderBy: "condition",
+                    direction: "fromLowToHigh",
+                  })
+                }
+              />
+              Condition
+              <Icon
+                name="arrow up"
+                size="small"
+                color="teal"
+                className="clickable"
+                onClick={() =>
+                  setNewOrder({
+                    orderBy: "condition",
+                    direction: "fromHighToLow",
+                  })
+                }
+              />
+            </div>
+            <div>IRB consent decision</div>
+            <div>
+              <Icon
+                name="arrow down"
+                size="small"
+                color="teal"
+                className="clickable"
+                onClick={() =>
+                  setNewOrder({
+                    orderBy: "type",
+                    direction: "fromLowToHigh",
+                  })
+                }
+              />
+              Account
+              <Icon
+                name="arrow up"
+                size="small"
+                color="teal"
+                className="clickable"
+                onClick={() =>
+                  setNewOrder({
+                    orderBy: "type",
+                    direction: "fromHighToLow",
+                  })
+                }
+              />
+            </div>
+            <div>Include all data in analysis</div>
           </div>
 
           <div>
@@ -101,6 +321,6 @@ export default function ParticipantsTable({ study, components }) {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
