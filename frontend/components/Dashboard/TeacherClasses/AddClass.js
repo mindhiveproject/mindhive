@@ -29,7 +29,18 @@ export default function AddClass({ user }) {
         query: GET_CLASSES,
         variables: {
           input: {
-            creator: { id: { equals: user?.id } },
+            OR: [
+              {
+                creator: {
+                  id: { equals: user?.id },
+                },
+              },
+              {
+                mentors: {
+                  some: { id: { equals: user?.id } },
+                },
+              },
+            ],
           },
         },
       },

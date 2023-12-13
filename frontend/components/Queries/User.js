@@ -24,6 +24,12 @@ export const CURRENT_USER_QUERY = gql`
         participantIn {
           id
         }
+        teacherIn {
+          id
+        }
+        mentorIn {
+          id
+        }
         bio
         location
         language

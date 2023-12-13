@@ -127,6 +127,7 @@ export const StyledSelector = styled.div`
     grid-gap: 0rem;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     text-align: center;
+    min-width: 800px;
     .option {
       display: grid;
       grid-template-rows: 1fr 1fr auto;

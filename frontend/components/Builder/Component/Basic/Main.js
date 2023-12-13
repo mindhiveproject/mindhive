@@ -19,9 +19,7 @@ export default function Basic({
       <DisplayError error={error} />
 
       <fieldset disabled={loading} aria-busy={loading}>
-
-      {
-        isInStudyBuilder && 
+        {isInStudyBuilder && (
           <>
             <div className="block">
               <label htmlFor="subtitle">
@@ -35,13 +33,11 @@ export default function Basic({
               </label>
             </div>
             <div>
-              <label>Test ID</label>
-              <p>
-                {task?.testId}
-              </p>
+              <label>Version ID</label>
+              <p>{task?.testId}</p>
             </div>
           </>
-        }
+        )}
 
         <div className="block">
           <label htmlFor="title">

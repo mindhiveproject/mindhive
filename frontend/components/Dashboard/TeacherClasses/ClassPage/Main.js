@@ -12,6 +12,7 @@ import ClassAssignments from "./Assignments/Main";
 import ClassSettings from "./Settings";
 
 import { GET_CLASS } from "../../../Queries/Classes";
+import RestrictedAccess from "../../../Global/Restricted";
 
 export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
@@ -24,109 +25,121 @@ export default function ClassPage({ code, user, query }) {
   const myclass = data?.class || { title: "", description: "" };
 
   return (
-    <div>
-      <Header user={user} myclass={myclass} />
+    <RestrictedAccess
+      userCanAccess={[
+        ...user?.teacherIn.map((c) => c?.id),
+        ...user?.mentorIn.map((c) => c?.id),
+      ]}
+      whatToAccess={myclass?.id}
+    >
       <div>
-        <div className="menu">
-          <Link
-            href={{
-              pathname: `/dashboard/myclasses/${code}`,
-              query: {
-                page: "students",
-              },
-            }}
-            className={
-              page === "students" ? "menuTitle selectedMenuTitle" : "menuTitle"
-            }
-          >
-            <p>Students</p>
-          </Link>
+        <Header user={user} myclass={myclass} />
+        <div>
+          <div className="menu">
+            <Link
+              href={{
+                pathname: `/dashboard/myclasses/${code}`,
+                query: {
+                  page: "students",
+                },
+              }}
+              className={
+                page === "students"
+                  ? "menuTitle selectedMenuTitle"
+                  : "menuTitle"
+              }
+            >
+              <p>Students</p>
+            </Link>
 
-          <Link
-            href={{
-              pathname: `/dashboard/myclasses/${code}`,
-              query: {
-                page: "mentors",
-              },
-            }}
-            className={
-              page === "mentors" ? "menuTitle selectedMenuTitle" : "menuTitle"
-            }
-          >
-            <p>Mentors</p>
-          </Link>
+            <Link
+              href={{
+                pathname: `/dashboard/myclasses/${code}`,
+                query: {
+                  page: "mentors",
+                },
+              }}
+              className={
+                page === "mentors" ? "menuTitle selectedMenuTitle" : "menuTitle"
+              }
+            >
+              <p>Mentors</p>
+            </Link>
 
-          <Link
-            href={{
-              pathname: `/dashboard/myclasses/${code}`,
-              query: {
-                page: "studies",
-              },
-            }}
-            className={
-              page === "studies" ? "menuTitle selectedMenuTitle" : "menuTitle"
-            }
-          >
-            <p>Studies</p>
-          </Link>
+            <Link
+              href={{
+                pathname: `/dashboard/myclasses/${code}`,
+                query: {
+                  page: "studies",
+                },
+              }}
+              className={
+                page === "studies" ? "menuTitle selectedMenuTitle" : "menuTitle"
+              }
+            >
+              <p>Studies</p>
+            </Link>
 
-          <Link
-            href={{
-              pathname: `/dashboard/myclasses/${code}`,
-              query: {
-                page: "assignments",
-              },
-            }}
-            className={
-              page === "assignments"
-                ? "menuTitle selectedMenuTitle"
-                : "menuTitle"
-            }
-          >
-            <p>Assignments</p>
-          </Link>
+            <Link
+              href={{
+                pathname: `/dashboard/myclasses/${code}`,
+                query: {
+                  page: "assignments",
+                },
+              }}
+              className={
+                page === "assignments"
+                  ? "menuTitle selectedMenuTitle"
+                  : "menuTitle"
+              }
+            >
+              <p>Assignments</p>
+            </Link>
 
-          <Link
-            href={{
-              pathname: `/dashboard/myclasses/${code}`,
-              query: {
-                page: "settings",
-              },
-            }}
-            className={
-              page === "settings" ? "menuTitle selectedMenuTitle" : "menuTitle"
-            }
-          >
-            <p>Settings</p>
-          </Link>
+            <Link
+              href={{
+                pathname: `/dashboard/myclasses/${code}`,
+                query: {
+                  page: "settings",
+                },
+              }}
+              className={
+                page === "settings"
+                  ? "menuTitle selectedMenuTitle"
+                  : "menuTitle"
+              }
+            >
+              <p>Settings</p>
+            </Link>
+          </div>
+        </div>
+
+        <div>
+          {page === "students" && (
+            <ClassStudents myclass={myclass} user={user} query={query} />
+          )}
+        </div>
+        <div>
+          {page === "mentors" && (
+            <ClassMentors myclass={myclass} user={user} query={query} />
+          )}
+        </div>
+        <div>
+          {page === "studies" && (
+            <ClassStudies myclass={myclass} user={user} query={query} />
+          )}
+        </div>
+        <div>
+          {page === "assignments" && (
+            <ClassAssignments myclass={myclass} user={user} query={query} />
+          )}
+        </div>
+        <div>
+          {page === "settings" && (
+            <ClassSettings myclass={myclass} user={user} query={query} />
+          )}
         </div>
       </div>
-
-      <div>
-        {page === "students" && (
-          <ClassStudents myclass={myclass} user={user} query={query} />
-        )}
-      </div>
-      <div>
-        {page === "mentors" && (
-          <ClassMentors myclass={myclass} user={user} query={query} />
-        )}
-      </div>
-      <div>
-        {page === "studies" && (
-          <ClassStudies myclass={myclass} user={user} query={query} />
-        )}
-      </div>
-      <div>
-        {page === "assignments" && (
-          <ClassAssignments myclass={myclass} user={user} query={query} />
-        )}
-      </div>
-      <div>
-        {page === "settings" && (
-          <ClassSettings myclass={myclass} user={user} query={query} />
-        )}
-      </div>
-    </div>
+    </RestrictedAccess>
   );
 }

@@ -84,8 +84,6 @@ export const TaskWidget = props => (
 
     <div className="node-content">
       {props.node?.options?.subtitle}
-      -
-      {props.node?.options?.testId}
     </div>
 
     <PortWidget

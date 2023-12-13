@@ -18,7 +18,18 @@ export default function ClassStudents({ myclass, user, query }) {
   const { data, error, loading } = useQuery(GET_CLASSES, {
     variables: {
       input: {
-        creator: { id: { equals: user?.id } },
+        OR: [
+          {
+            creator: {
+              id: { equals: user?.id },
+            },
+          },
+          {
+            mentors: {
+              some: { id: { equals: user?.id } },
+            },
+          },
+        ],
       },
     },
   });
