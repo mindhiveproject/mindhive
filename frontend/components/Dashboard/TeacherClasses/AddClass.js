@@ -13,6 +13,7 @@ import ClassForm from "./ClassForm";
 
 import { CREATE_CLASS } from "../../Mutations/Classes";
 import { GET_CLASSES } from "../../Queries/Classes";
+import { CURRENT_USER_QUERY } from "../../Queries/User";
 
 export default function AddClass({ user }) {
   const router = useRouter();
@@ -43,6 +44,9 @@ export default function AddClass({ user }) {
             ],
           },
         },
+      },
+      {
+        query: CURRENT_USER_QUERY,
       },
     ],
   });

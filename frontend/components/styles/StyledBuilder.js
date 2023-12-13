@@ -756,7 +756,7 @@ export const StyledCollectPage = styled.div`
   }
   .collectBoard {
     display: grid;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 45px 0px 45px 0px;
     width: 100%;
     justify-self: center;

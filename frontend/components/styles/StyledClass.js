@@ -2,6 +2,12 @@ import styled from "styled-components";
 
 const StyledClass = styled.div`
   display: grid;
+
+  .upperMenu {
+    display: grid;
+    margin-bottom: 30px;
+  }
+
   .classListHeader {
     display: grid;
     margin: 5px;

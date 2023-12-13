@@ -56,7 +56,10 @@ export const StyledStudyCard = styled.div`
     background: white;
     border-radius: 30px;
     padding: 10px 10px 10px 10px;
-    z-index: 2;
+    z-index: 20;
+  }
+
+  .dropdownItem {
   }
 
   .noImage {

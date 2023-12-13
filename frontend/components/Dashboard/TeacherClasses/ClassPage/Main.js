@@ -34,7 +34,7 @@ export default function ClassPage({ code, user, query }) {
     >
       <div>
         <Header user={user} myclass={myclass} />
-        <div>
+        <div className="upperMenu">
           <div className="menu">
             <Link
               href={{

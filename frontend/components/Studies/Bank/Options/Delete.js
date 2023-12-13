@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Dropdown, Icon, Modal, Button } from "semantic-ui-react";
 
-import StyledModal from "../../../styles/StyledModal";
+import StyledModal, { StyledModalButtons } from "../../../styles/StyledModal";
 
 import { HIDE_STUDY } from "../../../Mutations/Study";
 import { MY_STUDIES } from "../../../Queries/Study";
@@ -30,6 +30,7 @@ export default function Delete({ study, user }) {
       size="small"
       trigger={
         <Dropdown.Item
+          className="dropdownItem"
           text={
             <>
               <div className="iconTitle">
@@ -76,7 +77,6 @@ export default function Delete({ study, user }) {
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
-        <Button content="Cancel" onClick={() => setOpen(false)} />
         <Button
           style={{ background: "#D53533", color: "#FFFFFF" }}
           content="Delete"
@@ -94,6 +94,7 @@ export default function Delete({ study, user }) {
             setOpen(false);
           }}
         />
+        <Button content="Cancel" onClick={() => setOpen(false)} />
       </Modal.Actions>
     </Modal>
   );

@@ -29,6 +29,7 @@ export default function Authorship({ user, study }) {
       size="small"
       trigger={
         <Dropdown.Item
+          className="dropdownItem"
           text={
             <div className="iconTitle">
               <Icon name="signup" />
@@ -53,12 +54,15 @@ export default function Authorship({ user, study }) {
                 <strong> This action cannot be undone.</strong>
               </span>
             </p>
-            <div>
+            <div className="selectUser">
+              <p>Select the user</p>
               <FindUser authorId={authorId} setAuthorId={setAuthorId} />
             </div>
 
             <div>
-              <h2>Type "CHANGE" to confirm</h2>
+              <p>
+                <strong>Type "CHANGE" to confirm</strong>
+              </p>
               <input
                 type="text"
                 value={confirmation}

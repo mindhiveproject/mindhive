@@ -1,4 +1,4 @@
-import { Dropdown, Icon, Modal, Button } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 
 import Authorship from "./Options/Authorship";
 import Archive from "./Options/Archive";
@@ -15,7 +15,7 @@ export default function StudyOptions({ user, study, studiesInfo }) {
         trigger={<img src="/assets/icons/settings.svg" />}
         scrolling
       >
-        <Dropdown.Menu className="archiveDropdown">
+        <Dropdown.Menu>
           <Authorship user={user} study={study} />
           <Archive user={user} study={study} studiesInfo={studiesInfo} />
           <Delete user={user} study={study} />

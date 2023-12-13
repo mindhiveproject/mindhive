@@ -31,6 +31,7 @@ export default function Archive({ user, study, studiesInfo }) {
       size="small"
       trigger={
         <Dropdown.Item
+          className="dropdownItem"
           text={
             <>
               <div className="iconTitle">
@@ -83,7 +84,6 @@ export default function Archive({ user, study, studiesInfo }) {
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
-        <Button content="Cancel" onClick={() => setOpen(false)} />
         <Button
           style={{ background: "#007C70", color: "#FFFFFF" }}
           content={isArchived ? "Unarchive" : "Archive"}
@@ -94,6 +94,7 @@ export default function Archive({ user, study, studiesInfo }) {
             setOpen(false);
           }}
         />
+        <Button content="Cancel" onClick={() => setOpen(false)} />
       </Modal.Actions>
     </Modal>
   );

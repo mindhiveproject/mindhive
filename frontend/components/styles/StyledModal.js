@@ -2,10 +2,28 @@ import styled from "styled-components";
 
 const StyledModal = styled.div`
   display: grid;
+  grid-gap: 10px;
   margin: 30px 10px;
   justify-content: center;
   align-items: stretch;
-  text-align: center;
+  /* text-align: center; */
+
+  input,
+  textarea,
+  select {
+    font-family: Lato;
+    height: 48px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 16px;
+    line-height: 24px;
+    padding: 12px;
+    &:focus {
+      outline: 0;
+      border-color: ${(props) => props.theme.red};
+    }
+  }
 
   .message {
     margin-top: 180px;
@@ -20,7 +38,7 @@ const StyledModal = styled.div`
     font-weight: 400;
     line-height: 24px;
     letter-spacing: 0.05em;
-    text-align: center !important;
+    /* text-align: center !important; */
   }
   p {
     font-family: Lato;
@@ -29,7 +47,13 @@ const StyledModal = styled.div`
     font-weight: 400;
     line-height: 24px;
     letter-spacing: 0.05em;
-    text-align: center !important;
+    /* text-align: center !important; */
+  }
+  .selectUser {
+    margin: 10px 0px;
+  }
+  .red {
+    color: red;
   }
 `;
 
