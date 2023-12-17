@@ -1,3 +1,4 @@
+import moment from "moment";
 import useForm from "../../../lib/useForm";
 import { useMutation } from "@apollo/client";
 import HomeworkModal from "./Modal";
@@ -7,7 +8,8 @@ import { GET_MY_HOMEWORK_FOR_ASSIGNMENT } from "../../Queries/Homework";
 
 export default function NewHomework({ user, assignment, children }) {
   const { inputs, handleChange, clearForm } = useForm({
-    title: "",
+    title:
+      assignment?.title + "-homework-" + moment().format("YYYY-MM-DD") || "",
     content: "",
   });
 

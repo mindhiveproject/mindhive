@@ -10,6 +10,8 @@ export default function TaskRun({
   study,
   id,
   testVersion,
+  currentStep,
+  isTaskRetaken,
   onFinish,
   isSavingData,
 }) {
@@ -41,6 +43,8 @@ export default function TaskRun({
           study={study}
           task={{ ...task, template: { ...task.template, script } }}
           testVersion={testVersion}
+          currentStep={currentStep}
+          isTaskRetaken={isTaskRetaken}
           onFinish={onFinish}
           isSavingData={isSavingData}
         />

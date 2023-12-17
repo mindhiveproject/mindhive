@@ -1,6 +1,7 @@
 import Manager from "./Manager";
 
 import { StyledStudyRun } from "../../styles/StyledStudyPage";
+import { useState, useEffect } from "react";
 
 // have one landing page to run the study
 // the function should check what is the status of the user (new, ongoing)
@@ -8,7 +9,30 @@ import { StyledStudyRun } from "../../styles/StyledStudyPage";
 export default function RunStudy({ user, study, task, version }) {
   const { flow } = study;
   const studiesInfo = user?.studiesInfo || {};
-  let info = studiesInfo[study?.id]?.info;
+  const userInfo = studiesInfo[study?.id]?.info;
+
+  const [info, setInfo] = useState(userInfo);
+
+  // initiate a new path if there is no information about the user path
+  useEffect(() => {
+    async function initiateUserPath() {
+      const nextStep = getNextStep({
+        stages: [],
+        currentFlow: flow,
+        currentPosition: 0,
+      });
+      if (nextStep) {
+        const updatedInfo = {
+          ...info,
+          path: nextStep,
+        };
+        setInfo(updatedInfo);
+      }
+    }
+    if (!info || info?.path.length === 0) {
+      initiateUserPath();
+    }
+  }, [user, study]);
 
   const getRandomInt = (min, max) => {
     min = Math.ceil(min);
@@ -87,25 +111,15 @@ export default function RunStudy({ user, study, task, version }) {
     }
   };
 
-  // initiate a new path if there is no information about the user path
-  if (!info && !task) {
-    info = {};
-    info.path = [];
-    const nextStep = getNextStep({
-      stages: [],
-      currentFlow: flow,
-      currentPosition: 0,
-    });
-    info.path = info.path.concat(nextStep);
-  }
-
   // find any updates in the current structure of the study
   let blockWithNextTask = [];
   const findTask = ({ taskId, flow }) => {
     for (let stage of flow) {
       if (stage?.type === "my-node") {
         if (stage?.id === taskId) {
-          blockWithNextTask.push(...flow);
+          if (blockWithNextTask.length === 0) {
+            blockWithNextTask.push(...flow);
+          }
         }
       }
       if (stage?.type === "design") {
@@ -119,7 +133,7 @@ export default function RunStudy({ user, study, task, version }) {
     }
   };
   const comparePathWithFlow = ({ path, flow }) => {
-    let nextTask;
+    let nextBlocks = [];
     const lastTaskId = path[path?.length - 2]?.id;
     // search for the lastTaskId in the study flow
     findTask({
@@ -131,21 +145,53 @@ export default function RunStudy({ user, study, task, version }) {
       .map((task) => task?.id)
       .indexOf(lastTaskId);
     if (blockWithNextTask[indexLastTask + 1]) {
-      nextTask = blockWithNextTask[indexLastTask + 1];
+      const nextBlock = blockWithNextTask[indexLastTask + 1];
+      if (nextBlock?.type === "design") {
+        // assign condition
+        const { conditionName, conditionLabel } = selectCondition({
+          conditions: nextBlock?.conditions,
+        });
+        nextBlocks = [
+          {
+            ...nextBlock,
+            type: "branching",
+            timestampRun: Date.now(),
+            conditionName,
+            conditionLabel,
+          },
+        ];
+        const [branchedFlow] = nextBlock?.conditions
+          .filter((c) => c?.label === conditionLabel)
+          .map((c) => c.flow);
+        const remainingSteps = [];
+        getNextStep({
+          stages: remainingSteps,
+          currentFlow: branchedFlow,
+          currentPosition: 0,
+        });
+        nextBlocks = nextBlocks.concat(remainingSteps);
+      } else {
+        nextBlocks = nextBlocks.concat(nextBlock);
+      }
     }
-    return nextTask;
+    return nextBlocks;
   };
 
-  if (info && info?.path) {
+  // if there there is a path already exists and the users does not repeat a task
+  if (info && info?.path && !task) {
     const { path } = info;
     const nextTaskType = path[path?.length - 1]?.type;
+    // if there is an update and a new task or between-subjects branching appeared after end
+    // it should be added to the path
     if (nextTaskType === "end") {
-      const nextStep = comparePathWithFlow({ path: path, flow: study?.flow });
-      info.path = info.path.concat({
-        ...nextStep,
-        type: "task",
-        timestampStarted: Date.now(),
-      });
+      const nextSteps = comparePathWithFlow({ path: path, flow: study?.flow });
+      if (nextSteps.length) {
+        const updatedInfo = {
+          ...info,
+          path: info.path.concat(nextSteps),
+        };
+        setInfo(updatedInfo);
+      }
     }
   }
 

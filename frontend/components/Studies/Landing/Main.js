@@ -26,16 +26,18 @@ export default function StudyLandingMain({ query, isDashboard, isRun }) {
     user = useContext(UserContext);
   }
 
-  if (isRun) {
+  if (isRun && user && study) {
     return <RunStudy user={user} study={study} task={task} version={version} />;
   }
 
-  return (
-    <StudyPage
-      query={query}
-      user={user}
-      study={study}
-      isDashboard={isDashboard}
-    />
-  );
+  if (!isRun) {
+    return (
+      <StudyPage
+        query={query}
+        user={user}
+        study={study}
+        isDashboard={isDashboard}
+      />
+    );
+  }
 }

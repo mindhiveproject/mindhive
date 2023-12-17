@@ -13,6 +13,7 @@ export default function Prompt({
   study,
   studiesInfo,
   info,
+  currentStep,
   nextStep,
   closePrompt,
   token,
@@ -25,9 +26,13 @@ export default function Prompt({
       : `/dashboard/discover/studies?name=${study?.slug}`;
 
   const [dataUse, setDataUse] = useState(undefined);
+
+  // only present the data usage question to students and admins
+  // and when it was explicitly chosen by the researcher
   const [askDataUsageQuestion, setAskDataUsageQuestion] = useState(
-    user?.permissions?.map((p) => p.name).includes("STUDENT") ||
-      user?.permissions?.map((p) => p.name).includes("ADMIN")
+    (user?.permissions?.map((p) => p.name).includes("STUDENT") ||
+      user?.permissions?.map((p) => p.name).includes("ADMIN")) &&
+      currentStep?.askDataUsageQuestion
   );
 
   const [updateDataset] = useMutation(UPDATE_DATASET, {

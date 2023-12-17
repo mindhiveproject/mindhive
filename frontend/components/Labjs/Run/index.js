@@ -14,6 +14,8 @@ export default function ExperimentWindow({
   study,
   task,
   testVersion,
+  currentStep,
+  isTaskRetaken,
   onFinish,
   isSavingData,
 }) {
@@ -111,7 +113,7 @@ export default function ExperimentWindow({
         variables: { token: id, isCompleted: true, completedAt: new Date() },
       });
     }
-    onFinish({ token: id });
+    onFinish({ token: id, currentStep, isTaskRetaken });
   });
 
   // css style

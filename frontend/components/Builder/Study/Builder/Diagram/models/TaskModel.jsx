@@ -44,6 +44,7 @@ export class TaskModel extends NodeModel {
       taskType: this.options.taskType,
       subtitle: this.options.subtitle,
       createCopy: this.options.createCopy,
+      askDataUsageQuestion: this.options.askDataUsageQuestion,
     };
   }
 
@@ -56,5 +57,6 @@ export class TaskModel extends NodeModel {
     this.options.taskType = ob.data.taskType;
     this.options.subtitle = ob.data.subtitle;
     this.options.createCopy = ob.data.createCopy;
+    this.options.askDataUsageQuestion = ob.data.askDataUsageQuestion;
   }
 }

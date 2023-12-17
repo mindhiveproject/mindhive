@@ -4,7 +4,7 @@ const StyledModal = styled.div`
   display: grid;
   grid-gap: 10px;
   margin: 30px 10px;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: stretch;
   /* text-align: center; */
 

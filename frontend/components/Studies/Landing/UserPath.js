@@ -4,9 +4,7 @@ import TaskCard from "./TaskCard";
 import { useEffect, useState } from "react";
 
 export default function UserPath({ query, user, study, isDashboard, path }) {
-  const [nextTaskId, setNextTaskId] = useState(
-    path[path?.length - 1]?.componentID
-  );
+  const [nextBlock, setNextBlock] = useState(path[path?.length - 1]);
 
   // pass the guest publicId to the task page if the user type is guest
   const taskQuery =
@@ -23,11 +21,14 @@ export default function UserPath({ query, user, study, isDashboard, path }) {
   const nextTaskType = path[path?.length - 1]?.type;
 
   let blockWithNextTask = [];
+
   const findTask = ({ taskId, flow }) => {
     for (let stage of flow) {
       if (stage?.type === "my-node") {
         if (stage?.id === taskId) {
-          blockWithNextTask.push(...flow);
+          if (blockWithNextTask.length === 0) {
+            blockWithNextTask.push(...flow);
+          }
         }
       }
       if (stage?.type === "design") {
@@ -42,7 +43,7 @@ export default function UserPath({ query, user, study, isDashboard, path }) {
   };
 
   const comparePathWithFlow = ({ path, flow }) => {
-    let nextTask;
+    let next;
     const lastTaskId = path[path?.length - 2]?.id;
     // search for the lastTaskId in the study flow
     findTask({
@@ -54,19 +55,19 @@ export default function UserPath({ query, user, study, isDashboard, path }) {
       .map((task) => task?.id)
       .indexOf(lastTaskId);
     if (blockWithNextTask[indexLastTask + 1]) {
-      nextTask = blockWithNextTask[indexLastTask + 1]?.componentID;
+      next = blockWithNextTask[indexLastTask + 1];
     }
-    return nextTask;
+    return next;
   };
 
   // find any updates in the current structure of the study
   useEffect(() => {
     function findStudyUpdates() {
-      const nextTask = comparePathWithFlow({ path: path, flow: study?.flow });
-      setNextTaskId(nextTask);
+      const block = comparePathWithFlow({ path: path, flow: study?.flow });
+      setNextBlock(block);
     }
     // only look for study updates if there is no next task ID and the path was ended in the past
-    if (nextTaskType === "end" && !nextTaskId) {
+    if (nextTaskType === "end") {
       findStudyUpdates();
     }
   }, [study]);
@@ -99,7 +100,7 @@ export default function UserPath({ query, user, study, isDashboard, path }) {
           }
         })}
 
-      {(path.length === 0 || nextTaskId) && (
+      {(path.length === 0 || (nextBlock && nextBlock?.type !== "end")) && (
         <Link
           href={{
             pathname: `/participate/run`,

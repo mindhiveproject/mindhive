@@ -36,6 +36,22 @@ export default function Basic({
               <label>Version ID</label>
               <p>{task?.testId}</p>
             </div>
+            <div className="hideContinueBtn">
+              <div>
+                <input
+                  type="checkbox"
+                  id="askDataUsageQuestion"
+                  name="askDataUsageQuestion"
+                  checked={task?.askDataUsageQuestion}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="askDataUsageQuestion">
+                  Ask students a data usage question after the task
+                </label>
+              </div>
+            </div>
           </>
         )}
 

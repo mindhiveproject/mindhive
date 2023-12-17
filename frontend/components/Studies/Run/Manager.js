@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 
 import TaskRun from "../../Tasks/Run/Main";
@@ -19,7 +19,29 @@ export default function Manager({
   info,
 }) {
   const { path } = info;
-  const currentStep = path[path.length - 1];
+  const [currentStep, setCurrentStep] = useState({});
+
+  // find out the current step
+  useEffect(() => {
+    async function findCurrentStep() {
+      if (task && version) {
+        let step = {};
+        const steps =
+          path.filter(
+            (step) => step?.componentID === task && step?.testId === version
+          ) || [];
+        if (steps.length) {
+          step = steps[0];
+        }
+        setCurrentStep(step);
+      } else {
+        setCurrentStep(path[path.length - 1]);
+      }
+    }
+    if (info) {
+      findCurrentStep();
+    }
+  }, [info]);
 
   const [page, setPage] = useState("test"); // two pages: test and post
   const [token, setToken] = useState(undefined); // token is used to find saved data in the dataset to modify them if needed
@@ -149,27 +171,43 @@ export default function Manager({
     return nextSteps;
   };
 
-  const onTaskFinish = async ({ token }) => {
-    // update the previous task of the path with information that it is finished
-    let updatedPath = [...path];
-    const prevTask = updatedPath.pop();
-    updatedPath = updatedPath.concat({
-      ...prevTask,
-      finished: true,
-      timestampFinished: Date.now(),
+  const onTaskFinish = async ({ token, currentStep, isTaskRetaken }) => {
+    let updatedPath = path.map((step) => {
+      if (step?.id === currentStep?.id) {
+        if (isTaskRetaken) {
+          return {
+            ...step,
+            timestampsRetakeFinished: step?.timestampsRetakeFinished?.length
+              ? step?.timestampsRetakeFinished.concat(Date.now())
+              : [Date.now()],
+          };
+        } else {
+          return {
+            ...step,
+            finished: true,
+            timestampFinished: Date.now(),
+          };
+        }
+      } else {
+        return step;
+      }
     });
 
-    // find the next task
-    const nextSteps = findNextSteps();
-
-    // update the path with the information about the next task
-    if (nextSteps.length > 0) {
-      setNextStep(nextSteps[nextSteps.length - 1]);
-      updatedPath = updatedPath.concat(nextSteps);
-    } else {
-      setNextStep(undefined);
-      updatedPath = updatedPath.concat({ type: "end" });
+    // if the task is not retaken, try to find next steps
+    if (!isTaskRetaken) {
+      // find the next task
+      const nextSteps = findNextSteps();
+      // update the path with the information about the next task
+      if (nextSteps.length > 0) {
+        setNextStep(nextSteps[nextSteps.length - 1]);
+        updatedPath = updatedPath.concat(nextSteps);
+      } else {
+        setNextStep(undefined);
+        updatedPath = updatedPath.concat({ type: "end" });
+      }
     }
+
+    // update user information
     const updatedStudiesInfo = {
       ...studiesInfo,
       [study?.id]: {
@@ -177,8 +215,6 @@ export default function Manager({
         info: { path: updatedPath },
       },
     };
-
-    // update user information
     if (user.type === "GUEST") {
       await updateGuestStudyInfo({
         variables: { studiesInfo: updatedStudiesInfo },
@@ -202,13 +238,15 @@ export default function Manager({
     }
   };
 
-  if (page === "test") {
+  if (page === "test" && (task || currentStep?.componentID)) {
     return (
       <TaskRun
         user={user}
         study={study}
         id={task || currentStep?.componentID}
         testVersion={version || currentStep?.testId}
+        currentStep={currentStep}
+        isTaskRetaken={task && version}
         onFinish={onTaskFinish}
         isSavingData
       />
@@ -222,6 +260,7 @@ export default function Manager({
         study={study}
         studiesInfo={studiesInfo}
         info={info}
+        currentStep={currentStep}
         nextStep={nextStep}
         closePrompt={closePrompt}
         token={token}

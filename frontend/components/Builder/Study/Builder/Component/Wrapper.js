@@ -59,6 +59,7 @@ export default function Wrapper({
       consent: theTask?.consent?.id,
       subtitle: node?.options?.subtitle,
       testId: node?.options?.testId,
+      askDataUsageQuestion: node?.options?.askDataUsageQuestion,
     };
   } else if (createCopy) {
     task = {

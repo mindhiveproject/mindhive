@@ -76,6 +76,7 @@ export default function Builder({
           name: task?.title,
           details: addFunctions.shorten(task?.description),
           subtitle: addFunctions.shorten(task?.subtitle),
+          askDataUsageQuestion: task?.askDataUsageQuestion,
         });
       }
     });
