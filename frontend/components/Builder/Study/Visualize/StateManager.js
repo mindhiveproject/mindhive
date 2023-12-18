@@ -5,22 +5,11 @@ import Table from "./Table/Main";
 
 import { StyledChatGPTPage } from "../../../styles/StyledBuilder";
 
-const defaultSpec = `
-
-import matplotlib
+const defaultSpec = `import matplotlib
 import matplotlib.pyplot as plt
 
-matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend");
-
-f = plt.figure(1)
-
-from js import document
-def create_root_element2(self):
-    return document.querySelector('.graphArea')
-
-#override create_root_element method of canvas by one of the functions above
-f.canvas.create_root_element = create_root_element2.__get__(
-    create_root_element2, f.canvas.__class__)
+import js_workspace as data
+data = data.to_py()
 
 # Sample data
 x = [1, 2, 3, 4, 10]
@@ -56,7 +45,6 @@ export default function StateManager({ studyId, studyData, studyVariables, user 
   return (
     <StyledChatGPTPage>
       <div className="board">
-
         <Dashboard 
             user={user}
             studyId={studyId}
@@ -69,7 +57,6 @@ export default function StateManager({ studyId, studyData, studyVariables, user 
             defaultSpec={defaultSpec}
             setSpec={setSpec} 
         />
-
         <Table data={data} />
 
       </div>  

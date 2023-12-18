@@ -16,38 +16,55 @@ const sampleData = {
 // print(df)
 
 
+const importString = `
+import matplotlib
+import matplotlib.pyplot as plt
+
+matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend");
+
+f = plt.figure(1)
+
+from js import document
+def create_root_element2(self):
+    return document.querySelector('.graphArea')
+
+f.canvas.create_root_element = create_root_element2.__get__(
+    create_root_element2, f.canvas.__class__)
+`
+
 export default function Render({ data, spec }) {
 
   const [pyodide, setPyodide] = useState(false);
   // const [running, setRunning] = useState(false);
-  
+
   useEffect(() => {
     async function startPyodide() {
       const pyodideLoad = await loadPyodide({
-        indexURL : "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/"
+        indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/"
       });
       await pyodideLoad.loadPackage(["numpy", "pandas", "matplotlib"]);
-      
+
+      // Import modules and run code that will only run once
+      await pyodideLoad.runPython(importString);
       setPyodide(pyodideLoad);
     }
     startPyodide();
   }, []);
-  
+
   useEffect(() => {
     async function evaluatePython(code) {
       //document.pyodideMplTarget = document.getElementsByClassName('graphArea');
       if (pyodide) {
-        pyodide.registerJsModule("js_workspace", sampleData);
+        pyodide.registerJsModule("js_workspace", data);
         // setRunning(true);
         const res = await pyodide.runPythonAsync(code);
-        console.log(res);
         return res;
       }
     }
     evaluatePython(spec);
-  }, [spec, pyodide])
+  }, [spec, pyodide, data])
 
   return (
-    <div className="graphArea" id="figureArea"/>
+    <div className="graphArea" id="figureArea" />
   );
 }

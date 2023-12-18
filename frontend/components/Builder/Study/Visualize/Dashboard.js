@@ -98,13 +98,13 @@ export default function Dashboard({
 
         {tab === "manager" &&
           <div>
-            {/*<SpecManager
+            <SpecManager
               studyId={studyId}
               user={user}
               spec={spec}
               setSpec={setSpec}
               defaultSpec={defaultSpec}
-            />*/}
+            />
           </div>
         }
 

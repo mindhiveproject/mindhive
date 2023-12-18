@@ -30,7 +30,7 @@ export default function SpecEditor({ spec, setSpec }) {
       <p>
         <button onClick={(e) => evaluate()}>Update</button>
       </p>
-      <CodeMirror value={localSpec} height="300px" extensions={python()} onChange={onChange} theme='light'/>
+      <CodeMirror value={localSpec} height="300px" extensions={python()} onChange={onChange} theme='light' />
     </div>
   );
 }
