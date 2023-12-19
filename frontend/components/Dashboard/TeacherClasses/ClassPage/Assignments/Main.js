@@ -42,6 +42,17 @@ export default function Settings({ myclass, user, query }) {
     return (
       <div className="empty">
         <div>There are no assignments yet.</div>
+        <Link
+          href={{
+            pathname: `/dashboard/myclasses/${myclass?.code}`,
+            query: {
+              page: "assignments",
+              action: "add",
+            },
+          }}
+        >
+          <button>Add assignment</button>
+        </Link>
       </div>
     );
   }

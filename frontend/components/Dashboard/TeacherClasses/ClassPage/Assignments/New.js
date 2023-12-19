@@ -9,6 +9,7 @@ export default function NewAssignment({ user, myclass, assignment, children }) {
   const { inputs, handleChange, clearForm } = useForm({
     title: assignment?.title || "",
     content: assignment?.content || "",
+    classes: assignment?.classes || [],
   });
 
   const [createAssignment, { loading }] = useMutation(CREATE_ASSIGNMENT, {
@@ -38,6 +39,7 @@ export default function NewAssignment({ user, myclass, assignment, children }) {
       inputs={inputs}
       handleChange={handleChange}
       submit={handleSave}
+      user={user}
     >
       {children}
     </AssignmentModal>

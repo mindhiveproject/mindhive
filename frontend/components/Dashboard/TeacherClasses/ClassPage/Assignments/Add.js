@@ -20,23 +20,20 @@ export default function AddAssignment({ myclass, user, query }) {
 
   return (
     <div className="selector">
-      <div className="header">
-        <div></div>
-        <div className="closeBtn">
-          <Link
-            href={{
-              pathname: `/dashboard/myclasses/${myclass?.code}`,
-              query: {
-                page: "assignments",
-              },
-            }}
-          >
-            <span>&times;</span>
-          </Link>
-        </div>
+      <div className="head">
+        <Link
+          href={{
+            pathname: `/dashboard/myclasses/${myclass?.code}`,
+            query: {
+              page: "assignments",
+            },
+          }}
+        >
+          <p>← Go back</p>
+        </Link>
+        <p>Create a new assignment or select one from the list below</p>
       </div>
       <div>
-        <p>Create a new assignment or select one from the list below</p>
         <div className="navigationHeader">
           <div
             style={{

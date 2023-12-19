@@ -34,7 +34,7 @@ export default function ClassForm({
               {t("common.description")}
               <textarea
                 id="description"
-                rows="50"
+                rows="10"
                 name="description"
                 value={inputs?.description}
                 onChange={handleChange}

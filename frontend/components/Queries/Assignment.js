@@ -8,6 +8,9 @@ export const GET_ASSIGNMENT = gql`
       code
       title
       content
+      classes {
+        id
+      }
       homework {
         id
         code
@@ -60,6 +63,9 @@ export const GET_MY_CLASS_ASSIGNMENTS = gql`
       public
       homework {
         public
+      }
+      classes {
+        id
       }
     }
   }

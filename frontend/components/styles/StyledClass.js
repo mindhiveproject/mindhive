@@ -198,6 +198,11 @@ const StyledClass = styled.div`
     }
   }
 
+  .empty {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
   .assignments {
     .tab {
       display: grid;
@@ -272,11 +277,12 @@ const StyledClass = styled.div`
     }
     .selector {
       display: grid;
-      grid-gap: 30px;
+      grid-gap: 10px;
       background: #f7f9f8;
-      .header {
+      .head {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-gap: 20px;
+        grid-template-columns: auto 1fr;
       }
       .closeBtn {
         line-height: 3rem;
@@ -284,12 +290,12 @@ const StyledClass = styled.div`
         cursor: pointer;
         border-radius: 2.25rem;
         color: #5f6871;
-        font-size: 2rem;
-        :hover {
+        /* font-size: 2rem; */
+        /* :hover {
           transform: scale(1.5);
           transition: transform 0.5s;
           color: red;
-        }
+        } */
       }
       .header {
         display: grid;
