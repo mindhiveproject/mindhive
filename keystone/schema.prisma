@@ -283,6 +283,7 @@ model Study {
   datasets                    Dataset[]       @relation("Dataset_study")
   summaryResults              SummaryResult[] @relation("SummaryResult_study")
   specs                       Spec[]          @relation("Spec_studies")
+  vizJournals                 VizJournal[]    @relation("VizJournal_study")
   createdAt                   DateTime?       @default(now())
   updatedAt                   DateTime?
 
@@ -604,4 +605,77 @@ model Guest {
   summaryResults     SummaryResult[] @relation("SummaryResult_guest")
   createdAt          DateTime?       @default(now())
   updatedAt          DateTime?
+}
+
+model VizJournal {
+  id          String    @id @default(cuid())
+  title       String    @default("")
+  description String    @default("")
+  isPublic    Boolean   @default(false)
+  isTemplate  Boolean   @default(false)
+  isFeatured  Boolean   @default(false)
+  settings    String?
+  content     String?
+  study       Study?    @relation("VizJournal_study", fields: [studyId], references: [id])
+  studyId     String?   @map("study")
+  vizParts    VizPart[] @relation("VizPart_vizJournal")
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime?
+
+  @@index([studyId])
+}
+
+model VizPart {
+  id           String       @id @default(cuid())
+  title        String       @default("")
+  description  String       @default("")
+  dataOrigin   String?
+  isPublic     Boolean      @default(false)
+  isTemplate   Boolean      @default(false)
+  isFeatured   Boolean      @default(false)
+  settings     String?
+  content      String?
+  vizJournal   VizJournal?  @relation("VizPart_vizJournal", fields: [vizJournalId], references: [id])
+  vizJournalId String?      @map("vizJournal")
+  vizChapters  VizChapter[] @relation("VizChapter_vizPart")
+  createdAt    DateTime?    @default(now())
+  updatedAt    DateTime?
+
+  @@index([vizJournalId])
+}
+
+model VizChapter {
+  id          String       @id @default(cuid())
+  title       String       @default("")
+  description String       @default("")
+  isPublic    Boolean      @default(false)
+  isTemplate  Boolean      @default(false)
+  isFeatured  Boolean      @default(false)
+  settings    String?
+  content     String?
+  vizPart     VizPart?     @relation("VizChapter_vizPart", fields: [vizPartId], references: [id])
+  vizPartId   String?      @map("vizPart")
+  vizSections VizSection[] @relation("VizSection_vizChapter")
+  createdAt   DateTime?    @default(now())
+  updatedAt   DateTime?
+
+  @@index([vizPartId])
+}
+
+model VizSection {
+  id           String      @id @default(cuid())
+  title        String      @default("")
+  description  String      @default("")
+  type         String?
+  isPublic     Boolean     @default(false)
+  isTemplate   Boolean     @default(false)
+  isFeatured   Boolean     @default(false)
+  settings     String?
+  content      String?
+  vizChapter   VizChapter? @relation("VizSection_vizChapter", fields: [vizChapterId], references: [id])
+  vizChapterId String?     @map("vizChapter")
+  createdAt    DateTime?   @default(now())
+  updatedAt    DateTime?
+
+  @@index([vizChapterId])
 }

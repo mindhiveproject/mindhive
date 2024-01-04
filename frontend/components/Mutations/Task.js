@@ -5,11 +5,13 @@ export const CREATE_TASK = gql`
   mutation CREATE_TASK(
     $title: String!
     $description: String
+    $descriptionForParticipants: String
     $templateId: ID
     $taskType: TaskTaskTypeType
     $isExternal: Boolean
     $link: String
     $parameters: JSON
+    $settings: JSON
     $collaborators: [ProfileWhereUniqueInput!]
   ) {
     createTask(
@@ -17,10 +19,12 @@ export const CREATE_TASK = gql`
         template: { connect: { id: $templateId } }
         title: $title
         description: $description
+        descriptionForParticipants: $descriptionForParticipants
         taskType: $taskType
         isExternal: $isExternal
         link: $link
         parameters: $parameters
+        settings: $settings
         collaborators: { connect: $collaborators }
       }
     ) {
@@ -36,19 +40,23 @@ export const CREATE_EXTERNAL_TASK = gql`
   mutation CREATE_EXTERNAL_TASK(
     $title: String!
     $description: String
+    $descriptionForParticipants: String
     $taskType: TaskTaskTypeType
     $isExternal: Boolean
     $link: String
     $collaborators: [ProfileWhereUniqueInput!]
+    $settings: JSON
   ) {
     createTask(
       data: {
         title: $title
         description: $description
+        descriptionForParticipants: $descriptionForParticipants
         taskType: $taskType
         isExternal: $isExternal
         link: $link
         collaborators: { connect: $collaborators }
+        settings: $settings
       }
     ) {
       id
@@ -64,8 +72,10 @@ export const UPDATE_TASK = gql`
     $id: ID!
     $title: String
     $description: String
+    $descriptionForParticipants: String
     $link: String
     $parameters: JSON
+    $settings: JSON
     $collaborators: [ProfileWhereUniqueInput!]
   ) {
     updateTask(
@@ -73,8 +83,10 @@ export const UPDATE_TASK = gql`
       data: {
         title: $title
         description: $description
+        descriptionForParticipants: $descriptionForParticipants
         link: $link
         parameters: $parameters
+        settings: $settings
         collaborators: { set: $collaborators }
       }
     ) {

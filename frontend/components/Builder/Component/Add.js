@@ -30,6 +30,18 @@ export default function AddComponent({ query, user, redirect, isExternal }) {
       description: "",
     },
     isExternal: !!isExternal,
+    settings: {
+      mobileCompatible: false,
+      descriptionBefore: "",
+      descriptionAfter: "",
+      background: "",
+      duration: "",
+      scoring: "",
+      format: "",
+      resources: "[]",
+      aggregateVariables: "[]",
+      addInfo: "",
+    },
   });
 
   const [

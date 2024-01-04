@@ -1,7 +1,10 @@
 import { Icon, Accordion } from "semantic-ui-react";
 import ReactHtmlParser from "react-html-parser";
+import { useState } from "react";
 
 export default function Viewer({ task, close, openEditor, openPreview }) {
+  const [active, setActive] = useState(false);
+
   const taskType = task?.taskType?.toLowerCase();
   const settings = task?.settings || {};
   const resources =
@@ -165,6 +168,17 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
         </div>
 
         <div className="rightPanel">
+          {task?.settings?.mobileCompatible && (
+            <div>
+              <Icon
+                id="favoriteButton"
+                name="mobile alternate"
+                color="teal"
+                size="large"
+              />
+              <span>Mobile compatible</span>
+            </div>
+          )}
           {aggregateVariables.length > 0 && (
             <div className="contentBlock">
               <h2>Aggregate Variables</h2>
@@ -174,7 +188,10 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
               </p>
               {settings?.addInfo && (
                 <Accordion>
-                  <Accordion.Title active={active} onClick={this.handleClick}>
+                  <Accordion.Title
+                    active={active}
+                    onClick={() => setActive(!active)}
+                  >
                     <Icon name="dropdown" />
                     more info
                   </Accordion.Title>

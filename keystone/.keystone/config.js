@@ -34,7 +34,7 @@ __export(keystone_exports, {
 });
 module.exports = __toCommonJS(keystone_exports);
 var import_config = require("dotenv/config");
-var import_core30 = require("@keystone-6/core");
+var import_core34 = require("@keystone-6/core");
 
 // mutations/index.ts
 var import_schema = require("@graphql-tools/schema");
@@ -58,7 +58,7 @@ async function sendPasswordResetEmail(resetToken, to) {
     MessageStream: "ps-stream"
   });
 }
-async function sendNotificationEmail(to, subject, text30) {
+async function sendNotificationEmail(to, subject, text34) {
   const info = await client.sendEmailWithTemplate({
     From: "no-reply@prettyspecial.one",
     To: to,
@@ -69,7 +69,7 @@ async function sendNotificationEmail(to, subject, text30) {
       company_name: "MindHive",
       company_address: "New York",
       support_url: `${process.env.FRONTEND_URL}/menu/docs/about`,
-      text: text30
+      text: text34
     },
     MessageStream: "ps-stream"
   });
@@ -1463,6 +1463,10 @@ var Study = (0, import_core13.list)({
       ref: "Spec.studies",
       many: true
     }),
+    vizJournals: (0, import_fields16.relationship)({
+      ref: "VizJournal.study",
+      many: true
+    }),
     createdAt: (0, import_fields16.timestamp)({
       defaultValue: { kind: "now" }
     }),
@@ -2419,6 +2423,152 @@ var Guest = (0, import_core29.list)({
   }
 });
 
+// schemas/VizJournal.ts
+var import_core30 = require("@keystone-6/core");
+var import_fields33 = require("@keystone-6/core/fields");
+var VizJournal = (0, import_core30.list)({
+  access: {
+    operation: {
+      query: () => true,
+      create: () => true,
+      update: () => true,
+      delete: () => true
+    }
+  },
+  fields: {
+    title: (0, import_fields33.text)(),
+    description: (0, import_fields33.text)(),
+    isPublic: (0, import_fields33.checkbox)({ isFilterable: true }),
+    isTemplate: (0, import_fields33.checkbox)({ isFilterable: true }),
+    isFeatured: (0, import_fields33.checkbox)({ isFilterable: true }),
+    settings: (0, import_fields33.json)(),
+    content: (0, import_fields33.json)(),
+    study: (0, import_fields33.relationship)({
+      ref: "Study.vizJournals"
+    }),
+    vizParts: (0, import_fields33.relationship)({
+      ref: "VizPart.vizJournal",
+      many: true
+    }),
+    createdAt: (0, import_fields33.timestamp)({
+      defaultValue: { kind: "now" }
+    }),
+    updatedAt: (0, import_fields33.timestamp)()
+  }
+});
+
+// schemas/VizPart.ts
+var import_core31 = require("@keystone-6/core");
+var import_fields34 = require("@keystone-6/core/fields");
+var VizPart = (0, import_core31.list)({
+  access: {
+    operation: {
+      query: () => true,
+      create: () => true,
+      update: () => true,
+      delete: () => true
+    }
+  },
+  fields: {
+    title: (0, import_fields34.text)(),
+    description: (0, import_fields34.text)(),
+    dataOrigin: (0, import_fields34.select)({
+      options: [
+        { label: "study", value: "STUDY" },
+        { label: "simulated", value: "SIMULATED" }
+      ]
+    }),
+    isPublic: (0, import_fields34.checkbox)({ isFilterable: true }),
+    isTemplate: (0, import_fields34.checkbox)({ isFilterable: true }),
+    isFeatured: (0, import_fields34.checkbox)({ isFilterable: true }),
+    settings: (0, import_fields34.json)(),
+    content: (0, import_fields34.json)(),
+    vizJournal: (0, import_fields34.relationship)({
+      ref: "VizJournal.vizParts"
+    }),
+    vizChapters: (0, import_fields34.relationship)({
+      ref: "VizChapter.vizPart",
+      many: true
+    }),
+    createdAt: (0, import_fields34.timestamp)({
+      defaultValue: { kind: "now" }
+    }),
+    updatedAt: (0, import_fields34.timestamp)()
+  }
+});
+
+// schemas/VizChapter.ts
+var import_core32 = require("@keystone-6/core");
+var import_fields35 = require("@keystone-6/core/fields");
+var VizChapter = (0, import_core32.list)({
+  access: {
+    operation: {
+      query: () => true,
+      create: () => true,
+      update: () => true,
+      delete: () => true
+    }
+  },
+  fields: {
+    title: (0, import_fields35.text)(),
+    description: (0, import_fields35.text)(),
+    isPublic: (0, import_fields35.checkbox)({ isFilterable: true }),
+    isTemplate: (0, import_fields35.checkbox)({ isFilterable: true }),
+    isFeatured: (0, import_fields35.checkbox)({ isFilterable: true }),
+    settings: (0, import_fields35.json)(),
+    content: (0, import_fields35.json)(),
+    vizPart: (0, import_fields35.relationship)({
+      ref: "VizPart.vizChapters"
+    }),
+    vizSections: (0, import_fields35.relationship)({
+      ref: "VizSection.vizChapter",
+      many: true
+    }),
+    createdAt: (0, import_fields35.timestamp)({
+      defaultValue: { kind: "now" }
+    }),
+    updatedAt: (0, import_fields35.timestamp)()
+  }
+});
+
+// schemas/VizSection.ts
+var import_core33 = require("@keystone-6/core");
+var import_fields36 = require("@keystone-6/core/fields");
+var VizSection = (0, import_core33.list)({
+  access: {
+    operation: {
+      query: () => true,
+      create: () => true,
+      update: () => true,
+      delete: () => true
+    }
+  },
+  fields: {
+    title: (0, import_fields36.text)(),
+    description: (0, import_fields36.text)(),
+    type: (0, import_fields36.select)({
+      options: [
+        { label: "paragraph", value: "PARAGRAPH" },
+        { label: "statistics", value: "STATISTICS" },
+        { label: "table", value: "TABLE" },
+        { label: "graph", value: "GRAPH" }
+      ]
+    }),
+    isPublic: (0, import_fields36.checkbox)({ isFilterable: true }),
+    isTemplate: (0, import_fields36.checkbox)({ isFilterable: true }),
+    isFeatured: (0, import_fields36.checkbox)({ isFilterable: true }),
+    settings: (0, import_fields36.json)(),
+    content: (0, import_fields36.json)(),
+    vizChapter: (0, import_fields36.relationship)({
+      ref: "VizChapter.vizSections"
+    }),
+    createdAt: (0, import_fields36.timestamp)({
+      defaultValue: { kind: "now" }
+    }),
+    updatedAt: (0, import_fields36.timestamp)()
+  }
+});
+
 // schema.ts
 var lists = {
   Profile,
@@ -2449,7 +2599,11 @@ var lists = {
   Homework,
   SummaryResult,
   Spec,
-  Guest
+  Guest,
+  VizJournal,
+  VizPart,
+  VizChapter,
+  VizSection
 };
 
 // auth.ts
@@ -2492,7 +2646,7 @@ var session = (0, import_session.statelessSessions)({
 
 // keystone.ts
 var keystone_default = withAuth(
-  (0, import_core30.config)({
+  (0, import_core34.config)({
     server: {
       cors: {
         origin: [

@@ -85,6 +85,7 @@ export const GET_TASK = gql`
       taskType
       image
       description
+      descriptionForParticipants
       parameters
       settings
     }
@@ -101,6 +102,7 @@ export const MY_TASK = gql`
       image
       description
       parameters
+      settings
       isExternal
       taskType
       link
@@ -138,6 +140,7 @@ export const TASK_TO_CLONE = gql`
       description
       taskType
       parameters
+      settings
       template {
         id
         slug

@@ -118,15 +118,18 @@ export const StyledContent = styled.div`
   grid-template-columns: 60% auto;
   column-gap: 1px;
   .leftPanel {
+    display: grid;
+    grid-gap: 15px;
     padding: 50px 70px 0px 70px;
     background-color: #f7f9f8;
   }
   .rightPanel {
+    display: grid;
+    grid-gap: 15px;
     padding: 50px;
     background-color: #f7f9f8;
   }
   .contentBlock {
-    margin-bottom: 30px;
     ul {
       padding-left: 20px;
     }

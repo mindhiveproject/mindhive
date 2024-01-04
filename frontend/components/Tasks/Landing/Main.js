@@ -3,6 +3,8 @@ import { useQuery } from "@apollo/client";
 
 import { UserContext } from "../../Global/Authorized";
 
+import ReactHtmlParser from "react-html-parser";
+
 import { GET_TASK } from "../../Queries/Task";
 import TaskPage from "./TaskPage";
 
@@ -16,6 +18,10 @@ export default function TaskLandingMain({ slug }) {
 
   return (
     <>
+      <h1>{task?.title}</h1>
+      <div>
+        <h3>{ReactHtmlParser(task?.descriptionForParticipants)}</h3>
+      </div>
       <div className="controlBtns">
         <a
           target="_blank"
@@ -24,7 +30,7 @@ export default function TaskLandingMain({ slug }) {
           <button>Preview</button>
         </a>
       </div>
-      <TaskPage user={user} task={task} />;
+      <TaskPage user={user} task={task} />
     </>
   );
 }

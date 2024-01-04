@@ -37,6 +37,10 @@ import { Homework } from "./schemas/Homework";
 import { SummaryResult } from "./schemas/SummaryResult";
 import { Spec } from "./schemas/Spec";
 import { Guest } from "./schemas/Guest";
+import { VizJournal } from "./schemas/VizJournal";
+import { VizPart } from "./schemas/VizPart";
+import { VizChapter } from "./schemas/VizChapter";
+import { VizSection } from "./schemas/VizSection";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -86,4 +90,8 @@ export const lists: Lists = {
   SummaryResult,
   Spec,
   Guest,
+  VizJournal,
+  VizPart,
+  VizChapter,
+  VizSection,
 };

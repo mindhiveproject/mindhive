@@ -71,7 +71,9 @@ export default function TaskPage({ user, task }) {
                       name={parameter?.icon || "clipboard outline"}
                       style={{ color: "#556AEB" }}
                     />
-                    <span style={{ fontWeight: "600" }}>{parameter.help}</span>
+                    <span style={{ fontWeight: "600" }}>
+                      {parameter?.name || parameter?.help}
+                    </span>
                   </p>
                   <p style={{ fontWeight: "lighter" }}>
                     {ReactHtmlParser(parameter.value)}
@@ -138,6 +140,18 @@ export default function TaskPage({ user, task }) {
       </div>
 
       <div className="rightPanel">
+        {task?.settings?.mobileCompatible && (
+          <div>
+            <Icon
+              id="favoriteButton"
+              name="mobile alternate"
+              color="teal"
+              size="large"
+            />
+            <span>Mobile compatible</span>
+          </div>
+        )}
+
         {aggregateVariables.length > 0 && (
           <div className="contentBlock">
             <h2>Aggregate Variables</h2>
@@ -147,7 +161,10 @@ export default function TaskPage({ user, task }) {
             </p>
             {settings?.addInfo && (
               <Accordion>
-                <Accordion.Title active={active} onClick={this.handleClick}>
+                <Accordion.Title
+                  active={active}
+                  onClick={() => setActive(!active)}
+                >
                   <Icon name="dropdown" />
                   more info
                 </Accordion.Title>

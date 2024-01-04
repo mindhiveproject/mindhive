@@ -2,6 +2,8 @@ import DisplayError from "../../../ErrorMessage";
 
 import useTranslation from "next-translate/useTranslation";
 
+import SettingBlock from "./SettingBlock";
+
 export default function Basic({
   user,
   task,
@@ -13,6 +15,22 @@ export default function Basic({
   isInStudyBuilder,
 }) {
   const { t } = useTranslation("classes");
+
+  // initialize task settings if there are no
+  if (!task?.settings) {
+    task.settings = {
+      mobileCompatible: false,
+      descriptionBefore: "",
+      descriptionAfter: "",
+      background: "",
+      duration: "",
+      scoring: "",
+      format: "",
+      resources: "[]",
+      aggregateVariables: "[]",
+      addInfo: "",
+    };
+  }
 
   return (
     <>
@@ -116,6 +134,20 @@ export default function Basic({
             </label>
             <span>The data will not be saved to the MH database</span>
           </div>
+        )}
+
+        {task?.settings && Object.keys(task?.settings).length && (
+          <>
+            {Object.keys(task?.settings).map((name, i) => (
+              <SettingBlock
+                key={i}
+                name={name}
+                value={task?.settings[name]}
+                handleChange={handleChange}
+                task={task}
+              />
+            ))}
+          </>
         )}
       </fieldset>
     </>

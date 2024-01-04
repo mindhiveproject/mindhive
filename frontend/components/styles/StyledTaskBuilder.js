@@ -15,7 +15,7 @@ const StyledTaskBuilder = styled.div`
 
     .block {
       display: grid;
-      max-width: 500px;
+      max-width: 800px;
     }
 
     .wideBlock {

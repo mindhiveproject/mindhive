@@ -3,7 +3,8 @@ import ParticipantPage from "./ParticipantPage/Main";
 import Builder from "./Builder/Main";
 import Review from "./Review/Main";
 import Collect from "./Collect/Main";
-import Visualize from "./Visualize/Main";
+// import DataWrapper from "./Visualize/DataWrapper";
+import Visualize from "./Visualize_old/Main";
 
 export default function Router({ query, user, tab, toggleSidebar }) {
   if (tab === "proposal") {

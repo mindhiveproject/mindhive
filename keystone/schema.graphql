@@ -1780,6 +1780,8 @@ type Study {
   summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
   specs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SpecWhereUniqueInput): [Spec!]
   specsCount(where: SpecWhereInput! = {}): Int
+  vizJournals(where: VizJournalWhereInput! = {}, orderBy: [VizJournalOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VizJournalWhereUniqueInput): [VizJournal!]
+  vizJournalsCount(where: VizJournalWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1818,6 +1820,7 @@ input StudyWhereInput {
   datasets: DatasetManyRelationFilter
   summaryResults: SummaryResultManyRelationFilter
   specs: SpecManyRelationFilter
+  vizJournals: VizJournalManyRelationFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
 }
@@ -1832,6 +1835,12 @@ input TagManyRelationFilter {
   every: TagWhereInput
   some: TagWhereInput
   none: TagWhereInput
+}
+
+input VizJournalManyRelationFilter {
+  every: VizJournalWhereInput
+  some: VizJournalWhereInput
+  none: VizJournalWhereInput
 }
 
 input StudyOrderByInput {
@@ -1878,6 +1887,7 @@ input StudyUpdateInput {
   datasets: DatasetRelateToManyForUpdateInput
   summaryResults: SummaryResultRelateToManyForUpdateInput
   specs: SpecRelateToManyForUpdateInput
+  vizJournals: VizJournalRelateToManyForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1906,6 +1916,13 @@ input TagRelateToManyForUpdateInput {
   set: [TagWhereUniqueInput!]
   create: [TagCreateInput!]
   connect: [TagWhereUniqueInput!]
+}
+
+input VizJournalRelateToManyForUpdateInput {
+  disconnect: [VizJournalWhereUniqueInput!]
+  set: [VizJournalWhereUniqueInput!]
+  create: [VizJournalCreateInput!]
+  connect: [VizJournalWhereUniqueInput!]
 }
 
 input StudyUpdateArgs {
@@ -1942,6 +1959,7 @@ input StudyCreateInput {
   datasets: DatasetRelateToManyForCreateInput
   summaryResults: SummaryResultRelateToManyForCreateInput
   specs: SpecRelateToManyForCreateInput
+  vizJournals: VizJournalRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -1964,6 +1982,11 @@ input ProposalCardRelateToOneForCreateInput {
 input TagRelateToManyForCreateInput {
   create: [TagCreateInput!]
   connect: [TagWhereUniqueInput!]
+}
+
+input VizJournalRelateToManyForCreateInput {
+  create: [VizJournalCreateInput!]
+  connect: [VizJournalWhereUniqueInput!]
 }
 
 type StudyImage {
@@ -3414,6 +3437,418 @@ input GuestCreateInput {
   updatedAt: DateTime
 }
 
+type VizJournal {
+  id: ID!
+  title: String
+  description: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  study: Study
+  vizParts(where: VizPartWhereInput! = {}, orderBy: [VizPartOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VizPartWhereUniqueInput): [VizPart!]
+  vizPartsCount(where: VizPartWhereInput! = {}): Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input VizJournalWhereUniqueInput {
+  id: ID
+}
+
+input VizJournalWhereInput {
+  AND: [VizJournalWhereInput!]
+  OR: [VizJournalWhereInput!]
+  NOT: [VizJournalWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  description: StringFilter
+  isPublic: BooleanFilter
+  isTemplate: BooleanFilter
+  isFeatured: BooleanFilter
+  study: StudyWhereInput
+  vizParts: VizPartManyRelationFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input VizPartManyRelationFilter {
+  every: VizPartWhereInput
+  some: VizPartWhereInput
+  none: VizPartWhereInput
+}
+
+input VizJournalOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  description: OrderDirection
+  isPublic: OrderDirection
+  isTemplate: OrderDirection
+  isFeatured: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input VizJournalUpdateInput {
+  title: String
+  description: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  study: StudyRelateToOneForUpdateInput
+  vizParts: VizPartRelateToManyForUpdateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input VizPartRelateToManyForUpdateInput {
+  disconnect: [VizPartWhereUniqueInput!]
+  set: [VizPartWhereUniqueInput!]
+  create: [VizPartCreateInput!]
+  connect: [VizPartWhereUniqueInput!]
+}
+
+input VizJournalUpdateArgs {
+  where: VizJournalWhereUniqueInput!
+  data: VizJournalUpdateInput!
+}
+
+input VizJournalCreateInput {
+  title: String
+  description: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  study: StudyRelateToOneForCreateInput
+  vizParts: VizPartRelateToManyForCreateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input VizPartRelateToManyForCreateInput {
+  create: [VizPartCreateInput!]
+  connect: [VizPartWhereUniqueInput!]
+}
+
+type VizPart {
+  id: ID!
+  title: String
+  description: String
+  dataOrigin: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  vizJournal: VizJournal
+  vizChapters(where: VizChapterWhereInput! = {}, orderBy: [VizChapterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VizChapterWhereUniqueInput): [VizChapter!]
+  vizChaptersCount(where: VizChapterWhereInput! = {}): Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input VizPartWhereUniqueInput {
+  id: ID
+}
+
+input VizPartWhereInput {
+  AND: [VizPartWhereInput!]
+  OR: [VizPartWhereInput!]
+  NOT: [VizPartWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  description: StringFilter
+  dataOrigin: StringNullableFilter
+  isPublic: BooleanFilter
+  isTemplate: BooleanFilter
+  isFeatured: BooleanFilter
+  vizJournal: VizJournalWhereInput
+  vizChapters: VizChapterManyRelationFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input VizChapterManyRelationFilter {
+  every: VizChapterWhereInput
+  some: VizChapterWhereInput
+  none: VizChapterWhereInput
+}
+
+input VizPartOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  description: OrderDirection
+  dataOrigin: OrderDirection
+  isPublic: OrderDirection
+  isTemplate: OrderDirection
+  isFeatured: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input VizPartUpdateInput {
+  title: String
+  description: String
+  dataOrigin: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  vizJournal: VizJournalRelateToOneForUpdateInput
+  vizChapters: VizChapterRelateToManyForUpdateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input VizJournalRelateToOneForUpdateInput {
+  create: VizJournalCreateInput
+  connect: VizJournalWhereUniqueInput
+  disconnect: Boolean
+}
+
+input VizChapterRelateToManyForUpdateInput {
+  disconnect: [VizChapterWhereUniqueInput!]
+  set: [VizChapterWhereUniqueInput!]
+  create: [VizChapterCreateInput!]
+  connect: [VizChapterWhereUniqueInput!]
+}
+
+input VizPartUpdateArgs {
+  where: VizPartWhereUniqueInput!
+  data: VizPartUpdateInput!
+}
+
+input VizPartCreateInput {
+  title: String
+  description: String
+  dataOrigin: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  vizJournal: VizJournalRelateToOneForCreateInput
+  vizChapters: VizChapterRelateToManyForCreateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input VizJournalRelateToOneForCreateInput {
+  create: VizJournalCreateInput
+  connect: VizJournalWhereUniqueInput
+}
+
+input VizChapterRelateToManyForCreateInput {
+  create: [VizChapterCreateInput!]
+  connect: [VizChapterWhereUniqueInput!]
+}
+
+type VizChapter {
+  id: ID!
+  title: String
+  description: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  vizPart: VizPart
+  vizSections(where: VizSectionWhereInput! = {}, orderBy: [VizSectionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VizSectionWhereUniqueInput): [VizSection!]
+  vizSectionsCount(where: VizSectionWhereInput! = {}): Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input VizChapterWhereUniqueInput {
+  id: ID
+}
+
+input VizChapterWhereInput {
+  AND: [VizChapterWhereInput!]
+  OR: [VizChapterWhereInput!]
+  NOT: [VizChapterWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  description: StringFilter
+  isPublic: BooleanFilter
+  isTemplate: BooleanFilter
+  isFeatured: BooleanFilter
+  vizPart: VizPartWhereInput
+  vizSections: VizSectionManyRelationFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input VizSectionManyRelationFilter {
+  every: VizSectionWhereInput
+  some: VizSectionWhereInput
+  none: VizSectionWhereInput
+}
+
+input VizChapterOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  description: OrderDirection
+  isPublic: OrderDirection
+  isTemplate: OrderDirection
+  isFeatured: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input VizChapterUpdateInput {
+  title: String
+  description: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  vizPart: VizPartRelateToOneForUpdateInput
+  vizSections: VizSectionRelateToManyForUpdateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input VizPartRelateToOneForUpdateInput {
+  create: VizPartCreateInput
+  connect: VizPartWhereUniqueInput
+  disconnect: Boolean
+}
+
+input VizSectionRelateToManyForUpdateInput {
+  disconnect: [VizSectionWhereUniqueInput!]
+  set: [VizSectionWhereUniqueInput!]
+  create: [VizSectionCreateInput!]
+  connect: [VizSectionWhereUniqueInput!]
+}
+
+input VizChapterUpdateArgs {
+  where: VizChapterWhereUniqueInput!
+  data: VizChapterUpdateInput!
+}
+
+input VizChapterCreateInput {
+  title: String
+  description: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  vizPart: VizPartRelateToOneForCreateInput
+  vizSections: VizSectionRelateToManyForCreateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input VizPartRelateToOneForCreateInput {
+  create: VizPartCreateInput
+  connect: VizPartWhereUniqueInput
+}
+
+input VizSectionRelateToManyForCreateInput {
+  create: [VizSectionCreateInput!]
+  connect: [VizSectionWhereUniqueInput!]
+}
+
+type VizSection {
+  id: ID!
+  title: String
+  description: String
+  type: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  vizChapter: VizChapter
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input VizSectionWhereUniqueInput {
+  id: ID
+}
+
+input VizSectionWhereInput {
+  AND: [VizSectionWhereInput!]
+  OR: [VizSectionWhereInput!]
+  NOT: [VizSectionWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  description: StringFilter
+  type: StringNullableFilter
+  isPublic: BooleanFilter
+  isTemplate: BooleanFilter
+  isFeatured: BooleanFilter
+  vizChapter: VizChapterWhereInput
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input VizSectionOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  description: OrderDirection
+  type: OrderDirection
+  isPublic: OrderDirection
+  isTemplate: OrderDirection
+  isFeatured: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input VizSectionUpdateInput {
+  title: String
+  description: String
+  type: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  vizChapter: VizChapterRelateToOneForUpdateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input VizChapterRelateToOneForUpdateInput {
+  create: VizChapterCreateInput
+  connect: VizChapterWhereUniqueInput
+  disconnect: Boolean
+}
+
+input VizSectionUpdateArgs {
+  where: VizSectionWhereUniqueInput!
+  data: VizSectionUpdateInput!
+}
+
+input VizSectionCreateInput {
+  title: String
+  description: String
+  type: String
+  isPublic: Boolean
+  isTemplate: Boolean
+  isFeatured: Boolean
+  settings: JSON
+  content: JSON
+  vizChapter: VizChapterRelateToOneForCreateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input VizChapterRelateToOneForCreateInput {
+  create: VizChapterCreateInput
+  connect: VizChapterWhereUniqueInput
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -3594,6 +4029,30 @@ type Mutation {
   updateGuests(data: [GuestUpdateArgs!]!): [Guest]
   deleteGuest(where: GuestWhereUniqueInput!): Guest
   deleteGuests(where: [GuestWhereUniqueInput!]!): [Guest]
+  createVizJournal(data: VizJournalCreateInput!): VizJournal
+  createVizJournals(data: [VizJournalCreateInput!]!): [VizJournal]
+  updateVizJournal(where: VizJournalWhereUniqueInput!, data: VizJournalUpdateInput!): VizJournal
+  updateVizJournals(data: [VizJournalUpdateArgs!]!): [VizJournal]
+  deleteVizJournal(where: VizJournalWhereUniqueInput!): VizJournal
+  deleteVizJournals(where: [VizJournalWhereUniqueInput!]!): [VizJournal]
+  createVizPart(data: VizPartCreateInput!): VizPart
+  createVizParts(data: [VizPartCreateInput!]!): [VizPart]
+  updateVizPart(where: VizPartWhereUniqueInput!, data: VizPartUpdateInput!): VizPart
+  updateVizParts(data: [VizPartUpdateArgs!]!): [VizPart]
+  deleteVizPart(where: VizPartWhereUniqueInput!): VizPart
+  deleteVizParts(where: [VizPartWhereUniqueInput!]!): [VizPart]
+  createVizChapter(data: VizChapterCreateInput!): VizChapter
+  createVizChapters(data: [VizChapterCreateInput!]!): [VizChapter]
+  updateVizChapter(where: VizChapterWhereUniqueInput!, data: VizChapterUpdateInput!): VizChapter
+  updateVizChapters(data: [VizChapterUpdateArgs!]!): [VizChapter]
+  deleteVizChapter(where: VizChapterWhereUniqueInput!): VizChapter
+  deleteVizChapters(where: [VizChapterWhereUniqueInput!]!): [VizChapter]
+  createVizSection(data: VizSectionCreateInput!): VizSection
+  createVizSections(data: [VizSectionCreateInput!]!): [VizSection]
+  updateVizSection(where: VizSectionWhereUniqueInput!, data: VizSectionUpdateInput!): VizSection
+  updateVizSections(data: [VizSectionUpdateArgs!]!): [VizSection]
+  deleteVizSection(where: VizSectionWhereUniqueInput!): VizSection
+  deleteVizSections(where: [VizSectionWhereUniqueInput!]!): [VizSection]
   endSession: Boolean!
   authenticateProfileWithPassword(email: String!, password: String!): ProfileAuthenticationWithPasswordResult
   createInitialProfile(data: CreateInitialProfileInput!): ProfileAuthenticationWithPasswordSuccess!
@@ -3723,6 +4182,18 @@ type Query {
   guests(where: GuestWhereInput! = {}, orderBy: [GuestOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GuestWhereUniqueInput): [Guest!]
   guest(where: GuestWhereUniqueInput!): Guest
   guestsCount(where: GuestWhereInput! = {}): Int
+  vizJournals(where: VizJournalWhereInput! = {}, orderBy: [VizJournalOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VizJournalWhereUniqueInput): [VizJournal!]
+  vizJournal(where: VizJournalWhereUniqueInput!): VizJournal
+  vizJournalsCount(where: VizJournalWhereInput! = {}): Int
+  vizParts(where: VizPartWhereInput! = {}, orderBy: [VizPartOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VizPartWhereUniqueInput): [VizPart!]
+  vizPart(where: VizPartWhereUniqueInput!): VizPart
+  vizPartsCount(where: VizPartWhereInput! = {}): Int
+  vizChapters(where: VizChapterWhereInput! = {}, orderBy: [VizChapterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VizChapterWhereUniqueInput): [VizChapter!]
+  vizChapter(where: VizChapterWhereUniqueInput!): VizChapter
+  vizChaptersCount(where: VizChapterWhereInput! = {}): Int
+  vizSections(where: VizSectionWhereInput! = {}, orderBy: [VizSectionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VizSectionWhereUniqueInput): [VizSection!]
+  vizSection(where: VizSectionWhereUniqueInput!): VizSection
+  vizSectionsCount(where: VizSectionWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
   validateProfilePasswordResetToken(email: String!, token: String!): ValidateProfilePasswordResetTokenResult
