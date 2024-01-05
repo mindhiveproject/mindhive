@@ -19,6 +19,15 @@ export default function TaskParameters({ task, handleChange }) {
     });
   };
 
+  const setParametersFromTemplate = () => {
+    handleChange({
+      target: {
+        name: "parameters",
+        value: task?.template?.parameters,
+      },
+    });
+  };
+
   const renderInput = ({ name, value, type, options, array }) => {
     switch (type) {
       case "textarea":
@@ -107,6 +116,11 @@ export default function TaskParameters({ task, handleChange }) {
           </div>
         )
       )}
+      <div>
+        <button onClick={setParametersFromTemplate}>
+          Get parameters from the template
+        </button>
+      </div>
     </fieldset>
   );
 }

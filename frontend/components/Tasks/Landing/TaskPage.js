@@ -72,7 +72,7 @@ export default function TaskPage({ user, task }) {
                       style={{ color: "#556AEB" }}
                     />
                     <span style={{ fontWeight: "600" }}>
-                      {parameter?.name || parameter?.help}
+                      {parameter?.help || parameter?.name}
                     </span>
                   </p>
                   <p style={{ fontWeight: "lighter" }}>

@@ -79,40 +79,45 @@ export default function EditComponent({
   });
 
   async function handleSubmit() {
-    // update the template
-    if (
-      inputs?.template?.script &&
-      inputs?.template?.file &&
-      isTemplateAuthor
-    ) {
-      // save files in the file system and store their addresses
-      // Find the absolute path of the json directory
-      const { scriptAddress, fileAddress } = await UploadFile({
-        script: inputs?.template?.script,
-        file: inputs?.template?.file,
-        name: inputs?.template?.slug,
-      });
+    // update the template if the user is the template author
+    if (isTemplateAuthor) {
+      if (inputs?.template?.script && inputs?.template?.file) {
+        // save files in the file system and store their addresses
+        // Find the absolute path of the json directory
+        const { scriptAddress, fileAddress } = await UploadFile({
+          script: inputs?.template?.script,
+          file: inputs?.template?.file,
+          name: inputs?.template?.slug,
+        });
 
-      handleMultipleUpdate({
-        template: {
-          ...inputs?.template,
-          scriptAddress, // string
-          fileAddress, // JSON object
-        },
-      });
-
+        handleMultipleUpdate({
+          template: {
+            ...inputs?.template,
+            scriptAddress, // string
+            fileAddress, // JSON object
+          },
+        });
+        await updateTemplate({
+          variables: {
+            collaborators: inputs?.template?.collaborators.map((col) => ({
+              id: col?.id,
+            })),
+            script: null,
+            file: null,
+            scriptAddress,
+            fileAddress,
+          },
+        });
+      }
       await updateTemplate({
         variables: {
           collaborators: inputs?.template?.collaborators.map((col) => ({
             id: col?.id,
           })),
-          script: null,
-          file: null,
-          scriptAddress,
-          fileAddress,
         },
       });
     }
+
     // update the task
     await updateTask({
       variables: {
