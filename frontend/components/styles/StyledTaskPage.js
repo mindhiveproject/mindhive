@@ -120,7 +120,7 @@ export const StyledContent = styled.div`
   .leftPanel {
     display: grid;
     grid-gap: 15px;
-    padding: 50px 70px 0px 70px;
+    /* padding: 50px 70px 0px 70px; */
     background-color: #f7f9f8;
   }
   .rightPanel {

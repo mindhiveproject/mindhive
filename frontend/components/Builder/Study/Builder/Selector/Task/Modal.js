@@ -81,7 +81,7 @@ export default function TaskModal({
         </StyledModalHeader>
       </Modal.Header>
 
-      <Modal.Content style={{ padding: "0px", backgroundColor: "#E6E6E6" }}>
+      <Modal.Content style={{ padding: "50px", backgroundColor: "#f8f9f8" }}>
         <TaskPage user={user} task={component} />
       </Modal.Content>
 

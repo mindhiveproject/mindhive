@@ -35,7 +35,7 @@ const StyledTaskBuilder = styled.div`
     textarea,
     select {
       font-family: Lato;
-      height: 48px;
+      /* height: 48px; */
       border: 1px solid #cccccc;
       border-radius: 4px;
       width: 100%;

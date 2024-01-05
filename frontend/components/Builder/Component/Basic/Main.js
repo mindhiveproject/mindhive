@@ -91,7 +91,6 @@ export default function Basic({
             Description (for Develop mode)
             <textarea
               id="description"
-              rows="50"
               name="description"
               value={task?.description}
               onChange={handleChange}
@@ -111,7 +110,6 @@ export default function Basic({
               name="descriptionForParticipants"
               value={task?.descriptionForParticipants}
               onChange={handleChange}
-              rows="5"
             />
           </label>
           <span>

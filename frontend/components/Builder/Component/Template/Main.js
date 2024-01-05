@@ -82,7 +82,6 @@ export default function Template({
           <label htmlFor="description">Template description</label>
           <textarea
             id="description"
-            rows="50"
             name="description"
             value={template?.description}
             onChange={handleTemplateChange}
