@@ -5,3 +5,5 @@ keystone.db
 .env
 yarn.lock
 package-lock.json
+schema.graphql
+schema.prisma
