@@ -1,3 +1,5 @@
+import { Dropdown, DropdownMenu, DropdownItem } from "semantic-ui-react";
+
 import { useMutation } from "@apollo/client";
 import { CREATE_VIZSECTION } from "../../../../Mutations/VizSection";
 import { STUDY_VIZJOURNAL } from "../../../../Queries/VizJournal";
@@ -6,10 +8,17 @@ export default function CreateSection({ studyId, chapterId }) {
   const [createSection, { data, loading, error }] = useMutation(
     CREATE_VIZSECTION,
     {
+      variables: {},
+      refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
+    }
+  );
+
+  const addSection = ({ type, title }) => {
+    createSection({
       variables: {
         input: {
-          title: "Test viz section title",
-          type: "PARAGRAPH",
+          title,
+          type,
           vizChapter: {
             connect: {
               id: chapterId,
@@ -17,13 +26,58 @@ export default function CreateSection({ studyId, chapterId }) {
           },
         },
       },
-      refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
-    }
-  );
+    });
+  };
 
   return (
-    <div>
-      <button onClick={createSection}>+ Paragraph</button>
-    </div>
+    <Dropdown icon={<img src={`/assets/icons/visualize/add.svg`} />}>
+      <DropdownMenu>
+        <DropdownItem
+          onClick={() => addSection({ type: "PARAGRAPH", title: "Text" })}
+        >
+          <div className="menuItem">
+            <div>
+              <img src={`/assets/icons/visualize/segment.svg`} />
+            </div>
+            <div>Paragraph</div>
+          </div>
+        </DropdownItem>
+
+        <DropdownItem
+          onClick={() =>
+            addSection({ type: "STATISTICS", title: "Summary Statistics" })
+          }
+        >
+          <div className="menuItem">
+            <div>
+              <img src={`/assets/icons/visualize/table_chart_view.svg`} />
+            </div>
+            <div>Summary statistics</div>
+          </div>
+        </DropdownItem>
+
+        <DropdownItem
+          onClick={() => addSection({ type: "TABLE", title: "Data Table" })}
+        >
+          <div className="menuItem">
+            <div>
+              <img src={`/assets/icons/visualize/table_view.svg`} />
+            </div>
+            <div>Table view</div>
+          </div>
+        </DropdownItem>
+
+        <DropdownItem
+          onClick={() => addSection({ type: "GRAPH", title: "Graph" })}
+        >
+          <div className="menuItem">
+            <div>
+              <img src={`/assets/icons/visualize/bar_chart.svg`} />
+            </div>
+            <div>Graph</div>
+          </div>
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
   );
 }

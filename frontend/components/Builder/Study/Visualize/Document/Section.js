@@ -1,28 +1,68 @@
 import useForm from "../../../../../lib/useForm";
-import JoditEditor from "../../../../Jodit/Editor";
-import DeleteSection from "./DeleteSection";
-import SaveSection from "./SaveSection";
 
-export default function Section({ studyId, chapter, section }) {
+import Paragraph from "./Sections/Paragraph";
+import Table from "./Sections/Table";
+
+import SaveSection from "./SaveSection";
+import Statistics from "./Sections/Statistics";
+import Graph from "./Sections/Graph/Main";
+import SectionHeader from "./SectionHeader";
+
+export default function Section({ studyId, chapter, section, results }) {
   const { inputs, handleChange } = useForm({
-    ...(section?.content || {}),
+    ...(section || {}),
   });
 
-  // update content in the local state
-  const handleContentChange = async (content) => {
-    handleChange({ target: { name: "text", value: content } });
+  const { type } = section;
+
+  const handleContentChange = ({ name, content }) => {
+    handleChange({
+      target: {
+        name: "content",
+        value: { ...inputs.content, [name]: content },
+      },
+    });
   };
 
   return (
     <div className="section">
-      <h4>{section?.type}</h4>
+      <SectionHeader
+        studyId={studyId}
+        section={section}
+        description={inputs?.description}
+        handleChange={handleChange}
+      />
 
-      <div>
-        <JoditEditor
-          content={inputs?.text || ""}
-          setContent={handleContentChange}
+      {type === "PARAGRAPH" && (
+        <Paragraph
+          content={inputs?.content}
+          handleContentChange={handleContentChange}
         />
-      </div>
+      )}
+
+      {type === "TABLE" && (
+        <Table
+          content={inputs?.content}
+          handleContentChange={handleContentChange}
+          results={results}
+        />
+      )}
+
+      {type === "STATISTICS" && (
+        <Statistics
+          content={inputs?.content}
+          handleContentChange={handleContentChange}
+          results={results}
+        />
+      )}
+
+      {type === "GRAPH" && (
+        <Graph
+          content={inputs?.content}
+          handleContentChange={handleContentChange}
+          results={results}
+        />
+      )}
 
       <div>
         <SaveSection
@@ -30,9 +70,6 @@ export default function Section({ studyId, chapter, section }) {
           sectionId={section?.id}
           inputs={inputs}
         />
-      </div>
-      <div>
-        <DeleteSection studyId={studyId} sectionId={section?.id} />
       </div>
     </div>
   );

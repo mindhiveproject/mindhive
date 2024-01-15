@@ -83,6 +83,12 @@ export const GET_CHAT = gql`
       members {
         id
         username
+        image {
+          id
+          image {
+            publicUrlTransformed
+          }
+        }
       }
     }
   }

@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { Icon } from "semantic-ui-react";
+
 import { CREATE_VIZJOURNAL } from "../../../../../Mutations/VizJournal";
 import { STUDY_VIZJOURNAL } from "../../../../../Queries/VizJournal";
 
@@ -9,7 +9,7 @@ export default function EmptyState({ studyId }) {
     {
       variables: {
         input: {
-          title: "Test viz journal",
+          title: "Unnamed journal",
           study: {
             connect: {
               id: studyId,
@@ -18,9 +18,13 @@ export default function EmptyState({ studyId }) {
           vizParts: {
             create: [
               {
-                title: "Test viz part",
+                title: "Unnamed part",
                 dataOrigin: "STUDY",
-                vizChapters: { create: [{ title: "Test viz chapter" }] },
+                vizChapters: {
+                  create: [
+                    { title: "Unnamed chapter", description: "Description" },
+                  ],
+                },
               },
             ],
           },
@@ -33,8 +37,11 @@ export default function EmptyState({ studyId }) {
   return (
     <div>
       <div>It looks like you still don’t have any data visualizations!</div>
-      <div>
-        <button onClick={createJournal}>From scratch</button>
+      <div className="emptyStateButtons">
+        <div className="menuItem menuButton" onClick={createJournal}>
+          <img src={`/assets/icons/visualize/draft.svg`} />
+          <div>From scratch</div>
+        </div>
       </div>
     </div>
   );

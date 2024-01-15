@@ -1,3 +1,5 @@
+import { DropdownItem } from "semantic-ui-react";
+
 import { useMutation } from "@apollo/client";
 import { DELETE_VIZSECTION } from "../../../../Mutations/VizSection";
 import { STUDY_VIZJOURNAL } from "../../../../Queries/VizJournal";
@@ -14,8 +16,11 @@ export default function DeleteSection({ studyId, sectionId }) {
   );
 
   return (
-    <div>
-      <button onClick={deleteSection}>Delete</button>
-    </div>
+    <DropdownItem onClick={deleteSection}>
+      <div className="menuItem">
+        <img src={`/assets/icons/visualize/delete.svg`} />
+        <div>Delete</div>
+      </div>
+    </DropdownItem>
   );
 }

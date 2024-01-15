@@ -9,7 +9,8 @@ export default function SaveSection({ studyId, sectionId, inputs }) {
       variables: {
         id: sectionId,
         input: {
-          content: { ...inputs },
+          description: inputs?.description,
+          content: { ...inputs.content },
         },
       },
       refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],

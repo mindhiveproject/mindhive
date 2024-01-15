@@ -17,6 +17,7 @@ export const STUDY_VIZJOURNAL = gql`
             vizSections {
               id
               title
+              description
               type
               content
             }

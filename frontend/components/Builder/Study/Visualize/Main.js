@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Icon } from "semantic-ui-react";
 
 import Navigation from "../Navigation/Main";
+import Menu from "./Menu/Main";
 import Overview from "./Overview/Main";
 import Document from "./Document/Main";
 
@@ -11,7 +12,14 @@ import { STUDY_VIZJOURNAL } from "../../../Queries/VizJournal";
 
 import { StyledDataViz } from "../../../styles/StyledDataviz";
 
-export default function Visualize({ query, user, tab, toggleSidebar, data }) {
+export default function Visualize({
+  query,
+  user,
+  tab,
+  toggleSidebar,
+  data,
+  results,
+}) {
   const studyId = query?.selector;
 
   const [page, setPage] = useState("browse");
@@ -54,6 +62,8 @@ export default function Visualize({ query, user, tab, toggleSidebar, data }) {
               c = p?.vizChapters[0];
             }
             setChapter(c);
+          } else {
+            setChapter(undefined);
           }
         }
       }
@@ -92,20 +102,13 @@ export default function Visualize({ query, user, tab, toggleSidebar, data }) {
         user={user}
         tab={tab}
         toggleSidebar={toggleSidebar}
-        saveBtnName="Save"
-        saveBtnFunction={saveVizJournal}
-        hasStudyChanged={hasJournalChanged}
+        // saveBtnName="Save"
+        // saveBtnFunction={saveVizJournal}
+        // hasStudyChanged={hasJournalChanged}
       />
       <StyledDataViz>
         <div className="vizMenu">
-          <div className="buttons">
-            <div onClick={() => setPage("browse")}>
-              <Icon name="folder open" />
-            </div>
-            <div onClick={() => setPage("database")}>
-              <Icon name="database" />
-            </div>
-          </div>
+          <Menu page={page} setPage={setPage} />
           <Overview
             page={page}
             studyId={studyId}
@@ -115,7 +118,13 @@ export default function Visualize({ query, user, tab, toggleSidebar, data }) {
             data={data}
           />
         </div>
-        <Document page={page} studyId={studyId} chapter={chapter} part={part} />
+        <Document
+          page={page}
+          studyId={studyId}
+          chapter={chapter}
+          part={part}
+          results={results}
+        />
       </StyledDataViz>
     </>
   );

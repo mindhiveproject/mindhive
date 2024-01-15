@@ -9,7 +9,7 @@ export default function NewAssignment({ user, myclass, assignment, children }) {
   const { inputs, handleChange, clearForm } = useForm({
     title: assignment?.title || "",
     content: assignment?.content || "",
-    classes: assignment?.classes || [],
+    classes: assignment?.classes || [{ id: myclass?.id }],
   });
 
   const [createAssignment, { loading }] = useMutation(CREATE_ASSIGNMENT, {

@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-import { Modal } from "semantic-ui-react";
+import {
+  Modal,
+  ModalHeader,
+  ModalContent,
+  ModalActions,
+} from "semantic-ui-react";
 import JoditEditor from "../../../Jodit/Editor";
 
 export default function Form({
@@ -19,8 +24,15 @@ export default function Form({
       open={open}
       trigger={children}
     >
-      <div className="modalWrapper">
-        <JoditEditor content={message} setContent={setMessage} />
+      <ModalHeader>
+        <h2>Add posting</h2>
+      </ModalHeader>
+      <ModalContent>
+        <div className="modalWrapper">
+          <JoditEditor content={message} setContent={setMessage} />
+        </div>
+      </ModalContent>
+      <ModalActions>
         <button
           onClick={() => {
             submit();
@@ -30,7 +42,7 @@ export default function Form({
         >
           {btnName}
         </button>
-      </div>
+      </ModalActions>
     </Modal>
   );
 }

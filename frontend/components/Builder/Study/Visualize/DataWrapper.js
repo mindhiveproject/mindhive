@@ -11,7 +11,33 @@ export default function DataWrapper({ query, user, tab, toggleSidebar }) {
   const { data, loading, error } = useQuery(STUDY_SUMMARY_RESULTS, {
     variables: { studyId },
   });
-  const results = data?.summaryResults || [];
+  const study = data?.study || {};
+  const results = study?.summaryResults || [];
+
+  // find all tests in the study with recursive search
+  var components = [];
+  const findComponents = ({ flow, conditionLabel }) => {
+    flow?.forEach((stage) => {
+      if (stage?.type === "my-node") {
+        components.push({
+          testId: stage?.testId,
+          name: stage?.name,
+          subtitle: stage?.subtitle,
+          conditionLabel,
+        });
+      }
+      if (stage?.type === "design") {
+        stage?.conditions?.forEach((condition) => {
+          findComponents({
+            flow: condition?.flow,
+            conditionLabel: condition?.label,
+          });
+        });
+      }
+    });
+  };
+  findComponents({ flow: study?.flow });
+  console.log({ components });
 
   // process results
   const process = ({ data }) => {
@@ -71,22 +97,35 @@ export default function DataWrapper({ query, user, tab, toggleSidebar }) {
   };
 
   const processed = process({ data: results });
+  // console.log({ results });
 
   const processByTask = ({ data }) => {
+    console.log({ data });
     // filter out unique tasks
-    const allTasks = data.map((row) => row?.task?.id);
+    const allTasks = data.map((row) => row?.testVersion);
     const tasks = [...new Set(allTasks)];
     // populate the array of data with tasks
     const dataByTask = tasks.map((taskId) => {
-      const taskData = data.filter((row) => row?.task?.id === taskId);
+      const taskData = data.filter((row) => row?.testVersion === taskId);
       // get the title
       const title = taskData[0]?.task?.title;
+      // get the subtitle and condition
+      const component = components
+        .filter((c) => c?.testId === taskId)
+        .map((c) => ({
+          subtitle: c?.subtitle,
+          condition: c?.conditionLabel,
+        }))[0];
+      const subtitle = component?.subtitle;
+      const condition = component?.condition;
       // get the names of all variables
       const allVariables = taskData.map((row) => Object.keys(row?.data)).flat();
       const variables = [...new Set(allVariables)];
       return {
         id: taskId,
         title: title,
+        subtitle: subtitle,
+        condition: condition,
         variables: variables,
         data: taskData,
       };
@@ -94,6 +133,7 @@ export default function DataWrapper({ query, user, tab, toggleSidebar }) {
     return dataByTask;
   };
   const processedByTask = processByTask({ data: results });
+  console.log({ processedByTask });
 
   return (
     <Visualize
@@ -102,6 +142,7 @@ export default function DataWrapper({ query, user, tab, toggleSidebar }) {
       tab={tab}
       toggleSidebar={toggleSidebar}
       data={processedByTask}
+      results={results}
     />
   );
 }

@@ -1,6 +1,47 @@
 import styled from "styled-components";
 
 export const StyledChat = styled.div`
+  display: grid;
+  grid-gap: 10px;
+  align-content: baseline;
+  height: 100%;
+
+  .chatTitle {
+    display: grid;
+    margin: 10px 0px;
+    input,
+    textarea,
+    select {
+      background: #f6f9f8;
+      width: 100%;
+      border: 0px solid #e6e6e6;
+      border-radius: 4px;
+      &:focus {
+        outline: 0;
+        background: white;
+        border-color: mintcream;
+      }
+    }
+    button {
+      background: #007c70;
+      color: white;
+      max-width: 256px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .title {
+      font-family: Lato;
+      font-size: 36px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 56px;
+      letter-spacing: 0em;
+      text-align: left;
+      color: #1a1a1a;
+      margin-bottom: 23px;
+    }
+  }
+
   .chatsHeader {
     display: grid;
     margin: 1rem 0rem;
@@ -59,45 +100,12 @@ export const StyledChat = styled.div`
     }
   }
 
-  .chatTitle {
-    display: grid;
-    input,
-    textarea,
-    select {
-      background: #f6f9f8;
-      width: 100%;
-      border: 0px solid #e6e6e6;
-      border-radius: 4px;
-      &:focus {
-        outline: 0;
-        background: white;
-        border-color: mintcream;
-      }
-    }
-    button {
-      background: #007c70;
-      color: white;
-      max-width: 256px;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-    .title {
-      font-family: Lato;
-      font-size: 36px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 56px;
-      letter-spacing: 0em;
-      text-align: left;
-      color: #1a1a1a;
-      margin-bottom: 23px;
-    }
-  }
-
   .chatRoom {
     display: grid;
-    grid-gap: 1px;
+    grid-gap: 5px;
     margin: 0px 0px;
+    height: 100%;
+    align-content: baseline;
     .chatHeader {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -117,7 +125,6 @@ export const StyledChat = styled.div`
     .members {
       display: grid;
       width: 100%;
-      justify-content: end;
       .title {
         padding: 1px;
         margin: 0px 5px 0px 0px;

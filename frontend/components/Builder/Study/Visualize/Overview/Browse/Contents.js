@@ -1,6 +1,5 @@
-import { useMutation } from "@apollo/client";
-import { ADD_VIZCHAPTER } from "../../../../../Mutations/VizChapter";
-import { STUDY_VIZJOURNAL } from "../../../../../Queries/VizJournal";
+import { Dropdown, DropdownMenu, DropdownItem } from "semantic-ui-react";
+import DeleteChapter from "../../Document/DeleteChapter";
 
 export default function Contents({
   studyId,
@@ -8,38 +7,39 @@ export default function Contents({
   chapterId,
   selectChapter,
 }) {
-  const [addChapter, { data, loading, error }] = useMutation(ADD_VIZCHAPTER, {
-    variables: {
-      input: {
-        title: "Test viz chapter 2",
-        vizPart: {
-          connect: {
-            id: journal?.vizParts[0]?.id,
-          },
-        },
-      },
-    },
-    refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
-  });
-
   return (
     <div className="contents">
-      {journal?.vizParts.map((part) => (
-        <div className="part">
-          <div>{part?.dataOrigin}</div>
+      {journal?.vizParts.map((part, num) => (
+        <div key={num} className="part">
+          <div className="menuOriginaDataTitle">
+            {part?.dataOrigin === "STUDY" ? "Study Data" : "Simulated Data"}
+          </div>
           <div>
-            {part?.vizChapters.map((chapter) => (
-              <div className="chapter">
+            {part?.vizChapters.map((chapter, num) => (
+              <div
+                key={num}
+                className={
+                  chapter?.id === chapterId ? "selected chapter" : "chapter"
+                }
+              >
                 <div
                   className="title"
                   onClick={() => selectChapter({ chapterId: chapter?.id })}
                 >
-                  {chapter?.title}
-                  {chapter?.id === chapterId && "Selected"}
+                  <div>{chapter?.title}</div>
+                  <Dropdown
+                    icon={<img src={`/assets/icons/visualize/more_vert.svg`} />}
+                  >
+                    <DropdownMenu>
+                      <DeleteChapter studyId={studyId} chapter={chapter} />
+                    </DropdownMenu>
+                  </Dropdown>
                 </div>
                 <div>
-                  {chapter?.vizSections.map((section) => (
-                    <div className="section">{section?.title}</div>
+                  {chapter?.vizSections.map((section, num) => (
+                    <div key={num} className="section">
+                      {section?.title}
+                    </div>
                   ))}
                 </div>
               </div>
@@ -47,9 +47,6 @@ export default function Contents({
           </div>
         </div>
       ))}
-      <div>
-        <button onClick={addChapter}>New chapter</button>
-      </div>
     </div>
   );
 }
