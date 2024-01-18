@@ -26,7 +26,7 @@ export default function StudyBuilder({ query, user }) {
         <Sidebar
           animation="overlay"
           icon="labeled"
-          vertical
+          vertical="true"
           visible={sidebarOpen}
           direction="right"
           width="very wide"

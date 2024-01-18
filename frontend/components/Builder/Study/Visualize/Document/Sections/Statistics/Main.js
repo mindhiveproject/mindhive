@@ -1,6 +1,6 @@
 import StateManager from "./StateManager";
 
-export default function Graph({
+export default function Statistics({
   content,
   handleContentChange,
   data,

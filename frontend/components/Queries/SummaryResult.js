@@ -13,6 +13,9 @@ export const STUDY_SUMMARY_RESULTS = gql`
         user {
           id
           publicReadableId
+          studentIn {
+            code
+          }
         }
         guest {
           id

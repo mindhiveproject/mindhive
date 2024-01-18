@@ -14,6 +14,7 @@ export const STUDY_VIZJOURNAL = gql`
             id
             title
             description
+            isTemplate
             vizSections {
               id
               title

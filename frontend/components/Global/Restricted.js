@@ -11,3 +11,10 @@ export default function RestrictedAccess({
   }
   return <>{children}</>;
 }
+
+export function OnlyAdminAccess({ children, user }) {
+  if (!user?.permissions.map((p) => p?.name).includes("ADMIN")) {
+    return <></>;
+  }
+  return <>{children}</>;
+}

@@ -1,44 +1,35 @@
-// const defaultSpec = {
-//   width: "500",
-//   height: "400",
-//   title: { text: "My graph", fontSize: 20 },
-//   mark: "point",
-//   transform: [],
-//   encoding: {
-//     x: {
-//       field: "",
-//       type: "quantitative",
-//     },
-//     y: {
-//       field: "",
-//       type: "quantitative",
-//     },
-//     color: { field: "", type: "nominal" },
-//   },
-//   data: { name: "values" },
-// };
+const defaultCode = `import matplotlib
+import matplotlib.pyplot as plt
+import pandas as pd
 
-export default function TemplateSelector({ updateSpec }) {
+import js_workspace as data
+data = data.to_py()
+
+df = pd.DataFrame(data)                                                                    
+
+# clean the canvas
+plt.clf()
+
+X = document.getElementById("X-variable").value
+Y = document.getElementById("Y-variable").value
+Group = document.getElementById("Group-variable").value
+
+# create a scatter plot
+plt.scatter(df[X], df[Y]) 
+
+# customize the graph
+plt.title('Sample Line Graph')
+plt.xlabel('X-axis Label')
+plt.ylabel('Y-axis Label')
+plt.legend()
+plt.grid(True)
+
+plt.show()`;
+
+export default function TemplateSelector({ handleChange, runCode }) {
   const selectGraphType = ({ type, title }) => {
-    updateSpec({
-      width: "500",
-      height: "400",
-      title: { text: title, fontSize: 20 },
-      mark: "point",
-      transform: [],
-      encoding: {
-        x: {
-          field: "reaction_time_match",
-          type: "quantitative",
-        },
-        y: {
-          field: "reaction_time_mismatch",
-          type: "quantitative",
-        },
-        color: { field: "testVersion", type: "nominal" },
-      },
-      data: { name: "values" },
-    });
+    handleChange(defaultCode);
+    runCode({ code: defaultCode });
   };
 
   return (

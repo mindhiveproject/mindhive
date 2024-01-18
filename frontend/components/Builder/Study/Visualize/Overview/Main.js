@@ -8,6 +8,7 @@ export default function Overview({
   chapterId,
   selectChapter,
   data,
+  variables,
 }) {
   return (
     <div className="overview">
@@ -19,7 +20,7 @@ export default function Overview({
           selectChapter={selectChapter}
         />
       )}
-      {page === "database" && <Database data={data} />}
+      {page === "database" && <Database data={data} variables={variables} />}
     </div>
   );
 }

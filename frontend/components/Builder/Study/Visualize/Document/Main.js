@@ -3,7 +3,15 @@ import CreateSection from "./CreateSection";
 
 import Section from "./Section";
 
-export default function Document({ studyId, part, chapter, results }) {
+export default function Document({
+  user,
+  studyId,
+  part,
+  chapter,
+  data,
+  variables,
+  pyodide,
+}) {
   if (!chapter) {
     if (part?.vizChapters && part?.vizChapters.length) {
       return (
@@ -19,7 +27,12 @@ export default function Document({ studyId, part, chapter, results }) {
   }
   return (
     <div className="document">
-      <ChapterHeader studyId={studyId} part={part} chapter={chapter} />
+      <ChapterHeader
+        user={user}
+        studyId={studyId}
+        part={part}
+        chapter={chapter}
+      />
       <div>
         {chapter?.vizSections.map((section, num) => (
           <Section
@@ -27,7 +40,9 @@ export default function Document({ studyId, part, chapter, results }) {
             studyId={studyId}
             chapter={chapter}
             section={section}
-            results={results}
+            data={data}
+            variables={variables}
+            pyodide={pyodide}
           />
         ))}
       </div>

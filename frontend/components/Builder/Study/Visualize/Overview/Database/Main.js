@@ -1,7 +1,31 @@
 import { useState } from "react";
 import { Accordion, Icon } from "semantic-ui-react";
 
-export default function Database({ data }) {
+const processByTask = ({ data }) => {
+  // filter out unique tasks
+  const allTasks = data.map((row) => row?.testVersion);
+  const tasks = [...new Set(allTasks)];
+  // populate the array of data with tasks
+  const dataByTask = tasks.map((taskId) => {
+    const taskData = data.filter((row) => row?.testVersion === taskId);
+    // get the names of all variables
+    const allVariables = taskData.map((row) => Object.keys(row)).flat();
+    const variables = [...new Set(allVariables)];
+    return {
+      id: taskId,
+      title: taskData[0]?.task,
+      subtitle: taskData[0]?.subtitle,
+      condition: taskData[0]?.condition,
+      variables: variables,
+      data: taskData,
+    };
+  });
+  return dataByTask;
+};
+
+export default function Database({ data, variables }) {
+  const formatedData = processByTask({ data: data });
+
   const [activeIndex, setActiveIndex] = useState(
     data.map((task, index) => index) || []
   );
@@ -28,7 +52,7 @@ export default function Database({ data }) {
       </div>
 
       <Accordion exclusive={false} fluid>
-        {data.map((task, index) => (
+        {formatedData.map((task, index) => (
           <>
             <Accordion.Title
               active={activeIndex.includes(index)}

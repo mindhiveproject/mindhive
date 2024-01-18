@@ -9,10 +9,12 @@ import {
 
 import Render from "./Render";
 import CodeEditor from "./Controller/CodeEditor";
-import TemplateSelector from "./Controller/Templates";
-import Selector from "./Controller/Selector";
 
-const defaultCode = ``;
+const defaultCode = `import pandas as pd
+import js_workspace as data
+data = data.to_py()
+df = pd.DataFrame(data)
+df.head()`;
 
 export default function StateManager({
   studyData,
@@ -23,13 +25,18 @@ export default function StateManager({
 }) {
   const [isRunning, setIsRunning] = useState(false);
   const [output, setOutput] = useState("");
-
   // state of the python code
   const code = content?.code || defaultCode;
+  // const [code, setCode] = useState(content?.code || defaultCode);
   // state of the data we are working with
   const [data, setData] = useState(studyData);
   // state of the variables
   const [variables, setVariables] = useState([...studyVariables]);
+
+  // const updateCode = (code) => {
+  //   setCode(code);
+  //   handleChange(code);
+  // };
 
   const addToOutput = (s) => {
     setOutput(output + ">>>" + "\n" + s + "\n");
@@ -49,14 +56,8 @@ export default function StateManager({
   };
 
   return (
-    <div className="graph">
-      {!code && pyodide && (
-        <TemplateSelector handleChange={handleChange} runCode={runCode} />
-      )}
-      {code && pyodide && (
-        <CodeEditor code={code} handleChange={handleChange} runCode={runCode} />
-      )}
-
+    <div className="statistics">
+      <CodeEditor code={code} handleChange={handleChange} runCode={runCode} />
       {isRunning && (
         <Message icon>
           <Icon name="circle notched" loading />
@@ -69,7 +70,6 @@ export default function StateManager({
       {code && pyodide && (
         <Render data={data} code={code} pyodide={pyodide} runCode={runCode} />
       )}
-      <Selector variables={variables} code={code} runCode={runCode} />
       <div>Output:</div>
       <textarea
         className="outputArea"

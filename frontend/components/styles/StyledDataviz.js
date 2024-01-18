@@ -244,7 +244,6 @@ export const StyledDataViz = styled.div`
         .selectorLine {
           display: grid;
           grid-template-columns: auto 1fr;
-          /* grid-gap: 32px; */
 
           border-radius: 8px;
           border: 1px solid #eaeaea;
@@ -263,9 +262,13 @@ export const StyledDataViz = styled.div`
             padding: 9px 13px;
           }
           .select {
-            /* padding: 9px 13px; */
             .dropdown {
               border: 0;
+            }
+            select {
+              border: 0px;
+              height: 100%;
+              padding: 9px 13px;
             }
           }
         }
@@ -282,6 +285,9 @@ export const StyledDataViz = styled.div`
     .createSectionButton {
       display: grid;
       justify-items: center;
+    }
+    .outputArea {
+      width: 100%;
     }
   }
 `;

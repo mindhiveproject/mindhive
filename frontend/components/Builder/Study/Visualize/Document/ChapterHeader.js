@@ -3,8 +3,12 @@ import useForm from "../../../../../lib/useForm";
 import { UPDATE_VIZCHAPTER } from "../../../../Mutations/VizChapter";
 import { STUDY_VIZJOURNAL } from "../../../../Queries/VizJournal";
 import { StyledInput } from "../../../../styles/StyledForm";
+import { Checkbox } from "semantic-ui-react";
+import RestrictedAccess, {
+  OnlyAdminAccess,
+} from "../../../../Global/Restricted";
 
-export default function ChapterHeader({ studyId, part, chapter }) {
+export default function ChapterHeader({ user, studyId, part, chapter }) {
   const { inputs, handleChange } = useForm({
     ...chapter,
   });
@@ -17,6 +21,7 @@ export default function ChapterHeader({ studyId, part, chapter }) {
         input: {
           title: inputs?.title,
           description: inputs?.description,
+          isTemplate: inputs?.isTemplate,
         },
       },
       refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
@@ -53,8 +58,23 @@ export default function ChapterHeader({ studyId, part, chapter }) {
             />
           </label>
 
+          <OnlyAdminAccess user={user}>
+            <div>
+              <Checkbox
+                label="Make the chapter a template"
+                onChange={(e, data) =>
+                  handleChange({
+                    target: { name: "isTemplate", value: data.checked },
+                  })
+                }
+                checked={inputs?.isTemplate}
+              />
+            </div>
+          </OnlyAdminAccess>
+
           {(inputs?.title !== chapter.title ||
-            inputs?.description !== chapter.description) && (
+            inputs?.description !== chapter.description ||
+            inputs?.isTemplate !== chapter.isTemplate) && (
             <div className="submitButton">
               <button onClick={() => updateChapter()} type="submit">
                 Save
