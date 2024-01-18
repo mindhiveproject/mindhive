@@ -5,11 +5,13 @@ export const StyledDataViz = styled.div`
   margin: 27px 17px;
   grid-template-columns: 1fr 2fr;
   grid-gap: 19px;
-  height: 100%;
+  max-height: 85vh;
   .vizMenu {
     display: grid;
     grid-template-columns: 40px auto;
     grid-gap: 34px;
+    overflow-y: auto;
+    height: 100%;
   }
   .item {
     padding: 0px !important;
@@ -48,6 +50,8 @@ export const StyledDataViz = styled.div`
     border-radius: 8px;
     background: #fcfdfc;
     box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
+    overflow-y: auto;
+    height: 100%;
     .header {
       display: grid;
       grid-template-columns: auto 1fr auto;
@@ -170,6 +174,7 @@ export const StyledDataViz = styled.div`
     background: #fcfdfc;
     box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
     height: 100%;
+    overflow-y: auto;
     .section {
       display: grid;
       padding: 10px 0px;

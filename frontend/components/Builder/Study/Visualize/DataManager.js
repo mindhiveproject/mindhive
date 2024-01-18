@@ -49,15 +49,17 @@ export default function DataManager({
   }, [data]);
 
   return (
-    <div>
+    <>
       {isLoading && (
-        <Message icon>
-          <Icon name="circle notched" loading />
-          <MessageContent>
-            <MessageHeader>Just one second</MessageHeader>
-            The data analysis libraries are loading.
-          </MessageContent>
-        </Message>
+        <div>
+          <Message icon>
+            <Icon name="circle notched" loading />
+            <MessageContent>
+              <MessageHeader>Just one second</MessageHeader>
+              The data analysis libraries are loading.
+            </MessageContent>
+          </Message>
+        </div>
       )}
 
       <JournalManager
@@ -67,6 +69,6 @@ export default function DataManager({
         variables={variables}
         pyodide={pyodide}
       />
-    </div>
+    </>
   );
 }

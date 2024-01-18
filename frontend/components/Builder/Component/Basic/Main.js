@@ -32,6 +32,11 @@ export default function Basic({
     };
   }
 
+  // in the study builder only display specific parameters
+  const displayedParameterKeys = isInStudyBuilder
+    ? ["descriptionBefore", "descriptionAfter"]
+    : Object.keys(task?.settings);
+
   return (
     <>
       <DisplayError error={error} />
@@ -136,15 +141,18 @@ export default function Basic({
 
         {task?.settings && Object.keys(task?.settings).length && (
           <>
-            {Object.keys(task?.settings).map((name, i) => (
-              <SettingBlock
-                key={i}
-                name={name}
-                value={task?.settings[name]}
-                handleChange={handleChange}
-                task={task}
-              />
-            ))}
+            {Object.keys(task?.settings)
+              .filter((parameter) => displayedParameterKeys.includes(parameter))
+              .map((name, i) => (
+                <SettingBlock
+                  key={i}
+                  name={name}
+                  value={task?.settings[name]}
+                  handleChange={handleChange}
+                  task={task}
+                  isInStudyBuilder={isInStudyBuilder}
+                />
+              ))}
           </>
         )}
       </fieldset>
