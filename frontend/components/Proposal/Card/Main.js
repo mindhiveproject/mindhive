@@ -3,7 +3,6 @@ import { useQuery, useMutation } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
 
-import { GET_CARD_CONTENT } from "../../Queries/Proposal";
 import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
 import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 
@@ -12,7 +11,7 @@ import JoditEditor from "../../Jodit/Editor";
 
 import Assigned from "./Forms/Assigned";
 import Status from "./Forms/Status";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function ProposalCard({
   user,
@@ -21,19 +20,9 @@ export default function ProposalCard({
   closeCard,
   proposalBuildMode,
   isPreview,
+  proposalCard,
+  refreshPage,
 }) {
-  const {
-    data,
-    loading: getLoading,
-    error,
-  } = useQuery(GET_CARD_CONTENT, {
-    variables: {
-      id: cardId,
-    },
-  });
-
-  const proposalCard = data?.proposalCard || {};
-
   // check whether the card is locked - after 1 hour it is allowed to edit
   const releaseTime =
     new Date(proposalCard?.lastTimeEdited)?.getTime() + 60 * 60 * 1000;
@@ -52,18 +41,10 @@ export default function ProposalCard({
     ...proposalCard,
   });
 
-  const [content, setContent] = useState(proposalCard?.content);
+  const content = useRef(proposalCard?.content);
 
-  const [updateCard, { loading: updateLoading }] = useMutation(
-    UPDATE_CARD_CONTENT,
-    {
-      variables: {
-        ...inputs,
-        content,
-        assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
-      },
-    }
-  );
+  const [updateCard, { loading: updateLoading }] =
+    useMutation(UPDATE_CARD_CONTENT);
 
   const [updateEdit, { loading: updateEditLoading }] = useMutation(
     UPDATE_CARD_EDIT,
@@ -103,11 +84,9 @@ export default function ProposalCard({
   };
 
   // update card content in the local state
-  const handleContentChange = async (content) => {
-    setContent(content);
-
-    // lock the card
-    if (inputs?.content !== content && areEditsAllowed && !lockedByUser) {
+  const handleContentChange = async (newContent) => {
+    // lock the card if needed
+    if (inputs?.content !== newContent && areEditsAllowed && !lockedByUser) {
       await updateEdit({
         variables: {
           id: cardId,
@@ -119,11 +98,19 @@ export default function ProposalCard({
       });
       setLockedByUser(true);
     }
+    // update the value of content
+    content.current = newContent;
   };
 
   // update the card and close the modal
   const onUpdateCard = async () => {
-    await updateCard();
+    await updateCard({
+      variables: {
+        ...inputs,
+        content: content?.current,
+        assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
+      },
+    });
     closeCard({ cardId, lockedByUser });
   };
 
@@ -131,13 +118,20 @@ export default function ProposalCard({
     <div className="post">
       {!areEditsAllowed && (
         <div className="lockedMessage">
-          The card is currently been edited by{" "}
-          <span className="username">{proposalCard?.isEditedBy?.username}</span>
-          . Ask the user to close the card or wait until the card is released.
-          The card will be released{" "}
-          <span className="username">{moment().to(releaseTime)}</span>. After
-          the card is released, refresh the page to get the latest version of
-          the card.
+          <div>
+            The card is currently been edited by{" "}
+            <span className="username">
+              {proposalCard?.isEditedBy?.username}
+            </span>
+            . Ask the user to close the card or wait until the card is released.
+            The card will be released{" "}
+            <span className="username">{moment().to(releaseTime)}</span>. After
+            the card is released, refresh the page to get the latest version of
+            the card.
+          </div>
+          <div className="buttonHolder">
+            <button onClick={() => refreshPage()}>Refresh</button>
+          </div>
         </div>
       )}
 
@@ -187,7 +181,10 @@ export default function ProposalCard({
               </div>
             )}
             <div className="jodit">
-              <JoditEditor content={content} setContent={handleContentChange} />
+              <JoditEditor
+                content={content?.current}
+                setContent={handleContentChange}
+              />
             </div>
           </div>
           {!isPreview && (

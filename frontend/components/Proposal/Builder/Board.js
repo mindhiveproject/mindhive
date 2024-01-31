@@ -21,7 +21,7 @@ const Board = ({
 }) => {
   const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
-    pollInterval: 2000, // get new data every 20 seconds
+    pollInterval: 5000, // get new data every 20 seconds
   });
   const proposal = data?.proposalBoard || undefined;
 

@@ -3,9 +3,10 @@ import { useMutation } from "@apollo/client";
 
 import ProposalHeader from "./Header";
 import ProposalBoard from "./Board";
-import ProposalCard from "../Card/Main";
+import ProposalCardWrapper from "../Card/Wrapper";
 
 import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
+import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 
 import { Menu, Sidebar } from "semantic-ui-react";
 
@@ -17,8 +18,14 @@ export default function ProposalBuilder({
   isPreview,
   refetchQueries,
 }) {
-  const [updateEdit, { loading: updateEditLoading }] =
-    useMutation(UPDATE_CARD_EDIT);
+  const [updateEdit, { loading: updateEditLoading }] = useMutation(
+    UPDATE_CARD_EDIT,
+    {
+      refetchQueries: [
+        { query: PROPOSAL_QUERY, variables: { id: proposal?.id } },
+      ],
+    }
+  );
 
   const [page, setPage] = useState("board");
   const [card, setCard] = useState(null);
@@ -56,7 +63,7 @@ export default function ProposalBuilder({
         direction="right"
       >
         {card && (
-          <ProposalCard
+          <ProposalCardWrapper
             user={user}
             proposal={proposal}
             cardId={card?.id}

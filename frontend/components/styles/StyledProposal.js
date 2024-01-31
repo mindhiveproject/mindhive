@@ -428,10 +428,20 @@ export const StyledProposal = styled.div`
     text-align: left;
 
     .lockedMessage {
+      display: grid;
+      grid-gap: 15px;
+      align-items: center;
+      grid-template-columns: 1fr auto;
       background: orange;
       padding: 15px;
       .username {
         font-weight: bold;
+      }
+      .buttonHolder {
+        display: grid;
+        button {
+          background: white;
+        }
       }
     }
 
