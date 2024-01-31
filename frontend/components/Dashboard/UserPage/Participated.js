@@ -1,5 +1,6 @@
 import absoluteUrl from "next-absolute-url";
 import { Icon } from "semantic-ui-react";
+import moment from "moment";
 
 export default function Participated({ query, user, profile }) {
   const { origin } = absoluteUrl();
@@ -19,53 +20,20 @@ export default function Participated({ query, user, profile }) {
         <div>
           <span>Study title</span>
         </div>
+        <div>Step</div>
+        <div>Type</div>
+        <div>Name</div>
+        <div>Task subtitle</div>
+        <div>Task version</div>
         <div>Condition</div>
-        <div>Task/survey/block</div>
-        <div>Task ID</div>
-        <div>Status</div>
-        <div>Date</div>
+        <div>Started</div>
+        <div>Finished</div>
       </div>
       <div>
         {studies.map((study, num) => {
-          // get the information this profile has regarding the study
           const studyInfo =
             (profile?.studiesInfo && profile?.studiesInfo[study?.id]) || {};
-
-          // get the condition name
-          const blockId = studyInfo?.blockId || undefined;
-          // get the condition id
-          const blockName = studyInfo?.blockName || undefined;
-
-          let tests = [];
-          // if the study has only one block (no between-subjects design), use that block
-          if (
-            study?.components?.blocks &&
-            study?.components?.blocks.length === 1
-          ) {
-            tests = study?.components?.blocks[0].tests;
-          } else {
-            // get the study block which is equal to profile condition id
-            const studyBlock = study.components?.blocks.filter(
-              (block) => block?.blockId === blockId
-            )[0];
-            // get the tests from this block
-            tests = studyBlock?.tests || [];
-          }
-
-          const results = profile?.results || [];
-
-          const resultsWithInfo = results
-            .filter((result) => result?.study?.id === study?.id)
-            .map((result) => {
-              const resultExtended = {
-                ...result,
-                title:
-                  tests
-                    .filter((test) => test?.testId === result?.testVersion)
-                    .map((test) => test?.title) || [],
-              };
-              return resultExtended;
-            });
+          const path = studyInfo?.info?.path || [];
 
           return (
             <div key={num} className="rowParticipatedStudies">
@@ -82,44 +50,40 @@ export default function Participated({ query, user, profile }) {
                 </div>
               </div>
               <div className="conditionName">
-                {blockName}
-
                 <div>
-                  {tests.map((test, num) => (
-                    <li key={num}>{test?.title}</li>
+                  {path.map((test, num) => (
+                    <div className="rowTasks" key={num} odd={num % 2}>
+                      <div>{test?.type}</div>
+                      <div>{test?.taskType}</div>
+                      <div>{test?.name}</div>
+                      <div>{test?.subtitle}</div>
+                      <div>{test?.testId}</div>
+                      <div>{test?.conditionLabel}</div>
+                      <div>
+                        {test?.timestampStarted ||
+                        test?.timestampRun ||
+                        test?.timestampAssigned ? (
+                          moment(
+                            test?.timestampStarted ||
+                              test?.timestampRun ||
+                              test?.timestampAssigned
+                          ).format("MM.D.YYYY, h:mma")
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                      <div>
+                        {test?.timestampFinished ? (
+                          moment(test?.timestampFinished).format(
+                            "MM.D.YYYY, h:mma"
+                          )
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                    </div>
                   ))}
                 </div>
-              </div>
-              <div>
-                {resultsWithInfo?.map((test, num) => (
-                  <div className="rowTasks" key={num} odd={num % 2}>
-                    <div>
-                      {test?.title.map((title, num) => (
-                        <span key={num}>{title} </span>
-                      ))}
-                    </div>
-                    <div>{test?.testVersion}</div>
-
-                    <div>
-                      {test?.payload ? (
-                        <>
-                          {test?.payload === "full"
-                            ? "✅ Completed "
-                            : "🔥 Started"}
-                        </>
-                      ) : (
-                        "❌ Not done"
-                      )}
-                    </div>
-                    <div>
-                      {test?.createdAt ? (
-                        moment(test?.createdAt).format("MM.D.YYYY, h:mma")
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           );

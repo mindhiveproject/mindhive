@@ -27,7 +27,7 @@ const StyledProfile = styled.div`
   .headerParticipatedStudies {
     display: grid;
     grid-gap: 10px;
-    grid-template-columns: 200px 200px 2fr 1fr 1fr 1fr;
+    grid-template-columns: 50px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     padding: 10px;
     font-weight: bold;
     grid-gap: 1rem;
@@ -35,7 +35,7 @@ const StyledProfile = styled.div`
   .rowParticipatedStudies {
     display: grid;
     padding: 10px;
-    grid-template-columns: 200px 200px auto;
+    grid-template-columns: 50px 1fr;
     background: white;
     grid-gap: 1rem;
     border-bottom: 1px solid lightGrey;
@@ -57,8 +57,8 @@ const StyledProfile = styled.div`
   .rowTasks {
     display: grid;
     padding: 0rem 1rem;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    grid-gap: 1rem;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 5px;
     align-items: center;
     background: ${(props) => (props.odd ? "#f0f0f0" : "white")};
     border-radius: 5px;
