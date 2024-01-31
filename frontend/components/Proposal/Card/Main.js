@@ -6,7 +6,6 @@ import moment from "moment";
 import { GET_CARD_CONTENT } from "../../Queries/Proposal";
 import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
 import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
-import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 
 import useForm from "../../../lib/useForm";
 import JoditEditor from "../../Jodit/Editor";
@@ -31,7 +30,6 @@ export default function ProposalCard({
     variables: {
       id: cardId,
     },
-    fetchPolicy: "network-only", // Doesn't check cache before making a network request
   });
 
   const proposalCard = data?.proposalCard || {};
@@ -54,32 +52,25 @@ export default function ProposalCard({
     ...proposalCard,
   });
 
+  const [content, setContent] = useState(proposalCard?.content);
+
   const [updateCard, { loading: updateLoading }] = useMutation(
     UPDATE_CARD_CONTENT,
     {
       variables: {
         ...inputs,
+        content,
         assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
       },
-      refetchQueries: [{ query: GET_CARD_CONTENT, variables: { id: cardId } }],
     }
   );
 
   const [updateEdit, { loading: updateEditLoading }] = useMutation(
-    UPDATE_CARD_EDIT
-    // {
-    //   refetchQueries: [
-    //     { query: PROPOSAL_QUERY, variables: { id: proposal?.id } },
-    //   ],
-    // }
+    UPDATE_CARD_EDIT,
+    {
+      ignoreResults: true,
+    }
   );
-
-  // extract author and collaborators of the study
-  const author = {
-    key: proposal?.study?.author?.id,
-    text: proposal?.study?.author?.username,
-    value: proposal?.study?.author?.id,
-  };
 
   const users =
     proposal?.study?.collaborators?.map((user) => ({
@@ -88,7 +79,6 @@ export default function ProposalCard({
       value: user.id,
     })) || [];
   const allUsers = [...users];
-  // const allUsers = [author, ...users];
 
   // update the assignedTo in the local state
   const handleAssignedToChange = (assignedTo) => {
@@ -114,11 +104,11 @@ export default function ProposalCard({
 
   // update card content in the local state
   const handleContentChange = async (content) => {
-    handleChange({ target: { name: "content", value: content } });
+    setContent(content);
 
     // lock the card
     if (inputs?.content !== content && areEditsAllowed && !lockedByUser) {
-      const res = await updateEdit({
+      await updateEdit({
         variables: {
           id: cardId,
           input: {
@@ -197,10 +187,7 @@ export default function ProposalCard({
               </div>
             )}
             <div className="jodit">
-              <JoditEditor
-                content={inputs?.content}
-                setContent={handleContentChange}
-              />
+              <JoditEditor content={content} setContent={handleContentChange} />
             </div>
           </div>
           {!isPreview && (

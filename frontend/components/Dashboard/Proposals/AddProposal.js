@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -38,6 +39,12 @@ export default function AddProposal({ user }) {
 
   return (
     <div>
+      <div className="goBackBtn">
+        <Link href="/dashboard/proposals">
+          <span style={{ cursor: "pointer" }}>← Back</span>
+        </Link>
+      </div>
+      <h1>New proposal template</h1>
       <ProposalForm inputs={inputs} handleChange={handleChange} />
       <button onClick={handleSave}>Save</button>
     </div>

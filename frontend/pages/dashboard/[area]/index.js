@@ -6,10 +6,11 @@ import DashboardRouter from "../../../components/Dashboard/Router";
 import GuestContext from "../../../components/Global/GuestContext";
 
 export default function DashboardPage({ query }) {
+  const { area } = query;
   return (
     <Site>
       <GuestContext query={query}>
-        <Dashboard>
+        <Dashboard area={area}>
           <DashboardRouter query={query} />
         </Dashboard>
       </GuestContext>

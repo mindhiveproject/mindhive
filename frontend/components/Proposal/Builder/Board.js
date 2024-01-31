@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
 
-import { useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
+import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 
 import Inner from "./Inner";
 
@@ -12,12 +13,18 @@ import {
 } from "../../Mutations/Proposal";
 
 const Board = ({
-  proposal,
+  proposalId,
   openCard,
   proposalBuildMode,
   adminMode,
   isPreview,
 }) => {
+  const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
+    variables: { id: proposalId },
+    pollInterval: 2000, // get new data every 20 seconds
+  });
+  const proposal = data?.proposalBoard || undefined;
+
   const [sections, setSections] = useState([]);
   const [createSection, createSectionState] = useMutation(CREATE_SECTION);
   const [updateSection, updateSectionState] = useMutation(UPDATE_SECTION);
@@ -39,6 +46,9 @@ const Board = ({
       setSections(sortedCardsSections);
     }
   }, [proposal]);
+
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error.message}`;
 
   return (
     <Inner

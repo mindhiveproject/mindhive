@@ -63,11 +63,11 @@ export default function ProposalPage({
         )}
       </div>
       {isPDF || proposal?.isSubmitted ? (
-        <ProposalPDF proposalId={proposal?.id} />
+        <ProposalPDF proposalId={proposalId} />
       ) : (
         <ProposalBuilder
           user={user}
-          proposalId={proposalId}
+          proposal={proposal}
           onClose={goToOverview}
           proposalBuildMode={proposalBuildMode}
           refetchQueries={refetchQueries}

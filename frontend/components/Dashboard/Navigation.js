@@ -209,7 +209,7 @@ export default function DashboardNavigation() {
               </StyledNavigationLink>
             </Link>
 
-            <Link href="/dashboard/proposal">
+            {/* <Link href="/dashboard/proposal">
               <StyledNavigationLink selected={area === "proposal"}>
                 <div>
                   <svg
@@ -227,7 +227,7 @@ export default function DashboardNavigation() {
                 </div>
                 <div>Proposal</div>
               </StyledNavigationLink>
-            </Link>
+            </Link> */}
 
             <Link href="/dashboard/tags">
               <StyledNavigationLink selected={area === "tags"}>

@@ -37,7 +37,7 @@ export default function StudentPage({ query, user }) {
           />
         </div>
       </div>
-      <div>
+      <div className="pageProfile">
         <div className="menu">
           <Link
             href={{

@@ -10,6 +10,10 @@ const StyledProfile = styled.div`
       max-height: 200px;
     }
   }
+  .pageProfile {
+    display: grid;
+    grid-gap: 10px;
+  }
   .empty {
     display: grid;
     padding: 10px;

@@ -140,6 +140,17 @@ export const GET_USER = gql`
         id
         title
         slug
+        flow
+      }
+      datasets {
+        id
+        isCompleted
+        study {
+          id
+        }
+        testVersion
+        createdAt
+        completedAt
       }
       # results {
       #   id

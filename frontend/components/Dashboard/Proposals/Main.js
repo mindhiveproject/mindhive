@@ -1,6 +1,9 @@
 import Link from "next/link";
-import AddProposal from "./AddProposal";
 
+import { useQuery } from "@apollo/client";
+import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../Queries/Proposal";
+
+import AddProposal from "./AddProposal";
 import ProposalsList from "./ProposalsList";
 import ProposalBuilder from "../../Proposal/Builder/Main";
 
@@ -23,13 +26,27 @@ export default function ProposalsMain({ query, user }) {
   if (selector === "add") {
     return <AddProposal user={user} />;
   }
+
+  const { data, error, loading } = useQuery(OVERVIEW_PROPOSAL_BOARD_QUERY, {
+    variables: {
+      id: query?.id,
+    },
+  });
+
+  const proposal = data?.proposalBoard || {};
+
   return (
     <StyledProposal>
-      <ProposalBuilder 
-        user={user} 
-        proposalId={query?.id} 
-        refetchQueries={[]} 
-        proposalBuildMode 
+      <div className="goBackBtn">
+        <Link href="/dashboard/proposals">
+          <span style={{ cursor: "pointer" }}>← Back</span>
+        </Link>
+      </div>
+      <ProposalBuilder
+        user={user}
+        proposal={proposal}
+        refetchQueries={[]}
+        proposalBuildMode
       />
     </StyledProposal>
   );

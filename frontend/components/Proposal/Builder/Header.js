@@ -1,6 +1,6 @@
 import { UPDATE_PROPOSAL_BOARD } from "../../Mutations/Proposal";
 
-import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../Queries/Proposal";
 
 import { useMutation } from "@apollo/client";
 
@@ -25,7 +25,7 @@ export default function ProposalHeader({
       ...inputs,
     },
     refetchQueries: [
-      { query: PROPOSAL_QUERY, variables: { id: proposal?.id } },
+      { query: OVERVIEW_PROPOSAL_BOARD_QUERY, variables: { id: proposal?.id } },
       ...refetchQueries,
     ],
   });
