@@ -230,7 +230,7 @@ export const UPDATE_CARD_EDIT = gql`
 `;
 
 export const DELETE_CARD = gql`
-  mutation DELETE_CARD($id: ID!, $boardId: ID!) {
+  mutation DELETE_CARD($id: ID!) {
     deleteProposalCard(where: { id: $id }) {
       id
       section {

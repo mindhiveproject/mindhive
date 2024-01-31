@@ -1,3 +1,4 @@
+import { validate } from "graphql";
 import React, { Component } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { Draggable } from "react-smooth-dnd";
@@ -10,6 +11,7 @@ export default function Card({
   adminMode,
   openCard,
   onDeleteCard,
+  settings,
 }) {
   let status = card?.settings?.status ? card.settings.status : "Not started";
 
@@ -93,7 +95,7 @@ export default function Card({
           )}
         </div>
       </div>
-      {proposalBuildMode && !isPreview && (
+      {settings?.allowAddingCards && (
         <div
           className="deleteBtn"
           onClick={() => {

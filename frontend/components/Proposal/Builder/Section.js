@@ -275,7 +275,6 @@ const Section = ({
     deleteCard({
       variables: {
         id,
-        boardId,
       },
       update: (cache, payload) => {
         cache.evict({ id: cache.identify(payload.data.deleteProposalCard) });
@@ -373,6 +372,7 @@ const Section = ({
                 proposalBuildMode={proposalBuildMode}
                 adminMode={adminMode}
                 isPreview={isPreview}
+                settings={settings}
               />
             ))
           ) : (
