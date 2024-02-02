@@ -27,16 +27,10 @@ export default function StateManager({
   const [output, setOutput] = useState("");
   // state of the python code
   const code = content?.code || defaultCode;
-  // const [code, setCode] = useState(content?.code || defaultCode);
   // state of the data we are working with
   const [data, setData] = useState(studyData);
   // state of the variables
   const [variables, setVariables] = useState([...studyVariables]);
-
-  // const updateCode = (code) => {
-  //   setCode(code);
-  //   handleChange(code);
-  // };
 
   const addToOutput = (s) => {
     setOutput(output + ">>>" + "\n" + s + "\n");

@@ -26,29 +26,31 @@ export default function CodeEditor({ code, handleChange, runCode }) {
   }, []);
 
   return (
-    <Accordion>
-      <AccordionTitle
-        active={activeIndex === 0}
-        index={0}
-        onClick={handleClick}
-      >
-        <Icon name="dropdown" />
-        Code editor
-      </AccordionTitle>
-      <AccordionContent active={activeIndex === 0}>
-        <div>
-          <p>
-            <button onClick={() => runCode({ code })}>Run the code</button>
-          </p>
-          <CodeMirror
-            value={code}
-            height="300px"
-            extensions={python()}
-            onChange={onChange}
-            theme="light"
-          />
-        </div>
-      </AccordionContent>
-    </Accordion>
+    <>
+      <div>
+        <button onClick={() => runCode({ code })}>Run the code</button>
+      </div>
+      <Accordion>
+        <AccordionTitle
+          active={activeIndex === 0}
+          index={0}
+          onClick={handleClick}
+        >
+          <Icon name="dropdown" />
+          Code editor
+        </AccordionTitle>
+        <AccordionContent active={activeIndex === 0}>
+          <div>
+            <CodeMirror
+              value={code}
+              height="300px"
+              extensions={python()}
+              onChange={onChange}
+              theme="light"
+            />
+          </div>
+        </AccordionContent>
+      </Accordion>
+    </>
   );
 }

@@ -26,13 +26,14 @@ export const VizPart = list({
       options: [
         { label: "study", value: "STUDY" },
         { label: "simulated", value: "SIMULATED" },
+        { label: "uploaded", value: "UPLOADED" },
       ],
     }),
     isPublic: checkbox({ isFilterable: true }),
     isTemplate: checkbox({ isFilterable: true }),
     isFeatured: checkbox({ isFilterable: true }),
     settings: json(),
-    content: json(),
+    content: json(), // save uploaded data here
     vizJournal: relationship({
       ref: "VizJournal.vizParts",
     }),

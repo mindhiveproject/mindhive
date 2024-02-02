@@ -81,7 +81,7 @@ export default function ParticipantInformation({ study, participant, type }) {
         })}
       </div>
 
-      {study?.consent.length > 0 && (
+      {study?.consent?.length > 0 && (
         <>
           <h2>IRB consent decisions</h2>
           {study?.consent?.map((consent) => {

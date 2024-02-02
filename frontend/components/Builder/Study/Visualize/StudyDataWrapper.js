@@ -2,7 +2,8 @@ import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
 
 import { STUDY_SUMMARY_RESULTS } from "../../../Queries/SummaryResult";
-import DataManager from "./DataManager";
+
+import PartManager from "./PartManager";
 
 // helper function to get all column names of the given dataset
 const getColumnNames = ({ data }) => {
@@ -58,7 +59,13 @@ const processRawData = ({ rawdata, components }) => {
   return { data: res, variables };
 };
 
-export default function Preprocessor({ user, studyId }) {
+export default function StudyDataWrapper({
+  user,
+  studyId,
+  pyodide,
+  journal,
+  part,
+}) {
   // get the summary results of the study
   const {
     data: studyData,
@@ -101,14 +108,15 @@ export default function Preprocessor({ user, studyId }) {
     [summaryResults, components]
   );
 
-  if (data && data.length) {
-    return (
-      <DataManager
-        user={user}
-        studyId={studyId}
-        studyData={data}
-        studyVariables={variables}
-      />
-    );
-  }
+  return (
+    <PartManager
+      user={user}
+      studyId={studyId}
+      pyodide={pyodide}
+      journal={journal}
+      part={part}
+      data={data}
+      variables={variables}
+    />
+  );
 }

@@ -1,11 +1,13 @@
 // ---- Structure ------
 // Visualize (Main.js)
-//  Data preprocessor (Preprocessor.js)
-//    Data state manager (DataManager.js)
-//      Journal manager (JournalManager.js)
+//  Pyodide wrapper (PyodideWrapper.js)
+//    Journal manager (JournalManager.js)
+//      Part manager (PartManager.js)
+//        StudyDataWrapper or UploadedDataWrapper (optional)
+//          Menu, overview, and document
 
 import Navigation from "../Navigation/Main";
-import Preprocessor from "./Preprocessor";
+import PyodideWrapper from "./PyodideWrapper";
 
 export default function Visualize({ query, user, tab, toggleSidebar }) {
   const studyId = query?.selector;
@@ -19,7 +21,7 @@ export default function Visualize({ query, user, tab, toggleSidebar }) {
         toggleSidebar={toggleSidebar}
       />
       {!studyId && <>No study found, please save your study first.</>}
-      {studyId && <Preprocessor user={user} studyId={studyId} />}
+      {studyId && <PyodideWrapper user={user} studyId={studyId} />}
     </>
   );
 }

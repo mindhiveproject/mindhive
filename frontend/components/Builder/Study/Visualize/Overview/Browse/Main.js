@@ -17,6 +17,7 @@ export default function Browse({ studyId, journal, chapterId, selectChapter }) {
           {journal && (
             <Dropdown
               icon={<img src={`/assets/icons/visualize/add_notes.svg`} />}
+              direction="left"
             >
               <DropdownMenu>
                 <CreateChapter studyId={studyId} journal={journal} />

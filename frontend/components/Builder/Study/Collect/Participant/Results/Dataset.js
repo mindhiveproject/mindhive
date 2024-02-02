@@ -22,7 +22,7 @@ export default function Dataset({
   // There are 3 possible states: (1) loading when data is null (2) ready when the data is returned (3) error when there was an error fetching the data
   const [year, month, day] = date.split("-");
   const { data, error } = useSWR(
-    `/api/data/${year}/${month}/${day}/${token}`,
+    `/api/data/${year}/${month}/${day}/${token}?type=full`,
     fetcher
   );
 

@@ -2475,7 +2475,8 @@ var VizPart = (0, import_core31.list)({
     dataOrigin: (0, import_fields34.select)({
       options: [
         { label: "study", value: "STUDY" },
-        { label: "simulated", value: "SIMULATED" }
+        { label: "simulated", value: "SIMULATED" },
+        { label: "uploaded", value: "UPLOADED" }
       ]
     }),
     isPublic: (0, import_fields34.checkbox)({ isFilterable: true }),
@@ -2483,6 +2484,7 @@ var VizPart = (0, import_core31.list)({
     isFeatured: (0, import_fields34.checkbox)({ isFilterable: true }),
     settings: (0, import_fields34.json)(),
     content: (0, import_fields34.json)(),
+    // save uploaded data here
     vizJournal: (0, import_fields34.relationship)({
       ref: "VizJournal.vizParts"
     }),

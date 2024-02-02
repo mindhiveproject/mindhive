@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import JournalManager from "./JournalManager";
-
 import { loadPyodide } from "pyodide";
+
+import JournalManager from "./JournalManager";
 
 import {
   MessageHeader,
@@ -10,23 +10,11 @@ import {
   Icon,
 } from "semantic-ui-react";
 
-// code that will only run once for all pyodide
-const importString = ``;
-
-export default function DataManager({
-  user,
-  studyId,
-  studyData,
-  studyVariables,
-}) {
+export default function PyodideWrapper({ user, studyId }) {
   const [isLoading, setIsLoading] = useState(false);
 
-  // state of the data we are working with
-  const [data, setData] = useState(studyData || []);
-  // state of the variables
-  const [variables, setVariables] = useState(studyVariables || []);
   // pyodide
-  const [pyodide, setPyodide] = useState(false);
+  const [pyodide, setPyodide] = useState(null);
 
   useEffect(() => {
     async function startPyodide() {
@@ -39,14 +27,14 @@ export default function DataManager({
         await pyodideLoad.loadPackage(["numpy", "pandas", "matplotlib"]);
         // run code that will only run once
         // await pyodideLoad.runPython(importString);
-        // provide data to pyodide
-        pyodideLoad.registerJsModule("js_workspace", data);
+        // provide data to pyodide which will be shared between all parts of the journal
+        // pyodideLoad.registerJsModule("js_shared_workspace", sharedData);
         setPyodide(pyodideLoad);
         setIsLoading(false);
       }
     }
     startPyodide();
-  }, [data]);
+  }, []);
 
   return (
     <>
@@ -61,14 +49,7 @@ export default function DataManager({
           </Message>
         </div>
       )}
-
-      <JournalManager
-        user={user}
-        studyId={studyId}
-        data={data}
-        variables={variables}
-        pyodide={pyodide}
-      />
+      <JournalManager user={user} studyId={studyId} pyodide={pyodide} />
     </>
   );
 }

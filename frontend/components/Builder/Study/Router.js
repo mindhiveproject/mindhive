@@ -63,7 +63,10 @@ export default function Router({ query, user, tab, toggleSidebar }) {
   }
 
   if (tab === "visualize") {
-    if (user?.permissions?.map((p) => p?.name).includes("ADMIN")) {
+    if (
+      user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
+      user?.permissions?.map((p) => p?.name).includes("TEACHER")
+    ) {
       return (
         <Visualize
           query={query}

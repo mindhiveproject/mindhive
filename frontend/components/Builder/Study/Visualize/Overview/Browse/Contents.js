@@ -12,7 +12,9 @@ export default function Contents({
       {journal?.vizParts.map((part, num) => (
         <div key={num} className="part">
           <div className="menuOriginaDataTitle">
-            {part?.dataOrigin === "STUDY" ? "Study Data" : "Simulated Data"}
+            {part?.dataOrigin.charAt(0) +
+              part?.dataOrigin.toLowerCase().slice(1)}{" "}
+            Data
           </div>
           <div>
             {part?.vizChapters.map((chapter, num) => (
@@ -29,6 +31,7 @@ export default function Contents({
                   <div>{chapter?.title}</div>
                   <Dropdown
                     icon={<img src={`/assets/icons/visualize/more_vert.svg`} />}
+                    direction="left"
                   >
                     <DropdownMenu>
                       <DeleteChapter studyId={studyId} chapter={chapter} />
