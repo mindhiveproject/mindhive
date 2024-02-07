@@ -222,3 +222,30 @@ export const STUDY_TO_CLONE = gql`
     }
   }
 `;
+
+// get study templates
+export const STUDY_TEMPLATES = gql`
+  query STUDY_TEMPLATES($id: ID!) {
+    studies(
+      where: {
+        OR: [
+          { public: { equals: true } }
+          { author: { id: { equals: $id } } }
+          { collaborators: { some: { id: { equals: $id } } } }
+        ]
+      }
+    ) {
+      id
+      title
+      slug
+      public
+      diagram
+      author {
+        id
+      }
+      collaborators {
+        id
+      }
+    }
+  }
+`;

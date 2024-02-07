@@ -66,6 +66,7 @@ export const CreatorWidget = props => {
       const model = new DiagramModel();
       model.deserializeModel(JSON.parse(diagram), diagramEngine);
       diagramEngine.setModel(model);
+      forceUpdate();
     }
 
     if (data.type === 'design') {

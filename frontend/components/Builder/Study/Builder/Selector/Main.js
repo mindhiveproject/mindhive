@@ -7,6 +7,7 @@ import { NodesTypesContainer } from "../Diagram/nodes-types-container/NodesTypes
 import { NodeTypeLabel } from "../Diagram/node-type-label/NodeTypeLabel";
 
 import Blocks from "./Blocks/Main";
+import StudyTemplates from "./Templates/Main";
 
 const components = [
   {
@@ -174,6 +175,30 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
             </div>
             <div className="icons"></div>
           </div>
+        </Accordion.Content>
+
+        <Accordion.Title
+          active={activeIndex.includes(5)}
+          index={5}
+          onClick={handleClick}
+        >
+          <div className="blocksMenuTitle">
+            <h3>Templates</h3>
+            <Icon name="dropdown" />
+            <p>
+              Don’t want to start from scratch? Select and edit a{" "}
+              <strong>pre-made study design</strong> using one of the templates
+              in this bank
+            </p>
+          </div>
+        </Accordion.Title>
+        <Accordion.Content active={activeIndex.includes(5)}>
+          <StudyTemplates
+            user={user}
+            addFunctions={addFunctions}
+            createdBy={createdBy}
+            search={search}
+          />
         </Accordion.Content>
       </Accordion>
     </div>

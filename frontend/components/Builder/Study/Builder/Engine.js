@@ -162,11 +162,12 @@ export default function Engine({
     forceUpdate();
   };
 
-  const addStudyTemplateToCanvas = (study) => {
+  const addStudyTemplateToCanvas = ({ study }) => {
     const { diagram } = study;
     const model = new DiagramModel();
-    model.deserializeModel(JSON.parse(diagram), props.engine);
+    model.deserializeModel(JSON.parse(diagram), engine);
     engine.setModel(model);
+    setHasStudyChanged(true);
   };
 
   const addComment = () => {
@@ -183,6 +184,7 @@ export default function Engine({
     note.setPosition(point);
     engine.getModel().addNode(note);
     forceUpdate();
+    setHasStudyChanged(true);
   };
 
   const addAnchor = () => {
