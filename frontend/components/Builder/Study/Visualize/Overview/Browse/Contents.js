@@ -1,5 +1,9 @@
 import { Dropdown, DropdownMenu, DropdownItem } from "semantic-ui-react";
 import DeleteChapter from "../../Document/DeleteChapter";
+import DeletePart from "../../Document/DeletePart";
+
+import CreateChapter from "./CreateChapter";
+import BrowseTemplates from "./BrowseTemplates";
 
 export default function Contents({
   studyId,
@@ -12,9 +16,19 @@ export default function Contents({
       {journal?.vizParts.map((part, num) => (
         <div key={num} className="part">
           <div className="menuOriginaDataTitle">
-            {part?.dataOrigin.charAt(0) +
-              part?.dataOrigin.toLowerCase().slice(1)}{" "}
-            Data
+            <div>
+              {part?.dataOrigin.charAt(0) +
+                part?.dataOrigin.toLowerCase().slice(1)}{" "}
+              Data
+            </div>
+            <Dropdown
+              icon={<img src={`/assets/icons/visualize/more_vert.svg`} />}
+              direction="left"
+            >
+              <DropdownMenu>
+                <DeletePart studyId={studyId} part={part} />
+              </DropdownMenu>
+            </Dropdown>
           </div>
           <div>
             {part?.vizChapters.map((chapter, num) => (
@@ -47,6 +61,17 @@ export default function Contents({
                 </div>
               </div>
             ))}
+          </div>
+          <div className="addNewChapter">
+            <Dropdown
+              icon={<img src={`/assets/icons/visualize/add_notes.svg`} />}
+              direction="right"
+            >
+              <DropdownMenu>
+                <CreateChapter studyId={studyId} journal={journal} />
+                <BrowseTemplates studyId={studyId} journal={journal} />
+              </DropdownMenu>
+            </Dropdown>
           </div>
         </div>
       ))}

@@ -2,7 +2,7 @@ import { Dropdown, DropdownMenu } from "semantic-ui-react";
 
 import EmptyState from "./EmptyState";
 import Contents from "./Contents";
-import CreateChapter from "./CreateChapter";
+import CreatePart from "./CreatePart";
 import BrowseTemplates from "./BrowseTemplates";
 
 export default function Browse({ studyId, journal, chapterId, selectChapter }) {
@@ -20,7 +20,16 @@ export default function Browse({ studyId, journal, chapterId, selectChapter }) {
               direction="left"
             >
               <DropdownMenu>
-                <CreateChapter studyId={studyId} journal={journal} />
+                <CreatePart
+                  studyId={studyId}
+                  journal={journal}
+                  dataOrigin="STUDY"
+                />
+                <CreatePart
+                  studyId={studyId}
+                  journal={journal}
+                  dataOrigin="UPLOADED"
+                />
                 <BrowseTemplates studyId={studyId} journal={journal} />
               </DropdownMenu>
             </Dropdown>

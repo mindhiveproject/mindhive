@@ -83,6 +83,10 @@ export const StyledDataViz = styled.div`
         display: grid;
         grid-gap: 20px;
         .menuOriginaDataTitle {
+          display: grid;
+          align-items: center;
+          grid-template-columns: 1fr auto;
+          grid-gap: 12px;
           color: #636363;
           font-family: Inter;
           font-size: 12px;
@@ -109,6 +113,12 @@ export const StyledDataViz = styled.div`
         display: grid;
         grid-template-columns: 1fr auto;
         grid-gap: 12px;
+      }
+      .addNewChapter {
+        display: grid;
+        justify-content: center;
+        border-top: 1px solid lightgrey;
+        padding-top: 5px;
       }
     }
     .database {

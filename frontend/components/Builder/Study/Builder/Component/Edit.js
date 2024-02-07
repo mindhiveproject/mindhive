@@ -57,22 +57,31 @@ export default function EditComponent({
           collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
         },
       });
+
+      // update the canvas in the study builder
+      updateCanvas({
+        task: {
+          ...inputs,
+        },
+        operation: "update",
+      });
     } else {
       // create the new task
-      await createTask({
+      const res = await createTask({
         variables: {
           collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
         },
       });
+      const newTask = res?.data?.createTask;
+      // update the canvas with the new task in the study builder
+      updateCanvas({
+        task: {
+          ...newTask,
+        },
+        operation: "create",
+      });
     }
 
-    // update the canvas in the study builder
-    updateCanvas({
-      task: {
-        ...inputs,
-      },
-      operation: "update",
-    });
     close();
   }
 

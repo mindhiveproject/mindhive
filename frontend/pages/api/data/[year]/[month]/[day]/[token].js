@@ -4,7 +4,6 @@ import { promises as fs } from "fs";
 export default async function handler(req, res) {
   const { query } = req;
   const { year, month, day, token, type } = query;
-  console.log({ query });
 
   // Find the absolute path of the json directory
   const jsonDirectory = path.join(process.cwd(), "data");
