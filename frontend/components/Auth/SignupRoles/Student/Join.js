@@ -7,6 +7,7 @@ import {
   JOIN_CLASS_AS_STUDENT_MUTATION,
   JOIN_CLASS_AS_MENTOR_MUTATION,
 } from "../../../Mutations/User";
+import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { SignupForm } from "../../../styles/StyledForm";
 
 export default function JoinClass({ user, role, classCode, invitationCode }) {
@@ -27,6 +28,7 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
         id: user?.id,
         classCode: classCode,
       },
+      refetchQueries: [{ query: CURRENT_USER_QUERY }],
     });
 
   const [joinClassAsMentor, { loading: joinClassAsMentorLoading }] =
@@ -35,6 +37,7 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
         id: user?.id,
         classCode: classCode,
       },
+      refetchQueries: [{ query: CURRENT_USER_QUERY }],
     });
 
   const myclass = data?.class || undefined;
@@ -73,13 +76,16 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
               onClick={async () => {
                 if (role === "mentor") {
                   await joinClassAsMentor();
+                  router.push({
+                    pathname: "/dashboard/myclasses",
+                  });
                 }
                 if (role === "student") {
                   await joinClassAsStudent();
+                  router.push({
+                    pathname: "/dashboard/classes",
+                  });
                 }
-                router.push({
-                  pathname: "/dashboard/classes",
-                });
               }}
               className="primaryBtn"
             >

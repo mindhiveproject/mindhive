@@ -95,7 +95,10 @@ export const JOIN_CLASS_AS_STUDENT_MUTATION = gql`
   mutation JOIN_CLASS_AS_STUDENT_MUTATION($id: ID!, $classCode: String!) {
     updateProfile(
       where: { id: $id }
-      data: { studentIn: { connect: { code: $classCode } } }
+      data: {
+        permissions: { connect: { name: "STUDENT" } }
+        studentIn: { connect: { code: $classCode } }
+      }
     ) {
       id
     }
@@ -107,7 +110,10 @@ export const JOIN_CLASS_AS_MENTOR_MUTATION = gql`
   mutation JOIN_CLASS_AS_MENTOR_MUTATION($id: ID!, $classCode: String!) {
     updateProfile(
       where: { id: $id }
-      data: { mentorIn: { connect: { code: $classCode } } }
+      data: {
+        permissions: { connect: { name: "MENTOR" } }
+        mentorIn: { connect: { code: $classCode } }
+      }
     ) {
       id
     }
