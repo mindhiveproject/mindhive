@@ -31,7 +31,9 @@ export default function AddAssignment({ myclass, user, query }) {
         >
           <p>← Go back</p>
         </Link>
-        <p>Create a new assignment or select one from the list below</p>
+        <p>
+          Create a new assignment from scratch or select one from the list below
+        </p>
       </div>
       <div>
         <div className="navigationHeader">
@@ -52,7 +54,7 @@ export default function AddAssignment({ myclass, user, query }) {
       </div>
 
       <div>
-        <h2>My assignments</h2>
+        <h2>Create a new assignment from an existing assignment</h2>
         <div className="header">
           <div>Title</div>
           <div>Creator</div>
@@ -78,7 +80,7 @@ export default function AddAssignment({ myclass, user, query }) {
       </div>
 
       <div>
-        <h2>Template assignments</h2>
+        <h2>Create a new assignment from a template</h2>
         <div className="header">
           <div>Title</div>
           <div>Creator</div>

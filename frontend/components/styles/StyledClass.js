@@ -277,7 +277,7 @@ const StyledClass = styled.div`
     }
     .selector {
       display: grid;
-      grid-gap: 10px;
+      grid-gap: 2rem;
       background: #f7f9f8;
       .head {
         display: grid;
@@ -290,12 +290,6 @@ const StyledClass = styled.div`
         cursor: pointer;
         border-radius: 2.25rem;
         color: #5f6871;
-        /* font-size: 2rem; */
-        /* :hover {
-          transform: scale(1.5);
-          transition: transform 0.5s;
-          color: red;
-        } */
       }
       .header {
         display: grid;

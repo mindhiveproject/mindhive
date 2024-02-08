@@ -19,7 +19,9 @@ export default function EditAssignment({ assignment, myclass }) {
         input: {
           title: inputs?.title,
           content: inputs?.content,
-          classes: inputs?.classes ? { set: inputs?.classes } : null, // [ { id: "123" }, { id: "234" } ]
+          classes: inputs?.classes
+            ? { set: inputs?.classes.map((cl) => ({ id: cl?.id })) }
+            : null, // [ { id: "123" }, { id: "234" } ]
           tags: inputs?.tags ? { set: inputs?.tags } : null,
         },
       },

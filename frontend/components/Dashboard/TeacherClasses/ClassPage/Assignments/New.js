@@ -16,7 +16,9 @@ export default function NewAssignment({ user, myclass, assignment, children }) {
     variables: {
       input: {
         ...inputs,
-        classes: inputs?.classes ? { connect: inputs?.classes } : null, // [ { id: "123" }, { id: "234" } ]
+        classes: inputs?.classes
+          ? { connect: inputs?.classes.map((cl) => ({ id: cl?.id })) }
+          : null,
         tags: inputs?.tags ? { connect: inputs?.tags } : null,
       },
     },
