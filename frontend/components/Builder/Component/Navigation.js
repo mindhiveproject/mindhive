@@ -1,8 +1,5 @@
 import Link from "next/link";
 
-// import SaveStudy from "./Save";
-// import UpdateStudy from "./Update";
-
 const itemsInternalTask = [
   {
     value: "template",
@@ -39,6 +36,14 @@ const itemsExternalTask = [
   },
 ];
 
+const itemsInStudyBuilder = [
+  {
+    value: "parameters",
+    name: "Parameters",
+    icon: "builder",
+  },
+];
+
 export default function Navigation({
   tab,
   setTab,
@@ -52,7 +57,9 @@ export default function Navigation({
   isInStudyBuilder,
 }) {
   // decide whether include the template tab based on whether the user is the author or a collaborator on the template
-  const itemsInternalTaskSelected = isTemplateAuthor
+  const itemsInternalTaskSelected = isInStudyBuilder
+    ? itemsInStudyBuilder
+    : isTemplateAuthor
     ? itemsInternalTask
     : itemsInternalTask.filter((item) => item.value !== "template");
   // decide whether to show only tabs for an external task

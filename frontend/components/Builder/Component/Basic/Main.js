@@ -34,50 +34,17 @@ export default function Basic({
 
   // in the study builder only display specific parameters
   const displayedParameterKeys = isInStudyBuilder
-    ? ["descriptionBefore", "descriptionAfter"]
+    ? []
     : Object.keys(task?.settings);
+  // const displayedParameterKeys = isInStudyBuilder
+  //   ? ["descriptionBefore", "descriptionAfter"]
+  //   : Object.keys(task?.settings);
 
   return (
     <>
       <DisplayError error={error} />
 
       <fieldset disabled={loading} aria-busy={loading}>
-        {isInStudyBuilder && (
-          <>
-            <div className="block">
-              <label htmlFor="subtitle">
-                Subtitle
-                <input
-                  type="text"
-                  name="subtitle"
-                  value={task?.subtitle}
-                  onChange={handleChange}
-                />
-              </label>
-            </div>
-            <div>
-              <label>Version ID</label>
-              <p>{task?.testId}</p>
-            </div>
-            <div className="hideContinueBtn">
-              <div>
-                <input
-                  type="checkbox"
-                  id="askDataUsageQuestion"
-                  name="askDataUsageQuestion"
-                  checked={task?.askDataUsageQuestion}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="askDataUsageQuestion">
-                  Ask students a data usage question after the task
-                </label>
-              </div>
-            </div>
-          </>
-        )}
-
         <div className="block">
           <label htmlFor="title">
             {t("common.title")}
@@ -91,37 +58,41 @@ export default function Basic({
           </label>
         </div>
 
-        <div className="block">
-          <label htmlFor="description">
-            Description (for Develop mode)
-            <textarea
-              id="description"
-              name="description"
-              value={task?.description}
-              onChange={handleChange}
-            />
-          </label>
-          <span>
-            This is visible to researchers, teachers, and students when choosing
-            tasks or surveys in the Develop mode.
-          </span>
-        </div>
+        {!isInStudyBuilder && (
+          <>
+            <div className="block">
+              <label htmlFor="description">
+                Description (for Develop mode)
+                <textarea
+                  id="description"
+                  name="description"
+                  value={task?.description}
+                  onChange={handleChange}
+                />
+              </label>
+              <span>
+                This is visible to researchers, teachers, and students when
+                choosing tasks or surveys in the Develop mode.
+              </span>
+            </div>
 
-        <div className="block">
-          <label htmlFor="descriptionForParticipants">
-            Description (for Discover mode)
-            <textarea
-              id="descriptionForParticipants"
-              name="descriptionForParticipants"
-              value={task?.descriptionForParticipants}
-              onChange={handleChange}
-            />
-          </label>
-          <span>
-            This is visible to all platform users when choosing tasks or surveys
-            in the Discover mode.
-          </span>
-        </div>
+            <div className="block">
+              <label htmlFor="descriptionForParticipants">
+                Description (for Discover mode)
+                <textarea
+                  id="descriptionForParticipants"
+                  name="descriptionForParticipants"
+                  value={task?.descriptionForParticipants}
+                  onChange={handleChange}
+                />
+              </label>
+              <span>
+                This is visible to all platform users when choosing tasks or
+                surveys in the Discover mode.
+              </span>
+            </div>
+          </>
+        )}
 
         {task?.isExternal && (
           <div className="block">

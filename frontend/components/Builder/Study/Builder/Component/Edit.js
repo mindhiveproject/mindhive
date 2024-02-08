@@ -72,7 +72,11 @@ export default function EditComponent({
           collaborators: inputs?.collaborators.map((col) => ({ id: col?.id })),
         },
       });
-      const newTask = res?.data?.createTask;
+      const newTask = {
+        ...res?.data?.createTask,
+        subtitle: inputs?.subtitle,
+        askDataUsageQuestion: inputs?.askDataUsageQuestion,
+      };
       // update the canvas with the new task in the study builder
       updateCanvas({
         task: {
@@ -81,7 +85,6 @@ export default function EditComponent({
         operation: "create",
       });
     }
-
     close();
   }
 

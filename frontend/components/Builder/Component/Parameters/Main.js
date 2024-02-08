@@ -3,7 +3,12 @@ import SelectOne from "./Types/SelectOne";
 import SurveyBuilder from "./Types/SurveyBuilder";
 import Array from "./Types/Array";
 
-export default function TaskParameters({ task, handleChange }) {
+export default function TaskParameters({
+  user,
+  task,
+  handleChange,
+  isInStudyBuilder,
+}) {
   const parameters = task?.parameters || task?.template?.parameters || [];
 
   const handleParameterChange = (e) => {
@@ -95,6 +100,48 @@ export default function TaskParameters({ task, handleChange }) {
 
   return (
     <fieldset>
+      {isInStudyBuilder && (
+        <>
+          <div className="block">
+            <label htmlFor="subtitle">
+              Subtitle
+              <input
+                type="text"
+                name="subtitle"
+                value={task?.subtitle}
+                onChange={handleChange}
+              />
+            </label>
+          </div>
+
+          {task?.testId && (
+            <div>
+              <label>Version ID</label>
+              <p>{task?.testId}</p>
+            </div>
+          )}
+
+          {user &&
+            user?.permissions.map((p) => p?.name).includes("SCIENTIST") && (
+              <div className="hideContinueBtn">
+                <div>
+                  <input
+                    type="checkbox"
+                    id="askDataUsageQuestion"
+                    name="askDataUsageQuestion"
+                    checked={task?.askDataUsageQuestion}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="askDataUsageQuestion">
+                    Ask students a data usage question after the task
+                  </label>
+                </div>
+              </div>
+            )}
+        </>
+      )}
       <label>Task parameters</label>
       {parameters.map(
         ({ name, value, type, help, example, options, array }) => (

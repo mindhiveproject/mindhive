@@ -29,7 +29,9 @@ export default function ComponentForm({
 }) {
   const { t } = useTranslation("classes");
 
-  const [tab, setTab] = useState(isTemplateAuthor ? "template" : "basic");
+  const [tab, setTab] = useState(
+    isTemplateAuthor ? "template" : isInStudyBuilder ? "parameters" : "basic"
+  );
   const [isFullscreenPreviewOpen, setIsFullscreenPreviewOpen] = useState(false);
 
   const openFullscreenPreview = () => {
@@ -108,11 +110,13 @@ export default function ComponentForm({
 
           {tab === "parameters" && (
             <Parameters
+              user={user}
               task={inputs}
               handleChange={handleChange}
               handleMultipleUpdate={handleMultipleUpdate}
               loading={loading}
               error={error}
+              isInStudyBuilder={isInStudyBuilder}
             />
           )}
 
