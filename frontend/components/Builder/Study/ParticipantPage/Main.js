@@ -53,19 +53,44 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
       ...study,
     });
 
+  // modify the study if it has to be cloned
   useEffect(() => {
     function prepareStudyToClone() {
       const rand = nanoid(4);
+      // connect to the user class(es) if the user is a student
+      const classes =
+        user && user?.permissions.map((p) => p?.name).includes("STUDENT")
+          ? user?.studentIn
+          : [];
       handleMultipleUpdate({
         image: null,
-        title: `Clone of ${inputs?.title}-${rand}`,
-        slug: `${inputs?.slug}-${rand}`,
+        title: `Clone of ${study?.title}-${rand}`,
+        slug: `${study?.slug}-${rand}`,
+        consent: [],
+        collaborators: [],
+        classes,
       });
     }
-    if (area === "cloneofstudy") {
+    if (area === "cloneofstudy" && study?.id) {
       prepareStudyToClone();
     }
-  }, [area]);
+  }, [study]);
+
+  // connect the new study to the user class(es) automatically
+  useEffect(() => {
+    function connectToClass() {
+      handleChange({ target: { name: "classes", value: user?.studentIn } });
+    }
+    if (
+      studyId === "add" &&
+      user &&
+      user?.permissions.map((p) => p?.name).includes("STUDENT") &&
+      user?.studentIn &&
+      user?.studentIn?.length
+    ) {
+      connectToClass();
+    }
+  }, [user]);
 
   const handleStudyChange = (props) => {
     setHasStudyChanged(true);
@@ -100,10 +125,13 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
         image: inputs?.file
           ? { create: { image: inputs?.file, altText: inputs?.title } }
           : null,
-        consent: inputs?.consent?.length ? { connect: inputs?.consent } : null,
+        consent: inputs?.consent?.length
+          ? { connect: inputs?.consent?.map((cl) => ({ id: cl?.id })) }
+          : null,
         talks: {
           create: [{ settings: { type: "default", title: "Project chat" } }],
         },
+        classes: { connect: inputs?.classes?.map((cl) => ({ id: cl?.id })) },
       },
     },
     refetchQueries: [{ query: MY_STUDIES, variables: { id: user?.id } }],

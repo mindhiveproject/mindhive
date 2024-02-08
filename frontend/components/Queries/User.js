@@ -24,6 +24,9 @@ export const CURRENT_USER_QUERY = gql`
         participantIn {
           id
         }
+        studentIn {
+          id
+        }
         teacherIn {
           id
         }
