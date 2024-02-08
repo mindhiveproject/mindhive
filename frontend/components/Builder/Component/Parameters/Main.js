@@ -86,7 +86,7 @@ export default function TaskParameters({
     }
   };
 
-  if (parameters.length === 0) {
+  if (!isInStudyBuilder && parameters.length === 0) {
     return (
       <div>
         <label>Template parameters</label>
@@ -142,32 +142,37 @@ export default function TaskParameters({
             )}
         </>
       )}
-      <label>Task parameters</label>
-      {parameters.map(
-        ({ name, value, type, help, example, options, array }) => (
-          <div className="wideBlock" key={name}>
-            <div className="taskBlock" htmlFor={name}>
-              <div className="help">
-                <p>{name || help}</p>
-              </div>
-              {example && (
-                <div className="example">
-                  <p>{example}</p>
-                </div>
-              )}
 
-              <div className="input">
-                {renderInput({ type, name, value, options, array })}
+      {parameters.length > 0 && (
+        <>
+          <label>Task parameters</label>
+          {parameters.map(
+            ({ name, value, type, help, example, options, array }) => (
+              <div className="wideBlock" key={name}>
+                <div className="taskBlock" htmlFor={name}>
+                  <div className="help">
+                    <p>{name || help}</p>
+                  </div>
+                  {example && (
+                    <div className="example">
+                      <p>{example}</p>
+                    </div>
+                  )}
+
+                  <div className="input">
+                    {renderInput({ type, name, value, options, array })}
+                  </div>
+                </div>
               </div>
-            </div>
+            )
+          )}
+          <div>
+            <button onClick={setParametersFromTemplate}>
+              Get parameters from the template
+            </button>
           </div>
-        )
+        </>
       )}
-      <div>
-        <button onClick={setParametersFromTemplate}>
-          Get parameters from the template
-        </button>
-      </div>
     </fieldset>
   );
 }
