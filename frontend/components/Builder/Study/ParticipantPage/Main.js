@@ -173,6 +173,7 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
           selector: newStudy?.data?.createStudy?.id,
         },
       });
+      setHasStudyChanged(false);
     } else {
       updateStudy();
       setHasStudyChanged(false);

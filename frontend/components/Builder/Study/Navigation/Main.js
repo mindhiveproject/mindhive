@@ -38,10 +38,10 @@ const itemsClone = [
     value: "page",
     name: "Participant Page",
   },
-  {
-    value: "builder",
-    name: "Study builder",
-  },
+  // {
+  //   value: "builder",
+  //   name: "Study builder",
+  // },
 ];
 
 export default function Navigation({
@@ -125,7 +125,9 @@ export default function Navigation({
           {saveBtnFunction && (
             <button
               onClick={() => saveBtnFunction()}
-              className={hasStudyChanged ? "on" : "off"}
+              className={
+                hasStudyChanged || area === "cloneofstudy" ? "on" : "off"
+              }
             >
               {saveBtnName}
             </button>
