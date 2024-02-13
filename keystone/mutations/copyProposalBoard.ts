@@ -27,10 +27,10 @@ async function copyProposalBoard(
     title: template.title,
     description: template.description,
     settings: template.settings,
-    slug: template.slug,
-    // slug: `${template.slug}-${Date.now()}-${Math.round(
-    //   Math.random() * 100000
-    // )}`,
+    // slug: template.slug,
+    slug: `${template.slug}-${Date.now()}-${Math.round(
+      Math.random() * 100000
+    )}`,
   };
 
   // create a new board

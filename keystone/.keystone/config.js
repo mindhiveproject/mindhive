@@ -112,10 +112,10 @@ async function copyProposalBoard(root, {
     title: template.title,
     description: template.description,
     settings: template.settings,
-    slug: template.slug
-    // slug: `${template.slug}-${Date.now()}-${Math.round(
-    //   Math.random() * 100000
-    // )}`,
+    // slug: template.slug,
+    slug: `${template.slug}-${Date.now()}-${Math.round(
+      Math.random() * 1e5
+    )}`
   };
   const board = await context.db.ProposalBoard.createOne(
     {
@@ -1684,6 +1684,9 @@ var ProposalBoard = (0, import_core18.list)({
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
+            if (inputData.slug) {
+              return inputData.slug;
+            }
             const { title } = inputData;
             if (title) {
               let slug = (0, import_slugify4.default)(title, {

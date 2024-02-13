@@ -29,6 +29,10 @@ export const ProposalBoard = list({
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
+            // in case if slug is given use that slug (e.g., for cloning templates)
+            if (inputData.slug) {
+              return inputData.slug;
+            }
             const { title } = inputData;
             if (title) {
               let slug = slugify(title, {
