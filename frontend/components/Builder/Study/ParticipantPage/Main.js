@@ -132,6 +132,8 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
           create: [{ settings: { type: "default", title: "Project chat" } }],
         },
         classes: { connect: inputs?.classes?.map((cl) => ({ id: cl?.id })) },
+        flow: inputs?.flow,
+        diagram: inputs?.diagram,
       },
     },
     refetchQueries: [{ query: MY_STUDIES, variables: { id: user?.id } }],
