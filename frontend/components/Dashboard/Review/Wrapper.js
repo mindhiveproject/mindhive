@@ -19,8 +19,8 @@ export default function Wrapper({ user, page }) {
   const networkClasses =
     myClasses
       .map((myClass) => {
-        if (myClass?.network) {
-          return myClass?.network?.map((net) => net.classes).flat();
+        if (myClass?.networks) {
+          return myClass?.networks?.map((net) => net.classes).flat();
         }
         return [];
       })

@@ -25,12 +25,14 @@ export const ClassNetwork = list({
     settings: json(),
     creator: relationship({
       ref: "Profile.classNetworksCreated",
-      ui: {
-        displayMode: "cards",
-        cardFields: ["username", "email"],
-        // inlineEdit: { fields: ['username', 'email'] },
-        linkToItem: true,
-        // inlineCreate: { fields: ['username', 'email'] },
+      hooks: {
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create") {
+            return { connect: { id: context.session.itemId } };
+          } else {
+            return inputData.creator;
+          }
+        },
       },
     }),
     classes: relationship({ ref: "Class.networks", many: true }),

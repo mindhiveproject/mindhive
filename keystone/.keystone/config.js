@@ -921,12 +921,14 @@ var ClassNetwork = (0, import_core5.list)({
     settings: (0, import_fields8.json)(),
     creator: (0, import_fields8.relationship)({
       ref: "Profile.classNetworksCreated",
-      ui: {
-        displayMode: "cards",
-        cardFields: ["username", "email"],
-        // inlineEdit: { fields: ['username', 'email'] },
-        linkToItem: true
-        // inlineCreate: { fields: ['username', 'email'] },
+      hooks: {
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create") {
+            return { connect: { id: context.session.itemId } };
+          } else {
+            return inputData.creator;
+          }
+        }
       }
     }),
     classes: (0, import_fields8.relationship)({ ref: "Class.networks", many: true }),

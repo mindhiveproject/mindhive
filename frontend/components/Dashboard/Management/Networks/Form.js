@@ -1,6 +1,7 @@
 import { GET_ALL_CLASSES } from "../../../Queries/Classes";
 import { Dropdown } from "semantic-ui-react";
 import { useQuery } from "@apollo/client";
+import { StyledForm } from "../../../styles/StyledForm";
 
 export default function NetworkForm({ inputs, handleChange }) {
   const { data, loading, error } = useQuery(GET_ALL_CLASSES);
@@ -24,8 +25,7 @@ export default function NetworkForm({ inputs, handleChange }) {
   };
 
   return (
-    <div>
-      <h2>Edit the class network</h2>
+    <StyledForm>
       <div>
         <label htmlFor="title">
           <p>Title</p>
@@ -67,6 +67,6 @@ export default function NetworkForm({ inputs, handleChange }) {
           </div>
         </label>
       </div>
-    </div>
+    </StyledForm>
   );
 }

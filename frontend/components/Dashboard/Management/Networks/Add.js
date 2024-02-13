@@ -38,6 +38,7 @@ export default function AddNetwork({}) {
 
   return (
     <div>
+      <h3>Add a class network</h3>
       <NetworkForm inputs={inputs} handleChange={handleChange} />
       <button onClick={handleSave}>Save</button>
     </div>

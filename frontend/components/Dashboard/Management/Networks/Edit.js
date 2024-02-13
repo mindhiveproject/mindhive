@@ -41,6 +41,7 @@ export default function EditNetwork({ user, id }) {
 
   return (
     <div>
+      <h3>Edit the class network</h3>
       <NetworkForm inputs={inputs} handleChange={handleChange} />
       <button onClick={handleSave}>Save</button>
     </div>
