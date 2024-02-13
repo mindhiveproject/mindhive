@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
+import moment from "moment";
 
 import { DELETE_CLASS } from "../../../Mutations/Classes";
 import { GET_CLASSES } from "../../../Queries/Classes";
@@ -45,7 +46,29 @@ export default function Settings({ myclass, user }) {
 
   return (
     <div className="settings">
-      <h2>Delete your class</h2>
+      {myclass?.networks.length && (
+        <div>
+          <h3>Class networks</h3>
+          {myclass?.networks.map((network) => (
+            <div>
+              <h2>{network?.title}</h2>
+              <p>{network?.description}</p>
+              <p>
+                Created by {network?.creator?.username} on{" "}
+                {moment(network?.createdAt).format("MMMM D, YYYY")}
+              </p>
+              <p>Classes</p>
+              <ul>
+                {network?.classes.map((cl) => (
+                  <li>{cl?.title}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <h3>Delete your class</h3>
       <p>
         Deleting your class will permanently delete your class within the “My
         Classes” area. This action cannot be undone.

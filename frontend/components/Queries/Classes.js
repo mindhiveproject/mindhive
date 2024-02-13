@@ -75,6 +75,17 @@ export const GET_CLASS = gql`
         }
         createdAt
       }
+      networks {
+        title
+        description
+        creator {
+          username
+        }
+        classes {
+          title
+        }
+        createdAt
+      }
       settings
       createdAt
       updatedAt
