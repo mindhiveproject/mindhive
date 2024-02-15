@@ -54,14 +54,16 @@ export default function ReviewHomework({
 
         <div className="infoBoard">
           <div>
-            <h4>Assigned to</h4>
+            <h4>Author</h4>
             <p>{inputs?.author?.username}</p>
           </div>
 
-          <div>
-            <h4>Last updated</h4>
-            <p>{moment(inputs?.updatedAt).format("MMM D, YYYY, h:mm a")}</p>
-          </div>
+          {inputs?.updatedAt && (
+            <div>
+              <h4>Last updated</h4>
+              <p>{moment(inputs?.updatedAt).format("MMM D, YYYY, h:mm a")}</p>
+            </div>
+          )}
 
           <div>
             <h4>Status</h4>
@@ -108,7 +110,11 @@ export default function ReviewHomework({
         <div
           className="primary saveButton"
           onClick={async () => {
-            await editHomework();
+            await editHomework({
+              variables: {
+                updatedAt: new Date(),
+              },
+            });
             router.push({
               pathname: `/dashboard/myclasses/${myclass?.code}`,
               query: {

@@ -31,6 +31,7 @@ export const EDIT_HOMEWORK = gql`
     $content: String
     $settings: JSON
     $public: Boolean
+    $updatedAt: DateTime
   ) {
     updateHomework(
       where: { id: $id }
@@ -39,6 +40,7 @@ export const EDIT_HOMEWORK = gql`
         content: $content
         settings: $settings
         public: $public
+        updatedAt: $updatedAt
       }
     ) {
       id

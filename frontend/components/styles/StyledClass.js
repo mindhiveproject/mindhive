@@ -204,6 +204,9 @@ const StyledClass = styled.div`
   }
 
   .assignments {
+    .backButton {
+      margin: 0rem 0rem 2rem 0rem;
+    }
     .tab {
       display: grid;
       grid-template-rows: auto 1fr;

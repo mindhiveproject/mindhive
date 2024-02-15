@@ -1,13 +1,13 @@
+import Link from "next/link";
 import { Icon, Popup } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import moment from "moment";
 
 import useForm from "../../../lib/useForm";
 import DeleteHomework from "./Delete";
-import HomeworkModal from "./Modal";
 
 import { EDIT_HOMEWORK } from "../../Mutations/Homework";
-import { GET_MY_HOMEWORK_FOR_ASSIGNMENT } from "../../Queries/Homework";
+import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../Queries/Homework";
 
 export default function HomeworkTab({ user, assignment, homework }) {
   const { inputs, handleChange, clearForm } = useForm({
@@ -20,16 +20,11 @@ export default function HomeworkTab({ user, assignment, homework }) {
     },
     refetchQueries: [
       {
-        query: GET_MY_HOMEWORK_FOR_ASSIGNMENT,
+        query: GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
         variables: { userId: user?.id, assignmentCode: assignment?.code },
       },
     ],
   });
-
-  const handleSave = () => {
-    editHomework();
-    clearForm();
-  };
 
   return (
     <div className="tab">
@@ -68,14 +63,17 @@ export default function HomeworkTab({ user, assignment, homework }) {
         <div className="headerInfo">
           <>
             <div className="buttons">
-              <HomeworkModal
-                btnName="Save"
-                inputs={inputs}
-                handleChange={handleChange}
-                submit={handleSave}
+              <Link
+                key={homework?.id}
+                href={{
+                  pathname: `/dashboard/assignments/${assignment?.code}`,
+                  query: {
+                    homework: homework?.code,
+                  },
+                }}
               >
-                <button className="secondary">Edit</button>
-              </HomeworkModal>
+                <button className="secondary">Open</button>
+              </Link>
 
               {homework?.public ? (
                 <>

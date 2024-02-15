@@ -47,22 +47,6 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
               </button>
             </div>
           </>
-
-          {/* <Link
-            href={{
-              pathname: `/dashboard/myclasses/${myclass?.code}`,
-              query: {
-                page: "assignments",
-                action: "view",
-                assignment: assignment?.code,
-              },
-            }}
-          >
-            <span>
-              {assignment?.homework?.filter((h) => h?.public)?.length || 0}{" "}
-              homework submitted
-            </span>
-          </Link> */}
         </div>
       </div>
     </div>

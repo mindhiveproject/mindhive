@@ -7,6 +7,8 @@ import JoditEditor from "../../Jodit/Editor";
 export default function HomeworkModal({
   btnName,
   inputs,
+  content,
+  updateContent,
   handleChange,
   submit,
   children,
@@ -36,10 +38,8 @@ export default function HomeworkModal({
               />
             </label>
             <JoditEditor
-              content={inputs?.content}
-              setContent={(content) =>
-                handleChange({ target: { name: "content", value: content } })
-              }
+              content={content?.current}
+              setContent={updateContent}
             />
             <button
               onClick={() => {

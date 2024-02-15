@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { DELETE_HOMEWORK } from "../../Mutations/Homework";
-import { GET_MY_HOMEWORK_FOR_ASSIGNMENT } from "../../Queries/Homework";
+import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../Queries/Homework";
 
 export default function DeleteHomework({
   user,
@@ -12,7 +12,7 @@ export default function DeleteHomework({
     variables: { id: homework?.id },
     refetchQueries: [
       {
-        query: GET_MY_HOMEWORK_FOR_ASSIGNMENT,
+        query: GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
         variables: { userId: user?.id, assignmentCode: assignment?.code },
       },
     ],

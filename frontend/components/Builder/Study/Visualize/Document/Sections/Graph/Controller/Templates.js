@@ -1,6 +1,10 @@
 const defaultCode = `import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
+import micropip
+
+# install plotly from pypi
+await micropip.install('plotly==5.0.0')
 
 import js_workspace as data
 data = data.to_py()

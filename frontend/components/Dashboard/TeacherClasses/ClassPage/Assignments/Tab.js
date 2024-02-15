@@ -23,8 +23,6 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
           query: GET_MY_CLASS_ASSIGNMENTS,
           variables: { userId: user?.id, classId: myclass?.id },
         },
-        // { query: GET_CLASS, variables: { code: myclass?.code } },
-        // { query: GET_ASSIGNMENT, variables: { code: assignment?.code } },
       ],
     }
   );
@@ -148,23 +146,6 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
               homework submitted
             </span>
           </Link>
-
-          {/* {assignment.public ? (
-            <Link
-              href={{
-                pathname: `/dashboard/myclasses/${myclass?.code}`,
-                query: {
-                  page: "assignments",
-                  action: "view",
-                  assignment: assignment?.code,
-                },
-              }}
-            >
-              
-            </Link>
-          ) : (
-            
-          )} */}
         </div>
       </div>
     </div>
