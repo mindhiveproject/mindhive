@@ -16,7 +16,7 @@ export default function CreateProposal({
   goToOverview,
 }) {
   const [proposalId, setProposalId] = useState(copyProposalId || null);
-  const [template, setTemplate] = useState(null); 
+  const [template, setTemplate] = useState(null);
 
   const [copyProposal, { loading }] = useMutation(COPY_PROPOSAL_MUTATION, {
     variables: {
@@ -55,7 +55,7 @@ export default function CreateProposal({
   };
 
   return (
-    <div>
+    <>
       <div className="empty">
         <div className="closeBtn">
           <span onClick={goToOverview}>&times;</span>
@@ -77,25 +77,21 @@ export default function CreateProposal({
             />
           </div>
         )}
-     
+
         <button onClick={createProposalCopy}>
           {isCopy ? "Create a copy" : "Create"}
         </button>
+      </div>
 
-    </div>
-    <div>
-        {template && !isCopy && (
-          <div className="previewTemplate">
-            <ProposalBuilder
-              proposalId={template?.id}
-              proposal={template}
-              isPreview
-            />
-          </div>
-        )}
-    </div>
-  
-  </div>
-    
+      {template && !isCopy && (
+        <div className="previewTemplate">
+          <ProposalBuilder
+            proposalId={template?.id}
+            proposal={template}
+            isPreview
+          />
+        </div>
+      )}
+    </>
   );
 }

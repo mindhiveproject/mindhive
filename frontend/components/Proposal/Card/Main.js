@@ -137,6 +137,9 @@ export default function ProposalCard({
 
       {isPreview ? (
         <div className="cardPreview">
+          <div className="closeBtn">
+            <span onClick={() => closeCard({})}>&times;</span>
+          </div>
           <h2>{proposalCard?.title}</h2>
           {proposalCard?.description && (
             <div className="description">

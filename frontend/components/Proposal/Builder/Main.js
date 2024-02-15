@@ -61,6 +61,7 @@ export default function ProposalBuilder({
         vertical
         visible={page === "card"}
         direction="right"
+        className="pushableSidebar"
       >
         {card && (
           <ProposalCardWrapper

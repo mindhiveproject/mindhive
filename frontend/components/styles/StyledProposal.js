@@ -5,7 +5,7 @@ export const StyledProposal = styled.div`
   width: 100%;
   overflow-y: auto;
   margin: 20px;
-  width: auto;
+  min-height: 80vh;
 
   .closeBtn {
     line-height: 3rem;
@@ -98,6 +98,7 @@ export const StyledProposal = styled.div`
   .proposalBoard {
     display: grid;
     grid-template-rows: auto 1fr;
+    width: max-content;
     .previewToggle {
       display: grid;
       grid-template-columns: auto auto 1fr;
@@ -381,6 +382,7 @@ export const StyledProposal = styled.div`
   .cardPreview {
     display: grid;
     grid-gap: 10px;
+    margin: 3rem;
     .description {
       background: #fbfaf7;
       padding: 10px 5px;

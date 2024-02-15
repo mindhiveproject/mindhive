@@ -28,19 +28,16 @@ export default function Proposal({ query, user, tab, toggleSidebar }) {
   }
 
   return (
-    <>
-      <div></div>
-      <Sidebar.Pushable>
-        <Navigation
-          query={query}
-          user={user}
-          tab={tab}
-          toggleSidebar={toggleSidebar}
-        />
-        <StyledProposal>
-          <ProposalWrapper query={query} user={user} templates={templates} />
-        </StyledProposal>
-      </Sidebar.Pushable>
-    </>
+    <Sidebar.Pushable>
+      <Navigation
+        query={query}
+        user={user}
+        tab={tab}
+        toggleSidebar={toggleSidebar}
+      />
+      <StyledProposal>
+        <ProposalWrapper query={query} user={user} templates={templates} />
+      </StyledProposal>
+    </Sidebar.Pushable>
   );
 }

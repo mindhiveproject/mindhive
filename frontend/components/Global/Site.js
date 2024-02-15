@@ -174,6 +174,9 @@ const GlobalStyles = createGlobalStyle`
     grid-template-columns: 1fr auto;
     align-items: center;
   }
+  .pushableSidebar {
+    min-width: 1000px;
+  }
 `;
 
 // the styles shared within all pages
