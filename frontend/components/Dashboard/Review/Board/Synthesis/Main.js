@@ -17,7 +17,7 @@ export default function Reviews({ user, reviews, view }) {
   const sections = reviews.map((review) =>
     review.content.map((question) => ({
       ...question,
-      author: review.author.id,
+      author: review.author?.id,
       authorUsername: review.author?.username,
       createdAt: review.createdAt,
       updatedAt: review.updatedAt,
