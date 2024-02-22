@@ -5,6 +5,7 @@ import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 import moment from "moment";
 import Head from "next/head";
 import JoditEditor from "../../Jodit/Editor";
+import Presenter from "../../Jodit/Presenter";
 
 export default function ProposalPDF({ proposalId }) {
   const { origin } = absoluteUrl();
@@ -57,7 +58,7 @@ export default function ProposalPDF({ proposalId }) {
         </title>
       </Head>
       <div className="proposalPDF">
-        <JoditEditor content={content} setContent={() => {}} readonly />
+        <Presenter content={content} />
       </div>
     </>
   );

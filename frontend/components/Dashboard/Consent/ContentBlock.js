@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import moment from "moment";
 import { Icon } from "semantic-ui-react";
 import Link from "next/link";
-
-import ReactHtmlParser from "react-html-parser";
 import JoditEditor from "../../Jodit/Editor";
 
 export default function ContentBlock({ index, block, updateInfo }) {

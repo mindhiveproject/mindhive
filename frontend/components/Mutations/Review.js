@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 // create new review
 export const CREATE_REVIEW = gql`
   mutation CREATE_REVIEW(
+    $authorId: ID!
     $studyId: ID!
     $proposalId: ID!
     $stage: String
@@ -11,6 +12,7 @@ export const CREATE_REVIEW = gql`
   ) {
     createReview(
       data: {
+        author: { connect: { id: $authorId } }
         study: { connect: { id: $studyId } }
         proposal: { connect: { id: $proposalId } }
         stage: $stage

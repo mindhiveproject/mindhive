@@ -56,7 +56,7 @@ export default function ProposalRow({
             pathname: `/dashboard/review/proposal`,
             query: {
               id: proposal?.id,
-              tab: "proposal",
+              tab: "reviews",
               action: "synthesis",
             },
           }}

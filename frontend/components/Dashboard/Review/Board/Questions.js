@@ -1,27 +1,24 @@
+import { useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
+
 import { GET_REVIEW } from "../../../Queries/Review";
 import { CREATE_REVIEW, UPDATE_REVIEW } from "../../../Mutations/Review";
-
-import { individual, synthesis } from "./Template";
 
 import Question from "./Question";
 import useForm from "../../../../lib/useForm";
 
-export default function Questions({ studyId, proposalId, authorId, stage }) {
-  const { data, loading, error } = useQuery(GET_REVIEW, {
-    variables: {
-      proposalId,
-      authorId,
-      stage,
-    },
-  });
-  const reviews = data?.reviews || [];
-  const review = reviews.length ? reviews[0] : {};
-  const content =
-    review?.content || (stage === "INDIVIDUAL" ? individual : synthesis);
-
-  const { inputs, handleChange } = useForm({
+export default function Questions({
+  studyId,
+  proposalId,
+  authorId,
+  stage,
+  content,
+  reviewId,
+}) {
+  const { inputs, handleChange, handleMultipleUpdate } = useForm({
+    id: reviewId,
     content,
+    authorId,
     studyId,
     proposalId,
     stage,
@@ -85,7 +82,7 @@ export default function Questions({ studyId, proposalId, authorId, stage }) {
         {stage === "INDIVIDUAL" ? "Review questions" : "Synthesis questions"}
       </h1>
       <div className="reviewItems">
-        {inputs?.content.map((item, i) => (
+        {inputs?.content?.map((item, i) => (
           <Question
             stage={stage}
             item={item}
@@ -93,7 +90,7 @@ export default function Questions({ studyId, proposalId, authorId, stage }) {
           />
         ))}
       </div>
-      {inputs?.id ? (
+      {reviewId ? (
         <button
           type="button"
           disabled={updateLoading}

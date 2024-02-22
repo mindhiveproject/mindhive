@@ -101,6 +101,7 @@ export const StyledReviewBoard = styled.div`
       align-content: baseline;
       button {
         border: 2px solid #b3b3b3;
+        color: grey;
       }
     }
   }
@@ -140,7 +141,7 @@ export const StyledReviewBoard = styled.div`
       }
     }
   }
-  .row  {
+  .row {
     display: grid;
     padding: 20px 28px;
     background: #ffffff;
@@ -269,13 +270,12 @@ export const StyledDasboardReview = styled.div`
 
     .header {
       grid-area: header;
-      padding: 0rem 2rem;
+      padding: 2rem 2rem;
       display: grid;
       grid-template-columns: 1fr auto;
       grid-gap: 3rem;
       justify-content: flex-start;
-      align-items: baseline;
-      /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); */
+      /* align-items: baseline; */
       font-family: Lato;
       font-style: normal;
       font-weight: 400;
@@ -328,7 +328,7 @@ export const StyledDasboardReview = styled.div`
       background: #f7f9f8;
       padding: 1rem 2rem;
       overflow-y: scroll;
-      /* overflow-x: scroll; */
+      overflow-x: scroll;
     }
     .questions {
       grid-area: review;

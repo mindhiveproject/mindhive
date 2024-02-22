@@ -136,7 +136,9 @@ export const StyledProposal = styled.div`
     }
     .proposalPDF {
       display: grid;
-      width: 100%;
+      align-content: baseline;
+      margin: 20px;
+      max-width: 90vw;
       height: 100%;
     }
   }

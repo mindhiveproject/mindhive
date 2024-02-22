@@ -2,7 +2,7 @@ import ReactStars from "react-rating-stars-component"; // https://www.npmjs.com/
 
 export default function Question({ stage, item, handleItemChange }) {
   return (
-    <div className="reviewItem ">
+    <div className="reviewItem">
       <div>
         <h2>{item.question}</h2>
         {item.subQuestionA && (
@@ -28,7 +28,7 @@ export default function Question({ stage, item, handleItemChange }) {
             size={24}
             activeColor="#ffd700"
             isHalf
-            value={item.rating}
+            value={item?.rating}
           />
         </div>
       )}

@@ -11,11 +11,16 @@ import { UserContext } from "./Authorized";
 
 import { Sidebar } from "semantic-ui-react";
 
-export default function Dashboard({ children, area }) {
+export default function Dashboard({ children, area, selector }) {
   const user = useContext(UserContext);
 
   if (!user) {
     return <div>Please first log in!</div>;
+  }
+
+  // use the full screen for reviewing
+  if (area === "review" && selector === "proposal") {
+    return <>{children}</>;
   }
 
   // do not use dashboard wrapper on the proposals page
