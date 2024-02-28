@@ -21,6 +21,14 @@ export default function Authorship({ user, study }) {
     refetchQueries: [{ query: MY_STUDIES, variables: { id: user?.id } }],
   });
 
+  const userClasses = [
+    ...user?.teacherIn.map((cl) => cl?.id),
+    ...user?.mentorIn.map((cl) => cl?.id),
+    ...user?.studentIn.map((cl) => cl?.id),
+  ];
+
+  console.log({ userClasses });
+
   return (
     <Modal
       onClose={() => setOpen(false)}
@@ -56,7 +64,11 @@ export default function Authorship({ user, study }) {
             </p>
             <div className="selectUser">
               <p>Select the user</p>
-              <FindUser authorId={authorId} setAuthorId={setAuthorId} />
+              <FindUser
+                userClasses={userClasses}
+                authorId={authorId}
+                setAuthorId={setAuthorId}
+              />
             </div>
 
             <div>

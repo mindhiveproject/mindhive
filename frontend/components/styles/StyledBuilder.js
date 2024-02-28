@@ -66,30 +66,6 @@ export const StyledBuilderArea = styled.div`
     cursor: pointer;
     .icons {
     }
-    .connectModal {
-      display: grid;
-      margin: 43px 51px;
-      h2 {
-        font-family: Roboto;
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 30px;
-        letter-spacing: 0em;
-        text-align: left;
-        color: #1a1a1a;
-      }
-      .collaboratorUsernamesForAdmin {
-        display: grid;
-        margin: 1rem 0rem 0rem 0rem;
-        padding: 1rem;
-        border: 1px solid pink;
-        border-radius: 1rem;
-        .collaboratorUsername {
-          padding: 0.5rem 0rem;
-        }
-      }
-    }
     .buttons {
       width: 100%;
       display: grid;

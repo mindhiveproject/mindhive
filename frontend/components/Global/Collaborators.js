@@ -1,10 +1,25 @@
 import { useQuery } from "@apollo/client";
-import { GET_USERNAMES } from "../Queries/User";
+import { GET_USERNAMES_OF_CLASS } from "../Queries/User";
 
 import { Dropdown } from "semantic-ui-react";
 
-export default function Collaborators({ collaborators, handleChange }) {
-  const { data, loading, error } = useQuery(GET_USERNAMES);
+export default function Collaborators({
+  userClasses,
+  collaborators,
+  handleChange,
+}) {
+  const { data, loading, error } = useQuery(GET_USERNAMES_OF_CLASS, {
+    variables: {
+      input: {
+        OR: [
+          { permissions: { some: { name: { equals: "ADMIN" } } } }, // get all admins
+          { studentIn: { some: { id: { in: userClasses } } } },
+          { teacherIn: { some: { id: { in: userClasses } } } },
+          { mentorIn: { some: { id: { in: userClasses } } } },
+        ],
+      },
+    },
+  });
   const profiles = data?.profiles || [];
 
   const usernames = profiles.map((user) => ({
@@ -43,24 +58,3 @@ export default function Collaborators({ collaborators, handleChange }) {
     </div>
   );
 }
-
-// const DropdownExampleMultipleSelection = ({
-//   usernames,
-//   collaborators,
-//   handleChange,
-// }) => {
-
-//   return (
-//     <Dropdown
-//       placeholder="Type username"
-//       fluid
-//       multiple
-//       search
-//       selection
-//       lazyLoad
-//       options={usernames}
-//       onChange={onChange}
-//       value={collaborators}
-//     />
-//   );
-// };

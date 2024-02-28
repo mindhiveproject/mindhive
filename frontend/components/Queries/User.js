@@ -123,6 +123,15 @@ export const GET_USERNAMES = gql`
   }
 `;
 
+export const GET_USERNAMES_OF_CLASS = gql`
+  query GET_USERNAMES_OF_CLASS($input: ProfileWhereInput!) {
+    profiles(where: $input) {
+      id
+      username
+    }
+  }
+`;
+
 // get user information
 export const GET_USER = gql`
   query GET_USER($id: String!) {
