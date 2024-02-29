@@ -1,4 +1,11 @@
-export default function Selector({ variables, code, runCode }) {
+export default function Selector({
+  variables,
+  code,
+  runCode,
+  sectionId,
+  selectors,
+  handleChange,
+}) {
   const options = variables.map((variable) => ({
     key: variable,
     value: variable,
@@ -11,13 +18,22 @@ export default function Selector({ variables, code, runCode }) {
         <div className="title">X-Axis</div>
         <div className="select">
           <select
-            id="X-variable"
-            onChange={() => {
+            id={`X-variable-${sectionId}`}
+            onChange={({ target }) => {
+              handleChange({
+                name: "selectors",
+                content: { ...selectors, "X-variable": target.value },
+              });
               runCode({ code });
             }}
           >
             {options.map((option) => (
-              <option value={option?.value}>{option?.text}</option>
+              <option
+                value={option?.value}
+                selected={option?.value === selectors["X-variable"]}
+              >
+                {option?.text}
+              </option>
             ))}
           </select>
         </div>
@@ -26,13 +42,22 @@ export default function Selector({ variables, code, runCode }) {
         <div className="title">Y-Axis</div>
         <div className="select">
           <select
-            id="Y-variable"
-            onChange={() => {
+            id={`Y-variable-${sectionId}`}
+            onChange={({ target }) => {
+              handleChange({
+                name: "selectors",
+                content: { ...selectors, "Y-variable": target.value },
+              });
               runCode({ code });
             }}
           >
             {options.map((option) => (
-              <option value={option?.value}>{option?.text}</option>
+              <option
+                value={option?.value}
+                selected={option?.value === selectors["Y-variable"]}
+              >
+                {option?.text}
+              </option>
             ))}
           </select>
         </div>
@@ -42,13 +67,22 @@ export default function Selector({ variables, code, runCode }) {
         <div className="title">Group</div>
         <div className="select">
           <select
-            id="Group-variable"
-            onChange={() => {
+            id={`Group-variable-${sectionId}`}
+            onChange={({ target }) => {
+              handleChange({
+                name: "selectors",
+                content: { ...selectors, "Group-variable": target.value },
+              });
               runCode({ code });
             }}
           >
             {options.map((option) => (
-              <option value={option?.value}>{option?.text}</option>
+              <option
+                value={option?.value}
+                selected={option?.value === selectors["Group-variable"]}
+              >
+                {option?.text}
+              </option>
             ))}
           </select>
         </div>

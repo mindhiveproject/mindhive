@@ -22,7 +22,7 @@ export default function CodeEditor({ code, handleChange, runCode }) {
   };
 
   const onChange = useCallback((val, viewUpdate) => {
-    handleChange(val);
+    handleChange({ name: "code", content: val });
   }, []);
 
   return (

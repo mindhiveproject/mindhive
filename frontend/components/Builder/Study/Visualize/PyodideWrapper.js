@@ -3,12 +3,30 @@ import { loadPyodide } from "pyodide";
 
 import JournalManager from "./JournalManager";
 
+const baseCode = `import js
+import micropip
+import pandas as pd
+await micropip.install('plotly==5.19.0')
+import plotly.express as px
+import plotly.graph_objects as go`;
+
 import {
   MessageHeader,
   MessageContent,
   Message,
   Icon,
 } from "semantic-ui-react";
+
+function render_plot(container, plot_html) {
+  var range = document.createRange();
+  range.selectNode(container);
+  var documentFragment = range.createContextualFragment(plot_html);
+  while (container.hasChildNodes()) {
+    container.removeChild(container.firstChild);
+  }
+  container.appendChild(documentFragment);
+  container.className = "plotly";
+}
 
 export default function PyodideWrapper({ user, studyId }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,10 +49,12 @@ export default function PyodideWrapper({ user, studyId }) {
           "micropip",
         ]);
         // run code that will only run once
-        // await pyodideLoad.runPython(importString);
+        await pyodideLoad.runPythonAsync(baseCode);
         // provide data to pyodide which will be shared between all parts of the journal
         // pyodideLoad.registerJsModule("js_shared_workspace", sharedData);
         setPyodide(pyodideLoad);
+        // inject plot rendering function
+        window.render_plot = render_plot;
         setIsLoading(false);
       }
     }

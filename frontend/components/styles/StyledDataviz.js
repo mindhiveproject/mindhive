@@ -6,6 +6,11 @@ export const StyledDataViz = styled.div`
   grid-template-columns: 1fr 2fr;
   grid-gap: 19px;
   max-height: 85vh;
+  .plotly {
+    width: 100%;
+    height: 500px;
+    overflow-y: auto;
+  }
   .vizMenu {
     display: grid;
     grid-template-columns: 40px auto;

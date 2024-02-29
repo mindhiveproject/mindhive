@@ -20,12 +20,15 @@ export default function StateManager({
   content,
   handleChange,
   pyodide,
+  sectionId,
 }) {
   const [isRunning, setIsRunning] = useState(false);
   const [output, setOutput] = useState("");
 
   // state of the python code
   const code = content?.code || defaultCode;
+  // state of the selectors
+  const selectors = content?.selectors || {};
   // state of the data we are working with
   const [data, setData] = useState(studyData);
   // state of the variables
@@ -51,7 +54,11 @@ export default function StateManager({
   return (
     <div className="graph">
       {!code && pyodide && (
-        <TemplateSelector handleChange={handleChange} runCode={runCode} />
+        <TemplateSelector
+          handleChange={handleChange}
+          runCode={runCode}
+          sectionId={sectionId}
+        />
       )}
       {code && pyodide && (
         <CodeEditor code={code} handleChange={handleChange} runCode={runCode} />
@@ -67,9 +74,22 @@ export default function StateManager({
         </Message>
       )}
       {code && pyodide && (
-        <Render data={data} code={code} pyodide={pyodide} runCode={runCode} />
+        <Render
+          data={data}
+          code={code}
+          pyodide={pyodide}
+          runCode={runCode}
+          sectionId={sectionId}
+        />
       )}
-      <Selector variables={variables} code={code} runCode={runCode} />
+      <Selector
+        variables={variables}
+        code={code}
+        runCode={runCode}
+        sectionId={sectionId}
+        selectors={selectors}
+        handleChange={handleChange}
+      />
       <div>Output:</div>
       <textarea
         className="outputArea"

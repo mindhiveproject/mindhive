@@ -27,8 +27,6 @@ export default function Authorship({ user, study }) {
     ...user?.studentIn.map((cl) => cl?.id),
   ];
 
-  console.log({ userClasses });
-
   return (
     <Modal
       onClose={() => setOpen(false)}

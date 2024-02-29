@@ -10,8 +10,7 @@ import {
 import Render from "./Render";
 import CodeEditor from "./Controller/CodeEditor";
 
-const defaultCode = `import pandas as pd
-import js_workspace as data
+const defaultCode = `import js_workspace as data
 data = data.to_py()
 df = pd.DataFrame(data)
 df.head()`;

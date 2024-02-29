@@ -6,6 +6,8 @@ import Document from "./Document/Main";
 
 import { StyledDataViz } from "../../../styles/StyledDataviz";
 
+const prepareDataCode = ``;
+
 export default function PartManager({
   user,
   studyId,
@@ -40,6 +42,8 @@ export default function PartManager({
     async function registerData() {
       if (pyodide && data) {
         pyodide?.registerJsModule("js_workspace", [...data]);
+        // make data available as data and df (pandas dataframe)
+        await pyodide.runPythonAsync(prepareDataCode);
       }
     }
     registerData();

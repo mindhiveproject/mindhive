@@ -13,7 +13,6 @@ export default function DeleteChapter({ studyId, part }) {
 
   const deleteVizPart = async () => {
     // TO DO delete all chapters and sections inside of the part
-    // console.log({ part });
 
     // delete the part
     await deletePart({ variables: { id: part?.id } });

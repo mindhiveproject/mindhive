@@ -6,10 +6,11 @@ export default function Graph({
   data,
   variables,
   pyodide,
+  sectionId,
 }) {
   // update content in the local state
-  const handleChange = async (content) => {
-    handleContentChange({ name: "code", content });
+  const handleChange = async ({ name, content }) => {
+    handleContentChange({ name, content });
   };
 
   return (
@@ -19,6 +20,7 @@ export default function Graph({
       content={content}
       handleChange={handleChange}
       pyodide={pyodide}
+      sectionId={sectionId}
     />
   );
 }

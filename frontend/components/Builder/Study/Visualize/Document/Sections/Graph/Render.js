@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 
-const prepareCanvasCode = `
-import micropip
-`;
+const prepareCanvasCode = ``;
 
-export default function Render({ data, code, pyodide, runCode }) {
+export default function Render({ data, code, pyodide, runCode, sectionId }) {
   // run only once
   useEffect(() => {
     async function startPyodide() {
@@ -21,7 +19,7 @@ export default function Render({ data, code, pyodide, runCode }) {
     evaluatePython();
   }, [data]);
 
-  return <div className="graphArea" id="figureArea" />;
+  return <div className="graphArea" id={`figure-${sectionId}`} />;
 }
 
 // const prepareCanvasCode = `

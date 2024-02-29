@@ -73,6 +73,7 @@ export default function Section({
           data={data}
           variables={variables}
           pyodide={pyodide}
+          sectionId={section?.id}
         />
       )}
 
