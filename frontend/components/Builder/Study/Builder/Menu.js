@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import ComponentSelector from "./Selector/Main";
 import StudySettings from "./Settings/Main";
+import StudyTasks from "../../../Dashboard/Review/Board/StudyPreview/StudyTasks";
 
 export default function Menu({
   engine,
@@ -27,6 +28,15 @@ export default function Menu({
         </div>
 
         <div
+          onClick={() => setTab("flow")}
+          className={
+            tab === "flow" ? "menuTitle selectedMenuTitle" : "menuTitle"
+          }
+        >
+          <h2>Study flow</h2>
+        </div>
+
+        <div
           onClick={() => setTab("study")}
           className={
             tab === "study" ? "menuTitle selectedMenuTitle" : "menuTitle"
@@ -43,6 +53,12 @@ export default function Menu({
           addFunctions={addFunctions}
           setIsModalOpen={setIsModalOpen}
         />
+      )}
+
+      {tab === "flow" && (
+        <div className="studyFlow">
+          <StudyTasks study={study} />
+        </div>
       )}
 
       {tab === "study" && (

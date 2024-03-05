@@ -8,7 +8,7 @@ import { Menu, Dropdown } from "semantic-ui-react";
 import { PROPOSAL_REVIEWS_QUERY } from "../../../Queries/Proposal";
 
 import Review from "./Review";
-import StudyPreview from "./StudyPreview";
+import StudyPreview from "./StudyPreview/Main";
 import Presenter from "../../../Jodit/Presenter";
 import Reviews from "./Synthesis/Main";
 

@@ -1,11 +1,12 @@
 import { useQuery } from "@apollo/client";
 import Head from "next/head";
-import Link from "next/link";
 import ReactHtmlParser from "react-html-parser";
 
-import { STUDY_TO_DISCOVER } from "../../../Queries/Study";
+import { STUDY_TO_DISCOVER } from "../../../../Queries/Study";
 
-import { StyledStudyPage } from "../../../styles/StyledStudyPage";
+import { StyledStudyPage } from "../../../../styles/StyledStudyPage";
+import StudyInfo from "../../../../Studies/Landing/StudyInfo";
+import StudyTasks from "./StudyTasks";
 
 export default function StudyPreview({ user, proposal }) {
   const { data, error, loading } = useQuery(STUDY_TO_DISCOVER, {
@@ -33,7 +34,11 @@ export default function StudyPreview({ user, proposal }) {
           <div className="studyDescription">
             <h3>{ReactHtmlParser(study?.description)}</h3>
           </div>
+
+          <StudyInfo user={user} study={study} />
         </div>
+
+        <StudyTasks study={study} />
       </div>
     </StyledStudyPage>
   );

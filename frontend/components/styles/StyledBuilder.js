@@ -8,7 +8,6 @@ export const StyledBuilderArea = styled.div`
   display: grid;
   height: 100vh;
   grid-template-rows: auto 1fr;
-  /* overflow-y: hidden; */
   .navigation {
     display: grid;
     .on {
@@ -112,6 +111,9 @@ export const StyledCanvasBuilder = styled.div`
     align-content: baseline;
     height: 85vh;
     overflow-y: auto;
+    .studyFlow {
+      margin: 0rem;
+    }
   }
 
   .board {

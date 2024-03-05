@@ -183,6 +183,83 @@ export const StyledStudyPage = styled.div`
   }
 `;
 
+export const StyledTasksPreview = styled.div`
+  margin: 2rem;
+  .studyTasksPreview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    align-items: baseline;
+    grid-gap: 10px;
+    border-radius: 7px;
+    .condition {
+      display: grid;
+      grid-gap: 5px;
+      align-items: baseline;
+      margin: 0rem 0rem 1rem 0rem;
+      padding: 2rem;
+      background: white;
+      width: 100%;
+      .firstLine {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        margin-bottom: 5px;
+      }
+    }
+    .taskBlocks {
+      display: grid;
+      grid-gap: 10px;
+    }
+  }
+`;
+
+export const StyledTaskCardReview = styled.div`
+  height: 100%;
+  background: #ffffff;
+  border-radius: 4px;
+  border-top: 14px solid;
+  border-top-color: ${(props) =>
+    props.taskType === "TASK"
+      ? "#64c9e2"
+      : props.taskType === "SURVEY"
+      ? "#28619e"
+      : "#ffc7c3"};
+
+  box-shadow: 0px 2px 4px 0px #00000026;
+  transition: box-shadow 300ms ease-out;
+  cursor: pointer;
+
+  :hover {
+    box-shadow: 0px 2px 24px 0px #0000001a;
+  }
+
+  .cardInfo {
+    padding: 5px 10px;
+  }
+  a {
+    letter-spacing: 0.04em;
+    text-decoration-line: underline;
+    color: #007c70;
+  }
+  h2 {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 30px;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+  }
+  p {
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0.04em;
+    text-align: left;
+  }
+`;
+
 export const StyledTaskCard = styled.div`
   height: 100%;
   background: #ffffff;

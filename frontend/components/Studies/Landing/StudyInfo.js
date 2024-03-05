@@ -1,9 +1,9 @@
-import Link from "next/link";
+import { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { Menu } from "semantic-ui-react";
 
 export default function StudyInfo({ query, user, study, isDashboard }) {
-  const tab = query?.tab || "What";
+  const [tab, setTab] = useState(query?.tab || "What");
 
   const additionalTabs =
     study?.info?.filter((p) => p.name.startsWith("tab")) || [];
@@ -136,34 +136,14 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
           <Menu tabular stackable>
             {tabs.map((atab, num) => (
               <div key={num}>
-                {isDashboard ? (
-                  <Link
-                    key={num}
-                    href={{
-                      pathname: `/dashboard/discover/studies`,
-                      query: {
-                        name: study?.slug,
-                        tab: atab.header,
-                      },
-                    }}
-                  >
-                    <Menu.Item name={atab.name} active={tab === atab.header}>
-                      {atab.header}
-                    </Menu.Item>
-                  </Link>
-                ) : (
-                  <Link
-                    key={num}
-                    href={{
-                      pathname: `/studies/${study?.slug}`,
-                      query: { tab: atab.header, guest: user?.publicId },
-                    }}
-                  >
-                    <Menu.Item name={atab.name} active={tab === atab.header}>
-                      {atab.header}
-                    </Menu.Item>
-                  </Link>
-                )}
+                <Menu.Item
+                  key={num}
+                  name={atab.name}
+                  active={tab === atab.header}
+                  onClick={() => setTab(atab.header)}
+                >
+                  {atab.header}
+                </Menu.Item>
               </div>
             ))}
           </Menu>
