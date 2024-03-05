@@ -9,6 +9,11 @@ export const StyledPreview = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 5;
 
+  button {
+    color: revert;
+    background: revert;
+  }
+
   .frame {
     /* position: absolute;
     top: 0px;

@@ -208,6 +208,10 @@ export const StyledDasboardReview = styled.div`
       border: 1px solid #e6e6e6;
       text-align: center;
       padding: 20px;
+      background: rgb(255, 255, 255);
+      box-shadow: rgba(0, 0, 0, 0.07) 0px 2px 10px;
+      border-radius: 8px;
+
       p {
         font-family: Lato;
         font-size: 18px;

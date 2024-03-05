@@ -187,7 +187,7 @@ export const StyledTasksPreview = styled.div`
   margin: 2rem;
   .studyTasksPreview {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     align-items: baseline;
     grid-gap: 10px;
     border-radius: 7px;
@@ -363,6 +363,10 @@ export const StyledStudyPreview = styled.div`
 
 export const StyledStudyRun = styled.div`
   display: grid;
+  button {
+    color: revert;
+    background: revert;
+  }
   .prompt {
     display: grid;
     max-width: 800px;
