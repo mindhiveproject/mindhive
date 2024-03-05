@@ -264,7 +264,7 @@ export const StyledDasboardReview = styled.div`
     grid-template-columns: 2fr 1fr;
     grid-template-rows: 71px 1fr;
     grid-template-areas:
-      "header header"
+      "header review"
       "content review";
     height: 100vh;
 
@@ -332,14 +332,42 @@ export const StyledDasboardReview = styled.div`
     }
     .questions {
       grid-area: review;
-      padding: 37px 44px 37px 50px;
+
       height: 90%;
       overflow-y: scroll;
+      .stickyButton {
+        position: sticky;
+        top: 0px;
+        width: 100%;
+        display: grid;
+        justify-items: end;
+        background: white;
+        padding: 10px;
+        z-index: 1;
+        button {
+          background: #007c70;
+          border: 2px solid #007c70;
+          box-sizing: border-box;
+          border-radius: 4px;
+          padding: 14px 24px;
+          color: #ffffff;
+          font-family: Lato;
+          font-size: 18px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 18px;
+          letter-spacing: 0.05em;
+          text-align: center;
+          cursor: pointer;
+          width: 100%;
+        }
+      }
     }
   }
 
   .reviewQuestions {
     display: grid;
+    padding: 67px 44px 37px 50px;
     .reviewItems {
       display: grid;
       grid-gap: 20px;
@@ -371,23 +399,7 @@ export const StyledDasboardReview = styled.div`
       letter-spacing: 0em;
       text-align: left;
     }
-    button {
-      background: #007c70;
-      border: 2px solid #007c70;
-      box-sizing: border-box;
-      border-radius: 4px;
-      width: 140px;
-      padding: 14px 24px;
-      color: #ffffff;
-      font-family: Lato;
-      font-size: 18px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 18px;
-      letter-spacing: 0.05em;
-      text-align: center;
-      cursor: pointer;
-    }
+
     textarea {
       padding: 0.5rem;
       width: 100%;

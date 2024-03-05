@@ -3,7 +3,7 @@ import absoluteUrl from "next-absolute-url";
 import moment from "moment";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
-import { Menu, Dropdown } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 
 import { PROPOSAL_REVIEWS_QUERY } from "../../../Queries/Proposal";
 
@@ -126,8 +126,8 @@ export default function ReviewBoard({ query, user }) {
           </div>
         </div>
 
-        {stage === "SYNTHESIS" && tab === "reviews" && (
-          <div className="headerRight">
+        <div className="headerRight">
+          {stage === "SYNTHESIS" && tab === "reviews" && (
             <Dropdown
               fluid
               selection
@@ -154,8 +154,8 @@ export default function ReviewBoard({ query, user }) {
                 setView(data.value);
               }}
             />
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <div className="content">
@@ -174,14 +174,12 @@ export default function ReviewBoard({ query, user }) {
         )}
       </div>
 
-      <div className="questions">
-        <Review
-          studyId={proposal?.study?.id}
-          proposalId={proposal?.id}
-          authorId={user?.id}
-          stage={stage}
-        />
-      </div>
+      <Review
+        studyId={proposal?.study?.id}
+        proposalId={proposal?.id}
+        authorId={user?.id}
+        stage={stage}
+      />
     </div>
   );
 }

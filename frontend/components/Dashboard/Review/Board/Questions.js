@@ -77,45 +77,53 @@ export default function Questions({
   });
 
   return (
-    <div className="reviewQuestions">
-      <h1>
-        {stage === "INDIVIDUAL" ? "Review questions" : "Synthesis questions"}
-      </h1>
-      <div className="reviewItems">
-        {inputs?.content?.map((item, i) => (
-          <Question
-            stage={stage}
-            item={item}
-            handleItemChange={handleItemChange}
-          />
-        ))}
+    <div className="questions">
+      <div className="stickyButton">
+        {reviewId ? (
+          <button
+            type="button"
+            disabled={updateLoading}
+            onClick={() => {
+              updateReview();
+              alert("The review has been saved");
+            }}
+          >
+            Save my review
+          </button>
+        ) : (
+          <button
+            type="button"
+            disabled={createLoading}
+            onClick={async () => {
+              const res = await createReview();
+              const id = res?.data?.createReview?.id || null;
+              handleChange({
+                target: {
+                  name: "id",
+                  value: id,
+                },
+              });
+              alert("The review has been submitted");
+            }}
+          >
+            Submit my review
+          </button>
+        )}
       </div>
-      {reviewId ? (
-        <button
-          type="button"
-          disabled={updateLoading}
-          onClick={() => updateReview()}
-        >
-          Update
-        </button>
-      ) : (
-        <button
-          type="button"
-          disabled={createLoading}
-          onClick={async () => {
-            const res = await createReview();
-            const id = res?.data?.createReview?.id || null;
-            handleChange({
-              target: {
-                name: "id",
-                value: id,
-              },
-            });
-          }}
-        >
-          Submit
-        </button>
-      )}
+      <div className="reviewQuestions">
+        <h1>
+          {stage === "INDIVIDUAL" ? "Review questions" : "Synthesis questions"}
+        </h1>
+        <div className="reviewItems">
+          {inputs?.content?.map((item, i) => (
+            <Question
+              stage={stage}
+              item={item}
+              handleItemChange={handleItemChange}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
