@@ -62,6 +62,7 @@ export default function PartManager({
       <div className="vizMenu">
         <Menu page={page} setPage={setPage} />
         <Overview
+          user={user}
           page={page}
           studyId={studyId}
           journal={journal}

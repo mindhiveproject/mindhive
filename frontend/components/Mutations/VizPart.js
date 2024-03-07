@@ -9,6 +9,15 @@ export const ADD_VIZPART = gql`
   }
 `;
 
+// update viz part
+export const UPDATE_VIZPART = gql`
+  mutation UPDATE_VIZPART($id: ID!, $input: VizPartUpdateInput!) {
+    updateVizPart(where: { id: $id }, data: $input) {
+      id
+    }
+  }
+`;
+
 // delete viz part
 export const DELETE_VIZPART = gql`
   mutation DELETE_VIZPART($id: ID!) {

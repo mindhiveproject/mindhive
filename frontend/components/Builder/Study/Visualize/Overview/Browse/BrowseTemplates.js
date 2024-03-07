@@ -11,40 +11,48 @@ import {
   Modal,
 } from "semantic-ui-react";
 
-import { VIZCHAPTER_TEMPLATES } from "../../../../../Queries/VizChapter";
-import { ADD_VIZCHAPTER } from "../../../../../Mutations/VizChapter";
+import { VIZPART_TEMPLATES } from "../../../../../Queries/VizPart";
+import { ADD_VIZPART } from "../../../../../Mutations/VizPart";
 import { STUDY_VIZJOURNAL } from "../../../../../Queries/VizJournal";
 
 export default function BrowseTemplates({ studyId, journal }) {
   const [open, setOpen] = useState(false);
 
-  const [addChapter, { data: addChapterData }] = useMutation(ADD_VIZCHAPTER, {
+  const [addPart, { data: addPartData }] = useMutation(ADD_VIZPART, {
     refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
   });
 
-  const { data, loading, error } = useQuery(VIZCHAPTER_TEMPLATES);
-  const templates = data?.vizChapters || [];
+  const { data, loading, error } = useQuery(VIZPART_TEMPLATES);
+  const templates = data?.vizParts || [];
 
   const selectTemplate = async ({ template }) => {
-    const vizSections = template.vizSections.map((section) => ({
-      type: section?.type,
-      title: section?.title,
-      description: section?.description,
-      content: section?.content,
+    const vizChapters = template.vizChapters.map((chapter) => ({
+      title: chapter?.title,
+      description: chapter?.description,
+      vizSections: {
+        create: chapter?.vizSections.map((section) => ({
+          type: section?.type,
+          title: section?.title,
+          description: section?.description,
+          content: section?.content,
+        })),
+      },
     }));
 
-    await addChapter({
+    await addPart({
       variables: {
         input: {
           title: "Copy of " + template?.title,
           description: template?.description,
-          vizPart: {
-            connect: {
-              id: journal?.vizParts[0]?.id,
-            },
+          dataOrigin: template?.dataOrigin,
+          content: template?.content,
+          vizChapters: {
+            create: vizChapters,
           },
-          vizSections: {
-            create: vizSections,
+          vizJournal: {
+            connect: {
+              id: journal?.id,
+            },
           },
         },
       },
@@ -59,7 +67,7 @@ export default function BrowseTemplates({ studyId, journal }) {
       onOpen={() => setOpen(true)}
       open={open}
       trigger={
-        <DropdownItem onClick={() => {}}>
+        <DropdownItem>
           <div className="menuItem">
             <img src={`/assets/icons/visualize/description.svg`} />
             <div>Browse templates</div>

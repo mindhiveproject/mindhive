@@ -9,6 +9,9 @@ export const STUDY_VIZJOURNAL = gql`
         id
         vizParts {
           id
+          title
+          description
+          isTemplate
           dataOrigin
           content
           vizChapters {

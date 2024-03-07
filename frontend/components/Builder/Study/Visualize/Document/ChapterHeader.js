@@ -58,7 +58,7 @@ export default function ChapterHeader({ user, studyId, part, chapter }) {
             />
           </label>
 
-          <OnlyAdminAccess user={user}>
+          {/* <OnlyAdminAccess user={user}>
             <div>
               <Checkbox
                 label="Make the chapter a template"
@@ -70,7 +70,7 @@ export default function ChapterHeader({ user, studyId, part, chapter }) {
                 checked={inputs?.isTemplate}
               />
             </div>
-          </OnlyAdminAccess>
+          </OnlyAdminAccess> */}
 
           {(inputs?.title !== chapter.title ||
             inputs?.description !== chapter.description ||

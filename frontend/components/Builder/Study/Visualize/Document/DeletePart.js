@@ -19,7 +19,19 @@ export default function DeleteChapter({ studyId, part }) {
   };
 
   return (
-    <DropdownItem onClick={deleteVizPart}>
+    <DropdownItem
+      onClick={() => {
+        if (
+          confirm(
+            "Are you sure you want to delete this part? All sections in this part will be deleted as well."
+          )
+        ) {
+          deleteVizPart().catch((err) => {
+            alert(err.message);
+          });
+        }
+      }}
+    >
       <div className="menuItem">
         <img src={`/assets/icons/visualize/delete.svg`} />
         <div>Delete</div>

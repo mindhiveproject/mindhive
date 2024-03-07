@@ -5,7 +5,13 @@ import Contents from "./Contents";
 import CreatePart from "./CreatePart";
 import BrowseTemplates from "./BrowseTemplates";
 
-export default function Browse({ studyId, journal, chapterId, selectChapter }) {
+export default function Browse({
+  user,
+  studyId,
+  journal,
+  chapterId,
+  selectChapter,
+}) {
   return (
     <div>
       <div className="header">
@@ -40,6 +46,7 @@ export default function Browse({ studyId, journal, chapterId, selectChapter }) {
       {!journal && <EmptyState studyId={studyId} />}
       {journal && (
         <Contents
+          user={user}
           studyId={studyId}
           journal={journal}
           chapterId={chapterId}

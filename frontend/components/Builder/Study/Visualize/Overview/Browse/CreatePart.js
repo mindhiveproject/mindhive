@@ -7,6 +7,8 @@ const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
 import { useMutation } from "@apollo/client";
 
+import { DropdownItem } from "semantic-ui-react";
+
 export default function CreatePart({ studyId, journal, dataOrigin }) {
   const [createPart, { data, loading, error }] = useMutation(ADD_VIZPART, {
     refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
@@ -131,27 +133,31 @@ export default function CreatePart({ studyId, journal, dataOrigin }) {
 
   if (dataOrigin === "STUDY") {
     return (
-      <div className="menuItem menuButton" onClick={() => addPart()}>
-        <img src={`/assets/icons/visualize/content_paste_go.svg`} />
-        <div>Use study data</div>
-      </div>
+      <DropdownItem>
+        <div className="menuItem" onClick={() => addPart()}>
+          <img src={`/assets/icons/visualize/content_paste_go.svg`} />
+          <div>Use study data</div>
+        </div>
+      </DropdownItem>
     );
   }
 
   if (dataOrigin === "UPLOADED") {
     return (
-      <label htmlFor="fileUpload">
-        <input
-          type="file"
-          id="fileUpload"
-          style={{ display: "none" }}
-          onChange={handleDataUpload}
-        />
-        <div className="menuItem menuButton">
-          <img src={`/assets/icons/visualize/draft.svg`} />
-          <div>Upload own data</div>
-        </div>
-      </label>
+      <DropdownItem>
+        <label htmlFor="fileUpload">
+          <input
+            type="file"
+            id="fileUpload"
+            style={{ display: "none" }}
+            onChange={handleDataUpload}
+          />
+          <div className="menuItem">
+            <img src={`/assets/icons/visualize/draft.svg`} />
+            <div>Upload own data</div>
+          </div>
+        </label>
+      </DropdownItem>
     );
   }
 }

@@ -4,8 +4,10 @@ import DeletePart from "../../Document/DeletePart";
 
 import CreateChapter from "./CreateChapter";
 import BrowseTemplates from "./BrowseTemplates";
+import PartSettings from "./PartSettings";
 
 export default function Contents({
+  user,
   studyId,
   journal,
   chapterId,
@@ -17,8 +19,8 @@ export default function Contents({
         <div key={num} className="part">
           <div className="menuOriginaDataTitle">
             <div>
-              {part?.dataOrigin.charAt(0) +
-                part?.dataOrigin.toLowerCase().slice(1)}{" "}
+              {part?.dataOrigin?.charAt(0) +
+                part?.dataOrigin?.toLowerCase().slice(1)}{" "}
               Data
             </div>
             <Dropdown
@@ -26,6 +28,7 @@ export default function Contents({
               direction="left"
             >
               <DropdownMenu>
+                <PartSettings user={user} studyId={studyId} part={part} />
                 <DeletePart studyId={studyId} part={part} />
               </DropdownMenu>
             </Dropdown>
