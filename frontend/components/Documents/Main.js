@@ -14,7 +14,7 @@ export default function MainDocument({ title, content }) {
 
       <div className="main">
         <h1>{title}</h1>
-        {title === "About" && <Carousel />}
+        {/* {title === "About" && <Carousel />} */}
         {ReactHtmlParser(content)}
       </div>
     </StyledDocumentPage>
