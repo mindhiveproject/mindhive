@@ -159,6 +159,7 @@ export default function Builder({
           engine={engine}
           close={() => closeModal()}
           setHasStudyChanged={setHasStudyChanged}
+          study={study}
         />
       )}
     </StyledCanvasBuilder>

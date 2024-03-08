@@ -156,6 +156,7 @@ export const STUDY_TO_DISCOVER = gql`
       description
       info
       flow
+      components
     }
   }
 `;
@@ -246,6 +247,15 @@ export const STUDY_TEMPLATES = gql`
       collaborators {
         id
       }
+    }
+  }
+`;
+
+// get study components (taken conditions by participants)
+export const STUDY_COMPONENTS = gql`
+  query STUDY_COMPONENTS($studyId: ID!) {
+    study(where: { id: $studyId }) {
+      components
     }
   }
 `;

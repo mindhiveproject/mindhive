@@ -8,7 +8,12 @@ import { useState, useEffect } from "react";
 // and assign correct task to show
 export default function RunStudy({ user, study, task, version }) {
   const { flow } = study;
+
+  // recorded number of participants in each condition
+  const components = study?.components || {};
+
   const studiesInfo = user?.studiesInfo || {};
+
   const userInfo = studiesInfo[study?.id]?.info;
 
   const [info, setInfo] = useState(userInfo);
@@ -41,11 +46,31 @@ export default function RunStudy({ user, study, task, version }) {
   };
 
   const selectCondition = ({ conditions }) => {
-    const probabilities = conditions
-      .map((condition, num) =>
-        Array.from(`${num}`.repeat(parseInt(condition?.probability)))
-      )
+    let probabilities = conditions
+      .map((condition, num) => {
+        const placesTaken = components[condition?.label] || 0;
+        let placesLeft =
+          parseInt(condition?.probability) - parseInt(placesTaken);
+        if (placesLeft < 0) placesLeft = 0;
+        return Array.from(`${num}`.repeat(placesLeft));
+      })
       .flat();
+
+    let multiplier = 2;
+    while (probabilities?.length === 0) {
+      probabilities = conditions
+        .map((condition, num) => {
+          const placesTaken = components[condition?.label] || 0;
+          let placesLeft =
+            parseInt(condition?.probability * multiplier) -
+            parseInt(placesTaken);
+          if (placesLeft < 0) placesLeft = 0;
+          return Array.from(`${num}`.repeat(placesLeft));
+        })
+        .flat();
+      multiplier++;
+    }
+
     const rand = getRandomInt(0, probabilities.length);
     const conditionNumber = parseInt(probabilities[rand]);
     return {

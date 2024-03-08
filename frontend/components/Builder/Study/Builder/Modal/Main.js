@@ -10,7 +10,10 @@ export default function Modal({
   engine,
   close,
   setHasStudyChanged,
+  study,
 }) {
+  const components = study?.components || {};
+
   const [ports, setPorts] = useState(
     Object.values(node?.ports)
       .filter((port) => port?.options?.type === "outCustomPort")
@@ -119,6 +122,9 @@ export default function Modal({
                 <p>Probability (0 - 100%)</p>
               </div>
               <div>
+                <p>Participants</p>
+              </div>
+              <div>
                 <p></p>
               </div>
             </div>
@@ -147,6 +153,8 @@ export default function Modal({
                     type="number"
                     name="probability"
                     value={port?.probability}
+                    min={0}
+                    max={100}
                     onChange={({ target }) =>
                       handleChange({
                         portNumber: num,
@@ -156,6 +164,9 @@ export default function Modal({
                     }
                   />
                 </div>
+
+                <div>{components[port?.label]}</div>
+
                 <div>
                   <button onClick={() => removePort({ name: port?.name })}>
                     Remove condition

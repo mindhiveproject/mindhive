@@ -321,7 +321,7 @@ export const StyledCanvasBuilder = styled.div`
     .port {
       display: grid;
       grid-gap: 10px;
-      grid-template-columns: 100px 2fr 1fr 1fr;
+      grid-template-columns: 100px 2fr 1fr 1fr 1fr;
       margin: 10px 0px;
       align-items: center;
 

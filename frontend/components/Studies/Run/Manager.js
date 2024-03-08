@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
-import { useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 
 import TaskRun from "../../Tasks/Run/Main";
 import Prompt from "./Prompt/Main";
 
 import { UPDATE_USER_STUDY_INFO } from "../../Mutations/User";
 import { UPDATE_GUEST_STUDY_INFO } from "../../Mutations/Guest";
+import { UPDATE_STUDY } from "../../Mutations/Study";
 
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 import { GET_GUEST } from "../../Queries/Guest";
+import { STUDY_COMPONENTS } from "../../Queries/Study";
 
 export default function Manager({
   user,
@@ -18,6 +20,12 @@ export default function Manager({
   studiesInfo,
   info,
 }) {
+  // get the latest state of components (participants' conditions) with a query
+  const { data: studyComponentsData } = useQuery(STUDY_COMPONENTS, {
+    variables: { studyId: study?.id },
+  });
+  const components = { ...studyComponentsData?.study?.components } || {};
+
   const { path } = info;
   const [currentStep, setCurrentStep] = useState({});
 
@@ -59,6 +67,15 @@ export default function Manager({
     ],
   });
 
+  const [
+    updateStudyConditionsInfo,
+    { data: studyData, loading: studyLoading, error: studyError },
+  ] = useMutation(UPDATE_STUDY, {
+    refetchQueries: [
+      { query: STUDY_COMPONENTS, variables: { studyId: study?.id } },
+    ],
+  });
+
   const closePrompt = () => {
     setPage(undefined);
   };
@@ -70,11 +87,31 @@ export default function Manager({
   };
 
   const selectCondition = ({ conditions }) => {
-    const probabilities = conditions
-      .map((condition, num) =>
-        Array.from(`${num}`.repeat(parseInt(condition?.probability)))
-      )
+    let probabilities = conditions
+      .map((condition, num) => {
+        const placesTaken = components[condition?.label] || 0;
+        let placesLeft =
+          parseInt(condition?.probability) - parseInt(placesTaken);
+        if (placesLeft < 0) placesLeft = 0;
+        return Array.from(`${num}`.repeat(placesLeft));
+      })
       .flat();
+
+    let multiplier = 2;
+    while (probabilities?.length === 0) {
+      probabilities = conditions
+        .map((condition, num) => {
+          const placesTaken = components[condition?.label] || 0;
+          let placesLeft =
+            parseInt(condition?.probability * multiplier) -
+            parseInt(placesTaken);
+          if (placesLeft < 0) placesLeft = 0;
+          return Array.from(`${num}`.repeat(placesLeft));
+        })
+        .flat();
+      multiplier++;
+    }
+
     const rand = getRandomInt(0, probabilities.length);
     const conditionNumber = parseInt(probabilities[rand]);
     return {
@@ -204,6 +241,24 @@ export default function Manager({
       } else {
         setNextStep(undefined);
         updatedPath = updatedPath.concat({ type: "end" });
+        // update the study information with the condition name(s) that was used for this participant
+        const takenConditions = updatedPath
+          .filter((stage) => stage?.type === "branching")
+          .map((stage) => stage?.conditionLabel);
+        if (takenConditions?.length) {
+          takenConditions.map((taken) => {
+            components[taken] = components[taken] + 1 || 1;
+          });
+          // save study info
+          await updateStudyConditionsInfo({
+            variables: {
+              id: study?.id,
+              input: {
+                components,
+              },
+            },
+          });
+        }
       }
     }
 
