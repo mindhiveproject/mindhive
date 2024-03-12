@@ -17,25 +17,25 @@ export default function Preview({
     }, {}) || {};
 
   // get the study components or initialize an empty array
-  let blocks = [];
-  if (study.components) {
-    if (study.components.blocks) {
-      blocks = study.components.blocks;
-    } else {
-      const upgradedComponents = study.components.map((component) => ({
-        id: component.id,
-        testId: uniqid.time(),
-        title: component.title,
-      }));
-      blocks = [
-        {
-          blockId: uniqid.time(),
-          title: "Main experiment sequence",
-          tests: upgradedComponents,
-        },
-      ];
-    }
-  }
+  // let blocks = [];
+  // if (study.components) {
+  //   if (study.components.blocks) {
+  //     blocks = study.components.blocks;
+  //   } else {
+  //     const upgradedComponents = study.components.map((component) => ({
+  //       id: component.id,
+  //       testId: uniqid.time(),
+  //       title: component.title,
+  //     }));
+  //     blocks = [
+  //       {
+  //         blockId: uniqid.time(),
+  //         title: "Main experiment sequence",
+  //         tests: upgradedComponents,
+  //       },
+  //     ];
+  //   }
+  // }
 
   const handleParameterChange = (e, classType) => {
     const { name, type, value, className } = e.target;
