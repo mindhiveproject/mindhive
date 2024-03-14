@@ -68,24 +68,18 @@ export const Task = list({
     author: relationship({
       ref: "Profile.taskCreatorIn",
       hooks: {
-        async resolveInput({ context }) {
-          return { connect: { id: context.session.itemId } };
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create") {
+            return { connect: { id: context.session.itemId } };
+          } else {
+            return inputData.author;
+          }
         },
       },
     }),
     collaborators: relationship({
       ref: "Profile.collaboratorInTask",
       many: true,
-      // hooks: {
-      //   async resolveInput({ context, operation, inputData }) {
-      //     if (operation === "create") {
-      //       // return { connect: { id: context.session.itemId } };
-      //       return inputData.collaborators;
-      //     } else {
-      //       return inputData.collaborators;
-      //     }
-      //   },
-      // },
     }),
     template: relationship({
       ref: "Template.tasks",

@@ -1169,8 +1169,12 @@ var Template = (0, import_core11.list)({
     author: (0, import_fields14.relationship)({
       ref: "Profile.templates",
       hooks: {
-        async resolveInput({ context }) {
-          return { connect: { id: context.session.itemId } };
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create") {
+            return { connect: { id: context.session.itemId } };
+          } else {
+            return inputData.author;
+          }
         }
       }
     }),
@@ -1179,8 +1183,6 @@ var Template = (0, import_core11.list)({
       many: true
     }),
     parameters: (0, import_fields14.json)(),
-    // file: text(),
-    // script: text(),
     fileAddress: (0, import_fields14.text)(),
     scriptAddress: (0, import_fields14.text)(),
     style: (0, import_fields14.text)(),
@@ -1268,24 +1270,18 @@ var Task = (0, import_core12.list)({
     author: (0, import_fields15.relationship)({
       ref: "Profile.taskCreatorIn",
       hooks: {
-        async resolveInput({ context }) {
-          return { connect: { id: context.session.itemId } };
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create") {
+            return { connect: { id: context.session.itemId } };
+          } else {
+            return inputData.author;
+          }
         }
       }
     }),
     collaborators: (0, import_fields15.relationship)({
       ref: "Profile.collaboratorInTask",
       many: true
-      // hooks: {
-      //   async resolveInput({ context, operation, inputData }) {
-      //     if (operation === "create") {
-      //       // return { connect: { id: context.session.itemId } };
-      //       return inputData.collaborators;
-      //     } else {
-      //       return inputData.collaborators;
-      //     }
-      //   },
-      // },
     }),
     template: (0, import_fields15.relationship)({
       ref: "Template.tasks"

@@ -57,8 +57,12 @@ export const Template = list({
     author: relationship({
       ref: "Profile.templates",
       hooks: {
-        async resolveInput({ context }) {
-          return { connect: { id: context.session.itemId } };
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create") {
+            return { connect: { id: context.session.itemId } };
+          } else {
+            return inputData.author;
+          }
         },
       },
     }),
@@ -67,8 +71,6 @@ export const Template = list({
       many: true,
     }),
     parameters: json(),
-    // file: text(),
-    // script: text(),
     fileAddress: text(),
     scriptAddress: text(),
     style: text(),
