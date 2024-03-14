@@ -33,7 +33,7 @@ export default function Details({ user, study, query }) {
         ".
       </h3>
 
-      { settings?.zipCode && 
+      {settings?.zipCode && (
         <div>
           <label htmlFor="zip">
             <p className="questionTitle">Your zip code</p>
@@ -46,9 +46,9 @@ export default function Details({ user, study, query }) {
             />
           </label>
         </div>
-      }
-      
-      { settings?.sonaId && 
+      )}
+
+      {settings?.sonaId && (
         <div>
           <label htmlFor="sona">
             <p className="questionTitle">Are you an NYU SONA participant?</p>
@@ -72,9 +72,9 @@ export default function Details({ user, study, query }) {
             </ResponseButtons>
           </label>
         </div>
-      }
+      )}
 
-    { settings?.askStudentsNYC &&
+      {settings?.askStudentsNYC && (
         <div>
           <label htmlFor="sonaid">
             <p className="questionTitle">What is your NYU ID?</p>
@@ -91,7 +91,7 @@ export default function Details({ user, study, query }) {
             />
           </label>
         </div>
-      } 
+      )}
 
       <div>
         <label htmlFor="eng">
@@ -157,28 +157,27 @@ export default function Details({ user, study, query }) {
         </label>
       </div>
 
-      { ( settings?.consentObtained && consents?.length > 0 ) ?
+      {settings?.consentObtained && consents?.length > 0 ? (
         <Link
           href={{
             pathname: `/join/consent`,
-            query: { 
-              ...inputs, 
-              id: study?.id, 
+            query: {
+              ...inputs,
+              id: study?.id,
               consent: study?.consent[0]?.id,
             },
           }}
-          >
+        >
           <button>Next</button>
         </Link>
-      :
-        <JoinStudy 
-          user={user} 
-          study={study} 
-          userInfo={inputs} 
-          btnName="Join the study" 
+      ) : (
+        <JoinStudy
+          user={user}
+          study={study}
+          userInfo={inputs}
+          btnName="Join the study"
         />
-      }
-      
+      )}
     </StyledDetails>
   );
 }

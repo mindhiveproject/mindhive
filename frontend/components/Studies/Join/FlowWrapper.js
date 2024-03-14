@@ -8,6 +8,8 @@ import Details from "./Details";
 import Consents from "./Consents/Main";
 
 export default function FlowWrapper({ query, user, study, step }) {
+  const { guest } = query;
+
   let header;
   switch (step) {
     case "select":
@@ -27,6 +29,34 @@ export default function FlowWrapper({ query, user, study, step }) {
       break;
     default:
       header = "Participation";
+  }
+
+  // for the cases when the direct link is copied in browser but there is no user logged in
+  if (
+    (step === "details" || step === "consent") &&
+    guest === "false" &&
+    !user
+  ) {
+    return (
+      <StyledWrapper>
+        <div className="header">
+          <div className="logo">
+            <img src="/logo.png" alt="icon" height="30" />
+          </div>
+          <div>Participation</div>
+          <Link
+            href={{
+              pathname: `/studies/${study?.slug}`,
+            }}
+          >
+            <div className="closeBtn">&times;</div>
+          </Link>
+        </div>
+        <div className="main">
+          <Selector user={user} study={study} query={query} />
+        </div>
+      </StyledWrapper>
+    );
   }
 
   return (
