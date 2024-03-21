@@ -177,6 +177,10 @@ const GlobalStyles = createGlobalStyle`
   .pushableSidebar {
     min-width: 1000px;
   }
+  .jodit_fullsize {
+    position: relative !important;
+    inset: auto !important;
+  }
 `;
 
 // the styles shared within all pages

@@ -6,17 +6,17 @@ export default function ProposalRow({
   showClass,
   showStatus,
 }) {
-  let theClass;
-  if (proposal?.study?.classes?.length) {
-    theClass = proposal?.study?.classes[0].title;
-  }
+  // let theClass;
+  // if (proposal?.study?.classes?.length) {
+  //   theClass = proposal?.study?.classes[0].title;
+  // }
 
   return (
     <div className="row">
       <div>{proposal?.study?.title}</div>
       <div>{showProposalTitle && <>{proposal?.title}</>}</div>
 
-      {showClass && <div>{theClass}</div>}
+      {/* {showClass && <div>{theClass}</div>} */}
       {showStatus && (
         <div className="centered">{proposal?.isSubmitted ? "Yes" : "No"}</div>
       )}

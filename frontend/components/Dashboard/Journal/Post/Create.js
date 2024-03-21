@@ -8,6 +8,8 @@ import Form from "./Form";
 import { CREATE_POST } from "../../../Mutations/Post";
 import { GET_JOURNAL } from "../../../Queries/Journal";
 
+import StyledModal from "../../../styles/StyledModal";
+
 export default function PostModal({ journal, user, children }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -49,7 +51,7 @@ export default function PostModal({ journal, user, children }) {
         title={title}
         setTitle={setTitle}
         handleSave={handleSave}
-        headerTitle="Create post"
+        headerTitle="Create note"
       />
     </Modal>
   );

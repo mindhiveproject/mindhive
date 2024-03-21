@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 const StyledNote = styled.div`
   display: grid;
+  margin: 20px;
   label {
     display: block;
     font-style: normal;

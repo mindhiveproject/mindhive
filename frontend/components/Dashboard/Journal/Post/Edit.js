@@ -53,7 +53,7 @@ export default function EditPost({ code, journal, user, postId, index }) {
       title={title}
       setTitle={setTitle}
       handleSave={handleSave}
-      headerTitle="Edit post"
+      headerTitle="Edit note"
     />
   );
 }

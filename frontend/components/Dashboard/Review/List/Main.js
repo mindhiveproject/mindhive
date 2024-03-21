@@ -8,7 +8,6 @@ export default function ProposalList({ proposals }) {
       <div className="reviewHeader">
         <div>Study</div>
         <div>Proposal</div>
-        <div>Class</div>
         <div className="centered">Submitted</div>
         <div className="centered">Reviews</div>
         <div>Actions</div>

@@ -31,7 +31,7 @@ export default function JournalPage({ code, user, query }) {
 
   return (
     <div>
-      <h1>Journal page</h1>
+      <h1>{journal?.title}</h1>
       <CreatePost journal={journal} user={user}>
         <button>Add note</button>
       </CreatePost>

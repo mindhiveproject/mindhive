@@ -1,4 +1,5 @@
 import JoditEditor from "../../../Jodit/Editor";
+import JoditEditorPro from "../../../Jodit/EditorPro";
 import StyledNote from "../../../styles/StyledNote";
 
 export default function CreatePost({
@@ -25,7 +26,8 @@ export default function CreatePost({
           required
         />
       </label>
-      <JoditEditor content={content} setContent={setContent} />
+      {/* <JoditEditor content={content} setContent={setContent} /> */}
+      <JoditEditorPro content={content} setContent={setContent} />
       <button onClick={handleSave}>Save</button>
     </StyledNote>
   );

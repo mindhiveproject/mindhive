@@ -16,34 +16,32 @@ export default function JournalForm({
     <div className="addJournal">
       <StyledForm method="POST" onSubmit={handleSubmit}>
         <DisplayError error={error} />
-        <h1>Create a new journal</h1>
+        <h1>Create new journal</h1>
         <fieldset disabled={loading} aria-busy={loading}>
-          <div className="infoPane">
-            <label htmlFor="title">
-              <p>Journal title</p>
-              <input
-                type="title"
-                name="title"
-                value={inputs?.title}
-                onChange={handleChange}
-                required
-              />
-            </label>
+          <label htmlFor="title">
+            <p>Journal title</p>
+            <input
+              type="title"
+              name="title"
+              value={inputs?.title}
+              onChange={handleChange}
+              required
+            />
+          </label>
 
-            <label htmlFor="description">
-              <p>Description</p>
-              <textarea
-                id="description"
-                rows="50"
-                name="description"
-                value={inputs?.description}
-                onChange={handleChange}
-              />
-            </label>
+          <label htmlFor="description">
+            <p>Description</p>
+            <textarea
+              id="description"
+              rows="10"
+              name="description"
+              value={inputs?.description}
+              onChange={handleChange}
+            />
+          </label>
 
-            <div className="submitButton">
-              <button type="submit">{submitBtnName}</button>
-            </div>
+          <div className="submitButton">
+            <button type="submit">{submitBtnName}</button>
           </div>
         </fieldset>
       </StyledForm>
