@@ -31,6 +31,12 @@ export const GET_JOURNAL = gql`
         createdAt
         updatedAt
       }
+      creator {
+        id
+        studentIn {
+          id
+        }
+      }
     }
   }
 `;

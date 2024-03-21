@@ -17,6 +17,27 @@ export default function JournalPage({ code, user, query }) {
   const journal = data?.journal || { title: "", description: "" };
   const posts = journal?.posts || [];
 
+  // check whether the user is a journal author
+  const isCreator = user?.id === journal?.creator?.id;
+  // check whether the user is a teacher or a mentor of the class of the journal author
+  const isTeacher =
+    user?.teacherIn
+      .map((cl) => cl?.id)
+      .filter((id) => journal?.creator?.studentIn.map((cl) => cl?.id)).length >
+    0;
+  const isMentor =
+    user?.mentorIn
+      .map((cl) => cl?.id)
+      .filter((id) => journal?.creator?.studentIn.map((cl) => cl?.id)).length >
+    0;
+  // check whether the user is an admin
+  const isAdmin = user?.permissions?.map((p) => p?.name).includes("ADMIN");
+
+  // do not show the journal, if the user is not one of those
+  if (!(isCreator || isTeacher || isMentor || isAdmin)) {
+    return <div></div>;
+  }
+
   if (action === "edit" && post) {
     return (
       <EditPost

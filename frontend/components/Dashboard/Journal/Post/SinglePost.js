@@ -31,12 +31,12 @@ export default function Post({ code, journalId, post, editPost, index }) {
               query: {
                 post: post?.id,
                 action: "edit",
-                index,
+                index: index || 0,
               },
             }}
           >
             <span>
-              <Icon name="edit" />
+              <Icon size="large" name="edit" />
             </span>
           </Link>
           <DeletePost postId={post?.id} code={code} index={index} />

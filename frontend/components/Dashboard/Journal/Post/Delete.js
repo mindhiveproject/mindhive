@@ -23,7 +23,7 @@ export default function DeletePost({ postId, code, index }) {
         }
       }}
     >
-      <Icon name="trash" />
+      <Icon size="large" name="trash" />
     </div>
   );
 }
