@@ -96,6 +96,12 @@ export const StyledBuilderArea = styled.div`
       }
     }
   }
+  .pyodideLoadingMessage {
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    padding: 10px;
+  }
 `;
 
 export const StyledCanvasBuilder = styled.div`

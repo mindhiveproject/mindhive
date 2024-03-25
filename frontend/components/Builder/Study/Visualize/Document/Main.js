@@ -1,17 +1,38 @@
+import { useEffect } from "react";
+
 import ChapterHeader from "./ChapterHeader";
 import CreateSection from "./CreateSection";
 
 import Section from "./Section";
+
+const prepareDataCode = ``;
 
 export default function Document({
   user,
   studyId,
   part,
   chapter,
+  pyodide,
   data,
   variables,
-  pyodide,
 }) {
+  // register data relevant for this part
+  useEffect(() => {
+    async function registerData() {
+      if (pyodide && data) {
+        // delete the previous data if they are registered
+        const sys = pyodide.pyimport("sys");
+        if (sys.modules.get("js_workspace")) {
+          sys.modules.delete("js_workspace");
+        }
+        pyodide?.registerJsModule("js_workspace", [...data]);
+        // make data available as data and df (pandas dataframe)
+        await pyodide.runPythonAsync(prepareDataCode);
+      }
+    }
+    registerData();
+  }, [pyodide, data]);
+
   if (!chapter) {
     if (part?.vizChapters && part?.vizChapters.length) {
       return (
@@ -40,9 +61,9 @@ export default function Document({
             studyId={studyId}
             chapter={chapter}
             section={section}
+            pyodide={pyodide}
             data={data}
             variables={variables}
-            pyodide={pyodide}
           />
         ))}
       </div>

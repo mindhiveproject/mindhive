@@ -11,11 +11,14 @@ export default function Table({
     handleContentChange({ name: "text", content });
   };
 
-  const columns = variables.map((variable) => ({
-    name: variable,
-    selector: (row) => row[variable],
-    sortable: true,
-  }));
+  // filter columns
+  const columns = variables
+    .filter((column) => !column?.hide)
+    .map((column) => ({
+      name: column?.field,
+      selector: (row) => row[column?.field],
+      sortable: true,
+    }));
 
   // A super simple expandable component.
   const ExpandedComponent = ({ data }) => (

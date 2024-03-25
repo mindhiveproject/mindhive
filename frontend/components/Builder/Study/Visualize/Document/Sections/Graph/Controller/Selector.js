@@ -27,10 +27,11 @@ export default function Selector({
               runCode({ code });
             }}
           >
-            {options.map((option) => (
+            {options.map((option, num) => (
               <option
                 value={option?.value}
                 selected={option?.value === selectors["X-variable"]}
+                key={num}
               >
                 {option?.text}
               </option>
@@ -51,10 +52,11 @@ export default function Selector({
               runCode({ code });
             }}
           >
-            {options.map((option) => (
+            {options.map((option, num) => (
               <option
                 value={option?.value}
                 selected={option?.value === selectors["Y-variable"]}
+                key={num}
               >
                 {option?.text}
               </option>
@@ -76,10 +78,11 @@ export default function Selector({
               runCode({ code });
             }}
           >
-            {options.map((option) => (
+            {options.map((option, num) => (
               <option
                 value={option?.value}
                 selected={option?.value === selectors["Group-variable"]}
+                key={num}
               >
                 {option?.text}
               </option>

@@ -19,9 +19,13 @@ export default function Contents({
         <div key={num} className="part">
           <div className="menuOriginaDataTitle">
             <div>
-              {part?.dataOrigin?.charAt(0) +
-                part?.dataOrigin?.toLowerCase().slice(1)}{" "}
-              Data
+              {part?.title || (
+                <>
+                  {part?.dataOrigin?.charAt(0) +
+                    part?.dataOrigin?.toLowerCase().slice(1)}{" "}
+                  Data
+                </>
+              )}
             </div>
             <Dropdown
               icon={<img src={`/assets/icons/visualize/more_vert.svg`} />}
@@ -32,7 +36,11 @@ export default function Contents({
                 <DeletePart studyId={studyId} part={part} />
               </DropdownMenu>
             </Dropdown>
+            {part?.description && (
+              <div className="menuDescription">{part?.description}</div>
+            )}
           </div>
+
           <div>
             {part?.vizChapters.map((chapter, num) => (
               <div
@@ -43,7 +51,9 @@ export default function Contents({
               >
                 <div
                   className="title"
-                  onClick={() => selectChapter({ chapterId: chapter?.id })}
+                  onClick={() =>
+                    selectChapter({ partId: part?.id, chapterId: chapter?.id })
+                  }
                 >
                   <div>{chapter?.title}</div>
                   <Dropdown
@@ -66,15 +76,20 @@ export default function Contents({
             ))}
           </div>
           <div className="addNewChapter">
-            <Dropdown
+            <CreateChapter studyId={studyId} part={part} />
+            {/* <Dropdown
               icon={<img src={`/assets/icons/visualize/add_notes.svg`} />}
               direction="right"
             >
               <DropdownMenu>
-                <CreateChapter studyId={studyId} journal={journal} />
-                <BrowseTemplates studyId={studyId} journal={journal} />
+                <CreateChapter studyId={studyId} part={part} />
+                <BrowseTemplates
+                  studyId={studyId}
+                  journal={journal}
+                  part={part}
+                />
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> */}
           </div>
         </div>
       ))}

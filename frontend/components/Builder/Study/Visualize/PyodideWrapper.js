@@ -64,7 +64,7 @@ export default function PyodideWrapper({ user, studyId }) {
   return (
     <>
       {isLoading && (
-        <div>
+        <div className="pyodideLoadingMessage">
           <Message icon>
             <Icon name="circle notched" loading />
             <MessageContent>

@@ -1,11 +1,11 @@
 import StateManager from "./StateManager";
 
 export default function Statistics({
+  pyodide,
   content,
   handleContentChange,
   data,
   variables,
-  pyodide,
 }) {
   // update content in the local state
   const handleChange = async (content) => {
@@ -14,11 +14,11 @@ export default function Statistics({
 
   return (
     <StateManager
-      studyData={data}
-      studyVariables={variables}
       content={content}
       handleChange={handleChange}
       pyodide={pyodide}
+      data={data}
+      variables={variables}
     />
   );
 }

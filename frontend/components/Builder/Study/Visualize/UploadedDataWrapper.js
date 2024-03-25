@@ -10,6 +10,7 @@ export default function UploadedDataWrapper({
   pyodide,
   journal,
   part,
+  setPart,
 }) {
   const { year, month, day, token } = part?.content?.uploaded?.address;
   const { variables } = part?.content?.uploaded?.metadata;
@@ -42,8 +43,10 @@ export default function UploadedDataWrapper({
       pyodide={pyodide}
       journal={journal}
       part={part}
-      data={uploadedData}
-      variables={variables}
+      setPart={setPart}
+      initData={uploadedData}
+      initVariables={variables}
+      components={[]}
     />
   );
 }

@@ -16,20 +16,20 @@ df = pd.DataFrame(data)
 df.head()`;
 
 export default function StateManager({
-  studyData,
-  studyVariables,
   content,
   handleChange,
   pyodide,
+  data,
+  variables,
 }) {
   const [isRunning, setIsRunning] = useState(false);
   const [output, setOutput] = useState("");
   // state of the python code
   const code = content?.code || defaultCode;
-  // state of the data we are working with
-  const [data, setData] = useState(studyData);
-  // state of the variables
-  const [variables, setVariables] = useState([...studyVariables]);
+  // variables
+  const variableNames = variables
+    .filter((column) => !column?.hide)
+    .map((column) => column?.field);
 
   const addToOutput = (s) => {
     setOutput(output + ">>>" + "\n" + s + "\n");

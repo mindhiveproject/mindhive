@@ -15,7 +15,7 @@ const getColumnNames = ({ data }) => {
 };
 
 // pre-process and aggregate data
-const processRawData = ({ rawdata, components }) => {
+const processRawData = ({ rawdata, components, username }) => {
   const res = rawdata.map((result) => {
     const userID =
       result?.user?.publicReadableId ||
@@ -55,8 +55,39 @@ const processRawData = ({ rawdata, components }) => {
     };
   });
 
-  const variables = getColumnNames({ data: res });
-  return { data: res, variables };
+  const allParticipants = res.map((row) => row?.participant);
+  const participants = [...new Set(allParticipants)];
+
+  const dataByParticipant = participants.map((participant) => {
+    const data = {};
+    const participantData = res.filter(
+      (row) => row?.participant === participant
+    );
+    participantData.map((row) => {
+      Object.keys(row).map((key) => {
+        const newKey = `${row?.task.replace(/\s/g, "-")}_${
+          row?.testVersion
+        }_${key}`;
+        data[newKey] = row[key];
+      });
+    });
+
+    return {
+      participant,
+      ...data,
+      isMine: participant === username,
+    };
+  });
+
+  const variableNames = getColumnNames({ data: dataByParticipant });
+
+  const variables = variableNames.map((variable) => ({
+    field: variable,
+    testId: variable.split("_")[1],
+    type: "task",
+    editable: false,
+  }));
+  return { data: dataByParticipant, variables };
 };
 
 export default function StudyDataWrapper({
@@ -65,7 +96,11 @@ export default function StudyDataWrapper({
   pyodide,
   journal,
   part,
+  setPart,
 }) {
+  // get the username of the current user
+  const username = user?.publicReadableId || user?.publicId || user?.id;
+
   // get the summary results of the study
   const {
     data: studyData,
@@ -102,9 +137,9 @@ export default function StudyDataWrapper({
   };
   findComponents({ flow: study?.flow });
 
-  // pre-process the data
+  // pre-process the data in the participant-by-row format
   const { data, variables } = useMemo(
-    () => processRawData({ rawdata: summaryResults, components: components }),
+    () => processRawData({ rawdata: summaryResults, components, username }),
     [summaryResults, components]
   );
 
@@ -115,8 +150,10 @@ export default function StudyDataWrapper({
       pyodide={pyodide}
       journal={journal}
       part={part}
-      data={data}
-      variables={variables}
+      setPart={setPart}
+      initData={data}
+      initVariables={variables}
+      components={components}
     />
   );
 }

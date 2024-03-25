@@ -2,9 +2,10 @@
 // Visualize (Main.js)
 //  Pyodide wrapper (PyodideWrapper.js)
 //    Journal manager (JournalManager.js)
-//      Part manager (PartManager.js)
-//        StudyDataWrapper or UploadedDataWrapper (optional)
-//          Menu, overview, and document
+//      StudyDataWrapper or UploadedDataWrapper (optional)
+//        Part manager (PartManager.js)
+//          Preprocessing manager (ProcessManager.js) - data and variables state
+//            Menu, overview, and document
 
 import Navigation from "../Navigation/Main";
 import PyodideWrapper from "./PyodideWrapper";

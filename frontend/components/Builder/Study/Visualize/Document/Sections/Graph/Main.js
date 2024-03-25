@@ -3,10 +3,10 @@ import StateManager from "./StateManager";
 export default function Graph({
   content,
   handleContentChange,
-  data,
-  variables,
   pyodide,
   sectionId,
+  data,
+  variables,
 }) {
   // update content in the local state
   const handleChange = async ({ name, content }) => {
@@ -15,12 +15,12 @@ export default function Graph({
 
   return (
     <StateManager
-      studyData={data}
-      studyVariables={variables}
       content={content}
       handleChange={handleChange}
       pyodide={pyodide}
       sectionId={sectionId}
+      data={data}
+      variables={variables}
     />
   );
 }

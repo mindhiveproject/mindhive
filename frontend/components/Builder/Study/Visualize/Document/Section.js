@@ -2,19 +2,19 @@ import useForm from "../../../../../lib/useForm";
 
 import Paragraph from "./Sections/Paragraph";
 import Table from "./Sections/Table";
-
-import SaveSection from "./SaveSection";
 import Statistics from "./Sections/Statistics/Main";
 import Graph from "./Sections/Graph/Main";
+
+import SaveSection from "./SaveSection";
 import SectionHeader from "./SectionHeader";
 
 export default function Section({
   studyId,
   chapter,
   section,
+  pyodide,
   data,
   variables,
-  pyodide,
 }) {
   const { inputs, handleChange } = useForm({
     ...(section || {}),
@@ -60,9 +60,9 @@ export default function Section({
         <Statistics
           content={inputs?.content}
           handleContentChange={handleContentChange}
+          pyodide={pyodide}
           data={data}
           variables={variables}
-          pyodide={pyodide}
         />
       )}
 
@@ -70,10 +70,10 @@ export default function Section({
         <Graph
           content={inputs?.content}
           handleContentChange={handleContentChange}
-          data={data}
-          variables={variables}
           pyodide={pyodide}
           sectionId={section?.id}
+          data={data}
+          variables={variables}
         />
       )}
 

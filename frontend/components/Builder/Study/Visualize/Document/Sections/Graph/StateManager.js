@@ -15,12 +15,12 @@ import Selector from "./Controller/Selector";
 const defaultCode = ``;
 
 export default function StateManager({
-  studyData,
-  studyVariables,
   content,
   handleChange,
   pyodide,
   sectionId,
+  data,
+  variables,
 }) {
   const [isRunning, setIsRunning] = useState(false);
   const [output, setOutput] = useState("");
@@ -29,10 +29,10 @@ export default function StateManager({
   const code = content?.code || defaultCode;
   // state of the selectors
   const selectors = content?.selectors || {};
-  // state of the data we are working with
-  const [data, setData] = useState(studyData);
-  // state of the variables
-  const [variables, setVariables] = useState([...studyVariables]);
+  // get variable names
+  const variableNames = variables
+    .filter((column) => !column?.hide)
+    .map((column) => column?.field);
 
   const addToOutput = (s) => {
     setOutput(output + ">>>" + "\n" + s + "\n");
@@ -83,7 +83,7 @@ export default function StateManager({
         />
       )}
       <Selector
-        variables={variables}
+        variables={variableNames}
         code={code}
         runCode={runCode}
         sectionId={sectionId}

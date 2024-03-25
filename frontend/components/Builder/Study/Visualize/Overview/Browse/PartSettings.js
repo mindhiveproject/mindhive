@@ -19,23 +19,20 @@ export default function PartSettings({ user, studyId, part }) {
     ...part,
   });
 
-  const [updateChapter, { data, loading, error }] = useMutation(
-    UPDATE_VIZPART,
-    {
-      variables: {
-        id: part?.id,
-        input: {
-          title: inputs?.title,
-          description: inputs?.description,
-          isTemplate: inputs?.isTemplate,
-        },
+  const [updatePart, { data, loading, error }] = useMutation(UPDATE_VIZPART, {
+    variables: {
+      id: part?.id,
+      input: {
+        title: inputs?.title,
+        description: inputs?.description,
+        isTemplate: inputs?.isTemplate,
       },
-      refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
-    }
-  );
+    },
+    refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
+  });
 
   const update = async () => {
-    await updateChapter();
+    await updatePart();
     setIsOpen(false);
   };
 

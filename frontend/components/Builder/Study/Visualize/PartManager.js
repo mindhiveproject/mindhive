@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 
-import Menu from "./Menu/Main";
-import Overview from "./Overview/Main";
-import Document from "./Document/Main";
-
-import { StyledDataViz } from "../../../styles/StyledDataviz";
-
-const prepareDataCode = ``;
+import ProcessManager from "./ProcessManager";
 
 export default function PartManager({
   user,
@@ -14,8 +8,10 @@ export default function PartManager({
   pyodide,
   journal,
   part,
-  data,
-  variables,
+  setPart,
+  initData,
+  initVariables,
+  components,
 }) {
   const [page, setPage] = useState("browse");
   const [chapter, setChapter] = useState(null);
@@ -37,20 +33,18 @@ export default function PartManager({
     }
   }, [part]);
 
-  // register data relevant for this part
-  useEffect(() => {
-    async function registerData() {
-      if (pyodide && data) {
-        pyodide?.registerJsModule("js_workspace", [...data]);
-        // make data available as data and df (pandas dataframe)
-        await pyodide.runPythonAsync(prepareDataCode);
+  const selectChapter = ({ partId, chapterId }) => {
+    const currentPartId = part?.id;
+    let activePart = part;
+    // change the part if the ID is different
+    if (currentPartId !== partId) {
+      const parts = journal.vizParts.filter((part) => part?.id === partId);
+      if (parts.length) {
+        activePart = parts[0];
+        setPart(activePart);
       }
     }
-    registerData();
-  }, [pyodide, data]);
-
-  const selectChapter = ({ chapterId }) => {
-    const chapter = part?.vizChapters.filter(
+    const chapter = activePart?.vizChapters.filter(
       (chapter) => chapter?.id === chapterId
     )[0];
     setChapterId(chapterId);
@@ -58,30 +52,19 @@ export default function PartManager({
   };
 
   return (
-    <StyledDataViz>
-      <div className="vizMenu">
-        <Menu page={page} setPage={setPage} />
-        <Overview
-          user={user}
-          page={page}
-          studyId={studyId}
-          journal={journal}
-          chapterId={chapter?.id}
-          selectChapter={selectChapter}
-          data={data}
-          variables={variables}
-        />
-      </div>
-      <Document
-        user={user}
-        page={page}
-        studyId={studyId}
-        chapter={chapter}
-        part={part}
-        data={data}
-        variables={variables}
-        pyodide={pyodide}
-      />
-    </StyledDataViz>
+    <ProcessManager
+      user={user}
+      studyId={studyId}
+      pyodide={pyodide}
+      journal={journal}
+      part={part}
+      initData={initData}
+      initVariables={initVariables}
+      components={components}
+      page={page}
+      setPage={setPage}
+      chapter={chapter}
+      selectChapter={selectChapter}
+    />
   );
 }

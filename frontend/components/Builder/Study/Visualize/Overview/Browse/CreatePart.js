@@ -68,7 +68,12 @@ export default function CreatePart({ studyId, journal, dataOrigin }) {
     } else {
       data = await toJson(file);
     }
-    const variables = getColumnNames({ data });
+    const variableNames = getColumnNames({ data });
+    const variables = variableNames.map((variable) => ({
+      field: variable,
+      type: "general",
+      editable: false,
+    }));
 
     const metadata = {
       id: nanoid(),

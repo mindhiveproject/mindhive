@@ -1,31 +1,19 @@
 import { useState } from "react";
 import { Accordion, Icon } from "semantic-ui-react";
 
-const processByTask = ({ data }) => {
-  // filter out unique tasks
-  const allTasks = data.map((row) => row?.testVersion);
-  const tasks = [...new Set(allTasks)];
-  // populate the array of data with tasks
-  const dataByTask = tasks.map((taskId) => {
-    const taskData = data.filter((row) => row?.testVersion === taskId);
-    // get the names of all variables
-    const allVariables = taskData.map((row) => Object.keys(row)).flat();
-    const variables = [...new Set(allVariables)];
-    return {
-      id: taskId,
-      title: taskData[0]?.task,
-      subtitle: taskData[0]?.subtitle,
-      condition: taskData[0]?.condition,
-      variables: variables,
-      data: taskData,
-    };
-  });
-  return dataByTask;
-};
+import OperationModal from "../../Process/OperationModal";
+import Variable from "./Variable";
+import UpdatePartContent from "../../Process/UpdatePart";
 
-export default function Database({ data, variables }) {
-  const formatedData = processByTask({ data: data });
-
+export default function Database({
+  part,
+  data,
+  variables,
+  components,
+  addNewColumn,
+  checkData,
+  onColumnChange,
+}) {
   const [activeIndex, setActiveIndex] = useState(
     data.map((task, index) => index) || []
   );
@@ -48,12 +36,33 @@ export default function Database({ data, variables }) {
           <img src={`/assets/icons/visualize/database.svg`} />
         </div>
         <div>Active Data</div>
-        <div></div>
+        <div>
+          <UpdatePartContent
+            part={part}
+            content={{ modified: { data, variables } }}
+          />
+        </div>
+      </div>
+
+      <div className="variables">
+        {variables
+          .filter((column) => column.type === "user")
+          .map((column) => (
+            <Variable column={column} onColumnChange={onColumnChange} />
+          ))}
+      </div>
+
+      <div className="variables">
+        {variables
+          .filter((column) => column.type === "general")
+          .map((column) => (
+            <Variable column={column} onColumnChange={onColumnChange} />
+          ))}
       </div>
 
       <Accordion exclusive={false} fluid>
-        {formatedData.map((task, index) => (
-          <>
+        {components.map((task, index) => (
+          <div key={index}>
             <Accordion.Title
               active={activeIndex.includes(index)}
               index={index}
@@ -62,21 +71,32 @@ export default function Database({ data, variables }) {
               <div className="task">
                 <Icon name="dropdown" />
                 <div>
-                  <div className="title">{task?.title}</div>
-                  <div className="subtitle">{task?.subtitle || task?.id}</div>
+                  <div className="title">{task?.name}</div>
+                  <div className="subtitle">
+                    {task?.subtitle} - {task?.testId}
+                  </div>
                 </div>
               </div>
             </Accordion.Title>
             <Accordion.Content active={activeIndex.includes(index)}>
               <div className="variables">
-                {task?.variables.map((variable) => (
-                  <div className="variable"># {variable}</div>
-                ))}
+                {variables
+                  .filter((column) => column.type === "task")
+                  .filter((column) => column.testId === task?.testId)
+                  .map((column) => (
+                    <Variable column={column} onColumnChange={onColumnChange} />
+                  ))}
               </div>
             </Accordion.Content>
-          </>
+          </div>
         ))}
       </Accordion>
+
+      <div>
+        <OperationModal variables={variables} addNewColumn={addNewColumn} />
+
+        {/* <button onClick={checkData}>Check the data status</button> */}
+      </div>
     </div>
   );
 }

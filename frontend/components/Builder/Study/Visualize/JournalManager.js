@@ -31,7 +31,12 @@ export default function JournalManager({ user, studyId, pyodide }) {
         const j = studyJournal?.study?.vizJournals[0];
         setJournal(j);
         if (j?.vizParts && j?.vizParts.length) {
-          const p = j?.vizParts && j?.vizParts[0];
+          let p;
+          if (part && part?.id) {
+            p = j?.vizParts.filter((p) => p?.id === part?.id)[0];
+          } else {
+            p = j?.vizParts && j?.vizParts[0];
+          }
           setPart(p);
         }
       }
@@ -55,6 +60,7 @@ export default function JournalManager({ user, studyId, pyodide }) {
           pyodide={pyodide}
           journal={journal}
           part={part}
+          setPart={setPart}
         />
       );
     }
@@ -66,11 +72,12 @@ export default function JournalManager({ user, studyId, pyodide }) {
           pyodide={pyodide}
           journal={journal}
           part={part}
+          setPart={setPart}
         />
       );
     }
   } else {
-    // in case of empty state
+    // in case of empty journal
     return (
       <PartManager
         user={user}
@@ -78,8 +85,10 @@ export default function JournalManager({ user, studyId, pyodide }) {
         pyodide={pyodide}
         journal={journal}
         part={part}
-        data={[]}
-        variables={[]}
+        setPart={setPart}
+        initData={[]}
+        initVariables={[]}
+        components={[]}
       />
     );
   }

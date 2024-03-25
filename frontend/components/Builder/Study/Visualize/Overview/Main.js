@@ -6,10 +6,15 @@ export default function Overview({
   page,
   studyId,
   journal,
+  part,
   chapterId,
   selectChapter,
   data,
   variables,
+  components,
+  addNewColumn,
+  checkData,
+  onColumnChange,
 }) {
   return (
     <div className="overview">
@@ -22,7 +27,17 @@ export default function Overview({
           selectChapter={selectChapter}
         />
       )}
-      {page === "database" && <Database data={data} variables={variables} />}
+      {page === "database" && (
+        <Database
+          part={part}
+          data={data}
+          variables={variables}
+          components={components}
+          addNewColumn={addNewColumn}
+          checkData={checkData}
+          onColumnChange={onColumnChange}
+        />
+      )}
     </div>
   );
 }
