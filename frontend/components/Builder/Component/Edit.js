@@ -108,14 +108,15 @@ export default function EditComponent({
             fileAddress,
           },
         });
+      } else {
+        await updateTemplate({
+          variables: {
+            collaborators: inputs?.template?.collaborators.map((col) => ({
+              id: col?.id,
+            })),
+          },
+        });
       }
-      await updateTemplate({
-        variables: {
-          collaborators: inputs?.template?.collaborators.map((col) => ({
-            id: col?.id,
-          })),
-        },
-      });
     }
 
     // update the task
