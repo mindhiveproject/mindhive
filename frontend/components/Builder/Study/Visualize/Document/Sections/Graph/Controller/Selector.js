@@ -7,9 +7,9 @@ export default function Selector({
   handleChange,
 }) {
   const options = variables.map((variable) => ({
-    key: variable,
-    value: variable,
-    text: variable,
+    key: variable?.field,
+    value: variable?.field,
+    text: variable?.displayName || variable?.field,
   }));
 
   return (

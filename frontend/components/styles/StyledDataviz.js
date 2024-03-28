@@ -129,6 +129,7 @@ export const StyledDataViz = styled.div`
         padding-top: 5px;
       }
     }
+
     .database {
       display: grid;
       align-content: baseline;
@@ -136,12 +137,18 @@ export const StyledDataViz = styled.div`
       .header {
         display: grid;
         grid-template-columns: auto 1fr auto;
+        .icons {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-gap: 10px;
+        }
       }
       .task {
         display: grid;
         grid-template-columns: auto 1fr;
         grid-gap: 10px;
         align-items: center;
+
         .title {
           color: #000;
           font-family: Inter;
@@ -164,8 +171,10 @@ export const StyledDataViz = styled.div`
         grid-gap: 15px;
         padding: 0px 30px;
       }
+      .hidden {
+        color: #9a9a9a;
+      }
       .variable {
-        color: #000;
         font-family: Inter;
         font-size: 14px;
         font-style: normal;
@@ -173,6 +182,25 @@ export const StyledDataViz = styled.div`
         line-height: 130%; /* 18.2px */
         display: grid;
         grid-template-columns: 1fr auto;
+        /* align-content: center; */
+        label,
+        input {
+          cursor: pointer;
+        }
+        .name {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          grid-gap: 10px;
+          align-items: center;
+        }
+        .icons {
+          display: grid;
+          grid-template-columns: 20px 20px;
+          grid-gap: 10px;
+          .visibilityIcon {
+            cursor: pointer;
+          }
+        }
       }
     }
   }

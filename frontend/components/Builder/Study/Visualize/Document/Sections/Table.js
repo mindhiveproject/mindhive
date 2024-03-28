@@ -15,7 +15,7 @@ export default function Table({
   const columns = variables
     .filter((column) => !column?.hide)
     .map((column) => ({
-      name: column?.field,
+      name: column?.displayName || column?.field,
       selector: (row) => row[column?.field],
       sortable: true,
     }));
@@ -30,8 +30,8 @@ export default function Table({
       columns={columns}
       data={data}
       pagination
-      expandableRows
-      expandableRowsComponent={ExpandedComponent}
+      // expandableRows
+      // expandableRowsComponent={ExpandedComponent}
       dense
       highlightOnHover
     />

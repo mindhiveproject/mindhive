@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Accordion, Icon } from "semantic-ui-react";
+import { Accordion, Icon, Dropdown, DropdownMenu } from "semantic-ui-react";
 
 import OperationModal from "../../Process/OperationModal";
 import Variable from "./Variable";
@@ -10,9 +10,8 @@ export default function Database({
   data,
   variables,
   components,
-  addNewColumn,
-  checkData,
-  onColumnChange,
+  updateDataset,
+  onVariableChange,
 }) {
   const [activeIndex, setActiveIndex] = useState(
     data.map((task, index) => index) || []
@@ -36,11 +35,36 @@ export default function Database({
           <img src={`/assets/icons/visualize/database.svg`} />
         </div>
         <div>Active Data</div>
-        <div>
+        <div className="icons">
           <UpdatePartContent
             part={part}
             content={{ modified: { data, variables } }}
           />
+          <div>
+            <Dropdown
+              icon={<img src={`/assets/icons/visualize/add_notes.svg`} />}
+              direction="left"
+            >
+              <DropdownMenu>
+                <OperationModal
+                  type="copy"
+                  data={data}
+                  variables={variables}
+                  updateDataset={updateDataset}
+                  title="Copy existing variable"
+                  iconSrc={`/assets/icons/visualize/content_paste_go.svg`}
+                />
+                <OperationModal
+                  type="compute"
+                  data={data}
+                  variables={variables}
+                  updateDataset={updateDataset}
+                  title="Compute new variable"
+                  iconSrc={`/assets/icons/visualize/table_chart_view.svg`}
+                />
+              </DropdownMenu>
+            </Dropdown>
+          </div>
         </div>
       </div>
 
@@ -48,7 +72,7 @@ export default function Database({
         {variables
           .filter((column) => column.type === "user")
           .map((column) => (
-            <Variable column={column} onColumnChange={onColumnChange} />
+            <Variable column={column} onVariableChange={onVariableChange} />
           ))}
       </div>
 
@@ -56,7 +80,7 @@ export default function Database({
         {variables
           .filter((column) => column.type === "general")
           .map((column) => (
-            <Variable column={column} onColumnChange={onColumnChange} />
+            <Variable column={column} onVariableChange={onVariableChange} />
           ))}
       </div>
 
@@ -84,19 +108,16 @@ export default function Database({
                   .filter((column) => column.type === "task")
                   .filter((column) => column.testId === task?.testId)
                   .map((column) => (
-                    <Variable column={column} onColumnChange={onColumnChange} />
+                    <Variable
+                      column={column}
+                      onVariableChange={onVariableChange}
+                    />
                   ))}
               </div>
             </Accordion.Content>
           </div>
         ))}
       </Accordion>
-
-      <div>
-        <OperationModal variables={variables} addNewColumn={addNewColumn} />
-
-        {/* <button onClick={checkData}>Check the data status</button> */}
-      </div>
     </div>
   );
 }

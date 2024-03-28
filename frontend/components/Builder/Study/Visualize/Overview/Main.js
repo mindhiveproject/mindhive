@@ -12,9 +12,8 @@ export default function Overview({
   data,
   variables,
   components,
-  addNewColumn,
-  checkData,
-  onColumnChange,
+  updateDataset,
+  onVariableChange,
 }) {
   return (
     <div className="overview">
@@ -33,9 +32,8 @@ export default function Overview({
           data={data}
           variables={variables}
           components={components}
-          addNewColumn={addNewColumn}
-          checkData={checkData}
-          onColumnChange={onColumnChange}
+          updateDataset={updateDataset}
+          onVariableChange={onVariableChange}
         />
       )}
     </div>

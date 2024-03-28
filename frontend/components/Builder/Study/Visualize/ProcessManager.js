@@ -23,7 +23,9 @@ export default function ProcessManager({
 }) {
   // the data to be displayed
   const [data, setData] = useState([...initData]);
+  console.log({ data });
 
+  // TODO store custom data more efficiently
   // update data if data changed
   useEffect(() => {
     async function getData() {
@@ -65,37 +67,37 @@ export default function ProcessManager({
     }
   }, [initVariables]);
 
-  const addNewColumn = ({ columnName, oldVariable }) => {
-    const updatedData = data.map((row) => ({
-      ...row,
-      [columnName]: row[oldVariable],
-    }));
+  // to update the dataset
+  const updateDataset = ({ updatedVariables, updatedData }) => {
+    setVariables(updatedVariables);
     setData(updatedData);
-    setVariables([
-      ...variables,
-      {
-        field: columnName,
-        editable: true,
-        type: "user",
-      },
-    ]);
   };
 
-  const checkData = () => {
-    console.log({ data });
-  };
-
-  const onColumnChange = ({ target }) => {
-    const { id, value, className, name, checked } = target;
-    const updatedColumns = variables.map((col) => {
-      if (col.field === id) {
-        const newCol = { ...col, hide: !checked };
-        return newCol;
-      } else {
-        return col;
-      }
-    });
-    setVariables(updatedColumns);
+  // to propogate changes from a variable to a whole dataset
+  const onVariableChange = ({ variable, property, value }) => {
+    if (property === "isDeleted") {
+      const updatedVariables = variables?.filter(
+        (column) => column?.field !== variable
+      );
+      const updatedData = data.map((row) => {
+        delete row[variable];
+        return row;
+      });
+      updateDataset({
+        updatedVariables,
+        updatedData,
+      });
+    } else {
+      const updatedColumns = variables.map((col) => {
+        if (col.field === variable) {
+          const newCol = { ...col, [property]: value };
+          return newCol;
+        } else {
+          return col;
+        }
+      });
+      setVariables(updatedColumns);
+    }
   };
 
   return (
@@ -114,9 +116,8 @@ export default function ProcessManager({
             data={data}
             variables={variables}
             components={components}
-            addNewColumn={addNewColumn}
-            checkData={checkData}
-            onColumnChange={onColumnChange}
+            updateDataset={updateDataset}
+            onVariableChange={onVariableChange}
           />
         </div>
         {page === "browse" && (

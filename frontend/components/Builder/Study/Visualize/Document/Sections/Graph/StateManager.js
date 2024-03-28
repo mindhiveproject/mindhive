@@ -30,9 +30,8 @@ export default function StateManager({
   // state of the selectors
   const selectors = content?.selectors || {};
   // get variable names
-  const variableNames = variables
-    .filter((column) => !column?.hide)
-    .map((column) => column?.field);
+  const variablesToDisplay = variables.filter((column) => !column?.hide);
+  // .map((column) => column?.field);
 
   const addToOutput = (s) => {
     setOutput(output + ">>>" + "\n" + s + "\n");
@@ -83,7 +82,7 @@ export default function StateManager({
         />
       )}
       <Selector
-        variables={variableNames}
+        variables={variablesToDisplay}
         code={code}
         runCode={runCode}
         sectionId={sectionId}

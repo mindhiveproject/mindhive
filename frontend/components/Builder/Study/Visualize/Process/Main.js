@@ -10,6 +10,7 @@ export default function ProcessMain({ data, variables }) {
     field: variable?.field,
     hide: variable?.hide,
     editable: variable?.editable,
+    headerName: variable?.displayName || variable?.field,
   }));
 
   // apply settings across all columns
