@@ -84,6 +84,7 @@ export default function StateManager({
       <Selector
         variables={variablesToDisplay}
         code={code}
+        pyodide={pyodide}
         runCode={runCode}
         sectionId={sectionId}
         selectors={selectors}

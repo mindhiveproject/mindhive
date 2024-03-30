@@ -1,16 +1,28 @@
 export default function Selector({
   variables,
   code,
+  pyodide,
   runCode,
   sectionId,
   selectors,
   handleChange,
 }) {
+  const connectSelectorsCode = `# get relevant html elements
+plot_output = js.document.getElementById('figure-${sectionId}')
+X = js.document.getElementById("X-variable-${sectionId}").value
+Y = js.document.getElementById("Y-variable-${sectionId}").value
+Group = js.document.getElementById("Group-variable-${sectionId}").value`;
+
   const options = variables.map((variable) => ({
     key: variable?.field,
     value: variable?.field,
     text: variable?.displayName || variable?.field,
   }));
+
+  const updateCode = async ({ code }) => {
+    await pyodide.runPythonAsync(connectSelectorsCode);
+    runCode({ code });
+  };
 
   return (
     <div className="selectors">
@@ -24,7 +36,7 @@ export default function Selector({
                 name: "selectors",
                 content: { ...selectors, "X-variable": target.value },
               });
-              runCode({ code });
+              updateCode({ code });
             }}
           >
             {options.map((option, num) => (
@@ -49,7 +61,7 @@ export default function Selector({
                 name: "selectors",
                 content: { ...selectors, "Y-variable": target.value },
               });
-              runCode({ code });
+              updateCode({ code });
             }}
           >
             {options.map((option, num) => (
@@ -75,7 +87,7 @@ export default function Selector({
                 name: "selectors",
                 content: { ...selectors, "Group-variable": target.value },
               });
-              runCode({ code });
+              updateCode({ code });
             }}
           >
             {options.map((option, num) => (

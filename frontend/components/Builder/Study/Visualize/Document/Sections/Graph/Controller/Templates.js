@@ -2,12 +2,6 @@ export default function TemplateSelector({ handleChange, runCode, sectionId }) {
   const sectionCodeStart = `import js_workspace as data
 data = data.to_py()
 df = pd.DataFrame(data)
-  
-# get relevant html elements
-plot_output = js.document.getElementById('figure-${sectionId}')
-X = js.document.getElementById("X-variable-${sectionId}").value
-Y = js.document.getElementById("Y-variable-${sectionId}").value
-Group = js.document.getElementById("Group-variable-${sectionId}").value
 
 # convert string to numbers
 df[X] = pd.to_numeric(df[X])
