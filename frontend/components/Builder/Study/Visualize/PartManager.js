@@ -33,7 +33,7 @@ export default function PartManager({
     }
   }, [part]);
 
-  const selectChapter = ({ partId, chapterId }) => {
+  const selectChapter = async ({ partId, chapterId }) => {
     const currentPartId = part?.id;
     let activePart = part;
     // change the part if the ID is different

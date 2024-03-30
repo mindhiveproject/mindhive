@@ -29,7 +29,7 @@ export default function SectionHeader({
 }) {
   return (
     <>
-      <div className="sectionHeader">
+      <div className="sectionHeader" id={section?.id}>
         <div>
           <img src={sections?.[section?.type]?.img} />
         </div>

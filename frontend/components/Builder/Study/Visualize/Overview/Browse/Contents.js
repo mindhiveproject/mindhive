@@ -51,9 +51,20 @@ export default function Contents({
               >
                 <div
                   className="title"
-                  onClick={() =>
-                    selectChapter({ partId: part?.id, chapterId: chapter?.id })
-                  }
+                  onClick={async () => {
+                    await selectChapter({
+                      partId: part?.id,
+                      chapterId: chapter?.id,
+                    });
+                    const header = document.getElementById(chapter?.id);
+                    if (header) {
+                      header.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                        inline: "nearest",
+                      });
+                    }
+                  }}
                 >
                   <div>{chapter?.title}</div>
                   <Dropdown
@@ -67,7 +78,24 @@ export default function Contents({
                 </div>
                 <div>
                   {chapter?.vizSections.map((section, num) => (
-                    <div key={num} className="section">
+                    <div
+                      key={num}
+                      className="section"
+                      onClick={async () => {
+                        await selectChapter({
+                          partId: part?.id,
+                          chapterId: chapter?.id,
+                        });
+                        const header = document.getElementById(section?.id);
+                        if (header) {
+                          header.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                            inline: "nearest",
+                          });
+                        }
+                      }}
+                    >
                       {section?.title}
                     </div>
                   ))}

@@ -107,6 +107,9 @@ export const StyledDataViz = styled.div`
         padding: 12px 15px;
         .title {
           cursor: pointer;
+          :hover {
+            font-weight: bold;
+          }
         }
       }
       .selected {
@@ -116,6 +119,10 @@ export const StyledDataViz = styled.div`
       }
       .section {
         padding: 5px 20px;
+        cursor: pointer;
+        :hover {
+          font-weight: bold;
+        }
       }
       .title {
         display: grid;

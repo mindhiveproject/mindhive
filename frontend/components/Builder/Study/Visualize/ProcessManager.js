@@ -23,7 +23,6 @@ export default function ProcessManager({
 }) {
   // the data to be displayed
   const [data, setData] = useState([...initData]);
-  console.log({ data });
 
   // TODO store custom data more efficiently
   // update data if data changed

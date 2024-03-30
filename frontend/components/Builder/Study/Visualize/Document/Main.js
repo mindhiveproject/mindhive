@@ -20,7 +20,6 @@ export default function Document({
   useEffect(() => {
     async function registerData() {
       if (pyodide && data) {
-        console.log({ data });
         // delete the previous data if they are registered
         const sys = pyodide.pyimport("sys");
         if (sys.modules.get("js_workspace")) {
