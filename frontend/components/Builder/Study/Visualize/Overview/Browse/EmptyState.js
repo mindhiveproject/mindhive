@@ -6,6 +6,7 @@ import { Dropdown, DropdownMenu } from "semantic-ui-react";
 
 import Papa from "papaparse";
 import { customAlphabet } from "nanoid";
+import BrowseTemplates from "./BrowseTemplates";
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
 export default function EmptyState({ studyId }) {
@@ -164,6 +165,9 @@ export default function EmptyState({ studyId }) {
         It looks like you still don’t have any data visualizations!
       </div>
       <div className="emptyStateButtons">
+        <div className="menuButton">
+          <BrowseTemplates studyId={studyId} />
+        </div>
         <Dropdown
           icon={
             <div className="menuItem menuButton">

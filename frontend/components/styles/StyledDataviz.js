@@ -22,7 +22,7 @@ export const StyledDataViz = styled.div`
     padding: 0px !important;
   }
   .menuItem {
-    padding: 5px 20px 5px 5px;
+    /* padding: 5px 20px 5px 5px; */
     display: grid;
     grid-template-columns: auto 1fr;
     grid-gap: 12px;
@@ -76,9 +76,11 @@ export const StyledDataViz = styled.div`
       box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
       color: #000000;
       cursor: pointer;
+      /* height: 50px; */
     }
     .emptyStateButtons {
       display: grid;
+      grid-gap: 10px;
       margin: 28px 10px;
       justify-content: center;
     }

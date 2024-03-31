@@ -3,7 +3,6 @@ import DeleteChapter from "../../Document/DeleteChapter";
 import DeletePart from "../../Document/DeletePart";
 
 import CreateChapter from "./CreateChapter";
-import BrowseTemplates from "./BrowseTemplates";
 import PartSettings from "./PartSettings";
 
 import sortBy from "lodash/sortBy";
