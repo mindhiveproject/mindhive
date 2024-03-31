@@ -14,17 +14,23 @@ export const STUDY_VIZJOURNAL = gql`
           isTemplate
           dataOrigin
           content
+          position
+          createdAt
           vizChapters {
             id
             title
             description
             isTemplate
+            position
+            createdAt
             vizSections {
               id
               title
               description
               type
               content
+              position
+              createdAt
             }
           }
         }

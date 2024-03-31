@@ -640,6 +640,7 @@ model VizPart {
   vizChapters  VizChapter[] @relation("VizChapter_vizPart")
   createdAt    DateTime?    @default(now())
   updatedAt    DateTime?
+  position     Float?
 
   @@index([vizJournalId])
 }
@@ -658,6 +659,7 @@ model VizChapter {
   vizSections VizSection[] @relation("VizSection_vizChapter")
   createdAt   DateTime?    @default(now())
   updatedAt   DateTime?
+  position    Float?
 
   @@index([vizPartId])
 }
@@ -676,6 +678,7 @@ model VizSection {
   vizChapterId String?     @map("vizChapter")
   createdAt    DateTime?   @default(now())
   updatedAt    DateTime?
+  position     Float?
 
   @@index([vizChapterId])
 }

@@ -8,6 +8,7 @@ import {
   integer,
   checkbox,
   json,
+  float,
 } from "@keystone-6/core/fields";
 
 export const VizSection = list({
@@ -42,5 +43,6 @@ export const VizSection = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+    position: float(),
   },
 });

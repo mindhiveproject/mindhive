@@ -81,7 +81,12 @@ export default function EmptyState({ studyId }) {
     } else {
       data = await toJson(file);
     }
-    const variables = getColumnNames({ data });
+    const variableNames = getColumnNames({ data });
+    const variables = variableNames.map((variable) => ({
+      field: variable,
+      type: "general",
+      editable: false,
+    }));
 
     const metadata = {
       id: nanoid(),
@@ -154,8 +159,10 @@ export default function EmptyState({ studyId }) {
   };
 
   return (
-    <div>
-      <div>It looks like you still don’t have any data visualizations!</div>
+    <div className="contents">
+      <div className="emptyStateHeader">
+        It looks like you still don’t have any data visualizations!
+      </div>
       <div className="emptyStateButtons">
         <Dropdown
           icon={

@@ -2496,7 +2496,8 @@ var VizPart = (0, import_core31.list)({
     createdAt: (0, import_fields34.timestamp)({
       defaultValue: { kind: "now" }
     }),
-    updatedAt: (0, import_fields34.timestamp)()
+    updatedAt: (0, import_fields34.timestamp)(),
+    position: (0, import_fields34.float)()
   }
 });
 
@@ -2530,7 +2531,8 @@ var VizChapter = (0, import_core32.list)({
     createdAt: (0, import_fields35.timestamp)({
       defaultValue: { kind: "now" }
     }),
-    updatedAt: (0, import_fields35.timestamp)()
+    updatedAt: (0, import_fields35.timestamp)(),
+    position: (0, import_fields35.float)()
   }
 });
 
@@ -2568,7 +2570,8 @@ var VizSection = (0, import_core33.list)({
     createdAt: (0, import_fields36.timestamp)({
       defaultValue: { kind: "now" }
     }),
-    updatedAt: (0, import_fields36.timestamp)()
+    updatedAt: (0, import_fields36.timestamp)(),
+    position: (0, import_fields36.float)()
   }
 });
 

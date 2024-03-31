@@ -84,6 +84,9 @@ export const StyledDataViz = styled.div`
     }
     .contents {
       display: grid;
+      .emptyStateHeader {
+        padding: 10px 15px;
+      }
       .part {
         display: grid;
         .menuOriginaDataTitle {

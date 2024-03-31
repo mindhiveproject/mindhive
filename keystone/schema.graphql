@@ -3550,6 +3550,7 @@ type VizPart {
   vizChaptersCount(where: VizChapterWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
+  position: Float
 }
 
 input VizPartWhereUniqueInput {
@@ -3571,6 +3572,7 @@ input VizPartWhereInput {
   vizChapters: VizChapterManyRelationFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
+  position: FloatNullableFilter
 }
 
 input VizChapterManyRelationFilter {
@@ -3589,6 +3591,7 @@ input VizPartOrderByInput {
   isFeatured: OrderDirection
   createdAt: OrderDirection
   updatedAt: OrderDirection
+  position: OrderDirection
 }
 
 input VizPartUpdateInput {
@@ -3604,6 +3607,7 @@ input VizPartUpdateInput {
   vizChapters: VizChapterRelateToManyForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
+  position: Float
 }
 
 input VizJournalRelateToOneForUpdateInput {
@@ -3637,6 +3641,7 @@ input VizPartCreateInput {
   vizChapters: VizChapterRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
+  position: Float
 }
 
 input VizJournalRelateToOneForCreateInput {
@@ -3663,6 +3668,7 @@ type VizChapter {
   vizSectionsCount(where: VizSectionWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
+  position: Float
 }
 
 input VizChapterWhereUniqueInput {
@@ -3683,6 +3689,7 @@ input VizChapterWhereInput {
   vizSections: VizSectionManyRelationFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
+  position: FloatNullableFilter
 }
 
 input VizSectionManyRelationFilter {
@@ -3700,6 +3707,7 @@ input VizChapterOrderByInput {
   isFeatured: OrderDirection
   createdAt: OrderDirection
   updatedAt: OrderDirection
+  position: OrderDirection
 }
 
 input VizChapterUpdateInput {
@@ -3714,6 +3722,7 @@ input VizChapterUpdateInput {
   vizSections: VizSectionRelateToManyForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
+  position: Float
 }
 
 input VizPartRelateToOneForUpdateInput {
@@ -3746,6 +3755,7 @@ input VizChapterCreateInput {
   vizSections: VizSectionRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
+  position: Float
 }
 
 input VizPartRelateToOneForCreateInput {
@@ -3771,6 +3781,7 @@ type VizSection {
   vizChapter: VizChapter
   createdAt: DateTime
   updatedAt: DateTime
+  position: Float
 }
 
 input VizSectionWhereUniqueInput {
@@ -3791,6 +3802,7 @@ input VizSectionWhereInput {
   vizChapter: VizChapterWhereInput
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
+  position: FloatNullableFilter
 }
 
 input VizSectionOrderByInput {
@@ -3803,6 +3815,7 @@ input VizSectionOrderByInput {
   isFeatured: OrderDirection
   createdAt: OrderDirection
   updatedAt: OrderDirection
+  position: OrderDirection
 }
 
 input VizSectionUpdateInput {
@@ -3817,6 +3830,7 @@ input VizSectionUpdateInput {
   vizChapter: VizChapterRelateToOneForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
+  position: Float
 }
 
 input VizChapterRelateToOneForUpdateInput {
@@ -3842,6 +3856,7 @@ input VizSectionCreateInput {
   vizChapter: VizChapterRelateToOneForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
+  position: Float
 }
 
 input VizChapterRelateToOneForCreateInput {

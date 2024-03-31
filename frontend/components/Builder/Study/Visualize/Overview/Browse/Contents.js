@@ -6,6 +6,8 @@ import CreateChapter from "./CreateChapter";
 import BrowseTemplates from "./BrowseTemplates";
 import PartSettings from "./PartSettings";
 
+import sortBy from "lodash/sortBy";
+
 export default function Contents({
   user,
   studyId,
@@ -15,7 +17,9 @@ export default function Contents({
 }) {
   return (
     <div className="contents">
-      {journal?.vizParts.map((part, num) => (
+      {sortBy(journal?.vizParts, [
+        (part) => part?.position || new Date(part?.createdAt).getTime(),
+      ]).map((part, num) => (
         <div key={num} className="part">
           <div className="menuOriginaDataTitle">
             <div>
@@ -42,7 +46,10 @@ export default function Contents({
           </div>
 
           <div>
-            {part?.vizChapters.map((chapter, num) => (
+            {sortBy(part?.vizChapters, [
+              (chapter) =>
+                chapter?.position || new Date(chapter?.createdAt).getTime(),
+            ]).map((chapter, num) => (
               <div
                 key={num}
                 className={
@@ -77,7 +84,11 @@ export default function Contents({
                   </Dropdown>
                 </div>
                 <div>
-                  {chapter?.vizSections.map((section, num) => (
+                  {sortBy(chapter?.vizSections, [
+                    (section) =>
+                      section?.position ||
+                      new Date(section?.createdAt).getTime(),
+                  ]).map((section, num) => (
                     <div
                       key={num}
                       className="section"
