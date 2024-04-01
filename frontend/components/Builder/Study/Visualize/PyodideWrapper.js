@@ -6,7 +6,7 @@ import JournalManager from "./JournalManager";
 const baseCode = `import js
 import micropip
 import pandas as pd
-await micropip.install('plotly==5.19.0')
+await micropip.install('plotly==5.20.0')
 import plotly.express as px
 import plotly.graph_objects as go`;
 
@@ -25,7 +25,6 @@ function render_plot(container, plot_html) {
     container.removeChild(container.firstChild);
   }
   container.appendChild(documentFragment);
-  container.className = "plotly";
 }
 
 export default function PyodideWrapper({ user, studyId }) {

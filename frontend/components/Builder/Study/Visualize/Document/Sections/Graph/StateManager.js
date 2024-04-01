@@ -72,15 +72,18 @@ export default function StateManager({
           </MessageContent>
         </Message>
       )}
-      {code && pyodide && (
-        <Render
-          data={data}
-          code={code}
-          pyodide={pyodide}
-          runCode={runCode}
-          sectionId={sectionId}
-        />
-      )}
+      <div className="renderContainer">
+        {code && pyodide && (
+          <Render
+            data={data}
+            code={code}
+            pyodide={pyodide}
+            runCode={runCode}
+            sectionId={sectionId}
+          />
+        )}
+      </div>
+
       <Selector
         variables={variablesToDisplay}
         code={code}

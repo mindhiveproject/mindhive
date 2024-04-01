@@ -6,11 +6,6 @@ export const StyledDataViz = styled.div`
   grid-template-columns: 1fr 2fr;
   grid-gap: 19px;
   max-height: 85vh;
-  .plotly {
-    width: 100%;
-    height: 500px;
-    overflow-y: auto;
-  }
   .vizMenu {
     display: grid;
     grid-template-columns: 40px auto;
@@ -22,7 +17,6 @@ export const StyledDataViz = styled.div`
     padding: 0px !important;
   }
   .menuItem {
-    /* padding: 5px 20px 5px 5px; */
     display: grid;
     grid-template-columns: auto 1fr;
     grid-gap: 12px;
@@ -76,7 +70,6 @@ export const StyledDataViz = styled.div`
       box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
       color: #000000;
       cursor: pointer;
-      /* height: 50px; */
     }
     .emptyStateButtons {
       display: grid;
@@ -194,7 +187,6 @@ export const StyledDataViz = styled.div`
         line-height: 130%; /* 18.2px */
         display: grid;
         grid-template-columns: 1fr auto;
-        /* align-content: center; */
         label,
         input {
           cursor: pointer;
@@ -294,17 +286,13 @@ export const StyledDataViz = styled.div`
             }
           }
         }
-
-        .graphArea {
+        .renderContainer {
           display: grid;
           justify-content: center;
-          margin: 10px 0px;
-          .graph {
-            padding: 11px 20px;
-            border-radius: 8px;
-            background: #fff;
-            box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
-          }
+        }
+        .graphArea {
+          display: grid;
+          max-width: 500px;
         }
         .selectors {
           display: grid;

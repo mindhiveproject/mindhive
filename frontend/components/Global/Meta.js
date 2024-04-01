@@ -6,15 +6,8 @@ const Meta = () => (
     <meta charSet="utf-8" />
     <link rel="shortcut icon" href="/favicon.png" />
     <title>MindHive</title>
-    <script src="https://cdn.plot.ly/plotly-2.1.0.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
   </Head>
 );
 
 export default Meta;
-
-{
-  /* <link
-rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
-/> */
-}

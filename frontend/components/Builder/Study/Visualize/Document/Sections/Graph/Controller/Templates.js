@@ -7,11 +7,7 @@ df = pd.DataFrame(data)
 df[X] = pd.to_numeric(df[X])
 df[Y] = pd.to_numeric(df[Y])`;
 
-  const sectionCodeEnd = `fig_html = fig.to_html(
-  include_plotlyjs=False,
-  full_html=False,
-  default_height='500px'
-)
+  const sectionCodeEnd = `fig_html = fig.to_html()
 js.render_plot(plot_output, fig_html)`;
 
   const linePlotCode = `fig = px.line(df, x=X, y=Y, color=Group)`;

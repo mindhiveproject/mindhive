@@ -40,15 +40,12 @@ export default function CodeEditor({ code, handleChange, runCode }) {
           Code editor
         </AccordionTitle>
         <AccordionContent active={activeIndex === 0}>
-          <div>
-            <CodeMirror
-              value={code}
-              height="300px"
-              extensions={python()}
-              onChange={onChange}
-              theme="light"
-            />
-          </div>
+          <CodeMirror
+            value={code}
+            extensions={python()}
+            onChange={onChange}
+            theme="light"
+          />
         </AccordionContent>
       </Accordion>
     </>
