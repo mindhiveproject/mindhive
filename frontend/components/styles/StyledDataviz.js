@@ -289,6 +289,7 @@ export const StyledDataViz = styled.div`
         .renderContainer {
           display: grid;
           justify-content: center;
+          min-height: 450px;
         }
         .graphArea {
           display: grid;

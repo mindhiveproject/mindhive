@@ -13,7 +13,7 @@ Group = js.document.getElementById("Group-variable-${sectionId}").value`;
       await pyodide.runPythonAsync(prepareCanvasCode);
     }
     startPyodide();
-  }, []);
+  }, [data, code]);
 
   // run if the data has changed
   useEffect(() => {
@@ -21,7 +21,7 @@ Group = js.document.getElementById("Group-variable-${sectionId}").value`;
       await runCode({ code });
     }
     evaluatePython();
-  }, [data]);
+  }, [data, code]);
 
   return <div className="graphArea" id={`figure-${sectionId}`} />;
 }

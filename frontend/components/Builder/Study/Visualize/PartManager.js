@@ -31,7 +31,7 @@ export default function PartManager({
     if (part && part?.vizChapters && part?.vizChapters.length) {
       initChapter();
     }
-  }, [part]);
+  }, []);
 
   const selectChapter = async ({ partId, chapterId }) => {
     const currentPartId = part?.id;

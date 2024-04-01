@@ -13,7 +13,7 @@ import { python } from "@codemirror/lang-python";
 import CodeMirror from "@uiw/react-codemirror";
 
 export default function CodeEditor({ code, handleChange, runCode }) {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(-1);
 
   const handleClick = (e, titleProps) => {
     const { index } = titleProps;

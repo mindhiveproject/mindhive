@@ -5,6 +5,9 @@ import {
   MessageContent,
   Message,
   Icon,
+  AccordionTitle,
+  AccordionContent,
+  Accordion,
 } from "semantic-ui-react";
 
 import Render from "./Render";
@@ -25,16 +28,28 @@ export default function StateManager({
   const [isRunning, setIsRunning] = useState(false);
   const [output, setOutput] = useState("");
 
+  const [activeIndex, setActiveIndex] = useState(-1);
+
+  const handleClick = (e, titleProps) => {
+    const { index } = titleProps;
+    const newIndex = activeIndex === index ? -1 : index;
+    setActiveIndex(newIndex);
+  };
+
   // state of the python code
   const code = content?.code || defaultCode;
   // state of the selectors
   const selectors = content?.selectors || {};
   // get variable names
   const variablesToDisplay = variables.filter((column) => !column?.hide);
-  // .map((column) => column?.field);
 
   const addToOutput = (s) => {
-    setOutput(output + ">>>" + "\n" + s + "\n");
+    if (typeof s === "undefined") {
+      setOutput("");
+    } else {
+      setOutput(s);
+    }
+    // setOutput(output + ">>>" + "\n" + s + "\n");
     setIsRunning(false);
   };
 
@@ -93,23 +108,35 @@ export default function StateManager({
         selectors={selectors}
         handleChange={handleChange}
       />
-      <div>Output:</div>
-      <textarea
-        className="outputArea"
-        id="output"
-        value={output}
-        rows={12}
-        disabled
-      />
-      <div>
-        <button
-          onClick={() => {
-            setOutput("");
-          }}
+
+      <Accordion>
+        <AccordionTitle
+          active={activeIndex === 0}
+          index={0}
+          onClick={handleClick}
         >
-          Clean output
-        </button>
-      </div>
+          <Icon name="dropdown" />
+          Console
+        </AccordionTitle>
+        <AccordionContent active={activeIndex === 0}>
+          <textarea
+            className="outputArea"
+            id="output"
+            value={output}
+            rows={12}
+            disabled
+          />
+          {/* <div>
+            <button
+              onClick={() => {
+                setOutput("");
+              }}
+            >
+              Clean console
+            </button>
+          </div> */}
+        </AccordionContent>
+      </Accordion>
     </div>
   );
 }
