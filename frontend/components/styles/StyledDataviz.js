@@ -246,6 +246,21 @@ export const StyledDataViz = styled.div`
         font-weight: 700;
         line-height: 150%; /* 27px */
       }
+      .paragraph {
+        .modeSwitch {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          grid-gap: 10px;
+          align-content: center;
+          font-family: Lato;
+          font-size: 18px;
+          font-weight: 700;
+          margin: 0px 0px 10px 0px;
+        }
+        .viewMode {
+          margin: 0px 0px 10px 0px;
+        }
+      }
       .graph {
         display: grid;
         margin: 10px 0px;
