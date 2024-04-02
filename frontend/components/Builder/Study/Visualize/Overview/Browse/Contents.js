@@ -78,7 +78,12 @@ export default function Contents({
                     direction="left"
                   >
                     <DropdownMenu>
-                      <DeleteChapter studyId={studyId} chapter={chapter} />
+                      <DeleteChapter
+                        studyId={studyId}
+                        part={part}
+                        chapter={chapter}
+                        selectChapter={selectChapter}
+                      />
                     </DropdownMenu>
                   </Dropdown>
                 </div>

@@ -6,7 +6,12 @@ import { DELETE_VIZCHAPTER } from "../../../../Mutations/VizChapter";
 
 import { STUDY_VIZJOURNAL } from "../../../../Queries/VizJournal";
 
-export default function DeleteChapter({ studyId, chapter }) {
+export default function DeleteChapter({
+  studyId,
+  part,
+  chapter,
+  selectChapter,
+}) {
   const [
     deleteSection,
     {
@@ -37,6 +42,11 @@ export default function DeleteChapter({ studyId, chapter }) {
     });
     // delete the chapter
     await deleteChapter({ variables: { id: chapter?.id } });
+    // de-select the chapter
+    await selectChapter({
+      partId: part?.id,
+      chapterId: undefined,
+    });
   };
 
   return (
