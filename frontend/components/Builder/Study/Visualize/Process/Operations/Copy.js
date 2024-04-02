@@ -51,7 +51,7 @@ export default function Copy({
                 onChange={handleChange}
               />
 
-              <label>Variable to copy</label>
+              <label>Select variable to copy</label>
               <Dropdown
                 placeholder="Select variable"
                 fluid

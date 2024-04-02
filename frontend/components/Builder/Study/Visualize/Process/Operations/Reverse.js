@@ -1,4 +1,4 @@
-import { Modal } from "semantic-ui-react";
+import { Modal, Dropdown } from "semantic-ui-react";
 
 import { StyledForm } from "../../../../../styles/StyledForm";
 
@@ -13,7 +13,7 @@ export default function Reverse({
   setIsOpen,
   resetForm,
 }) {
-  const reverse = (column, maxValue) => {
+  const reverse = ({ column, maxValue }) => {
     return maxValue - column + 1;
   };
 
@@ -23,7 +23,6 @@ export default function Reverse({
       alert("Please enter a valid integer for the max value.");
       return;
     }
-
     const updatedVariables = [
       ...variables,
       {
@@ -34,10 +33,10 @@ export default function Reverse({
     ];
     const updatedData = data.map((row) => ({
       ...row,
-      [`${inputs?.variable}_reversed`]: reverse(
-        parseFloat(row[inputs?.variable]),
-        maxValue
-      ),
+      [`${inputs?.variable}_reversed`]: reverse({
+        column: parseFloat(row[inputs?.variable]),
+        maxValue,
+      }),
     }));
     updateDataset({
       updatedVariables,
@@ -57,19 +56,19 @@ export default function Reverse({
         <Modal.Description>
           <StyledForm>
             <fieldset>
-              <label htmlFor="variable">Select column to reverse</label>
-              <select
-                name="variable"
-                value={inputs.variable}
-                onChange={handleChange}
-              >
-                {variablesOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.text}
-                  </option>
-                ))}
-              </select>
-
+              <label htmlFor="variable">Select variable to reverse</label>
+              <Dropdown
+                placeholder="Select variable"
+                fluid
+                search
+                selection
+                options={variablesOptions}
+                onChange={(event, data) =>
+                  handleChange({
+                    target: { name: "variable", value: data?.value },
+                  })
+                }
+              />
               <label htmlFor="maxValue">Enter max value of the scale</label>
               <input
                 type="number"

@@ -14,6 +14,7 @@ import Render from "./Render";
 import CodeEditor from "./Controller/CodeEditor";
 import TemplateSelector from "./Controller/Templates";
 import Selector from "./Controller/Selector";
+import Dashboard from "./Controller/Dashboard";
 
 const defaultCode = ``;
 
@@ -88,15 +89,28 @@ export default function StateManager({
         </Message>
       )}
       <div className="renderContainer">
-        {code && pyodide && (
-          <Render
-            data={data}
+        <div>
+          {code && pyodide && (
+            <Render
+              data={data}
+              code={code}
+              pyodide={pyodide}
+              runCode={runCode}
+              sectionId={sectionId}
+            />
+          )}
+        </div>
+        <div>
+          <Dashboard
+            variables={variablesToDisplay}
             code={code}
             pyodide={pyodide}
             runCode={runCode}
             sectionId={sectionId}
+            selectors={selectors}
+            handleChange={handleChange}
           />
-        )}
+        </div>
       </div>
 
       <Selector

@@ -34,20 +34,6 @@ js.render_plot(plot_output, fig_html)`;
       <div
         className="template"
         onClick={() =>
-          selectGraphType({ type: "linePlot", title: "Line Plot" })
-        }
-      >
-        <div>
-          <img src={`/assets/icons/visualize/linePlot.svg`} />
-        </div>
-        <div className="text">
-          <div className="title">Line Plot</div>
-          <div className="description">Observe a variable across time</div>
-        </div>
-      </div>
-      <div
-        className="template"
-        onClick={() =>
           selectGraphType({ type: "scatterPlot", title: "Scatter Plot" })
         }
       >
@@ -85,6 +71,20 @@ js.render_plot(plot_output, fig_html)`;
         <div className="text">
           <div className="title">Bar graph</div>
           <div className="description">Compare quantities</div>
+        </div>
+      </div>
+      <div
+        className="template"
+        onClick={() =>
+          selectGraphType({ type: "linePlot", title: "Line Plot" })
+        }
+      >
+        <div>
+          <img src={`/assets/icons/visualize/linePlot.svg`} />
+        </div>
+        <div className="text">
+          <div className="title">Line Plot</div>
+          <div className="description">Observe a variable across time</div>
         </div>
       </div>
     </div>

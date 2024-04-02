@@ -303,6 +303,8 @@ export const StyledDataViz = styled.div`
         }
         .renderContainer {
           display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-gap: 10px;
           justify-content: center;
           min-height: 450px;
         }
@@ -361,6 +363,59 @@ export const StyledDataViz = styled.div`
     }
     .outputArea {
       width: 100%;
+    }
+  }
+  .graphDashboard {
+    background: #ffffff;
+    display: grid;
+    overflow-y: scroll;
+    height: 450px;
+
+    .header {
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: auto 1fr;
+      font-weight: bold;
+    }
+    .subheader {
+      background: #f8f8f8;
+      padding: 10px;
+    }
+    .subsection {
+      display: grid;
+      grid-gap: 8px;
+      padding: 10px 10px;
+    }
+    .title {
+      color: #666666;
+    }
+    .ranges {
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: 100px 100px;
+    }
+    label {
+      display: block;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    input,
+    textarea,
+    select {
+      font-family: Lato;
+      height: 48px;
+      border: 1px solid #cccccc;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 16px;
+      line-height: 24px;
+      padding: 12px;
+      &:focus {
+        outline: 0;
+        border-color: ${(props) => props.theme.red};
+      }
     }
   }
 `;
