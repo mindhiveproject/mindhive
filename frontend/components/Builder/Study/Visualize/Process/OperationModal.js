@@ -6,6 +6,7 @@ import useForm from "../../../../../lib/useForm";
 
 import Copy from "./Operations/Copy";
 import Compute from "./Operations/Compute";
+import Reverse from "./Operations/Reverse";
 
 export default function OperationModal({
   type,
@@ -60,6 +61,20 @@ export default function OperationModal({
 
       {type === "compute" && (
         <Compute
+          title={title}
+          data={data}
+          variables={variables}
+          variablesOptions={variablesOptions}
+          inputs={inputs}
+          handleChange={handleChange}
+          updateDataset={updateDataset}
+          setIsOpen={setIsOpen}
+          resetForm={resetForm}
+        />
+      )}
+      
+      {type === "reverse" && (
+        <Reverse
           title={title}
           data={data}
           variables={variables}

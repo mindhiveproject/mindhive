@@ -62,6 +62,14 @@ export default function Database({
                   title="Compute new variable"
                   iconSrc={`/assets/icons/visualize/table_chart_view.svg`}
                 />
+                <OperationModal
+                  type="reverse"
+                  data={data}
+                  variables={variables}
+                  updateDataset={updateDataset}
+                  title="Reverse score"
+                  iconSrc={`/assets/icons/visualize/database_reverse.svg`}
+                />
               </DropdownMenu>
             </Dropdown>
           </div>
