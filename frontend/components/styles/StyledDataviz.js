@@ -307,6 +307,15 @@ export const StyledDataViz = styled.div`
           grid-gap: 10px;
           justify-content: center;
           min-height: 450px;
+          box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
+          border-radius: 10px;
+          margin: 20px 0px;
+          .graphContainer {
+            margin: 20px 10px;
+          }
+          .dashboardContainer {
+            box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
+          }
         }
         .graphArea {
           display: grid;
@@ -370,12 +379,14 @@ export const StyledDataViz = styled.div`
     display: grid;
     overflow-y: scroll;
     height: 450px;
+    margin: 20px 10px;
 
     .header {
       display: grid;
       grid-gap: 10px;
       grid-template-columns: auto 1fr;
       font-weight: bold;
+      margin: 0px 0px 10px 0px;
     }
     .subheader {
       background: #f8f8f8;

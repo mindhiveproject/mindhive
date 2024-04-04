@@ -82,18 +82,20 @@ export default function Variable({ column, onVariableChange }) {
                   </div>
                 </DropdownItem>
 
-                <DropdownItem
-                  onClick={() =>
-                    onDelete({
-                      variable: column?.field,
-                    })
-                  }
-                >
-                  <div className="menuItem">
-                    <img src={`/assets/icons/visualize/delete.svg`} />
-                    <div>Delete</div>
-                  </div>
-                </DropdownItem>
+                {column?.type === "user" && (
+                  <DropdownItem
+                    onClick={() =>
+                      onDelete({
+                        variable: column?.field,
+                      })
+                    }
+                  >
+                    <div className="menuItem">
+                      <img src={`/assets/icons/visualize/delete.svg`} />
+                      <div>Delete</div>
+                    </div>
+                  </DropdownItem>
+                )}
               </DropdownMenu>
             </Dropdown>
           </div>

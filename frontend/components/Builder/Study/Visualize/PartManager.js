@@ -13,7 +13,7 @@ export default function PartManager({
   initVariables,
   components,
 }) {
-  const [page, setPage] = useState("browse");
+  const [page, setPage] = useState("database");
   const [chapter, setChapter] = useState(null);
   const [chapterId, setChapterId] = useState(null);
 

@@ -89,7 +89,7 @@ export default function StateManager({
         </Message>
       )}
       <div className="renderContainer">
-        <div>
+        <div className="graphContainer">
           {code && pyodide && (
             <Render
               data={data}
@@ -100,7 +100,7 @@ export default function StateManager({
             />
           )}
         </div>
-        <div>
+        <div className="dashboardContainer">
           <Dashboard
             variables={variablesToDisplay}
             code={code}
