@@ -1,3 +1,11 @@
+import { Dropdown } from "semantic-ui-react";
+
+const marginalPlotsOptions = [
+  { value: "", text: "" },
+  { value: "box", text: "Boxplot" },
+  { value: "rug", text: "Rug" },
+];
+
 export default function Dashboard({
   variables,
   code,
@@ -14,7 +22,8 @@ xRangeMin = js.document.getElementById('xRangeMin-${sectionId}').value
 xRangeMax = js.document.getElementById('xRangeMax-${sectionId}').value
 yLabel = js.document.getElementById('yLabel-${sectionId}').value
 yRangeMin = js.document.getElementById('yRangeMin-${sectionId}').value
-yRangeMax = js.document.getElementById('yRangeMax-${sectionId}').value`;
+yRangeMax = js.document.getElementById('yRangeMax-${sectionId}').value
+marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
 
   const updateCode = async ({ code }) => {
     await pyodide.runPythonAsync(connectDashboardCode);
@@ -148,6 +157,27 @@ yRangeMax = js.document.getElementById('yRangeMax-${sectionId}').value`;
             onBlur={() => updateCode({ code })}
           />
         </div>
+      </div>
+
+      <div className="subheader">Marginal plot</div>
+
+      <div className="subsection">
+        <select
+          id={`marginalPlot-${sectionId}`}
+          name="marginalPlot"
+          value={selectors["marginalPlot"]}
+          onChange={({ target }) =>
+            handleChange({
+              name: "selectors",
+              content: { ...selectors, marginalPlot: target.value },
+            })
+          }
+          onBlur={() => updateCode({ code })}
+        >
+          {marginalPlotsOptions.map((option) => (
+            <option value={option?.value}>{option?.text}</option>
+          ))}
+        </select>
       </div>
     </div>
   );

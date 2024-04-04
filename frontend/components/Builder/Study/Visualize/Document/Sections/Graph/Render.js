@@ -12,7 +12,8 @@ xRangeMin = js.document.getElementById('xRangeMin-${sectionId}').value
 xRangeMax = js.document.getElementById('xRangeMax-${sectionId}').value
 yLabel = js.document.getElementById('yLabel-${sectionId}').value
 yRangeMin = js.document.getElementById('yRangeMin-${sectionId}').value
-yRangeMax = js.document.getElementById('yRangeMax-${sectionId}').value`;
+yRangeMax = js.document.getElementById('yRangeMax-${sectionId}').value
+marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
 
   // run only once to connect selectors with python code
   useEffect(() => {
