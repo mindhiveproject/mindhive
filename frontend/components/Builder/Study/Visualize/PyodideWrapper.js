@@ -17,10 +17,10 @@ import {
   Icon,
 } from "semantic-ui-react";
 
-function render_plot(container, plot_html) {
+function render_html(container, html) {
   var range = document.createRange();
   range.selectNode(container);
-  var documentFragment = range.createContextualFragment(plot_html);
+  var documentFragment = range.createContextualFragment(html);
   while (container.hasChildNodes()) {
     container.removeChild(container.firstChild);
   }
@@ -53,7 +53,7 @@ export default function PyodideWrapper({ user, studyId }) {
         // pyodideLoad.registerJsModule("js_shared_workspace", sharedData);
         setPyodide(pyodideLoad);
         // inject plot rendering function
-        window.render_plot = render_plot;
+        window.render_html = render_html;
         setIsLoading(false);
       }
     }

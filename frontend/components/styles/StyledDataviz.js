@@ -261,6 +261,37 @@ export const StyledDataViz = styled.div`
           margin: 0px 0px 10px 0px;
         }
       }
+      .htmlRenderContainer {
+        display: grid;
+        max-width: 600px;
+        margin: 20px 0px;
+        box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
+        table {
+          border-collapse: collapse;
+
+          td,
+          th {
+            border: 1px solid #ddd;
+            padding: 8px;
+          }
+
+          tr:nth-child(even) {
+            background-color: #f2f2f2;
+          }
+
+          tr:hover {
+            /* background-color: #ddd; */
+          }
+
+          th {
+            padding-top: 6px;
+            padding-bottom: 6px;
+            text-align: left;
+            background-color: #007c70;
+            color: white;
+          }
+        }
+      }
       .graph {
         display: grid;
         margin: 10px 0px;
@@ -301,7 +332,8 @@ export const StyledDataViz = styled.div`
             }
           }
         }
-        .renderContainer {
+
+        .graphRenderContainer {
           display: grid;
           grid-template-columns: 1fr 1fr;
           grid-gap: 10px;

@@ -1,9 +1,10 @@
 import StateManager from "./StateManager";
 
 export default function Statistics({
-  pyodide,
   content,
   handleContentChange,
+  pyodide,
+  sectionId,
   data,
   variables,
 }) {
@@ -17,6 +18,7 @@ export default function Statistics({
       content={content}
       handleChange={handleChange}
       pyodide={pyodide}
+      sectionId={sectionId}
       data={data}
       variables={variables}
     />

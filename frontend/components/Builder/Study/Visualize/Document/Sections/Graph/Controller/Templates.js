@@ -8,7 +8,7 @@ df[X] = pd.to_numeric(df[X])
 df[Y] = pd.to_numeric(df[Y])`;
 
   const sectionCodeEnd = `fig_html = fig.to_html()
-js.render_plot(plot_output, fig_html)`;
+js.render_html(plot_output, fig_html)`;
 
   const linePlotCode = `fig = px.line(df, x=X, y=Y, color=Group)`;
   const scatterPlotCode = `fig = px.scatter(df, x=X, y=Y, color=Group)`;

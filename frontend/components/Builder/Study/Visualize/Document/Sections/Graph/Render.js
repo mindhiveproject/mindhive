@@ -15,7 +15,7 @@ yRangeMin = js.document.getElementById('yRangeMin-${sectionId}').value
 yRangeMax = js.document.getElementById('yRangeMax-${sectionId}').value
 marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
 
-  // run only once to connect selectors with python code
+  // run to connect plot output and selectors with python code
   useEffect(() => {
     async function startPyodide() {
       await pyodide.runPythonAsync(prepareCanvasCode);
