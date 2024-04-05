@@ -61,6 +61,7 @@ export default function Section({
           content={inputs?.content}
           handleContentChange={handleContentChange}
           pyodide={pyodide}
+          sectionId={section?.id}
           data={data}
           variables={variables}
         />

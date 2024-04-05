@@ -50,7 +50,6 @@ export default function StateManager({
     } else {
       setOutput(s);
     }
-    // setOutput(output + ">>>" + "\n" + s + "\n");
     setIsRunning(false);
   };
 
@@ -88,7 +87,7 @@ export default function StateManager({
           </MessageContent>
         </Message>
       )}
-      <div className="renderContainer">
+      <div className="graphRenderContainer">
         <div className="graphContainer">
           {code && pyodide && (
             <Render
@@ -140,15 +139,6 @@ export default function StateManager({
             rows={12}
             disabled
           />
-          {/* <div>
-            <button
-              onClick={() => {
-                setOutput("");
-              }}
-            >
-              Clean console
-            </button>
-          </div> */}
         </AccordionContent>
       </Accordion>
     </div>
