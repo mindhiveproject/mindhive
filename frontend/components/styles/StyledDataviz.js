@@ -268,6 +268,7 @@ export const StyledDataViz = styled.div`
         box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
         table {
           border-collapse: collapse;
+          background: white;
 
           td,
           th {
