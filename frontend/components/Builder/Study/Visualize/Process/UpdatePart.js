@@ -21,5 +21,9 @@ export default function UpdatePartContent({ part, content }) {
   };
   const [updatePart, { data, loading, error }] = useMutation(UPDATE_VIZPART);
 
-  return <Icon name="save outline" size="large" onClick={() => update()} />;
+  return <Icon 
+  name="save outline" 
+  size="large" 
+  color="red" 
+  onClick={() => update()} />;
 }
