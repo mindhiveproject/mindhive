@@ -16,7 +16,7 @@ js.render_html(plot_output, fig_html)`;
   const barGraphCode = `fig = px.bar(df, x=X, y=Y, color=Group)`;
 
   const templates = {
-    linePlot: sectionCodeStart + "\n" + linePlotCode + "\n" + sectionCodeEnd,
+    // linePlot: sectionCodeStart + "\n" + linePlotCode + "\n" + sectionCodeEnd,
     scatterPlot:
       sectionCodeStart + "\n" + scatterPlotCode + "\n" + sectionCodeEnd,
     histogram: sectionCodeStart + "\n" + histogramCode + "\n" + sectionCodeEnd,
@@ -73,7 +73,7 @@ js.render_html(plot_output, fig_html)`;
           <div className="description">Compare quantities</div>
         </div>
       </div>
-      <div
+      {/* <div
         className="template"
         onClick={() =>
           selectGraphType({ type: "linePlot", title: "Line Plot" })
@@ -86,7 +86,7 @@ js.render_html(plot_output, fig_html)`;
           <div className="title">Line Plot</div>
           <div className="description">Observe a variable across time</div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
