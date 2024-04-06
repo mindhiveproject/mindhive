@@ -34,7 +34,7 @@ const compute = ({ var1, var2, data, selectedVariables, operation }) => {
         const sum = validValues.reduce((acc, value) => acc + value, 0);
         return validValues.length > 0 ? sum / validValues.length : 0;
       } else {
-        return 42; // Return 0 if selectedVariables is not an array or is empty
+        return 42; // Return 42 if selectedVariables is not an array or is empty
       }
       
 
