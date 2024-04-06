@@ -70,6 +70,16 @@ export default function Database({
                   title="Reverse score"
                   iconSrc={`/assets/icons/visualize/database_reverse.svg`}
                 />
+
+                <OperationModal
+                  type="recode"
+                  data={data}
+                  variables={variables}
+                  updateDataset={updateDataset}
+                  title="Recode a variable"
+                  iconSrc={`/assets/icons/visualize/database_recode.svg`}
+                />
+
               </DropdownMenu>
             </Dropdown>
           </div>
