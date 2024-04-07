@@ -72,6 +72,7 @@ export default function Reverse({
               <label htmlFor="maxValue">Enter max value of the scale</label>
               <input
                 type="number"
+                min={0}
                 name="maxValue"
                 value={inputs.maxValue}
                 onChange={handleChange}
