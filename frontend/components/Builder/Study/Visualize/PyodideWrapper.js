@@ -6,6 +6,7 @@ import JournalManager from "./JournalManager";
 const baseCode = `import js
 import micropip
 import pandas as pd
+import numpy as np
 await micropip.install('plotly==5.20.0')
 import plotly.express as px
 import plotly.graph_objects as go`;
