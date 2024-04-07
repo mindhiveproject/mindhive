@@ -1,6 +1,13 @@
 import { Dropdown, DropdownMenu, DropdownItem } from "semantic-ui-react";
+import { useEffect, useState } from 'react';
 
 export default function Variable({ column, onVariableChange }) {
+  // const [hide, setHide] = useState(column?.hide);
+  
+  // useEffect(() => {
+  //   setHide(column?.hide);
+  // }, [column?.hide]);
+
   const onRename = ({ variable }) => {
     const newName = prompt("Please enter new name:");
     if (newName && newName !== "") {
@@ -32,7 +39,7 @@ export default function Variable({ column, onVariableChange }) {
           })
         }
       >
-        <img src={`/assets/icons/visualize/tag.svg`} />
+        {/* <img src={`/assets/icons/visualize/tag.svg`} /> */}
         <label for={column?.field}>
           {column?.displayName || column?.field}
         </label>
@@ -49,7 +56,7 @@ export default function Variable({ column, onVariableChange }) {
               })
             }
           >
-            <img src={`/assets/icons/visualize/visibility.svg`} />
+          <img src={`/assets/icons/visualize/visibility.svg`} />
           </div>
 
           <div>

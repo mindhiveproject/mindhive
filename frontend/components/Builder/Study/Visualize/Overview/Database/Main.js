@@ -28,6 +28,15 @@ export default function Database({
     setActiveIndex(newIndex);
   };
 
+  ////////////////////////////////////////////////// trying to do a hide all button
+  // const hideAllColumns = () => {
+  //   variables.forEach(column => {
+  //     onVariableChange({
+  //       variable: { ...column, hide: true },
+  //     });
+  //   });
+  // };
+  //////////////////////////////////////////////////
   return (
     <div className="database">
       <div className="header">
@@ -83,6 +92,7 @@ export default function Database({
               </DropdownMenu>
             </Dropdown>
           </div>
+          {/* <Icon name="eye slash outline" size="large" color="olive" onClick={hideAllColumns} /> */}
         </div>
       </div>
 
