@@ -14,8 +14,13 @@ export default function Reverse({
   resetForm,
 }) {
   const reverse = ({ column, maxValue }) => {
-    return maxValue - column + 1;
+    const columnValue = parseFloat(column);
+    if (isNaN(columnValue)) {
+      return null;
+    }
+    return maxValue - columnValue + 1;
   };
+  
 
   const reverseColumn = () => {
     const maxValue = parseInt(inputs?.maxValue);
