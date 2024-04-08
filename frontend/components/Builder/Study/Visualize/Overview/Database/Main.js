@@ -28,15 +28,15 @@ export default function Database({
     setActiveIndex(newIndex);
   };
 
-  ////////////////////////////////////////////////// trying to do a hide all button
-  // const hideAllColumns = () => {
-  //   variables.forEach(column => {
-  //     onVariableChange({
-  //       variable: { ...column, hide: true },
-  //     });
-  //   });
-  // };
-  //////////////////////////////////////////////////
+  // hide all columns
+  const hideAllColumns = () => {
+    const updatedVariables = variables.map((variable) => ({
+      ...variable,
+      hide: true,
+    }));
+    updateDataset({ updatedVariables });
+  };
+
   return (
     <div className="database">
       <div className="header">
@@ -45,6 +45,14 @@ export default function Database({
         </div>
         <div>Active Data</div>
         <div className="icons">
+          <div>
+            <Icon
+              name="eye slash outline"
+              size="large"
+              color="olive"
+              onClick={hideAllColumns}
+            />
+          </div>
           <UpdatePartContent
             part={part}
             content={{ modified: { data, variables } }}
@@ -88,11 +96,9 @@ export default function Database({
                   title="Recode a variable"
                   iconSrc={`/assets/icons/visualize/database_recode.svg`}
                 />
-
               </DropdownMenu>
             </Dropdown>
           </div>
-          {/* <Icon name="eye slash outline" size="large" color="olive" onClick={hideAllColumns} /> */}
         </div>
       </div>
 

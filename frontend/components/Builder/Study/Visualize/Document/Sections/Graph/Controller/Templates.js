@@ -1,5 +1,4 @@
 export default function TemplateSelector({ handleChange, runCode, sectionId }) {
-
   const sectionCodeStart = ``;
 
   // const linePlotCode = `fig = px.line(df, x=X, y=Y, color=Group)`;
@@ -240,7 +239,6 @@ fig.update_layout(
 fig_html = fig.to_html()
 js.render_html(plot_output, fig_html)`;
 
-
   const templates = {
     // linePlot: sectionCodeStart + "\n" + linePlotCode + "\n" + sectionCodeEnd,
     scatterPlot:
@@ -316,35 +314,3 @@ js.render_html(plot_output, fig_html)`;
     </div>
   );
 }
-
-// const defaultCode = `import matplotlib
-// import matplotlib.pyplot as plt
-// import pandas as pd
-// import micropip
-
-// # install plotly from pypi
-// await micropip.install('plotly==5.0.0')
-
-// import js_workspace as data
-// data = data.to_py()
-
-// df = pd.DataFrame(data)
-
-// # clean the canvas
-// plt.clf()
-
-// X = document.getElementById("X-variable").value
-// Y = document.getElementById("Y-variable").value
-// Group = document.getElementById("Group-variable").value
-
-// # create a scatter plot
-// plt.scatter(df[X], df[Y])
-
-// # customize the graph
-// plt.title('Sample Line Graph')
-// plt.xlabel('X-axis Label')
-// plt.ylabel('Y-axis Label')
-// plt.legend()
-// plt.grid(True)
-
-// plt.show()`;

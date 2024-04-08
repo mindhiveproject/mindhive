@@ -18,22 +18,18 @@ export default function Recode({
 
   useEffect(() => {
     if (inputs?.oldVariable) {
-      const uniqueVals = [...new Set(data.map((row) => row[inputs?.oldVariable]))];
-      const filteredUniqueVals = uniqueVals.filter(value => value !== ""); // filter out empty strings
+      const uniqueVals = [
+        ...new Set(data.map((row) => row[inputs?.oldVariable])),
+      ];
+      const filteredUniqueVals = uniqueVals.filter((value) => value !== ""); // filter out empty strings
       setUniqueValues(filteredUniqueVals);
-      const initialReplacements = filteredUniqueVals.reduce((acc, val) => ({ ...acc, [val]: val }), {});
+      const initialReplacements = filteredUniqueVals.reduce(
+        (acc, val) => ({ ...acc, [val]: val }),
+        {}
+      );
       setReplacementValues(initialReplacements);
     }
   }, [inputs?.oldVariable, data]);
-
-//   useEffect(() => {
-//     if (inputs?.oldVariable) {
-//       const uniqueVals = [...new Set(data.map((row) => row[inputs?.oldVariable]))];
-//       setUniqueValues(uniqueVals);
-//       const initialReplacements = uniqueVals.reduce((acc, val) => ({ ...acc, [val]: val }), {});
-//       setReplacementValues(initialReplacements);
-//     }
-//   }, [inputs?.oldVariable, data]);
 
   const recode = () => {
     const updatedVariables = [

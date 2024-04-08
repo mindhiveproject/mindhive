@@ -68,8 +68,12 @@ export default function ProcessManager({
 
   // to update the dataset
   const updateDataset = ({ updatedVariables, updatedData }) => {
-    setVariables(updatedVariables);
-    setData(updatedData);
+    if (updatedVariables) {
+      setVariables(updatedVariables);
+    }
+    if (updatedData) {
+      setData(updatedData);
+    }
   };
 
   // to propogate changes from a variable to a whole dataset

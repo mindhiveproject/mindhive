@@ -143,8 +143,9 @@ export const StyledDataViz = styled.div`
         display: grid;
         grid-template-columns: auto 1fr auto;
         .icons {
+          cursor: pointer;
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: 1fr 1fr 1fr;
           grid-gap: 10px;
         }
       }
@@ -175,6 +176,7 @@ export const StyledDataViz = styled.div`
         display: grid;
         grid-gap: 15px;
         padding: 0px 30px;
+        margin: 0px 0px 10px 0px;
       }
       .hidden {
         color: #9a9a9a;
@@ -200,7 +202,8 @@ export const StyledDataViz = styled.div`
         .icons {
           display: grid;
           grid-template-columns: 20px 20px;
-          grid-gap: 10px;
+          grid-gap: 20px;
+          height: 5px;
           .visibilityIcon {
             cursor: pointer;
           }
