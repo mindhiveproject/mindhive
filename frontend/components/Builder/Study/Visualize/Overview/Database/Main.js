@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { Accordion, Icon, Dropdown, DropdownMenu } from "semantic-ui-react";
+import { saveAs } from 'file-saver';
+import moment from "moment";
+import { jsonToCSV } from "react-papaparse";
 
 import OperationModal from "../../Process/OperationModal";
 import Variable from "./Variable";
 import UpdatePartContent from "../../Process/UpdatePart";
 
 export default function Database({
+  // study,
+  // by,
   part,
   data,
   variables,
@@ -45,6 +50,29 @@ export default function Database({
     }));
     updateDataset({ updatedVariables });
   };
+
+  const downloadData = () => {
+    let userInput = prompt("Give a name to the CSV you're about to download\nNo need to add '.csv' we're taking care of that!");
+    const name = `${userInput}_${moment().format()}`;
+    // const name = `${study?.slug}_${by}_${moment().format()}`;
+    console.log(userInput)
+    if (userInput !== null) {
+      const visibleColumns = variables.filter(variable => !variable.hide).map(variable => variable.field);
+      const visibleData = data.map(row => {
+        let visibleRow = {};
+        visibleColumns.forEach(column => {
+          visibleRow[column] = row[column];
+        });
+        return visibleRow;
+      });
+      const csv = jsonToCSV({ fields: visibleColumns, data: visibleData });
+      const blob = new Blob([csv], {
+        type: "text/csv",
+      });
+      saveAs(blob, `${name}.csv`);
+    }
+    
+  };  
 
   return (
     <div className="database">
@@ -98,10 +126,16 @@ export default function Database({
                 </DropdownMenu>
               </Dropdown>
             </div>
+            <div>
+              <Icon name="download" size="normal" color="grey" onClick={downloadData}
+              />  
+            </div>
+            <div></div>
           <div>
+            <div></div>
             <Icon
               name="eye slash"
-              size="large"
+              size="normal"
               color="grey"
               onClick={hideAllColumns}
             />
@@ -109,7 +143,7 @@ export default function Database({
           <div>
             <Icon
               name="eye"
-              size="large"
+              size="normal"
               color="grey"
               onClick={showAllColumns}
             />

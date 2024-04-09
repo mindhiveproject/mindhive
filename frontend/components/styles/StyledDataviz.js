@@ -142,11 +142,11 @@ export const StyledDataViz = styled.div`
       .header {
         display: grid;
         grid-template-columns: auto 1fr auto;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: 1fr auto;
         .icons {
           cursor: pointer;
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: 1fr 1fr 1fr;
           grid-gap: 10px;
         }
       }
