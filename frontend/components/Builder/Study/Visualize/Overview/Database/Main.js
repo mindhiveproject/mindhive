@@ -37,6 +37,15 @@ export default function Database({
     updateDataset({ updatedVariables });
   };
 
+  // show all columns
+  const showAllColumns = () => {
+    const updatedVariables = variables.map((variable) => ({
+      ...variable,
+      hide: false,
+    }));
+    updateDataset({ updatedVariables });
+  };
+
   return (
     <div className="database">
       <div className="header">
@@ -45,59 +54,65 @@ export default function Database({
         </div>
         <div>Active Data</div>
         <div className="icons">
+          <UpdatePartContent part={part} content={{ modified: { data, variables } }}
+            />
+            <div>
+              <Dropdown
+                icon={<img src={`/assets/icons/visualize/add_notes.svg`} />}
+                direction="left"
+              >
+                <DropdownMenu>
+                  <OperationModal
+                    type="copy"
+                    data={data}
+                    variables={variables}
+                    updateDataset={updateDataset}
+                    title="Copy existing variable"
+                    iconSrc={`/assets/icons/visualize/content_paste_go.svg`}
+                  />
+                  <OperationModal
+                    type="compute"
+                    data={data}
+                    variables={variables}
+                    updateDataset={updateDataset}
+                    title="Compute new variable"
+                    iconSrc={`/assets/icons/visualize/table_chart_view.svg`}
+                  />
+                  <OperationModal
+                    type="reverse"
+                    data={data}
+                    variables={variables}
+                    updateDataset={updateDataset}
+                    title="Reverse score"
+                    iconSrc={`/assets/icons/visualize/database_reverse.svg`}
+                  />
+
+                  <OperationModal
+                    type="recode"
+                    data={data}
+                    variables={variables}
+                    updateDataset={updateDataset}
+                    title="Recode a variable"
+                    iconSrc={`/assets/icons/visualize/database_recode.svg`}
+                  />
+                </DropdownMenu>
+              </Dropdown>
+            </div>
           <div>
             <Icon
-              name="eye slash outline"
+              name="eye slash"
               size="large"
-              color="olive"
+              color="grey"
               onClick={hideAllColumns}
             />
           </div>
-          <UpdatePartContent
-            part={part}
-            content={{ modified: { data, variables } }}
-          />
           <div>
-            <Dropdown
-              icon={<img src={`/assets/icons/visualize/add_notes.svg`} />}
-              direction="left"
-            >
-              <DropdownMenu>
-                <OperationModal
-                  type="copy"
-                  data={data}
-                  variables={variables}
-                  updateDataset={updateDataset}
-                  title="Copy existing variable"
-                  iconSrc={`/assets/icons/visualize/content_paste_go.svg`}
-                />
-                <OperationModal
-                  type="compute"
-                  data={data}
-                  variables={variables}
-                  updateDataset={updateDataset}
-                  title="Compute new variable"
-                  iconSrc={`/assets/icons/visualize/table_chart_view.svg`}
-                />
-                <OperationModal
-                  type="reverse"
-                  data={data}
-                  variables={variables}
-                  updateDataset={updateDataset}
-                  title="Reverse score"
-                  iconSrc={`/assets/icons/visualize/database_reverse.svg`}
-                />
-
-                <OperationModal
-                  type="recode"
-                  data={data}
-                  variables={variables}
-                  updateDataset={updateDataset}
-                  title="Recode a variable"
-                  iconSrc={`/assets/icons/visualize/database_recode.svg`}
-                />
-              </DropdownMenu>
-            </Dropdown>
+            <Icon
+              name="eye"
+              size="large"
+              color="grey"
+              onClick={showAllColumns}
+            />
           </div>
         </div>
       </div>
