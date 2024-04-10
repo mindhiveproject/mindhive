@@ -55,7 +55,6 @@ export default function Database({
     let userInput = prompt("Give a name to the CSV you're about to download\nNo need to add '.csv' we're taking care of that!");
     const name = `${userInput}_${moment().format()}`;
     // const name = `${study?.slug}_${by}_${moment().format()}`;
-    console.log(userInput)
     if (userInput !== null) {
       const visibleColumns = variables.filter(variable => !variable.hide).map(variable => variable.field);
       const visibleData = data.map(row => {
