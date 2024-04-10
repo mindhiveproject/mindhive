@@ -5,7 +5,7 @@ import { StyledForm } from "../../../../../styles/StyledForm";
 const operations = [
   { value: "zeroState", text: "" },
   { value: "add", text: " Addition (+) " },
-  { value: "subtract", text: " Substraction (-) " },
+  { value: "subtract", text: " Subtraction (-) " },
   { value: "multiply", text: " Multiplication (x) " },
   { value: "divide", text: " Division (/) " },
   { value: "average", text: " Average (x̄) " },
