@@ -8,7 +8,7 @@ export default function Table({
 }) {
   // update content in the local state
   const handleChange = async (content) => {
-    handleContentChange({ name: "text", content });
+    handleContentChange({ newContent: { text: content } });
   };
 
   // filter columns

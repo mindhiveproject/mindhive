@@ -12,7 +12,7 @@ import { useState, useCallback } from "react";
 import { python } from "@codemirror/lang-python";
 import CodeMirror from "@uiw/react-codemirror";
 
-export default function CodeEditor({ code, handleChange, runCode }) {
+export default function CodeEditor({ code, handleContentChange, runCode }) {
   const [activeIndex, setActiveIndex] = useState(-1);
 
   const handleClick = (e, titleProps) => {
@@ -22,7 +22,11 @@ export default function CodeEditor({ code, handleChange, runCode }) {
   };
 
   const onChange = useCallback((val, viewUpdate) => {
-    handleChange({ name: "code", content: val });
+    handleContentChange({
+      newContent: {
+        code: val,
+      },
+    });
   }, []);
 
   return (

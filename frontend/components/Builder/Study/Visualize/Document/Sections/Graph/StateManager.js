@@ -13,14 +13,14 @@ import {
 import Render from "./Render";
 import CodeEditor from "./Controller/CodeEditor";
 import TemplateSelector from "./Controller/Templates";
-import Selector from "./Controller/Selector";
-import Dashboard from "./Controller/Dashboard";
+import Options from "./Controller/Options";
+import Axes from "./Controller/Axes";
 
 const defaultCode = ``;
 
 export default function StateManager({
   content,
-  handleChange,
+  handleContentChange,
   pyodide,
   sectionId,
   data,
@@ -41,6 +41,8 @@ export default function StateManager({
   const code = content?.code || defaultCode;
   // state of the selectors
   const selectors = content?.selectors || {};
+  // state of the graph type
+  const type = content?.type || undefined;
   // get variable names
   const variablesToDisplay = variables.filter((column) => !column?.hide);
 
@@ -69,13 +71,17 @@ export default function StateManager({
     <div className="graph">
       {!code && pyodide && (
         <TemplateSelector
-          handleChange={handleChange}
+          handleContentChange={handleContentChange}
           runCode={runCode}
           sectionId={sectionId}
         />
       )}
       {code && pyodide && (
-        <CodeEditor code={code} handleChange={handleChange} runCode={runCode} />
+        <CodeEditor
+          code={code}
+          handleContentChange={handleContentChange}
+          runCode={runCode}
+        />
       )}
 
       {isRunning && (
@@ -87,60 +93,62 @@ export default function StateManager({
           </MessageContent>
         </Message>
       )}
-      <div className="graphRenderContainer">
-        <div className="graphContainer">
-          {code && pyodide && (
-            <Render
-              data={data}
-              code={code}
-              pyodide={pyodide}
-              runCode={runCode}
-              sectionId={sectionId}
-            />
-          )}
-        </div>
-        <div className="dashboardContainer">
-          <Dashboard
+      {code && pyodide && (
+        <>
+          <div className="graphRenderContainer">
+            <div className="graphContainer">
+              <Render
+                data={data}
+                code={code}
+                pyodide={pyodide}
+                runCode={runCode}
+                sectionId={sectionId}
+              />
+            </div>
+            <div className="dashboardContainer">
+              <Options
+                type={type}
+                variables={variablesToDisplay}
+                code={code}
+                pyodide={pyodide}
+                runCode={runCode}
+                sectionId={sectionId}
+                selectors={selectors}
+                handleContentChange={handleContentChange}
+              />
+            </div>
+          </div>
+          <Axes
+            type={type}
             variables={variablesToDisplay}
             code={code}
             pyodide={pyodide}
             runCode={runCode}
             sectionId={sectionId}
             selectors={selectors}
-            handleChange={handleChange}
+            handleContentChange={handleContentChange}
           />
-        </div>
-      </div>
-
-      <Selector
-        variables={variablesToDisplay}
-        code={code}
-        pyodide={pyodide}
-        runCode={runCode}
-        sectionId={sectionId}
-        selectors={selectors}
-        handleChange={handleChange}
-      />
-
-      <Accordion>
-        <AccordionTitle
-          active={activeIndex === 0}
-          index={0}
-          onClick={handleClick}
-        >
-          <Icon name="dropdown" />
-          Console
-        </AccordionTitle>
-        <AccordionContent active={activeIndex === 0}>
-          <textarea
-            className="outputArea"
-            id="output"
-            value={output}
-            rows={12}
-            disabled
-          />
-        </AccordionContent>
-      </Accordion>
+          <Accordion>
+            <AccordionTitle
+              active={activeIndex === 0}
+              index={0}
+              onClick={handleClick}
+            >
+              <Icon name="dropdown" />
+              Console
+            </AccordionTitle>
+            <AccordionContent active={activeIndex === 0}>
+              <textarea
+                className="outputArea"
+                id="output"
+                value={output}
+                rows={12}
+                disabled
+              />
+            </AccordionContent>
+          </Accordion>
+        </>
+      )}
     </div>
   );
 }

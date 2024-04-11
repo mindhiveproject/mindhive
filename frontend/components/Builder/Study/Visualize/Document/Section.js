@@ -20,13 +20,24 @@ export default function Section({
     ...(section || {}),
   });
 
+  console.log({ inputs });
+
   const { type } = section;
 
-  const handleContentChange = ({ name, content }) => {
+  // const handleContentChange = ({ name, content }) => {
+  //   handleChange({
+  //     target: {
+  //       name: "content",
+  //       value: { ...inputs.content, [name]: content },
+  //     },
+  //   });
+  // };
+
+  const handleContentChange = ({ newContent }) => {
     handleChange({
       target: {
         name: "content",
-        value: { ...inputs.content, [name]: content },
+        value: { ...inputs.content, ...newContent },
       },
     });
   };

@@ -10,7 +10,7 @@ export default function Statistics({
 }) {
   // update content in the local state
   const handleChange = async (content) => {
-    handleContentChange({ name: "code", content });
+    handleContentChange({ newContent: { code: content } });
   };
 
   return (

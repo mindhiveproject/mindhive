@@ -8,15 +8,10 @@ export default function Graph({
   data,
   variables,
 }) {
-  // update content in the local state
-  const handleChange = async ({ name, content }) => {
-    handleContentChange({ name, content });
-  };
-
   return (
     <StateManager
       content={content}
-      handleChange={handleChange}
+      handleContentChange={handleContentChange}
       pyodide={pyodide}
       sectionId={sectionId}
       data={data}

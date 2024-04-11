@@ -3,9 +3,9 @@ import { useEffect } from "react";
 export default function Render({ data, code, pyodide, runCode, sectionId }) {
   const prepareCanvasCode = `# get relevant html elements
 plot_output = js.document.getElementById('figure-${sectionId}')
-X = js.document.getElementById("X-variable-${sectionId}").value
-Y = js.document.getElementById("Y-variable-${sectionId}").value
-Group = js.document.getElementById("Group-variable-${sectionId}").value
+X = js.document.getElementById("xVariable-${sectionId}").value
+Y = js.document.getElementById("yVariable-${sectionId}").value
+Group = js.document.getElementById("groupVariable-${sectionId}").value
 graphTitle = js.document.getElementById('graphTitle-${sectionId}').value
 xLabel = js.document.getElementById('xLabel-${sectionId}').value
 xRangeMin = js.document.getElementById('xRangeMin-${sectionId}').value

@@ -1,4 +1,8 @@
-export default function TemplateSelector({ handleChange, runCode, sectionId }) {
+export default function TemplateSelector({
+  handleContentChange,
+  runCode,
+  sectionId,
+}) {
   const sectionCodeStart = ``;
 
   // const linePlotCode = `fig = px.line(df, x=X, y=Y, color=Group)`;
@@ -249,7 +253,12 @@ js.render_html(plot_output, fig_html)`;
 
   const selectGraphType = ({ type, title }) => {
     const code = templates[type];
-    handleChange({ name: "code", content: code });
+    handleContentChange({
+      newContent: {
+        type,
+        code,
+      },
+    });
     runCode({ code });
   };
 

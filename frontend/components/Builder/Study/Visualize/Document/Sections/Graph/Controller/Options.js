@@ -6,14 +6,15 @@ const marginalPlotsOptions = [
   { value: "rug", text: "Rug" },
 ];
 
-export default function Dashboard({
+export default function Options({
+  type,
   variables,
   code,
   pyodide,
   runCode,
   sectionId,
   selectors,
-  handleChange,
+  handleContentChange,
 }) {
   const connectDashboardCode = `# get relevant html elements
 graphTitle = js.document.getElementById('graphTitle-${sectionId}').value
@@ -35,7 +36,7 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
       <div className="subsection">
         <div className="header">
           <img src={`/assets/icons/visualize/chat_add_on.svg`} />
-          <div>Dashboard</div>
+          <div>Options</div>
         </div>
         <label htmlFor="graphTitle">Graph Title</label>
         <input
@@ -44,9 +45,10 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
           name="graphTitle"
           value={selectors.graphTitle}
           onChange={({ target }) =>
-            handleChange({
-              name: "selectors",
-              content: { ...selectors, graphTitle: target.value },
+            handleContentChange({
+              newContent: {
+                selectors: { ...selectors, graphTitle: target.value },
+              },
             })
           }
           onBlur={() => updateCode({ code })}
@@ -65,9 +67,10 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
           name="xLabel"
           value={selectors["xLabel"]}
           onChange={({ target }) =>
-            handleChange({
-              name: "selectors",
-              content: { ...selectors, xLabel: target.value },
+            handleContentChange({
+              newContent: {
+                selectors: { ...selectors, xLabel: target.value },
+              },
             })
           }
           onBlur={() => updateCode({ code })}
@@ -83,9 +86,10 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
             name="xRangeMin"
             value={selectors["xRangeMin"]}
             onChange={({ target }) =>
-              handleChange({
-                name: "selectors",
-                content: { ...selectors, xRangeMin: target.value },
+              handleContentChange({
+                newContent: {
+                  selectors: { ...selectors, xRangeMin: target.value },
+                },
               })
             }
             onBlur={() => updateCode({ code })}
@@ -96,9 +100,10 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
             name="xRangeMax"
             value={selectors["xRangeMax"]}
             onChange={({ target }) =>
-              handleChange({
-                name: "selectors",
-                content: { ...selectors, xRangeMax: target.value },
+              handleContentChange({
+                newContent: {
+                  selectors: { ...selectors, xRangeMax: target.value },
+                },
               })
             }
             onBlur={() => updateCode({ code })}
@@ -118,9 +123,10 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
           name="yLabel"
           value={selectors["yLabel"]}
           onChange={({ target }) =>
-            handleChange({
-              name: "selectors",
-              content: { ...selectors, yLabel: target.value },
+            handleContentChange({
+              newContent: {
+                selectors: { ...selectors, yLabel: target.value },
+              },
             })
           }
           onBlur={() => updateCode({ code })}
@@ -136,9 +142,10 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
             name="yRangeMin"
             value={selectors["yRangeMin"]}
             onChange={({ target }) =>
-              handleChange({
-                name: "selectors",
-                content: { ...selectors, yRangeMin: target.value },
+              handleContentChange({
+                newContent: {
+                  selectors: { ...selectors, yRangeMin: target.value },
+                },
               })
             }
             onBlur={() => updateCode({ code })}
@@ -149,9 +156,10 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
             name="yRangeMax"
             value={selectors["yRangeMax"]}
             onChange={({ target }) =>
-              handleChange({
-                name: "selectors",
-                content: { ...selectors, yRangeMax: target.value },
+              handleContentChange({
+                newContent: {
+                  selectors: { ...selectors, yRangeMax: target.value },
+                },
               })
             }
             onBlur={() => updateCode({ code })}
@@ -167,9 +175,10 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
           name="marginalPlot"
           value={selectors["marginalPlot"]}
           onChange={({ target }) =>
-            handleChange({
-              name: "selectors",
-              content: { ...selectors, marginalPlot: target.value },
+            handleContentChange({
+              newContent: {
+                selectors: { ...selectors, marginalPlot: target.value },
+              },
             })
           }
           onBlur={() => updateCode({ code })}
