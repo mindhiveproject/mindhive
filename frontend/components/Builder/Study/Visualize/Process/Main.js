@@ -35,7 +35,7 @@ export default function ProcessMain({ data, variables }) {
   // apply settings across all columns
   const defaultColDef = useMemo(() => {
     return {
-      initialWidth: 400,
+      initialWidth: 200,
       // wrapHeaderText: true,
       // autoHeaderHeight: true,
     };
