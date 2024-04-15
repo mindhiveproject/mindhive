@@ -17,12 +17,12 @@ import TemplateSelector from "./Controller/Templates";
 import OptionsDefault from "./Controller/Options/OptionsDefault";
 import OptionsScatterPlot from "./Controller/Options/OptionsScatterPlot";
 import OptionsBarPlot from "./Controller/Options/OptionsBarPlot";
-// import OptionsHistogram from "./Controller/Options/OptionsHistogram";
+import OptionsHistogram from "./Controller/Options/OptionsHistogram";
 
 import AxesDefault from "./Controller/Axes/AxesDefault";
 import AxesScatterPlot from "./Controller/Axes/AxesScatterPlot";
 import AxesBarPlot from "./Controller/Axes/AxesBarPlot";
-// import AxesHistogram from "./Controller/Axes/AxesHistogram";
+import AxesHistogram from "./Controller/Axes/AxesHistogram";
 
 const defaultCode = ``;
 
@@ -77,13 +77,13 @@ export default function StateManager({
 
   // Define different templates or components for each type of graph
   const AxisTemplateMap = {
-    // histogram: AxesHistogram,
+    histogram: AxesHistogram,
     barGraph: AxesBarPlot,
     scatterPlot: AxesScatterPlot,
   };
   
   const OptionsTemplateMap = {
-    // histogram: OptionsHistogram,
+    histogram: OptionsHistogram,
     barGraph: OptionsBarPlot,
     scatterPlot: OptionsScatterPlot,
   };

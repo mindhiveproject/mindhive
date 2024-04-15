@@ -10,16 +10,17 @@ export default function Axes({
   selectors,
   handleContentChange,
 }) {
-  const connectSelectorsCode = `
-import json
+  const connectSelectorsCode = `# get relevant html elements
 plot_output = js.document.getElementById('figure-${sectionId}')
+#X = js.document.getElementById("xVariable-${sectionId}").value############################################################################################################
 
+
+import json
 Xmultiple = js.document.getElementById("xVariableMultiple-${sectionId}")
 xMultiple_value_json = json.loads(Xmultiple.value)
 columns = xMultiple_value_json
 
-x_labels= columns ###################################################### To change to list under x axis
-`;
+legend_title_text = js.document.getElementById('legend_title_text-${sectionId}').value`;
 
   const options = variables.map((variable) => ({
     key: variable?.field,
@@ -33,15 +34,14 @@ x_labels= columns ###################################################### To chan
   };
 
   const onSelectorChange = ({ target }) => {
-    const value = Array.isArray(target?.value) ? target?.value : [target?.value];
     handleContentChange({
       newContent: {
-        selectors: { ...selectors, [target?.name]: value },
+        selectors: { ...selectors, [target?.name]: target?.value },
       },
     });
     updateCode({ code });
   };
-  
+
   return (
     <div className="selectors">
       <SelectMultiple
@@ -52,22 +52,6 @@ x_labels= columns ###################################################### To chan
         title="X-Axis"
         parameter="xVariableMultiple"
       />
-      {/* <SelectOne
-        sectionId={sectionId}
-        options={options}
-        selectors={selectors}
-        onSelectorChange={onSelectorChange}
-        title="Y-Axis"
-        parameter="yVariable"
-        />
-        <SelectOne
-        sectionId={sectionId}
-        options={options}
-        selectors={selectors}
-        onSelectorChange={onSelectorChange}
-        title="Group"
-        parameter="groupVariable"
-      /> */}
     </div>
   );
 }
