@@ -15,12 +15,12 @@ import CodeEditor from "./Controller/CodeEditor";
 import TemplateSelector from "./Controller/Templates";
 
 import OptionsDefault from "./Controller/Options/OptionsDefault";
-// import OptionsScatterPlot from "./Controller/Options/OptionsScatterPlot";
+import OptionsScatterPlot from "./Controller/Options/OptionsScatterPlot";
 import OptionsBarPlot from "./Controller/Options/OptionsBarPlot";
 // import OptionsHistogram from "./Controller/Options/OptionsHistogram";
 
 import AxesDefault from "./Controller/Axes/AxesDefault";
-// import AxesScatterPlot from "./Controller/Axes/AxesScatterPlot";
+import AxesScatterPlot from "./Controller/Axes/AxesScatterPlot";
 import AxesBarPlot from "./Controller/Axes/AxesBarPlot";
 // import AxesHistogram from "./Controller/Axes/AxesHistogram";
 
