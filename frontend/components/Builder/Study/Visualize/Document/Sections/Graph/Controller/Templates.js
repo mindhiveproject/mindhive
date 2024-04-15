@@ -7,15 +7,9 @@ export default function TemplateSelector({
 
   // const linePlotCode = `fig = px.line(df, x=X, y=Y, color=Group)`;
   const scatterPlotCode = `
-# TEXT-BOXES
-legend_title='LEGEND'
-
-# CHECK-BOXES
-add_trend_line = False
-
-######################################################################################################
-######################### Don't you dare change anything below #######################################
-######################################################################################################
+#############################################################################################
+######################### Don't change anything below #######################################
+#############################################################################################
 
 # Currently takes the name of the parameter given in GUI input
 axis_title = {
@@ -70,7 +64,7 @@ else:
   }).reset_index()
 
 if Group=='':
-  if add_trend_line:
+  if trendline:
     
     print("dl statsmodels")
     await micropip.install("statsmodels")
@@ -94,7 +88,7 @@ if Group=='':
                       **{k: v for k, v in optional_params.items() if v})
     fig.update_layout(showlegend=False)
 else:
-  if add_trend_line:
+  if trendline:
     print('group-addtrendline')
 
     print("dl statsmodels")
@@ -108,9 +102,7 @@ else:
                       labels=axis_title, 
                       template="seaborn",
                       **{k: v for k, v in optional_params.items() if v})
-    fig.update_layout(showlegend=False)
-    # for trace in fig.data:
-    #   trace.showlegend = False
+    fig.update_layout(showlegend=True)
   else:
     print('group-NOTaddtrendline')
     fig = px.scatter(grouped_df, x=X, y=Y, 
@@ -119,14 +111,16 @@ else:
                       labels=axis_title, 
                       template="seaborn",
                       **{k: v for k, v in optional_params.items() if v})
-    # fig.update_layout(showlegend=False)  
+    fig.update_layout(showlegend=True)  
+
+fig.update_layout(legend_title_text= None if legend_title_text == '' else legend_title_text)
   
 fig.update_xaxes(range=[None if xRangeMin == '' else xRangeMin, 
                         None if xRangeMax == '' else xRangeMax])  
 
 fig.update_yaxes(range=[None if yRangeMin == '' else yRangeMin, 
                         None if yRangeMax == '' else yRangeMax])
-  `;
+`;
   const histogramCode = `
 #~ OPTIONS ~#
 bargap = 0.1

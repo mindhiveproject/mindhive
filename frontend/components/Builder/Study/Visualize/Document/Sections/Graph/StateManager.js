@@ -79,13 +79,13 @@ export default function StateManager({
   const AxisTemplateMap = {
     // histogram: AxesHistogram,
     barGraph: AxesBarPlot,
-    // scatterPlot: AxesScatterPlot,
+    scatterPlot: AxesScatterPlot,
   };
   
   const OptionsTemplateMap = {
     // histogram: OptionsHistogram,
     barGraph: OptionsBarPlot,
-    // scatterPlot: OptionsScatterPlot,
+    scatterPlot: OptionsScatterPlot,
   };
 
   // Conditionally render the appropriate template or component based on the selected graph type

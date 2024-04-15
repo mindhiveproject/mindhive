@@ -24,7 +24,9 @@ xRangeMax = js.document.getElementById('xRangeMax-${sectionId}').value
 yLabel = js.document.getElementById('yLabel-${sectionId}').value
 yRangeMin = js.document.getElementById('yRangeMin-${sectionId}').value
 yRangeMax = js.document.getElementById('yRangeMax-${sectionId}').value
-marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
+marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value
+legend_title_text = js.document.getElementById('legend_title_text-${sectionId}').value
+`;
 
   const updateCode = async ({ code }) => {
     await pyodide.runPythonAsync(connectDashboardCode);
@@ -184,10 +186,31 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
           onBlur={() => updateCode({ code })}
         >
           {marginalPlotsOptions.map((option) => (
-            <option value={option?.value}>{option?.text}</option>
+            <option key={option.value} value={option.value}>{option.text}</option>
           ))}
+
         </select>
       </div>
+
+      <div className="subheader">Legend title</div>
+
+      <label htmlFor="legend_title_text" className="title">
+      (leave empty if not needed)
+      </label>
+      <input
+        id={`legend_title_text-${sectionId}`}
+        type="text"
+        name="legend_title_text"
+        value={selectors["legend_title_text"]}
+        onChange={({ target }) =>
+          handleContentChange({
+            newContent: {
+              selectors: { ...selectors, legend_title_text: target.value },
+            },
+          })
+        }
+        onBlur={() => updateCode({ code })}
+      />      
     </div>
   );
 }
