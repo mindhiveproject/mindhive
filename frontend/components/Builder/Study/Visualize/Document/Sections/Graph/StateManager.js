@@ -13,8 +13,16 @@ import {
 import Render from "./Render";
 import CodeEditor from "./Controller/CodeEditor";
 import TemplateSelector from "./Controller/Templates";
-import Options from "./Controller/Options";
-import Axes from "./Controller/Axes";
+
+import OptionsDefault from "./Controller/Options/OptionsDefault";
+// import OptionsScatterPlot from "./Controller/Options/OptionsScatterPlot";
+import OptionsBarPlot from "./Controller/Options/OptionsBarPlot";
+// import OptionsHistogram from "./Controller/Options/OptionsHistogram";
+
+import AxesDefault from "./Controller/Axes/AxesDefault";
+// import AxesScatterPlot from "./Controller/Axes/AxesScatterPlot";
+import AxesBarPlot from "./Controller/Axes/AxesBarPlot";
+// import AxesHistogram from "./Controller/Axes/AxesHistogram";
 
 const defaultCode = ``;
 
@@ -67,7 +75,24 @@ export default function StateManager({
     }
   };
 
-  return (
+  // Define different templates or components for each type of graph
+  const AxisTemplateMap = {
+    // histogram: AxesHistogram,
+    barGraph: AxesBarPlot,
+    // scatterPlot: AxesScatterPlot,
+  };
+  
+  const OptionsTemplateMap = {
+    // histogram: OptionsHistogram,
+    barGraph: OptionsBarPlot,
+    // scatterPlot: OptionsScatterPlot,
+  };
+
+  // Conditionally render the appropriate template or component based on the selected graph type
+  const AxesComponent = AxisTemplateMap[type] || AxesDefault;
+  const OptionsComponent = OptionsTemplateMap[type] || OptionsDefault;
+
+return (
     <div className="graph">
       {!code && pyodide && (
         <TemplateSelector
@@ -106,7 +131,7 @@ export default function StateManager({
               />
             </div>
             <div className="dashboardContainer">
-              <Options
+              <OptionsComponent
                 type={type}
                 variables={variablesToDisplay}
                 code={code}
@@ -118,7 +143,7 @@ export default function StateManager({
               />
             </div>
           </div>
-          <Axes
+           <AxesComponent
             type={type}
             variables={variablesToDisplay}
             code={code}
