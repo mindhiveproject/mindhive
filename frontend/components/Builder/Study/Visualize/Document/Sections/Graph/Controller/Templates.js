@@ -7,12 +7,6 @@ export default function TemplateSelector({
 
   // const linePlotCode = `fig = px.line(df, x=X, y=Y, color=Group)`;
   const scatterPlotCode = `
-
-# indicate the name of the column where the participant id is defined
-id_col = 'participant' # MH uses 'participant' but you uploaded data may use a different name!
-
-Group=''
-
 # TEXT-BOXES
 legend_title='LEGEND'
 
@@ -38,8 +32,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.colors as mcolors
 import js_workspace as data
+
 data = data.to_py()
 df = pd.DataFrame(data)
+
+# indicate the name of the column where the participant id is defined
+df.rename(columns={"id":"participant"}, inplace=True)
+id_col = 'participant' # MH uses 'participant' but you uploaded data may use a different name!
 
 # convert string to numbers
 columns = [X, Y]
@@ -121,6 +120,12 @@ else:
                       template="seaborn",
                       **{k: v for k, v in optional_params.items() if v})
     # fig.update_layout(showlegend=False)  
+  
+fig.update_xaxes(range=[None if xRangeMin == '' else xRangeMin, 
+                        None if xRangeMax == '' else xRangeMax])  
+
+fig.update_yaxes(range=[None if yRangeMin == '' else yRangeMin, 
+                        None if yRangeMax == '' else yRangeMax])
   `;
   const histogramCode = `
 #~ OPTIONS ~#
