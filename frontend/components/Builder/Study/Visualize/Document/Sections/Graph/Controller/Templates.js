@@ -124,7 +124,6 @@ else:
   `;
   const histogramCode = `
 #~ OPTIONS ~#
-# float input
 bargap = 0.1
 #nbins = ""
 
@@ -158,32 +157,30 @@ fig.update_layout(title=graphTitle if graphTitle != '' else f"Histogram of {X}",
 
 `;
   const barGraphCode = `
-#Example 1 (2 cols)
-#columns = ['GT_gamble_percentage_mixed', 'GT_gamble_percentage_lose']
-#labels = ['Mixed-condition', 'Lose-condition']
+# You can define you labels bellow (add as many element in the python-formated
+# list as there is element in your X-axis)
 
-#Example 2 (3 cols)
-columns = ['GT_gamble_percentage_mixed', 'GT_gamble_percentage_lose', 'GT_gamble_percentage_gain']
-labels = ['Mixed', 'Lose', 'Gain']
+# labels = ['Label1', 'Label2', 'Label3']
 
-legend_title='Condition'
+#############################################################################################
+######################### Don't change anything below #######################################
+#############################################################################################
 
-#Choose a base color for your graph
-base_color = 'pink'
-
-######################################################################################################
-######################### Don't you dare change anything below #######################################
-######################################################################################################
-
-title= graphTitle if graphTitle != "" else f"Barplot of {columns}"
+import numpy as np
+import pandas as pd
+import matplotlib.colors as mcolors
 
 import js_workspace as data
 data = data.to_py()
 df = pd.DataFrame(data)
-  
-import numpy as np
-import pandas as pd
-import matplotlib.colors as mcolors
+
+base_color = 'pink' if color == '' else color
+title= graphTitle if graphTitle != "" else f"Barplot of {columns}"
+
+yaxis_range = [
+  None if yRangeMin == ''else yRangeMin,
+  None if yRangeMax == ''else yRangeMax
+]
 
 df[columns] = df[columns].apply(pd.to_numeric, errors='coerce')
 
@@ -217,10 +214,8 @@ def generate_complementary_colors(base_color, n):
 n = len(columns)  # Number of harmonious colors to generate
 colors = generate_complementary_colors(base_color, n)
 
-#['blue', 'orange', 'green']
-
 df_bar = pd.DataFrame({
-    'Categories': labels,
+    'Categories': x_labels if x_labels != None else columns,
     'Y': average_percentages,
     'Error Bars': error_bars
 })
@@ -234,10 +229,13 @@ fig = px.bar(df_bar,
               labels={'Categories': xLabel if xLabel != "" else "Categories",
                       'Y': yLabel if yLabel != "" else 'Average value'
                       })
+
 fig.update_layout(
     title=title,
-    legend_title=legend_title
-)`;
+    legend_title=legend_title,
+    yaxis_range=yaxis_range
+)
+`;
 
   const sectionCodeEnd = `  
 fig_html = fig.to_html()
