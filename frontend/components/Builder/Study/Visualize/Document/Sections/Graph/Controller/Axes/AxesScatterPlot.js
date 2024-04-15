@@ -1,4 +1,5 @@
 import SelectOne from "../Fields/SelectOne";
+import ToggleOne from "../Fields/ToggleOne";
 
 export default function AxesScatterPlot({
   type,
@@ -14,7 +15,12 @@ export default function AxesScatterPlot({
 plot_output = js.document.getElementById('figure-${sectionId}')
 X = js.document.getElementById("xVariable-${sectionId}").value
 Y = js.document.getElementById("yVariable-${sectionId}").value
-Group = js.document.getElementById("groupVariable-${sectionId}").value`;
+Group = js.document.getElementById("groupVariable-${sectionId}").value
+
+trendline         = js.document.getElementById("trendLine-${sectionId}").checked
+legend_title_text = js.document.getElementById("legend_title_text-${sectionId}").value
+`;
+
 
   // Add an empty placeholder option
   const options = [
@@ -65,6 +71,14 @@ Group = js.document.getElementById("groupVariable-${sectionId}").value`;
         onSelectorChange={onSelectorChange}
         title="Group"
         parameter="groupVariable"
+      />
+      <ToggleOne
+        sectionId={sectionId}
+        options={options}
+        selectors={selectors}
+        onSelectorChange={onSelectorChange}
+        title="trendLine"
+        parameter="trendLine"
       />
     </div>
   );
