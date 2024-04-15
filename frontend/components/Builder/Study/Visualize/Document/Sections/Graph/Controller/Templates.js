@@ -142,18 +142,34 @@ import js_workspace as data
 data = data.to_py()
 df = pd.DataFrame(data)
 
-df[X] = df[X].apply(pd.to_numeric, errors='coerce')
+df[columns] = df[columns].apply(pd.to_numeric, errors='coerce')
 
-fig = px.histogram(df, x=X, 
-                    #nbins=nbins, 
-                    **{k: v for k, v in optional_params.items() if v})
+df_plot = pd.DataFrame(dict(
+    series=np.concatenate([[i for j in range(len(df[i]))] for i in columns]), 
+    data=np.concatenate([df[i] for i in columns])
+))
 
-fig.update_layout(title=graphTitle if graphTitle != '' else f"Histogram of {X}",
+fig = px.histogram(df_plot, 
+                   x="data", 
+#                   nbins=nbins, 
+                   color="series", 
+                   barmode="overlay",
+                   **{k: v for k, v in optional_params.items() if v}
+                  )
+
+fig.update_layout(title=graphTitle if graphTitle != '' else f"Histogram of {columns}",
                   bargap=bargap,
-                  xaxis_title_text=xLabel if xLabel != '' else X,
+                  xaxis_title_text=xLabel if xLabel != '' else f"{columns}",
                   yaxis_title_text=yLabel if yLabel != '' else "Count"
                   )
 
+fig.update_layout(legend_title_text= None if legend_title_text == '' else legend_title_text)
+
+fig.update_xaxes(range=[None if xRangeMin == '' else xRangeMin, 
+                        None if xRangeMax == '' else xRangeMax])  
+
+fig.update_yaxes(range=[None if yRangeMin == '' else yRangeMin, 
+                        None if yRangeMax == '' else yRangeMax])
 `;
   const barGraphCode = `
 # You can define you labels bellow (add as many element in the python-formated
