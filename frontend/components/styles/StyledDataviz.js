@@ -237,7 +237,15 @@ export const StyledDataViz = styled.div`
     overflow-y: auto;
     .section {
       display: grid;
-      padding: 10px 0px;
+      // padding: 10px 0px;
+      // box-shadow: 0px 2px 500px 0px rgba(0, 0, 0, 0.07);
+      // box-shadow: 0px 2px 10px 0px  papayawhip;
+      // box-shadow: 0px 2px 10px 0px  #007c70;
+      padding: 10px 32px 30px;
+      marging: 10px 32px 30px;
+      border-radius: 8px;
+      background: #fcfdfc;
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.17);
       .sectionHeader {
         display: grid;
         grid-gap: 10px;
