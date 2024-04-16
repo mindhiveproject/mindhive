@@ -93,7 +93,7 @@ export const StyledDataViz = styled.div`
           grid-gap: 12px;
           color: #007c70;
           font-family: Inter;
-          font-size: 12px;
+          font-size: 14px;
           font-style: normal;
           font-weight: 500;
           line-height: normal;
@@ -111,9 +111,10 @@ export const StyledDataViz = styled.div`
         }
       }
       .selected {
-        border: 1px solid black;
+        // border: 1px solid black;
         border-radius: 5px;
         background: papayawhip;
+        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.17);
       }
       .section {
         padding: 5px 20px;
@@ -359,16 +360,17 @@ export const StyledDataViz = styled.div`
             margin: 20px 10px;
           }
           .dashboardContainer {
-            box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
+            // box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
           }
         }
         .graphArea {
           display: grid;
-          max-width: 500px;
+          max-width: 100%;
         }
         .selectors {
           display: grid;
           grid-gap: 21px;
+          height: 60px;
         }
         .selectorLine {
           display: grid;
