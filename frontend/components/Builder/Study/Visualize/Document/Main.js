@@ -67,6 +67,7 @@ export default function Document({
           />
         ))}
       </div>
+      <br/>
       <div className="createSectionButton">
         <CreateSection studyId={studyId} chapterId={chapter?.id} />
       </div>
