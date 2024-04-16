@@ -81,7 +81,7 @@ export default function StateManager({
     barGraph: AxesBarPlot,
     scatterPlot: AxesScatterPlot,
   };
-  
+
   const OptionsTemplateMap = {
     histogram: OptionsHistogram,
     barGraph: OptionsBarPlot,
@@ -92,9 +92,8 @@ export default function StateManager({
   const AxesComponent = AxisTemplateMap[type] || AxesDefault;
   const OptionsComponent = OptionsTemplateMap[type] || OptionsDefault;
 
-return (
+  return (
     <div className="graph">
-
       {!code && pyodide && (
         <TemplateSelector
           handleContentChange={handleContentChange}
@@ -125,15 +124,15 @@ return (
           </div>
           <div className="graphRenderContainer">
             <AxesComponent
-            type={type}
-            variables={variablesToDisplay}
-            code={code}
-            pyodide={pyodide}
-            runCode={runCode}
-            sectionId={sectionId}
-            selectors={selectors}
-            handleContentChange={handleContentChange}
-          />
+              type={type}
+              variables={variablesToDisplay}
+              code={code}
+              pyodide={pyodide}
+              runCode={runCode}
+              sectionId={sectionId}
+              selectors={selectors}
+              handleContentChange={handleContentChange}
+            />
             <div className="dashboardContainer">
               <OptionsComponent
                 type={type}

@@ -14,16 +14,13 @@ export default function SelectOne({
           id={`${parameter}-${sectionId}`}
           name={parameter}
           onChange={onSelectorChange}
-          value={selectors[parameter] || ''}
+          value={selectors[parameter] || ""}
         >
           {/* Render the placeholder option */}
           <option value="">{`Select ${title}`}</option>
           {/* Map through options */}
           {options.map((option, num) => (
-            <option
-              value={option?.value}
-              key={num}
-            >
+            <option value={option?.value} key={num}>
               {option?.text}
             </option>
           ))}

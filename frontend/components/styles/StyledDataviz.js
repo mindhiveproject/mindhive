@@ -369,12 +369,13 @@ export const StyledDataViz = styled.div`
         }
         .selectors {
           display: grid;
+          margin: 20px;
           grid-gap: 21px;
           height: 60px;
         }
         .selectorLine {
           display: grid;
-          grid-template-columns: auto 1fr;
+          grid-template-columns: 110px 1fr;
 
           border-radius: 8px;
           border: 1px solid #eaeaea;
@@ -389,6 +390,7 @@ export const StyledDataViz = styled.div`
           .title {
             display: grid;
             align-content: center;
+            justify-content: end;
             background: #eaeaea;
             padding: 9px 13px;
           }
@@ -400,6 +402,7 @@ export const StyledDataViz = styled.div`
               border: 0px;
               height: 100%;
               padding: 9px 13px;
+              min-width: 98%;
             }
           }
         }
