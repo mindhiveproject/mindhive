@@ -94,18 +94,12 @@ export default function StateManager({
 
 return (
     <div className="graph">
+
       {!code && pyodide && (
         <TemplateSelector
           handleContentChange={handleContentChange}
           runCode={runCode}
           sectionId={sectionId}
-        />
-      )}
-      {code && pyodide && (
-        <CodeEditor
-          code={code}
-          handleContentChange={handleContentChange}
-          runCode={runCode}
         />
       )}
 
@@ -120,16 +114,26 @@ return (
       )}
       {code && pyodide && (
         <>
+          <div className="graphContainer">
+            <Render
+              data={data}
+              code={code}
+              pyodide={pyodide}
+              runCode={runCode}
+              sectionId={sectionId}
+            />
+          </div>
           <div className="graphRenderContainer">
-            <div className="graphContainer">
-              <Render
-                data={data}
-                code={code}
-                pyodide={pyodide}
-                runCode={runCode}
-                sectionId={sectionId}
-              />
-            </div>
+            <AxesComponent
+            type={type}
+            variables={variablesToDisplay}
+            code={code}
+            pyodide={pyodide}
+            runCode={runCode}
+            sectionId={sectionId}
+            selectors={selectors}
+            handleContentChange={handleContentChange}
+          />
             <div className="dashboardContainer">
               <OptionsComponent
                 type={type}
@@ -143,16 +147,13 @@ return (
               />
             </div>
           </div>
-           <AxesComponent
-            type={type}
-            variables={variablesToDisplay}
-            code={code}
-            pyodide={pyodide}
-            runCode={runCode}
-            sectionId={sectionId}
-            selectors={selectors}
-            handleContentChange={handleContentChange}
-          />
+          {code && pyodide && (
+            <CodeEditor
+              code={code}
+              handleContentChange={handleContentChange}
+              runCode={runCode}
+            />
+          )}
           <Accordion>
             <AccordionTitle
               active={activeIndex === 0}
