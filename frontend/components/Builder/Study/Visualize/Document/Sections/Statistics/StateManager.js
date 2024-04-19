@@ -5,49 +5,26 @@ import {
   MessageContent,
   Message,
   Icon,
-  Accordion,
   AccordionTitle,
   AccordionContent,
+  Accordion,
 } from "semantic-ui-react";
 
 import Render from "./Render";
 import CodeEditor from "./Controller/CodeEditor";
+import TemplateSelector from "./Controller/Templates";
 
-const defaultCode = `
+import AxesDefault from "./Controller/Axes/AxesDefault";
+import AxesdescStatNum from "./Controller/Axes/AxesdescStatNum";
+import AxesdescStatStrings from "./Controller/Axes/AxesdescStatStrings";
+import AxesdescStatsStringsAndNumerical from "./Controller/Axes/AxesdescStatsStringsAndNumerical";
+import AxesdescStatsStringsAndStrings from "./Controller/Axes/AxesdescStatsStringsAndStrings";
 
-column_input = ['GT_gamble_percentage_gain', 'GT_gamble_percentage_lose', 'GT_last_score']
-
-
-
-
-#############################################################################################
-######################### Don't change anything below #######################################
-#############################################################################################
-
-import js_workspace as data
-import numpy as np
-data = data.to_py()
-df = pd.DataFrame(data)
-
-df.replace('NaN', np.nan, inplace=True)
-described_df = pd.DataFrame()
-
-# Loop over the list of columns
-for column in column_input:
-    # Convert the column to numeric
-    df[column] = pd.to_numeric(df[column], errors='coerce') 
-    # Describe the column and add it to the described_df DataFrame
-    described_df = pd.concat([described_df, df[column].describe()], axis=1)
-
-# Put the ds in the correct orientation
-described_df = described_df.transpose()
-
-df_html = described_df.to_html()
-js.render_html(html_output, df_html)`;
+const defaultCode = ``;
 
 export default function StateManager({
   content,
-  handleChange,
+  handleContentChange,
   pyodide,
   sectionId,
   data,
@@ -66,6 +43,10 @@ export default function StateManager({
 
   // state of the python code
   const code = content?.code || defaultCode;
+  // state of the selectors
+  const selectors = content?.selectors || {};
+  // state of the graph type
+  const type = content?.type || undefined;
   // get variable names
   const variablesToDisplay = variables.filter((column) => !column?.hide);
 
@@ -90,10 +71,26 @@ export default function StateManager({
     }
   };
 
-  return (
-    <div className="statistics">
-      {code && pyodide && (
-        <CodeEditor code={code} handleChange={handleChange} runCode={runCode} />
+  // Define different templates or components for each type of graph
+  const AxisTemplateMap = {
+    descStatNum: AxesdescStatNum,
+    descStatStrings: AxesdescStatStrings,
+    descStatsStringsAndNumerical: AxesdescStatsStringsAndNumerical,
+    descStatsStringsAndStrings: AxesdescStatsStringsAndStrings,
+  };
+
+  // Conditionally render the appropriate template or component based on the selected graph type
+  const AxesComponent = AxisTemplateMap[type] || AxesDefault;
+
+return (
+    <div className="graph">
+
+      {!code && pyodide && (
+        <TemplateSelector
+          handleContentChange={handleContentChange}
+          runCode={runCode}
+          sectionId={sectionId}
+        />
       )}
 
       {isRunning && (
@@ -105,37 +102,70 @@ export default function StateManager({
           </MessageContent>
         </Message>
       )}
-      <div className="htmlRenderContainer">
-        {code && pyodide && (
-          <Render
-            data={data}
+      
+      {code && pyodide && (
+        <>
+          <div className="htmlRenderContainer">
+            <Render
+              data={data}
+              code={code}
+              pyodide={pyodide}
+              runCode={runCode}
+              sectionId={sectionId}
+            />
+          </div>
+          <div className="tableRenderContainer">
+            <AxesComponent
+            type={type}
+            variables={variablesToDisplay}
             code={code}
             pyodide={pyodide}
             runCode={runCode}
             sectionId={sectionId}
+            selectors={selectors}
+            handleContentChange={handleContentChange}
           />
-        )}
-      </div>
-
-      <Accordion>
-        <AccordionTitle
-          active={activeIndex === 0}
-          index={0}
-          onClick={handleClick}
-        >
-          <Icon name="dropdown" />
-          Console
-        </AccordionTitle>
-        <AccordionContent active={activeIndex === 0}>
-          <textarea
-            className="outputArea"
-            id="output"
-            value={output}
-            rows={12}
-            disabled
-          />
-        </AccordionContent>
-      </Accordion>
+            {/* <div className="dashboardContainer">
+              <OptionsComponent
+                type={type}
+                variables={variablesToDisplay}
+                code={code}
+                pyodide={pyodide}
+                runCode={runCode}
+                sectionId={sectionId}
+                selectors={selectors}
+                handleContentChange={handleContentChange}
+              />
+            </div> */}
+          </div>
+          {code && pyodide && (
+            <CodeEditor
+              code={code}
+              handleContentChange={handleContentChange}
+              runCode={runCode}
+            />
+          )}
+          <Accordion>
+            <AccordionTitle
+              active={activeIndex === 0}
+              index={0}
+              onClick={handleClick}
+            >
+              <Icon name="dropdown" />
+              Console
+            </AccordionTitle>
+            <AccordionContent active={activeIndex === 0}>
+              <textarea
+                className="outputArea"
+                id="output"
+                value={output}
+                rows={12}
+                disabled
+              />
+            </AccordionContent>
+          </Accordion>
+        </>
+      )}
     </div>
   );
 }
