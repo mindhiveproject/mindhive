@@ -21,17 +21,14 @@ trendline         = js.document.getElementById("trendLine-${sectionId}").checked
 legend_title_text = js.document.getElementById("legend_title_text-${sectionId}").value
 `;
 
-
-  // Add an empty placeholder option
   const options = [
-    { key: '', value: '', text: 'Select variable' }, // Placeholder option
     ...variables.map((variable) => ({
       key: variable?.field,
       value: variable?.field,
       text: variable?.displayName || variable?.field,
     })),
   ];
-  
+
   const updateCode = async ({ code }) => {
     await pyodide.runPythonAsync(connectSelectorsCode);
     runCode({ code });
@@ -77,7 +74,7 @@ legend_title_text = js.document.getElementById("legend_title_text-${sectionId}")
         options={options}
         selectors={selectors}
         onSelectorChange={onSelectorChange}
-        title="trendLine"
+        title="Trend line"
         parameter="trendLine"
       />
     </div>
