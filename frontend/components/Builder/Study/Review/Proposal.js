@@ -35,13 +35,13 @@ export default function Proposal({
 
   const takeAction = (action) => {
     if (action === "export") {
-      this.exportProposal();
+      exportProposal();
     }
   };
 
   const exportProposal = () => {
-    const url = `/proposals/${proposal?.slug}`;
-    const win = window.open(url, "_blank");
+    const url = `/proposals/${proposal?.id}`;
+    window.open(url, "_blank");
   };
 
   const submitProposal = async () => {
