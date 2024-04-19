@@ -243,10 +243,14 @@ export const StyledDataViz = styled.div`
       // box-shadow: 0px 2px 10px 0px  papayawhip;
       // box-shadow: 0px 2px 10px 0px  #007c70;
       padding: 10px 32px 30px;
-      marging: 10px 32px 30px;
+      margin: 10px 32px 30px;
       border-radius: 8px;
       background: #fcfdfc;
       box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.17);
+      // :hover {
+      //   background: #000000;
+      // }
+
       .sectionHeader {
         display: grid;
         grid-gap: 10px;
@@ -294,8 +298,8 @@ export const StyledDataViz = styled.div`
           }
 
           tr:hover {
-            /* background-color: #ddd; */
-          }
+            background-color: #E6F2F1; /* Made it more @MindHive */
+          } 
 
           th {
             padding-top: 6px;
@@ -363,6 +367,18 @@ export const StyledDataViz = styled.div`
             // box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
           }
         }
+        .tableRenderContainer {
+          display: grid;
+          grid-template-columns: 1fr;
+          justify-content: center;
+          max-width: 500px;
+          // box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
+          // border-radius: 10px;
+          margin: 20px 0px;
+          .graphContainer {
+            margin: 20px 10px;
+          }
+        }
         .graphArea {
           display: grid;
           max-width: 100%;
@@ -372,6 +388,10 @@ export const StyledDataViz = styled.div`
           margin: 20px;
           grid-gap: 21px;
           height: 60px;
+        }
+        .selectorsStats {
+          display: grid;
+          grid-gap: 21px;
         }
         .selectorLine {
           display: grid;

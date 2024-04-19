@@ -12,7 +12,7 @@ import { useState, useEffect, useCallback } from "react";
 import { python } from "@codemirror/lang-python";
 import CodeMirror from "@uiw/react-codemirror";
 
-export default function CodeEditor({ code, handleChange, runCode }) {
+export default function CodeEditor({ code, handleContentChange, runCode }) {
   const [activeIndex, setActiveIndex] = useState(-1);
 
   const handleClick = (e, titleProps) => {
@@ -22,7 +22,11 @@ export default function CodeEditor({ code, handleChange, runCode }) {
   };
 
   const onChange = useCallback((val, viewUpdate) => {
-    handleChange(val);
+    handleContentChange({
+      newContent: {
+        code: val,
+      },
+    });
   }, []);
 
   return (
@@ -40,15 +44,12 @@ export default function CodeEditor({ code, handleChange, runCode }) {
           Code editor
         </AccordionTitle>
         <AccordionContent active={activeIndex === 0}>
-          <div>
-            <CodeMirror
-              value={code}
-              height="300px"
-              extensions={python()}
-              onChange={onChange}
-              theme="light"
-            />
-          </div>
+          <CodeMirror
+            value={code}
+            extensions={python()}
+            onChange={onChange}
+            theme="light"
+          />
         </AccordionContent>
       </Accordion>
     </>
