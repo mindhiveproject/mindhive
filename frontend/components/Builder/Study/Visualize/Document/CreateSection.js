@@ -77,6 +77,18 @@ export default function CreateSection({ studyId, chapterId }) {
             <div>Graph</div>
           </div>
         </DropdownItem>
+
+        <DropdownItem
+          onClick={() => addSection({ type: "STATTEST", title: "Statistical Test" })}
+        >
+          <div className="menuItem">
+            <div>
+              <img src={`/assets/icons/visualize/statisticalTest.svg`} />
+            </div>
+            <div>Statistical Test</div>
+          </div>
+        </DropdownItem>
+
       </DropdownMenu>
     </Dropdown>
   );

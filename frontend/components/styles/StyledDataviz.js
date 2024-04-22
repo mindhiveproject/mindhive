@@ -371,7 +371,7 @@ export const StyledDataViz = styled.div`
           display: grid;
           grid-template-columns: 1fr;
           justify-content: center;
-          max-width: 500px;
+          max-width: 100%;
           // box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
           // border-radius: 10px;
           margin: 20px 0px;
@@ -395,8 +395,7 @@ export const StyledDataViz = styled.div`
         }
         .selectorLine {
           display: grid;
-          grid-template-columns: 110px 1fr;
-
+          grid-template-columns: minmax(auto, 200px) 1fr;
           border-radius: 8px;
           border: 1px solid #eaeaea;
           background: #fff;

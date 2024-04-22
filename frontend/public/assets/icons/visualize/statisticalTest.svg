@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="18"
+   height="18"
+   viewBox="0 0 18 18"
+   fill="none"
+   version="1.1"
+   id="svg2437"
+   sodipodi:docname="bar_chart copy.svg"
+   inkscape:version="1.2.2 (b0a8486, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2441">
+    <mask
+       id="mask0_1248_376"
+       maskUnits="userSpaceOnUse"
+       x="0"
+       y="0"
+       width="25"
+       height="25">
+      <rect
+         x="0.296875"
+         y="0.111084"
+         width="24"
+         height="24"
+         fill="#d9d9d9"
+         id="rect691" />
+    </mask>
+  </defs>
+  <sodipodi:namedview
+     id="namedview2439"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="13.111111"
+     inkscape:cx="1.5635593"
+     inkscape:cy="8.0847458"
+     inkscape:window-width="1309"
+     inkscape:window-height="456"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2437" />
+  <g
+     mask="url(#mask0_1248_376)"
+     id="g696"
+     transform="matrix(0.62557816,0,0,0.6477001,1.3073343,0.79366019)">
+    <path
+       d="m 2.92188,18.2861 -1.625,-1.175 5,-8.00002 3,3.50002 4.00002,-6.50002 2.725,4.07502 c -0.3834,0.0167 -0.7459,0.0625 -1.0875,0.1375 -0.3417,0.075 -0.6792,0.1792 -1.0125,0.3125 l -0.55,-0.82502 -3.80002,6.17502 -3.025,-3.525 z m 18.95002,4.825 -3.125,-3.125 c -0.3334,0.2333 -0.7042,0.4083 -1.1125,0.525 -0.4084,0.1167 -0.8292,0.175 -1.2625,0.175 -1.25,0 -2.3125,-0.4375 -3.1875,-1.3125 -0.875,-0.875 -1.3125,-1.9375 -1.3125,-3.1875 0,-1.25 0.4375,-2.3125 1.3125,-3.1875 0.875,-0.875 1.9375,-1.3125 3.1875,-1.3125 1.25,0 2.3125,0.4375 3.1875,1.3125 0.875,0.875 1.3125,1.9375 1.3125,3.1875 0,0.4333 -0.0584,0.8542 -0.175,1.2625 -0.1167,0.4083 -0.2917,0.7875 -0.525,1.1375 l 3.125,3.1 z m -5.5,-4.425 c 0.7,0 1.2916,-0.2417 1.775,-0.725 0.4833,-0.4833 0.725,-1.075 0.725,-1.775 0,-0.7 -0.2417,-1.2917 -0.725,-1.775 -0.4834,-0.4833 -1.075,-0.725 -1.775,-0.725 -0.7,0 -1.2917,0.2417 -1.775,0.725 -0.4834,0.4833 -0.725,1.075 -0.725,1.775 0,0.7 0.2416,1.2917 0.725,1.775 0.4833,0.4833 1.075,0.725 1.775,0.725 z m 2.225,-8 c -0.3167,-0.1333 -0.6459,-0.2417 -0.9875,-0.325 -0.3417,-0.0833 -0.6959,-0.1333 -1.0625,-0.15 l 5.125,-8.10002 1.625,1.175 z"
+       fill="#1c1b1f"
+       id="path694" />
+  </g>
+</svg>
