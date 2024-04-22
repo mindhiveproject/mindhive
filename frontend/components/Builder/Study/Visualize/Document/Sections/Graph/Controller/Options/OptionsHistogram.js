@@ -56,7 +56,7 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
         />
       </div>
 
-      <div className="subheader">Horizontal axis</div>
+      <div className="subheader">X-Axis</div>
 
       <div className="subsection">
         <label htmlFor="xLabel" className="title">
@@ -112,7 +112,7 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
         </div>
       </div>
 
-      <div className="subheader">Vertical axis</div>
+      <div className="subheader">Y-Axis</div>
 
       <div className="subsection">
         <label htmlFor="yLabel" className="title">
