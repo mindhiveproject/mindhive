@@ -29,6 +29,7 @@ export const VizSection = list({
         { label: "statistics", value: "STATISTICS" },
         { label: "table", value: "TABLE" },
         { label: "graph", value: "GRAPH" },
+        { label: "stattest", value: "STATTEST" },
       ],
     }),
     isPublic: checkbox({ isFilterable: true }),

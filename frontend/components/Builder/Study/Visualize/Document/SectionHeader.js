@@ -19,6 +19,10 @@ const sections = {
     title: "Graph",
     img: "/assets/icons/visualize/bar_chart.svg",
   },
+  STATTEST: {
+    title: "Statistical Test",
+    img: "/assets/icons/visualize/statisticalTest.svg",
+  },
 };
 
 export default function SectionHeader({

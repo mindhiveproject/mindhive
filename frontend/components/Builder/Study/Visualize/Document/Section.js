@@ -3,6 +3,7 @@ import useForm from "../../../../../lib/useForm";
 import Paragraph from "./Sections/Paragraph";
 import Table from "./Sections/Table";
 import Statistics from "./Sections/Statistics/Main";
+import StatisticTest from "./Sections/StatsticalTests/Main";
 import Graph from "./Sections/Graph/Main";
 
 import SaveSection from "./SaveSection";
@@ -80,6 +81,17 @@ export default function Section({
 
       {type === "GRAPH" && (
         <Graph
+          content={inputs?.content}
+          handleContentChange={handleContentChange}
+          pyodide={pyodide}
+          sectionId={section?.id}
+          data={data}
+          variables={variables}
+        />
+      )}
+
+      {type === "STATTEST" && (
+        <StatisticTest
           content={inputs?.content}
           handleContentChange={handleContentChange}
           pyodide={pyodide}
