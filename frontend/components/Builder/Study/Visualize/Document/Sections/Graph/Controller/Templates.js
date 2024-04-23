@@ -24,7 +24,6 @@ optional_params = {
 
 import numpy as np
 import pandas as pd
-import matplotlib.colors as mcolors
 import js_workspace as data
 
 data = data.to_py()
@@ -136,7 +135,6 @@ optional_params = {
 
 import numpy as np
 import pandas as pd
-import matplotlib.colors as mcolors
 import js_workspace as data
 
 data = data.to_py()
@@ -183,7 +181,6 @@ fig.update_yaxes(range=[None if yRangeMin == '' else yRangeMin,
 
 import numpy as np
 import pandas as pd
-import matplotlib.colors as mcolors
 
 import js_workspace as data
 data = data.to_py()

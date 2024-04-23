@@ -29,10 +29,6 @@ alternative_hypothesis = "two-sided"
 ######################### Don't change anything below #######################################
 #############################################################################################
 
-print("Importing: SciPy")
-await micropip.install("scipy")
-print("Importing: SciPy (DONE)")
-
 from scipy import stats
 import js_workspace as data
 data = data.to_py()
@@ -72,10 +68,6 @@ columns = columns # the "columns" variable is served by MH's datatool
 ######################### Don't change anything below #######################################
 #############################################################################################
 
-print("Importing: SciPy")
-await micropip.install("scipy")
-print("Importing: SciPy (DONE)")
-
 from scipy import stats
 import js_workspace as data
 data = data.to_py()
@@ -109,10 +101,6 @@ column_2 = col2  # example: 'GT_gamble_percentage_lose'
 #############################################################################################
 ######################### Don't change anything below #######################################
 #############################################################################################
-
-print("Importing: SciPy")
-await micropip.install("scipy")
-print("Importing: SciPy (DONE)")
 
 from scipy import stats
 import js_workspace as data
