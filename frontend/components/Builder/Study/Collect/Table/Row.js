@@ -51,8 +51,9 @@ export default function Row({ studyId, participant, consents, type }) {
 
       <div>
         {
-          participant?.datasets?.filter((dataset) => dataset?.isCompleted)
-            .length
+          participant?.datasets?.filter(
+            (dataset) => dataset?.isCompleted && dataset?.study?.id === studyId
+          ).length
         }
       </div>
       <div>{condition}</div>

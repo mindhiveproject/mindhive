@@ -7,6 +7,7 @@ import useSWR from "swr";
 import { saveAs } from "file-saver";
 import { jsonToCSV } from "react-papaparse";
 import ChangeDatasetStatus from "./ChangeStatus";
+import DeleteRecord from "./DeleteRecord";
 
 // A fetcher function to wrap the native fetch function and return the result of a call to url in json format
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -17,17 +18,38 @@ export default function Dataset({
   dataset,
   components,
 }) {
-  const { date, token } = dataset;
+  const { date, token, isCompleted } = dataset;
   // Set up SWR to run the fetcher function when calling "/api/staticdata"
   // There are 3 possible states: (1) loading when data is null (2) ready when the data is returned (3) error when there was an error fetching the data
   const [year, month, day] = date.split("-");
   const { data, error } = useSWR(
-    `/api/data/${year}/${month}/${day}/${token}?type=full`,
+    `/api/data/${year}/${month}/${day}/${token}?type=${
+      isCompleted ? "full" : "incremental"
+    }`,
     fetcher
   );
 
   // Handle the error state
-  if (error) return <div></div>;
+  if (error)
+    return (
+      <div className="resultItem">
+        <div>{dataset?.study?.title}</div>
+        <div>{dataset?.task?.title}</div>
+        <div>{subtitle}</div>
+        <div>{metadata?.testVersion}</div>
+        <div>{moment(dataset?.createdAt).format("MMMM D, YY, h:mm:ss")}</div>
+        <div>{moment(dataset?.completedAt).format("MMMM D, YY, h:mm:ss")}</div>
+        <div>{condition}</div>
+        <div>{dataset?.isCompleted ? "full" : "incremental"}</div>
+        <div>{dataset?.dataPolicy}</div>
+        <div>No data</div>
+        <DeleteRecord
+          studyId={studyId}
+          participantId={participantId}
+          dataset={dataset}
+        />
+      </div>
+    );
   // Handle the loading state
   if (!data) return <div>Loading...</div>;
   // Handle the ready state and display the result contained in the data object mapped to the structure of the json file
@@ -89,8 +111,12 @@ export default function Dataset({
       <div>{subtitle}</div>
       <div>{metadata?.testVersion}</div>
       <div>{moment(dataset?.createdAt).format("MMMM D, YY, h:mm:ss")}</div>
-      <div>{moment(dataset?.completedAt).format("MMMM D, YY, h:mm:ss")}</div>
+      <div>
+        {dataset?.completedAt &&
+          moment(dataset?.completedAt).format("MMMM D, YY, h:mm:ss")}
+      </div>
       <div>{condition}</div>
+      <div>{dataset?.isCompleted ? "full" : "incremental"}</div>
       <div>{dataset?.dataPolicy}</div>
       <ChangeDatasetStatus
         studyId={studyId}

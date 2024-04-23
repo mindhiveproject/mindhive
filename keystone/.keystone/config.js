@@ -2556,7 +2556,8 @@ var VizSection = (0, import_core33.list)({
         { label: "paragraph", value: "PARAGRAPH" },
         { label: "statistics", value: "STATISTICS" },
         { label: "table", value: "TABLE" },
-        { label: "graph", value: "GRAPH" }
+        { label: "graph", value: "GRAPH" },
+        { label: "stattest", value: "STATTEST" }
       ]
     }),
     isPublic: (0, import_fields36.checkbox)({ isFilterable: true }),

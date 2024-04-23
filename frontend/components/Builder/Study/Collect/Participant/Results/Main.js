@@ -36,6 +36,7 @@ export default function ParticipantResults({
         <div>Started</div>
         <div>Completed</div>
         <div>Condition</div>
+        <div>Data type</div>
         <div>Data policy</div>
         <div>Data analysis</div>
         <div></div>

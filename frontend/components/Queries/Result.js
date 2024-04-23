@@ -50,6 +50,9 @@ export const GET_USER_RESULTS = gql`
       datasets {
         id
         token
+        study {
+          id
+        }
         task {
           title
         }
@@ -83,6 +86,9 @@ export const GET_GUEST_RESULTS = gql`
       datasets {
         id
         token
+        study {
+          id
+        }
         task {
           title
         }
