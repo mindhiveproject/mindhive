@@ -444,7 +444,6 @@ export const StyledDataViz = styled.div`
     }
   }
   .graphDashboard {
-    background: #ffffff;
     display: grid;
     overflow-y: scroll;
     height: 450px;
@@ -458,7 +457,7 @@ export const StyledDataViz = styled.div`
       margin: 0px 0px 10px 0px;
     }
     .subheader {
-      background: #f8f8f8;
+      background: #f1f7f6;
       padding: 10px;
     }
     .subsection {
