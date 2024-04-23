@@ -55,7 +55,7 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
         />
       </div>
 
-      <div className="subheader">Horizontal axis</div>
+      <div className="subheader">X-Axis</div>
 
       <div className="subsection">
         <label htmlFor="xLabel" className="title">
@@ -111,7 +111,7 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value`;
         </div>
       </div>
 
-      <div className="subheader">Vertical axis</div>
+      <div className="subheader">Y-Axis</div>
 
       <div className="subsection">
         <label htmlFor="yLabel" className="title">

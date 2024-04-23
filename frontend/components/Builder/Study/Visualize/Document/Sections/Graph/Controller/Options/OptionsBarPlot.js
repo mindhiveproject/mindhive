@@ -65,7 +65,7 @@ color = 'pink' if js.document.getElementById('color-${sectionId}') == None else 
         />
       </div>
 
-      <div className="subheader">Horizontal axis</div>
+      <div className="subheader">X-Axis</div>
 
       <div className="subsection">
         <label htmlFor="xLabel" className="title">
@@ -87,7 +87,7 @@ color = 'pink' if js.document.getElementById('color-${sectionId}') == None else 
         />
       </div>
 
-      <div className="subheader">Vertical axis</div>
+      <div className="subheader">Y-Axis</div>
 
       <div className="subsection">
         <label htmlFor="yLabel" className="title">
