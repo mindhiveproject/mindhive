@@ -179,6 +179,9 @@ fig.update_yaxes(range=[None if yRangeMin == '' else yRangeMin,
 ######################### Don't change anything below #######################################
 #############################################################################################
 
+await micropip.install("matplotlib.colors")
+from matplotlib import colors as mcolors
+
 import numpy as np
 import pandas as pd
 
@@ -187,28 +190,50 @@ data = data.to_py()
 df = pd.DataFrame(data)
 
 base_color = 'pink' if color == '' else color
-title= graphTitle if graphTitle != "" else f"Barplot of {columns}"
+if isWide:
+  title= graphTitle if graphTitle != "" else f"Barplot of {columns}"
+else:
+  title= graphTitle if graphTitle != "" else "Barplot"
 
 yaxis_range = [
   None if yRangeMin == ''else yRangeMin,
   None if yRangeMax == ''else yRangeMax
 ]
 
-df[columns] = df[columns].apply(pd.to_numeric, errors='coerce')
+if isWide:
+  df[columns] = df[columns].apply(pd.to_numeric, errors='coerce')
+else:
+  df[quantCol] = df[quantCol].apply(pd.to_numeric, errors='coerce')
 
-# Calculate mean, standard deviation, and confidence intervals for each column
+# Calculate mean, standard deviation, and confidence intervals for each group
 statistics = {}
 
-for column in columns:
-    mean = np.mean(df[column])
-    std = np.std(df[column])
-    n = df[column].shape[0]
-    conf_interval = 1.96 * np.sqrt(std**2 / n)  # 95% confidence interval
-    statistics[column] = {'mean': mean, 'std': std, 'conf_interval': conf_interval}
+if isWide:
+    for column in columns:
+        mean = np.mean(df[column])
+        std = np.std(df[column])
+        n = df[column].shape[0]
+        conf_interval = 1.96 * np.sqrt(std**2 / n)  # 95% confidence interval
+        statistics[column] = {'mean': mean, 'std': std, 'conf_interval': conf_interval}
+else:
+    unique_labels = df[qualCol].unique()
+    for label in unique_labels:
+        group_data = df[df[qualCol] == label][quantCol]
+        mean = np.mean(group_data)
+        std = np.std(group_data)
+        n = group_data.shape[0]
+        conf_interval = 1.96 * np.sqrt(std**2 / n)  # 95% confidence interval
+        statistics[label] = {'mean': mean, 'std': std, 'conf_interval': conf_interval}
 
 # Extract the required statistics for plotting
-average_percentages = [statistics[column]['mean'] for column in columns]
-error_bars = [statistics[column]['conf_interval'] for column in columns]
+if isWide:
+    average_percentages = [statistics[column]['mean'] for column in columns]
+    error_bars = [statistics[column]['conf_interval'] for column in columns]
+    categories = x_labels if x_labels is not None else columns
+else:
+    average_percentages = [statistics[label]['mean'] for label in unique_labels]
+    error_bars = [statistics[label]['conf_interval'] for label in unique_labels]
+    categories = unique_labels
 
 def generate_complementary_colors(base_color, n):
     base_rgb = mcolors.to_rgb(base_color)
@@ -223,11 +248,11 @@ def generate_complementary_colors(base_color, n):
     
     return harmonious_colors
   
-n = len(columns)  # Number of harmonious colors to generate
+n = len(categories)
 colors = generate_complementary_colors(base_color, n)
 
 df_bar = pd.DataFrame({
-    'Categories': x_labels if x_labels != None else columns,
+    'Categories': categories,
     'Y': average_percentages,
     'Error Bars': error_bars
 })
