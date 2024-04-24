@@ -73,12 +73,21 @@ import js_workspace as data
 data = data.to_py()
 df = pd.DataFrame(data)
 
+df.replace('NaN', np.nan, inplace=True)
+
 # Convert columns to numeric
-for col in columns:
-    df[col] = pd.to_numeric(df[col], errors='coerce')
+if isWide:
+    for col in columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+else:
+    df[quantCol] = pd.to_numeric(df[quantCol], errors='coerce')
 
 # Perform a one-way ANOVA
-f_statistic, p_value = stats.f_oneway(*[df[col] for col in columns])
+if isWide:
+    f_statistic, p_value = stats.f_oneway(*[df[col] for col in columns])
+else:
+    groups = [group_data for label, group_data in df.groupby(qualCol)[quantCol]]
+    f_statistic, p_value = stats.f_oneway(*groups)
 
 # Display the results
 print(f"F-Statistic: {f_statistic:.4f}")
