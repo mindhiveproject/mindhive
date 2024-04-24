@@ -444,7 +444,13 @@ export const StyledDataViz = styled.div`
           grid-gap: 21px;
           height: 60px;
         }
+        .selectorsStatTest {
+          display: grid;
+          margin: 20px 100px 50px;
+          grid-gap: 21px;
+        }
         .selectorsStats {
+          margin: 20px 100px 50px;
           display: grid;
           grid-gap: 21px;
         }
