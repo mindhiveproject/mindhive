@@ -285,7 +285,7 @@ export const StyledDataViz = styled.div`
   .document {
     display: grid;
     align-content: baseline;
-    padding: 10px 32px;
+    padding: 10px 32px 600px;
     border-radius: 8px;
     background: #fcfdfc;
     box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
