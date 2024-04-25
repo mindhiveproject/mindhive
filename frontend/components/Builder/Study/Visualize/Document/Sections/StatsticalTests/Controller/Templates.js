@@ -13,13 +13,8 @@ export default function TemplateSelector({
 # identical average (expected) values. This test assumes that the populations 
 # have identical variances by default.
 
-
-if isWide:
-  column_1 = col1  # example: 'GT_gamble_percentage_gain'
-  column_2 = col2  # example: 'GT_gamble_percentage_lose'
-else:
-  column_1 = qualCol
-  column_2 = quantCol
+column_1 = col1  # example: 'GT_gamble_percentage_gain'
+column_2 = col2  # example: 'GT_gamble_percentage_lose'
 
 # the "col1" and "col2" variables are served by MH's datatool
 
@@ -39,25 +34,18 @@ import js_workspace as data
 data = data.to_py()
 df = pd.DataFrame(data)
 
-if isWide:
-    df[column_1] = pd.to_numeric(df[column_1], errors='coerce')
-    df[column_2] = pd.to_numeric(df[column_2], errors='coerce')
-else:
-    df[quantCol] = pd.to_numeric(df[quantCol], errors='coerce')
+
+df[column_1] = pd.to_numeric(df[column_1], errors='coerce')
+df[column_2] = pd.to_numeric(df[column_2], errors='coerce')
 
 # Perform a two-sample t-test
-if isWide:
-    t_statistic, p_value = stats.ttest_ind(df[column_1], df[column_2], nan_policy="omit")
-else:
-    groups = [group_data for label, group_data in df.groupby(qualCol)[quantCol]]
-    t_statistic, p_value = stats.ttest_ind(*groups, nan_policy="omit")
+t_statistic, p_value = stats.ttest_ind(df[column_1], df[column_2], nan_policy="omit")
 
 # Display the results
 print(f"T-Statistic: {t_statistic:.4f}")
 print(f"P-Value: {p_value:.4f}")
 
 df_to_show = pd.DataFrame({'Values': [t_statistic, p_value]}, index=['T-Statistic', 'P-Value'])
-
   `;
   
   const anovaCode = `
