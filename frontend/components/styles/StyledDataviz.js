@@ -167,9 +167,9 @@ export const StyledDataViz = styled.div`
       }
       .selected {
         // border: 1px solid black;
-        border-radius: 5px;
+        border-radius: 0px;
         background: papayawhip;
-        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.17);
+        // box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.17);
       }
       .section {
         padding: 5px 20px;
@@ -188,6 +188,7 @@ export const StyledDataViz = styled.div`
         justify-content: center;
         border-top: 1px solid lightgrey;
         padding-top: 5px;
+        padding-bottom: 50px;
       }
     }
 
@@ -268,6 +269,13 @@ export const StyledDataViz = styled.div`
       }
     }
   }
+  .overview::-webkit-scrollbar {
+    width: 5px;
+    color: #f1f7f6;
+  }
+  .overview::-webkit-scrollbar-thumb {
+    // background-color: #CCE5E2;
+  }
   .emptyDocument {
     display: grid;
     align-content: center;
@@ -336,7 +344,7 @@ export const StyledDataViz = styled.div`
       .htmlRenderContainer {
         display: grid;
         max-width: 600px;
-        margin: 20px 0px;
+        margin: 20px auto; /* y-justify-center */
         box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
         table {
           border-collapse: collapse;
