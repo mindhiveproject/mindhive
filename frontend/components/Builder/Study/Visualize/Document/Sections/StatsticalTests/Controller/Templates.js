@@ -144,8 +144,8 @@ print(f"Standard Error of the Intercept: {result.intercept_stderr:.4f}")
 
 # Create DataFrame to display the results
 df_to_show = pd.DataFrame({
-    'Values': [result.slope, result.intercept, result.rvalue, result.pvalue, result.stderr, result.intercept_stderr]},
-    index=['Slope', 'Intercept', 'Pearson Correlation Coefficient', 'P-Value', 'Standard Error of the Slope', 'Standard Error of the Intercept']
+    'Values': [result.rvalue, result.pvalue, result.slope, result.intercept, result.stderr, result.intercept_stderr]},
+    index=['Pearson Correlation Coefficient','P-Value', 'Slope', 'Intercept', 'Standard Error of the Slope', 'Standard Error of the Intercept']
 )
 `;
 
