@@ -34,7 +34,6 @@ export const StyledDataViz = styled.div`
     padding: 20px;
     grid-gap: 12px;
     align-items: start; 
-    color: #f1f7f6;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -45,7 +44,6 @@ export const StyledDataViz = styled.div`
     }
     div {
       display: flex;
-      flex-direction: column;
       justify-content: start;
       width: 350px; 
     }
@@ -54,30 +52,25 @@ export const StyledDataViz = styled.div`
       color: #007C70;
       margin: 0;
     }
-    // link {
-    //   display: grid;
-    //   grid-template-columns: 350px;
-    //   grid-template-rows: 200px auto;
-    //   padding: 20px;
-    //   grid-gap: 12px;
-    //   align-items: start; 
-    //   color: #f1f7f6;
-    //   font-size: 14px;
-    //   font-style: normal;
-    //   font-weight: 400;
-    //   cursor: pointer;
-    //   }
     p {
       font-size: 14px;
       width: auto; 
-      margin: 0 0;
+      margin: 0 4;
       word-break: break-word;
       white-space: normal;
     }
   }
-  
   .dropdownMenu {
     background-color: #f1f7f6; 
+    border-radius: 8px; 
+    padding: 15px 10px 10px 10px;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
+    box-sizing: border-box;
+  }
+  .slidesCard {
+    grid-template-columns: 15px 100%;
+    column-gap: 15px;
+    background-color: #fbbc041e; 
     border-radius: 8px; 
     padding: 15px 10px 10px 10px;
     box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
@@ -86,7 +79,7 @@ export const StyledDataViz = styled.div`
   
   .menuItemThreeDiv {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 100%;
     grid-column-gap: 12px;
     align-items: center;
     color: #000;

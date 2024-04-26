@@ -95,14 +95,16 @@ isWide = False
             value: 'long', 
             title: "Long Data Format", 
             description: "Data organized with each observation (like a student's test score) appearing on its own row, often with a column indicating categories (like subjects). This format is useful for detailed analysis across categories.", 
-            img: '/assets/icons/visualize/dataStructLongDetailed.svg'
+            img: '/assets/icons/visualize/dataStructLongDetailed.svg',
+            link: 'https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing'
           },
           { 
             key: 'wide', 
             value: 'wide', 
             title: "Wide Data Format", 
             description: "Data organized with each category (like subjects) appearing as its own column, often with rows representing observations (like students). This format is simpler for quick comparisons within categories.", 
-            img: '/assets/icons/visualize/dataStructWideDetailed.svg'
+            img: '/assets/icons/visualize/dataStructWideDetailed.svg',
+            link: 'https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing'
           }
         ].filter(option => option.value !== selectedOption).map((option) => (
           <div
@@ -110,10 +112,15 @@ isWide = False
             className="menuItemDataStruct menuButton"
             onClick={() => onSelectorChoice(option)}
           >
-            <img src={option.img} alt={option.title} />
             {/* <h3>{option.title}</h3> */}
+            <img src={option.img} alt={option.title} />
             <p>{option.description}</p>
-            {/* <link>{option.title}</link> */}
+            <div className="slidesCard">
+              <img src={`/assets/icons/visualize/googleSlides.svg`} alt="Google Slides" />
+              <a href={option.link} target="_blank" rel="noopener noreferrer">
+                Click here to see the lecture slides
+              </a>
+            </div>
           </div>
         ))}
       </DropdownMenu>
