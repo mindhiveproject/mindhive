@@ -21,7 +21,7 @@ else:
   column_1 = quantCol
   column_2 = groupcol
 
-# the "col1" and "col2" variables are served by MH's datatool
+# the "col1", "col2", "quantCol", and "groupcol" variables are served by MH's datatool
 
 alternative_hypothesis = "two-sided"
 
@@ -79,8 +79,13 @@ df_to_show = pd.DataFrame({'Values': [t_statistic, p_value]}, index=['T-Statisti
 
 # See R. Lowry, “Concepts and Applications of Inferential Statistics”, Chapter 14, 2014, http://vassarstats.net/textbook/
 
+if isWide:
+  columns = columns 
+else:
+  column_1 = quantCol
+  column_2 = groupcol
 
-columns = columns # the "columns" variable is served by MH's datatool
+# the "columns", "quantCol", and "groupcol" variables are served by MH's datatool
 
 #############################################################################################
 ######################### Don't change anything below #######################################
@@ -104,7 +109,7 @@ else:
 if isWide:
     f_statistic, p_value = stats.f_oneway(*[df[col] for col in columns])
 else:
-    groups = [group_data for label, group_data in df.groupby(qualCol)[quantCol]]
+    groups = [group_data for label, group_data in df.groupby(groupcol)[quantCol]]
     f_statistic, p_value = stats.f_oneway(*groups)
 
 # Display the results

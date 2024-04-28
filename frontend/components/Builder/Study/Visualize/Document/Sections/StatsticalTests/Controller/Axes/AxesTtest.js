@@ -109,7 +109,7 @@ return (
         key: 'long', 
         value: 'long', 
         title: "Switch to using a label column to sort rows of a value column", 
-        description: "In the example above, we would select the column 'attrib' as a grouping column. This grouping is performed on the value column which contains values for both conditions", 
+        description: "In the example above, we would select the column 'attrib' as a grouping column. This grouping is performed on the 'value' column which contains values for both conditions", 
         img: '/assets/icons/visualize/dataTtestLong.svg',
         link: 'https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing'
       }
