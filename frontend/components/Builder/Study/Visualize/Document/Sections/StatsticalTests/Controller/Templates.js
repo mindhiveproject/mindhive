@@ -18,8 +18,8 @@ if isWide:
   column_1 = col1  # example: 'GT_gamble_percentage_gain'
   column_2 = col2  # example: 'GT_gamble_percentage_lose'
 else:
-  column_1 = qualCol
-  column_2 = quantCol
+  column_1 = quantCol
+  column_2 = groupcol
 
 # the "col1" and "col2" variables are served by MH's datatool
 
@@ -49,12 +49,18 @@ else:
 if isWide:
     t_statistic, p_value = stats.ttest_ind(df[column_1], df[column_2], nan_policy="omit")
 else:
-    groups = [group_data for label, group_data in df.groupby(qualCol)[quantCol]]
-    t_statistic, p_value = stats.ttest_ind(*groups, nan_policy="omit")
-
-# Display the results
-print(f"T-Statistic: {t_statistic:.4f}")
-print(f"P-Value: {p_value:.4f}")
+    if len(df[groupcol].unique()) != 2:
+        raise TypeError(f"Error: The number of unique labels in 'groupcol' must be 2 for a two-sample t-test. Got: {df[groupcol].unique()}")
+    else:
+        groups = [group_data for label, group_data in df.groupby(groupcol)[quantCol]]
+        print(df.columns) 
+        print(groups)  
+        # Perform pairwise t-tests between all groups
+        for i in range(len(groups)):
+            for j in range(i+1, len(groups)):
+                t_statistic, p_value = stats.ttest_ind(groups[i], groups[j], nan_policy="omit")
+                print(f"T-Statistic for Group {i+1} vs. Group {j+1}: {t_statistic:.4f}")
+                print(f"P-Value for Group {i+1} vs. Group {j+1}: {p_value:.4f}")
 
 df_to_show = pd.DataFrame({'Values': [t_statistic, p_value]}, index=['T-Statistic', 'P-Value'])
 
