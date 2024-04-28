@@ -5,7 +5,40 @@ export default function TemplateSelector({
 }) {
   const sectionCodeStart = ``;
 
-  // const linePlotCode = `fig = px.line(df, x=X, y=Y, color=Group)`;
+  const allInOneCode = `
+column_input = columns # ['COLUMN_NAME', 'COLUMN_NAME', 'COLUMN_NAME']
+
+#############################################################################################
+######################### Don't change anything below #######################################
+#############################################################################################
+
+import js_workspace as data
+data = data.to_py()
+df = pd.DataFrame(data)
+
+df.replace('NaN', np.nan, inplace=True)
+described_df = pd.DataFrame()
+
+for column in column_input:
+    if isQuant:
+        # Convert the column to numeric
+        df[column] = pd.to_numeric(df[column], errors='coerce') 
+    
+    if groupVariable != "":
+        # Group by the specified column if groupVariable is not None
+        grouped = df.groupby(groupVariable)[column].describe()
+        # Rename the columns to include the groupVariable name
+        grouped.columns = [f"{column}_{col}" for col in grouped.columns]
+        # Add the grouped statistics to described_df
+        described_df = pd.concat([described_df, grouped], axis=1)
+    else:
+        # Describe the column and add it to the described_df DataFrame
+        described_df = pd.concat([described_df, df[column].describe()], axis=1)
+
+# Put the ds in the correct orientation
+described_df = described_df.transpose()
+  `;
+
   const descStatNumCode = `
 
 column_input = columns # ['COLUMN_NAME', 'COLUMN_NAME', 'COLUMN_NAME']
@@ -31,8 +64,7 @@ for column in column_input:
 # Put the ds in the correct orientation
 described_df = described_df.transpose()
   `;
-  
-      const descStatStringsCode = `
+  const descStatStringsCode = `
 
 column_input = columns # ['COLUMN_NAME', 'COLUMN_NAME', 'COLUMN_NAME']
 
@@ -56,8 +88,7 @@ for column in column_input:
 described_df = described_df.transpose()
 
   `;
-  
-      const descStatsStringsAndNumericalCode = `
+  const descStatsStringsAndNumericalCode = `
 
 column_input    = NumericalColumn # 'num_siblings'
 column_category = LabelColumn # 'year'
@@ -100,7 +131,7 @@ for label in unique_labels:
 # Transpose the DataFrame to the correct orientation
 described_df = described_df.transpose()
   `;
-      const descStatsStringsAndStringsCode = `
+  const descStatsStringsAndStringsCode = `
 
 column_input    = StringColumn # 'IsExtrovert'
 column_category = LabelColumn # 'year'
@@ -146,6 +177,7 @@ df_html = described_df.to_html()
 js.render_html(html_output, df_html)`;
 
   const templates = {
+    allInOne: sectionCodeStart + "\n" + allInOneCode + "\n" + sectionCodeEnd,
     descStatNum:
       sectionCodeStart + "\n" + descStatNumCode + "\n" + sectionCodeEnd,
     descStatStrings: sectionCodeStart + "\n" + descStatStringsCode + "\n" + sectionCodeEnd,
@@ -153,16 +185,33 @@ js.render_html(html_output, df_html)`;
     descStatsStringsAndStrings: sectionCodeStart + "\n" + descStatsStringsAndStringsCode + "\n" + sectionCodeEnd,
   };
 
-  const selectGraphType = ({ type, title }) => {
-    const code = templates[type];
-    handleContentChange({
-      newContent: {
-        type,
-        code,
-      },
-    });
-    runCode({ code });
-  };
+   // Set the default template type (e.g., "descStatNum")
+   const defaultTemplateType = "allInOne";
+
+   // Initialize the default code based on the default template type
+   const defaultCode = templates[defaultTemplateType];
+ 
+   // Call handleContentChange with the default content
+   handleContentChange({
+     newContent: {
+       type: defaultTemplateType,
+       code: defaultCode,
+     },
+   });
+ 
+   // Run the default code
+   runCode({ code: defaultCode });
+
+  // const selectGraphType = ({ type, title }) => {
+  //   const code = templates[type];
+  //   handleContentChange({
+  //     newContent: {
+  //       type,
+  //       code,
+  //     },
+  //   });
+  //   runCode({ code });
+  // };
 
   return (
     <div className="templates">

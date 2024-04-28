@@ -114,7 +114,7 @@ return (
               sectionId={sectionId}
             />
           </div>
-          <div className="tableRenderContainer">
+          <div className="tableRenderContainerDescStat">
             <AxesComponent
             type={type}
             variables={variablesToDisplay}
