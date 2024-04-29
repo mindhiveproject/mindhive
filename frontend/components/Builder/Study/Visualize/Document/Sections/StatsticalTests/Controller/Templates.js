@@ -13,10 +13,15 @@ export default function TemplateSelector({
 # identical average (expected) values. This test assumes that the populations 
 # have identical variances by default.
 
-column_1 = col1  # example: 'GT_gamble_percentage_gain'
-column_2 = col2  # example: 'GT_gamble_percentage_lose'
 
-# the "col1" and "col2" variables are served by MH's datatool
+if isWide:
+  column_1 = col1  # example: 'GT_gamble_percentage_gain'
+  column_2 = col2  # example: 'GT_gamble_percentage_lose'
+else:
+  column_1 = quantCol
+  column_2 = groupcol
+
+# the "col1", "col2", "quantCol", and "groupcol" variables are served by MH's datatool
 
 alternative_hypothesis = "two-sided"
 
@@ -34,18 +39,31 @@ import js_workspace as data
 data = data.to_py()
 df = pd.DataFrame(data)
 
-
-df[column_1] = pd.to_numeric(df[column_1], errors='coerce')
-df[column_2] = pd.to_numeric(df[column_2], errors='coerce')
+if isWide:
+    df[column_1] = pd.to_numeric(df[column_1], errors='coerce')
+    df[column_2] = pd.to_numeric(df[column_2], errors='coerce')
+else:
+    df[quantCol] = pd.to_numeric(df[quantCol], errors='coerce')
 
 # Perform a two-sample t-test
-t_statistic, p_value = stats.ttest_ind(df[column_1], df[column_2], nan_policy="omit")
-
-# Display the results
-print(f"T-Statistic: {t_statistic:.4f}")
-print(f"P-Value: {p_value:.4f}")
+if isWide:
+    t_statistic, p_value = stats.ttest_ind(df[column_1], df[column_2], nan_policy="omit")
+else:
+    if len(df[groupcol].unique()) != 2:
+        raise TypeError(f"Error: The number of unique labels in 'groupcol' must be 2 for a two-sample t-test. Got: {df[groupcol].unique()}")
+    else:
+        groups = [group_data for label, group_data in df.groupby(groupcol)[quantCol]]
+        print(df.columns) 
+        print(groups)  
+        # Perform pairwise t-tests between all groups
+        for i in range(len(groups)):
+            for j in range(i+1, len(groups)):
+                t_statistic, p_value = stats.ttest_ind(groups[i], groups[j], nan_policy="omit")
+                print(f"T-Statistic for Group {i+1} vs. Group {j+1}: {t_statistic:.4f}")
+                print(f"P-Value for Group {i+1} vs. Group {j+1}: {p_value:.4f}")
 
 df_to_show = pd.DataFrame({'Values': [t_statistic, p_value]}, index=['T-Statistic', 'P-Value'])
+
   `;
   
   const anovaCode = `
@@ -61,8 +79,13 @@ df_to_show = pd.DataFrame({'Values': [t_statistic, p_value]}, index=['T-Statisti
 
 # See R. Lowry, “Concepts and Applications of Inferential Statistics”, Chapter 14, 2014, http://vassarstats.net/textbook/
 
+if isWide:
+  columns = columns 
+else:
+  column_1 = quantCol
+  column_2 = groupcol
 
-columns = columns # the "columns" variable is served by MH's datatool
+# the "columns", "quantCol", and "groupcol" variables are served by MH's datatool
 
 #############################################################################################
 ######################### Don't change anything below #######################################
@@ -86,7 +109,7 @@ else:
 if isWide:
     f_statistic, p_value = stats.f_oneway(*[df[col] for col in columns])
 else:
-    groups = [group_data for label, group_data in df.groupby(qualCol)[quantCol]]
+    groups = [group_data for label, group_data in df.groupby(groupcol)[quantCol]]
     f_statistic, p_value = stats.f_oneway(*groups)
 
 # Display the results
@@ -132,8 +155,8 @@ print(f"Standard Error of the Intercept: {result.intercept_stderr:.4f}")
 
 # Create DataFrame to display the results
 df_to_show = pd.DataFrame({
-    'Values': [result.slope, result.intercept, result.rvalue, result.pvalue, result.stderr, result.intercept_stderr]},
-    index=['Slope', 'Intercept', 'Pearson Correlation Coefficient', 'P-Value', 'Standard Error of the Slope', 'Standard Error of the Intercept']
+    'Values': [result.rvalue, result.pvalue, result.slope, result.intercept, result.stderr, result.intercept_stderr]},
+    index=['Pearson Correlation Coefficient','P-Value', 'Slope', 'Intercept', 'Standard Error of the Slope', 'Standard Error of the Intercept']
 )
 `;
 

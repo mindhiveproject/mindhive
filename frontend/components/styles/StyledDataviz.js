@@ -29,11 +29,11 @@ export const StyledDataViz = styled.div`
   }
   .menuItemDataStruct {
     display: grid;
-    grid-template-columns: 100px 250px;
-    grid-template-rows: auto;
+    grid-template-columns: 350px;
+    grid-template-rows: 200px auto;
+    padding: 20px;
     grid-gap: 12px;
     align-items: start; 
-    color: #f1f7f6;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -44,9 +44,8 @@ export const StyledDataViz = styled.div`
     }
     div {
       display: flex;
-      flex-direction: column;
       justify-content: start;
-      max-width: 250px; 
+      width: 350px; 
     }
     h3 {
       font-size: 18px;
@@ -55,13 +54,45 @@ export const StyledDataViz = styled.div`
     }
     p {
       font-size: 14px;
-      max-width: 250px; 
-      margin: 0 0;
+      width: auto; 
+      margin: 0 4;
       word-break: break-word;
       white-space: normal;
     }
   }
-  
+  .menuItemDataType {
+    display: grid;
+    grid-template-columns: 250px;
+    grid-template-rows: 40px auto;
+    padding: 20px;
+    grid-gap: 12px;
+    align-items: start; 
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    cursor: pointer;
+    .img {
+      width: 100%;
+      height: auto;
+    }
+    div {
+      display: flex;
+      justify-content: start;
+      width: 290px; 
+    }
+    h3 {
+      font-size: 18px;
+      color: #28619E;
+      margin: 0;
+    }
+    p {
+      font-size: 14px;
+      width: auto; 
+      margin: 0 4;
+      word-break: break-word;
+      white-space: normal;
+    }
+  }
   .dropdownMenu {
     background-color: #f1f7f6; 
     border-radius: 8px; 
@@ -69,12 +100,41 @@ export const StyledDataViz = styled.div`
     box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
     box-sizing: border-box;
   }
-  
+  .slidesCard {
+    grid-template-columns: 15px 100%;
+    column-gap: 15px;
+    background-color: #fbbc041e; 
+    border-radius: 8px; 
+    padding: 15px 10px 10px 10px;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
+    box-sizing: border-box;
+  }
+  .dataTypeSelector {
+    grid-template-columns: 15px 200px;
+    max-width: 370px;
+    column-gap: 15px;
+    background-color: #E6F2F1; 
+    border-radius: 8px; 
+    padding: 15px 10px 10px 10px;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
+    box-sizing: border-box;
+  }
+  .dataFormatSelector {
+    grid-template-columns: 15px auto;
+    // max-width: 370px;
+    column-gap: 15px;
+    background-color: #E6F2F1; 
+    border-radius: 8px; 
+    padding: 15px 10px 10px 10px;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
+    box-sizing: border-box;
+  }
   .menuItemThreeDiv {
     display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: 1fr;
+    grid-template-columns: 15px auto;
     grid-column-gap: 12px;
+    grid-row-gap: 7px;
+    max-width: 250px
     align-items: center;
     color: #000;
     font-size: 14px;
@@ -167,9 +227,9 @@ export const StyledDataViz = styled.div`
       }
       .selected {
         // border: 1px solid black;
-        border-radius: 5px;
+        border-radius: 0px;
         background: papayawhip;
-        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.17);
+        // box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.17);
       }
       .section {
         padding: 5px 20px;
@@ -188,6 +248,7 @@ export const StyledDataViz = styled.div`
         justify-content: center;
         border-top: 1px solid lightgrey;
         padding-top: 5px;
+        padding-bottom: 50px;
       }
     }
 
@@ -268,6 +329,13 @@ export const StyledDataViz = styled.div`
       }
     }
   }
+  .overview::-webkit-scrollbar {
+    width: 5px;
+    color: #f1f7f6;
+  }
+  .overview::-webkit-scrollbar-thumb {
+    // background-color: #CCE5E2;
+  }
   .emptyDocument {
     display: grid;
     align-content: center;
@@ -336,7 +404,7 @@ export const StyledDataViz = styled.div`
       .htmlRenderContainer {
         display: grid;
         max-width: 600px;
-        margin: 20px 0px;
+        margin: 20px auto; /* y-justify-center */
         box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
         table {
           border-collapse: collapse;
@@ -408,7 +476,7 @@ export const StyledDataViz = styled.div`
 
         .graphRenderContainer {
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: 4fr 3fr;
           grid-gap: 10px;
           justify-content: center;
           min-height: 450px;
@@ -444,9 +512,8 @@ export const StyledDataViz = styled.div`
           grid-gap: 21px;
           height: 60px;
         }
-        .selectorsStatTest {
+        .selectorsTestStats {
           display: grid;
-          margin: 20px 100px 50px;
           grid-gap: 21px;
         }
         .selectorsStats {
