@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="340.60208"
+   height="168.33153"
+   viewBox="0 0 340.60208 168.33153"
+   fill="none"
+   version="1.1"
+   id="svg50"
+   sodipodi:docname="dataStructLongDetailed.svg"
+   inkscape:version="1.2.2 (b0a8486, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs54">
+    <marker
+       style="overflow:visible"
+       id="Arrow1"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow1"
+       markerWidth="4.0606604"
+       markerHeight="6.7071066"
+       viewBox="0 0 4.0606602 6.7071068"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:none;stroke:context-stroke;stroke-width:1;stroke-linecap:butt"
+         d="M 3,-3 0,0 3,3"
+         id="path5057"
+         transform="rotate(180,0.125,0)"
+         sodipodi:nodetypes="ccc" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="namedview52"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.1207499"
+     inkscape:cx="350.65807"
+     inkscape:cy="128.4854"
+     inkscape:window-width="1440"
+     inkscape:window-height="900"
+     inkscape:window-x="1920"
+     inkscape:window-y="-56"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg50" />
+  <rect
+     style="fill:#000000;fill-opacity:1;stroke-width:1.92891;stroke-opacity:0.446078"
+     id="rect17319"
+     width="63.874924"
+     height="21.566536"
+     x="28.362114"
+     y="0.96229184" />
+  <rect
+     style="fill:#000000;fill-opacity:1;stroke-width:1.4375;stroke-opacity:0.446078"
+     id="rect17319-1"
+     width="35.47543"
+     height="21.566536"
+     x="95.995171"
+     y="0.98759395" />
+  <text
+     xml:space="preserve"
+     style="font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';fill:#ffffff;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="33.378597"
+     y="16.476944"
+     id="text1368-4"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan1366-2"
+       x="33.378597"
+       y="16.476944"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.8403px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.4375">condition</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';fill:#ffffff;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="104.65651"
+     y="16.672298"
+     id="text1372-4"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan1370-6"
+       x="104.65651"
+       y="16.672298"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.8403px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.4375">value</tspan></text>
+  <rect
+     style="opacity:0.3;fill:#28619e;fill-opacity:1;stroke-width:1.4375;stroke-opacity:0.446078"
+     id="rect19149"
+     width="35.47543"
+     height="21.566536"
+     x="95.852028"
+     y="24.786972" />
+  <rect
+     style="opacity:0.3;fill:#007c70;fill-opacity:1;stroke-width:1.4375;stroke-opacity:0.446078"
+     id="rect19151"
+     width="35.47543"
+     height="21.566536"
+     x="95.943657"
+     y="49.405151" />
+  <rect
+     style="opacity:0.3;fill:#28619e;fill-opacity:1;stroke-width:1.4375;stroke-opacity:0.446078"
+     id="rect19153"
+     width="35.47543"
+     height="21.566536"
+     x="95.58522"
+     y="97.785294" />
+  <rect
+     style="opacity:0.3;fill:#007c70;fill-opacity:1;stroke-width:1.4375;stroke-opacity:0.446078"
+     id="rect19155"
+     width="35.47543"
+     height="21.566536"
+     x="95.599205"
+     y="122.22603" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="111.9886"
+     y="39.385357"
+     id="text1384-7"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan1382-5"
+       x="111.9886"
+       y="39.385357"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:1;stroke-width:1.4375">18</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="115.57958"
+     y="107.38189"
+     id="text1388-9"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan1386-2"
+       x="115.57958"
+       y="107.38189"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:1;stroke-width:1.4375">9</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#007c70;fill-opacity:1;stroke-width:1.4375;stroke-dasharray:none;stroke-opacity:0.446078"
+     x="111.11394"
+     y="63.061703"
+     id="text1392-6"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan1390-2"
+       x="111.11394"
+       y="63.061703"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#007c70;fill-opacity:1;stroke-width:1.4375;stroke-dasharray:none">27</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#007c70;fill-opacity:1;stroke-width:1.4375;stroke-dasharray:none;stroke-opacity:0.446078"
+     x="110.74417"
+     y="130.8929"
+     id="text1396-9"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan1394-6"
+       x="110.74417"
+       y="130.8929"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#007c70;fill-opacity:1;stroke-width:1.4375;stroke-dasharray:none">42</tspan></text>
+  <rect
+     style="fill:#ffc107;fill-opacity:1;stroke-width:1.13855;stroke-opacity:0.446078"
+     id="rect19251"
+     width="22.254036"
+     height="21.566536"
+     x="3.2351925"
+     y="0.96229184" />
+  <text
+     xml:space="preserve"
+     style="font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';fill:#ffffff;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="9.3353004"
+     y="16.286726"
+     id="text19255"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan19253"
+       x="9.3353004"
+       y="16.286726"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.8403px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.4375">id</tspan></text>
+  <rect
+     style="opacity:0.3;fill:#ffc107;fill-opacity:1;stroke-width:1.13855;stroke-opacity:0.446078"
+     id="rect19257"
+     width="22.254036"
+     height="21.566536"
+     x="3.5021393"
+     y="25.133286" />
+  <rect
+     style="opacity:0.3;fill:#ffc107;fill-opacity:1;stroke-width:1.13855;stroke-opacity:0.446078"
+     id="rect19259"
+     width="22.254036"
+     height="21.566536"
+     x="3.6564822"
+     y="48.909954" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="6.8305788"
+     y="39.707947"
+     id="text19263"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan19261"
+       x="6.8305788"
+       y="39.707947"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:1;stroke-width:1.4375">s1</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="6.9962735"
+     y="61.85545"
+     id="text19267"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan19265"
+       x="6.9962735"
+       y="61.85545"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:1;stroke-width:1.4375">s1</tspan></text>
+  <rect
+     style="opacity:0.3;fill:#ffc107;fill-opacity:1;stroke-width:1.13855;stroke-opacity:0.446078"
+     id="rect23985"
+     width="22.254036"
+     height="21.566536"
+     x="3.6564822"
+     y="97.448166" />
+  <rect
+     style="opacity:0.3;fill:#ffc107;fill-opacity:1;stroke-width:1.13855;stroke-opacity:0.446078"
+     id="rect23987"
+     width="22.254036"
+     height="21.566536"
+     x="3.5021393"
+     y="121.57117" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="6.4991894"
+     y="107.22916"
+     id="text23991"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan23989"
+       x="6.4991894"
+       y="107.22916"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:1;stroke-width:1.4375">s2</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="6.3334899"
+     y="130.02184"
+     id="text23995"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan23993"
+       x="6.3334899"
+       y="130.02184"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:1;stroke-width:1.4375">s2</tspan></text>
+  <rect
+     style="fill:#28619e;fill-opacity:1;stroke-width:1.92891;stroke-opacity:0.446078"
+     id="rect30009"
+     width="63.874924"
+     height="21.566536"
+     x="28.86936"
+     y="25.082285" />
+  <text
+     xml:space="preserve"
+     style="font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';fill:#ffffff;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="38.482132"
+     y="38.247837"
+     id="text30013"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan30011"
+       x="38.482132"
+       y="38.247837"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.8403px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.4375">cond_A</tspan></text>
+  <rect
+     style="fill:#28619e;fill-opacity:1;stroke-width:1.92891;stroke-opacity:0.446078"
+     id="rect32193"
+     width="63.874924"
+     height="21.566536"
+     x="28.86936"
+     y="97.340408" />
+  <text
+     xml:space="preserve"
+     style="font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';fill:#ffffff;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="38.912956"
+     y="105.92864"
+     id="text32197"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan32195"
+       x="38.912956"
+       y="105.92864"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.8403px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.4375">cond_A</tspan></text>
+  <rect
+     style="fill:#007c70;fill-opacity:1;stroke-width:1.92891;stroke-opacity:0.446078"
+     id="rect32199"
+     width="63.874924"
+     height="21.566536"
+     x="28.86936"
+     y="49.318687" />
+  <text
+     xml:space="preserve"
+     style="font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';fill:#ffffff;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="38.927513"
+     y="59.423141"
+     id="text32203"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan32201"
+       x="38.927513"
+       y="59.423141"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.8403px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.4375">cond_B</tspan></text>
+  <rect
+     style="fill:#007c70;fill-opacity:1;stroke-width:1.92891;stroke-opacity:0.446078"
+     id="rect32307"
+     width="63.874924"
+     height="21.566536"
+     x="28.86936"
+     y="121.57684" />
+  <text
+     xml:space="preserve"
+     style="font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';fill:#ffffff;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="38.927513"
+     y="126.73013"
+     id="text32311"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan32309"
+       x="38.927513"
+       y="126.73013"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.8403px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.4375">cond_B</tspan></text>
+  <path
+     style="opacity:0.764444;fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2.92666;stroke-dasharray:none;stroke-opacity:1"
+     d="m 193.6936,144.02241 145.23224,-0.16357"
+     id="path20162"
+     sodipodi:nodetypes="cc" />
+  <path
+     style="opacity:0.764444;fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2.90145;stroke-dasharray:none;stroke-opacity:1"
+     d="M 195.16754,142.56564 194.687,36.067315"
+     id="path20162-1"
+     sodipodi:nodetypes="cc" />
+  <rect
+     style="opacity:0.3;fill:#d53533;fill-opacity:1;stroke-width:1.4375;stroke-opacity:0.446078"
+     id="rect25774"
+     width="35.47543"
+     height="21.566536"
+     x="95.943657"
+     y="73.653198" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#d53533;fill-opacity:1;stroke-width:1.4375;stroke-dasharray:none;stroke-opacity:0.446078"
+     x="111.11394"
+     y="85.648285"
+     id="text25778"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan25776"
+       x="111.11394"
+       y="85.648285"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#d53533;fill-opacity:1;stroke-width:1.4375;stroke-dasharray:none">75</tspan></text>
+  <rect
+     style="opacity:0.3;fill:#ffc107;fill-opacity:1;stroke-width:1.13855;stroke-opacity:0.446078"
+     id="rect25780"
+     width="22.254036"
+     height="21.566536"
+     x="3.6564822"
+     y="73.158005" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="6.9962735"
+     y="84.442039"
+     id="text25784"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan25782"
+       x="6.9962735"
+       y="84.442039"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:1;stroke-width:1.4375">s1</tspan></text>
+  <rect
+     style="fill:#d53533;fill-opacity:1;stroke-width:1.92891;stroke-opacity:0.446078"
+     id="rect25786"
+     width="63.874924"
+     height="21.566536"
+     x="28.86936"
+     y="73.566742" />
+  <text
+     xml:space="preserve"
+     style="font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';fill:#ffffff;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="38.927513"
+     y="82.009727"
+     id="text25790"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan25788"
+       x="38.927513"
+       y="82.009727"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.8403px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.4375">cond_C</tspan></text>
+  <rect
+     style="opacity:0.3;fill:#d53533;fill-opacity:1;stroke-width:1.4375;stroke-opacity:0.446078"
+     id="rect27364"
+     width="35.47543"
+     height="21.566536"
+     x="95.336678"
+     y="146.11594" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#d53533;fill-opacity:1;stroke-width:1.4375;stroke-dasharray:none;stroke-opacity:0.446078"
+     x="104.99065"
+     y="153.14587"
+     id="text27368"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan27366"
+       x="104.99065"
+       y="153.14587"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#d53533;fill-opacity:1;stroke-width:1.4375;stroke-dasharray:none">110</tspan></text>
+  <rect
+     style="opacity:0.3;fill:#ffc107;fill-opacity:1;stroke-width:1.13855;stroke-opacity:0.446078"
+     id="rect27370"
+     width="22.254036"
+     height="21.566536"
+     x="3.2396133"
+     y="145.46107" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="6.0516524"
+     y="152.27478"
+     id="text27374"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan27372"
+       x="6.0516524"
+       y="152.27478"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#53533e;fill-opacity:1;stroke-width:1.4375">s2</tspan></text>
+  <rect
+     style="fill:#d53533;fill-opacity:1;stroke-width:1.92891;stroke-opacity:0.446078"
+     id="rect27376"
+     width="63.874924"
+     height="21.566536"
+     x="28.437958"
+     y="145.46677" />
+  <text
+     xml:space="preserve"
+     style="font-size:21.1206px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';fill:#ffffff;fill-opacity:0.453925;stroke-width:1.4375;stroke-opacity:0.446078"
+     x="38.645672"
+     y="148.98311"
+     id="text27380"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan27378"
+       x="38.645672"
+       y="148.98311"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.8403px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.4375">cond_C</tspan></text>
+  <rect
+     x="204.58672"
+     y="117.18907"
+     width="35.981583"
+     height="18.398237"
+     fill="#ffc107"
+     id="rect9400"
+     style="fill:#28619e;fill-opacity:1;stroke-width:1.83231" />
+  <rect
+     x="252.01685"
+     y="70.21006"
+     width="34.346222"
+     height="65.37706"
+     fill="#e06766"
+     id="rect9402"
+     style="fill:#007c70;fill-opacity:1;stroke-width:2.8639" />
+  <rect
+     x="297.54297"
+     y="46.546059"
+     width="35.981583"
+     height="88.442154"
+     fill="#5381b1"
+     id="rect9404"
+     style="fill:#d53533;fill-opacity:1;stroke-width:5.12842" />
+  <path
+     style="opacity:1;fill:#d53533;fill-opacity:0;stroke:#28619e;stroke-width:1.39428;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Arrow1)"
+     d="m 132.56299,109.23834 c 22.30465,0.10016 19.93162,1.66351 20.16024,-13.749333 l 0.32333,-81.01915 70.16073,-0.283284 v 94.427647"
+     id="path35640"
+     sodipodi:nodetypes="ccccc" />
+  <path
+     style="opacity:1;fill:#d53533;fill-opacity:0;stroke:#28619e;stroke-width:1.39428;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Arrow1)"
+     d="m 132.6773,35.999421 c 19.23129,0.218818 20.3317,0.846554 20.3317,-8.896693 l 0.0376,-12.632871 70.16073,-0.283284 v 94.561737"
+     id="path37419"
+     sodipodi:nodetypes="ccccc" />
+  <path
+     style="opacity:1;fill:#d53533;fill-opacity:0;stroke:#007c70;stroke-width:1.44797;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Arrow1)"
+     d="m 134.51841,61.18914 c 40.81351,0 38.61635,1.673989 38.84808,-15.441479 l 0.34888,-25.766217 95.59082,-2e-6 v 44.038655"
+     id="path37556"
+     sodipodi:nodetypes="csccc" />
+  <path
+     style="opacity:1;fill:#d53533;fill-opacity:0;stroke:#007c70;stroke-width:1.31284;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Arrow1)"
+     d="m 132.37652,134.40457 c 11.87807,0.10219 16.83516,0.16173 30.60331,0.0939 11.4636,-0.0565 10.45986,-6.57536 10.16019,-13.04248 l 0.12798,-101.447207 96.19238,-0.01964 v 44.130306"
+     id="path37558"
+     sodipodi:nodetypes="cscccc" />
+  <path
+     style="opacity:1;fill:#d53533;fill-opacity:0;stroke:#d53533;stroke-width:1.48447;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Arrow1)"
+     d="m 133.68669,85.34945 c 52.82065,0 50.07982,-1.603048 50.07982,-19.11699 L 183.008,29.787753 315.74092,30.000052 v 12.12709"
+     id="path39064"
+     sodipodi:nodetypes="ccccc" />
+  <path
+     style="opacity:1;fill:#d53533;fill-opacity:0;stroke:#d53533;stroke-width:1.34593;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Arrow1)"
+     d="m 132.61842,157.44598 c 12.48791,0.10219 22.83932,0.0553 37.37398,0.0939 18.31751,0.0487 14.90124,-1.96922 14.90124,-20.44465 l -2.02112,-107.318094 133.03041,0.275345 v 11.905848"
+     id="path39066"
+     sodipodi:nodetypes="cscccc" />
+  <rect
+     style="fill:#28619e;fill-opacity:1;stroke-width:1.13868;stroke-opacity:0.446078"
+     id="rect40640"
+     width="37.706711"
+     height="12.731176"
+     x="202.94495"
+     y="149.85538" />
+  <text
+     xml:space="preserve"
+     style="font-size:12.4679px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';fill:#ffffff;fill-opacity:0.453925;stroke-width:0.848589;stroke-opacity:0.446078"
+     x="222.29456"
+     y="148.37376"
+     id="text40644"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan40642"
+       x="222.29456"
+       y="148.37376"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.35082px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:0.848589">cond_A</tspan></text>
+  <rect
+     style="fill:#007c70;fill-opacity:1;stroke-width:1.13868;stroke-opacity:0.446078"
+     id="rect40646"
+     width="37.706711"
+     height="12.731176"
+     x="250.35112"
+     y="149.37192" />
+  <text
+     xml:space="preserve"
+     style="font-size:12.4679px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';fill:#ffffff;fill-opacity:0.453925;stroke-width:0.848589;stroke-opacity:0.446078"
+     x="273.4509"
+     y="147.09671"
+     id="text40650"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan40648"
+       x="273.4509"
+       y="147.09671"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.35082px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:0.848589">cond_B</tspan></text>
+  <rect
+     style="fill:#d53533;fill-opacity:1;stroke-width:1.13868;stroke-opacity:0.446078"
+     id="rect40652"
+     width="37.706711"
+     height="12.731176"
+     x="296.61954"
+     y="149.65382" />
+  <text
+     xml:space="preserve"
+     style="font-size:12.4679px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';fill:#ffffff;fill-opacity:0.453925;stroke-width:0.848589;stroke-opacity:0.446078"
+     x="323.12289"
+     y="147.35928"
+     id="text40656"
+     transform="scale(0.93148005,1.0735603)"><tspan
+       sodipodi:role="line"
+       id="tspan40654"
+       x="323.12289"
+       y="147.35928"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.35082px;font-family:'Myriad Pro';-inkscape-font-specification:'Myriad Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:0.848589">cond_C</tspan></text>
+</svg>

@@ -15,7 +15,7 @@ export default function Axes({
   handleContentChange,
 }) {
 
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState("long");
 
   const connectSelectorsCodeWide = `
 import json
@@ -76,28 +76,15 @@ isWide = False
       className="dropdownMenu"
         icon={
           <div className="menuItemThreeDiv menuButton">
-            <img src={`/assets/icons/visualize/database_selected.svg`} />
+            <img src={`/assets/icons/visualize/more_vert.svg`} />
             <div>
-              {selectedOption ? (
-                <a><b>Click here</b> to change your choice.</a>
-              ) : (
-                <a><b>Click here</b> to select how the data for this plot is structured.</a>
-              )}
-            </div>
-
-            <div></div>
             {selectedOption && (
               selectedOption === "long" ? (
-                <div>
-                  You selected a <b>{selectedOption}</b>-data format dashboard
-                </div>
+                  <a>If you want to <b>compare columns</b> click here</a>
                 ) : (
-                  <div>
-                    You selected a <b>{selectedOption}</b>-data format dashboard
-                  </div>
-                  )
-              )
-            }
+                  <a> If you want to <b>compare different groups for one column</b> (variable), click here.</a>
+                ))}
+            </div>
           </div>
         }
       >
@@ -108,25 +95,31 @@ isWide = False
             value: 'long', 
             title: "Long Data Format", 
             description: "Data organized with each observation (like a student's test score) appearing on its own row, often with a column indicating categories (like subjects). This format is useful for detailed analysis across categories.", 
-            img: '/assets/icons/visualize/dataStructLong.svg'
+            img: '/assets/icons/visualize/dataStructLongDetailed.svg',
+            link: 'https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing'
           },
           { 
             key: 'wide', 
             value: 'wide', 
             title: "Wide Data Format", 
             description: "Data organized with each category (like subjects) appearing as its own column, often with rows representing observations (like students). This format is simpler for quick comparisons within categories.", 
-            img: '/assets/icons/visualize/dataStructWide.svg'
+            img: '/assets/icons/visualize/dataStructWideDetailed.svg',
+            link: 'https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing'
           }
-        ].map((option) => (
+        ].filter(option => option.value !== selectedOption).map((option) => (
           <div
             key={option.key}
             className="menuItemDataStruct menuButton"
             onClick={() => onSelectorChoice(option)}
           >
+            {/* <h3>{option.title}</h3> */}
             <img src={option.img} alt={option.title} />
-            <div>
-              <h3>{option.title}</h3>
-              <p>{option.description}</p>
+            <p>{option.description}</p>
+            <div className="slidesCard">
+              <img src={`/assets/icons/visualize/googleSlides.svg`} alt="Google Slides" />
+              <a href={option.link} target="_blank" rel="noopener noreferrer">
+                Click here to see the lecture slides
+              </a>
             </div>
           </div>
         ))}
