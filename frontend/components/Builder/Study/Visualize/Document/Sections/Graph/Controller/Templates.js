@@ -225,6 +225,7 @@ if isWide:
         statistics[column] = {'mean': mean, 'std': std, 'conf_interval': conf_interval}
 else:
     unique_labels = df[qualCol].unique()
+    unique_labels = [i for i in unique_labels if i != ""]
     for label in unique_labels:
         group_data = df[df[qualCol] == label][quantCol]
         mean = np.mean(group_data)
