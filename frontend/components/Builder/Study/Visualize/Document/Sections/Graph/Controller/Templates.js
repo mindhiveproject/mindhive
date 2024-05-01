@@ -30,8 +30,13 @@ data = data.to_py()
 df = pd.DataFrame(data)
 
 # indicate the name of the column where the participant id is defined
-df.rename(columns={"id":"participant"}, inplace=True)
-id_col = 'participant' # MH uses 'participant' but you uploaded data may use a different name!
+if 'participant' not in df.columns: #
+  print("No 'participant' or 'id' column, treating X and Y inputs as wide-df cols.")
+  userDefWide = True
+else:
+  df.rename(columns={"id":"participant"}, inplace=True)
+  id_col = 'participant' # MH uses 'participant' but you uploaded data may use a different name!
+  userDefWide = False
 
 # convert string to numbers
 columns = [X, Y]
@@ -50,18 +55,21 @@ def agg_func(x):
 # agg_func = lambda x: x.dropna().iloc[0]
 
 # Group by participant ID and aggregate data
-if Group == '':
-  grouped_df = df.groupby(id_col).agg({
-      X: agg_func,  # Take the first non-NaN x value for each participant
-      Y: agg_func   # Take the first non-NaN y value for each participant
-  }).reset_index()
+if userDefWide:
+  grouped_df = df
 else:
-  grouped_df = df.groupby(id_col).agg({
-      X: agg_func,  # Take the first non-NaN x value for each participant
-      Y: agg_func,  # Take the first non-NaN y value for each participant
-      Group: agg_func,  # Take the first non-NaN y value for each participant
-  }).reset_index()
-
+  if Group == '':
+    grouped_df = df.groupby(id_col).agg({
+        X: agg_func,  # Take the first non-NaN x value for each participant
+        Y: agg_func   # Take the first non-NaN y value for each participant
+    }).reset_index()
+  else:
+    grouped_df = df.groupby(id_col).agg({
+        X: agg_func,  # Take the first non-NaN x value for each participant
+        Y: agg_func,  # Take the first non-NaN y value for each participant
+        Group: agg_func,  # Take the first non-NaN y value for each participant
+    }).reset_index()
+print(grouped_df)
 if Group=='':
   if trendline:
     
@@ -217,6 +225,7 @@ if isWide:
         statistics[column] = {'mean': mean, 'std': std, 'conf_interval': conf_interval}
 else:
     unique_labels = df[qualCol].unique()
+    unique_labels = [i for i in unique_labels if i != ""]
     for label in unique_labels:
         group_data = df[df[qualCol] == label][quantCol]
         mean = np.mean(group_data)
