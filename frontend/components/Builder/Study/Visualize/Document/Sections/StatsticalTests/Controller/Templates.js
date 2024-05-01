@@ -142,6 +142,8 @@ df = pd.DataFrame(data)
 df[column_1] = pd.to_numeric(df[column_1], errors='coerce')
 df[column_2] = pd.to_numeric(df[column_2], errors='coerce')
 
+df.dropna(subset=[column_1, column_2], inplace=True) # remove the rows that are empty before lingress
+
 result = stats.linregress(df[column_1], df[column_2])
 
 # Display the results
