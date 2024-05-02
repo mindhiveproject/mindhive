@@ -12,12 +12,16 @@ export default function UploadedDataWrapper({
   part,
   setPart,
 }) {
-  const { year, month, day, token } = part?.content?.uploaded?.address;
-  const { variables } = part?.content?.uploaded?.metadata;
+  const { year, month, day, token } =
+    part?.content?.[part?.content?.isModified ? "modified" : "uploaded"]
+      ?.address;
+
   // Set up SWR to run the fetcher function when calling "/api/staticdata"
   // There are 3 possible states: (1) loading when data is null (2) ready when the data is returned (3) error when there was an error fetching the data
   const { data, error } = useSWR(
-    `/api/data/${year}/${month}/${day}/${token}?type=upload`,
+    `/api/data/${year}/${month}/${day}/${token}?type=${
+      part?.content?.isModified ? "modified" : "upload"
+    }`,
     fetcher
   );
   // Handle the error state
@@ -26,14 +30,22 @@ export default function UploadedDataWrapper({
   if (!data) return <div>Loading...</div>;
   // Handle the ready state and display the result contained in the data object mapped to the structure of the json file
 
-  // trim the data
-  const trimmedData = "[" + data.trim().slice(0, -1) + "]";
+  // trim the data, remove the comma at the end only for uploaded data (not modified)
+  let trimmedData;
+  if (part?.content?.isModified) {
+    trimmedData = data.trim();
+    variables = data?.metadata?.variables;
+  } else {
+    trimmedData = data.trim().slice(0, -1);
+  }
 
-  let results = [];
+  let result = {};
   let uploadedData = [];
+  let variables = [];
   if (trimmedData) {
-    results = JSON.parse(trimmedData);
-    uploadedData = results[0].data;
+    result = JSON.parse(trimmedData);
+    uploadedData = result?.data;
+    variables = result?.metadata?.variables;
   }
 
   return (

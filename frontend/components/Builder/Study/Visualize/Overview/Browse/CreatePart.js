@@ -120,7 +120,11 @@ export default function CreatePart({ studyId, journal, dataOrigin }) {
           content: {
             uploaded: {
               address: fileAddress,
-              metadata,
+              metadata: {
+                id: metadata?.id,
+                payload: metadata?.payload,
+                timestampUploaded: metadata?.timestampUploaded,
+              },
             },
           },
           vizChapters: {

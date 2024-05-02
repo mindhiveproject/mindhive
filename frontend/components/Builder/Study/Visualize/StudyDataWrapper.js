@@ -1,21 +1,22 @@
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
+import useSWR from "swr";
 
 import { STUDY_SUMMARY_RESULTS } from "../../../Queries/SummaryResult";
 
 import PartManager from "./PartManager";
 
-// helper function to get all column names of the given dataset
-const getColumnNames = ({ data }) => {
-  const allKeys = data
-    .map((line) => Object.keys(line))
-    .reduce((a, b) => a.concat(b), []);
-  const keys = Array.from(new Set(allKeys)).sort();
-  return keys;
-};
+// A fetcher function to wrap the native fetch function and return the result of a call to url in json format
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 // pre-process and aggregate data
-const processRawData = ({ rawdata, components, username }) => {
+const processRawData = ({
+  rawdata,
+  components,
+  username,
+  modifiedData,
+  modifiedVariables,
+}) => {
   const res = rawdata.map((result) => {
     const userID =
       result?.user?.publicReadableId ||
@@ -42,51 +43,119 @@ const processRawData = ({ rawdata, components, username }) => {
     const condition = component?.condition;
 
     return {
-      participant: participantId,
-      classCode,
-      userType: result?.type,
-      study: result.study.title,
-      task: result.task.title,
-      testVersion: result.testVersion,
-      timestamp: result.createdAt,
-      subtitle,
-      condition,
-      ...result.data,
+      general: {
+        participant: participantId, // unique variable
+        classCode,
+        userType: result?.type,
+        condition,
+      },
+      task: {
+        task: result.task.title,
+        testVersion: result.testVersion,
+        subtitle,
+      },
+      data: {
+        ...result.data,
+      },
     };
   });
 
-  const allParticipants = res.map((row) => row?.participant);
+  const allParticipants = res.map((row) => row?.general?.participant);
   const participants = [...new Set(allParticipants)];
+
+  let variableNames = [];
+  let generalKeys = [];
 
   const dataByParticipant = participants.map((participant) => {
     const data = {};
     const participantData = res.filter(
-      (row) => row?.participant === participant
+      (row) => row?.general?.participant === participant
     );
+
     participantData.map((row) => {
-      Object.keys(row).map((key) => {
-        const newKey = `${row?.task.replace(/\s/g, "-")}_${
-          row?.testVersion
-        }_${key}`;
-        data[newKey] = row[key];
+      // generate variables
+      generalKeys = Object.keys(row?.general).map((k) => ({
+        field: k,
+        type: "general",
+      }));
+      generalKeys.map((key) => {
+        data[key.field] = row?.general[key.field];
+      });
+      const resultKeys = Object.keys(row?.data).map((k) => ({
+        field: k,
+        task: row?.task?.task,
+        testVersion: row?.task?.testVersion,
+        subtitle: row?.task?.subtitle,
+        type: "task",
+      }));
+      resultKeys.map((key) => {
+        data[key?.field] = row?.data[key?.field];
+      });
+      resultKeys.forEach((key) => {
+        if (
+          !variableNames.map((variable) => variable?.field).includes(key?.field)
+        ) {
+          variableNames.push(key);
+        }
       });
     });
+
+    // append participant data that was modified or added by user
+    let modifiedParticipantData = {};
+    if (modifiedData?.length) {
+      modifiedParticipantData = modifiedData.find(
+        (row) => row?.participant === participant
+      );
+    }
 
     return {
       participant,
       ...data,
       isMine: participant === username,
+      ...modifiedParticipantData,
     };
   });
 
-  const variableNames = getColumnNames({ data: dataByParticipant });
+  variableNames = [...variableNames, ...generalKeys];
 
-  const variables = variableNames.map((variable) => ({
-    field: variable,
-    testId: variable.split("_")[1],
-    type: "task",
-    editable: false,
-  }));
+  let variables = [];
+  if (modifiedVariables?.length) {
+    // modified variables and new variables from the study data
+    const modifiedStudyVariables = variableNames.map((variable) => {
+      if (modifiedVariables.map((v) => v?.field).includes(variable?.field)) {
+        const modifiedVariable = modifiedVariables.find(
+          (v) => v?.field === variable?.field
+        );
+        return modifiedVariable;
+      } else {
+        return {
+          field: variable?.field,
+          task: variable?.testVersion,
+          testId: variable?.testVersion,
+          subtitle: variable?.subtitle,
+          type: variable?.type,
+          editable: false,
+        };
+      }
+    });
+    // new variables created by the user
+    const customVariables = modifiedVariables.filter(
+      (v) =>
+        !variableNames.map((variable) => variable?.field).includes(v?.field)
+    );
+
+    variables = [...modifiedStudyVariables, ...customVariables];
+  } else {
+    variables = variableNames.map((variable) => ({
+      field: variable?.field,
+      task: variable?.testVersion,
+      testId: variable?.testVersion,
+      subtitle: variable?.subtitle,
+      type: variable?.type,
+      editable: false,
+    }));
+  }
+
   return { data: dataByParticipant, variables };
 };
 
@@ -112,6 +181,22 @@ export default function StudyDataWrapper({
 
   const study = studyData?.study || {};
   const summaryResults = study?.summaryResults || [];
+
+  // get the saved modified data
+  let modifiedData = [];
+  let modifiedVariables = [];
+  if (part?.content?.isModified) {
+    const { year, month, day, token } = part?.content?.modified?.address;
+    const { data: dataModified, error: modifiedError } = useSWR(
+      `/api/data/${year}/${month}/${day}/${token}?type=modified`,
+      fetcher
+    );
+    if (dataModified) {
+      const parsedData = JSON.parse(dataModified);
+      modifiedData = parsedData.data;
+      modifiedVariables = parsedData?.metadata?.variables;
+    }
+  }
 
   // find all tests in the study with recursive search
   var components = [];
@@ -139,8 +224,15 @@ export default function StudyDataWrapper({
 
   // pre-process the data in the participant-by-row format
   const { data, variables } = useMemo(
-    () => processRawData({ rawdata: summaryResults, components, username }),
-    [summaryResults, components]
+    () =>
+      processRawData({
+        rawdata: summaryResults,
+        components,
+        username,
+        modifiedData,
+        modifiedVariables,
+      }),
+    [summaryResults, components, modifiedData, modifiedVariables]
   );
 
   return (

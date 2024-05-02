@@ -8,7 +8,7 @@ export const StyledDataViz = styled.div`
   max-height: 85vh;
   .vizMenu {
     display: grid;
-    grid-template-columns: 40px auto;
+    grid-template-columns: 1fr;
     grid-gap: 34px;
     overflow-y: auto;
     height: 100%;
@@ -166,12 +166,11 @@ export const StyledDataViz = styled.div`
     overflow-y: auto;
     height: 100%;
     .header {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      grid-gap: 13px;
-      justify-content: center;
-      padding: 12px;
-      margin-bottom: 17px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-gap: 13px;
+        justify-content: center;
+        padding: 12px 12px 12px 12px;
     }
     .menu {
       border-radius: 8px;
@@ -194,27 +193,46 @@ export const StyledDataViz = styled.div`
     }
     .contents {
       display: grid;
+      grid-gap: 10px;
       .emptyStateHeader {
         padding: 10px 15px;
       }
       .part {
         display: grid;
+        border-radius: 5px;
         .menuOriginaDataTitle {
           background: #f1f7f6;
           padding: 10px 15px;
+          border-radius: 5px;
           display: grid;
           align-items: center;
-          grid-template-columns: 1fr auto;
+          grid-template-columns: 1fr auto auto;
           grid-gap: 12px;
           color: #007c70;
           font-family: Inter;
-          font-size: 14px;
+          font-size: 16px;
           font-style: normal;
           font-weight: 500;
           line-height: normal;
+          .icon {
+            cursor: pointer;
+          }
+          .title {
+            cursor: pointer;
+            :hover {
+              color: black;
+              font-weight: bold;
+            }
+          }
+          .title {
+            cursor: pointer;
+          }
         }
         .menuDescription {
         }
+      }
+      .active {
+        border: 1px solid #d3d3d359;
       }
       .chapter {
         padding: 12px 15px;
@@ -226,10 +244,8 @@ export const StyledDataViz = styled.div`
         }
       }
       .selected {
-        // border: 1px solid black;
-        border-radius: 0px;
-        background: papayawhip;
-        // box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.17);
+        border: 1px solid #d3d3d359;
+        background: #ffefd561;
       }
       .section {
         padding: 5px 20px;
@@ -247,8 +263,8 @@ export const StyledDataViz = styled.div`
         display: grid;
         justify-content: center;
         border-top: 1px solid lightgrey;
-        padding-top: 5px;
-        padding-bottom: 50px;
+        padding: 5px;
+        height: 50px;
       }
     }
 
@@ -256,17 +272,32 @@ export const StyledDataViz = styled.div`
       display: grid;
       align-content: baseline;
       grid-gap: 5px;
+
       .header {
         display: grid;
         grid-template-columns: auto 1fr auto;
-        grid-template-rows: 1fr auto;
+        grid-gap: 13px;
+        justify-content: center;
+        padding: 12px 12px 0px 12px;
+    
         .icons {
           cursor: pointer;
           display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-columns: 1fr 1fr 1fr 1fr;
           grid-gap: 10px;
         }
       }
+      .visibilityIcons {
+        display: grid;
+        grid-template-columns: 30px 30px;
+        padding: 12px;
+        justify-content: end;
+        margin-bottom: 17px;
+        .icon {
+          cursor: pointer;
+        }
+      }
+
       .task {
         display: grid;
         grid-template-columns: auto 1fr;
