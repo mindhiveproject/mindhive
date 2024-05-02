@@ -33,7 +33,7 @@ export default function Variable({ column, onVariableChange }) {
         }
       >
         {/* <img src={`/assets/icons/visualize/tag.svg`} /> */}
-        <label for={column?.field}>
+        <label htmlFor={column?.field}>
           {column?.displayName || column?.field}
         </label>
       </div>

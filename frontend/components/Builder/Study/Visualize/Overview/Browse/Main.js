@@ -9,8 +9,10 @@ export default function Browse({
   user,
   studyId,
   journal,
+  part,
   chapterId,
   selectChapter,
+  setPage,
 }) {
   return (
     <div>
@@ -49,8 +51,10 @@ export default function Browse({
           user={user}
           studyId={studyId}
           journal={journal}
+          activePart={part}
           chapterId={chapterId}
           selectChapter={selectChapter}
+          setPage={setPage}
         />
       )}
     </div>

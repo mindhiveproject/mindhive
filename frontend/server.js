@@ -110,17 +110,31 @@ app
         publicId: req.query.upid === "undefined" ? null : req.query.upid,
       };
 
-      jsonfile.writeFile(
-        filePath,
-        {
-          ...req.body,
-          metadata: { ...req.body.metadata, ...enhancedMetadata },
-        },
-        { flag: "a", EOL: ",\n" },
-        function (err) {
-          if (err) console.error(err);
-        }
-      );
+      // in case if a modified data file is uploaded, replace the existing file
+      if (payload === "modified") {
+        jsonfile.writeFile(
+          filePath,
+          {
+            ...req.body,
+            metadata: { ...req.body.metadata, ...enhancedMetadata },
+          },
+          function (err) {
+            if (err) console.error(err);
+          }
+        );
+      } else {
+        jsonfile.writeFile(
+          filePath,
+          {
+            ...req.body,
+            metadata: { ...req.body.metadata, ...enhancedMetadata },
+          },
+          { flag: "a", EOL: ",\n" },
+          function (err) {
+            if (err) console.error(err);
+          }
+        );
+      }
 
       // save aggregated data
       if (payload === "full") {

@@ -47,7 +47,7 @@ export default function PyodideWrapper({ user, studyId }) {
           "pandas",
           // "matplotlib",
           "micropip",
-          "scipy"
+          "scipy",
         ]);
         // run code that will only run once
         await pyodideLoad.runPythonAsync(baseCode);

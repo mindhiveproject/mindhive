@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Accordion, Icon, Dropdown, DropdownMenu } from "semantic-ui-react";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 import moment from "moment";
 import { jsonToCSV } from "react-papaparse";
 
@@ -9,14 +9,13 @@ import Variable from "./Variable";
 import UpdatePartContent from "../../Process/UpdatePart";
 
 export default function Database({
-  // study,
-  // by,
   part,
   data,
   variables,
   components,
   updateDataset,
   onVariableChange,
+  setPage,
 }) {
   const [activeIndex, setActiveIndex] = useState(
     data.map((task, index) => index) || []
@@ -52,14 +51,18 @@ export default function Database({
   };
 
   const downloadData = () => {
-    let userInput = prompt("Give a name to the CSV you're about to download\nNo need to add '.csv' we're taking care of that!");
+    let userInput = prompt(
+      "Give a name to the CSV you're about to download\nNo need to add '.csv' we're taking care of that!"
+    );
     const name = `${userInput}_${moment().format()}`;
     // const name = `${study?.slug}_${by}_${moment().format()}`;
     if (userInput !== null) {
-      const visibleColumns = variables.filter(variable => !variable.hide).map(variable => variable.field);
-      const visibleData = data.map(row => {
+      const visibleColumns = variables
+        .filter((variable) => !variable.hide)
+        .map((variable) => variable.field);
+      const visibleData = data.map((row) => {
         let visibleRow = {};
-        visibleColumns.forEach(column => {
+        visibleColumns.forEach((column) => {
           visibleRow[column] = row[column];
         });
         return visibleRow;
@@ -70,8 +73,7 @@ export default function Database({
       });
       saveAs(blob, `${name}.csv`);
     }
-    
-  };  
+  };
 
   return (
     <div className="database">
@@ -81,88 +83,91 @@ export default function Database({
         </div>
         <div>Active Data</div>
         <div className="icons">
-          <UpdatePartContent part={part} content={{ modified: { data, variables } }}
-            />
-            <div>
-              <Dropdown
-                icon={<img src={`/assets/icons/visualize/add_notes.svg`} />}
-                direction="left"
-              >
-                <DropdownMenu>
-                  <OperationModal
-                    type="copy"
-                    data={data}
-                    variables={variables}
-                    updateDataset={updateDataset}
-                    title="Copy existing variable"
-                    iconSrc={`/assets/icons/visualize/content_paste_go.svg`}
-                  />
-                  <OperationModal
-                    type="compute"
-                    data={data}
-                    variables={variables}
-                    updateDataset={updateDataset}
-                    title="Compute new variable"
-                    iconSrc={`/assets/icons/visualize/table_chart_view.svg`}
-                  />
-                  <OperationModal
-                    type="reverse"
-                    data={data}
-                    variables={variables}
-                    updateDataset={updateDataset}
-                    title="Reverse score"
-                    iconSrc={`/assets/icons/visualize/database_reverse.svg`}
-                  />
+          <div className="icon" onClick={() => setPage("browse")}>
+            <img src={`/assets/icons/visualize/folder_open.svg`} />
+          </div>
+          <UpdatePartContent
+            part={part}
+            content={{ modified: { data, variables } }}
+          />
+          <div>
+            <Dropdown
+              icon={<img src={`/assets/icons/visualize/add_notes.svg`} />}
+              direction="left"
+            >
+              <DropdownMenu>
+                <OperationModal
+                  type="copy"
+                  data={data}
+                  variables={variables}
+                  updateDataset={updateDataset}
+                  title="Copy existing variable"
+                  iconSrc={`/assets/icons/visualize/content_paste_go.svg`}
+                />
+                <OperationModal
+                  type="compute"
+                  data={data}
+                  variables={variables}
+                  updateDataset={updateDataset}
+                  title="Compute new variable"
+                  iconSrc={`/assets/icons/visualize/table_chart_view.svg`}
+                />
+                <OperationModal
+                  type="reverse"
+                  data={data}
+                  variables={variables}
+                  updateDataset={updateDataset}
+                  title="Reverse score"
+                  iconSrc={`/assets/icons/visualize/database_reverse.svg`}
+                />
 
-                  <OperationModal
-                    type="recode"
-                    data={data}
-                    variables={variables}
-                    updateDataset={updateDataset}
-                    title="Recode a variable"
-                    iconSrc={`/assets/icons/visualize/database_recode.svg`}
-                  />
-                </DropdownMenu>
-              </Dropdown>
-            </div>
-            <div>
-              <Icon name="download" size="normal" color="grey" onClick={downloadData}
-              />  
-            </div>
-            <div></div>
-          <div>
-            <div></div>
-            <Icon
-              name="eye slash"
-              size="normal"
-              color="grey"
-              onClick={hideAllColumns}
-            />
+                <OperationModal
+                  type="recode"
+                  data={data}
+                  variables={variables}
+                  updateDataset={updateDataset}
+                  title="Recode a variable"
+                  iconSrc={`/assets/icons/visualize/database_recode.svg`}
+                />
+              </DropdownMenu>
+            </Dropdown>
           </div>
           <div>
-            <Icon
-              name="eye"
-              size="normal"
-              color="grey"
-              onClick={showAllColumns}
-            />
+            <Icon name="download" color="grey" onClick={downloadData} />
           </div>
+        </div>
+      </div>
+
+      <div className="visibilityIcons">
+        <div className="icon">
+          <Icon name="eye slash" color="grey" onClick={hideAllColumns} />
+        </div>
+        <div className="icon">
+          <Icon name="eye" color="grey" onClick={showAllColumns} />
         </div>
       </div>
 
       <div className="variables">
         {variables
           .filter((column) => column.type === "user")
-          .map((column) => (
-            <Variable column={column} onVariableChange={onVariableChange} />
+          .map((column, num) => (
+            <Variable
+              key={num}
+              column={column}
+              onVariableChange={onVariableChange}
+            />
           ))}
       </div>
 
       <div className="variables">
         {variables
           .filter((column) => column.type === "general")
-          .map((column) => (
-            <Variable column={column} onVariableChange={onVariableChange} />
+          .map((column, num) => (
+            <Variable
+              key={num}
+              column={column}
+              onVariableChange={onVariableChange}
+            />
           ))}
       </div>
 
@@ -189,8 +194,9 @@ export default function Database({
                 {variables
                   .filter((column) => column.type === "task")
                   .filter((column) => column.testId === task?.testId)
-                  .map((column) => (
+                  .map((column, num) => (
                     <Variable
+                      key={num}
                       column={column}
                       onVariableChange={onVariableChange}
                     />

@@ -11,17 +11,49 @@ export default function Contents({
   user,
   studyId,
   journal,
+  activePart,
   chapterId,
   selectChapter,
+  setPage,
 }) {
+  const goToChapter = async ({ part, chapter, headerId }) => {
+    if (chapterId !== chapter?.id) {
+      await selectChapter({
+        partId: part?.id,
+        chapterId: chapter?.id,
+      });
+    }
+    const header = document.getElementById(headerId);
+    if (header) {
+      header.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+    }
+  };
+
   return (
     <div className="contents">
       {sortBy(journal?.vizParts, [
         (part) => part?.position || new Date(part?.createdAt).getTime(),
       ]).map((part, num) => (
-        <div key={num} className="part">
+        <div
+          key={num}
+          className={part?.id === activePart?.id ? "active part" : "part"}
+        >
           <div className="menuOriginaDataTitle">
-            <div>
+            <div
+              className="title"
+              onClick={async () => {
+                await goToChapter({
+                  part,
+                  chapter: part?.vizChapters.length && part?.vizChapters[0],
+                  headerId:
+                    part?.vizChapters.length && part?.vizChapters[0]?.id,
+                });
+              }}
+            >
               {part?.title || (
                 <>
                   {part?.dataOrigin?.charAt(0) +
@@ -30,6 +62,20 @@ export default function Contents({
                 </>
               )}
             </div>
+
+            {part?.id === activePart?.id ? (
+              <div
+                className="icon"
+                onClick={async () => {
+                  setPage("database");
+                }}
+              >
+                <img src={`/assets/icons/visualize/database.svg`} />
+              </div>
+            ) : (
+              <div></div>
+            )}
+
             <Dropdown
               icon={<img src={`/assets/icons/visualize/more_vert.svg`} />}
               direction="left"
@@ -44,96 +90,75 @@ export default function Contents({
             )}
           </div>
 
-          <div>
-            {sortBy(part?.vizChapters, [
-              (chapter) =>
-                chapter?.position || new Date(chapter?.createdAt).getTime(),
-            ]).map((chapter, num) => (
-              <div
-                key={num}
-                className={
-                  chapter?.id === chapterId ? "selected chapter" : "chapter"
-                }
-              >
-                <div
-                  className="title"
-                  onClick={async () => {
-                    await selectChapter({
-                      partId: part?.id,
-                      chapterId: chapter?.id,
-                    });
-                    const header = document.getElementById(chapter?.id);
-                    if (header) {
-                      header.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                        inline: "nearest",
-                      });
+          {part?.id === activePart?.id && (
+            <>
+              <div>
+                {sortBy(part?.vizChapters, [
+                  (chapter) =>
+                    chapter?.position || new Date(chapter?.createdAt).getTime(),
+                ]).map((chapter, num) => (
+                  <div
+                    key={num}
+                    className={
+                      chapter?.id === chapterId ? "selected chapter" : "chapter"
                     }
-                  }}
-                >
-                  <div>{chapter?.title}</div>
-                  <Dropdown
-                    icon={<img src={`/assets/icons/visualize/more_vert.svg`} />}
-                    direction="left"
                   >
-                    <DropdownMenu>
-                      <DeleteChapter
-                        studyId={studyId}
-                        part={part}
-                        chapter={chapter}
-                        selectChapter={selectChapter}
-                      />
-                    </DropdownMenu>
-                  </Dropdown>
-                </div>
-                <div>
-                  {sortBy(chapter?.vizSections, [
-                    (section) =>
-                      section?.position ||
-                      new Date(section?.createdAt).getTime(),
-                  ]).map((section, num) => (
                     <div
-                      key={num}
-                      className="section"
-                      onClick={async () => {
-                        await selectChapter({
-                          partId: part?.id,
-                          chapterId: chapter?.id,
-                        });
-                        const header = document.getElementById(section?.id);
-                        if (header) {
-                          header.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                            inline: "nearest",
-                          });
-                        }
-                      }}
+                      className="title"
+                      onClick={async () =>
+                        await goToChapter({
+                          part,
+                          chapter,
+                          headerId: chapter?.id,
+                        })
+                      }
                     >
-                      {section?.title}
+                      <div>{chapter?.title}</div>
+                      <Dropdown
+                        icon={
+                          <img src={`/assets/icons/visualize/more_vert.svg`} />
+                        }
+                        direction="left"
+                      >
+                        <DropdownMenu>
+                          <DeleteChapter
+                            studyId={studyId}
+                            part={part}
+                            chapter={chapter}
+                            selectChapter={selectChapter}
+                          />
+                        </DropdownMenu>
+                      </Dropdown>
                     </div>
-                  ))}
-                </div>
+                    <div>
+                      {sortBy(chapter?.vizSections, [
+                        (section) =>
+                          section?.position ||
+                          new Date(section?.createdAt).getTime(),
+                      ]).map((section, num) => (
+                        <div
+                          key={num}
+                          className="section"
+                          onClick={async () =>
+                            await goToChapter({
+                              part,
+                              chapter,
+                              headerId: section?.id,
+                            })
+                          }
+                        >
+                          {section?.title}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className="addNewChapter">
-            <CreateChapter studyId={studyId} part={part} />
-            {/* <Dropdown
-              icon={<img src={`/assets/icons/visualize/add_notes.svg`} />}
-              direction="right"
-            >
-              <DropdownMenu>
+              <div className="addNewChapter">
                 <CreateChapter studyId={studyId} part={part} />
-                <BrowseTemplates
-                  studyId={studyId}
-                  journal={journal}
-                  part={part}
-                />
-              </DropdownMenu>
-            </Dropdown> */}
-          </div>
+              </div>
+            </>
+          )}
         </div>
       ))}
     </div>

@@ -21,8 +21,6 @@ export default function Section({
     ...(section || {}),
   });
 
-  // console.log({ inputs });
-
   const { type } = section;
 
   // const handleContentChange = ({ name, content }) => {

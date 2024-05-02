@@ -4,6 +4,7 @@ import Database from "./Database/Main";
 export default function Overview({
   user,
   page,
+  setPage,
   studyId,
   journal,
   part,
@@ -22,8 +23,10 @@ export default function Overview({
           user={user}
           studyId={studyId}
           journal={journal}
+          part={part}
           chapterId={chapterId}
           selectChapter={selectChapter}
+          setPage={setPage}
         />
       )}
       {page === "database" && (
@@ -34,6 +37,7 @@ export default function Overview({
           components={components}
           updateDataset={updateDataset}
           onVariableChange={onVariableChange}
+          setPage={setPage}
         />
       )}
     </div>

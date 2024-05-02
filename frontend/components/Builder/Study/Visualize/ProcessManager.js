@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-import Menu from "./Menu/Main";
 import Overview from "./Overview/Main";
 import Document from "./Document/Main";
 
@@ -23,43 +22,18 @@ export default function ProcessManager({
 }) {
   // the data to be displayed
   const [data, setData] = useState([...initData]);
+  const [variables, setVariables] = useState([...initVariables]);
 
-  // TODO store custom data more efficiently
-  // update data if data changed
   useEffect(() => {
     async function getData() {
-      const customData = part?.content?.modified?.data || [];
-      const extendedData = initData.map((row, index) => ({
-        ...row,
-        ...customData[index],
-      }));
-      if (customData && customData?.length) {
-        setData([...extendedData]);
-      } else {
-        setData([...initData]);
-      }
+      setData([...initData]);
     }
     getData();
   }, [initData]);
 
-  // variables to be displayed
-  const [variables, setVariables] = useState([]);
-
-  // update variables if variables changed
   useEffect(() => {
     async function getColumns() {
-      // const customVariables =
-      //   part?.content?.modified?.variables.filter(
-      //     (variable) => variable?.type === "user"
-      //   ) || [];
-      // const mergedVariables = [...initVariablesProcessed, ...customVariables];
-      // try custom variables first and (if there is nothing) initial variables
-      const customVariables = part?.content?.modified?.variables;
-      if (customVariables && customVariables?.length) {
-        setVariables([...customVariables]);
-      } else {
-        setVariables([...initVariables]);
-      }
+      setVariables([...initVariables]);
     }
     if (initVariables?.length) {
       getColumns();
@@ -107,10 +81,10 @@ export default function ProcessManager({
     <>
       <StyledDataViz>
         <div className="vizMenu">
-          <Menu page={page} setPage={setPage} />
           <Overview
             user={user}
             page={page}
+            setPage={setPage}
             studyId={studyId}
             journal={journal}
             part={part}
