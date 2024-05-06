@@ -44,6 +44,10 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
 
   return (
     <div className="selectors">
+      <div className="header">
+        <img src={`/assets/icons/visualize/axes.svg`} />
+        <div>Axes</div>
+      </div>
       <SelectMultiple
         sectionId={sectionId}
         options={options}

@@ -612,6 +612,13 @@ export const StyledDataViz = styled.div`
           margin: 20px;
           grid-gap: 21px;
           height: 60px;
+          .header {
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: auto 1fr;
+            font-weight: bold;
+            margin: 0px 0px 10px 0px;
+          }
         }
         .selectorsTestStats {
           display: grid;

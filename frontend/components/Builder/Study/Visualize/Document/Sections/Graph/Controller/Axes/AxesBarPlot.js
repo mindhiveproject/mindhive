@@ -17,10 +17,18 @@ export default function Axes({
 
   const [selectedOption, setSelectedOption] = useState("long");
 
+  const errBarsOptions = [
+    // { value: "", text: "" },
+    { value: "stdErr", text: "Standard error" },
+    { value: "95pi", text: "95% confidence interval" },
+    { value: "99pi", text: "99% confidence interval" },
+  ];
+
   const connectSelectorsCodeWide = `
 import json
 plot_output = js.document.getElementById('figure-${sectionId}')
 
+errBar  = None if js.document.getElementById("errBar-${sectionId}") == None else js.document.getElementById("errBar-${sectionId}").value
 Xmultiple = None if js.document.getElementById("colToPlot-${sectionId}") == None else js.document.getElementById("colToPlot-${sectionId}")
 xMultiple_value_json = json.loads(Xmultiple.value)
 columns = xMultiple_value_json
@@ -32,6 +40,7 @@ isWide = True
 const connectSelectorsCodeLong = `
 plot_output = js.document.getElementById('figure-${sectionId}')
 
+errBar  = None if js.document.getElementById("errBar-${sectionId}") == None else js.document.getElementById("errBar-${sectionId}").value
 qualCol  = None if js.document.getElementById("qualCol-${sectionId}") == None else js.document.getElementById("qualCol-${sectionId}").value
 quantCol = None if js.document.getElementById("quantCol-${sectionId}") == None else js.document.getElementById("quantCol-${sectionId}").value
 
@@ -72,6 +81,10 @@ isWide = False
   
   return (
     <div className="selectors">
+      <div className="header">
+        <img src={`/assets/icons/visualize/axes.svg`} />
+        <div>Axes</div>
+      </div>
       <Dropdown 
       className="dropdownMenu"
         icon={
@@ -147,19 +160,57 @@ isWide = False
               title="Quantitative Column"
               parameter="quantCol"
             />
+            <SelectOne
+              sectionId={sectionId}
+              options={errBarsOptions}
+              selectors={selectors}
+              onSelectorChange={onSelectorChange}
+              title="Error bar"
+              parameter="errBar"
+            />
           </div>
     
         ) : (
-          <SelectMultiple
-            sectionId={sectionId}
-            options={options}
-            selectors={selectors}
-            onSelectorChange={onSelectorChange}
-            title="Column(s) to plot"
-            parameter="colToPlot"
-          />
+          <div className="selectors">
+            <SelectMultiple
+              sectionId={sectionId}
+              options={options}
+              selectors={selectors}
+              onSelectorChange={onSelectorChange}
+              title="Column(s) to plot"
+              parameter="colToPlot"
+            />
+            <SelectOne
+              sectionId={sectionId}
+              options={errBarsOptions}
+              selectors={selectors}
+              onSelectorChange={onSelectorChange}
+              title="Error Bar"
+              parameter="errBar"
+            />
+          </div>          
         )
       )}
+      {/* <div className="subsection">
+        <select
+          id={`marginalPlot-${sectionId}`}
+          name="marginalPlot"
+          value={selectors["marginalPlot"]}
+          onChange={({ target }) =>
+            handleContentChange({
+              newContent: {
+                selectors: { ...selectors, marginalPlot: target.value },
+              },
+            })
+          }
+          onBlur={() => updateCode({ code })}
+        >
+          {errBarsOptions.map((option) => (
+            <option key={option.value} value={option.value}>{option.text}</option>
+          ))}
+
+        </select>
+      </div> */}
     </div>
   );
 }
