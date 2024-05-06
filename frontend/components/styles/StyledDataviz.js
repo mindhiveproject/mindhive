@@ -134,12 +134,22 @@ export const StyledDataViz = styled.div`
     grid-template-columns: 15px auto;
     grid-column-gap: 12px;
     grid-row-gap: 7px;
-    max-width: 250px
+    max-width: 250px;
     align-items: center;
     color: #000;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
+    cursor: pointer;
+  }
+  .dataButtonPart {
+    display: grid;
+    grid-template-columns: 15px auto;
+    grid-column-gap: 20px;
+    align-items: center;
+    color: #000;
+    font-size: 14px;
+    font-style: normal;
     cursor: pointer;
   }
   .buttons {
@@ -185,6 +195,40 @@ export const StyledDataViz = styled.div`
       color: #000000;
       cursor: pointer;
     }
+    .menuButtonThin {
+      padding: 4px 13px 4px 13px;
+      border-radius: 8px;
+      // background: #fff;
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
+      cursor: pointer;
+    }
+    .greenFrame {
+      background: #F1F7F6;
+      color: #007C70;
+      outline: solid #007C70 1px;
+      font-weight: 600;
+    }
+    .blueFrame {
+      color: #28619E;
+      outline: solid #28619E 1px;
+      font-weight: 400;
+    }
+    .redSaveFrame {
+      grid-area: 1 / 1 / 2 / 2;
+      max-width: 100px;
+      height: 35px;
+      color: #DB2828;
+      outline: solid #DB2828 1.5px;
+      font-weight: 550;
+    }
+    .optionsFrame {
+      grid-area: 1 / 3 / 3 / 4;
+      display: grid;
+      grid-template-columns: max-content max-content;
+      grid-template-rows: 1fr 1fr;
+      grid-row-gap: 7px;
+      outline: solid #007C70 1px;
+    }
     .emptyStateButtons {
       display: grid;
       grid-gap: 10px;
@@ -194,6 +238,7 @@ export const StyledDataViz = styled.div`
     .contents {
       display: grid;
       grid-gap: 10px;
+      padding-bottom: 100px;
       .emptyStateHeader {
         padding: 10px 15px;
       }
@@ -275,10 +320,10 @@ export const StyledDataViz = styled.div`
 
       .header {
         display: grid;
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: 20px 1fr auto;
         grid-gap: 13px;
         justify-content: center;
-        padding: 12px 12px 0px 12px;
+        padding: 12px;
     
         .icons {
           cursor: pointer;
@@ -287,15 +332,40 @@ export const StyledDataViz = styled.div`
           grid-gap: 10px;
         }
       }
-      .visibilityIcons {
+      .options {
         display: grid;
-        grid-template-columns: 30px 30px;
+        grid-template-columns: auto 10px auto;
+        grid-template-rows: repeat(2, 1fr);
+        grid-gap: 5px;
         padding: 12px;
-        justify-content: end;
-        margin-bottom: 17px;
-        .icon {
-          cursor: pointer;
-        }
+        cursor: pointer;
+      }
+      .optionsButtonGreen {
+        padding: 4px 13px 4px 13px;
+        border-radius: 8px;
+        background: #F1F7F6 ;
+        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
+        cursor: pointer;
+        color: #007C70;
+        font-weight: 450;
+      }
+      .optionsButtonGreen {
+        padding: 4px 13px 4px 13px;
+        border-radius: 8px;
+        background: #F1F7F6 ;
+        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
+        cursor: pointer;
+        color: #007C70;
+        font-weight: 450;
+      }
+      .optionsButtonYellow {
+        padding: 4px 33px 4px 13px;
+        border-radius: 8px;
+        background: #ffc10723 ;
+        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
+        cursor: pointer;
+        color: #ffc107ff;
+        font-weight: 450;
       }
 
       .task {

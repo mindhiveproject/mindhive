@@ -78,75 +78,88 @@ export default function Database({
   return (
     <div className="database">
       <div className="header">
-        <div>
-          <img src={`/assets/icons/visualize/database.svg`} />
-        </div>
+        <div><img src={`/assets/icons/visualize/database.svg`} /></div>
         <div>Active Data</div>
-        <div className="icons">
-          <div className="icon" onClick={() => setPage("browse")}>
-            <img src={`/assets/icons/visualize/folder_open.svg`} />
-          </div>
-          <UpdatePartContent
-            part={part}
-            content={{ modified: { data, variables } }}
-          />
-          <div>
-            <Dropdown
-              icon={<img src={`/assets/icons/visualize/add_notes.svg`} />}
-              direction="left"
+        <div 
+          className="dataButtonPart menuButtonThin blueFrame"
+          onClick={async () => {setPage("browse");}}>
+          <img src={`/assets/icons/visualize/folder_open_blue.svg`} />
+          <div><a>Return to browse</a></div>
+        </div>
+      </div>
+
+      <div className="options">
+        <UpdatePartContent
+          part={part}
+          content={{ modified: { data, variables } }}
+        />
+
+        <div 
+          className="dataButtonPart menuButtonThin optionsFrame"
+          // onClick={async () => {setPage("browse");}}
+          >
+
+          <Dropdown
+            className="optionsButtonGreen"
+            icon={
+              <div>
+                <img src={`/assets/icons/visualize/add_notes.svg`} alt="Add a column" />
+                <div>Add a column</div>
+              </div>
+            }
+            direction="left"
             >
-              <DropdownMenu>
-                <OperationModal
-                  type="copy"
-                  data={data}
-                  variables={variables}
-                  updateDataset={updateDataset}
-                  title="Copy existing variable"
-                  iconSrc={`/assets/icons/visualize/content_paste_go.svg`}
-                />
-                <OperationModal
-                  type="compute"
-                  data={data}
-                  variables={variables}
-                  updateDataset={updateDataset}
-                  title="Compute new variable"
-                  iconSrc={`/assets/icons/visualize/table_chart_view.svg`}
-                />
-                <OperationModal
-                  type="reverse"
-                  data={data}
-                  variables={variables}
-                  updateDataset={updateDataset}
-                  title="Reverse score"
-                  iconSrc={`/assets/icons/visualize/database_reverse.svg`}
-                />
+            <DropdownMenu>
+              <OperationModal
+                type="copy"
+                data={data}
+                variables={variables}
+                updateDataset={updateDataset}
+                title="Copy existing variable"
+                iconSrc={`/assets/icons/visualize/content_paste_go.svg`}
+              />
+              <OperationModal
+                type="compute"
+                data={data}
+                variables={variables}
+                updateDataset={updateDataset}
+                title="Compute new variable"
+                iconSrc={`/assets/icons/visualize/table_chart_view.svg`}
+              />
+              <OperationModal
+                type="reverse"
+                data={data}
+                variables={variables}
+                updateDataset={updateDataset}
+                title="Reverse score"
+                iconSrc={`/assets/icons/visualize/database_reverse.svg`}
+              />
 
-                <OperationModal
-                  type="recode"
-                  data={data}
-                  variables={variables}
-                  updateDataset={updateDataset}
-                  title="Recode a variable"
-                  iconSrc={`/assets/icons/visualize/database_recode.svg`}
-                />
-              </DropdownMenu>
-            </Dropdown>
+              <OperationModal
+                type="recode"
+                data={data}
+                variables={variables}
+                updateDataset={updateDataset}
+                title="Recode a variable"
+                iconSrc={`/assets/icons/visualize/database_recode.svg`}
+              />
+            </DropdownMenu>
+          </Dropdown>
+
+          <div className="optionsButtonGreen" onClick={downloadData} >
+            <div><Icon name="download" color="grey"/></div>
+            <div><a>Download</a></div>
           </div>
-          <div>
-            <Icon name="download" color="grey" onClick={downloadData} />
+          <div className="optionsButtonYellow" onClick={hideAllColumns}>
+            <Icon name="eye slash" color="grey"  />
+            <div><a>Hide all</a></div>
+          </div>
+          <div className="optionsButtonYellow" onClick={showAllColumns} >
+            <Icon name="eye" color="grey"/>
+            <div><a>Show all</a></div>
           </div>
         </div>
       </div>
-
-      <div className="visibilityIcons">
-        <div className="icon">
-          <Icon name="eye slash" color="grey" onClick={hideAllColumns} />
-        </div>
-        <div className="icon">
-          <Icon name="eye" color="grey" onClick={showAllColumns} />
-        </div>
-      </div>
-
       <div className="variables">
         {variables
           .filter((column) => column.type === "user")
