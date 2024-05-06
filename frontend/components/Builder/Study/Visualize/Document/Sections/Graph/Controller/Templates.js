@@ -216,12 +216,27 @@ else:
 # Calculate mean, standard deviation, and confidence intervals for each group
 statistics = {}
 
+errBar = errBar
+
+# Function to calculate error bars based on specified method
+def calculate_error_bar(std, n, method):
+    if method == "":
+        return None
+    elif method == "stdErr":
+        return 1.0 * np.sqrt(std**2 / n)  # Standard error
+    elif method == "95pi":
+        return 1.96 * np.sqrt(std**2 / n)  # 95% confidence interval
+    elif method == "99pi":
+        return 2.576 * np.sqrt(std**2 / n)  # 99% confidence interval
+    else:
+        raise ValueError("Invalid error bar method")
+
 if isWide:
     for column in columns:
         mean = np.mean(df[column])
         std = np.std(df[column])
         n = df[column].shape[0]
-        conf_interval = 1.96 * np.sqrt(std**2 / n)  # 95% confidence interval
+        conf_interval = calculate_error_bar(std, n, errBar)
         statistics[column] = {'mean': mean, 'std': std, 'conf_interval': conf_interval}
 else:
     unique_labels = df[qualCol].unique()
@@ -231,7 +246,7 @@ else:
         mean = np.mean(group_data)
         std = np.std(group_data)
         n = group_data.shape[0]
-        conf_interval = 1.96 * np.sqrt(std**2 / n)  # 95% confidence interval
+        conf_interval = calculate_error_bar(std, n, errBar)
         statistics[label] = {'mean': mean, 'std': std, 'conf_interval': conf_interval}
 
 # Extract the required statistics for plotting
@@ -266,11 +281,14 @@ df_bar = pd.DataFrame({
     'Error Bars': error_bars
 })
 
+# If errBar is empty, do not include error bars
+error_y_param = None if errBar == "" else 'Error Bars'
+
 fig = px.bar(df_bar, 
               x='Categories', 
               y='Y', 
               color='Categories',
-              error_y='Error Bars', 
+              error_y=error_y_param,  # Include error bars based on the condition
               color_discrete_sequence=colors,
               labels={'Categories': xLabel if xLabel != "" else "Categories",
                       'Y': yLabel if yLabel != "" else 'Average value'
