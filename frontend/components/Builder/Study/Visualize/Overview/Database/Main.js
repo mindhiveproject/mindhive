@@ -96,7 +96,6 @@ export default function Database({
 
         <div 
           className="dataButtonPart menuButtonThin optionsFrame"
-          // onClick={async () => {setPage("browse");}}
           >
 
           <Dropdown

@@ -199,13 +199,13 @@ export const StyledDataViz = styled.div`
       padding: 4px 13px 4px 13px;
       border-radius: 8px;
       // background: #fff;
-      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
       cursor: pointer;
     }
     .greenFrame {
       background: #F1F7F6;
       color: #007C70;
       outline: solid #007C70 1px;
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
       font-weight: 600;
     }
     .blueFrame {
@@ -226,8 +226,8 @@ export const StyledDataViz = styled.div`
       display: grid;
       grid-template-columns: max-content max-content;
       grid-template-rows: 1fr 1fr;
-      grid-row-gap: 7px;
-      outline: solid #007C70 1px;
+      grid-row-gap: 15px;
+      // outline: solid #007C70 1px;
     }
     .emptyStateButtons {
       display: grid;
@@ -364,7 +364,7 @@ export const StyledDataViz = styled.div`
         background: #ffc10723 ;
         box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
         cursor: pointer;
-        color: #ffc107ff;
+        // color: #ffc107ff;
         font-weight: 450;
       }
 
