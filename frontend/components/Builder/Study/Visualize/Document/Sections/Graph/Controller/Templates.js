@@ -259,8 +259,20 @@ else:
     error_bars = [statistics[label]['conf_interval'] for label in unique_labels]
     categories = unique_labels
 
+def parse_color(color):
+    if color.startswith("#"):
+        # HEX color string
+        return mcolors.to_rgb(color)
+    elif "," in color:
+        # RGB color string
+        rgb_values = tuple(map(int, color.split(",")))
+        return tuple([val / 255.0 for val in rgb_values])
+    else:
+        # Assume color name string
+        return mcolors.to_rgb(color)
+
 def generate_complementary_colors(base_color, n):
-    base_rgb = mcolors.to_rgb(base_color)
+    base_rgb = parse_color(base_color)
     complementary_rgb = mcolors.rgb_to_hsv(base_rgb)
     complementary_rgb[0] = (complementary_rgb[0] + 0.5) % 1  # Shift hue by 180 degrees (complementary color)
     
