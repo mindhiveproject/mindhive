@@ -5,7 +5,7 @@
 //      StudyDataWrapper or UploadedDataWrapper (optional)
 //        Part manager (PartManager.js)
 //          Preprocessing manager (ProcessManager.js) - data and variables state
-//            Menu, overview, and document
+//            Overview and Document
 
 import Navigation from "../Navigation/Main";
 import PyodideWrapper from "./PyodideWrapper";

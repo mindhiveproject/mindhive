@@ -55,9 +55,9 @@ export default function Document({
         chapter={chapter}
       />
       <div>
-        {chapter?.vizSections.map((section, num) => (
+        {chapter?.vizSections.map((section) => (
           <Section
-            key={num}
+            key={section?.id}
             studyId={studyId}
             chapter={chapter}
             section={section}
@@ -67,7 +67,7 @@ export default function Document({
           />
         ))}
       </div>
-      <br/>
+      <br />
       <div className="createSectionButton">
         <CreateSection studyId={studyId} chapterId={chapter?.id} />
       </div>

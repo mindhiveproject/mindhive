@@ -42,13 +42,7 @@ export default function PyodideWrapper({ user, studyId }) {
           indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/",
         });
         // load packages
-        await pyodideLoad.loadPackage([
-          "numpy",
-          "pandas",
-          // "matplotlib",
-          "micropip",
-          "scipy",
-        ]);
+        await pyodideLoad.loadPackage(["numpy", "pandas", "micropip", "scipy"]);
         // run code that will only run once
         await pyodideLoad.runPythonAsync(baseCode);
         // provide data to pyodide which will be shared between all parts of the journal
