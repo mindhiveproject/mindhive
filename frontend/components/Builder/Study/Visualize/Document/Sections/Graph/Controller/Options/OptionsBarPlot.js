@@ -22,7 +22,7 @@ graphTitle = js.document.getElementById('graphTitle-${sectionId}').value
 xLabel = js.document.getElementById('xLabel-${sectionId}').value
 xLabel = js.document.getElementById('xLabel-${sectionId}').value
 
-x_labels = columns #js.document.getElementById('x_labels-${sectionId}').value
+#x_labels = columns #js.document.getElementById('x_labels-${sectionId}').value
 legend_title = js.document.getElementById('legend_title-${sectionId}').value
 
 yLabel = js.document.getElementById('yLabel-${sectionId}').value
@@ -31,10 +31,6 @@ yRangeMax = js.document.getElementById('yRangeMax-${sectionId}').value
 
 color = 'pink' if js.document.getElementById('color-${sectionId}') == None else js.document.getElementById('color-${sectionId}').value`
 ;
-
-// xRangeMin = js.document.getElementById('xRangeMin-${sectionId}').value
-// xRangeMax = js.document.getElementById('xRangeMax-${sectionId}').value
-// marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value
 
   const updateCode = async ({ code }) => {
     await pyodide.runPythonAsync(connectDashboardCode);
@@ -187,7 +183,10 @@ color = 'pink' if js.document.getElementById('color-${sectionId}') == None else 
 
       <div className="subheader">Color</div>
       <div className="subsection">
-        <label htmlFor="color" className="title">Give a base color for the bar</label>
+        <label htmlFor="color" className="title">Give a base color for the bar (remove squary brackets to use the examples bellow)</label>
+        <label htmlFor="color" className="title">- Color names: [red], [pink]</label>
+        <label htmlFor="color" className="title">- RGB value [100,255,0], [0,120,80]</label>
+        <label htmlFor="color" className="title">- HEX format [#28619E], [#D53533]</label>
         <input
           id={`color-${sectionId}`}
           type="text"

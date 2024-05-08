@@ -64,13 +64,13 @@ export default function Contents({
             </div>
 
             {part?.id === activePart?.id ? (
-              <div
-                className="icon"
-                onClick={async () => {
-                  setPage("database");
-                }}
-              >
-                <img src={`/assets/icons/visualize/database.svg`} />
+              <div 
+              className="dataButtonPart menuButtonThin greenFrame"
+              onClick={async () => {setPage("database");}}>
+                <img src={`/assets/icons/visualize/database_green.svg`} />
+                <div>
+                  <a>Data</a>
+                </div>
               </div>
             ) : (
               <div></div>
