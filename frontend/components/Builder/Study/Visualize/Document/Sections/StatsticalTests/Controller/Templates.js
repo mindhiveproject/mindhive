@@ -49,18 +49,11 @@ else:
 if isWide:
     t_statistic, p_value = stats.ttest_ind(df[column_1], df[column_2], nan_policy="omit")
 else:
-    if len(df[groupcol].unique()) != 2:
-        raise TypeError(f"Error: The number of unique labels in 'groupcol' must be 2 for a two-sample t-test. Got: {df[groupcol].unique()}")
+    if len(df[groupcol].dropna().unique()) != 2:
+        raise TypeError(f"Error: The number of unique labels in 'groupcol' must be 2 for a two-sample t-test. Got: {df[groupcol].dropna().unique()}")
     else:
-        groups = [group_data for label, group_data in df.groupby(groupcol)[quantCol]]
-        print(df.columns) 
-        print(groups)  
-        # Perform pairwise t-tests between all groups
-        for i in range(len(groups)):
-            for j in range(i+1, len(groups)):
-                t_statistic, p_value = stats.ttest_ind(groups[i], groups[j], nan_policy="omit")
-                print(f"T-Statistic for Group {i+1} vs. Group {j+1}: {t_statistic:.4f}")
-                print(f"P-Value for Group {i+1} vs. Group {j+1}: {p_value:.4f}")
+        groups = [group_data.dropna() for label, group_data in df.dropna(subset=[groupcol]).groupby(groupcol)[quantCol]]
+        t_statistic, p_value = stats.ttest_ind(groups[0], groups[1])
 
 df_to_show = pd.DataFrame({'Values': [t_statistic, p_value]}, index=['T-Statistic', 'P-Value'])
 
@@ -109,12 +102,8 @@ else:
 if isWide:
     f_statistic, p_value = stats.f_oneway(*[df[col] for col in columns])
 else:
-    groups = [group_data for label, group_data in df.groupby(groupcol)[quantCol]]
+    groups = [group_data.dropna() for label, group_data in df.groupby(groupcol)[quantCol]]
     f_statistic, p_value = stats.f_oneway(*groups)
-
-# Display the results
-print(f"F-Statistic: {f_statistic:.4f}")
-print(f"P-Value: {p_value:.4f}")
 
 df_to_show = pd.DataFrame({'Values': [f_statistic, p_value]}, index=['F-Statistic', 'P-Value'])
 `;

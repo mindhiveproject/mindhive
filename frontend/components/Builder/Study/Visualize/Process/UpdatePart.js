@@ -88,11 +88,20 @@ export default function UpdatePartContent({ part, content }) {
   const [updatePart, { data, loading, error }] = useMutation(UPDATE_VIZPART);
 
   return (
-    <Icon
-      name="save outline"
-      size="large"
-      color="red"
-      onClick={() => update()}
-    />
+    // <Icon
+    //   name="save outline"
+    //   size="large"
+    //   color="red"
+    //   onClick={() => update()}
+    // />
+    <div 
+    className="dataButtonPart menuButtonThin redSaveFrame"
+    onClick={update} 
+    >
+      <div>
+        <img src="/assets/icons/visualize/save.svg" alt="Save"/>
+      </div>
+      <div><a>Save</a></div>
+    </div>
   );
 }
