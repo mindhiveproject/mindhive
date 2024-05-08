@@ -82,9 +82,8 @@ export default function StateManager({
   // Conditionally render the appropriate template or component based on the selected graph type
   const AxesComponent = AxisTemplateMap[type] || AxesDefault;
 
-return (
+  return (
     <div className="graph">
-
       {!code && pyodide && (
         <TemplateSelector
           handleContentChange={handleContentChange}
@@ -102,11 +101,12 @@ return (
           </MessageContent>
         </Message>
       )}
-      
+
       {code && pyodide && (
         <>
           <div className="htmlRenderContainer">
             <Render
+              type={type}
               data={data}
               code={code}
               pyodide={pyodide}
@@ -116,27 +116,15 @@ return (
           </div>
           <div className="tableRenderContainerDescStat">
             <AxesComponent
-            type={type}
-            variables={variablesToDisplay}
-            code={code}
-            pyodide={pyodide}
-            runCode={runCode}
-            sectionId={sectionId}
-            selectors={selectors}
-            handleContentChange={handleContentChange}
-          />
-            {/* <div className="dashboardContainer">
-              <OptionsComponent
-                type={type}
-                variables={variablesToDisplay}
-                code={code}
-                pyodide={pyodide}
-                runCode={runCode}
-                sectionId={sectionId}
-                selectors={selectors}
-                handleContentChange={handleContentChange}
-              />
-            </div> */}
+              type={type}
+              variables={variablesToDisplay}
+              code={code}
+              pyodide={pyodide}
+              runCode={runCode}
+              sectionId={sectionId}
+              selectors={selectors}
+              handleContentChange={handleContentChange}
+            />
           </div>
           {code && pyodide && (
             <CodeEditor

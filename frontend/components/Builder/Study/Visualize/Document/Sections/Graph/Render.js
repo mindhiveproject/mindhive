@@ -3,7 +3,7 @@ import { useEffect } from "react";
 export default function Render({ data, code, pyodide, runCode, sectionId }) {
   const prepareCanvasCode = `
 # get relevant html elements
-plot_output = js.document.getElementById('figure-${sectionId}')
+html_output = js.document.getElementById('figure-${sectionId}')
 
 Xmultiple = js.document.getElementById("xVariableMultiple-${sectionId}")
 

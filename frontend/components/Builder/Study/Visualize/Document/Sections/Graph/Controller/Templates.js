@@ -315,7 +315,7 @@ fig.update_layout(
 
   const sectionCodeEnd = `  
 fig_html = fig.to_html()
-js.render_html(plot_output, fig_html)`;
+js.render_html(html_output, fig_html)`;
 
   const templates = {
     // linePlot: sectionCodeStart + "\n" + linePlotCode + "\n" + sectionCodeEnd,

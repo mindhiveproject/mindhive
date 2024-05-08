@@ -4,11 +4,17 @@ import { useState, useEffect } from "react";
 export default function SelectMultiple({
   sectionId,
   options,
+  selectors,
   onSelectorChange,
-  title,
   parameter,
+  selectedDataFormat,
 }) {
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState(selectors[parameter] || []);
+
+  const title =
+    selectedDataFormat === "quant"
+      ? "Quantitative column(s)"
+      : "Qualitative column(s)";
 
   const handleChange = (event, data) => {
     setSelected(data.value);
@@ -32,11 +38,12 @@ export default function SelectMultiple({
           selection
           options={options}
           onChange={handleChange}
+          value={selected}
         />
         <input
           type="hidden"
           id={`${parameter}-${sectionId}`}
-          value={JSON.stringify(selected)}
+          value={selected}
         />
       </div>
     </div>
