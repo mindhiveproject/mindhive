@@ -12,7 +12,7 @@ export default function Axes({
 }) {
   const connectSelectorsCode = `# get relevant html elements
 import json
-plot_output = js.document.getElementById('figure-${sectionId}')
+html_output = js.document.getElementById('figure-${sectionId}')
 Xmultiple = js.document.getElementById("xVariableMultiple-${sectionId}")
 xMultiple_value_json = json.loads(Xmultiple.value)
 columns = xMultiple_value_json

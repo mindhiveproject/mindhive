@@ -11,11 +11,11 @@ export default function Axes({
   handleContentChange,
 }) {
   const connectSelectorsCode = `# get relevant html elements
-plot_output = js.document.getElementById('figure-${sectionId}')
+html_output = js.document.getElementById('figure-${sectionId}')
 StringColumn = js.document.getElementById("StringColumn-${sectionId}").value
 LabelColumn = js.document.getElementById("LabelColumn-${sectionId}").value
 #Group = js.document.getElementById("groupVariable-${sectionId}").value
-`; 
+`;
 
   const options = variables.map((variable) => ({
     key: variable?.field,

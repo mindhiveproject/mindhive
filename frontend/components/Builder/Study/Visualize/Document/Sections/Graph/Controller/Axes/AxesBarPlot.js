@@ -14,7 +14,6 @@ export default function Axes({
   selectors,
   handleContentChange,
 }) {
-
   const [selectedOption, setSelectedOption] = useState("long");
 
   const errBarsOptions = [
@@ -26,7 +25,7 @@ export default function Axes({
 
   const connectSelectorsCodeWide = `
 import json
-plot_output = js.document.getElementById('figure-${sectionId}')
+html_output = js.document.getElementById('figure-${sectionId}')
 
 errBar  = None if js.document.getElementById("errBar-${sectionId}") == None else js.document.getElementById("errBar-${sectionId}").value
 Xmultiple = None if js.document.getElementById("colToPlot-${sectionId}") == None else js.document.getElementById("colToPlot-${sectionId}")
@@ -37,8 +36,8 @@ isWide = True
 
 #x_labels= columns ######################################need update################ To change to list under x axis
 `;
-const connectSelectorsCodeLong = `
-plot_output = js.document.getElementById('figure-${sectionId}')
+  const connectSelectorsCodeLong = `
+html_output = js.document.getElementById('figure-${sectionId}')
 
 errBar  = None if js.document.getElementById("errBar-${sectionId}") == None else js.document.getElementById("errBar-${sectionId}").value
 qualCol  = None if js.document.getElementById("qualCol-${sectionId}") == None else js.document.getElementById("qualCol-${sectionId}").value
@@ -63,14 +62,15 @@ isWide = False
     }
     runCode({ code });
   };
-  
 
   const onSelectorChoice = (option) => {
     setSelectedOption(option.value);
   };
 
   const onSelectorChange = ({ target }) => {
-    const value = Array.isArray(target?.value) ? target?.value : [target?.value];
+    const value = Array.isArray(target?.value)
+      ? target?.value
+      : [target?.value];
     handleContentChange({
       newContent: {
         selectors: { ...selectors, [target?.name]: value },
@@ -78,71 +78,87 @@ isWide = False
     });
     updateCode({ code });
   };
-  
+
   return (
     <div className="selectors">
       <div className="header">
         <img src={`/assets/icons/visualize/axes.svg`} />
         <div>Axes</div>
       </div>
-      <Dropdown 
-      className="dropdownMenu"
+      <Dropdown
+        className="dropdownMenu"
         icon={
           <div className="menuItemThreeDiv menuButton">
             <img src={`/assets/icons/visualize/more_vert.svg`} />
             <div>
-            {selectedOption && (
-              selectedOption === "long" ? (
-                  <a>If you want to <b>compare columns</b> click here</a>
+              {selectedOption &&
+                (selectedOption === "long" ? (
+                  <a>
+                    If you want to <b>compare columns</b> click here
+                  </a>
                 ) : (
-                  <a> If you want to <b>compare different groups for one column</b> (variable), click here.</a>
+                  <a>
+                    {" "}
+                    If you want to{" "}
+                    <b>compare different groups for one column</b> (variable),
+                    click here.
+                  </a>
                 ))}
             </div>
           </div>
         }
       >
-      <DropdownMenu>
-        {[
-          { 
-            key: 'long', 
-            value: 'long', 
-            title: "Long Data Format", 
-            description: "Data organized with each observation (like a student's test score) appearing on its own row, often with a column indicating categories (like subjects). This format is useful for detailed analysis across categories.", 
-            img: '/assets/icons/visualize/dataStructLongDetailed.svg',
-            link: 'https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing'
-          },
-          { 
-            key: 'wide', 
-            value: 'wide', 
-            title: "Wide Data Format", 
-            description: "Data organized with each category (like subjects) appearing as its own column, often with rows representing observations (like students). This format is simpler for quick comparisons within categories.", 
-            img: '/assets/icons/visualize/dataStructWideDetailed.svg',
-            link: 'https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing'
-          }
-        ].filter(option => option.value !== selectedOption).map((option) => (
-          <div
-            key={option.key}
-            className="menuItemDataStruct menuButton"
-            onClick={() => onSelectorChoice(option)}
-          >
-            {/* <h3>{option.title}</h3> */}
-            <img src={option.img} alt={option.title} />
-            <p>{option.description}</p>
-            <div className="slidesCard">
-              <img src={`/assets/icons/visualize/googleSlides.svg`} alt="Google Slides" />
-              <a href={option.link} target="_blank" rel="noopener noreferrer">
-                Click here to see the lecture slides
-              </a>
-            </div>
-          </div>
-        ))}
-      </DropdownMenu>
-
+        <DropdownMenu>
+          {[
+            {
+              key: "long",
+              value: "long",
+              title: "Long Data Format",
+              description:
+                "Data organized with each observation (like a student's test score) appearing on its own row, often with a column indicating categories (like subjects). This format is useful for detailed analysis across categories.",
+              img: "/assets/icons/visualize/dataStructLongDetailed.svg",
+              link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
+            },
+            {
+              key: "wide",
+              value: "wide",
+              title: "Wide Data Format",
+              description:
+                "Data organized with each category (like subjects) appearing as its own column, often with rows representing observations (like students). This format is simpler for quick comparisons within categories.",
+              img: "/assets/icons/visualize/dataStructWideDetailed.svg",
+              link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
+            },
+          ]
+            .filter((option) => option.value !== selectedOption)
+            .map((option) => (
+              <div
+                key={option.key}
+                className="menuItemDataStruct menuButton"
+                onClick={() => onSelectorChoice(option)}
+              >
+                {/* <h3>{option.title}</h3> */}
+                <img src={option.img} alt={option.title} />
+                <p>{option.description}</p>
+                <div className="slidesCard">
+                  <img
+                    src={`/assets/icons/visualize/googleSlides.svg`}
+                    alt="Google Slides"
+                  />
+                  <a
+                    href={option.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Click here to see the lecture slides
+                  </a>
+                </div>
+              </div>
+            ))}
+        </DropdownMenu>
       </Dropdown>
 
-      {selectedOption && (
-        selectedOption === "long" ? (
-
+      {selectedOption &&
+        (selectedOption === "long" ? (
           <div className="selectors">
             <SelectOne
               sectionId={sectionId}
@@ -169,7 +185,6 @@ isWide = False
               parameter="errBar"
             />
           </div>
-    
         ) : (
           <div className="selectors">
             <SelectMultiple
@@ -188,9 +203,8 @@ isWide = False
               title="Error Bar"
               parameter="errBar"
             />
-          </div>          
-        )
-      )}
+          </div>
+        ))}
       {/* <div className="subsection">
         <select
           id={`marginalPlot-${sectionId}`}

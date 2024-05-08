@@ -180,100 +180,138 @@ js.render_html(html_output, df_html)`;
     allInOne: sectionCodeStart + "\n" + allInOneCode + "\n" + sectionCodeEnd,
     descStatNum:
       sectionCodeStart + "\n" + descStatNumCode + "\n" + sectionCodeEnd,
-    descStatStrings: sectionCodeStart + "\n" + descStatStringsCode + "\n" + sectionCodeEnd,
-    descStatsStringsAndNumerical: sectionCodeStart + "\n" + descStatsStringsAndNumericalCode + "\n" + sectionCodeEnd,
-    descStatsStringsAndStrings: sectionCodeStart + "\n" + descStatsStringsAndStringsCode + "\n" + sectionCodeEnd,
+    descStatStrings:
+      sectionCodeStart + "\n" + descStatStringsCode + "\n" + sectionCodeEnd,
+    descStatsStringsAndNumerical:
+      sectionCodeStart +
+      "\n" +
+      descStatsStringsAndNumericalCode +
+      "\n" +
+      sectionCodeEnd,
+    descStatsStringsAndStrings:
+      sectionCodeStart +
+      "\n" +
+      descStatsStringsAndStringsCode +
+      "\n" +
+      sectionCodeEnd,
   };
 
-   // Set the default template type (e.g., "descStatNum")
-   const defaultTemplateType = "allInOne";
+  // Set the default template type (e.g., "descStatNum")
+  const defaultTemplateType = "allInOne";
 
-   // Initialize the default code based on the default template type
-   const defaultCode = templates[defaultTemplateType];
- 
-   // Call handleContentChange with the default content
-   handleContentChange({
-     newContent: {
-       type: defaultTemplateType,
-       code: defaultCode,
-     },
-   });
- 
-   // Run the default code
-   runCode({ code: defaultCode });
+  // Initialize the default code based on the default template type
+  const defaultCode = templates[defaultTemplateType];
 
-  // const selectGraphType = ({ type, title }) => {
-  //   const code = templates[type];
-  //   handleContentChange({
-  //     newContent: {
-  //       type,
-  //       code,
-  //     },
-  //   });
-  //   runCode({ code });
-  // };
+  // Call handleContentChange with the default content
+  handleContentChange({
+    newContent: {
+      type: defaultTemplateType,
+      code: defaultCode,
+    },
+  });
+
+  // Run the default code
+  runCode({ code: defaultCode });
+
+  const selectGraphType = ({ type, title }) => {
+    const code = templates[type];
+    handleContentChange({
+      newContent: {
+        type,
+        code,
+      },
+    });
+    runCode({ code });
+  };
 
   return (
     <div className="templates">
-    <div
-      className="template"
-      onClick={() =>
-        selectGraphType({ type: "descStatNum", title: "Descriptive Stats (Quantitative)" })
-      }
-    >
-      <div>
-        <img src={`/assets/icons/visualize/descriptiveStatsNumerical.svg`} />
+      <div
+        className="template"
+        onClick={() =>
+          selectGraphType({
+            type: "descStatNum",
+            title: "Descriptive Stats (Quantitative)",
+          })
+        }
+      >
+        <div>
+          <img src={`/assets/icons/visualize/descriptiveStatsNumerical.svg`} />
+        </div>
+        <div className="text">
+          <div className="title">Descriptive Stats (Quantitative)</div>
+          <div className="description">
+            Compute descriptive statistics on one or more column that contain
+            numbers.
+          </div>
+        </div>
       </div>
-      <div className="text">
-        <div className="title">Descriptive Stats (Quantitative)</div>
-        <div className="description">Compute descriptive statistics on one or more column that contain numbers.</div>
+      <div
+        className="template"
+        onClick={() =>
+          selectGraphType({
+            type: "descStatStrings",
+            title: "Descriptive Stats (Qualitative)",
+          })
+        }
+      >
+        <div>
+          <img src={`/assets/icons/visualize/descriptiveStatsStrings.svg`} />
+        </div>
+        <div className="text">
+          <div className="title">Descriptive Stats (Qualitative)</div>
+          <div className="description">
+            Compute descriptive statistics on one or more column that contain
+            words, labels, condition name, etc.
+          </div>
+        </div>
       </div>
-    </div>
-    <div
-      className="template"
-      onClick={() =>
-        selectGraphType({ type: "descStatStrings", title: "Descriptive Stats (Qualitative)" })
-      }
-    >
-      <div>
-        <img src={`/assets/icons/visualize/descriptiveStatsStrings.svg`} />
-      </div>
-      <div className="text">
-        <div className="title">Descriptive Stats (Qualitative)</div>
-        <div className="description">Compute descriptive statistics on one or more column that contain words, labels, condition name, etc.</div>
-      </div>
-    </div>
 
-    <div
-      className="template"
-      onClick={() =>
-        selectGraphType({ type: "descStatsStringsAndNumerical", title: "Descriptive Stats (Category & Quantitative)" })
-      }
-    >
-      <div>
-        <img src={`/assets/icons/visualize/descriptiveStatsStringsAndNumerical.svg`} />
+      <div
+        className="template"
+        onClick={() =>
+          selectGraphType({
+            type: "descStatsStringsAndNumerical",
+            title: "Descriptive Stats (Category & Quantitative)",
+          })
+        }
+      >
+        <div>
+          <img
+            src={`/assets/icons/visualize/descriptiveStatsStringsAndNumerical.svg`}
+          />
+        </div>
+        <div className="text">
+          <div className="title">
+            Descriptive Stats (Category & Quantitative)
+          </div>
+          <div className="description">
+            Compute descriptive statistics on a Quantitative column while using
+            labels in another column to group the rows.
+          </div>
+        </div>
       </div>
-      <div className="text">
-        <div className="title">Descriptive Stats (Category & Quantitative)</div>
-        <div className="description">Compute descriptive statistics on a Quantitative column while using labels in another column to group the rows.</div>
-      </div>
-    </div>
 
-    <div
-      className="template"
-      onClick={() =>
-        selectGraphType({ type: "descStatsStringsAndStrings", title: "Descriptive Stats (Category & Quantitative)" })
-      }
-    >
-      <div>
-        <img src={`/assets/icons/visualize/descriptiveStatsStrings.svg`} />
-      </div>
-      <div className="text">
-        <div className="title">Descriptive Stats (Category & Words)</div>
-        <div className="description">Compute descriptive statistics on a column containing words while using labels in another column to group the rows.</div>
+      <div
+        className="template"
+        onClick={() =>
+          selectGraphType({
+            type: "descStatsStringsAndStrings",
+            title: "Descriptive Stats (Category & Quantitative)",
+          })
+        }
+      >
+        <div>
+          <img src={`/assets/icons/visualize/descriptiveStatsStrings.svg`} />
+        </div>
+        <div className="text">
+          <div className="title">Descriptive Stats (Category & Words)</div>
+          <div className="description">
+            Compute descriptive statistics on a column containing words while
+            using labels in another column to group the rows.
+          </div>
+        </div>
       </div>
     </div>
-    
-  </div>
-);
+  );
 }

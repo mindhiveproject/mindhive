@@ -12,7 +12,7 @@ export default function AxesScatterPlot({
   handleContentChange,
 }) {
   const connectSelectorsCode = `
-plot_output = js.document.getElementById('figure-${sectionId}')
+html_output = js.document.getElementById('figure-${sectionId}')
 X = js.document.getElementById("xVariable-${sectionId}").value
 Y = js.document.getElementById("yVariable-${sectionId}").value
 Group = js.document.getElementById("groupVariable-${sectionId}").value

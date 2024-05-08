@@ -11,7 +11,7 @@ export default function Axes({
   handleContentChange,
 }) {
   const connectSelectorsCode = `# get relevant html elements
-plot_output = js.document.getElementById('figure-${sectionId}')
+html_output = js.document.getElementById('figure-${sectionId}')
 col1 = js.document.getElementById("col1-${sectionId}").value
 col2 = js.document.getElementById("col2-${sectionId}").value`;
 

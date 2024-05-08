@@ -23,15 +23,6 @@ export default function Section({
 
   const { type } = section;
 
-  // const handleContentChange = ({ name, content }) => {
-  //   handleChange({
-  //     target: {
-  //       name: "content",
-  //       value: { ...inputs.content, [name]: content },
-  //     },
-  //   });
-  // };
-
   const handleContentChange = ({ newContent }) => {
     handleChange({
       target: {
