@@ -94,7 +94,6 @@ export default function StateManager({
 
   return (
     <div className="graph">
-
       {!code && pyodide && (
         <TemplateSelector
           handleContentChange={handleContentChange}
