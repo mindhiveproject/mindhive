@@ -6,8 +6,14 @@ export const STUDY_SUMMARY_RESULTS = gql`
       id
       slug
       flow
+      datasets {
+        id
+        token
+        isIncluded
+      }
       summaryResults {
         id
+        metadataId
         testVersion
         type
         user {
@@ -37,33 +43,3 @@ export const STUDY_SUMMARY_RESULTS = gql`
     }
   }
 `;
-
-// export const STUDY_SUMMARY_RESULTS = gql`
-//   query STUDY_SUMMARY_RESULTS($studyId: ID!) {
-//     summaryResults(where: { study: { id: { equals: $studyId } } }) {
-//       id
-//       testVersion
-//       type
-//       user {
-//         id
-//         publicReadableId
-//       }
-//       guest {
-//         id
-//         publicId
-//         publicReadableId
-//       }
-//       study {
-//         id
-//         title
-//       }
-//       task {
-//         id
-//         title
-//       }
-//       data
-//       createdAt
-//       updatedAt
-//     }
-//   }
-// `;
