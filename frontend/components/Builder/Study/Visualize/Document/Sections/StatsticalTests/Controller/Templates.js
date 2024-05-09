@@ -49,11 +49,17 @@ else:
 if isWide:
     t_statistic, p_value = stats.ttest_ind(df[column_1], df[column_2], nan_policy="omit")
 else:
-    if len(df[groupcol].dropna().unique()) != 2:
+    if len([i for i in df[groupcol].dropna().unique() if i != ""]) != 2:
         raise TypeError(f"Error: The number of unique labels in 'groupcol' must be 2 for a two-sample t-test. Got: {df[groupcol].dropna().unique()}")
     else:
-        groups = [group_data.dropna() for label, group_data in df.dropna(subset=[groupcol]).groupby(groupcol)[quantCol]]
-        t_statistic, p_value = stats.ttest_ind(groups[0], groups[1])
+        groups = []
+        for label, group_data in df.dropna(subset=[groupcol]).groupby(groupcol)[quantCol]:
+            if label != "":
+                print(label)
+                groups.append(group_data)
+        t_statistic, p_value = stats.ttest_ind(groups[0].dropna(), groups[1].dropna())
+        print(groups[0].unique(), groups[1].unique())
+        print(t_statistic, p_value)
 
 df_to_show = pd.DataFrame({'Values': [t_statistic, p_value]}, index=['T-Statistic', 'P-Value'])
 
@@ -102,8 +108,16 @@ else:
 if isWide:
     f_statistic, p_value = stats.f_oneway(*[df[col] for col in columns])
 else:
-    groups = [group_data.dropna() for label, group_data in df.groupby(groupcol)[quantCol]]
+    groups = []
+    for label, group_data in df.dropna(subset=[groupcol]).groupby(groupcol)[quantCol]:
+        if label != "":
+            print("label", label)
+            groups.append(group_data)
+    
     f_statistic, p_value = stats.f_oneway(*groups)
+    for i in groups:
+        print(i.unique())
+    print(f_statistic, p_value)
 
 df_to_show = pd.DataFrame({'Values': [f_statistic, p_value]}, index=['F-Statistic', 'P-Value'])
 `;
