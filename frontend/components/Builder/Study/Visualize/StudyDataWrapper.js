@@ -180,7 +180,15 @@ export default function StudyDataWrapper({
   });
 
   const study = studyData?.study || {};
-  const summaryResults = study?.summaryResults || [];
+  // filter only summary results that are selected by the user to be included in the data analysis
+  const includedDatasets =
+    studyData?.study?.datasets
+      ?.filter((d) => d?.isIncluded)
+      .map((d) => d?.token) || [];
+  const summaryResults =
+    study?.summaryResults?.filter((s) =>
+      includedDatasets?.includes(s?.metadataId)
+    ) || [];
 
   // get the saved modified data
   let modifiedData = [];
