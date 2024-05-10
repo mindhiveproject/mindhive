@@ -617,7 +617,7 @@ export const StyledDataViz = styled.div`
             grid-gap: 10px;
             grid-template-columns: auto 1fr;
             font-weight: bold;
-            margin: 0px 0px 10px 0px;
+            margin: 10px 0px 10px 0px;
           }
         }
         .selectorsTestStats {

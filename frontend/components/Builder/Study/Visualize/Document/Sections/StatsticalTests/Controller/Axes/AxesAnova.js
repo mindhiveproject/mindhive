@@ -87,7 +87,7 @@ isWide = False
                   <div>
                     <a>
                       <b>Currently performing:</b> One-Way ANOVA <b>between</b>{" "}
-                      two or more columns.
+                      three or more columns.
                     </a>
                   </div>
                   <div></div>
@@ -128,7 +128,7 @@ isWide = False
             {
               key: "wide",
               value: "wide",
-              title: "Switch to performing a One-Way Anova between two columns",
+              title: "Switch to performing a One-Way Anova between three or more columns",
               description:
                 "In the example above, we would select the columns c1 and c2 to perform a t-test on them.",
               img: "/assets/icons/visualize/dataTtest.svg",
