@@ -53,7 +53,7 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
         options={options}
         selectors={selectors}
         onSelectorChange={onSelectorChange}
-        title="X-Axis"
+        title="Column(s) to observe"
         parameter="xVariableMultiple"
       />
     </div>

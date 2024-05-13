@@ -168,7 +168,7 @@ isWide = False
               options={options}
               selectors={selectors}
               onSelectorChange={onSelectorChange}
-              title="Value Column"
+              title="Quantitative Column"
               parameter="valCol"
             />
             <SelectOne
@@ -176,7 +176,7 @@ isWide = False
               options={options}
               selectors={selectors}
               onSelectorChange={onSelectorChange}
-              title="Grouping variable"
+              title="Grouping Column"
               parameter="groupcol"
             />
           </div>
