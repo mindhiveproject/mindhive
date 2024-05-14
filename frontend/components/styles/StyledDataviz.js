@@ -213,6 +213,10 @@ export const StyledDataViz = styled.div`
       outline: solid #28619E 1px;
       font-weight: 400;
     }
+    .blueFrame:hover {
+      outline: solid #28619E 2.5px;
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.27)
+    }
     .redSaveFrame {
       grid-area: 1 / 1 / 2 / 2;
       max-width: 100px;
@@ -221,13 +225,9 @@ export const StyledDataViz = styled.div`
       outline: solid #DB2828 1.5px;
       font-weight: 550;
     }
-    .optionsFrame {
-      grid-area: 1 / 3 / 3 / 4;
-      display: grid;
-      grid-template-columns: max-content max-content;
-      grid-template-rows: 1fr 1fr;
-      grid-row-gap: 15px;
-      // outline: solid #007C70 1px;
+    .redSaveFrame:hover {
+      outline: solid #DB2828 2.5px;
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.27)
     }
     .emptyStateButtons {
       display: grid;
@@ -334,13 +334,27 @@ export const StyledDataViz = styled.div`
       }
       .options {
         display: grid;
-        grid-template-columns: auto 10px auto;
-        grid-template-rows: repeat(2, 1fr);
-        grid-gap: 5px;
+        grid-template-columns: max-content max-content;
+        grid-template-rows: 1fr;
+        grid-column-gap: 25px;
+        justify-content: space-between;
         padding: 12px;
-        cursor: pointer;
+      }
+      .optionsFrame {
+        display: grid;
+        grid-area: 1 / 2 / 2 / 3;
+        grid-template-columns: max-content max-content;
+        grid-template-rows: 1fr 1fr;
+        grid-column-gap: 20px;
+        grid-row-gap: 15px;
+        padding: 0px 13px 4px 13px;
+        // outline: solid #007C70 1px;
       }
       .optionsButtonGreen {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
         padding: 4px 13px 4px 13px;
         border-radius: 8px;
         background: #F1F7F6 ;
@@ -357,15 +371,25 @@ export const StyledDataViz = styled.div`
         cursor: pointer;
         color: #007C70;
         font-weight: 450;
+      }
+      .optionsButtonGreen:hover {
+        outline: solid #007C70 2px; /* Adjust the color and width as needed */
       }
       .optionsButtonYellow {
-        padding: 4px 33px 4px 13px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 13px 4px 13px;
         border-radius: 8px;
         background: #ffc10723 ;
         box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
         cursor: pointer;
         // color: #ffc107ff;
         font-weight: 450;
+      }
+      .optionsButtonYellow:hover {
+        outline: solid #FFC107 2px; /* Adjust the color and width as needed */
       }
 
       .task {

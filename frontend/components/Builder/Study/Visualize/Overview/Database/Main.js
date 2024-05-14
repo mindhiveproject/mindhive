@@ -95,13 +95,13 @@ export default function Database({
         />
 
         <div 
-          className="dataButtonPart menuButtonThin optionsFrame"
+          className="optionsFrame"
           >
 
           <Dropdown
-            className="optionsButtonGreen"
             icon={
-              <div>
+              <div
+              className="optionsButtonGreen">
                 <img src={`/assets/icons/visualize/add_notes.svg`} alt="Add a column" />
                 <div>Add a column</div>
               </div>
