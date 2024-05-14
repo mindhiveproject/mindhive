@@ -130,8 +130,8 @@ isWide = False
               value: "wide",
               title: "Switch to performing a One-Way Anova between three or more columns",
               description:
-                "In the example above, we would select the columns c1 and c2 to perform a t-test on them.",
-              img: "/assets/icons/visualize/dataTtest.svg",
+                "In the example above, we would select the columns c1, c2, and c3 to perform a One-Way Anova on them.",
+              img: "/assets/icons/visualize/dataOneWayAnova.svg",
               link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
             },
             {
