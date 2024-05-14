@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Dropdown, DropdownMenu } from "semantic-ui-react";
 
-import SelectMultiple from "../Fields/SelectMultiple";
 import SelectOne from "../Fields/SelectOne";
 
 export default function Axes({
@@ -72,25 +71,26 @@ isWide = False
   return (
     <div className="selectorsStats">
       <Dropdown
-        className="dataFormatSelector"
         icon={
-          <div className="menuItemThreeDiv menuButton">
+          <div className="dataFormatSelector">
             {selectedOption &&
               (selectedOption === "wide" ? (
                 <>
                   <img
                     src="/assets/icons/visualize/more_vert.svg"
                     alt="Menu Icon"
-                  />
+                    />
                   <div>
-                    <a>
-                      <b>Currently performing:</b> T-Test <b>between</b> two
-                      columns.
-                    </a>
-                  </div>
-                  <div></div>
-                  <div>
-                    <a>(Click here to use a label column to group your rows)</a>
+                    <div>
+                      <a>
+                        <b>Currently performing:</b> T-Test <b>between</b> two
+                        columns.
+                      </a>
+                    </div>
+                    <div></div>
+                    <div>
+                      <a>(Click here to use a label column to group your rows)</a>
+                    </div>
                   </div>
                 </>
               ) : (
@@ -118,7 +118,8 @@ isWide = False
           </div>
         }
       >
-        <DropdownMenu>
+        <DropdownMenu
+        className="customDropdownMenu">
           {[
             {
               key: "wide",
@@ -144,7 +145,7 @@ isWide = False
             .map((option) => (
               <div
                 key={option.key}
-                className="menuItemDataType menuButton"
+                className="menuItemDataType"
                 onClick={() => onSelectorChoice(option)}
               >
                 <h3>{option.title}</h3>

@@ -60,21 +60,21 @@ export const StyledDataViz = styled.div`
       white-space: normal;
     }
   }
+  .customDropdownMenu{
+    display: grid;
+  }
   .menuItemDataType {
     display: grid;
-    grid-template-columns: 250px;
+    grid-template-columns: min-content;
     grid-template-rows: 40px auto;
     padding: 20px;
     grid-gap: 12px;
     align-items: start; 
+    justify-content: center;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     cursor: pointer;
-    .img {
-      width: 100%;
-      height: auto;
-    }
     div {
       display: flex;
       justify-content: start;
@@ -92,6 +92,16 @@ export const StyledDataViz = styled.div`
       word-break: break-word;
       white-space: normal;
     }
+  }
+  .menuItemDataType p {
+    font-size: 14px;
+    width: auto; 
+    word-break: break-word;
+    white-space: normal;
+  }
+  .menuItemDataType img {
+    width: 100%;
+    max-height: 200px;
   }
   .dropdownMenu {
     background-color: #f1f7f6; 
@@ -120,9 +130,11 @@ export const StyledDataViz = styled.div`
     box-sizing: border-box;
   }
   .dataFormatSelector {
-    grid-template-columns: 15px auto;
-    // max-width: 370px;
+    display: grid;
+    grid-template-columns: 15px 1fr;
+    // max-width: 1fr;
     column-gap: 15px;
+    align-items: center;
     background-color: #E6F2F1; 
     border-radius: 8px; 
     padding: 15px 10px 10px 10px;
@@ -207,6 +219,9 @@ export const StyledDataViz = styled.div`
       outline: solid #007C70 1px;
       box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
       font-weight: 600;
+    }
+    .greenFrame:hover {
+      outline: solid #007C70 2px; /* Adjust the color and width as needed */
     }
     .blueFrame {
       color: #28619E;
@@ -651,7 +666,7 @@ export const StyledDataViz = styled.div`
         .selectorsStats {
           margin: 20px 100px 50px;
           display: grid;
-          grid-gap: 21px;
+          grid-gap: 41px;
         }
         .selectorLine {
           display: grid;
