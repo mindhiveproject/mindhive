@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_USERNAMES_OF_CLASS } from "../Queries/User";
+import { GET_USERNAMES_WHERE } from "../Queries/User";
 
 import { Dropdown } from "semantic-ui-react";
 
@@ -8,7 +8,7 @@ export default function Collaborators({
   collaborators,
   handleChange,
 }) {
-  const { data, loading, error } = useQuery(GET_USERNAMES_OF_CLASS, {
+  const { data, loading, error } = useQuery(GET_USERNAMES_WHERE, {
     variables: {
       input: {
         OR: [

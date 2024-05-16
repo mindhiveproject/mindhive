@@ -44,42 +44,41 @@ var import_postmark = require("postmark");
 var client = new import_postmark.ServerClient(process.env.MAIL_TOKEN);
 async function sendPasswordResetEmail(resetToken, to) {
   const info = await client.sendEmailWithTemplate({
-    From: "no-reply@prettyspecial.one",
+    From: "info@mindhive.science",
     To: to,
     TemplateAlias: "password-reset",
     TemplateModel: {
-      product_name: "PrettySpecial",
-      subject: "Your password reset token for MindHive",
+      action_url: `${process.env.FRONTEND_URL}/login/reset?t=${resetToken}`,
+      support_url: `${process.env.FRONTEND_URL}/docs/about`,
+      product_name: "MindHive",
       company_name: "MindHive",
-      company_address: "New York",
-      support_url: `${process.env.FRONTEND_URL}/menu/docs/about`,
-      action_url: `${process.env.FRONTEND_URL}/menu/reset?token=${resetToken}`
-    },
-    MessageStream: "ps-stream"
+      company_addres: "New York"
+    }
   });
 }
-async function sendNotificationEmail(to, subject, text34) {
+async function sendNotificationEmail(to, title, message, link) {
   const info = await client.sendEmailWithTemplate({
-    From: "no-reply@prettyspecial.one",
+    From: "info@mindhive.science",
     To: to,
-    TemplateAlias: "general",
+    TemplateAlias: "new-update",
     TemplateModel: {
       product_name: "MindHive",
-      subject,
+      update_name: title,
+      text: message,
+      action_url: link,
+      support_email: "info@mindhive.science",
       company_name: "MindHive",
-      company_address: "New York",
-      support_url: `${process.env.FRONTEND_URL}/menu/docs/about`,
-      text: text34
-    },
-    MessageStream: "ps-stream"
+      company_addres: "New York"
+    }
   });
 }
 
 // mutations/sendEmail.ts
 async function sendEmail(root, {
   receiverId,
-  header,
-  body
+  title,
+  message,
+  link
 }, context) {
   const sesh = context.session;
   if (!sesh.itemId) {
@@ -90,7 +89,7 @@ async function sendEmail(root, {
     resolveFields: "email"
   });
   const email = user?.email || "produkt5@yandex.ru";
-  await sendNotificationEmail(email, header, body);
+  await sendNotificationEmail(email, title, message, link);
   return { message: "Email was sent" };
 }
 var sendEmail_default = sendEmail;

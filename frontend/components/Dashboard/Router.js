@@ -15,6 +15,7 @@ import ConsentMain from "./Consent/Main";
 import ProposalsMain from "./Proposals/Main";
 import LessonsMain from "./Lessons/Main";
 import TagsMain from "./Tags/Main";
+import UpdatesMain from "./Updates/Main";
 import UserPage from "./UserPage/Main";
 import Assignments from "./Assignment/Main";
 
@@ -79,6 +80,10 @@ export default function DashboardRouter({ query }) {
 
   if (area === "tags") {
     return <TagsMain query={query} user={user} />;
+  }
+
+  if (area === "updates") {
+    return <UpdatesMain query={query} user={user} />;
   }
 
   if (area === "students") {

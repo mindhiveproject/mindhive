@@ -28,38 +28,37 @@ export async function sendPasswordResetEmail(
 ): Promise<void> {
   // email user a token
   const info = (await client.sendEmailWithTemplate({
-    From: "no-reply@prettyspecial.one",
+    From: "info@mindhive.science",
     To: to,
     TemplateAlias: "password-reset",
     TemplateModel: {
-      product_name: "PrettySpecial",
-      subject: "Your password reset token for MindHive",
+      action_url: `${process.env.FRONTEND_URL}/login/reset?t=${resetToken}`,
+      support_url: `${process.env.FRONTEND_URL}/docs/about`,
+      product_name: "MindHive",
       company_name: "MindHive",
-      company_address: "New York",
-      support_url: `${process.env.FRONTEND_URL}/menu/docs/about`,
-      action_url: `${process.env.FRONTEND_URL}/menu/reset?token=${resetToken}`,
+      company_addres: "New York",
     },
-    MessageStream: "ps-stream",
   })) as MailResponse;
 }
 
 export async function sendNotificationEmail(
   to: string,
-  subject: string,
-  text: string
+  title: string,
+  message: string,
+  link: string
 ): Promise<void> {
   const info = (await client.sendEmailWithTemplate({
-    From: "no-reply@prettyspecial.one",
+    From: "info@mindhive.science",
     To: to,
-    TemplateAlias: "general",
+    TemplateAlias: "new-update",
     TemplateModel: {
       product_name: "MindHive",
-      subject: subject,
+      update_name: title,
+      text: message,
+      action_url: link,
+      support_email: "info@mindhive.science",
       company_name: "MindHive",
-      company_address: "New York",
-      support_url: `${process.env.FRONTEND_URL}/menu/docs/about`,
-      text: text,
+      company_addres: "New York",
     },
-    MessageStream: "ps-stream",
   })) as MailResponse;
 }

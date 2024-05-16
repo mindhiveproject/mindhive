@@ -19,8 +19,8 @@ export default function RequestReset() {
   );
   async function handleSubmit(e) {
     e.preventDefault();
-    await requestreset();
-    alert("Check your email box");
+    const res = await requestreset();
+    alert("If this user exists, we have sent you a password reset email");
     resetForm();
   }
 

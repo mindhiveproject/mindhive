@@ -127,7 +127,7 @@ export const RESET_MUTATION = gql`
     $password: String!
     $token: String!
   ) {
-    redeemUserPasswordResetToken(
+    redeemProfilePasswordResetToken(
       email: $email
       password: $password
       token: $token

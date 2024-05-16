@@ -4,12 +4,14 @@ async function sendEmail(
   root: any,
   {
     receiverId,
-    header,
-    body,
+    title,
+    message,
+    link,
   }: {
     receiverId: string;
-    header: string;
-    body: string;
+    title: string;
+    message: string;
+    link: string;
   },
   context: KeystoneContext
 ): Promise<ReportCreateInput> {
@@ -27,7 +29,7 @@ async function sendEmail(
 
   const email = user?.email || "produkt5@yandex.ru";
 
-  await sendNotificationEmail(email, header, body);
+  await sendNotificationEmail(email, title, message, link);
 
   return { message: "Email was sent" };
 }

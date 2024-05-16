@@ -35,3 +35,11 @@ export const DELETE_UPDATE = gql`
     }
   }
 `;
+
+export const EDIT_UPDATE = gql`
+  mutation EDIT_UPDATE($id: ID!, $input: UpdateUpdateInput!) {
+    updateUpdate(where: { id: $id }, data: $input) {
+      id
+    }
+  }
+`;
