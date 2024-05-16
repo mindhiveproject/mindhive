@@ -6,8 +6,12 @@ import json
 html_output = js.document.getElementById('figure-${sectionId}')
 
 colMultiple = None if js.document.getElementById("colMultiple-${sectionId}") == None else js.document.getElementById("colMultiple-${sectionId}")
-colMultiple_json = colMultiple.value.split(",")
-columns = colMultiple_json
+if colMultiple != None:
+    colMultiple_json = colMultiple.value.split(",")
+    columns = colMultiple_json
+else:
+    columns = None
+
 
 groupVariable= None if js.document.getElementById("groupVariable-${sectionId}") == None else js.document.getElementById("groupVariable-${sectionId}").value
 

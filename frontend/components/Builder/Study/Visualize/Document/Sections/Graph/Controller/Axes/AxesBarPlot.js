@@ -205,26 +205,6 @@ isWide = False
             />
           </div>
         ))}
-      {/* <div className="subsection">
-        <select
-          id={`marginalPlot-${sectionId}`}
-          name="marginalPlot"
-          value={selectors["marginalPlot"]}
-          onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, marginalPlot: target.value },
-              },
-            })
-          }
-          onBlur={() => updateCode({ code })}
-        >
-          {errBarsOptions.map((option) => (
-            <option key={option.value} value={option.value}>{option.text}</option>
-          ))}
-
-        </select>
-      </div> */}
     </div>
   );
 }

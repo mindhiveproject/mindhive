@@ -60,21 +60,21 @@ export const StyledDataViz = styled.div`
       white-space: normal;
     }
   }
+  .customDropdownMenu{
+    display: grid;
+  }
   .menuItemDataType {
     display: grid;
-    grid-template-columns: 250px;
+    grid-template-columns: min-content;
     grid-template-rows: 40px auto;
     padding: 20px;
     grid-gap: 12px;
     align-items: start; 
+    justify-content: center;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     cursor: pointer;
-    .img {
-      width: 100%;
-      height: auto;
-    }
     div {
       display: flex;
       justify-content: start;
@@ -92,6 +92,16 @@ export const StyledDataViz = styled.div`
       word-break: break-word;
       white-space: normal;
     }
+  }
+  .menuItemDataType p {
+    font-size: 14px;
+    width: auto; 
+    word-break: break-word;
+    white-space: normal;
+  }
+  .menuItemDataType img {
+    width: 100%;
+    max-height: 200px;
   }
   .dropdownMenu {
     background-color: #f1f7f6; 
@@ -120,9 +130,11 @@ export const StyledDataViz = styled.div`
     box-sizing: border-box;
   }
   .dataFormatSelector {
-    grid-template-columns: 15px auto;
-    // max-width: 370px;
+    display: grid;
+    grid-template-columns: 15px 1fr;
+    // max-width: 1fr;
     column-gap: 15px;
+    align-items: center;
     background-color: #E6F2F1; 
     border-radius: 8px; 
     padding: 15px 10px 10px 10px;
@@ -208,10 +220,17 @@ export const StyledDataViz = styled.div`
       box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
       font-weight: 600;
     }
+    .greenFrame:hover {
+      outline: solid #007C70 2px; /* Adjust the color and width as needed */
+    }
     .blueFrame {
       color: #28619E;
       outline: solid #28619E 1px;
       font-weight: 400;
+    }
+    .blueFrame:hover {
+      outline: solid #28619E 2.5px;
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.27)
     }
     .redSaveFrame {
       grid-area: 1 / 1 / 2 / 2;
@@ -221,13 +240,9 @@ export const StyledDataViz = styled.div`
       outline: solid #DB2828 1.5px;
       font-weight: 550;
     }
-    .optionsFrame {
-      grid-area: 1 / 3 / 3 / 4;
-      display: grid;
-      grid-template-columns: max-content max-content;
-      grid-template-rows: 1fr 1fr;
-      grid-row-gap: 15px;
-      // outline: solid #007C70 1px;
+    .redSaveFrame:hover {
+      outline: solid #DB2828 2.5px;
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.27)
     }
     .emptyStateButtons {
       display: grid;
@@ -334,13 +349,27 @@ export const StyledDataViz = styled.div`
       }
       .options {
         display: grid;
-        grid-template-columns: auto 10px auto;
-        grid-template-rows: repeat(2, 1fr);
-        grid-gap: 5px;
+        grid-template-columns: max-content max-content;
+        grid-template-rows: 1fr;
+        grid-column-gap: 25px;
+        justify-content: space-between;
         padding: 12px;
-        cursor: pointer;
+      }
+      .optionsFrame {
+        display: grid;
+        grid-area: 1 / 2 / 2 / 3;
+        grid-template-columns: max-content max-content;
+        grid-template-rows: 1fr 1fr;
+        grid-column-gap: 20px;
+        grid-row-gap: 15px;
+        padding: 0px 13px 4px 13px;
+        // outline: solid #007C70 1px;
       }
       .optionsButtonGreen {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
         padding: 4px 13px 4px 13px;
         border-radius: 8px;
         background: #F1F7F6 ;
@@ -357,15 +386,25 @@ export const StyledDataViz = styled.div`
         cursor: pointer;
         color: #007C70;
         font-weight: 450;
+      }
+      .optionsButtonGreen:hover {
+        outline: solid #007C70 2px; /* Adjust the color and width as needed */
       }
       .optionsButtonYellow {
-        padding: 4px 33px 4px 13px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 13px 4px 13px;
         border-radius: 8px;
         background: #ffc10723 ;
         box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
         cursor: pointer;
         // color: #ffc107ff;
         font-weight: 450;
+      }
+      .optionsButtonYellow:hover {
+        outline: solid #FFC107 2px; /* Adjust the color and width as needed */
       }
 
       .task {
@@ -617,7 +656,7 @@ export const StyledDataViz = styled.div`
             grid-gap: 10px;
             grid-template-columns: auto 1fr;
             font-weight: bold;
-            margin: 0px 0px 10px 0px;
+            margin: 10px 0px 10px 0px;
           }
         }
         .selectorsTestStats {
@@ -627,7 +666,7 @@ export const StyledDataViz = styled.div`
         .selectorsStats {
           margin: 20px 100px 50px;
           display: grid;
-          grid-gap: 21px;
+          grid-gap: 41px;
         }
         .selectorLine {
           display: grid;

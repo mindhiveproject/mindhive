@@ -74,9 +74,8 @@ isWide = False
   return (
     <div className="selectorsStats">
       <Dropdown
-        className="dataFormatSelector"
         icon={
-          <div className="menuItemThreeDiv menuButton">
+          <div className="dataFormatSelector">
             {selectedOption &&
               (selectedOption === "wide" ? (
                 <>
@@ -85,17 +84,19 @@ isWide = False
                     alt="Menu Icon"
                   />
                   <div>
-                    <a>
-                      <b>Currently performing:</b> One-Way ANOVA <b>between</b>{" "}
-                      two or more columns.
-                    </a>
-                  </div>
-                  <div></div>
-                  <div>
-                    <a>
-                      (Click here to use a label column to group each rows per
-                      unique label)
-                    </a>
+                    <div>
+                      <a>
+                        <b>Currently performing:</b> One-Way ANOVA <b>between</b>{" "}
+                        three or more columns.
+                      </a>
+                    </div>
+                    <div></div>
+                    <div>
+                      <a>
+                        (Click here to use a label column to group each rows per
+                        unique label)
+                      </a>
+                    </div>
                   </div>
                 </>
               ) : (
@@ -123,15 +124,16 @@ isWide = False
           </div>
         }
       >
-        <DropdownMenu>
+        <DropdownMenu
+        className="customDropdownMenu">
           {[
             {
               key: "wide",
               value: "wide",
-              title: "Switch to performing a One-Way Anova between two columns",
+              title: "Switch to performing a One-Way Anova between three or more columns",
               description:
-                "In the example above, we would select the columns c1 and c2 to perform a t-test on them.",
-              img: "/assets/icons/visualize/dataTtest.svg",
+                "In the example above, we would select the columns c1, c2, and c3 to perform a One-Way Anova on them.",
+              img: "/assets/icons/visualize/dataOneWayAnova.svg",
               link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
             },
             {
@@ -140,27 +142,31 @@ isWide = False
               title:
                 "Switch to using a label column to sort rows of a value column",
               description:
-                "In the example above, we would select the column 'attrib' as a grouping column. This grouping is performed on the 'value' column which contains values for both conditions",
-              img: "/assets/icons/visualize/dataTtestLong.svg",
+                "In the example above, we would select the column 'attrib' as a grouping column. This grouping is performed on the 'value' column which contains values for the conditions c1, c2, and c3.",
+              img: "/assets/icons/visualize/dataAnovaLong.svg",
               link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
             },
           ]
-            .filter((option) => option.value !== selectedOption)
+             .filter((option) => option.value !== selectedOption)
             .map((option) => (
+
               <div
-                key={option.key}
-                className="menuItemDataType menuButton"
-                onClick={() => onSelectorChoice(option)}
-              >
-                <h3>{option.title}</h3>
-                <img src={option.img} alt={option.title} />
-                <p>{option.description}</p>
-                {/* <div className="slidesCard">
-          <img src={`/assets/icons/visualize/googleSlides.svg`} alt="Google Slides" />
-          <a href={option.link} target="_blank" rel="noopener noreferrer">
-            Click here to see the lecture slides
-          </a>
-        </div> */}
+                className="customDropdownMenu">
+                <div
+                  key={option.key}
+                  className="menuItemDataType"
+                  onClick={() => onSelectorChoice(option)}
+                >
+                  <h3>{option.title}</h3>
+                  <img src={option.img} alt={option.title} />
+                  <p>{option.description}</p>
+                  {/* <div className="slidesCard">
+            <img src={`/assets/icons/visualize/googleSlides.svg`} alt="Google Slides" />
+            <a href={option.link} target="_blank" rel="noopener noreferrer">
+              Click here to see the lecture slides
+            </a>
+          </div> */}
+                </div>
               </div>
             ))}
         </DropdownMenu>
@@ -173,7 +179,7 @@ isWide = False
               options={options}
               selectors={selectors}
               onSelectorChange={onSelectorChange}
-              title="Value Column"
+              title="Quantitative Column"
               parameter="valCol"
             />
             <SelectOne
@@ -181,7 +187,7 @@ isWide = False
               options={options}
               selectors={selectors}
               onSelectorChange={onSelectorChange}
-              title="Grouping variable"
+              title="Grouping Column"
               parameter="groupcol"
             />
           </div>

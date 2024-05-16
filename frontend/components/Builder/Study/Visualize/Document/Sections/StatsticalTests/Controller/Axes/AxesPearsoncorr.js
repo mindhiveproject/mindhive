@@ -37,22 +37,24 @@ col2 = js.document.getElementById("col2-${sectionId}").value`;
 
   return (
     <div className="selectorsStats">
-      <SelectOne
-        sectionId={sectionId}
-        options={options}
-        selectors={selectors}
-        onSelectorChange={onSelectorChange}
-        title="Predictor Column"
-        parameter="col1"
-      />
-      <SelectOne
-        sectionId={sectionId}
-        options={options}
-        selectors={selectors}
-        onSelectorChange={onSelectorChange}
-        title="Predicted Column"
-        parameter="col2"
-      />
+      <div className="selectorsTestStats">
+        <SelectOne
+          sectionId={sectionId}
+          options={options}
+          selectors={selectors}
+          onSelectorChange={onSelectorChange}
+          title="Predictor Column"
+          parameter="col1"
+        />
+        <SelectOne
+          sectionId={sectionId}
+          options={options}
+          selectors={selectors}
+          onSelectorChange={onSelectorChange}
+          title="Predicted Column"
+          parameter="col2"
+        />
+      </div>
     </div>
   );
 }

@@ -18,7 +18,7 @@ export default function Reverse({
     if (isNaN(columnValue)) {
       return null;
     }
-    return maxValue - columnValue + 1;
+    return maxValue - columnValue;
   };
   
 

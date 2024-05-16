@@ -1,4 +1,4 @@
-import { Dropdown, DropdownMenu, DropdownItem } from "semantic-ui-react";
+import { Dropdown, DropdownMenu, DropdownItem, Icon } from "semantic-ui-react";
 
 export default function Variable({ column, onVariableChange }) {
   const onRename = ({ variable }) => {
@@ -46,10 +46,10 @@ export default function Variable({ column, onVariableChange }) {
                 variable: column?.field,
                 property: "hide",
                 value: !column?.hide,
-              })
-            }
-          >
-            <img src={`/assets/icons/visualize/visibility.svg`} />
+                })}>
+
+            {/* <img src={`/assets/icons/visualize/visibility.svg`} /> */}
+            <Icon name="eye" color="grey"  /> 
           </div>
 
           <div>
@@ -68,8 +68,9 @@ export default function Variable({ column, onVariableChange }) {
                   }
                 >
                   <div className="menuItem">
-                    <img src={`/assets/icons/visualize/visibility.svg`} />
-                    <div>Toggle in workspace</div>
+                    {/* <img src={`/assets/icons/visualize/visibility.svg`} />*/}
+                    <Icon name="eye slash" color="grey"  /> 
+                    <div>Hide Column</div>
                   </div>
                 </DropdownItem>
 
@@ -101,7 +102,20 @@ export default function Variable({ column, onVariableChange }) {
           </div>
         </div>
       ) : (
-        <div className="icons"></div>
+        <div className="icons">
+          <div
+              className="visibilityIcon"
+              onClick={() =>
+                onVariableChange({
+                  variable: column?.field,
+                  property: "hide",
+                  value: !column?.hide,
+                  })}>
+                    
+              <Icon name="eye slash" color="grey"  />
+          </div>
+          <div></div>
+        </div>
       )}
     </div>
   );
