@@ -113,12 +113,56 @@ export const StyledDataViz = styled.div`
   .slidesCard {
     grid-template-columns: 15px 100%;
     column-gap: 15px;
+    max-width: max-content;
     background-color: #fbbc041e; 
     border-radius: 8px; 
     padding: 15px 10px 10px 10px;
     box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
     box-sizing: border-box;
   }
+
+  .resourcesCard {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    column-gap: 15px;
+    row-gap: 6px;
+    max-width: max-content;
+    background-color: #ECF8FB;
+    border-radius: 8px;
+    padding: 15px 15px 10px 10px;
+    margin: 0px 0px 15px 0px;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
+    box-sizing: border-box;
+    align-items: center; /* Center items vertically */
+    justify-items: start; /* Align items to the start horizontally */
+  }
+  .resourcesCard:hover {
+    cursor: pointer;
+    outline: solid #28619E 1.5px;
+  }
+  
+  .resourcesCardImage {
+    width: 100%;
+    height: auto;
+    max-width: 250px;
+  }
+  
+  .resourcesCardTitle {
+    grid-area: 1 / 2 / 2 / 3;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    color: #28619E;
+  }
+
+  .resourcesCardLink {
+    grid-area: 2 / 2 / 3 / 3; 
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    color: #000;
+  }
+    
   .dataTypeSelector {
     grid-template-columns: 15px 200px;
     max-width: 370px;
@@ -650,7 +694,6 @@ export const StyledDataViz = styled.div`
           display: grid;
           margin: 20px;
           grid-gap: 21px;
-          height: 60px;
           .header {
             display: grid;
             grid-gap: 10px;

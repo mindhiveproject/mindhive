@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Dropdown, DropdownMenu } from "semantic-ui-react";
+import { 
+  Dropdown, 
+  DropdownMenu,
+  Icon,
+  AccordionTitle,
+  AccordionContent,
+  Accordion,
+} from "semantic-ui-react";
 
 import SelectMultiple from "../Fields/SelectMultiple";
 import SelectOne from "../Fields/SelectOne";
@@ -16,6 +23,23 @@ export default function Axes({
   const [selectedDataFormat, setSelectedDataFormat] = useState(
     selectors["dataType"] || "quant"
   );
+
+  const [activeIndex, setActiveIndex] = useState(-1);
+
+  const handleClick = (e, titleProps) => {
+    const { index } = titleProps;
+    const newIndex = activeIndex === index ? -1 : index;
+    setActiveIndex(newIndex);
+  };
+
+  const resourcesList = [
+    {
+      title: "What is a table?",
+      alt:   "External link",
+      img:   "/assets/icons/visualize/openNewTab.svg",
+      link:  "https://datavizproject.com/data-type/table-chart/#",
+    },
+  ]
 
   const connectSelectorsCode = `
 import json
@@ -157,6 +181,33 @@ isQuant = dataType == "quant"
         id={`dataType-${sectionId}`}
         value={selectedDataFormat}
       />
+      <Accordion>
+          <AccordionTitle
+            active={activeIndex === 0}
+            index={0}
+            onClick={handleClick}
+          >
+            <Icon name="dropdown" />
+            Resources
+          </AccordionTitle>
+          <AccordionContent active={activeIndex === 0}>
+          {resourcesList.map((option) => (
+            <a
+              className="resourcesCard"
+              href={option.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              key={option.link} 
+            >
+              <img className="resourcesCardImage" src={option.img} alt={option.alt} />
+              <div>
+                <div className="resourcesCardTitle">{option.title}</div>
+                <div className="resourcesCardLink">Click here to access the resource</div>
+              </div>
+            </a>
+          ))}
+          </AccordionContent>
+        </Accordion>
     </div>
   );
 }
