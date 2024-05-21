@@ -352,6 +352,9 @@ export const StyledDataViz = styled.div`
         background: #ffefd561;
       }
       .section {
+        display: grid;
+        grid-template-columns: 15px 1fr;
+        column-gap: 8px;
         padding: 5px 20px;
         cursor: pointer;
         :hover {
@@ -550,6 +553,7 @@ export const StyledDataViz = styled.div`
       border-radius: 8px;
       background: #fcfdfc;
       box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.17);
+      max-width 1500px;
       
       .sectionHeader {
         display: grid;
@@ -706,7 +710,7 @@ export const StyledDataViz = styled.div`
         }
         .selectorLine {
           display: grid;
-          grid-template-columns: minmax(auto, 200px) 1fr;
+          grid-template-columns: minmax(max-content, 200px) 1fr;
           border-radius: 8px;
           border: 1px solid #eaeaea;
           background: #fff;
@@ -733,6 +737,10 @@ export const StyledDataViz = styled.div`
               height: 100%;
               padding: 9px 13px;
               min-width: 98%;
+              max-width: 200px;
+              overflow-wrap: break-word;
+              word-wrap: break-word;
+              word-break: break-word;
             }
           }
         }
