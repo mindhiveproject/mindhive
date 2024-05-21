@@ -35,7 +35,7 @@ export default function Axes({
     {
       title: "What is a One-way ANOVA?",
       alt:   "External link",
-      img:   "/assets/icons/visualize/openNewTab.svg",
+      img:   "/assets/icons/visualize/externalNewTab.svg",
       link:  "https://www.scribbr.com/statistics/one-way-anova/",
     },
   ]

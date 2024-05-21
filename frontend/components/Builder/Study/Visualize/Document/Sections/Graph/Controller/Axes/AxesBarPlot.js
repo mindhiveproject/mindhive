@@ -42,19 +42,19 @@ export default function Axes({
     {
       title: "What is a Bar Plot?",
       alt:   "External link",
-      img:   "/assets/icons/visualize/openNewTab.svg",
+      img:   "/assets/icons/visualize/externalNewTab.svg",
       link:  "https://datavizcatalogue.com/methods/bar_chart.html",
     },
     {
       title: "More about the Standard Error",
       alt:   "External link",
-      img:   "/assets/icons/visualize/openNewTab.svg",
+      img:   "/assets/icons/visualize/externalNewTab.svg",
       link:  "https://www.scribbr.com/statistics/standard-error/",
     },
     {
       title: "Confidence Intervales, what are they?",
       alt:   "External link",
-      img:   "/assets/icons/visualize/openNewTab.svg",
+      img:   "/assets/icons/visualize/externalNewTab.svg",
       link:  "https://www.scribbr.com/statistics/confidence-interval/",
     },
   ]

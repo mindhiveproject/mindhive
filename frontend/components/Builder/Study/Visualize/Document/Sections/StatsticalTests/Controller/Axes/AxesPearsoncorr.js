@@ -32,7 +32,7 @@ export default function Axes({
     {
       title: "What's a Pearson's correlation",
       alt:   "External link",
-      img:   "/assets/icons/visualize/openNewTab.svg",
+      img:   "/assets/icons/visualize/externalNewTab.svg",
       link:  "https://www.scribbr.com/statistics/pearson-correlation-coefficient/",
     },
   ]
