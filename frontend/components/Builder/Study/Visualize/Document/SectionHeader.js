@@ -1,5 +1,6 @@
 import { Dropdown, DropdownMenu } from "semantic-ui-react";
 import DeleteSection from "./DeleteSection";
+import RenameSection from "./RenameSection";
 import { StyledInput } from "../../../../styles/StyledForm";
 
 const sections = {
@@ -31,17 +32,33 @@ export default function SectionHeader({
   description,
   handleChange,
 }) {
+
+  const defaultTitle = sections?.[section?.type]?.title;
+
   return (
     <>
       <div className="sectionHeader" id={section?.id}>
         <div>
-          <img src={sections?.[section?.type]?.img} />
+          <img src={sections?.[section?.type]?.img} alt={defaultTitle} />
         </div>
-        <div>{sections?.[section?.type]?.title}</div>
+        <div>{defaultTitle}</div>
+        {section?.title !== defaultTitle ? (
+        <>
+          <div>—</div>
+          <div>{section?.title}</div>
+        </>
+      ) : (
+        <>
+          <div></div>
+          <div></div>
+        </>
+      )}
+        <div></div>
         <div>
           <Dropdown direction="left">
             <DropdownMenu>
               <DeleteSection studyId={studyId} sectionId={section?.id} />
+              <RenameSection studyId={studyId} sectionId={section?.id} />
             </DropdownMenu>
           </Dropdown>
         </div>

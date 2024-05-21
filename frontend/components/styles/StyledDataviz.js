@@ -545,23 +545,16 @@ export const StyledDataViz = styled.div`
     overflow-y: auto;
     .section {
       display: grid;
-      // padding: 10px 0px;
-      // box-shadow: 0px 2px 500px 0px rgba(0, 0, 0, 0.07);
-      // box-shadow: 0px 2px 10px 0px  papayawhip;
-      // box-shadow: 0px 2px 10px 0px  #007c70;
       padding: 10px 32px 30px;
       margin: 10px 32px 30px;
       border-radius: 8px;
       background: #fcfdfc;
       box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.17);
-      // :hover {
-      //   background: #000000;
-      // }
-
+      
       .sectionHeader {
         display: grid;
         grid-gap: 10px;
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: auto max-content max-content max-content 1fr auto;
         margin: 10px 0px 5px 0px;
         color: #000;
         font-family: Lato;
