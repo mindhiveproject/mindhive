@@ -51,13 +51,13 @@ legend_title_text = js.document.getElementById("legend_title_text-${sectionId}")
     {
       title: "Scatter Plot",
       alt:   "External link to trendline resource",
-      img:   "/assets/icons/visualize/openNewTab.svg",
+      img:   "/assets/icons/visualize/externalNewTab.svg",
       link:  "",
     },
     {
       title: "Trendline",
       alt:   "External link to trendline resource",
-      img:   "/assets/icons/visualize/openNewTab.svg",
+      img:   "/assets/icons/visualize/externalNewTab.svg",
       link:  "https://www.storytellingwithdata.com/blog/2020/10/20/thoughts-on-trendlines#:~:text=A%20trendline%20is%20a%20line,data%20(e.g.%20regression%20analysis)",
     },
   ]

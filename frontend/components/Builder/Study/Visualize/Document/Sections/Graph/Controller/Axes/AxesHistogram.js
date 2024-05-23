@@ -32,7 +32,7 @@ export default function Axes({
     {
       title: "What is an Histogram?",
       alt:   "External link",
-      img:   "/assets/icons/visualize/openNewTab.svg",
+      img:   "/assets/icons/visualize/externalNewTab.svg",
       link:  "https://datavizcatalogue.com/methods/histogram.html",
     },
   ]

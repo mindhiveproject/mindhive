@@ -56,7 +56,7 @@ isWide = False
     {
       title: "Independent samples t-test",
       alt:   "External link",
-      img:   "/assets/icons/visualize/openNewTab.svg",
+      img:   "/assets/icons/visualize/externalNewTab.svg",
       link:  "https://www.scribbr.com/statistics/t-test/",
     },
   ]

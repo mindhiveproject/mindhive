@@ -33,6 +33,29 @@ export default function Contents({
     }
   };
 
+  const sections = {
+    PARAGRAPH: {
+      title: "Paragraph",
+      img: "/assets/icons/visualize/segment.svg",
+    },
+    STATISTICS: {
+      title: "Summary Statistics",
+      img: "/assets/icons/visualize/table_chart_view.svg",
+    },
+    TABLE: {
+      title: "Data Table",
+      img: "/assets/icons/visualize/table_view.svg",
+    },
+    GRAPH: {
+      title: "Graph",
+      img: "/assets/icons/visualize/bar_chart.svg",
+    },
+    STATTEST: {
+      title: "Statistical Test",
+      img: "/assets/icons/visualize/statisticalTest.svg",
+    },
+  };
+
   return (
     <div className="contents">
       {sortBy(journal?.vizParts, [
@@ -147,6 +170,7 @@ export default function Contents({
                             })
                           }
                         >
+                          <img src={sections?.[section?.type]?.img} alt={section?.title} />
                           {section?.title}
                         </div>
                       ))}
