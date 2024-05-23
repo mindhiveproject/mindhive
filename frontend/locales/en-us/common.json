@@ -5,7 +5,8 @@
 		"discover": "Discover",
 		"login": "Log in",
 		"signup": "Sign up",
+		"studies": "Studies",
+		"tasks": "Tasks & Surveys",
 		"teachers": "Teachers"
-	},
-	"update": "Update"
+	}
 }

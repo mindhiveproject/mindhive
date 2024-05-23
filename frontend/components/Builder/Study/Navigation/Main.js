@@ -38,10 +38,6 @@ const itemsClone = [
     value: "page",
     name: "Participant Page",
   },
-  // {
-  //   value: "builder",
-  //   name: "Study builder",
-  // },
 ];
 
 export default function Navigation({

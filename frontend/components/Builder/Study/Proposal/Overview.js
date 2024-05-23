@@ -1,3 +1,4 @@
+import useTranslation from "next-translate/useTranslation";
 import moment from "moment";
 
 import DeleteProposal from "./Delete";
@@ -13,6 +14,8 @@ export default function ProposalOverview({
   copyProposal,
   createProposal,
 }) {
+  const { t } = useTranslation("builder");
+
   const refetchQueries = [
     { query: STUDY_PROPOSALS_QUERY, variables: { studyId } },
   ];
@@ -32,7 +35,7 @@ export default function ProposalOverview({
         <div></div>
         <div>
           <button onClick={() => createProposal()}>
-            Create a new proposal
+            {t("proposal.create")}
           </button>
         </div>
       </div>
