@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { 
-  Dropdown, 
+import {
+  Dropdown,
   DropdownMenu,
   Icon,
   AccordionTitle,
@@ -21,7 +21,9 @@ export default function Axes({
   selectors,
   handleContentChange,
 }) {
-  const [selectedOption, setSelectedOption] = useState("long");
+  const [selectedDataFormat, setSelectedDataFormat] = useState(
+    selectors["dataFormat"] || "long"
+  );
 
   const [activeIndex, setActiveIndex] = useState(-1);
 
@@ -34,34 +36,26 @@ export default function Axes({
   const resourcesList = [
     {
       title: "What is a One-way ANOVA?",
-      alt:   "External link",
-      img:   "/assets/icons/visualize/externalNewTab.svg",
-      link:  "https://www.scribbr.com/statistics/one-way-anova/",
+      alt: "External link",
+      img: "/assets/icons/visualize/externalNewTab.svg",
+      link: "https://www.scribbr.com/statistics/one-way-anova/",
     },
-  ]
+  ];
 
-  const connectSelectorsCodeWide = `
-import json
+  const connectSelectorsCode = `
 html_output = js.document.getElementById('figure-${sectionId}')
 
-columns = None
-Xmultiple = None if js.document.getElementById("colToAnalyse-${sectionId}") == None else js.document.getElementById("colToAnalyse-${sectionId}")
-xMultiple_value_json = json.loads(Xmultiple.value)
-columns = xMultiple_value_json
+dataFormat= None if js.document.getElementById("dataFormat-${sectionId}") == None else js.document.getElementById("dataFormat-${sectionId}").value
+isWide = dataFormat == "wide"
 
-isWide = True
+if isWide: 
+  colMultiple = None if js.document.getElementById("colToAnalyse-${sectionId}") == None else js.document.getElementById("colToAnalyse-${sectionId}")
+  colMultiple_json = colMultiple.value.split(",")
+  columns = colMultiple_json
 
-#x_labels= columns ######################################need update################ To change to list under x axis
-`;
-  const connectSelectorsCodeLong = `
-html_output = js.document.getElementById('figure-${sectionId}')
-
-quantCol = None if js.document.getElementById("valCol-${sectionId}") == None else js.document.getElementById("valCol-${sectionId}").value
-groupcol = None if js.document.getElementById("groupcol-${sectionId}") == None else js.document.getElementById("groupcol-${sectionId}").value
-
-isWide = False
-
-#x_labels= columns ######################################need update################ To change to list under x axis
+else: 
+  quantCol = None if js.document.getElementById("valCol-${sectionId}") == None else js.document.getElementById("valCol-${sectionId}").value
+  groupcol = None if js.document.getElementById("groupcol-${sectionId}") == None else js.document.getElementById("groupcol-${sectionId}").value
 `;
 
   const options = variables.map((variable) => ({
@@ -71,25 +65,19 @@ isWide = False
   }));
 
   const updateCode = async ({ code }) => {
-    if (selectedOption === "wide") {
-      await pyodide.runPythonAsync(connectSelectorsCodeWide);
-    } else if (selectedOption === "long") {
-      await pyodide.runPythonAsync(connectSelectorsCodeLong);
-    }
+    await pyodide.runPythonAsync(connectSelectorsCode);
     runCode({ code });
   };
 
   const onSelectorChoice = (option) => {
-    setSelectedOption(option.value);
+    setSelectedDataFormat(option.value);
+    onSelectorChange({ target: { name: "dataFormat", value: option?.value } });
   };
 
   const onSelectorChange = ({ target }) => {
-    const value = Array.isArray(target?.value)
-      ? target?.value
-      : [target?.value];
     handleContentChange({
       newContent: {
-        selectors: { ...selectors, [target?.name]: value },
+        selectors: { ...selectors, [target?.name]: target?.value },
       },
     });
     updateCode({ code });
@@ -100,8 +88,8 @@ isWide = False
       <Dropdown
         icon={
           <div className="dataFormatSelector">
-            {selectedOption &&
-              (selectedOption === "wide" ? (
+            {selectedDataFormat &&
+              (selectedDataFormat === "wide" ? (
                 <>
                   <img
                     src="/assets/icons/visualize/more_vert.svg"
@@ -110,8 +98,8 @@ isWide = False
                   <div>
                     <div>
                       <a>
-                        <b>Currently performing:</b> One-Way ANOVA <b>between</b>{" "}
-                        three or more columns.
+                        <b>Currently performing:</b> One-Way ANOVA{" "}
+                        <b>between</b> three or more columns.
                       </a>
                     </div>
                     <div></div>
@@ -148,13 +136,13 @@ isWide = False
           </div>
         }
       >
-        <DropdownMenu
-        className="customDropdownMenu">
+        <DropdownMenu className="customDropdownMenu">
           {[
             {
               key: "wide",
               value: "wide",
-              title: "Switch to performing a One-Way Anova between three or more columns",
+              title:
+                "Switch to performing a One-Way Anova between three or more columns",
               description:
                 "In the example above, we would select the columns c1, c2, and c3 to perform a One-Way Anova on them.",
               img: "/assets/icons/visualize/dataOneWayAnova.svg",
@@ -171,11 +159,9 @@ isWide = False
               link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
             },
           ]
-             .filter((option) => option.value !== selectedOption)
+            .filter((option) => option.value !== selectedDataFormat)
             .map((option) => (
-
-              <div
-                className="customDropdownMenu">
+              <div className="customDropdownMenu">
                 <div
                   key={option.key}
                   className="menuItemDataType"
@@ -184,19 +170,13 @@ isWide = False
                   <h3>{option.title}</h3>
                   <img src={option.img} alt={option.title} />
                   <p>{option.description}</p>
-                  {/* <div className="slidesCard">
-            <img src={`/assets/icons/visualize/googleSlides.svg`} alt="Google Slides" />
-            <a href={option.link} target="_blank" rel="noopener noreferrer">
-              Click here to see the lecture slides
-            </a>
-          </div> */}
                 </div>
               </div>
             ))}
         </DropdownMenu>
       </Dropdown>
-      {selectedOption &&
-        (selectedOption == "long" ? (
+      {selectedDataFormat &&
+        (selectedDataFormat == "long" ? (
           <div className="selectorsTestStats">
             <SelectOne
               sectionId={sectionId}
@@ -227,33 +207,44 @@ isWide = False
             />
           </div>
         ))}
-        <Accordion>
-          <AccordionTitle
-            active={activeIndex === 0}
-            index={0}
-            onClick={handleClick}
-          >
-            <Icon name="dropdown" />
-            Resources
-          </AccordionTitle>
-          <AccordionContent active={activeIndex === 0}>
+      <input
+        type="hidden"
+        id={`dataFormat-${sectionId}`}
+        value={selectedDataFormat}
+      />
+      <Accordion>
+        <AccordionTitle
+          active={activeIndex === 0}
+          index={0}
+          onClick={handleClick}
+        >
+          <Icon name="dropdown" />
+          Resources
+        </AccordionTitle>
+        <AccordionContent active={activeIndex === 0}>
           {resourcesList.map((option) => (
             <a
               className="resourcesCard"
               href={option.link}
               target="_blank"
               rel="noopener noreferrer"
-              key={option.link} 
+              key={option.link}
             >
-              <img className="resourcesCardImage" src={option.img} alt={option.alt} />
+              <img
+                className="resourcesCardImage"
+                src={option.img}
+                alt={option.alt}
+              />
               <div>
                 <div className="resourcesCardTitle">{option.title}</div>
-                <div className="resourcesCardLink">Click here to access the resource</div>
+                <div className="resourcesCardLink">
+                  Click here to access the resource
+                </div>
               </div>
             </a>
           ))}
-          </AccordionContent>
-        </Accordion>
+        </AccordionContent>
+      </Accordion>
     </div>
   );
 }

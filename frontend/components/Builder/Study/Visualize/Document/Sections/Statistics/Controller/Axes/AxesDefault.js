@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { 
-  Dropdown, 
+import {
+  Dropdown,
   DropdownMenu,
   Icon,
   AccordionTitle,
@@ -35,14 +35,13 @@ export default function Axes({
   const resourcesList = [
     {
       title: "What is a table?",
-      alt:   "External link",
-      img:   "/assets/icons/visualize/externalNewTab.svg",
-      link:  "https://datavizproject.com/data-type/table-chart/#",
+      alt: "External link",
+      img: "/assets/icons/visualize/externalNewTab.svg",
+      link: "https://datavizproject.com/data-type/table-chart/#",
     },
-  ]
+  ];
 
   const connectSelectorsCode = `
-import json
 html_output = js.document.getElementById('figure-${sectionId}')
 
 colMultiple = None if js.document.getElementById("colMultiple-${sectionId}") == None else js.document.getElementById("colMultiple-${sectionId}")
@@ -182,32 +181,38 @@ isQuant = dataType == "quant"
         value={selectedDataFormat}
       />
       <Accordion>
-          <AccordionTitle
-            active={activeIndex === 0}
-            index={0}
-            onClick={handleClick}
-          >
-            <Icon name="dropdown" />
-            Resources
-          </AccordionTitle>
-          <AccordionContent active={activeIndex === 0}>
+        <AccordionTitle
+          active={activeIndex === 0}
+          index={0}
+          onClick={handleClick}
+        >
+          <Icon name="dropdown" />
+          Resources
+        </AccordionTitle>
+        <AccordionContent active={activeIndex === 0}>
           {resourcesList.map((option) => (
             <a
               className="resourcesCard"
               href={option.link}
               target="_blank"
               rel="noopener noreferrer"
-              key={option.link} 
+              key={option.link}
             >
-              <img className="resourcesCardImage" src={option.img} alt={option.alt} />
+              <img
+                className="resourcesCardImage"
+                src={option.img}
+                alt={option.alt}
+              />
               <div>
                 <div className="resourcesCardTitle">{option.title}</div>
-                <div className="resourcesCardLink">Click here to access the resource</div>
+                <div className="resourcesCardLink">
+                  Click here to access the resource
+                </div>
               </div>
             </a>
           ))}
-          </AccordionContent>
-        </Accordion>
+        </AccordionContent>
+      </Accordion>
     </div>
   );
 }

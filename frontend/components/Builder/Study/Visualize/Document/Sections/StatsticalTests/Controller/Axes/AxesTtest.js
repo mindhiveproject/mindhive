@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { 
-  Dropdown, 
+import {
+  Dropdown,
   DropdownMenu,
   Icon,
   AccordionTitle,
@@ -11,7 +11,6 @@ import {
 import SelectOne from "../Fields/SelectOne";
 
 export default function Axes({
-  type,
   variables,
   code,
   pyodide,
@@ -20,7 +19,9 @@ export default function Axes({
   selectors,
   handleContentChange,
 }) {
-  const [selectedOption, setSelectedOption] = useState("long");
+  const [selectedDataFormat, setSelectedDataFormat] = useState(
+    selectors["dataFormat"] || "long"
+  );
 
   const [activeIndex, setActiveIndex] = useState(-1);
 
@@ -30,36 +31,28 @@ export default function Axes({
     setActiveIndex(newIndex);
   };
 
-  const connectSelectorsCodeWide = `
-import json
+  const connectSelectorsCode = `
 html_output = js.document.getElementById('figure-${sectionId}')
 
-col1 = None if js.document.getElementById("col1-${sectionId}") == None else js.document.getElementById("col1-${sectionId}").value
-col2 = None if js.document.getElementById("col2-${sectionId}") == None else js.document.getElementById("col2-${sectionId}").value
+dataFormat= None if js.document.getElementById("dataFormat-${sectionId}") == None else js.document.getElementById("dataFormat-${sectionId}").value
+isWide = dataFormat == "wide"
 
-isWide = True
-
-#x_labels= columns ######################################need update################ To change to list under x axis
-`;
-  const connectSelectorsCodeLong = `
-html_output = js.document.getElementById('figure-${sectionId}')
-
-quantCol = None if js.document.getElementById("valCol-${sectionId}") == None else js.document.getElementById("valCol-${sectionId}").value
-groupcol = None if js.document.getElementById("groupcol-${sectionId}") == None else js.document.getElementById("groupcol-${sectionId}").value
-
-isWide = False
-
-#x_labels= columns ######################################need update################ To change to list under x axis
+if isWide: 
+  col1 = None if js.document.getElementById("col1-${sectionId}") == None else js.document.getElementById("col1-${sectionId}").value
+  col2 = None if js.document.getElementById("col2-${sectionId}") == None else js.document.getElementById("col2-${sectionId}").value
+else: 
+  quantCol = None if js.document.getElementById("valCol-${sectionId}") == None else js.document.getElementById("valCol-${sectionId}").value
+  groupcol = None if js.document.getElementById("groupcol-${sectionId}") == None else js.document.getElementById("groupcol-${sectionId}").value
 `;
 
   const resourcesList = [
     {
       title: "Independent samples t-test",
-      alt:   "External link",
-      img:   "/assets/icons/visualize/externalNewTab.svg",
-      link:  "https://www.scribbr.com/statistics/t-test/",
+      alt: "External link",
+      img: "/assets/icons/visualize/externalNewTab.svg",
+      link: "https://www.scribbr.com/statistics/t-test/",
     },
-  ]
+  ];
 
   const options = variables.map((variable) => ({
     key: variable?.field,
@@ -68,25 +61,19 @@ isWide = False
   }));
 
   const updateCode = async ({ code }) => {
-    if (selectedOption === "wide") {
-      await pyodide.runPythonAsync(connectSelectorsCodeWide);
-    } else if (selectedOption === "long") {
-      await pyodide.runPythonAsync(connectSelectorsCodeLong);
-    }
+    await pyodide.runPythonAsync(connectSelectorsCode);
     runCode({ code });
   };
 
   const onSelectorChoice = (option) => {
-    setSelectedOption(option.value);
+    setSelectedDataFormat(option.value);
+    onSelectorChange({ target: { name: "dataFormat", value: option?.value } });
   };
 
   const onSelectorChange = ({ target }) => {
-    const value = Array.isArray(target?.value)
-      ? target?.value
-      : [target?.value];
     handleContentChange({
       newContent: {
-        selectors: { ...selectors, [target?.name]: value },
+        selectors: { ...selectors, [target?.name]: target?.value },
       },
     });
     updateCode({ code });
@@ -97,13 +84,13 @@ isWide = False
       <Dropdown
         icon={
           <div className="dataFormatSelector">
-            {selectedOption &&
-              (selectedOption === "wide" ? (
+            {selectedDataFormat &&
+              (selectedDataFormat === "wide" ? (
                 <>
                   <img
                     src="/assets/icons/visualize/more_vert.svg"
                     alt="Menu Icon"
-                    />
+                  />
                   <div>
                     <div>
                       <a>
@@ -113,7 +100,9 @@ isWide = False
                     </div>
                     <div></div>
                     <div>
-                      <a>(Click here to use a label column to group your rows)</a>
+                      <a>
+                        (Click here to use a label column to group your rows)
+                      </a>
                     </div>
                   </div>
                 </>
@@ -142,8 +131,7 @@ isWide = False
           </div>
         }
       >
-        <DropdownMenu
-        className="customDropdownMenu">
+        <DropdownMenu className="customDropdownMenu">
           {[
             {
               key: "wide",
@@ -165,7 +153,7 @@ isWide = False
               link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
             },
           ]
-            .filter((option) => option.value !== selectedOption)
+            .filter((option) => option.value !== selectedDataFormat)
             .map((option) => (
               <div
                 key={option.key}
@@ -175,18 +163,12 @@ isWide = False
                 <h3>{option.title}</h3>
                 <img src={option.img} alt={option.title} />
                 <p>{option.description}</p>
-                {/* <div className="slidesCard">
-          <img src={`/assets/icons/visualize/googleSlides.svg`} alt="Google Slides" />
-          <a href={option.link} target="_blank" rel="noopener noreferrer">
-            Click here to see the lecture slides
-          </a>
-        </div> */}
               </div>
             ))}
         </DropdownMenu>
       </Dropdown>
-      {selectedOption &&
-        (selectedOption == "long" ? (
+      {selectedDataFormat &&
+        (selectedDataFormat == "long" ? (
           <div className="selectorsTestStats">
             <SelectOne
               sectionId={sectionId}
@@ -224,8 +206,12 @@ isWide = False
               parameter="col2"
             />
           </div>
-        ))
-      }
+        ))}
+      <input
+        type="hidden"
+        id={`dataFormat-${sectionId}`}
+        value={selectedDataFormat}
+      />
       <Accordion>
         <AccordionTitle
           active={activeIndex === 0}
@@ -236,8 +222,7 @@ isWide = False
           Resources
         </AccordionTitle>
         <AccordionContent active={activeIndex === 0}>
-        {resourcesList
-          .map((option) => (
+          {resourcesList.map((option) => (
             <a
               className="resourcesCard"
               href={option.link}
@@ -245,15 +230,19 @@ isWide = False
               rel="noopener noreferrer"
               key={option.link}
             >
-              <img className="resourcesCardImage" src={option.img} alt={option.alt} />
+              <img
+                className="resourcesCardImage"
+                src={option.img}
+                alt={option.alt}
+              />
               <div>
                 <div className="resourcesCardTitle">{option.title}</div>
-                <div className="resourcesCardLink">Click here to access the resource</div>
+                <div className="resourcesCardLink">
+                  Click here to access the resource
+                </div>
               </div>
             </a>
-          ))
-        }
-
+          ))}
         </AccordionContent>
       </Accordion>
     </div>

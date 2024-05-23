@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { 
-  Dropdown, 
+import {
+  Dropdown,
   DropdownMenu,
   Icon,
   AccordionTitle,
@@ -21,7 +21,9 @@ export default function Axes({
   selectors,
   handleContentChange,
 }) {
-  const [selectedOption, setSelectedOption] = useState("long");
+  const [selectedDataFormat, setSelectedDataFormat] = useState(
+    selectors["dataFormat"] || "long"
+  );
 
   const [activeIndex, setActiveIndex] = useState(-1);
 
@@ -32,7 +34,6 @@ export default function Axes({
   };
 
   const errBarsOptions = [
-    // { value: "", text: "" },
     { value: "stdErr", text: "Standard error" },
     { value: "95pi", text: "95% confidence interval" },
     { value: "99pi", text: "99% confidence interval" },
@@ -41,47 +42,39 @@ export default function Axes({
   const resourcesList = [
     {
       title: "What is a Bar Plot?",
-      alt:   "External link",
-      img:   "/assets/icons/visualize/externalNewTab.svg",
-      link:  "https://datavizcatalogue.com/methods/bar_chart.html",
+      alt: "External link",
+      img: "/assets/icons/visualize/externalNewTab.svg",
+      link: "https://datavizcatalogue.com/methods/bar_chart.html",
     },
     {
       title: "More about the Standard Error",
-      alt:   "External link",
-      img:   "/assets/icons/visualize/externalNewTab.svg",
-      link:  "https://www.scribbr.com/statistics/standard-error/",
+      alt: "External link",
+      img: "/assets/icons/visualize/externalNewTab.svg",
+      link: "https://www.scribbr.com/statistics/standard-error/",
     },
     {
       title: "Confidence Intervales, what are they?",
-      alt:   "External link",
-      img:   "/assets/icons/visualize/externalNewTab.svg",
-      link:  "https://www.scribbr.com/statistics/confidence-interval/",
+      alt: "External link",
+      img: "/assets/icons/visualize/externalNewTab.svg",
+      link: "https://www.scribbr.com/statistics/confidence-interval/",
     },
-  ]
+  ];
 
-  const connectSelectorsCodeWide = `
-import json
+  const connectSelectorsCode = `
 html_output = js.document.getElementById('figure-${sectionId}')
 
-errBar  = None if js.document.getElementById("errBar-${sectionId}") == None else js.document.getElementById("errBar-${sectionId}").value
-Xmultiple = None if js.document.getElementById("colToPlot-${sectionId}") == None else js.document.getElementById("colToPlot-${sectionId}")
-xMultiple_value_json = json.loads(Xmultiple.value)
-columns = xMultiple_value_json
+dataFormat= None if js.document.getElementById("dataFormat-${sectionId}") == None else js.document.getElementById("dataFormat-${sectionId}").value
+isWide = dataFormat == "wide"
 
-isWide = True
+if isWide: 
+  Xmultiple = None if js.document.getElementById("colToPlot-${sectionId}") == None else js.document.getElementById("colToPlot-${sectionId}")
+  xMultiple_value_json = Xmultiple.value.split(",")
+  columns = xMultiple_value_json
+else: 
+  qualCol  = None if js.document.getElementById("qualCol-${sectionId}") == None else js.document.getElementById("qualCol-${sectionId}").value
+  quantCol = None if js.document.getElementById("quantCol-${sectionId}") == None else js.document.getElementById("quantCol-${sectionId}").value
 
-#x_labels= columns ######################################need update################ To change to list under x axis
-`;
-  const connectSelectorsCodeLong = `
-html_output = js.document.getElementById('figure-${sectionId}')
-
-errBar  = None if js.document.getElementById("errBar-${sectionId}") == None else js.document.getElementById("errBar-${sectionId}").value
-qualCol  = None if js.document.getElementById("qualCol-${sectionId}") == None else js.document.getElementById("qualCol-${sectionId}").value
-quantCol = None if js.document.getElementById("quantCol-${sectionId}") == None else js.document.getElementById("quantCol-${sectionId}").value
-
-isWide = False
-
-#x_labels= columns ######################################need update################ To change to list under x axis
+errBar = None if js.document.getElementById("errBar-${sectionId}") == None else js.document.getElementById("errBar-${sectionId}").value
 `;
 
   const options = variables.map((variable) => ({
@@ -91,25 +84,19 @@ isWide = False
   }));
 
   const updateCode = async ({ code }) => {
-    if (selectedOption === "wide") {
-      await pyodide.runPythonAsync(connectSelectorsCodeWide);
-    } else if (selectedOption === "long") {
-      await pyodide.runPythonAsync(connectSelectorsCodeLong);
-    }
+    await pyodide.runPythonAsync(connectSelectorsCode);
     runCode({ code });
   };
 
   const onSelectorChoice = (option) => {
-    setSelectedOption(option.value);
+    setSelectedDataFormat(option.value);
+    onSelectorChange({ target: { name: "dataFormat", value: option?.value } });
   };
 
   const onSelectorChange = ({ target }) => {
-    const value = Array.isArray(target?.value)
-      ? target?.value
-      : [target?.value];
     handleContentChange({
       newContent: {
-        selectors: { ...selectors, [target?.name]: value },
+        selectors: { ...selectors, [target?.name]: target?.value },
       },
     });
     updateCode({ code });
@@ -127,8 +114,8 @@ isWide = False
           <div className="menuItemThreeDiv menuButton">
             <img src={`/assets/icons/visualize/more_vert.svg`} />
             <div>
-              {selectedOption &&
-                (selectedOption === "long" ? (
+              {selectedDataFormat &&
+                (selectedDataFormat === "long" ? (
                   <a>
                     If you want to <b>compare columns</b> click here
                   </a>
@@ -165,14 +152,13 @@ isWide = False
               link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
             },
           ]
-            .filter((option) => option.value !== selectedOption)
+            .filter((option) => option.value !== selectedDataFormat)
             .map((option) => (
               <div
                 key={option.key}
                 className="menuItemDataStruct menuButton"
                 onClick={() => onSelectorChoice(option)}
               >
-                {/* <h3>{option.title}</h3> */}
                 <img src={option.img} alt={option.title} />
                 <p>{option.description}</p>
                 <div className="slidesCard">
@@ -193,8 +179,8 @@ isWide = False
         </DropdownMenu>
       </Dropdown>
 
-      {selectedOption &&
-        (selectedOption === "long" ? (
+      {selectedDataFormat &&
+        (selectedDataFormat === "long" ? (
           <div className="selectors">
             <SelectOne
               sectionId={sectionId}
@@ -241,33 +227,44 @@ isWide = False
             />
           </div>
         ))}
-        <Accordion>
-          <AccordionTitle
-            active={activeIndex === 0}
-            index={0}
-            onClick={handleClick}
-          >
-            <Icon name="dropdown" />
-            Resources
-          </AccordionTitle>
-          <AccordionContent active={activeIndex === 0}>
+      <input
+        type="hidden"
+        id={`dataFormat-${sectionId}`}
+        value={selectedDataFormat}
+      />
+      <Accordion>
+        <AccordionTitle
+          active={activeIndex === 0}
+          index={0}
+          onClick={handleClick}
+        >
+          <Icon name="dropdown" />
+          Resources
+        </AccordionTitle>
+        <AccordionContent active={activeIndex === 0}>
           {resourcesList.map((option) => (
             <a
               className="resourcesCard"
               href={option.link}
               target="_blank"
               rel="noopener noreferrer"
-              key={option.link} 
+              key={option.link}
             >
-              <img className="resourcesCardImage" src={option.img} alt={option.alt} />
+              <img
+                className="resourcesCardImage"
+                src={option.img}
+                alt={option.alt}
+              />
               <div>
                 <div className="resourcesCardTitle">{option.title}</div>
-                <div className="resourcesCardLink">Click here to access the resource</div>
+                <div className="resourcesCardLink">
+                  Click here to access the resource
+                </div>
               </div>
             </a>
           ))}
-          </AccordionContent>
-        </Accordion>
+        </AccordionContent>
+      </Accordion>
     </div>
   );
 }

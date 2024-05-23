@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { 
-  Dropdown, 
+import {
+  Dropdown,
   DropdownMenu,
   Icon,
   AccordionTitle,
@@ -20,6 +20,7 @@ export default function Axes({
   selectors,
   handleContentChange,
 }) {
+  const [selectedDataFormat, setSelectedDataFormat] = useState("wide");
   const [activeIndex, setActiveIndex] = useState(-1);
 
   const handleClick = (e, titleProps) => {
@@ -31,20 +32,17 @@ export default function Axes({
   const resourcesList = [
     {
       title: "What is an Histogram?",
-      alt:   "External link",
-      img:   "/assets/icons/visualize/externalNewTab.svg",
-      link:  "https://datavizcatalogue.com/methods/histogram.html",
+      alt: "External link",
+      img: "/assets/icons/visualize/externalNewTab.svg",
+      link: "https://datavizcatalogue.com/methods/histogram.html",
     },
-  ]
+  ];
 
   const connectSelectorsCode = `# get relevant html elements
 html_output = js.document.getElementById('figure-${sectionId}')
-#X = js.document.getElementById("xVariable-${sectionId}").value############################################################################################################
 
-
-import json
-Xmultiple = js.document.getElementById("xVariableMultiple-${sectionId}")
-xMultiple_value_json = json.loads(Xmultiple.value)
+Xmultiple = None if js.document.getElementById("colToPlot-${sectionId}") == None else js.document.getElementById("colToPlot-${sectionId}")
+xMultiple_value_json = Xmultiple.value.split(",")
 columns = xMultiple_value_json
 
 legend_title_text = js.document.getElementById('legend_title_text-${sectionId}').value`;
@@ -81,7 +79,12 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
         selectors={selectors}
         onSelectorChange={onSelectorChange}
         title="Column(s) to observe"
-        parameter="xVariableMultiple"
+        parameter="colToPlot"
+      />
+      <input
+        type="hidden"
+        id={`dataFormat-${sectionId}`}
+        value={selectedDataFormat}
       />
       <Accordion>
         <AccordionTitle
@@ -93,21 +96,27 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
           Resources
         </AccordionTitle>
         <AccordionContent active={activeIndex === 0}>
-        {resourcesList.map((option) => (
-          <a
-            className="resourcesCard"
-            href={option.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            key={option.link} 
-          >
-            <img className="resourcesCardImage" src={option.img} alt={option.alt} />
-            <div>
-              <div className="resourcesCardTitle">{option.title}</div>
-              <div className="resourcesCardLink">Click here to access the resource</div>
-            </div>
-          </a>
-        ))}
+          {resourcesList.map((option) => (
+            <a
+              className="resourcesCard"
+              href={option.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              key={option.link}
+            >
+              <img
+                className="resourcesCardImage"
+                src={option.img}
+                alt={option.alt}
+              />
+              <div>
+                <div className="resourcesCardTitle">{option.title}</div>
+                <div className="resourcesCardLink">
+                  Click here to access the resource
+                </div>
+              </div>
+            </a>
+          ))}
         </AccordionContent>
       </Accordion>
     </div>

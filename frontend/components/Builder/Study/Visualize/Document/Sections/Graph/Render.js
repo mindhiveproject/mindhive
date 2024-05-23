@@ -28,12 +28,25 @@ yRangeMax = None if js.document.getElementById('yRangeMax-${sectionId}') == None
 color        = 'pink' if js.document.getElementById('color-${sectionId}') == None else js.document.getElementById('color-${sectionId}').value
 marginalPlot = None if js.document.getElementById('marginalPlot-${sectionId}') == None else js.document.getElementById('marginalPlot-${sectionId}').value
 
-trendline = None if js.document.getElementById('trendline-${sectionId}') == None else js.document.getElementById('trendline-${sectionId}').value`;
+trendline = None if js.document.getElementById('trendline-${sectionId}') == None else js.document.getElementById('trendline-${sectionId}').value
+
+dataFormat= None if js.document.getElementById("dataFormat-${sectionId}") == None else js.document.getElementById("dataFormat-${sectionId}").value
+isWide = dataFormat == "wide"
+
+if isWide: 
+  Xmultiple = None if js.document.getElementById("colToPlot-${sectionId}") == None else js.document.getElementById("colToPlot-${sectionId}")
+  xMultiple_value_json = Xmultiple.value.split(",")
+  columns = xMultiple_value_json
+else: 
+  qualCol  = None if js.document.getElementById("qualCol-${sectionId}") == None else js.document.getElementById("qualCol-${sectionId}").value
+  quantCol = None if js.document.getElementById("quantCol-${sectionId}") == None else js.document.getElementById("quantCol-${sectionId}").value
+
+errBar = None if js.document.getElementById("errBar-${sectionId}") == None else js.document.getElementById("errBar-${sectionId}").value
+`;
 
   // run to connect plot output and selectors with python code
   useEffect(() => {
     async function startPyodide() {
-      // debugger;
       await pyodide.runPythonAsync(prepareCanvasCode);
     }
     startPyodide();

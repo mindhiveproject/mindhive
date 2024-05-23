@@ -11,7 +11,6 @@ export default function Axes({
   handleContentChange,
 }) {
   const connectSelectorsCode = `# get relevant html elements
-import json
 html_output = js.document.getElementById('figure-${sectionId}')
 Xmultiple = js.document.getElementById("xVariableMultiple-${sectionId}")
 xMultiple_value_json = json.loads(Xmultiple.value)

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { 
-  Dropdown, 
-  DropdownMenu,
+import {
   Icon,
   AccordionTitle,
   AccordionContent,
@@ -11,7 +9,6 @@ import {
 import SelectOne from "../Fields/SelectOne";
 
 export default function Axes({
-  type,
   variables,
   code,
   pyodide,
@@ -20,6 +17,7 @@ export default function Axes({
   selectors,
   handleContentChange,
 }) {
+  const [selectedDataFormat, setSelectedDataFormat] = useState("wide");
   const [activeIndex, setActiveIndex] = useState(-1);
 
   const handleClick = (e, titleProps) => {
@@ -31,11 +29,11 @@ export default function Axes({
   const resourcesList = [
     {
       title: "What's a Pearson's correlation",
-      alt:   "External link",
-      img:   "/assets/icons/visualize/externalNewTab.svg",
-      link:  "https://www.scribbr.com/statistics/pearson-correlation-coefficient/",
+      alt: "External link",
+      img: "/assets/icons/visualize/externalNewTab.svg",
+      link: "https://www.scribbr.com/statistics/pearson-correlation-coefficient/",
     },
-  ]
+  ];
 
   const connectSelectorsCode = `# get relevant html elements
 html_output = js.document.getElementById('figure-${sectionId}')
@@ -82,33 +80,44 @@ col2 = js.document.getElementById("col2-${sectionId}").value`;
           parameter="col2"
         />
       </div>
+      <input
+        type="hidden"
+        id={`dataFormat-${sectionId}`}
+        value={selectedDataFormat}
+      />
       <Accordion>
-          <AccordionTitle
-            active={activeIndex === 0}
-            index={0}
-            onClick={handleClick}
-          >
-            <Icon name="dropdown" />
-            Resources
-          </AccordionTitle>
-          <AccordionContent active={activeIndex === 0}>
+        <AccordionTitle
+          active={activeIndex === 0}
+          index={0}
+          onClick={handleClick}
+        >
+          <Icon name="dropdown" />
+          Resources
+        </AccordionTitle>
+        <AccordionContent active={activeIndex === 0}>
           {resourcesList.map((option) => (
             <a
               className="resourcesCard"
               href={option.link}
               target="_blank"
               rel="noopener noreferrer"
-              key={option.link} 
+              key={option.link}
             >
-              <img className="resourcesCardImage" src={option.img} alt={option.alt} />
+              <img
+                className="resourcesCardImage"
+                src={option.img}
+                alt={option.alt}
+              />
               <div>
                 <div className="resourcesCardTitle">{option.title}</div>
-                <div className="resourcesCardLink">Click here to access the resource</div>
+                <div className="resourcesCardLink">
+                  Click here to access the resource
+                </div>
               </div>
             </a>
           ))}
-          </AccordionContent>
-        </Accordion>
+        </AccordionContent>
+      </Accordion>
     </div>
   );
 }
