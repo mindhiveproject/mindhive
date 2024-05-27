@@ -14,7 +14,7 @@ export default function Form({
   error,
   classCode,
 }) {
-  const { t } = useTranslation("account");
+  const { t } = useTranslation("common");
 
   return (
     <SignupForm>
@@ -27,7 +27,7 @@ export default function Form({
         <fieldset disabled={loading} aria-busy={loading}>
           <div className="infoPane">
             <label htmlFor="username">
-              {t("common.username")}
+              {t("auth.username")}
               <input
                 type="text"
                 name="username"
@@ -38,7 +38,7 @@ export default function Form({
             </label>
 
             <label htmlFor="email">
-              {t("common.email")}
+              {t("auth.email")}
               <input
                 type="email"
                 name="email"
@@ -49,7 +49,7 @@ export default function Form({
             </label>
 
             <label htmlFor="password">
-              {t("common.password")}
+              {t("auth.password")}
               <input
                 type="password"
                 name="password"

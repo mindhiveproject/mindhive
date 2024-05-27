@@ -6,7 +6,7 @@ import DisplayError from "../ErrorMessage";
 import { REQUEST_RESET_MUTATION } from "../Mutations/User";
 
 export default function RequestReset() {
-  const { t } = useTranslation("account");
+  const { t } = useTranslation("common");
 
   const { inputs, handleChange, resetForm } = useForm({
     email: "",
@@ -26,14 +26,14 @@ export default function RequestReset() {
 
   return (
     <StyledForm method="POST" onSubmit={handleSubmit}>
-      <h1>{t("reset.requestResetPassword")}</h1>
+      <h1>{t("auth.requestReset")}</h1>
       <DisplayError error={error} />
       <fieldset>
         {data?.sendUserPasswordResetLink === null && (
-          <p>{t("reset.checkYourMail")}</p>
+          <p>{t("auth.checkYourMail")}</p>
         )}
         <label htmlFor="email">
-          {t("common.email")}
+          {t("auth.email")}
           <input
             type="email"
             name="email"
@@ -43,7 +43,7 @@ export default function RequestReset() {
           />
         </label>
 
-        <button type="submit">{t("reset.requestReset")}</button>
+        <button type="submit">{t("auth.requestReset")}</button>
       </fieldset>
     </StyledForm>
   );

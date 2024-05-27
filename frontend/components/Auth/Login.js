@@ -13,7 +13,7 @@ import LoginWithGoogle from "./GoogleLogin";
 import StyledAuth from "../styles/StyledAuth";
 
 export default function Login({ redirectType, redirectTo }) {
-  const { t } = useTranslation("account");
+  const { t } = useTranslation("common");
 
   const [error, setError] = useState(null);
 
@@ -65,11 +65,11 @@ export default function Login({ redirectType, redirectTo }) {
   return (
     <StyledAuth>
       <StyledForm method="POST" onSubmit={handleSubmit}>
-        <h1>{t("login.login")}</h1>
+        <h1>{t("auth.login")}</h1>
         <DisplayError error={error} />
         <fieldset>
           <label htmlFor="email">
-            {t("common.email")}
+            {t("auth.email")}
             <input
               type="email"
               name="email"
@@ -80,7 +80,7 @@ export default function Login({ redirectType, redirectTo }) {
           </label>
 
           <label htmlFor="password">
-            {t("login.password")}
+            {t("auth.password")}
             <input
               type="password"
               name="password"
@@ -90,7 +90,7 @@ export default function Login({ redirectType, redirectTo }) {
             />
           </label>
 
-          <button type="submit">{t("login.login")}</button>
+          <button type="submit">{t("auth.login")}</button>
         </fieldset>
 
         <LoginWithGoogle />
