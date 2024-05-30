@@ -15,7 +15,12 @@ export const extendGraphqlSchema = (schema) =>
     schemas: [schema],
     typeDefs: graphql`
       type Mutation {
-        sendEmail(receiverId: String, header: String, body: String): Report
+        sendEmail(
+          receiverId: ID!
+          title: String
+          message: String
+          link: String
+        ): Report
         copyProposalBoard(id: ID!, study: ID): ProposalBoard
         deleteProposal(id: ID!): ProposalBoard
         archiveStudy(study: ID!, isArchived: Boolean!): Profile

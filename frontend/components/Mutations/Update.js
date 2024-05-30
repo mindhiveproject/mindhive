@@ -43,3 +43,22 @@ export const EDIT_UPDATE = gql`
     }
   }
 `;
+
+// send email
+export const SEND_EMAIL = gql`
+  mutation SEND_EMAIL(
+    $receiverId: ID!
+    $title: String
+    $message: String
+    $link: String
+  ) {
+    sendEmail(
+      receiverId: $receiverId
+      title: $title
+      message: $message
+      link: $link
+    ) {
+      message
+    }
+  }
+`;

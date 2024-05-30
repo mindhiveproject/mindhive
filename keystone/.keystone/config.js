@@ -84,9 +84,9 @@ async function sendEmail(root, {
   if (!sesh.itemId) {
     throw new Error("You must be logged in to do this!");
   }
-  const user = await context.lists.User.findOne({
+  const user = await context.query.Profile.findOne({
     where: { id: receiverId },
-    resolveFields: "email"
+    query: "email"
   });
   const email = user?.email || "produkt5@yandex.ru";
   await sendNotificationEmail(email, title, message, link);
@@ -301,7 +301,12 @@ var extendGraphqlSchema = (schema) => (0, import_schema.mergeSchemas)({
   schemas: [schema],
   typeDefs: graphql`
       type Mutation {
-        sendEmail(receiverId: String, header: String, body: String): Report
+        sendEmail(
+          receiverId: ID!
+          title: String
+          message: String
+          link: String
+        ): Report
         copyProposalBoard(id: ID!, study: ID): ProposalBoard
         deleteProposal(id: ID!): ProposalBoard
         archiveStudy(study: ID!, isArchived: Boolean!): Profile

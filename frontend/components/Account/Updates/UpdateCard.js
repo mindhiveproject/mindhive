@@ -38,7 +38,7 @@ export default function UpdateCard({ user, update }) {
       </div>
       <div className="linkMessage">
         <div onClick={() => openUpdate()}>
-          <Link href={`${update.link}`} as={`${update.link}`}>
+          <Link href={`${update.link}`} as={`${update.link}`} target="_blank">
             <p>Open</p>
           </Link>
         </div>

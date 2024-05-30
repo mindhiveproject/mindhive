@@ -54,7 +54,7 @@ export default function UpdateForm({
 
       <JoditEditor content={inputs.description} setContent={setContent} />
 
-      {/* <div className="iconTitle">
+      <div className="iconTitle">
         <div>Send an email</div>
         <Radio
           toggle
@@ -68,7 +68,7 @@ export default function UpdateForm({
             });
           }}
         />
-      </div> */}
+      </div>
     </StyledInput>
   );
 }

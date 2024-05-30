@@ -22,9 +22,9 @@ async function sendEmail(
   }
 
   // get the email of the receiver
-  const user = await context.lists.User.findOne({
+  const user = await context.query.Profile.findOne({
     where: { id: receiverId },
-    resolveFields: "email",
+    query: "email",
   });
 
   const email = user?.email || "produkt5@yandex.ru";

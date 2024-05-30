@@ -7,8 +7,12 @@ import UpdateForm from "./UpdateForm";
 import { CREATE_UPDATE } from "../../Mutations/Update";
 import { GET_UPDATES } from "../../Queries/Update";
 
+import useEmail from "../../../lib/useEmail";
+
 export default function AddUpdate({ user }) {
   const router = useRouter();
+  const { sendEmail } = useEmail();
+
   const { inputs, handleChange, clearForm } = useForm({
     title: "",
     description: "",
@@ -39,6 +43,14 @@ export default function AddUpdate({ user }) {
           userId,
         },
       });
+      if (inputs?.sendEmail) {
+        await sendEmail({
+          receiverId: userId,
+          title: inputs?.title,
+          message: inputs?.description,
+          link: inputs?.link,
+        });
+      }
     });
     router.push({
       pathname: "/dashboard/updates",

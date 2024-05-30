@@ -4073,7 +4073,7 @@ type Mutation {
   createInitialProfile(data: CreateInitialProfileInput!): ProfileAuthenticationWithPasswordSuccess!
   sendProfilePasswordResetLink(email: String!): Boolean!
   redeemProfilePasswordResetToken(email: String!, token: String!, password: String!): RedeemProfilePasswordResetTokenResult
-  sendEmail(receiverId: String, header: String, body: String): Report
+  sendEmail(receiverId: ID!, title: String, message: String, link: String): Report
   copyProposalBoard(id: ID!, study: ID): ProposalBoard
   deleteProposal(id: ID!): ProposalBoard
   archiveStudy(study: ID!, isArchived: Boolean!): Profile
