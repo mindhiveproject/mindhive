@@ -12,6 +12,7 @@ export default function Overview({
   selectChapter,
   data,
   variables,
+  settings,
   components,
   updateDataset,
   onVariableChange,
@@ -34,6 +35,7 @@ export default function Overview({
           part={part}
           data={data}
           variables={variables}
+          settings={settings}
           components={components}
           updateDataset={updateDataset}
           onVariableChange={onVariableChange}

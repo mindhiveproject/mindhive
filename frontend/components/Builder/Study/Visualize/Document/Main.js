@@ -7,6 +7,8 @@ import Section from "./Section";
 
 const prepareDataCode = ``;
 
+import filterData from "../Helpers/Filter";
+
 export default function Document({
   user,
   studyId,
@@ -15,6 +17,7 @@ export default function Document({
   pyodide,
   data,
   variables,
+  settings,
 }) {
   // register data relevant for this part
   useEffect(() => {
@@ -25,13 +28,14 @@ export default function Document({
         if (sys.modules.get("js_workspace")) {
           sys.modules.delete("js_workspace");
         }
-        pyodide?.registerJsModule("js_workspace", [...data]);
+        const filteredData = filterData({ data, settings });
+        pyodide?.registerJsModule("js_workspace", [...filteredData]);
         // make data available as data and df (pandas dataframe)
         await pyodide.runPythonAsync(prepareDataCode);
       }
     }
     registerData();
-  }, [pyodide, data]);
+  }, [pyodide, data, settings]);
 
   if (!chapter) {
     if (part?.vizChapters && part?.vizChapters.length) {
@@ -64,6 +68,7 @@ export default function Document({
             pyodide={pyodide}
             data={data}
             variables={variables}
+            settings={settings}
           />
         ))}
       </div>

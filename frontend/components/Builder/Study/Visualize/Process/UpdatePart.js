@@ -3,8 +3,6 @@ import { UPDATE_VIZPART } from "../../../../Mutations/VizPart";
 import { customAlphabet } from "nanoid";
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
-import { Icon } from "semantic-ui-react";
-
 export default function UpdatePartContent({ part, content }) {
   const update = async () => {
     let year, month, day, token;
@@ -43,6 +41,7 @@ export default function UpdatePartContent({ part, content }) {
       metadata: {
         ...metadata,
         variables: content?.modified?.variables,
+        settings: content?.modified?.settings,
       },
       data: content?.modified?.data,
     };
@@ -88,20 +87,16 @@ export default function UpdatePartContent({ part, content }) {
   const [updatePart, { data, loading, error }] = useMutation(UPDATE_VIZPART);
 
   return (
-    // <Icon
-    //   name="save outline"
-    //   size="large"
-    //   color="red"
-    //   onClick={() => update()}
-    // />
-    <div 
-    className="dataButtonPart menuButtonThin redSaveFrame"
-    onClick={update} 
+    <div
+      className="dataButtonPart menuButtonThin redSaveFrame"
+      onClick={update}
     >
       <div>
-        <img src="/assets/icons/visualize/save.svg" alt="Save"/>
+        <img src="/assets/icons/visualize/save.svg" alt="Save" />
       </div>
-      <div><a>Save</a></div>
+      <div>
+        <a>Save</a>
+      </div>
     </div>
   );
 }

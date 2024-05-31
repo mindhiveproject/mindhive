@@ -1,10 +1,12 @@
 import DataTable from "react-data-table-component";
+import filterData from "../../Helpers/Filter";
 
 export default function Table({
   content,
   handleContentChange,
   data,
   variables,
+  settings,
 }) {
   // update content in the local state
   const handleChange = async (content) => {
@@ -28,12 +30,12 @@ export default function Table({
   return (
     <DataTable
       columns={columns}
-      data={data}
+      data={filterData({ data, settings })}
       pagination
-      // expandableRows
-      // expandableRowsComponent={ExpandedComponent}
       dense
       highlightOnHover
+      // expandableRows
+      // expandableRowsComponent={ExpandedComponent}
     />
   );
 }

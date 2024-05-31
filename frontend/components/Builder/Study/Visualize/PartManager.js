@@ -11,6 +11,7 @@ export default function PartManager({
   setPart,
   initData,
   initVariables,
+  initSettings,
   components,
 }) {
   const [page, setPage] = useState("browse");
@@ -60,6 +61,7 @@ export default function PartManager({
       part={part}
       initData={initData}
       initVariables={initVariables}
+      initSettings={initSettings}
       components={components}
       page={page}
       setPage={setPage}

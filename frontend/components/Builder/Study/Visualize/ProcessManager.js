@@ -14,6 +14,7 @@ export default function ProcessManager({
   part,
   initData,
   initVariables,
+  initSettings,
   components,
   page,
   setPage,
@@ -23,6 +24,7 @@ export default function ProcessManager({
   // the data to be displayed
   const [data, setData] = useState([...initData]);
   const [variables, setVariables] = useState([...initVariables]);
+  const [settings, setSettings] = useState(initSettings || {});
 
   useEffect(() => {
     async function getData() {
@@ -40,13 +42,29 @@ export default function ProcessManager({
     }
   }, [initVariables]);
 
+  useEffect(() => {
+    async function getSettings() {
+      setSettings({ ...initSettings });
+    }
+    if (initSettings) {
+      getSettings();
+    }
+  }, [initSettings]);
+
   // to update the dataset
-  const updateDataset = ({ updatedVariables, updatedData }) => {
+  const updateDataset = ({
+    updatedVariables,
+    updatedData,
+    updatedSettings,
+  }) => {
     if (updatedVariables) {
       setVariables(updatedVariables);
     }
     if (updatedData) {
       setData(updatedData);
+    }
+    if (updatedSettings) {
+      setSettings(updatedSettings);
     }
   };
 
@@ -92,6 +110,7 @@ export default function ProcessManager({
             selectChapter={selectChapter}
             data={data}
             variables={variables}
+            settings={settings}
             components={components}
             updateDataset={updateDataset}
             onVariableChange={onVariableChange}
@@ -106,12 +125,18 @@ export default function ProcessManager({
             chapter={chapter}
             part={part}
             data={data}
+            settings={settings}
             variables={variables}
           />
         )}
 
         {page === "database" && (
-          <Preprocessor data={data} variables={variables} />
+          <Preprocessor
+            data={data}
+            variables={variables}
+            settings={settings}
+            updateDataset={updateDataset}
+          />
         )}
       </StyledDataViz>
     </>

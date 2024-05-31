@@ -42,10 +42,12 @@ export default function UploadedDataWrapper({
   let result = {};
   let uploadedData = [];
   let variables = [];
+  let settings = {};
   if (trimmedData) {
     result = JSON.parse(trimmedData);
     uploadedData = result?.data;
     variables = result?.metadata?.variables;
+    settings = result?.metadata?.settings;
   }
 
   return (
@@ -58,6 +60,7 @@ export default function UploadedDataWrapper({
       setPart={setPart}
       initData={uploadedData}
       initVariables={variables}
+      initSettings={settings}
       components={[]}
     />
   );

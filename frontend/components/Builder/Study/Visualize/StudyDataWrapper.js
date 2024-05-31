@@ -16,6 +16,7 @@ const processRawData = ({
   username,
   modifiedData,
   modifiedVariables,
+  modifiedSettings,
 }) => {
   const res = rawdata.map((result) => {
     const userID =
@@ -156,7 +157,9 @@ const processRawData = ({
     }));
   }
 
-  return { data: dataByParticipant, variables };
+  const settings = modifiedSettings || {};
+
+  return { data: dataByParticipant, variables, settings };
 };
 
 export default function StudyDataWrapper({
@@ -193,6 +196,7 @@ export default function StudyDataWrapper({
   // get the saved modified data
   let modifiedData = [];
   let modifiedVariables = [];
+  let modifiedSettings = {};
   if (part?.content?.isModified) {
     const { year, month, day, token } = part?.content?.modified?.address;
     const { data: dataModified, error: modifiedError } = useSWR(
@@ -203,6 +207,7 @@ export default function StudyDataWrapper({
       const parsedData = JSON.parse(dataModified);
       modifiedData = parsedData.data;
       modifiedVariables = parsedData?.metadata?.variables;
+      modifiedSettings = parsedData?.metadata?.settings || {};
     }
   }
 
@@ -231,7 +236,7 @@ export default function StudyDataWrapper({
   findComponents({ flow: study?.flow });
 
   // pre-process the data in the participant-by-row format
-  const { data, variables } = useMemo(
+  const { data, variables, settings } = useMemo(
     () =>
       processRawData({
         rawdata: summaryResults,
@@ -239,8 +244,15 @@ export default function StudyDataWrapper({
         username,
         modifiedData,
         modifiedVariables,
+        modifiedSettings,
       }),
-    [summaryResults, components, modifiedData, modifiedVariables]
+    [
+      summaryResults,
+      components,
+      modifiedData,
+      modifiedVariables,
+      modifiedSettings,
+    ]
   );
 
   return (
@@ -253,6 +265,7 @@ export default function StudyDataWrapper({
       setPart={setPart}
       initData={data}
       initVariables={variables}
+      initSettings={settings}
       components={components}
     />
   );

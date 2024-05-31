@@ -12,6 +12,7 @@ export default function Database({
   part,
   data,
   variables,
+  settings,
   components,
   updateDataset,
   onVariableChange,
@@ -78,36 +79,42 @@ export default function Database({
   return (
     <div className="database">
       <div className="header">
-        <div><img src={`/assets/icons/visualize/database.svg`} /></div>
+        <div>
+          <img src={`/assets/icons/visualize/database.svg`} />
+        </div>
         <div>Active Data</div>
-        <div 
+        <div
           className="dataButtonPart menuButtonThin blueFrame"
-          onClick={async () => {setPage("browse");}}>
+          onClick={async () => {
+            setPage("browse");
+          }}
+        >
           <img src={`/assets/icons/visualize/folder_open_blue.svg`} />
-          <div><a>Return to browse</a></div>
+          <div>
+            <a>Return to browse</a>
+          </div>
         </div>
       </div>
 
       <div className="options">
         <UpdatePartContent
           part={part}
-          content={{ modified: { data, variables } }}
+          content={{ modified: { data, variables, settings } }}
         />
 
-        <div 
-          className="optionsFrame"
-          >
-
+        <div className="optionsFrame">
           <Dropdown
             icon={
-              <div
-              className="optionsButtonGreen">
-                <img src={`/assets/icons/visualize/add_notes.svg`} alt="Add a column" />
+              <div className="optionsButtonGreen">
+                <img
+                  src={`/assets/icons/visualize/add_notes.svg`}
+                  alt="Add a column"
+                />
                 <div>Add a column</div>
               </div>
             }
             direction="left"
-            >
+          >
             <DropdownMenu>
               <OperationModal
                 type="copy"
@@ -145,17 +152,25 @@ export default function Database({
             </DropdownMenu>
           </Dropdown>
 
-          <div className="optionsButtonGreen" onClick={downloadData} >
-            <div><Icon name="download" color="grey"/></div>
-            <div><a>Download</a></div>
+          <div className="optionsButtonGreen" onClick={downloadData}>
+            <div>
+              <Icon name="download" color="grey" />
+            </div>
+            <div>
+              <a>Download</a>
+            </div>
           </div>
           <div className="optionsButtonYellow" onClick={hideAllColumns}>
-            <Icon name="eye slash" color="grey"  />
-            <div><a>Hide all</a></div>
+            <Icon name="eye slash" color="grey" />
+            <div>
+              <a>Hide all</a>
+            </div>
           </div>
-          <div className="optionsButtonYellow" onClick={showAllColumns} >
-            <Icon name="eye" color="grey"/>
-            <div><a>Show all</a></div>
+          <div className="optionsButtonYellow" onClick={showAllColumns}>
+            <Icon name="eye" color="grey" />
+            <div>
+              <a>Show all</a>
+            </div>
           </div>
         </div>
       </div>

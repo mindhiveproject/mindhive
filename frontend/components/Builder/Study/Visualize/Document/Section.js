@@ -16,6 +16,7 @@ export default function Section({
   pyodide,
   data,
   variables,
+  settings,
 }) {
   const { inputs, handleChange } = useForm({
     ...(section || {}),
@@ -54,6 +55,7 @@ export default function Section({
           handleContentChange={handleContentChange}
           data={data}
           variables={variables}
+          settings={settings}
         />
       )}
 
