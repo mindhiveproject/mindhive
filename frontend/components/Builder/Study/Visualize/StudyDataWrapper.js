@@ -61,6 +61,8 @@ const processRawData = ({
     };
   });
 
+  console.log({ res });
+
   const allParticipants = res.map((row) => row?.general?.participant);
   const participants = [...new Set(allParticipants)];
 
@@ -89,14 +91,19 @@ const processRawData = ({
         subtitle: row?.task?.subtitle,
         type: "task",
       }));
-      resultKeys.map((key) => {
-        data[key?.field] = row?.data[key?.field];
-      });
       resultKeys.forEach((key) => {
+        let keyExtended = { ...key };
+        // if the key is already present, append a subtitle to the name of the key
+        if (data[key?.field]) {
+          keyExtended.field = key?.field + "_" + key?.subtitle;
+        }
+        data[keyExtended?.field] = row?.data[key?.field];
         if (
-          !variableNames.map((variable) => variable?.field).includes(key?.field)
+          !variableNames
+            .map((variable) => variable?.field)
+            .includes(keyExtended?.field)
         ) {
-          variableNames.push(key);
+          variableNames.push(keyExtended);
         }
       });
     });
