@@ -8,10 +8,10 @@ export default function Menu({
   engine,
   user,
   addFunctions,
-  setIsModalOpen,
   study,
   handleChange,
   handleMultipleUpdate,
+  hasStudyChanged,
 }) {
   const [tab, setTab] = useState("addBlock");
 
@@ -51,7 +51,6 @@ export default function Menu({
           engine={engine}
           user={user}
           addFunctions={addFunctions}
-          setIsModalOpen={setIsModalOpen}
         />
       )}
 
@@ -66,10 +65,10 @@ export default function Menu({
           engine={engine}
           user={user}
           addFunctions={addFunctions}
-          setIsModalOpen={setIsModalOpen}
           study={study}
           handleChange={handleChange}
           handleMultipleUpdate={handleMultipleUpdate}
+          hasStudyChanged={hasStudyChanged}
         />
       )}
     </div>

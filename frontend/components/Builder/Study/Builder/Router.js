@@ -10,6 +10,7 @@ export default function Router({
   tab,
   study,
   handleChange,
+  handleMultipleUpdate,
   saveStudy,
   toggleSidebar,
 }) {
@@ -20,6 +21,7 @@ export default function Router({
       tab={tab}
       study={study}
       handleChange={handleChange}
+      handleMultipleUpdate={handleMultipleUpdate}
       saveStudy={saveStudy}
       toggleSidebar={toggleSidebar}
     />

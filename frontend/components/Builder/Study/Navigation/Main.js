@@ -64,6 +64,7 @@ export default function Navigation({
     classes: [],
     consent: [],
     talks: [],
+    currentVersion: "",
   };
 
   const toggleChatSidebar = () => {
@@ -99,6 +100,17 @@ export default function Navigation({
           </div>
           <div>
             <span className="studyTitle">{study?.title}</span>
+            {/* {study?.currentVersion && (
+              <span className="studyVersion">
+                [
+                {
+                  study?.versionHistory.filter(
+                    (v) => v?.id === study?.currentVersion
+                  )[0]?.name
+                }
+                ]
+              </span>
+            )} */}
           </div>
         </div>
         <div className="rightPanel">

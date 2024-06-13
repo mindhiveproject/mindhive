@@ -20,7 +20,7 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
   const study = data?.study || {};
 
   // save and edit the study information
-  const { inputs, handleChange } = useForm({
+  const { inputs, handleChange, handleMultipleUpdate } = useForm({
     ...study,
   });
 
@@ -54,6 +54,9 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
     diagram,
     descriptionInProposalCardId,
     tags,
+    status,
+    currentVersion,
+    versionHistory,
   }) => {
     if (studyId === "add" || area === "cloneofstudy") {
       const newStudy = await createStudy({
@@ -71,6 +74,9 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
                 { settings: { type: "default", title: "Project chat" } },
               ],
             },
+            status,
+            currentVersion,
+            versionHistory,
           },
         },
       });
@@ -90,6 +96,9 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
               ? { connect: { id: descriptionInProposalCardId } }
               : null,
             tags: tags?.length ? { set: tags } : { set: [] },
+            status,
+            currentVersion,
+            versionHistory,
           },
         },
       });
@@ -107,6 +116,7 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
       tab={tab}
       study={inputs}
       handleChange={handleChange}
+      handleMultipleUpdate={handleMultipleUpdate}
       saveStudy={saveStudy}
       toggleSidebar={toggleSidebar}
     />

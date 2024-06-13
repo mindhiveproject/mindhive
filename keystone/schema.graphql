@@ -1784,6 +1784,9 @@ type Study {
   vizJournalsCount(where: VizJournalWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
+  status: String
+  currentVersion: String
+  versionHistory: JSON
 }
 
 input StudyWhereUniqueInput {
@@ -1823,6 +1826,8 @@ input StudyWhereInput {
   vizJournals: VizJournalManyRelationFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
+  status: StringNullableFilter
+  currentVersion: StringFilter
 }
 
 input GuestManyRelationFilter {
@@ -1856,6 +1861,8 @@ input StudyOrderByInput {
   diagram: OrderDirection
   createdAt: OrderDirection
   updatedAt: OrderDirection
+  status: OrderDirection
+  currentVersion: OrderDirection
 }
 
 input StudyUpdateInput {
@@ -1890,6 +1897,9 @@ input StudyUpdateInput {
   vizJournals: VizJournalRelateToManyForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
+  status: String
+  currentVersion: String
+  versionHistory: JSON
 }
 
 input StudyImageRelateToOneForUpdateInput {
@@ -1962,6 +1972,9 @@ input StudyCreateInput {
   vizJournals: VizJournalRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
+  status: String
+  currentVersion: String
+  versionHistory: JSON
 }
 
 input StudyImageRelateToOneForCreateInput {

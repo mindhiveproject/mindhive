@@ -286,6 +286,9 @@ model Study {
   vizJournals                 VizJournal[]    @relation("VizJournal_study")
   createdAt                   DateTime?       @default(now())
   updatedAt                   DateTime?
+  status                      String?         @default("WORKING")
+  currentVersion              String          @default("")
+  versionHistory              String?
 
   @@index([authorId])
   @@index([descriptionInProposalCardId])

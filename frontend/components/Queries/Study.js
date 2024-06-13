@@ -129,6 +129,9 @@ export const MY_STUDY = gql`
         id
         title
       }
+      status
+      currentVersion
+      versionHistory
     }
   }
 `;

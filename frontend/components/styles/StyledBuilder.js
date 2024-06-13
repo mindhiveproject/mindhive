@@ -28,6 +28,10 @@ export const StyledBuilderArea = styled.div`
         grid-gap: 20px;
         grid-template-columns: auto 1fr;
         align-items: center;
+        .studyVersion {
+          margin: 0px 10px;
+          color: grey;
+        }
       }
       .rightPanel {
         display: grid;
@@ -119,6 +123,45 @@ export const StyledCanvasBuilder = styled.div`
     overflow-y: auto;
     .studyFlow {
       margin: 0rem;
+    }
+    .studySettings {
+      margin: 1rem;
+      display: grid;
+      grid-gap: 2rem;
+      .studyVersion {
+        display: grid;
+        grid-gap: 1rem;
+        .studyVersionHeader {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          grid-gap: 1rem;
+          align-items: center;
+          .studyVersionHeaderNote {
+            color: grey;
+          }
+        }
+        .studyVersionInfo {
+          display: grid;
+          grid-gap: 0.5rem;
+          background: white;
+          margin: 1rem 0rem;
+          padding: 1rem;
+          border-radius: 5px;
+          .studyVersionInfoDescription {
+            color: grey;
+          }
+        }
+      }
+      .switch {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        grid-gap: 1rem;
+        align-items: center;
+        .deleteBtn {
+          background: darkred;
+          border: 1px solid darkred;
+        }
+      }
     }
   }
 

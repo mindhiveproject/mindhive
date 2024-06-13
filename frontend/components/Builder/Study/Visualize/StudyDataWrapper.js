@@ -61,8 +61,6 @@ const processRawData = ({
     };
   });
 
-  console.log({ res });
-
   const allParticipants = res.map((row) => row?.general?.participant);
   const participants = [...new Set(allParticipants)];
 

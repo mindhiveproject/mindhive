@@ -1472,7 +1472,23 @@ var Study = (0, import_core13.list)({
     createdAt: (0, import_fields16.timestamp)({
       defaultValue: { kind: "now" }
     }),
-    updatedAt: (0, import_fields16.timestamp)()
+    updatedAt: (0, import_fields16.timestamp)(),
+    status: (0, import_fields16.select)({
+      options: [
+        { label: "Working", value: "WORKING" },
+        { label: "Ready for review", value: "READY_FOR_REVIEW" },
+        { label: "In review", value: "IN_REVIEW" },
+        { label: "Reviewed", value: "REVIEWED" },
+        { label: "Collecting data", value: "COLLECTING_DATA" },
+        {
+          label: "Data collection is completed",
+          value: "DATA_COLLECTION_IS_COMPLETED"
+        }
+      ],
+      defaultValue: "WORKING"
+    }),
+    currentVersion: (0, import_fields16.text)(),
+    versionHistory: (0, import_fields16.json)()
   }
 });
 

@@ -18,6 +18,7 @@ export default function Builder({
   handleMultipleUpdate,
   engine,
   addFunctions,
+  hasStudyChanged,
   setHasStudyChanged,
 }) {
   const [node, setNode] = useState(null);
@@ -133,6 +134,7 @@ export default function Builder({
           study={study}
           handleChange={handleChange}
           handleMultipleUpdate={handleMultipleUpdate}
+          hasStudyChanged={hasStudyChanged}
         />
       </div>
 

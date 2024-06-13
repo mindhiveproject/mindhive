@@ -159,5 +159,21 @@ export const Study = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+    status: select({
+      options: [
+        { label: "Working", value: "WORKING" },
+        { label: "Ready for review", value: "READY_FOR_REVIEW" },
+        { label: "In review", value: "IN_REVIEW" },
+        { label: "Reviewed", value: "REVIEWED" },
+        { label: "Collecting data", value: "COLLECTING_DATA" },
+        {
+          label: "Data collection is completed",
+          value: "DATA_COLLECTION_IS_COMPLETED",
+        },
+      ],
+      defaultValue: "WORKING",
+    }),
+    currentVersion: text(),
+    versionHistory: json(),
   },
 });

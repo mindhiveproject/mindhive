@@ -32,6 +32,7 @@ export default function Engine({
   tab,
   study,
   handleChange,
+  handleMultipleUpdate,
   saveStudy,
   toggleSidebar,
 }) {
@@ -311,11 +312,21 @@ export default function Engine({
 
   const buildStudy = () => {
     const { flow, diagram } = saveDiagramState();
+    const updatedVersionHistory = study?.versionHistory.map((v) => {
+      if (v?.id === study?.currentVersion) {
+        return { ...v, diagram };
+      } else {
+        return v;
+      }
+    });
     saveStudy({
       flow,
       diagram,
       descriptionInProposalCardId: study?.descriptionInProposalCardId,
       tags: study?.tags,
+      status: study?.status,
+      currentVersion: study?.currentVersion,
+      versionHistory: updatedVersionHistory,
     });
     setHasStudyChanged(false);
   };
@@ -323,6 +334,11 @@ export default function Engine({
   const handleStudyChange = (props) => {
     setHasStudyChanged(true);
     handleChange(props);
+  };
+
+  const handleStudyMultipleUpdate = (props) => {
+    setHasStudyChanged(true);
+    handleMultipleUpdate(props);
   };
 
   return (
@@ -341,8 +357,10 @@ export default function Engine({
         user={user}
         study={study}
         handleChange={handleStudyChange}
+        handleMultipleUpdate={handleStudyMultipleUpdate}
         engine={engine}
         addFunctions={addFunctions}
+        hasStudyChanged={hasStudyChanged}
         setHasStudyChanged={setHasStudyChanged}
       />
     </>
