@@ -312,7 +312,7 @@ export default function Engine({
 
   const buildStudy = () => {
     const { flow, diagram } = saveDiagramState();
-    const updatedVersionHistory = study?.versionHistory.map((v) => {
+    const updatedVersionHistory = study?.versionHistory?.map((v) => {
       if (v?.id === study?.currentVersion) {
         return { ...v, diagram };
       } else {
