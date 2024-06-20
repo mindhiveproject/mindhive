@@ -37,14 +37,14 @@ export default function Delete({ study, user }) {
                 <Icon name="trash" className="red" />
                 <p className="red">Delete Study</p>
               </div>
-              <p style={{ padding: "5px" }} className="red">
+              {/* <p style={{ padding: "5px" }} className="red">
                 Deleting a study deletes it for{" "}
                 <em>
                   all <br />
                   collaborators
                 </em>{" "}
                 on that study.
-              </p>
+              </p> */}
             </>
           }
         />

@@ -38,7 +38,7 @@ export default function Archive({ user, study, studiesInfo }) {
                 <Icon name="archive" />
                 <p>{isArchived ? "Unarchive study" : "Archive Study"}</p>
               </div>
-              {isArchived ? (
+              {/* {isArchived ? (
                 <p style={{ padding: "5px" }}>
                   Unarchiving a study will return it
                   <br /> to the "Active" section in your
@@ -52,7 +52,7 @@ export default function Archive({ user, study, studiesInfo }) {
                   Develop area. It will not impact <br />
                   how others see the study.
                 </p>
-              )}
+              )} */}
             </>
           }
         />

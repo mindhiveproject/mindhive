@@ -15,7 +15,7 @@ export default function StudyOptions({ user, study, studiesInfo }) {
         trigger={<img src="/assets/icons/settings.svg" />}
         scrolling
       >
-        <Dropdown.Menu>
+        <Dropdown.Menu className="archiveDropdown">
           <Authorship user={user} study={study} />
           <Archive user={user} study={study} studiesInfo={studiesInfo} />
           <Delete user={user} study={study} />

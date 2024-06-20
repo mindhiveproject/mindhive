@@ -59,6 +59,27 @@ export const StyledStudyCard = styled.div`
     z-index: 20;
   }
 
+  .archiveDropdown {
+    width: 270px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.7);
+    span {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    p {
+      color: #666666;
+      line-height: 150%;
+      font-size: 16px;
+    }
+    .heading {
+      line-height: 200%;
+    }
+    .red {
+      color: #d53533;
+    }
+    z-index: 100;
+  }
+
   .dropdownItem {
   }
 
