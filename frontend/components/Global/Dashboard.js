@@ -11,11 +11,21 @@ import { UserContext } from "./Authorized";
 
 import { Sidebar } from "semantic-ui-react";
 
+import Page from "../../components/Global/Page";
+import Form from "../../components/Global/Form";
+import Login from "../Auth/Login";
+
 export default function Dashboard({ children, area, selector }) {
   const user = useContext(UserContext);
 
   if (!user) {
-    return <div>Please first log in!</div>;
+    return (
+      <Page>
+        <Form>
+          <Login />
+        </Form>
+      </Page>
+    );
   }
 
   // use the full screen for reviewing
