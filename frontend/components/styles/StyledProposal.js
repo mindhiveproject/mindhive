@@ -190,6 +190,7 @@ export const StyledProposal = styled.div`
     border-radius: 8px;
     min-width: 250px;
     margin: 15px;
+    padding: 0px 0px 20px 0px;
     .infoLine {
       margin: 0.2rem 0px 0px 3rem;
       display: grid;

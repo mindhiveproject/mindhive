@@ -383,24 +383,26 @@ const Section = ({
         </div>
       )}
 
-      <div className="deleteBtn">
-        <img
-          src="/assets/icons/proposal/delete.svg"
-          onClick={() => {
-            if (section?.cards?.length === 0) {
-              deleteSection(section.id);
-              return;
-            }
-            if (
-              confirm(
-                "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone."
-              )
-            ) {
-              deleteSection(section.id);
-            }
-          }}
-        />
-      </div>
+      {settings?.allowAddingSections && (
+        <div className="deleteBtn">
+          <img
+            src="/assets/icons/proposal/delete.svg"
+            onClick={() => {
+              if (section?.cards?.length === 0) {
+                deleteSection(section.id);
+                return;
+              }
+              if (
+                confirm(
+                  "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone."
+                )
+              ) {
+                deleteSection(section.id);
+              }
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
