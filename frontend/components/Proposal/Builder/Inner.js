@@ -111,21 +111,20 @@ class Inner extends Component {
             isPreview={this.props.isPreview}
             settings={board?.settings}
           />
-
-          {!this.props.isPreview && board?.settings?.allowAddingSections && (
+        </div>
+        {!this.props.isPreview && board?.settings?.allowAddingSections && (
+          <div>
             <div className="newInput">
-              <label htmlFor="sectionTitle">
-                <div>New section</div>
-                <input
-                  type="text"
-                  id="sectionTitle"
-                  name="title"
-                  placeholder=""
-                  value={this.state.title}
-                  onChange={this.handleChange}
-                  required
-                />
-              </label>
+              <div>New section</div>
+              <input
+                type="text"
+                id="sectionTitle"
+                name="title"
+                placeholder=""
+                value={this.state.title}
+                onChange={this.handleChange}
+                required
+              />
               <div
                 className="addBtn"
                 onClick={() => this.createSection(board.id)}
@@ -133,8 +132,8 @@ class Inner extends Component {
                 Add section
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
   }

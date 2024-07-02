@@ -293,16 +293,9 @@ const Section = ({
   return (
     <div className="section">
       <div className="column-drag-handle">
-        <h3>{ReactHTMLParser(section.title)}</h3>
-      </div>
-
-      {!isPreview && (
-        <div className="infoLine">
-          <div>
-            {numOfCards} card{numOfCards <= 1 ? "" : "s"}
-          </div>
-          <div
-            className="deleteBtn"
+        <div className="firstLine">
+          <img
+            src="/assets/icons/proposal/edit.svg"
             onClick={() => {
               const title = prompt("Please enter a new title");
               if (title != null) {
@@ -315,29 +308,15 @@ const Section = ({
                 });
               }
             }}
-          >
-            Edit title
-          </div>
-          <div
-            className="deleteBtn"
-            onClick={() => {
-              if (section?.cards?.length === 0) {
-                deleteSection(section.id);
-                return;
-              }
-              if (
-                confirm(
-                  "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone."
-                )
-              ) {
-                deleteSection(section.id);
-              }
-            }}
-          >
-            Delete section
-          </div>
+          />
+          <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
         </div>
-      )}
+        {!isPreview && (
+          <div className="infoLine">
+            {numOfCards} card{numOfCards == 1 ? "" : "s"}
+          </div>
+        )}
+      </div>
 
       <div>
         <Container
@@ -383,16 +362,15 @@ const Section = ({
 
       {!isPreview && settings?.allowAddingCards && (
         <div className="newInput">
-          <label htmlFor={`input-${section.id}`}>
-            <div>New card</div>
-            <input
-              id={`input-${section.id}`}
-              type="text"
-              name={`input-${section.id}`}
-              value={cardName}
-              onChange={(e) => setCardName(e.target.value)}
-            />
-          </label>
+          <div>New card</div>
+
+          <input
+            id={`input-${section.id}`}
+            type="text"
+            name={`input-${section.id}`}
+            value={cardName}
+            onChange={(e) => setCardName(e.target.value)}
+          />
 
           <div
             className="addBtn"
@@ -404,6 +382,25 @@ const Section = ({
           </div>
         </div>
       )}
+
+      <div className="deleteBtn">
+        <img
+          src="/assets/icons/proposal/delete.svg"
+          onClick={() => {
+            if (section?.cards?.length === 0) {
+              deleteSection(section.id);
+              return;
+            }
+            if (
+              confirm(
+                "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone."
+              )
+            ) {
+              deleteSection(section.id);
+            }
+          }}
+        />
+      </div>
     </div>
   );
 };

@@ -4,9 +4,9 @@ export const StyledProposal = styled.div`
   display: grid;
   width: 100%;
   overflow-y: auto;
-  margin: 20px;
+  padding: 20px;
   min-height: 80vh;
-
+  background: #f7f9f8;
   .closeBtn {
     line-height: 3rem;
     text-align: center;
@@ -99,6 +99,8 @@ export const StyledProposal = styled.div`
     display: grid;
     grid-template-rows: auto 1fr;
     width: max-content;
+    margin: 20px;
+
     .previewToggle {
       display: grid;
       grid-template-columns: auto auto 1fr;
@@ -145,41 +147,32 @@ export const StyledProposal = styled.div`
 
   .newInput {
     display: grid;
-    justify-content: start;
+    justify-content: stretch;
     text-align: start;
-    margin: 10px;
-    padding: 1rem 0rem;
-    border-top: 1px solid lightgrey;
-    justify-content: center;
+    margin: 30px 10px 0px 10px;
     input {
       border: 1px solid #e6e6e6;
-      border-radius: 4px;
+      border-radius: 8px;
       padding: 10px 10px 10px 10px;
       height: 50px;
-    }
-    span {
-      font-family: Lato;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 21px;
-      letter-spacing: 0em;
-      text-align: center;
+      margin: 5px 0px 0px 0px;
     }
     .addBtn {
-      background: #ffffff;
       display: grid;
-      margin-top: 10px;
+      justify-self: center;
+      margin: 10px 0px 5px 0px;
       cursor: pointer;
       text-align: center;
-      border: 1px solid #e6e6e6;
-      border-radius: 4px;
       padding: 5px;
+      color: #007c70;
+      width: fit-content;
     }
   }
 
   .inner {
-    width: 90vw;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    /* width: 90vw; */
     .scrollable {
       overflow-x: auto;
     }
@@ -190,24 +183,34 @@ export const StyledProposal = styled.div`
 
   .section {
     display: grid;
-    background: #ffffff;
+    grid-gap: 0.5rem;
+    position: relative;
+    background: #f5f5f5;
     border: 1px solid #e6e6e6;
-    border-radius: 4px;
+    border-radius: 8px;
     min-width: 250px;
-    margin: 10px;
+    margin: 15px;
     .infoLine {
-      margin: 0rem 2rem;
+      margin: 0.2rem 0px 0px 3rem;
       display: grid;
-      grid-template-columns: 1fr auto auto;
-      grid-gap: 1rem;
+      color: #b3b3b3;
     }
     .column-drag-handle {
+      margin: 0px 0px 0px 0px;
+      padding: 1rem 2rem 1rem 1rem;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
       cursor: pointer;
-      text-align: center;
-      margin: 10px;
-      h3 {
+      .firstLine {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-gap: 10px;
+        justify-items: baseline;
+        align-items: center;
+        text-align: center;
+      }
+      .sectionTitle {
         font-family: Lato;
-        font-size: 18px;
+        font-size: 23px;
         font-style: normal;
         font-weight: 700;
         line-height: 27px;
@@ -225,18 +228,13 @@ export const StyledProposal = styled.div`
       }
     }
     .deleteBtn {
-      display: grid;
-      margin-bottom: 30px;
+      position: absolute;
+      bottom: -5px;
+      left: -5px;
       cursor: pointer;
-      text-align: center;
-      font-family: Lato;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 21px;
-      letter-spacing: 0em;
-      text-align: center;
-      color: darkred;
+      img {
+        width: 20px;
+      }
     }
   }
 
@@ -245,12 +243,12 @@ export const StyledProposal = styled.div`
     border: 1px solid #e6e6e6;
     box-sizing: border-box;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
-    margin: 10px;
+    margin: 3px 10px;
+    position: relative;
     .card-drag-handle {
       display: grid;
-      text-align: center;
       margin: 10px;
       font-family: Lato;
       font-size: 16px;
@@ -259,11 +257,27 @@ export const StyledProposal = styled.div`
       line-height: 24px;
       letter-spacing: 0em;
     }
+    .deleteCardBtn {
+      position: absolute;
+      bottom: -5px;
+      left: -5px;
+      cursor: pointer;
+      img {
+        width: 20px;
+      }
+    }
     .card-information {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(50px, auto));
+      grid-template-columns: 30px 1fr 30px;
       grid-gap: 10px;
-      align-items: baseline;
+      align-items: center;
+      .status {
+        color: #007c70;
+        font-family: Lato;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+      }
       .editedByAvatar {
       }
       .info-assigned-container {
@@ -554,7 +568,6 @@ export const StyledProposal = styled.div`
       display: grid;
       grid-gap: 30px;
       align-content: baseline;
-      // background: #f7f9f8;
       border-radius: 0px 4px 4px 0px;
       padding: 53px 30px 30px 37px;
       font-family: Roboto;

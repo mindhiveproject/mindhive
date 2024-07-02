@@ -51,66 +51,83 @@ export default function Card({
         }}
       >
         <div className="card-drag-handle">
-          <h4>{ReactHtmlParser(card.title)}</h4>
           {!proposalBuildMode && (
             <div className="card-information">
-              <div className="info-assigned-container">
-                {card?.assignedTo.length
-                  ? card?.assignedTo.map((user, i) => (
-                      <div key={i} className="info-assigned">
-                        {adminMode
-                          ? user?.username ||
-                            user?.publicReadableId ||
-                            "John Doe"
-                          : user?.username}
-                      </div>
-                    ))
-                  : ""}
+              <div>
+                <Popup
+                  content={
+                    card?.assignedTo.length
+                      ? card?.assignedTo.map((user, i) => (
+                          <div key={i} className="info-assigned">
+                            {`The card is assigned to ${
+                              adminMode
+                                ? user?.username ||
+                                  user?.publicReadableId ||
+                                  "John Doe"
+                                : user?.username
+                            }`}
+                          </div>
+                        ))
+                      : "The card is not assigned to anyone"
+                  }
+                  trigger={
+                    <Image
+                      src={`/assets/icons/proposal/${statusStyle}.svg`}
+                      avatar
+                    />
+                  }
+                  size="huge"
+                />
               </div>
-              {status && (
-                <div className={`info-status ${statusStyle}`}>{status}</div>
-              )}
+              <div>
+                <div>{ReactHtmlParser(card.title)}</div>
+                {status && <div className="status">{status}</div>}
+              </div>
 
-              {card?.isEditedBy?.username && (
-                <div className="editedByAvatar">
-                  <Popup
-                    content={card?.isEditedBy?.username}
-                    trigger={
-                      card?.isEditedBy?.image?.image?.publicUrlTransformed ? (
-                        <Image
-                          src={
-                            card?.isEditedBy?.image?.image?.publicUrlTransformed
-                          }
-                          avatar
-                        />
-                      ) : (
-                        <Image src="/assets/icons/builder/page.svg" avatar />
-                      )
-                    }
-                    size="huge"
-                  />
-                </div>
-              )}
+              <div>
+                {card?.isEditedBy?.username && (
+                  <div className="editedByAvatar">
+                    <Popup
+                      content={`The card is currently being edited by ${card?.isEditedBy?.username}`}
+                      trigger={
+                        card?.isEditedBy?.image?.image?.publicUrlTransformed ? (
+                          <Image
+                            src={
+                              card?.isEditedBy?.image?.image
+                                ?.publicUrlTransformed
+                            }
+                            avatar
+                          />
+                        ) : (
+                          <Image src="/assets/icons/builder/page.svg" avatar />
+                        )
+                      }
+                      size="huge"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
+        {settings?.allowAddingCards && (
+          <div className="deleteCardBtn">
+            <img
+              src="/assets/icons/proposal/delete.svg"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (
+                  confirm(
+                    "Are you sure you want to delete this card? This action cannot be undone."
+                  )
+                ) {
+                  onDeleteCard(card.id);
+                }
+              }}
+            />
+          </div>
+        )}
       </div>
-      {settings?.allowAddingCards && (
-        <div
-          className="deleteBtn"
-          onClick={() => {
-            if (
-              confirm(
-                "Are you sure you want to delete this card? This action cannot be undone."
-              )
-            ) {
-              onDeleteCard(card.id);
-            }
-          }}
-        >
-          Delete card
-        </div>
-      )}
     </Draggable>
   );
 }
