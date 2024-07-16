@@ -170,3 +170,12 @@ export const UPDATE_USER_STUDY_INFO = gql`
     }
   }
 `;
+
+// update the profile information
+export const UPDATE_PROFILE = gql`
+  mutation UPDATE_PROFILE($id: ID!, $input: ProfileUpdateInput!) {
+    updateProfile(where: { id: $id }, data: $input) {
+      id
+    }
+  }
+`;

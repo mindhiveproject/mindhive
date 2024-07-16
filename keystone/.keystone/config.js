@@ -620,22 +620,11 @@ var Profile = (0, import_core.list)({
         update: () => true
       }
     }),
-    image: (0, import_fields3.relationship)({
-      ref: "ProfileImage.profile",
-      ui: {
-        displayMode: "cards",
-        cardFields: ["image", "altText"],
-        inlineCreate: { fields: ["image", "altText"] },
-        inlineEdit: { fields: ["image", "altText"] }
-      }
-    }),
-    bio: (0, import_fields3.text)(),
     facebook: (0, import_fields3.text)(),
     twitter: (0, import_fields3.text)(),
     instagram: (0, import_fields3.text)(),
     publicMail: (0, import_fields3.text)(),
     website: (0, import_fields3.text)(),
-    location: (0, import_fields3.text)(),
     dateCreated: (0, import_fields3.timestamp)({
       defaultValue: { kind: "now" }
     }),
@@ -792,6 +781,81 @@ var Profile = (0, import_core.list)({
     authoredSpecs: (0, import_fields3.relationship)({
       ref: "Spec.author",
       many: true
+    }),
+    profileType: (0, import_fields3.select)({
+      options: [
+        { label: "Individual", value: "individual" },
+        { label: "Organization", value: "organization" }
+      ],
+      defaultValue: "individual"
+    }),
+    image: (0, import_fields3.relationship)({
+      ref: "ProfileImage.profile",
+      ui: {
+        displayMode: "cards",
+        cardFields: ["image", "altText"],
+        inlineCreate: { fields: ["image", "altText"] },
+        inlineEdit: { fields: ["image", "altText"] }
+      }
+    }),
+    firstName: (0, import_fields3.text)(),
+    lastName: (0, import_fields3.text)(),
+    pronouns: (0, import_fields3.select)({
+      options: [
+        { label: "she/her/hers", value: "she" },
+        { label: "he/him/his", value: "he" },
+        { label: "they/them/theirs", value: "they" }
+      ]
+    }),
+    location: (0, import_fields3.text)(),
+    bio: (0, import_fields3.text)(),
+    bioInformal: (0, import_fields3.text)(),
+    occupation: (0, import_fields3.text)(),
+    education: (0, import_fields3.json)(),
+    // a list of institutions and degrees
+    languages: (0, import_fields3.json)(),
+    // a list of languages
+    introVideo: (0, import_fields3.json)(),
+    // an object with the link to the file system, timestampUploaded, timestampModified
+    mentorPreferGrade: (0, import_fields3.select)({
+      options: [
+        { label: "Middle School", value: "middle" },
+        { label: "9 - 10 Grade", value: "nine" },
+        { label: "11 - 12 Grade", value: "eleven" },
+        { label: "No Preference", value: "no" }
+      ]
+    }),
+    mentorPreferGroup: (0, import_fields3.select)({
+      options: [
+        { label: "Individual", value: "individual" },
+        { label: "Group", value: "group" },
+        { label: "No Preference", value: "no" }
+      ]
+    }),
+    mentorPreferClass: (0, import_fields3.select)({
+      options: [
+        { label: "Accelerated", value: "accelerated" },
+        { label: "Non Accelerated", value: "nonAccelerated" },
+        { label: "ELL", value: "ell" },
+        { label: "No Preference", value: "no" }
+      ]
+    }),
+    interests: (0, import_fields3.relationship)({
+      ref: "Tag.profiles",
+      many: true
+    }),
+    availableStartDate: (0, import_fields3.calendarDay)(),
+    availableEndDate: (0, import_fields3.calendarDay)(),
+    availableStartTime: (0, import_fields3.text)(),
+    availableEndTime: (0, import_fields3.text)(),
+    availableDays: (0, import_fields3.multiselect)({
+      options: [
+        { label: "Monday", value: "mon" },
+        { label: "Tuesday", value: "tue" },
+        { label: "Wednesday", value: "wed" },
+        { label: "Thursday", value: "thu" },
+        { label: "Friday", value: "fri" }
+      ]
     })
   }
 });
@@ -2137,7 +2201,11 @@ var Tag = (0, import_core24.list)({
     createdAt: (0, import_fields27.timestamp)({
       defaultValue: { kind: "now" }
     }),
-    updatedAt: (0, import_fields27.timestamp)()
+    updatedAt: (0, import_fields27.timestamp)(),
+    profiles: (0, import_fields27.relationship)({
+      ref: "Profile.interests",
+      many: true
+    })
   }
 });
 

@@ -512,3 +512,46 @@ export const GET_PERSON_ID_BY_WALLET = gql`
     }
   }
 `;
+
+// query the full profile of the user
+export const GET_PROFILE = gql`
+  query {
+    authenticatedItem {
+      ... on Profile {
+        id
+        firstName
+        lastName
+        username
+        email
+        publicId
+        publicReadableId
+        type
+        permissions {
+          name
+        }
+        image {
+          id
+          image {
+            publicUrlTransformed
+          }
+        }
+        studiesInfo
+        participantIn {
+          id
+        }
+        studentIn {
+          id
+        }
+        teacherIn {
+          id
+        }
+        mentorIn {
+          id
+        }
+        bio
+        location
+        language
+      }
+    }
+  }
+`;

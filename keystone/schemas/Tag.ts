@@ -95,5 +95,9 @@ export const Tag = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+    profiles: relationship({
+      ref: "Profile.interests",
+      many: true,
+    }),
   },
 });

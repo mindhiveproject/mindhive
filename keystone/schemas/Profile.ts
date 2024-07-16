@@ -8,6 +8,8 @@ import {
   integer,
   checkbox,
   json,
+  calendarDay,
+  multiselect,
 } from "@keystone-6/core/fields";
 // import slugify from "slugify";
 import { permissions, rules } from "../access";
@@ -115,22 +117,11 @@ export const Profile = list({
         update: () => true,
       },
     }),
-    image: relationship({
-      ref: "ProfileImage.profile",
-      ui: {
-        displayMode: "cards",
-        cardFields: ["image", "altText"],
-        inlineCreate: { fields: ["image", "altText"] },
-        inlineEdit: { fields: ["image", "altText"] },
-      },
-    }),
-    bio: text(),
     facebook: text(),
     twitter: text(),
     instagram: text(),
     publicMail: text(),
     website: text(),
-    location: text(),
     dateCreated: timestamp({
       defaultValue: { kind: "now" },
     }),
@@ -287,6 +278,78 @@ export const Profile = list({
     authoredSpecs: relationship({
       ref: "Spec.author",
       many: true,
+    }),
+    profileType: select({
+      options: [
+        { label: "Individual", value: "individual" },
+        { label: "Organization", value: "organization" },
+      ],
+      defaultValue: "individual",
+    }),
+    image: relationship({
+      ref: "ProfileImage.profile",
+      ui: {
+        displayMode: "cards",
+        cardFields: ["image", "altText"],
+        inlineCreate: { fields: ["image", "altText"] },
+        inlineEdit: { fields: ["image", "altText"] },
+      },
+    }),
+    firstName: text(),
+    lastName: text(),
+    pronouns: select({
+      options: [
+        { label: "she/her/hers", value: "she" },
+        { label: "he/him/his", value: "he" },
+        { label: "they/them/theirs", value: "they" },
+      ],
+    }),
+    location: text(),
+    bio: text(),
+    bioInformal: text(),
+    occupation: text(),
+    education: json(), // a list of institutions and degrees
+    languages: json(), // a list of languages
+    introVideo: json(), // an object with the link to the file system, timestampUploaded, timestampModified
+    mentorPreferGrade: select({
+      options: [
+        { label: "Middle School", value: "middle" },
+        { label: "9 - 10 Grade", value: "nine" },
+        { label: "11 - 12 Grade", value: "eleven" },
+        { label: "No Preference", value: "no" },
+      ],
+    }),
+    mentorPreferGroup: select({
+      options: [
+        { label: "Individual", value: "individual" },
+        { label: "Group", value: "group" },
+        { label: "No Preference", value: "no" },
+      ],
+    }),
+    mentorPreferClass: select({
+      options: [
+        { label: "Accelerated", value: "accelerated" },
+        { label: "Non Accelerated", value: "nonAccelerated" },
+        { label: "ELL", value: "ell" },
+        { label: "No Preference", value: "no" },
+      ],
+    }),
+    interests: relationship({
+      ref: "Tag.profiles",
+      many: true,
+    }),
+    availableStartDate: calendarDay(),
+    availableEndDate: calendarDay(),
+    availableStartTime: text(),
+    availableEndTime: text(),
+    availableDays: multiselect({
+      options: [
+        { label: "Monday", value: "mon" },
+        { label: "Tuesday", value: "tue" },
+        { label: "Wednesday", value: "wed" },
+        { label: "Thursday", value: "thu" },
+        { label: "Friday", value: "fri" },
+      ],
     }),
   },
 });

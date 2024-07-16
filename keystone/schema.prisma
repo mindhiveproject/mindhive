@@ -26,15 +26,11 @@ model Profile {
   tasksInfo                String?
   isPublic                 Boolean         @default(false)
   password                 String
-  image                    ProfileImage?   @relation("Profile_image", fields: [imageId], references: [id])
-  imageId                  String?         @unique @map("image")
-  bio                      String          @default("")
   facebook                 String          @default("")
   twitter                  String          @default("")
   instagram                String          @default("")
   publicMail               String          @default("")
   website                  String          @default("")
-  location                 String          @default("")
   dateCreated              DateTime?       @default(now())
   language                 String?         @default("EN-US")
   participantIn            Study[]         @relation("Profile_participantIn")
@@ -70,6 +66,28 @@ model Profile {
   datasets                 Dataset[]       @relation("Dataset_profile")
   summaryResults           SummaryResult[] @relation("SummaryResult_user")
   authoredSpecs            Spec[]          @relation("Spec_author")
+  profileType              String?         @default("individual")
+  image                    ProfileImage?   @relation("Profile_image", fields: [imageId], references: [id])
+  imageId                  String?         @unique @map("image")
+  firstName                String          @default("")
+  lastName                 String          @default("")
+  pronouns                 String?
+  location                 String          @default("")
+  bio                      String          @default("")
+  bioInformal              String          @default("")
+  occupation               String          @default("")
+  education                String?
+  languages                String?
+  introVideo               String?
+  mentorPreferGrade        String?
+  mentorPreferGroup        String?
+  mentorPreferClass        String?
+  interests                Tag[]           @relation("Profile_interests")
+  availableStartDate       String?
+  availableEndDate         String?
+  availableStartTime       String          @default("")
+  availableEndTime         String          @default("")
+  availableDays            String          @default("[]")
   passwordResetToken       String?
   passwordResetIssuedAt    DateTime?
   passwordResetRedeemedAt  DateTime?
@@ -503,6 +521,7 @@ model Tag {
   children    Tag[]        @relation("Tag_parent")
   createdAt   DateTime?    @default(now())
   updatedAt   DateTime?
+  profiles    Profile[]    @relation("Profile_interests")
 
   @@index([parentId])
 }

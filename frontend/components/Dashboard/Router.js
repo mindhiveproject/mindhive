@@ -21,6 +21,7 @@ import Assignments from "./Assignment/Main";
 
 // admin area
 import ManagementMain from "./Management/Main";
+import ProfileMain from "./Profile/Main";
 
 export default function DashboardRouter({ query }) {
   const user = useContext(UserContext);
@@ -92,6 +93,10 @@ export default function DashboardRouter({ query }) {
 
   if (area === "mentors") {
     return <UserPage query={query} user={user} />;
+  }
+
+  if (area === "profile") {
+    return <ProfileMain query={query} user={user} />;
   }
 
   return <Home query={query} user={user} />;

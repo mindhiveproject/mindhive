@@ -17,14 +17,11 @@ type Profile {
   tasksInfo: JSON
   isPublic: Boolean
   password: PasswordState
-  image: ProfileImage
-  bio: String
   facebook: String
   twitter: String
   instagram: String
   publicMail: String
   website: String
-  location: String
   dateCreated: DateTime
   language: String
   participantIn(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
@@ -93,6 +90,28 @@ type Profile {
   summaryResultsCount(where: SummaryResultWhereInput! = {}): Int
   authoredSpecs(where: SpecWhereInput! = {}, orderBy: [SpecOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SpecWhereUniqueInput): [Spec!]
   authoredSpecsCount(where: SpecWhereInput! = {}): Int
+  profileType: String
+  image: ProfileImage
+  firstName: String
+  lastName: String
+  pronouns: String
+  location: String
+  bio: String
+  bioInformal: String
+  occupation: String
+  education: JSON
+  languages: JSON
+  introVideo: JSON
+  mentorPreferGrade: String
+  mentorPreferGroup: String
+  mentorPreferClass: String
+  interests(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
+  interestsCount(where: TagWhereInput! = {}): Int
+  availableStartDate: CalendarDay
+  availableEndDate: CalendarDay
+  availableStartTime: String
+  availableEndTime: String
+  availableDays: [String!]
   passwordResetToken: PasswordState
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -103,6 +122,8 @@ type PasswordState {
 }
 
 scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
+
+scalar CalendarDay @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
 
 input ProfileWhereUniqueInput {
   id: ID
@@ -123,14 +144,11 @@ input ProfileWhereInput {
   email: StringFilter
   permissions: PermissionManyRelationFilter
   isPublic: BooleanFilter
-  image: ProfileImageWhereInput
-  bio: StringFilter
   facebook: StringFilter
   twitter: StringFilter
   instagram: StringFilter
   publicMail: StringFilter
   website: StringFilter
-  location: StringFilter
   dateCreated: DateTimeNullableFilter
   language: StringNullableFilter
   participantIn: StudyManyRelationFilter
@@ -166,6 +184,23 @@ input ProfileWhereInput {
   datasets: DatasetManyRelationFilter
   summaryResults: SummaryResultManyRelationFilter
   authoredSpecs: SpecManyRelationFilter
+  profileType: StringNullableFilter
+  image: ProfileImageWhereInput
+  firstName: StringFilter
+  lastName: StringFilter
+  pronouns: StringNullableFilter
+  location: StringFilter
+  bio: StringFilter
+  bioInformal: StringFilter
+  occupation: StringFilter
+  mentorPreferGrade: StringNullableFilter
+  mentorPreferGroup: StringNullableFilter
+  mentorPreferClass: StringNullableFilter
+  interests: TagManyRelationFilter
+  availableStartDate: CalendarDayNullableFilter
+  availableEndDate: CalendarDayNullableFilter
+  availableStartTime: StringFilter
+  availableEndTime: StringFilter
   passwordResetToken: PasswordFilter
   passwordResetIssuedAt: DateTimeNullableFilter
   passwordResetRedeemedAt: DateTimeNullableFilter
@@ -372,6 +407,23 @@ input SpecManyRelationFilter {
   none: SpecWhereInput
 }
 
+input TagManyRelationFilter {
+  every: TagWhereInput
+  some: TagWhereInput
+  none: TagWhereInput
+}
+
+input CalendarDayNullableFilter {
+  equals: CalendarDay
+  in: [CalendarDay!]
+  notIn: [CalendarDay!]
+  lt: CalendarDay
+  lte: CalendarDay
+  gt: CalendarDay
+  gte: CalendarDay
+  not: CalendarDayNullableFilter
+}
+
 input PasswordFilter {
   isSet: Boolean!
 }
@@ -384,15 +436,28 @@ input ProfileOrderByInput {
   type: OrderDirection
   email: OrderDirection
   isPublic: OrderDirection
-  bio: OrderDirection
   facebook: OrderDirection
   twitter: OrderDirection
   instagram: OrderDirection
   publicMail: OrderDirection
   website: OrderDirection
-  location: OrderDirection
   dateCreated: OrderDirection
   language: OrderDirection
+  profileType: OrderDirection
+  firstName: OrderDirection
+  lastName: OrderDirection
+  pronouns: OrderDirection
+  location: OrderDirection
+  bio: OrderDirection
+  bioInformal: OrderDirection
+  occupation: OrderDirection
+  mentorPreferGrade: OrderDirection
+  mentorPreferGroup: OrderDirection
+  mentorPreferClass: OrderDirection
+  availableStartDate: OrderDirection
+  availableEndDate: OrderDirection
+  availableStartTime: OrderDirection
+  availableEndTime: OrderDirection
   passwordResetIssuedAt: OrderDirection
   passwordResetRedeemedAt: OrderDirection
 }
@@ -416,14 +481,11 @@ input ProfileUpdateInput {
   tasksInfo: JSON
   isPublic: Boolean
   password: String
-  image: ProfileImageRelateToOneForUpdateInput
-  bio: String
   facebook: String
   twitter: String
   instagram: String
   publicMail: String
   website: String
-  location: String
   dateCreated: DateTime
   language: String
   participantIn: StudyRelateToManyForUpdateInput
@@ -459,6 +521,27 @@ input ProfileUpdateInput {
   datasets: DatasetRelateToManyForUpdateInput
   summaryResults: SummaryResultRelateToManyForUpdateInput
   authoredSpecs: SpecRelateToManyForUpdateInput
+  profileType: String
+  image: ProfileImageRelateToOneForUpdateInput
+  firstName: String
+  lastName: String
+  pronouns: String
+  location: String
+  bio: String
+  bioInformal: String
+  occupation: String
+  education: JSON
+  languages: JSON
+  introVideo: JSON
+  mentorPreferGrade: String
+  mentorPreferGroup: String
+  mentorPreferClass: String
+  interests: TagRelateToManyForUpdateInput
+  availableStartDate: CalendarDay
+  availableEndDate: CalendarDay
+  availableStartTime: String
+  availableEndTime: String
+  availableDays: [String!]
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -469,12 +552,6 @@ input PermissionRelateToManyForUpdateInput {
   set: [PermissionWhereUniqueInput!]
   create: [PermissionCreateInput!]
   connect: [PermissionWhereUniqueInput!]
-}
-
-input ProfileImageRelateToOneForUpdateInput {
-  create: ProfileImageCreateInput
-  connect: ProfileImageWhereUniqueInput
-  disconnect: Boolean
 }
 
 input StudyRelateToManyForUpdateInput {
@@ -624,6 +701,19 @@ input SpecRelateToManyForUpdateInput {
   connect: [SpecWhereUniqueInput!]
 }
 
+input ProfileImageRelateToOneForUpdateInput {
+  create: ProfileImageCreateInput
+  connect: ProfileImageWhereUniqueInput
+  disconnect: Boolean
+}
+
+input TagRelateToManyForUpdateInput {
+  disconnect: [TagWhereUniqueInput!]
+  set: [TagWhereUniqueInput!]
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
+}
+
 input ProfileUpdateArgs {
   where: ProfileWhereUniqueInput!
   data: ProfileUpdateInput!
@@ -643,14 +733,11 @@ input ProfileCreateInput {
   tasksInfo: JSON
   isPublic: Boolean
   password: String
-  image: ProfileImageRelateToOneForCreateInput
-  bio: String
   facebook: String
   twitter: String
   instagram: String
   publicMail: String
   website: String
-  location: String
   dateCreated: DateTime
   language: String
   participantIn: StudyRelateToManyForCreateInput
@@ -686,6 +773,27 @@ input ProfileCreateInput {
   datasets: DatasetRelateToManyForCreateInput
   summaryResults: SummaryResultRelateToManyForCreateInput
   authoredSpecs: SpecRelateToManyForCreateInput
+  profileType: String
+  image: ProfileImageRelateToOneForCreateInput
+  firstName: String
+  lastName: String
+  pronouns: String
+  location: String
+  bio: String
+  bioInformal: String
+  occupation: String
+  education: JSON
+  languages: JSON
+  introVideo: JSON
+  mentorPreferGrade: String
+  mentorPreferGroup: String
+  mentorPreferClass: String
+  interests: TagRelateToManyForCreateInput
+  availableStartDate: CalendarDay
+  availableEndDate: CalendarDay
+  availableStartTime: String
+  availableEndTime: String
+  availableDays: [String!]
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -694,11 +802,6 @@ input ProfileCreateInput {
 input PermissionRelateToManyForCreateInput {
   create: [PermissionCreateInput!]
   connect: [PermissionWhereUniqueInput!]
-}
-
-input ProfileImageRelateToOneForCreateInput {
-  create: ProfileImageCreateInput
-  connect: ProfileImageWhereUniqueInput
 }
 
 input StudyRelateToManyForCreateInput {
@@ -804,6 +907,16 @@ input SummaryResultRelateToManyForCreateInput {
 input SpecRelateToManyForCreateInput {
   create: [SpecCreateInput!]
   connect: [SpecWhereUniqueInput!]
+}
+
+input ProfileImageRelateToOneForCreateInput {
+  create: ProfileImageCreateInput
+  connect: ProfileImageWhereUniqueInput
+}
+
+input TagRelateToManyForCreateInput {
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
 }
 
 type ProfileImage {
@@ -1836,12 +1949,6 @@ input GuestManyRelationFilter {
   none: GuestWhereInput
 }
 
-input TagManyRelationFilter {
-  every: TagWhereInput
-  some: TagWhereInput
-  none: TagWhereInput
-}
-
 input VizJournalManyRelationFilter {
   every: VizJournalWhereInput
   some: VizJournalWhereInput
@@ -1921,13 +2028,6 @@ input ProposalCardRelateToOneForUpdateInput {
   disconnect: Boolean
 }
 
-input TagRelateToManyForUpdateInput {
-  disconnect: [TagWhereUniqueInput!]
-  set: [TagWhereUniqueInput!]
-  create: [TagCreateInput!]
-  connect: [TagWhereUniqueInput!]
-}
-
 input VizJournalRelateToManyForUpdateInput {
   disconnect: [VizJournalWhereUniqueInput!]
   set: [VizJournalWhereUniqueInput!]
@@ -1990,11 +2090,6 @@ input GuestRelateToManyForCreateInput {
 input ProposalCardRelateToOneForCreateInput {
   create: ProposalCardCreateInput
   connect: ProposalCardWhereUniqueInput
-}
-
-input TagRelateToManyForCreateInput {
-  create: [TagCreateInput!]
-  connect: [TagWhereUniqueInput!]
 }
 
 input VizJournalRelateToManyForCreateInput {
@@ -2914,6 +3009,8 @@ type Tag {
   childrenCount(where: TagWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
+  profiles(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
+  profilesCount(where: ProfileWhereInput! = {}): Int
 }
 
 input TagWhereUniqueInput {
@@ -2939,6 +3036,7 @@ input TagWhereInput {
   children: TagManyRelationFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
+  profiles: ProfileManyRelationFilter
 }
 
 input TagOrderByInput {
@@ -2965,6 +3063,7 @@ input TagUpdateInput {
   children: TagRelateToManyForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
+  profiles: ProfileRelateToManyForUpdateInput
 }
 
 input TagRelateToOneForUpdateInput {
@@ -2992,6 +3091,7 @@ input TagCreateInput {
   children: TagRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
+  profiles: ProfileRelateToManyForCreateInput
 }
 
 input TagRelateToOneForCreateInput {
