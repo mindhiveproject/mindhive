@@ -1,0 +1,20 @@
+{
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "username": "Username",
+    "requestReset": "Request reset",
+    "checkYourMail": "Check your email"
+  },
+  "navigation": {
+    "about": "About",
+    "dashboard": "Dashboard",
+    "discover": "Discover",
+    "login": "Log in",
+    "signup": "Sign up",
+    "studies": "Studies",
+    "tasks": "Tasks & Surveys",
+    "teachers": "Teachers"
+  }
+}

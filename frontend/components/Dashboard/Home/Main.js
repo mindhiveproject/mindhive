@@ -3,6 +3,7 @@ import MyUpdates from "../../Account/Updates/Main";
 import IdentIcon from "../../Account/IdentIcon";
 import Link from "next/link";
 import StyledHome from "../../styles/StyledHome";
+import LanguageSwitcher from "./LanuageSwitcher";
 
 export default function Home({ query, user }) {
   const { username, publicId, publicReadableId } = user;
@@ -81,6 +82,10 @@ export default function Home({ query, user }) {
 
       <MyUpdates user={user} />
       <Links />
+
+      {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+        <LanguageSwitcher />
+      )}
     </StyledHome>
   );
 }
