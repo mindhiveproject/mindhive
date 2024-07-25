@@ -2,12 +2,13 @@ import Links from "./Links";
 import MyUpdates from "../../Account/Updates/Main";
 import IdentIcon from "../../Account/IdentIcon";
 import Link from "next/link";
+import StyledHome from "../../styles/StyledHome";
 
 export default function Home({ query, user }) {
   const { username, publicId, publicReadableId } = user;
 
   return (
-    <>
+    <StyledHome>
       <div className="titleIcon">
         <div>
           <h1>Welcome{username && `, ${username}`}!</h1>
@@ -25,23 +26,26 @@ export default function Home({ query, user }) {
       </div>
 
       {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
-        <div>
-          <h1>Create your MindHive profile</h1>
-          <p>
-            To better connect with the MindHive community, please create your
-            profile
-          </p>
+        <div className="createProfileArea">
+          <div></div>
+          <div>
+            <h2>Create your MindHive profile</h2>
+            <p>
+              To better connect with the MindHive community, please create your
+              profile
+            </p>
 
-          <Link
-            href={{
-              pathname: `/dashboard/profile/create`,
-              query: {
-                page: "type",
-              },
-            }}
-          >
-            <button>Create Profile</button>
-          </Link>
+            <Link
+              href={{
+                pathname: `/dashboard/profile/create`,
+                query: {
+                  page: "type",
+                },
+              }}
+            >
+              <button>Create Profile</button>
+            </Link>
+          </div>
         </div>
       )}
 
@@ -77,6 +81,6 @@ export default function Home({ query, user }) {
 
       <MyUpdates user={user} />
       <Links />
-    </>
+    </StyledHome>
   );
 }

@@ -47,16 +47,14 @@ export default function UpdateAvatarModal({ user }) {
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
       open={isOpen}
-      trigger={
-        <Icon name="edit" size="large" color="teal" />
-      }
+      trigger={<Icon name="edit" size="large" color="teal" />}
       dimmer="blurring"
       size="small"
       closeIcon
     >
       <StyledModal>
         <Modal.Header>
-          <h1>{t("common.uploadAvatarPicture")}</h1>
+          <h1>Create your avatar</h1>
         </Modal.Header>
 
         <Modal.Content scrolling>
@@ -66,7 +64,7 @@ export default function UpdateAvatarModal({ user }) {
                 handleChange={() => {}}
                 setPreview={() => {}}
                 onClose={(avatar) => updateAvatar(avatar)}
-                uploadTitle={t("common.update")}
+                uploadTitle={"Upload"}
                 shortcut
               />
             </div>

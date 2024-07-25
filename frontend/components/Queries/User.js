@@ -523,6 +523,7 @@ export const GET_PROFILE = gql`
         lastName
         username
         email
+        pronouns
         publicId
         publicReadableId
         type
@@ -548,9 +549,19 @@ export const GET_PROFILE = gql`
         mentorIn {
           id
         }
+        profileType
         bio
+        bioInformal
         location
-        language
+        languages
+        occupation
+        education
+        mentorPreferGrade
+        mentorPreferGroup
+        mentorPreferClass
+        interests {
+          id
+        }
       }
     }
   }
