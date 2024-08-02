@@ -9,7 +9,7 @@ const jsonfile = require("jsonfile");
 const axios = require("axios");
 
 const endpoint = `http://localhost:4444/api/graphql`;
-const prodEndpoint = `https://dev-backend.mindhive.science/api/graphql`;
+const prodEndpoint = `https://backend.mindhive.science/api/graphql`;
 
 const SAVE_AGGREGATED_RESULTS = `
   mutation createSummaryResult(
