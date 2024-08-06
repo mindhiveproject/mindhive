@@ -162,7 +162,7 @@ export default function TeachersInformation() {
               <div>
                 <a
                   target="_blank"
-                  href="https://docs.google.com/document/d/1LqCdIvmWoTe7n9eGwk41ZawJOeAHOXQwiLdBmQhKFAw/edit?usp=sharing"
+                  href="https://docs.google.com/document/d/1wchcGV14rE2JKXpyOdQ5pLkj-7NEfXWwfS-MdxK8bqI/edit?usp=sharing"
                 >
                   <button className="secondary">Explore our tools</button>
                 </a>
