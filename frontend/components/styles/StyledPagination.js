@@ -3,7 +3,6 @@ import styled from "styled-components";
 export const StyledPagination = styled.div`
   display: grid;
   align-self: end;
-  /* text-align: center; */
   display: inline-grid;
   grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
   align-items: stretch;
@@ -32,6 +31,9 @@ export const StyledPagination = styled.div`
     color: lightgrey;
     pointer-events: none;
   }
+  .prev {
+    text-align: start;
+  }
   .next {
     text-align: end;
   }
@@ -41,5 +43,11 @@ export const StyledPagination = styled.div`
   button {
     background: white;
     border: 0px white;
+  }
+  .pageDropdown {
+    display: grid;
+    grid-template-columns: auto 100px 1fr;
+    grid-gap: 1rem;
+    align-items: center;
   }
 `;

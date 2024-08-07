@@ -3,7 +3,15 @@ import { StyledPagination } from "../../../styles/StyledPagination";
 
 import { PAGINATION_USERS_QUERY } from "../../../Queries/User";
 
-export default function PaginationUsers({ page, perPage, search, goToPage }) {
+import { Dropdown } from "semantic-ui-react";
+
+export default function PaginationUsers({
+  page,
+  setPage,
+  perPage,
+  search,
+  goToPage,
+}) {
   const { data, loading, error } = useQuery(PAGINATION_USERS_QUERY, {
     variables: {
       search: search,
@@ -15,18 +23,33 @@ export default function PaginationUsers({ page, perPage, search, goToPage }) {
   return (
     <StyledPagination>
       <button disabled={page <= 1} onClick={() => goToPage(parseInt(page) - 1)}>
-        <a aria-disabled={page <= 1}>Prev</a>
+        <a aria-disabled={page <= 1} className="prev">
+          <p>Prev</p>
+        </a>
       </button>
-      <p>
-        Page {page} of {pageCount}{" "}
-      </p>
+      <div className="pageDropdown">
+        <span>Page</span>
+        <Dropdown
+          selection
+          fluid
+          options={[...Array(pageCount).keys()].map((n) => ({
+            key: n + 1,
+            text: n + 1,
+            value: n + 1,
+          }))}
+          value={page}
+          onChange={(event, data) => setPage(data.value)}
+        />
+        <span>of {pageCount}</span>
+      </div>
       <p>{countUsers} users total</p>
+
       <button
         disabled={page >= pageCount}
         onClick={() => goToPage(parseInt(page) + 1)}
       >
         <a aria-disabled={page >= pageCount} className="next">
-          Next
+          <p>Next</p>
         </a>
       </button>
     </StyledPagination>

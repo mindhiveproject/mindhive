@@ -9,6 +9,8 @@ import PaginationUsers from "./Pagination";
 import { StyledInput } from "../../../styles/StyledForm";
 import DownloadUsersData from "./Download";
 
+import { Dropdown } from "semantic-ui-react";
+
 export default function Users({ query, user }) {
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState("");
@@ -77,10 +79,26 @@ export default function Users({ query, user }) {
 
       <PaginationUsers
         page={page}
+        setPage={setPage}
         perPage={perPage}
         search={search}
         goToPage={goToPage}
       />
+
+      <div>
+        <span>Number of users per page</span>
+        <Dropdown
+          fluid
+          selection
+          options={[10, 30, 50, 100].map((n) => ({
+            key: n,
+            text: n,
+            value: n,
+          }))}
+          value={perPage}
+          onChange={(event, data) => setPerPage(data.value)}
+        />
+      </div>
 
       <DownloadUsersData ids={users.map((user) => user?.id)} />
     </div>
