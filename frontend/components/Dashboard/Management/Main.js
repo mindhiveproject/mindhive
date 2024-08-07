@@ -6,6 +6,8 @@ import Networks from "./Networks/Main";
 import StyledManagement from "../../styles/StyledManagement";
 import TemplateAssignments from "./Assignments/Main";
 
+import Users from "./Users/Main";
+
 export default function ManagementMain({ query, user }) {
   const selector = query?.selector || "classes";
 
@@ -14,9 +16,11 @@ export default function ManagementMain({ query, user }) {
       <div>
         <h1>Management</h1>
         <div>
-          <p>All classes, class networks, and assignments on the platform MindHive.</p>
+          <p>
+            All classes, class networks, and assignments on the platform
+            MindHive.
+          </p>
         </div>
-
 
         <div className="header">
           <div className="menu">
@@ -61,14 +65,29 @@ export default function ManagementMain({ query, user }) {
                 </div>
               </Link>
             </div>
+
+            <div>
+              <Link href="/dashboard/management/users">
+                <div
+                  className={
+                    selector === "users"
+                      ? "menuTitle selectedMenuTitle"
+                      : "menuTitle"
+                  }
+                >
+                  <p>Users</p>
+                </div>
+              </Link>
+            </div>
           </div>
-          
         </div>
       </div>
       {selector === "classes" && <Classes query={query} user={user} />}
       {selector === "networks" && <Networks query={query} user={user} />}
-      {selector === "assignments" && <TemplateAssignments query={query} user={user} />}
-
+      {selector === "assignments" && (
+        <TemplateAssignments query={query} user={user} />
+      )}
+      {selector === "users" && <Users query={query} user={user} />}
     </StyledManagement>
   );
 }

@@ -9,6 +9,9 @@
     "postinstall": "keystone postinstall",
     "migrate": "NODE_ENV=production keystone prisma db push"
   },
+  "engines": {
+    "node": "20.11.1"
+  },
   "dependencies": {
     "@graphql-tools/schema": "^9.0.12",
     "@keystone-6/auth": "^7.0.2",

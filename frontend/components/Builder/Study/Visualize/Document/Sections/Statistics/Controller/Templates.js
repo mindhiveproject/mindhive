@@ -16,7 +16,6 @@ import js_workspace as data
 data = data.to_py()
 df = pd.DataFrame(data)
 
-df.replace('', np.nan, inplace=True)
 df.replace('NaN', np.nan, inplace=True)
 described_df = pd.DataFrame()
 
@@ -181,9 +180,20 @@ js.render_html(html_output, df_html)`;
     allInOne: sectionCodeStart + "\n" + allInOneCode + "\n" + sectionCodeEnd,
     descStatNum:
       sectionCodeStart + "\n" + descStatNumCode + "\n" + sectionCodeEnd,
-    descStatStrings: sectionCodeStart + "\n" + descStatStringsCode + "\n" + sectionCodeEnd,
-    descStatsStringsAndNumerical: sectionCodeStart + "\n" + descStatsStringsAndNumericalCode + "\n" + sectionCodeEnd,
-    descStatsStringsAndStrings: sectionCodeStart + "\n" + descStatsStringsAndStringsCode + "\n" + sectionCodeEnd,
+    descStatStrings:
+      sectionCodeStart + "\n" + descStatStringsCode + "\n" + sectionCodeEnd,
+    descStatsStringsAndNumerical:
+      sectionCodeStart +
+      "\n" +
+      descStatsStringsAndNumericalCode +
+      "\n" +
+      sectionCodeEnd,
+    descStatsStringsAndStrings:
+      sectionCodeStart +
+      "\n" +
+      descStatsStringsAndStringsCode +
+      "\n" +
+      sectionCodeEnd,
   };
 
   // Set the default template type (e.g., "descStatNum")
@@ -203,18 +213,16 @@ js.render_html(html_output, df_html)`;
   // Run the default code
   runCode({ code: defaultCode });
 
-  //  The code below should be uncommented to let the user chose subcomponents
-
-  // const selectGraphType = ({ type, title }) => {
-  //   const code = templates[type];
-  //   handleContentChange({
-  //     newContent: {
-  //       type,
-  //       code,
-  //     },
-  //   });
-  //   runCode({ code });
-  // };
+  const selectGraphType = ({ type, title }) => {
+    const code = templates[type];
+    handleContentChange({
+      newContent: {
+        type,
+        code,
+      },
+    });
+    runCode({ code });
+  };
 
   return (
     <div className="templates">

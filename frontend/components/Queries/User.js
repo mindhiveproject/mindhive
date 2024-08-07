@@ -355,6 +355,231 @@ export const PUBLIC_USER_QUERY = gql`
   }
 `;
 
+// query to get all users for admin overview
+export const GET_ALL_USERS = gql`
+  query GET_ALL_USERS($skip: Int, $take: Int, $search: String) {
+    profiles(
+      skip: $skip
+      take: $take
+      where: {
+        OR: [
+          { username: { contains: $search } }
+          { publicReadableId: { contains: $search } }
+          { publicId: { contains: $search } }
+        ]
+      }
+    ) {
+      id
+      username
+      email
+      publicId
+      publicReadableId
+      permissions {
+        name
+      }
+      dateCreated
+    }
+  }
+`;
+
+// count all users
+export const PAGINATION_USERS_QUERY = gql`
+  query PAGINATION_USERS_QUERY($search: String) {
+    profilesCount(
+      where: {
+        OR: [
+          { username: { contains: $search } }
+          { publicReadableId: { contains: $search } }
+          { publicId: { contains: $search } }
+        ]
+      }
+    )
+  }
+`;
+
+// download user data for admins
+export const GET_USERS_DATA = gql`
+  query GET_USERS_DATA($ids: [ID!]) {
+    profiles(where: { id: { in: $ids } }) {
+      id
+      username
+
+      studentIn {
+        id
+        code
+        title
+        description
+        creator {
+          username
+        }
+      }
+
+      authorOfHomework {
+        title
+        assignment {
+          title
+        }
+        content
+        createdAt
+        settings
+        public
+      }
+
+      journals {
+        title
+        description
+        settings
+        createdAt
+        posts {
+          title
+          content
+          settings
+          createdAt
+        }
+      }
+
+      memberOfTalk {
+        settings
+        classes {
+          title
+        }
+        studies {
+          title
+        }
+        members {
+          username
+        }
+        words {
+          message
+          settings
+          isMain
+          children {
+            message
+            settings
+            isMain
+            author {
+              username
+            }
+            createdAt
+          }
+          author {
+            username
+          }
+          createdAt
+          updatedAt
+        }
+      }
+
+      info
+      generalInfo
+      studiesInfo
+      tasksInfo
+      consentsInfo
+
+      participantIn {
+        id
+        title
+        slug
+        shortDescription
+        description
+        flow
+        settings
+        collaborators {
+          username
+        }
+        classes {
+          title
+        }
+        createdAt
+        updatedAt
+      }
+
+      researcherIn {
+        id
+        title
+        slug
+        shortDescription
+        description
+        flow
+        settings
+        collaborators {
+          username
+        }
+        classes {
+          title
+        }
+        proposal {
+          slug
+          sections {
+            cards {
+              title
+              content
+              createdAt
+              updatedAt
+            }
+          }
+          reviews {
+            author {
+              publicReadableId
+            }
+            settings
+            content
+            createdAt
+          }
+        }
+        createdAt
+        updatedAt
+      }
+
+      collaboratorInStudy {
+        id
+        title
+        slug
+        shortDescription
+        description
+        flow
+        settings
+        collaborators {
+          username
+        }
+        classes {
+          title
+        }
+        proposal {
+          slug
+          sections {
+            cards {
+              title
+              content
+              createdAt
+              updatedAt
+            }
+          }
+          reviews {
+            author {
+              publicReadableId
+            }
+            settings
+            content
+            createdAt
+          }
+        }
+        createdAt
+        updatedAt
+      }
+
+      reviews {
+        study {
+          title
+        }
+        settings
+        content
+        createdAt
+      }
+    }
+  }
+`;
+
 ////////////////////////////////////////////////
 // to do from here
 
