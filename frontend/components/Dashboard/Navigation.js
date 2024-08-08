@@ -33,7 +33,7 @@ export default function DashboardNavigation() {
       <div className="navLinks">
         <Link href="/dashboard">
           <StyledNavigationLink selected={!area}>
-            <div>
+            <div className="icon">
               <svg
                 width="18"
                 height="21"
@@ -56,7 +56,7 @@ export default function DashboardNavigation() {
 
         <Link href="/dashboard/discover">
           <StyledNavigationLink selected={area === "discover"}>
-            <div>
+            <div className="icon">
               <svg
                 width="16"
                 height="23"
@@ -74,6 +74,47 @@ export default function DashboardNavigation() {
           </StyledNavigationLink>
         </Link>
 
+        {permissions?.includes("ADMIN") && (
+          <Link href="/dashboard/connect">
+            <StyledNavigationLink selected={area === "connect"}>
+              <div className="icon">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="9"
+                    stroke={area === "connect" ? "#FFC107" : "#666666"}
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M13 3.0481C12.652 3.34099 12.3384 3.68664 12.0717 4.08265C10.5289 6.3729 11.1348 9.48019 13.4251 11.023C13.6058 11.1448 13.7917 11.2532 13.9815 11.3484C16 12.3612 16.7706 10.9962 17.8634 11.7323C18.5723 12.2099 18.7598 13.1716 18.2823 13.8805C17.7819 14.6234 17 15 17.1352 16.2168C17.2116 16.9036 17.6335 17.4954 18.1802 18"
+                    stroke={area === "connect" ? "#FFC107" : "#666666"}
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M4 9.28003C5.08188 9.54331 6.083 10.1678 6.80601 11.1259C7.57668 12.1472 7.89615 13.3684 7.79785 14.5504C7.74578 15.1764 8.15405 15.8083 8.6794 16.1526C8.93324 16.319 9.16323 16.5312 9.35655 16.7874C10.2126 17.9218 10.0418 19.511 9 20.4407"
+                    stroke={area === "connect" ? "#FFC107" : "#666666"}
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <div>Connect</div>
+            </StyledNavigationLink>
+          </Link>
+        )}
+
         <div className="workspaceHeader">WORKSPACE</div>
 
         {(permissions?.includes("ADMIN") ||
@@ -83,7 +124,7 @@ export default function DashboardNavigation() {
           permissions?.includes("MENTOR")) && (
           <Link href="/dashboard/develop">
             <StyledNavigationLink selected={area === "develop"}>
-              <div>
+              <div className="icon">
                 <svg
                   width="20"
                   height="20"
@@ -104,7 +145,7 @@ export default function DashboardNavigation() {
 
         <Link href="/dashboard/review">
           <StyledNavigationLink selected={area === "review"}>
-            <div>
+            <div className="icon">
               <svg
                 width="23"
                 height="20"
@@ -136,7 +177,7 @@ export default function DashboardNavigation() {
 
         <Link href="/dashboard/journals">
           <StyledNavigationLink selected={area === "journals"}>
-            <div>
+            <div className="icon">
               <svg
                 width="20"
                 height="20"
@@ -191,7 +232,7 @@ export default function DashboardNavigation() {
 
             <Link href="/dashboard/management">
               <StyledNavigationLink selected={area === "management"}>
-                <div>
+                <div className="icon">
                   <svg
                     width="20"
                     height="20"
@@ -231,7 +272,7 @@ export default function DashboardNavigation() {
 
             <Link href="/dashboard/tags">
               <StyledNavigationLink selected={area === "tags"}>
-                <div>
+                <div className="icon">
                   <svg
                     width="20"
                     height="20"
@@ -251,7 +292,7 @@ export default function DashboardNavigation() {
 
             <Link href="/dashboard/updates">
               <StyledNavigationLink selected={area === "updates"}>
-                <div>
+                <div className="icon">
                   <svg
                     width="20"
                     height="20"
@@ -277,7 +318,7 @@ export default function DashboardNavigation() {
           <>
             <Link href="/dashboard/classes">
               <StyledNavigationLink selected={area === "classes"}>
-                <div>
+                <div className="icon">
                   <svg
                     width="20"
                     height="20"
@@ -327,7 +368,7 @@ export default function DashboardNavigation() {
           <>
             <Link href="/dashboard/myclasses">
               <StyledNavigationLink selected={area === "myclasses"}>
-                <div>
+                <div className="icon">
                   <svg
                     width="20"
                     height="20"
@@ -371,7 +412,7 @@ export default function DashboardNavigation() {
 
             <Link href="/dashboard/proposals">
               <StyledNavigationLink selected={area === "proposals"}>
-                <div>
+                <div className="icon">
                   <svg
                     width="20"
                     height="20"
@@ -398,7 +439,7 @@ export default function DashboardNavigation() {
           <>
             <Link href="/dashboard/lessons">
               <StyledNavigationLink selected={area === "lessons"}>
-                <div>
+                <div className="icon">
                   <svg
                     width="20"
                     height="20"
@@ -439,7 +480,7 @@ export default function DashboardNavigation() {
 
         <Link href="/dashboard/settings">
           <StyledNavigationLink selected={area === "settings"}>
-            <div>
+            <div className="icon">
               <svg
                 width="20"
                 height="20"

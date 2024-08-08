@@ -351,6 +351,18 @@ export const PUBLIC_USER_QUERY = gql`
       bio
       location
       language
+      firstName
+      lastName
+      bioInformal
+      languages
+      occupation
+      education
+      mentorPreferGrade
+      mentorPreferGroup
+      mentorPreferClass
+      interests {
+        id
+      }
     }
   }
 `;
@@ -378,6 +390,19 @@ export const GET_ALL_USERS = gql`
         name
       }
       dateCreated
+      image {
+        image {
+          publicUrlTransformed
+        }
+      }
+      location
+      interests {
+        id
+        title
+      }
+      bioInformal
+      firstName
+      lastName
     }
   }
 `;
@@ -576,6 +601,36 @@ export const GET_USERS_DATA = gql`
         content
         createdAt
       }
+    }
+  }
+`;
+
+// get public profile by username
+export const GET_PUBLIC_PROFILE = gql`
+  query GET_PUBLIC_PROFILE($username: String) {
+    profile(where: { username: $username }) {
+      id
+      username
+      email
+      publicId
+      publicReadableId
+      type
+      permissions {
+        name
+      }
+      image {
+        id
+        image {
+          publicUrlTransformed
+        }
+      }
+      studiesInfo
+      participantIn {
+        id
+      }
+      bio
+      location
+      language
     }
   }
 `;

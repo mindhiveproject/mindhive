@@ -4,6 +4,7 @@ import { UserContext } from "../Global/Authorized";
 
 import Home from "./Home/Main";
 import DiscoverMain from "./Discover/Main";
+import ConnectMain from "./Connect/Main";
 import DevelopMain from "./Develop/Main";
 import ReviewMain from "./Review/Main";
 import Journals from "./Journal/Main";
@@ -29,6 +30,10 @@ export default function DashboardRouter({ query }) {
 
   if (area === "discover") {
     return <DiscoverMain query={query} user={user} />;
+  }
+
+  if (area === "connect") {
+    return <ConnectMain query={query} user={user} />;
   }
 
   if (area === "develop") {

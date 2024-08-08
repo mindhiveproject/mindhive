@@ -5,14 +5,19 @@ export const StyledUserPage = styled.div`
   max-width: var(--maxWidth);
   width: 100%;
   justify-self: center;
-  padding: 2rem;
+
   grid-template-columns: 1fr;
   grid-gap: 5rem;
   align-items: baseline;
 
+  border-radius: 20px;
+  background: var(--neutral_white, #fff);
+  box-shadow: 0px 4px 75px 0px rgba(0, 0, 0, 0.1);
+  padding: 62px 40px 60px 40px;
+
   .profile {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     grid-gap: 1rem;
     justify-items: start;
     align-content: baseline;
@@ -24,12 +29,13 @@ export const StyledUserPage = styled.div`
 
     .profileContainer {
       display: grid;
-      grid-gap: 1rem;
+      grid-gap: 2rem;
       padding: 1rem;
       .firstLine {
         display: grid;
         grid-gap: 2rem;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 3fr 1fr;
+        align-items: center;
         @media only screen and (max-width: 500px) {
           grid-template-columns: 1fr;
           justify-items: center;
@@ -111,8 +117,8 @@ export const StyledUserPage = styled.div`
     }
     .bioContainer {
       display: grid;
-      grid-template-rows: 1fr auto;
-      grid-gap: 1rem;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-gap: 10rem;
       padding: 1rem;
       .bio {
         overflow-y: auto;

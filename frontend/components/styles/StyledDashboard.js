@@ -153,8 +153,8 @@ export const StyledSideBar = styled.div`
 
 export const StyledNavigationLink = styled.div`
   display: grid;
-  grid-template-columns: 20px auto;
-  grid-column-gap: 12px;
+  grid-template-columns: 30px auto;
+  grid-column-gap: 10px;
   cursor: pointer;
   font-family: Lato;
   font-size: 18px;
@@ -167,5 +167,9 @@ export const StyledNavigationLink = styled.div`
   ${(props) => props.selected && `border-right: 3px solid #ffc107`};
   :hover {
     opacity: 0.6;
+  }
+  .icon {
+    display: grid;
+    justify-content: center;
   }
 `;
