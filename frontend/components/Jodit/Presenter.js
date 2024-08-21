@@ -1,10 +1,5 @@
-import ReactHtmlParser from "react-html-parser";
+import JoditEditorProExportPDF from "./EditorProExportPDF";
 
 export default function Presenter({ content }) {
-  return (
-    <>
-      <div>Button</div>
-      <div>{ReactHtmlParser(content)}</div>
-    </>
-  );
+  return <JoditEditorProExportPDF content={content} setContent={() => {}} />;
 }
