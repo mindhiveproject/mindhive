@@ -906,8 +906,9 @@ export const StyledCollectPage = styled.div`
         background: white;
         align-items: center;
         .switcher {
+          height: 2rem;
           display: grid;
-          justify-items: center;
+          justify-items: start;
         }
       }
 

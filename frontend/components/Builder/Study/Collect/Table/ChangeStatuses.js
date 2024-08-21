@@ -51,7 +51,7 @@ export default function ChangeDatasetStatuses({
         {loading ? (
           <Loader active inline />
         ) : (
-          <Checkbox toggle checked={allIncluded} onClick={change} />
+          <Checkbox checked={allIncluded} onClick={change} />
         )}
       </div>
     );
