@@ -905,6 +905,10 @@ export const StyledCollectPage = styled.div`
         grid-gap: 2rem;
         background: white;
         align-items: center;
+        .switcher {
+          display: grid;
+          justify-items: center;
+        }
       }
 
       .ui.toggle.checkbox input:checked ~ .box:before,

@@ -1,4 +1,4 @@
-import { Checkbox } from "semantic-ui-react";
+import { Checkbox, Loader } from "semantic-ui-react";
 
 import { useMutation } from "@apollo/client";
 
@@ -23,7 +23,7 @@ export default function ChangeDatasetStatuses({
       ? [{ query: GET_USER_RESULTS, variables: { id: participantId } }]
       : [{ query: GET_GUEST_RESULTS, variables: { id: participantId } }];
 
-  const [changeStatus] = useMutation(CHANGE_DATASET_STATUS, {
+  const [changeStatus, { loading }] = useMutation(CHANGE_DATASET_STATUS, {
     refetchQueries: queriesToRefetch,
   });
 
@@ -47,8 +47,12 @@ export default function ChangeDatasetStatuses({
 
   if (areIncluded?.length) {
     return (
-      <div>
-        <Checkbox toggle checked={allIncluded} onClick={change} />
+      <div className="switcher">
+        {loading ? (
+          <Loader active inline />
+        ) : (
+          <Checkbox toggle checked={allIncluded} onClick={change} />
+        )}
       </div>
     );
   } else {
