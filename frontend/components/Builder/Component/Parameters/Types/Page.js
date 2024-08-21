@@ -244,6 +244,7 @@ function Item({
     max_value,
     options,
     items,
+    name,
   } = item;
 
   return (
@@ -267,6 +268,24 @@ function Item({
           <option value="likert">Likert scale</option>
           <option value="block">Block</option>
         </select>
+
+        {(type === "freeinput" ||
+          type === "select" ||
+          type === "checkbox" ||
+          type === "likert" ||
+          type === "vas") && (
+          <>
+            <div>Variable name</div>
+            <input
+              type="text"
+              name={id}
+              value={name}
+              onChange={handleItemChange}
+              className="name"
+              required
+            />
+          </>
+        )}
 
         {type !== "block" && (
           <>

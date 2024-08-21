@@ -253,10 +253,6 @@ const StyledTaskBuilder = styled.div`
 
   .taskBlock {
     display: grid;
-    /* grid-template-columns: 1fr; */
-    /* grid-column-gap: 20px; */
-    /* margin-bottom: 15px; */
-    /* border-radius: 5px; */
     .help {
       font-size: 2rem;
       font-weight: 500;
@@ -269,6 +265,9 @@ const StyledTaskBuilder = styled.div`
       justify-self: end;
     }
     .input {
+      .name {
+        color: black;
+      }
     }
     textarea {
       height: 300px;
