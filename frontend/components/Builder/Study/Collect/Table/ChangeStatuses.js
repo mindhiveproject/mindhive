@@ -6,10 +6,8 @@ import { CHANGE_DATASET_STATUS } from "../../../../Mutations/Dataset";
 
 import { GET_USER_RESULTS } from "../../../../Queries/Result";
 import { GET_GUEST_RESULTS } from "../../../../Queries/Result";
-import { GET_STUDY_PARTICIPANTS } from "../../../../Queries/User";
 
 export default function ChangeDatasetStatuses({
-  studyId,
   participantId,
   datasets,
   type,
@@ -22,14 +20,8 @@ export default function ChangeDatasetStatuses({
 
   const queriesToRefetch =
     type === "user"
-      ? [
-          { query: GET_USER_RESULTS, variables: { id: participantId } },
-          { query: GET_STUDY_PARTICIPANTS, variables: { id: studyId } },
-        ]
-      : [
-          { query: GET_GUEST_RESULTS, variables: { id: participantId } },
-          { query: GET_STUDY_PARTICIPANTS, variables: { id: studyId } },
-        ];
+      ? [{ query: GET_USER_RESULTS, variables: { id: participantId } }]
+      : [{ query: GET_GUEST_RESULTS, variables: { id: participantId } }];
 
   const [changeStatus] = useMutation(CHANGE_DATASET_STATUS, {
     refetchQueries: queriesToRefetch,
@@ -41,6 +33,13 @@ export default function ChangeDatasetStatuses({
         variables: {
           token: dataset?.token,
           isIncluded: !allIncluded,
+        },
+        optimisticResponse: {
+          updateDataset: {
+            id: dataset?.id,
+            __typename: "Dataset",
+            isIncluded: !allIncluded,
+          },
         },
       });
     });
