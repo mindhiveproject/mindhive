@@ -3,9 +3,7 @@ import { MY_TASKS } from "../../../../../Queries/Task";
 import Card from "./Card";
 
 export default function PrivateBlocks({
-  engine,
   user,
-  createdBy,
   search,
   componentType,
   addFunctions,

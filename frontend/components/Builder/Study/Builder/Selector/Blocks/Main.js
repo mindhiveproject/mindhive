@@ -1,5 +1,3 @@
-import { useQuery } from "@apollo/client";
-
 import PublicBlocks from "./Public";
 import PrivateBlocks from "./Private";
 
@@ -10,6 +8,7 @@ export default function Blocks({
   search,
   componentType,
   addFunctions,
+  isSurveyBuilder,
 }) {
   if (createdBy === "anyone") {
     return (
@@ -19,6 +18,7 @@ export default function Blocks({
         search={search}
         componentType={componentType}
         addFunctions={addFunctions}
+        isSurveyBuilder={isSurveyBuilder}
       />
     );
   }
@@ -31,6 +31,7 @@ export default function Blocks({
         search={search}
         componentType={componentType}
         addFunctions={addFunctions}
+        isSurveyBuilder={isSurveyBuilder}
       />
     );
   }

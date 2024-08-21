@@ -439,6 +439,14 @@ export const StyledCanvasBuilder = styled.div`
         overflow-y: auto;
         max-height: 40vh;
       }
+      .blocksMenuSurveyBuilder {
+        padding: 10px 25px 0px 30px;
+        overflow-y: auto;
+        max-height: 40vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 2rem;
+      }
     }
 
     label {

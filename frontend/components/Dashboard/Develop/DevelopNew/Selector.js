@@ -148,7 +148,7 @@ export default function Selector({ query, user }) {
             </p>
           </Link>
 
-          {develop === "survey" && (
+          {/* {develop === "survey" && (
             <Link
               className="option"
               href={{
@@ -171,7 +171,7 @@ export default function Selector({ query, user }) {
                 entirely from scratch.
               </p>
             </Link>
-          )}
+          )} */}
 
           <Link
             className="option"

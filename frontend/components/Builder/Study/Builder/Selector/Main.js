@@ -132,6 +132,23 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
                 componentType={item?.componentType}
                 addFunctions={addFunctions}
               />
+              {item?.componentType === "SURVEY" && (
+                <div className="blocksMenuSurveyBuilder">
+                  <p>
+                    Cannot find a tools to measure one of you’re study
+                    construct? Build your own with the Survey builder and
+                    teacher’s help:
+                  </p>
+                  <Blocks
+                    user={user}
+                    createdBy={"anyone"}
+                    search={search}
+                    componentType={"SURVEY"}
+                    addFunctions={addFunctions}
+                    isSurveyBuilder
+                  />
+                </div>
+              )}
             </Accordion.Content>
           </>
         ))}
