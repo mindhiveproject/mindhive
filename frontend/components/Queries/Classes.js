@@ -92,3 +92,22 @@ export const GET_CLASS = gql`
     }
   }
 `;
+
+// get student data of a particular class
+export const GET_STUDENTS_DATA = gql`
+  query GET_STUDENTS_DATA($classId: ID!) {
+    profiles(where: { studentIn: { some: { id: { equals: $classId } } } }) {
+      id
+      username
+      firstName
+      lastName
+      authorOfHomework {
+        assignment {
+          id
+        }
+        settings
+        public
+      }
+    }
+  }
+`;

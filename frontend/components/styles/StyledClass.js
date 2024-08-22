@@ -204,6 +204,16 @@ const StyledClass = styled.div`
   }
 
   .assignments {
+    .subheader {
+      margin: 1rem 0rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-gap: 1rem;
+      .secondary {
+        background: white;
+        color: #007c70;
+      }
+    }
     .backButton {
       margin: 0rem 0rem 2rem 0rem;
     }

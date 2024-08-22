@@ -7,6 +7,7 @@ import { GET_MY_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import AssignmentTab from "./Tab";
 import AddAssignment from "./Add";
 import ViewAssignment from "./View";
+import Overview from "./Overview/Main";
 
 export default function Settings({ myclass, user, query }) {
   const router = useRouter();
@@ -21,6 +22,19 @@ export default function Settings({ myclass, user, query }) {
     return (
       <div className="assignments">
         <AddAssignment myclass={myclass} user={user} query={query} />
+      </div>
+    );
+  }
+
+  if (action === "overview") {
+    return (
+      <div className="assignments">
+        <Overview
+          myclass={myclass}
+          user={user}
+          query={query}
+          assignments={assignments}
+        />
       </div>
     );
   }
@@ -59,17 +73,34 @@ export default function Settings({ myclass, user, query }) {
 
   return (
     <div className="assignments">
-      <Link
-        href={{
-          pathname: `/dashboard/myclasses/${myclass?.code}`,
-          query: {
-            page: "assignments",
-            action: "add",
-          },
-        }}
-      >
-        <button>Add assignment</button>
-      </Link>
+      <div className="subheader">
+        <div>
+          <Link
+            href={{
+              pathname: `/dashboard/myclasses/${myclass?.code}`,
+              query: {
+                page: "assignments",
+                action: "add",
+              },
+            }}
+          >
+            <button>Add assignment</button>
+          </Link>
+        </div>
+        <div>
+          <Link
+            href={{
+              pathname: `/dashboard/myclasses/${myclass?.code}`,
+              query: {
+                page: "assignments",
+                action: "overview",
+              },
+            }}
+          >
+            <button className="secondary">Class homework overview</button>
+          </Link>
+        </div>
+      </div>
 
       {assignments.map((assignment) => (
         <AssignmentTab

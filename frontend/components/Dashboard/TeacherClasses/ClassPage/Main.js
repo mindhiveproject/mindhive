@@ -1,7 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
-import { Menu } from "semantic-ui-react";
 import Link from "next/link";
 
 import Header from "./Header";
