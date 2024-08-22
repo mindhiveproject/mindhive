@@ -3,6 +3,7 @@ import moment from "moment";
 import { GET_MY_JOURNALS } from "../../Queries/Journal";
 
 import Link from "next/link";
+import DeleteJournal from "./DeleteJournal";
 
 export default function JournalsList({ query, user }) {
   const { data, error, loading } = useQuery(GET_MY_JOURNALS, {
@@ -45,6 +46,7 @@ export default function JournalsList({ query, user }) {
               <div>{moment(journal?.createdAt).format("MMMM D, YYYY")}</div>
             </div>
           </Link>
+          <DeleteJournal user={user} journal={journal} />
         </div>
       ))}
     </div>

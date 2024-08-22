@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 const StyledJournal = styled.div`
   display: grid;
+  grid-gap: 1rem;
   .addJournal {
     display: grid;
     height: 100vh;

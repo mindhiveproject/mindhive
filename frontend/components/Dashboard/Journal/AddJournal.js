@@ -6,15 +6,12 @@ import { customAlphabet } from "nanoid";
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
 import useForm from "../../../lib/useForm";
-import DisplayError from "../../ErrorMessage";
-
-import { StyledForm } from "../../styles/StyledForm";
 import JournalForm from "./JournalForm";
 
 import { CREATE_JOURNAL } from "../../Mutations/Journal";
 import { GET_MY_JOURNALS } from "../../Queries/Journal";
 
-export default function AddClass({}) {
+export default function AddJournal({ user }) {
   const router = useRouter();
   const { t } = useTranslation("classes");
   const { inputs, handleChange, clearForm } = useForm({
@@ -24,7 +21,7 @@ export default function AddClass({}) {
 
   const [createClass, { data, loading, error }] = useMutation(CREATE_JOURNAL, {
     variables: inputs,
-    refetchQueries: [{ query: GET_MY_JOURNALS }],
+    refetchQueries: [{ query: GET_MY_JOURNALS, variables: { id: user?.id } }],
   });
 
   async function handleSubmit(e) {
@@ -44,7 +41,7 @@ export default function AddClass({}) {
       inputs={inputs}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
-      submitBtnName={t("common.create")}
+      submitBtnName={"Create"}
       loading={loading}
       error={error}
     />

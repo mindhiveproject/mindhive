@@ -38,7 +38,7 @@ export default function JournalMain({ query, user }) {
   if (selector === "add") {
     return (
       <StyledJournal>
-        <AddJournal />;
+        <AddJournal user={user} />;
       </StyledJournal>
     );
   }
