@@ -2,8 +2,8 @@ import gql from "graphql-tag";
 
 // get teacher classes
 export const GET_MY_JOURNALS = gql`
-  query GET_MY_JOURNALS {
-    journals {
+  query GET_MY_JOURNALS($id: ID!) {
+    journals(where: { creator: { id: { equals: $id } } }) {
       id
       title
       code
