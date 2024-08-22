@@ -200,6 +200,7 @@ export default function ParticipantsTable({ study, components }) {
                 }
               />
             </div>
+            <div>Duration</div>
             <div>
               <Icon
                 name="arrow down"

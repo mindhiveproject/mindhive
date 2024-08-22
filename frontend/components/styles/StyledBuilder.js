@@ -794,7 +794,7 @@ export const StyledCollectPage = styled.div`
   }
   .collectBoard {
     display: grid;
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 45px 0px 45px 0px;
     width: 100%;
     justify-self: center;
@@ -888,6 +888,7 @@ export const StyledCollectPage = styled.div`
     }
     .participantsBoard {
       display: grid;
+      margin: 0px 1rem;
       .tableHeader {
         display: grid;
         padding: 10px;

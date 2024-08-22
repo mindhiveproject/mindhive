@@ -1,4 +1,5 @@
 import moment from "moment";
+import "moment-duration-format";
 import Link from "next/link";
 import ChangeDatasetStatuses from "./ChangeStatuses";
 
@@ -28,6 +29,21 @@ export default function Row({ studyId, participant, consents, type }) {
       .join(", ");
   }
 
+  // Compute duration
+  // Get the event timestamps
+  const timestampsRun = path.map((p) => p?.timestampRun).filter((t) => !!t);
+  const timestampsFinished = path
+    .map((p) => p?.timestampFinished)
+    .filter((t) => !!t);
+  const timestamps = [...timestampsRun, ...timestampsFinished];
+  // Find the minimum and maximum values
+  const minTimestamp = Math.min(...timestamps);
+  const maxTimestamp = Math.max(...timestamps);
+  // Calculate the difference
+  const difference = maxTimestamp - minTimestamp;
+  const duration = moment.duration(difference, "milliseconds");
+  const formattedDuration = duration.format("h:mm:ss", { trim: false });
+
   return (
     <div className="tableRow">
       <Link
@@ -48,7 +64,7 @@ export default function Row({ studyId, participant, consents, type }) {
 
       <div>{participant?.publicReadableId}</div>
       <div>{started && moment(started).format("MMMM D, YY, h:mm:ss")}</div>
-
+      <div>{timestamps.length > 1 ? formattedDuration : ""}</div>
       <div>
         {
           participant?.datasets?.filter(
