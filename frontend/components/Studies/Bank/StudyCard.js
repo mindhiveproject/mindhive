@@ -28,6 +28,7 @@ export default function StudyCard({ user, study, url, id, name, studiesInfo }) {
           <div className="cardInfo">
             <div className="studyHeader">
               <h2>{study.title}</h2>
+              <span>created by {study?.author?.username}</span>
             </div>
           </div>
         </Link>
