@@ -25,29 +25,27 @@ export default function HomeworkMain({
 
   return (
     <div>
-      {homeworks
-        ?.filter((h) => h?.public)
-        .map((work) => (
-          <Link
-            key={work?.id}
-            href={{
-              pathname: `/dashboard/myclasses/${myclass?.code}`,
-              query: {
-                page: "assignments",
-                action: "view",
-                assignment: code,
-                homework: work?.code,
-              },
-            }}
-          >
-            <div className="homeworkTab">
-              <div>{work?.title}</div>
-              <div>{moment(work?.createdAt).format("MMM D, YYYY")}</div>
-              <div>{work?.author?.username}</div>
-              <div>{work?.settings?.status}</div>
-            </div>
-          </Link>
-        ))}
+      {homeworks.map((work) => (
+        <Link
+          key={work?.id}
+          href={{
+            pathname: `/dashboard/myclasses/${myclass?.code}`,
+            query: {
+              page: "assignments",
+              action: "view",
+              assignment: code,
+              homework: work?.code,
+            },
+          }}
+        >
+          <div className="homeworkTab">
+            <div>{work?.title}</div>
+            <div>{moment(work?.createdAt).format("MMM D, YYYY")}</div>
+            <div>{work?.author?.username}</div>
+            <div>{work?.settings?.status}</div>
+          </div>
+        </Link>
+      ))}
     </div>
   );
 }

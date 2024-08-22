@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
-import moment from "moment";
 
 import EditAssignment from "./Edit";
 
@@ -8,7 +7,6 @@ import { GET_ASSIGNMENT } from "../../../../Queries/Assignment";
 import HomeworkMain from "./Homework/Main";
 
 export default function ViewAssignment({ code, myclass, user, query }) {
-  // get assignment
   const { data, loading, error } = useQuery(GET_ASSIGNMENT, {
     variables: { code },
   });
@@ -30,7 +28,7 @@ export default function ViewAssignment({ code, myclass, user, query }) {
 
       {assignment?.homework?.length > 0 && (
         <div className="homework">
-          <h2>Submitted homework</h2>
+          <h2>Homework</h2>
           <HomeworkMain
             code={code}
             myclass={myclass}

@@ -41,11 +41,15 @@ export default function AssignmentMain({ query, user }) {
       <h1>{assignment?.title}</h1>
       <div className="content">{ReactHtmlParser(assignment?.content)}</div>
       <h3>My homework</h3>
-      <NewHomework user={user} assignment={assignment}>
-        <div>
-          <button>New homework</button>
-        </div>
-      </NewHomework>
+
+      {!homeworks.length && (
+        <NewHomework user={user} assignment={assignment}>
+          <div>
+            <button>New homework</button>
+          </div>
+        </NewHomework>
+      )}
+
       <div className="assignments">
         {homeworks.map((homework) => (
           <HomeworkTab

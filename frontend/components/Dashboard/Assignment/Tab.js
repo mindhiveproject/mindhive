@@ -34,7 +34,7 @@ export default function HomeworkTab({ user, assignment, homework }) {
             <div className="title">
               <h2>{homework?.title}</h2>
 
-              {homework?.public ? (
+              {/* {homework?.public ? (
                 <Popup
                   content="The homework is visible for teacher"
                   trigger={<Icon name="eye" />}
@@ -44,7 +44,7 @@ export default function HomeworkTab({ user, assignment, homework }) {
                   content="The homework is NOT visible for teacher"
                   trigger={<Icon name="eye slash" />}
                 />
-              )}
+              )} */}
             </div>
             <em>{moment(homework?.createdAt).format("MMM D, YYYY")}</em>
           </div>
@@ -75,7 +75,7 @@ export default function HomeworkTab({ user, assignment, homework }) {
                 <button className="secondary">Open</button>
               </Link>
 
-              {homework?.public ? (
+              {/* {homework?.public ? (
                 <>
                   <button
                     onClick={() => {
@@ -115,7 +115,7 @@ export default function HomeworkTab({ user, assignment, homework }) {
                     Submit
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
           </>
         </div>

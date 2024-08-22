@@ -2,12 +2,12 @@ import { Dropdown } from "semantic-ui-react";
 
 export default function Status({ settings, handleChange }) {
   const options = [
-    {
-      key: "Not started",
-      text: "Not started",
-      value: "Not started",
-      className: "info-status status-not-started",
-    },
+    // {
+    //   key: "Not started",
+    //   text: "Not started",
+    //   value: "Not started",
+    //   className: "info-status status-not-started",
+    // },
     {
       key: "Started",
       text: "Started",
@@ -49,7 +49,7 @@ export default function Status({ settings, handleChange }) {
             },
           })
         }
-        value={settings?.status || "Not started"}
+        value={settings?.status || "Started"}
       />
     </div>
   );

@@ -141,10 +141,7 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
               },
             }}
           >
-            <span>
-              {assignment?.homework?.filter((h) => h?.public)?.length || 0}{" "}
-              homework submitted
-            </span>
+            <span>{assignment?.homework.length || 0} homework</span>
           </Link>
         </div>
       </div>
