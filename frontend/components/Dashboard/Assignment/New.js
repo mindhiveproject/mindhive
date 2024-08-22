@@ -9,6 +9,7 @@ import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../Queries/Homework";
 
 export default function NewHomework({ user, assignment, children }) {
   const { inputs, handleChange, clearForm } = useForm({
+    settings: { status: "Started" },
     title:
       assignment?.title + "-homework-" + moment().format("YYYY-MM-DD") || "",
   });

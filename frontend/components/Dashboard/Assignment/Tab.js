@@ -47,6 +47,7 @@ export default function HomeworkTab({ user, assignment, homework }) {
               )} */}
             </div>
             <em>{moment(homework?.createdAt).format("MMM D, YYYY")}</em>
+            <p>Status: {homework?.settings?.status}</p>
           </div>
 
           <div className="title">
