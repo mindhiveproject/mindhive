@@ -52,6 +52,8 @@ type Profile {
   taskCreatorInCount(where: TaskWhereInput! = {}): Int
   collaboratorInTask(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TaskWhereUniqueInput): [Task!]
   collaboratorInTaskCount(where: TaskWhereInput! = {}): Int
+  favoriteTasks(where: TaskWhereInput! = {}, orderBy: [TaskOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TaskWhereUniqueInput): [Task!]
+  favoriteTasksCount(where: TaskWhereInput! = {}): Int
   researcherIn(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
   researcherInCount(where: StudyWhereInput! = {}): Int
   collaboratorInStudy(where: StudyWhereInput! = {}, orderBy: [StudyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudyWhereUniqueInput): [Study!]
@@ -165,6 +167,7 @@ input ProfileWhereInput {
   collaboratorInTemplate: TemplateManyRelationFilter
   taskCreatorIn: TaskManyRelationFilter
   collaboratorInTask: TaskManyRelationFilter
+  favoriteTasks: TaskManyRelationFilter
   researcherIn: StudyManyRelationFilter
   collaboratorInStudy: StudyManyRelationFilter
   consentCreatorIn: ConsentManyRelationFilter
@@ -502,6 +505,7 @@ input ProfileUpdateInput {
   collaboratorInTemplate: TemplateRelateToManyForUpdateInput
   taskCreatorIn: TaskRelateToManyForUpdateInput
   collaboratorInTask: TaskRelateToManyForUpdateInput
+  favoriteTasks: TaskRelateToManyForUpdateInput
   researcherIn: StudyRelateToManyForUpdateInput
   collaboratorInStudy: StudyRelateToManyForUpdateInput
   consentCreatorIn: ConsentRelateToManyForUpdateInput
@@ -754,6 +758,7 @@ input ProfileCreateInput {
   collaboratorInTemplate: TemplateRelateToManyForCreateInput
   taskCreatorIn: TaskRelateToManyForCreateInput
   collaboratorInTask: TaskRelateToManyForCreateInput
+  favoriteTasks: TaskRelateToManyForCreateInput
   researcherIn: StudyRelateToManyForCreateInput
   collaboratorInStudy: StudyRelateToManyForCreateInput
   consentCreatorIn: ConsentRelateToManyForCreateInput
@@ -1702,6 +1707,8 @@ type Task {
   author: Profile
   collaborators(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
   collaboratorsCount(where: ProfileWhereInput! = {}): Int
+  favoriteBy(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
+  favoriteByCount(where: ProfileWhereInput! = {}): Int
   template: Template
   parameters: JSON
   settings: JSON
@@ -1745,6 +1752,7 @@ input TaskWhereInput {
   descriptionForParticipants: StringFilter
   author: ProfileWhereInput
   collaborators: ProfileManyRelationFilter
+  favoriteBy: ProfileManyRelationFilter
   template: TemplateWhereInput
   link: StringFilter
   public: BooleanFilter
@@ -1793,6 +1801,7 @@ input TaskUpdateInput {
   descriptionForParticipants: String
   author: ProfileRelateToOneForUpdateInput
   collaborators: ProfileRelateToManyForUpdateInput
+  favoriteBy: ProfileRelateToManyForUpdateInput
   template: TemplateRelateToOneForUpdateInput
   parameters: JSON
   settings: JSON
@@ -1829,6 +1838,7 @@ input TaskCreateInput {
   descriptionForParticipants: String
   author: ProfileRelateToOneForCreateInput
   collaborators: ProfileRelateToManyForCreateInput
+  favoriteBy: ProfileRelateToManyForCreateInput
   template: TemplateRelateToOneForCreateInput
   parameters: JSON
   settings: JSON

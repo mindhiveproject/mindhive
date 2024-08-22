@@ -25,6 +25,8 @@ export default function PrivateBlocks({
           key={component?.id}
           component={component}
           addFunctions={addFunctions}
+          search={search}
+          componentType={componentType}
         />
       ))}
     </div>

@@ -203,6 +203,10 @@ export const Profile = list({
       ref: "Task.collaborators",
       many: true,
     }),
+    favoriteTasks: relationship({
+      ref: "Task.favoriteBy",
+      many: true,
+    }),
     researcherIn: relationship({
       ref: "Study.author",
       many: true,

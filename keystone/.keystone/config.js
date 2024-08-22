@@ -706,6 +706,10 @@ var Profile = (0, import_core.list)({
       ref: "Task.collaborators",
       many: true
     }),
+    favoriteTasks: (0, import_fields3.relationship)({
+      ref: "Task.favoriteBy",
+      many: true
+    }),
     researcherIn: (0, import_fields3.relationship)({
       ref: "Study.author",
       many: true
@@ -1349,6 +1353,10 @@ var Task = (0, import_core12.list)({
     }),
     collaborators: (0, import_fields15.relationship)({
       ref: "Profile.collaboratorInTask",
+      many: true
+    }),
+    favoriteBy: (0, import_fields15.relationship)({
+      ref: "Profile.favoriteTasks",
       many: true
     }),
     template: (0, import_fields15.relationship)({

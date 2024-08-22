@@ -75,6 +75,44 @@ export const MY_TASKS = gql`
   }
 `;
 
+// get favorite tasks
+export const FAVORITE_TASKS = gql`
+  query FAVORITE_TASKS(
+    $taskType: TaskTaskTypeType
+    $searchTerm: String
+    $userId: ID!
+  ) {
+    tasks(
+      where: {
+        favoriteBy: { some: { id: { equals: $userId } } }
+        taskType: { equals: $taskType }
+        OR: [
+          { title: { contains: $searchTerm } }
+          { description: { contains: $searchTerm } }
+        ]
+      }
+      orderBy: { title: asc }
+    ) {
+      id
+      title
+      taskType
+      slug
+      image
+      description
+      descriptionForParticipants
+      author {
+        id
+      }
+      collaborators {
+        id
+        username
+      }
+      parameters
+      settings
+    }
+  }
+`;
+
 // get task to participate
 export const GET_TASK = gql`
   query GET_TASK($slug: String!) {

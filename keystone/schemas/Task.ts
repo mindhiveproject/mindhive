@@ -81,6 +81,10 @@ export const Task = list({
       ref: "Profile.collaboratorInTask",
       many: true,
     }),
+    favoriteBy: relationship({
+      ref: "Profile.favoriteTasks",
+      many: true,
+    }),
     template: relationship({
       ref: "Template.tasks",
     }),

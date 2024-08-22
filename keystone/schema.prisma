@@ -47,6 +47,7 @@ model Profile {
   collaboratorInTemplate   Template[]      @relation("Profile_collaboratorInTemplate")
   taskCreatorIn            Task[]          @relation("Task_author")
   collaboratorInTask       Task[]          @relation("Profile_collaboratorInTask")
+  favoriteTasks            Task[]          @relation("Profile_favoriteTasks")
   researcherIn             Study[]         @relation("Study_author")
   collaboratorInStudy      Study[]         @relation("Profile_collaboratorInStudy")
   consentCreatorIn         Consent[]       @relation("Consent_author")
@@ -247,6 +248,7 @@ model Task {
   author                     Profile?        @relation("Task_author", fields: [authorId], references: [id])
   authorId                   String?         @map("author")
   collaborators              Profile[]       @relation("Profile_collaboratorInTask")
+  favoriteBy                 Profile[]       @relation("Profile_favoriteTasks")
   template                   Template?       @relation("Task_template", fields: [templateId], references: [id])
   templateId                 String?         @map("template")
   parameters                 String?

@@ -138,6 +138,19 @@ export const RESET_MUTATION = gql`
   }
 `;
 
+// manage profile
+export const MANAGE_FAVORITE_TASKS = gql`
+  mutation MANAGE_FAVORITE_TASKS(
+    $id: ID!
+    $taskAction: TaskRelateToManyForUpdateInput!
+  ) {
+    updateProfile(where: { id: $id }, data: { favoriteTasks: $taskAction }) {
+      id
+    }
+  }
+`;
+
+// UPDATE FROM HERE LATER
 // follow user
 export const FOLLOW_USER_MUTATION = gql`
   mutation FOLLOW_USER_MUTATION($id: ID!, $userId: ID!) {

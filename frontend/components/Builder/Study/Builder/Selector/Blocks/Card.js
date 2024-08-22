@@ -1,13 +1,22 @@
-import { Icon } from "semantic-ui-react";
+import { useState } from "react";
+
 import uniqid from "uniqid";
 
 import { NodesTypesContainer } from "../../Diagram/nodes-types-container/NodesTypesContainer";
 import { NodeTypeLabel } from "../../Diagram/node-type-label/NodeTypeLabel";
 
-import TaskModal from "../Task/Modal";
-import { useState } from "react";
+import { Icon } from "semantic-ui-react";
 
-export default function Card({ user, component, addFunctions }) {
+import TaskModal from "../Task/Modal";
+import ManageFavorite from "../../../../../User/ManageFavorite";
+
+export default function Card({
+  user,
+  component,
+  addFunctions,
+  search,
+  componentType,
+}) {
   const [showModal, setShowModal] = useState(false);
 
   const toggleModal = () => {
@@ -53,9 +62,13 @@ export default function Card({ user, component, addFunctions }) {
           </NodesTypesContainer>
         </div>
         <div className="icons">
-          {/* <div className="icon" onClick={() => setComponentId(component?.id)}>
-            <img src="/assets/icons/info.svg" />
-          </div> */}
+          <ManageFavorite
+            user={user}
+            search={search}
+            componentType={componentType}
+            id={component?.id}
+          />
+
           <div className="icon" onClick={() => toggleModal()}>
             <img src="/assets/icons/info.svg" />
           </div>

@@ -1,18 +1,19 @@
 import { useQuery } from "@apollo/client";
-import { PUBLIC_TASKS } from "../../../../../Queries/Task";
+import { FAVORITE_TASKS } from "../../../../../Queries/Task";
 import Card from "./Card";
 
-export default function PublicBlocks({
+export default function FavoriteBlocks({
   user,
   search,
   componentType,
   addFunctions,
   isSurveyBuilder,
 }) {
-  const { data, error, loading } = useQuery(PUBLIC_TASKS, {
+  const { data, error, loading } = useQuery(FAVORITE_TASKS, {
     variables: {
       taskType: componentType,
       searchTerm: search,
+      userId: user?.id,
     },
   });
   const tasks = data?.tasks || [];

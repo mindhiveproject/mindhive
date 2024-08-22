@@ -33,6 +33,9 @@ export const CURRENT_USER_QUERY = gql`
         mentorIn {
           id
         }
+        favoriteTasks {
+          id
+        }
         bio
         location
         language
