@@ -7,7 +7,14 @@ import DownloadRawData from "../Download/RawData";
 import DownloadSummaryData from "../Download/Summary";
 import DownloadByComponent from "../Download/ByComponent";
 
-export default function Header({ study, slug, participants, components }) {
+export default function Header({
+  keyword,
+  updateKeyword,
+  study,
+  slug,
+  participants,
+  components,
+}) {
   const { origin } = absoluteUrl();
 
   // filter out the datasets with explicit disagreement for data sharing (data policy is "no")
@@ -22,8 +29,6 @@ export default function Header({ study, slug, participants, components }) {
   const filteredDatasetTokens = study?.datasets
     ?.filter((dataset) => dataset?.isCompleted && dataset?.isIncluded)
     .map((dataset) => dataset?.token);
-
-  const [keyword, setKeyword] = useState("");
 
   const copyLink = () => {
     const copyLink = `${origin}/studies/${slug}`;
@@ -119,15 +124,15 @@ export default function Header({ study, slug, participants, components }) {
           filteredDatasetTokens={filteredDatasetTokens}
         />
       </div>
-      {/* <div className="searchArea">
+      <div className="searchArea">
         <input
           type="text"
           name="keyword"
           value={keyword}
-          onChange={saveToState}
+          onChange={({ target }) => updateKeyword(target.value)}
           placeholder="Search for participants"
         />
-      </div> */}
+      </div>
     </div>
   );
 }

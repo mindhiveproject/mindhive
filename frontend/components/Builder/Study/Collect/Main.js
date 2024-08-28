@@ -1,7 +1,14 @@
 import { useQuery } from "@apollo/client";
+import { useState } from "react";
+import debounce from "lodash.debounce";
 
 import { StyledCollectPage } from "../../../styles/StyledBuilder";
-import { GET_STUDY_PARTICIPANTS } from "../../../Queries/User";
+
+import {
+  GET_STUDY_PARTICIPANTS,
+  GET_STUDY_GUESTS,
+} from "../../../Queries/User";
+import { GET_STUDY_RESULTS } from "../../../Queries/Study";
 
 import Navigation from "../Navigation/Main";
 import ParticipantPage from "./Participant/Main";
@@ -12,15 +19,36 @@ export default function Collect({ query, user, tab, toggleSidebar }) {
   const participantId = query?.id;
   const { type } = query;
 
+  const [keyword, setKeyword] = useState("");
+  const [search, setSearch] = useState("");
+
   if (!studyId) {
     return <div>No study found, please save your study first.</div>;
   }
 
-  const { data, loading, error } = useQuery(GET_STUDY_PARTICIPANTS, {
+  const { data: participantsData } = useQuery(GET_STUDY_PARTICIPANTS, {
+    variables: { studyId: studyId, search: search },
+  });
+  const users = participantsData?.profiles || [];
+
+  const { data: guestsData } = useQuery(GET_STUDY_GUESTS, {
+    variables: { studyId: studyId, search: search },
+  });
+  const guests = guestsData?.guests || [];
+
+  const { data: studyData } = useQuery(GET_STUDY_RESULTS, {
     variables: { id: studyId },
   });
+  const study = studyData?.study || { participants: [], guests: [] };
 
-  const study = data?.study || { participants: [], guests: [] };
+  const debounceSearch = debounce((value) => {
+    setSearch(value);
+  }, 1000);
+
+  const updateSearch = (value) => {
+    setKeyword(value);
+    debounceSearch(value);
+  };
 
   // find all tests in the study with recursive search
   var components = [];
@@ -64,7 +92,14 @@ export default function Collect({ query, user, tab, toggleSidebar }) {
             type={type}
           />
         ) : (
-          <Table study={study} components={components} />
+          <Table
+            keyword={keyword}
+            updateKeyword={(value) => updateSearch(value)}
+            study={study}
+            components={components}
+            users={users}
+            guests={guests}
+          />
         )}
       </StyledCollectPage>
     </>

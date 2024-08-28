@@ -229,63 +229,57 @@ export const GET_USER = gql`
   }
 `;
 
-// get study participants
+// get study participants for Test & Collect
 export const GET_STUDY_PARTICIPANTS = gql`
-  query GET_STUDY_PARTICIPANTS($id: ID!) {
-    study(where: { id: $id }) {
+  query GET_STUDY_PARTICIPANTS(
+    $studyId: ID!
+    $skip: Int
+    $take: Int
+    $search: String
+  ) {
+    profiles(
+      skip: $skip
+      take: $take
+      where: {
+        participantIn: { some: { id: { equals: $studyId } } }
+        OR: [
+          { publicReadableId: { contains: $search } }
+          { publicId: { contains: $search } }
+        ]
+      }
+    ) {
       id
-      slug
-      flow
-      datasets {
-        date
-        token
-        task {
-          id
-          slug
-        }
-        isCompleted
-        isIncluded
-        testVersion
-        dataPolicy
+      publicId
+      publicReadableId
+      type
+      studiesInfo
+    }
+  }
+`;
+
+export const GET_STUDY_GUESTS = gql`
+  query GET_STUDY_GUESTS(
+    $studyId: ID!
+    $skip: Int
+    $take: Int
+    $search: String
+  ) {
+    guests(
+      skip: $skip
+      take: $take
+      where: {
+        participantIn: { some: { id: { equals: $studyId } } }
+        OR: [
+          { publicReadableId: { contains: $search } }
+          { publicId: { contains: $search } }
+        ]
       }
-      summaryResults {
-        data
-        user {
-          publicId
-        }
-        guest {
-          publicId
-        }
-        study {
-          title
-        }
-        task {
-          id
-          slug
-          title
-        }
-        testVersion
-        metadataId
-        createdAt
-      }
-      participants {
-        id
-        publicId
-        publicReadableId
-        type
-        studiesInfo
-      }
-      guests {
-        id
-        publicId
-        publicReadableId
-        type
-        studiesInfo
-      }
-      consent {
-        id
-        title
-      }
+    ) {
+      id
+      publicId
+      publicReadableId
+      type
+      studiesInfo
     }
   }
 `;

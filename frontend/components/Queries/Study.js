@@ -263,3 +263,50 @@ export const STUDY_COMPONENTS = gql`
     }
   }
 `;
+
+// get study datasets, summary results and consents
+export const GET_STUDY_RESULTS = gql`
+  query GET_STUDY_RESULTS($id: ID!) {
+    study(where: { id: $id }) {
+      id
+      slug
+      flow
+      datasets {
+        date
+        token
+        task {
+          id
+          slug
+        }
+        isCompleted
+        isIncluded
+        testVersion
+        dataPolicy
+      }
+      summaryResults {
+        data
+        user {
+          publicId
+        }
+        guest {
+          publicId
+        }
+        study {
+          title
+        }
+        task {
+          id
+          slug
+          title
+        }
+        testVersion
+        metadataId
+        createdAt
+      }
+      consent {
+        id
+        title
+      }
+    }
+  }
+`;

@@ -1,7 +1,6 @@
 import * as lab from "./lib/lab.js";
-import { convert, decompress } from "./functions";
+import { convert } from "./functions";
 import clonedeep from "lodash.clonedeep";
-import Head from "next/head";
 
 import Plugin from "./Plugin.js";
 

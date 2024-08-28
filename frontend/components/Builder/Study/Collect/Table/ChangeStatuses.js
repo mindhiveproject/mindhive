@@ -6,11 +6,13 @@ import { CHANGE_DATASET_STATUS } from "../../../../Mutations/Dataset";
 
 import { GET_USER_RESULTS } from "../../../../Queries/Result";
 import { GET_GUEST_RESULTS } from "../../../../Queries/Result";
+import { GET_STUDY_RESULTS } from "../../../../Queries/Study";
 
 export default function ChangeDatasetStatuses({
   participantId,
   datasets,
   type,
+  studyId,
 }) {
   const areIncluded =
     datasets
@@ -20,8 +22,14 @@ export default function ChangeDatasetStatuses({
 
   const queriesToRefetch =
     type === "user"
-      ? [{ query: GET_USER_RESULTS, variables: { id: participantId } }]
-      : [{ query: GET_GUEST_RESULTS, variables: { id: participantId } }];
+      ? [
+          { query: GET_USER_RESULTS, variables: { id: participantId } },
+          { query: GET_STUDY_RESULTS, variables: { id: studyId } },
+        ]
+      : [
+          { query: GET_GUEST_RESULTS, variables: { id: participantId } },
+          { query: GET_STUDY_RESULTS, variables: { id: studyId } },
+        ];
 
   const [changeStatus, { loading }] = useMutation(CHANGE_DATASET_STATUS, {
     refetchQueries: queriesToRefetch,

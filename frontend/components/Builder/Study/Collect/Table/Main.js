@@ -7,7 +7,14 @@ import { Icon } from "semantic-ui-react";
 
 import ParticipantsPagination from "./Pagination";
 
-export default function ParticipantsTable({ study, components }) {
+export default function ParticipantsTable({
+  keyword,
+  updateKeyword,
+  study,
+  components,
+  users,
+  guests,
+}) {
   // page setup
   const perPage = 20;
   const [page, setPage] = useState(1);
@@ -80,10 +87,7 @@ export default function ParticipantsTable({ study, components }) {
   // get participants and order them by the time moment when they joined the study
   useEffect(() => {
     async function getParticipants() {
-      // get both users and guests as participants
-      const { participants } = study;
-      const { guests } = study;
-      const allParticipants = [...participants, ...guests];
+      const allParticipants = [...users, ...guests];
       setParticipants(
         orderParticipantsBy({
           participants: allParticipants,
@@ -92,7 +96,7 @@ export default function ParticipantsTable({ study, components }) {
       );
     }
     getParticipants();
-  }, [study]);
+  }, [study, users, guests]);
 
   const participantsOnPage = participants.slice(
     page * perPage - perPage,
@@ -102,6 +106,8 @@ export default function ParticipantsTable({ study, components }) {
   return (
     <div className="collectBoard">
       <Header
+        keyword={keyword}
+        updateKeyword={updateKeyword}
         study={study}
         slug={study.slug}
         participants={participants}
