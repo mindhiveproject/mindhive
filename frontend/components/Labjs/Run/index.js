@@ -8,6 +8,7 @@ import Plugin from "./Plugin.js";
 import { CREATE_DATASET, UPDATE_DATASET } from "../../Mutations/Dataset.js";
 
 import { useMutation } from "@apollo/client";
+import { useState } from "react";
 
 export default function ExperimentWindow({
   user,
@@ -19,6 +20,7 @@ export default function ExperimentWindow({
   onFinish,
   isSavingData,
 }) {
+  const [isCompleted, setIsCompleted] = useState(false);
   // whether to show the plugin is decided by the study parameter
   const isPlugin = study?.settings?.useExternalDevices;
   // check the type of the user
@@ -75,7 +77,7 @@ export default function ExperimentWindow({
 
   // define the start event
   experiment?.on("run", () => {
-    if (isSavingData) {
+    if (isSavingData && !isCompleted) {
       const id = experiment?.plugins?.plugins
         .map((p) => p?.metadata?.id)
         .filter((p) => !!p)[0];
@@ -104,6 +106,7 @@ export default function ExperimentWindow({
 
   // define the end event
   experiment?.on("end", async () => {
+    setIsCompleted(true);
     const id = experiment?.plugins?.plugins
       .map((p) => p?.metadata?.id)
       .filter((p) => !!p)[0];
@@ -131,7 +134,7 @@ export default function ExperimentWindow({
   // launch the experiment
   experiment?.run();
 
-  if (isPlugin) {
+  if (isPlugin && !isCompleted) {
     return <Plugin experiment={experiment} settings={{}} />;
   }
 }

@@ -7,6 +7,11 @@ import DataUsageForParticipant from "./DataUsage/Participant";
 import DataUsageForStudent from "./DataUsage/Student";
 
 import { UPDATE_DATASET } from "../../../Mutations/Dataset";
+import { UPDATE_GUEST_STUDY_INFO } from "../../../Mutations/Guest";
+import { UPDATE_USER_STUDY_INFO } from "../../../Mutations/User";
+
+import { CURRENT_USER_QUERY } from "../../../Queries/User";
+import { GET_GUEST } from "../../../Queries/Guest";
 
 export default function Prompt({
   user,
@@ -20,20 +25,40 @@ export default function Prompt({
 }) {
   const router = useRouter();
 
+  // ToDo: find whether the user already gave data usage consent to this study
+  // If the study changed the consent should be given again
+  const dataUsageConsentWasGiven =
+    !!studiesInfo[study?.id]?.dataPolicy?.[study?.currentVersion];
+
   const redirectPage =
     user.type === "GUEST"
       ? `/studies/${study?.slug}?guest=${user?.publicId}`
       : `/dashboard/discover/studies?name=${study?.slug}`;
 
-  const [dataUse, setDataUse] = useState(undefined);
+  // by default, use the user response given at the first time to a task in the current version of the study
+  const [dataUse, setDataUse] = useState(
+    studiesInfo[study?.id]?.dataPolicy?.[study?.currentVersion]
+  );
 
   // only present the data usage question to students and admins
-  // and when it was explicitly chosen by the researcher
+  // and when the consent was not given to the specific version of the study
   const [askDataUsageQuestion, setAskDataUsageQuestion] = useState(
     (user?.permissions?.map((p) => p.name).includes("STUDENT") ||
       user?.permissions?.map((p) => p.name).includes("ADMIN")) &&
-      currentStep?.askDataUsageQuestion
+      !dataUsageConsentWasGiven
   );
+
+  const [updateUserStudyInfo] = useMutation(UPDATE_USER_STUDY_INFO, {
+    variables: { id: user?.id },
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+  });
+
+  const [updateGuestStudyInfo] = useMutation(UPDATE_GUEST_STUDY_INFO, {
+    variables: { id: user?.id },
+    refetchQueries: [
+      { query: GET_GUEST, variables: { publicId: user?.publicId } },
+    ],
+  });
 
   const [updateDataset] = useMutation(UPDATE_DATASET, {
     ignoreResults: true,
@@ -50,6 +75,29 @@ export default function Prompt({
   const isStudent = user?.permissions?.map((p) => p.name).includes("STUDENT");
 
   const saveResponsesAndProceed = async ({ proceedToNextTask }) => {
+    // save the data usage consent response given by user
+    if (!dataUsageConsentWasGiven) {
+      const updatedStudiesInfo = {
+        ...studiesInfo,
+        [study?.id]: {
+          ...studiesInfo[study?.id],
+          dataPolicy: {
+            ...studiesInfo[study?.id]?.dataPolicy,
+            [study?.currentVersion]: dataUse,
+          },
+        },
+      };
+      if (user.type === "GUEST") {
+        await updateGuestStudyInfo({
+          variables: { studiesInfo: updatedStudiesInfo },
+        });
+      } else {
+        await updateUserStudyInfo({
+          variables: { studiesInfo: updatedStudiesInfo },
+        });
+      }
+    }
+
     // save responses by updating the dataset
     await updateDataset({ variables: { token: token, dataPolicy: dataUse } });
 

@@ -160,6 +160,7 @@ export const STUDY_TO_DISCOVER = gql`
       info
       flow
       components
+      currentVersion
     }
   }
 `;
