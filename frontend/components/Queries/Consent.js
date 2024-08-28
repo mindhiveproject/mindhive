@@ -20,6 +20,7 @@ export const GET_MY_CONSENTS = gql`
       code
       title
       description
+      createdAt
     }
   }
 `;
@@ -32,6 +33,7 @@ export const GET_PUBLIC_CONSENTS = gql`
       code
       title
       description
+      createdAt
     }
   }
 `;
