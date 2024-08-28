@@ -1,7 +1,3 @@
-import React, { Component } from "react";
-import slugify from "slugify";
-import uniqid from "uniqid";
-
 import Tabs from "./Tabs";
 
 export default function Preview({
@@ -15,27 +11,6 @@ export default function Preview({
       acc[el.name] = el.text || "";
       return acc;
     }, {}) || {};
-
-  // get the study components or initialize an empty array
-  // let blocks = [];
-  // if (study.components) {
-  //   if (study.components.blocks) {
-  //     blocks = study.components.blocks;
-  //   } else {
-  //     const upgradedComponents = study.components.map((component) => ({
-  //       id: component.id,
-  //       testId: uniqid.time(),
-  //       title: component.title,
-  //     }));
-  //     blocks = [
-  //       {
-  //         blockId: uniqid.time(),
-  //         title: "Main experiment sequence",
-  //         tests: upgradedComponents,
-  //       },
-  //     ];
-  //   }
-  // }
 
   const handleParameterChange = (e, classType) => {
     const { name, type, value, className } = e.target;

@@ -664,10 +664,47 @@ export const StyledParticipantPage = styled.div`
       display: grid;
       align-items: center;
       grid-template-columns: auto 100px;
-      grid-gap: 10px;
+      grid-gap: 5px;
       .tabHeaderContainer {
         display: grid;
         grid-template-columns: auto 1fr;
+        grid-gap: 5px;
+      }
+      input {
+        font-family: Lato;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 24px;
+        color: #666666;
+        border: 0px solid;
+      }
+      input: focus {
+        border: 1px solid red;
+      }
+      .menu {
+        width: 100%;
+        display: grid;
+        grid-gap: 10px;
+        grid-template-columns: repeat(auto-fill, 100px);
+        margin: 10px 0px 0px 0px;
+        .menuTitle {
+          display: grid;
+          align-items: center;
+          justify-items: center;
+          grid-template-columns: 1fr;
+          border-bottom: 2px solid #e8ebef;
+          padding-bottom: 10px;
+          cursor: pointer;
+        }
+        .titleWithIcon {
+          display: grid;
+          grid-gap: 5px;
+          grid-template-columns: auto 1fr;
+        }
+        .selectedMenuTitle {
+          border-bottom: 4px solid #ffc107;
+        }
       }
     }
 
