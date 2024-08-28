@@ -52,6 +52,7 @@ export const GET_MY_CLASS_ASSIGNMENTS = gql`
           { classes: { some: { id: { equals: $classId } } } }
         ]
       }
+      orderBy: [{ createdAt: desc }]
     ) {
       id
       code
@@ -67,6 +68,7 @@ export const GET_MY_CLASS_ASSIGNMENTS = gql`
       classes {
         id
       }
+      createdAt
     }
   }
 `;
