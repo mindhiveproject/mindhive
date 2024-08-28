@@ -19,7 +19,6 @@ export default function ConsentPage({ code, user, query }) {
   });
 
   const consent = data?.consent || { title: "", description: "", info: [] };
-
   const { inputs, handleChange, clearForm } = useForm({ ...consent });
 
   const [editConsent, { loading: editConsentLoading }] = useMutation(
@@ -29,21 +28,18 @@ export default function ConsentPage({ code, user, query }) {
     }
   );
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSave() {
     await editConsent({
       variables: {
         id: consent?.id,
-        input: {
-          title: inputs?.title,
-          description: inputs?.description,
-          info: inputs?.info,
-          collaborators: inputs?.collaborators?.length
-            ? {
-                set: inputs?.collaborators?.map((col) => ({ id: col?.id })),
-              }
-            : { set: [] },
-        },
+        title: inputs?.title,
+        description: inputs?.description,
+        info: inputs?.info,
+        collaborators: inputs?.collaborators?.length
+          ? {
+              set: inputs?.collaborators?.map((col) => ({ id: col?.id })),
+            }
+          : { set: [] },
       },
     });
     router.push({
@@ -56,7 +52,7 @@ export default function ConsentPage({ code, user, query }) {
       <ConsentForm
         inputs={inputs}
         handleChange={handleChange}
-        handleSubmit={handleSubmit}
+        handleSave={handleSave}
         headerName="Edit protocol"
         submitBtnName="Save"
         loading={loading}
@@ -66,25 +62,31 @@ export default function ConsentPage({ code, user, query }) {
   }
 
   return (
-    <div>
-      {consent?.author?.id === user?.id && (
-        <Link
-          href={{
-            pathname: `/dashboard/irb/${code}`,
-            query: { action: "edit" },
-          }}
-        >
-          <button>Edit</button>
-        </Link>
-      )}
+    <div className="consentPage">
+      <div className="consentHeader">
+        <div>
+          <h1>{consent?.title}</h1>
+          <h3> {consent?.description}</h3>
+        </div>
 
-      <div>{consent?.title}</div>
-      <div>{consent?.description}</div>
+        <div>
+          {consent?.author?.id === user?.id && (
+            <Link
+              href={{
+                pathname: `/dashboard/irb/${code}`,
+                query: { action: "edit" },
+              }}
+            >
+              <button>Edit</button>
+            </Link>
+          )}
+        </div>
+      </div>
 
       {consent?.info?.map((block, i) => (
         <div key={i}>
           <h3>{block?.description}</h3>
-          {ReactHtmlParser(block?.text)}
+          {block?.text ? <>{ReactHtmlParser(block?.text)}</> : <>-----</>}
         </div>
       ))}
     </div>

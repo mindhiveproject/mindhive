@@ -9,26 +9,6 @@ export const CREATE_CONSENT = gql`
   }
 `;
 
-// export const CREATE_CONSENT = gql`
-//   mutation CREATE_CONSENT(
-//     $title: String!
-//     $description: String
-//     $info: JSON
-//     $collaborators: [ProfileWhereUniqueInput!]
-//   ) {
-//     createConsent(
-//       data: {
-//         title: $title
-//         description: $description
-//         info: $info
-//         collaborators: { connect: $collaborators }
-//       }
-//     ) {
-//       id
-//     }
-//   }
-// `;
-
 // edit consent
 export const EDIT_CONSENT = gql`
   mutation EDIT_CONSENT(
@@ -36,7 +16,7 @@ export const EDIT_CONSENT = gql`
     $title: String
     $description: String
     $info: JSON
-    $collaborators: [ProfileWhereUniqueInput!]
+    $collaborators: ProfileRelateToManyForUpdateInput
   ) {
     updateConsent(
       where: { id: $id }
@@ -44,7 +24,7 @@ export const EDIT_CONSENT = gql`
         title: $title
         description: $description
         info: $info
-        collaborators: { set: $collaborators }
+        collaborators: $collaborators
       }
     ) {
       id

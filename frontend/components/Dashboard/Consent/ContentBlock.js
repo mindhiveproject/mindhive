@@ -8,7 +8,7 @@ export default function ContentBlock({ index, block, updateInfo }) {
   return (
     <div className="singlePost">
       <div className="header">
-        <h2>{block?.description}</h2>
+        <h3>{block?.description}</h3>
       </div>
 
       <JoditEditor

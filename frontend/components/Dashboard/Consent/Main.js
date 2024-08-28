@@ -4,11 +4,12 @@ import ConsentPage from "./ConsentPage";
 
 import ConsentsList from "./ConsentsList";
 import PublicConsentsList from "./PublicConsentsList";
+import StyledConsent from "../../styles/StyledConsent";
 
 export default function ConsentMain({ query, user }) {
   const { selector } = query;
   return (
-    <>
+    <StyledConsent>
       <h1>IRB protocols</h1>
       <div className="header">
         <div className="menu">
@@ -52,6 +53,6 @@ export default function ConsentMain({ query, user }) {
       {selector && selector !== "add" && selector !== "public" && (
         <ConsentPage code={selector} user={user} query={query} />
       )}
-    </>
+    </StyledConsent>
   );
 }

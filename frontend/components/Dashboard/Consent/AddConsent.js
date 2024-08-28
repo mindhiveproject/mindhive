@@ -74,8 +74,7 @@ export default function AddClass({ user }) {
     }
   );
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSave() {
     await createConsent({
       variables: {
         input: {
@@ -97,9 +96,9 @@ export default function AddClass({ user }) {
     <ConsentForm
       inputs={inputs}
       handleChange={handleChange}
-      handleSubmit={handleSubmit}
+      handleSave={handleSave}
       headerName="Add new IRB protocol"
-      submitBtnName={t("common.create")}
+      submitBtnName="Create"
       loading={loading}
       error={error}
     />

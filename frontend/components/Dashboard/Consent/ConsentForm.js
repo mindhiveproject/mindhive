@@ -1,4 +1,4 @@
-import { StyledForm } from "../../styles/StyledForm";
+import { StyledInput } from "../../styles/StyledForm";
 import DisplayError from "../../ErrorMessage";
 import useTranslation from "next-translate/useTranslation";
 import ConsentContent from "./Content";
@@ -7,7 +7,7 @@ import Collaborators from "../../Global/Collaborators";
 export default function ConsentForm({
   inputs,
   handleChange,
-  handleSubmit,
+  handleSave,
   headerName,
   submitBtnName,
   loading,
@@ -19,8 +19,13 @@ export default function ConsentForm({
 
   return (
     <div>
-      <h1>{headerName}</h1>
-      <StyledForm method="POST" onSubmit={handleSubmit}>
+      <div className="consentHeader">
+        <h1>{headerName}</h1>
+        <div className="submitButton">
+          <button onClick={handleSave}>{submitBtnName}</button>
+        </div>
+      </div>
+      <StyledInput>
         <DisplayError error={error} />
 
         <Collaborators
@@ -31,7 +36,7 @@ export default function ConsentForm({
         <fieldset disabled={loading} aria-busy={loading}>
           <div className="infoPane">
             <label htmlFor="title">
-              {t("common.title")}
+              Title
               <input
                 type="title"
                 name="title"
@@ -42,7 +47,7 @@ export default function ConsentForm({
             </label>
 
             <label htmlFor="description">
-              {t("common.description")}
+              Description
               <textarea
                 id="description"
                 rows="5"
@@ -51,13 +56,9 @@ export default function ConsentForm({
                 onChange={handleChange}
               />
             </label>
-
-            <div className="submitButton">
-              <button type="submit">{submitBtnName}</button>
-            </div>
           </div>
         </fieldset>
-      </StyledForm>
+      </StyledInput>
       <ConsentContent info={inputs?.info} handleChange={handleChange} />
     </div>
   );
