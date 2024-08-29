@@ -2,10 +2,11 @@ import { Icon } from "semantic-ui-react";
 
 import { NodesTypesContainer } from "../../Diagram/nodes-types-container/NodesTypesContainer";
 import { NodeTypeLabel } from "../../Diagram/node-type-label/NodeTypeLabel";
+import { StyledCard } from "../../../../../styles/StyledBuilder";
 
 export default function StudyCard({ study, addFunctions }) {
   return (
-    <div className="taskCard">
+    <StyledCard>
       <div className="addBlock">
         <Icon
           name="plus circle"
@@ -30,6 +31,6 @@ export default function StudyCard({ study, addFunctions }) {
         </NodesTypesContainer>
       </div>
       <div className="icons"></div>
-    </div>
+    </StyledCard>
   );
 }

@@ -10,6 +10,8 @@ import { Icon } from "semantic-ui-react";
 import TaskModal from "../Task/Modal";
 import ManageFavorite from "../../../../../User/ManageFavorite";
 
+import { StyledCard } from "../../../../../styles/StyledBuilder";
+
 export default function Card({
   user,
   component,
@@ -25,7 +27,7 @@ export default function Card({
 
   return (
     <>
-      <div className="taskCard" taskType={component?.taskType}>
+      <StyledCard taskType={component?.taskType}>
         <div className="addBlock">
           <Icon
             name="plus circle"
@@ -94,7 +96,7 @@ export default function Card({
             </a>
           )}
         </div>
-      </div>
+      </StyledCard>
 
       {showModal && (
         <TaskModal

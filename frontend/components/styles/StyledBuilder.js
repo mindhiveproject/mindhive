@@ -436,7 +436,6 @@ export const StyledCanvasBuilder = styled.div`
         }
       }
       .blocksMenuContent {
-        padding: 10px 25px 0px 30px;
         overflow-y: auto;
         max-height: 40vh;
       }
@@ -528,51 +527,53 @@ export const StyledCanvasBuilder = styled.div`
       }
     }
   }
+`;
 
-  .taskCard {
+export const StyledCard = styled.div`
+  display: grid;
+  align-items: center;
+  grid-template-columns: 30px 4fr 1fr;
+  grid-gap: 10px;
+  background: #ffffff;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.07);
+  border-radius: 8px;
+  margin-bottom: 10px;
+
+  border-top: 8px solid;
+  border-top-color: ${(props) =>
+    props.taskType === "TASK"
+      ? "#64c9e2"
+      : props.taskType === "SURVEY"
+      ? "#28619e"
+      : props.taskType === "BLOCK"
+      ? "#ffc7c3"
+      : props.taskType === "DESIGN"
+      ? "#007c70"
+      : "#FFE29D"};
+
+  .addBlock {
+    margin: 0px 10px;
+  }
+  .movableCard {
+    display: grid;
+    width: 100%;
+    height: 100%;
+  }
+  .icons {
     display: grid;
     align-items: center;
-    grid-template-columns: 30px 4fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 10px;
-    background: #ffffff;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.07);
-    border-radius: 8px;
-    margin-bottom: 10px;
-
-    border-top: 8px solid;
-    border-top-color: ${(props) =>
-      props.taskType === "TASK"
-        ? "#64c9e2"
-        : props.taskType === "SURVEY"
-        ? "#28619e"
-        : props.taskType === "BLOCK"
-        ? "#ffc7c3"
-        : "#007c70"};
-
-    .addBlock {
-      margin: 0px 10px;
-    }
-    .movableCard {
-      display: grid;
-      width: 100%;
-      height: 100%;
-    }
-    .icons {
+    padding: 16px;
+    .icon {
       display: grid;
       align-items: center;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-gap: 10px;
-      padding: 16px;
-      .icon {
-        display: grid;
-        align-items: center;
-        justify-items: center;
-        background: #f3f5f6;
-        width: 42px;
-        height: 42px;
-        border-radius: 20px;
-        cursor: pointer;
-      }
+      justify-items: center;
+      background: #f3f5f6;
+      width: 42px;
+      height: 42px;
+      border-radius: 20px;
+      cursor: pointer;
     }
   }
 `;

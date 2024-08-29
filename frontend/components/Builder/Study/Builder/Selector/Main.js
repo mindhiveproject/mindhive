@@ -8,6 +8,7 @@ import { NodeTypeLabel } from "../Diagram/node-type-label/NodeTypeLabel";
 
 import Blocks from "./Blocks/Main";
 import StudyTemplates from "./Templates/Main";
+import { StyledCard } from "../../../../styles/StyledBuilder";
 
 const components = [
   {
@@ -164,7 +165,7 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
           </div>
         </Accordion.Title>
         <Accordion.Content active={activeIndex.includes(4)}>
-          <div className="taskCard" taskType="DESIGN">
+          <StyledCard taskType="DESIGN">
             <div className="addBlock">
               <Icon
                 name="plus circle"
@@ -191,7 +192,7 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
               </NodesTypesContainer>
             </div>
             <div className="icons"></div>
-          </div>
+          </StyledCard>
         </Accordion.Content>
 
         <Accordion.Title
