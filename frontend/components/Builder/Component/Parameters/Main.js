@@ -166,11 +166,13 @@ export default function TaskParameters({
               </div>
             )
           )}
-          <div>
-            <button onClick={setParametersFromTemplate}>
-              Get parameters from the template
-            </button>
-          </div>
+          {!isInStudyBuilder && (
+            <div>
+              <button onClick={setParametersFromTemplate}>
+                Get parameters from the template
+              </button>
+            </div>
+          )}
         </>
       )}
     </fieldset>

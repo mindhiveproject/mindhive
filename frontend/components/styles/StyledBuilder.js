@@ -7,6 +7,7 @@ export const StyledBuilder = styled.div`
 export const StyledBuilderArea = styled.div`
   display: grid;
   height: 100vh;
+  width: 100%;
   grid-template-rows: auto 1fr;
   .navigation {
     display: grid;
@@ -242,7 +243,7 @@ export const StyledCanvasBuilder = styled.div`
     height: 100%;
     top: 0;
     right: 0;
-    min-width: 70%;
+    min-width: 80%;
     max-width: 90%;
     bottom: 0;
     transition: all 0.3s;

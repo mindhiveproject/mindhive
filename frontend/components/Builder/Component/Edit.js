@@ -137,7 +137,7 @@ export default function EditComponent({
       handleChange={handleChange}
       handleMultipleUpdate={handleMultipleUpdate}
       handleSubmit={handleSubmit}
-      submitBtnName={t("update")}
+      submitBtnName={"Update"}
       loading={templateLoading || taskLoading}
       error={templateError || taskError}
       isTemplateAuthor={isTemplateAuthor}

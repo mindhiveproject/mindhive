@@ -1,5 +1,6 @@
 import uniqid from "uniqid";
 import JoditEditor from "../../../../Jodit/Editor";
+// import JoditEditorPro from "../../../../Jodit/EditorPro";
 
 export default function Page({
   name,
@@ -182,15 +183,17 @@ export default function Page({
           </div>
         </div>
         <div className="timeout">
-          <p>Page timeout (in milliseconds)</p>
-          <input
-            type="number"
-            min="0"
-            name="timeout"
-            value={timeout}
-            onChange={handleTimeoutChange}
-            className="timeout"
-          />
+          <div>Page timeout (in milliseconds)</div>
+          <div>
+            <input
+              type="number"
+              min="0"
+              name="timeout"
+              value={timeout}
+              onChange={handleTimeoutChange}
+              className="timeout"
+            />
+          </div>
         </div>
 
         <div>

@@ -5,7 +5,7 @@ const StyledTaskBuilder = styled.div`
     display: grid;
     align-content: baseline;
     grid-gap: 20px;
-    margin: 15px;
+    margin: 3rem;
     width: auto;
     font-size: 1.5rem;
     line-height: 1.5;
@@ -20,7 +20,7 @@ const StyledTaskBuilder = styled.div`
 
     .wideBlock {
       display: grid;
-      max-width: 800px;
+      /* max-width: 800px; */
       /* margin-bottom: 50px; */
     }
 
@@ -87,7 +87,7 @@ const StyledTaskBuilder = styled.div`
   .surveyBuilderItemLine {
     border-bottom: 3px #e7d6d6 solid;
     padding-bottom: 30px;
-    margin-bottom: 30px;
+    margin: 3rem 0rem;
     display: grid;
     grid-template-columns: 9fr 1fr;
     grid-column-gap: 10px;
@@ -152,6 +152,11 @@ const StyledTaskBuilder = styled.div`
         transition: transform 0.5s;
       }
     }
+  }
+
+  .timeout {
+    margin: 1rem 0rem 0rem 0rem;
+    max-width: 300px;
   }
 
   .statementLine {

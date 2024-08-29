@@ -1,4 +1,3 @@
-import JoditEditor from "../../../Jodit/Editor";
 import JoditEditorPro from "../../../Jodit/EditorPro";
 import StyledNote from "../../../styles/StyledNote";
 

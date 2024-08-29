@@ -25,6 +25,7 @@ export default function JoditEditorPro({ content, setContent }) {
     // },
     minHeight: 500,
     globalFullSize: false,
+    removeButtons: ["fullsize"],
   };
 
   return (

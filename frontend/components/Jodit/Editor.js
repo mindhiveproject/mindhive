@@ -17,6 +17,7 @@ export default function JoditEditor({ content, setContent, readonly }) {
       minHeight: 500,
       askBeforePasteFromWord: false,
       askBeforePasteHTML: false,
+      removeButtons: ["fullsize"],
     }),
     []
   );
