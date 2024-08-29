@@ -51,7 +51,7 @@ export default function PostModal({ journal, user, children }) {
         title={title}
         setTitle={setTitle}
         handleSave={handleSave}
-        headerTitle="Create note"
+        headerTitle="Create a new post"
       />
     </Modal>
   );

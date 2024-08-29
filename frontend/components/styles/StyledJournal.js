@@ -2,18 +2,18 @@ import styled from "styled-components";
 
 const StyledJournal = styled.div`
   display: grid;
-  grid-gap: 1rem;
+  grid-gap: 2rem;
   .addJournal {
     display: grid;
-    height: 100vh;
+    /* height: 100vh; */
     background: #f7f9f8;
-    grid-template-rows: 0px auto;
+    /* grid-template-rows: 0px auto; */
 
     .header {
       display: grid;
       grid-template-columns: 1fr auto;
     }
-    .closeBtn {
+    /* .closeBtn {
       width: 3.3rem;
       line-height: 3rem;
       text-align: center;
@@ -26,7 +26,7 @@ const StyledJournal = styled.div`
         transform: scale(1.1);
         transition: transform 0.5s;
       }
-    }
+    } */
   }
 
   .journalsList {

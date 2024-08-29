@@ -25,6 +25,7 @@ export default function JournalsList({ query, user }) {
 
   return (
     <div className="journalsList">
+      <h3>My journals</h3>
       <div className="row">
         <div className="topHeader">
           <div>Journal name</div>

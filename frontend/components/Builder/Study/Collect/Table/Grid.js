@@ -124,7 +124,7 @@ export default function Grid({ studyId, participants }) {
 
   // settings
   const pagination = true;
-  const paginationPageSize = 20;
+  const paginationPageSize = 50;
   const paginationPageSizeSelector = [20, 50, 100, 200, 500, 1000];
 
   const autoSizeStrategy = {

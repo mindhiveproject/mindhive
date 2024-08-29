@@ -25,7 +25,9 @@ export default function AddJournal({ user }) {
   });
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    if (!inputs.title) {
+      return alert("Please enter a title");
+    }
     await createClass({
       variables: {
         code: nanoid(),
@@ -41,7 +43,7 @@ export default function AddJournal({ user }) {
       inputs={inputs}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
-      submitBtnName={"Create"}
+      submitBtnName={"Create a new journal"}
       loading={loading}
       error={error}
     />

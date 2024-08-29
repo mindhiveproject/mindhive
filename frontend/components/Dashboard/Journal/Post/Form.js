@@ -26,7 +26,6 @@ export default function CreatePost({
           required
         />
       </label>
-      {/* <JoditEditor content={content} setContent={setContent} /> */}
       <JoditEditorPro content={content} setContent={setContent} />
       <button onClick={handleSave}>Save</button>
     </StyledNote>
