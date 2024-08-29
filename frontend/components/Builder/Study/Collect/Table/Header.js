@@ -1,20 +1,10 @@
 import absoluteUrl from "next-absolute-url";
-import { useState } from "react";
-
-import debounce from "lodash.debounce";
 
 import DownloadRawData from "../Download/RawData";
 import DownloadSummaryData from "../Download/Summary";
 import DownloadByComponent from "../Download/ByComponent";
 
-export default function Header({
-  keyword,
-  updateKeyword,
-  study,
-  slug,
-  participants,
-  components,
-}) {
+export default function Header({ study, slug, participants, components }) {
   const { origin } = absoluteUrl();
 
   // filter out the datasets with explicit disagreement for data sharing (data policy is "no")
@@ -39,22 +29,6 @@ export default function Header({
     document.execCommand("copy");
     temp.remove();
     alert("The link is copied");
-  };
-
-  const debouncedSearch = debounce((value) => {
-    // this.setState({
-    //   search: value,
-    //   page: 1,
-    //   guestPage: 1,
-    // });
-  }, 1000);
-
-  const saveToState = (e) => {
-    // this.setState({
-    //   [e.target.name]: e.target.value,
-    // });
-    setKeyword(e.target.value);
-    debouncedSearch(e.target.value);
   };
 
   return (
@@ -122,15 +96,6 @@ export default function Header({
           participantsInStudy={participants}
           datasets={study?.datasets || []}
           filteredDatasetTokens={filteredDatasetTokens}
-        />
-      </div>
-      <div className="searchArea">
-        <input
-          type="text"
-          name="keyword"
-          value={keyword}
-          onChange={({ target }) => updateKeyword(target.value)}
-          placeholder="Search for participants"
         />
       </div>
     </div>

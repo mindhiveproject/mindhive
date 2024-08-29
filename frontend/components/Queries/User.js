@@ -231,55 +231,45 @@ export const GET_USER = gql`
 
 // get study participants for Test & Collect
 export const GET_STUDY_PARTICIPANTS = gql`
-  query GET_STUDY_PARTICIPANTS(
-    $studyId: ID!
-    $skip: Int
-    $take: Int
-    $search: String
-  ) {
-    profiles(
-      skip: $skip
-      take: $take
-      where: {
-        participantIn: { some: { id: { equals: $studyId } } }
-        OR: [
-          { publicReadableId: { contains: $search } }
-          { publicId: { contains: $search } }
-        ]
-      }
-    ) {
+  query GET_STUDY_PARTICIPANTS($studyId: ID!) {
+    profiles(where: { participantIn: { some: { id: { equals: $studyId } } } }) {
       id
       publicId
       publicReadableId
       type
+      info
+      generalInfo
       studiesInfo
+      datasets {
+        isCompleted
+        isIncluded
+        token
+        study {
+          id
+        }
+      }
     }
   }
 `;
 
 export const GET_STUDY_GUESTS = gql`
-  query GET_STUDY_GUESTS(
-    $studyId: ID!
-    $skip: Int
-    $take: Int
-    $search: String
-  ) {
-    guests(
-      skip: $skip
-      take: $take
-      where: {
-        participantIn: { some: { id: { equals: $studyId } } }
-        OR: [
-          { publicReadableId: { contains: $search } }
-          { publicId: { contains: $search } }
-        ]
-      }
-    ) {
+  query GET_STUDY_GUESTS($studyId: ID!) {
+    guests(where: { participantIn: { some: { id: { equals: $studyId } } } }) {
       id
       publicId
       publicReadableId
       type
+      info
+      generalInfo
       studiesInfo
+      datasets {
+        isCompleted
+        isIncluded
+        token
+        study {
+          id
+        }
+      }
     }
   }
 `;

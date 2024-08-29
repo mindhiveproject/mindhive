@@ -4,8 +4,11 @@ import { useMutation } from "@apollo/client";
 
 import { CHANGE_DATASET_STATUS } from "../../../../Mutations/Dataset";
 
-import { GET_USER_RESULTS } from "../../../../Queries/Result";
-import { GET_GUEST_RESULTS } from "../../../../Queries/Result";
+import {
+  GET_USER_RESULTS,
+  GET_GUEST_RESULTS,
+} from "../../../../Queries/Result";
+
 import { GET_STUDY_RESULTS } from "../../../../Queries/Study";
 
 export default function ChangeDatasetStatuses({

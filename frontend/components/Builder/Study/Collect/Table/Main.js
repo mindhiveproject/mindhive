@@ -1,87 +1,77 @@
-import Header from "./Header";
-import UserRowWrapper from "./UserRowWrapper";
-import GuestRowWrapper from "./GuestRowWrapper";
 import { useState, useEffect } from "react";
 
-import { Icon } from "semantic-ui-react";
-
-import ParticipantsPagination from "./Pagination";
+import Header from "./Header";
+import Grid from "./Grid";
 
 export default function ParticipantsTable({
-  keyword,
-  updateKeyword,
   study,
   components,
   users,
   guests,
 }) {
-  // page setup
-  const perPage = 20;
-  const [page, setPage] = useState(1);
-
   // participants
   const [participants, setParticipants] = useState([]);
-  const count = participants.length;
 
-  // consents
-  const consents = study?.consent || [];
+  const processParticipant = ({ participant }) => {
+    const generalInfo =
+      { ...participant?.generalInfo, ...participant?.info } || {};
+    const studyInfo = participant?.studiesInfo?.[study?.id];
+    const path = studyInfo?.info?.path || [];
 
-  const orderParticipantsBy = ({ participants, orderBy, direction }) => {
-    let orderedParticipants = [...participants];
-    const director = direction === "fromLowToHigh" ? 1 : -1;
-    if (orderBy === "started") {
-      orderedParticipants = [...participants].sort((a, b) => {
-        const timeA =
-          (a?.studiesInfo?.[study?.id]?.info?.path.length &&
-            a?.studiesInfo?.[study?.id]?.info?.path[0]?.timestampFinished) ||
-          a?.publicReadableId;
-        const timeB =
-          (b?.studiesInfo?.[study?.id]?.info?.path.length &&
-            b?.studiesInfo?.[study?.id]?.info?.path[0]?.timestampFinished) ||
-          b?.publicReadableId;
-        return timeA > timeB ? director : -director;
-      });
-    }
-    if (
-      orderBy === "publicId" ||
-      orderBy === "publicReadableId" ||
-      orderBy === "type"
-    ) {
-      orderedParticipants = [...participants].sort((a, b) => {
-        return a[orderBy] > b[orderBy] ? director : -director;
-      });
-    }
-    if (orderBy === "completed") {
-      orderedParticipants = [...participants].sort((a, b) => {
-        const lengthA = a?.studiesInfo?.[study?.id]?.info?.path.length || 0;
-        const lengthB = b?.studiesInfo?.[study?.id]?.info?.path.length || 0;
-        return lengthA > lengthB ? director : -director;
-      });
-    }
-    if (orderBy === "condition") {
-      orderedParticipants = [...participants].sort((a, b) => {
-        const conditionA =
-          (a?.studiesInfo?.[study?.id]?.info?.path.length &&
-            a?.studiesInfo?.[study?.id]?.info?.path
-              .filter((stage) => stage?.conditionLabel)
-              .map((stage) => stage?.conditionLabel)
-              .join("")) ||
-          a?.publicReadableId;
-        const conditionB =
-          (b?.studiesInfo?.[study?.id]?.info?.path.length &&
-            b?.studiesInfo?.[study?.id]?.info?.path
-              .filter((stage) => stage?.conditionLabel)
-              .map((stage) => stage?.conditionLabel)
-              .join("")) ||
-          b?.publicReadableId;
-        return conditionA > conditionB ? director : -director;
-      });
-    }
-    return orderedParticipants;
-  };
+    const startedAt = path?.length && path[0]?.timestampFinished;
 
-  const setNewOrder = ({ orderBy, direction }) => {
-    setParticipants(orderParticipantsBy({ participants, orderBy, direction }));
+    // Compute duration
+    // Get the event timestamps
+    const timestampsRun = path.map((p) => p?.timestampRun).filter((t) => !!t);
+    const timestampsFinished = path
+      .map((p) => p?.timestampFinished)
+      .filter((t) => !!t);
+    const timestamps = [...timestampsRun, ...timestampsFinished];
+    // Find the minimum and maximum values
+    const minTimestamp = Math.min(...timestamps);
+    const maxTimestamp = Math.max(...timestamps);
+    // Calculate the duration in minutes (this will be used for filter)
+    const duration = (maxTimestamp - minTimestamp) / (1000 * 60);
+
+    // compute the number of completed tasks
+    const numberCompleted = participant?.datasets?.filter(
+      (dataset) => dataset?.isCompleted && dataset?.study?.id === study?.id
+    ).length;
+
+    // return condition labels
+    const condition = path
+      .filter((stage) => stage?.conditionLabel)
+      .map((stage) => stage?.conditionLabel)
+      .join(", ");
+
+    // return consent decisions for this study
+    const studyConsent = study?.consent || [];
+    const consent = studyConsent
+      .map((consent) => {
+        return generalInfo?.[`consent-${consent?.id}`];
+      })
+      .join(", ");
+
+    // Compute whether all datasets of participant are included in analysis
+    const areIncluded =
+      participant?.datasets
+        ?.filter((dataset) => dataset?.isCompleted)
+        .map((dataset) => dataset?.isIncluded) || [];
+    const includeAnalysis =
+      areIncluded.length && areIncluded?.every((v) => !!v);
+
+    return {
+      publicId: participant?.publicId,
+      publicReadableId: participant?.publicReadableId,
+      startedAt,
+      duration,
+      numberCompleted,
+      condition,
+      consent,
+      accountType: participant?.type,
+      includeAnalysis,
+      datasets: participant?.datasets,
+    };
   };
 
   // get participants and order them by the time moment when they joined the study
@@ -89,245 +79,23 @@ export default function ParticipantsTable({
     async function getParticipants() {
       const allParticipants = [...users, ...guests];
       setParticipants(
-        orderParticipantsBy({
-          participants: allParticipants,
-          orderBy: "started",
-        })
+        allParticipants.map((participant) =>
+          processParticipant({ participant })
+        )
       );
     }
     getParticipants();
   }, [study, users, guests]);
 
-  const participantsOnPage = participants.slice(
-    page * perPage - perPage,
-    page * perPage
-  );
-
   return (
     <div className="collectBoard">
       <Header
-        keyword={keyword}
-        updateKeyword={updateKeyword}
         study={study}
         slug={study.slug}
         participants={participants}
         components={components}
       />
-      <div className="participants">
-        <div className="participantsBoard">
-          {count > 0 && (
-            <ParticipantsPagination
-              page={page}
-              perPage={perPage}
-              count={count}
-              setPage={setPage}
-            />
-          )}
-
-          <div className="tableHeader">
-            <div>
-              <Icon
-                name="arrow down"
-                size="small"
-                color="teal"
-                className="clickable"
-                onClick={() =>
-                  setNewOrder({
-                    orderBy: "publicId",
-                    direction: "fromLowToHigh",
-                  })
-                }
-              />
-              Participant ID
-              <Icon
-                name="arrow up"
-                size="small"
-                color="teal"
-                className="clickable"
-                onClick={() =>
-                  setNewOrder({
-                    orderBy: "publicId",
-                    direction: "fromHighToLow",
-                  })
-                }
-              />
-            </div>
-            <div>
-              <Icon
-                name="arrow down"
-                size="small"
-                color="teal"
-                className="clickable"
-                onClick={() =>
-                  setNewOrder({
-                    orderBy: "publicReadableId",
-                    direction: "fromLowToHigh",
-                  })
-                }
-              />
-              Public readable ID
-              <Icon
-                name="arrow up"
-                size="small"
-                color="teal"
-                className="clickable"
-                onClick={() =>
-                  setNewOrder({
-                    orderBy: "publicReadableId",
-                    direction: "fromHighToLow",
-                  })
-                }
-              />
-            </div>
-            <div>
-              <Icon
-                name="arrow down"
-                size="small"
-                color="teal"
-                className="clickable"
-                onClick={() =>
-                  setNewOrder({
-                    orderBy: "started",
-                    direction: "fromLowToHigh",
-                  })
-                }
-              />
-              Started
-              <Icon
-                name="arrow up"
-                size="small"
-                color="teal"
-                className="clickable"
-                onClick={() =>
-                  setNewOrder({
-                    orderBy: "started",
-                    direction: "fromHighToLow",
-                  })
-                }
-              />
-            </div>
-            <div>Duration</div>
-            <div>
-              <Icon
-                name="arrow down"
-                size="small"
-                color="teal"
-                className="clickable"
-                onClick={() =>
-                  setNewOrder({
-                    orderBy: "completed",
-                    direction: "fromLowToHigh",
-                  })
-                }
-              />
-              Number of completed tasks
-              <Icon
-                name="arrow up"
-                size="small"
-                color="teal"
-                className="clickable"
-                onClick={() =>
-                  setNewOrder({
-                    orderBy: "completed",
-                    direction: "fromHighToLow",
-                  })
-                }
-              />
-            </div>
-            <div>
-              <Icon
-                name="arrow down"
-                size="small"
-                color="teal"
-                className="clickable"
-                onClick={() =>
-                  setNewOrder({
-                    orderBy: "condition",
-                    direction: "fromLowToHigh",
-                  })
-                }
-              />
-              Condition
-              <Icon
-                name="arrow up"
-                size="small"
-                color="teal"
-                className="clickable"
-                onClick={() =>
-                  setNewOrder({
-                    orderBy: "condition",
-                    direction: "fromHighToLow",
-                  })
-                }
-              />
-            </div>
-            <div>IRB consent decision</div>
-            <div>
-              <Icon
-                name="arrow down"
-                size="small"
-                color="teal"
-                className="clickable"
-                onClick={() =>
-                  setNewOrder({
-                    orderBy: "type",
-                    direction: "fromLowToHigh",
-                  })
-                }
-              />
-              Account
-              <Icon
-                name="arrow up"
-                size="small"
-                color="teal"
-                className="clickable"
-                onClick={() =>
-                  setNewOrder({
-                    orderBy: "type",
-                    direction: "fromHighToLow",
-                  })
-                }
-              />
-            </div>
-            <div>Include all data in analysis</div>
-          </div>
-
-          <div>
-            {participantsOnPage.map((participant, num) => {
-              if (participant?.type === "GUEST") {
-                return (
-                  <GuestRowWrapper
-                    key={num}
-                    num={num}
-                    studyId={study?.id}
-                    participant={participant}
-                    consents={consents}
-                  />
-                );
-              } else {
-                return (
-                  <UserRowWrapper
-                    key={num}
-                    num={num}
-                    studyId={study?.id}
-                    participant={participant}
-                    consents={consents}
-                  />
-                );
-              }
-            })}
-          </div>
-
-          {count > 5 && (
-            <ParticipantsPagination
-              page={page}
-              perPage={perPage}
-              count={count}
-              setPage={setPage}
-            />
-          )}
-        </div>
-      </div>
+      <Grid studyId={study?.id} participants={participants} />
     </div>
   );
 }

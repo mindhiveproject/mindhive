@@ -6,6 +6,11 @@ import { CHANGE_DATASET_STATUS } from "../../../../../Mutations/Dataset";
 import { GET_PARTICIPANT_RESULTS } from "../../../../../Queries/Result";
 import { GET_STUDY_RESULTS } from "../../../../../Queries/Study";
 
+import {
+  GET_USER_RESULTS,
+  GET_GUEST_RESULTS,
+} from "../../../../../Queries/Result";
+
 export default function ChangeDatasetStatus({
   studyId,
   participantId,
@@ -29,6 +34,8 @@ export default function ChangeDatasetStatus({
           id: studyId,
         },
       },
+      { query: GET_USER_RESULTS, variables: { id: participantId } },
+      { query: GET_GUEST_RESULTS, variables: { id: participantId } },
     ],
   });
 
