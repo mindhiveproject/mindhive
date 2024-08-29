@@ -55,6 +55,7 @@ export const MY_TASKS = gql`
           }
         ]
       }
+      orderBy: [{ createdAt: desc }]
     ) {
       id
       title

@@ -47,6 +47,7 @@ export const MY_STUDIES = gql`
           { collaborators: { some: { id: { equals: $id } } } }
         ]
       }
+      orderBy: [{ createdAt: desc }]
     ) {
       id
       title
