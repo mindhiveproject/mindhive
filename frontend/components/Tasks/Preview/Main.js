@@ -7,11 +7,15 @@ export default function TaskPreview({ user, study, id, close }) {
     <StyledPreview>
       <div className="frame"></div>
       <div className="message">
-        THIS IS A TASK PREVIEW. YOUR DATA ARE NOT SAVED.
+        {close
+          ? "THIS IS A TASK PREVIEW. YOUR DATA ARE NOT SAVED."
+          : "CLOSE THIS TAB TO STOP PREVIEW"}
       </div>
-      <div className="closeBtn" onClick={() => close()}>
-        <span>&times;</span>
-      </div>
+      {close && (
+        <div className="closeBtn" onClick={() => close()}>
+          <span>&times;</span>
+        </div>
+      )}
       <div className="preview">
         <TaskRun user={user} study={study} id={id} onFinish={close} />
       </div>

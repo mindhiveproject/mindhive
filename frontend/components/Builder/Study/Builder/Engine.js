@@ -1,7 +1,6 @@
 import { useState, useEffect, useReducer } from "react";
 
 import uniqid from "uniqid";
-import generate from "project-name-generator";
 
 import createEngine, {
   DiagramModel,
