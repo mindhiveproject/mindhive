@@ -19,7 +19,7 @@ async function copyProposalBoard(
   const template = await context.query.ProposalBoard.findOne({
     where: { id: id },
     query:
-      "id slug title description settings sections { id title position cards { id title description position content } }",
+      "id slug title description settings sections { id title position cards { id type title description position content } }",
   });
 
   // make a full copy
@@ -27,7 +27,6 @@ async function copyProposalBoard(
     title: template.title,
     description: template.description,
     settings: template.settings,
-    // slug: template.slug,
     slug: `${template.slug}-${Date.now()}-${Math.round(
       Math.random() * 100000
     )}`,
@@ -73,7 +72,7 @@ async function copyProposalBoard(
       await Promise.all(
         templateSection.cards.map(async (card, i) => {
           const templateCard = section.cards[i];
-          const newCard = await context.db.ProposalCard.createOne(
+          await context.db.ProposalCard.createOne(
             {
               data: {
                 section: {
@@ -81,6 +80,7 @@ async function copyProposalBoard(
                     id: newSection.id,
                   },
                 },
+                type: templateCard.type,
                 title: templateCard.title,
                 description: templateCard.description,
                 content: templateCard.content,

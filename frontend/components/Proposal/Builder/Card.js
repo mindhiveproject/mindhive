@@ -1,9 +1,8 @@
-import { validate } from "graphql";
-import React, { Component } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { Draggable } from "react-smooth-dnd";
 
 import { Image, Popup } from "semantic-ui-react";
+import { StyledProposalCard } from "../../styles/StyledProposal";
 
 export default function Card({
   card,
@@ -44,16 +43,16 @@ export default function Card({
 
   return (
     <Draggable key={card.id}>
-      <div
-        className="card"
+      <StyledProposalCard
         onClick={() => {
           openCard(card);
         }}
+        type={card?.type}
       >
         <div className="card-drag-handle">
           {!proposalBuildMode && (
             <div className="card-information">
-              <div>
+              <div className="card-left-side">
                 <Popup
                   content={
                     card?.assignedTo.length
@@ -79,33 +78,44 @@ export default function Card({
                   size="huge"
                 />
               </div>
-              <div>
-                <div>{ReactHtmlParser(card.title)}</div>
-                {status && <div className="status">{status}</div>}
-              </div>
-
-              <div>
-                {card?.isEditedBy?.username && (
-                  <div className="editedByAvatar">
-                    <Popup
-                      content={`The card is currently being edited by ${card?.isEditedBy?.username}`}
-                      trigger={
-                        card?.isEditedBy?.image?.image?.publicUrlTransformed ? (
-                          <Image
-                            src={
-                              card?.isEditedBy?.image?.image
-                                ?.publicUrlTransformed
-                            }
-                            avatar
-                          />
-                        ) : (
-                          <Image src="/assets/icons/builder/page.svg" avatar />
-                        )
-                      }
-                      size="huge"
-                    />
+              <div className="card-right-side">
+                <div className="card-type">
+                  <span>
+                    {card?.type.charAt(0).toUpperCase() +
+                      card?.type.slice(1).toLowerCase()}
+                  </span>
+                </div>
+                <div className="card-title">
+                  <div>
+                    <div>{ReactHtmlParser(card.title)}</div>
+                    {status && <div className="status">{status}</div>}
                   </div>
-                )}
+                  <div className="editedByAvatar">
+                    {card?.isEditedBy?.username && (
+                      <Popup
+                        content={`The card is currently being edited by ${card?.isEditedBy?.username}`}
+                        trigger={
+                          card?.isEditedBy?.image?.image
+                            ?.publicUrlTransformed ? (
+                            <Image
+                              src={
+                                card?.isEditedBy?.image?.image
+                                  ?.publicUrlTransformed
+                              }
+                              avatar
+                            />
+                          ) : (
+                            <Image
+                              src="/assets/icons/builder/page.svg"
+                              avatar
+                            />
+                          )
+                        }
+                        size="huge"
+                      />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -127,7 +137,7 @@ export default function Card({
             />
           </div>
         )}
-      </div>
+      </StyledProposalCard>
     </Draggable>
   );
 }

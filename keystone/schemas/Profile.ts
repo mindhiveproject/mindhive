@@ -11,7 +11,6 @@ import {
   calendarDay,
   multiselect,
 } from "@keystone-6/core/fields";
-// import slugify from "slugify";
 import { permissions, rules } from "../access";
 
 import uniqid from "uniqid";

@@ -235,105 +235,10 @@ export const StyledProposal = styled.div`
       cursor: pointer;
       img {
         width: 20px;
+        opacity: 0.1;
       }
-    }
-  }
-
-  .card {
-    background: #ffffff;
-    border: 1px solid #e6e6e6;
-    box-sizing: border-box;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    cursor: pointer;
-    margin: 3px 10px;
-    position: relative;
-    .card-drag-handle {
-      display: grid;
-      margin: 10px;
-      font-family: Lato;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 24px;
-      letter-spacing: 0em;
-    }
-    .deleteCardBtn {
-      position: absolute;
-      bottom: -5px;
-      left: -5px;
-      cursor: pointer;
-      img {
-        width: 20px;
-      }
-    }
-    .card-information {
-      display: grid;
-      grid-template-columns: 30px 1fr 30px;
-      grid-gap: 10px;
-      align-items: center;
-      .status {
-        color: #007c70;
-        font-family: Lato;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-      }
-      .editedByAvatar {
-      }
-      .info-assigned-container {
-        display: grid;
-        justify-items: baseline;
-        grid-gap: 5px;
-      }
-      .info-assigned {
-        display: grid;
-        align-items: center;
-        color: #666666;
-        background: #ffffff;
-        border: 1px solid #e6e6e6;
-        box-sizing: border-box;
-        border-radius: 60px;
-        font-family: Lato;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        letter-spacing: 0.05em;
-        padding: 1px 7px 1px 7px;
-      }
-      .info-status {
-        width: fit-content;
-        display: grid;
-        align-items: center;
-        box-sizing: border-box;
-        border: 1px solid transparent;
-        border-radius: 60px;
-        font-family: Lato;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        letter-spacing: 0.05em;
-        padding: 1px 7px 1px 7px;
-      }
-      .status-not-started {
-        color: #896900;
-        background: rgba(254, 210, 79, 0.18);
-      }
-      .status-started {
-        color: #0063ce;
-        background: rgba(0, 117, 224, 0.12);
-      }
-      .status-needs-feedback {
-        color: #c92927;
-        background: rgba(224, 103, 102, 0.12);
-      }
-      .status-feedback-given {
-        color: #6f25ce !important;
-        background: rgba(111, 37, 206, 0.12) !important;
-      }
-      .status-completed {
-        color: #00635a;
-        background: rgba(0, 124, 112, 0.12);
+      img: hover {
+        opacity: 1;
       }
     }
   }
@@ -608,6 +513,187 @@ export const StyledProposal = styled.div`
     }
     .jodit-ui-button__text {
       color: black;
+    }
+  }
+`;
+
+export const StyledProposalCard = styled.div`
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 3px 10px;
+  position: relative;
+  min-width: 264px;
+  min-height: 71px;
+
+  border-right: 8px solid;
+  border-right-color: ${(props) =>
+    props.type === "PROPOSAL"
+      ? "#623A39"
+      : props.type === "ASSIGNMENT"
+      ? "#2C9389"
+      : props.type === "LESSON"
+      ? "#E06766"
+      : props.type === "ARTICLE"
+      ? "#28619E"
+      : props.type === "SURVEY"
+      ? "#007c70"
+      : props.type === "LINK"
+      ? "#C9D6CD"
+      : "#FFE29D"};
+
+  .card-drag-handle {
+    display: grid;
+    font-family: Lato;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: 0em;
+  }
+  .deleteCardBtn {
+    position: absolute;
+    bottom: -5px;
+    left: -5px;
+    cursor: pointer;
+    img {
+      width: 20px;
+      opacity: 0.1;
+    }
+    img: hover {
+      opacity: 1;
+    }
+  }
+  .card-information {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    align-items: center;
+    .status {
+      color: #007c70;
+      font-family: Lato;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+    }
+
+    .info-assigned-container {
+      display: grid;
+      justify-items: baseline;
+      grid-gap: 5px;
+    }
+    .info-assigned {
+      display: grid;
+      align-items: center;
+      color: #666666;
+      background: #ffffff;
+      border: 1px solid #e6e6e6;
+      box-sizing: border-box;
+      border-radius: 60px;
+      font-family: Lato;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      padding: 1px 7px 1px 7px;
+    }
+    .info-status {
+      width: fit-content;
+      display: grid;
+      align-items: center;
+      box-sizing: border-box;
+      border: 1px solid transparent;
+      border-radius: 60px;
+      font-family: Lato;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      padding: 1px 7px 1px 7px;
+    }
+    .status-not-started {
+      color: #896900;
+      background: rgba(254, 210, 79, 0.18);
+    }
+    .status-started {
+      color: #0063ce;
+      background: rgba(0, 117, 224, 0.12);
+    }
+    .status-needs-feedback {
+      color: #c92927;
+      background: rgba(224, 103, 102, 0.12);
+    }
+    .status-feedback-given {
+      color: #6f25ce !important;
+      background: rgba(111, 37, 206, 0.12) !important;
+    }
+    .status-completed {
+      color: #00635a;
+      background: rgba(0, 124, 112, 0.12);
+    }
+    img {
+      width: 20px !important;
+    }
+    .card-left-side {
+      display: grid;
+      justify-content: center;
+    }
+    .card-right-side {
+      display: grid;
+      margin: 0px 5px 5px 5px;
+      .card-type {
+        display: grid;
+        justify-content: end;
+        font-family: Lato;
+        font-size: 8px;
+        font-weight: 600;
+        line-height: 13px;
+        text-align: center;
+        span {
+          margin-top: 5px;
+          border-radius: 10px;
+          padding: 1px 8px 1px 8px;
+          background: ${(props) =>
+            props.type === "PROPOSAL"
+              ? "#ebe5e5"
+              : props.type === "ASSIGNMENT"
+              ? "#98cbc6"
+              : props.type === "LESSON"
+              ? "#f9e1df"
+              : props.type === "ARTICLE"
+              ? "#b8d2ec"
+              : props.type === "SURVEY"
+              ? "#FFC107"
+              : props.type === "LINK"
+              ? "#C9D6CD"
+              : "#FFE29D"};
+          color: ${(props) =>
+            props.type === "PROPOSAL"
+              ? "#623A39"
+              : props.type === "ASSIGNMENT"
+              ? "#004A43"
+              : props.type === "LESSON"
+              ? "#E06766"
+              : props.type === "ARTICLE"
+              ? "#28619E"
+              : props.type === "SURVEY"
+              ? "#856502"
+              : props.type === "LINK"
+              ? "#3C443E"
+              : "#FFE29D"};
+        }
+      }
+      .card-title {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        margin-bottom: 5px;
+      }
+      .editedByAvatar {
+        display: grid;
+        align-content: end;
+      }
     }
   }
 `;

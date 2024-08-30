@@ -443,6 +443,7 @@ model ProposalCard {
   isEditedBy       Profile?         @relation("ProposalCard_isEditedBy", fields: [isEditedById], references: [id])
   isEditedById     String?          @map("isEditedBy")
   lastTimeEdited   DateTime?
+  type             String?          @default("PROPOSAL")
 
   @@index([sectionId])
   @@index([isEditedById])

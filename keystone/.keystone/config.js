@@ -105,13 +105,12 @@ async function copyProposalBoard(root, {
   }
   const template = await context.query.ProposalBoard.findOne({
     where: { id },
-    query: "id slug title description settings sections { id title position cards { id title description position content } }"
+    query: "id slug title description settings sections { id title position cards { id type title description position content } }"
   });
   const argumentsToCopy = {
     title: template.title,
     description: template.description,
     settings: template.settings,
-    // slug: template.slug,
     slug: `${template.slug}-${Date.now()}-${Math.round(
       Math.random() * 1e5
     )}`
@@ -152,7 +151,7 @@ async function copyProposalBoard(root, {
       await Promise.all(
         templateSection.cards.map(async (card, i2) => {
           const templateCard = section.cards[i2];
-          const newCard = await context.db.ProposalCard.createOne(
+          await context.db.ProposalCard.createOne(
             {
               data: {
                 section: {
@@ -160,6 +159,7 @@ async function copyProposalBoard(root, {
                     id: newSection.id
                   }
                 },
+                type: templateCard.type,
                 title: templateCard.title,
                 description: templateCard.description,
                 content: templateCard.content,
@@ -1900,7 +1900,18 @@ var ProposalCard = (0, import_core20.list)({
     isEditedBy: (0, import_fields23.relationship)({
       ref: "Profile.editsProposalCard"
     }),
-    lastTimeEdited: (0, import_fields23.timestamp)()
+    lastTimeEdited: (0, import_fields23.timestamp)(),
+    type: (0, import_fields23.select)({
+      options: [
+        { label: "Proposal", value: "PROPOSAL" },
+        { label: "Assignment", value: "ASSIGNMENT" },
+        { label: "Lesson", value: "LESSON" },
+        { label: "Article", value: "ARTICLE" },
+        { label: "Survey", value: "SURVEY" },
+        { label: "Link", value: "LINK" }
+      ],
+      defaultValue: "PROPOSAL"
+    })
   }
 });
 

@@ -46,5 +46,16 @@ export const ProposalCard = list({
       ref: "Profile.editsProposalCard",
     }),
     lastTimeEdited: timestamp(),
+    type: select({
+      options: [
+        { label: "Proposal", value: "PROPOSAL" },
+        { label: "Assignment", value: "ASSIGNMENT" },
+        { label: "Lesson", value: "LESSON" },
+        { label: "Article", value: "ARTICLE" },
+        { label: "Survey", value: "SURVEY" },
+        { label: "Link", value: "LINK" },
+      ],
+      defaultValue: "PROPOSAL",
+    }),
   },
 });

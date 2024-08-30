@@ -84,11 +84,11 @@ export const PROPOSAL_QUERY = gql`
         title
         slug
         author {
-          id 
+          id
           username
         }
         collaborators {
-          id 
+          id
           username
         }
       }
@@ -99,6 +99,7 @@ export const PROPOSAL_QUERY = gql`
         position
         cards {
           id
+          type
           title
           content
           settings
@@ -129,6 +130,7 @@ export const GET_CARD_CONTENT = gql`
   query GET_CARD_CONTENT($id: ID!) {
     proposalCard(where: { id: $id }) {
       id
+      type
       title
       description
       content

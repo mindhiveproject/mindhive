@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
@@ -12,6 +12,7 @@ import JoditEditor from "../../Jodit/Editor";
 import Assigned from "./Forms/Assigned";
 import Status from "./Forms/Status";
 import { useState, useEffect, useRef } from "react";
+import CardType from "./Forms/Type";
 
 export default function ProposalCard({
   user,
@@ -192,6 +193,13 @@ export default function ProposalCard({
           </div>
           {!isPreview && (
             <div className="infoBoard">
+              {proposalBuildMode && (
+                <div>
+                  <h4>Type</h4>
+                  <CardType type={inputs?.type} handleChange={handleChange} />
+                </div>
+              )}
+
               {!proposalBuildMode && (
                 <>
                   <div>

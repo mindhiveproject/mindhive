@@ -15,6 +15,7 @@ export const COPY_PROPOSAL_MUTATION = gql`
         position
         cards {
           id
+          type
           title
           position
           section {
@@ -195,6 +196,7 @@ export const UPDATE_CARD_CONTENT = gql`
     $comment: String
     $settings: JSON
     $assignedTo: [ProfileWhereUniqueInput!]
+    $type: String
   ) {
     updateProposalCard(
       where: { id: $id }
@@ -205,6 +207,7 @@ export const UPDATE_CARD_CONTENT = gql`
         comment: $comment
         settings: $settings
         assignedTo: { set: $assignedTo }
+        type: $type
       }
     ) {
       id
