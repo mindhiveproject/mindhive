@@ -76,7 +76,7 @@ export default function Prompt({
 
   const saveResponsesAndProceed = async ({ proceedToNextTask }) => {
     // save the data usage consent response given by user
-    if (!dataUsageConsentWasGiven) {
+    if (!dataUsageConsentWasGiven && dataUse) {
       const updatedStudiesInfo = {
         ...studiesInfo,
         [study?.id]: {
@@ -87,6 +87,7 @@ export default function Prompt({
           },
         },
       };
+
       if (user.type === "GUEST") {
         await updateGuestStudyInfo({
           variables: { studiesInfo: updatedStudiesInfo },
