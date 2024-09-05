@@ -16,7 +16,7 @@ export default function MyUpdates({ user }) {
 
   return (
     <div className="updatesBoard">
-      <h2>Latest updates</h2>
+      <div className="h26">Latest updates</div>
       {updates.length === 0 && <p>There are no updates at the moment.</p>}
       <div className="updates">
         {updates.map((update, num) => (

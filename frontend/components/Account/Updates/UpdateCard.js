@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client";
 import moment from "moment";
 import Link from "next/link";
 import ReactHtmlParser from "react-html-parser";
+import { Icon } from "semantic-ui-react";
 
 import { StyledUpdateCard } from "../../styles/StyledUpdateCard";
 
@@ -32,19 +33,25 @@ export default function UpdateCard({ user, update }) {
 
   return (
     <StyledUpdateCard>
-      <div className="infoMessage">
-        <div>{ReactHtmlParser(update?.content?.message)}</div>
-        <div className="contextInfo">{moment(update.createdAt).fromNow()}</div>
+      <div className="updateIcon">
+        <img src="/assets/icons/bell.svg" alt="bell" />
       </div>
-      <div className="linkMessage">
-        <div onClick={() => openUpdate()}>
-          <Link href={`${update.link}`} as={`${update.link}`} target="_blank">
-            <p>Open</p>
-          </Link>
+      <div className="updateContent">
+        <div className="title">{ReactHtmlParser(update?.content?.title)}</div>
+        <div className="message">
+          {ReactHtmlParser(update?.content?.message)}
         </div>
+        {/* <div className="contextInfo">{moment(update.createdAt).fromNow()}</div> */}
+        <Link href={`${update.link}`} as={`${update.link}`} target="_blank">
+          <div className="linkTitle" onClick={() => openUpdate()}>
+            {update?.content?.linkTitle
+              ? ReactHtmlParser(update?.content?.linkTitle)
+              : "Open"}
+          </div>
+        </Link>
       </div>
-      <div className="deleteButton" onClick={() => deleteUpdate()}>
-        &times;
+      <div className="updateDelete" onClick={() => deleteUpdate()}>
+        <img src="/assets/icons/close.svg" alt="close" />
       </div>
     </StyledUpdateCard>
   );

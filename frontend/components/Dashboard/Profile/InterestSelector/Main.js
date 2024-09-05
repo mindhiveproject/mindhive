@@ -45,21 +45,80 @@ export default function InterestSelector({ user }) {
     });
   };
 
+  const addInterest = ({ tag }) => {
+    const selectedInterests =
+      inputs?.interests.map((i) => {
+        return {
+          id: i?.id,
+        };
+      }) || [];
+    if (!selectedInterests.map((interest) => interest?.id).includes(tag?.id)) {
+      const updatedInterests = [...selectedInterests, { id: tag?.id }] || [];
+      handleChange({
+        target: { name: "interests", value: updatedInterests },
+      });
+    }
+  };
+
   return (
-    <div>
-      <h2>Search interests</h2>
-      <Dropdown
-        placeholder="Begin typing to search for interests"
-        fluid
-        multiple
-        search
-        selection
-        options={tagValues}
-        onChange={(e, data) => handleTagsUpdate(data.value)}
-        value={inputs?.interests.map((tag) => tag?.id) || []}
-      />
-      <h2>Suggested interests</h2>
-      <button onClick={async () => await updateProfile()}>Save changes</button>
+    <div className="interestsSelector">
+      <div>
+        <div className="titleIcon">
+          <h2>Search interests</h2>
+          <div>Min 3, Max 10</div>
+        </div>
+
+        <Dropdown
+          placeholder="Begin typing to search for interests"
+          fluid
+          multiple
+          search
+          selection
+          options={tagValues}
+          onChange={(e, data) => handleTagsUpdate(data.value)}
+          value={inputs?.interests.map((tag) => tag?.id) || []}
+        />
+      </div>
+
+      <div>
+        <h2>Suggested interests</h2>
+        <div className="suggestedInterests">
+          {tags
+            .filter(
+              (tag) =>
+                !inputs?.interests.map((tag) => tag?.id).includes(tag?.id)
+            )
+            .sort((a, b) => {
+              // Convert titles to lowercase to ensure case-insensitive sorting
+              const titleA = a.title.toLowerCase();
+              const titleB = b.title.toLowerCase();
+
+              if (titleA < titleB) {
+                return -1; // a comes before b
+              }
+              if (titleA > titleB) {
+                return 1; // a comes after b
+              }
+              return 0; // a and b are equal
+            })
+            .map((tag) => (
+              <div className="interest">
+                <div>{tag.title}</div>
+                <img
+                  src="/assets/icons/add.svg"
+                  alt="add"
+                  onClick={() => addInterest({ tag })}
+                />
+              </div>
+            ))}
+        </div>
+      </div>
+
+      <div>
+        <button onClick={async () => await updateProfile()}>
+          Save changes
+        </button>
+      </div>
     </div>
   );
 }

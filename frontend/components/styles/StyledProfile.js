@@ -337,6 +337,58 @@ export const StyledCreateProfileFlow = styled.div`
       }
     }
   }
+  .interests {
+    display: grid;
+    grid-gap: 3rem;
+    margin: 12rem 9rem;
+    .interestsHeader {
+      display: grid;
+      grid-gap: 15px;
+      margin: 1rem 17.7rem;
+      justify-items: center;
+      .h40 {
+        //styleName: H2;
+        font-family: Lato;
+        font-size: 40px;
+        font-weight: 600;
+        line-height: 50px;
+        text-align: left;
+        color: var(--neutral_black1, #171717);
+      }
+      .p15 {
+        //styleName: BODY_1;
+        font-family: Lato;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: center;
+        color: var(--neutral_grey2, #3b3b3b);
+      }
+    }
+    .interestsSelector {
+      display: grid;
+      grid-gap: 3rem;
+      .suggestedInterests {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, auto));
+        grid-gap: 16px;
+        .interest {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          grid-gap: 2rem;
+          align-items: center;
+          background: #ffffff;
+          border: 1.5px solid #dfdfdf;
+          padding: 8px 16px;
+          width: auto;
+          border-radius: 20px;
+          img {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
   .navButtons {
     display: grid;
     grid-template-columns: 186px 186px;

@@ -12,7 +12,11 @@ export default function Home({ query, user }) {
     <StyledHome>
       <div className="titleIcon">
         <div>
-          <h1>Welcome{username && `, ${username}`}!</h1>
+          <div className="h36">Welcome{username && `, ${username}`}!</div>
+          <div className="p20">
+            You can edit your Profile, schedule time with mentors, stay
+            up-to-date with the latest MH notifications here
+          </div>
         </div>
 
         <div>
@@ -27,28 +31,29 @@ export default function Home({ query, user }) {
       </div>
 
       {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
-        <div className="createProfileArea">
-          <div></div>
-          <div>
-            <h2>Create your MindHive profile</h2>
-            <p>
-              To better connect with the MindHive community, please create your
-              profile
-            </p>
-
-            <Link
-              href={{
-                pathname: `/dashboard/profile/create`,
-                query: {
-                  page: "type",
-                },
-              }}
-            >
-              <button>Create Profile</button>
-            </Link>
-          </div>
+        <div className="createProfileAreaWrapper">
+          <Link
+            href={{
+              pathname: `/dashboard/profile/create`,
+              query: {
+                page: "type",
+              },
+            }}
+          >
+            <div className="createProfileArea">
+              <div>
+                <div className="h32">Create your MindHive profile</div>
+                <div className="p18">
+                  Ready to join the MindHive community? Create your profile now
+                  by clicking here.
+                </div>
+              </div>
+            </div>
+          </Link>
         </div>
       )}
+
+      <MyUpdates user={user} />
 
       <div className="header">
         <div className="idInfo">
@@ -80,7 +85,6 @@ export default function Home({ query, user }) {
         </div>
       </div>
 
-      <MyUpdates user={user} />
       <Links />
 
       {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (

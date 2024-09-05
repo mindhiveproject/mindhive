@@ -79,17 +79,6 @@ export const StyledDashboardContent = styled.div`
     border-radius: 5px;
   }
 
-  .updatesBoard {
-    display: grid;
-    margin-top: 40px;
-  }
-
-  .updates {
-    margin-top: 30px;
-    display: grid;
-    grid-row-gap: 25px;
-  }
-
   .dropdown {
     display: grid;
     justify-content: end;

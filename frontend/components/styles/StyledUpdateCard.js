@@ -1,15 +1,15 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const StyledUpdateCard = styled.div`
   position: relative;
   display: grid;
-  max-width: 560px;
-  grid-template-columns: 4fr 1fr;
+  margin: 0px 0px 0px 0px;
+  grid-template-columns: 50px 1fr 50px;
   background: #ffffff;
   border: 1px solid #ebebeb;
   box-sizing: border-box;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.09), 0px 5px 6px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
+
   h2 {
     font-family: Roboto;
     font-style: normal;
@@ -27,15 +27,41 @@ export const StyledUpdateCard = styled.div`
     text-decoration-line: underline;
     color: #007c70;
   }
-  .infoMessage {
-    padding: 31px;
-    border-right: 1px solid #ebebeb;
-  }
-  .linkMessage {
-    padding: 10px;
+  .updateIcon {
     display: grid;
-    align-items: center;
     justify-content: center;
+    margin-top: 16px;
+  }
+  .updateContent {
+    display: grid;
+    margin: 16px 5px 16px 5px;
+    .title {
+      font-family: Lato;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 18px;
+      text-align: left;
+      color: #373737;
+      margin-bottom: 18px;
+    }
+    .message {
+      font-family: Lato;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 13px;
+      text-align: left;
+      color: #0000008f;
+      margin-bottom: 10px;
+    }
+    .linkTitle {
+      font-family: Lato;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 13px;
+      text-align: left;
+      color: #007c70;
+      text-decoration: underline;
+    }
   }
   .contextInfo {
     font-family: Roboto;
@@ -47,21 +73,10 @@ export const StyledUpdateCard = styled.div`
     text-align: left;
     color: #969696;
   }
-  .deleteButton {
-    position: absolute;
-    top: -20%;
-    right: -5%;
-    width: 3.3rem;
-    line-height: 3rem;
-    text-align: center;
+  .updateDelete {
+    display: grid;
+    justify-content: center;
     cursor: pointer;
-    border-radius: 2.25rem;
-    color: #969696;
-    padding-bottom: 5px;
-    font-size: 2rem;
-    :hover {
-      transform: scale(1.1);
-      transition: transform 0.5s;
-    }
+    margin-top: 16px;
   }
 `;
