@@ -1,8 +1,9 @@
 import Link from "next/link";
 
 import { StyledTaskCard } from "../../styles/StyledCard";
+import ManageFavorite from "../../User/ManageFavorite";
 
-export default function TaskCard({ task, url, id, name }) {
+export default function TaskCard({ user, task, url, id, name }) {
   return (
     <Link
       href={{
@@ -23,6 +24,7 @@ export default function TaskCard({ task, url, id, name }) {
             <div>{task?.title}</div>
 
             <div className="rightSide">
+              {user && <ManageFavorite user={user} id={task?.id} />}
               {/* {user && this.props.participateMode && (
               <ManageFavorites id={task?.id} isFavorite={isFavorite}>
                 {isFavorite ? (

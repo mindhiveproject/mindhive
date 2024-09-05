@@ -73,6 +73,7 @@ export default function DiscoverTaskBank({ query, user, isDashboard }) {
       <div className="tasks">
         {tasks.map((task) => (
           <TaskCard
+            user={user}
             key={task?.id}
             task={task}
             url={user ? "/dashboard/discover/tasks/" : `/tasks/${task?.slug}`}

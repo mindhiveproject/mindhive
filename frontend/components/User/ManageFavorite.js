@@ -25,7 +25,8 @@ export default function ManageFavorite({ user, search, componentType, id }) {
 
   return (
     <div
-      onClick={async () => {
+      onClick={async (e) => {
+        e.preventDefault();
         await manageFavorite({
           variables: {
             id: user?.id,

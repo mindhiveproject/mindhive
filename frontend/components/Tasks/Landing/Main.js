@@ -7,6 +7,7 @@ import ReactHtmlParser from "react-html-parser";
 
 import { GET_TASK } from "../../Queries/Task";
 import TaskPage from "./TaskPage";
+import ManageFavorite from "../../User/ManageFavorite";
 
 export default function TaskLandingMain({ slug }) {
   const user = useContext(UserContext);
@@ -18,7 +19,11 @@ export default function TaskLandingMain({ slug }) {
 
   return (
     <>
-      <h1>{task?.title}</h1>
+      <div className="titleIcon">
+        <h1>{task?.title}</h1>
+        <div>{user && <ManageFavorite user={user} id={task?.id} />}</div>
+      </div>
+
       <div>
         <h3>{ReactHtmlParser(task?.descriptionForParticipants)}</h3>
       </div>
