@@ -24,7 +24,7 @@ export default function ChangeDatasetStatuses({
   const allIncluded = areIncluded.length && areIncluded?.every((v) => !!v);
 
   const queriesToRefetch =
-    type === "user"
+    type === "USER"
       ? [
           { query: GET_USER_RESULTS, variables: { id: participantId } },
           { query: GET_STUDY_RESULTS, variables: { id: studyId } },
