@@ -47,7 +47,7 @@ export const GET_MY_CLASS_ASSIGNMENTS = gql`
   query GET_MY_CLASS_ASSIGNMENTS($userId: ID!, $classId: ID) {
     assignments(
       where: {
-        OR: [
+        AND: [
           { author: { id: { equals: $userId } } }
           { classes: { some: { id: { equals: $classId } } } }
         ]
