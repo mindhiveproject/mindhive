@@ -7,7 +7,7 @@ import { GET_MY_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import AssignmentTab from "./Tab";
 import AddAssignment from "./Add";
 import ViewAssignment from "./View";
-import Overview from "./Overview/Main";
+import Overview from "../Overview/HomeworkCompletion";
 
 export default function Settings({ myclass, user, query }) {
   const router = useRouter();

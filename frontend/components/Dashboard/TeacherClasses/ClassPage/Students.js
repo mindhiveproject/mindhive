@@ -9,8 +9,10 @@ import {
   REMOVE_STUDENT_FROM_CLASS,
 } from "../../../Mutations/Classes";
 import { GET_CLASS } from "../../../Queries/Classes";
+import StudyCompletionOverview from "./Overview/StudyCompletion";
 
 export default function ClassStudents({ myclass, user, query }) {
+  const { action } = query;
   const { origin } = absoluteUrl();
 
   const students = myclass?.students || [];
@@ -85,6 +87,10 @@ export default function ClassStudents({ myclass, user, query }) {
     alert("The link is copied");
   };
 
+  if (action === "overview") {
+    return <StudyCompletionOverview myclass={myclass} user={user} />;
+  }
+
   return (
     <div className="students">
       <div className="topNavigation">
@@ -107,6 +113,21 @@ export default function ClassStudents({ myclass, user, query }) {
           <h2>{myclass.code}</h2>
         </div>
       </div>
+
+      <div>
+        <Link
+          href={{
+            pathname: `/dashboard/myclasses/${myclass?.code}`,
+            query: {
+              page: "students",
+              action: "overview",
+            },
+          }}
+        >
+          <button className="secondary">Study completion overview</button>
+        </Link>
+      </div>
+
       <div className="listHeader">
         <div></div>
         <div>Student/Username</div>

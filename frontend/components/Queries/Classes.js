@@ -108,6 +108,13 @@ export const GET_STUDENTS_DATA = gql`
         settings
         public
       }
+      studiesInfo
+      participantIn {
+        id
+        title
+        slug
+        flow
+      }
     }
   }
 `;

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
-import { GET_STUDENTS_DATA } from "../../../../../Queries/Classes";
+import { GET_STUDENTS_DATA } from "../../../../Queries/Classes";
 
 // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-grid.css";
@@ -10,7 +10,12 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 // React Data Grid Component
 import { AgGridReact } from "ag-grid-react";
 
-export default function Overview({ myclass, user, query, assignments }) {
+export default function HomeworkCompletion({
+  myclass,
+  user,
+  query,
+  assignments,
+}) {
   const assignmentsPublic = assignments.filter((a) => a?.public);
 
   const { data, loading, error } = useQuery(GET_STUDENTS_DATA, {
