@@ -41,3 +41,6 @@ yarn-error.log*
 
 # config file
 config.js
+
+# videos
+/videos

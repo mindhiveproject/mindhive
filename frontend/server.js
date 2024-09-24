@@ -1,6 +1,7 @@
 // server.js
 /* eslint-disable no-console */
 const express = require("express");
+const multer = require("multer");
 const next = require("next");
 const body = require("body-parser");
 const fs = require("fs");
@@ -34,6 +35,17 @@ const app = next({
 });
 
 const handle = app.getRequestHandler();
+
+// Configure multer for handling file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/videos/"); // Make sure this folder exists
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
 
 let server;
 app
@@ -191,6 +203,14 @@ app
         status: 202,
         statusText: "it worked",
       });
+    });
+
+    server.post("/api/upload", upload.single("video"), async (req, res) => {
+      if (!req.file) {
+        return res.status(400).send("No file uploaded.");
+      }
+      // Send the file URL back to the client
+      res.json({ filename: req.file.filename });
     });
 
     server.post("*", (req, res) => {

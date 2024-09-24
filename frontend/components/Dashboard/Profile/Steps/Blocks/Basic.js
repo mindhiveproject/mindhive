@@ -58,7 +58,7 @@ export default function BasicInformation({ query, user }) {
         <UpdateAvatarModal user={user} />
       </div>
 
-      <StyledInput method="POST" onSubmit={handleSubmit}>
+      <StyledInput>
         <div className="inputLineBlock">
           <div className="twoColumnsInput">
             <div>
@@ -141,7 +141,7 @@ export default function BasicInformation({ query, user }) {
         </div>
 
         <div className="saveButtonBlock">
-          <button type="submit">Save changes</button>
+          <button onClick={handleSubmit}>Save changes</button>
         </div>
       </StyledInput>
     </div>

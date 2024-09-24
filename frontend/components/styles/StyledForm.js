@@ -297,3 +297,64 @@ export const StyledInput = styled.div`
     }
   }
 `;
+
+export const StyledVideoUploader = styled.div`
+  display: grid;
+  width: 100%;
+  height: 460px;
+  border: 1.5px solid var(--Border-Default-Default, #d9d9d9);
+  border-radius: 10px;
+  align-content: center;
+  justify-items: center;
+  align-text: center;
+  .message {
+    margin: 3rem 0rem 5rem 0rem;
+    //styleName: H3;
+    font-family: Lato;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 32px;
+    text-align: left;
+  }
+  button {
+    background: white;
+    color: #007c70;
+    border: 1.5px solid var(--PRIMARY_GREEN3, #007c70);
+  }
+  .upload-area {
+    border: 2px dashed #ccc;
+    border-radius: 20px;
+    width: 480px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .upload-area.drag-active {
+    background-color: #f0f0f0;
+    border-color: #000;
+  }
+
+  .upload-area p {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .upload-area button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .upload-area button:hover {
+    background-color: #0056b3;
+  }
+`;

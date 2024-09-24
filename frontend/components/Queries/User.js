@@ -821,6 +821,7 @@ export const GET_PROFILE = gql`
         bioInformal
         location
         languages
+        introVideo
         occupation
         education
         mentorPreferGrade

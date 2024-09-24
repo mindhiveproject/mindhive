@@ -64,7 +64,7 @@ export default function Preferences({ query, user }) {
       </div>
       <Divider />
 
-      <StyledInput method="POST" onSubmit={handleSubmit}>
+      <StyledInput>
         <div className="inputLineBlock">
           <h3>Grade Level</h3>
           <p>
@@ -159,7 +159,7 @@ export default function Preferences({ query, user }) {
         </div>
 
         <div className="saveButtonBlock">
-          <button type="submit">Save changes</button>
+          <button onClick={handleSubmit}>Save changes</button>
         </div>
       </StyledInput>
     </div>

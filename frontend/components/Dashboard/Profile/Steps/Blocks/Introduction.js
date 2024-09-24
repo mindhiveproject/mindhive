@@ -1,5 +1,4 @@
 import useForm from "../../../../../lib/useForm";
-import UpdateAvatarModal from "../../../../Account/AvatarEditor/AvatarModal";
 import { Divider } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 
@@ -7,15 +6,11 @@ import { GET_PROFILE } from "../../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../../Mutations/User";
 
 import { StyledForm } from "../../../../styles/StyledForm";
+import VideoUploader from "./VideoUploader";
 
 export default function IntroductionVideo({ query, user }) {
   const { inputs, handleChange } = useForm({
-    firstName: user?.firstName,
-    lastName: user?.lastName,
-    email: user?.email,
-    pronouns: user?.pronouns,
-    location: user?.location,
-    profileType: query?.type,
+    introVideo: user?.introVideo,
   });
 
   const [updateProfile, { data, loading, error }] = useMutation(
@@ -29,10 +24,21 @@ export default function IntroductionVideo({ query, user }) {
     }
   );
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  const onFileUpload = ({ filename, timestamp }) => {
+    handleChange({
+      target: {
+        name: "introVideo",
+        value: {
+          filename,
+          timestamp,
+        },
+      },
+    });
+  };
+
+  const saveChanges = async () => {
     await updateProfile();
-  }
+  };
 
   return (
     <div className="profileBlock">
@@ -46,6 +52,25 @@ export default function IntroductionVideo({ query, user }) {
         </p>
       </div>
       <Divider />
+
+      {inputs?.introVideo?.filename ? (
+        <video width="100%" controls>
+          <source
+            src={`/videos/${inputs?.introVideo?.filename}`}
+            type="video/mp4"
+          />
+          Your browser does not support the video tag.
+        </video>
+      ) : (
+        <VideoUploader
+          publicReadableId={user?.publicReadableId}
+          onFileUpload={onFileUpload}
+        />
+      )}
+
+      <div className="saveButtonBlock">
+        <button onClick={saveChanges}>Save changes</button>
+      </div>
     </div>
   );
 }
