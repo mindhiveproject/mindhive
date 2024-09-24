@@ -53,7 +53,10 @@ app
   .then(() => {
     server = express();
 
-    server.use(body.json({ limit: "50mb" }));
+    server.use(body.json({ limit: "100mb" }));
+
+    // Serve static files from the 'public' directory
+    server.use(express.static(path.join(__dirname, "public")));
 
     server.post("/api/templates/upload", async (req, res) => {
       const { name, script, file } = req.body;
