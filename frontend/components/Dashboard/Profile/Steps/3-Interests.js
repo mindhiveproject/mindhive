@@ -1,4 +1,3 @@
-import Link from "next/link";
 import InterestSelector from "../InterestSelector/Main";
 
 export default function Interests({ query, user }) {
@@ -14,26 +13,6 @@ export default function Interests({ query, user }) {
       </div>
 
       <InterestSelector user={user} />
-      <div className="navButtons">
-        <Link
-          href={{
-            pathname: `/dashboard/profile/create`,
-            query: {
-              page: "about",
-            },
-          }}
-        >
-          <button className="secondary">Previous</button>
-        </Link>
-
-        <Link
-          href={{
-            pathname: `/dashboard`,
-          }}
-        >
-          <button className="primary">Finish</button>
-        </Link>
-      </div>
     </div>
   );
 }

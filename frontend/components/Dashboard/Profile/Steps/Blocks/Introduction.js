@@ -1,3 +1,4 @@
+import { useState } from "react";
 import useForm from "../../../../../lib/useForm";
 import { Divider } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
@@ -5,10 +6,13 @@ import { useMutation } from "@apollo/client";
 import { GET_PROFILE } from "../../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../../Mutations/User";
 
-import { StyledForm } from "../../../../styles/StyledForm";
 import VideoUploader from "./VideoUploader";
 
+import { StyledSaveButton } from "../../../../styles/StyledProfile";
+
 export default function IntroductionVideo({ query, user }) {
+  const [changed, setChanged] = useState(false);
+
   const { inputs, handleChange } = useForm({
     introVideo: user?.introVideo,
   });
@@ -34,10 +38,12 @@ export default function IntroductionVideo({ query, user }) {
         },
       },
     });
+    setChanged(true);
   };
 
   const saveChanges = async () => {
     await updateProfile();
+    setChanged(false);
   };
 
   return (
@@ -68,9 +74,11 @@ export default function IntroductionVideo({ query, user }) {
         />
       )}
 
-      <div className="saveButtonBlock">
-        <button onClick={saveChanges}>Save changes</button>
-      </div>
+      <StyledSaveButton changed={changed}>
+        <button onClick={saveChanges} disabled={!changed}>
+          Save changes
+        </button>
+      </StyledSaveButton>
     </div>
   );
 }

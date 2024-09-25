@@ -45,7 +45,9 @@ const StyledHome = styled.div`
     color: var(--neutral_grey2, #3b3b3b);
   }
   .createProfileAreaWrapper {
-    margin: 9rem 6rem;
+    display: grid;
+    grid-gap: 4rem;
+    margin: 7rem 0rem;
   }
   .createProfileArea {
     display: grid;
@@ -62,7 +64,6 @@ const StyledHome = styled.div`
 
   .updatesBoard {
     display: grid;
-    margin-top: 40px;
     margin-bottom: 56px;
     .updates {
       display: grid;

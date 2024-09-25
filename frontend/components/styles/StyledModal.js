@@ -3,7 +3,7 @@ import styled from "styled-components";
 const StyledModal = styled.div`
   display: grid;
   grid-gap: 10px;
-  margin: 30px 10px;
+  margin: 30px 20px;
   /* justify-content: center; */
   align-items: stretch;
   /* text-align: center; */
@@ -54,6 +54,10 @@ const StyledModal = styled.div`
   }
   .red {
     color: red;
+  }
+  .centeredHeader {
+    display: grid;
+    justify-content: center;
   }
 `;
 

@@ -173,12 +173,26 @@ export const StyledCreateProfileFlow = styled.div`
   .progressBar {
     .ui.progress {
       background: var(--neutral_white, #fff);
+      border-radius: 10px;
     }
     .bar {
       background: var(--SECONDARY_BLUE2, #5381b1) !important;
+      border-radius: 10px;
     }
     .ui.progress > .label {
       font-size: 16px;
+    }
+    .progressLabels {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      justify-items: center;
+      margin-top: 16px;
+      font-family: Lato;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 18px;
+      text-align: left;
+      color: var(--neutral_grey2, #3b3b3b);
     }
   }
   .chooseProfileType {
@@ -237,7 +251,7 @@ export const StyledCreateProfileFlow = styled.div`
   .aboutMe {
     .profileBlock {
       display: grid;
-      grid-gap: 1rem;
+      grid-gap: 2rem;
       margin-top: 7.3rem;
       padding: 4rem 4.8rem;
       border-radius: 8px;
@@ -270,6 +284,7 @@ export const StyledCreateProfileFlow = styled.div`
         font-style: normal;
         font-weight: 600;
         line-height: 32px; /* 133.333% */
+        margin-bottom: 12px;
       }
       .subtitle {
         color: var(--neutral_black1, #171717);
@@ -282,9 +297,7 @@ export const StyledCreateProfileFlow = styled.div`
       .inputLineBlock {
         margin: 1rem 0rem;
       }
-      .saveButtonBlock {
-        margin-top: 7rem;
-      }
+
       .addLink {
         display: grid;
         grid-template-columns: auto 1fr;
@@ -326,6 +339,7 @@ export const StyledCreateProfileFlow = styled.div`
         font-size: 16px;
         line-height: 24px;
         padding: 12px;
+        height: 50px;
       }
       .ui.checkbox input.hidden + label {
         color: var(--neutral_black1, #171717);
@@ -416,6 +430,14 @@ export const StyledCreateProfileFlow = styled.div`
       font-weight: 500;
       line-height: 125%; /* 22.5px */
     }
+  }
+`;
+
+export const StyledSaveButton = styled.div`
+  margin-top: 7rem;
+  button {
+    background: ${(props) => (props.changed ? "#28619E" : "#9a9a9a")};
+    border-color: ${(props) => (props.changed ? "#28619E" : "#9a9a9a")};
   }
 `;
 

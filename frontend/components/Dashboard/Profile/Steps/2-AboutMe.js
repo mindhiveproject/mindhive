@@ -16,7 +16,7 @@ export default function About({ query, user }) {
       <div className="navButtons">
         <Link
           href={{
-            pathname: `/dashboard/profile/create`,
+            pathname: `/dashboard/profile/edit`,
             query: {
               page: "type",
             },
@@ -27,7 +27,7 @@ export default function About({ query, user }) {
 
         <Link
           href={{
-            pathname: `/dashboard/profile/create`,
+            pathname: `/dashboard/profile/edit`,
             query: {
               page: "interests",
             },

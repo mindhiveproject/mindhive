@@ -7,8 +7,12 @@ import { GET_PROFILE } from "../../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../../Mutations/User";
 
 import { StyledInput } from "../../../../styles/StyledForm";
+import { StyledSaveButton } from "../../../../styles/StyledProfile";
+import { useState } from "react";
 
 export default function BasicInformation({ query, user }) {
+  const [changed, setChanged] = useState(false);
+
   const { inputs, handleChange } = useForm({
     firstName: user?.firstName,
     lastName: user?.lastName,
@@ -17,6 +21,11 @@ export default function BasicInformation({ query, user }) {
     location: user?.location,
     profileType: query?.type || user?.profileType,
   });
+
+  const handleUpdate = (data) => {
+    setChanged(true);
+    handleChange(data);
+  };
 
   const [updateProfile, { data, loading, error }] = useMutation(
     UPDATE_PROFILE,
@@ -32,6 +41,7 @@ export default function BasicInformation({ query, user }) {
   async function handleSubmit(e) {
     e.preventDefault();
     await updateProfile();
+    setChanged(false);
   }
 
   return (
@@ -68,7 +78,7 @@ export default function BasicInformation({ query, user }) {
                 name="firstName"
                 autoComplete="firstName"
                 value={inputs?.firstName}
-                onChange={handleChange}
+                onChange={handleUpdate}
               />
             </div>
             <div>
@@ -78,7 +88,7 @@ export default function BasicInformation({ query, user }) {
                 name="lastName"
                 autoComplete="lastName"
                 value={inputs?.lastName}
-                onChange={handleChange}
+                onChange={handleUpdate}
               />
             </div>
           </div>
@@ -90,7 +100,7 @@ export default function BasicInformation({ query, user }) {
             name="email"
             autoComplete="email"
             value={inputs?.email}
-            onChange={handleChange}
+            onChange={handleUpdate}
             required
           />
         </div>
@@ -119,7 +129,7 @@ export default function BasicInformation({ query, user }) {
                   },
                 ]}
                 onChange={(event, data) => {
-                  handleChange({
+                  handleUpdate({
                     target: { name: "pronouns", value: data.value },
                   });
                 }}
@@ -134,15 +144,17 @@ export default function BasicInformation({ query, user }) {
                 type="text"
                 name="location"
                 value={inputs?.location || ""}
-                onChange={handleChange}
+                onChange={handleUpdate}
               />
             </div>
           </div>
         </div>
 
-        <div className="saveButtonBlock">
-          <button onClick={handleSubmit}>Save changes</button>
-        </div>
+        <StyledSaveButton changed={changed}>
+          <button onClick={handleSubmit} disabled={!changed}>
+            Save changes
+          </button>
+        </StyledSaveButton>
       </StyledInput>
     </div>
   );

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import useForm from "../../../../../lib/useForm";
 import { FormField, Form, FormGroup, Radio, Divider } from "semantic-ui-react";
 
@@ -7,6 +8,7 @@ import { GET_PROFILE } from "../../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../../Mutations/User";
 
 import { StyledInput } from "../../../../styles/StyledForm";
+import { StyledSaveButton } from "../../../../styles/StyledProfile";
 
 const optionsMentorPreferGrade = [
   { label: "Middle School", value: "middle" },
@@ -29,6 +31,8 @@ const optionsMentorPreferClass = [
 ];
 
 export default function Preferences({ query, user }) {
+  const [changed, setChanged] = useState(false);
+
   const { inputs, handleChange } = useForm({
     mentorPreferGrade: user?.mentorPreferGrade || undefined,
     mentorPreferGroup: user?.mentorPreferGroup || undefined,
@@ -46,9 +50,15 @@ export default function Preferences({ query, user }) {
     }
   );
 
+  const handleUpdate = (data) => {
+    setChanged(true);
+    handleChange(data);
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
     await updateProfile();
+    setChanged(false);
   }
 
   return (
@@ -82,7 +92,7 @@ export default function Preferences({ query, user }) {
                     value={value}
                     checked={inputs.mentorPreferGrade === value}
                     onChange={(e, content) => {
-                      handleChange({
+                      handleUpdate({
                         target: {
                           name: content?.name,
                           value: content?.value,
@@ -113,7 +123,7 @@ export default function Preferences({ query, user }) {
                     value={value}
                     checked={inputs.mentorPreferGroup === value}
                     onChange={(e, content) => {
-                      handleChange({
+                      handleUpdate({
                         target: {
                           name: content?.name,
                           value: content?.value,
@@ -144,7 +154,7 @@ export default function Preferences({ query, user }) {
                     value={value}
                     checked={inputs.mentorPreferClass === value}
                     onChange={(e, content) => {
-                      handleChange({
+                      handleUpdate({
                         target: {
                           name: content?.name,
                           value: content?.value,
@@ -158,9 +168,11 @@ export default function Preferences({ query, user }) {
           </Form>
         </div>
 
-        <div className="saveButtonBlock">
-          <button onClick={handleSubmit}>Save changes</button>
-        </div>
+        <StyledSaveButton changed={changed}>
+          <button onClick={handleSubmit} disabled={!changed}>
+            Save changes
+          </button>
+        </StyledSaveButton>
       </StyledInput>
     </div>
   );

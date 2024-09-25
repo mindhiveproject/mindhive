@@ -1,51 +1,124 @@
 import { useQuery } from "@apollo/client";
-import ProfileType from "./Steps/1-ProfileType";
-import About from "./Steps/2-AboutMe";
-import Interests from "./Steps/3-Interests";
+import IdentIcon from "../../Account/IdentIcon";
+import Link from "next/link";
 
 import { GET_PROFILE } from "../../Queries/User";
-import { StyledCreateProfileFlow } from "../../styles/StyledProfile";
 
-import { Progress } from "semantic-ui-react";
-
-export default function ProfileMain({ query }) {
-  const { selector, page } = query;
-
-  const steps = [
-    { step: 1, label: "1. Profile Type", percent: 25, page: "type" },
-    { step: 2, label: "2. About me", percent: 50, page: "about" },
-    { step: 3, label: "3. Interests", percent: 75, page: "interests" },
-    { step: 4, label: "4. Complete Profile", percent: 100, page: "complete" },
-  ];
-
+export default function Profile() {
   // query the full profile of the user
   const { data } = useQuery(GET_PROFILE);
-  const user = data?.authenticatedItem;
+  const user = data?.authenticatedItem || {};
+
+  const {
+    profileType,
+    firstName,
+    lastName,
+    email,
+    pronouns,
+    location,
+    bio,
+    bioInformal,
+    occupation,
+    education,
+    languages,
+    introVideo,
+    mentorPreferGrade,
+    mentorPreferGroup,
+    mentorPreferClass,
+    interests,
+  } = user;
+
+  const isProfileComplete =
+    profileType &&
+    firstName &&
+    lastName &&
+    email &&
+    pronouns &&
+    location &&
+    bio &&
+    bioInformal &&
+    occupation &&
+    education &&
+    languages &&
+    introVideo &&
+    mentorPreferGrade &&
+    mentorPreferGroup &&
+    mentorPreferClass &&
+    interests;
 
   return (
-    <StyledCreateProfileFlow>
-      <div>
-        <h1>Create Profile</h1>
-        <p>
-          Your profile is incomplete. Enter the remaining information to
-          complete your profile and begin contributing to the MindHive
-          community.
-        </p>
-        <div className="progressBar">
-          <Progress
-            percent={steps
-              .filter((s) => s?.page === page)
-              .map((s) => s?.percent)}
-            size="large"
-          >
-            {steps.filter((s) => s?.page === page).map((s) => s?.label)}
-          </Progress>
+    <>
+      <div className="titleIcon">
+        <div>
+          <div className="h36">
+            Welcome{isProfileComplete && ` back`}
+            {firstName ? `, ${firstName}` : `, MindHive User`}
+          </div>
+          <div className="p20">
+            You can edit your Profile, schedule time with mentors, stay
+            up-to-date with the latest MH notifications here
+          </div>
+        </div>
+
+        <div>
+          {user?.image?.image?.publicUrlTransformed ? (
+            <img
+              src={user?.image?.image?.publicUrlTransformed}
+              alt={user?.name}
+            />
+          ) : (
+            <div>
+              <IdentIcon size="120" value={user?.name} />
+            </div>
+          )}
         </div>
       </div>
 
-      {page === "type" && <ProfileType />}
-      {page === "about" && <About query={query} user={user} />}
-      {page === "interests" && <Interests query={query} user={user} />}
-    </StyledCreateProfileFlow>
+      {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+        <div className="createProfileAreaWrapper">
+          <Link
+            href={{
+              pathname: `/dashboard/profile/edit`,
+              query: {
+                page: "type",
+              },
+            }}
+          >
+            <div className="createProfileArea">
+              <div>
+                <div className="h32">
+                  {isProfileComplete ? `Edit` : `Create`} your MindHive profile
+                </div>
+                <div className="p18">
+                  {isProfileComplete
+                    ? `You’re already a part of the MindHive community! Update your profile by clicking here.`
+                    : `Ready to join the MindHive community? Create your profile now
+                  by clicking here.`}
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          <Link
+            href={{
+              pathname: `/dashboard/profile/set`,
+              // query: {
+              //   page: "type",
+              // },
+            }}
+          >
+            <div className="createProfileArea">
+              <div>
+                <div className="h32">Set your mentorship availability</div>
+                <div className="p18">
+                  Set your availability to start mentoring. Click here to get
+                  started
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+      )}
+    </>
   );
 }

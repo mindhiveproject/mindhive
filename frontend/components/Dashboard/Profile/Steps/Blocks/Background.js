@@ -1,3 +1,4 @@
+import { useState } from "react";
 import useForm from "../../../../../lib/useForm";
 import { useMutation } from "@apollo/client";
 import { Divider, Icon } from "semantic-ui-react";
@@ -6,8 +7,11 @@ import { GET_PROFILE } from "../../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../../Mutations/User";
 
 import { StyledInput } from "../../../../styles/StyledForm";
+import { StyledSaveButton } from "../../../../styles/StyledProfile";
 
 export default function Background({ query, user }) {
+  const [changed, setChanged] = useState(false);
+
   const { inputs, handleChange } = useForm({
     bioInformal: user?.bioInformal,
     bio: user?.bio,
@@ -15,6 +19,11 @@ export default function Background({ query, user }) {
     education: user?.education || [{ institution: "", degree: "" }],
     languages: user?.languages || [{ language: "" }],
   });
+
+  const handleUpdate = (data) => {
+    setChanged(true);
+    handleChange(data);
+  };
 
   const [updateProfile, { data, loading, error }] = useMutation(
     UPDATE_PROFILE,
@@ -30,10 +39,11 @@ export default function Background({ query, user }) {
   async function handleSubmit(e) {
     e.preventDefault();
     await updateProfile();
+    setChanged(false);
   }
 
   const handleArrayChange = ({ variable, property, position, value }) => {
-    handleChange({
+    handleUpdate({
       target: {
         name: variable,
         value: inputs[variable].map((edu, num) => {
@@ -59,7 +69,7 @@ export default function Background({ query, user }) {
       newObj = { language: "" };
     }
     if (newObj) {
-      handleChange({
+      handleUpdate({
         target: {
           name: variable,
           value: [...inputs[variable], newObj],
@@ -69,7 +79,7 @@ export default function Background({ query, user }) {
   };
 
   const removeFromArray = ({ variable, position }) => {
-    handleChange({
+    handleUpdate({
       target: {
         name: variable,
         value: inputs[variable].filter((edu, num) => num !== position),
@@ -102,7 +112,7 @@ export default function Background({ query, user }) {
             name="bioInformal"
             placeholder=""
             value={inputs?.bioInformal || ""}
-            onChange={handleChange}
+            onChange={handleUpdate}
           />
         </div>
 
@@ -120,7 +130,7 @@ export default function Background({ query, user }) {
             name="bio"
             placeholder=""
             value={inputs?.bio || ""}
-            onChange={handleChange}
+            onChange={handleUpdate}
           />
         </div>
 
@@ -130,7 +140,7 @@ export default function Background({ query, user }) {
             type="text"
             name="occupation"
             value={inputs?.occupation || ""}
-            onChange={handleChange}
+            onChange={handleUpdate}
           />
         </div>
 
@@ -246,9 +256,11 @@ export default function Background({ query, user }) {
           </div>
         </div>
 
-        <div className="saveButtonBlock">
-          <button onClick={handleSubmit}>Save changes</button>
-        </div>
+        <StyledSaveButton changed={changed}>
+          <button onClick={handleSubmit} disabled={!changed}>
+            Save changes
+          </button>
+        </StyledSaveButton>
       </StyledInput>
     </div>
   );

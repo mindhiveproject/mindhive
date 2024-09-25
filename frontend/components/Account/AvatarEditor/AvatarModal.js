@@ -54,7 +54,9 @@ export default function UpdateAvatarModal({ user }) {
     >
       <StyledModal>
         <Modal.Header>
-          <h1>Create your avatar</h1>
+          <div className="centeredHeader">
+            <h1>Create your avatar</h1>
+          </div>
         </Modal.Header>
 
         <Modal.Content scrolling>

@@ -1,14 +1,17 @@
+import Link from "next/link";
 import { Dropdown } from "semantic-ui-react";
 import { useQuery, useMutation } from "@apollo/client";
 import useForm from "../../../../lib/useForm";
+import { useRouter } from "next/dist/client/router";
 
 import { GET_PROFILE } from "../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../Mutations/User";
 import { GET_TAGS } from "../../../Queries/Tag";
 
 export default function InterestSelector({ user }) {
+  const router = useRouter();
   const { inputs, handleChange } = useForm({
-    interests: user?.interests || [],
+    interests: user?.interests.map((i) => ({ id: i?.id })) || [],
   });
 
   const { data, loading, error } = useQuery(GET_TAGS);
@@ -60,6 +63,13 @@ export default function InterestSelector({ user }) {
     }
   };
 
+  const complete = async () => {
+    await updateProfile();
+    router.push({
+      pathname: "/dashboard",
+    });
+  };
+
   return (
     <div className="interestsSelector">
       <div>
@@ -80,44 +90,54 @@ export default function InterestSelector({ user }) {
         />
       </div>
 
-      <div>
-        <h2>Suggested interests</h2>
-        <div className="suggestedInterests">
-          {tags
-            .filter(
-              (tag) =>
-                !inputs?.interests.map((tag) => tag?.id).includes(tag?.id)
-            )
-            .sort((a, b) => {
-              // Convert titles to lowercase to ensure case-insensitive sorting
-              const titleA = a.title.toLowerCase();
-              const titleB = b.title.toLowerCase();
+      {tags.length && (
+        <div>
+          <h2>Suggested interests</h2>
+          <div className="suggestedInterests">
+            {tags
+              .filter(
+                (tag) =>
+                  !inputs?.interests.map((tag) => tag?.id).includes(tag?.id)
+              )
+              .sort((a, b) => {
+                // Convert titles to lowercase to ensure case-insensitive sorting
+                const titleA = a.title.toLowerCase();
+                const titleB = b.title.toLowerCase();
 
-              if (titleA < titleB) {
-                return -1; // a comes before b
-              }
-              if (titleA > titleB) {
-                return 1; // a comes after b
-              }
-              return 0; // a and b are equal
-            })
-            .map((tag) => (
-              <div className="interest">
-                <div>{tag.title}</div>
-                <img
-                  src="/assets/icons/add.svg"
-                  alt="add"
-                  onClick={() => addInterest({ tag })}
-                />
-              </div>
-            ))}
+                if (titleA < titleB) {
+                  return -1; // a comes before b
+                }
+                if (titleA > titleB) {
+                  return 1; // a comes after b
+                }
+                return 0; // a and b are equal
+              })
+              .map((tag) => (
+                <div className="interest">
+                  <div>{tag.title}</div>
+                  <img
+                    src="/assets/icons/add.svg"
+                    alt="add"
+                    onClick={() => addInterest({ tag })}
+                  />
+                </div>
+              ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      <div>
-        <button onClick={async () => await updateProfile()}>
-          Save changes
-        </button>
+      <div className="navButtons">
+        <Link
+          href={{
+            pathname: `/dashboard/profile/edit`,
+            query: {
+              page: "about",
+            },
+          }}
+        >
+          <button className="secondary">Previous</button>
+        </Link>
+        <button onClick={complete}>Complete</button>
       </div>
     </div>
   );
