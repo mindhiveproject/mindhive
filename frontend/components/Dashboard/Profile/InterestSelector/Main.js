@@ -90,7 +90,7 @@ export default function InterestSelector({ user }) {
         />
       </div>
 
-      {tags.length && (
+      {tags.length ? (
         <div>
           <h2>Suggested interests</h2>
           <div className="suggestedInterests">
@@ -124,6 +124,8 @@ export default function InterestSelector({ user }) {
               ))}
           </div>
         </div>
+      ) : (
+        <></>
       )}
 
       <div className="navButtons">

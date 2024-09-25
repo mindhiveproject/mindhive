@@ -441,4 +441,11 @@ export const StyledSaveButton = styled.div`
   }
 `;
 
+export const StyledSimpleSaveButton = styled.div`
+  button {
+    background: ${(props) => (props.changed ? "#347A70" : "#9a9a9a")};
+    border-color: ${(props) => (props.changed ? "#347A70" : "#9a9a9a")};
+  }
+`;
+
 export default StyledProfile;

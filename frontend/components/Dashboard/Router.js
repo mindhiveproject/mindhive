@@ -8,10 +8,10 @@ import ConnectMain from "./Connect/Main";
 import DevelopMain from "./Develop/Main";
 import ReviewMain from "./Review/Main";
 import Journals from "./Journal/Main";
-import Chats from "./Chat/Main";
+// import Chats from "./Chat/Main";
 import TeacherClasses from "./TeacherClasses/Main";
 import StudentClasses from "./StudentClasses/Main";
-import EditSettings from "./Settings/Edit";
+import Settings from "./Settings/Router";
 import ConsentMain from "./Consent/Main";
 import ProposalsMain from "./Proposals/Main";
 import LessonsMain from "./Lessons/Main";
@@ -53,7 +53,7 @@ export default function DashboardRouter({ query }) {
   // }
 
   if (area === "settings") {
-    return <EditSettings query={query} user={user} />;
+    return <Settings query={query} user={user} />;
   }
 
   if (area === "myclasses") {
