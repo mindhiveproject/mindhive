@@ -25,7 +25,7 @@ By agreeing to use the MindHive platform, you allow us and our collaborators to 
 ### 1) Your participation is voluntary
 
 <p>
-Your participation on Mindive is completely voluntary, and you may discontinue your participation at any time, for any reason. You may end your participation in any study by closing your browser window. If you have an account on MindHive, you are free to request the deletion of your account and associated data at any time by contacting <a href="mailto: mindhive@nyu.edu">mindhive@nyu.edu</a>. Note that we only have control over data that is stored with us at the moment of request. Some data may be beyond our control (e.g., data that has already been shared with researchers or included in publications, or data that cannot be retrieved because you forgot your username).
+Your participation on Mindive is completely voluntary, and you may discontinue your participation at any time, for any reason. You may end your participation in any study by closing your browser window. If you have an account on MindHive, you are free to request the deletion of your account and associated data at any time by contacting <a href="mailto: info@mindhive.science">info@mindhive.science</a>. Note that we only have control over data that is stored with us at the moment of request. Some data may be beyond our control (e.g., data that has already been shared with researchers or included in publications, or data that cannot be retrieved because you forgot your username).
 </p>
 
 ### 2) We will never sell your data
@@ -76,7 +76,7 @@ d) <strong>Students</strong> can explore and participate (see Participant) in Mi
 The legal environment and the legal details by which we operate and make your data available can change. When this happens, we need to obtain your permission to move forward.  However, if you give us the broad permissions that are outlined in this agreement, we can quickly adapt to these circumstances and make the necessary legal changes without obtaining permission from every single user.  
 </p>
 <p>
-In sum, by engaging with MindHive, you agree that your de-identified data may be shared with authorized Users (Researchers and Educators) and be used for research and educational purposes. Only non-commercial use of your data will be allowed: we will never ever sell your data to anyone. Finally, you can request that your data be removed from the platform at any time by contacting mindhive@nyu.edu.
+In sum, by engaging with MindHive, you agree that your de-identified data may be shared with authorized Users (Researchers and Educators) and be used for research and educational purposes. Only non-commercial use of your data will be allowed: we will never ever sell your data to anyone. Finally, you can request that your data be removed from the platform at any time by contacting <a href="mailto: info@mindhive.science">info@mindhive.science</a>.
 </p>
 
 <p>
@@ -149,7 +149,7 @@ You are the owner of all your User Content, including any data and/or studies yo
 
  - Your User Content (including that used by you, us or other users of the Service) does not and will not infringe or misappropriate any third party rights, including copyrights and other intellectual property rights, privacy rights, rights of publicity or moral rights, or defame, libel or slander anyone. That is, your User Content must be your original work, and you must have the permission of third parties who have rights in the User Content before you upload or publish the User Content on the Service.
 
- - You can remove your User Content from the platform at any time. User Participants, you can request that your data be removed from the platform at any time by contacting <a mailto="mindhive@nyu.edu">mindhive@nyu.edu</a>.
+ - You can remove your User Content from the platform at any time. User Participants, you can request that your data be removed from the platform at any time by contacting <a mailto="info@mindhive.science">info@mindhive.science</a>.
 
 
 * Disclaimer. There is no reasonable way for us to monitor all User Content that is uploaded to or published on the Service, and we have no obligation to you or any other user to monitor, edit or control the User Content that you and other users upload to or publish on the Service. This means that we are not responsible for User Content on the Service and you agree not to make any claims against us based on User Content. Nevertheless, we may remove, edit, search or block User Content from the Service at any time if the User Content violates these Terms or is found to be otherwise offensive. If you use the Service, you will be exposed to User Content from other users, some of which may be insulting, inaccurate or offensive. We may investigate allegations that User Content violates these Terms and in such cases we will determine what action (if any) we take with respect to the User Content in question.
@@ -184,7 +184,7 @@ You may find tools on the Service that allow you to send information, including 
 
 ### 9. Termination of Your Account
 
-If you violate any of these terms, your permission to use the Service automatically terminates. You may cancel your account with the Service by submitting a request to <a href="mailto: mindhive@nyu.edu">mindhive@nyu.edu</a>.
+If you violate any of these terms, your permission to use the Service automatically terminates. You may cancel your account with the Service by submitting a request to <a href="mailto: info@mindhive.science">info@mindhive.science</a>.
 
 ### 10. Privacy Policy and Additional Requirements
 
@@ -216,4 +216,4 @@ You agree to receive electronic communications from us as described in our <a ta
 
 ### 16. Contact Information
 
-The service is provided by researchers at New York University, at the Department of Psychology, at 6 Washington Place, New York, USA and at the Steinhardt School of Culture, Education, and Human Development at 82 Washington Square E, New York, NY 10003. You can reach us by sending letters to our address or by emailing us at <a mailto="mindhive@nyu.edu">mindhive@nyu.edu</a>. For questions about data management and protection at New York University, you can contact the GDPR Office at <a mailto="gdpr-info@nyu.edu">gdpr-info@nyu.edu</a>.
+The service is provided by researchers at New York University, at the Department of Psychology, at 6 Washington Place, New York, USA and at the Steinhardt School of Culture, Education, and Human Development at 82 Washington Square E, New York, NY 10003. You can reach us by sending letters to our address or by emailing us at <a mailto="info@mindhive.science">info@mindhive.science</a>. For questions about data management and protection at New York University, you can contact the GDPR Office at <a mailto="gdpr-info@nyu.edu">gdpr-info@nyu.edu</a>.
