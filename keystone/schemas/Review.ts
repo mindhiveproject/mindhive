@@ -36,11 +36,17 @@ export const Review = list({
       options: [
         { label: "Individual", value: "INDIVIDUAL" },
         { label: "Synthesis", value: "SYNTHESIS" },
+        { label: "Proposal", value: "SUBMITTED_AS_PROPOSAL" },
+        { label: "In review", value: "IN_REVIEW" },
       ],
     }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+    upvotedBy: relationship({
+      ref: "Profile.reviewsUpvoted",
+      many: true,
+    }),
   },
 });

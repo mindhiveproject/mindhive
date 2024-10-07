@@ -3,13 +3,15 @@ import moment from "moment";
 
 import DeleteProposal from "./Delete";
 
-import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Proposal";
+import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
+import MakeMain from "./MakeMain";
 
 export default function ProposalOverview({
   user,
   studyId,
   templates,
   proposals,
+  proposalMain,
   openProposal,
   copyProposal,
   createProposal,
@@ -17,7 +19,7 @@ export default function ProposalOverview({
   const { t } = useTranslation("builder");
 
   const refetchQueries = [
-    { query: STUDY_PROPOSALS_QUERY, variables: { studyId } },
+    { query: STUDY_PROPOSALS_QUERY, variables: { id: studyId } },
   ];
 
   if (proposals.length === 0) {
@@ -53,7 +55,11 @@ export default function ProposalOverview({
         {proposals.map((prop) => (
           <div key={prop?.id}>
             <div className="row">
-              <div className="itemRow">
+              <div
+                className={
+                  prop?.id === proposalMain?.id ? `itemRow main` : `itemRow`
+                }
+              >
                 <div>
                   <p>{prop?.title}</p>
                 </div>
@@ -67,6 +73,16 @@ export default function ProposalOverview({
                 <div className="actionLinks">
                   <button onClick={() => openProposal(prop?.id)}>Open</button>
                   <button onClick={() => copyProposal(prop?.id)}>Copy</button>
+                  {prop?.id !== proposalMain?.id && (
+                    <MakeMain
+                      studyId={studyId}
+                      proposalId={prop?.id}
+                      refetchQueries={refetchQueries}
+                    >
+                      <button>Select as main</button>
+                    </MakeMain>
+                  )}
+
                   {!prop?.isSubmitted && (
                     <DeleteProposal
                       proposalId={prop?.id}

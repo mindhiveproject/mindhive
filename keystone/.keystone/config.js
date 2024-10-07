@@ -738,6 +738,10 @@ var Profile = (0, import_core.list)({
       ref: "Review.author",
       many: true
     }),
+    reviewsUpvoted: (0, import_fields3.relationship)({
+      ref: "Review.upvotedBy",
+      many: true
+    }),
     assignedToProposalCard: (0, import_fields3.relationship)({
       ref: "ProposalCard.assignedTo",
       many: true
@@ -1503,6 +1507,9 @@ var Study = (0, import_core13.list)({
       ref: "ProposalBoard.study",
       many: true
     }),
+    proposalMain: (0, import_fields16.relationship)({
+      ref: "ProposalBoard.studyMain"
+    }),
     descriptionInProposalCard: (0, import_fields16.relationship)({
       ref: "ProposalCard.studyDescription"
     }),
@@ -1548,6 +1555,7 @@ var Study = (0, import_core13.list)({
     status: (0, import_fields16.select)({
       options: [
         { label: "Working", value: "WORKING" },
+        { label: "Proposal", value: "SUBMITTED_AS_PROPOSAL" },
         { label: "Ready for review", value: "READY_FOR_REVIEW" },
         { label: "In review", value: "IN_REVIEW" },
         { label: "Reviewed", value: "REVIEWED" },
@@ -1818,6 +1826,9 @@ var ProposalBoard = (0, import_core18.list)({
     study: (0, import_fields21.relationship)({
       ref: "Study.proposal"
     }),
+    studyMain: (0, import_fields21.relationship)({
+      ref: "Study.proposalMain"
+    }),
     sections: (0, import_fields21.relationship)({
       ref: "ProposalSection.board",
       many: true
@@ -1942,13 +1953,19 @@ var Review = (0, import_core21.list)({
     stage: (0, import_fields24.select)({
       options: [
         { label: "Individual", value: "INDIVIDUAL" },
-        { label: "Synthesis", value: "SYNTHESIS" }
+        { label: "Synthesis", value: "SYNTHESIS" },
+        { label: "Proposal", value: "SUBMITTED_AS_PROPOSAL" },
+        { label: "In review", value: "IN_REVIEW" }
       ]
     }),
     createdAt: (0, import_fields24.timestamp)({
       defaultValue: { kind: "now" }
     }),
-    updatedAt: (0, import_fields24.timestamp)()
+    updatedAt: (0, import_fields24.timestamp)(),
+    upvotedBy: (0, import_fields24.relationship)({
+      ref: "Profile.reviewsUpvoted",
+      many: true
+    })
   }
 });
 

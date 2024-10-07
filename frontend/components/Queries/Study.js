@@ -162,6 +162,7 @@ export const STUDY_TO_DISCOVER = gql`
       flow
       components
       currentVersion
+      status
     }
   }
 `;
@@ -175,6 +176,7 @@ export const STUDY_TO_JOIN = gql`
       slug
       description
       settings
+      status
       image {
         id
         image {
@@ -204,6 +206,10 @@ export const STUDY_TO_JOIN = gql`
           id
           title
         }
+      }
+      reviews {
+        id
+        stage
       }
       components
       flow
@@ -307,6 +313,167 @@ export const GET_STUDY_RESULTS = gql`
       consent {
         id
         title
+      }
+    }
+  }
+`;
+
+// get all studies and their proposals for review (featured studies + studies from class network)
+export const STUDIES_TO_REVIEW = gql`
+  query STUDIES_TO_REVIEW($classIds: [ID!]) {
+    studies(
+      where: {
+        AND: [
+          { status: { in: ["SUBMITTED_AS_PROPOSAL", "IN_REVIEW"] } }
+          {
+            OR: [
+              { featured: { equals: true } }
+              { classes: { some: { id: { in: $classIds } } } }
+            ]
+          }
+        ]
+      }
+    ) {
+      id
+      slug
+      title
+      featured
+      status
+      classes {
+        id
+      }
+      image {
+        id
+        image {
+          publicUrlTransformed
+        }
+      }
+      reviews {
+        id
+        stage
+      }
+      proposal {
+        reviews {
+          id
+        }
+      }
+      createdAt
+    }
+  }
+`;
+
+// get a study for review
+export const STUDY_TO_REVIEW = gql`
+  query STUDY_TO_REVIEW($id: ID!) {
+    study(where: { id: $id }) {
+      id
+      slug
+      title
+      featured
+      description
+      info
+      status
+      classes {
+        id
+      }
+      image {
+        id
+        image {
+          publicUrlTransformed
+        }
+      }
+      reviews {
+        id
+        stage
+        content
+        author {
+          id
+          permissions {
+            name
+          }
+        }
+        upvotedBy {
+          id
+        }
+      }
+      proposalMain {
+        id
+        title
+        description
+        slug
+        isSubmitted
+        checklist
+        study {
+          id
+          title
+          slug
+        }
+        sections {
+          id
+          title
+          description
+          position
+          cards {
+            id
+            title
+            content
+            settings
+            position
+            section {
+              id
+            }
+            assignedTo {
+              id
+              username
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+// get study proposals
+export const STUDY_PROPOSALS_QUERY = gql`
+  query STUDY_PROPOSALS_QUERY($id: ID!) {
+    study(where: { id: $id }) {
+      id
+      status
+      proposal {
+        id
+        title
+        slug
+        description
+        isSubmitted
+        isTemplate
+        settings
+        createdAt
+        updatedAt
+      }
+      proposalMain {
+        id
+        title
+        slug
+        description
+        isSubmitted
+        isTemplate
+        settings
+        checklist
+        createdAt
+        updatedAt
+      }
+      reviews {
+        id
+        stage
+        content
+        author {
+          id
+        }
+        createdAt
+        updatedAt
+        upvotedBy {
+          id
+        }
       }
     }
   }

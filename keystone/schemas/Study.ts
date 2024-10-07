@@ -117,6 +117,9 @@ export const Study = list({
       ref: "ProposalBoard.study",
       many: true,
     }),
+    proposalMain: relationship({
+      ref: "ProposalBoard.studyMain",
+    }),
     descriptionInProposalCard: relationship({
       ref: "ProposalCard.studyDescription",
     }),
@@ -162,6 +165,7 @@ export const Study = list({
     status: select({
       options: [
         { label: "Working", value: "WORKING" },
+        { label: "Proposal", value: "SUBMITTED_AS_PROPOSAL" },
         { label: "Ready for review", value: "READY_FOR_REVIEW" },
         { label: "In review", value: "IN_REVIEW" },
         { label: "Reviewed", value: "REVIEWED" },

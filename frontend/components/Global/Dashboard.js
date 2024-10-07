@@ -29,7 +29,7 @@ export default function Dashboard({ children, area, selector }) {
   }
 
   // use the full screen for reviewing
-  if (area === "review" && selector === "proposal") {
+  if (area === "review" && selector === "comment") {
     return <>{children}</>;
   }
 

@@ -1,33 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 
 import ProposalOverview from "./Overview";
 import CreateProposal from "./Create";
 import ProposalPage from "./ProposalPage";
 
-import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Proposal";
+import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
 
 export default function ProposalWrapper({ query, user, templates }) {
   const studyId = query?.selector;
 
   const { data, loading, error } = useQuery(STUDY_PROPOSALS_QUERY, {
     variables: {
-      studyId: studyId,
+      id: studyId,
     },
   });
 
   const refetchQueries = [
     {
       query: STUDY_PROPOSALS_QUERY,
-      variables: { studyId },
+      variables: { id: studyId },
     },
   ];
 
-  const proposals = data?.proposalBoards || [];
-
+  const [proposals, setProposals] = useState(data?.study?.proposal || []);
+  const [proposalMain, setProposalMain] = useState(
+    data?.study?.proposalMain || {}
+  );
   const [page, setPage] = useState("overview");
   const [isCopy, setIsCopy] = useState(false);
   const [proposalId, setProposalId] = useState(null);
+
+  useEffect(() => {
+    async function updateProposals() {
+      setProposals(data?.study?.proposal);
+      setProposalMain(data?.study?.proposalMain);
+    }
+    if (data) {
+      updateProposals();
+    }
+  }, [data]);
 
   const openProposal = (proposalId) => {
     setPage("proposal");
@@ -80,6 +92,7 @@ export default function ProposalWrapper({ query, user, templates }) {
       studyId={studyId}
       templates={templates}
       proposals={proposals}
+      proposalMain={proposalMain}
       openProposal={openProposal}
       copyProposal={copyProposal}
       createProposal={createProposal}

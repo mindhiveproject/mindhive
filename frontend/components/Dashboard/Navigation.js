@@ -171,7 +171,7 @@ export default function DashboardNavigation() {
                 />
               </svg>
             </div>
-            <div>Review</div>
+            <div>Feedback Center</div>
           </StyledNavigationLink>
         </Link>
 

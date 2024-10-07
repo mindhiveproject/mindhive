@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Dropdown } from "semantic-ui-react";
+import {} from "semantic-ui-react";
 
 import ProposalCardSelector from "./ProposalSelector";
 

@@ -70,7 +70,7 @@ export default function AddClass({ user }) {
         inputs={inputs}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
-        submitBtnName={t("common.create")}
+        submitBtnName={"Create"}
         loading={loading}
         error={error}
       />

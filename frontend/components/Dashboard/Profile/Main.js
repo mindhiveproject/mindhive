@@ -74,7 +74,8 @@ export default function Profile() {
         </div>
       </div>
 
-      {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+      {(user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
+        user?.permissions?.map((p) => p?.name).includes("MENTOR")) && (
         <div className="createProfileAreaWrapper">
           <Link
             href={{
@@ -102,9 +103,6 @@ export default function Profile() {
           <Link
             href={{
               pathname: `/dashboard/profile/set`,
-              // query: {
-              //   page: "type",
-              // },
             }}
           >
             <div className="createProfileArea">

@@ -3,7 +3,6 @@ import styled from "styled-components";
 export const StyledReviewPage = styled.div`
   display: grid;
   width: 100%;
-  overflow-y: scroll;
 
   .review {
     display: grid;
@@ -40,7 +39,6 @@ export const StyledReviewPage = styled.div`
       grid-area: content;
       background: #f7f9f8;
       padding: 1rem 2rem;
-      overflow-y: scroll;
     }
   }
   .reviewBoard {
@@ -66,6 +64,16 @@ export const StyledReviewPage = styled.div`
         align-items: center;
         justify-self: center;
       }
+    }
+  }
+  .descriptionMenu {
+    .item {
+      font-family: Lato;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 23px;
+      color: #1a1a1a;
     }
   }
 `;
@@ -112,6 +120,9 @@ export const StyledReviewBoard = styled.div`
       grid-gap: 10px;
       margin-top: 18px;
     }
+    a {
+      text-decoration: underline !important;
+    }
   }
   .reviews {
     grid-area: reviews;
@@ -140,6 +151,43 @@ export const StyledReviewBoard = styled.div`
         text-align: center;
       }
     }
+    .reviewerSection {
+      display: grid;
+      border: 1.5px solid #dadfe2;
+      padding: 16px 23px;
+      border-radius: 8px;
+    }
+    .reviewerTitle {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      font-family: Inter;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 16.94px;
+      text-align: left;
+    }
+    .reviewerComments {
+      display: grid;
+      grid-gap: 20px;
+      .reviewerComment {
+        display: grid;
+        .question {
+          font-family: Lato;
+          font-size: 16px;
+          font-weight: 600;
+          line-height: 20px;
+          text-align: left;
+        }
+        .answer {
+          font-family: Lato;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 24px;
+          text-align: left;
+        }
+      }
+    }
   }
   .row {
     display: grid;
@@ -163,7 +211,7 @@ export const StyledReviewBoard = styled.div`
 export const StyledReviewCard = styled.div`
   background: white;
   border-radius: 4px;
-  padding: 41px 50px 21px 50px;
+  padding: 30px 24px;
   h2 {
     font-family: Lato;
     font-size: 24px;
@@ -183,14 +231,238 @@ export const StyledReviewCard = styled.div`
     letter-spacing: 0em;
     text-align: left;
   }
+
   .dropdown {
     background: #fff9e6;
     padding: 0.5rem 0.5rem 0.5rem 1rem;
     border-radius: 1rem;
   }
+  .buttons {
+    display: grid;
+    grid-gap: 16px;
+    grid-template-columns: auto 1fr;
+    .submitBtn {
+      display: grid;
+      grid-gap: 8px;
+      grid-template-columns: auto 1fr;
+      width: fit-content;
+      border-radius: 5px;
+      padding: 13px 17px;
+      font-family: Lato;
+      font-size: 17px;
+      line-height: 22px;
+    }
+    .active {
+      border: 2px solid #007c70;
+      background: #007c70;
+      color: white;
+      cursor: pointer;
+    }
+    .locked {
+      border: 2px solid #e5e5e5;
+      background: #e5e5e5;
+      color: #8a888d;
+    }
+  }
 `;
 
 export const StyledDasboardReview = styled.div`
+  .overview {
+    display: grid;
+    grid-gap: 16px;
+    .board {
+      display: grid;
+      grid-gap: 24px;
+      .searchTopArea {
+        display: grid;
+        margin: 16px 0px;
+        grid-gap: 16px;
+        grid-template-columns: 3fr 1fr 1fr 2fr;
+      }
+      .checkboxArea {
+        display: grid;
+        align-items: center;
+      }
+      input,
+      textarea,
+      select {
+        font-family: Lato;
+        border: 1px solid #cccccc;
+        border-radius: 4px;
+        width: 100%;
+        font-size: 16px;
+        line-height: 24px;
+        padding: 12px;
+      }
+      .dropdown {
+        border-radius: 4px;
+        width: 100%;
+        font-size: 16px;
+        line-height: 24px;
+        padding: 12px;
+        .default.text {
+          color: #979797;
+        }
+      }
+      .checkbox {
+        label {
+          font-family: Inter;
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 20px;
+          text-align: left;
+          color: #666666;
+        }
+      }
+    }
+    .cardsArea {
+      display: grid;
+      grid-gap: 16px;
+      grid-template-columns: auto auto 1fr;
+    }
+
+    .card {
+      display: grid;
+      grid-gap: 8px;
+      align-content: baseline;
+      width: 340px;
+      background: white;
+      padding: 12px 16px;
+      border-radius: 8px;
+
+      .headline {
+        display: grid;
+        grid-gap: 10px;
+        grid-template-columns: auto 1fr;
+      }
+
+      .lowPanel {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+      }
+
+      .imageContainer {
+        height: 125px;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 8px;
+        }
+      }
+      .tag {
+        padding: 3px 10px;
+        width: fit-content;
+        border: 1px solid var(--PRIMARY_GREEN3, #007c70);
+        background: #007c7014;
+        border-radius: 4px;
+      }
+      .options {
+        display: grid;
+        grid-gap: 10px;
+        grid-template-columns: 1fr auto;
+        align-content: center;
+        justify-items: end;
+        font-family: Lato;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 18px;
+        text-align: left;
+        .option {
+          display: grid;
+          grid-gap: 6px;
+          grid-template-columns: 1fr 1fr;
+          align-items: center;
+          justify-items: end;
+        }
+      }
+    }
+  }
+  .view {
+    display: grid;
+    grid-gap: 16px;
+    .studyArea {
+      display: grid;
+      margin: 24px 0px;
+      position: relative;
+      .closeBtn {
+        position: absolute;
+        top: -4%;
+        left: -3%;
+        cursor: pointer;
+        :hover {
+          transform: scale(1.1);
+          transition: transform 0.5s;
+        }
+      }
+      .studyImage {
+        height: 340px;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 8px;
+        }
+      }
+      .studyInfo {
+        display: grid;
+        grid-gap: 16px;
+        background: #ffffff;
+        padding: 24px 48px;
+
+        font-family: Lato;
+        font-size: 22px;
+        font-weight: 400;
+        line-height: 30.14px;
+        text-align: left;
+
+        .topLine {
+          display: grid;
+          grid-gap: 10px;
+          grid-template-columns: auto 1fr;
+        }
+        .title {
+          color: #171717;
+          font-family: Lato;
+          font-size: 32px;
+          font-weight: 700;
+          line-height: 40px;
+          text-align: left;
+        }
+        .studyWhatWhoHow {
+          display: grid;
+          grid-gap: 32px;
+          margin-top: 32px;
+          .navTopLine {
+            display: grid;
+            grid-template-columns: 1fr auto;
+          }
+          .content {
+            min-height: 200px;
+          }
+        }
+        .options {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          align-content: center;
+          justify-items: end;
+          border-bottom: 1px solid #d4d4d5;
+          .option {
+            height: 50px;
+            display: grid;
+            border: 2px solid #347a70;
+            border-radius: 5px;
+            padding: 10px 16px;
+            grid-gap: 10px;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            justify-items: end;
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+  }
   .navigationMenu {
     display: grid;
     width: 100%;
@@ -265,113 +537,181 @@ export const StyledDasboardReview = styled.div`
 
   .reviewContainer {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: 71px 1fr;
-    grid-template-areas:
-      "header review"
-      "content review";
     height: 100vh;
+    align-content: baseline;
+
+    .double {
+      display: grid;
+      grid-gap: 8px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .single {
+      display: grid;
+      grid-template-columns: 1fr;
+      .studyPage {
+        max-width: 1090px;
+        margin: 0 auto;
+      }
+    }
 
     .header {
-      grid-area: header;
-      padding: 2rem 2rem;
+      padding: 1rem 2rem;
       display: grid;
-      grid-template-columns: 1fr auto;
-      grid-gap: 3rem;
-      justify-content: flex-start;
-      /* align-items: baseline; */
-      font-family: Lato;
-      font-style: normal;
-      font-weight: 400;
-      letter-spacing: 0em;
-      text-align: left;
-      color: #007c70;
-      font-size: 18px;
+      grid-template-columns: 250px 1fr 250px;
+      grid-gap: 1rem;
+      align-items: center;
+
       .backBtn {
+        display: grid;
+        grid-gap: 4px;
+        grid-template-columns: auto 1fr;
+        align-items: center;
         cursor: pointer;
+        .text {
+          font-family: Lato;
+          font-size: 15px;
+          font-weight: 600;
+          line-height: 20px;
+          text-align: left;
+          color: var(--neutral_grey2, #3b3b3b);
+        }
       }
+      .title {
+        display: grid;
+        justify-content: center;
+        font-family: Lato;
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 20px;
+        text-align: center;
+        color: var(--neutral_grey2, #3b3b3b);
+      }
+
+      .saveBtn {
+        display: grid;
+        justify-content: end;
+        display: grid;
+      }
+    }
+
+    .panelLeft {
+      background: #f7f9f8;
+      padding: 2.4rem 3.2rem;
+      height: 90vh;
+      overflow-y: scroll;
+      overflow-x: auto;
 
       .headerMenu {
         font-size: 18px;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(auto-fill, 150px);
         cursor: pointer;
+        border-bottom: 1px solid #4c4d54;
+
         .headerMenuTitle {
           width: 150px;
           display: grid;
           justify-content: center;
-          padding-bottom: 20px !important;
+          padding: 10px;
         }
         .selectedMenuTitle {
-          border-bottom: 4px solid #ffc107 !important;
+          border-top: 1px solid #4c4d54;
+          border-right: 1px solid #4c4d54;
+          border-left: 1px solid #4c4d54;
           p {
             color: #1a1a1a;
           }
         }
       }
 
-      .headerLeft {
+      .studyPage {
         display: grid;
-        grid-template-columns: auto auto auto;
-        justify-content: flex-start;
-        align-items: baseline;
-        grid-gap: 3rem;
-      }
-      .headerRight {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-gap: 9px;
-        background: #ffffff;
-        box-sizing: border-box;
-        border-radius: 4px;
-        align-items: center;
-      }
-    }
-    .content {
-      grid-area: content;
-      background: #f7f9f8;
-      padding: 1rem 2rem;
-      overflow-y: scroll;
-      overflow-x: scroll;
-    }
-    .questions {
-      grid-area: review;
-
-      height: 90%;
-      overflow-y: scroll;
-      .stickyButton {
-        position: sticky;
-        top: 0px;
-        width: 100%;
-        display: grid;
-        justify-items: end;
-        background: white;
-        padding: 10px;
-        z-index: 1;
-        button {
-          background: #007c70;
-          border: 2px solid #007c70;
-          box-sizing: border-box;
-          border-radius: 4px;
-          padding: 14px 24px;
-          color: #ffffff;
+        .imageContainer {
+          margin-top: 24px;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+          }
+        }
+        .studyInformation {
+          display: grid;
+          grid-gap: 8px;
+        }
+        .studyDescription {
+          margin: 8px 0px;
+        }
+        .ui.accordion:not(.styled) .accordion .title ~ .content:not(.ui),
+        .ui.accordion:not(.styled) .title ~ .content:not(.ui) {
+          overflow: hidden;
           font-family: Lato;
           font-size: 18px;
-          font-style: normal;
           font-weight: 400;
-          line-height: 18px;
-          letter-spacing: 0.05em;
-          text-align: center;
-          cursor: pointer;
-          width: 100%;
+          line-height: 24.66px;
+          text-align: left;
+          color: #626269;
+          border-bottom: 1px solid var(--neutral_grey2, #3b3b3b);
+          border-left: 1px solid var(--neutral_grey2, #3b3b3b);
+          border-right: 1px solid var(--neutral_grey2, #3b3b3b);
+          padding: 24px 16px;
+        }
+        .ui.accordion .title:not(.ui) {
+          font-family: Lato;
+          font-size: 24px;
+          font-weight: 600;
+          line-height: 32px;
+          text-align: left;
+          padding: 24px 16px;
+          margin-top: 24px;
+        }
+        .ui.accordion .title:not(.ui) {
+          border-top: 1px solid var(--neutral_grey2, #3b3b3b);
+          border-bottom: 1px solid var(--neutral_grey2, #3b3b3b);
+          border-left: 1px solid var(--neutral_grey2, #3b3b3b);
+          border-right: 1px solid var(--neutral_grey2, #3b3b3b);
         }
       }
+      .studyDetails {
+        display: grid;
+        margin: 40px 0px;
+        .participateLinkWrapper {
+          display: grid;
+          justify-self: end;
+        }
+        .participateLink {
+          display: grid;
+          grid-gap: 10px;
+          grid-template-columns: 1fr auto;
+          font-family: Lato;
+          font-size: 16px;
+          font-weight: 600;
+          line-height: 20px;
+          text-align: left;
+          color: var(--SECONDARY_BLUE1, #28619e);
+        }
+
+        h1 {
+          font-family: Lato;
+          font-size: 28px;
+          font-weight: 700;
+          line-height: 35px;
+          text-align: left;
+          color: #171717;
+        }
+      }
+    }
+    .panelRight {
+      height: 90vh;
+      overflow-y: scroll;
     }
   }
 
   .reviewQuestions {
     display: grid;
     padding: 67px 44px 37px 50px;
+
     .reviewItems {
       display: grid;
       grid-gap: 20px;
@@ -426,6 +766,129 @@ export const StyledDasboardReview = styled.div`
     .reviewItem {
       display: grid;
       grid-gap: 5px;
+    }
+  }
+
+  .p12 {
+    font-family: Lato;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 8px;
+    text-align: left;
+    color: #6e6a6a;
+  }
+  .p12_400 {
+    font-family: Lato;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: left;
+    color: #666666;
+  }
+  .p13 {
+    font-family: Lato;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 24px;
+    text-align: left;
+    color: #47484d;
+  }
+  .p14 {
+    font-family: Lato;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: left;
+    color: var(--neutral_grey2, #3b3b3b);
+  }
+  .p16 {
+    font-family: Lato;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: center;
+    color: #6e6d71;
+  }
+  .p16_500 {
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: left;
+    color: #666666;
+  }
+  .p16_600 {
+    font-family: Lato;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: left;
+    color: var(--neutral_black1, #171717);
+  }
+  .p17 {
+    font-family: Lato;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 22px;
+    text-align: left;
+  }
+  .p18 {
+    font-family: Lato;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 32px;
+    color: var(--neutral_black1, #171717);
+  }
+  .p22 {
+    font-family: Lato;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 22px;
+    text-align: left;
+    color: #007c70;
+  }
+  .h24 {
+    //styleName: H3;
+    font-family: Lato;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 32px;
+    text-align: left;
+    color: #666666;
+  }
+  .h28 {
+    font-family: Lato;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 35px;
+    text-align: left;
+    color: #171717;
+  }
+  .h40 {
+    //styleName: H2;
+    font-family: Lato;
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 50px;
+    text-align: left;
+    color: var(--neutral_black1, #171717);
+  }
+  .noStudyDetailsContainer  {
+    display: grid;
+    grid-gap: 8px;
+    border: 1px solid #dadfe2;
+    margin: 80px 65px;
+    padding: 40px 47px;
+    text-align: center;
+  }
+  .descriptionMenu {
+    .item {
+      font-family: Lato;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 23px;
+      color: #1a1a1a;
     }
   }
 `;

@@ -2,24 +2,8 @@ import gql from "graphql-tag";
 
 // create new review
 export const CREATE_REVIEW = gql`
-  mutation CREATE_REVIEW(
-    $authorId: ID!
-    $studyId: ID!
-    $proposalId: ID!
-    $stage: String
-    $settings: JSON
-    $content: JSON
-  ) {
-    createReview(
-      data: {
-        author: { connect: { id: $authorId } }
-        study: { connect: { id: $studyId } }
-        proposal: { connect: { id: $proposalId } }
-        stage: $stage
-        settings: $settings
-        content: $content
-      }
-    ) {
+  mutation CREATE_REVIEW($input: ReviewCreateInput!) {
+    createReview(data: $input) {
       id
     }
   }
@@ -32,6 +16,15 @@ export const UPDATE_REVIEW = gql`
       where: { id: $id }
       data: { settings: $settings, content: $content }
     ) {
+      id
+    }
+  }
+`;
+
+// edit review
+export const EDIT_REVIEW = gql`
+  mutation EDIT_REVIEW($id: ID!, $input: ReviewUpdateInput!) {
+    updateReview(where: { id: $id }, data: $input) {
       id
     }
   }

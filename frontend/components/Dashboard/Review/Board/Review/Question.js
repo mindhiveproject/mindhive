@@ -6,15 +6,15 @@ export default function Question({ stage, item, handleItemChange }) {
       <div>
         <h2>{item.question}</h2>
         {item.subQuestionA && (
-          <ol type="a">
-            <li>{item.subQuestionA}</li>
-            <li>{item.subQuestionB}</li>
-          </ol>
+          <ul>
+            {item.subQuestionA && <li>{item.subQuestionA}</li>}
+            {item.subQuestionB && <li>{item.subQuestionB}</li>}
+          </ul>
         )}
         <p>{item.text}</p>
       </div>
 
-      {stage === "INDIVIDUAL" && (
+      {stage === "IN_REVIEW" && (
         <div>
           <ReactStars
             count={5}

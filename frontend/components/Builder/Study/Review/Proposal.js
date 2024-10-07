@@ -1,14 +1,13 @@
-import { useState } from "react";
 import { useMutation } from "@apollo/client";
-
-import { Icon, Dropdown } from "semantic-ui-react";
+import Link from "next/link";
 
 import { PROPOSAL_REVIEWS_QUERY } from "../../../Queries/Proposal";
+import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
 import { UPDATE_PROPOSAL_BOARD } from "../../../Mutations/Proposal";
+import { UPDATE_STUDY } from "../../../Mutations/Study";
 
 import { items } from "./Checklist/Template";
 import ChecklistItem from "./Checklist/Main";
-import Row from "./Reviews/Row";
 
 import {
   StyledReviewSection,
@@ -16,20 +15,33 @@ import {
   StyledReviewCard,
 } from "../../../styles/StyledReview";
 
-export default function Proposal({
-  proposals,
-  proposal,
-  selectReview,
-  setReviewNumber,
-  setProposalId,
-}) {
-  const [showAllReviews, setShowAllReviews] = useState(false);
+import Feedback from "./Reviews/Main";
+
+export default function Proposal({ query, study }) {
+  const proposal = study?.proposalMain || {};
+
   const [updateProposal, { loading }] = useMutation(UPDATE_PROPOSAL_BOARD, {
     refetchQueries: [
       {
         query: PROPOSAL_REVIEWS_QUERY,
         variables: { id: proposal?.id },
       },
+    ],
+  });
+
+  const [
+    updateStudy,
+    {
+      data: updateStudyData,
+      loading: updateStudyLoading,
+      error: updateStudyError,
+    },
+  ] = useMutation(UPDATE_STUDY, {
+    variables: {
+      id: study?.id,
+    },
+    refetchQueries: [
+      { query: STUDY_PROPOSALS_QUERY, variables: { id: study?.id } },
     ],
   });
 
@@ -60,158 +72,172 @@ export default function Proposal({
     }
     await updateProposal({
       variables: {
-        id: proposal.id,
+        id: proposal?.id,
         checklist,
       },
     });
+  };
+
+  const updateStudyStatus = async ({ status }) => {
+    await updateStudy({
+      variables: {
+        id: study?.id,
+        input: {
+          status: status,
+        },
+      },
+    });
+    if (status === "IN_REVIEW") {
+      submitProposal();
+    }
   };
 
   return (
     <StyledReviewSection>
       <StyledReviewBoard>
         <StyledReviewCard className="submit">
-          <h2>
-            Ready to send for review{" "}
-            <Dropdown
-              inline
-              placeholder="Select proposal"
-              options={proposals?.map((p) => ({
-                key: p.id,
-                value: p.id,
-                text: p.title,
-              }))}
-              onChange={(event, data) => setProposalId(data?.value)}
-              value={proposal?.id}
-              className="dropdown"
-            />
-            ?
-          </h2>
+          <h2>Ready to receive feedback on your proposal or study?</h2>
+          <p>
+            Once you submit your study for review, your proposal and study will
+            become available to peer reviews from other participating schools to
+            view and review.
+            <strong> If you are submitting your brainstorm</strong>, you may
+            disregard the checklist below.
+            <strong> If you are submitting for final review</strong>, only
+            submit once you have completed the checklist below, and are happy
+            with your proposal.
+          </p>
+          <p>
+            {study?.status === "SUBMITTED_AS_PROPOSAL" && (
+              <strong>
+                You have already submitted your proposal for review.
+              </strong>
+            )}
+            {study?.status === "IN_REVIEW" && (
+              <strong>
+                You have already submitted both your proposal and your study for
+                final review.
+              </strong>
+            )}
+          </p>
+          <div className="buttons">
+            <div
+              className={
+                study?.status !== "SUBMITTED_AS_PROPOSAL" &&
+                study?.status !== "IN_REVIEW"
+                  ? `submitBtn active`
+                  : `submitBtn locked`
+              }
+              onClick={() => {
+                if (
+                  study?.status !== "SUBMITTED_AS_PROPOSAL" &&
+                  study?.status !== "IN_REVIEW" &&
+                  confirm(
+                    "Are you sure you want to submit this proposal? You will not be able to undo it later."
+                  )
+                ) {
+                  updateStudyStatus({ status: "SUBMITTED_AS_PROPOSAL" });
+                }
+              }}
+            >
+              {study?.status !== "SUBMITTED_AS_PROPOSAL" &&
+              study?.status !== "IN_REVIEW" ? (
+                <img src="/assets/icons/review/brain-and-head.svg" />
+              ) : (
+                <img src="/assets/icons/review/brain-and-head-gray.svg" />
+              )}
+              <div>Submit Proposal</div>
+            </div>
 
-          <div className="submitPanel">
-            <p>
-              When you submit your study as “ready for review,” your proposal
-              and study will become available to peer reviewers from other
-              participating schools to view and review.
-            </p>
-            <div className="submitBtnContainer">
-              <button
-                type="button"
-                style={{
-                  display: "grid",
-                  gridGap: "15px",
-                  gridTemplateColumns: "20px 1fr",
-                  padding: "15px 20px 10px 20px",
-                  background: `${
-                    proposal?.isSubmitted ? "#FFF3CD" : "#FFFFFF"
-                  }`,
-                  border: `${
-                    proposal?.isSubmitted
-                      ? "2px solid #FFC107"
-                      : "2px solid #B3B3B3"
-                  }`,
-                }}
-                disabled={proposal?.isSubmitted}
-                onClick={() => {
-                  if (
-                    confirm(
-                      "Are you sure you want to submit this proposal? You will not be able to undo it later."
-                    )
-                  ) {
-                    submitProposal();
-                  }
-                }}
-              >
-                {proposal?.isSubmitted ? (
-                  <Icon
-                    name="check"
-                    style={{
-                      color: "#FFC107",
-                    }}
-                  />
-                ) : (
-                  <img src="/assets/icons/builder/submit.svg" alt="icon" />
-                )}
-
-                {proposal?.isSubmitted
-                  ? "Submitted for review"
-                  : "Submit for review"}
-              </button>
+            <div
+              className={
+                study?.status !== "IN_REVIEW"
+                  ? `submitBtn active`
+                  : `submitBtn locked`
+              }
+              onClick={() => {
+                if (proposal?.checklist?.length < 5) {
+                  return alert(
+                    "Before you submit your study for feedback make sure you check that you have completed the checklist"
+                  );
+                }
+                if (
+                  study?.status !== "IN_REVIEW" &&
+                  confirm(
+                    "Are you sure you want to submit this study for feedback? You will not be able to undo it later."
+                  )
+                ) {
+                  updateStudyStatus({ status: "IN_REVIEW" });
+                }
+              }}
+            >
+              {study?.status !== "IN_REVIEW" ? (
+                <img src="/assets/icons/review/process.svg" />
+              ) : (
+                <img src="/assets/icons/review/process-gray.svg" />
+              )}
+              <div>Submit Study for Feedback</div>
             </div>
           </div>
         </StyledReviewCard>
 
         <StyledReviewCard className="checklist">
-          <h2>Pre-review checklist</h2>
+          <h2>Before you submit your study for feedback</h2>
 
-          <p>Before you submit for review, make sure to:</p>
+          {study?.proposal?.length === 0 && (
+            <p>
+              Please create your{" "}
+              <Link
+                href={`/builder/studies?selector=${study?.id}&tab=proposal`}
+              >
+                proposal
+              </Link>{" "}
+              first
+            </p>
+          )}
 
-          <div className="checklistItems">
-            {items.map((item, i) => (
-              <ChecklistItem
-                item={item}
-                key={i}
-                isComplete={proposal?.checklist?.includes(item.name)}
-                toggleCheckTo={toggleCheckTo}
-                updateProposal={updateProposal}
-                takeAction={takeAction}
-                isSubmitted={!!proposal?.isSubmitted}
-              />
-            ))}
-          </div>
+          {!!study?.proposal?.length && !proposal?.id && (
+            <p>
+              Please select one{" "}
+              <Link
+                href={`/builder/studies?selector=${study?.id}&tab=proposal`}
+              >
+                proposal
+              </Link>{" "}
+              as your main proposal
+            </p>
+          )}
+
+          {!!study?.proposal?.length && proposal?.id && (
+            <>
+              <p>
+                Make sure you check that you have completed the following items
+              </p>
+
+              <div className="checklistItems">
+                {items.map((item, i) => (
+                  <ChecklistItem
+                    item={item}
+                    key={i}
+                    isComplete={proposal?.checklist?.includes(item.name)}
+                    toggleCheckTo={toggleCheckTo}
+                    updateProposal={updateProposal}
+                    takeAction={takeAction}
+                    isSubmitted={!!proposal?.isSubmitted}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </StyledReviewCard>
 
         <StyledReviewCard className="reviews">
-          <h2>Reviews</h2>
-          {proposal?.reviews && proposal?.reviews.length ? (
-            <div className="reviewsCards">
-              <p>All individual reviews and syntheses are available here:</p>
-              {proposal.reviews
-                .filter((review) => review.stage === "SYNTHESIS")
-                .map((review, num) => (
-                  <Row
-                    key={num}
-                    number={num + 1}
-                    review={review}
-                    stage="SYNTHESIS"
-                    selectReview={selectReview}
-                  />
-                ))}
-
-              <a
-                className="allReviewsToggle"
-                onClick={() => setShowAllReviews(!showAllReviews)}
-              >
-                {showAllReviews ? "Hide" : "Show"} all reviews
-              </a>
-
-              {showAllReviews && (
-                <>
-                  {proposal.reviews
-                    .filter((review) => review.stage === "INDIVIDUAL")
-                    .map((review, num) => (
-                      <Row
-                        key={num}
-                        number={num + 1}
-                        review={review}
-                        stage="INDIVIDUAL"
-                        selectReview={selectReview}
-                      />
-                    ))}
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="reviewsPlaceholder">
-              <p>
-                <strong>You don’t have any reviews yet</strong>
-              </p>
-              <p>
-                Once you mark your study as ready for review and your peers have
-                reviewed and synthesized their comments, you will see your
-                reviews here.
-              </p>
-            </div>
-          )}
+          <h2>Feedback</h2>
+          <p>
+            Once you submit your proposal or study, your reviews will appear
+            here.
+          </p>
+          <Feedback query={query} study={study} />
         </StyledReviewCard>
       </StyledReviewBoard>
     </StyledReviewSection>

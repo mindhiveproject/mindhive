@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Dropdown } from "semantic-ui-react";
 
 import { COPY_PROPOSAL_MUTATION } from "../../../Mutations/Proposal";
-import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Proposal";
+import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
 
 import { useMutation } from "@apollo/client";
 import ProposalBuilder from "../../../Proposal/Builder/Main";
@@ -24,7 +24,7 @@ export default function CreateProposal({
       study: studyId,
     },
     refetchQueries: [
-      { query: STUDY_PROPOSALS_QUERY, variables: { studyId: studyId } },
+      { query: STUDY_PROPOSALS_QUERY, variables: { id: studyId } },
     ],
   });
 

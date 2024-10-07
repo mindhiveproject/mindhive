@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import ComponentSelector from "./Selector/Main";
 import StudySettings from "./Settings/Main";
-import StudyTasks from "../../../Dashboard/Review/Board/StudyPreview/StudyTasks";
+import StudyTasks from "../../../Dashboard/Review/Board/StudyOverview/StudyTasks";
 
 export default function Menu({
   engine,

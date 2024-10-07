@@ -1,10 +1,9 @@
-import { useState } from "react";
 import { useQuery } from "@apollo/client";
 
 import Navigation from "../Navigation/Main";
-import Wrapper from "./Wrapper";
+import Proposal from "./Proposal";
 
-import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Proposal";
+import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
 
 import { StyledReviewPage } from "../../../styles/StyledReview";
 
@@ -13,41 +12,18 @@ export default function Review({ query, user, tab, toggleSidebar }) {
 
   const { data, loading, error } = useQuery(STUDY_PROPOSALS_QUERY, {
     variables: {
-      studyId: studyId,
+      id: studyId,
     },
   });
 
-  const proposals = data?.proposalBoards || [];
-
-  const [proposalId, setProposalId] = useState(
-    (proposals.length && proposals[0].id) || null
-  );
-
-  if (proposalId) {
-    return (
-      <>
-        <Navigation query={query} user={user} tab={tab} />
-        <StyledReviewPage>
-          <Wrapper
-            user={user}
-            proposals={proposals}
-            proposalId={proposalId}
-            setProposalId={setProposalId}
-          />
-        </StyledReviewPage>
-      </>
-    );
-  }
+  const study = data?.study || {};
 
   return (
     <>
-      <Navigation
-        query={query}
-        user={user}
-        tab={tab}
-        toggleSidebar={toggleSidebar}
-      />
-      <div>There are no proposals</div>;
+      <Navigation query={query} user={user} tab={tab} />
+      <StyledReviewPage>
+        <Proposal query={query} user={user} study={study} />
+      </StyledReviewPage>
     </>
   );
 }

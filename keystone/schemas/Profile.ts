@@ -234,6 +234,10 @@ export const Profile = list({
       ref: "Review.author",
       many: true,
     }),
+    reviewsUpvoted: relationship({
+      ref: "Review.upvotedBy",
+      many: true,
+    }),
     assignedToProposalCard: relationship({
       ref: "ProposalCard.assignedTo",
       many: true,

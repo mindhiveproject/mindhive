@@ -68,6 +68,8 @@ type Profile {
   authorOfProposalCount(where: ProposalBoardWhereInput! = {}): Int
   reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReviewWhereUniqueInput): [Review!]
   reviewsCount(where: ReviewWhereInput! = {}): Int
+  reviewsUpvoted(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReviewWhereUniqueInput): [Review!]
+  reviewsUpvotedCount(where: ReviewWhereInput! = {}): Int
   assignedToProposalCard(where: ProposalCardWhereInput! = {}, orderBy: [ProposalCardOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalCardWhereUniqueInput): [ProposalCard!]
   assignedToProposalCardCount(where: ProposalCardWhereInput! = {}): Int
   editsProposalCard(where: ProposalCardWhereInput! = {}, orderBy: [ProposalCardOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalCardWhereUniqueInput): [ProposalCard!]
@@ -175,6 +177,7 @@ input ProfileWhereInput {
   creatorOfProposal: ProposalBoardManyRelationFilter
   authorOfProposal: ProposalBoardManyRelationFilter
   reviews: ReviewManyRelationFilter
+  reviewsUpvoted: ReviewManyRelationFilter
   assignedToProposalCard: ProposalCardManyRelationFilter
   editsProposalCard: ProposalCardManyRelationFilter
   updates: UpdateManyRelationFilter
@@ -513,6 +516,7 @@ input ProfileUpdateInput {
   creatorOfProposal: ProposalBoardRelateToManyForUpdateInput
   authorOfProposal: ProposalBoardRelateToManyForUpdateInput
   reviews: ReviewRelateToManyForUpdateInput
+  reviewsUpvoted: ReviewRelateToManyForUpdateInput
   assignedToProposalCard: ProposalCardRelateToManyForUpdateInput
   editsProposalCard: ProposalCardRelateToManyForUpdateInput
   updates: UpdateRelateToManyForUpdateInput
@@ -766,6 +770,7 @@ input ProfileCreateInput {
   creatorOfProposal: ProposalBoardRelateToManyForCreateInput
   authorOfProposal: ProposalBoardRelateToManyForCreateInput
   reviews: ReviewRelateToManyForCreateInput
+  reviewsUpvoted: ReviewRelateToManyForCreateInput
   assignedToProposalCard: ProposalCardRelateToManyForCreateInput
   editsProposalCard: ProposalCardRelateToManyForCreateInput
   updates: UpdateRelateToManyForCreateInput
@@ -1888,6 +1893,7 @@ type Study {
   consentCount(where: ConsentWhereInput! = {}): Int
   proposal(where: ProposalBoardWhereInput! = {}, orderBy: [ProposalBoardOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalBoardWhereUniqueInput): [ProposalBoard!]
   proposalCount(where: ProposalBoardWhereInput! = {}): Int
+  proposalMain: ProposalBoard
   descriptionInProposalCard: ProposalCard
   classes(where: ClassWhereInput! = {}, orderBy: [ClassOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClassWhereUniqueInput): [Class!]
   classesCount(where: ClassWhereInput! = {}): Int
@@ -1938,6 +1944,7 @@ input StudyWhereInput {
   guests: GuestManyRelationFilter
   consent: ConsentManyRelationFilter
   proposal: ProposalBoardManyRelationFilter
+  proposalMain: ProposalBoardWhereInput
   descriptionInProposalCard: ProposalCardWhereInput
   classes: ClassManyRelationFilter
   reviews: ReviewManyRelationFilter
@@ -2003,6 +2010,7 @@ input StudyUpdateInput {
   guests: GuestRelateToManyForUpdateInput
   consent: ConsentRelateToManyForUpdateInput
   proposal: ProposalBoardRelateToManyForUpdateInput
+  proposalMain: ProposalBoardRelateToOneForUpdateInput
   descriptionInProposalCard: ProposalCardRelateToOneForUpdateInput
   classes: ClassRelateToManyForUpdateInput
   reviews: ReviewRelateToManyForUpdateInput
@@ -2030,6 +2038,12 @@ input GuestRelateToManyForUpdateInput {
   set: [GuestWhereUniqueInput!]
   create: [GuestCreateInput!]
   connect: [GuestWhereUniqueInput!]
+}
+
+input ProposalBoardRelateToOneForUpdateInput {
+  create: ProposalBoardCreateInput
+  connect: ProposalBoardWhereUniqueInput
+  disconnect: Boolean
 }
 
 input ProposalCardRelateToOneForUpdateInput {
@@ -2071,6 +2085,7 @@ input StudyCreateInput {
   guests: GuestRelateToManyForCreateInput
   consent: ConsentRelateToManyForCreateInput
   proposal: ProposalBoardRelateToManyForCreateInput
+  proposalMain: ProposalBoardRelateToOneForCreateInput
   descriptionInProposalCard: ProposalCardRelateToOneForCreateInput
   classes: ClassRelateToManyForCreateInput
   reviews: ReviewRelateToManyForCreateInput
@@ -2095,6 +2110,11 @@ input StudyImageRelateToOneForCreateInput {
 input GuestRelateToManyForCreateInput {
   create: [GuestCreateInput!]
   connect: [GuestWhereUniqueInput!]
+}
+
+input ProposalBoardRelateToOneForCreateInput {
+  create: ProposalBoardCreateInput
+  connect: ProposalBoardWhereUniqueInput
 }
 
 input ProposalCardRelateToOneForCreateInput {
@@ -2461,6 +2481,7 @@ type ProposalBoard {
   creator: Profile
   author: Profile
   study: Study
+  studyMain: Study
   sections(where: ProposalSectionWhereInput! = {}, orderBy: [ProposalSectionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProposalSectionWhereUniqueInput): [ProposalSection!]
   sectionsCount(where: ProposalSectionWhereInput! = {}): Int
   reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReviewWhereUniqueInput): [Review!]
@@ -2487,6 +2508,7 @@ input ProposalBoardWhereInput {
   creator: ProfileWhereInput
   author: ProfileWhereInput
   study: StudyWhereInput
+  studyMain: StudyWhereInput
   sections: ProposalSectionManyRelationFilter
   reviews: ReviewManyRelationFilter
   createdAt: DateTimeNullableFilter
@@ -2521,6 +2543,7 @@ input ProposalBoardUpdateInput {
   creator: ProfileRelateToOneForUpdateInput
   author: ProfileRelateToOneForUpdateInput
   study: StudyRelateToOneForUpdateInput
+  studyMain: StudyRelateToOneForUpdateInput
   sections: ProposalSectionRelateToManyForUpdateInput
   reviews: ReviewRelateToManyForUpdateInput
   createdAt: DateTime
@@ -2550,6 +2573,7 @@ input ProposalBoardCreateInput {
   creator: ProfileRelateToOneForCreateInput
   author: ProfileRelateToOneForCreateInput
   study: StudyRelateToOneForCreateInput
+  studyMain: StudyRelateToOneForCreateInput
   sections: ProposalSectionRelateToManyForCreateInput
   reviews: ReviewRelateToManyForCreateInput
   createdAt: DateTime
@@ -2621,12 +2645,6 @@ input ProposalSectionUpdateInput {
   updatedAt: DateTime
 }
 
-input ProposalBoardRelateToOneForUpdateInput {
-  create: ProposalBoardCreateInput
-  connect: ProposalBoardWhereUniqueInput
-  disconnect: Boolean
-}
-
 input ProposalSectionUpdateArgs {
   where: ProposalSectionWhereUniqueInput!
   data: ProposalSectionUpdateInput!
@@ -2640,11 +2658,6 @@ input ProposalSectionCreateInput {
   cards: ProposalCardRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
-}
-
-input ProposalBoardRelateToOneForCreateInput {
-  create: ProposalBoardCreateInput
-  connect: ProposalBoardWhereUniqueInput
 }
 
 type ProposalCard {
@@ -2764,6 +2777,8 @@ type Review {
   stage: String
   createdAt: DateTime
   updatedAt: DateTime
+  upvotedBy(where: ProfileWhereInput! = {}, orderBy: [ProfileOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProfileWhereUniqueInput): [Profile!]
+  upvotedByCount(where: ProfileWhereInput! = {}): Int
 }
 
 input ReviewWhereUniqueInput {
@@ -2781,6 +2796,7 @@ input ReviewWhereInput {
   stage: StringNullableFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
+  upvotedBy: ProfileManyRelationFilter
 }
 
 input ReviewOrderByInput {
@@ -2799,6 +2815,7 @@ input ReviewUpdateInput {
   stage: String
   createdAt: DateTime
   updatedAt: DateTime
+  upvotedBy: ProfileRelateToManyForUpdateInput
 }
 
 input ReviewUpdateArgs {
@@ -2815,6 +2832,7 @@ input ReviewCreateInput {
   stage: String
   createdAt: DateTime
   updatedAt: DateTime
+  upvotedBy: ProfileRelateToManyForCreateInput
 }
 
 type Curriculum {

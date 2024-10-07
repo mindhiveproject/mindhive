@@ -55,6 +55,7 @@ model Profile {
   creatorOfProposal        ProposalBoard[] @relation("ProposalBoard_creator")
   authorOfProposal         ProposalBoard[] @relation("ProposalBoard_author")
   reviews                  Review[]        @relation("Review_author")
+  reviewsUpvoted           Review[]        @relation("Profile_reviewsUpvoted")
   assignedToProposalCard   ProposalCard[]  @relation("Profile_assignedToProposalCard")
   editsProposalCard        ProposalCard[]  @relation("ProposalCard_isEditedBy")
   updates                  Update[]        @relation("Update_user")
@@ -294,6 +295,7 @@ model Study {
   guests                      Guest[]         @relation("Guest_participantIn")
   consent                     Consent[]       @relation("Consent_studies")
   proposal                    ProposalBoard[] @relation("ProposalBoard_study")
+  proposalMain                ProposalBoard?  @relation("ProposalBoard_studyMain")
   descriptionInProposalCard   ProposalCard?   @relation("Study_descriptionInProposalCard", fields: [descriptionInProposalCardId], references: [id])
   descriptionInProposalCardId String?         @map("descriptionInProposalCard")
   classes                     Class[]         @relation("Class_studies")
@@ -402,6 +404,8 @@ model ProposalBoard {
   authorId    String?           @map("author")
   study       Study?            @relation("ProposalBoard_study", fields: [studyId], references: [id])
   studyId     String?           @map("study")
+  studyMain   Study?            @relation("ProposalBoard_studyMain", fields: [studyMainId], references: [id])
+  studyMainId String?           @unique @map("studyMain")
   sections    ProposalSection[] @relation("ProposalSection_board")
   reviews     Review[]          @relation("Review_proposal")
   createdAt   DateTime?         @default(now())
@@ -462,6 +466,7 @@ model Review {
   stage      String?
   createdAt  DateTime?      @default(now())
   updatedAt  DateTime?
+  upvotedBy  Profile[]      @relation("Profile_reviewsUpvoted")
 
   @@index([authorId])
   @@index([studyId])

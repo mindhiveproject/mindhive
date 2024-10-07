@@ -25,7 +25,7 @@ export const PROPOSAL_TEMPLATES_QUERY = gql`
   }
 `;
 
-// get study proposala
+// get study proposals
 export const STUDY_PROPOSALS_QUERY = gql`
   query STUDY_PROPOSALS_QUERY($studyId: ID!) {
     proposalBoards(where: { study: { id: { equals: $studyId } } }) {
@@ -190,6 +190,10 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
         author {
           id
         }
+        upvotedBy {
+          id
+        }
+        updatedAt
       }
     }
   }

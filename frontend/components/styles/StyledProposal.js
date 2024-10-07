@@ -56,6 +56,7 @@ export const StyledProposal = styled.div`
       grid-template-columns: 1fr 200px;
       align-items: center;
     }
+
     .proposalHeader {
       display: grid;
       margin: 5px;
@@ -73,9 +74,12 @@ export const StyledProposal = styled.div`
       align-items: center;
       .actionLinks {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-gap: 1rem;
       }
+    }
+    .main {
+      border: 1px solid gray;
     }
   }
 

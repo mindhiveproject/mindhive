@@ -1,7 +1,7 @@
-import Wrapper from "./Wrapper";
-import ReviewBoard from "./Board/Main";
-
 import { StyledDasboardReview } from "../../styles/StyledReview";
+import Overview from "./Overview/Main";
+import View from "./View/Main";
+import ReviewBoard from "./Board/Main";
 
 export default function ReviewMain({ query, user }) {
   const { selector } = query;
@@ -9,22 +9,24 @@ export default function ReviewMain({ query, user }) {
   if (!selector) {
     return (
       <StyledDasboardReview>
-        <Wrapper page="featured" query={query} user={user} />
+        <Overview query={query} user={user} />
       </StyledDasboardReview>
     );
   }
 
-  if (selector === "proposal") {
+  if (selector === "study") {
+    return (
+      <StyledDasboardReview>
+        <View query={query} user={user} />
+      </StyledDasboardReview>
+    );
+  }
+
+  if (selector === "comment") {
     return (
       <StyledDasboardReview>
         <ReviewBoard query={query} user={user} />
       </StyledDasboardReview>
     );
   }
-
-  return (
-    <StyledDasboardReview>
-      <Wrapper page={selector} query={query} user={user} />
-    </StyledDasboardReview>
-  );
 }

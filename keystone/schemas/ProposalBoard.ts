@@ -73,6 +73,9 @@ export const ProposalBoard = list({
     study: relationship({
       ref: "Study.proposal",
     }),
+    studyMain: relationship({
+      ref: "Study.proposalMain",
+    }),
     sections: relationship({
       ref: "ProposalSection.board",
       many: true,
