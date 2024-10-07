@@ -32,7 +32,7 @@ export default function UserReview({ query, user, tab, study, canReview }) {
   const review = reviews.length ? reviews[0] : {};
 
   const defaultContent =
-    study?.stage === "SUBMITTED_AS_PROPOSAL"
+    study?.status === "SUBMITTED_AS_PROPOSAL"
       ? proposalStageQuestions
       : inReviewStageQuestions;
 
