@@ -40,7 +40,7 @@ export default function StudyPreview({ study, user }) {
             <h3>{ReactHtmlParser(study?.description)}</h3>
           </div>
 
-          {canReview ? (
+          {canReview || true ? (
             <StudyInfo user={user} study={study} />
           ) : (
             <div className="noStudyDetailsContainer">

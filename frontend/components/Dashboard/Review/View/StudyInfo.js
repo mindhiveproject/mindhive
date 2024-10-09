@@ -80,7 +80,7 @@ export default function StudyInfo({ query, canReview, study }) {
         </div>
       </div>
 
-      {canReview ? (
+      {canReview || true ? (
         <div>
           {tabs.map((atab, num) => (
             <div key={num}>
