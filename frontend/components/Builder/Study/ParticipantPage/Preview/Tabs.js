@@ -46,6 +46,10 @@ export default function Tabs({
       name: "why",
       header: "Why",
     },
+    {
+      name: "how",
+      header: "How",
+    },
     ...additionalTabs,
   ];
 

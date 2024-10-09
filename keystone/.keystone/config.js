@@ -1483,7 +1483,7 @@ var Study = (0, import_core13.list)({
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
-            return { connect: { id: context.session.itemId } };
+            return inputData.collaborators;
           } else {
             return inputData.collaborators;
           }
@@ -1568,7 +1568,8 @@ var Study = (0, import_core13.list)({
       defaultValue: "WORKING"
     }),
     currentVersion: (0, import_fields16.text)(),
-    versionHistory: (0, import_fields16.json)()
+    versionHistory: (0, import_fields16.json)(),
+    projectName: (0, import_fields16.text)()
   }
 });
 

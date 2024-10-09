@@ -1,6 +1,8 @@
+import moment from "moment";
 import Question from "./Question";
 
 export default function QuestionsMain({
+  review,
   reviewContent,
   stage,
   handleItemChange,
@@ -22,6 +24,17 @@ export default function QuestionsMain({
             />
           ))}
         </div>
+        {review?.createdAt && (
+          <em>
+            Submitted on{" "}
+            {moment(review?.createdAt).format("MMMM D, YYYY, h:mma")}
+          </em>
+        )}
+        {review?.updatedAt && (
+          <em>
+            Updated on {moment(review?.updatedAt).format("MMMM D, YYYY, h:mma")}
+          </em>
+        )}
       </div>
     </div>
   );

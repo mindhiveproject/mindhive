@@ -151,6 +151,7 @@ export default function UserReview({ query, user, tab, study, canReview }) {
 
         {canReview && (
           <Questions
+            review={review}
             reviewContent={inputs?.content}
             stage={study?.status}
             handleItemChange={handleItemChange}

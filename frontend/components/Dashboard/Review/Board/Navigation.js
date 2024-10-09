@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 
 import { GET_REVIEW } from "../../../Queries/Review";
 import { CREATE_REVIEW, UPDATE_REVIEW } from "../../../Mutations/Review";
@@ -40,7 +40,12 @@ export default function Navigation({ study, inputs, canReview, handleChange }) {
     updateReview,
     { data: updateData, loading: updateLoading, error: updateError },
   ] = useMutation(UPDATE_REVIEW, {
-    variables: inputs,
+    variables: {
+      id: inputs?.id,
+      settings: inputs?.settings,
+      content: inputs?.content,
+      updatedAt: new Date(),
+    },
     refetchQueries: [
       {
         query: GET_REVIEW,
@@ -73,17 +78,22 @@ export default function Navigation({ study, inputs, canReview, handleChange }) {
       {canReview && (
         <div className="saveBtn">
           {inputs?.id ? (
-            // <button
-            //   type="button"
-            //   disabled={updateLoading}
-            //   onClick={() => {
-            //     updateReview();
-            //     alert("The review has been saved");
-            //   }}
-            // >
-            //   Save Feedback
-            // </button>
-            <></>
+            <button
+              type="button"
+              disabled={updateLoading}
+              onClick={async () => {
+                if (
+                  confirm(
+                    "Are you sure you want to resubmit? Your feedback will be updated."
+                  )
+                ) {
+                  updateReview();
+                  alert("The review has been updated");
+                }
+              }}
+            >
+              Submit Feedback
+            </button>
           ) : (
             <button
               type="button"
@@ -91,7 +101,7 @@ export default function Navigation({ study, inputs, canReview, handleChange }) {
               onClick={async () => {
                 if (
                   confirm(
-                    "Are you sure you want to submit? You cannot edit or change your feedback after submission."
+                    "Are you sure you want to submit? Your feedback will be visible for others. You can edit your feedback after submission."
                   )
                 ) {
                   const res = await createReview();

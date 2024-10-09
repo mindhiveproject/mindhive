@@ -9,6 +9,51 @@ export const StyledBuilderArea = styled.div`
   height: 100vh;
   width: 100%;
   grid-template-rows: auto 1fr;
+  .newProject {
+    background: #f7f9f8;
+    display: grid;
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
+    align-content: center;
+
+    .modal {
+      display: grid;
+      grid-gap: 15px;
+      background: #ffffff;
+      padding: 24px 32px;
+      border-radius: 8px;
+      max-width: 360px;
+      .title {
+        font-family: Lato;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 20px;
+        color: var(--neutral_black1, #171717);
+        margin: 5px 0px;
+      }
+      .message {
+        font-family: Lato;
+        font-size: 10px;
+        font-weight: 400;
+        line-height: 16px;
+        color: #8a919d;
+      }
+      button {
+        padding: 5px 20px;
+        background: #b0b0b3;
+        width: fit-content;
+        border-radius: 50px;
+        border: 1px solid #b0b0b3;
+        font-family: Lato;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 18px;
+        text-align: center;
+        color: #ffffff;
+      }
+    }
+  }
   .navigation {
     display: grid;
     .on {
@@ -16,6 +61,22 @@ export const StyledBuilderArea = styled.div`
     .off {
       background: lightGrey;
       border: 1px solid lightGrey;
+    }
+    .firstLineNewProject {
+      display: grid;
+      grid-gap: 1rem;
+      grid-template-columns: auto 1fr;
+      padding: 7px 10px;
+      .centralPanel {
+        display: grid;
+        justify-items: center;
+        font-family: Lato;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: center;
+        color: #d0c9d6;
+      }
     }
     .firstLine {
       display: grid;

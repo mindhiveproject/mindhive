@@ -1,7 +1,5 @@
 import moment from "moment";
-
 import styled from "styled-components";
-
 import ReactStars from "react-rating-stars-component"; // https://www.npmjs.com/package/react-rating-stars-component
 
 import { Icon } from "semantic-ui-react";
@@ -104,13 +102,22 @@ export default function Board({ studyId, sections, user }) {
                 <span>{section?.upvotedBy?.length}</span>
               </div>
             </div>
-            {user?.permissions.includes("TEACHER") && (
-              <div>{section.hiddenTitle}</div>
-            )}
+
             {section?.createdAt && (
               <em>
+                Submitted on{" "}
                 {moment(section?.createdAt).format("MMMM D, YYYY, h:mma")}
               </em>
+            )}
+            {section?.updatedAt && (
+              <em>
+                Updated on{" "}
+                {moment(section?.updatedAt).format("MMMM D, YYYY, h:mma")}
+              </em>
+            )}
+
+            {user?.permissions.includes("TEACHER") && (
+              <div>{section.hiddenTitle}</div>
             )}
 
             <div className="cards">

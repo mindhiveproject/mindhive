@@ -9,7 +9,7 @@ import { MY_STUDY } from "../../../Queries/Study";
 const itemsOriginal = [
   {
     value: "proposal",
-    name: "Proposal",
+    name: "Project Board",
   },
   {
     value: "page",

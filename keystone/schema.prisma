@@ -311,6 +311,7 @@ model Study {
   status                      String?         @default("WORKING")
   currentVersion              String          @default("")
   versionHistory              String?
+  projectName                 String          @default("")
 
   @@index([authorId])
   @@index([descriptionInProposalCardId])

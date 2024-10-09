@@ -11,10 +11,15 @@ export const CREATE_REVIEW = gql`
 
 // update existing review
 export const UPDATE_REVIEW = gql`
-  mutation UPDATE_REVIEW($id: ID!, $settings: JSON, $content: JSON) {
+  mutation UPDATE_REVIEW(
+    $id: ID!
+    $settings: JSON
+    $content: JSON
+    $updatedAt: DateTime
+  ) {
     updateReview(
       where: { id: $id }
-      data: { settings: $settings, content: $content }
+      data: { settings: $settings, content: $content, updatedAt: $updatedAt }
     ) {
       id
     }

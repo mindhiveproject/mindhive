@@ -93,7 +93,7 @@ export const Study = list({
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
-            return { connect: { id: context.session.itemId } };
+            return inputData.collaborators;
           } else {
             return inputData.collaborators;
           }
@@ -179,5 +179,6 @@ export const Study = list({
     }),
     currentVersion: text(),
     versionHistory: json(),
+    projectName: text(),
   },
 });

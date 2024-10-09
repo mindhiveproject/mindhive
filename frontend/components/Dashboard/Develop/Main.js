@@ -11,6 +11,23 @@ export default function DevelopMain({ query, user }) {
   const { t } = useTranslation("dashboard");
 
   const { selector } = query;
+  let developNewQuery;
+  switch (selector) {
+    case "studies":
+      developNewQuery = "study";
+      break;
+    case "tasks":
+      developNewQuery = "task";
+      break;
+    case "surveys":
+      developNewQuery = "survey";
+      break;
+    case "blocks":
+      developNewQuery = "block";
+      break;
+    default:
+      developNewQuery = "study";
+  }
 
   if (selector === "new") {
     return (
@@ -33,7 +50,12 @@ export default function DevelopMain({ query, user }) {
           </p>
         </div>
         <div>
-          <Link href="/dashboard/develop/new">
+          <Link
+            href={{
+              pathname: `/dashboard/develop/new`,
+              query: { develop: developNewQuery },
+            }}
+          >
             <button>Develop new</button>
           </Link>
         </div>

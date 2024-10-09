@@ -395,6 +395,8 @@ export const STUDY_TO_REVIEW = gql`
         upvotedBy {
           id
         }
+        createdAt
+        updatedAt
       }
       proposalMain {
         id

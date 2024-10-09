@@ -43,18 +43,16 @@ export default function Collaborators({
   };
 
   return (
-    <div>
-      <Dropdown
-        placeholder="Type username"
-        fluid
-        multiple
-        search
-        selection
-        lazyLoad
-        options={usernames}
-        onChange={onChange}
-        value={collaborators}
-      />
-    </div>
+    <Dropdown
+      placeholder="Type username"
+      fluid
+      multiple
+      search
+      selection
+      lazyLoad
+      options={usernames}
+      onChange={onChange}
+      value={collaborators}
+    />
   );
 }

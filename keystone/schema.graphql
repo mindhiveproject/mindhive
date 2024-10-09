@@ -1916,6 +1916,7 @@ type Study {
   status: String
   currentVersion: String
   versionHistory: JSON
+  projectName: String
 }
 
 input StudyWhereUniqueInput {
@@ -1958,6 +1959,7 @@ input StudyWhereInput {
   updatedAt: DateTimeNullableFilter
   status: StringNullableFilter
   currentVersion: StringFilter
+  projectName: StringFilter
 }
 
 input GuestManyRelationFilter {
@@ -1987,6 +1989,7 @@ input StudyOrderByInput {
   updatedAt: OrderDirection
   status: OrderDirection
   currentVersion: OrderDirection
+  projectName: OrderDirection
 }
 
 input StudyUpdateInput {
@@ -2025,6 +2028,7 @@ input StudyUpdateInput {
   status: String
   currentVersion: String
   versionHistory: JSON
+  projectName: String
 }
 
 input StudyImageRelateToOneForUpdateInput {
@@ -2100,6 +2104,7 @@ input StudyCreateInput {
   status: String
   currentVersion: String
   versionHistory: JSON
+  projectName: String
 }
 
 input StudyImageRelateToOneForCreateInput {

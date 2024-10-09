@@ -14,6 +14,8 @@ export const GET_REVIEW = gql`
       stage
       settings
       content
+      createdAt
+      updatedAt
     }
   }
 `;

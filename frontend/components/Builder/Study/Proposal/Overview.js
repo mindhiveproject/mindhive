@@ -22,7 +22,7 @@ export default function ProposalOverview({
     { query: STUDY_PROPOSALS_QUERY, variables: { id: studyId } },
   ];
 
-  if (proposals.length === 0) {
+  if (proposals?.length === 0) {
     return (
       <div className="empty">
         <h3>You haven’t created any proposals yet.</h3>
@@ -52,7 +52,7 @@ export default function ProposalOverview({
           </div>
           <div></div>
         </div>
-        {proposals.map((prop) => (
+        {proposals?.map((prop) => (
           <div key={prop?.id}>
             <div className="row">
               <div
