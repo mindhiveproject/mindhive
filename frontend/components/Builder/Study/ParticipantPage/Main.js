@@ -195,6 +195,7 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
       />
       <StyledParticipantPage>
         <Preview
+          user={user}
           study={inputs}
           handleChange={handleStudyChange}
           handleMultipleUpdate={handleStudyMultipleUpdate}

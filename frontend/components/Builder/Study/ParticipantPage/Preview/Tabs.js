@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export default function Tabs({
+  user,
   study,
   infoBlocks,
   handleParameterChange,
@@ -91,13 +92,18 @@ export default function Tabs({
             </div>
           ))}
         </div>
-        <button
-          onClick={() => {
-            addTab();
-          }}
-        >
-          Add Tab
-        </button>
+        {(user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
+          user?.permissions?.map((p) => p?.name).includes("SCIENTIST") ||
+          user?.permissions?.map((p) => p?.name).includes("TEACHER") ||
+          user?.permissions?.map((p) => p?.name).includes("MENTOR")) && (
+          <button
+            onClick={() => {
+              addTab();
+            }}
+          >
+            Add Tab
+          </button>
+        )}
       </div>
 
       {tabs.map((atab, num) => (

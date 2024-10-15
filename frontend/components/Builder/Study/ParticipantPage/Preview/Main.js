@@ -1,6 +1,7 @@
 import Tabs from "./Tabs";
 
 export default function Preview({
+  user,
   study,
   handleChange,
   handleMultipleUpdate,
@@ -101,6 +102,7 @@ export default function Preview({
       <div className="details">
         <div className="leftPanel">
           <Tabs
+            user={user}
             study={study}
             infoBlocks={infoBlocks}
             handleParameterChange={handleParameterChange}

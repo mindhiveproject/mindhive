@@ -14,13 +14,13 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
     study?.info?.filter((p) => p.name.startsWith("tab")) || [];
 
   const tabs = [
-    // {
-    //   name: "what",
-    //   header: "What",
-    // },
     {
       name: "why",
       header: "Why",
+    },
+    {
+      name: "how",
+      header: "How",
     },
     {
       name: "who",
