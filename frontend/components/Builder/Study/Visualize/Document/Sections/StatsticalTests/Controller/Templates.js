@@ -100,7 +100,7 @@ else:
 
 # Perform a one-way ANOVA
 if isWide:
-    f_statistic, p_value = stats.f_oneway(*[df[col] for col in columns])
+    f_statistic, p_value = stats.f_oneway(*[df[col].dropna() for col in columns])
 else:
     groups = [group_data.dropna() for label, group_data in df.groupby(groupcol)[quantCol]]
     f_statistic, p_value = stats.f_oneway(*groups)

@@ -25,7 +25,7 @@ By agreeing to use the MindHive platform, you allow us and our collaborators to 
 ### 1) Your participation is voluntary
 
 <p>
-Your participation on Mindive is completely voluntary, and you may discontinue your participation at any time, for any reason. You may end your participation in any study by closing your browser window.  If you have an account on MindHive, you are free to delete your account at any time by navigating to <a target="_blank" href="https://mindhive.science/dashboard/settings">Account Settings</a>. You can also request that your data be removed from the platform at any time by contacting <a href="mailto: info@mindhive.science">info@mindhive.science</a>. Note that we only have control over data that is stored with us at the moment of request. Some data may be beyond our control (e.g., data that has already been shared with researchers or included in publications, or data that cannot be retrieved because you forgot your username).
+Your participation on Mindive is completely voluntary, and you may discontinue your participation at any time, for any reason. You may end your participation in any study by closing your browser window. If you have an account on MindHive, you are free to request the deletion of your account and associated data at any time by contacting <a href="mailto: info@mindhive.science">info@mindhive.science</a>. Note that we only have control over data that is stored with us at the moment of request. Some data may be beyond our control (e.g., data that has already been shared with researchers or included in publications, or data that cannot be retrieved because you forgot your username).
 </p>
 
 ### 2) We will never sell your data
@@ -76,7 +76,7 @@ d) <strong>Students</strong> can explore and participate (see Participant) in Mi
 The legal environment and the legal details by which we operate and make your data available can change. When this happens, we need to obtain your permission to move forward.  However, if you give us the broad permissions that are outlined in this agreement, we can quickly adapt to these circumstances and make the necessary legal changes without obtaining permission from every single user.  
 </p>
 <p>
-In sum, by engaging with MindHive, you agree that your de-identified data may be shared with authorized Users (Researchers and Educators) and be used for research and educational purposes. Only non-commercial use of your data will be allowed: we will never ever sell your data to anyone. Finally, you can request that your data be removed from the platform at any time by contacting info@mindhive.science.
+In sum, by engaging with MindHive, you agree that your de-identified data may be shared with authorized Users (Researchers and Educators) and be used for research and educational purposes. Only non-commercial use of your data will be allowed: we will never ever sell your data to anyone. Finally, you can request that your data be removed from the platform at any time by contacting <a href="mailto: info@mindhive.science">info@mindhive.science</a>.
 </p>
 
 <p>
@@ -184,7 +184,7 @@ You may find tools on the Service that allow you to send information, including 
 
 ### 9. Termination of Your Account
 
-If you violate any of these terms, your permission to use the Service automatically terminates. You may cancel your account with the Service by going to https://mindhive.science/dashboard/settings.
+If you violate any of these terms, your permission to use the Service automatically terminates. You may cancel your account with the Service by submitting a request to <a href="mailto: info@mindhive.science">info@mindhive.science</a>.
 
 ### 10. Privacy Policy and Additional Requirements
 

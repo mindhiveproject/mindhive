@@ -69,7 +69,7 @@ else:
         Y: agg_func,  # Take the first non-NaN y value for each participant
         Group: agg_func,  # Take the first non-NaN y value for each participant
     }).reset_index()
-print(grouped_df)
+
 if Group=='':
   if trendline:
     
