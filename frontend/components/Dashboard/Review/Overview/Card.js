@@ -18,12 +18,22 @@ export default function Card({ study }) {
       status = "Undefined";
   }
 
+  const shortenTitle = (title) => {
+    if (title.length <= 48) {
+      return title;
+    }
+    const truncated = title.substr(0, 48);
+    const lastSpaceIndex = truncated.lastIndexOf(" ");
+    return title.substr(0, lastSpaceIndex) + "...";
+  };
+
   return (
     <Link
       href={{
         pathname: `/dashboard/review/study`,
         query: { id: study?.id },
       }}
+      className="customlink"
     >
       <div className="card">
         <div className="headline">
@@ -37,17 +47,24 @@ export default function Card({ study }) {
               : ``}
           </div>
         </div>
-        <div className="p13">{study?.title}</div>
+        <div className="p13">{shortenTitle(study?.title)}</div>
         <div className="imageContainer">
           {imageURL ? (
             <img src={imageURL} alt={study?.title} />
           ) : (
-            <div className="noImage"></div>
+            <div className="noImage">
+              <img src="/logo.png" alt={study?.title} />
+            </div>
           )}
         </div>
         <div className="lowPanel">
           <div>
-            <div className="tag">{status}</div>
+            {status === "Proposal" && (
+              <div className="tag proposal">{status}</div>
+            )}
+            {status === "Peer Review" && (
+              <div className="tag peerreview">{status}</div>
+            )}
           </div>
           <div className="options">
             {study?.status === "IN_REVIEW" && (
@@ -57,7 +74,7 @@ export default function Card({ study }) {
               </div>
             )}
             <div className="option">
-              <img src="/assets/icons/review/review.svg" />
+              <img src="/assets/icons/review/comment.svg" />
               <div>Comment</div>
             </div>
           </div>

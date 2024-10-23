@@ -15,6 +15,7 @@ import {
   proposalStageQuestions,
   inReviewStageQuestions,
 } from "./Review/Template";
+import { useEffect } from "react";
 
 // getting the state of the user review
 export default function UserReview({ query, user, tab, study, canReview }) {
@@ -36,14 +37,28 @@ export default function UserReview({ query, user, tab, study, canReview }) {
       ? proposalStageQuestions
       : inReviewStageQuestions;
 
-  const { inputs, handleChange } = useForm({
+  const { inputs, handleChange, resetForm } = useForm({
     id: review?.id,
-    content: review?.content || defaultContent,
+    content: defaultContent,
     authorId: user?.id,
     studyId: study?.id,
     proposalId: study?.proposalMain?.id,
     stage: study?.status,
   });
+
+  useEffect(() => {
+    async function updateContent() {
+      handleChange({
+        target: {
+          name: "content",
+          value: review?.content,
+        },
+      });
+    }
+    if (review?.content) {
+      updateContent();
+    }
+  }, [review?.content]);
 
   const handleItemChange = ({ className, name, value }) => {
     const updatedContent = [...inputs?.content];
@@ -70,6 +85,7 @@ export default function UserReview({ query, user, tab, study, canReview }) {
         inputs={inputs}
         canReview={canReview}
         handleChange={handleChange}
+        resetForm={resetForm}
       />
 
       <div className={canReview ? `double` : `single`}>
@@ -152,7 +168,7 @@ export default function UserReview({ query, user, tab, study, canReview }) {
         {canReview && (
           <Questions
             review={review}
-            reviewContent={inputs?.content}
+            reviewContent={inputs?.content || []}
             stage={study?.status}
             handleItemChange={handleItemChange}
           />

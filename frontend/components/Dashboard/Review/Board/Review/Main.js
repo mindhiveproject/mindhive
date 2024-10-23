@@ -21,6 +21,7 @@ export default function QuestionsMain({
               stage={stage}
               item={item}
               handleItemChange={handleItemChange}
+              answer={item?.answer}
             />
           ))}
         </div>

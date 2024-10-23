@@ -6,7 +6,13 @@ import { GET_REVIEW } from "../../../Queries/Review";
 import { CREATE_REVIEW, UPDATE_REVIEW } from "../../../Mutations/Review";
 import { STUDY_TO_REVIEW } from "../../../Queries/Study";
 
-export default function Navigation({ study, inputs, canReview, handleChange }) {
+export default function Navigation({
+  study,
+  inputs,
+  canReview,
+  handleChange,
+  resetForm,
+}) {
   const [
     createReview,
     { data: createData, loading: createLoading, error: createError },

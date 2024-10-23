@@ -121,63 +121,82 @@ export default function Proposal({ query, study }) {
             )}
           </p>
           <div className="buttons">
-            <div
-              className={
-                study?.status !== "SUBMITTED_AS_PROPOSAL" &&
-                study?.status !== "IN_REVIEW"
-                  ? `submitBtn active`
-                  : `submitBtn locked`
-              }
-              onClick={() => {
-                if (
-                  study?.status !== "SUBMITTED_AS_PROPOSAL" &&
-                  study?.status !== "IN_REVIEW" &&
-                  confirm(
-                    "Are you sure you want to submit this proposal? You will not be able to undo it later."
-                  )
-                ) {
-                  updateStudyStatus({ status: "SUBMITTED_AS_PROPOSAL" });
-                }
-              }}
-            >
-              {study?.status !== "SUBMITTED_AS_PROPOSAL" &&
-              study?.status !== "IN_REVIEW" ? (
-                <img src="/assets/icons/review/brain-and-head.svg" />
-              ) : (
-                <img src="/assets/icons/review/brain-and-head-gray.svg" />
-              )}
-              <div>Submit Proposal</div>
-            </div>
+            <div className="step">Step 1: Submit proposal</div>
+            <div className="step">Step 2: Submit study for feedback</div>
 
-            <div
-              className={
-                study?.status !== "IN_REVIEW"
-                  ? `submitBtn active`
-                  : `submitBtn locked`
-              }
-              onClick={() => {
-                if (proposal?.checklist?.length < 5) {
-                  return alert(
-                    "Before you submit your study for feedback make sure you check that you have completed the checklist"
-                  );
-                }
-                if (
-                  study?.status !== "IN_REVIEW" &&
-                  confirm(
-                    "Are you sure you want to submit this study for feedback? You will not be able to undo it later."
-                  )
-                ) {
-                  updateStudyStatus({ status: "IN_REVIEW" });
-                }
-              }}
-            >
-              {study?.status !== "IN_REVIEW" ? (
-                <img src="/assets/icons/review/process.svg" />
-              ) : (
-                <img src="/assets/icons/review/process-gray.svg" />
+            {(study?.status === "SUBMITTED_AS_PROPOSAL" ||
+              study?.status === "IN_REVIEW") && (
+              <Link href={`/dashboard/review`}>
+                <div className="submitBtn view">
+                  <img src="/assets/icons/review/brain-and-head-green.svg" />
+                  <div>View submission</div>
+                </div>
+              </Link>
+            )}
+
+            {study?.status !== "SUBMITTED_AS_PROPOSAL" &&
+              study?.status !== "IN_REVIEW" && (
+                <div
+                  className="submitBtn active"
+                  onClick={() => {
+                    if (
+                      confirm(
+                        "Are you sure you want to submit this proposal? You will not be able to undo it later."
+                      )
+                    ) {
+                      updateStudyStatus({ status: "SUBMITTED_AS_PROPOSAL" });
+                    }
+                  }}
+                >
+                  <img src="/assets/icons/review/brain-and-head.svg" />
+                  <div>Submit Proposal</div>
+                </div>
               )}
-              <div>Submit Study for Feedback</div>
-            </div>
+
+            {study?.status !== "SUBMITTED_AS_PROPOSAL" &&
+              study?.status !== "IN_REVIEW" && (
+                <div className="submitBtn locked">
+                  <img src="/assets/icons/review/process-gray.svg" />
+                  <div>Submit Study for Feedback</div>
+                </div>
+              )}
+
+            {study?.status === "SUBMITTED_AS_PROPOSAL" && (
+              <div
+                className="submitBtn active"
+                onClick={() => {
+                  if (!proposal?.id) {
+                    return alert(
+                      "Before you submit your study for feedback make sure you created your project board and selected it as the main one"
+                    );
+                  }
+                  if (!proposal?.checklist || proposal?.checklist?.length < 5) {
+                    return alert(
+                      "Before you submit your study for feedback make sure you check that you have completed the checklist"
+                    );
+                  }
+                  if (
+                    confirm(
+                      "Are you sure you want to submit this study for feedback? You will not be able to undo it later."
+                    )
+                  ) {
+                    updateStudyStatus({ status: "IN_REVIEW" });
+                  }
+                }}
+              >
+                <img src="/assets/icons/review/process.svg" />
+                <div>Submit Study for Feedback</div>
+              </div>
+            )}
+
+            {study?.status === "IN_REVIEW" && (
+              <Link href={`/dashboard/review`}>
+                <div className="submitBtn view">
+                  <img src="/assets/icons/review/process-green.svg" />
+                  <div>View submission</div>
+                </div>
+              </Link>
+            )}
           </div>
         </StyledReviewCard>
 
@@ -190,7 +209,7 @@ export default function Proposal({ query, study }) {
               <Link
                 href={`/builder/studies?selector=${study?.id}&tab=proposal`}
               >
-                proposal
+                project board
               </Link>{" "}
               first
             </p>
@@ -202,9 +221,9 @@ export default function Proposal({ query, study }) {
               <Link
                 href={`/builder/studies?selector=${study?.id}&tab=proposal`}
               >
-                proposal
+                project board
               </Link>{" "}
-              as your main proposal
+              as your main one
             </p>
           )}
 

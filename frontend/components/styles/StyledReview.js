@@ -90,6 +90,7 @@ export const StyledReviewBoard = styled.div`
   margin: 45px 0px 45px 0px;
   width: 100%;
   justify-self: center;
+  align-content: baseline;
 
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
@@ -239,15 +240,24 @@ export const StyledReviewCard = styled.div`
   }
   .buttons {
     display: grid;
-    grid-gap: 16px;
+    grid-row-gap: 16px;
+    grid-column-gap: 24px;
     grid-template-columns: auto 1fr;
+    .step {
+      font-family: Lato;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 22px;
+      text-align: left;
+      color: var(--neutral_grey2, #3b3b3b);
+    }
     .submitBtn {
       display: grid;
       grid-gap: 8px;
       grid-template-columns: auto 1fr;
       width: fit-content;
       border-radius: 5px;
-      padding: 13px 17px;
+      padding: 10px 30px;
       font-family: Lato;
       font-size: 17px;
       line-height: 22px;
@@ -262,6 +272,11 @@ export const StyledReviewCard = styled.div`
       border: 2px solid #e5e5e5;
       background: #e5e5e5;
       color: #8a888d;
+    }
+    .view {
+      border: 2px solid var(--PRIMARY_GREEN3, #007c70);
+      background: white;
+      color: var(--PRIMARY_GREEN3, #007c70);
     }
   }
 `;
@@ -321,6 +336,24 @@ export const StyledDasboardReview = styled.div`
       grid-template-columns: auto auto 1fr;
     }
 
+    .customlink: hover {
+      opacity: 1;
+      .card {
+        box-shadow: 0px 4px 4px 0px #97979d40;
+        .imageContainer {
+          img {
+            opacity: 0.7;
+          }
+        }
+        .options {
+          color: var(--SECONDARY_BLUE1, #28619e);
+          img {
+            filter: sepia(100%) hue-rotate(190deg) saturate(500%);
+          }
+        }
+      }
+    }
+
     .card {
       display: grid;
       grid-gap: 8px;
@@ -349,13 +382,38 @@ export const StyledDasboardReview = styled.div`
           object-fit: cover;
           border-radius: 8px;
         }
+        .noImage {
+          display: grid;
+          margin-left: 30px;
+          justify-content: center;
+          align-content: center;
+          height: 100%;
+          img {
+            border-radius: 0px;
+            width: 80%;
+            object-fit: contain;
+          }
+        }
       }
       .tag {
-        padding: 3px 10px;
+        padding: 1px 6px;
         width: fit-content;
-        border: 1px solid var(--PRIMARY_GREEN3, #007c70);
-        background: #007c7014;
         border-radius: 4px;
+        font-family: Lato;
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 18px;
+        text-align: left;
+      }
+      .proposal {
+        background: var(--SECONDARY_BLUE3, #d8f1f8);
+        border: 1px solid var(--SECONDARY_BLUE1, #28619e);
+        color: var(--SECONDARY_BLUE1, #28619e);
+      }
+      .peerreview {
+        background: #e4efee;
+        border: 1px solid var(--PRIMARY_GREEN3, #007c70);
+        color: var(--PRIMARY_GREEN3, #007c70);
       }
       .options {
         display: grid;

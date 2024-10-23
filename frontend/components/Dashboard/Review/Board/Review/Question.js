@@ -1,6 +1,6 @@
 import ReactStars from "react-rating-stars-component"; // https://www.npmjs.com/package/react-rating-stars-component
 
-export default function Question({ stage, item, handleItemChange }) {
+export default function Question({ stage, item, handleItemChange, answer }) {
   return (
     <div className="reviewItem">
       <div>
@@ -33,22 +33,20 @@ export default function Question({ stage, item, handleItemChange }) {
         </div>
       )}
 
-      <div>
-        <textarea
-          type="text"
-          id={item.name}
-          name={item.name}
-          value={item.answer}
-          className="answer"
-          onChange={({ target }) =>
-            handleItemChange({
-              className: "answer",
-              name: item.name,
-              value: target.value,
-            })
-          }
-        />
-      </div>
+      <textarea
+        type="text"
+        id={item.name}
+        name={item.name}
+        value={answer}
+        className="answer"
+        onChange={({ target }) =>
+          handleItemChange({
+            className: "answer",
+            name: item.name,
+            value: target.value,
+          })
+        }
+      />
     </div>
   );
 }

@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import absoluteUrl from "next-absolute-url";
-
 import { useQuery } from "@apollo/client";
 
 import { STUDY_TO_REVIEW } from "../../../Queries/Study";
