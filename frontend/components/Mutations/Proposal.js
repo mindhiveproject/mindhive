@@ -197,6 +197,7 @@ export const UPDATE_CARD_CONTENT = gql`
     $settings: JSON
     $assignedTo: [ProfileWhereUniqueInput!]
     $type: String
+    $shareType: String
   ) {
     updateProposalCard(
       where: { id: $id }
@@ -208,6 +209,7 @@ export const UPDATE_CARD_CONTENT = gql`
         settings: $settings
         assignedTo: { set: $assignedTo }
         type: $type
+        shareType: $shareType
       }
     ) {
       id

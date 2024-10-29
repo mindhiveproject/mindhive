@@ -144,6 +144,7 @@ export const GET_CARD_CONTENT = gql`
       isEditedBy {
         username
       }
+      shareType
     }
   }
 `;

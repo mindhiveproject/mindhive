@@ -2683,6 +2683,9 @@ type ProposalCard {
   isEditedBy: Profile
   lastTimeEdited: DateTime
   type: String
+  shareType: String
+  homework(where: HomeworkWhereInput! = {}, orderBy: [HomeworkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: HomeworkWhereUniqueInput): [Homework!]
+  homeworkCount(where: HomeworkWhereInput! = {}): Int
 }
 
 input ProposalCardWhereUniqueInput {
@@ -2707,6 +2710,8 @@ input ProposalCardWhereInput {
   isEditedBy: ProfileWhereInput
   lastTimeEdited: DateTimeNullableFilter
   type: StringNullableFilter
+  shareType: StringNullableFilter
+  homework: HomeworkManyRelationFilter
 }
 
 input ProposalCardOrderByInput {
@@ -2720,6 +2725,7 @@ input ProposalCardOrderByInput {
   updatedAt: OrderDirection
   lastTimeEdited: OrderDirection
   type: OrderDirection
+  shareType: OrderDirection
 }
 
 input ProposalCardUpdateInput {
@@ -2737,6 +2743,8 @@ input ProposalCardUpdateInput {
   isEditedBy: ProfileRelateToOneForUpdateInput
   lastTimeEdited: DateTime
   type: String
+  shareType: String
+  homework: HomeworkRelateToManyForUpdateInput
 }
 
 input ProposalSectionRelateToOneForUpdateInput {
@@ -2765,6 +2773,8 @@ input ProposalCardCreateInput {
   isEditedBy: ProfileRelateToOneForCreateInput
   lastTimeEdited: DateTime
   type: String
+  shareType: String
+  homework: HomeworkRelateToManyForCreateInput
 }
 
 input ProposalSectionRelateToOneForCreateInput {
@@ -3230,6 +3240,7 @@ type Homework {
   code: String
   author: Profile
   assignment: Assignment
+  proposalCard: ProposalCard
   title: String
   content: String
   settings: JSON
@@ -3253,6 +3264,7 @@ input HomeworkWhereInput {
   code: StringFilter
   author: ProfileWhereInput
   assignment: AssignmentWhereInput
+  proposalCard: ProposalCardWhereInput
   title: StringFilter
   content: StringFilter
   public: BooleanFilter
@@ -3275,6 +3287,7 @@ input HomeworkUpdateInput {
   code: String
   author: ProfileRelateToOneForUpdateInput
   assignment: AssignmentRelateToOneForUpdateInput
+  proposalCard: ProposalCardRelateToOneForUpdateInput
   title: String
   content: String
   settings: JSON
@@ -3299,6 +3312,7 @@ input HomeworkCreateInput {
   code: String
   author: ProfileRelateToOneForCreateInput
   assignment: AssignmentRelateToOneForCreateInput
+  proposalCard: ProposalCardRelateToOneForCreateInput
   title: String
   content: String
   settings: JSON

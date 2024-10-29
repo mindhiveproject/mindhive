@@ -73,6 +73,32 @@ export const GET_MY_CLASS_ASSIGNMENTS = gql`
   }
 `;
 
+// get all my and class assignments
+export const GET_CLASS_ASSIGNMENTS_FOR_STUDENTS = gql`
+  query GET_CLASS_ASSIGNMENTS_FOR_STUDENTS($classId: ID) {
+    assignments(
+      where: { classes: { some: { id: { equals: $classId } } } }
+      orderBy: [{ createdAt: desc }]
+    ) {
+      id
+      code
+      title
+      content
+      author {
+        username
+      }
+      public
+      homework {
+        public
+      }
+      classes {
+        id
+      }
+      createdAt
+    }
+  }
+`;
+
 // get template assignments
 export const GET_TEMPLATE_ASSIGNMENTS = gql`
   query GET_TEMPLATE_ASSIGNMENTS {

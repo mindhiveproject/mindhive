@@ -23,6 +23,15 @@ export const CREATE_HOMEWORK = gql`
   }
 `;
 
+// more flexible way to create a homework
+export const CREATE_NEW_HOMEWORK = gql`
+  mutation CREATE_NEW_HOMEWORK($input: HomeworkCreateInput!) {
+    createHomework(data: $input) {
+      id
+    }
+  }
+`;
+
 // edit homework
 export const EDIT_HOMEWORK = gql`
   mutation EDIT_HOMEWORK(

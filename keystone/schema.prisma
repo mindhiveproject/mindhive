@@ -449,6 +449,8 @@ model ProposalCard {
   isEditedById     String?          @map("isEditedBy")
   lastTimeEdited   DateTime?
   type             String?          @default("PROPOSAL")
+  shareType        String?          @default("COLLECTIVE")
+  homework         Homework[]       @relation("Homework_proposalCard")
 
   @@index([sectionId])
   @@index([isEditedById])
@@ -555,22 +557,25 @@ model Assignment {
 }
 
 model Homework {
-  id           String      @id @default(cuid())
-  code         String      @unique @default("")
-  author       Profile?    @relation("Homework_author", fields: [authorId], references: [id])
-  authorId     String?     @map("author")
-  assignment   Assignment? @relation("Homework_assignment", fields: [assignmentId], references: [id])
-  assignmentId String?     @map("assignment")
-  title        String      @default("")
-  content      String      @default("")
-  settings     String?
-  public       Boolean     @default(false)
-  tags         Tag[]       @relation("Homework_tags")
-  createdAt    DateTime?   @default(now())
-  updatedAt    DateTime?
+  id             String        @id @default(cuid())
+  code           String        @unique @default("")
+  author         Profile?      @relation("Homework_author", fields: [authorId], references: [id])
+  authorId       String?       @map("author")
+  assignment     Assignment?   @relation("Homework_assignment", fields: [assignmentId], references: [id])
+  assignmentId   String?       @map("assignment")
+  proposalCard   ProposalCard? @relation("Homework_proposalCard", fields: [proposalCardId], references: [id])
+  proposalCardId String?       @map("proposalCard")
+  title          String        @default("")
+  content        String        @default("")
+  settings       String?
+  public         Boolean       @default(false)
+  tags           Tag[]         @relation("Homework_tags")
+  createdAt      DateTime?     @default(now())
+  updatedAt      DateTime?
 
   @@index([authorId])
   @@index([assignmentId])
+  @@index([proposalCardId])
 }
 
 model SummaryResult {

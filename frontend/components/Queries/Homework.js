@@ -69,3 +69,29 @@ export const GET_MY_HOMEWORKS_FOR_ASSIGNMENT = gql`
     }
   }
 `;
+
+// get student homework for specific proposal card
+export const GET_MY_HOMEWORK_FOR_PROPOSAL_CARD = gql`
+  query GET_MY_HOMEWORK_FOR_PROPOSAL_CARD($userId: ID!, $cardId: ID!) {
+    homeworks(
+      where: {
+        author: { id: { equals: $userId } }
+        proposalCard: { id: { equals: $cardId } }
+      }
+    ) {
+      id
+      code
+      title
+      content
+      settings
+      public
+      author {
+        id
+        username
+        publicReadableId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

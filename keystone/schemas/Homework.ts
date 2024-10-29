@@ -52,6 +52,9 @@ export const Homework = list({
     assignment: relationship({
       ref: "Assignment.homework",
     }),
+    proposalCard: relationship({
+      ref: "ProposalCard.homework",
+    }),
     title: text({ validation: { isRequired: true } }),
     content: text(),
     settings: json(),

@@ -57,5 +57,16 @@ export const ProposalCard = list({
       ],
       defaultValue: "PROPOSAL",
     }),
+    shareType: select({
+      options: [
+        { label: "Individual", value: "INDIVIDUAL" },
+        { label: "Collective", value: "COLLECTIVE" },
+      ],
+      defaultValue: "COLLECTIVE",
+    }),
+    homework: relationship({
+      ref: "Homework.proposalCard",
+      many: true,
+    }),
   },
 });

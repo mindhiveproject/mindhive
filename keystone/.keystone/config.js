@@ -105,7 +105,7 @@ async function copyProposalBoard(root, {
   }
   const template = await context.query.ProposalBoard.findOne({
     where: { id },
-    query: "id slug title description settings sections { id title position cards { id type title description position content } }"
+    query: "id slug title description settings sections { id title position cards { id type shareType title description position content } }"
   });
   const argumentsToCopy = {
     title: template.title,
@@ -160,6 +160,7 @@ async function copyProposalBoard(root, {
                   }
                 },
                 type: templateCard.type,
+                shareType: templateCard.shareType,
                 title: templateCard.title,
                 description: templateCard.description,
                 content: templateCard.content,
@@ -1923,6 +1924,17 @@ var ProposalCard = (0, import_core20.list)({
         { label: "Link", value: "LINK" }
       ],
       defaultValue: "PROPOSAL"
+    }),
+    shareType: (0, import_fields23.select)({
+      options: [
+        { label: "Individual", value: "INDIVIDUAL" },
+        { label: "Collective", value: "COLLECTIVE" }
+      ],
+      defaultValue: "COLLECTIVE"
+    }),
+    homework: (0, import_fields23.relationship)({
+      ref: "Homework.proposalCard",
+      many: true
     })
   }
 });
@@ -2356,6 +2368,9 @@ var Homework = (0, import_core26.list)({
     }),
     assignment: (0, import_fields29.relationship)({
       ref: "Assignment.homework"
+    }),
+    proposalCard: (0, import_fields29.relationship)({
+      ref: "ProposalCard.homework"
     }),
     title: (0, import_fields29.text)({ validation: { isRequired: true } }),
     content: (0, import_fields29.text)(),
