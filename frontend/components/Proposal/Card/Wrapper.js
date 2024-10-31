@@ -4,6 +4,7 @@ import { GET_CARD_CONTENT } from "../../Queries/Proposal";
 
 import ProposalCard from "./Main";
 import IndividualCard from "./Individual/Main";
+import OverviewOfIndividualCards from "./Overview/Main";
 
 export default function CardWrapper({
   user,
@@ -27,16 +28,32 @@ export default function CardWrapper({
 
   const proposalCard = data?.proposalCard || {};
 
+  // TODO also check whether the teacher is a teacher of the particular class
+  const hasOverviewAccess = user?.permissions
+    .map((p) => p?.name)
+    .includes("TEACHER");
+
   if (proposalCard && Object.values(proposalCard).length) {
     if (!proposalBuildMode && proposalCard?.shareType === "INDIVIDUAL") {
-      return (
-        <IndividualCard
-          user={user}
-          proposalCard={proposalCard}
-          closeCard={closeCard}
-          isPreview={isPreview}
-        />
-      );
+      if (hasOverviewAccess) {
+        return (
+          <OverviewOfIndividualCards
+            user={user}
+            proposalCard={proposalCard}
+            closeCard={closeCard}
+            isPreview={isPreview}
+          />
+        );
+      } else {
+        return (
+          <IndividualCard
+            user={user}
+            proposalCard={proposalCard}
+            closeCard={closeCard}
+            isPreview={isPreview}
+          />
+        );
+      }
     } else {
       return (
         <ProposalCard

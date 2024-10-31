@@ -58,6 +58,7 @@ export const Homework = list({
     title: text({ validation: { isRequired: true } }),
     content: text(),
     settings: json(),
+    comment: text(),
     public: checkbox({ isFilterable: true }),
     tags: relationship({
       ref: "Tag.homeworks",

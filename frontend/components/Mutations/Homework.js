@@ -65,3 +65,12 @@ export const DELETE_HOMEWORK = gql`
     }
   }
 `;
+
+// update homework
+export const UPDATE_HOMEWORK = gql`
+  mutation UPDATE_HOMEWORK($id: ID!, $input: HomeworkUpdateInput!) {
+    updateHomework(where: { id: $id }, data: $input) {
+      id
+    }
+  }
+`;

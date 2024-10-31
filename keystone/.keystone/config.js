@@ -2375,6 +2375,7 @@ var Homework = (0, import_core26.list)({
     title: (0, import_fields29.text)({ validation: { isRequired: true } }),
     content: (0, import_fields29.text)(),
     settings: (0, import_fields29.json)(),
+    comment: (0, import_fields29.text)(),
     public: (0, import_fields29.checkbox)({ isFilterable: true }),
     tags: (0, import_fields29.relationship)({
       ref: "Tag.homeworks",

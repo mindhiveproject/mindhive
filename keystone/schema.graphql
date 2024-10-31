@@ -3244,6 +3244,7 @@ type Homework {
   title: String
   content: String
   settings: JSON
+  comment: String
   public: Boolean
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
@@ -3267,6 +3268,7 @@ input HomeworkWhereInput {
   proposalCard: ProposalCardWhereInput
   title: StringFilter
   content: StringFilter
+  comment: StringFilter
   public: BooleanFilter
   tags: TagManyRelationFilter
   createdAt: DateTimeNullableFilter
@@ -3278,6 +3280,7 @@ input HomeworkOrderByInput {
   code: OrderDirection
   title: OrderDirection
   content: OrderDirection
+  comment: OrderDirection
   public: OrderDirection
   createdAt: OrderDirection
   updatedAt: OrderDirection
@@ -3291,6 +3294,7 @@ input HomeworkUpdateInput {
   title: String
   content: String
   settings: JSON
+  comment: String
   public: Boolean
   tags: TagRelateToManyForUpdateInput
   createdAt: DateTime
@@ -3316,6 +3320,7 @@ input HomeworkCreateInput {
   title: String
   content: String
   settings: JSON
+  comment: String
   public: Boolean
   tags: TagRelateToManyForCreateInput
   createdAt: DateTime

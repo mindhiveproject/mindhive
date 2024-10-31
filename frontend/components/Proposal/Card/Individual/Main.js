@@ -10,6 +10,8 @@ import {
 import JoditEditor from "../../../Jodit/Editor";
 import useForm from "../../../../lib/useForm";
 
+import Status from "../Forms/Status";
+
 export default function IndividualCard({
   user,
   proposalCard,
@@ -68,6 +70,7 @@ export default function IndividualCard({
           id: homework?.id,
           updatedAt: new Date(),
           content: content.current,
+          settings: inputs?.settings,
         },
       });
     } else {
@@ -77,11 +80,22 @@ export default function IndividualCard({
             title: "Title",
             content: content.current,
             proposalCard: { connect: { id: proposalCard?.id } },
+            settings: inputs?.settings,
           },
         },
       });
     }
     closeCard({ cardId: false, lockedByUser: false });
+  };
+
+  // update the settings in the local state
+  const handleSettingsChange = (name, value) => {
+    handleChange({
+      target: {
+        name: "settings",
+        value: { ...inputs.settings, [name]: value },
+      },
+    });
   };
 
   return (
@@ -118,6 +132,27 @@ export default function IndividualCard({
 
         {!isPreview && (
           <div className="infoBoard">
+            <div>
+              <h4>Status</h4>
+              <Status
+                settings={inputs?.settings}
+                onSettingsChange={handleSettingsChange}
+              />
+            </div>
+
+            <div className="proposalCardComments">
+              <h4>Comments</h4>
+              <textarea
+                rows="5"
+                type="text"
+                id="comment"
+                name="comment"
+                value={inputs.comment}
+                onChange={handleChange}
+                disabled
+              />
+            </div>
+
             <div className="buttons">
               <button
                 className="secondary"

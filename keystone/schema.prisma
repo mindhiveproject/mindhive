@@ -568,6 +568,7 @@ model Homework {
   title          String        @default("")
   content        String        @default("")
   settings       String?
+  comment        String        @default("")
   public         Boolean       @default(false)
   tags           Tag[]         @relation("Homework_tags")
   createdAt      DateTime?     @default(now())
