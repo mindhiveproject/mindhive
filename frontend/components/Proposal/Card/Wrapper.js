@@ -28,10 +28,10 @@ export default function CardWrapper({
 
   const proposalCard = data?.proposalCard || {};
 
-  // TODO also check whether the teacher is a teacher of the particular class
-  const hasOverviewAccess = user?.permissions
-    .map((p) => p?.name)
-    .includes("TEACHER");
+  // TODO also check whether the teacher/mentor is a teacher/mentor of the particular class
+  const hasOverviewAccess =
+    user?.permissions.map((p) => p?.name).includes("TEACHER") ||
+    user?.permissions.map((p) => p?.name).includes("MENTOR");
 
   if (proposalCard && Object.values(proposalCard).length) {
     if (!proposalBuildMode && proposalCard?.shareType === "INDIVIDUAL") {
