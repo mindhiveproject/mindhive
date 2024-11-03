@@ -1,8 +1,11 @@
+import { useEffect, useRef } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_HOMEWORK_BY_ID } from "../../../Queries/Homework";
 import ReactHtmlParser from "react-html-parser";
 import useForm from "../../../../lib/useForm";
 import { UPDATE_HOMEWORK } from "../../../Mutations/Homework";
+
+import JoditEditor from "../../../Jodit/Editor";
 
 const options = [
   {
@@ -41,6 +44,17 @@ export default function Homework({ homeworkId }) {
     ...homework,
   });
 
+  const content = useRef(homework?.content);
+
+  useEffect(() => {
+    async function updateEditor() {
+      content.current = homework?.content;
+    }
+    if (homework.content) {
+      updateEditor();
+    }
+  }, [homework]);
+
   const [updateHomework, { loading: updateLoading }] = useMutation(
     UPDATE_HOMEWORK,
     {
@@ -58,6 +72,7 @@ export default function Homework({ homeworkId }) {
         input: {
           comment: inputs?.comment,
           settings: inputs?.settings,
+          content: content.current,
         },
       },
     });
@@ -75,7 +90,13 @@ export default function Homework({ homeworkId }) {
 
   return (
     <>
-      <div>{ReactHtmlParser(homework?.content)}</div>
+      <JoditEditor
+        content={content?.current}
+        setContent={(newContent) => {
+          content.current = newContent;
+        }}
+      />
+
       <div className="proposalCardComments">
         <h4>Comments</h4>
         <textarea

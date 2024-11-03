@@ -34,6 +34,12 @@ export default function OverviewOfIndividualCards({
     <div className="post">
       <div className="proposalCardBoard">
         <div className="textBoard">
+          <button
+            className="secondary"
+            onClick={() => closeCard({ cardId: false, lockedByUser: false })}
+          >
+            Close
+          </button>
           <div className="cardHeader">{proposalCard?.title}</div>
           <div className="cardDescription">
             {ReactHtmlParser(proposalCard?.description)}
@@ -48,7 +54,7 @@ export default function OverviewOfIndividualCards({
             value={homeworkId}
           />
 
-          <Homework homeworkId={homeworkId} />
+          {homeworkId && <Homework homeworkId={homeworkId} />}
         </div>
       </div>
     </div>
