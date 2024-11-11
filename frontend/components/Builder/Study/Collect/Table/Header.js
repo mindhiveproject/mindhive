@@ -75,6 +75,7 @@ export default function Header({ study, slug, participants, components }) {
               by="by participant"
               study={study}
               participantsInStudy={participants}
+              components={components}
               datasets={study?.datasets || []}
               filteredDatasetTokens={filteredDatasetTokens}
             />
