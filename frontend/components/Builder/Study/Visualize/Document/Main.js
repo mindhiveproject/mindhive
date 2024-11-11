@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import sortBy from "lodash/sortBy";
 
 import ChapterHeader from "./ChapterHeader";
 import CreateSection from "./CreateSection";
@@ -50,6 +51,7 @@ export default function Document({
       );
     }
   }
+
   return (
     <div className="document">
       <ChapterHeader
@@ -59,7 +61,10 @@ export default function Document({
         chapter={chapter}
       />
       <div>
-        {chapter?.vizSections.map((section) => (
+        {sortBy(chapter?.vizSections, [
+          (section) =>
+            section?.position || new Date(section?.createdAt).getTime(),
+        ]).map((section) => (
           <Section
             key={section?.id}
             studyId={studyId}

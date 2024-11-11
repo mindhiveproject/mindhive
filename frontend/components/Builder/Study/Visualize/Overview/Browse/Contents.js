@@ -87,9 +87,12 @@ export default function Contents({
             </div>
 
             {part?.id === activePart?.id ? (
-              <div 
-              className="dataButtonPart menuButtonThin greenFrame"
-              onClick={async () => {setPage("database");}}>
+              <div
+                className="dataButtonPart menuButtonThin greenFrame"
+                onClick={async () => {
+                  setPage("database");
+                }}
+              >
                 <img src={`/assets/icons/visualize/database_green.svg`} />
                 <div>
                   <a>Data</a>
@@ -170,7 +173,10 @@ export default function Contents({
                             })
                           }
                         >
-                          <img src={sections?.[section?.type]?.img} alt={section?.title} />
+                          <img
+                            src={sections?.[section?.type]?.img}
+                            alt={section?.title}
+                          />
                           {section?.title}
                         </div>
                       ))}
