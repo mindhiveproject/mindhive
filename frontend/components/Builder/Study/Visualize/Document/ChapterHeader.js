@@ -31,7 +31,10 @@ export default function ChapterHeader({ user, studyId, part, chapter }) {
   return (
     <div id={chapter?.id}>
       <div className="originDataTitle">
-        {part?.dataOrigin === "STUDY" ? "Study data" : "Uploaded data"}
+        {part?.dataOrigin === "STUDY" && "Study data"}
+        {part?.dataOrigin === "TEMPLATE" && "Template data"}
+        {part?.dataOrigin === "SIMULATED" && "Simulated data"}
+        {part?.dataOrigin === "UPLOADED" && "Uploaded data"}
       </div>
 
       <StyledInput>

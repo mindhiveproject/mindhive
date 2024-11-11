@@ -13,6 +13,7 @@ export const STUDY_VIZJOURNAL = gql`
           description
           isTemplate
           dataOrigin
+          settings
           content
           position
           createdAt

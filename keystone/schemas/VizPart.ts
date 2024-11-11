@@ -28,6 +28,7 @@ export const VizPart = list({
         { label: "study", value: "STUDY" },
         { label: "simulated", value: "SIMULATED" },
         { label: "uploaded", value: "UPLOADED" },
+        { label: "template", value: "TEMPLATE" },
       ],
     }),
     isPublic: checkbox({ isFilterable: true }),

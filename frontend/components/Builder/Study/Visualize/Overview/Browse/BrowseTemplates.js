@@ -67,7 +67,8 @@ export default function BrowseTemplates({ studyId, journal }) {
         input: {
           title: "Copy of " + template?.title,
           description: template?.description,
-          dataOrigin: template?.dataOrigin,
+          dataOrigin: "TEMPLATE",
+          settings: template?.settings,
           content: template?.content,
           vizChapters: {
             create: vizChapters,

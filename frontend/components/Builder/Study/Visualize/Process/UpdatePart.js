@@ -11,12 +11,16 @@ export default function UpdatePartContent({ part, content }) {
       part?.content?.[part?.content?.isModified ? "modified" : "uploaded"]
         ?.address;
 
+    const isTemplateData =
+      part?.dataOrigin === "TEMPLATE" && !part?.content?.isTemplateModified;
+
     if (
       address &&
       address?.year &&
       address?.month &&
       address?.day &&
-      address?.token
+      address?.token &&
+      !isTemplateData
     ) {
       year = address?.year;
       month = address?.month;
@@ -65,6 +69,7 @@ export default function UpdatePartContent({ part, content }) {
             content: {
               ...prevContent,
               isModified: true,
+              isTemplateModified: part?.dataOrigin === "TEMPLATE",
               modified: {
                 address: {
                   year,

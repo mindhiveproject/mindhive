@@ -52,6 +52,18 @@ export default function JournalManager({ user, studyId, pyodide }) {
   }, [studyJournal]);
 
   if (part && part.dataOrigin) {
+    if (part?.dataOrigin === "TEMPLATE") {
+      return (
+        <StudyDataWrapper
+          user={user}
+          studyId={part?.settings?.studyId}
+          pyodide={pyodide}
+          journal={journal}
+          part={part}
+          setPart={setPart}
+        />
+      );
+    }
     if (part?.dataOrigin === "STUDY") {
       return (
         <StudyDataWrapper

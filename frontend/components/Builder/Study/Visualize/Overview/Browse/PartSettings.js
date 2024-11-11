@@ -26,6 +26,9 @@ export default function PartSettings({ user, studyId, part }) {
         title: inputs?.title,
         description: inputs?.description,
         isTemplate: inputs?.isTemplate,
+        settings: {
+          studyId: studyId,
+        },
       },
     },
     refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
