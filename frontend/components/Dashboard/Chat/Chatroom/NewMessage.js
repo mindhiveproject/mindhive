@@ -13,6 +13,7 @@ export default function NewMessage({
   isMain,
   parentMessageId,
   membersIds,
+  studyid,
 }) {
   const [message, setMessage] = useState("");
   const [settings, setSettings] = useState({});
@@ -33,7 +34,7 @@ export default function NewMessage({
   const [sendUpdate, { loading: updateLoading }] = useMutation(CREATE_UPDATE, {
     variables: {
       updateArea: "CHAT",
-      link: `/dashboard/chats/${chat?.id}`,
+      link: `builder/studies?selector=${studyid}`,
       content: {
         message: `There is a new message in the chat ${chat?.settings?.title}`,
       },

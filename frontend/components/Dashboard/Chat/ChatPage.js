@@ -8,7 +8,7 @@ import Message from "./Chatroom/Message";
 
 import { Image, Popup } from "semantic-ui-react";
 
-export default function ClassPage({ code, user, query }) {
+export default function ClassPage({ code, user, query, studyid }) {
   const { data, loading, error } = useQuery(GET_CHAT, {
     variables: { id: code },
   });
@@ -72,6 +72,7 @@ export default function ClassPage({ code, user, query }) {
           btnName="Add posting"
           membersIds={membersIds}
           isMain
+          studyid={studyid}
         />
 
         <div>
