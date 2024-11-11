@@ -79,7 +79,7 @@ errBar = None if js.document.getElementById("errBar-${sectionId}") == None else 
 
   const options = variables.map((variable) => ({
     key: variable?.field,
-    value: variable?.field,
+    value: variable?.displayName || variable?.field,
     text: variable?.displayName || variable?.field,
   }));
 

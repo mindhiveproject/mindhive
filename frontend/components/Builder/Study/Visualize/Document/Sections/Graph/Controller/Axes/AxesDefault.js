@@ -18,7 +18,7 @@ Group = js.document.getElementById("groupVariable-${sectionId}").value`;
 
   const options = variables.map((variable) => ({
     key: variable?.field,
-    value: variable?.field,
+    value: variable?.displayName || variable?.field,
     text: variable?.displayName || variable?.field,
   }));
 

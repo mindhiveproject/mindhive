@@ -58,7 +58,7 @@ else:
 df_to_show = pd.DataFrame({'Values': [t_statistic, p_value]}, index=['T-Statistic', 'P-Value'])
 
   `;
-  
+
   const anovaCode = `
 # ONE-WAY ANOVA
 
@@ -158,7 +158,8 @@ js.render_html(html_output, df_html)`;
   const templates = {
     ttest: sectionCodeStart + "\n" + ttestCode + "\n" + sectionCodeEnd,
     anova: sectionCodeStart + "\n" + anovaCode + "\n" + sectionCodeEnd,
-    pearsoncorr: sectionCodeStart + "\n" + pearsoncorrCode + "\n" + sectionCodeEnd,
+    pearsoncorr:
+      sectionCodeStart + "\n" + pearsoncorrCode + "\n" + sectionCodeEnd,
   };
 
   const selectGraphType = ({ type, title }) => {
@@ -172,41 +173,51 @@ js.render_html(html_output, df_html)`;
     runCode({ code });
   };
 
-  return (  
+  return (
     <div className="templates">
-
       <div
         className="template"
-        onClick={() =>
-          selectGraphType({ type: "ttest", title: "T-Test" })
-        }
+        onClick={() => selectGraphType({ type: "ttest", title: "T-Test" })}
       >
         <div>
           <img src={`/assets/icons/visualize/stattest_ttest.svg`} />
         </div>
         <div className="text">
           <div className="title">T-Test</div>
-          <div className="description">Calculate the T-test for the means of two independent samples.<br/>This is a test for the null hypothesis that 2 independent samples have identical average (expected) values. This test assumes that the populations have identical variances by default.</div>
+          <div className="description">
+            Calculate the T-test for the means of two independent samples.
+            <br />
+            This is a test for the null hypothesis that 2 independent samples
+            have identical average (expected) values. This test assumes that the
+            populations have identical variances by default.
+          </div>
         </div>
       </div>
       <div
         className="template"
-        onClick={() =>
-          selectGraphType({ type: "anova", title: "ANOVA" })
-        }
+        onClick={() => selectGraphType({ type: "anova", title: "ANOVA" })}
       >
         <div>
           <img src={`/assets/icons/visualize/stattest_anova.svg`} />
         </div>
         <div className="text">
           <div className="title">One-Way Anova</div>
-          <div className="description">Perform a one-way ANOVA to compare the means of three or more independent samples.<br/>This is a test for the null hypothesis that two or more groups have the same population mean.</div>
+          <div className="description">
+            Perform a one-way ANOVA to compare the means of three or more
+            independent samples.
+            <br />
+            This is a test for the null hypothesis that two or more groups have
+            the same population mean.
+          </div>
         </div>
       </div>
       <div
         className="template"
         onClick={() =>
-          selectGraphType({ type: "pearsoncorr", title: "Descriptive Stats (Category & Quantitative)" })
+          selectGraphType({
+            type: "pearsoncorr",
+            title: "Descriptive Stats (Category & Quantitative)",
+          })
         }
       >
         <div>
@@ -214,10 +225,13 @@ js.render_html(html_output, df_html)`;
         </div>
         <div className="text">
           <div className="title">Pearson Product Correlation</div>
-          <div className="description">Calculate the Pearson correlation coefficient between two variables.<br/>This is a measure of the linear relationship between two variables.</div>
+          <div className="description">
+            Calculate the Pearson correlation coefficient between two variables.
+            <br />
+            This is a measure of the linear relationship between two variables.
+          </div>
         </div>
       </div>
     </div>
-
-);
+  );
 }

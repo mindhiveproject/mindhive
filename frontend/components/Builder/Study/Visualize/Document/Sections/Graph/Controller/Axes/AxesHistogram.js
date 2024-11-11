@@ -49,7 +49,7 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
 
   const options = variables.map((variable) => ({
     key: variable?.field,
-    value: variable?.field,
+    value: variable?.displayName || variable?.field,
     text: variable?.displayName || variable?.field,
   }));
 

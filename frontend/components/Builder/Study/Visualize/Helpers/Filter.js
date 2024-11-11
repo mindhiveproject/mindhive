@@ -90,3 +90,15 @@ export default function filterData({ data, settings }) {
   }
   return filteredData;
 }
+
+export function renameData({ data, variables }) {
+  return data.map((obj) => {
+    const newObj = {};
+    Object.keys(obj).forEach((key) => {
+      const mapping = variables.find((m) => m.field === key);
+      const newKey = mapping && mapping.displayName ? mapping.displayName : key;
+      newObj[newKey] = obj[key];
+    });
+    return newObj;
+  });
+}

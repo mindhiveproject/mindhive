@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { 
-  Dropdown, 
+import {
+  Dropdown,
   DropdownMenu,
   Icon,
   AccordionTitle,
@@ -28,7 +28,6 @@ export default function AxesScatterPlot({
     setActiveIndex(newIndex);
   };
 
-
   const connectSelectorsCode = `
 html_output = js.document.getElementById('figure-${sectionId}')
 X = js.document.getElementById("xVariable-${sectionId}").value
@@ -42,25 +41,25 @@ legend_title_text = js.document.getElementById("legend_title_text-${sectionId}")
   const options = [
     ...variables.map((variable) => ({
       key: variable?.field,
-      value: variable?.field,
+      value: variable?.displayName || variable?.field,
       text: variable?.displayName || variable?.field,
     })),
   ];
-  
+
   const resourcesList = [
     {
       title: "Scatter Plot",
-      alt:   "External link to trendline resource",
-      img:   "/assets/icons/visualize/externalNewTab.svg",
-      link:  "",
+      alt: "External link to trendline resource",
+      img: "/assets/icons/visualize/externalNewTab.svg",
+      link: "",
     },
     {
       title: "Trendline",
-      alt:   "External link to trendline resource",
-      img:   "/assets/icons/visualize/externalNewTab.svg",
-      link:  "https://www.storytellingwithdata.com/blog/2020/10/20/thoughts-on-trendlines#:~:text=A%20trendline%20is%20a%20line,data%20(e.g.%20regression%20analysis)",
+      alt: "External link to trendline resource",
+      img: "/assets/icons/visualize/externalNewTab.svg",
+      link: "https://www.storytellingwithdata.com/blog/2020/10/20/thoughts-on-trendlines#:~:text=A%20trendline%20is%20a%20line,data%20(e.g.%20regression%20analysis)",
     },
-  ]
+  ];
 
   const updateCode = async ({ code }) => {
     await pyodide.runPythonAsync(connectSelectorsCode);
@@ -115,32 +114,38 @@ legend_title_text = js.document.getElementById("legend_title_text-${sectionId}")
         parameter="trendLine"
       />
       <Accordion>
-          <AccordionTitle
-            active={activeIndex === 0}
-            index={0}
-            onClick={handleClick}
-          >
-            <Icon name="dropdown" />
-            Resources
-          </AccordionTitle>
-          <AccordionContent active={activeIndex === 0}>
+        <AccordionTitle
+          active={activeIndex === 0}
+          index={0}
+          onClick={handleClick}
+        >
+          <Icon name="dropdown" />
+          Resources
+        </AccordionTitle>
+        <AccordionContent active={activeIndex === 0}>
           {resourcesList.map((option) => (
             <a
               className="resourcesCard"
               href={option.link}
               target="_blank"
               rel="noopener noreferrer"
-              key={option.link} 
+              key={option.link}
             >
-              <img className="resourcesCardImage" src={option.img} alt={option.alt} />
+              <img
+                className="resourcesCardImage"
+                src={option.img}
+                alt={option.alt}
+              />
               <div>
                 <div className="resourcesCardTitle">{option.title}</div>
-                <div className="resourcesCardLink">Click here to access the resource</div>
+                <div className="resourcesCardLink">
+                  Click here to access the resource
+                </div>
               </div>
             </a>
           ))}
-          </AccordionContent>
-        </Accordion>
+        </AccordionContent>
+      </Accordion>
     </div>
   );
 }

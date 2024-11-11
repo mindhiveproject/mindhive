@@ -8,7 +8,7 @@ import Section from "./Section";
 
 const prepareDataCode = ``;
 
-import filterData from "../Helpers/Filter";
+import filterData, { renameData } from "../Helpers/Filter";
 
 export default function Document({
   user,
@@ -30,7 +30,8 @@ export default function Document({
           sys.modules.delete("js_workspace");
         }
         const filteredData = filterData({ data, settings });
-        pyodide?.registerJsModule("js_workspace", [...filteredData]);
+        const renamedData = renameData({ data: filteredData, variables });
+        pyodide?.registerJsModule("js_workspace", [...renamedData]);
         // make data available as data and df (pandas dataframe)
         await pyodide.runPythonAsync(prepareDataCode);
       }
