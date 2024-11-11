@@ -42,7 +42,7 @@ export default function PartSettings({ user, studyId, part }) {
       onOpen={() => setIsOpen(true)}
       open={isOpen}
       trigger={
-        <DropdownItem onClick={() => {}}>
+        <DropdownItem>
           <div className="menuItem">
             <img src={`/assets/icons/visualize/edit.svg`} />
             <div>Edit</div>
@@ -52,6 +52,8 @@ export default function PartSettings({ user, studyId, part }) {
       dimmer="blurring"
       size="small"
       closeIcon
+      onFocus={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
     >
       <StyledModal>
         <Modal.Header>
