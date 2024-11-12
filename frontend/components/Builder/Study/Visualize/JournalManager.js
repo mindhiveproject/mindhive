@@ -6,6 +6,7 @@ import { STUDY_VIZJOURNAL } from "../../../Queries/VizJournal";
 import StudyDataWrapper from "./StudyDataWrapper";
 import UploadedDataWrapper from "./UploadedDataWrapper";
 import PartManager from "./PartManager";
+import TemplateDataWrapper from "./TemplateDataWrapper";
 
 export default function JournalManager({ user, studyId, pyodide }) {
   const [journal, setJournal] = useState(null);
@@ -52,11 +53,12 @@ export default function JournalManager({ user, studyId, pyodide }) {
   }, [studyJournal]);
 
   if (part && part.dataOrigin) {
-    if (part?.dataOrigin === "TEMPLATE") {
+    if (part?.dataOrigin === "TEMPLATE" && part?.settings?.studyId) {
       return (
-        <StudyDataWrapper
+        <TemplateDataWrapper
           user={user}
-          studyId={part?.settings?.studyId}
+          studyId={studyId}
+          templateStudyId={part?.settings?.studyId}
           pyodide={pyodide}
           journal={journal}
           part={part}
