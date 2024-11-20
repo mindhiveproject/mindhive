@@ -90,6 +90,18 @@ export default function JournalManager({ user, studyId, pyodide }) {
         />
       );
     }
+    if (part?.dataOrigin === "SIMULATED") {
+      return (
+        <UploadedDataWrapper
+          user={user}
+          studyId={studyId}
+          pyodide={pyodide}
+          journal={journal}
+          part={part}
+          setPart={setPart}
+        />
+      );
+    }
   } else {
     // in case of empty journal
     return (

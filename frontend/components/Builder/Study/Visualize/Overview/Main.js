@@ -25,6 +25,8 @@ export default function Overview({
           studyId={studyId}
           journal={journal}
           part={part}
+          data={data}
+          variables={variables}
           chapterId={chapterId}
           selectChapter={selectChapter}
           setPage={setPage}

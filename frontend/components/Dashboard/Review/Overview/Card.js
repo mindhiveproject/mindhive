@@ -38,14 +38,25 @@ export default function Card({ study }) {
       <div className="card">
         <div className="headline">
           {study?.featured && <div className="p12">Featured study</div>}
-          <div className="p12">
-            {study?.reviews?.filter((r) => r?.stage === study?.status).length}{" "}
-            review
-            {study?.reviews?.filter((r) => r?.stage === study?.status)
-              .length !== 1
-              ? `s`
-              : ``}
-          </div>
+          {study?.status !== "COLLECTING_DATA" && (
+            <div className="p12">
+              {study?.reviews?.filter((r) => r?.stage === study?.status).length}{" "}
+              review
+              {study?.reviews?.filter((r) => r?.stage === study?.status)
+                .length !== 1
+                ? `s`
+                : ``}
+            </div>
+          )}
+
+          {study?.status === "COLLECTING_DATA" && (
+            <div className="p12">
+              {study?.guests?.length + study?.participants?.length} participant
+              {study?.guests?.length + study?.participants?.length !== 1
+                ? `s`
+                : ``}
+            </div>
+          )}
         </div>
         <div className="p13">{shortenTitle(study?.title)}</div>
         <div className="imageContainer">
@@ -65,18 +76,24 @@ export default function Card({ study }) {
             {status === "Peer Review" && (
               <div className="tag peerreview">{status}</div>
             )}
+            {status === "Collecting data" && (
+              <div className="tag peerreview">{status}</div>
+            )}
           </div>
           <div className="options">
-            {study?.status === "IN_REVIEW" && (
+            {(study?.status === "IN_REVIEW" ||
+              study?.status === "COLLECTING_DATA") && (
               <div className="option">
                 <img src="/assets/icons/review/participate.svg" />
                 <div>Participate</div>
               </div>
             )}
-            <div className="option">
-              <img src="/assets/icons/review/comment.svg" />
-              <div>Comment</div>
-            </div>
+            {study?.status !== "COLLECTING_DATA" && (
+              <div className="option">
+                <img src="/assets/icons/review/comment.svg" />
+                <div>Comment</div>
+              </div>
+            )}
           </div>
         </div>
       </div>

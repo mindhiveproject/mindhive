@@ -20,7 +20,11 @@ export default function UploadedDataWrapper({
   // There are 3 possible states: (1) loading when data is null (2) ready when the data is returned (3) error when there was an error fetching the data
   const { data, error } = useSWR(
     `/api/data/${year}/${month}/${day}/${token}?type=${
-      part?.content?.isModified ? "modified" : "upload"
+      part?.content?.isModified
+        ? "modified"
+        : part?.dataOrigin === "SIMULATED"
+        ? "simulated"
+        : "upload"
     }`,
     fetcher
   );

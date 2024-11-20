@@ -9,7 +9,8 @@ function containsAny(arr1, arr2) {
 const filterOptions = [
   { label: "Proposal", value: "SUBMITTED_AS_PROPOSAL" },
   { label: "In Review", value: "IN_REVIEW" },
-  { label: "Featured", value: "FEATURED" },
+  { label: "In Review", value: "IN_REVIEW" },
+  { label: "Collecting Data", value: "COLLECTING_DATA" },
 ];
 
 const sortOptions = [
@@ -128,9 +129,13 @@ export default function Board({ studies, myClassesIds }) {
               if (data?.value === "IN_REVIEW") {
                 setFilterSortMessage(`Filter by: in peer review`);
               }
+              if (data?.value === "COLLECTING_DATA") {
+                setFilterSortMessage(`Filter by: collecting data`);
+              }
               if (data?.value === "FEATURED") {
                 setFilterSortMessage(`Filter by: featured`);
               }
+
               setStatus(data?.value);
             }}
             value={status}

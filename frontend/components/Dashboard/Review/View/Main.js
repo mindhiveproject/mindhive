@@ -51,14 +51,22 @@ export default function View({ query, user }) {
             {study?.status === "SUBMITTED_AS_PROPOSAL" && (
               <div className="p12">PROPOSAL</div>
             )}
-            <div className="p12">
-              {study?.reviews?.filter((r) => r?.stage == study?.status).length}{" "}
-              comment
-              {study?.reviews?.filter((r) => r?.stage == study?.status)
-                .length !== 1
-                ? `s`
-                : ``}
-            </div>
+            {study?.status === "COLLECTING_DATA" && (
+              <div className="p12">COLLECTING DATA</div>
+            )}
+            {study?.status !== "COLLECTING_DATA" && (
+              <div className="p12">
+                {
+                  study?.reviews?.filter((r) => r?.stage == study?.status)
+                    .length
+                }{" "}
+                comment
+                {study?.reviews?.filter((r) => r?.stage == study?.status)
+                  .length !== 1
+                  ? `s`
+                  : ``}
+              </div>
+            )}
           </div>
 
           <div className="title">{study?.title}</div>

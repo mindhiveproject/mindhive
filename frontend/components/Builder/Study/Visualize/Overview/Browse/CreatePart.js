@@ -8,8 +8,15 @@ const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 import { useMutation } from "@apollo/client";
 
 import { DropdownItem } from "semantic-ui-react";
+import PromptModal from "../../Simulation/Modal";
 
-export default function CreatePart({ studyId, journal, dataOrigin }) {
+export default function CreatePart({
+  studyId,
+  journal,
+  dataOrigin,
+  exampleDataset,
+  exampleVariables,
+}) {
   const [createPart, { data, loading, error }] = useMutation(ADD_VIZPART, {
     refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
   });
@@ -19,7 +26,7 @@ export default function CreatePart({ studyId, journal, dataOrigin }) {
       variables: {
         input: {
           title: "Unnamed part",
-          dataOrigin: "STUDY",
+          dataOrigin: "SIMULATED",
           vizChapters: {
             create: [{ title: "Unnamed chapter", description: "Description" }],
           },
@@ -167,6 +174,17 @@ export default function CreatePart({ studyId, journal, dataOrigin }) {
           </div>
         </label>
       </DropdownItem>
+    );
+  }
+
+  if (dataOrigin === "SIMULATED") {
+    return (
+      <PromptModal
+        studyId={studyId}
+        journal={journal}
+        exampleDataset={exampleDataset}
+        exampleVariables={exampleVariables}
+      />
     );
   }
 }

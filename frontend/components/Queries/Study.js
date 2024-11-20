@@ -324,7 +324,11 @@ export const STUDIES_TO_REVIEW = gql`
     studies(
       where: {
         AND: [
-          { status: { in: ["SUBMITTED_AS_PROPOSAL", "IN_REVIEW"] } }
+          {
+            status: {
+              in: ["SUBMITTED_AS_PROPOSAL", "IN_REVIEW", "COLLECTING_DATA"]
+            }
+          }
           {
             OR: [
               { featured: { equals: true } }
@@ -357,6 +361,12 @@ export const STUDIES_TO_REVIEW = gql`
           id
         }
       }
+      participants {
+        id
+      }
+      guests {
+        id
+      }
       createdAt
     }
   }
@@ -373,6 +383,20 @@ export const STUDY_TO_REVIEW = gql`
       description
       info
       status
+      author {
+        id
+        username
+        permissions {
+          name
+        }
+      }
+      collaborators {
+        id
+        username
+        permissions {
+          name
+        }
+      }
       classes {
         id
       }
@@ -427,6 +451,13 @@ export const STUDY_TO_REVIEW = gql`
             assignedTo {
               id
               username
+            }
+            shareType
+            homework {
+              id
+              author {
+                id
+              }
             }
           }
         }

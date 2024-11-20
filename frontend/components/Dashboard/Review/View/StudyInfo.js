@@ -52,7 +52,8 @@ export default function StudyInfo({ query, canReview, study }) {
           </Menu>
         </div>
         <div className="options">
-          {study?.status === "IN_REVIEW" && (
+          {(study?.status === "IN_REVIEW" ||
+            study?.status === "COLLECTING_DATA") && (
             <a
               href={`/dashboard/discover/studies/?name=${study?.slug}`}
               target="_blank"
@@ -64,19 +65,22 @@ export default function StudyInfo({ query, canReview, study }) {
               </div>
             </a>
           )}
-          <Link
-            href={{
-              pathname: `/dashboard/review/comment`,
-              query: { id: study?.id },
-            }}
-          >
-            <div className="option">
-              <img src="/assets/icons/review/comment.svg" />
-              <div className="p22">
-                {canReview ? `Comment` : `View Feedback`}
+
+          {study?.status !== "COLLECTING_DATA" && (
+            <Link
+              href={{
+                pathname: `/dashboard/review/comment`,
+                query: { id: study?.id },
+              }}
+            >
+              <div className="option">
+                <img src="/assets/icons/review/comment.svg" />
+                <div className="p22">
+                  {canReview ? `Comment` : `View Feedback`}
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+          )}
         </div>
       </div>
 
