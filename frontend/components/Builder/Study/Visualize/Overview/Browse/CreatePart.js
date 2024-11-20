@@ -26,7 +26,7 @@ export default function CreatePart({
       variables: {
         input: {
           title: "Unnamed part",
-          dataOrigin: "SIMULATED",
+          dataOrigin: "STUDY",
           vizChapters: {
             create: [{ title: "Unnamed chapter", description: "Description" }],
           },
