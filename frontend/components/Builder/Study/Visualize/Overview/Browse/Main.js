@@ -16,7 +16,6 @@ export default function Browse({
   selectChapter,
   setPage,
 }) {
-  console.log({ user });
   return (
     <div>
       <div className="header">
