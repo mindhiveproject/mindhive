@@ -3,7 +3,9 @@ import Link from "next/link";
 import { StyledTaskCard } from "../../styles/StyledCard";
 import ManageFavorite from "../../User/ManageFavorite";
 
-export default function TaskCard({ user, task, url, id, name }) {
+export default function TaskCard({ user, task, url, id, name, domain }) {
+  console.log("TaskCard", task);
+  console.log("domain", domain);
   return (
     <Link
       href={{
@@ -34,15 +36,16 @@ export default function TaskCard({ user, task, url, id, name }) {
                 )}
               </ManageFavorites>
             )} */}
-              {/* {task?.descriptionForParticipants && (
+              {task?.descriptionForParticipants && (
               <Popup
                 content={ReactHtmlParser(task?.descriptionForParticipants)}
                 size="huge"
                 trigger={<Icon name="info circle" size="large" />}
               />
-            )} */}
+            )}
             </div>
           </div>
+          {domain === "discover" && <div className="subtitle">{task?.settings.addInfo}</div>}
           {/* 
         {this.props.participateMode && (
           <Link

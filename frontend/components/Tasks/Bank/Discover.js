@@ -79,6 +79,7 @@ export default function DiscoverTaskBank({ query, user, isDashboard }) {
             url={user ? "/dashboard/discover/tasks/" : `/tasks/${task?.slug}`}
             id="slug"
             name="name"
+            domain="discover"
           />
         ))}
       </div>

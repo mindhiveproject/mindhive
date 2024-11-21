@@ -49,7 +49,7 @@ export default function Modal({
   const addPort = () => {
     const newPorts = [
       ...ports,
-      { name: uniqid.time(), label: generate().dashed, probability: 0 },
+      { name: uniqid.time(), label: generate().dashed, probability: 1 },
     ];
     setPorts(newPorts);
   };
