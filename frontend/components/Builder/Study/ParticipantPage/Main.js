@@ -26,6 +26,7 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
   const { data, error, loading } = useQuery(MY_STUDY, {
     variables: { id: studyId },
   });
+
   const study = data?.study || {
     title: "",
     description: "",

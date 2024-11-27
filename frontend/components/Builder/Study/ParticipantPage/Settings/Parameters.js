@@ -6,17 +6,27 @@ export default function Parameters({
   handleChange,
   handleMultipleUpdate,
 }) {
-  const settings = {
-    ...study.settings,
+  const settings = study.settings || {
+    forbidRetake: true,
+    hideParticipateButton: false,
+    showEmailNotificationPropmt: false,
+    askStudentsNYC: false,
+    zipCode: false,
+    guestParticipation: false,
+    consentObtained: false,
+    proceedToFirstTask: false,
+    useExternalDevices: false,
+    sonaId: false,
+    minorsBlocked: false,
   };
 
   // settings that are shown only to students
   const settingsOnlyStudents = [
-    "hideParticipateButton",
+    // "hideParticipateButton",
     "guestParticipation",
-    "consentObtained",
-    "zipCode",
-    "proceedToFirstTask",
+    // "consentObtained",
+    // "zipCode",
+    // "proceedToFirstTask",
     "forbidRetake",
   ];
 
