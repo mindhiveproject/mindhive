@@ -14,7 +14,7 @@ export default function Parameters({
     zipCode: false,
     guestParticipation: false,
     consentObtained: false,
-    proceedToFirstTask: false,
+    proceedToFirstTask: true,
     useExternalDevices: false,
     sonaId: false,
     minorsBlocked: false,

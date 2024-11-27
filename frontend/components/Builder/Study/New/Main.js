@@ -66,7 +66,7 @@ export default function NewStudy({ query, user }) {
             zipCode: false,
             guestParticipation: false,
             consentObtained: false,
-            proceedToFirstTask: false,
+            proceedToFirstTask: true,
             useExternalDevices: false,
             sonaId: false,
             minorsBlocked: false,

@@ -41,7 +41,7 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
       zipCode: false,
       guestParticipation: false,
       consentObtained: false,
-      proceedToFirstTask: false,
+      proceedToFirstTask: true,
       useExternalDevices: false,
       sonaId: false,
       minorsBlocked: false,
