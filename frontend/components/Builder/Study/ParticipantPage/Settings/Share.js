@@ -17,6 +17,19 @@ export default function ShareStudy({ study, handleChange }) {
     alert("The link is copied");
   };
 
+  const sanitizeInput = (e) => {
+    const cleanedValue = e.target.value
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]/g, "");
+    handleChange({
+      target: {
+        name: e.target.name,
+        value: cleanedValue,
+      },
+    });
+  };
+
   return (
     <div>
       <h2>Share your study</h2>
@@ -49,7 +62,7 @@ export default function ShareStudy({ study, handleChange }) {
                     id="slug"
                     name="slug"
                     value={study.slug}
-                    onChange={handleChange}
+                    onChange={sanitizeInput}
                     required
                   />
                 </div>
