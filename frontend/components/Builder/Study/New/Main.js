@@ -64,7 +64,7 @@ export default function NewStudy({ query, user }) {
             showEmailNotificationPropmt: false,
             askStudentsNYC: false,
             zipCode: false,
-            guestParticipation: false,
+            guestParticipation: true,
             consentObtained: false,
             proceedToFirstTask: true,
             useExternalDevices: false,

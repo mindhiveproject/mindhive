@@ -12,7 +12,7 @@ export default function Parameters({
     showEmailNotificationPropmt: false,
     askStudentsNYC: false,
     zipCode: false,
-    guestParticipation: false,
+    guestParticipation: true,
     consentObtained: false,
     proceedToFirstTask: true,
     useExternalDevices: false,
@@ -22,11 +22,11 @@ export default function Parameters({
 
   // settings that are shown only to students
   const settingsOnlyStudents = [
-    // "hideParticipateButton",
+    "hideParticipateButton",
     "guestParticipation",
     // "consentObtained",
     // "zipCode",
-    // "proceedToFirstTask",
+    "proceedToFirstTask",
     "forbidRetake",
   ];
 

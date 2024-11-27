@@ -39,7 +39,7 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
       showEmailNotificationPropmt: false,
       askStudentsNYC: false,
       zipCode: false,
-      guestParticipation: false,
+      guestParticipation: true,
       consentObtained: false,
       proceedToFirstTask: true,
       useExternalDevices: false,

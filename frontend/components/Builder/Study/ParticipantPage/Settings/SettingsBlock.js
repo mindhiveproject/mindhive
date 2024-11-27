@@ -29,10 +29,7 @@ export default function SettingBlock({
           {name === "guestParticipation" && (
             <label className="name" htmlFor={name}>
               <h4>Allow guest participation</h4>
-              <p>
-                Visitors won’t need MindHive accounts to participate in your
-                study.
-              </p>
+              <p>Visitors can participate in your study as guests.</p>
             </label>
           )}
 
