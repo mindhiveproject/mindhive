@@ -43,3 +43,12 @@ export const UPDATE_RESOURCE = gql`
     }
   }
 `;
+
+// delete resource
+export const DELETE_RESOURCE = gql`
+  mutation DELETE_RESOURCE($id: ID!) {
+    deleteResource(where: { id: $id }) {
+      id
+    }
+  }
+`;
