@@ -68,5 +68,9 @@ export const ProposalCard = list({
       ref: "Homework.proposalCard",
       many: true,
     }),
+    resources: relationship({
+      ref: "Resource.proposalCards",
+      many: true,
+    }),
   },
 });

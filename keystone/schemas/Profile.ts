@@ -254,8 +254,16 @@ export const Profile = list({
       ref: "Lesson.author",
       many: true,
     }),
+    authorOfResource: relationship({
+      ref: "Resource.author",
+      many: true,
+    }),
     collaboratorInLesson: relationship({
       ref: "Lesson.collaborators",
+      many: true,
+    }),
+    collaboratorInResource: relationship({
+      ref: "Resource.collaborators",
       many: true,
     }),
     authorOfCurriculum: relationship({

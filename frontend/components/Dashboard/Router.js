@@ -14,6 +14,7 @@ import StudentClasses from "./StudentClasses/Main";
 import Settings from "./Settings/Router";
 import ConsentMain from "./Consent/Main";
 import ProposalsMain from "./Proposals/Main";
+import ResourcesMain from "./Resources/Main";
 import LessonsMain from "./Lessons/Main";
 import TagsMain from "./Tags/Main";
 import UpdatesMain from "./Updates/Main";
@@ -70,6 +71,10 @@ export default function DashboardRouter({ query }) {
 
   if (area === "proposals") {
     return <ProposalsMain query={query} user={user} />;
+  }
+
+  if (area === "resources") {
+    return <ResourcesMain query={query} user={user} />;
   }
 
   if (area === "lessons") {

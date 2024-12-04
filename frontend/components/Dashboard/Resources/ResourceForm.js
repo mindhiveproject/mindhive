@@ -1,7 +1,7 @@
 import JoditEditor from "../../Jodit/Editor";
 import { StyledInput } from "../../styles/StyledForm";
 
-export default function LessonForm({ inputs, handleChange, loading }) {
+export default function ResourceForm({ inputs, handleChange, loading }) {
   const setContent = (content) =>
     handleChange({
       target: { name: "content", value: content },

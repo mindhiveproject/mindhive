@@ -198,6 +198,7 @@ export const UPDATE_CARD_CONTENT = gql`
     $assignedTo: [ProfileWhereUniqueInput!]
     $type: String
     $shareType: String
+    $resources: [ResourceWhereUniqueInput!]
   ) {
     updateProposalCard(
       where: { id: $id }
@@ -210,6 +211,7 @@ export const UPDATE_CARD_CONTENT = gql`
         assignedTo: { set: $assignedTo }
         type: $type
         shareType: $shareType
+        resources: { set: $resources }
       }
     ) {
       id

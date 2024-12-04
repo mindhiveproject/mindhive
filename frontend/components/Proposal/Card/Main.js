@@ -14,6 +14,7 @@ import Status from "./Forms/Status";
 import { useState, useEffect, useRef } from "react";
 import CardType from "./Forms/Type";
 import Sharing from "./Forms/Sharing";
+import Resources from "./Forms/Resources";
 
 export default function ProposalCard({
   user,
@@ -111,6 +112,7 @@ export default function ProposalCard({
         ...inputs,
         content: content?.current,
         assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
+        resources: inputs?.resources?.map((resource) => ({ id: resource?.id })),
       },
     });
     closeCard({ cardId, lockedByUser });
@@ -202,6 +204,13 @@ export default function ProposalCard({
                   <Sharing
                     type={inputs?.shareType}
                     handleChange={handleChange}
+                  />
+                  <h4>Linked resources</h4>
+                  <Resources
+                    handleChange={handleChange}
+                    selectedResources={
+                      inputs?.resources?.map((resource) => resource?.id) || []
+                    }
                   />
                 </div>
               )}

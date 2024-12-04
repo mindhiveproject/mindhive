@@ -41,6 +41,7 @@ import { VizJournal } from "./schemas/VizJournal";
 import { VizPart } from "./schemas/VizPart";
 import { VizChapter } from "./schemas/VizChapter";
 import { VizSection } from "./schemas/VizSection";
+import { Resource } from "./schemas/Resource";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -94,4 +95,5 @@ export const lists: Lists = {
   VizPart,
   VizChapter,
   VizSection,
+  Resource,
 };

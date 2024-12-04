@@ -60,6 +60,10 @@ export const Tag = list({
       ref: "Lesson.tags",
       many: true,
     }),
+    resources: relationship({
+      ref: "Resource.tags",
+      many: true,
+    }),
     assignments: relationship({
       ref: "Assignment.tags",
       many: true,

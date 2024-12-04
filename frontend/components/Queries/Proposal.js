@@ -145,6 +145,9 @@ export const GET_CARD_CONTENT = gql`
         username
       }
       shareType
+      resources {
+        id
+      }
     }
   }
 `;
