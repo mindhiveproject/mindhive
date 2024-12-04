@@ -151,6 +151,15 @@ export default function ProposalCard({
             </div>
           )}
           <div>{ReactHtmlParser(proposalCard?.content)}</div>
+          {proposalCard?.resources && proposalCard?.resources.length ? (
+            <>
+              {proposalCard?.resources.map((resource) => (
+                <div>{resource?.title}</div>
+              ))}
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       ) : (
         <div className="proposalCardBoard">
@@ -193,6 +202,38 @@ export default function ProposalCard({
                 setContent={handleContentChange}
               />
             </div>
+            {proposalBuildMode && (
+              <>
+                {inputs?.resources && inputs?.resources.length ? (
+                  <>
+                    {inputs?.resources.map((resource) => (
+                      <div>
+                        <h2>{resource?.title}</h2>
+                        <div>{ReactHtmlParser(resource?.content?.main)}</div>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
+            {!proposalBuildMode && (
+              <>
+                {proposalCard?.resources && proposalCard?.resources.length ? (
+                  <>
+                    {proposalCard?.resources.map((resource) => (
+                      <div>
+                        <h2>{resource?.title}</h2>
+                        <div>{ReactHtmlParser(resource?.content?.main)}</div>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
           </div>
           {!isPreview && (
             <div className="infoBoard">

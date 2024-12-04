@@ -147,6 +147,8 @@ export const GET_CARD_CONTENT = gql`
       shareType
       resources {
         id
+        title
+        content
       }
     }
   }

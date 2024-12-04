@@ -23,7 +23,6 @@ export default function useForm(initial = {}) {
 
   function handleChange(e) {
     let { value, name, type } = e.target;
-    // console.log(value, name, type);
 
     if (type === "number") {
       value = parseFloat(value);

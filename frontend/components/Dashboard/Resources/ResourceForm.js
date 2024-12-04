@@ -4,7 +4,7 @@ import { StyledInput } from "../../styles/StyledForm";
 export default function ResourceForm({ inputs, handleChange, loading }) {
   const setContent = (content) =>
     handleChange({
-      target: { name: "content", value: content },
+      target: { name: "content", value: { main: content } },
     });
 
   return (
@@ -36,11 +36,9 @@ export default function ResourceForm({ inputs, handleChange, loading }) {
             />
           </label>
         </div>
-
-        <div>Keywords</div>
       </StyledInput>
 
-      <JoditEditor content={inputs.content} setContent={setContent} />
+      <JoditEditor content={inputs.content?.main} setContent={setContent} />
     </div>
   );
 }

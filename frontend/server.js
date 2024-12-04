@@ -127,7 +127,6 @@ app
 
       // in case if a modified data file is uploaded, replace the existing file
       if (payload === "modified") {
-        console.log(req.body);
         jsonfile.writeFile(
           filePath,
           {
