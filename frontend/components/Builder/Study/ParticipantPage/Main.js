@@ -26,6 +26,7 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
   const { data, error, loading } = useQuery(MY_STUDY, {
     variables: { id: studyId },
   });
+
   const study = data?.study || {
     title: "",
     description: "",
@@ -40,7 +41,7 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
       zipCode: false,
       guestParticipation: true,
       consentObtained: false,
-      proceedToFirstTask: false,
+      proceedToFirstTask: true,
       useExternalDevices: false,
       sonaId: false,
       minorsBlocked: false,

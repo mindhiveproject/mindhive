@@ -58,6 +58,19 @@ export default function NewStudy({ query, user }) {
           classes: inputs?.classes?.length
             ? { connect: inputs?.classes?.map((cl) => ({ id: cl?.id })) }
             : null,
+          settings: {
+            forbidRetake: true,
+            hideParticipateButton: false,
+            showEmailNotificationPropmt: false,
+            askStudentsNYC: false,
+            zipCode: false,
+            guestParticipation: true,
+            consentObtained: false,
+            proceedToFirstTask: true,
+            useExternalDevices: false,
+            sonaId: false,
+            minorsBlocked: false,
+          },
         },
       },
     });
