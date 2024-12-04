@@ -43,7 +43,9 @@ export default function TaskCard({ user, task, url, id, name, domain }) {
             )} */}
             </div>
           </div>
-          {domain === "discover" && <div className="subtitle">{task?.settings.addInfo}</div>}
+          {domain === "discover" && (
+            <div className="subtitle">{task?.settings?.addInfo}</div>
+          )}
           {/* 
         {this.props.participateMode && (
           <Link
