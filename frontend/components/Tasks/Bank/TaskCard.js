@@ -3,7 +3,7 @@ import Link from "next/link";
 import { StyledTaskCard } from "../../styles/StyledCard";
 import ManageFavorite from "../../User/ManageFavorite";
 
-export default function TaskCard({ user, task, url, id, name }) {
+export default function TaskCard({ user, task, url, id, name, domain }) {
   return (
     <Link
       href={{
@@ -43,6 +43,7 @@ export default function TaskCard({ user, task, url, id, name }) {
             )} */}
             </div>
           </div>
+          {domain === "discover" && <div className="subtitle">{task?.settings.addInfo}</div>}
           {/* 
         {this.props.participateMode && (
           <Link

@@ -258,7 +258,10 @@ export const StyledTaskCard = styled.div`
         grid-template-columns: auto 1fr;
         align-items: center;
         justify-items: center;
+        }
       }
+    .subtitle {
+      font-size: 14px;
     }
   }
 `;
