@@ -7,6 +7,12 @@ export const GET_RESOURCES = gql`
       id
       title
       slug
+      author {
+        id
+        username
+      }
+      createdAt
+      updatedAt
     }
   }
 `;

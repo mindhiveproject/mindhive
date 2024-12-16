@@ -429,14 +429,7 @@ export default function DashboardNavigation() {
                 <div>Proposals</div>
               </StyledNavigationLink>
             </Link>
-          </>
-        )}
 
-        {(permissions?.includes("ADMIN") ||
-          permissions?.includes("TEACHER") ||
-          permissions?.includes("MENTOR") ||
-          permissions?.includes("SCIENTIST")) && (
-          <>
             <Link href="/dashboard/resources">
               <StyledNavigationLink selected={area === "resources"}>
                 <div className="icon">
@@ -456,6 +449,14 @@ export default function DashboardNavigation() {
                 <div>Resources</div>
               </StyledNavigationLink>
             </Link>
+          </>
+        )}
+
+        {(permissions?.includes("ADMIN") ||
+          permissions?.includes("TEACHER") ||
+          permissions?.includes("MENTOR") ||
+          permissions?.includes("SCIENTIST")) && (
+          <>
             <Link href="/dashboard/lessons">
               <StyledNavigationLink selected={area === "lessons"}>
                 <div className="icon">

@@ -10,7 +10,7 @@ import useForm from "../../../lib/useForm";
 import ResourceForm from "./ResourceForm";
 
 import { CREATE_RESOURCE } from "../../Mutations/Resource";
-import { GET_MY_RESOURCES } from "../../Queries/Resource";
+import { GET_RESOURCES } from "../../Queries/Resource";
 
 export default function AddResource({ user }) {
   const router = useRouter();
@@ -25,9 +25,7 @@ export default function AddResource({ user }) {
     CREATE_RESOURCE,
     {
       variables: inputs,
-      refetchQueries: [
-        { query: GET_MY_RESOURCES, variables: { id: user?.id } },
-      ],
+      refetchQueries: [{ query: GET_RESOURCES }],
     }
   );
 

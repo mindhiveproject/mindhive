@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
 import moment from "moment";
-import { GET_MY_RESOURCES } from "../../Queries/Resource";
+import { GET_RESOURCES } from "../../Queries/Resource";
 
 import Link from "next/link";
 import DeleteResource from "./DeleteResource";
 
 export default function ResourcesList({ query, user }) {
-  const { data, error, loading } = useQuery(GET_MY_RESOURCES, {
+  const { data, error, loading } = useQuery(GET_RESOURCES, {
     variables: {
       id: user?.id,
     },
@@ -16,8 +16,7 @@ export default function ResourcesList({ query, user }) {
 
   const refetchQueries = [
     {
-      query: GET_MY_RESOURCES,
-      variables: { id: user?.id },
+      query: GET_RESOURCES,
     },
   ];
 
@@ -37,6 +36,7 @@ export default function ResourcesList({ query, user }) {
             <div key={i} className="item">
               <p>{resource?.title}</p>
               <p>{moment(resource?.createdAt).format("MMMM D, YYYY")}</p>
+              <p>{resource?.author?.username}</p>
             </div>
           </Link>
           <DeleteResource
