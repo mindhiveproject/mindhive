@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import DevelopProjectBank from "../../Projects/Bank/Develop";
 import DevelopStudyBank from "../../Studies/Bank/Develop";
 import DevelopTaskBank from "../../Tasks/Bank/Develop";
 
@@ -8,10 +9,22 @@ export default function Panels({ query, user }) {
   return (
     <>
       <div className="menu">
+        <Link href="/dashboard/develop/projects">
+          <div
+            className={
+              selector === "projects" || !selector
+                ? "menuTitle selectedMenuTitle"
+                : "menuTitle"
+            }
+          >
+            <p>My projects</p>
+          </div>
+        </Link>
+
         <Link href="/dashboard/develop/studies">
           <div
             className={
-              selector === "studies" || !selector
+              selector === "studies"
                 ? "menuTitle selectedMenuTitle"
                 : "menuTitle"
             }
@@ -55,7 +68,11 @@ export default function Panels({ query, user }) {
         </Link>
       </div>
 
-      {(!selector || selector == "studies") && <DevelopStudyBank user={user} />}
+      {(!selector || selector == "projects") && (
+        <DevelopProjectBank user={user} />
+      )}
+
+      {selector == "studies" && <DevelopStudyBank user={user} />}
 
       {selector == "tasks" && <DevelopTaskBank user={user} taskType="TASK" />}
 

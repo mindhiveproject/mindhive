@@ -303,6 +303,12 @@ export const StyledProposal = styled.div`
         color: green;
       }
     }
+    .titleEditBtn {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-gap: 10px;
+      align-items: center;
+    }
   }
 
   .cardPreview {

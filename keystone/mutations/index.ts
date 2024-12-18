@@ -21,7 +21,15 @@ export const extendGraphqlSchema = (schema) =>
           message: String
           link: String
         ): Report
-        copyProposalBoard(id: ID!, study: ID): ProposalBoard
+        copyProposalBoard(
+          id: ID!
+          study: ID
+          title: String
+          classIdTemplate: ID
+          classIdUsed: ID
+          collaborators: [ID]
+          isTemplate: Boolean
+        ): ProposalBoard
         deleteProposal(id: ID!): ProposalBoard
         archiveStudy(study: ID!, isArchived: Boolean!): Profile
         googleSignup(token: String!, role: String, classCode: String): Profile

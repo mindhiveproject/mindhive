@@ -230,6 +230,10 @@ export const Profile = list({
       ref: "ProposalBoard.author",
       many: true,
     }),
+    collaboratorInProposal: relationship({
+      ref: "ProposalBoard.collaborators",
+      many: true,
+    }),
     reviews: relationship({
       ref: "Review.author",
       many: true,

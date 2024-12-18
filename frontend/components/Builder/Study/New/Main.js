@@ -23,7 +23,7 @@ export default function NewStudy({ query, user }) {
   const { inputs, handleChange } = useForm({
     projectName: "",
     collaborators: [{ id: user?.id }],
-    clases: [],
+    classes: [],
   });
 
   const router = useRouter();

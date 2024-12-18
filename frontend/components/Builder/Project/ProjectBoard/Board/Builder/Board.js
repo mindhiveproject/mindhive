@@ -1,0 +1,69 @@
+import React, { useState, useEffect } from "react";
+import sortBy from "lodash/sortBy";
+
+import { useQuery, useMutation } from "@apollo/client";
+import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
+
+import Inner from "./Inner";
+
+import {
+  CREATE_SECTION,
+  UPDATE_SECTION,
+  DELETE_SECTION,
+} from "../../../../../Mutations/Proposal";
+
+const Board = ({
+  proposalId,
+  openCard,
+  proposalBuildMode,
+  adminMode,
+  isPreview,
+}) => {
+  const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
+    variables: { id: proposalId },
+    pollInterval: 20000, // get new data every 20 seconds
+  });
+  const proposal = data?.proposalBoard || undefined;
+
+  const [sections, setSections] = useState([]);
+  const [createSection, createSectionState] = useMutation(CREATE_SECTION);
+  const [updateSection, updateSectionState] = useMutation(UPDATE_SECTION);
+  const [deleteSection, deleteSectionState] = useMutation(DELETE_SECTION);
+
+  useEffect(() => {
+    if (proposal) {
+      const newSections = proposal.sections;
+      const sortedSections = sortBy(newSections, [
+        (section) => section.position,
+      ]);
+      const sortedCardsSections = sortedSections.map((section) => {
+        const sortedSection = {
+          ...section,
+          cards: sortBy(section.cards, (item) => item.position),
+        };
+        return sortedSection;
+      });
+      setSections(sortedCardsSections);
+    }
+  }, [proposal]);
+
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error.message}`;
+
+  return (
+    <Inner
+      board={proposal}
+      sections={sections}
+      onCreateSection={createSection}
+      onUpdateSection={updateSection}
+      onSetSections={setSections}
+      onDeleteSection={deleteSection}
+      openCard={openCard}
+      proposalBuildMode={proposalBuildMode}
+      adminMode={adminMode}
+      isPreview={isPreview}
+    />
+  );
+};
+
+export default Board;

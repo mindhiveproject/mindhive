@@ -60,6 +60,7 @@ export const ProposalBoard = list({
       },
     }),
     description: text(),
+    isDefault: checkbox({ isFilterable: true }),
     isTemplate: checkbox({ isFilterable: true }),
     isSubmitted: checkbox({ isFilterable: true }),
     checklist: json(),
@@ -69,6 +70,10 @@ export const ProposalBoard = list({
     }),
     author: relationship({
       ref: "Profile.authorOfProposal",
+    }),
+    collaborators: relationship({
+      ref: "Profile.collaboratorInProposal",
+      many: true,
     }),
     study: relationship({
       ref: "Study.proposal",
@@ -83,6 +88,13 @@ export const ProposalBoard = list({
     reviews: relationship({
       ref: "Review.proposal",
       many: true,
+    }),
+    templateForClasses: relationship({
+      ref: "Class.templateProposal",
+      many: true,
+    }),
+    usedInClass: relationship({
+      ref: "Class.studentProposals",
     }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },

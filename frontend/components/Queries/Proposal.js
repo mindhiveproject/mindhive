@@ -79,6 +79,14 @@ export const PROPOSAL_QUERY = gql`
       settings
       isSubmitted
       isTemplate
+      usedInClass {
+        id
+        title
+      }
+      collaborators {
+        id
+        username
+      }
       study {
         id
         title
@@ -323,6 +331,148 @@ export const GET_MY_PROPOSALS = gql`
       }
       isTemplate
       createdAt
+    }
+  }
+`;
+
+// get the project boards where the user is an author or a collaborator
+export const GET_MY_PROJECT_BOARDS = gql`
+  query GET_MY_PROJECT_BOARDS($userId: ID!) {
+    proposalBoards(
+      where: {
+        OR: [
+          { author: { id: { equals: $userId } } }
+          { collaborators: { some: { id: { equals: $userId } } } }
+        ]
+      }
+    ) {
+      id
+      title
+      author {
+        id
+        username
+      }
+      createdAt
+    }
+  }
+`;
+
+// get class proposals
+export const CLASS_TEMPLATE_PROJECTS_QUERY = gql`
+  query CLASS_TEMPLATE_PROJECTS_QUERY($classId: ID!) {
+    proposalBoards(
+      where: { templateForClasses: { some: { id: { equals: $classId } } } }
+    ) {
+      id
+      title
+      slug
+      description
+      isSubmitted
+      isTemplate
+      settings
+      author {
+        username
+      }
+      collaborators {
+        username
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+// get class proposals
+export const CLASS_PROJECTS_QUERY = gql`
+  query CLASS_PROJECTS_QUERY($classId: ID!) {
+    proposalBoards(where: { usedInClass: { id: { equals: $classId } } }) {
+      id
+      title
+      slug
+      description
+      isSubmitted
+      settings
+      author {
+        username
+      }
+      collaborators {
+        username
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+// get overview of a proposal
+export const GET_PROJECT_STUDY = gql`
+  query GET_PROJECT_STUDY($id: ID!) {
+    proposalBoard(where: { id: $id }) {
+      id
+      study {
+        id
+        title
+        slug
+        info
+        settings
+        image {
+          id
+          image {
+            publicUrlTransformed
+          }
+        }
+        shortDescription
+        description
+        proposal {
+          id
+          title
+        }
+        author {
+          id
+          username
+        }
+        collaborators {
+          id
+          username
+          image {
+            id
+            image {
+              publicUrlTransformed
+            }
+          }
+        }
+        classes {
+          id
+        }
+        consent {
+          id
+        }
+        talks {
+          id
+        }
+        diagram
+        components
+        flow
+        descriptionInProposalCard {
+          id
+          title
+          description
+          section {
+            id
+            board {
+              id
+              title
+            }
+          }
+        }
+        tags {
+          id
+          title
+        }
+        status
+        currentVersion
+        versionHistory
+      }
     }
   }
 `;

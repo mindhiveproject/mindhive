@@ -61,6 +61,9 @@ export const GET_USER_CLASSES = gql`
               code
             }
           }
+          templateProposal {
+            id
+          }
         }
         teacherIn {
           id

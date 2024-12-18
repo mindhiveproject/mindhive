@@ -23,9 +23,5 @@ export default function TeacherClasses({ query, user }) {
     return <AddClass user={user} />;
   }
 
-  return (
-    <StyledClass>
-      <ClassPage code={selector} user={user} query={query} />
-    </StyledClass>
-  );
+  return <ClassPage code={selector} user={user} query={query} />;
 }

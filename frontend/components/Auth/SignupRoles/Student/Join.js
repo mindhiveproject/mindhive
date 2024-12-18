@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
 
 import { GET_CLASS } from "../../../Queries/Classes";
+import { GET_CLASSES } from "../../../Queries/Classes";
+
 import {
   JOIN_CLASS_AS_STUDENT_MUTATION,
   JOIN_CLASS_AS_MENTOR_MUTATION,
@@ -28,7 +30,17 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
         id: user?.id,
         classCode: classCode,
       },
-      refetchQueries: [{ query: CURRENT_USER_QUERY }],
+      refetchQueries: [
+        { query: CURRENT_USER_QUERY },
+        {
+          query: GET_CLASSES,
+          variables: {
+            input: {
+              students: { some: { id: { equals: user?.id } } },
+            },
+          },
+        },
+      ],
     });
 
   const [joinClassAsMentor, { loading: joinClassAsMentorLoading }] =

@@ -57,5 +57,12 @@ export const Class = list({
       ref: "Assignment.classes",
       many: true,
     }),
+    templateProposal: relationship({
+      ref: "ProposalBoard.templateForClasses",
+    }),
+    studentProposals: relationship({
+      ref: "ProposalBoard.usedInClass",
+      many: true,
+    }),
   },
 });

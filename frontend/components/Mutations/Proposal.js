@@ -2,8 +2,24 @@ import gql from "graphql-tag";
 
 // copy proposal
 export const COPY_PROPOSAL_MUTATION = gql`
-  mutation COPY_PROPOSAL_MUTATION($id: ID!, $study: ID) {
-    copyProposalBoard(id: $id, study: $study) {
+  mutation COPY_PROPOSAL_MUTATION(
+    $id: ID!
+    $study: ID
+    $title: String
+    $classIdTemplate: ID
+    $classIdUsed: ID
+    $collaborators: [ID]
+    $isTemplate: Boolean
+  ) {
+    copyProposalBoard(
+      id: $id
+      study: $study
+      title: $title
+      classIdTemplate: $classIdTemplate
+      classIdUsed: $classIdUsed
+      collaborators: $collaborators
+      isTemplate: $isTemplate
+    ) {
       id
       title
       slug
@@ -250,6 +266,15 @@ export const DELETE_CARD = gql`
 export const DELETE_COMPLETE_PROPOSAL = gql`
   mutation DELETE_COMPLETE_PROPOSAL($id: ID!) {
     deleteProposal(id: $id) {
+      id
+    }
+  }
+`;
+
+// update a project board
+export const UPDATE_PROJECT_BOARD = gql`
+  mutation UPDATE_PROJECT_BOARD($id: ID!, $input: ProposalBoardUpdateInput!) {
+    updateProposalBoard(where: { id: $id }, data: $input) {
       id
     }
   }

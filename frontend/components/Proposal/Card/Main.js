@@ -1,4 +1,5 @@
 import { useMutation } from "@apollo/client";
+import { Checkbox } from "semantic-ui-react";
 
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
@@ -43,6 +44,8 @@ export default function ProposalCard({
   const { inputs, handleChange } = useForm({
     ...proposalCard,
   });
+
+  console.log({ inputs });
 
   const content = useRef(proposalCard?.content);
 
@@ -252,6 +255,23 @@ export default function ProposalCard({
                     selectedResources={
                       inputs?.resources?.map((resource) => resource?.id) || []
                     }
+                  />
+                  Include the card into the report
+                  <Checkbox
+                    toggle
+                    name="includeCardToggle"
+                    onChange={(event, data) =>
+                      handleChange({
+                        target: {
+                          name: "settings",
+                          value: {
+                            ...inputs.settings,
+                            includeInReport: data.checked,
+                          },
+                        },
+                      })
+                    }
+                    checked={inputs?.settings?.includeInReport}
                   />
                 </div>
               )}

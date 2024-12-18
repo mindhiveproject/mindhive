@@ -3,9 +3,19 @@ async function copyProposalBoard(
   {
     id,
     study,
+    title,
+    classIdTemplate,
+    classIdUsed,
+    collaborators,
+    isTemplate,
   }: {
     id: string;
     study: string;
+    title: string;
+    classIdTemplate: string;
+    classIdUsed: string;
+    collaborators: string[];
+    isTemplate: boolean;
   },
   context: KeystoneContext
 ): Promise<ReportCreateInput> {
@@ -19,12 +29,12 @@ async function copyProposalBoard(
   const template = await context.query.ProposalBoard.findOne({
     where: { id: id },
     query:
-      "id slug title description settings sections { id title position cards { id type shareType title description position content resources { id } } }",
+      "id slug title description settings sections { id title position cards { id type shareType title description settings position content resources { id } } }",
   });
 
   // make a full copy
   const argumentsToCopy = {
-    title: template.title,
+    title: title || template.title,
     description: template.description,
     settings: template.settings,
     slug: `${template.slug}-${Date.now()}-${Math.round(
@@ -41,11 +51,33 @@ async function copyProposalBoard(
             id: sesh.itemId,
           },
         },
-        study: {
-          connect: {
-            id: study,
-          },
-        },
+        collaborators: collaborators
+          ? {
+              connect: collaborators.map((c) => ({ id: c })),
+            }
+          : null,
+        templateForClasses: classIdTemplate
+          ? {
+              connect: {
+                id: classIdTemplate,
+              },
+            }
+          : null,
+        usedInClass: classIdUsed
+          ? {
+              connect: {
+                id: classIdUsed,
+              },
+            }
+          : null,
+        study: study
+          ? {
+              connect: {
+                id: study,
+              },
+            }
+          : null,
+        isTemplate: isTemplate,
         ...argumentsToCopy,
       },
     },
@@ -89,6 +121,7 @@ async function copyProposalBoard(
                 resources: {
                   connect: templateCard.resources,
                 },
+                settings: templateCard.settings,
               },
             },
             "id"

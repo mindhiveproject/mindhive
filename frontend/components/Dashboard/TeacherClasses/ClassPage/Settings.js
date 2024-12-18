@@ -46,7 +46,7 @@ export default function Settings({ myclass, user }) {
 
   return (
     <div className="settings">
-      {myclass?.networks.length && (
+      {myclass?.networks.length > 0 && (
         <div>
           <h3>Class networks</h3>
           {myclass?.networks.map((network) => (
