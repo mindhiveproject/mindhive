@@ -274,6 +274,7 @@ export default function ProposalCard({
                       />
                       <h4>Linked resources</h4>
                       <Resources
+                        user={user}
                         handleChange={handleChange}
                         selectedResources={
                           inputs?.resources?.map((resource) => resource?.id) ||
