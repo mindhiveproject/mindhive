@@ -50,8 +50,6 @@ export default function ProposalCard({
     ...proposalCard,
   });
 
-  console.log({ inputs });
-
   const content = useRef(proposalCard?.content);
 
   const [updateCard, { loading: updateLoading }] =

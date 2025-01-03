@@ -1,10 +1,12 @@
 import { useQuery } from "@apollo/client";
-import { GET_RESOURCES } from "../../../Queries/Resource";
+import { GET_MY_AND_PUBLIC_RESOURCES } from "../../../Queries/Resource";
 
 import { Dropdown } from "semantic-ui-react";
 
-export default function Resources({ handleChange, selectedResources }) {
-  const { data, error, loading } = useQuery(GET_RESOURCES);
+export default function Resources({ user, handleChange, selectedResources }) {
+  const { data, error, loading } = useQuery(GET_MY_AND_PUBLIC_RESOURCES, {
+    variables: { id: user?.id },
+  });
 
   const resources = data?.resources || [];
 

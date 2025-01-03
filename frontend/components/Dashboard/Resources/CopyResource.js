@@ -1,17 +1,15 @@
-import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 
 import { GET_RESOURCE } from "../../Queries/Resource";
-import { UPDATE_RESOURCE } from "../../Mutations/Resource";
-import { GET_PUBLIC_RESOURCES } from "../../Queries/Resource";
+import { CREATE_RESOURCE } from "../../Mutations/Resource";
+import { GET_MY_RESOURCES } from "../../Queries/Resource";
 
 import useForm from "../../../lib/useForm";
 import ResourceForm from "./ResourceForm";
 
-export default function EditResource({ selector, query, user }) {
+export default function CopyResource({ selector, query, user }) {
   const router = useRouter();
-  const [content, setContent] = useState("");
 
   const { id } = query;
   const { data, loading, error } = useQuery(GET_RESOURCE, {
@@ -24,19 +22,27 @@ export default function EditResource({ selector, query, user }) {
   });
 
   const [
-    updateResource,
-    { data: updateData, loading: updateLoading, error: updateError },
-  ] = useMutation(UPDATE_RESOURCE, {
+    createResource,
+    {
+      data: createResourcesData,
+      loading: createResourceLoading,
+      error: createResourceError,
+    },
+  ] = useMutation(CREATE_RESOURCE, {
     variables: inputs,
     refetchQueries: [
-      { query: GET_RESOURCE, variables: { id } },
-      { query: GET_PUBLIC_RESOURCES },
+      {
+        query: GET_MY_RESOURCES,
+        variables: {
+          id: user?.id,
+        },
+      },
     ],
   });
 
   async function handleSave(e) {
     e.preventDefault();
-    await updateResource({ variables: { updatedAt: new Date() } });
+    await createResource();
     router.push({
       pathname: `/dashboard/resources`,
     });
@@ -45,7 +51,7 @@ export default function EditResource({ selector, query, user }) {
   return (
     <div>
       <ResourceForm inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>Save</button>
+      <button onClick={handleSave}>Save as your own resource</button>
     </div>
   );
 }

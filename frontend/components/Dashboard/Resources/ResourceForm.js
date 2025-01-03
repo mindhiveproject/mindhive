@@ -1,5 +1,6 @@
 import JoditEditor from "../../Jodit/Editor";
 import { StyledInput } from "../../styles/StyledForm";
+import { Radio } from "semantic-ui-react";
 
 export default function ResourceForm({ inputs, handleChange, loading }) {
   const setContent = (content) =>
@@ -12,6 +13,21 @@ export default function ResourceForm({ inputs, handleChange, loading }) {
       <StyledInput>
         <h1>{inputs.title}</h1>
 
+        <div className="iconTitle">
+          <div>Make public</div>
+          <Radio
+            toggle
+            checked={inputs?.isPublic}
+            onChange={() => {
+              handleChange({
+                target: {
+                  name: "isPublic",
+                  value: !inputs?.isPublic,
+                },
+              });
+            }}
+          />
+        </div>
         <div>
           <label htmlFor="title">
             Title

@@ -91,29 +91,34 @@ export default function Selector({ query, user }) {
               />
             </div>
             <h3>Clone & modify a study</h3>
-            <p>
-              Build a study based on a pre-existing MindHive study (if you are a
-              student, only select this option if your teacher explicitly told
-              you to do so)
-            </p>
+            <p>Build a study based on a pre-existing MindHive study</p>
+
+            {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+              <p>
+                (if you are a student, only select this option if your teacher
+                explicitly told you to do so)
+              </p>
+            )}
           </Link>
 
-          <Link
-            className="option"
-            href={{
-              pathname: "/builder/projects/start",
-            }}
-          >
-            <div className="iconSelect">
-              <img
-                src={`/assets/develop/new-study.svg`}
-                alt="icon"
-                width="50"
-              />
-            </div>
-            <h3>Start your MindHive project</h3>
-            <p></p>
-          </Link>
+          {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+            <Link
+              className="option"
+              href={{
+                pathname: "/builder/projects/start",
+              }}
+            >
+              <div className="iconSelect">
+                <img
+                  src={`/assets/develop/new-study.svg`}
+                  alt="icon"
+                  width="50"
+                />
+              </div>
+              <h3>Start your MindHive project</h3>
+              <p></p>
+            </Link>
+          )}
 
           <Link
             className="option"
@@ -129,10 +134,13 @@ export default function Selector({ query, user }) {
               />
             </div>
             <h3>Start a study from scratch</h3>
-            <p>
-              Create a study without a project (if you are a student, only
-              select this option if your teacher explicitly told you to do so)
-            </p>
+            <p>Create a study without a project</p>
+            {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+              <p>
+                (if you are a student, only select this option if your teacher
+                explicitly told you to do so)
+              </p>
+            )}
           </Link>
         </div>
       </div>

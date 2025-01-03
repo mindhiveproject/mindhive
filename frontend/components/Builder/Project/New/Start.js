@@ -32,7 +32,6 @@ export default function StartProject({ query, user }) {
 
   useEffect(() => {
     function selectClass() {
-      console.log("Selecting default class");
       handleChange({
         target: {
           name: "class",

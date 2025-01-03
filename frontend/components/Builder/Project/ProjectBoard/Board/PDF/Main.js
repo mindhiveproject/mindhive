@@ -14,7 +14,6 @@ export default function ProposalPDF({ proposalId }) {
   });
 
   const proposal = data?.proposalBoard || {};
-  console.log({ proposal });
 
   const title = proposal?.title || "";
   const description = proposal?.description || "";
@@ -54,8 +53,6 @@ export default function ProposalPDF({ proposalId }) {
   // extracting the study title is problematic as there are several classes
   const studyTitle = study?.title;
   const date = moment().format("MM-D-YYYY");
-
-  console.log({ content });
 
   return (
     <>

@@ -45,8 +45,6 @@ export default function ProposalCard({
     ...proposalCard,
   });
 
-  console.log({ inputs });
-
   const content = useRef(proposalCard?.content);
 
   const [updateCard, { loading: updateLoading }] =
@@ -251,6 +249,7 @@ export default function ProposalCard({
                   />
                   <h4>Linked resources</h4>
                   <Resources
+                    user={user}
                     handleChange={handleChange}
                     selectedResources={
                       inputs?.resources?.map((resource) => resource?.id) || []

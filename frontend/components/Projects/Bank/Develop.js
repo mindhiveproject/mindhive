@@ -19,7 +19,6 @@ export default function DevelopProjectBank({ user }) {
     variables: { userId: user?.id },
   });
   const projects = data?.proposalBoards || [];
-  console.log({ projects });
 
   // const [filter, setFilter] = useState("All");
 

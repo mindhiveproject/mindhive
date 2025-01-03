@@ -1,9 +1,9 @@
 import gql from "graphql-tag";
 
 // get all resources
-export const GET_RESOURCES = gql`
+export const GET_PUBLIC_RESOURCES = gql`
   query GET_RESOURCES {
-    resources {
+    resources(where: { isPublic: { equals: true } }) {
       id
       title
       slug
@@ -48,6 +48,31 @@ export const GET_MY_RESOURCES = gql`
   }
 `;
 
+// get my and public resources
+export const GET_MY_AND_PUBLIC_RESOURCES = gql`
+  query GET_MY_AND_PUBLIC_RESOURCES($id: ID!) {
+    resources(
+      where: {
+        OR: [
+          { author: { id: { equals: $id } } }
+          { collaborators: { some: { id: { equals: $id } } } }
+          { isPublic: { equals: true } }
+        ]
+      }
+    ) {
+      id
+      title
+      slug
+      author {
+        id
+        username
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 // get specific resource
 export const GET_RESOURCE = gql`
   query GET_RESOURCE($id: ID!) {
@@ -57,6 +82,7 @@ export const GET_RESOURCE = gql`
       slug
       description
       content
+      isPublic
       settings
       author {
         id

@@ -6,6 +6,7 @@ export const CREATE_RESOURCE = gql`
     $title: String!
     $description: String
     $content: JSON
+    $isPublic: Boolean
     $settings: JSON
   ) {
     createResource(
@@ -13,6 +14,7 @@ export const CREATE_RESOURCE = gql`
         title: $title
         description: $description
         content: $content
+        isPublic: $isPublic
         settings: $settings
       }
     ) {
@@ -29,6 +31,8 @@ export const UPDATE_RESOURCE = gql`
     $description: String
     $content: JSON
     $settings: JSON
+    $isPublic: Boolean
+    $updatedAt: DateTime
   ) {
     updateResource(
       where: { id: $id }
@@ -37,6 +41,8 @@ export const UPDATE_RESOURCE = gql`
         description: $description
         content: $content
         settings: $settings
+        isPublic: $isPublic
+        updatedAt: $updatedAt
       }
     ) {
       id
