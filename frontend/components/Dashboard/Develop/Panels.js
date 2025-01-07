@@ -9,11 +9,23 @@ export default function Panels({ query, user }) {
   return (
     <>
       <div className="menu">
+        <Link href="/dashboard/develop/studies">
+          <div
+            className={
+              selector === "studies" || !selector
+                ? "menuTitle selectedMenuTitle"
+                : "menuTitle"
+            }
+          >
+            <p>My studies</p>
+          </div>
+        </Link>
+
         {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
           <Link href="/dashboard/develop/projects">
             <div
               className={
-                selector === "projects" || !selector
+                selector === "projects"
                   ? "menuTitle selectedMenuTitle"
                   : "menuTitle"
               }
@@ -22,18 +34,6 @@ export default function Panels({ query, user }) {
             </div>
           </Link>
         )}
-
-        <Link href="/dashboard/develop/studies">
-          <div
-            className={
-              selector === "studies"
-                ? "menuTitle selectedMenuTitle"
-                : "menuTitle"
-            }
-          >
-            <p>My studies</p>
-          </div>
-        </Link>
 
         <Link href="/dashboard/develop/tasks">
           <div
@@ -70,11 +70,9 @@ export default function Panels({ query, user }) {
         </Link>
       </div>
 
-      {(!selector || selector == "projects") && (
-        <DevelopProjectBank user={user} />
-      )}
+      {selector == "projects" && <DevelopProjectBank user={user} />}
 
-      {selector == "studies" && <DevelopStudyBank user={user} />}
+      {(!selector || selector == "studies") && <DevelopStudyBank user={user} />}
 
       {selector == "tasks" && <DevelopTaskBank user={user} taskType="TASK" />}
 
