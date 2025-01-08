@@ -62,7 +62,7 @@ export default function StartProject({ query, user }) {
     const classTemplateProposalId = inputs?.class?.templateProposal?.id;
 
     // TODO if there is no proposal ID for a chosen class, then use a default one
-    const defaultProposalBoardId = `clo4s6ack0832v2t5resr7jx8`;
+    const defaultProposalBoardId = `cm2wodtfy008abj0rh8ms8yt9`;
 
     const res = await copyProposal({
       variables: {
