@@ -11,10 +11,16 @@ import JoditEditor from "../../../../../../Jodit/Editor";
 import useForm from "../../../../../../../lib/useForm";
 
 import Status from "../Forms/Status";
+import Navigation from "../../../../Navigation/Main";
+import { StyledProposal } from "../../../../../../styles/StyledProposal";
 
 export default function IndividualCard({
+  query,
+  tab,
   user,
+  proposalId,
   proposalCard,
+  cardId,
   closeCard,
   isPreview,
 }) {
@@ -99,77 +105,94 @@ export default function IndividualCard({
   };
 
   return (
-    <div className="post">
-      {isPreview && (
-        <div className="closeBtn">
-          <span onClick={() => closeCard({})}>&times;</span>
-        </div>
-      )}
+    <>
+      <Navigation
+        query={query}
+        user={user}
+        tab={tab}
+        toggleSidebar={() => {}}
+        proposalId={proposalId}
+        cardId={cardId}
+        saveBtnFunction={() => {
+          saveHomework();
+        }}
+        saveBtnName="Save & Exit"
+      />
 
-      <div className="lockedMessage">
-        <div>
-          This is your private workspace. Only your teacher and reviewer have
-          access to the content you write here.
-        </div>
-      </div>
-
-      <div className="proposalCardBoard">
-        <div className="textBoard">
-          <div className="cardHeader">{proposalCard?.title}</div>
-          <div className="cardDescription">
-            {ReactHtmlParser(proposalCard?.description)}
-          </div>
-
-          {!isPreview && (
-            <JoditEditor
-              content={content?.current}
-              setContent={(newContent) => {
-                content.current = newContent;
-              }}
-            />
+      <StyledProposal>
+        <div className="post">
+          {isPreview && (
+            <div className="closeBtn">
+              <span onClick={() => closeCard({})}>&times;</span>
+            </div>
           )}
-        </div>
 
-        {!isPreview && (
-          <div className="infoBoard">
+          <div className="lockedMessage">
             <div>
-              <h4>Status</h4>
-              <Status
-                settings={inputs?.settings}
-                onSettingsChange={handleSettingsChange}
-              />
-            </div>
-
-            <div className="proposalCardComments">
-              <h4>Comments</h4>
-              <textarea
-                rows="5"
-                type="text"
-                id="comment"
-                name="comment"
-                value={inputs.comment}
-                onChange={handleChange}
-                disabled
-              />
-            </div>
-
-            <div className="buttons">
-              <button
-                className="secondary"
-                onClick={() =>
-                  closeCard({ cardId: false, lockedByUser: false })
-                }
-              >
-                Close without saving
-              </button>
-
-              <button className="primary" onClick={() => saveHomework()}>
-                {editLoading ? "Saving ..." : "Save & close"}
-              </button>
+              This is your private workspace. Only your teacher and reviewer
+              have access to the content you write here.
             </div>
           </div>
-        )}
-      </div>
-    </div>
+
+          <div className="proposalCardBoard">
+            <div className="textBoard">
+              <div className="cardHeader">{proposalCard?.title}</div>
+              <div className="cardDescription">
+                {ReactHtmlParser(proposalCard?.description)}
+              </div>
+
+              {!isPreview && (
+                <JoditEditor
+                  content={content?.current}
+                  setContent={(newContent) => {
+                    content.current = newContent;
+                  }}
+                />
+              )}
+            </div>
+
+            {!isPreview && (
+              <div className="infoBoard">
+                <div>
+                  <h4>Status</h4>
+                  <Status
+                    settings={inputs?.settings}
+                    onSettingsChange={handleSettingsChange}
+                  />
+                </div>
+
+                <div className="proposalCardComments">
+                  <h4>Comments</h4>
+                  <textarea
+                    rows="5"
+                    type="text"
+                    id="comment"
+                    name="comment"
+                    value={inputs.comment}
+                    onChange={handleChange}
+                    disabled
+                  />
+                </div>
+
+                <div className="buttons">
+                  {/* <button
+                    className="secondary"
+                    onClick={() =>
+                      closeCard({ cardId: false, lockedByUser: false })
+                    }
+                  >
+                    Close without saving
+                  </button> */}
+
+                  <button className="primary" onClick={() => saveHomework()}>
+                    {editLoading ? "Saving ..." : "Save"}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </StyledProposal>
+    </>
   );
 }

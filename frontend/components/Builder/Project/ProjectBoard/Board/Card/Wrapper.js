@@ -1,16 +1,17 @@
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 
 import { GET_CARD_CONTENT } from "../../../../../Queries/Proposal";
 
 import ProposalCard from "./Main";
 import IndividualCard from "./Individual/Main";
 import OverviewOfIndividualCards from "./Overview/Main";
+import SubmitAction from "./Actions/Submit";
 
 export default function CardWrapper({
   query,
   tab,
   user,
-  boardId,
+  proposalId,
   proposal,
   cardId,
   closeCard,
@@ -37,12 +38,33 @@ export default function CardWrapper({
     user?.permissions.map((p) => p?.name).includes("MENTOR");
 
   if (proposalCard && Object.values(proposalCard).length) {
+    if (!proposalBuildMode && proposalCard?.type === "ACTION_SUBMIT") {
+      return (
+        <SubmitAction
+          query={query}
+          tab={tab}
+          user={user}
+          proposalId={proposalId}
+          proposal={proposal}
+          cardId={cardId}
+          closeCard={closeCard}
+          proposalBuildMode={proposalBuildMode}
+          isPreview={isPreview}
+          proposalCard={proposalCard}
+        />
+      );
+    }
+
     if (!proposalBuildMode && proposalCard?.shareType === "INDIVIDUAL") {
       if (hasOverviewAccess) {
         return (
           <OverviewOfIndividualCards
+            query={query}
+            tab={tab}
             user={user}
+            proposalId={proposalId}
             proposalCard={proposalCard}
+            cardId={cardId}
             closeCard={closeCard}
             isPreview={isPreview}
           />
@@ -50,8 +72,12 @@ export default function CardWrapper({
       } else {
         return (
           <IndividualCard
+            query={query}
+            tab={tab}
             user={user}
+            proposalId={proposalId}
             proposalCard={proposalCard}
+            cardId={cardId}
             closeCard={closeCard}
             isPreview={isPreview}
           />
@@ -63,7 +89,7 @@ export default function CardWrapper({
           query={query}
           tab={tab}
           user={user}
-          boardId={boardId}
+          proposalId={proposalId}
           proposal={proposal}
           cardId={cardId}
           closeCard={closeCard}

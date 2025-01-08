@@ -14,6 +14,7 @@ import {
   UPDATE_CARD_POSITION,
   DELETE_CARD,
 } from "../../../../../Mutations/Proposal";
+import SubmitCard from "./Actions/SubmitCard";
 
 const Section = ({
   section,
@@ -268,7 +269,7 @@ const Section = ({
         },
       },
     });
-    openCard({ id: newCard?.data?.createProposalCard?.id });
+    // openCard({ id: newCard?.data?.createProposalCard?.id });
   };
 
   const deleteCardMutation = (id) => {
@@ -341,19 +342,37 @@ const Section = ({
           }
         >
           {cards && cards.length ? (
-            cards.map((card) => (
-              <Card
-                key={card.id}
-                card={card}
-                onDeleteCard={deleteCardMutation}
-                boardId={boardId}
-                openCard={openCard}
-                proposalBuildMode={proposalBuildMode}
-                adminMode={adminMode}
-                isPreview={isPreview}
-                settings={settings}
-              />
-            ))
+            cards.map((card) => {
+              if (card?.type === "ACTION_SUBMIT") {
+                return (
+                  <SubmitCard
+                    key={card.id}
+                    card={card}
+                    onDeleteCard={deleteCardMutation}
+                    boardId={boardId}
+                    openCard={openCard}
+                    proposalBuildMode={proposalBuildMode}
+                    adminMode={adminMode}
+                    isPreview={isPreview}
+                    settings={settings}
+                  />
+                );
+              } else {
+                return (
+                  <Card
+                    key={card.id}
+                    card={card}
+                    onDeleteCard={deleteCardMutation}
+                    boardId={boardId}
+                    openCard={openCard}
+                    proposalBuildMode={proposalBuildMode}
+                    adminMode={adminMode}
+                    isPreview={isPreview}
+                    settings={settings}
+                  />
+                );
+              }
+            })
           ) : (
             <div></div>
           )}

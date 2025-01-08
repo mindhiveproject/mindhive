@@ -7,6 +7,8 @@ export const StyledProposal = styled.div`
   padding: 20px;
   min-height: 80vh;
   background: #f7f9f8;
+  align-items: baseline;
+
   .closeBtn {
     line-height: 3rem;
     text-align: center;
@@ -478,6 +480,8 @@ export const StyledProposal = styled.div`
       border-bottom: 2px solid #e6e6e6;
     }
     .textBoard {
+      display: grid;
+      grid-gap: 10px;
       margin: 15px 10px 0px 20px;
     }
     .infoBoard {
@@ -501,7 +505,7 @@ export const StyledProposal = styled.div`
   }
 
   .jodit {
-    height: 100%;
+    /* height: 100%; */
     input,
     textarea,
     select {

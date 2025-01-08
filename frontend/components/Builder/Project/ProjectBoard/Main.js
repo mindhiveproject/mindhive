@@ -1,14 +1,23 @@
+import { useQuery } from "@apollo/client";
+import { Sidebar } from "semantic-ui-react";
+
+import CardWrapper from "./Board/Card/Wrapper";
 import Navigation from "../Navigation/Main";
 import ProposalPage from "./ProposalPage";
 
+import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
+
 import { StyledProposal } from "../../../styles/StyledProposal";
 
-import { Sidebar } from "semantic-ui-react";
-import CardWrapper from "./Board/Card/Wrapper";
-
 export default function Proposal({ query, user, tab, toggleSidebar }) {
-  const boardId = query?.selector;
+  const proposalId = query?.selector;
   const cardId = query?.card;
+
+  const { data, error, loading } = useQuery(PROPOSAL_QUERY, {
+    variables: { id: proposalId },
+  });
+
+  const proposal = data?.proposalBoard || {};
 
   if (cardId) {
     return (
@@ -16,8 +25,8 @@ export default function Proposal({ query, user, tab, toggleSidebar }) {
         query={query}
         tab={tab}
         user={user}
-        boardId={boardId}
-        proposal={null}
+        proposalId={proposalId}
+        proposal={proposal}
         cardId={cardId}
         closeCard={() => {}}
         proposalBuildMode={false}
@@ -28,17 +37,17 @@ export default function Proposal({ query, user, tab, toggleSidebar }) {
 
   return (
     <Sidebar.Pushable>
-      {boardId && (
+      {proposalId && (
         <>
           <Navigation
-            proposalId={boardId}
+            proposalId={proposalId}
             query={query}
             user={user}
             tab={tab}
             toggleSidebar={toggleSidebar}
           />
           <StyledProposal>
-            <ProposalPage user={user} proposalId={boardId} />
+            <ProposalPage user={user} proposalId={proposalId} />
           </StyledProposal>
         </>
       )}

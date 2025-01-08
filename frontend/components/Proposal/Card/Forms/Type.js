@@ -8,6 +8,11 @@ export default function CardType({ type, handleChange }) {
     { key: "article", text: "Article", value: "ARTICLE" },
     { key: "survey", text: "Survey", value: "SURVEY" },
     { key: "link", text: "Link", value: "LINK" },
+    {
+      key: "actionSubmit",
+      text: "Action card - Submit",
+      value: "ACTION_SUBMIT",
+    },
   ];
 
   return (

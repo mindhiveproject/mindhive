@@ -1,6 +1,6 @@
+import { useState, useEffect, useRef } from "react";
 import { useMutation } from "@apollo/client";
 import { Checkbox } from "semantic-ui-react";
-
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
 
@@ -12,7 +12,7 @@ import JoditEditor from "../../Jodit/Editor";
 
 import Assigned from "./Forms/Assigned";
 import Status from "./Forms/Status";
-import { useState, useEffect, useRef } from "react";
+
 import CardType from "./Forms/Type";
 import Sharing from "./Forms/Sharing";
 import Resources from "./Forms/Resources";

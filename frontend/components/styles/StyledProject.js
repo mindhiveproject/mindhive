@@ -2,7 +2,9 @@ import styled from "styled-components";
 
 const StyledProject = styled.div`
   display: grid;
-
+  height: 100vh;
+  align-content: baseline;
+  grid-template-rows: auto 1fr;
   .navigation {
     display: grid;
     align-items: center;
@@ -37,6 +39,17 @@ const StyledProject = styled.div`
           padding: 10px 9px;
           width: 225px;
         }
+      }
+    }
+    .right {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-gap: 10px;
+      .connectArea {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-gap: 5px;
+        align-items: center;
       }
     }
   }

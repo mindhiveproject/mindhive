@@ -79,6 +79,7 @@ export default function ProposalWrapper({ myclass, query, user, templates }) {
         proposalId={proposalId}
         goToOverview={goToOverview}
         refetchQueries={refetchQueries}
+        proposalBuildMode
       />
     );
   }

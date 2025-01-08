@@ -23,7 +23,7 @@ export default function ProposalCard({
   query,
   tab,
   user,
-  boardId,
+  proposalId,
   proposal,
   cardId,
   closeCard,
@@ -131,7 +131,7 @@ export default function ProposalCard({
         user={user}
         tab={tab}
         toggleSidebar={() => {}}
-        proposalId={boardId}
+        proposalId={proposalId}
         cardId={cardId}
         saveBtnFunction={onUpdateCard}
         saveBtnName="Save & Exit"

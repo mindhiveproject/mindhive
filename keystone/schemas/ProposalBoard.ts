@@ -63,6 +63,22 @@ export const ProposalBoard = list({
     isDefault: checkbox({ isFilterable: true }),
     isTemplate: checkbox({ isFilterable: true }),
     isSubmitted: checkbox({ isFilterable: true }),
+    status: select({
+      options: [
+        { label: "Working", value: "WORKING" },
+        {
+          label: "Submitted as proposal for review",
+          value: "SUBMITTED_AS_PROPOSAL_FOR_REVIEW",
+        },
+        {
+          label: "Submitted as study for review",
+          value: "SUBMITTED_AS_STUDY_FOR_REVIEW",
+        },
+        { label: "Reviewed as proposal", value: "REVIEWED_AS_PROPOSAL" },
+        { label: "Reviewed as study", value: "REVIEWED_AS_STUDY" },
+      ],
+      defaultValue: "WORKING",
+    }),
     checklist: json(),
     settings: json(),
     creator: relationship({

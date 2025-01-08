@@ -54,6 +54,7 @@ export const ProposalCard = list({
         { label: "Article", value: "ARTICLE" },
         { label: "Survey", value: "SURVEY" },
         { label: "Link", value: "LINK" },
+        { label: "ActionSubmit", value: "ACTION_SUBMIT" },
       ],
       defaultValue: "PROPOSAL",
     }),

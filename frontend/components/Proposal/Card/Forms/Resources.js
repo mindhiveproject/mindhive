@@ -20,9 +20,7 @@ export default function Resources({ user, handleChange, selectedResources }) {
     handleChange({
       target: {
         name: "resources",
-        value: data.value.map((resource) => ({
-          id: resource,
-        })),
+        value: resources?.filter((r) => data.value.includes(r?.id)),
       },
     });
   };

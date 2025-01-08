@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -88,7 +88,6 @@ export default function Navigation({
       <div className="left">
         <div className="selector">
           <Dropdown
-            direction="right"
             upward={false}
             icon={null}
             trigger={

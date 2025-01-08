@@ -78,6 +78,7 @@ export const PROPOSAL_QUERY = gql`
       description
       settings
       isSubmitted
+      status
       isTemplate
       usedInClass {
         id

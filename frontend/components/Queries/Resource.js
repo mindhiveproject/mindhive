@@ -62,6 +62,7 @@ export const GET_MY_AND_PUBLIC_RESOURCES = gql`
     ) {
       id
       title
+      content
       slug
       author {
         id

@@ -5,10 +5,16 @@ import { Dropdown } from "semantic-ui-react";
 import { useState } from "react";
 
 import Homework from "./Homework";
+import Navigation from "../../../../Navigation/Main";
+import { StyledProposal } from "../../../../../../styles/StyledProposal";
 
 export default function OverviewOfIndividualCards({
+  query,
+  tab,
   user,
+  proposalId,
   proposalCard,
+  cardId,
   closeCard,
   isPreview,
 }) {
@@ -31,32 +37,48 @@ export default function OverviewOfIndividualCards({
   }));
 
   return (
-    <div className="post">
-      <div className="proposalCardBoard">
-        <div className="textBoard">
-          <button
-            className="secondary"
-            onClick={() => closeCard({ cardId: false, lockedByUser: false })}
-          >
-            Close
-          </button>
-          <div className="cardHeader">{proposalCard?.title}</div>
-          <div className="cardDescription">
-            {ReactHtmlParser(proposalCard?.description)}
+    <>
+      <Navigation
+        query={query}
+        user={user}
+        tab={tab}
+        toggleSidebar={() => {}}
+        proposalId={proposalId}
+        cardId={cardId}
+        saveBtnFunction={() => {}}
+        // saveBtnName="Save & Exit"
+        saveBtnName="Close"
+      />
+
+      <StyledProposal>
+        <div className="post">
+          <div className="proposalCardBoard">
+            <div className="textBoard">
+              {/* <button
+              className="secondary"
+              onClick={() => closeCard({ cardId: false, lockedByUser: false })}
+            >
+              Close
+            </button> */}
+              <div className="cardHeader">{proposalCard?.title}</div>
+              <div className="cardDescription">
+                {ReactHtmlParser(proposalCard?.description)}
+              </div>
+
+              <Dropdown
+                placeholder="Select student"
+                fluid
+                selection
+                options={studentFilterOptions}
+                onChange={(event, data) => setHomeworkId(data?.value)}
+                value={homeworkId}
+              />
+
+              {homeworkId && <Homework homeworkId={homeworkId} />}
+            </div>
           </div>
-
-          <Dropdown
-            placeholder="Select student"
-            fluid
-            selection
-            options={studentFilterOptions}
-            onChange={(event, data) => setHomeworkId(data?.value)}
-            value={homeworkId}
-          />
-
-          {homeworkId && <Homework homeworkId={homeworkId} />}
         </div>
-      </div>
-    </div>
+      </StyledProposal>
+    </>
   );
 }
