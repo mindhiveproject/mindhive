@@ -78,7 +78,12 @@ export const PROPOSAL_QUERY = gql`
       description
       settings
       isSubmitted
-      status
+      submitProposalStatus
+      submitProposalOpenForComments
+      peerFeedbackStatus
+      peerFeedbackOpenForComments
+      projectReportStatus
+      projectReportOpenForComments
       isTemplate
       usedInClass {
         id
@@ -173,6 +178,12 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
       slug
       isSubmitted
       checklist
+      author {
+        username
+      }
+      collaborators {
+        username
+      }
       study {
         id
         title
@@ -204,6 +215,9 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
         content
         author {
           id
+          permissions {
+            name
+          }
         }
         upvotedBy {
           id
@@ -474,6 +488,44 @@ export const GET_PROJECT_STUDY = gql`
         currentVersion
         versionHistory
       }
+    }
+  }
+`;
+
+// get proposals with a custom query
+export const PROJECTS_QUERY = gql`
+  query PROJECTS_QUERY($where: ProposalBoardWhereInput!) {
+    proposalBoards(where: $where) {
+      id
+      title
+      slug
+      description
+      isSubmitted
+      submitProposalStatus
+      submitProposalOpenForComments
+      peerFeedbackStatus
+      peerFeedbackOpenForComments
+      projectReportStatus
+      projectReportOpenForComments
+      settings
+      study {
+        featured
+      }
+      reviews {
+        id
+        stage
+      }
+      author {
+        username
+      }
+      collaborators {
+        username
+      }
+      usedInClass {
+        id
+      }
+      createdAt
+      updatedAt
     }
   }
 `;

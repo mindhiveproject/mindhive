@@ -63,22 +63,52 @@ export const ProposalBoard = list({
     isDefault: checkbox({ isFilterable: true }),
     isTemplate: checkbox({ isFilterable: true }),
     isSubmitted: checkbox({ isFilterable: true }),
-    status: select({
+    // status: select({
+    //   options: [
+    //     { label: "Working", value: "WORKING" },
+    //     {
+    //       label: "Submitted as proposal for review",
+    //       value: "SUBMITTED_AS_PROPOSAL_FOR_REVIEW",
+    //     },
+    //     {
+    //       label: "Submitted as study for review",
+    //       value: "SUBMITTED_AS_STUDY_FOR_REVIEW",
+    //     },
+    //     { label: "Reviewed as proposal", value: "REVIEWED_AS_PROPOSAL" },
+    //     { label: "Reviewed as study", value: "REVIEWED_AS_STUDY" },
+    //   ],
+    //   defaultValue: "WORKING",
+    // }),
+    submitProposalStatus: select({
       options: [
-        { label: "Working", value: "WORKING" },
-        {
-          label: "Submitted as proposal for review",
-          value: "SUBMITTED_AS_PROPOSAL_FOR_REVIEW",
-        },
-        {
-          label: "Submitted as study for review",
-          value: "SUBMITTED_AS_STUDY_FOR_REVIEW",
-        },
-        { label: "Reviewed as proposal", value: "REVIEWED_AS_PROPOSAL" },
-        { label: "Reviewed as study", value: "REVIEWED_AS_STUDY" },
+        { label: "Not started", value: "NOT_STARTED" },
+        { label: "In progress", value: "IN_PROGRESS" },
+        { label: "Submitted", value: "SUBMITTED" },
+        { label: "Review is finished", value: "FINISHED" },
       ],
-      defaultValue: "WORKING",
+      defaultValue: "NOT_STARTED",
     }),
+    submitProposalOpenForComments: checkbox({ isFilterable: true }),
+    peerFeedbackStatus: select({
+      options: [
+        { label: "Not started", value: "NOT_STARTED" },
+        { label: "In progress", value: "IN_PROGRESS" },
+        { label: "Submitted", value: "SUBMITTED" },
+        { label: "Review is finished", value: "FINISHED" },
+      ],
+      defaultValue: "NOT_STARTED",
+    }),
+    peerFeedbackOpenForComments: checkbox({ isFilterable: true }),
+    projectReportStatus: select({
+      options: [
+        { label: "Not started", value: "NOT_STARTED" },
+        { label: "In progress", value: "IN_PROGRESS" },
+        { label: "Submitted", value: "SUBMITTED" },
+        { label: "Report is finished", value: "FINISHED" },
+      ],
+      defaultValue: "NOT_STARTED",
+    }),
+    projectReportOpenForComments: checkbox({ isFilterable: true }),
     checklist: json(),
     settings: json(),
     creator: relationship({

@@ -318,17 +318,13 @@ export const GET_STUDY_RESULTS = gql`
   }
 `;
 
-// get all studies and their proposals for review (featured studies + studies from class network)
-export const STUDIES_TO_REVIEW = gql`
-  query STUDIES_TO_REVIEW($classIds: [ID!]) {
+// get all studies (public studies and studies in the student's class network) that collect data
+export const STUDIES_COLLECTING_DATA = gql`
+  query STUDIES_COLLECTING_DATA($classIds: [ID!]) {
     studies(
       where: {
         AND: [
-          {
-            status: {
-              in: ["SUBMITTED_AS_PROPOSAL", "IN_REVIEW", "COLLECTING_DATA"]
-            }
-          }
+          { dataCollectionStatus: { in: ["SUBMITTED"] } }
           {
             OR: [
               { featured: { equals: true } }

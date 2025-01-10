@@ -101,7 +101,8 @@ export default function Selector({ query, user }) {
             )}
           </Link>
 
-          {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+          {(user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
+            user?.permissions?.map((p) => p?.name).includes("STUDENT")) && (
             <Link
               className="option"
               href={{

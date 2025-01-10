@@ -583,6 +583,22 @@ const StyledClass = styled.div`
       }
     }
   }
+  .dashboard {
+    .ag-cell-button {
+      color: black;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+      padding: 0 10px;
+    }
+
+    .ag-cell-button:hover {
+      background-color: #f0f0f0;
+    }
+  }
 `;
 
 export default StyledClass;

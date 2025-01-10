@@ -101,6 +101,7 @@ export const GET_STUDENTS_DATA = gql`
       username
       firstName
       lastName
+      publicId
       authorOfHomework {
         assignment {
           id
@@ -114,6 +115,42 @@ export const GET_STUDENTS_DATA = gql`
         title
         slug
         flow
+      }
+    }
+  }
+`;
+
+// get student data of a particular class
+export const GET_STUDENTS_DASHBOARD_DATA = gql`
+  query GET_STUDENTS_DASHBOARD_DATA($classId: ID!) {
+    profiles(where: { studentIn: { some: { id: { equals: $classId } } } }) {
+      id
+      username
+      publicId
+      collaboratorInProposal {
+        id
+        title
+        status
+        usedInClass {
+          id
+        }
+        collaborators {
+          username
+          permissions {
+            name
+          }
+        }
+        study {
+          id
+          title
+          status
+          collaborators {
+            username
+            permissions {
+              name
+            }
+          }
+        }
       }
     }
   }

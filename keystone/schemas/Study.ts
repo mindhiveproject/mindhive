@@ -180,5 +180,24 @@ export const Study = list({
     currentVersion: text(),
     versionHistory: json(),
     projectName: text(),
+    dataCollectionStatus: select({
+      options: [
+        { label: "Not started", value: "NOT_STARTED" },
+        { label: "In progress", value: "IN_PROGRESS" },
+        { label: "Submitted", value: "SUBMITTED" },
+        { label: "Data collection is finished", value: "FINISHED" },
+      ],
+      defaultValue: "NOT_STARTED",
+    }),
+    dataCollectionData: select({
+      options: [
+        { label: "Not defined", value: "NOT_DEFINED" },
+        { label: "Testing", value: "TESTING" },
+        { label: "Preliminary data", value: "PRELIMINARY_DATA" },
+        { label: "Real data", value: "REAL_DATA" },
+      ],
+      defaultValue: "NOT_DEFINED",
+    }),
+    dataCollectionOpenForParticipation: checkbox({ isFilterable: true }),
   },
 });

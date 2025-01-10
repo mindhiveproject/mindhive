@@ -18,6 +18,8 @@ import StyledClass from "../../../styles/StyledClass";
 // creating and customizing project boards for a class
 import ProjectBoard from "./ProjectBoard/Main";
 
+import Dashboard from "./Dashboard/Main";
+
 export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
   const page = query?.page || "students";
@@ -59,6 +61,22 @@ export default function ClassPage({ code, user, query }) {
                 }
               >
                 <p>Students</p>
+              </Link>
+
+              <Link
+                href={{
+                  pathname: `/dashboard/myclasses/${code}`,
+                  query: {
+                    page: "dashboard",
+                  },
+                }}
+                className={
+                  page === "dashboard"
+                    ? "menuTitle selectedMenuTitle"
+                    : "menuTitle"
+                }
+              >
+                <p>Dashboard</p>
               </Link>
 
               <Link
@@ -146,6 +164,11 @@ export default function ClassPage({ code, user, query }) {
           <div>
             {page === "students" && (
               <ClassStudents myclass={myclass} user={user} query={query} />
+            )}
+          </div>
+          <div>
+            {page === "dashboard" && (
+              <Dashboard myclass={myclass} user={user} query={query} />
             )}
           </div>
           <div>

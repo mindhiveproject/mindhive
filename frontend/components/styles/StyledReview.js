@@ -292,7 +292,7 @@ export const StyledDasboardReview = styled.div`
         display: grid;
         margin: 16px 0px;
         grid-gap: 16px;
-        grid-template-columns: 3fr 1fr 1fr 2fr;
+        grid-template-columns: 3fr 1fr 2fr;
       }
       .checkboxArea {
         display: grid;

@@ -1,17 +1,14 @@
+import { useQuery } from "@apollo/client";
 import { useState, useEffect } from "react";
+
 import { Dropdown, Checkbox } from "semantic-ui-react";
-import Card from "./Card.js";
+
+import { PROJECTS_QUERY } from "../../../../Queries/Proposal";
+import Card from "./Card";
 
 function containsAny(arr1, arr2) {
   return arr1.some((item) => arr2.includes(item));
 }
-
-const filterOptions = [
-  { label: "Proposal", value: "SUBMITTED_AS_PROPOSAL" },
-  { label: "In Review", value: "IN_REVIEW" },
-  { label: "In Review", value: "IN_REVIEW" },
-  { label: "Collecting Data", value: "COLLECTING_DATA" },
-];
 
 const sortOptions = [
   { label: "Oldest", value: "OLDEST" },
@@ -20,42 +17,72 @@ const sortOptions = [
   { label: "Most comments", value: "MOST_COMMENTS" },
 ];
 
-export default function Board({ studies, myClassesIds }) {
+export default function ProjectsBoard({
+  selector,
+  allUniqueClassIds,
+  myClassesIds,
+}) {
   const [keyword, setKeyword] = useState("");
-  const [status, setStatus] = useState("");
-  const [filteredStudies, setFilteredStudies] = useState(studies);
-  const [showMyClassOnly, setShowMyClassOnly] = useState(false);
+  const [filteredProjects, setFilteredProjects] = useState([]);
   const [sortBy, setSortBy] = useState("");
+  const [showMyClassOnly, setShowMyClassOnly] = useState(false);
   const [filterSortMessage, setFilterSortMessage] = useState(
-    "Showing all studies "
+    "Showing all projects"
   );
+
+  let whereStatus;
+  switch (selector) {
+    case "proposals":
+      whereStatus = { submitProposalStatus: { in: ["SUBMITTED"] } };
+      break;
+    case "inreview":
+      whereStatus = { peerFeedbackStatus: { in: ["SUBMITTED"] } };
+      break;
+    case "report":
+      whereStatus = { projectReportStatus: { in: ["SUBMITTED"] } };
+      break;
+    default:
+      whereStatus = { submitProposalStatus: { in: ["SUBMITTED"] } };
+  }
+
+  const { data, loading, error } = useQuery(PROJECTS_QUERY, {
+    variables: {
+      where: {
+        AND: [
+          whereStatus,
+          {
+            OR: [
+              { study: { featured: { equals: true } } },
+              { usedInClass: { id: { in: allUniqueClassIds } } },
+            ],
+          },
+        ],
+      },
+    },
+  });
+
+  const projects = data?.proposalBoards || [];
 
   // filter and sort proposals
   useEffect(() => {
     async function filterProposals() {
-      const studiesFiltered = studies.filter((study) => {
-        if (keyword || status || showMyClassOnly) {
-          const isMatchingKeyword = study.title
+      const projectsFiltered = projects.filter((project) => {
+        if (keyword || showMyClassOnly) {
+          const isMatchingKeyword = project.title
             .toLowerCase()
             .includes(keyword.toLowerCase());
-
-          const isMatchingStatus =
-            !status ||
-            study.status === status ||
-            (status === "FEATURED" && study?.featured);
-
           const isInMyClasses = containsAny(
-            study?.classes?.map((cl) => cl?.id),
+            [project?.usedInClass?.id],
             myClassesIds
           );
-          return isMatchingKeyword && isMatchingStatus && isInMyClasses;
+          return isMatchingKeyword && isInMyClasses;
         } else {
           return true;
         }
       });
       if (sortBy) {
         // sort studies
-        const studiesFilteredAndSorted = studiesFiltered.sort((a, b) => {
+        const projectsFilteredAndSorted = projectsFiltered.sort((a, b) => {
           if (sortBy === "OLDEST") {
             if (a.createdAt < b.createdAt) return -1;
             if (a.createdAt > b.createdAt) return 1;
@@ -91,13 +118,13 @@ export default function Board({ studies, myClassesIds }) {
               return 1;
           }
         });
-        setFilteredStudies(studiesFilteredAndSorted);
+        setFilteredProjects(projectsFilteredAndSorted);
       } else {
-        setFilteredStudies(studiesFiltered);
+        setFilteredProjects(projectsFiltered);
       }
     }
     filterProposals();
-  }, [studies, keyword, status, showMyClassOnly, sortBy]);
+  }, [projects, keyword, showMyClassOnly, sortBy]);
 
   return (
     <div className="board">
@@ -114,35 +141,6 @@ export default function Board({ studies, myClassesIds }) {
 
         <div>
           <Dropdown
-            placeholder="Filter"
-            fluid
-            selection
-            options={filterOptions.map((p) => ({
-              key: p.value,
-              value: p.value,
-              text: p.label,
-            }))}
-            onChange={(event, data) => {
-              if (data?.value === "SUBMITTED_AS_PROPOSAL") {
-                setFilterSortMessage(`Filter by: proposal`);
-              }
-              if (data?.value === "IN_REVIEW") {
-                setFilterSortMessage(`Filter by: in peer review`);
-              }
-              if (data?.value === "COLLECTING_DATA") {
-                setFilterSortMessage(`Filter by: collecting data`);
-              }
-              if (data?.value === "FEATURED") {
-                setFilterSortMessage(`Filter by: featured`);
-              }
-
-              setStatus(data?.value);
-            }}
-            value={status}
-          />
-        </div>
-        <div>
-          <Dropdown
             placeholder="Sort by"
             fluid
             selection
@@ -153,10 +151,10 @@ export default function Board({ studies, myClassesIds }) {
             }))}
             onChange={(event, data) => {
               if (data?.value === "OLDEST") {
-                setFilterSortMessage(`Sorting by: oldest to newest study`);
+                setFilterSortMessage(`Sorting by: oldest to newest project`);
               }
               if (data?.value === "NEWEST") {
-                setFilterSortMessage(`Sorting by: newest to oldest study`);
+                setFilterSortMessage(`Sorting by: newest to oldest project`);
               }
               if (data?.value === "LEAST_COMMENTS") {
                 setFilterSortMessage(`Sorting by: least to most comments`);
@@ -173,14 +171,14 @@ export default function Board({ studies, myClassesIds }) {
           <Checkbox
             onChange={() => {
               if (!showMyClassOnly) {
-                setFilterSortMessage(`Showing studies in my class`);
+                setFilterSortMessage(`Showing projects in my class`);
               } else {
-                setFilterSortMessage(`Showing all studies`);
+                setFilterSortMessage(`Showing all projects`);
               }
               setShowMyClassOnly(!showMyClassOnly);
             }}
             checked={showMyClassOnly}
-            label="Only show studies in my class"
+            label="Only show projects in my class"
           />
         </div>
       </div>
@@ -188,8 +186,8 @@ export default function Board({ studies, myClassesIds }) {
       <div className="p16_500">{filterSortMessage}</div>
 
       <div className="cardsArea">
-        {filteredStudies.map((study) => (
-          <Card study={study} />
+        {filteredProjects.map((project) => (
+          <Card project={project} />
         ))}
       </div>
     </div>
