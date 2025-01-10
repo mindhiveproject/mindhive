@@ -21,19 +21,17 @@ export default function Panels({ query, user }) {
           </div>
         </Link>
 
-        {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
-          <Link href="/dashboard/develop/projects">
-            <div
-              className={
-                selector === "projects"
-                  ? "menuTitle selectedMenuTitle"
-                  : "menuTitle"
-              }
-            >
-              <p>My projects</p>
-            </div>
-          </Link>
-        )}
+        <Link href="/dashboard/develop/projects">
+          <div
+            className={
+              selector === "projects"
+                ? "menuTitle selectedMenuTitle"
+                : "menuTitle"
+            }
+          >
+            <p>My projects</p>
+          </div>
+        </Link>
 
         <Link href="/dashboard/develop/tasks">
           <div
