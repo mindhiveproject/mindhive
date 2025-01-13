@@ -240,22 +240,7 @@ export default function ProposalCard({
             <div className="infoBoard">
               {proposalBuildMode && (
                 <div>
-                  <h4>Type</h4>
-                  <CardType type={inputs?.type} handleChange={handleChange} />
-                  <h4>Sharing</h4>
-                  <Sharing
-                    type={inputs?.shareType}
-                    handleChange={handleChange}
-                  />
-                  <h4>Linked resources</h4>
-                  <Resources
-                    user={user}
-                    handleChange={handleChange}
-                    selectedResources={
-                      inputs?.resources?.map((resource) => resource?.id) || []
-                    }
-                  />
-                  Include the card into the report
+                  Include public input
                   <Checkbox
                     toggle
                     name="includeCardToggle"
@@ -271,6 +256,21 @@ export default function ProposalCard({
                       })
                     }
                     checked={inputs?.settings?.includeInReport}
+                  />
+                  <h4>Type</h4>
+                  <CardType type={inputs?.type} handleChange={handleChange} />
+                  <h4>Sharing</h4>
+                  <Sharing
+                    type={inputs?.shareType}
+                    handleChange={handleChange}
+                  />
+                  <h4>Linked resources</h4>
+                  <Resources
+                    user={user}
+                    handleChange={handleChange}
+                    selectedResources={
+                      inputs?.resources?.map((resource) => resource?.id) || []
+                    }
                   />
                 </div>
               )}

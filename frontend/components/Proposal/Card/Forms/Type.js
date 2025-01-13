@@ -10,8 +10,23 @@ export default function CardType({ type, handleChange }) {
     { key: "link", text: "Link", value: "LINK" },
     {
       key: "actionSubmit",
-      text: "Action card - Submit",
+      text: "Action card - Submit Proposal",
       value: "ACTION_SUBMIT",
+    },
+    {
+      key: "actionPeerFeedback",
+      text: "Action card - Submit for Peer Feedback",
+      value: "ACTION_PEER_FEEDBACK",
+    },
+    {
+      key: "actionCollectingData",
+      text: "Action card - Start Collecting Data",
+      value: "ACTION_COLLECTING_DATA",
+    },
+    {
+      key: "actionProjectReport",
+      text: "Action card - Submit Project Report",
+      value: "ACTION_PROJECT_REPORT",
     },
   ];
 
