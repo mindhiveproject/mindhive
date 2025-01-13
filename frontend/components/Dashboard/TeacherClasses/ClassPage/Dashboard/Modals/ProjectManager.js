@@ -1,14 +1,82 @@
-import { Modal, Icon } from "semantic-ui-react";
+import { useMutation, useQuery } from "@apollo/client";
+import { Modal, Icon, Dropdown } from "semantic-ui-react";
 import { useState } from "react";
 
 import StyledModal from "../../../../../styles/StyledModal";
 
 // query to refetch after the student update
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
+// query to get all projects of a class
+import { CLASS_PROJECTS_QUERY } from "../../../../../Queries/Proposal";
+// mutation to update a student
+import { ASSIGN_STUDENT_TO_PROJECT } from "../../../../../Mutations/Classes";
+// mutation to create a new project board
+import { COPY_PROPOSAL_MUTATION } from "../../../../../Mutations/Proposal";
 
-export default function ProjectManagerModal({ ...props }) {
-  console.log({ props });
+import StyledClass from "../../../../../styles/StyledClass";
+
+export default function ProjectManager(props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [projectId, setProjecId] = useState("");
+  const [projectName, setProjectName] = useState("");
+
+  const { data: classProjectsData } = useQuery(CLASS_PROJECTS_QUERY, {
+    variables: { classId: props?.classId },
+  });
+  const projects = classProjectsData?.proposalBoards || [];
+  const projectOptions =
+    projects?.map((project) => ({
+      key: project?.id,
+      text: project?.title,
+      value: project?.id,
+    })) || [];
+
+  const [updateStudent] = useMutation(ASSIGN_STUDENT_TO_PROJECT, {
+    variables: { studentId: props?.data?.id },
+    refetchQueries: [
+      {
+        query: GET_STUDENTS_DASHBOARD_DATA,
+        variables: { classId: props?.classId },
+      },
+    ],
+  });
+
+  const assignToProject = async () => {
+    if (!projectId) {
+      return alert("Select the project first");
+    }
+    await updateStudent({ variables: { projectId } });
+    setIsOpen(false);
+  };
+
+  const [copyProposal] = useMutation(COPY_PROPOSAL_MUTATION, {
+    variables: {},
+    refetchQueries: [
+      { query: CLASS_PROJECTS_QUERY, variables: { classId: props?.classId } },
+      {
+        query: GET_STUDENTS_DASHBOARD_DATA,
+        variables: { classId: props?.classId },
+      },
+    ],
+  });
+
+  const defaultProposalBoardId =
+    `clo4s6ack0832v2t5resr7jx8` || `cm2wodtfy008abj0rh8ms8yt9`;
+
+  const createNewProject = async () => {
+    if (!projectName) {
+      return alert("Give the project a name first");
+    }
+    await copyProposal({
+      variables: {
+        id: props?.classProposalBoardId || defaultProposalBoardId,
+        title: projectName,
+        classIdUsed: props?.classId,
+        collaborators: [props?.data?.id],
+      },
+    });
+    setIsOpen(false);
+  };
 
   return (
     <Modal
@@ -23,13 +91,46 @@ export default function ProjectManagerModal({ ...props }) {
       <StyledModal>
         <Modal.Header>
           <div className="centeredHeader">
-            <h1>
-              Manage the project for student {props?.props?.data?.username}
-            </h1>
+            <h2>Manage the project for {props?.data?.username}</h2>
           </div>
         </Modal.Header>
 
-        <Modal.Content scrolling>content</Modal.Content>
+        <Modal.Content scrolling>
+          <StyledClass>
+            <div className="dashboard">
+              <div className="manageModal">
+                <div>
+                  <h3>Select the existing project</h3>
+
+                  <div>
+                    <Dropdown
+                      selection
+                      options={projectOptions}
+                      value={projectId}
+                      onChange={(e, data) => setProjecId(data?.value)}
+                    />
+                  </div>
+                  <button onClick={assignToProject}>Save & Close</button>
+                </div>
+
+                <div>
+                  <h3>Create a new project</h3>
+                  <input
+                    type="text"
+                    name="projectName"
+                    placeholder="The name of the new project is "
+                    value={projectName}
+                    onChange={(e) => {
+                      setProjectName(e?.target?.value);
+                    }}
+                  />
+
+                  <button onClick={createNewProject}>Create new project</button>
+                </div>
+              </div>
+            </div>
+          </StyledClass>
+        </Modal.Content>
       </StyledModal>
     </Modal>
   );

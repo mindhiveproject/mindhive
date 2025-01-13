@@ -55,6 +55,7 @@ export default function Dashboard({ myclass, user, query }) {
     }
 
     return {
+      id: student?.id,
       username: student?.username,
       projectId,
       projectTitle,
@@ -67,8 +68,6 @@ export default function Dashboard({ myclass, user, query }) {
     };
   });
 
-  console.log({ students });
-
   const [colDefs, setColDefs] = useState([
     {
       field: "username",
@@ -80,8 +79,12 @@ export default function Dashboard({ myclass, user, query }) {
     },
     {
       field: "projectTitle",
-      headerName: "Create | Manage Project",
+      headerName: "Create | Manage Project",
       cellRenderer: ProjectManagerLink,
+      cellRendererParams: {
+        classId: myclass?.id,
+        classProposalBoardId: myclass?.templateProposal?.id,
+      },
     },
     { field: "projectStatus" },
     { field: "projectCollaborators" },
@@ -101,6 +104,7 @@ export default function Dashboard({ myclass, user, query }) {
           columnDefs={colDefs}
           frameworkComponents={{
             studentPageLink: StudentPageLink,
+            projectManagerLink: ProjectManagerLink,
           }}
         />
       </div>

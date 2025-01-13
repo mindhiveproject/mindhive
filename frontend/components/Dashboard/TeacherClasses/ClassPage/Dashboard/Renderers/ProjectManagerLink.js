@@ -8,8 +8,8 @@ export const ProjectManagerLink = (props) => {
     );
   };
 
-  if (!props?.value) {
-    return <ProjectManager props={props} />;
+  if (props && !props?.value) {
+    return <ProjectManager {...props} />;
   }
 
   return (

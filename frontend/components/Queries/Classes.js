@@ -86,6 +86,9 @@ export const GET_CLASS = gql`
         }
         createdAt
       }
+      templateProposal {
+        id
+      }
       settings
       createdAt
       updatedAt
@@ -130,7 +133,6 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
       collaboratorInProposal {
         id
         title
-        status
         usedInClass {
           id
         }

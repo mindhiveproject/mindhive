@@ -111,7 +111,6 @@ export default function Navigation({
                 ) {
                   const res = await createReview();
                   const id = res?.data?.createReview?.id || null;
-                  console.log({ id });
                   handleChange({
                     target: {
                       name: "id",

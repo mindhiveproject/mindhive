@@ -598,6 +598,12 @@ const StyledClass = styled.div`
     .ag-cell-button:hover {
       background-color: #f0f0f0;
     }
+
+    .manageModal {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 10px;
+    }
   }
 `;
 
