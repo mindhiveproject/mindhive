@@ -189,6 +189,7 @@ export const StyledProposal = styled.div`
 
   .section {
     display: grid;
+    justify-items: center;
     grid-gap: 0.5rem;
     position: relative;
     background: #f5f5f5;
@@ -197,6 +198,7 @@ export const StyledProposal = styled.div`
     min-width: 250px;
     margin: 15px;
     padding: 0px 0px 20px 0px;
+    width: 410px;
     .infoLine {
       margin: 1rem 0px 0px 0rem;
       display: grid;
@@ -211,6 +213,8 @@ export const StyledProposal = styled.div`
       text-decoration-skip-ink: none;
     }
     .column-drag-handle {
+      display: grid;
+      width: 100%;
       margin: 0px 0px 0px 0px;
       padding: 1rem 2rem 1rem 2rem;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -591,8 +595,8 @@ export const StyledProposalCard = styled.div`
   cursor: pointer;
   margin: 3px 10px;
   position: relative;
-  min-width: 264px;
-  min-height: 71px;
+  width: 362px;
+  height: 80px;
 
   font-family: Nunito;
   font-size: 18px;

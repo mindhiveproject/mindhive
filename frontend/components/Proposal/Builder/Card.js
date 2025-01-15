@@ -47,12 +47,11 @@ export default function Card({
         onClick={() => {
           openCard(card);
         }}
-        // type={card?.type}
       >
         <div className="card-drag-handle">
-          {!proposalBuildMode && (
-            <div className="card-information">
-              <div className="card-left-side">
+          <div className="card-information">
+            <div className="card-left-side">
+              {!proposalBuildMode && (
                 <Popup
                   content={
                     card?.assignedTo.length
@@ -77,13 +76,14 @@ export default function Card({
                   }
                   size="huge"
                 />
-              </div>
-              <div className="card-right-side">
-                <div className="card-title">
-                  <div>
-                    <div>{ReactHtmlParser(card.title)}</div>
-                    {/* {status && <div className="status">{status}</div>} */}
-                  </div>
+              )}
+            </div>
+            <div className="card-right-side">
+              <div className="card-title">
+                <div>
+                  <div>{ReactHtmlParser(card.title)}</div>
+                </div>
+                {!proposalBuildMode && (
                   <div className="editedByAvatar">
                     {card?.isEditedBy?.username && (
                       <Popup
@@ -109,17 +109,17 @@ export default function Card({
                       />
                     )}
                   </div>
-                </div>
+                )}
               </div>
-              {card?.settings?.includeInReport && (
-                <div className="card-public-status">
-                  <img src="/assets/icons/status/publicTemplate.svg" />
-                </div>
-              )}
             </div>
-          )}
+            {card?.settings?.includeInReport && (
+              <div className="card-public-status">
+                <img src="/assets/icons/status/publicTemplate.svg" />
+              </div>
+            )}
+          </div>
         </div>
-        {settings?.allowAddingCards && (
+        {(proposalBuildMode || settings?.allowAddingCards) && (
           <div className="deleteCardBtn">
             <img
               src="/assets/icons/proposal/delete.svg"

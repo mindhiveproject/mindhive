@@ -26,7 +26,10 @@ class Sections extends Component {
   };
 
   onColumnDrop = ({ removedIndex, addedIndex, payload }) => {
-    if (this.props.isPreview || !this.props.settings?.allowMovingSections) {
+    if (
+      (this.props.isPreview || !this.props.settings?.allowMovingSections) &&
+      !this.props.proposalBuildMode
+    ) {
       return;
     }
 
@@ -127,7 +130,8 @@ class Sections extends Component {
           getChildPayload={(index) => sections[index]}
           dragHandleSelector=".column-drag-handle"
           lockAxis={
-            this.props.isPreview || !settings?.allowMovingSections
+            (this.props.isPreview || !settings?.allowMovingSections) &&
+            !this.props.proposalBuildMode
               ? "undefined"
               : null
           }

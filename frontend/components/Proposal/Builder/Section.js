@@ -143,7 +143,7 @@ const Section = ({
   };
 
   const onCardDrop = (columnId, addedIndex, removedIndex, payload) => {
-    if (isPreview || !settings?.allowMovingCards) {
+    if ((isPreview || !settings?.allowMovingCards) && !proposalBuildMode) {
       return;
     }
 
@@ -338,7 +338,9 @@ const Section = ({
           }}
           dropPlaceholderAnimationDuration={200}
           lockAxis={
-            isPreview || !settings?.allowMovingCards ? "undefined" : null
+            (isPreview || !settings?.allowMovingCards) && !proposalBuildMode
+              ? "undefined"
+              : null
           }
         >
           {cards && cards.length ? (
@@ -384,7 +386,7 @@ const Section = ({
         </Container>
       </div>
 
-      {!isPreview && settings?.allowAddingCards && (
+      {(proposalBuildMode || (!isPreview && settings?.allowAddingCards)) && (
         <div className="newInput">
           <div>New card</div>
 
@@ -407,7 +409,7 @@ const Section = ({
         </div>
       )}
 
-      {settings?.allowAddingSections && (
+      {(proposalBuildMode || settings?.allowAddingSections) && (
         <div className="deleteBtn">
           <img
             src="/assets/icons/proposal/delete.svg"

@@ -97,6 +97,7 @@ export default function ProposalBuilder({
             proposalId={proposal?.id}
             openCard={openCard}
             isPreview={isPreview}
+            proposalBuildMode={proposalBuildMode}
           />
         )}
       </Sidebar.Pusher>

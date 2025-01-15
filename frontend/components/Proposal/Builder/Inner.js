@@ -112,7 +112,9 @@ class Inner extends Component {
             settings={board?.settings}
           />
         </div>
-        {!this.props.isPreview && board?.settings?.allowAddingSections && (
+
+        {(proposalBuildMode ||
+          (!this.props.isPreview && board?.settings?.allowAddingSections)) && (
           <div>
             <div className="newInput">
               <div>New section</div>
