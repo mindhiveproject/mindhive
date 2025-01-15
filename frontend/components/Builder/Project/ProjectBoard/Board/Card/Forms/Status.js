@@ -3,42 +3,72 @@ import { Dropdown } from "semantic-ui-react";
 import styled from "styled-components";
 
 const StyledDropdown = styled.div`
+  font-family: Nunito !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  line-height: 24px !important;
+  letter-spacing: 0.15000000596046448px !important;
+  text-align: left !important;
+  text-underline-position: from-font !important;
+  text-decoration-skip-ink: none !important;
+
+  display: grid !important;
+  grid-template-columns: auto 1fr !important;
+  align-items: center !important;
+
+  .ui.dropdown > .text {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    align-items: center !important;
+  }
+
   input {
     all: unset;
   }
+
   .info-status {
-    display: table;
-    font-family: Lato;
-    font-style: normal;
-    font-size: 12px;
-    line-height: 100%;
-    letter-spacing: 0.05em;
-    border-radius: 30px;
-    position: absolute;
-    margin: 8px;
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    align-items: center !important;
+
+    font-family: Nunito !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    line-height: 24px !important;
+    border-radius: 25px !important;
+    width: 200px !important;
+    height: 42px !important;
+    margin: 10px 5px !important;
+    padding: 10px 0px !important;
   }
-  .status-not-started {
-    color: #896900 !important;
-    background: rgba(254, 210, 79, 0.18) !important;
+
+  .menu {
+    max-height: none !important;
   }
-  .status-started {
-    color: #0063ce !important;
-    background: rgba(0, 117, 224, 0.12) !important;
-  }
-  .status-needs-feedback {
-    color: #c92927 !important;
-    background: rgba(224, 103, 102, 0.12) !important;
-  }
-  .status-feedback-given {
-    color: #6f25ce !important;
-    background: rgba(111, 37, 206, 0.12) !important;
+
+  .status-in-progress {
+    color: #666666 !important;
+    background: #fdf2d0 !important;
   }
   .status-completed {
-    color: #00635a !important;
-    background: rgba(0, 124, 112, 0.12) !important;
+    color: #55808c !important;
+    background: #def8fb !important;
   }
+  .status-help-needed {
+    color: #b9261a !important;
+    background: #edcecd !important;
+  }
+  .status-comments {
+    color: #7d70ad !important;
+    background: #d8d3e7 !important;
+  }
+  .status-not-started {
+    color: #8a919d !important;
+    background: #f3f3f3 !important;
+  }
+
   .info-status :hover {
-    background: #f7f7f7 !important;
+    /* background: #f7f7f7 !important; */
   }
 `;
 
@@ -51,42 +81,46 @@ class Status extends Component {
     const status = this.props?.settings?.status;
     const options = [
       {
-        key: "Not started",
-        text: "Not started",
-        value: "Not started",
-        className: "info-status status-not-started",
+        key: "inProgress",
+        text: "In progress",
+        value: "In progress",
+        className: "info-status status-in-progress",
+        image: { src: "/assets/icons/status/inProgress.svg" },
       },
       {
-        key: "Started",
-        text: "Started",
-        value: "Started",
-        className: "info-status status-started",
-      },
-      {
-        key: "Needs feedback",
-        text: "Needs feedback",
-        value: "Needs feedback",
-        className: "info-status status-needs-feedback",
-      },
-      {
-        key: "Feedback given",
-        text: "Feedback given",
-        value: "Feedback given",
-        className: "info-status status-feedback-given",
-      },
-      {
-        key: "Completed",
+        key: "completed",
         text: "Completed",
         value: "Completed",
         className: "info-status status-completed",
+        image: { src: "/assets/icons/status/completed.svg" },
+      },
+      {
+        key: "helpNeeded",
+        text: "Help needed",
+        value: "Help needed",
+        className: "info-status status-help-needed",
+        image: { src: "/assets/icons/status/helpNeeded.svg" },
+      },
+      {
+        key: "comments",
+        text: "Comments",
+        value: "Comments",
+        className: "info-status status-comments",
+        image: { src: "/assets/icons/status/comments.svg" },
+      },
+      {
+        key: "notStarted",
+        text: "Not started",
+        value: "Not started",
+        className: "info-status status-not-started",
+        image: { src: "/assets/icons/status/notStarted.svg" },
       },
     ];
 
     return (
       <StyledDropdown>
         <Dropdown
-          placeholder="Select status"
-          fluid
+          placeholder="Set status before closing"
           selection
           options={options}
           onChange={this.onChange}

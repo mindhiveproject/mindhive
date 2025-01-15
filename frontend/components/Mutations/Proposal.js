@@ -208,6 +208,7 @@ export const UPDATE_CARD_CONTENT = gql`
     $id: ID!
     $title: String
     $description: String
+    $internalContent: String
     $content: String
     $comment: String
     $settings: JSON
@@ -221,6 +222,7 @@ export const UPDATE_CARD_CONTENT = gql`
       data: {
         title: $title
         description: $description
+        internalContent: $internalContent
         content: $content
         comment: $comment
         settings: $settings

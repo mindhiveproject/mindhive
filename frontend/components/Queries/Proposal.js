@@ -147,6 +147,7 @@ export const GET_CARD_CONTENT = gql`
       type
       title
       description
+      internalContent
       content
       comment
       settings

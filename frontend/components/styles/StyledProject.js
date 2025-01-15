@@ -53,6 +53,57 @@ const StyledProject = styled.div`
       }
     }
   }
+  .cardNavigation {
+    display: grid;
+    align-items: center;
+    padding: 6px 9px;
+    grid-template-columns: auto 1fr auto;
+    grid-gap: 20px;
+    .left {
+      display: grid;
+      .icon {
+        width: 40px;
+        height: 40px;
+      }
+      .selector {
+        display: grid;
+        grid-gap: 10px;
+        align-items: center;
+        justify-items: center;
+        border-radius: 12px;
+        width: 40px;
+        height: 40px;
+        box-shadow: 0px 1px 3px 0px #0000004d;
+      }
+    }
+    .middle {
+      font-family: Nunito;
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 40px;
+      text-align: left;
+      text-underline-position: from-font;
+      text-decoration-skip-ink: none;
+    }
+    .right {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-gap: 10px;
+      .saveButton {
+        background: #3d85b0;
+        border-radius: 100px;
+        font-family: Nunito;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: var(--LabelLargeLineHeight);
+        letter-spacing: var(--LabelLargeTracking);
+        text-align: center;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        padding: 10px 24px;
+      }
+    }
+  }
 `;
 
 export default StyledProject;

@@ -198,13 +198,21 @@ export const StyledProposal = styled.div`
     margin: 15px;
     padding: 0px 0px 20px 0px;
     .infoLine {
-      margin: 0.2rem 0px 0px 3rem;
+      margin: 1rem 0px 0px 0rem;
       display: grid;
       color: #b3b3b3;
+      font-family: Nunito;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      letter-spacing: var(--BodySmallTracking);
+      text-align: left;
+      text-underline-position: from-font;
+      text-decoration-skip-ink: none;
     }
     .column-drag-handle {
       margin: 0px 0px 0px 0px;
-      padding: 1rem 2rem 1rem 1rem;
+      padding: 1rem 2rem 1rem 2rem;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
       cursor: pointer;
       .firstLine {
@@ -214,15 +222,17 @@ export const StyledProposal = styled.div`
         justify-items: baseline;
         align-items: center;
         text-align: center;
+        margin: 1rem 0px 0px 0rem;
       }
       .sectionTitle {
-        font-family: Lato;
-        font-size: 23px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 27px;
-        letter-spacing: 0em;
-        text-align: center;
+        font-family: Nunito;
+        font-size: 24px;
+        font-weight: 500;
+        line-height: var(--BodySmallLineHeight);
+        letter-spacing: var(--BodySmallTracking);
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
       }
       span {
         font-family: Lato;
@@ -457,27 +467,44 @@ export const StyledProposal = styled.div`
       }
     }
     .cardHeader {
-      margin-bottom: 15px;
-      font-family: Roboto;
-      font-size: 24px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 30px;
-      letter-spacing: 0em;
+      font-family: Nunito;
+      font-size: 30px;
+      font-weight: 600;
+      line-height: 40.92px;
       text-align: left;
+      text-underline-position: from-font;
+      text-decoration-skip-ink: none;
+    }
+    .cardSubheader {
+      color: var(--neutral_grey2, #3b3b3b);
+      font-family: Nunito;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 32px;
+      text-align: left;
+      text-underline-position: from-font;
+      text-decoration-skip-ink: none;
+    }
+    .cardSubheaderComment {
+      color: #3f3356;
+      font-family: Nunito;
+      font-size: 17px;
+      font-style: italic;
+      font-weight: 400;
+      line-height: 22px;
+      text-align: left;
+      text-underline-position: from-font;
+      text-decoration-skip-ink: none;
     }
     .cardDescription {
-      color: #666666;
-      font-family: Roboto;
-      font-size: 16px;
-      font-style: normal;
+      color: #626269;
+      font-family: Nunito;
+      font-size: 17px;
       font-weight: 400;
-      line-height: 24px;
-      letter-spacing: 0em;
+      line-height: 23.19px;
       text-align: left;
-      padding-bottom: 40px;
-      margin-bottom: 44px;
-      border-bottom: 2px solid #e6e6e6;
+      text-underline-position: from-font;
+      text-decoration-skip-ink: none;
     }
     .textBoard {
       display: grid;
@@ -498,6 +525,29 @@ export const StyledProposal = styled.div`
       letter-spacing: 0em;
       text-align: left;
       height: 100%;
+    }
+    .resourceLinks {
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+      .link {
+        display: grid;
+        background: #def8fb;
+        border: 1px solid #cccccc;
+        border-radius: 20px;
+        padding: 9px 16px;
+        font-family: Nunito;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 21.82px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        align-items: center;
+        justify-items: center;
+        text-align: center;
+      }
     }
     .proposalCardComments {
       display: grid;
@@ -532,18 +582,28 @@ export const StyledProposal = styled.div`
 `;
 
 export const StyledProposalCard = styled.div`
+  display: grid;
   background: #ffffff;
   border: 1px solid #e6e6e6;
   box-sizing: border-box;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   margin: 3px 10px;
   position: relative;
   min-width: 264px;
   min-height: 71px;
 
-  border-right: 8px solid;
+  font-family: Nunito;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: var(--TitleMediumLineHeight);
+  letter-spacing: var(--TitleMediumTracking);
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+
+  /* border-right: 8px solid;
   border-right-color: ${(props) =>
     props.type === "PROPOSAL"
       ? "#623A39"
@@ -557,16 +617,17 @@ export const StyledProposalCard = styled.div`
       ? "#007c70"
       : props.type === "LINK"
       ? "#C9D6CD"
-      : "#FFE29D"};
+      : "#FFE29D"}; */
 
   .card-drag-handle {
+    height: 100%;
     display: grid;
-    font-family: Lato;
+    /* font-family: Lato;
     font-size: 16px;
     font-style: normal;
     font-weight: 700;
     line-height: 24px;
-    letter-spacing: 0em;
+    letter-spacing: 0em; */
   }
   .deleteCardBtn {
     position: absolute;
@@ -583,7 +644,7 @@ export const StyledProposalCard = styled.div`
   }
   .card-information {
     display: grid;
-    grid-template-columns: 40px 1fr;
+    grid-template-columns: 40px 1fr auto;
     align-items: center;
     .status {
       color: #007c70;
@@ -656,7 +717,7 @@ export const StyledProposalCard = styled.div`
     }
     .card-right-side {
       display: grid;
-      margin: 0px 5px 5px 5px;
+      margin: 0px;
       .card-type {
         display: grid;
         justify-content: end;
@@ -669,7 +730,7 @@ export const StyledProposalCard = styled.div`
           margin-top: 5px;
           border-radius: 10px;
           padding: 1px 8px 1px 8px;
-          background: ${(props) =>
+          /* background: ${(props) =>
             props.type === "PROPOSAL"
               ? "#ebe5e5"
               : props.type === "ASSIGNMENT"
@@ -696,18 +757,56 @@ export const StyledProposalCard = styled.div`
               ? "#856502"
               : props.type === "LINK"
               ? "#3C443E"
-              : "#FFE29D"};
+              : "#FFE29D"}; */
         }
       }
       .card-title {
         display: grid;
-        grid-template-columns: 1fr auto;
-        margin-bottom: 5px;
+        /* grid-template-columns: 1fr auto;
+        margin-bottom: 5px; */
       }
       .editedByAvatar {
         display: grid;
         align-content: end;
       }
     }
+    .card-public-status {
+      display: grid;
+      background: #f9d978;
+      height: 100%;
+      width: 40px;
+      align-items: center;
+      justify-items: center;
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+  }
+`;
+
+export const StyledActionCard = styled.div`
+  display: grid;
+  align-content: center;
+  justify-content: center;
+  border-radius: 41px;
+  background: #fdf2d0;
+  border: 3px solid #FFC107
+  box-sizing: border-box;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  margin: 3px 10px;
+  position: relative;
+  min-width: 264px;
+  min-height: 71px;
+  font-family: Nunito;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: var(--TitleMediumLineHeight);
+  letter-spacing: var(--TitleMediumTracking);
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  .card-information {
+    display: grid;
+    grid-template-columns: 40px 1fr;
   }
 `;

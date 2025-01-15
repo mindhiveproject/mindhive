@@ -295,21 +295,24 @@ const Section = ({
     <div className="section">
       <div className="column-drag-handle">
         <div className="firstLine">
-          <img
-            src="/assets/icons/proposal/edit.svg"
-            onClick={() => {
-              const title = prompt("Please enter a new title");
-              if (title != null) {
-                onUpdateSection({
-                  variables: {
-                    id: section.id,
-                    boardId,
-                    title,
-                  },
-                });
-              }
-            }}
-          />
+          {settings?.allowAddingCards && (
+            <img
+              src="/assets/icons/proposal/edit.svg"
+              onClick={() => {
+                const title = prompt("Please enter a new title");
+                if (title != null) {
+                  onUpdateSection({
+                    variables: {
+                      id: section.id,
+                      boardId,
+                      title,
+                    },
+                  });
+                }
+              }}
+            />
+          )}
+
           <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
         </div>
         {!isPreview && (

@@ -17,6 +17,7 @@ const theme = {
 };
 
 const GlobalStyles = createGlobalStyle`
+  @import url("https://fonts.googleapis.com/css?family=Nunito");
   @import url("https://fonts.googleapis.com/css?family=Lato");
   @import url("https://fonts.googleapis.com/css?family=Roboto");
   @import url("https://fonts.googleapis.com/css?family=Inconsolata");

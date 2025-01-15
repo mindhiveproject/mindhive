@@ -24,6 +24,7 @@ export const ProposalCard = list({
     title: text({ validation: { isRequired: true } }),
     description: text(),
     position: float(),
+    internalContent: text(),
     content: text(),
     comment: text(),
     settings: json(),

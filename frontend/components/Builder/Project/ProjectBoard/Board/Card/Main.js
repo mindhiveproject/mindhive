@@ -1,5 +1,5 @@
+import { useState, useEffect, useRef } from "react";
 import { useMutation } from "@apollo/client";
-
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
 
@@ -7,29 +7,21 @@ import { UPDATE_CARD_CONTENT } from "../../../../../Mutations/Proposal";
 import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
 
 import useForm from "../../../../../../lib/useForm";
+
+import Navigation from "./Navigation/Main";
+import Assigned from "./Forms/Assigned";
 import JoditEditor from "../../../../../Jodit/Editor";
 
-import Assigned from "./Forms/Assigned";
-import Status from "./Forms/Status";
-import { useState, useEffect, useRef } from "react";
-import CardType from "./Forms/Type";
-import Sharing from "./Forms/Sharing";
-import Resources from "./Forms/Resources";
-
-import Navigation from "../../../Navigation/Main";
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 
 export default function ProposalCard({
+  proposalCard,
   query,
   tab,
   user,
   proposalId,
   proposal,
   cardId,
-  closeCard,
-  proposalBuildMode,
-  isPreview,
-  proposalCard,
   refreshPage,
 }) {
   // check whether the card is locked - after 1 hour it is allowed to edit
@@ -51,6 +43,7 @@ export default function ProposalCard({
   });
 
   const content = useRef(proposalCard?.content);
+  const internalContent = useRef(proposalCard?.internalContent);
 
   const [updateCard, { loading: updateLoading }] =
     useMutation(UPDATE_CARD_CONTENT);
@@ -63,7 +56,7 @@ export default function ProposalCard({
   );
 
   const users =
-    proposal?.study?.collaborators?.map((user) => ({
+    proposal?.collaborators?.map((user) => ({
       key: user.id,
       text: user.username,
       value: user.id,
@@ -93,9 +86,13 @@ export default function ProposalCard({
   };
 
   // update card content in the local state
-  const handleContentChange = async (newContent) => {
+  const handleContentChange = async ({ contentType, newContent }) => {
     // lock the card if needed
-    if (inputs?.content !== newContent && areEditsAllowed && !lockedByUser) {
+    if (
+      inputs[contentType] !== newContent &&
+      areEditsAllowed &&
+      !lockedByUser
+    ) {
       await updateEdit({
         variables: {
           id: cardId,
@@ -108,7 +105,11 @@ export default function ProposalCard({
       setLockedByUser(true);
     }
     // update the value of content
-    content.current = newContent;
+    if (contentType === "internalContent") {
+      internalContent.current = newContent;
+    } else {
+      content.current = newContent;
+    }
   };
 
   // update the card and close the modal
@@ -116,12 +117,12 @@ export default function ProposalCard({
     await updateCard({
       variables: {
         ...inputs,
+        internalContent: internalContent?.current,
         content: content?.current,
         assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
         resources: inputs?.resources?.map((resource) => ({ id: resource?.id })),
       },
     });
-    closeCard({ cardId, lockedByUser });
   };
 
   return (
@@ -134,7 +135,8 @@ export default function ProposalCard({
         proposalId={proposalId}
         cardId={cardId}
         saveBtnFunction={onUpdateCard}
-        saveBtnName="Save & Exit"
+        inputs={inputs}
+        handleSettingsChange={handleSettingsChange}
       />
       <StyledProposal>
         <div className="post">
@@ -157,205 +159,98 @@ export default function ProposalCard({
             </div>
           )}
 
-          {isPreview ? (
-            <div className="cardPreview">
-              <div className="closeBtn">
-                <span onClick={() => closeCard({})}>&times;</span>
+          <div className="proposalCardBoard">
+            <div className="textBoard">
+              <div className="cardHeader">{inputs?.title}</div>
+              <div className="cardSubheader">Instructions</div>
+              <div className="cardDescription">
+                {ReactHtmlParser(inputs?.description)}
               </div>
-              <h2>{proposalCard?.title}</h2>
-              {proposalCard?.description && (
-                <div className="description">
-                  {ReactHtmlParser(proposalCard?.description)}
-                </div>
-              )}
-              <div>{ReactHtmlParser(proposalCard?.content)}</div>
-              {proposalCard?.resources && proposalCard?.resources.length ? (
-                <>
-                  {proposalCard?.resources.map((resource) => (
-                    <div>{resource?.title}</div>
-                  ))}
-                </>
-              ) : (
-                <></>
-              )}
-            </div>
-          ) : (
-            <div className="proposalCardBoard">
-              <div className="textBoard">
-                {proposalBuildMode && (
-                  <label htmlFor="title">
-                    <p>Title</p>
-                    <input
-                      type="text"
-                      id="title"
-                      name="title"
-                      value={inputs?.title}
-                      onChange={handleChange}
-                    />
-                  </label>
-                )}
-                {proposalBuildMode && (
-                  <label htmlFor="description">
-                    <p>Description</p>
-                    <textarea
-                      type="text"
-                      id="description"
-                      name="description"
-                      value={inputs?.description}
-                      onChange={handleChange}
-                    />
-                  </label>
-                )}
-                {!proposalBuildMode && (
-                  <div className="cardHeader">{inputs?.title}</div>
-                )}
-                {!proposalBuildMode && (
-                  <div className="cardDescription">
-                    {ReactHtmlParser(inputs?.description)}
-                  </div>
-                )}
-                <div className="jodit">
-                  <JoditEditor
-                    content={content?.current}
-                    setContent={handleContentChange}
-                  />
-                </div>
-                {proposalBuildMode && (
-                  <>
-                    {inputs?.resources && inputs?.resources.length ? (
-                      <>
-                        {inputs?.resources.map((resource) => (
-                          <div>
-                            <h2>{resource?.title}</h2>
-                            <div>
-                              {ReactHtmlParser(resource?.content?.main)}
-                            </div>
-                          </div>
-                        ))}
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                )}
-                {!proposalBuildMode && (
-                  <>
-                    {proposalCard?.resources &&
-                    proposalCard?.resources.length ? (
-                      <>
-                        {proposalCard?.resources.map((resource) => (
-                          <div>
-                            <h2>{resource?.title}</h2>
-                            <div>
-                              {ReactHtmlParser(resource?.content?.main)}
-                            </div>
-                          </div>
-                        ))}
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                )}
-              </div>
-              {!isPreview && (
-                <div className="infoBoard">
-                  {proposalBuildMode && (
-                    <div>
-                      <h4>Type</h4>
-                      <CardType
-                        type={inputs?.type}
-                        handleChange={handleChange}
-                      />
-                      <h4>Sharing</h4>
-                      <Sharing
-                        type={inputs?.shareType}
-                        handleChange={handleChange}
-                      />
-                      <h4>Linked resources</h4>
-                      <Resources
-                        user={user}
-                        handleChange={handleChange}
-                        selectedResources={
-                          inputs?.resources?.map((resource) => resource?.id) ||
-                          []
-                        }
-                      />
-                    </div>
-                  )}
 
-                  {!proposalBuildMode && (
-                    <>
-                      <div>
-                        <h4>Assigned to</h4>
-                        <Assigned
-                          users={allUsers}
-                          assignedTo={inputs?.assignedTo}
-                          onAssignedToChange={handleAssignedToChange}
-                        />
-                      </div>
-                      <div>
-                        <h4>Status</h4>
-                        <Status
-                          settings={inputs?.settings}
-                          onSettingsChange={handleSettingsChange}
-                        />
-                      </div>
-                    </>
-                  )}
-                  {!proposalBuildMode && false && (
-                    <>
-                      <div>
-                        <h4>Assigned to</h4>
-                        <div>
-                          {proposalCard?.assignedTo?.map(
-                            (c) => c?.id || "John Doe"
-                          )}
+              <div className="cardSubheader">
+                For my teacher and project collaborators only
+              </div>
+
+              <div className="cardSubheaderComment">
+                The content you include below will only be visible to your
+                teacher(s) and project collaborators
+              </div>
+
+              <div className="jodit">
+                <JoditEditor
+                  content={internalContent?.current}
+                  setContent={(newContent) =>
+                    handleContentChange({
+                      contentType: "internalContent",
+                      newContent,
+                    })
+                  }
+                />
+              </div>
+
+              <div className="cardSubheader">For MindHive Network</div>
+
+              <div className="cardSubheaderComment">
+                The content you include here will be visible in the Feedback
+                Center once it is submitted via an Action Card.
+              </div>
+
+              <div className="jodit">
+                <JoditEditor
+                  content={content?.current}
+                  setContent={(newContent) =>
+                    handleContentChange({
+                      contentType: "content",
+                      newContent,
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <div className="infoBoard">
+              <div>
+                <div className="cardSubheader">Assigned to</div>
+                <Assigned
+                  users={allUsers}
+                  assignedTo={inputs?.assignedTo}
+                  onAssignedToChange={handleAssignedToChange}
+                />
+              </div>
+
+              <div>
+                <div className="cardSubheader">Resources</div>
+                {proposalCard?.resources && proposalCard?.resources.length ? (
+                  <div className="resourceLinks">
+                    {proposalCard?.resources.map((resource) => (
+                      <a
+                        href={`/dashboard/resources/view?id=${resource?.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <div className="link">
+                          <div>{resource?.title}</div>
                         </div>
-                      </div>
-                      <div>
-                        <h4>Status</h4>
-                        <div>{inputs.settings?.status}</div>
-                      </div>
-                    </>
-                  )}
-
-                  <div className="proposalCardComments">
-                    <h4>Comments</h4>
-                    <textarea
-                      rows="5"
-                      type="text"
-                      id="comment"
-                      name="comment"
-                      value={inputs.comment}
-                      onChange={handleChange}
-                    />
+                      </a>
+                    ))}
                   </div>
+                ) : (
+                  <></>
+                )}
+              </div>
 
-                  {/* <div className="buttons">
-                    {!updateLoading && (
-                      <button
-                        className="secondary"
-                        onClick={() => closeCard({ cardId, lockedByUser })}
-                      >
-                        Close without saving
-                      </button>
-                    )}
-
-                    {areEditsAllowed && (
-                      <button
-                        className="primary"
-                        onClick={() => onUpdateCard()}
-                        disabled={updateLoading}
-                      >
-                        {updateLoading ? "Saving ..." : "Save & close"}
-                      </button>
-                    )}
-                  </div> */}
-                </div>
-              )}
+              <div className="proposalCardComments">
+                <div className="cardSubheader">Comments</div>
+                <textarea
+                  rows="5"
+                  type="text"
+                  id="comment"
+                  name="comment"
+                  value={inputs.comment}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </StyledProposal>
     </>

@@ -86,6 +86,7 @@ export default function CardWrapper({
     } else {
       return (
         <ProposalCard
+          proposalCard={proposalCard}
           query={query}
           tab={tab}
           user={user}
@@ -95,7 +96,6 @@ export default function CardWrapper({
           closeCard={closeCard}
           proposalBuildMode={proposalBuildMode}
           isPreview={isPreview}
-          proposalCard={proposalCard}
           refreshPage={refetch}
         />
       );
