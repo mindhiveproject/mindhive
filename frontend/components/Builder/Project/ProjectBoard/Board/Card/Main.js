@@ -188,24 +188,28 @@ export default function ProposalCard({
                 />
               </div>
 
-              <div className="cardSubheader">For MindHive Network</div>
+              {proposalCard?.settings?.includeInReport && (
+                <>
+                  <div className="cardSubheader">For MindHive Network</div>
 
-              <div className="cardSubheaderComment">
-                The content you include here will be visible in the Feedback
-                Center once it is submitted via an Action Card.
-              </div>
+                  <div className="cardSubheaderComment">
+                    The content you include here will be visible in the Feedback
+                    Center once it is submitted via an Action Card.
+                  </div>
 
-              <div className="jodit">
-                <JoditEditor
-                  content={content?.current}
-                  setContent={(newContent) =>
-                    handleContentChange({
-                      contentType: "content",
-                      newContent,
-                    })
-                  }
-                />
-              </div>
+                  <div className="jodit">
+                    <JoditEditor
+                      content={content?.current}
+                      setContent={(newContent) =>
+                        handleContentChange({
+                          contentType: "content",
+                          newContent,
+                        })
+                      }
+                    />
+                  </div>
+                </>
+              )}
             </div>
             <div className="infoBoard">
               <div>

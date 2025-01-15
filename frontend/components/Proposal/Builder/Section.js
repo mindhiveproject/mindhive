@@ -6,6 +6,7 @@ import { Container } from "react-smooth-dnd";
 import { v1 as uuidv1 } from "uuid";
 
 import Card from "./Card";
+import ActionCard from "./ActionCard";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 
@@ -341,19 +342,42 @@ const Section = ({
           }
         >
           {cards && cards.length ? (
-            cards.map((card) => (
-              <Card
-                key={card.id}
-                card={card}
-                onDeleteCard={deleteCardMutation}
-                boardId={boardId}
-                openCard={openCard}
-                proposalBuildMode={proposalBuildMode}
-                adminMode={adminMode}
-                isPreview={isPreview}
-                settings={settings}
-              />
-            ))
+            cards.map((card) => {
+              if (
+                card?.type === "ACTION_SUBMIT" ||
+                card?.type === "ACTION_PEER_FEEDBACK" ||
+                card?.type === "ACTION_COLLECTING_DATA" ||
+                card?.type === "ACTION_PROJECT_REPORT"
+              ) {
+                return (
+                  <ActionCard
+                    key={card.id}
+                    card={card}
+                    onDeleteCard={deleteCardMutation}
+                    boardId={boardId}
+                    openCard={openCard}
+                    proposalBuildMode={proposalBuildMode}
+                    adminMode={adminMode}
+                    isPreview={isPreview}
+                    settings={settings}
+                  />
+                );
+              } else {
+                return (
+                  <Card
+                    key={card.id}
+                    card={card}
+                    onDeleteCard={deleteCardMutation}
+                    boardId={boardId}
+                    openCard={openCard}
+                    proposalBuildMode={proposalBuildMode}
+                    adminMode={adminMode}
+                    isPreview={isPreview}
+                    settings={settings}
+                  />
+                );
+              }
+            })
           ) : (
             <div></div>
           )}

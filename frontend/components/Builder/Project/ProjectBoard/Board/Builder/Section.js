@@ -14,7 +14,7 @@ import {
   UPDATE_CARD_POSITION,
   DELETE_CARD,
 } from "../../../../../Mutations/Proposal";
-import SubmitCard from "./Actions/SubmitCard";
+import ActionCard from "./Actions/ActionCard";
 
 const Section = ({
   section,
@@ -346,9 +346,14 @@ const Section = ({
         >
           {cards && cards.length ? (
             cards.map((card) => {
-              if (card?.type === "ACTION_SUBMIT") {
+              if (
+                card?.type === "ACTION_SUBMIT" ||
+                card?.type === "ACTION_PEER_FEEDBACK" ||
+                card?.type === "ACTION_COLLECTING_DATA" ||
+                card?.type === "ACTION_PROJECT_REPORT"
+              ) {
                 return (
-                  <SubmitCard
+                  <ActionCard
                     key={card.id}
                     card={card}
                     onDeleteCard={deleteCardMutation}

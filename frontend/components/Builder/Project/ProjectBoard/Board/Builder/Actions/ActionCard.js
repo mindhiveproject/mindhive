@@ -7,7 +7,7 @@ import { StyledActionCard } from "../../../../../../styles/StyledProposal";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-export default function SubmitCard({
+export default function ActionCard({
   card,
   proposalBuildMode,
   adminMode,

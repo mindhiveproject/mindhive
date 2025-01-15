@@ -74,7 +74,7 @@ export default function ProposalHeader({
                         checked={inputs.isTemplate}
                         onChange={toggleBoolean}
                       />
-                      <span>Public template</span>
+                      <span>Make this project board a public template</span>
                     </div>
                   </label>
                 </div>
@@ -106,7 +106,7 @@ export default function ProposalHeader({
                     checked={inputs?.settings?.allowMovingSections || false}
                     onChange={toggleSettingsBoolean}
                   />
-                  <span>Allow moving sections</span>
+                  <span>Allow students to move sections</span>
                 </div>
               </label>
             </div>
@@ -121,7 +121,7 @@ export default function ProposalHeader({
                     checked={inputs?.settings?.allowMovingCards || false}
                     onChange={toggleSettingsBoolean}
                   />
-                  <span>Allow moving cards</span>
+                  <span>Allow students to move cards</span>
                 </div>
               </label>
             </div>
@@ -136,7 +136,7 @@ export default function ProposalHeader({
                     checked={inputs?.settings?.allowAddingSections || false}
                     onChange={toggleSettingsBoolean}
                   />
-                  <span>Allow adding new sections</span>
+                  <span>Allow students to add/delete sections</span>
                 </div>
               </label>
             </div>
@@ -151,7 +151,7 @@ export default function ProposalHeader({
                     checked={inputs?.settings?.allowAddingCards || false}
                     onChange={toggleSettingsBoolean}
                   />
-                  <span>Allow adding new cards</span>
+                  <span>Allow students to add/delete cards</span>
                 </div>
               </label>
             </div>

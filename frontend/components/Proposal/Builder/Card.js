@@ -47,7 +47,7 @@ export default function Card({
         onClick={() => {
           openCard(card);
         }}
-        type={card?.type}
+        // type={card?.type}
       >
         <div className="card-drag-handle">
           {!proposalBuildMode && (
@@ -79,16 +79,10 @@ export default function Card({
                 />
               </div>
               <div className="card-right-side">
-                <div className="card-type">
-                  <span>
-                    {card?.type.charAt(0).toUpperCase() +
-                      card?.type.slice(1).toLowerCase()}
-                  </span>
-                </div>
                 <div className="card-title">
                   <div>
                     <div>{ReactHtmlParser(card.title)}</div>
-                    {status && <div className="status">{status}</div>}
+                    {/* {status && <div className="status">{status}</div>} */}
                   </div>
                   <div className="editedByAvatar">
                     {card?.isEditedBy?.username && (
@@ -117,6 +111,11 @@ export default function Card({
                   </div>
                 </div>
               </div>
+              {card?.settings?.includeInReport && (
+                <div className="card-public-status">
+                  <img src="/assets/icons/status/publicTemplate.svg" />
+                </div>
+              )}
             </div>
           )}
         </div>

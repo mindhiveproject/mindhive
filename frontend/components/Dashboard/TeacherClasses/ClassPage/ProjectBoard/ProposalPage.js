@@ -29,7 +29,7 @@ export default function ProposalPage({
         <div className="goBackButton" onClick={goToOverview}>
           <p>← Go back</p>
         </div>
-        {proposal?.isSubmitted ? (
+        {/* {proposal?.isSubmitted ? (
           <div>
             <h3>The proposal has been submitted and locked 🔒</h3>
           </div>
@@ -60,7 +60,7 @@ export default function ProposalPage({
               )}
             </span>
           </>
-        )}
+        )} */}
       </div>
       {isPDF || proposal?.isSubmitted ? (
         <ProposalPDF proposalId={proposalId} />

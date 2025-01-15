@@ -18,13 +18,13 @@ import Sharing from "./Forms/Sharing";
 import Resources from "./Forms/Resources";
 
 export default function ProposalCard({
+  proposalCard,
   user,
   proposal,
   cardId,
   closeCard,
   proposalBuildMode,
   isPreview,
-  proposalCard,
   refreshPage,
 }) {
   // check whether the card is locked - after 1 hour it is allowed to edit
@@ -46,6 +46,7 @@ export default function ProposalCard({
   });
 
   const content = useRef(proposalCard?.content);
+  const internalContent = useRef(proposalCard?.internalContent);
 
   const [updateCard, { loading: updateLoading }] =
     useMutation(UPDATE_CARD_CONTENT);
@@ -88,9 +89,13 @@ export default function ProposalCard({
   };
 
   // update card content in the local state
-  const handleContentChange = async (newContent) => {
+  const handleContentChange = async ({ contentType, newContent }) => {
     // lock the card if needed
-    if (inputs?.content !== newContent && areEditsAllowed && !lockedByUser) {
+    if (
+      inputs[contentType] !== newContent &&
+      areEditsAllowed &&
+      !lockedByUser
+    ) {
       await updateEdit({
         variables: {
           id: cardId,
@@ -103,7 +108,11 @@ export default function ProposalCard({
       setLockedByUser(true);
     }
     // update the value of content
-    content.current = newContent;
+    if (contentType === "internalContent") {
+      internalContent.current = newContent;
+    } else {
+      content.current = newContent;
+    }
   };
 
   // update the card and close the modal
@@ -111,6 +120,7 @@ export default function ProposalCard({
     await updateCard({
       variables: {
         ...inputs,
+        internalContent: internalContent?.current,
         content: content?.current,
         assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
         resources: inputs?.resources?.map((resource) => ({ id: resource?.id })),
@@ -167,7 +177,11 @@ export default function ProposalCard({
           <div className="textBoard">
             {proposalBuildMode && (
               <label htmlFor="title">
-                <p>Title</p>
+                <p>Card Title</p>
+                <p>
+                  Add or edit the card title. This title will appear as a
+                  section title if student input is made visible
+                </p>
                 <input
                   type="text"
                   id="title"
@@ -179,7 +193,11 @@ export default function ProposalCard({
             )}
             {proposalBuildMode && (
               <label htmlFor="description">
-                <p>Description</p>
+                <p>Instructions for Students</p>
+                <p>
+                  Add or edit instructions for students telling them how to
+                  complete the card
+                </p>
                 <textarea
                   type="text"
                   id="description"
@@ -197,14 +215,73 @@ export default function ProposalCard({
                 {ReactHtmlParser(inputs?.description)}
               </div>
             )}
+
+            {proposalBuildMode && (
+              <label htmlFor="description">
+                <p>Student Response Box - For Project Collaborators</p>
+                <p>
+                  The content students include here will only be visible to
+                  their project collaborators and teacher(s). Include any
+                  templates or placeholder text as needed
+                </p>
+              </label>
+            )}
+
             <div className="jodit">
               <JoditEditor
-                content={content?.current}
-                setContent={handleContentChange}
+                content={internalContent?.current}
+                setContent={(newContent) =>
+                  handleContentChange({
+                    contentType: "internalContent",
+                    newContent,
+                  })
+                }
               />
             </div>
+
+            {proposalBuildMode && inputs?.settings?.includeInReport && (
+              <>
+                <label htmlFor="description">
+                  <p>Student Response Box - For MindHive Network</p>
+                  <p>
+                    The content students include here will be visible in the
+                    Feedback Center once it is submitted via an Action Card.
+                    Include any templates or placeholder text as needed
+                  </p>
+                </label>
+                <div className="jodit">
+                  <JoditEditor
+                    content={content?.current}
+                    setContent={(newContent) =>
+                      handleContentChange({
+                        contentType: "content",
+                        newContent,
+                      })
+                    }
+                  />
+                </div>
+              </>
+            )}
+
+            {!proposalBuildMode && proposalCard?.settings?.includeInReport && (
+              <>
+                <div className="jodit">
+                  <JoditEditor
+                    content={content?.current}
+                    setContent={(newContent) =>
+                      handleContentChange({
+                        contentType: "content",
+                        newContent,
+                      })
+                    }
+                  />
+                </div>
+              </>
+            )}
+
             {proposalBuildMode && (
               <>
+                <h2>Preview Linked Resources</h2>
                 {inputs?.resources && inputs?.resources.length ? (
                   <>
                     {inputs?.resources.map((resource) => (
@@ -240,7 +317,13 @@ export default function ProposalCard({
             <div className="infoBoard">
               {proposalBuildMode && (
                 <div>
-                  Include public input
+                  <div>
+                    <h2>Visibility</h2>
+                    <p>
+                      Check box to include student input for the Feedback Center
+                    </p>
+                  </div>
+                  Include text input for Feedback Center
                   <Checkbox
                     toggle
                     name="includeCardToggle"
@@ -259,12 +342,15 @@ export default function ProposalCard({
                   />
                   <h4>Type</h4>
                   <CardType type={inputs?.type} handleChange={handleChange} />
-                  <h4>Sharing</h4>
+                  {/* <h4>Sharing</h4>
                   <Sharing
                     type={inputs?.shareType}
                     handleChange={handleChange}
-                  />
-                  <h4>Linked resources</h4>
+                  /> */}
+                  <h4>Resources</h4>
+                  <p>
+                    Add existing resources (See Resources in Navigation Pane)
+                  </p>
                   <Resources
                     user={user}
                     handleChange={handleChange}
@@ -313,6 +399,12 @@ export default function ProposalCard({
 
               <div className="proposalCardComments">
                 <h4>Comments</h4>
+                {proposalBuildMode && (
+                  <p>
+                    This will pre-populate the Comment Box for students. You can
+                    delete comments later.
+                  </p>
+                )}
                 <textarea
                   rows="5"
                   type="text"
