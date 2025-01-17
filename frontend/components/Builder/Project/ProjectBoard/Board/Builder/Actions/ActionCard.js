@@ -38,8 +38,33 @@ export default function ActionCard({
           </div>
           <div className="card-right-side">
             <div className="card-title">
-              <div>Submit for Peer Feedback</div>
-              <p>Click to submit for Feedback</p>
+              {card?.type === "ACTION_SUBMIT" && (
+                <>
+                  <div>Submit for Proposal Feedback</div>
+                  <p>Click to submit for Proposal Feedback</p>
+                </>
+              )}
+
+              {card?.type === "ACTION_PEER_FEEDBACK" && (
+                <>
+                  <div>Submit for Peer Feedback</div>
+                  <p>Click to submit for Feedback</p>
+                </>
+              )}
+
+              {card?.type === "ACTION_COLLECTING_DATA" && (
+                <>
+                  <div>Submit for Data Collection</div>
+                  <p>Click to submit for Data Collection</p>
+                </>
+              )}
+
+              {card?.type === "ACTION_PROJECT_REPORT" && (
+                <>
+                  <div>Submit for Project Report</div>
+                  <p>Click to submit for Project Report</p>
+                </>
+              )}
             </div>
           </div>
         </div>

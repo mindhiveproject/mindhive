@@ -5,7 +5,7 @@ import { GET_CARD_CONTENT } from "../../../../../Queries/Proposal";
 import ProposalCard from "./Main";
 import IndividualCard from "./Individual/Main";
 import OverviewOfIndividualCards from "./Overview/Main";
-import SubmitAction from "./Actions/Submit";
+import SubmitAction from "./Actions/Proposal";
 
 export default function CardWrapper({
   query,
@@ -38,7 +38,13 @@ export default function CardWrapper({
     user?.permissions.map((p) => p?.name).includes("MENTOR");
 
   if (proposalCard && Object.values(proposalCard).length) {
-    if (!proposalBuildMode && proposalCard?.type === "ACTION_SUBMIT") {
+    if (
+      !proposalBuildMode &&
+      (proposalCard?.type === "ACTION_SUBMIT" ||
+        proposalCard?.type === "ACTION_PEER_FEEDBACK" ||
+        proposalCard?.type === "ACTION_COLLECTING_DATA" ||
+        proposalCard?.type === "ACTION_PROJECT_REPORT")
+    ) {
       return (
         <SubmitAction
           query={query}
@@ -47,9 +53,6 @@ export default function CardWrapper({
           proposalId={proposalId}
           proposal={proposal}
           cardId={cardId}
-          closeCard={closeCard}
-          proposalBuildMode={proposalBuildMode}
-          isPreview={isPreview}
           proposalCard={proposalCard}
         />
       );
