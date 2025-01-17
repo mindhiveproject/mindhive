@@ -14,6 +14,7 @@ import { AgGridReact } from "ag-grid-react";
 // Renderers
 import { StudentPageLink } from "./Renderers/StudentPageLink";
 import { ProjectManagerLink } from "./Renderers/ProjectManagerLink";
+import { StudyManagerLink } from "./Renderers/StudyManagerLink";
 
 export default function Dashboard({ myclass, user, query }) {
   const { data, loading, error } = useQuery(GET_STUDENTS_DASHBOARD_DATA, {
@@ -89,7 +90,16 @@ export default function Dashboard({ myclass, user, query }) {
     { field: "projectStatus" },
     { field: "projectCollaborators" },
     { field: "projectMentors" },
-    { field: "studyTitle" },
+    {
+      field: "studyTitle",
+      headerName: "Create | Manage Study",
+      cellRenderer: StudyManagerLink,
+      cellRendererParams: {
+        classId: myclass?.id,
+        classProposalBoardId: myclass?.templateProposal?.id,
+        classCode: myclass?.code,
+      },
+    },
     { field: "studyCollaborators" },
   ]);
 
@@ -105,6 +115,7 @@ export default function Dashboard({ myclass, user, query }) {
           frameworkComponents={{
             studentPageLink: StudentPageLink,
             projectManagerLink: ProjectManagerLink,
+            studyManagerLink: StudyManagerLink,
           }}
         />
       </div>

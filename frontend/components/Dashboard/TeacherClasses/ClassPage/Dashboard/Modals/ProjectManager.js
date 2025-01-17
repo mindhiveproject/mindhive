@@ -8,6 +8,8 @@ import StyledModal from "../../../../../styles/StyledModal";
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
 // query to get all projects of a class
 import { CLASS_PROJECTS_QUERY } from "../../../../../Queries/Proposal";
+// query to get default proposals
+import { DEFAULT_PROJECT_BOARDS } from "../../../../../Queries/Proposal";
 // mutation to update a student
 import { ASSIGN_STUDENT_TO_PROJECT } from "../../../../../Mutations/Classes";
 // mutation to create a new project board
@@ -17,7 +19,7 @@ import StyledClass from "../../../../../styles/StyledClass";
 
 export default function ProjectManager(props) {
   const [isOpen, setIsOpen] = useState(false);
-  const [projectId, setProjecId] = useState("");
+  const [projectId, setProjectId] = useState("");
   const [projectName, setProjectName] = useState("");
 
   const { data: classProjectsData } = useQuery(CLASS_PROJECTS_QUERY, {
@@ -30,6 +32,10 @@ export default function ProjectManager(props) {
       text: project?.title,
       value: project?.id,
     })) || [];
+
+  const { data: proposalData } = useQuery(DEFAULT_PROJECT_BOARDS);
+  const defaultProposalBoardId =
+    proposalData?.proposalBoards?.map((p) => p?.id)[0] || [];
 
   const [updateStudent] = useMutation(ASSIGN_STUDENT_TO_PROJECT, {
     variables: { studentId: props?.data?.id },
@@ -59,9 +65,6 @@ export default function ProjectManager(props) {
       },
     ],
   });
-
-  const defaultProposalBoardId =
-    `clo4s6ack0832v2t5resr7jx8` || `cm2wodtfy008abj0rh8ms8yt9`;
 
   const createNewProject = async () => {
     if (!projectName) {
@@ -107,7 +110,7 @@ export default function ProjectManager(props) {
                       selection
                       options={projectOptions}
                       value={projectId}
-                      onChange={(e, data) => setProjecId(data?.value)}
+                      onChange={(e, data) => setProjectId(data?.value)}
                     />
                   </div>
                   <button onClick={assignToProject}>Save & Close</button>
