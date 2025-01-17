@@ -1,0 +1,10 @@
+NODE_ENV=development
+PORT=4444
+FRONTEND_URL_DEV=http://localhost:3000
+FRONTEND_URL=https://dev.mindhive.science
+DATABASE_URL=
+MAIL_TOKEN=e302a309-6b7f-4b78-82b2-dd346324327c
+CLOUDINARY_CLOUD_NAME=dfshkvgf3
+CLOUDINARY_KEY=121447251223627
+CLOUDINARY_SECRET=Ve8wjNy_egmXI_OsirjALOrWj4s
+SESSION_SECRET=fdasasdadgewrgwergeyacasfawefasdfasaeasdxafws
