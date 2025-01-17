@@ -89,6 +89,9 @@ export const PROPOSAL_QUERY = gql`
         id
         title
       }
+      author {
+        username
+      }
       collaborators {
         id
         username
@@ -527,6 +530,15 @@ export const PROJECTS_QUERY = gql`
       }
       createdAt
       updatedAt
+    }
+  }
+`;
+
+// get default proposals
+export const DEFAULT_PROJECT_BOARDS = gql`
+  query DEFAULT_PROJECT_BOARDS {
+    proposalBoards(where: { isDefault: { equals: true } }) {
+      id
     }
   }
 `;

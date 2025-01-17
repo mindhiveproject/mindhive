@@ -10,6 +10,7 @@ import {
   json,
 } from "@keystone-6/core/fields";
 import slugify from "slugify";
+import uniqid from "uniqid";
 
 export const Resource = list({
   access: {
@@ -43,7 +44,7 @@ export const Resource = list({
               const re = new RegExp(`${slug}-*\\d*$`);
               const slugs = items.filter((item) => item.slug.match(re));
               if (slugs.length) {
-                slug = `${slug}-${slugs.length}`;
+                slug = `${slug}-${uniqid()}`;
               }
             }
             return slug;

@@ -10,8 +10,10 @@ import { StyledInput } from "../../../styles/StyledForm";
 import LinkClass from "../Navigation/Connect/LinkClass";
 import Collaborators from "../../../Global/Collaborators";
 
-import { COPY_PROPOSAL_MUTATION } from "../../../Mutations/Proposal";
 import { GET_USER_CLASSES } from "../../../Queries/User";
+import { DEFAULT_PROJECT_BOARDS } from "../../../Queries/Proposal";
+import { COPY_PROPOSAL_MUTATION } from "../../../Mutations/Proposal";
+
 import { useEffect } from "react";
 
 export default function StartProject({ query, user }) {
@@ -23,6 +25,10 @@ export default function StartProject({ query, user }) {
     ...user?.mentorIn.map((cl) => cl?.id),
     ...user?.studentIn.map((cl) => cl?.id),
   ];
+
+  const { data: proposalData } = useQuery(DEFAULT_PROJECT_BOARDS);
+  const defaultProposalBoardId =
+    proposalData?.proposalBoards?.map((p) => p?.id)[0] || [];
 
   const { inputs, handleChange } = useForm({
     projectName: "",
@@ -48,9 +54,7 @@ export default function StartProject({ query, user }) {
 
   const [copyProposal, { loading }] = useMutation(COPY_PROPOSAL_MUTATION, {
     variables: {},
-    refetchQueries: [
-      // { query: STUDY_PROPOSALS_QUERY, variables: { id: studyId } },
-    ],
+    refetchQueries: [],
   });
 
   const saveNewProject = async () => {
@@ -60,10 +64,6 @@ export default function StartProject({ query, user }) {
 
     // get the class template proposal ID that has to be copied
     const classTemplateProposalId = inputs?.class?.templateProposal?.id;
-
-    // TODO if there is no proposal ID for a chosen class, then use a default one
-    const defaultProposalBoardId =
-      `clo4s6ack0832v2t5resr7jx8` || `cm2wodtfy008abj0rh8ms8yt9`;
 
     const res = await copyProposal({
       variables: {

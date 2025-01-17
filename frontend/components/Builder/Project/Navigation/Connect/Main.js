@@ -16,7 +16,7 @@ export default function Connect({ project, user }) {
       ...project,
     });
 
-  const [updateStudy, { data, loading, error }] = useMutation(
+  const [updateProject, { data, loading, error }] = useMutation(
     UPDATE_PROJECT_BOARD,
     {
       variables: {
@@ -25,7 +25,10 @@ export default function Connect({ project, user }) {
           collaborators: {
             set: inputs?.collaborators?.map((col) => ({ id: col?.id })),
           },
-          // classes: { set: inputs?.classes?.map((cl) => ({ id: cl?.id })) },
+          usedInClass:
+            inputs?.usedInClass?.id !== "$$$-class-not-connected-$$$"
+              ? { connect: { id: inputs?.usedInClass?.id } }
+              : { disconnect: true },
         },
       },
       refetchQueries: [
@@ -59,10 +62,10 @@ export default function Connect({ project, user }) {
       </div>
 
       <ConnectModal
-        study={inputs}
+        project={inputs}
         user={user}
         handleChange={handleChange}
-        updateStudy={updateStudy}
+        updateProject={updateProject}
       />
     </div>
   );
