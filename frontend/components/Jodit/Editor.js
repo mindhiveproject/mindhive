@@ -7,14 +7,19 @@ const Jodit = dynamic(importJodit, {
   ssr: false,
 });
 
-export default function JoditEditor({ content, setContent, readonly }) {
+export default function JoditEditor({
+  content,
+  setContent,
+  readonly,
+  minHeight,
+}) {
   const ref = useRef(null);
   //   const [content, setContent] = useState(externalContent);
 
   const config = useMemo(
     () => ({
       readonly,
-      minHeight: 500,
+      minHeight: minHeight || 500,
       askBeforePasteFromWord: false,
       askBeforePasteHTML: false,
       removeButtons: ["fullsize"],

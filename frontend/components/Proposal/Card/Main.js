@@ -14,7 +14,6 @@ import Assigned from "./Forms/Assigned";
 import Status from "./Forms/Status";
 
 import CardType from "./Forms/Type";
-import Sharing from "./Forms/Sharing";
 import Resources from "./Forms/Resources";
 
 export default function ProposalCard({
@@ -45,6 +44,7 @@ export default function ProposalCard({
     ...proposalCard,
   });
 
+  const description = useRef(proposalCard?.description);
   const content = useRef(proposalCard?.content);
   const internalContent = useRef(proposalCard?.internalContent);
 
@@ -108,9 +108,13 @@ export default function ProposalCard({
       setLockedByUser(true);
     }
     // update the value of content
+    if (contentType === "description") {
+      description.current = newContent;
+    }
     if (contentType === "internalContent") {
       internalContent.current = newContent;
-    } else {
+    }
+    if (contentType === "content") {
       content.current = newContent;
     }
   };
@@ -120,6 +124,7 @@ export default function ProposalCard({
     await updateCard({
       variables: {
         ...inputs,
+        description: description?.current,
         internalContent: internalContent?.current,
         content: content?.current,
         assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
@@ -131,6 +136,28 @@ export default function ProposalCard({
 
   return (
     <div className="post">
+      {proposalBuildMode && (
+        <div className="navigation-build-mode">
+          <div className="left">
+            <div
+              className="icon"
+              onClick={() => closeCard({ cardId, lockedByUser })}
+            >
+              <div className="selector">
+                <img src="/assets/icons/back.svg" alt="back" />
+              </div>
+            </div>
+          </div>
+          <div className="middle">
+            <span className="studyTitle">{proposal?.title}</span>
+          </div>
+          <div className="right">
+            <button onClick={() => onUpdateCard()} className="saveButton">
+              Save
+            </button>
+          </div>
+        </div>
+      )}
       {!areEditsAllowed && (
         <div className="lockedMessage">
           <div>
@@ -163,11 +190,11 @@ export default function ProposalCard({
           )}
           <div>{ReactHtmlParser(proposalCard?.content)}</div>
           {proposalCard?.resources && proposalCard?.resources.length ? (
-            <>
+            <div className="resourcePreview">
               {proposalCard?.resources.map((resource) => (
-                <div>{resource?.title}</div>
+                <div className="resourceBlockPreview">{resource?.title}</div>
               ))}
-            </>
+            </div>
           ) : (
             <></>
           )}
@@ -177,11 +204,12 @@ export default function ProposalCard({
           <div className="textBoard">
             {proposalBuildMode && (
               <label htmlFor="title">
-                <p>Card Title</p>
-                <p>
+                <div className="cardHeader">Card Title</div>
+                <div className="cardSubheaderComment">
                   Add or edit the card title. This title will appear as a
                   section title if student input is made visible
-                </p>
+                </div>
+                <p></p>
                 <input
                   type="text"
                   id="title"
@@ -193,18 +221,23 @@ export default function ProposalCard({
             )}
             {proposalBuildMode && (
               <label htmlFor="description">
-                <p>Instructions for Students</p>
-                <p>
+                <div className="cardHeader">Instructions for Students</div>
+                <div className="cardSubheaderComment">
                   Add or edit instructions for students telling them how to
                   complete the card
-                </p>
-                <textarea
-                  type="text"
-                  id="description"
-                  name="description"
-                  value={inputs?.description}
-                  onChange={handleChange}
-                />
+                </div>
+                <div className="jodit">
+                  <JoditEditor
+                    content={description?.current}
+                    setContent={(newContent) =>
+                      handleContentChange({
+                        contentType: "description",
+                        newContent,
+                      })
+                    }
+                    minHeight={300}
+                  />
+                </div>
               </label>
             )}
             {!proposalBuildMode && (
@@ -218,12 +251,14 @@ export default function ProposalCard({
 
             {proposalBuildMode && (
               <label htmlFor="description">
-                <p>Student Response Box - For Project Collaborators</p>
-                <p>
+                <div className="cardHeader">
+                  Student Response Box - For Project Collaborators
+                </div>
+                <div className="cardSubheaderComment">
                   The content students include here will only be visible to
                   their project collaborators and teacher(s). Include any
                   templates or placeholder text as needed
-                </p>
+                </div>
               </label>
             )}
 
@@ -236,18 +271,21 @@ export default function ProposalCard({
                     newContent,
                   })
                 }
+                minHeight={300}
               />
             </div>
 
             {proposalBuildMode && inputs?.settings?.includeInReport && (
               <>
                 <label htmlFor="description">
-                  <p>Student Response Box - For MindHive Network</p>
-                  <p>
+                  <div className="cardHeader">
+                    Student Response Box - For MindHive Network
+                  </div>
+                  <div className="cardSubheaderComment">
                     The content students include here will be visible in the
                     Feedback Center once it is submitted via an Action Card.
                     Include any templates or placeholder text as needed
-                  </p>
+                  </div>
                 </label>
                 <div className="jodit">
                   <JoditEditor
@@ -258,6 +296,7 @@ export default function ProposalCard({
                         newContent,
                       })
                     }
+                    minHeight={300}
                   />
                 </div>
               </>
@@ -281,32 +320,33 @@ export default function ProposalCard({
 
             {proposalBuildMode && (
               <>
-                <h2>Preview Linked Resources</h2>
+                <div className="cardHeader">Preview Linked Resources</div>
                 {inputs?.resources && inputs?.resources.length ? (
-                  <>
+                  <div className="resourcePreview">
                     {inputs?.resources.map((resource) => (
-                      <div>
+                      <div className="resourceBlockPreview">
                         <h2>{resource?.title}</h2>
                         <div>{ReactHtmlParser(resource?.content?.main)}</div>
                       </div>
                     ))}
-                  </>
+                  </div>
                 ) : (
                   <></>
                 )}
               </>
             )}
+
             {!proposalBuildMode && (
               <>
                 {proposalCard?.resources && proposalCard?.resources.length ? (
-                  <>
+                  <div className="resourcePreview">
                     {proposalCard?.resources.map((resource) => (
-                      <div>
+                      <div className="resourceBlockPreview">
                         <h2>{resource?.title}</h2>
                         <div>{ReactHtmlParser(resource?.content?.main)}</div>
                       </div>
                     ))}
-                  </>
+                  </div>
                 ) : (
                   <></>
                 )}
@@ -316,49 +356,63 @@ export default function ProposalCard({
           {!isPreview && (
             <div className="infoBoard">
               {proposalBuildMode && (
-                <div>
+                <>
                   <div>
-                    <h2>Visibility</h2>
-                    <p>
+                    <div className="cardHeader">Visibility</div>
+                    <div className="cardSubheaderComment">
                       Check box to include student input for the Feedback Center
-                    </p>
+                    </div>
+
+                    <div className="checkboxText">
+                      <Checkbox
+                        name="includeCardToggle"
+                        id="includeCardToggle"
+                        onChange={(event, data) =>
+                          handleChange({
+                            target: {
+                              name: "settings",
+                              value: {
+                                ...inputs.settings,
+                                includeInReport: data.checked,
+                              },
+                            },
+                          })
+                        }
+                        checked={inputs?.settings?.includeInReport}
+                      />
+
+                      <label for="includeCardToggle">
+                        <div className="cardDescription">
+                          Include text input for Feedback Center
+                        </div>
+                      </label>
+                    </div>
                   </div>
-                  Include text input for Feedback Center
-                  <Checkbox
-                    toggle
-                    name="includeCardToggle"
-                    onChange={(event, data) =>
-                      handleChange({
-                        target: {
-                          name: "settings",
-                          value: {
-                            ...inputs.settings,
-                            includeInReport: data.checked,
-                          },
-                        },
-                      })
-                    }
-                    checked={inputs?.settings?.includeInReport}
-                  />
-                  <h4>Type</h4>
-                  <CardType type={inputs?.type} handleChange={handleChange} />
-                  {/* <h4>Sharing</h4>
-                  <Sharing
-                    type={inputs?.shareType}
-                    handleChange={handleChange}
-                  /> */}
-                  <h4>Resources</h4>
-                  <p>
-                    Add existing resources (See Resources in Navigation Pane)
-                  </p>
-                  <Resources
-                    user={user}
-                    handleChange={handleChange}
-                    selectedResources={
-                      inputs?.resources?.map((resource) => resource?.id) || []
-                    }
-                  />
-                </div>
+
+                  {user.permissions.map((p) => p?.name).includes("ADMIN") && (
+                    <div>
+                      <div className="cardHeader">Type</div>
+                      <CardType
+                        type={inputs?.type}
+                        handleChange={handleChange}
+                      />
+                    </div>
+                  )}
+
+                  <div>
+                    <div className="cardHeader">Resources</div>
+                    <div className="cardSubheaderComment">
+                      Add existing resources (See Resources in Navigation Pane)
+                    </div>
+                    <Resources
+                      user={user}
+                      handleChange={handleChange}
+                      selectedResources={
+                        inputs?.resources?.map((resource) => resource?.id) || []
+                      }
+                    />
+                  </div>
+                </>
               )}
 
               {!proposalBuildMode && (
@@ -398,12 +452,12 @@ export default function ProposalCard({
               )}
 
               <div className="proposalCardComments">
-                <h4>Comments</h4>
+                <div className="cardHeader">Comments</div>
                 {proposalBuildMode && (
-                  <p>
+                  <div className="cardSubheaderComment">
                     This will pre-populate the Comment Box for students. You can
                     delete comments later.
-                  </p>
+                  </div>
                 )}
                 <textarea
                   rows="5"
@@ -413,27 +467,6 @@ export default function ProposalCard({
                   value={inputs.comment}
                   onChange={handleChange}
                 />
-              </div>
-
-              <div className="buttons">
-                {!updateLoading && (
-                  <button
-                    className="secondary"
-                    onClick={() => closeCard({ cardId, lockedByUser })}
-                  >
-                    Close without saving
-                  </button>
-                )}
-
-                {areEditsAllowed && (
-                  <button
-                    className="primary"
-                    onClick={() => onUpdateCard()}
-                    disabled={updateLoading}
-                  >
-                    {updateLoading ? "Saving ..." : "Save & close"}
-                  </button>
-                )}
               </div>
             </div>
           )}

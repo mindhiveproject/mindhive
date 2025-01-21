@@ -2,7 +2,7 @@ import JoditEditor from "../../Jodit/Editor";
 import { StyledInput } from "../../styles/StyledForm";
 import { Radio } from "semantic-ui-react";
 
-export default function ResourceForm({ inputs, handleChange, loading }) {
+export default function ResourceForm({ user, inputs, handleChange, loading }) {
   const setContent = (content) =>
     handleChange({
       target: { name: "content", value: { main: content } },
@@ -12,22 +12,24 @@ export default function ResourceForm({ inputs, handleChange, loading }) {
     <div>
       <StyledInput>
         <h1>{inputs.title}</h1>
+        {user?.permissions.map((p) => p.name).includes("ADMIN") && (
+          <div className="iconTitle">
+            <div>Make public</div>
+            <Radio
+              toggle
+              checked={inputs?.isPublic}
+              onChange={() => {
+                handleChange({
+                  target: {
+                    name: "isPublic",
+                    value: !inputs?.isPublic,
+                  },
+                });
+              }}
+            />
+          </div>
+        )}
 
-        <div className="iconTitle">
-          <div>Make public</div>
-          <Radio
-            toggle
-            checked={inputs?.isPublic}
-            onChange={() => {
-              handleChange({
-                target: {
-                  name: "isPublic",
-                  value: !inputs?.isPublic,
-                },
-              });
-            }}
-          />
-        </div>
         <div>
           <label htmlFor="title">
             Title

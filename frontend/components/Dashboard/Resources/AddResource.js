@@ -25,7 +25,7 @@ export default function AddResource({ user }) {
   const [createResource, { data, loading, error }] = useMutation(
     CREATE_RESOURCE,
     {
-      variables: inputs,
+      variables: { input: inputs },
       refetchQueries: [
         {
           query: GET_MY_RESOURCES,

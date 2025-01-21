@@ -88,6 +88,9 @@ export const PROPOSAL_QUERY = gql`
       usedInClass {
         id
         title
+        creator {
+          id
+        }
       }
       author {
         username
@@ -167,6 +170,13 @@ export const GET_CARD_CONTENT = gql`
         id
         title
         content
+        children {
+          id
+          title
+          author {
+            id
+          }
+        }
       }
     }
   }

@@ -59,7 +59,7 @@ export default function ResourcesList({ query, user }) {
               }}
               key={i}
             >
-              <button>Copy</button>
+              <button>Customize</button>
             </Link>
 
             {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (

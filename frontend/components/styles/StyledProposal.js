@@ -8,6 +8,7 @@ export const StyledProposal = styled.div`
   min-height: 80vh;
   background: #f7f9f8;
   align-items: baseline;
+  font-family: "Nunito";
 
   .closeBtn {
     line-height: 3rem;
@@ -153,15 +154,15 @@ export const StyledProposal = styled.div`
 
   .newInput {
     display: grid;
+    width: 100%;
     justify-content: stretch;
     text-align: start;
-    margin: 30px 10px 0px 10px;
+    padding: 0px 20px;
     input {
       border: 1px solid #e6e6e6;
       border-radius: 8px;
       padding: 10px 10px 10px 10px;
-      height: 50px;
-      margin: 5px 0px 0px 0px;
+      height: 70px;
     }
     .addBtn {
       display: grid;
@@ -250,7 +251,7 @@ export const StyledProposal = styled.div`
     }
     .deleteBtn {
       position: absolute;
-      bottom: -5px;
+      bottom: -12px;
       left: -5px;
       cursor: pointer;
       img {
@@ -265,8 +266,41 @@ export const StyledProposal = styled.div`
 
   .header {
     display: grid;
-    margin-bottom: 20px;
-    padding: 10px;
+    .titleEdit {
+      font-family: "Nunito";
+      font-style: normal;
+      font-weight: 600;
+      font-size: 40px;
+      line-height: 125%;
+      color: #171717;
+      background: white;
+    }
+    .titleIcon {
+      display: grid;
+      grid-gap: 20px;
+      grid-template-columns: auto 1fr;
+      .title {
+        font-family: "Nunito";
+        font-style: normal;
+        font-weight: 600;
+        font-size: 40px;
+        line-height: 125%;
+        color: #171717;
+      }
+      .icon {
+        display: grid;
+        align-content: center;
+        cursor: pointer;
+      }
+    }
+    .subtitle {
+      font-family: "Nunito";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 32px;
+      color: #6c6c6c;
+    }
     input,
     textarea,
     select {
@@ -288,15 +322,15 @@ export const StyledProposal = styled.div`
       cursor: pointer;
     }
     .title {
-      font-family: Lato;
+      /* font-family: Lato;
       font-size: 48px;
       font-style: normal;
       font-weight: 400;
-      line-height: 56px;
+      /* line-height: 56px; */
       letter-spacing: 0em;
       text-align: left;
-      color: #1a1a1a;
-      margin-bottom: 23px;
+      color: #1a1a1a; */
+      /* margin-bottom: 23px; */
     }
     .description {
       font-family: Lato;
@@ -376,6 +410,18 @@ export const StyledProposal = styled.div`
     font-family: Lato;
     font-size: 18px;
     text-align: left;
+    background: #F7F9F8;
+
+    .resourcePreview {
+      display: grid;
+      grid-gap: 20px;
+      .resourceBlockPreview {
+        border: 1px solid #CCCCCC;
+        border-radius: 4px;
+        padding: 10px;
+        border-radius: 10px;
+      }
+    }
 
     .lockedMessage {
       display: grid;
@@ -395,6 +441,59 @@ export const StyledProposal = styled.div`
       }
     }
 
+    .navigation-build-mode {
+      display: grid;
+      align-items: center;
+      padding: 6px 9px;
+      grid-template-columns: auto 1fr auto;
+      grid-gap: 20px;
+      background: white;
+      .left {
+        display: grid;
+        .icon {
+          width: 40px;
+          height: 40px;
+        }
+        .selector {
+          display: grid;
+          grid-gap: 10px;
+          align-items: center;
+          justify-items: center;
+          border-radius: 12px;
+          width: 40px;
+          height: 40px;
+          box-shadow: 0px 1px 3px 0px #0000004d;
+        }
+      }
+      .middle {
+        font-family: Nunito;
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 40px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+      }
+      .right {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-gap: 10px;
+        .saveButton {
+          background: #3d85b0;
+          color: white;
+          border-radius: 100px;
+          font-family: Nunito;
+          font-size: 20px;
+          font-weight: 700;
+          line-height: var(--LabelLargeLineHeight);
+          letter-spacing: var(--LabelLargeTracking);
+          text-align: center;
+          text-underline-position: from-font;
+          text-decoration-skip-ink: none;
+          padding: 10px 24px;
+        }
+      }
+    }
     .buttons {
       width: auto;
       display: grid;
@@ -415,7 +514,8 @@ export const StyledProposal = styled.div`
 
     .proposalCardBoard {
       display: grid;
-      grid-template-columns: 7fr 3fr;
+      grid-gap: 30px;
+      grid-template-columns: 6fr 4fr;
       height: 100%;
     }
 
@@ -510,6 +610,12 @@ export const StyledProposal = styled.div`
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
     }
+    .checkboxText {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-gap: 15px;
+      align-items: center;
+    }
     .textBoard {
       display: grid;
       grid-gap: 10px;
@@ -517,10 +623,11 @@ export const StyledProposal = styled.div`
     }
     .infoBoard {
       display: grid;
-      grid-gap: 30px;
+      grid-gap: 15px;
       align-content: baseline;
       border-radius: 0px 4px 4px 0px;
-      padding: 53px 30px 30px 37px;
+      margin: 10px;
+      /* padding: 53px 30px 30px 37px; */
       font-family: Roboto;
       font-size: 16px;
       font-style: normal;
@@ -559,7 +666,6 @@ export const StyledProposal = styled.div`
   }
 
   .jodit {
-    /* height: 100%; */
     input,
     textarea,
     select {
@@ -597,7 +703,6 @@ export const StyledProposalCard = styled.div`
   position: relative;
   width: 362px;
   height: 80px;
-
   font-family: Nunito;
   font-size: 18px;
   font-weight: 500;
@@ -607,35 +712,13 @@ export const StyledProposalCard = styled.div`
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
 
-  /* border-right: 8px solid;
-  border-right-color: ${(props) =>
-    props.type === "PROPOSAL"
-      ? "#623A39"
-      : props.type === "ASSIGNMENT"
-      ? "#2C9389"
-      : props.type === "LESSON"
-      ? "#E06766"
-      : props.type === "ARTICLE"
-      ? "#28619E"
-      : props.type === "SURVEY"
-      ? "#007c70"
-      : props.type === "LINK"
-      ? "#C9D6CD"
-      : "#FFE29D"}; */
-
   .card-drag-handle {
     height: 100%;
     display: grid;
-    /* font-family: Lato;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 24px;
-    letter-spacing: 0em; */
   }
   .deleteCardBtn {
     position: absolute;
-    bottom: -5px;
+    bottom: -12px;
     left: -5px;
     cursor: pointer;
     img {
@@ -784,22 +867,30 @@ export const StyledProposalCard = styled.div`
       border-top-right-radius: 12px;
       border-bottom-right-radius: 12px;
     }
+    .card-public-status-build-mode {
+      display: grid;
+      background: #f3f3f3;
+      height: 100%;
+      width: 40px;
+      align-items: center;
+      justify-items: center;
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
   }
 `;
 
 export const StyledActionCard = styled.div`
   display: grid;
   align-content: center;
-  justify-content: center;
   border-radius: 41px;
-  background: #fdf2d0;
+  background: ${(props) => (props.proposalBuildMode ? "#FFFFFF" : "#fdf2d0")};
   border: 3px solid #FFC107
   box-sizing: border-box;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   margin: 3px 10px;
   position: relative;
-  min-width: 264px;
   min-height: 71px;
   font-family: Nunito;
   font-size: 18px;
@@ -809,8 +900,19 @@ export const StyledActionCard = styled.div`
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
+
+  .card-drag-handle {
+    height: 100%;
+    margin: 0px 10px;
+    display: grid;
+  }
   .card-information {
     display: grid;
-    grid-template-columns: 40px 1fr;
+    grid-template-columns: 40px 1fr auto;
   }
+  .card-left-side {
+      display: grid;
+      justify-content: center;
+    }
+
 `;

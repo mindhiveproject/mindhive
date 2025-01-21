@@ -24,6 +24,10 @@ export default function ResourcesList({ query, user }) {
     { query: GET_PUBLIC_RESOURCES },
   ];
 
+  if (user.permissions.map((p) => p?.name).includes("STUDENT")) {
+    return <></>;
+  }
+
   return (
     <div className="board">
       <div className="headerMy">

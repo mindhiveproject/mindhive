@@ -36,6 +36,9 @@ export default function StartProject({ query, user }) {
     class: undefined,
   });
 
+  // get the class template proposal ID that has to be copied
+  const classTemplateProposalId = inputs?.class?.templateProposal?.id;
+
   useEffect(() => {
     function selectClass() {
       handleChange({
@@ -61,9 +64,6 @@ export default function StartProject({ query, user }) {
     if (!inputs?.projectName) {
       return alert("Give your project a name");
     }
-
-    // get the class template proposal ID that has to be copied
-    const classTemplateProposalId = inputs?.class?.templateProposal?.id;
 
     const res = await copyProposal({
       variables: {
@@ -102,46 +102,67 @@ export default function StartProject({ query, user }) {
         </div>
       </div>
       <div className="newProject">
-        <div className="modal">
-          <StyledInput>
-            <div className="title">Name your project</div>
-            <div className="message">
-              Give your project a name. This is not the study's title, but what
-              you want to call your work space.
+        {!classTemplateProposalId ? (
+          <div className="modalEmpty">
+            <div className="title">
+              There are no project board templates in the class
+            </div>
+            <div className="subtitle">
+              To start a project, you need a project board template. Your
+              teacher may not have a project board template linked to this
+              class.
             </div>
 
-            <input
-              type="text"
-              name="projectName"
-              placeholder="The name of my project is "
-              value={inputs.projectName}
-              onChange={handleChange}
-            />
+            <Link
+              href={{
+                pathname: `/dashboard/develop/studies`,
+              }}
+            >
+              <div className="backBtn">Go back home</div>
+            </Link>
+          </div>
+        ) : (
+          <div className="modal">
+            <StyledInput>
+              <div className="title">Name your project</div>
+              <div className="message">
+                Give your project a name. This is not the study's title, but
+                what you want to call your work space.
+              </div>
 
-            {studentClasses && studentClasses.length > 1 && (
+              <input
+                type="text"
+                name="projectName"
+                placeholder="The name of my project is "
+                value={inputs.projectName}
+                onChange={handleChange}
+              />
+
+              {studentClasses && studentClasses.length > 1 && (
+                <div>
+                  <div className="title">Select the class</div>
+                  <LinkClass
+                    classes={studentClasses}
+                    study={inputs}
+                    handleChange={handleChange}
+                  />
+                </div>
+              )}
+
               <div>
-                <div className="title">Select the class</div>
-                <LinkClass
-                  classes={studentClasses}
-                  study={inputs}
+                <div className="title">Add collaborators</div>
+                <Collaborators
+                  userClasses={userClasses}
+                  collaborators={
+                    (inputs && inputs?.collaborators?.map((c) => c?.id)) || []
+                  }
                   handleChange={handleChange}
                 />
               </div>
-            )}
-
-            <div>
-              <div className="title">Add collaborators</div>
-              <Collaborators
-                userClasses={userClasses}
-                collaborators={
-                  (inputs && inputs?.collaborators?.map((c) => c?.id)) || []
-                }
-                handleChange={handleChange}
-              />
-            </div>
-          </StyledInput>
-          <button onClick={saveNewProject}>Create Project</button>
-        </div>
+            </StyledInput>
+            <button onClick={saveNewProject}>Create Project</button>
+          </div>
+        )}
       </div>
     </StyledBuilderArea>
   );

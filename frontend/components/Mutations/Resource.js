@@ -2,22 +2,8 @@ import gql from "graphql-tag";
 
 // create new resource
 export const CREATE_RESOURCE = gql`
-  mutation CREATE_RESOURCE(
-    $title: String!
-    $description: String
-    $content: JSON
-    $isPublic: Boolean
-    $settings: JSON
-  ) {
-    createResource(
-      data: {
-        title: $title
-        description: $description
-        content: $content
-        isPublic: $isPublic
-        settings: $settings
-      }
-    ) {
+  mutation CREATE_RESOURCE($input: ResourceCreateInput!) {
+    createResource(data: $input) {
       id
     }
   }

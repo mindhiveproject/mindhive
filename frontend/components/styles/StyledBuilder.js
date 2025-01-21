@@ -16,7 +16,34 @@ export const StyledBuilderArea = styled.div`
     height: 100vh;
     justify-content: center;
     align-content: center;
-
+    .modalEmpty {
+      display: grid;
+      grid-gap: 12px;
+      max-width: 526px;
+      text-align: center;
+      font-family: "Nunito";
+      font-style: normal;
+      font-weight: 400;
+      color: #6c6c6c;
+      .title {
+        font-size: 24px;
+        line-height: 32px;
+      }
+      .subtitle {
+        font-size: 17px;
+        line-height: 23px;
+      }
+      .backBtn {
+        margin: 15px auto;
+        padding: 10px 24px;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 20px;
+        border: 1px solid green;
+        border-radius: 20px;
+        width: 200px;
+      }
+    }
     .modal {
       display: grid;
       grid-gap: 15px;

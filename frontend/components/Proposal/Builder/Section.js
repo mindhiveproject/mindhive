@@ -295,6 +295,7 @@ const Section = ({
     <div className="section">
       <div className="column-drag-handle">
         <div className="firstLine">
+          <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
           <img
             src="/assets/icons/proposal/edit.svg"
             onClick={() => {
@@ -310,9 +311,8 @@ const Section = ({
               }
             }}
           />
-          <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
         </div>
-        {!isPreview && (
+        {!isPreview && !proposalBuildMode && (
           <div className="infoLine">
             {numOfCards} card{numOfCards == 1 ? "" : "s"}
           </div>
@@ -388,14 +388,13 @@ const Section = ({
 
       {(proposalBuildMode || (!isPreview && settings?.allowAddingCards)) && (
         <div className="newInput">
-          <div>New card</div>
-
           <input
             id={`input-${section.id}`}
             type="text"
             name={`input-${section.id}`}
             value={cardName}
             onChange={(e) => setCardName(e.target.value)}
+            placeholder="Enter a new card title"
           />
 
           <div
@@ -404,7 +403,7 @@ const Section = ({
               addCardMutation(section.id, cardName);
             }}
           >
-            Add card
+            [ Click to add a card ]
           </div>
         </div>
       )}

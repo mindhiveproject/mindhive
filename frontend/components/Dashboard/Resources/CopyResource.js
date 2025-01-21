@@ -19,6 +19,7 @@ export default function CopyResource({ selector, query, user }) {
 
   const { inputs, handleChange } = useForm({
     ...resource,
+    isPublic: false,
   });
 
   const [
@@ -29,7 +30,18 @@ export default function CopyResource({ selector, query, user }) {
       error: createResourceError,
     },
   ] = useMutation(CREATE_RESOURCE, {
-    variables: inputs,
+    variables: {
+      input: {
+        title: inputs?.title,
+        description: inputs?.description,
+        content: inputs?.content,
+        parent: {
+          connect: {
+            id: resource?.id,
+          },
+        },
+      },
+    },
     refetchQueries: [
       {
         query: GET_MY_RESOURCES,
@@ -50,7 +62,7 @@ export default function CopyResource({ selector, query, user }) {
 
   return (
     <div>
-      <ResourceForm inputs={inputs} handleChange={handleChange} />
+      <ResourceForm user={user} inputs={inputs} handleChange={handleChange} />
       <button onClick={handleSave}>Save as your own resource</button>
     </div>
   );

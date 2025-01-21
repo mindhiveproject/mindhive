@@ -22,28 +22,23 @@ export default function Card({
   let statusStyle = null;
   switch (status) {
     default:
-      statusStyle = "status-not-started";
+      statusStyle = "notStarted";
       break;
-    case "Started":
-      statusStyle = "status-started";
-      break;
-    case "Needs feedback":
-      statusStyle = "status-needs-feedback";
-      break;
-    case "Feedback given":
-      statusStyle = "status-feedback-given";
+    case "In progress":
+      statusStyle = "inProgress";
       break;
     case "Completed":
-      statusStyle = "status-completed";
+      statusStyle = "completed";
       break;
-    // in case any cards are still tagged 'Closed' or 'On-Hold'
-    case "Closed":
-      status = "Started";
-      statusStyle = "status-started";
+    case "Help needed":
+      statusStyle = "helpNeeded";
       break;
-    case "On-Hold":
-      status = "Needs feedback";
-      statusStyle = "status-needs-feedback";
+    case "Comments":
+      statusStyle = "comments";
+      break;
+    case "Not started":
+      statusStyle = "notStarted";
+      break;
   }
 
   return (
@@ -58,7 +53,6 @@ export default function Card({
             },
           });
         }}
-        // type={card?.type}
       >
         <div className="card-drag-handle">
           <div className="card-information">
@@ -81,7 +75,7 @@ export default function Card({
                 }
                 trigger={
                   <Image
-                    src={`/assets/icons/proposal/${statusStyle}.svg`}
+                    src={`/assets/icons/status/${statusStyle}.svg`}
                     avatar
                   />
                 }

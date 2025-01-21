@@ -225,17 +225,36 @@ export default function ProposalCard({
                 <div className="cardSubheader">Resources</div>
                 {proposalCard?.resources && proposalCard?.resources.length ? (
                   <div className="resourceLinks">
-                    {proposalCard?.resources.map((resource) => (
-                      <a
-                        href={`/dashboard/resources/view?id=${resource?.id}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <div className="link">
-                          <div>{resource?.title}</div>
-                        </div>
-                      </a>
-                    ))}
+                    {proposalCard?.resources.map((resource) => {
+                      const { children } = resource;
+                      let resourceId = resource?.id;
+                      let resourceTitle = resource?.title;
+                      if (
+                        children &&
+                        children.length &&
+                        proposal?.usedInClass?.creator?.id
+                      ) {
+                        const teacherId = proposal?.usedInClass?.creator?.id;
+                        const customizedResources = children.filter(
+                          (resource) => resource?.author?.id === teacherId
+                        );
+                        if (customizedResources && customizedResources.length) {
+                          resourceId = customizedResources[0].id;
+                          resourceTitle = customizedResources[0].title;
+                        }
+                      }
+                      return (
+                        <a
+                          href={`/dashboard/resources/view?id=${resourceId}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <div className="link">
+                            <div>{resourceTitle}</div>
+                          </div>
+                        </a>
+                      );
+                    })}
                   </div>
                 ) : (
                   <></>

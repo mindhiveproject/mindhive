@@ -6,12 +6,22 @@ import { useMutation } from "@apollo/client";
 
 import useForm from "../../../lib/useForm";
 
+import {
+  AccordionTitle,
+  AccordionContent,
+  Accordion,
+  Icon,
+} from "semantic-ui-react";
+import { useState } from "react";
+
 export default function ProposalHeader({
   user,
   proposal,
   proposalBuildMode,
   refetchQueries,
 }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isTitleEditing, setIsTitleEditing] = useState(false);
   const studyId = proposal?.study?.id;
 
   // save and edit the study information
@@ -33,128 +43,143 @@ export default function ProposalHeader({
   return (
     <div className="header">
       <div>
-        <div>
-          <label htmlFor="title">
-            <input
-              type="text"
-              id="propsalTitle"
-              name="title"
-              value={inputs.title}
-              onChange={handleChange}
-              required
-              className="title"
-            />
-          </label>
-        </div>
+        {isTitleEditing ? (
+          <input
+            type="text"
+            id="propsalTitle"
+            name="title"
+            value={inputs.title}
+            onChange={handleChange}
+            className="titleEdit"
+          />
+        ) : (
+          <div className="titleIcon">
+            <div className="title">{inputs?.title}</div>
 
-        <div>
-          <label htmlFor="description">
-            <textarea
-              id="description"
-              name="description"
-              value={inputs.description}
-              onChange={handleChange}
-              rows="1"
-              className="description"
-            />
-          </label>
+            <div className="icon">
+              <img
+                src="/assets/icons/pencil.svg"
+                onClick={() => {
+                  setIsTitleEditing(!isTitleEditing);
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="subtitle">
+          This board will guide your students through their MindHive project
+          step by step
         </div>
 
         {proposalBuildMode && (
           <div>
-            {user?.permissions.map((p) => p?.name).includes("ADMIN") && (
-              <>
-                <div>
-                  <label htmlFor="isTemplate">
-                    <div className="checkboxField">
-                      <input
-                        type="checkbox"
-                        id="isTemplate"
-                        name="isTemplate"
-                        checked={inputs.isTemplate}
-                        onChange={toggleBoolean}
-                      />
-                      <span>Make this project board a public template</span>
-                    </div>
-                  </label>
-                </div>
-              </>
-            )}
+            <Accordion>
+              <AccordionTitle
+                active={activeIndex === 1}
+                index={1}
+                onClick={() => {
+                  setActiveIndex(activeIndex === 1 ? 0 : 1);
+                }}
+              >
+                <Icon name="dropdown" />
+                Advanced options
+              </AccordionTitle>
+              <AccordionContent active={activeIndex === 1}>
+                <>
+                  {user?.permissions.map((p) => p?.name).includes("ADMIN") && (
+                    <>
+                      <div>
+                        <label htmlFor="isTemplate">
+                          <div className="checkboxField">
+                            <input
+                              type="checkbox"
+                              id="isTemplate"
+                              name="isTemplate"
+                              checked={inputs.isTemplate}
+                              onChange={toggleBoolean}
+                            />
+                            <span>
+                              Make this project board a public template
+                            </span>
+                          </div>
+                        </label>
+                      </div>
+                    </>
+                  )}
 
-            {/* <div>
-              <label htmlFor="isSubmitted">
-                <div className="checkboxField">
-                  <input
-                    type="checkbox"
-                    id="isSubmitted"
-                    name="isSubmitted"
-                    checked={inputs?.isSubmitted || false}
-                    onChange={toggleBoolean}
-                  />
-                  <span>Submit as a template</span>
-                </div>
-              </label>
-            </div> */}
+                  <h2>
+                    Checking the boxes below enables students to modify the
+                    board. Check in with the MindHive team if you're unsure what
+                    this means.
+                  </h2>
 
-            <div>
-              <label htmlFor="allowMovingSections">
-                <div className="checkboxField">
-                  <input
-                    type="checkbox"
-                    id="allowMovingSections"
-                    name="allowMovingSections"
-                    checked={inputs?.settings?.allowMovingSections || false}
-                    onChange={toggleSettingsBoolean}
-                  />
-                  <span>Allow students to move sections</span>
-                </div>
-              </label>
-            </div>
+                  <div>
+                    <label htmlFor="allowMovingSections">
+                      <div className="checkboxField">
+                        <input
+                          type="checkbox"
+                          id="allowMovingSections"
+                          name="allowMovingSections"
+                          checked={
+                            inputs?.settings?.allowMovingSections || false
+                          }
+                          onChange={toggleSettingsBoolean}
+                        />
+                        <span>Allow students to move sections</span>
+                      </div>
+                    </label>
+                  </div>
 
-            <div>
-              <label htmlFor="allowMovingCards">
-                <div className="checkboxField">
-                  <input
-                    type="checkbox"
-                    id="allowMovingCards"
-                    name="allowMovingCards"
-                    checked={inputs?.settings?.allowMovingCards || false}
-                    onChange={toggleSettingsBoolean}
-                  />
-                  <span>Allow students to move cards</span>
-                </div>
-              </label>
-            </div>
+                  <div>
+                    <label htmlFor="allowMovingCards">
+                      <div className="checkboxField">
+                        <input
+                          type="checkbox"
+                          id="allowMovingCards"
+                          name="allowMovingCards"
+                          checked={inputs?.settings?.allowMovingCards || false}
+                          onChange={toggleSettingsBoolean}
+                        />
+                        <span>Allow students to move cards</span>
+                      </div>
+                    </label>
+                  </div>
 
-            <div>
-              <label htmlFor="allowAddingSections">
-                <div className="checkboxField">
-                  <input
-                    type="checkbox"
-                    id="allowAddingSections"
-                    name="allowAddingSections"
-                    checked={inputs?.settings?.allowAddingSections || false}
-                    onChange={toggleSettingsBoolean}
-                  />
-                  <span>Allow students to add/delete sections</span>
-                </div>
-              </label>
-            </div>
+                  <div>
+                    <label htmlFor="allowAddingSections">
+                      <div className="checkboxField">
+                        <input
+                          type="checkbox"
+                          id="allowAddingSections"
+                          name="allowAddingSections"
+                          checked={
+                            inputs?.settings?.allowAddingSections || false
+                          }
+                          onChange={toggleSettingsBoolean}
+                        />
+                        <span>Allow students to add/delete sections</span>
+                      </div>
+                    </label>
+                  </div>
 
-            <div>
-              <label htmlFor="allowAddingCards">
-                <div className="checkboxField">
-                  <input
-                    type="checkbox"
-                    id="allowAddingCards"
-                    name="allowAddingCards"
-                    checked={inputs?.settings?.allowAddingCards || false}
-                    onChange={toggleSettingsBoolean}
-                  />
-                  <span>Allow students to add/delete cards</span>
-                </div>
-              </label>
-            </div>
+                  <div>
+                    <label htmlFor="allowAddingCards">
+                      <div className="checkboxField">
+                        <input
+                          type="checkbox"
+                          id="allowAddingCards"
+                          name="allowAddingCards"
+                          checked={inputs?.settings?.allowAddingCards || false}
+                          onChange={toggleSettingsBoolean}
+                        />
+                        <span>Allow students to add/delete cards</span>
+                      </div>
+                    </label>
+                  </div>
+                </>
+              </AccordionContent>
+            </Accordion>
           </div>
         )}
 
@@ -167,6 +192,7 @@ export default function ProposalHeader({
             <button
               className="secondaryBtn"
               onClick={async () => {
+                setIsTitleEditing(false);
                 const res = await updateProposal();
               }}
             >

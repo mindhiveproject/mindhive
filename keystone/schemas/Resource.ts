@@ -90,6 +90,13 @@ export const Resource = list({
       ref: "ProposalCard.resources",
       many: true,
     }),
+    parent: relationship({
+      ref: "Resource.children",
+    }),
+    children: relationship({
+      ref: "Resource.parent",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

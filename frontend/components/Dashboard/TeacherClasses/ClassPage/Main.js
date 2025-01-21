@@ -83,22 +83,6 @@ export default function ClassPage({ code, user, query }) {
                 href={{
                   pathname: `/dashboard/myclasses/${code}`,
                   query: {
-                    page: "mentors",
-                  },
-                }}
-                className={
-                  page === "mentors"
-                    ? "menuTitle selectedMenuTitle"
-                    : "menuTitle"
-                }
-              >
-                <p>Mentors</p>
-              </Link>
-
-              <Link
-                href={{
-                  pathname: `/dashboard/myclasses/${code}`,
-                  query: {
                     page: "projects",
                   },
                 }}
@@ -109,6 +93,22 @@ export default function ClassPage({ code, user, query }) {
                 }
               >
                 <p>Projects</p>
+              </Link>
+
+              <Link
+                href={{
+                  pathname: `/dashboard/myclasses/${code}`,
+                  query: {
+                    page: "mentors",
+                  },
+                }}
+                className={
+                  page === "mentors"
+                    ? "menuTitle selectedMenuTitle"
+                    : "menuTitle"
+                }
+              >
+                <p>Mentors</p>
               </Link>
 
               <Link

@@ -43,14 +43,19 @@ export default function Card({
 
   return (
     <Draggable key={card.id}>
-      <StyledProposalCard
-        onClick={() => {
-          openCard(card);
-        }}
-      >
+      <StyledProposalCard>
         <div className="card-drag-handle">
           <div className="card-information">
             <div className="card-left-side">
+              {proposalBuildMode && (
+                <img
+                  src="/assets/icons/pencil.svg"
+                  onClick={() => {
+                    openCard(card);
+                  }}
+                />
+              )}
+
               {!proposalBuildMode && (
                 <Popup
                   content={
@@ -113,7 +118,7 @@ export default function Card({
               </div>
             </div>
             {card?.settings?.includeInReport && (
-              <div className="card-public-status">
+              <div className="card-public-status-build-mode">
                 <img src="/assets/icons/status/publicTemplate.svg" />
               </div>
             )}
