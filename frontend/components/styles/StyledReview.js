@@ -1,5 +1,104 @@
 import styled from "styled-components";
 
+export const StyledActionPage = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  .proposal {
+    display: grid;
+    grid-gap: 10px;
+    padding: 20px 36px;
+    align-content: baseline;
+  }
+  .instructions {
+    display: grid;
+    grid-gap: 20px;
+    background: #f7f9f8;
+    padding: 20px 36px;
+    align-content: baseline;
+  }
+  .iconTitle {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: auto 1fr;
+  }
+  .title {
+    font-family: "Nunito";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 32px;
+    color: #3b3b3b;
+  }
+  .subtitle {
+    font-family: "Nunito";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 137%;
+    color: #626269;
+  }
+  .warning {
+    color: #b9261a;
+  }
+  .cards {
+    display: grid;
+    grid-gap: 10px;
+  }
+  .card {
+    display: grid;
+    grid-gap: 10px;
+    padding: 24px;
+    border: 1px solid #deddd9;
+    border-radius: 10px;
+  }
+  .cardTitleIcon {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 1fr auto;
+  }
+  .cardTitle {
+    font-family: "Nunito";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 125%;
+    color: #171717;
+  }
+  .lists {
+    display: grid;
+  }
+  .list {
+    display: grid;
+    grid-gap: 10px;
+    padding: 12px;
+  }
+  .listIconTitle {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+  }
+  .listTitle {
+    font-family: "Nunito";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #626269;
+  }
+  .listSubtitle {
+    font-family: "Nunito";
+    font-style: italic;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #969696;
+  }
+`;
+
 export const StyledReviewPage = styled.div`
   display: grid;
   width: 100%;

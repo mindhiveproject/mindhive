@@ -102,6 +102,39 @@ const StyledProject = styled.div`
         text-decoration-skip-ink: none;
         padding: 10px 24px;
       }
+      .disabled {
+        opacity: 50%;
+      }
+      .iconBtn {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-gap: 10px;
+      }
+      .lockText {
+        font-family: "Nunito";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 22px;
+        display: flex;
+        align-items: center;
+        color: #666666;
+      }
+      .lockButton {
+        background: white;
+        color: #3d85b0;
+        border: 1px solid #3d85b0;
+        border-radius: 100px;
+        font-family: Nunito;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: var(--LabelLargeLineHeight);
+        letter-spacing: var(--LabelLargeTracking);
+        text-align: center;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        padding: 10px 24px;
+      }
     }
   }
 `;

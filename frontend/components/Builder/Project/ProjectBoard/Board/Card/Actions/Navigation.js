@@ -5,17 +5,16 @@ import Link from "next/link";
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 
 export default function Navigation({
-  proposalId,
   query,
   tab,
   user,
-  saveBtnFunction,
-  toggleSidebar,
-  hasStudyChanged,
+  proposalId,
   cardId,
-  onUpdateCard,
-  inputs,
-  handleSettingsChange,
+  saveBtnFunction,
+  allCardsCompleted,
+  isProposalSubmitted,
+  switchFeedbackLock,
+  isFeedbackLocked,
 }) {
   const { data, error, loading } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
@@ -46,15 +45,40 @@ export default function Navigation({
         <span className="studyTitle">{study?.title}</span>
       </div>
       <div className="right">
-        {cardId && (
+        {cardId && !isProposalSubmitted && (
           <button
             onClick={async () => {
-              await saveBtnFunction();
+              if (
+                confirm(
+                  "Are you sure you want to submit this proposal? You will not be able to undo it later."
+                )
+              ) {
+                await saveBtnFunction();
+              }
             }}
-            className="saveButton"
+            className={allCardsCompleted ? "saveButton" : "saveButton disabled"}
+            disabled={!allCardsCompleted}
           >
             Submit for Proposal Feedback
           </button>
+        )}
+        {cardId && isProposalSubmitted && (
+          <div className="iconBtn">
+            {!isFeedbackLocked && (
+              <div className="lockText">
+                Enough comments? Let reviewers know
+              </div>
+            )}
+            <button
+              onClick={async () => {
+                await switchFeedbackLock();
+              }}
+              className={"lockButton"}
+              disabled={!allCardsCompleted}
+            >
+              {isFeedbackLocked ? "Unlock for Feedback" : "Lock Feedback"}
+            </button>
+          </div>
         )}
       </div>
     </div>
