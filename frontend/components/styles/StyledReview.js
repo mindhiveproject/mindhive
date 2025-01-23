@@ -2,12 +2,18 @@ import styled from "styled-components";
 
 export const StyledActionPage = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+
+  .board {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 1fr 1fr;
+    padding: 0px 36px;
+  }
 
   .proposal {
     display: grid;
     grid-gap: 10px;
-    padding: 20px 36px;
+    padding: 20px 0px;
     align-content: baseline;
   }
   .instructions {
@@ -96,6 +102,42 @@ export const StyledActionPage = styled.div`
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #969696;
+  }
+
+  .reviews {
+    display: grid;
+    .reviewsCards {
+      display: grid;
+      grid-gap: 27px;
+    }
+    .reviewerSection {
+      display: grid;
+      background: white;
+      padding: 16px 23px;
+    }
+    .reviewerTitle {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+    }
+    .reviewerComments {
+      display: grid;
+      grid-gap: 15px;
+    }
+    .reviewerComment {
+      font-family: "Nunito";
+      font-size: 16px;
+      line-height: 137%;
+      color: #3b3b3b;
+    }
+    .questionTitle {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .questionAnswer {
+      font-weight: 700;
+      font-style: normal;
+    }
   }
 `;
 
@@ -869,6 +911,14 @@ export const StyledDasboardReview = styled.div`
     display: grid;
     padding: 67px 44px 37px 50px;
 
+    .subtitle {
+      font-family: "Nunito";
+      font-style: italic;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 137%;
+    }
+
     .reviewItems {
       display: grid;
       grid-gap: 20px;
@@ -923,6 +973,14 @@ export const StyledDasboardReview = styled.div`
     .reviewItem {
       display: grid;
       grid-gap: 5px;
+      .question {
+        font-family: "Nunito";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 137%;
+        color: #171717;
+      }
     }
   }
 

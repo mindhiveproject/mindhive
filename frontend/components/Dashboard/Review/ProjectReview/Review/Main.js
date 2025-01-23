@@ -15,6 +15,9 @@ export default function QuestionsMain({
             ? "Proposal Feedback"
             : "Study Feedback"}
         </h1>
+        <div className="subtitle">
+          Help students create studies by offering feedback and suggestions.
+        </div>
         <div className="reviewItems">
           {reviewContent?.map((item, i) => (
             <Question

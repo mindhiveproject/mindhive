@@ -221,6 +221,7 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
             id
             username
           }
+          type
         }
       }
       reviews {

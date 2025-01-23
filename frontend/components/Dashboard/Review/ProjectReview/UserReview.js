@@ -10,10 +10,7 @@ import Questions from "./Review/Main";
 
 import useForm from "../../../../lib/useForm";
 
-import {
-  proposalStageQuestions,
-  inReviewStageQuestions,
-} from "./Review/Template";
+import { TemplateQuestions } from "./Review/Template";
 import { useEffect } from "react";
 
 // getting the state of the user review
@@ -31,10 +28,8 @@ export default function UserReview({ query, user, tab, project, canReview }) {
   const reviews = data?.reviews || [];
   const review = reviews.length ? reviews[0] : {};
 
-  const defaultContent =
-    project?.status === "SUBMITTED_AS_PROPOSAL"
-      ? proposalStageQuestions
-      : inReviewStageQuestions;
+  // TODO make it dynamic later
+  const defaultContent = TemplateQuestions["SUBMITTED_AS_PROPOSAL"];
 
   const { inputs, handleChange, resetForm, handleMultipleUpdate } = useForm({
     id: review?.id,
@@ -101,7 +96,7 @@ export default function UserReview({ query, user, tab, project, canReview }) {
                   : "headerMenuTitle"
               }
             >
-              <p>Project Details</p>
+              <p>Proposal</p>
             </Link>
 
             <Link

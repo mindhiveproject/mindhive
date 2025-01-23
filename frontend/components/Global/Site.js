@@ -12,7 +12,7 @@ const theme = {
   lightgrey: "#E1E1E1",
   darkgreen: "#007C70",
   offWhite: "#EDEDED",
-  maxWidth: "1300px",
+  maxWidth: "2300px",
   bs: "0 12px 24px 0 rgba(0, 0, 0, 0.09)",
 };
 

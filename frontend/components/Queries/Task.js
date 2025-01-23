@@ -1,5 +1,15 @@
 import gql from "graphql-tag";
 
+// get all public tasks
+export const ALL_PUBLIC_TASKS = gql`
+  query ALL_PUBLIC_TASKS {
+    tasks(where: { public: { equals: true } }, orderBy: { title: asc }) {
+      id
+      title
+    }
+  }
+`;
+
 // get public tasks
 export const PUBLIC_TASKS = gql`
   query PUBLIC_TASKS($taskType: TaskTaskTypeType, $searchTerm: String) {

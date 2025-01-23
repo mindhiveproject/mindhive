@@ -9,7 +9,10 @@ import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
 import Navigation from "./Navigation";
 import Comment from "./Comment";
 
-import { StyledActionPage } from "../../../../../../styles/StyledReview";
+import {
+  StyledActionPage,
+  StyledReviewBoard,
+} from "../../../../../../styles/StyledReview";
 
 export default function Proposal({
   query,
@@ -114,120 +117,124 @@ export default function Proposal({
         isFeedbackLocked={isFeedbackLocked}
       />
       <StyledActionPage>
-        <div className="proposal">
-          <div className="iconTitle">
-            <img src="/assets/icons/project.svg" />
-            <div className="title">Project Proposal</div>
-          </div>
+        <div className="board">
+          <div className="proposal">
+            <div className="iconTitle">
+              <img src="/assets/icons/project.svg" />
+              <div className="title">Project Proposal</div>
+            </div>
 
-          <div className="subtitle">
-            This is how your proposal will appear in the Feedback Center
-          </div>
-          <div className="cards">
-            {cards?.map((card) => (
-              <div className="card">
-                <div className="cardTitleIcon">
-                  <div className="cardTitle">{card?.title}</div>
-                  <img
-                    src={`/assets/icons/status/${
-                      statusesDict[card?.settings?.status] || "notStarted"
-                    }.svg`}
-                  />
-                </div>
-                <div className="cardText">{ReactHtmlParser(card?.content)}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="instructions">
-          {isProposalSubmitted ? (
-            <>
-              <div className="iconTitle">
-                <img src="/assets/icons/eye.svg" />
-                <div className="title">Comments</div>
-              </div>
-
-              <div>
-                {project?.reviews &&
-                project?.reviews.filter(
-                  (review) => review.stage === "SUBMITTED_AS_PROPOSAL"
-                ).length ? (
-                  <div className="reviewsCards">
-                    {project?.reviews
-                      .filter(
-                        (review) => review.stage === "SUBMITTED_AS_PROPOSAL"
-                      )
-                      .sort((a, b) => {
-                        return b?.upvotedBy?.length - a?.upvotedBy?.length;
-                      })
-                      .map((review, num) => (
-                        <Comment key={num} number={num + 1} review={review} />
-                      ))}
+            <div className="subtitle">
+              This is how your proposal will appear in the Feedback Center
+            </div>
+            <div className="cards">
+              {cards?.map((card) => (
+                <div className="card">
+                  <div className="cardTitleIcon">
+                    <div className="cardTitle">{card?.title}</div>
+                    <img
+                      src={`/assets/icons/status/${
+                        statusesDict[card?.settings?.status] || "notStarted"
+                      }.svg`}
+                    />
                   </div>
-                ) : (
-                  <div className="reviewsPlaceholder"></div>
-                )}
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="title">
-                Submit your proposal for expert feedback
-              </div>
+                  <div className="cardText">
+                    {ReactHtmlParser(card?.content)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-              <div className="subtitle">
-                Once you submit your proposal for feedback:
-                <ul>
-                  <li>Your proposal will appear in the Feedback Center.</li>
-                  <li>
-                    Expert mentors will provide feedback & comments will appear
-                    here.
-                  </li>
-                  <li>
-                    The cards that are included in the Proposal will be locked.
-                    Your teacher can unlock them.
-                  </li>
-                </ul>
-              </div>
+          <div className="instructions">
+            {isProposalSubmitted ? (
+              <>
+                <div className="iconTitle">
+                  <img src="/assets/icons/eye.svg" />
+                  <div className="title">Comments</div>
+                </div>
 
-              <div className="subtitle">
-                Please make sure all cards listed below are marked as
-                “completed” before you submit.
-              </div>
+                <div className="reviews">
+                  {project?.reviews &&
+                  project?.reviews.filter(
+                    (review) => review.stage === "SUBMITTED_AS_PROPOSAL"
+                  ).length ? (
+                    <div className="reviewsCards">
+                      {project?.reviews
+                        .filter(
+                          (review) => review.stage === "SUBMITTED_AS_PROPOSAL"
+                        )
+                        .sort((a, b) => {
+                          return b?.upvotedBy?.length - a?.upvotedBy?.length;
+                        })
+                        .map((review, num) => (
+                          <Comment key={num} number={num + 1} review={review} />
+                        ))}
+                    </div>
+                  ) : (
+                    <div className="reviewsPlaceholder"></div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="title">
+                  Submit your proposal for expert feedback
+                </div>
 
-              <div className="lists">
-                {cards?.map((card) => (
-                  <div className="list">
-                    <div className="listIconTitle">
-                      <img
-                        src={`/assets/icons/status/${
-                          statusesDict[card?.settings?.status] || "notStarted"
-                        }.svg`}
-                      />
-                      <div>
-                        <div className="listTitle">{card?.title}</div>
-                        <div className="listSubtitle">
-                          {card?.settings?.status || "Not started"}
+                <div className="subtitle">
+                  Once you submit your proposal for feedback:
+                  <ul>
+                    <li>Your proposal will appear in the Feedback Center.</li>
+                    <li>
+                      Expert mentors will provide feedback & comments will
+                      appear here.
+                    </li>
+                    <li>
+                      The cards that are included in the Proposal will be
+                      locked. Your teacher can unlock them.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="subtitle">
+                  Please make sure all cards listed below are marked as
+                  “completed” before you submit.
+                </div>
+
+                <div className="lists">
+                  {cards?.map((card) => (
+                    <div className="list">
+                      <div className="listIconTitle">
+                        <img
+                          src={`/assets/icons/status/${
+                            statusesDict[card?.settings?.status] || "notStarted"
+                          }.svg`}
+                        />
+                        <div>
+                          <div className="listTitle">{card?.title}</div>
+                          <div className="listSubtitle">
+                            {card?.settings?.status || "Not started"}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              {allCardsCompleted ? (
-                <div className="subtitle">
-                  The proposal is ready to be submitted for feedback!
-                </div>
-              ) : (
-                <div className="subtitle warning">
-                  Please complete all required cards before submitting your
-                  proposal for feedback.
-                </div>
-              )}
-            </>
-          )}
+                {allCardsCompleted ? (
+                  <div className="subtitle">
+                    The proposal is ready to be submitted for feedback!
+                  </div>
+                ) : (
+                  <div className="subtitle warning">
+                    Please complete all required cards before submitting your
+                    proposal for feedback.
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </StyledActionPage>
     </>

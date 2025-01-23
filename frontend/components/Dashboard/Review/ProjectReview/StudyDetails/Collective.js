@@ -1,75 +1,36 @@
 import ReactHtmlParser from "react-html-parser";
+import { StyledActionPage } from "../../../../styles/StyledReview";
 
 export default function CollectivePresentation({ project }) {
   const proposal = project || { sections: [] };
 
-  const { title, description, sections } = proposal;
-  const orderedSections = [...sections].sort((a, b) => a.position - b.position);
-  const allCardsContent = orderedSections.map((section) => {
-    const orderedCards = [...section.cards].sort(
-      (a, b) => a.position - b.position
-    );
-    return orderedCards
-      .filter((card) => card?.settings?.status === "Completed")
-      .map((card) =>
-        [`<h3>${section.title} - `, `${card.title}</h3>`, card.content]
-          .flat()
-          .join("")
-      );
-  });
-
-  const cardsContent = allCardsContent.flat().join("");
-  let studyURL = "";
-  if (proposal?.study?.slug) {
-    studyURL = `<h3>Study URL: ${origin}/studies/${proposal?.study?.slug}</h3>`;
+  // find the current section for preview
+  const currentSections = proposal?.sections?.filter((section) =>
+    section?.cards.map((card) => card?.type).includes("ACTION_SUBMIT")
+  );
+  let currentSection;
+  if (currentSections && currentSections.length) {
+    currentSection = currentSections[0];
   }
-  const content = `<h1>${title}</h1><h2>${description}</h2>${studyURL}${cardsContent}`;
+
+  const cards = currentSection?.cards.filter(
+    (card) => card?.settings?.includeInReport
+  );
 
   return (
-    <div className="studyDetails">
-      <>
-        <div className="participateLinkWrapper">
-          <a
-            href={`/dashboard/discover/studies/?name=${proposal?.study?.slug}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {/* <div className="participateLink">
-              <div>Participate in new page</div>
-              <img src="/assets/icons/review/new-window.svg" />
-            </div> */}
-          </a>
-        </div>
-        {ReactHtmlParser(content)}
-      </>
-
-      {/* {proposal?.study?.status === "IN_REVIEW" ? (
-        <>
-          <div className="participateLinkWrapper">
-            <a
-              href={`/dashboard/discover/studies/?name=${proposal?.study?.slug}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div className="participateLink">
-                <div>Participate in new page</div>
-                <img src="/assets/icons/review/new-window.svg" />
+    <StyledActionPage>
+      <div className="proposal">
+        <div className="cards">
+          {cards?.map((card) => (
+            <div className="card">
+              <div className="cardTitleIcon">
+                <div className="cardTitle">{card?.title}</div>
               </div>
-            </a>
-          </div>
-          {ReactHtmlParser(content)}
-        </>
-      ) : (
-        <div className="noStudyDetailsContainer">
-          <div className="p18">
-            This study hasn’t been submitted for peer review yet
-          </div>
-          <div>
-            Study details will be displayed here once the study is submitted for
-            peer review.
-          </div>
+              <div className="cardText">{ReactHtmlParser(card?.content)}</div>
+            </div>
+          ))}
         </div>
-      )} */}
-    </div>
+      </div>
+    </StyledActionPage>
   );
 }

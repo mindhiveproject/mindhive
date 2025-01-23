@@ -59,7 +59,7 @@ export const StyledDashboardWrapper = styled.div`
 export const StyledDashboardContent = styled.div`
   display: grid;
   margin: 50px;
-  max-width: 1300px;
+  max-width: ${(props) => props.theme.maxWidth};
   grid-gap: 20px;
   align-content: start;
 
