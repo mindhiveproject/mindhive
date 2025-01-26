@@ -74,6 +74,36 @@ export const GET_MY_AND_PUBLIC_RESOURCES = gql`
   }
 `;
 
+// get public and project resources
+export const GET_PUBLIC_AND_PROJECT_RESOURCES = gql`
+  query GET_PUBLIC_AND_PROJECT_RESOURCES($projectId: ID!) {
+    resources(
+      where: {
+        OR: [
+          { proposalBoard: { id: { equals: $projectId } } }
+          { isPublic: { equals: true } }
+        ]
+      }
+    ) {
+      id
+      title
+      content
+      slug
+      author {
+        id
+        username
+      }
+      parent {
+        id
+      }
+      isCustom
+      isPublic
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 // get specific resource
 export const GET_RESOURCE = gql`
   query GET_RESOURCE($id: ID!) {

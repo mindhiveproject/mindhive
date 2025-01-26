@@ -29,7 +29,7 @@ async function copyProposalBoard(
   const template = await context.query.ProposalBoard.findOne({
     where: { id: id },
     query:
-      "id slug title description settings sections { id title position cards { id type shareType title description settings position content resources { id } } }",
+      "id slug title description settings sections { id title position cards { id type shareType title description settings position content comment resources { id } } }",
   });
 
   // make a full copy
@@ -117,6 +117,7 @@ async function copyProposalBoard(
                 title: templateCard.title,
                 description: templateCard.description,
                 content: templateCard.content,
+                comment: templateCard.comment,
                 position: templateCard.position,
                 resources: {
                   connect: templateCard.resources,

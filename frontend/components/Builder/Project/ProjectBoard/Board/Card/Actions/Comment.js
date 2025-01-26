@@ -31,8 +31,6 @@ export default function Comment({ number, review }) {
     upvotedBy: review?.upvotedBy,
   };
 
-  console.log({ reviewProcessed });
-
   return (
     <div className="reviewerSection">
       <div className="reviewerTitle">

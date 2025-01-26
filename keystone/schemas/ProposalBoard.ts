@@ -142,6 +142,10 @@ export const ProposalBoard = list({
     usedInClass: relationship({
       ref: "Class.studentProposals",
     }),
+    resources: relationship({
+      ref: "Resource.proposalBoard",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

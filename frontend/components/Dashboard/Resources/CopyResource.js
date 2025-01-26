@@ -11,7 +11,7 @@ import ResourceForm from "./ResourceForm";
 export default function CopyResource({ selector, query, user }) {
   const router = useRouter();
 
-  const { id } = query;
+  const { id, project } = query;
   const { data, loading, error } = useQuery(GET_RESOURCE, {
     variables: { id },
   });
@@ -40,6 +40,14 @@ export default function CopyResource({ selector, query, user }) {
             id: resource?.id,
           },
         },
+        proposalBoard: project
+          ? {
+              connect: {
+                id: project,
+              },
+            }
+          : null,
+        isCustom: true,
       },
     },
     refetchQueries: [

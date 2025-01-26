@@ -97,6 +97,10 @@ export const Resource = list({
       ref: "Resource.parent",
       many: true,
     }),
+    proposalBoard: relationship({
+      ref: "ProposalBoard.resources",
+    }),
+    isCustom: checkbox({ isFilterable: true }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useMutation } from "@apollo/client";
-import { Checkbox } from "semantic-ui-react";
+import { Checkbox, Icon } from "semantic-ui-react";
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
 
@@ -15,6 +15,74 @@ import Status from "./Forms/Status";
 
 import CardType from "./Forms/Type";
 import Resources from "./Forms/Resources";
+
+function truncateHtml(html, wordLimit = 10) {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+
+  // Get text content
+  const text = div.textContent || div.innerText;
+  const words = text.trim().split(/\s+/);
+
+  if (words.length <= wordLimit) {
+    return html;
+  }
+
+  let charCount = 0;
+  for (let i = 0; i < wordLimit; i++) {
+    charCount += words[i].length + 1; // +1 for space
+  }
+
+  // Create temporary element to handle HTML
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+
+  let result = "";
+  let currentLength = 0;
+
+  function processNode(node) {
+    if (node.nodeType === 3) {
+      // Text node
+      const text = node.textContent;
+      const remaining = charCount - currentLength;
+
+      if (currentLength >= charCount) {
+        return false;
+      }
+
+      if (currentLength + text.length > charCount) {
+        const truncated = text.substr(0, remaining).trim();
+        result += truncated;
+        currentLength += truncated.length;
+        return false;
+      }
+
+      result += text;
+      currentLength += text.length;
+      return true;
+    }
+
+    // Element node
+    result += `<${node.tagName.toLowerCase()}`;
+
+    // Add attributes
+    Array.from(node.attributes).forEach((attr) => {
+      result += ` ${attr.name}="${attr.value}"`;
+    });
+
+    result += ">";
+
+    // Process child nodes
+    Array.from(node.childNodes).every((child) => processNode(child));
+
+    result += `</${node.tagName.toLowerCase()}>`;
+    return true;
+  }
+
+  Array.from(tempDiv.childNodes).every((node) => processNode(node));
+
+  return result + "...";
+}
 
 export default function ProposalCard({
   proposalCard,
@@ -318,7 +386,7 @@ export default function ProposalCard({
               </>
             )}
 
-            {proposalBuildMode && (
+            {/* {proposalBuildMode && (
               <>
                 <div className="cardHeader">Preview Linked Resources</div>
                 {inputs?.resources && inputs?.resources.length ? (
@@ -334,7 +402,7 @@ export default function ProposalCard({
                   <></>
                 )}
               </>
-            )}
+            )} */}
 
             {!proposalBuildMode && (
               <>
@@ -411,6 +479,47 @@ export default function ProposalCard({
                         inputs?.resources?.map((resource) => resource?.id) || []
                       }
                     />
+                    <>
+                      <div className="cardHeader">Preview Linked Resources</div>
+                      {inputs?.resources && inputs?.resources.length ? (
+                        <div className="resourcePreview">
+                          {inputs?.resources.map((resource) => (
+                            <div className="resourceBlockPreview">
+                              <div className="titleIcons">
+                                <div>
+                                  <h2>{resource?.title}</h2>
+                                </div>
+                                <div>
+                                  <a
+                                    href={`/dashboard/resources/view?id=${resource?.id}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    <Icon name="external alternate" />
+                                  </a>
+                                </div>
+                                <div>
+                                  <a
+                                    href={`/dashboard/resources/copy?id=${resource?.id}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    <Icon name="pencil alternate" />
+                                  </a>
+                                </div>
+                              </div>
+                              <div>
+                                {ReactHtmlParser(
+                                  truncateHtml(resource?.content?.main)
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                    </>
                   </div>
                 </>
               )}

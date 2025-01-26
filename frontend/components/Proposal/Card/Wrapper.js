@@ -2,7 +2,9 @@ import { useQuery, useMutation } from "@apollo/client";
 
 import { GET_CARD_CONTENT } from "../../Queries/Proposal";
 
+import BuilderProposalCard from "./MainBuilder";
 import ProposalCard from "./Main";
+
 import IndividualCard from "./Individual/Main";
 import OverviewOfIndividualCards from "./Overview/Main";
 
@@ -55,18 +57,33 @@ export default function CardWrapper({
         );
       }
     } else {
-      return (
-        <ProposalCard
-          user={user}
-          proposal={proposal}
-          cardId={cardId}
-          closeCard={closeCard}
-          proposalBuildMode={proposalBuildMode}
-          isPreview={isPreview}
-          proposalCard={proposalCard}
-          refreshPage={refetch}
-        />
-      );
+      if (proposalBuildMode) {
+        return (
+          <BuilderProposalCard
+            user={user}
+            proposal={proposal}
+            cardId={cardId}
+            closeCard={closeCard}
+            proposalBuildMode={proposalBuildMode}
+            isPreview={isPreview}
+            proposalCard={proposalCard}
+            refreshPage={refetch}
+          />
+        );
+      } else {
+        return (
+          <ProposalCard
+            user={user}
+            proposal={proposal}
+            cardId={cardId}
+            closeCard={closeCard}
+            proposalBuildMode={proposalBuildMode}
+            isPreview={isPreview}
+            proposalCard={proposalCard}
+            refreshPage={refetch}
+          />
+        );
+      }
     }
   }
 }

@@ -416,6 +416,12 @@ export const StyledProposal = styled.div`
       display: grid;
       grid-gap: 20px;
       .resourceBlockPreview {
+        .titleIcons {
+          display: grid;
+          align-items: center;
+          grid-gap: 10px;
+          grid-template-columns: 1fr auto auto;
+        }
         border: 1px solid #CCCCCC;
         border-radius: 4px;
         padding: 10px;
@@ -623,7 +629,7 @@ export const StyledProposal = styled.div`
     }
     .infoBoard {
       display: grid;
-      grid-gap: 15px;
+      grid-gap: 20px;
       align-content: baseline;
       border-radius: 0px 4px 4px 0px;
       margin: 10px;

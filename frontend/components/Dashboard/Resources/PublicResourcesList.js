@@ -50,7 +50,7 @@ export default function ResourcesList({ query, user }) {
           </Link>
 
           <div className="buttonLinks">
-            <Link
+            {/* <Link
               href={{
                 pathname: `/dashboard/resources/copy`,
                 query: {
@@ -60,7 +60,7 @@ export default function ResourcesList({ query, user }) {
               key={i}
             >
               <button>Customize</button>
-            </Link>
+            </Link> */}
 
             {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
               <Link

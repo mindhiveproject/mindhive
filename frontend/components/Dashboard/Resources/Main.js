@@ -1,4 +1,7 @@
 import Link from "next/link";
+
+import TeacherView from "./TeacherView";
+
 import AddResource from "./AddResource";
 import ViewResource from "./ViewResource";
 import CopyResource from "./CopyResource";
@@ -14,11 +17,13 @@ export default function ResourcesMain({ query, user }) {
 
   return (
     <StyledResource>
-      {user.permissions.map((p) => p?.name).includes("STUDENT") ? (
-        <></>
-      ) : (
+      {user.permissions.map((p) => p?.name).includes("TEACHER") && (
+        <TeacherView user={user} query={query} />
+      )}
+
+      {user.permissions.map((p) => p?.name).includes("ADMIN") && (
         <>
-          <h1>Recources center</h1>
+          <h1>Recources center for administrators</h1>
           <div className="header">
             <div className="menu">
               <Link href="/dashboard/resources">
