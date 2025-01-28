@@ -45,8 +45,6 @@ export default function Profile() {
     mentorPreferGroup &&
     mentorPreferClass &&
     interests;
-  
-  console.log(user);
 
   return (
     <>
