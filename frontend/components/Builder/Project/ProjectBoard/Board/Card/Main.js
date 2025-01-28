@@ -11,6 +11,7 @@ import useForm from "../../../../../../lib/useForm";
 import Navigation from "./Navigation/Main";
 import Assigned from "./Forms/Assigned";
 import JoditEditor from "../../../../../Jodit/Editor";
+import Resources from "./Forms/Resources";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 
@@ -222,7 +223,12 @@ export default function ProposalCard({
               </div>
 
               <div>
-                <div className="cardSubheader">Resources</div>
+                <Resources
+                  proposal={proposal}
+                  selectedResources={proposalCard?.resources || []}
+                />
+
+                {/* <div className="cardSubheader">Resources</div>
                 {proposalCard?.resources && proposalCard?.resources.length ? (
                   <div className="resourceLinks">
                     {proposalCard?.resources.map((resource) => {
@@ -258,7 +264,7 @@ export default function ProposalCard({
                   </div>
                 ) : (
                   <></>
-                )}
+                )} */}
               </div>
 
               <div className="proposalCardComments">

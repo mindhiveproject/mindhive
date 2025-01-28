@@ -27,7 +27,7 @@ export default function LinkClass({ classes, project, handleChange }) {
     ...myClasses,
   ];
 
-  const selectedClass = project?.usedInClass?.id;
+  const selectedClass = project?.class?.id;
 
   const selectedClassIncludingEmpty =
     selectedClass || "$$$-class-not-connected-$$$";
@@ -35,8 +35,8 @@ export default function LinkClass({ classes, project, handleChange }) {
   const onChange = (event, data) => {
     handleChange({
       target: {
-        name: "usedInClass",
-        value: { id: data?.value },
+        name: "class",
+        value: classes?.filter((cl) => cl?.id === data?.value)[0],
       },
     });
   };

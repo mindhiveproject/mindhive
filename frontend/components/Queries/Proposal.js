@@ -170,13 +170,6 @@ export const GET_CARD_CONTENT = gql`
         id
         title
         content
-        children {
-          id
-          title
-          author {
-            id
-          }
-        }
       }
     }
   }

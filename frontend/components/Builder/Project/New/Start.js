@@ -33,7 +33,7 @@ export default function StartProject({ query, user }) {
   const { inputs, handleChange } = useForm({
     projectName: "",
     collaborators: [{ id: user?.id }],
-    class: undefined,
+    class: studentClasses?.length ? studentClasses[0] : undefined,
   });
 
   // get the class template proposal ID that has to be copied
@@ -103,24 +103,34 @@ export default function StartProject({ query, user }) {
       </div>
       <div className="newProject">
         {!classTemplateProposalId ? (
-          <div className="modalEmpty">
-            <div className="title">
-              There are no project board templates in the class
-            </div>
-            <div className="subtitle">
-              To start a project, you need a project board template. Your
-              teacher may not have a project board template linked to this
-              class.
-            </div>
+          <>
+            <div className="modalEmpty">
+              <div className="title">
+                There are no project board templates in the class
+              </div>
+              <div className="subtitle">
+                To start a project, you need a project board template. Your
+                teacher may not have a project board template linked to this
+                class.
+              </div>
 
-            <Link
-              href={{
-                pathname: `/dashboard/develop/studies`,
-              }}
-            >
-              <div className="backBtn">Go back home</div>
-            </Link>
-          </div>
+              <div>Select the class</div>
+
+              <LinkClass
+                classes={studentClasses}
+                project={inputs}
+                handleChange={handleChange}
+              />
+
+              <Link
+                href={{
+                  pathname: `/dashboard/develop/studies`,
+                }}
+              >
+                <div className="backBtn">Go back home</div>
+              </Link>
+            </div>
+          </>
         ) : (
           <div className="modal">
             <StyledInput>
@@ -143,7 +153,7 @@ export default function StartProject({ query, user }) {
                   <div className="title">Select the class</div>
                   <LinkClass
                     classes={studentClasses}
-                    study={inputs}
+                    project={inputs}
                     handleChange={handleChange}
                   />
                 </div>
