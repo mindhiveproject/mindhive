@@ -45,6 +45,8 @@ export default function Profile() {
     mentorPreferGroup &&
     mentorPreferClass &&
     interests;
+  
+  console.log(user);
 
   return (
     <>
@@ -52,7 +54,7 @@ export default function Profile() {
         <div>
           <div className="h36">
             Welcome{isProfileComplete && ` back`}
-            {firstName ? `, ${firstName}` : `, MindHive User`}
+            {user.username ? `, ${user.username}` : `, MindHive User`}
           </div>
           <div className="p20">
             You can edit your Profile, schedule time with mentors, stay
