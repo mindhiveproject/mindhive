@@ -25,6 +25,7 @@ optional_params = {
 import numpy as np
 import pandas as pd
 import js_workspace as data
+import plotly.io as pio
 
 data = data.to_py()
 df = pd.DataFrame(data)
@@ -54,6 +55,12 @@ def agg_func(x):
         return non_nan_values.iloc[0]
 # agg_func = lambda x: x.dropna().iloc[0]
 
+# Style settings for Plotly; setting to MH colors
+custom_colors = ["#265390", "#F2BE42", "#B9261A", "#8A2CF6", "#336F8A", "#274E5B"]
+pio.templates["custom"] = pio.templates["plotly"] 
+pio.templates["custom"]["layout"]["colorway"] = custom_colors
+pio.templates.default = "custom"
+
 # Group by participant ID and aggregate data
 if userDefWide:
   grouped_df = df
@@ -81,8 +88,18 @@ if Group=='':
                       trendline="ols", 
                       title = graphTitle if graphTitle != '' else f"{X} vs {Y}",
                       labels=axis_title, 
-                      template="seaborn",
+                      template="custom",
                       **{k: v for k, v in optional_params.items() if v})
+    
+    # Un-comment this section and comment out prev definition if opting to use a Plotly set theme (using: D3)
+    # fig = px.scatter(grouped_df, x=X, y=Y, 
+    #                   trendline="ols", 
+    #                   title = graphTitle if graphTitle != '' else f"{X} vs {Y}",
+    #                   labels=axis_title, 
+    #                   color_discrete_sequence=px.colors.qualitative.D3,
+    #                   **{k: v for k, v in optional_params.items() if v}) 
+
+    fig.update_traces(marker=dict(size=12))  
     fig.update_layout(showlegend=False)
 
 
@@ -91,8 +108,17 @@ if Group=='':
     fig = px.scatter(grouped_df, x=X, y=Y,
                       title=graphTitle if graphTitle != '' else f"{X} vs {Y}",
                       labels=axis_title, 
-                      template="seaborn",
+                      template="custom",
                       **{k: v for k, v in optional_params.items() if v})
+
+    # Un-comment this section and comment out prev definition if opting to use a Plotly set theme (using: D3)
+    # fig = px.scatter(grouped_df, x=X, y=Y,
+    #                   title=graphTitle if graphTitle != '' else f"{X} vs {Y}",
+    #                   labels=axis_title, 
+    #                   color_discrete_sequence=px.colors.qualitative.D3,
+    #                   **{k: v for k, v in optional_params.items() if v})
+
+    fig.update_traces(marker=dict(size=12))
     fig.update_layout(showlegend=False)
 else:
   if trendline:
@@ -107,8 +133,19 @@ else:
                       title=graphTitle if graphTitle != '' else f"{X} vs {Y}",
                       color=Group,
                       labels=axis_title, 
-                      template="seaborn",
+                      template="custom",
                       **{k: v for k, v in optional_params.items() if v})
+
+    # Un-comment this section and comment out prev definition if opting to use a Plotly set theme (using: D3)
+    # fig = px.scatter(grouped_df, x=X, y=Y, 
+    #                   trendline="ols", 
+    #                   title=graphTitle if graphTitle != '' else f"{X} vs {Y}",
+    #                   color=Group,
+    #                   labels=axis_title, 
+    #                   color_discrete_sequence=px.colors.qualitative.D3,
+    #                   **{k: v for k, v in optional_params.items() if v})
+
+    fig.update_traces(marker=dict(size=12))
     fig.update_layout(showlegend=True)
   else:
     print('group-NOTaddtrendline')
@@ -116,17 +153,38 @@ else:
                       color=Group, 
                       title=graphTitle if graphTitle != '' else f"{X} vs {Y}",
                       labels=axis_title, 
-                      template="seaborn",
+                      template="custom",
                       **{k: v for k, v in optional_params.items() if v})
+    
+    # Un-comment this section and comment out prev definition if opting to use a Plotly set theme (using: D3)
+    # fig = px.scatter(grouped_df, x=X, y=Y, 
+    #                   color=Group, 
+    #                   title=graphTitle if graphTitle != '' else f"{X} vs {Y}",
+    #                   labels=axis_title, 
+    #                   color_discrete_sequence=px.colors.qualitative.D3,
+    #                   **{k: v for k, v in optional_params.items() if v})
+
+    fig.update_traces(marker=dict(size=12))
     fig.update_layout(showlegend=True)  
 
 fig.update_layout(legend_title_text= None if legend_title_text == '' else legend_title_text)
+fig.update_layout(title_font=dict(size=20))
+fig.update_layout(legend=dict(font=dict(size=20)))
+fig.update_layout(
+    xaxis=dict(title_font=dict(size=18)),
+    yaxis=dict(title_font=dict(size=18)),
+    font=dict(size=18)  # Set overall font size
+)
   
 fig.update_xaxes(range=[None if xRangeMin == '' else xRangeMin, 
                         None if xRangeMax == '' else xRangeMax])  
 
 fig.update_yaxes(range=[None if yRangeMin == '' else yRangeMin, 
                         None if yRangeMax == '' else yRangeMax])
+
+  
+fig_html = fig.to_html()
+js.render_html(html_output, fig_html)
 `;
   const histogramCode = `
 #~ OPTIONS ~#
@@ -144,11 +202,19 @@ optional_params = {
 import numpy as np
 import pandas as pd
 import js_workspace as data
+import plotly.io as pio
 
 data = data.to_py()
 df = pd.DataFrame(data)
 
 df[columns] = df[columns].apply(pd.to_numeric, errors='coerce')
+print(columns)
+
+# Style settings for Plotly; setting to MH colors
+custom_colors = ["#265390", "#F2BE42", "#B9261A", "#8A2CF6", "#336F8A", "#274E5B"]
+pio.templates["custom"] = pio.templates["plotly"] 
+pio.templates["custom"]["layout"]["colorway"] = custom_colors
+pio.templates.default = "custom"
 
 df_plot = pd.DataFrame(dict(
     series=np.concatenate([[i for j in range(len(df[i]))] for i in columns]), 
@@ -157,25 +223,51 @@ df_plot = pd.DataFrame(dict(
 
 fig = px.histogram(df_plot, 
                    x="data", 
-#                   nbins=nbins, 
                    color="series", 
                    barmode="overlay",
+                   template="custom", 
                    **{k: v for k, v in optional_params.items() if v}
                   )
 
-fig.update_layout(title=graphTitle if graphTitle != '' else f"Histogram of {columns}",
+# Un-comment this section and comment out prev  definition if opting to use a Plotly set theme (using: D3)
+# fig = px.histogram(df_plot, 
+#                    x="data", 
+#                    color="series", 
+#                    barmode="overlay",
+#                    color_discrete_sequence=px.colors.qualitative.D3,
+#                    **{k: v for k, v in optional_params.items() if v}
+#                   )
+
+fig.update_layout(title=graphTitle if graphTitle != '' else f"Histogram of {', '.join(columns)}",
                   bargap=bargap,
-                  xaxis_title_text=xLabel if xLabel != '' else f"{columns}",
+                  xaxis_title_text=xLabel if xLabel != '' else f"{', '.join(columns)}",
                   yaxis_title_text=yLabel if yLabel != '' else "Count"
                   )
 
+fig.update_layout(title_font=dict(size=20))
+fig.update_layout(legend=dict(font=dict(size=20)))
 fig.update_layout(legend_title_text= None if legend_title_text == '' else legend_title_text)
+
 
 fig.update_xaxes(range=[None if xRangeMin == '' else xRangeMin, 
                         None if xRangeMax == '' else xRangeMax])  
 
 fig.update_yaxes(range=[None if yRangeMin == '' else yRangeMin, 
                         None if yRangeMax == '' else yRangeMax])
+
+fig.update_xaxes(
+    range=[None if xRangeMin == '' else xRangeMin, 
+           None if xRangeMax == '' else xRangeMax],
+    tickmode='linear',
+    tick0=0,
+    dtick=5,
+    ticks='outside',
+    tickwidth=1,
+    ticklen=5
+)
+  
+fig_html = fig.to_html()
+js.render_html(html_output, fig_html)
 `;
   const barGraphCode = `
 # You can define you labels bellow (add as many element in the python-formated
@@ -290,7 +382,9 @@ colors = generate_complementary_colors(base_color, n)
 df_bar = pd.DataFrame({
     'Categories': categories,
     'Y': average_percentages,
-    'Error Bars': error_bars
+    'Error Bars': error_bars,
+    'Lower Range': error_bars[0],
+    'Upper Range': error_bars[1]
 })
 
 # If errBar is empty, do not include error bars
@@ -304,13 +398,32 @@ fig = px.bar(df_bar,
               color_discrete_sequence=colors,
               labels={'Categories': xLabel if xLabel != "" else "Categories",
                       'Y': yLabel if yLabel != "" else 'Average value'
-                      })
+                      },
+               hover_data={  # Add custom hover information
+                    'Categories': False,
+                    'Y': True,
+                    'Error Bars': False,
+                    'Lower Range': ':.2f',  # Format the lower range
+                    'Upper Range': ':.2f'   # Format the upper range
+                }
+            )
 
 fig.update_layout(
     title=title,
     legend_title=legend_title,
     yaxis_range=yaxis_range
 )
+fig.update_layout(title_font=dict(size=20))
+fig.update_layout(legend=dict(font=dict(size=20)))
+fig.update_layout(legend_title_text= None if legend_title_text == '' else legend_title_text)
+fig.update_layout(
+    xaxis=dict(title_font=dict(size=18)),
+    yaxis=dict(title_font=dict(size=18)),
+    font=dict(size=18)  # Set overall font size
+)
+  
+fig_html = fig.to_html()
+js.render_html(html_output, fig_html)
 `;
 
   const sectionCodeEnd = `  
