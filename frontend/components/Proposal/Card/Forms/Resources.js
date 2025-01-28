@@ -101,7 +101,7 @@ export default function Resources({
                       </a>
                     ) : (
                       <a
-                        href={`/dashboard/resources/copy?id=${resource?.id}&board=${proposal?.id}`}
+                        href={`/dashboard/resources/copy?id=${resource?.id}&project=${proposal?.id}`}
                         target="_blank"
                         rel="noreferrer"
                       >
