@@ -23,7 +23,7 @@ export default function ResourcesMain({ query, user }) {
 
       {user.permissions.map((p) => p?.name).includes("ADMIN") && (
         <>
-          <h1>Recources center for administrators</h1>
+          <h1>Resources center for administrators</h1>
           <div className="header">
             <div className="menu">
               <Link href="/dashboard/resources">
