@@ -80,7 +80,7 @@ export const GET_PUBLIC_AND_PROJECT_RESOURCES = gql`
     resources(
       where: {
         OR: [
-          { proposalBoard: { id: { equals: $projectId } } }
+          { proposalBoard: { some: { id: { equals: $projectId } } } }
           { isPublic: { equals: true } }
         ]
       }
