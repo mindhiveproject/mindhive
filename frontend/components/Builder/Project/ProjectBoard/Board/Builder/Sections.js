@@ -146,6 +146,7 @@ class Sections extends Component {
                 adminMode={this.props.adminMode}
                 isPreview={this.props.isPreview}
                 settings={settings}
+                submitStatuses={this.props.submitStatuses}
               />
             </Draggable>
           ))}

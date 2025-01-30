@@ -1,12 +1,14 @@
 import Link from "next/link";
 
-export default function Card({ project }) {
+export default function Card({
+  stage,
+  project,
+  status,
+  isOpenForCommentsQuery,
+}) {
   const imageURL = null;
 
-  let status;
-  if (project?.submitProposalStatus === "SUBMITTED") {
-    status = "SUBMITTED_AS_PROPOSAL";
-  }
+  const isOpenForComments = project[isOpenForCommentsQuery];
 
   const shortenTitle = (title) => {
     if (title?.length <= 48) {
@@ -21,7 +23,7 @@ export default function Card({ project }) {
     <Link
       href={{
         pathname: `/dashboard/review/project`,
-        query: { id: project?.id },
+        query: { id: project?.id, stage: stage },
       }}
       className="customlink"
     >
@@ -73,11 +75,17 @@ export default function Card({ project }) {
                 <div>Comment</div>
               </div>
             )} */}
-
-            <div className="option">
-              <img src="/assets/icons/review/comment.svg" />
-              <div>Comment</div>
-            </div>
+            {isOpenForComments ? (
+              <div className="option">
+                <img src="/assets/icons/review/comment.svg" />
+                <div>Comment</div>
+              </div>
+            ) : (
+              <div className="option">
+                <img src="/assets/icons/proposal/status-completed.svg" />
+                <div>Locked</div>
+              </div>
+            )}
           </div>
         </div>
       </div>

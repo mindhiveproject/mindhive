@@ -15,6 +15,7 @@ export default function Card({
   onDeleteCard,
   settings,
   boardId,
+  sectionSummary,
 }) {
   const router = useRouter();
   let status = card?.settings?.status ? card.settings.status : "Not started";
@@ -112,9 +113,17 @@ export default function Card({
               </div>
             </div>
             {card?.settings?.includeInReport && (
-              <div className="card-public-status">
-                <img src="/assets/icons/status/publicTemplate.svg" />
-              </div>
+              <>
+                {sectionSummary?.isLocked ? (
+                  <div className="card-public-status-submitted">
+                    <img src="/assets/icons/status/publicTemplatesubmitted.svg" />
+                  </div>
+                ) : (
+                  <div className="card-public-status">
+                    <img src="/assets/icons/status/publicTemplate.svg" />
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

@@ -625,7 +625,7 @@ export const StyledProposal = styled.div`
     .textBoard {
       display: grid;
       grid-gap: 10px;
-      margin: 15px 10px 0px 20px;
+      margin: 15px 10px 100px 20px;
     }
     .infoBoard {
       display: grid;
@@ -866,6 +866,16 @@ export const StyledProposalCard = styled.div`
     .card-public-status {
       display: grid;
       background: #f9d978;
+      height: 100%;
+      width: 40px;
+      align-items: center;
+      justify-items: center;
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+    .card-public-status-submitted {
+      display: grid;
+      background: #def8fb;
       height: 100%;
       width: 40px;
       align-items: center;

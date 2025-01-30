@@ -24,6 +24,7 @@ export default function ProposalCard({
   proposal,
   cardId,
   refreshPage,
+  isLocked,
 }) {
   // check whether the card is locked - after 1 hour it is allowed to edit
   const releaseTime =
@@ -199,15 +200,19 @@ export default function ProposalCard({
                   </div>
 
                   <div className="jodit">
-                    <JoditEditor
-                      content={content?.current}
-                      setContent={(newContent) =>
-                        handleContentChange({
-                          contentType: "content",
-                          newContent,
-                        })
-                      }
-                    />
+                    {isLocked ? (
+                      ReactHtmlParser(content?.current)
+                    ) : (
+                      <JoditEditor
+                        content={content?.current}
+                        setContent={(newContent) =>
+                          handleContentChange({
+                            contentType: "content",
+                            newContent,
+                          })
+                        }
+                      />
+                    )}
                   </div>
                 </>
               )}

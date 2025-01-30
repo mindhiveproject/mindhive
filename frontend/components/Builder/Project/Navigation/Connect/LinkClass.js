@@ -11,8 +11,7 @@ export default function LinkClass({ classes, project, handleChange }) {
     teacherIn: [],
     mentorIn: [],
   };
-  const myClassObjects =
-    [...user?.studentIn, ...user?.teacherIn, ...user?.mentorIn] || [];
+  const myClassObjects = [...user?.studentIn] || [];
   const myClasses = myClassObjects.map((cl) => ({
     key: cl.id,
     text: cl.title,

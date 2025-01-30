@@ -28,15 +28,34 @@ const Section = ({
   adminMode,
   isPreview,
   settings,
+  submitStatuses,
 }) => {
   const { cards } = section;
-  const numOfCards = cards.length;
-  // const sortedCards = sortBy(cards, item => item.position);
+
+  const actionCards = cards
+    ?.filter(
+      (card) =>
+        card?.type === "ACTION_SUBMIT" ||
+        card?.type === "ACTION_PEER_FEEDBACK" ||
+        card?.type === "ACTION_COLLECTING_DATA" ||
+        card?.type === "ACTION_PROJECT_REPORT"
+    )
+    .map((c) => c?.type);
+  const submissionStage = (actionCards?.length && actionCards[0]) || undefined;
+  const submissionStatus = submitStatuses[submissionStage];
 
   const [cardName, setCardName] = useState("");
   const [createCard, createCardState] = useMutation(CREATE_CARD);
   const [updateCard, updateCardState] = useMutation(UPDATE_CARD_POSITION);
   const [deleteCard, deleteCardState] = useMutation(DELETE_CARD);
+
+  const sectionSummary = {
+    submissionStage,
+    submissionStatus,
+    isLocked: submissionStatus === "SUBMITTED",
+    numOfCards: cards?.length,
+    numOfCardsCompleted: cards?.length,
+  };
 
   const onUpdateCard = (payload, sectionId, position, isDiffColumn) => {
     const { id, title, content, isEditedBy, assignedTo, settings } = payload;
@@ -317,7 +336,8 @@ const Section = ({
         </div>
         {!isPreview && (
           <div className="infoLine">
-            {numOfCards} card{numOfCards == 1 ? "" : "s"}
+            {sectionSummary?.numOfCards} card
+            {sectionSummary?.numOfCards == 1 ? "" : "s"}
           </div>
         )}
       </div>
@@ -377,6 +397,7 @@ const Section = ({
                     adminMode={adminMode}
                     isPreview={isPreview}
                     settings={settings}
+                    sectionSummary={sectionSummary}
                   />
                 );
               }

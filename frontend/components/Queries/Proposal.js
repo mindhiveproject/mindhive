@@ -184,6 +184,12 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
       description
       slug
       isSubmitted
+      submitProposalStatus
+      submitProposalOpenForComments
+      peerFeedbackStatus
+      peerFeedbackOpenForComments
+      projectReportStatus
+      projectReportOpenForComments
       checklist
       author {
         username

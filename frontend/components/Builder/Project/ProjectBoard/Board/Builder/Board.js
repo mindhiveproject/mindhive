@@ -25,6 +25,12 @@ const Board = ({
   });
   const proposal = data?.proposalBoard || undefined;
 
+  const submitStatuses = {
+    ACTION_SUBMIT: proposal?.submitProposalStatus,
+    ACTION_PEER_FEEDBACK: proposal?.peerFeedbackStatus,
+    ACTION_PROJECT_REPORT: proposal?.projectReportStatus,
+  };
+
   const [sections, setSections] = useState([]);
   const [createSection, createSectionState] = useMutation(CREATE_SECTION);
   const [updateSection, updateSectionState] = useMutation(UPDATE_SECTION);
@@ -62,6 +68,7 @@ const Board = ({
       proposalBuildMode={proposalBuildMode}
       adminMode={adminMode}
       isPreview={isPreview}
+      submitStatuses={submitStatuses}
     />
   );
 };
