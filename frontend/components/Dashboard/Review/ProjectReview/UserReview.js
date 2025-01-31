@@ -14,7 +14,14 @@ import { TemplateQuestions } from "./Review/Template";
 import { useEffect } from "react";
 
 // getting the state of the user review
-export default function UserReview({ query, user, tab, project, canReview }) {
+export default function UserReview({
+  query,
+  user,
+  tab,
+  project,
+  status,
+  canReview,
+}) {
   // try to get the user review
   const { data, loading, error } = useQuery(GET_REVIEW, {
     variables: {
@@ -28,15 +35,15 @@ export default function UserReview({ query, user, tab, project, canReview }) {
   const reviews = data?.reviews || [];
   const review = reviews.length ? reviews[0] : {};
 
-  // TODO make it dynamic later
-  const defaultContent = TemplateQuestions["SUBMITTED_AS_PROPOSAL"];
+  // TODO to make templates for other stages of review
+  const defaultContent = TemplateQuestions[status];
 
   const { inputs, handleChange, resetForm, handleMultipleUpdate } = useForm({
     id: review?.id,
     content: defaultContent,
     authorId: user?.id,
     projectId: project?.id,
-    stage: "SUBMITTED_AS_PROPOSAL",
+    stage: status,
   });
 
   useEffect(() => {
@@ -115,12 +122,7 @@ export default function UserReview({ query, user, tab, project, canReview }) {
             >
               <p>
                 Comments (
-                {
-                  project?.reviews?.filter(
-                    (r) => r?.stage === "SUBMITTED_AS_PROPOSAL"
-                  ).length
-                }
-                )
+                {project?.reviews?.filter((r) => r?.stage === status).length})
               </p>
             </Link>
           </div>
@@ -131,9 +133,8 @@ export default function UserReview({ query, user, tab, project, canReview }) {
               projectId={project?.id}
               user={user}
               reviews={
-                project?.reviews?.filter(
-                  (review) => review.stage === "SUBMITTED_AS_PROPOSAL"
-                ) || []
+                project?.reviews?.filter((review) => review.stage === status) ||
+                []
               }
             />
           )}
@@ -143,7 +144,7 @@ export default function UserReview({ query, user, tab, project, canReview }) {
           <Questions
             review={review}
             reviewContent={inputs?.content || []}
-            stage={"SUBMITTED_AS_PROPOSAL"}
+            stage={status}
             handleItemChange={handleItemChange}
           />
         )}

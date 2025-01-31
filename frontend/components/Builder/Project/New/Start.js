@@ -26,6 +26,8 @@ export default function StartProject({ query, user }) {
     ...user?.studentIn.map((cl) => cl?.id),
   ];
 
+  const isStudent = user?.permissions.map((p) => p?.name).includes("STUDENT");
+
   const { data: proposalData } = useQuery(DEFAULT_PROJECT_BOARDS);
   const defaultProposalBoardId =
     proposalData?.proposalBoards?.map((p) => p?.id)[0] || [];
@@ -102,7 +104,7 @@ export default function StartProject({ query, user }) {
         </div>
       </div>
       <div className="newProject">
-        {!classTemplateProposalId ? (
+        {!classTemplateProposalId && isStudent ? (
           <>
             <div className="modalEmpty">
               <div className="title">
@@ -114,13 +116,16 @@ export default function StartProject({ query, user }) {
                 class.
               </div>
 
-              <div>Select the class</div>
-
-              <LinkClass
-                classes={studentClasses}
-                project={inputs}
-                handleChange={handleChange}
-              />
+              {studentClasses && studentClasses.length > 1 && (
+                <div>
+                  <div className="title">Select the class</div>
+                  <LinkClass
+                    classes={studentClasses}
+                    project={inputs}
+                    handleChange={handleChange}
+                  />
+                </div>
+              )}
 
               <Link
                 href={{

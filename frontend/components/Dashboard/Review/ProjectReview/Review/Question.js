@@ -1,4 +1,9 @@
-import { Dropdown } from "semantic-ui-react";
+import {
+  DropdownMenu,
+  DropdownItem,
+  DropdownDivider,
+  Dropdown,
+} from "semantic-ui-react";
 
 import ReactStars from "react-rating-stars-component"; // https://www.npmjs.com/package/react-rating-stars-component
 import TaskSelector from "./TaskSelector";
@@ -14,6 +19,15 @@ export default function Question({ stage, item, handleItemChange, answer }) {
     }));
 
     return (
+      // <Dropdown>
+      //   <DropdownMenu>
+      //     {options.map((option) => (
+      //       <DropdownItem>
+      //         <div></div>
+      //       </DropdownItem>
+      //     ))}
+      //   </DropdownMenu>
+      // </Dropdown>
       <Dropdown
         placeholder="Select an option"
         fluid

@@ -32,6 +32,29 @@ export default function CardWrapper({
 
   const proposalCard = data?.proposalCard || {};
 
+  const submitStatuses = {
+    ACTION_SUBMIT: proposal?.submitProposalStatus,
+    ACTION_PEER_FEEDBACK: proposal?.peerFeedbackStatus,
+    ACTION_PROJECT_REPORT: proposal?.projectReportStatus,
+  };
+
+  const sectionsWithCard = proposal?.sections?.filter((section) =>
+    section?.cards?.map((c) => c?.id).includes(cardId)
+  );
+  const section = sectionsWithCard?.length && sectionsWithCard[0];
+  const actionCards = section?.cards
+    ?.filter(
+      (card) =>
+        card?.type === "ACTION_SUBMIT" ||
+        card?.type === "ACTION_PEER_FEEDBACK" ||
+        card?.type === "ACTION_COLLECTING_DATA" ||
+        card?.type === "ACTION_PROJECT_REPORT"
+    )
+    .map((c) => c?.type);
+  const submissionStage = (actionCards?.length && actionCards[0]) || undefined;
+  const submissionStatus = submitStatuses[submissionStage];
+  const isLocked = submissionStatus === "SUBMITTED";
+
   // TODO also check whether the teacher/mentor is a teacher/mentor of the particular class
   const hasOverviewAccess =
     user?.permissions.map((p) => p?.name).includes("TEACHER") ||
@@ -100,6 +123,7 @@ export default function CardWrapper({
           proposalBuildMode={proposalBuildMode}
           isPreview={isPreview}
           refreshPage={refetch}
+          isLocked={isLocked}
         />
       );
     }

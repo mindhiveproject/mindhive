@@ -30,19 +30,27 @@ export default function ProjectsBoard({
     "Showing all projects"
   );
 
-  let whereStatus;
+  let whereStatus, status, isOpenForCommentsQuery;
   switch (selector) {
     case "proposals":
       whereStatus = { submitProposalStatus: { in: ["SUBMITTED"] } };
+      status = "SUBMITTED_AS_PROPOSAL";
+      isOpenForCommentsQuery = "submitProposalOpenForComments";
       break;
     case "inreview":
       whereStatus = { peerFeedbackStatus: { in: ["SUBMITTED"] } };
+      status = "PEER_REVIEW";
+      isOpenForCommentsQuery = "peerFeedbackOpenForComments";
       break;
     case "report":
       whereStatus = { projectReportStatus: { in: ["SUBMITTED"] } };
+      status = "PROJECT_REPORT";
+      isOpenForCommentsQuery = "projectReportOpenForComments";
       break;
     default:
       whereStatus = { submitProposalStatus: { in: ["SUBMITTED"] } };
+      status = "SUBMITTED_AS_PROPOSAL";
+      isOpenForCommentsQuery = "submitProposalOpenForComments";
   }
 
   const { data, loading, error } = useQuery(PROJECTS_QUERY, {
@@ -187,7 +195,12 @@ export default function ProjectsBoard({
 
       <div className="cardsArea">
         {filteredProjects.map((project) => (
-          <Card project={project} />
+          <Card
+            stage={selector}
+            project={project}
+            status={status}
+            isOpenForCommentsQuery={isOpenForCommentsQuery}
+          />
         ))}
       </div>
     </div>
