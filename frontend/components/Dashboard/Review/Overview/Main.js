@@ -4,13 +4,11 @@ import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import { GET_USER_CLASSES } from "../../../Queries/User";
 
-// import { STUDIES_TO_REVIEW } from "../../../Queries/Study";
-
 import StudiesBoard from "./Studies/Main";
 import ProjectsBoard from "./Projects/Main";
 
 export default function Overview({ query, user }) {
-  const { selector } = query;
+  const selector = query?.selector || "proposals";
 
   // get all classes of a particular user (including classes from the class network)
   const { data: classesData } = useQuery(GET_USER_CLASSES);
@@ -33,14 +31,6 @@ export default function Overview({ query, user }) {
   const allClasses = [...myClasses, ...networkClasses];
   const allClassIds = allClasses.map((theclass) => theclass.id);
   const allUniqueClassIds = [...new Set([...allClassIds])];
-
-  // const { data, loading, error } = useQuery(STUDIES_TO_REVIEW, {
-  //   variables: {
-  //     classIds: allUniqueClassIds,
-  //   },
-  // });
-
-  // const studies = data?.studies || [];
 
   return (
     <div className="overview">

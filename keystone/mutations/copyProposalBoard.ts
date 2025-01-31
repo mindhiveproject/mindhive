@@ -77,11 +77,14 @@ async function copyProposalBoard(
               },
             }
           : null,
-        resources: template?.resources
-          ? {
-              connect: template?.resources,
-            }
-          : null,
+        resources:
+          template?.resources?.length > 0
+            ? {
+                connect: template.resources.map((resource) => ({
+                  id: resource.id,
+                })),
+              }
+            : null,
         isTemplate: isTemplate,
         ...argumentsToCopy,
       },
@@ -124,9 +127,14 @@ async function copyProposalBoard(
                 content: templateCard.content,
                 comment: templateCard.comment,
                 position: templateCard.position,
-                resources: {
-                  connect: templateCard.resources,
-                },
+                resources:
+                  templateCard.resources.length > 0
+                    ? {
+                        connect: templateCard.resources?.map((resource) => ({
+                          id: resource.id,
+                        })),
+                      }
+                    : null,
                 settings: templateCard.settings,
               },
             },

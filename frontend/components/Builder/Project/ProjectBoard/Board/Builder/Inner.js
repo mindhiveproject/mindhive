@@ -110,6 +110,7 @@ class Inner extends Component {
             adminMode={this.props.adminMode}
             isPreview={this.props.isPreview}
             settings={board?.settings}
+            submitStatuses={this.props.submitStatuses}
           />
         </div>
         {!this.props.isPreview && board?.settings?.allowAddingSections && (
