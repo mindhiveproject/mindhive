@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import {
   MessageHeader,
@@ -35,9 +35,10 @@ export default function StateManager({
 }) {
   const [isRunning, setIsRunning] = useState(false);
   const [output, setOutput] = useState("");
-
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [runCodeCallback, setRunCodeCallback] = useState(null);
 
+  
   const handleClick = (e, titleProps) => {
     const { index } = titleProps;
     const newIndex = activeIndex === index ? -1 : index;
@@ -75,6 +76,22 @@ export default function StateManager({
     }
   };
 
+  const handleContentChangeWrapper = ({ newContent }) => {
+    if (newContent.code !== undefined) {
+      handleContentChange({ newContent });
+    }
+    if (newContent.selectors !== undefined) {
+      handleContentChange({ newContent });
+    }
+    if (newContent.type !== undefined) {
+      handleContentChange({ newContent });
+    }
+  };
+
+  const registerRunCodeCallback = useCallback((callback) => {
+    setRunCodeCallback(() => callback);
+  }, []);
+
   // Define different templates or components for each type of graph
   const AxisTemplateMap = {
     ABDesign: AxesABDesign,
@@ -94,11 +111,15 @@ export default function StateManager({
   const copyToClipboard = async () => {
     try {
       // Retrieve the variable from Pyodide
-      const variableValue = await pyodide.runPythonAsync('fig_html');
-      console.log("variableValue", variableValue);
-      // Copy the variable value to the clipboard
-      await navigator.clipboard.writeText(variableValue);
-      alert('Copied to clipboard!');
+      try {
+        const variableValue = await pyodide.runPythonAsync('fig_html');
+        console.log("variableValue", variableValue);
+        // Copy the variable value to the clipboard
+        await navigator.clipboard.writeText(variableValue);
+        alert('Copied to clipboard!');
+      } catch (error) {
+        console.error('Failed to retrieve variable: ', error);
+      }
     } catch (error) {
       console.error('Failed to copy: ', error);
     }
@@ -141,10 +162,10 @@ export default function StateManager({
               variables={variablesToDisplay}
               code={code}
               pyodide={pyodide}
-              runCode={runCode}
+              runCode={runCodeCallback}
               sectionId={sectionId}
               selectors={selectors}
-              handleContentChange={handleContentChange}
+              handleContentChange={handleContentChangeWrapper}
             />
             <div className="dashboardContainer">
               <OptionsComponent

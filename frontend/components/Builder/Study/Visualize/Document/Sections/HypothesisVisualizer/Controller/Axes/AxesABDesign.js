@@ -1,59 +1,44 @@
 import React, { useState } from "react";
-import {
-  Dropdown,
-  DropdownMenu,
-  Icon,
-  AccordionTitle,
-  AccordionContent,
-  Accordion,
-} from "semantic-ui-react";
-
-import SelectMultiple from "../Fields/SelectMultiple";
 import SelectOne from "../Fields/SelectOne";
 
-export default function Axes({
-  type,
-  variables,
-  code,
-  pyodide,
-  runCode,
+const Axes = ({ 
   sectionId,
-  selectors,
   handleContentChange,
-}) {
-  const [selectedDataFormat, setSelectedDataFormat] = useState(
-    selectors["dataFormat"] || "long"
-  );
+  runCode, 
+  pyodide,
+  selectors
+}) => {
+  const [groupNb, setGroupNb] = useState(2); // Default to 2 groups
+  const [groupLabels, setGroupLabels] = useState({ group1: '', group2: '' });
 
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const handleGroupNbChange = (e) => {
+    const newGroupNb = parseInt(e.target.value, 10);
+    setGroupNb(newGroupNb);
 
-  const handleClick = (e, titleProps) => {
-    const { index } = titleProps;
-    const newIndex = activeIndex === index ? -1 : index;
-    setActiveIndex(newIndex);
+    // Update group labels state
+    const newGroupLabels = {};
+    for (let i = 1; i <= newGroupNb; i++) {
+      newGroupLabels[`group${i}`] = groupLabels[`group${i}`] || '';
+    }
+    setGroupLabels(newGroupLabels);
   };
 
+  const handleGroupLabelChange = (e, group) => {
+    setGroupLabels({ ...groupLabels, [group]: e.target.value });
+  };
+  
   const significanceOptions = [
     { value: "non-significant", text: "No significance" },
     { value: "significant", text: "Significant results" },
   ];
 
-  const resourcesList = [
-    {
-      title: "What is a Bar Plot?",
-      alt: "External link",
-      img: "/assets/icons/visualize/externalNewTab.svg",
-      link: "https://datavizcatalogue.com/methods/bar_chart.html",
-    },
-  ];
-
   const connectSelectorsCode = `
 html_output = js.document.getElementById('figure-${sectionId}')
-#groupA = js.document.getElementById('groupA-${sectionId}').value
-groupA = None if js.document.getElementById("groupA-${sectionId}") == None else js.document.getElementById("groupA-${sectionId}").value
+${Object.keys(groupLabels).map(group => `
+${group} = None if js.document.getElementById("${group}-${sectionId}") == None else js.document.getElementById("${group}-${sectionId}").value
+`).join('')}
 
-#groupB = js.document.getElementById('groupB-${sectionId}').value
-groupB = None if js.document.getElementById("groupB-${sectionId}") == None else js.document.getElementById("groupB-${sectionId}").value
+group_nb = ${Object.keys(groupLabels).length}
 
 n_samples_element = js.document.getElementById('n_samples-${sectionId}')
 n_samples = None if n_samples_element is None or n_samples_element.value == '' else int(n_samples_element.value)
@@ -67,30 +52,26 @@ effect_size_element = js.document.getElementById('effect_size-${sectionId}')
 effect_size = None if effect_size_element is None or effect_size_element.value == '' else float(effect_size_element.value)
 `;
 
-  const options = variables.map((variable) => ({
-    key: variable?.field,
-    value: variable?.displayName || variable?.field,
-    text: variable?.displayName || variable?.field,
-  }));
+const updateCode = async ({ code }) => {
+  await pyodide.runPythonAsync(connectSelectorsCode);
+  if (runCode) {
+    console.log(connectSelectorsCode);
+    runCode({ code }); // Trigger the runCode function passed from StateManager
+  }
+};
+const onSelectorChoice = (option) => {
+  setSelectedDataFormat(option.value);
+  onSelectorChange({ target: { name: "dataFormat", value: option?.value } });
+};
 
-  const updateCode = async ({ code }) => {
-    await pyodide.runPythonAsync(connectSelectorsCode);
-    runCode({ code });
-  };
-
-  const onSelectorChoice = (option) => {
-    setSelectedDataFormat(option.value);
-    onSelectorChange({ target: { name: "dataFormat", value: option?.value } });
-  };
-
-  const onSelectorChange = ({ target }) => {
-    handleContentChange({
-      newContent: {
-        selectors: { ...selectors, [target?.name]: target?.value },
-      },
-    });
-    updateCode({ code });
-  };
+const onSelectorChange = ({ target }) => {
+  handleContentChange({
+    newContent: {
+      selectors: { ...selectors, [target?.name]: target?.value },
+    },
+  });
+  updateCode({  });
+};
 
   return (
     <div className="graphDashboard">
@@ -98,127 +79,34 @@ effect_size = None if effect_size_element is None or effect_size_element.value =
         <img src={`/assets/icons/visualize/axes.svg`} />
         <div>Axes (A-B Design)</div>
       </div>
-        <label htmlFor="groupA">Group A</label>
-        <input
-          id={`groupA-${sectionId}`}
-          type="text"
-          name="groupA"
-          value={selectors.groupA}
-          onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, groupA: target.value },
-              },
-            })
-          }
-          onBlur={() => updateCode({ code })}
-        />
-        <label htmlFor="groupB">Group B</label>
-        <input
-          id={`groupB-${sectionId}`}
-          type="text"
-          name="groupB"
-          value={selectors.groupB}
-          onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, groupB: target.value },
-              },
-            })
-          }
-          onBlur={() => updateCode({ code })}
-        />
-        <SelectOne
-              sectionId={sectionId}
-              options={significanceOptions}
-              selectors={selectors}
-              onSelectorChange={onSelectorChange}
-              title="Significance of hypothesis"
-              parameter="significanceDecision"
+      <label>
+        Number of Groups:
+        <input type="number" value={groupNb} onChange={handleGroupNbChange} min="2" />
+      </label>
+      {Array.from({ length: groupNb }, (_, i) => (
+        <div key={i}>
+          <label>
+            Group {i + 1} Label:
+            <input
+              type="text"
+              id={`group${i + 1}-${sectionId}`}
+              value={groupLabels[`group${i + 1}`]}
+              onChange={(e) => handleGroupLabelChange(e, `group${i + 1}`)}
             />
-        <label htmlFor="n_samples">Number of samples</label>
-        <input
-          id={`n_samples-${sectionId}`}
-          type="number"
-          name="n_samples"
-          value={selectors.n_samples}
-          onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, n_samples: target.value },
-              },
-            })
-          }
-          onBlur={() => updateCode({ code })}
-        />
-        <label htmlFor="base_mean">Base mean</label>
-        <input
-          id={`base_mean-${sectionId}`}
-          type="number"
-          name="base_mean"
-          value={selectors.base_mean}
-          onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, base_mean: target.value },
-              },
-            })
-          }
-          onBlur={() => updateCode({ code })}
-        />
-        <label htmlFor="base_mean">Effect size</label>
-        <input
-          id={`effect_size-${sectionId}`}
-          type="number"
-          name="effect_size"
-          value={selectors.effect_size}
-          onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, effect_size: target.value },
-              },
-            })
-          }
-          onBlur={() => updateCode({ code })}
-        />
-      <input
-        type="hidden"
-        id={`dataFormat-${sectionId}`}
-        value={selectedDataFormat}
+          </label>
+        </div>
+      ))}
+      <SelectOne
+        sectionId={sectionId}
+        options={significanceOptions}
+        selectors={selectors}
+        onSelectorChange={onSelectorChange}
+        title="Significance of hypothesis"
+        parameter="significanceDecision"
       />
-      <Accordion>
-        <AccordionTitle
-          active={activeIndex === 0}
-          index={0}
-          onClick={handleClick}
-        >
-          <Icon name="dropdown" />
-          Resources
-        </AccordionTitle>
-        <AccordionContent active={activeIndex === 0}>
-          {resourcesList.map((option) => (
-            <a
-              className="resourcesCard"
-              href={option.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              key={option.link}
-            >
-              <img
-                className="resourcesCardImage"
-                src={option.img}
-                alt={option.alt}
-              />
-              <div>
-                <div className="resourcesCardTitle">{option.title}</div>
-                <div className="resourcesCardLink">
-                  Click here to access the resource
-                </div>
-              </div>
-            </a>
-          ))}
-        </AccordionContent>
-      </Accordion>
+      <button onClick={() => updateCode({ code: 'print("Updating code from Axes")' })}>Save group settings</button>
     </div>
   );
-}
+};
+
+export default Axes;

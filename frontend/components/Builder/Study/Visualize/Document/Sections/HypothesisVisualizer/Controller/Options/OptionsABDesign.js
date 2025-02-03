@@ -17,7 +17,7 @@ export default function Options({
   handleContentChange,
 }) {
   const connectDashboardCode = `# get relevant html elements
-customTitle = js.document.getElementById('custom_title-${sectionId}').value
+custom_title = None if js.document.getElementById("custom_title-${sectionId}") == None else js.document.getElementById("custom_title-${sectionId}").value
 yLabel = js.document.getElementById('yLabel-${sectionId}').value
 `
 ;
@@ -43,7 +43,7 @@ yLabel = js.document.getElementById('yLabel-${sectionId}').value
           onChange={({ target }) =>
             handleContentChange({
               newContent: {
-                selectors: { ...selectors, graphTitle: target.value },
+                selectors: { ...selectors, custom_title: target.value },
               },
             })
           }

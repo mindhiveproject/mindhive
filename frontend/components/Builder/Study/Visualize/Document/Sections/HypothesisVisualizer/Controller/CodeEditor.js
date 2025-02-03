@@ -32,7 +32,7 @@ export default function CodeEditor({ code, handleContentChange, runCode }) {
   return (
     <>
       <div>
-        <button onClick={() => runCode({ code })}>Run the code</button>
+        <button onClick={() => runCode({ code })}>Graph hypothesis</button>
       </div>
       <Accordion>
         <AccordionTitle

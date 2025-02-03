@@ -13,57 +13,63 @@ plt.xkcd()
 
   const ABDesignCode = `
 # AXES #######################################################################
-group_a_label = groupA
-group_b_label = groupB
 
-n_samples = 50
-n_samples = n_samples
+#difference_type = significanceDecision
+group_nb = group_nb if group_nb is not None else 2
+base_mean = base_mean if base_mean is not None else 10  
+effect_size = effect_size if effect_size is not None else 10
+n_samples = n_samples if n_samples is not None else 50
+difference_type = significanceDecision if significanceDecision is not None else 'non-significant'
 
-# Define whether the difference is significant or not
-difference_type = None # 'non-significant' 'significant'
-difference_type = significanceDecision
-
-base_mean = base_mean
-effect_size = effect_size
+group_vars = [globals().get(f'group{i+1}') for i in range(group_nb)]
+group_vars = [group for group in group_vars if group is not None]
+print(group_vars)
 
 # OPTIONS ####################################################################
 
-custom_title = customTitle
-yaxis = yLabel
+custom_title = custom_title if 'custom_title' in globals() and custom_title is not None else ''
+yaxis = yLabel if yLabel is not None else ''
 
 # Generate data for the bar plot
-def generate_ab_data(difference_type='non-significant', n_samples=50, base_mean=10, effect_size=2, noise=1):
+def generate_ab_data(difference_type='non-significant', group_nb=2, n_samples=50, base_mean=10, effect_size=10, noise=1):
     np.random.seed(42)  # For reproducibility
-    group_a = np.random.normal(loc=base_mean, scale=noise, size=n_samples)
+    groups = []
     
-    if difference_type == 'significant':
-        group_b = np.random.normal(loc=base_mean + effect_size, scale=noise, size=n_samples)
-    else:
-        group_b = np.random.normal(loc=base_mean, scale=noise, size=n_samples)
+    for i in range(group_nb):
+        if i == 0:
+            group = np.random.normal(loc=base_mean, scale=noise, size=n_samples)
+        else:
+            if difference_type == 'significant':
+                group = np.random.normal(loc=base_mean + effect_size * i, scale=noise, size=n_samples)
+            else:
+                group = np.random.normal(loc=base_mean, scale=noise, size=n_samples)
+        groups.append(group)
     
-    return group_a, group_b
+    return groups
 
-group_a, group_b = generate_ab_data(difference_type=difference_type, n_samples=n_samples, base_mean=base_mean, effect_size=effect_size)
+groups = generate_ab_data(difference_type=difference_type, group_nb=group_nb, n_samples=n_samples, base_mean=base_mean, effect_size=effect_size)
 
 # Calculate means and standard errors
-means = [group_a.mean(), group_b.mean()]
-errors = [group_a.std() / np.sqrt(n_samples), group_b.std() / np.sqrt(n_samples)]
+means = [group.mean() for group in groups]
+errors = [group.std() / np.sqrt(n_samples) for group in groups]
 
 # Create the bar plot with adjusted figure size 
 fig, ax = plt.subplots(figsize=(4, 2.5))  
 
-bars = ax.bar([group_a_label, group_b_label], means, 
+bars = ax.bar([f'{group_vars[i]}' for i in range(group_nb)], means, 
               # yerr=errors, 
-              capsize=5, color=['skyblue', 'lightcoral'], width=0.5)
+              capsize=5, color=['skyblue', 'lightcoral', 'lightgreen', 'gray', 'lightpink'][:group_nb], width=0.5)
 
 # Set y-axis limit to ensure 5 points above the highest bar
 max_mean = max(means)
 ax.set_ylim(0, max_mean + 3)
 
-# Add labels and title
-# ax.set_title(f"{custom_title}")
+# labels and title
 ax.set_title(f"{custom_title}\\nDifference: {difference_type.capitalize()}")
 ax.set_ylabel(yaxis)
+
+ax.yaxis.set_ticks([])  # Remove y-axis ticks
+ax.set_yticklabels([])  # Remove y-axis labels
 
 # Annotate bars
 for bar, mean in zip(bars, means):
