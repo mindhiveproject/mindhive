@@ -6,15 +6,16 @@ import { GET_PUBLIC_AND_PROJECT_RESOURCES } from "../../../../../../Queries/Reso
 import { Dropdown, Icon } from "semantic-ui-react";
 
 export default function Resources({ proposal, selectedResources }) {
+  const projectId = proposal?.usedInClass?.templateProposal?.id;
+
   const { data, error, loading } = useQuery(GET_PUBLIC_AND_PROJECT_RESOURCES, {
-    variables: { projectId: proposal?.id },
+    variables: { projectId },
   });
 
   const resources = data?.resources || [];
 
   const publicResources = resources.filter((resource) => resource?.isPublic);
   const projectResources = resources.filter((resource) => resource?.isCustom);
-
   const selectedResourcesMerged = selectedResources.map((selectedResource) => {
     if (
       projectResources.filter(

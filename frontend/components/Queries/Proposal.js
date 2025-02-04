@@ -91,6 +91,9 @@ export const PROPOSAL_QUERY = gql`
         creator {
           id
         }
+        templateProposal {
+          id
+        }
       }
       author {
         username
