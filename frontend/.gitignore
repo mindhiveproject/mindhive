@@ -43,4 +43,4 @@ yarn-error.log*
 config.js
 
 # videos
-/videos
+/public/videos
