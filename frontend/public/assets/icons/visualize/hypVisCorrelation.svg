@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 58 44">
+  <!-- Generator: Adobe Illustrator 29.2.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 116)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #9addff;
+      }
+
+      .st1 {
+        fill: #e6f2f1;
+      }
+
+      .st2 {
+        fill: #565656;
+      }
+
+      .st3 {
+        fill: none;
+        stroke: #e06766;
+        stroke-width: 1.5px;
+      }
+    </style>
+  </defs>
+  <rect id="Rectangle_2666" class="st1" x="8" y="2.3" width="48.2" height="33.6"/>
+  <path id="Arrow_3" class="st2" d="M8.7.3c-.4-.4-1-.4-1.4,0L.9,6.7c-.4.4-.4,1,0,1.4.4.4,1,.4,1.4,0l5.7-5.7,5.7,5.7c.4.4,1,.4,1.4,0,.4-.4.4-1,0-1.4L8.7.3ZM9,36.8V1h-2v35.8h2Z"/>
+  <path id="Arrow_4" class="st2" d="M57.7,37.1c.4-.4.4-1,0-1.4l-6.5-6.4c-.4-.4-1-.4-1.4,0-.4.4-.4,1,0,1.4l5.8,5.7-5.8,5.7c-.4.4-.4,1,0,1.4.4.4,1,.4,1.4,0l6.5-6.4ZM7,37.4h50v-2H7v2Z"/>
+  <g id="Line_2">
+    <path class="st3" d="M12.6,23.2c1.9-.6,2.4,1,4.2.4s1.4-2.2,3.2-2.8,2.4,1,4.2.4,1.4-2.2,3.2-2.8,2.4,1,4.2.4,1.4-2.2,3.2-2.8,2.4,1,4.2.4,1.4-2.2,3.2-2.8,2.4,1,4.2.4,1.4-2.2,3.2-2.8,2.4,1,4.3.4"/>
+  </g>
+  <circle id="Ellipse_50" class="st0" cx="21.7" cy="11.8" r=".8"/>
+  <circle id="Ellipse_53" class="st0" cx="32.3" cy="14.8" r=".8"/>
+  <circle id="Ellipse_63" class="st0" cx="40.9" cy="17" r=".8"/>
+  <circle id="Ellipse_56" class="st0" cx="23.2" cy="19.3" r=".8"/>
+  <circle id="Ellipse_66" class="st0" cx="24.4" cy="23.1" r=".8"/>
+  <circle id="Ellipse_51" class="st0" cx="30.4" cy="10.3" r=".8"/>
+  <circle id="Ellipse_64" class="st0" cx="19.8" cy="19.7" r=".8"/>
+  <circle id="Ellipse_54" class="st0" cx="40.9" cy="13.3" r=".8"/>
+  <circle id="Ellipse_57" class="st0" cx="31.9" cy="17.8" r=".8"/>
+  <circle id="Ellipse_67" class="st0" cx="33" cy="21.6" r=".8"/>
+  <circle id="Ellipse_52" class="st0" cx="28.5" cy="17" r=".8"/>
+  <circle id="Ellipse_68" class="st0" cx="29.6" cy="20.8" r=".8"/>
+  <circle id="Ellipse_65" class="st0" cx="19.8" cy="25.3" r=".8"/>
+  <circle id="Ellipse_60" class="st0" cx="36" cy="14.8" r=".8"/>
+  <circle id="Ellipse_55" class="st0" cx="39.1" cy="20.1" r=".8"/>
+  <circle id="Ellipse_61" class="st0" cx="46.6" cy="17.8" r=".8"/>
+  <circle id="Ellipse_58" class="st0" cx="30" cy="24.6" r=".8"/>
+  <circle id="Ellipse_62" class="st0" cx="37.6" cy="22.3" r=".8"/>
+</svg>

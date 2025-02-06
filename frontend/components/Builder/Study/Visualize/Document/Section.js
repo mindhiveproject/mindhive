@@ -5,6 +5,7 @@ import Table from "./Sections/Table";
 import Statistics from "./Sections/Statistics/Main";
 import StatisticTest from "./Sections/StatsticalTests/Main";
 import Graph from "./Sections/Graph/Main";
+import HypVis from "./Sections/HypothesisVisualizer/Main";
 
 import SaveSection from "./SaveSection";
 import SectionHeader from "./SectionHeader";
@@ -72,6 +73,17 @@ export default function Section({
 
       {type === "GRAPH" && (
         <Graph
+          content={inputs?.content}
+          handleContentChange={handleContentChange}
+          pyodide={pyodide}
+          sectionId={section?.id}
+          data={data}
+          variables={variables}
+        />
+      )}
+
+      {type === "HYPVIS" && (
+        <HypVis
           content={inputs?.content}
           handleContentChange={handleContentChange}
           pyodide={pyodide}

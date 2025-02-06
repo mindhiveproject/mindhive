@@ -21,7 +21,7 @@ export default function TeacherView({ query, user }) {
   if (!selector) {
     return (
       <>
-        <h1>Recources center for teachers</h1>
+        <h1>Resources center for teachers</h1>
 
         <div className="header">
           <div className="menu">

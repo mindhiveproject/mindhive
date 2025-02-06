@@ -24,6 +24,10 @@ const sections = {
     title: "Statistical Test",
     img: "/assets/icons/visualize/statisticalTest.svg",
   },
+  HYPVIS: {
+    title: "Hypothesis Visualizer",
+    img: "/assets/icons/visualize/bar_chart_color.svg",
+  },
 };
 
 export default function SectionHeader({

@@ -43,9 +43,7 @@ export default function Browse({
 
                 {(user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
                   user?.permissions?.map((p) => p?.name).includes("TEACHER") ||
-                  user?.permissions
-                    ?.map((p) => p?.name)
-                    .includes("MENTOR")) && (
+                  user?.permissions?.map((p) => p?.name).includes("MENTOR")) && (
                   <CreatePart
                     studyId={studyId}
                     journal={journal}

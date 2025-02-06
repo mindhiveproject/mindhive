@@ -4,7 +4,10 @@ import { useMutation } from "@apollo/client";
 import { CREATE_VIZSECTION } from "../../../../Mutations/VizSection";
 import { STUDY_VIZJOURNAL } from "../../../../Queries/VizJournal";
 
-export default function CreateSection({ studyId, chapterId }) {
+export default function CreateSection({ 
+  user,
+  studyId, 
+  chapterId }) {
   const [createSection, { data, loading, error }] = useMutation(
     CREATE_VIZSECTION,
     {
@@ -77,7 +80,21 @@ export default function CreateSection({ studyId, chapterId }) {
             <div>Graph</div>
           </div>
         </DropdownItem>
-
+        
+        {(user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
+          user?.permissions?.map((p) => p?.name).includes("TEACHER") ||
+          user?.permissions?.map((p) => p?.name).includes("MENTOR")) && (
+          <DropdownItem
+            onClick={() => addSection({ type: "HYPVIS", title: "Hypothesis Visualizer" })}
+          >
+            <div className="menuItem">
+              <div>
+                <img src={`/assets/icons/visualize/bar_chart_color.svg`} />
+              </div>
+              <div>Hypothesis Visualizer</div>
+            </div>
+          </DropdownItem>
+        )}
         <DropdownItem
           onClick={() => addSection({ type: "STATTEST", title: "Statistical Test" })}
         >
