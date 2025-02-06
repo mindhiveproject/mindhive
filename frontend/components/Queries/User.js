@@ -36,6 +36,9 @@ export const CURRENT_USER_QUERY = gql`
         favoriteTasks {
           id
         }
+        favoritePeople {
+          id
+        }
         bio
         location
         language
@@ -386,6 +389,7 @@ export const GET_ALL_USERS = gql`
         }
       }
       location
+      organization
       interests {
         id
         title
@@ -823,6 +827,10 @@ export const GET_PROFILE = gql`
         bio
         bioInformal
         location
+        organization
+        tagline
+        passion
+        involvement
         languages
         introVideo
         occupation

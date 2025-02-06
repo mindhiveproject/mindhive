@@ -100,7 +100,7 @@ export default function Profile() {
             </div>
           </Link>
 
-          <Link
+          {/* <Link
             href={{
               pathname: `/dashboard/profile/set`,
             }}
@@ -114,7 +114,7 @@ export default function Profile() {
                 </div>
               </div>
             </div>
-          </Link>
+          </Link> */}
         </div>
       )}
     </>

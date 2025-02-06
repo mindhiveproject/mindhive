@@ -296,21 +296,23 @@ const Section = ({
       <div className="column-drag-handle">
         <div className="firstLine">
           <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
-          <img
-            src="/assets/icons/proposal/edit.svg"
-            onClick={() => {
-              const title = prompt("Please enter a new title");
-              if (title != null) {
-                onUpdateSection({
-                  variables: {
-                    id: section.id,
-                    boardId,
-                    title,
-                  },
-                });
-              }
-            }}
-          />
+          {!isPreview && (
+            <img
+              src="/assets/icons/proposal/edit.svg"
+              onClick={() => {
+                const title = prompt("Please enter a new title");
+                if (title != null) {
+                  onUpdateSection({
+                    variables: {
+                      id: section.id,
+                      boardId,
+                      title,
+                    },
+                  });
+                }
+              }}
+            />
+          )}
         </div>
         {!isPreview && !proposalBuildMode && (
           <div className="infoLine">

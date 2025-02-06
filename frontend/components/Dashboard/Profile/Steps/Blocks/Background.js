@@ -100,11 +100,32 @@ export default function Background({ query, user }) {
       <Divider />
 
       <StyledInput>
-        <div className="inputLineBlock">
+        <div>
+          <div className="inputLineBlock">
+            <h3>Offical Bio</h3>
+            <p>
+              In ~100 words, describe your expertise, experience, and
+              educational background for a high school audience.
+            </p>
+            <textarea
+              id="bio"
+              rows="5"
+              name="bio"
+              placeholder=""
+              value={inputs?.bio || ""}
+              onChange={handleUpdate}
+            />
+          </div>
+
           <h3>Unofficial Bio</h3>
           <p>
-            Give us a quick blurb about who you are - this is your place to get
-            creative!
+            In a couple of sentences, describe your journey leading to where you
+            are now, professionally. And look ahead to the next 5 years or
+            beyond. The goal is for students to understand that professional
+            lives are not always a straight path and that there are
+            coincidences, good luck and bad luck, and sometimes multiple career
+            paths hidden behind official bios you might read on a scientist’s
+            website.
           </p>
           <textarea
             id="bioInformal"
@@ -116,25 +137,7 @@ export default function Background({ query, user }) {
           />
         </div>
 
-        <div className="inputLineBlock">
-          <h3>Offical Bio</h3>
-          <p>
-            Here you can present the more professional side of yourself. This is
-            the perfect place to share your scientific research, professional
-            background, and any other relevant details about your career and
-            expertise.
-          </p>
-          <textarea
-            id="bio"
-            rows="5"
-            name="bio"
-            placeholder=""
-            value={inputs?.bio || ""}
-            onChange={handleUpdate}
-          />
-        </div>
-
-        <div className="inputLineBlock">
+        {/* <div className="inputLineBlock">
           <h3>Occupation</h3>
           <input
             type="text"
@@ -254,7 +257,7 @@ export default function Background({ query, user }) {
             </div>
             <p>Add another language</p>
           </div>
-        </div>
+        </div> */}
 
         <StyledSaveButton changed={changed}>
           <button onClick={handleSubmit} disabled={!changed}>

@@ -1,23 +1,19 @@
 import Link from "next/link";
 
+import ManageFavorite from "../ManageFavorite";
+
 export default function ProfileCard({ user, profile }) {
   return (
-    <div className="card">
-      <div className="avatar">
-        {profile?.image?.image?.publicUrlTransformed ? (
-          <img
-            src={profile?.image?.image?.publicUrlTransformed}
-            alt={profile?.name}
-          />
-        ) : (
-          <div>{/* <IdentIcon size="120" value={user?.name} /> */}</div>
-        )}
-      </div>
-
-      <div className="name">
-        {profile?.firstName} {profile?.lastName}
-      </div>
-      <div className="location">
+    <Link
+      href={{
+        pathname: `/dashboard/connect/with`,
+        query: {
+          id: profile?.publicId,
+        },
+      }}
+    >
+      <div className="card">
+        {/* <div className="location">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="12"
@@ -31,17 +27,30 @@ export default function ProfileCard({ user, profile }) {
           />
         </svg>
         {profile?.location}
-      </div>
-
-      <div>
+      </div> */}
+        {/* <div>
         {profile?.interests.map((interest) => (
           <span className="interest">{interest?.title}</span>
         ))}
-      </div>
-
-      <div className="bio">{profile?.bioInformal}</div>
-
-      <div>
+      </div> */}
+        <ManageFavorite user={user} profileId={profile?.id} />}
+        <div>{profile?.permissions.map((p) => p?.name).join(" ")}</div>
+        <div>{profile?.organization}</div>
+        <div className="avatar">
+          {profile?.image?.image?.publicUrlTransformed ? (
+            <img
+              src={profile?.image?.image?.publicUrlTransformed}
+              alt={profile?.name}
+            />
+          ) : (
+            <div>{/* <IdentIcon size="120" value={user?.name} /> */}</div>
+          )}
+        </div>
+        <div className="name">
+          {profile?.firstName} {profile?.lastName}
+        </div>
+        <div className="bio">{profile?.bioInformal}</div>
+        {/* <div>
         <Link
           href={{
             pathname: `/dashboard/connect/with`,
@@ -52,7 +61,8 @@ export default function ProfileCard({ user, profile }) {
         >
           <button>See more</button>
         </Link>
+      </div> */}
       </div>
-    </div>
+    </Link>
   );
 }

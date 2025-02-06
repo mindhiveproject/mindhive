@@ -324,12 +324,16 @@ export const Profile = list({
       ],
     }),
     location: text(),
+    organization: text(),
+    tagline: text(),
+    passion: text(),
     bio: text(),
     bioInformal: text(),
     occupation: text(),
     education: json(), // a list of institutions and degrees
     languages: json(), // a list of languages
     introVideo: json(), // an object with the link to the file system, timestampUploaded, timestampModified
+    involvement: json(),
     mentorPreferGrade: select({
       options: [
         { label: "Middle School", value: "middle" },
@@ -369,6 +373,14 @@ export const Profile = list({
         { label: "Thursday", value: "thu" },
         { label: "Friday", value: "fri" },
       ],
+    }),
+    favoriteBy: relationship({
+      ref: "Profile.favoritePeople",
+      many: true,
+    }),
+    favoritePeople: relationship({
+      ref: "Profile.favoriteBy",
+      many: true,
     }),
   },
 });

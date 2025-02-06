@@ -520,6 +520,7 @@ export const StyledProposal = styled.div`
 
     .proposalCardBoard {
       display: grid;
+      align-items: baseline;
       grid-gap: 30px;
       grid-template-columns: 6fr 4fr;
       height: 100%;
@@ -577,13 +578,12 @@ export const StyledProposal = styled.div`
       }
     }
     .cardHeader {
-      font-family: Nunito;
-      font-size: 30px;
+      font-family: 'Nunito';
+      font-style: normal;
       font-weight: 600;
-      line-height: 40.92px;
-      text-align: left;
-      text-underline-position: from-font;
-      text-decoration-skip-ink: none;
+      font-size: 24px;
+      line-height: 32px;
+      color: #3B3B3B;
     }
     .cardSubheader {
       color: var(--neutral_grey2, #3b3b3b);
@@ -596,15 +596,16 @@ export const StyledProposal = styled.div`
       text-decoration-skip-ink: none;
     }
     .cardSubheaderComment {
-      color: #3f3356;
-      font-family: Nunito;
-      font-size: 17px;
-      font-style: italic;
+      font-family: 'Nunito';
+      font-style: normal;
       font-weight: 400;
+      font-size: 16px;
       line-height: 22px;
-      text-align: left;
-      text-underline-position: from-font;
-      text-decoration-skip-ink: none;
+      display: flex;
+      align-items: center;
+      color: #626269;
+      mix-blend-mode: normal;
+      opacity: 0.7;
     }
     .cardDescription {
       color: #626269;
@@ -629,7 +630,7 @@ export const StyledProposal = styled.div`
     }
     .infoBoard {
       display: grid;
-      grid-gap: 20px;
+      grid-gap: 10px;
       align-content: baseline;
       border-radius: 0px 4px 4px 0px;
       margin: 10px;

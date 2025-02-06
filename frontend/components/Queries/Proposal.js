@@ -232,8 +232,17 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
         content
         author {
           id
+          publicId
+          firstName
+          lastName
           permissions {
             name
+          }
+          image {
+            id
+            image {
+              publicUrlTransformed
+            }
           }
         }
         upvotedBy {

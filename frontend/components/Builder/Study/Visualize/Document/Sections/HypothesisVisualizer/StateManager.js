@@ -20,8 +20,8 @@ import OptionsABDesign from "./Controller/Options/OptionsABDesign";
 import OptionsCorrAnalysis from "./Controller/Options/OptionsCorrAnalysis";
 
 import AxesDefault from "./Controller/Axes/AxesDefault";
-import AxesABDesign from   "./Controller/Axes/AxesABDesign";
-import AxesCorrAnalysis from   "./Controller/Axes/AxesCorrAnalysis";
+import AxesABDesign from "./Controller/Axes/AxesABDesign";
+import AxesCorrAnalysis from "./Controller/Axes/AxesCorrAnalysis";
 
 const defaultCode = ``;
 
@@ -38,7 +38,6 @@ export default function StateManager({
   const [activeIndex, setActiveIndex] = useState(-1);
   const [runCodeCallback, setRunCodeCallback] = useState(null);
 
-  
   const handleClick = (e, titleProps) => {
     const { index } = titleProps;
     const newIndex = activeIndex === index ? -1 : index;
@@ -102,26 +101,25 @@ export default function StateManager({
     ABDesign: OptionsABDesign,
     CorrAnalysis: OptionsCorrAnalysis,
   };
-  
+
   // Conditionally render the appropriate template or component based on the selected graph type
 
   const AxesComponent = AxisTemplateMap[type] || AxesDefault;
   const OptionsComponent = OptionsTemplateMap[type] || OptionsDefault;
-  
+
   const copyToClipboard = async () => {
     try {
       // Retrieve the variable from Pyodide
       try {
-        const variableValue = await pyodide.runPythonAsync('fig_html');
-        console.log("variableValue", variableValue);
+        const variableValue = await pyodide.runPythonAsync("fig_html");
         // Copy the variable value to the clipboard
         await navigator.clipboard.writeText(variableValue);
-        alert('Copied to clipboard!');
+        alert("Copied to clipboard!");
       } catch (error) {
-        console.error('Failed to retrieve variable: ', error);
+        console.error("Failed to retrieve variable: ", error);
       }
     } catch (error) {
-      console.error('Failed to copy: ', error);
+      console.error("Failed to copy: ", error);
     }
   };
 
@@ -154,7 +152,10 @@ export default function StateManager({
               runCode={runCode}
               sectionId={sectionId}
             />
-            <button onClick={copyToClipboard}>Click here to copy this plot to you clipboard and paste it in your Project Board</button>
+            <button onClick={copyToClipboard}>
+              Click here to copy this plot to you clipboard and paste it in your
+              Project Board
+            </button>
           </div>
           <div className="graphRenderContainer">
             <AxesComponent

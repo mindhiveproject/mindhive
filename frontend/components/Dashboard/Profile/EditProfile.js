@@ -26,10 +26,6 @@ export default function EditProfile({ query }) {
     <StyledCreateProfileFlow>
       <div>
         <h1>Create Profile</h1>
-        <p>
-          Please create your profile in order to begin connecting with the
-          MindHive community.
-        </p>
         {page !== "type" && (
           <div className="progressBar">
             <Progress

@@ -29,13 +29,34 @@ export default function Comment({ number, review }) {
     createdAt: review.createdAt,
     updatedAt: review.updatedAt,
     upvotedBy: review?.upvotedBy,
+    author:
+      review?.author?.firstName && review?.author?.lastName
+        ? `${review?.author?.firstName} ${review?.author?.lastName}`
+        : `${role} ${number + 1}`,
   };
 
   return (
     <div className="reviewerSection">
       <div className="reviewerTitle">
-        <img src="/assets/icons/review/reviewer.svg" />
-        <div>{reviewProcessed.title}</div>
+        {review?.author?.image?.image?.publicUrlTransformed ? (
+          <img
+            src={review?.author?.image?.image?.publicUrlTransformed}
+            alt={review?.author?.username}
+            width="30px"
+          />
+        ) : (
+          <img src="/assets/icons/profile/user.svg" width="30px" />
+        )}
+
+        <div>
+          <a
+            href={`/dashboard/connect/with?id=${review?.author?.publicId}`}
+            target="_blank"
+          >
+            {reviewProcessed?.author}
+          </a>
+        </div>
+        {/* <div>{reviewProcessed.title}</div> */}
         {/* <div>
           <Icon name="thumbs up outline" size="big" />
           <span>{reviewProcessed?.upvotedBy?.length}</span>

@@ -112,12 +112,14 @@ export const StyledActionPage = styled.div`
     }
     .reviewerSection {
       display: grid;
+      grid-gap: 10px;
       background: white;
       padding: 16px 23px;
     }
     .reviewerTitle {
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-gap: 10px;
+      grid-template-columns: 40px 1fr auto;
       align-items: center;
     }
     .reviewerComments {
@@ -131,6 +133,7 @@ export const StyledActionPage = styled.div`
       color: #3b3b3b;
     }
     .questionTitle {
+      font-size: 18px;
       font-weight: bold;
       margin-bottom: 5px;
     }

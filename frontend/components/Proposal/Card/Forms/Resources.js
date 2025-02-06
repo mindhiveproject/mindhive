@@ -58,7 +58,7 @@ export default function Resources({
   };
 
   return (
-    <div>
+    <>
       <Dropdown
         placeholder="Type resource"
         fluid
@@ -120,7 +120,7 @@ export default function Resources({
       ) : (
         <></>
       )}
-    </div>
+    </>
   );
 }
 

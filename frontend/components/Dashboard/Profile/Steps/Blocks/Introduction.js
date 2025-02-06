@@ -9,12 +9,14 @@ import { UPDATE_PROFILE } from "../../../../Mutations/User";
 import VideoUploader from "./VideoUploader";
 
 import { StyledSaveButton } from "../../../../styles/StyledProfile";
+import { StyledInput } from "../../../../styles/StyledForm";
 
 export default function IntroductionVideo({ query, user }) {
   const [changed, setChanged] = useState(false);
 
   const { inputs, handleChange } = useForm({
     introVideo: user?.introVideo,
+    passion: user?.passion,
   });
 
   const [updateProfile, { data, loading, error }] = useMutation(
@@ -27,6 +29,11 @@ export default function IntroductionVideo({ query, user }) {
       refetchQueries: [{ query: GET_PROFILE }],
     }
   );
+
+  const handleUpdate = (data) => {
+    setChanged(true);
+    handleChange(data);
+  };
 
   const onFileUpload = ({ filename, timestamp }) => {
     handleChange({
@@ -52,9 +59,8 @@ export default function IntroductionVideo({ query, user }) {
         <div className="title">Introduction Video</div>
         <p>
           We'd love for you to upload an introduction video to share with
-          students and fellow MindHive members. This is your chance to tell
-          everyone who you are, highlight your research, and share what excites
-          you about your work.
+          students and fellow MindHive members. You can use it to share a
+          project you think students might get excited about.
         </p>
       </div>
       <Divider />
@@ -73,6 +79,27 @@ export default function IntroductionVideo({ query, user }) {
           onFileUpload={onFileUpload}
         />
       )}
+
+      <StyledInput>
+        <div className="inputLineBlock">
+          <h3>What are you passionate about right now?</h3>
+          <p>
+            For example, you can briefly describe a science project you are
+            working on. Or you can tell us about your experience bringing
+            science to the public. This is your space to showcase what you’re
+            currently working on and how it shapes the expertise you bring to
+            our community.
+          </p>
+          <textarea
+            id="passion"
+            rows="5"
+            name="passion"
+            placeholder=""
+            value={inputs?.passion || ""}
+            onChange={handleUpdate}
+          />
+        </div>
+      </StyledInput>
 
       <StyledSaveButton changed={changed}>
         <button onClick={saveChanges} disabled={!changed}>

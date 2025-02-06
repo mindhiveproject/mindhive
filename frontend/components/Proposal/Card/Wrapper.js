@@ -2,7 +2,7 @@ import { useQuery, useMutation } from "@apollo/client";
 
 import { GET_CARD_CONTENT } from "../../Queries/Proposal";
 
-import BuilderProposalCard from "./MainBuilder";
+import CardBuilder from "./Builder";
 import ProposalCard from "./Main";
 
 import IndividualCard from "./Individual/Main";
@@ -59,15 +59,11 @@ export default function CardWrapper({
     } else {
       if (proposalBuildMode) {
         return (
-          <BuilderProposalCard
+          <CardBuilder
             user={user}
             proposal={proposal}
-            cardId={cardId}
-            closeCard={closeCard}
-            proposalBuildMode={proposalBuildMode}
-            isPreview={isPreview}
             proposalCard={proposalCard}
-            refreshPage={refetch}
+            closeCard={closeCard}
           />
         );
       } else {

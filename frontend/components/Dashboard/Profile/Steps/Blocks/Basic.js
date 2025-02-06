@@ -19,6 +19,8 @@ export default function BasicInformation({ query, user }) {
     email: user?.email,
     pronouns: user?.pronouns,
     location: user?.location,
+    organization: user?.organization,
+    tagline: user?.tagline,
     profileType: query?.type || user?.profileType,
   });
 
@@ -47,6 +49,10 @@ export default function BasicInformation({ query, user }) {
   return (
     <div className="profileBlock">
       <div>
+        <p>
+          Please complete the following items in order to create your profile
+          and begin connecting with the MindHive community.
+        </p>
         <div className="title">Basic Information</div>
         <p>
           Your basic information helps the MindHive community get to know you
@@ -107,7 +113,7 @@ export default function BasicInformation({ query, user }) {
         <div className="inputLineBlock">
           <div className="twoColumnsInput">
             <div>
-              <h3>Preferred pronouns</h3>
+              <h3>Pronouns</h3>
               <Dropdown
                 fluid
                 selection
@@ -147,6 +153,28 @@ export default function BasicInformation({ query, user }) {
                 onChange={handleUpdate}
               />
             </div>
+          </div>
+
+          <div className="inputLineBlock">
+            <h3>Organization if relevant</h3>
+            <input
+              type="text"
+              name="organization"
+              value={inputs?.organization}
+              onChange={handleUpdate}
+              required
+            />
+          </div>
+
+          <div className="inputLineBlock">
+            <h3>Tagline</h3>
+            <input
+              type="text"
+              name="tagline"
+              value={inputs?.tagline}
+              onChange={handleUpdate}
+              required
+            />
           </div>
         </div>
 

@@ -192,3 +192,15 @@ export const UPDATE_PROFILE = gql`
     }
   }
 `;
+
+// manage profile
+export const MANAGE_FAVORITE_PEOPLE = gql`
+  mutation MANAGE_FAVORITE_PEOPLE(
+    $id: ID!
+    $action: ProfileRelateToManyForUpdateInput!
+  ) {
+    updateProfile(where: { id: $id }, data: { favoritePeople: $action }) {
+      id
+    }
+  }
+`;

@@ -41,8 +41,8 @@ const StyledConnect = styled.div`
   }
   .cards {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 48px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 20px;
     margin-top: 95px;
   }
   .card {

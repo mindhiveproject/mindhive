@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import SelectOne from "../Fields/SelectOne";
 
-const Axes = ({ 
+const Axes = ({
   sectionId,
   handleContentChange,
-  runCode, 
+  runCode,
   pyodide,
-  selectors
+  selectors,
 }) => {
   const [groupNb, setGroupNb] = useState(2); // Default to 2 groups
-  const [groupLabels, setGroupLabels] = useState({ group1: '', group2: '' });
+  const [groupLabels, setGroupLabels] = useState({ group1: "", group2: "" });
 
   const handleGroupNbChange = (e) => {
     const newGroupNb = parseInt(e.target.value, 10);
@@ -18,7 +18,7 @@ const Axes = ({
     // Update group labels state
     const newGroupLabels = {};
     for (let i = 1; i <= newGroupNb; i++) {
-      newGroupLabels[`group${i}`] = groupLabels[`group${i}`] || '';
+      newGroupLabels[`group${i}`] = groupLabels[`group${i}`] || "";
     }
     setGroupLabels(newGroupLabels);
   };
@@ -26,7 +26,7 @@ const Axes = ({
   const handleGroupLabelChange = (e, group) => {
     setGroupLabels({ ...groupLabels, [group]: e.target.value });
   };
-  
+
   const significanceOptions = [
     { value: "non-significant", text: "No significance" },
     { value: "significant", text: "Significant results" },
@@ -34,9 +34,13 @@ const Axes = ({
 
   const connectSelectorsCode = `
 html_output = js.document.getElementById('figure-${sectionId}')
-${Object.keys(groupLabels).map(group => `
+${Object.keys(groupLabels)
+  .map(
+    (group) => `
 ${group} = None if js.document.getElementById("${group}-${sectionId}") == None else js.document.getElementById("${group}-${sectionId}").value
-`).join('')}
+`
+  )
+  .join("")}
 
 group_nb = ${Object.keys(groupLabels).length}
 
@@ -52,26 +56,25 @@ effect_size_element = js.document.getElementById('effect_size-${sectionId}')
 effect_size = None if effect_size_element is None or effect_size_element.value == '' else float(effect_size_element.value)
 `;
 
-const updateCode = async ({ code }) => {
-  await pyodide.runPythonAsync(connectSelectorsCode);
-  if (runCode) {
-    console.log(connectSelectorsCode);
-    runCode({ code }); // Trigger the runCode function passed from StateManager
-  }
-};
-const onSelectorChoice = (option) => {
-  setSelectedDataFormat(option.value);
-  onSelectorChange({ target: { name: "dataFormat", value: option?.value } });
-};
+  const updateCode = async ({ code }) => {
+    await pyodide.runPythonAsync(connectSelectorsCode);
+    if (runCode) {
+      runCode({ code }); // Trigger the runCode function passed from StateManager
+    }
+  };
+  const onSelectorChoice = (option) => {
+    setSelectedDataFormat(option.value);
+    onSelectorChange({ target: { name: "dataFormat", value: option?.value } });
+  };
 
-const onSelectorChange = ({ target }) => {
-  handleContentChange({
-    newContent: {
-      selectors: { ...selectors, [target?.name]: target?.value },
-    },
-  });
-  updateCode({  });
-};
+  const onSelectorChange = ({ target }) => {
+    handleContentChange({
+      newContent: {
+        selectors: { ...selectors, [target?.name]: target?.value },
+      },
+    });
+    updateCode({});
+  };
 
   return (
     <div className="graphDashboard">
@@ -81,7 +84,12 @@ const onSelectorChange = ({ target }) => {
       </div>
       <label>
         Number of Groups:
-        <input type="number" value={groupNb} onChange={handleGroupNbChange} min="2" />
+        <input
+          type="number"
+          value={groupNb}
+          onChange={handleGroupNbChange}
+          min="2"
+        />
       </label>
       {Array.from({ length: groupNb }, (_, i) => (
         <div key={i}>
@@ -104,7 +112,11 @@ const onSelectorChange = ({ target }) => {
         title="Significance of hypothesis"
         parameter="significanceDecision"
       />
-      <button onClick={() => updateCode({ code: 'print("Updating code from Axes")' })}>Save group settings</button>
+      <button
+        onClick={() => updateCode({ code: 'print("Updating code from Axes")' })}
+      >
+        Save group settings
+      </button>
     </div>
   );
 };

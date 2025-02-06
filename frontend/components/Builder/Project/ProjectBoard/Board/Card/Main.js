@@ -169,36 +169,40 @@ export default function ProposalCard({
                 {ReactHtmlParser(inputs?.description)}
               </div>
 
-              <div className="cardSubheader">
-                For my teacher and project collaborators only
-              </div>
-
-              <div className="cardSubheaderComment">
-                The content you include below will only be visible to your
-                teacher(s) and project collaborators
-              </div>
-
-              <div className="jodit">
-                <JoditEditor
-                  content={internalContent?.current}
-                  setContent={(newContent) =>
-                    handleContentChange({
-                      contentType: "internalContent",
-                      newContent,
-                    })
-                  }
-                />
-              </div>
+              {!proposalCard?.settings?.excludeFromCollaborators && (
+                <>
+                  <div className="cardSubheader">
+                    For my teacher and project collaborators only
+                  </div>
+                  <div className="cardSubheaderComment">
+                    The content you include below will only be visible to your
+                    teacher(s) and project collaborators
+                  </div>
+                  <div className="jodit">
+                    {isLocked ? (
+                      ReactHtmlParser(internalContent?.current)
+                    ) : (
+                      <JoditEditor
+                        content={internalContent?.current}
+                        setContent={(newContent) =>
+                          handleContentChange({
+                            contentType: "internalContent",
+                            newContent,
+                          })
+                        }
+                      />
+                    )}
+                  </div>
+                </>
+              )}
 
               {proposalCard?.settings?.includeInReport && (
                 <>
                   <div className="cardSubheader">For MindHive Network</div>
-
                   <div className="cardSubheaderComment">
                     The content you include here will be visible in the Feedback
                     Center once it is submitted via an Action Card.
                   </div>
-
                   <div className="jodit">
                     {isLocked ? (
                       ReactHtmlParser(content?.current)
@@ -232,44 +236,6 @@ export default function ProposalCard({
                   proposal={proposal}
                   selectedResources={proposalCard?.resources || []}
                 />
-
-                {/* <div className="cardSubheader">Resources</div>
-                {proposalCard?.resources && proposalCard?.resources.length ? (
-                  <div className="resourceLinks">
-                    {proposalCard?.resources.map((resource) => {
-                      const { children } = resource;
-                      let resourceId = resource?.id;
-                      let resourceTitle = resource?.title;
-                      if (
-                        children &&
-                        children.length &&
-                        proposal?.usedInClass?.creator?.id
-                      ) {
-                        const teacherId = proposal?.usedInClass?.creator?.id;
-                        const customizedResources = children.filter(
-                          (resource) => resource?.author?.id === teacherId
-                        );
-                        if (customizedResources && customizedResources.length) {
-                          resourceId = customizedResources[0].id;
-                          resourceTitle = customizedResources[0].title;
-                        }
-                      }
-                      return (
-                        <a
-                          href={`/dashboard/resources/view?id=${resourceId}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <div className="link">
-                            <div>{resourceTitle}</div>
-                          </div>
-                        </a>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <></>
-                )} */}
               </div>
 
               <div className="proposalCardComments">

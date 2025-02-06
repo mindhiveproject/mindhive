@@ -11,6 +11,7 @@ export default function Card({
   openCard,
   onDeleteCard,
   settings,
+  isPreview,
 }) {
   let status = card?.settings?.status ? card.settings.status : "Not started";
 
@@ -56,7 +57,7 @@ export default function Card({
                 />
               )}
 
-              {!proposalBuildMode && (
+              {!proposalBuildMode && !isPreview && (
                 <Popup
                   content={
                     card?.assignedTo.length

@@ -40,8 +40,12 @@ export const Class = list({
     creator: relationship({
       ref: "Profile.teacherIn",
       hooks: {
-        async resolveInput({ context }) {
-          return { connect: { id: context.session.itemId } };
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create") {
+            return { connect: { id: context.session.itemId } };
+          } else {
+            return inputData.creator;
+          }
         },
       },
     }),

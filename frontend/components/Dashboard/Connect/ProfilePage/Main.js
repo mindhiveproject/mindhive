@@ -3,9 +3,9 @@ import { useQuery } from "@apollo/client";
 import { PUBLIC_USER_QUERY } from "../../../Queries/User";
 import { StyledUserPage } from "../../../styles/StyledUser";
 
-import { Card, Flag, Icon, Menu } from "semantic-ui-react";
 import { languageOptions } from "../../../User/LanguageSelector";
 import StyledConnect from "../../../styles/StyledConnect";
+import ManageFavorite from "../ManageFavorite";
 
 export default function ProfilePage({ query, user }) {
   const { id } = query;
@@ -38,6 +38,7 @@ export default function ProfilePage({ query, user }) {
                 <h1>
                   {profile?.firstName} {profile?.lastName}
                 </h1>
+                <ManageFavorite user={user} profileId={profile?.id} />
               </div>
 
               <div>

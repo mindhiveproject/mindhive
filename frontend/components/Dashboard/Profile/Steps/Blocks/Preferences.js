@@ -1,6 +1,13 @@
 import { useState } from "react";
 import useForm from "../../../../../lib/useForm";
-import { FormField, Form, FormGroup, Radio, Divider } from "semantic-ui-react";
+import {
+  FormField,
+  Form,
+  FormGroup,
+  Radio,
+  Divider,
+  Checkbox,
+} from "semantic-ui-react";
 
 import { useMutation } from "@apollo/client";
 
@@ -37,6 +44,7 @@ export default function Preferences({ query, user }) {
     mentorPreferGrade: user?.mentorPreferGrade || undefined,
     mentorPreferGroup: user?.mentorPreferGroup || undefined,
     mentorPreferClass: user?.mentorPreferClass || undefined,
+    involvement: user?.involvement,
   });
 
   const [updateProfile, { data, loading, error }] = useMutation(
@@ -61,21 +69,120 @@ export default function Preferences({ query, user }) {
     setChanged(false);
   }
 
+  const setChecked = ({ name, checked }) => {
+    const involvement = {
+      ...inputs?.involvement,
+      mentor: {
+        ...inputs?.involvement?.mentor,
+        [name]: checked,
+      },
+    };
+    handleUpdate({
+      target: {
+        name: "involvement",
+        value: involvement,
+      },
+    });
+  };
+
   return (
     <div className="profileBlock">
       <div>
-        <div className="title">Mentorship Preferences</div>
+        <div className="title">Your Involvement</div>
         <p>
-          We'd love for you to upload an introduction video to share with
-          students and fellow MindHive members. This is your chance to tell
-          everyone who you are, highlight your research, and share what excites
-          you about your work.
+          Please complete the following items to let us know the details of your
+          involvement.
         </p>
       </div>
       <Divider />
 
       <StyledInput>
         <div className="inputLineBlock">
+          <h3>
+            Please indicate below how you are available to partner with us
+            (select all that apply).
+          </h3>
+
+          <h3>Asynchronous</h3>
+          <FormField>
+            <Checkbox
+              label="Answering student questions (based on your profile)."
+              onChange={(e, data) => {
+                setChecked({
+                  name: "async_answering_questions",
+                  checked: data.checked,
+                });
+              }}
+              checked={inputs?.involvement?.mentor?.async_answering_questions}
+            />
+          </FormField>
+          <FormField>
+            <Checkbox
+              label="Providing feedback on student projects"
+              onChange={(e, data) => {
+                setChecked({
+                  name: "async_providing_feedback",
+                  checked: data.checked,
+                });
+              }}
+              checked={inputs?.involvement?.mentor?.async_providing_feedback}
+            />
+          </FormField>
+
+          <h3>Synchronous</h3>
+
+          <FormField>
+            <Checkbox
+              label="Making an in-class visit to talk with program students about your work (in-person)."
+              onChange={(e, data) => {
+                setChecked({
+                  name: "sync_making_visit_in_person",
+                  checked: data.checked,
+                });
+              }}
+              checked={inputs?.involvement?.mentor?.sync_making_visit_in_person}
+            />
+          </FormField>
+          <FormField>
+            <Checkbox
+              label="Making an in-class visit to talk with program students about your work (over Zoom)."
+              onChange={(e, data) => {
+                setChecked({
+                  name: "sync_making_visit_in_person_over_zoom",
+                  checked: data.checked,
+                });
+              }}
+              checked={
+                inputs?.involvement?.mentor
+                  ?.sync_making_visit_in_person_over_zoom
+              }
+            />
+          </FormField>
+
+          {/* <Form>
+            <FormGroup widths="4">
+              {optionsMentorPreferGrade.map(({ label, value }) => (
+                <FormField>
+                  <Radio
+                    label={label}
+                    name="mentorPreferGrade"
+                    value={value}
+                    checked={inputs.mentorPreferGrade === value}
+                    onChange={(e, content) => {
+                      handleUpdate({
+                        target: {
+                          name: content?.name,
+                          value: content?.value,
+                        },
+                      });
+                    }}
+                  />
+                </FormField>
+              ))}
+            </FormGroup>
+          </Form> */}
+        </div>
+        {/* <div className="inputLineBlock">
           <h3>Grade Level</h3>
           <p>
             Tell us about the grade levels you feel most comfortable supporting
@@ -166,8 +273,7 @@ export default function Preferences({ query, user }) {
               ))}
             </FormGroup>
           </Form>
-        </div>
-
+        </div> */}
         <StyledSaveButton changed={changed}>
           <button onClick={handleSubmit} disabled={!changed}>
             Save changes
