@@ -1,11 +1,12 @@
 import ConnectBank from "./Bank/Main";
+import Connections from "./Connections/Main";
 import ProfilePage from "./ProfilePage/Main";
 
 export default function ConnectMain({ query, user }) {
   const { selector } = query;
 
   if (selector === "my") {
-    return <div>My connections</div>;
+    return <Connections query={query} user={user} />;
   }
 
   if (selector === "with") {

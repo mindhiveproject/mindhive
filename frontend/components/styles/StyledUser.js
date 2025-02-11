@@ -19,7 +19,7 @@ export const StyledUserPage = styled.div`
     display: grid;
     grid-template-columns: 1fr;
     grid-gap: 1rem;
-    justify-items: start;
+    /* justify-items: start; */
     align-content: baseline;
 
     @media only screen and (max-width: 800px) {
@@ -29,12 +29,13 @@ export const StyledUserPage = styled.div`
 
     .profileContainer {
       display: grid;
+      grid-template-columns: 1fr;
       grid-gap: 2rem;
       padding: 1rem;
       .firstLine {
         display: grid;
         grid-gap: 2rem;
-        grid-template-columns: 3fr 1fr;
+        grid-template-columns: 3fr 1fr auto;
         align-items: center;
         @media only screen and (max-width: 500px) {
           grid-template-columns: 1fr;
@@ -57,7 +58,7 @@ export const StyledUserPage = styled.div`
       }
       .secondLine {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr;
 
         @media only screen and (max-width: 500px) {
           grid-template-columns: 1fr;
@@ -73,7 +74,7 @@ export const StyledUserPage = styled.div`
       .thirdLine {
         display: grid;
         grid-gap: 1rem;
-        grid-template-columns: repeat(5, auto);
+        grid-template-columns: 1fr;
         color: var(--lightBlack);
         justify-content: space-between;
         @media only screen and (max-width: 500px) {
@@ -117,7 +118,7 @@ export const StyledUserPage = styled.div`
     }
     .bioContainer {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-columns: 1fr;
       grid-gap: 10rem;
       padding: 1rem;
       .bio {

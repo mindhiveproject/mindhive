@@ -341,8 +341,14 @@ export const PUBLIC_USER_QUERY = gql`
       participantIn {
         id
       }
+      pronouns
       bio
       location
+      organization
+      tagline
+      introVideo
+      passion
+      involvement
       language
       firstName
       lastName
@@ -367,10 +373,13 @@ export const GET_ALL_USERS = gql`
       skip: $skip
       take: $take
       where: {
+        AND: [{ isPublic: { equals: true } }]
         OR: [
           { username: { contains: $search } }
           { publicReadableId: { contains: $search } }
           { publicId: { contains: $search } }
+          { firstName: { contains: $search } }
+          { lastName: { contains: $search } }
         ]
       }
     ) {
@@ -629,6 +638,42 @@ export const GET_PUBLIC_PROFILE = gql`
   }
 `;
 
+// query all users that a user follows
+export const MY_FAVORITE_PEOPLE = gql`
+  query {
+    authenticatedItem {
+      ... on Profile {
+        id
+        favoritePeople {
+          id
+          username
+          email
+          publicId
+          publicReadableId
+          permissions {
+            name
+          }
+          dateCreated
+          image {
+            image {
+              publicUrlTransformed
+            }
+          }
+          location
+          organization
+          interests {
+            id
+            title
+          }
+          bioInformal
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`;
+
 ////////////////////////////////////////////////
 // to do from here
 
@@ -719,39 +764,6 @@ export const PUBLIC_USERS_QUERY = gql`
       dateCreated
       followedBy {
         id
-      }
-    }
-  }
-`;
-
-// query all users that a user follows
-export const MY_FOLLOWING_USERS_QUERY = gql`
-  query {
-    authenticatedItem {
-      ... on User {
-        id
-        usersFollowed {
-          id
-          name
-          slug
-          email
-          image {
-            id
-            image {
-              publicUrlTransformed
-            }
-          }
-          editionsOwned {
-            id
-          }
-          artworksCreated {
-            id
-          }
-          dateCreated
-          followedBy {
-            id
-          }
-        }
       }
     }
   }

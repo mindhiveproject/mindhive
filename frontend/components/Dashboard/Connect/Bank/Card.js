@@ -33,7 +33,7 @@ export default function ProfileCard({ user, profile }) {
           <span className="interest">{interest?.title}</span>
         ))}
       </div> */}
-        <ManageFavorite user={user} profileId={profile?.id} />}
+        <ManageFavorite user={user} profileId={profile?.id} />
         <div>{profile?.permissions.map((p) => p?.name).join(" ")}</div>
         <div>{profile?.organization}</div>
         <div className="avatar">

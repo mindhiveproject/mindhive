@@ -7,6 +7,12 @@ import { languageOptions } from "../../../User/LanguageSelector";
 import StyledConnect from "../../../styles/StyledConnect";
 import ManageFavorite from "../ManageFavorite";
 
+const pronouns = {
+  he: "he/him/his",
+  she: "she/her/hers",
+  they: "they/them/theirs",
+};
+
 export default function ProfilePage({ query, user }) {
   const { id } = query;
 
@@ -18,6 +24,8 @@ export default function ProfilePage({ query, user }) {
   const language = languageOptions?.filter(
     (l) => l.value === user?.language
   )[0];
+
+  const pronoun = pronouns[profile.pronouns] || undefined;
 
   return (
     <StyledConnect>
@@ -38,7 +46,7 @@ export default function ProfilePage({ query, user }) {
                 <h1>
                   {profile?.firstName} {profile?.lastName}
                 </h1>
-                <ManageFavorite user={user} profileId={profile?.id} />
+                <div>{pronoun}</div>
               </div>
 
               <div>
@@ -51,24 +59,76 @@ export default function ProfilePage({ query, user }) {
                   <div></div>
                 )}
               </div>
+
+              <ManageFavorite user={user} profileId={profile?.id} />
             </div>
 
             <div className="secondLine">
-              <p>{profile?.bioInformal}</p>
+              <div>
+                <p>{profile?.tagline}</p>
+              </div>
             </div>
 
             <div className="thirdLine">
               <div>{profile?.email}</div>
               <div>{profile?.location}</div>
+              <div>{profile?.organization}</div>
             </div>
           </div>
 
           <div className="bioContainer">
             <div>
-              <p>Bio</p> {profile?.bio}
+              <div>
+                <h3>Offical Bio</h3>
+                {profile?.bio}
+              </div>
+              <h3>Unofficial Bio</h3>
+              <p>{profile?.bioInformal}</p>
             </div>
-            <div>Available for</div>
-            <div>Interests</div>
+
+            <div>
+              <h3>Introduction Video</h3>
+              {profile?.introVideo?.filename && (
+                <video width="100%" controls>
+                  <source
+                    src={`/videos/${profile?.introVideo?.filename}`}
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              )}
+            </div>
+
+            <div>
+              <h3>What are you passionate about right now?</h3>
+              <div>{profile?.passion}</div>
+            </div>
+
+            <div>
+              <h3>Availability</h3>
+              {profile?.involvement?.mentor?.async_answering_questions && (
+                <p>Answering student questions (based on your profile).</p>
+              )}
+
+              {profile?.involvement?.mentor?.async_providing_feedback && (
+                <p>Providing feedback on student projects</p>
+              )}
+
+              {profile?.involvement?.mentor?.sync_making_visit_in_person && (
+                <p>
+                  Making an in-class visit to talk with program students about
+                  your work (in-person).
+                </p>
+              )}
+
+              {profile?.involvement?.mentor
+                ?.sync_making_visit_in_person_over_zoom && (
+                <p>
+                  Making an in-class visit to talk with program students about
+                  your work (over Zoom).
+                </p>
+              )}
+            </div>
           </div>
         </div>
 

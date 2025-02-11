@@ -281,3 +281,19 @@ export const TASK_TO_EDIT = gql`
     }
   }
 `;
+
+// query all users that a user follows
+export const MY_FAVORITE_TASKS = gql`
+  query {
+    authenticatedItem {
+      ... on Profile {
+        id
+        favoriteTasks {
+          id
+          slug
+          title
+        }
+      }
+    }
+  }
+`;

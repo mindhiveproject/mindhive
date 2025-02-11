@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 const StyledHome = styled.div`
   display: grid;
+  grid-gap: 1rem;
   .h36 {
     font-family: Lato;
     font-size: 36px;

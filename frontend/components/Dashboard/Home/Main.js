@@ -4,6 +4,8 @@ import MyUpdates from "../../Account/Updates/Main";
 import StyledHome from "../../styles/StyledHome";
 import LanguageSwitcher from "./LanuageSwitcher";
 import Profile from "../Profile/Main";
+import FavoritePeople from "../Connect/Connections/FavoritePeople";
+import FavoriteTasks from "../../Tasks/Bank/FavoriteTasks";
 
 export default function Home({ query, user }) {
   const { publicId, publicReadableId } = user;
@@ -11,6 +13,10 @@ export default function Home({ query, user }) {
   return (
     <StyledHome>
       <Profile />
+
+      <FavoritePeople user={user} />
+
+      <FavoriteTasks user={user} />
 
       <MyUpdates user={user} />
 
