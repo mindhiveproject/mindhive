@@ -1,11 +1,40 @@
-import ReactHtmlParser from "react-html-parser";
-import { Draggable } from "react-smooth-dnd";
+import { useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 
-import { Image, Popup } from "semantic-ui-react";
+import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
+
 import { StyledActionCard } from "../../../../../../styles/StyledProposal";
 
-import Link from "next/link";
-import { useRouter } from "next/router";
+export const cardTypes = {
+  ACTION_SUBMIT: {
+    title: "Proposal Feedback",
+    reviewStage: "SUBMITTED_AS_PROPOSAL",
+    proposalSubmitStatusQuery: "submitProposalStatus",
+    proposalOpenForCommentsQuery: "submitProposalOpenForComments",
+    previewTitle: "Project Proposal",
+  },
+  ACTION_PEER_FEEDBACK: {
+    title: "Peer Feedback",
+    reviewStage: "PEER_REVIEW",
+    proposalSubmitStatusQuery: "peerFeedbackStatus",
+    proposalOpenForCommentsQuery: "peerFeedbackOpenForComments",
+    previewTitle: "Peer Feedback",
+  },
+  ACTION_COLLECTING_DATA: {
+    title: "Data Collection",
+    reviewStage: "DATA_COLLECTION",
+    proposalSubmitStatusQuery: "",
+    proposalOpenForCommentsQuery: "",
+    previewTitle: "Data Collection",
+  },
+  ACTION_PROJECT_REPORT: {
+    title: "Project Report",
+    reviewStage: "PROJECT_REPORT",
+    proposalSubmitStatusQuery: "projectReportStatus",
+    proposalOpenForCommentsQuery: "projectReportOpenForComments",
+    previewTitle: "Project Report",
+  },
+};
 
 export default function ActionCard({
   card,
@@ -15,8 +44,21 @@ export default function ActionCard({
   onDeleteCard,
   settings,
   boardId,
+  submitStatuses,
 }) {
   const router = useRouter();
+  const isSubmitted = submitStatuses[card?.type] === "SUBMITTED";
+
+  const { data } = useQuery(PROPOSAL_REVIEWS_QUERY, {
+    variables: {
+      id: boardId,
+    },
+  });
+
+  const project = data?.proposalBoard || { sections: [] };
+  const comments = project?.reviews?.filter(
+    (review) => review.stage === cardTypes[card?.type].reviewStage
+  );
 
   return (
     <StyledActionCard
@@ -30,42 +72,36 @@ export default function ActionCard({
         });
       }}
       type={card?.type}
+      isSubmitted={isSubmitted}
     >
       <div className="card-drag-handle">
         <div className="card-information">
           <div className="card-left-side">
-            <img src="/assets/icons/status/publicTemplate.svg" />
+            {isSubmitted ? (
+              <img src="/assets/icons/eye.svg" />
+            ) : (
+              <img src="/assets/icons/upload.svg" />
+            )}
           </div>
-          <div className="card-right-side">
+          <div>
             <div className="card-title">
-              {card?.type === "ACTION_SUBMIT" && (
-                <>
-                  <div>Submit for Proposal Feedback</div>
-                  <p>Click to submit for Proposal Feedback</p>
-                </>
-              )}
-
-              {card?.type === "ACTION_PEER_FEEDBACK" && (
-                <>
-                  <div>Submit for Peer Feedback</div>
-                  <p>Click to submit for Feedback</p>
-                </>
-              )}
-
-              {card?.type === "ACTION_COLLECTING_DATA" && (
-                <>
-                  <div>Submit for Data Collection</div>
-                  <p>Click to submit for Data Collection</p>
-                </>
-              )}
-
-              {card?.type === "ACTION_PROJECT_REPORT" && (
-                <>
-                  <div>Submit for Project Report</div>
-                  <p>Click to submit for Project Report</p>
-                </>
+              <div>Submit for {cardTypes[card?.type].title}</div>
+              {isSubmitted ? (
+                <p>
+                  View {comments?.length > 0 ? comments.length + " " : ""}
+                  comments
+                </p>
+              ) : (
+                <p>Click to submit for {cardTypes[card?.type].title}</p>
               )}
             </div>
+          </div>
+          <div className="card-right-side">
+            {isSubmitted ? (
+              <img src="/assets/icons/status/publicTemplatesubmitted.svg" />
+            ) : (
+              <img src="/assets/icons/status/publicTemplate.svg" />
+            )}
           </div>
         </div>
       </div>

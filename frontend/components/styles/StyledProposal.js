@@ -901,12 +901,17 @@ export const StyledActionCard = styled.div`
   display: grid;
   align-content: center;
   border-radius: 41px;
-  background: ${(props) => (props.proposalBuildMode ? "#FFFFFF" : "#fdf2d0")};
+  background: ${(props) =>
+    props.proposalBuildMode
+      ? "#FFFFFF"
+      : props.isSubmitted
+      ? "#DEF8FB"
+      : "#fdf2d0"};
   border: 3px solid #FFC107
   box-sizing: border-box;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  margin: 3px 10px;
+  margin: 0px 10px;
   position: relative;
   min-height: 71px;
   font-family: Nunito;
@@ -920,16 +925,22 @@ export const StyledActionCard = styled.div`
 
   .card-drag-handle {
     height: 100%;
-    margin: 0px 10px;
+    margin: 0px 15px;
     display: grid;
   }
   .card-information {
     display: grid;
+    grid-gap: 10px;
     grid-template-columns: 40px 1fr auto;
   }
   .card-left-side {
-      display: grid;
-      justify-content: center;
-    }
-
+    display: grid;
+    justify-content: center;
+    align-content: center;
+  }
+  .card-right-side{
+    display: grid;
+    justify-content: center;
+    align-content: center;
+  }
 `;

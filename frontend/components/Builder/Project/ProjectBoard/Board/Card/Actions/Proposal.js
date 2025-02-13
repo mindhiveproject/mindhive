@@ -8,6 +8,7 @@ import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
 
 import Navigation from "./Navigation";
 import Comment from "./Comment";
+import { cardTypes } from "../../Builder/Actions/ActionCard";
 
 import {
   StyledActionPage,
@@ -47,8 +48,11 @@ export default function Proposal({
   const allCardsCompleted =
     cards?.filter((card) => card?.settings?.status !== "Completed").length ===
     0;
-  const isProposalSubmitted = proposal?.submitProposalStatus === "SUBMITTED";
-  const isFeedbackLocked = !proposal?.submitProposalOpenForComments;
+  const isProposalSubmitted =
+    proposal[cardTypes[proposalCard?.type].proposalSubmitStatusQuery] ===
+    "SUBMITTED";
+  const isFeedbackLocked =
+    !proposal[cardTypes[proposalCard?.type].proposalOpenForCommentsQuery];
 
   const { data } = useQuery(PROPOSAL_REVIEWS_QUERY, {
     variables: {
@@ -108,6 +112,7 @@ export default function Proposal({
         tab={tab}
         proposalId={proposalId}
         cardId={cardId}
+        saveBtnName={`Submit for ${cardTypes[proposalCard?.type].title}`}
         saveBtnFunction={() => {
           submitProposal();
         }}
@@ -121,7 +126,9 @@ export default function Proposal({
           <div className="proposal">
             <div className="iconTitle">
               <img src="/assets/icons/project.svg" />
-              <div className="title">Project Proposal</div>
+              <div className="title">
+                {cardTypes[proposalCard?.type].previewTitle}
+              </div>
             </div>
 
             <div className="subtitle">
@@ -157,12 +164,15 @@ export default function Proposal({
                 <div className="reviews">
                   {project?.reviews &&
                   project?.reviews.filter(
-                    (review) => review.stage === "SUBMITTED_AS_PROPOSAL"
+                    (review) =>
+                      review.stage === cardTypes[proposalCard?.type].reviewStage
                   ).length ? (
                     <div className="reviewsCards">
                       {project?.reviews
                         .filter(
-                          (review) => review.stage === "SUBMITTED_AS_PROPOSAL"
+                          (review) =>
+                            review.stage ===
+                            cardTypes[proposalCard?.type].reviewStage
                         )
                         .sort((a, b) => {
                           return b?.upvotedBy?.length - a?.upvotedBy?.length;

@@ -383,6 +383,7 @@ const Section = ({
                     adminMode={adminMode}
                     isPreview={isPreview}
                     settings={settings}
+                    submitStatuses={submitStatuses}
                   />
                 );
               } else {

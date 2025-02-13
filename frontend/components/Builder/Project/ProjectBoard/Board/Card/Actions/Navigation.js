@@ -10,6 +10,7 @@ export default function Navigation({
   user,
   proposalId,
   cardId,
+  saveBtnName,
   saveBtnFunction,
   allCardsCompleted,
   isProposalSubmitted,
@@ -59,7 +60,7 @@ export default function Navigation({
             className={allCardsCompleted ? "saveButton" : "saveButton disabled"}
             disabled={!allCardsCompleted}
           >
-            Submit for Proposal Feedback
+            {saveBtnName}
           </button>
         )}
         {cardId && isProposalSubmitted && (
