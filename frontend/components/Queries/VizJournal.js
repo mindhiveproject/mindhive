@@ -17,6 +17,7 @@ export const STUDY_VIZJOURNAL = gql`
           content
           position
           createdAt
+          updatedAt
           vizChapters {
             id
             title

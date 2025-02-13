@@ -7,7 +7,7 @@ export default function CreateChapter({ studyId, part }) {
   const [addChapter, { data, loading, error }] = useMutation(ADD_VIZCHAPTER, {
     variables: {
       input: {
-        title: "Unnamed chapter",
+        title: "Unnamed page",
         description: "Description",
         vizPart: {
           connect: {
@@ -19,8 +19,8 @@ export default function CreateChapter({ studyId, part }) {
     refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
   });
   return (
-    <div className="menuItem" onClick={addChapter}>
-      <img src={`/assets/icons/visualize/add.svg`} />
+    <div onClick={addChapter}>
+      {/* <img src={`/assets/icons/visualize/add.svg`} /> */}+ Add page
     </div>
   );
 }

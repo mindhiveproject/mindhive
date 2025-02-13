@@ -12,6 +12,9 @@ export const StyledDataViz = styled.div`
     grid-gap: 34px;
     overflow-y: auto;
     height: 100%;
+    background: #FCFDFC;
+    box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
+    border-radius: 8px;
   }
   .item {
     padding: 0px !important;
@@ -226,17 +229,16 @@ export const StyledDataViz = styled.div`
   }
   .overview {
     display: grid;
-    border-radius: 8px;
-    background: #fcfdfc;
-    box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
+    
     overflow-y: auto;
     height: 100%;
+
     .header {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        grid-gap: 13px;
-        justify-content: center;
-        padding: 12px 12px 12px 12px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      grid-gap: 13px;
+      justify-content: center;
+      padding: 25px 12px 12px 19px;
     }
     .menu {
       border-radius: 8px;
@@ -297,20 +299,23 @@ export const StyledDataViz = styled.div`
     .contents {
       display: grid;
       grid-gap: 10px;
-      padding-bottom: 100px;
+      padding-bottom: 10px;
       .emptyStateHeader {
         padding: 10px 15px;
       }
       .part {
         display: grid;
-        border-radius: 5px;
+        border-left: 8px solid #D0D0D0;
+        background: #FFFFFF;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.07);
+        border-radius: 8px;
+        margin: 0px 15px;
+        padding: 15px 15px;
+
         .menuOriginaDataTitle {
-          background: #f1f7f6;
-          padding: 10px 15px;
-          border-radius: 5px;
           display: grid;
           align-items: center;
-          grid-template-columns: 1fr auto auto;
+          grid-template-columns: 1fr auto;
           grid-gap: 12px;
           color: #007c70;
           font-family: Inter;
@@ -327,19 +332,58 @@ export const StyledDataViz = styled.div`
               color: black;
               font-weight: bold;
             }
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 125%;
+            color: #1A1A1A;
           }
           .title {
             cursor: pointer;
           }
         }
-        .menuDescription {
+        .menuSubtitle {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-gap: 10px;
+          padding-left: 5px;
+          .dataSource {
+            font-family: 'Lato';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 10px;
+            line-height: 140%;
+            color: #1A1A1A;
+          }
+          .lastUpdated {
+            font-family: 'Lato';
+            font-style: italic;
+            font-weight: 300;
+            font-size: 10px;
+            line-height: 140%;
+            text-align: right;
+            color: #888888;
+            padding-right: 10px;
+          }
         }
+        
       }
-      .active {
-        border: 1px solid #d3d3d359;
+      .activePart {
+        border-left: 8px solid #4BB3A3;
+      }
+      .chapters {
+        display: grid;
+        margin-top: 10px;
       }
       .chapter {
-        padding: 12px 15px;
+        padding: 12px 10px 12px 30px;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 17px;
+        color:rgb(192, 187, 187);
         .title {
           cursor: pointer;
           :hover {
@@ -348,8 +392,8 @@ export const StyledDataViz = styled.div`
         }
       }
       .selected {
-        border: 1px solid #d3d3d359;
-        background: #ffefd561;
+        font-weight: 700;
+        color: #000000;
       }
       .section {
         display: grid;
@@ -368,10 +412,15 @@ export const StyledDataViz = styled.div`
       }
       .addNewChapter {
         display: grid;
-        justify-content: center;
-        border-top: 1px solid lightgrey;
-        padding: 5px;
-        height: 50px;
+        justify-content: baseline;
+        padding: 12px 10px 12px 30px;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 23px;
+        color: #007C70;
+        cursor: pointer;
       }
     }
 
@@ -514,6 +563,22 @@ export const StyledDataViz = styled.div`
           }
         }
       }
+    }
+    .addJournalBtn {
+      display: grid;
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 124, 112, 0.1);
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+      border-radius: 12.5px;
+      margin: 0px 15px;
+      padding: 5px 20px;
+      width: fit-content;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 23px;
+      color: #007C70;
     }
   }
   .overview::-webkit-scrollbar {
