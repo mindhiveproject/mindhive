@@ -31,17 +31,21 @@ export default function Dashboard({ myclass, user, query }) {
     let project,
       projectId,
       projectTitle,
-      projectStatus,
       projectCollaborators,
       projectMentors,
       studyId,
       studyTitle,
-      studyCollaborators;
+      studyCollaborators,
+      proposalStatus,
+      isProposalOpenForComments,
+      peerFeedbackStatus,
+      isPeerFeedbackOpenForComments,
+      projectReportStatus,
+      isProjectReportOpenForComments;
     if (projects && projects.length) {
       project = projects[0];
       projectId = project?.id;
       projectTitle = project?.title;
-      projectStatus = project?.status;
       projectCollaborators = project?.collaborators
         ?.filter((c) => c?.permissions?.map((p) => p?.name).includes("STUDENT"))
         .map((c) => c?.username);
@@ -53,6 +57,18 @@ export default function Dashboard({ myclass, user, query }) {
       studyCollaborators = project?.study?.collaborators
         ?.filter((c) => c?.permissions?.map((p) => p?.name).includes("STUDENT"))
         .map((c) => c?.username);
+      proposalStatus = project?.submitProposalStatus;
+      isProposalOpenForComments = project?.submitProposalOpenForComments
+        ? "Open for comments"
+        : "Not open for comments";
+      peerFeedbackStatus = project?.peerFeedbackStatus;
+      isPeerFeedbackOpenForComments = project?.peerFeedbackOpenForComments
+        ? "Open for comments"
+        : "Not open for comments";
+      projectReportStatus = project?.projectReportStatus;
+      isProjectReportOpenForComments = project?.projectReportOpenForComments
+        ? "Open for comments"
+        : "Not open for comments";
     }
 
     return {
@@ -60,12 +76,17 @@ export default function Dashboard({ myclass, user, query }) {
       username: student?.username,
       projectId,
       projectTitle,
-      projectStatus,
       projectCollaborators,
       projectMentors,
       studyId,
       studyTitle,
       studyCollaborators,
+      proposalStatus,
+      isProposalOpenForComments,
+      peerFeedbackStatus,
+      isPeerFeedbackOpenForComments,
+      projectReportStatus,
+      isProjectReportOpenForComments,
     };
   });
 
@@ -87,7 +108,6 @@ export default function Dashboard({ myclass, user, query }) {
         classProposalBoardId: myclass?.templateProposal?.id,
       },
     },
-    { field: "projectStatus" },
     { field: "projectCollaborators" },
     { field: "projectMentors" },
     {
@@ -101,6 +121,13 @@ export default function Dashboard({ myclass, user, query }) {
       },
     },
     { field: "studyCollaborators" },
+
+    { field: "proposalStatus" },
+    { field: "isProposalOpenForComments" },
+    { field: "peerFeedbackStatus" },
+    { field: "isPeerFeedbackOpenForComments" },
+    { field: "projectReportStatus" },
+    { field: "isProjectReportOpenForComments" },
   ]);
 
   return (

@@ -133,6 +133,12 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
       collaboratorInProposal {
         id
         title
+        submitProposalStatus
+        submitProposalOpenForComments
+        peerFeedbackStatus
+        peerFeedbackOpenForComments
+        projectReportStatus
+        projectReportOpenForComments
         usedInClass {
           id
         }
