@@ -12,6 +12,7 @@ import useForm from "../../../../lib/useForm";
 
 import { TemplateQuestions } from "./Review/Template";
 import { useEffect } from "react";
+import Feedback from "../Feedback/Main";
 
 // getting the state of the user review
 export default function UserReview({
@@ -129,9 +130,9 @@ export default function UserReview({
 
           {tab === "proposal" && <StudyDetails project={project} />}
           {tab === "reviews" && (
-            <Comments
-              projectId={project?.id}
+            <Feedback
               user={user}
+              projectId={project?.id}
               reviews={
                 project?.reviews?.filter((review) => review.stage === status) ||
                 []

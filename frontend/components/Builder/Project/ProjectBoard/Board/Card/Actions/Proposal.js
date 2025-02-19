@@ -14,6 +14,7 @@ import {
   StyledActionPage,
   StyledReviewBoard,
 } from "../../../../../../styles/StyledReview";
+import Feedback from "../../../../../../Dashboard/Review/Feedback/Main";
 
 export default function Proposal({
   query,
@@ -162,7 +163,18 @@ export default function Proposal({
                 </div>
 
                 <div className="reviews">
-                  {project?.reviews &&
+                  <Feedback
+                    user={user}
+                    projectId={project?.id}
+                    reviews={
+                      project?.reviews?.filter(
+                        (review) =>
+                          review.stage ===
+                          cardTypes[proposalCard?.type].reviewStage
+                      ) || []
+                    }
+                  />
+                  {/* {project?.reviews &&
                   project?.reviews.filter(
                     (review) =>
                       review.stage === cardTypes[proposalCard?.type].reviewStage
@@ -183,7 +195,7 @@ export default function Proposal({
                     </div>
                   ) : (
                     <div className="reviewsPlaceholder"></div>
-                  )}
+                  )} */}
                 </div>
               </>
             ) : (

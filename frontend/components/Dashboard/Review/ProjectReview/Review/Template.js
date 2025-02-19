@@ -46,7 +46,7 @@ const SUBMITTED_AS_PROPOSAL = [
     name: "3",
     responseType: "textarea",
     question:
-      "Is the research question answerable using MindHive tools? Do the proposed tasks and surveys align with the research question? Do you have any suggestions for additional or alternative tasks and surveys that might be suitable for this research question?",
+      "Is the investigation question answerable using MindHive tools? Do the proposed tasks and surveys align with the investigation question? Do you have any suggestions for additional or alternative tasks and surveys that might be suitable for this investigation question?",
     subtitle: "",
   },
   {
@@ -60,7 +60,7 @@ const SUBMITTED_AS_PROPOSAL = [
     responseType: "textarea",
     question: "Use the space below for any additional comments or suggestions",
     subtitle:
-      "You can mention anything here, but you might consider: clarity and/or relevance of research question, feasibility within the scope of MindHive, ethical obstacles, study motivation/background research, alignment of participant population with the research question.",
+      "You can mention anything here, but you might consider: clarity and/or relevance of investigation question, feasibility within the scope of MindHive, ethical obstacles, study motivation/background research, alignment of participant population with the investigation question.",
   },
 ];
 

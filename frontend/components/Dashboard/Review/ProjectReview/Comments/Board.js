@@ -24,23 +24,45 @@ const StyledBoard = styled.div`
     display: grid;
     grid-gap: 1rem;
     min-width: 300px;
-    padding: 20px;
+    padding: 16px 23px;
 
     align-content: baseline;
-    border: 1.5px solid #dadfe2;
-    .reviewerTitle {
+    background: #ffffff;
+    border: 1px solid #deddd9;
+    border-radius: 8px;
+
+    .topLine {
       display: grid;
       grid-gap: 8px;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: 1fr auto auto;
       align-items: center;
-      img {
+      /* img {
         height: 40px;
+      } */
+      .reviewer {
+        display: grid;
+        grid-gap: 5px;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+      }
+      .voteArea {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        border: 1px solid #a1a1a1;
+        border-radius: 4px;
+        padding: 5px;
+        .votesCounter {
+          border-left: 1px solid #a1a1a1;
+          text-align: center;
+        }
       }
     }
   }
 
   .cards {
     display: grid;
+    padding: 8px;
     grid-gap: 1rem;
   }
 
@@ -56,6 +78,36 @@ const StyledBoard = styled.div`
     box-sizing: border-box;
     border-radius: 4px;
     text-align: left;
+  }
+
+  .status {
+    display: grid;
+    grid-gap: 15px;
+    grid-template-columns: auto 1fr;
+    padding: 8px;
+    border-radius: 4px;
+    .title {
+      font-family: "Nunito";
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 24px;
+    }
+  }
+  .readyMoveForward {
+    background: #def8fb;
+  }
+  .needsMinorAdjustments {
+    background: #fdf2d0;
+    color: #5d5763;
+  }
+  .needsSignificantWork {
+    background: #ebe5f8;
+    color: #6f25ce;
+  }
+  .requiresReevaluation {
+    background: #fdeae8;
+    color: #b9261a;
   }
 `;
 
@@ -80,18 +132,38 @@ export default function Board({ projectId, sections, user }) {
 
   return (
     <StyledBoard>
-      <div className="h28">Feedback and Comments</div>
       {sections.map((section, num) => {
         const votedBefore = section?.upvotedBy
           ?.map((u) => u?.id)
           .includes(user?.id);
         return (
           <div key={num} className="section">
-            <div className="reviewerTitle">
-              <img src="/assets/icons/review/reviewer.svg" />
-              <div classsName="p14_black">{section.title}</div>
+            <div className="topLine">
+              <div className="reviewer">
+                <img src="/assets/icons/review/reviewer.svg" />
+                <div classsName="p14_black">{section.title}</div>
+              </div>
 
               <div>
+                {section.content
+                  .filter((card) => card.responseType === "selectOne")
+                  .filter((card) => card.answer)
+                  .map((card, num) => {
+                    const [option] = card?.responseOptions.filter(
+                      (option) => option?.value === card?.answer
+                    );
+                    return (
+                      <div key={num} className={`status  ${option?.value}`}>
+                        <img src={`/assets/icons/status/${option?.icon}.svg`} />
+                        <div>
+                          <div className="title">{option?.title}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+
+              <div className="voteArea">
                 <div
                   onClick={() => voteReview({ id: section?.id, votedBefore })}
                 >
@@ -102,11 +174,11 @@ export default function Board({ projectId, sections, user }) {
                   )}
                 </div>
 
-                <span>{section?.upvotedBy?.length}</span>
+                <div className="votesCounter">{section?.upvotedBy?.length}</div>
               </div>
             </div>
 
-            {section?.createdAt && (
+            {/* {section?.createdAt && (
               <em>
                 Submitted on{" "}
                 {moment(section?.createdAt).format("MMMM D, YYYY, h:mma")}
@@ -121,10 +193,15 @@ export default function Board({ projectId, sections, user }) {
 
             {user?.permissions.includes("TEACHER") && (
               <div>{section.hiddenTitle}</div>
-            )}
+            )} */}
 
             <div className="cards">
               {section.content
+                .filter(
+                  (card) =>
+                    card.responseType !== "selectOne" &&
+                    card.responseType !== "taskSelector"
+                )
                 .filter((card) => card.answer)
                 .map((card, num) => (
                   <div key={num} className="card">

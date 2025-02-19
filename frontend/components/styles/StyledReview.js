@@ -912,7 +912,7 @@ export const StyledDasboardReview = styled.div`
 
   .reviewQuestions {
     display: grid;
-    padding: 67px 44px 37px 50px;
+    padding: 27px 44px 37px 50px;
 
     .subtitle {
       font-family: "Nunito";
@@ -924,7 +924,8 @@ export const StyledDasboardReview = styled.div`
 
     .reviewItems {
       display: grid;
-      grid-gap: 20px;
+      grid-gap: 30px;
+      margin-top: 40px;
       margin-bottom: 40px;
     }
     h1 {
@@ -983,6 +984,86 @@ export const StyledDasboardReview = styled.div`
         font-size: 20px;
         line-height: 137%;
         color: #171717;
+      }
+      .subtitle {
+        font-family: "Nunito";
+        font-style: italic;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 137%;
+        color: #6c6c6c;
+      }
+      .dropdownOption {
+        display: grid;
+        grid-gap: 20px;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        padding: 5px;
+        .title {
+          font-family: "Nunito";
+          font-style: normal;
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 24px;
+          display: flex;
+          align-items: center;
+          letter-spacing: 0.5px;
+          color: #171717;
+          margin-bottom: 2px;
+        }
+        .subtitle {
+          font-family: "Nunito";
+          font-style: normal;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 16px;
+          color: #626269;
+        }
+      }
+      .dropdownSelectedOption {
+        display: grid;
+        grid-gap: 20px;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        .title {
+          font-family: "Nunito";
+          font-style: normal;
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 24px;
+          display: flex;
+          align-items: center;
+          letter-spacing: 0.5px;
+          color: #171717;
+        }
+      }
+      .custom-dropdown .menu {
+        max-height: none !important;
+        overflow-y: visible !important;
+        position: absolute !important;
+        top: 100% !important;
+      }
+      .dropdownSelectedTask {
+        .ui.label {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          grid-gap: 30px;
+          align-items: center;
+          background: #fdf2d0 !important;
+          border: 1px solid #cccccc !important;
+          border-radius: 20px !important;
+          padding: 10px 20px !important;
+          width: fit-content !important;
+          .title {
+            font-family: "Nunito";
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 22px;
+            display: flex;
+            color: #5d5763;
+          }
+        }
       }
     }
   }

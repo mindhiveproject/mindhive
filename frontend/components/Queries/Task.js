@@ -6,6 +6,7 @@ export const ALL_PUBLIC_TASKS = gql`
     tasks(where: { public: { equals: true } }, orderBy: { title: asc }) {
       id
       title
+      slug
     }
   }
 `;

@@ -3,6 +3,7 @@ import {
   DropdownItem,
   DropdownDivider,
   Dropdown,
+  Icon,
 } from "semantic-ui-react";
 
 import ReactStars from "react-rating-stars-component"; // https://www.npmjs.com/package/react-rating-stars-component
@@ -14,44 +15,57 @@ export default function Question({ stage, item, handleItemChange, answer }) {
   if (responseType === "selectOne") {
     const options = item?.responseOptions.map((r) => ({
       key: r.value,
-      text: r.title,
       value: r.value,
+      content: (
+        <div className="dropdownOption">
+          <img src={`/assets/icons/status/${r?.icon}.svg`} />
+          <div>
+            <div className="title">{r?.title}</div>
+            <div className="subtitle">{r?.subtitle}</div>
+          </div>
+        </div>
+      ),
+      text: (
+        <div className="dropdownSelectedOption">
+          <img src={`/assets/icons/status/${r?.icon}.svg`} />
+          <div>
+            <div className="title">{r?.title}</div>
+          </div>
+        </div>
+      ),
     }));
 
     return (
-      // <Dropdown>
-      //   <DropdownMenu>
-      //     {options.map((option) => (
-      //       <DropdownItem>
-      //         <div></div>
-      //       </DropdownItem>
-      //     ))}
-      //   </DropdownMenu>
-      // </Dropdown>
-      <Dropdown
-        placeholder="Select an option"
-        fluid
-        selection
-        options={options}
-        onChange={(event, data) =>
-          handleItemChange({
-            className: "answer",
-            name: item.name,
-            value: data?.value,
-          })
-        }
-        value={item?.answer}
-      />
+      <div className="reviewItem">
+        <div className="question">{item.question}</div>
+        <Dropdown
+          placeholder="Select an option"
+          fluid
+          selection
+          options={options}
+          onChange={(event, data) =>
+            handleItemChange({
+              className: "answer",
+              name: item.name,
+              value: data?.value,
+            })
+          }
+          value={item?.answer}
+          className="custom-dropdown"
+        />
+      </div>
     );
   }
 
   if (responseType === "taskSelector") {
     return (
-      <TaskSelector
-        name={item?.name}
-        handleItemChange={handleItemChange}
-        answer={answer}
-      />
+      <div className="reviewItem">
+        <TaskSelector
+          name={item?.name}
+          handleItemChange={handleItemChange}
+          answer={answer}
+        />
+      </div>
     );
   }
 

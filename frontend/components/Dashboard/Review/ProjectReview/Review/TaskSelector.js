@@ -9,13 +9,22 @@ export default function TaskSelector({ name, handleItemChange, answer }) {
 
   const options = tasks.map((task) => ({
     key: task.id,
-    text: task.title,
     value: task.id,
+    content: (
+      <div className="dropdownOption">
+        <div className="title">{task?.title}</div>
+      </div>
+    ),
+    text: (
+      <div className="dropdownSelectedTask">
+        <div className="title">{task?.title}</div>
+      </div>
+    ),
   }));
 
   return (
     <Dropdown
-      placeholder="Select an option"
+      placeholder="Add MindHive survey or task suggestions"
       fluid
       selection
       multiple
@@ -28,6 +37,7 @@ export default function TaskSelector({ name, handleItemChange, answer }) {
         })
       }
       value={answer}
+      className="dropdownSelectedTask"
     />
   );
 }
