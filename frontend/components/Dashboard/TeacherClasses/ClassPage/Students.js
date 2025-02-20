@@ -114,7 +114,7 @@ export default function ClassStudents({ myclass, user, query }) {
         </div>
       </div>
 
-      <div>
+      <div className="buttons">
         <Link
           href={{
             pathname: `/dashboard/myclasses/${myclass?.code}`,
@@ -125,6 +125,17 @@ export default function ClassStudents({ myclass, user, query }) {
           }}
         >
           <button className="secondary">Study completion overview</button>
+        </Link>
+
+        <Link
+          href={{
+            pathname: `/dashboard/resources`,
+            query: {
+              c: myclass?.id,
+            },
+          }}
+        >
+          <button className="secondary">Class resources</button>
         </Link>
       </div>
 

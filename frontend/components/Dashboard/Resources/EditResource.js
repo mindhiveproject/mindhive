@@ -37,9 +37,10 @@ export default function EditResource({ selector, query, user }) {
   async function handleSave(e) {
     e.preventDefault();
     await updateResource({ variables: { updatedAt: new Date() } });
-    router.push({
-      pathname: `/dashboard/resources`,
-    });
+    alert("The resource is saved");
+    // router.push({
+    //   pathname: `/dashboard/resources`,
+    // });
   }
 
   return (

@@ -142,6 +142,12 @@ const StyledClass = styled.div`
         height: fit-content;
       }
     }
+    .buttons {
+      display: grid;
+      grid-template-columns: auto auto;
+      grid-gap: 10px;
+      justify-content: start;
+    }
   }
 
   .mentors {

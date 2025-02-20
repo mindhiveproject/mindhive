@@ -20,3 +20,14 @@ For more information, see Working with GIT below.
 4. Set up a local Postgres database (e.g., with the [Postgres app](https://postgresapp.com/)) and enter the URL endpoint as the DATABASE_DEV variable in the file ".env" in the keystone folder.
 5. Go to the keystone folder and run `npm run dev` The server should run on [http://localhost:4444](http://localhost:4444/)
 6. Go to the frontend folder and run `node server.js`. The frontend should run on [http://localhost:3000](http://localhost:3000/)
+
+Shield: [![CC BY-NC-ND 4.0][cc-by-nc-nd-shield]][cc-by-nc-nd]
+
+This work is licensed under a
+[Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International License][cc-by-nc-nd].
+
+[![CC BY-NC-ND 4.0][cc-by-nc-nd-image]][cc-by-nc-nd]
+
+[cc-by-nc-nd]: http://creativecommons.org/licenses/by-nc-nd/4.0/
+[cc-by-nc-nd-image]: https://licensebuttons.net/l/by-nc-nd/4.0/88x31.png
+[cc-by-nc-nd-shield]: https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg

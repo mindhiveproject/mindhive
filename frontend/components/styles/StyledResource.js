@@ -15,7 +15,7 @@ export const StyledResource = styled.div`
     }
     .wrapper {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr 100px;
     }
     .buttonLinks {
       display: grid;

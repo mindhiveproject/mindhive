@@ -128,3 +128,39 @@ export const GET_RESOURCE = gql`
     }
   }
 `;
+
+// get public and class resources
+export const GET_PUBLIC_AND_CLASS_RESOURCES = gql`
+  query GET_PUBLIC_AND_CLASS_RESOURCES($classId: ID!) {
+    resources(
+      where: {
+        OR: [
+          {
+            proposalBoard: {
+              some: {
+                templateForClasses: { some: { id: { equals: $classId } } }
+              }
+            }
+          }
+          { isPublic: { equals: true } }
+        ]
+      }
+    ) {
+      id
+      title
+      content
+      slug
+      author {
+        id
+        username
+      }
+      parent {
+        id
+      }
+      isCustom
+      isPublic
+      createdAt
+      updatedAt
+    }
+  }
+`;
