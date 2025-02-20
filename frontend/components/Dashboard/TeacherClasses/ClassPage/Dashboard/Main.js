@@ -16,6 +16,35 @@ import { StudentPageLink } from "./Renderers/StudentPageLink";
 import { ProjectManagerLink } from "./Renderers/ProjectManagerLink";
 import { StudyManagerLink } from "./Renderers/StudyManagerLink";
 
+const countAndFormat = (arr) => {
+  // First count occurrences
+  const counts = arr.reduce((acc, val) => {
+    acc[val] = (acc[val] || 0) + 1;
+    return acc;
+  }, {});
+
+  // Convert to string format
+  return Object.entries(counts)
+    .map(([value, count]) => `${value}:${count}`)
+    .join(", ");
+};
+
+const aggregateProposalFeedback = ({ project }) => {
+  const statuses = project?.reviews
+    ?.filter((review) => review?.stage === "SUBMITTED_AS_PROPOSAL")
+    .map((review) =>
+      review?.content
+        .filter((question) => question?.responseType === "selectOne")
+        .map((question) => question?.answer)
+    )
+    .flat();
+  let res;
+  if (statuses && statuses.length) {
+    res = countAndFormat(statuses);
+  }
+  return res;
+};
+
 export default function Dashboard({ myclass, user, query }) {
   const { data, loading, error } = useQuery(GET_STUDENTS_DASHBOARD_DATA, {
     variables: { classId: myclass?.id },
@@ -37,6 +66,7 @@ export default function Dashboard({ myclass, user, query }) {
       studyTitle,
       studyCollaborators,
       proposalStatus,
+      commentsReceivedOnProposal,
       isProposalOpenForComments,
       peerFeedbackStatus,
       isPeerFeedbackOpenForComments,
@@ -58,6 +88,7 @@ export default function Dashboard({ myclass, user, query }) {
         ?.filter((c) => c?.permissions?.map((p) => p?.name).includes("STUDENT"))
         .map((c) => c?.username);
       proposalStatus = project?.submitProposalStatus;
+      commentsReceivedOnProposal = aggregateProposalFeedback({ project });
       isProposalOpenForComments = project?.submitProposalOpenForComments
         ? "Open for comments"
         : "Not open for comments";
@@ -82,6 +113,7 @@ export default function Dashboard({ myclass, user, query }) {
       studyTitle,
       studyCollaborators,
       proposalStatus,
+      commentsReceivedOnProposal,
       isProposalOpenForComments,
       peerFeedbackStatus,
       isPeerFeedbackOpenForComments,
@@ -123,6 +155,7 @@ export default function Dashboard({ myclass, user, query }) {
     { field: "studyCollaborators" },
 
     { field: "proposalStatus" },
+    { field: "commentsReceivedOnProposal" },
     { field: "isProposalOpenForComments" },
     { field: "peerFeedbackStatus" },
     { field: "isPeerFeedbackOpenForComments" },
