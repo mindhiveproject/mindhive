@@ -68,5 +68,9 @@ export const Class = list({
       ref: "ProposalBoard.usedInClass",
       many: true,
     }),
+    logs: relationship({
+      ref: "Log.class",
+      many: true,
+    }),
   },
 });

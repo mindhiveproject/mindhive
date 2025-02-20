@@ -382,5 +382,9 @@ export const Profile = list({
       ref: "Profile.favoriteBy",
       many: true,
     }),
+    logs: relationship({
+      ref: "Log.user",
+      many: true,
+    }),
   },
 });

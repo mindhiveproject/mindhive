@@ -146,6 +146,10 @@ export const ProposalBoard = list({
       ref: "Resource.proposalBoard",
       many: true,
     }),
+    logs: relationship({
+      ref: "Log.proposal",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

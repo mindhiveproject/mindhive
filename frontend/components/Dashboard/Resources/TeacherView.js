@@ -80,7 +80,6 @@ export default function TeacherView({ query, user }) {
           placeholder="Select the class"
           options={options}
           onChange={(event, data) => {
-            console.log(data.value);
             router.push({
               pathname: `/dashboard/resources`,
               query: { c: data.value },

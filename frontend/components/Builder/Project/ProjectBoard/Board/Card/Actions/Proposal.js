@@ -5,6 +5,7 @@ import ReactHtmlParser from "react-html-parser";
 import { UPDATE_PROJECT_BOARD } from "../../../../../../Mutations/Proposal";
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
+import { CREATE_LOG } from "../../../../../../Mutations/Log";
 
 import Navigation from "./Navigation";
 import Comment from "./Comment";
@@ -72,6 +73,8 @@ export default function Proposal({
     ],
   });
 
+  const [createLog] = useMutation(CREATE_LOG);
+
   const submitProposal = async () => {
     const res = await updateProposal({
       variables: {
@@ -79,6 +82,25 @@ export default function Proposal({
         input: {
           submitProposalStatus: "SUBMITTED",
           submitProposalOpenForComments: true,
+        },
+      },
+    });
+    await createLog({
+      variables: {
+        input: {
+          event: "PROPOSAL_SUBMITTED_FOR_REVIEW",
+          user: {
+            connect: { id: user?.id },
+          },
+          proposal: {
+            connect: { id: proposalId },
+          },
+          class: {
+            connect: { id: proposal?.usedInClass?.id },
+          },
+          content: {
+            proposalSnapshot: cards,
+          },
         },
       },
     });

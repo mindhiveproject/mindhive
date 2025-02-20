@@ -199,5 +199,9 @@ export const Study = list({
       defaultValue: "NOT_DEFINED",
     }),
     dataCollectionOpenForParticipation: checkbox({ isFilterable: true }),
+    logs: relationship({
+      ref: "Log.study",
+      many: true,
+    }),
   },
 });
