@@ -55,33 +55,39 @@ export default function Document({
 
   return (
     <div className="document">
-      <ChapterHeader
+      {/* <ChapterHeader
         user={user}
         studyId={studyId}
         part={part}
         chapter={chapter}
-      />
-      <div>
-        {sortBy(chapter?.vizSections, [
-          (section) =>
-            section?.position || new Date(section?.createdAt).getTime(),
-        ]).map((section) => (
-          <Section
-            key={section?.id}
-            studyId={studyId}
-            chapter={chapter}
-            section={section}
-            pyodide={pyodide}
-            data={data}
-            variables={variables}
-            settings={settings}
-          />
-        ))}
-      </div>
+      /> */}
+
+      {sortBy(chapter?.vizSections, [
+        (section) =>
+          section?.position || new Date(section?.createdAt).getTime(),
+      ]).map((section) => (
+        <Section
+          key={section?.id}
+          studyId={studyId}
+          chapter={chapter}
+          section={section}
+          pyodide={pyodide}
+          data={data}
+          variables={variables}
+          settings={settings}
+        />
+      ))}
+
       <br />
-      <div className="createSectionButton">
-        <CreateSection user={user} studyId={studyId} chapterId={chapter?.id} />
-      </div>
+      {(!chapter?.vizSections || !chapter?.vizSections?.length) && (
+        <div className="createSectionButton">
+          <CreateSection
+            user={user}
+            studyId={studyId}
+            chapterId={chapter?.id}
+          />
+        </div>
+      )}
     </div>
   );
 }

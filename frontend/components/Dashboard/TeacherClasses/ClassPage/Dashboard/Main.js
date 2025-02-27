@@ -105,6 +105,7 @@ export default function Dashboard({ myclass, user, query }) {
     return {
       id: student?.id,
       username: student?.username,
+      project,
       projectId,
       projectTitle,
       projectCollaborators,

@@ -143,6 +143,7 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
           id
         }
         collaborators {
+          id
           username
           permissions {
             name
@@ -153,6 +154,7 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
           title
           status
           collaborators {
+            id
             username
             permissions {
               name

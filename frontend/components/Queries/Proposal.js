@@ -114,6 +114,9 @@ export const PROPOSAL_QUERY = gql`
           id
           username
         }
+        classes {
+          id
+        }
       }
       sections {
         id
@@ -438,6 +441,9 @@ export const CLASS_PROJECTS_QUERY = gql`
       }
       collaborators {
         username
+      }
+      study {
+        id
       }
       createdAt
       updatedAt

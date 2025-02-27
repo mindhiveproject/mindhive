@@ -75,11 +75,11 @@ export const REMOVE_MENTOR_FROM_CLASS = gql`
 
 // assign a student to a project
 export const ASSIGN_STUDENT_TO_PROJECT = gql`
-  mutation ASSIGN_STUDENT_TO_PROJECT($studentId: ID!, $projectId: ID!) {
-    updateProfile(
-      where: { id: $studentId }
-      data: { collaboratorInProposal: { connect: { id: $projectId } } }
-    ) {
+  mutation ASSIGN_STUDENT_TO_PROJECT(
+    $studentId: ID!
+    $input: ProfileUpdateInput!
+  ) {
+    updateProfile(where: { id: $studentId }, data: $input) {
       id
     }
   }

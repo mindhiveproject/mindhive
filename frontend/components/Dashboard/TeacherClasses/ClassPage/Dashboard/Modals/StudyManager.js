@@ -10,6 +10,8 @@ import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
 import { GET_CLASS } from "../../../../../Queries/Classes";
 // mutation to update a project (by linking it to a new or existing study)
 import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
+// mutation to upate a study (by linking it to existing project)
+import { UPDATE_STUDY } from "../../../../../Mutations/Study";
 
 import StyledClass from "../../../../../styles/StyledClass";
 
@@ -40,17 +42,33 @@ export default function ProjectManager(props) {
     ],
   });
 
+  const [updateStudy] = useMutation(UPDATE_STUDY, {
+    refetchQueries: [
+      {
+        query: GET_STUDENTS_DASHBOARD_DATA,
+        variables: { classId: props?.classId },
+      },
+    ],
+  });
+
   const assignToStudy = async () => {
     if (!studyId) {
       return alert("Select the study first");
     }
-    await updateProject({
+    // update the study
+    await updateStudy({
       variables: {
+        id: studyId,
         input: {
-          study: {
+          proposal: {
             connect: {
-              id: studyId,
+              id: props?.data?.projectId,
             },
+          },
+          collaborators: {
+            connect: props?.data?.project?.collaborators.map((c) => ({
+              id: c?.id,
+            })),
           },
         },
       },
@@ -72,6 +90,11 @@ export default function ProjectManager(props) {
                 connect: {
                   id: props?.classId,
                 },
+              },
+              collaborators: {
+                connect: props?.data?.project?.collaborators.map((c) => ({
+                  id: c?.id,
+                })),
               },
             },
           },

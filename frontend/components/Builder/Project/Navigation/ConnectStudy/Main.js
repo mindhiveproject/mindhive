@@ -4,39 +4,35 @@ import useForm from "../../../../../lib/useForm";
 
 import ConnectModal from "./Modal";
 
-import { PROPOSAL_QUERY } from "../../../../Queries/Proposal";
-import { UPDATE_PROJECT_BOARD } from "../../../../Mutations/Proposal";
+import { MY_STUDY } from "../../../../Queries/Study";
+import { UPDATE_STUDY } from "../../../../Mutations/Study";
 
 import { Image, Popup } from "semantic-ui-react";
 
-export default function Connect({ project, user }) {
+export default function Connect({ study, user }) {
   // save and edit the study information
   const { inputs, handleChange, handleMultipleUpdate, captureFile, clearForm } =
     useForm({
-      ...project,
+      ...study,
     });
 
-  const [updateProject, { data, loading, error }] = useMutation(
-    UPDATE_PROJECT_BOARD,
-    {
-      variables: {
-        id: project?.id,
-        input: {
-          collaborators: {
-            set: inputs?.collaborators?.map((col) => ({ id: col?.id })),
-          },
-          usedInClass:
-            inputs?.usedInClass &&
-            inputs?.usedInClass?.id !== "$$$-class-not-connected-$$$"
-              ? { connect: { id: inputs?.usedInClass?.id } }
-              : { disconnect: true },
+  const [
+    updateStudy,
+    { data: studyData, loading: studyLoading, error: studyError },
+  ] = useMutation(UPDATE_STUDY, {
+    variables: {
+      id: study?.id,
+      input: {
+        collaborators: {
+          set: inputs?.collaborators?.map((col) => ({ id: col?.id })),
         },
+        classes: inputs?.classes
+          ? { set: inputs?.classes?.map((cl) => ({ id: cl?.id })) }
+          : { disconnect: study?.classes?.map((cl) => ({ id: cl?.id })) },
       },
-      refetchQueries: [
-        { query: PROPOSAL_QUERY, variables: { id: project?.id } },
-      ],
-    }
-  );
+    },
+    refetchQueries: [{ query: MY_STUDY, variables: { id: study?.id } }],
+  });
 
   const collaborators = inputs?.collaborators || [];
 
@@ -63,10 +59,10 @@ export default function Connect({ project, user }) {
       </div>
 
       <ConnectModal
-        project={inputs}
+        study={inputs}
         user={user}
         handleChange={handleChange}
-        updateProject={updateProject}
+        updateStudy={updateStudy}
       />
     </div>
   );

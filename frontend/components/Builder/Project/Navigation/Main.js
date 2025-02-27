@@ -3,9 +3,8 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 import Connect from "./Connect/Main";
-import StudyOptions from "../../../Studies/Bank/StudyOptions";
+import ConnectStudy from "./ConnectStudy/Main";
 
-// import { MY_STUDY } from "../../../Queries/Study";
 import { Dropdown, DropdownMenu } from "semantic-ui-react";
 
 import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
@@ -19,10 +18,10 @@ const items = [
     value: "builder",
     name: "Study builder",
   },
-  {
-    value: "review",
-    name: "Review",
-  },
+  // {
+  //   value: "review",
+  //   name: "Review",
+  // },
   {
     value: "page",
     name: "Participant Page",
@@ -57,12 +56,10 @@ export default function Navigation({
 
   const { area, selector } = query;
 
-  // const id = query?.selector;
-
   const { data, error, loading } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
   });
-  const study = data?.proposalBoard || {
+  const project = data?.proposalBoard || {
     title: "",
   };
 
@@ -146,10 +143,15 @@ export default function Navigation({
         </div>
       </div>
       <div className="middle">
-        <span className="studyTitle">{study?.title}</span>
+        <span className="studyTitle">{project?.title}</span>
       </div>
       <div className="right">
-        <Connect project={study} user={user} />
+        {tab === "board" ? (
+          <Connect project={project} user={user} />
+        ) : (
+          <ConnectStudy study={project?.study} user={user} />
+        )}
+
         {cardId && (
           <button
             onClick={async () => {

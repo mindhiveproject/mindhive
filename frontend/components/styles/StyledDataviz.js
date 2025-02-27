@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const StyledDataViz = styled.div`
   display: grid;
   margin: 27px 17px;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 3fr;
   grid-gap: 19px;
   max-height: 85vh;
   .vizMenu {
@@ -12,7 +12,7 @@ export const StyledDataViz = styled.div`
     grid-gap: 34px;
     overflow-y: auto;
     height: 100%;
-    background: #FCFDFC;
+    background: #fcfdfc;
     box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
     border-radius: 8px;
   }
@@ -36,7 +36,7 @@ export const StyledDataViz = styled.div`
     grid-template-rows: 200px auto;
     padding: 20px;
     grid-gap: 12px;
-    align-items: start; 
+    align-items: start;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -48,22 +48,22 @@ export const StyledDataViz = styled.div`
     div {
       display: flex;
       justify-content: start;
-      width: 350px; 
+      width: 350px;
     }
     h3 {
       font-size: 18px;
-      color: #007C70;
+      color: #007c70;
       margin: 0;
     }
     p {
       font-size: 14px;
-      width: auto; 
+      width: auto;
       margin: 0 4;
       word-break: break-word;
       white-space: normal;
     }
   }
-  .customDropdownMenu{
+  .customDropdownMenu {
     display: grid;
   }
   .menuItemDataType {
@@ -72,7 +72,7 @@ export const StyledDataViz = styled.div`
     grid-template-rows: 40px auto;
     padding: 20px;
     grid-gap: 12px;
-    align-items: start; 
+    align-items: start;
     justify-content: center;
     font-size: 14px;
     font-style: normal;
@@ -81,16 +81,16 @@ export const StyledDataViz = styled.div`
     div {
       display: flex;
       justify-content: start;
-      width: 290px; 
+      width: 290px;
     }
     h3 {
       font-size: 18px;
-      color: #28619E;
+      color: #28619e;
       margin: 0;
     }
     p {
       font-size: 14px;
-      width: auto; 
+      width: auto;
       margin: 0 4;
       word-break: break-word;
       white-space: normal;
@@ -98,7 +98,7 @@ export const StyledDataViz = styled.div`
   }
   .menuItemDataType p {
     font-size: 14px;
-    width: auto; 
+    width: auto;
     word-break: break-word;
     white-space: normal;
   }
@@ -107,20 +107,20 @@ export const StyledDataViz = styled.div`
     max-height: 200px;
   }
   .dropdownMenu {
-    background-color: #f1f7f6; 
-    border-radius: 8px; 
+    background-color: #f1f7f6;
+    border-radius: 8px;
     padding: 15px 10px 10px 10px;
-    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
   }
   .slidesCard {
     grid-template-columns: 15px 100%;
     column-gap: 15px;
     max-width: max-content;
-    background-color: #fbbc041e; 
-    border-radius: 8px; 
+    background-color: #fbbc041e;
+    border-radius: 8px;
     padding: 15px 10px 10px 10px;
-    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
   }
 
@@ -130,50 +130,50 @@ export const StyledDataViz = styled.div`
     column-gap: 15px;
     row-gap: 6px;
     max-width: max-content;
-    background-color: #ECF8FB;
+    background-color: #ecf8fb;
     border-radius: 8px;
     padding: 15px 15px 10px 10px;
     margin: 0px 0px 15px 0px;
-    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     align-items: center; /* Center items vertically */
     justify-items: start; /* Align items to the start horizontally */
   }
   .resourcesCard:hover {
     cursor: pointer;
-    outline: solid #28619E 1.5px;
+    outline: solid #28619e 1.5px;
   }
-  
+
   .resourcesCardImage {
     width: 100%;
     height: auto;
     max-width: 250px;
   }
-  
+
   .resourcesCardTitle {
     grid-area: 1 / 2 / 2 / 3;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    color: #28619E;
+    color: #28619e;
   }
 
   .resourcesCardLink {
-    grid-area: 2 / 2 / 3 / 3; 
+    grid-area: 2 / 2 / 3 / 3;
     font-size: 11px;
     font-style: normal;
     font-weight: 400;
     color: #000;
   }
-    
+
   .dataTypeSelector {
     grid-template-columns: 15px 200px;
     max-width: 370px;
     column-gap: 15px;
-    background-color: #E6F2F1; 
-    border-radius: 8px; 
+    background-color: #e6f2f1;
+    border-radius: 8px;
     padding: 15px 10px 10px 10px;
-    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
   }
   .dataFormatSelector {
@@ -182,10 +182,10 @@ export const StyledDataViz = styled.div`
     // max-width: 1fr;
     column-gap: 15px;
     align-items: center;
-    background-color: #E6F2F1; 
-    border-radius: 8px; 
+    background-color: #e6f2f1;
+    border-radius: 8px;
     padding: 15px 10px 10px 10px;
-    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.10);
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
   }
   .menuItemThreeDiv {
@@ -229,7 +229,7 @@ export const StyledDataViz = styled.div`
   }
   .overview {
     display: grid;
-    
+
     overflow-y: auto;
     height: 100%;
 
@@ -260,35 +260,35 @@ export const StyledDataViz = styled.div`
       cursor: pointer;
     }
     .greenFrame {
-      background: #F1F7F6;
-      color: #007C70;
-      outline: solid #007C70 1px;
+      background: #f1f7f6;
+      color: #007c70;
+      outline: solid #007c70 1px;
       box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
       font-weight: 600;
     }
     .greenFrame:hover {
-      outline: solid #007C70 2px; /* Adjust the color and width as needed */
+      outline: solid #007c70 2px; /* Adjust the color and width as needed */
     }
     .blueFrame {
-      color: #28619E;
-      outline: solid #28619E 1px;
+      color: #28619e;
+      outline: solid #28619e 1px;
       font-weight: 400;
     }
     .blueFrame:hover {
-      outline: solid #28619E 2.5px;
-      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.27)
+      outline: solid #28619e 2.5px;
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.27);
     }
     .redSaveFrame {
       grid-area: 1 / 1 / 2 / 2;
       max-width: 100px;
       height: 35px;
-      color: #DB2828;
-      outline: solid #DB2828 1.5px;
+      color: #db2828;
+      outline: solid #db2828 1.5px;
       font-weight: 550;
     }
     .redSaveFrame:hover {
-      outline: solid #DB2828 2.5px;
-      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.27)
+      outline: solid #db2828 2.5px;
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.27);
     }
     .emptyStateButtons {
       display: grid;
@@ -305,8 +305,8 @@ export const StyledDataViz = styled.div`
       }
       .part {
         display: grid;
-        border-left: 8px solid #D0D0D0;
-        background: #FFFFFF;
+        border-left: 8px solid #d0d0d0;
+        background: #ffffff;
         box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.07);
         border-radius: 8px;
         margin: 0px 15px;
@@ -332,12 +332,12 @@ export const StyledDataViz = styled.div`
               color: black;
               font-weight: bold;
             }
-            font-family: 'Inter';
+            font-family: "Inter";
             font-style: normal;
             font-weight: 500;
             font-size: 16px;
             line-height: 125%;
-            color: #1A1A1A;
+            color: #1a1a1a;
           }
           .title {
             cursor: pointer;
@@ -349,15 +349,15 @@ export const StyledDataViz = styled.div`
           grid-gap: 10px;
           padding-left: 5px;
           .dataSource {
-            font-family: 'Lato';
+            font-family: "Lato";
             font-style: normal;
             font-weight: 400;
             font-size: 10px;
             line-height: 140%;
-            color: #1A1A1A;
+            color: #1a1a1a;
           }
           .lastUpdated {
-            font-family: 'Lato';
+            font-family: "Lato";
             font-style: italic;
             font-weight: 300;
             font-size: 10px;
@@ -367,10 +367,9 @@ export const StyledDataViz = styled.div`
             padding-right: 10px;
           }
         }
-        
       }
       .activePart {
-        border-left: 8px solid #4BB3A3;
+        border-left: 8px solid #4bb3a3;
       }
       .chapters {
         display: grid;
@@ -378,12 +377,12 @@ export const StyledDataViz = styled.div`
       }
       .chapter {
         padding: 12px 10px 12px 30px;
-        font-family: 'Inter';
+        font-family: "Inter";
         font-style: normal;
         font-weight: 400;
         font-size: 14px;
         line-height: 17px;
-        color:rgb(192, 187, 187);
+        color: rgb(192, 187, 187);
         .title {
           cursor: pointer;
           :hover {
@@ -414,12 +413,12 @@ export const StyledDataViz = styled.div`
         display: grid;
         justify-content: baseline;
         padding: 12px 10px 12px 30px;
-        font-family: 'Inter';
+        font-family: "Inter";
         font-style: normal;
         font-weight: 400;
         font-size: 12px;
         line-height: 23px;
-        color: #007C70;
+        color: #007c70;
         cursor: pointer;
       }
     }
@@ -435,7 +434,7 @@ export const StyledDataViz = styled.div`
         grid-gap: 13px;
         justify-content: center;
         padding: 12px;
-    
+
         .icons {
           cursor: pointer;
           display: grid;
@@ -468,23 +467,23 @@ export const StyledDataViz = styled.div`
         gap: 8px;
         padding: 4px 13px 4px 13px;
         border-radius: 8px;
-        background: #F1F7F6 ;
+        background: #f1f7f6;
         box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
         cursor: pointer;
-        color: #007C70;
+        color: #007c70;
         font-weight: 450;
       }
       .optionsButtonGreen {
         padding: 4px 13px 4px 13px;
         border-radius: 8px;
-        background: #F1F7F6 ;
+        background: #f1f7f6;
         box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
         cursor: pointer;
-        color: #007C70;
+        color: #007c70;
         font-weight: 450;
       }
       .optionsButtonGreen:hover {
-        outline: solid #007C70 2px; /* Adjust the color and width as needed */
+        outline: solid #007c70 2px; /* Adjust the color and width as needed */
       }
       .optionsButtonYellow {
         display: flex;
@@ -493,14 +492,14 @@ export const StyledDataViz = styled.div`
         gap: 8px;
         padding: 4px 13px 4px 13px;
         border-radius: 8px;
-        background: #ffc10723 ;
+        background: #ffc10723;
         box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
         cursor: pointer;
         // color: #ffc107ff;
         font-weight: 450;
       }
       .optionsButtonYellow:hover {
-        outline: solid #FFC107 2px; /* Adjust the color and width as needed */
+        outline: solid #ffc107 2px; /* Adjust the color and width as needed */
       }
 
       .task {
@@ -566,19 +565,19 @@ export const StyledDataViz = styled.div`
     }
     .addJournalBtn {
       display: grid;
-      background: #FFFFFF;
+      background: #ffffff;
       border: 1px solid rgba(0, 124, 112, 0.1);
       box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
       border-radius: 12.5px;
       margin: 0px 15px;
       padding: 5px 20px;
       width: fit-content;
-      font-family: 'Inter';
+      font-family: "Inter";
       font-style: normal;
       font-weight: 400;
       font-size: 12px;
       line-height: 23px;
-      color: #007C70;
+      color: #007c70;
     }
   }
   .overview::-webkit-scrollbar {
@@ -605,21 +604,21 @@ export const StyledDataViz = styled.div`
   .document {
     display: grid;
     align-content: baseline;
-    padding: 10px 32px 600px;
-    border-radius: 8px;
-    background: #fcfdfc;
-    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
+    /* padding: 10px 32px 600px; */
+    /* border-radius: 8px; */
+    /* background: #fcfdfc;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07); */
     height: 100%;
     overflow-y: auto;
     .section {
       display: grid;
-      padding: 10px 32px 30px;
-      margin: 10px 32px 30px;
-      border-radius: 8px;
-      background: #fcfdfc;
-      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.17);
-      max-width 1500px;
-      
+      /* padding: 10px 32px 30px;
+      margin: 10px 32px 30px; */
+      /* border-radius: 8px;
+      background: #fcfdfc; */
+      /* box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.17); */
+      /* max-width 1500px; */
+
       .sectionHeader {
         display: grid;
         grid-gap: 10px;
@@ -667,8 +666,8 @@ export const StyledDataViz = styled.div`
           }
 
           tr:hover {
-            background-color: #E6F2F1; /* Made it more @MindHive */
-          } 
+            background-color: #e6f2f1; /* Made it more @MindHive */
+          }
 
           th {
             padding-top: 6px;
@@ -681,7 +680,20 @@ export const StyledDataViz = styled.div`
       }
       .graph {
         display: grid;
-        margin: 10px 0px;
+        /* margin: 10px 0px; */
+
+        .displayContainer {
+          display: grid;
+          grid-template-columns: 2fr 1fr;
+          grid-gap: 10px;
+        }
+
+        .graphContainer {
+          display: grid;
+          /* box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
+          border-radius: 10px;
+          padding: 10px; */
+        }
 
         .templates {
           display: grid;
@@ -722,16 +734,17 @@ export const StyledDataViz = styled.div`
 
         .graphRenderContainer {
           display: grid;
-          grid-template-columns: 4fr 3fr;
+          grid-template-columns: 1fr;
+          /* grid-template-columns: 4fr 3fr; */
           grid-gap: 10px;
           justify-content: center;
-          min-height: 450px;
+          /* min-height: 450px; */
           box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
           border-radius: 10px;
-          margin: 20px 0px;
-          .graphContainer {
+          /* margin: 20px 0px; */
+          /* .graphContainer {
             margin: 20px 10px;
-          }
+          } */
           .dashboardContainer {
             // box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
           }
@@ -744,13 +757,14 @@ export const StyledDataViz = styled.div`
           // box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
           // border-radius: 10px;
           margin: 20px 0px;
-          .graphContainer {
+          /* .graphContainer {
             margin: 20px 10px;
-          }
+          } */
         }
         .graphArea {
           display: grid;
-          max-width: 100%;
+          /* max-width: 100%; */
+          max-height: 80vh;
         }
         .selectors {
           display: grid;
@@ -829,9 +843,9 @@ export const StyledDataViz = styled.div`
   }
   .graphDashboard {
     display: grid;
-    overflow-y: scroll;
-    height: 450px;
-    margin: 20px 10px;
+    /* overflow-y: scroll; */
+    /* height: 450px; */
+    margin: 0px 10px 20px 10px;
 
     .header {
       display: grid;

@@ -26,6 +26,7 @@ export default function ProjectManager(props) {
     variables: { classId: props?.classId },
   });
   const projects = classProjectsData?.proposalBoards || [];
+
   const projectOptions =
     projects?.map((project) => ({
       key: project?.id,
@@ -51,7 +52,22 @@ export default function ProjectManager(props) {
     if (!projectId) {
       return alert("Select the project first");
     }
-    await updateStudent({ variables: { projectId } });
+    // get the study id (if it exists)
+    let studyId;
+    const p = projects
+      .filter((p) => p?.id === projectId)
+      .map((p) => p?.study?.id);
+    if (p && p.length) {
+      studyId = p[0];
+    }
+    await updateStudent({
+      variables: {
+        input: {
+          collaboratorInProposal: { connect: { id: projectId } },
+          collaboratorInStudy: studyId ? { connect: { id: studyId } } : null,
+        },
+      },
+    });
     setIsOpen(false);
   };
 

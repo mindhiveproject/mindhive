@@ -36,12 +36,12 @@ export default function Section({
 
   return (
     <div className="section">
-      <SectionHeader
+      {/* <SectionHeader
         studyId={studyId}
         section={section}
         description={inputs?.description}
         handleChange={handleChange}
-      />
+      /> */}
 
       {type === "PARAGRAPH" && (
         <Paragraph

@@ -112,7 +112,7 @@ export default function StateManager({
         </Message>
       )}
       {code && pyodide && (
-        <>
+        <div className="displayContainer">
           <div className="graphContainer">
             <Render
               data={data}
@@ -122,19 +122,9 @@ export default function StateManager({
               sectionId={sectionId}
             />
           </div>
-          <div className="graphRenderContainer">
-            <AxesComponent
-              type={type}
-              variables={variablesToDisplay}
-              code={code}
-              pyodide={pyodide}
-              runCode={runCode}
-              sectionId={sectionId}
-              selectors={selectors}
-              handleContentChange={handleContentChange}
-            />
-            <div className="dashboardContainer">
-              <OptionsComponent
+          <div>
+            <div className="graphRenderContainer">
+              <AxesComponent
                 type={type}
                 variables={variablesToDisplay}
                 code={code}
@@ -144,35 +134,47 @@ export default function StateManager({
                 selectors={selectors}
                 handleContentChange={handleContentChange}
               />
+              <div className="dashboardContainer">
+                <OptionsComponent
+                  type={type}
+                  variables={variablesToDisplay}
+                  code={code}
+                  pyodide={pyodide}
+                  runCode={runCode}
+                  sectionId={sectionId}
+                  selectors={selectors}
+                  handleContentChange={handleContentChange}
+                />
+              </div>
             </div>
-          </div>
-          {code && pyodide && (
-            <CodeEditor
-              code={code}
-              handleContentChange={handleContentChange}
-              runCode={runCode}
-            />
-          )}
-          <Accordion>
-            <AccordionTitle
-              active={activeIndex === 0}
-              index={0}
-              onClick={handleClick}
-            >
-              <Icon name="dropdown" />
-              Console
-            </AccordionTitle>
-            <AccordionContent active={activeIndex === 0}>
-              <textarea
-                className="outputArea"
-                id="output"
-                value={output}
-                rows={12}
-                disabled
+            {code && pyodide && (
+              <CodeEditor
+                code={code}
+                handleContentChange={handleContentChange}
+                runCode={runCode}
               />
-            </AccordionContent>
-          </Accordion>
-        </>
+            )}
+            <Accordion>
+              <AccordionTitle
+                active={activeIndex === 0}
+                index={0}
+                onClick={handleClick}
+              >
+                <Icon name="dropdown" />
+                Console
+              </AccordionTitle>
+              <AccordionContent active={activeIndex === 0}>
+                <textarea
+                  className="outputArea"
+                  id="output"
+                  value={output}
+                  rows={12}
+                  disabled
+                />
+              </AccordionContent>
+            </Accordion>
+          </div>
+        </div>
       )}
     </div>
   );

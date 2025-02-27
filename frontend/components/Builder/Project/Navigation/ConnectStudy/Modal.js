@@ -6,10 +6,10 @@ import LinkClass from "./LinkClass";
 import Collaborators from "../../../../Global/Collaborators";
 
 export default function ConnectModal({
-  project,
+  study,
   user,
   handleChange,
-  updateProject,
+  updateStudy,
 }) {
   const [open, setOpen] = useState(false);
 
@@ -19,7 +19,7 @@ export default function ConnectModal({
     ...user?.studentIn.map((cl) => cl?.id),
   ];
   const collaborators =
-    (project && project?.collaborators?.map((c) => c?.id)) || [];
+    (study && study?.collaborators?.map((c) => c?.id)) || [];
 
   return (
     <Modal
@@ -31,7 +31,7 @@ export default function ConnectModal({
       {user?.permissions.map((p) => p?.name).includes("ADMIN") && (
         <Modal.Header>
           <div>
-            Project creator is {project?.author?.username || "No Author"} (
+            Study author is {study?.author?.username || "No Author"} (
             <em>This information is visible only for ADMIN</em>)
           </div>
         </Modal.Header>
@@ -39,17 +39,9 @@ export default function ConnectModal({
       <Modal.Content>
         <Modal.Description>
           <div>
-            {/* {project?.usedInClass ? (
-              <>
-                
-                {project?.usedInClass?.title}
-              </>
-            ) : (
-              <></>
-            )} */}
             <h2>Linked class</h2>
-            <LinkClass project={project} handleChange={handleChange} />
-            <h2>Project board collaborators</h2>
+            <LinkClass study={study} handleChange={handleChange} />
+            <h2>Study collaborators</h2>
             <Collaborators
               userClasses={userClasses}
               collaborators={collaborators}
@@ -72,7 +64,7 @@ export default function ConnectModal({
           <button
             className="primaryBtn"
             onClick={() => {
-              updateProject();
+              updateStudy();
               setOpen(false);
             }}
             disabled={false}
