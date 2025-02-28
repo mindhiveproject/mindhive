@@ -58,12 +58,16 @@ export default function ProjectsBoard({
       where: {
         AND: [
           whereStatus,
-          {
-            OR: [
-              { study: { featured: { equals: true } } },
-              { usedInClass: { id: { in: allUniqueClassIds } } },
-            ],
-          },
+          ...(showMyClassOnly
+            ? [
+                {
+                  OR: [
+                    { study: { featured: { equals: true } } },
+                    { usedInClass: { id: { in: allUniqueClassIds } } },
+                  ],
+                },
+              ]
+            : []),
         ],
       },
     },
