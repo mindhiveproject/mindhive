@@ -6,25 +6,38 @@ import DevelopTaskBank from "../../Tasks/Bank/Develop";
 
 export default function Panels({ query, user }) {
   const { selector } = query;
+
+  const userPermissions = user.permissions.map(
+    (permission) => permission?.name
+  );
+
+  // choose default selector for user dependent on user permissions
+  const selectorForUser = userPermissions.includes("SCIENTIST")
+    ? selector || "studies"
+    : selector || "projects";
+
   return (
     <>
       <div className="menu">
-        <Link href="/dashboard/develop/studies">
-          <div
-            className={
-              selector === "studies" || !selector
-                ? "menuTitle selectedMenuTitle"
-                : "menuTitle"
-            }
-          >
-            <p>My studies</p>
-          </div>
-        </Link>
+        {(userPermissions.includes("SCIENTIST") ||
+          userPermissions.includes("ADMIN")) && (
+          <Link href="/dashboard/develop/studies">
+            <div
+              className={
+                selectorForUser === "studies"
+                  ? "menuTitle selectedMenuTitle"
+                  : "menuTitle"
+              }
+            >
+              <p>My studies</p>
+            </div>
+          </Link>
+        )}
 
         <Link href="/dashboard/develop/projects">
           <div
             className={
-              selector === "projects"
+              selectorForUser === "projects"
                 ? "menuTitle selectedMenuTitle"
                 : "menuTitle"
             }
@@ -36,7 +49,9 @@ export default function Panels({ query, user }) {
         <Link href="/dashboard/develop/tasks">
           <div
             className={
-              selector === "tasks" ? "menuTitle selectedMenuTitle" : "menuTitle"
+              selectorForUser === "tasks"
+                ? "menuTitle selectedMenuTitle"
+                : "menuTitle"
             }
           >
             <p>My tasks</p>
@@ -46,7 +61,7 @@ export default function Panels({ query, user }) {
         <Link href="/dashboard/develop/surveys">
           <div
             className={
-              selector === "surveys"
+              selectorForUser === "surveys"
                 ? "menuTitle selectedMenuTitle"
                 : "menuTitle"
             }
@@ -58,7 +73,7 @@ export default function Panels({ query, user }) {
         <Link href="/dashboard/develop/blocks">
           <div
             className={
-              selector === "blocks"
+              selectorForUser === "blocks"
                 ? "menuTitle selectedMenuTitle"
                 : "menuTitle"
             }
@@ -68,17 +83,21 @@ export default function Panels({ query, user }) {
         </Link>
       </div>
 
-      {selector == "projects" && <DevelopProjectBank user={user} />}
+      {selectorForUser == "projects" && <DevelopProjectBank user={user} />}
 
-      {(!selector || selector == "studies") && <DevelopStudyBank user={user} />}
+      {selectorForUser == "studies" && <DevelopStudyBank user={user} />}
 
-      {selector == "tasks" && <DevelopTaskBank user={user} taskType="TASK" />}
+      {selectorForUser == "tasks" && (
+        <DevelopTaskBank user={user} taskType="TASK" />
+      )}
 
-      {selector == "surveys" && (
+      {selectorForUser == "surveys" && (
         <DevelopTaskBank user={user} taskType="SURVEY" />
       )}
 
-      {selector == "blocks" && <DevelopTaskBank user={user} taskType="BLOCK" />}
+      {selectorForUser == "blocks" && (
+        <DevelopTaskBank user={user} taskType="BLOCK" />
+      )}
     </>
   );
 }

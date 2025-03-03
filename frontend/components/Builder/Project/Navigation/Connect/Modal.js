@@ -4,6 +4,8 @@ import { Icon } from "semantic-ui-react";
 
 import LinkClass from "./LinkClass";
 import Collaborators from "../../../../Global/Collaborators";
+import { StyledInput } from "../../../../styles/StyledForm";
+import { StyledLinkedProjects } from "../../../../styles/StyledProject";
 
 export default function ConnectModal({
   project,
@@ -38,24 +40,47 @@ export default function ConnectModal({
       )}
       <Modal.Content>
         <Modal.Description>
-          <div>
-            {/* {project?.usedInClass ? (
-              <>
-                
-                {project?.usedInClass?.title}
-              </>
-            ) : (
-              <></>
-            )} */}
-            <h2>Linked class</h2>
-            <LinkClass project={project} handleChange={handleChange} />
-            <h2>Project board collaborators</h2>
-            <Collaborators
-              userClasses={userClasses}
-              collaborators={collaborators}
-              handleChange={handleChange}
+          <StyledInput>
+            <h2>Project title</h2>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={project?.title}
+              onChange={handleChange}
             />
-          </div>
+          </StyledInput>
+          <h2>Linked class</h2>
+          <LinkClass project={project} handleChange={handleChange} />
+          <h2>Project board collaborators</h2>
+          <Collaborators
+            userClasses={userClasses}
+            collaborators={collaborators}
+            handleChange={handleChange}
+          />
+
+          {project?.study?.title && (
+            <StyledLinkedProjects>
+              <h2>Linked projects</h2>
+              <p>
+                Projects that share access to your study{" "}
+                <span className="projectName"> {project?.study?.title}</span>
+              </p>
+              <div>
+                {project?.study?.proposal.map((project) => (
+                  <div className="project">
+                    <div>{project?.title}</div>
+                    <a
+                      href={`/builder/projects?selector=${project?.id}`}
+                      target="_blank"
+                    >
+                      Open in a new tab
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </StyledLinkedProjects>
+          )}
         </Modal.Description>
       </Modal.Content>
 

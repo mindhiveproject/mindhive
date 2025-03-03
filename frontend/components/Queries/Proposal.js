@@ -117,6 +117,10 @@ export const PROPOSAL_QUERY = gql`
         classes {
           id
         }
+        proposal {
+          id
+          title
+        }
       }
       sections {
         id
@@ -519,6 +523,18 @@ export const GET_PROJECT_STUDY = gql`
         status
         currentVersion
         versionHistory
+      }
+    }
+  }
+`;
+
+// get study ID of the project
+export const GET_PROJECT_STUDY_ID = gql`
+  query GET_PROJECT_STUDY_ID($id: ID!) {
+    proposalBoard(where: { id: $id }) {
+      id
+      study {
+        id
       }
     }
   }

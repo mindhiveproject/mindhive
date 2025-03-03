@@ -59,6 +59,10 @@ const StyledModal = styled.div`
     display: grid;
     justify-content: center;
   }
+  .linkedProjects {
+    display: grid;
+    background: red;
+  }
 `;
 
 export const StyledModalHeader = styled.div`

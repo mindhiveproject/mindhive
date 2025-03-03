@@ -90,7 +90,7 @@ export default function NewStudy({ query, user }) {
           <div>
             <Link
               href={{
-                pathname: `/dashboard/develop/studies`,
+                pathname: `/dashboard/develop`,
               }}
             >
               ← Back to home

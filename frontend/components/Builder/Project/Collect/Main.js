@@ -2,8 +2,6 @@ import { useQuery } from "@apollo/client";
 
 import { StyledCollectPage } from "../../../styles/StyledBuilder";
 
-import InDev from "../../../Global/InDev";
-
 import {
   GET_STUDY_PARTICIPANTS,
   GET_STUDY_GUESTS,
@@ -14,8 +12,7 @@ import Navigation from "../Navigation/Main";
 import ParticipantPage from "./Participant/Main";
 import Table from "./Table/Main";
 
-export default function Collect({ query, user, tab, toggleSidebar }) {
-  const studyId = query?.selector;
+export default function Collect({ query, user, tab, toggleSidebar, studyId }) {
   const participantId = query?.id;
   const { type } = query;
 
@@ -61,24 +58,6 @@ export default function Collect({ query, user, tab, toggleSidebar }) {
     });
   };
   findComponents({ flow: study?.flow });
-
-  if (!study?.id) {
-    return (
-      <>
-        <Navigation
-          proposalId={query?.selector}
-          query={query}
-          user={user}
-          tab={tab}
-          toggleSidebar={toggleSidebar}
-        />
-        <InDev
-          header="🤷🏻 Sorry, no study found, please create your study first."
-          message="If you need help, please contact the tech support at info@mindhive.science"
-        />
-      </>
-    );
-  }
 
   return (
     <>

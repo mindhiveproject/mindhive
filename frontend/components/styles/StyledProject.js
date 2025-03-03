@@ -1,5 +1,28 @@
 import styled from "styled-components";
 
+export const StyledLinkedProjects = styled.div`
+  display: grid;
+  margin-top: 20px;
+
+  font-family: Nunito;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 40px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+
+  .projectName {
+    color: #3d85b0;
+  }
+  .project {
+    display: grid;
+    align-content: center;
+    grid-template-columns: auto 1fr;
+    grid-gap: 10px;
+  }
+`;
+
 const StyledProject = styled.div`
   display: grid;
   height: 100vh;
@@ -9,8 +32,14 @@ const StyledProject = styled.div`
     display: grid;
     align-items: center;
     padding: 6px 9px;
-    grid-template-columns: 1fr 1fr auto;
+    grid-template-columns: auto 1fr auto;
     grid-gap: 20px;
+    .on {
+    }
+    .off {
+      background: lightGrey;
+      border: 1px solid lightGrey;
+    }
     .left {
       display: grid;
       .selector {
@@ -39,6 +68,14 @@ const StyledProject = styled.div`
           padding: 10px 9px;
           width: 225px;
         }
+      }
+    }
+    .middle {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-gap: 20px;
+      .title {
+        color: #3d85b0;
       }
     }
     .right {

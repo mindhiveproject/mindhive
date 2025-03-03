@@ -30,6 +30,9 @@ const mainOptions = [
 
 export default function Selector({ query, user }) {
   const { develop, clone } = query;
+  const userPermissions = user.permissions.map(
+    (permission) => permission?.name
+  );
 
   if (!develop) {
     return (
@@ -93,16 +96,17 @@ export default function Selector({ query, user }) {
             <h3>Clone & modify a study</h3>
             <p>Build a study based on a pre-existing MindHive study</p>
 
-            {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+            {(userPermissions.includes("ADMIN") ||
+              userPermissions.includes("STUDENT")) && (
               <p>
-                (if you are a student, only select this option if your teacher
-                explicitly told you to do so)
+                (only select this option if your teacher explicitly told you to
+                do so)
               </p>
             )}
           </Link>
 
-          {(user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
-            user?.permissions?.map((p) => p?.name).includes("STUDENT")) && (
+          {(userPermissions.includes("ADMIN") ||
+            userPermissions.includes("STUDENT")) && (
             <Link
               className="option"
               href={{
@@ -136,10 +140,11 @@ export default function Selector({ query, user }) {
             </div>
             <h3>Start a study from scratch</h3>
             <p>Create a study without a project</p>
-            {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+            {(userPermissions.includes("ADMIN") ||
+              userPermissions.includes("STUDENT")) && (
               <p>
-                (if you are a student, only select this option if your teacher
-                explicitly told you to do so)
+                (only select this option if your teacher explicitly told you to
+                do so)
               </p>
             )}
           </Link>

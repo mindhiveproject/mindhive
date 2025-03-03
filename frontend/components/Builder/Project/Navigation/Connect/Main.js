@@ -22,6 +22,7 @@ export default function Connect({ project, user }) {
       variables: {
         id: project?.id,
         input: {
+          title: inputs?.title,
           collaborators: {
             set: inputs?.collaborators?.map((col) => ({ id: col?.id })),
           },

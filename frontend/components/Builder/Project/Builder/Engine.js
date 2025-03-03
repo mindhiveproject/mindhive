@@ -322,7 +322,7 @@ export default function Engine({
       flow,
       diagram,
       descriptionInProposalCardId: study?.descriptionInProposalCardId,
-      tags: study?.tags,
+      tags: study?.tags.map((tag) => ({ id: tag?.id })),
       status: study?.status,
       currentVersion: study?.currentVersion,
       versionHistory: updatedVersionHistory,

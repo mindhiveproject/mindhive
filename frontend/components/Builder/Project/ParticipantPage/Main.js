@@ -11,7 +11,7 @@ import Navigation from "../Navigation/Main";
 import Preview from "./Preview/Main";
 import Settings from "./Settings/Main";
 
-import { MY_STUDIES, MY_STUDY } from "../../../Queries/Study";
+import { MY_STUDIES } from "../../../Queries/Study";
 import { GET_PROJECT_STUDY } from "../../../Queries/Proposal";
 
 import { CREATE_STUDY, UPDATE_STUDY } from "../../../Mutations/Study";
@@ -32,27 +32,6 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
   });
 
   const study = data?.proposalBoard?.study || {};
-
-  // const study = data?.proposalBoard?.study || {
-  //   title: "",
-  //   description: "",
-  //   collaborators: [],
-  //   classes: [],
-  //   consent: [],
-  //   settings: {
-  //     forbidRetake: true,
-  //     hideParticipateButton: false,
-  //     showEmailNotificationPropmt: false,
-  //     askStudentsNYC: false,
-  //     zipCode: false,
-  //     guestParticipation: true,
-  //     consentObtained: false,
-  //     proceedToFirstTask: true,
-  //     useExternalDevices: false,
-  //     sonaId: false,
-  //     minorsBlocked: false,
-  //   },
-  // };
 
   // save and edit the study information
   const { inputs, handleChange, handleMultipleUpdate, captureFile, clearForm } =
@@ -170,7 +149,9 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
           : null,
       },
     },
-    refetchQueries: [{ query: MY_STUDY, variables: { id: projectId } }],
+    refetchQueries: [
+      { query: GET_PROJECT_STUDY, variables: { id: projectId } },
+    ],
   });
 
   const saveStudy = async () => {

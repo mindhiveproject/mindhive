@@ -143,7 +143,15 @@ export default function Navigation({
         </div>
       </div>
       <div className="middle">
-        <span className="studyTitle">{project?.title}</span>
+        <div className="studyTitle">
+          <span className="title">Project </span> {project?.title}
+        </div>
+
+        {project?.study?.title && (
+          <div className="studyTitle">
+            <span className="title"> Study </span> {project?.study?.title}
+          </div>
+        )}
       </div>
       <div className="right">
         {tab === "board" ? (
@@ -163,6 +171,17 @@ export default function Navigation({
                 },
               });
             }}
+            className={
+              hasStudyChanged || area === "cloneofstudy" ? "on" : "off"
+            }
+          >
+            {saveBtnName}
+          </button>
+        )}
+
+        {saveBtnFunction && (
+          <button
+            onClick={() => saveBtnFunction()}
             className={
               hasStudyChanged || area === "cloneofstudy" ? "on" : "off"
             }
