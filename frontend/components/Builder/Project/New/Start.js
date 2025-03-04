@@ -7,7 +7,7 @@ import useForm from "../../../../lib/useForm";
 import { StyledBuilderArea } from "../../../styles/StyledBuilder";
 import { StyledInput } from "../../../styles/StyledForm";
 
-import LinkClass from "../Navigation/Connect/LinkClass";
+import LinkClass from "./LinkClass";
 import Collaborators from "../../../Global/Collaborators";
 
 import { GET_USER_CLASSES } from "../../../Queries/User";
