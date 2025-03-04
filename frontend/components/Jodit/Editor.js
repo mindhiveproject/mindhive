@@ -13,9 +13,6 @@ export default function JoditEditor({
   readonly,
   minHeight,
 }) {
-  const ref = useRef(null);
-  //   const [content, setContent] = useState(externalContent);
-
   const config = useMemo(
     () => ({
       readonly,
@@ -27,28 +24,8 @@ export default function JoditEditor({
     []
   );
 
-  //   let config; // all options from https://xdsoft.net/jodit/doc/
-  //   if (readonly) {
-  //     config = {
-  //       readonly,
-  //       activeButtonsInReadOnly: ["print"], // active only two buttons
-  //       toolbarButtonSize: "large",
-  //       buttons: ["print"],
-  //       height: "100%",
-  //       minHeight: "70vh",
-  //     };
-  //   } else {
-  //     config = {
-  //       allowTabNavigation: true,
-  //       minHeight: 500,
-  //       askBeforePasteFromWord: false,
-  //       askBeforePasteHTML: false,
-  //     };
-  //   }
-
   return (
     <Jodit
-      //   ref={ref}
       value={content}
       config={config}
       tabIndex={1} // tabIndex of textarea

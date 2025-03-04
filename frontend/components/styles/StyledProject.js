@@ -111,6 +111,7 @@ const StyledProject = styled.div`
         width: 40px;
         height: 40px;
         box-shadow: 0px 1px 3px 0px #0000004d;
+        cursor: pointer;
       }
     }
     .middle {
@@ -171,6 +172,10 @@ const StyledProject = styled.div`
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
         padding: 10px 24px;
+      }
+      .off {
+        background: lightGrey;
+        border: 1px solid lightGrey;
       }
     }
   }

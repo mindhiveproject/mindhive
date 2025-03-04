@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
+
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
 
@@ -26,6 +28,7 @@ export default function ProposalCard({
   refreshPage,
   isLocked,
 }) {
+  const router = useRouter();
   // check whether the card is locked - after 1 hour it is allowed to edit
   const releaseTime =
     new Date(proposalCard?.lastTimeEdited)?.getTime() + 60 * 60 * 1000;
@@ -33,6 +36,8 @@ export default function ProposalCard({
 
   // check whether the card is locked by the user
   const [lockedByUser, setLockedByUser] = useState(false);
+  const [wasLockedOnFocus, setWasLockedOnFocus] = useState(false);
+  const [hasContentChanged, setHasContentChanged] = useState(false);
   const areEditsAllowed = lockedByUser || outsideTimeWindow;
 
   // useEffect
@@ -75,6 +80,7 @@ export default function ProposalCard({
         })),
       },
     });
+    if (!hasContentChanged) setHasContentChanged(true);
   };
 
   // update the settings in the local state
@@ -85,16 +91,13 @@ export default function ProposalCard({
         value: { ...inputs.settings, [name]: value },
       },
     });
+    if (!hasContentChanged) setHasContentChanged(true);
   };
 
-  // update card content in the local state
-  const handleContentChange = async ({ contentType, newContent }) => {
+  // Send update to the server when the editor gains focus
+  const handleFocus = async () => {
     // lock the card if needed
-    if (
-      inputs[contentType] !== newContent &&
-      areEditsAllowed &&
-      !lockedByUser
-    ) {
+    if (!wasLockedOnFocus && areEditsAllowed && !lockedByUser) {
       await updateEdit({
         variables: {
           id: cardId,
@@ -106,23 +109,67 @@ export default function ProposalCard({
       });
       setLockedByUser(true);
     }
-    // update the value of content
+    setWasLockedOnFocus(true);
+  };
+
+  // update card content in the local state
+  const handleContentChange = async ({ contentType, newContent }) => {
     if (contentType === "internalContent") {
       internalContent.current = newContent;
+      if (!hasContentChanged && newContent !== inputs?.internalContent)
+        setHasContentChanged(true);
     } else {
       content.current = newContent;
+      if (!hasContentChanged && newContent !== inputs?.content)
+        setHasContentChanged(true);
     }
   };
 
   // update the card and close the modal
-  const onUpdateCard = async () => {
-    await updateCard({
-      variables: {
-        ...inputs,
-        internalContent: internalContent?.current,
-        content: content?.current,
-        assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
-        resources: inputs?.resources?.map((resource) => ({ id: resource?.id })),
+  const onUpdateCard = async ({ shoudBeSaved }) => {
+    // update the content of the card
+    if (shoudBeSaved) {
+      await updateCard({
+        variables: {
+          ...inputs,
+          internalContent: internalContent?.current,
+          content: content?.current,
+          assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
+          resources: inputs?.resources?.map((resource) => ({
+            id: resource?.id,
+          })),
+        },
+      });
+    } else {
+      if (hasContentChanged) {
+        if (
+          !confirm(
+            "Your unsaved changes will be lost. Click Cancel to return and save the changes."
+          )
+        ) {
+          return;
+        }
+      }
+    }
+
+    // unlock the card
+    if (lockedByUser) {
+      await updateEdit({
+        variables: {
+          id: cardId,
+          input: {
+            isEditedBy: { disconnect: true },
+            lastTimeEdited: null,
+          },
+        },
+      });
+    }
+
+    // move to the project board
+    router.push({
+      pathname: `/builder/projects/`,
+      query: {
+        selector: proposalId,
       },
     });
   };
@@ -139,6 +186,7 @@ export default function ProposalCard({
         saveBtnFunction={onUpdateCard}
         inputs={inputs}
         handleSettingsChange={handleSettingsChange}
+        hasContentChanged={hasContentChanged}
       />
       <StyledProposal>
         <div className="post">
@@ -182,15 +230,17 @@ export default function ProposalCard({
                     {isLocked ? (
                       ReactHtmlParser(internalContent?.current)
                     ) : (
-                      <JoditEditor
-                        content={internalContent?.current}
-                        setContent={(newContent) =>
-                          handleContentChange({
-                            contentType: "internalContent",
-                            newContent,
-                          })
-                        }
-                      />
+                      <div onFocus={handleFocus}>
+                        <JoditEditor
+                          content={internalContent?.current}
+                          setContent={(newContent) =>
+                            handleContentChange({
+                              contentType: "internalContent",
+                              newContent,
+                            })
+                          }
+                        />
+                      </div>
                     )}
                   </div>
                 </>
@@ -207,15 +257,18 @@ export default function ProposalCard({
                     {isLocked ? (
                       ReactHtmlParser(content?.current)
                     ) : (
-                      <JoditEditor
-                        content={content?.current}
-                        setContent={(newContent) =>
-                          handleContentChange({
-                            contentType: "content",
-                            newContent,
-                          })
-                        }
-                      />
+                      <div onFocus={handleFocus}>
+                        <JoditEditor
+                          content={content?.current}
+                          setContent={(newContent) =>
+                            handleContentChange({
+                              contentType: "content",
+                              newContent,
+                            })
+                          }
+                          onFocus={handleFocus}
+                        />
+                      </div>
                     )}
                   </div>
                 </>
@@ -246,7 +299,12 @@ export default function ProposalCard({
                   id="comment"
                   name="comment"
                   value={inputs.comment}
-                  onChange={handleChange}
+                  onChange={(e, target) => {
+                    if (!hasContentChanged) {
+                      setHasContentChanged(true);
+                    }
+                    handleChange(e, target);
+                  }}
                 />
               </div>
             </div>

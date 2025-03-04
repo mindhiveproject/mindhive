@@ -184,8 +184,8 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
           hasStudyChanged={hasStudyChanged}
         />
         <InDev
-          header="🤷🏻 Sorry, no study found, please create your study first."
-          message="If you need help, please contact the tech support at info@mindhive.science"
+          header={`🤷🏻 Your project has no Study attached to it.`}
+          message="Let your teacher know so they can create one and associate it. If you need help, please contact tech support at support.mindhive@nyu.edu."
         />
       </>
     );

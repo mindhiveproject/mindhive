@@ -101,6 +101,8 @@ export default function ProposalCard({
 
   // check whether the card is locked by the user
   const [lockedByUser, setLockedByUser] = useState(false);
+  const [wasLockedOnFocus, setWasLockedOnFocus] = useState(false);
+  const [hasContentChanged, setHasContentChanged] = useState(false);
   const areEditsAllowed = lockedByUser || outsideTimeWindow;
 
   // useEffect
@@ -156,14 +158,10 @@ export default function ProposalCard({
     });
   };
 
-  // update card content in the local state
-  const handleContentChange = async ({ contentType, newContent }) => {
+  // Send update to the server when the editor gains focus
+  const handleFocus = async () => {
     // lock the card if needed
-    if (
-      inputs[contentType] !== newContent &&
-      areEditsAllowed &&
-      !lockedByUser
-    ) {
+    if (!wasLockedOnFocus && areEditsAllowed && !lockedByUser) {
       await updateEdit({
         variables: {
           id: cardId,
@@ -175,15 +173,25 @@ export default function ProposalCard({
       });
       setLockedByUser(true);
     }
-    // update the value of content
+    setWasLockedOnFocus(true);
+  };
+
+  // update card content in the local state
+  const handleContentChange = async ({ contentType, newContent }) => {
     if (contentType === "description") {
       description.current = newContent;
+      if (!hasContentChanged && newContent !== inputs?.description)
+        setHasContentChanged(true);
     }
     if (contentType === "internalContent") {
       internalContent.current = newContent;
+      if (!hasContentChanged && newContent !== inputs?.internalContent)
+        setHasContentChanged(true);
     }
     if (contentType === "content") {
       content.current = newContent;
+      if (!hasContentChanged && newContent !== inputs?.content)
+        setHasContentChanged(true);
     }
   };
 
