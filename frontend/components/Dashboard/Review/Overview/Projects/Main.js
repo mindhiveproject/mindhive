@@ -89,7 +89,7 @@ export default function ProjectsBoard({
         }
       });
       if (sortBy) {
-        // sort studies
+        // sort projects
         const projectsFilteredAndSorted = projectsFiltered.sort((a, b) => {
           if (sortBy === "OLDEST") {
             if (a.createdAt < b.createdAt) return -1;
@@ -102,26 +102,26 @@ export default function ProjectsBoard({
 
           if (sortBy === "LEAST_COMMENTS") {
             if (
-              a?.reviews?.filter((r) => r?.stage === a?.status).length <
-              b?.reviews?.filter((r) => r?.stage === b?.status).length
+              a?.reviews?.filter((r) => r?.stage === status).length <
+              b?.reviews?.filter((r) => r?.stage === status).length
             )
               return -1;
             if (
-              a?.reviews?.filter((r) => r?.stage === a?.status).length >
-              b?.reviews?.filter((r) => r?.stage === b?.status).length
+              a?.reviews?.filter((r) => r?.stage === status).length >
+              b?.reviews?.filter((r) => r?.stage === status).length
             )
               return 1;
           }
 
           if (sortBy === "MOST_COMMENTS") {
             if (
-              a?.reviews?.filter((r) => r?.stage === a?.status).length >
-              b?.reviews?.filter((r) => r?.stage === b?.status).length
+              a?.reviews?.filter((r) => r?.stage === status).length >
+              b?.reviews?.filter((r) => r?.stage === status).length
             )
               return -1;
             if (
-              a?.reviews?.filter((r) => r?.stage === a?.status).length <
-              b?.reviews?.filter((r) => r?.stage === b?.status).length
+              a?.reviews?.filter((r) => r?.stage === status).length <
+              b?.reviews?.filter((r) => r?.stage === status).length
             )
               return 1;
           }
