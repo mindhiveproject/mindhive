@@ -22,7 +22,7 @@ export default function CollectivePresentation({ project }) {
       <div className="proposal">
         <div className="cards">
           {cards?.map((card) => (
-            <div className="card">
+            <div key={card?.id} className="card">
               <div className="cardTitleIcon">
                 <div className="cardTitle">{card?.title}</div>
               </div>

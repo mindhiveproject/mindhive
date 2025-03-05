@@ -143,6 +143,7 @@ export default function UserReview({
 
         {canReview && (
           <Questions
+            projectId={project?.id}
             review={review}
             reviewContent={inputs?.content || []}
             stage={status}

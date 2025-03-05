@@ -50,7 +50,7 @@ export default function Question({ stage, item, handleItemChange, answer }) {
               value: data?.value,
             })
           }
-          value={item?.answer}
+          value={answer}
           className="custom-dropdown"
         />
       </div>

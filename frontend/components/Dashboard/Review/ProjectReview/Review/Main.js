@@ -2,6 +2,7 @@ import moment from "moment";
 import Question from "./Question";
 
 export default function QuestionsMain({
+  projectId,
   review,
   reviewContent,
   stage,
@@ -21,10 +22,11 @@ export default function QuestionsMain({
         <div className="reviewItems">
           {reviewContent?.map((item, i) => (
             <Question
+              key={`${projectId}-${i}`}
               stage={stage}
               item={item}
               handleItemChange={handleItemChange}
-              answer={item?.answer}
+              answer={item?.answer || ""}
             />
           ))}
         </div>

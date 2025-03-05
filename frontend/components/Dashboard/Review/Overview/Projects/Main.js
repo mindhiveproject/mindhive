@@ -131,7 +131,9 @@ export default function ProjectsBoard({
         setFilteredProjects(projectsFiltered);
       }
     }
-    filterProposals();
+    if (projects && projects.length) {
+      filterProposals();
+    }
   }, [projects, keyword, showMyClassOnly, sortBy]);
 
   return (
@@ -196,6 +198,7 @@ export default function ProjectsBoard({
       <div className="cardsArea">
         {filteredProjects.map((project) => (
           <Card
+            key={project?.id}
             stage={selector}
             project={project}
             status={status}
