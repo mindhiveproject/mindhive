@@ -19,21 +19,6 @@ export default function Panels({ query, user }) {
   return (
     <>
       <div className="menu">
-        {(userPermissions.includes("SCIENTIST") ||
-          userPermissions.includes("ADMIN")) && (
-          <Link href="/dashboard/develop/studies">
-            <div
-              className={
-                selectorForUser === "studies"
-                  ? "menuTitle selectedMenuTitle"
-                  : "menuTitle"
-              }
-            >
-              <p>My studies</p>
-            </div>
-          </Link>
-        )}
-
         <Link href="/dashboard/develop/projects">
           <div
             className={
@@ -43,6 +28,18 @@ export default function Panels({ query, user }) {
             }
           >
             <p>My projects</p>
+          </div>
+        </Link>
+
+        <Link href="/dashboard/develop/studies">
+          <div
+            className={
+              selectorForUser === "studies"
+                ? "menuTitle selectedMenuTitle"
+                : "menuTitle"
+            }
+          >
+            <p>My studies</p>
           </div>
         </Link>
 
