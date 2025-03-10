@@ -26,7 +26,7 @@ const sections = {
   },
   HYPVIS: {
     title: "Hypothesis Visualizer",
-    img: "/assets/icons/visualize/bar_chart.svg",
+    img: "/assets/icons/visualize/bar_chart_color.svg",
   },
 };
 
@@ -36,7 +36,6 @@ export default function SectionHeader({
   description,
   handleChange,
 }) {
-
   const defaultTitle = sections?.[section?.type]?.title;
 
   return (
@@ -47,16 +46,16 @@ export default function SectionHeader({
         </div>
         <div>{defaultTitle}</div>
         {section?.title !== defaultTitle ? (
-        <>
-          <div>—</div>
-          <div>{section?.title}</div>
-        </>
-      ) : (
-        <>
-          <div></div>
-          <div></div>
-        </>
-      )}
+          <>
+            <div>—</div>
+            <div>{section?.title}</div>
+          </>
+        ) : (
+          <>
+            <div></div>
+            <div></div>
+          </>
+        )}
         <div></div>
         <div>
           <Dropdown direction="left">

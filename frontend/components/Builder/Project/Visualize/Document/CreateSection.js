@@ -79,7 +79,22 @@ export default function CreateSection({ studyId, chapterId }) {
         </DropdownItem>
 
         <DropdownItem
-          onClick={() => addSection({ type: "STATTEST", title: "Statistical Test" })}
+          onClick={() =>
+            addSection({ type: "HYPVIS", title: "Hypothesis Visualizer" })
+          }
+        >
+          <div className="menuItem">
+            <div>
+              <img src={`/assets/icons/visualize/bar_chart_color.svg`} />
+            </div>
+            <div>Hypothesis Visualizer</div>
+          </div>
+        </DropdownItem>
+
+        <DropdownItem
+          onClick={() =>
+            addSection({ type: "STATTEST", title: "Statistical Test" })
+          }
         >
           <div className="menuItem">
             <div>
@@ -88,7 +103,6 @@ export default function CreateSection({ studyId, chapterId }) {
             <div>Statistical Test</div>
           </div>
         </DropdownItem>
-
       </DropdownMenu>
     </Dropdown>
   );
