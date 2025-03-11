@@ -203,7 +203,7 @@ export default function EmptyState({ projectId, studyId }) {
       </div>
       <div className="emptyStateButtons">
         <div className="menuButton">
-          <BrowseTemplates studyId={studyId} />
+          <BrowseTemplates projectId={projectId} studyId={studyId} />
         </div>
         <Dropdown
           icon={
