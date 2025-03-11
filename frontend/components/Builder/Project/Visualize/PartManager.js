@@ -4,6 +4,7 @@ import ProcessManager from "./ProcessManager";
 
 export default function PartManager({
   user,
+  projectId,
   studyId,
   pyodide,
   journal,
@@ -55,6 +56,7 @@ export default function PartManager({
   return (
     <ProcessManager
       user={user}
+      projectId={projectId}
       studyId={studyId}
       pyodide={pyodide}
       journal={journal}

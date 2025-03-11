@@ -2,14 +2,33 @@ import { Dropdown, DropdownMenu, DropdownItem } from "semantic-ui-react";
 
 import { useMutation } from "@apollo/client";
 import { CREATE_VIZSECTION } from "../../../../Mutations/VizSection";
-import { STUDY_VIZJOURNAL } from "../../../../Queries/VizJournal";
+import { GET_VIZJOURNALS } from "../../../../Queries/VizJournal";
 
-export default function CreateSection({ studyId, chapterId }) {
+export default function CreateSection({ projectId, studyId, chapterId }) {
   const [createSection, { data, loading, error }] = useMutation(
     CREATE_VIZSECTION,
     {
       variables: {},
-      refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
+      refetchQueries: [
+        {
+          query: GET_VIZJOURNALS,
+          variables: {
+            where:
+              projectId && studyId
+                ? {
+                    OR: [
+                      { project: { id: { equals: projectId } } },
+                      { study: { id: { equals: studyId } } },
+                    ],
+                  }
+                : projectId
+                ? { project: { id: { equals: projectId } } }
+                : studyId
+                ? { study: { id: { equals: studyId } } }
+                : null,
+          },
+        },
+      ],
     }
   );
 

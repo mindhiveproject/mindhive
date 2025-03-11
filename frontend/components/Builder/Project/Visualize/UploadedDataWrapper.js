@@ -6,6 +6,7 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function UploadedDataWrapper({
   user,
+  projectId,
   studyId,
   pyodide,
   journal,
@@ -57,6 +58,7 @@ export default function UploadedDataWrapper({
   return (
     <PartManager
       user={user}
+      projectId={projectId}
       studyId={studyId}
       pyodide={pyodide}
       journal={journal}

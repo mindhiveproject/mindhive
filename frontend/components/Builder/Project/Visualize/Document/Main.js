@@ -12,6 +12,7 @@ import filterData, { renameData } from "../Helpers/Filter";
 
 export default function Document({
   user,
+  projectId,
   studyId,
   part,
   chapter,
@@ -57,6 +58,7 @@ export default function Document({
     <div className="document">
       <ChapterHeader
         user={user}
+        projectId={projectId}
         studyId={studyId}
         part={part}
         chapter={chapter}
@@ -68,6 +70,7 @@ export default function Document({
         ]).map((section) => (
           <Section
             key={section?.id}
+            projectId={projectId}
             studyId={studyId}
             chapter={chapter}
             section={section}
@@ -80,7 +83,11 @@ export default function Document({
       </div>
       <br />
       <div className="createSectionButton">
-        <CreateSection studyId={studyId} chapterId={chapter?.id} />
+        <CreateSection
+          projectId={projectId}
+          studyId={studyId}
+          chapterId={chapter?.id}
+        />
       </div>
     </div>
   );

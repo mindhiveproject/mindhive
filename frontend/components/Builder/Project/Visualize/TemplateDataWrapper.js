@@ -266,6 +266,7 @@ export default function TemplateDataWrapper({
   return (
     <PartManager
       user={user}
+      projectId={projectId}
       studyId={studyId}
       pyodide={pyodide}
       journal={journal}

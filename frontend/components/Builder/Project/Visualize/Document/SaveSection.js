@@ -1,8 +1,8 @@
 import { useMutation } from "@apollo/client";
 import { UPDATE_VIZSECTION } from "../../../../Mutations/VizSection";
-import { STUDY_VIZJOURNAL } from "../../../../Queries/VizJournal";
+import { GET_VIZJOURNALS } from "../../../../Queries/VizJournal";
 
-export default function SaveSection({ studyId, sectionId, inputs }) {
+export default function SaveSection({ projectId, studyId, sectionId, inputs }) {
   const [updateSection, { data, loading, error }] = useMutation(
     UPDATE_VIZSECTION,
     {
@@ -13,7 +13,26 @@ export default function SaveSection({ studyId, sectionId, inputs }) {
           content: { ...inputs.content },
         },
       },
-      refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
+      refetchQueries: [
+        {
+          query: GET_VIZJOURNALS,
+          variables: {
+            where:
+              projectId && studyId
+                ? {
+                    OR: [
+                      { project: { id: { equals: projectId } } },
+                      { study: { id: { equals: studyId } } },
+                    ],
+                  }
+                : projectId
+                ? { project: { id: { equals: projectId } } }
+                : studyId
+                ? { study: { id: { equals: studyId } } }
+                : null,
+          },
+        },
+      ],
     }
   );
 

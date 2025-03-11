@@ -11,6 +11,7 @@ import SaveSection from "./SaveSection";
 import SectionHeader from "./SectionHeader";
 
 export default function Section({
+  projectId,
   studyId,
   chapter,
   section,
@@ -37,6 +38,7 @@ export default function Section({
   return (
     <div className="section">
       <SectionHeader
+        projectId={projectId}
         studyId={studyId}
         section={section}
         description={inputs?.description}
@@ -106,6 +108,7 @@ export default function Section({
 
       <div>
         <SaveSection
+          projectId={projectId}
           studyId={studyId}
           sectionId={section?.id}
           inputs={inputs}

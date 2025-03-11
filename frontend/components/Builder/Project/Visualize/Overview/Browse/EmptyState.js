@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 
 import { CREATE_VIZJOURNAL } from "../../../../../Mutations/VizJournal";
-import { STUDY_VIZJOURNAL } from "../../../../../Queries/VizJournal";
+import { GET_VIZJOURNALS } from "../../../../../Queries/VizJournal";
 import { Dropdown, DropdownMenu } from "semantic-ui-react";
 
 import Papa from "papaparse";
@@ -9,11 +9,30 @@ import { customAlphabet } from "nanoid";
 import BrowseTemplates from "./BrowseTemplates";
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
-export default function EmptyState({ studyId }) {
+export default function EmptyState({ projectId, studyId }) {
   const [createJournal, { data, loading, error }] = useMutation(
     CREATE_VIZJOURNAL,
     {
-      refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
+      refetchQueries: [
+        {
+          query: GET_VIZJOURNALS,
+          variables: {
+            where:
+              projectId && studyId
+                ? {
+                    OR: [
+                      { project: { id: { equals: projectId } } },
+                      { study: { id: { equals: studyId } } },
+                    ],
+                  }
+                : projectId
+                ? { project: { id: { equals: projectId } } }
+                : studyId
+                ? { study: { id: { equals: studyId } } }
+                : null,
+          },
+        },
+      ],
     }
   );
 
@@ -23,11 +42,20 @@ export default function EmptyState({ studyId }) {
         variables: {
           input: {
             title: "Unnamed journal",
-            study: {
-              connect: {
-                id: studyId,
-              },
-            },
+            project: projectId
+              ? {
+                  connect: {
+                    id: projectId,
+                  },
+                }
+              : null,
+            study: studyId
+              ? {
+                  connect: {
+                    id: studyId,
+                  },
+                }
+              : null,
             vizParts: {
               create: [
                 {
@@ -130,11 +158,20 @@ export default function EmptyState({ studyId }) {
       variables: {
         input: {
           title: "Unnamed journal",
-          study: {
-            connect: {
-              id: studyId,
-            },
-          },
+          project: projectId
+            ? {
+                connect: {
+                  id: projectId,
+                },
+              }
+            : null,
+          study: studyId
+            ? {
+                connect: {
+                  id: studyId,
+                },
+              }
+            : null,
           vizParts: {
             create: [
               {

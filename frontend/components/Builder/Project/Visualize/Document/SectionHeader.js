@@ -31,6 +31,7 @@ const sections = {
 };
 
 export default function SectionHeader({
+  projectId,
   studyId,
   section,
   description,
@@ -60,8 +61,16 @@ export default function SectionHeader({
         <div>
           <Dropdown direction="left">
             <DropdownMenu>
-              <DeleteSection studyId={studyId} sectionId={section?.id} />
-              <RenameSection studyId={studyId} sectionId={section?.id} />
+              <DeleteSection
+                projectId={projectId}
+                studyId={studyId}
+                sectionId={section?.id}
+              />
+              <RenameSection
+                projectId={projectId}
+                studyId={studyId}
+                sectionId={section?.id}
+              />
             </DropdownMenu>
           </Dropdown>
         </div>

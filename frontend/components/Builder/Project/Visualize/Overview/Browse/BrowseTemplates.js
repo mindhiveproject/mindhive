@@ -13,14 +13,33 @@ import {
 
 import { VIZPART_TEMPLATES } from "../../../../../Queries/VizPart";
 import { ADD_VIZPART } from "../../../../../Mutations/VizPart";
-import { STUDY_VIZJOURNAL } from "../../../../../Queries/VizJournal";
+import { GET_VIZJOURNALS } from "../../../../../Queries/VizJournal";
 import { CREATE_VIZJOURNAL } from "../../../../../Mutations/VizJournal";
 
-export default function BrowseTemplates({ studyId, journal }) {
+export default function BrowseTemplates({ projectId, studyId, journal }) {
   const [open, setOpen] = useState(false);
 
   const [addPart, { data: addPartData }] = useMutation(ADD_VIZPART, {
-    refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
+    refetchQueries: [
+      {
+        query: GET_VIZJOURNALS,
+        variables: {
+          where:
+            projectId && studyId
+              ? {
+                  OR: [
+                    { project: { id: { equals: projectId } } },
+                    { study: { id: { equals: studyId } } },
+                  ],
+                }
+              : projectId
+              ? { project: { id: { equals: projectId } } }
+              : studyId
+              ? { study: { id: { equals: studyId } } }
+              : null,
+        },
+      },
+    ],
   });
 
   const { data, loading, error } = useQuery(VIZPART_TEMPLATES);
@@ -38,11 +57,20 @@ export default function BrowseTemplates({ studyId, journal }) {
         variables: {
           input: {
             title: "Unnamed journal",
-            study: {
-              connect: {
-                id: studyId,
-              },
-            },
+            project: projectId
+              ? {
+                  connect: {
+                    id: projectId,
+                  },
+                }
+              : null,
+            study: studyId
+              ? {
+                  connect: {
+                    id: studyId,
+                  },
+                }
+              : null,
           },
         },
       });

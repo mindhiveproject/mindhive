@@ -30,6 +30,9 @@ export const VizJournal = list({
     study: relationship({
       ref: "Study.vizJournals",
     }),
+    project: relationship({
+      ref: "ProposalBoard.vizJournals",
+    }),
     vizParts: relationship({
       ref: "VizPart.vizJournal",
       many: true,

@@ -3,12 +3,31 @@ import { DropdownItem } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import { DELETE_VIZPART } from "../../../../Mutations/VizPart";
 
-import { STUDY_VIZJOURNAL } from "../../../../Queries/VizJournal";
+import { GET_VIZJOURNALS } from "../../../../Queries/VizJournal";
 
-export default function DeleteChapter({ studyId, part }) {
+export default function DeleteChapter({ projectId, studyId, part }) {
   const [deletePart, { data: deletePartData }] = useMutation(DELETE_VIZPART, {
     variables: {},
-    refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
+    refetchQueries: [
+      {
+        query: GET_VIZJOURNALS,
+        variables: {
+          where:
+            projectId && studyId
+              ? {
+                  OR: [
+                    { project: { id: { equals: projectId } } },
+                    { study: { id: { equals: studyId } } },
+                  ],
+                }
+              : projectId
+              ? { project: { id: { equals: projectId } } }
+              : studyId
+              ? { study: { id: { equals: studyId } } }
+              : null,
+        },
+      },
+    ],
   });
 
   const deleteVizPart = async () => {

@@ -29,7 +29,7 @@ function render_html(container, html) {
   container.appendChild(documentFragment);
 }
 
-export default function PyodideWrapper({ user, studyId }) {
+export default function PyodideWrapper({ user, projectId, studyId }) {
   const [isLoading, setIsLoading] = useState(false);
 
   // pyodide
@@ -70,7 +70,14 @@ export default function PyodideWrapper({ user, studyId }) {
           </Message>
         </div>
       )}
-      <JournalManager user={user} studyId={studyId} pyodide={pyodide} />
+      {(studyId || projectId) && (
+        <JournalManager
+          user={user}
+          projectId={projectId}
+          studyId={studyId}
+          pyodide={pyodide}
+        />
+      )}
     </>
   );
 }

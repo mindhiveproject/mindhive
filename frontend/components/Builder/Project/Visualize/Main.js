@@ -15,6 +15,7 @@ export default function Visualize({
   user,
   tab,
   toggleSidebar,
+  projectId,
   studyId,
 }) {
   return (
@@ -26,8 +27,7 @@ export default function Visualize({
         tab={tab}
         toggleSidebar={toggleSidebar}
       />
-      {!studyId && <>No study found, please save your study first.</>}
-      {studyId && <PyodideWrapper user={user} studyId={studyId} />}
+      <PyodideWrapper user={user} projectId={projectId} studyId={studyId} />
     </>
   );
 }

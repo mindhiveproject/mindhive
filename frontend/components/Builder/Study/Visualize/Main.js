@@ -8,9 +8,11 @@
 //            Overview and Document
 
 import Navigation from "../Navigation/Main";
-import PyodideWrapper from "./PyodideWrapper";
+// import PyodideWrapper from "./PyodideWrapper";
+// use code from the new project builder
+import PyodideWrapper from "../../Project/Visualize/PyodideWrapper";
 
-export default function Visualize({ query, user, tab, toggleSidebar }) {
+export default function StudyVisualize({ query, user, tab, toggleSidebar }) {
   const studyId = query?.selector;
 
   return (

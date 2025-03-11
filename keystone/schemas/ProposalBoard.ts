@@ -150,6 +150,10 @@ export const ProposalBoard = list({
       ref: "Log.proposal",
       many: true,
     }),
+    vizJournals: relationship({
+      ref: "VizJournal.project",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

@@ -2,7 +2,7 @@ import { Loader, Dimmer, Modal, DropdownItem } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 
 import { ADD_VIZPART } from "../../../../Mutations/VizPart";
-import { STUDY_VIZJOURNAL } from "../../../../Queries/VizJournal";
+import { GET_VIZJOURNALS } from "../../../../Queries/VizJournal";
 
 import { customAlphabet } from "nanoid";
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
@@ -14,6 +14,7 @@ import { StyledInput } from "../../../../styles/StyledForm";
 import { useState } from "react";
 
 export default function PromptModal({
+  projectId,
   studyId,
   journal,
   exampleDataset,
@@ -27,7 +28,26 @@ export default function PromptModal({
   });
 
   const [createPart, { data, loading, error }] = useMutation(ADD_VIZPART, {
-    refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
+    refetchQueries: [
+      {
+        query: GET_VIZJOURNALS,
+        variables: {
+          where:
+            projectId && studyId
+              ? {
+                  OR: [
+                    { project: { id: { equals: projectId } } },
+                    { study: { id: { equals: studyId } } },
+                  ],
+                }
+              : projectId
+              ? { project: { id: { equals: projectId } } }
+              : studyId
+              ? { study: { id: { equals: studyId } } }
+              : null,
+        },
+      },
+    ],
   });
 
   // helper function to get all column names of the given dataset

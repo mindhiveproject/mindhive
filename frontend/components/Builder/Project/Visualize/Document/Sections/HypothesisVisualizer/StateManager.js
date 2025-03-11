@@ -112,7 +112,6 @@ export default function StateManager({
       // Retrieve the variable from Pyodide
       try {
         const variableValue = await pyodide.runPythonAsync("fig_html");
-        console.log("variableValue", variableValue);
         // Copy the variable value to the clipboard
         await navigator.clipboard.writeText(variableValue);
         alert("Copied to clipboard!");

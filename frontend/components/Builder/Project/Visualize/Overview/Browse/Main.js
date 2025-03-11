@@ -7,6 +7,7 @@ import BrowseTemplates from "./BrowseTemplates";
 
 export default function Browse({
   user,
+  projectId,
   studyId,
   journal,
   part,
@@ -31,11 +32,13 @@ export default function Browse({
             >
               <DropdownMenu>
                 <CreatePart
+                  projectId={projectId}
                   studyId={studyId}
                   journal={journal}
                   dataOrigin="STUDY"
                 />
                 <CreatePart
+                  projectId={projectId}
                   studyId={studyId}
                   journal={journal}
                   dataOrigin="UPLOADED"
@@ -47,6 +50,7 @@ export default function Browse({
                     ?.map((p) => p?.name)
                     .includes("MENTOR")) && (
                   <CreatePart
+                    projectId={projectId}
                     studyId={studyId}
                     journal={journal}
                     dataOrigin="SIMULATED"
@@ -62,10 +66,11 @@ export default function Browse({
         </div>
       </div>
 
-      {!journal && <EmptyState studyId={studyId} />}
+      {!journal && <EmptyState projectId={projectId} studyId={studyId} />}
       {journal && (
         <Contents
           user={user}
+          projectId={projectId}
           studyId={studyId}
           journal={journal}
           activePart={part}

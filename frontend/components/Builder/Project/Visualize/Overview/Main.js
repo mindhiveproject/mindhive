@@ -5,6 +5,7 @@ export default function Overview({
   user,
   page,
   setPage,
+  projectId,
   studyId,
   journal,
   part,
@@ -22,6 +23,7 @@ export default function Overview({
       {page === "browse" && (
         <Browse
           user={user}
+          projectId={projectId}
           studyId={studyId}
           journal={journal}
           part={part}

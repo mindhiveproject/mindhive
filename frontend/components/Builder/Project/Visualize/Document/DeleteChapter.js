@@ -4,9 +4,10 @@ import { useMutation } from "@apollo/client";
 import { DELETE_VIZSECTION } from "../../../../Mutations/VizSection";
 import { DELETE_VIZCHAPTER } from "../../../../Mutations/VizChapter";
 
-import { STUDY_VIZJOURNAL } from "../../../../Queries/VizJournal";
+import { GET_VIZJOURNALS } from "../../../../Queries/VizJournal";
 
 export default function DeleteChapter({
+  projectId,
   studyId,
   part,
   chapter,
@@ -27,7 +28,26 @@ export default function DeleteChapter({
     DELETE_VIZCHAPTER,
     {
       variables: {},
-      refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
+      refetchQueries: [
+        {
+          query: GET_VIZJOURNALS,
+          variables: {
+            where:
+              projectId && studyId
+                ? {
+                    OR: [
+                      { project: { id: { equals: projectId } } },
+                      { study: { id: { equals: studyId } } },
+                    ],
+                  }
+                : projectId
+                ? { project: { id: { equals: projectId } } }
+                : studyId
+                ? { study: { id: { equals: studyId } } }
+                : null,
+          },
+        },
+      ],
     }
   );
 

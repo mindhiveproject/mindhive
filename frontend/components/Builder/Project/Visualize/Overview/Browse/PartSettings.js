@@ -10,9 +10,9 @@ import { StyledModalButtons } from "../../../../../styles/StyledModal";
 import { StyledInput } from "../../../../../styles/StyledForm";
 
 import { UPDATE_VIZPART } from "../../../../../Mutations/VizPart";
-import { STUDY_VIZJOURNAL } from "../../../../../Queries/VizJournal";
+import { GET_VIZJOURNALS } from "../../../../../Queries/VizJournal";
 
-export default function PartSettings({ user, studyId, part }) {
+export default function PartSettings({ user, projectId, studyId, part }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const { inputs, handleChange } = useForm({
@@ -31,7 +31,26 @@ export default function PartSettings({ user, studyId, part }) {
         },
       },
     },
-    refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
+    refetchQueries: [
+      {
+        query: GET_VIZJOURNALS,
+        variables: {
+          where:
+            projectId && studyId
+              ? {
+                  OR: [
+                    { project: { id: { equals: projectId } } },
+                    { study: { id: { equals: studyId } } },
+                  ],
+                }
+              : projectId
+              ? { project: { id: { equals: projectId } } }
+              : studyId
+              ? { study: { id: { equals: studyId } } }
+              : null,
+        },
+      },
+    ],
   });
 
   const update = async () => {

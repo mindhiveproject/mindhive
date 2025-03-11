@@ -1,5 +1,5 @@
 import { ADD_VIZPART } from "../../../../../Mutations/VizPart";
-import { STUDY_VIZJOURNAL } from "../../../../../Queries/VizJournal";
+import { GET_VIZJOURNALS } from "../../../../../Queries/VizJournal";
 
 import Papa from "papaparse";
 import { customAlphabet } from "nanoid";
@@ -11,6 +11,7 @@ import { DropdownItem } from "semantic-ui-react";
 import PromptModal from "../../Simulation/Modal";
 
 export default function CreatePart({
+  projectId,
   studyId,
   journal,
   dataOrigin,
@@ -18,7 +19,26 @@ export default function CreatePart({
   exampleVariables,
 }) {
   const [createPart, { data, loading, error }] = useMutation(ADD_VIZPART, {
-    refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
+    refetchQueries: [
+      {
+        query: GET_VIZJOURNALS,
+        variables: {
+          where:
+            projectId && studyId
+              ? {
+                  OR: [
+                    { project: { id: { equals: projectId } } },
+                    { study: { id: { equals: studyId } } },
+                  ],
+                }
+              : projectId
+              ? { project: { id: { equals: projectId } } }
+              : studyId
+              ? { study: { id: { equals: studyId } } }
+              : null,
+        },
+      },
+    ],
   });
 
   const addPart = () => {

@@ -8,6 +8,7 @@ import Preprocessor from "./Process/Main";
 
 export default function ProcessManager({
   user,
+  projectId,
   studyId,
   pyodide,
   journal,
@@ -103,6 +104,7 @@ export default function ProcessManager({
             user={user}
             page={page}
             setPage={setPage}
+            projectId={projectId}
             studyId={studyId}
             journal={journal}
             part={part}
@@ -120,6 +122,7 @@ export default function ProcessManager({
           <Document
             user={user}
             page={page}
+            projectId={projectId}
             studyId={studyId}
             pyodide={pyodide}
             chapter={chapter}
