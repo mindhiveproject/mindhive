@@ -436,7 +436,7 @@ export const StyledDasboardReview = styled.div`
         display: grid;
         margin: 16px 0px;
         grid-gap: 16px;
-        grid-template-columns: 3fr 1fr 2fr;
+        grid-template-columns: 3fr 1fr 1fr 1fr;
       }
       .checkboxArea {
         display: grid;
@@ -454,11 +454,13 @@ export const StyledDasboardReview = styled.div`
         padding: 12px;
       }
       .dropdown {
+        display: grid;
+        align-items: center;
+        justify-content: start;
         border-radius: 4px;
         width: 100%;
         font-size: 16px;
         line-height: 24px;
-        padding: 12px;
         .default.text {
           color: #979797;
         }

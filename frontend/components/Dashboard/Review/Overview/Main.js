@@ -99,6 +99,7 @@ export default function Overview({ query, user }) {
           selector={selector}
           allUniqueClassIds={allUniqueClassIds}
           myClassesIds={myClasses.map((cl) => cl?.id)}
+          allClasses={allClasses}
         />
       )}
 

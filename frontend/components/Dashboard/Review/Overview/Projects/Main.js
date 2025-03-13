@@ -21,10 +21,12 @@ export default function ProjectsBoard({
   selector,
   allUniqueClassIds,
   myClassesIds,
+  allClasses,
 }) {
   const [keyword, setKeyword] = useState("");
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [sortBy, setSortBy] = useState("");
+  const [filteredClasses, setFilteredClasses] = useState([]);
   const [showMyClassOnly, setShowMyClassOnly] = useState(false);
   const [filterSortMessage, setFilterSortMessage] = useState(
     "Showing all projects"
@@ -75,15 +77,28 @@ export default function ProjectsBoard({
   useEffect(() => {
     async function filterProposals() {
       const projectsFiltered = projects.filter((project) => {
-        if (keyword || showMyClassOnly) {
-          const isMatchingKeyword = project.title
-            .toLowerCase()
-            .includes(keyword.toLowerCase());
-          const isInMyClasses = containsAny(
-            [project?.usedInClass?.id],
-            myClassesIds
-          );
-          return isMatchingKeyword && isInMyClasses;
+        let isMatchingKeyword = true;
+        let isInFilteredClasses = true;
+        if (keyword || filteredClasses.length) {
+          if (keyword) {
+            isMatchingKeyword = project.title
+              .toLowerCase()
+              .includes(keyword.toLowerCase());
+          }
+          if (filteredClasses.length) {
+            isInFilteredClasses = containsAny(
+              [project?.usedInClass?.id],
+              filteredClasses
+            );
+          }
+          // let isInMyClasses;
+          // if (showMyClassOnly) {
+          //    isInMyClasses = containsAny(
+          //     [project?.usedInClass?.id],
+          //     myClassesIds
+          //   );
+          // }
+          return isMatchingKeyword && isInFilteredClasses;
         } else {
           return true;
         }
@@ -134,7 +149,7 @@ export default function ProjectsBoard({
     if (projects && projects.length) {
       filterProposals();
     }
-  }, [projects, keyword, showMyClassOnly, sortBy]);
+  }, [projects, keyword, showMyClassOnly, sortBy, filteredClasses]);
 
   return (
     <div className="board">
@@ -177,7 +192,7 @@ export default function ProjectsBoard({
             value={sortBy}
           />
         </div>
-        <div className="checkboxArea">
+        {/* <div className="checkboxArea">
           <Checkbox
             onChange={() => {
               if (!showMyClassOnly) {
@@ -190,7 +205,22 @@ export default function ProjectsBoard({
             checked={showMyClassOnly}
             label="Only show projects in my class"
           />
-        </div>
+        </div> */}
+        <Dropdown
+          placeholder="Filter by classes"
+          fluid
+          multiple
+          selection
+          options={allClasses.map((c) => ({
+            key: c.id,
+            value: c.id,
+            text: c.title,
+          }))}
+          onChange={(event, data) => {
+            setFilteredClasses(data.value);
+          }}
+          value={filteredClasses}
+        />
       </div>
 
       <div className="p16_500">{filterSortMessage}</div>
