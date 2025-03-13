@@ -206,6 +206,7 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
       }
       collaborators {
         username
+        publicReadableId
       }
       study {
         id

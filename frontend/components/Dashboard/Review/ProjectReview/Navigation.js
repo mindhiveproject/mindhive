@@ -78,7 +78,16 @@ export default function Navigation({
         </div>
       </Link>
 
-      <div className="title">{study?.title}</div>
+      <div className="title">{project?.title}</div>
+      <div className="collaborators">
+        <span>Collaborators (public readable IDs): </span>
+        {project?.collaborators?.map((c, num) => (
+          <span>
+            {num !== 0 && `, `}
+            {c?.publicReadableId}{" "}
+          </span>
+        ))}
+      </div>
 
       {canReview && (
         <div className="saveBtn">

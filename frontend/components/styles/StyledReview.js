@@ -760,9 +760,10 @@ export const StyledDasboardReview = styled.div`
     .header {
       padding: 1rem 2rem;
       display: grid;
-      grid-template-columns: 250px 1fr 250px;
-      grid-gap: 1rem;
+      grid-template-columns: 250px 1fr 1fr auto;
+      grid-gap: 2rem;
       align-items: center;
+      justify-items: baseline;
 
       .backBtn {
         display: grid;
