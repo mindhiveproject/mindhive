@@ -217,6 +217,34 @@ export default function ProposalCard({
                 {ReactHtmlParser(inputs?.description)}
               </div>
 
+              {proposalCard?.settings?.includeInReport && (
+                <>
+                  <div className="cardSubheader">For MindHive Network</div>
+                  <div className="cardSubheaderComment">
+                    The content you include here will be visible in the Feedback
+                    Center once it is submitted via an Action Card.
+                  </div>
+                  <div className="jodit">
+                    {isLocked ? (
+                      ReactHtmlParser(content?.current)
+                    ) : (
+                      <div onFocus={handleFocus}>
+                        <JoditEditor
+                          content={content?.current}
+                          setContent={(newContent) =>
+                            handleContentChange({
+                              contentType: "content",
+                              newContent,
+                            })
+                          }
+                          minHeight={600}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+
               {!proposalCard?.settings?.excludeFromCollaborators && (
                 <>
                   <div className="cardSubheader">
@@ -239,34 +267,7 @@ export default function ProposalCard({
                               newContent,
                             })
                           }
-                        />
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
-
-              {proposalCard?.settings?.includeInReport && (
-                <>
-                  <div className="cardSubheader">For MindHive Network</div>
-                  <div className="cardSubheaderComment">
-                    The content you include here will be visible in the Feedback
-                    Center once it is submitted via an Action Card.
-                  </div>
-                  <div className="jodit">
-                    {isLocked ? (
-                      ReactHtmlParser(content?.current)
-                    ) : (
-                      <div onFocus={handleFocus}>
-                        <JoditEditor
-                          content={content?.current}
-                          setContent={(newContent) =>
-                            handleContentChange({
-                              contentType: "content",
-                              newContent,
-                            })
-                          }
-                          onFocus={handleFocus}
+                          minHeight={300}
                         />
                       </div>
                     )}

@@ -117,6 +117,33 @@ export default function BuilderProposalCard({
             </div>
           </label>
 
+          {inputs?.settings?.includeInReport && (
+            <>
+              <label htmlFor="description">
+                <div className="cardHeader">
+                  Student Response Box - For MindHive Network
+                </div>
+                <div className="cardSubheaderComment">
+                  The content students include here will be visible in the
+                  Feedback Center once it is submitted via an Action Card.
+                  Include any templates or placeholder text as needed
+                </div>
+              </label>
+              <div className="jodit">
+                <JoditEditor
+                  content={content?.current}
+                  setContent={(newContent) =>
+                    handleContentChange({
+                      contentType: "content",
+                      newContent,
+                    })
+                  }
+                  minHeight={200}
+                />
+              </div>
+            </>
+          )}
+
           {!inputs?.settings?.excludeFromCollaborators && (
             <>
               <label htmlFor="description">
@@ -139,34 +166,7 @@ export default function BuilderProposalCard({
                       newContent,
                     })
                   }
-                  minHeight={300}
-                />
-              </div>
-            </>
-          )}
-
-          {inputs?.settings?.includeInReport && (
-            <>
-              <label htmlFor="description">
-                <div className="cardHeader">
-                  Student Response Box - For MindHive Network
-                </div>
-                <div className="cardSubheaderComment">
-                  The content students include here will be visible in the
-                  Feedback Center once it is submitted via an Action Card.
-                  Include any templates or placeholder text as needed
-                </div>
-              </label>
-              <div className="jodit">
-                <JoditEditor
-                  content={content?.current}
-                  setContent={(newContent) =>
-                    handleContentChange({
-                      contentType: "content",
-                      newContent,
-                    })
-                  }
-                  minHeight={300}
+                  minHeight={200}
                 />
               </div>
             </>

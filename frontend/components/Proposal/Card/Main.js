@@ -325,6 +325,50 @@ export default function ProposalCard({
               </div>
             )}
 
+            {proposalBuildMode && inputs?.settings?.includeInReport && (
+              <>
+                <label htmlFor="description">
+                  <div className="cardHeader">
+                    Student Response Box - For MindHive Network
+                  </div>
+                  <div className="cardSubheaderComment">
+                    The content students include here will be visible in the
+                    Feedback Center once it is submitted via an Action Card.
+                    Include any templates or placeholder text as needed
+                  </div>
+                </label>
+                <div className="jodit">
+                  <JoditEditor
+                    content={content?.current}
+                    setContent={(newContent) =>
+                      handleContentChange({
+                        contentType: "content",
+                        newContent,
+                      })
+                    }
+                    minHeight={600}
+                  />
+                </div>
+              </>
+            )}
+
+            {!proposalBuildMode && proposalCard?.settings?.includeInReport && (
+              <>
+                <div className="jodit">
+                  <JoditEditor
+                    content={content?.current}
+                    setContent={(newContent) =>
+                      handleContentChange({
+                        contentType: "content",
+                        newContent,
+                      })
+                    }
+                    minHeight={600}
+                  />
+                </div>
+              </>
+            )}
+
             {proposalBuildMode && (
               <label htmlFor="description">
                 <div className="cardHeader">
@@ -350,67 +394,6 @@ export default function ProposalCard({
                 minHeight={300}
               />
             </div>
-
-            {proposalBuildMode && inputs?.settings?.includeInReport && (
-              <>
-                <label htmlFor="description">
-                  <div className="cardHeader">
-                    Student Response Box - For MindHive Network
-                  </div>
-                  <div className="cardSubheaderComment">
-                    The content students include here will be visible in the
-                    Feedback Center once it is submitted via an Action Card.
-                    Include any templates or placeholder text as needed
-                  </div>
-                </label>
-                <div className="jodit">
-                  <JoditEditor
-                    content={content?.current}
-                    setContent={(newContent) =>
-                      handleContentChange({
-                        contentType: "content",
-                        newContent,
-                      })
-                    }
-                    minHeight={300}
-                  />
-                </div>
-              </>
-            )}
-
-            {!proposalBuildMode && proposalCard?.settings?.includeInReport && (
-              <>
-                <div className="jodit">
-                  <JoditEditor
-                    content={content?.current}
-                    setContent={(newContent) =>
-                      handleContentChange({
-                        contentType: "content",
-                        newContent,
-                      })
-                    }
-                  />
-                </div>
-              </>
-            )}
-
-            {/* {proposalBuildMode && (
-              <>
-                <div className="cardHeader">Preview Linked Resources</div>
-                {inputs?.resources && inputs?.resources.length ? (
-                  <div className="resourcePreview">
-                    {inputs?.resources.map((resource) => (
-                      <div className="resourceBlockPreview">
-                        <h2>{resource?.title}</h2>
-                        <div>{ReactHtmlParser(resource?.content?.main)}</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </>
-            )} */}
 
             {!proposalBuildMode && (
               <>
