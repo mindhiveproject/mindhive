@@ -3,7 +3,12 @@ import { GET_USER_CLASSES } from "../../../Queries/User";
 
 import { Dropdown } from "semantic-ui-react";
 
-export default function LinkClass({ classes, project, handleChange }) {
+export default function LinkClass({
+  classes,
+  project,
+  handleChange,
+  refetchUserProjectsInClass,
+}) {
   const { data, error, loading } = useQuery(GET_USER_CLASSES);
 
   const user = data?.authenticatedItem || {
@@ -40,6 +45,7 @@ export default function LinkClass({ classes, project, handleChange }) {
         value: classes?.filter((cl) => cl?.id === data?.value)[0],
       },
     });
+    refetchUserProjectsInClass();
   };
 
   return (

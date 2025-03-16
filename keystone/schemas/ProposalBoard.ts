@@ -63,6 +63,7 @@ export const ProposalBoard = list({
     isDefault: checkbox({ isFilterable: true }),
     isTemplate: checkbox({ isFilterable: true }),
     isSubmitted: checkbox({ isFilterable: true }),
+    isMain: checkbox({ isFilterable: true }),
     // status: select({
     //   options: [
     //     { label: "Working", value: "WORKING" },

@@ -19,6 +19,14 @@ export default function ProjectManager(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [studyId, setStudyId] = useState("");
   const [studyName, setStudyName] = useState("");
+  const [projectId, setProjectId] = useState(props?.data?.projectId);
+
+  const projectOptions =
+    props?.data?.projects.map((project) => ({
+      key: project?.id,
+      text: project?.title,
+      value: project?.id,
+    })) || [];
 
   const { data: dataClass } = useQuery(GET_CLASS, {
     variables: { code: props?.classCode },
@@ -33,7 +41,6 @@ export default function ProjectManager(props) {
     })) || [];
 
   const [updateProject] = useMutation(UPDATE_PROJECT_BOARD, {
-    variables: { id: props?.data?.projectId },
     refetchQueries: [
       {
         query: GET_STUDENTS_DASHBOARD_DATA,
@@ -62,7 +69,7 @@ export default function ProjectManager(props) {
         input: {
           proposal: {
             connect: {
-              id: props?.data?.projectId,
+              id: projectId,
             },
           },
           collaborators: {
@@ -82,6 +89,7 @@ export default function ProjectManager(props) {
     }
     await updateProject({
       variables: {
+        id: projectId,
         input: {
           study: {
             create: {
@@ -124,6 +132,18 @@ export default function ProjectManager(props) {
         <Modal.Content scrolling>
           <StyledClass>
             <div className="dashboard">
+              {projectOptions.length > 1 && (
+                <div>
+                  <h3>Select the student's project</h3>
+                  <Dropdown
+                    selection
+                    options={projectOptions}
+                    value={projectId}
+                    onChange={(e, data) => setProjectId(data?.value)}
+                  />
+                </div>
+              )}
+
               <div className="manageModal">
                 <div>
                   <h3>Select the existing study</h3>

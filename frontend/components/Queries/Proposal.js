@@ -587,3 +587,25 @@ export const DEFAULT_PROJECT_BOARDS = gql`
     }
   }
 `;
+
+// get the project boards where the user is an author or a collaborator
+export const GET_MY_PROJECT_BOARDS_IN_CLASS = gql`
+  query GET_MY_PROJECT_BOARDS_IN_CLASS($userId: ID!, $classId: ID!) {
+    proposalBoards(
+      where: {
+        AND: [
+          { author: { id: { equals: $userId } } }
+          { usedInClass: { id: { equals: $classId } } }
+        ]
+      }
+    ) {
+      id
+      title
+      author {
+        id
+        username
+      }
+      createdAt
+    }
+  }
+`;

@@ -72,8 +72,10 @@ export default function Dashboard({ myclass, user, query }) {
       isPeerFeedbackOpenForComments,
       projectReportStatus,
       isProjectReportOpenForComments;
+
     if (projects && projects.length) {
-      project = projects[0];
+      const mainProjects = projects.filter((p) => p?.isMain);
+      project = (mainProjects.length && mainProjects[0]) || projects[0];
       projectId = project?.id;
       projectTitle = project?.title;
       projectCollaborators = project?.collaborators
@@ -104,6 +106,7 @@ export default function Dashboard({ myclass, user, query }) {
 
     return {
       id: student?.id,
+      publicId: student?.publicId,
       username: student?.username,
       project,
       projectId,
@@ -120,6 +123,7 @@ export default function Dashboard({ myclass, user, query }) {
       isPeerFeedbackOpenForComments,
       projectReportStatus,
       isProjectReportOpenForComments,
+      projects,
     };
   });
 

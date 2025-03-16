@@ -64,6 +64,34 @@ const StyledProfile = styled.div`
     border-radius: 5px;
     align-content: baseline;
   }
+  .headerCreatedProjects {
+    display: grid;
+    grid-template-columns: 2fr 1fr 200px 200px 350px;
+    padding: 10px;
+    font-weight: bold;
+    grid-gap: 1rem;
+  }
+  .rowCreatedProjects {
+    display: grid;
+    padding: 10px;
+    grid-template-columns: 2fr 1fr 200px 200px 350px;
+    background: white;
+    grid-gap: 1rem;
+    .title {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-gap: 1rem;
+      align-items: center;
+    }
+    .mainProjectBtn {
+      background: red;
+      border: 1px solid red;
+    }
+  }
+  .selectedAsMain {
+    border: 1px solid red;
+  }
+
   .headerCreatedStudies {
     display: grid;
     grid-template-columns: 3fr 1fr 250px 250px;

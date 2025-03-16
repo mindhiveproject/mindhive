@@ -46,7 +46,10 @@ export default function Created({ query, user, profile }) {
           </div>
           <div>{study?.role}</div>
           <div>{moment(study.createdAt).format("MMMM D, YYYY, h:mma")}</div>
-          <div>{moment(study.updatedAt).format("MMMM D, YYYY, h:mma")}</div>
+          <div>
+            {study.updatedAt &&
+              moment(study.updatedAt).format("MMMM D, YYYY, h:mma")}
+          </div>
         </div>
       ))}
     </div>

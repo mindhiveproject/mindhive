@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { useMutation } from "@apollo/client";
-import { Checkbox } from "semantic-ui-react";
-
+import { Checkbox, Dropdown } from "semantic-ui-react";
 import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
 
 import useForm from "../../../lib/useForm";
@@ -9,6 +8,29 @@ import JoditEditor from "../../Jodit/Editor";
 
 import CardType from "./Forms/Type";
 import Resources from "./Forms/Resources";
+
+const peerReviewOptions = [
+  {
+    key: "actionSubmit",
+    text: "Proposal",
+    value: "ACTION_SUBMIT",
+  },
+  {
+    key: "actionPeerFeedback",
+    text: "Peer Feedback",
+    value: "ACTION_PEER_FEEDBACK",
+  },
+  {
+    key: "actionCollectingData",
+    text: "Collecting Data",
+    value: "ACTION_COLLECTING_DATA",
+  },
+  {
+    key: "actionProjectReport",
+    text: "Project Report",
+    value: "ACTION_PROJECT_REPORT",
+  },
+];
 
 export default function BuilderProposalCard({
   user,
@@ -234,12 +256,46 @@ export default function BuilderProposalCard({
             </div>
           </>
 
-          {user.permissions.map((p) => p?.name).includes("ADMIN") && (
+          {inputs?.settings?.includeInReport && (
+            <div>
+              <div className="cardSubheaderComment">
+                Choose which step of the peer review a card should go in
+              </div>
+              <Dropdown
+                placeholder="Select option"
+                fluid
+                multiple
+                search
+                selection
+                lazyLoad
+                options={peerReviewOptions}
+                onChange={(event, data) => {
+                  handleChange({
+                    target: {
+                      name: "settings",
+                      value: {
+                        ...inputs.settings,
+                        includeInReviewSteps: data.value,
+                      },
+                    },
+                  });
+                }}
+                value={inputs?.settings?.includeInReviewSteps || []}
+              />
+            </div>
+          )}
+
+          {/* {user.permissions.map((p) => p?.name).includes("ADMIN") && (
             <div>
               <div className="cardHeader">Type</div>
               <CardType type={inputs?.type} handleChange={handleChange} />
             </div>
-          )}
+          )} */}
+
+          <div>
+            <div className="cardHeader">Type</div>
+            <CardType type={inputs?.type} handleChange={handleChange} />
+          </div>
 
           <>
             <div className="cardHeader">Resources</div>

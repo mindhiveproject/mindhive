@@ -5,6 +5,7 @@ import Link from "next/link";
 import StyledProfile from "../../styles/StyledProfile";
 
 import Participated from "./Participated";
+import Projects from "./Projects";
 import Created from "./Created";
 import Reviewed from "./Reviewed/Main";
 import Journal from "./Journal/Main";
@@ -12,7 +13,7 @@ import Homework from "./Homework/Main";
 
 export default function StudentPage({ query, user }) {
   const { area, selector } = query;
-  const page = query?.page || "participated";
+  const page = query?.page || "projects";
 
   const { data, loading, error } = useQuery(GET_USER, {
     variables: { id: selector },
@@ -21,6 +22,8 @@ export default function StudentPage({ query, user }) {
     researcherIn: [],
     collaboratorInStudy: [],
     reviews: [],
+    authorOfProposal: [],
+    collaboratorInProposal: [],
   };
 
   return (
@@ -43,16 +46,14 @@ export default function StudentPage({ query, user }) {
             href={{
               pathname: `/dashboard/${area}/${selector}`,
               query: {
-                page: "participated",
+                page: "projects",
               },
             }}
             className={
-              page === "participated"
-                ? "menuTitle selectedMenuTitle"
-                : "menuTitle"
+              page === "projects" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>Participated</p>
+            <p>Created projects</p>
           </Link>
 
           <Link
@@ -66,7 +67,23 @@ export default function StudentPage({ query, user }) {
               page === "created" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>Created</p>
+            <p>Created studies</p>
+          </Link>
+
+          <Link
+            href={{
+              pathname: `/dashboard/${area}/${selector}`,
+              query: {
+                page: "participated",
+              },
+            }}
+            className={
+              page === "participated"
+                ? "menuTitle selectedMenuTitle"
+                : "menuTitle"
+            }
+          >
+            <p>Participated</p>
           </Link>
 
           <Link
@@ -114,6 +131,11 @@ export default function StudentPage({ query, user }) {
         <div>
           {page === "participated" && (
             <Participated query={query} user={user} profile={profile} />
+          )}
+        </div>
+        <div>
+          {page === "projects" && (
+            <Projects query={query} user={user} profile={profile} />
           )}
         </div>
         <div>

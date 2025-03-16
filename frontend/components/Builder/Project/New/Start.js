@@ -6,12 +6,16 @@ import useForm from "../../../../lib/useForm";
 
 import { StyledBuilderArea } from "../../../styles/StyledBuilder";
 import { StyledInput } from "../../../styles/StyledForm";
+import { MessageHeader, Message } from "semantic-ui-react";
 
 import LinkClass from "./LinkClass";
 import Collaborators from "../../../Global/Collaborators";
 
 import { GET_USER_CLASSES } from "../../../Queries/User";
-import { DEFAULT_PROJECT_BOARDS } from "../../../Queries/Proposal";
+import {
+  DEFAULT_PROJECT_BOARDS,
+  GET_MY_PROJECT_BOARDS_IN_CLASS,
+} from "../../../Queries/Proposal";
 import { COPY_PROPOSAL_MUTATION } from "../../../Mutations/Proposal";
 
 import { useEffect } from "react";
@@ -19,7 +23,6 @@ import { useEffect } from "react";
 export default function StartProject({ query, user }) {
   const { data, error } = useQuery(GET_USER_CLASSES);
   const studentClasses = data?.authenticatedItem?.studentIn || [];
-
   const userClasses = [
     ...user?.teacherIn.map((cl) => cl?.id),
     ...user?.mentorIn.map((cl) => cl?.id),
@@ -36,6 +39,18 @@ export default function StartProject({ query, user }) {
     projectName: "",
     collaborators: [{ id: user?.id }],
     class: studentClasses?.length ? studentClasses[0] : undefined,
+  });
+
+  const {
+    data: dataProjects,
+    error: errorProjects,
+    refetch,
+  } = useQuery(GET_MY_PROJECT_BOARDS_IN_CLASS, {
+    variables: {
+      userId: user?.id,
+      classId: inputs?.class?.id,
+    },
+    skip: !inputs?.class?.id,
   });
 
   // get the class template proposal ID that has to be copied
@@ -123,6 +138,7 @@ export default function StartProject({ query, user }) {
                     classes={studentClasses}
                     project={inputs}
                     handleChange={handleChange}
+                    refetchUserProjectsInClass={refetch}
                   />
                 </div>
               )}
@@ -160,6 +176,7 @@ export default function StartProject({ query, user }) {
                     classes={studentClasses}
                     project={inputs}
                     handleChange={handleChange}
+                    refetchUserProjectsInClass={refetch}
                   />
                 </div>
               )}
@@ -174,6 +191,17 @@ export default function StartProject({ query, user }) {
                   handleChange={handleChange}
                 />
               </div>
+
+              {dataProjects && dataProjects?.proposalBoards.length > 1 && (
+                <Message warning>
+                  <MessageHeader>
+                    You already have a project associated with this class
+                  </MessageHeader>
+                  <p>
+                    Do not proceed further unless you know what you are doing.
+                  </p>
+                </Message>
+              )}
             </StyledInput>
             <button onClick={saveNewProject}>Create Project</button>
           </div>

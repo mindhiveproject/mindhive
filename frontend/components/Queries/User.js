@@ -166,6 +166,20 @@ export const GET_USER = gql`
         slug
         flow
       }
+      authorOfProposal {
+        id
+        title
+        isMain
+        createdAt
+        updatedAt
+      }
+      collaboratorInProposal {
+        id
+        title
+        isMain
+        createdAt
+        updatedAt
+      }
       datasets {
         id
         isCompleted
