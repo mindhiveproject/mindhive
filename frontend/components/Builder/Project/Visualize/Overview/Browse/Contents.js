@@ -56,7 +56,7 @@ export default function Contents({
     },
     HYPVIS: {
       title: "Hypothesis Visualizer",
-      img: "/assets/icons/visualize/bar_chart_color.svg",
+      img: "/assets/icons/visualize/hypVis_icon.svg",
     },
   };
 

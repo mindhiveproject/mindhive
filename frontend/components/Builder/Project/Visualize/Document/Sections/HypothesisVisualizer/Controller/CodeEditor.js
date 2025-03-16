@@ -31,9 +31,9 @@ export default function CodeEditor({ code, handleContentChange, runCode }) {
 
   return (
     <>
-      <div>
+      {/* <div>
         <button onClick={() => runCode({ code })}>Graph hypothesis</button>
-      </div>
+      </div> */}
       <Accordion>
         <AccordionTitle
           active={activeIndex === 0}

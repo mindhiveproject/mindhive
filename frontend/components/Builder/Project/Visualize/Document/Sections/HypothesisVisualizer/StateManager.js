@@ -107,21 +107,24 @@ export default function StateManager({
   const AxesComponent = AxisTemplateMap[type] || AxesDefault;
   const OptionsComponent = OptionsTemplateMap[type] || OptionsDefault;
 
-  const copyToClipboard = async () => {
-    try {
-      // Retrieve the variable from Pyodide
-      try {
-        const variableValue = await pyodide.runPythonAsync("fig_html");
-        // Copy the variable value to the clipboard
-        await navigator.clipboard.writeText(variableValue);
-        alert("Copied to clipboard!");
-      } catch (error) {
-        console.error("Failed to retrieve variable: ", error);
-      }
-    } catch (error) {
-      console.error("Failed to copy: ", error);
-    }
-  };
+  // Commenting out the copy to clipboard functionality becuase it has
+  // been implemented in the child components
+  
+  // const copyToClipboard = async () => {
+  //   try {
+  //     // Retrieve the variable from Pyodide
+  //     try {
+  //       const variableValue = await pyodide.runPythonAsync("fig_html");
+  //       // Copy the variable value to the clipboard
+  //       await navigator.clipboard.writeText(variableValue);
+  //       alert("Copied to clipboard!");
+  //     } catch (error) {
+  //       console.error("Failed to retrieve variable: ", error);
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to copy: ", error);
+  //   }
+  // };
 
   return (
     <div className="graph">
@@ -152,10 +155,10 @@ export default function StateManager({
               runCode={runCode}
               sectionId={sectionId}
             />
-            <button onClick={copyToClipboard}>
+            {/* <button onClick={copyToClipboard}>
               Click here to copy this plot to you clipboard and paste it in your
               Project Board
-            </button>
+            </button> */}
           </div>
           <div className="graphRenderContainer">
             <AxesComponent
@@ -168,7 +171,7 @@ export default function StateManager({
               selectors={selectors}
               handleContentChange={handleContentChangeWrapper}
             />
-            <div className="dashboardContainer">
+            {/* <div className="dashboardContainer">
               <OptionsComponent
                 type={type}
                 variables={variablesToDisplay}
@@ -179,7 +182,7 @@ export default function StateManager({
                 selectors={selectors}
                 handleContentChange={handleContentChange}
               />
-            </div>
+            </div> */}
           </div>
           {code && pyodide && (
             <CodeEditor
