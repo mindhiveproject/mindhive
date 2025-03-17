@@ -159,6 +159,8 @@ if trendline_handle:
 
 plt.tight_layout()
 
+plt.xticks(rotation=45)
+
 ax.xaxis.set_ticks([])  # Remove x-axis ticks
 ax.set_xticklabels([])  # Remove x-axis labels
 ax.yaxis.set_ticks([])  # Remove y-axis ticks
@@ -207,14 +209,16 @@ js.render_html(html_output, fig_html)`;
       <div
         className="template"
         onClick={() =>
-          selectGraphType({ type: "ABDesign", title: "AB Design" })
+          selectGraphType({ 
+            type: "ABDesign", 
+            title: "AB Design" })
         }
       >
         <div>
           <img src={`/assets/icons/visualize/hypVisABdesign.svg`} />
         </div>
         <div className="text">
-          <div className="title">AB DESIGN</div>
+          <div className="title">Experimental Hypothesis</div>
           <div className="description">
             Create graphical representation of hypothesis for an experimental
             (A-B) design where two groups or more are compared.
@@ -228,7 +232,7 @@ js.render_html(html_output, fig_html)`;
         onClick={() =>
           selectGraphType({
             type: "CorrAnalysis",
-            title: "Correlational analysis",
+            title: "Correlational Hypothesis",
           })
         }
       >
@@ -236,7 +240,7 @@ js.render_html(html_output, fig_html)`;
           <img src={`/assets/icons/visualize/hypVisCorrelation.svg`} />
         </div>
         <div className="text">
-          <div className="title">Correlational analysis</div>
+          <div className="title">Correlational Hypothesis</div>
           <div className="description">
             Create graphical representation of hypothesis where two quantities
             are expected to vary together.

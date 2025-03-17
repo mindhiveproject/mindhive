@@ -32,6 +32,7 @@ export default function StateManager({
   sectionId,
   data,
   variables,
+  user,
 }) {
   const [isRunning, setIsRunning] = useState(false);
   const [output, setOutput] = useState("");
@@ -164,6 +165,7 @@ export default function StateManager({
             <AxesComponent
               type={type}
               variables={variablesToDisplay}
+              user={user}
               code={code}
               pyodide={pyodide}
               runCode={runCodeCallback}

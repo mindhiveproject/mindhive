@@ -206,3 +206,4 @@ print("Py code parameters", parameters)
     </>
   );
 }
+//TODO: Add aggregate variables from study builder to the dropdowns

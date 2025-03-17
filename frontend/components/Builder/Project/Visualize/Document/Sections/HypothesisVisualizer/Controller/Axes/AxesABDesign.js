@@ -6,6 +6,7 @@ import AggregateVarSelector from "../Fields/AggregateVarSelector";
 export default function Axes({
   type,
   variables,
+  user,
   code,
   pyodide,
   runCode,
@@ -91,6 +92,27 @@ print("Py code parameters", parameters)
     }).catch(err => {
       console.error('Error copying text: ', err);
     });
+  };
+    
+  const copyAiToClipboard = () => {
+
+    // TBD: Implement AI hypothesis generation
+
+    // const { dependentVariable, independentVariable, ivConditions } = selectors;
+    // let textContent = `I predict that the ${dependentVariable || 'dependent variable'} will vary across the ${ivConditions || 'number of'} conditions of the ${independentVariable || 'independent variable'} as follows:\n`;
+  
+    // for (let i = 1; i <= groupNb; i++) {
+    //   const condition = selectors[`condition${i}`] || `condition ${i}`;
+    //   const rank = selectors[`group${i}`] || 0;
+    //   textContent += `- ${condition} will occupy rank #${rank}\n`;
+    // }
+  
+    // navigator.clipboard.writeText(textContent).then(() => {
+    //   alert('Text copied to clipboard: ' + textContent);
+    //   console.log('Text copied to clipboard: ' + textContent);
+    // }).catch(err => {
+    //   console.error('Error copying text: ', err);
+    // });
   };
 
   const copyFigToClipboard = async () => {
@@ -255,8 +277,23 @@ print("Py code parameters", parameters)
           <div>Copy graph to clipboard</div>
           <img src={`/assets/icons/visualize/clipboard-copy.svg`} />
         </div>
+        {(user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
+          user?.permissions?.map((p) => p?.name).includes("TEACHER") ||
+          user?.permissions
+            ?.map((p) => p?.name)
+            .includes("MENTOR")) && (
+            // .includes("STUDENT")) && ( //// will include students later
+
+              <div className="clipboard-copy-button" onClick={copyAiToClipboard}>
+                <div>Copy AI formulated hypothesis text to clipboard</div>
+                <img src={`/assets/icons/visualize/clipboard-copy.svg`} />
+              </div>
+        )}    
       </div>
     </div>
    </div>
   );
 }
+
+//TODO: Add a button to copy the AI generated hypothesis to the clipboard
+//TODO: Add aggregate variables from study builder to the dropdowns
