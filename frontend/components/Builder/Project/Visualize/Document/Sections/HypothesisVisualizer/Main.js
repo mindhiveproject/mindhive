@@ -7,6 +7,7 @@ export default function HypVis({
   sectionId,
   data,
   variables,
+  user,
 }) {
   return (
     <StateManager
@@ -16,6 +17,7 @@ export default function HypVis({
       sectionId={sectionId}
       data={data}
       variables={variables}
+      user={user}
     />
   );
 }

@@ -1,15 +1,7 @@
-import React, { useState } from "react";
-import {
-  Dropdown,
-  DropdownMenu,
-  Icon,
-  AccordionTitle,
-  AccordionContent,
-  Accordion,
-} from "semantic-ui-react";
+import React, { useState, useEffect } from "react";
+import {  Popup } from "semantic-ui-react";
 
-import SelectMultiple from "../Fields/SelectMultiple";
-import SelectOne from "../Fields/SelectOne";
+import AggregateVarSelector from "../Fields/AggregateVarSelector";
 
 export default function Axes({
   type,
@@ -21,11 +13,9 @@ export default function Axes({
   selectors,
   handleContentChange,
 }) {
-  const [selectedDataFormat, setSelectedDataFormat] = useState(
-    selectors["dataFormat"] || "long"
-  );
 
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [jsonObject, setJsonObject] = useState(selectors);
 
   const handleClick = (e, titleProps) => {
     const { index } = titleProps;
@@ -33,47 +23,18 @@ export default function Axes({
     setActiveIndex(newIndex);
   };
 
-  const correlationOptions = [
-    { value: "No correlation", text: "No correlation" },
-    { value: "positive", text: "Positive correlation" },
-    { value: "negative", text: "Negative correlation" },
-  ];
-
-  const resourcesList = [
-    {
-      title: "What is a Bar Plot?",
-      alt: "External link",
-      img: "/assets/icons/visualize/externalNewTab.svg",
-      link: "https://datavizcatalogue.com/methods/bar_chart.html",
-    },
-    {
-      title: "More about the Standard Error",
-      alt: "External link",
-      img: "/assets/icons/visualize/externalNewTab.svg",
-      link: "https://www.scribbr.com/statistics/standard-error/",
-    },
-    {
-      title: "Confidence Intervales, what are they?",
-      alt: "External link",
-      img: "/assets/icons/visualize/externalNewTab.svg",
-      link: "https://www.scribbr.com/statistics/confidence-interval/",
-    },
-  ];
-
   const connectSelectorsCode = `
 html_output = js.document.getElementById('figure-${sectionId}')
-xaxis = js.document.getElementById('xaxis-${sectionId}').value
-yaxis = js.document.getElementById('yaxis-${sectionId}').value
-
-
-n_points_element = js.document.getElementById('n_points-${sectionId}')
-n_points = None if n_points_element is None or n_points_element.value == '' else int(n_points_element.value)
-noise_level_element = js.document.getElementById('noise_level-${sectionId}')
-noise_level = None if noise_level_element is None or noise_level_element.value == '' else float(noise_level_element.value)
-
-correlationHyp = None if js.document.getElementById("correlation_type-${sectionId}") == None else js.document.getElementById("correlation_type-${sectionId}").value
-
+parameters = dict(json.loads('dashboardJSON'))
+print("Py code parameters", parameters)
 `;
+  
+  const popupStyle = {
+    borderRadius: 8,
+    opacity: 0.9,
+    padding: '2em',
+    fontSize: '15px',
+  }
 
   const options = variables.map((variable) => ({
     key: variable?.field,
@@ -81,144 +42,168 @@ correlationHyp = None if js.document.getElementById("correlation_type-${sectionI
     text: variable?.displayName || variable?.field,
   }));
 
-  const updateCode = async ({ code }) => {
-    await pyodide.runPythonAsync(connectSelectorsCode);
+  const updateCode = async ({ code, newJsonObject }) => {
+    const updatedConnectSelectorsCode = connectSelectorsCode.replace('dashboardJSON', JSON.stringify(newJsonObject));
+    await pyodide.runPythonAsync(updatedConnectSelectorsCode);
+    await pyodide.runPythonAsync(code);
     if (runCode) {
       runCode({ code }); // Trigger the runCode function passed from StateManager
     }
   };
 
-  const onSelectorChoice = (option) => {
-    setSelectedDataFormat(option.value);
-    onSelectorChange({ target: { name: "dataFormat", value: option?.value } });
+  // const copyToClipboard = () => {
+  //   const fillInTheBlanksDiv = document.querySelector('.fill-in-the-blanks');
+  //   // const textContent = fillInTheBlanksDiv.innerText;
+  //   const textContent = Array.from(fillInTheBlanksDiv.childNodes)
+  //   .map(node => node.innerText || node.textContent)
+  //   .join(' ');
+  //   navigator.clipboard.writeText(textContent).then(() => {
+  //     alert('Text copied to clipboard: ' + textContent);
+  //     console.log('Text copied to clipboard: ' + textContent);
+  //   }).catch(err => {
+  //     console.error('Error copying text: ', err);
+  //   });
+  // };
+  
+  const copyToClipboard = () => {
+    const { ivDirectionality, independentVariable, dvDirectionality, dependentVariable } = selectors;
+    const textContent = `I predict that ${ivDirectionality || ''} ${independentVariable || ''} will be related to ${dvDirectionality || ''} ${dependentVariable || ''}.`;
+    
+    navigator.clipboard.writeText(textContent).then(() => {
+      alert('Text copied to clipboard: ' + textContent);
+      console.log('Text copied to clipboard: ' + textContent);
+    }).catch(err => {
+      console.error('Error copying text: ', err);
+    });
+  }; 
+  const copyFigToClipboard = async () => {
+    try {
+      // Retrieve the variable from Pyodide
+      try {
+        const variableValue = await pyodide.runPythonAsync("fig_html");
+        // Copy the variable value to the clipboard
+        await navigator.clipboard.writeText(variableValue);
+        alert("Copied to clipboard!");
+      } catch (error) {
+        console.error("Failed to retrieve variable: ", error);
+      }
+    } catch (error) {
+      console.error("Failed to copy: ", error);
+    }
   };
-
-  const onSelectorChange = ({ target }) => {
+  
+  const handleAggregateVarChange = (name, value) => {
+    // console.log('Handling aggregate var change:', selectors);
     handleContentChange({
       newContent: {
-        selectors: { ...selectors, [target?.name]: target?.value },
+        selectors: { ...selectors, [name]: value },
       },
     });
-    updateCode({ code });
   };
 
+  // useEffect(() => {  
+  //   const newJsonObject = { ...jsonObject };
+  //   // iterate over selectors to build newJsonObject
+  //   for (const key in selectors) {
+  //     if (selectors.hasOwnProperty(key)) {
+  //       newJsonObject[key] = selectors[key];
+  //     }
+  //   }
+  //   // console.log('Setting jsonObject:', newJsonObject);
+  //   setJsonObject(newJsonObject);
+  //   updateCode({ code , newJsonObject});
+  // }, [selectors]);
+
+  useEffect(() => {  
+    const newJsonObject = { ...selectors };
+    setJsonObject(newJsonObject);
+    updateCode({ code, newJsonObject });
+  }, [selectors]);
+
   return (
-    <div className="graphDashboard">
-      <div className="header">
-        <img src={`/assets/icons/visualize/axes.svg`} />
-        <div>Axes</div>
-      </div>
-      <div>
-        <label htmlFor="xaxis">X Axis</label>
-        <input
-          id={`xaxis-${sectionId}`}
-          type="text"
-          name="xaxis"
-          value={selectors.xaxis}
-          onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, xaxis: target.value },
-              },
-            })
-          }
-          onBlur={() => updateCode({ code })}
-        />
-        <label htmlFor="yaxis">Y Axis</label>
-        <input
-          id={`yaxis-${sectionId}`}
-          type="text"
-          name="yaxis"
-          value={selectors.yaxis}
-          onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, yaxis: target.value },
-              },
-            })
-          }
-          onBlur={() => updateCode({ code })}
-        />
-        <label htmlFor="n_points">Sample</label>
-        <input
-          id={`n_points-${sectionId}`}
-          type="number"
-          name="n_points"
-          value={selectors.n_points}
-          onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, n_points: target.value },
-              },
-            })
-          }
-          onBlur={() => updateCode({ code })}
-        />
-        <label htmlFor="noise_level">Noise level (0 - 1)</label>
-        <input
-          id={`noise_level-${sectionId}`}
-          type="number"
-          min="0"
-          max="1"
-          step="0.01"
-          name="noise_level"
-          value={selectors.noise_level}
-          onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, noise_level: target.value },
-              },
-            })
-          }
-          onBlur={() => updateCode({ code })}
-        />
-        <SelectOne
-          sectionId={sectionId}
-          options={correlationOptions}
-          selectors={selectors}
-          onSelectorChange={onSelectorChange}
-          title="Expected correlation"
-          parameter="correlation_type"
-        />
-      </div>
-      <input
-        type="hidden"
-        id={`dataFormat-${sectionId}`}
-        value={selectedDataFormat}
-      />
-      <Accordion>
-        <AccordionTitle
-          active={activeIndex === 0}
-          index={0}
-          onClick={handleClick}
-        >
-          <Icon name="dropdown" />
-          Resources
-        </AccordionTitle>
-        <AccordionContent active={activeIndex === 0}>
-          {resourcesList.map((option) => (
-            <a
-              className="resourcesCard"
-              href={option.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              key={option.link}
-            >
-              <img
-                className="resourcesCardImage"
-                src={option.img}
-                alt={option.alt}
-              />
+    <>
+      <div className="graph-dashboard">
+        <div className="header">
+          <img src={`/assets/icons/visualize/hypVis_corrAnalysis.svg`} />
+          <div className="header-title">Correlational Hypothesis</div>
+        </div>
+        <div className="text-input">
+          <label htmlFor="graphTitle" className="header-text">Title</label>
+          <input
+            className="input-box"
+            id={`title-${sectionId}`}
+            type="text"
+            name="graphTitle"
+            value={selectors.graphTitle || ""}
+            onChange={({ target }) => handleContentChange({ newContent: { selectors: { ...selectors, graphTitle: target.value }, }, }) }
+            />
+        </div>
+        <div className="parameter-panel">
+          <div className="header">
+            <div className="header-title">Your correlational hypothesis</div>
+            <Popup 
+              content={
               <div>
-                <div className="resourcesCardTitle">{option.title}</div>
-                <div className="resourcesCardLink">
-                  Click here to access the resource
-                </div>
+                <>Fill in the blanks to create your correlational hypothesis!</><br/>
+                <>For instance</><br/>
+                <q>It is predicted that higher anxiety will be related to lower % of trials gambled.</q>
               </div>
-            </a>
-          ))}
-        </AccordionContent>
-      </Accordion>
-    </div>
+              } 
+              trigger={<img src={`/assets/icons/visualize/question_mark.svg`} />} 
+              inverted
+              style={popupStyle}
+            />
+          </div>
+          <div className="fill-in-the-blanks">
+
+            <div className="text">I predict that </div>
+
+            <AggregateVarSelector
+              placeholder="directionality"
+              isDirectionality={true}
+              allowAdditions={false}
+              value={selectors.ivDirectionality || ""}
+              onChange={(e, { value }) => handleAggregateVarChange("ivDirectionality", value)}
+            />
+           <AggregateVarSelector
+              placeholder={selectors[`independentVariable`] || "independant variable"}
+              isDirectionality={false}
+              allowAdditions={true}
+              value={selectors[`independentVariable`] || ""}
+              onChange={(e, { value }) => handleAggregateVarChange("independentVariable", value)}
+            />
+            <div className="text">will be related to</div>            
+            <AggregateVarSelector
+              placeholder="directionality"
+              isDirectionality={true}
+              allowAdditions={false}
+              value={selectors.dvDirectionality || ""}
+              onChange={(e, { value }) => handleAggregateVarChange("dvDirectionality", value)}
+            />
+           <AggregateVarSelector
+              placeholder={selectors[`dependentVariable`] || "dependant variable"}
+              isDirectionality={false}
+              allowAdditions={true}
+              value={selectors[`dependentVariable`] || ""}
+              onChange={(e, { value }) => handleAggregateVarChange("dependentVariable", value)}
+            />
+
+            {/* <div className="text">.</div> */}
+
+          </div>
+        </div>
+        <div className="button-panel">
+          <div className="clipboard-copy-button" onClick={copyToClipboard}>
+            <div>Copy hypothesis text to clipboard</div>
+            <img src={`/assets/icons/visualize/clipboard-copy.svg`} />
+          </div>
+          <div className="clipboard-fig-copy-button" onClick={copyFigToClipboard}>
+            <div>Copy graph to clipboard</div>
+            <img src={`/assets/icons/visualize/clipboard-copy.svg`} />
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
+//TODO: Add aggregate variables from study builder to the dropdowns

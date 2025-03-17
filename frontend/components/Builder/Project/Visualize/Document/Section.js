@@ -11,6 +11,7 @@ import SaveSection from "./SaveSection";
 import SectionHeader from "./SectionHeader";
 
 export default function Section({
+  user, 
   projectId,
   studyId,
   chapter,
@@ -92,6 +93,7 @@ export default function Section({
           sectionId={section?.id}
           data={data}
           variables={variables}
+          user={user}
         />
       )}
 

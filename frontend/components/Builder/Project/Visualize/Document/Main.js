@@ -70,6 +70,7 @@ export default function Document({
         ]).map((section) => (
           <Section
             key={section?.id}
+            user={user}
             projectId={projectId}
             studyId={studyId}
             chapter={chapter}
