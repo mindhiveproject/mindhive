@@ -170,6 +170,7 @@ export const GET_USER = gql`
         id
         title
         isMain
+        isHidden
         createdAt
         updatedAt
       }
@@ -177,6 +178,7 @@ export const GET_USER = gql`
         id
         title
         isMain
+        isHidden
         createdAt
         updatedAt
       }

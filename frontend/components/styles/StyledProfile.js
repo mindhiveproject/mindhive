@@ -91,6 +91,12 @@ const StyledProfile = styled.div`
   .selectedAsMain {
     border: 1px solid red;
   }
+  .errorMessage {
+    background: red;
+    border-radius: 20px;
+    padding: 0px 5px;
+    color: white;
+  }
 
   .headerCreatedStudies {
     display: grid;

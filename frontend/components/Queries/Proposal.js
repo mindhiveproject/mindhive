@@ -389,9 +389,14 @@ export const GET_MY_PROJECT_BOARDS = gql`
   query GET_MY_PROJECT_BOARDS($userId: ID!) {
     proposalBoards(
       where: {
-        OR: [
-          { author: { id: { equals: $userId } } }
-          { collaborators: { some: { id: { equals: $userId } } } }
+        AND: [
+          { isHidden: { equals: false } }
+          {
+            OR: [
+              { author: { id: { equals: $userId } } }
+              { collaborators: { some: { id: { equals: $userId } } } }
+            ]
+          }
         ]
       }
     ) {
@@ -400,6 +405,9 @@ export const GET_MY_PROJECT_BOARDS = gql`
       author {
         id
         username
+      }
+      collaborators {
+        id
       }
       createdAt
     }
@@ -434,7 +442,12 @@ export const CLASS_TEMPLATE_PROJECTS_QUERY = gql`
 // get class proposals
 export const CLASS_PROJECTS_QUERY = gql`
   query CLASS_PROJECTS_QUERY($classId: ID!) {
-    proposalBoards(where: { usedInClass: { id: { equals: $classId } } }) {
+    proposalBoards(
+      where: {
+        isHidden: { equals: false }
+        usedInClass: { id: { equals: $classId } }
+      }
+    ) {
       id
       title
       slug
@@ -594,6 +607,7 @@ export const GET_MY_PROJECT_BOARDS_IN_CLASS = gql`
     proposalBoards(
       where: {
         AND: [
+          { isHidden: { equals: false } }
           { author: { id: { equals: $userId } } }
           { usedInClass: { id: { equals: $classId } } }
         ]

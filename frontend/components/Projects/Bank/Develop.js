@@ -76,15 +76,15 @@ export default function DevelopProjectBank({ user }) {
         />
       </div> */}
       <div className="cardBoard">
-        {projects.map((study) => (
+        {projects.map((project) => (
           <ProjectCard
-            key={study?.id}
+            key={project?.id}
             user={user}
-            study={study}
+            project={project}
             url="/builder/projects/"
             id="id"
             name="selector"
-            studiesInfo={null}
+            projectsInfo={null}
           />
         ))}
       </div>

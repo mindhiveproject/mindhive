@@ -25,7 +25,6 @@ export default function Projects({ query, user, profile }) {
   ];
 
   const toggleProjectAsMain = async ({ projectId, isMain }) => {
-    console.log("toggle as main one, new state is ", isMain);
     await updateProject({
       variables: {
         id: projectId,
@@ -74,7 +73,11 @@ export default function Projects({ query, user, profile }) {
           <div>{project?.role}</div>
           <div>{moment(project.createdAt).format("MMMM D, YYYY, h:mma")}</div>
           <div>
-            {project.updatedAt &&
+            {project?.isHidden && (
+              <div className="errorMessage">The project has been deleted</div>
+            )}
+            {!project?.isHidden &&
+              project.updatedAt &&
               moment(project.updatedAt).format("MMMM D, YYYY, h:mma")}
           </div>
           <div>

@@ -1,41 +1,44 @@
 import Link from "next/link";
 
 import { StyledStudyCard } from "../../styles/StyledCard";
-// import StudyOptions from "./StudyOptions";
+import ProjectOptions from "./ProjectOptions";
 
 export default function ProjectCard({
   user,
-  study,
+  project,
   url,
   id,
   name,
-  studiesInfo,
+  projectsInfo,
 }) {
-  const imageURL = study?.image?.image?.publicUrlTransformed;
+  const imageURL = project?.image?.image?.publicUrlTransformed;
 
   return (
     <StyledStudyCard>
-      {/* {studiesInfo && (
-        <StudyOptions user={user} study={study} studiesInfo={studiesInfo} />
-      )} */}
+      <ProjectOptions
+        user={user}
+        project={project}
+        projectsInfo={projectsInfo}
+      />
+
       {user ? (
         <Link
           href={{
             pathname: url,
-            query: { [name]: study[id] },
+            query: { [name]: project[id] },
           }}
         >
           <div className="studyImage">
             {imageURL ? (
-              <img src={imageURL} alt={study?.title} />
+              <img src={imageURL} alt={project?.title} />
             ) : (
               <div className="noImage"></div>
             )}
           </div>
           <div className="cardInfo">
             <div className="studyHeader">
-              <h2>{study.title}</h2>
-              <span>created by {study?.author?.username}</span>
+              <h2>{project.title}</h2>
+              <span>created by {project?.author?.username}</span>
             </div>
           </div>
         </Link>
@@ -47,14 +50,14 @@ export default function ProjectCard({
         >
           <div className="studyImage">
             {imageURL ? (
-              <img src={imageURL} alt={study?.title} />
+              <img src={imageURL} alt={project?.title} />
             ) : (
               <div className="noImage"></div>
             )}
           </div>
           <div className="cardInfo">
             <div className="studyHeader">
-              <h2>{study.title}</h2>
+              <h2>{project.title}</h2>
             </div>
           </div>
         </Link>

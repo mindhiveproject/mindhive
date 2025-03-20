@@ -281,3 +281,12 @@ export const UPDATE_PROJECT_BOARD = gql`
     }
   }
 `;
+
+// remove (hide) study by author
+export const HIDE_PROJECT = gql`
+  mutation HIDE_PROJECT($id: ID!) {
+    updateProposalBoard(where: { id: $id }, data: { isHidden: true }) {
+      id
+    }
+  }
+`;
