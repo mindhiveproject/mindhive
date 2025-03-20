@@ -63,6 +63,28 @@ const StyledModal = styled.div`
     display: grid;
     background: red;
   }
+  .modalTwoSideContent {
+    display: grid;
+    align-content: baseline;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    margin: 10px 0px;
+    min-height: 150px;
+    .firstSide {
+      display: grid;
+      align-content: baseline;
+    }
+    .secondSide {
+      display: grid;
+      grid-gap: 10px;
+      align-content: baseline;
+    }
+  }
+  .footer {
+    display: grid;
+    justify-items: end;
+    margin: 20px;
+  }
 `;
 
 export const StyledModalHeader = styled.div`

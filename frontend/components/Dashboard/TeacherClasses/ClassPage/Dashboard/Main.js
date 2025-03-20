@@ -15,6 +15,7 @@ import { AgGridReact } from "ag-grid-react";
 import { StudentPageLink } from "./Renderers/StudentPageLink";
 import { ProjectManagerLink } from "./Renderers/ProjectManagerLink";
 import { StudyManagerLink } from "./Renderers/StudyManagerLink";
+import { SubmissionStatusLink } from "./Renderers/SubmissionStatusLink";
 
 const countAndFormat = (arr) => {
   // First count occurrences
@@ -158,13 +159,36 @@ export default function Dashboard({ myclass, user, query }) {
       },
     },
     { field: "studyCollaborators" },
-
-    { field: "proposalStatus" },
+    {
+      field: "proposalStatus",
+      cellRenderer: SubmissionStatusLink,
+      cellRendererParams: {
+        classId: myclass?.id,
+        type: "submitProposalStatus",
+        stage: "Proposal review",
+      },
+    },
     { field: "commentsReceivedOnProposal" },
     { field: "isProposalOpenForComments" },
-    { field: "peerFeedbackStatus" },
+    {
+      field: "peerFeedbackStatus",
+      cellRenderer: SubmissionStatusLink,
+      cellRendererParams: {
+        classId: myclass?.id,
+        type: "peerFeedbackStatus",
+        stage: "Peer review",
+      },
+    },
     { field: "isPeerFeedbackOpenForComments" },
-    { field: "projectReportStatus" },
+    {
+      field: "projectReportStatus",
+      cellRenderer: SubmissionStatusLink,
+      cellRendererParams: {
+        classId: myclass?.id,
+        type: "projectReportStatus",
+        stage: "Project report",
+      },
+    },
     { field: "isProjectReportOpenForComments" },
   ]);
 
@@ -181,6 +205,7 @@ export default function Dashboard({ myclass, user, query }) {
             studentPageLink: StudentPageLink,
             projectManagerLink: ProjectManagerLink,
             studyManagerLink: StudyManagerLink,
+            submissionStatusLink: SubmissionStatusLink,
           }}
         />
       </div>
