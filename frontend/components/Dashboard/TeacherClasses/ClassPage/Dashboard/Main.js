@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
 
@@ -131,6 +130,7 @@ export default function Dashboard({ myclass, user, query }) {
   const [colDefs, setColDefs] = useState([
     {
       field: "username",
+      pinned: "left",
       headerName: "Username",
       cellRenderer: StudentPageLink,
       cellRendererParams: {
