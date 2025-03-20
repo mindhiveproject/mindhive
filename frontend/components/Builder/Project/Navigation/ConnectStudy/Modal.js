@@ -5,6 +5,8 @@ import { Icon } from "semantic-ui-react";
 import LinkClass from "./LinkClass";
 import Collaborators from "../../../../Global/Collaborators";
 
+import { StyledLinkedProjects } from "../../../../styles/StyledProject";
+
 export default function ConnectModal({
   study,
   user,
@@ -47,6 +49,29 @@ export default function ConnectModal({
               collaborators={collaborators}
               handleChange={handleChange}
             />
+
+            {study?.title && (
+              <StyledLinkedProjects>
+                <h2>Linked projects</h2>
+                <p>
+                  Projects that share access to your study{" "}
+                  <span className="projectName"> {study?.title}</span>
+                </p>
+                <div>
+                  {study?.proposal.map((project) => (
+                    <div className="project">
+                      <div>{project?.title}</div>
+                      <a
+                        href={`/builder/projects?selector=${project?.id}`}
+                        target="_blank"
+                      >
+                        Open in a new tab
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </StyledLinkedProjects>
+            )}
           </div>
         </Modal.Description>
       </Modal.Content>
