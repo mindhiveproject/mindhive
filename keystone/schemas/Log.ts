@@ -36,6 +36,18 @@ export const Log = list({
           label: "Proposal is submitted for expert review",
           value: "PROPOSAL_SUBMITTED_FOR_REVIEW",
         },
+        {
+          label: "Proposal is submitted for peer review",
+          value: "PROPOSAL_SUBMITTED_FOR_PEER_REVIEW",
+        },
+        {
+          label: "Study is submitted for data collection",
+          value: "STUDY_SUBMITTED_FOR_DATA_COLLECTION",
+        },
+        {
+          label: "Project is submitted for report",
+          value: "PROJECT_SUBMITTED_FOR_REPORT",
+        },
       ],
     }),
     content: json(),

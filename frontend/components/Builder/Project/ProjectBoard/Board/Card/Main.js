@@ -16,6 +16,30 @@ import JoditEditor from "../../../../../Jodit/Editor";
 import Resources from "./Forms/Resources";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
+import { Dropdown } from "semantic-ui-react";
+
+const reviewOptions = [
+  {
+    key: "actionSubmit",
+    text: "Proposal",
+    value: "ACTION_SUBMIT",
+  },
+  {
+    key: "actionPeerFeedback",
+    text: "Peer Feedback",
+    value: "ACTION_PEER_FEEDBACK",
+  },
+  {
+    key: "actionCollectingData",
+    text: "Collecting Data",
+    value: "ACTION_COLLECTING_DATA",
+  },
+  {
+    key: "actionProjectReport",
+    text: "Project Report",
+    value: "ACTION_PROJECT_REPORT",
+  },
+];
 
 export default function ProposalCard({
   proposalCard,
@@ -27,7 +51,12 @@ export default function ProposalCard({
   cardId,
   refreshPage,
   isLocked,
+  submitStatuses,
 }) {
+  const filteredReviewOptions = reviewOptions.filter(
+    (option) => submitStatuses[option?.value] !== "SUBMITTED"
+  );
+
   const router = useRouter();
   // check whether the card is locked - after 1 hour it is allowed to edit
   const releaseTime =
@@ -308,6 +337,35 @@ export default function ProposalCard({
                   }}
                 />
               </div>
+
+              {proposalCard?.settings?.includeInReport && !isLocked && (
+                <div>
+                  <div className="cardSubheaderComment">
+                    Choose which step of the peer review a card should go in
+                  </div>
+                  <Dropdown
+                    placeholder="Select option"
+                    fluid
+                    multiple
+                    search
+                    selection
+                    lazyLoad
+                    options={filteredReviewOptions}
+                    onChange={(event, data) => {
+                      handleChange({
+                        target: {
+                          name: "settings",
+                          value: {
+                            ...inputs.settings,
+                            includeInReviewSteps: data.value,
+                          },
+                        },
+                      });
+                    }}
+                    value={inputs?.settings?.includeInReviewSteps || []}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

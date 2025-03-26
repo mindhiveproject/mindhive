@@ -53,7 +53,10 @@ export default function CardWrapper({
     .map((c) => c?.type);
   const submissionStage = (actionCards?.length && actionCards[0]) || undefined;
   const submissionStatus = submitStatuses[submissionStage];
-  const isLocked = submissionStatus === "SUBMITTED";
+  const isCardSubmitted = proposalCard?.settings?.includeInReviewSteps?.some(
+    (step) => submitStatuses[step] === "SUBMITTED"
+  );
+  const isLocked = submissionStatus === "SUBMITTED" || isCardSubmitted;
 
   // TODO also check whether the teacher/mentor is a teacher/mentor of the particular class
   const hasOverviewAccess =
@@ -124,6 +127,7 @@ export default function CardWrapper({
           isPreview={isPreview}
           refreshPage={refetch}
           isLocked={isLocked}
+          submitStatuses={submitStatuses}
         />
       );
     }

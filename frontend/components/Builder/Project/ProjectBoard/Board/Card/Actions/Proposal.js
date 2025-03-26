@@ -1,5 +1,4 @@
 import { useQuery, useMutation } from "@apollo/client";
-import Link from "next/link";
 import ReactHtmlParser from "react-html-parser";
 
 import { UPDATE_PROJECT_BOARD } from "../../../../../../Mutations/Proposal";
@@ -8,14 +7,53 @@ import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
 import { CREATE_LOG } from "../../../../../../Mutations/Log";
 
 import Navigation from "./Navigation";
-import Comment from "./Comment";
 import { cardTypes } from "../../Builder/Actions/ActionCard";
 
-import {
-  StyledActionPage,
-  StyledReviewBoard,
-} from "../../../../../../styles/StyledReview";
+import { StyledActionPage } from "../../../../../../styles/StyledReview";
 import Feedback from "../../../../../../Dashboard/Review/Feedback/Main";
+
+const submitOptions = {
+  ACTION_SUBMIT: {
+    event: "PROPOSAL_SUBMITTED_FOR_REVIEW",
+    updateInput: {
+      submitProposalStatus: "SUBMITTED",
+      submitProposalOpenForComments: true,
+    },
+    name: "expert feedback",
+    description:
+      "Expert mentors will provide feedback & comments will appear here.",
+  },
+  ACTION_PEER_FEEDBACK: {
+    event: "PROPOSAL_SUBMITTED_FOR_PEER_REVIEW",
+    updateInput: {
+      peerFeedbackStatus: "SUBMITTED",
+      peerFeedbackOpenForComments: true,
+    },
+    name: "peer feedback",
+    description:
+      "Your peers will provide feedback & comments will appear here.",
+  },
+  ACTION_COLLECTING_DATA: {
+    event: "STUDY_SUBMITTED_FOR_DATA_COLLECTION",
+    updateInput: {
+      // should be updated in study
+      dataCollectionStatus: "SUBMITTED",
+      dataCollectionData: "REAL_DATA",
+      dataCollectionOpenForParticipation: true,
+    },
+    name: "data collection",
+    description: "",
+  },
+  ACTION_PROJECT_REPORT: {
+    event: "PROJECT_SUBMITTED_FOR_REPORT",
+    updateInput: {
+      projectReportStatus: "SUBMITTED",
+      projectReportOpenForComments: true,
+    },
+    name: "project report",
+    description: "",
+  },
+};
 
 export default function Proposal({
   query,
@@ -26,18 +64,15 @@ export default function Proposal({
   cardId,
   proposalCard,
 }) {
-  // find the current section for preview
-  const currentSections = proposal?.sections?.filter((section) =>
-    section?.cards.map((card) => card?.id).includes(proposalCard?.id)
-  );
-  let currentSection;
-  if (currentSections && currentSections.length) {
-    currentSection = currentSections[0];
-  }
-
-  const cards = currentSection?.cards.filter(
-    (card) => card?.settings?.includeInReport
-  );
+  const cards = proposal?.sections
+    ?.map((section) => section?.cards)
+    .flat()
+    .filter(
+      (card) =>
+        (card?.settings?.includeInReport &&
+          card?.section?.id == proposalCard?.section?.id) ||
+        card?.settings?.includeInReviewSteps?.includes(proposalCard?.type)
+    );
 
   const statusesDict = {
     Completed: "completed",
@@ -79,16 +114,13 @@ export default function Proposal({
     const res = await updateProposal({
       variables: {
         id: proposal?.id,
-        input: {
-          submitProposalStatus: "SUBMITTED",
-          submitProposalOpenForComments: true,
-        },
+        input: submitOptions[proposalCard.type]?.updateInput,
       },
     });
     await createLog({
       variables: {
         input: {
-          event: "PROPOSAL_SUBMITTED_FOR_REVIEW",
+          event: submitOptions[proposalCard.type]?.event,
           user: {
             connect: { id: user?.id },
           },
@@ -196,44 +228,22 @@ export default function Proposal({
                       ) || []
                     }
                   />
-                  {/* {project?.reviews &&
-                  project?.reviews.filter(
-                    (review) =>
-                      review.stage === cardTypes[proposalCard?.type].reviewStage
-                  ).length ? (
-                    <div className="reviewsCards">
-                      {project?.reviews
-                        .filter(
-                          (review) =>
-                            review.stage ===
-                            cardTypes[proposalCard?.type].reviewStage
-                        )
-                        .sort((a, b) => {
-                          return b?.upvotedBy?.length - a?.upvotedBy?.length;
-                        })
-                        .map((review, num) => (
-                          <Comment key={num} number={num + 1} review={review} />
-                        ))}
-                    </div>
-                  ) : (
-                    <div className="reviewsPlaceholder"></div>
-                  )} */}
                 </div>
               </>
             ) : (
               <>
                 <div className="title">
-                  Submit your proposal for expert feedback
+                  Submit your proposal for{" "}
+                  {submitOptions[proposalCard.type]?.name}
                 </div>
 
                 <div className="subtitle">
                   Once you submit your proposal for feedback:
                   <ul>
                     <li>Your proposal will appear in the Feedback Center.</li>
-                    <li>
-                      Expert mentors will provide feedback & comments will
-                      appear here.
-                    </li>
+                    {submitOptions[proposalCard.type]?.description && (
+                      <li>{submitOptions[proposalCard.type]?.description}</li>
+                    )}
                     <li>
                       The cards that are included in the Proposal will be
                       locked. Your teacher can unlock them.
