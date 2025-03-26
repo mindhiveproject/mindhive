@@ -80,11 +80,11 @@ export default function Navigation({
 
       <div className="title">{project?.title}</div>
       <div className="collaborators">
-        <span>Collaborators (public readable IDs): </span>
+        <span>Collaborators: </span>
         {project?.collaborators?.map((c, num) => (
           <span>
             {num !== 0 && `, `}
-            {c?.publicReadableId}{" "}
+            {c?.username}
           </span>
         ))}
       </div>

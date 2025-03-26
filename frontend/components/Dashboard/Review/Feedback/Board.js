@@ -83,7 +83,7 @@ export default function Board({ user, projectId, reviews }) {
                   >
                     {review?.author?.firstName && review?.author?.lastName
                       ? `${review?.author?.firstName} ${review?.author?.lastName}`
-                      : `Reviewer`}
+                      : `${review?.author?.username}`}
                   </a>
                 </div>
               </div>

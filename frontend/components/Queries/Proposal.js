@@ -241,6 +241,7 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
         author {
           id
           publicId
+          username
           firstName
           lastName
           permissions {
