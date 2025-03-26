@@ -15,11 +15,7 @@ export default function TaskSelector({ name, handleItemChange, answer }) {
         <div className="title">{task?.title}</div>
       </div>
     ),
-    text: (
-      <div className="dropdownSelectedTask">
-        <div className="title">{task?.title}</div>
-      </div>
-    ),
+    text: task?.title,
   }));
 
   return (
@@ -28,6 +24,7 @@ export default function TaskSelector({ name, handleItemChange, answer }) {
       fluid
       selection
       multiple
+      search
       options={options}
       onChange={(event, data) =>
         handleItemChange({

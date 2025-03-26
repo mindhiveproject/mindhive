@@ -63,7 +63,7 @@ export default function Question({ stage, item, handleItemChange, answer }) {
         <TaskSelector
           name={item?.name}
           handleItemChange={handleItemChange}
-          answer={answer}
+          answer={answer || []}
         />
       </div>
     );
