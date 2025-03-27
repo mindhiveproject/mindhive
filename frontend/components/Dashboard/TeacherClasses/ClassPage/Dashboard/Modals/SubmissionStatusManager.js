@@ -10,6 +10,9 @@ import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 export default function SubmissionStatusManager(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState(props?.value);
+  const [commentsAllowed, setCommentsAllowed] = useState(
+    props?.data?.project && props?.data?.project[props?.commentField]
+  );
 
   const [updateStatus, { loading, error }] = useMutation(UPDATE_PROJECT_BOARD, {
     variables: {
@@ -28,6 +31,7 @@ export default function SubmissionStatusManager(props) {
       variables: {
         input: {
           [props?.type]: status,
+          [props?.commentField]: commentsAllowed,
         },
       },
     });
@@ -39,6 +43,16 @@ export default function SubmissionStatusManager(props) {
       { label: "In progress", value: "IN_PROGRESS" },
       { label: "Submitted", value: "SUBMITTED" },
       { label: "Review is finished", value: "FINISHED" },
+    ].map((status) => ({
+      key: status?.value,
+      text: status?.label,
+      value: status?.value,
+    })) || [];
+
+  const commentsOptions =
+    [
+      { label: "Not allowed", value: false },
+      { label: "Allowed", value: true },
     ].map((status) => ({
       key: status?.value,
       text: status?.label,
@@ -70,6 +84,15 @@ export default function SubmissionStatusManager(props) {
                   options={statusOptions}
                   value={status}
                   onChange={(e, data) => setStatus(data?.value)}
+                />
+              </div>
+              <h2>Are comments allowed?</h2>
+              <div>
+                <Dropdown
+                  selection
+                  options={commentsOptions}
+                  value={commentsAllowed}
+                  onChange={(e, data) => setCommentsAllowed(data?.value)}
                 />
               </div>
             </div>
