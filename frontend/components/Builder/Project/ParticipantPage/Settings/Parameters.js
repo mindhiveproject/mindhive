@@ -24,7 +24,7 @@ export default function Parameters({
   const settingsOnlyStudents = [
     "hideParticipateButton",
     "guestParticipation",
-    // "consentObtained",
+    "consentObtained",
     // "zipCode",
     "proceedToFirstTask",
     "forbidRetake",
@@ -44,7 +44,8 @@ export default function Parameters({
     user?.permissions &&
     (user.permissions.map((p) => p.name).includes("TEACHER") ||
       user.permissions.map((p) => p.name).includes("SCIENTIST") ||
-      user.permissions.map((p) => p.name).includes("ADMIN"));
+      user.permissions.map((p) => p.name).includes("ADMIN") ||
+      user.permissions.map((p) => p.name).includes("STUDENT"));
 
   const isStudent =
     user &&

@@ -97,7 +97,7 @@ export default function AddClass({ user }) {
       inputs={inputs}
       handleChange={handleChange}
       handleSave={handleSave}
-      headerName="Add new IRB protocol"
+      headerName="Add new protocol"
       submitBtnName="Create"
       loading={loading}
       error={error}

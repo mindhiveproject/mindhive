@@ -10,7 +10,7 @@ export default function ConsentMain({ query, user }) {
   const { selector } = query;
   return (
     <StyledConsent>
-      <h1>IRB protocols</h1>
+      <h1>Consent protocols</h1>
       <div className="header">
         <div className="menu">
           <Link href="/dashboard/irb">
@@ -19,7 +19,7 @@ export default function ConsentMain({ query, user }) {
                 !selector ? "menuTitle selectedMenuTitle" : "menuTitle"
               }
             >
-              <p>My IRB protocols</p>
+              <p>My protocols</p>
             </div>
           </Link>
 
@@ -31,7 +31,7 @@ export default function ConsentMain({ query, user }) {
                   : "menuTitle"
               }
             >
-              <p>Public IRB protocols</p>
+              <p>Public protocols</p>
             </div>
           </Link>
         </div>
