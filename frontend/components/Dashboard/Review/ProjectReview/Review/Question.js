@@ -74,6 +74,12 @@ export default function Question({ stage, item, handleItemChange, answer }) {
       <div>
         <div className="question">{item.question}</div>
         {item.subtitle && <div className="subtitle">{item.subtitle}</div>}
+        {item.subQuestionA && (
+          <div className="subtitle">{item.subQuestionA}</div>
+        )}
+        {item.subQuestionB && (
+          <div className="subtitle">{item.subQuestionB}</div>
+        )}
         <p>{item.text}</p>
       </div>
 

@@ -5,25 +5,26 @@ export default function QuestionsMain({
   projectId,
   review,
   reviewContent,
-  stage,
+  status,
   handleItemChange,
 }) {
   return (
     <div className="panelRight">
       <div className="reviewQuestions">
         <h1>
-          {stage === "SUBMITTED_AS_PROPOSAL"
+          {status === "SUBMITTED_AS_PROPOSAL" || status === "PEER_REVIEW"
             ? "Proposal Feedback"
             : "Study Feedback"}
         </h1>
         <div className="subtitle">
-          Help students create studies by offering feedback and suggestions.
+          Help {status === "SUBMITTED_AS_PROPOSAL" ? "students" : "your peers"}{" "}
+          create studies by offering feedback and suggestions.
         </div>
         <div className="reviewItems">
           {reviewContent?.map((item, i) => (
             <Question
               key={`${projectId}-${i}`}
-              stage={stage}
+              stage={status}
               item={item}
               handleItemChange={handleItemChange}
               answer={item?.answer || ""}

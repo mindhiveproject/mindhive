@@ -22,6 +22,7 @@ const submitOptions = {
     name: "expert feedback",
     description:
       "Expert mentors will provide feedback & comments will appear here.",
+    status: "SUBMITTED_AS_PROPOSAL",
   },
   ACTION_PEER_FEEDBACK: {
     event: "PROPOSAL_SUBMITTED_FOR_PEER_REVIEW",
@@ -32,6 +33,7 @@ const submitOptions = {
     name: "peer feedback",
     description:
       "Your peers will provide feedback & comments will appear here.",
+    status: "PEER_REVIEW",
   },
   ACTION_COLLECTING_DATA: {
     event: "STUDY_SUBMITTED_FOR_DATA_COLLECTION",
@@ -43,6 +45,7 @@ const submitOptions = {
     },
     name: "data collection",
     description: "",
+    status: "DATA_COLLECTION",
   },
   ACTION_PROJECT_REPORT: {
     event: "PROJECT_SUBMITTED_FOR_REPORT",
@@ -52,6 +55,7 @@ const submitOptions = {
     },
     name: "project report",
     description: "",
+    status: "PROJECT_REPORT",
   },
 };
 
@@ -220,6 +224,7 @@ export default function Proposal({
                   <Feedback
                     user={user}
                     projectId={project?.id}
+                    status={submitOptions[proposalCard.type]?.status}
                     reviews={
                       project?.reviews?.filter(
                         (review) =>

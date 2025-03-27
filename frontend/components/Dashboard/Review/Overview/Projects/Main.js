@@ -55,7 +55,7 @@ export default function ProjectsBoard({
       isOpenForCommentsQuery = "submitProposalOpenForComments";
   }
 
-  const { data, loading, error } = useQuery(PROJECTS_QUERY, {
+  const { data, loading, error, refetch } = useQuery(PROJECTS_QUERY, {
     variables: {
       where: {
         AND: [
@@ -91,13 +91,6 @@ export default function ProjectsBoard({
               filteredClasses
             );
           }
-          // let isInMyClasses;
-          // if (showMyClassOnly) {
-          //    isInMyClasses = containsAny(
-          //     [project?.usedInClass?.id],
-          //     myClassesIds
-          //   );
-          // }
           return isMatchingKeyword && isInFilteredClasses;
         } else {
           return true;
@@ -146,7 +139,7 @@ export default function ProjectsBoard({
         setFilteredProjects(projectsFiltered);
       }
     }
-    if (projects && projects.length) {
+    if (projects) {
       filterProposals();
     }
   }, [projects, keyword, showMyClassOnly, sortBy, filteredClasses]);

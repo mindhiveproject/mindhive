@@ -56,7 +56,7 @@ export default function ReviewBoard({ query, user, reviewType }) {
     (permissions.includes("MENTOR") ||
       permissions.includes("TEACHER") ||
       permissions.includes("SCIENTIST") ||
-      reviewType === "PEER_REVIEW") &&
+      status === "PEER_REVIEW") &&
     isOpenForComments;
 
   return (

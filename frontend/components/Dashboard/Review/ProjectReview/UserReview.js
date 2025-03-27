@@ -5,7 +5,7 @@ import { GET_REVIEW } from "../../../Queries/Review";
 
 import Navigation from "./Navigation";
 import StudyDetails from "./StudyDetails/Main";
-import Comments from "./Comments/Main";
+// import Comments from "./Comments/Main";
 import Questions from "./Review/Main";
 
 import useForm from "../../../../lib/useForm";
@@ -95,6 +95,7 @@ export default function UserReview({
                 pathname: `/dashboard/review/project`,
                 query: {
                   id: project?.id,
+                  stage: query?.stage,
                   tab: "proposal",
                 },
               }}
@@ -112,6 +113,7 @@ export default function UserReview({
                 pathname: `/dashboard/review/project`,
                 query: {
                   id: project?.id,
+                  stage: query?.stage,
                   tab: "reviews",
                 },
               }}
@@ -133,6 +135,7 @@ export default function UserReview({
             <Feedback
               user={user}
               projectId={project?.id}
+              status={status}
               reviews={
                 project?.reviews?.filter((review) => review.stage === status) ||
                 []
@@ -146,7 +149,7 @@ export default function UserReview({
             projectId={project?.id}
             review={review}
             reviewContent={inputs?.content || []}
-            stage={status}
+            status={status}
             handleItemChange={handleItemChange}
           />
         )}
