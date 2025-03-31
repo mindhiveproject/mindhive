@@ -53,6 +53,21 @@ export const Dataset = list({
     info: json(),
     isCompleted: checkbox({ isFilterable: true }),
     isIncluded: checkbox({ isFilterable: true, defaultValue: false }),
+    studyStatus: select({
+      options: [
+        { label: "Working", value: "WORKING" },
+        { label: "Proposal", value: "SUBMITTED_AS_PROPOSAL" },
+        { label: "Ready for review", value: "READY_FOR_REVIEW" },
+        { label: "In review", value: "IN_REVIEW" },
+        { label: "Reviewed", value: "REVIEWED" },
+        { label: "Collecting data", value: "COLLECTING_DATA" },
+        {
+          label: "Data collection is completed",
+          value: "DATA_COLLECTION_IS_COMPLETED",
+        },
+      ],
+      defaultValue: "WORKING",
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

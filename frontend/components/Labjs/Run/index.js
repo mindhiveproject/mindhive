@@ -97,6 +97,7 @@ export default function ExperimentWindow({
             type: user?.type,
             date: dateString,
             testVersion: testVersion,
+            studyStatus: study?.status,
           },
         },
       });
