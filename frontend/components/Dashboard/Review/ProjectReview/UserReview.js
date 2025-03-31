@@ -86,6 +86,7 @@ export default function UserReview({
         canReview={canReview}
         handleChange={handleChange}
         resetForm={resetForm}
+        status={status}
       />
 
       <div className={canReview ? `double` : `single`}>
