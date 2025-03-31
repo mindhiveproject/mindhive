@@ -31,22 +31,26 @@ export default function ReviewBoard({ query, user, reviewType }) {
   const permissions = user?.permissions?.map((p) => p?.name);
 
   // Check whether the proposal is open for comments at this stage
-  let status, isOpenForCommentsQuery;
+  let status, actionCardType, isOpenForCommentsQuery;
   switch (stage) {
     case "proposals":
       status = "SUBMITTED_AS_PROPOSAL";
-      isOpenForCommentsQuery = "submitProposalOpenForComments";
+      (actionCardType = "ACTION_SUBMIT"),
+        (isOpenForCommentsQuery = "submitProposalOpenForComments");
       break;
     case "inreview":
       status = "PEER_REVIEW";
+      actionCardType = "ACTION_PEER_FEEDBACK";
       isOpenForCommentsQuery = "peerFeedbackOpenForComments";
       break;
     case "report":
       status = "PROJECT_REPORT";
+      actionCardType = "ACTION_PROJECT_REPORT";
       isOpenForCommentsQuery = "projectReportOpenForComments";
       break;
     default:
       status = "SUBMITTED_AS_PROPOSAL";
+      actionCardType = "ACTION_SUBMIT";
       isOpenForCommentsQuery = "submitProposalOpenForComments";
   }
   const isOpenForComments = project[isOpenForCommentsQuery];
@@ -66,6 +70,7 @@ export default function ReviewBoard({ query, user, reviewType }) {
       tab={tab}
       project={project}
       status={status}
+      actionCardType={actionCardType}
       canReview={canReview}
     />
   );

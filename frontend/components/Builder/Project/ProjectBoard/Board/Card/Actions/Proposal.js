@@ -68,15 +68,22 @@ export default function Proposal({
   cardId,
   proposalCard,
 }) {
-  const cards = proposal?.sections
-    ?.map((section) => section?.cards)
-    .flat()
-    .filter(
-      (card) =>
-        (card?.settings?.includeInReport &&
-          card?.section?.id == proposalCard?.section?.id) ||
-        card?.settings?.includeInReviewSteps?.includes(proposalCard?.type)
-    );
+  // find the current section for preview
+  const currentSections = proposal?.sections?.filter((section) =>
+    section?.cards.map((card) => card?.type).includes(proposalCard?.type)
+  );
+
+  const cards = [...proposal?.sections]
+    ?.sort((a, b) => a?.position - b?.position)
+    .map((section) =>
+      section?.cards.filter(
+        (card) =>
+          (card?.settings?.includeInReport &&
+            currentSections?.map((s) => s?.id).includes(card?.section?.id)) ||
+          card?.settings?.includeInReviewSteps?.includes(proposalCard?.type)
+      )
+    )
+    .flat();
 
   const statusesDict = {
     Completed: "completed",
