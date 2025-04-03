@@ -38,6 +38,7 @@ export default function ParticipantResults({
         <div>Condition</div>
         <div>Data type</div>
         <div>Data policy</div>
+        <div>Study status</div>
         <div>Data analysis</div>
         <div></div>
       </div>

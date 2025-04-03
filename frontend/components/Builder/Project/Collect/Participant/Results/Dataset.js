@@ -12,6 +12,16 @@ import DeleteRecord from "./DeleteRecord";
 // A fetcher function to wrap the native fetch function and return the result of a call to url in json format
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
+const studyStatuses = {
+  WORKING: "Work in progress",
+  SUBMITTED_AS_PROPOSAL: "Submitted as Proposal",
+  READY_FOR_REVIEW: "Ready for review",
+  IN_REVIEW: "In review",
+  REVIEWED: "Reviewed",
+  COLLECTING_DATA: "Collecting data",
+  DATA_COLLECTION_IS_COMPLETED: "Data collection is completed",
+};
+
 export default function Dataset({
   studyId,
   participantId,
@@ -42,6 +52,7 @@ export default function Dataset({
         <div>{condition}</div>
         <div>{dataset?.isCompleted ? "full" : "incremental"}</div>
         <div>{dataset?.dataPolicy}</div>
+        <div>{dataset?.studyStatus}</div>
         <div>No data</div>
         <DeleteRecord
           studyId={studyId}
@@ -118,6 +129,7 @@ export default function Dataset({
       <div>{condition}</div>
       <div>{dataset?.isCompleted ? "full" : "incremental"}</div>
       <div>{dataset?.dataPolicy}</div>
+      <div>{dataset?.studyStatus && studyStatuses[dataset?.studyStatus]}</div>
       <ChangeDatasetStatus
         studyId={studyId}
         participantId={participantId}

@@ -21,6 +21,7 @@ export const GET_PARTICIPANT_RESULTS = gql`
       study {
         title
       }
+      studyStatus
       dataPolicy
       info
       isCompleted
