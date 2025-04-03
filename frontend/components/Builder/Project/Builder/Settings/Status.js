@@ -4,12 +4,13 @@ import { Dropdown } from "semantic-ui-react";
 
 const statuses = [
   { key: 1, text: "Work in progress", value: "WORKING" },
-  { key: 2, text: "Ready for review", value: "READY_FOR_REVIEW" },
-  { key: 3, text: "In review", value: "IN_REVIEW" },
-  { key: 4, text: "Reviewed", value: "REVIEWED" },
-  { key: 5, text: "Collecting data", value: "COLLECTING_DATA" },
+  { key: 2, text: "Submitted as proposal", value: "SUBMITTED_AS_PROPOSAL" },
+  { key: 3, text: "Ready for review", value: "READY_FOR_REVIEW" },
+  { key: 4, text: "In review", value: "IN_REVIEW" },
+  { key: 5, text: "Reviewed", value: "REVIEWED" },
+  { key: 6, text: "Collecting data", value: "COLLECTING_DATA" },
   {
-    key: 6,
+    key: 7,
     text: "Data collection is completed",
     value: "DATA_COLLECTION_IS_COMPLETED",
   },

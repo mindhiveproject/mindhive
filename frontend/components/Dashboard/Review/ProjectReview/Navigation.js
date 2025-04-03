@@ -13,6 +13,7 @@ export default function Navigation({
   canReview,
   handleChange,
   resetForm,
+  status,
 }) {
   const [
     createReview,
@@ -88,6 +89,20 @@ export default function Navigation({
           </span>
         ))}
       </div>
+
+      {status === "PEER_REVIEW" && (
+        <>
+          {project?.study ? (
+            <div>
+              <a target="_blank" href={`/studies/${project?.study?.slug}`}>
+                <button>Participate in the study</button>
+              </a>
+            </div>
+          ) : (
+            <div>There is no study</div>
+          )}
+        </>
+      )}
 
       {canReview && (
         <div className="saveBtn">

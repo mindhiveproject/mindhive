@@ -1,21 +1,25 @@
 import ReactHtmlParser from "react-html-parser";
 import { StyledActionPage } from "../../../../styles/StyledReview";
 
-export default function CollectivePresentation({ project }) {
+export default function CollectivePresentation({ project, actionCardType }) {
   const proposal = project || { sections: [] };
 
   // find the current section for preview
   const currentSections = proposal?.sections?.filter((section) =>
-    section?.cards.map((card) => card?.type).includes("ACTION_SUBMIT")
+    section?.cards.map((card) => card?.type).includes(actionCardType)
   );
-  let currentSection;
-  if (currentSections && currentSections.length) {
-    currentSection = currentSections[0];
-  }
 
-  const cards = currentSection?.cards.filter(
-    (card) => card?.settings?.includeInReport
-  );
+  const cards = [...proposal?.sections]
+    ?.sort((a, b) => a?.position - b?.position)
+    .map((section) =>
+      section?.cards.filter(
+        (card) =>
+          (card?.settings?.includeInReport &&
+            currentSections?.map((s) => s?.id).includes(card?.section?.id)) ||
+          card?.settings?.includeInReviewSteps?.includes(actionCardType)
+      )
+    )
+    .flat();
 
   return (
     <StyledActionPage>
