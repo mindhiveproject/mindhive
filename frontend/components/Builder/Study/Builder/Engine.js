@@ -23,7 +23,12 @@ import { AnchorModel } from "./Diagram/models/AnchorModel";
 import { DesignModel } from "./Diagram/models/DesignModel";
 
 import Navigation from "../Navigation/Main";
-import Builder from "./Builder";
+
+// old import
+// import Builder from "./Builder";
+
+// new import
+import Builder from "../../Project/Builder/Builder";
 
 export default function Engine({
   query,

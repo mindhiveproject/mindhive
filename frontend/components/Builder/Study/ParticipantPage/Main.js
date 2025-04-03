@@ -76,6 +76,8 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
         consent: [],
         collaborators: [],
         classes,
+        diagram: study?.diagram,
+        flow: study?.flow,
       });
     }
     if (area === "cloneofstudy" && study?.id) {
