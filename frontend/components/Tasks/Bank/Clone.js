@@ -8,7 +8,7 @@ import { StyledBank } from "../../styles/StyledBank";
 export default function CloneTaskBank({ taskType }) {
   const { data, error, loading } = useQuery(PUBLIC_TASKS, {
     variables: {
-      taskType: taskType.toUpperCase(),
+      where: { taskType: { equals: taskType.toUpperCase() } },
     },
   });
   const tasks = data?.tasks || [];

@@ -11,8 +11,24 @@ export default function PublicBlocks({
 }) {
   const { data, error, loading } = useQuery(PUBLIC_TASKS, {
     variables: {
-      taskType: componentType,
-      searchTerm: search,
+      where:
+        process.env.NODE_ENV === "development"
+          ? {
+              taskType: { equals: componentType },
+              public: { equals: true },
+              OR: [
+                { title: { contains: search } },
+                { description: { contains: search } },
+              ],
+            }
+          : {
+              taskType: { equals: componentType },
+              public: { equals: true },
+              OR: [
+                { title: { contains: search, mode: "insensitive" } },
+                { description: { contains: search, mode: "insensitive" } },
+              ],
+            },
     },
   });
   const tasks = data?.tasks || [];
