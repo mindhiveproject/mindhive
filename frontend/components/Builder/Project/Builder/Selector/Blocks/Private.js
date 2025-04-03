@@ -10,9 +10,42 @@ export default function PrivateBlocks({
 }) {
   const { data, error, loading } = useQuery(MY_TASKS, {
     variables: {
-      id: user?.id,
-      taskType: componentType,
-      searchTerm: search,
+      where:
+        process.env.NODE_ENV === "development"
+          ? {
+              AND: [
+                { taskType: { equals: componentType } },
+                {
+                  OR: [
+                    { author: { id: { equals: user?.id } } },
+                    { collaborators: { some: { id: { equals: user?.id } } } },
+                  ],
+                },
+                {
+                  OR: [
+                    { title: { contains: search } },
+                    { description: { contains: search } },
+                  ],
+                },
+              ],
+            }
+          : {
+              AND: [
+                { taskType: { equals: componentType } },
+                {
+                  OR: [
+                    { author: { id: { equals: user?.id } } },
+                    { collaborators: { some: { id: { equals: user?.id } } } },
+                  ],
+                },
+                {
+                  OR: [
+                    { title: { contains: search, mode: "insensitive" } },
+                    { description: { contains: search, mode: "insensitive" } },
+                  ],
+                },
+              ],
+            },
     },
   });
   const tasks = data?.tasks || [];
