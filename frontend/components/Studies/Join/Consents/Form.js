@@ -1,8 +1,7 @@
 import ReactHtmlParser from "react-html-parser";
 
 const getConsent = (consent, name) =>
-  consent?.info.filter((info) => info.name === name).map((info) => info.text) ||
-  "";
+  consent?.info.filter((info) => info.name === name).map((info) => info.text) || "";
 
 // to check whether a participant is under 18 based on the birthday
 const isUnder18 = (birthdayTimestamp) => {
@@ -29,6 +28,7 @@ export default function ConsentForm({
   const studentsNYCConsent = getConsent(consent, "studentsNYC");
   const studentsMinorsNYCConsent = getConsent(consent, "studentsMinorsNYC");
   const studentsParentsNYCConsent = getConsent(consent, "studentsParentsNYC");
+  const anyoneConsent = getConsent(consent, "anyone");
 
   const handleMinorConsentChange = ({ target }) => {
     const { name, value } = target;
@@ -40,66 +40,50 @@ export default function ConsentForm({
     });
   };
 
+  // Determine which consent content to display
+  let consentContent = [];
+
+  if (anyoneConsent && anyoneConsent.length) {
+    // If an "anyone" consent exists, use it regardless of age
+    consentContent = anyoneConsent;
+  } else if (isUnder18(userInfo?.bd)) {
+    // For participants under 18, choose based on other criteria:
+    if (
+      userInfo.sona === "yes" &&
+      sonaMinorsConsent.length &&
+      sonaMinorsKidsConsent.length
+    ) {
+      consentContent = [sonaMinorsConsent, sonaMinorsKidsConsent];
+    } else if (
+      userInfo.studentNYC === "yes" &&
+      studentsParentsNYCConsent.length &&
+      studentsMinorsNYCConsent.length
+    ) {
+      consentContent = [studentsParentsNYCConsent, studentsMinorsNYCConsent];
+    } else {
+      consentContent = [regularMinorsConsent, regularMinorsKidsConsent];
+    }
+  } else {
+    // For participants 18 or older, choose based on other criteria:
+    if (userInfo.sona === "yes" && sonaAdultsConsent.length) {
+      consentContent = [sonaAdultsConsent];
+    } else if (userInfo.studentNYC === "yes" && studentsNYCConsent.length) {
+      consentContent = [studentsNYCConsent];
+    } else {
+      consentContent = [regularAdultsConsent];
+    }
+  }
+
   return (
     <div>
-      {isUnder18(userInfo?.bd) && (
-        <>
-          {(userInfo.sona === "no" ||
-            typeof userInfo.sona === "undefined" ||
-            !sonaMinorsConsent.length ||
-            !sonaMinorsKidsConsent.length) &&
-            (userInfo.studentNYC === "no" ||
-              typeof userInfo.studentNYC === "undefined" ||
-              !studentsParentsNYCConsent.length ||
-              !studentsMinorsNYCConsent.length) && (
-              <>
-                <div>{ReactHtmlParser(regularMinorsConsent)}</div>
-                <div>{ReactHtmlParser(regularMinorsKidsConsent)}</div>
-              </>
-            )}
+      {/* Consent Text Section */}
+      <div>
+        {consentContent.map((text, index) => (
+          <div key={index}>{ReactHtmlParser(text)}</div>
+        ))}
+      </div>
 
-          {userInfo.sona === "yes" &&
-            sonaMinorsConsent &&
-            sonaMinorsKidsConsent && (
-              <>
-                <div>{ReactHtmlParser(sonaMinorsConsent)}</div>
-                <div>{ReactHtmlParser(sonaMinorsKidsConsent)}</div>
-              </>
-            )}
-
-          {userInfo?.studentNYC === "yes" &&
-            studentsParentsNYCConsent &&
-            studentsMinorsNYCConsent && (
-              <>
-                <div>{ReactHtmlParser(studentsParentsNYCConsent)}</div>
-                <div>{ReactHtmlParser(studentsMinorsNYCConsent)}</div>
-              </>
-            )}
-        </>
-      )}
-
-      {!isUnder18(userInfo?.bd) && (
-        <>
-          {(userInfo.sona === "no" ||
-            userInfo.sona === "" ||
-            typeof userInfo.sona === "undefined" ||
-            !sonaAdultsConsent.length) &&
-            (userInfo.studentNYC === "no" ||
-              typeof userInfo.studentNYC === "undefined" ||
-              !studentsNYCConsent.length) && (
-              <div>{ReactHtmlParser(regularAdultsConsent)}</div>
-            )}
-
-          {userInfo.sona === "yes" && sonaAdultsConsent && (
-            <div>{ReactHtmlParser(sonaAdultsConsent)}</div>
-          )}
-
-          {userInfo?.studentNYC === "yes" && studentsNYCConsent && (
-            <div>{ReactHtmlParser(studentsNYCConsent)}</div>
-          )}
-        </>
-      )}
-
+      {/* Study & Protocol Information */}
       <div className="consentInfo">
         <div>
           <p>
@@ -113,7 +97,6 @@ export default function ConsentForm({
                 Tasks and surveys associated with the following studies are
                 covered under this protocol
               </p>
-
               <div className="coveredStudiesAndTasks">
                 {publicStudies.map((study) => (
                   <li key={study.id}>{study.title}</li>
@@ -126,6 +109,7 @@ export default function ConsentForm({
         </div>
       </div>
 
+      {/* Additional fields for participants under 18 */}
       {isUnder18(userInfo?.bd) && (
         <>
           <div>

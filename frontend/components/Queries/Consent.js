@@ -14,7 +14,7 @@ export const GET_CONSENTS = gql`
 
 // get my consents
 export const GET_MY_CONSENTS = gql`
-  query GET_MY_CONSENTS($userId: ID!) {
+  query GET_MY_CONSENTS($userId: ID!) { 
     consents(where: { author: { id: { equals: $userId } } }) {
       id
       code
@@ -32,6 +32,9 @@ export const GET_PUBLIC_CONSENTS = gql`
       id
       code
       title
+      organization
+      info
+      settings
       description
       createdAt
     }
