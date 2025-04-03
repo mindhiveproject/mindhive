@@ -3,7 +3,7 @@ import ReactHtmlParser from "react-html-parser";
 import { Menu } from "semantic-ui-react";
 
 export default function StudyInfo({ query, user, study, isDashboard }) {
-  const [tab, setTab] = useState(query?.tab || "What");
+  const [tab, setTab] = useState(query?.tab);
 
   const additionalTabs =
     study?.info?.filter((p) => p.name.startsWith("tab")) || [];
@@ -25,14 +25,23 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
   ];
 
   // do not display empty tabs
-  const filteredTabs = tabs.filter((tab) => !!tab.text && tab?.text !== "");
+  const filteredTabs = tabs.filter(
+    (tab) =>
+      (!!tab.text && tab?.text !== "") ||
+      (tab?.name === "what" &&
+        study?.info?.filter((p) => p?.name === "what").length) ||
+      (tab?.name === "who" &&
+        study?.info?.filter((p) => p?.name === "who").length) ||
+      (tab?.name === "why" &&
+        study?.info?.filter((p) => p?.name === "why").length)
+  );
 
   // by default display the first tab
   useEffect(() => {
     async function updateTab() {
       setTab(filteredTabs[0]?.header);
     }
-    if (filteredTabs && filteredTabs.length) {
+    if (filteredTabs && filteredTabs.length && !tab) {
       updateTab();
     }
   }, [filteredTabs]);
