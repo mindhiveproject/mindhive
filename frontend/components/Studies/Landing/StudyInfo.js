@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { Menu } from "semantic-ui-react";
 
@@ -23,6 +23,19 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
     },
     ...additionalTabs,
   ];
+
+  // do not display empty tabs
+  const filteredTabs = tabs.filter((tab) => !!tab.text && tab?.text !== "");
+
+  // by default display the first tab
+  useEffect(() => {
+    async function updateTab() {
+      setTab(filteredTabs[0]?.header);
+    }
+    if (filteredTabs && filteredTabs.length) {
+      updateTab();
+    }
+  }, [filteredTabs]);
 
   // parse study information
   const infoBlocks =
@@ -134,7 +147,7 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
       <div className="studyWhatWhoHow">
         <div className="descriptionMenu">
           <Menu tabular stackable>
-            {tabs.map((atab, num) => (
+            {filteredTabs.map((atab, num) => (
               <div key={num}>
                 <Menu.Item
                   key={num}
@@ -149,7 +162,7 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
           </Menu>
         </div>
 
-        {tabs.map((atab, num) => (
+        {filteredTabs.map((atab, num) => (
           <div key={num}>
             {tab === atab.header && (
               <div>{infoBlocks && ReactHtmlParser(infoBlocks[atab.name])}</div>

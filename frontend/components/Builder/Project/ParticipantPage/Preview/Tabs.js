@@ -35,22 +35,24 @@ export default function Tabs({
     study?.info?.filter((p) => p.name.startsWith("tab")) || [];
 
   const tabs = [
-    {
-      name: "what",
-      header: "What",
-    },
-    {
-      name: "who",
-      header: "Who",
-    },
-    {
-      name: "why",
-      header: "Why",
-    },
-    {
-      name: "how",
-      header: "How",
-    },
+    // remove default tabs
+    // Notion TICKET (February 7, 2025 4:26 PM) "Remove default Who/What/Why tab and only have “Add tab button”"
+    // {
+    //   name: "what",
+    //   header: "What",
+    // },
+    // {
+    //   name: "who",
+    //   header: "Who",
+    // },
+    // {
+    //   name: "why",
+    //   header: "Why",
+    // },
+    // {
+    //   name: "how",
+    //   header: "How",
+    // },
     ...additionalTabs,
   ];
 
@@ -92,18 +94,13 @@ export default function Tabs({
             </div>
           ))}
         </div>
-        {(user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
-          user?.permissions?.map((p) => p?.name).includes("SCIENTIST") ||
-          user?.permissions?.map((p) => p?.name).includes("TEACHER") ||
-          user?.permissions?.map((p) => p?.name).includes("MENTOR")) && (
-          <button
-            onClick={() => {
-              addTab();
-            }}
-          >
-            Add Tab
-          </button>
-        )}
+        <button
+          onClick={() => {
+            addTab();
+          }}
+        >
+          Add Tab
+        </button>
       </div>
 
       {tabs.map((atab, num) => (
