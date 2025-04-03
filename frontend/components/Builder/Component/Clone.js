@@ -58,7 +58,7 @@ export default function CloneTask({ query, user, taskSlug, redirect }) {
         variables: {
           where: {
             AND: [
-              { taskType: { equals: taskType } },
+              { taskType: { equals: task?.taskType } },
               {
                 OR: [
                   { author: { id: { equals: user?.id } } },
