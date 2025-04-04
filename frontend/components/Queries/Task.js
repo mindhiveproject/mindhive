@@ -13,18 +13,8 @@ export const ALL_PUBLIC_TASKS = gql`
 
 // get public tasks
 export const PUBLIC_TASKS = gql`
-  query PUBLIC_TASKS($taskType: TaskTaskTypeType, $searchTerm: String) {
-    tasks(
-      where: {
-        taskType: { equals: $taskType }
-        public: { equals: true }
-        OR: [
-          { title: { contains: $searchTerm } }
-          { description: { contains: $searchTerm } }
-        ]
-      }
-      orderBy: { title: asc }
-    ) {
+  query PUBLIC_TASKS($where: TaskWhereInput!) {
+    tasks(where: $where, orderBy: { title: asc }) {
       id
       title
       taskType
@@ -47,27 +37,8 @@ export const PUBLIC_TASKS = gql`
 
 // get my tasks
 export const MY_TASKS = gql`
-  query MY_TASKS($id: ID!, $taskType: TaskTaskTypeType, $searchTerm: String) {
-    tasks(
-      where: {
-        AND: [
-          { taskType: { equals: $taskType } }
-          {
-            OR: [
-              { author: { id: { equals: $id } } }
-              { collaborators: { some: { id: { equals: $id } } } }
-            ]
-          }
-          {
-            OR: [
-              { title: { contains: $searchTerm } }
-              { description: { contains: $searchTerm } }
-            ]
-          }
-        ]
-      }
-      orderBy: [{ createdAt: desc }]
-    ) {
+  query MY_TASKS($where: TaskWhereInput!) {
+    tasks(where: $where, orderBy: [{ createdAt: desc }]) {
       id
       title
       slug
@@ -89,22 +60,8 @@ export const MY_TASKS = gql`
 
 // get favorite tasks
 export const FAVORITE_TASKS = gql`
-  query FAVORITE_TASKS(
-    $taskType: TaskTaskTypeType
-    $searchTerm: String
-    $userId: ID!
-  ) {
-    tasks(
-      where: {
-        favoriteBy: { some: { id: { equals: $userId } } }
-        taskType: { equals: $taskType }
-        OR: [
-          { title: { contains: $searchTerm } }
-          { description: { contains: $searchTerm } }
-        ]
-      }
-      orderBy: { title: asc }
-    ) {
+  query FAVORITE_TASKS($where: TaskWhereInput!) {
+    tasks(where: $where, orderBy: { title: asc }) {
       id
       title
       taskType

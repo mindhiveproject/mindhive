@@ -12,7 +12,13 @@ export default function DiscoverTaskBank({ query, user, isDashboard }) {
 
   const { data, error, loading } = useQuery(PUBLIC_TASKS, {
     variables: {
-      taskType: tab === "all" ? undefined : tab.toUpperCase(),
+      where:
+        tab === "all"
+          ? { public: { equals: true } }
+          : {
+              taskType: { equals: tab.toUpperCase() },
+              public: { equals: true },
+            },
     },
   });
   const tasks = data?.tasks || [];

@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 
 import { GET_REVIEW } from "../../../Queries/Review";
@@ -13,7 +13,23 @@ export default function Navigation({
   canReview,
   handleChange,
   resetForm,
+  status,
 }) {
+  const [returnUrl, setReturnUrl] = useState("/projects");
+  // Extract project ID and return URL from the current URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get("from");
+    if (fromUrl) {
+      setReturnUrl(decodeURIComponent(fromUrl));
+    }
+  }, []);
+
+  // Navigate back to Feedback Center
+  const goBackToFeedbackCenter = () => {
+    window.location.href = returnUrl; // Navigate to the preserved Feedback Center URL
+  };
+
   const [
     createReview,
     { data: createData, loading: createLoading, error: createError },
@@ -66,17 +82,11 @@ export default function Navigation({
 
   return (
     <div className="header">
-      <Link
-        href={{
-          pathname: `/dashboard/review`,
-        }}
-      >
-        <div className="backBtn">
-          <img src="/assets/icons/review/expand_left.svg" />
+      <div className="backBtn" onClick={goBackToFeedbackCenter}>
+        <img src="/assets/icons/review/expand_left.svg" />
 
-          <div className="text">Back to Feedback Center</div>
-        </div>
-      </Link>
+        <div className="text">Back to Feedback Center</div>
+      </div>
 
       <div className="title">{project?.title}</div>
       <div className="collaborators">
@@ -88,6 +98,20 @@ export default function Navigation({
           </span>
         ))}
       </div>
+
+      {status === "PEER_REVIEW" && (
+        <>
+          {project?.study ? (
+            <div>
+              <a target="_blank" href={`/studies/${project?.study?.slug}`}>
+                <button>Participate in the study</button>
+              </a>
+            </div>
+          ) : (
+            <div>There is no study</div>
+          )}
+        </>
+      )}
 
       {canReview && (
         <div className="saveBtn">

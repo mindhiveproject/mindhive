@@ -9,8 +9,13 @@ import {
 import { GET_STUDY_RESULTS } from "../../../Queries/Study";
 
 import Navigation from "../Navigation/Main";
-import ParticipantPage from "./Participant/Main";
-import Table from "./Table/Main";
+// old import (from Study folder)
+// import ParticipantPage from "./Participant/Main";
+// import Table from "./Table/Main";
+
+// new import (from Project folder)
+import ParticipantPage from "../../Project/Collect/Participant/Main";
+import Table from "../../Project/Collect/Table/Main";
 
 export default function Collect({ query, user, tab, toggleSidebar }) {
   const studyId = query?.selector;

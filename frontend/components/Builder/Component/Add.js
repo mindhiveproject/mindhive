@@ -68,7 +68,19 @@ export default function AddComponent({ query, user, redirect, isExternal }) {
     refetchQueries: [
       {
         query: MY_TASKS,
-        variables: { id: user?.id, taskType: taskType },
+        variables: {
+          where: {
+            AND: [
+              { taskType: { equals: taskType } },
+              {
+                OR: [
+                  { author: { id: { equals: user?.id } } },
+                  { collaborators: { some: { id: { equals: user?.id } } } },
+                ],
+              },
+            ],
+          },
+        },
       },
     ],
   });

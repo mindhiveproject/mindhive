@@ -17,7 +17,7 @@ export default function Proposal({ query, user, tab, toggleSidebar }) {
     variables: { id: proposalId },
   });
 
-  const proposal = data?.proposalBoard || {};
+  const proposal = data?.proposalBoard || { sections: [] };
 
   if (cardId) {
     return (

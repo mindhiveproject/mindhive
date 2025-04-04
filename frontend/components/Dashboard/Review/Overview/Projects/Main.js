@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useRef } from "react";
 import { Dropdown, Checkbox } from "semantic-ui-react";
 
 import { PROJECTS_QUERY } from "../../../../Queries/Proposal";
@@ -21,7 +20,7 @@ export default function ProjectsBoard({
   selector,
   allUniqueClassIds,
   myClassesIds,
-  allClasses,
+  allUniqueClasses,
 }) {
   const [keyword, setKeyword] = useState("");
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -31,6 +30,11 @@ export default function ProjectsBoard({
   const [filterSortMessage, setFilterSortMessage] = useState(
     "Showing all projects"
   );
+
+  // Use a ref to track if this is the initial mount
+  const isInitialMount = useRef(true);
+  // Store the previous selector value to detect tab switches
+  const prevSelector = useRef(selector);
 
   let whereStatus, status, isOpenForCommentsQuery;
   switch (selector) {
@@ -73,7 +77,83 @@ export default function ProjectsBoard({
 
   const projects = data?.proposalBoards || [];
 
-  // filter and sort proposals
+  // Initialize state from URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const classesParam = params.get("classes");
+    const keywordParam = params.get("keyword");
+    const sortParam = params.get("sort");
+
+    if (classesParam) setFilteredClasses(classesParam.split(","));
+    if (keywordParam) setKeyword(keywordParam);
+    if (sortParam) setSortBy(sortParam);
+
+    // After initial mount, set isInitialMount to false
+    isInitialMount.current = false;
+  }, []);
+
+  // Reset filters only when selector changes (not on initial mount)
+  useEffect(() => {
+    // Skip reset on initial mount
+    if (isInitialMount.current) {
+      prevSelector.current = selector;
+      return;
+    }
+
+    // Reset filters only if selector actually changed (tab switch)
+    if (prevSelector.current !== selector) {
+      setKeyword("");
+      setSortBy("");
+      setFilteredClasses([]);
+      setShowMyClassOnly(false);
+      setFilterSortMessage("Showing all projects");
+      const newUrl = window.location.pathname;
+      window.history.pushState({}, document.title, newUrl);
+    }
+
+    // Update prevSelector for the next render
+    prevSelector.current = selector;
+  }, [selector]);
+
+  // Update URL when filters change
+  useEffect(() => {
+    const queryParams = new URLSearchParams();
+    if (filteredClasses.length > 0) {
+      queryParams.set("classes", filteredClasses.join(","));
+    }
+    if (keyword) {
+      queryParams.set("keyword", keyword);
+    }
+    if (sortBy) {
+      queryParams.set("sort", sortBy);
+    }
+
+    const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
+    window.history.pushState(
+      { filteredClasses, keyword, sortBy },
+      document.title,
+      newUrl
+    );
+  }, [filteredClasses, keyword, sortBy]);
+
+  // Restore state on popstate (back/forward navigation)
+  useEffect(() => {
+    const handlePopState = (event) => {
+      const params = new URLSearchParams(window.location.search);
+      const classesParam = params.get("classes");
+      const keywordParam = params.get("keyword");
+      const sortParam = params.get("sort");
+
+      setFilteredClasses(classesParam ? classesParam.split(",") : []);
+      setKeyword(keywordParam || "");
+      setSortBy(sortParam || "");
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  // Filter and sort proposals
   useEffect(() => {
     async function filterProposals() {
       const projectsFiltered = projects.filter((project) => {
@@ -97,7 +177,6 @@ export default function ProjectsBoard({
         }
       });
       if (sortBy) {
-        // sort projects
         const projectsFilteredAndSorted = projectsFiltered.sort((a, b) => {
           if (sortBy === "OLDEST") {
             if (a.createdAt < b.createdAt) return -1;
@@ -107,7 +186,6 @@ export default function ProjectsBoard({
             if (a.createdAt > b.createdAt) return -1;
             if (a.createdAt < b.createdAt) return 1;
           }
-
           if (sortBy === "LEAST_COMMENTS") {
             if (
               a?.reviews?.filter((r) => r?.stage === status).length <
@@ -120,7 +198,6 @@ export default function ProjectsBoard({
             )
               return 1;
           }
-
           if (sortBy === "MOST_COMMENTS") {
             if (
               a?.reviews?.filter((r) => r?.stage === status).length >
@@ -142,7 +219,23 @@ export default function ProjectsBoard({
     if (projects) {
       filterProposals();
     }
-  }, [projects, keyword, showMyClassOnly, sortBy, filteredClasses]);
+  }, [
+    projects?.length,
+    keyword,
+    showMyClassOnly,
+    sortBy,
+    filteredClasses,
+    status,
+  ]);
+
+  // Function to navigate to a project page
+  const navigateToProject = ({ id, stage }) => {
+    const feedbackCenterUrl = window.location.href; // Current URL with filters
+    const projectUrl = `/dashboard/review/project?id=${id}&stage=${stage}&from=${encodeURIComponent(
+      feedbackCenterUrl
+    )}`; // Adjust this path as needed
+    window.location.href = projectUrl; // Full navigation to another page
+  };
 
   return (
     <div className="board">
@@ -185,26 +278,12 @@ export default function ProjectsBoard({
             value={sortBy}
           />
         </div>
-        {/* <div className="checkboxArea">
-          <Checkbox
-            onChange={() => {
-              if (!showMyClassOnly) {
-                setFilterSortMessage(`Showing projects in my class`);
-              } else {
-                setFilterSortMessage(`Showing all projects`);
-              }
-              setShowMyClassOnly(!showMyClassOnly);
-            }}
-            checked={showMyClassOnly}
-            label="Only show projects in my class"
-          />
-        </div> */}
         <Dropdown
           placeholder="Filter by classes"
           fluid
           multiple
           selection
-          options={allClasses.map((c) => ({
+          options={allUniqueClasses.map((c) => ({
             key: c.id,
             value: c.id,
             text: c.title,
@@ -220,13 +299,20 @@ export default function ProjectsBoard({
 
       <div className="cardsArea">
         {filteredProjects.map((project) => (
-          <Card
+          <div
             key={project?.id}
-            stage={selector}
-            project={project}
-            status={status}
-            isOpenForCommentsQuery={isOpenForCommentsQuery}
-          />
+            onClick={() =>
+              navigateToProject({ id: project.id, stage: selector })
+            }
+            style={{ cursor: "pointer" }}
+          >
+            <Card
+              stage={selector}
+              project={project}
+              status={status}
+              isOpenForCommentsQuery={isOpenForCommentsQuery}
+            />
+          </div>
         ))}
       </div>
     </div>

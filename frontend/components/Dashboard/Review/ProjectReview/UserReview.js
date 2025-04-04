@@ -21,6 +21,7 @@ export default function UserReview({
   tab,
   project,
   status,
+  actionCardType,
   canReview,
 }) {
   // try to get the user review
@@ -85,6 +86,7 @@ export default function UserReview({
         canReview={canReview}
         handleChange={handleChange}
         resetForm={resetForm}
+        status={status}
       />
 
       <div className={canReview ? `double` : `single`}>
@@ -130,7 +132,13 @@ export default function UserReview({
             </Link>
           </div>
 
-          {tab === "proposal" && <StudyDetails project={project} />}
+          {tab === "proposal" && (
+            <StudyDetails
+              project={project}
+              status={status}
+              actionCardType={actionCardType}
+            />
+          )}
           {tab === "reviews" && (
             <Feedback
               user={user}

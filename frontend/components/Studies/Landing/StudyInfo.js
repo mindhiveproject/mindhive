@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { Menu } from "semantic-ui-react";
 
 export default function StudyInfo({ query, user, study, isDashboard }) {
-  const [tab, setTab] = useState(query?.tab || "What");
+  const [tab, setTab] = useState(query?.tab);
 
   const additionalTabs =
     study?.info?.filter((p) => p.name.startsWith("tab")) || [];
@@ -23,6 +23,28 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
     },
     ...additionalTabs,
   ];
+
+  // do not display empty tabs
+  const filteredTabs = tabs.filter(
+    (tab) =>
+      (!!tab.text && tab?.text !== "") ||
+      (tab?.name === "what" &&
+        study?.info?.filter((p) => p?.name === "what").length) ||
+      (tab?.name === "who" &&
+        study?.info?.filter((p) => p?.name === "who").length) ||
+      (tab?.name === "why" &&
+        study?.info?.filter((p) => p?.name === "why").length)
+  );
+
+  // by default display the first tab
+  useEffect(() => {
+    async function updateTab() {
+      setTab(filteredTabs[0]?.header);
+    }
+    if (filteredTabs && filteredTabs.length && !tab) {
+      updateTab();
+    }
+  }, [filteredTabs]);
 
   // parse study information
   const infoBlocks =
@@ -134,7 +156,7 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
       <div className="studyWhatWhoHow">
         <div className="descriptionMenu">
           <Menu tabular stackable>
-            {tabs.map((atab, num) => (
+            {filteredTabs.map((atab, num) => (
               <div key={num}>
                 <Menu.Item
                   key={num}
@@ -149,7 +171,7 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
           </Menu>
         </div>
 
-        {tabs.map((atab, num) => (
+        {filteredTabs.map((atab, num) => (
           <div key={num}>
             {tab === atab.header && (
               <div>{infoBlocks && ReactHtmlParser(infoBlocks[atab.name])}</div>

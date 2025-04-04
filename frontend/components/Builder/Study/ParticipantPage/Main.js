@@ -8,8 +8,14 @@ const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 4);
 import useForm from "../../../../lib/useForm";
 
 import Navigation from "../Navigation/Main";
-import Preview from "./Preview/Main";
-import Settings from "./Settings/Main";
+
+// old import (from Study folder)
+// import Preview from "./Preview/Main";
+// import Settings from "./Settings/Main";
+
+// new import (from Project folder)
+import Preview from "../../Project/ParticipantPage/Preview/Main";
+import Settings from "../../Project/ParticipantPage/Settings/Main";
 
 import { MY_STUDIES, MY_STUDY } from "../../../Queries/Study";
 import { CREATE_STUDY, UPDATE_STUDY } from "../../../Mutations/Study";
@@ -70,6 +76,8 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
         consent: [],
         collaborators: [],
         classes,
+        diagram: study?.diagram,
+        flow: study?.flow,
       });
     }
     if (area === "cloneofstudy" && study?.id) {

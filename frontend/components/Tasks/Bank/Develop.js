@@ -4,7 +4,19 @@ import TaskCard from "./TaskCard";
 
 export default function DevelopTaskBank({ user, taskType }) {
   const { data, error, loading } = useQuery(MY_TASKS, {
-    variables: { id: user?.id, taskType },
+    variables: {
+      where: {
+        AND: [
+          { taskType: { equals: taskType } },
+          {
+            OR: [
+              { author: { id: { equals: user?.id } } },
+              { collaborators: { some: { id: { equals: user?.id } } } },
+            ],
+          },
+        ],
+      },
+    },
   });
   const tasks = data?.tasks || [];
 

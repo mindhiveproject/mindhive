@@ -11,9 +11,24 @@ export default function FavoriteBlocks({
 }) {
   const { data, error, loading } = useQuery(FAVORITE_TASKS, {
     variables: {
-      taskType: componentType,
-      searchTerm: search,
-      userId: user?.id,
+      where:
+        process.env.NODE_ENV === "development"
+          ? {
+              favoriteBy: { some: { id: { equals: user?.id } } },
+              taskType: { equals: componentType },
+              OR: [
+                { title: { contains: search } },
+                { description: { contains: search } },
+              ],
+            }
+          : {
+              favoriteBy: { some: { id: { equals: user?.id } } },
+              taskType: { equals: componentType },
+              OR: [
+                { title: { contains: search, mode: "insensitive" } },
+                { description: { contains: search, mode: "insensitive" } },
+              ],
+            },
     },
   });
   const tasks = data?.tasks || [];

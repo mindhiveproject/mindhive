@@ -20,49 +20,42 @@ export default function Card({
   };
 
   return (
-    <Link
-      href={{
-        pathname: `/dashboard/review/project`,
-        query: { id: project?.id, stage: stage },
-      }}
-      className="customlink"
-    >
-      <div className="card">
-        <div className="headline">
-          {project?.study?.featured && (
-            <div className="p12">Featured project</div>
-          )}
-          <div className="p12">
-            {project?.reviews?.filter((r) => r?.stage === status).length} review
-            {project?.reviews?.filter((r) => r?.stage === status).length !== 1
-              ? `s`
-              : ``}
-          </div>
+    <div className="card">
+      <div className="headline">
+        {project?.study?.featured && (
+          <div className="p12">Featured project</div>
+        )}
+        <div className="p12">
+          {project?.reviews?.filter((r) => r?.stage === status).length} review
+          {project?.reviews?.filter((r) => r?.stage === status).length !== 1
+            ? `s`
+            : ``}
         </div>
-        <div className="p13">{shortenTitle(project?.title)}</div>
-        <div className="imageContainer">
-          {imageURL ? (
-            <img src={imageURL} alt={project?.title} />
-          ) : (
-            <div className="noImage">
-              <img src="/logo.png" alt={project?.title} />
-            </div>
+      </div>
+      <div className="p13">{shortenTitle(project?.title)}</div>
+      <div className="imageContainer">
+        {imageURL ? (
+          <img src={imageURL} alt={project?.title} />
+        ) : (
+          <div className="noImage">
+            <img src="/logo.png" alt={project?.title} />
+          </div>
+        )}
+      </div>
+      <div className="lowPanel">
+        <div>
+          {status === "Proposal" && (
+            <div className="tag proposal">{status}</div>
+          )}
+          {status === "Peer Review" && (
+            <div className="tag peerreview">{status}</div>
+          )}
+          {status === "Collecting data" && (
+            <div className="tag peerreview">{status}</div>
           )}
         </div>
-        <div className="lowPanel">
-          <div>
-            {status === "Proposal" && (
-              <div className="tag proposal">{status}</div>
-            )}
-            {status === "Peer Review" && (
-              <div className="tag peerreview">{status}</div>
-            )}
-            {status === "Collecting data" && (
-              <div className="tag peerreview">{status}</div>
-            )}
-          </div>
-          <div className="options">
-            {/* {(status === "IN_REVIEW" ||
+        <div className="options">
+          {/* {(status === "IN_REVIEW" ||
               status === "COLLECTING_DATA") && (
               <div className="option">
                 <img src="/assets/icons/review/participate.svg" />
@@ -75,20 +68,19 @@ export default function Card({
                 <div>Comment</div>
               </div>
             )} */}
-            {isOpenForComments ? (
-              <div className="option">
-                <img src="/assets/icons/review/comment.svg" />
-                <div>Comment</div>
-              </div>
-            ) : (
-              <div className="option">
-                <img src="/assets/icons/proposal/status-completed.svg" />
-                <div>Locked</div>
-              </div>
-            )}
-          </div>
+          {isOpenForComments ? (
+            <div className="option">
+              <img src="/assets/icons/review/comment.svg" />
+              <div>Comment</div>
+            </div>
+          ) : (
+            <div className="option">
+              <img src="/assets/icons/proposal/status-completed.svg" />
+              <div>Locked</div>
+            </div>
+          )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
