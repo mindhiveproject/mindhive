@@ -31,6 +31,12 @@ export default function Overview({ query, user }) {
   const allClasses = [...myClasses, ...networkClasses];
   const allClassIds = allClasses.map((theclass) => theclass.id);
   const allUniqueClassIds = [...new Set([...allClassIds])];
+  const allUniqueClasses = allUniqueClassIds.map((id) => {
+    return {
+      id,
+      title: allClasses.find((cl) => cl?.id === id).title,
+    };
+  });
 
   return (
     <div className="overview">
@@ -99,7 +105,7 @@ export default function Overview({ query, user }) {
           selector={selector}
           allUniqueClassIds={allUniqueClassIds}
           myClassesIds={myClasses.map((cl) => cl?.id)}
-          allClasses={allClasses}
+          allUniqueClasses={allUniqueClasses}
         />
       )}
 
