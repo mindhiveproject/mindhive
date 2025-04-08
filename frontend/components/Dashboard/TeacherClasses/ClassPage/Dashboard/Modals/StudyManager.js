@@ -151,6 +151,7 @@ export default function ProjectManager(props) {
                   <div>
                     <Dropdown
                       selection
+                      search
                       options={studyOptions}
                       value={studyId}
                       onChange={(e, data) => setStudyId(data?.value)}
