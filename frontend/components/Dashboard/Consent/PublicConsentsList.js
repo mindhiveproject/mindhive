@@ -29,7 +29,7 @@ export default function ConsentsList({ query, user }) {
 
   async function createConsentlCopy(i) {
     // console.log("Copying consent...");
-    console.log(consents[i])
+    // console.log(consents[i])
     const consentToCopy = consents[i];
   
     if (!consentToCopy) {
@@ -68,7 +68,7 @@ export default function ConsentsList({ query, user }) {
       // }
       if (data?.createConsent?.id) {
         setNewConsentId(data.createConsent.id); // Store the new consent ID in state
-        router.push(`/dashboard/irb/${data.createConsent.id}?action=edit`);
+        router.push(`/dashboard/irb/`);
       }
     } catch (error) {
       console.error("Error creating consent copy:", error);
