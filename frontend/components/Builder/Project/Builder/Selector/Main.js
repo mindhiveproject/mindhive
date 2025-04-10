@@ -112,8 +112,8 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
       </div>
 
       <Accordion exclusive={false} fluid styled className="blocksMenu">
-        {components.map((item) => (
-          <>
+        {components.map((item, num) => (
+          <div key={num}>
             <Accordion.Title
               active={activeIndex.includes(item?.index)}
               index={item?.index}
@@ -151,7 +151,7 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
                 </div>
               )}
             </Accordion.Content>
-          </>
+          </div>
         ))}
         <Accordion.Title
           active={activeIndex.includes(4)}

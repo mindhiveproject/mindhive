@@ -137,6 +137,7 @@ export default function ProjectManager(props) {
                   <h3>Select the student's project</h3>
                   <Dropdown
                     selection
+                    search
                     options={projectOptions}
                     value={projectId}
                     onChange={(e, data) => setProjectId(data?.value)}

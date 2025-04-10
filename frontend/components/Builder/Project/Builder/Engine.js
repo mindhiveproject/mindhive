@@ -94,6 +94,12 @@ export default function Engine({
   }, []);
   // study?.diagram - was removed from the previous line not to update every time when the study state is updated
 
+  useEffect(() => {
+    if (engine && study?.diagram) {
+      engine.repaintCanvas();
+    }
+  }, [engine, study?.diagram]);
+
   const getRandomIntInclusive = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
