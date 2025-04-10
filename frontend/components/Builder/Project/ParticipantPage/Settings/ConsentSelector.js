@@ -26,7 +26,7 @@ export default function ConsentSelector({ user, study, handleChange }) {
 
   return (
     <Dropdown
-      placeholder="Type consent name"
+      placeholder="Type consent protocol"
       fluid
       multiple
       search

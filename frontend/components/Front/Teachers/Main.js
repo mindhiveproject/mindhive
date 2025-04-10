@@ -82,8 +82,8 @@ export default function TeachersInformation() {
             <iframe
               width="560"
               height="315"
-              src="https://www.youtube.com/embed/VRxvufd5aBc"
-              title="YouTube video player"
+              src="https://drive.google.com/file/d/1sBAGxA6hGWUonxyNFmaPcyoiRuJxVC7j/preview"
+              title="Google Drive video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen

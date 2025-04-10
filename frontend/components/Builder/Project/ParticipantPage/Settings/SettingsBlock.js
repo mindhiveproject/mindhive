@@ -38,7 +38,7 @@ export default function SettingBlock({
               <label className="name" htmlFor={name}>
                 <h4>Ask for participant’s consent</h4>
                 <p>
-                  Visitors will be shown IRB forms and will be asked to consent
+                  Visitors will be shown consent forms and will be asked to consent
                   prior to participation
                 </p>
               </label>
