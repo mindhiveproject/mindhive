@@ -30,6 +30,7 @@ export default function Engine({
   user,
   tab,
   study,
+  project,
   handleChange,
   handleMultipleUpdate,
   saveStudy,
@@ -361,6 +362,7 @@ export default function Engine({
       <Builder
         query={query}
         user={user}
+        project={project}
         study={study}
         handleChange={handleStudyChange}
         handleMultipleUpdate={handleStudyMultipleUpdate}
