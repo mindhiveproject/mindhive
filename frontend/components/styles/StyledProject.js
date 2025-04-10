@@ -80,6 +80,7 @@ const StyledProject = styled.div`
       display: grid;
       grid-template-columns: auto 1fr;
       grid-gap: 20px;
+      align-items: center;
       .title {
         color: #3d85b0;
       }
@@ -133,6 +134,7 @@ const StyledProject = styled.div`
       text-align: left;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
+      max-width: 100%;
     }
     .right {
       display: grid;
