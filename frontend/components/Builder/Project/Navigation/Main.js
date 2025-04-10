@@ -34,10 +34,14 @@ const items = [
     value: "visualize",
     name: "Visualize",
   },
-  {
-    value: "exit",
-    name: "Exit Study Builder",
-  },
+  // {
+  //   value: "journal",
+  //   name: "Data Journals (BETA)",
+  // },
+  // {
+  //   value: "exit",
+  //   name: "Exit Study Builder",
+  // },
 ];
 
 export default function Navigation({
@@ -82,114 +86,164 @@ export default function Navigation({
 
   return (
     <div className="navigation">
-      <div className="left">
-        <div className="selector">
-          <Dropdown
-            upward={false}
-            icon={null}
-            trigger={
-              <div className="icon">
-                <img src="/assets/icons/project/list.svg" />
-              </div>
-            }
-          >
-            <Dropdown.Menu>
-              {items
-                .filter((item) => item.value !== "exit")
-                .map((item, i) => (
-                  <Link
-                    key={i}
-                    href={{
-                      pathname: `/builder/${area}`,
-                      query: {
-                        selector,
-                        tab: item?.value,
-                      },
-                    }}
-                    onClick={tryToLeave}
-                  >
-                    <Dropdown.Item>
-                      <div className="option">
-                        <img src={`/assets/icons/project/${item?.value}.svg`} />
-                        <p>{item?.name}</p>
-                      </div>
-                    </Dropdown.Item>
-                  </Link>
-                ))}
-              {items
-                .filter((item) => item.value === "exit")
-                .map((item, i) => (
-                  <Link
-                    key={i}
-                    href={{
-                      pathname: `/dashboard/develop`,
-                    }}
-                    onClick={tryToLeave}
-                  >
-                    <Dropdown.Item>
-                      <div className="option">
-                        <img src={`/assets/icons/project/${item?.value}.svg`} />
-                        <p>{item?.name}</p>
-                      </div>
-                    </Dropdown.Item>
-                  </Link>
-                ))}
-            </Dropdown.Menu>
-          </Dropdown>
-
-          {items
-            .filter((item) => item?.value === tab)
-            .map((item) => item?.name)}
-        </div>
-      </div>
-      <div className="middle">
-        <div className="studyTitle">
-          <span className="title">Project </span> {project?.title}
-        </div>
-
-        {project?.study?.title && (
-          <div className="studyTitle">
-            <span className="title"> Study </span> {project?.study?.title}
+      <div className="firstLine">
+        <div className="leftPanel">
+          <div className="goBackBtn">
+            <Link
+              href={{
+                pathname: `/dashboard/develop/projects`,
+              }}
+              onClick={tryToLeave}
+            >
+              ←
+            </Link>
           </div>
-        )}
+        </div>
+        <div className="middle">
+          <div className="studyTitle">
+            <span className="title">Project </span> {project?.title}
+          </div>
+
+          {project?.study?.title && (
+            <div className="studyTitle">
+              <span className="title"> Study </span> {project?.study?.title}
+            </div>
+          )}
+        </div>
+        <div className="right">
+          {tab === "board" ? (
+            <Connect project={project} user={user} />
+          ) : (
+            <ConnectStudy study={project?.study} user={user} />
+          )}
+
+          {cardId && (
+            <button
+              onClick={async () => {
+                await saveBtnFunction();
+                router.push({
+                  pathname: `/builder/projects/`,
+                  query: {
+                    selector: proposalId,
+                  },
+                });
+              }}
+              className={
+                hasStudyChanged || area === "cloneofstudy" ? "on" : "off"
+              }
+            >
+              {saveBtnName}
+            </button>
+          )}
+
+          {saveBtnFunction && (
+            <button
+              onClick={() => saveBtnFunction()}
+              className={
+                hasStudyChanged || area === "cloneofstudy" ? "on" : "off"
+              }
+            >
+              {saveBtnName}
+            </button>
+          )}
+        </div>
       </div>
-      <div className="right">
-        {tab === "board" ? (
-          <Connect project={project} user={user} />
-        ) : (
-          <ConnectStudy study={project?.study} user={user} />
-        )}
 
-        {cardId && (
-          <button
-            onClick={async () => {
-              await saveBtnFunction();
-              router.push({
-                pathname: `/builder/projects/`,
+      <div className="secondLine">
+        <div className="menu">
+          {items.map((item, i) => (
+            <Link
+              key={i}
+              href={{
+                pathname: `/builder/${area}`,
                 query: {
-                  selector: proposalId,
+                  selector,
+                  tab: item?.value,
                 },
-              });
-            }}
-            className={
-              hasStudyChanged || area === "cloneofstudy" ? "on" : "off"
-            }
-          >
-            {saveBtnName}
-          </button>
-        )}
-
-        {saveBtnFunction && (
-          <button
-            onClick={() => saveBtnFunction()}
-            className={
-              hasStudyChanged || area === "cloneofstudy" ? "on" : "off"
-            }
-          >
-            {saveBtnName}
-          </button>
-        )}
+              }}
+              onClick={tryToLeave}
+            >
+              <div
+                className={
+                  tab === item?.value
+                    ? "menuTitle selectedMenuTitle"
+                    : "menuTitle"
+                }
+              >
+                <div className="titleWithIcon">
+                  <img src={`/assets/icons/project/${item?.value}.svg`} />
+                  <p>{item?.name}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
+}
+
+{
+  /* <div className="selector">
+            <Dropdown
+              upward={false}
+              icon={null}
+              trigger={
+                <div className="icon">
+                  <img src="/assets/icons/project/list.svg" />
+                </div>
+              }
+            >
+              <Dropdown.Menu>
+                {items
+                  .filter((item) => item.value !== "exit")
+                  .map((item, i) => (
+                    <Link
+                      key={i}
+                      href={{
+                        pathname: `/builder/${area}`,
+                        query: {
+                          selector,
+                          tab: item?.value,
+                        },
+                      }}
+                      onClick={tryToLeave}
+                    >
+                      <Dropdown.Item>
+                        <div className="option">
+                          <img
+                            src={`/assets/icons/project/${item?.value}.svg`}
+                          />
+                          <p>{item?.name}</p>
+                        </div>
+                      </Dropdown.Item>
+                    </Link>
+                  ))}
+                {items
+                  .filter((item) => item.value === "exit")
+                  .map((item, i) => (
+                    <Link
+                      key={i}
+                      href={{
+                        pathname: `/dashboard/develop`,
+                      }}
+                      onClick={tryToLeave}
+                    >
+                      <Dropdown.Item>
+                        <div className="option">
+                          <img
+                            src={`/assets/icons/project/${item?.value}.svg`}
+                          />
+                          <p>{item?.name}</p>
+                        </div>
+                      </Dropdown.Item>
+                    </Link>
+                  ))}
+              </Dropdown.Menu>
+            </Dropdown>
+
+            {items
+              .filter((item) => item?.value === tab)
+              .map((item) => item?.name)}
+          </div> */
 }
