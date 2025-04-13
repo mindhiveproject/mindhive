@@ -100,6 +100,7 @@ export default function Grid({ studyId, participants }) {
       filter: "agTextColumnFilter",
     },
     { field: "consent", headerName: "Consent", filter: "agTextColumnFilter" },
+    { field: "studyStatus", headerName: "Study Status" },
     {
       field: "accountType",
       headerName: "Account Type",

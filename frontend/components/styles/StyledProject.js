@@ -30,10 +30,16 @@ const StyledProject = styled.div`
   grid-template-rows: auto 1fr;
   .navigation {
     display: grid;
-    align-items: center;
-    padding: 6px 9px;
-    grid-template-columns: auto 1fr auto;
-    grid-gap: 20px;
+    .firstLine {
+      display: grid;
+      align-items: center;
+      padding: 6px 9px;
+      grid-template-columns: auto 1fr auto;
+      grid-gap: 20px;
+      padding: 7px 10px;
+      min-height: 55px;
+    }
+
     .on {
     }
     .off {
@@ -74,6 +80,7 @@ const StyledProject = styled.div`
       display: grid;
       grid-template-columns: auto 1fr;
       grid-gap: 20px;
+      align-items: center;
       .title {
         color: #3d85b0;
       }
@@ -88,6 +95,11 @@ const StyledProject = styled.div`
         grid-gap: 5px;
         align-items: center;
       }
+    }
+    .secondLine {
+      padding: 0px 15px;
+      background: #e8ebef;
+      box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
     }
   }
   .cardNavigation {
@@ -122,6 +134,7 @@ const StyledProject = styled.div`
       text-align: left;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
+      max-width: 100%;
     }
     .right {
       display: grid;

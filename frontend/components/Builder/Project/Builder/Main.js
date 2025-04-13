@@ -19,6 +19,8 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
   const { data, error, loading } = useQuery(GET_PROJECT_STUDY, {
     variables: { id: projectId },
   });
+
+  const project = data?.proposalBoard || {};
   const study = data?.proposalBoard?.study || {};
 
   // save and edit the study information
@@ -110,8 +112,11 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
   };
 
   if (!projectId) {
-    return <div>No study found, please save your study first.</div>;
+    return <div>No project found, please save your project first.</div>;
   }
+
+  if (loading) return <div>Loading study...</div>;
+  if (error) return <div>Error loading study: {error.message}</div>;
 
   return (
     <Router
@@ -119,6 +124,7 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
       user={user}
       tab={tab}
       study={inputs}
+      project={project}
       handleChange={handleChange}
       handleMultipleUpdate={handleMultipleUpdate}
       saveStudy={saveStudy}

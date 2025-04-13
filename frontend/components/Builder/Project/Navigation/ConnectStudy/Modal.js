@@ -59,7 +59,7 @@ export default function ConnectModal({
                 </p>
                 <div>
                   {study?.proposal.map((project) => (
-                    <div className="project">
+                    <div className="project" key={project?.id}>
                       <div>{project?.title}</div>
                       <a
                         href={`/builder/projects?selector=${project?.id}`}

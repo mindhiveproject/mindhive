@@ -12,7 +12,7 @@ import DeleteRecord from "./DeleteRecord";
 // A fetcher function to wrap the native fetch function and return the result of a call to url in json format
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-const studyStatuses = {
+export const studyStatuses = {
   WORKING: "Work in progress",
   SUBMITTED_AS_PROPOSAL: "Submitted as Proposal",
   READY_FOR_REVIEW: "Ready for review",

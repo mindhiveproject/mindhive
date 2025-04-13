@@ -9,11 +9,13 @@ import Modal from "./Modal/Main";
 import StudyPreview from "../../../Studies/Preview/Main";
 
 import InDev from "../../../Global/InDev";
+import StudyConnector from "../../../Projects/StudyConnector/Main";
 
 export default function Builder({
   query,
   user,
   study,
+  project,
   handleChange,
   handleMultipleUpdate,
   engine,
@@ -97,10 +99,14 @@ export default function Builder({
 
   if (!study?.id) {
     return (
-      <InDev
-        header={`🤷🏻 Your project has no Study attached to it.`}
-        message="Let your teacher know so they can create one and associate it. If you need help, please contact tech support at support.mindhive@nyu.edu."
-      />
+      <div>
+        {/* <h3>Your project has no Study attached to it.</h3> */}
+        {/* <InDev
+          header={`🤷🏻 Your project has no Study attached to it.`}
+          message="Let your teacher know so they can create one and associate it. If you need help, please contact tech support at support.mindhive@nyu.edu."
+        /> */}
+        <StudyConnector user={user} project={project} />
+      </div>
     );
   }
 

@@ -269,6 +269,7 @@ export const GET_STUDY_PARTICIPANTS = gql`
         isCompleted
         isIncluded
         token
+        studyStatus
         study {
           id
         }
@@ -291,6 +292,7 @@ export const GET_STUDY_GUESTS = gql`
         isCompleted
         isIncluded
         token
+        studyStatus
         study {
           id
         }

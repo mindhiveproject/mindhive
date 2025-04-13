@@ -3,6 +3,12 @@ import { useState, useEffect } from "react";
 import Header from "./Header";
 import Grid from "./Grid";
 
+import { studyStatuses } from "../Participant/Results/Dataset";
+
+function getUnique(array) {
+  return [...new Set(array)];
+}
+
 export default function ParticipantsTable({
   study,
   components,
@@ -60,6 +66,14 @@ export default function ParticipantsTable({
     const includeAnalysis =
       areIncluded.length && areIncluded?.every((v) => !!v);
 
+    const datasetStatuses = participant?.datasets?.map(
+      (dataset) => dataset?.studyStatus
+    );
+    const uniqueDatasetStatuses = getUnique(datasetStatuses);
+    const studyStatus = uniqueDatasetStatuses.map(
+      (status) => studyStatuses[status]
+    );
+
     return {
       publicId: participant?.publicId,
       publicReadableId: participant?.publicReadableId,
@@ -71,6 +85,7 @@ export default function ParticipantsTable({
       accountType: participant?.type,
       includeAnalysis,
       datasets: participant?.datasets,
+      studyStatus,
     };
   };
 

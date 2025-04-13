@@ -9,6 +9,7 @@ export default function Router({
   user,
   tab,
   study,
+  project,
   handleChange,
   handleMultipleUpdate,
   saveStudy,
@@ -20,6 +21,7 @@ export default function Router({
       user={user}
       tab={tab}
       study={study}
+      project={project}
       handleChange={handleChange}
       handleMultipleUpdate={handleMultipleUpdate}
       saveStudy={saveStudy}

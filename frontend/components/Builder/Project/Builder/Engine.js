@@ -30,6 +30,7 @@ export default function Engine({
   user,
   tab,
   study,
+  project,
   handleChange,
   handleMultipleUpdate,
   saveStudy,
@@ -93,6 +94,12 @@ export default function Engine({
     };
   }, []);
   // study?.diagram - was removed from the previous line not to update every time when the study state is updated
+
+  useEffect(() => {
+    if (engine && study?.diagram) {
+      engine.repaintCanvas();
+    }
+  }, [engine, study?.diagram]);
 
   const getRandomIntInclusive = (min, max) => {
     min = Math.ceil(min);
@@ -355,6 +362,7 @@ export default function Engine({
       <Builder
         query={query}
         user={user}
+        project={project}
         study={study}
         handleChange={handleStudyChange}
         handleMultipleUpdate={handleStudyMultipleUpdate}

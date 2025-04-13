@@ -478,6 +478,12 @@ export const GET_PROJECT_STUDY = gql`
   query GET_PROJECT_STUDY($id: ID!) {
     proposalBoard(where: { id: $id }) {
       id
+      usedInClass {
+        id
+      }
+      collaborators {
+        id
+      }
       study {
         id
         title
