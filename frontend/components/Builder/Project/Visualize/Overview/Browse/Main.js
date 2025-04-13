@@ -18,12 +18,12 @@ export default function Browse({
   setPage,
 }) {
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <div className="header">
         <div>
           <img src={`/assets/icons/visualize/folder_open_black.svg`} />
         </div>
-        <div>Browse</div>
+        <div>Navigation</div>
         <div>
           {journal && (
             <Dropdown

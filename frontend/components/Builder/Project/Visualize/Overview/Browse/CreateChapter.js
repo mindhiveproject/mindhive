@@ -7,7 +7,7 @@ export default function CreateChapter({ projectId, studyId, part }) {
   const [addChapter, { data, loading, error }] = useMutation(ADD_VIZCHAPTER, {
     variables: {
       input: {
-        title: "Unnamed chapter",
+        title: "Unnamed workspace",
         description: "Description",
         vizPart: {
           connect: {
@@ -38,8 +38,9 @@ export default function CreateChapter({ projectId, studyId, part }) {
     ],
   });
   return (
-    <div className="menuItem" onClick={addChapter}>
-      <img src={`/assets/icons/visualize/add.svg`} />
+    <div className="addNewChapter" onClick={addChapter}>
+      + Add Workspace
+      {/* <img src={`/assets/icons/visualize/add.svg`} /> */}
     </div>
   );
 }

@@ -45,10 +45,10 @@ export default function CreatePart({
     createPart({
       variables: {
         input: {
-          title: "Unnamed part",
+          title: "Unnamed journal",
           dataOrigin: "STUDY",
           vizChapters: {
-            create: [{ title: "Unnamed chapter", description: "Description" }],
+            create: [{ title: "Unnamed workspace", description: "Description" }],
           },
           vizJournal: {
             connect: {
