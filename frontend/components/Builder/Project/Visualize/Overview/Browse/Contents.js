@@ -69,7 +69,7 @@ export default function Contents({
           key={num}
           className={part?.id === activePart?.id ? "active part" : "part"}
         >
-          <div className="menuOriginaDataTitle">
+          <div className="journal-header">
             <div
               className="title"
               onClick={async () => {
@@ -90,7 +90,7 @@ export default function Contents({
               )}
             </div>
 
-            {part?.id === activePart?.id ? (
+            {/* {part?.id === activePart?.id ? (
               <div
                 className="dataButtonPart menuButtonThin greenFrame"
                 onClick={async () => {
@@ -104,7 +104,7 @@ export default function Contents({
               </div>
             ) : (
               <div></div>
-            )}
+            )} */}
 
             <Dropdown
               icon={<img src={`/assets/icons/visualize/more_vert.svg`} />}
@@ -113,6 +113,17 @@ export default function Contents({
               <DropdownMenu>
                 <PartSettings user={user} studyId={studyId} part={part} />
                 <DeletePart studyId={studyId} part={part} />
+                <div
+                  className="dataButtonPart menuButtonThin greenFrame"
+                  onClick={async () => {
+                    setPage("database");
+                  }}
+                >
+                  <img src={`/assets/icons/visualize/database_green.svg`} />
+                  <div>
+                    <a>Journal's Data</a>
+                  </div>
+                </div>
               </DropdownMenu>
             </Dropdown>
             {part?.description && (
@@ -188,7 +199,8 @@ export default function Contents({
                   </div>
                 ))}
               </div>
-              <div className="addNewChapter">
+              {/* <div className="addNewChapter"> */}
+              <div>
                 <CreateChapter studyId={studyId} part={part} />
               </div>
             </>
