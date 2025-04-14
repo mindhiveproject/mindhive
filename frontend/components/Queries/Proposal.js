@@ -106,6 +106,8 @@ export const PROPOSAL_QUERY = gql`
         id
         title
         slug
+        dataCollectionStatus
+        dataCollectionOpenForParticipation
         author {
           id
           username

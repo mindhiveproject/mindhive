@@ -87,10 +87,14 @@ export default function ActionCard({
             <div className="card-title">
               <div>Submit for {cardTypes[card?.type].title}</div>
               {isSubmitted ? (
-                <p>
-                  View {comments?.length > 0 ? comments.length + " " : ""}
-                  comments
-                </p>
+                <>
+                  {card?.type !== "ACTION_COLLECTING_DATA" && (
+                    <p>
+                      View {comments?.length > 0 ? comments.length + " " : ""}
+                      comments
+                    </p>
+                  )}
+                </>
               ) : (
                 <p>Click to submit for {cardTypes[card?.type].title}</p>
               )}

@@ -1,35 +1,21 @@
-import { StyledDasboardReview } from "../../styles/StyledReview";
 import Overview from "./Overview/Main";
-// import View from "./View/Main";
-import ReviewBoard from "./ProjectReview/Main";
+import ProjectReviewBoard from "./ProjectReview/Main";
+
+import { StyledDasboardReview } from "../../styles/StyledReview";
 
 export default function ReviewMain({ query, user }) {
   const { selector } = query;
 
-  // if (selector === "study") {
-  //   return (
-  //     <StyledDasboardReview>
-  //       <View query={query} user={user} />
-  //     </StyledDasboardReview>
-  //   );
-  // }
-
-  // if (selector === "comment") {
-  //   return (
-  //     <StyledDasboardReview>
-  //       <ReviewBoard query={query} user={user} />
-  //     </StyledDasboardReview>
-  //   );
-  // }
-
+  // Project review
   if (selector === "project") {
     return (
       <StyledDasboardReview>
-        <ReviewBoard query={query} user={user} />
+        <ProjectReviewBoard query={query} user={user} />
       </StyledDasboardReview>
     );
   }
 
+  // Overview
   return (
     <StyledDasboardReview>
       <Overview query={query} user={user} />

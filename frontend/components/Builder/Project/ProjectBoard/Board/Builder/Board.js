@@ -28,6 +28,7 @@ const Board = ({
   const submitStatuses = {
     ACTION_SUBMIT: proposal?.submitProposalStatus,
     ACTION_PEER_FEEDBACK: proposal?.peerFeedbackStatus,
+    ACTION_COLLECTING_DATA: proposal?.study?.dataCollectionStatus,
     ACTION_PROJECT_REPORT: proposal?.projectReportStatus,
   };
 

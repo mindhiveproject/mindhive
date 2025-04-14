@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import { GET_USER_CLASSES } from "../../../Queries/User";
 
-import StudiesBoard from "./Studies/Main";
 import ProjectsBoard from "./Projects/Main";
+import StudiesBoard from "./Studies/Main";
 
 export default function Overview({ query, user }) {
   const selector = query?.selector || "proposals";
@@ -114,6 +114,7 @@ export default function Overview({ query, user }) {
           selector={selector}
           allUniqueClassIds={allUniqueClassIds}
           myClassesIds={myClasses.map((cl) => cl?.id)}
+          allUniqueClasses={allUniqueClasses}
         />
       )}
     </div>
