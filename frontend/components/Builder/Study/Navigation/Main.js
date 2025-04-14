@@ -48,6 +48,7 @@ export default function Navigation({
   saveBtnFunction,
   toggleSidebar,
   hasStudyChanged,
+  isCanvasLocked,
 }) {
   const { area, selector } = query;
   const items = area === "cloneofstudy" ? itemsClone : itemsOriginal;
@@ -130,7 +131,7 @@ export default function Navigation({
             </>
           )}
 
-          {saveBtnFunction && (
+          {saveBtnFunction && !isCanvasLocked && (
             <button
               onClick={() => saveBtnFunction()}
               className={
