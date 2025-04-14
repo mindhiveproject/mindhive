@@ -5,7 +5,7 @@ import Contents from "./Contents";
 import CreatePart from "./CreatePart";
 import BrowseTemplates from "./BrowseTemplates";
 
-export default function Browse({
+export default function Navigation({
   user,
   projectId,
   studyId,

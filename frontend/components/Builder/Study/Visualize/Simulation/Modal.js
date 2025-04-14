@@ -105,7 +105,7 @@ export default function PromptModal({
     await createPart({
       variables: {
         input: {
-          title: "Unnamed part",
+          title: "Unnamed journal",
           dataOrigin: "SIMULATED",
           content: {
             uploaded: {
@@ -118,7 +118,7 @@ export default function PromptModal({
             },
           },
           vizChapters: {
-            create: [{ title: "Unnamed chapter", description: "Description" }],
+            create: [{ title: "Unnamed workspace", description: "Description" }],
           },
           vizJournal: {
             connect: {

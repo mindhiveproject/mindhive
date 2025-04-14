@@ -32,7 +32,7 @@ export default function Contents({
       });
     }
   };
-
+  
   const sections = {
     PARAGRAPH: {
       title: "Paragraph",
@@ -113,17 +113,18 @@ export default function Contents({
               <DropdownMenu>
                 <PartSettings user={user} studyId={studyId} part={part} />
                 <DeletePart studyId={studyId} part={part} />
-                <div
-                  className="dataButtonPart menuButtonThin greenFrame"
-                  onClick={async () => {
-                    setPage("database");
-                  }}
-                >
-                  <img src={`/assets/icons/visualize/database_green.svg`} />
-                  <div>
-                    <a>Journal's Data</a>
+                <DropdownItem>
+                  <div
+                    // className="dataButtonPart menuButtonThin"
+                    className="menuItem"
+                    onClick={async () => {
+                      setPage("database");
+                    }}
+                  >
+                    <img src={`/assets/icons/visualize/database_green.svg`} />
+                    <div>Journal's Data</div>
                   </div>
-                </div>
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
             {part?.description && (
