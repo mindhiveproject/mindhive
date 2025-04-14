@@ -22,6 +22,7 @@ export default function Builder({
   addFunctions,
   hasStudyChanged,
   setHasStudyChanged,
+  isCanvasLocked,
 }) {
   const [node, setNode] = useState(null);
   const [componentId, setComponentId] = useState(null);
@@ -31,12 +32,17 @@ export default function Builder({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isStudyPreviewOpen, setStudyPreviewOpen] = useState(false);
 
+  if (isCanvasLocked && engine?.getModel()) {
+    engine.getModel().setLocked(true);
+  }
+
   const openComponentModal = ({
     node,
     isInfoOpen,
     isPreviewOpen,
     isEditorOpen,
   }) => {
+    if (isCanvasLocked) return; // Prevent opening modals when locked
     setNode(node);
     setIsInfoOpen(isInfoOpen);
     setIsPreviewOpen(isPreviewOpen);
@@ -46,20 +52,26 @@ export default function Builder({
 
   const closeComponentModal = () => {
     setComponentId(null);
-    engine.getModel().setLocked(false); // unlock the model
+    if (!isCanvasLocked && engine?.getModel()) {
+      engine.getModel().setLocked(false); // Unlock only if not SUBMITTED
+    }
   };
 
   const openModal = ({ node }) => {
+    if (isCanvasLocked) return; // Prevent opening modals when locked
     setNode(node);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    engine.getModel().setLocked(false); // unlock the model
+    if (!isCanvasLocked && engine?.getModel()) {
+      engine.getModel().setLocked(false); // Unlock only if not SUBMITTED
+    }
   };
 
   const updateCanvas = ({ task, operation }) => {
+    if (isCanvasLocked) return; // Prevent updates when locked
     const model = engine?.model;
     const nodes = model.getNodes() || [];
     const componentID = node?.options?.componentID;
@@ -88,7 +100,28 @@ export default function Builder({
   };
 
   const openStudyPreview = () => {
-    setStudyPreviewOpen(true);
+    setStudyPreviewOpen(true); // Allow preview even when locked
+  };
+
+  // Wrap addFunctions to block task additions when locked
+  const lockedAddFunctions = {
+    ...addFunctions,
+    addAnchor: () => {
+      if (isCanvasLocked) return;
+      addFunctions.addAnchor();
+    },
+    addComment: () => {
+      if (isCanvasLocked) return;
+      addFunctions.addComment();
+    },
+    addNode: () => {
+      if (isCanvasLocked) return;
+      if (addFunctions.addNode) addFunctions.addNode();
+    },
+    addTask: () => {
+      if (isCanvasLocked) return;
+      if (addFunctions.addTask) addFunctions.addTask();
+    },
   };
 
   if (isStudyPreviewOpen) {
@@ -100,11 +133,6 @@ export default function Builder({
   if (!study?.id) {
     return (
       <div>
-        {/* <h3>Your project has no Study attached to it.</h3> */}
-        {/* <InDev
-          header={`🤷🏻 Your project has no Study attached to it.`}
-          message="Let your teacher know so they can create one and associate it. If you need help, please contact tech support at support.mindhive@nyu.edu."
-        /> */}
         <StudyConnector user={user} project={project} />
       </div>
     );
@@ -112,8 +140,40 @@ export default function Builder({
 
   return (
     <StyledCanvasBuilder>
+      {isCanvasLocked && (
+        <div className="lockedMessageOverlay">
+          <h3>Study Builder Locked</h3>
+          <p>
+            This study has been submitted and cannot be edited. To make changes,
+            please ask your teacher to un-submit the study.
+          </p>
+        </div>
+      )}
       <div className="board">
-        <button className="addCommentButton" onClick={addFunctions.addComment}>
+        <Widget
+          engine={engine}
+          openComponentModal={openComponentModal}
+          openModal={openModal}
+          openStudyPreview={openStudyPreview}
+          isCanvasLocked={isCanvasLocked}
+        />
+        <div className="sidepanel">
+          <Menu
+            user={user}
+            engine={engine}
+            addFunctions={lockedAddFunctions}
+            study={study}
+            handleChange={handleChange}
+            handleMultipleUpdate={handleMultipleUpdate}
+            hasStudyChanged={hasStudyChanged}
+            isCanvasLocked={isCanvasLocked}
+          />
+        </div>
+        <button
+          className="addCommentButton"
+          onClick={lockedAddFunctions.addComment}
+          disabled={isCanvasLocked}
+        >
           Add a comment
         </button>
         {engine?.model &&
@@ -122,26 +182,12 @@ export default function Builder({
             .filter((node) => node?.options?.type === "my-anchor").length && (
             <button
               className="addAnchorButton"
-              onClick={addFunctions?.addAnchor}
+              onClick={lockedAddFunctions.addAnchor}
+              disabled={isCanvasLocked}
             >
               Add starting point
             </button>
           )}
-        <Widget
-          engine={engine}
-          openComponentModal={openComponentModal}
-          openModal={openModal}
-          openStudyPreview={openStudyPreview}
-        />
-        <Menu
-          user={user}
-          engine={engine}
-          addFunctions={addFunctions}
-          study={study}
-          handleChange={handleChange}
-          handleMultipleUpdate={handleMultipleUpdate}
-          hasStudyChanged={hasStudyChanged}
-        />
       </div>
 
       {componentId && (
@@ -155,7 +201,7 @@ export default function Builder({
           isPreviewOpen={isPreviewOpen}
           isEditorOpen={isEditorOpen}
           updateCanvas={updateCanvas}
-          addFunctions={addFunctions}
+          addFunctions={lockedAddFunctions}
           node={node}
         />
       )}
