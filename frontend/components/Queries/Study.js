@@ -133,6 +133,7 @@ export const MY_STUDY = gql`
       status
       currentVersion
       versionHistory
+      dataCollectionStatus
     }
   }
 `;

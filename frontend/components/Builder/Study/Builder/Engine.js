@@ -40,6 +40,9 @@ export default function Engine({
   saveStudy,
   toggleSidebar,
 }) {
+  // Lock the canvas if dataCollectionStatus is SUBMITTED
+  const isCanvasLocked = study?.dataCollectionStatus === "SUBMITTED";
+
   const [hasStudyChanged, setHasStudyChanged] = useState(false);
   // force update canvas
   const forceUpdate = useReducer((bool) => !bool)[1];
@@ -366,6 +369,7 @@ export default function Engine({
         addFunctions={addFunctions}
         hasStudyChanged={hasStudyChanged}
         setHasStudyChanged={setHasStudyChanged}
+        isCanvasLocked={isCanvasLocked}
       />
     </>
   );
