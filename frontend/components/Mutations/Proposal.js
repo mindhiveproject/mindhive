@@ -210,6 +210,7 @@ export const UPDATE_CARD_CONTENT = gql`
     $description: String
     $internalContent: String
     $content: String
+    $revisedContent: String
     $comment: String
     $settings: JSON
     $assignedTo: [ProfileWhereUniqueInput!]
@@ -224,6 +225,7 @@ export const UPDATE_CARD_CONTENT = gql`
         description: $description
         internalContent: $internalContent
         content: $content
+        revisedContent: $revisedContent
         comment: $comment
         settings: $settings
         assignedTo: { set: $assignedTo }
