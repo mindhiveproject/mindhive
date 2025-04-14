@@ -358,6 +358,7 @@ export default function Engine({
         saveBtnFunction={buildStudy}
         toggleSidebar={toggleSidebar}
         hasStudyChanged={hasStudyChanged}
+        isCanvasLocked={isCanvasLocked}
       />
       <Builder
         query={query}
