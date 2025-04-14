@@ -204,12 +204,39 @@ export const StyledCanvasBuilder = styled.div`
   height: 100%;
   background: #f4f5f5;
   box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
+  position: relative;
+
+  .lockedMessageOverlay {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 230, 230, 0.95);
+    border: 1px solid #cc0000;
+    color: #cc0000;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 400px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+    p {
+      margin: 0;
+      font-size: 16px;
+    }
+  }
 
   .sidepanel {
     display: grid;
     align-content: baseline;
     height: 85vh;
     overflow-y: auto;
+    background: #ffffff;
+    padding: 10px;
     .studyFlow {
       margin: 0rem;
     }
@@ -257,7 +284,8 @@ export const StyledCanvasBuilder = styled.div`
   .board {
     display: grid;
     grid-template-columns: 5fr 3fr;
-
+    height: 100%;
+    position: relative;
     :active {
       .up-port:hover {
         border: 5px solid #ffc107;
@@ -269,9 +297,9 @@ export const StyledCanvasBuilder = styled.div`
 
   .addCommentButton {
     position: absolute;
-    z-index: 1;
+    z-index: 10;
     left: 10px;
-    margin: 5px;
+    top: 10px;
     background: #007c70;
     border: 1px solid #007c70;
     border-radius: 100px;
@@ -287,13 +315,18 @@ export const StyledCanvasBuilder = styled.div`
       transform: scale(1.1);
       transition: transform 0.5s;
     }
+    :disabled {
+      background: #cccccc;
+      border-color: #cccccc;
+      cursor: not-allowed;
+    }
   }
 
   .addAnchorButton {
     position: absolute;
-    z-index: 1;
+    z-index: 10;
     left: 170px;
-    margin: 5px;
+    top: 10px;
     background: #e9ecef;
     border: 1px solid #e9ecef;
     border-radius: 100px;
@@ -308,6 +341,11 @@ export const StyledCanvasBuilder = styled.div`
     :hover {
       transform: scale(1.1);
       transition: transform 0.5s;
+    }
+    :disabled {
+      background: #cccccc;
+      border-color: #cccccc;
+      cursor: not-allowed;
     }
   }
 
@@ -462,7 +500,6 @@ export const StyledCanvasBuilder = styled.div`
       grid-template-columns: 100px 2fr 1fr 1fr 1fr;
       margin: 10px 0px;
       align-items: center;
-
       input,
       select {
         width: 100%;
@@ -485,22 +522,18 @@ export const StyledCanvasBuilder = styled.div`
     display: grid;
     width: 100%;
     align-content: baseline;
-
     resize: horizontal;
-
     .header {
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-gap: 10px;
       padding: 0px 1px 20px 0px;
     }
-
     .createdByDropdown {
       display: grid !important;
       align-items: center !important;
       border: 1px solid #cccccc !important;
     }
-
     .blocksMenu {
       .blocksMenuTitle {
         display: grid;
@@ -536,11 +569,9 @@ export const StyledCanvasBuilder = styled.div`
         grid-gap: 2rem;
       }
     }
-
     label {
       display: block;
     }
-
     input,
     select {
       width: 100%;
@@ -568,13 +599,11 @@ export const StyledCanvasBuilder = styled.div`
         border-color: ${(props) => props.theme.red};
       }
     }
-
     .discoverMenu {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr;
       margin: 20px 6px 29px 6px !important;
       cursor: pointer;
-
       .discoverMenuTitle {
         padding-bottom: 10px !important;
         display: grid;
@@ -591,17 +620,14 @@ export const StyledCanvasBuilder = styled.div`
         }
       }
     }
-
     .consentSelector {
       margin-top: 10px;
       margin-bottom: 10px;
     }
-
     .closeBtnContainerEdit {
       display: grid;
       justify-self: end;
     }
-
     .closeBtnEdit {
       display: grid;
       justify-self: end;

@@ -56,6 +56,7 @@ export default function Navigation({
   hasStudyChanged,
   cardId,
   onUpdateCard,
+  isCanvasLocked,
 }) {
   const router = useRouter();
 
@@ -140,7 +141,7 @@ export default function Navigation({
             </button>
           )}
 
-          {saveBtnFunction && (
+          {saveBtnFunction && !isCanvasLocked && (
             <button
               onClick={() => saveBtnFunction()}
               className={
@@ -185,69 +186,4 @@ export default function Navigation({
       </div>
     </div>
   );
-}
-
-{
-  /* <div className="selector">
-            <Dropdown
-              upward={false}
-              icon={null}
-              trigger={
-                <div className="icon">
-                  <img src="/assets/icons/project/list.svg" />
-                </div>
-              }
-            >
-              <Dropdown.Menu>
-                {items
-                  .filter((item) => item.value !== "exit")
-                  .map((item, i) => (
-                    <Link
-                      key={i}
-                      href={{
-                        pathname: `/builder/${area}`,
-                        query: {
-                          selector,
-                          tab: item?.value,
-                        },
-                      }}
-                      onClick={tryToLeave}
-                    >
-                      <Dropdown.Item>
-                        <div className="option">
-                          <img
-                            src={`/assets/icons/project/${item?.value}.svg`}
-                          />
-                          <p>{item?.name}</p>
-                        </div>
-                      </Dropdown.Item>
-                    </Link>
-                  ))}
-                {items
-                  .filter((item) => item.value === "exit")
-                  .map((item, i) => (
-                    <Link
-                      key={i}
-                      href={{
-                        pathname: `/dashboard/develop`,
-                      }}
-                      onClick={tryToLeave}
-                    >
-                      <Dropdown.Item>
-                        <div className="option">
-                          <img
-                            src={`/assets/icons/project/${item?.value}.svg`}
-                          />
-                          <p>{item?.name}</p>
-                        </div>
-                      </Dropdown.Item>
-                    </Link>
-                  ))}
-              </Dropdown.Menu>
-            </Dropdown>
-
-            {items
-              .filter((item) => item?.value === tab)
-              .map((item) => item?.name)}
-          </div> */
 }

@@ -106,6 +106,8 @@ export const PROPOSAL_QUERY = gql`
         id
         title
         slug
+        dataCollectionStatus
+        dataCollectionOpenForParticipation
         author {
           id
           username
@@ -164,6 +166,7 @@ export const GET_CARD_CONTENT = gql`
       title
       description
       internalContent
+      revisedContent
       content
       comment
       settings
@@ -547,6 +550,7 @@ export const GET_PROJECT_STUDY = gql`
         status
         currentVersion
         versionHistory
+        dataCollectionStatus
       }
     }
   }

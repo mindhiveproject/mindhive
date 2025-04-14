@@ -13,9 +13,9 @@ export default function Navigation({
   saveBtnName,
   saveBtnFunction,
   allCardsCompleted,
-  isProposalSubmitted,
+  isStudySubmitted,
   switchFeedbackLock,
-  isFeedbackLocked,
+  isParticipationLocked,
 }) {
   const { data, error, loading } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
@@ -46,7 +46,7 @@ export default function Navigation({
         <span className="studyTitle">{study?.title}</span>
       </div>
       <div className="right">
-        {cardId && !isProposalSubmitted && (
+        {cardId && !isStudySubmitted && (
           <button
             onClick={async () => {
               if (
@@ -57,27 +57,25 @@ export default function Navigation({
                 await saveBtnFunction();
               }
             }}
-            className={allCardsCompleted ? "saveButton" : "saveButton disabled"}
-            disabled={!allCardsCompleted}
+            className={"saveButton"}
           >
             {saveBtnName}
           </button>
         )}
-        {cardId && isProposalSubmitted && (
+        {cardId && isStudySubmitted && (
           <div className="iconBtn">
-            {!isFeedbackLocked && (
-              <div className="lockText">
-                Enough comments? Let reviewers know
-              </div>
+            {!isParticipationLocked && (
+              <div className="lockText">Enough participants?</div>
             )}
             <button
               onClick={async () => {
                 await switchFeedbackLock();
               }}
               className={"lockButton"}
-              disabled={!allCardsCompleted}
             >
-              {isFeedbackLocked ? "Unlock for Feedback" : "Lock Feedback"}
+              {isParticipationLocked
+                ? "Unlock for Participation"
+                : "Lock Participation"}
             </button>
           </div>
         )}

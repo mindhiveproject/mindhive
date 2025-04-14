@@ -561,6 +561,14 @@ export const StyledDasboardReview = styled.div`
         border: 1px solid var(--PRIMARY_GREEN3, #007c70);
         color: var(--PRIMARY_GREEN3, #007c70);
       }
+      .closed {
+        background: #ffe6e6;
+        border: 1px solid #cc0000;
+        color: #cc0000;
+        font-weight: bold;
+        border-radius: 4px;
+        text-transform: uppercase;
+      }
       .options {
         display: grid;
         grid-gap: 10px;

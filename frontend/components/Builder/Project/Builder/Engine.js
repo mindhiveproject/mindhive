@@ -36,6 +36,9 @@ export default function Engine({
   saveStudy,
   toggleSidebar,
 }) {
+  // Lock the canvas if dataCollectionStatus is SUBMITTED
+  const isCanvasLocked = study?.dataCollectionStatus === "SUBMITTED";
+
   const [hasStudyChanged, setHasStudyChanged] = useState(false);
   // force update canvas
   const forceUpdate = useReducer((bool) => !bool)[1];
@@ -136,6 +139,7 @@ export default function Engine({
     subtitle,
     createCopy,
   }) => {
+    if (isCanvasLocked) return alert("The study has been locked");
     let newNode;
     if (createCopy) {
       newNode = new TaskModel({
@@ -170,6 +174,7 @@ export default function Engine({
   };
 
   const addStudyTemplateToCanvas = ({ study }) => {
+    if (isCanvasLocked) return alert("The study has been locked");
     const { diagram } = study;
     const model = new DiagramModel();
     model.deserializeModel(JSON.parse(diagram), engine);
@@ -178,6 +183,7 @@ export default function Engine({
   };
 
   const addComment = () => {
+    if (isCanvasLocked) return alert("The study has been locked");
     const note = new CommentModel({
       author: user?.username,
       time: Date.now(),
@@ -195,6 +201,7 @@ export default function Engine({
   };
 
   const addAnchor = () => {
+    if (isCanvasLocked) return alert("The study has been locked");
     const anchor = new AnchorModel({});
     const event = {
       clientX: getRandomIntInclusive(300, 500),
@@ -207,6 +214,7 @@ export default function Engine({
   };
 
   const addDesignToCanvas = ({ name, details, conditions }) => {
+    if (isCanvasLocked) return alert("The study has been locked");
     const newNode = new DesignModel({
       name,
       details,
@@ -358,6 +366,7 @@ export default function Engine({
         saveBtnFunction={buildStudy}
         toggleSidebar={toggleSidebar}
         hasStudyChanged={hasStudyChanged}
+        isCanvasLocked={isCanvasLocked}
       />
       <Builder
         query={query}
@@ -370,6 +379,7 @@ export default function Engine({
         addFunctions={addFunctions}
         hasStudyChanged={hasStudyChanged}
         setHasStudyChanged={setHasStudyChanged}
+        isCanvasLocked={isCanvasLocked}
       />
     </>
   );

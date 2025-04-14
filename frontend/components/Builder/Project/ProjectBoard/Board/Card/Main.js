@@ -7,6 +7,7 @@ import moment from "moment";
 
 import { UPDATE_CARD_CONTENT } from "../../../../../Mutations/Proposal";
 import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
+import { GET_CARD_CONTENT } from "../../../../../Queries/Proposal";
 
 import useForm from "../../../../../../lib/useForm";
 
@@ -80,9 +81,14 @@ export default function ProposalCard({
 
   const content = useRef(proposalCard?.content);
   const internalContent = useRef(proposalCard?.internalContent);
+  const revisedContent = useRef(
+    proposalCard?.revisedContent || proposalCard?.content
+  );
 
-  const [updateCard, { loading: updateLoading }] =
-    useMutation(UPDATE_CARD_CONTENT);
+  const [updateCard, { loading: updateLoading }] = useMutation(
+    UPDATE_CARD_CONTENT,
+    { refetchQueries: [{ query: GET_CARD_CONTENT, variables: { id: cardId } }] }
+  );
 
   const [updateEdit, { loading: updateEditLoading }] = useMutation(
     UPDATE_CARD_EDIT,
@@ -147,9 +153,13 @@ export default function ProposalCard({
       internalContent.current = newContent;
       if (!hasContentChanged && newContent !== inputs?.internalContent)
         setHasContentChanged(true);
-    } else {
+    } else if (contentType === "content") {
       content.current = newContent;
       if (!hasContentChanged && newContent !== inputs?.content)
+        setHasContentChanged(true);
+    } else if (contentType === "revisedContent") {
+      revisedContent.current = newContent;
+      if (!hasContentChanged && newContent !== inputs?.revisedContent)
         setHasContentChanged(true);
     }
   };
@@ -163,6 +173,7 @@ export default function ProposalCard({
           ...inputs,
           internalContent: internalContent?.current,
           content: content?.current,
+          revisedContent: revisedContent?.current,
           assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
           resources: inputs?.resources?.map((resource) => ({
             id: resource?.id,
@@ -270,6 +281,30 @@ export default function ProposalCard({
                         />
                       </div>
                     )}
+                  </div>
+                </>
+              )}
+
+              {proposalCard?.settings?.includeInReport && isLocked && (
+                <>
+                  <div className="cardSubheader">Revised Content</div>
+                  <div className="cardSubheaderComment">
+                    The revised content you include here will be used in the
+                    final report.
+                  </div>
+                  <div className="jodit">
+                    <div onFocus={handleFocus}>
+                      <JoditEditor
+                        content={revisedContent?.current}
+                        setContent={(newContent) =>
+                          handleContentChange({
+                            contentType: "revisedContent",
+                            newContent,
+                          })
+                        }
+                        minHeight={600}
+                      />
+                    </div>
                   </div>
                 </>
               )}

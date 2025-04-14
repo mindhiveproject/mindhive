@@ -79,6 +79,24 @@ app
       }
     });
 
+    server.get("/api/notion", async (req, res) => {
+      const { pageId } = req.query;
+      console.log("Received pageId:", pageId);
+
+      try {
+        // Query the database to get its pages
+        const response = await notion.databases.query({
+          database_id: pageId,
+        });
+        res.json(response.results); // Return the pages (rows) of the database
+      } catch (error) {
+        console.error("Error retrieving Notion database pages:", error);
+        res
+          .status(500)
+          .json({ error: "Failed to retrieve Notion database pages" });
+      }
+    });
+
     server.post("/api/templates/upload", async (req, res) => {
       const { name, script, file } = req.body;
 

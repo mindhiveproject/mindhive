@@ -92,6 +92,33 @@ export default function ProjectsBoard({
     isInitialMount.current = false;
   }, []);
 
+  // Update filterSortMessage based on filters
+  useEffect(() => {
+    let message = "Showing all projects";
+    if (filteredClasses.length > 0) {
+      const classTitles = filteredClasses
+        .map((classId) => allUniqueClasses.find((c) => c.id === classId)?.title)
+        .filter(Boolean)
+        .join(", ");
+      message = `Showing projects in ${classTitles}`;
+    }
+    if (sortBy) {
+      if (sortBy === "OLDEST") {
+        message += `, sorted by oldest to newest`;
+      } else if (sortBy === "NEWEST") {
+        message += `, sorted by newest to oldest`;
+      } else if (sortBy === "LEAST_COMMENTS") {
+        message += `, sorted by least to most comments`;
+      } else if (sortBy === "MOST_COMMENTS") {
+        message += `, sorted by most to least comments`;
+      }
+    }
+    if (keyword) {
+      message += ` matching "${keyword}"`;
+    }
+    setFilterSortMessage(message);
+  }, [filteredClasses, sortBy, keyword, allUniqueClasses]);
+
   // Reset filters only when selector changes (not on initial mount)
   useEffect(() => {
     // Skip reset on initial mount
@@ -261,18 +288,6 @@ export default function ProjectsBoard({
               text: p.label,
             }))}
             onChange={(event, data) => {
-              if (data?.value === "OLDEST") {
-                setFilterSortMessage(`Sorting by: oldest to newest project`);
-              }
-              if (data?.value === "NEWEST") {
-                setFilterSortMessage(`Sorting by: newest to oldest project`);
-              }
-              if (data?.value === "LEAST_COMMENTS") {
-                setFilterSortMessage(`Sorting by: least to most comments`);
-              }
-              if (data?.value === "MOST_COMMENTS") {
-                setFilterSortMessage(`Sorting by: most to least comments`);
-              }
               setSortBy(data?.value);
             }}
             value={sortBy}

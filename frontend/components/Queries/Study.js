@@ -359,11 +359,18 @@ export const STUDIES_COLLECTING_DATA = gql`
       }
       participants {
         id
+        datasets {
+          studyStatus
+        }
       }
       guests {
         id
+        datasets {
+          studyStatus
+        }
       }
       createdAt
+      dataCollectionOpenForParticipation
     }
   }
 `;

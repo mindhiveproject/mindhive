@@ -25,6 +25,7 @@ export const ProposalCard = list({
     description: text(),
     position: float(),
     internalContent: text(),
+    revisedContent: text(),
     content: text(),
     comment: text(),
     settings: json(),

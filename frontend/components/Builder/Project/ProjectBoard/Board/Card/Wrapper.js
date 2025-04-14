@@ -6,6 +6,7 @@ import ProposalCard from "./Main";
 import IndividualCard from "./Individual/Main";
 import OverviewOfIndividualCards from "./Overview/Main";
 import SubmitAction from "./Actions/Proposal";
+import SubmitStudy from "./Actions/SubmitStudy";
 
 export default function CardWrapper({
   query,
@@ -68,11 +69,24 @@ export default function CardWrapper({
       !proposalBuildMode &&
       (proposalCard?.type === "ACTION_SUBMIT" ||
         proposalCard?.type === "ACTION_PEER_FEEDBACK" ||
-        proposalCard?.type === "ACTION_COLLECTING_DATA" ||
         proposalCard?.type === "ACTION_PROJECT_REPORT")
     ) {
       return (
         <SubmitAction
+          query={query}
+          tab={tab}
+          user={user}
+          proposalId={proposalId}
+          proposal={proposal}
+          cardId={cardId}
+          proposalCard={proposalCard}
+        />
+      );
+    }
+
+    if (!proposalBuildMode && proposalCard?.type === "ACTION_COLLECTING_DATA") {
+      return (
+        <SubmitStudy
           query={query}
           tab={tab}
           user={user}
