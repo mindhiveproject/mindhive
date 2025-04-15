@@ -25,18 +25,45 @@ for column in column_input:
         df[column] = pd.to_numeric(df[column], errors='coerce') 
     
     if groupVariable != "":
-        # Group by the specified column if groupVariable is not None
-        grouped = df.groupby(groupVariable)[column].describe()
-        # Rename the columns to include the groupVariable name
+        # Filter out rows with NaNs or empty strings in groupVariable or column
+        grouped = df[
+            df[groupVariable].notna() & (df[groupVariable] != "") &
+            df[column].notna() & (df[column] != "")
+        ].groupby(groupVariable)[column].describe()
+    
+        # Rename the columns to include the column name
         grouped.columns = [f"{column}_{col}" for col in grouped.columns]
+    
         # Add the grouped statistics to described_df
         described_df = pd.concat([described_df, grouped], axis=1)
+
     else:
         # Describe the column and add it to the described_df DataFrame
-        described_df = pd.concat([described_df, df[column].describe()], axis=1)
+        if isQuant:
+            described_df = pd.concat([described_df, df[column].describe()], axis=1)
+        else:
+            # Filter out NAs and empty strings
+            filtered = df[column][df[column].notna() & (df[column] != "")]
+            value_counts = filtered.value_counts()
+
+            # Build tidy count rows
+            temp_counts = pd.DataFrame({
+                "variable": column,
+                "statistic": ['Count {}'.format(i if i != "" else "empty values") for i in value_counts.index],
+                "value": value_counts.values
+            })
+
+            # Add non-null count as a separate row with clearer naming
+            total_row = pd.DataFrame({
+                "variable": [column],
+                "statistic": ["total non-empty values"],
+                "value": [filtered.count()]
+            })
+
+            described_df = pd.concat([described_df, temp_counts, total_row], ignore_index=True)
 
 # Put the ds in the correct orientation
-described_df = described_df.transpose()
+described_df = described_df.transpose() if isQuant else described_df
   `;
 
   const descStatNumCode = `
@@ -183,17 +210,9 @@ js.render_html(html_output, df_html)`;
     descStatStrings:
       sectionCodeStart + "\n" + descStatStringsCode + "\n" + sectionCodeEnd,
     descStatsStringsAndNumerical:
-      sectionCodeStart +
-      "\n" +
-      descStatsStringsAndNumericalCode +
-      "\n" +
-      sectionCodeEnd,
+      sectionCodeStart + "\n" + descStatsStringsAndNumericalCode + "\n" + sectionCodeEnd,
     descStatsStringsAndStrings:
-      sectionCodeStart +
-      "\n" +
-      descStatsStringsAndStringsCode +
-      "\n" +
-      sectionCodeEnd,
+      sectionCodeStart + "\n" + descStatsStringsAndStringsCode + "\n" + sectionCodeEnd,
   };
 
   // Set the default template type (e.g., "descStatNum")
