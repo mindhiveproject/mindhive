@@ -211,7 +211,7 @@ js.render_html(html_output, fig_html)`;
         onClick={() =>
           selectGraphType({ 
             type: "ABDesign", 
-            title: "AB Design" })
+            title: "Experimental Hypothesis" })
         }
       >
         <div>
