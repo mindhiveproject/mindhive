@@ -44,12 +44,12 @@ export default function Document({
     if (part?.vizChapters && part?.vizChapters.length) {
       return (
         <div className="emptyDocument">
-          Select a chapter in the menu on the left
+          Select a workspace in the menu on the left
         </div>
       );
     } else {
       return (
-        <div className="emptyDocument">Create a new document to begin</div>
+        <div className="emptyDocument">Create a new Journal to begin</div>
       );
     }
   }
