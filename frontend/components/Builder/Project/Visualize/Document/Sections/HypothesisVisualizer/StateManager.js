@@ -33,6 +33,7 @@ export default function StateManager({
   data,
   variables,
   user,
+  studyId,
 }) {
   const [isRunning, setIsRunning] = useState(false);
   const [output, setOutput] = useState("");
@@ -169,6 +170,7 @@ export default function StateManager({
               code={code}
               pyodide={pyodide}
               runCode={runCodeCallback}
+              studyId={studyId}
               sectionId={sectionId}
               selectors={selectors}
               handleContentChange={handleContentChangeWrapper}

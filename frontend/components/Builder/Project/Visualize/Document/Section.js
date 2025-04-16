@@ -94,6 +94,7 @@ export default function Section({
           data={data}
           variables={variables}
           user={user}
+          studyId={studyId}
         />
       )}
 

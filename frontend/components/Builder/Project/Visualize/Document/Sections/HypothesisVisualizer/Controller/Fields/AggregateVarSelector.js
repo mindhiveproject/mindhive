@@ -1,12 +1,6 @@
 import { Dropdown } from 'semantic-ui-react';
 import { useState } from 'react';
 
-const options = [ // will have to change 
-//   { key: 'apple', text: 'Apple', value: 'apple' },
-//   { key: 'banana', text: 'Banana', value: 'banana' },
-//   { key: 'orange', text: 'Orange', value: 'orange' },
-];
-
 const fixedItems = [
   { key: 'higher', text: 'higher', value: 'higher' },
   { key: 'more', text: 'more', value: 'more' },
@@ -16,14 +10,24 @@ const fixedItems = [
   { key: 'worse', text: 'worse', value: 'worse' },
 ];
 
-export default function AggregateVarSelector({ placeholder, allowAdditions, isDirectionality, onChange , value }) {
-  const [items, setItems] = useState(options); // will have to change 
-
+export default function AggregateVarSelector({ 
+  placeholder, 
+  allowAdditions, 
+  optionsAggVar,
+  isDirectionality, 
+  onChange, 
+  value,
+ }) 
+ {
+  
+  const [items, setItems] = useState(optionsAggVar);
+  
   const handleAddition = (e, { value }) => {
     setItems((prevItems) => [
       ...prevItems,
       { key: value, text: value, value },
     ]);
+    console.log(items);
   };
 
   return (
