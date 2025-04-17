@@ -55,9 +55,9 @@ export default function Resources({ proposal, selectedResources }) {
                     </a>
                   </div>
                 </div>
-                <div>
+                {/* <div>
                   {ReactHtmlParser(truncateHtml(resource?.content?.main))}
-                </div>
+                </div> */}
               </div>
             ))}
           </div>
