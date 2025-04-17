@@ -15,6 +15,7 @@ import { lists } from "./schema";
 // authentication is configured separately here too, but you might move this elsewhere
 // when you write your list-level access control functions, as they typically rely on session data
 import { withAuth, session } from "./auth";
+import { permissions } from "./access";
 
 export default withAuth(
   config({
@@ -42,11 +43,20 @@ export default withAuth(
     //   url: 'file:./keystone.db',
     // },
     db: {
-      provider: process.env.NODE_ENV === "development" ? "sqlite" : "postgresql",
-      url: process.env.NODE_ENV === "development" ? "file:./keystone.db" : process.env.DATABASE_URL,
+      provider:
+        process.env.NODE_ENV === "development" ? "sqlite" : "postgresql",
+      url:
+        process.env.NODE_ENV === "development"
+          ? "file:./keystone.db"
+          : process.env.DATABASE_URL,
     },
     lists,
     extendGraphqlSchema,
     session,
+    // ui: {
+    //   isAccessAllowed: ({ session }) => {
+    //     return permissions.canAccessAdminUI({ session });
+    //   },
+    // },
   })
 );

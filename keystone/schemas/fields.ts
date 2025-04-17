@@ -1,9 +1,13 @@
-import { checkbox } from '@keystone-6/core/fields';
+import { checkbox } from "@keystone-6/core/fields";
 
 export const permissionFields = {
   canManageUsers: checkbox({
     defaultValue: false,
     label: "User can Edit other users",
+  }),
+  canAccessAdminUI: checkbox({
+    defaultValue: false,
+    label: "User can access Admin UI",
   }),
 };
 
