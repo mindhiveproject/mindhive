@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {  Popup } from "semantic-ui-react";
+import { Popup } from "semantic-ui-react";
+import { useQuery } from "@apollo/client";
+
+import { GET_STUDY_FLOW, GET_BLOCK_AGGVAR } from "../../../../../../../../Queries/Study";
 
 import AggregateVarSelector from "../Fields/AggregateVarSelector";
 
@@ -12,6 +15,7 @@ export default function Axes({
   sectionId,
   selectors,
   handleContentChange,
+  studyId,
 }) {
 
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -28,7 +32,7 @@ html_output = js.document.getElementById('figure-${sectionId}')
 parameters = dict(json.loads('dashboardJSON'))
 print("Py code parameters", parameters)
 `;
-  
+
   const popupStyle = {
     borderRadius: 8,
     opacity: 0.9,
@@ -36,11 +40,59 @@ print("Py code parameters", parameters)
     fontSize: '15px',
   }
 
-  const options = variables.map((variable) => ({
-    key: variable?.field,
-    value: variable?.displayName || variable?.field,
-    text: variable?.displayName || variable?.field,
-  }));
+  // const selectors = variables.map((variable) => ({
+  //   key: variable?.field,
+  //   value: variable?.displayName || variable?.field,
+  //   text: variable?.displayName || variable?.field,
+  // }));
+
+  const { data, loading, error } = useQuery(GET_STUDY_FLOW, {
+    variables: {
+      where: {
+        id: {
+          equals: studyId
+        }
+      }
+    },
+  });
+
+  const flow = data?.studies?.[0]?.flow || [];
+
+  const aggregateVarOptions = flow
+    .filter(block => block.componentID)
+    .map(block => ({
+      label: block.name || block.type,
+      ID: block.componentID,
+    }));
+    const taskIds = aggregateVarOptions.map(block => block.ID);
+    
+    const {
+      data: aggVarData,
+      loading: aggVarLoading,
+      error: aggVarError
+    } = useQuery(GET_BLOCK_AGGVAR, {
+      variables: {
+        where: {
+          id: {
+            in: taskIds
+          }
+        }
+      },
+    });
+    
+  // const optionsAggVar = aggVarData.map(block => block.settings?.aggregateVariables || []);
+  const optionsAggVar = aggVarData?.tasks?.flatMap((task) => {
+    // Parse the aggregateVariables string into an array
+    return JSON.parse(task.settings?.aggregateVariables || "[]");
+  }) || [];
+  const formattedItems = optionsAggVar.map(item => {
+    console.log(item);
+    return {
+      key: item.toLowerCase().replace(/\s+/g, '-'),
+      text: item,
+      value: item
+    };
+  });
 
   const updateCode = async ({ code, newJsonObject }) => {
     const updatedConnectSelectorsCode = connectSelectorsCode.replace('dashboardJSON', JSON.stringify(newJsonObject));
@@ -51,31 +103,17 @@ print("Py code parameters", parameters)
     }
   };
 
-  // const copyToClipboard = () => {
-  //   const fillInTheBlanksDiv = document.querySelector('.fill-in-the-blanks');
-  //   // const textContent = fillInTheBlanksDiv.innerText;
-  //   const textContent = Array.from(fillInTheBlanksDiv.childNodes)
-  //   .map(node => node.innerText || node.textContent)
-  //   .join(' ');
-  //   navigator.clipboard.writeText(textContent).then(() => {
-  //     alert('Text copied to clipboard: ' + textContent);
-  //     console.log('Text copied to clipboard: ' + textContent);
-  //   }).catch(err => {
-  //     console.error('Error copying text: ', err);
-  //   });
-  // };
-  
   const copyToClipboard = () => {
     const { ivDirectionality, independentVariable, dvDirectionality, dependentVariable } = selectors;
     const textContent = `I predict that ${ivDirectionality || ''} ${independentVariable || ''} will be related to ${dvDirectionality || ''} ${dependentVariable || ''}.`;
-    
+
     navigator.clipboard.writeText(textContent).then(() => {
       alert('Text copied to clipboard: ' + textContent);
       console.log('Text copied to clipboard: ' + textContent);
     }).catch(err => {
       console.error('Error copying text: ', err);
     });
-  }; 
+  };
   const copyFigToClipboard = async () => {
     try {
       // Retrieve the variable from Pyodide
@@ -91,7 +129,7 @@ print("Py code parameters", parameters)
       console.error("Failed to copy: ", error);
     }
   };
-  
+
   const handleAggregateVarChange = (name, value) => {
     // console.log('Handling aggregate var change:', selectors);
     handleContentChange({
@@ -101,24 +139,16 @@ print("Py code parameters", parameters)
     });
   };
 
-  // useEffect(() => {  
-  //   const newJsonObject = { ...jsonObject };
-  //   // iterate over selectors to build newJsonObject
-  //   for (const key in selectors) {
-  //     if (selectors.hasOwnProperty(key)) {
-  //       newJsonObject[key] = selectors[key];
-  //     }
-  //   }
-  //   // console.log('Setting jsonObject:', newJsonObject);
-  //   setJsonObject(newJsonObject);
-  //   updateCode({ code , newJsonObject});
-  // }, [selectors]);
-
-  useEffect(() => {  
+  useEffect(() => {
     const newJsonObject = { ...selectors };
     setJsonObject(newJsonObject);
     updateCode({ code, newJsonObject });
   }, [selectors]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (aggVarLoading) return <p>Loading block data...</p>;
+  if (aggVarError) return <p>Error loading block data: {aggVarError.message}</p>;
 
   return (
     <>
@@ -135,21 +165,24 @@ print("Py code parameters", parameters)
             type="text"
             name="graphTitle"
             value={selectors.graphTitle || ""}
-            onChange={({ target }) => handleContentChange({ newContent: { selectors: { ...selectors, graphTitle: target.value }, }, }) }
-            />
+            onChange={({ target }) => handleContentChange({ newContent: { selectors: { ...selectors, graphTitle: target.value }, }, })}
+          />
         </div>
         <div className="parameter-panel">
           <div className="header">
             <div className="header-title">Your correlational hypothesis</div>
-            <Popup 
+            <Popup
               content={
-              <div>
-                <>Fill in the blanks to create your correlational hypothesis!</><br/>
-                <>For instance</><br/>
-                <q>It is predicted that higher anxiety will be related to lower % of trials gambled.</q>
-              </div>
-              } 
-              trigger={<img src={`/assets/icons/visualize/question_mark.svg`} />} 
+                <div>
+                  <>Fill in the blanks to create your correlational hypothesis!</><br />
+                  <br />
+                  <>For instance</><br />
+                  <q>It is predicted that higher anxiety will be related to lower % of trials gambled.</q><br />
+                  <br />
+                  <i>Note that the options suggested under the variable fields are pulled from the public blocks in your study builder</i><br />
+                </div>
+              }
+              trigger={<img src={`/assets/icons/visualize/question_mark.svg`} />}
               inverted
               style={popupStyle}
             />
@@ -162,28 +195,36 @@ print("Py code parameters", parameters)
               placeholder="directionality"
               isDirectionality={true}
               allowAdditions={false}
+              optionsAggVar={formattedItems}
+              studyId={studyId}
               value={selectors.ivDirectionality || ""}
               onChange={(e, { value }) => handleAggregateVarChange("ivDirectionality", value)}
             />
-           <AggregateVarSelector
+            <AggregateVarSelector
               placeholder={selectors[`independentVariable`] || "independant variable"}
               isDirectionality={false}
               allowAdditions={true}
+              optionsAggVar={formattedItems}
+              studyId={studyId}
               value={selectors[`independentVariable`] || ""}
               onChange={(e, { value }) => handleAggregateVarChange("independentVariable", value)}
             />
-            <div className="text">will be related to</div>            
+            <div className="text">will be related to</div>
             <AggregateVarSelector
               placeholder="directionality"
               isDirectionality={true}
               allowAdditions={false}
+              optionsAggVar={formattedItems}
+              studyId={studyId}
               value={selectors.dvDirectionality || ""}
               onChange={(e, { value }) => handleAggregateVarChange("dvDirectionality", value)}
             />
-           <AggregateVarSelector
+            <AggregateVarSelector
               placeholder={selectors[`dependentVariable`] || "dependant variable"}
               isDirectionality={false}
               allowAdditions={true}
+              optionsAggVar={formattedItems}
+              studyId={studyId}
               value={selectors[`dependentVariable`] || ""}
               onChange={(e, { value }) => handleAggregateVarChange("dependentVariable", value)}
             />

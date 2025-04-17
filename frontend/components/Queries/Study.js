@@ -515,3 +515,21 @@ export const STUDY_PROPOSALS_QUERY = gql`
     }
   }
 `;
+
+// get study flow
+export const GET_STUDY_FLOW = gql`
+  query Studies($where: StudyWhereInput!) {
+    studies(where: $where) {
+      flow 
+    }
+  }
+`;
+
+// get aggregate variables from a block
+export const GET_BLOCK_AGGVAR = gql`
+  query Tasks($where: TaskWhereInput!) {
+    tasks(where: $where) {
+      settings
+    }
+  }
+`;

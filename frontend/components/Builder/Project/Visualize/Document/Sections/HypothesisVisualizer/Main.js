@@ -8,6 +8,7 @@ export default function HypVis({
   data,
   variables,
   user,
+  studyId,
 }) {
   return (
     <StateManager
@@ -18,6 +19,7 @@ export default function HypVis({
       data={data}
       variables={variables}
       user={user}
+      studyId={studyId}
     />
   );
 }

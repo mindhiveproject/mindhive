@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Popup, Rating } from "semantic-ui-react";
 
 import AggregateVarSelector from "../Fields/AggregateVarSelector";
+// import reformulateHypothesis from "./ReformulateHypothesis";
 
 export default function Axes({
   type,
@@ -13,6 +14,7 @@ export default function Axes({
   sectionId,
   selectors,
   handleContentChange,
+  studyId,
 }) {
 
   const [groupNb, setGroupNb] = useState(selectors?.ivConditions || 2); // Default to 2 groups
@@ -63,19 +65,6 @@ print("Py code parameters", parameters)
     }
   };
 
-  // const copyToClipboard = () => {
-  //   const fillInTheBlanksDiv = document.querySelector('.fill-in-the-blanks');
-  //   const textContent = Array.from(fillInTheBlanksDiv.childNodes)
-  //     .map(node => node.innerText || node.textContent)
-  //     .join(' ');
-  //   navigator.clipboard.writeText(textContent).then(() => {
-  //     alert('Text copied to clipboard: ' + textContent);
-  //     // console.log('Text copied to clipboard: ' + textContent);
-  //   }).catch(err => {
-  //     console.error('Error copying text: ', err);
-  //   });
-  // };
-
   const copyToClipboard = () => {
     const { dependentVariable, independentVariable, ivConditions } = selectors;
     let textContent = `I predict that the ${dependentVariable || 'dependent variable'} will vary across the ${ivConditions || 'number of'} conditions of the ${independentVariable || 'independent variable'} as follows:\n`;
@@ -93,26 +82,27 @@ print("Py code parameters", parameters)
       console.error('Error copying text: ', err);
     });
   };
-    
+  
   const copyAiToClipboard = () => {
 
-    // TBD: Implement AI hypothesis generation
+    // UNFINISHED ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    if (selectors?.hypothesisPrompt === "") { 
+      return alert("Please describe your hypothesis first");
+    }
+    
+    // get the data from the selector
+    const { dependentVariable, independentVariable, ivConditions } = selectors;
 
-    // const { dependentVariable, independentVariable, ivConditions } = selectors;
-    // let textContent = `I predict that the ${dependentVariable || 'dependent variable'} will vary across the ${ivConditions || 'number of'} conditions of the ${independentVariable || 'independent variable'} as follows:\n`;
+
+    let textContent = `I` // fill with the retun of the ai func
   
-    // for (let i = 1; i <= groupNb; i++) {
-    //   const condition = selectors[`condition${i}`] || `condition ${i}`;
-    //   const rank = selectors[`group${i}`] || 0;
-    //   textContent += `- ${condition} will occupy rank #${rank}\n`;
-    // }
-  
-    // navigator.clipboard.writeText(textContent).then(() => {
-    //   alert('Text copied to clipboard: ' + textContent);
-    //   console.log('Text copied to clipboard: ' + textContent);
-    // }).catch(err => {
-    //   console.error('Error copying text: ', err);
-    // });
+    navigator.clipboard.writeText(textContent).then(() => {
+      alert('AI-reformulated hypothesis copied to clipboard: ' + textContent);
+      console.log('Text copied to clipboard: ' + textContent);
+    }).catch(err => {
+      console.error('Error copying text: ', err);
+    });
   };
 
   const copyFigToClipboard = async () => {
@@ -150,7 +140,7 @@ print("Py code parameters", parameters)
     <div className="graph-dashboard">
       <div className="header">
         <img src={`/assets/icons/visualize/hypVis_expeAnalysis.svg`} />
-        <div className="header-title">Correlational Hypothesis</div>
+        <div className="header-title">Experimental Hypothesis</div>
       </div>
       <div className="text-input">
         <label htmlFor="graphTitle" className="header-text">Title</label>
@@ -251,6 +241,7 @@ print("Py code parameters", parameters)
               allowAdditions={true}
               value={selectors[`condition${i + 1}`] || ""}
               onChange={(e, { value }) => handleAggregateVarChange(`condition${i + 1}`, value)}
+              // study={study}
             />
             <>will occupy rank #</>
             <div className="fill-in-ranks">
@@ -284,8 +275,8 @@ print("Py code parameters", parameters)
             .includes("MENTOR")) && (
             // .includes("STUDENT")) && ( //// will include students later
 
-              <div className="clipboard-copy-button" onClick={copyAiToClipboard}>
-                <div>Copy AI formulated hypothesis text to clipboard</div>
+              <div className="clipboard-AI-copy-button" onClick={copyAiToClipboard}>
+                <div>🏗️ Copy AI-formulated hypothesis text to clipboard 🚧</div>
                 <img src={`/assets/icons/visualize/clipboard-copy.svg`} />
               </div>
         )}    

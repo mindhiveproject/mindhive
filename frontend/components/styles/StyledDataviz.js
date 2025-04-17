@@ -4,7 +4,7 @@ export const StyledDataViz = styled.div`
   display: grid;
   padding: 10px 0px;
   grid-template-columns: 1fr 3fr;
-  grid-gap: 19px;
+  // grid-gap: 19px;
   // max-height: 85vh;
   background: #f7f9f8;
 
@@ -14,7 +14,7 @@ export const StyledDataViz = styled.div`
     align-items: stretch; /* Ensure children stretch to fill the container */
     gap: 10px; /* Add spacing between children */
     background: #f7f9f8;
-    padding: 20px 16px;
+    padding: 0px 8px 0px 16px;
     border-radius: 8px;
     // box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); 
   }
@@ -627,7 +627,7 @@ export const StyledDataViz = styled.div`
   .document {
     display: grid;
     align-content: baseline;
-    padding: 10px 32px 600px;
+    padding: 0px 16px 600px 16px;
     /* border-radius: 8px; */
     /* background: #fcfdfc;
     box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07); */
@@ -636,7 +636,7 @@ export const StyledDataViz = styled.div`
     .section {
       display: grid;
       padding: 10px 20px;
-      margin: 10px 20px;
+      // margin: 10px 20px;
       border-radius: 16px;
       background: #FFF;
 
@@ -799,6 +799,7 @@ export const StyledDataViz = styled.div`
             grid-gap: 10px;
             grid-template-columns: auto 1fr;
             font-weight: bold;
+            font-size: 18px;
             margin: 10px 0px 10px 0px;
           }
         }
@@ -875,6 +876,7 @@ export const StyledDataViz = styled.div`
       display: grid;
       grid-gap: 10px;
       grid-template-columns: auto 1fr;
+      font-size: 18px;
       font-weight: bold;
       margin: 0px 0px 10px 0px;
     }

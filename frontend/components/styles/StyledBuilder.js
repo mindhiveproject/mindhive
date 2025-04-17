@@ -208,7 +208,7 @@ export const StyledCanvasBuilder = styled.div`
 
   .lockedMessageOverlay {
     position: fixed;
-    top: 20px;
+    top: 20%;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(255, 230, 230, 0.95);

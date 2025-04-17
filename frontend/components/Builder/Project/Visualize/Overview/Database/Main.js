@@ -91,7 +91,7 @@ export default function Database({
         >
           <img src={`/assets/icons/visualize/folder_open_blue.svg`} />
           <div>
-            <a>Return to browse</a>
+            <a>Return to Navigation</a>
           </div>
         </div>
       </div>

@@ -59,11 +59,11 @@ export default function EmptyState({ projectId, studyId }) {
             vizParts: {
               create: [
                 {
-                  title: "Unnamed part",
+                  title: "Unnamed journal",
                   dataOrigin: "STUDY",
                   vizChapters: {
                     create: [
-                      { title: "Unnamed chapter", description: "Description" },
+                      { title: "Unnamed workspace", description: "Description" },
                     ],
                   },
                 },
@@ -175,7 +175,7 @@ export default function EmptyState({ projectId, studyId }) {
           vizParts: {
             create: [
               {
-                title: "Unnamed part",
+                title: "Unnamed journal",
                 dataOrigin: "UPLOADED",
                 content: {
                   uploaded: {
@@ -185,7 +185,7 @@ export default function EmptyState({ projectId, studyId }) {
                 },
                 vizChapters: {
                   create: [
-                    { title: "Unnamed chapter", description: "Description" },
+                    { title: "Unnamed workspace", description: "Description" },
                   ],
                 },
               },

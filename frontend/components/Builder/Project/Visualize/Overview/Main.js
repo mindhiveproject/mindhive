@@ -1,4 +1,4 @@
-import Browse from "./Browse/Main";
+import Navigation from "./Navigation/Main";
 import Database from "./Database/Main";
 
 export default function Overview({
@@ -21,7 +21,7 @@ export default function Overview({
   return (
     <div className="overview">
       {page === "browse" && (
-        <Browse
+        <Navigation
           user={user}
           projectId={projectId}
           studyId={studyId}
