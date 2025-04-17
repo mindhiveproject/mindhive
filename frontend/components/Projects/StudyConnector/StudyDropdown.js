@@ -1,15 +1,20 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Dropdown } from "semantic-ui-react";
+import { Dropdown, Modal, Button } from "semantic-ui-react";
 import styled from "styled-components";
+import { useState } from "react";
 
 import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal";
 import { GET_PROJECT_STUDY } from "../../Queries/Proposal";
-import { MY_STUDIES } from "../../Queries/Study";
+import { MY_STUDIES, TEACHER_STUDIES } from "../../Queries/Study";
 
 export default function StudyDropdown({ user, project }) {
-  const { data: studiesData } = useQuery(MY_STUDIES, {
-    variables: { id: user?.id },
-  });
+  const isTeacher = user?.permissions?.map((p) => p?.name).includes("TEACHER");
+  const { data: studiesData } = useQuery(
+    isTeacher ? TEACHER_STUDIES : MY_STUDIES,
+    {
+      variables: { id: user?.id },
+    }
+  );
 
   const [updateProject] = useMutation(UPDATE_PROJECT_BOARD, {
     refetchQueries: [
@@ -20,6 +25,9 @@ export default function StudyDropdown({ user, project }) {
     ],
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedStudyId, setSelectedStudyId] = useState(null);
+
   const studies = studiesData?.studies || [];
 
   const studyOptions = studies.map((study) => ({
@@ -28,7 +36,15 @@ export default function StudyDropdown({ user, project }) {
     value: study?.id,
   }));
 
-  const handleStudyChange = async (e, { value }) => {
+  const handleStudyChange = (e, { value }) => {
+    // Only open modal if the selected study is different from the current one
+    if (value !== project?.study?.id) {
+      setSelectedStudyId(value);
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleConfirm = async () => {
     try {
       await updateProject({
         variables: {
@@ -36,17 +52,26 @@ export default function StudyDropdown({ user, project }) {
           input: {
             study: {
               connect: {
-                id: value,
+                id: selectedStudyId,
               },
             },
           },
         },
       });
+      setIsModalOpen(false);
+      setSelectedStudyId(null);
       window.location.reload();
     } catch (error) {
       console.error("Error updating study:", error);
       alert("Failed to update study connection");
+      setIsModalOpen(false);
+      setSelectedStudyId(null);
     }
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setSelectedStudyId(null);
   };
 
   return (
@@ -62,6 +87,23 @@ export default function StudyDropdown({ user, project }) {
         className="study-selector"
         fluid
       />
+      <StyledModal open={isModalOpen} onClose={handleCancel} size="tiny">
+        <Modal.Header>Confirm Study Change</Modal.Header>
+        <Modal.Content>
+          <Modal.Description>
+            Are you sure you want to switch the study for this project? This
+            action may affect related data.
+          </Modal.Description>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button onClick={handleCancel} className="cancel-button">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirm} className="confirm-button" primary>
+            Confirm
+          </Button>
+        </Modal.Actions>
+      </StyledModal>
     </StyledStudyDropdown>
   );
 }
@@ -81,12 +123,11 @@ const StyledStudyDropdown = styled.div`
       border: 1px solid #e0e0e0;
       border-radius: 4px;
       background: #ffffff;
-      position: relative; // Ensures proper positioning context
+      position: relative;
 
-      // Fix arrow positioning
       .dropdown.icon {
         margin: 0;
-        right: 12px; // Align arrow inside the border
+        right: 12px;
         top: 50%;
         transform: translateY(-50%);
         color: #666666;
@@ -96,7 +137,7 @@ const StyledStudyDropdown = styled.div`
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        padding-right: 24px; // Make room for the arrow
+        padding-right: 24px;
       }
 
       .menu {
@@ -118,7 +159,7 @@ const StyledStudyDropdown = styled.div`
       &.active,
       &.selected {
         .dropdown.icon {
-          top: 50%; // Maintain centering when active
+          top: 50%;
         }
       }
     }
@@ -139,4 +180,52 @@ const Label = styled.span`
   font-weight: 600;
   color: #666666;
   flex-shrink: 0;
+`;
+
+const StyledModal = styled(Modal)`
+  font-family: Nunito, sans-serif !important;
+
+  .header {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #333333 !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+    padding-bottom: 12px !important;
+  }
+
+  .content {
+    padding: 20px !important;
+    color: #666666 !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px !important;
+    border-top: 1px solid #e0e0e0 !important;
+
+    .cancel-button {
+      background: #ffffff !important;
+      color: #666666 !important;
+      border: 1px solid #e0e0e0 !important;
+      font-family: Nunito, sans-serif !important;
+
+      &:hover {
+        background: #f5f5f5 !important;
+        color: #333333 !important;
+      }
+    }
+
+    .confirm-button {
+      font-family: Nunito, sans-serif !important;
+      background: #3d85b0 !important;
+
+      &:hover {
+        background: #326d94 !important;
+      }
+    }
+  }
 `;

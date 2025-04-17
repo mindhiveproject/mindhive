@@ -130,6 +130,14 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
       id
       username
       publicId
+      collaboratorInStudy {
+        id
+        title
+        classes {
+          id
+          title
+        }
+      }
       collaboratorInProposal {
         id
         title
@@ -161,6 +169,8 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
               name
             }
           }
+          dataCollectionStatus
+          dataCollectionOpenForParticipation
         }
         reviews {
           stage

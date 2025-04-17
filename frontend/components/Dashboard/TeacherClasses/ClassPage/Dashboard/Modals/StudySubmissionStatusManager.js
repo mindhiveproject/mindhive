@@ -4,18 +4,18 @@ import { useState } from "react";
 import styled from "styled-components";
 
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
-import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
+import { UPDATE_STUDY } from "../../../../../Mutations/Study";
 
-export default function SubmissionStatusManager(props) {
+export default function StudySubmissionStatusManager(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState(props?.value);
-  const [commentsAllowed, setCommentsAllowed] = useState(
-    props?.data?.project && props?.data?.project[props?.commentField]
+  const [participationAllowed, setParticipationAllowed] = useState(
+    props?.data?.project?.study?.dataCollectionOpenForParticipation
   );
 
-  const [updateStatus, { loading, error }] = useMutation(UPDATE_PROJECT_BOARD, {
+  const [updateStatus, { loading, error }] = useMutation(UPDATE_STUDY, {
     variables: {
-      id: props?.data?.projectId,
+      id: props?.data?.project?.study?.id,
     },
     refetchQueries: [
       {
@@ -25,12 +25,12 @@ export default function SubmissionStatusManager(props) {
     ],
   });
 
-  const updateProjectStatus = () => {
+  const updateStudyStatus = () => {
     updateStatus({
       variables: {
         input: {
-          [props?.type]: status,
-          [props?.commentField]: commentsAllowed,
+          dataCollectionStatus: status,
+          dataCollectionOpenForParticipation: participationAllowed,
         },
       },
     });
@@ -42,14 +42,14 @@ export default function SubmissionStatusManager(props) {
       { label: "Not started", value: "NOT_STARTED" },
       { label: "In progress", value: "IN_PROGRESS" },
       { label: "Submitted", value: "SUBMITTED" },
-      { label: "Review is finished", value: "FINISHED" },
+      { label: "Data collection is finished", value: "FINISHED" },
     ].map((status) => ({
       key: status?.value,
       text: status?.label,
       value: status?.value,
     })) || [];
 
-  const commentsOptions =
+  const participationOptions =
     [
       { label: "Not allowed", value: false },
       { label: "Allowed", value: true },
@@ -74,13 +74,13 @@ export default function SubmissionStatusManager(props) {
           <div className="modalHeader">
             <h1>Manage {props?.stage} Status</h1>
             <p>
-              Update the status and comment settings for{" "}
+              Update the status and participation settings for{" "}
               {props?.data?.projectTitle}
             </p>
           </div>
           <div className="modalTwoSideContent">
             <div className="firstSide">
-              <h2>Project Details</h2>
+              <h2>Study Details</h2>
               <p>
                 <strong>Stage:</strong> {props?.stage}
               </p>
@@ -98,14 +98,14 @@ export default function SubmissionStatusManager(props) {
                 fluid
                 className="status-dropdown"
               />
-              <h2>Comments</h2>
+              <h2>Participation</h2>
               <Dropdown
                 selection
-                options={commentsOptions}
-                value={commentsAllowed}
-                onChange={(e, data) => setCommentsAllowed(data?.value)}
+                options={participationOptions}
+                value={participationAllowed}
+                onChange={(e, data) => setParticipationAllowed(data?.value)}
                 fluid
-                className="comments-dropdown"
+                className="participation-dropdown"
               />
             </div>
           </div>
@@ -115,7 +115,7 @@ export default function SubmissionStatusManager(props) {
             </button>
             <button
               className="update-button"
-              onClick={updateProjectStatus}
+              onClick={updateStudyStatus}
               disabled={loading}
             >
               {loading ? "Updating..." : "Update Status"}
@@ -195,7 +195,7 @@ const StyledModal = styled.div`
       }
 
       .status-dropdown,
-      .comments-dropdown {
+      .participation-dropdown {
         margin-bottom: 24px;
 
         &.ui.dropdown {
@@ -270,7 +270,7 @@ const StyledModal = styled.div`
         background: #326d94;
       }
 
-      &:disabled {
+      &: June {
         background: #b0b0b0;
         cursor: not-allowed;
       }

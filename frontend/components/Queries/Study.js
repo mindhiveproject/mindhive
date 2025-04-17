@@ -67,6 +67,38 @@ export const MY_STUDIES = gql`
   }
 `;
 
+//  TEACHER_STUDIES query
+export const TEACHER_STUDIES = gql`
+  query TEACHER_STUDIES($id: ID!) {
+    studies(
+      where: {
+        isHidden: { equals: false }
+        OR: [
+          { author: { id: { equals: $id } } }
+          { collaborators: { some: { id: { equals: $id } } } }
+          { classes: { some: { creator: { id: { equals: $id } } } } }
+        ]
+      }
+      orderBy: [{ createdAt: desc }]
+    ) {
+      id
+      title
+      slug
+      image {
+        id
+        image {
+          publicUrlTransformed
+        }
+      }
+      description
+      author {
+        id
+        username
+      }
+    }
+  }
+`;
+
 // get my study
 export const MY_STUDY = gql`
   query MY_STUDY($id: ID!) {
@@ -520,7 +552,7 @@ export const STUDY_PROPOSALS_QUERY = gql`
 export const GET_STUDY_FLOW = gql`
   query Studies($where: StudyWhereInput!) {
     studies(where: $where) {
-      flow 
+      flow
     }
   }
 `;

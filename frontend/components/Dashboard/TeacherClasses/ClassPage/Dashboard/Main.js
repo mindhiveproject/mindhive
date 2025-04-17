@@ -15,6 +15,7 @@ import { StudentPageLink } from "./Renderers/StudentPageLink";
 import { ProjectManagerLink } from "./Renderers/ProjectManagerLink";
 import { StudyManagerLink } from "./Renderers/StudyManagerLink";
 import { SubmissionStatusLink } from "./Renderers/SubmissionStatusLink";
+import { StudySubmissionStatusLink } from "./Renderers/StudySubmissionStatusLink";
 
 const countAndFormat = (arr) => {
   // First count occurrences
@@ -64,12 +65,16 @@ export default function Dashboard({ myclass, user, query }) {
       projectMentors,
       studyId,
       studyTitle,
+      collaboratorStudyId,
+      collaboratorStudyTitle,
       studyCollaborators,
       proposalStatus,
       commentsReceivedOnProposal,
       isProposalOpenForComments,
       peerFeedbackStatus,
       isPeerFeedbackOpenForComments,
+      dataCollectionStatus,
+      dataCollectionOpenForParticipation,
       projectReportStatus,
       isProjectReportOpenForComments;
 
@@ -98,11 +103,20 @@ export default function Dashboard({ myclass, user, query }) {
       isPeerFeedbackOpenForComments = project?.peerFeedbackOpenForComments
         ? "Open for comments"
         : "Not open for comments";
+      dataCollectionStatus = project?.study?.dataCollectionStatus;
+      dataCollectionOpenForParticipation = project?.study
+        ?.dataCollectionOpenForParticipation
+        ? "Open for participation"
+        : "Not open for participation";
       projectReportStatus = project?.projectReportStatus;
       isProjectReportOpenForComments = project?.projectReportOpenForComments
         ? "Open for comments"
         : "Not open for comments";
     }
+
+    const studies = student?.collaboratorInStudy?.filter((study) =>
+      study?.classes?.map((cl) => cl?.id).includes(myclass?.id)
+    );
 
     return {
       id: student?.id,
@@ -113,14 +127,17 @@ export default function Dashboard({ myclass, user, query }) {
       projectTitle,
       projectCollaborators,
       projectMentors,
-      studyId,
-      studyTitle,
+      studyId: studyId || (studies?.length && studies?.map((st) => st?.id)[0]),
+      studyTitle:
+        studyTitle || (studies?.length && studies?.map((st) => st?.title)[0]),
       studyCollaborators,
       proposalStatus,
       commentsReceivedOnProposal,
       isProposalOpenForComments,
       peerFeedbackStatus,
       isPeerFeedbackOpenForComments,
+      dataCollectionStatus,
+      dataCollectionOpenForParticipation,
       projectReportStatus,
       isProjectReportOpenForComments,
       projects,
@@ -182,6 +199,17 @@ export default function Dashboard({ myclass, user, query }) {
       },
     },
     { field: "isPeerFeedbackOpenForComments" },
+
+    {
+      field: "dataCollectionStatus",
+      cellRenderer: StudySubmissionStatusLink,
+      cellRendererParams: {
+        classId: myclass?.id,
+        stage: "Data collection",
+      },
+    },
+    { field: "dataCollectionOpenForParticipation" },
+
     {
       field: "projectReportStatus",
       cellRenderer: SubmissionStatusLink,
@@ -209,6 +237,7 @@ export default function Dashboard({ myclass, user, query }) {
             projectManagerLink: ProjectManagerLink,
             studyManagerLink: StudyManagerLink,
             submissionStatusLink: SubmissionStatusLink,
+            studySubmissionStatusLink: StudySubmissionStatusLink,
           }}
         />
       </div>

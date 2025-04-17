@@ -41,9 +41,10 @@ export default function ProposalWrapper({ query, user, templates }) {
     }
   }, [data]);
 
+  // redirect to the project builder
   const openProposal = (proposalId) => {
-    setPage("proposal");
-    setProposalId(proposalId);
+    const url = `/builder/projects?selector=${proposalId}`;
+    window.open(url, "_blank");
   };
 
   const copyProposal = (proposalId) => {

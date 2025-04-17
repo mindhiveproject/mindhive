@@ -111,9 +111,11 @@ export default function Navigation({
               <span className="title"> Study </span> {project?.study?.title}
             </div>
           )} */}
-          <div className="studyTitle">
-            <StudyDropdown user={user} project={project} />
-          </div>
+          {project?.study && (
+            <div className="studyTitle">
+              <StudyDropdown user={user} project={project} />
+            </div>
+          )}
         </div>
         <div className="right">
           {tab === "board" ? (
