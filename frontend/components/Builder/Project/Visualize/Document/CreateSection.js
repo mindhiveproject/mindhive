@@ -104,7 +104,7 @@ export default function CreateSection({ projectId, studyId, chapterId }) {
         >
           <div className="menuItem">
             <div>
-              <img src={`/assets/icons/visualize/hypVis_icon.svg`} />
+              <img src={`/assets/icons/visualize/hypothesisVisualizer.svg`} />
             </div>
             <div>Hypothesis Visualizer</div>
           </div>

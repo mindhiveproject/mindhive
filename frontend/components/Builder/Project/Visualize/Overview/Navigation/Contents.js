@@ -36,7 +36,7 @@ export default function Contents({
   const sections = {
     PARAGRAPH: {
       title: "Paragraph",
-      img: "/assets/icons/visualize/segment.svg",
+      img: "/assets/icons/visualize/paragraph.svg",
     },
     STATISTICS: {
       title: "Summary Statistics",
@@ -56,7 +56,7 @@ export default function Contents({
     },
     HYPVIS: {
       title: "Hypothesis Visualizer",
-      img: "/assets/icons/visualize/hypVis_icon.svg",
+      img: "/assets/icons/visualize/hypothesisVisualizer.svg",
     },
   };
 
@@ -70,42 +70,30 @@ export default function Contents({
           className={part?.id === activePart?.id ? "active part" : "part"}
         >
           <div className="journal-header">
-            <div
-              className="title"
-              onClick={async () => {
-                await goToChapter({
-                  part,
-                  chapter: part?.vizChapters.length && part?.vizChapters[0],
-                  headerId:
-                    part?.vizChapters.length && part?.vizChapters[0]?.id,
-                });
-              }}
-            >
-              {part?.title || (
-                <>
-                  {part?.dataOrigin?.charAt(0) +
-                    part?.dataOrigin?.toLowerCase().slice(1)}{" "}
-                  Data
-                </>
-              )}
-            </div>
-
-            {/* {part?.id === activePart?.id ? (
+            <div className="journal-header-text">
               <div
-                className="dataButtonPart menuButtonThin greenFrame"
+                className="title"
                 onClick={async () => {
-                  setPage("database");
+                  await goToChapter({
+                    part,
+                    chapter: part?.vizChapters.length && part?.vizChapters[0],
+                    headerId:
+                      part?.vizChapters.length && part?.vizChapters[0]?.id,
+                  });
                 }}
               >
-                <img src={`/assets/icons/visualize/database_green.svg`} />
-                <div>
-                  <a>Data</a>
-                </div>
+                {part?.title || (
+                  <>
+                    {part?.dataOrigin?.charAt(0) +
+                      part?.dataOrigin?.toLowerCase().slice(1)}{" "}
+                    Data
+                  </>
+                )}
               </div>
-            ) : (
-              <div></div>
-            )} */}
-
+              {part?.description && (
+                <div className="description">{part?.description}</div>
+              )}
+            </div>
             <Dropdown
               icon={<img src={`/assets/icons/visualize/more_vert.svg`} />}
               direction="left"
@@ -127,41 +115,22 @@ export default function Contents({
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
-            {part?.description && (
-              <div className="menuDescription">{part?.description}</div>
-            )}
           </div>
 
           {part?.id === activePart?.id && (
             <>
-              <div>
+              <div className="workspaces">
                 {sortBy(part?.vizChapters, [
                   (chapter) =>
                     chapter?.position || new Date(chapter?.createdAt).getTime(),
                 ]).map((chapter, num) => (
-                  <div
-                    key={num}
-                    className={
-                      chapter?.id === chapterId ? "selected chapter" : "chapter"
-                    }
-                  >
-                    <div
-                      className="title"
-                      onClick={async () =>
-                        await goToChapter({
-                          part,
-                          chapter,
-                          headerId: chapter?.id,
-                        })
-                      }
-                    >
-                      <div>{chapter?.title}</div>
-                      <Dropdown
-                        icon={
-                          <img src={`/assets/icons/visualize/more_vert.svg`} />
-                        }
-                        direction="left"
-                      >
+                  <div key={num} className="workspace">
+                    <div className={chapter?.id === chapterId ? "selected title" : "title"} onClick={async () => await goToChapter({ part, chapter, headerId: chapter?.id,}) }>
+                      <div className="logo-workspace-tile">
+                      <img src={chapter?.id === chapterId ? `/assets/icons/visualize/workspaceSelected.svg` : `/assets/icons/visualize/workspace.svg`} />
+                        <div>{chapter?.title}</div>
+                      </div>
+                      <Dropdown icon={<img src={`/assets/icons/visualize/more_vert.svg`} />} direction="left" >
                         <DropdownMenu>
                           <DeleteChapter
                             studyId={studyId}
@@ -172,31 +141,19 @@ export default function Contents({
                         </DropdownMenu>
                       </Dropdown>
                     </div>
-                    <div>
-                      {sortBy(chapter?.vizSections, [
-                        (section) =>
-                          section?.position ||
-                          new Date(section?.createdAt).getTime(),
-                      ]).map((section, num) => (
-                        <div
-                          key={num}
-                          className="section"
-                          onClick={async () =>
-                            await goToChapter({
-                              part,
-                              chapter,
-                              headerId: section?.id,
-                            })
-                          }
-                        >
-                          <img
-                            src={sections?.[section?.type]?.img}
-                            alt={section?.title}
-                          />
-                          {section?.title}
-                        </div>
-                      ))}
-                    </div>
+                    {sortBy(chapter?.vizSections, [
+                      (section) =>
+                        section?.position ||
+                        new Date(section?.createdAt).getTime(),
+                    ]).map((section, num) => (
+                      <div key={num} className="component-section" onClick={async () => await goToChapter({part,chapter,headerId: section?.id,})}>
+                        <img
+                          src={sections?.[section?.type]?.img}
+                          alt={section?.title}
+                        />
+                        {section?.title}
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>

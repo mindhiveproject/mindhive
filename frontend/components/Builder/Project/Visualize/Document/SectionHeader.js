@@ -26,7 +26,7 @@ const sections = {
   },
   HYPVIS: {
     title: "Hypothesis Visualizer",
-    img: "/assets/icons/visualize/hypVis_icon.svg",
+    img: "/assets/icons/visualize/hypothesisVisualizer.svg",
   },
 };
 
