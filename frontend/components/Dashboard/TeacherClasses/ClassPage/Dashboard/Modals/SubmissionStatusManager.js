@@ -1,40 +1,95 @@
 import { useMutation } from "@apollo/client";
-import { Modal, Dropdown } from "semantic-ui-react";
+import { Modal, Dropdown, Button } from "semantic-ui-react";
 import { useState } from "react";
 import styled from "styled-components";
 
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
-import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
+import {
+  UPDATE_PROJECT_BOARD,
+  UPDATE_PROPOSAL_CARD,
+} from "../../../../../Mutations/Proposal";
 
 export default function SubmissionStatusManager(props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [status, setStatus] = useState(props?.value);
   const [commentsAllowed, setCommentsAllowed] = useState(
     props?.data?.project && props?.data?.project[props?.commentField]
   );
 
-  const [updateStatus, { loading, error }] = useMutation(UPDATE_PROJECT_BOARD, {
-    variables: {
-      id: props?.data?.projectId,
-    },
-    refetchQueries: [
-      {
-        query: GET_STUDENTS_DASHBOARD_DATA,
-        variables: { classId: props?.classId },
-      },
-    ],
-  });
-
-  const updateProjectStatus = () => {
-    updateStatus({
+  const [updateStatus, { loading: boardLoading, error: boardError }] =
+    useMutation(UPDATE_PROJECT_BOARD, {
       variables: {
-        input: {
-          [props?.type]: status,
-          [props?.commentField]: commentsAllowed,
-        },
+        id: props?.data?.projectId,
       },
+      refetchQueries: [
+        {
+          query: GET_STUDENTS_DASHBOARD_DATA,
+          variables: { classId: props?.classId },
+        },
+      ],
     });
-    setIsOpen(false);
+
+  const [updateCard, { loading: cardLoading, error: cardError }] = useMutation(
+    UPDATE_PROPOSAL_CARD,
+    {
+      refetchQueries: [
+        {
+          query: GET_STUDENTS_DASHBOARD_DATA,
+          variables: { classId: props?.classId },
+        },
+      ],
+    }
+  );
+
+  const handleUpdateStatus = () => {
+    if (status === "FINISHED") {
+      setConfirmModalOpen(true);
+    } else {
+      updateProjectStatus();
+    }
+  };
+
+  const updateProjectStatus = async (updateCardsToNeedsRevision = false) => {
+    try {
+      await updateStatus({
+        variables: {
+          input: {
+            [props?.type]: status,
+            [props?.commentField]: commentsAllowed,
+          },
+        },
+      });
+
+      if (updateCardsToNeedsRevision) {
+        // Fetch all sections of the project board
+        const sections = props?.data?.project?.sections || [];
+        const cardsToUpdate = sections
+          .flatMap((section) => section.cards || [])
+          .filter((card) => !!card.settings?.includeInReport);
+
+        // Update each card individually
+        for (const card of cardsToUpdate) {
+          await updateCard({
+            variables: {
+              where: { id: card.id },
+              data: {
+                settings: {
+                  ...card?.settings,
+                  status: "Needs revision",
+                },
+              },
+            },
+          });
+        }
+      }
+
+      setIsOpen(false);
+      setConfirmModalOpen(false);
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Failed to update status or cards");
+    }
   };
 
   const statusOptions =
@@ -60,70 +115,113 @@ export default function SubmissionStatusManager(props) {
     })) || [];
 
   return (
-    <Modal
-      onClose={() => setIsOpen(false)}
-      onOpen={() => setIsOpen(true)}
-      open={isOpen}
-      trigger={<div>{props.value}</div>}
-      dimmer="blurring"
-      size="large"
-      closeIcon
-    >
-      <StyledModal>
+    <>
+      <Modal
+        onClose={() => setIsOpen(false)}
+        onOpen={() => setIsOpen(true)}
+        open={isOpen}
+        trigger={<div>{props.value}</div>}
+        dimmer="blurring"
+        size="large"
+        closeIcon
+      >
+        <StyledModal>
+          <Modal.Content>
+            <div className="modalHeader">
+              <h1>Manage {props?.stage} Status</h1>
+              <p>
+                Update the status and comment settings for{" "}
+                {props?.data?.projectTitle}
+              </p>
+            </div>
+            {(boardError || cardError) && (
+              <div className="error-message">
+                Error: Failed to update status or cards. Please try again.
+              </div>
+            )}
+            <div className="modalTwoSideContent">
+              <div className="firstSide">
+                <h2>Project Details</h2>
+                <p>
+                  <strong>Stage:</strong> {props?.stage}
+                </p>
+                <p>
+                  <strong>Project:</strong> {props?.data?.projectTitle}
+                </p>
+              </div>
+              <div className="secondSide">
+                <h2>Status</h2>
+                <Dropdown
+                  selection
+                  options={statusOptions}
+                  value={status}
+                  onChange={(e, data) => setStatus(data?.value)}
+                  fluid
+                  className="status-dropdown"
+                />
+                <h2>Comments</h2>
+                <Dropdown
+                  selection
+                  options={commentsOptions}
+                  value={commentsAllowed}
+                  onChange={(e, data) => setCommentsAllowed(data?.value)}
+                  fluid
+                  className="comments-dropdown"
+                />
+              </div>
+            </div>
+            <div className="footer">
+              <button
+                className="cancel-button"
+                onClick={() => setIsOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="update-button"
+                onClick={handleUpdateStatus}
+                disabled={boardLoading || cardLoading}
+              >
+                {boardLoading || cardLoading ? "Updating..." : "Update Status"}
+              </button>
+            </div>
+          </Modal.Content>
+        </StyledModal>
+      </Modal>
+      <StyledConfirmModal
+        open={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        size="tiny"
+      >
+        <Modal.Header>Confirm Card Status Update</Modal.Header>
         <Modal.Content>
-          <div className="modalHeader">
-            <h1>Manage {props?.stage} Status</h1>
-            <p>
-              Update the status and comment settings for{" "}
-              {props?.data?.projectTitle}
-            </p>
-          </div>
-          <div className="modalTwoSideContent">
-            <div className="firstSide">
-              <h2>Project Details</h2>
-              <p>
-                <strong>Stage:</strong> {props?.stage}
-              </p>
-              <p>
-                <strong>Project:</strong> {props?.data?.projectTitle}
-              </p>
-            </div>
-            <div className="secondSide">
-              <h2>Status</h2>
-              <Dropdown
-                selection
-                options={statusOptions}
-                value={status}
-                onChange={(e, data) => setStatus(data?.value)}
-                fluid
-                className="status-dropdown"
-              />
-              <h2>Comments</h2>
-              <Dropdown
-                selection
-                options={commentsOptions}
-                value={commentsAllowed}
-                onChange={(e, data) => setCommentsAllowed(data?.value)}
-                fluid
-                className="comments-dropdown"
-              />
-            </div>
-          </div>
-          <div className="footer">
-            <button className="cancel-button" onClick={() => setIsOpen(false)}>
-              Cancel
-            </button>
-            <button
-              className="update-button"
-              onClick={updateProjectStatus}
-              disabled={loading}
-            >
-              {loading ? "Updating..." : "Update Status"}
-            </button>
-          </div>
+          <Modal.Description>
+            Setting the status to "Review is finished" can update all submitted
+            cards in this project to "Needs revision". Would you like to proceed
+            with this change?
+          </Modal.Description>
         </Modal.Content>
-      </StyledModal>
-    </Modal>
+        <Modal.Actions>
+          <Button
+            onClick={() => {
+              updateProjectStatus(false);
+              setConfirmModalOpen(false);
+            }}
+            className="cancel-button"
+          >
+            No, Keep Card Statuses
+          </Button>
+          <Button
+            onClick={() => updateProjectStatus(true)}
+            className="confirm-button"
+            primary
+            disabled={boardLoading || cardLoading}
+          >
+            Yes, Update Cards
+          </Button>
+        </Modal.Actions>
+      </StyledConfirmModal>
+    </>
   );
 }
 
@@ -151,6 +249,16 @@ const StyledModal = styled.div`
       color: #666666;
       margin: 0;
     }
+  }
+
+  .error-message {
+    background: #ffe6e6;
+    color: #d32f2f;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    text-align: center;
   }
 
   .modalTwoSideContent {
@@ -202,7 +310,7 @@ const StyledModal = styled.div`
           border: 1px solid #d0d0d0;
           border-radius: 6px;
           background: #ffffff;
-          font-size: 16px; /* Increased font size */
+          font-size: 16px;
           color: #333333;
           padding: 10px;
 
@@ -215,7 +323,7 @@ const StyledModal = styled.div`
 
           .menu {
             .item {
-              font-size: 16px; /* Increased font size for menu items */
+              font-size: 16px;
             }
           }
 
@@ -273,6 +381,54 @@ const StyledModal = styled.div`
       &:disabled {
         background: #b0b0b0;
         cursor: not-allowed;
+      }
+    }
+  }
+`;
+
+const StyledConfirmModal = styled(Modal)`
+  font-family: Nunito, sans-serif !important;
+
+  .header {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #333333 !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+    padding-bottom: 12px !important;
+  }
+
+  .content {
+    padding: 20px !important;
+    color: #666666 !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px !important;
+    border-top: 1px solid #e0e0e0 !important;
+
+    .cancel-button {
+      background: #ffffff !important;
+      color: #666666 !important;
+      border: 1px solid #e0e0e0 !important;
+      font-family: Nunito, sans-serif !important;
+
+      &:hover {
+        background: #f5f5f5 !important;
+        color: #333333 !important;
+      }
+    }
+
+    .confirm-button {
+      font-family: Nunito, sans-serif !important;
+      background: #3d85b0 !important;
+
+      &:hover {
+        background: #326d94 !important;
       }
     }
   }

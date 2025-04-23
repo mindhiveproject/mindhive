@@ -399,6 +399,7 @@ const Section = ({
                     isPreview={isPreview}
                     settings={settings}
                     sectionSummary={sectionSummary}
+                    submitStatuses={submitStatuses}
                   />
                 );
               }

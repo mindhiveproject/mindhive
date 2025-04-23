@@ -54,11 +54,12 @@ export default function Dashboard({ myclass, user, query }) {
   const students = data?.profiles || [];
 
   const studentsProcessed = students.map((student) => {
-    const projects = student?.collaboratorInProposal?.filter(
+    const classProjects = student?.collaboratorInProposal?.filter(
       (project) => project?.usedInClass?.id === myclass?.id
     );
 
     let project,
+      projects,
       projectId,
       projectTitle,
       projectCollaborators,
@@ -78,9 +79,10 @@ export default function Dashboard({ myclass, user, query }) {
       projectReportStatus,
       isProjectReportOpenForComments;
 
-    if (projects && projects.length) {
-      const mainProjects = projects.filter((p) => p?.isMain);
-      project = (mainProjects.length && mainProjects[0]) || projects[0];
+    if (classProjects && classProjects.length) {
+      const mainProjects = classProjects.filter((p) => p?.isMain);
+      project = (mainProjects.length && mainProjects[0]) || classProjects[0];
+      projects = classProjects;
       projectId = project?.id;
       projectTitle = project?.title;
       projectCollaborators = project?.collaborators
@@ -123,13 +125,14 @@ export default function Dashboard({ myclass, user, query }) {
       publicId: student?.publicId,
       username: student?.username,
       project,
+      projects,
       projectId,
       projectTitle,
       projectCollaborators,
       projectMentors,
-      studyId: studyId || (studies?.length && studies?.map((st) => st?.id)[0]),
-      studyTitle:
-        studyTitle || (studies?.length && studies?.map((st) => st?.title)[0]),
+      studies,
+      studyId: studyId,
+      studyTitle: studyTitle,
       studyCollaborators,
       proposalStatus,
       commentsReceivedOnProposal,
@@ -163,6 +166,10 @@ export default function Dashboard({ myclass, user, query }) {
         classProposalBoardId: myclass?.templateProposal?.id,
       },
     },
+    {
+      field: "projectTitle",
+      headerName: "Main Project",
+    },
     { field: "projectCollaborators" },
     { field: "projectMentors" },
     {
@@ -174,6 +181,10 @@ export default function Dashboard({ myclass, user, query }) {
         classProposalBoardId: myclass?.templateProposal?.id,
         classCode: myclass?.code,
       },
+    },
+    {
+      field: "studyTitle",
+      headerName: "Main Study",
     },
     { field: "studyCollaborators" },
     {

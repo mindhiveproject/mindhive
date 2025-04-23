@@ -4,7 +4,6 @@ import { Draggable } from "react-smooth-dnd";
 import { Image, Popup } from "semantic-ui-react";
 import { StyledProposalCard } from "../../../../../styles/StyledProposal";
 
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 export default function Card({
@@ -16,10 +15,15 @@ export default function Card({
   settings,
   boardId,
   sectionSummary,
+  submitStatuses,
 }) {
+  const isCardLocked = card?.settings?.includeInReviewSteps?.some(
+    (step) => submitStatuses[step] === "SUBMITTED"
+  );
+  const isLocked = sectionSummary?.isLocked || isCardLocked;
+
   const router = useRouter();
   let status = card?.settings?.status ? card.settings.status : "Not started";
-
   let statusStyle = null;
   switch (status) {
     default:
@@ -39,6 +43,9 @@ export default function Card({
       break;
     case "Not started":
       statusStyle = "notStarted";
+      break;
+    case "Needs revision":
+      statusStyle = "TriangleWarning";
       break;
   }
 
@@ -87,34 +94,12 @@ export default function Card({
               <div className="card-title">
                 <div>
                   <div>{ReactHtmlParser(card.title)}</div>
-                  {/* {status && <div className="status">{status}</div>} */}
                 </div>
-                {/* <div className="editedByAvatar">
-                  {card?.isEditedBy?.username && (
-                    <Popup
-                      content={`The card is currently being edited by ${card?.isEditedBy?.username}`}
-                      trigger={
-                        card?.isEditedBy?.image?.image?.publicUrlTransformed ? (
-                          <Image
-                            src={
-                              card?.isEditedBy?.image?.image
-                                ?.publicUrlTransformed
-                            }
-                            avatar
-                          />
-                        ) : (
-                          <Image src="/assets/icons/builder/page.svg" avatar />
-                        )
-                      }
-                      size="huge"
-                    />
-                  )}
-                </div> */}
               </div>
             </div>
             {card?.settings?.includeInReport && (
               <>
-                {sectionSummary?.isLocked ? (
+                {isLocked ? (
                   <div className="card-public-status-submitted">
                     <img src="/assets/icons/status/publicTemplatesubmitted.svg" />
                   </div>

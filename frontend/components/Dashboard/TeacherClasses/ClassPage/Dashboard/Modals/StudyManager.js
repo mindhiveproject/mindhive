@@ -1,50 +1,44 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Modal, Icon, Dropdown } from "semantic-ui-react";
+import { Modal, Icon, Dropdown, Button } from "semantic-ui-react";
 import { useState } from "react";
 import styled from "styled-components";
+import Link from "next/link";
 
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
 import { GET_CLASS } from "../../../../../Queries/Classes";
+import { UPDATE_STUDY, CREATE_STUDY } from "../../../../../Mutations/Study";
 import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
-import { CREATE_STUDY, UPDATE_STUDY } from "../../../../../Mutations/Study";
 
 import StyledClass from "../../../../../styles/StyledClass";
 
-export default function ProjectManager(props) {
+export default function StudyManager(props) {
   const [isOpen, setIsOpen] = useState(false);
-  const [studyId, setStudyId] = useState("");
+  const [studyId, setStudyId] = useState(null);
   const [studyName, setStudyName] = useState("");
-  const [projectId, setProjectId] = useState(props?.data?.projectId);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [selectedStudyForProject, setSelectedStudyForProject] = useState(null);
 
-  const projectOptions =
-    props?.data?.projects.map((project) => ({
-      key: project?.id,
-      text: project?.title,
-      value: project?.id,
-    })) || [];
+  const projectId = props?.data?.projectId;
+  const hasProject = !!projectId;
+  const project = props?.data?.projects?.find((p) => p.id === projectId);
+  const mainProjectStudy = project?.study;
+  const collaboratorStudies = props?.data?.studies || [];
+  const hasCollaboratorStudies = collaboratorStudies.length > 0;
 
-  const { data: dataClass } = useQuery(GET_CLASS, {
+  const { data: classData } = useQuery(GET_CLASS, {
     variables: { code: props?.classCode },
   });
+  const availableStudies = classData?.class?.studies || [];
 
-  const studies = dataClass?.class?.studies || [];
+  // Include all class studies, including those where the student is a collaborator
   const studyOptions =
-    studies?.map((study) => ({
+    availableStudies?.map((study) => ({
       key: study?.id,
       text: study?.title,
       value: study?.id,
     })) || [];
 
-  const [updateProject] = useMutation(UPDATE_PROJECT_BOARD, {
-    refetchQueries: [
-      {
-        query: GET_STUDENTS_DASHBOARD_DATA,
-        variables: { classId: props?.classId },
-      },
-    ],
-  });
-
-  const [updateStudy] = useMutation(UPDATE_STUDY, {
+  const [assignStudentToStudy] = useMutation(UPDATE_STUDY, {
     refetchQueries: [
       {
         query: GET_STUDENTS_DASHBOARD_DATA,
@@ -59,34 +53,32 @@ export default function ProjectManager(props) {
         query: GET_STUDENTS_DASHBOARD_DATA,
         variables: { classId: props?.classId },
       },
+      {
+        query: GET_CLASS,
+        variables: { code: props?.classCode },
+      },
+    ],
+  });
+
+  const [updateProject] = useMutation(UPDATE_PROJECT_BOARD, {
+    refetchQueries: [
+      {
+        query: GET_STUDENTS_DASHBOARD_DATA,
+        variables: { classId: props?.classId },
+      },
     ],
   });
 
   const assignToStudy = async () => {
     if (!studyId) {
-      return alert("Select the study first");
+      return alert("Select a study first");
     }
 
-    if (projectId) {
-      await updateStudy({
-        variables: {
-          id: studyId,
-          input: {
-            proposal: {
-              connect: {
-                id: projectId,
-              },
-            },
-            collaborators: {
-              connect: props?.data?.project?.collaborators.map((c) => ({
-                id: c?.id,
-              })),
-            },
-          },
-        },
-      });
+    if (hasProject) {
+      setSelectedStudyForProject(studyId);
+      setIsConfirmModalOpen(true);
     } else {
-      await updateStudy({
+      await assignStudentToStudy({
         variables: {
           id: studyId,
           input: {
@@ -96,9 +88,45 @@ export default function ProjectManager(props) {
           },
         },
       });
+      setStudyId(null);
+      setIsOpen(false);
     }
+  };
 
-    setIsOpen(false);
+  const confirmStudyConnection = async () => {
+    try {
+      await assignStudentToStudy({
+        variables: {
+          id: selectedStudyForProject,
+          input: {
+            proposal: {
+              connect: {
+                id: projectId,
+              },
+            },
+            collaborators: {
+              connect: project?.collaborators.map((c) => ({
+                id: c?.id,
+              })),
+            },
+          },
+        },
+      });
+      setIsConfirmModalOpen(false);
+      setSelectedStudyForProject(null);
+      setStudyId(null);
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error connecting study to project:", error);
+      alert("Failed to connect study to project");
+      setIsConfirmModalOpen(false);
+      setSelectedStudyForProject(null);
+    }
+  };
+
+  const cancelStudyConnection = () => {
+    setIsConfirmModalOpen(false);
+    setSelectedStudyForProject(null);
   };
 
   const createNewStudy = async () => {
@@ -106,7 +134,7 @@ export default function ProjectManager(props) {
       return alert("Give the study a name first");
     }
 
-    if (projectId) {
+    if (hasProject) {
       await updateProject({
         variables: {
           id: projectId,
@@ -120,7 +148,7 @@ export default function ProjectManager(props) {
                   },
                 },
                 collaborators: {
-                  connect: props?.data?.project?.collaborators.map((c) => ({
+                  connect: project?.collaborators.map((c) => ({
                     id: c?.id,
                   })),
                 },
@@ -146,8 +174,41 @@ export default function ProjectManager(props) {
         },
       });
     }
-
+    setStudyName("");
     setIsOpen(false);
+  };
+
+  const disconnectFromStudy = async (studyId) => {
+    await assignStudentToStudy({
+      variables: {
+        id: studyId,
+        input: {
+          collaborators: {
+            disconnect: { id: props?.data?.id },
+          },
+        },
+      },
+    });
+  };
+
+  const disconnectMainProjectStudy = async () => {
+    if (!mainProjectStudy) return;
+
+    try {
+      await updateProject({
+        variables: {
+          id: projectId,
+          input: {
+            study: {
+              disconnect: true,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      console.error("Error disconnecting main project study:", error);
+      alert("Failed to disconnect study from project");
+    }
   };
 
   return (
@@ -155,7 +216,12 @@ export default function ProjectManager(props) {
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
       open={isOpen}
-      trigger={<div>Create</div>}
+      trigger={
+        <StyledTriggerButton>
+          <Icon name="book" />
+          Manage Studies ({collaboratorStudies.length})
+        </StyledTriggerButton>
+      }
       dimmer="blurring"
       size="large"
       closeIcon
@@ -163,51 +229,204 @@ export default function ProjectManager(props) {
       <StyledModal>
         <Modal.Content>
           <div className="modalHeader">
-            <h1>Manage Study for {props?.data?.username}</h1>
-            <p>Assign or create a study for the student's project</p>
+            <h1>Manage Studies for {props?.data?.username}</h1>
+            <p>View, disconnect, or assign new studies for the student</p>
           </div>
           <StyledClass>
             <div className="dashboard">
-              {projectOptions.length > 1 && (
-                <div className="section">
-                  <h2>Select Project</h2>
-                  <Dropdown
-                    selection
-                    search
-                    options={projectOptions}
-                    value={projectId}
-                    onChange={(e, data) => setProjectId(data?.value)}
-                    fluid
-                    className="project-dropdown"
-                    placeholder="Select a project"
-                  />
-                </div>
-              )}
               <div className="manageModal">
-                <div className="section">
-                  <h2>Assign to Existing Study</h2>
-                  <Dropdown
-                    selection
-                    search
-                    options={studyOptions}
-                    value={studyId}
-                    onChange={(e, data) => setStudyId(data?.value)}
-                    fluid
-                    className="study-dropdown"
-                    placeholder="Select a study"
-                  />
-                </div>
-                <div className="section">
-                  <h2>Create New Study</h2>
-                  <input
-                    type="text"
-                    name="studyName"
-                    placeholder="Enter the name of the new study"
-                    value={studyName}
-                    onChange={(e) => setStudyName(e?.target?.value)}
-                    className="study-input"
-                  />
-                </div>
+                {hasProject && (
+                  <div className="section">
+                    <h2>Main Project Study</h2>
+                    {mainProjectStudy ? (
+                      <div className="study-item main-study">
+                        <div className="study-info">
+                          <h3>{mainProjectStudy.title}</h3>
+                          <p>Connected to Project: {project?.title}</p>
+                          <div className="collaborators">
+                            <strong>Collaborators:</strong>{" "}
+                            {mainProjectStudy.collaborators?.length > 0
+                              ? mainProjectStudy.collaborators
+                                  .map((c) => c.username)
+                                  .join(", ")
+                              : "None"}
+                          </div>
+                          <div className="mentors">
+                            <strong>Mentors:</strong>{" "}
+                            {mainProjectStudy.collaborators?.filter((c) =>
+                              c.permissions.some((p) => p.name === "MENTOR")
+                            ).length > 0
+                              ? mainProjectStudy.collaborators
+                                  .filter((c) =>
+                                    c.permissions.some(
+                                      (p) => p.name === "MENTOR"
+                                    )
+                                  )
+                                  .map((c) => c.username)
+                                  .join(", ")
+                              : "None"}
+                          </div>
+                          <Link
+                            href={`/builder/studies?selector=${mainProjectStudy.id}`}
+                            target="_blank"
+                            className="study-link"
+                          >
+                            View Study
+                          </Link>
+                        </div>
+                        <button
+                          className="disconnect-button"
+                          onClick={disconnectMainProjectStudy}
+                        >
+                          Disconnect
+                        </button>
+                      </div>
+                    ) : (
+                      <p>
+                        No study is currently connected to this project. Use the
+                        options below to assign or create a new study.
+                      </p>
+                    )}
+                  </div>
+                )}
+                {hasCollaboratorStudies ? (
+                  <div className="section">
+                    <h2>Collaborator Studies</h2>
+                    <div className="study-list">
+                      {collaboratorStudies
+                        .filter(
+                          (study) =>
+                            !mainProjectStudy ||
+                            study.id !== mainProjectStudy.id
+                        )
+                        .map((study) => (
+                          <div key={study.id} className="study-item">
+                            <div className="study-info">
+                              <h3>{study.title}</h3>
+                              <div className="collaborators">
+                                <strong>Collaborators:</strong>{" "}
+                                {study.collaborators?.length > 0
+                                  ? study.collaborators
+                                      .map((c) => c.username)
+                                      .join(", ")
+                                  : "None"}
+                              </div>
+                              <div className="mentors">
+                                <strong>Mentors:</strong>{" "}
+                                {study.collaborators?.filter((c) =>
+                                  c.permissions.some((p) => p.name === "MENTOR")
+                                ).length > 0
+                                  ? study.collaborators
+                                      .filter((c) =>
+                                        c.permissions.some(
+                                          (p) => p.name === "MENTOR"
+                                        )
+                                      )
+                                      .map((c) => c.username)
+                                      .join(", ")
+                                  : "None"}
+                              </div>
+                              <Link
+                                href={`/builder/studies?selector=${study.id}`}
+                                target="_blank"
+                                className="study-link"
+                              >
+                                View Study
+                              </Link>
+                            </div>
+                            <button
+                              className="disconnect-button"
+                              onClick={() => disconnectFromStudy(study.id)}
+                            >
+                              Disconnect
+                            </button>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                ) : (
+                  !mainProjectStudy && (
+                    <div className="section empty-state">
+                      <h2>No Collaborator Studies Assigned</h2>
+                      <p>
+                        This student is not assigned to any studies as a
+                        collaborator.
+                      </p>
+                    </div>
+                  )
+                )}
+                {hasProject ? (
+                  <>
+                    <div className="section">
+                      <h2>Project</h2>
+                      <div className="project-info">
+                        <p>
+                          <strong>Title:</strong>{" "}
+                          {project?.title || "Unknown Project"}
+                        </p>
+                        <p>
+                          <strong>Collaborators:</strong>{" "}
+                          {project?.collaborators
+                            ?.map((c) => c.username)
+                            .join(", ") || "None"}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="section">
+                        <h2>
+                          {mainProjectStudy
+                            ? "Reassign to Another Study"
+                            : "Assign to Existing Study"}
+                        </h2>
+                        <p>
+                          {mainProjectStudy
+                            ? "Select a different study to connect to this project."
+                            : "Choose an existing study to assign to the project."}
+                        </p>
+                        <Dropdown
+                          selection
+                          search
+                          options={studyOptions}
+                          value={studyId}
+                          onChange={(e, data) => setStudyId(data?.value)}
+                          fluid
+                          className="study-dropdown"
+                          placeholder="Select a study"
+                          disabled={studyOptions.length === 0}
+                        />
+                      </div>
+                      <div className="section">
+                        <h2>Create New Study</h2>
+                        <p>Create a new study to connect to this project.</p>
+                        <input
+                          type="text"
+                          name="studyName"
+                          placeholder="Enter the name of the new study"
+                          value={studyName}
+                          onChange={(e) => setStudyName(e?.target?.value)}
+                          className="study-input"
+                        />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="section">
+                    <h2>Create New Study</h2>
+                    <p>
+                      No project is assigned. Please use the Project Manager to
+                      create or assign a project before managing studies.
+                    </p>
+                    <input
+                      type="text"
+                      name="studyName"
+                      placeholder="Enter the name of the new study"
+                      value={studyName}
+                      onChange={(e) => setStudyName(e?.target?.value)}
+                      className="study-input"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </StyledClass>
@@ -215,13 +434,15 @@ export default function ProjectManager(props) {
             <button className="cancel-button" onClick={() => setIsOpen(false)}>
               Cancel
             </button>
-            <button
-              className="action-button"
-              onClick={assignToStudy}
-              disabled={!studyId}
-            >
-              Assign to Study
-            </button>
+            {hasProject && (
+              <button
+                className="action-button"
+                onClick={assignToStudy}
+                disabled={!studyId}
+              >
+                {mainProjectStudy ? "Reassign Study" : "Assign to Study"}
+              </button>
+            )}
             <button
               className="action-button"
               onClick={createNewStudy}
@@ -232,9 +453,61 @@ export default function ProjectManager(props) {
           </div>
         </Modal.Content>
       </StyledModal>
+      {hasProject && (
+        <StyledConfirmModal
+          open={isConfirmModalOpen}
+          onClose={cancelStudyConnection}
+          size="tiny"
+        >
+          <Modal.Header>Confirm Study Connection</Modal.Header>
+          <Modal.Content>
+            <Modal.Description>
+              Are you sure you want to{" "}
+              {mainProjectStudy ? "reassign" : "connect"} this study to the
+              project "{project?.title}"? This action may affect related data.
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button onClick={cancelStudyConnection} className="cancel-button">
+              Cancel
+            </Button>
+            <Button
+              onClick={confirmStudyConnection}
+              className="confirm-button"
+              primary
+            >
+              Confirm
+            </Button>
+          </Modal.Actions>
+        </StyledConfirmModal>
+      )}
     </Modal>
   );
 }
+
+const StyledTriggerButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #3d85b0;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: Nunito, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #326d94;
+  }
+
+  .icon {
+    margin: 0 !important;
+  }
+`;
 
 const StyledModal = styled.div`
   font-family: Nunito, sans-serif !important;
@@ -264,8 +537,8 @@ const StyledModal = styled.div`
 
   .dashboard {
     .section {
-      margin-bottom: 24px;
-      padding: 16px;
+      margin-bottom: 32px;
+      padding: 20px;
       border-radius: 8px;
       background: #f9f9f9;
 
@@ -273,16 +546,124 @@ const StyledModal = styled.div`
         font-size: 18px;
         font-weight: 600;
         color: #333333;
-        margin-bottom: 12px;
+        margin-bottom: 16px;
       }
 
-      .project-dropdown,
+      &.empty-state {
+        text-align: center;
+        p {
+          font-size: 16px;
+          color: #666666;
+        }
+      }
+
+      .project-info {
+        p {
+          font-size: 14px;
+          color: #333333;
+          margin-bottom: 8px;
+
+          strong {
+            color: #3d85b0;
+          }
+        }
+      }
+
+      .study-list {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .study-item {
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        background: #ffffff;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background: #f5f5f5;
+        }
+
+        &.main-study {
+          background: #e6f0fa;
+          border: 2px solid #3d85b0;
+
+          &:hover {
+            background: #d6e4f5;
+          }
+        }
+
+        .study-info {
+          h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333333;
+            margin: 0 0 8px;
+          }
+
+          p {
+            font-size: 14px;
+            color: #666666;
+            margin: 0 0 8px;
+          }
+
+          .collaborators,
+          .mentors {
+            font-size: 14px;
+            color: #333333;
+            margin: 0 0 8px;
+
+            strong {
+              color: #3d85b0;
+            }
+          }
+
+          .study-link {
+            display: inline-block;
+            background: #3d85b0;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background: #326d94;
+            }
+          }
+        }
+
+        .disconnect-button {
+          background: #d32f2f;
+          border: none;
+          border-radius: 6px;
+          padding: 8px 16px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #ffffff;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          align-self: flex-end;
+          margin-top: 12px;
+
+          &:hover {
+            background: #b71c1c;
+          }
+        }
+      }
+
       .study-dropdown {
         &.ui.dropdown {
           border: 1px solid #d0d0d0;
           border-radius: 6px;
           background: #ffffff;
-          font-size: 16px; 
+          font-size: 16px;
           color: #333333;
           padding: 10px;
 
@@ -295,7 +676,7 @@ const StyledModal = styled.div`
 
           .menu {
             .item {
-              font-size: 16px; 
+              font-size: 16px;
             }
           }
 
@@ -304,7 +685,12 @@ const StyledModal = styled.div`
 
             .dropdown.icon {
               color: #3d85b0;
-           734}
+            }
+          }
+
+          &.disabled {
+            background: #f0f0f0;
+            cursor: not-allowed;
           }
         }
       }
@@ -314,7 +700,7 @@ const StyledModal = styled.div`
         border: 1px solid #d0d0d0;
         border-radius: 6px;
         padding: 10px;
-        font-size: 16px; 
+        font-size: 16px;
         color: #333333;
         font-family: Nunito, sans-serif;
 
@@ -368,6 +754,54 @@ const StyledModal = styled.div`
       &:disabled {
         background: #b0b0b0;
         cursor: not-allowed;
+      }
+    }
+  }
+`;
+
+const StyledConfirmModal = styled(Modal)`
+  font-family: Nunito, sans-serif !important;
+
+  .header {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #333333 !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+    padding-bottom: 12px !important;
+  }
+
+  .content {
+    padding: 20px !important;
+    color: #666666 !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px !important;
+    border-top: 1px solid #e0e0e0 !important;
+
+    .cancel-button {
+      background: #ffffff !important;
+      color: #666666 !important;
+      border: 1px solid #e0e0e0 !important;
+      font-family: Nunito, sans-serif !important;
+
+      &:hover {
+        background: #f5f5f5 !important;
+        color: #333333 !important;
+      }
+    }
+
+    .confirm-button {
+      font-family: Nunito, sans-serif !important;
+      background: #3d85b0 !important;
+
+      &:hover {
+        background: #326d94 !important;
       }
     }
   }

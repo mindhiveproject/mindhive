@@ -137,11 +137,24 @@ export const GET_STUDENTS_DASHBOARD_DATA = gql`
           id
           title
         }
+        collaborators {
+          id
+          username
+          permissions {
+            name
+          }
+        }
       }
       collaboratorInProposal {
         id
         title
         isMain
+        sections {
+          cards {
+            id
+            settings
+          }
+        }
         submitProposalStatus
         submitProposalOpenForComments
         peerFeedbackStatus

@@ -292,3 +292,14 @@ export const HIDE_PROJECT = gql`
     }
   }
 `;
+
+export const UPDATE_PROPOSAL_CARD = gql`
+  mutation UpdateProposalCard(
+    $where: ProposalCardWhereUniqueInput!
+    $data: ProposalCardUpdateInput!
+  ) {
+    updateProposalCard(where: $where, data: $data) {
+      id
+    }
+  }
+`;

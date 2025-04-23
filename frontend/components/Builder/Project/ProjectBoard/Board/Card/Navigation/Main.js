@@ -1,6 +1,4 @@
 import { useQuery } from "@apollo/client";
-import { useRouter } from "next/router";
-import Link from "next/link";
 
 import Status from "../Forms/Status";
 

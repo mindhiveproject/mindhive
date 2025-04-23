@@ -66,6 +66,10 @@ const StyledDropdown = styled.div`
     color: #8a919d !important;
     background: #f3f3f3 !important;
   }
+  .status-needs-revision {
+    color: white !important;
+    background: #8a2cf6 !important;
+  }
 
   .info-status :hover {
     /* background: #f7f7f7 !important; */
@@ -114,6 +118,13 @@ class Status extends Component {
         value: "Not started",
         className: "info-status status-not-started",
         image: { src: "/assets/icons/status/notStarted.svg" },
+      },
+      {
+        key: "needsRevision",
+        text: "Needs revision",
+        value: "Needs revision",
+        className: "info-status status-needs-revision",
+        image: { src: "/assets/icons/status/TriangleWarning.svg" },
       },
     ];
 
