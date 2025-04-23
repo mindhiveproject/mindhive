@@ -56,7 +56,7 @@ export default function CreateSection({ projectId, studyId, chapterId }) {
         >
           <div className="menuItem">
             <div>
-              <img src={`/assets/icons/visualize/segment.svg`} />
+              <img src={`/assets/icons/visualize/paragraph.svg`} />
             </div>
             <div>Paragraph</div>
           </div>

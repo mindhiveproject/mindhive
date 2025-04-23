@@ -714,13 +714,15 @@ export const StyledDataViz = styled.div`
     overflow-y: auto;
     .section {
       display: grid;
+      max-width 1500px;
       padding: 10px 20px;
       margin-bottom: 10px;
       border-radius: 16px;
       background: #FFF;
 
-      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.05);
-      max-width 1500px;
+      /* MH-Theme/Elevation/Medium */
+      box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.10);
+      
 
       .sectionHeader {
         display: grid;

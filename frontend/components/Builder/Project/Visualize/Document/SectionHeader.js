@@ -6,7 +6,7 @@ import { StyledInput } from "../../../../styles/StyledForm";
 const sections = {
   PARAGRAPH: {
     title: "Paragraph",
-    img: "/assets/icons/visualize/segment.svg",
+    img: "/assets/icons/visualize/paragraph.svg",
   },
   STATISTICS: {
     title: "Summary Statistics",
