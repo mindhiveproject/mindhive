@@ -86,11 +86,13 @@ print("Py code parameters", parameters)
     return JSON.parse(task.settings?.aggregateVariables || "[]");
   }) || [];
   const formattedItems = optionsAggVar.map(item => {
-    console.log(item);
+    const parser = new DOMParser();
+    const parsedDoc = parser.parseFromString(item, "text/html");
+    const strippedContent = parsedDoc.body.textContent || "";
     return {
-      key: item.toLowerCase().replace(/\s+/g, '-'),
-      text: item,
-      value: item
+      key: strippedContent.toLowerCase().replace(/\s+/g, '-'),
+      text: strippedContent,
+      value: strippedContent
     };
   });
 
