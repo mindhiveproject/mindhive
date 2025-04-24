@@ -141,19 +141,30 @@ export default function Contents({
                         </DropdownMenu>
                       </Dropdown>
                     </div>
-                    {sortBy(chapter?.vizSections, [
-                      (section) =>
-                        section?.position ||
-                        new Date(section?.createdAt).getTime(),
-                    ]).map((section, num) => (
-                      <div key={num} className="component-section" onClick={async () => await goToChapter({part,chapter,headerId: section?.id,})}>
-                        <img
-                          src={sections?.[section?.type]?.img}
-                          alt={section?.title}
-                        />
-                        {section?.title}
-                      </div>
-                    ))}
+                    
+                    {chapter?.id === chapterId && (
+                      <>
+                        {sortBy(chapter?.vizSections, [
+                          (section) =>
+                            section?.position || new Date(section?.createdAt).getTime(),
+                        ]).map((section, num) => (
+                          <div
+                            key={num}
+                            className="component-section"
+                            onClick={async () =>
+                              await goToChapter({ part, chapter, headerId: section?.id })
+                            }
+                          >
+                            <img
+                              src={sections?.[section?.type]?.img}
+                              alt={section?.title}
+                            />
+                            {section?.title}
+                          </div>
+                        ))}
+                      </>
+                    )}
+
                   </div>
                 ))}
               </div>
