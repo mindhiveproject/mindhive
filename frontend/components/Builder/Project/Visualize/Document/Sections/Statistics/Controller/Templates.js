@@ -48,16 +48,16 @@ for column in column_input:
 
             # Build tidy count rows
             temp_counts = pd.DataFrame({
-                "variable": column,
-                "statistic": ['Count {}'.format(i if i != "" else "empty values") for i in value_counts.index],
-                "value": value_counts.values
+                "Variable": column,
+                "Group Label": ['Count {}'.format(i if i != "" else "empty values") for i in value_counts.index],
+                "Count": value_counts.values
             })
 
             # Add non-null count as a separate row with clearer naming
             total_row = pd.DataFrame({
-                "variable": [column],
-                "statistic": ["total non-empty values"],
-                "value": [filtered.count()]
+                "Variable": [column],
+                "Group Label": ["total non-empty values"],
+                "Count": [filtered.count()]
             })
 
             described_df = pd.concat([described_df, temp_counts, total_row], ignore_index=True)
