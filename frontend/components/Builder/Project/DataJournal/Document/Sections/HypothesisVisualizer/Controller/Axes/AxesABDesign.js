@@ -268,11 +268,11 @@ print("Py code parameters", parameters)
           <div>Copy graph to clipboard</div>
           <img src={`/assets/icons/visualize/clipboard-copy.svg`} />
         </div>
-        {(user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
-          user?.permissions?.map((p) => p?.name).includes("TEACHER") ||
-          user?.permissions
-            ?.map((p) => p?.name)
-            .includes("MENTOR")) && (
+        {(
+          // user?.permissions?.map((p) => p?.name).includes("MENTOR") ||
+          // user?.permissions?.map((p) => p?.name).includes("TEACHER") ||
+          user?.permissions?.map((p) => p?.name).includes("ADMIN")
+        ) && (
             // .includes("STUDENT")) && ( //// will include students later
 
               <div className="clipboard-AI-copy-button" onClick={copyAiToClipboard}>
