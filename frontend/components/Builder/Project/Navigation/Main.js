@@ -37,7 +37,7 @@ const items = [
   },
   // {
   //   value: "journal",
-  //   name: "Data Journals (BETA)",
+  //   name: "Data Journals",
   // },
   // {
   //   value: "exit",

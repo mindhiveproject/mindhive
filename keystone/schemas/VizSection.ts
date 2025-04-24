@@ -1,3 +1,4 @@
+// Component
 import { list } from "@keystone-6/core";
 import {
   text,

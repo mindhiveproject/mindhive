@@ -21,10 +21,24 @@
 //  Pyodide wrapper (PyodideWrapper.js)
 //    Journal manager (JournalManager.js)
 //      DataWrapper
+//
+// Keystone
+// Journal wrapper (My journals) (VizJournal)
+// Journal (VizPart)
+// Workspace (VizChapter)
+// Component (VizSection)
 
 import Navigation from "../Navigation/Main";
+import PyodideWrapper from "./PyodideWrapper";
 
-export default function DataJournal({ query, user, tab, toggleSidebar }) {
+export default function DataJournal({
+  query,
+  user,
+  tab,
+  toggleSidebar,
+  projectId,
+  studyId,
+}) {
   return (
     <>
       <Navigation
@@ -34,7 +48,7 @@ export default function DataJournal({ query, user, tab, toggleSidebar }) {
         tab={tab}
         toggleSidebar={toggleSidebar}
       />
-      Data Journals
+      <PyodideWrapper user={user} projectId={projectId} studyId={studyId} />
     </>
   );
 }

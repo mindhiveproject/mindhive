@@ -1,3 +1,4 @@
+// Workspace
 import { list } from "@keystone-6/core";
 import {
   text,
@@ -40,5 +41,6 @@ export const VizChapter = list({
     }),
     updatedAt: timestamp(),
     position: float(),
+    layout: json(),
   },
 });

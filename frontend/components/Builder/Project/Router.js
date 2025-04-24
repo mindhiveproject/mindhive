@@ -4,7 +4,7 @@ import Builder from "./Builder/Main";
 // import Review from "./Review/Main";
 import Collect from "./Collect/Wrapper";
 import Visualize from "./Visualize/Wrapper";
-import DataJournal from "./DataJournal/Main";
+import DataJournal from "./DataJournal/Wrapper";
 
 export default function Router({ query, user, tab, toggleSidebar }) {
   if (tab === "board") {
