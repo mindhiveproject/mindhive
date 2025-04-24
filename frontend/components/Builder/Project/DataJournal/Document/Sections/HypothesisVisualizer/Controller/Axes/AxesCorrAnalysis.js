@@ -203,7 +203,7 @@ print("Py code parameters", parameters)
               onChange={(e, { value }) => handleAggregateVarChange("ivDirectionality", value)}
             />
             <AggregateVarSelector
-              placeholder={selectors[`independentVariable`] || "independant variable"}
+              placeholder={selectors[`independentVariable`] || "independent variable"}
               isDirectionality={false}
               allowAdditions={true}
               optionsAggVar={formattedItems}
@@ -222,7 +222,7 @@ print("Py code parameters", parameters)
               onChange={(e, { value }) => handleAggregateVarChange("dvDirectionality", value)}
             />
             <AggregateVarSelector
-              placeholder={selectors[`dependentVariable`] || "dependant variable"}
+              placeholder={selectors[`dependentVariable`] || "dependent variable"}
               isDirectionality={false}
               allowAdditions={true}
               optionsAggVar={formattedItems}

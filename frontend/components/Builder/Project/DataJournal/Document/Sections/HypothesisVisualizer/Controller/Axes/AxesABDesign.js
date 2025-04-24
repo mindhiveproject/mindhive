@@ -176,7 +176,7 @@ print("Py code parameters", parameters)
         <label htmlFor="dependentVariable" className="header-text">What is the name of your Dependent Variable (DV)?</label>
         <input
           className="input-box"
-          placeholder="Dependant variable"
+          placeholder="Dependent variable"
           id={`dependentVariable-${sectionId}`}
           type="text"
           name="dependentVariable"
@@ -188,7 +188,7 @@ print("Py code parameters", parameters)
           <label htmlFor="independentVariable" className="header-text">What is the name of your Independent Variable (IV)?</label>
           <input
             className="input-box"
-            placeholder="Independant variable"
+            placeholder="Independent variable"
             id={`independentVariable-${sectionId}`}
             type="text"
             name="independentVariable"
