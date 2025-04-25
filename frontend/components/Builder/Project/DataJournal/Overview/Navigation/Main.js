@@ -18,7 +18,7 @@ export default function Navigation({
   setPage,
 }) {
   return (
-    <div style={{ width: "100%" }}>
+    <div className="navigation-panel">
       <div className="header">
         <div>
           <img src={`/assets/icons/visualize/folder_open_black.svg`} />

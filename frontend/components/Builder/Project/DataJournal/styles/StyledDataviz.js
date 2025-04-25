@@ -33,6 +33,12 @@ export const StyledDataViz = styled.div`
     background: #f7f9f8;
     padding: 0px 8px 0px 16px;
     border-radius: 8px;
+ 
+    .navigation-mode {
+      max-width: 400px;
+    }
+  }
+ 
   }
 
   .item {
@@ -250,7 +256,6 @@ export const StyledDataViz = styled.div`
     
     display: flex;
     width: 100%;
-    max-width: 400px;
     // padding: 20px 16px;
     flex-direction: column;
     align-items: flex-end;
@@ -261,6 +266,10 @@ export const StyledDataViz = styled.div`
 
     /* MH-Theme/Elevation/Medium */
     box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.10);
+
+    .navigation-panel {
+      width: 100%;
+    }
   
     .header {
       display: grid;
@@ -521,6 +530,7 @@ export const StyledDataViz = styled.div`
       display: grid;
       align-content: baseline;
       grid-gap: 5px;
+      width: 100%;
 
       .header {
         display: grid;
