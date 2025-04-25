@@ -146,6 +146,7 @@ print("Py code parameters", parameters)
         <label htmlFor="graphTitle" className="header-text">Title</label>
         <input
           className="input-box"
+          placeholder="Effect of condition on variable"
           id={`title-${sectionId}`}
           type="text"
           name="graphTitle"
@@ -176,7 +177,7 @@ print("Py code parameters", parameters)
         <label htmlFor="dependentVariable" className="header-text">What is the name of your Dependent Variable (DV)?</label>
         <input
           className="input-box"
-          placeholder="Dependant variable"
+          placeholder="Dependent variable"
           id={`dependentVariable-${sectionId}`}
           type="text"
           name="dependentVariable"
@@ -188,7 +189,7 @@ print("Py code parameters", parameters)
           <label htmlFor="independentVariable" className="header-text">What is the name of your Independent Variable (IV)?</label>
           <input
             className="input-box"
-            placeholder="Independant variable"
+            placeholder="Independent variable"
             id={`independentVariable-${sectionId}`}
             type="text"
             name="independentVariable"
@@ -268,11 +269,11 @@ print("Py code parameters", parameters)
           <div>Copy graph to clipboard</div>
           <img src={`/assets/icons/visualize/clipboard-copy.svg`} />
         </div>
-        {(user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
-          user?.permissions?.map((p) => p?.name).includes("TEACHER") ||
-          user?.permissions
-            ?.map((p) => p?.name)
-            .includes("MENTOR")) && (
+        {(
+          // user?.permissions?.map((p) => p?.name).includes("MENTOR") ||
+          // user?.permissions?.map((p) => p?.name).includes("TEACHER") ||
+          user?.permissions?.map((p) => p?.name).includes("ADMIN")
+        ) && (
             // .includes("STUDENT")) && ( //// will include students later
 
               <div className="clipboard-AI-copy-button" onClick={copyAiToClipboard}>

@@ -7,6 +7,7 @@ export default function TemplateSelector({
 import numpy as np
 import pandas as pd
 import json as json
+import textwrap
 await micropip.install("matplotlib") 
 import matplotlib.pyplot as plt
 plt.xkcd()
@@ -16,20 +17,30 @@ plt.xkcd()
 # AXES #######################################################################
 
 independentVariable = parameters["independentVariable"] if "independentVariable" in parameters else "independent Variable"
+independentVariable = "\n".join(textwrap.wrap(independentVariable, width=15))
 dependentVariable = parameters["dependentVariable"] if "dependentVariable" in parameters else "dependent variable"
+dependentVariable = "\n".join(textwrap.wrap(dependentVariable, width=15))
 
 ivConditions =  int(parameters["ivConditions"]) if "ivConditions" in parameters else 2  
 
-conditionNames = []
+# Extract condition names using the index in the key
+condition_items = []
 for key, value in parameters.items():
     if key.startswith("condition"):
-        conditionNames.append(value)
+        index = int(key.replace("condition", ""))
+        condition_items.append((index, value))
+condition_items.sort()
+conditionNames = [value for _, value in condition_items]
 
-conditionRanks = []
+# Extract group ranks using the index in the key
+group_items = []
 for key, value in parameters.items():
     if key.startswith("group"):
-        # Convert value to int when appending to conditionRanks
-        conditionRanks.append(int(value))  # make integers
+        index = int(key.replace("group", ""))
+        group_items.append((index, int(value)))
+group_items.sort()
+conditionRanks = [value for _, value in group_items]
+
 
 print("conditionRanks") 
 print(conditionRanks) 
@@ -39,6 +50,7 @@ print(conditionNames)
 # OPTIONS ####################################################################
 
 graphTitle = parameters["graphTitle"] if "graphTitle" in parameters else "Effect of Condition on Performance"
+graphTitle = "\n".join(textwrap.wrap(graphTitle, width=15))
 
 # Generate data for the bar plot
 def generate_ranked_data(condition_ranks, available_ranks=ivConditions, max_value=100):

@@ -24,7 +24,7 @@ export default function AggregateVarSelector({
   
   const handleAddition = (e, { value }) => {
     setItems((prevItems) => [
-      ...prevItems,
+      ...(prevItems || []),
       { key: value, text: value, value },
     ]);
     console.log(items);
