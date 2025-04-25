@@ -332,6 +332,8 @@ export const StyledDataViz = styled.div`
         flex-direction: column;
         align-items: flex-end;
         gap: 10px;
+        border: 1px solid transparent;
+
 
         &:hover {
           border-radius: 8px;
