@@ -351,11 +351,15 @@ export const StyledDataViz = styled.div`
         flex-direction: column;
         align-items: flex-end;
         gap: 10px;
-
+        border-left: 3px solid var(--MH-Theme-Neutrals-Light-Green, #F6F9F8);
+        
         &:hover {
-          border-radius: 8px;
-          border: 1px solid var(--State-Layers-On-Secondary-Container-Opacity-12, rgba(74, 68, 89, 0.12));
-          box-shadow: 2px 2px 12px 0px rgba(0, 0, 0, 0.15);
+          border-left: 3px solid #F9D978;;
+          // border: 1px solid var(--State-Layers-On-Secondary-Container-Opacity-12, rgba(74, 68, 89, 0.12));
+        }
+        
+        &.active {
+          border-left: 3px solid #F2BE42;
         }
 
         .journal-header {
@@ -433,7 +437,7 @@ export const StyledDataViz = styled.div`
               
             }
             .selected {
-              border-right: 3px solid var(--MH-Theme-Accent-Base, #F2BE42);
+              border-left: 3px solid var(--MH-Theme-Accent-Base, #F2BE42);
             }
 
             .component-section {
