@@ -101,7 +101,7 @@ export default function ProcessManager({
     <StyledDataViz>
       <TopNav projectId={projectId} studyId={studyId} chapter={chapter} />
       <div className="main">
-        <div className="vizMenu">
+        <div className={`vizMenu ${page === "browse" ? "navigation-mode" : ""}`}>
           <Overview
             user={user}
             page={page}

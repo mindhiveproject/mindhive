@@ -9,40 +9,19 @@ export const StyledDataViz = styled.div`
   background: #f7f9f8;
 
   .vizMenu {
-    display: inline-flex; /* Use inline-flex to allow the width to adjust based on children */
+    display: inline-flex;
     flex-direction: column;
     align-items: stretch; /* Ensure children stretch to fill the container */
     gap: 10px; /* Add spacing between children */
     background: #f7f9f8;
     padding: 0px 8px 0px 16px;
     border-radius: 8px;
-    // box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); 
+ 
+    .navigation-mode {
+      max-width: 400px;
+    }
   }
-  // .vizMenu {
-  //   display:inline-flex;
-  //   flex-direction:column;
-  //   align-items:baseline
-
-
-  //   display: flex;
-  //   width: 320px;
-  //   // max-width: 350px;
-  //   padding: 20px 16px;
-  //   flex-direction: column;
-  //   align-items: flex-end;
-  //   gap: 10px;
-  //   background: #F7F9F8;
-  
-  
-  //   // display: grid;
-  //   // grid-template-columns: 1fr;
-  //   // grid-gap: 34px;
-  //   // overflow-y: auto;
-  //   // height: 100%;
-  //   // background: #fcfdfc;
-  //   // box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
-  //   // border-radius: 8px;
-  // }
+ 
   .item {
     padding: 0px !important;
   }
@@ -258,7 +237,6 @@ export const StyledDataViz = styled.div`
     
     display: flex;
     width: 100%;
-    max-width: 400px;
     // padding: 20px 16px;
     flex-direction: column;
     align-items: flex-end;
@@ -269,7 +247,11 @@ export const StyledDataViz = styled.div`
 
     /* MH-Theme/Elevation/Medium */
     box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.10);
-  
+
+    .navigation-panel {
+      width: 100%;
+    }
+
     .header {
       display: grid;
       grid-template-columns: auto 1fr auto;
@@ -350,11 +332,15 @@ export const StyledDataViz = styled.div`
         flex-direction: column;
         align-items: flex-end;
         gap: 10px;
-
+        border-left: 3px solid var(--MH-Theme-Neutrals-Light-Green, #F6F9F8);
+        
         &:hover {
-          border-radius: 8px;
-          border: 1px solid var(--State-Layers-On-Secondary-Container-Opacity-12, rgba(74, 68, 89, 0.12));
-          box-shadow: 2px 2px 12px 0px rgba(0, 0, 0, 0.15);
+          border-left: 3px solid #F9D978;;
+          // border: 1px solid var(--State-Layers-On-Secondary-Container-Opacity-12, rgba(74, 68, 89, 0.12));
+        }
+        
+        &.active {
+          border-left: 3px solid #F2BE42;
         }
 
         .journal-header {
@@ -432,7 +418,7 @@ export const StyledDataViz = styled.div`
               
             }
             .selected {
-              border-right: 3px solid var(--MH-Theme-Accent-Base, #F2BE42);
+              border-left: 3px solid var(--MH-Theme-Accent-Base, #F2BE42);
             }
 
             .component-section {
@@ -529,6 +515,7 @@ export const StyledDataViz = styled.div`
       display: grid;
       align-content: baseline;
       grid-gap: 5px;
+      width: 100%;
 
       .header {
         display: grid;
