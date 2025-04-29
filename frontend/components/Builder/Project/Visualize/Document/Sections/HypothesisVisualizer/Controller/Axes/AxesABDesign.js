@@ -135,7 +135,6 @@ print("Py code parameters", parameters)
     updateCode({ code, newJsonObject });
   }, [selectors]);
 
-  console.log(selectors)
   return (
     <div className="graph-dashboard">
       <div className="header">

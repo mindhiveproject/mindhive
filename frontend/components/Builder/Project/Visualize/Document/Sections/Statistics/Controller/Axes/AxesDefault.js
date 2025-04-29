@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dropdown,
   DropdownMenu,
@@ -20,11 +20,48 @@ export default function Axes({
   selectors,
   handleContentChange,
 }) {
-  const [selectedDataFormat, setSelectedDataFormat] = useState(
-    selectors["dataType"] || "quant"
-  );
-
+  // console.log("Axes component rendered");
+  // console.log(selectors);
+  const [selectedDataFormat, setSelectedDataFormat] = useState(selectors["dataType"] || "quant");
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [jsonObject, setJsonObject] = useState(selectors);
+
+  const connectSelectorsCode = `
+#html_output = js.document.getElementById('figure-${sectionId}')
+#colMultiple = None if js.document.getElementById("colMultiple-${sectionId}") == None else js.document.getElementById("colMultiple-${sectionId}")
+#colMultiple_json = colMultiple.value.split(",")
+#columns = colMultiple_json
+#groupVariable= None if js.document.getElementById("groupVariable-${sectionId}") == None else js.document.getElementById("groupVariable-${sectionId}").value
+#dataType= None if js.document.getElementById("dat aType-${sectionId}") == None else js.document.getElementById("dataType-${sectionId}").value
+#isQuant = dataType == "quant"
+
+html_output = js.document.getElementById('figure-${sectionId}')
+parameters = dict(json.loads('dashboardJSON'))
+`;
+
+  const options = variables.map((variable) => ({
+    key: variable?.field,
+    value: variable?.displayName || variable?.field,
+    text: variable?.displayName || variable?.field,
+  }));
+
+  const updateCode = async ({ code, newJsonObject }) => {
+    const updatedConnectSelectorsCode = connectSelectorsCode.replace('dashboardJSON', JSON.stringify(newJsonObject));
+    await pyodide.runPythonAsync(updatedConnectSelectorsCode);
+    await pyodide.runPythonAsync(code);
+    if (runCode) {
+      runCode({ code }); // Trigger the runCode function passed from StateManager
+    }
+  };
+
+  const onSelectorChange = ({ target }) => {
+    handleContentChange({
+      newContent: {
+        selectors: { ...selectors, [target?.name]: target?.value },
+      },
+    });
+    updateCode({ code });
+  };
 
   const handleClick = (e, titleProps) => {
     const { index } = titleProps;
@@ -41,43 +78,27 @@ export default function Axes({
     },
   ];
 
-  const connectSelectorsCode = `
-html_output = js.document.getElementById('figure-${sectionId}')
-
-colMultiple = None if js.document.getElementById("colMultiple-${sectionId}") == None else js.document.getElementById("colMultiple-${sectionId}")
-colMultiple_json = colMultiple.value.split(",")
-columns = colMultiple_json
-
-groupVariable= None if js.document.getElementById("groupVariable-${sectionId}") == None else js.document.getElementById("groupVariable-${sectionId}").value
-
-dataType= None if js.document.getElementById("dataType-${sectionId}") == None else js.document.getElementById("dataType-${sectionId}").value
-
-isQuant = dataType == "quant"
-`;
-  const options = variables.map((variable) => ({
-    key: variable?.field,
-    value: variable?.field,
-    text: variable?.displayName || variable?.field,
-  }));
-
-  const updateCode = async ({ code }) => {
-    await pyodide.runPythonAsync(connectSelectorsCode);
+  const onSelectorChoice = (option) => {
+    const newDataFormat = option?.value;
+    setSelectedDataFormat(newDataFormat);
+  
+    // Update selectors and notify parent
+    const updatedSelectors = { ...selectors, dataType: newDataFormat };
+    handleContentChange({
+      newContent: {
+        selectors: updatedSelectors,
+      },
+    });
+  
+    // Optionally re-run the code to reflect changes in Render
     runCode({ code });
   };
 
-  const onSelectorChange = ({ target }) => {
-    handleContentChange({
-      newContent: {
-        selectors: { ...selectors, [target?.name]: target?.value },
-      },
-    });
-    updateCode({ code });
-  };
-
-  const onSelectorChoice = (option) => {
-    setSelectedDataFormat(option?.value);
-    onSelectorChange({ target: { name: "dataType", value: option?.value } });
-  };
+  useEffect(() => {  
+    const newJsonObject = { ...selectors };
+    setJsonObject(newJsonObject);
+    updateCode({ code, newJsonObject });
+  }, [selectors]);
 
   return (
     <div className="selectorsStats">

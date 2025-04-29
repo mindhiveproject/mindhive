@@ -41,12 +41,6 @@ for key, value in parameters.items():
 group_items.sort()
 conditionRanks = [value for _, value in group_items]
 
-
-print("conditionRanks") 
-print(conditionRanks) 
-print("conditionNames") 
-print(conditionNames) 
-
 # OPTIONS ####################################################################
 
 graphTitle = parameters["graphTitle"] if "graphTitle" in parameters else "Effect of Condition on Performance"
@@ -188,9 +182,6 @@ img_buffer.seek(0)
 img_base64 = base64.b64encode(img_buffer.read()).decode('utf-8')
 fig_html = f'<img src="data:image/png;base64,{img_base64}" />'
 
-  
-# Display the plot
-js.render_html(html_output, fig_html)
   `;
 
   const sectionCodeEnd = `  
