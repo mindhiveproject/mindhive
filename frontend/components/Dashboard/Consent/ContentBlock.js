@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import moment from "moment";
-import { Icon } from "semantic-ui-react";
-import Link from "next/link";
+import { useRef } from "react";
+
 import JoditEditor from "../../Jodit/Editor";
 
 export default function ContentBlock({ index, block, updateInfo }) {
+  const content = useRef(block?.text);
+
   return (
     <div className="singlePost">
       <div className="header">
@@ -12,7 +12,7 @@ export default function ContentBlock({ index, block, updateInfo }) {
       </div>
 
       <JoditEditor
-        content={block?.text}
+        content={content?.current}
         setContent={(content) => updateInfo({ content, index })}
       />
     </div>
