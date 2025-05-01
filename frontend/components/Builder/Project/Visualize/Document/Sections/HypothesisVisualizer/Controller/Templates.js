@@ -13,15 +13,17 @@ import matplotlib.pyplot as plt
 plt.xkcd()
   `;
 
-  const ABDesignCode = String.raw`
-# AXES #######################################################################
-
+  const ABDesignCode = String.raw`# Getting variable from dashboard ###########################################
 independentVariable = parameters["independentVariable"] if "independentVariable" in parameters else "independent Variable"
 independentVariable = "\n".join(textwrap.wrap(independentVariable, width=15))
-dependentVariable = parameters["dependentVariable"] if "dependentVariable" in parameters else "dependent variable"
-dependentVariable = "\n".join(textwrap.wrap(dependentVariable, width=15))
-
+dependentVariable   = parameters["dependentVariable"] if "dependentVariable" in parameters else "dependent variable"
+dependentVariable   = "\n".join(textwrap.wrap(dependentVariable, width=15))
 ivConditions =  int(parameters["ivConditions"]) if "ivConditions" in parameters else 2  
+
+graphTitle          = parameters["graphTitle"] if "graphTitle" in parameters else "Effect of IV on DV"
+graphTitle          = "\n".join(textwrap.wrap(graphTitle, width=30))
+
+# AXES #######################################################################
 
 # Extract condition names using the index in the key
 condition_items = []
@@ -41,16 +43,7 @@ for key, value in parameters.items():
 group_items.sort()
 conditionRanks = [value for _, value in group_items]
 
-
-print("conditionRanks") 
-print(conditionRanks) 
-print("conditionNames") 
-print(conditionNames) 
-
 # OPTIONS ####################################################################
-
-graphTitle = parameters["graphTitle"] if "graphTitle" in parameters else "Effect of Condition on Performance"
-graphTitle = "\n".join(textwrap.wrap(graphTitle, width=15))
 
 # Generate data for the bar plot
 def generate_ranked_data(condition_ranks, available_ranks=ivConditions, max_value=100):
@@ -70,7 +63,8 @@ bars = ax.bar(conditionNames, values, capsize=5,
 
 ax.set_ylim(0, max_y)
 ax.set_ylabel(dependentVariable)
-ax.set_title(f"{graphTitle}\n{independentVariable} vs {dependentVariable}", fontsize=11)
+plt.xticks(rotation=45)
+ax.set_title("{}".format(graphTitle if graphTitle != "" else f"{independentVariable} vs {dependentVariable}"), fontsize=11)
 
 # Annotate bars with ranks
 for bar, rank in zip(bars, conditionRanks):
@@ -93,14 +87,12 @@ img_base64 = base64.b64encode(img_buffer.read()).decode('utf-8')
 fig_html = f'<img src="data:image/png;base64,{img_base64}" />'
 `;
 
-  const CorrAnalysisCode = String.raw`
+  const CorrAnalysisCode = String.raw`# Getting variable from dashboard ###########################################
 independentVariable = parameters["independentVariable"] if "independentVariable" in parameters else "Independent Variable"
 dependentVariable = parameters["dependentVariable"] if "dependentVariable" in parameters else "Dependent Variable"
 ivDirectionality = parameters["ivDirectionality"] if "ivDirectionality" in parameters else "more"
 dvDirectionality = parameters["dvDirectionality"] if "dvDirectionality" in parameters else "more"
 graphTitle = parameters["graphTitle"] if "graphTitle" in parameters else "Correlational Analysis"
-
-print(independentVariable, dependentVariable, ivDirectionality, dvDirectionality)
 
 # AXES #######################################################################
 xaxis = independentVariable
@@ -188,9 +180,6 @@ img_buffer.seek(0)
 img_base64 = base64.b64encode(img_buffer.read()).decode('utf-8')
 fig_html = f'<img src="data:image/png;base64,{img_base64}" />'
 
-  
-# Display the plot
-js.render_html(html_output, fig_html)
   `;
 
   const sectionCodeEnd = `  

@@ -877,6 +877,7 @@ export const StyledDataViz = styled.div`
         }
         .graphArea {
           display: grid;
+          justify-items: center;
           /* max-width: 100%; */
           max-height: 80vh;
         }

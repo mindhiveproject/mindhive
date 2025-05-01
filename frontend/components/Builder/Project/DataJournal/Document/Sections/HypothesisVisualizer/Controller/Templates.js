@@ -7,38 +7,43 @@ export default function TemplateSelector({
 import numpy as np
 import pandas as pd
 import json as json
+import textwrap
 await micropip.install("matplotlib") 
 import matplotlib.pyplot as plt
 plt.xkcd()
   `;
 
-  const ABDesignCode = String.raw`
-# AXES #######################################################################
-
+  const ABDesignCode = String.raw`# Getting variable from dashboard ###########################################
 independentVariable = parameters["independentVariable"] if "independentVariable" in parameters else "independent Variable"
-dependentVariable = parameters["dependentVariable"] if "dependentVariable" in parameters else "dependent variable"
-
+independentVariable = "\n".join(textwrap.wrap(independentVariable, width=15))
+dependentVariable   = parameters["dependentVariable"] if "dependentVariable" in parameters else "dependent variable"
+dependentVariable   = "\n".join(textwrap.wrap(dependentVariable, width=15))
 ivConditions =  int(parameters["ivConditions"]) if "ivConditions" in parameters else 2  
 
-conditionNames = []
+graphTitle          = parameters["graphTitle"] if "graphTitle" in parameters else "Effect of IV on DV"
+graphTitle          = "\n".join(textwrap.wrap(graphTitle, width=30))
+
+# AXES #######################################################################
+
+# Extract condition names using the index in the key
+condition_items = []
 for key, value in parameters.items():
     if key.startswith("condition"):
-        conditionNames.append(value)
+        index = int(key.replace("condition", ""))
+        condition_items.append((index, value))
+condition_items.sort()
+conditionNames = [value for _, value in condition_items]
 
-conditionRanks = []
+# Extract group ranks using the index in the key
+group_items = []
 for key, value in parameters.items():
     if key.startswith("group"):
-        # Convert value to int when appending to conditionRanks
-        conditionRanks.append(int(value))  # make integers
-
-print("conditionRanks") 
-print(conditionRanks) 
-print("conditionNames") 
-print(conditionNames) 
+        index = int(key.replace("group", ""))
+        group_items.append((index, int(value)))
+group_items.sort()
+conditionRanks = [value for _, value in group_items]
 
 # OPTIONS ####################################################################
-
-graphTitle = parameters["graphTitle"] if "graphTitle" in parameters else "Effect of Condition on Performance"
 
 # Generate data for the bar plot
 def generate_ranked_data(condition_ranks, available_ranks=ivConditions, max_value=100):
@@ -58,7 +63,8 @@ bars = ax.bar(conditionNames, values, capsize=5,
 
 ax.set_ylim(0, max_y)
 ax.set_ylabel(dependentVariable)
-ax.set_title(f"{graphTitle}\n{independentVariable} vs {dependentVariable}", fontsize=11)
+plt.xticks(rotation=45)
+ax.set_title("{}".format(graphTitle if graphTitle != "" else f"{independentVariable} vs {dependentVariable}"), fontsize=11)
 
 # Annotate bars with ranks
 for bar, rank in zip(bars, conditionRanks):
@@ -81,14 +87,12 @@ img_base64 = base64.b64encode(img_buffer.read()).decode('utf-8')
 fig_html = f'<img src="data:image/png;base64,{img_base64}" />'
 `;
 
-  const CorrAnalysisCode = String.raw`
+  const CorrAnalysisCode = String.raw`# Getting variable from dashboard ###########################################
 independentVariable = parameters["independentVariable"] if "independentVariable" in parameters else "Independent Variable"
 dependentVariable = parameters["dependentVariable"] if "dependentVariable" in parameters else "Dependent Variable"
 ivDirectionality = parameters["ivDirectionality"] if "ivDirectionality" in parameters else "more"
 dvDirectionality = parameters["dvDirectionality"] if "dvDirectionality" in parameters else "more"
 graphTitle = parameters["graphTitle"] if "graphTitle" in parameters else "Correlational Analysis"
-
-print(independentVariable, dependentVariable, ivDirectionality, dvDirectionality)
 
 # AXES #######################################################################
 xaxis = independentVariable
@@ -176,9 +180,6 @@ img_buffer.seek(0)
 img_base64 = base64.b64encode(img_buffer.read()).decode('utf-8')
 fig_html = f'<img src="data:image/png;base64,{img_base64}" />'
 
-  
-# Display the plot
-js.render_html(html_output, fig_html)
   `;
 
   const sectionCodeEnd = `  
