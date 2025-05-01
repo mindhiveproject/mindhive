@@ -6,6 +6,7 @@ import SignIn from "../../Auth/Login";
 import RoleSignup from "../../Auth/SignupRoles/Role";
 import Details from "./Details";
 import Consents from "./Consents/Main";
+import ConsentSkippedMessage from "./Consents/ConsentSkippedMessage";
 
 export default function FlowWrapper({ query, user, study, step }) {
   const { guest } = query;
@@ -29,6 +30,10 @@ export default function FlowWrapper({ query, user, study, step }) {
       break;
     default:
       header = "Participation";
+  }
+
+  if (step === "consent-skipped") {
+    return <ConsentSkippedMessage />;
   }
 
   // for the cases when the direct link is copied in browser but there is no user logged in

@@ -19,6 +19,7 @@ import { CREATE_STUDY, UPDATE_STUDY } from "../../../Mutations/Study";
 import { StyledParticipantPage } from "../../../styles/StyledBuilder";
 
 import InDev from "../../../Global/InDev";
+import { disconnect } from "process";
 
 export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
   const router = useRouter();
@@ -146,7 +147,7 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
           : null,
         consent: inputs?.consent?.length
           ? { connect: inputs?.consent.map((c) => ({ id: c?.id })) }
-          : null,
+          : { disconnect: study?.consent?.map((c) => ({ id: c?.id })) },
       },
     },
     refetchQueries: [
