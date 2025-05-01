@@ -1,5 +1,5 @@
-import Parameters from "./Parameters";
 import ShareStudy from "./Share";
+import Parameters from "./Parameters";
 
 export default function Settings({
   user,

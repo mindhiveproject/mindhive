@@ -6,15 +6,29 @@ export default function Parameters({
   handleChange,
   handleMultipleUpdate,
 }) {
+  // const settings = study.settings || {
+  //   forbidRetake: true,
+  //   hideParticipateButton: false,
+  //   showEmailNotificationPropmt: false,
+  //   askStudentsNYC: false,
+  //   zipCode: false,
+  //   guestParticipation: true,
+  //   consentObtained: false,
+  //   proceedToFirstTask: true,
+  //   useExternalDevices: false,
+  //   sonaId: false,
+  //   minorsBlocked: false,
+  // };
+
   const settings = study.settings || {
     forbidRetake: true,
     hideParticipateButton: false,
     showEmailNotificationPropmt: false,
     askStudentsNYC: false,
     zipCode: false,
-    guestParticipation: true,
+    guestParticipation: false,
     consentObtained: false,
-    proceedToFirstTask: true,
+    proceedToFirstTask: false,
     useExternalDevices: false,
     sonaId: false,
     minorsBlocked: false,
@@ -25,7 +39,6 @@ export default function Parameters({
     "hideParticipateButton",
     "guestParticipation",
     "consentObtained",
-    // "zipCode",
     "proceedToFirstTask",
     "forbidRetake",
   ];
