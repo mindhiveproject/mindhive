@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Modal, Icon, Dropdown, Button, Popup } from "semantic-ui-react";
+import { Modal, Icon, Dropdown, Button, Message } from "semantic-ui-react";
 import { useState } from "react";
 import styled from "styled-components";
 import Link from "next/link";
@@ -17,12 +17,14 @@ export default function ProjectManager(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [projectId, setProjectId] = useState(null);
   const [projectName, setProjectName] = useState("");
+  const [localProjects, setLocalProjects] = useState(
+    props?.data?.projects || []
+  );
 
-  const projects = props?.data?.projects || [];
-  const hasProjects = projects.length > 0;
+  const hasProjects = localProjects.length > 0;
 
   // Sort projects: main projects (isMain: true) at the top
-  const sortedProjects = [...projects].sort((a, b) => {
+  const sortedProjects = [...localProjects].sort((a, b) => {
     if (a.isMain && !b.isMain) return -1;
     if (!a.isMain && b.isMain) return 1;
     return 0;
@@ -35,7 +37,7 @@ export default function ProjectManager(props) {
 
   const projectOptions =
     availableProjects
-      ?.filter((project) => !projects.some((p) => p.id === project.id))
+      ?.filter((project) => !localProjects.some((p) => p.id === project.id))
       ?.map((project) => ({
         key: project?.id,
         text: project?.title,
@@ -69,12 +71,56 @@ export default function ProjectManager(props) {
 
   const [updateProject, { loading: updateLoading, error: updateError }] =
     useMutation(UPDATE_PROJECT_BOARD, {
-      refetchQueries: [
-        {
-          query: GET_STUDENTS_DASHBOARD_DATA,
-          variables: { classId: props?.classId },
-        },
-      ],
+      update(cache, { data: { updateProposalBoard } }) {
+        // Only update cache if classId is valid
+        if (!props?.classId) return;
+
+        try {
+          // Read the current cache for GET_STUDENTS_DASHBOARD_DATA
+          const cacheData = cache.readQuery({
+            query: GET_STUDENTS_DASHBOARD_DATA,
+            variables: { classId: props?.classId },
+          });
+
+          // Skip if cache data is not available
+          if (!cacheData || !cacheData.profiles) return;
+
+          const { profiles } = cacheData;
+
+          // Update the cache with the new isMain value
+          const updatedProfiles = profiles.map((profile) => {
+            if (profile.id === props?.data?.id) {
+              return {
+                ...profile,
+                collaboratorInProposal: profile.collaboratorInProposal.map(
+                  (proj) =>
+                    proj.id === updateProposalBoard.id
+                      ? { ...proj, isMain: updateProposalBoard.isMain }
+                      : proj
+                ),
+              };
+            }
+            return profile;
+          });
+
+          // Write the updated data back to the cache
+          cache.writeQuery({
+            query: GET_STUDENTS_DASHBOARD_DATA,
+            variables: { classId: props?.classId },
+            data: { profiles: updatedProfiles },
+          });
+        } catch (err) {
+          console.warn("Cache update skipped due to missing data:", err);
+        }
+      },
+      refetchQueries: props?.classId
+        ? [
+            {
+              query: GET_STUDENTS_DASHBOARD_DATA,
+              variables: { classId: props?.classId },
+            },
+          ]
+        : [],
     });
 
   const assignToProject = async () => {
@@ -126,6 +172,13 @@ export default function ProjectManager(props) {
 
   const toggleProjectAsMain = async ({ projectId, isMain }) => {
     try {
+      // Optimistically update local state
+      setLocalProjects((prevProjects) =>
+        prevProjects.map((proj) =>
+          proj.id === projectId ? { ...proj, isMain } : proj
+        )
+      );
+
       await updateProject({
         variables: {
           id: projectId,
@@ -133,9 +186,19 @@ export default function ProjectManager(props) {
             isMain,
           },
         },
+        optimisticResponse: {
+          updateProposalBoard: {
+            __typename: "ProposalBoard",
+            id: projectId,
+            isMain,
+          },
+        },
       });
     } catch (err) {
       console.error("Error toggling main project:", err);
+      // Revert local state on error
+      setLocalProjects(props?.data?.projects || []);
+      alert("Failed to update main project status. Please try again.");
     }
   };
 
@@ -147,7 +210,7 @@ export default function ProjectManager(props) {
       trigger={
         <StyledTriggerButton>
           <Icon name="book" />
-          Manage Projects ({projects.length})
+          Manage Projects ({localProjects.length})
         </StyledTriggerButton>
       }
       dimmer="blurring"
@@ -185,35 +248,33 @@ export default function ProjectManager(props) {
                         >
                           <div className="project-header">
                             <h3>{project.title}</h3>
-                            <Popup
-                              content={
-                                project.isMain
+                            <div className="tooltip-container">
+                              <div className="main-toggle-container">
+                                <Button
+                                  toggle
+                                  active={project?.isMain}
+                                  onClick={() =>
+                                    toggleProjectAsMain({
+                                      projectId: project?.id,
+                                      isMain: !project?.isMain,
+                                    })
+                                  }
+                                  disabled={updateLoading}
+                                  aria-label={`Set ${project?.title} as main project`}
+                                  className="main-toggle"
+                                />
+                                <span className="toggle-label">
+                                  {project.isMain
+                                    ? "Main Project"
+                                    : "Set as Main"}
+                                </span>
+                              </div>
+                              <div className="tooltip">
+                                {project.isMain
                                   ? "This is the main project. Click to unset."
-                                  : "Set this as the main project for the student."
-                              }
-                              trigger={
-                                <div className="main-toggle-container">
-                                  <Button
-                                    toggle
-                                    active={project?.isMain}
-                                    onClick={() =>
-                                      toggleProjectAsMain({
-                                        projectId: project?.id,
-                                        isMain: !project?.isMain,
-                                      })
-                                    }
-                                    disabled={updateLoading}
-                                    aria-label={`Set ${project?.title} as main project`}
-                                    className="main-toggle"
-                                  />
-                                  <span className="toggle-label">
-                                    {project.isMain
-                                      ? "Main Project"
-                                      : "Set as Main"}
-                                  </span>
-                                </div>
-                              }
-                            />
+                                  : "Set this as the main project for the student."}
+                              </div>
+                            </div>
                           </div>
                           <div className="project-info">
                             <p>{project.study?.title || "No study assigned"}</p>
@@ -422,37 +483,66 @@ const StyledModal = styled.div`
             margin: 0;
           }
 
-          .main-toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+          .tooltip-container {
+            position: relative;
+            display: inline-block;
 
-            .main-toggle {
-              .ui.toggle.button {
-                width: 60px;
-                height: 30px;
-                background-color: ${(props) =>
-                  props.active ? "#3d85b0" : "#b0b0b0"};
-                color: #ffffff;
-                font-size: 14px;
-                padding: 6px 12px;
+            .main-toggle-container {
+              display: flex;
+              align-items: center;
+              gap: 8px;
 
-                &:hover {
+              .main-toggle {
+                .ui.toggle.button {
+                  width: 60px;
+                  height: 30px;
                   background-color: ${(props) =>
-                    props.active ? "#326d94" : "#999999"};
-                }
+                    props.active ? "#3d85b0" : "#b0b0b0"};
+                  color: #ffffff;
+                  font-size: 14px;
+                  padding: 6px 12px;
 
-                &.disabled {
-                  background-color: #d0d0d0;
-                  cursor: not-allowed;
+                  &:hover {
+                    background-color: ${(props) =>
+                      props.active ? "#326d94" : "#999999"};
+                  }
+
+                  &.disabled {
+                    background-color: #d0d0d0;
+                    cursor: not-allowed;
+                  }
                 }
+              }
+
+              .toggle-label {
+                font-size: 14px;
+                font-weight: 600;
+                color: ${(props) => (props.isMain ? "#3d85b0" : "#666666")};
               }
             }
 
-            .toggle-label {
-              font-size: 14px;
-              font-weight: 600;
-              color: ${(props) => (props.isMain ? "#3d85b0" : "#666666")};
+            .tooltip {
+              visibility: hidden;
+              background-color: #333333;
+              color: #ffffff;
+              font-size: 12px;
+              font-weight: normal;
+              text-align: center;
+              border-radius: 4px;
+              padding: 8px;
+              position: absolute;
+              z-index: 1000;
+              top: -40px;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 200px;
+              opacity: 0;
+              transition: opacity 0.2s ease;
+            }
+
+            &:hover .tooltip {
+              visibility: visible;
+              opacity: 1;
             }
           }
         }
