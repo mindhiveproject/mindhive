@@ -96,12 +96,9 @@ export default function ProjectManager(props) {
       },
     });
     setProjectId(null);
-    setIsOpen(false);
   };
 
   const disconnectFromProject = async (projectId) => {
-    const project = projects.find((p) => p.id === projectId);
-    const studyId = project?.study?.id;
     await assignStudent({
       variables: {
         input: {
@@ -161,7 +158,7 @@ export default function ProjectManager(props) {
         <Modal.Content>
           <div className="modalHeader">
             <h1>Manage Projects for {props?.data?.username}</h1>
-            <p>View, disconnect, or assign new projects for the student</p>
+            <p>View, create, or assign projects for the student</p>
           </div>
           {updateError && (
             <Message negative>
@@ -255,7 +252,7 @@ export default function ProjectManager(props) {
                             className="disconnect-button"
                             onClick={() => disconnectFromProject(project.id)}
                           >
-                            Disconnect
+                            Remove as a collaborator
                           </button>
                         </div>
                       ))}

@@ -230,7 +230,7 @@ export default function StudyManager(props) {
         <Modal.Content>
           <div className="modalHeader">
             <h1>Manage Studies for {props?.data?.username}</h1>
-            <p>View, disconnect, or assign new studies for the student</p>
+            <p>View, create, or assign studies for the student</p>
           </div>
           <StyledClass>
             <div className="dashboard">
@@ -338,7 +338,7 @@ export default function StudyManager(props) {
                               className="disconnect-button"
                               onClick={() => disconnectFromStudy(study.id)}
                             >
-                              Disconnect
+                              Remove as a collaborator
                             </button>
                           </div>
                         ))}
