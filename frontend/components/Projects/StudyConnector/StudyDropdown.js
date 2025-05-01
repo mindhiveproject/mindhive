@@ -178,7 +178,7 @@ const Label = styled.span`
   font-family: Nunito, sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: #666666;
+  color: #00635a;
   flex-shrink: 0;
 `;
 

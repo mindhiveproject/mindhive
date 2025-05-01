@@ -82,7 +82,7 @@ const StyledProject = styled.div`
       grid-gap: 20px;
       align-items: center;
       .title {
-        color: #3d85b0;
+        color: #00635a;
       }
     }
     .right {

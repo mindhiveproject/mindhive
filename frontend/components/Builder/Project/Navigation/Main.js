@@ -5,8 +5,6 @@ import Link from "next/link";
 import Connect from "./Connect/Main";
 import ConnectStudy from "./ConnectStudy/Main";
 
-import { Dropdown, DropdownMenu } from "semantic-ui-react";
-
 import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
 import StudyDropdown from "../../../Projects/StudyConnector/StudyDropdown";
 
@@ -19,10 +17,6 @@ const items = [
     value: "builder",
     name: "Study builder",
   },
-  // {
-  //   value: "review",
-  //   name: "Review",
-  // },
   {
     value: "page",
     name: "Participant Page",
@@ -105,12 +99,6 @@ export default function Navigation({
           <div className="studyTitle">
             <span className="title">Project </span> {project?.title}
           </div>
-
-          {/* {project?.study?.title && (
-            <div className="studyTitle">
-              <span className="title"> Study </span> {project?.study?.title}
-            </div>
-          )} */}
           {project?.study && (
             <div className="studyTitle">
               <StudyDropdown user={user} project={project} />

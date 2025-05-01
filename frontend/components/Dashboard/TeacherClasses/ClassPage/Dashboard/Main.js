@@ -1,30 +1,24 @@
 import { useQuery } from "@apollo/client";
-import { useState } from "react";
-
-import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../Queries/Classes";
-
-// Mandatory CSS required by the Data Grid
+import { useState, useMemo } from "react";
+import { Icon } from "semantic-ui-react";
+import styled from "styled-components";
 import "ag-grid-community/styles/ag-grid.css";
-// Optional Theme applied to the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css";
-// React Data Grid Component
 import { AgGridReact } from "ag-grid-react";
-
-// Renderers
 import { StudentPageLink } from "./Renderers/StudentPageLink";
 import { ProjectManagerLink } from "./Renderers/ProjectManagerLink";
 import { StudyManagerLink } from "./Renderers/StudyManagerLink";
 import { SubmissionStatusLink } from "./Renderers/SubmissionStatusLink";
 import { StudySubmissionStatusLink } from "./Renderers/StudySubmissionStatusLink";
+import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../Queries/Classes";
+
+import { SelectedStudentsModal } from "./Modals/SelectedStudents";
 
 const countAndFormat = (arr) => {
-  // First count occurrences
   const counts = arr.reduce((acc, val) => {
     acc[val] = (acc[val] || 0) + 1;
     return acc;
   }, {});
-
-  // Convert to string format
   return Object.entries(counts)
     .map(([value, count]) => `${value}:${count}`)
     .join(", ");
@@ -39,17 +33,16 @@ const aggregateProposalFeedback = ({ project }) => {
         .map((question) => question?.answer)
     )
     .flat();
-  let res;
-  if (statuses && statuses.length) {
-    res = countAndFormat(statuses);
-  }
-  return res;
+  return statuses?.length ? countAndFormat(statuses) : null;
 };
 
 export default function Dashboard({ myclass, user, query }) {
   const { data, loading, error } = useQuery(GET_STUDENTS_DASHBOARD_DATA, {
     variables: { classId: myclass?.id },
   });
+
+  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const students = data?.profiles || [];
 
@@ -66,8 +59,6 @@ export default function Dashboard({ myclass, user, query }) {
       projectMentors,
       studyId,
       studyTitle,
-      collaboratorStudyId,
-      collaboratorStudyTitle,
       studyCollaborators,
       proposalStatus,
       commentsReceivedOnProposal,
@@ -147,102 +138,132 @@ export default function Dashboard({ myclass, user, query }) {
     };
   });
 
-  const [colDefs, setColDefs] = useState([
-    {
-      field: "username",
-      pinned: "left",
-      headerName: "Username",
-      cellRenderer: StudentPageLink,
-      cellRendererParams: {
-        baseUrl: "/students",
+  const columnDefs = useMemo(
+    () => [
+      {
+        field: "selection",
+        headerName: "",
+        checkboxSelection: true,
+        headerCheckboxSelection: true,
+        width: 50,
+        pinned: "left",
       },
-    },
-    {
-      field: "projectTitle",
-      headerName: "Create | Manage Project",
-      cellRenderer: ProjectManagerLink,
-      cellRendererParams: {
-        classId: myclass?.id,
-        classProposalBoardId: myclass?.templateProposal?.id,
+      {
+        field: "username",
+        pinned: "left",
+        headerName: "Username",
+        cellRenderer: StudentPageLink,
+        cellRendererParams: {
+          baseUrl: "/students",
+        },
       },
-    },
-    {
-      field: "projectTitle",
-      headerName: "Main Project",
-    },
-    { field: "projectCollaborators" },
-    { field: "projectMentors" },
-    {
-      field: "studyTitle",
-      headerName: "Create | Manage Study",
-      cellRenderer: StudyManagerLink,
-      cellRendererParams: {
-        classId: myclass?.id,
-        classProposalBoardId: myclass?.templateProposal?.id,
-        classCode: myclass?.code,
+      {
+        field: "projectTitle",
+        headerName: "Create | Manage Project",
+        cellRenderer: ProjectManagerLink,
+        cellRendererParams: {
+          classId: myclass?.id,
+          classProposalBoardId: myclass?.templateProposal?.id,
+        },
       },
-    },
-    {
-      field: "studyTitle",
-      headerName: "Main Study",
-    },
-    { field: "studyCollaborators" },
-    {
-      field: "proposalStatus",
-      cellRenderer: SubmissionStatusLink,
-      cellRendererParams: {
-        classId: myclass?.id,
-        type: "submitProposalStatus",
-        stage: "Proposal review",
-        commentField: "submitProposalOpenForComments",
+      {
+        field: "projectTitle",
+        headerName: "Main Project",
       },
-    },
-    { field: "commentsReceivedOnProposal" },
-    { field: "isProposalOpenForComments" },
-    {
-      field: "peerFeedbackStatus",
-      cellRenderer: SubmissionStatusLink,
-      cellRendererParams: {
-        classId: myclass?.id,
-        type: "peerFeedbackStatus",
-        stage: "Peer review",
-        commentField: "peerFeedbackOpenForComments",
+      { field: "projectCollaborators" },
+      { field: "projectMentors" },
+      {
+        field: "studyTitle",
+        headerName: "Create | Manage Study",
+        cellRenderer: StudyManagerLink,
+        cellRendererParams: {
+          classId: myclass?.id,
+          classProposalBoardId: myclass?.templateProposal?.id,
+          classCode: myclass?.code,
+        },
       },
-    },
-    { field: "isPeerFeedbackOpenForComments" },
-
-    {
-      field: "dataCollectionStatus",
-      cellRenderer: StudySubmissionStatusLink,
-      cellRendererParams: {
-        classId: myclass?.id,
-        stage: "Data collection",
+      {
+        field: "studyTitle",
+        headerName: "Main Study",
       },
-    },
-    { field: "dataCollectionOpenForParticipation" },
-
-    {
-      field: "projectReportStatus",
-      cellRenderer: SubmissionStatusLink,
-      cellRendererParams: {
-        classId: myclass?.id,
-        type: "projectReportStatus",
-        stage: "Project report",
-        commentField: "projectReportOpenForComments",
+      { field: "studyCollaborators" },
+      {
+        field: "proposalStatus",
+        cellRenderer: SubmissionStatusLink,
+        cellRendererParams: {
+          classId: myclass?.id,
+          type: "submitProposalStatus",
+          stage: "Proposal review",
+          commentField: "submitProposalOpenForComments",
+        },
       },
-    },
-    { field: "isProjectReportOpenForComments" },
-  ]);
+      { field: "commentsReceivedOnProposal" },
+      { field: "isProposalOpenForComments" },
+      {
+        field: "peerFeedbackStatus",
+        cellRenderer: SubmissionStatusLink,
+        cellRendererParams: {
+          classId: myclass?.id,
+          type: "peerFeedbackStatus",
+          stage: "Peer review",
+          commentField: "peerFeedbackOpenForComments",
+        },
+      },
+      { field: "isPeerFeedbackOpenForComments" },
+      {
+        field: "dataCollectionStatus",
+        cellRenderer: StudySubmissionStatusLink,
+        cellRendererParams: {
+          classId: myclass?.id,
+          stage: "Data collection",
+        },
+      },
+      { field: "dataCollectionOpenForParticipation" },
+      {
+        field: "projectReportStatus",
+        cellRenderer: SubmissionStatusLink,
+        cellRendererParams: {
+          classId: myclass?.id,
+          type: "projectReportStatus",
+          stage: "Project report",
+          commentField: "projectReportOpenForComments",
+        },
+      },
+      { field: "isProjectReportOpenForComments" },
+    ],
+    [myclass]
+  );
 
   return (
     <div className="dashboard">
-      <div
-        className="ag-theme-quartz" // applying the Data Grid theme
-        style={{ height: 500 }} // the Data Grid will fill the size of the parent container
-      >
+      <div className="mb-4">
+        <StyledTriggerButton
+          onClick={() => setIsModalOpen(true)}
+          disabled={selectedStudents.length === 0}
+        >
+          <Icon name="users" />
+          Manage Selected Students ({selectedStudents.length})
+        </StyledTriggerButton>
+      </div>
+      <SelectedStudentsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        selectedStudents={selectedStudents}
+        classId={myclass?.id}
+      />
+      <div className="ag-theme-quartz" style={{ height: 500 }}>
         <AgGridReact
           rowData={studentsProcessed}
-          columnDefs={colDefs}
+          columnDefs={columnDefs}
+          rowSelection="multiple"
+          suppressRowClickSelection={true}
+          getRowId={(params) =>
+            params.data.id || params.data.publicId || params.data.username
+          }
+          onSelectionChanged={(event) => {
+            const selectedRows = event.api.getSelectedRows();
+            setSelectedStudents(selectedRows);
+          }}
           frameworkComponents={{
             studentPageLink: StudentPageLink,
             projectManagerLink: ProjectManagerLink,
@@ -255,3 +276,32 @@ export default function Dashboard({ myclass, user, query }) {
     </div>
   );
 }
+
+const StyledTriggerButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #3d85b0;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: Nunito, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #326d94;
+  }
+
+  &:disabled {
+    background: #b0b0b0;
+    cursor: not-allowed;
+  }
+
+  .icon {
+    margin: 0 !important;
+  }
+`;
