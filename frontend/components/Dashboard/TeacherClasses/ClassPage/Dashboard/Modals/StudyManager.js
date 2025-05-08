@@ -293,7 +293,7 @@ export default function StudyManager(props) {
                               : "None"}
                           </div>
                           <Link
-                            href={`/builder/studies?selector=${mainProjectStudy.id}`}
+                            href={`/builder/projects?selector=${project.id}&tab=builder`}
                             target="_blank"
                             className="study-link"
                           >
