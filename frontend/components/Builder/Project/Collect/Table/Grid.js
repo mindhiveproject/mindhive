@@ -146,7 +146,7 @@ export default function Grid({ studyId, participants }) {
   return (
     <div
       className="ag-theme-quartz" // applying the Data Grid theme
-      style={{ height: 500 }} // the Data Grid will fill the size of the parent container
+      style={{ height: "65vh" }} // the Data Grid will fill the size of the parent container
     >
       <AgGridReact
         rowData={participants}
