@@ -30,11 +30,25 @@ export default function StudyDropdown({ user, project }) {
 
   const studies = studiesData?.studies || [];
 
-  const studyOptions = studies.map((study) => ({
-    key: study?.id,
-    text: study?.title,
-    value: study?.id,
-  }));
+  const studyOptions = [
+    // Include existing studies from studiesData
+    ...studies.map((study) => ({
+      key: study?.id,
+      text: study?.title,
+      value: study?.id,
+    })),
+    // Add the connected study if it exists and is not in the studies list
+    ...(project?.study &&
+    !studies.some((study) => study?.id === project?.study?.id)
+      ? [
+          {
+            key: project?.study?.id,
+            text: project?.study?.title || "Connected Study",
+            value: project?.study?.id,
+          },
+        ]
+      : []),
+  ];
 
   const handleStudyChange = (e, { value }) => {
     // Only open modal if the selected study is different from the current one
