@@ -52,9 +52,13 @@ export default function ParticipantsTable({
 
     // return consent decisions for this study
     const studyConsent = study?.consent || [];
+
+    // if a participant agreed to the consent, display the title of the consent form
     const consent = studyConsent
       .map((consent) => {
-        return generalInfo?.[`consent-${consent?.id}`];
+        return generalInfo?.[`consent-${consent?.id}`] === "agree"
+          ? consent?.title
+          : "";
       })
       .join(", ");
 
