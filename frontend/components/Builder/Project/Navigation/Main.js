@@ -22,6 +22,10 @@ const items = [
     name: "Participant Page",
   },
   {
+    value: "review",
+    name: "Review",
+  },
+  {
     value: "collect",
     name: "Test & Collect",
   },
@@ -29,14 +33,10 @@ const items = [
     value: "visualize",
     name: "Visualize",
   },
-  // {
-  //   value: "journal",
-  //   name: "Data Journals",
-  // },
-  // {
-  //   value: "exit",
-  //   name: "Exit Study Builder",
-  // },
+  {
+    value: "journal",
+    name: "Data Journals",
+  },
 ];
 
 export default function Navigation({

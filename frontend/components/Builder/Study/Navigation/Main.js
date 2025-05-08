@@ -19,10 +19,10 @@ const itemsOriginal = [
     value: "builder",
     name: "Study builder",
   },
-  {
-    value: "review",
-    name: "Review",
-  },
+  // {
+  //   value: "review",
+  //   name: "Review",
+  // },
   {
     value: "collect",
     name: "Test & Collect",

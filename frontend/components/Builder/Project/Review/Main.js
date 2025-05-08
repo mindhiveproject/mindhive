@@ -3,14 +3,14 @@ import { useQuery } from "@apollo/client";
 import Navigation from "../Navigation/Main";
 import Proposal from "./Proposal";
 
-import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../../Queries/Proposal";
+import { PROPOSAL_REVIEWS_QUERY } from "../../../Queries/Proposal";
 
 import { StyledReviewPage } from "../../../styles/StyledReview";
 
 export default function Review({ query, user, tab, toggleSidebar }) {
   const projectId = query?.selector;
 
-  const { data, loading, error } = useQuery(OVERVIEW_PROPOSAL_BOARD_QUERY, {
+  const { data, loading, error } = useQuery(PROPOSAL_REVIEWS_QUERY, {
     variables: {
       id: projectId,
     },

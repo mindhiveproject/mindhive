@@ -357,6 +357,8 @@ export const StyledReviewCard = styled.div`
   background: white;
   border-radius: 4px;
   padding: 30px 24px;
+  height: 80vh;
+  overflow: auto;
   h2 {
     font-family: Lato;
     font-size: 24px;

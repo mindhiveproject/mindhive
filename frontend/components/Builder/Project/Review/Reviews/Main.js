@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu } from "semantic-ui-react";
 
-import Comment from "./Comment";
+import Feedback from "../../../../Dashboard/Review/Feedback/Main";
 
 const tabs = [
   {
@@ -10,17 +10,19 @@ const tabs = [
     stage: "SUBMITTED_AS_PROPOSAL",
   },
   {
-    value: "study",
-    name: "Study Feedback",
-    stage: "IN_REVIEW",
+    value: "peer",
+    name: "Peer Feedback",
+    stage: "PEER_REVIEW",
+  },
+  {
+    value: "report",
+    name: "Project Report Feedback",
+    stage: "PROJECT_REPORT",
   },
 ];
 
-export default function Feedback({ query, study, selectReview }) {
-  const [feedbackTab, setFeedbackTab] = useState("proposal");
-
-  const feedbackType =
-    feedbackTab === "study" ? "IN_REVIEW" : "SUBMITTED_AS_PROPOSAL";
+export default function FeedbackTabs({ user, query, proposal, selectReview }) {
+  const [feedbackTab, setFeedbackTab] = useState("SUBMITTED_AS_PROPOSAL");
 
   return (
     <div className="descriptionMenu">
@@ -30,13 +32,13 @@ export default function Feedback({ query, study, selectReview }) {
             <Menu.Item
               key={i}
               name={tab.name}
-              active={feedbackTab === tab.value}
-              onClick={() => setFeedbackTab(tab.value)}
+              active={feedbackTab === tab.stage}
+              onClick={() => setFeedbackTab(tab.stage)}
             >
               <div>
                 {tab.name} (
                 {
-                  study?.reviews?.filter(
+                  proposal?.reviews?.filter(
                     (review) => review?.stage === tab?.stage
                   ).length
                 }
@@ -47,29 +49,15 @@ export default function Feedback({ query, study, selectReview }) {
         ))}
       </Menu>
 
-      <div>
-        {study?.reviews &&
-        study?.reviews.filter((review) => review.stage === feedbackType)
-          .length ? (
-          <div className="reviewsCards">
-            {study?.reviews
-              .filter((review) => review.stage === feedbackType)
-              .sort((a, b) => {
-                return b?.upvotedBy?.length - a?.upvotedBy?.length;
-              })
-              .map((review, num) => (
-                <Comment key={num} number={num + 1} review={review} />
-              ))}
-          </div>
-        ) : (
-          <div className="reviewsPlaceholder">
-            <p>
-              <strong>You don’t have any reviews yet</strong>
-            </p>
-            <p>Reviews will appear here once you submit</p>
-          </div>
-        )}
-      </div>
+      <Feedback
+        user={user}
+        projectId={proposal?.id}
+        status={feedbackTab}
+        reviews={
+          proposal?.reviews?.filter((review) => review.stage === feedbackTab) ||
+          []
+        }
+      />
     </div>
   );
 }

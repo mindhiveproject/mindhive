@@ -1,7 +1,7 @@
 import ProjectBoard from "./ProjectBoard/Main";
 import ParticipantPage from "./ParticipantPage/Main";
 import Builder from "./Builder/Main";
-// import Review from "./Review/Main";
+import Review from "./Review/Main";
 import Collect from "./Collect/Wrapper";
 import Visualize from "./Visualize/Wrapper";
 import DataJournal from "./DataJournal/Wrapper";
@@ -29,16 +29,16 @@ export default function Router({ query, user, tab, toggleSidebar }) {
     );
   }
 
-  // if (tab === "review") {
-  //   return (
-  //     <Review
-  //       query={query}
-  //       user={user}
-  //       tab={tab}
-  //       toggleSidebar={toggleSidebar}
-  //     />
-  //   );
-  // }
+  if (tab === "review") {
+    return (
+      <Review
+        query={query}
+        user={user}
+        tab={tab}
+        toggleSidebar={toggleSidebar}
+      />
+    );
+  }
 
   if (tab === "page") {
     return (
