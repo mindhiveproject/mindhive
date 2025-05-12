@@ -59,13 +59,6 @@ export default function DownloadByComponent({
           (participant) => participant?.publicId === personalID
         );
 
-        let condition;
-        if (participant?.studiesInfo?.[study?.id]) {
-          condition = participant?.studiesInfo[study?.id]?.info?.path
-            .filter((stage) => stage?.conditionLabel)
-            .map((stage) => stage.conditionLabel)[0];
-        }
-
         const [dataPolicy] = datasets
           .filter((d) => d?.token === result?.metadataId)
           .map((d) => d?.dataPolicy);
@@ -81,7 +74,7 @@ export default function DownloadByComponent({
             .filter((c) => c?.testId === result.testVersion)
             .map((c) => c?.subtitle),
           timestamp: result.createdAt,
-          condition,
+          condition: participant?.condition,
           dataPolicy,
           ...result.data,
         };
