@@ -35,7 +35,7 @@ const items = [
   },
   {
     value: "journal",
-    name: "Data Journals",
+    name: "Data Journals 🚧",
   },
 ];
 
