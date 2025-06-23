@@ -1,15 +1,15 @@
 import InterestSelector from "../InterestSelector/Main";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Interests({ query, user }) {
+  const { t } = useTranslation("connect");
+
   return (
     <div className="interests">
       <div className="interestsHeader">
-        <div className="h40">Where can you help?</div>
+        <div className="h40">{t("interests.title")}</div>
         <div className="p15">
-          What topics would you like to support students with? Select some
-          topics and areas of interest from the list below to let other
-          community members know where you’re excited to contribute. This will
-          help us connect you with students and peers who share your passions.
+          {t("interests.description")}
         </div>
       </div>
 

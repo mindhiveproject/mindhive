@@ -1,6 +1,7 @@
 import Link from "next/link";
 import moment from "moment";
 import "moment-duration-format";
+import useTranslation from "next-translate/useTranslation";
 
 // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-grid.css";
@@ -11,6 +12,7 @@ import { AgGridReact } from "ag-grid-react";
 import ChangeDatasetStatuses from "./ChangeStatuses";
 
 export default function Grid({ studyId, participants }) {
+  const { t } = useTranslation("builder");
   const OpenButtonRenderer = (props) => {
     return (
       <Link
@@ -25,7 +27,7 @@ export default function Grid({ studyId, participants }) {
         }}
       >
         <div>
-          <a>Open</a>
+          <a>{t("grid.open", "Open")}</a>
         </div>
       </Link>
     );
@@ -54,7 +56,7 @@ export default function Grid({ studyId, participants }) {
     },
     {
       field: "includeAnalysis",
-      headerName: "Analysis",
+      headerName: t("grid.analysis", "Analysis"),
       cellRenderer: IncludeAnalysisRenderer,
       width: 110,
       pinned: "left",
@@ -62,24 +64,24 @@ export default function Grid({ studyId, participants }) {
     },
     {
       field: "publicId",
-      headerName: "Public Id",
+      headerName: t("grid.publicId", "Public Id"),
       filter: "agTextColumnFilter",
     },
     {
       field: "publicReadableId",
-      headerName: "Public Readable Id",
+      headerName: t("grid.publicReadableId", "Public Readable Id"),
       filter: "agTextColumnFilter",
     },
     {
       field: "startedAt",
-      headerName: "Started At",
+      headerName: t("grid.startedAt", "Started At"),
       valueFormatter: (params) =>
         moment(params.value).format("MM/DD/YYYY hh:mm A"),
       filter: "agDateColumnFilter", // Use the date filter
     },
     {
       field: "duration",
-      headerName: "Duration",
+      headerName: t("grid.duration", "Duration"),
       valueFormatter: (params) => {
         const duration = moment.duration(
           params.value * 1000 * 60,
@@ -91,19 +93,19 @@ export default function Grid({ studyId, participants }) {
     },
     {
       field: "numberCompleted",
-      headerName: "Number Completed",
+      headerName: t("grid.numberCompleted", "Number Completed"),
       filter: "agNumberColumnFilter",
     },
     {
       field: "condition",
-      headerName: "Condition",
+      headerName: t("grid.condition", "Condition"),
       filter: "agTextColumnFilter",
     },
-    { field: "consent", headerName: "Consent", filter: "agTextColumnFilter" },
-    { field: "studyStatus", headerName: "Study Status" },
+    { field: "consent", headerName: t("grid.consent", "Consent"), filter: "agTextColumnFilter" },
+    { field: "studyStatus", headerName: t("grid.studyStatus", "Study Status") },
     {
       field: "accountType",
-      headerName: "Account Type",
+      headerName: t("grid.accountType", "Account Type"),
       filter: "agTextColumnFilter",
     },
   ];

@@ -25,9 +25,9 @@ export default function ProposalOverview({
   if (proposals?.length === 0) {
     return (
       <div className="empty">
-        <h3>You haven’t created any proposals yet.</h3>
-        <p>Once you create a proposal, it will appear here.</p>
-        <button onClick={() => createProposal()}>Create a new proposal</button>
+        <h3>{t("proposal.zeroState1")}</h3>
+        <p>{t("proposal.zeroState2")}</p>
+        <button onClick={() => createProposal()}>{t("proposal.create")}</button>
       </div>
     );
   }
@@ -45,10 +45,10 @@ export default function ProposalOverview({
       <div>
         <div className="row">
           <div className="proposalHeader">
-            <div>Proposal name</div>
-            <div>Date created</div>
-            <div>Status</div>
-            <div>Actions</div>
+            <div>{t("proposal.name", "Proposal name")}</div>
+            <div>{t("proposal.dateCreated", "Date created")}</div>
+            <div>{t("proposal.status", "Status")}</div>
+            <div>{t("proposal.actions", "Actions")}</div>
           </div>
           <div></div>
         </div>
@@ -67,19 +67,19 @@ export default function ProposalOverview({
                   <p>{moment(prop?.createdAt).format("MMMM D, YYYY")}</p>
                 </div>
                 <div>
-                  <p>{prop?.isSubmitted ? "Submitted" : "Not submitted"}</p>
+                  <p>{prop?.isSubmitted ? t("proposal.submitted", "Submitted") : t("proposal.notSubmitted", "Not submitted")}</p>
                 </div>
 
                 <div className="actionLinks">
-                  <button onClick={() => openProposal(prop?.id)}>Open</button>
-                  <button onClick={() => copyProposal(prop?.id)}>Copy</button>
+                  <button onClick={() => openProposal(prop?.id)}>{t("proposal.open", "Open")}</button>
+                  <button onClick={() => copyProposal(prop?.id)}>{t("proposal.copy", "Copy")}</button>
                   {prop?.id !== proposalMain?.id && (
                     <MakeMain
                       studyId={studyId}
                       proposalId={prop?.id}
                       refetchQueries={refetchQueries}
                     >
-                      <button>Select as main</button>
+                      <button>{t("proposal.selectAsMain", "Select as main")}</button>
                     </MakeMain>
                   )}
 
@@ -88,7 +88,7 @@ export default function ProposalOverview({
                       proposalId={prop?.id}
                       refetchQueries={refetchQueries}
                     >
-                      <button>Delete</button>
+                      <button>{t("proposal.delete", "Delete")}</button>
                     </DeleteProposal>
                   )}
                 </div>

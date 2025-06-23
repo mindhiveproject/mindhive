@@ -15,7 +15,7 @@ export default function Template({
   loading,
   error,
 }) {
-  const { t } = useTranslation("classes");
+  const { t } = useTranslation("builder");
 
   const collaborators =
     (template && template?.collaborators?.map((c) => c?.id)) || [];
@@ -68,7 +68,7 @@ export default function Template({
 
       <fieldset disabled={loading} aria-busy={loading}>
         <div className="block">
-          <label htmlFor="title">Template title</label>
+          <label htmlFor="title">{t("template.title", "Template title")}</label>
           <input
             type="text"
             name="title"
@@ -79,7 +79,7 @@ export default function Template({
         </div>
 
         <div className="block">
-          <label htmlFor="description">Template description</label>
+          <label htmlFor="description">{t("template.description", "Template description")}</label>
           <textarea
             id="description"
             name="description"
@@ -89,7 +89,7 @@ export default function Template({
         </div>
 
         <div className="block">
-          <label>lab.js script (JSON file)</label>
+          <label>{t("template.labjsScript", "lab.js script (JSON file)")}</label>
           {template?.fileAddress && (
             <Download
               name={template?.slug}
@@ -100,21 +100,19 @@ export default function Template({
             <div>
               {template?.createdAt && (
                 <div>
-                  Created on{" "}
-                  {moment(template?.createdAt).format("MMMM D, YYYY, h:mm")}
+                  {t("template.createdOn", "Created on")} {moment(template?.createdAt).format("MMMM D, YYYY, h:mm")}
                 </div>
               )}
 
               {template?.updatedAt && (
                 <div>
-                  Last updated on{" "}
-                  {moment(template?.updatedAt).format("MMMM D, YYYY, h:mm")}
+                  {t("template.updatedOn", "Last updated on")} {moment(template?.updatedAt).format("MMMM D, YYYY, h:mm")}
                 </div>
               )}
 
               <div>
                 <button onClick={deleteTemplateLocally}>
-                  Delete and reupload
+                  {t("template.deleteAndReupload", "Delete and reupload")}
                 </button>
               </div>
             </div>
@@ -130,7 +128,7 @@ export default function Template({
         </div>
 
         <div className="block">
-          <label>Collaborators on the template</label>
+          <label>{t("template.collaborators", "Collaborators on the template")}</label>
           <Collaborators
             collaborators={collaborators}
             handleChange={handleTemplateChange}

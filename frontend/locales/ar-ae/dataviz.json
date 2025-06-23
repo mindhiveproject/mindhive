@@ -1,0 +1,9 @@
+{
+	"overview": {
+		"database": {
+			"csvDownloadMessage": "امنح اسماً لملف CSV الذي ستقوم بتنزيله\\nلا حاجة لإضافة '.csv'، سنقوم بذلك!",
+			"returnBrowse": "العودة إلى السجل",
+			"sectionTitle": "بيانات السجل"
+		}
+	}
+}

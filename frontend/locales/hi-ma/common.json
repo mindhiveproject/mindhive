@@ -1,0 +1,27 @@
+{
+  "auth": {
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "login": "लॉगिन",
+    "username": "यूज़रनेम",
+    "requestReset": "रीसेट का अनुरोध करें",
+    "checkYourMail": "अपना ईमेल जांचें"
+  },
+  "navigation": {
+    "about": "के बारे में",
+    "dashboard": "डैशबोर्ड",
+    "discover": "खोजें",
+    "login": "लॉग इन करें",
+    "signup": "साइन अप करें",
+    "studies": "अध्ययन",
+    "tasks": "कार्य और सर्वेक्षण",
+    "teachers": "शिक्षक"
+  },
+  "languages": {
+    "title": "भाषा सेटिंग्ज",
+    "description": "तुम्ही खाली तुमच्या भाषा सेटिंग्ज अनुकूलित आणि बदलू शकता.",
+    "displayLanguage": "प्रदर्शन भाषा",
+    "updatePreferences": "प्राधान्ये अपडेट करा",
+    "backToSettings": "सेटिंग्जकडे परत जा"
+  }
+}

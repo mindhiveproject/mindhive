@@ -1,5 +1,6 @@
 import uniqid from "uniqid";
 import JoditEditor from "../../../../Jodit/Editor";
+import useTranslation from "next-translate/useTranslation";
 // import JoditEditorPro from "../../../../Jodit/EditorPro";
 
 export default function Page({
@@ -9,6 +10,7 @@ export default function Page({
   hideContinueBtn,
   onChange,
 }) {
+  const { t } = useTranslation("builder");
   const updateProps = ({ page, timeout, hideContinueBtn }) => {
     onChange({ page, timeout, hideContinueBtn });
   };
@@ -179,11 +181,11 @@ export default function Page({
             />
           </div>
           <div>
-            <label htmlFor="hideContinueBtn">Hide Continue button</label>
+            <label htmlFor="hideContinueBtn">{t("survey.hideContinueBtn", "Hide Continue button")}</label>
           </div>
         </div>
         <div className="timeout">
-          <div>Page timeout (in milliseconds)</div>
+          <div>{t("survey.pageTimeout", "Page timeout (in milliseconds)")}</div>
           <div>
             <input
               type="number"
@@ -208,19 +210,20 @@ export default function Page({
               number={number}
               addNewOption={addNewOption}
               deleteOption={deleteOption}
+              t={t}
             />
           ))}
         </div>
 
         <button className="addButton" onClick={addItem}>
-          +
+          {t("survey.addItem", "+")}
         </button>
       </div>
     );
   }
   return (
     <button className="addButton" onClick={addItem}>
-      +
+      {t("survey.addItem", "+")}
     </button>
   );
 }
@@ -234,6 +237,7 @@ function Item({
   number,
   addNewOption,
   deleteOption,
+  t,
 }) {
   const {
     id,
@@ -253,7 +257,7 @@ function Item({
   return (
     <div className="surveyBuilderItemLine">
       <div className="input">
-        <div>Type</div>
+        <div>{t("survey.type", "Type")}</div>
         <select
           type="text"
           name={id}
@@ -261,15 +265,13 @@ function Item({
           onChange={handleItemChange}
           className="type"
         >
-          <option value="text">Text</option>
-          <option value="select">Multiple choice (select one)</option>
-          <option value="checkbox">
-            Multiple choice (select many options)
-          </option>
-          <option value="freeinput">Text input</option>
-          <option value="vas">Visual scale</option>
-          <option value="likert">Likert scale</option>
-          <option value="block">Block</option>
+          <option value="text">{t("survey.text", "Text")}</option>
+          <option value="select">{t("survey.select", "Multiple choice (select one)")}</option>
+          <option value="checkbox">{t("survey.checkbox", "Multiple choice (select many options)")}</option>
+          <option value="freeinput">{t("survey.freeinput", "Text input")}</option>
+          <option value="vas">{t("survey.vas", "Visual scale")}</option>
+          <option value="likert">{t("survey.likert", "Likert scale")}</option>
+          <option value="block">{t("survey.block", "Block")}</option>
         </select>
 
         {(type === "freeinput" ||
@@ -278,7 +280,7 @@ function Item({
           type === "likert" ||
           type === "vas") && (
           <>
-            <div>Variable name</div>
+            <div>{t("survey.variableName", "Variable name")}</div>
             <input
               type="text"
               name={id}
@@ -292,7 +294,7 @@ function Item({
 
         {type !== "block" && (
           <>
-            <div>Header</div>
+            <div>{t("survey.header", "Header")}</div>
             <input
               type="text"
               name={id}
@@ -305,7 +307,7 @@ function Item({
 
         {type === "text" && (
           <>
-            <div>Text</div>
+            <div>{t("survey.textLabel", "Text")}</div>
             <textarea
               type="text"
               name={id}
@@ -318,7 +320,7 @@ function Item({
 
         {(type === "select" || type === "checkbox" || type === "likert") && (
           <>
-            <div>Options</div>
+            <div>{t("survey.options", "Options")}</div>
             {options.map((option, num) => (
               <div key={num} className="optionRow">
                 <input
@@ -330,23 +332,21 @@ function Item({
                   onChange={handleItemChange}
                   className="options"
                 />
-                <button onClick={(e) => deleteOption(e, id, num, "options")}>
-                  &times;
-                </button>
+                <button onClick={(e) => deleteOption(e, id, num, "options")}> &times; </button>
               </div>
             ))}
             <button
               onClick={(e) => addNewOption(e, id, "options")}
               className="addOptionButton"
             >
-              + option
+              {t("survey.addOption", "+ option")}
             </button>
           </>
         )}
 
         {type === "likert" && (
           <>
-            <div>Items for the Likert Scale</div>
+            <div>{t("survey.likertItems", "Items for the Likert Scale")}</div>
             {items.map((item, num) => (
               <div key={num} className="optionRow">
                 <input
@@ -358,23 +358,21 @@ function Item({
                   onChange={handleItemChange}
                   className="items"
                 />
-                <button onClick={(e) => deleteOption(e, id, num, "items")}>
-                  &times;
-                </button>
+                <button onClick={(e) => deleteOption(e, id, num, "items")}> &times; </button>
               </div>
             ))}
             <button
               onClick={(e) => addNewOption(e, id, "items")}
               className="addOptionButton"
             >
-              + item
+              {t("survey.addItemBtn", "+ item")}
             </button>
           </>
         )}
 
         {type === "vas" && (
           <>
-            <div>Minimum value label</div>
+            <div>{t("survey.minValueLabel", "Minimum value label")}</div>
             <input
               type="text"
               name={id}
@@ -383,7 +381,7 @@ function Item({
               className="min_rating_label"
             />
 
-            <div>Maximum value label</div>
+            <div>{t("survey.maxValueLabel", "Maximum value label")}</div>
             <input
               type="text"
               name={id}
@@ -392,7 +390,7 @@ function Item({
               className="max_rating_label"
             />
 
-            <div>Minimum value</div>
+            <div>{t("survey.minValue", "Minimum value")}</div>
             <input
               type="number"
               name={id}
@@ -401,7 +399,7 @@ function Item({
               className="min_value"
             />
 
-            <div>Maximum value</div>
+            <div>{t("survey.maxValue", "Maximum value")}</div>
             <input
               type="number"
               name={id}

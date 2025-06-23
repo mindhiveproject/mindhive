@@ -1,0 +1,53 @@
+{
+	"welcome": "Bienvenido",
+	"editProfile": "Puedes editar tu perfil, programar tiempo con mentores, mantenerte al día con las últimas notificaciones de MH aquí",
+	"createYourProfile": "Crea tu perfil de MindHive",
+	"editYourProfile": "Edita tu perfil de MindHive",
+	"updateProfileDescription": "¡Ya eres parte de la comunidad MindHive! Actualiza tu perfil haciendo clic aquí.",
+	"createProfileDescription": "¿Listo para unirte a la comunidad MindHive? Crea tu perfil ahora haciendo clic aquí.",
+	"setAvail":"Establece tu disponibilidad de mentoría",
+	"setAvailDescription":"Establece tu disponibilidad para comenzar a ser mentor. Haz clic aquí para comenzar.",
+	"favoritePeople": "Personas favoritas",
+	"favoriteTasks": "Tareas y encuestas favoritas",
+	"participantID": "ID del participante",
+	"publicReadableID": "ID público legible",
+	"permissions": "Permisos",
+	"needSupport": "¿Necesitas ayuda?",
+	"fillSupportTicket": "Completar ticket de soporte",
+	"needNewBlock": "¿Necesitas un nuevo bloque?",
+	"fillRequestForm": "Completar formulario de solicitud",
+	"updates": {
+        "latestUpdates": "Últimas actualizaciones",
+        "noUpdate": "No hay actualizaciones en este momento."
+    },
+	"info": "Más información",
+	"about": "Acerca de",
+	"teachers": "Profesores",
+	"privacyPolicy": "Política de privacidad",
+	"termsCondition": "Términos y condiciones",
+	"footer": {
+		"title": "MindHive",
+		"description": "MindHive es una plataforma de ciencia ciudadana basada en web que apoya la investigación real del cerebro y el comportamiento.",
+		"audience": "MindHive fue diseñado para estudiantes y profesores que buscan una experiencia auténtica de investigación STEM, y para neurocientíficos y psicólogos cognitivos/sociales que buscan abordar sus preguntas de investigación fuera del laboratorio.",
+		"copyright": "© 2024",
+		"about": "Acerca de",
+		"privacy": "Política de privacidad",
+		"terms": "Términos y condiciones",
+		"email": "info@mindhive.science"
+	},
+	"sidebar": {
+		"dashboard": "Panel de control",
+		"profile": "Perfil",
+		"connections": "Conexiones",
+		"messages": "Mensajes",
+		"settings": "Configuración",
+		"help": "Ayuda",
+		"logout": "Cerrar sesión"
+	},
+	"all": "Todo",
+	"tasks": "Tareas",
+	"surveys": "Encuestas",
+	"blocks": "Bloques",
+	"tasksAndSurveysDescriptions": "Descripciones de tareas y encuestas",
+	"preview": "Vista previa"
+} 

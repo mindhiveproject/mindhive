@@ -2,6 +2,7 @@ import { useState } from "react";
 import useForm from "../../../../../lib/useForm";
 import { Divider } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../../Mutations/User";
@@ -12,6 +13,7 @@ import { StyledSaveButton } from "../../../../styles/StyledProfile";
 import { StyledInput } from "../../../../styles/StyledForm";
 
 export default function IntroductionVideo({ query, user }) {
+  const { t } = useTranslation("connect");
   const [changed, setChanged] = useState(false);
 
   const { inputs, handleChange } = useForm({
@@ -56,12 +58,8 @@ export default function IntroductionVideo({ query, user }) {
   return (
     <div className="profileBlock">
       <div>
-        <div className="title">Introduction Video</div>
-        <p>
-          We'd love for you to upload an introduction video to share with
-          students and fellow MindHive members. You can use it to share a
-          project you think students might get excited about.
-        </p>
+        <div className="title">{t("introduction.title")}</div>
+        <p>{t("introduction.description")}</p>
       </div>
       <Divider />
 
@@ -71,7 +69,7 @@ export default function IntroductionVideo({ query, user }) {
             src={`/videos/${inputs?.introVideo?.filename}`}
             type="video/mp4"
           />
-          Your browser does not support the video tag.
+          {t("introduction.videoNotSupported")}
         </video>
       ) : (
         <VideoUploader
@@ -82,14 +80,8 @@ export default function IntroductionVideo({ query, user }) {
 
       <StyledInput>
         <div className="inputLineBlock">
-          <h3>What are you passionate about right now?</h3>
-          <p>
-            For example, you can briefly describe a science project you are
-            working on. Or you can tell us about your experience bringing
-            science to the public. This is your space to showcase what you’re
-            currently working on and how it shapes the expertise you bring to
-            our community.
-          </p>
+          <h3>{t("introduction.passion.title")}</h3>
+          <p>{t("introduction.passion.description")}</p>
           <textarea
             id="passion"
             rows="5"
@@ -103,7 +95,7 @@ export default function IntroductionVideo({ query, user }) {
 
       <StyledSaveButton changed={changed}>
         <button onClick={saveChanges} disabled={!changed}>
-          Save changes
+          {t("introduction.saveChanges")}
         </button>
       </StyledSaveButton>
     </div>

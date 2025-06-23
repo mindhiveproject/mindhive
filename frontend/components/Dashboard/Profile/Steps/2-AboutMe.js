@@ -1,4 +1,5 @@
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import Background from "./Blocks/Background";
 import BasicInformation from "./Blocks/Basic";
@@ -6,6 +7,8 @@ import IntroductionVideo from "./Blocks/Introduction";
 import Preferences from "./Blocks/Preferences";
 
 export default function About({ query, user }) {
+  const { t } = useTranslation("connect");
+
   return (
     <>
       <div className="aboutMe">
@@ -23,7 +26,7 @@ export default function About({ query, user }) {
               },
             }}
           >
-            <button className="secondary">Previous</button>
+            <button className="secondary">{t("navigation.previous")}</button>
           </Link>
 
           <Link
@@ -34,7 +37,7 @@ export default function About({ query, user }) {
               },
             }}
           >
-            <button className="primary">Next</button>
+            <button className="primary">{t("navigation.next")}</button>
           </Link>
         </div>
       </div>

@@ -1,10 +1,12 @@
 import absoluteUrl from "next-absolute-url";
+import useTranslation from "next-translate/useTranslation";
 
 import DownloadRawData from "../Download/RawData";
 import DownloadSummaryData from "../Download/Summary";
 import DownloadByComponent from "../Download/ByComponent";
 
 export default function Header({ study, slug, participants, components }) {
+  const { t } = useTranslation("builder");
   const { origin } = absoluteUrl();
 
   // filter out the datasets with explicit disagreement for data sharing (data policy is "no")
@@ -28,7 +30,7 @@ export default function Header({ study, slug, participants, components }) {
     temp.select();
     document.execCommand("copy");
     temp.remove();
-    alert("The link is copied");
+    alert(t("header.linkCopied", "The link is copied"));
   };
 
   return (
@@ -36,15 +38,17 @@ export default function Header({ study, slug, participants, components }) {
       <div className="study">
         <div className="shareStudy">
           <p>
-            Share the link below with your participants to invite them to join
-            your study
+            {t(
+              "header.shareInstructions",
+              "Share the link below with your participants to invite them to join your study"
+            )}
           </p>
           <h3>
             {origin}/studies/{slug}
           </h3>
           <div className="buttons">
             <div>
-              <button onClick={() => copyLink()}>Copy study link</button>
+              <button onClick={() => copyLink()}>{t("header.copyLink", "Copy study link")}</button>
             </div>
             <div>
               <a
@@ -52,13 +56,13 @@ export default function Header({ study, slug, participants, components }) {
                 href={`${origin}/studies/${slug}`}
                 rel="noreferrer"
               >
-                <button>Test your study</button>
+                <button>{t("header.testStudy", "Test your study")}</button>
               </a>
             </div>
           </div>
         </div>
         <div className="downloadOptions">
-          <h3>All data in one file</h3>
+          <h3>{t("header.allDataOneFile", "All data in one file")}</h3>
           {filteredDatasetTokens?.length > 0 && (
             <DownloadSummaryData
               by=""

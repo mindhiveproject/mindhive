@@ -1,43 +1,13 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import Connect from "./Connect/Main";
 import ConnectStudy from "./ConnectStudy/Main";
 
 import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
 import StudyDropdown from "../../../Projects/StudyConnector/StudyDropdown";
-
-const items = [
-  {
-    value: "board",
-    name: "Project Board",
-  },
-  {
-    value: "builder",
-    name: "Study builder",
-  },
-  {
-    value: "page",
-    name: "Participant Page",
-  },
-  {
-    value: "review",
-    name: "Review",
-  },
-  {
-    value: "collect",
-    name: "Test & Collect",
-  },
-  {
-    value: "visualize",
-    name: "Visualize",
-  },
-  {
-    value: "journal",
-    name: "Data Journals",
-  },
-];
 
 export default function Navigation({
   proposalId,
@@ -53,6 +23,7 @@ export default function Navigation({
   isCanvasLocked,
 }) {
   const router = useRouter();
+  const { t } = useTranslation("builder");
 
   const { area, selector } = query;
 
@@ -72,13 +43,44 @@ export default function Navigation({
     if (hasStudyChanged) {
       if (
         !confirm(
-          "Your unsaved changes will be lost. Click Cancel to return and save the changes."
+          t("unsavedChangesWarning")
         )
       ) {
         e.preventDefault();
       }
     }
   };
+
+  const items = [
+    {
+      value: "board",
+      name: t("projectBoard"),
+    },
+    {
+      value: "builder",
+      name: t("studyBuilder"),
+    },
+    {
+      value: "page",
+      name: t("participantPage"),
+    },
+    {
+      value: "review",
+      name: t("review"),
+    },
+    {
+      value: "collect",
+      name: t("testAndCollect"),
+    },
+    {
+      value: "visualize",
+      name: t("visualize"),
+    },
+    {
+      value: "journal",
+      name: t("dataJournals"),
+    },
+  ];
 
   return (
     <div className="navigation">
@@ -97,7 +99,7 @@ export default function Navigation({
         </div>
         <div className="middle">
           <div className="studyTitle">
-            <span className="title">Project </span> {project?.title}
+            <span className="title">{t("project")} </span> {project?.title}
           </div>
           {project?.study && (
             <div className="studyTitle">

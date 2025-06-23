@@ -3,6 +3,7 @@ import { saveAs } from "file-saver";
 import { jsonToCSV } from "react-papaparse";
 import moment from "moment";
 import { Icon } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function DownloadSummaryData({
   by,
@@ -12,6 +13,7 @@ export default function DownloadSummaryData({
   datasets,
   filteredDatasetTokens,
 }) {
+  const { t } = useTranslation("builder");
   const [loading, setLoading] = useState(false);
 
   // pre-process and aggregate data on the subject level
@@ -114,11 +116,11 @@ export default function DownloadSummaryData({
   return (
     <>
       {loading ? (
-        <div>Wait ...</div>
+        <div>{t("byComponent.wait", "Wait ...")}</div>
       ) : (
         <div className="downloadArea" onClick={() => download()}>
           <Icon color="teal" size="large" name="download" />
-          <a>Download aggregated data {by}</a>
+          <a>{t("byComponent.downloadAggregatedBy", "Download aggregated data {{by}}", { by })}</a>
         </div>
       )}
     </>

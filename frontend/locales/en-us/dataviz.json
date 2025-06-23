@@ -1,0 +1,9 @@
+{
+	"overview": {
+		"database": {
+			"csvDownloadMessage": "Give a name to the CSV you're about to download\\nNo need to add '.csv' we're taking care of that!",
+			"returnBrowse": "Return to browse",
+			"sectionTitle": "Active Data"
+		}
+	}
+}

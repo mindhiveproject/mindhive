@@ -1,0 +1,29 @@
+{
+  "classNetworks": "Сетевые классы",
+  "createdByOn": "Создано {{username}} {{date}}",
+  "classes": "Классы",
+  "deleteYourClass": "Удалить ваш класс",
+  "deleteClassWarning": "Удаление вашего класса навсегда удалит его из раздела \"Мои классы\". Это действие нельзя отменить.",
+  "noAccessTo": "У вас не будет доступа к:",
+  "yourClass": "Ваш класс",
+  "anyStudiesOrResults": "Любые исследования или результаты, созданные студентами вашего класса",
+  "studentsWillHaveAccessTo": "Ваши студенты будут иметь доступ к:",
+  "theirWorkspaceAndStudies": "Их рабочее пространство и любые исследования, задания или опросы, которые они создали во время вашего класса",
+  "noteNewStudents": "Примечание: Новые студенты не смогут присоединиться к вашему классу",
+  "deleteClass": "Удалить класс",
+  "areYouSureDeleteClass": "Вы уверены, что хотите удалить этот класс?",
+  "typeDeleteToConfirm": "Введите \"DELETE\" для подтверждения",
+  "delete": "Удалить",
+  "cancel": "Отмена",
+  "pleaseTypeDelete": "Пожалуйста, введите DELETE, чтобы удалить ваш класс",
+  "studySpecific": {
+    "subtitle": "Subtitle",
+    "testId": "Test ID"
+  },
+  "create": {
+    "createHeader": "Добавить новый класс",
+    "title": "Название нового класса",
+    "description": "Описание нового класса",
+    "create": "Создать новый класс"
+  }
+} 

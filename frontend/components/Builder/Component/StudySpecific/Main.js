@@ -21,7 +21,7 @@ export default function StudySpecificInfo({
 
         <div className="block">
           <label htmlFor="subtitle">
-            Subtitle
+            {t("studySpecific.subtitle", "Subtitle")}
             <input
               type="text"
               name="subtitle"
@@ -32,7 +32,7 @@ export default function StudySpecificInfo({
         </div>
         
         <div>
-          <label>Test ID</label>
+          <label>{t("studySpecific.testId", "Test ID")}</label>
           <p>
             {task?.testId}
           </p>

@@ -1,8 +1,10 @@
 import absoluteUrl from "next-absolute-url";
 import { useState } from "react";
 import { Radio } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function ShareStudy({ study, handleChange }) {
+  const { t } = useTranslation("builder");
   const { origin } = absoluteUrl();
   const [isCustomize, setIsCustomize] = useState(true);
 
@@ -14,7 +16,7 @@ export default function ShareStudy({ study, handleChange }) {
     temp.select();
     document.execCommand("copy");
     temp.remove();
-    alert("The link is copied");
+    alert(t('share.linkCopied'));
   };
 
   const sanitizeInput = (e) => {
@@ -32,10 +34,10 @@ export default function ShareStudy({ study, handleChange }) {
 
   return (
     <div>
-      <h2>Share your study</h2>
+      <h2>{t('share.shareYourStudy')}</h2>
 
       <div className="card">
-        <h3>Study url</h3>
+        <h3>{t('share.studyUrl')}</h3>
         {study?.slug ? (
           <label htmlFor="slug" onClick={() => copyLink()}>
             <p className="accessLink">
@@ -45,15 +47,15 @@ export default function ShareStudy({ study, handleChange }) {
             </p>
           </label>
         ) : (
-          <p className="accessLink highlight">Customize your study url below</p>
+          <p className="accessLink highlight">{t('share.customizeBelow')}</p>
         )}
       </div>
 
       <div className="card">
         <div className="settingsBlock">
           <div>
-            <h3>Customize url</h3>
-            <p>Customize your study url</p>
+            <h3>{t('share.customizeUrl')}</h3>
+            <p>{t('share.customizeUrlDesc')}</p>
             {isCustomize && (
               <div>
                 <div>
@@ -67,8 +69,7 @@ export default function ShareStudy({ study, handleChange }) {
                   />
                 </div>
                 <div>
-                  A tip - avoid spaces in the url. Use dashes instead, for
-                  example.
+                  {t('share.tip')}
                 </div>
               </div>
             )}
@@ -76,7 +77,7 @@ export default function ShareStudy({ study, handleChange }) {
           <div className="input">
             <Radio
               toggle
-              label={isCustomize ? "On" : "Off"}
+              label={isCustomize ? t('share.on') : t('share.off')}
               checked={isCustomize}
               onChange={() => setIsCustomize(!isCustomize)}
             />

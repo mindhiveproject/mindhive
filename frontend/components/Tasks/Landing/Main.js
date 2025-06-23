@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { useQuery } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import { UserContext } from "../../Global/Authorized";
 
@@ -11,6 +12,7 @@ import ManageFavorite from "../../User/ManageFavorite";
 
 export default function TaskLandingMain({ slug }) {
   const user = useContext(UserContext);
+  const { t } = useTranslation("home");
   const { data, error, loading } = useQuery(GET_TASK, {
     variables: { slug },
   });
@@ -32,7 +34,7 @@ export default function TaskLandingMain({ slug }) {
           target="_blank"
           href={`/preview/${task?.taskType?.toLowerCase()}/${task?.id}`}
         >
-          <button>Preview</button>
+          <button>{t("preview")}</button>
         </a>
       </div>
       <TaskPage user={user} task={task} />

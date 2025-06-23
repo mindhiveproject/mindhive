@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Page from "./Page";
+import useTranslation from "next-translate/useTranslation";
 
 // it holds all pages and displays the currently active page on the screen with surveyPageBuilder
 export default function SurveyBuilder({ name, content, onChange }) {
+  const { t } = useTranslation("builder");
   const [pages, setPages] = useState(JSON.parse(content) || []);
   const [currentPageNumber, setCurrentPageNumber] = useState(0);
 
@@ -54,16 +56,16 @@ export default function SurveyBuilder({ name, content, onChange }) {
     <>
       <div className="pageHeader">
         {pages && pages.length > 0 ? (
-          <h2>Page {currentPageNumber + 1}</h2>
+          <h2>{t("surveyBuilder.page", { number: currentPageNumber + 1 }, "Page {{number}}")}</h2>
         ) : (
-          <h2>Add your first page</h2>
+          <h2>{t("surveyBuilder.addFirstPage", "Add your first page")}</h2>
         )}
 
         <button
           className="notActivePageButton"
           onClick={(e) => deletePage(e, currentPageNumber)}
         >
-          Delete this page
+          {t("surveyBuilder.deletePage", "Delete this page")}
         </button>
       </div>
 
@@ -86,7 +88,7 @@ export default function SurveyBuilder({ name, content, onChange }) {
             className="notActivePageButton"
             onClick={(e) => addNewPage(e)}
           >
-            +
+            {t("surveyBuilder.addPage", "+")}
           </button>
         )}
       </div>

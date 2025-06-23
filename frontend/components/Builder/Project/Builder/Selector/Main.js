@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Dropdown, Accordion, Icon } from "semantic-ui-react";
 import debounce from "lodash.debounce";
 import ReactHtmlParser from "react-html-parser";
+import useTranslation from "next-translate/useTranslation";
 
 import { NodesTypesContainer } from "../Diagram/nodes-types-container/NodesTypesContainer";
 import { NodeTypeLabel } from "../Diagram/node-type-label/NodeTypeLabel";
@@ -10,37 +11,8 @@ import Blocks from "./Blocks/Main";
 import StudyTemplates from "./Templates/Main";
 import { StyledCard } from "../../../../styles/StyledBuilder";
 
-const components = [
-  {
-    index: 0,
-    componentType: "BLOCK",
-    title: "Basic Blocks",
-    description: `
-      Want to include <strong>custom instructions</strong> to your
-      participants or <strong>embed a link and/or video</strong> in
-      your study’s procedure? Select and edit a basic block`,
-  },
-  {
-    index: 1,
-    componentType: "TASK",
-    title: "Tasks",
-    description: `
-      Want to <strong>measure a construct or variable</strong> by having
-      participants <strong>complete an activity</strong>? Choose from
-      this bank of validated tasks`,
-  },
-  {
-    index: 2,
-    componentType: "SURVEY",
-    title: "Surveys",
-    description: `
-      Want to <strong> measure participants’ attitudes, experiences, or opinions
-      </strong> through <strong>self-report</strong>? Choose from this bank of
-      validated surveys`,
-  },
-];
-
 export default function ComponentSelector({ engine, user, addFunctions }) {
+  const { t } = useTranslation("builder");
   const [createdBy, setCreatedBy] = useState("anyone");
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState("");
@@ -66,6 +38,36 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
     setActiveIndex(newIndex);
   };
 
+  const components = [
+    {
+      index: 0,
+      componentType: "BLOCK",
+      title: t("selector.basicBlocks.title", "Basic Blocks"),
+      description: t(
+        "selector.basicBlocks.description",
+        "Want to include <strong>custom instructions</strong> to your participants or <strong>embed a link and/or video</strong> in your study's procedure? Select and edit a basic block"
+      ),
+    },
+    {
+      index: 1,
+      componentType: "TASK",
+      title: t("selector.tasks.title", "Tasks"),
+      description: t(
+        "selector.tasks.description",
+        "Want to <strong>measure a construct or variable</strong> by having participants <strong>complete an activity</strong>? Choose from this bank of validated tasks"
+      ),
+    },
+    {
+      index: 2,
+      componentType: "SURVEY",
+      title: t("selector.surveys.title", "Surveys"),
+      description: t(
+        "selector.surveys.description",
+        "Want to <strong>measure participants' attitudes, experiences, or opinions</strong> through <strong>self-report</strong>? Choose from this bank of validated surveys"
+      ),
+    },
+  ];
+
   return (
     <div className="editPane">
       <div className="header">
@@ -74,7 +76,7 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
           name="keyword"
           value={keyword}
           onChange={saveToState}
-          placeholder="🔍 Search"
+          placeholder={t("selector.searchPlaceholder", "🔍 Search")}
           onFocus={() => {
             engine.getModel().setLocked(true);
           }}
@@ -89,17 +91,17 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
           options={[
             {
               key: "anyone",
-              text: "Created by anyone",
+              text: t("selector.filter.createdByAnyone", "Created by anyone"),
               value: "anyone",
             },
             {
               key: "me",
-              text: "Owned by me",
+              text: t("selector.filter.ownedByMe", "Owned by me"),
               value: "me",
             },
             {
               key: "favorite",
-              text: "My favorite",
+              text: t("selector.filter.myFavorite", "My favorite"),
               value: "favorite",
             },
           ]}
@@ -136,9 +138,10 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
               {item?.componentType === "SURVEY" && (
                 <div className="blocksMenuSurveyBuilder">
                   <p>
-                    Cannot find a tools to measure one of you’re study
-                    construct? Build your own with the Survey builder and
-                    teacher’s help:
+                    {t(
+                      "selector.surveys.buildOwn",
+                      "Cannot find a tools to measure one of you're study construct? Build your own with the Survey builder and teacher's help:"
+                    )}
                   </p>
                   <Blocks
                     user={user}
@@ -159,9 +162,9 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
           onClick={handleClick}
         >
           <div className="blocksMenuTitle">
-            <h3>Study design</h3>
+            <h3>{t("selector.studyDesign.title", "Study design")}</h3>
             <Icon name="dropdown" />
-            <p>Create between-subjects design</p>
+            <p>{t("selector.studyDesign.description", "Create between-subjects design")}</p>
           </div>
         </Accordion.Title>
         <Accordion.Content active={activeIndex.includes(4)}>
@@ -174,7 +177,7 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
                 link
                 onClick={() => {
                   addFunctions.addDesignToCanvas({
-                    name: "Between-subjects design",
+                    name: t("selector.studyDesign.betweenSubjects", "Between-subjects design"),
                   });
                 }}
               />
@@ -185,9 +188,9 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
                 <NodeTypeLabel
                   model={{
                     type: "design",
-                    name: "Between-subjects design",
+                    name: t("selector.studyDesign.betweenSubjects", "Between-subjects design"),
                   }}
-                  name="Between-subjects design"
+                  name={t("selector.studyDesign.betweenSubjects", "Between-subjects design")}
                 ></NodeTypeLabel>
               </NodesTypesContainer>
             </div>
@@ -201,12 +204,13 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
           onClick={handleClick}
         >
           <div className="blocksMenuTitle">
-            <h3>Templates</h3>
+            <h3>{t("selector.templates.title", "Templates")}</h3>
             <Icon name="dropdown" />
             <p>
-              Don’t want to start from scratch? Select and edit a{" "}
-              <strong>pre-made study design</strong> using one of the templates
-              in this bank
+              {t(
+                "selector.templates.description",
+                "Don't want to start from scratch? Select and edit a <strong>pre-made study design</strong> using one of the templates in this bank"
+              )}
             </p>
           </div>
         </Accordion.Title>

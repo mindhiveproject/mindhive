@@ -3,6 +3,7 @@ import { Icon } from "semantic-ui-react";
 
 import { saveAs } from "file-saver";
 import { jsonToCSV } from "react-papaparse";
+import useTranslation from "next-translate/useTranslation";
 
 export default function DownloadRawData({
   slug,
@@ -10,6 +11,7 @@ export default function DownloadRawData({
   components,
   datasets,
 }) {
+  const { t } = useTranslation("builder");
   const [loading, setLoading] = useState(false);
 
   const download = async () => {
@@ -61,11 +63,11 @@ export default function DownloadRawData({
   return (
     <>
       {loading ? (
-        <div>Wait ...</div>
+        <div>{t("byComponent.wait", "Wait ...")}</div>
       ) : (
         <div className="downloadArea" onClick={() => download()}>
           <Icon color="teal" size="large" name="download" />
-          <a>Download raw data</a>
+          <a>{t("byComponent.downloadRaw", "Download raw data")}</a>
         </div>
       )}
     </>

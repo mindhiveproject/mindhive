@@ -7,6 +7,7 @@ import { STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
 
 import { useMutation } from "@apollo/client";
 import ProposalBuilder from "../../../Proposal/Builder/Main";
+import useTranslation from "next-translate/useTranslation";
 
 export default function CreateProposal({
   studyId,
@@ -15,6 +16,7 @@ export default function CreateProposal({
   isCopy,
   goToOverview,
 }) {
+  const { t } = useTranslation("builder");
   const [proposalId, setProposalId] = useState(copyProposalId || null);
   const [template, setTemplate] = useState(null);
 
@@ -41,7 +43,7 @@ export default function CreateProposal({
 
   const createProposalCopy = async () => {
     if (!proposalId) {
-      return alert("Please choose the proposal template");
+      return alert(t("createProposal.selectTemplate", "Please choose the proposal template"));
     }
     const res = await copyProposal({
       variables: {
@@ -62,13 +64,13 @@ export default function CreateProposal({
         </div>
 
         <h3>
-          {isCopy ? `Copy the study proposal` : "Create a new study proposal"}
+          {isCopy ? t("createProposal.copyStudyProposal", "Copy the study proposal") : t("createProposal.createNewStudyProposal", "Create a new study proposal")}
         </h3>
 
         {!isCopy && (
           <div className="dropdown">
             <Dropdown
-              placeholder="Select template"
+              placeholder={t("createProposal.selectTemplate", "Select template")}
               fluid
               selection
               options={dropdownTemplates}
@@ -79,7 +81,7 @@ export default function CreateProposal({
         )}
 
         <button onClick={createProposalCopy}>
-          {isCopy ? "Create a copy" : "Create"}
+          {isCopy ? t("createProposal.createCopy", "Create a copy") : t("createProposal.create", "Create")}
         </button>
       </div>
 

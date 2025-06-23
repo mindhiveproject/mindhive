@@ -5,7 +5,17 @@
     "login": "Login",
     "username": "Username",
     "requestReset": "Request reset",
-    "checkYourMail": "Check your email"
+    "checkYourMail": "Check your email",
+    "forgotPassword": "Forgot your password?"
+  },
+  "signup": {
+    "title": "Which role best describes you?",
+    "participant": "Study participant",
+    "student": "Student",
+    "scientist": "Scientist",
+    "teacher": "Teacher",
+    "haveAccount": "Already have an account?",
+    "loginHere": "Login here"
   },
   "navigation": {
     "about": "About",
@@ -16,5 +26,18 @@
     "studies": "Studies",
     "tasks": "Tasks & Surveys",
     "teachers": "Teachers"
+  },
+  "studies": "Studies",
+  "tasksAndSurveys": "Tasks & Surveys",
+  "discoverHeader": "Discover studies, tasks and surveys",
+  "discoverDescription": "Browse our collection of studies, tasks and surveys created by high school students in the MindHive program and partner scientists. Participate in studies or preview tasks and surveys.",
+  "featured": "Featured",
+  "goToStudy": "Go to study",
+  "languages": {
+    "title": "Language Settings",
+    "description": "You can customize and change your language settings below.",
+    "displayLanguage": "Display Language",
+    "updatePreferences": "Update Preferences",
+    "backToSettings": "Back to Settings"
   }
 }

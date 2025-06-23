@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import { UserContext } from "../Global/Authorized";
 
@@ -13,6 +14,7 @@ import { Logo } from "../styles/StyledHeader";
 export default function DashboardNavigation() {
   const router = useRouter();
   const user = useContext(UserContext);
+  const { t } = useTranslation("navigation");
 
   // read permissions
   const permissions = user?.permissions.map((permission) => permission?.name);
@@ -48,7 +50,7 @@ export default function DashboardNavigation() {
               </svg>
             </div>
             <div className="headerWithUpdateCounter">
-              <span>Home</span>
+              <span>{t("home")}</span>
               <UpdatesCount user={user} />
             </div>
           </StyledNavigationLink>
@@ -70,7 +72,7 @@ export default function DashboardNavigation() {
                 />
               </svg>
             </div>
-            <div>Discover</div>
+            <div>{t("discover")}</div>
           </StyledNavigationLink>
         </Link>
 
@@ -109,11 +111,11 @@ export default function DashboardNavigation() {
                 />
               </svg>
             </div>
-            <div>Connect</div>
+            <div>{t("connect")}</div>
           </StyledNavigationLink>
         </Link>
 
-        <div className="workspaceHeader">WORKSPACE</div>
+        <div className="workspaceHeader">{t("workspace")}</div>
 
         {(permissions?.includes("ADMIN") ||
           permissions?.includes("SCIENTIST") ||
@@ -136,7 +138,7 @@ export default function DashboardNavigation() {
                   />
                 </svg>
               </div>
-              <div>Develop</div>
+              <div>{t("dev")}</div>
             </StyledNavigationLink>
           </Link>
         )}
@@ -169,7 +171,7 @@ export default function DashboardNavigation() {
                 />
               </svg>
             </div>
-            <div>Feedback Center</div>
+            <div>{t("feedbackCenter")}</div>
           </StyledNavigationLink>
         </Link>
 
@@ -189,7 +191,7 @@ export default function DashboardNavigation() {
                 />
               </svg>
             </div>
-            <div>Journal</div>
+            <div>{t("journal")}</div>
           </StyledNavigationLink>
         </Link>
 
@@ -226,7 +228,7 @@ export default function DashboardNavigation() {
 
         {permissions?.includes("ADMIN") && (
           <>
-            <div className="workspaceHeader">ADMIN</div>
+            <div className="workspaceHeader">{t("admin")}</div>
 
             <Link href="/dashboard/management">
               <StyledNavigationLink selected={area === "management"}>
@@ -244,7 +246,7 @@ export default function DashboardNavigation() {
                     />
                   </svg>
                 </div>
-                <div>Management</div>
+                <div>{t("management")}</div>
               </StyledNavigationLink>
             </Link>
 
@@ -284,7 +286,7 @@ export default function DashboardNavigation() {
                     />
                   </svg>
                 </div>
-                <div>Tags</div>
+                <div>{t("tags")}</div>
               </StyledNavigationLink>
             </Link>
 
@@ -304,7 +306,7 @@ export default function DashboardNavigation() {
                     />
                   </svg>
                 </div>
-                <div>Updates</div>
+                <div>{t("updates")}</div>
               </StyledNavigationLink>
             </Link>
 
@@ -324,7 +326,7 @@ export default function DashboardNavigation() {
                     />
                   </svg>
                 </div>
-                <div>Proposals</div>
+                <div>{t("proposals")}</div>
               </StyledNavigationLink>
             </Link>
           </>
@@ -340,7 +342,6 @@ export default function DashboardNavigation() {
                   <svg
                     width="20"
                     height="20"
-                    viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                   >
@@ -374,7 +375,7 @@ export default function DashboardNavigation() {
                     />
                   </svg>
                 </div>
-                <div>My Classes</div>
+                <div>{t("myClasses")}</div>
               </StyledNavigationLink>
             </Link>
           </>
@@ -396,7 +397,7 @@ export default function DashboardNavigation() {
                 />
               </svg>
             </div>
-            <div>Consent Protocol</div>
+            <div>{t("consentProtocol")}</div>
           </StyledNavigationLink>
         </Link>
 
@@ -410,7 +411,6 @@ export default function DashboardNavigation() {
                   <svg
                     width="20"
                     height="20"
-                    viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                   >
@@ -444,7 +444,7 @@ export default function DashboardNavigation() {
                     />
                   </svg>
                 </div>
-                <div>My Classes</div>
+                <div>{t("myClasses")}</div>
               </StyledNavigationLink>
             </Link>
 
@@ -464,7 +464,7 @@ export default function DashboardNavigation() {
                     />
                   </svg>
                 </div>
-                <div>Resources</div>
+                <div>{t("resources")}</div>
               </StyledNavigationLink>
             </Link>
           </>
@@ -491,7 +491,7 @@ export default function DashboardNavigation() {
                     />
                   </svg>
                 </div>
-                <div>Lessons</div>
+                <div>{t("lessons")}</div>
               </StyledNavigationLink>
             </Link>
           </>
@@ -513,10 +513,10 @@ export default function DashboardNavigation() {
                 />
               </svg>
             </div>
-            <div>Settings</div>
+            <div>{t("settings")}</div>
           </StyledNavigationLink>
         </Link>
-        <Signout>Log off</Signout>
+        <Signout>{t("logoff")}</Signout>
       </div>
     </StyledSideBar>
   );

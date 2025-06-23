@@ -19,8 +19,10 @@ import {
 import { COPY_PROPOSAL_MUTATION } from "../../../Mutations/Proposal";
 
 import { useEffect } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function StartProject({ query, user }) {
+  const { t } = useTranslation("builder");
   const { data, error } = useQuery(GET_USER_CLASSES);
   const studentClasses = data?.authenticatedItem?.studentIn || [];
   const userClasses = [
@@ -79,7 +81,7 @@ export default function StartProject({ query, user }) {
 
   const saveNewProject = async () => {
     if (!inputs?.projectName) {
-      return alert("Give your project a name");
+      return alert(t('newProject.giveNameAlert'));
     }
 
     const res = await copyProposal({
@@ -110,11 +112,11 @@ export default function StartProject({ query, user }) {
                 pathname: `/dashboard/develop`,
               }}
             >
-              ← Back to home
+              {t('newProject.backToHome')}
             </Link>
           </div>
           <div className="centralPanel">
-            {inputs?.projectName || `Untitled Project`}
+            {inputs?.projectName || t('newProject.untitledProject')}
           </div>
         </div>
       </div>
@@ -123,17 +125,15 @@ export default function StartProject({ query, user }) {
           <>
             <div className="modalEmpty">
               <div className="title">
-                There are no project board templates in the class
+                {t('newProject.noTemplatesTitle')}
               </div>
               <div className="subtitle">
-                To start a project, you need a project board template. Your
-                teacher may not have a project board template linked to this
-                class.
+                {t('newProject.noTemplatesSubtitle')}
               </div>
 
               {studentClasses && studentClasses.length > 1 && (
                 <div>
-                  <div className="title">Select the class</div>
+                  <div className="title">{t('newProject.selectClass')}</div>
                   <LinkClass
                     classes={studentClasses}
                     project={inputs}
@@ -148,30 +148,29 @@ export default function StartProject({ query, user }) {
                   pathname: `/dashboard/develop/studies`,
                 }}
               >
-                <div className="backBtn">Go back home</div>
+                <div className="backBtn">{t('newProject.goBackHome')}</div>
               </Link>
             </div>
           </>
         ) : (
           <div className="modal">
             <StyledInput>
-              <div className="title">Name your project</div>
+              <div className="title">{t('newProject.nameYourProject')}</div>
               <div className="message">
-                Give your project a name. This is not the study's title, but
-                what you want to call your work space.
+                {t('newProject.nameMessage')}
               </div>
 
               <input
                 type="text"
                 name="projectName"
-                placeholder="The name of my project is "
+                placeholder={t('newProject.namePlaceholder')}
                 value={inputs.projectName}
                 onChange={handleChange}
               />
 
               {studentClasses && studentClasses.length > 1 && (
                 <div>
-                  <div className="title">Select the class</div>
+                  <div className="title">{t('newProject.selectClass')}</div>
                   <LinkClass
                     classes={studentClasses}
                     project={inputs}
@@ -182,7 +181,7 @@ export default function StartProject({ query, user }) {
               )}
 
               <div>
-                <div className="title">Add collaborators</div>
+                <div className="title">{t('newProject.addCollaborators')}</div>
                 <Collaborators
                   userClasses={userClasses}
                   collaborators={
@@ -195,15 +194,15 @@ export default function StartProject({ query, user }) {
               {dataProjects && dataProjects?.proposalBoards.length > 1 && (
                 <Message warning>
                   <MessageHeader>
-                    You already have a project associated with this class
+                    {t('newProject.alreadyAssociatedTitle')}
                   </MessageHeader>
                   <p>
-                    Do not proceed further unless you know what you are doing.
+                    {t('newProject.alreadyAssociatedWarning')}
                   </p>
                 </Message>
               )}
             </StyledInput>
-            <button onClick={saveNewProject}>Create Project</button>
+            <button onClick={saveNewProject}>{t('newProject.createProject')}</button>
           </div>
         )}
       </div>

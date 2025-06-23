@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import { GET_PARTICIPANT_RESULTS } from "../../../../../Queries/Result";
 
 import Dataset from "./Dataset";
+import useTranslation from "next-translate/useTranslation";
 
 // https://vercel.com/guides/loading-static-file-nextjs-api-route
 // https://swr.vercel.app/
@@ -12,6 +13,7 @@ export default function ParticipantResults({
   components,
   participantId,
 }) {
+  const { t } = useTranslation("builder");
   const dataToken = query?.data;
 
   const { data: results } = useQuery(GET_PARTICIPANT_RESULTS, {
@@ -26,20 +28,20 @@ export default function ParticipantResults({
 
   return (
     <div>
-      <h2>Participant results</h2>
+      <h2>{t("participantResults.title", "Participant results")}</h2>
 
       <div className="resultItem">
-        <div>Study</div>
-        <div>Task title</div>
-        <div>Task subtitle</div>
-        <div>Task ID</div>
-        <div>Started</div>
-        <div>Completed</div>
-        <div>Condition</div>
-        <div>Data type</div>
-        <div>Data policy</div>
-        <div>Study status</div>
-        <div>Data analysis</div>
+        <div>{t("participantResults.study", "Study")}</div>
+        <div>{t("participantResults.taskTitle", "Task title")}</div>
+        <div>{t("participantResults.taskSubtitle", "Task subtitle")}</div>
+        <div>{t("participantResults.taskId", "Task ID")}</div>
+        <div>{t("participantResults.started", "Started")}</div>
+        <div>{t("participantResults.completed", "Completed")}</div>
+        <div>{t("participantResults.condition", "Condition")}</div>
+        <div>{t("participantResults.dataType", "Data type")}</div>
+        <div>{t("participantResults.dataPolicy", "Data policy")}</div>
+        <div>{t("participantResults.studyStatus", "Study status")}</div>
+        <div>{t("participantResults.dataAnalysis", "Data analysis")}</div>
         <div></div>
       </div>
 

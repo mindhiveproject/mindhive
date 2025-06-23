@@ -1,4 +1,5 @@
 import { useState, useEffect, useReducer } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import uniqid from "uniqid";
 
@@ -36,6 +37,8 @@ export default function Engine({
   saveStudy,
   toggleSidebar,
 }) {
+  const { t } = useTranslation("builder");
+  
   // Lock the canvas if dataCollectionStatus is SUBMITTED
   const isCanvasLocked = study?.dataCollectionStatus === "SUBMITTED";
 
@@ -139,7 +142,7 @@ export default function Engine({
     subtitle,
     createCopy,
   }) => {
-    if (isCanvasLocked) return alert("The study has been locked");
+    if (isCanvasLocked) return alert(t("engine.studyLocked", "The study has been locked"));
     let newNode;
     if (createCopy) {
       newNode = new TaskModel({
@@ -149,7 +152,7 @@ export default function Engine({
         componentID,
         testId: uniqid.time(),
         taskType,
-        subtitle: `COPY ${shorten(subtitle)}`,
+        subtitle: `${t("engine.copy", "COPY")} ${shorten(subtitle)}`,
         createCopy: true,
       });
     } else {
@@ -174,7 +177,7 @@ export default function Engine({
   };
 
   const addStudyTemplateToCanvas = ({ study }) => {
-    if (isCanvasLocked) return alert("The study has been locked");
+    if (isCanvasLocked) return alert(t("engine.studyLocked", "The study has been locked"));
     const { diagram } = study;
     const model = new DiagramModel();
     model.deserializeModel(JSON.parse(diagram), engine);
@@ -183,7 +186,7 @@ export default function Engine({
   };
 
   const addComment = () => {
-    if (isCanvasLocked) return alert("The study has been locked");
+    if (isCanvasLocked) return alert(t("engine.studyLocked", "The study has been locked"));
     const note = new CommentModel({
       author: user?.username,
       time: Date.now(),
@@ -201,7 +204,7 @@ export default function Engine({
   };
 
   const addAnchor = () => {
-    if (isCanvasLocked) return alert("The study has been locked");
+    if (isCanvasLocked) return alert(t("engine.studyLocked", "The study has been locked"));
     const anchor = new AnchorModel({});
     const event = {
       clientX: getRandomIntInclusive(300, 500),
@@ -214,7 +217,7 @@ export default function Engine({
   };
 
   const addDesignToCanvas = ({ name, details, conditions }) => {
-    if (isCanvasLocked) return alert("The study has been locked");
+    if (isCanvasLocked) return alert(t("engine.studyLocked", "The study has been locked"));
     const newNode = new DesignModel({
       name,
       details,
@@ -362,7 +365,7 @@ export default function Engine({
         query={query}
         user={user}
         tab={tab}
-        saveBtnName="Save"
+        saveBtnName={t("engine.save", "Save")}
         saveBtnFunction={buildStudy}
         toggleSidebar={toggleSidebar}
         hasStudyChanged={hasStudyChanged}

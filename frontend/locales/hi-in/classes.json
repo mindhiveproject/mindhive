@@ -1,0 +1,29 @@
+{
+  "classNetworks": "कक्षा नेटवर्क",
+  "createdByOn": "{{username}} द्वारा {{date}} को बनाया गया",
+  "classes": "कक्षाएँ",
+  "deleteYourClass": "अपनी कक्षा हटाएँ",
+  "deleteClassWarning": "अपनी कक्षा हटाने से आपकी कक्षा \"मेरी कक्षाएँ\" क्षेत्र से स्थायी रूप से हट जाएगी। इस क्रिया को पूर्ववत नहीं किया जा सकता।",
+  "noAccessTo": "आपको इन तक पहुँच नहीं होगी:",
+  "yourClass": "आपकी कक्षा",
+  "anyStudiesOrResults": "आपकी कक्षा के छात्रों द्वारा उत्पन्न कोई भी अध्ययन या परिणाम",
+  "studentsWillHaveAccessTo": "आपके छात्रों को इन तक पहुँच होगी:",
+  "theirWorkspaceAndStudies": "उनका कार्यक्षेत्र और कोई भी अध्ययन, कार्य या सर्वेक्षण जो उन्होंने आपकी कक्षा के दौरान बनाया है",
+  "noteNewStudents": "नोट: नए छात्र आपकी कक्षा में शामिल नहीं हो पाएंगे",
+  "deleteClass": "कक्षा हटाएँ",
+  "areYouSureDeleteClass": "क्या आप वाकई इस कक्षा को हटाना चाहते हैं?",
+  "typeDeleteToConfirm": "पुष्टि के लिए \"DELETE\" टाइप करें",
+  "delete": "हटाएँ",
+  "cancel": "रद्द करें",
+  "pleaseTypeDelete": "कृपया अपनी कक्षा हटाने के लिए DELETE टाइप करें",
+  "studySpecific": {
+    "subtitle": "Subtitle",
+    "testId": "Test ID"
+  },
+  "create": {
+    "createHeader": "नई कक्षा जोड़ें",
+    "title": "नई कक्षा का नाम",
+    "description": "नई कक्षा का विवरण",
+    "create": "नई कक्षा बनाएं"
+  }
+} 

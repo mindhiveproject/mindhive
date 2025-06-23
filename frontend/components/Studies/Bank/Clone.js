@@ -1,11 +1,13 @@
 import { useQuery } from "@apollo/client";
 import { PUBLIC_STUDIES } from "../../Queries/Study";
 import StudyCard from "./StudyCard";
+import useTranslation from "next-translate/useTranslation";
 
 import { StyledSelector } from "../../styles/StyledSelector";
 import { StyledBank } from "../../styles/StyledBank";
 
 export default function CloneStudyBank({ user }) {
+  const { t } = useTranslation("builder");
   const { data, error, loading } = useQuery(PUBLIC_STUDIES);
   const studies = data?.studies || [];
 
@@ -13,8 +15,8 @@ export default function CloneStudyBank({ user }) {
     <StyledSelector>
       <div className="selectionBody">
         <div className="selectHeader">
-          <h1>Clone & modify a study</h1>
-          <p>Select which study you would like to clone below.</p>
+          <h1>{t("cloneAndModify", { taskType: t("study") })}</h1>
+          <p>{t("selectWhichToClone", { taskType: t("study") })}</p>
         </div>
         <StyledBank>
           {studies.map((study) => (

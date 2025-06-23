@@ -1,4 +1,5 @@
 import { Modal } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import TaskPage from "../../../../../Tasks/Landing/TaskPage";
 
@@ -13,6 +14,7 @@ export default function TaskModal({
   addFunctions,
   onModalClose,
 }) {
+  const { t } = useTranslation("builder");
   const isAuthor = component?.author?.id === user?.id;
   const isCollaborator = component?.collaborators
     .map((c) => c?.id)
@@ -44,7 +46,7 @@ export default function TaskModal({
                     onModalClose();
                   }}
                 >
-                  Add to study
+                  {t("taskModal.addToStudy", "Add to study")}
                 </button>
               </div>
               {(isAuthor || isCollaborator) && (
@@ -63,7 +65,7 @@ export default function TaskModal({
                       onModalClose();
                     }}
                   >
-                    Create a copy
+                    {t("taskModal.createCopy", "Create a copy")}
                   </button>
                 </div>
               )}
@@ -73,7 +75,7 @@ export default function TaskModal({
                   target="_blank"
                   href={`/preview/${taskType}/${component?.id}`}
                 >
-                  Preview {taskType}
+                  {t("taskModal.preview", { taskType }, "Preview {{taskType}}")}
                 </a>
               </button>
             </StyledModalButtons>
@@ -88,7 +90,7 @@ export default function TaskModal({
       <Modal.Actions>
         <StyledModalButtons>
           <button className="closeBtn" onClick={() => onModalClose()}>
-            Close
+            {t("taskModal.close", "Close")}
           </button>
         </StyledModalButtons>
       </Modal.Actions>

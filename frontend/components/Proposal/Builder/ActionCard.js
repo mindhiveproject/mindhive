@@ -6,6 +6,7 @@ import { StyledActionCard } from "../../styles/StyledProposal";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 
 export default function ActionCard({
   card,
@@ -17,6 +18,7 @@ export default function ActionCard({
   boardId,
 }) {
   const router = useRouter();
+  const { t } = useTranslation("builder");
 
   return (
     <Draggable key={card.id}>
@@ -39,25 +41,25 @@ export default function ActionCard({
               <div className="card-title">
                 {card?.type === "ACTION_SUBMIT" && (
                   <>
-                    <div>Submit for Proposal Feedback</div>
+                    <div>{t("actionCard.submitForProposalFeedback", "Submit for Proposal Feedback")}</div>
                   </>
                 )}
 
                 {card?.type === "ACTION_PEER_FEEDBACK" && (
                   <>
-                    <div>Submit for Peer Feedback</div>
+                    <div>{t("actionCard.submitForPeerFeedback", "Submit for Peer Feedback")}</div>
                   </>
                 )}
 
                 {card?.type === "ACTION_COLLECTING_DATA" && (
                   <>
-                    <div>Submit for Data Collection</div>
+                    <div>{t("actionCard.submitForDataCollection", "Submit for Data Collection")}</div>
                   </>
                 )}
 
                 {card?.type === "ACTION_PROJECT_REPORT" && (
                   <>
-                    <div>Submit for Project Report</div>
+                    <div>{t("actionCard.submitForProjectReport", "Submit for Project Report")}</div>
                   </>
                 )}
               </div>
@@ -72,7 +74,7 @@ export default function ActionCard({
                 e.stopPropagation();
                 if (
                   confirm(
-                    "Are you sure you want to delete this card? This action cannot be undone."
+                    t("actionCard.deleteConfirm", "Are you sure you want to delete this card? This action cannot be undone.")
                   )
                 ) {
                   onDeleteCard(card.id);

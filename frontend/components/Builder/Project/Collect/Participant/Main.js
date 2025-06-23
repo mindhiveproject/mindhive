@@ -1,4 +1,5 @@
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import UserWrapper from "./StudyInfo/UserWrapper";
 import GuestWrapper from "./StudyInfo/GuestWrapper";
@@ -12,6 +13,7 @@ export default function ParticipantPage({
   participantId,
   type,
 }) {
+  const { t } = useTranslation("builder");
   return (
     <div className="participantPage">
       <Link
@@ -23,7 +25,7 @@ export default function ParticipantPage({
           },
         }}
       >
-        <p>← Go back</p>
+        <p>{t("participant.goBack", "← Go back")}</p>
       </Link>
 
       {type === "user" ? (

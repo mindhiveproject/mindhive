@@ -1,0 +1,43 @@
+{
+	"auth": {
+	  "email": "Email",
+	  "password": "Contraseña",
+	  "login": "Iniciar sesión",
+	  "username": "Nombre de usuario",
+	  "requestReset": "Solicitar restablecimiento",
+	  "checkYourMail": "Revisa tu correo electrónico",
+	  "forgotPassword": "¿Olvidaste tu contraseña?"
+	},
+	"signup": {
+	  "title": "¿Qué rol te describe mejor?",
+	  "participant": "Participante de estudio",
+	  "student": "Estudiante",
+	  "scientist": "Científico",
+	  "teacher": "Profesor",
+	  "haveAccount": "¿Ya tienes una cuenta?",
+	  "loginHere": "Inicia sesión aquí"
+	},
+	"navigation": {
+	  "about": "Acerca de",
+	  "dashboard": "Panel de control",
+	  "discover": "Descubrir",
+	  "login": "Iniciar sesión",
+	  "signup": "Registrarse",
+	  "studies": "Estudios",
+	  "tasks": "Tareas y encuestas",
+	  "teachers": "Profesores"
+	},
+	"studies": "Estudios",
+	"tasksAndSurveys": "Tareas y Encuestas",
+	"discoverHeader": "Descubre estudios, tareas y encuestas",
+	"discoverDescription": "Explora nuestra colección de estudios, tareas y encuestas creadas por estudiantes de secundaria en el programa MindHive y científicos asociados. Participa en estudios o visualiza tareas y encuestas.",
+	"featured": "Destacado",
+	"goToStudy": "Ir al estudio",
+	"languages": {
+		"title": "Configuración de idioma",
+		"description": "Puedes personalizar y cambiar tu configuración de idioma a continuación.",
+		"displayLanguage": "Idioma de visualización",
+		"updatePreferences": "Actualizar preferencias",
+		"backToSettings": "Volver a configuración"
+	}
+}

@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import ProfileType from "./Steps/1-ProfileType";
 import About from "./Steps/2-AboutMe";
 import Interests from "./Steps/3-Interests";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../Queries/User";
 import { StyledCreateProfileFlow } from "../../styles/StyledProfile";
@@ -9,13 +10,14 @@ import { StyledCreateProfileFlow } from "../../styles/StyledProfile";
 import { Progress } from "semantic-ui-react";
 
 export default function EditProfile({ query }) {
+  const { t } = useTranslation("connect");
   const { selector, page } = query;
 
   const steps = [
-    { step: 1, label: "1. Profile Type", percent: 20, page: "type" },
-    { step: 2, label: "2. About Me", percent: 36, page: "about" },
-    { step: 3, label: "3. Interests", percent: 61, page: "interests" },
-    { step: 4, label: "4. Complete", percent: 80, page: "complete" },
+    { step: 1, label: t("steps.profileType"), percent: 20, page: "type" },
+    { step: 2, label: t("steps.aboutMe"), percent: 36, page: "about" },
+    { step: 3, label: t("steps.interests"), percent: 61, page: "interests" },
+    { step: 4, label: t("steps.complete"), percent: 80, page: "complete" },
   ];
 
   // query the full profile of the user
@@ -25,7 +27,7 @@ export default function EditProfile({ query }) {
   return (
     <StyledCreateProfileFlow>
       <div>
-        <h1>Create Profile</h1>
+        <h1>{t("createProfile")}</h1>
         {page !== "type" && (
           <div className="progressBar">
             <Progress
@@ -36,7 +38,7 @@ export default function EditProfile({ query }) {
             >
               <div className="progressLabels">
                 {steps.map((step) => (
-                  <div>{step?.label}</div>
+                  <div key={step.step}>{step?.label}</div>
                 ))}
               </div>
             </Progress>

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Popup, Icon } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import ArrayBuilder from "./ArrayBuilder";
 
@@ -54,6 +55,7 @@ const StyledParameterBlock = styled.div`
 `;
 
 export default function SettingBlock({ name, value, handleChange, task }) {
+  const { t } = useTranslation("builder");
   const taskType = task?.taskType?.toLowerCase();
 
   const onChange = (e) => {
@@ -78,7 +80,7 @@ export default function SettingBlock({ name, value, handleChange, task }) {
         </div>
         <div style={{ display: "grid" }}>
           <label className="name" htmlFor={name}>
-            {taskType} is mobile compatible
+            {t("mobileCompatible", { taskType })}
           </label>
         </div>
       </StyledSettingsBlock>
@@ -88,12 +90,11 @@ export default function SettingBlock({ name, value, handleChange, task }) {
     return (
       <StyledParameterBlock key={name} htmlFor={name}>
         <div className="input">
-          <label>Duration</label>
+          <label>{t("duration")}</label>
           <Popup
             content={
               <p>
-                Approximately how long will it take for someone to complete the{" "}
-                {taskType}?
+                {t("durationHelp", { taskType })}
               </p>
             }
             trigger={<Icon name="question circle outline" />}
@@ -113,12 +114,12 @@ export default function SettingBlock({ name, value, handleChange, task }) {
     return (
       <StyledParameterBlock key={name} htmlFor={name}>
         <div className="input">
-          <label>Resources</label>
+          <label>{t("resources")}</label>
           <ArrayBuilder
             name={name}
             content={value}
             onChange={onChange}
-            title="Resource"
+            title={t("resource")}
           />
         </div>
       </StyledParameterBlock>
@@ -129,12 +130,12 @@ export default function SettingBlock({ name, value, handleChange, task }) {
     return (
       <StyledParameterBlock key={name} htmlFor={name}>
         <div className="input">
-          <label>Aggregate variables</label>
+          <label>{t("aggregateVariables")}</label>
           <ArrayBuilder
             name={name}
             content={value}
             onChange={onChange}
-            title="Variable"
+            title={t("variable")}
           />
         </div>
       </StyledParameterBlock>
@@ -144,59 +145,42 @@ export default function SettingBlock({ name, value, handleChange, task }) {
     <StyledParameterBlock key={name} htmlFor={name}>
       {name === "descriptionBefore" && (
         <>
-          <p>{taskType} card description (pre-participation)</p>
+          <p>{t("descriptionBefore", { taskType })}</p>
           <Popup
-            content={
-              <p>
-                This is what participants will see before taking the {taskType}.
-              </p>
-            }
+            content={<p>{t("descriptionBeforeHelp", { taskType })}</p>}
             trigger={<Icon name="question circle outline" />}
           />
         </>
       )}
       {name === "descriptionAfter" && (
         <>
-          <p>{taskType} card description (post-participation)</p>
+          <p>{t("descriptionAfter", { taskType })}</p>
           <Popup
-            content={
-              <p>
-                This is what participants will see after taking the {taskType}.
-              </p>
-            }
+            content={<p>{t("descriptionAfterHelp", { taskType })}</p>}
             trigger={<Icon name="question circle outline" />}
           />
         </>
       )}
       {name === "background" && (
         <>
-          <p>Background</p>
+          <p>{t("background")}</p>
           <Popup
-            content="Use this field to provide some brief background on the topic of research. What is the problem under study and why is it important?"
+            content={t("backgroundHelp")}
             trigger={<Icon name="question circle outline" />}
           />
         </>
       )}
-      {name === "scoring" && <p>Instructions for scoring (for surveys only)</p>}
+      {name === "scoring" && <p>{t("scoringSurvey")}</p>}
       {name === "format" && (
         <>
-          <p>Format (for surveys only)</p>
+          <p>{t("formatSurvey")}</p>
           <Popup
-            content={
-              <p>
-                For example:{" "}
-                <i>
-                  10 questions in a 5-point Likert scale format. Questions fall
-                  into 2 categories (negative and positive affect). 4 of the
-                  questions are reverse-scored.
-                </i>
-              </p>
-            }
+            content={<p>{t("formatSurveyHelp")}</p>}
             trigger={<Icon name="question circle outline" />}
           />
         </>
       )}
-      {name === "addInfo" && <p>Additional Information</p>}
+      {name === "addInfo" && <p>{t("addInfo")}</p>}
       <div className="input">
         <textarea
           id={name}
@@ -207,12 +191,10 @@ export default function SettingBlock({ name, value, handleChange, task }) {
         />
       </div>
       {name === "descriptionBefore" && (
-        <span>
-          This is visible to anyone who hasn't yet participated in the task.
-        </span>
+        <span>{t("descriptionBeforeVisible")}</span>
       )}
       {name === "descriptionAfter" && (
-        <span>This is visible to anyone who has participated in the task.</span>
+        <span>{t("descriptionAfterVisible")}</span>
       )}
     </StyledParameterBlock>
   );

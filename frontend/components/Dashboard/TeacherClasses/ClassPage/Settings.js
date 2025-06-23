@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import moment from "moment";
+import useTranslation from "next-translate/useTranslation";
 
 import { DELETE_CLASS } from "../../../Mutations/Classes";
 import { GET_CLASSES } from "../../../Queries/Classes";
@@ -12,6 +13,7 @@ import StyledModal from "../../../styles/StyledModal";
 import { useRouter } from "next/router";
 
 export default function Settings({ myclass, user }) {
+  const { t } = useTranslation("classes");
   const [inputValue, setInputValue] = useState({});
   const [open, setOpen] = useState(false);
   const handleChange = (e) => {
@@ -48,16 +50,18 @@ export default function Settings({ myclass, user }) {
     <div className="settings">
       {myclass?.networks.length > 0 && (
         <div>
-          <h3>Class networks</h3>
+          <h3>{t("classNetworks")}</h3>
           {myclass?.networks.map((network) => (
             <div>
               <h2>{network?.title}</h2>
               <p>{network?.description}</p>
               <p>
-                Created by {network?.creator?.username} on{" "}
-                {moment(network?.createdAt).format("MMMM D, YYYY")}
+                {t("createdByOn", {
+                  username: network?.creator?.username,
+                  date: moment(network?.createdAt).format("MMMM D, YYYY"),
+                })}
               </p>
-              <p>Classes</p>
+              <p>{t("classes")}</p>
               <ul>
                 {network?.classes.map((cl) => (
                   <li>{cl?.title}</li>
@@ -68,31 +72,23 @@ export default function Settings({ myclass, user }) {
         </div>
       )}
 
-      <h3>Delete your class</h3>
-      <p>
-        Deleting your class will permanently delete your class within the “My
-        Classes” area. This action cannot be undone.
-      </p>
+      <h3>{t("deleteYourClass")}</h3>
+      <p>{t("deleteClassWarning")}</p>
 
       <div className="informationBlock">
         <div className="block">
-          <p>You will not have access to:</p>
+          <p>{t("noAccessTo")}</p>
           <ul>
-            <li>Your class</li>
-            <li>
-              Any studies or results generated from students in your class
-            </li>
+            <li>{t("yourClass")}</li>
+            <li>{t("anyStudiesOrResults")}</li>
           </ul>
         </div>
 
         <div className="block">
-          <p>Your students will have access to:</p>
+          <p>{t("studentsWillHaveAccessTo")}</p>
           <ul>
-            <li>
-              Their workspace and any studies, tasks or surveys they created
-              during your class
-            </li>
-            <li>Note: New students will not be able to join your class</li>
+            <li>{t("theirWorkspaceAndStudies")}</li>
+            <li>{t("noteNewStudents")}</li>
           </ul>
         </div>
       </div>
@@ -103,25 +99,20 @@ export default function Settings({ myclass, user }) {
           onOpen={() => setOpen(true)}
           open={open}
           size="small"
-          trigger={<button disabled={loading}>Delete class</button>}
+          trigger={<button disabled={loading}>{t("deleteClass")}</button>}
         >
           <Modal.Content>
             <Modal.Description>
               <StyledModal>
                 <h3>
-                  Are you sure you want to <strong>delete</strong> this class?
+                  {t("areYouSureDeleteClass")}
                 </h3>
                 <p>
-                  Deleting your class will{" "}
-                  <strong>permanently delete your class</strong> within the “My
-                  Classes” area.{" "}
-                  <span className="red">
-                    <strong>This action cannot be undone.</strong>
-                  </span>
+                  {t("deleteClassWarning")}
                 </p>
                 <div>
                   <p>
-                    <strong>Type "DELETE" to confirm</strong>
+                    <strong>{t("typeDeleteToConfirm")}</strong>
                   </p>
                   <input type="text" onChange={handleChange} />
                 </div>
@@ -131,7 +122,7 @@ export default function Settings({ myclass, user }) {
           <Modal.Actions>
             <Button
               style={{ background: "#D53533", color: "#FFFFFF" }}
-              content="Delete"
+              content={t("delete")}
               onClick={() => {
                 if (inputValue === "DELETE") {
                   deleteClass().catch((err) => alert(err.message));
@@ -139,12 +130,13 @@ export default function Settings({ myclass, user }) {
                     pathname: "/dashboard/myclasses",
                   });
                 } else {
-                  return alert("Please type DELETE to delete your class");
+                  return alert(t("pleaseTypeDelete"));
                 }
                 setOpen(false);
               }}
             />
-            <Button content="Cancel" onClick={() => setOpen(false)} />
+            <Button content={t("cancel")}
+              onClick={() => setOpen(false)} />
           </Modal.Actions>
         </Modal>
       </div>

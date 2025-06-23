@@ -8,6 +8,8 @@ import useForm from "../../../../../../lib/useForm";
 
 import { Radio } from "semantic-ui-react";
 
+import useTranslation from "next-translate/useTranslation";
+
 export default function ProposalHeader({
   user,
   proposal,
@@ -16,6 +18,7 @@ export default function ProposalHeader({
   isPDF,
   setIsPDF,
 }) {
+  const { t } = useTranslation("builder");
   const studyId = proposal?.study?.id;
 
   // save and edit the study information
@@ -40,7 +43,7 @@ export default function ProposalHeader({
         {!proposalBuildMode && (
           <div>
             <div className="titleEditBtn">
-              <h1>My Project Board</h1>
+              <h1>{t("proposalBoard.myProjectBoard", "My Project Board")}</h1>
               <Radio
                 toggle
                 checked={isPDF}
@@ -51,7 +54,7 @@ export default function ProposalHeader({
             </div>
 
             <p>
-              Create your study proposal here to begin your research journey{" "}
+              {t("proposalBoard.createYourStudyProposal", "Create your study proposal here to begin your research journey ")}
             </p>
           </div>
         )}
@@ -68,6 +71,7 @@ export default function ProposalHeader({
                   onChange={handleChange}
                   required
                   className="title"
+                  placeholder={t("proposalBoard.titlePlaceholder", "Enter project board title")}
                 />
               </label>
             </div>
@@ -81,6 +85,7 @@ export default function ProposalHeader({
                   onChange={handleChange}
                   rows="1"
                   className="description"
+                  placeholder={t("proposalBoard.descriptionPlaceholder", "Enter project board description")}
                 />
               </label>
             </div>
@@ -97,7 +102,7 @@ export default function ProposalHeader({
                         checked={inputs.isTemplate}
                         onChange={toggleBoolean}
                       />
-                      <span>Public template</span>
+                      <span>{t("proposalBoard.publicTemplate", "Public template")}</span>
                     </div>
                   </label>
                 </div>
@@ -129,7 +134,7 @@ export default function ProposalHeader({
                     checked={inputs?.settings?.allowMovingSections || false}
                     onChange={toggleSettingsBoolean}
                   />
-                  <span>Allow moving sections</span>
+                  <span>{t("proposalBoard.allowMovingSections", "Allow moving sections")}</span>
                 </div>
               </label>
             </div>
@@ -144,7 +149,7 @@ export default function ProposalHeader({
                     checked={inputs?.settings?.allowMovingCards || false}
                     onChange={toggleSettingsBoolean}
                   />
-                  <span>Allow moving cards</span>
+                  <span>{t("proposalBoard.allowMovingCards", "Allow moving cards")}</span>
                 </div>
               </label>
             </div>
@@ -159,7 +164,7 @@ export default function ProposalHeader({
                     checked={inputs?.settings?.allowAddingSections || false}
                     onChange={toggleSettingsBoolean}
                   />
-                  <span>Allow adding new sections</span>
+                  <span>{t("proposalBoard.allowAddingSections", "Allow adding new sections")}</span>
                 </div>
               </label>
             </div>
@@ -174,7 +179,7 @@ export default function ProposalHeader({
                     checked={inputs?.settings?.allowAddingCards || false}
                     onChange={toggleSettingsBoolean}
                   />
-                  <span>Allow adding new cards</span>
+                  <span>{t("proposalBoard.allowAddingCards", "Allow adding new cards")}</span>
                 </div>
               </label>
             </div>
@@ -193,7 +198,7 @@ export default function ProposalHeader({
                 const res = await updateProposal();
               }}
             >
-              {loading ? "Saving" : "Save"}
+              {loading ? t("proposalBoard.saving", "Saving") : t("proposalBoard.save", "Save")}
             </button>
           </div>
         )}

@@ -1,0 +1,43 @@
+{
+  "auth": {
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "login": "Inloggen",
+    "username": "Gebruikersnaam",
+    "requestReset": "Reset aanvragen",
+    "checkYourMail": "Controleer je e-mail",
+    "forgotPassword": "Wachtwoord vergeten?"
+  },
+  "signup": {
+    "title": "Welke rol beschrijft jou het beste?",
+    "participant": "Studiedeelnemer",
+    "student": "Student",
+    "scientist": "Wetenschapper",
+    "teacher": "Docent",
+    "haveAccount": "Heb je al een account?",
+    "loginHere": "Log hier in"
+  },
+  "navigation": {
+    "about": "Over",
+    "dashboard": "Dashboard",
+    "discover": "Ontdekken",
+    "login": "Inloggen",
+    "signup": "Registreren",
+    "studies": "Studies",
+    "tasks": "Taken en enquêtes",
+    "teachers": "Docenten"
+  },
+  "studies": "Studies",
+  "tasksAndSurveys": "Taken en Enquêtes",
+  "discoverHeader": "Ontdek studies, taken en enquêtes",
+  "discoverDescription": "Blader door onze collectie studies, taken en enquêtes gemaakt door middelbare scholieren in het MindHive-programma en partners. Neem deel aan studies of bekijk taken en enquêtes.",
+  "featured": "Uitgelicht",
+  "goToStudy": "Ga naar studie",
+  "languages": {
+    "title": "Taalinstellingen",
+    "description": "Je kunt hieronder je taalinstellingen aanpassen en wijzigen.",
+    "displayLanguage": "Weergavetaal",
+    "updatePreferences": "Voorkeuren bijwerken",
+    "backToSettings": "Terug naar instellingen"
+  }
+}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import { StyledStudyCard } from "../../styles/StyledCard";
 import ProjectOptions from "./ProjectOptions";
@@ -11,6 +12,7 @@ export default function ProjectCard({
   name,
   projectsInfo,
 }) {
+  const { t } = useTranslation("builder");
   const imageURL = project?.image?.image?.publicUrlTransformed;
 
   return (
@@ -38,7 +40,7 @@ export default function ProjectCard({
           <div className="cardInfo">
             <div className="studyHeader">
               <h2>{project.title}</h2>
-              <span>created by {project?.author?.username}</span>
+              <span>{t("createdBy", { username: project?.author?.username })}</span>
             </div>
           </div>
         </Link>
