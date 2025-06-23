@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import { Dropdown } from "semantic-ui-react";
 
@@ -9,6 +10,7 @@ import { GET_USER_STUDIES } from "../../Queries/User";
 import StudyCard from "./StudyCard";
 
 export default function DevelopStudyBank({ user }) {
+  const { t } = useTranslation("builder");
   const { data, error, loading } = useQuery(MY_STUDIES, {
     variables: { id: user?.id },
   });
@@ -22,21 +24,21 @@ export default function DevelopStudyBank({ user }) {
   const filterOptions = [
     {
       key: "All",
-      text: "All studies",
+      text: t("allStudies"),
       value: "All",
-      content: <p>All</p>,
+      content: <p>{t("allStudies")}</p>,
     },
     {
       key: "Active",
-      text: "Active studies",
+      text: t("activeStudies"),
       value: "Active",
-      content: <p>Active</p>,
+      content: <p>{t("activeStudies")}</p>,
     },
     {
       key: "Archived",
-      text: "Archived studies",
+      text: t("archivedStudies"),
       value: "Archived",
-      content: <p>Archived</p>,
+      content: <p>{t("archivedStudies")}</p>,
     },
   ];
 

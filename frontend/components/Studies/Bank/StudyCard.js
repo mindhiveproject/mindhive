@@ -1,9 +1,11 @@
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import { StyledStudyCard } from "../../styles/StyledCard";
 import StudyOptions from "./StudyOptions";
 
 export default function StudyCard({ user, study, url, id, name, studiesInfo }) {
+  const { t } = useTranslation("builder");
   const imageURL = study?.image?.image?.publicUrlTransformed;
 
   return (
@@ -28,7 +30,7 @@ export default function StudyCard({ user, study, url, id, name, studiesInfo }) {
           <div className="cardInfo">
             <div className="studyHeader">
               <h2>{study.title}</h2>
-              <span>created by {study?.author?.username}</span>
+              <span>{t("createdBy", { username: study?.author?.username })}</span>
             </div>
           </div>
         </Link>

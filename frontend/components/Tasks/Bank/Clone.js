@@ -1,11 +1,13 @@
 import { useQuery } from "@apollo/client";
 import { PUBLIC_TASKS } from "../../Queries/Task";
 import TaskCard from "./TaskCard";
+import useTranslation from "next-translate/useTranslation";
 
 import { StyledSelector } from "../../styles/StyledSelector";
 import { StyledBank } from "../../styles/StyledBank";
 
 export default function CloneTaskBank({ taskType }) {
+  const { t } = useTranslation("builder");
   const { data, error, loading } = useQuery(PUBLIC_TASKS, {
     variables: {
       where: {
@@ -20,8 +22,8 @@ export default function CloneTaskBank({ taskType }) {
     <StyledSelector>
       <div className="selectionBody">
         <div className="selectHeader">
-          <h1>Clone & modify a {taskType}</h1>
-          <p>Select which {taskType} you would like to clone below.</p>
+          <h1>{t("cloneAndModify", { taskType })}</h1>
+          <p>{t("selectWhichToClone", { taskType })}</p>
         </div>
         <StyledBank>
           {tasks.map((task) => (
