@@ -1,0 +1,29 @@
+{
+  "classNetworks": "班级网络",
+  "createdByOn": "由{{username}}于{{date}}创建",
+  "classes": "班级",
+  "deleteYourClass": "删除你的班级",
+  "deleteClassWarning": "删除你的班级将会永久删除\"我的班级\"区域中的该班级。此操作无法撤销。",
+  "noAccessTo": "你将无法访问：",
+  "yourClass": "你的班级",
+  "anyStudiesOrResults": "你班级学生生成的任何研究或结果",
+  "studentsWillHaveAccessTo": "你的学生将可以访问：",
+  "theirWorkspaceAndStudies": "他们的工作区以及在你的班级期间创建的任何研究、任务或调查",
+  "noteNewStudents": "注意：新学生将无法加入你的班级",
+  "deleteClass": "删除班级",
+  "areYouSureDeleteClass": "你确定要删除这个班级吗？",
+  "typeDeleteToConfirm": "输入\"DELETE\"以确认",
+  "delete": "删除",
+  "cancel": "取消",
+  "pleaseTypeDelete": "请输入 DELETE 以删除你的班级",
+  "studySpecific": {
+    "subtitle": "Subtitle",
+    "testId": "Test ID"
+  },
+  "create": {
+    "createHeader": "添加新班级",
+    "title": "新班级名称",
+    "description": "新班级描述",
+    "create": "创建新班级"
+  }
+} 

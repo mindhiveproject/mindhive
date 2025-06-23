@@ -1,4 +1,5 @@
 import React from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import ComponentWidget from "./Widgets/Component";
 import NotesWidget from "./Widgets/Notes";
@@ -19,6 +20,7 @@ const VisualizationWidget = ({
   variables,
   section,
 }) => {
+  const { t } = useTranslation();
   const commonProps = {
     id,
     settings,
@@ -41,7 +43,7 @@ const VisualizationWidget = ({
     case "notes":
       return <NotesWidget {...commonProps} />;
     default:
-      return <p>Unsupported widget type: {type}</p>;
+      return <p>{t('builder:dataJournal.visualizationWidget.unsupportedType', { type })}</p>;
   }
 };
 

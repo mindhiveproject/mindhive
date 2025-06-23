@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import { StyledCollectPage } from "../../../styles/StyledBuilder";
 
@@ -13,11 +14,12 @@ import ParticipantPage from "./Participant/Main";
 import Table from "./Table/Main";
 
 export default function Collect({ query, user, tab, toggleSidebar, studyId }) {
+  const { t } = useTranslation("builder");
   const participantId = query?.id;
   const { type } = query;
 
   if (!studyId) {
-    return <div>No study found, please save your study first.</div>;
+    return <div>{t("collect.noStudyFound", "No study found, please save your study first.")}</div>;
   }
 
   const { data: participantsData } = useQuery(GET_STUDY_PARTICIPANTS, {

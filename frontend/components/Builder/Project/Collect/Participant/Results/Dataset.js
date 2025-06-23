@@ -8,18 +8,19 @@ import { saveAs } from "file-saver";
 import { jsonToCSV } from "react-papaparse";
 import ChangeDatasetStatus from "./ChangeStatus";
 import DeleteRecord from "./DeleteRecord";
+import useTranslation from "next-translate/useTranslation";
 
 // A fetcher function to wrap the native fetch function and return the result of a call to url in json format
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export const studyStatuses = {
-  WORKING: "Work in progress",
-  SUBMITTED_AS_PROPOSAL: "Submitted as Proposal",
-  READY_FOR_REVIEW: "Ready for review",
-  IN_REVIEW: "In review",
-  REVIEWED: "Reviewed",
-  COLLECTING_DATA: "Collecting data",
-  DATA_COLLECTION_IS_COMPLETED: "Data collection is completed",
+  WORKING: "dataset.status.working",
+  SUBMITTED_AS_PROPOSAL: "dataset.status.submittedAsProposal",
+  READY_FOR_REVIEW: "dataset.status.readyForReview",
+  IN_REVIEW: "dataset.status.inReview",
+  REVIEWED: "dataset.status.reviewed",
+  COLLECTING_DATA: "dataset.status.collectingData",
+  DATA_COLLECTION_IS_COMPLETED: "dataset.status.dataCollectionCompleted",
 };
 
 export default function Dataset({
@@ -28,6 +29,7 @@ export default function Dataset({
   dataset,
   components,
 }) {
+  const { t } = useTranslation("builder");
   const { date, token, isCompleted } = dataset;
   // Set up SWR to run the fetcher function when calling "/api/staticdata"
   // There are 3 possible states: (1) loading when data is null (2) ready when the data is returned (3) error when there was an error fetching the data
@@ -50,10 +52,10 @@ export default function Dataset({
         <div>{moment(dataset?.createdAt).format("MMMM D, YY, h:mm:ss")}</div>
         <div>{moment(dataset?.completedAt).format("MMMM D, YY, h:mm:ss")}</div>
         <div>{condition}</div>
-        <div>{dataset?.isCompleted ? "full" : "incremental"}</div>
+        <div>{dataset?.isCompleted ? t("dataset.full", "full") : t("dataset.incremental", "incremental")}</div>
         <div>{dataset?.dataPolicy}</div>
-        <div>{dataset?.studyStatus}</div>
-        <div>No data</div>
+        <div>{dataset?.studyStatus && t(studyStatuses[dataset?.studyStatus])}</div>
+        <div>{t("dataset.noData", "No data")}</div>
         <DeleteRecord
           studyId={studyId}
           participantId={participantId}
@@ -62,7 +64,7 @@ export default function Dataset({
       </div>
     );
   // Handle the loading state
-  if (!data) return <div>Loading...</div>;
+  if (!data) return <div>{t("dataset.loading", "Loading...")}</div>;
   // Handle the ready state and display the result contained in the data object mapped to the structure of the json file
 
   // trim the data
@@ -127,9 +129,9 @@ export default function Dataset({
           moment(dataset?.completedAt).format("MMMM D, YY, h:mm:ss")}
       </div>
       <div>{condition}</div>
-      <div>{dataset?.isCompleted ? "full" : "incremental"}</div>
+      <div>{dataset?.isCompleted ? t("dataset.full", "full") : t("dataset.incremental", "incremental")}</div>
       <div>{dataset?.dataPolicy}</div>
-      <div>{dataset?.studyStatus && studyStatuses[dataset?.studyStatus]}</div>
+      <div>{dataset?.studyStatus && t(studyStatuses[dataset?.studyStatus])}</div>
       <ChangeDatasetStatus
         studyId={studyId}
         participantId={participantId}
@@ -137,7 +139,7 @@ export default function Dataset({
       />
       <div className="downloadArea" onClick={download}>
         <Icon color="teal" size="large" name="download" />
-        <a>Download</a>
+        <a>{t("dataset.download", "Download")}</a>
       </div>
     </div>
   );

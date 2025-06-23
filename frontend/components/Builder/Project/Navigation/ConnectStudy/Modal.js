@@ -6,6 +6,7 @@ import LinkClass from "./LinkClass";
 import Collaborators from "../../../../Global/Collaborators";
 
 import { StyledLinkedProjects } from "../../../../styles/StyledProject";
+import useTranslation from "next-translate/useTranslation";
 
 export default function ConnectModal({
   study,
@@ -13,6 +14,7 @@ export default function ConnectModal({
   handleChange,
   updateStudy,
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   const userClasses = [
@@ -33,17 +35,17 @@ export default function ConnectModal({
       {user?.permissions.map((p) => p?.name).includes("ADMIN") && (
         <Modal.Header>
           <div>
-            Study author is {study?.author?.username || "No Author"} (
-            <em>This information is visible only for ADMIN</em>)
+            {t('builder:connectStudyModal.studyAuthor', { username: study?.author?.username || t('builder:connectStudyModal.noAuthor') })} (
+            <em>{t('builder:connectStudyModal.adminInfo')}</em>)
           </div>
         </Modal.Header>
       )}
       <Modal.Content>
         <Modal.Description>
           <div>
-            <h2>Linked class</h2>
+            <h2>{t('builder:connectStudyModal.linkedClass')}</h2>
             <LinkClass study={study} handleChange={handleChange} />
-            <h2>Study collaborators</h2>
+            <h2>{t('builder:connectStudyModal.studyCollaborators')}</h2>
             <Collaborators
               userClasses={userClasses}
               collaborators={collaborators}
@@ -52,10 +54,9 @@ export default function ConnectModal({
 
             {study?.title && (
               <StyledLinkedProjects>
-                <h2>Linked projects</h2>
+                <h2>{t('builder:connectStudyModal.linkedProjects')}</h2>
                 <p>
-                  Projects that share access to your study{" "}
-                  <span className="projectName"> {study?.title}</span>
+                  {t('builder:connectStudyModal.linkedProjectsDescription', { title: study?.title })}
                 </p>
                 <div>
                   {study?.proposal.map((project) => (
@@ -65,7 +66,7 @@ export default function ConnectModal({
                         href={`/builder/projects?selector=${project?.id}`}
                         target="_blank"
                       >
-                        Open in a new tab
+                        {t('builder:connectStudyModal.openInNewTab')}
                       </a>
                     </div>
                   ))}
@@ -83,7 +84,7 @@ export default function ConnectModal({
             onClick={() => setOpen(false)}
             disabled={false}
           >
-            Close
+            {t('builder:connectStudyModal.close')}
           </button>
 
           <button
@@ -94,7 +95,7 @@ export default function ConnectModal({
             }}
             disabled={false}
           >
-            Save & Close
+            {t('builder:connectStudyModal.saveAndClose')}
           </button>
         </div>
       </Modal.Actions>

@@ -1,0 +1,9 @@
+{
+	"overview": {
+		"database": {
+			"csvDownloadMessage": "Geef een naam aan de CSV die je gaat downloaden\\nJe hoeft geen '.csv' toe te voegen, dat doen wij voor je!",
+			"returnBrowse": "Terug naar bladeren",
+			"sectionTitle": "Actieve gegevens"
+		}
+	}
+}

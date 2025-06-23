@@ -1,10 +1,12 @@
 import { useQuery } from "@apollo/client";
 import IdentIcon from "../../Account/IdentIcon";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../Queries/User";
 
 export default function Profile() {
+  const { t } = useTranslation("home");
   // query the full profile of the user
   const { data } = useQuery(GET_PROFILE);
   const user = data?.authenticatedItem || {};
@@ -51,12 +53,11 @@ export default function Profile() {
       <div className="titleIcon">
         <div>
           <div className="h36">
-            Welcome{isProfileComplete && ` back`}
+            {t("welcome")}{isProfileComplete && ` back`}
             {user.username ? `, ${user.username}` : `, MindHive User`}
           </div>
           <div className="p20">
-            You can edit your Profile, schedule time with mentors, stay
-            up-to-date with the latest MH notifications here
+            {t("editProfile")}
           </div>
         </div>
 
@@ -88,13 +89,12 @@ export default function Profile() {
             <div className="createProfileArea">
               <div>
                 <div className="h32">
-                  {isProfileComplete ? `Edit` : `Create`} your MindHive profile
+                  {isProfileComplete ? t("editYourProfile") : t("createYourProfile")}
                 </div>
                 <div className="p18">
                   {isProfileComplete
-                    ? `You’re already a part of the MindHive community! Update your profile by clicking here.`
-                    : `Ready to join the MindHive community? Create your profile now
-                  by clicking here.`}
+                    ? t("updateProfileDescription")
+                    : t("createProfileDescription")}
                 </div>
               </div>
             </div>
@@ -107,10 +107,9 @@ export default function Profile() {
           >
             <div className="createProfileArea">
               <div>
-                <div className="h32">Set your mentorship availability</div>
+                <div className="h32">{t("setAvail")}</div>
                 <div className="p18">
-                  Set your availability to start mentoring. Click here to get
-                  started
+                  {t("setAvailDescription")}
                 </div>
               </div>
             </div>

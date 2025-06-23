@@ -1,14 +1,15 @@
 import Links from "./Links";
 import MyUpdates from "../../Account/Updates/Main";
+import useTranslation from "next-translate/useTranslation";
 
 import StyledHome from "../../styles/StyledHome";
-import LanguageSwitcher from "./LanuageSwitcher";
 import Profile from "../Profile/Main";
 import FavoritePeople from "../Connect/Connections/FavoritePeople";
 import FavoriteTasks from "../../Tasks/Bank/FavoriteTasks";
 
 export default function Home({ query, user }) {
   const { publicId, publicReadableId } = user;
+  const { t } = useTranslation("home");
 
   return (
     <StyledHome>
@@ -25,7 +26,7 @@ export default function Home({ query, user }) {
           <div>
             {publicId && (
               <div>
-                Participant ID <div className="code">{publicId}</div>
+                {t("participantID")} <div className="code">{publicId}</div>
               </div>
             )}
           </div>
@@ -33,7 +34,7 @@ export default function Home({ query, user }) {
           <div>
             {publicReadableId && (
               <div>
-                Public readable ID{" "}
+                {t("publicReadableID")}{" "}
                 <div className="code">{publicReadableId}</div>
               </div>
             )}
@@ -41,7 +42,7 @@ export default function Home({ query, user }) {
         </div>
 
         <div className="idInfo">
-          Permissions
+          {t("permissions")}
           {user?.permissions.map((permission, num) => (
             <div key={num} className="code">
               {permission?.name}
@@ -53,9 +54,9 @@ export default function Home({ query, user }) {
               user?.permissions?.map((p) => p?.name).includes("SCIENTIST") ||
               user?.permissions?.map((p) => p?.name).includes("TEACHER")) && (
               <div>
-                Do you need support?<br></br>
+                {t("needSupport")}<br></br>
                 <a href="https://mindhive.notion.site/153d80abf4c48093b13cc8d50807c7b8?pvs=105" target="_blank">
-                  <button>Fill Support Ticket</button>
+                  <button>{t("fillSupportTicket")}</button>
                 </a>
               </div>
             )}
@@ -66,9 +67,9 @@ export default function Home({ query, user }) {
               user?.permissions?.map((p) => p?.name).includes("SCIENTIST") ||
               user?.permissions?.map((p) => p?.name).includes("TEACHER")) && (
               <div>
-                Need a new block?<br></br>
+                {t("needNewBlock")}<br></br>
                 <a href="https://mindhive.notion.site/18bd80abf4c480749952e3c0498fab29?pvs=105" target="_blank">
-                <button>Fill a Request Form</button>
+                <button>{t("fillRequestForm")}</button>
                 </a>
               </div>
             )}
@@ -78,10 +79,6 @@ export default function Home({ query, user }) {
       </div>
 
       <Links />
-
-      {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
-        <LanguageSwitcher />
-      )}
     </StyledHome>
   );
 }

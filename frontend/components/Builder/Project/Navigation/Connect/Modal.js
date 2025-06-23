@@ -5,6 +5,7 @@ import { Icon } from "semantic-ui-react";
 import LinkClass from "./LinkClass";
 import Collaborators from "../../../../Global/Collaborators";
 import { StyledInput } from "../../../../styles/StyledForm";
+import useTranslation from "next-translate/useTranslation";
 
 export default function ConnectModal({
   project,
@@ -12,6 +13,7 @@ export default function ConnectModal({
   handleChange,
   updateProject,
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   const userClasses = [
@@ -32,15 +34,15 @@ export default function ConnectModal({
       {user?.permissions.map((p) => p?.name).includes("ADMIN") && (
         <Modal.Header>
           <div>
-            Project creator is {project?.author?.username || "No Author"} (
-            <em>This information is visible only for ADMIN</em>)
+            {t('builder:connectModal.projectCreator', { username: project?.author?.username || t('builder:connectModal.noAuthor') })} (
+            <em>{t('builder:connectModal.adminInfo')}</em>)
           </div>
         </Modal.Header>
       )}
       <Modal.Content>
         <Modal.Description>
           <StyledInput>
-            <h2>Project title</h2>
+            <h2>{t('builder:connectModal.projectTitle')}</h2>
             <input
               type="text"
               id="title"
@@ -49,9 +51,9 @@ export default function ConnectModal({
               onChange={handleChange}
             />
           </StyledInput>
-          <h2>Linked class</h2>
+          <h2>{t('builder:connectModal.linkedClass')}</h2>
           <LinkClass project={project} handleChange={handleChange} />
-          <h2>Project board collaborators</h2>
+          <h2>{t('builder:connectModal.projectBoardCollaborators')}</h2>
           <Collaborators
             userClasses={userClasses}
             collaborators={collaborators}
@@ -67,7 +69,7 @@ export default function ConnectModal({
             onClick={() => setOpen(false)}
             disabled={false}
           >
-            Close
+            {t('builder:connectModal.close')}
           </button>
 
           <button
@@ -78,7 +80,7 @@ export default function ConnectModal({
             }}
             disabled={false}
           >
-            Save & Close
+            {t('builder:connectModal.saveAndClose')}
           </button>
         </div>
       </Modal.Actions>

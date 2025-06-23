@@ -1,6 +1,7 @@
 import Link from "next/link";
 import CloneStudyBank from "../../../Studies/Bank/Clone";
 import CloneTaskBank from "../../../Tasks/Bank/Clone";
+import useTranslation from "next-translate/useTranslation";
 
 const mainOptions = [
   {
@@ -29,6 +30,7 @@ const mainOptions = [
 ];
 
 export default function Selector({ query, user }) {
+  const { t } = useTranslation("builder");
   const { develop, clone } = query;
   const userPermissions = user.permissions.map(
     (permission) => permission?.name
@@ -37,8 +39,7 @@ export default function Selector({ query, user }) {
   if (!develop) {
     return (
       <div className="selectionBody">
-        <h1>What would you like to develop?</h1>
-
+        <h1>{t("whatWouldYouLikeToDevelop")}</h1>
         <div className="studyOptions">
           {mainOptions.map((option) => (
             <Link
@@ -58,8 +59,8 @@ export default function Selector({ query, user }) {
                   width="50"
                 />
               </div>
-              <h3>{option.header}</h3>
-              <p>{option.description}</p>
+              <h3>{t(option.header.toLowerCase())}</h3>
+              <p>{t(option.develop + "Description")}</p>
             </Link>
           ))}
         </div>
@@ -73,8 +74,6 @@ export default function Selector({ query, user }) {
     }
     return (
       <div className="selectionBody">
-        {/* <h1>Develop a study</h1> */}
-
         <div className="studyOptions">
           <Link
             className="option"
@@ -93,15 +92,11 @@ export default function Selector({ query, user }) {
                 width="50"
               />
             </div>
-            <h3>Clone & modify a study</h3>
-            <p>Build a study based on a pre-existing MindHive study</p>
-
+            <h3>{t("cloneAndModify", { taskType: t("study") })}</h3>
+            <p>{t("buildStudyFromExisting")}</p>
             {(userPermissions.includes("ADMIN") ||
               userPermissions.includes("STUDENT")) && (
-              <p>
-                (only select this option if your teacher explicitly told you to
-                do so)
-              </p>
+              <p>{t("teacherExplicitInstruction")}</p>
             )}
           </Link>
 
@@ -120,7 +115,7 @@ export default function Selector({ query, user }) {
                   width="50"
                 />
               </div>
-              <h3>Start your MindHive project</h3>
+              <h3>{t("startMindHiveProject")}</h3>
               <p></p>
             </Link>
           )}
@@ -138,14 +133,11 @@ export default function Selector({ query, user }) {
                 width="50"
               />
             </div>
-            <h3>Start a study from scratch</h3>
-            <p>Create a study without a project</p>
+            <h3>{t("startStudyFromScratch")}</h3>
+            <p>{t("createStudyWithoutProject")}</p>
             {(userPermissions.includes("ADMIN") ||
               userPermissions.includes("STUDENT")) && (
-              <p>
-                (only select this option if your teacher explicitly told you to
-                do so)
-              </p>
+              <p>{t("teacherExplicitInstruction")}</p>
             )}
           </Link>
         </div>
@@ -159,7 +151,7 @@ export default function Selector({ query, user }) {
     }
     return (
       <div className="selectionBody">
-        <h1>Develop a {develop}</h1>
+        <h1>{t("developA", { develop: t(develop) })}</h1>
         <div className="studyOptions">
           <Link
             className="option"
@@ -178,38 +170,9 @@ export default function Selector({ query, user }) {
                 width="50"
               />
             </div>
-            <h3>Clone & modify a {develop}</h3>
-            <p>
-              {develop === "task"
-                ? "Build a task based on a pre-existing MindHive task."
-                : "Duplicate and edit a pre-existing MindHive survey and its parameters."}
-            </p>
+            <h3>{t("cloneAndModify", { taskType: t(develop) })}</h3>
+            <p>{t(develop === "task" ? "buildTaskFromExisting" : "duplicateEditSurvey")}</p>
           </Link>
-
-          {/* {develop === "survey" && (
-            <Link
-              className="option"
-              href={{
-                pathname: `/builder/cloneofsurvey`,
-                query: {
-                  selector: "survey-builder",
-                },
-              }}
-            >
-              <div className="iconSelect">
-                <img
-                  src={`/assets/develop/survey-builder.svg`}
-                  alt="icon"
-                  width="50"
-                />
-              </div>
-              <h3>Use the Survey Builder</h3>
-              <p>
-                Select this option if you would prefer to build a survey
-                entirely from scratch.
-              </p>
-            </Link>
-          )} */}
 
           <Link
             className="option"
@@ -224,12 +187,8 @@ export default function Selector({ query, user }) {
                 width="50"
               />
             </div>
-            <h3>Upload a {develop} from lab.js</h3>
-            <p>
-              {develop === "task"
-                ? "Select this option if you would prefer to upload your own task script from lab.js."
-                : "Select this option if you would prefer to upload your own survey script from lab.js."}
-            </p>
+            <h3>{t("uploadFromLabjs", { develop: t(develop) })}</h3>
+            <p>{t(develop === "task" ? "uploadTaskScript" : "uploadSurveyScript")}</p>
           </Link>
 
           <Link
@@ -241,10 +200,8 @@ export default function Selector({ query, user }) {
             <div className="iconSelect">
               <img src={`/assets/develop/task.svg`} alt="icon" width="50" />
             </div>
-            <h3>Add an external {develop} with a web link</h3>
-            <p>
-              Select this option if you would prefer to add an external link
-            </p>
+            <h3>{t("addExternalWithLink", { develop: t(develop) })}</h3>
+            <p>{t("addExternalLinkInstruction")}</p>
           </Link>
         </div>
       </div>
@@ -258,7 +215,7 @@ export default function Selector({ query, user }) {
 
     return (
       <div className="selectionBody">
-        <h1>Develop a {develop}</h1>
+        <h1>{t("developA", { develop: t(develop) })}</h1>
         <div className="studyOptions">
           <Link
             className="option"
@@ -277,11 +234,8 @@ export default function Selector({ query, user }) {
                 width="50"
               />
             </div>
-            <h3>Clone & modify a {develop}</h3>
-            <p>
-              Duplicate and edit a pre-existing MindHive block and its
-              parameters.
-            </p>
+            <h3>{t("cloneAndModify", { taskType: t(develop) })}</h3>
+            <p>{t("duplicateEditBlock")}</p>
           </Link>
 
           <Link
@@ -296,11 +250,8 @@ export default function Selector({ query, user }) {
             <div className="iconSelect">
               <img src={`/assets/develop/block.svg`} alt="icon" width="50" />
             </div>
-            <h3>Create new block</h3>
-            <p>
-              Select this option if you would prefer to build a block entirely
-              from scratch.
-            </p>
+            <h3>{t("createNewBlock")}</h3>
+            <p>{t("buildBlockFromScratch")}</p>
           </Link>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
+import useTranslation from "next-translate/useTranslation";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
@@ -19,6 +20,7 @@ const Board = ({
   adminMode,
   isPreview,
 }) => {
+  const { t } = useTranslation("builder");
   const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
     pollInterval: 20000, // get new data every 20 seconds
@@ -54,8 +56,8 @@ const Board = ({
     }
   }, [proposal]);
 
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error.message}`;
+  if (loading) return t("board.loading");
+  if (error) return t("board.error", { message: error.message });
 
   return (
     <Inner

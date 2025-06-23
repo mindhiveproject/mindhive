@@ -3,12 +3,14 @@ import { Dropdown } from "semantic-ui-react";
 import { useQuery, useMutation } from "@apollo/client";
 import useForm from "../../../../lib/useForm";
 import { useRouter } from "next/dist/client/router";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../Mutations/User";
 import { GET_TAGS } from "../../../Queries/Tag";
 
 export default function InterestSelector({ user }) {
+  const { t } = useTranslation("connect");
   const router = useRouter();
   const { inputs, handleChange } = useForm({
     interests: user?.interests.map((i) => ({ id: i?.id })) || [],
@@ -74,12 +76,12 @@ export default function InterestSelector({ user }) {
     <div className="interestsSelector">
       <div>
         <div className="titleIcon">
-          <h2>Search interests</h2>
-          <div>Min 3, Max 10</div>
+          <h2>{t("interestSelector.searchTitle")}</h2>
+          <div>{t("interestSelector.minMax")}</div>
         </div>
 
         <Dropdown
-          placeholder="Begin typing to search for interests"
+          placeholder={t("interestSelector.placeholder")}
           fluid
           multiple
           search
@@ -92,7 +94,7 @@ export default function InterestSelector({ user }) {
 
       {tags.length ? (
         <div>
-          <h2>Suggested interests</h2>
+          <h2>{t("interestSelector.suggestedTitle")}</h2>
           <div className="suggestedInterests">
             {tags
               .filter(
@@ -100,24 +102,23 @@ export default function InterestSelector({ user }) {
                   !inputs?.interests.map((tag) => tag?.id).includes(tag?.id)
               )
               .sort((a, b) => {
-                // Convert titles to lowercase to ensure case-insensitive sorting
                 const titleA = a.title.toLowerCase();
                 const titleB = b.title.toLowerCase();
 
                 if (titleA < titleB) {
-                  return -1; // a comes before b
+                  return -1;
                 }
                 if (titleA > titleB) {
-                  return 1; // a comes after b
+                  return 1;
                 }
-                return 0; // a and b are equal
+                return 0;
               })
               .map((tag) => (
                 <div className="interest">
                   <div>{tag.title}</div>
                   <img
                     src="/assets/icons/add.svg"
-                    alt="add"
+                    alt={t("interestSelector.add")}
                     onClick={() => addInterest({ tag })}
                   />
                 </div>
@@ -137,9 +138,9 @@ export default function InterestSelector({ user }) {
             },
           }}
         >
-          <button className="secondary">Previous</button>
+          <button className="secondary">{t("interestSelector.navButtons.previous")}</button>
         </Link>
-        <button onClick={complete}>Complete</button>
+        <button onClick={complete}>{t("interestSelector.navButtons.complete")}</button>
       </div>
     </div>
   );

@@ -2,8 +2,10 @@ import { useMutation } from "@apollo/client";
 import { Icon } from "semantic-ui-react";
 import { DELETE_DATASET } from "../../../../../Mutations/Dataset";
 import { GET_PARTICIPANT_RESULTS } from "../../../../../Queries/Result";
+import useTranslation from "next-translate/useTranslation";
 
 export default function DeleteRecord({ studyId, participantId, dataset }) {
+  const { t } = useTranslation("builder");
   const [deleteDataset] = useMutation(DELETE_DATASET, {
     variables: { id: dataset?.id },
     refetchQueries: [
@@ -21,7 +23,7 @@ export default function DeleteRecord({ studyId, participantId, dataset }) {
   return (
     <div className="downloadArea" onClick={deleteRecord}>
       <Icon color="red" size="large" name="delete" />
-      <a>Delete invalid record</a>
+      <a>{t("dataset.deleteInvalidRecord", "Delete invalid record")}</a>
     </div>
   );
 }

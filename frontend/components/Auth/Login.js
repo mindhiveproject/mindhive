@@ -96,7 +96,7 @@ export default function Login({ redirectType, redirectTo }) {
         <LoginWithGoogle />
         <div className="forgotLink">
           <span>
-            <Link href="/login/requestreset">Forgot your password?</Link>
+            <Link href="/login/requestreset">{t("auth.forgotPassword")}</Link>
           </span>
         </div>
       </StyledForm>

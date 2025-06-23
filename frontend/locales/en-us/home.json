@@ -1,0 +1,53 @@
+{
+	"welcome": "Welcome",
+	"editProfile": "You can edit your Profile, schedule time with mentors, stay up-to-date with the latest MH notifications here",
+	"createYourProfile": "Create your MindHive profile",
+	"editYourProfile": "Edit your MindHive profile",
+	"updateProfileDescription": "You're already a part of the MindHive community! Update your profile by clicking here.",
+	"createProfileDescription": "Ready to join the MindHive community? Create your profile now by clicking here.",
+	"setAvail":"Set your mentorship availability",
+	"setAvailDescription":"Set your availability to start mentoring. Click here to get started.",
+	"favoritePeople": "Favorite people",
+	"favoriteTasks": "Favorite tasks and surveys",
+	"participantID": "Participant ID",
+	"publicReadableID": "Public readable ID",
+	"permissions": "Permissions",
+	"needSupport": "Do you need support?",
+	"fillSupportTicket": "Fill Support Ticket",
+	"needNewBlock": "Need a new block?",
+	"fillRequestForm": "Fill a Request Form",
+	"updates": {
+        "latestUpdates": "Latest updates", 
+        "noUpdate": "There are no updates at the moment."
+    },
+	"info": "More information",
+	"about": "About",
+	"teachers": "Teachers",
+	"privacyPolicy": "Privacy policy",
+	"termsCondition": "Terms & Conditions",
+	"footer": {
+		"title": "MindHive",
+		"description": "MindHive is a web-based citizen science platform that supports real-world brain and behavior research.",
+		"audience": "MindHive was designed for students & teachers who seek authentic STEM research experience, and for neuroscientists & cognitive/social psychologists who seek to address their research questions outside of the lab.",
+		"copyright": "© 2024",
+		"about": "About",
+		"privacy": "Privacy Policy",
+		"terms": "Terms & Conditions",
+		"email": "info@mindhive.science"
+	},
+	"sidebar": {
+		"dashboard": "Dashboard",
+		"profile": "Profile",
+		"connections": "Connections",
+		"messages": "Messages",
+		"settings": "Settings",
+		"help": "Help",
+		"logout": "Logout"
+	},
+	"all": "All",
+	"tasks": "Tasks",
+	"surveys": "Surveys",
+	"blocks": "Blocks",
+	"tasksAndSurveysDescriptions": "Tasks and Surveys descriptions",
+	"preview": "Preview"
+}

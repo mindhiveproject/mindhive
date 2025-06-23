@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import ReactHtmlParser from "react-html-parser";
+import useTranslation from "next-translate/useTranslation";
 
 import { StyledStudyPage } from "../../styles/StyledStudyPage";
 
@@ -9,6 +10,8 @@ import StudyInfo from "./StudyInfo";
 import UserPath from "./UserPath";
 
 export default function StudyPage({ query, user, study, isDashboard }) {
+  const { t } = useTranslation("builder");
+  
   // check whether the user is the study author or is among collaborators
   const isAuthor =
     study?.author?.id === user?.id ||
@@ -75,7 +78,7 @@ export default function StudyPage({ query, user, study, isDashboard }) {
                   }}
                 >
                   <div className="controlBtns">
-                    <button>Participate as a guest</button>
+                    <button>{t("participateAsGuest")}</button>
                   </div>
                 </Link>
               ) : (
@@ -86,7 +89,7 @@ export default function StudyPage({ query, user, study, isDashboard }) {
                   }}
                 >
                   <div className="controlBtns">
-                    <button>Participate</button>
+                    <button>{t("participate")}</button>
                   </div>
                 </Link>
               )}

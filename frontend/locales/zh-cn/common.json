@@ -1,0 +1,43 @@
+{
+  "auth": {
+    "email": "电子邮件",
+    "password": "密码",
+    "login": "登录",
+    "username": "用户名",
+    "requestReset": "请求重置",
+    "checkYourMail": "检查您的邮件",
+    "forgotPassword": "忘记密码？"
+  },
+  "signup": {
+    "title": "哪个角色最适合描述您？",
+    "participant": "研究参与者",
+    "student": "学生",
+    "scientist": "科学家",
+    "teacher": "教师",
+    "haveAccount": "已有账户？",
+    "loginHere": "在此登录"
+  },
+  "navigation": {
+    "about": "关于",
+    "dashboard": "仪表板",
+    "discover": "发现",
+    "login": "登录",
+    "signup": "注册",
+    "studies": "研究",
+    "tasks": "任务和调查",
+    "teachers": "教师"
+  },
+  "studies": "研究",
+  "tasksAndSurveys": "任务和调查",
+  "discoverHeader": "发现研究、任务和调查",
+  "discoverDescription": "浏览我们由 MindHive 项目中的高中生和合作科学家创建的研究、任务和调查集合。参与研究或预览任务和调查。",
+  "featured": "精选",
+  "goToStudy": "前往研究",
+  "languages": {
+    "title": "语言设置",
+    "description": "您可以在下方自定义和更改您的语言设置。",
+    "displayLanguage": "显示语言",
+    "updatePreferences": "更新偏好设置",
+    "backToSettings": "返回设置"
+  }
+}

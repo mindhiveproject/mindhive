@@ -3,8 +3,10 @@ import StyledLibrary from "../styles/StyledLibrary";
 import DiscoverTaskBank from "../Tasks/Bank/Discover";
 
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Library({ query, user, isDashboard }) {
+  const { t } = useTranslation("common");
   const selector = query?.selector || "study";
 
   return (
@@ -21,7 +23,7 @@ export default function Library({ query, user, isDashboard }) {
               selector === "study" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>Studies</p>
+            <p>{t("studies")}</p>
           </Link>
 
           <Link
@@ -32,7 +34,7 @@ export default function Library({ query, user, isDashboard }) {
               selector === "task" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>Tasks & Surveys</p>
+            <p>{t("tasksAndSurveys")}</p>
           </Link>
         </div>
       </div>

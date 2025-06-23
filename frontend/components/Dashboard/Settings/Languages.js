@@ -1,20 +1,26 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Divider } from "semantic-ui-react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import useForm from "../../../lib/useForm";
+import useTranslation from "next-translate/useTranslation";
 
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 import { UPDATE_USER } from "../../Mutations/User";
 import { StyledInput } from "../../styles/StyledForm";
 import { StyledSimpleSaveButton } from "../../styles/StyledProfile";
-import LanguageSelector from "../../User/LanguageSelector";
+import LanguageSelector from "../../LanguageSelector";
 
-export default function Languages({ query, user }) {
+export default function Languages({ query }) {
   const [changed, setChanged] = useState(false);
+  const { t } = useTranslation("common");
+  
+  // Fetch current user data
+  const { data } = useQuery(CURRENT_USER_QUERY);
+  const user = data?.authenticatedItem;
 
   const { inputs, handleChange, clearForm } = useForm({ ...user });
-  const [updateProfile, { data, loading, error }] = useMutation(UPDATE_USER, {
+  const [updateProfile, { data: mutationData, loading, error }] = useMutation(UPDATE_USER, {
     variables: inputs,
     refetchQueries: [{ query: CURRENT_USER_QUERY }],
   });
@@ -32,12 +38,12 @@ export default function Languages({ query, user }) {
 
   return (
     <StyledInput>
-      <h1>Language Settings</h1>
-      <h3>You can customize and change your language settings below.</h3>
+      <h1>{t("languages.title")}</h1>
+      <h3>{t("languages.description")}</h3>
       <Divider />
 
       <div className="content">
-        <div className="p24-thin">Display Language </div>
+        <div className="p24-thin">{t("languages.displayLanguage")}</div>
         <div>
           <LanguageSelector
             handleChange={handleUpdate}
@@ -47,7 +53,7 @@ export default function Languages({ query, user }) {
 
         <div className="buttons">
           <StyledSimpleSaveButton changed={changed}>
-            <button onClick={handleSave}>Update Preferences</button>
+            <button onClick={handleSave}>{t("languages.updatePreferences")}</button>
           </StyledSimpleSaveButton>
 
           <Link
@@ -55,7 +61,7 @@ export default function Languages({ query, user }) {
               pathname: `/dashboard/settings`,
             }}
           >
-            <button className="back">Back to Settings</button>
+            <button className="back">{t("languages.backToSettings")}</button>
           </Link>
         </div>
       </div>

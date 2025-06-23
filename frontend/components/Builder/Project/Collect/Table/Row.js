@@ -2,8 +2,10 @@ import moment from "moment";
 import "moment-duration-format";
 import Link from "next/link";
 import ChangeDatasetStatuses from "./ChangeStatuses";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Row({ studyId, participant, consents, type }) {
+  const { t } = useTranslation("builder");
   const studyInfo = (participant?.studiesInfo &&
     participant?.studiesInfo[studyId]) || { info: { path: [] } };
   const { info } = studyInfo;
@@ -44,6 +46,11 @@ export default function Row({ studyId, participant, consents, type }) {
   const duration = moment.duration(difference, "milliseconds");
   const formattedDuration = duration.format("h:mm:ss", { trim: false });
 
+  // Optionally translate participant type if present
+  const participantType = participant?.type
+    ? t(`participantType.${participant.type.toLowerCase()}`, participant.type)
+    : "";
+
   return (
     <div className="tableRow">
       <Link
@@ -75,7 +82,7 @@ export default function Row({ studyId, participant, consents, type }) {
       <div>{condition}</div>
       <div>{consentDecisions}</div>
 
-      <div>{participant?.type}</div>
+      <div>{participantType}</div>
       <ChangeDatasetStatuses
         studyId={studyId}
         participantId={participant?.publicId}

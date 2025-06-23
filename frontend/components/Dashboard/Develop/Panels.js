@@ -1,10 +1,12 @@
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import DevelopProjectBank from "../../Projects/Bank/Develop";
 import DevelopStudyBank from "../../Studies/Bank/Develop";
 import DevelopTaskBank from "../../Tasks/Bank/Develop";
 
 export default function Panels({ query, user }) {
+  const { t } = useTranslation("builder");
   const { selector } = query;
 
   const userPermissions = user.permissions.map(
@@ -27,7 +29,7 @@ export default function Panels({ query, user }) {
                 : "menuTitle"
             }
           >
-            <p>My projects</p>
+            <p>{t("myProjects")}</p>
           </div>
         </Link>
 
@@ -39,7 +41,7 @@ export default function Panels({ query, user }) {
                 : "menuTitle"
             }
           >
-            <p>My studies</p>
+            <p>{t("myStudies")}</p>
           </div>
         </Link>
 
@@ -51,7 +53,7 @@ export default function Panels({ query, user }) {
                 : "menuTitle"
             }
           >
-            <p>My tasks</p>
+            <p>{t("myTasks")}</p>
           </div>
         </Link>
 
@@ -63,7 +65,7 @@ export default function Panels({ query, user }) {
                 : "menuTitle"
             }
           >
-            <p>My surveys</p>
+            <p>{t("mySurveys")}</p>
           </div>
         </Link>
 
@@ -75,7 +77,7 @@ export default function Panels({ query, user }) {
                 : "menuTitle"
             }
           >
-            <p>My blocks</p>
+            <p>{t("myBlocks")}</p>
           </div>
         </Link>
       </div>

@@ -1,7 +1,9 @@
 import React, { useState, useRef } from "react";
 import { StyledVideoUploader } from "../../../../styles/StyledForm";
+import useTranslation from "next-translate/useTranslation";
 
 const VideoUploader = ({ publicReadableId, onFileUpload }) => {
+  const { t } = useTranslation("connect");
   const [dragActive, setDragActive] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -55,19 +57,16 @@ const VideoUploader = ({ publicReadableId, onFileUpload }) => {
       });
 
       if (response.ok) {
-        // Handle successful upload
         const json = await response.json();
         const { filename } = json;
         onFileUpload({ filename, timestamp: Date.now() });
       } else {
         console.error("Upload failed");
-        // Handle error
-        alert("There was an error with the video upload. Please try again.");
+        alert(t("videoUploader.error"));
       }
     } catch (error) {
       console.error("Error:", error);
-      // Handle error
-      alert("There was an error with the video upload. Please try again.");
+      alert(t("videoUploader.error"));
     } finally {
       setUploading(false);
       setUploadProgress(0);
@@ -77,10 +76,9 @@ const VideoUploader = ({ publicReadableId, onFileUpload }) => {
   const handleFiles = (files) => {
     const file = files[0];
     if (file.type.startsWith("video/")) {
-      // upload the file to the server
       handleUpload({ file });
     } else {
-      alert("Please select a video file.");
+      alert(t("videoUploader.invalidFile"));
     }
   };
 
@@ -104,13 +102,13 @@ const VideoUploader = ({ publicReadableId, onFileUpload }) => {
         onChange={handleChange}
         style={{ display: "none" }}
       />
-      <div className="message">Drag and drop video file to upload</div>
+      <div className="message">{t("videoUploader.dragAndDrop")}</div>
 
       <div>
-        <button onClick={onButtonClick}>Select file</button>
+        <button onClick={onButtonClick}>{t("videoUploader.selectFile")}</button>
       </div>
 
-      {uploading && <p>Upload Progress: {uploadProgress}%</p>}
+      {uploading && <p>{t("videoUploader.uploadProgress", { progress: uploadProgress })}</p>}
     </StyledVideoUploader>
   );
 };

@@ -1,4 +1,5 @@
 import SettingsBlock from "./SettingsBlock";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Parameters({
   user,
@@ -6,6 +7,7 @@ export default function Parameters({
   handleChange,
   handleMultipleUpdate,
 }) {
+  const { t } = useTranslation("builder");
   // const settings = study.settings || {
   //   forbidRetake: true,
   //   hideParticipateButton: false,
@@ -67,7 +69,7 @@ export default function Parameters({
 
   return (
     <div>
-      <h2>Participation settings</h2>
+      <h2>{t('parameters.participationSettings')}</h2>
 
       <div>
         {Object.keys(settings)

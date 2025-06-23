@@ -1,0 +1,29 @@
+{
+  "classNetworks": "Redes de classe",
+  "createdByOn": "Criado por {{username}} em {{date}}",
+  "classes": "Turmas",
+  "deleteYourClass": "Excluir sua turma",
+  "deleteClassWarning": "Excluir sua turma irá removê-la permanentemente da área \"Minhas Turmas\". Esta ação não pode ser desfeita.",
+  "noAccessTo": "Você não terá acesso a:",
+  "yourClass": "Sua turma",
+  "anyStudiesOrResults": "Quaisquer estudos ou resultados gerados por alunos da sua turma",
+  "studentsWillHaveAccessTo": "Seus alunos terão acesso a:",
+  "theirWorkspaceAndStudies": "Seu espaço de trabalho e quaisquer estudos, tarefas ou pesquisas que criaram durante sua turma",
+  "noteNewStudents": "Nota: Novos alunos não poderão ingressar em sua turma",
+  "deleteClass": "Excluir turma",
+  "areYouSureDeleteClass": "Tem certeza de que deseja excluir esta turma?",
+  "typeDeleteToConfirm": "Digite \"DELETE\" para confirmar",
+  "delete": "Excluir",
+  "cancel": "Cancelar",
+  "pleaseTypeDelete": "Por favor, digite DELETE para excluir sua turma",
+  "studySpecific": {
+    "subtitle": "Subtitle",
+    "testId": "Test ID"
+  },
+  "create": {
+    "createHeader": "Adicionar nova turma",
+    "title": "Nome da nova turma",
+    "description": "Descrição da nova turma",
+    "create": "Criar nova turma"
+  }
+} 

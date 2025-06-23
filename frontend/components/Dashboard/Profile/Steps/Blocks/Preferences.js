@@ -8,8 +8,8 @@ import {
   Divider,
   Checkbox,
 } from "semantic-ui-react";
-
 import { useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../../Mutations/User";
@@ -18,26 +18,27 @@ import { StyledInput } from "../../../../styles/StyledForm";
 import { StyledSaveButton } from "../../../../styles/StyledProfile";
 
 const optionsMentorPreferGrade = [
-  { label: "Middle School", value: "middle" },
-  { label: "9 - 10 Grade", value: "nine" },
-  { label: "11 - 12 Grade", value: "eleven" },
-  { label: "No Preference", value: "no" },
+  { label: "middle", value: "middle" },
+  { label: "nine", value: "nine" },
+  { label: "eleven", value: "eleven" },
+  { label: "no", value: "no" },
 ];
 
 const optionsMentorPreferGroup = [
-  { label: "Individual", value: "individual" },
-  { label: "Group", value: "group" },
-  { label: "No Preference", value: "no" },
+  { label: "individual", value: "individual" },
+  { label: "group", value: "group" },
+  { label: "no", value: "no" },
 ];
 
 const optionsMentorPreferClass = [
-  { label: "Accelerated", value: "accelerated" },
-  { label: "Non Accelerated", value: "nonAccelerated" },
-  { label: "ELL", value: "ell" },
-  { label: "No Preference", value: "no" },
+  { label: "accelerated", value: "accelerated" },
+  { label: "nonAccelerated", value: "nonAccelerated" },
+  { label: "ell", value: "ell" },
+  { label: "no", value: "no" },
 ];
 
 export default function Preferences({ query, user }) {
+  const { t } = useTranslation("connect");
   const [changed, setChanged] = useState(false);
 
   const { inputs, handleChange } = useForm({
@@ -88,25 +89,19 @@ export default function Preferences({ query, user }) {
   return (
     <div className="profileBlock">
       <div>
-        <div className="title">Your Involvement</div>
-        <p>
-          Please complete the following items to let us know the details of your
-          involvement.
-        </p>
+        <div className="title">{t("preferences.title")}</div>
+        <p>{t("preferences.description")}</p>
       </div>
       <Divider />
 
       <StyledInput>
         <div className="inputLineBlock">
-          <h3>
-            Please indicate below how you are available to partner with us
-            (select all that apply).
-          </h3>
+          <h3>{t("preferences.availability.title")}</h3>
 
-          <h3>Asynchronous</h3>
+          <h3>{t("preferences.availability.async.title")}</h3>
           <FormField>
             <Checkbox
-              label="Answering student questions (based on your profile)."
+              label={t("preferences.availability.async.answeringQuestions")}
               onChange={(e, data) => {
                 setChecked({
                   name: "async_answering_questions",
@@ -118,7 +113,7 @@ export default function Preferences({ query, user }) {
           </FormField>
           <FormField>
             <Checkbox
-              label="Providing feedback on student projects"
+              label={t("preferences.availability.async.providingFeedback")}
               onChange={(e, data) => {
                 setChecked({
                   name: "async_providing_feedback",
@@ -129,11 +124,11 @@ export default function Preferences({ query, user }) {
             />
           </FormField>
 
-          <h3>Synchronous</h3>
+          <h3>{t("preferences.availability.sync.title")}</h3>
 
           <FormField>
             <Checkbox
-              label="Making an in-class visit to talk with program students about your work (in-person)."
+              label={t("preferences.availability.sync.inPersonVisit")}
               onChange={(e, data) => {
                 setChecked({
                   name: "sync_making_visit_in_person",
@@ -145,7 +140,7 @@ export default function Preferences({ query, user }) {
           </FormField>
           <FormField>
             <Checkbox
-              label="Making an in-class visit to talk with program students about your work (over Zoom)."
+              label={t("preferences.availability.sync.zoomVisit")}
               onChange={(e, data) => {
                 setChecked({
                   name: "sync_making_visit_in_person_over_zoom",
@@ -164,7 +159,7 @@ export default function Preferences({ query, user }) {
               {optionsMentorPreferGrade.map(({ label, value }) => (
                 <FormField>
                   <Radio
-                    label={label}
+                    label={t(`preferences.gradeLevel.options.${label}`)}
                     name="mentorPreferGrade"
                     value={value}
                     checked={inputs.mentorPreferGrade === value}
@@ -183,18 +178,15 @@ export default function Preferences({ query, user }) {
           </Form> */}
         </div>
         {/* <div className="inputLineBlock">
-          <h3>Grade Level</h3>
-          <p>
-            Tell us about the grade levels you feel most comfortable supporting
-            as a mentor. Select all that apply.
-          </p>
+          <h3>{t("preferences.gradeLevel.title")}</h3>
+          <p>{t("preferences.gradeLevel.description")}</p>
 
           <Form>
             <FormGroup widths="4">
               {optionsMentorPreferGrade.map(({ label, value }) => (
                 <FormField>
                   <Radio
-                    label={label}
+                    label={t(`preferences.gradeLevel.options.${label}`)}
                     name="mentorPreferGrade"
                     value={value}
                     checked={inputs.mentorPreferGrade === value}
@@ -214,18 +206,15 @@ export default function Preferences({ query, user }) {
         </div>
 
         <div className="inputLineBlock">
-          <h3>Individual vs Group</h3>
-          <p>
-            Do you prefer supporting individuals or groups in mentorship
-            sessions? Select all that apply.
-          </p>
+          <h3>{t("preferences.groupPreference.title")}</h3>
+          <p>{t("preferences.groupPreference.description")}</p>
 
           <Form>
             <FormGroup widths="4">
               {optionsMentorPreferGroup.map(({ label, value }) => (
                 <FormField>
                   <Radio
-                    label={label}
+                    label={t(`preferences.groupPreference.options.${label}`)}
                     name="mentorPreferGroup"
                     value={value}
                     checked={inputs.mentorPreferGroup === value}
@@ -245,18 +234,15 @@ export default function Preferences({ query, user }) {
         </div>
 
         <div className="inputLineBlock">
-          <h3>Class Type</h3>
-          <p>
-            Tell us about what type of classroom you would most like to mentor.
-            Select all that apply.
-          </p>
+          <h3>{t("preferences.classType.title")}</h3>
+          <p>{t("preferences.classType.description")}</p>
 
           <Form>
             <FormGroup widths="4">
               {optionsMentorPreferClass.map(({ label, value }) => (
                 <FormField>
                   <Radio
-                    label={label}
+                    label={t(`preferences.classType.options.${label}`)}
                     name="mentorPreferClass"
                     value={value}
                     checked={inputs.mentorPreferClass === value}
@@ -276,7 +262,7 @@ export default function Preferences({ query, user }) {
         </div> */}
         <StyledSaveButton changed={changed}>
           <button onClick={handleSubmit} disabled={!changed}>
-            Save changes
+            {t("preferences.saveChanges")}
           </button>
         </StyledSaveButton>
       </StyledInput>

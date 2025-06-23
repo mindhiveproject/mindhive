@@ -5,8 +5,10 @@ import TaskCard from "./TaskCard";
 
 import { Dropdown } from "semantic-ui-react";
 import { StyledDiscover } from "../../styles/StyledDiscover";
+import useTranslation from "next-translate/useTranslation";
 
 export default function DiscoverTaskBank({ query, user, isDashboard }) {
+  const { t } = useTranslation("home");
   const router = useRouter();
   const tab = query?.tab || "all";
 
@@ -41,22 +43,22 @@ export default function DiscoverTaskBank({ query, user, isDashboard }) {
             options={[
               {
                 key: "all",
-                text: "All",
+                text: t("all"),
                 value: "all",
               },
               {
                 key: "task",
-                text: "Tasks",
+                text: t("tasks"),
                 value: "task",
               },
               {
                 key: "survey",
-                text: "Surveys",
+                text: t("surveys"),
                 value: "survey",
               },
               {
                 key: "block",
-                text: "Blocks",
+                text: t("blocks"),
                 value: "block",
               },
             ]}
@@ -72,7 +74,7 @@ export default function DiscoverTaskBank({ query, user, isDashboard }) {
             href="https://docs.google.com/document/d/1PjobN7C3LUDuiFUanZd7BuTGYRf5zq9t_CUGGKQjLyM/edit?usp=sharing"
             rel="noreferrer"
           >
-            <button>Tasks and Surveys descriptions</button>
+            <button>{t("tasksAndSurveysDescriptions")}</button>
           </a>
         </div>
       </div>

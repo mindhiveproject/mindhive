@@ -1,6 +1,7 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import generate from "project-name-generator";
+import useTranslation from "next-translate/useTranslation";
 
 import useForm from "../../../../lib/useForm";
 
@@ -12,6 +13,7 @@ import { GET_PROJECT_STUDY } from "../../../Queries/Proposal";
 import Router from "./Router";
 
 export default function Builder({ query, user, tab, toggleSidebar }) {
+  const { t } = useTranslation("builder");
   const router = useRouter();
   const { area } = query;
   const projectId = query?.selector;
@@ -77,7 +79,7 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
             title: generate().dashed,
             talks: {
               create: [
-                { settings: { type: "default", title: "Project chat" } },
+                { settings: { type: "default", title: t("main.projectChat", "Project chat") } },
               ],
             },
             status,
@@ -112,11 +114,11 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
   };
 
   if (!projectId) {
-    return <div>No project found, please save your project first.</div>;
+    return <div>{t("main.noProjectFound", "No project found, please save your project first.")}</div>;
   }
 
-  if (loading) return <div>Loading study...</div>;
-  if (error) return <div>Error loading study: {error.message}</div>;
+  if (loading) return <div>{t("main.loadingStudy", "Loading study...")}</div>;
+  if (error) return <div>{t("main.errorLoadingStudy", "Error loading study: {{errorMessage}}", { errorMessage: error.message })}</div>;
 
   return (
     <Router

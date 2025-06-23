@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import Widget from "./Widget";
 import Menu from "./Menu";
@@ -24,6 +25,7 @@ export default function Builder({
   setHasStudyChanged,
   isCanvasLocked,
 }) {
+  const { t } = useTranslation("builder");
   const [node, setNode] = useState(null);
   const [componentId, setComponentId] = useState(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -142,10 +144,9 @@ export default function Builder({
     <StyledCanvasBuilder>
       {isCanvasLocked && (
         <div className="lockedMessageOverlay">
-          <h3>Study Builder Locked</h3>
+          <h3>{t("builder.studyBuilderLocked", "Study Builder Locked")}</h3>
           <p>
-            This study has been submitted and cannot be edited. To make changes,
-            please ask your teacher to un-submit the study.
+            {t("builder.lockedMessage", "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study.")}
           </p>
         </div>
       )}
@@ -174,7 +175,7 @@ export default function Builder({
           onClick={lockedAddFunctions.addComment}
           disabled={isCanvasLocked}
         >
-          Add a comment
+          {t("builder.addComment", "Add a comment")}
         </button>
         {engine?.model &&
           !engine?.model
@@ -185,7 +186,7 @@ export default function Builder({
               onClick={lockedAddFunctions.addAnchor}
               disabled={isCanvasLocked}
             >
-              Add starting point
+              {t("builder.addStartingPoint", "Add starting point")}
             </button>
           )}
       </div>

@@ -1,10 +1,13 @@
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 import { StyledForm, SignupButton, SignupForm } from "../styles/StyledForm";
 
 export default function Sign() {
+  const { t } = useTranslation("common");
+
   return (
     <SignupForm>
-      <h1>Which role best describes you?</h1>
+      <h1>{t("signup.title")}</h1>
 
       <div className="signupOptions">
         <Link href="/signup/participant">
@@ -16,7 +19,7 @@ export default function Sign() {
                 height="20"
               />
             </div>
-            <div>Study participant</div>
+            <div>{t("signup.participant")}</div>
           </SignupButton>
         </Link>
 
@@ -25,7 +28,7 @@ export default function Sign() {
             <div>
               <img src="/assets/signup/student.png" alt="icon" height="20" />
             </div>
-            <div>Student</div>
+            <div>{t("signup.student")}</div>
           </SignupButton>
         </Link>
 
@@ -34,7 +37,7 @@ export default function Sign() {
             <div>
               <img src="/assets/signup/scientist.png" alt="icon" height="20" />
             </div>
-            <div>Scientist</div>
+            <div>{t("signup.scientist")}</div>
           </SignupButton>
         </Link>
 
@@ -43,14 +46,14 @@ export default function Sign() {
             <div>
               <img src="/assets/signup/teacher.png" alt="icon" height="20" />
             </div>
-            <div>Teacher</div>
+            <div>{t("signup.teacher")}</div>
           </SignupButton>
         </Link>
       </div>
 
       <span>
-        Already have an account?{` `}
-        <Link href="/login">Login here</Link>
+        {t("signup.haveAccount")}{` `}
+        <Link href="/login">{t("signup.loginHere")}</Link>
       </span>
     </SignupForm>
   );

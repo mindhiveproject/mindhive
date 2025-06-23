@@ -1,0 +1,58 @@
+{
+	"welcome": "欢迎",
+	"connect": {
+        "header": "创建您的 MindHive 个人资料",
+        "paragraph": "请创建您的个人资料以更好地与 MindHive 社区联系",
+        "button": "创建个人资料"
+    },
+	"editProfile": "您可以在这里编辑个人资料、安排与导师的会面，并了解最新的 MH 更新",
+	"createYourProfile": "创建您的 MindHive 个人资料",
+	"editYourProfile": "编辑您的 MindHive 个人资料",
+	"updateProfileDescription": "您已经是 MindHive 社区的一员！点击此处更新您的个人资料。",
+	"createProfileDescription": "准备好加入 MindHive 社区了吗？点击此处立即创建您的个人资料。",
+	"setAvail": "设置您的导师可用时间",
+	"setAvailDescription": "设置您的可用时间以开始导师指导。点击此处开始。",
+	"favoritePeople": "收藏的人",
+	"favoriteTasks": "收藏的任务和调查",
+	"participantID": "参与者 ID",
+	"publicReadableID": "公开可读 ID",
+	"permissions": "权限",
+	"needSupport": "需要支持？",
+	"fillSupportTicket": "填写支持工单",
+	"needNewBlock": "需要新模块？",
+	"fillRequestForm": "填写申请表",
+	"updates": {
+        "latestUpdates": "最新更新",
+        "noUpdate": "目前没有更新。"
+    },
+	"info": "更多信息",
+	"about": "关于我们",
+	"teachers": "教师",
+	"privacyPolicy": "隐私政策",
+	"termsCondition": "条款和条件",
+	"footer": {
+		"title": "MindHive",
+		"description": "MindHive 是一个基于网络的公民科学平台，支持真实世界的脑科学和行为研究。",
+		"audience": "MindHive 专为寻求真实 STEM 研究体验的学生和教师设计，也适用于希望在实验室外解决研究问题的神经科学家和认知/社会心理学家。",
+		"copyright": "© 2024",
+		"about": "关于我们",
+		"privacy": "隐私政策",
+		"terms": "条款和条件",
+		"email": "info@mindhive.science"
+	},
+	"sidebar": {
+		"dashboard": "仪表板",
+		"profile": "个人资料",
+		"connections": "联系",
+		"messages": "消息",
+		"settings": "设置",
+		"help": "帮助",
+		"logout": "退出登录"
+	},
+	"all": "全部",
+	"tasks": "任务",
+	"surveys": "调查",
+	"blocks": "区块",
+	"tasksAndSurveysDescriptions": "任务和调查描述",
+	"preview": "预览"
+}

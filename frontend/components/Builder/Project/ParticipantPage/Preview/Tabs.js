@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Tabs({
   user,
@@ -7,6 +8,7 @@ export default function Tabs({
   handleParameterChange,
   deleteParameter,
 }) {
+  const { t } = useTranslation("builder");
   const [tab, setTab] = useState("what");
 
   const addTab = () => {
@@ -19,7 +21,7 @@ export default function Tabs({
         target: {
           name,
           type: "text",
-          value: "New Tab",
+          value: t('tabs.newTab'),
           className: "header",
         },
       },
@@ -36,7 +38,7 @@ export default function Tabs({
 
   const tabs = [
     // remove default tabs
-    // Notion TICKET (February 7, 2025 4:26 PM) "Remove default Who/What/Why tab and only have “Add tab button”"
+    // Notion TICKET (February 7, 2025 4:26 PM) "Remove default Who/What/Why tab and only have "Add tab button""
     // {
     //   name: "what",
     //   header: "What",
@@ -99,7 +101,7 @@ export default function Tabs({
             addTab();
           }}
         >
-          Add Tab
+          {t('tabs.addTab')}
         </button>
       </div>
 

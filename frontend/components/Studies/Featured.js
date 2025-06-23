@@ -4,18 +4,16 @@ import { FEATURED_STUDIES } from "../Queries/Study";
 
 import FeaturedCard from "./FeaturedCard";
 import { StyledFeaturedStudies } from "../styles/StyledFeatured";
+import useTranslation from "next-translate/useTranslation";
 
 function DisplayFeatured({ user, studies, isDashboard }) {
   const [study, setStudy] = useState(studies[0]);
+  const { t } = useTranslation("common");
   return (
     <StyledFeaturedStudies>
       <div className="featuredHeader">
-        <h1>Discover studies, tasks and surveys</h1>
-        <p>
-          Browse our collection of studies, tasks and surveys created by high
-          school students in the MindHive program and partner scientists.
-          Participate in studies or preview tasks and surveys.
-        </p>
+        <h1>{t("discoverHeader")}</h1>
+        <p>{t("discoverDescription")}</p>
       </div>
 
       <div className="featuredContainerWrapper">

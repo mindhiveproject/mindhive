@@ -1,4 +1,5 @@
 import { useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import { DELETE_COMPLETE_PROPOSAL } from "../../../Mutations/Proposal";
 
@@ -13,6 +14,7 @@ export default function DeleteProposal({
     },
     refetchQueries: [...refetchQueries],
   });
+  const { t } = useTranslation("builder");
 
   return (
     <div
@@ -20,7 +22,7 @@ export default function DeleteProposal({
       onClick={() => {
         if (
           confirm(
-            "Are you sure you want to delete this proposal? All sections and cards in this proposal will be deleted as well."
+            t("deleteProposal.confirm", "Are you sure you want to delete this proposal? All sections and cards in this proposal will be deleted as well.")
           )
         ) {
           deleteProposal().catch((err) => {

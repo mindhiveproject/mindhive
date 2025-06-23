@@ -1,8 +1,10 @@
 import React from "react";
+import useTranslation from "next-translate/useTranslation";
 
 const NotesWidget = ({ id, settings, isActive, onSelect }) => {
+  const { t } = useTranslation("builder");
   const notes =
-    settings?.text || "No notes entered yet. Right-click to add notes.";
+    settings?.text || t("notes.noNotes", "No notes entered yet. Right-click to add notes.");
 
   const handleRightClick = (e) => {
     e.preventDefault();

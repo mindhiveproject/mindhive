@@ -1,4 +1,7 @@
+import useTranslation from "next-translate/useTranslation";
+
 export default function Vas({ name, statements, onChange }) {
+  const { t } = useTranslation("builder");
   const statementsArray = statements.split("\n");
 
   const packTheObject = (value) => ({
@@ -58,7 +61,7 @@ export default function Vas({ name, statements, onChange }) {
           </div>
         </div>
       ))}
-      <button onClick={addStatement}>Add more</button>
+      <button onClick={addStatement}>{t("vas.addMore", "Add more")}</button>
     </div>
   );
 }

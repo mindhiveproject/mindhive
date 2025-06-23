@@ -2,6 +2,7 @@ import { useState } from "react";
 import useForm from "../../../../../lib/useForm";
 import { useMutation } from "@apollo/client";
 import { Divider, Icon } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../../Mutations/User";
@@ -10,6 +11,7 @@ import { StyledInput } from "../../../../styles/StyledForm";
 import { StyledSaveButton } from "../../../../styles/StyledProfile";
 
 export default function Background({ query, user }) {
+  const { t } = useTranslation("connect");
   const [changed, setChanged] = useState(false);
 
   const { inputs, handleChange } = useForm({
@@ -90,23 +92,16 @@ export default function Background({ query, user }) {
   return (
     <div className="profileBlock">
       <div>
-        <div className="title">Background</div>
-        <p>
-          Let's get to know you better! Please fill out your background
-          information so others in the MindHive community can connect with you
-          more easily.
-        </p>
+        <div className="title">{t("background.title")}</div>
+        <p>{t("background.description")}</p>
       </div>
       <Divider />
 
       <StyledInput>
         <div>
           <div className="inputLineBlock">
-            <h3>Offical Bio</h3>
-            <p>
-              In ~100 words, describe your expertise, experience, and
-              educational background for a high school audience.
-            </p>
+            <h3>{t("background.officialBio.title")}</h3>
+            <p>{t("background.officialBio.description")}</p>
             <textarea
               id="bio"
               rows="5"
@@ -117,16 +112,8 @@ export default function Background({ query, user }) {
             />
           </div>
 
-          <h3>Unofficial Bio</h3>
-          <p>
-            In a couple of sentences, describe your journey leading to where you
-            are now, professionally. And look ahead to the next 5 years or
-            beyond. The goal is for students to understand that professional
-            lives are not always a straight path and that there are
-            coincidences, good luck and bad luck, and sometimes multiple career
-            paths hidden behind official bios you might read on a scientist’s
-            website.
-          </p>
+          <h3>{t("background.unofficialBio.title")}</h3>
+          <p>{t("background.unofficialBio.description")}</p>
           <textarea
             id="bioInformal"
             rows="5"
@@ -138,7 +125,7 @@ export default function Background({ query, user }) {
         </div>
 
         {/* <div className="inputLineBlock">
-          <h3>Occupation</h3>
+          <h3>{t("background.occupation.title")}</h3>
           <input
             type="text"
             name="occupation"
@@ -148,12 +135,12 @@ export default function Background({ query, user }) {
         </div>
 
         <div className="inputLineBlock">
-          <h3>Education</h3>
+          <h3>{t("background.education.title")}</h3>
           <div>
             {inputs.education.map((edu, num) => (
               <div className="twoColumnsInputWithIcon">
                 <div>
-                  <div className="subtitle">Institution</div>
+                  <div className="subtitle">{t("background.education.institution")}</div>
                   <input
                     type="text"
                     name={`institution-${num}`}
@@ -170,7 +157,7 @@ export default function Background({ query, user }) {
                 </div>
 
                 <div>
-                  <div className="subtitle">Degree</div>
+                  <div className="subtitle">{t("background.education.degree")}</div>
                   <input
                     type="text"
                     name={`degree-${num}`}
@@ -208,13 +195,13 @@ export default function Background({ query, user }) {
               <div>
                 <img src={`/assets/icons/profile/plus.svg`} />
               </div>
-              <p>Add another institution</p>
+              <p>{t("background.education.addInstitution")}</p>
             </div>
           </div>
         </div>
 
         <div className="inputLineBlock">
-          <h3>Language</h3>
+          <h3>{t("background.languages.title")}</h3>
           {inputs.languages.map((lang, num) => (
             <div className="oneColumnInputWithIcon">
               <label htmlFor={`language-${num}`}>
@@ -255,13 +242,13 @@ export default function Background({ query, user }) {
             <div>
               <img src={`/assets/icons/profile/plus.svg`} />
             </div>
-            <p>Add another language</p>
+            <p>{t("background.languages.addLanguage")}</p>
           </div>
         </div> */}
 
         <StyledSaveButton changed={changed}>
           <button onClick={handleSubmit} disabled={!changed}>
-            Save changes
+            {t("background.saveChanges")}
           </button>
         </StyledSaveButton>
       </StyledInput>

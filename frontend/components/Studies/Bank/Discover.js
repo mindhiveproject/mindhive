@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { PUBLIC_STUDIES } from "../../Queries/Study";
 import { GET_USER_STUDIES } from "../../Queries/User";
@@ -8,30 +9,31 @@ import { GET_USER_STUDIES } from "../../Queries/User";
 import StudyCard from "./StudyCard";
 import { StyledDiscover } from "../../styles/StyledDiscover";
 
-const filterOptions = [
-  {
-    key: "all",
-    text: "All studies",
-    value: "all",
-    content: "All studies",
-  },
-  {
-    key: "participated",
-    text: "Studies I participated in",
-    value: "participated",
-    content: "Studies I participated in",
-  },
-  {
-    key: "notparticipated",
-    text: "Studies I haven't participated in",
-    value: "notparticipated",
-    content: "Studies I haven't participated in",
-  },
-];
-
 export default function DiscoverStudyBank({ query, user, isDashboard }) {
+  const { t } = useTranslation("builder");
   const router = useRouter();
   const tab = query?.tab || "all";
+
+  const filterOptions = [
+    {
+      key: "all",
+      text: t("allStudies"),
+      value: "all",
+      content: t("allStudies"),
+    },
+    {
+      key: "participated",
+      text: t("studiesIParticipatedIn"),
+      value: "participated",
+      content: t("studiesIParticipatedIn"),
+    },
+    {
+      key: "notparticipated",
+      text: t("studiesIHaventParticipatedIn"),
+      value: "notparticipated",
+      content: t("studiesIHaventParticipatedIn"),
+    },
+  ];
 
   const { data, error, loading } = useQuery(PUBLIC_STUDIES);
   const studies = data?.studies || [];

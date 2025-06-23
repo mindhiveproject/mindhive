@@ -1,6 +1,8 @@
 import moment from "moment";
+import useTranslation from "next-translate/useTranslation";
 
 export default function ParticipantInformation({ study, participant, type }) {
+  const { t } = useTranslation("builder");
   const studyInfo =
     (participant?.studiesInfo && participant?.studiesInfo[study?.id]) || {};
   const generalInfo =
@@ -9,29 +11,29 @@ export default function ParticipantInformation({ study, participant, type }) {
   return (
     <div>
       <div className="infoItem">
-        <p>Participant ID</p>
+        <p>{t("participantInfo.participantId", "Participant ID")}</p>
         <p>{participant?.publicId}</p>
       </div>
       <div className="infoItem">
-        <p>Public readable ID</p>
+        <p>{t("participantInfo.publicReadableId", "Public readable ID")}</p>
         <p>{participant?.publicReadableId}</p>
       </div>
 
-      <h2>Study-related information</h2>
+      <h2>{t("participantInfo.studyRelatedInfo", "Study-related information")}</h2>
       <div>
         {Object.keys(generalInfo).map((key) => {
           if (key === "eng") {
             return (
               <div className="infoItem" key={key}>
-                <p>Do you understand basic instruction written in English?</p>
-                <p>{generalInfo[key] === "yes" ? "Yes" : "No"}</p>
+                <p>{t("participantInfo.englishQuestion", "Do you understand basic instruction written in English?")}</p>
+                <p>{generalInfo[key] === "yes" ? t("participantInfo.yes", "Yes") : t("participantInfo.no", "No")}</p>
               </div>
             );
           }
           if (key === "blockName") {
             return (
               <div className="infoItem" key={key}>
-                <p>Between-subject condition</p>
+                <p>{t("participantInfo.betweenSubjectCondition", "Between-subject condition")}</p>
                 <p>{generalInfo[key]}</p>
               </div>
             );
@@ -39,15 +41,15 @@ export default function ParticipantInformation({ study, participant, type }) {
           if (key === "share") {
             return (
               <div className="infoItem" key={key}>
-                <p>Agreed to save information for future studies</p>
-                <p>{generalInfo[key] === "true" ? "Yes" : "No"}</p>
+                <p>{t("participantInfo.agreedToSave", "Agreed to save information for future studies")}</p>
+                <p>{generalInfo[key] === "true" ? t("participantInfo.yes", "Yes") : t("participantInfo.no", "No")}</p>
               </div>
             );
           }
           if (key === "zip" && generalInfo.zip) {
             return (
               <div className="infoItem" key={key}>
-                <p>Zip code</p>
+                <p>{t("participantInfo.zipCode", "Zip code")}</p>
                 <p>{generalInfo[key]}</p>
               </div>
             );
@@ -55,7 +57,7 @@ export default function ParticipantInformation({ study, participant, type }) {
           if (key === "zipcode" && generalInfo.zipcode) {
             return (
               <div className="infoItem" key={key}>
-                <p>Zip code</p>
+                <p>{t("participantInfo.zipCode", "Zip code")}</p>
                 <p>{generalInfo[key]}</p>
               </div>
             );
@@ -63,7 +65,7 @@ export default function ParticipantInformation({ study, participant, type }) {
           if (key === "bd" && generalInfo.bd) {
             return (
               <div className="infoItem" key={key}>
-                <p>Birthday</p>
+                <p>{t("participantInfo.birthday", "Birthday")}</p>
                 <p>
                   {moment(parseInt(generalInfo[key])).format("MMMM D, YYYY")}
                 </p>
@@ -73,7 +75,7 @@ export default function ParticipantInformation({ study, participant, type }) {
           if (key === "age" && generalInfo.age) {
             return (
               <div className="infoItem" key={key}>
-                <p>Age</p>
+                <p>{t("participantInfo.age", "Age")}</p>
                 <p>{generalInfo[key]}</p>
               </div>
             );
@@ -83,7 +85,7 @@ export default function ParticipantInformation({ study, participant, type }) {
 
       {study?.consent?.length > 0 && (
         <>
-          <h2>IRB consent decisions</h2>
+          <h2>{t("participantInfo.irbConsent", "IRB consent decisions")}</h2>
           {study?.consent?.map((consent) => {
             return (
               <div className="infoItem" key={consent?.id}>
@@ -92,21 +94,19 @@ export default function ParticipantInformation({ study, participant, type }) {
 
                 {generalInfo?.[`consent-${consent?.id}-parentname`] && (
                   <p>
-                    Parent name:{" "}
-                    {generalInfo?.[`consent-${consent?.id}-parentname`]}
+                    {t("participantInfo.parentName", "Parent name:")} {generalInfo?.[`consent-${consent?.id}-parentname`]}
                   </p>
                 )}
 
                 {generalInfo?.[`consent-${consent?.id}-parentemail`] && (
                   <p>
-                    Parent email:{" "}
-                    {generalInfo?.[`consent-${consent?.id}-parentemail`]}
+                    {t("participantInfo.parentEmail", "Parent email:")} {generalInfo?.[`consent-${consent?.id}-parentemail`]}
                   </p>
                 )}
 
                 {generalInfo?.[`consent-${consent?.id}-kidname`] && (
                   <p>
-                    Your name: {generalInfo?.[`consent-${consent?.id}-kidname`]}
+                    {t("participantInfo.kidName", "Your name:")} {generalInfo?.[`consent-${consent?.id}-kidname`]}
                   </p>
                 )}
               </div>

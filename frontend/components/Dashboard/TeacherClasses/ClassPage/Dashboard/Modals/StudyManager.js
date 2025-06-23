@@ -3,6 +3,7 @@ import { Modal, Icon, Dropdown, Button } from "semantic-ui-react";
 import { useState } from "react";
 import styled from "styled-components";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
 import { GET_CLASS } from "../../../../../Queries/Classes";
@@ -12,6 +13,7 @@ import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 import StyledClass from "../../../../../styles/StyledClass";
 
 export default function StudyManager(props) {
+  const { t } = useTranslation("builder");
   const [isOpen, setIsOpen] = useState(false);
   const [studyId, setStudyId] = useState(null);
   const [studyName, setStudyName] = useState("");
@@ -245,7 +247,7 @@ export default function StudyManager(props) {
       trigger={
         <StyledTriggerButton>
           <Icon name="book" />
-          Manage Studies ({collaboratorStudies.length})
+          {t("studyManager.manageStudies", { count: collaboratorStudies.length })}
         </StyledTriggerButton>
       }
       dimmer="blurring"
@@ -255,30 +257,30 @@ export default function StudyManager(props) {
       <StyledModal>
         <Modal.Content>
           <div className="modalHeader">
-            <h1>Manage Studies for {props?.data?.username}</h1>
-            <p>View, create, or assign studies for the student</p>
+            <h1>{t("studyManager.manageStudiesFor", { username: props?.data?.username })}</h1>
+            <p>{t("studyManager.viewCreateAssign")}</p>
           </div>
           <StyledClass>
             <div className="dashboard">
               <div className="manageModal">
                 {hasProject && (
                   <div className="section">
-                    <h2>Main Project Study</h2>
+                    <h2>{t("studyManager.mainProjectStudy")}</h2>
                     {mainProjectStudy ? (
                       <div className="study-item main-study">
                         <div className="study-info">
                           <h3>{mainProjectStudy.title}</h3>
-                          <p>Connected to Project: {project?.title}</p>
+                          <p>{t("studyManager.connectedToProject", { project: project?.title })}</p>
                           <div className="collaborators">
-                            <strong>Collaborators:</strong>{" "}
+                            <strong>{t("studyManager.collaborators")}</strong>{" "}
                             {mainProjectStudy.collaborators?.length > 0
                               ? mainProjectStudy.collaborators
                                   .map((c) => c.username)
                                   .join(", ")
-                              : "None"}
+                              : t("studyManager.none")}
                           </div>
                           <div className="mentors">
-                            <strong>Mentors:</strong>{" "}
+                            <strong>{t("studyManager.mentors")}</strong>{" "}
                             {mainProjectStudy.collaborators?.filter((c) =>
                               c.permissions.some((p) => p.name === "MENTOR")
                             ).length > 0
@@ -290,34 +292,33 @@ export default function StudyManager(props) {
                                   )
                                   .map((c) => c.username)
                                   .join(", ")
-                              : "None"}
+                              : t("studyManager.none")}
                           </div>
                           <Link
                             href={`/builder/projects?selector=${project.id}&tab=builder`}
                             target="_blank"
                             className="study-link"
                           >
-                            View Study
+                            {t("studyManager.viewStudy")}
                           </Link>
                         </div>
                         <button
                           className="disconnect-button"
                           onClick={disconnectMainProjectStudy}
                         >
-                          Disconnect
+                          {t("studyManager.disconnect")}
                         </button>
                       </div>
                     ) : (
                       <p>
-                        No study is currently connected to this project. Use the
-                        options below to assign or create a new study.
+                        {t("studyManager.noStudyConnected")}
                       </p>
                     )}
                   </div>
                 )}
                 {hasCollaboratorStudies ? (
                   <div className="section">
-                    <h2>Collaborator Studies</h2>
+                    <h2>{t("studyManager.collaboratorStudies")}</h2>
                     <div className="study-list">
                       {collaboratorStudies
                         .filter(
@@ -330,15 +331,15 @@ export default function StudyManager(props) {
                             <div className="study-info">
                               <h3>{study.title}</h3>
                               <div className="collaborators">
-                                <strong>Collaborators:</strong>{" "}
+                                <strong>{t("studyManager.collaborators")}</strong>{" "}
                                 {study.collaborators?.length > 0
                                   ? study.collaborators
                                       .map((c) => c.username)
                                       .join(", ")
-                                  : "None"}
+                                  : t("studyManager.none")}
                               </div>
                               <div className="mentors">
-                                <strong>Mentors:</strong>{" "}
+                                <strong>{t("studyManager.mentors")}</strong>{" "}
                                 {study.collaborators?.filter((c) =>
                                   c.permissions.some((p) => p.name === "MENTOR")
                                 ).length > 0
@@ -350,21 +351,21 @@ export default function StudyManager(props) {
                                       )
                                       .map((c) => c.username)
                                       .join(", ")
-                                  : "None"}
+                                  : t("studyManager.none")}
                               </div>
                               <Link
                                 href={`/builder/studies?selector=${study.id}`}
                                 target="_blank"
                                 className="study-link"
                               >
-                                View Study
+                                {t("studyManager.viewStudy")}
                               </Link>
                             </div>
                             <button
                               className="disconnect-button"
                               onClick={() => disconnectFromStudy(study.id)}
                             >
-                              Remove as a collaborator
+                              {t("studyManager.removeCollaborator")}
                             </button>
                           </div>
                         ))}
@@ -373,10 +374,9 @@ export default function StudyManager(props) {
                 ) : (
                   !mainProjectStudy && (
                     <div className="section empty-state">
-                      <h2>No Collaborator Studies Assigned</h2>
+                      <h2>{t("studyManager.noCollaboratorStudiesAssigned")}</h2>
                       <p>
-                        This student is not assigned to any studies as a
-                        collaborator.
+                        {t("studyManager.notAssignedToAnyStudies")}
                       </p>
                     </div>
                   )
@@ -384,17 +384,17 @@ export default function StudyManager(props) {
                 {hasProject ? (
                   <>
                     <div className="section">
-                      <h2>Project</h2>
+                      <h2>{t("studyManager.project")}</h2>
                       <div className="project-info">
                         <p>
-                          <strong>Title:</strong>{" "}
-                          {project?.title || "Unknown Project"}
+                          <strong>{t("studyManager.title")}</strong>{" "}
+                          {project?.title || t("studyManager.unknownProject")}
                         </p>
                         <p>
-                          <strong>Collaborators:</strong>{" "}
+                          <strong>{t("studyManager.collaborators")}</strong>{" "}
                           {project?.collaborators
                             ?.map((c) => c.username)
-                            .join(", ") || "None"}
+                            .join(", ") || t("studyManager.none")}
                         </p>
                       </div>
                     </div>
@@ -402,13 +402,13 @@ export default function StudyManager(props) {
                       <div className="section">
                         <h2>
                           {mainProjectStudy
-                            ? "Reassign to Another Study"
-                            : "Assign to Existing Study"}
+                            ? t("studyManager.reassignToAnotherStudy")
+                            : t("studyManager.assignToExistingStudy")}
                         </h2>
                         <p>
                           {mainProjectStudy
-                            ? "Select a different study to connect to this project."
-                            : "Choose an existing study to assign to the project."}
+                            ? t("studyManager.selectDifferentStudy")
+                            : t("studyManager.chooseExistingStudy")}
                         </p>
                         <Dropdown
                           selection
@@ -418,17 +418,17 @@ export default function StudyManager(props) {
                           onChange={(e, data) => setStudyId(data?.value)}
                           fluid
                           className="study-dropdown"
-                          placeholder="Select a study"
+                          placeholder={t("studyManager.selectAStudy")}
                           disabled={studyOptions.length === 0}
                         />
                       </div>
                       <div className="section">
-                        <h2>Create New Study</h2>
-                        <p>Create a new study to connect to this project.</p>
+                        <h2>{t("studyManager.createNewStudy")}</h2>
+                        <p>{t("studyManager.createNewStudyToConnect")}</p>
                         <input
                           type="text"
                           name="studyName"
-                          placeholder="Enter the name of the new study"
+                          placeholder={t("studyManager.enterNewStudyName")}
                           value={studyName}
                           onChange={(e) => setStudyName(e?.target?.value)}
                           className="study-input"
@@ -438,15 +438,14 @@ export default function StudyManager(props) {
                   </>
                 ) : (
                   <div className="section">
-                    <h2>Create New Study</h2>
+                    <h2>{t("studyManager.createNewStudy")}</h2>
                     <p>
-                      No project is assigned. Please use the Project Manager to
-                      create or assign a project before managing studies.
+                      {t("studyManager.noProjectAssigned")}
                     </p>
                     <input
                       type="text"
                       name="studyName"
-                      placeholder="Enter the name of the new study"
+                      placeholder={t("studyManager.enterNewStudyName")}
                       value={studyName}
                       onChange={(e) => setStudyName(e?.target?.value)}
                       className="study-input"
@@ -458,7 +457,7 @@ export default function StudyManager(props) {
           </StyledClass>
           <div className="footer">
             <button className="cancel-button" onClick={() => setIsOpen(false)}>
-              Cancel
+              {t("studyManager.cancel")}
             </button>
             {hasProject && (
               <button
@@ -466,7 +465,7 @@ export default function StudyManager(props) {
                 onClick={assignToStudy}
                 disabled={!studyId}
               >
-                {mainProjectStudy ? "Reassign Study" : "Assign to Study"}
+                {mainProjectStudy ? t("studyManager.reassignStudy") : t("studyManager.assignToStudy")}
               </button>
             )}
             <button
@@ -474,7 +473,7 @@ export default function StudyManager(props) {
               onClick={createNewStudy}
               disabled={!studyName}
             >
-              Create Study
+              {t("studyManager.createStudy")}
             </button>
           </div>
         </Modal.Content>
@@ -485,24 +484,25 @@ export default function StudyManager(props) {
           onClose={cancelStudyConnection}
           size="tiny"
         >
-          <Modal.Header>Confirm Study Connection</Modal.Header>
+          <Modal.Header>{t("studyManager.confirmStudyConnection")}</Modal.Header>
           <Modal.Content>
             <Modal.Description>
-              Are you sure you want to{" "}
-              {mainProjectStudy ? "reassign" : "connect"} this study to the
-              project "{project?.title}"? This action may affect related data.
+              {t("studyManager.confirmStudyConnectionDesc", {
+                action: mainProjectStudy ? t("studyManager.reassign") : t("studyManager.connect"),
+                project: project?.title
+              })}
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>
             <Button onClick={cancelStudyConnection} className="cancel-button">
-              Cancel
+              {t("studyManager.cancel")}
             </Button>
             <Button
               onClick={confirmStudyConnection}
               className="confirm-button"
               primary
             >
-              Confirm
+              {t("studyManager.confirm")}
             </Button>
           </Modal.Actions>
         </StyledConfirmModal>

@@ -17,7 +17,7 @@ import { UPDATE_PROFILE_IMAGE } from "../../Mutations/User";
 const AvatarEditor = dynamic(() => import("./Avatar"), { ssr: false });
 
 export default function UpdateAvatarModal({ user }) {
-  const { t } = useTranslation("account");
+  const { t } = useTranslation("connect");
   const [isOpen, setIsOpen] = useState(false);
 
   const [
@@ -38,7 +38,7 @@ export default function UpdateAvatarModal({ user }) {
       });
       setIsOpen(false);
     } else {
-      alert("Please upload the picture");
+      alert(t("avatar.error"));
     }
   }
 
@@ -55,7 +55,7 @@ export default function UpdateAvatarModal({ user }) {
       <StyledModal>
         <Modal.Header>
           <div className="centeredHeader">
-            <h1>Create your avatar</h1>
+            <h1>{t("avatar.title")}</h1>
           </div>
         </Modal.Header>
 
@@ -66,7 +66,7 @@ export default function UpdateAvatarModal({ user }) {
                 handleChange={() => {}}
                 setPreview={() => {}}
                 onClose={(avatar) => updateAvatar(avatar)}
-                uploadTitle={"Upload"}
+                uploadTitle={t("avatar.upload")}
                 shortcut
               />
             </div>
