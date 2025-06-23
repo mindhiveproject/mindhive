@@ -4,6 +4,7 @@ import { PUBLIC_USER_QUERY } from "../../../Queries/User";
 import { StyledUserPage } from "../../../styles/StyledUser";
 
 import { languageOptions } from "../../../User/LanguageSelector";
+import useTranslation from "next-translate/useTranslation";
 import StyledConnect from "../../../styles/StyledConnect";
 import ManageFavorite from "../ManageFavorite";
 
@@ -15,7 +16,7 @@ const pronouns = {
 
 export default function ProfilePage({ query, user }) {
   const { id } = query;
-
+  const { t } = useTranslation("connect");
   const { data, loading, error } = useQuery(PUBLIC_USER_QUERY, {
     variables: { id },
   });
@@ -35,7 +36,7 @@ export default function ProfilePage({ query, user }) {
             pathname: `/dashboard/connect/my`,
           }}
         >
-          <button>My connections</button>
+          <button>{t("myConnections")}</button>
         </Link>
       </div>
       <StyledUserPage>
@@ -79,54 +80,48 @@ export default function ProfilePage({ query, user }) {
           <div className="bioContainer">
             <div>
               <div>
-                <h3>Offical Bio</h3>
+                <h3>{t("officialBio")}</h3>
                 {profile?.bio}
               </div>
-              <h3>Unofficial Bio</h3>
+              <h3>{t("unofficialBio")}</h3>
               <p>{profile?.bioInformal}</p>
             </div>
 
             <div>
-              <h3>Introduction Video</h3>
+              <h3>{t("introductionVideo")}</h3>
               {profile?.introVideo?.filename && (
                 <video width="100%" controls>
                   <source
                     src={`/videos/${profile?.introVideo?.filename}`}
                     type="video/mp4"
                   />
-                  Your browser does not support the video tag.
+                  {t("videoNotSupported")}
                 </video>
               )}
             </div>
 
             <div>
-              <h3>What are you passionate about right now?</h3>
+              <h3>{t("passionNow")}</h3>
               <div>{profile?.passion}</div>
             </div>
 
             <div>
-              <h3>Availability</h3>
+              <h3>{t("availability")}</h3>
               {profile?.involvement?.mentor?.async_answering_questions && (
-                <p>Answering student questions (based on your profile).</p>
+                <p>{t("asyncAnsweringQuestions")}</p>
               )}
 
               {profile?.involvement?.mentor?.async_providing_feedback && (
-                <p>Providing feedback on student projects</p>
+                <p>{t("asyncProvidingFeedback")}</p>
               )}
 
               {profile?.involvement?.mentor?.sync_making_visit_in_person && (
-                <p>
-                  Making an in-class visit to talk with program students about
-                  your work (in-person).
-                </p>
+                <p>{t("syncInPersonVisit")}</p>
               )}
 
               {profile?.involvement?.mentor
                 ?.sync_making_visit_in_person_over_zoom && (
-                <p>
-                  Making an in-class visit to talk with program students about
-                  your work (over Zoom).
-                </p>
+                <p>{t("syncZoomVisit")}</p>
               )}
             </div>
           </div>

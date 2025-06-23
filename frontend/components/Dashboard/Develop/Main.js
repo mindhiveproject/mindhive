@@ -8,7 +8,7 @@ import Panels from "./Panels";
 import { StyledSelector } from "../../styles/StyledSelector";
 
 export default function DevelopMain({ query, user }) {
-  const { t } = useTranslation("dashboard");
+  const { t } = useTranslation("builder");
 
   const { selector } = query;
   let developNewQuery;
@@ -39,12 +39,12 @@ export default function DevelopMain({ query, user }) {
 
   return (
     <>
-      <h1>Develop</h1>
+      <h1>{t("develop")}</h1>
       <div className="header">
         <div>
           <p>
             <Trans
-              i18nKey="dashboard:develop.headerDescription"
+              i18nKey="builder:developHeaderDescription"
               components={[<strong />]}
             />
           </p>
@@ -56,7 +56,7 @@ export default function DevelopMain({ query, user }) {
               query: { develop: developNewQuery },
             }}
           >
-            <button>Develop new</button>
+            <button>{t("developNew")}</button>
           </Link>
         </div>
       </div>

@@ -2,6 +2,7 @@ import useForm from "../../../../../lib/useForm";
 import UpdateAvatarModal from "../../../../Account/AvatarEditor/AvatarModal";
 import { Dropdown, Divider } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../../Mutations/User";
@@ -11,6 +12,7 @@ import { StyledSaveButton } from "../../../../styles/StyledProfile";
 import { useState } from "react";
 
 export default function BasicInformation({ query, user }) {
+  const { t } = useTranslation("connect");
   const [changed, setChanged] = useState(false);
 
   const { inputs, handleChange } = useForm({
@@ -49,19 +51,12 @@ export default function BasicInformation({ query, user }) {
   return (
     <div className="profileBlock">
       <div>
-        <p>
-          Please complete the following items in order to create your profile
-          and begin connecting with the MindHive community.
-        </p>
-        <div className="title">Basic Information</div>
-        <p>
-          Your basic information helps the MindHive community get to know you
-          better. It includes who you are, where you’re located, and what you
-          look like.
-        </p>
+        <p>{t("basic.description")}</p>
+        <div className="title">{t("basic.title")}</div>
+        <p>{t("basic.subtitle")}</p>
       </div>
       <Divider />
-      <h3>Profile photo</h3>
+      <h3>{t("basic.profilePhoto")}</h3>
       <div>
         {user?.image?.image?.publicUrlTransformed ? (
           <img
@@ -78,7 +73,7 @@ export default function BasicInformation({ query, user }) {
         <div className="inputLineBlock">
           <div className="twoColumnsInput">
             <div>
-              <h3>First name</h3>
+              <h3>{t("basic.firstName")}</h3>
               <input
                 type="text"
                 name="firstName"
@@ -88,7 +83,7 @@ export default function BasicInformation({ query, user }) {
               />
             </div>
             <div>
-              <h3>Last name</h3>
+              <h3>{t("basic.lastName")}</h3>
               <input
                 type="text"
                 name="lastName"
@@ -100,7 +95,7 @@ export default function BasicInformation({ query, user }) {
           </div>
         </div>
         <div className="inputLineBlock">
-          <h3>Email</h3>
+          <h3>{t("basic.email")}</h3>
           <input
             type="email"
             name="email"
@@ -113,24 +108,24 @@ export default function BasicInformation({ query, user }) {
         <div className="inputLineBlock">
           <div className="twoColumnsInput">
             <div>
-              <h3>Pronouns</h3>
+              <h3>{t("basic.pronouns")}</h3>
               <Dropdown
                 fluid
                 selection
                 options={[
                   {
                     key: "she",
-                    text: "she/her/hers",
+                    text: t("basic.pronounsOptions.she"),
                     value: "she",
                   },
                   {
                     key: "he",
-                    text: "he/him/his",
+                    text: t("basic.pronounsOptions.he"),
                     value: "he",
                   },
                   {
                     key: "they",
-                    text: "they/them/theirs",
+                    text: t("basic.pronounsOptions.they"),
                     value: "they",
                   },
                 ]}
@@ -145,7 +140,7 @@ export default function BasicInformation({ query, user }) {
             </div>
 
             <div>
-              <h3>Location</h3>
+              <h3>{t("basic.location")}</h3>
               <input
                 type="text"
                 name="location"
@@ -156,7 +151,7 @@ export default function BasicInformation({ query, user }) {
           </div>
 
           <div className="inputLineBlock">
-            <h3>Organization if relevant</h3>
+            <h3>{t("basic.organization")}</h3>
             <input
               type="text"
               name="organization"
@@ -167,7 +162,7 @@ export default function BasicInformation({ query, user }) {
           </div>
 
           <div className="inputLineBlock">
-            <h3>Tagline</h3>
+            <h3>{t("basic.tagline")}</h3>
             <input
               type="text"
               name="tagline"
@@ -180,7 +175,7 @@ export default function BasicInformation({ query, user }) {
 
         <StyledSaveButton changed={changed}>
           <button onClick={handleSubmit} disabled={!changed}>
-            Save changes
+            {t("basic.saveChanges")}
           </button>
         </StyledSaveButton>
       </StyledInput>

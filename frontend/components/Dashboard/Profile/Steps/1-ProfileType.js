@@ -1,15 +1,14 @@
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 export default function ProfileType({}) {
+  const { t } = useTranslation("connect");
+
   return (
     <>
-      <p>
-        Set up your MindHive profile by choosing an option below. Are you
-        creating a personal profile for yourself, or setting up a page for your
-        organization?
-      </p>
+      <p>{t("profileType.description")}</p>
       <div className="chooseProfileType">
-        <h2>Choose your profile type</h2>
+        <h2>{t("profileType.chooseType")}</h2>
 
         <div className="profileChoicesArea">
           <div>
@@ -26,13 +25,10 @@ export default function ProfileType({}) {
                 <div>
                   <img src={`/assets/icons/profile/people.svg`} />
                 </div>
-                <div>Organization</div>
+                <div>{t("profileType.organization.title")}</div>
               </div>
             </Link>
-            <p>
-              This profile is best for when you are creating an account to
-              represent a community organization or company.
-            </p>
+            <p>{t("profileType.organization.description")}</p>
           </div>
 
           <div>
@@ -49,13 +45,10 @@ export default function ProfileType({}) {
                 <div>
                   <img src={`/assets/icons/profile/user.svg`} />
                 </div>
-                <div>Individual</div>
+                <div>{t("profileType.individual.title")}</div>
               </div>
             </Link>
-            <p>
-              This profile is best for when you are creating an account for
-              yourself.
-            </p>
+            <p>{t("profileType.individual.description")}</p>
           </div>
         </div>
       </div>

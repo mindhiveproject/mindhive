@@ -3,6 +3,7 @@ import { useState } from "react";
 import debounce from "lodash.debounce";
 import Link from "next/link";
 import { Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import StyledConnect from "../../../styles/StyledConnect";
 import { StyledInput } from "../../../styles/StyledForm";
@@ -13,6 +14,7 @@ import ProfileCard from "./Card";
 import PaginationUsers from "./Pagination";
 
 export default function ConnectBank({ query, user }) {
+  const { t } = useTranslation("connect");
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -51,19 +53,19 @@ export default function ConnectBank({ query, user }) {
             pathname: `/dashboard/connect/my`,
           }}
         >
-          <button>My connections</button>
+          <button>{t("myConnections")}</button>
         </Link>
       </div>
       <div className="header">
-        <div className="title">Connect with people</div>
+        <div className="title">{t("connectWithPeople")}</div>
         <div className="subtitle">
-          Search for, discover, and connect with the MindHive community
+          {t("connectSubtitle")}
         </div>
       </div>
       <StyledInput>
         <div className="searchArea">
           <input
-            placeholder="Search by name, topic, or area of interest "
+            placeholder={t("searchPlaceholder")}
             type="text"
             name="keyword"
             value={keyword}
@@ -86,7 +88,7 @@ export default function ConnectBank({ query, user }) {
       />
 
       <div>
-        <span>Number of users per page</span>
+        <span>{t("usersPerPage")}</span>
         <Dropdown
           fluid
           selection
