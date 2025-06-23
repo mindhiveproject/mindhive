@@ -2,6 +2,7 @@ import Vas from "./Types/Vas";
 import SelectOne from "./Types/SelectOne";
 import SurveyBuilder from "./Types/SurveyBuilder";
 import Array from "./Types/Array";
+import useTranslation from "next-translate/useTranslation";
 
 export default function TaskParameters({
   user,
@@ -9,6 +10,7 @@ export default function TaskParameters({
   handleChange,
   isInStudyBuilder,
 }) {
+  const { t } = useTranslation("builder");
   const parameters = task?.parameters || task?.template?.parameters || [];
 
   const handleParameterChange = (e) => {
@@ -89,10 +91,10 @@ export default function TaskParameters({
   if (!isInStudyBuilder && parameters.length === 0) {
     return (
       <div>
-        <label>Template parameters</label>
-        {!task?.template?.file && <p>Please upload a lab.js json file first</p>}
+        <label>{t("parameters.templateParameters", "Template parameters")}</label>
+        {!task?.template?.file && <p>{t("parameters.uploadLabjs", "Please upload a lab.js json file first")}</p>}
         {task?.template?.file && (
-          <p>The template does not contain any parameters.</p>
+          <p>{t("parameters.noParameters", "The template does not contain any parameters.")}</p>
         )}
       </div>
     );
@@ -104,7 +106,7 @@ export default function TaskParameters({
         <>
           <div className="block">
             <label htmlFor="subtitle">
-              Subtitle
+              {t("parameters.subtitle", "Subtitle")}
               <input
                 type="text"
                 name="subtitle"
@@ -116,7 +118,7 @@ export default function TaskParameters({
 
           {task?.testId && (
             <div>
-              <label>Version ID</label>
+              <label>{t("parameters.versionId", "Version ID")}</label>
               <p>{task?.testId}</p>
             </div>
           )}
@@ -135,7 +137,7 @@ export default function TaskParameters({
                 </div>
                 <div>
                   <label htmlFor="askDataUsageQuestion">
-                    Ask students a data usage question after the task
+                    {t("parameters.askDataUsage", "Ask students a data usage question after the task")}
                   </label>
                 </div>
               </div>
@@ -145,7 +147,7 @@ export default function TaskParameters({
 
       {parameters.length > 0 && (
         <>
-          <label>Task parameters</label>
+          <label>{t("parameters.taskParameters", "Task parameters")}</label>
           {parameters.map(
             ({ name, value, type, help, example, options, array }) => (
               <div className="wideBlock" key={name}>
@@ -169,7 +171,7 @@ export default function TaskParameters({
           {!isInStudyBuilder && (
             <div>
               <button onClick={setParametersFromTemplate}>
-                Get parameters from the template
+                {t("parameters.getFromTemplate", "Get parameters from the template")}
               </button>
             </div>
           )}

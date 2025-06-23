@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import ProposalHeader from "./Header";
 import ProposalBoard from "./Board";
@@ -20,6 +21,7 @@ export default function ProposalBuilder({
   isPDF,
   setIsPDF,
 }) {
+  const { t } = useTranslation("builder");
   const [updateEdit, { loading: updateEditLoading }] = useMutation(
     UPDATE_CARD_EDIT,
     {
@@ -81,7 +83,8 @@ export default function ProposalBuilder({
         {isPreview ? (
           <>
             <h2>
-              Preview of proposal template{" "}
+              {t("proposal.previewHeader", "Preview of proposal template")}
+              {" "}
               <span className="templateName">{proposal.title}</span>
             </h2>
             <p>{proposal.description}</p>

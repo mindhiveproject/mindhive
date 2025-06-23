@@ -4,6 +4,7 @@ import { Dropdown, Icon } from "semantic-ui-react";
 import { saveAs } from "file-saver";
 import { jsonToCSV } from "react-papaparse";
 import moment from "moment";
+import useTranslation from "next-translate/useTranslation";
 
 export default function DownloadByComponent({
   studyId,
@@ -13,6 +14,7 @@ export default function DownloadByComponent({
   datasets,
   filteredDatasetTokens,
 }) {
+  const { t } = useTranslation("builder");
   const [selected, setSelected] = useState([]);
 
   const [loadingSummary, setLoadingSummary] = useState(false);
@@ -21,7 +23,7 @@ export default function DownloadByComponent({
   const options = components.map((c) => ({
     ...c,
     key: c?.testId,
-    text: `${c?.name} (${c?.subtitle || "no subtitle"}) (${c?.testId})`,
+    text: `${c?.name} (${c?.subtitle || t("byComponent.noSubtitle", "no subtitle")}) (${c?.testId})`,
     value: c?.testId,
   }));
 
@@ -186,9 +188,9 @@ export default function DownloadByComponent({
 
   return (
     <div className="downloadByComponent">
-      <h3>Data by task in separate files</h3>
+      <h3>{t("byComponent.dataByTask", "Data by task in separate files")}</h3>
       <Dropdown
-        placeholder="Select tasks or surveys"
+        placeholder={t("byComponent.selectTasks", "Select tasks or surveys")}
         fluid
         multiple
         search
@@ -201,24 +203,24 @@ export default function DownloadByComponent({
         <>
           <>
             {loadingSummary ? (
-              <div>Wait ...</div>
+              <div>{t("byComponent.wait", "Wait ...")}</div>
             ) : (
               <div
                 className="downloadArea"
                 onClick={() => downloadAggregated()}
               >
                 <Icon color="teal" size="large" name="download" />
-                <a>Download aggregated data</a>
+                <a>{t("byComponent.downloadAggregated", "Download aggregated data")}</a>
               </div>
             )}
           </>
           <>
             {loadingRaw ? (
-              <div>Wait ...</div>
+              <div>{t("byComponent.wait", "Wait ...")}</div>
             ) : (
               <div className="downloadArea" onClick={() => downloadRaw()}>
                 <Icon color="teal" size="large" name="download" />
-                <a>Download raw data</a>
+                <a>{t("byComponent.downloadRaw", "Download raw data")}</a>
               </div>
             )}
           </>

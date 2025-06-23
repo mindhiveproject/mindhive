@@ -14,7 +14,7 @@ export default function Basic({
   error,
   isInStudyBuilder,
 }) {
-  const { t } = useTranslation("classes");
+  const { t } = useTranslation("builder");
 
   // initialize task settings if there are no
   if (!task?.settings) {
@@ -47,7 +47,7 @@ export default function Basic({
       <fieldset disabled={loading} aria-busy={loading}>
         <div className="block">
           <label htmlFor="title">
-            {t("common.title")}
+            {t("title")}
             <input
               type="text"
               name="title"
@@ -62,7 +62,7 @@ export default function Basic({
           <>
             <div className="block">
               <label htmlFor="description">
-                Description (for Develop mode)
+                {t("descriptionDevelop")}
                 <textarea
                   id="description"
                   name="description"
@@ -71,14 +71,13 @@ export default function Basic({
                 />
               </label>
               <span>
-                This is visible to researchers, teachers, and students when
-                choosing tasks or surveys in the Develop mode.
+                {t("descriptionDevelopHelp")}
               </span>
             </div>
 
             <div className="block">
               <label htmlFor="descriptionForParticipants">
-                Description (for Discover mode)
+                {t("descriptionDiscover")}
                 <textarea
                   id="descriptionForParticipants"
                   name="descriptionForParticipants"
@@ -87,8 +86,7 @@ export default function Basic({
                 />
               </label>
               <span>
-                This is visible to all platform users when choosing tasks or
-                surveys in the Discover mode.
+                {t("descriptionDiscoverHelp")}
               </span>
             </div>
           </>
@@ -97,7 +95,7 @@ export default function Basic({
         {task?.isExternal && (
           <div className="block">
             <label htmlFor="link">
-              Link
+              {t("link")}
               <input
                 type="text"
                 id="link"
@@ -106,7 +104,7 @@ export default function Basic({
                 onChange={handleChange}
               />
             </label>
-            <span>The data will not be saved to the MH database</span>
+            <span>{t("externalDataWarning")}</span>
           </div>
         )}
 

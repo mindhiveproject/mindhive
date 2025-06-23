@@ -2,8 +2,10 @@ import { useQuery } from "@apollo/client";
 import { GET_USER_CLASSES } from "../../../../Queries/User";
 
 import { Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function LinkClass({ project, handleChange }) {
+  const { t } = useTranslation();
   const { data, error, loading } = useQuery(GET_USER_CLASSES);
 
   const user = data?.authenticatedItem || {
@@ -22,7 +24,7 @@ export default function LinkClass({ project, handleChange }) {
   const myClassesIncludingEmpty = [
     {
       key: 0,
-      text: "❌  Do not connect the class",
+      text: t('builder:linkClass.doNotConnectClass'),
       value: "$$$-class-not-connected-$$$",
     },
     ...myClasses,

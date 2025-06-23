@@ -1,6 +1,7 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import { customAlphabet } from "nanoid";
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 4);
@@ -23,6 +24,7 @@ import { disconnect } from "process";
 
 export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
   const router = useRouter();
+  const { t } = useTranslation("builder");
   const { area } = query;
   const projectId = query?.selector;
 
@@ -51,7 +53,7 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
           : [];
       handleMultipleUpdate({
         image: null,
-        title: `Clone of ${study?.title}-${rand}`,
+        title: `${t('participantPageMain.cloneOf')} ${study?.title}-${rand}`,
         slug: `${study?.slug}-${rand}`,
         consent: [],
         collaborators: [],
@@ -116,7 +118,14 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
           ? { connect: inputs?.consent?.map((cl) => ({ id: cl?.id })) }
           : null,
         talks: {
-          create: [{ settings: { type: "default", title: "Project chat" } }],
+          create: [
+            {
+              settings: {
+                type: "default",
+                title: t('participantPageMain.projectChat'),
+              },
+            },
+          ],
         },
         classes: { connect: inputs?.classes?.map((cl) => ({ id: cl?.id })) },
         flow: inputs?.flow,
@@ -179,14 +188,14 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
           query={query}
           user={user}
           tab={tab}
-          saveBtnName="Save"
+          saveBtnName={t('participantPageMain.save')}
           saveBtnFunction={saveStudy}
           toggleSidebar={toggleSidebar}
           hasStudyChanged={hasStudyChanged}
         />
         <InDev
-          header={`🤷🏻 Your project has no Study attached to it.`}
-          message="Let your teacher know so they can create one and associate it. If you need help, please contact tech support at support.mindhive@nyu.edu."
+          header={t('participantPageMain.noStudyHeader')}
+          message={t('participantPageMain.noStudyMessage')}
         />
       </>
     );
@@ -199,7 +208,7 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
         query={query}
         user={user}
         tab={tab}
-        saveBtnName="Save"
+        saveBtnName={t('participantPageMain.save')}
         saveBtnFunction={saveStudy}
         toggleSidebar={toggleSidebar}
         hasStudyChanged={hasStudyChanged}

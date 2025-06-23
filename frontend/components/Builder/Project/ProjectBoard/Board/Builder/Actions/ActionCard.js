@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 
 import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
 
@@ -47,6 +48,7 @@ export default function ActionCard({
   submitStatuses,
 }) {
   const router = useRouter();
+  const { t } = useTranslation("builder");
   const isSubmitted = submitStatuses[card?.type] === "SUBMITTED";
 
   const { data } = useQuery(PROPOSAL_REVIEWS_QUERY, {
@@ -59,6 +61,13 @@ export default function ActionCard({
   const comments = project?.reviews?.filter(
     (review) => review.stage === cardTypes[card?.type].reviewStage
   );
+
+  const cardTitle = {
+    ACTION_SUBMIT: t("actionCard.proposalFeedback"),
+    ACTION_PEER_FEEDBACK: t("actionCard.peerFeedback"),
+    ACTION_COLLECTING_DATA: t("actionCard.dataCollection"),
+    ACTION_PROJECT_REPORT: t("actionCard.projectReport"),
+  };
 
   return (
     <StyledActionCard
@@ -85,18 +94,21 @@ export default function ActionCard({
           </div>
           <div>
             <div className="card-title">
-              <div>Submit for {cardTypes[card?.type].title}</div>
+              <div>{t("actionCard.submitFor", { title: cardTitle[card?.type] })}</div>
               {isSubmitted ? (
                 <>
                   {card?.type !== "ACTION_COLLECTING_DATA" && (
                     <p>
-                      View {comments?.length > 0 ? comments.length + " " : ""}
-                      comments
+                      {comments?.length > 0
+                        ? t("actionCard.viewCountComments", {
+                            count: comments.length,
+                          })
+                        : t("actionCard.viewComments")}
                     </p>
                   )}
                 </>
               ) : (
-                <p>Click to submit for {cardTypes[card?.type].title}</p>
+                <p>{t("actionCard.clickToSubmit", { title: cardTitle[card?.type] })}</p>
               )}
             </div>
           </div>
@@ -116,9 +128,7 @@ export default function ActionCard({
             onClick={(e) => {
               e.stopPropagation();
               if (
-                confirm(
-                  "Are you sure you want to delete this card? This action cannot be undone."
-                )
+                confirm(t("actionCard.deleteCardConfirmation"))
               ) {
                 onDeleteCard(card.id);
               }

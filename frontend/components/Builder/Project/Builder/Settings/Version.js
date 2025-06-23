@@ -2,6 +2,7 @@ import { useState } from "react";
 import uniqid from "uniqid";
 import useForm from "../../../../../lib/useForm";
 import moment from "moment";
+import useTranslation from "next-translate/useTranslation";
 
 import { Dropdown, Modal, Icon } from "semantic-ui-react";
 import { StyledForm } from "../../../../styles/StyledForm";
@@ -14,6 +15,7 @@ export default function StudyVersion({
   addFunctions,
   hasStudyChanged,
 }) {
+  const { t } = useTranslation("builder");
   const [version, setVersion] = useState(study?.currentVersion || "");
 
   const { inputs, handleChange: handleFormChange } = useForm({
@@ -33,7 +35,7 @@ export default function StudyVersion({
       : [];
 
   const createNewVersion = () => {
-    if (!inputs?.name) return alert("Please enter the version name");
+    if (!inputs?.name) return alert(t("version.enterVersionName", "Please enter the version name"));
     const { diagram } = study;
 
     const newVersion = {
@@ -73,9 +75,9 @@ export default function StudyVersion({
   const deleteVersion = () => {
     if (
       confirm(
-        `Are you sure you want to delete the ${
-          versionHistory.filter((v) => v?.id === version)[0]?.name
-        }?`
+        t("version.confirmDelete", "Are you sure you want to delete the {{versionName}}?", {
+          versionName: versionHistory.filter((v) => v?.id === version)[0]?.name
+        })
       )
     ) {
       const updatedVersionHistory = versionHistory.filter(
@@ -91,9 +93,9 @@ export default function StudyVersion({
     <div className="studyVersion">
       <div>
         <div className="studyVersionHeader">
-          <h2>Study version</h2>
+          <h2>{t("version.title", "Study version")}</h2>
           <span className="studyVersionHeaderNote">
-            Save different study designs displayed on the screen on the left
+            {t("version.headerNote", "Save different study designs displayed on the screen on the left")}
           </span>
         </div>
 
@@ -102,12 +104,12 @@ export default function StudyVersion({
             <div className="studyVersionInfo">
               <div className="studyVersionHeader">
                 <div>
-                  <h4>Current version</h4>
+                  <h4>{t("version.currentVersion", "Current version")}</h4>
                 </div>
 
                 <div>
                   <h4>
-                    Created on{" "}
+                    {t("version.createdOn", "Created on")}{" "}
                     {moment(
                       versionHistory?.filter(
                         (v) => v?.id === study?.currentVersion
@@ -136,7 +138,7 @@ export default function StudyVersion({
             <div className="switch">
               <div>
                 <Dropdown
-                  placeholder="Study versions"
+                  placeholder={t("version.placeholder", "Study versions")}
                   fluid
                   selection
                   options={versions}
@@ -145,17 +147,16 @@ export default function StudyVersion({
                 />
               </div>
 
-              <button onClick={switchToVersion}>Load</button>
+              <button onClick={switchToVersion}>{t("version.load", "Load")}</button>
 
               <button onClick={deleteVersion} className="deleteBtn">
-                Delete
+                {t("version.delete", "Delete")}
               </button>
             </div>
           </>
         ) : (
           <p>
-            No study version has been saved yet. Create a new version by
-            clicking on the button below.
+            {t("version.noVersionSaved", "No study version has been saved yet. Create a new version by clicking on the button below.")}
           </p>
         )}
       </div>
@@ -178,6 +179,7 @@ const CreateVersionModal = ({
   handleFormChange,
   createNewVersion,
 }) => {
+  const { t } = useTranslation("builder");
   const [isOpen, setIsOpen] = useState(false);
 
   const onOpen = () => {
@@ -195,19 +197,19 @@ const CreateVersionModal = ({
       onClose={() => onClose()}
       onOpen={() => onOpen()}
       open={isOpen}
-      trigger={<button>Create new version</button>}
+      trigger={<button>{t("version.createNewVersion", "Create new version")}</button>}
       dimmer="blurring"
       size="small"
       closeIcon
     >
       <Modal.Header>
-        <h2>Create new version</h2>
+        <h2>{t("version.createNewVersion", "Create new version")}</h2>
       </Modal.Header>
 
       <Modal.Content>
         <StyledForm>
           <label htmlFor="name">
-            Name
+            {t("version.name", "Name")}
             <input
               type="text"
               name="name"
@@ -217,7 +219,7 @@ const CreateVersionModal = ({
           </label>
 
           <label htmlFor="description">
-            Description
+            {t("version.description", "Description")}
             <input
               type="text"
               name="description"
@@ -234,7 +236,7 @@ const CreateVersionModal = ({
             setIsOpen(false);
           }}
         >
-          Create new version
+          {t("version.createNewVersion", "Create new version")}
         </button>
       </Modal.Actions>
     </Modal>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { OutCustomPort } from "../Diagram/models/OutPortModel";
+import useTranslation from "next-translate/useTranslation";
 
 import uniqid from "uniqid";
 import generate from "project-name-generator";
@@ -12,6 +13,7 @@ export default function Modal({
   setHasStudyChanged,
   study,
 }) {
+  const { t } = useTranslation("builder");
   const components = study?.components || {};
 
   const [ports, setPorts] = useState(
@@ -100,29 +102,29 @@ export default function Modal({
         <div className="portsEditor">
           <div className="navigation">
             <div className="goBackBtn" onClick={() => close()}>
-              ←
+              {t("modal.back", "←")}
             </div>
             <div>
               <h1>{node?.options?.name}</h1>
               <p>{node?.options?.details}</p>
             </div>
             <div>
-              <button onClick={update}>Update</button>
+              <button onClick={update}>{t("modal.update", "Update")}</button>
             </div>
           </div>
           <div>
             <div className="port">
               <div>
-                <p>ID</p>
+                <p>{t("modal.id", "ID")}</p>
               </div>
               <div>
-                <p>Name</p>
+                <p>{t("modal.name", "Name")}</p>
               </div>
               <div>
-                <p>Probability (0 - 100%)</p>
+                <p>{t("modal.probability", "Probability (0 - 100%)")}</p>
               </div>
               <div>
-                <p>Participants</p>
+                <p>{t("modal.participants", "Participants")}</p>
               </div>
               <div>
                 <p></p>
@@ -169,7 +171,7 @@ export default function Modal({
 
                 <div>
                   <button onClick={() => removePort({ name: port?.name })}>
-                    Remove condition
+                    {t("modal.removeCondition", "Remove condition")}
                   </button>
                 </div>
               </div>
@@ -177,7 +179,9 @@ export default function Modal({
 
             <div className="footer">
               <div>
-                <button onClick={() => addPort()}>Add condition</button>
+                <button onClick={() => addPort()}>
+                  {t("modal.addCondition", "Add condition")}
+                </button>
               </div>
             </div>
           </div>

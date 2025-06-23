@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import { Dropdown } from "semantic-ui-react";
 
@@ -6,6 +7,7 @@ import { PROPOSAL_QUERY } from "../../../../Queries/Proposal";
 import { useQuery } from "@apollo/client";
 
 export default function ProposalSelector({ study, handleChange, proposalId }) {
+  const { t } = useTranslation("builder");
   const [cardId, setCardId] = useState(
     study?.descriptionInProposalCard?.id || null
   );
@@ -44,9 +46,9 @@ export default function ProposalSelector({ study, handleChange, proposalId }) {
 
   return (
     <div className="selector">
-      <p>Select card</p>
+      <p>{t("proposalSelector.selectCard", "Select card")}</p>
       <Dropdown
-        placeholder="Link to proposal"
+        placeholder={t("proposalSelector.linkToProposal", "Link to proposal")}
         fluid
         selection
         options={titleOptions}

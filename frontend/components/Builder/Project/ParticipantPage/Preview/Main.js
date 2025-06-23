@@ -1,4 +1,5 @@
 import Tabs from "./Tabs";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Preview({
   user,
@@ -7,6 +8,7 @@ export default function Preview({
   handleMultipleUpdate,
   captureFile,
 }) {
+  const { t } = useTranslation("builder");
   const infoBlocks =
     study?.info?.reduce((acc, el) => {
       acc[el.name] = el.text || "";
@@ -50,8 +52,8 @@ export default function Preview({
           >
             <button className="btn">
               {study?.image?.image?.publicUrlTransformed
-                ? "Update study image"
-                : "Upload study image"}
+                ? t('preview.updateStudyImage')
+                : t('preview.uploadStudyImage')}
             </button>
             <input
               type="file"
@@ -64,7 +66,7 @@ export default function Preview({
                 <img
                   width="213"
                   src={study?.image?.image?.publicUrlTransformed}
-                  alt="Upload preview"
+                  alt={t('preview.uploadPreview')}
                 />
               )}
             </div>
@@ -75,7 +77,7 @@ export default function Preview({
             <textarea
               id="title"
               name="title"
-              placeholder="Title"
+              placeholder={t('preview.title')}
               value={study.title}
               onChange={handleChange}
               required
@@ -89,7 +91,7 @@ export default function Preview({
             <textarea
               id="description"
               name="description"
-              placeholder="Description"
+              placeholder={t('preview.description')}
               value={study.description}
               onChange={handleChange}
               rows="7"
@@ -114,7 +116,7 @@ export default function Preview({
           <div className="timeInformationBlock">
             <div>
               <label htmlFor="time">
-                Time to complete
+                {t('preview.timeToComplete')}
                 <div className="completeTimeLine">
                   <img src="/assets/icons/time.svg" alt="icon" width="24" />
                   <input

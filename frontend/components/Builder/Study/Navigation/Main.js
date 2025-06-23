@@ -1,44 +1,11 @@
 import { useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import Connect from "./Connect/Main";
 import StudyOptions from "../../../Studies/Bank/StudyOptions";
 
 import { MY_STUDY } from "../../../Queries/Study";
-
-const itemsOriginal = [
-  {
-    value: "proposal",
-    name: "Project Board",
-  },
-  {
-    value: "page",
-    name: "Participant Page",
-  },
-  {
-    value: "builder",
-    name: "Study builder",
-  },
-  // {
-  //   value: "review",
-  //   name: "Review",
-  // },
-  {
-    value: "collect",
-    name: "Test & Collect",
-  },
-  {
-    value: "visualize",
-    name: "Visualize",
-  },
-];
-
-const itemsClone = [
-  {
-    value: "page",
-    name: "Participant Page",
-  },
-];
 
 export default function Navigation({
   query,
@@ -50,8 +17,40 @@ export default function Navigation({
   hasStudyChanged,
   isCanvasLocked,
 }) {
+  const { t } = useTranslation("builder");
   const { area, selector } = query;
-  const items = area === "cloneofstudy" ? itemsClone : itemsOriginal;
+  const itemsOriginal = [
+    {
+      value: "proposal",
+      name: t("projectBoard"),
+    },
+    {
+      value: "page",
+      name: t("participantPage"),
+    },
+    {
+      value: "builder",
+      name: t("studyBuilder"),
+    },
+    // {
+    //   value: "review",
+    //   name: t("review"),
+    // },
+    {
+      value: "collect",
+      name: t("testAndCollect"),
+    },
+    {
+      value: "visualize",
+      name: t("visualize"),
+    },
+  ];
+  const itemsClone = [
+    {
+      value: "page",
+      name: t("participantPage"),
+    },
+  ];
 
   const studyId = query?.selector;
 
@@ -77,7 +76,7 @@ export default function Navigation({
     if (hasStudyChanged) {
       if (
         !confirm(
-          "Your unsaved changes will be lost. Click Cancel to return and save the changes."
+          t("unsavedChangesWarning")
         )
       ) {
         e.preventDefault();
@@ -146,7 +145,7 @@ export default function Navigation({
 
       <div className="secondLine">
         <div className="menu">
-          {items.map((item, i) => (
+          {itemsOriginal.map((item, i) => (
             <Link
               key={i}
               href={{

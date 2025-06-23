@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import ComponentSelector from "./Selector/Main";
 import StudySettings from "./Settings/Main";
@@ -13,6 +14,7 @@ export default function Menu({
   handleMultipleUpdate,
   hasStudyChanged,
 }) {
+  const { t } = useTranslation("builder");
   const [tab, setTab] = useState("addBlock");
 
   return (
@@ -24,7 +26,7 @@ export default function Menu({
             tab === "addBlock" ? "menuTitle selectedMenuTitle" : "menuTitle"
           }
         >
-          <h2>Add a block</h2>
+          <h2>{t("menu.addBlock", "Add a block")}</h2>
         </div>
 
         <div
@@ -33,7 +35,7 @@ export default function Menu({
             tab === "flow" ? "menuTitle selectedMenuTitle" : "menuTitle"
           }
         >
-          <h2>Study flow</h2>
+          <h2>{t("menu.studyFlow", "Study flow")}</h2>
         </div>
 
         <div
@@ -42,7 +44,7 @@ export default function Menu({
             tab === "study" ? "menuTitle selectedMenuTitle" : "menuTitle"
           }
         >
-          <h2>Study settings</h2>
+          <h2>{t("menu.studySettings", "Study settings")}</h2>
         </div>
       </div>
 
