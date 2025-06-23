@@ -22,6 +22,9 @@ export default function ProcessManager({
   setPage,
   chapter,
   selectChapter,
+  handleLayoutChange,
+  handleWidgetSelect,
+  handleAddWidget,
 }) {
   // the data to be displayed
   const [data, setData] = useState([...initData]);
@@ -99,9 +102,17 @@ export default function ProcessManager({
 
   return (
     <StyledDataViz>
-      <TopNav projectId={projectId} studyId={studyId} chapter={chapter} />
+      <TopNav
+        projectId={projectId}
+        studyId={studyId}
+        chapter={chapter}
+        handleAddWidget={handleAddWidget}
+        part={part}
+      />
       <div className="main">
-        <div className={`vizMenu ${page === "browse" ? "navigation-mode" : ""}`}>
+        <div
+          className={`vizMenu ${page === "browse" ? "navigation-mode" : ""}`}
+        >
           <Overview
             user={user}
             page={page}
@@ -132,6 +143,8 @@ export default function ProcessManager({
             data={data}
             settings={settings}
             variables={variables}
+            handleLayoutChange={handleLayoutChange}
+            handleWidgetSelect={handleWidgetSelect}
           />
         )}
 

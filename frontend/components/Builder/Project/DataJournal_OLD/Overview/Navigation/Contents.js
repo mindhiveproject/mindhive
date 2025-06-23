@@ -32,7 +32,7 @@ export default function Contents({
       });
     }
   };
-  
+
   const sections = {
     PARAGRAPH: {
       title: "Paragraph",
@@ -125,13 +125,36 @@ export default function Contents({
                     chapter?.position || new Date(chapter?.createdAt).getTime(),
                 ]).map((chapter, num) => (
                   <div key={num} className="workspace">
-                    <div className={chapter?.id === chapterId ? "selected title" : "title"} onClick={async () => await goToChapter({ part, chapter, headerId: chapter?.id,}) }>
+                    <div
+                      className={
+                        chapter?.id === chapterId ? "selected title" : "title"
+                      }
+                      onClick={async () =>
+                        await goToChapter({
+                          part,
+                          chapter,
+                          headerId: chapter?.id,
+                        })
+                      }
+                    >
                       <div className="logo-workspace-tile">
-                      <img src={chapter?.id === chapterId ? `/assets/icons/visualize/workspaceSelected.svg` : `/assets/icons/visualize/workspace.svg`} />
+                        <img
+                          src={
+                            chapter?.id === chapterId
+                              ? `/assets/icons/visualize/workspaceSelected.svg`
+                              : `/assets/icons/visualize/workspace.svg`
+                          }
+                        />
                         <div>{chapter?.title}</div>
                       </div>
-                      <Dropdown icon={<img src={`/assets/icons/visualize/more_vert.svg`} />} direction="left" >
+                      <Dropdown
+                        icon={
+                          <img src={`/assets/icons/visualize/more_vert.svg`} />
+                        }
+                        direction="left"
+                      >
                         <DropdownMenu>
+                          {/* // TODO Edit chapter here */}
                           <DeleteChapter
                             studyId={studyId}
                             part={part}
@@ -141,18 +164,23 @@ export default function Contents({
                         </DropdownMenu>
                       </Dropdown>
                     </div>
-                    
+
                     {chapter?.id === chapterId && (
                       <>
                         {sortBy(chapter?.vizSections, [
                           (section) =>
-                            section?.position || new Date(section?.createdAt).getTime(),
+                            section?.position ||
+                            new Date(section?.createdAt).getTime(),
                         ]).map((section, num) => (
                           <div
                             key={num}
                             className="component-section"
                             onClick={async () =>
-                              await goToChapter({ part, chapter, headerId: section?.id })
+                              await goToChapter({
+                                part,
+                                chapter,
+                                headerId: section?.id,
+                              })
                             }
                           >
                             <img
@@ -164,7 +192,6 @@ export default function Contents({
                         ))}
                       </>
                     )}
-
                   </div>
                 ))}
               </div>

@@ -53,10 +53,10 @@ export default withAuth(
     lists,
     extendGraphqlSchema,
     session,
-    ui: {
-      isAccessAllowed: ({ session }) => {
-        return permissions.canAccessAdminUI({ session });
-      },
-    },
+    // ui: {
+    //   isAccessAllowed: ({ session }) => {
+    //     return permissions.canAccessAdminUI({ session });
+    //   },
+    // },
   })
 );

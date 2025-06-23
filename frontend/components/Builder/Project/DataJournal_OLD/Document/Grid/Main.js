@@ -16,81 +16,25 @@ export default function Grid({
   data,
   variables,
   settings,
+  handleLayoutChange,
+  handleWidgetSelect,
 }) {
   const [activeWidgetId, setActiveWidgetId] = useState(null);
   const [localLayout, setLocalLayout] = useState([]);
   const [localWidgets, setLocalWidgets] = useState([]);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  console.log({ chapter });
 
   useEffect(() => {
     if (chapter) {
-      setLocalLayout(chapter?.layout || []);
-      setLocalWidgets(chapter?.sections || []);
+      // setLocalLayout(chapter?.layout || []);
+      setLocalWidgets(chapter?.vizSections || []);
     }
   }, [chapter]);
 
-  const handleAddWidget = (type) => {
-    console.log("handle add widget");
-    const newWidgetId = `temp-${Date.now()}`;
-    const newWidget = {
-      id: newWidgetId,
-      type,
-      settings:
-        type === "notes"
-          ? { text: "" } // Initial empty text for notes widget
-          : {},
-    };
-    const newLayoutItem = {
-      i: newWidgetId,
-      x: (localLayout.length * 2) % 12,
-      y: 0,
-      w: 4,
-      h: 10,
-      minW: 2,
-      minH: 5,
-      maxW: 12,
-      maxH: 20,
-    };
-
-    console.log("Adding widget - new layout:", [...localLayout, newLayoutItem]);
-    setLocalWidgets([...localWidgets, newWidget]);
-    setLocalLayout([...localLayout, newLayoutItem]);
-    setHasUnsavedChanges(true);
-  };
-
-  const handleRemoveWidget = (widgetId) => {
-    console.log(`Removing widget: ${widgetId}`);
-    setLocalWidgets(localWidgets.filter((w) => w.id !== widgetId));
-    setLocalLayout(localLayout.filter((l) => l.i !== widgetId));
-    setHasUnsavedChanges(true);
-    if (activeWidgetId === widgetId) setActiveWidgetId(null);
-  };
-
-  const handleLayoutChange = (newLayout) => {
-    console.log("handle layout change");
-    setLocalLayout(newLayout);
-    setHasUnsavedChanges(true);
-  };
-
-  const handleWidgetSelect = (widgetId) => {
-    console.log(
-      `Selecting widget ${widgetId}, current active: ${activeWidgetId}`
-    );
-    setActiveWidgetId(widgetId === activeWidgetId ? null : widgetId);
-  };
-
-  const handleSettingsChange = (widgetId, newSettings) => {
-    setLocalWidgets(
-      localWidgets.map((widget) =>
-        widget.id === widgetId ? { ...widget, settings: newSettings } : widget
-      )
-    );
-    setHasUnsavedChanges(true);
-  };
-
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex space-x-4 mb-6">
+      {/* <div className="flex space-x-4 mb-6">
         <button
           onClick={() => handleAddWidget("component")}
           className="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200 text-sm font-medium"
@@ -104,14 +48,14 @@ export default function Grid({
         >
           Add Notes
         </button>
-      </div>
+      </div> */}
 
       <GridLayout
         className="layout"
-        layout={localLayout}
+        layout={chapter?.layout || []}
         cols={12}
         rowHeight={30}
-        width={1200}
+        width={1600}
         onLayoutChange={handleLayoutChange}
         isDraggable={true}
         isResizable={true}

@@ -48,7 +48,13 @@ export default function CreatePart({
           title: "Unnamed journal",
           dataOrigin: "STUDY",
           vizChapters: {
-            create: [{ title: "Unnamed workspace", description: "Description" }],
+            create: [
+              {
+                title: "Unnamed workspace",
+                description: "Description",
+                layout: [],
+              },
+            ],
           },
           vizJournal: {
             connect: {
@@ -155,7 +161,9 @@ export default function CreatePart({
             },
           },
           vizChapters: {
-            create: [{ title: "Unnamed workspace", description: "Description" }],
+            create: [
+              { title: "Unnamed workspace", description: "Description" },
+            ],
           },
           vizJournal: {
             connect: {

@@ -1,6 +1,13 @@
 import CreateSection from "../../Document/CreateSection";
+import Breadcrumbs from "./Breadcrumbs";
 
-export default function TopNav({ projectId, studyId, chapter }) {
+export default function TopNav({
+  projectId,
+  studyId,
+  chapter,
+  handleAddWidget,
+  part,
+}) {
   return (
     <div className="topNav">
       <div className="areaSwitch">
@@ -8,7 +15,7 @@ export default function TopNav({ projectId, studyId, chapter }) {
         <div>Datasets</div>
       </div>
 
-      <div>Breadcrumbs</div>
+      <Breadcrumbs part={part} chapter={chapter} />
       <div>
         <button>Export</button>
         <button>Share</button>
@@ -18,6 +25,7 @@ export default function TopNav({ projectId, studyId, chapter }) {
             projectId={projectId}
             studyId={studyId}
             chapterId={chapter?.id}
+            handleAddWidget={handleAddWidget}
           />
         </div>
       </div>

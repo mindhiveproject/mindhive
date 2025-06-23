@@ -21,6 +21,8 @@ export default function Document({
   data,
   variables,
   settings,
+  handleLayoutChange,
+  handleWidgetSelect,
 }) {
   // register data relevant for this part
   useEffect(() => {
@@ -64,6 +66,8 @@ export default function Document({
         data={data}
         variables={variables}
         settings={settings}
+        handleLayoutChange={handleLayoutChange}
+        handleWidgetSelect={handleWidgetSelect}
       />
       {/* <ChapterHeader
         user={user}

@@ -1,44 +1,17 @@
 // ---- Structure ------
-// DataJournal (Main.js)
-// - Top navigation menu (internal, for data journal navigation)
-//  -- Switch between Journals/Datasets view
-//  -- Breadcrumbs
-//  -- Export function button
-//  -- Share function button
-//  -- Add a Componenent button
-//  -- Chat toggle
+// DataJournals
+//  Journals
 //
-// - Sidebar (on the left): navigation, adding workspace
 //
-// - Workspace canvas
-// - Editor
 //
-// Open question - on which level the journal and dataset are connected?
-// Pyodide environment is connected to the whole Data Journals space (saves time when switching between journals)
-// Pyodide code is connected with Element
-//
-// Architecture
-//  Pyodide wrapper (PyodideWrapper.js)
-//    Journal manager (JournalManager.js)
-//      DataWrapper
-//
-// Keystone
-// Journal wrapper (My journals) (VizJournal)
-// Journal (VizPart)
-// Workspace (VizChapter)
-// Component (VizSection)
 
 import Navigation from "../Navigation/Main";
-import PyodideWrapper from "./PyodideWrapper";
+import Journals from "./Journals";
 
-export default function DataJournal({
-  query,
-  user,
-  tab,
-  toggleSidebar,
-  projectId,
-  studyId,
-}) {
+export default function DataJournals({ user, query, tab, toggleSidebar }) {
+  const projectId = query?.selector;
+  const studyId = "cm8wt73yb0001m4o1q24hh3j1";
+
   return (
     <>
       <Navigation
@@ -48,7 +21,7 @@ export default function DataJournal({
         tab={tab}
         toggleSidebar={toggleSidebar}
       />
-      <PyodideWrapper user={user} projectId={projectId} studyId={studyId} />
+      <Journals user={user} projectId={projectId} studyId={studyId} />
     </>
   );
 }

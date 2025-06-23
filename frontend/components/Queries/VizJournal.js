@@ -29,6 +29,7 @@ export const GET_VIZJOURNALS = gql`
           isTemplate
           position
           createdAt
+          layout
           vizSections {
             id
             title

@@ -4,7 +4,12 @@ import { useMutation } from "@apollo/client";
 import { CREATE_VIZSECTION } from "../../../../Mutations/VizSection";
 import { GET_VIZJOURNALS } from "../../../../Queries/VizJournal";
 
-export default function CreateSection({ projectId, studyId, chapterId }) {
+export default function CreateSection({
+  projectId,
+  studyId,
+  chapterId,
+  handleAddWidget,
+}) {
   const [createSection, { data, loading, error }] = useMutation(
     CREATE_VIZSECTION,
     {
@@ -33,24 +38,35 @@ export default function CreateSection({ projectId, studyId, chapterId }) {
   );
 
   const addSection = ({ type, title }) => {
-    createSection({
-      variables: {
-        input: {
-          title,
-          type,
-          vizChapter: {
-            connect: {
-              id: chapterId,
-            },
-          },
-        },
-      },
-    });
+    handleAddWidget("notes");
+    // createSection({
+    //   variables: {
+    //     input: {
+    //       title,
+    //       type,
+    //       vizChapter: {
+    //         connect: {
+    //           id: chapterId,
+    //         },
+    //       },
+    //     },
+    //   },
+    // });
   };
 
   return (
     <Dropdown icon={<img src={`/assets/icons/visualize/add.svg`} />}>
       <DropdownMenu>
+        <DropdownItem
+          onClick={() => addSection({ type: "PARAGRAPH", title: "Text" })}
+        >
+          <div className="menuItem">
+            <div>
+              <img src={`/assets/icons/visualize/paragraph.svg`} />
+            </div>
+            <div>Note</div>
+          </div>
+        </DropdownItem>
         <DropdownItem
           onClick={() => addSection({ type: "PARAGRAPH", title: "Text" })}
         >
