@@ -1,0 +1,43 @@
+{
+	"auth": {
+	  "email": "Email",
+	  "password": "Mot de passe",
+	  "login": "Connexion",
+	  "username": "Nom d'utilisateur",
+	  "requestReset": "Demander une réinitialisation",
+	  "checkYourMail": "Vérifiez votre email",
+	  "forgotPassword": "Mot de passe oublié ?"
+	},
+	"signup": {
+	  "title": "Quel rôle vous décrit le mieux ?",
+	  "participant": "Participant à un étude",
+	  "student": "Étudiant",
+	  "scientist": "Scientifique",
+	  "teacher": "Enseignant",
+	  "haveAccount": "Vous avez déjà un compte ?",
+	  "loginHere": "Connectez-vous ici"
+	},
+	"navigation": {
+		"about": "À Propos",
+		"dashboard": "Tableau de Bord",
+		"discover": "Découvrir",
+		"login": "Se connecter",
+		"signup": "S'inscrire",
+		"studies": "Études",
+		"tasks": "Tâches et Questionnaires",
+		"teachers": "Enseignants"
+	},
+	"studies": "Études",
+	"tasksAndSurveys": "Tâches et Questionnaires",
+	"discoverHeader": "Découvrez des études, des tâches et des questionnaires",
+	"discoverDescription": "Parcourez notre collection d'études, de tâches et de questionnaires créés par des lycéens du programme MindHive et des scientifiques partenaires. Participez à des études ou prévisualisez des tâches et des questionnaires.",
+	"featured": "En vedette",
+	"goToStudy": "Aller à l'étude",
+	"languages": {
+		"title": "Paramètres de langue",
+		"description": "Vous pouvez personnaliser et modifier vos paramètres de langue ci-dessous.",
+		"displayLanguage": "Langue d'affichage",
+		"updatePreferences": "Mettre à jour les préférences",
+		"backToSettings": "Retour aux paramètres"
+	}
+}

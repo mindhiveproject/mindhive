@@ -1,0 +1,9 @@
+{
+	"overview": {
+		"database": {
+			"csvDownloadMessage": "Donne un nom au CSV que tu vas télécharger\\nPas besoin d'ajouter '.csv' on s'en occupe !",
+			"returnBrowse": "Retourne au journal",
+			"sectionTitle": "Données du journal"
+		}
+	}
+}

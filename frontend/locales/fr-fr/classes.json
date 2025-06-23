@@ -1,0 +1,29 @@
+{
+  "classNetworks": "Réseaux de classe",
+  "createdByOn": "Créé par {{username}} le {{date}}",
+  "classes": "Classes",
+  "deleteYourClass": "Supprimer votre classe",
+  "deleteClassWarning": "La suppression de votre classe supprimera définitivement votre classe dans la zone \"Mes Classes\". Cette action est irréversible.",
+  "noAccessTo": "Vous n'aurez pas accès à :",
+  "yourClass": "Votre classe",
+  "anyStudiesOrResults": "Toutes les études ou résultats générés par les étudiants de votre classe",
+  "studentsWillHaveAccessTo": "Vos étudiants auront accès à :",
+  "theirWorkspaceAndStudies": "Leur espace de travail et toutes les études, tâches ou enquêtes qu'ils ont créées pendant votre classe",
+  "noteNewStudents": "Remarque : Les nouveaux étudiants ne pourront pas rejoindre votre classe",
+  "deleteClass": "Supprimer la classe",
+  "areYouSureDeleteClass": "Êtes-vous sûr de vouloir supprimer cette classe ?",
+  "typeDeleteToConfirm": "Tapez \"DELETE\" pour confirmer",
+  "delete": "Supprimer",
+  "cancel": "Annuler",
+  "pleaseTypeDelete": "Veuillez taper DELETE pour supprimer votre classe",
+  "studySpecific": {
+    "subtitle": "Subtitle",
+    "testId": "Test ID"
+  },
+  "create": {
+    "createHeader": "Ajouter une nouvelle classe",
+    "title": "Nom de la nouvelle classe",
+    "description": "Description de la nouvelle classe",
+    "create": "Créer une nouvelle classe"
+  }
+} 

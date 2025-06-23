@@ -1,0 +1,29 @@
+{
+  "classNetworks": "Klasnetwerken",
+  "createdByOn": "Gemaakt door {{username}} op {{date}}",
+  "classes": "Klassen",
+  "deleteYourClass": "Verwijder je klas",
+  "deleteClassWarning": "Het verwijderen van je klas zal je klas permanent verwijderen uit het gebied \"Mijn Klassen\". Deze actie kan niet ongedaan worden gemaakt.",
+  "noAccessTo": "Je hebt geen toegang tot:",
+  "yourClass": "Je klas",
+  "anyStudiesOrResults": "Alle studies of resultaten die door studenten in je klas zijn gegenereerd",
+  "studentsWillHaveAccessTo": "Je studenten hebben toegang tot:",
+  "theirWorkspaceAndStudies": "Hun werkruimte en alle studies, taken of enquêtes die ze tijdens je klas hebben gemaakt",
+  "noteNewStudents": "Let op: Nieuwe studenten kunnen niet deelnemen aan je klas",
+  "deleteClass": "Klas verwijderen",
+  "areYouSureDeleteClass": "Weet je zeker dat je deze klas wilt verwijderen?",
+  "typeDeleteToConfirm": "Typ \"DELETE\" om te bevestigen",
+  "delete": "Verwijderen",
+  "cancel": "Annuleren",
+  "pleaseTypeDelete": "Typ DELETE om je klas te verwijderen",
+  "studySpecific": {
+    "subtitle": "Subtitle",
+    "testId": "Test ID"
+  },
+  "create": {
+    "createHeader": "Nieuwe klas toevoegen",
+    "title": "Naam van de nieuwe klas",
+    "description": "Beschrijving van de nieuwe klas",
+    "create": "Nieuwe klas aanmaken"
+  }
+} 

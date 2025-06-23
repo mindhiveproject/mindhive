@@ -1,0 +1,53 @@
+{
+	"welcome": "مرحباً",
+	"editProfile": "يمكنك تعديل ملفك الشخصي، وجدولة الوقت مع المرشدين، والبقاء على اطلاع بآخر إشعارات MH هنا",
+	"createYourProfile": "أنشئ ملفك الشخصي في MindHive",
+	"editYourProfile": "عدل ملفك الشخصي في MindHive",
+	"updateProfileDescription": "أنت بالفعل جزء من مجتمع MindHive! قم بتحديث ملفك الشخصي بالنقر هنا.",
+	"createProfileDescription": "هل أنت مستعد للانضمام إلى مجتمع MindHive؟ أنشئ ملفك الشخصي الآن بالنقر هنا.",
+	"setAvail": "حدد توفرك للتدريب",
+	"setAvailDescription": "حدد توفرك لبدء التدريب. انقر هنا للبدء.",
+	"favoritePeople": "الأشخاص المفضلون",
+	"favoriteTasks": "المهام والاستبيانات المفضلة",
+	"participantID": "معرف المشارك",
+	"publicReadableID": "المعرف العام المقروء",
+	"permissions": "الصلاحيات",
+	"needSupport": "هل تحتاج إلى دعم؟",
+	"fillSupportTicket": "ملء تذكرة الدعم",
+	"needNewBlock": "هل تحتاج إلى كتلة جديدة؟",
+	"fillRequestForm": "ملء نموذج الطلب",
+	"updates": {
+        "latestUpdates": "آخر التحديثات",
+        "noUpdate": "لا توجد تحديثات في الوقت الحالي."
+    },
+	"info": "مزيد من المعلومات",
+	"about": "حول",
+	"teachers": "المعلمون",
+	"privacyPolicy": "سياسة الخصوصية",
+	"termsCondition": "الشروط والأحكام",
+	"footer": {
+		"title": "MindHive",
+		"description": "MindHive هي منصة علم المواطن عبر الإنترنت التي تدعم أبحاث الدماغ والسلوك في العالم الحقيقي.",
+		"audience": "تم تصميم MindHive للطلاب والمعلمين الذين يسعون للحصول على تجربة بحث STEM حقيقية، ولعلماء الأعصاب وعلماء النفس المعرفي/الاجتماعي الذين يسعون لمعالجة أسئلة بحثهم خارج المختبر.",
+		"copyright": "© 2024",
+		"about": "حول",
+		"privacy": "سياسة الخصوصية",
+		"terms": "الشروط والأحكام",
+		"email": "info@mindhive.science"
+	},
+	"sidebar": {
+		"dashboard": "لوحة التحكم",
+		"profile": "الملف الشخصي",
+		"connections": "الاتصالات",
+		"messages": "الرسائل",
+		"settings": "الإعدادات",
+		"help": "المساعدة",
+		"logout": "تسجيل الخروج"
+	},
+	"all": "الكل",
+	"tasks": "المهام",
+	"surveys": "الاستبيانات",
+	"blocks": "الكتل",
+	"tasksAndSurveysDescriptions": "وصف المهام والاستبيانات",
+	"preview": "معاينة"
+}

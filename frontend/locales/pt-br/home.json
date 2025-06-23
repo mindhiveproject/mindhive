@@ -1,0 +1,53 @@
+{
+	"welcome": "Bem-vindo",
+	"editProfile": "Você pode editar seu perfil, agendar horários com mentores, manter-se atualizado com as últimas notificações do MH aqui",
+	"createYourProfile": "Crie seu perfil MindHive",
+	"editYourProfile": "Edite seu perfil MindHive",
+	"updateProfileDescription": "Você já faz parte da comunidade MindHive! Clique aqui para atualizar seu perfil.",
+	"createProfileDescription": "Pronto para se juntar à comunidade MindHive? Clique aqui para criar seu perfil agora.",
+	"setAvail": "Defina sua disponibilidade para mentoria",
+	"setAvailDescription": "Defina sua disponibilidade para começar a mentoria. Clique aqui para começar.",
+	"favoritePeople": "Pessoas favoritas",
+	"favoriteTasks": "Tarefas e pesquisas favoritas",
+	"participantID": "ID do participante",
+	"publicReadableID": "ID público legível",
+	"permissions": "Permissões",
+	"needSupport": "Precisa de suporte?",
+	"fillSupportTicket": "Preencha um ticket de suporte",
+	"needNewBlock": "Precisa de um novo bloco?",
+	"fillRequestForm": "Preencha o formulário de solicitação",
+	"updates": {
+        "latestUpdates": "Últimas atualizações",
+        "noUpdate": "Não há atualizações no momento."
+    },
+	"info": "Mais informações",
+	"about": "Sobre nós",
+	"teachers": "Professores",
+	"privacyPolicy": "Política de privacidade",
+	"termsCondition": "Termos e condições",
+	"footer": {
+		"title": "MindHive",
+		"description": "MindHive é uma plataforma de ciência cidadã baseada na web que apoia pesquisas reais sobre o cérebro e comportamento.",
+		"audience": "MindHive é projetado para estudantes e professores que desejam experiências autênticas de pesquisa STEM, e para neurocientistas e psicólogos cognitivos/sociais que desejam abordar suas questões de pesquisa fora do laboratório.",
+		"copyright": "© 2024",
+		"about": "Sobre nós",
+		"privacy": "Política de privacidade",
+		"terms": "Termos e condições",
+		"email": "info@mindhive.science"
+	},
+	"sidebar": {
+		"dashboard": "Painel",
+		"profile": "Perfil",
+		"connections": "Conexões",
+		"messages": "Mensagens",
+		"settings": "Configurações",
+		"help": "Ajuda",
+		"logout": "Sair"
+	},
+	"all": "Tudo",
+	"tasks": "Tarefas",
+	"surveys": "Pesquisas",
+	"blocks": "Blocos",
+	"tasksAndSurveysDescriptions": "Descrições de tarefas e pesquisas",
+	"preview": "Pré-visualização"
+}

@@ -1,0 +1,53 @@
+{
+	"welcome": "Bienvenue",
+	"editProfile": "Vous pouvez modifier votre profil, planifier des rendez-vous avec des mentors, rester à jour avec les dernières notifications MH ici",
+	"createYourProfile": "Créez votre profil MindHive",
+	"editYourProfile": "Modifiez votre profil MindHive",
+	"updateProfileDescription": "Vous faites déjà partie de la communauté MindHive ! Mettez à jour votre profil en cliquant ici.",
+	"createProfileDescription": "Prêt à rejoindre la communauté MindHive ? Créez votre profil maintenant en cliquant ici.",
+	"setAvail": "Définir votre disponibilité de mentorat",
+	"setAvailDescription": "Définissez votre disponibilité pour commencer à mentorer. Cliquez ici pour commencer.",
+	"favoritePeople": "Personnes favorites",
+	"favoriteTasks": "Tâches et questionnaires favoris",
+	"participantID": "ID du participant",
+	"publicReadableID": "ID public lisible",
+	"permissions": "Permissions",
+	"needSupport": "Besoin d'aide ?",
+	"fillSupportTicket": "Remplir un ticket de support",
+	"needNewBlock": "Besoin d'un nouveau bloc ?",
+	"fillRequestForm": "Remplir un formulaire de demande",
+	"updates": {
+        "latestUpdates": "Dernières mises à jour", 
+        "noUpdate": "Il n'y a pas de mises à jour pour le moment."
+    },
+	"info": "Plus d'informations",
+	"about": "À propos",
+	"teachers": "Pour les enseignants",
+	"privacyPolicy": "Politique de confidentialité",
+	"termsCondition": "Conditions générales",
+	"footer": {
+		"title": "MindHive",
+		"description": "MindHive est une plateforme de science citoyenne basée sur le web qui soutient la recherche réelle sur le cerveau et le comportement.",
+		"audience": "MindHive a été conçu pour les étudiants et les enseignants qui recherchent une expérience authentique de recherche STEM, et pour les neuroscientifiques et les psychologues cognitifs/sociaux qui cherchent à répondre à leurs questions de recherche en dehors du laboratoire.",
+		"copyright": "© 2024",
+		"about": "À propos",
+		"privacy": "Politique de confidentialité",
+		"terms": "Conditions générales",
+		"email": "info@mindhive.science"
+	},
+	"sidebar": {
+		"dashboard": "Tableau de bord",
+		"profile": "Profil",
+		"connections": "Connexions",
+		"messages": "Messages",
+		"settings": "Paramètres",
+		"help": "Aide",
+		"logout": "Déconnexion"
+	},
+	"all": "Tout",
+	"tasks": "Tâches",
+	"surveys": "Questionnaires",
+	"blocks": "Blocs",
+	"tasksAndSurveysDescriptions": "Descriptions des tâches et des questionnaires",
+	"preview": "Aperçu"
+}

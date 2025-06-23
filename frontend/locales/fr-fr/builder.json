@@ -1,0 +1,493 @@
+{
+	"proposal": {
+		"zeroState1": "Vous n'avez pas encore créé de propositions.",
+		"zeroState2": "Une fois que vous aurez créé une proposition, elle apparaîtra ici.",
+		"create": "Créer une nouvelle proposition",
+		"name": "Nom de la proposition",
+		"dateCreated": "Date de création",
+		"status": "Statut",
+		"actions": "Actions",
+		"submitted": "Soumis",
+		"notSubmitted": "Non soumis",
+		"open": "Ouvrir",
+		"copy": "Copier",
+		"selectAsMain": "Définir comme principal",
+		"delete": "Supprimer",
+		"previewHeader": "Aperçu du modèle de proposition"
+	},
+	"participateAsGuest": "Participer en tant qu'invité",
+	"participate": "Participer",
+	"allStudies": "Toutes les études",
+	"studiesIParticipatedIn": "Études auxquelles j'ai participé",
+	"studiesIHaventParticipatedIn": "Études auxquelles je n'ai pas participé",
+	"developNew": "Créer nouveau",
+	"developHeaderDescription": "Créez, modifiez et gérez vos <strong>études, tâches et questionnaires</strong> ici.",
+	"develop": "Développer",
+	"myProjects": "Mes projets",
+	"myStudies": "Mes études",
+	"myTasks": "Mes tâches",
+	"mySurveys": "Mes questionnaires",
+	"myBlocks": "Mes blocs",
+	"createdBy": "créé par {{username}}",
+	"cloneAndModify": "Cloner et modifier un(e) {{taskType}}",
+	"selectWhichToClone": "Sélectionnez le/la {{taskType}} que vous souhaitez cloner ci-dessous.",
+	"study": "étude",
+	"whatWouldYouLikeToDevelop": "Que souhaitez-vous développer ?",
+	"studyDescription": "Une étude est un projet de recherche avec une question de recherche. Elle peut comporter plusieurs tâches et/ou questionnaires.",
+	"taskDescription": "Dans une tâche, les participants doivent effectuer des actions spécifiques (par exemple, appuyer sur un bouton) en fonction de ce qu'ils voient ou entendent.",
+	"surveyDescription": "Dans un questionnaire, les participants sont interrogés sur eux-mêmes, leur comportement ou leurs ressentis.",
+	"blockDescription": "Dans un bloc, des informations sont présentées aux participants.",
+	"buildStudyFromExisting": "Créer une étude à partir d'une étude MindHive existante",
+	"teacherExplicitInstruction": "(ne sélectionnez cette option que si votre enseignant vous l'a explicitement demandé)",
+	"startMindHiveProject": "Commencez votre projet MindHive",
+	"startStudyFromScratch": "Commencer une étude à partir de zéro",
+	"createStudyWithoutProject": "Créer une étude sans projet",
+	"developA": "Développer un {{develop}}",
+	"buildTaskFromExisting": "Créer une tâche à partir d'une tâche MindHive existante.",
+	"duplicateEditSurvey": "Dupliquer et modifier un questionnaire MindHive existant et ses paramètres.",
+	"uploadFromLabjs": "Télécharger un {{develop}} depuis lab.js",
+	"uploadTaskScript": "Sélectionnez cette option si vous préférez télécharger votre propre script de tâche depuis lab.js.",
+	"uploadSurveyScript": "Sélectionnez cette option si vous préférez télécharger votre propre script de questionnaire depuis lab.js.",
+	"addExternalWithLink": "Ajouter un {{develop}} externe avec un lien web",
+	"addExternalLinkInstruction": "Sélectionnez cette option si vous préférez ajouter un lien externe",
+	"duplicateEditBlock": "Dupliquer et modifier un bloc MindHive existant et ses paramètres.",
+	"createNewBlock": "Créer un nouveau bloc",
+	"buildBlockFromScratch": "Sélectionnez cette option si vous préférez créer un bloc entièrement à partir de zéro.",
+	"activeStudies": "Études actives",
+	"archivedStudies": "Études archivées",
+	"title": "Titre",
+	"descriptionDevelop": "Description (pour le mode Développer)",
+	"descriptionDevelopHelp": "Ceci est visible par les chercheurs, enseignants et étudiants lors du choix des tâches ou questionnaires en mode Développer.",
+	"descriptionDiscover": "Description (pour le mode Découvrir)",
+	"descriptionDiscoverHelp": "Ceci est visible par tous les utilisateurs de la plateforme lors du choix des tâches ou questionnaires en mode Découvrir.",
+	"link": "Lien",
+	"externalDataWarning": "Les données ne seront pas enregistrées dans la base de données MH",
+	"mobileCompatible": "{{taskType}} est compatible mobile",
+	"duration": "Durée",
+	"durationHelp": "Combien de temps faudra-t-il environ pour compléter le/la {{taskType}} ?",
+	"resources": "Ressources",
+	"resource": "Ressource",
+	"aggregateVariables": "Variables agrégées",
+	"variable": "Variable",
+	"descriptionBefore": "Description de la carte {{taskType}} (avant participation)",
+	"descriptionBeforeHelp": "Ceci est ce que les participants verront avant de réaliser le/la {{taskType}}.",
+	"descriptionAfter": "Description de la carte {{taskType}} (après participation)",
+	"descriptionAfterHelp": "Ceci est ce que les participants verront après avoir réalisé le/la {{taskType}}.",
+	"background": "Contexte",
+	"backgroundHelp": "Utilisez ce champ pour fournir un bref contexte sur le sujet de recherche. Quel est le problème étudié et pourquoi est-il important ?",
+	"scoringSurvey": "Instructions de notation (pour les questionnaires uniquement)",
+	"formatSurvey": "Format (pour les questionnaires uniquement)",
+	"formatSurveyHelp": "Par exemple : 10 questions au format échelle de Likert à 5 points. Les questions sont réparties en 2 catégories (affect négatif et positif). 4 des questions sont inversées.",
+	"addInfo": "Informations supplémentaires",
+	"descriptionBeforeVisible": "Ceci est visible pour toute personne n'ayant pas encore participé à la tâche.",
+	"descriptionAfterVisible": "Ceci est visible pour toute personne ayant participé à la tâche.",
+	"templateTab": "Modèle",
+	"basicTab": "Basique",
+	"parametersTab": "Paramètres",
+	"sharingTab": "Partage",
+	"fullscreenPreview": "Aperçu plein écran",
+	"submit": "Soumettre",
+	"projectBoard": {
+		"myProjectBoard": "Mon tableau de projet",
+		"createYourStudyProposal": "Créez votre proposition d'étude ici pour commencer votre parcours de recherche",
+		"titlePlaceholder": "Saisir le titre du tableau de projet",
+		"descriptionPlaceholder": "Saisir la description du tableau de projet",
+		"publicTemplate": "Modèle public",
+		"allowMovingSections": "Autoriser le déplacement des sections",
+		"allowMovingCards": "Autoriser le déplacement des cartes",
+		"allowAddingSections": "Autoriser l'ajout de nouvelles sections",
+		"allowAddingCards": "Autoriser l'ajout de nouvelles cartes",
+		"saving": "Enregistrement",
+		"save": "Enregistrer"
+	},
+	"vas": {
+		"addMore": "Add more",
+		"title": "Échelle visuelle analogique",
+		"description": "Une échelle visuelle analogique (EVA) est un outil de mesure permettant d'évaluer une caractéristique ou une attitude qui ne peut pas être directement mesurée.",
+		"left": "Étiquette gauche",
+		"right": "Étiquette droite",
+		"question": "Question"
+	},
+	"parameters": {
+		"templateParameters": "Template parameters",
+		"uploadLabjs": "Please upload a lab.js json file first",
+		"noParameters": "The template does not contain any parameters.",
+		"subtitle": "Subtitle",
+		"versionId": "Version ID",
+		"askDataUsage": "Ask students a data usage question after the task",
+		"taskParameters": "Task parameters",
+		"getFromTemplate": "Get parameters from the template",
+		"title": "Paramètres",
+		"description": "Définissez les paramètres de votre composant",
+		"add": "Ajouter un paramètre",
+		"name": "Nom du paramètre",
+		"type": "Type de paramètre",
+		"value": "Valeur par défaut",
+		"participationSettings": "Paramètres de participation"
+	},
+	"sharing": {
+		"collaboratorsOn": "Collaborators on the {{taskType}}",
+		"title": "Partage",
+		"description": "Gérez qui peut voir et modifier ce composant",
+		"public": "Public",
+		"private": "Privé",
+		"publicDescription": "Tout le monde peut voir ce composant",
+		"privateDescription": "Seuls les collaborateurs peuvent voir ce composant"
+	},
+	"viewer": {
+		"customize": "Customize",
+		"preview": "Preview {{taskType}}",
+		"screenshot": "Screenshot",
+		"background": "Background",
+		"parameters": "Parameters",
+		"tweakableFeatures": "The following features of this {{taskType}} can be tweaked:",
+		"defaultValues": "Default values are shown (can clone {{taskType}} and modify these)",
+		"surveyParameters": "Survey parameters",
+		"text": "Text",
+		"visualAnalogueScale": "Visual analogue scale",
+		"likertScale": "Likert scale",
+		"freeTextInput": "Free text input",
+		"selectOne": "Select one",
+		"selectMany": "Select many",
+		"beforeParticipation": "What participants see <u>before</u> taking the {{taskType}}",
+		"afterParticipation": "What participants see <u>after</u> taking the {{taskType}}",
+		"mobileCompatible": "Mobile compatible",
+		"aggregateVariables": "Aggregate Variables",
+		"aggregateVariablesDesc": "These data are automatically written to a csv file upon completion of the {{taskType}}",
+		"moreInfo": "more info",
+		"scoring": "Scoring",
+		"format": "Format",
+		"duration": "Duration",
+		"resources": "Resources",
+		"title": "Visualiseur",
+		"description": "Prévisualisez votre composant",
+		"noPreview": "Aucune prévisualisation disponible"
+	},
+	"modal": {
+		"back": "←",
+		"update": "Mettre à jour",
+		"id": "ID",
+		"name": "Nom",
+		"probability": "Probabilité (0-100%)",
+		"participants": "Participants",
+		"removeCondition": "Supprimer la condition",
+		"addCondition": "Ajouter une condition"
+	},
+	"taskModal": {
+		"addToStudy": "Ajouter à l'étude",
+		"createCopy": "Créer une copie",
+		"preview": "Aperçu de {{taskType}}",
+		"close": "Fermer"
+	},
+	"selector": {
+		"searchPlaceholder": "🔍 Rechercher",
+		"filter": {
+			"createdByAnyone": "Créé par n'importe qui",
+			"ownedByMe": "Mes créations",
+			"myFavorite": "Mes favoris"
+		},
+		"basicBlocks": {
+			"title": "Blocs de base",
+			"description": "Vous souhaitez inclure des <strong>instructions personnalisées</strong> pour vos participants ou <strong>intégrer un lien et/ou une vidéo</strong> dans la procédure de votre étude ? Sélectionnez et modifiez un bloc de base"
+		},
+		"tasks": {
+			"title": "Tâches",
+			"description": "Vous souhaitez <strong>mesurer un concept ou une variable</strong> en faisant <strong>réaliser une activité</strong> aux participants ? Choisissez parmi cette banque de tâches validées"
+		},
+		"surveys": {
+			"title": "Questionnaires",
+			"description": "Vous souhaitez <strong>mesurer les attitudes, expériences ou opinions des participants</strong> par <strong>auto-évaluation</strong> ? Choisissez parmi cette banque de questionnaires validés",
+			"buildOwn": "Vous ne trouvez pas d'outils pour mesurer l'un des concepts de votre étude ? Construisez le vôtre avec le constructeur de questionnaires et l'aide de l'enseignant :"
+		},
+		"studyDesign": {
+			"title": "Design de l'étude",
+			"description": "Créer un design inter-sujets",
+			"betweenSubjects": "Design inter-sujets"
+		},
+		"templates": {
+			"title": "Modèles",
+			"description": "Vous ne voulez pas partir de zéro ? Sélectionnez et modifiez un <strong>design d'étude préconçu</strong> en utilisant l'un des modèles de cette banque"
+		}
+	},
+	"description": {
+		"title": "Description de l'étude",
+		"internalUse": "Ceci est pour un usage interne uniquement. Les participants ne verront pas cette description.",
+		"selectSource": "Sélectionnez une source",
+		"linkToProposal": "Lien vers la proposition"
+	},
+	"proposalSelector": {
+		"selectCard": "Sélectionner une carte",
+		"linkToProposal": "Lien vers la proposition"
+	},
+	"status": {
+		"title": "Statut de l'étude",
+		"placeholder": "Versions de l'étude",
+		"workInProgress": "Travail en cours",
+		"submittedAsProposal": "Soumis comme proposition",
+		"readyForReview": "Prêt pour révision",
+		"inReview": "En cours de révision",
+		"reviewed": "Révisé",
+		"collectingData": "Collecte de données",
+		"dataCollectionCompleted": "Collecte de données terminée"
+	},
+	"version": {
+		"title": "Version de l'étude",
+		"headerNote": "Sauvegardez différents designs d'étude affichés à l'écran à gauche",
+		"currentVersion": "Version actuelle",
+		"createdOn": "Créé le",
+		"placeholder": "Versions de l'étude",
+		"load": "Charger",
+		"delete": "Supprimer",
+		"noVersionSaved": "Aucune version d'étude n'a encore été sauvegardée. Créez une nouvelle version en cliquant sur le bouton ci-dessous.",
+		"createNewVersion": "Créer une nouvelle version",
+		"name": "Nom",
+		"description": "Description",
+		"enterVersionName": "Veuillez saisir le nom de la version",
+		"confirmDelete": "Êtes-vous sûr de vouloir supprimer {{versionName}} ?"
+	},
+	"builder": {
+		"studyBuilderLocked": "Constructeur d'Étude Verrouillé",
+		"lockedMessage": "Cette étude a été soumise et ne peut pas être modifiée. Pour apporter des modifications, veuillez demander à votre enseignant d'annuler la soumission de l'étude.",
+		"addComment": "Ajouter un commentaire",
+		"addStartingPoint": "Ajouter un point de départ"
+	},
+	"engine": {
+		"studyLocked": "L'étude a été verrouillée",
+		"copy": "COPIE",
+		"save": "Sauvegarder"
+	},
+	"main": {
+		"noProjectFound": "Aucun projet trouvé, veuillez d'abord sauvegarder votre projet.",
+		"loadingStudy": "Chargement de l'étude...",
+		"errorLoadingStudy": "Erreur lors du chargement de l'étude : {{errorMessage}}",
+		"projectChat": "Chat du projet"
+	},
+	"menu": {
+		"addBlock": "Ajouter un bloc",
+		"studyFlow": "Flux de l'étude",
+		"studySettings": "Paramètres de l'étude"
+	},
+	"byComponent": {
+		"noSubtitle": "pas de sous-titre",
+		"dataByTask": "Données par tâche dans des fichiers séparés",
+		"selectTasks": "Sélectionnez des tâches ou des enquêtes",
+		"wait": "Veuillez patienter ...",
+		"downloadAggregated": "Télécharger les données agrégées",
+		"downloadAggregatedBy": "Télécharger les données agrégées {{by}}",
+		"downloadRaw": "Télécharger les données brutes"
+	},
+	"dataset": {
+		"status": {
+			"working": "Travail en cours",
+			"submittedAsProposal": "Soumis en tant que proposition",
+			"readyForReview": "Prêt pour révision",
+			"inReview": "En cours de révision",
+			"reviewed": "Révisé",
+			"collectingData": "Collecte de données",
+			"dataCollectionCompleted": "Collecte de données terminée"
+		},
+		"noData": "Aucune donnée",
+		"loading": "Chargement...",
+		"full": "complet",
+		"incremental": "incrémental",
+		"download": "Télécharger",
+		"deleteInvalidRecord": "Supprimer l'enregistrement invalide"
+	},
+	"participantResults": {
+		"title": "Résultats du participant",
+		"study": "Étude",
+		"taskTitle": "Titre de la tâche",
+		"taskSubtitle": "Sous-titre de la tâche",
+		"taskId": "ID de la tâche",
+		"started": "Commencé",
+		"completed": "Terminé",
+		"condition": "Condition",
+		"dataType": "Type de données",
+		"dataPolicy": "Politique de données",
+		"studyStatus": "Statut de l'étude",
+		"dataAnalysis": "Analyse des données"
+	},
+	"participantInfo": {
+		"participantId": "ID du participant",
+		"publicReadableId": "ID public lisible",
+		"studyRelatedInfo": "Informations liées à l'étude",
+		"englishQuestion": "Comprenez-vous les instructions de base écrites en anglais ?",
+		"yes": "Oui",
+		"no": "Non",
+		"betweenSubjectCondition": "Condition inter-sujets",
+		"agreedToSave": "A accepté de sauvegarder les informations pour de futures études",
+		"zipCode": "Code postal",
+		"birthday": "Date de naissance",
+		"age": "Âge",
+		"irbConsent": "Décisions de consentement IRB",
+		"parentName": "Nom du parent :",
+		"parentEmail": "Email du parent :",
+		"kidName": "Votre nom :"
+	},
+	"participant": {
+		"goBack": "← Retourner"
+	},
+	"grid": {
+		"open": "Ouvrir",
+		"analysis": "Analyse",
+		"publicId": "ID public",
+		"publicReadableId": "ID public lisible",
+		"startedAt": "Commencé le",
+		"duration": "Durée",
+		"numberCompleted": "Nombre terminé",
+		"condition": "Condition",
+		"consent": "Consentement",
+		"studyStatus": "Statut de l'étude",
+		"accountType": "Type de compte"
+	},
+	"pagination": {
+		"prev": "Précédent",
+		"next": "Suivant",
+		"pageOf": "Page {{page}} sur {{pageCount}}",
+		"participantsTotal": "{{count}} participants au total"
+	},
+	"participantType": {
+		"user": "Utilisateur",
+		"guest": "Invité"
+	},
+	"collect": {
+		"noProjectFound": "Aucun projet trouvé, veuillez d'abord sauvegarder votre projet.",
+		"noStudyAttachedHeader": "🤷🏻 Votre projet n'a pas d'étude associée.",
+		"noStudyAttachedMessage": "Informez votre enseignant afin qu'il puisse en créer une et l'associer. Si vous avez besoin d'aide, veuillez contacter le support technique à support.mindhive@nyu.edu."
+	},
+	"notes": {
+		"noNotes": "Aucune note saisie pour le moment. Faites un clic droit pour ajouter des notes."
+	},
+	"dataJournal": {
+		"addComponent": "Ajouter un composant",
+		"addNotes": "Ajouter des notes",
+		"settingsPanel": {
+			"widgetSettings": "Paramètres du widget",
+			"notes": "Notes",
+			"notesPlaceholder": "Entrez vos notes ici...",
+			"deleteWidget": "Supprimer le widget"
+		},
+		"visualizationWidget": {
+			"unsupportedType": "Type de widget non pris en charge : {{type}}"
+		}
+	},
+	"linkClass": {
+		"doNotConnectClass": "❌  Ne pas connecter la classe"
+	},
+	"connectModal": {
+		"projectCreator": "Le créateur du projet est {{username}}",
+		"noAuthor": "Aucun auteur",
+		"adminInfo": "Cette information est visible uniquement pour l'ADMIN",
+		"projectTitle": "Titre du projet",
+		"linkedClass": "Classe liée",
+		"projectBoardCollaborators": "Collaborateurs du tableau de projet",
+		"close": "Fermer",
+		"saveAndClose": "Enregistrer et fermer"
+	},
+	"connectStudyModal": {
+		"studyAuthor": "L'auteur de l'étude est {{username}}",
+		"noAuthor": "Aucun auteur",
+		"adminInfo": "Cette information est visible uniquement pour l'ADMIN",
+		"linkedClass": "Classe liée",
+		"studyCollaborators": "Collaborateurs de l'étude",
+		"linkedProjects": "Projets liés",
+		"linkedProjectsDescription": "Projets qui partagent l'accès à votre étude {{title}}",
+		"openInNewTab": "Ouvrir dans un nouvel onglet",
+		"close": "Fermer",
+		"saveAndClose": "Enregistrer et fermer"
+	},
+	"createStudy": {
+		"save": "Enregistrer"
+	},
+	"updateStudy": {
+		"update": "Mettre à jour"
+	},
+	"newProject": {
+		"backToHome": "← Retour à l'accueil",
+		"untitledProject": "Projet sans titre",
+		"noTemplatesTitle": "Il n'y a pas de modèles de tableau de projet dans la classe",
+		"noTemplatesSubtitle": "Pour démarrer un projet, vous avez besoin d'un modèle de tableau de projet. Il se peut que votre enseignant n'ait pas de modèle de tableau de projet lié à cette classe.",
+		"selectClass": "Sélectionnez la classe",
+		"goBackHome": "Retour à l'accueil",
+		"nameYourProject": "Nommez votre projet",
+		"nameMessage": "Donnez un nom à votre projet. Ce n'est pas le titre de l'étude, mais le nom que vous souhaitez donner à votre espace de travail.",
+		"namePlaceholder": "Le nom de mon projet est ",
+		"addCollaborators": "Ajouter des collaborateurs",
+		"alreadyAssociatedTitle": "Vous avez déjà un projet associé à cette classe",
+		"alreadyAssociatedWarning": "Ne continuez que si vous savez ce que vous faites.",
+		"createProject": "Créer un projet",
+		"giveNameAlert": "Donnez un nom à votre projet"
+	},
+	"preview": {
+		"updateStudyImage": "Mettre à jour l'image de l'étude",
+		"uploadStudyImage": "Télécharger l'image de l'étude",
+		"uploadPreview": "Aperçu du téléchargement",
+		"title": "Titre",
+		"description": "Description",
+		"timeToComplete": "Temps pour compléter"
+	},
+	"tabs": {
+		"addTab": "Ajouter un onglet",
+		"newTab": "Nouvel onglet"
+	},
+	"consentSelector": {
+		"typeConsentProtocol": "Saisir le protocole de consentement"
+	},
+	"settingsBlock": {
+		"acceptParticipants": "Accepter les participants",
+		"acceptParticipantsDesc": "Affiche le bouton 'Participer' sur la page de l'étude et permet aux visiteurs de participer à votre étude",
+		"allowGuestParticipation": "Autoriser la participation des invités",
+		"allowGuestParticipationDesc": "Les visiteurs peuvent participer à votre étude en tant qu'invités.",
+		"askForConsent": "Demander le consentement du participant",
+		"askForConsentDesc": "Les visiteurs verront les formulaires de consentement et devront consentir avant de participer",
+		"onlyTeachersCanEditIRB": "Seuls les enseignants, scientifiques et administrateurs peuvent ajouter ou modifier les formulaires IRB.",
+		"askForZip": "Demander le code postal du participant",
+		"askForZipDesc": "Les visiteurs devront saisir leur code postal lors de la participation à l'étude",
+		"autoLaunch": "Lancer automatiquement l'étude",
+		"autoLaunchDesc": "Les participants seront automatiquement dirigés vers la première tâche après avoir rejoint l'étude",
+		"allowMultipleRetakes": "Autoriser plusieurs tentatives",
+		"allowMultipleRetakesDesc": "Permettre aux participants de refaire les tâches ou questionnaires plusieurs fois",
+		"emailNotifications": "Notifications par e-mail",
+		"emailNotificationsDesc": "Afficher la notification par e-mail après chaque tâche/questionnaire",
+		"nycStudents": "Étudiants de NYC",
+		"nycStudentsDesc": "Demander aux participants s'ils sont élèves d'une école publique de NYC",
+		"askForSonaId": "Demander l'ID NYU SONA du participant",
+		"askForSonaIdDesc": "Demander l'ID NYU SONA aux participants",
+		"onlyOver18": "Autoriser uniquement les participants de plus de 18 ans",
+		"onlyOver18Desc": "N'autoriser que les participants de plus de 18 ans à participer à cette étude",
+		"connectExternalDevices": "Connecter des appareils externes",
+		"connectExternalDevicesDesc": "Affiche le plugin pour les appareils externes pendant la tâche",
+		"on": "Activé",
+		"off": "Désactivé"
+	},
+	"share": {
+		"shareYourStudy": "Partager votre étude",
+		"studyUrl": "URL de l'étude",
+		"customizeBelow": "Personnalisez l'URL de votre étude ci-dessous",
+		"customizeUrl": "Personnaliser l'URL",
+		"customizeUrlDesc": "Personnalisez l'URL de votre étude",
+		"tip": "Astuce - évitez les espaces dans l'URL. Utilisez des tirets à la place, par exemple.",
+		"linkCopied": "Le lien a été copié",
+		"on": "Activé",
+		"off": "Désactivé"
+	},
+	"participantPageMain": {
+		"cloneOf": "Copie de",
+		"projectChat": "Chat du projet",
+		"save": "Enregistrer",
+		"noStudyHeader": "🤷🏻 Votre projet n'a pas d'étude rattachée.",
+		"noStudyMessage": "Informez votre enseignant pour qu'il puisse en créer une et l'associer. Si vous avez besoin d'aide, veuillez contacter le support technique à support.mindhive@nyu.edu."
+	},
+	"board": {
+		"loading": "Chargement...",
+		"error": "Erreur ! {{message}}"
+	},
+	"newSection": "Nouvelle section",
+	"addSection": "Ajouter une section",
+	"section-title-placeholder": "Saisir le titre de la section",
+	"surveyBuilder": {
+		"page": "Page {{number}}",
+		"addFirstPage": "Ajoutez votre première page"
+	}
+}
+	
