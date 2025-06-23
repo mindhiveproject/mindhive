@@ -8,7 +8,9 @@ import Page from "../../components/Global/Page";
 import Document from "../../components/Documents/Main";
 
 export const getStaticPaths = async () => {
-  const files = fs.readdirSync("content/docs");
+  const files = fs
+    .readdirSync("content/docs")
+    .filter((file) => file.endsWith(".md")); // Only include .md files
   const paths = files.map((filename) => ({
     params: {
       slug: filename.replace(".md", ""),
