@@ -20,29 +20,6 @@ import Resources from "./Forms/Resources";
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { Dropdown } from "semantic-ui-react";
 
-const reviewOptions = [
-  {
-    key: "actionSubmit",
-    text: t("mainCard.reviewOptions.proposal", "Proposal"),
-    value: "ACTION_SUBMIT",
-  },
-  {
-    key: "actionPeerFeedback",
-    text: t("mainCard.reviewOptions.peerFeedback", "Peer Feedback"),
-    value: "ACTION_PEER_FEEDBACK",
-  },
-  {
-    key: "actionCollectingData",
-    text: t("mainCard.reviewOptions.collectingData", "Collecting Data"),
-    value: "ACTION_COLLECTING_DATA",
-  },
-  {
-    key: "actionProjectReport",
-    text: t("mainCard.reviewOptions.projectReport", "Project Report"),
-    value: "ACTION_PROJECT_REPORT",
-  },
-];
-
 export default function ProposalCard({
   proposalCard,
   query,
@@ -56,6 +33,29 @@ export default function ProposalCard({
   submitStatuses,
 }) {
   const { t } = useTranslation("builder");
+
+  const reviewOptions = [
+    {
+      key: "actionSubmit",
+      text: t("mainCard.reviewOptions.proposal", "Proposal"),
+      value: "ACTION_SUBMIT",
+    },
+    {
+      key: "actionPeerFeedback",
+      text: t("mainCard.reviewOptions.peerFeedback", "Peer Feedback"),
+      value: "ACTION_PEER_FEEDBACK",
+    },
+    {
+      key: "actionCollectingData",
+      text: t("mainCard.reviewOptions.collectingData", "Collecting Data"),
+      value: "ACTION_COLLECTING_DATA",
+    },
+    {
+      key: "actionProjectReport",
+      text: t("mainCard.reviewOptions.projectReport", "Project Report"),
+      value: "ACTION_PROJECT_REPORT",
+    },
+  ];
 
   const filteredReviewOptions = reviewOptions.filter(
     (option) => submitStatuses[option?.value] !== "SUBMITTED"
