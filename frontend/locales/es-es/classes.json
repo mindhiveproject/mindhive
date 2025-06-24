@@ -1,29 +1,29 @@
 {
-  "classNetworks": "Redes de clase",
-  "createdByOn": "Creado por {{username}} el {{date}}",
-  "classes": "Clases",
-  "deleteYourClass": "Eliminar tu clase",
-  "deleteClassWarning": "Eliminar tu clase eliminará permanentemente tu clase dentro del área \"Mis Clases\". Esta acción no se puede deshacer.",
-  "noAccessTo": "No tendrás acceso a:",
-  "yourClass": "Tu clase",
-  "anyStudiesOrResults": "Cualquier estudio o resultado generado por los estudiantes de tu clase",
-  "studentsWillHaveAccessTo": "Tus estudiantes tendrán acceso a:",
-  "theirWorkspaceAndStudies": "Su espacio de trabajo y cualquier estudio, tarea o encuesta que hayan creado durante tu clase",
-  "noteNewStudents": "Nota: Los nuevos estudiantes no podrán unirse a tu clase",
-  "deleteClass": "Eliminar clase",
-  "areYouSureDeleteClass": "¿Estás seguro de que deseas eliminar esta clase?",
-  "typeDeleteToConfirm": "Escribe \"DELETE\" para confirmar",
-  "delete": "Eliminar",
-  "cancel": "Cancelar",
-  "pleaseTypeDelete": "Por favor, escribe DELETE para eliminar tu clase",
-  "studySpecific": {
-    "subtitle": "Subtitle",
-    "testId": "Test ID"
-  },
-  "create": {
-    "createHeader": "Agregar nueva clase",
-    "title": "Nombre de la nueva clase",
-    "description": "Descripción de la nueva clase",
-    "create": "Crear nueva clase"
-  }
-} 
+	"anyStudiesOrResults": "Cualquier estudio o resultado generado por los estudiantes de su clase",
+	"areYouSureDeleteClass": "¿Estás seguro que deseas eliminar esta clase?",
+	"cancel": "Cancelar",
+	"classes": "Clases",
+	"classNetworks": "Redes de clases",
+	"create": {
+		"create": "Crear nueva clase",
+		"createHeader": "Agregar nueva clase",
+		"description": "Nueva descripción de la clase",
+		"title": "Nuevo nombre de clase"
+	},
+	"createdByOn": "Creado por {{username}} el {{date}}",
+	"delete": "Borrar",
+	"deleteClass": "Eliminar clase",
+	"deleteClassWarning": "Al eliminar tu clase, se eliminará permanentemente de \"Mis Clases\". Esta acción no se puede deshacer.",
+	"deleteYourClass": "Eliminar tu clase",
+	"noAccessTo": "No tendrás acceso a:",
+	"noteNewStudents": "Nota: Los estudiantes nuevos no podrán unirse a su clase.",
+	"pleaseTypeDelete": "Por favor escribe SUPR para eliminar tu clase",
+	"studentsWillHaveAccessTo": "Sus estudiantes tendrán acceso a:",
+	"studySpecific": {
+		"subtitle": "Subtitular",
+		"testId": "Identificación de prueba"
+	},
+	"theirWorkspaceAndStudies": "Su espacio de trabajo y cualquier estudio, tarea o encuesta que hayan creado durante su clase.",
+	"typeDeleteToConfirm": "Escribe \"ELIMINAR\" para confirmar",
+	"yourClass": "Tu clase"
+}

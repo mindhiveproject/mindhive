@@ -1,7 +1,7 @@
 {
 	"develop": {
-		"headerDescription": "",
-		"headerTitle": ""
+		"headerDescription": "Todos los estudios, tareas o encuestas que hayas <0>desarrollado o en los que estés colaborando</0>.",
+		"headerTitle": "Desarrollar"
 	},
-	"update": ""
+	"update": "Actualizar"
 }

@@ -1,169 +1,169 @@
 {
-  "createProfile": "创建个人资料",
-  "steps": {
-    "profileType": "1. 个人资料类型",
-    "aboutMe": "2. 关于我",
-    "interests": "3. 兴趣爱好",
-    "complete": "4. 完成"
-  },
-  "profileType": {
-    "description": "通过选择以下选项来设置您的 MindHive 个人资料。您是为自己创建个人资料，还是为您的组织设置页面？",
-    "chooseType": "选择您的个人资料类型",
-    "organization": {
-      "title": "组织",
-      "description": "当您创建账户代表社区组织或公司时，此个人资料最合适。"
-    },
-    "individual": {
-      "title": "个人",
-      "description": "当您为自己创建账户时，此个人资料最合适。"
-    }
-  },
-  "navigation": {
-    "previous": "上一步",
-    "next": "下一步"
-  },
-  "basic": {
-    "description": "请完成以下项目以创建您的个人资料并与 MindHive 社区建立联系。",
-    "title": "基本信息",
-    "subtitle": "您的基本信息帮助 MindHive 社区更好地了解您。这包括您是谁、您在哪里以及您的样子。",
-    "profilePhoto": "个人照片",
-    "firstName": "名字",
-    "lastName": "姓氏",
-    "email": "电子邮件",
-    "pronouns": "代词",
-    "pronounsOptions": {
-      "she": "她/她的",
-      "he": "他/他的",
-      "they": "他们/他们的"
-    },
-    "location": "位置",
-    "organization": "组织（如适用）",
-    "tagline": "标语",
-    "saveChanges": "保存更改"
-  },
-  "avatar": {
-    "title": "创建您的头像",
-    "upload": "上传",
-    "error": "请上传图片"
-  },
-  "background": {
-    "title": "背景",
-    "description": "让我们更好地了解您！请填写您的背景信息，以便 MindHive 社区的其他成员能够更容易地与您联系。",
-    "officialBio": {
-      "title": "官方简介",
-      "description": "用约100字描述您的专业知识、经验和教育背景，面向高中生受众。"
-    },
-    "unofficialBio": {
-      "title": "个人简介",
-      "description": "用几句话描述您的职业发展历程，以及未来5年或更远的展望。目的是让学生理解职业发展并非总是直线，而是充满巧合、好运和坏运，有时在科学家的官方网站上看到的官方简介背后还隐藏着多种职业道路。"
-    },
-    "occupation": {
-      "title": "职业"
-    },
-    "education": {
-      "title": "教育",
-      "institution": "机构",
-      "degree": "学位",
-      "addInstitution": "添加另一个机构"
-    },
-    "languages": {
-      "title": "语言",
-      "addLanguage": "添加另一种语言"
-    },
-    "saveChanges": "保存更改"
-  },
-  "introduction": {
-    "title": "介绍视频",
-    "description": "我们希望您能上传一个介绍视频，与学生们和其他 MindHive 成员分享。您可以用它来分享一个您认为可能会让学生们感兴趣的项目。",
-    "videoNotSupported": "您的浏览器不支持视频标签。",
-    "passion": {
-      "title": "您现在对什么充满热情？",
-      "description": "例如，您可以简要描述一个您正在进行的科学项目。或者您可以告诉我们您将科学带给公众的经验。这是您展示当前工作内容以及它如何塑造您为我们社区带来的专业知识的空间。"
-    },
-    "saveChanges": "保存更改"
-  },
-  "videoUploader": {
-    "dragAndDrop": "拖放视频文件以上传",
-    "selectFile": "选择文件",
-    "uploadProgress": "上传进度：{{progress}}%",
-    "error": "视频上传时出错。请重试。",
-    "invalidFile": "请选择视频文件。"
-  },
-  "preferences": {
-    "title": "您的参与",
-    "description": "请完成以下项目，让我们了解您参与的详细信息。",
-    "availability": {
-      "title": "请说明您如何与我们合作（选择所有适用选项）。",
-      "async": {
-        "title": "异步",
-        "answeringQuestions": "回答学生问题（基于您的个人资料）。",
-        "providingFeedback": "为学生项目提供反馈"
-      },
-      "sync": {
-        "title": "同步",
-        "inPersonVisit": "进行课堂访问，与项目学生讨论您的工作（面对面）。",
-        "zoomVisit": "进行课堂访问，与项目学生讨论您的工作（通过Zoom）。"
-      }
-    },
-    "gradeLevel": {
-      "title": "年级水平",
-      "description": "请告诉我们您作为导师最愿意支持的年级水平。选择所有适用选项。",
-      "options": {
-        "middle": "初中",
-        "nine": "9-10年级",
-        "eleven": "11-12年级",
-        "no": "无偏好"
-      }
-    },
-    "groupPreference": {
-      "title": "个人vs小组",
-      "description": "您更倾向于在导师课程中支持个人还是小组？选择所有适用选项。",
-      "options": {
-        "individual": "个人",
-        "group": "小组",
-        "no": "无偏好"
-      }
-    },
-    "classType": {
-      "title": "班级类型",
-      "description": "请告诉我们您最想指导的班级类型。选择所有适用选项。",
-      "options": {
-        "accelerated": "加速班",
-        "nonAccelerated": "非加速班",
-        "ell": "ELL",
-        "no": "无偏好"
-      }
-    },
-    "saveChanges": "保存更改"
-  },
-  "interests": {
-    "title": "您可以在哪些方面提供帮助？",
-    "description": "您想支持学生哪些主题？从下面的列表中选择一些主题和兴趣领域，让其他社区成员知道您热衷于在哪些方面做出贡献。这将帮助我们让您与分享您热情的学生和同行建立联系。"
-  },
-  "interestSelector": {
-    "searchTitle": "搜索兴趣",
-    "minMax": "最少3个，最多10个",
-    "placeholder": "开始输入以搜索兴趣",
-    "suggestedTitle": "推荐兴趣",
-    "add": "添加",
-    "navButtons": {
-      "previous": "上一步",
-      "complete": "完成"
-    }
-  },
-  "myConnections": "我的连接",
-  "connectWithPeople": "与人联系",
-  "connectSubtitle": "搜索、发现并与 MindHive 社区建立联系",
-  "searchPlaceholder": "按姓名、主题或兴趣领域搜索",
-  "usersPerPage": "每页用户数",
-  "officialBio": "官方简介",
-  "unofficialBio": "非官方简介",
-  "introductionVideo": "介绍视频",
-  "videoNotSupported": "您的浏览器不支持视频标签。",
-  "passionNow": "你现在热衷于什么？",
-  "availability": "可用性",
-  "asyncAnsweringQuestions": "回答学生问题（基于您的个人资料）。",
-  "asyncProvidingFeedback": "为学生项目提供反馈",
-  "syncInPersonVisit": "到班级与学生面对面交流您的工作。",
-  "syncZoomVisit": "通过Zoom到班级与学生交流您的工作。"
-} 
+	"asyncAnsweringQuestions": "回答学生的问题（根据您的个人资料）。",
+	"asyncProvidingFeedback": "为学生项目提供反馈",
+	"availability": "可用性",
+	"avatar": {
+		"error": "请上传图片",
+		"title": "创建你的头像",
+		"upload": "上传"
+	},
+	"background": {
+		"description": "让我们更好地了解您！请填写您的背景信息，以便 MindHive 社区中的其他人更轻松地与您联系。",
+		"education": {
+			"addInstitution": "添加另一个机构",
+			"degree": "程度",
+			"institution": "机构",
+			"title": "教育"
+		},
+		"languages": {
+			"addLanguage": "添加其他语言",
+			"title": "语言"
+		},
+		"occupation": {
+			"title": "职业"
+		},
+		"officialBio": {
+			"description": "用大约 100 个字向高中生描述您的专业知识、经验和教育背景。",
+			"title": "官方简介"
+		},
+		"saveChanges": "保存更改",
+		"title": "背景",
+		"unofficialBio": {
+			"description": "用几句话描述一下你职业生涯走到今天的历程，并展望未来五年甚至更远的未来。目标是让学生理解，职业生涯并非总是一帆风顺，其中有巧合、好运和厄运，有时你可能在科学家网站上看到的官方简历背后隐藏着多条职业道路。",
+			"title": "非官方简历"
+		}
+	},
+	"basic": {
+		"description": "请完成以下项目以创建您的个人资料并与 MindHive 社区建立联系。",
+		"email": "电子邮件",
+		"firstName": "名",
+		"lastName": "姓",
+		"location": "地点",
+		"organization": "组织（如果适用）",
+		"profilePhoto": "个人资料照片",
+		"pronouns": "代词",
+		"pronounsOptions": {
+			"he": "他/他",
+			"she": "她/她",
+			"they": "他们/她们"
+		},
+		"saveChanges": "保存更改",
+		"subtitle": "您的基本信息有助于 MindHive 社区更好地了解您。这些信息包括您的身份、所在地以及您的外貌。",
+		"tagline": "标语",
+		"title": "基本信息"
+	},
+	"connectSubtitle": "搜索、发现并联系 MindHive 社区",
+	"connectWithPeople": "与人联系",
+	"createProfile": "创建个人资料",
+	"interests": {
+		"description": "您想在哪些主题上为学生提供支持？请从下方列表中选择一些您感兴趣的主题和领域，让其他社区成员了解您乐于贡献的内容。这有助于我们将您与志同道合的学生和同学联系起来。",
+		"title": "您能提供什么帮助？"
+	},
+	"interestSelector": {
+		"add": "添加",
+		"minMax": "最少 3 个，最多 10 个",
+		"navButtons": {
+			"complete": "完全的",
+			"previous": "以前的"
+		},
+		"placeholder": "开始输入以搜索兴趣",
+		"searchTitle": "搜索兴趣",
+		"suggestedTitle": "推荐兴趣"
+	},
+	"introduction": {
+		"description": "我们诚邀您上传一段介绍视频，与学生和其他 MindHive 成员分享。您可以用它来分享您认为学生可能会感兴趣的项目。",
+		"passion": {
+			"description": "例如，您可以简要描述您正在进行的科学项目。或者，您可以分享您将科学成果推广给公众的经历。您可以在这里展示您目前正在进行的研究，以及它如何塑造您为社区带来的专业知识。",
+			"title": "您现在对什么事情充满热情？"
+		},
+		"saveChanges": "保存更改",
+		"title": "介绍视频",
+		"videoNotSupported": "您的浏览器不支持视频标签。"
+	},
+	"introductionVideo": "介绍视频",
+	"myConnections": "我的联系人",
+	"navigation": {
+		"next": "下一个",
+		"previous": "以前的"
+	},
+	"officialBio": "官方简介",
+	"passionNow": "您现在对什么事情充满热情？",
+	"preferences": {
+		"availability": {
+			"async": {
+				"answeringQuestions": "回答学生的问题（根据您的个人资料）。",
+				"providingFeedback": "为学生项目提供反馈",
+				"title": "异步"
+			},
+			"sync": {
+				"inPersonVisit": "进行课堂访问，与项目学生面对面讨论您的工作。",
+				"title": "同步",
+				"zoomVisit": "进行课堂访问，与项目学生讨论您的工作（通过 Zoom）。"
+			},
+			"title": "请在下方注明您可以如何与我们合作（选择所有适用项）。"
+		},
+		"classType": {
+			"description": "告诉我们您最想指导哪种类型的课堂。请选择所有适用的选项。",
+			"options": {
+				"accelerated": "加速",
+				"ell": "ELL",
+				"no": "无偏好",
+				"nonAccelerated": "非加速"
+			},
+			"title": "班级类型"
+		},
+		"description": "请填写以下内容，让我们了解您参与的详细信息。",
+		"gradeLevel": {
+			"description": "请告诉我们您作为导师最愿意指导的年级。请选择所有适用的选项。",
+			"options": {
+				"eleven": "11-12年级",
+				"middle": "中学",
+				"nine": "9 - 10年级",
+				"no": "无偏好"
+			},
+			"title": "年级"
+		},
+		"groupPreference": {
+			"description": "您更倾向于在导师指导课程中为个人还是团体提供支持？请选择所有适用项。",
+			"options": {
+				"group": "团体",
+				"individual": "个人",
+				"no": "无偏好"
+			},
+			"title": "个人与团体"
+		},
+		"saveChanges": "保存更改",
+		"title": "您的参与"
+	},
+	"profileType": {
+		"chooseType": "选择您的个人资料类型",
+		"description": "选择以下选项之一，设置您的 MindHive 个人资料。您是要为自己创建个人资料，还是要为您的组织设置页面？",
+		"individual": {
+			"description": "当您为自己创建帐户时，此配置文件最为合适。",
+			"title": "个人"
+		},
+		"organization": {
+			"description": "当您创建帐户来代表社区组织或公司时，此配置文件最为合适。",
+			"title": "组织"
+		}
+	},
+	"searchPlaceholder": "按名称、主题或感兴趣的领域搜索",
+	"steps": {
+		"aboutMe": "2. 关于我",
+		"complete": "4. 完成",
+		"interests": "3. 利益",
+		"profileType": "1. 个人资料类型"
+	},
+	"syncInPersonVisit": "进行课堂访问，与项目学生面对面讨论您的工作。",
+	"syncZoomVisit": "进行课堂访问，与项目学生讨论您的工作（通过 Zoom）。",
+	"unofficialBio": "非官方简历",
+	"usersPerPage": "每页用户数",
+	"videoNotSupported": "您的浏览器不支持视频标签。",
+	"videoUploader": {
+		"dragAndDrop": "拖放视频文件即可上传",
+		"error": "视频上传出错。请重试。",
+		"invalidFile": "请选择一个视频文件。",
+		"selectFile": "选择文件",
+		"uploadProgress": "上传进度：{{progress}}%"
+	}
+}

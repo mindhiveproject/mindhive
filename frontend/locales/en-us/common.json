@@ -1,43 +1,43 @@
 {
-  "auth": {
-    "email": "Email",
-    "password": "Password",
-    "login": "Login",
-    "username": "Username",
-    "requestReset": "Request reset",
-    "checkYourMail": "Check your email",
-    "forgotPassword": "Forgot your password?"
-  },
-  "signup": {
-    "title": "Which role best describes you?",
-    "participant": "Study participant",
-    "student": "Student",
-    "scientist": "Scientist",
-    "teacher": "Teacher",
-    "haveAccount": "Already have an account?",
-    "loginHere": "Login here"
-  },
-  "navigation": {
-    "about": "About",
-    "dashboard": "Dashboard",
-    "discover": "Discover",
-    "login": "Log in",
-    "signup": "Sign up",
-    "studies": "Studies",
-    "tasks": "Tasks & Surveys",
-    "teachers": "Teachers"
-  },
-  "studies": "Studies",
-  "tasksAndSurveys": "Tasks & Surveys",
-  "discoverHeader": "Discover studies, tasks and surveys",
-  "discoverDescription": "Browse our collection of studies, tasks and surveys created by high school students in the MindHive program and partner scientists. Participate in studies or preview tasks and surveys.",
-  "featured": "Featured",
-  "goToStudy": "Go to study",
-  "languages": {
-    "title": "Language Settings",
-    "description": "You can customize and change your language settings below.",
-    "displayLanguage": "Display Language",
-    "updatePreferences": "Update Preferences",
-    "backToSettings": "Back to Settings"
-  }
+	"auth": {
+		"checkYourMail": "Check your email",
+		"email": "Email",
+		"forgotPassword": "Forgot your password?",
+		"login": "Login",
+		"password": "Password",
+		"requestReset": "Request reset",
+		"username": "Username"
+	},
+	"discoverDescription": "Browse our collection of studies, tasks and surveys created by high school students in the MindHive program and partner scientists. Participate in studies or preview tasks and surveys.",
+	"discoverHeader": "Discover studies, tasks and surveys",
+	"featured": "Featured",
+	"goToStudy": "Go to study",
+	"languages": {
+		"backToSettings": "Back to Settings",
+		"description": "You can customize and change your language settings below.",
+		"displayLanguage": "Display Language",
+		"title": "Language Settings",
+		"updatePreferences": "Update Preferences"
+	},
+	"navigation": {
+		"about": "About",
+		"dashboard": "Dashboard",
+		"discover": "Discover",
+		"login": "Log in",
+		"signup": "Sign up",
+		"studies": "Studies",
+		"tasks": "Tasks & Surveys",
+		"teachers": "Teachers"
+	},
+	"signup": {
+		"haveAccount": "Already have an account?",
+		"loginHere": "Login here",
+		"participant": "Study participant",
+		"scientist": "Scientist",
+		"student": "Student",
+		"teacher": "Teacher",
+		"title": "Which role best describes you?"
+	},
+	"studies": "Studies",
+	"tasksAndSurveys": "Tasks & Surveys"
 }

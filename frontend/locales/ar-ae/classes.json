@@ -1,29 +1,29 @@
 {
-  "classNetworks": "شبكات الصف",
-  "createdByOn": "أنشأها {{username}} في {{date}}",
-  "classes": "الصفوف",
-  "deleteYourClass": "احذف صفك",
-  "deleteClassWarning": "سيؤدي حذف صفك إلى حذف صفك نهائيًا من منطقة \"صفوفي\". لا يمكن التراجع عن هذا الإجراء.",
-  "noAccessTo": "لن يكون لديك حق الوصول إلى:",
-  "yourClass": "صفك",
-  "anyStudiesOrResults": "أي دراسات أو نتائج تم إنشاؤها من طلاب صفك",
-  "studentsWillHaveAccessTo": "سيكون لدى طلابك حق الوصول إلى:",
-  "theirWorkspaceAndStudies": "مساحة عملهم وأي دراسات أو مهام أو استبيانات أنشأوها خلال صفك",
-  "noteNewStudents": "ملاحظة: لن يتمكن الطلاب الجدد من الانضمام إلى صفك",
-  "deleteClass": "حذف الصف",
-  "areYouSureDeleteClass": "هل أنت متأكد أنك تريد حذف هذا الصف؟",
-  "typeDeleteToConfirm": "اكتب \"DELETE\" للتأكيد",
-  "delete": "حذف",
-  "cancel": "إلغاء",
-  "pleaseTypeDelete": "يرجى كتابة DELETE لحذف صفك",
-  "studySpecific": {
-    "subtitle": "Subtitle",
-    "testId": "Test ID"
-  },
-  "create": {
-    "createHeader": "إضافة صف جديد",
-    "title": "اسم الصف الجديد",
-    "description": "وصف الصف الجديد",
-    "create": "إنشاء صف جديد"
-  }
-} 
+	"anyStudiesOrResults": "أية دراسات أو نتائج تم التوصل إليها من قبل الطلاب في صفك",
+	"areYouSureDeleteClass": "هل أنت متأكد أنك تريد حذف هذه الفئة؟",
+	"cancel": "يلغي",
+	"classes": "الفصول الدراسية",
+	"classNetworks": "شبكات الطبقات",
+	"create": {
+		"create": "إنشاء فئة جديدة",
+		"createHeader": "إضافة فصل جديد",
+		"description": "وصف الفصل الجديد",
+		"title": "اسم الفصل الجديد"
+	},
+	"createdByOn": "تم إنشاؤه بواسطة {{username}} في {{date}}",
+	"delete": "يمسح",
+	"deleteClass": "حذف الفصل",
+	"deleteClassWarning": "سيؤدي حذف صفك إلى حذفه نهائيًا من قسم \"صفوفي\". لا يمكن التراجع عن هذا الإجراء.",
+	"deleteYourClass": "حذف صفك",
+	"noAccessTo": "لن يكون لديك حق الوصول إلى:",
+	"noteNewStudents": "ملاحظة: لن يتمكن الطلاب الجدد من الانضمام إلى صفك",
+	"pleaseTypeDelete": "الرجاء كتابة DELETE لحذف صفك",
+	"studentsWillHaveAccessTo": "سيتمكن طلابك من الوصول إلى:",
+	"studySpecific": {
+		"subtitle": "الترجمة الفرعية",
+		"testId": "معرف الاختبار"
+	},
+	"theirWorkspaceAndStudies": "مساحة عملهم وأي دراسات أو مهام أو استطلاعات رأي قاموا بإنشائها أثناء الفصل الدراسي",
+	"typeDeleteToConfirm": "اكتب \"حذف\" للتأكيد",
+	"yourClass": "صفك"
+}

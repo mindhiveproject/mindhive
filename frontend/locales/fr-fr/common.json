@@ -1,43 +1,43 @@
 {
 	"auth": {
-	  "email": "Email",
-	  "password": "Mot de passe",
-	  "login": "Connexion",
-	  "username": "Nom d'utilisateur",
-	  "requestReset": "Demander une réinitialisation",
-	  "checkYourMail": "Vérifiez votre email",
-	  "forgotPassword": "Mot de passe oublié ?"
+		"checkYourMail": "Vérifiez votre courrier électronique",
+		"email": "E-mail",
+		"forgotPassword": "Mot de passe oublié?",
+		"login": "Se connecter",
+		"password": "Mot de passe",
+		"requestReset": "Demande de réinitialisation",
+		"username": "Nom d'utilisateur"
 	},
-	"signup": {
-	  "title": "Quel rôle vous décrit le mieux ?",
-	  "participant": "Participant à un étude",
-	  "student": "Étudiant",
-	  "scientist": "Scientifique",
-	  "teacher": "Enseignant",
-	  "haveAccount": "Vous avez déjà un compte ?",
-	  "loginHere": "Connectez-vous ici"
+	"discoverDescription": "Parcourez notre collection d'études, de tâches et d'enquêtes créées par des lycéens du programme MindHive et des scientifiques partenaires. Participez aux études ou prévisualisez les tâches et les enquêtes.",
+	"discoverHeader": "Découvrez des études, des tâches et des enquêtes",
+	"featured": "En vedette",
+	"goToStudy": "Aller étudier",
+	"languages": {
+		"backToSettings": "Retour aux paramètres",
+		"description": "Vous pouvez personnaliser et modifier vos paramètres de langue ci-dessous.",
+		"displayLanguage": "Langue d'affichage",
+		"title": "Paramètres de langue",
+		"updatePreferences": "Mettre à jour les préférences"
 	},
 	"navigation": {
-		"about": "À Propos",
-		"dashboard": "Tableau de Bord",
+		"about": "À propos",
+		"dashboard": "Tableau de bord",
 		"discover": "Découvrir",
 		"login": "Se connecter",
 		"signup": "S'inscrire",
 		"studies": "Études",
-		"tasks": "Tâches et Questionnaires",
+		"tasks": "Tâches et enquêtes",
 		"teachers": "Enseignants"
 	},
+	"signup": {
+		"haveAccount": "Vous avez déjà un compte ?",
+		"loginHere": "Connectez-vous ici",
+		"participant": "Participant à l'étude",
+		"scientist": "Scientifique",
+		"student": "Étudiant",
+		"teacher": "Professeur",
+		"title": "Quel rôle vous décrit le mieux ?"
+	},
 	"studies": "Études",
-	"tasksAndSurveys": "Tâches et Questionnaires",
-	"discoverHeader": "Découvrez des études, des tâches et des questionnaires",
-	"discoverDescription": "Parcourez notre collection d'études, de tâches et de questionnaires créés par des lycéens du programme MindHive et des scientifiques partenaires. Participez à des études ou prévisualisez des tâches et des questionnaires.",
-	"featured": "En vedette",
-	"goToStudy": "Aller à l'étude",
-	"languages": {
-		"title": "Paramètres de langue",
-		"description": "Vous pouvez personnaliser et modifier vos paramètres de langue ci-dessous.",
-		"displayLanguage": "Langue d'affichage",
-		"updatePreferences": "Mettre à jour les préférences",
-		"backToSettings": "Retour aux paramètres"
-	}
+	"tasksAndSurveys": "Tâches et enquêtes"
 }

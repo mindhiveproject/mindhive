@@ -1,29 +1,29 @@
 {
-  "classNetworks": "Redes de classe",
-  "createdByOn": "Criado por {{username}} em {{date}}",
-  "classes": "Turmas",
-  "deleteYourClass": "Excluir sua turma",
-  "deleteClassWarning": "Excluir sua turma irá removê-la permanentemente da área \"Minhas Turmas\". Esta ação não pode ser desfeita.",
-  "noAccessTo": "Você não terá acesso a:",
-  "yourClass": "Sua turma",
-  "anyStudiesOrResults": "Quaisquer estudos ou resultados gerados por alunos da sua turma",
-  "studentsWillHaveAccessTo": "Seus alunos terão acesso a:",
-  "theirWorkspaceAndStudies": "Seu espaço de trabalho e quaisquer estudos, tarefas ou pesquisas que criaram durante sua turma",
-  "noteNewStudents": "Nota: Novos alunos não poderão ingressar em sua turma",
-  "deleteClass": "Excluir turma",
-  "areYouSureDeleteClass": "Tem certeza de que deseja excluir esta turma?",
-  "typeDeleteToConfirm": "Digite \"DELETE\" para confirmar",
-  "delete": "Excluir",
-  "cancel": "Cancelar",
-  "pleaseTypeDelete": "Por favor, digite DELETE para excluir sua turma",
-  "studySpecific": {
-    "subtitle": "Subtitle",
-    "testId": "Test ID"
-  },
-  "create": {
-    "createHeader": "Adicionar nova turma",
-    "title": "Nome da nova turma",
-    "description": "Descrição da nova turma",
-    "create": "Criar nova turma"
-  }
-} 
+	"anyStudiesOrResults": "Quaisquer estudos ou resultados gerados por alunos da sua turma",
+	"areYouSureDeleteClass": "Tem certeza de que deseja excluir esta aula?",
+	"cancel": "Cancelar",
+	"classes": "Aulas",
+	"classNetworks": "Redes de classes",
+	"create": {
+		"create": "Criar nova classe",
+		"createHeader": "Adicionar nova classe",
+		"description": "Nova descrição da classe",
+		"title": "Novo nome de classe"
+	},
+	"createdByOn": "Criado por {{username}} em {{date}}",
+	"delete": "Excluir",
+	"deleteClass": "Excluir classe",
+	"deleteClassWarning": "Excluir sua turma a excluirá permanentemente da área \"Minhas Turmas\". Esta ação não pode ser desfeita.",
+	"deleteYourClass": "Excluir sua classe",
+	"noAccessTo": "Você não terá acesso a:",
+	"noteNewStudents": "Observação: novos alunos não poderão ingressar na sua turma.",
+	"pleaseTypeDelete": "Por favor, digite DELETE para excluir sua classe",
+	"studentsWillHaveAccessTo": "Seus alunos terão acesso a:",
+	"studySpecific": {
+		"subtitle": "Legenda",
+		"testId": "ID do teste"
+	},
+	"theirWorkspaceAndStudies": "Seu espaço de trabalho e quaisquer estudos, tarefas ou pesquisas que eles criaram durante sua aula",
+	"typeDeleteToConfirm": "Digite \"DELETE\" para confirmar",
+	"yourClass": "Sua classe"
+}

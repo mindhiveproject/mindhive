@@ -1,43 +1,43 @@
 {
-  "auth": {
-    "email": "E-mail",
-    "password": "Senha",
-    "login": "Entrar",
-    "username": "Nome de usuário",
-    "requestReset": "Solicitar redefinição",
-    "checkYourMail": "Verifique seu e-mail",
-    "forgotPassword": "Esqueceu sua senha?"
-  },
-  "signup": {
-    "title": "Qual papel melhor te descreve?",
-    "participant": "Participante do estudo",
-    "student": "Estudante",
-    "scientist": "Cientista",
-    "teacher": "Professor",
-    "haveAccount": "Já tem uma conta?",
-    "loginHere": "Entre aqui"
-  },
-  "navigation": {
-    "about": "Sobre",
-    "dashboard": "Painel",
-    "discover": "Descobrir",
-    "login": "Entrar",
-    "signup": "Cadastrar",
-    "studies": "Estudos",
-    "tasks": "Tarefas e pesquisas",
-    "teachers": "Professores"
-  },
-  "studies": "Estudos",
-  "tasksAndSurveys": "Tarefas e Pesquisas",
-  "discoverHeader": "Descubra estudos, tarefas e pesquisas",
-  "discoverDescription": "Navegue por nossa coleção de estudos, tarefas e pesquisas criadas por estudantes do ensino médio no programa MindHive e cientistas parceiros. Participe de estudos ou visualize tarefas e pesquisas.",
-  "featured": "Destaque",
-  "goToStudy": "Ir para o estudo",
-  "languages": {
-    "title": "Configurações de idioma",
-    "description": "Você pode personalizar e alterar suas configurações de idioma abaixo.",
-    "displayLanguage": "Idioma de exibição",
-    "updatePreferences": "Atualizar preferências",
-    "backToSettings": "Voltar para configurações"
-  }
+	"auth": {
+		"checkYourMail": "Verifique seu e-mail",
+		"email": "E-mail",
+		"forgotPassword": "Esqueceu sua senha?",
+		"login": "Conecte-se",
+		"password": "Senha",
+		"requestReset": "Solicitar redefinição",
+		"username": "Nome de usuário"
+	},
+	"discoverDescription": "Navegue pela nossa coleção de estudos, tarefas e pesquisas criadas por alunos do ensino médio do programa MindHive e cientistas parceiros. Participe de estudos ou visualize tarefas e pesquisas.",
+	"discoverHeader": "Descubra estudos, tarefas e pesquisas",
+	"featured": "Apresentou",
+	"goToStudy": "Vá estudar",
+	"languages": {
+		"backToSettings": "Voltar para Configurações",
+		"description": "Você pode personalizar e alterar suas configurações de idioma abaixo.",
+		"displayLanguage": "Idioma de exibição",
+		"title": "Configurações de idioma",
+		"updatePreferences": "Atualizar preferências"
+	},
+	"navigation": {
+		"about": "Sobre",
+		"dashboard": "Painel",
+		"discover": "Descobrir",
+		"login": "Conecte-se",
+		"signup": "Inscrever-se",
+		"studies": "Estudos",
+		"tasks": "Tarefas e Pesquisas",
+		"teachers": "Professores"
+	},
+	"signup": {
+		"haveAccount": "Já tem uma conta?",
+		"loginHere": "Faça login aqui",
+		"participant": "Participante do estudo",
+		"scientist": "Cientista",
+		"student": "Estudante",
+		"teacher": "Professor",
+		"title": "Qual função melhor descreve você?"
+	},
+	"studies": "Estudos",
+	"tasksAndSurveys": "Tarefas e Pesquisas"
 }
