@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Header, Image, Modal, Icon } from "semantic-ui-react";
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 
 const StyledModal = styled.div`
   display: grid;
@@ -72,6 +73,7 @@ function CheckModal({
   isSubmitted,
 }) {
   const [open, setOpen] = React.useState(false);
+  const { t } = useTranslation("builder");
 
   const mark = () => {
     toggleCheckTo(name, !isComplete);
@@ -102,7 +104,7 @@ function CheckModal({
               onClick={() => takeAction(action)}
             >
               <Icon name="download" />
-              Export your proposal
+              {t("checklist.exportProposal", "Export your proposal")}
             </StyledButton>
           )}
           <StyledButton
@@ -115,7 +117,7 @@ function CheckModal({
             }}
           >
             <Icon name="check" />
-            Mark as complete
+            {t("checklist.markAsComplete", "Mark as complete")}
           </StyledButton>
         </StyledButtons>
       </StyledModal>

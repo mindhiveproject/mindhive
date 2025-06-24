@@ -43,7 +43,7 @@ export default function CreateProposal({
 
   const createProposalCopy = async () => {
     if (!proposalId) {
-      return alert(t("createProposal.selectTemplate", "Please choose the proposal template"));
+      return alert(t("createProposal.selectTemplateAlert", "Please choose the proposal template"));
     }
     const res = await copyProposal({
       variables: {
@@ -64,7 +64,9 @@ export default function CreateProposal({
         </div>
 
         <h3>
-          {isCopy ? t("createProposal.copyStudyProposal", "Copy the study proposal") : t("createProposal.createNewStudyProposal", "Create a new study proposal")}
+          {isCopy
+            ? t("createProposal.copyStudyProposal", "Copy the study proposal")
+            : t("createProposal.createNewStudyProposal", "Create a new study proposal")}
         </h3>
 
         {!isCopy && (
@@ -81,7 +83,9 @@ export default function CreateProposal({
         )}
 
         <button onClick={createProposalCopy}>
-          {isCopy ? t("createProposal.createCopy", "Create a copy") : t("createProposal.create", "Create")}
+          {isCopy
+            ? t("createProposal.createCopy", "Create a copy")
+            : t("createProposal.create", "Create")}
         </button>
       </div>
 

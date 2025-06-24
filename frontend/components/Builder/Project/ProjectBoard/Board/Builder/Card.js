@@ -1,5 +1,6 @@
 import ReactHtmlParser from "react-html-parser";
 import { Draggable } from "react-smooth-dnd";
+import useTranslation from "next-translate/useTranslation";
 
 import { Image, Popup } from "semantic-ui-react";
 import { StyledProposalCard } from "../../../../../styles/StyledProposal";
@@ -17,6 +18,8 @@ export default function Card({
   sectionSummary,
   submitStatuses,
 }) {
+  const { t } = useTranslation("builder");
+
   const isCardLocked = card?.settings?.includeInReviewSteps?.some(
     (step) => submitStatuses[step] === "SUBMITTED"
   );
@@ -29,21 +32,27 @@ export default function Card({
     default:
       statusStyle = "notStarted";
       break;
+    case t("card.status.inProgress", "In progress"):
     case "In progress":
       statusStyle = "inProgress";
       break;
+    case t("card.status.completed", "Completed"):
     case "Completed":
       statusStyle = "completed";
       break;
+    case t("card.status.helpNeeded", "Help needed"):
     case "Help needed":
       statusStyle = "helpNeeded";
       break;
+    case t("card.status.comments", "Comments"):
     case "Comments":
       statusStyle = "comments";
       break;
+    case t("card.status.notStarted", "Not started"):
     case "Not started":
       statusStyle = "notStarted";
       break;
+    case t("card.status.needsRevision", "Needs revision"):
     case "Needs revision":
       statusStyle = "TriangleWarning";
       break;
@@ -70,16 +79,19 @@ export default function Card({
                   card?.assignedTo.length
                     ? card?.assignedTo.map((user, i) => (
                         <div key={i} className="info-assigned">
-                          {`The card is assigned to ${
-                            adminMode
+                          {t("card.assignedTo", {
+                            username: adminMode
                               ? user?.username ||
                                 user?.publicReadableId ||
-                                "John Doe"
-                              : user?.username
-                          }`}
+                                t("card.defaultUser", "John Doe")
+                              : user?.username,
+                          },
+                          adminMode
+                            ? `The card is assigned to ${user?.username || user?.publicReadableId || "John Doe"}`
+                            : `The card is assigned to ${user?.username}`)}
                         </div>
                       ))
-                    : "The card is not assigned to anyone"
+                    : t("card.notAssigned", "The card is not assigned to anyone")
                 }
                 trigger={
                   <Image
@@ -120,7 +132,10 @@ export default function Card({
                 e.stopPropagation();
                 if (
                   confirm(
-                    "Are you sure you want to delete this card? This action cannot be undone."
+                    t(
+                      "card.deleteConfirm",
+                      "Are you sure you want to delete this card? This action cannot be undone."
+                    )
                   )
                 ) {
                   onDeleteCard(card.id);

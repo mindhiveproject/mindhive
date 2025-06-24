@@ -7,35 +7,10 @@ import useForm from "../../../../../../../lib/useForm";
 import { UPDATE_HOMEWORK } from "../../../../../../Mutations/Homework";
 
 import JoditEditor from "../../../../../../Jodit/Editor";
-
-const options = [
-  {
-    text: "",
-    value: "",
-  },
-  {
-    text: "Not started",
-    value: "Not started",
-  },
-  {
-    text: "Started",
-    value: "Started",
-  },
-  {
-    text: "Needs feedback",
-    value: "Needs feedback",
-  },
-  {
-    text: "Feedback given",
-    value: "Feedback given",
-  },
-  {
-    text: "Completed",
-    value: "Completed",
-  },
-];
+import useTranslation from "next-translate/useTranslation";
 
 export default function Homework({ homeworkId }) {
+  const { t } = useTranslation("builder");
   const { data, loading, error } = useQuery(GET_HOMEWORK_BY_ID, {
     variables: { id: homeworkId },
   });
@@ -89,6 +64,33 @@ export default function Homework({ homeworkId }) {
     });
   };
 
+  const options = [
+    {
+      text: "",
+      value: "",
+    },
+    {
+      text: t("homeworkCard.notStarted", "Not started"),
+      value: "Not started",
+    },
+    {
+      text: t("homeworkCard.started", "Started"),
+      value: "Started",
+    },
+    {
+      text: t("homeworkCard.needsFeedback", "Needs feedback"),
+      value: "Needs feedback",
+    },
+    {
+      text: t("homeworkCard.feedbackGiven", "Feedback given"),
+      value: "Feedback given",
+    },
+    {
+      text: t("homeworkCard.completed", "Completed"),
+      value: "Completed",
+    },
+  ];
+
   return (
     <>
       <JoditEditor
@@ -99,7 +101,7 @@ export default function Homework({ homeworkId }) {
       />
 
       <div className="proposalCardComments">
-        <h4>Comments</h4>
+        <h4>{t("homeworkCard.comments", "Comments")}</h4>
         <textarea
           rows="5"
           type="text"
@@ -110,7 +112,7 @@ export default function Homework({ homeworkId }) {
         />
       </div>
       <div>
-        <h4>Status</h4>
+        <h4>{t("homeworkCard.status", "Status")}</h4>
         <select
           value={inputs?.settings?.status || ""}
           onChange={(event) =>
@@ -128,7 +130,9 @@ export default function Homework({ homeworkId }) {
           onClick={() => onUpdateHomework()}
           disabled={updateLoading}
         >
-          {updateLoading ? "Saving ..." : "Save"}
+          {updateLoading
+            ? t("homeworkCard.saving", "Saving ...")
+            : t("homeworkCard.save", "Save")}
         </button>
       </div>
     </>

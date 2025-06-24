@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import { Dropdown } from "semantic-ui-react";
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 
 const StyledDropdown = styled.div`
   input,
@@ -11,26 +12,24 @@ const StyledDropdown = styled.div`
   }
 `;
 
-class Assigned extends Component {
-  onChange = (event, data) => {
-    this.props.onAssignedToChange(data.value);
+export default function Assigned(props) {
+  const { t } = useTranslation("builder");
+
+  const onChange = (event, data) => {
+    props.onAssignedToChange(data.value);
   };
 
-  render() {
-    return (
-      <StyledDropdown>
-        <Dropdown
-          placeholder="Type username"
-          fluid
-          multiple
-          selection
-          options={this.props.users}
-          onChange={this.onChange}
-          value={this.props.assignedTo?.map((obj) => obj["id"]) || []}
-        />
-      </StyledDropdown>
-    );
-  }
+  return (
+    <StyledDropdown>
+      <Dropdown
+        placeholder={t("assigned.typeUsername", "Type username")}
+        fluid
+        multiple
+        selection
+        options={props.users}
+        onChange={onChange}
+        value={props.assignedTo?.map((obj) => obj["id"]) || []}
+      />
+    </StyledDropdown>
+  );
 }
-
-export default Assigned;

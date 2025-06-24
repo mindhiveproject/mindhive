@@ -1,11 +1,13 @@
 import { useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_PUBLIC_AND_PROJECT_RESOURCES } from "../../../../../../Queries/Resource";
 
 import { Dropdown, Icon } from "semantic-ui-react";
 
 export default function Resources({ proposal, selectedResources }) {
+  const { t } = useTranslation("builder");
   const projectId = proposal?.usedInClass?.templateProposal?.id;
 
   const { data, error, loading } = useQuery(GET_PUBLIC_AND_PROJECT_RESOURCES, {
@@ -37,7 +39,7 @@ export default function Resources({ proposal, selectedResources }) {
     <div>
       {selectedResourcesMerged && selectedResourcesMerged.length ? (
         <>
-          <div className="cardSubheader">Resources</div>
+          <div className="cardSubheader">{t("resources.header", "Resources")}</div>
           <div className="resourcePreview">
             {selectedResourcesMerged.map((resource) => (
               <div className="resourceBlockPreview">

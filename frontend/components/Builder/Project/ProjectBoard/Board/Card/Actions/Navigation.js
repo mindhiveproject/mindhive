@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 
@@ -17,6 +18,7 @@ export default function Navigation({
   switchFeedbackLock,
   isFeedbackLocked,
 }) {
+  const { t } = useTranslation("builder");
   const { data, error, loading } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
   });
@@ -37,7 +39,7 @@ export default function Navigation({
             }}
           >
             <div className="selector">
-              <img src="/assets/icons/back.svg" alt="back" />
+              <img src="/assets/icons/back.svg" alt={t("navigation.back", "back")} />
             </div>
           </Link>
         </div>
@@ -51,7 +53,10 @@ export default function Navigation({
             onClick={async () => {
               if (
                 confirm(
-                  "Are you sure you want to submit? You will not be able to undo it later."
+                  t(
+                    "navigation.submitConfirm",
+                    "Are you sure you want to submit? You will not be able to undo it later."
+                  )
                 )
               ) {
                 await saveBtnFunction();
@@ -67,7 +72,7 @@ export default function Navigation({
           <div className="iconBtn">
             {!isFeedbackLocked && (
               <div className="lockText">
-                Enough comments? Let reviewers know
+                {t("navigation.enoughComments", "Enough comments? Let reviewers know")}
               </div>
             )}
             <button
@@ -77,7 +82,9 @@ export default function Navigation({
               className={"lockButton"}
               disabled={!allCardsCompleted}
             >
-              {isFeedbackLocked ? "Unlock for Feedback" : "Lock Feedback"}
+              {isFeedbackLocked
+                ? t("navigation.unlockFeedback", "Unlock for Feedback")
+                : t("navigation.lockFeedback", "Lock Feedback")}
             </button>
           </div>
         )}

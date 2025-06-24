@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import Status from "../Forms/Status";
 
@@ -17,6 +18,7 @@ export default function Navigation({
   inputs,
   handleSettingsChange,
 }) {
+  const { t } = useTranslation("builder");
   const { data, error, loading } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
   });
@@ -34,7 +36,7 @@ export default function Navigation({
               await saveBtnFunction({ shoudBeSaved: false });
             }}
           >
-            <img src="/assets/icons/back.svg" alt="back" />
+            <img src="/assets/icons/back.svg" alt={t("cardNavigation.back", "back")} />
           </div>
         </div>
       </div>
@@ -54,7 +56,7 @@ export default function Navigation({
             }}
             className={`saveButton ${hasContentChanged ? "on" : "off"}`}
           >
-            Save
+            {t("cardNavigation.save", "Save")}
           </button>
         )}
       </div>
