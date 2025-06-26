@@ -3,12 +3,14 @@ import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../../Queries/Proposal";
 
 import { Radio, Icon } from "semantic-ui-react";
 import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import ProposalPDF from "./Board/PDF/Main";
 import ProposalBuilder from "./Board/Builder/Main";
 
 export default function ProposalPage({ user, proposalId }) {
   const [isPDF, setIsPDF] = useState(false);
+  const { t } = useTranslation("builder");
   const { data, error, loading } = useQuery(OVERVIEW_PROPOSAL_BOARD_QUERY, {
     variables: {
       id: proposalId,
@@ -22,7 +24,7 @@ export default function ProposalPage({ user, proposalId }) {
       <div className="previewToggle">
         {proposal?.isSubmitted ? (
           <div>
-            <h3>The proposal has been submitted and locked 🔒</h3>
+            <h3>{t("proposalPage.submittedLocked", "The proposal has been submitted and locked 🔒")}</h3>
           </div>
         ) : (
           <>
@@ -37,13 +39,14 @@ export default function ProposalPage({ user, proposalId }) {
                 />
                 <span>
                   <div className="preview">
-                    Preview
+                    {t("proposalPage.preview", "Preview")}
                     <span className="alert">
                       <Icon name="info circle" />
                       <span>
-                        Content from cards marked as "complete" in edit mode
-                        will appear here, in preview mode, displaying what your
-                        reviewers will see.
+                        {t(
+                          "proposalPage.previewInfo",
+                          'Content from cards marked as "complete" in edit mode will appear here, in preview mode, displaying what your reviewers will see.'
+                        )}
                       </span>
                     </span>
                   </div>

@@ -3,6 +3,7 @@ import absoluteUrl from "next-absolute-url";
 import { UPDATE_STUDY } from "../../../../../../Mutations/Study";
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 import { CREATE_LOG } from "../../../../../../Mutations/Log";
+import useTranslation from "next-translate/useTranslation";
 
 import NavigationSubmitStudy from "./NavigationSubmitStudy";
 import { cardTypes } from "../../Builder/Actions/ActionCard";
@@ -19,6 +20,7 @@ export default function Proposal({
   cardId,
   proposalCard,
 }) {
+  const { t } = useTranslation("builder");
   const { origin } = absoluteUrl();
   const study = proposal?.study || {};
 
@@ -67,7 +69,7 @@ export default function Proposal({
       },
     });
     if (res?.data?.updateProposalBoard?.id) {
-      alert("The proposal was submitted for review");
+      alert(t("submitStudy.submittedForReview", "The proposal was submitted for review"));
     }
   };
 
@@ -82,9 +84,9 @@ export default function Proposal({
     });
     if (res?.data?.updateStudy?.id) {
       if (isParticipationLocked) {
-        alert("The study was unlocked for participation");
+        alert(t("submitStudy.unlockedForParticipation", "The study was unlocked for participation"));
       } else {
-        alert("The study was locked for participation");
+        alert(t("submitStudy.lockedForParticipation", "The study was locked for participation"));
       }
     }
   };
@@ -97,7 +99,7 @@ export default function Proposal({
         tab={tab}
         proposalId={proposalId}
         cardId={cardId}
-        saveBtnName={`Submit for ${cardTypes[proposalCard?.type].title}`}
+        saveBtnName={t("submitStudy.submitFor", { title: cardTypes[proposalCard?.type].title }, `Submit for ${cardTypes[proposalCard?.type].title}`)}
         saveBtnFunction={() => {
           submitStudy();
         }}
@@ -110,10 +112,10 @@ export default function Proposal({
           <div className="proposal">
             <div className="iconTitle">
               <img src="/assets/icons/project.svg" />
-              <div className="title">Data Collection</div>
+              <div className="title">{t("submitStudy.dataCollection", "Data Collection")}</div>
             </div>
             <div className="card">
-              <h3>Study url</h3>
+              <h3>{t("submitStudy.studyUrl", "Study url")}</h3>
               <label htmlFor="slug">
                 <a href={`${origin}/studies/${study.slug}`} target="_blank">
                   <p className="accessLink">
@@ -131,30 +133,29 @@ export default function Proposal({
               <>
                 <div className="iconTitle">
                   <img src="/assets/icons/eye.svg" />
-                  <div className="title">The study was submitted</div>
+                  <div className="title">{t("submitStudy.studyWasSubmitted", "The study was submitted")}</div>
                 </div>
               </>
             ) : (
               <>
                 <div className="title">
-                  Submit your study for data collection
+                  {t("submitStudy.submitForDataCollection", "Submit your study for data collection")}
                 </div>
 
                 <div className="subtitle">
-                  Once you submit your study for feedback:
+                  {t("submitStudy.submitForFeedbackIntro", "Once you submit your study for feedback:")}
                   <ul>
-                    <li>Your study will appear in the Feedback Center.</li>
+                    <li>{t("submitStudy.appearInFeedbackCenter", "Your study will appear in the Feedback Center.")}</li>
                   </ul>
                 </div>
 
                 {allCardsCompleted ? (
                   <div className="subtitle">
-                    The study is ready to be submitted for feedback!
+                    {t("submitStudy.readyToSubmit", "The study is ready to be submitted for feedback!")}
                   </div>
                 ) : (
                   <div className="subtitle warning">
-                    Please complete all required cards before submitting your
-                    proposal for feedback.
+                    {t("submitStudy.completeAllRequired", "Please complete all required cards before submitting your proposal for feedback.")}
                   </div>
                 )}
               </>

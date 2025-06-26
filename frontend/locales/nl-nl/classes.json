@@ -1,29 +1,29 @@
 {
-  "classNetworks": "Klasnetwerken",
-  "createdByOn": "Gemaakt door {{username}} op {{date}}",
-  "classes": "Klassen",
-  "deleteYourClass": "Verwijder je klas",
-  "deleteClassWarning": "Het verwijderen van je klas zal je klas permanent verwijderen uit het gebied \"Mijn Klassen\". Deze actie kan niet ongedaan worden gemaakt.",
-  "noAccessTo": "Je hebt geen toegang tot:",
-  "yourClass": "Je klas",
-  "anyStudiesOrResults": "Alle studies of resultaten die door studenten in je klas zijn gegenereerd",
-  "studentsWillHaveAccessTo": "Je studenten hebben toegang tot:",
-  "theirWorkspaceAndStudies": "Hun werkruimte en alle studies, taken of enquêtes die ze tijdens je klas hebben gemaakt",
-  "noteNewStudents": "Let op: Nieuwe studenten kunnen niet deelnemen aan je klas",
-  "deleteClass": "Klas verwijderen",
-  "areYouSureDeleteClass": "Weet je zeker dat je deze klas wilt verwijderen?",
-  "typeDeleteToConfirm": "Typ \"DELETE\" om te bevestigen",
-  "delete": "Verwijderen",
-  "cancel": "Annuleren",
-  "pleaseTypeDelete": "Typ DELETE om je klas te verwijderen",
-  "studySpecific": {
-    "subtitle": "Subtitle",
-    "testId": "Test ID"
-  },
-  "create": {
-    "createHeader": "Nieuwe klas toevoegen",
-    "title": "Naam van de nieuwe klas",
-    "description": "Beschrijving van de nieuwe klas",
-    "create": "Nieuwe klas aanmaken"
-  }
-} 
+	"anyStudiesOrResults": "Alle studies of resultaten die voortkomen uit de studenten in uw klas",
+	"areYouSureDeleteClass": "Weet u zeker dat u deze klas wilt verwijderen?",
+	"cancel": "Annuleren",
+	"classes": "Klassen",
+	"classNetworks": "Klassenetwerken",
+	"create": {
+		"create": "Nieuwe klasse maken",
+		"createHeader": "Nieuwe klasse toevoegen",
+		"description": "Nieuwe klassebeschrijving",
+		"title": "Nieuwe klassenaam"
+	},
+	"createdByOn": "Gemaakt door {{username}} op {{date}}",
+	"delete": "Verwijderen",
+	"deleteClass": "Klasse verwijderen",
+	"deleteClassWarning": "Als u uw klas verwijdert, wordt deze permanent verwijderd uit het gedeelte 'Mijn klassen'. Deze actie kan niet ongedaan worden gemaakt.",
+	"deleteYourClass": "Verwijder uw klas",
+	"noAccessTo": "U heeft geen toegang tot:",
+	"noteNewStudents": "Let op: Nieuwe studenten kunnen niet aan uw klas deelnemen",
+	"pleaseTypeDelete": "Typ DELETE om uw klas te verwijderen",
+	"studentsWillHaveAccessTo": "Uw studenten krijgen toegang tot:",
+	"studySpecific": {
+		"subtitle": "Ondertitel",
+		"testId": "Test-ID"
+	},
+	"theirWorkspaceAndStudies": "Hun werkruimte en alle studies, taken of enquêtes die ze tijdens jouw les hebben gemaakt",
+	"typeDeleteToConfirm": "Typ \"DELETE\" om te bevestigen",
+	"yourClass": "Jouw klas"
+}

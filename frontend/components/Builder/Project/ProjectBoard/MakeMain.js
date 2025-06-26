@@ -1,4 +1,5 @@
 import { useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import { DELETE_COMPLETE_PROPOSAL } from "../../../Mutations/Proposal";
 import { UPDATE_STUDY } from "../../../Mutations/Study";
@@ -9,6 +10,7 @@ export default function MakeMain({
   proposalId,
   refetchQueries,
 }) {
+  const { t } = useTranslation("builder");
   const [updateStudy, { loading }] = useMutation(UPDATE_STUDY, {
     variables: {
       id: studyId,
@@ -24,7 +26,7 @@ export default function MakeMain({
       style={{ cursor: "pointer" }}
       onClick={() => {
         if (
-          confirm("Are you sure you want to make this proposal the main one?")
+          confirm(t("makeMain.confirm", "Are you sure you want to make this proposal the main one?"))
         ) {
           updateStudy().catch((err) => {
             alert(err.message);

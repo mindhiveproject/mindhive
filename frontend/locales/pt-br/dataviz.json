@@ -1,8 +1,8 @@
 {
 	"overview": {
 		"database": {
-			"csvDownloadMessage": "Dê um nome ao CSV que você está prestes a baixar\\nNão é necessário adicionar '.csv', nós cuidamos disso!",
-			"returnBrowse": "Voltar à navegação",
+			"csvDownloadMessage": "Dê um nome ao CSV que você está prestes a baixar. Não precisa adicionar \".csv\", nós cuidamos disso!",
+			"returnBrowse": "Voltar para navegar",
 			"sectionTitle": "Dados Ativos"
 		}
 	}

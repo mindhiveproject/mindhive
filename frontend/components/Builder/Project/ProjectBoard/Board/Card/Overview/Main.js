@@ -3,6 +3,7 @@ import ReactHtmlParser from "react-html-parser";
 import { GET_ALL_HOMEWORK_FOR_PROPOSAL_CARD } from "../../../../../../Queries/Homework";
 import { Dropdown } from "semantic-ui-react";
 import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import Homework from "./Homework";
 import Navigation from "../../../../Navigation/Main";
@@ -18,6 +19,7 @@ export default function OverviewOfIndividualCards({
   closeCard,
   isPreview,
 }) {
+  const { t } = useTranslation("builder");
   const [homeworkId, setHomeworkId] = useState(null);
 
   const { data, loading, error } = useQuery(
@@ -46,27 +48,20 @@ export default function OverviewOfIndividualCards({
         proposalId={proposalId}
         cardId={cardId}
         saveBtnFunction={() => {}}
-        // saveBtnName="Save & Exit"
-        saveBtnName="Close"
+        saveBtnName={t("overviewCard.close", "Close")}
       />
 
       <StyledProposal>
         <div className="post">
           <div className="proposalCardBoard">
             <div className="textBoard">
-              {/* <button
-              className="secondary"
-              onClick={() => closeCard({ cardId: false, lockedByUser: false })}
-            >
-              Close
-            </button> */}
               <div className="cardHeader">{proposalCard?.title}</div>
               <div className="cardDescription">
                 {ReactHtmlParser(proposalCard?.description)}
               </div>
 
               <Dropdown
-                placeholder="Select student"
+                placeholder={t("overviewCard.selectStudent", "Select student")}
                 fluid
                 selection
                 options={studentFilterOptions}

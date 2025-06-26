@@ -1,587 +1,800 @@
 {
-	"proposal": {
-		"zeroState1": "您还没有创建任何提案。",
-		"zeroState2": "一旦您创建了提案，它将显示在这里。",
-		"create": "创建新提案",
-		"name": "提案名称",
-		"dateCreated": "创建日期",
-		"status": "状态",
-		"actions": "操作",
-		"submitted": "已提交",
-		"notSubmitted": "未提交",
-		"open": "打开",
-		"copy": "复制",
-		"selectAsMain": "设为主提案",
-		"delete": "删除",
-		"previewHeader": "提案模板预览"
-	},
-	"participateAsGuest": "以访客身份参与",
-	"participate": "参与",
-	"allStudies": "所有研究",
-	"studiesIParticipatedIn": "我参与的研究",
-	"studiesIHaventParticipatedIn": "我未参与的研究",
-	"developNew": "新建开发",
-	"developHeaderDescription": "在这里创建、编辑和管理您的<strong>研究、任务和调查</strong>。",
-	"develop": "开发",
-	"myProjects": "我的项目",
-	"myStudies": "我的研究",
-	"myTasks": "我的任务",
-	"mySurveys": "我的调查",
-	"myBlocks": "我的区块",
-	"createdBy": "由{{username}}创建",
-	"cloneAndModify": "克隆并修改{{taskType}}",
-	"selectWhichToClone": "请选择要克隆的{{taskType}}。",
-	"study": "研究",
-	"whatWouldYouLikeToDevelop": "您想要开发什么？",
-	"studyDescription": "一项研究是一个有研究问题的研究项目。它可以包含多个任务和/或调查。",
-	"taskDescription": "在任务中，要求参与者根据他们看到或听到的内容执行特定操作（例如按按钮）。",
-	"surveyDescription": "在调查中，会询问参与者有关他们自己、他们的行为或他们的感受的问题。",
-	"blockDescription": "在区块中，会向参与者展示信息。",
-	"buildStudyFromExisting": "基于已有的 MindHive 研究创建研究",
-	"teacherExplicitInstruction": "（仅当您的老师明确要求您这样做时才选择此选项）",
-	"startMindHiveProject": "开始您的 MindHive 项目",
-	"startStudyFromScratch": "从头开始研究",
-	"createStudyWithoutProject": "创建一个没有项目的研究",
-	"developA": "开发{{develop}}",
-	"buildTaskFromExisting": "基于已有的 MindHive 任务创建任务。",
-	"duplicateEditSurvey": "复制并编辑已有的 MindHive 调查及其参数。",
-	"uploadFromLabjs": "从 lab.js 上传{{develop}}",
-	"uploadTaskScript": "如果您更愿意从 lab.js 上传自己的任务脚本，请选择此选项。",
-	"uploadSurveyScript": "如果您更愿意从 lab.js 上传自己的调查脚本，请选择此选项。",
-	"addExternalWithLink": "通过网络链接添加外部{{develop}}",
-	"addExternalLinkInstruction": "如果您更愿意添加外部链接，请选择此选项",
-	"duplicateEditBlock": "复制并编辑已有的 MindHive 区块及其参数。",
-	"createNewBlock": "创建新区块",
-	"buildBlockFromScratch": "如果您更愿意从头开始构建区块，请选择此选项。",
-	"activeStudies": "活跃研究",
-	"archivedStudies": "已归档研究",
-	"title": "标题",
-	"descriptionDevelop": "描述（用于开发模式）",
-	"descriptionDevelopHelp": "在开发模式下，研究人员、教师和学生选择任务或调查时可见。",
-	"descriptionDiscover": "描述（用于发现模式）",
-	"descriptionDiscoverHelp": "在发现模式下，所有平台用户选择任务或调查时可见。",
-	"link": "链接",
-	"externalDataWarning": "数据不会保存到MH数据库中",
-	"mobileCompatible": "{{taskType}} 支持移动设备",
-	"duration": "时长",
-	"durationHelp": "完成 {{taskType}} 大约需要多长时间？",
-	"resources": "资源",
-	"resource": "资源",
-	"aggregateVariables": "汇总变量",
-	"variable": "变量",
-	"descriptionBefore": "{{taskType}} 卡片描述（参与前）",
-	"descriptionBeforeHelp": "这是参与者在进行 {{taskType}} 之前会看到的内容。",
-	"descriptionAfter": "{{taskType}} 卡片描述（参与后）",
-	"descriptionAfterHelp": "这是参与者在进行 {{taskType}} 之后会看到的内容。",
-	"background": "背景",
-	"backgroundHelp": "请在此字段简要说明研究主题。研究的问题是什么，为什么重要？",
-	"scoringSurvey": "评分说明（仅限调查）",
-	"formatSurvey": "格式（仅限调查）",
-	"formatSurveyHelp": "例如：10 个问题，采用 5 分制李克特量表。问题分为 2 类（消极和积极情感）。其中 4 个问题为反向计分。",
-	"addInfo": "附加信息",
-	"descriptionBeforeVisible": "此内容对尚未参与任务的任何人可见。",
-	"descriptionAfterVisible": "此内容对已参与任务的任何人可见。",
-	"templateTab": "模板",
-	"basicTab": "基础",
-	"parametersTab": "参数",
-	"sharingTab": "共享",
-	"fullscreenPreview": "全屏预览",
-	"submit": "提交",
-	"projectBoard": "项目看板",
-	"studyBuilder": "研究构建器",
-	"participantPage": "参与者页面",
-	"review": "审核",
-	"testAndCollect": "测试与收集",
-	"visualize": "可视化",
-	"dataJournals": "数据日志 🚧",
-	"project": "项目",
-	"unsavedChangesWarning": "您未保存的更改将会丢失。点击取消返回并保存更改。",
 	"actionCard": {
-		"proposalFeedback": "提案反馈",
-		"peerFeedback": "同行反馈",
+		"clickToSubmit": "点击提交 {{title}}",
 		"dataCollection": "数据收集",
+		"deleteCardConfirmation": "您确定要删除这张卡吗？此操作无法撤销。",
+		"peerFeedback": "同行反馈",
 		"projectReport": "项目报告",
-		"submitFor": "提交以获取 {{title}}",
+		"proposalFeedback": "建议反馈",
+		"submitFor": "提交 {{title}}",
 		"viewComments": "查看评论",
-		"viewCountComments": "查看 {{count}} 条评论",
-		"clickToSubmit": "点击以提交获取 {{title}}",
-		"deleteCardConfirmation": "您确定要删除此卡片吗？此操作无法撤销。"
+		"viewCountComments": "查看 {{count}} 条评论"
 	},
-	"deleteProposal": {
-		"confirm": "您确定要删除此提案吗？此提案中的所有部分和卡片也将被删除。"
+	"activeStudies": "积极研究",
+	"add-section": "添加部分",
+	"addExternalLinkInstruction": "如果您希望添加外部链接，请选择此选项",
+	"addExternalWithLink": "添加带网络链接的外部 {{develop}} ",
+	"addInfo": "其他信息",
+	"aggregateVariables": "总体变量",
+	"allStudies": "所有研究",
+	"archivedStudies": "存档研究",
+	"assigned": {
+		"typeUsername": "用户名类型"
 	},
-	"studyManager": {
-		"manageStudies": "管理研究 ({{count}})",
-		"manageStudiesFor": "为 {{username}} 管理研究",
-		"viewCreateAssign": "查看、创建或分配学生的研究",
-		"mainProjectStudy": "主项目研究",
-		"connectedToProject": "已连接到项目: {{project}}",
-		"collaborators": "协作者：",
-		"mentors": "导师：",
-		"none": "无",
-		"viewStudy": "查看研究",
-		"disconnect": "断开连接",
-		"noStudyConnected": "当前没有研究连接到此项目。请使用下方选项分配或创建新研究。",
-		"collaboratorStudies": "协作者研究",
-		"removeCollaborator": "移除协作者身份",
-		"noCollaboratorStudiesAssigned": "未分配协作者研究",
-		"notAssignedToAnyStudies": "该学生未被分配为任何研究的协作者。",
-		"project": "项目",
-		"title": "标题：",
-		"unknownProject": "未知项目",
-		"reassignToAnotherStudy": "重新分配到其他研究",
-		"assignToExistingStudy": "分配到现有研究",
-		"selectDifferentStudy": "选择其他研究以连接到此项目。",
-		"chooseExistingStudy": "选择现有研究分配给项目。",
-		"selectAStudy": "选择研究",
-		"createNewStudy": "创建新研究",
-		"createNewStudyToConnect": "创建一个新研究以连接到此项目。",
-		"enterNewStudyName": "输入新研究的名称",
-		"noProjectAssigned": "未分配项目。请先使用项目管理器创建或分配项目，然后再管理研究。",
-		"cancel": "取消",
-		"reassignStudy": "重新分配研究",
-		"assignToStudy": "分配到研究",
-		"createStudy": "创建研究",
-		"confirmStudyConnection": "确认研究连接",
-		"confirmStudyConnectionDesc": "您确定要将此研究{{action}}到项目\"{{project}}\"吗？此操作可能会影响相关数据。",
-		"reassign": "重新分配",
-		"connect": "连接",
-		"confirm": "确认"
+	"background": "背景介绍",
+	"backgroundHelp": "使用此栏简要介绍研究课题的背景。研究的问题是什么，为什么重要？",
+	"basicTab": "基础",
+	"blockDescription": "在一个区块中，参与者会收到各种信息。",
+	"board": {
+		"error": "错误！ {{message}}",
+		"loading": "正在加载..."
 	},
-	"createProposal": {
-		"selectTemplate": "选择模板",
-		"copyStudyProposal": "复制研究提案",
-		"createNewStudyProposal": "创建新的研究提案",
-		"createCopy": "创建副本",
-		"create": "创建"
-	},
-	"proposalBoard": {
-		"myProjectBoard": "我的项目看板",
-		"createYourStudyProposal": "在这里创建您的研究提案，开启您的科研之旅",
-		"titlePlaceholder": "输入项目看板标题",
-		"descriptionPlaceholder": "输入项目看板描述",
-		"publicTemplate": "公开模板",
-		"allowMovingSections": "允许移动分区",
-		"allowMovingCards": "允许移动卡片",
-		"allowAddingSections": "允许添加新分区",
-		"allowAddingCards": "允许添加新卡片",
-		"saving": "保存中",
-		"save": "保存"
-	},
-	"vas": {
-		"addMore": "Add more",
-		"title": "视觉模拟量表",
-		"description": "视觉模拟量表（VAS）是一种用于评估无法直接测量的特征或态度的测量工具。",
-		"left": "左标签",
-		"right": "右标签",
-		"question": "问题"
-	},
-	"parameters": {
-		"templateParameters": "Template parameters",
-		"uploadLabjs": "Please upload a lab.js json file first",
-		"noParameters": "The template does not contain any parameters.",
-		"subtitle": "Subtitle",
-		"versionId": "Version ID",
-		"askDataUsage": "Ask students a data usage question after the task",
-		"taskParameters": "Task parameters",
-		"getFromTemplate": "Get parameters from the template",
-		"title": "参数",
-		"description": "定义组件参数",
-		"add": "添加参数",
-		"name": "参数名称",
-		"type": "参数类型",
-		"value": "默认值",
-		"participationSettings": "参与设置"
-	},
-	"template": {
-		"download": "Download",
-		"title": "Template title",
-		"description": "Template description",
-		"labjsScript": "lab.js script (JSON file)",
-		"createdOn": "Created on",
-		"updatedOn": "Last updated on",
-		"deleteAndReupload": "Delete and reupload",
-		"collaborators": "Collaborators on the template",
-		"parameters": "Template parameters",
-		"uploadLabjs": "Please upload a lab.js json file first",
-		"noParameters": "The lab.js file does not contain any parameters.",
-		"selectType": "Select the type of the parameter",
-		"chooseType": "Choose the type",
-		"text": "Text",
-		"singleLine": "Single-line text input",
-		"number": "Number",
-		"selectOne": "Select one",
-		"vasBuilder": "VAS builder",
-		"surveyBuilder": "Survey builder",
-		"selectIcon": "Select the icon",
-		"instructions": "Provide instructions for other users to understand what this parameter changes in the task",
-		"example": "An example of what can be the parameter value",
-		"options": "The options (each on a new line) for this parameter",
-		"defaultValue": "The default value for this parameter",
-		"delete": "Delete"
-	},
-	"sharing": {
-		"collaboratorsOn": "Collaborators on the {{taskType}}",
-		"title": "共享",
-		"description": "管理谁可以查看和编辑此组件",
-		"public": "公开",
-		"private": "私有",
-		"publicDescription": "任何人都可以查看此组件",
-		"privateDescription": "只有协作者可以查看此组件"
-	},
-	"viewer": {
-		"customize": "Customize",
-		"preview": "Preview {{taskType}}",
-		"screenshot": "Screenshot",
-		"background": "Background",
-		"parameters": "Parameters",
-		"tweakableFeatures": "The following features of this {{taskType}} can be tweaked:",
-		"defaultValues": "Default values are shown (can clone {{taskType}} and modify these)",
-		"surveyParameters": "Survey parameters",
-		"text": "Text",
-		"visualAnalogueScale": "Visual analogue scale",
-		"likertScale": "Likert scale",
-		"freeTextInput": "Free text input",
-		"selectOne": "Select one",
-		"selectMany": "Select many",
-		"beforeParticipation": "What participants see <u>before</u> taking the {{taskType}}",
-		"afterParticipation": "What participants see <u>after</u> taking the {{taskType}}",
-		"mobileCompatible": "Mobile compatible",
-		"aggregateVariables": "Aggregate Variables",
-		"aggregateVariablesDesc": "These data are automatically written to a csv file upon completion of the {{taskType}}",
-		"moreInfo": "more info",
-		"scoring": "Scoring",
-		"format": "Format",
-		"duration": "Duration",
-		"resources": "Resources",
-		"title": "预览器",
-		"description": "预览您的组件",
-		"noPreview": "无可用预览"
-	},
-	"modal": {
-		"back": "←",
-		"update": "更新",
-		"id": "ID",
-		"name": "名称",
-		"probability": "概率 (0-100%)",
-		"participants": "参与者",
-		"removeCondition": "删除条件",
-		"addCondition": "添加条件"
-	},
-	"taskModal": {
-		"addToStudy": "添加到研究",
-		"createCopy": "创建副本",
-		"preview": "预览{{taskType}}",
-		"close": "关闭"
-	},
-	"selector": {
-		"searchPlaceholder": "🔍 搜索",
-		"filter": {
-			"createdByAnyone": "任何人创建的",
-			"ownedByMe": "我拥有的",
-			"myFavorite": "我的收藏"
-		},
-		"basicBlocks": {
-			"title": "基础模块",
-			"description": "想要为参与者添加<strong>自定义说明</strong>或在研究流程中<strong>嵌入链接和/或视频</strong>吗？选择并编辑基础模块"
-		},
-		"tasks": {
-			"title": "任务",
-			"description": "想要通过让参与者<strong>完成活动</strong>来<strong>测量某个构念或变量</strong>吗？从这个经过验证的任务库中选择"
-		},
-		"surveys": {
-			"title": "问卷",
-			"description": "想要通过<strong>自我报告</strong>来<strong>测量参与者的态度、经历或观点</strong>吗？从这个经过验证的问卷库中选择",
-			"buildOwn": "找不到测量研究构念的工具？使用问卷构建器并在教师的帮助下创建你自己的问卷："
-		},
-		"studyDesign": {
-			"title": "研究设计",
-			"description": "创建被试间设计",
-			"betweenSubjects": "被试间设计"
-		},
-		"templates": {
-			"title": "模板",
-			"description": "不想从头开始？使用此库中的模板选择并编辑<strong>预制研究设计</strong>"
-		}
-	},
-	"description": {
-		"title": "研究描述",
-		"internalUse": "这仅供内部使用。参与者不会看到此描述。",
-		"selectSource": "选择来源",
-		"linkToProposal": "链接到提案"
-	},
-	"proposalSelector": {
-		"selectCard": "选择卡片",
-		"linkToProposal": "链接到提案"
-	},
-	"status": {
-		"title": "研究状态",
-		"placeholder": "研究版本",
-		"workInProgress": "进行中",
-		"submittedAsProposal": "已作为提案提交",
-		"readyForReview": "准备审查",
-		"inReview": "审查中",
-		"reviewed": "已审查",
-		"collectingData": "收集数据",
-		"dataCollectionCompleted": "数据收集完成"
-	},
-	"version": {
-		"title": "研究版本",
-		"headerNote": "保存左侧屏幕上显示的不同研究设计",
-		"currentVersion": "当前版本",
-		"createdOn": "创建于",
-		"placeholder": "研究版本",
-		"load": "加载",
-		"delete": "删除",
-		"noVersionSaved": "尚未保存任何研究版本。点击下方按钮创建新版本。",
-		"createNewVersion": "创建新版本",
-		"name": "名称",
-		"description": "描述",
-		"enterVersionName": "请输入版本名称",
-		"confirmDelete": "您确定要删除{{versionName}}吗？"
-	},
+	"build-create-new-study": "要创建新研究，请单击下面的按钮。",
+	"build-intro": "在该生成器中，您可以创建新的学习任务、上传自己的任务或使用任务库中的任务。",
+	"buildBlockFromScratch": "如果您希望完全从零开始构建一个区块，请选择此选项。",
 	"builder": {
-		"studyBuilderLocked": "研究构建器已锁定",
-		"lockedMessage": "此研究已提交，无法编辑。要进行更改，请让您的老师取消提交研究。",
 		"addComment": "添加评论",
-		"addStartingPoint": "添加起点"
+		"addStartingPoint": "添加起点",
+		"lockedMessage": "本研究已提交，无法编辑。如需修改，请让老师取消提交研究报告。",
+		"studyBuilderLocked": "锁定的学习生成器"
 	},
-	"engine": {
-		"studyLocked": "研究已被锁定",
-		"copy": "复制",
-		"save": "保存"
-	},
-	"main": {
-		"noProjectFound": "未找到项目，请先保存您的项目。",
-		"loadingStudy": "正在加载研究...",
-		"errorLoadingStudy": "加载研究时出错：{{errorMessage}}",
-		"projectChat": "项目聊天"
-	},
-	"menu": {
-		"addBlock": "添加块",
-		"studyFlow": "研究流程",
-		"studySettings": "研究设置"
-	},
+	"buildStudyFromExisting": "在已有的MindHive研究基础上建立研究",
+	"buildTaskFromExisting": "根据已有的 MindHive 任务创建任务。",
 	"byComponent": {
-		"noSubtitle": "无副标题",
-		"dataByTask": "按任务分文件的数据",
-		"selectTasks": "选择任务或问卷",
-		"wait": "请稍候 ...",
+		"dataByTask": "单独文件中的任务数据",
 		"downloadAggregated": "下载汇总数据",
 		"downloadAggregatedBy": "下载汇总数据 {{by}}",
-		"downloadRaw": "下载原始数据"
+		"downloadRaw": "下载原始数据",
+		"noSubtitle": "没有字幕",
+		"selectTasks": "选择任务或调查",
+		"wait": "等待 ..."
 	},
-	"dataset": {
+	"card": {
+		"assignedTo": "该卡已分配给 {{username}}",
+		"defaultUser": "约翰·多伊",
+		"deleteConfirm": "您确定要删除此卡吗？此操作无法撤消。",
+		"notAssigned": "该卡尚未分配给任何人",
 		"status": {
-			"working": "进行中",
-			"submittedAsProposal": "已作为提案提交",
-			"readyForReview": "准备审核",
-			"inReview": "审核中",
-			"reviewed": "已审核",
-			"collectingData": "收集数据中",
-			"dataCollectionCompleted": "数据收集已完成"
-		},
-		"noData": "无数据",
-		"loading": "加载中...",
-		"full": "完整",
-		"incremental": "增量",
-		"download": "下载",
-		"deleteInvalidRecord": "删除无效记录"
-	},
-	"participantResults": {
-		"title": "参与者结果",
-		"study": "研究",
-		"taskTitle": "任务标题",
-		"taskSubtitle": "任务副标题",
-		"taskId": "任务ID",
-		"started": "开始时间",
-		"completed": "完成时间",
-		"condition": "条件",
-		"dataType": "数据类型",
-		"dataPolicy": "数据政策",
-		"studyStatus": "研究状态",
-		"dataAnalysis": "数据分析"
-	},
-	"participantInfo": {
-		"participantId": "参与者ID",
-		"publicReadableId": "公开可读ID",
-		"studyRelatedInfo": "与研究相关的信息",
-		"englishQuestion": "你能理解用英语写的基本指令吗？",
-		"yes": "是",
-		"no": "否",
-		"betweenSubjectCondition": "组间条件",
-		"agreedToSave": "同意为未来研究保存信息",
-		"zipCode": "邮政编码",
-		"birthday": "生日",
-		"age": "年龄",
-		"irbConsent": "IRB同意决策",
-		"parentName": "家长姓名：",
-		"parentEmail": "家长邮箱：",
-		"kidName": "你的名字："
-	},
-	"participant": {
-		"goBack": "← 返回"
-	},
-	"grid": {
-		"open": "打开",
-		"analysis": "分析",
-		"publicId": "公开ID",
-		"publicReadableId": "公开可读ID",
-		"startedAt": "开始时间",
-		"duration": "时长",
-		"numberCompleted": "完成数量",
-		"condition": "条件",
-		"consent": "同意",
-		"studyStatus": "研究状态",
-		"accountType": "账户类型"
-	},
-	"header": {
-		"shareInstructions": "将下面的链接分享给参与者以邀请他们加入您的研究",
-		"copyLink": "复制研究链接",
-		"testStudy": "测试您的研究",
-		"allDataOneFile": "所有数据在一个文件中",
-		"linkCopied": "链接已复制"
-	},
-	"pagination": {
-		"prev": "上一页",
-		"next": "下一页",
-		"pageOf": "第{{page}}页，共{{pageCount}}页",
-		"participantsTotal": "共{{count}}位参与者"
-	},
-	"participantType": {
-		"user": "用户",
-		"guest": "访客"
-	},
-	"collect": {
-		"noProjectFound": "未找到项目，请先保存您的项目。",
-		"noStudyAttachedHeader": "🏻 您的项目没有关联任何研究。",
-		"noStudyAttachedMessage": "请告知您的老师，以便他们可以创建并关联一个研究。如果您需要帮助，请联系技术支持 support.mindhive@nyu.edu。"
-	},
-	"notes": {
-		"noNotes": "尚未输入备注。右键点击以添加备注。"
-	},
-	"dataJournal": {
-		"addComponent": "添加组件",
-		"addNotes": "添加备注",
-		"settingsPanel": {
-			"widgetSettings": "小部件设置",
-			"notes": "备注",
-			"notesPlaceholder": "在此输入您的备注...",
-			"deleteWidget": "删除小部件"
-		},
-		"visualizationWidget": {
-			"unsupportedType": "不支持的小部件类型: {{type}}"
+			"comments": "评论",
+			"completed": "完全的",
+			"helpNeeded": "需要帮助",
+			"inProgress": "进行中",
+			"needsRevision": "需要修改",
+			"notStarted": "未开始"
 		}
 	},
-	"linkClass": {
-		"doNotConnectClass": "❌  不连接班级"
+	"cardNavigation": {
+		"back": "后退",
+		"save": "节省"
+	},
+	"checklist": {
+		"exportProposal": "导出您的提案",
+		"markAsComplete": "标记为完成"
+	},
+	"checklistTemplate": {
+		"completeCards": {
+			"description": "您的提案卡中的文本将被汇总并导出为 PDF 文件。",
+			"title": "仔细检查所有提案卡是否完整"
+		},
+		"exportPdf": {
+			"description": "审阅者将以 PDF 格式查看您的提案。提交前请务必仔细检查 PDF 格式的提案。您还需要保存 PDF 文件，以便随时参考原始提案。",
+			"title": "以 PDF 格式导出并审查您的提案"
+		},
+		"recordTime": {
+			"description": "这将允许您在学习页面上放置预计完成时间，以便参与者了解并可以相应地安排时间。",
+			"title": "记录参与者完成研究需要多长时间"
+		},
+		"reviewStudyPage": {
+			"description": "认真思考您希望参与者在研究页面上看到哪些信息。您可能不希望研究页面上包含任何会直接影响参与者在任务/调查中表现的信息。您的研究是否有一些细节最好在研究完成时透露？",
+			"title": "查看你的学习页面。你的参与者和审阅者将会看到这些内容"
+		},
+		"testAsParticipant": {
+			"description": "在请同行评审你的研究之前，务必至少与 2 人进行测试。这个测试阶段通常有助于研究人员发现研究设计中的错误，并留出时间来纠正这些错误，否则这些错误可能会损害数据。",
+			"title": "至少让 2 个人测试一下参与你的研究的感觉"
+		}
+	},
+	"cloneAndModify": "克隆并修改 {{taskType}}",
+	"collect": {
+		"noProjectFound": "未找到项目，请先保存您的项目。",
+		"noStudyAttachedHeader": "🤷🏻 您的项目没有附加任何研究。",
+		"noStudyAttachedMessage": "请告知你的老师，以便他们创建并关联。如需帮助，请联系技术支持：support.mindhive@nyu.edu。"
 	},
 	"connectModal": {
-		"projectCreator": "项目创建者是{{username}}",
-		"noAuthor": "无作者",
-		"adminInfo": "此信息仅对管理员可见",
-		"projectTitle": "项目标题",
-		"linkedClass": "关联班级",
-		"projectBoardCollaborators": "项目板协作者",
+		"adminInfo": "此信息仅管理员可见",
 		"close": "关闭",
+		"linkedClass": "链接类",
+		"noAuthor": "无作者",
+		"projectBoardCollaborators": "项目委员会合作者",
+		"projectCreator": "项目创建者是 {{username}}",
+		"projectTitle": "项目名称",
 		"saveAndClose": "保存并关闭"
 	},
 	"connectStudyModal": {
-		"studyAuthor": "研究作者是{{username}}",
-		"noAuthor": "无作者",
-		"adminInfo": "此信息仅对管理员可见",
-		"linkedClass": "关联班级",
-		"studyCollaborators": "研究协作者",
-		"linkedProjects": "关联项目",
-		"linkedProjectsDescription": "共享您研究 {{title}} 访问权限的项目",
-		"openInNewTab": "在新标签页中打开",
+		"adminInfo": "此信息仅管理员可见",
 		"close": "关闭",
-		"saveAndClose": "保存并关闭"
+		"linkedClass": "链接类",
+		"linkedProjects": "链接项目",
+		"linkedProjectsDescription": "共享您的研究 {{title}} 访问权限的项目",
+		"noAuthor": "无作者",
+		"openInNewTab": "在新标签页中打开",
+		"saveAndClose": "保存并关闭",
+		"studyAuthor": "研究作者是 {{username}}",
+		"studyCollaborators": "研究合作者"
+	},
+	"consentSelector": {
+		"typeConsentProtocol": "类型同意协议"
+	},
+	"createdBy": "由 {{username}} 创建",
+	"createNewBlock": "创建新块",
+	"createProposal": {
+		"copyStudyProposal": "复制学习计划",
+		"create": "创造",
+		"createCopy": "创建副本",
+		"createNewStudyProposal": "创建新的学习计划",
+		"selectTemplate": "选择模板",
+		"selectTemplateAlert": "请选择提案模板"
 	},
 	"createStudy": {
-		"save": "保存"
+		"save": "节省"
 	},
+	"createStudyWithoutProject": "创建没有项目的研究",
+	"dataJournal": {
+		"addComponent": "添加组件",
+		"addNotes": "添加注释",
+		"settingsPanel": {
+			"deleteWidget": "删除小部件",
+			"notes": "笔记",
+			"notesPlaceholder": "在此输入您的注释...",
+			"widgetSettings": "小部件设置"
+		},
+		"visualizationWidget": {
+			"unsupportedType": "不支持的小部件类型：{{type}}"
+		}
+	},
+	"dataJournals": "数据日志🚧",
+	"dataset": {
+		"deleteInvalidRecord": "删除无效记录",
+		"download": "下载",
+		"full": "满的",
+		"incremental": "增量",
+		"loading": "加载中...",
+		"noData": "没有数据",
+		"status": {
+			"collectingData": "收集数据",
+			"dataCollectionCompleted": "数据收集完成",
+			"inReview": "正在审核中",
+			"readyForReview": "准备审核",
+			"reviewed": "已审核",
+			"submittedAsProposal": "作为提案提交",
+			"working": "正在进行的工作"
+		}
+	},
+	"deleteProposal": {
+		"confirm": "您确定要删除此提案吗？此提案中的所有版块和卡片也将被删除。",
+		"title": "您确定要删除该建议吗？"
+	},
+	"description": "建立新书房的地方",
+	"descriptionAfter": "{{taskType}} 卡片描述（参与后）",
+	"descriptionAfterHelp": "这是参与者完成 {{taskType}} 后将看到的内容。",
+	"descriptionAfterVisible": "参与该任务的任何人都可以看到这一点。",
+	"descriptionBefore": "{{taskType}} 卡片描述（参与前）",
+	"descriptionBeforeHelp": "这是参与者在执行 {{taskType}} 之前将看到的内容。",
+	"descriptionBeforeVisible": "尚未参与该任务的任何人都可以看到此信息。",
+	"descriptionDevelop": "描述（针对“开发”模式）",
+	"descriptionDevelopHelp": "研究人员、教师和学生在开发模式下选择任务或调查时可以看到这一点。",
+	"descriptionDiscover": "描述（用于发现模式）",
+	"descriptionDiscoverHelp": "在发现模式下选择任务或调查时，所有平台用户都可以看到这一点。",
+	"develop": "发展",
+	"developA": "开发一个 {{develop}}",
+	"developHeaderDescription": "在此创建、编辑和管理您的<strong>研究、任务和调查</strong>。",
+	"developNew": "开发新的",
+	"duplicateEditBlock": "复制并编辑预先存在的 MindHive 块及其参数。",
+	"duplicateEditSurvey": "复制并编辑现有的 MindHive 调查及其参数。",
+	"duration": "期间",
+	"durationHelp": "大约需要多长时间才能完成 {{taskType}}？",
+	"engine": {
+		"copy": "复制",
+		"save": "节省",
+		"studyLocked": "该研究已被锁定"
+	},
+	"externalDataWarning": "数据不会保存到 MH 数据库",
+	"formatSurvey": "格式（仅适用于调查）",
+	"formatSurveyHelp": "例如：采用 5 点李克特量表格式的 10 个问题。问题分为两类（消极情感和积极情感）。其中 4 个问题是反向计分的。",
+	"fullscreenPreview": "全屏预览",
+	"grid": {
+		"accountType": "账户类型",
+		"analysis": "分析",
+		"condition": "健康）状况",
+		"consent": "同意",
+		"duration": "期间",
+		"numberCompleted": "完成数量",
+		"open": "打开",
+		"publicId": "公共 ID",
+		"publicReadableId": "公共可读ID",
+		"startedAt": "开始于",
+		"studyStatus": "研究现状"
+	},
+	"header": {
+		"allDataOneFile": "所有数据在一个文件中",
+		"allowAddingCards": "允许添加新卡",
+		"allowAddingSections": "允许添加新部分",
+		"allowMovingCards": "允许移动卡片",
+		"allowMovingSections": "允许移动部分",
+		"copyLink": "复制学习链接",
+		"createYourStudyProposal": "在此创建您的研究计划以开始您的研究之旅",
+		"descriptionPlaceholder": "输入项目板描述",
+		"linkCopied": "链接已复制",
+		"myProjectBoard": "我的项目板",
+		"publicTemplate": "公共模板",
+		"save": "节省",
+		"saving": "保存",
+		"shareInstructions": "与您的参与者分享以下链接，邀请他们加入您的研究",
+		"testStudy": "测试你的学习",
+		"titlePlaceholder": "输入项目板标题"
+	},
+	"homeworkCard": {
+		"comments": "评论",
+		"completed": "完全的",
+		"feedbackGiven": "已给出反馈",
+		"needsFeedback": "需要反馈",
+		"notStarted": "未开始",
+		"save": "节省",
+		"saving": "正在保存...",
+		"started": "已开始",
+		"status": "地位"
+	},
+	"individualCard": {
+		"comments": "评论",
+		"privateWorkspaceMsg": "这是您的私人工作区。只有您的老师和审阅者可以访问您在此处撰写的内容。",
+		"save": "节省",
+		"saveExit": "保存并退出",
+		"saving": "正在保存...",
+		"status": "地位"
+	},
+	"inner": {
+		"addSection": "添加部分",
+		"newSection": "新部分",
+		"sectionTitlePlaceholder": "输入章节标题"
+	},
+	"link": "关联",
+	"linkClass": {
+		"doNotConnectClass": "❌ 不要连接类"
+	},
+	"main": {
+		"errorLoadingStudy": "加载研究时出错：{{errorMessage}}",
+		"loadingStudy": "正在加载研究...",
+		"noProjectFound": "未找到项目，请先保存您的项目。",
+		"projectChat": "项目聊天"
+	},
+	"mainCard": {
+		"askToClose": "要求用户关闭卡片或等待卡片释放。",
+		"assignedTo": "分配给",
+		"cardWillBeReleased": "该卡将发布",
+		"chooseReviewStep": "选择卡片应进入同行评审的哪个步骤",
+		"comments": "评论",
+		"forMindHiveNetwork": "对于 MindHive 网络",
+		"forTeacherAndCollaborators": "仅供我的老师和项目合作者使用",
+		"instructions": "指示",
+		"lockedMessage": "该卡片目前正在被编辑",
+		"refresh": "刷新",
+		"refreshAfterRelease": "卡片发布后，请刷新页面以获取最新版本的卡片。",
+		"reviewOptions": {
+			"collectingData": "收集数据",
+			"peerFeedback": "同行反馈",
+			"projectReport": "项目报告",
+			"proposal": "提议"
+		},
+		"revisedContent": "修订内容",
+		"revisedContentUsed": "您在此处包含的修订内容将用于最终报告。",
+		"selectOption": "选择选项",
+		"visibleInFeedbackCenter": "您在此处包含的内容一旦通过行动卡提交，就会显示在反馈中心中。",
+		"visibleToTeacherAndCollaborators": "您在下面包含的内容只有您的老师和项目合作者才能看到"
+	},
+	"makeMain": {
+		"confirm": "您确定要将此提案作为主要提案吗？"
+	},
+	"menu": {
+		"addBlock": "添加块",
+		"studyFlow": "学习流程",
+		"studySettings": "研究环境"
+	},
+	"mobileCompatible": "{{taskType}} 与移动设备兼容",
+	"modal": {
+		"addCondition": "添加条件",
+		"back": "←",
+		"delete": "删除",
+		"id": "ID",
+		"name": "姓名",
+		"participants": "参与者",
+		"probability": "概率 (0 - 100%)",
+		"removeCondition": "删除条件",
+		"update": "更新"
+	},
+	"my-studies": "我的学业",
+	"myBlocks": "我的积木",
+	"myProjects": "我的项目",
+	"myStudies": "我的学业",
+	"mySurveys": "我的调查",
+	"myTasks": "我的任务",
+	"navigation": {
+		"back": "后退",
+		"enoughComments": "评论够多了？请告知评论者",
+		"enoughParticipants": "参与者够多吗？",
+		"lockFeedback": "锁定反馈",
+		"lockParticipation": "锁定参与",
+		"submitConfirm": "确定要提交吗？之后将无法撤消。",
+		"unlockFeedback": "解锁反馈",
+		"unlockParticipation": "解锁参与"
+	},
+	"new-section": "新部分",
+	"new-study": "新研究",
+	"newProject": {
+		"addCollaborators": "添加合作者",
+		"alreadyAssociatedTitle": "您已经有一个与此类相关的项目",
+		"alreadyAssociatedWarning": "除非您知道自己在做什么，否则请勿继续操作。",
+		"backToHome": "← 返回主页",
+		"createProject": "创建项目",
+		"giveNameAlert": "给你的项目命名",
+		"goBackHome": "回家",
+		"nameMessage": "给你的项目起个名字。这不是研究的标题，而是你想用来称呼你的工作空间的名称。",
+		"namePlaceholder": "我的项目名称是",
+		"nameYourProject": "命名您的项目",
+		"noTemplatesSubtitle": "要启动项目，你需要一个项目板模板。你的老师可能没有链接到此课程的项目板模板。",
+		"noTemplatesTitle": "课堂上没有项目板模板",
+		"selectClass": "选择班级",
+		"untitledProject": "未命名项目"
+	},
+	"notes": {
+		"noNotes": "尚未输入任何注释。右键单击即可添加注释。"
+	},
+	"overview": {
+		"actions": "行动",
+		"copy": "复制",
+		"createNewProposal": "创建新提案",
+		"dateCreated": "创建日期",
+		"delete": "删除",
+		"notSubmitted": "未提交",
+		"open": "打开",
+		"proposalName": "提案名称",
+		"selectAsMain": "选择作为主要",
+		"status": "地位",
+		"submitted": "已提交",
+		"zeroState1": "您尚未创建任何提案。",
+		"zeroState2": "一旦您创建了提案，它就会出现在这里。"
+	},
+	"overviewCard": {
+		"close": "关闭",
+		"selectStudent": "选择学生"
+	},
+	"pagination": {
+		"next": "下一个",
+		"pageOf": "第 {{page}} 页，共 {{pageCount}} 页",
+		"participantsTotal": "总共 {{count}} 位参与者",
+		"prev": "上一页"
+	},
+	"parameters": {
+		"askDataUsage": "任务完成后向学生询问数据使用问题",
+		"getFromTemplate": "从模板获取参数",
+		"noParameters": "该模板不包含任何参数。",
+		"participationSettings": "参与设置",
+		"subtitle": "字幕",
+		"taskParameters": "任务参数",
+		"templateParameters": "模板参数",
+		"uploadLabjs": "请先上传 lab.js json 文件",
+		"versionId": "版本 ID"
+	},
+	"parametersTab": "参数",
+	"participant": {
+		"goBack": "← 返回"
+	},
+	"participantInfo": {
+		"age": "年龄",
+		"agreedToSave": "同意保存信息以供将来研究",
+		"betweenSubjectCondition": "受试者间条件",
+		"birthday": "生日",
+		"englishQuestion": "您是否理解用英语写的基本指令？",
+		"irbConsent": "IRB同意决定",
+		"kidName": "您的姓名：",
+		"no": "不",
+		"parentEmail": "家长邮箱：",
+		"parentName": "家长姓名：",
+		"participantId": "参与者 ID",
+		"publicReadableId": "公共可读ID",
+		"studyRelatedInfo": "研究相关信息",
+		"yes": "是的",
+		"zipCode": "邮政编码"
+	},
+	"participantPage": "参与者页面",
+	"participantPageMain": {
+		"cloneOf": "克隆",
+		"noStudyHeader": "🤷🏻 您的项目没有附加任何研究。",
+		"noStudyMessage": "请告知你的老师，以便他们创建并关联。如需帮助，请联系技术支持：support.mindhive@nyu.edu。",
+		"projectChat": "项目聊天",
+		"save": "节省"
+	},
+	"participantResults": {
+		"completed": "完全的",
+		"condition": "健康）状况",
+		"dataAnalysis": "数据分析",
+		"dataPolicy": "数据政策",
+		"dataType": "数据类型",
+		"started": "已开始",
+		"study": "学习",
+		"studyStatus": "研究现状",
+		"taskId": "任务 ID",
+		"taskSubtitle": "任务副标题",
+		"taskTitle": "任务标题",
+		"title": "参与者结果"
+	},
+	"participantType": {
+		"guest": "客人",
+		"user": "用户"
+	},
+	"participate": "参加",
+	"participateAsGuest": "以嘉宾身份参与",
+	"preview": {
+		"description": "描述",
+		"timeToComplete": "完成时间",
+		"title": "标题",
+		"updateStudyImage": "更新研究图像",
+		"uploadPreview": "上传预览",
+		"uploadStudyImage": "上传学习图片"
+	},
+	"project": "项目",
+	"projectBoard": "项目委员会",
+	"proposal": {
+		"actions": "行动",
+		"copy": "复制",
+		"create": "创建新提案",
+		"dateCreated": "创建日期",
+		"delete": "删除",
+		"name": "提案名称",
+		"notSubmitted": "未提交",
+		"open": "打开",
+		"previewHeader": "提案模板预览",
+		"selectAsMain": "选择作为主要",
+		"status": "地位",
+		"submitted": "已提交"
+	},
+	"proposalAction": {
+		"appearInFeedbackCenter": "您的建议将出现在反馈中心。",
+		"cardsLocked": "提案中包含的卡片将被锁定。您的老师可以解锁它们。",
+		"comments": "评论",
+		"completeAllBeforeSubmit": "提交之前，请确保下面列出的所有卡片都标记为“已完成”。",
+		"completeAllRequired": "在提交您的提案以获得反馈之前，请填写所有必需的卡片。",
+		"feedbackCenterPreview": "您的提案将在反馈中心以以下方式显示",
+		"lockedForFeedback": "该提案已被锁定，无法获取反馈",
+		"notStarted": "未开始",
+		"readyToSubmit": "该提案已准备好提交反馈！",
+		"submitFor": "提交 {{title}}",
+		"submitForFeedbackIntro": "提交提案以获取反馈后：",
+		"submitForTitle": "提交您对 {{name}} 的提案",
+		"submittedForReview": "该提案已提交审查",
+		"unlockedForFeedback": "该提案已解锁，可供反馈"
+	},
+	"proposalBoard": {
+		"allowAddingCards": "允许添加新卡",
+		"allowAddingSections": "允许添加新部分",
+		"allowMovingCards": "允许移动卡片",
+		"allowMovingSections": "允许移动部分",
+		"createYourStudyProposal": "在此创建您的研究计划以开始您的研究之旅",
+		"descriptionPlaceholder": "输入项目板描述",
+		"myProjectBoard": "我的项目板",
+		"publicTemplate": "公共模板",
+		"save": "节省",
+		"saving": "保存",
+		"titlePlaceholder": "输入项目板标题"
+	},
+	"proposalPage": {
+		"preview": "预览",
+		"previewInfo": "在编辑模式下标记为“完成”的卡片内容将以预览模式出现在这里，显示审阅者将看到的内容。",
+		"submittedLocked": "提案已提交并锁定🔒"
+	},
+	"proposalSelector": {
+		"linkToProposal": "提案链接",
+		"selectCard": "选择卡"
+	},
+	"resource": "资源",
+	"resources": "资源",
+	"resourcesCards": {
+		"header": "资源"
+	},
+	"review": "审查",
+	"reviewDetail": {
+		"exit": "出口",
+		"individualReview": "个人评论",
+		"synthesis": "合成"
+	},
+	"reviewProposal": {
+		"feedback": "反馈",
+		"instruction": "一旦您提交您的提案或研究，您的评论就会出现在这里。"
+	},
+	"reviewTabs": {
+		"peerFeedback": "同行反馈",
+		"projectReportFeedback": "项目报告反馈",
+		"proposalFeedback": "提案反馈"
+	},
+	"scoringSurvey": "评分说明（仅适用于调查）",
+	"section": {
+		"addCard": "添加卡片",
+		"card": "卡片",
+		"cards": "牌",
+		"deleteSectionConfirm": "您确定要删除此提案部分吗？此部分中的所有卡片也将被删除。此操作无法撤消。",
+		"newCard": "新卡",
+		"newTitlePrompt": "请输入新标题"
+	},
+	"selector": {
+		"basicBlocks": {
+			"description": "想要为参与者添加<strong>自定义说明</strong>或在研究过程中<strong>嵌入链接和/或视频</strong>吗？请选择并编辑基本区块",
+			"title": "基本块"
+		},
+		"filter": {
+			"createdByAnyone": "由任何人创建",
+			"myFavorite": "我最喜欢的",
+			"ownedByMe": "属于我"
+		},
+		"searchPlaceholder": "🔍 搜索",
+		"studyDesign": {
+			"betweenSubjects": "受试者间设计",
+			"description": "创建受试者间设计",
+			"title": "研究设计"
+		},
+		"surveys": {
+			"buildOwn": "找不到工具来衡量你的学习内容？借助调查问卷构建器，在老师的帮助下，构建你自己的调查问卷：",
+			"description": "想要通过<strong>自我报告</strong>来<strong>衡量参与者的态度、经历或观点</strong>吗？从这个经过验证的调查库中选择吧！",
+			"title": "调查"
+		},
+		"tasks": {
+			"description": "想要通过让参与者<strong>完成一项活动</strong>来<strong>测量某个概念或变量</strong>吗？请从这组经过验证的任务中选择",
+			"title": "任务"
+		},
+		"templates": {
+			"description": "不想从头开始？选择并编辑<strong>预制研究设计</strong>，使用本模板库中的模板之一",
+			"title": "模板"
+		}
+	},
+	"selectWhichToClone": "选择您想要克隆的 {{taskType}}。",
+	"settingsBlock": {
+		"acceptParticipants": "接受参与者",
+		"acceptParticipantsDesc": "在研究页面上显示“参与”按钮，并允许访问者参与您的研究",
+		"allowGuestParticipation": "允许来宾参与",
+		"allowGuestParticipationDesc": "访问者可以作为客人参与您的研究。",
+		"allowMultipleRetakes": "允许多次重考",
+		"allowMultipleRetakesDesc": "允许参与者多次重新完成任务或调查",
+		"askForConsent": "征求参与者的同意",
+		"askForConsentDesc": "参观者将收到同意书，并在参与之前征求同意",
+		"askForSonaId": "索取参与者的 NYU SONA ID",
+		"askForSonaIdDesc": "要求参与者提供 NYU SONA ID",
+		"askForZip": "询问参与者的邮政编码",
+		"askForZipDesc": "访问者在加入研究时将被要求输入邮政编码",
+		"autoLaunch": "自动启动研究",
+		"autoLaunchDesc": "加入研究后，参与者将自动进入第一个任务",
+		"connectExternalDevices": "连接到外部设备",
+		"connectExternalDevicesDesc": "在任务期间显示外部设备的插件",
+		"emailNotifications": "电子邮件通知提示",
+		"emailNotificationsDesc": "每次任务/调查后显示电子邮件通知提示",
+		"nycStudents": "纽约市学生",
+		"nycStudentsDesc": "询问参与者是否是纽约市公立学校的学生",
+		"off": "离开",
+		"on": "在",
+		"onlyOver18": "仅允许 18 岁以上的参与者",
+		"onlyOver18Desc": "仅允许 18 岁以上的参与者参加本研究",
+		"onlyTeachersCanEditIRB": "只有教师、科学家和管理员可以添加或编辑 IRB 表格。"
+	},
+	"share": {
+		"customizeBelow": "在下面自定义您的学习网址",
+		"customizeUrl": "自定义网址",
+		"customizeUrlDesc": "自定义您的学习网址",
+		"linkCopied": "链接已复制",
+		"off": "离开",
+		"on": "在",
+		"shareYourStudy": "分享你的学习",
+		"studyUrl": "研究网址",
+		"tip": "提示：避免在 URL 中使用空格。例如，使用短划线。"
+	},
+	"sharing": {
+		"collaboratorsOn": "{{taskType}} 上的协作者"
+	},
+	"sharingCard": {
+		"collective": "集体",
+		"individual": "个人",
+		"selectType": "选择类型"
+	},
+	"sharingTab": "共享",
+	"start": {
+		"header": "开始构建你的研究",
+		"message": "您现在可以或稍后在学习设置中将您的学习与课程联系起来。"
+	},
+	"startMindHiveProject": "启动您的 MindHive 项目",
+	"startStudyFromScratch": "从头开始研究",
+	"status": {
+		"collectingData": "收集数据",
+		"dataCollectionCompleted": "数据收集完成",
+		"inReview": "正在审核中",
+		"placeholder": "学习版本",
+		"readyForReview": "准备审核",
+		"reviewed": "已审核",
+		"submittedAsProposal": "作为提案提交",
+		"title": "研究现状",
+		"workInProgress": "正在进行的工作"
+	},
+	"statusCard": {
+		"comments": "评论",
+		"completed": "完全的",
+		"helpNeeded": "需要帮助",
+		"inProgress": "进行中",
+		"needsRevision": "需要修改",
+		"notStarted": "未开始",
+		"setStatus": "关闭前设置状态"
+	},
+	"studiesIHaventParticipatedIn": "我未曾参与的研究",
+	"studiesIParticipatedIn": "我参与的研究",
+	"study": "学习",
+	"studyBuilder": "学习建设者",
+	"studyDescription": "研究是指具有研究问题的研究项目。它可以包含多个任务和/或调查。",
+	"studyManager": {
+		"assignToExistingStudy": "分配至现有研究",
+		"assignToStudy": "分配到学习",
+		"cancel": "取消",
+		"chooseExistingStudy": "选择一项现有研究分配给该项目。",
+		"collaborators": "合作者：",
+		"collaboratorStudies": "合作者研究",
+		"confirm": "确认",
+		"confirmStudyConnection": "确认学习联系",
+		"confirmStudyConnectionDesc": "您确定要将此研究 {{action}} 添加到项目“{{project}}”吗？此操作可能会影响相关数据。",
+		"connect": "连接",
+		"connectedToProject": "连接到项目：{{project}}",
+		"createNewStudy": "创建新研究",
+		"createNewStudyToConnect": "创建一项新研究来连接到该项目。",
+		"createStudy": "创建研究",
+		"disconnect": "断开",
+		"enterNewStudyName": "输入新研究的名称",
+		"mainProjectStudy": "主要项目研究",
+		"manageStudies": "管理研究 ({{count}})",
+		"manageStudiesFor": "管理 {{username}} 的研究",
+		"mentors": "导师：",
+		"noCollaboratorStudiesAssigned": "未指定合作者研究",
+		"none": "没有任何",
+		"noProjectAssigned": "尚未分配项目。请在管理研究之前使用项目管理器创建或分配项目。",
+		"noStudyConnected": "目前尚未关联任何研究。请使用以下选项分配或创建新研究。",
+		"notAssignedToAnyStudies": "该学生未被指定为任何研究的合作者。",
+		"project": "项目",
+		"reassign": "重新分配",
+		"reassignStudy": "重新分配研究",
+		"reassignToAnotherStudy": "重新分配到另一项研究",
+		"removeCollaborator": "移除协作者身份",
+		"selectAStudy": "选择一项研究",
+		"selectDifferentStudy": "选择不同的研究来连接到该项目。",
+		"title": "标题：",
+		"unknownProject": "未知项目",
+		"viewCreateAssign": "查看、创建或分配学生的学习内容",
+		"viewStudy": "查看研究"
+	},
+	"submit": "提交",
+	"submitStudy": {
+		"appearInFeedbackCenter": "您的研究将出现在反馈中心。",
+		"completeAllRequired": "在提交您的提案以获得反馈之前，请填写所有必需的卡片。",
+		"dataCollection": "数据收集",
+		"lockedForParticipation": "该研究已被锁定，无法参与",
+		"readyToSubmit": "该研究已准备好提交反馈！",
+		"studyUrl": "研究网址",
+		"studyWasSubmitted": "该研究已提交",
+		"submitFor": "提交 {{title}}",
+		"submitForDataCollection": "提交您的研究以进行数据收集",
+		"submitForFeedbackIntro": "提交研究以获得反馈后：",
+		"submittedForReview": "该提案已提交审查",
+		"unlockedForParticipation": "该研究已解锁，可供参与"
+	},
+	"surveyBuilder": {
+		"addFirstPage": "添加您的第一页",
+		"addPage": "+",
+		"deletePage": "删除此页面",
+		"page": "页码}}"
+	},
+	"surveyDescription": "在调查中，参与者会被问及关于他们自己、他们的行为或感受的问题。",
+	"tabs": {
+		"addTab": "添加标签",
+		"newTab": "新标签页"
+	},
+	"taskDescription": "在一项任务中，要求参与者根据他们看到或听到的内容执行特定的操作（例如，按下按钮）。",
+	"taskModal": {
+		"addToStudy": "添加至学习",
+		"close": "关闭",
+		"createCopy": "创建副本",
+		"preview": "预览 {{taskType}}"
+	},
+	"teacherExplicitInstruction": "（仅当您的老师明确告诉您这样做时才选择此选项）",
+	"template": {
+		"chooseType": "选择类型",
+		"collaborators": "模板的合作者",
+		"createdOn": "创建日期",
+		"defaultValue": "此参数的默认值",
+		"delete": "删除",
+		"deleteAndReupload": "删除并重新上传",
+		"description": "模板描述",
+		"download": "下载",
+		"example": "参数值示例",
+		"instructions": "为其他用户提供说明，以了解此参数在任务中的变化",
+		"labjsScript": "lab.js 脚本（JSON 文件）",
+		"noParameters": "lab.js 文件不包含任何参数。",
+		"number": "数字",
+		"options": "此参数的选项（每个选项占一行）",
+		"parameters": "模板参数",
+		"selectIcon": "选择图标",
+		"selectOne": "选择一个",
+		"selectType": "选择参数的类型",
+		"singleLine": "单行文本输入",
+		"surveyBuilder": "调查生成器",
+		"text": "文本",
+		"title": "模板标题",
+		"updatedOn": "最后更新日期",
+		"uploadLabjs": "请先上传 lab.js json 文件",
+		"vasBuilder": "增值服务构建器"
+	},
+	"templateTab": "模板",
+	"testAndCollect": "测试和收集",
+	"title": "学习构建器",
+	"typeCard": {
+		"article": "文章",
+		"assignment": "任务",
+		"lesson": "课",
+		"link": "关联",
+		"proposal": "提议",
+		"selectType": "选择类型",
+		"survey": "民意调查"
+	},
+	"unsavedChangesWarning": "您未保存的更改将会丢失。单击“取消”返回并保存更改。",
 	"updateStudy": {
 		"update": "更新"
 	},
-	"newProject": {
-		"backToHome": "← 返回首页",
-		"untitledProject": "未命名项目",
-		"noTemplatesTitle": "班级中没有项目板模板",
-		"noTemplatesSubtitle": "要开始一个项目，您需要一个项目板模板。您的老师可能没有为此班级关联模板。",
-		"selectClass": "选择班级",
-		"goBackHome": "返回首页",
-		"nameYourProject": "为您的项目命名",
-		"nameMessage": "给您的项目起个名字。这不是研究的标题，而是您想为工作区起的名字。",
-		"namePlaceholder": "我的项目名称是 ",
-		"addCollaborators": "添加协作者",
-		"alreadyAssociatedTitle": "您已经有一个与此班级关联的项目",
-		"alreadyAssociatedWarning": "除非您知道自己在做什么，否则请勿继续。",
-		"createProject": "创建项目",
-		"giveNameAlert": "请为您的项目命名"
+	"uploadFromLabjs": "从 lab.js 上传 {{develop}}",
+	"uploadSurveyScript": "如果您希望从 lab.js 上传您自己的调查脚本，请选择此选项。",
+	"uploadTaskScript": "如果您希望从 lab.js 上传您自己的任务脚本，请选择此选项。",
+	"variable": "多变的",
+	"vas": {
+		"addMore": "添加更多"
 	},
-	"preview": {
-		"updateStudyImage": "更新研究图片",
-		"uploadStudyImage": "上传研究图片",
-		"uploadPreview": "上传预览",
-		"title": "标题",
+	"version": {
+		"confirmDelete": "您确定要删除 {{versionName}} 吗？",
+		"createdOn": "创建日期",
+		"createNewVersion": "创建新版本",
+		"currentVersion": "当前版本",
+		"delete": "删除",
 		"description": "描述",
-		"timeToComplete": "完成时间"
+		"enterVersionName": "请输入版本名称",
+		"headerNote": "保存左侧屏幕上显示的不同研究设计",
+		"load": "加载",
+		"name": "姓名",
+		"noVersionSaved": "尚未保存任何学习版本。点击下方按钮，即可创建新版本。",
+		"placeholder": "学习版本",
+		"title": "学习版"
 	},
-	"tabs": {
-		"addTab": "添加标签页",
-		"newTab": "新标签页"
+	"viewer": {
+		"afterParticipation": "参与者在完成 {{taskType}}<u>之后</u>会看到什么",
+		"aggregateVariables": "聚合变量",
+		"aggregateVariablesDesc": "完成 {{taskType}} 后，这些数据会自动写入 csv 文件",
+		"background": "背景",
+		"beforeParticipation": "参与者在执行 {{taskType}} 之前看到的内容",
+		"customize": "定制",
+		"defaultValues": "显示默认值（可以克隆 {{taskType}} 并修改它们）",
+		"duration": "期间",
+		"format": "格式",
+		"freeTextInput": "自由文本输入",
+		"likertScale": "李克特量表",
+		"mobileCompatible": "兼容移动设备",
+		"moreInfo": "更多信息",
+		"parameters": "参数",
+		"preview": "预览 {{taskType}}",
+		"resources": "资源",
+		"scoring": "得分",
+		"screenshot": "截屏",
+		"selectMany": "选择多项",
+		"selectOne": "选择一个",
+		"surveyParameters": "勘测参数",
+		"text": "文本",
+		"tweakableFeatures": "此 {{taskType}} 的以下功能可以进行调整：",
+		"visualAnalogueScale": "视觉模拟评分法"
 	},
-	"consentSelector": {
-		"typeConsentProtocol": "输入知情同意协议"
-	},
-	"settingsBlock": {
-		"acceptParticipants": "接受参与者",
-		"acceptParticipantsDesc": "在研究页面显示'参与'按钮，并允许访客参与您的研究",
-		"allowGuestParticipation": "允许访客参与",
-		"allowGuestParticipationDesc": "访客可以作为嘉宾参与您的研究。",
-		"askForConsent": "请求参与者同意",
-		"askForConsentDesc": "访客将看到同意表，并在参与前被要求同意",
-		"onlyTeachersCanEditIRB": "只有教师、科学家和管理员可以添加或编辑 IRB 表单。",
-		"askForZip": "请求参与者邮编",
-		"askForZipDesc": "访客在加入研究时将被要求输入他们的邮编",
-		"autoLaunch": "自动启动研究",
-		"autoLaunchDesc": "参与者加入研究后将自动进入第一个任务",
-		"allowMultipleRetakes": "允许多次重做",
-		"allowMultipleRetakesDesc": "允许参与者多次重做任务或调查",
-		"emailNotifications": "电子邮件通知提示",
-		"emailNotificationsDesc": "每个任务/调查后显示电子邮件通知提示",
-		"nycStudents": "纽约市学生",
-		"nycStudentsDesc": "询问参与者是否是纽约市公立学校的学生",
-		"askForSonaId": "请求参与者 NYU SONA ID",
-		"askForSonaIdDesc": "请求参与者提供 NYU SONA ID",
-		"onlyOver18": "仅允许 18 岁以上参与者",
-		"onlyOver18Desc": "仅允许 18 岁以上的参与者参与此研究",
-		"connectExternalDevices": "连接外部设备",
-		"connectExternalDevicesDesc": "在任务期间显示外部设备插件",
-		"on": "开",
-		"off": "关"
-	},
-	"share": {
-		"shareYourStudy": "分享你的研究",
-		"studyUrl": "研究链接",
-		"customizeBelow": "在下方自定义你的研究链接",
-		"customizeUrl": "自定义链接",
-		"customizeUrlDesc": "自定义你的研究链接",
-		"tip": "提示：避免在链接中使用空格。请用短横线代替，例如。",
-		"linkCopied": "链接已复制",
-		"on": "开",
-		"off": "关"
-	},
-	"participantPageMain": {
-		"cloneOf": "克隆 ",
-		"projectChat": "项目聊天",
-		"save": "保存",
-		"noStudyHeader": "🤷🏻 您的项目没有附加研究。",
-		"noStudyMessage": "请告知您的老师，以便他们可以创建一个并关联。如果您需要帮助，请联系技术支持 support.mindhive@nyu.edu。"
-	},
-	"board": {
-		"loading": "正在加载...",
-		"error": "错误！{{message}}"
-	}
+	"visualize": "可视化",
+	"whatWouldYouLikeToDevelop": "您想开发什么？"
 }

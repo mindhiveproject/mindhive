@@ -1,5 +1,6 @@
 import { useQuery, useMutation } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
+import useTranslation from "next-translate/useTranslation";
 
 import { UPDATE_PROJECT_BOARD } from "../../../../../../Mutations/Proposal";
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
@@ -68,6 +69,8 @@ export default function Proposal({
   cardId,
   proposalCard,
 }) {
+  const { t } = useTranslation("builder");
+
   // find the current section for preview
   const currentSections = proposal?.sections?.filter((section) =>
     section?.cards.map((card) => card?.type).includes(proposalCard?.type)
@@ -148,7 +151,7 @@ export default function Proposal({
       },
     });
     if (res?.data?.updateProposalBoard?.id) {
-      alert("The proposal was submitted for review");
+      alert(t("proposalAction.submittedForReview", "The proposal was submitted for review"));
     }
   };
 
@@ -163,9 +166,9 @@ export default function Proposal({
     });
     if (res?.data?.updateProposalBoard?.id) {
       if (isFeedbackLocked) {
-        alert("The proposal was unlocked for feedback");
+        alert(t("proposalAction.unlockedForFeedback", "The proposal was unlocked for feedback"));
       } else {
-        alert("The proposal was locked for feedback");
+        alert(t("proposalAction.lockedForFeedback", "The proposal was locked for feedback"));
       }
     }
   };
@@ -178,7 +181,7 @@ export default function Proposal({
         tab={tab}
         proposalId={proposalId}
         cardId={cardId}
-        saveBtnName={`Submit for ${cardTypes[proposalCard?.type].title}`}
+        saveBtnName={t("proposalAction.submitFor", { title: cardTypes[proposalCard?.type].title }, `Submit for ${cardTypes[proposalCard?.type].title}`)}
         saveBtnFunction={() => {
           submitProposal();
         }}
@@ -198,7 +201,7 @@ export default function Proposal({
             </div>
 
             <div className="subtitle">
-              This is how your proposal will appear in the Feedback Center
+              {t("proposalAction.feedbackCenterPreview", "This is how your proposal will appear in the Feedback Center")}
             </div>
             <div className="cards">
               {cards?.map((card) => (
@@ -224,7 +227,7 @@ export default function Proposal({
               <>
                 <div className="iconTitle">
                   <img src="/assets/icons/eye.svg" />
-                  <div className="title">Comments</div>
+                  <div className="title">{t("proposalAction.comments", "Comments")}</div>
                 </div>
 
                 <div className="reviews">
@@ -245,27 +248,24 @@ export default function Proposal({
             ) : (
               <>
                 <div className="title">
-                  Submit your proposal for{" "}
-                  {submitOptions[proposalCard.type]?.name}
+                  {t("proposalAction.submitForTitle", {
+                    name: submitOptions[proposalCard.type]?.name,
+                  }, `Submit your proposal for ${submitOptions[proposalCard.type]?.name}`)}
                 </div>
 
                 <div className="subtitle">
-                  Once you submit your proposal for feedback:
+                  {t("proposalAction.submitForFeedbackIntro", "Once you submit your proposal for feedback:")}
                   <ul>
-                    <li>Your proposal will appear in the Feedback Center.</li>
+                    <li>{t("proposalAction.appearInFeedbackCenter", "Your proposal will appear in the Feedback Center.")}</li>
                     {submitOptions[proposalCard.type]?.description && (
                       <li>{submitOptions[proposalCard.type]?.description}</li>
                     )}
-                    <li>
-                      The cards that are included in the Proposal will be
-                      locked. Your teacher can unlock them.
-                    </li>
+                    <li>{t("proposalAction.cardsLocked", "The cards that are included in the Proposal will be locked. Your teacher can unlock them.")}</li>
                   </ul>
                 </div>
 
                 <div className="subtitle">
-                  Please make sure all cards listed below are marked as
-                  “completed” before you submit.
+                  {t("proposalAction.completeAllBeforeSubmit", "Please make sure all cards listed below are marked as “completed” before you submit.")}
                 </div>
 
                 <div className="lists">
@@ -280,7 +280,7 @@ export default function Proposal({
                         <div>
                           <div className="listTitle">{card?.title}</div>
                           <div className="listSubtitle">
-                            {card?.settings?.status || "Not started"}
+                            {card?.settings?.status || t("proposalAction.notStarted", "Not started")}
                           </div>
                         </div>
                       </div>
@@ -290,12 +290,11 @@ export default function Proposal({
 
                 {allCardsCompleted ? (
                   <div className="subtitle">
-                    The proposal is ready to be submitted for feedback!
+                    {t("proposalAction.readyToSubmit", "The proposal is ready to be submitted for feedback!")}
                   </div>
                 ) : (
                   <div className="subtitle warning">
-                    Please complete all required cards before submitting your
-                    proposal for feedback.
+                    {t("proposalAction.completeAllRequired", "Please complete all required cards before submitting your proposal for feedback.")}
                   </div>
                 )}
               </>
@@ -305,87 +304,4 @@ export default function Proposal({
       </StyledActionPage>
     </>
   );
-}
-
-{
-  /* <div className="reviews">
-              <h2>Feedback</h2>
-              <p>
-                Once you submit your proposal or study, your reviews will appear
-                here.
-              </p>
-
-              <div>
-                {project?.reviews &&
-                project?.reviews.filter(
-                  (review) => review.stage === "SUBMITTED_AS_PROPOSAL"
-                ).length ? (
-                  <div className="reviewsCards">
-                    {project?.reviews
-                      .filter(
-                        (review) => review.stage === "SUBMITTED_AS_PROPOSAL"
-                      )
-                      .sort((a, b) => {
-                        return b?.upvotedBy?.length - a?.upvotedBy?.length;
-                      })
-                      .map((review, num) => (
-                        <Comment key={num} number={num + 1} review={review} />
-                      ))}
-                  </div>
-                ) : (
-                  <div className="reviewsPlaceholder">
-                    <p>
-                      <strong>You don’t have any reviews yet</strong>
-                    </p>
-                    <p>Reviews will appear here once you submit</p>
-                  </div>
-                )}
-              </div>
-            </div> */
-}
-
-{
-  /* <div className="submit">
-            <h2>Ready to receive feedback on your proposal?</h2>
-            <p>
-              Once you submit your proposal for review, your proposal will
-              become available to peer reviews from other participating schools
-              to view and review.
-            </p>
-            <p>
-              {proposal?.submitProposalStatus === "SUBMITTED" && (
-                <strong>
-                  You have already submitted your proposal for review.
-                </strong>
-              )}
-            </p>
-            <div className="buttons">
-              {proposal?.submitProposalStatus === "SUBMITTED" && (
-                <Link href={`/dashboard/review`}>
-                  <div className="submitBtn view">
-                    <img src="/assets/icons/review/brain-and-head-green.svg" />
-                    <div>View submission</div>
-                  </div>
-                </Link>
-              )}
-
-              {proposal?.submitProposalStatus !== "SUBMITTED" && (
-                <div
-                  className="submitBtn active"
-                  onClick={() => {
-                    if (
-                      confirm(
-                        "Are you sure you want to submit this proposal? You will not be able to undo it later."
-                      )
-                    ) {
-                      submitProposal();
-                    }
-                  }}
-                >
-                  <img src="/assets/icons/review/brain-and-head.svg" />
-                  <div>Submit Proposal</div>
-                </div>
-              )}
-            </div>
-          </div> */
 }

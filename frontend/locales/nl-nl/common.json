@@ -1,43 +1,43 @@
 {
-  "auth": {
-    "email": "E-mail",
-    "password": "Wachtwoord",
-    "login": "Inloggen",
-    "username": "Gebruikersnaam",
-    "requestReset": "Reset aanvragen",
-    "checkYourMail": "Controleer je e-mail",
-    "forgotPassword": "Wachtwoord vergeten?"
-  },
-  "signup": {
-    "title": "Welke rol beschrijft jou het beste?",
-    "participant": "Studiedeelnemer",
-    "student": "Student",
-    "scientist": "Wetenschapper",
-    "teacher": "Docent",
-    "haveAccount": "Heb je al een account?",
-    "loginHere": "Log hier in"
-  },
-  "navigation": {
-    "about": "Over",
-    "dashboard": "Dashboard",
-    "discover": "Ontdekken",
-    "login": "Inloggen",
-    "signup": "Registreren",
-    "studies": "Studies",
-    "tasks": "Taken en enquêtes",
-    "teachers": "Docenten"
-  },
-  "studies": "Studies",
-  "tasksAndSurveys": "Taken en Enquêtes",
-  "discoverHeader": "Ontdek studies, taken en enquêtes",
-  "discoverDescription": "Blader door onze collectie studies, taken en enquêtes gemaakt door middelbare scholieren in het MindHive-programma en partners. Neem deel aan studies of bekijk taken en enquêtes.",
-  "featured": "Uitgelicht",
-  "goToStudy": "Ga naar studie",
-  "languages": {
-    "title": "Taalinstellingen",
-    "description": "Je kunt hieronder je taalinstellingen aanpassen en wijzigen.",
-    "displayLanguage": "Weergavetaal",
-    "updatePreferences": "Voorkeuren bijwerken",
-    "backToSettings": "Terug naar instellingen"
-  }
+	"auth": {
+		"checkYourMail": "Controleer uw e-mail",
+		"email": "E-mail",
+		"forgotPassword": "Wachtwoord vergeten?",
+		"login": "Login",
+		"password": "Wachtwoord",
+		"requestReset": "Verzoek om reset",
+		"username": "Gebruikersnaam"
+	},
+	"discoverDescription": "Blader door onze collectie studies, opdrachten en enquêtes, gemaakt door middelbare scholieren in het MindHive-programma en partnerwetenschappers. Neem deel aan studies of bekijk een voorbeeld van opdrachten en enquêtes.",
+	"discoverHeader": "Ontdek studies, opdrachten en enquêtes",
+	"featured": "Uitgelicht",
+	"goToStudy": "Ga studeren",
+	"languages": {
+		"backToSettings": "Terug naar Instellingen",
+		"description": "Hieronder kunt u uw taalinstellingen aanpassen en wijzigen.",
+		"displayLanguage": "Weergavetaal",
+		"title": "Taalinstellingen",
+		"updatePreferences": "Voorkeuren bijwerken"
+	},
+	"navigation": {
+		"about": "Over",
+		"dashboard": "Dashboard",
+		"discover": "Ontdekken",
+		"login": "Inloggen",
+		"signup": "Aanmelden",
+		"studies": "Onderzoeken",
+		"tasks": "Taken en enquêtes",
+		"teachers": "Leraren"
+	},
+	"signup": {
+		"haveAccount": "Heeft u al een account?",
+		"loginHere": "Meld je hier aan",
+		"participant": "Deelnemer aan het onderzoek",
+		"scientist": "Wetenschapper",
+		"student": "Student",
+		"teacher": "Docent",
+		"title": "Welke rol beschrijft u het beste?"
+	},
+	"studies": "Onderzoeken",
+	"tasksAndSurveys": "Taken en enquêtes"
 }

@@ -4,6 +4,7 @@ import { useMutation } from "@apollo/client";
 import sortBy from "lodash/sortBy";
 import { Container } from "react-smooth-dnd";
 import { v1 as uuidv1 } from "uuid";
+import useTranslation from "next-translate/useTranslation";
 
 import Card from "./Card";
 
@@ -30,6 +31,7 @@ const Section = ({
   settings,
   submitStatuses,
 }) => {
+  const { t } = useTranslation("builder");
   const { cards } = section;
 
   const actionCards = cards
@@ -318,7 +320,7 @@ const Section = ({
             <img
               src="/assets/icons/proposal/edit.svg"
               onClick={() => {
-                const title = prompt("Please enter a new title");
+                const title = prompt(t("section.newTitlePrompt", "Please enter a new title"));
                 if (title != null) {
                   onUpdateSection({
                     variables: {
@@ -336,8 +338,7 @@ const Section = ({
         </div>
         {!isPreview && (
           <div className="infoLine">
-            {sectionSummary?.numOfCards} card
-            {sectionSummary?.numOfCards == 1 ? "" : "s"}
+            {sectionSummary?.numOfCards} {sectionSummary?.numOfCards == 1 ? t("section.card", "card") : t("section.cards", "cards")}
           </div>
         )}
       </div>
@@ -412,7 +413,7 @@ const Section = ({
 
       {!isPreview && settings?.allowAddingCards && (
         <div className="newInput">
-          <div>New card</div>
+          <div>{t("section.newCard", "New card")}</div>
 
           <input
             id={`input-${section.id}`}
@@ -428,7 +429,7 @@ const Section = ({
               addCardMutation(section.id, cardName);
             }}
           >
-            Add card
+            {t("section.addCard", "Add card")}
           </div>
         </div>
       )}
@@ -444,7 +445,10 @@ const Section = ({
               }
               if (
                 confirm(
-                  "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone."
+                  t(
+                    "section.deleteSectionConfirm",
+                    "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone."
+                  )
                 )
               ) {
                 deleteSection(section.id);

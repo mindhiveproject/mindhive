@@ -1,29 +1,29 @@
 {
-  "classNetworks": "Réseaux de classe",
-  "createdByOn": "Créé par {{username}} le {{date}}",
-  "classes": "Classes",
-  "deleteYourClass": "Supprimer votre classe",
-  "deleteClassWarning": "La suppression de votre classe supprimera définitivement votre classe dans la zone \"Mes Classes\". Cette action est irréversible.",
-  "noAccessTo": "Vous n'aurez pas accès à :",
-  "yourClass": "Votre classe",
-  "anyStudiesOrResults": "Toutes les études ou résultats générés par les étudiants de votre classe",
-  "studentsWillHaveAccessTo": "Vos étudiants auront accès à :",
-  "theirWorkspaceAndStudies": "Leur espace de travail et toutes les études, tâches ou enquêtes qu'ils ont créées pendant votre classe",
-  "noteNewStudents": "Remarque : Les nouveaux étudiants ne pourront pas rejoindre votre classe",
-  "deleteClass": "Supprimer la classe",
-  "areYouSureDeleteClass": "Êtes-vous sûr de vouloir supprimer cette classe ?",
-  "typeDeleteToConfirm": "Tapez \"DELETE\" pour confirmer",
-  "delete": "Supprimer",
-  "cancel": "Annuler",
-  "pleaseTypeDelete": "Veuillez taper DELETE pour supprimer votre classe",
-  "studySpecific": {
-    "subtitle": "Subtitle",
-    "testId": "Test ID"
-  },
-  "create": {
-    "createHeader": "Ajouter une nouvelle classe",
-    "title": "Nom de la nouvelle classe",
-    "description": "Description de la nouvelle classe",
-    "create": "Créer une nouvelle classe"
-  }
-} 
+	"anyStudiesOrResults": "Toutes études ou résultats générés par les étudiants de votre classe",
+	"areYouSureDeleteClass": "Êtes-vous sûr de vouloir supprimer ce cours ?",
+	"cancel": "Annuler",
+	"classes": "Cours",
+	"classNetworks": "Réseaux de classes",
+	"create": {
+		"create": "Créer une nouvelle classe",
+		"createHeader": "Ajouter une nouvelle classe",
+		"description": "Nouvelle description de classe",
+		"title": "Nouveau nom de classe"
+	},
+	"createdByOn": "Créé par {{username}} le {{date}}",
+	"delete": "Supprimer",
+	"deleteClass": "Supprimer la classe",
+	"deleteClassWarning": "La suppression de votre cours entraînera sa suppression définitive dans la section « Mes cours ». Cette action est irréversible.",
+	"deleteYourClass": "Supprimez votre classe",
+	"noAccessTo": "Vous n'aurez pas accès à :",
+	"noteNewStudents": "Remarque : les nouveaux étudiants ne pourront pas rejoindre votre classe.",
+	"pleaseTypeDelete": "Veuillez taper SUPPRIMER pour supprimer votre classe",
+	"studentsWillHaveAccessTo": "Vos étudiants auront accès à :",
+	"studySpecific": {
+		"subtitle": "Sous-titre",
+		"testId": "ID de test"
+	},
+	"theirWorkspaceAndStudies": "Leur espace de travail et toutes les études, tâches ou enquêtes qu'ils ont créées pendant votre cours",
+	"typeDeleteToConfirm": "Tapez « SUPPRIMER » pour confirmer",
+	"yourClass": "Votre classe"
+}

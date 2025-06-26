@@ -43,7 +43,7 @@ export default function ProposalHeader({
         {!proposalBuildMode && (
           <div>
             <div className="titleEditBtn">
-              <h1>{t("proposalBoard.myProjectBoard", "My Project Board")}</h1>
+              <h1>{t("header.myProjectBoard", "My Project Board")}</h1>
               <Radio
                 toggle
                 checked={isPDF}
@@ -54,7 +54,7 @@ export default function ProposalHeader({
             </div>
 
             <p>
-              {t("proposalBoard.createYourStudyProposal", "Create your study proposal here to begin your research journey ")}
+              {t("header.createYourStudyProposal", "Create your study proposal here to begin your research journey ")}
             </p>
           </div>
         )}
@@ -71,7 +71,7 @@ export default function ProposalHeader({
                   onChange={handleChange}
                   required
                   className="title"
-                  placeholder={t("proposalBoard.titlePlaceholder", "Enter project board title")}
+                  placeholder={t("header.titlePlaceholder", "Enter project board title")}
                 />
               </label>
             </div>
@@ -85,7 +85,7 @@ export default function ProposalHeader({
                   onChange={handleChange}
                   rows="1"
                   className="description"
-                  placeholder={t("proposalBoard.descriptionPlaceholder", "Enter project board description")}
+                  placeholder={t("header.descriptionPlaceholder", "Enter project board description")}
                 />
               </label>
             </div>
@@ -102,7 +102,7 @@ export default function ProposalHeader({
                         checked={inputs.isTemplate}
                         onChange={toggleBoolean}
                       />
-                      <span>{t("proposalBoard.publicTemplate", "Public template")}</span>
+                      <span>{t("header.publicTemplate", "Public template")}</span>
                     </div>
                   </label>
                 </div>
@@ -134,7 +134,7 @@ export default function ProposalHeader({
                     checked={inputs?.settings?.allowMovingSections || false}
                     onChange={toggleSettingsBoolean}
                   />
-                  <span>{t("proposalBoard.allowMovingSections", "Allow moving sections")}</span>
+                  <span>{t("header.allowMovingSections", "Allow moving sections")}</span>
                 </div>
               </label>
             </div>
@@ -149,7 +149,7 @@ export default function ProposalHeader({
                     checked={inputs?.settings?.allowMovingCards || false}
                     onChange={toggleSettingsBoolean}
                   />
-                  <span>{t("proposalBoard.allowMovingCards", "Allow moving cards")}</span>
+                  <span>{t("header.allowMovingCards", "Allow moving cards")}</span>
                 </div>
               </label>
             </div>
@@ -164,7 +164,7 @@ export default function ProposalHeader({
                     checked={inputs?.settings?.allowAddingSections || false}
                     onChange={toggleSettingsBoolean}
                   />
-                  <span>{t("proposalBoard.allowAddingSections", "Allow adding new sections")}</span>
+                  <span>{t("header.allowAddingSections", "Allow adding new sections")}</span>
                 </div>
               </label>
             </div>
@@ -179,7 +179,7 @@ export default function ProposalHeader({
                     checked={inputs?.settings?.allowAddingCards || false}
                     onChange={toggleSettingsBoolean}
                   />
-                  <span>{t("proposalBoard.allowAddingCards", "Allow adding new cards")}</span>
+                  <span>{t("header.allowAddingCards", "Allow adding new cards")}</span>
                 </div>
               </label>
             </div>
@@ -198,7 +198,7 @@ export default function ProposalHeader({
                 const res = await updateProposal();
               }}
             >
-              {loading ? t("proposalBoard.saving", "Saving") : t("proposalBoard.save", "Save")}
+              {loading ? t("header.saving", "Saving") : t("header.save", "Save")}
             </button>
           </div>
         )}

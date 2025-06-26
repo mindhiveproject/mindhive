@@ -1,169 +1,169 @@
 {
-  "createProfile": "Profiel aanmaken",
-  "steps": {
-    "profileType": "1. Profieltype",
-    "aboutMe": "2. Over mij",
-    "interests": "3. Interesses",
-    "complete": "4. Voltooien"
-  },
-  "profileType": {
-    "description": "Stel uw MindHive-profiel in door een van de onderstaande opties te selecteren. Maakt u een persoonlijk profiel voor uzelf aan, of richt u een pagina in voor uw organisatie?",
-    "chooseType": "Kies uw profieltype",
-    "organization": {
-      "title": "Organisatie",
-      "description": "Dit profiel is het meest geschikt wanneer u een account aanmaakt om een gemeenschapsorganisatie of bedrijf te vertegenwoordigen."
-    },
-    "individual": {
-      "title": "Individueel",
-      "description": "Dit profiel is het meest geschikt wanneer u een account voor uzelf aanmaakt."
-    }
-  },
-  "navigation": {
-    "previous": "Vorige",
-    "next": "Volgende"
-  },
-  "basic": {
-    "description": "Vul de volgende items in om uw profiel aan te maken en contact te maken met de MindHive-gemeenschap.",
-    "title": "Basisinformatie",
-    "subtitle": "Uw basisinformatie helpt de MindHive-gemeenschap u beter te leren kennen. Dit omvat wie u bent, waar u zich bevindt en hoe u eruitziet.",
-    "profilePhoto": "Profielfoto",
-    "firstName": "Voornaam",
-    "lastName": "Achternaam",
-    "email": "E-mail",
-    "pronouns": "Voornaamwoorden",
-    "pronounsOptions": {
-      "she": "Zij/Haar",
-      "he": "Hij/Hem",
-      "they": "Hen/Hun"
-    },
-    "location": "Locatie",
-    "organization": "Organisatie indien van toepassing",
-    "tagline": "Tagline",
-    "saveChanges": "Wijzigingen opslaan"
-  },
-  "avatar": {
-    "title": "Maak uw avatar",
-    "upload": "Uploaden",
-    "error": "Upload een afbeelding"
-  },
-  "background": {
-    "title": "Achtergrond",
-    "description": "Laten we u beter leren kennen! Vul uw achtergrondinformatie in zodat anderen in de MindHive-gemeenschap gemakkelijker contact met u kunnen maken.",
-    "officialBio": {
-      "title": "Officiële biografie",
-      "description": "Beschrijf in ongeveer 100 woorden uw expertise, ervaring en educatieve achtergrond voor een middelbare schoolpubliek."
-    },
-    "unofficialBio": {
-      "title": "Informele biografie",
-      "description": "Beschrijf in een paar zinnen uw reis die heeft geleid tot waar u nu professioneel staat. En kijk vooruit naar de komende 5 jaar of verder. Het doel is dat studenten begrijpen dat professionele levens niet altijd een rechte weg zijn en dat er toevalligheden, geluk en pech zijn, en soms meerdere carrièrepaden verborgen achter officiële biografieën die u misschien op de website van een wetenschapper leest."
-    },
-    "occupation": {
-      "title": "Beroep"
-    },
-    "education": {
-      "title": "Opleiding",
-      "institution": "Instelling",
-      "degree": "Diploma",
-      "addInstitution": "Voeg nog een instelling toe"
-    },
-    "languages": {
-      "title": "Taal",
-      "addLanguage": "Voeg nog een taal toe"
-    },
-    "saveChanges": "Wijzigingen opslaan"
-  },
-  "introduction": {
-    "title": "Introductievideo",
-    "description": "We zouden het geweldig vinden als u een introductievideo zou uploaden om te delen met studenten en andere MindHive-leden. U kunt deze gebruiken om een project te delen waarvan u denkt dat studenten er enthousiast over zouden kunnen worden.",
-    "videoNotSupported": "Uw browser ondersteunt de video-tag niet.",
-    "passion": {
-      "title": "Waar bent u momenteel gepassioneerd over?",
-      "description": "U kunt bijvoorbeeld kort een wetenschappelijk project beschrijven waar u aan werkt. Of u kunt ons vertellen over uw ervaring met het brengen van wetenschap naar het publiek. Dit is uw ruimte om te laten zien waar u momenteel aan werkt en hoe dit vorm geeft aan de expertise die u naar onze gemeenschap brengt."
-    },
-    "saveChanges": "Wijzigingen opslaan"
-  },
-  "videoUploader": {
-    "dragAndDrop": "Sleep een videobestand hierheen om te uploaden",
-    "selectFile": "Bestand selecteren",
-    "uploadProgress": "Upload voortgang: {{progress}}%",
-    "error": "Er is een fout opgetreden bij het uploaden van de video. Probeer het opnieuw.",
-    "invalidFile": "Selecteer een videobestand."
-  },
-  "preferences": {
-    "title": "Uw betrokkenheid",
-    "description": "Vul de volgende items in om ons te laten weten hoe u betrokken wilt zijn.",
-    "availability": {
-      "title": "Geef hieronder aan hoe u beschikbaar bent om met ons samen te werken (selecteer alle van toepassing zijnde opties).",
-      "async": {
-        "title": "Asynchroon",
-        "answeringQuestions": "Beantwoorden van vragen van studenten (op basis van uw profiel).",
-        "providingFeedback": "Feedback geven op studentenprojecten"
-      },
-      "sync": {
-        "title": "Synchroon",
-        "inPersonVisit": "Een bezoek brengen aan de klas om met programmastudenten over uw werk te praten (fysiek).",
-        "zoomVisit": "Een bezoek brengen aan de klas om met programmastudenten over uw werk te praten (via Zoom)."
-      }
-    },
-    "gradeLevel": {
-      "title": "Niveau",
-      "description": "Vertel ons over de niveaus waar u zich het meest comfortabel bij voelt als mentor. Selecteer alle van toepassing zijnde opties.",
-      "options": {
-        "middle": "Middelbare school",
-        "nine": "9 - 10 klas",
-        "eleven": "11 - 12 klas",
-        "no": "Geen voorkeur"
-      }
-    },
-    "groupPreference": {
-      "title": "Individueel versus Groep",
-      "description": "Heeft u voorkeur voor het ondersteunen van individuen of groepen tijdens mentorsessies? Selecteer alle van toepassing zijnde opties.",
-      "options": {
-        "individual": "Individueel",
-        "group": "Groep",
-        "no": "Geen voorkeur"
-      }
-    },
-    "classType": {
-      "title": "Type Klas",
-      "description": "Vertel ons over het type klas waar u het liefst mentor zou willen zijn. Selecteer alle van toepassing zijnde opties.",
-      "options": {
-        "accelerated": "Versneld",
-        "nonAccelerated": "Niet-versneld",
-        "ell": "ELL",
-        "no": "Geen voorkeur"
-      }
-    },
-    "saveChanges": "Wijzigingen opslaan"
-  },
-  "interests": {
-    "title": "Waar kunt u helpen?",
-    "description": "Met welke onderwerpen wilt u studenten ondersteunen? Selecteer enkele onderwerpen en interessegebieden uit de lijst hieronder om andere leden van de gemeenschap te laten weten waar u graag aan wilt bijdragen. Dit helpt ons om u te verbinden met studenten en collega's die uw passies delen."
-  },
-  "interestSelector": {
-    "searchTitle": "Zoek interesses",
-    "minMax": "Min 3, Max 10",
-    "placeholder": "Begin met typen om interesses te zoeken",
-    "suggestedTitle": "Voorgestelde interesses",
-    "add": "toevoegen",
-    "navButtons": {
-      "previous": "Vorige",
-      "complete": "Voltooien"
-    }
-  },
-  "myConnections": "Mijn connecties",
-  "connectWithPeople": "Verbind met mensen",
-  "connectSubtitle": "Zoek, ontdek en verbind met de MindHive-gemeenschap",
-  "searchPlaceholder": "Zoek op naam, onderwerp of interessegebied",
-  "usersPerPage": "Aantal gebruikers per pagina",
-  "officialBio": "Officiële bio",
-  "unofficialBio": "Onofficiële bio",
-  "introductionVideo": "Introductievideo",
-  "videoNotSupported": "Je browser ondersteunt het video-element niet.",
-  "passionNow": "Waar ben je momenteel gepassioneerd over?",
-  "availability": "Beschikbaarheid",
-  "asyncAnsweringQuestions": "Beantwoorden van vragen van studenten (op basis van je profiel).",
-  "asyncProvidingFeedback": "Feedback geven op studentenprojecten",
-  "syncInPersonVisit": "Een bezoek brengen aan de klas om met studenten over je werk te praten (fysiek).",
-  "syncZoomVisit": "Een bezoek brengen aan de klas om met studenten over je werk te praten (via Zoom)."
-} 
+	"asyncAnsweringQuestions": "Vragen van studenten beantwoorden (op basis van jouw profiel).",
+	"asyncProvidingFeedback": "Feedback geven op studentenprojecten",
+	"availability": "Beschikbaarheid",
+	"avatar": {
+		"error": "Upload een afbeelding",
+		"title": "Maak je avatar",
+		"upload": "Uploaden"
+	},
+	"background": {
+		"description": "Laten we je beter leren kennen! Vul je achtergrondinformatie in, zodat anderen in de MindHive-community gemakkelijker contact met je kunnen opnemen.",
+		"education": {
+			"addInstitution": "Voeg een andere instelling toe",
+			"degree": "Rang",
+			"institution": "Instelling",
+			"title": "Onderwijs"
+		},
+		"languages": {
+			"addLanguage": "Voeg een andere taal toe",
+			"title": "Taal"
+		},
+		"occupation": {
+			"title": "Bezigheid"
+		},
+		"officialBio": {
+			"description": "Beschrijf in ongeveer 100 woorden uw expertise, ervaring en opleidingsachtergrond voor een publiek van middelbare scholen.",
+			"title": "Officiële biografie"
+		},
+		"saveChanges": "Wijzigingen opslaan",
+		"title": "Achtergrond",
+		"unofficialBio": {
+			"description": "Beschrijf in een paar zinnen je reis die je heeft gebracht tot waar je nu bent, professioneel gezien. En kijk vooruit naar de komende vijf jaar of verder. Het doel is dat studenten begrijpen dat professionele levens niet altijd een rechte lijn volgen en dat er toevalligheden, geluk en pech zijn, en dat er soms meerdere carrièrepaden verborgen liggen achter officiële biografieën die je op de website van een wetenschapper kunt lezen.",
+			"title": "Onofficiële biografie"
+		}
+	},
+	"basic": {
+		"description": "Vul de volgende velden in om uw profiel aan te maken en verbinding te maken met de MindHive-community.",
+		"email": "E-mail",
+		"firstName": "Voornaam",
+		"lastName": "Achternaam",
+		"location": "Locatie",
+		"organization": "Organisatie indien van toepassing",
+		"profilePhoto": "Profielfoto",
+		"pronouns": "Voornaamwoorden",
+		"pronounsOptions": {
+			"he": "Hij/Hem",
+			"she": "Zij/Haar",
+			"they": "Zij/Hen"
+		},
+		"saveChanges": "Wijzigingen opslaan",
+		"subtitle": "Je basisgegevens helpen de MindHive-community je beter te leren kennen. Dit omvat wie je bent, waar je je bevindt en hoe je eruitziet.",
+		"tagline": "Slogan",
+		"title": "Basisgegevens"
+	},
+	"connectSubtitle": "Zoek, ontdek en maak contact met de MindHive-community",
+	"connectWithPeople": "Maak contact met mensen",
+	"createProfile": "Profiel aanmaken",
+	"interests": {
+		"description": "Met welke onderwerpen zou je studenten willen ondersteunen? Selecteer een aantal onderwerpen en interessegebieden uit de onderstaande lijst om andere communityleden te laten weten waar je graag een bijdrage aan wilt leveren. Zo kunnen we je in contact brengen met studenten en medestudenten die jouw passies delen.",
+		"title": "Waar kunt u helpen?"
+	},
+	"interestSelector": {
+		"add": "toevoegen",
+		"minMax": "Minimaal 3, maximaal 10",
+		"navButtons": {
+			"complete": "Compleet",
+			"previous": "Vorig"
+		},
+		"placeholder": "Begin met typen om te zoeken naar interesses",
+		"searchTitle": "Zoekinteresses",
+		"suggestedTitle": "Voorgestelde interesses"
+	},
+	"introduction": {
+		"description": "We zouden het geweldig vinden als je een introductievideo uploadt om te delen met studenten en andere MindHive-leden. Je kunt deze gebruiken om een ​​project te delen waarvan je denkt dat studenten er enthousiast over zullen zijn.",
+		"passion": {
+			"description": "Je kunt bijvoorbeeld kort een wetenschappelijk project beschrijven waar je aan werkt. Of je kunt ons vertellen over je ervaring met het delen van wetenschap met het publiek. Dit is jouw kans om te laten zien waar je momenteel aan werkt en hoe dit de expertise die je inbrengt in onze gemeenschap vormgeeft.",
+			"title": "Waar ben je momenteel gepassioneerd over?"
+		},
+		"saveChanges": "Wijzigingen opslaan",
+		"title": "Introductievideo",
+		"videoNotSupported": "Uw browser ondersteunt de videotag niet."
+	},
+	"introductionVideo": "Introductievideo",
+	"myConnections": "Mijn connecties",
+	"navigation": {
+		"next": "Volgende",
+		"previous": "Vorig"
+	},
+	"officialBio": "Officiële biografie",
+	"passionNow": "Waar ben je momenteel gepassioneerd over?",
+	"preferences": {
+		"availability": {
+			"async": {
+				"answeringQuestions": "Vragen van studenten beantwoorden (op basis van jouw profiel).",
+				"providingFeedback": "Feedback geven op studentenprojecten",
+				"title": "Asynchroon"
+			},
+			"sync": {
+				"inPersonVisit": "Een lesbezoek afleggen om met programmastudenten over je werk te praten (persoonlijk).",
+				"title": "Synchroon",
+				"zoomVisit": "Een lesbezoek afleggen om met programmastudenten over je werk te praten (via Zoom)."
+			},
+			"title": "Geef hieronder aan op welke manier u met ons wilt samenwerken (selecteer alle van toepassing zijnde opties)."
+		},
+		"classType": {
+			"description": "Vertel ons welk type klas je het liefst zou begeleiden. Selecteer alle antwoorden die van toepassing zijn.",
+			"options": {
+				"accelerated": "Versneld",
+				"ell": "ELL",
+				"no": "Geen voorkeur",
+				"nonAccelerated": "Niet versneld"
+			},
+			"title": "Klasse Type"
+		},
+		"description": "Vul de volgende velden in om ons te laten weten hoe betrokken u bent.",
+		"gradeLevel": {
+			"description": "Vertel ons over de klassen waarin je je het prettigst voelt om als mentor te ondersteunen. Selecteer alle antwoorden die van toepassing zijn.",
+			"options": {
+				"eleven": "11 - 12e klas",
+				"middle": "Middelbare school",
+				"nine": "9 - 10e klas",
+				"no": "Geen voorkeur"
+			},
+			"title": "Leerjaar"
+		},
+		"groupPreference": {
+			"description": "Geeft u er de voorkeur aan om individuen of groepen te ondersteunen in mentorschapssessies? Selecteer alle opties die van toepassing zijn.",
+			"options": {
+				"group": "Groep",
+				"individual": "Individueel",
+				"no": "Geen voorkeur"
+			},
+			"title": "Individueel versus groep"
+		},
+		"saveChanges": "Wijzigingen opslaan",
+		"title": "Uw betrokkenheid"
+	},
+	"profileType": {
+		"chooseType": "Kies uw profieltype",
+		"description": "Stel je MindHive-profiel in door een van de onderstaande opties te selecteren. Maak je een persoonlijk profiel voor jezelf aan of maak je een pagina aan voor je organisatie?",
+		"individual": {
+			"description": "Dit profiel is het meest geschikt als u een account voor uzelf aanmaakt.",
+			"title": "Individueel"
+		},
+		"organization": {
+			"description": "Dit profiel is het meest geschikt als u een account aanmaakt om een ​​maatschappelijke organisatie of bedrijf te vertegenwoordigen.",
+			"title": "Organisatie"
+		}
+	},
+	"searchPlaceholder": "Zoeken op naam, onderwerp of interessegebied",
+	"steps": {
+		"aboutMe": "2. Over mij",
+		"complete": "4. Voltooien",
+		"interests": "3. Belangen",
+		"profileType": "1. Profieltype"
+	},
+	"syncInPersonVisit": "Een lesbezoek afleggen om met programmastudenten over je werk te praten (persoonlijk).",
+	"syncZoomVisit": "Een lesbezoek afleggen om met programmastudenten over je werk te praten (via Zoom).",
+	"unofficialBio": "Onofficiële biografie",
+	"usersPerPage": "Aantal gebruikers per pagina",
+	"videoNotSupported": "Uw browser ondersteunt de videotag niet.",
+	"videoUploader": {
+		"dragAndDrop": "Sleep en zet het videobestand neer om te uploaden",
+		"error": "Er is een fout opgetreden bij het uploaden van de video. Probeer het opnieuw.",
+		"invalidFile": "Selecteer een videobestand.",
+		"selectFile": "Selecteer bestand",
+		"uploadProgress": "Uploadvoortgang: {{progress}}%"
+	}
+}

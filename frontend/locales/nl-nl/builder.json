@@ -1,580 +1,800 @@
 {
-	"proposal": {
-		"zeroState1": "Je hebt nog geen voorstellen gemaakt.",
-		"zeroState2": "Zodra je een voorstel maakt, verschijnt het hier.",
-		"create": "Maak een nieuw voorstel",
-		"name": "Voorstelnaam",
-		"dateCreated": "Aanmaakdatum",
-		"status": "Status",
-		"actions": "Acties",
-		"submitted": "Ingediend",
-		"notSubmitted": "Niet ingediend",
-		"open": "Openen",
-		"copy": "Kopiëren",
-		"selectAsMain": "Selecteer als hoofdvoorstel",
-		"delete": "Verwijderen",
-		"previewHeader": "Voorbeeld van voorsteltemplate"
-	},
-	"participateAsGuest": "Deelnemen als gast",
-	"participate": "Deelnemen",
-	"allStudies": "Alle studies",
-	"studiesIParticipatedIn": "Studies waar ik aan heb deelgenomen",
-	"studiesIHaventParticipatedIn": "Studies waar ik niet aan heb deelgenomen",
-	"developNew": "Nieuw ontwikkelen",
-	"developHeaderDescription": "Maak, bewerk en beheer hier je <strong>studies, taken en enquêtes</strong>.",
-	"develop": "Ontwikkelen",
-	"myProjects": "Mijn projecten",
-	"myStudies": "Mijn studies",
-	"myTasks": "Mijn taken",
-	"mySurveys": "Mijn enquêtes",
-	"myBlocks": "Mijn blokken",
-	"createdBy": "gemaakt door {{username}}",
-	"cloneAndModify": "Kloon & wijzig een {{taskType}}",
-	"selectWhichToClone": "Selecteer hieronder welke {{taskType}} je wilt klonen.",
-	"study": "studie",
-	"whatWouldYouLikeToDevelop": "Wat wil je ontwikkelen?",
-	"studyDescription": "Een studie is een onderzoeksproject met een onderzoeksvraag. Het kan bestaan uit meerdere taken en/of enquêtes.",
-	"taskDescription": "Bij een taak wordt deelnemers gevraagd specifieke handelingen uit te voeren (bijv. op een knop drukken) op basis van wat ze zien of horen.",
-	"surveyDescription": "Bij een enquête worden deelnemers vragen gesteld over zichzelf, hun gedrag of hoe ze zich voelen.",
-	"blockDescription": "In een blok wordt informatie aan de deelnemers gepresenteerd.",
-	"buildStudyFromExisting": "Bouw een studie op basis van een bestaande MindHive-studie",
-	"teacherExplicitInstruction": "(selecteer deze optie alleen als je docent je dat expliciet heeft gevraagd)",
-	"startMindHiveProject": "Start je MindHive-project",
-	"startStudyFromScratch": "Begin een studie vanaf nul",
-	"createStudyWithoutProject": "Maak een studie zonder project",
-	"developA": "Ontwikkel een {{develop}}",
-	"buildTaskFromExisting": "Bouw een taak op basis van een bestaande MindHive-taak.",
-	"duplicateEditSurvey": "Dupliceer en bewerk een bestaande MindHive-enquête en de parameters ervan.",
-	"uploadFromLabjs": "Upload een {{develop}} van lab.js",
-	"uploadTaskScript": "Selecteer deze optie als je liever je eigen taakscripts van lab.js uploadt.",
-	"uploadSurveyScript": "Selecteer deze optie als je liever je eigen enquêtescript van lab.js uploadt.",
-	"addExternalWithLink": "Voeg een externe {{develop}} toe met een weblink",
-	"addExternalLinkInstruction": "Selecteer deze optie als je liever een externe link toevoegt",
-	"duplicateEditBlock": "Dupliceer en bewerk een bestaande MindHive-blok en de parameters ervan.",
-	"createNewBlock": "Nieuw blok aanmaken",
-	"buildBlockFromScratch": "Selecteer deze optie als je liever een blok helemaal opnieuw maakt.",
-	"activeStudies": "Actieve studies",
-	"archivedStudies": "Gearchiveerde studies",
-	"title": "Titel",
-	"descriptionDevelop": "Beschrijving (voor Ontwikkelmodus)",
-	"descriptionDevelopHelp": "Dit is zichtbaar voor onderzoekers, docenten en studenten bij het kiezen van taken of enquêtes in de Ontwikkelmodus.",
-	"descriptionDiscover": "Beschrijving (voor Ontdekken-modus)",
-	"descriptionDiscoverHelp": "Dit is zichtbaar voor alle platformgebruikers bij het kiezen van taken of enquêtes in de Ontdekken-modus.",
-	"link": "Link",
-	"externalDataWarning": "De gegevens worden niet opgeslagen in de MH-database",
-	"mobileCompatible": "{{taskType}} is mobiel compatibel",
-	"duration": "Duur",
-	"durationHelp": "Hoe lang duurt het ongeveer om de {{taskType}} te voltooien?",
-	"resources": "Bronnen",
-	"resource": "Bron",
-	"aggregateVariables": "Samengestelde variabelen",
-	"variable": "Variabele",
-	"descriptionBefore": "{{taskType}} kaartbeschrijving (voor deelname)",
-	"descriptionBeforeHelp": "Dit is wat deelnemers zullen zien voordat ze de {{taskType}} doen.",
-	"descriptionAfter": "{{taskType}} kaartbeschrijving (na deelname)",
-	"descriptionAfterHelp": "Dit is wat deelnemers zullen zien nadat ze de {{taskType}} hebben gedaan.",
-	"background": "Achtergrond",
-	"backgroundHelp": "Gebruik dit veld om een korte achtergrond te geven over het onderzoeksonderwerp. Wat is het probleem dat wordt bestudeerd en waarom is het belangrijk?",
-	"scoringSurvey": "Instructies voor scoring (alleen voor enquêtes)",
-	"formatSurvey": "Formaat (alleen voor enquêtes)",
-	"formatSurveyHelp": "Bijvoorbeeld: 10 vragen in een 5-punts Likert-schaalformaat. Vragen vallen in 2 categorieën (negatief en positief affect). 4 van de vragen zijn omgekeerd gescoord.",
-	"addInfo": "Aanvullende informatie",
-	"descriptionBeforeVisible": "Dit is zichtbaar voor iedereen die nog niet aan de taak heeft deelgenomen.",
-	"descriptionAfterVisible": "Dit is zichtbaar voor iedereen die aan de taak heeft deelgenomen.",
-	"templateTab": "Sjabloon",
-	"basicTab": "Basis",
-	"parametersTab": "Parameters",
-	"sharingTab": "Delen",
-	"fullscreenPreview": "Volledig scherm voorbeeld",
-	"submit": "Verzenden",
-	"projectBoard": "Projectbord",
-	"studyBuilder": "Studiebouwer",
-	"participantPage": "Deelnemerspagina",
-	"review": "Beoordelen",
-	"testAndCollect": "Testen & Verzamelen",
-	"visualize": "Visualiseren",
-	"dataJournals": "Datajournaals 🚧",
-	"project": "Project",
-	"unsavedChangesWarning": "Je niet-opgeslagen wijzigingen gaan verloren. Klik op Annuleren om terug te gaan en de wijzigingen op te slaan.",
 	"actionCard": {
-		"proposalFeedback": "Voorstel feedback",
-		"peerFeedback": "Peer feedback",
-		"dataCollection": "Dataverzameling",
+		"clickToSubmit": "Klik om in te zenden voor {{title}}",
+		"dataCollection": "Gegevensverzameling",
+		"deleteCardConfirmation": "Weet je zeker dat je deze kaart wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+		"peerFeedback": "Feedback van collega's",
 		"projectReport": "Projectrapport",
-		"submitFor": "Indienen voor {{title}}",
+		"proposalFeedback": "Feedback op het voorstel",
+		"submitFor": "Inzenden voor {{title}}",
 		"viewComments": "Reacties bekijken",
-		"viewCountComments": "{{count}} reacties bekijken",
-		"clickToSubmit": "Klik om in te dienen voor {{title}}",
-		"deleteCardConfirmation": "Weet u zeker dat u deze kaart wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt."
+		"viewCountComments": "Bekijk {{count}} reacties"
 	},
-	"studyManager": {
-		"manageStudies": "Beheer studies ({{count}})",
-		"manageStudiesFor": "Beheer studies voor {{username}}",
-		"viewCreateAssign": "Bekijk, maak of wijs studies toe aan de student",
-		"mainProjectStudy": "Hoofdprojectstudie",
-		"connectedToProject": "Verbonden met project: {{project}}",
-		"collaborators": "Medewerkers:",
-		"mentors": "Mentoren:",
-		"none": "Geen",
-		"viewStudy": "Bekijk studie",
-		"disconnect": "Ontkoppelen",
-		"noStudyConnected": "Er is momenteel geen studie gekoppeld aan dit project. Gebruik de onderstaande opties om een nieuwe studie toe te wijzen of te maken.",
-		"collaboratorStudies": "Medewerkerstudies",
-		"removeCollaborator": "Verwijder als medewerker",
-		"noCollaboratorStudiesAssigned": "Geen medewerkerstudies toegewezen",
-		"notAssignedToAnyStudies": "Deze student is niet als medewerker toegewezen aan een studie.",
-		"project": "Project",
-		"title": "Titel:",
-		"unknownProject": "Onbekend project",
-		"reassignToAnotherStudy": "Opnieuw toewijzen aan een andere studie",
-		"assignToExistingStudy": "Toewijzen aan bestaande studie",
-		"selectDifferentStudy": "Selecteer een andere studie om aan dit project te koppelen.",
-		"chooseExistingStudy": "Kies een bestaande studie om aan het project toe te wijzen.",
-		"selectAStudy": "Selecteer een studie",
-		"createNewStudy": "Nieuwe studie aanmaken",
-		"createNewStudyToConnect": "Maak een nieuwe studie aan om aan dit project te koppelen.",
-		"enterNewStudyName": "Voer de naam van de nieuwe studie in",
-		"noProjectAssigned": "Geen project toegewezen. Gebruik de projectmanager om een project aan te maken of toe te wijzen voordat je studies beheert.",
-		"cancel": "Annuleren",
-		"reassignStudy": "Studie opnieuw toewijzen",
-		"assignToStudy": "Toewijzen aan studie",
-		"createStudy": "Studie aanmaken",
-		"confirmStudyConnection": "Bevestig studieverbinding",
-		"confirmStudyConnectionDesc": "Weet je zeker dat je deze studie wilt {{action}} aan het project \"{{project}}\"? Deze actie kan gerelateerde gegevens beïnvloeden.",
-		"reassign": "opnieuw toewijzen",
-		"connect": "koppelen",
-		"confirm": "Bevestigen"
+	"activeStudies": "Actieve onderzoeken",
+	"add-section": "Sectie toevoegen",
+	"addExternalLinkInstruction": "Selecteer deze optie als je een externe link wilt toevoegen",
+	"addExternalWithLink": "Een externe {{develop}} met een weblink toevoegen",
+	"addInfo": "Aanvullende informatie",
+	"aggregateVariables": "Geaggregeerde variabelen",
+	"allStudies": "Alle onderzoeken",
+	"archivedStudies": "Gearchiveerde studies",
+	"assigned": {
+		"typeUsername": "Type gebruikersnaam"
 	},
-	"createProposal": {
-		"selectTemplate": "Selecteer sjabloon",
-		"copyStudyProposal": "Kopieer het studievoorstel",
-		"createNewStudyProposal": "Maak een nieuw studievoorstel",
-		"createCopy": "Maak een kopie",
-		"create": "Aanmaken"
+	"background": "Achtergrond",
+	"backgroundHelp": "Gebruik dit veld om korte achtergrondinformatie te geven over het onderwerp van onderzoek. Wat is het bestudeerde probleem en waarom is het belangrijk?",
+	"basicTab": "Basis",
+	"blockDescription": "In een blok krijgen de deelnemers informatie te zien.",
+	"board": {
+		"error": "Fout! {{message}}",
+		"loading": "Aan het laden..."
 	},
-	"proposalBoard": {
-		"myProjectBoard": "Mijn projectbord",
-		"createYourStudyProposal": "Maak hier je studievoorstel om je onderzoek te starten",
-		"titlePlaceholder": "Voer de titel van het projectbord in",
-		"descriptionPlaceholder": "Voer de beschrijving van het projectbord in",
-		"publicTemplate": "Openbare sjabloon",
-		"allowMovingSections": "Secties verplaatsen toestaan",
-		"allowMovingCards": "Kaarten verplaatsen toestaan",
-		"allowAddingSections": "Nieuwe secties toevoegen toestaan",
-		"allowAddingCards": "Nieuwe kaarten toevoegen toestaan",
-		"saving": "Bezig met opslaan",
-		"save": "Opslaan"
+	"build-create-new-study": "Klik op de knop hieronder om een nieuw onderzoek aan te maken.",
+	"build-intro": "In deze bouwer kun je een nieuw onderzoek maken, je eigen taken uploaden of taken uit de bibliotheek gebruiken.",
+	"buildBlockFromScratch": "Selecteer deze optie als je een blok helemaal vanaf nul wilt opbouwen.",
+	"builder": {
+		"addComment": "Een commentaar toevoegen",
+		"addStartingPoint": "Startpunt toevoegen",
+		"lockedMessage": "Dit onderzoek is ingestuurd en kan niet bewerkt worden. Om wijzigingen aan te brengen, vraag je je docent om het onderzoek te verwijderen.",
+		"studyBuilderLocked": "Studiebouwer Gesloten"
 	},
-	"vas": {
-		"addMore": "Add more",
-		"title": "Visueel Analoge Schaal",
-		"description": "Een Visueel Analoge Schaal (VAS) is een meetinstrument om een kenmerk of houding te evalueren die niet direct meetbaar is.",
-		"left": "Linker label",
-		"right": "Rechter label",
-		"question": "Vraag"
+	"buildStudyFromExisting": "Een onderzoek bouwen op basis van een bestaand MindHive onderzoek",
+	"buildTaskFromExisting": "Bouw een taak gebaseerd op een bestaande MindHive taak.",
+	"byComponent": {
+		"dataByTask": "Gegevens per taak in afzonderlijke bestanden",
+		"downloadAggregated": "Geaggregeerde gegevens downloaden",
+		"downloadAggregatedBy": "Verzamelde gegevens downloaden {{by}}",
+		"downloadRaw": "Ruwe gegevens downloaden",
+		"noSubtitle": "geen ondertitel",
+		"selectTasks": "Selecteer taken of enquêtes",
+		"wait": "Wachten ..."
 	},
-	"parameters": {
-		"templateParameters": "Template parameters",
-		"uploadLabjs": "Please upload a lab.js json file first",
-		"noParameters": "The template does not contain any parameters.",
-		"subtitle": "Subtitle",
-		"versionId": "Version ID",
-		"askDataUsage": "Ask students a data usage question after the task",
-		"taskParameters": "Task parameters",
-		"getFromTemplate": "Get parameters from the template",
-		"title": "Parameters",
-		"description": "Definieer de parameters van je component",
-		"add": "Parameter toevoegen",
-		"name": "Parameter naam",
-		"type": "Parameter type",
-		"value": "Standaardwaarde",
-		"participationSettings": "Deelname-instellingen"
-	},
-	"template": {
-		"download": "Download",
-		"title": "Template title",
-		"description": "Template description",
-		"labjsScript": "lab.js script (JSON file)",
-		"createdOn": "Created on",
-		"updatedOn": "Last updated on",
-		"deleteAndReupload": "Delete and reupload",
-		"collaborators": "Collaborators on the template",
-		"parameters": "Template parameters",
-		"uploadLabjs": "Please upload a lab.js json file first",
-		"noParameters": "The lab.js file does not contain any parameters.",
-		"selectType": "Select the type of the parameter",
-		"chooseType": "Choose the type",
-		"text": "Text",
-		"singleLine": "Single-line text input",
-		"number": "Number",
-		"selectOne": "Select one",
-		"vasBuilder": "VAS builder",
-		"surveyBuilder": "Survey builder",
-		"selectIcon": "Select the icon",
-		"instructions": "Provide instructions for other users to understand what this parameter changes in the task",
-		"example": "An example of what can be the parameter value",
-		"options": "The options (each on a new line) for this parameter",
-		"defaultValue": "The default value for this parameter",
-		"delete": "Delete"
-	},
-	"sharing": {
-		"collaboratorsOn": "Collaborators on the {{taskType}}",
-		"title": "Delen",
-		"description": "Beheer wie deze component kan zien en bewerken",
-		"public": "Openbaar",
-		"private": "Privé",
-		"publicDescription": "Iedereen kan deze component zien",
-		"privateDescription": "Alleen medewerkers kunnen deze component zien"
-	},
-	"viewer": {
-		"customize": "Customize",
-		"preview": "Preview {{taskType}}",
-		"screenshot": "Screenshot",
-		"background": "Background",
-		"parameters": "Parameters",
-		"tweakableFeatures": "The following features of this {{taskType}} can be tweaked:",
-		"defaultValues": "Default values are shown (can clone {{taskType}} and modify these)",
-		"surveyParameters": "Survey parameters",
-		"text": "Text",
-		"visualAnalogueScale": "Visual analogue scale",
-		"likertScale": "Likert scale",
-		"freeTextInput": "Free text input",
-		"selectOne": "Select one",
-		"selectMany": "Select many",
-		"beforeParticipation": "What participants see <u>before</u> taking the {{taskType}}",
-		"afterParticipation": "What participants see <u>after</u> taking the {{taskType}}",
-		"mobileCompatible": "Mobile compatible",
-		"aggregateVariables": "Aggregate Variables",
-		"aggregateVariablesDesc": "These data are automatically written to a csv file upon completion of the {{taskType}}",
-		"moreInfo": "more info",
-		"scoring": "Scoring",
-		"format": "Format",
-		"duration": "Duration",
-		"resources": "Resources",
-		"title": "Viewer",
-		"description": "Bekijk een voorbeeld van je component",
-		"noPreview": "Geen voorbeeld beschikbaar"
-	},
-	"modal": {
-		"back": "←",
-		"update": "Bijwerken",
-		"id": "ID",
-		"name": "Naam",
-		"probability": "Waarschijnlijkheid (0-100%)",
-		"participants": "Deelnemers",
-		"removeCondition": "Voorwaarde verwijderen",
-		"addCondition": "Voorwaarde toevoegen"
-	},
-	"taskModal": {
-		"addToStudy": "Toevoegen aan studie",
-		"createCopy": "Kopie maken",
-		"preview": "Voorbeeld van {{taskType}}",
-		"close": "Sluiten"
-	},
-	"selector": {
-		"searchPlaceholder": "🔍 Zoeken",
-		"filter": {
-			"createdByAnyone": "Door iedereen gemaakt",
-			"ownedByMe": "In mijn bezit",
-			"myFavorite": "Mijn favorieten"
-		},
-		"basicBlocks": {
-			"title": "Basisblokken",
-			"description": "Wil je <strong>aangepaste instructies</strong> voor je deelnemers toevoegen of een <strong>link en/of video insluiten</strong> in je onderzoeksprocedure? Selecteer en bewerk een basisblok"
-		},
-		"tasks": {
-			"title": "Taken",
-			"description": "Wil je een <strong>construct of variabele meten</strong> door deelnemers <strong>een activiteit te laten voltooien</strong>? Kies uit deze bank van gevalideerde taken"
-		},
-		"surveys": {
-			"title": "Vragenlijsten",
-			"description": "Wil je <strong>attitudes, ervaringen of meningen van deelnemers meten</strong> via <strong>zelfrapportage</strong>? Kies uit deze bank van gevalideerde vragenlijsten",
-			"buildOwn": "Kun je geen tools vinden om een van je onderzoeksconstructen te meten? Bouw je eigen vragenlijst met de Survey builder en hulp van de docent:"
-		},
-		"studyDesign": {
-			"title": "Onderzoeksontwerp",
-			"description": "Tussen-proefpersonen ontwerp maken",
-			"betweenSubjects": "Tussen-proefpersonen ontwerp"
-		},
-		"templates": {
-			"title": "Sjablonen",
-			"description": "Wil je niet vanaf nul beginnen? Selecteer en bewerk een <strong>voorgemaakt onderzoeksontwerp</strong> met een van de sjablonen in deze bank"
+	"card": {
+		"assignedTo": "De kaart is toegewezen aan {{username}}",
+		"defaultUser": "John Doe",
+		"deleteConfirm": "Weet u zeker dat u deze kaart wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+		"notAssigned": "De kaart is aan niemand toegewezen",
+		"status": {
+			"comments": "Reacties",
+			"completed": "Voltooid",
+			"helpNeeded": "Hulp nodig",
+			"inProgress": "In uitvoering",
+			"needsRevision": "Moet worden herzien",
+			"notStarted": "Niet gestart"
 		}
 	},
-	"description": {
-		"title": "Onderzoeksbeschrijving",
-		"internalUse": "Dit is alleen voor intern gebruik. Deelnemers zullen deze beschrijving niet zien.",
-		"selectSource": "Selecteer een bron",
-		"linkToProposal": "Link naar voorstel"
+	"cardNavigation": {
+		"back": "rug",
+		"save": "Redden"
 	},
-	"proposalSelector": {
-		"selectCard": "Selecteer kaart",
-		"linkToProposal": "Link naar voorstel"
+	"checklist": {
+		"exportProposal": "Exporteer uw voorstel",
+		"markAsComplete": "Markeer als voltooid"
 	},
-	"status": {
-		"title": "Onderzoeksstatus",
-		"placeholder": "Onderzoeksversies",
-		"workInProgress": "Werk in uitvoering",
-		"submittedAsProposal": "Ingediend als voorstel",
-		"readyForReview": "Klaar voor beoordeling",
-		"inReview": "In beoordeling",
-		"reviewed": "Beoordeeld",
-		"collectingData": "Gegevens verzamelen",
-		"dataCollectionCompleted": "Gegevensverzameling voltooid"
-	},
-	"version": {
-		"title": "Onderzoeksversie",
-		"headerNote": "Sla verschillende onderzoeksontwerpen op die links op het scherm worden weergegeven",
-		"currentVersion": "Huidige versie",
-		"createdOn": "Gemaakt op",
-		"placeholder": "Onderzoeksversies",
-		"load": "Laden",
-		"delete": "Verwijderen",
-		"noVersionSaved": "Er is nog geen onderzoeksversie opgeslagen. Maak een nieuwe versie door op de knop hieronder te klikken.",
-		"createNewVersion": "Nieuwe versie maken",
-		"name": "Naam",
-		"description": "Beschrijving",
-		"enterVersionName": "Voer de versienaam in",
-		"confirmDelete": "Weet je zeker dat je {{versionName}} wilt verwijderen?"
-	},
-	"builder": {
-		"studyBuilderLocked": "Studie Builder Vergrendeld",
-		"lockedMessage": "Deze studie is ingediend en kan niet worden bewerkt. Om wijzigingen aan te brengen, vraag je leraar om de studie in te trekken.",
-		"addComment": "Een opmerking toevoegen",
-		"addStartingPoint": "Startpunt toevoegen"
-	},
-	"engine": {
-		"studyLocked": "De studie is vergrendeld",
-		"copy": "KOPIE",
-		"save": "Opslaan"
-	},
-	"main": {
-		"noProjectFound": "Geen project gevonden, sla eerst je project op.",
-		"loadingStudy": "Studie laden...",
-		"errorLoadingStudy": "Fout bij het laden van de studie: {{errorMessage}}",
-		"projectChat": "Project chat"
-	},
-	"menu": {
-		"addBlock": "Blok toevoegen",
-		"studyFlow": "Studie flow",
-		"studySettings": "Studie instellingen"
-	},
-	"byComponent": {
-		"noSubtitle": "geen subtitel",
-		"dataByTask": "Gegevens per taak in aparte bestanden",
-		"selectTasks": "Selecteer taken of enquêtes",
-		"wait": "Even geduld ...",
-		"downloadAggregated": "Geaggregeerde gegevens downloaden",
-		"downloadAggregatedBy": "Geaggregeerde gegevens downloaden {{by}}",
-		"downloadRaw": "Ruwe gegevens downloaden"
-	},
-	"dataset": {
-		"status": {
-			"working": "Werk in uitvoering",
-			"submittedAsProposal": "Ingediend als voorstel",
-			"readyForReview": "Klaar voor beoordeling",
-			"inReview": "In beoordeling",
-			"reviewed": "Beoordeeld",
-			"collectingData": "Gegevens verzamelen",
-			"dataCollectionCompleted": "Gegevensverzameling voltooid"
+	"checklistTemplate": {
+		"completeCards": {
+			"description": "De tekst in uw voorstelkaarten wordt samengevoegd en geëxporteerd als een PDF-bestand.",
+			"title": "Controleer nogmaals of al uw voorstelkaarten compleet zijn"
 		},
-		"noData": "Geen gegevens",
-		"loading": "Laden...",
-		"full": "volledig",
-		"incremental": "incrementeel",
-		"download": "Downloaden",
-		"deleteInvalidRecord": "Ongeldig record verwijderen"
+		"exportPdf": {
+			"description": "Uw reviewers zullen uw voorstel als pdf bekijken. Het is belangrijk om uw voorstel als pdf te controleren voordat u het indient. Zorg er ook voor dat u uw pdf opslaat, zodat u uw oorspronkelijke voorstel altijd kunt raadplegen.",
+			"title": "Exporteer en bekijk uw voorstel als PDF"
+		},
+		"recordTime": {
+			"description": "Hiermee kunt u een geschatte tijd voor voltooiing van de studie op de studiepagina vermelden, zodat deelnemers hiervan op de hoogte zijn en hun tijd dienovereenkomstig kunnen indelen.",
+			"title": "Registreer hoe lang het duurt voordat een deelnemer uw onderzoek voltooit"
+		},
+		"reviewStudyPage": {
+			"description": "Denk kritisch na over welke informatie u uw deelnemers wilt laten zien op de onderzoekspagina. Mogelijk wilt u geen informatie op de onderzoekspagina plaatsen die direct van invloed is op de prestaties van deelnemers bij een taak/enquête. Zijn er details over uw onderzoek die het beste pas na afloop van uw onderzoek onthuld kunnen worden?",
+			"title": "Bekijk je studiepagina. Dat is wat je deelnemers en reviewers zullen zien."
+		},
+		"testAsParticipant": {
+			"description": "Het is belangrijk om met ten minste twee personen te testen voordat u uw collega's vraagt ​​uw onderzoek te beoordelen. Deze testfase helpt onderzoekers vaak om fouten in het onderzoeksontwerp te vinden en geeft hen tijd om dergelijke fouten te corrigeren die anders de data in gevaar zouden brengen.",
+			"title": "Laat minimaal 2 personen testen hoe het is om deelnemer te zijn aan uw onderzoek"
+		}
 	},
-	"participantResults": {
-		"title": "Deelresultaten",
-		"study": "Studie",
-		"taskTitle": "Taaktitel",
-		"taskSubtitle": "Taak subtitel",
-		"taskId": "Taak ID",
-		"started": "Gestart",
-		"completed": "Voltooid",
-		"condition": "Conditie",
-		"dataType": "Gegevenstype",
-		"dataPolicy": "Gegevensbeleid",
-		"studyStatus": "Studie status",
-		"dataAnalysis": "Data-analyse"
-	},
-	"participantInfo": {
-		"participantId": "Deelnemer ID",
-		"publicReadableId": "Publiek leesbare ID",
-		"studyRelatedInfo": "Studiegerelateerde informatie",
-		"englishQuestion": "Begrijp je basisinstructies geschreven in het Engels?",
-		"yes": "Ja",
-		"no": "Nee",
-		"betweenSubjectCondition": "Tussen-subject conditie",
-		"agreedToSave": "Akkoord om informatie op te slaan voor toekomstige studies",
-		"zipCode": "Postcode",
-		"birthday": "Geboortedatum",
-		"age": "Leeftijd",
-		"irbConsent": "IRB toestemmingsbeslissingen",
-		"parentName": "Naam ouder:",
-		"parentEmail": "E-mail ouder:",
-		"kidName": "Jouw naam:"
-	},
-	"participant": {
-		"goBack": "← Terug"
-	},
-	"grid": {
-		"open": "Openen",
-		"analysis": "Analyse",
-		"publicId": "Publiek ID",
-		"publicReadableId": "Publiek leesbare ID",
-		"startedAt": "Gestart op",
-		"duration": "Duur",
-		"numberCompleted": "Aantal voltooid",
-		"condition": "Conditie",
-		"consent": "Toestemming",
-		"studyStatus": "Studie status",
-		"accountType": "Accounttype"
-	},
-	"header": {
-		"shareInstructions": "Deel de onderstaande link met je deelnemers om ze uit te nodigen voor je onderzoek",
-		"copyLink": "Kopieer studielink",
-		"testStudy": "Test je studie",
-		"allDataOneFile": "Alle gegevens in één bestand",
-		"linkCopied": "De link is gekopieerd"
-	},
-	"pagination": {
-		"prev": "Vorige",
-		"next": "Volgende",
-		"pageOf": "Pagina {{page}} van {{pageCount}}",
-		"participantsTotal": "Totaal {{count}} deelnemers"
-	},
+	"cloneAndModify": "Een {{taskType}} klonen en wijzigen",
 	"collect": {
-		"noProjectFound": "Geen project gevonden, sla eerst je project op.",
-		"noStudyAttachedHeader": "🤷🏻 Je project heeft geen gekoppelde studie.",
-		"noStudyAttachedMessage": "Laat je docent weten dat hij of zij er een kan aanmaken en koppelen. Als je hulp nodig hebt, neem dan contact op met de technische ondersteuning via support.mindhive@nyu.edu."
+		"noProjectFound": "Er is geen project gevonden. Sla uw project eerst op.",
+		"noStudyAttachedHeader": "🤷🏻 Er is geen studie aan uw project gekoppeld.",
+		"noStudyAttachedMessage": "Laat het je docent weten, zodat hij of zij er een kan maken en koppelen. Heb je hulp nodig? Neem dan contact op met de technische ondersteuning via support.mindhive@nyu.edu."
 	},
-	"notes": {
-		"noNotes": "Nog geen notities ingevoerd. Klik met de rechtermuisknop om notities toe te voegen."
+	"connectModal": {
+		"adminInfo": "Deze informatie is alleen zichtbaar voor ADMIN",
+		"close": "Dichtbij",
+		"linkedClass": "Gekoppelde klasse",
+		"noAuthor": "Geen auteur",
+		"projectBoardCollaborators": "Medewerkers van het projectbestuur",
+		"projectCreator": "Projectmaker is {{gebruikersnaam}}",
+		"projectTitle": "Projecttitel",
+		"saveAndClose": "Opslaan en sluiten"
 	},
+	"connectStudyModal": {
+		"adminInfo": "Deze informatie is alleen zichtbaar voor ADMIN",
+		"close": "Dichtbij",
+		"linkedClass": "Gekoppelde klasse",
+		"linkedProjects": "Gekoppelde projecten",
+		"linkedProjectsDescription": "Projecten die toegang tot uw studie delen {{title}}",
+		"noAuthor": "Geen auteur",
+		"openInNewTab": "Openen in een nieuw tabblad",
+		"saveAndClose": "Opslaan en sluiten",
+		"studyAuthor": "Auteur van de studie is {{username}}",
+		"studyCollaborators": "Studiemedewerkers"
+	},
+	"consentSelector": {
+		"typeConsentProtocol": "Type toestemmingsprotocol"
+	},
+	"createdBy": "gemaakt door {{gebruikersnaam}}",
+	"createNewBlock": "Nieuw blok maken",
+	"createProposal": {
+		"copyStudyProposal": "Kopieer het studievoorstel",
+		"create": "Creëren",
+		"createCopy": "Een kopie maken",
+		"createNewStudyProposal": "Een nieuw onderzoeksvoorstel maken",
+		"selectTemplate": "Selecteer sjabloon",
+		"selectTemplateAlert": "Selecteer het voorstelsjabloon"
+	},
+	"createStudy": {
+		"save": "Redden"
+	},
+	"createStudyWithoutProject": "Een studie maken zonder project",
 	"dataJournal": {
 		"addComponent": "Component toevoegen",
 		"addNotes": "Notities toevoegen",
 		"settingsPanel": {
-			"widgetSettings": "Widget-instellingen",
+			"deleteWidget": "Widget verwijderen",
 			"notes": "Notities",
-			"notesPlaceholder": "Voer hier uw notities in...",
-			"deleteWidget": "Widget verwijderen"
+			"notesPlaceholder": "Voer hier uw aantekeningen in...",
+			"widgetSettings": "Widget-instellingen"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Niet-ondersteund widgettype: {{type}}"
 		}
 	},
+	"dataJournals": "Datajournaals 🚧",
+	"dataset": {
+		"deleteInvalidRecord": "Ongeldige record verwijderen",
+		"download": "Download",
+		"full": "vol",
+		"incremental": "toenemend",
+		"loading": "Bezig met laden...",
+		"noData": "Geen gegevens",
+		"status": {
+			"collectingData": "Gegevens verzamelen",
+			"dataCollectionCompleted": "Gegevensverzameling is voltooid",
+			"inReview": "Ter beoordeling",
+			"readyForReview": "Klaar voor beoordeling",
+			"reviewed": "Beoordeeld",
+			"submittedAsProposal": "Ingediend als voorstel",
+			"working": "Werk in uitvoering"
+		}
+	},
+	"deleteProposal": {
+		"confirm": "Weet u zeker dat u dit voorstel wilt verwijderen? Alle secties en kaarten in dit voorstel worden ook verwijderd.",
+		"title": "Weet u zeker dat u dit voorstel wilt verwijderen?"
+	},
+	"description": "De plek om een ​​nieuwe studie te bouwen",
+	"descriptionAfter": "Beschrijving van de {{taskType}}-kaart (na deelname)",
+	"descriptionAfterHelp": "Dit is wat deelnemers zien nadat ze de {{taskType}} hebben afgelegd.",
+	"descriptionAfterVisible": "Dit is zichtbaar voor iedereen die aan de taak heeft deelgenomen.",
+	"descriptionBefore": "Beschrijving van de {{taskType}}-kaart (vóór deelname)",
+	"descriptionBeforeHelp": "Dit is wat deelnemers zien voordat ze de {{taskType}} maken.",
+	"descriptionBeforeVisible": "Dit is zichtbaar voor iedereen die nog niet aan de taak heeft deelgenomen.",
+	"descriptionDevelop": "Beschrijving (voor ontwikkelmodus)",
+	"descriptionDevelopHelp": "Dit is zichtbaar voor onderzoekers, docenten en studenten wanneer ze taken of enquêtes kiezen in de Ontwikkelmodus.",
+	"descriptionDiscover": "Beschrijving (voor Ontdekmodus)",
+	"descriptionDiscoverHelp": "Dit is zichtbaar voor alle platformgebruikers wanneer ze taken of enquêtes kiezen in de Ontdekmodus.",
+	"develop": "Ontwikkelen",
+	"developA": "Ontwikkel een {{develop}}",
+	"developHeaderDescription": "Hier kunt u uw <strong>onderzoeken, taken en enquêtes</strong> maken, bewerken en beheren.",
+	"developNew": "Ontwikkel nieuwe",
+	"duplicateEditBlock": "Dupliceer en bewerk een bestaand MindHive-blok en de bijbehorende parameters.",
+	"duplicateEditSurvey": "Dupliceer en bewerk een bestaande MindHive-enquête en de bijbehorende parameters.",
+	"duration": "Duur",
+	"durationHelp": "Hoelang duurt het ongeveer voordat iemand {{taskType}} heeft voltooid?",
+	"engine": {
+		"copy": "KOPIËREN",
+		"save": "Redden",
+		"studyLocked": "De studie is afgesloten"
+	},
+	"externalDataWarning": "De gegevens worden niet opgeslagen in de MH-database",
+	"formatSurvey": "Formaat (alleen voor enquêtes)",
+	"formatSurveyHelp": "Bijvoorbeeld: 10 vragen in een 5-punts Likertschaal. De vragen vallen in twee categorieën (negatieve en positieve affectie). Vier van de vragen worden omgekeerd gescoord.",
+	"fullscreenPreview": "Voorvertoning op volledig scherm",
+	"grid": {
+		"accountType": "Accounttype",
+		"analysis": "Analyse",
+		"condition": "Voorwaarde",
+		"consent": "Toestemming",
+		"duration": "Duur",
+		"numberCompleted": "Aantal voltooid",
+		"open": "Open",
+		"publicId": "Openbare ID",
+		"publicReadableId": "Openbaar leesbare ID",
+		"startedAt": "Begonnen bij",
+		"studyStatus": "Studiestatus"
+	},
+	"header": {
+		"allDataOneFile": "Alle gegevens in één bestand",
+		"allowAddingCards": "Toestaan ​​om nieuwe kaarten toe te voegen",
+		"allowAddingSections": "Toestaan ​​om nieuwe secties toe te voegen",
+		"allowMovingCards": "Sta het verplaatsen van kaarten toe",
+		"allowMovingSections": "Verplaatsen van secties toestaan",
+		"copyLink": "Kopieer studielink",
+		"createYourStudyProposal": "Maak hier uw studievoorstel om uw onderzoeksreis te beginnen",
+		"descriptionPlaceholder": "Voer de beschrijving van het projectbord in",
+		"linkCopied": "De link is gekopieerd",
+		"myProjectBoard": "Mijn projectbord",
+		"publicTemplate": "Openbaar sjabloon",
+		"save": "Redden",
+		"saving": "Besparing",
+		"shareInstructions": "Deel de onderstaande link met uw deelnemers om hen uit te nodigen deel te nemen aan uw onderzoek",
+		"testStudy": "Test je studie",
+		"titlePlaceholder": "Voer de titel van het projectbord in"
+	},
+	"homeworkCard": {
+		"comments": "Reacties",
+		"completed": "Voltooid",
+		"feedbackGiven": "Feedback gegeven",
+		"needsFeedback": "Feedback nodig",
+		"notStarted": "Niet gestart",
+		"save": "Redden",
+		"saving": "Opslaan ...",
+		"started": "Begonnen",
+		"status": "Status"
+	},
+	"individualCard": {
+		"comments": "Reacties",
+		"privateWorkspaceMsg": "Dit is je privéwerkruimte. Alleen je docent en reviewer hebben toegang tot de content die je hier schrijft.",
+		"save": "Redden",
+		"saveExit": "Opslaan en afsluiten",
+		"saving": "Opslaan ...",
+		"status": "Status"
+	},
+	"inner": {
+		"addSection": "Sectie toevoegen",
+		"newSection": "Nieuwe sectie",
+		"sectionTitlePlaceholder": "Voer sectietitel in"
+	},
+	"link": "Link",
 	"linkClass": {
-		"doNotConnectClass": "❌  Koppel de klas niet"
+		"doNotConnectClass": "❌ Sluit de klasse niet aan"
 	},
-	"connectModal": {
-		"projectCreator": "Projectmaker is {{username}}",
-		"noAuthor": "Geen auteur",
-		"adminInfo": "Deze informatie is alleen zichtbaar voor ADMIN",
-		"projectTitle": "Projecttitel",
-		"linkedClass": "Gekoppelde klas",
-		"projectBoardCollaborators": "Projectbord medewerkers",
-		"close": "Sluiten",
-		"saveAndClose": "Opslaan & sluiten"
+	"main": {
+		"errorLoadingStudy": "Fout bij het laden van de studie: {{errorMessage}}",
+		"loadingStudy": "Studie laden...",
+		"noProjectFound": "Er is geen project gevonden. Sla uw project eerst op.",
+		"projectChat": "Projectchat"
 	},
-	"connectStudyModal": {
-		"studyAuthor": "Studieauteur is {{username}}",
-		"noAuthor": "Geen auteur",
-		"adminInfo": "Deze informatie is alleen zichtbaar voor ADMIN",
-		"linkedClass": "Gekoppelde klas",
-		"studyCollaborators": "Studie medewerkers",
-		"linkedProjects": "Gekoppelde projecten",
-		"linkedProjectsDescription": "Projecten die toegang delen tot je studie {{title}}",
-		"openInNewTab": "Open in een nieuw tabblad",
-		"close": "Sluiten",
-		"saveAndClose": "Opslaan & sluiten"
+	"mainCard": {
+		"askToClose": "Vraag de gebruiker om de kaart te sluiten of te wachten totdat de kaart wordt vrijgegeven.",
+		"assignedTo": "Toegewezen aan",
+		"cardWillBeReleased": "De kaart wordt vrijgegeven",
+		"chooseReviewStep": "Kies in welke stap van de peer review een kaart moet komen",
+		"comments": "Reacties",
+		"forMindHiveNetwork": "Voor MindHive Network",
+		"forTeacherAndCollaborators": "Alleen voor mijn docent en projectmedewerkers",
+		"instructions": "Instructies",
+		"lockedMessage": "De kaart wordt momenteel bewerkt door",
+		"refresh": "Vernieuwen",
+		"refreshAfterRelease": "Nadat de kaart is vrijgegeven, vernieuwt u de pagina om de nieuwste versie van de kaart te bekijken.",
+		"reviewOptions": {
+			"collectingData": "Gegevens verzamelen",
+			"peerFeedback": "Peerfeedback",
+			"projectReport": "Projectrapport",
+			"proposal": "Voorstel"
+		},
+		"revisedContent": "Herziene inhoud",
+		"revisedContentUsed": "De herziene inhoud die u hier opneemt, wordt gebruikt in het eindrapport.",
+		"selectOption": "Selecteer optie",
+		"visibleInFeedbackCenter": "De content die u hier opneemt, is zichtbaar in het Feedbackcentrum nadat u deze via een Actiekaart hebt ingediend.",
+		"visibleToTeacherAndCollaborators": "De inhoud die u hieronder opneemt, is alleen zichtbaar voor uw docent(en) en projectmedewerkers"
 	},
-	"createStudy": {
-		"save": "Opslaan"
+	"makeMain": {
+		"confirm": "Weet u zeker dat u dit voorstel het hoofdvoorstel wilt maken?"
 	},
-	"updateStudy": {
-		"update": "Bijwerken"
+	"menu": {
+		"addBlock": "Voeg een blok toe",
+		"studyFlow": "Studiestroom",
+		"studySettings": "Studie-instellingen"
 	},
+	"mobileCompatible": "{{taskType}} is mobiel compatibel",
+	"modal": {
+		"addCondition": "Voorwaarde toevoegen",
+		"back": "←",
+		"delete": "Verwijderen",
+		"id": "ID",
+		"name": "Naam",
+		"participants": "Deelnemers",
+		"probability": "Waarschijnlijkheid (0 - 100%)",
+		"removeCondition": "Voorwaarde verwijderen",
+		"update": "Update"
+	},
+	"my-studies": "Mijn studies",
+	"myBlocks": "Mijn blokken",
+	"myProjects": "Mijn projecten",
+	"myStudies": "Mijn studies",
+	"mySurveys": "Mijn enquêtes",
+	"myTasks": "Mijn taken",
+	"navigation": {
+		"back": "rug",
+		"enoughComments": "Genoeg reacties? Laat het de reviewers weten.",
+		"enoughParticipants": "Genoeg deelnemers?",
+		"lockFeedback": "Vergrendelingsfeedback",
+		"lockParticipation": "Slotdeelname",
+		"submitConfirm": "Weet je zeker dat je wilt verzenden? Je kunt dit later niet meer ongedaan maken.",
+		"unlockFeedback": "Ontgrendelen voor feedback",
+		"unlockParticipation": "Ontgrendelen voor deelname"
+	},
+	"new-section": "Nieuwe sectie",
+	"new-study": "Nieuwe studie",
 	"newProject": {
+		"addCollaborators": "Medewerkers toevoegen",
+		"alreadyAssociatedTitle": "Er is al een project aan deze klasse gekoppeld",
+		"alreadyAssociatedWarning": "Ga niet verder tenzij u weet wat u doet.",
 		"backToHome": "← Terug naar home",
-		"untitledProject": "Naamloos project",
-		"noTemplatesTitle": "Er zijn geen projectbord-sjablonen in de klas",
-		"noTemplatesSubtitle": "Om een project te starten, heb je een projectbord-sjabloon nodig. Je docent heeft mogelijk geen sjabloon gekoppeld aan deze klas.",
+		"createProject": "Project maken",
+		"giveNameAlert": "Geef uw project een naam",
+		"goBackHome": "Ga terug naar huis",
+		"nameMessage": "Geef je project een naam. Dit is niet de titel van de studie, maar de naam die je aan je werkruimte wilt geven.",
+		"namePlaceholder": "De naam van mijn project is",
+		"nameYourProject": "Geef uw project een naam",
+		"noTemplatesSubtitle": "Om een ​​project te starten, heb je een projectbordsjabloon nodig. Het is mogelijk dat je docent geen projectbordsjabloon aan deze les heeft gekoppeld.",
+		"noTemplatesTitle": "Er zijn geen projectbordsjablonen in de klas",
 		"selectClass": "Selecteer de klas",
-		"goBackHome": "Terug naar home",
-		"nameYourProject": "Geef je project een naam",
-		"nameMessage": "Geef je project een naam. Dit is niet de titel van het onderzoek, maar hoe je je werkruimte wilt noemen.",
-		"namePlaceholder": "De naam van mijn project is ",
-		"addCollaborators": "Voeg medewerkers toe",
-		"alreadyAssociatedTitle": "Je hebt al een project gekoppeld aan deze klas",
-		"alreadyAssociatedWarning": "Ga alleen verder als je weet wat je doet.",
-		"createProject": "Project aanmaken",
-		"giveNameAlert": "Geef je project een naam"
+		"untitledProject": "Ongetiteld project"
 	},
+	"notes": {
+		"noNotes": "Er zijn nog geen notities ingevoerd. Klik met de rechtermuisknop om notities toe te voegen."
+	},
+	"overview": {
+		"actions": "Acties",
+		"copy": "Kopiëren",
+		"createNewProposal": "Een nieuw voorstel maken",
+		"dateCreated": "Datum aangemaakt",
+		"delete": "Verwijderen",
+		"notSubmitted": "Niet ingediend",
+		"open": "Open",
+		"proposalName": "Voorstelnaam",
+		"selectAsMain": "Selecteer als hoofd",
+		"status": "Status",
+		"submitted": "Ingediend",
+		"zeroState1": "U heeft nog geen voorstellen gemaakt.",
+		"zeroState2": "Zodra u een voorstel maakt, verschijnt dit hier."
+	},
+	"overviewCard": {
+		"close": "Dichtbij",
+		"selectStudent": "Selecteer student"
+	},
+	"pagination": {
+		"next": "Volgende",
+		"pageOf": "Pagina {{page}} van {{pageCount}}",
+		"participantsTotal": "Totaal {{count}} deelnemers",
+		"prev": "Vorige"
+	},
+	"parameters": {
+		"askDataUsage": "Stel studenten na de taak een vraag over datagebruik",
+		"getFromTemplate": "Parameters ophalen uit de sjabloon",
+		"noParameters": "De sjabloon bevat geen parameters.",
+		"participationSettings": "Deelname-instellingen",
+		"subtitle": "Ondertitel",
+		"taskParameters": "Taakparameters",
+		"templateParameters": "Sjabloonparameters",
+		"uploadLabjs": "Upload eerst een lab.js json-bestand",
+		"versionId": "Versie-ID"
+	},
+	"parametersTab": "Parameters",
+	"participant": {
+		"goBack": "← Ga terug"
+	},
+	"participantInfo": {
+		"age": "Leeftijd",
+		"agreedToSave": "Akkoord gegaan met het bewaren van informatie voor toekomstige studies",
+		"betweenSubjectCondition": "Tussen-onderwerp conditie",
+		"birthday": "Verjaardag",
+		"englishQuestion": "Begrijpt u de basisinstructies in het Engels?",
+		"irbConsent": "IRB-toestemmingsbeslissingen",
+		"kidName": "Jouw naam:",
+		"no": "Nee",
+		"parentEmail": "E-mailadres ouder:",
+		"parentName": "Naam van de ouder:",
+		"participantId": "Deelnemers-ID",
+		"publicReadableId": "Openbaar leesbare ID",
+		"studyRelatedInfo": "Studiegerelateerde informatie",
+		"yes": "Ja",
+		"zipCode": "Postcode"
+	},
+	"participantPage": "Deelnemerspagina",
+	"participantPageMain": {
+		"cloneOf": "Kloon van",
+		"noStudyHeader": "🤷🏻 Er is geen studie aan uw project gekoppeld.",
+		"noStudyMessage": "Laat het je docent weten, zodat hij of zij er een kan maken en koppelen. Heb je hulp nodig? Neem dan contact op met de technische ondersteuning via support.mindhive@nyu.edu.",
+		"projectChat": "Projectchat",
+		"save": "Redden"
+	},
+	"participantResults": {
+		"completed": "Voltooid",
+		"condition": "Voorwaarde",
+		"dataAnalysis": "Gegevensanalyse",
+		"dataPolicy": "Gegevensbeleid",
+		"dataType": "Gegevenstype",
+		"started": "Begonnen",
+		"study": "Studie",
+		"studyStatus": "Studiestatus",
+		"taskId": "Taak-ID",
+		"taskSubtitle": "Taak ondertitel",
+		"taskTitle": "Taaktitel",
+		"title": "Resultaten van deelnemers"
+	},
+	"participantType": {
+		"guest": "Gast",
+		"user": "Gebruiker"
+	},
+	"participate": "Deelnemen",
+	"participateAsGuest": "Deelnemen als gast",
 	"preview": {
-		"updateStudyImage": "Studieafbeelding bijwerken",
-		"uploadStudyImage": "Studieafbeelding uploaden",
-		"uploadPreview": "Uploadvoorbeeld",
-		"title": "Titel",
 		"description": "Beschrijving",
-		"timeToComplete": "Tijd om te voltooien"
+		"timeToComplete": "Tijd om te voltooien",
+		"title": "Titel",
+		"updateStudyImage": "Studie-afbeelding bijwerken",
+		"uploadPreview": "Voorbeeld uploaden",
+		"uploadStudyImage": "Upload studie-afbeelding"
 	},
+	"project": "Project",
+	"projectBoard": "Projectbestuur",
+	"proposal": {
+		"actions": "Acties",
+		"copy": "Kopiëren",
+		"create": "Een nieuw voorstel maken",
+		"dateCreated": "Datum aangemaakt",
+		"delete": "Verwijderen",
+		"name": "Voorstelnaam",
+		"notSubmitted": "Niet ingediend",
+		"open": "Open",
+		"previewHeader": "Voorbeeld van voorstelsjabloon",
+		"selectAsMain": "Selecteer als hoofd",
+		"status": "Status",
+		"submitted": "Ingediend"
+	},
+	"proposalAction": {
+		"appearInFeedbackCenter": "Uw voorstel verschijnt in het Feedback Center.",
+		"cardsLocked": "De kaarten die in het voorstel zijn opgenomen, worden geblokkeerd. Je docent kan ze vrijgeven.",
+		"comments": "Reacties",
+		"completeAllBeforeSubmit": "Zorg ervoor dat alle hieronder vermelde kaarten als 'voltooid' zijn gemarkeerd voordat u ze verzendt.",
+		"completeAllRequired": "Vul alle vereiste kaarten in voordat u uw voorstel ter feedback indient.",
+		"feedbackCenterPreview": "Zo zal uw voorstel in het Feedback Center verschijnen",
+		"lockedForFeedback": "Het voorstel is geblokkeerd voor feedback",
+		"notStarted": "Niet gestart",
+		"readyToSubmit": "Het voorstel is klaar om ter feedback ingediend te worden!",
+		"submitFor": "Verzenden voor {{title}}",
+		"submitForFeedbackIntro": "Zodra u uw voorstel ter feedback indient:",
+		"submitForTitle": "Dien uw voorstel in voor {{name}}",
+		"submittedForReview": "Het voorstel werd ter beoordeling voorgelegd",
+		"unlockedForFeedback": "Het voorstel is vrijgegeven voor feedback"
+	},
+	"proposalBoard": {
+		"allowAddingCards": "Toestaan ​​om nieuwe kaarten toe te voegen",
+		"allowAddingSections": "Toestaan ​​om nieuwe secties toe te voegen",
+		"allowMovingCards": "Sta het verplaatsen van kaarten toe",
+		"allowMovingSections": "Verplaatsen van secties toestaan",
+		"createYourStudyProposal": "Maak hier uw studievoorstel om uw onderzoeksreis te beginnen",
+		"descriptionPlaceholder": "Voer de beschrijving van het projectbord in",
+		"myProjectBoard": "Mijn projectbord",
+		"publicTemplate": "Openbaar sjabloon",
+		"save": "Redden",
+		"saving": "Besparing",
+		"titlePlaceholder": "Voer de titel van het projectbord in"
+	},
+	"proposalPage": {
+		"preview": "Voorvertoning",
+		"previewInfo": "Inhoud van kaarten die in de bewerkingsmodus als 'voltooid' zijn gemarkeerd, worden hier weergegeven in de voorbeeldmodus, zodat uw reviewers kunnen zien wat ze zien.",
+		"submittedLocked": "Het voorstel is ingediend en vergrendeld 🔒"
+	},
+	"proposalSelector": {
+		"linkToProposal": "Link naar voorstel",
+		"selectCard": "Selecteer kaart"
+	},
+	"resource": "Hulpbron",
+	"resources": "Bronnen",
+	"resourcesCards": {
+		"header": "Bronnen"
+	},
+	"review": "Beoordeling",
+	"reviewDetail": {
+		"exit": "Uitgang",
+		"individualReview": "individuele beoordeling",
+		"synthesis": "synthese"
+	},
+	"reviewProposal": {
+		"feedback": "Feedback",
+		"instruction": "Zodra u uw voorstel of onderzoek indient, verschijnen uw beoordelingen hier."
+	},
+	"reviewTabs": {
+		"peerFeedback": "Peerfeedback",
+		"projectReportFeedback": "Feedback op projectrapport",
+		"proposalFeedback": "Feedback op voorstel"
+	},
+	"scoringSurvey": "Instructies voor het scoren (alleen voor enquêtes)",
+	"section": {
+		"addCard": "Kaart toevoegen",
+		"card": "kaart",
+		"cards": "kaarten",
+		"deleteSectionConfirm": "Weet u zeker dat u deze voorstelsectie wilt verwijderen? Alle kaarten in deze sectie worden ook verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
+		"newCard": "Nieuwe kaart",
+		"newTitlePrompt": "Voer een nieuwe titel in"
+	},
+	"selector": {
+		"basicBlocks": {
+			"description": "Wil je <strong>aangepaste instructies</strong> aan je deelnemers geven of <strong>een link en/of video</strong> in je studieprocedure insluiten? Selecteer en bewerk een basisblok.",
+			"title": "Basisblokken"
+		},
+		"filter": {
+			"createdByAnyone": "Gemaakt door iedereen",
+			"myFavorite": "Mijn favoriet",
+			"ownedByMe": "In mijn bezit"
+		},
+		"searchPlaceholder": "🔍 Zoeken",
+		"studyDesign": {
+			"betweenSubjects": "Tussen-onderwerpen-ontwerp",
+			"description": "Creëer een tussen-onderwerpen-ontwerp",
+			"title": "Studieopzet"
+		},
+		"surveys": {
+			"buildOwn": "Vind je geen tool om een ​​van je studieobjecten te meten? Bouw er dan zelf een met de Survey Builder en hulp van je docent:",
+			"description": "Wilt u de houding, ervaringen of meningen van deelnemers meten via zelfrapportage? Kies uit deze database met gevalideerde enquêtes.",
+			"title": "Enquêtes"
+		},
+		"tasks": {
+			"description": "Wil je een construct of variabele meten door deelnemers een activiteit te laten voltooien? Kies uit deze database met gevalideerde taken.",
+			"title": "Taken"
+		},
+		"templates": {
+			"description": "Wil je niet helemaal opnieuw beginnen? Selecteer en bewerk een <strong>vooraf gemaakt onderzoeksontwerp</strong> met behulp van een van de sjablonen in deze database.",
+			"title": "Sjablonen"
+		}
+	},
+	"selectWhichToClone": "Selecteer hieronder welke {{taskType}} u wilt klonen.",
+	"settingsBlock": {
+		"acceptParticipants": "Deelnemers accepteren",
+		"acceptParticipantsDesc": "Toont de knop 'Deelnemen' op de studiepagina en stelt bezoekers in staat deel te nemen aan uw studie",
+		"allowGuestParticipation": "Gastdeelname toestaan",
+		"allowGuestParticipationDesc": "Bezoekers kunnen als gasten aan uw studie deelnemen.",
+		"allowMultipleRetakes": "Meerdere herkansingen toestaan",
+		"allowMultipleRetakesDesc": "Geef deelnemers de mogelijkheid om taken of enquêtes meerdere keren opnieuw in te vullen",
+		"askForConsent": "Vraag toestemming van de deelnemer",
+		"askForConsentDesc": "Aan bezoekers worden toestemmingsformulieren getoond en er wordt hen gevraagd om toestemming voordat ze mogen deelnemen.",
+		"askForSonaId": "Vraag naar de NYU SONA-ID van de deelnemer",
+		"askForSonaIdDesc": "Vraag deelnemers om NYU SONA ID",
+		"askForZip": "Vraag naar de postcode van de deelnemer",
+		"askForZipDesc": "Bezoekers wordt gevraagd hun postcode in te voeren wanneer ze deelnemen aan het onderzoek",
+		"autoLaunch": "Automatisch studie starten",
+		"autoLaunchDesc": "Deelnemers worden automatisch naar de eerste taak geleid nadat ze aan het onderzoek deelnemen",
+		"connectExternalDevices": "Verbinding maken met externe apparaten",
+		"connectExternalDevicesDesc": "Geeft de plug-in voor externe apparaten weer tijdens de taak",
+		"emailNotifications": "E-mailmeldingen",
+		"emailNotificationsDesc": "Toon de e-mailmeldingen na elke taak/enquête",
+		"nycStudents": "Studenten uit New York",
+		"nycStudentsDesc": "Vraag de deelnemers of ze leerlingen zijn van een openbare school in New York",
+		"off": "Uit",
+		"on": "Op",
+		"onlyOver18": "Alleen deelnemers ouder dan 18 jaar toelaten",
+		"onlyOver18Desc": "Alleen deelnemers ouder dan 18 jaar mogen aan deze studie deelnemen",
+		"onlyTeachersCanEditIRB": "Alleen docenten, wetenschappers en beheerders kunnen IRB-formulieren toevoegen of bewerken."
+	},
+	"share": {
+		"customizeBelow": "Pas hieronder uw studie-url aan",
+		"customizeUrl": "URL aanpassen",
+		"customizeUrlDesc": "Pas uw studie-url aan",
+		"linkCopied": "De link is gekopieerd",
+		"off": "Uit",
+		"on": "Op",
+		"shareYourStudy": "Deel je studie",
+		"studyUrl": "Studie-url",
+		"tip": "Tip: vermijd spaties in de url. Gebruik bijvoorbeeld streepjes."
+	},
+	"sharing": {
+		"collaboratorsOn": "Medewerkers aan de {{taskType}}"
+	},
+	"sharingCard": {
+		"collective": "Collectief",
+		"individual": "Individueel",
+		"selectType": "Selecteer type"
+	},
+	"sharingTab": "Delen",
+	"start": {
+		"header": "Begin met het opbouwen van uw studie",
+		"message": "U kunt uw studie nu of later aan een klas koppelen in de studie-instellingen."
+	},
+	"startMindHiveProject": "Start uw MindHive-project",
+	"startStudyFromScratch": "Een studie vanaf nul beginnen",
+	"status": {
+		"collectingData": "Gegevens verzamelen",
+		"dataCollectionCompleted": "Gegevensverzameling is voltooid",
+		"inReview": "Ter beoordeling",
+		"placeholder": "Studieversies",
+		"readyForReview": "Klaar voor beoordeling",
+		"reviewed": "Beoordeeld",
+		"submittedAsProposal": "Ingediend als voorstel",
+		"title": "Studiestatus",
+		"workInProgress": "Werk in uitvoering"
+	},
+	"statusCard": {
+		"comments": "Reacties",
+		"completed": "Voltooid",
+		"helpNeeded": "Hulp nodig",
+		"inProgress": "In uitvoering",
+		"needsRevision": "Moet worden herzien",
+		"notStarted": "Niet gestart",
+		"setStatus": "Status instellen vóór het sluiten"
+	},
+	"studiesIHaventParticipatedIn": "Studies waaraan ik niet heb deelgenomen",
+	"studiesIParticipatedIn": "Studies waaraan ik heb deelgenomen",
+	"study": "studie",
+	"studyBuilder": "Studiebouwer",
+	"studyDescription": "Een studie is een onderzoeksproject met een onderzoeksvraag. Het kan bestaan ​​uit meerdere taken en/of enquêtes.",
+	"studyManager": {
+		"assignToExistingStudy": "Toewijzen aan bestaande studie",
+		"assignToStudy": "Toewijzen aan studie",
+		"cancel": "Annuleren",
+		"chooseExistingStudy": "Kies een bestaande studie die u aan het project wilt toewijzen.",
+		"collaborators": "Medewerkers:",
+		"collaboratorStudies": "Samenwerkingsstudies",
+		"confirm": "Bevestigen",
+		"confirmStudyConnection": "Bevestig studieverbinding",
+		"confirmStudyConnectionDesc": "Weet u zeker dat u deze studie wilt {{action}}en wilt koppelen aan het project \"{{project}}\"? Deze actie kan van invloed zijn op gerelateerde gegevens.",
+		"connect": "verbinden",
+		"connectedToProject": "Verbonden met project: {{project}}",
+		"createNewStudy": "Nieuwe studie maken",
+		"createNewStudyToConnect": "Maak een nieuwe studie om verbinding te maken met dit project.",
+		"createStudy": "Studie maken",
+		"disconnect": "Loskoppelen",
+		"enterNewStudyName": "Voer de naam van de nieuwe studie in",
+		"mainProjectStudy": "Hoofdprojectstudie",
+		"manageStudies": "Studies beheren ({{count}})",
+		"manageStudiesFor": "Studies beheren voor {{username}}",
+		"mentors": "Mentoren:",
+		"noCollaboratorStudiesAssigned": "Geen samenwerkende studies toegewezen",
+		"none": "Geen",
+		"noProjectAssigned": "Er is geen project toegewezen. Gebruik de Project Manager om een ​​project aan te maken of toe te wijzen voordat u de studies beheert.",
+		"noStudyConnected": "Er is momenteel geen studie aan dit project gekoppeld. Gebruik de onderstaande opties om een ​​nieuwe studie toe te wijzen of aan te maken.",
+		"notAssignedToAnyStudies": "Deze student is niet als medewerker aan een studie toegewezen.",
+		"project": "Project",
+		"reassign": "opnieuw toewijzen",
+		"reassignStudy": "Studie opnieuw toewijzen",
+		"reassignToAnotherStudy": "Toewijzen aan een andere studie",
+		"removeCollaborator": "Verwijderen als medewerker",
+		"selectAStudy": "Selecteer een studie",
+		"selectDifferentStudy": "Selecteer een andere studie om aan dit project te koppelen.",
+		"title": "Titel:",
+		"unknownProject": "Onbekend project",
+		"viewCreateAssign": "Studies voor de student bekijken, maken of toewijzen",
+		"viewStudy": "Bekijk studie"
+	},
+	"submit": "Indienen",
+	"submitStudy": {
+		"appearInFeedbackCenter": "Uw onderzoek verschijnt in het Feedback Center.",
+		"completeAllRequired": "Vul alle vereiste kaarten in voordat u uw voorstel ter feedback indient.",
+		"dataCollection": "Gegevensverzameling",
+		"lockedForParticipation": "Deelname aan het onderzoek is geblokkeerd",
+		"readyToSubmit": "Het onderzoek is klaar om ter feedback ingediend te worden!",
+		"studyUrl": "Studie-url",
+		"studyWasSubmitted": "Het onderzoek is ingediend",
+		"submitFor": "Verzenden voor {{title}}",
+		"submitForDataCollection": "Dien uw studie in voor gegevensverzameling",
+		"submitForFeedbackIntro": "Zodra u uw studie ter feedback indient:",
+		"submittedForReview": "Het voorstel werd ter beoordeling voorgelegd",
+		"unlockedForParticipation": "Het onderzoek is vrijgegeven voor deelname"
+	},
+	"surveyBuilder": {
+		"addFirstPage": "Voeg uw eerste pagina toe",
+		"addPage": "+",
+		"deletePage": "Deze pagina verwijderen",
+		"page": "Pagina {{nummer}}"
+	},
+	"surveyDescription": "In een enquête worden deelnemers vragen gesteld over zichzelf, over hoe ze zich gedragen en hoe ze zich voelen.",
 	"tabs": {
 		"addTab": "Tabblad toevoegen",
 		"newTab": "Nieuw tabblad"
 	},
-	"consentSelector": {
-		"typeConsentProtocol": "Typ het toestemmingsprotocol"
+	"taskDescription": "Bij een taak wordt de deelnemers gevraagd om specifieke acties uit te voeren (bijvoorbeeld op een knop drukken) op basis van wat ze zien of horen.",
+	"taskModal": {
+		"addToStudy": "Toevoegen aan studie",
+		"close": "Dichtbij",
+		"createCopy": "Een kopie maken",
+		"preview": "Voorbeeld {{taskType}}"
 	},
-	"settingsBlock": {
-		"acceptParticipants": "Deelnemers accepteren",
-		"acceptParticipantsDesc": "Toont de knop 'Deelnemen' op de studiepagin en stelt bezoekers in staat deel te nemen aan je studie",
-		"allowGuestParticipation": "Gastdeelname toestaan",
-		"allowGuestParticipationDesc": "Bezoekers kunnen als gast deelnemen aan je studie.",
-		"askForConsent": "Vraag om toestemming van de deelnemer",
-		"askForConsentDesc": "Bezoekers krijgen toestemmingsformulieren te zien en wordt gevraagd om toestemming voordat ze deelnemen",
-		"onlyTeachersCanEditIRB": "Alleen docenten, wetenschappers en beheerders kunnen IRB-formulieren toevoegen of bewerken.",
-		"askForZip": "Vraag om postcode van deelnemer",
-		"askForZipDesc": "Bezoekers wordt gevraagd hun postcode in te voeren bij deelname aan de studie",
-		"autoLaunch": "Studie automatisch starten",
-		"autoLaunchDesc": "Deelnemers worden automatisch naar de eerste taak geleid na deelname aan de studie",
-		"allowMultipleRetakes": "Meerdere pogingen toestaan",
-		"allowMultipleRetakesDesc": "Sta deelnemers toe taken of enquêtes meerdere keren opnieuw te doen",
-		"emailNotifications": "E-mailnotificaties",
-		"emailNotificationsDesc": "Toon de e-mailnotificatie na elke taak/enquête",
-		"nycStudents": "NYC studenten",
-		"nycStudentsDesc": "Vraag deelnemers of ze student zijn aan een openbare school in NYC",
-		"askForSonaId": "Vraag om NYU SONA ID van deelnemer",
-		"askForSonaIdDesc": "Vraag deelnemers om hun NYU SONA ID",
-		"onlyOver18": "Alleen deelnemers ouder dan 18 toestaan",
-		"onlyOver18Desc": "Sta alleen deelnemers ouder dan 18 toe om deel te nemen aan deze studie",
-		"connectExternalDevices": "Verbind met externe apparaten",
-		"connectExternalDevicesDesc": "Toont de plugin voor externe apparaten tijdens de taak",
-		"on": "Aan",
-		"off": "Uit"
+	"teacherExplicitInstruction": "(selecteer deze optie alleen als uw docent u dit expliciet heeft opgedragen)",
+	"template": {
+		"chooseType": "Kies het type",
+		"collaborators": "Medewerkers aan de sjabloon",
+		"createdOn": "Gemaakt op",
+		"defaultValue": "De standaardwaarde voor deze parameter",
+		"delete": "Verwijderen",
+		"deleteAndReupload": "Verwijderen en opnieuw uploaden",
+		"description": "Sjabloonbeschrijving",
+		"download": "Download",
+		"example": "Een voorbeeld van wat de parameterwaarde kan zijn",
+		"instructions": "Geef instructies zodat andere gebruikers kunnen begrijpen wat deze parameter verandert in de taak",
+		"labjsScript": "lab.js script (JSON-bestand)",
+		"noParameters": "Het bestand lab.js bevat geen parameters.",
+		"number": "Nummer",
+		"options": "De opties (elk op een nieuwe regel) voor deze parameter",
+		"parameters": "Sjabloonparameters",
+		"selectIcon": "Selecteer het pictogram",
+		"selectOne": "Selecteer er één",
+		"selectType": "Selecteer het type parameter",
+		"singleLine": "Eénregelige tekstinvoer",
+		"surveyBuilder": "Enquêtebouwer",
+		"text": "Tekst",
+		"title": "Sjabloontitel",
+		"updatedOn": "Laatst bijgewerkt op",
+		"uploadLabjs": "Upload eerst een lab.js json-bestand",
+		"vasBuilder": "VAS-bouwer"
 	},
-	"share": {
-		"shareYourStudy": "Deel je studie",
-		"studyUrl": "Studie-url",
-		"customizeBelow": "Pas hieronder je studie-url aan",
-		"customizeUrl": "Url aanpassen",
-		"customizeUrlDesc": "Pas je studie-url aan",
-		"tip": "Tip: vermijd spaties in de url. Gebruik bijvoorbeeld streepjes.",
-		"linkCopied": "De link is gekopieerd",
-		"on": "Aan",
-		"off": "Uit"
+	"templateTab": "Sjabloon",
+	"testAndCollect": "Testen en verzamelen",
+	"title": "Studie Builder",
+	"typeCard": {
+		"article": "Artikel",
+		"assignment": "Opdracht",
+		"lesson": "Les",
+		"link": "Link",
+		"proposal": "Voorstel",
+		"selectType": "Selecteer type",
+		"survey": "Vragenlijst"
 	},
-	"participantPageMain": {
-		"cloneOf": "Kloon van",
-		"projectChat": "Projectchat",
-		"save": "Opslaan",
-		"noStudyHeader": "🤷🏻 Er is geen studie aan je project gekoppeld.",
-		"noStudyMessage": "Laat je docent weten dat hij er een kan aanmaken en koppelen. Als je hulp nodig hebt, neem dan contact op met de technische ondersteuning via support.mindhive@nyu.edu."
+	"unsavedChangesWarning": "Uw niet-opgeslagen wijzigingen gaan verloren. Klik op Annuleren om terug te keren en de wijzigingen op te slaan.",
+	"updateStudy": {
+		"update": "Update"
 	},
-	"board": {
-		"loading": "Bezig met laden...",
-		"error": "Fout! {{message}}"
-	}
+	"uploadFromLabjs": "Upload een {{develop}} van lab.js",
+	"uploadSurveyScript": "Selecteer deze optie als u liever uw eigen enquêtescript wilt uploaden vanuit lab.js.",
+	"uploadTaskScript": "Selecteer deze optie als u liever uw eigen taakscript wilt uploaden vanuit lab.js.",
+	"variable": "Variabele",
+	"vas": {
+		"addMore": "Voeg meer toe"
+	},
+	"version": {
+		"confirmDelete": "Weet u zeker dat u {{versionName}} wilt verwijderen?",
+		"createdOn": "Gemaakt op",
+		"createNewVersion": "Nieuwe versie maken",
+		"currentVersion": "Huidige versie",
+		"delete": "Verwijderen",
+		"description": "Beschrijving",
+		"enterVersionName": "Voer de versienaam in",
+		"headerNote": "Sla verschillende studieontwerpen op die op het scherm aan de linkerkant worden weergegeven",
+		"load": "Laden",
+		"name": "Naam",
+		"noVersionSaved": "Er is nog geen studieversie opgeslagen. Maak een nieuwe versie door op onderstaande knop te klikken.",
+		"placeholder": "Studieversies",
+		"title": "Studieversie"
+	},
+	"viewer": {
+		"afterParticipation": "Wat deelnemers zien <u>na</u> het afleggen van de {{taskType}}",
+		"aggregateVariables": "Geaggregeerde variabelen",
+		"aggregateVariablesDesc": "Deze gegevens worden automatisch naar een csv-bestand geschreven zodra de {{taskType}} is voltooid.",
+		"background": "Achtergrond",
+		"beforeParticipation": "Wat deelnemers zien <u>voordat</u> ze de {{taskType}} afleggen",
+		"customize": "Aanpassen",
+		"defaultValues": "Standaardwaarden worden weergegeven (u kunt {{taskType}} klonen en deze wijzigen)",
+		"duration": "Duur",
+		"format": "Formaat",
+		"freeTextInput": "Vrije tekstinvoer",
+		"likertScale": "Likertschaal",
+		"mobileCompatible": "Mobiel compatibel",
+		"moreInfo": "meer informatie",
+		"parameters": "Parameters",
+		"preview": "Voorbeeld {{taskType}}",
+		"resources": "Bronnen",
+		"scoring": "Scoren",
+		"screenshot": "Schermafbeelding",
+		"selectMany": "Selecteer veel",
+		"selectOne": "Selecteer er één",
+		"surveyParameters": "Enquêteparameters",
+		"text": "Tekst",
+		"tweakableFeatures": "De volgende kenmerken van deze {{taskType}} kunnen worden aangepast:",
+		"visualAnalogueScale": "Visuele analoge schaal"
+	},
+	"visualize": "Visualiseren",
+	"whatWouldYouLikeToDevelop": "Wat wil je ontwikkelen?"
 }
