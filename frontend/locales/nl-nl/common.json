@@ -39,5 +39,11 @@
 		"title": "Welke rol beschrijft u het beste?"
 	},
 	"studies": "Onderzoeken",
-	"tasksAndSurveys": "Taken en enquêtes"
+	"tasksAndSurveys": "Taken en enquêtes",
+	"terms": {
+		"byClicking": "",
+		"includingOur": "",
+		"privacyPolicy": "",
+		"termsOfService": ""
+	}
 }

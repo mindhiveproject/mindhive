@@ -169,6 +169,27 @@
 			"working": "Trabalho em andamento"
 		}
 	},
+	"dataUsage": {
+		"and": "",
+		"educationLabel": "",
+		"educationNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"noLabel": "",
+		"noNote": "",
+		"privacy": "",
+		"question": "",
+		"scienceLabel": "",
+		"scienceNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"selfLabel": "",
+		"selfNote": "",
+		"terms": "",
+		"title": ""
+	},
 	"deleteProposal": {
 		"confirm": "Tem certeza de que deseja excluir esta proposta? Todas as seções e cartões desta proposta também serão excluídos.",
 		"title": "Tem certeza de que deseja excluir esta proposta?"
@@ -702,6 +723,30 @@
 		"close": "Fechar",
 		"createCopy": "Criar uma cópia",
 		"preview": "Visualizar {{taskType}}"
+	},
+	"taskPage": {
+		"after": "O que os participantes veem <u>depois de</u> fazer o {{taskType}}",
+		"aggregateVariables": "",
+		"aggregateVariablesDescription": "",
+		"background": "",
+		"before": "",
+		"checkbox": "",
+		"duration": "",
+		"format": "",
+		"freeinput": "",
+		"likert": "",
+		"mobileCompatible": "",
+		"moreInfo": "",
+		"parameters": "",
+		"parametersDescription": "",
+		"parametersNote": "",
+		"resources": "",
+		"scoring": "",
+		"screenshot": "",
+		"select": "",
+		"surveyParameters": "",
+		"text": "",
+		"vas": ""
 	},
 	"teacherExplicitInstruction": "(selecione esta opção somente se seu professor tiver explicitamente solicitado)",
 	"template": {

@@ -39,5 +39,11 @@
 		"title": "Quel rôle vous décrit le mieux ?"
 	},
 	"studies": "Études",
-	"tasksAndSurveys": "Tâches et enquêtes"
+	"tasksAndSurveys": "Tâches et enquêtes",
+	"terms": {
+		"byClicking": "",
+		"includingOur": "",
+		"privacyPolicy": "",
+		"termsOfService": ""
+	}
 }

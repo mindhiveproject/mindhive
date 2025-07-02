@@ -169,6 +169,27 @@
 			"working": "العمل قيد التقدم"
 		}
 	},
+	"dataUsage": {
+		"and": "و",
+		"educationLabel": "لا",
+		"educationNote": {
+			"part1": "لا، لكن فقط للاستخدام التعليمي والبرامج المجتمعية",
+			"part2": "لا، لكن فقط للاستخدام التعليمي والبرامج المجتمعية"
+		},
+		"noLabel": "لا",
+		"noNote": "لا، فقط حفظ الردود الخاصة بي لاستخدامي",
+		"privacy": "سياسة الخصوصية",
+		"question": "هل تريد السماح لباحثي ومعلمي MindHive بالوصول إلى ردودك لهذه المهمة؟",
+		"scienceLabel": "لا",
+		"scienceNote": {
+			"part1": "لا، لكن فقط للاستخدام التعليمي والبرامج المجتمعية",
+			"part2": ""
+		},
+		"selfLabel": "لا",
+		"selfNote": "لا، فقط حفظ الردود الخاصة بي لاستخدامي",
+		"terms": "الشروط والأحكام",
+		"title": "استخدام البيانات"
+	},
 	"deleteProposal": {
 		"confirm": "هل أنت متأكد من رغبتك في حذف هذا الاقتراح؟ سيتم حذف جميع الأقسام والبطاقات فيه أيضًا.",
 		"title": "هل أنت متأكد أنك تريد حذف هذا الاقتراح؟"
@@ -702,6 +723,30 @@
 		"close": "يغلق",
 		"createCopy": "إنشاء نسخة",
 		"preview": "معاينة {{taskType}}"
+	},
+	"taskPage": {
+		"after": "ما يراه المشاركون <u>بعد</u> من تناول {{taskType}}",
+		"aggregateVariables": "",
+		"aggregateVariablesDescription": "",
+		"background": "",
+		"before": "",
+		"checkbox": "",
+		"duration": "",
+		"format": "",
+		"freeinput": "",
+		"likert": "",
+		"mobileCompatible": "",
+		"moreInfo": "",
+		"parameters": "",
+		"parametersDescription": "",
+		"parametersNote": "",
+		"resources": "",
+		"scoring": "",
+		"screenshot": "",
+		"select": "",
+		"surveyParameters": "",
+		"text": "",
+		"vas": ""
 	},
 	"teacherExplicitInstruction": "(اختر هذا الخيار فقط إذا طلب منك معلمك صراحةً القيام بذلك)",
 	"template": {

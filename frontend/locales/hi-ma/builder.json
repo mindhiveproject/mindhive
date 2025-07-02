@@ -169,6 +169,27 @@
 			"working": "कार्य प्रगति पर"
 		}
 	},
+	"dataUsage": {
+		"and": "",
+		"educationLabel": "",
+		"educationNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"noLabel": "",
+		"noNote": "",
+		"privacy": "",
+		"question": "",
+		"scienceLabel": "",
+		"scienceNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"selfLabel": "",
+		"selfNote": "",
+		"terms": "",
+		"title": ""
+	},
 	"deleteProposal": {
 		"confirm": "क्या आप वाकई इस प्रस्ताव को हटाना चाहते हैं? इस प्रस्ताव के सभी अनुभाग और कार्ड भी हटा दिए जाएँगे।",
 		"title": "क्या आप वाकई इस प्रस्ताव को हटाना चाहते हैं?"
@@ -702,6 +723,30 @@
 		"close": "बंद करना",
 		"createCopy": "प्रतिलिपि बनाएँ",
 		"preview": "पूर्वावलोकन {{taskType}}"
+	},
+	"taskPage": {
+		"after": "",
+		"aggregateVariables": "",
+		"aggregateVariablesDescription": "",
+		"background": "",
+		"before": "",
+		"checkbox": "",
+		"duration": "",
+		"format": "",
+		"freeinput": "",
+		"likert": "",
+		"mobileCompatible": "",
+		"moreInfo": "",
+		"parameters": "",
+		"parametersDescription": "",
+		"parametersNote": "",
+		"resources": "",
+		"scoring": "",
+		"screenshot": "",
+		"select": "",
+		"surveyParameters": "",
+		"text": "",
+		"vas": ""
 	},
 	"teacherExplicitInstruction": "(यह विकल्प केवल तभी चुनें जब आपके शिक्षक ने आपको ऐसा करने के लिए स्पष्ट रूप से कहा हो)",
 	"template": {

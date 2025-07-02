@@ -39,5 +39,11 @@
 		"title": "哪个角色最能描述您？"
 	},
 	"studies": "研究",
-	"tasksAndSurveys": "任务和调查"
+	"tasksAndSurveys": "任务和调查",
+	"terms": {
+		"byClicking": "",
+		"includingOur": "",
+		"privacyPolicy": "",
+		"termsOfService": ""
+	}
 }

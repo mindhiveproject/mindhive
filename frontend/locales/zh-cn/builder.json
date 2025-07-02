@@ -169,6 +169,27 @@
 			"working": "正在进行的工作"
 		}
 	},
+	"dataUsage": {
+		"and": "",
+		"educationLabel": "",
+		"educationNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"noLabel": "",
+		"noNote": "",
+		"privacy": "",
+		"question": "",
+		"scienceLabel": "",
+		"scienceNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"selfLabel": "",
+		"selfNote": "",
+		"terms": "",
+		"title": ""
+	},
 	"deleteProposal": {
 		"confirm": "您确定要删除此提案吗？此提案中的所有版块和卡片也将被删除。",
 		"title": "您确定要删除该建议吗？"
@@ -702,6 +723,30 @@
 		"close": "关闭",
 		"createCopy": "创建副本",
 		"preview": "预览 {{taskType}}"
+	},
+	"taskPage": {
+		"after": "参与者在</u> 参加 {{taskType}}后 <u>看到了什么",
+		"aggregateVariables": "",
+		"aggregateVariablesDescription": "",
+		"background": "",
+		"before": "",
+		"checkbox": "",
+		"duration": "",
+		"format": "",
+		"freeinput": "",
+		"likert": "",
+		"mobileCompatible": "",
+		"moreInfo": "",
+		"parameters": "",
+		"parametersDescription": "",
+		"parametersNote": "",
+		"resources": "",
+		"scoring": "",
+		"screenshot": "",
+		"select": "",
+		"surveyParameters": "",
+		"text": "",
+		"vas": ""
 	},
 	"teacherExplicitInstruction": "（仅当您的老师明确告诉您这样做时才选择此选项）",
 	"template": {

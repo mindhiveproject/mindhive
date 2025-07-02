@@ -169,6 +169,27 @@
 			"working": "Trabajo en progreso"
 		}
 	},
+	"dataUsage": {
+		"and": "",
+		"educationLabel": "",
+		"educationNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"noLabel": "",
+		"noNote": "",
+		"privacy": "",
+		"question": "",
+		"scienceLabel": "",
+		"scienceNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"selfLabel": "",
+		"selfNote": "",
+		"terms": "",
+		"title": ""
+	},
 	"deleteProposal": {
 		"confirm": "¿Seguro que desea eliminar esta propuesta? Todas las secciones y tarjetas de esta propuesta también se eliminarán.",
 		"title": "¿Estás seguro que deseas eliminar esta propuesta?"
@@ -702,6 +723,30 @@
 		"close": "Cerca",
 		"createCopy": "Crear una copia",
 		"preview": "Vista previa {{taskType}}"
+	},
+	"taskPage": {
+		"after": "Lo que ven los participantes <u>después de</u> tomar la {{taskType}}",
+		"aggregateVariables": "",
+		"aggregateVariablesDescription": "",
+		"background": "",
+		"before": "",
+		"checkbox": "",
+		"duration": "",
+		"format": "",
+		"freeinput": "",
+		"likert": "",
+		"mobileCompatible": "",
+		"moreInfo": "",
+		"parameters": "",
+		"parametersDescription": "",
+		"parametersNote": "",
+		"resources": "",
+		"scoring": "",
+		"screenshot": "",
+		"select": "",
+		"surveyParameters": "",
+		"text": "",
+		"vas": ""
 	},
 	"teacherExplicitInstruction": "(seleccione esta opción solo si su profesor le dijo explícitamente que lo hiciera)",
 	"template": {

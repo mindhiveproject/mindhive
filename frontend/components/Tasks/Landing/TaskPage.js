@@ -4,9 +4,11 @@ import { Icon, Accordion } from "semantic-ui-react";
 
 import { StyledContent } from "../../styles/StyledTaskPage";
 import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function TaskPage({ user, task }) {
   const [active, setActive] = useState(false);
+  const { t } = useTranslation("builder");
 
   const taskType = task?.taskType?.toLowerCase();
 
@@ -40,14 +42,14 @@ export default function TaskPage({ user, task }) {
       <div className="leftPanel">
         {task?.image && (
           <div className="contentBlock">
-            <h2>Screenshot</h2>
+            <h2>{t("taskPage.screenshot")}</h2>
             <img src={task?.image} />
           </div>
         )}
 
         {settings?.background && (
           <div className="contentBlock">
-            <h2>Background</h2>
+            <h2>{t("taskPage.background")}</h2>
             <div>
               {settings?.background && (
                 <p>{ReactHtmlParser(settings?.background)}</p>
@@ -58,10 +60,10 @@ export default function TaskPage({ user, task }) {
 
         {parameters.length > 0 && (
           <div>
-            <h2>Parameters</h2>
-            <p>The following features of this {taskType} can be tweaked:</p>
+            <h2>{t("taskPage.parameters")}</h2>
+            <p>{t("taskPage.parametersDescription", { taskType })}</p>
             <p style={{ fontSize: "14px" }}>
-              * Default values are shown (can clone {taskType} and modify these)
+              {t("taskPage.parametersNote", { taskType })}
             </p>
             <div className="symbolBlock">
               {parameters.map((parameter, num) => (
@@ -86,10 +88,10 @@ export default function TaskPage({ user, task }) {
 
         {surveyItems.length > 0 && (
           <div>
-            <h2>Survey parameters</h2>
-            <p>The following features of this {taskType} can be tweaked:</p>
+            <h2>{t("taskPage.surveyParameters")}</h2>
+            <p>{t("taskPage.parametersDescription", { taskType })}</p>
             <p style={{ fontSize: "14px" }}>
-              * Default values are shown (can clone {taskType} and modify these)
+              {t("taskPage.parametersNote", { taskType })}
             </p>
             <div className="symbolBlock">
               {surveyItems.map((item, num) => (
@@ -100,12 +102,12 @@ export default function TaskPage({ user, task }) {
                       style={{ color: "#556AEB" }}
                     />
                     <span style={{ fontWeight: "600" }}>
-                      {item?.type === "text" && "Text"}
-                      {item?.type === "vas" && "Visual analogue scale"}
-                      {item?.type === "likert" && "Likert scale"}
-                      {item?.type === "freeinput" && "Free text input"}
-                      {item?.type === "select" && "Select one"}
-                      {item?.type === "checkbox" && "Select many"}
+                      {item?.type === "text" && t("taskPage.text")}
+                      {item?.type === "vas" && t("taskPage.vas")}
+                      {item?.type === "likert" && t("taskPage.likert")}
+                      {item?.type === "freeinput" && t("taskPage.freeinput")}
+                      {item?.type === "select" && t("taskPage.select")}
+                      {item?.type === "checkbox" && t("taskPage.checkbox")}
                     </span>
                   </p>
                   <p style={{ fontWeight: "lighter" }}>
@@ -123,7 +125,7 @@ export default function TaskPage({ user, task }) {
         {settings?.descriptionBefore && (
           <div>
             <h2>
-              What participants see <u>before</u> taking the {taskType}
+              {t("taskPage.before", { taskType })}
             </h2>
             <p className="symbolBlock">{settings?.descriptionBefore}</p>
           </div>
@@ -132,7 +134,7 @@ export default function TaskPage({ user, task }) {
         {settings?.descriptionAfter && (
           <div>
             <h2>
-              What participants see <u>after</u> taking the {taskType}
+              {t("taskPage.after", { taskType })}
             </h2>
             <p className="symbolBlock">{settings?.descriptionAfter}</p>
           </div>
@@ -148,16 +150,15 @@ export default function TaskPage({ user, task }) {
               color="teal"
               size="large"
             />
-            <span>Mobile compatible</span>
+            <span>{t("taskPage.mobileCompatible")}</span>
           </div>
         )}
 
         {aggregateVariables.length > 0 && (
           <div className="contentBlock">
-            <h2>Aggregate Variables</h2>
+            <h2>{t("taskPage.aggregateVariables")}</h2>
             <p>
-              These data are automatically written to a csv file upon completion
-              of the {taskType}
+              {t("taskPage.aggregateVariablesDescription", { taskType })}
             </p>
             {settings?.addInfo && (
               <Accordion>
@@ -166,7 +167,7 @@ export default function TaskPage({ user, task }) {
                   onClick={() => setActive(!active)}
                 >
                   <Icon name="dropdown" />
-                  more info
+                  {t("taskPage.moreInfo")}
                 </Accordion.Title>
                 <Accordion.Content active={active}>
                   <p>{ReactHtmlParser(settings?.addInfo)}</p>
@@ -183,28 +184,28 @@ export default function TaskPage({ user, task }) {
 
         {settings?.scoring && (
           <div className="contentBlock">
-            <h2>Scoring</h2>
+            <h2>{t("taskPage.scoring")}</h2>
             <p>{ReactHtmlParser(settings?.scoring)}</p>
           </div>
         )}
 
         {settings?.format && (
           <div className="contentBlock">
-            <h2>Format</h2>
+            <h2>{t("taskPage.format")}</h2>
             <p>{ReactHtmlParser(settings?.format)}</p>
           </div>
         )}
 
         {settings?.duration && (
           <div className="contentBlock">
-            <h2>Duration</h2>
+            <h2>{t("taskPage.duration")}</h2>
             <p>{settings?.duration}</p>
           </div>
         )}
 
         {resources.length > 0 && (
           <div className="contentBlock">
-            <h2>Resources</h2>
+            <h2>{t("taskPage.resources")}</h2>
             <ul>
               {resources.map((resource, num) => (
                 <li key={num}>{ReactHtmlParser(resource)}</li>

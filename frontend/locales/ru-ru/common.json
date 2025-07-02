@@ -39,5 +39,11 @@
 		"title": "Какая роль лучше всего вас описывает?"
 	},
 	"studies": "Исследования",
-	"tasksAndSurveys": "Задачи и опросы"
+	"tasksAndSurveys": "Задачи и опросы",
+	"terms": {
+		"byClicking": "",
+		"includingOur": "",
+		"privacyPolicy": "",
+		"termsOfService": ""
+	}
 }
