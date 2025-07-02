@@ -67,11 +67,21 @@ app
       console.log("Received pageId:", pageId);
 
       try {
-        // Query the database to get its pages
-        const response = await notion.databases.query({
-          database_id: pageId,
-        });
-        res.json(response.results); // Return the pages (rows) of the database
+        let results = [];
+        let hasMore = true;
+        let start_cursor = undefined;
+
+        while (hasMore) {
+          const response = await notion.databases.query({
+            database_id: pageId,
+            start_cursor,
+            page_size: 100, // max allowed
+          });
+          results = results.concat(response.results);
+          hasMore = response.has_more;
+          start_cursor = response.next_cursor;
+        }
+        res.json(results); // Return all pages (rows) of the database
       } catch (error) {
         console.error("Error retrieving Notion database pages:", error);
         res

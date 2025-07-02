@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import Tools from "./Tools";
 import Program from "./Program";
 
 import { StyledTeachersInfo } from "../../styles/StyledDocument";
 export default function NotionData({ pageId }) {
+  const router = useRouter();
+  const currentLocale = router.locale;
 
   const [notionData, setNotionData] = useState(null); // State to store the Notion data
   const [loading, setLoading] = useState(true); // State to track loading
@@ -22,7 +25,7 @@ export default function NotionData({ pageId }) {
           throw new Error(`Error: ${response.statusText}`);
         }
         const data = await response.json();
-        console.log(data); // Debug log ////////////////////////////////////////////////////////////////////////////////////////////////
+        console.log("data", data); // Debug log ////////////////////////////////////////////////////////////////////////////////////////////////
         setNotionData(data); // Store the fetched data in state
 
       } catch (err) {
@@ -47,25 +50,34 @@ export default function NotionData({ pageId }) {
   }
 
   const parseNotionData = (dataArray) => {
+    // Filter data by language column matching currentLocale
+    let filteredData = dataArray.filter((page) => {
+      const props = page.properties;
+      const pageLang = props?.language?.select?.name || props?.language?.rich_text?.[0]?.plain_text || props?.language?.title?.[0]?.plain_text;
+      return pageLang === currentLocale;
+    });
+    // Fallback to 'en-us' if no data for currentLocale
+    if (filteredData.length === 0) {
+      filteredData = dataArray.filter((page) => {
+        const props = page.properties;
+        const pageLang = props?.language?.select?.name || props?.language?.rich_text?.[0]?.plain_text || props?.language?.title?.[0]?.plain_text;
+        return pageLang === 'en-us';
+      });
+    }
     const result = {};
-  
-    dataArray.forEach((page) => {
+    filteredData.forEach((page) => {
       const props = page.properties;
       if (!props || !props.fieldName) return;
-  
       const fieldName = props.fieldName.title?.[0]?.plain_text;
       if (!fieldName) return;
-  
       const type = props.type?.select?.name;
       let content = null;
-  
       switch (type) {
         case 'text':
           if (props.contentText?.rich_text?.length > 0) {
             content = props.contentText.rich_text.map((rt, idx) => {
               const { annotations, plain_text } = rt;
               let element = <span key={idx}>{plain_text}</span>;
-  
               if (annotations.bold) {
                 element = <strong key={idx}>{element}</strong>;
               }
@@ -81,52 +93,42 @@ export default function NotionData({ pageId }) {
               if (annotations.code) {
                 element = <code key={idx}>{element}</code>;
               }
-  
               return element;
             });
           }
           break;
-  
         case 'url':
           if (props.contentURL?.url) {
             content = props.contentURL.url;
           }
           break;
-  
         case 'media':
           if (props.contentMedia?.files?.length > 0) {
-            content = props.contentMedia.files[0].name; // Or .url if you want the actual media
+            content = props.contentMedia.files[0].name;
           }
           break;
-  
         default:
           console.warn(`Unknown type "${type}" for field "${fieldName}"`);
           break;
       }
-  
       if (content) {
         result[fieldName] = content;
       }
     });
-  
     return result;
   };
   
-  
-
   const notionContent = notionData ? parseNotionData(notionData) : {};
-  console.log(notionContent); // Debug log ////////////////////////////////////////////////////////////////////////////////////////////////
-  console.log(notionContent.caseStudyImage); // Debug log ////////////////////////////////////////////////////////////////////////////////////////////////
-  console.log(notionContent.headerCurriculum); // Debug log ////////////////////////////////////////////////////////////////////////////////////////////////
+  console.log("notionContent", notionContent);
 
   return (
     <StyledTeachersInfo>
       <div className="white">
         <h1 className="centered">
-          {notionContent.mainHeader || "Fallback Header"}
+          {notionContent.mainHeader}
         </h1>
         <p className="centered">
-          {notionContent.mainDescription || "Fallback Header"}
+          {notionContent.mainDescription}
         </p>
         <div className="centered">
           <a
@@ -267,7 +269,7 @@ export default function NotionData({ pageId }) {
         <div>
           <a
             target="_blank"
-            href={`${notionContent.interestLink}`}
+            href={notionContent.interestLink || "https://docs.google.com/forms/d/e/1FAIpQLSfeaomKF-CrgKPAWF--Dy-IQpxjX1ginylqRJQ11SSnRjXKmQ/viewform?usp=sf_link"}
           >
             <button>{notionContent.getInTouch}</button>
           </a>
