@@ -169,6 +169,27 @@
 			"working": "Werk in uitvoering"
 		}
 	},
+	"dataUsage": {
+		"and": "",
+		"educationLabel": "",
+		"educationNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"noLabel": "",
+		"noNote": "",
+		"privacy": "",
+		"question": "",
+		"scienceLabel": "",
+		"scienceNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"selfLabel": "",
+		"selfNote": "",
+		"terms": "",
+		"title": ""
+	},
 	"deleteProposal": {
 		"confirm": "Weet u zeker dat u dit voorstel wilt verwijderen? Alle secties en kaarten in dit voorstel worden ook verwijderd.",
 		"title": "Weet u zeker dat u dit voorstel wilt verwijderen?"
@@ -702,6 +723,30 @@
 		"close": "Dichtbij",
 		"createCopy": "Een kopie maken",
 		"preview": "Voorbeeld {{taskType}}"
+	},
+	"taskPage": {
+		"after": "Wat deelnemers zien <u>nadat</u> de {{taskType}}heeft genomen",
+		"aggregateVariables": "",
+		"aggregateVariablesDescription": "",
+		"background": "",
+		"before": "",
+		"checkbox": "",
+		"duration": "",
+		"format": "",
+		"freeinput": "",
+		"likert": "",
+		"mobileCompatible": "",
+		"moreInfo": "",
+		"parameters": "",
+		"parametersDescription": "",
+		"parametersNote": "",
+		"resources": "",
+		"scoring": "",
+		"screenshot": "",
+		"select": "",
+		"surveyParameters": "",
+		"text": "",
+		"vas": ""
 	},
 	"teacherExplicitInstruction": "(selecteer deze optie alleen als uw docent u dit expliciet heeft opgedragen)",
 	"template": {

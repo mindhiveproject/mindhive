@@ -39,5 +39,11 @@
 		"title": "कौन सी भूमिका आपको सबसे अच्छी तरह से वर्णित करती है?"
 	},
 	"studies": "अध्ययन करते हैं",
-	"tasksAndSurveys": "कार्य और सर्वेक्षण"
+	"tasksAndSurveys": "कार्य और सर्वेक्षण",
+	"terms": {
+		"byClicking": "",
+		"includingOur": "",
+		"privacyPolicy": "",
+		"termsOfService": ""
+	}
 }

@@ -39,5 +39,11 @@
 		"title": "¿Qué rol te describe mejor?"
 	},
 	"studies": "Estudios",
-	"tasksAndSurveys": "Tareas y encuestas"
+	"tasksAndSurveys": "Tareas y encuestas",
+	"terms": {
+		"byClicking": "",
+		"includingOur": "",
+		"privacyPolicy": "",
+		"termsOfService": ""
+	}
 }

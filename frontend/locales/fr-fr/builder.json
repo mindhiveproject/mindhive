@@ -151,7 +151,7 @@
 			"unsupportedType": "Type de widget non pris en charge : {{type}}"
 		}
 	},
-	"dataJournals": "Journaux de données 🚧",
+	"dataJournals": "Journaux d'analyse' 🚧",
 	"dataset": {
 		"deleteInvalidRecord": "Supprimer l'enregistrement invalide",
 		"download": "Télécharger",
@@ -168,6 +168,27 @@
 			"submittedAsProposal": "Soumis comme proposition",
 			"working": "Travaux en cours"
 		}
+	},
+	"dataUsage": {
+		"and": "",
+		"educationLabel": "",
+		"educationNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"noLabel": "",
+		"noNote": "",
+		"privacy": "",
+		"question": "",
+		"scienceLabel": "",
+		"scienceNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"selfLabel": "",
+		"selfNote": "",
+		"terms": "",
+		"title": ""
 	},
 	"deleteProposal": {
 		"confirm": "Êtes-vous sûr de vouloir supprimer cette proposition ? Toutes les sections et cartes de cette proposition seront également supprimées.",
@@ -335,7 +356,7 @@
 		"backToHome": "← Retour à l'accueil",
 		"createProject": "Créer un projet",
 		"giveNameAlert": "Donnez un nom à votre projet",
-		"goBackHome": "Retourner à la maison",
+		"goBackHome": "Retourner à l'accueil'",
 		"nameMessage": "Donnez un nom à votre projet. Il ne s'agit pas du titre de l'étude, mais du nom que vous souhaitez donner à votre espace de travail.",
 		"namePlaceholder": "Le nom de mon projet est",
 		"nameYourProject": "Nommez votre projet",
@@ -441,7 +462,7 @@
 		"uploadStudyImage": "Télécharger l'image de l'étude"
 	},
 	"project": "Projet",
-	"projectBoard": "Comité de projet",
+	"projectBoard": "Organisateur de projet",
 	"proposal": {
 		"actions": "Actes",
 		"copy": "Copie",
@@ -499,7 +520,7 @@
 	"resourcesCards": {
 		"header": "Ressources"
 	},
-	"review": "Revoir",
+	"review": "Revue de projet",
 	"reviewDetail": {
 		"exit": "Sortie",
 		"individualReview": "examen individuel",
@@ -702,6 +723,30 @@
 		"close": "Fermer",
 		"createCopy": "Créer une copie",
 		"preview": "Aperçu {{taskType}}"
+	},
+	"taskPage": {
+		"after": "Ce que les participants voient <u>après avoir passé</u> le {{taskType}}",
+		"aggregateVariables": "Variables agrégées",
+		"aggregateVariablesDescription": "Ces données sont automatiquement écrites dans un fichier csv à la fin de la {{taskType}}",
+		"background": "Arrière-plan",
+		"before": "Ce que les participants voient <u>avant</u> de passer la {{taskType}}",
+		"checkbox": "Sélectionnez plusieurs",
+		"duration": "Durée",
+		"format": "Format",
+		"freeinput": "Saisie de texte libre",
+		"likert": "Échelle de Likert",
+		"mobileCompatible": "Compatible avec les appareils mobiles",
+		"moreInfo": "plus d'infos",
+		"parameters": "Paramètres",
+		"parametersDescription": "Les fonctionnalités suivantes de ce {{taskType}} peuvent être modifiées :",
+		"parametersNote": "* Les valeurs par défaut sont affichées (vous pouvez cloner {{taskType}} et les modifier)",
+		"resources": "Ressources",
+		"scoring": "Notation",
+		"screenshot": "Capture d'écran",
+		"select": "Sélectionnez-en un",
+		"surveyParameters": "Paramètres de l'enquête",
+		"text": "Texte",
+		"vas": "Échelle visuelle analogique"
 	},
 	"teacherExplicitInstruction": "(sélectionnez cette option uniquement si votre enseignant vous l'a explicitement demandé)",
 	"template": {

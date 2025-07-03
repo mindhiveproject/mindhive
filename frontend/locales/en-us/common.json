@@ -39,5 +39,11 @@
 		"title": "Which role best describes you?"
 	},
 	"studies": "Studies",
-	"tasksAndSurveys": "Tasks & Surveys"
+	"tasksAndSurveys": "Tasks & Surveys",
+	"terms": {
+		"byClicking": "By clicking on {btnName} you agree to MindHive’s",
+		"includingOur": "including our",
+		"privacyPolicy": "Privacy Policy",
+		"termsOfService": "Terms of Service"
+	}
 }

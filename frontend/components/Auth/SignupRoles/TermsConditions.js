@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 
 const StyledTermsConditions = styled.div`
   span {
@@ -9,16 +10,17 @@ const StyledTermsConditions = styled.div`
 `;
 
 export default function TermsConditions({ btnName }) {
+  const { t } = useTranslation("common");
   return (
     <StyledTermsConditions>
       <span>
-        By clicking on {btnName} you agree to MindHive’s{" "}
+        {t("terms.byClicking", { btnName })} {" "}
         <a target="_blank" href="/docs/terms" rel="noreferrer">
-          Terms of Service
+          {t("terms.termsOfService")}
         </a>
-        , including our{" "}
+        , {t("terms.includingOur")} {" "}
         <a target="_blank" href="/docs/privacy" rel="noreferrer">
-          Privacy Policy
+          {t("terms.privacyPolicy")}
         </a>
         .
       </span>

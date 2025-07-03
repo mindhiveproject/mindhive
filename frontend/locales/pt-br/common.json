@@ -39,5 +39,11 @@
 		"title": "Qual função melhor descreve você?"
 	},
 	"studies": "Estudos",
-	"tasksAndSurveys": "Tarefas e Pesquisas"
+	"tasksAndSurveys": "Tarefas e Pesquisas",
+	"terms": {
+		"byClicking": "",
+		"includingOur": "",
+		"privacyPolicy": "",
+		"termsOfService": ""
+	}
 }

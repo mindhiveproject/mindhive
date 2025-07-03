@@ -13,10 +13,10 @@
 	"footer": {
 		"about": "À propos",
 		"audience": "MindHive a été conçu pour les étudiants et les enseignants qui recherchent une expérience authentique de recherche STEM, ainsi que pour les neuroscientifiques et les psychologues cognitifs/sociaux qui cherchent à répondre à leurs questions de recherche en dehors du laboratoire.",
-		"copyright": "© 2024",
+		"copyright": "© 2025",
 		"description": "MindHive est une plateforme scientifique citoyenne basée sur le Web qui soutient la recherche sur le cerveau et le comportement dans le monde réel.",
 		"email": "info@mindhive.science",
-		"privacy": "politique de confidentialité",
+		"privacy": "Politique de confidentialité",
 		"terms": "Conditions générales",
 		"title": "MindHive"
 	},
@@ -49,5 +49,5 @@
 		"latestUpdates": "Dernières mises à jour",
 		"noUpdate": "Il n'y a pas de mises à jour pour le moment."
 	},
-	"welcome": "Accueillir"
+	"welcome": "Accueil"
 }

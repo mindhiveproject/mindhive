@@ -39,5 +39,11 @@
 		"title": "ما هو الدور الذي يصفك بشكل أفضل؟"
 	},
 	"studies": "دراسات",
-	"tasksAndSurveys": "المهام والاستطلاعات"
+	"tasksAndSurveys": "المهام والاستطلاعات",
+	"terms": {
+		"byClicking": "",
+		"includingOur": "",
+		"privacyPolicy": "",
+		"termsOfService": ""
+	}
 }

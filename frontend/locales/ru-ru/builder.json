@@ -169,6 +169,27 @@
 			"working": "Работа в процессе"
 		}
 	},
+	"dataUsage": {
+		"and": "",
+		"educationLabel": "",
+		"educationNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"noLabel": "",
+		"noNote": "",
+		"privacy": "",
+		"question": "",
+		"scienceLabel": "",
+		"scienceNote": {
+			"part1": "",
+			"part2": ""
+		},
+		"selfLabel": "",
+		"selfNote": "",
+		"terms": "",
+		"title": ""
+	},
 	"deleteProposal": {
 		"confirm": "Вы уверены, что хотите удалить это предложение? Все разделы и карточки в этом предложении также будут удалены.",
 		"title": "Вы уверены, что хотите удалить это предложение?"
@@ -702,6 +723,30 @@
 		"close": "Закрывать",
 		"createCopy": "Создать копию",
 		"preview": "Предварительный просмотр {{taskType}}"
+	},
+	"taskPage": {
+		"after": "Что видят участники <u>после</u> взятия {{taskType}}",
+		"aggregateVariables": "",
+		"aggregateVariablesDescription": "",
+		"background": "",
+		"before": "",
+		"checkbox": "",
+		"duration": "",
+		"format": "",
+		"freeinput": "",
+		"likert": "",
+		"mobileCompatible": "",
+		"moreInfo": "",
+		"parameters": "",
+		"parametersDescription": "",
+		"parametersNote": "",
+		"resources": "",
+		"scoring": "",
+		"screenshot": "",
+		"select": "",
+		"surveyParameters": "",
+		"text": "",
+		"vas": ""
 	},
 	"teacherExplicitInstruction": "(выбирайте этот вариант только в том случае, если ваш учитель прямо сказал вам сделать это)",
 	"template": {
