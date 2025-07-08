@@ -6,6 +6,7 @@ import moment from "moment";
 import Head from "next/head";
 import JoditEditor from "../../../../../Jodit/Editor";
 import Presenter from "../../../../../Jodit/Presenter";
+import Preview from "../../../../../Jodit/Preview/Main";
 
 export default function ProposalPDF({ proposalId }) {
   const { origin } = absoluteUrl();
@@ -54,6 +55,21 @@ export default function ProposalPDF({ proposalId }) {
   const studyTitle = study?.title;
   const date = moment().format("MM-D-YYYY");
 
+  // get the cards
+  const cards = orderedSections.map((section) => {
+    // order cards inside each section
+    const orderedCards = [...section.cards].sort(
+      (a, b) => a.position - b.position
+    );
+    // get the content of completed cards together with titles
+    const completedCards = orderedCards.filter(
+      (card) =>
+        card?.settings?.status === "Completed" &&
+        card?.settings?.includeInReport
+    );
+    return completedCards;
+  });
+
   return (
     <>
       <Head>
@@ -62,9 +78,9 @@ export default function ProposalPDF({ proposalId }) {
         </title>
       </Head>
       <div className="proposalPDF">
+        <Preview cards={cards.flat()} />
         {/* <Presenter content={content} /> */}
-
-        <JoditEditor content={content} setContent={() => {}} />
+        {/* <JoditEditor content={content} setContent={() => {}} /> */}
       </div>
     </>
   );
