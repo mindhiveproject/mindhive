@@ -3,6 +3,7 @@ import uniqid from "uniqid";
 import { Dropdown } from "semantic-ui-react";
 import Link from "next/link";
 import absoluteUrl from "next-absolute-url";
+import useTranslation from "next-translate/useTranslation";
 
 import { EDIT_CLASS } from "../../../Mutations/Classes";
 import { REMOVE_MENTOR_FROM_CLASS } from "../../../Mutations/Classes";
@@ -10,6 +11,7 @@ import { GET_CLASS } from "../../../Queries/Classes";
 // import { GET_TEACHER_CLASSES } from "../../../Queries/Classes";
 
 export default function ClassMentors({ myclass, user }) {
+  const { t } = useTranslation("classes");
   const { origin } = absoluteUrl();
 
   const [updateClass, { loading }] = useMutation(EDIT_CLASS, {
@@ -43,7 +45,7 @@ export default function ClassMentors({ myclass, user }) {
     temp.select();
     document.execCommand("copy");
     temp.remove();
-    alert("The link is copied");
+    alert(t("mentors.linkCopied"));
   };
 
   return (
@@ -52,8 +54,7 @@ export default function ClassMentors({ myclass, user }) {
         {mentorInvitationCode && (
           <div>
             <p>
-              Share the link below with mentors to invite them to join your
-              class
+              {t("mentors.shareLinkWithMentors")}
             </p>
             <div className="copyArea">
               <div className="link">
@@ -64,7 +65,7 @@ export default function ClassMentors({ myclass, user }) {
                 className="copyButton"
                 onClick={() => copyLink(mentorInvitationCode)}
               >
-                Copy
+                {t("mentors.copy")}
               </div>
             </div>
           </div>
@@ -73,11 +74,11 @@ export default function ClassMentors({ myclass, user }) {
         <div>
           {mentorInvitationCode ? (
             <div className="infoText">
-              ⚠️ Creating a new link will invalidate the current one
+              {t("mentors.newLinkWillInvalidate")}
             </div>
           ) : (
             <div className="infoText">
-              👋 Create a new invitation link for mentors to join your class
+              {t("mentors.createNewInvitationLink")}
             </div>
           )}
           <button
@@ -93,15 +94,15 @@ export default function ClassMentors({ myclass, user }) {
               });
             }}
           >
-            {loading ? "Creating ..." : "Create link"}
+            {loading ? t("mentors.creating") : t("mentors.createLink")}
           </button>
         </div>
       </div>
 
       <div className="listHeader">
         <div></div>
-        <div>Mentor/Username</div>
-        <div>Email address</div>
+        <div>{t("mentors.mentorUsername")}</div>
+        <div>{t("mentors.emailAddress")}</div>
       </div>
 
       {mentors.map((mentor, i) => {
@@ -115,7 +116,7 @@ export default function ClassMentors({ myclass, user }) {
                   onClick={() => {
                     if (
                       confirm(
-                        "Are you sure you want to remove this mentor from the class?"
+                        t("mentors.removeMentorConfirm")
                       )
                     ) {
                       removeFromClass({
@@ -126,7 +127,7 @@ export default function ClassMentors({ myclass, user }) {
                     }
                   }}
                 >
-                  Remove from this class
+                  {t("mentors.removeFromClass")}
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

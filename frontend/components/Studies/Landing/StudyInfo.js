@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { Menu } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function StudyInfo({ query, user, study, isDashboard }) {
+  const { t } = useTranslation('common');
   const [tab, setTab] = useState(query?.tab);
 
   const additionalTabs =
@@ -11,15 +13,15 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
   const tabs = [
     {
       name: "what",
-      header: "What",
+      header: t('studyInfo.tabWhat'),
     },
     {
       name: "who",
-      header: "Who",
+      header: t('studyInfo.tabWho'),
     },
     {
       name: "why",
-      header: "Why",
+      header: t('studyInfo.tabWhy'),
     },
     ...additionalTabs,
   ];
@@ -108,7 +110,7 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
         <div className="timeFrequency">
           {timeToComplete && timeToComplete.length ? (
             <div>
-              <div className="studyInformationHeader">Time to complete</div>
+              <div className="studyInformationHeader">{t('studyInfo.timeToComplete')}</div>
               <div>{timeToComplete}</div>
             </div>
           ) : (
@@ -117,7 +119,7 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
 
           {frequency && frequency.length ? (
             <div>
-              <div className="studyInformationHeader">Frequency</div>
+              <div className="studyInformationHeader">{t('studyInfo.frequency')}</div>
               <div>{frequency}</div>
             </div>
           ) : (
@@ -127,7 +129,7 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
 
         {partnership && partnership.length ? (
           <div>
-            <div className="studyInformationHeader">In partnership with</div>
+            <div className="studyInformationHeader">{t('studyInfo.inPartnershipWith')}</div>
             <div className="partnersInfo">{partnership}</div>
           </div>
         ) : (
@@ -137,7 +139,7 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
       <div className="studyTagsContacts">
         {tags && tags.length ? (
           <div>
-            <div className="studyInformationHeader">Tags</div>
+            <div className="studyInformationHeader">{t('studyInfo.tags')}</div>
             <div className="studyTags">{tags}</div>
           </div>
         ) : (
@@ -146,7 +148,7 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
 
         {contacts && contacts.length ? (
           <div>
-            <div className="studyInformationHeader">Contact information</div>
+            <div className="studyInformationHeader">{t('studyInfo.contactInformation')}</div>
             <div>{contacts}</div>
           </div>
         ) : (

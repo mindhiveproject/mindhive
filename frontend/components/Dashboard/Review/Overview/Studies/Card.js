@@ -1,19 +1,22 @@
+import useTranslation from "next-translate/useTranslation";
+
 export default function Card({ study }) {
+  const { t } = useTranslation("builder");
   const imageURL = study?.image?.image?.publicUrlTransformed;
 
   let status;
   switch (study?.status) {
     case "SUBMITTED_AS_PROPOSAL":
-      status = "Proposal";
+      status = t("review.proposalTag");
       break;
     case "IN_REVIEW":
-      status = "Peer Review";
+      status = t("review.peerReviewTag");
       break;
     case "COLLECTING_DATA":
-      status = "Collecting data";
+      status = t("review.collectingDataTag");
       break;
     default:
-      status = "Undefined";
+      status = t("review.undefined");
   }
 
   const shortenTitle = (title) => {
@@ -35,24 +38,24 @@ export default function Card({ study }) {
     )
   ).length;
 
+  const reviewCount = study?.reviews?.filter((r) => r?.stage === study?.status).length;
+
   return (
     <div className="card">
       <div className="headline">
-        {study?.featured && <div className="p12">Featured study</div>}
+        {study?.featured && <div className="p12">{t("review.featuredProject")}</div>}
         {study?.status !== "COLLECTING_DATA" && (
           <div className="p12">
-            {study?.reviews?.filter((r) => r?.stage === study?.status).length}{" "}
-            review
-            {study?.reviews?.filter((r) => r?.stage === study?.status)
-              .length !== 1
-              ? `s`
-              : ``}
+            {typeof reviewCount === "undefined" || reviewCount < 1
+              ? t("review.reviewUnder")
+              : t("review.reviewOverOne", { count: reviewCount })}
           </div>
         )}
         {study?.status === "COLLECTING_DATA" && (
           <div className="p12">
-            {activeParticipantsCount} participant
-            {activeParticipantsCount !== 1 ? `s` : ``}
+            {activeParticipantsCount === 0
+              ? t("review.participantUnder")
+              : t("review.participantOverOne", { count: activeParticipantsCount })}
           </div>
         )}
       </div>
@@ -68,13 +71,13 @@ export default function Card({ study }) {
       </div>
       <div className="lowPanel">
         <div>
-          {status === "Collecting data" &&
+          {study?.status === "COLLECTING_DATA" &&
             study?.dataCollectionOpenForParticipation && (
               <div className="tag peerreview">{status}</div>
             )}
-          {status === "Collecting data" &&
+          {study?.status === "COLLECTING_DATA" &&
             !study?.dataCollectionOpenForParticipation && (
-              <div className="tag closed">Closed for Participation</div>
+              <div className="tag closed">{t("review.closedForParticipation")}</div>
             )}
         </div>
         <div className="options">
@@ -82,14 +85,14 @@ export default function Card({ study }) {
             study?.dataCollectionOpenForParticipation && (
               <div className="option">
                 <img src="/assets/icons/review/participate.svg" />
-                <div>Participate</div>
+                <div>{t("review.participate")}</div>
               </div>
             )}
 
           {study?.status === "IN_REVIEW" && (
             <div className="option">
               <img src="/assets/icons/review/comment.svg" />
-              <div>Comment</div>
+              <div>{t("review.commentBtn")}</div>
             </div>
           )}
         </div>

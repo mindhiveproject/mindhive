@@ -11,6 +11,7 @@ import { StudyManagerLink } from "./Renderers/StudyManagerLink";
 import { SubmissionStatusLink } from "./Renderers/SubmissionStatusLink";
 import { StudySubmissionStatusLink } from "./Renderers/StudySubmissionStatusLink";
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../Queries/Classes";
+import useTranslation from "next-translate/useTranslation";
 
 import { SelectedStudentsModal } from "./Modals/SelectedStudents";
 
@@ -37,6 +38,7 @@ const aggregateProposalFeedback = ({ project }) => {
 };
 
 export default function Dashboard({ myclass, user, query }) {
+  const { t } = useTranslation("classes");
   const { data, loading, error } = useQuery(GET_STUDENTS_DASHBOARD_DATA, {
     variables: { classId: myclass?.id },
   });
@@ -90,21 +92,21 @@ export default function Dashboard({ myclass, user, query }) {
       proposalStatus = project?.submitProposalStatus;
       commentsReceivedOnProposal = aggregateProposalFeedback({ project });
       isProposalOpenForComments = project?.submitProposalOpenForComments
-        ? "Open for comments"
-        : "Not open for comments";
+        ? t("dashboard.openForComments")
+        : t("dashboard.notOpenForComments");
       peerFeedbackStatus = project?.peerFeedbackStatus;
       isPeerFeedbackOpenForComments = project?.peerFeedbackOpenForComments
-        ? "Open for comments"
-        : "Not open for comments";
+        ? t("dashboard.openForComments")
+        : t("dashboard.notOpenForComments");
       dataCollectionStatus = project?.study?.dataCollectionStatus;
       dataCollectionOpenForParticipation = project?.study
         ?.dataCollectionOpenForParticipation
-        ? "Open for participation"
-        : "Not open for participation";
+        ? t("dashboard.openForParticipation")
+        : t("dashboard.notOpenForParticipation");
       projectReportStatus = project?.projectReportStatus;
       isProjectReportOpenForComments = project?.projectReportOpenForComments
-        ? "Open for comments"
-        : "Not open for comments";
+        ? t("dashboard.openForComments")
+        : t("dashboard.notOpenForComments");
     }
 
     const studies = student?.collaboratorInStudy?.filter((study) =>
@@ -151,7 +153,7 @@ export default function Dashboard({ myclass, user, query }) {
       {
         field: "username",
         pinned: "left",
-        headerName: "Username",
+        headerName: t("dashboard.username"),
         cellRenderer: StudentPageLink,
         cellRendererParams: {
           baseUrl: "/students",
@@ -159,7 +161,7 @@ export default function Dashboard({ myclass, user, query }) {
       },
       {
         field: "projectTitle",
-        headerName: "Create | Manage Project",
+        headerName: t("dashboard.createManageProject"),
         cellRenderer: ProjectManagerLink,
         cellRendererParams: {
           classId: myclass?.id,
@@ -168,13 +170,13 @@ export default function Dashboard({ myclass, user, query }) {
       },
       {
         field: "projectTitle",
-        headerName: "Main Project",
+        headerName: t("dashboard.mainProject"),
       },
       { field: "projectCollaborators" },
       { field: "projectMentors" },
       {
         field: "studyTitle",
-        headerName: "Create | Manage Study",
+        headerName: t("dashboard.createManageStudy"),
         cellRenderer: StudyManagerLink,
         cellRendererParams: {
           classId: myclass?.id,
@@ -184,7 +186,7 @@ export default function Dashboard({ myclass, user, query }) {
       },
       {
         field: "studyTitle",
-        headerName: "Main Study",
+        headerName: t("dashboard.mainStudy"),
       },
       { field: "studyCollaborators" },
       {
@@ -231,7 +233,7 @@ export default function Dashboard({ myclass, user, query }) {
       },
       { field: "isProjectReportOpenForComments" },
     ],
-    [myclass]
+    [myclass, t]
   );
 
   return (
@@ -242,7 +244,7 @@ export default function Dashboard({ myclass, user, query }) {
           disabled={selectedStudents.length === 0}
         >
           <Icon name="users" />
-          Manage Selected Students ({selectedStudents.length})
+          {t("dashboard.manageSelectedStudents", { count: selectedStudents.length })}
         </StyledTriggerButton>
       </div>
       <SelectedStudentsModal

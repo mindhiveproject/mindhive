@@ -13,7 +13,7 @@ import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 import StyledClass from "../../../../../styles/StyledClass";
 
 export default function StudyManager(props) {
-  const { t } = useTranslation("builder");
+  const { t } = useTranslation("classes");
   const [isOpen, setIsOpen] = useState(false);
   const [studyId, setStudyId] = useState(null);
   const [studyName, setStudyName] = useState("");
@@ -73,7 +73,7 @@ export default function StudyManager(props) {
 
   const assignToStudy = async () => {
     if (!studyId) {
-      return alert("Select a study first");
+      return alert(t("studyManager.selectStudyFirst"));
     }
 
     if (hasProject) {
@@ -120,7 +120,7 @@ export default function StudyManager(props) {
       setIsOpen(false);
     } catch (error) {
       console.error("Error connecting study to project:", error);
-      alert("Failed to connect study to project");
+      alert(t("studyManager.failedToConnectStudy"));
       setIsConfirmModalOpen(false);
       setSelectedStudyForProject(null);
     }
@@ -133,7 +133,7 @@ export default function StudyManager(props) {
 
   const createNewStudy = async () => {
     if (!studyName) {
-      return alert("Give the study a name first");
+      return alert(t("studyManager.giveStudyNameFirst"));
     }
 
     if (hasProject) {
@@ -235,7 +235,7 @@ export default function StudyManager(props) {
       });
     } catch (error) {
       console.error("Error disconnecting main project study:", error);
-      alert("Failed to disconnect study from project");
+      alert(t("studyManager.failedToDisconnectStudy"));
     }
   };
 

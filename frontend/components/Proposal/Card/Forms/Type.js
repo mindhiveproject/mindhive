@@ -1,8 +1,10 @@
 import { Dropdown } from "semantic-ui-react";
+import useTranslation from 'next-translate/useTranslation';
 
 export default function CardType({ type, handleChange }) {
+  const { t } = useTranslation('classes');
   const options = [
-    { key: "proposal", text: "Proposal", value: "PROPOSAL" },
+    { key: "proposal", text: t('board.proposal', 'Proposal'), value: "PROPOSAL" },
     // { key: "assignment", text: "Assignment", value: "ASSIGNMENT" },
     //{ key: "lesson", text: "Lesson", value: "LESSON" },
     //{ key: "article", text: "Article", value: "ARTICLE" },
@@ -10,29 +12,29 @@ export default function CardType({ type, handleChange }) {
     //{ key: "link", text: "Link", value: "LINK" },
     {
       key: "actionSubmit",
-      text: "Action card - Submit Proposal",
+      text: t('board.actionSubmit', 'Action card - Submit Proposal'),
       value: "ACTION_SUBMIT",
     },
     {
       key: "actionPeerFeedback",
-      text: "Action card - Submit for Peer Feedback",
+      text: t('board.actionPeerFeedback', 'Action card - Submit for Peer Feedback'),
       value: "ACTION_PEER_FEEDBACK",
     },
     {
       key: "actionCollectingData",
-      text: "Action card - Start Collecting Data",
+      text: t('board.actionCollectingData', 'Action card - Start Collecting Data'),
       value: "ACTION_COLLECTING_DATA",
     },
     {
       key: "actionProjectReport",
-      text: "Action card - Submit Project Report",
+      text: t('board.actionProjectReport', 'Action card - Submit Project Report'),
       value: "ACTION_PROJECT_REPORT",
     },
   ];
 
   return (
     <Dropdown
-      placeholder="Select type"
+      placeholder={t('board.selectType', 'Select type')}
       fluid
       selection
       options={options}

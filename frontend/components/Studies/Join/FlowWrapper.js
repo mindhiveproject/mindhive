@@ -7,29 +7,31 @@ import RoleSignup from "../../Auth/SignupRoles/Role";
 import Details from "./Details";
 import Consents from "./Consents/Main";
 import ConsentSkippedMessage from "./Consents/ConsentSkippedMessage";
+import useTranslation from "next-translate/useTranslation";
 
 export default function FlowWrapper({ query, user, study, step }) {
   const { guest } = query;
+  const { t } = useTranslation('common');
 
   let header;
   switch (step) {
     case "select":
-      header = "Participation";
+      header = t('flow.header.participation');
       break;
     case "signup":
-      header = "Participant details";
+      header = t('flow.header.participantDetails');
       break;
     case "login":
-      header = "Login";
+      header = t('flow.header.login');
       break;
     case "details":
-      header = "Participant details";
+      header = t('flow.header.participantDetails');
       break;
     case "consent":
-      header = "Study consent";
+      header = t('flow.header.studyConsent');
       break;
     default:
-      header = "Participation";
+      header = t('flow.header.participation');
   }
 
   if (step === "consent-skipped") {
@@ -48,7 +50,7 @@ export default function FlowWrapper({ query, user, study, step }) {
           <div className="logo">
             <img src="/logo.png" alt="icon" height="30" />
           </div>
-          <div>Participation</div>
+          <div>{t('flow.header.participation')}</div>
           <Link
             href={{
               pathname: `/studies/${study?.slug}`,

@@ -1,10 +1,12 @@
 import { useMutation } from "@apollo/client";
 import { Icon } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { DELETE_UPDATE } from "../../Mutations/Update";
 import { GET_UPDATES } from "../../Queries/Update";
 
 export default function DeleteTag({ id }) {
+  const { t } = useTranslation("common");
   const [deleteTag, { loading }] = useMutation(DELETE_UPDATE, {
     variables: { id },
     refetchQueries: [
@@ -16,7 +18,7 @@ export default function DeleteTag({ id }) {
     <div
       style={{ cursor: "pointer", color: "red" }}
       onClick={() => {
-        if (confirm("Are you sure you want to delete this update?")) {
+        if (confirm(t("update.deleteConfirm"))) {
           deleteTag().catch((err) => {
             alert(err.message);
           });

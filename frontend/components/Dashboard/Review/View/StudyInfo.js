@@ -2,8 +2,10 @@ import { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { Menu } from "semantic-ui-react";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 export default function StudyInfo({ query, canReview, study }) {
+  const { t } = useTranslation("builder");
   const [tab, setTab] = useState(query?.tab || "Why");
 
   const additionalTabs =
@@ -12,15 +14,15 @@ export default function StudyInfo({ query, canReview, study }) {
   const tabs = [
     {
       name: "why",
-      header: "Why",
+      header: t("reviewTabs.whyTab"),
     },
     {
       name: "how",
-      header: "How",
+      header: t("reviewTabs.howTab"),
     },
     {
       name: "who",
-      header: "Who",
+      header: t("reviewTabs.whoTab"),
     },
     ...additionalTabs,
   ];
@@ -61,7 +63,7 @@ export default function StudyInfo({ query, canReview, study }) {
             >
               <div className="option">
                 <img src="/assets/icons/review/participate-green.svg" />
-                <div className="p22">Participate</div>
+                <div className="p22">{t("review.participate")}</div>
               </div>
             </a>
           )}
@@ -76,7 +78,7 @@ export default function StudyInfo({ query, canReview, study }) {
               <div className="option">
                 <img src="/assets/icons/review/comment.svg" />
                 <div className="p22">
-                  {canReview ? `Comment` : `View Feedback`}
+                  {canReview ? t("review.commentBtn") : t("reviewDetail.viewFeedback")}
                 </div>
               </div>
             </Link>
@@ -98,10 +100,9 @@ export default function StudyInfo({ query, canReview, study }) {
         </div>
       ) : (
         <div className="noStudyDetailsContainer">
-          <div className="p18">You cannot view this section yet</div>
+          <div className="p18">{t("reviewDetail.cannotViewSection")}</div>
           <div>
-            To access this section, you must review or participate in the study
-            once it moves beyond the proposal phase.
+            {t("reviewDetail.cannotViewSectionDescription")}
           </div>
         </div>
       )}

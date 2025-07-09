@@ -120,7 +120,7 @@ export default function DownloadSummaryData({
       ) : (
         <div className="downloadArea" onClick={() => download()}>
           <Icon color="teal" size="large" name="download" />
-          <a>{t("byComponent.downloadAggregatedBy", "Download aggregated data {{by}}", { by })}</a>
+          <a>{t("byComponent.downloadAggregatedBy", { by })}</a>
         </div>
       )}
     </>

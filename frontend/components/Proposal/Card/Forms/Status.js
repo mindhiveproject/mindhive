@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Dropdown } from "semantic-ui-react";
 import styled from "styled-components";
+import useTranslation from 'next-translate/useTranslation';
 
 const StyledDropdown = styled.div`
   input {
@@ -43,40 +44,37 @@ const StyledDropdown = styled.div`
 `;
 
 class Status extends Component {
-  onChange = (event, data) => {
-    this.props.onSettingsChange("status", data.value);
-  };
-
   render() {
+    const { t } = useTranslation('classes');
     const status = this.props?.settings?.status;
     const options = [
       {
         key: "Not started",
-        text: "Not started",
+        text: t('board.statusNotStarted', 'Not started'),
         value: "Not started",
         className: "info-status status-not-started",
       },
       {
         key: "Started",
-        text: "Started",
+        text: t('board.statusStarted', 'Started'),
         value: "Started",
         className: "info-status status-started",
       },
       {
         key: "Needs feedback",
-        text: "Needs feedback",
+        text: t('board.statusNeedsFeedback', 'Needs feedback'),
         value: "Needs feedback",
         className: "info-status status-needs-feedback",
       },
       {
         key: "Feedback given",
-        text: "Feedback given",
+        text: t('board.statusFeedbackGiven', 'Feedback given'),
         value: "Feedback given",
         className: "info-status status-feedback-given",
       },
       {
         key: "Completed",
-        text: "Completed",
+        text: t('board.statusCompleted', 'Completed'),
         value: "Completed",
         className: "info-status status-completed",
       },
@@ -85,11 +83,11 @@ class Status extends Component {
     return (
       <StyledDropdown>
         <Dropdown
-          placeholder="Select status"
+          placeholder={t('board.selectStatus', 'Select status')}
           fluid
           selection
           options={options}
-          onChange={this.onChange}
+          onChange={(event, data) => this.props.onSettingsChange("status", data.value)}
           value={status}
         />
       </StyledDropdown>

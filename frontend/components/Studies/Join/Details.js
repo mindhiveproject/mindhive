@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import MyDatePicker from "../../Utils/DatePicker";
 import useForm from "../../../lib/useForm";
+import useTranslation from "next-translate/useTranslation";
 
 import {
   StyledDetails,
@@ -10,6 +11,7 @@ import {
 import JoinStudy from "./JoinStudy";
 
 export default function Details({ user, study, query }) {
+  const { t } = useTranslation('common');
   const { inputs, handleChange } = useForm({
     zip: "",
     sona: "",
@@ -27,16 +29,15 @@ export default function Details({ user, study, query }) {
 
   return (
     <StyledDetails>
-      <h1>Let's get started</h1>
+      <h1>{t('join.details.header')}</h1>
       <h3>
-        We are glad that you are interested in participating in "{study.title}
-        ".
+        {t('join.details.intro', { title: study.title })}
       </h3>
 
       {settings?.zipCode && (
         <div>
           <label htmlFor="zip">
-            <p className="questionTitle">Your zip code</p>
+            <p className="questionTitle">{t('join.details.zip')}</p>
             <input
               type="number"
               id="zip"
@@ -51,7 +52,7 @@ export default function Details({ user, study, query }) {
       {settings?.sonaId && (
         <div>
           <label htmlFor="sona">
-            <p className="questionTitle">Are you an NYU SONA participant?</p>
+            <p className="questionTitle">{t('join.details.sona')}</p>
             <ResponseButtons>
               <button
                 onClick={() =>
@@ -59,7 +60,7 @@ export default function Details({ user, study, query }) {
                 }
                 className={inputs?.sona === "yes" ? "selectedBtn" : undefined}
               >
-                Yes
+                {t('join.details.sonaYes')}
               </button>
               <button
                 onClick={() =>
@@ -67,7 +68,7 @@ export default function Details({ user, study, query }) {
                 }
                 className={inputs?.sona === "no" ? "selectedBtn" : undefined}
               >
-                No
+                {t('join.details.sonaNo')}
               </button>
             </ResponseButtons>
           </label>
@@ -77,11 +78,8 @@ export default function Details({ user, study, query }) {
       {settings?.askStudentsNYC && (
         <div>
           <label htmlFor="sonaid">
-            <p className="questionTitle">What is your NYU ID?</p>
-            <span>
-              By entering your ID, we can ensure that you will receive course
-              credit for your participation in this study.
-            </span>
+            <p className="questionTitle">{t('join.details.nyuId')}</p>
+            <span>{t('join.details.nyuIdDesc')}</span>
             <input
               type="text"
               id="sonaid"
@@ -96,7 +94,7 @@ export default function Details({ user, study, query }) {
       <div>
         <label htmlFor="eng">
           <p className="questionTitle">
-            Do you understand basic instruction written in English?
+            {t('join.details.english')}
           </p>
 
           <ResponseButtons>
@@ -106,7 +104,7 @@ export default function Details({ user, study, query }) {
               }
               className={inputs?.eng === "yes" ? "selectedBtn" : undefined}
             >
-              Yes
+              {t('join.details.englishYes')}
             </button>
             <button
               onClick={() =>
@@ -114,20 +112,17 @@ export default function Details({ user, study, query }) {
               }
               className={inputs?.eng === "no" ? "selectedBtn" : undefined}
             >
-              No
+              {t('join.details.englishNo')}
             </button>
           </ResponseButtons>
           <p className="translation">
-            <em>
-              (La versión en español de la plataforma estará disponible en poco
-              tiempo.)
-            </em>
+            <em>{t('join.details.englishTranslationNote')}</em>
           </p>
         </label>
       </div>
 
       <div>
-        <p className="questionTitle">What is your date of birth?</p>
+        <p className="questionTitle">{t('join.details.dob')}</p>
         <MyDatePicker
           onDateInput={(timestamp) =>
             handleChange({ target: { name: "bd", value: timestamp } })
@@ -152,7 +147,7 @@ export default function Details({ user, study, query }) {
                 })
               }
             />
-            <span>Save my information for future studies</span>
+            <span>{t('join.details.saveInfo')}</span>
           </div>
         </label>
       </div>
@@ -168,14 +163,14 @@ export default function Details({ user, study, query }) {
             },
           }}
         >
-          <button>Next</button>
+          <button>{t('join.details.next')}</button>
         </Link>
       ) : (
         <JoinStudy
           user={user}
           study={study}
           userInfo={inputs}
-          btnName="Join the study"
+          btnName={t('join.details.joinButton')}
         />
       )}
     </StyledDetails>

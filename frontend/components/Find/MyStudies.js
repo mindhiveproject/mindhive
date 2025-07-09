@@ -2,12 +2,14 @@ import { useQuery } from "@apollo/client";
 
 import { Dropdown } from "semantic-ui-react";
 import { MY_STUDIES } from "../Queries/Study";
+import useTranslation from 'next-translate/useTranslation';
 
 const DropdownExampleMultipleSelection = ({
   mystudies,
   studies,
   handleChange,
 }) => {
+  const { t } = useTranslation('common');
   const onChange = (event, data) => {
     handleChange({
       target: {
@@ -20,7 +22,7 @@ const DropdownExampleMultipleSelection = ({
 
   return (
     <Dropdown
-      placeholder="Type study title"
+      placeholder={t('studies.typeStudyTitle', 'Type study title')}
       fluid
       multiple
       search

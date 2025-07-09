@@ -1,12 +1,15 @@
+import useTranslation from "next-translate/useTranslation";
+
 export default function ClassStudents({ myclass, user, query }) {
+  const { t } = useTranslation("classes");
   const students = myclass?.students || [];
 
   return (
     <div className="students">
       <div className="listHeader">
         <div></div>
-        <div>Student/Username</div>
-        <div>Email address</div>
+        <div>{t("studentUsername")}</div>
+        <div>{t("emailAddress")}</div>
       </div>
       {students.map((student, i) => {
         return (

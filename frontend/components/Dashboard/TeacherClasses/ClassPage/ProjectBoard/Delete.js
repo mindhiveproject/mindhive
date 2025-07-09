@@ -20,7 +20,7 @@ export default function DeleteProposal({
       onClick={() => {
         if (
           confirm(
-            t("deleteProposal.confirm", "Are you sure you want to delete this proposal? All sections and cards in this proposal will be deleted as well.")
+            t("deleteProposal.confirm")
           )
         ) {
           deleteProposal().catch((err) => {

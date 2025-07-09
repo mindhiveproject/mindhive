@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { COPY_PROPOSAL_MUTATION } from "../../../../Mutations/Proposal";
 import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../../Queries/Proposal";
@@ -15,6 +16,7 @@ export default function CreateProposal({
   isCopy,
   goToOverview,
 }) {
+  const { t } = useTranslation("classes");
   const [proposalId, setProposalId] = useState(copyProposalId || null);
   const [template, setTemplate] = useState(null);
 
@@ -44,7 +46,7 @@ export default function CreateProposal({
 
   const createProposalCopy = async () => {
     if (!proposalId) {
-      return alert("Please choose the proposal template");
+      return alert(t("projectBoard.chooseTemplate"));
     }
     const res = await copyProposal();
     if (res?.data?.copyProposalBoard) {
@@ -60,13 +62,15 @@ export default function CreateProposal({
         </div>
 
         <h3>
-          {isCopy ? `Copy the project board` : "Create a new project board"}
+          {isCopy
+            ? t("projectBoard.copyProjectBoard")
+            : t("projectBoard.createNewProjectBoard")}
         </h3>
 
         {!isCopy && (
           <div className="dropdown">
             <Dropdown
-              placeholder="Select project template"
+              placeholder={t("projectBoard.selectProjectTemplate")}
               fluid
               selection
               options={dropdownTemplates}
@@ -77,7 +81,7 @@ export default function CreateProposal({
         )}
 
         <button onClick={createProposalCopy}>
-          {isCopy ? "Create a copy" : "Create"}
+          {isCopy ? t("projectBoard.createCopy") : t("projectBoard.create")}
         </button>
       </div>
 

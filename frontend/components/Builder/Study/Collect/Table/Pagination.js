@@ -1,4 +1,5 @@
 import { StyledPagination } from "../../../../styles/StyledPagination";
+import useTranslation from "next-translate/useTranslation";
 
 export default function ParticipantsPagination({
   page,
@@ -6,6 +7,7 @@ export default function ParticipantsPagination({
   count,
   setPage,
 }) {
+  const { t } = useTranslation("common");
   const pageCount = Math.ceil(count / perPage);
 
   return (
@@ -19,13 +21,13 @@ export default function ParticipantsPagination({
           aria-disabled={page <= 1}
           className={page <= 1 ? "inactive" : undefined}
         >
-          Prev
+          {t("pagination.prev")}
         </a>
       </div>
       <p>
-        Page {page} of {pageCount}{" "}
+        {t("pagination.pageOf", { page, pageCount })}
       </p>
-      <p>{count} participants total</p>
+      <p>{t("pagination.totalParticipants", { count })}</p>
       <div
         onClick={() => {
           if (page < pageCount) setPage(page + 1);
@@ -35,7 +37,7 @@ export default function ParticipantsPagination({
           aria-disabled={page >= pageCount}
           className={page >= pageCount ? "next inactive" : "next"}
         >
-          Next
+          {t("pagination.next")}
         </a>
       </div>
     </StyledPagination>

@@ -1,10 +1,12 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import moment from "moment";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_CLASSES } from "../../Queries/Classes";
 
 export default function ClassesList({ query, user }) {
+  const { t } = useTranslation("classes");
   const { data, error, loading } = useQuery(GET_CLASSES, {
     variables: {
       input: {
@@ -18,8 +20,8 @@ export default function ClassesList({ query, user }) {
   if (classes.length === 0) {
     return (
       <>
-        <h3>You haven’t joined any classes yet.</h3>
-        <p>Once you join a class, it will appear here.</p>
+        <h3>{t("noClasses")}</h3>
+        <p>{t("joinClassInfo")}</p>
       </>
     );
   }
@@ -27,10 +29,10 @@ export default function ClassesList({ query, user }) {
   return (
     <>
       <div className="classListHeader">
-        <div>Class name</div>
-        <div>Teacher</div>
-        <div>Number of students</div>
-        <div>Date created</div>
+        <div>{t("className")}</div>
+        <div>{t("teacher")}</div>
+        <div>{t("numberOfStudents")}</div>
+        <div>{t("dateCreated")}</div>
       </div>
 
       <div className="board">

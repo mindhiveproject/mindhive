@@ -3,6 +3,7 @@ import ReactHtmlParser from "react-html-parser";
 import { GET_ALL_HOMEWORK_FOR_PROPOSAL_CARD } from "../../../Queries/Homework";
 import { Dropdown } from "semantic-ui-react";
 import { useState } from "react";
+import useTranslation from 'next-translate/useTranslation';
 
 import Homework from "./Homework";
 
@@ -12,6 +13,7 @@ export default function OverviewOfIndividualCards({
   closeCard,
   isPreview,
 }) {
+  const { t } = useTranslation('classes');
   const [homeworkId, setHomeworkId] = useState(null);
 
   const { data, loading, error } = useQuery(
@@ -38,7 +40,7 @@ export default function OverviewOfIndividualCards({
             className="secondary"
             onClick={() => closeCard({ cardId: false, lockedByUser: false })}
           >
-            Close
+            {t('board.close', 'Close')}
           </button>
           <div className="cardHeader">{proposalCard?.title}</div>
           <div className="cardDescription">
@@ -46,7 +48,7 @@ export default function OverviewOfIndividualCards({
           </div>
 
           <Dropdown
-            placeholder="Select student"
+            placeholder={t('board.selectStudent', 'Select student')}
             fluid
             selection
             options={studentFilterOptions}

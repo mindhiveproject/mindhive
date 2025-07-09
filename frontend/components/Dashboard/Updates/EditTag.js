@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useQuery, useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import { EDIT_UPDATE } from "../../Mutations/Update";
 import { GET_UPDATE, GET_UPDATES } from "../../Queries/Update";
@@ -8,6 +9,7 @@ import useForm from "../../../lib/useForm";
 import UpdateForm from "./UpdateForm";
 
 export default function EditUpdate({ selector, query, user }) {
+  const { t } = useTranslation("common");
   const router = useRouter();
 
   const { id } = query;
@@ -54,7 +56,7 @@ export default function EditUpdate({ selector, query, user }) {
   return (
     <div>
       <UpdateForm inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>Save</button>
+      <button onClick={handleSave}>{t("update.save")}</button>
     </div>
   );
 }

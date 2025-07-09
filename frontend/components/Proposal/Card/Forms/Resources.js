@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
+import useTranslation from 'next-translate/useTranslation';
 
 import { GET_PUBLIC_AND_PROJECT_RESOURCES } from "../../../Queries/Resource";
 
@@ -11,6 +12,7 @@ export default function Resources({
   handleChange,
   selectedResources,
 }) {
+  const { t } = useTranslation('classes');
   const { data, error, loading } = useQuery(GET_PUBLIC_AND_PROJECT_RESOURCES, {
     variables: { projectId: proposal?.id },
   });
@@ -60,7 +62,7 @@ export default function Resources({
   return (
     <>
       <Dropdown
-        placeholder="Type resource"
+        placeholder={t('board.typeResource', 'Type resource')}
         fluid
         multiple
         search
@@ -73,7 +75,7 @@ export default function Resources({
 
       {selectedResourcesMerged && selectedResourcesMerged.length ? (
         <>
-          <div className="cardHeader">Preview Linked Resources</div>
+          <div className="cardHeader">{t('board.previewLinkedResources', 'Preview Linked Resources')}</div>
           <div className="resourcePreview">
             {selectedResourcesMerged.map((resource) => (
               <div className="resourceBlockPreview">

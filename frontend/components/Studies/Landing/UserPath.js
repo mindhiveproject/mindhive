@@ -2,8 +2,10 @@ import Link from "next/link";
 
 import TaskCard from "./TaskCard";
 import { useEffect, useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function UserPath({ query, user, study, isDashboard, path }) {
+  const { t } = useTranslation('common');
   const [nextBlock, setNextBlock] = useState(path[path?.length - 1]);
 
   // pass the guest publicId to the task page if the user type is guest
@@ -76,10 +78,7 @@ export default function UserPath({ query, user, study, isDashboard, path }) {
     <>
       {user?.type === "GUEST" && (
         <div className="guestMessage">
-          <p>
-            You participate as a guest. Your public readable id is{" "}
-            <strong>{user?.publicReadableId}</strong>
-          </p>
+          <p dangerouslySetInnerHTML={{ __html: t('userPath.guestMessage', { id: user?.publicReadableId }) }} />
         </div>
       )}
 
@@ -108,7 +107,7 @@ export default function UserPath({ query, user, study, isDashboard, path }) {
           }}
         >
           <div className="controlBtns">
-            <button>Start the next task</button>
+            <button>{t('userPath.startNextTask')}</button>
           </div>
         </Link>
       )}

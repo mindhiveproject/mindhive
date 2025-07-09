@@ -3,6 +3,7 @@ import { Draggable } from "react-smooth-dnd";
 
 import { Image, Popup } from "semantic-ui-react";
 import { StyledProposalCard } from "../../styles/StyledProposal";
+import useTranslation from 'next-translate/useTranslation';
 
 export default function Card({
   card,
@@ -13,6 +14,7 @@ export default function Card({
   settings,
   isPreview,
 }) {
+  const { t } = useTranslation('builder');
   let status = card?.settings?.status ? card.settings.status : "Not started";
 
   let statusStyle = null;
@@ -63,16 +65,10 @@ export default function Card({
                     card?.assignedTo.length
                       ? card?.assignedTo.map((user, i) => (
                           <div key={i} className="info-assigned">
-                            {`The card is assigned to ${
-                              adminMode
-                                ? user?.username ||
-                                  user?.publicReadableId ||
-                                  "John Doe"
-                                : user?.username
-                            }`}
+                            {t('card.assignedTo', { username: adminMode ? (user?.username || user?.publicReadableId || "John Doe") : user?.username })}
                           </div>
                         ))
-                      : "The card is not assigned to anyone"
+                      : t('card.notAssigned')
                   }
                   trigger={
                     <Image
@@ -93,7 +89,7 @@ export default function Card({
                   <div className="editedByAvatar">
                     {card?.isEditedBy?.username && (
                       <Popup
-                        content={`The card is currently being edited by ${card?.isEditedBy?.username}`}
+                        content={t('card.editingBy', { username: card?.isEditedBy?.username })}
                         trigger={
                           card?.isEditedBy?.image?.image
                             ?.publicUrlTransformed ? (
@@ -133,7 +129,7 @@ export default function Card({
                 e.stopPropagation();
                 if (
                   confirm(
-                    "Are you sure you want to delete this card? This action cannot be undone."
+                    t('actionCard.deleteConfirm')
                   )
                 ) {
                   onDeleteCard(card.id);

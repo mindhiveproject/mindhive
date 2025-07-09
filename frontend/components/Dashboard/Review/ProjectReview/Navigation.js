@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_REVIEW } from "../../../Queries/Review";
 import { CREATE_REVIEW, UPDATE_REVIEW } from "../../../Mutations/Review";
@@ -15,6 +16,7 @@ export default function Navigation({
   resetForm,
   status,
 }) {
+  const { t } = useTranslation("builder");
   const [returnUrl, setReturnUrl] = useState("/projects");
   // Extract project ID and return URL from the current URL
   useEffect(() => {
@@ -85,14 +87,14 @@ export default function Navigation({
       <div className="backBtn" onClick={goBackToFeedbackCenter}>
         <img src="/assets/icons/review/expand_left.svg" />
 
-        <div className="text">Back to Feedback Center</div>
+        <div className="text">{t("reviewDetail.backToFeedbackCenter")}</div>
       </div>
 
       <div className="title">{project?.title}</div>
       <div className="collaborators">
-        <span>Collaborators: </span>
+        <span>{t("reviewDetail.collaborators")}: </span>
         {project?.collaborators?.map((c, num) => (
-          <span>
+          <span key={c?.id}>
             {num !== 0 && `, `}
             {c?.username}
           </span>
@@ -104,11 +106,11 @@ export default function Navigation({
           {project?.study ? (
             <div>
               <a target="_blank" href={`/studies/${project?.study?.slug}`}>
-                <button>Participate in the study</button>
+                <button>{t("reviewDetail.participateInStudy")}</button>
               </a>
             </div>
           ) : (
-            <div>There is no study</div>
+            <div>{t("reviewDetail.noStudy")}</div>
           )}
         </>
       )}
@@ -122,15 +124,15 @@ export default function Navigation({
               onClick={async () => {
                 if (
                   confirm(
-                    "Are you sure you want to resubmit? Your feedback will be updated."
+                    t("reviewDetail.resubmitConfirm")
                   )
                 ) {
                   updateReview();
-                  alert("The review has been updated");
+                  alert(t("reviewDetail.updated"));
                 }
               }}
             >
-              Resubmit Feedback
+              {t("reviewDetail.resubmitFeedback")}
             </button>
           ) : (
             <button
@@ -139,7 +141,7 @@ export default function Navigation({
               onClick={async () => {
                 if (
                   confirm(
-                    "Are you sure you want to submit? Your feedback will be visible for others. You can edit your feedback after submission."
+                    t("reviewDetail.submitConfirm")
                   )
                 ) {
                   const res = await createReview();
@@ -150,11 +152,11 @@ export default function Navigation({
                       value: id,
                     },
                   });
-                  alert("The review has been submitted");
+                  alert(t("reviewDetail.submitted"));
                 }
               }}
             >
-              Submit Feedback
+              {t("reviewDetail.submitFeedback")}
             </button>
           )}
         </div>

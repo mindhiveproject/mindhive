@@ -12,7 +12,7 @@ export default function ProposalOverview({
   openProposal,
   createProposal,
 }) {
-  const { t } = useTranslation("builder");
+  const { t } = useTranslation("classes");
 
   const refetchQueries = [
     {
@@ -24,10 +24,10 @@ export default function ProposalOverview({
   if (proposals?.length === 0) {
     return (
       <div className="empty">
-        <h3>You haven’t created any project boards yet.</h3>
-        <p>Once you create a project board, it will appear here.</p>
+        <h3>{t("projectBoard.noProjectBoardsYet")}</h3>
+        <p>{t("projectBoard.createProjectBoardToAppear")}</p>
         <button onClick={() => createProposal()}>
-          Create a new project board
+          {t("projectBoard.createNewProjectBoard")}
         </button>
       </div>
     );
@@ -37,9 +37,9 @@ export default function ProposalOverview({
       <div>
         <div className="row">
           <div className="proposalHeader">
-            <div>Project board name</div>
-            <div>Date created</div>
-            <div>Actions</div>
+            <div>{t("projectBoard.projectBoardName")}</div>
+            <div>{t("projectBoard.dateCreated")}</div>
+            <div>{t("projectBoard.actions")}</div>
           </div>
           <div></div>
         </div>
@@ -59,12 +59,12 @@ export default function ProposalOverview({
                 </div>
 
                 <div className="actionLinks">
-                  <button onClick={() => openProposal(prop?.id)}>Open</button>
+                  <button onClick={() => openProposal(prop?.id)}>{t("projectBoard.open")}</button>
                   <DeleteProposal
                     proposalId={prop?.id}
                     refetchQueries={refetchQueries}
                   >
-                    <button>Delete</button>
+                    <button>{t("projectBoard.delete")}</button>
                   </DeleteProposal>
                 </div>
               </div>

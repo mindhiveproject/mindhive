@@ -37,7 +37,7 @@ export default function ClassPage({ code, user, query }) {
                 : "menuTitle"
             }
           >
-            <p>Assignments</p>
+            <p>{t("assignmentsTab")}</p>
           </Link>
           <Link
             href={{
@@ -50,7 +50,7 @@ export default function ClassPage({ code, user, query }) {
               page === "students" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>Students</p>
+            <p>{t("studentsTab")}</p>
           </Link>
 
           <Link
@@ -64,7 +64,7 @@ export default function ClassPage({ code, user, query }) {
               page === "studies" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>Studies</p>
+            <p>{t("studiesTab")}</p>
           </Link>
         </div>
       </div>

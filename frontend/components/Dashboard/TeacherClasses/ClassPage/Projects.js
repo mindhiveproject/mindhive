@@ -2,10 +2,12 @@ import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import moment from "moment";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import { CLASS_PROJECTS_QUERY } from "../../../Queries/Proposal";
 
 export default function ClassProjects({ myclass, user }) {
+  const { t } = useTranslation("classes");
   const router = useRouter();
 
   const { data, loading, error } = useQuery(CLASS_PROJECTS_QUERY, {
@@ -17,7 +19,7 @@ export default function ClassProjects({ myclass, user }) {
   // if (projects.length === 0) {
   //   return (
   //     <div className="empty">
-  //       <div>The students haven’t created any projects yet.</div>
+  //       <div>{t("projects.noProjectsYet")}</div>
   //     </div>
   //   );
   // }
@@ -33,7 +35,7 @@ export default function ClassProjects({ myclass, user }) {
             },
           }}
         >
-          <button>Manage the class project board</button>
+          <button>{t("projects.manageClassProjectBoard")}</button>
         </Link>
       </div>
 
@@ -41,7 +43,7 @@ export default function ClassProjects({ myclass, user }) {
         <div className="studies">
           <div className="studiesHeader">
             <div>
-              <span>Project title </span>
+              <span>{t("projects.projectTitle")} </span>
               {/* <span
                 style={{ cursor: "pointer" }}
                 onClick={() => randomizeStudiesOrder(false)}
@@ -49,8 +51,8 @@ export default function ClassProjects({ myclass, user }) {
                 ↓
               </span> */}
             </div>
-            <div>Collaborator(s)</div>
-            <div>Date created</div>
+            <div>{t("projects.collaborators")}</div>
+            <div>{t("projects.dateCreated")}</div>
             {/* <div></div>
         <div></div> */}
           </div>
@@ -88,7 +90,7 @@ export default function ClassProjects({ myclass, user }) {
         </div>
       ) : (
         <div className="empty">
-          <div>The students haven’t created any projects yet.</div>
+          <div>{t("projects.noProjectsYet")}</div>
         </div>
       )}
     </>

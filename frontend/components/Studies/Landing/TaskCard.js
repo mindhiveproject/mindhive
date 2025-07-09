@@ -1,12 +1,14 @@
 import { useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import { TASK_TO_PARTICIPATE } from "../../Queries/Task";
 
 import { StyledTaskCard } from "../../styles/StyledStudyPage";
 
 export default function TaskCard({ user, study, step }) {
+  const { t } = useTranslation('common');
   const { data, loading, error } = useQuery(TASK_TO_PARTICIPATE, {
     variables: { id: step?.componentID },
   });
@@ -37,7 +39,8 @@ export default function TaskCard({ user, study, step }) {
         <p>
           {task.settings &&
             task.settings.duration &&
-            `Duration ${task.settings.duration}`}
+            t('taskCard.duration', { duration: task.settings.duration })
+          }
         </p>
 
         <div>
@@ -53,7 +56,7 @@ export default function TaskCard({ user, study, step }) {
               }}
             >
               <div className="controlBtns">
-                <button>Retake {task?.taskType?.toLowerCase()}</button>
+                <button>{t('taskCard.retake', { type: task?.taskType?.toLowerCase() })}</button>
               </div>
             </Link>
           </div>

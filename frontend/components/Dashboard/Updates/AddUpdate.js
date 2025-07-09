@@ -1,6 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import useForm from "../../../lib/useForm";
+import useTranslation from "next-translate/useTranslation";
 
 import UpdateForm from "./UpdateForm";
 
@@ -10,6 +11,7 @@ import { GET_UPDATES } from "../../Queries/Update";
 import useEmail from "../../../lib/useEmail";
 
 export default function AddUpdate({ user }) {
+  const { t } = useTranslation("common");
   const router = useRouter();
   const { sendEmail } = useEmail();
 
@@ -60,7 +62,7 @@ export default function AddUpdate({ user }) {
   return (
     <div>
       <UpdateForm inputs={inputs} handleChange={handleChange} creationMode />
-      <button onClick={handleSave}>Save</button>
+      <button onClick={handleSave}>{t("update.save")}</button>
     </div>
   );
 }

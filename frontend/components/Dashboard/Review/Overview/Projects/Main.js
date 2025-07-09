@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useState, useEffect, useRef } from "react";
 import { Dropdown, Checkbox } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { PROJECTS_QUERY } from "../../../../Queries/Proposal";
 import Card from "./Card";
@@ -22,13 +23,14 @@ export default function ProjectsBoard({
   myClassesIds,
   allUniqueClasses,
 }) {
+  const { t } = useTranslation("builder");
   const [keyword, setKeyword] = useState("");
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [sortBy, setSortBy] = useState("");
   const [filteredClasses, setFilteredClasses] = useState([]);
   const [showMyClassOnly, setShowMyClassOnly] = useState(false);
   const [filterSortMessage, setFilterSortMessage] = useState(
-    "Showing all projects"
+    t("review.showingAllProjects")
   );
 
   // Use a ref to track if this is the initial mount
@@ -94,30 +96,30 @@ export default function ProjectsBoard({
 
   // Update filterSortMessage based on filters
   useEffect(() => {
-    let message = "Showing all projects";
+    let message = t("review.showingAllProjects");
     if (filteredClasses.length > 0) {
       const classTitles = filteredClasses
         .map((classId) => allUniqueClasses.find((c) => c.id === classId)?.title)
         .filter(Boolean)
         .join(", ");
-      message = `Showing projects in ${classTitles}`;
+      message = t("review.showingProjectsIn", { classTitles });
     }
     if (sortBy) {
       if (sortBy === "OLDEST") {
-        message += `, sorted by oldest to newest`;
+        message += t("review.sortedByOldest");
       } else if (sortBy === "NEWEST") {
-        message += `, sorted by newest to oldest`;
+        message += t("review.sortedByNewest");
       } else if (sortBy === "LEAST_COMMENTS") {
-        message += `, sorted by least to most comments`;
+        message += t("review.sortedByLeastComments");
       } else if (sortBy === "MOST_COMMENTS") {
-        message += `, sorted by most to least comments`;
+        message += t("review.sortedByMostComments");
       }
     }
     if (keyword) {
-      message += ` matching "${keyword}"`;
+      message += t("review.matchingKeyword", { keyword });
     }
     setFilterSortMessage(message);
-  }, [filteredClasses, sortBy, keyword, allUniqueClasses]);
+  }, [filteredClasses, sortBy, keyword, allUniqueClasses, t]);
 
   // Reset filters only when selector changes (not on initial mount)
   useEffect(() => {
@@ -133,14 +135,14 @@ export default function ProjectsBoard({
       setSortBy("");
       setFilteredClasses([]);
       setShowMyClassOnly(false);
-      setFilterSortMessage("Showing all projects");
+      setFilterSortMessage(t("review.showingAllProjects"));
       const newUrl = window.location.pathname;
       window.history.pushState({}, document.title, newUrl);
     }
 
     // Update prevSelector for the next render
     prevSelector.current = selector;
-  }, [selector]);
+  }, [selector, t]);
 
   // Update URL when filters change
   useEffect(() => {
@@ -269,7 +271,7 @@ export default function ProjectsBoard({
       <div className="searchTopArea">
         <div className="searchArea">
           <input
-            placeholder="Search"
+            placeholder={t("review.search")}
             type="text"
             name="keyword"
             value={keyword}
@@ -279,13 +281,13 @@ export default function ProjectsBoard({
 
         <div>
           <Dropdown
-            placeholder="Sort by"
+            placeholder={t("review.sortBy")}
             fluid
             selection
             options={sortOptions.map((p) => ({
               key: p.value,
               value: p.value,
-              text: p.label,
+              text: t(`review.${p.value.toLowerCase()}`),
             }))}
             onChange={(event, data) => {
               setSortBy(data?.value);
@@ -294,7 +296,7 @@ export default function ProjectsBoard({
           />
         </div>
         <Dropdown
-          placeholder="Filter by classes"
+          placeholder={t("review.filterByClasses")}
           fluid
           multiple
           selection

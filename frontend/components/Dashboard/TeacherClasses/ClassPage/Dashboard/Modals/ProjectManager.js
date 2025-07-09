@@ -3,6 +3,7 @@ import { Modal, Icon, Dropdown, Button, Message } from "semantic-ui-react";
 import { useState } from "react";
 import styled from "styled-components";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
 import { CLASS_PROJECTS_QUERY } from "../../../../../Queries/Proposal";
@@ -14,6 +15,7 @@ import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 import StyledClass from "../../../../../styles/StyledClass";
 
 export default function ProjectManager(props) {
+  const { t } = useTranslation("classes");
   const [isOpen, setIsOpen] = useState(false);
   const [projectId, setProjectId] = useState(null);
   const [projectName, setProjectName] = useState("");
@@ -125,7 +127,7 @@ export default function ProjectManager(props) {
 
   const assignToProject = async () => {
     if (!projectId) {
-      return alert("Select a project first");
+      return alert(t("dashboard.selectProjectFirst"));
     }
     let studyId;
     const p = availableProjects
@@ -156,7 +158,7 @@ export default function ProjectManager(props) {
 
   const createNewProject = async () => {
     if (!projectName) {
-      return alert("Give the project a name first");
+      return alert(t("dashboard.giveProjectNameFirst"));
     }
     await copyProposal({
       variables: {
@@ -198,7 +200,7 @@ export default function ProjectManager(props) {
       console.error("Error toggling main project:", err);
       // Revert local state on error
       setLocalProjects(props?.data?.projects || []);
-      alert("Failed to update main project status. Please try again.");
+      alert(t("dashboard.failedToUpdateMainProject"));
     }
   };
 
@@ -210,7 +212,7 @@ export default function ProjectManager(props) {
       trigger={
         <StyledTriggerButton>
           <Icon name="book" />
-          Manage Projects ({localProjects.length})
+          {t("dashboard.manageProjects", { count: localProjects.length })}
         </StyledTriggerButton>
       }
       dimmer="blurring"
@@ -220,13 +222,13 @@ export default function ProjectManager(props) {
       <StyledModal>
         <Modal.Content>
           <div className="modalHeader">
-            <h1>Manage Projects for {props?.data?.username}</h1>
-            <p>View, create, or assign projects for the student</p>
+            <h1>{t("dashboard.manageProjectsFor", { username: props?.data?.username })}</h1>
+            <p>{t("dashboard.viewCreateOrAssignProjects")}</p>
           </div>
           {updateError && (
             <Message negative>
-              <Message.Header>Error</Message.Header>
-              <p>Failed to update project status. Please try again.</p>
+              <Message.Header>{t("dashboard.error")}</Message.Header>
+              <p>{t("dashboard.failedToUpdateProjectStatus")}</p>
             </Message>
           )}
           <StyledClass>
@@ -234,7 +236,7 @@ export default function ProjectManager(props) {
               <div className="manageModal">
                 {hasProjects ? (
                   <div className="section">
-                    <h2>Current Projects</h2>
+                    <h2>{t("dashboard.currentProjects")}</h2>
                     <div className="project-list">
                       {sortedProjects.map((project) => (
                         <div
@@ -260,34 +262,34 @@ export default function ProjectManager(props) {
                                     })
                                   }
                                   disabled={updateLoading}
-                                  aria-label={`Set ${project?.title} as main project`}
+                                  aria-label={t("dashboard.setAsMainAria", { title: project?.title })}
                                   className="main-toggle"
                                 />
                                 <span className="toggle-label">
                                   {project.isMain
-                                    ? "Main Project"
-                                    : "Set as Main"}
+                                    ? t("dashboard.mainProject")
+                                    : t("dashboard.setAsMain")}
                                 </span>
                               </div>
                               <div className="tooltip">
                                 {project.isMain
-                                  ? "This is the main project. Click to unset."
-                                  : "Set this as the main project for the student."}
+                                  ? t("dashboard.thisIsMainProject")
+                                  : t("dashboard.setAsMainTooltip")}
                               </div>
                             </div>
                           </div>
                           <div className="project-info">
-                            <p>{project.study?.title || "No study assigned"}</p>
+                            <p>{project.study?.title || t("dashboard.noStudyAssigned")}</p>
                             <div className="collaborators">
-                              <strong>Collaborators:</strong>{" "}
+                              <strong>{t("dashboard.collaborators")}</strong>{" "}
                               {project.collaborators?.length > 0
                                 ? project.collaborators
                                     .map((c) => c.username)
                                     .join(", ")
-                                : "None"}
+                                : t("dashboard.none")}
                             </div>
                             <div className="mentors">
-                              <strong>Mentors:</strong>{" "}
+                              <strong>{t("dashboard.mentors")}</strong>{" "}
                               {project.study?.collaborators?.filter((c) =>
                                 c.permissions.some((p) => p.name === "MENTOR")
                               ).length > 0
@@ -299,21 +301,21 @@ export default function ProjectManager(props) {
                                     )
                                     .map((c) => c.username)
                                     .join(", ")
-                                : "None"}
+                                : t("dashboard.none")}
                             </div>
                             <Link
                               href={`/builder/projects?selector=${project.id}`}
                               target="_blank"
                               className="project-link"
                             >
-                              View Project Board
+                              {t("dashboard.viewProjectBoard")}
                             </Link>
                           </div>
                           <button
                             className="disconnect-button"
                             onClick={() => disconnectFromProject(project.id)}
                           >
-                            Remove as a collaborator
+                            {t("dashboard.removeAsCollaborator")}
                           </button>
                         </div>
                       ))}
@@ -321,13 +323,13 @@ export default function ProjectManager(props) {
                   </div>
                 ) : (
                   <div className="section empty-state">
-                    <h2>No Projects Assigned</h2>
-                    <p>This student is not assigned to any projects yet.</p>
+                    <h2>{t("dashboard.noProjectsAssigned")}</h2>
+                    <p>{t("dashboard.notAssignedToAnyProjects")}</p>
                   </div>
                 )}
                 <div>
                   <div className="section">
-                    <h2>Assign to Existing Project</h2>
+                    <h2>{t("dashboard.assignToExistingProject")}</h2>
                     <Dropdown
                       selection
                       options={projectOptions}
@@ -335,16 +337,16 @@ export default function ProjectManager(props) {
                       onChange={(e, data) => setProjectId(data?.value)}
                       fluid
                       className="project-dropdown"
-                      placeholder="Select a project"
+                      placeholder={t("dashboard.selectAProject")}
                       disabled={projectOptions.length === 0}
                     />
                   </div>
                   <div className="section">
-                    <h2>Create New Project</h2>
+                    <h2>{t("dashboard.createNewProject")}</h2>
                     <input
                       type="text"
                       name="projectName"
-                      placeholder="Enter the name of the new project"
+                      placeholder={t("dashboard.enterNewProjectName")}
                       value={projectName}
                       onChange={(e) => setProjectName(e?.target?.value)}
                       className="project-input"
@@ -356,21 +358,21 @@ export default function ProjectManager(props) {
           </StyledClass>
           <div className="footer">
             <button className="cancel-button" onClick={() => setIsOpen(false)}>
-              Cancel
+              {t("dashboard.cancel")}
             </button>
             <button
               className="action-button"
               onClick={assignToProject}
               disabled={!projectId}
             >
-              Assign to Project
+              {t("dashboard.assignToProject")}
             </button>
             <button
               className="action-button"
               onClick={createNewProject}
               disabled={!projectName}
             >
-              Create Project
+              {t("dashboard.createProject")}
             </button>
           </div>
         </Modal.Content>

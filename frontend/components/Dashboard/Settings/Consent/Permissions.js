@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Divider } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import useForm from "../../../../lib/useForm";
+import useTranslation from "next-translate/useTranslation";
 
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { UPDATE_USER } from "../../../Mutations/User";
@@ -10,6 +11,7 @@ import { StyledInput } from "../../../styles/StyledForm";
 import { StyledSimpleSaveButton } from "../../../styles/StyledProfile";
 
 export default function Permissions({ query, user }) {
+  const { t } = useTranslation("common");
   const [changed, setChanged] = useState(false);
 
   const { inputs, handleChange, clearForm } = useForm({ ...user });
@@ -31,23 +33,15 @@ export default function Permissions({ query, user }) {
 
   return (
     <StyledInput>
-      <h1>Data and Consent Settings</h1>
-      <h3>
-        MindHive would like to use the following data in order to create better
-        experiences for our users and to continue contributing to meaningful
-        research
-      </h3>
-      <p>
-        If you would like to change your current data preferences or opt out of
-        data sharing altogether, you may do so below. Please contact
-        mindhive.question@mindhive.com if you have any questions.
-      </p>
+      <h1>{t("permissions.title")}</h1>
+      <h3>{t("permissions.description")}</h3>
+      <p>{t("permissions.help")}</p>
       <Divider />
 
       <div className="content">
         <div className="buttons">
           <StyledSimpleSaveButton changed={changed}>
-            <button onClick={handleSave}>Update Preferences</button>
+            <button onClick={handleSave}>{t("permissions.updatePreferences")}</button>
           </StyledSimpleSaveButton>
 
           <Link
@@ -55,7 +49,7 @@ export default function Permissions({ query, user }) {
               pathname: `/dashboard/settings/consent`,
             }}
           >
-            <button className="back">Go back</button>
+            <button className="back">{t("permissions.goBack")}</button>
           </Link>
         </div>
       </div>

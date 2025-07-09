@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client";
 import { Modal, Dropdown, Button } from "semantic-ui-react";
 import { useState } from "react";
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
 import {
@@ -10,6 +11,7 @@ import {
 } from "../../../../../Mutations/Proposal";
 
 export default function SubmissionStatusManager(props) {
+  const { t } = useTranslation("classes");
   const [isOpen, setIsOpen] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [status, setStatus] = useState(props?.value);
@@ -88,16 +90,16 @@ export default function SubmissionStatusManager(props) {
       setConfirmModalOpen(false);
     } catch (error) {
       console.error("Error updating status:", error);
-      alert("Failed to update status or cards");
+      alert(t("dashboard.failedToUpdateStatusOrCards"));
     }
   };
 
   const statusOptions =
     [
-      { label: "Not started", value: "NOT_STARTED" },
-      { label: "In progress", value: "IN_PROGRESS" },
-      { label: "Submitted", value: "SUBMITTED" },
-      { label: "Review is finished", value: "FINISHED" },
+      { label: t("dashboard.notStarted"), value: "NOT_STARTED" },
+      { label: t("dashboard.inProgress"), value: "IN_PROGRESS" },
+      { label: t("dashboard.submitted"), value: "SUBMITTED" },
+      { label: t("dashboard.reviewFinished"), value: "FINISHED" },
     ].map((status) => ({
       key: status?.value,
       text: status?.label,
@@ -106,8 +108,8 @@ export default function SubmissionStatusManager(props) {
 
   const commentsOptions =
     [
-      { label: "Not allowed", value: false },
-      { label: "Allowed", value: true },
+      { label: t("dashboard.notAllowed"), value: false },
+      { label: t("dashboard.allowed"), value: true },
     ].map((status) => ({
       key: status?.value,
       text: status?.label,
@@ -128,29 +130,28 @@ export default function SubmissionStatusManager(props) {
         <StyledModal>
           <Modal.Content>
             <div className="modalHeader">
-              <h1>Manage {props?.stage} Status</h1>
+              <h1>{t("dashboard.manageStageStatus", { stage: props?.stage })}</h1>
               <p>
-                Update the status and comment settings for{" "}
-                {props?.data?.projectTitle}
+                {t("dashboard.updateStatusAndComments", { project: props?.data?.projectTitle })}
               </p>
             </div>
             {(boardError || cardError) && (
               <div className="error-message">
-                Error: Failed to update status or cards. Please try again.
+                {t("dashboard.failedToUpdateStatusOrCards")}
               </div>
             )}
             <div className="modalTwoSideContent">
               <div className="firstSide">
-                <h2>Project Details</h2>
+                <h2>{t("dashboard.projectDetails")}</h2>
                 <p>
-                  <strong>Stage:</strong> {props?.stage}
+                  <strong>{t("dashboard.stage")}</strong> {props?.stage}
                 </p>
                 <p>
-                  <strong>Project:</strong> {props?.data?.projectTitle}
+                  <strong>{t("dashboard.project")}</strong> {props?.data?.projectTitle}
                 </p>
               </div>
               <div className="secondSide">
-                <h2>Status</h2>
+                <h2>{t("dashboard.status")}</h2>
                 <Dropdown
                   selection
                   options={statusOptions}
@@ -159,7 +160,7 @@ export default function SubmissionStatusManager(props) {
                   fluid
                   className="status-dropdown"
                 />
-                <h2>Comments</h2>
+                <h2>{t("dashboard.comments")}</h2>
                 <Dropdown
                   selection
                   options={commentsOptions}
@@ -175,14 +176,14 @@ export default function SubmissionStatusManager(props) {
                 className="cancel-button"
                 onClick={() => setIsOpen(false)}
               >
-                Cancel
+                {t("dashboard.cancel")}
               </button>
               <button
                 className="update-button"
                 onClick={handleUpdateStatus}
                 disabled={boardLoading || cardLoading}
               >
-                {boardLoading || cardLoading ? "Updating..." : "Update Status"}
+                {boardLoading || cardLoading ? t("dashboard.updating") : t("dashboard.updateStatus")}
               </button>
             </div>
           </Modal.Content>
@@ -193,12 +194,10 @@ export default function SubmissionStatusManager(props) {
         onClose={() => setConfirmModalOpen(false)}
         size="tiny"
       >
-        <Modal.Header>Confirm Card Status Update</Modal.Header>
+        <Modal.Header>{t("dashboard.confirmCardStatusUpdate")}</Modal.Header>
         <Modal.Content>
           <Modal.Description>
-            Setting the status to "Review is finished" can update all submitted
-            cards in this project to "Needs revision". Would you like to proceed
-            with this change?
+            {t("dashboard.confirmCardStatusUpdateDescSingle")}
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
@@ -209,7 +208,7 @@ export default function SubmissionStatusManager(props) {
             }}
             className="cancel-button"
           >
-            No, Keep Card Statuses
+            {t("dashboard.noKeepCardStatuses")}
           </Button>
           <Button
             onClick={() => updateProjectStatus(true)}
@@ -217,7 +216,7 @@ export default function SubmissionStatusManager(props) {
             primary
             disabled={boardLoading || cardLoading}
           >
-            Yes, Update Cards
+            {t("dashboard.yesUpdateCards")}
           </Button>
         </Modal.Actions>
       </StyledConfirmModal>
