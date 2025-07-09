@@ -1,4 +1,16 @@
 {
+	"activity": {
+		"backToConsent": "Terug naar Gegevens & Toestemming",
+		"description": "Volg uw voortgang en bekijk de studies en taken waaraan u hebt deelgenomen",
+		"title": "Mijn activiteit"
+	},
+	"assignments": {
+		"copyLink": "Link kopiëren",
+		"linkCopied": "De link is gekopieerd",
+		"noAssignments": "Er zijn nog geen opdrachten.",
+		"open": "Open",
+		"save": "Redden"
+	},
 	"auth": {
 		"checkYourMail": "Controleer uw e-mail",
 		"email": "E-mail",
@@ -8,16 +20,146 @@
 		"requestReset": "Verzoek om reset",
 		"username": "Gebruikersnaam"
 	},
+	"classes": {
+		"typeClassTitle": "Titel van de typeklasse"
+	},
+	"close": "Dichtbij",
+	"collaborators": {
+		"typeUsername": "Typ gebruikersnaam"
+	},
+	"consent": {
+		"activityDescription": "Bekijk de studies en opdrachten waaraan u hebt deelgenomen",
+		"activityTitle": "Mijn activiteit",
+		"backToSettings": "Terug naar Instellingen",
+		"description": "MindHive wil de volgende gegevens gebruiken om betere ervaringen voor onze gebruikers te creëren en om te blijven bijdragen aan zinvol onderzoek",
+		"documentsDescription": "Beoordeel en dien documenten in ter ondersteuning van onderzoek bij MindHive",
+		"documentsTitle": "Toestemmingsdocumenten",
+		"form": {
+			"coveredStudiesDesc": "Taken en onderzoeken die verband houden met de volgende onderzoeken vallen onder dit protocol",
+			"iAgreeJoin": "Ik ga akkoord, doe mee aan de studie",
+			"iAgreeNext": "Ik ben het eens, volgende",
+			"kidName": "Jouw naam",
+			"parentEmail": "E-mailadres van de ouder",
+			"parentName": "Naam van de ouder",
+			"skip": "Toestemming overslaan",
+			"studyInfo": "Deze studie maakt deel uit van het <strong>{{organization}}</strong> onderzoeksprotocol <strong>{{title}}</strong>."
+		},
+		"permissionsDescription": "Bekijk en bewerk uw gegevensmachtigingen en bekijk uw activiteit",
+		"permissionsTitle": "Gegevensmachtigingen",
+		"skipped": {
+			"contact": "Neem contact op met de studiebeheerder voor meer informatie.",
+			"header": "Kan niet deelnemen",
+			"message": "Helaas kunt u niet deelnemen aan het onderzoek omdat u niet akkoord bent gegaan met het vereiste toestemmingsformulier."
+		},
+		"title": "Gegevens en toestemming"
+	},
+	"created": {
+		"author": "Auteur",
+		"collaborator": "Medewerker",
+		"dateCreated": "Datum aangemaakt",
+		"dateUpdated": "Datum bijgewerkt",
+		"menuTitle": "Gemaakte studies",
+		"noStudiesYet": "De student heeft nog geen studies aangemaakt.",
+		"role": "Rol",
+		"studyTitle": "Studietitel"
+	},
+	"dataUsage": {
+		"education": "Ik wil dat mijn gegevens alleen voor educatieve doeleinden worden opgeslagen (bijvoorbeeld lezingen en lesmateriaal)",
+		"header": "Datagebruik",
+		"no": "Registreer mijn gegevens helemaal niet (als je een MindHive-student bent: dit betekent dat je gegevens niet worden opgenomen in de klasdemo's!)",
+		"question": "Hoe wilt u dat wij uw gegevens gebruiken?",
+		"science": "U mag mijn gegevens gebruiken voor wetenschappelijke en/of educatieve doeleinden"
+	},
 	"discoverDescription": "Blader door onze collectie studies, opdrachten en enquêtes, gemaakt door middelbare scholieren in het MindHive-programma en partnerwetenschappers. Neem deel aan studies of bekijk een voorbeeld van opdrachten en enquêtes.",
 	"discoverHeader": "Ontdek studies, opdrachten en enquêtes",
+	"documents": {
+		"description": "MindHive wil de volgende gegevens gebruiken om betere ervaringen voor onze gebruikers te creëren en om te blijven bijdragen aan zinvol onderzoek",
+		"title": "Toestemmingsdocumenten",
+		"uploadNotice": "Je hebt nog niet alle documentatie geüpload die nodig is voor deelname aan het mentorschap. Controleer en upload de overige documenten hieronder."
+	},
+	"email": {
+		"currentEmail": "Huidig ​​e-mailadres",
+		"description": "Werk hieronder uw MindHive-e-mailinstellingen bij om belangrijke e-mailupdates te blijven ontvangen",
+		"newEmail": "Nieuwe e-mail",
+		"title": "E-mailinstellingen",
+		"updatePreferences": "Voorkeuren bijwerken"
+	},
+	"error": {
+		"oops": "Oeps!"
+	},
 	"featured": "Uitgelicht",
+	"flow": {
+		"header": {
+			"login": "Login",
+			"participantDetails": "Deelnemersgegevens",
+			"participation": "Deelname",
+			"studyConsent": "Toestemming voor onderzoek"
+		}
+	},
+	"form": {
+		"fileTooBig10Mb": "Het bestand is te groot. Kies een bestand kleiner dan 10 MB.",
+		"fileTooBig100Mb": "Het bestand is te groot. Kies een bestand kleiner dan 100 MB.",
+		"unknownFormat": "Onbekend formaat van het bestand"
+	},
 	"goToStudy": "Ga studeren",
+	"homework": {
+		"menuTitle": "Huiswerk"
+	},
+	"inDev": {
+		"header": "Dit onderdeel van het platform is momenteel in ontwikkeling 🚧👷🏻‍♂️🚜👷⚙️",
+		"message": "Kom later nog eens terug om het te bekijken."
+	},
+	"join": {
+		"details": {
+			"dob": "Wat is uw geboortedatum?",
+			"english": "Begrijpt u de basisinstructies in het Engels?",
+			"englishNo": "Nee",
+			"englishTranslationNote": "(De españolversie van het plataforma is beschikbaar in poco tiempo.)",
+			"englishYes": "Ja",
+			"error": {
+				"enterDob": "Voer uw geboortedatum in",
+				"minorBlocked": "Helaas kunnen op dit moment alleen deelnemers van 18 jaar of ouder aan deze studie deelnemen."
+			},
+			"header": "Laten we beginnen",
+			"intro": "Wij zijn blij dat u interesse heeft om deel te nemen aan \"{{title}}\".",
+			"joinButton": "Doe mee aan de studie",
+			"next": "Volgende",
+			"nyuId": "Wat is uw NYU-ID?",
+			"nyuIdDesc": "Als u uw ID invoert, kunnen wij ervoor zorgen dat u studiepunten ontvangt voor uw deelname aan dit onderzoek.",
+			"saveInfo": "Bewaar mijn gegevens voor toekomstige studies",
+			"sona": "Bent u een NYU SONA-deelnemer?",
+			"sonaNo": "Nee",
+			"sonaYes": "Ja",
+			"zip": "Uw postcode"
+		},
+		"selector": {
+			"guestButton": "Doorgaan als gast",
+			"guestDesc": "Ga direct naar de studie. Gasten kunnen geen informatie opslaan voor een volgende keer.",
+			"guestTitle": "Gastdeelnemer",
+			"header": "Hoe wilt u vandaag deelnemen?",
+			"memberButton": "Doorgaan als lid",
+			"memberDesc": "Blijf lid voor een snellere studie-ervaring.",
+			"memberTitle": "MindHive-lid",
+			"newButton": "Aanmelden",
+			"newDesc": "Meld u aan om de volgende keer sneller deel te nemen aan het onderzoek",
+			"newTitle": "Nieuw MindHive-lid",
+			"returningButton": "Inloggen",
+			"returningDesc": "Heb je al een MindHive-account? Log in voor een snellere studie-ervaring.",
+			"returningTitle": "Terugkerend MindHive-lid"
+		}
+	},
+	"journal": {
+		"menuTitle": "Tijdschrift"
+	},
 	"languages": {
 		"backToSettings": "Terug naar Instellingen",
 		"description": "Hieronder kunt u uw taalinstellingen aanpassen en wijzigen.",
 		"displayLanguage": "Weergavetaal",
 		"title": "Taalinstellingen",
 		"updatePreferences": "Voorkeuren bijwerken"
+	},
+	"members": {
+		"typeUsername": "Typ gebruikersnaam"
 	},
 	"navigation": {
 		"about": "Over",
@@ -29,21 +171,186 @@
 		"tasks": "Taken en enquêtes",
 		"teachers": "Leraren"
 	},
+	"pagination": {
+		"next": "Volgende",
+		"of": "van {{pageCount}}",
+		"page": "Pagina",
+		"pageOf": "Pagina {{page}} van {{pageCount}}",
+		"prev": "Vorige",
+		"totalParticipants": "Totaal {{count}} deelnemers",
+		"totalUsers": "{{count}} gebruikers totaal"
+	},
+	"participated": {
+		"condition": "Voorwaarde",
+		"finished": "Afgerond",
+		"menuTitle": "Deelgenomen",
+		"name": "Naam",
+		"noStudiesYet": "De student heeft nog niet aan een onderzoek deelgenomen.",
+		"started": "Begonnen",
+		"step": "Stap",
+		"studyTitle": "Studietitel",
+		"taskSubtitle": "Taak ondertitel",
+		"taskVersion": "Taakversie",
+		"type": "Type"
+	},
+	"permissions": {
+		"description": "MindHive wil de volgende gegevens gebruiken om betere ervaringen voor onze gebruikers te creëren en om te blijven bijdragen aan zinvol onderzoek",
+		"goBack": "Ga terug",
+		"help": "Als u uw huidige gegevensvoorkeuren wilt wijzigen of helemaal geen gegevensdeling wilt toestaan, kunt u dat hieronder doen. Neem contact op met mindhive.question@mindhive.com als u vragen heeft.",
+		"title": "Gegevens- en toestemmingsinstellingen",
+		"updatePreferences": "Voorkeuren bijwerken"
+	},
+	"preview": {
+		"closeTabToStopPreview": "SLUIT DIT TABBLAD OM DE VOORBEKIJKING TE STOPPEN",
+		"taskBuilderPreviewMessage": "DIT IS EEN VOORBEELD. UW GEGEVENS WORDEN NIET OPGESLAGEN.",
+		"taskPreviewMessage": "DIT IS EEN VOORBEELD VAN EEN TAAK. UW GEGEVENS WORDEN NIET OPGESLAGEN."
+	},
+	"projects": {
+		"author": "Auteur",
+		"collaborator": "Medewerker",
+		"dateCreated": "Datum aangemaakt",
+		"dateUpdated": "Datum bijgewerkt",
+		"error": "Fout",
+		"failedToUpdateProjectStatus": "Projectstatus kan niet worden bijgewerkt. Probeer het opnieuw.",
+		"mainProject": "Hoofdproject",
+		"menuTitle": "Aangemaakte projecten",
+		"noProjectsYet": "De student heeft nog geen projecten aangemaakt.",
+		"openInNewTab": "Project openen in nieuw tabblad",
+		"projectDeleted": "Project verwijderd",
+		"projectTitle": "Projecttitel",
+		"role": "Rol",
+		"setAsMainAria": "Stel {{title}} in als hoofdproject"
+	},
+	"prompt": {
+		"goBack": "Ga terug naar de hoofdpagina van de studie",
+		"next": "Volgende",
+		"pleaseAnswer": "Beantwoord eerst de vraag",
+		"proceedNextTask": "Ga door naar de volgende taak",
+		"thankYou": "Bedankt voor uw deelname aan deze taak!"
+	},
+	"reviewed": {
+		"menuTitle": "Beoordeeld"
+	},
+	"save": "Redden",
+	"searchMembers": {
+		"admin": "Beheerder",
+		"classes": "Klassen",
+		"mentor": "Mentor",
+		"participant": "Deelnemer",
+		"scientist": "Wetenschapper",
+		"searchByClass": "Zoeken op klas",
+		"selectAll": "Selecteer alles",
+		"selectClass": "Selecteer klas(sen)",
+		"selectRole": "Selecteer rol(len)",
+		"selectUser": "Selecteer gebruiker(s)",
+		"student": "Student",
+		"teacher": "Docent",
+		"userRole": "Gebruikersrol",
+		"users": "Gebruikers"
+	},
+	"settings": {
+		"dataConsent": "Gegevens- en toestemmingsinstellingen",
+		"dataConsentDescription": "Beheer het gebruik van persoonlijke informatie",
+		"description": "Hier kunt u uw MindHive-account en privacyinstellingen bijwerken",
+		"email": "E-mail",
+		"languagePreferences": "Stel uw taalvoorkeuren in",
+		"languages": "Talen",
+		"quickLinks": "Snelle links",
+		"title": "Instellingen",
+		"username": "Gebruikersnaam"
+	},
 	"signup": {
 		"haveAccount": "Heeft u al een account?",
-		"loginHere": "Meld je hier aan",
+		"loginHere": "Log hier in",
 		"participant": "Deelnemer aan het onderzoek",
 		"scientist": "Wetenschapper",
 		"student": "Student",
 		"teacher": "Docent",
 		"title": "Welke rol beschrijft u het beste?"
 	},
-	"studies": "Onderzoeken",
+	"studies": {
+		"typeStudyTitle": "Typ de titel van de studie"
+	},
+	"study": {
+		"archive": "Archiefstudie",
+		"archiveConfirm": "Weet u zeker dat u deze studie wilt archiveren?",
+		"archiveDescription": "Door een onderzoek te archiveren, kunt u zich concentreren op actieve onderzoeken. Het onderzoek wordt verplaatst naar de sectie 'Gearchiveerd' in uw ontwikkelomgeving. Dit heeft geen invloed op hoe anderen het onderzoek zien. U kunt een onderzoek op elk moment uit het archief halen.",
+		"authorshipConfirm": "Weet u zeker dat u het auteurschap van deze studie wilt overdragen?",
+		"authorshipDescription": "Door uw auteurschap over te dragen, wordt de verbinding tussen uw account en de studie permanent verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
+		"change": "Wijziging",
+		"delete": "Studie verwijderen",
+		"deleteConfirm": "Weet u zeker dat u deze studie wilt verwijderen?",
+		"deleteDescription": "Als u een onderzoek verwijdert, worden het onderzoek en alle bijbehorende gegevens permanent verwijderd voor u en alle deelnemers aan het onderzoek. Als u uw gegevens wilt behouden, kunt u het onderzoek archiveren. Archiveren verplaatst het onderzoek naar de sectie 'Gearchiveerd' in uw ontwikkelomgeving en houdt het onderzoek actief voor alle deelnemers aan het onderzoek. Deze actie kan niet ongedaan worden gemaakt.",
+		"selectUser": "Selecteer de gebruiker",
+		"transferAuthorship": "Het auteurschap overdragen",
+		"typeChangeAlert": "Typ WIJZIG om de auteur van uw studie te wijzigen",
+		"typeChangeToConfirm": "Typ \"WIJZIGEN\" om te bevestigen",
+		"typeDeleteAlert": "Typ DELETE om uw studie te verwijderen",
+		"typeDeleteToConfirm": "Typ \"DELETE\" om te bevestigen",
+		"unarchive": "Niet-archiefonderzoek",
+		"unarchiveConfirm": "Weet u zeker dat u deze studie wilt uitarchiveren?",
+		"unarchiveDescription": "Het onderzoek wordt teruggezet naar de sectie 'Actief' in uw ontwikkelomgeving. Dit heeft geen invloed op hoe anderen het onderzoek zien. U kunt een onderzoek op elk moment opnieuw archiveren."
+	},
+	"studyInfo": {
+		"contactInformation": "Contactgegevens",
+		"frequency": "Frequentie",
+		"inPartnershipWith": "In samenwerking met",
+		"tabWhat": "Wat",
+		"tabWho": "WHO",
+		"tabWhy": "Waarom",
+		"tags": "Labels",
+		"timeToComplete": "Tijd om te voltooien"
+	},
+	"tag": {
+		"chooseKeywords": "Kies trefwoorden voor uw onderzoek.",
+		"createdAt": "Gemaakt op",
+		"createTag": "Tag maken",
+		"deleteTagConfirm": "Weet u zeker dat u deze tag wilt verwijderen?",
+		"firstLevel": "Eerste niveau",
+		"level": "Niveau",
+		"myTags": "Mijn tags",
+		"noParentTag": "Geen bovenliggende tag",
+		"searchPlaceholder": "Zoeken naar tags",
+		"secondLevel": "Tweede niveau",
+		"selectParentTag": "Selecteer bovenliggende tag",
+		"studyTagsHeader": "Studietags",
+		"tagLevel": "Tag-niveau",
+		"thirdLevel": "Derde niveau",
+		"title": "Titel",
+		"updatedAt": "Bijgewerkt op"
+	},
+	"taskCard": {
+		"duration": "Duur {{duration}}",
+		"retake": "Herhalen {{type}}"
+	},
 	"tasksAndSurveys": "Taken en enquêtes",
 	"terms": {
-		"byClicking": "",
-		"includingOur": "",
-		"privacyPolicy": "",
-		"termsOfService": ""
+		"byClicking": "Door op {btnName} te klikken, gaat u akkoord met de voorwaarden van MindHive.",
+		"includingOur": "inclusief onze",
+		"privacyPolicy": "Privacybeleid",
+		"termsOfService": "Servicevoorwaarden"
+	},
+	"update": {
+		"createdAt": "Gemaakt op",
+		"createUpdate": "Update maken",
+		"deleteConfirm": "Weet u zeker dat u deze update wilt verwijderen?",
+		"link": "Link",
+		"notificationsAndUpdates": "Meldingen en updates",
+		"save": "Redden",
+		"sendEmail": "Stuur een e-mail",
+		"title": "Titel",
+		"updatedAt": "Bijgewerkt op",
+		"user": "Gebruiker"
+	},
+	"username": {
+		"currentUsername": "Huidige gebruikersnaam",
+		"description": "Je MindHive-gebruikersnaam is wat anderen zien wanneer je content op het platform creëert. Je kunt je gebruikersnaaminstellingen hieronder wijzigen.",
+		"newUsername": "Nieuwe gebruikersnaam",
+		"title": "Gebruikersnaaminstellingen",
+		"updatePreferences": "Voorkeuren bijwerken"
+	},
+	"userPath": {
+		"guestMessage": "Je neemt deel als gast. Je openbare, leesbare ID is <strong>{{id}}</strong>",
+		"startNextTask": "Start de volgende taak"
 	}
 }
