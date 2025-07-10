@@ -2,12 +2,14 @@ import DynamicExperimentWindow from "../../Labjs/Run/Wrapper";
 
 import Labjs from "../../Global/Labjs";
 import { StyledPreview } from "../../styles/StyledPreview";
+import useTranslation from "next-translate/useTranslation";
 
 export default function BuilderTaskPreview({ user, task, close }) {
+  const { t } = useTranslation('common');
   return (
     <StyledPreview>
       <div className="frame"></div>
-      <div className="message">THIS IS A PREVIEW. YOUR DATA ARE NOT SAVED.</div>
+      <div className="message">{t('preview.taskBuilderPreviewMessage')}</div>
       <div className="closeBtn" onClick={() => close()}>
         <span>&times;</span>
       </div>

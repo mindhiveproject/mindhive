@@ -6,8 +6,10 @@ import { GET_USER_CLASSES } from "../../../Queries/User";
 
 import ProjectsBoard from "./Projects/Main";
 import StudiesBoard from "./Studies/Main";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Overview({ query, user }) {
+  const { t } = useTranslation("builder");
   const selector = query?.selector || "proposals";
 
   // get all classes of a particular user (including classes from the class network)
@@ -40,12 +42,8 @@ export default function Overview({ query, user }) {
 
   return (
     <div className="overview">
-      <div className="h40">Feedback Center</div>
-      <div className="h24">
-        Whether you're starting your study or collecting participants, use this
-        page to give feedback to your fellow peers on their proposals and
-        finalized studies
-      </div>
+      <div className="h40">{t("review.feedbackCenter")}</div>
+      <div className="h24">{t("review.overviewIntro")}</div>
 
       <div className="menu">
         <Link href="/dashboard/review/proposals">
@@ -56,7 +54,7 @@ export default function Overview({ query, user }) {
                 : "menuTitle"
             }
           >
-            <p>Proposals</p>
+            <p>{t("review.proposals")}</p>
           </div>
         </Link>
 
@@ -68,7 +66,7 @@ export default function Overview({ query, user }) {
                 : "menuTitle"
             }
           >
-            <p>In review</p>
+            <p>{t("review.inReview")}</p>
           </div>
         </Link>
 
@@ -80,7 +78,7 @@ export default function Overview({ query, user }) {
                 : "menuTitle"
             }
           >
-            <p>Collecting data</p>
+            <p>{t("review.collectingDataMenu")}</p>
           </div>
         </Link>
 
@@ -92,7 +90,7 @@ export default function Overview({ query, user }) {
                 : "menuTitle"
             }
           >
-            <p>Project report</p>
+            <p>{t("review.projectReport")}</p>
           </div>
         </Link>
       </div>

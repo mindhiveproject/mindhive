@@ -2,8 +2,10 @@ import { Dropdown } from "semantic-ui-react";
 import { useState } from "react";
 import StudentWork from "./StudentWork";
 import CollectivePresentation from "../Collective";
+import useTranslation from "next-translate/useTranslation";
 
 export default function IndividualPresentationMain({ project }) {
+  const { t } = useTranslation("builder");
   const [studentId, setStudentId] = useState("collective");
 
   const { author, collaborators } = project;
@@ -17,7 +19,7 @@ export default function IndividualPresentationMain({ project }) {
   const filterOptions = [
     {
       key: "collective",
-      text: "Show collective work",
+      text: t("reviewDetail.showCollectiveWork"),
       value: "collective",
     },
     ...studentFilterOptions,
@@ -25,9 +27,9 @@ export default function IndividualPresentationMain({ project }) {
 
   return (
     <>
-      <h2>Select the student</h2>
+      <h2>{t("reviewDetail.selectStudent")}</h2>
       <Dropdown
-        placeholder="Select student"
+        placeholder={t("reviewDetail.selectStudentPlaceholder")}
         fluid
         selection
         options={filterOptions}

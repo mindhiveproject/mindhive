@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Resizer from "react-image-file-resizer";
+import useTranslation from "next-translate/useTranslation";
 
 export function dataURItoBlob(dataURI) {
   const binary = atob(dataURI.split(",")[1]);
@@ -12,6 +13,7 @@ export function dataURItoBlob(dataURI) {
 
 export default function useForm(initial = {}) {
   // create a state object for our inputs
+  const { t } = useTranslation('common');
   const [inputs, setInputs] = useState(initial);
   const initialValues = Object.values(initial).join();
 
@@ -149,13 +151,13 @@ export default function useForm(initial = {}) {
     ];
 
     if (!supportedFormats.includes(value?.type)) {
-      alert("Unknown format of the file");
+      alert(t('form.unknownFormat'));
       return;
     }
 
     // check the size of file
     if (value?.size > 100 * 1000000) {
-      alert("The file is too big. Please choose a file smaller than 100 Mb.");
+      alert(t('form.fileTooBig100Mb'));
       return;
     }
 

@@ -2,12 +2,14 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import { Dropdown } from "semantic-ui-react";
 import styled from "styled-components";
+import useTranslation from 'next-translate/useTranslation';
 
 import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal";
 import { GET_PROJECT_STUDY } from "../../Queries/Proposal";
 import { MY_STUDIES } from "../../Queries/Study";
 
 export default function StudyConnector({ user, project }) {
+  const { t } = useTranslation('builder');
   const [studyId, setStudyId] = useState("");
   const [studyName, setStudyName] = useState("");
 
@@ -34,7 +36,7 @@ export default function StudyConnector({ user, project }) {
 
   const assignToStudy = async () => {
     if (!studyId) {
-      return alert("Select the study first");
+      return alert(t('project.selectStudyFirst', 'Select the study first'));
     }
     await updateProject({
       variables: {
@@ -48,7 +50,7 @@ export default function StudyConnector({ user, project }) {
 
   const createNewStudy = async () => {
     if (!studyName) {
-      return alert("Give the project a name first");
+      return alert(t('project.giveProjectNameFirst', 'Give the project a name first'));
     }
     await updateProject({
       variables: {
@@ -70,14 +72,14 @@ export default function StudyConnector({ user, project }) {
 
   return (
     <StyledStudyConnector>
-      <Header>Connect to a Study</Header>
+      <Header>{t('project.connectToStudy', 'Connect to a Study')}</Header>
       <Description>
-        Link this project to an existing study or create a new one
+        {t('project.connectToStudyDescription', 'Link this project to an existing study or create a new one')}
       </Description>
 
       <ContentGrid>
         <Section>
-          <SectionTitle>Select Existing Study</SectionTitle>
+          <SectionTitle>{t('project.selectExistingStudy', 'Select Existing Study')}</SectionTitle>
           <DropdownWrapper>
             <Dropdown
               selection
@@ -86,25 +88,25 @@ export default function StudyConnector({ user, project }) {
               options={studyOptions}
               value={studyId}
               onChange={(e, data) => setStudyId(data?.value)}
-              placeholder="Choose a study..."
+              placeholder={t('project.chooseStudy', 'Choose a study...')}
             />
           </DropdownWrapper>
           <Button primary onClick={assignToStudy}>
-            Connect Study
+            {t('project.connectStudy', 'Connect Study')}
           </Button>
         </Section>
 
         <Section>
-          <SectionTitle>Create New Study</SectionTitle>
+          <SectionTitle>{t('project.createNewStudy', 'Create New Study')}</SectionTitle>
           <Input
             type="text"
             name="studyName"
-            placeholder="Enter study name"
+            placeholder={t('project.enterStudyName', 'Enter study name')}
             value={studyName}
             onChange={(e) => setStudyName(e?.target?.value)}
           />
           <Button secondary onClick={createNewStudy}>
-            Create & Connect
+            {t('project.createAndConnect', 'Create & Connect')}
           </Button>
         </Section>
       </ContentGrid>

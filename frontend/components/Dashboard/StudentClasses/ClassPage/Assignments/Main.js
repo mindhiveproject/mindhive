@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 
 import { useQuery } from "@apollo/client";
 import { GET_CLASS_ASSIGNMENTS_FOR_STUDENTS } from "../../../../Queries/Assignment";
@@ -7,6 +8,7 @@ import { GET_CLASS_ASSIGNMENTS_FOR_STUDENTS } from "../../../../Queries/Assignme
 import AssignmentTab from "./Tab";
 
 export default function Settings({ myclass, user, query }) {
+  const { t } = useTranslation("common");
   const router = useRouter();
   const { action, assignment } = query;
 
@@ -34,7 +36,7 @@ export default function Settings({ myclass, user, query }) {
   if (assignments?.length === 0) {
     return (
       <div className="empty">
-        <div>There are no assignments yet.</div>
+        <div>{t("assignments.noAssignments")}</div>
       </div>
     );
   }

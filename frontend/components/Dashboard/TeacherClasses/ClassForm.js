@@ -20,7 +20,7 @@ export default function ClassForm({
         <fieldset disabled={loading} aria-busy={loading}>
           <div className="infoPane">
             <label htmlFor="title">
-              Title
+              {t("classForm.title")}
               <input
                 type="title"
                 name="title"
@@ -31,7 +31,7 @@ export default function ClassForm({
             </label>
 
             <label htmlFor="description">
-              Description
+              {t("classForm.description")}
               <textarea
                 id="description"
                 rows="10"

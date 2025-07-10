@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { Divider } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import Permissions from "./Consent/Permissions";
 import Documents from "./Consent/Documents";
 import Activity from "./Consent/Activity";
 
 export default function Consent({ query, user }) {
+  const { t } = useTranslation("common");
   const { section } = query;
 
   if (section === "permissions") {
@@ -22,13 +24,9 @@ export default function Consent({ query, user }) {
 
   return (
     <>
-      <h1>Data and Consent</h1>
+      <h1>{t("consent.title")}</h1>
 
-      <h3>
-        MindHive would like to use the following data in order to create better
-        experiences for our users and to continue contributing to meaningful
-        research
-      </h3>
+      <h3>{t("consent.description")}</h3>
 
       <Divider />
 
@@ -50,10 +48,8 @@ export default function Consent({ query, user }) {
                 />
               </div>
               <div className="content">
-                <div className="p18">Data Permissions</div>
-                <div>
-                  Review and edit your data permissions and view your acitivty
-                </div>
+                <div className="p18">{t("consent.permissionsTitle")}</div>
+                <div>{t("consent.permissionsDescription")}</div>
               </div>
               <div>
                 <img src={`/assets/icons/profile/arrow.svg`} alt="arrow" />
@@ -79,10 +75,8 @@ export default function Consent({ query, user }) {
                 />
               </div>
               <div className="content">
-                <div className="p18">Consent Documents</div>
-                <div>
-                  Review and submit documents to support research at MindHive
-                </div>
+                <div className="p18">{t("consent.documentsTitle")}</div>
+                <div>{t("consent.documentsDescription")}</div>
               </div>
               <div>
                 <img src={`/assets/icons/profile/arrow.svg`} alt="arrow" />
@@ -108,8 +102,8 @@ export default function Consent({ query, user }) {
                 />
               </div>
               <div className="content">
-                <div className="p18">My Activity</div>
-                <div>View studies and tasks you have participated in</div>
+                <div className="p18">{t("consent.activityTitle")}</div>
+                <div>{t("consent.activityDescription")}</div>
               </div>
               <div>
                 <img src={`/assets/icons/profile/arrow.svg`} alt="arrow" />
@@ -129,7 +123,7 @@ export default function Consent({ query, user }) {
               pathname: `/dashboard/settings`,
             }}
           >
-            <button className="back">Back to Settings</button>
+            <button className="back">{t("consent.backToSettings")}</button>
           </Link>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Dropdown, Icon, Modal, Button } from "semantic-ui-react";
+import useTranslation from 'next-translate/useTranslation';
 
 import StyledModal from "../../../styles/StyledModal";
 
@@ -9,6 +10,7 @@ import { UPDATE_PROJECT_BOARD } from "../../../Mutations/Proposal";
 import { GET_MY_PROJECT_BOARDS } from "../../../Queries/Proposal";
 
 export default function Delete({ project, user }) {
+  const { t } = useTranslation('builder');
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState({});
@@ -54,7 +56,7 @@ export default function Delete({ project, user }) {
             <>
               <div className="iconTitle">
                 <Icon name="trash" className="red" />
-                <p className="red">Delete Project</p>
+                <p className="red">{t('project.delete')}</p>
               </div>
             </>
           }
@@ -65,7 +67,7 @@ export default function Delete({ project, user }) {
         <Modal.Description>
           <StyledModal>
             <h3>
-              Are you sure you want to <strong>delete</strong> this project?
+              {t('project.deleteConfirm')}
             </h3>
             {/* <p>
               Deleting a study will{" "}
@@ -80,7 +82,7 @@ export default function Delete({ project, user }) {
             </p> */}
             <div>
               <p>
-                <strong>Type "DELETE" to confirm</strong>
+                <strong>{t('project.typeDeleteToConfirm')}</strong>
               </p>
               <input type="text" onChange={handleChange} />
             </div>
@@ -90,7 +92,7 @@ export default function Delete({ project, user }) {
       <Modal.Actions>
         <Button
           style={{ background: "#D53533", color: "#FFFFFF" }}
-          content="Delete"
+          content={t('project.delete')}
           onClick={() => {
             if (inputValue === "DELETE") {
               deleteProject().catch((err) => {
@@ -100,12 +102,12 @@ export default function Delete({ project, user }) {
                 pathname: `/dashboard/develop/projects`,
               });
             } else {
-              return alert("Please type DELETE to delete your project");
+              return alert(t('project.typeDeleteAlert'));
             }
             setOpen(false);
           }}
         />
-        <Button content="Cancel" onClick={() => setOpen(false)} />
+        <Button content={t('project.cancel')} onClick={() => setOpen(false)} />
       </Modal.Actions>
     </Modal>
   );

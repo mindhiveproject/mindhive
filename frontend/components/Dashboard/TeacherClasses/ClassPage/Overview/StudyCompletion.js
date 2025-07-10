@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 import { GET_STUDENTS_DATA } from "../../../../Queries/Classes";
 
 // Mandatory CSS required by the Data Grid
@@ -11,6 +12,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
 export default function StudyCompletionOverview({ myclass, user, query }) {
+  const { t } = useTranslation("classes");
   const { data, loading, error } = useQuery(GET_STUDENTS_DATA, {
     variables: { classId: myclass?.id },
   });
@@ -80,7 +82,7 @@ export default function StudyCompletionOverview({ myclass, user, query }) {
             },
           }}
         >
-          <p>← Go back</p>
+          <p>{t("students.goBack")}</p>
         </Link>
         <p></p>
       </div>

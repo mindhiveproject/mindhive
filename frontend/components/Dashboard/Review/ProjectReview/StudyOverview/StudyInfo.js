@@ -6,8 +6,10 @@ import {
   AccordionContent,
   Accordion,
 } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function StudyInfo({ query, user, study, isDashboard }) {
+  const { t } = useTranslation("builder");
   const [tab, setTab] = useState(query?.tab || "What");
 
   const additionalTabs =
@@ -16,15 +18,15 @@ export default function StudyInfo({ query, user, study, isDashboard }) {
   const tabs = [
     {
       name: "why",
-      header: "Why",
+      header: t("reviewTabs.whyTab"),
     },
     {
       name: "how",
-      header: "How",
+      header: t("reviewTabs.howTab"),
     },
     {
       name: "who",
-      header: "Who",
+      header: t("reviewTabs.whoTab"),
     },
 
     ...additionalTabs,

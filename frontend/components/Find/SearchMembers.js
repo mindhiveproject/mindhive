@@ -5,6 +5,7 @@ import { GET_USERNAMES_WHERE } from "../Queries/User";
 
 import { Dropdown, Radio } from "semantic-ui-react";
 import { GET_ALL_CLASSES } from "../Queries/Classes";
+import useTranslation from 'next-translate/useTranslation';
 
 const permissionOptions = [
   { key: "selectAll", text: "Select All", value: "selectAll" },
@@ -41,6 +42,7 @@ const permissionOptions = [
 ];
 
 export default function FindMembersWhere({ members, handleChange }) {
+  const { t } = useTranslation('common');
   const [permissions, setPermissions] = useState([]);
   const [userClasses, setUserClasses] = useState([]);
   const [searchByClass, setSearchByClass] = useState(false);
@@ -54,7 +56,7 @@ export default function FindMembersWhere({ members, handleChange }) {
       value: cl?.id,
     })) || [];
   const userClassesOptionsWithSelectAll = [
-    { key: "selectAll", text: "Select All", value: "selectAll" },
+    { key: "selectAll", text: t('searchMembers.selectAll', 'Select All'), value: "selectAll" },
     ...userClassesOptions,
   ];
 
@@ -86,25 +88,35 @@ export default function FindMembersWhere({ members, handleChange }) {
       value: user.id,
     })) || [];
   const usernamesWithSelectAll = [
-    { key: "selectAll", text: "Select All", value: "selectAll" },
+    { key: "selectAll", text: t('searchMembers.selectAll', 'Select All'), value: "selectAll" },
     ...usernames,
+  ];
+
+  // Permission options with translation
+  const permissionOptionsTranslated = [
+    { key: "selectAll", text: t('searchMembers.selectAll', 'Select All'), value: "selectAll" },
+    { key: 1, text: t('searchMembers.admin', 'Admin'), value: "ADMIN" },
+    { key: 2, text: t('searchMembers.scientist', 'Scientist'), value: "SCIENTIST" },
+    { key: 3, text: t('searchMembers.teacher', 'Teacher'), value: "TEACHER" },
+    { key: 4, text: t('searchMembers.student', 'Student'), value: "STUDENT" },
+    { key: 5, text: t('searchMembers.mentor', 'Mentor'), value: "MENTOR" },
+    { key: 6, text: t('searchMembers.participant', 'Participant'), value: "PARTICIPANT" },
   ];
 
   return (
     <div style={{ display: "grid", gridGap: "10px" }}>
-      <label>User role</label>
+      <label>{t('searchMembers.userRole', 'User role')}</label>
       <Dropdown
-        placeholder="Select role(s)"
+        placeholder={t('searchMembers.selectRole', 'Select role(s)')}
         fluid
         multiple
         search
         selection
-        options={permissionOptions}
+        options={permissionOptionsTranslated}
         onChange={(e, { value }) => {
           if (value.includes("selectAll")) {
-            // Select all options except the 'Select All' option itself
             setPermissions(
-              permissionOptions
+              permissionOptionsTranslated
                 .filter((option) => option.value !== "selectAll")
                 .map((option) => option.value)
             );
@@ -116,7 +128,7 @@ export default function FindMembersWhere({ members, handleChange }) {
       />
 
       <div className="iconTitle">
-        <div>Search by class</div>
+        <div>{t('searchMembers.searchByClass', 'Search by class')}</div>
         <Radio
           toggle
           checked={searchByClass}
@@ -128,9 +140,9 @@ export default function FindMembersWhere({ members, handleChange }) {
 
       {searchByClass && (
         <>
-          <label>Classes</label>
+          <label>{t('searchMembers.classes', 'Classes')}</label>
           <Dropdown
-            placeholder="Select class(es)"
+            placeholder={t('searchMembers.selectClass', 'Select class(es)')}
             fluid
             multiple
             search
@@ -138,7 +150,6 @@ export default function FindMembersWhere({ members, handleChange }) {
             options={userClassesOptionsWithSelectAll}
             onChange={(e, { value }) => {
               if (value.includes("selectAll")) {
-                // Select all options except the 'Select All' option itself
                 setUserClasses(
                   userClassesOptionsWithSelectAll
                     .filter((option) => option.value !== "selectAll")
@@ -153,9 +164,9 @@ export default function FindMembersWhere({ members, handleChange }) {
         </>
       )}
 
-      <label>Users</label>
+      <label>{t('searchMembers.users', 'Users')}</label>
       <Dropdown
-        placeholder="Select user(s)"
+        placeholder={t('searchMembers.selectUser', 'Select user(s)')}
         fluid
         multiple
         search
@@ -163,7 +174,6 @@ export default function FindMembersWhere({ members, handleChange }) {
         options={usernamesWithSelectAll}
         onChange={(e, { value }) => {
           if (value.includes("selectAll")) {
-            // Select all options except the 'Select All' option itself
             const updatedValue = usernames
               .filter((option) => option.value !== "selectAll")
               .map((option) => option.value);

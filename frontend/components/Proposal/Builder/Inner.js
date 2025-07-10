@@ -3,11 +3,23 @@ import { v1 as uuidv1 } from "uuid";
 import Sections from "./Sections";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+import useTranslation from 'next-translate/useTranslation';
 
 class Inner extends Component {
-  state = {
-    title: "",
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: "",
+    };
+    this.t = null;
+  }
+
+  componentDidMount() {
+    // things to do after the component mounted
+    // Set up translation
+    const { t } = useTranslation('builder');
+    this.t = t;
+  }
 
   handleChange = (e) => {
     const { name, type, value } = e.target;
@@ -89,13 +101,9 @@ class Inner extends Component {
     });
   };
 
-  componentDidMount() {
-    // things to do after the component mounted
-  }
-
   render() {
     const { board, sections, proposalBuildMode } = this.props;
-
+    const t = this.t || (() => (key, fallback) => fallback);
     return (
       <div className="inner">
         <div className="scrollable">
@@ -112,17 +120,16 @@ class Inner extends Component {
             settings={board?.settings}
           />
         </div>
-
         {(proposalBuildMode ||
           (!this.props.isPreview && board?.settings?.allowAddingSections)) && (
           <div>
             <div className="newInput">
-              <div>New section</div>
+              <div>{t('proposal.newSection', 'New section')}</div>
               <input
                 type="text"
                 id="sectionTitle"
                 name="title"
-                placeholder=""
+                placeholder={t('proposal.sectionTitlePlaceholder', '')}
                 value={this.state.title}
                 onChange={this.handleChange}
                 required
@@ -131,7 +138,7 @@ class Inner extends Component {
                 className="addBtn"
                 onClick={() => this.createSection(board.id)}
               >
-                Add section
+                {t('proposal.addSection', 'Add section')}
               </div>
             </div>
           </div>

@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client";
 import { Modal, Dropdown, Button } from "semantic-ui-react";
 import { useState } from "react";
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
 import {
   UPDATE_PROJECT_BOARD,
@@ -16,6 +17,7 @@ export const SelectedStudentsModal = ({
   selectedStudents,
   classId,
 }) => {
+  const { t } = useTranslation("classes");
   const [projectStatus, setProjectStatus] = useState("");
   const [statusType, setStatusType] = useState("");
   const [commentsAllowed, setCommentsAllowed] = useState(null);
@@ -128,7 +130,7 @@ export const SelectedStudentsModal = ({
       onClose();
     } catch (error) {
       console.error("Error updating project status:", error);
-      alert("Failed to update project status. Please try again.");
+      alert(t("dashboard.failedToUpdateProjectStatus"));
     }
   };
 
@@ -163,15 +165,15 @@ export const SelectedStudentsModal = ({
       onClose();
     } catch (error) {
       console.error("Error updating study status:", error);
-      alert("Failed to update study status. Please try again.");
+      alert(t("dashboard.failedToUpdateStudyStatus"));
     }
   };
 
   const projectStatusOptions = [
-    { label: "Not started", value: "NOT_STARTED" },
-    { label: "In progress", value: "IN_PROGRESS" },
-    { label: "Submitted", value: "SUBMITTED" },
-    { label: "Review is finished", value: "FINISHED" },
+    { label: t("dashboard.notStarted"), value: "NOT_STARTED" },
+    { label: t("dashboard.inProgress"), value: "IN_PROGRESS" },
+    { label: t("dashboard.submitted"), value: "SUBMITTED" },
+    { label: t("dashboard.reviewFinished"), value: "FINISHED" },
   ].map((status) => ({
     key: status.value,
     text: status.label,
@@ -179,9 +181,9 @@ export const SelectedStudentsModal = ({
   }));
 
   const statusTypeOptions = [
-    { label: "Proposal Status", value: "submitProposalStatus" },
-    { label: "Peer Feedback Status", value: "peerFeedbackStatus" },
-    { label: "Project Report Status", value: "projectReportStatus" },
+    { label: t("dashboard.proposalStatus"), value: "submitProposalStatus" },
+    { label: t("dashboard.peerFeedbackStatus"), value: "peerFeedbackStatus" },
+    { label: t("dashboard.projectReportStatus"), value: "projectReportStatus" },
   ].map((type) => ({
     key: type.value,
     text: type.label,
@@ -189,8 +191,8 @@ export const SelectedStudentsModal = ({
   }));
 
   const commentsOptions = [
-    { label: "Not allowed", value: false },
-    { label: "Allowed", value: true },
+    { label: t("dashboard.notAllowed"), value: false },
+    { label: t("dashboard.allowed"), value: true },
   ].map((status) => ({
     key: status.value,
     text: status.label,
@@ -198,10 +200,10 @@ export const SelectedStudentsModal = ({
   }));
 
   const studyStatusOptions = [
-    { label: "Not started", value: "NOT_STARTED" },
-    { label: "In progress", value: "IN_PROGRESS" },
-    { label: "Submitted", value: "SUBMITTED" },
-    { label: "Data collection is finished", value: "FINISHED" },
+    { label: t("dashboard.notStarted"), value: "NOT_STARTED" },
+    { label: t("dashboard.inProgress"), value: "IN_PROGRESS" },
+    { label: t("dashboard.submitted"), value: "SUBMITTED" },
+    { label: t("dashboard.dataCollectionFinished"), value: "FINISHED" },
   ].map((status) => ({
     key: status.value,
     text: status.label,
@@ -209,8 +211,8 @@ export const SelectedStudentsModal = ({
   }));
 
   const participationOptions = [
-    { label: "Not allowed", value: false },
-    { label: "Allowed", value: true },
+    { label: t("dashboard.notAllowed"), value: false },
+    { label: t("dashboard.allowed"), value: true },
   ].map((status) => ({
     key: status.value,
     text: status.label,
@@ -223,18 +225,18 @@ export const SelectedStudentsModal = ({
         <StyledModal>
           <Modal.Content>
             <div className="modalHeader">
-              <h1>Selected Students</h1>
-              <p>Manage {selectedStudents.length} selected student(s)</p>
+              <h1>{t("dashboard.selectedStudents")}</h1>
+              <p>{t("dashboard.manageSelectedStudentsInfo", { count: selectedStudents.length })}</p>
             </div>
             {(boardError || cardError || studyError) && (
               <div className="error-message">
-                Error: Failed to update status. Please try again.
+                {t("dashboard.failedToUpdateStatus")}
               </div>
             )}
             <div className="section">
-              <h2>Selected Students</h2>
+              <h2>{t("dashboard.selectedStudents")}</h2>
               {selectedStudents.length === 0 ? (
-                <p>No students selected.</p>
+                <p>{t("dashboard.noStudentsSelected")}</p>
               ) : (
                 <div className="student-list">
                   {selectedStudents.map((student, index) => (
@@ -247,22 +249,22 @@ export const SelectedStudentsModal = ({
                           {index + 1}. {student.username}
                         </strong>
                       </span>
-                      <span>Project: {student.projectTitle || "None"}</span>
-                      <span>Study: {student.studyTitle || "None"}</span>
+                      <span>{t("dashboard.projectLabel", { project: student.projectTitle || t("dashboard.none") })}</span>
+                      <span>{t("dashboard.studyLabel", { study: student.studyTitle || t("dashboard.none") })}</span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
             <div className="section">
-              <h2>Bulk Update Project Status</h2>
+              <h2>{t("dashboard.bulkUpdateProjectStatus")}</h2>
               <Dropdown
                 selection
                 options={statusTypeOptions}
                 value={statusType}
                 onChange={(e, { value }) => setStatusType(value)}
                 fluid
-                placeholder="Select a status type"
+                placeholder={t("dashboard.selectStatusType")}
                 className="status-type-dropdown"
               />
               <Dropdown
@@ -271,7 +273,7 @@ export const SelectedStudentsModal = ({
                 value={projectStatus}
                 onChange={(e, { value }) => setProjectStatus(value)}
                 fluid
-                placeholder="Select a project status"
+                placeholder={t("dashboard.selectProjectStatus")}
                 className="status-dropdown"
                 disabled={!statusType}
               />
@@ -281,7 +283,7 @@ export const SelectedStudentsModal = ({
                 value={commentsAllowed}
                 onChange={(e, { value }) => setCommentsAllowed(value)}
                 fluid
-                placeholder="Select comments setting"
+                placeholder={t("dashboard.selectCommentsSetting")}
                 className="comments-dropdown"
                 disabled={!statusType}
               />
@@ -298,19 +300,19 @@ export const SelectedStudentsModal = ({
                 }
               >
                 {boardLoading || cardLoading
-                  ? "Updating..."
-                  : "Update Project Status"}
+                  ? t("dashboard.updating")
+                  : t("dashboard.updateProjectStatus")}
               </button>
             </div>
             <div className="section">
-              <h2>Bulk Update Study Status</h2>
+              <h2>{t("dashboard.bulkUpdateStudyStatus")}</h2>
               <Dropdown
                 selection
                 options={studyStatusOptions}
                 value={studyStatus}
                 onChange={(e, { value }) => setStudyStatus(value)}
                 fluid
-                placeholder="Select a study status"
+                placeholder={t("dashboard.selectStudyStatus")}
                 className="status-dropdown"
               />
               <Dropdown
@@ -319,7 +321,7 @@ export const SelectedStudentsModal = ({
                 value={participationAllowed}
                 onChange={(e, { value }) => setParticipationAllowed(value)}
                 fluid
-                placeholder="Select participation setting"
+                placeholder={t("dashboard.selectParticipationSetting")}
                 className="participation-dropdown"
               />
               <button
@@ -332,12 +334,12 @@ export const SelectedStudentsModal = ({
                   studyLoading
                 }
               >
-                {studyLoading ? "Updating..." : "Update Study Status"}
+                {studyLoading ? t("dashboard.updating") : t("dashboard.updateStudyStatus")}
               </button>
             </div>
             <div className="footer">
               <button className="cancel-button" onClick={onClose}>
-                Close
+                {t("dashboard.close")}
               </button>
             </div>
           </Modal.Content>
@@ -348,12 +350,10 @@ export const SelectedStudentsModal = ({
         onClose={() => setConfirmModalOpen(false)}
         size="tiny"
       >
-        <Modal.Header>Confirm Card Status Update</Modal.Header>
+        <Modal.Header>{t("dashboard.confirmCardStatusUpdate")}</Modal.Header>
         <Modal.Content>
           <Modal.Description>
-            Setting the status to "Review is finished" can update all submitted
-            cards in these projects to "Needs revision". Would you like to
-            proceed with this change?
+            {t("dashboard.confirmCardStatusUpdateDesc")}
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
@@ -364,7 +364,7 @@ export const SelectedStudentsModal = ({
             }}
             className="cancel-button"
           >
-            No, Keep Card Statuses
+            {t("dashboard.noKeepCardStatuses")}
           </Button>
           <Button
             onClick={() => updateProjectStatus(true)}
@@ -372,7 +372,7 @@ export const SelectedStudentsModal = ({
             primary
             disabled={boardLoading || cardLoading}
           >
-            Yes, Update Cards
+            {t("dashboard.yesUpdateCards")}
           </Button>
         </Modal.Actions>
       </StyledConfirmModal>

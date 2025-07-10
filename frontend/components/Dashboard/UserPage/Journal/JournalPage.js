@@ -7,6 +7,7 @@ import { Tab } from "semantic-ui-react";
 import { GET_JOURNAL } from "../../../Queries/Journal";
 
 export default function JournalPage({ code, user, query }) {
+  const { t } = useTranslation("classes");
   const { action, area, post, selector, index } = query;
 
   const { data, loading, error } = useQuery(GET_JOURNAL, {
@@ -18,7 +19,7 @@ export default function JournalPage({ code, user, query }) {
 
   return (
     <div>
-      <h2>Notes</h2>
+      <h2>{t("journal.notes")}</h2>
       <Tab
         menu={{ fluid: true, vertical: true, tabular: true }}
         panes={[...posts]
@@ -46,8 +47,7 @@ export default function JournalPage({ code, user, query }) {
                         {post?.updatedAt &&
                           post?.updatedAt !== post?.createdAt && (
                             <div className="date">
-                              Edited on:{" "}
-                              {moment(post?.updatedAt).format(
+                              {t("journal.editedOn")} {moment(post?.updatedAt).format(
                                 "MMMM Do YYYY, h:mm a"
                               )}
                             </div>

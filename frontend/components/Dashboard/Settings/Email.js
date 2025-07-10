@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Divider } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import useForm from "../../../lib/useForm";
+import useTranslation from "next-translate/useTranslation";
 
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 import { UPDATE_USER } from "../../Mutations/User";
@@ -10,6 +11,7 @@ import { StyledInput } from "../../styles/StyledForm";
 import { StyledSimpleSaveButton } from "../../styles/StyledProfile";
 
 export default function Email({ query, user }) {
+  const { t } = useTranslation("common");
   const [changed, setChanged] = useState(false);
 
   const { inputs, handleChange, clearForm } = useForm({ ...user });
@@ -31,15 +33,12 @@ export default function Email({ query, user }) {
 
   return (
     <StyledInput>
-      <h1>Email Settings</h1>
-      <h3>
-        Update your MindHive email settings below to continue receiving
-        important email updates
-      </h3>
+      <h1>{t("email.title")}</h1>
+      <h3>{t("email.description")}</h3>
       <Divider />
 
       <div className="content">
-        <div className="p24-thin">Current Email</div>
+        <div className="p24-thin">{t("email.currentEmail")}</div>
         <div>
           <input
             type="email"
@@ -50,7 +49,7 @@ export default function Email({ query, user }) {
           />
         </div>
 
-        <div className="p24-thin">New Email</div>
+        <div className="p24-thin">{t("email.newEmail")}</div>
         <div>
           <input
             type="email"
@@ -64,7 +63,7 @@ export default function Email({ query, user }) {
 
         <div className="buttons">
           <StyledSimpleSaveButton changed={changed}>
-            <button onClick={handleSave}>Update Preferences</button>
+            <button onClick={handleSave}>{t("email.updatePreferences")}</button>
           </StyledSimpleSaveButton>
 
           <Link
@@ -72,7 +71,7 @@ export default function Email({ query, user }) {
               pathname: `/dashboard/settings`,
             }}
           >
-            <button className="back">Back to Settings</button>
+            <button className="back">{t("consent.backToSettings")}</button>
           </Link>
         </div>
       </div>

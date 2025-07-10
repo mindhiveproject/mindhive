@@ -1,10 +1,12 @@
 import { useQuery } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import Drop from "./Drop";
 
 import { GET_TAGS } from "../Queries/Tag";
 
 export default function StudyTagger({ study, engine, handleChange }) {
+  const { t } = useTranslation('common');
   const { data, loading, error } = useQuery(GET_TAGS);
   const tags = data?.tags || [];
   const tagValues = tags.map((tag) => ({
@@ -21,8 +23,8 @@ export default function StudyTagger({ study, engine, handleChange }) {
 
   return (
     <div>
-      <h2>Study tags</h2>
-      <p>Choose keywords for your study.</p>
+      <h2>{t('tag.studyTagsHeader')}</h2>
+      <p>{t('tag.chooseKeywords')}</p>
       <Drop
         study={study}
         engine={engine}

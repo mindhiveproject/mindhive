@@ -1,4 +1,5 @@
 import ReactHtmlParser from "react-html-parser";
+import useTranslation from "next-translate/useTranslation";
 
 const getConsent = (consent, name) =>
   consent?.info.filter((info) => info.name === name).map((info) => info.text) || "";
@@ -17,6 +18,7 @@ export default function ConsentForm({
   inputs,
   handleChange,
 }) {
+  const { t } = useTranslation('common');
   const publicStudies = consent?.studies.filter((study) => study.public) || [];
 
   const regularAdultsConsent = getConsent(consent, "regularAdults");
@@ -87,16 +89,15 @@ export default function ConsentForm({
       <div className="consentInfo">
         <div>
           <p>
-            This study is part of the <strong>{consent?.organization}</strong>{" "}
-            research protocol <strong>{consent?.title}</strong>.
+            {t('consent.form.studyInfo', {
+              organization: consent?.organization,
+              title: consent?.title,
+            })}
           </p>
 
           {publicStudies?.length ? (
             <div>
-              <p>
-                Tasks and surveys associated with the following studies are
-                covered under this protocol
-              </p>
+              <p>{t('consent.form.coveredStudiesDesc')}</p>
               <div className="coveredStudiesAndTasks">
                 {publicStudies.map((study) => (
                   <li key={study.id}>{study.title}</li>
@@ -114,7 +115,7 @@ export default function ConsentForm({
         <>
           <div>
             <label htmlFor="parentname">
-              <p>Parent name</p>
+              <p>{t('consent.form.parentName')}</p>
               <input
                 type="text"
                 id="parentname"
@@ -127,7 +128,7 @@ export default function ConsentForm({
 
           <div>
             <label htmlFor="parentemail">
-              <p>Parent email address</p>
+              <p>{t('consent.form.parentEmail')}</p>
               <input
                 type="email"
                 id="parentemail"
@@ -140,7 +141,7 @@ export default function ConsentForm({
 
           <div>
             <label htmlFor="kidname">
-              <p>Your name</p>
+              <p>{t('consent.form.kidName')}</p>
               <input
                 type="text"
                 id="kidname"

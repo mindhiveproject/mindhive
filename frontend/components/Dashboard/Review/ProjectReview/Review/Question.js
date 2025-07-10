@@ -8,8 +8,10 @@ import {
 
 import ReactStars from "react-rating-stars-component"; // https://www.npmjs.com/package/react-rating-stars-component
 import TaskSelector from "./TaskSelector";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Question({ stage, item, handleItemChange, answer }) {
+  const { t } = useTranslation("builder");
   const { responseType } = item;
 
   if (responseType === "selectOne") {
@@ -39,7 +41,7 @@ export default function Question({ stage, item, handleItemChange, answer }) {
       <div className="reviewItem">
         <div className="question">{item.question}</div>
         <Dropdown
-          placeholder="Select an option"
+          placeholder={t("reviewDetail.selectOption")}
           fluid
           selection
           options={options}

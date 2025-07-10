@@ -1,6 +1,7 @@
 import Link from "next/link";
 import moment from "moment";
 import { useQuery } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import NewAssignment from "./New";
 
@@ -10,6 +11,7 @@ import {
 } from "../../../../Queries/Assignment";
 
 export default function AddAssignment({ myclass, user, query }) {
+  const { t } = useTranslation("classes");
   const { data, loading, error } = useQuery(GET_MY_CLASS_ASSIGNMENTS, {
     variables: { userId: user?.id, classId: myclass?.id },
   });
@@ -29,10 +31,10 @@ export default function AddAssignment({ myclass, user, query }) {
             },
           }}
         >
-          <p>← Go back</p>
+          <p>{t("assignment.goBack")}</p>
         </Link>
         <p>
-          Create a new assignment from scratch or select one from the list below
+          {t("assignment.createFromScratchOrList")}
         </p>
       </div>
       <div>
@@ -46,7 +48,7 @@ export default function AddAssignment({ myclass, user, query }) {
           >
             <NewAssignment user={user} myclass={myclass}>
               <div>
-                <button>Create a new assignment</button>
+                <button>{t("assignment.createNew")}</button>
               </div>
             </NewAssignment>
           </div>
@@ -54,12 +56,12 @@ export default function AddAssignment({ myclass, user, query }) {
       </div>
 
       <div>
-        <h2>Create a new assignment from an existing assignment</h2>
+        <h2>{t("assignment.createFromExisting")}</h2>
         <div className="header">
-          <div>Title</div>
-          <div>Creator</div>
-          <div>Date created</div>
-          <div>Date updated</div>
+          <div>{t("assignment.title")}</div>
+          <div>{t("assignment.creator")}</div>
+          <div>{t("assignment.dateCreated")}</div>
+          <div>{t("assignment.dateUpdated")}</div>
         </div>
 
         {assignments.map((assignment) => (
@@ -80,12 +82,12 @@ export default function AddAssignment({ myclass, user, query }) {
       </div>
 
       <div>
-        <h2>Create a new assignment from a template</h2>
+        <h2>{t("assignment.createFromTemplate")}</h2>
         <div className="header">
-          <div>Title</div>
-          <div>Creator</div>
-          <div>Date created</div>
-          <div>Date updated</div>
+          <div>{t("assignment.title")}</div>
+          <div>{t("assignment.creator")}</div>
+          <div>{t("assignment.dateCreated")}</div>
+          <div>{t("assignment.dateUpdated")}</div>
         </div>
         <div></div>
 

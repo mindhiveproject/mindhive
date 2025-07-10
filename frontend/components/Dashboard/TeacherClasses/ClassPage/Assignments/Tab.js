@@ -2,6 +2,7 @@ import absoluteUrl from "next-absolute-url";
 import { Icon, Popup } from "semantic-ui-react";
 import moment from "moment";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import DeleteAssignment from "./Delete";
 
@@ -10,6 +11,7 @@ import { EDIT_ASSIGNMENT } from "../../../../Mutations/Assignment";
 import { GET_MY_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 
 export default function AssignmentTab({ assignment, myclass, user, query }) {
+  const { t } = useTranslation("classes");
   const { origin } = absoluteUrl();
 
   const [editAssignment, { loading: editLoading }] = useMutation(
@@ -35,7 +37,7 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
     temp.select();
     document.execCommand("copy");
     temp.remove();
-    alert("The link is copied");
+    alert(t("assignment.linkCopied"));
   };
 
   return (
@@ -48,12 +50,12 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
 
               {assignment?.public ? (
                 <Popup
-                  content="The assignment is visible for students"
+                  content={t("assignment.visibleForStudents")}
                   trigger={<Icon name="eye" />}
                 />
               ) : (
                 <Popup
-                  content="The assignment is NOT visible for students"
+                  content={t("assignment.notVisibleForStudents")}
                   trigger={<Icon name="eye slash" />}
                 />
               )}
@@ -63,7 +65,7 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
 
           <div className="title">
             <DeleteAssignment user={user} myclass={myclass} id={assignment?.id}>
-              <button className="secondary">Delete</button>
+              <button className="secondary">{t("assignment.delete")}</button>
             </DeleteAssignment>
           </div>
         </div>
@@ -81,7 +83,7 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
                   },
                 }}
               >
-                <button className="secondary">Open</button>
+                <button className="secondary">{t("assignment.open")}</button>
               </Link>
 
               {assignment?.public ? (
@@ -90,7 +92,7 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
                     onClick={() => {
                       if (
                         confirm(
-                          "Are you sure you want to revoke this assignment? The assignment will no longer be visible for the students."
+                          t("assignment.revokeConfirm")
                         )
                       ) {
                         editAssignment({
@@ -101,10 +103,10 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
                       }
                     }}
                   >
-                    Revoke
+                    {t("assignment.revoke")}
                   </button>
                   <button className="secondary" onClick={() => copyLink()}>
-                    Copy link
+                    {t("assignment.copyLink")}
                   </button>
                 </>
               ) : (
@@ -113,7 +115,7 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
                     onClick={() => {
                       if (
                         confirm(
-                          "Are you sure you want to submit this assignment? The assignment will be visible for the students."
+                          t("assignment.submitConfirm")
                         )
                       ) {
                         editAssignment({
@@ -124,7 +126,7 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
                       }
                     }}
                   >
-                    Submit
+                    {t("assignment.submit")}
                   </button>
                 </div>
               )}
@@ -141,7 +143,9 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
               },
             }}
           >
-            <span>{assignment?.homework.length || 0} homework</span>
+            <span>
+              {t("assignment.homework", { count: assignment?.homework.length || 0 })}
+            </span>
           </Link>
         </div>
       </div>

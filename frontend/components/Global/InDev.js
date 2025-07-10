@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import useTranslation from 'next-translate/useTranslation';
 
 const StyledInDev = styled.div`
   background: #e5e5e5;
@@ -13,10 +14,11 @@ const StyledInDev = styled.div`
 `;
 
 export default function InDev({ header, message }) {
+  const { t } = useTranslation('common');
   const h =
     header ||
-    `This part of the platform is currently in development 🚧👷🏻‍♂️🚜👷⚙️`;
-  const m = message || `Please come back later to check it out.`;
+    t('inDev.header', 'This part of the platform is currently in development 🚧👷🏻‍♂️🚜👷⚙️');
+  const m = message || t('inDev.message', 'Please come back later to check it out.');
   return (
     <StyledInDev>
       <h1>{h}</h1>

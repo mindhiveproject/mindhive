@@ -13,6 +13,7 @@ import {
   Icon,
 } from "semantic-ui-react";
 import { useState } from "react";
+import useTranslation from 'next-translate/useTranslation';
 
 export default function ProposalHeader({
   user,
@@ -20,6 +21,7 @@ export default function ProposalHeader({
   proposalBuildMode,
   refetchQueries,
 }) {
+  const { t } = useTranslation('builder');
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTitleEditing, setIsTitleEditing] = useState(false);
   const studyId = proposal?.study?.id;
@@ -68,8 +70,7 @@ export default function ProposalHeader({
         )}
 
         <div className="subtitle">
-          This board will guide your students through their MindHive project
-          step by step
+          {t('proposal.subtitle', 'This board will guide your students through their MindHive project step by step')}
         </div>
 
         {proposalBuildMode && (
@@ -83,7 +84,7 @@ export default function ProposalHeader({
                 }}
               >
                 <Icon name="dropdown" />
-                Advanced options
+                {t('proposal.advancedOptions', 'Advanced options')}
               </AccordionTitle>
               <AccordionContent active={activeIndex === 1}>
                 <>
@@ -99,20 +100,14 @@ export default function ProposalHeader({
                               checked={inputs.isTemplate}
                               onChange={toggleBoolean}
                             />
-                            <span>
-                              Make this project board a public template
-                            </span>
+                            <span>{t('proposal.makeTemplate', 'Make this project board a public template')}</span>
                           </div>
                         </label>
                       </div>
                     </>
                   )}
 
-                  <h2>
-                    Checking the boxes below enables students to modify the
-                    board. Check in with the MindHive team if you're unsure what
-                    this means.
-                  </h2>
+                  <h2>{t('proposal.advancedOptionsHelp', "Checking the boxes below enables students to modify the board. Check in with the MindHive team if you're unsure what this means.")}</h2>
 
                   <div>
                     <label htmlFor="allowMovingSections">
@@ -126,7 +121,7 @@ export default function ProposalHeader({
                           }
                           onChange={toggleSettingsBoolean}
                         />
-                        <span>Allow students to move sections</span>
+                        <span>{t('proposal.allowMovingSections', 'Allow students to move sections')}</span>
                       </div>
                     </label>
                   </div>
@@ -141,7 +136,7 @@ export default function ProposalHeader({
                           checked={inputs?.settings?.allowMovingCards || false}
                           onChange={toggleSettingsBoolean}
                         />
-                        <span>Allow students to move cards</span>
+                        <span>{t('proposal.allowMovingCards', 'Allow students to move cards')}</span>
                       </div>
                     </label>
                   </div>
@@ -158,7 +153,7 @@ export default function ProposalHeader({
                           }
                           onChange={toggleSettingsBoolean}
                         />
-                        <span>Allow students to add/delete sections</span>
+                        <span>{t('proposal.allowAddingSections', 'Allow students to add/delete sections')}</span>
                       </div>
                     </label>
                   </div>
@@ -173,7 +168,7 @@ export default function ProposalHeader({
                           checked={inputs?.settings?.allowAddingCards || false}
                           onChange={toggleSettingsBoolean}
                         />
-                        <span>Allow students to add/delete cards</span>
+                        <span>{t('proposal.allowAddingCards', 'Allow students to add/delete cards')}</span>
                       </div>
                     </label>
                   </div>
@@ -196,7 +191,7 @@ export default function ProposalHeader({
                 const res = await updateProposal();
               }}
             >
-              {loading ? "Saving" : "Save"}
+              {loading ? t('proposal.saving', 'Saving') : t('proposal.save', 'Save')}
             </button>
           </div>
         )}

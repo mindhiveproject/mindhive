@@ -1,13 +1,14 @@
 import { StyledStudyPreview } from "../../styles/StyledStudyPage";
 import { StyledPreview } from "../../styles/StyledPreview";
+import useTranslation from "next-translate/useTranslation";
 
 export default function StudyPreview({ study, close }) {
+  const { t } = useTranslation('common');
   return (
     <StyledPreview>
       <div className="frame"></div>
       <div className="message">
-        THIS IS A STUDY PREVIEW. YOUR DATA WILL BE SAVED AS GUEST PARTICIPANT
-        DATA.
+        {t('preview.studyPreviewMessage')}
       </div>
       <div className="closeBtn" onClick={() => close()}>
         <span>&times;</span>

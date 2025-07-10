@@ -4,8 +4,8 @@ import { GET_HOMEWORK_BY_ID } from "../../../Queries/Homework";
 import ReactHtmlParser from "react-html-parser";
 import useForm from "../../../../lib/useForm";
 import { UPDATE_HOMEWORK } from "../../../Mutations/Homework";
-
 import JoditEditor from "../../../Jodit/Editor";
+import useTranslation from 'next-translate/useTranslation';
 
 const options = [
   {
@@ -35,6 +35,7 @@ const options = [
 ];
 
 export default function Homework({ homeworkId }) {
+  const { t } = useTranslation('classes');
   const { data, loading, error } = useQuery(GET_HOMEWORK_BY_ID, {
     variables: { id: homeworkId },
   });
@@ -98,7 +99,7 @@ export default function Homework({ homeworkId }) {
       />
 
       <div className="proposalCardComments">
-        <h4>Comments</h4>
+        <h4>{t('board.comments', 'Comments')}</h4>
         <textarea
           rows="5"
           type="text"
@@ -109,15 +110,16 @@ export default function Homework({ homeworkId }) {
         />
       </div>
       <div>
-        <h4>Status</h4>
+        <h4>{t('board.status', 'Status')}</h4>
         <select
           value={inputs?.settings?.status || ""}
           onChange={(event) =>
             handleSettingsChange("status", event.target.value)
           }
         >
-          {options.map((option) => (
-            <option value={option?.value}>{option?.text}</option>
+          <option value="">{t('board.selectStatus', 'Select status')}</option>
+          {options.slice(1).map((option) => (
+            <option value={option?.value}>{t(`board.status${option.value.replace(/\s/g, '')}`, option?.text)}</option>
           ))}
         </select>
       </div>
@@ -127,7 +129,7 @@ export default function Homework({ homeworkId }) {
           onClick={() => onUpdateHomework()}
           disabled={updateLoading}
         >
-          {updateLoading ? "Saving ..." : "Save"}
+          {updateLoading ? t('board.saving', 'Saving ...') : t('board.save', 'Save')}
         </button>
       </div>
     </>

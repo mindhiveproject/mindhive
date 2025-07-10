@@ -1,15 +1,17 @@
 import { StyledPreview } from "../../styles/StyledPreview";
 
 import TaskRun from "../Run/Main";
+import useTranslation from "next-translate/useTranslation";
 
 export default function TaskPreview({ user, study, id, close }) {
+  const { t } = useTranslation('common');
   return (
     <StyledPreview>
       <div className="frame"></div>
       <div className="message">
         {close
-          ? "THIS IS A TASK PREVIEW. YOUR DATA ARE NOT SAVED."
-          : "CLOSE THIS TAB TO STOP PREVIEW"}
+          ? t('preview.taskPreviewMessage')
+          : t('preview.closeTabToStopPreview')}
       </div>
       {close && (
         <div className="closeBtn" onClick={() => close()}>

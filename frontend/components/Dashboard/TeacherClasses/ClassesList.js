@@ -1,10 +1,12 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import moment from "moment";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_CLASSES } from "../../Queries/Classes";
 
 export default function ClassesList({ query, user }) {
+  const { t } = useTranslation("classes");
   const { data, error, loading } = useQuery(GET_CLASSES, {
     variables: {
       input: {
@@ -29,8 +31,8 @@ export default function ClassesList({ query, user }) {
   if (classes.length === 0) {
     return (
       <>
-        <h3>You haven’t created any classes yet.</h3>
-        <p>Once you create a class, it will appear here.</p>
+        <h3>{t("classesList.noClassesYet")}</h3>
+        <p>{t("classesList.createClassToAppear")}</p>
       </>
     );
   }
@@ -38,10 +40,10 @@ export default function ClassesList({ query, user }) {
   return (
     <>
       <div className="classListHeader">
-        <div>Class name</div>
-        <div>Teacher</div>
-        <div>Number of students</div>
-        <div>Date created</div>
+        <div>{t("classesList.className")}</div>
+        <div>{t("classesList.teacher")}</div>
+        <div>{t("classesList.numberOfStudents")}</div>
+        <div>{t("classesList.dateCreated")}</div>
       </div>
 
       <div className="board">

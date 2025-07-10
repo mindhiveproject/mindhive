@@ -1,24 +1,26 @@
 import absoluteUrl from "next-absolute-url";
 import { Icon } from "semantic-ui-react";
 import moment from "moment";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Created({ query, user, profile }) {
+  const { t } = useTranslation("common");
   const { origin } = absoluteUrl();
   const studies = [
     ...profile?.researcherIn.map((study) => ({
       ...study,
-      role: "Author",
+      role: t("created.author"),
     })),
     ...profile?.collaboratorInStudy.map((study) => ({
       ...study,
-      role: "Collaborator",
+      role: t("created.collaborator"),
     })),
   ];
 
   if (studies.length === 0) {
     return (
       <div className="empty">
-        <div>The student hasn’t created any studies yet.</div>
+        <div>{t("created.noStudiesYet")}</div>
       </div>
     );
   }
@@ -26,10 +28,10 @@ export default function Created({ query, user, profile }) {
   return (
     <div>
       <div className="headerCreatedStudies">
-        <div>Study title</div>
-        <div>Role</div>
-        <div>Date created</div>
-        <div>Date updated</div>
+        <div>{t("created.studyTitle")}</div>
+        <div>{t("created.role")}</div>
+        <div>{t("created.dateCreated")}</div>
+        <div>{t("created.dateUpdated")}</div>
       </div>
 
       {studies.map((study, id) => (

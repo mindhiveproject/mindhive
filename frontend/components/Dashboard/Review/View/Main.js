@@ -2,8 +2,10 @@ import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import { STUDY_TO_JOIN } from "../../../Queries/Study";
 import StudyInfo from "./StudyInfo";
+import useTranslation from "next-translate/useTranslation";
 
 export default function View({ query, user }) {
+  const { t } = useTranslation("builder");
   const { id } = query;
 
   const { data, error, loading } = useQuery(STUDY_TO_JOIN, {
@@ -22,13 +24,12 @@ export default function View({ query, user }) {
     permissions.includes("SCIENTIST") ||
     study?.status === "IN_REVIEW";
 
+  const commentCount = study?.reviews?.filter((r) => r?.stage == study?.status).length;
+
   return (
     <div className="view">
-      <div className="h40">Feedback Center</div>
-      <div className="h24">
-        Whether you're starting your study or collecting participants, use this
-        page to review community brainstorms and studies.
-      </div>
+      <div className="h40">{t("review.feedbackCenter")}</div>
+      <div className="h24">{t("review.intro")}</div>
       <div className="studyArea">
         <div className="closeBtn">
           <Link href={`/dashboard/review/`}>
@@ -46,25 +47,17 @@ export default function View({ query, user }) {
         <div className="studyInfo">
           <div className="topLine">
             {study?.status === "IN_REVIEW" && (
-              <div className="p12">STUDY IN PEER REVIEW</div>
+              <div className="p12">{t("review.studyInPeerReview")}</div>
             )}
             {study?.status === "SUBMITTED_AS_PROPOSAL" && (
-              <div className="p12">PROPOSAL</div>
+              <div className="p12">{t("review.proposal")}</div>
             )}
             {study?.status === "COLLECTING_DATA" && (
-              <div className="p12">COLLECTING DATA</div>
+              <div className="p12">{t("review.collectingData")}</div>
             )}
             {study?.status !== "COLLECTING_DATA" && (
               <div className="p12">
-                {
-                  study?.reviews?.filter((r) => r?.stage == study?.status)
-                    .length
-                }{" "}
-                comment
-                {study?.reviews?.filter((r) => r?.stage == study?.status)
-                  .length !== 1
-                  ? `s`
-                  : ``}
+                {commentCount} {t("review.comment", { count: commentCount })}
               </div>
             )}
           </div>

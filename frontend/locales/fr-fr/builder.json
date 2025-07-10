@@ -1,46 +1,54 @@
 {
 	"actionCard": {
-		"clickToSubmit": "Cliquez pour soumettre {{title}}",
-		"dataCollection": "Collecte des données",
-		"deleteCardConfirmation": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action ne peut être annulée.",
-		"peerFeedback": "Retour d'information des pairs",
+		"clickToSubmit": "Cliquez pour soumettre pour {{title}}",
+		"dataCollection": "Collecte de données",
+		"deleteCardConfirmation": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible.",
+		"deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible.",
+		"peerFeedback": "Rétroaction des pairs",
 		"projectReport": "Rapport de projet",
-		"proposalFeedback": "Retour sur la proposition",
+		"proposalFeedback": "Commentaires sur la proposition",
 		"submitFor": "Soumettre pour {{title}}",
+		"submitForDataCollection": "Soumettre pour la collecte de données",
+		"submitForPeerFeedback": "Soumettre pour un retour d'information par les pairs",
+		"submitForProjectReport": "Soumettre pour rapport de projet",
+		"submitForProposalFeedback": "Soumettre une proposition pour obtenir des commentaires",
 		"viewComments": "Voir les commentaires",
-		"viewCountComments": "Voir {{count}} commentaires"
+		"viewCountComments": "Afficher {{count}} commentaires"
 	},
 	"activeStudies": "Études actives",
 	"add-section": "Ajouter une section",
-	"addExternalLinkInstruction": "Sélectionnez cette option si vous préférez ajouter un lien externe.",
-	"addExternalWithLink": "Ajouter un {{develop}} externe avec un lien web",
+	"addExternalLinkInstruction": "Sélectionnez cette option si vous préférez ajouter un lien externe",
+	"addExternalWithLink": "Ajouter un {{develop}} externe avec un lien Web",
 	"addInfo": "Informations Complémentaires",
 	"aggregateVariables": "Variables agrégées",
 	"allStudies": "Toutes les études",
 	"archivedStudies": "Études archivées",
 	"assigned": {
-		"typeUsername": "Écris le nom d'utilisateur"
+		"typeUsername": "Tapez le nom d'utilisateur"
 	},
-	"background": "Contexte",
-	"backgroundHelp": "Utilisez ce champ pour présenter brièvement le sujet de la recherche. Quel est le problème étudié et pourquoi est-il important ?",
-	"basicTab": "Base",
-	"blockDescription": "Dans un bloc, les participants reçoivent des informations.",
+	"background": "Arrière-plan",
+	"backgroundHelp": "Utilisez ce champ pour fournir un bref aperçu du sujet de recherche. Quel est le problème étudié et pourquoi est-il important ?",
+	"basicTab": "Basique",
+	"blockDescription": "Dans un bloc, des informations sont présentées aux participants.",
 	"board": {
-		"error": "Erreur ! {{message}}",
+		"error": "Erreur ! {{message}}",
 		"loading": "Chargement..."
 	},
 	"build-create-new-study": "Pour créer une nouvelle étude, cliquez sur le bouton ci-dessous.",
-	"build-intro": "Dans ce constructeur, vous pouvez créer une nouvelle étude, télécharger vos propres tâches ou utiliser des tâches de la bibliothèque.",
+	"build-intro": "Dans ce générateur, vous pouvez créer une nouvelle étude, télécharger vos propres tâches ou utiliser des tâches de la bibliothèque.",
 	"buildBlockFromScratch": "Sélectionnez cette option si vous préférez construire un bloc entièrement à partir de zéro.",
 	"builder": {
 		"addComment": "Ajouter un commentaire",
 		"addStartingPoint": "Ajouter un point de départ",
-		"lockedMessage": "Cette étude a été soumise et ne peut être modifiée. Pour apporter des modifications, veuillez demander à votre enseignant de dé-soumettre l'étude.",
-		"studyBuilderLocked": "Bâtisseur d'études verrouillé"
+		"lockedMessage": "Cette étude a été soumise et ne peut pas être modifiée. Pour apporter des modifications, veuillez demander à votre enseignant d'annuler la soumission.",
+		"studyBuilderLocked": "Générateur d'études verrouillé"
 	},
 	"buildStudyFromExisting": "Construire une étude basée sur une étude MindHive préexistante",
-	"buildTaskFromExisting": "Construire une tâche basée sur une tâche MindHive préexistante.",
+	"buildTaskFromExisting": "Créez une tâche basée sur une tâche MindHive préexistante.",
 	"byComponent": {
+		"by class": "par classe",
+		"by participant": "par participant",
+		"by task": "par tâche",
 		"dataByTask": "Données par tâche dans des fichiers séparés",
 		"downloadAggregated": "Télécharger les données agrégées",
 		"downloadAggregatedBy": "Télécharger les données agrégées {{by}}",
@@ -53,6 +61,7 @@
 		"assignedTo": "La carte est attribuée à {{username}}",
 		"defaultUser": "Jean Dupont",
 		"deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible.",
+		"editingBy": "La carte est actuellement en cours de modification par {{username}}",
 		"notAssigned": "La carte n'est attribuée à personne",
 		"status": {
 			"comments": "Commentaires",
@@ -100,6 +109,7 @@
 		"noStudyAttachedMessage": "Informez votre enseignant afin qu'il puisse en créer un et l'associer. Si vous avez besoin d'aide, veuillez contacter le support technique à l'adresse support.mindhive@nyu.edu."
 	},
 	"connectModal": {
+		"addCollaborators": "Ajouter des collaborateurs",
 		"adminInfo": "Ces informations ne sont visibles que pour l'ADMIN",
 		"close": "Fermer",
 		"linkedClass": "Classe liée",
@@ -107,7 +117,9 @@
 		"projectBoardCollaborators": "Collaborateurs du comité de projet",
 		"projectCreator": "Le créateur du projet est {{username}}",
 		"projectTitle": "Titre du projet",
-		"saveAndClose": "Enregistrer et fermer"
+		"saveAndClose": "Enregistrer et fermer",
+		"selectClass": "Sélectionnez la classe",
+		"studyAuthor": "L'auteur de l'étude est {{username}}"
 	},
 	"connectStudyModal": {
 		"adminInfo": "Ces informations ne sont visibles que pour l'ADMIN",
@@ -122,7 +134,7 @@
 		"studyCollaborators": "Collaborateurs d'étude"
 	},
 	"consentSelector": {
-		"typeConsentProtocol": "Type de protocole de consentement"
+		"typeConsentProtocol": "Protocole de consentement de type"
 	},
 	"createdBy": "créé par {{username}}",
 	"createNewBlock": "Créer un nouveau bloc",
@@ -143,7 +155,7 @@
 		"addNotes": "Ajouter des notes",
 		"settingsPanel": {
 			"deleteWidget": "Supprimer le widget",
-			"notes": "Notes",
+			"notes": "Remarques",
 			"notesPlaceholder": "Entrez vos notes ici...",
 			"widgetSettings": "Paramètres des widgets"
 		},
@@ -151,7 +163,7 @@
 			"unsupportedType": "Type de widget non pris en charge : {{type}}"
 		}
 	},
-	"dataJournals": "Journaux d'analyse' 🚧",
+	"dataJournals": "Journaux de données 🚧",
 	"dataset": {
 		"deleteInvalidRecord": "Supprimer l'enregistrement invalide",
 		"download": "Télécharger",
@@ -170,25 +182,25 @@
 		}
 	},
 	"dataUsage": {
-		"and": "",
-		"educationLabel": "",
+		"and": "et",
+		"educationLabel": "Oui, mais uniquement pour une utilisation dans le cadre de programmes éducatifs et communautaires",
 		"educationNote": {
-			"part1": "",
-			"part2": ""
+			"part1": "Remarque : Les enseignants MindHive sont contrôlés par les administrateurs de MindHive et ne peuvent pas accéder à vos données personnelles sans votre consentement explicite. Consultez notre",
+			"part2": "pour plus de détails sur notre engagement à protéger vos données."
 		},
-		"noLabel": "",
-		"noNote": "",
-		"privacy": "",
-		"question": "",
-		"scienceLabel": "",
+		"noLabel": "Non, ne sauvegardez pas mes réponses",
+		"noNote": "Remarque : certaines fonctionnalités de MindHive, comme la visualisation personnalisée des données, peuvent ne pas vous être accessibles si vous choisissez cette option.",
+		"privacy": "politique de confidentialité",
+		"question": "Souhaitez-vous permettre aux chercheurs et aux éducateurs de MindHive d’accéder à vos réponses pour cette tâche ?",
+		"scienceLabel": "Oui, pour tous les usages : sciences, éducation et programmes communautaires",
 		"scienceNote": {
-			"part1": "",
-			"part2": ""
+			"part1": "Remarque : Les chercheurs et enseignants de MindHive sont contrôlés par les administrateurs de MindHive et ne peuvent pas accéder à vos données personnelles sans votre consentement explicite. Consultez notre",
+			"part2": "pour plus de détails sur notre engagement à protéger vos données."
 		},
-		"selfLabel": "",
-		"selfNote": "",
-		"terms": "",
-		"title": ""
+		"selfLabel": "Non, je sauvegarde simplement mes réponses pour mon propre usage",
+		"selfNote": "Remarque : Votre enseignant aura toujours accès à vos réponses. Si vous choisissez cette option, vos données ne seront pas incluses dans les démonstrations en classe.",
+		"terms": "Termes et conditions",
+		"title": "Utilisation des données"
 	},
 	"deleteProposal": {
 		"confirm": "Êtes-vous sûr de vouloir supprimer cette proposition ? Toutes les sections et cartes de cette proposition seront également supprimées.",
@@ -266,7 +278,7 @@
 	},
 	"individualCard": {
 		"comments": "Commentaires",
-		"privateWorkspaceMsg": "Ceci est votre espace de travail privé. Seuls votre enseignant et votre correcteur ont accès au contenu que vous rédigez ici.",
+		"privateWorkspaceMsg": "Ceci est votre espace de travail privé. Seuls votre enseignant et votre correcteur ont accès au contenu que vous écrivez ici.",
 		"save": "Sauvegarder",
 		"saveExit": "Enregistrer et quitter",
 		"saving": "Économies ...",
@@ -356,7 +368,7 @@
 		"backToHome": "← Retour à l'accueil",
 		"createProject": "Créer un projet",
 		"giveNameAlert": "Donnez un nom à votre projet",
-		"goBackHome": "Retourner à l'accueil'",
+		"goBackHome": "Retourner à la maison",
 		"nameMessage": "Donnez un nom à votre projet. Il ne s'agit pas du titre de l'étude, mais du nom que vous souhaitez donner à votre espace de travail.",
 		"namePlaceholder": "Le nom de mon projet est",
 		"nameYourProject": "Nommez votre projet",
@@ -461,21 +473,58 @@
 		"uploadPreview": "Télécharger l'aperçu",
 		"uploadStudyImage": "Télécharger l'image de l'étude"
 	},
-	"project": "Projet",
-	"projectBoard": "Organisateur de projet",
+	"project": {
+		"cancel": "Annuler",
+		"chooseStudy": "Choisissez une étude...",
+		"confirm": "Confirmer",
+		"confirmStudyChange": "Confirmer le changement d'étude",
+		"confirmStudyChangeDescription": "Êtes-vous sûr de vouloir changer d'étude pour ce projet ? Cette action peut affecter les données associées.",
+		"connectedStudy": "Étude connectée",
+		"connectStudy": "Connecter l'étude",
+		"connectToStudy": "Se connecter à une étude",
+		"connectToStudyDescription": "Liez ce projet à une étude existante ou créez-en une nouvelle",
+		"createAndConnect": "Créer et connecter",
+		"createNewStudy": "Créer une nouvelle étude",
+		"delete": "Supprimer le projet",
+		"deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce projet ?",
+		"enterStudyName": "Entrez le nom de l'étude",
+		"failedToUpdateStudy": "Échec de la mise à jour de la connexion à l'étude",
+		"giveProjectNameFirst": "Donnez d'abord un nom au projet",
+		"noStudyConnected": "Aucune étude liée",
+		"selectExistingStudy": "Sélectionner une étude existante",
+		"selectStudyFirst": "Sélectionnez d'abord l'étude",
+		"study": "Étude:",
+		"typeDeleteAlert": "Veuillez taper SUPPRIMER pour supprimer votre projet",
+		"typeDeleteToConfirm": "Tapez « SUPPRIMER » pour confirmer"
+	},
 	"proposal": {
 		"actions": "Actes",
+		"addSection": "Ajouter une section",
+		"advancedOptions": "Options avancées",
+		"advancedOptionsHelp": "Cocher les cases ci-dessous permet aux élèves de modifier le tableau. Contactez l'équipe MindHive en cas de doute.",
+		"allowAddingCards": "Permettre aux étudiants d'ajouter/supprimer des cartes",
+		"allowAddingSections": "Permettre aux étudiants d'ajouter/supprimer des sections",
+		"allowMovingCards": "Permettre aux élèves de déplacer les cartes",
+		"allowMovingSections": "Permettre aux étudiants de déplacer les sections",
 		"copy": "Copie",
 		"create": "Créer une nouvelle proposition",
 		"dateCreated": "Date de création",
 		"delete": "Supprimer",
+		"makeTemplate": "Faire de ce tableau de projet un modèle public",
 		"name": "Nom de la proposition",
+		"newSection": "Nouvelle section",
 		"notSubmitted": "Non soumis",
 		"open": "Ouvrir",
 		"previewHeader": "Aperçu du modèle de proposition",
+		"save": "Sauvegarder",
+		"saving": "Économie",
+		"sectionTitlePlaceholder": "Entrez le titre de la section",
 		"selectAsMain": "Sélectionner comme principal",
 		"status": "Statut",
-		"submitted": "Soumis"
+		"submitted": "Soumis",
+		"subtitle": "Ce tableau guidera vos élèves étape par étape dans leur projet MindHive",
+		"zeroState1": "Vous n’avez pas encore créé de propositions.",
+		"zeroState2": "Une fois que vous avez créé une proposition, elle apparaîtra ici."
 	},
 	"proposalAction": {
 		"appearInFeedbackCenter": "Votre proposition apparaîtra dans le Centre de commentaires.",
@@ -491,7 +540,7 @@
 		"submitForFeedbackIntro": "Une fois que vous avez soumis votre proposition pour commentaires :",
 		"submitForTitle": "Soumettez votre proposition pour {{name}}",
 		"submittedForReview": "La proposition a été soumise pour examen",
-		"unlockedForFeedback": "La proposition a été débloquée pour recueillir des commentaires"
+		"unlockedForFeedback": "La proposition a été déverrouillée pour obtenir des commentaires"
 	},
 	"proposalBoard": {
 		"allowAddingCards": "Autoriser l'ajout de nouvelles cartes",
@@ -520,28 +569,150 @@
 	"resourcesCards": {
 		"header": "Ressources"
 	},
-	"review": "Revue de projet",
+	"review": {
+		"closedForParticipation": "Fermé à la participation",
+		"collectingData": "COLLECTE DE DONNÉES",
+		"collectingDataMenu": "Collecte de données",
+		"collectingDataTag": "Collecte de données",
+		"comment": "commentaire{{count !== 1 ? 's' : ''}}",
+		"commentBtn": "Commentaire",
+		"featuredProject": "Projet en vedette",
+		"feedbackCenter": "Centre de commentaires",
+		"filterByClasses": "Filtrer par classes",
+		"inReview": "En revue",
+		"intro": "Que vous commenciez votre étude ou que vous recrutiez des participants, utilisez cette page pour consulter les brainstormings et les études communautaires.",
+		"least_comments": "Moins de commentaires",
+		"least_participants": "Moins de participants",
+		"locked": "Fermé",
+		"matchingKeyword": "correspondant à « {{keyword}} »",
+		"most_comments": "La plupart des commentaires",
+		"most_participants": "La plupart des participants",
+		"newest": "Le plus récent",
+		"oldest": "Le plus ancien",
+		"overviewIntro": "Que vous commenciez votre étude ou que vous recrutiez des participants, utilisez cette page pour donner votre avis à vos pairs sur leurs propositions et leurs études finalisées.",
+		"participantOverOne": "{compter, pluriel, un {# participant} autre {# participants}}",
+		"participantUnder": "aucun participant",
+		"participate": "Participer",
+		"peerReviewTag": "Évaluation par les pairs",
+		"projectReport": "Rapport de projet",
+		"proposal": "PROPOSITION",
+		"proposals": "Propositions",
+		"proposalTag": "Proposition",
+		"review": "Revoir",
+		"reviewPlural": "avis",
+		"reviewSingular": "revoir",
+		"search": "Recherche",
+		"showingAllProjects": "Affichage de tous les projets",
+		"showingAllStudies": "Affichage de toutes les études",
+		"showingProjectsIn": "Affichage des projets dans {{classTitles}}",
+		"showingStudiesIn": "Affichage des études dans {{classTitles}}",
+		"sortBy": "Trier par",
+		"sortedByLeastComments": ", classés par ordre décroissant de commentaires",
+		"sortedByLeastParticipants": ", classés par nombre de participants, du moins au plus élevé",
+		"sortedByMostComments": ", classés par ordre de commentaires",
+		"sortedByMostParticipants": ", classés par nombre de participants, du plus au moins élevé",
+		"sortedByNewest": ", classés du plus récent au plus ancien",
+		"sortedByOldest": ", classés du plus ancien au plus récent",
+		"studyInPeerReview": "ÉTUDE EN ÉVALUATION PAR LES PAIRS",
+		"undefined": "Indéfini"
+	},
 	"reviewDetail": {
+		"addTaskSuggestion": "Ajoutez des suggestions d'enquête ou de tâches MindHive",
+		"backToFeedbackCenter": "Retour au centre de commentaires",
+		"cannotViewSection": "Vous ne pouvez pas encore voir cette section",
+		"cannotViewSectionDescription": "Pour accéder à cette section, vous devez consulter ou participer à l’étude une fois qu’elle dépasse la phase de proposition.",
+		"collaborators": "Collaborateurs",
+		"commentsTab": "Commentaires",
 		"exit": "Sortie",
+		"helpPeers": "Aidez vos pairs à créer des études en leur offrant des commentaires et des suggestions.",
+		"helpStudents": "Aidez les étudiants à créer des études en leur offrant des commentaires et des suggestions.",
 		"individualReview": "examen individuel",
-		"synthesis": "synthèse"
+		"mentor": "Mentor",
+		"noIndividualWork": "Aucun travail individuel trouvé pour l'étudiant sélectionné.",
+		"noStudy": "Il n'y a pas d'étude",
+		"participateInStudy": "Participer à l'étude",
+		"proposalTab": "Proposition",
+		"resubmitConfirm": "Êtes-vous sûr de vouloir soumettre à nouveau ? Vos commentaires seront mis à jour.",
+		"resubmitFeedback": "Renvoyer les commentaires",
+		"reviewer": "Critique",
+		"scientist": "Scientifique",
+		"selectOption": "Sélectionnez une option",
+		"selectStudent": "Sélectionnez l'étudiant",
+		"selectStudentPlaceholder": "Sélectionner un étudiant",
+		"showCollectiveWork": "Montrer un travail collectif",
+		"studyFeedback": "Commentaires sur l'étude",
+		"submitConfirm": "Êtes-vous sûr de vouloir soumettre votre commentaire ? Vos commentaires seront visibles par les autres. Vous pourrez les modifier après leur soumission.",
+		"submitFeedback": "Soumettre des commentaires",
+		"submitted": "L'avis a été soumis",
+		"submittedOn": "Soumis le {{date}}",
+		"synthesis": "synthèse",
+		"teacher": "Professeur",
+		"updated": "L'avis a été mis à jour",
+		"updatedOn": "Mis à jour le {{date}}",
+		"viewFeedback": "Voir les commentaires"
 	},
 	"reviewProposal": {
 		"feedback": "Retour",
 		"instruction": "Une fois que vous aurez soumis votre proposition ou votre étude, vos avis apparaîtront ici."
 	},
 	"reviewTabs": {
+		"howTab": "Comment",
 		"peerFeedback": "Rétroaction des pairs",
 		"projectReportFeedback": "Commentaires sur le rapport de projet",
-		"proposalFeedback": "Commentaires sur la proposition"
+		"proposalFeedback": "Commentaires sur la proposition",
+		"whoTab": "OMS",
+		"whyTab": "Pourquoi"
+	},
+	"reviewTemplate": {
+		"additionalComments": "Utilisez l'espace ci-dessous pour tout commentaire ou suggestion supplémentaire",
+		"additionalCommentsSubtitle": "Vous pouvez mentionner n'importe quoi ici, mais vous pourriez prendre en compte : la clarté et/ou la pertinence de la question d'enquête, la faisabilité dans le cadre de MindHive, les obstacles éthiques, la motivation de l'étude/la recherche de fond, l'alignement de la population participante avec la question d'enquête.",
+		"confoundsQuestion": "Comment les chercheurs abordent-ils les facteurs de confusion et les biais potentiels dans la conception de leur étude ?",
+		"confoundsSubA": "Si les chercheurs ne sont pas en mesure de tenir compte de certains de ces facteurs de confusion ou biais dans la conception de leur étude, comment les abordent-ils dans leurs propositions d’étude (par exemple, explications alternatives/limites de l’étude) ?",
+		"confoundsSubB": "Quels changements apporteriez-vous à la conception de l'étude pour minimiser les biais du chercheur ou l'impact des facteurs de confusion ? Expliquez votre réponse.",
+		"designQuestion": "Dans quelle mesure la conception de l’étude répond-elle à la question de l’enquête ?",
+		"designSubA": "Déterminez si la conception de l’étude (c’est-à-dire les tâches et les enquêtes utilisées ; le déroulement de l’étude) générerait les données nécessaires pour répondre à la question de l’enquête.",
+		"designSubB": "Comment pourriez-vous améliorer la conception de l’étude ? Expliquez votre réponse.",
+		"hypothesisQuestion": "Dans quelle mesure l’hypothèse est-elle bien définie ?",
+		"hypothesisSubA": "Déterminez si les variables indépendantes et dépendantes sont identifiées dans l’hypothèse et si elles sont alignées sur la question de l’enquête.",
+		"hypothesisSubB": "Comment amélioreriez-vous l’hypothèse ? Expliquez votre réponse.",
+		"importanceQuestion": "Quelle est l’importance de la question de l’enquête ?",
+		"importanceSubA": "Déterminez si cela répond à un problème pertinent pour la société ou comble une lacune dans les connaissances dans un domaine particulier.",
+		"importanceSubB": "Comment réviseriez-vous la question d’enquête pour clarifier son importance ? Expliquez votre réponse.",
+		"isQuestionAnswerable": "La question d'enquête peut-elle être résolue à l'aide des outils MindHive ? Les tâches et les enquêtes proposées correspondent-elles à la question d'enquête ? Avez-vous des suggestions de tâches et d'enquêtes supplémentaires ou alternatives qui pourraient convenir à cette question d'enquête ?",
+		"needsMinorAdjustments": "Nécessite des ajustements mineurs",
+		"needsMinorAdjustmentsSubtitle": "La proposition est en grande partie complète mais pourrait bénéficier de petites améliorations ou précisions, telles que la clarification de la question de recherche ou le comblement de lacunes mineures.",
+		"needsSignificantWork": "Nécessite des travaux importants",
+		"needsSignificantWorkSubtitle": "Le projet est incomplet ou présente des lacunes importantes nécessitant une attention particulière. Il peut nécessiter des recherches plus approfondies, une structure plus claire ou du contenu supplémentaire avant de poursuivre.",
+		"oneSentence": "Cela pourrait n’être qu’une seule phrase.",
+		"participationQuestion": "Comment s’est déroulée votre participation à l’étude ?",
+		"participationSubA": "Vérifiez si les instructions étaient claires et si le sujet et les activités étaient intéressants. Les activités d'étude vous ont-elles permis de représenter fidèlement vos choix et comportements réels ? Pourquoi ?",
+		"participationSubB": "Comment amélioreriez-vous l'étude pour motiver les participants à consacrer du temps et des efforts à leurs réponses ? Expliquez votre réponse.",
+		"proposalReadyQuestion": "Cette proposition est-elle prête à être mise en œuvre ou pensez-vous qu’elle nécessite un développement ou des révisions supplémentaires ?",
+		"readyToMoveForward": "Prêt à aller de l'avant",
+		"readyToMoveForwardSubtitle": "La proposition démontre une solide compréhension et l’achèvement des étapes nécessaires.",
+		"requiresReevaluation": "Nécessite une réévaluation",
+		"requiresReevaluationSubtitle": "La proposition pourrait être trop ambitieuse ou trop restrictive pour la phase actuelle. Il pourrait être nécessaire de la redéfinir ou de l'ajuster avant de poursuivre.",
+		"respectQuestion": "Dans quelle mesure l’étude respecte-t-elle la vie privée, la santé et les efforts des participants ?",
+		"respectSubA": "La difficulté et la durée de l’étude sont-elles appropriées ?",
+		"respectSubB": "Quelles améliorations proposeriez-vous pour que cette étude soit plus respectueuse des participants ? Expliquez votre réponse.",
+		"whatDoesStudyDoWell": "Qu’est-ce que l’étude fait bien ?"
+	},
+	"reviewWrapper": {
+		"featuredStudies": "Études en vedette",
+		"myStudies": "Mes études",
+		"reviewStudies": "Études de synthèse"
 	},
 	"scoringSurvey": "Instructions pour la notation (pour les enquêtes uniquement)",
 	"section": {
 		"addCard": "Ajouter une carte",
+		"addCardBtn": "[ Cliquez pour ajouter une carte ]",
 		"card": "carte",
 		"cards": "cartes",
+		"cardsCount": "{{count}} carte{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "Êtes-vous sûr de vouloir supprimer cette section de propositions ? Toutes les cartes de cette section seront également supprimées. Cette action est irréversible.",
+		"enterNewTitle": "Veuillez entrer un titre",
 		"newCard": "Nouvelle carte",
+		"newCardPlaceholder": "Entrez un nouveau titre de carte",
 		"newTitlePrompt": "Veuillez saisir un nouveau titre"
 	},
 	"selector": {
@@ -557,7 +728,9 @@
 		"searchPlaceholder": "🔍 Rechercher",
 		"studyDesign": {
 			"betweenSubjects": "Conception inter-sujets",
+			"conditionProbabilityInfo": "La probabilité qu'un participant se trouve dans cette condition inter-sujets (sur la base d'une simulation de l'étude 100 fois).",
 			"description": "Créer une conception inter-sujets",
+			"noTasksFound": "Aucune tâche trouvée",
 			"title": "Conception de l'étude"
 		},
 		"surveys": {
@@ -725,7 +898,7 @@
 		"preview": "Aperçu {{taskType}}"
 	},
 	"taskPage": {
-		"after": "Ce que les participants voient <u>après avoir passé</u> le {{taskType}}",
+		"after": "Ce que les participants voient <u>après</u> avoir effectué le {{taskType}}",
 		"aggregateVariables": "Variables agrégées",
 		"aggregateVariablesDescription": "Ces données sont automatiquement écrites dans un fichier csv à la fin de la {{taskType}}",
 		"background": "Arrière-plan",
@@ -734,7 +907,7 @@
 		"duration": "Durée",
 		"format": "Format",
 		"freeinput": "Saisie de texte libre",
-		"likert": "Échelle de Likert",
+		"likert": "échelle de Likert",
 		"mobileCompatible": "Compatible avec les appareils mobiles",
 		"moreInfo": "plus d'infos",
 		"parameters": "Paramètres",

@@ -5,6 +5,7 @@ import JoditEditor from "../../../../Jodit/Editor";
 
 import StyledModal from "../../../../styles/StyledModal";
 import ClassSelector from "./ClassSelector";
+import useTranslation from "next-translate/useTranslation";
 
 export default function AssignmentModal({
   btnName,
@@ -14,6 +15,7 @@ export default function AssignmentModal({
   children,
   user,
 }) {
+  const { t } = useTranslation("classes");
   const [open, setOpen] = useState(false);
 
   return (
@@ -33,7 +35,7 @@ export default function AssignmentModal({
               handleChange={handleChange}
             />
             <label htmlFor="title">
-              <p>Title</p>
+              <p>{t("assignment.title")}</p>
               <input
                 type="text"
                 id="title"

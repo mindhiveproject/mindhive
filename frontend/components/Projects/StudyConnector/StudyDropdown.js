@@ -2,12 +2,14 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Dropdown, Modal, Button } from "semantic-ui-react";
 import styled from "styled-components";
 import { useState } from "react";
+import useTranslation from 'next-translate/useTranslation';
 
 import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal";
 import { GET_PROJECT_STUDY } from "../../Queries/Proposal";
 import { MY_STUDIES, TEACHER_STUDIES } from "../../Queries/Study";
 
 export default function StudyDropdown({ user, project }) {
+  const { t } = useTranslation('builder');
   const isTeacher = user?.permissions?.map((p) => p?.name).includes("TEACHER");
   const { data: studiesData } = useQuery(
     isTeacher ? TEACHER_STUDIES : MY_STUDIES,
@@ -43,7 +45,7 @@ export default function StudyDropdown({ user, project }) {
       ? [
           {
             key: project?.study?.id,
-            text: project?.study?.title || "Connected Study",
+            text: project?.study?.title || t('project.connectedStudy'),
             value: project?.study?.id,
           },
         ]
@@ -77,7 +79,7 @@ export default function StudyDropdown({ user, project }) {
       window.location.reload();
     } catch (error) {
       console.error("Error updating study:", error);
-      alert("Failed to update study connection");
+      alert(t('project.failedToUpdateStudy'));
       setIsModalOpen(false);
       setSelectedStudyId(null);
     }
@@ -90,31 +92,30 @@ export default function StudyDropdown({ user, project }) {
 
   return (
     <StyledStudyDropdown>
-      <Label>Study:</Label>
+      <Label>{t('project.study')}</Label>
       <Dropdown
         selection
         options={studyOptions}
         value={project?.study?.id || ""}
         onChange={handleStudyChange}
-        placeholder="No study connected"
+        placeholder={t('project.noStudyConnected')}
         disabled={!studies.length}
         className="study-selector"
         fluid
       />
       <StyledModal open={isModalOpen} onClose={handleCancel} size="tiny">
-        <Modal.Header>Confirm Study Change</Modal.Header>
+        <Modal.Header>{t('project.confirmStudyChange')}</Modal.Header>
         <Modal.Content>
           <Modal.Description>
-            Are you sure you want to switch the study for this project? This
-            action may affect related data.
+            {t('project.confirmStudyChangeDescription')}
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
           <Button onClick={handleCancel} className="cancel-button">
-            Cancel
+            {t('project.cancel')}
           </Button>
           <Button onClick={handleConfirm} className="confirm-button" primary>
-            Confirm
+            {t('project.confirm')}
           </Button>
         </Modal.Actions>
       </StyledModal>

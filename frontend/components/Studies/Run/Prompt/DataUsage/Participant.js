@@ -1,8 +1,11 @@
+import useTranslation from "next-translate/useTranslation";
+
 export default function DataUsageForParticipant({ dataUse, setDataUse }) {
+  const { t } = useTranslation('common');
   return (
     <div>
-      <h1>Data usage</h1>
-      <h3>How would you like us to use your data?</h3>
+      <h1>{t('dataUsage.header')}</h1>
+      <h3>{t('dataUsage.question')}</h3>
 
       <div>
         <div className="checkboxField">
@@ -15,7 +18,7 @@ export default function DataUsageForParticipant({ dataUse, setDataUse }) {
             checked={dataUse === "science"}
           />
           <label htmlFor="useDataForScience">
-            You can use my data for science and/or educational purposes
+            {t('dataUsage.science')}
           </label>
         </div>
       </div>
@@ -30,8 +33,7 @@ export default function DataUsageForParticipant({ dataUse, setDataUse }) {
             checked={dataUse === "education"}
           />
           <label htmlFor="educationalUse">
-            I want my data to be saved for educational use only (e.g., lectures
-            and teaching materials)
+            {t('dataUsage.education')}
           </label>
         </div>
       </div>
@@ -46,8 +48,7 @@ export default function DataUsageForParticipant({ dataUse, setDataUse }) {
             checked={dataUse === "no"}
           />
           <label htmlFor="doNotRecord">
-            Don't record my data at all (if you’re a MindHive student: this
-            means your data won't be included in class demos!)
+            {t('dataUsage.no')}
           </label>
         </div>
       </div>

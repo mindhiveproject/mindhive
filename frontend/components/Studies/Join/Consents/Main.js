@@ -6,9 +6,11 @@ import useForm from "../../../../lib/useForm";
 
 import JoinStudy from "../JoinStudy";
 import ConsentForm from "./Form";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Consents({ query, user, study }) {
   const router = useRouter();
+  const { t } = useTranslation('common');
 
   const { inputs, handleChange } = useForm({
     ...query,
@@ -58,7 +60,7 @@ export default function Consents({ query, user, study }) {
             },
           }}
         >
-          <button>I agree, next</button>
+          <button>{t('consent.form.iAgreeNext')}</button>
         </Link>
       )}
 
@@ -71,7 +73,7 @@ export default function Consents({ query, user, study }) {
             },
           }}
         >
-          <button>Skip consent</button>
+          <button>{t('consent.form.skip')}</button>
         </Link>
       )}
 
@@ -83,7 +85,7 @@ export default function Consents({ query, user, study }) {
             ...inputs,
             [`consent-${consentId}`]: `agree`,
           }}
-          btnName="I agree, join the study"
+          btnName={t('consent.form.iAgreeJoin')}
         />
       )}
 
@@ -96,7 +98,7 @@ export default function Consents({ query, user, study }) {
             },
           }}
         >
-          <button>Skip consent</button>
+          <button>{t('consent.form.skip')}</button>
         </Link>
       )}
     </div>

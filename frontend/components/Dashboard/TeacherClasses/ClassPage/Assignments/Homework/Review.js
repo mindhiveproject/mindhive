@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
+import useTranslation from "next-translate/useTranslation";
 
 import JoditEditor from "../../../../../Jodit/Editor";
 
@@ -18,6 +19,7 @@ export default function ReviewHomework({
   query,
   homeworkCode,
 }) {
+  const { t } = useTranslation("classes");
   const router = useRouter();
 
   const { data, loading, error } = useQuery(GET_HOMEWORK, {
@@ -54,24 +56,24 @@ export default function ReviewHomework({
 
         <div className="infoBoard">
           <div>
-            <h4>Author</h4>
+            <h4>{t("teacherClass.author")}</h4>
             <p>{inputs?.author?.username}</p>
           </div>
 
           {inputs?.updatedAt && (
             <div>
-              <h4>Last updated</h4>
+              <h4>{t("teacherClass.lastUpdated")}</h4>
               <p>{moment(inputs?.updatedAt).format("MMM D, YYYY, h:mm a")}</p>
             </div>
           )}
 
           <div>
-            <h4>Status</h4>
+            <h4>{t("teacherClass.status")}</h4>
             <Status settings={inputs?.settings} handleChange={handleChange} />
           </div>
 
           <div className="proposalCardComments">
-            <h4>Comments</h4>
+            <h4>{t("teacherClass.comments")}</h4>
             <textarea
               rows="13"
               type="text"
@@ -103,7 +105,7 @@ export default function ReviewHomework({
               },
             }}
           >
-            <div className="secondary saveButton">Close without saving</div>
+            <div className="secondary saveButton">{t("teacherClass.closeWithoutSaving")}</div>
           </Link>
         )}
 
@@ -126,7 +128,7 @@ export default function ReviewHomework({
           }}
           disabled={loading}
         >
-          {loading ? "Saving ..." : "Save & close"}
+          {loading ? t("teacherClass.saving") : t("teacherClass.saveAndClose")}
         </div>
       </div>
     </div>

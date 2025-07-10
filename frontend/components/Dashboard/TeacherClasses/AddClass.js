@@ -65,12 +65,12 @@ export default function AddClass({ user }) {
 
   return (
     <>
-      <h1>Add new class</h1>
+      <h1>{t("addClass.addNewClass")}</h1>
       <ClassForm
         inputs={inputs}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
-        submitBtnName={"Create"}
+        submitBtnName={t("addClass.create")}
         loading={loading}
         error={error}
       />

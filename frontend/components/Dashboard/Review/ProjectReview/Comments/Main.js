@@ -1,6 +1,8 @@
 import Board from "./Board";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Reviews({ projectId, user, reviews }) {
+  const { t } = useTranslation("builder");
   const byReviewers = reviews
     .map((review, num) => {
       const permissions = review?.author?.permissions?.map((p) => p?.name);
@@ -8,15 +10,15 @@ export default function Reviews({ projectId, user, reviews }) {
       const isTeacher = permissions.includes("TEACHER");
       const isScientist = permissions.includes("SCIENTIST");
 
-      let role = "Reviewer";
+      let role = t("reviewDetail.reviewer");
       if (isScientist) {
-        role = "Scientist";
+        role = t("reviewDetail.scientist");
       }
       if (isMentor) {
-        role = "Mentor";
+        role = t("reviewDetail.mentor");
       }
       if (isTeacher) {
-        role = "Teacher";
+        role = t("reviewDetail.teacher");
       }
 
       return {
