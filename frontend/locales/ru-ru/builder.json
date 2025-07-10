@@ -465,6 +465,7 @@
 	},
 	"participate": "Участвовать",
 	"participateAsGuest": "Принять участие в качестве гостя",
+	"pleaseLogin": "Пожалуйста, сначала войдите в систему!",
 	"preview": {
 		"description": "Описание",
 		"timeToComplete": "Время для завершения",
@@ -495,8 +496,9 @@
 		"selectStudyFirst": "Сначала выберите исследование",
 		"study": "Изучать:",
 		"typeDeleteAlert": "Пожалуйста, введите DELETE, чтобы удалить ваш проект.",
-		"typeDeleteToConfirm": "Нажмите «УДАЛИТЬ» для подтверждения."
+		"typeDeleteToConfirm": "Нажмите «DELETE» для подтверждения."
 	},
+	"projectBoard": "Совет проекта",
 	"proposal": {
 		"actions": "Действия",
 		"addSection": "Добавить раздел",

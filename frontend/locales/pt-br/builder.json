@@ -465,6 +465,7 @@
 	},
 	"participate": "Participar",
 	"participateAsGuest": "Participe como convidado",
+	"pleaseLogin": "Por favor, faça login primeiro!",
 	"preview": {
 		"description": "Descrição",
 		"timeToComplete": "Tempo para concluir",
@@ -497,6 +498,7 @@
 		"typeDeleteAlert": "Digite DELETE para excluir seu projeto",
 		"typeDeleteToConfirm": "Digite \"DELETE\" para confirmar"
 	},
+	"projectBoard": "Conselho do projeto",
 	"proposal": {
 		"actions": "Ações",
 		"addSection": "Adicionar seção",

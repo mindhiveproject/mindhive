@@ -465,6 +465,7 @@
 	},
 	"participate": "Deelnemen",
 	"participateAsGuest": "Deelnemen als gast",
+	"pleaseLogin": "Log eerst in!",
 	"preview": {
 		"description": "Beschrijving",
 		"timeToComplete": "Tijd om te voltooien",
@@ -497,6 +498,7 @@
 		"typeDeleteAlert": "Typ DELETE om uw project te verwijderen",
 		"typeDeleteToConfirm": "Typ \"DELETE\" om te bevestigen"
 	},
+	"projectBoard": "Projectbord",
 	"proposal": {
 		"actions": "Acties",
 		"addSection": "Sectie toevoegen",

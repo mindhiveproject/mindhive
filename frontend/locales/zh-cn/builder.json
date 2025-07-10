@@ -465,6 +465,7 @@
 	},
 	"participate": "参加",
 	"participateAsGuest": "以嘉宾身份参与",
+	"pleaseLogin": "请先登录！",
 	"preview": {
 		"description": "描述",
 		"timeToComplete": "完成时间",
@@ -497,6 +498,7 @@
 		"typeDeleteAlert": "请输入 DELETE 来删除您的项目",
 		"typeDeleteToConfirm": "输入“DELETE”确认"
 	},
+	"projectBoard": "项目委员会",
 	"proposal": {
 		"actions": "行动",
 		"addSection": "添加部分",

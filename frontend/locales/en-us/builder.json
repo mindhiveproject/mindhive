@@ -465,6 +465,7 @@
 	},
 	"participate": "Participate",
 	"participateAsGuest": "Participate as a guest",
+	"pleaseLogin": "Please first log in!",
 	"preview": {
 		"description": "Description",
 		"timeToComplete": "Time to complete",
@@ -497,6 +498,7 @@
 		"typeDeleteAlert": "Please type DELETE to delete your project",
 		"typeDeleteToConfirm": "Type \"DELETE\" to confirm"
 	},
+	"projectBoard": "Project board",
 	"proposal": {
 		"actions": "Actions",
 		"addSection": "Add section",
@@ -1013,7 +1015,6 @@
 		"tweakableFeatures": "The following features of this {{taskType}} can be tweaked:",
 		"visualAnalogueScale": "Visual analogue scale"
 	},
-	"pleaseLogin": "Please first log in!",
 	"visualize": "Visualize",
 	"whatWouldYouLikeToDevelop": "What would you like to develop?"
 }

@@ -1,4 +1,5 @@
 {
+	"admin": "Beheerder",
 	"analyze": "Analyseren",
 	"connect": "Verbinden",
 	"consentProtocol": "Toestemmingsprotocol",
@@ -18,5 +19,6 @@
 	"review": "Beoordeling",
 	"settings": "Instellingen",
 	"tags": "Labels",
-	"updates": "Updates"
+	"updates": "Updates",
+	"workspace": "Werkruimte"
 }

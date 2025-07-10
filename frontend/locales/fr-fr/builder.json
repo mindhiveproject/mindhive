@@ -4,7 +4,7 @@
 		"dataCollection": "Collecte de données",
 		"deleteCardConfirmation": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible.",
 		"deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible.",
-		"peerFeedback": "Rétroaction des pairs",
+		"peerFeedback": "Revue par les pairs",
 		"projectReport": "Rapport de projet",
 		"proposalFeedback": "Commentaires sur la proposition",
 		"submitFor": "Soumettre pour {{title}}",
@@ -313,7 +313,7 @@
 		"refreshAfterRelease": "Une fois la carte publiée, actualisez la page pour obtenir la dernière version de la carte.",
 		"reviewOptions": {
 			"collectingData": "Collecte de données",
-			"peerFeedback": "Rétroaction des pairs",
+			"peerFeedback": "Revue par les pairs",
 			"projectReport": "Rapport de projet",
 			"proposal": "Proposition"
 		},
@@ -368,7 +368,7 @@
 		"backToHome": "← Retour à l'accueil",
 		"createProject": "Créer un projet",
 		"giveNameAlert": "Donnez un nom à votre projet",
-		"goBackHome": "Retourner à la maison",
+		"goBackHome": "Retourner à l'accueil'",
 		"nameMessage": "Donnez un nom à votre projet. Il ne s'agit pas du titre de l'étude, mais du nom que vous souhaitez donner à votre espace de travail.",
 		"namePlaceholder": "Le nom de mon projet est",
 		"nameYourProject": "Nommez votre projet",
@@ -465,6 +465,7 @@
 	},
 	"participate": "Participer",
 	"participateAsGuest": "Participer en tant qu'invité",
+	"pleaseLogin": "Veuillez d'abord vous connecter !",
 	"preview": {
 		"description": "Description",
 		"timeToComplete": "Il est temps de terminer",
@@ -495,8 +496,9 @@
 		"selectStudyFirst": "Sélectionnez d'abord l'étude",
 		"study": "Étude:",
 		"typeDeleteAlert": "Veuillez taper SUPPRIMER pour supprimer votre projet",
-		"typeDeleteToConfirm": "Tapez « SUPPRIMER » pour confirmer"
+		"typeDeleteToConfirm": "Tapez « DELETE » pour confirmer"
 	},
+	"projectBoard": "Tableau de projet",
 	"proposal": {
 		"actions": "Actes",
 		"addSection": "Ajouter une section",

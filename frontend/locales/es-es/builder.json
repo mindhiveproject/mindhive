@@ -465,6 +465,7 @@
 	},
 	"participate": "Participar",
 	"participateAsGuest": "Participar como invitado",
+	"pleaseLogin": "¡Por favor, inicie sesión primero!",
 	"preview": {
 		"description": "Descripción",
 		"timeToComplete": "Tiempo para completar",
@@ -495,8 +496,9 @@
 		"selectStudyFirst": "Seleccione el estudio primero",
 		"study": "Estudiar:",
 		"typeDeleteAlert": "Por favor escribe SUPR para eliminar tu proyecto",
-		"typeDeleteToConfirm": "Escribe \"ELIMINAR\" para confirmar"
+		"typeDeleteToConfirm": "Escribe \"DELETE\" para confirmar"
 	},
+	"projectBoard": "Tablero de proyecto",
 	"proposal": {
 		"actions": "Comportamiento",
 		"addSection": "Añadir sección",

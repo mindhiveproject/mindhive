@@ -465,6 +465,7 @@
 	},
 	"participate": "हिस्सा लेना",
 	"participateAsGuest": "अतिथि के रूप में भाग लें",
+	"pleaseLogin": "कृपया पहले लॉग इन करें!",
 	"preview": {
 		"description": "विवरण",
 		"timeToComplete": "पूरा करने का समय",
@@ -497,6 +498,7 @@
 		"typeDeleteAlert": "कृपया अपना प्रोजेक्ट हटाने के लिए DELETE टाइप करें",
 		"typeDeleteToConfirm": "पुष्टि करने के लिए \"DELETE\" टाइप करें"
 	},
+	"projectBoard": "परियोजना बोर्ड",
 	"proposal": {
 		"actions": "कार्रवाई",
 		"addSection": "अनुभाग जोड़ें",

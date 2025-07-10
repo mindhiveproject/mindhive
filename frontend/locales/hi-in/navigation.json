@@ -1,4 +1,5 @@
 {
+	"admin": "व्यवस्थापक",
 	"analyze": "विश्लेषण करें",
 	"connect": "जोड़ना",
 	"consentProtocol": "सहमति प्रोटोकॉल",
@@ -18,5 +19,6 @@
 	"review": "समीक्षा",
 	"settings": "सेटिंग्स",
 	"tags": "टैग",
-	"updates": "अपडेट"
+	"updates": "Updates",
+	"workspace": "कार्यस्थान"
 }

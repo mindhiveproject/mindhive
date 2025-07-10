@@ -465,6 +465,7 @@
 	},
 	"participate": "يشارك",
 	"participateAsGuest": "المشاركة كضيف",
+	"pleaseLogin": "الرجاء تسجيل الدخول أولاً!",
 	"preview": {
 		"description": "وصف",
 		"timeToComplete": "الوقت لإكمال",
@@ -497,6 +498,7 @@
 		"typeDeleteAlert": "الرجاء كتابة DELETE لحذف مشروعك",
 		"typeDeleteToConfirm": "اكتب \"حذف\" للتأكيد"
 	},
+	"projectBoard": "لوحة المشروع",
 	"proposal": {
 		"actions": "الإجراءات",
 		"addSection": "إضافة قسم",
