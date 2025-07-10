@@ -34,7 +34,7 @@ export function useTemplateQuestions() {
         },
       ],
       question: t("reviewTemplate.proposalReadyQuestion"),
-      subtitle: "",
+      subtitle: "asdad",
     },
     {
       name: "2",

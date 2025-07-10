@@ -1,5 +1,6 @@
 import JoditEditorPro from "../../../Jodit/EditorPro";
 import StyledNote from "../../../styles/StyledNote";
+import useTranslation from "next-translate/useTranslation";
 
 export default function CreatePost({
   journal,
@@ -11,11 +12,12 @@ export default function CreatePost({
   handleSave,
   headerTitle,
 }) {
+  const { t } = useTranslation("common");
   return (
     <StyledNote>
       <h1>{headerTitle}</h1>
       <label htmlFor="title">
-        <p>Title</p>
+        <p>{t("journal.title")}</p>
         <input
           type="text"
           id="title"
@@ -26,7 +28,7 @@ export default function CreatePost({
         />
       </label>
       <JoditEditorPro content={content} setContent={setContent} />
-      <button onClick={handleSave}>Save</button>
+      <button onClick={handleSave}>{t("save")}</button>
     </StyledNote>
   );
 }

@@ -7,51 +7,50 @@ import { ALL_PUBLIC_TASKS } from "../../../Queries/Task";
 
 import StyledFeedback from "../../../styles/StyledFeedback";
 import ManageFavorite from "../../../User/ManageFavorite";
+import useTranslation from 'next-translate/useTranslation';
 
-const questionTitles = {
-  SUBMITTED_AS_PROPOSAL: {
-    1: {
-      title:
-        "Is this proposal ready to move forward or do you feel it needs further development or revisions?",
-    },
-    2: { title: "What does the study do well?" },
-    3: {
-      title:
-        "Is the investigation question answerable using MindHive tools? Do the proposed tasks and surveys align with the investigation question?",
-    },
-    4: {
-      title: "Is the investigation question answerable using MindHive tools?",
-    },
-    5: { title: "Additional comments or suggestions" },
-  },
-  PEER_REVIEW: {
-    1: {
-      title: "How important is the investigation question?",
-    },
-    2: {
-      title: "How well-defined is the hypothesis?",
-    },
-    3: {
-      title:
-        "How well does the study design address the investigation question?",
-    },
-    4: {
-      title:
-        "How do the researchers address potential confounds and biases in their study design?",
-    },
-    5: {
-      title:
-        "How well does the study respect participants’ privacy, health, and effort?",
-    },
-    6: {
-      title: "What was it like to participate in the study?",
-    },
-  },
-};
+
 
 export default function Board({ user, projectId, status, reviews }) {
+  const { t } = useTranslation('builder');
   const { data: publicTasksData } = useQuery(ALL_PUBLIC_TASKS);
   const publicTasks = publicTasksData?.tasks || [];
+
+  const questionTitles = {
+    SUBMITTED_AS_PROPOSAL: {
+      1: {
+        title: t('reviewTemplate.proposalReadyQuestion'),
+      },
+      2: { title: t('reviewTemplate.whatDoesStudyDoWell') },
+      3: {
+        title: t('reviewTemplate.isQuestionAnswerable'),
+      },
+      4: {
+        title: t('reviewTemplate.isQuestionAnswerable'),
+      },
+      5: { title: t('reviewTemplate.additionalComments') },
+    },
+    PEER_REVIEW: {
+      1: {
+        title: t('reviewTemplate.importanceQuestion'),
+      },
+      2: {
+        title: t('reviewTemplate.hypothesisQuestion'),
+      },
+      3: {
+        title: t('reviewTemplate.designQuestion'),
+      },
+      4: {
+        title: t('reviewTemplate.confoundsQuestion'),
+      },
+      5: {
+        title: t('reviewTemplate.respectQuestion'),
+      },
+      6: {
+        title: t('reviewTemplate.participationQuestion'),
+      },
+    },
+  };
 
   const [editReview, { data }] = useMutation(EDIT_REVIEW, {});
 
