@@ -147,6 +147,7 @@
 			"title": "Organisatie"
 		}
 	},
+	"returnDashboard": "Terug naar dashboard",
 	"searchPlaceholder": "Zoeken op naam, onderwerp of interessegebied",
 	"steps": {
 		"aboutMe": "2. Over mij",
@@ -156,6 +157,7 @@
 	},
 	"syncInPersonVisit": "Een lesbezoek afleggen om met programmastudenten over je werk te praten (persoonlijk).",
 	"syncZoomVisit": "Een lesbezoek afleggen om met programmastudenten over je werk te praten (via Zoom).",
+	"underConstruction": "In aanbouw 🚧",
 	"unofficialBio": "Onofficiële biografie",
 	"usersPerPage": "Aantal gebruikers per pagina",
 	"videoNotSupported": "Uw browser ondersteunt de videotag niet.",
