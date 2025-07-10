@@ -1,12 +1,14 @@
 import useForm from "../../../../../lib/useForm";
 import { useMutation } from "@apollo/client";
 import AssignmentModal from "./Modal";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_CLASS } from "../../../../Queries/Classes";
 import { EDIT_ASSIGNMENT } from "../../../../Mutations/Assignment";
 import { GET_ASSIGNMENT } from "../../../../Queries/Assignment";
 
 export default function EditAssignment({ assignment, myclass }) {
+  const { t } = useTranslation("classes");
   const { inputs, handleChange, clearForm } = useForm({
     ...assignment,
   });
@@ -39,13 +41,13 @@ export default function EditAssignment({ assignment, myclass }) {
 
   return (
     <AssignmentModal
-      btnName="Save"
+      btnName={t("assignment.save")}
       inputs={inputs}
       handleChange={handleChange}
       submit={handleSave}
     >
       <div>
-        <button>Edit assignment</button>
+        <button>{t("assignment.editAssignment")}</button>
       </div>
     </AssignmentModal>
   );

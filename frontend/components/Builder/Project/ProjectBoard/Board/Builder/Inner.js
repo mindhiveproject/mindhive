@@ -1,31 +1,26 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { v1 as uuidv1 } from "uuid";
 import Sections from "./Sections";
-
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
+import useTranslation from "next-translate/useTranslation";
 
-class Inner extends Component {
-  state = {
-    title: "",
-  };
+export default function Inner(props) {
+  const [title, setTitle] = useState("");
+  const { t } = useTranslation("builder");
 
-  handleChange = (e) => {
+  const handleChange = (e) => {
     const { name, type, value } = e.target;
-    const val = type === "number" ? parseFloat(value) : value;
-    this.setState({
-      [name]: value,
-    });
+    setTitle(value);
   };
 
-  createSection = (id) => {
-    this.props.onCreateSection({
+  const createSection = (id) => {
+    props.onCreateSection({
       variables: {
         boardId: id,
-        title: this.state.title,
+        title: title,
         position:
-          this.props.sections && this.props.sections.length > 0
-            ? this.props.sections[this.props.sections.length - 1].position +
-              16384
+          props.sections && props.sections.length > 0
+            ? props.sections[props.sections.length - 1].position + 16384
             : 16384,
       },
       update: (cache, { data: { createProposalSection } }) => {
@@ -55,24 +50,21 @@ class Inner extends Component {
           __typename: "ProposalSection",
           id: uuidv1(),
           boardId: id,
-          title: this.state.title,
+          title: title,
           description: null,
           position:
-            this.props.sections && this.props.sections.length > 0
-              ? this.props.sections[this.props.sections.length - 1].position +
-                16384
+            props.sections && props.sections.length > 0
+              ? props.sections[props.sections.length - 1].position + 16384
               : 16384,
           cards: [],
         },
       },
     });
-    this.setState({
-      title: "",
-    });
+    setTitle("");
   };
 
-  deleteSection = (id) => {
-    this.props.onDeleteSection({
+  const deleteSection = (id) => {
+    props.onDeleteSection({
       variables: {
         id,
       },
@@ -89,55 +81,47 @@ class Inner extends Component {
     });
   };
 
-  componentDidMount() {
-    // things to do after the component mounted
-  }
+  const { board, sections, proposalBuildMode } = props;
 
-  render() {
-    const { board, sections, proposalBuildMode } = this.props;
-
-    return (
-      <div className="inner">
-        <div className="scrollable">
-          <Sections
-            boardId={board?.id}
-            sections={sections}
-            onSetSections={this.props.onSetSections}
-            deleteSection={this.deleteSection}
-            onUpdateSection={this.props.onUpdateSection}
-            openCard={this.props.openCard}
-            proposalBuildMode={proposalBuildMode}
-            adminMode={this.props.adminMode}
-            isPreview={this.props.isPreview}
-            settings={board?.settings}
-            submitStatuses={this.props.submitStatuses}
-          />
-        </div>
-        {!this.props.isPreview && board?.settings?.allowAddingSections && (
-          <div>
-            <div className="newInput">
-              <div>New section</div>
-              <input
-                type="text"
-                id="sectionTitle"
-                name="title"
-                placeholder=""
-                value={this.state.title}
-                onChange={this.handleChange}
-                required
-              />
-              <div
-                className="addBtn"
-                onClick={() => this.createSection(board.id)}
-              >
-                Add section
-              </div>
+  return (
+    <div className="inner">
+      <div className="scrollable">
+        <Sections
+          boardId={board?.id}
+          sections={sections}
+          onSetSections={props.onSetSections}
+          deleteSection={deleteSection}
+          onUpdateSection={props.onUpdateSection}
+          openCard={props.openCard}
+          proposalBuildMode={proposalBuildMode}
+          adminMode={props.adminMode}
+          isPreview={props.isPreview}
+          settings={board?.settings}
+          submitStatuses={props.submitStatuses}
+        />
+      </div>
+      {!props.isPreview && board?.settings?.allowAddingSections && (
+        <div>
+          <div className="newInput">
+            <div>{t("inner.newSection", "New section")}</div>
+            <input
+              type="text"
+              id="sectionTitle"
+              name="title"
+              placeholder={t("inner.sectionTitlePlaceholder", "Enter section title")}
+              value={title}
+              onChange={handleChange}
+              required
+            />
+            <div
+              className="addBtn"
+              onClick={() => createSection(board.id)}
+            >
+              {t("inner.addSection", "Add section")}
             </div>
           </div>
-        )}
-      </div>
-    );
-  }
+        </div>
+      )}
+    </div>
+  );
 }
-
-export default Inner;

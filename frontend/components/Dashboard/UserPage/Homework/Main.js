@@ -1,8 +1,10 @@
 import moment from "moment";
 import Link from "next/link";
 import HomeworkPage from "./HomeworkPage";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Homework({ query, user, profile }) {
+  const { t } = useTranslation("classes");
   const homeworks = profile?.authorOfHomework || [];
 
   const { homework } = query;
@@ -10,7 +12,7 @@ export default function Homework({ query, user, profile }) {
   if (homeworks.length === 0) {
     return (
       <div className="empty">
-        <div>The student hasn’t written any homework yet.</div>
+        <div>{t("homework.noHomeworkYet")}</div>
       </div>
     );
   }
@@ -30,10 +32,10 @@ export default function Homework({ query, user, profile }) {
     <div>
       <div className="journalWrapperLine">
         <div className="journalListHeader">
-          <div>Homework title</div>
-          <div>Assignment title</div>
-          <div>Date created</div>
-          <div>Date updated</div>
+          <div>{t("homework.homeworkTitle")}</div>
+          <div>{t("homework.assignmentTitle")}</div>
+          <div>{t("homework.dateCreated")}</div>
+          <div>{t("homework.dateUpdated")}</div>
         </div>
         <div></div>
       </div>

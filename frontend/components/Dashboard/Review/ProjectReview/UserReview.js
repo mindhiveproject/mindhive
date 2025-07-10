@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_REVIEW } from "../../../Queries/Review";
 
@@ -10,7 +11,7 @@ import Questions from "./Review/Main";
 
 import useForm from "../../../../lib/useForm";
 
-import { TemplateQuestions } from "./Review/Template";
+import { useTemplateQuestions } from "./Review/Template";
 import { useEffect } from "react";
 import Feedback from "../Feedback/Main";
 
@@ -24,6 +25,7 @@ export default function UserReview({
   actionCardType,
   canReview,
 }) {
+  const { t } = useTranslation("builder");
   // try to get the user review
   const { data, loading, error } = useQuery(GET_REVIEW, {
     variables: {
@@ -37,8 +39,9 @@ export default function UserReview({
   const reviews = data?.reviews || [];
   const review = reviews.length ? reviews[0] : {};
 
-  // TODO to make templates for other stages of review
-  const defaultContent = TemplateQuestions[status];
+  // Use the template hook for translated questions
+  const templates = useTemplateQuestions();
+  const defaultContent = templates[status];
 
   const { inputs, handleChange, resetForm, handleMultipleUpdate } = useForm({
     id: review?.id,
@@ -107,7 +110,7 @@ export default function UserReview({
                   : "headerMenuTitle"
               }
             >
-              <p>Proposal</p>
+              <p>{t("reviewDetail.proposalTab")}</p>
             </Link>
 
             <Link
@@ -126,7 +129,7 @@ export default function UserReview({
               }
             >
               <p>
-                Comments (
+                {t("reviewDetail.commentsTab")} (
                 {project?.reviews?.filter((r) => r?.stage === status).length})
               </p>
             </Link>

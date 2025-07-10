@@ -1,6 +1,8 @@
 import Homework from "./Homework";
+import useTranslation from "next-translate/useTranslation";
 
 export default function StudentWork({ studentId, project }) {
+  const { t } = useTranslation("builder");
   const proposal = project || { sections: [] };
 
   const { title, description, sections } = proposal;
@@ -29,9 +31,11 @@ export default function StudentWork({ studentId, project }) {
 
   return (
     <>
-      {allCardsContent.map((card) => (
-        <Homework card={card} />
-      ))}
+      {allCardsContent.length === 0 ? (
+        <div>{t("reviewDetail.noIndividualWork")}</div>
+      ) : (
+        allCardsContent.map((card) => <Homework card={card} />)
+      )}
     </>
   );
 }

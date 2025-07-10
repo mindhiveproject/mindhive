@@ -1,11 +1,13 @@
 import useForm from "../../../../../lib/useForm";
 import { useMutation } from "@apollo/client";
 import AssignmentModal from "../../../Assignment/Modal";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_MY_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import { CREATE_ASSIGNMENT } from "../../../../Mutations/Assignment";
 
 export default function NewAssignment({ user, myclass, assignment, children }) {
+  const { t } = useTranslation("common");
   const { inputs, handleChange, clearForm } = useForm({
     title: assignment?.title || "",
     content: assignment?.content || "",
@@ -34,7 +36,7 @@ export default function NewAssignment({ user, myclass, assignment, children }) {
 
   return (
     <AssignmentModal
-      btnName="Save"
+      btnName={t("assignments.save")}
       inputs={inputs}
       handleChange={handleChange}
       submit={handleSave}

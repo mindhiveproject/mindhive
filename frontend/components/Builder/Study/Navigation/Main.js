@@ -34,7 +34,7 @@ export default function Navigation({
     },
     // {
     //   value: "review",
-    //   name: t("review"),
+    //   name: t("review.review"),
     // },
     {
       value: "collect",

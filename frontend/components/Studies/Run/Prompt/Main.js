@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 
 import { useRouter } from "next/dist/client/router";
+import useTranslation from "next-translate/useTranslation";
 
 import DataUsageForParticipant from "./DataUsage/Participant";
 import DataUsageForStudent from "./DataUsage/Student";
@@ -24,6 +25,7 @@ export default function Prompt({
   token,
 }) {
   const router = useRouter();
+  const { t } = useTranslation('common');
 
   // ToDo: find whether the user already gave data usage consent to this study
   // If the study changed the consent should be given again
@@ -66,7 +68,7 @@ export default function Prompt({
 
   const closeDataUseQuestion = () => {
     if (!dataUse) {
-      alert("Please answer the question first");
+      alert(t('prompt.pleaseAnswer'));
     } else {
       setAskDataUsageQuestion(false);
     }
@@ -114,7 +116,7 @@ export default function Prompt({
     return (
       <div className="prompt">
         <div>
-          <h1>Thank you for participating in this task!</h1>
+          <h1>{t('prompt.thankYou')}</h1>
           {isStudent ? (
             <DataUsageForStudent dataUse={dataUse} setDataUse={setDataUse} />
           ) : (
@@ -123,7 +125,7 @@ export default function Prompt({
               setDataUse={setDataUse}
             />
           )}
-          <button onClick={() => closeDataUseQuestion()}>Next</button>
+          <button onClick={() => closeDataUseQuestion()}>{t('prompt.next')}</button>
         </div>
       </div>
     );
@@ -136,7 +138,7 @@ export default function Prompt({
           <button
             onClick={() => saveResponsesAndProceed({ proceedToNextTask: true })}
           >
-            Proceed to the next task
+            {t('prompt.proceedNextTask')}
           </button>
         )}
       </div>
@@ -145,7 +147,7 @@ export default function Prompt({
         style={{ textDecoration: "underline", cursor: "pointer" }}
         onClick={() => saveResponsesAndProceed({ proceedToNextTask: false })}
       >
-        Go back to the main study page
+        {t('prompt.goBack')}
       </p>
     </div>
   );

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 import { GET_STUDENTS_DATA } from "../../../../Queries/Classes";
 
 // Mandatory CSS required by the Data Grid
@@ -16,6 +17,7 @@ export default function HomeworkCompletion({
   query,
   assignments,
 }) {
+  const { t } = useTranslation("classes");
   const assignmentsPublic = assignments.filter((a) => a?.public);
 
   const { data, loading, error } = useQuery(GET_STUDENTS_DATA, {
@@ -64,7 +66,7 @@ export default function HomeworkCompletion({
             },
           }}
         >
-          <p>← Go back</p>
+          <p>{t("assignment.goBack")}</p>
         </Link>
         <p></p>
       </div>

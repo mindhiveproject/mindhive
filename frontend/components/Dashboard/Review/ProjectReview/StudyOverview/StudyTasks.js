@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import TaskBlock from "./Blocks/TaskBlock";
 import { Popup } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { StyledTasksPreview } from "../../../../styles/StyledStudyPage";
 
 export default function StudyTasks({ study }) {
+  const { t } = useTranslation("builder");
   const flow = study?.flow || {};
 
   const [paths, setPaths] = useState([]);
@@ -121,7 +123,7 @@ export default function StudyTasks({ study }) {
   }, [study]);
 
   if (Object.values(paths).length === 0) {
-    return <p>No tasks found</p>;
+    return <p>{t("selector.studyDesign.noTasksFound")}</p>;
   }
 
   return (
@@ -133,9 +135,7 @@ export default function StudyTasks({ study }) {
               <div className="firstLine">
                 <div>{label}</div>
                 <Popup
-                  content={
-                    "The probability that a participant is in this between-subjects condition (based on a simulated run of the study for 100 times)."
-                  }
+                  content={t("selector.studyDesign.conditionProbabilityInfo")}
                   trigger={<div>{frequency}%</div>}
                   size="huge"
                 />

@@ -2,8 +2,10 @@ import { useQuery } from "@apollo/client";
 import { GET_TAGS } from "../../Queries/Tag";
 
 import { Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function TagSelector({ handleChange, parentTag }) {
+  const { t } = useTranslation("common");
   const { data, error, loading } = useQuery(GET_TAGS);
 
   const tags =
@@ -16,7 +18,7 @@ export default function TagSelector({ handleChange, parentTag }) {
   const tagsIncludingEmpty = [
     {
       key: 0,
-      text: "❌    No parent tag",
+      text: `❌    ${t("tag.noParentTag")}`,
       value: "$$$-parent-not-connected-$$$",
     },
     ...tags,
@@ -36,7 +38,7 @@ export default function TagSelector({ handleChange, parentTag }) {
   return (
     <div>
       <label htmlFor="parent">
-        Select parent tag
+        {t("tag.selectParentTag")}
         <Dropdown
           placeholder=""
           fluid

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import React from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import PropTypes from "prop-types";
 
@@ -25,6 +26,7 @@ const ErrorStyles = styled.div`
 `;
 
 const DisplayError = ({ error }) => {
+  const { t } = useTranslation('common');
   if (!error || !error.message) return null;
   if (
     error.networkError &&
@@ -35,7 +37,7 @@ const DisplayError = ({ error }) => {
       <ErrorStyles key={i}>
         <div className="errorInner">
           <p data-test="graphql-error">
-            <strong>Oops!</strong>
+            <strong>{t('error.oops')}</strong>
             {error.message.replace("GraphQL error: ", "")}
           </p>
         </div>
@@ -46,7 +48,7 @@ const DisplayError = ({ error }) => {
     <ErrorStyles>
       <div className="errorInner">
         <p data-test="graphql-error">
-          <strong>Oops!</strong>
+          <strong>{t('error.oops')}</strong>
           {error.message.replace("GraphQL error: ", "")}
         </p>
       </div>

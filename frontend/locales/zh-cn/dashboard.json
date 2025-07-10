@@ -1,7 +1,7 @@
 {
 	"develop": {
-		"headerDescription": "您<0>开发或正在协作</0>的所有研究、任务或调查。",
-		"headerTitle": "开发"
+		"headerDescription": "您<0>已开展或正在合作开展</0>的所有研究、任务或调查。",
+		"headerTitle": "发展"
 	},
 	"update": "更新"
 }

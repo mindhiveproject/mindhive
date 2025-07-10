@@ -1,8 +1,10 @@
 import Head from "next/head";
 import ReactHtmlParser from "react-html-parser";
 import StudyInfo from "./StudyInfo";
+import useTranslation from "next-translate/useTranslation";
 
 export default function StudyPreview({ study, user }) {
+  const { t } = useTranslation("builder");
   const permissions = user?.permissions?.map((p) => p?.name);
   // Students should be able to view the feedback, but they cannot provide reviews for the proposal page
   const canReview =
@@ -29,10 +31,10 @@ export default function StudyPreview({ study, user }) {
 
         <div className="studyInformation">
           {study?.status === "IN_REVIEW" && (
-            <div className="p17">STUDY IN PEER REVIEW</div>
+            <div className="p17">{t("review.studyInPeerReview")}</div>
           )}
           {study?.status === "SUBMITTED_AS_PROPOSAL" && (
-            <div className="p17">PROPOSAL</div>
+            <div className="p17">{t("review.proposal")}</div>
           )}
 
           <div className="h28"> {study?.title}</div>
@@ -44,10 +46,9 @@ export default function StudyPreview({ study, user }) {
             <StudyInfo user={user} study={study} />
           ) : (
             <div className="noStudyDetailsContainer">
-              <div className="p18">You cannot view this section yet</div>
+              <div className="p18">{t("reviewDetail.cannotViewSection")}</div>
               <div>
-                To access this section, you must review or participate in the
-                study once it moves beyond the proposal phase.
+                {t("reviewDetail.cannotViewSectionDescription")}
               </div>
             </div>
           )}

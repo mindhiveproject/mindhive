@@ -53,13 +53,13 @@ export default function Header({ user, myclass }) {
               inputs?.description !== myclass.description) && (
               <div className="submitButton">
                 <button onClick={() => updateClass()} type="submit">
-                  Save
+                  {t("header.save")}
                 </button>
               </div>
             )}
           </div>
         </fieldset>
-        <div className="teacher">Teacher {myclass?.creator?.username}</div>
+        <div className="teacher">{t("header.teacher")} {myclass?.creator?.username}</div>
       </div>
     </StyledForm>
   );

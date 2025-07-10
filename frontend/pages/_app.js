@@ -1,5 +1,11 @@
 import NProgress from "nprogress";
 import Router from "next/router";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
+import Cookies from "js-cookie";
+import { useQuery } from "@apollo/client";
+import { CURRENT_USER_QUERY } from "../components/Queries/User";
 
 import "../components/styles/nprogress.css";
 
@@ -13,12 +19,33 @@ Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
+function useSyncUserLanguage() {
+  const router = useRouter();
+  const { lang } = useTranslation();
+  const { data } = useQuery(CURRENT_USER_QUERY);
+  const user = data?.authenticatedItem;
+
+  useEffect(() => {
+    if (user?.language && user.language.toLowerCase() !== lang) {
+      Cookies.set("NEXT_LOCALE", user.language.toLowerCase());
+      router.push(router.asPath, router.asPath, { locale: user.language.toLowerCase() });
+    }
+  }, [user, lang]);
+}
+
+function LanguageSyncWrapper({ children }) {
+  useSyncUserLanguage();
+  return children;
+}
+
 function MyApp({ Component, pageProps, apollo }) {
   return (
     <ApolloProvider client={apollo}>
       <Site>
         <Authorized>
-          <Component {...pageProps} />
+          <LanguageSyncWrapper>
+            <Component {...pageProps} />
+          </LanguageSyncWrapper>
         </Authorized>
       </Site>
     </ApolloProvider>

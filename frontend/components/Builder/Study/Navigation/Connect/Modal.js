@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Modal } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
+import useTranslation from 'next-translate/useTranslation';
 
 import LinkClass from "./LinkClass";
 import Collaborators from "../../../../Global/Collaborators";
@@ -11,6 +12,7 @@ export default function ConnectModal({
   handleChange,
   updateStudy,
 }) {
+  const { t } = useTranslation('builder');
   const [open, setOpen] = useState(false);
 
   const userClasses = [
@@ -31,17 +33,17 @@ export default function ConnectModal({
       {user?.permissions.map((p) => p?.name).includes("ADMIN") && (
         <Modal.Header>
           <div>
-            Study author is {study?.author?.username || "No Author"} (
-            <em>This information is visible only for ADMIN</em>)
+            {t('connectModal.studyAuthor', { username: study?.author?.username || t('connectModal.noAuthor', 'No Author') })} (
+            <em>{t('connectModal.adminInfo', 'This information is visible only for ADMIN')}</em>)
           </div>
         </Modal.Header>
       )}
       <Modal.Content>
         <Modal.Description>
           <div>
-            <h2>Select the class</h2>
+            <h2>{t('connectModal.selectClass', 'Select the class')}</h2>
             <LinkClass study={study} handleChange={handleChange} />
-            <h2>Add collaborators</h2>
+            <h2>{t('connectModal.addCollaborators', 'Add collaborators')}</h2>
             <Collaborators
               userClasses={userClasses}
               collaborators={collaborators}
@@ -58,7 +60,7 @@ export default function ConnectModal({
             onClick={() => setOpen(false)}
             disabled={false}
           >
-            Close
+            {t('connectModal.close', 'Close')}
           </button>
 
           <button
@@ -69,7 +71,7 @@ export default function ConnectModal({
             }}
             disabled={false}
           >
-            Save & Close
+            {t('connectModal.saveAndClose', 'Save & Close')}
           </button>
         </div>
       </Modal.Actions>

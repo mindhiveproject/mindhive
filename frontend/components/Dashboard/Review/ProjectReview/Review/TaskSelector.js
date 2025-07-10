@@ -2,8 +2,10 @@ import { Dropdown } from "semantic-ui-react";
 
 import { useQuery } from "@apollo/client";
 import { ALL_PUBLIC_TASKS } from "../../../../Queries/Task";
+import useTranslation from "next-translate/useTranslation";
 
 export default function TaskSelector({ name, handleItemChange, answer }) {
+  const { t } = useTranslation("builder");
   const { data } = useQuery(ALL_PUBLIC_TASKS);
   const tasks = data?.tasks || [];
 
@@ -20,7 +22,7 @@ export default function TaskSelector({ name, handleItemChange, answer }) {
 
   return (
     <Dropdown
-      placeholder="Add MindHive survey or task suggestions"
+      placeholder={t("reviewDetail.addTaskSuggestion")}
       fluid
       selection
       multiple

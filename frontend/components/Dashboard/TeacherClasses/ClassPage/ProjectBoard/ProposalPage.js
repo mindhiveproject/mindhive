@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../../../Queries/Proposal";
+import useTranslation from "next-translate/useTranslation";
 
 import { Radio, Icon } from "semantic-ui-react";
 import { useState } from "react";
@@ -14,6 +15,7 @@ export default function ProposalPage({
   proposalBuildMode,
   refetchQueries,
 }) {
+  const { t } = useTranslation("classes");
   const [isPDF, setIsPDF] = useState(false);
   const { data, error, loading } = useQuery(OVERVIEW_PROPOSAL_BOARD_QUERY, {
     variables: {
@@ -27,11 +29,11 @@ export default function ProposalPage({
     <div className="proposalBoard">
       <div className="previewToggle">
         <div className="goBackButton" onClick={goToOverview}>
-          <p>← Go back</p>
+          <p>{t("projectBoard.goBack")}</p>
         </div>
         {/* {proposal?.isSubmitted ? (
           <div>
-            <h3>The proposal has been submitted and locked 🔒</h3>
+            <h3>{t("projectBoard.submittedAndLocked")}</h3>
           </div>
         ) : (
           <>
@@ -45,18 +47,16 @@ export default function ProposalPage({
             <span>
               {isPDF ? (
                 <div className="preview">
-                  Preview
+                  {t("projectBoard.preview")}
                   <span className="alert">
                     <Icon name="info circle" />
                     <span>
-                      Content from cards marked as "complete" in edit mode will
-                      appear here, in preview mode, displaying what your
-                      reviewers will see.
+                      {t("projectBoard.previewInfo")}
                     </span>
                   </span>
                 </div>
               ) : (
-                <div className="preview">Edit</div>
+                <div className="preview">{t("projectBoard.edit")}</div>
               )}
             </span>
           </>

@@ -8,7 +8,7 @@ export default function Header({ user, myclass }) {
       <div className="editableClassHeader">
         <h1>{myclass?.title}</h1>
         <h2>{myclass?.description}</h2>
-        <div className="teacher">Teacher {myclass?.creator?.username}</div>
+        <div className="teacher">{t("teacher")} {myclass?.creator?.username}</div>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 
 import { useQuery } from "@apollo/client";
 import { GET_MY_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
+import useTranslation from "next-translate/useTranslation";
 
 import AssignmentTab from "./Tab";
 import AddAssignment from "./Add";
@@ -10,6 +11,7 @@ import ViewAssignment from "./View";
 import Overview from "../Overview/HomeworkCompletion";
 
 export default function Settings({ myclass, user, query }) {
+  const { t } = useTranslation("classes");
   const router = useRouter();
   const { action, assignment } = query;
 
@@ -55,7 +57,7 @@ export default function Settings({ myclass, user, query }) {
   if (assignments?.length === 0) {
     return (
       <div className="empty">
-        <div>There are no assignments yet.</div>
+        <div>{t("assignment.noAssignments")}</div>
         <Link
           href={{
             pathname: `/dashboard/myclasses/${myclass?.code}`,
@@ -65,7 +67,7 @@ export default function Settings({ myclass, user, query }) {
             },
           }}
         >
-          <button>Add assignment</button>
+          <button>{t("assignment.addAssignment")}</button>
         </Link>
       </div>
     );
@@ -84,7 +86,7 @@ export default function Settings({ myclass, user, query }) {
               },
             }}
           >
-            <button>Add assignment</button>
+            <button>{t("assignment.addAssignment")}</button>
           </Link>
         </div>
         <div>
@@ -97,7 +99,7 @@ export default function Settings({ myclass, user, query }) {
               },
             }}
           >
-            <button className="secondary">Class homework overview</button>
+            <button className="secondary">{t("assignment.classHomeworkOverview")}</button>
           </Link>
         </div>
       </div>

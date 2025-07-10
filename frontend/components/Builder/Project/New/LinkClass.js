@@ -10,7 +10,7 @@ export default function LinkClass({
   handleChange,
   refetchUserProjectsInClass,
 }) {
-  const { t } = useTranslation(builder);
+  const { t } = useTranslation("builder");
   const { data, error, loading } = useQuery(GET_USER_CLASSES);
 
   const user = data?.authenticatedItem || {

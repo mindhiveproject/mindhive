@@ -2,8 +2,10 @@ import { useQuery } from "@apollo/client";
 import { GET_USERNAMES_WHERE } from "../Queries/User";
 
 import { Dropdown } from "semantic-ui-react";
+import useTranslation from 'next-translate/useTranslation';
 
 export default function FindUser({ userClasses, authorId, setAuthorId }) {
+  const { t } = useTranslation('common');
   const { data, loading, error } = useQuery(GET_USERNAMES_WHERE, {
     variables: {
       input: {
@@ -25,7 +27,7 @@ export default function FindUser({ userClasses, authorId, setAuthorId }) {
 
   return (
     <Dropdown
-      placeholder="Type username"
+      placeholder={t('members.typeUsername', 'Type username')}
       search
       selection
       options={users || []}

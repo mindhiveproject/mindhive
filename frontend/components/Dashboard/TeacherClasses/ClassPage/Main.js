@@ -60,7 +60,7 @@ export default function ClassPage({ code, user, query }) {
                     : "menuTitle"
                 }
               >
-                <p>Students</p>
+                <p>{t("main.students")}</p>
               </Link>
 
               <Link
@@ -76,7 +76,7 @@ export default function ClassPage({ code, user, query }) {
                     : "menuTitle"
                 }
               >
-                <p>Dashboard</p>
+                <p>{t("main.dashboard")}</p>
               </Link>
 
               <Link
@@ -92,7 +92,7 @@ export default function ClassPage({ code, user, query }) {
                     : "menuTitle"
                 }
               >
-                <p>Projects</p>
+                <p>{t("main.projects")}</p>
               </Link>
 
               <Link
@@ -108,7 +108,7 @@ export default function ClassPage({ code, user, query }) {
                     : "menuTitle"
                 }
               >
-                <p>Mentors</p>
+                <p>{t("main.mentors")}</p>
               </Link>
 
               <Link
@@ -124,7 +124,7 @@ export default function ClassPage({ code, user, query }) {
                     : "menuTitle"
                 }
               >
-                <p>Studies</p>
+                <p>{t("main.studies")}</p>
               </Link>
 
               <Link
@@ -140,7 +140,7 @@ export default function ClassPage({ code, user, query }) {
                     : "menuTitle"
                 }
               >
-                <p>Assignments</p>
+                <p>{t("main.assignments")}</p>
               </Link>
 
               <Link
@@ -156,7 +156,7 @@ export default function ClassPage({ code, user, query }) {
                     : "menuTitle"
                 }
               >
-                <p>Settings</p>
+                <p>{t("main.settings")}</p>
               </Link>
             </div>
           </div>

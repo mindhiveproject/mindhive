@@ -15,7 +15,7 @@ import { GET_TAGS } from "../../Queries/Tag";
 
 export default function AddTag({ user }) {
   const router = useRouter();
-  const { t } = useTranslation("classes");
+  const { t } = useTranslation("common");
   const { inputs, handleChange, clearForm } = useForm({
     title: "",
     description: "",
@@ -43,7 +43,7 @@ export default function AddTag({ user }) {
   return (
     <div>
       <TagForm inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>Save</button>
+      <button onClick={handleSave}>{t("tag.save")}</button>
     </div>
   );
 }

@@ -6,8 +6,10 @@ import Link from "next/link";
 import Featured from "./Proposals/Featured";
 import MyStudies from "./Proposals/MyStudies";
 import ClassProposals from "./Proposals/ClassProposals";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Wrapper({ user, page }) {
+  const { t } = useTranslation("builder");
   // get all classes of a particular user (including classes from the class network)
   const { data, loading, error } = useQuery(GET_USER_CLASSES);
   const us = data?.authenticatedItem || {
@@ -36,7 +38,7 @@ export default function Wrapper({ user, page }) {
 
   return (
     <div>
-      <h1>Review studies</h1>
+      <h1>{t("reviewWrapper.reviewStudies")}</h1>
       <div>
         <div className="navigationMenu">
           <Link
@@ -49,7 +51,7 @@ export default function Wrapper({ user, page }) {
                 : "navigationTitle"
             }
           >
-            <p>Featured studies</p>
+            <p>{t("reviewWrapper.featuredStudies")}</p>
           </Link>
 
           <Link
@@ -62,7 +64,7 @@ export default function Wrapper({ user, page }) {
                 : "navigationTitle"
             }
           >
-            <p>My studies</p>
+            <p>{t("reviewWrapper.myStudies")}</p>
           </Link>
 
           {allUniqueClasses.map(({ id, title, code }) => (

@@ -1,5 +1,6 @@
 import moment from "moment";
 import Question from "./Question";
+import useTranslation from "next-translate/useTranslation";
 
 export default function QuestionsMain({
   projectId,
@@ -8,17 +9,21 @@ export default function QuestionsMain({
   status,
   handleItemChange,
 }) {
+  const { t } = useTranslation("builder");
   return (
     <div className="panelRight">
       <div className="reviewQuestions">
         <h1>
           {status === "SUBMITTED_AS_PROPOSAL" || status === "PEER_REVIEW"
-            ? "Proposal Feedback"
-            : "Study Feedback"}
+            ? t("reviewDetail.proposalFeedback")
+            : t("reviewDetail.studyFeedback")}
         </h1>
         <div className="subtitle">
-          Help {status === "SUBMITTED_AS_PROPOSAL" ? "students" : "your peers"}{" "}
-          create studies by offering feedback and suggestions.
+          {t(
+            status === "SUBMITTED_AS_PROPOSAL"
+              ? "reviewDetail.helpStudents"
+              : "reviewDetail.helpPeers"
+          )}
         </div>
         <div className="reviewItems">
           {reviewContent?.map((item, i) => (
@@ -33,13 +38,16 @@ export default function QuestionsMain({
         </div>
         {review?.createdAt && (
           <em>
-            Submitted on{" "}
-            {moment(review?.createdAt).format("MMMM D, YYYY, h:mma")}
+            {t("reviewDetail.submittedOn", {
+              date: moment(review?.createdAt).format("MMMM D, YYYY, h:mma"),
+            })}
           </em>
         )}
         {review?.updatedAt && (
           <em>
-            Updated on {moment(review?.updatedAt).format("MMMM D, YYYY, h:mma")}
+            {t("reviewDetail.updatedOn", {
+              date: moment(review?.updatedAt).format("MMMM D, YYYY, h:mma"),
+            })}
           </em>
         )}
       </div>

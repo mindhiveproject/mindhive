@@ -1,9 +1,11 @@
 import absoluteUrl from "next-absolute-url";
 import moment from "moment";
+import useTranslation from "next-translate/useTranslation";
 
 import Modal from "./Modal";
 
 export default function Reviewed({ query, user, profile }) {
+  const { t } = useTranslation("classes");
   const { origin } = absoluteUrl();
 
   const reviews = [
@@ -21,7 +23,7 @@ export default function Reviewed({ query, user, profile }) {
   if (reviews.length === 0) {
     return (
       <div className="empty">
-        <div>The student hasn’t reviewed any studies yet.</div>
+        <div>{t("reviewed.noReviewsYet")}</div>
       </div>
     );
   }
@@ -29,12 +31,12 @@ export default function Reviewed({ query, user, profile }) {
   return (
     <div>
       <div className="headerReviewedStudies">
-        <div>Study title</div>
-        <div>Review</div>
-        <div>Study</div>
-        <div>Proposal</div>
-        <div>Review type</div>
-        <div>Date reviewed</div>
+        <div>{t("reviewed.studyTitle")}</div>
+        <div>{t("reviewed.review")}</div>
+        <div>{t("reviewed.study")}</div>
+        <div>{t("reviewed.proposal")}</div>
+        <div>{t("reviewed.reviewType")}</div>
+        <div>{t("reviewed.dateReviewed")}</div>
       </div>
 
       {reviews.map((review, id) => (
@@ -49,7 +51,7 @@ export default function Reviewed({ query, user, profile }) {
               target="_blank"
               rel="noreferrer"
             >
-              Open
+              {t("reviewed.open")}
             </a>
           </div>
           <div>
@@ -58,7 +60,7 @@ export default function Reviewed({ query, user, profile }) {
               target="_blank"
               rel="noreferrer"
             >
-              Open
+              {t("reviewed.open")}
             </a>
           </div>
           <div>{review?.stage}</div>

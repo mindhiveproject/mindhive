@@ -10,8 +10,10 @@ import Created from "./Created";
 import Reviewed from "./Reviewed/Main";
 import Journal from "./Journal/Main";
 import Homework from "./Homework/Main";
+import useTranslation from 'next-translate/useTranslation';
 
 export default function StudentPage({ query, user }) {
+  const { t } = useTranslation('common');
   const { area, selector } = query;
   const page = query?.page || "projects";
 
@@ -53,7 +55,7 @@ export default function StudentPage({ query, user }) {
               page === "projects" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>Created projects</p>
+            <p>{t('projects.menuTitle')}</p>
           </Link>
 
           <Link
@@ -67,7 +69,7 @@ export default function StudentPage({ query, user }) {
               page === "created" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>Created studies</p>
+            <p>{t('created.menuTitle')}</p>
           </Link>
 
           <Link
@@ -83,7 +85,7 @@ export default function StudentPage({ query, user }) {
                 : "menuTitle"
             }
           >
-            <p>Participated</p>
+            <p>{t('participated.menuTitle')}</p>
           </Link>
 
           <Link
@@ -97,7 +99,7 @@ export default function StudentPage({ query, user }) {
               page === "reviewed" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>Reviewed</p>
+            <p>{t('reviewed.menuTitle')}</p>
           </Link>
 
           <Link
@@ -111,7 +113,7 @@ export default function StudentPage({ query, user }) {
               page === "journal" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>Journal</p>
+            <p>{t('journal.menuTitle')}</p>
           </Link>
 
           <Link
@@ -125,7 +127,7 @@ export default function StudentPage({ query, user }) {
               page === "homework" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>Homework</p>
+            <p>{t('homework.menuTitle')}</p>
           </Link>
         </div>
         <div>

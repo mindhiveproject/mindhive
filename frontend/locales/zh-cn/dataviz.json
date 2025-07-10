@@ -1,7 +1,7 @@
 {
 	"overview": {
 		"database": {
-			"csvDownloadMessage": "给即将下载的 CSV 命名\\n无需添加 '.csv'，我们会处理这个！",
+			"csvDownloadMessage": "为您即将下载的 CSV 命名\\n无需添加“.csv”，我们会处理好这个！",
 			"returnBrowse": "返回浏览",
 			"sectionTitle": "活动数据"
 		}

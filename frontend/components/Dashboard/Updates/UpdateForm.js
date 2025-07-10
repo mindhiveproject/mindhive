@@ -2,6 +2,7 @@ import FindMembersWhere from "../../Find/SearchMembers";
 import JoditEditor from "../../Jodit/Editor";
 import { StyledInput } from "../../styles/StyledForm";
 import { Radio } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function UpdateForm({
   inputs,
@@ -9,6 +10,7 @@ export default function UpdateForm({
   loading,
   creationMode,
 }) {
+  const { t } = useTranslation("common");
   const setContent = (content) =>
     handleChange({
       target: { name: "description", value: content },
@@ -28,7 +30,7 @@ export default function UpdateForm({
 
       <div>
         <label htmlFor="title">
-          Title
+          {t("update.title")}
           <input
             type="text"
             name="title"
@@ -41,7 +43,7 @@ export default function UpdateForm({
 
       <div>
         <label htmlFor="link">
-          Link
+          {t("update.link")}
           <input
             type="text"
             name="link"
@@ -55,7 +57,7 @@ export default function UpdateForm({
       <JoditEditor content={inputs.description} setContent={setContent} />
 
       <div className="iconTitle">
-        <div>Send an email</div>
+        <div>{t("update.sendEmail")}</div>
         <Radio
           toggle
           checked={inputs?.sendEmail}

@@ -3,16 +3,16 @@ import useTranslation from "next-translate/useTranslation";
 import { Divider } from "semantic-ui-react";
 
 export default function Main({ query, user }) {
-  const { t } = useTranslation("account");
+  const { t } = useTranslation("common");
 
   return (
     <>
-      <h1>Settings</h1>
+      <h1>{t("settings.title")}</h1>
 
-      <h3>You can update your MindHive account and privacy settings here</h3>
+      <h3>{t("settings.description")}</h3>
 
       <div className="quickLinks">
-        <div className="p24">Quick Links</div>
+        <div className="p24">{t("settings.quickLinks")}</div>
         <div className="links">
           <Link
             href={{
@@ -24,7 +24,7 @@ export default function Main({ query, user }) {
                 <img src={`/assets/icons/profile/email.svg`} alt="email" />
               </div>
               <div className="content">
-                <div className="p18">Email</div>
+                <div className="p18">{t("settings.email")}</div>
                 <div>{user?.email}</div>
               </div>
               <div>
@@ -48,7 +48,7 @@ export default function Main({ query, user }) {
                 />
               </div>
               <div className="content">
-                <div className="p18">Username</div>
+                <div className="p18">{t("settings.username")}</div>
                 <div>{user?.username}</div>
               </div>
               <div>
@@ -72,8 +72,8 @@ export default function Main({ query, user }) {
                 />
               </div>
               <div className="content">
-                <div className="p18">Languages</div>
-                <div>Set your language preferences</div>
+                <div className="p18">{t("settings.languages")}</div>
+                <div>{t("settings.languagePreferences")}</div>
               </div>
               <div>
                 <img src={`/assets/icons/profile/arrow.svg`} alt="arrow" />
@@ -93,8 +93,8 @@ export default function Main({ query, user }) {
                 <img src={`/assets/icons/profile/consent.svg`} alt="consent" />
               </div>
               <div className="content">
-                <div className="p18">Data and Consent Settings</div>
-                <div>Manage the usage of personal information</div>
+                <div className="p18">{t("settings.dataConsent")}</div>
+                <div>{t("settings.dataConsentDescription")}</div>
               </div>
               <div>
                 <img src={`/assets/icons/profile/arrow.svg`} alt="arrow" />

@@ -1,27 +1,28 @@
 import { useState } from "react";
 import { Menu } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import Feedback from "../../../../Dashboard/Review/Feedback/Main";
 
-const tabs = [
-  {
-    value: "proposal",
-    name: "Proposal Feedback",
-    stage: "SUBMITTED_AS_PROPOSAL",
-  },
-  {
-    value: "peer",
-    name: "Peer Feedback",
-    stage: "PEER_REVIEW",
-  },
-  {
-    value: "report",
-    name: "Project Report Feedback",
-    stage: "PROJECT_REPORT",
-  },
-];
-
 export default function FeedbackTabs({ user, query, proposal, selectReview }) {
+  const { t } = useTranslation("builder");
+  const tabs = [
+    {
+      value: "proposal",
+      name: t("reviewTabs.proposalFeedback", "Proposal Feedback"),
+      stage: "SUBMITTED_AS_PROPOSAL",
+    },
+    {
+      value: "peer",
+      name: t("reviewTabs.peerFeedback", "Peer Feedback"),
+      stage: "PEER_REVIEW",
+    },
+    {
+      value: "report",
+      name: t("reviewTabs.projectReportFeedback", "Project Report Feedback"),
+      stage: "PROJECT_REPORT",
+    },
+  ];
   const [feedbackTab, setFeedbackTab] = useState("SUBMITTED_AS_PROPOSAL");
 
   return (

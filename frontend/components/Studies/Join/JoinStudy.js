@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
+import useTranslation from "next-translate/useTranslation";
 
 import { JOIN_STUDY_MUTATION } from "../../Mutations/User";
 import { GET_USER_STUDIES } from "../../Queries/User";
@@ -15,7 +16,7 @@ const isUnder18 = (birthdayTimestamp) => {
 
 // function to join the study from any place
 export default function JoinStudy({ user, study, userInfo, btnName }) {
-
+    const { t } = useTranslation('common');
     const router = useRouter();
     const { settings } = study;
 
@@ -86,9 +87,9 @@ export default function JoinStudy({ user, study, userInfo, btnName }) {
          // check the age and block the minor
         if(settings?.minorsBlocked) {
             if(!userInfo?.bd) {
-                return alert("Please enter your date of birth");
+                return alert(t('join.details.error.enterDob'));
             } else if (isUnder18(userInfo?.bd)) {
-                return alert("We are very sorry but only participants who are 18 or older can take part in this study at this time.");
+                return alert(t('join.details.error.minorBlocked'));
             }
         }
         if(userInfo?.guest === "true") {

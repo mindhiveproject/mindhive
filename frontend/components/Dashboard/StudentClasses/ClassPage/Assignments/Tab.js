@@ -2,8 +2,10 @@ import absoluteUrl from "next-absolute-url";
 import { Icon, Popup } from "semantic-ui-react";
 import moment from "moment";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 export default function AssignmentTab({ assignment, myclass, user, query }) {
+  const { t } = useTranslation("common");
   const { origin } = absoluteUrl();
 
   const copyLink = () => {
@@ -14,7 +16,7 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
     temp.select();
     document.execCommand("copy");
     temp.remove();
-    alert("The link is copied");
+    alert(t("assignments.linkCopied"));
   };
 
   return (
@@ -39,11 +41,11 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
                   pathname: `/dashboard/assignments/${assignment?.code}`,
                 }}
               >
-                <button className="secondary">Open</button>
+                <button className="secondary">{t("assignments.open")}</button>
               </Link>
 
               <button className="secondary" onClick={() => copyLink()}>
-                Copy link
+                {t("assignments.copyLink")}
               </button>
             </div>
           </>

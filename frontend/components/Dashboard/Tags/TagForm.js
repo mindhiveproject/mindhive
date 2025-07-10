@@ -2,8 +2,10 @@ import JoditEditor from "../../Jodit/Editor";
 import { StyledInput } from "../../styles/StyledForm";
 import LevelSelector from "./Level";
 import TagSelector from "./Selector";
+import useTranslation from "next-translate/useTranslation";
 
 export default function TagForm({ inputs, handleChange, loading }) {
+  const { t } = useTranslation("common");
   const setContent = (content) =>
     handleChange({
       target: { name: "description", value: content },
@@ -15,7 +17,7 @@ export default function TagForm({ inputs, handleChange, loading }) {
 
       <div>
         <label htmlFor="title">
-          Title
+          {t("tag.title")}
           <input
             type="text"
             name="title"

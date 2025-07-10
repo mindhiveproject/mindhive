@@ -1,169 +1,169 @@
 {
-  "createProfile": "Create Profile",
-  "steps": {
-    "profileType": "1. Profile Type",
-    "aboutMe": "2. About Me",
-    "interests": "3. Interests",
-    "complete": "4. Complete"
-  },
-  "profileType": {
-    "description": "Set up your MindHive profile by selecting one of the options below. Are you creating a personal profile for yourself, or setting up a page for your organization?",
-    "chooseType": "Choose your profile type",
-    "organization": {
-      "title": "Organization",
-      "description": "This profile is most appropriate when you are creating an account to represent a community organization or company."
-    },
-    "individual": {
-      "title": "Individual",
-      "description": "This profile is most appropriate when you are creating an account for yourself."
-    }
-  },
-  "navigation": {
-    "previous": "Previous",
-    "next": "Next"
-  },
-  "basic": {
-    "description": "Please complete the following items to create your profile and connect with the MindHive community.",
-    "title": "Basic Information",
-    "subtitle": "Your basic information helps the MindHive community get to know you better. This includes who you are, where you're located, and what you look like.",
-    "profilePhoto": "Profile Photo",
-    "firstName": "First Name",
-    "lastName": "Last Name",
-    "email": "Email",
-    "pronouns": "Pronouns",
-    "pronounsOptions": {
-      "she": "She/Her",
-      "he": "He/Him",
-      "they": "They/Them"
-    },
-    "location": "Location",
-    "organization": "Organization if applicable",
-    "tagline": "Tagline",
-    "saveChanges": "Save Changes"
-  },
-  "avatar": {
-    "title": "Create your avatar",
-    "upload": "Upload",
-    "error": "Please upload an image"
-  },
-  "background": {
-    "title": "Background",
-    "description": "Let's get to know you better! Please fill out your background information so others in the MindHive community can connect with you more easily.",
-    "officialBio": {
-      "title": "Official Bio",
-      "description": "In ~100 words, describe your expertise, experience, and educational background for a high school audience."
-    },
-    "unofficialBio": {
-      "title": "Unofficial Bio",
-      "description": "In a couple of sentences, describe your journey leading to where you are now, professionally. And look ahead to the next 5 years or beyond. The goal is for students to understand that professional lives are not always a straight path and that there are coincidences, good luck and bad luck, and sometimes multiple career paths hidden behind official bios you might read on a scientist's website."
-    },
-    "occupation": {
-      "title": "Occupation"
-    },
-    "education": {
-      "title": "Education",
-      "institution": "Institution",
-      "degree": "Degree",
-      "addInstitution": "Add another institution"
-    },
-    "languages": {
-      "title": "Language",
-      "addLanguage": "Add another language"
-    },
-    "saveChanges": "Save Changes"
-  },
-  "introduction": {
-    "title": "Introduction Video",
-    "description": "We'd love for you to upload an introduction video to share with students and fellow MindHive members. You can use it to share a project you think students might get excited about.",
-    "videoNotSupported": "Your browser does not support the video tag.",
-    "passion": {
-      "title": "What are you passionate about right now?",
-      "description": "For example, you can briefly describe a science project you are working on. Or you can tell us about your experience bringing science to the public. This is your space to showcase what you're currently working on and how it shapes the expertise you bring to our community."
-    },
-    "saveChanges": "Save changes"
-  },
-  "videoUploader": {
-    "dragAndDrop": "Drag and drop video file to upload",
-    "selectFile": "Select file",
-    "uploadProgress": "Upload Progress: {{progress}}%",
-    "error": "There was an error with the video upload. Please try again.",
-    "invalidFile": "Please select a video file."
-  },
-  "preferences": {
-    "title": "Your Involvement",
-    "description": "Please complete the following items to let us know the details of your involvement.",
-    "availability": {
-      "title": "Please indicate below how you are available to partner with us (select all that apply).",
-      "async": {
-        "title": "Asynchronous",
-        "answeringQuestions": "Answering student questions (based on your profile).",
-        "providingFeedback": "Providing feedback on student projects"
-      },
-      "sync": {
-        "title": "Synchronous",
-        "inPersonVisit": "Making an in-class visit to talk with program students about your work (in-person).",
-        "zoomVisit": "Making an in-class visit to talk with program students about your work (over Zoom)."
-      }
-    },
-    "gradeLevel": {
-      "title": "Grade Level",
-      "description": "Tell us about the grade levels you feel most comfortable supporting as a mentor. Select all that apply.",
-      "options": {
-        "middle": "Middle School",
-        "nine": "9 - 10 Grade",
-        "eleven": "11 - 12 Grade",
-        "no": "No Preference"
-      }
-    },
-    "groupPreference": {
-      "title": "Individual vs Group",
-      "description": "Do you prefer supporting individuals or groups in mentorship sessions? Select all that apply.",
-      "options": {
-        "individual": "Individual",
-        "group": "Group",
-        "no": "No Preference"
-      }
-    },
-    "classType": {
-      "title": "Class Type",
-      "description": "Tell us about what type of classroom you would most like to mentor. Select all that apply.",
-      "options": {
-        "accelerated": "Accelerated",
-        "nonAccelerated": "Non Accelerated",
-        "ell": "ELL",
-        "no": "No Preference"
-      }
-    },
-    "saveChanges": "Save changes"
-  },
-  "interests": {
-    "title": "Where can you help?",
-    "description": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions."
-  },
-  "interestSelector": {
-    "searchTitle": "Search interests",
-    "minMax": "Min 3, Max 10",
-    "placeholder": "Begin typing to search for interests",
-    "suggestedTitle": "Suggested interests",
-    "add": "add",
-    "navButtons": {
-      "previous": "Previous",
-      "complete": "Complete"
-    }
-  },
-  "myConnections": "My connections",
-  "connectWithPeople": "Connect with people",
-  "connectSubtitle": "Search for, discover, and connect with the MindHive community",
-  "searchPlaceholder": "Search by name, topic, or area of interest",
-  "usersPerPage": "Number of users per page",
-  "officialBio": "Official Bio",
-  "unofficialBio": "Unofficial Bio",
-  "introductionVideo": "Introduction Video",
-  "videoNotSupported": "Your browser does not support the video tag.",
-  "passionNow": "What are you passionate about right now?",
-  "availability": "Availability",
-  "asyncAnsweringQuestions": "Answering student questions (based on your profile).",
-  "asyncProvidingFeedback": "Providing feedback on student projects",
-  "syncInPersonVisit": "Making an in-class visit to talk with program students about your work (in-person).",
-  "syncZoomVisit": "Making an in-class visit to talk with program students about your work (over Zoom)."
-} 
+	"asyncAnsweringQuestions": "Answering student questions (based on your profile).",
+	"asyncProvidingFeedback": "Providing feedback on student projects",
+	"availability": "Availability",
+	"avatar": {
+		"error": "Please upload an image",
+		"title": "Create your avatar",
+		"upload": "Upload"
+	},
+	"background": {
+		"description": "Let's get to know you better! Please fill out your background information so others in the MindHive community can connect with you more easily.",
+		"education": {
+			"addInstitution": "Add another institution",
+			"degree": "Degree",
+			"institution": "Institution",
+			"title": "Education"
+		},
+		"languages": {
+			"addLanguage": "Add another language",
+			"title": "Language"
+		},
+		"occupation": {
+			"title": "Occupation"
+		},
+		"officialBio": {
+			"description": "In ~100 words, describe your expertise, experience, and educational background for a high school audience.",
+			"title": "Official Bio"
+		},
+		"saveChanges": "Save Changes",
+		"title": "Background",
+		"unofficialBio": {
+			"description": "In a couple of sentences, describe your journey leading to where you are now, professionally. And look ahead to the next 5 years or beyond. The goal is for students to understand that professional lives are not always a straight path and that there are coincidences, good luck and bad luck, and sometimes multiple career paths hidden behind official bios you might read on a scientist's website.",
+			"title": "Unofficial Bio"
+		}
+	},
+	"basic": {
+		"description": "Please complete the following items to create your profile and connect with the MindHive community.",
+		"email": "Email",
+		"firstName": "First Name",
+		"lastName": "Last Name",
+		"location": "Location",
+		"organization": "Organization if applicable",
+		"profilePhoto": "Profile Photo",
+		"pronouns": "Pronouns",
+		"pronounsOptions": {
+			"he": "He/Him",
+			"she": "She/Her",
+			"they": "They/Them"
+		},
+		"saveChanges": "Save Changes",
+		"subtitle": "Your basic information helps the MindHive community get to know you better. This includes who you are, where you're located, and what you look like.",
+		"tagline": "Tagline",
+		"title": "Basic Information"
+	},
+	"connectSubtitle": "Search for, discover, and connect with the MindHive community",
+	"connectWithPeople": "Connect with people",
+	"createProfile": "Create Profile",
+	"interests": {
+		"description": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions.",
+		"title": "Where can you help?"
+	},
+	"interestSelector": {
+		"add": "add",
+		"minMax": "Min 3, Max 10",
+		"navButtons": {
+			"complete": "Complete",
+			"previous": "Previous"
+		},
+		"placeholder": "Begin typing to search for interests",
+		"searchTitle": "Search interests",
+		"suggestedTitle": "Suggested interests"
+	},
+	"introduction": {
+		"description": "We'd love for you to upload an introduction video to share with students and fellow MindHive members. You can use it to share a project you think students might get excited about.",
+		"passion": {
+			"description": "For example, you can briefly describe a science project you are working on. Or you can tell us about your experience bringing science to the public. This is your space to showcase what you're currently working on and how it shapes the expertise you bring to our community.",
+			"title": "What are you passionate about right now?"
+		},
+		"saveChanges": "Save changes",
+		"title": "Introduction Video",
+		"videoNotSupported": "Your browser does not support the video tag."
+	},
+	"introductionVideo": "Introduction Video",
+	"myConnections": "My connections",
+	"navigation": {
+		"next": "Next",
+		"previous": "Previous"
+	},
+	"officialBio": "Official Bio",
+	"passionNow": "What are you passionate about right now?",
+	"preferences": {
+		"availability": {
+			"async": {
+				"answeringQuestions": "Answering student questions (based on your profile).",
+				"providingFeedback": "Providing feedback on student projects",
+				"title": "Asynchronous"
+			},
+			"sync": {
+				"inPersonVisit": "Making an in-class visit to talk with program students about your work (in-person).",
+				"title": "Synchronous",
+				"zoomVisit": "Making an in-class visit to talk with program students about your work (over Zoom)."
+			},
+			"title": "Please indicate below how you are available to partner with us (select all that apply)."
+		},
+		"classType": {
+			"description": "Tell us about what type of classroom you would most like to mentor. Select all that apply.",
+			"options": {
+				"accelerated": "Accelerated",
+				"ell": "ELL",
+				"no": "No Preference",
+				"nonAccelerated": "Non Accelerated"
+			},
+			"title": "Class Type"
+		},
+		"description": "Please complete the following items to let us know the details of your involvement.",
+		"gradeLevel": {
+			"description": "Tell us about the grade levels you feel most comfortable supporting as a mentor. Select all that apply.",
+			"options": {
+				"eleven": "11 - 12 Grade",
+				"middle": "Middle School",
+				"nine": "9 - 10 Grade",
+				"no": "No Preference"
+			},
+			"title": "Grade Level"
+		},
+		"groupPreference": {
+			"description": "Do you prefer supporting individuals or groups in mentorship sessions? Select all that apply.",
+			"options": {
+				"group": "Group",
+				"individual": "Individual",
+				"no": "No Preference"
+			},
+			"title": "Individual vs Group"
+		},
+		"saveChanges": "Save changes",
+		"title": "Your Involvement"
+	},
+	"profileType": {
+		"chooseType": "Choose your profile type",
+		"description": "Set up your MindHive profile by selecting one of the options below. Are you creating a personal profile for yourself, or setting up a page for your organization?",
+		"individual": {
+			"description": "This profile is most appropriate when you are creating an account for yourself.",
+			"title": "Individual"
+		},
+		"organization": {
+			"description": "This profile is most appropriate when you are creating an account to represent a community organization or company.",
+			"title": "Organization"
+		}
+	},
+	"searchPlaceholder": "Search by name, topic, or area of interest",
+	"steps": {
+		"aboutMe": "2. About Me",
+		"complete": "4. Complete",
+		"interests": "3. Interests",
+		"profileType": "1. Profile Type"
+	},
+	"syncInPersonVisit": "Making an in-class visit to talk with program students about your work (in-person).",
+	"syncZoomVisit": "Making an in-class visit to talk with program students about your work (over Zoom).",
+	"unofficialBio": "Unofficial Bio",
+	"usersPerPage": "Number of users per page",
+	"videoNotSupported": "Your browser does not support the video tag.",
+	"videoUploader": {
+		"dragAndDrop": "Drag and drop video file to upload",
+		"error": "There was an error with the video upload. Please try again.",
+		"invalidFile": "Please select a video file.",
+		"selectFile": "Select file",
+		"uploadProgress": "Upload Progress: {{progress}}%"
+	}
+}

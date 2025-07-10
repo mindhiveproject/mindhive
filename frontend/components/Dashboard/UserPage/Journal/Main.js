@@ -1,8 +1,10 @@
 import moment from "moment";
 import Link from "next/link";
 import JournalPage from "./JournalPage";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Journal({ query, user, profile }) {
+  const { t } = useTranslation("classes");
   const journals = profile?.journals || [];
 
   const { journal } = query;
@@ -10,7 +12,7 @@ export default function Journal({ query, user, profile }) {
   if (journals.length === 0) {
     return (
       <div className="empty">
-        <div>The student hasn’t created any journals yet.</div>
+        <div>{t("journal.noJournalsYet")}</div>
       </div>
     );
   }
@@ -23,9 +25,9 @@ export default function Journal({ query, user, profile }) {
     <div>
       <div className="journalWrapperLine">
         <div className="journalListHeader">
-          <div>Journal name</div>
-          <div>Number of notes</div>
-          <div>Date created</div>
+          <div>{t("journal.journalName")}</div>
+          <div>{t("journal.numberOfNotes")}</div>
+          <div>{t("journal.dateCreated")}</div>
         </div>
         <div></div>
       </div>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Divider } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import useForm from "../../../../lib/useForm";
+import useTranslation from "next-translate/useTranslation";
 
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { UPDATE_USER } from "../../../Mutations/User";
@@ -10,6 +11,7 @@ import { StyledInput } from "../../../styles/StyledForm";
 import { StyledSimpleSaveButton } from "../../../styles/StyledProfile";
 
 export default function Activity({ query, user }) {
+  const { t } = useTranslation("common");
   const [changed, setChanged] = useState(false);
 
   const { inputs, handleChange, clearForm } = useForm({ ...user });
@@ -31,11 +33,8 @@ export default function Activity({ query, user }) {
 
   return (
     <StyledInput>
-      <h1>My Activity</h1>
-      <h3>
-        Track your progress and review the studies and tasks you've participated
-        in
-      </h3>
+      <h1>{t("activity.title")}</h1>
+      <h3>{t("activity.description")}</h3>
       <Divider />
 
       <div className="content">
@@ -45,7 +44,7 @@ export default function Activity({ query, user }) {
               pathname: `/dashboard/settings/consent`,
             }}
           >
-            <button className="back">Back to Data & Consent</button>
+            <button className="back">{t("activity.backToConsent")}</button>
           </Link>
         </div>
       </div>

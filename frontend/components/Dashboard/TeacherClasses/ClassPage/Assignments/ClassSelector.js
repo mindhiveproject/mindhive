@@ -1,9 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_CLASSES } from "../../../../Queries/Classes";
 
 export default function ClassSelector({ user, inputs, handleChange }) {
+  const { t } = useTranslation("classes");
   const { data, loading, error } = useQuery(GET_CLASSES, {
     variables: {
       input: {
@@ -33,7 +35,7 @@ export default function ClassSelector({ user, inputs, handleChange }) {
 
   return (
     <div className="consentSelector">
-      <p>Class(es)</p>
+      <p>{t("assignment.classes")}</p>
       <DropdownExampleMultipleSelection
         classes={myClasses}
         selectedClasses={selectedClasses}
@@ -48,6 +50,7 @@ const DropdownExampleMultipleSelection = ({
   selectedClasses,
   handleChange,
 }) => {
+  const { t } = useTranslation("classes");
   const onChange = (event, data) => {
     handleChange({
       target: {
@@ -59,7 +62,7 @@ const DropdownExampleMultipleSelection = ({
 
   return (
     <Dropdown
-      placeholder="Type class name"
+      placeholder={t("assignment.typeClassName")}
       fluid
       multiple
       search

@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import moment from "moment";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Studies({ myclass, user }) {
+  const { t } = useTranslation("classes");
   const router = useRouter();
 
   const studies = myclass?.studies || [];
@@ -9,7 +11,7 @@ export default function Studies({ myclass, user }) {
   if (studies.length === 0) {
     return (
       <div className="empty">
-        <div>The students haven’t created any studies yet.</div>
+        <div>{t("noStudies")}</div>
       </div>
     );
   }
@@ -18,7 +20,7 @@ export default function Studies({ myclass, user }) {
     <div className="studies">
       <div className="studiesHeader">
         <div>
-          <span>Study title </span>
+          <span>{t("studyTitle")} </span>
           <span
             style={{ cursor: "pointer" }}
             onClick={() => randomizeStudiesOrder(false)}
@@ -26,9 +28,9 @@ export default function Studies({ myclass, user }) {
             ↓
           </span>
         </div>
-        <div>Collaborator(s)</div>
-        <div>Participants</div>
-        <div>Date created</div>
+        <div>{t("collaborators")}</div>
+        <div>{t("participants")}</div>
+        <div>{t("dateCreated")}</div>
         <div></div>
         <div></div>
       </div>
@@ -49,7 +51,7 @@ export default function Studies({ myclass, user }) {
                 href={`/studies/${study.slug}`}
                 rel="noreferrer"
               >
-                Study page
+                {t("studyPage")}
               </a>
             </div>
             <div></div>

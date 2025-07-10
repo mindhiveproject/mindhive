@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useState, useEffect, useRef } from "react";
 import { Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import Card from "./Card.js";
 
@@ -10,25 +11,27 @@ function containsAny(arr1, arr2) {
   return arr1.some((item) => arr2.includes(item));
 }
 
-const sortOptions = [
-  { label: "Oldest", value: "OLDEST" },
-  { label: "Newest", value: "NEWEST" },
-  { label: "Least participants", value: "LEAST_PARTICIPANTS" },
-  { label: "Most participants", value: "MOST_PARTICIPANTS" },
-];
-
 export default function StudiesBoard({
   allUniqueClassIds,
   myClassesIds,
   allUniqueClasses,
 }) {
+  const { t } = useTranslation("builder");
   const [keyword, setKeyword] = useState("");
   const [filteredStudies, setFilteredStudies] = useState([]);
   const [sortBy, setSortBy] = useState("");
   const [filteredClasses, setFilteredClasses] = useState([]);
   const [filterSortMessage, setFilterSortMessage] = useState(
-    "Showing all studies"
+    t("review.showingAllStudies")
   );
+
+  // Move sortOptions inside the function to use t()
+  const sortOptions = [
+    { label: t("review.oldest"), value: "OLDEST" },
+    { label: t("review.newest"), value: "NEWEST" },
+    { label: t("review.least_participants"), value: "LEAST_PARTICIPANTS" },
+    { label: t("review.most_participants"), value: "MOST_PARTICIPANTS" },
+  ];
 
   // Use a ref to track if this is the initial mount
   const isInitialMount = useRef(true);
@@ -58,30 +61,30 @@ export default function StudiesBoard({
 
   // Update filterSortMessage based on filters
   useEffect(() => {
-    let message = "Showing all studies";
+    let message = t("review.showingAllStudies");
     if (filteredClasses.length > 0) {
       const classTitles = filteredClasses
         .map((classId) => allUniqueClasses.find((c) => c.id === classId)?.title)
         .filter(Boolean)
         .join(", ");
-      message = `Showing studies in ${classTitles}`;
+      message = t("review.showingStudiesIn", { classTitles });
     }
     if (sortBy) {
       if (sortBy === "OLDEST") {
-        message += `, sorted by oldest to newest`;
+        message += t("review.sortedByOldest");
       } else if (sortBy === "NEWEST") {
-        message += `, sorted by newest to oldest`;
+        message += t("review.sortedByNewest");
       } else if (sortBy === "LEAST_PARTICIPANTS") {
-        message += `, sorted by least to most participants`;
+        message += t("review.sortedByLeastParticipants");
       } else if (sortBy === "MOST_PARTICIPANTS") {
-        message += `, sorted by most to least participants`;
+        message += t("review.sortedByMostParticipants");
       }
     }
     if (keyword) {
-      message += ` matching "${keyword}"`;
+      message += t("review.matchingKeyword", { keyword });
     }
     setFilterSortMessage(message);
-  }, [filteredClasses, sortBy, keyword, allUniqueClasses]);
+  }, [filteredClasses, sortBy, keyword, allUniqueClasses, t]);
 
   // Update URL when filters change
   useEffect(() => {
@@ -223,7 +226,7 @@ export default function StudiesBoard({
       <div className="searchTopArea">
         <div className="searchArea">
           <input
-            placeholder="Search"
+            placeholder={t("review.search")}
             type="text"
             name="keyword"
             value={keyword}
@@ -233,7 +236,7 @@ export default function StudiesBoard({
 
         <div>
           <Dropdown
-            placeholder="Sort by"
+            placeholder={t("review.sortBy")}
             fluid
             selection
             options={sortOptions.map((p) => ({
@@ -248,7 +251,7 @@ export default function StudiesBoard({
           />
         </div>
         <Dropdown
-          placeholder="Filter by classes"
+          placeholder={t("review.filterByClasses")}
           fluid
           multiple
           selection

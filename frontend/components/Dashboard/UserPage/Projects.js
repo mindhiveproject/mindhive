@@ -3,11 +3,13 @@ import { Icon, Button, Message } from "semantic-ui-react";
 import moment from "moment";
 import styled from "styled-components";
 import { useMutation } from "@apollo/client";
+import useTranslation from 'next-translate/useTranslation';
 
 import { GET_USER } from "../../Queries/User";
 import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal";
 
 export default function Projects({ query, user, profile }) {
+  const { t } = useTranslation('common');
   const { origin } = absoluteUrl();
 
   const [updateProject, { loading, error }] = useMutation(
@@ -24,20 +26,20 @@ export default function Projects({ query, user, profile }) {
   [
     ...(profile?.authorOfProposal || []).map((project) => ({
       ...project,
-      role: "Author",
+      role: t('projects.author', 'Author'),
     })),
     ...(profile?.collaboratorInProposal || []).map((project) => ({
       ...project,
-      role: "Collaborator",
+      role: t('projects.collaborator', 'Collaborator'),
     })),
   ].forEach((project) => {
     if (!projectMap.has(project.id)) {
       projectMap.set(project.id, project);
-    } else if (project.role === "Author") {
+    } else if (project.role === t('projects.author', 'Author')) {
       // Update role to Author if the project is already in the map
       projectMap.set(project.id, {
         ...projectMap.get(project.id),
-        role: "Author",
+        role: t('projects.author', 'Author'),
       });
     }
   });
@@ -62,7 +64,7 @@ export default function Projects({ query, user, profile }) {
   if (projects.length === 0) {
     return (
       <EmptyState>
-        <p>The student hasn’t created any projects yet.</p>
+        <p>{t('projects.noProjectsYet', "The student hasn’t created any projects yet.")}</p>
       </EmptyState>
     );
   }
@@ -71,16 +73,16 @@ export default function Projects({ query, user, profile }) {
     <ProjectsContainer>
       {error && (
         <Message negative>
-          <Message.Header>Error</Message.Header>
-          <p>Failed to update project status. Please try again.</p>
+          <Message.Header>{t('projects.error', 'Error')}</Message.Header>
+          <p>{t('projects.failedToUpdateProjectStatus', 'Failed to update project status. Please try again.')}</p>
         </Message>
       )}
       <Header>
-        <div>Project Title</div>
-        <div>Role</div>
-        <div>Date Created</div>
-        <div>Date Updated</div>
-        <div>Main Project</div>
+        <div>{t('projects.projectTitle', 'Project Title')}</div>
+        <div>{t('projects.role', 'Role')}</div>
+        <div>{t('projects.dateCreated', 'Date Created')}</div>
+        <div>{t('projects.dateUpdated', 'Date Updated')}</div>
+        <div>{t('projects.mainProject', 'Main Project')}</div>
       </Header>
       {projects.map((project) => (
         <Row
@@ -95,7 +97,7 @@ export default function Projects({ query, user, profile }) {
                 href={`${origin}/builder/projects?selector=${project.id}`}
                 target="_blank"
                 rel="noreferrer"
-                title="Open project in new tab"
+                title={t('projects.openInNewTab', 'Open project in new tab')}
               >
                 <StyledIcon name="external alternate" />
               </a>
@@ -105,7 +107,7 @@ export default function Projects({ query, user, profile }) {
           <Cell>{moment(project.createdAt).format("MMMM D, YYYY, h:mma")}</Cell>
           <Cell>
             {project?.isHidden ? (
-              <DeletedMessage>Project deleted</DeletedMessage>
+              <DeletedMessage>{t('projects.projectDeleted', 'Project deleted')}</DeletedMessage>
             ) : (
               project.updatedAt &&
               moment(project.updatedAt).format("MMMM D, YYYY, h:mma")
@@ -122,7 +124,7 @@ export default function Projects({ query, user, profile }) {
                 })
               }
               disabled={loading || project?.isHidden}
-              aria-label={`Set ${project?.title} as main project`}
+              aria-label={t('projects.setAsMainAria', { title: project?.title }, `Set ${project?.title} as main project`)}
             />
           </Cell>
         </Row>

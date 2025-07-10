@@ -1,15 +1,17 @@
 import absoluteUrl from "next-absolute-url";
 import { Icon } from "semantic-ui-react";
 import moment from "moment";
+import useTranslation from 'next-translate/useTranslation';
 
 export default function Participated({ query, user, profile }) {
+  const { t } = useTranslation('common');
   const { origin } = absoluteUrl();
   const studies = profile?.participantIn || [];
 
   if (studies?.length === 0) {
     return (
       <div className="empty">
-        <div>The student hasn’t participated in any studies yet.</div>
+        <div>{t('participated.noStudiesYet', 'The student hasn’t participated in any studies yet.')}</div>
       </div>
     );
   }
@@ -18,16 +20,16 @@ export default function Participated({ query, user, profile }) {
     <div>
       <div className="headerParticipatedStudies">
         <div>
-          <span>Study title</span>
+          <span>{t('participated.studyTitle', 'Study title')}</span>
         </div>
-        <div>Step</div>
-        <div>Type</div>
-        <div>Name</div>
-        <div>Task subtitle</div>
-        <div>Task version</div>
-        <div>Condition</div>
-        <div>Started</div>
-        <div>Finished</div>
+        <div>{t('participated.step', 'Step')}</div>
+        <div>{t('participated.type', 'Type')}</div>
+        <div>{t('participated.name', 'Name')}</div>
+        <div>{t('participated.taskSubtitle', 'Task subtitle')}</div>
+        <div>{t('participated.taskVersion', 'Task version')}</div>
+        <div>{t('participated.condition', 'Condition')}</div>
+        <div>{t('participated.started', 'Started')}</div>
+        <div>{t('participated.finished', 'Finished')}</div>
       </div>
       <div>
         {studies.map((study, num) => {
@@ -67,7 +69,7 @@ export default function Participated({ query, user, profile }) {
                             test?.timestampStarted ||
                               test?.timestampRun ||
                               test?.timestampAssigned
-                          ).format("MM.D.YYYY, h:mma")
+                          ).format('MM.D.YYYY, h:mma')
                         ) : (
                           <></>
                         )}
@@ -75,7 +77,7 @@ export default function Participated({ query, user, profile }) {
                       <div>
                         {test?.timestampFinished ? (
                           moment(test?.timestampFinished).format(
-                            "MM.D.YYYY, h:mma"
+                            'MM.D.YYYY, h:mma'
                           )
                         ) : (
                           <></>

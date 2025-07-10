@@ -1,14 +1,13 @@
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 
 export default function ConsentSkippedMessage() {
+  const { t } = useTranslation('common');
   return (
     <StyledContainer>
-      <h1>Unable to Participate</h1>
-      <p>
-        Unfortunately, you cannot participate in the study because you did not
-        agree to the required consent form.
-      </p>
-      <p>Please contact the study administrator for more information.</p>
+      <h1>{t('consent.skipped.header')}</h1>
+      <p>{t('consent.skipped.message')}</p>
+      <p>{t('consent.skipped.contact')}</p>
     </StyledContainer>
   );
 }

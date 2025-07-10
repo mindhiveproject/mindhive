@@ -1,5 +1,6 @@
 import React from "react";
 import useTranslation from "next-translate/useTranslation";
+import Link from "next/link";
 
 const Links = () => {
   const { t } = useTranslation("home");
@@ -9,15 +10,15 @@ const Links = () => {
       <h2>{t("info")}</h2>
       <div className="updates">
         <div>
-          <a href="/docs/about" target="_blank" rel="noreferrer">
-            {t("about")}
-          </a>
+          <Link href="/docs/about" legacyBehavior>
+            <a target="_blank" rel="noreferrer">{t("about")}</a>
+          </Link>
         </div>
 
         <div>
-          <a href="/teachers" target="_blank" rel="noreferrer">
-            {t("teachers")}
-          </a>
+          <Link href="/teachers" target="_blank" rel="noreferrer">
+              {t("teachers")}
+          </Link>
         </div>
 
         <div>

@@ -1,11 +1,13 @@
 import { Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Drop({ study, engine, tags, handleTagsUpdate }) {
+  const { t } = useTranslation('common');
   const values = study?.tags.map((tag) => tag?.id) || [];
 
   return (
     <Dropdown
-      placeholder="Search for tags"
+      placeholder={t('tag.searchPlaceholder')}
       fluid
       multiple
       search

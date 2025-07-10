@@ -5,8 +5,10 @@ import { GET_TAGS } from "../../Queries/Tag";
 import Link from "next/link";
 
 import DeleteTag from "./Delete";
+import useTranslation from "next-translate/useTranslation";
 
 export default function TagsList({ query, user }) {
+  const { t } = useTranslation("common");
   const { data, error, loading } = useQuery(GET_TAGS);
 
   const tags = data?.tags || [];
@@ -14,10 +16,10 @@ export default function TagsList({ query, user }) {
   return (
     <div className="board">
       <div className="heading">
-        <p>Title</p>
-        <p>Level</p>
-        <p>Created At</p>
-        <p>Updated At</p>
+        <p>{t("tag.title")}</p>
+        <p>{t("tag.level")}</p>
+        <p>{t("tag.createdAt")}</p>
+        <p>{t("tag.updatedAt")}</p>
       </div>
       {tags?.map((tag, i) => (
         <div className="line">

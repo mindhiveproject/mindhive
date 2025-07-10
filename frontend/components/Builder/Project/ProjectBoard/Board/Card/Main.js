@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
+import useTranslation from "next-translate/useTranslation";
 
 import { UPDATE_CARD_CONTENT } from "../../../../../Mutations/Proposal";
 import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
@@ -19,29 +20,6 @@ import Resources from "./Forms/Resources";
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { Dropdown } from "semantic-ui-react";
 
-const reviewOptions = [
-  {
-    key: "actionSubmit",
-    text: "Proposal",
-    value: "ACTION_SUBMIT",
-  },
-  {
-    key: "actionPeerFeedback",
-    text: "Peer Feedback",
-    value: "ACTION_PEER_FEEDBACK",
-  },
-  {
-    key: "actionCollectingData",
-    text: "Collecting Data",
-    value: "ACTION_COLLECTING_DATA",
-  },
-  {
-    key: "actionProjectReport",
-    text: "Project Report",
-    value: "ACTION_PROJECT_REPORT",
-  },
-];
-
 export default function ProposalCard({
   proposalCard,
   query,
@@ -54,6 +32,31 @@ export default function ProposalCard({
   isLocked,
   submitStatuses,
 }) {
+  const { t } = useTranslation("builder");
+
+  const reviewOptions = [
+    {
+      key: "actionSubmit",
+      text: t("mainCard.reviewOptions.proposal", "Proposal"),
+      value: "ACTION_SUBMIT",
+    },
+    {
+      key: "actionPeerFeedback",
+      text: t("mainCard.reviewOptions.peerFeedback", "Peer Feedback"),
+      value: "ACTION_PEER_FEEDBACK",
+    },
+    {
+      key: "actionCollectingData",
+      text: t("mainCard.reviewOptions.collectingData", "Collecting Data"),
+      value: "ACTION_COLLECTING_DATA",
+    },
+    {
+      key: "actionProjectReport",
+      text: t("mainCard.reviewOptions.projectReport", "Project Report"),
+      value: "ACTION_PROJECT_REPORT",
+    },
+  ];
+
   const filteredReviewOptions = reviewOptions.filter(
     (option) => submitStatuses[option?.value] !== "SUBMITTED"
   );
@@ -233,18 +236,21 @@ export default function ProposalCard({
           {!areEditsAllowed && (
             <div className="lockedMessage">
               <div>
-                The card is currently been edited by{" "}
+                {t("mainCard.lockedMessage", "The card is currently being edited by")}
+                {" "}
                 <span className="username">
                   {proposalCard?.isEditedBy?.username}
                 </span>
-                . Ask the user to close the card or wait until the card is
-                released. The card will be released{" "}
+                . {t("mainCard.askToClose", "Ask the user to close the card or wait until the card is released.")}
+                {" "}
+                {t("mainCard.cardWillBeReleased", "The card will be released")}
+                {" "}
                 <span className="username">{moment().to(releaseTime)}</span>.
-                After the card is released, refresh the page to get the latest
-                version of the card.
+                {" "}
+                {t("mainCard.refreshAfterRelease", "After the card is released, refresh the page to get the latest version of the card.")}
               </div>
               <div className="buttonHolder">
-                <button onClick={() => refreshPage()}>Refresh</button>
+                <button onClick={() => refreshPage()}>{t("mainCard.refresh", "Refresh")}</button>
               </div>
             </div>
           )}
@@ -252,17 +258,16 @@ export default function ProposalCard({
           <div className="proposalCardBoard">
             <div className="textBoard">
               <div className="cardHeader">{inputs?.title}</div>
-              <div className="cardSubheader">Instructions</div>
+              <div className="cardSubheader">{t("mainCard.instructions", "Instructions")}</div>
               <div className="cardDescription">
                 {ReactHtmlParser(inputs?.description)}
               </div>
 
               {proposalCard?.settings?.includeInReport && (
                 <>
-                  <div className="cardSubheader">For MindHive Network</div>
+                  <div className="cardSubheader">{t("mainCard.forMindHiveNetwork", "For MindHive Network")}</div>
                   <div className="cardSubheaderComment">
-                    The content you include here will be visible in the Feedback
-                    Center once it is submitted via an Action Card.
+                    {t("mainCard.visibleInFeedbackCenter", "The content you include here will be visible in the Feedback Center once it is submitted via an Action Card.")}
                   </div>
                   <div className="jodit">
                     {isLocked ? (
@@ -287,10 +292,9 @@ export default function ProposalCard({
 
               {proposalCard?.settings?.includeInReport && isLocked && (
                 <>
-                  <div className="cardSubheader">Revised Content</div>
+                  <div className="cardSubheader">{t("mainCard.revisedContent", "Revised Content")}</div>
                   <div className="cardSubheaderComment">
-                    The revised content you include here will be used in the
-                    final report.
+                    {t("mainCard.revisedContentUsed", "The revised content you include here will be used in the final report.")}
                   </div>
                   <div className="jodit">
                     <div onFocus={handleFocus}>
@@ -312,11 +316,10 @@ export default function ProposalCard({
               {!proposalCard?.settings?.excludeFromCollaborators && (
                 <>
                   <div className="cardSubheader">
-                    For my teacher and project collaborators only
+                    {t("mainCard.forTeacherAndCollaborators", "For my teacher and project collaborators only")}
                   </div>
                   <div className="cardSubheaderComment">
-                    The content you include below will only be visible to your
-                    teacher(s) and project collaborators
+                    {t("mainCard.visibleToTeacherAndCollaborators", "The content you include below will only be visible to your teacher(s) and project collaborators")}
                   </div>
                   <div className="jodit">
                     {isLocked ? (
@@ -341,7 +344,7 @@ export default function ProposalCard({
             </div>
             <div className="infoBoard">
               <div>
-                <div className="cardSubheader">Assigned to</div>
+                <div className="cardSubheader">{t("mainCard.assignedTo", "Assigned to")}</div>
                 <Assigned
                   users={allUsers}
                   assignedTo={inputs?.assignedTo}
@@ -357,7 +360,7 @@ export default function ProposalCard({
               </div>
 
               <div className="proposalCardComments">
-                <div className="cardSubheader">Comments</div>
+                <div className="cardSubheader">{t("mainCard.comments", "Comments")}</div>
                 <textarea
                   rows="5"
                   type="text"
@@ -376,10 +379,10 @@ export default function ProposalCard({
               {proposalCard?.settings?.includeInReport && !isLocked && (
                 <div>
                   <div className="cardSubheaderComment">
-                    Choose which step of the peer review a card should go in
+                    {t("mainCard.chooseReviewStep", "Choose which step of the peer review a card should go in")}
                   </div>
                   <Dropdown
-                    placeholder="Select option"
+                    placeholder={t("mainCard.selectOption", "Select option")}
                     fluid
                     multiple
                     search

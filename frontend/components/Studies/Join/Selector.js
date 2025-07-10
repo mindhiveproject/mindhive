@@ -1,79 +1,73 @@
 import { StyledSelector } from "../../styles/StyledJoinStudyFlow";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Selector({ user, study, query }) {
-
+  const { t } = useTranslation('common');
   const { settings } = study;
 
   return (
     <StyledSelector>
       <div className="selectorHeader">
-        <h1>How would you like to participate today?</h1>
+        <h1>{t('join.selector.header')}</h1>
       </div>
       <div className="selectorOptions">
-        
-        { settings?.guestParticipation && (
+        {settings?.guestParticipation && (
           <div className="option borderRight">
-            <h2>Guest participant</h2>
-            <p>
-              Proceed directly to the study. Guests cannot save information for
-              the next time.
-            </p>
+            <h2>{t('join.selector.guestTitle')}</h2>
+            <p>{t('join.selector.guestDesc')}</p>
             <Link
               href={{
                 pathname: `/join/details`,
                 query: { ...query, guest: true },
               }}
             >
-              <button>Continue as guest</button>
+              <button>{t('join.selector.guestButton')}</button>
             </Link>
           </div>
         )}
 
         {!user && (
           <div className="option borderRight">
-            <h2>Returning MindHive member</h2>
-            <p>
-              Already have a MindHive account? Log in for a faster study
-              experience.
-            </p>
+            <h2>{t('join.selector.returningTitle')}</h2>
+            <p>{t('join.selector.returningDesc')}</p>
             <Link
               href={{
                 pathname: `/join/login`,
                 query: { ...query },
               }}
             >
-              <button>Log in</button>
+              <button>{t('join.selector.returningButton')}</button>
             </Link>
           </div>
         )}
 
         {!user && (
           <div className="option">
-            <h2>New MindHive member</h2>
-            <p>Sign up to speed up study participation next time</p>
+            <h2>{t('join.selector.newTitle')}</h2>
+            <p>{t('join.selector.newDesc')}</p>
             <Link
               href={{
                 pathname: `/join/signup`,
                 query: { ...query },
               }}
             >
-              <button>Sign up</button>
+              <button>{t('join.selector.newButton')}</button>
             </Link>
           </div>
         )}
 
         {user && (
           <div className="option">
-            <h2>MindHive member</h2>
-            <p>Continue as a member for a faster study experience.</p>
+            <h2>{t('join.selector.memberTitle')}</h2>
+            <p>{t('join.selector.memberDesc')}</p>
             <Link
               href={{
                 pathname: `/join/details`,
                 query: { ...query, guest: false },
               }}
             >
-              <button>Continue as a member</button>
+              <button>{t('join.selector.memberButton')}</button>
             </Link>
           </div>
         )}

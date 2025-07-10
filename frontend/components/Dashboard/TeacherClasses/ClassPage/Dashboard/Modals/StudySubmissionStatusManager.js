@@ -2,11 +2,13 @@ import { useMutation } from "@apollo/client";
 import { Modal, Dropdown } from "semantic-ui-react";
 import { useState } from "react";
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
 import { UPDATE_STUDY } from "../../../../../Mutations/Study";
 
 export default function StudySubmissionStatusManager(props) {
+  const { t } = useTranslation("classes");
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState(props?.value);
   const [participationAllowed, setParticipationAllowed] = useState(
@@ -39,10 +41,10 @@ export default function StudySubmissionStatusManager(props) {
 
   const statusOptions =
     [
-      { label: "Not started", value: "NOT_STARTED" },
-      { label: "In progress", value: "IN_PROGRESS" },
-      { label: "Submitted", value: "SUBMITTED" },
-      { label: "Data collection is finished", value: "FINISHED" },
+      { label: t("dashboard.notStarted"), value: "NOT_STARTED" },
+      { label: t("dashboard.inProgress"), value: "IN_PROGRESS" },
+      { label: t("dashboard.submitted"), value: "SUBMITTED" },
+      { label: t("dashboard.dataCollectionFinished"), value: "FINISHED" },
     ].map((status) => ({
       key: status?.value,
       text: status?.label,
@@ -51,8 +53,8 @@ export default function StudySubmissionStatusManager(props) {
 
   const participationOptions =
     [
-      { label: "Not allowed", value: false },
-      { label: "Allowed", value: true },
+      { label: t("dashboard.notAllowed"), value: false },
+      { label: t("dashboard.allowed"), value: true },
     ].map((status) => ({
       key: status?.value,
       text: status?.label,
@@ -72,24 +74,23 @@ export default function StudySubmissionStatusManager(props) {
       <StyledModal>
         <Modal.Content>
           <div className="modalHeader">
-            <h1>Manage {props?.stage} Status</h1>
+            <h1>{t("dashboard.manageStageStatus", { stage: props?.stage })}</h1>
             <p>
-              Update the status and participation settings for{" "}
-              {props?.data?.projectTitle}
+              {t("dashboard.updateStatusAndParticipation", { project: props?.data?.projectTitle })}
             </p>
           </div>
           <div className="modalTwoSideContent">
             <div className="firstSide">
-              <h2>Study Details</h2>
+              <h2>{t("dashboard.studyDetails")}</h2>
               <p>
-                <strong>Stage:</strong> {props?.stage}
+                <strong>{t("dashboard.stage")}</strong> {props?.stage}
               </p>
               <p>
-                <strong>Project:</strong> {props?.data?.projectTitle}
+                <strong>{t("dashboard.project")}</strong> {props?.data?.projectTitle}
               </p>
             </div>
             <div className="secondSide">
-              <h2>Status</h2>
+              <h2>{t("dashboard.status")}</h2>
               <Dropdown
                 selection
                 options={statusOptions}
@@ -98,7 +99,7 @@ export default function StudySubmissionStatusManager(props) {
                 fluid
                 className="status-dropdown"
               />
-              <h2>Participation</h2>
+              <h2>{t("dashboard.participation")}</h2>
               <Dropdown
                 selection
                 options={participationOptions}
@@ -111,14 +112,14 @@ export default function StudySubmissionStatusManager(props) {
           </div>
           <div className="footer">
             <button className="cancel-button" onClick={() => setIsOpen(false)}>
-              Cancel
+              {t("dashboard.cancel")}
             </button>
             <button
               className="update-button"
               onClick={updateStudyStatus}
               disabled={loading}
             >
-              {loading ? "Updating..." : "Update Status"}
+              {loading ? t("dashboard.updating") : t("dashboard.updateStatus")}
             </button>
           </div>
         </Modal.Content>

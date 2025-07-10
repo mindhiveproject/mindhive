@@ -1,15 +1,17 @@
 import ReactStars from "react-rating-stars-component";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Review({ review, reviewNumber, closeReview }) {
+  const { t } = useTranslation("builder");
   return (
     <div className="review">
       <div className="header">
         <div className="headerLeft">
           <div className="backBtn" onClick={closeReview}>
-            ← Exit{" "}
+            ← {t("reviewDetail.exit", "Exit")} {" "}
             {review?.stage === "INDIVIDUAL"
-              ? " individual review"
-              : "synthesis"}{" "}
+              ? t("reviewDetail.individualReview", "individual review")
+              : t("reviewDetail.synthesis", "synthesis")} {" "}
             {reviewNumber}
           </div>
         </div>

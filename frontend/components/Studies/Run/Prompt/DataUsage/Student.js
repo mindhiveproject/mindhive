@@ -1,5 +1,6 @@
 import absoluteUrl from "next-absolute-url";
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 
 const StyledNotes = styled.div`
   background: #fff3cd;
@@ -31,13 +32,11 @@ const StyledNotes = styled.div`
 
 export default function DataUsageForStudent({ dataUse, setDataUse }) {
   const { origin } = absoluteUrl();
+  const { t } = useTranslation("builder");
   return (
     <div>
-      <h1>Data usage</h1>
-      <h3>
-        Do you want to allow MindHive researchers and educators to access your
-        responses for this task?
-      </h3>
+      <h1>{t("dataUsage.title")}</h1>
+      <h3>{t("dataUsage.question")}</h3>
 
       <div>
         <div className="checkboxField">
@@ -50,23 +49,21 @@ export default function DataUsageForStudent({ dataUse, setDataUse }) {
             checked={dataUse === "science"}
           />
           <label htmlFor="useDataForScience">
-            Yes, for all uses - science, education, and community programs
+            {t("dataUsage.scienceLabel")}
           </label>
         </div>
         {dataUse === "science" && (
           <StyledNotes>
             <p>
-              Note: MindHive researchers and educators are vetted by MindHive
-              administrators and cannot access your personal data without your
-              explicit consent. See our{" "}
+              {t("dataUsage.scienceNote.part1")} {" "}
               <a target="_blank" href={`${origin}/docs/privacy`}>
-                Privacy Policy
+                {t("dataUsage.privacy")}
               </a>{" "}
-              and{" "}
+              {t("dataUsage.and")} {" "}
               <a target="_blank" href={`${origin}/docs/terms`}>
-                Terms and Conditions
+                {t("dataUsage.terms")}
               </a>{" "}
-              for details on our commitment to protect your data.
+              {t("dataUsage.scienceNote.part2")}
             </p>
           </StyledNotes>
         )}
@@ -82,23 +79,21 @@ export default function DataUsageForStudent({ dataUse, setDataUse }) {
             checked={dataUse === "education"}
           />
           <label htmlFor="educationalUse">
-            Yes, but just for educational and community programs use
+            {t("dataUsage.educationLabel")}
           </label>
         </div>
         {dataUse === "education" && (
           <StyledNotes>
             <p>
-              Note: MindHive educators are vetted by MindHive administrators and
-              cannot access your personal data without your explicit consent.
-              See our{" "}
+              {t("dataUsage.educationNote.part1")} {" "}
               <a target="_blank" href={`${origin}/docs/privacy`}>
-                Privacy Policy
+                {t("dataUsage.privacy")}
               </a>{" "}
-              and{" "}
+              {t("dataUsage.and")} {" "}
               <a target="_blank" href={`${origin}/docs/terms`}>
-                Terms and Conditions
+                {t("dataUsage.terms")}
               </a>{" "}
-              for details on our commitment to protect your data.
+              {t("dataUsage.educationNote.part2")}
             </p>
           </StyledNotes>
         )}
@@ -114,15 +109,13 @@ export default function DataUsageForStudent({ dataUse, setDataUse }) {
             checked={dataUse === "self"}
           />
           <label htmlFor="onlyForMe">
-            No, just save my responses for my own use
+            {t("dataUsage.selfLabel")}
           </label>
         </div>
         {dataUse === "self" && (
           <StyledNotes>
             <p>
-              Note: Your teacher will still have access to your responses.
-              Choosing this option means your data won't be included in class
-              demos
+              {t("dataUsage.selfNote")}
             </p>
           </StyledNotes>
         )}
@@ -137,13 +130,14 @@ export default function DataUsageForStudent({ dataUse, setDataUse }) {
             onChange={({ target }) => setDataUse(target?.value)}
             checked={dataUse === "no"}
           />
-          <label htmlFor="doNotRecord">No, don't save my responses</label>
+          <label htmlFor="doNotRecord">
+            {t("dataUsage.noLabel")}
+          </label>
         </div>
         {dataUse === "no" && (
           <StyledNotes>
             <p>
-              Note: Some MindHive features, like personalized data visualization
-              might not be accessible to you if you choose this option
+              {t("dataUsage.noNote")}
             </p>
           </StyledNotes>
         )}

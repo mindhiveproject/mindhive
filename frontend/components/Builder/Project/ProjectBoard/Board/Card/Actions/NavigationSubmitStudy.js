@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 
@@ -17,6 +18,7 @@ export default function Navigation({
   switchFeedbackLock,
   isParticipationLocked,
 }) {
+  const { t } = useTranslation("builder");
   const { data, error, loading } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
   });
@@ -37,7 +39,7 @@ export default function Navigation({
             }}
           >
             <div className="selector">
-              <img src="/assets/icons/back.svg" alt="back" />
+              <img src="/assets/icons/back.svg" alt={t("navigation.back", "back")} />
             </div>
           </Link>
         </div>
@@ -51,7 +53,10 @@ export default function Navigation({
             onClick={async () => {
               if (
                 confirm(
-                  "Are you sure you want to submit? You will not be able to undo it later."
+                  t(
+                    "navigation.submitConfirm",
+                    "Are you sure you want to submit? You will not be able to undo it later."
+                  )
                 )
               ) {
                 await saveBtnFunction();
@@ -65,7 +70,7 @@ export default function Navigation({
         {cardId && isStudySubmitted && (
           <div className="iconBtn">
             {!isParticipationLocked && (
-              <div className="lockText">Enough participants?</div>
+              <div className="lockText">{t("navigation.enoughParticipants", "Enough participants?")}</div>
             )}
             <button
               onClick={async () => {
@@ -74,8 +79,8 @@ export default function Navigation({
               className={"lockButton"}
             >
               {isParticipationLocked
-                ? "Unlock for Participation"
-                : "Lock Participation"}
+                ? t("navigation.unlockParticipation", "Unlock for Participation")
+                : t("navigation.lockParticipation", "Lock Participation")}
             </button>
           </div>
         )}

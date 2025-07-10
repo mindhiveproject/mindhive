@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import InDev from "../../../../Global/InDev";
 import ProposalWrapper from "./Wrapper";
@@ -11,6 +12,7 @@ import { StyledProposal } from "../../../../styles/StyledProposal";
 import { Sidebar } from "semantic-ui-react";
 
 export default function ProjectBoard({ myclass, query, user }) {
+  const { t } = useTranslation("classes");
   const { data, error, loading } = useQuery(PROPOSAL_TEMPLATES_QUERY);
 
   const templates = data?.proposalBoards || [];
@@ -19,8 +21,8 @@ export default function ProjectBoard({ myclass, query, user }) {
     return (
       <>
         <InDev
-          header="🤷🏻 Sorry, there are no proposal templates"
-          message="If you need help, please contact the tech support at info@mindhive.science"
+          header={t("projectBoard.noTemplatesHeader")}
+          message={t("projectBoard.noTemplatesMessage")}
         />
       </>
     );
@@ -36,7 +38,7 @@ export default function ProjectBoard({ myclass, query, user }) {
           },
         }}
       >
-        <div>← Back</div>
+        <div>{t("projectBoard.back")}</div>
       </Link>
 
       <StyledProposal>

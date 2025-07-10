@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { Dropdown, Icon, Modal, Button } from "semantic-ui-react";
+import useTranslation from 'next-translate/useTranslation';
 
 import { ARCHIVE_STUDY } from "../../../Mutations/Study";
 import { GET_USER_STUDIES } from "../../../Queries/User";
@@ -9,6 +10,7 @@ import { MY_STUDY } from "../../../Queries/Study";
 import StyledModal from "../../../styles/StyledModal";
 
 export default function Archive({ user, study, studiesInfo }) {
+  const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
   const isArchived = studiesInfo && studiesInfo[study?.id]?.hideInDevelop;
 
@@ -36,7 +38,7 @@ export default function Archive({ user, study, studiesInfo }) {
             <>
               <div className="iconTitle">
                 <Icon name="archive" />
-                <p>{isArchived ? "Unarchive study" : "Archive Study"}</p>
+                <p>{isArchived ? t('study.unarchive', 'Unarchive study') : t('study.archive', 'Archive Study')}</p>
               </div>
               {/* {isArchived ? (
                 <p style={{ padding: "5px" }}>
@@ -62,23 +64,12 @@ export default function Archive({ user, study, studiesInfo }) {
         <Modal.Description>
           <StyledModal>
             <h3>
-              Are you sure you want to{" "}
-              <strong>{isArchived ? "unarchive" : "archive"}</strong> this
-              study?
+              {isArchived ? t('study.unarchiveConfirm', 'Are you sure you want to unarchive this study?') : t('study.archiveConfirm', 'Are you sure you want to archive this study?')}
             </h3>
             {isArchived ? (
-              <p>
-                The study will be returned to the "Active" section within your
-                Develop area. It will not impact how others see the study. You
-                can rearchive a study at any time.
-              </p>
+              <p>{t('study.unarchiveDescription', 'The study will be returned to the "Active" section within your Develop area. It will not impact how others see the study. You can rearchive a study at any time.')}</p>
             ) : (
-              <p>
-                Archiving a study allows you to focus on active studies. The
-                study will be moved to an "Archived" section within your Develop
-                area. It will not impact how others see the study. You can
-                unarchive a study at any time.
-              </p>
+              <p>{t('study.archiveDescription', 'Archiving a study allows you to focus on active studies. The study will be moved to an "Archived" section within your Develop area. It will not impact how others see the study. You can unarchive a study at any time.')}</p>
             )}
           </StyledModal>
         </Modal.Description>
@@ -86,7 +77,7 @@ export default function Archive({ user, study, studiesInfo }) {
       <Modal.Actions>
         <Button
           style={{ background: "#007C70", color: "#FFFFFF" }}
-          content={isArchived ? "Unarchive" : "Archive"}
+          content={isArchived ? t('study.unarchive', 'Unarchive') : t('study.archive', 'Archive')}
           onClick={() => {
             archiveStudy().catch((err) => {
               alert(err.message);
@@ -94,7 +85,7 @@ export default function Archive({ user, study, studiesInfo }) {
             setOpen(false);
           }}
         />
-        <Button content="Cancel" onClick={() => setOpen(false)} />
+        <Button content={t('cancel', 'Cancel')} onClick={() => setOpen(false)} />
       </Modal.Actions>
     </Modal>
   );

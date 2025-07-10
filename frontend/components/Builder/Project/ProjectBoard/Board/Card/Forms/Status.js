@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import { Dropdown } from "semantic-ui-react";
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 
 const StyledDropdown = styled.div`
   font-family: Nunito !important;
@@ -76,70 +77,67 @@ const StyledDropdown = styled.div`
   }
 `;
 
-class Status extends Component {
-  onChange = (event, data) => {
-    this.props.onSettingsChange("status", data.value);
+export default function Status(props) {
+  const { t } = useTranslation("builder");
+  const status = props?.settings?.status;
+  const options = [
+    {
+      key: "inProgress",
+      text: t("statusCard.inProgress", "In progress"),
+      value: "In progress",
+      className: "info-status status-in-progress",
+      image: { src: "/assets/icons/status/inProgress.svg" },
+    },
+    {
+      key: "completed",
+      text: t("statusCard.completed", "Completed"),
+      value: "Completed",
+      className: "info-status status-completed",
+      image: { src: "/assets/icons/status/completed.svg" },
+    },
+    {
+      key: "helpNeeded",
+      text: t("statusCard.helpNeeded", "Help needed"),
+      value: "Help needed",
+      className: "info-status status-help-needed",
+      image: { src: "/assets/icons/status/helpNeeded.svg" },
+    },
+    {
+      key: "comments",
+      text: t("statusCard.comments", "Comments"),
+      value: "Comments",
+      className: "info-status status-comments",
+      image: { src: "/assets/icons/status/comments.svg" },
+    },
+    {
+      key: "notStarted",
+      text: t("statusCard.notStarted", "Not started"),
+      value: "Not started",
+      className: "info-status status-not-started",
+      image: { src: "/assets/icons/status/notStarted.svg" },
+    },
+    {
+      key: "needsRevision",
+      text: t("statusCard.needsRevision", "Needs revision"),
+      value: "Needs revision",
+      className: "info-status status-needs-revision",
+      image: { src: "/assets/icons/status/TriangleWarning.svg" },
+    },
+  ];
+
+  const onChange = (event, data) => {
+    props.onSettingsChange("status", data.value);
   };
 
-  render() {
-    const status = this.props?.settings?.status;
-    const options = [
-      {
-        key: "inProgress",
-        text: "In progress",
-        value: "In progress",
-        className: "info-status status-in-progress",
-        image: { src: "/assets/icons/status/inProgress.svg" },
-      },
-      {
-        key: "completed",
-        text: "Completed",
-        value: "Completed",
-        className: "info-status status-completed",
-        image: { src: "/assets/icons/status/completed.svg" },
-      },
-      {
-        key: "helpNeeded",
-        text: "Help needed",
-        value: "Help needed",
-        className: "info-status status-help-needed",
-        image: { src: "/assets/icons/status/helpNeeded.svg" },
-      },
-      {
-        key: "comments",
-        text: "Comments",
-        value: "Comments",
-        className: "info-status status-comments",
-        image: { src: "/assets/icons/status/comments.svg" },
-      },
-      {
-        key: "notStarted",
-        text: "Not started",
-        value: "Not started",
-        className: "info-status status-not-started",
-        image: { src: "/assets/icons/status/notStarted.svg" },
-      },
-      {
-        key: "needsRevision",
-        text: "Needs revision",
-        value: "Needs revision",
-        className: "info-status status-needs-revision",
-        image: { src: "/assets/icons/status/TriangleWarning.svg" },
-      },
-    ];
-
-    return (
-      <StyledDropdown>
-        <Dropdown
-          placeholder="Set status before closing"
-          selection
-          options={options}
-          onChange={this.onChange}
-          value={status}
-        />
-      </StyledDropdown>
-    );
-  }
+  return (
+    <StyledDropdown>
+      <Dropdown
+        placeholder={t("statusCard.setStatus", "Set status before closing")}
+        selection
+        options={options}
+        onChange={onChange}
+        value={status}
+      />
+    </StyledDropdown>
+  );
 }
-
-export default Status;

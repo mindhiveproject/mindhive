@@ -1,8 +1,10 @@
 import React from "react";
 import { Button, Modal, Icon } from "semantic-ui-react";
 import ReactStars from "react-rating-stars-component";
+import useTranslation from "next-translate/useTranslation";
 
 export default function ReviewModal({ review, profile }) {
+  const { t } = useTranslation("classes");
   const [open, setOpen] = React.useState(false);
   const { content, title } = review;
   const { username } = profile;
@@ -28,7 +30,7 @@ export default function ReviewModal({ review, profile }) {
                 color: "lightgrey",
               }}
             >
-              Author
+              {t("reviewed.author")}
             </div>
             {username}
           </div>
@@ -38,7 +40,7 @@ export default function ReviewModal({ review, profile }) {
                 color: "lightgrey",
               }}
             >
-              Study
+              {t("reviewed.study")}
             </div>
             {title}
           </div>
@@ -75,7 +77,7 @@ export default function ReviewModal({ review, profile }) {
       </Modal.Content>
       <Modal.Actions>
         <Button color="black" onClick={() => setOpen(false)}>
-          Close
+          {t("reviewed.close")}
         </Button>
       </Modal.Actions>
     </Modal>

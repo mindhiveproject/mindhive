@@ -5,6 +5,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 
 import Inner from "./Inner";
+import useTranslation from 'next-translate/useTranslation';
 
 import {
   CREATE_SECTION,
@@ -19,6 +20,7 @@ const Board = ({
   adminMode,
   isPreview,
 }) => {
+  const { t } = useTranslation('builder');
   const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
     pollInterval: 20000, // get new data every 20 seconds
@@ -47,8 +49,8 @@ const Board = ({
     }
   }, [proposal]);
 
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error.message}`;
+  if (loading) return t('board.loading', 'Loading...');
+  if (error) return t('board.error', { message: error.message }, `Error! ${error.message}`);
 
   return (
     <Inner

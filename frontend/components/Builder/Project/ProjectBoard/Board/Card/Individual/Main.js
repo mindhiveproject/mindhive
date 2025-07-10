@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useRef } from "react";
 import ReactHtmlParser from "react-html-parser";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_MY_HOMEWORK_FOR_PROPOSAL_CARD } from "../../../../../../Queries/Homework";
 import {
@@ -24,6 +25,7 @@ export default function IndividualCard({
   closeCard,
   isPreview,
 }) {
+  const { t } = useTranslation("builder");
   const { data, loading, error } = useQuery(GET_MY_HOMEWORK_FOR_PROPOSAL_CARD, {
     variables: {
       userId: user?.id,
@@ -116,7 +118,7 @@ export default function IndividualCard({
         saveBtnFunction={() => {
           saveHomework();
         }}
-        saveBtnName="Save & Exit"
+        saveBtnName={t("individualCard.saveExit", "Save & Exit")}
       />
 
       <StyledProposal>
@@ -129,8 +131,10 @@ export default function IndividualCard({
 
           <div className="lockedMessage">
             <div>
-              This is your private workspace. Only your teacher and reviewer
-              have access to the content you write here.
+              {t(
+                "individualCard.privateWorkspaceMsg",
+                "This is your private workspace. Only your teacher and reviewer have access to the content you write here."
+              )}
             </div>
           </div>
 
@@ -154,7 +158,7 @@ export default function IndividualCard({
             {!isPreview && (
               <div className="infoBoard">
                 <div>
-                  <h4>Status</h4>
+                  <h4>{t("individualCard.status", "Status")}</h4>
                   <Status
                     settings={inputs?.settings}
                     onSettingsChange={handleSettingsChange}
@@ -162,7 +166,7 @@ export default function IndividualCard({
                 </div>
 
                 <div className="proposalCardComments">
-                  <h4>Comments</h4>
+                  <h4>{t("individualCard.comments", "Comments")}</h4>
                   <textarea
                     rows="5"
                     type="text"
@@ -175,17 +179,10 @@ export default function IndividualCard({
                 </div>
 
                 <div className="buttons">
-                  {/* <button
-                    className="secondary"
-                    onClick={() =>
-                      closeCard({ cardId: false, lockedByUser: false })
-                    }
-                  >
-                    Close without saving
-                  </button> */}
-
                   <button className="primary" onClick={() => saveHomework()}>
-                    {editLoading ? "Saving ..." : "Save"}
+                    {editLoading
+                      ? t("individualCard.saving", "Saving ...")
+                      : t("individualCard.save", "Save")}
                   </button>
                 </div>
               </div>
