@@ -309,8 +309,8 @@
 		"transferAuthorship": "Transférer la paternité",
 		"typeChangeAlert": "Veuillez taper CHANGE pour changer l'auteur de votre étude",
 		"typeChangeToConfirm": "Tapez « CHANGE » pour confirmer",
-		"typeDeleteAlert": "Veuillez taper SUPPRIMER pour supprimer votre étude",
-		"typeDeleteToConfirm": "Tapez « SUPPRIMER » pour confirmer",
+		"typeDeleteAlert": "Veuillez taper DELETE pour supprimer votre étude",
+		"typeDeleteToConfirm": "Tapez « DELETE » pour confirmer",
 		"unarchive": "Étude de désarchivage",
 		"unarchiveConfirm": "Êtes-vous sûr de vouloir désarchiver cette étude ?",
 		"unarchiveDescription": "L'étude sera renvoyée dans la section « Active » de votre espace Développement. Cela n'aura aucune incidence sur la façon dont les autres la verront. Vous pouvez réarchiver une étude à tout moment."

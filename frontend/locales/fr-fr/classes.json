@@ -6,19 +6,19 @@
 	"anyStudiesOrResults": "Toutes études ou résultats générés par les étudiants de votre classe",
 	"areYouSureDeleteClass": "Êtes-vous sûr de vouloir supprimer ce cours ?",
 	"assignment": {
-		"addAssignment": "Ajouter une affectation",
+		"addAssignment": "Ajouter un devoir",
 		"classes": "Classe(s)",
 		"classHomeworkOverview": "Aperçu des devoirs de classe",
 		"copyLink": "Copier le lien",
-		"createFromExisting": "Créer une nouvelle tâche à partir d'une tâche existante",
-		"createFromScratchOrList": "Créez une nouvelle tâche à partir de zéro ou sélectionnez-en une dans la liste ci-dessous",
-		"createFromTemplate": "Créer une nouvelle tâche à partir d'un modèle",
-		"createNew": "Créer une nouvelle tâche",
+		"createFromExisting": "Créer un nouveau devoir à partir d'un devoir existant",
+		"createFromScratchOrList": "Créez un nouveau devoir à partir de zéro ou sélectionnez-en un dans la liste ci-dessous",
+		"createFromTemplate": "Créer un nouveau devoir à partir d'un modèle",
+		"createNew": "Créer un nouveau devoir",
 		"creator": "Créateur",
 		"dateCreated": "Date de création",
 		"dateUpdated": "Date de mise à jour",
 		"delete": "Supprimer",
-		"deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette tâche ?",
+		"deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce devoir ?",
 		"editAssignment": "Modifier la mission",
 		"goBack": "← Retour",
 		"homework": "{{count}} devoirs",
@@ -378,6 +378,6 @@
 		"teacherClasses": "Cours pour enseignants"
 	},
 	"theirWorkspaceAndStudies": "Leur espace de travail et toutes les études, tâches ou enquêtes qu'ils ont créées pendant votre cours",
-	"typeDeleteToConfirm": "Tapez « SUPPRIMER » pour confirmer",
+	"typeDeleteToConfirm": "Tapez « DELETE » pour confirmer",
 	"yourClass": "Votre classe"
 }

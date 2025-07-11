@@ -12,7 +12,7 @@ import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 
 import StyledClass from "../../../../../styles/StyledClass";
 
-export default function StudyManager(props) {
+export default function studyManager(props) {
   const { t } = useTranslation("classes");
   const [isOpen, setIsOpen] = useState(false);
   const [studyId, setStudyId] = useState(null);
@@ -73,7 +73,7 @@ export default function StudyManager(props) {
 
   const assignToStudy = async () => {
     if (!studyId) {
-      return alert(t("studyManager.selectStudyFirst"));
+      return alert(t("dashboard.studyManager.selectStudyFirst"));
     }
 
     if (hasProject) {
@@ -120,7 +120,7 @@ export default function StudyManager(props) {
       setIsOpen(false);
     } catch (error) {
       console.error("Error connecting study to project:", error);
-      alert(t("studyManager.failedToConnectStudy"));
+      alert(t("dashboard.studyManager.failedToConnectStudy"));
       setIsConfirmModalOpen(false);
       setSelectedStudyForProject(null);
     }
@@ -133,7 +133,7 @@ export default function StudyManager(props) {
 
   const createNewStudy = async () => {
     if (!studyName) {
-      return alert(t("studyManager.giveStudyNameFirst"));
+      return alert(t("dashboard.studyManager.giveStudyNameFirst"));
     }
 
     if (hasProject) {
@@ -235,7 +235,7 @@ export default function StudyManager(props) {
       });
     } catch (error) {
       console.error("Error disconnecting main project study:", error);
-      alert(t("studyManager.failedToDisconnectStudy"));
+      alert(t("dashboard.studyManager.failedToDisconnectStudy"));
     }
   };
 
@@ -247,7 +247,7 @@ export default function StudyManager(props) {
       trigger={
         <StyledTriggerButton>
           <Icon name="book" />
-          {t("studyManager.manageStudies", { count: collaboratorStudies.length })}
+          {t("dashboard.studyManager.manageStudies", { count: collaboratorStudies.length })}
         </StyledTriggerButton>
       }
       dimmer="blurring"
@@ -257,30 +257,30 @@ export default function StudyManager(props) {
       <StyledModal>
         <Modal.Content>
           <div className="modalHeader">
-            <h1>{t("studyManager.manageStudiesFor", { username: props?.data?.username })}</h1>
-            <p>{t("studyManager.viewCreateAssign")}</p>
+            <h1>{t("dashboard.studyManager.manageStudiesFor", { username: props?.data?.username })}</h1>
+            <p>{t("dashboard.studyManager.viewCreateAssign")}</p>
           </div>
           <StyledClass>
             <div className="dashboard">
               <div className="manageModal">
                 {hasProject && (
                   <div className="section">
-                    <h2>{t("studyManager.mainProjectStudy")}</h2>
+                    <h2>{t("dashboard.studyManager.mainProjectStudy")}</h2>
                     {mainProjectStudy ? (
                       <div className="study-item main-study">
                         <div className="study-info">
                           <h3>{mainProjectStudy.title}</h3>
-                          <p>{t("studyManager.connectedToProject", { project: project?.title })}</p>
+                          <p>{t("dashboard.studyManager.connectedToProject", { project: project?.title })}</p>
                           <div className="collaborators">
-                            <strong>{t("studyManager.collaborators")}</strong>{" "}
+                            <strong>{t("dashboard.studyManager.collaborators")}</strong>{" "}
                             {mainProjectStudy.collaborators?.length > 0
                               ? mainProjectStudy.collaborators
                                   .map((c) => c.username)
                                   .join(", ")
-                              : t("studyManager.none")}
+                              : t("dashboard.studyManager.none")}
                           </div>
                           <div className="mentors">
-                            <strong>{t("studyManager.mentors")}</strong>{" "}
+                            <strong>{t("dashboard.studyManager.mentors")}</strong>{" "}
                             {mainProjectStudy.collaborators?.filter((c) =>
                               c.permissions.some((p) => p.name === "MENTOR")
                             ).length > 0
@@ -292,33 +292,33 @@ export default function StudyManager(props) {
                                   )
                                   .map((c) => c.username)
                                   .join(", ")
-                              : t("studyManager.none")}
+                              : t("dashboard.studyManager.none")}
                           </div>
                           <Link
                             href={`/builder/projects?selector=${project.id}&tab=builder`}
                             target="_blank"
                             className="study-link"
                           >
-                            {t("studyManager.viewStudy")}
+                            {t("dashboard.studyManager.viewStudy")}
                           </Link>
                         </div>
                         <button
                           className="disconnect-button"
                           onClick={disconnectMainProjectStudy}
                         >
-                          {t("studyManager.disconnect")}
+                          {t("dashboard.studyManager.disconnect")}
                         </button>
                       </div>
                     ) : (
                       <p>
-                        {t("studyManager.noStudyConnected")}
+                        {t("dashboard.studyManager.noStudyConnected")}
                       </p>
                     )}
                   </div>
                 )}
                 {hasCollaboratorStudies ? (
                   <div className="section">
-                    <h2>{t("studyManager.collaboratorStudies")}</h2>
+                    <h2>{t("dashboard.studyManager.collaboratorStudies")}</h2>
                     <div className="study-list">
                       {collaboratorStudies
                         .filter(
@@ -331,15 +331,15 @@ export default function StudyManager(props) {
                             <div className="study-info">
                               <h3>{study.title}</h3>
                               <div className="collaborators">
-                                <strong>{t("studyManager.collaborators")}</strong>{" "}
+                                <strong>{t("dashboard.studyManager.collaborators")}</strong>{" "}
                                 {study.collaborators?.length > 0
                                   ? study.collaborators
                                       .map((c) => c.username)
                                       .join(", ")
-                                  : t("studyManager.none")}
+                                  : t("dashboard.studyManager.none")}
                               </div>
                               <div className="mentors">
-                                <strong>{t("studyManager.mentors")}</strong>{" "}
+                                <strong>{t("dashboard.studyManager.mentors")}</strong>{" "}
                                 {study.collaborators?.filter((c) =>
                                   c.permissions.some((p) => p.name === "MENTOR")
                                 ).length > 0
@@ -351,21 +351,21 @@ export default function StudyManager(props) {
                                       )
                                       .map((c) => c.username)
                                       .join(", ")
-                                  : t("studyManager.none")}
+                                  : t("dashboard.studyManager.none")}
                               </div>
                               <Link
                                 href={`/builder/studies?selector=${study.id}`}
                                 target="_blank"
                                 className="study-link"
                               >
-                                {t("studyManager.viewStudy")}
+                                {t("dashboard.studyManager.viewStudy")}
                               </Link>
                             </div>
                             <button
                               className="disconnect-button"
                               onClick={() => disconnectFromStudy(study.id)}
                             >
-                              {t("studyManager.removeCollaborator")}
+                              {t("dashboard.studyManager.removeCollaborator")}
                             </button>
                           </div>
                         ))}
@@ -374,9 +374,9 @@ export default function StudyManager(props) {
                 ) : (
                   !mainProjectStudy && (
                     <div className="section empty-state">
-                      <h2>{t("studyManager.noCollaboratorStudiesAssigned")}</h2>
+                      <h2>{t("dashboard.studyManager.noCollaboratorStudiesAssigned")}</h2>
                       <p>
-                        {t("studyManager.notAssignedToAnyStudies")}
+                        {t("dashboard.studyManager.notAssignedToAnyStudies")}
                       </p>
                     </div>
                   )
@@ -384,17 +384,17 @@ export default function StudyManager(props) {
                 {hasProject ? (
                   <>
                     <div className="section">
-                      <h2>{t("studyManager.project")}</h2>
+                      <h2>{t("dashboard.studyManager.project")}</h2>
                       <div className="project-info">
                         <p>
-                          <strong>{t("studyManager.title")}</strong>{" "}
-                          {project?.title || t("studyManager.unknownProject")}
+                          <strong>{t("dashboard.studyManager.title")}</strong>{" "}
+                          {project?.title || t("dashboard.studyManager.unknownProject")}
                         </p>
                         <p>
-                          <strong>{t("studyManager.collaborators")}</strong>{" "}
+                          <strong>{t("dashboard.studyManager.collaborators")}</strong>{" "}
                           {project?.collaborators
                             ?.map((c) => c.username)
-                            .join(", ") || t("studyManager.none")}
+                            .join(", ") || t("dashboard.studyManager.none")}
                         </p>
                       </div>
                     </div>
@@ -402,13 +402,13 @@ export default function StudyManager(props) {
                       <div className="section">
                         <h2>
                           {mainProjectStudy
-                            ? t("studyManager.reassignToAnotherStudy")
-                            : t("studyManager.assignToExistingStudy")}
+                            ? t("dashboard.studyManager.reassignToAnotherStudy")
+                            : t("dashboard.studyManager.assignToExistingStudy")}
                         </h2>
                         <p>
                           {mainProjectStudy
-                            ? t("studyManager.selectDifferentStudy")
-                            : t("studyManager.chooseExistingStudy")}
+                            ? t("dashboard.studyManager.selectDifferentStudy")
+                            : t("dashboard.studyManager.chooseExistingStudy")}
                         </p>
                         <Dropdown
                           selection
@@ -418,17 +418,17 @@ export default function StudyManager(props) {
                           onChange={(e, data) => setStudyId(data?.value)}
                           fluid
                           className="study-dropdown"
-                          placeholder={t("studyManager.selectAStudy")}
+                          placeholder={t("dashboard.studyManager.selectAStudy")}
                           disabled={studyOptions.length === 0}
                         />
                       </div>
                       <div className="section">
-                        <h2>{t("studyManager.createNewStudy")}</h2>
-                        <p>{t("studyManager.createNewStudyToConnect")}</p>
+                        <h2>{t("dashboard.studyManager.createNewStudy")}</h2>
+                        <p>{t("dashboard.studyManager.createNewStudyToConnect")}</p>
                         <input
                           type="text"
                           name="studyName"
-                          placeholder={t("studyManager.enterNewStudyName")}
+                          placeholder={t("dashboard.studyManager.enterNewStudyName")}
                           value={studyName}
                           onChange={(e) => setStudyName(e?.target?.value)}
                           className="study-input"
@@ -438,14 +438,14 @@ export default function StudyManager(props) {
                   </>
                 ) : (
                   <div className="section">
-                    <h2>{t("studyManager.createNewStudy")}</h2>
+                    <h2>{t("dashboard.studyManager.createNewStudy")}</h2>
                     <p>
-                      {t("studyManager.noProjectAssigned")}
+                      {t("dashboard.studyManager.noProjectAssigned")}
                     </p>
                     <input
                       type="text"
                       name="studyName"
-                      placeholder={t("studyManager.enterNewStudyName")}
+                      placeholder={t("dashboard.studyManager.enterNewStudyName")}
                       value={studyName}
                       onChange={(e) => setStudyName(e?.target?.value)}
                       className="study-input"
@@ -457,7 +457,7 @@ export default function StudyManager(props) {
           </StyledClass>
           <div className="footer">
             <button className="cancel-button" onClick={() => setIsOpen(false)}>
-              {t("studyManager.cancel")}
+              {t("dashboard.studyManager.cancel")}
             </button>
             {hasProject && (
               <button
@@ -465,7 +465,7 @@ export default function StudyManager(props) {
                 onClick={assignToStudy}
                 disabled={!studyId}
               >
-                {mainProjectStudy ? t("studyManager.reassignStudy") : t("studyManager.assignToStudy")}
+                {mainProjectStudy ? t("dashboard.studyManager.reassignStudy") : t("dashboard.studyManager.assignToStudy")}
               </button>
             )}
             <button
@@ -473,7 +473,7 @@ export default function StudyManager(props) {
               onClick={createNewStudy}
               disabled={!studyName}
             >
-              {t("studyManager.createStudy")}
+              {t("dashboard.studyManager.createStudy")}
             </button>
           </div>
         </Modal.Content>
@@ -484,25 +484,25 @@ export default function StudyManager(props) {
           onClose={cancelStudyConnection}
           size="tiny"
         >
-          <Modal.Header>{t("studyManager.confirmStudyConnection")}</Modal.Header>
+          <Modal.Header>{t("dashboard.studyManager.confirmStudyConnection")}</Modal.Header>
           <Modal.Content>
             <Modal.Description>
-              {t("studyManager.confirmStudyConnectionDesc", {
-                action: mainProjectStudy ? t("studyManager.reassign") : t("studyManager.connect"),
+              {t("dashboard.studyManager.confirmStudyConnectionDesc", {
+                action: mainProjectStudy ? t("dashboard.studyManager.reassign") : t("dashboard.studyManager.connect"),
                 project: project?.title
               })}
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>
             <Button onClick={cancelStudyConnection} className="cancel-button">
-              {t("studyManager.cancel")}
+              {t("dashboard.studyManager.cancel")}
             </Button>
             <Button
               onClick={confirmStudyConnection}
               className="confirm-button"
               primary
             >
-              {t("studyManager.confirm")}
+              {t("dashboard.studyManager.confirm")}
             </Button>
           </Modal.Actions>
         </StyledConfirmModal>
