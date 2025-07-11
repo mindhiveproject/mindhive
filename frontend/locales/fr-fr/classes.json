@@ -40,9 +40,9 @@
 	"assignmentsTab": "Devoirs",
 	"board": {
 		"actionCollectingData": "Carte d'action - Commencer à collecter des données",
-		"actionPeerFeedback": "Fiche d'action - Soumettre pour commentaires par les pairs",
-		"actionProjectReport": "Fiche d'action - Soumettre le rapport de projet",
-		"actionSubmit": "Fiche d'action - Soumettre une proposition",
+		"actionPeerFeedback": "Carte d'action - Soumettre pour commentaires par les pairs",
+		"actionProjectReport": "Carte d'action - Soumettre le rapport de projet",
+		"actionSubmit": "Carte d'action - Soumettre une proposition",
 		"addExistingResources": "Ajouter des ressources existantes (voir Ressources dans le volet de navigation)",
 		"addExistingResourcesComment": "Ajouter des ressources existantes (voir Ressources dans le volet de navigation)",
 		"askToClose": "Demandez à l'utilisateur de fermer la carte ou d'attendre que la carte soit libérée.",
@@ -80,8 +80,8 @@
 		"studentResponseBoxCollaborators": "Boîte de réponses des étudiants – Pour les collaborateurs du projet",
 		"studentResponseBoxCollaboratorsComment": "Le contenu que les élèves intègrent ici ne sera visible que par leurs collaborateurs et enseignants. N'hésitez pas à inclure des modèles ou des espaces réservés, si nécessaire.",
 		"studentResponseBoxNetwork": "Boîte de réponses des étudiants – Pour le réseau MindHive",
-		"studentResponseBoxNetworkComment": "Le contenu que les élèves incluent ici sera visible dans le Centre de commentaires une fois soumis via une fiche d'action. Ajoutez des modèles ou des espaces réservés si nécessaire.",
-		"type": "Taper",
+		"studentResponseBoxNetworkComment": "Le contenu que les élèves incluent ici sera visible dans le Centre de commentaires une fois soumis via une carte d'action. Ajoutez des modèles ou des espaces réservés si nécessaire.",
+		"type": "Type de carte",
 		"typeResource": "Type de ressource",
 		"visibility": "Visibilité",
 		"visibilityComment": "Cochez la case pour inclure les commentaires des étudiants pour le centre de commentaires"
