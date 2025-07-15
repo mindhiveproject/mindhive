@@ -103,6 +103,7 @@
 		}
 	},
 	"cloneAndModify": "Cloner et modifier un {{taskType}}",
+	"closeButton": "Fermer",
 	"collect": {
 		"noProjectFound": "Aucun projet trouvé, veuillez d'abord enregistrer votre projet.",
 		"noStudyAttachedHeader": "🤷🏻 Votre projet n'a aucune étude qui lui est associée.",
@@ -474,6 +475,7 @@
 		"uploadPreview": "Télécharger l'aperçu",
 		"uploadStudyImage": "Télécharger l'image de l'étude"
 	},
+	"printButton": "📄 Imprimer/Enregistrer au format PDF",
 	"project": {
 		"cancel": "Annuler",
 		"chooseStudy": "Choisissez une étude...",
@@ -558,6 +560,7 @@
 		"titlePlaceholder": "Saisissez le titre du tableau du projet"
 	},
 	"proposalPage": {
+		"download": "Télécharger",
 		"preview": "Aperçu",
 		"previewInfo": "Le contenu des cartes marquées comme « terminées » en mode édition apparaîtra ici, en mode aperçu, affichant ce que vos réviseurs verront.",
 		"submittedLocked": "La proposition a été soumise et verrouillée 🔒"

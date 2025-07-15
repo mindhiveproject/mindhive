@@ -103,6 +103,7 @@
 		}
 	},
 	"cloneAndModify": "Clone & modify a {{taskType}}",
+	"closeButton": "Close",
 	"collect": {
 		"noProjectFound": "No project found, please save your project first.",
 		"noStudyAttachedHeader": "🤷🏻 Your project has no Study attached to it.",
@@ -474,6 +475,7 @@
 		"uploadPreview": "Upload preview",
 		"uploadStudyImage": "Upload study image"
 	},
+	"printButton": "📄 Print/Save as PDF",
 	"project": {
 		"cancel": "Cancel",
 		"chooseStudy": "Choose a study...",
@@ -558,6 +560,7 @@
 		"titlePlaceholder": "Enter project board title"
 	},
 	"proposalPage": {
+		"download": "Download",
 		"preview": "Preview",
 		"previewInfo": "Content from cards marked as \"complete\" in edit mode will appear here, in preview mode, displaying what your reviewers will see.",
 		"submittedLocked": "The proposal has been submitted and locked 🔒"

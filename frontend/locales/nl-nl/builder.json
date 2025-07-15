@@ -103,6 +103,7 @@
 		}
 	},
 	"cloneAndModify": "Een {{taskType}} klonen en wijzigen",
+	"closeButton": "Dichtbij",
 	"collect": {
 		"noProjectFound": "Er is geen project gevonden. Sla uw project eerst op.",
 		"noStudyAttachedHeader": "🤷🏻 Er is geen studie aan uw project gekoppeld.",
@@ -474,6 +475,7 @@
 		"uploadPreview": "Voorbeeld uploaden",
 		"uploadStudyImage": "Upload studie-afbeelding"
 	},
+	"printButton": "📄 Afdrukken/Opslaan als PDF",
 	"project": {
 		"cancel": "Annuleren",
 		"chooseStudy": "Kies een studie...",
@@ -558,6 +560,7 @@
 		"titlePlaceholder": "Voer de titel van het projectbord in"
 	},
 	"proposalPage": {
+		"download": "Downloaden",
 		"preview": "Voorvertoning",
 		"previewInfo": "Inhoud van kaarten die in de bewerkingsmodus als 'voltooid' zijn gemarkeerd, worden hier weergegeven in de voorbeeldmodus, zodat uw reviewers kunnen zien wat ze zien.",
 		"submittedLocked": "Het voorstel is ingediend en vergrendeld 🔒"
