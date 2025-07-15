@@ -105,12 +105,11 @@ export const StyledProposal = styled.div`
   .proposalBoard {
     display: grid;
     grid-template-rows: auto 1fr;
-    width: max-content;
     margin: 20px;
 
     .previewToggle {
       display: grid;
-      grid-template-columns: auto auto 1fr;
+      grid-template-columns: auto auto auto;
       grid-gap: 1rem;
       margin: 5px 0px 15px 0px;
       align-items: center;
@@ -127,7 +126,8 @@ export const StyledProposal = styled.div`
       }
       .preview {
         display: grid;
-        grid-template-columns: auto auto;
+        grid-gap: 1rem;
+        grid-template-columns: auto 1fr;
         align-items: center;
       }
       .alert {
@@ -942,5 +942,41 @@ export const StyledActionCard = styled.div`
     display: grid;
     justify-content: center;
     align-content: center;
+  }
+`;
+
+export const DownloadButton = styled.button`
+  && {
+    display: inline-flex;
+    height: 40px;
+    padding: 8px 24px 8px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    background: #007c70;
+    border: 1px solid #007c70;
+    border-radius: 100px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    color: #ffffff;
+    cursor: pointer;
+    width: auto;
+    min-width: 0;
+    :hover {
+      transform: scale(1.1);
+      transition: transform 0.5s;
+    }
+    :disabled {
+      background: #cccccc;
+      border-color: #cccccc;
+      cursor: not-allowed;
+    }
+    .icon {
+      align-items: center !important;
+      margin: 0 !important;
+    }
   }
 `;
