@@ -4,12 +4,16 @@ import { useState, useEffect } from "react";
 import { GET_DATA_JOURNAL } from "../../../Queries/DataJournal";
 import { StyledDataJournal } from "./styles/StyledDataJournal";
 
-import Workspace from "./Workspace";
+import StudyDataWrapper from "./StudyDataWrapper";
+// import Workspace from "./Workspace";
 
 export default function Journal({
+  user,
+  studyId,
   dataJournals,
   journalId,
   selectJournalById,
+  pyodide,
 }) {
   // the state for the currently active workspace
   const [workspace, setWorkspace] = useState(null);
@@ -46,14 +50,26 @@ export default function Journal({
   return (
     <StyledDataJournal>
       {workspace && (
-        <Workspace
+        <StudyDataWrapper
+          user={user}
+          studyId={studyId}
           dataJournals={dataJournals}
           journalId={journalId}
           selectJournalById={selectJournalById}
           workspaces={workspaces}
           workspaceId={workspace?.id}
           selectWorkspaceById={selectWorkspaceById}
+          pyodide={pyodide}
         />
+        // <Workspace
+        //   dataJournals={dataJournals}
+        //   journalId={journalId}
+        //   selectJournalById={selectJournalById}
+        //   workspaces={workspaces}
+        //   workspaceId={workspace?.id}
+        //   selectWorkspaceById={selectWorkspaceById}
+        //   pyodide={pyodide}
+        // />
       )}
     </StyledDataJournal>
   );

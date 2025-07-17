@@ -1,12 +1,14 @@
 // ---- Structure ------
-// DataJournals
-//  Journals
+//  Pyodide wrapper (PyodideWrapper.js)
+//
+//
 //
 //
 //
 
 import Navigation from "../Navigation/Main";
-import Journals from "./Journals";
+import PyodideWrapper from "./PyodideWrapper";
+// import Journals from "./Journals";
 
 export default function DataJournals({ user, query, tab, toggleSidebar }) {
   const projectId = query?.selector;
@@ -21,7 +23,8 @@ export default function DataJournals({ user, query, tab, toggleSidebar }) {
         tab={tab}
         toggleSidebar={toggleSidebar}
       />
-      <Journals user={user} projectId={projectId} studyId={studyId} />
+      {/* <Journals user={user} projectId={projectId} studyId={studyId} /> */}
+      <PyodideWrapper user={user} projectId={projectId} studyId={studyId} />
     </>
   );
 }

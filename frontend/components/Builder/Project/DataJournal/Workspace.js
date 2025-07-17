@@ -9,12 +9,17 @@ import { StyledDataWorkspace } from "./styles/StyledDataJournal";
 import Grid from "./Workspace/Grid";
 
 export default function Workspace({
+  user,
   dataJournals,
   journalId,
   selectJournalById,
   workspaces,
   workspaceId,
   selectWorkspaceById,
+  pyodide,
+  initData,
+  initVariables,
+  initSettings,
 }) {
   const [workspace, setWorkspace] = useState({ layout: [], vizSections: [] });
 
@@ -26,10 +31,6 @@ export default function Workspace({
 
   useEffect(() => {
     if (workspaceServer) {
-      // setWorkspace({
-      //   layout: workspaceServer.layout || [],
-      //   vizSections: workspaceServer.vizSections || [],
-      // });
       setWorkspace(workspaceServer);
     }
   }, [workspaceServer]);
@@ -48,6 +49,10 @@ export default function Workspace({
         workspace={workspace}
         updateWorkspace={updateWorkspace}
         selectWorkspaceById={selectWorkspaceById}
+        pyodide={pyodide}
+        initData={initData}
+        initVariables={initVariables}
+        initSettings={initSettings}
       />
     </StyledDataWorkspace>
   );

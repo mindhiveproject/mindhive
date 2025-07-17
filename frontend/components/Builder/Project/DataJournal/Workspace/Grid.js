@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import {
   CREATE_DATA_COMPONENT,
@@ -8,7 +8,9 @@ import {
 import GridLayout from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+
 import Widget from "./Widget";
+
 import TopNavigation from "../TopNav/Main";
 import SideNavigation from "../SideNav/Main";
 import ComponentEditor from "../ComponentEditor/Main";
@@ -32,12 +34,47 @@ export default function Grid({
   workspace,
   updateWorkspace,
   selectWorkspaceById,
+  pyodide,
+  initData,
+  initVariables,
+  initSettings,
 }) {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [activeComponentId, setActiveComponentId] = useState(null);
 
   const layout = useMemo(() => workspace?.layout || [], [workspace]);
   const components = useMemo(() => workspace?.vizSections || [], [workspace]);
+
+  // data, variables, and settings
+  // the data to be displayed
+  const [data, setData] = useState([...initData]);
+  const [variables, setVariables] = useState([...initVariables]);
+  const [settings, setSettings] = useState(initSettings || {});
+
+  useEffect(() => {
+    async function getData() {
+      setData([...initData]);
+    }
+    getData();
+  }, [initData]);
+
+  useEffect(() => {
+    async function getColumns() {
+      setVariables([...initVariables]);
+    }
+    if (initVariables?.length) {
+      getColumns();
+    }
+  }, [initVariables]);
+
+  useEffect(() => {
+    async function getSettings() {
+      setSettings({ ...initSettings });
+    }
+    if (initSettings) {
+      getSettings();
+    }
+  }, [initSettings]);
 
   const [createComponent] = useMutation(CREATE_DATA_COMPONENT, {
     variables: {},
@@ -55,7 +92,6 @@ export default function Grid({
 
   const handleLayoutChange = useCallback(
     (newLayout) => {
-      console.log("Grid handleLayoutChange:", newLayout);
       updateWorkspace({ layout: newLayout });
     },
     [updateWorkspace]
@@ -79,7 +115,8 @@ export default function Grid({
         variables: {
           input: {
             type: type,
-            content: { text: "" },
+            title: "TEST",
+            // content: { text: "" },
             vizChapter: {
               connect: {
                 id: workspace?.id,
@@ -124,12 +161,11 @@ export default function Grid({
 
   const handleUpdateComponent = useCallback(
     ({ componentId, field, value }) => {
-      console.log("Grid handleUpdateComponent:", { componentId, field, value });
       const updatedComponents = components.map((comp) =>
         comp.id === componentId
           ? {
               ...comp,
-              content: { ...comp.content, [field]: value },
+              content: { ...value?.newContent },
             }
           : comp
       );
@@ -140,7 +176,6 @@ export default function Grid({
 
   const handleSaveComponent = useCallback(
     async (componentId) => {
-      console.log("Grid handleSaveComponent:", componentId);
       const component = components.find((comp) => comp.id === componentId);
       if (component) {
         try {
@@ -159,9 +194,6 @@ export default function Grid({
     },
     [components, updateComponent]
   );
-
-  console.log("Grid rendering, activeComponentId:", activeComponentId);
-  console.log("Grid components:", components);
 
   return (
     <StyledDataWorkspace>
@@ -211,6 +243,8 @@ export default function Grid({
                   compactType="vertical"
                   preventCollision={false}
                   margin={[16, 16]}
+                  draggableHandle=".widget-header"
+                  draggableCancel=".widget-button" // Exclude buttons from dragging
                 >
                   {components.map((widget) => {
                     const layoutItem = layout.find(
@@ -239,7 +273,12 @@ export default function Grid({
                           content={widget.content}
                           isActive={widget.id === activeComponentId}
                           onSelect={handleComponentSelect}
+                          onChange={handleUpdateComponent}
                           handleRemoveComponent={handleRemoveComponent}
+                          pyodide={pyodide}
+                          data={data}
+                          variables={variables}
+                          settings={settings}
                         />
                       </div>
                     );

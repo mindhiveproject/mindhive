@@ -19,18 +19,21 @@ export const StyledDataWorkspace = styled.div`
   grid-gap: 10px;
   .dashboard {
     display: grid;
-    grid-template-columns: auto 1fr auto; /* Add column for right panel */
+    grid-template-columns: auto 1fr auto;
     grid-gap: 10px;
     align-content: baseline;
-    height: calc(100vh - 50px); /* Adjust for TopNavigation height */
+    height: calc(100vh - 50px);
   }
   .canvas {
     display: grid;
     width: 100%;
     border: 1px solid grey;
-    height: 100%; /* Fill available height */
+    height: 100%;
     .widgetContainer {
       border: 1px solid grey;
+      &.active {
+        border: 2px solid blue; /* Highlight active widget */
+      }
     }
   }
 `;

@@ -5,7 +5,7 @@ import { GET_DATA_JOURNALS } from "../../../Queries/DataArea";
 import { StyledDataArea } from "./styles/StyledDataJournal";
 import Journal from "./Journal";
 
-export default function Journals({ user, projectId, studyId }) {
+export default function Journals({ user, projectId, studyId, pyodide }) {
   // the state for the currently active journal
   const [journal, setJournal] = useState(null);
 
@@ -55,9 +55,12 @@ export default function Journals({ user, projectId, studyId }) {
     <StyledDataArea>
       {journal && (
         <Journal
+          user={user}
+          studyId={studyId}
           dataJournals={dataJournals}
           journalId={journal?.id}
           selectJournalById={selectJournalById}
+          pyodide={pyodide}
         />
       )}
     </StyledDataArea>

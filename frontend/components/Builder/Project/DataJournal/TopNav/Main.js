@@ -30,6 +30,12 @@ export default function TopNavigation({
           <button onClick={async () => await handleAddComponent("PARAGRAPH")}>
             Add PARAGRAPH
           </button>
+          <button onClick={async () => await handleAddComponent("TABLE")}>
+            Add TABLE
+          </button>
+          <button onClick={async () => await handleAddComponent("GRAPH")}>
+            Add GRAPH
+          </button>
         </div>
         <SaveWorkspace workspace={workspace} />
       </div>
