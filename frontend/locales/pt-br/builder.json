@@ -103,6 +103,7 @@
 		}
 	},
 	"cloneAndModify": "Clonar e modificar um {{taskType}}",
+	"closeButton": "Fechar",
 	"collect": {
 		"noProjectFound": "Nenhum projeto encontrado, salve seu projeto primeiro.",
 		"noStudyAttachedHeader": "🤷🏻 Seu projeto não tem nenhum Estudo anexado.",
@@ -465,6 +466,7 @@
 	},
 	"participate": "Participar",
 	"participateAsGuest": "Participe como convidado",
+	"pleaseLogin": "Por favor, faça login primeiro!",
 	"preview": {
 		"description": "Descrição",
 		"timeToComplete": "Tempo para concluir",
@@ -473,6 +475,7 @@
 		"uploadPreview": "Carregar visualização",
 		"uploadStudyImage": "Carregar imagem do estudo"
 	},
+	"printButton": "📄 Imprimir/Salvar como PDF",
 	"project": {
 		"cancel": "Cancelar",
 		"chooseStudy": "Escolha um estudo...",
@@ -497,6 +500,7 @@
 		"typeDeleteAlert": "Digite DELETE para excluir seu projeto",
 		"typeDeleteToConfirm": "Digite \"DELETE\" para confirmar"
 	},
+	"projectBoard": "Conselho do projeto",
 	"proposal": {
 		"actions": "Ações",
 		"addSection": "Adicionar seção",
@@ -556,6 +560,7 @@
 		"titlePlaceholder": "Insira o título do quadro do projeto"
 	},
 	"proposalPage": {
+		"download": "Download",
 		"preview": "Visualização",
 		"previewInfo": "O conteúdo dos cartões marcados como \"concluídos\" no modo de edição aparecerá aqui, no modo de visualização, exibindo o que seus revisores verão.",
 		"submittedLocked": "A proposta foi enviada e bloqueada 🔒"

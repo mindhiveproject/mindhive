@@ -149,7 +149,31 @@
 		}
 	},
 	"journal": {
-		"menuTitle": "Tijdschrift"
+		"createNewJournal": "Een nieuw dagboek maken",
+		"createNewPost": "Een nieuw bericht maken",
+		"dateCreated": "Datum gecreeërd",
+		"deleteConfirm": "Weet u zeker dat u dit dagboek wilt verwijderen?",
+		"deleteNotesFirst": "Verwijder eerst alle aantekeningen in uw dagboek",
+		"deletePostConfirm": "Weet u zeker dat u dit bericht wilt verwijderen?",
+		"description": "Beschrijving",
+		"editNote": "Notitie bewerken",
+		"enterTitle": "Voer een titel in",
+		"info": {
+			"class": "Iets wat in de les is besproken en wat je niet wilt vergeten",
+			"ideas": "Vervolgideeën of reflecties op MindHive-onderzoeken",
+			"intro": "Gebruik het dagboek om alle MindHive-gerelateerde gedachten of aantekeningen te documenteren, waaronder maar niet beperkt tot:",
+			"read": "Iets wat je leest en later misschien wilt gebruiken",
+			"shower": "Een onderzoeksidee dat bij je opkwam onder de douche"
+		},
+		"journalName": "Naam van het tijdschrift",
+		"journalTitle": "Tijdschrifttitel",
+		"menuTitle": "Tijdschrift",
+		"myJournals": "Mijn dagboeken",
+		"noJournalsYet": "Je hebt nog geen dagboeken aangemaakt.",
+		"noJournalsYetDesc": "Zodra u een dagboek aanmaakt, verschijnt het hier.",
+		"notes": "Opmerkingen",
+		"numberOfNotes": "Aantal noten",
+		"title": "Titel"
 	},
 	"languages": {
 		"backToSettings": "Terug naar Instellingen",

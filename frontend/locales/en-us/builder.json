@@ -103,6 +103,7 @@
 		}
 	},
 	"cloneAndModify": "Clone & modify a {{taskType}}",
+	"closeButton": "Close",
 	"collect": {
 		"noProjectFound": "No project found, please save your project first.",
 		"noStudyAttachedHeader": "🤷🏻 Your project has no Study attached to it.",
@@ -465,6 +466,7 @@
 	},
 	"participate": "Participate",
 	"participateAsGuest": "Participate as a guest",
+	"pleaseLogin": "Please first log in!",
 	"preview": {
 		"description": "Description",
 		"timeToComplete": "Time to complete",
@@ -473,6 +475,7 @@
 		"uploadPreview": "Upload preview",
 		"uploadStudyImage": "Upload study image"
 	},
+	"printButton": "📄 Print/Save as PDF",
 	"project": {
 		"cancel": "Cancel",
 		"chooseStudy": "Choose a study...",
@@ -497,6 +500,7 @@
 		"typeDeleteAlert": "Please type DELETE to delete your project",
 		"typeDeleteToConfirm": "Type \"DELETE\" to confirm"
 	},
+	"projectBoard": "Project board",
 	"proposal": {
 		"actions": "Actions",
 		"addSection": "Add section",
@@ -556,6 +560,7 @@
 		"titlePlaceholder": "Enter project board title"
 	},
 	"proposalPage": {
+		"download": "Download",
 		"preview": "Preview",
 		"previewInfo": "Content from cards marked as \"complete\" in edit mode will appear here, in preview mode, displaying what your reviewers will see.",
 		"submittedLocked": "The proposal has been submitted and locked 🔒"
@@ -1013,7 +1018,6 @@
 		"tweakableFeatures": "The following features of this {{taskType}} can be tweaked:",
 		"visualAnalogueScale": "Visual analogue scale"
 	},
-	"pleaseLogin": "Please first log in!",
 	"visualize": "Visualize",
 	"whatWouldYouLikeToDevelop": "What would you like to develop?"
 }

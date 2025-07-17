@@ -1,4 +1,5 @@
 {
+	"admin": "Administrador",
 	"analyze": "Analisar",
 	"connect": "Conectar",
 	"consentProtocol": "Protocolo de Consentimento",
@@ -18,5 +19,6 @@
 	"review": "Análise",
 	"settings": "Configurações",
 	"tags": "Etiquetas",
-	"updates": "Atualizações"
+	"updates": "Updates",
+	"workspace": "Espaço de trabalho"
 }

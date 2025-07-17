@@ -9,14 +9,12 @@ import EditPost from "./Post/Edit";
 
 export default function JournalPage({ code, user, query }) {
   const { action, area, post, selector, index } = query;
-
+  const { t } = useTranslation("common");
   const { data, loading, error } = useQuery(GET_JOURNAL, {
     variables: { code },
   });
-
   const journal = data?.journal || { title: "", description: "" };
   const posts = journal?.posts || [];
-
   // check whether the user is a journal author
   const isCreator = user?.id === journal?.creator?.id;
   // check whether the user is a teacher or a mentor of the class of the journal author
@@ -32,12 +30,10 @@ export default function JournalPage({ code, user, query }) {
     0;
   // check whether the user is an admin
   const isAdmin = user?.permissions?.map((p) => p?.name).includes("ADMIN");
-
   // do not show the journal, if the user is not one of those
   if (!(isCreator || isTeacher || isMentor || isAdmin)) {
     return <div></div>;
   }
-
   if (action === "edit" && post) {
     return (
       <EditPost
@@ -49,14 +45,13 @@ export default function JournalPage({ code, user, query }) {
       />
     );
   }
-
   return (
     <div>
       <h1>{journal?.title}</h1>
       <CreatePost journal={journal} user={user}>
-        <button>Create a new post</button>
+        <button>{t("journal.createNewPost")}</button>
       </CreatePost>
-      <h2>Notes</h2>
+      <h2>{t("journal.notes")}</h2>
       <JournalPosts
         code={code}
         journalId={journal?.id}

@@ -147,6 +147,7 @@
 			"title": "组织"
 		}
 	},
+	"returnDashboard": "返回仪表板",
 	"searchPlaceholder": "按名称、主题或感兴趣的领域搜索",
 	"steps": {
 		"aboutMe": "2. 关于我",
@@ -156,6 +157,7 @@
 	},
 	"syncInPersonVisit": "进行课堂访问，与项目学生面对面讨论您的工作。",
 	"syncZoomVisit": "进行课堂访问，与项目学生讨论您的工作（通过 Zoom）。",
+	"underConstruction": "正在建设中🚧",
 	"unofficialBio": "非官方简历",
 	"usersPerPage": "每页用户数",
 	"videoNotSupported": "您的浏览器不支持视频标签。",

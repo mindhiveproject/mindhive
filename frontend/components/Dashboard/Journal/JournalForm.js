@@ -10,17 +10,16 @@ export default function JournalForm({
   loading,
   error,
 }) {
-  const { t } = useTranslation("classes");
-
+  const { t } = useTranslation("common");
   return (
     <div className="addJournal">
       <StyledInput>
-        <h1>Create a new Journal</h1>
+        <h1>{t("journal.createNewJournal")}</h1>
         <DisplayError error={error} />
         <div>
           <fieldset disabled={loading} aria-busy={loading}>
             <label htmlFor="title">
-              <p>Journal title</p>
+              <p>{t("journal.journalTitle")}</p>
               <input
                 type="title"
                 name="title"
@@ -29,9 +28,8 @@ export default function JournalForm({
                 required
               />
             </label>
-
             <label htmlFor="description">
-              <p>Description</p>
+              <p>{t("journal.description")}</p>
               <textarea
                 id="description"
                 name="description"
@@ -39,7 +37,6 @@ export default function JournalForm({
                 onChange={handleChange}
               />
             </label>
-
             <div className="submitButton">
               <button onClick={handleSubmit}>{submitBtnName}</button>
             </div>

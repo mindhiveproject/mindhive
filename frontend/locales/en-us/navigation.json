@@ -1,4 +1,5 @@
 {
+	"admin": "Admin",
 	"analyze": "Analyze",
 	"connect": "Connect",
 	"consentProtocol": "Consent Protocol",
@@ -18,5 +19,6 @@
 	"review": "Review",
 	"settings": "Settings",
 	"tags": "Tags",
-	"updates": "Updates"
+	"updates": "Updates",
+	"workspace": "Workspace"
 }

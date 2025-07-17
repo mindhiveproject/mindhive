@@ -149,7 +149,31 @@
 		}
 	},
 	"journal": {
-		"menuTitle": "Journal"
+		"createNewJournal": "Create a new Journal",
+		"createNewPost": "Create a new post",
+		"dateCreated": "Date created",
+		"deleteConfirm": "Are you sure you want to delete this journal?",
+		"deleteNotesFirst": "Please delete all notes in your journal first",
+		"deletePostConfirm": "Are you sure you want to delete this post?",
+		"description": "Description",
+		"editNote": "Edit note",
+		"enterTitle": "Please enter a title",
+		"info": {
+			"class": "Something that was discussed in class that you don't want to forget",
+			"ideas": "Follow-up ideas or reflections on MindHive studies",
+			"intro": "Use the journal to document any MindHive related thoughts or notes, including but not limited to:",
+			"read": "Something you read that you might want to use later",
+			"shower": "A research idea that came to you in the shower"
+		},
+		"journalName": "Journal name",
+		"journalTitle": "Journal title",
+		"menuTitle": "Journal",
+		"myJournals": "My journals",
+		"noJournalsYet": "You haven't created any journals yet.",
+		"noJournalsYetDesc": "Once you create a journal, it will appear here.",
+		"notes": "Notes",
+		"numberOfNotes": "Number of notes",
+		"title": "Title"
 	},
 	"languages": {
 		"backToSettings": "Back to Settings",

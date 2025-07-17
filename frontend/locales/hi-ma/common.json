@@ -149,7 +149,31 @@
 		}
 	},
 	"journal": {
-		"menuTitle": "पत्रिका"
+		"createNewJournal": "",
+		"createNewPost": "",
+		"dateCreated": "",
+		"deleteConfirm": "",
+		"deleteNotesFirst": "",
+		"deletePostConfirm": "",
+		"description": "",
+		"editNote": "",
+		"enterTitle": "",
+		"info": {
+			"class": "",
+			"ideas": "",
+			"intro": "",
+			"read": "",
+			"shower": ""
+		},
+		"journalName": "",
+		"journalTitle": "",
+		"menuTitle": "पत्रिका",
+		"myJournals": "",
+		"noJournalsYet": "",
+		"noJournalsYetDesc": "",
+		"notes": "",
+		"numberOfNotes": "",
+		"title": ""
 	},
 	"languages": {
 		"backToSettings": "सेटिंग्स पर वापस जाएं",

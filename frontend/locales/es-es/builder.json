@@ -103,6 +103,7 @@
 		}
 	},
 	"cloneAndModify": "Clonar y modificar un {{taskType}}",
+	"closeButton": "Cerca",
 	"collect": {
 		"noProjectFound": "No se encontró ningún proyecto, por favor guarde su proyecto primero.",
 		"noStudyAttachedHeader": "🤷🏻 Tu proyecto no tiene ningún estudio adjunto.",
@@ -465,6 +466,7 @@
 	},
 	"participate": "Participar",
 	"participateAsGuest": "Participar como invitado",
+	"pleaseLogin": "¡Por favor, inicie sesión primero!",
 	"preview": {
 		"description": "Descripción",
 		"timeToComplete": "Tiempo para completar",
@@ -473,6 +475,7 @@
 		"uploadPreview": "Subir vista previa",
 		"uploadStudyImage": "Subir imagen de estudio"
 	},
+	"printButton": "📄 Imprimir/Guardar como PDF",
 	"project": {
 		"cancel": "Cancelar",
 		"chooseStudy": "Elige un estudio...",
@@ -495,8 +498,9 @@
 		"selectStudyFirst": "Seleccione el estudio primero",
 		"study": "Estudiar:",
 		"typeDeleteAlert": "Por favor escribe SUPR para eliminar tu proyecto",
-		"typeDeleteToConfirm": "Escribe \"ELIMINAR\" para confirmar"
+		"typeDeleteToConfirm": "Escribe \"DELETE\" para confirmar"
 	},
+	"projectBoard": "Tablero de proyecto",
 	"proposal": {
 		"actions": "Comportamiento",
 		"addSection": "Añadir sección",
@@ -556,6 +560,7 @@
 		"titlePlaceholder": "Introduzca el título del tablero del proyecto"
 	},
 	"proposalPage": {
+		"download": "Descargar",
 		"preview": "Avance",
 		"previewInfo": "El contenido de las tarjetas marcadas como \"completas\" en el modo de edición aparecerá aquí, en modo de vista previa, mostrando lo que verán sus revisores.",
 		"submittedLocked": "La propuesta ha sido enviada y bloqueada 🔒"

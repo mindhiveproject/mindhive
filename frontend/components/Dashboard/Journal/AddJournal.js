@@ -13,7 +13,7 @@ import { GET_MY_JOURNALS } from "../../Queries/Journal";
 
 export default function AddJournal({ user }) {
   const router = useRouter();
-  const { t } = useTranslation("classes");
+  const { t } = useTranslation("common");
   const { inputs, handleChange, clearForm } = useForm({
     title: "",
     description: "",
@@ -26,7 +26,7 @@ export default function AddJournal({ user }) {
 
   async function handleSubmit(e) {
     if (!inputs.title) {
-      return alert("Please enter a title");
+      return alert(t("journal.enterTitle"));
     }
     await createClass({
       variables: {
@@ -43,7 +43,7 @@ export default function AddJournal({ user }) {
       inputs={inputs}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
-      submitBtnName={"Create a new journal"}
+      submitBtnName={t("journal.createNewJournal")}
       loading={loading}
       error={error}
     />
