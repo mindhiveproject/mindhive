@@ -1,5 +1,12 @@
-import React, { useState } from 'react';
-import styled, { keyframes } from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import styled, { keyframes, useTheme } from 'styled-components';
+import { useRouter } from 'next/router';
+import LanguageSelector from '../LanguageSelector';
+import { StyledInput } from '../styles/StyledForm';
+import { StyledSimpleSaveButton } from '../styles/StyledProfile';
+import { useQuery, useMutation } from '@apollo/client';
+import { CURRENT_USER_QUERY } from '../Queries/User';
+import { UPDATE_USER } from '../Mutations/User';
 
 // Animations
 const fadeInUp = keyframes`
@@ -138,8 +145,8 @@ const ModalContent = styled.div`
 `;
 
 const ModalHeader = styled.div`
-  background: ${props => props.theme.primaryGreen};
-  color: white;
+  
+  color: ${props => props.theme.neutral5};
   padding: 20px;
   display: flex;
   align-items: center;
@@ -166,7 +173,6 @@ const ModalFooter = styled.div`
   border-top: 1px solid ${props => props.theme.accentGreen};
   background: ${props => props.theme.offWhite};
   .primaryBtn {
-    
     margin-left: 10px;
   }
 `;
@@ -266,7 +272,7 @@ const Support = styled.div`
     .report-details {
       h4 {
         margin: 0 0 4px 0;
-        color: ${props => props.theme.black};
+        color: ${props => props.theme.neutral1};
         font-family: 'Lato', sans-serif;
       }
       
@@ -280,55 +286,108 @@ const Support = styled.div`
 
 export default function HelpCenter() {
   const [isOpen, setIsOpen] = useState(false);
+  const [modalType, setModalType] = useState(null);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalColor, setModalColor] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState({ title: '', content: null, color: '' });
   const [expandedFAQ, setExpandedFAQ] = useState(null);
+  const [changed, setChanged] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const theme = useTheme();
+  const router = useRouter();
+  const currentLanguage = router.locale?.toUpperCase() || "EN-US";
+  const [selectedLanguage, setSelectedLanguage] = useState(currentLanguage);
+
+  // Fetch current user data
+  const { data: userData } = useQuery(CURRENT_USER_QUERY);
+  const user = userData?.authenticatedItem;
+
+  const [updateProfile] = useMutation(UPDATE_USER, {
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+  });
+
+  useEffect(() => {
+    setSelectedLanguage(currentLanguage);
+    setChanged(false);
+  }, [currentLanguage, modalOpen]); // reset when modal opens or language changes
+
+  const handleLanguageChange = (event) => {
+    const newLocale = event.target.value;
+    setSelectedLanguage(newLocale);
+    setChanged(newLocale !== currentLanguage);
+  };
+
+  const handleSaveLanguage = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      if (!user?.id) throw new Error('No user id');
+      await updateProfile({ variables: { id: user.id, language: selectedLanguage } });
+      const { pathname, asPath, query } = router;
+      await router.push({ pathname, query }, asPath, { locale: selectedLanguage.toLowerCase() });
+      setChanged(false);
+    } catch (err) {
+        console.log('handleSaveLanguage: error', err);
+    }
+    setSaving(false);
+  };
 
   const actions = [
     {
       icon: '/assets/helpCenter/walkthrough.svg',
       tooltip: 'Walkthrough',
-      bgColor: '#265390',
+      bgColor: theme.primaryBlue,
       action: () => openModal('Walkthrough Tutorial', 'walkthrough')
     },
     {
       icon: '/assets/helpCenter/docs.svg',
       tooltip: 'Documentation',
-      bgColor: '#274E5B',
+      bgColor: theme.primaryCalyspo,
       action: () => openModal('Documentation', 'docs')
     },
     {
       icon: '/assets/helpCenter/support.svg',
       tooltip: 'Report Issue',
-      bgColor: '#B9261A',
+      bgColor: theme.primaryRed,
       action: () => openModal('Report Issue', 'report')
     },
     {
       icon: '/assets/helpCenter/aichat.svg',
       tooltip: 'Ai Assist',
-      bgColor: '#434343',
+      bgColor: theme.neutral2,
       action: () => openModal('Ai Assist', 'aiassist')
+    },
+    {
+      icon: '/assets/helpCenter/language.svg',
+      tooltip: 'Language',
+      bgColor: theme.secondaryPurple,
+      action: () => openModal('Language', 'language')
     }
   ];
 
   const openModal = (title, type) => {
-    setModalContent({ title, content: getContent(type), color: getColor(type) });
+    setModalTitle(title);
+    setModalType(type);
+    setModalColor(getColor(type, theme));
     setModalOpen(true);
     setIsOpen(false);
   };
 
-  const getColor = (type) => {
+  const getColor = (type, theme) => {
     switch (type) {
       case 'walkthrough':
-        return "#265390";
+        return theme.primaryBlue;
       case 'docs':
-        return "#274E5B";
+        return theme.primaryCalyspo;
       case 'report':
-        return "#B9261A";
+        return theme.primaryRed;
       case 'aiassist':
-        return "#434343";
+        return theme.neutral1;
+      case 'language':
+        return theme.secondaryPurple;
       default:
-        return '#ccc'; // fallback
+        return theme.neutral1; // fallback
     }
   };
 
@@ -356,12 +415,9 @@ export default function HelpCenter() {
         
         return (
           <walkThrough>
-            <p>
-                Walkthrough coming in
-            </p>
+            <p>Walkthrough coming in</p>
           </walkThrough>
         );
-
       case 'docs':
         return (
           <DocSection>
@@ -387,7 +443,6 @@ export default function HelpCenter() {
             </div>
           </DocSection>
         );
-
       case 'report':
         return (
           <Support>
@@ -414,14 +469,28 @@ export default function HelpCenter() {
             </div>
           </Support>
         );
-
       case 'aiassist':
         return (
           <div>
             <p>Here comes the ai ✨</p>
           </div>
         );
-
+      case 'language':
+        return (
+          <StyledInput>
+            <div style={{ marginBottom: '16px' }}>
+              <LanguageSelector
+                handleChange={handleLanguageChange}
+                value={selectedLanguage}
+              />
+            </div>
+            <StyledSimpleSaveButton changed={changed}>
+              <button onClick={handleSaveLanguage} disabled={!changed || saving}>
+                {saving ? 'Saving...' : 'Save Language'}
+              </button>
+            </StyledSimpleSaveButton>
+          </StyledInput>
+        );
       default:
         return <p>Content not available.</p>;
     }
@@ -459,18 +528,18 @@ export default function HelpCenter() {
       {modalOpen && (
         <Modal onClick={(e) => e.target === e.currentTarget && setModalOpen(false)}>
           <ModalContent>
-            <ModalHeader>
-              <h2>{modalContent.title}</h2>
+            <ModalHeader style={{ background: modalColor }}>
+              <h2>{modalTitle}</h2>
               <CloseButton onClick={() => setModalOpen(false)}>
                 ✕
               </CloseButton>
             </ModalHeader>
             <ModalBody>
-              {modalContent.content}
+              {getContent(modalType)}
             </ModalBody>
             <ModalFooter>
-              <button   className="primaryBtn" style={{ border: `1px solid ${modalContent.color}`, background: modalContent.color }} onClick={() => setModalOpen(false)}>
-                Close {modalContent.color}
+              <button className="primaryBtn" style={{ border: `1px solid ${modalColor}`, background: modalColor }} onClick={() => setModalOpen(false)}>
+                Close
               </button>
             </ModalFooter>
           </ModalContent>

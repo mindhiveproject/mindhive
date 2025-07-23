@@ -27,8 +27,11 @@ function useSyncUserLanguage() {
 
   useEffect(() => {
     if (user?.language && user.language.toLowerCase() !== lang) {
+      console.log('useSyncUserLanguage: setting cookie and pushing locale', user.language.toLowerCase(), 'current lang', lang);
       Cookies.set("NEXT_LOCALE", user.language.toLowerCase());
       router.push(router.asPath, router.asPath, { locale: user.language.toLowerCase() });
+    } else {
+      console.log('useSyncUserLanguage: no sync needed', user?.language, lang);
     }
   }, [user, lang]);
 }

@@ -5,14 +5,41 @@ import Meta from "./Meta";
 import HelpCenter from "./HelpCenter"; // Import the HelpCenter component
 
 const theme = {
-  primaryBlue: "#265390", // Is part of design system
-  primaryGreen: "#274E5B", // Is part of design system
-  accentGreen: "#D3E0E3", // Is part of design system
-  primaryCalyspo: "#336F8A", // Is part of design system
-  primaryYellow: "#F2BE42", // Is part of design system
-  primaryRed: "#B9261A", // Is part of design system
-  primaryPurple: "#8A2CF6", // Is part of design system
-  neutral3: "#434343", // Is part of design system
+// Design System: https://www.figma.com/design/AODZL5Cne8QAt0Yy9ZcKkM/Design-System?node-id=2275-1249&t=i5eXhFYKPtMSetWj-1
+
+  // Blues
+  primaryBlue:   "#265390",  
+  secondaryBlue: "#3D85B0",  
+  accentBlue:    "#D3E2F1",  
+  //Greens
+  primaryGreen:   "#274E5B",  
+  secondaryGreen: "#55808C",  
+  accentGreen:    "#E0FAF8",  
+  //Calypsos
+  primaryCalyspo:   "#336F8A",  
+  secondaryCalyspo: "#69BBC4",  
+  accentCalyspo:    "#DEF8FB",  
+  //Yellows
+  primaryYellow:   "#F2BE42",  
+  secondaryYellow: "#F9D978",  
+  accentYellow:    "#FDF2D0",  
+  //Reds
+  primaryRed:   "#B9261A",  
+  secondaryRed: "#CF6D6A",  
+  accentRed:    "#EDCECD",  
+  //Purples
+  primaryPurple:   "#8A2CF6",  
+  secondaryPurple: "#7D70AD",  
+  accentPurple:    "#D8D3E7",  
+  //Neutrals (darker >> ligher)
+  neutral1: "#171717",  
+  neutral2: "#434343",  
+  neutral3: "#625B71",  
+  neutral4: "#EFEFEF",  
+  neutral5: "#F3F3F3",  
+  neutral6: "#FFFFFF",  
+  
+  //Old color scheme //////////////////
   red: "#FF0000",
   black: "#393939",
   grey: "#666666",
@@ -21,7 +48,11 @@ const theme = {
   lightgrey: "#E1E1E1",
   darkgreen: "#007C70",
   offWhite: "#EDEDED",
+
+  // Breakpoints
   maxWidth: "2300px",
+
+  // Bootstrap
   bs: "0 12px 24px 0 rgba(0, 0, 0, 0.09)",
 };
 
