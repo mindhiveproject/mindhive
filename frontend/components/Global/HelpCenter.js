@@ -3,7 +3,7 @@ import styled, { keyframes, useTheme } from 'styled-components';
 import { useRouter } from 'next/router';
 import LanguageSelector from '../LanguageSelector';
 import { StyledInput } from '../styles/StyledForm';
-import { StyledSimpleSaveButton } from '../styles/StyledProfile';
+import { StyledAdaptableButton } from '../styles/StyledProfile';
 import { useQuery, useMutation } from '@apollo/client';
 import { CURRENT_USER_QUERY } from '../Queries/User';
 import { UPDATE_USER } from '../Mutations/User';
@@ -484,11 +484,13 @@ export default function HelpCenter() {
                 value={selectedLanguage}
               />
             </div>
-            <StyledSimpleSaveButton changed={changed}>
-              <button onClick={handleSaveLanguage} disabled={!changed || saving}>
+            <StyledAdaptableButton 
+              onClick={handleSaveLanguage} 
+              disabled={!changed || saving}
+              color={theme.secondaryPurple}
+              changed={changed} >
                 {saving ? 'Saving...' : 'Save Language'}
-              </button>
-            </StyledSimpleSaveButton>
+            </StyledAdaptableButton>
           </StyledInput>
         );
       default:
