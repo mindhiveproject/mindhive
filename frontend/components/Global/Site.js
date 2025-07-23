@@ -2,8 +2,17 @@ import PropTypes from "prop-types";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 
 import Meta from "./Meta";
+import HelpCenter from "./HelpCenter"; // Import the HelpCenter component
 
 const theme = {
+  primaryBlue: "#265390", // Is part of design system
+  primaryGreen: "#274E5B", // Is part of design system
+  accentGreen: "#D3E0E3", // Is part of design system
+  primaryCalyspo: "#336F8A", // Is part of design system
+  primaryYellow: "#F2BE42", // Is part of design system
+  primaryRed: "#B9261A", // Is part of design system
+  primaryPurple: "#8A2CF6", // Is part of design system
+  neutral3: "#434343", // Is part of design system
   red: "#FF0000",
   black: "#393939",
   grey: "#666666",
@@ -191,6 +200,7 @@ export default function Site({ children }) {
       <GlobalStyles />
       <Meta />
       {children}
+      <HelpCenter />
     </ThemeProvider>
   );
 }
