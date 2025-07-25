@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled, { keyframes, useTheme } from 'styled-components';
 import { useRouter } from 'next/router';
 import Documentation from './HelpCenter/Documentation';
+import Walkthrough from './HelpCenter/Walkthrough';
 import LanguageSelector from '../LanguageSelector';
 import { StyledInput } from '../styles/StyledForm';
 import { StyledAdaptableButton } from '../styles/StyledProfile';
@@ -9,254 +10,23 @@ import { useQuery, useMutation } from '@apollo/client';
 import { CURRENT_USER_QUERY } from '../Queries/User';
 import { UPDATE_USER } from '../Mutations/User';
 import useTranslation from "next-translate/useTranslation";
-// Animations
-const fadeInUp = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
-const scaleIn = keyframes`
-  from {
-    opacity: 0;
-    transform: scale(1);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-`;
-
-// Styled Components
-const HelpButton = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: ${props => props.theme.primaryGreen};
-  border: none;
-  box-shadow: ${props => props.theme.bs};
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  color: white;
-  transition: all 0.3s ease;
-  z-index: 1000;
-  
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 16px 32px 0 rgba(0, 0, 0, 0.15);
-  }
-
-//   ${props => props.isOpen && `
-//     transform: rotate(45deg);
-//   `}
-`;
-
-const ActionsList = styled.div`
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  z-index: 999;
-`;
-
-const ActionItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  animation: ${fadeInUp} 0.3s ease forwards;
-  animation-delay: ${props => props.delay}ms;
-  opacity: 0;
-`;
-
-const ActionButton = styled.button`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: ${props => props.bgColor || props.theme.primaryGreen};
-  border: none;
-  box-shadow: ${props => props.theme.bs};
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: white;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.15);
-  }
-`;
-
-const ActionLabel = styled.span`
-  background: white;
-  padding: 8px 16px;
-  border-radius: 25px;
-  color: var(--MH-Theme-Neutrals-Black, #171717);
-
-  /* MH-Theme/body/small */
-  font-family: "Nunito Sans", sans-serif;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 16px; /* 133.333% */
-
-  box-shadow: ${props => props.theme.bs};
-  white-space: nowrap;
-`;
-
-const Modal = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 1001;
-  animation: ${scaleIn} 0.3s ease;
-`;
-
-const ModalContent = styled.div`
-  background: white;
-  border-radius: 8px;
-  max-width: 600px;
-  width: 100%;
-  max-height: 80vh;
-  overflow: hidden;
-  box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.2);
-`;
-
-const ModalHeader = styled.div`
-  
-  color: ${props => props.theme.neutral5};
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: between;
-  gap: 12px;
-  
-  h2 {
-    font-family: 'Lato', sans-serif;
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0;
-    flex: 1;
-  }
-`;
-
-const ModalBody = styled.div`
-  padding: 20px;
-  overflow-y: auto;
-  max-height: 60vh;
-`;
-
-const ModalFooter = styled.div`
-  padding: 20px;
-  border-top: 1px solid ${props => props.theme.accentGreen};
-  background: ${props => props.theme.offWhite};
-  .primaryBtn {
-    margin-left: 10px;
-  }
-`;
-
-const CloseButton = styled.button`
-  background: none;
-  border: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 0;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-  }
-`;
-
-const DocSection = styled.div`
-  .doc-item {
-    background: ${props => props.theme.offWhite};
-    border-radius: 6px;
-    padding: 16px;
-    margin-bottom: 12px;
-    border-left: 4px solid ${props => props.theme.primaryGreen};
-    
-    h4 {
-      margin: 0 0 8px 0;
-      color: ${props => props.theme.black};
-      font-family: 'Lato', sans-serif;
-    }
-    
-    p {
-      margin: 0;
-      font-size: 14px;
-    }
-  }
-`;
-
-const Support = styled.div`
-  .primaryBtn {
-    margin-left: 10px;
-  }
-
-  .report-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: ${props => props.theme.neutral5};
-    border-radius: 6px;
-    margin-bottom: 12px;
-    
-    .report-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 18px;
-    }
-    
-    .report-details {
-      h4 {
-        margin: 0 0 4px 0;
-        color: ${props => props.theme.neutral1};
-        font-family: 'Lato', sans-serif;
-      }
-      
-      p {
-        margin: 0;
-        font-size: 14px;
-      }
-    }
-  }
-`;
+import {
+  HelpButton,
+  ActionsList,
+  ActionItem,
+  ActionButton,
+  ActionLabel,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  CloseButton,
+  DocSection,
+  Support,
+  fadeInUp,
+  scaleIn
+} from './HelpCenter/HelpCenterStyles';
 
 export default function HelpCenter() {
   const [isOpen, setIsOpen] = useState(false);
@@ -314,10 +84,10 @@ export default function HelpCenter() {
     const actions = [
       {
         icon: '/assets/helpCenter/walkthrough.svg',
-        tooltip: 'Walkthrough',
+        tooltip: 'Walkthrough (UNDER DEVELOPMENT 🏗️)',
         bgColor: theme.primaryBlue,
         action: () => openModal('Walkthrough Tutorial', 'walkthrough'),
-        // allowedRoles: undefined (visible to all)
+        allowedRoles: ["ADMIN"]
       },
       {
         icon: '/assets/helpCenter/docs.svg',
@@ -335,7 +105,7 @@ export default function HelpCenter() {
       },
       {
         icon: '/assets/helpCenter/aichat.svg',
-        tooltip: 'Ai Assist',
+        tooltip: 'Ai Assist (UNDER DEVELOPMENT 🏗️)',
         bgColor: theme.primaryYellow,
         action: () => openModal('Ai Assist', 'aiassist'),
         allowedRoles: ["ADMIN"]
@@ -384,19 +154,21 @@ export default function HelpCenter() {
   const getContent = (type) => {
     switch (type) {
       case 'walkthrough':
-        return (
-            <p>Explore Walkthroughs soon! 🧗🏼‍♂️</p>
-        );
+        return <Walkthrough />;
       case 'docs':
         return (
             <>
+                <Documentation />
                 <DocSection>
                     <div className="doc-item">
                     <h4>General Platform Guide</h4>
-                    <p><a herf="perdu.com" target='_blank'>You can see our general platform guide by clicking this link!</a></p>
+                    <p>
+                      <a href="https://docs.google.com/document/d/1wchcGV14rE2JKXpyOdQ5pLkj-7NEfXWwfS-MdxK8bqI/edit?tab=t.0" target="_blank" rel="noopener noreferrer">
+                        You can see our general platform guide by clicking this link!
+                      </a>
+                    </p>
                     </div>
                 </DocSection>
-                <Documentation />
             </>
         );
       case 'report':
@@ -443,7 +215,7 @@ export default function HelpCenter() {
       case 'aiassist':
         return (
           <div>
-            <p>Here comes the ai ✨</p>
+            <p>Here will come the ai ✨</p>
           </div>
         );
       case 'language':

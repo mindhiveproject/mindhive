@@ -33,20 +33,20 @@ const StyledMarkdown = styled.div`
   border-radius: 8px;
 `;
 
-const Heading1 = styled.h1`
-  color:rgb(0, 0, 0);
+const Heading1 = styled.h1`  color:rgb(0, 0, 0);
   font-size: 22px;
+  color: ${props => props.theme.primaryCalyspo};
+  font-weight: 600;
   margin-top: 1.5em;
-`;
-
-const Heading2 = styled.h2`
-  color:rgb(0, 0, 0);
+  `;
+  
+  const Heading2 = styled.h2`
+  color: ${props => props.theme.secondaryCalyspo};
   font-size: 18px;
   margin-top: 1.5em;
 `;
 
 const Heading3 = styled.h3`
-  color:rgb(0, 0, 0);
   font-size: 16px;
   margin-top: 1.5em;
 `;
@@ -61,17 +61,42 @@ export default function Documentation() {
   const router = useRouter();
   const [markdown, setMarkdown] = useState('');
   useEffect(() => {
-    const relativePath = getRelativePath(router.asPath);
+    // Remove query string from asPath for path parsing
+    const pathOnly = router.asPath.split('?')[0];
+    const relativePath = getRelativePath(pathOnly);
     const filePath = getDocsFilePath(relativePath);
+
+    // Get the tab from the query string
+    const tab = router.query.tab;
+    const validTabs = ['board', 'builder', 'page', 'review', 'collect', 'journal'];
+
+    // Helper to fetch documentation
+    const fetchDoc = (path) =>
+      fetch(`/api/documentation/fetchDocs?file=${encodeURIComponent(path)}`)
+        .then(res => res.ok ? res.text() : Promise.reject('Not found'));
+
     if (filePath) {
-      fetch(`/api/documentation/fetchDocs?file=${encodeURIComponent(filePath)}`)
-        .then(res => res.ok ? res.text() : Promise.reject('Not found'))
-        .then(setMarkdown)
-        .catch(() => setMarkdown(`No page-specific documentation available here.`));
+      // If tab is valid, try tab-specific doc first
+      if (tab && validTabs.includes(tab)) {
+        const tabFilePath = filePath.replace(/\.md$/, `.${tab}.md`);
+        fetchDoc(tabFilePath)
+          .then(setMarkdown)
+          .catch(() => {
+            // Fallback to default doc if tab-specific not found
+            fetchDoc(filePath)
+              .then(setMarkdown)
+              .catch(() => setMarkdown(`No page-specific documentation available here.`));
+          });
+      } else {
+        // No tab or invalid tab, just fetch the default doc
+        fetchDoc(filePath)
+          .then(setMarkdown)
+          .catch(() => setMarkdown(`Oops!\nNo page-specific documentation available here.`));
+      }
     } else {
-      setMarkdown('### Error: No page-specific documentation available here.');
+      setMarkdown('Oops!\nNo page-specific documentation available here.');
     }
-  }, [router.asPath]);
+  }, [router.asPath, router.query.tab]);
   return (
     <StyledMarkdown>
       <ReactMarkdown
