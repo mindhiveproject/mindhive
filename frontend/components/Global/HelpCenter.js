@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes, useTheme } from 'styled-components';
 import { useRouter } from 'next/router';
+import Documentation from './HelpCenter/Documentation';
 import LanguageSelector from '../LanguageSelector';
 import { StyledInput } from '../styles/StyledForm';
 import { StyledAdaptableButton } from '../styles/StyledProfile';
 import { useQuery, useMutation } from '@apollo/client';
 import { CURRENT_USER_QUERY } from '../Queries/User';
 import { UPDATE_USER } from '../Mutations/User';
-
+import useTranslation from "next-translate/useTranslation";
 // Animations
 const fadeInUp = keyframes`
   from {
@@ -23,7 +24,7 @@ const fadeInUp = keyframes`
 const scaleIn = keyframes`
   from {
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(1);
   }
   to {
     opacity: 1;
@@ -196,36 +197,6 @@ const CloseButton = styled.button`
   }
 `;
 
-const walkThrough = styled.div`
-  .walkthrough-item {
-    border: 1px solid ${props => props.theme.lightgrey};
-    border-radius: 6px;
-    margin-bottom: 12px;
-    overflow: hidden;
-  }
-  
-  .walkthrough-question {
-    background: ${props => props.theme.offWhite};
-    padding: 16px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 500;
-    color: ${props => props.theme.black};
-    
-    &:hover {
-      background: ${props => props.theme.lightgrey};
-    }
-  }
-  
-  .walkthrough-answer {
-    padding: 16px;
-    background: white;
-    border-top: 1px solid ${props => props.theme.lightgrey};
-  }
-`;
-
 const DocSection = styled.div`
   .doc-item {
     background: ${props => props.theme.offWhite};
@@ -248,19 +219,22 @@ const DocSection = styled.div`
 `;
 
 const Support = styled.div`
+  .primaryBtn {
+    margin-left: 10px;
+  }
+
   .report-item {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px;
-    background: ${props => props.theme.offWhite};
+    background: ${props => props.theme.neutral5};
     border-radius: 6px;
     margin-bottom: 12px;
     
     .report-icon {
       width: 40px;
       height: 40px;
-      background: ${props => props.theme.primaryGreen};
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -290,9 +264,9 @@ export default function HelpCenter() {
   const [modalTitle, setModalTitle] = useState('');
   const [modalColor, setModalColor] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [expandedFAQ, setExpandedFAQ] = useState(null);
   const [changed, setChanged] = useState(false);
   const [saving, setSaving] = useState(false);
+  const { t } = useTranslation("home");
 
   const theme = useTheme();
   const router = useRouter();
@@ -333,38 +307,54 @@ export default function HelpCenter() {
     setSaving(false);
   };
 
-  const actions = [
-    {
-      icon: '/assets/helpCenter/walkthrough.svg',
-      tooltip: 'Walkthrough',
-      bgColor: theme.primaryBlue,
-      action: () => openModal('Walkthrough Tutorial', 'walkthrough')
+  function getActions(user, theme, openModal) {
+    const permissions = user?.permissions?.map((p) => p?.name) || ['UNAUTHENTICATED'];
+    //Existing roles: ["ADMIN", "STUDENT", "MENTOR", "SCIENTIST", "TEACHER", "UNAUTHENTICATED", "PARTICIPANT"]
+
+    const actions = [
+      {
+        icon: '/assets/helpCenter/walkthrough.svg',
+        tooltip: 'Walkthrough',
+        bgColor: theme.primaryBlue,
+        action: () => openModal('Walkthrough Tutorial', 'walkthrough'),
+        // allowedRoles: undefined (visible to all)
+      },
+      {
+        icon: '/assets/helpCenter/docs.svg',
+        tooltip: 'Documentation',
+        bgColor: theme.primaryCalyspo,
+        action: () => openModal('Documentation', 'docs'),
+        // allowedRoles: undefined (visible to all)
     },
-    {
-      icon: '/assets/helpCenter/docs.svg',
-      tooltip: 'Documentation',
-      bgColor: theme.primaryCalyspo,
-      action: () => openModal('Documentation', 'docs')
-    },
-    {
-      icon: '/assets/helpCenter/support.svg',
-      tooltip: 'Report Issue',
-      bgColor: theme.primaryRed,
-      action: () => openModal('Report Issue', 'report')
-    },
-    {
-      icon: '/assets/helpCenter/aichat.svg',
-      tooltip: 'Ai Assist',
-      bgColor: theme.neutral2,
-      action: () => openModal('Ai Assist', 'aiassist')
-    },
-    {
-      icon: '/assets/helpCenter/language.svg',
-      tooltip: 'Language',
-      bgColor: theme.secondaryPurple,
-      action: () => openModal('Language', 'language')
-    }
-  ];
+      {
+        icon: '/assets/helpCenter/support.svg',
+        tooltip: 'Report Issue',
+        bgColor: theme.primaryRed,
+        action: () => openModal('Report Issue', 'report'),
+        allowedRoles: ["ADMIN", "MENTOR", "SCIENTIST", "TEACHER"]
+      },
+      {
+        icon: '/assets/helpCenter/aichat.svg',
+        tooltip: 'Ai Assist',
+        bgColor: theme.primaryYellow,
+        action: () => openModal('Ai Assist', 'aiassist'),
+        allowedRoles: ["ADMIN"]
+      },
+      {
+        icon: '/assets/helpCenter/language.svg',
+        tooltip: 'Language',
+        bgColor: theme.secondaryPurple,
+        action: () => openModal('Language', 'language'),
+        // allowedRoles: undefined (visible to all)
+      }
+    ];
+    return actions.filter(action => {
+      if (action.allowedRoles) {
+        return permissions.some(p => action.allowedRoles.includes(p));
+      }
+      return true;
+    });
+  }
 
   const openModal = (title, type) => {
     setModalTitle(title);
@@ -394,77 +384,58 @@ export default function HelpCenter() {
   const getContent = (type) => {
     switch (type) {
       case 'walkthrough':
-        // const faqs = [
-        //   {
-        //     question: "How do I get started with the platform?",
-        //     answer: "Welcome! To get started, simply navigate through the main menu and explore the different sections. Each section has detailed guides to help you understand the features available."
-        //   },
-        //   {
-        //     question: "How can I reset my password?",
-        //     answer: "Go to the login page and click 'Forgot Password'. Enter your email address and you'll receive instructions in your inbox to reset your password securely."
-        //   },
-        //   {
-        //     question: "Can I customize my account settings?",
-        //     answer: "Yes! Navigate to your profile page where you can update your personal information, notification preferences, and other account settings according to your needs."
-        //   },
-        //   {
-        //     question: "Is my data secure?",
-        //     answer: "Absolutely. We use industry-standard encryption and security practices to protect your data. All information is stored securely and we never share personal data with third parties."
-        //   }
-        // ];
-        
         return (
-          <walkThrough>
-            <p>Walkthrough coming in</p>
-          </walkThrough>
+            <p>Explore Walkthroughs soon! 🧗🏼‍♂️</p>
         );
       case 'docs':
         return (
-          <DocSection>
-            <div className="doc-item">
-              <h4>Getting Started Guide</h4>
-              <p>Learn the basics of using our platform with step-by-step instructions.</p>
-            </div>
-            <div className="doc-item">
-              <h4>User Manual</h4>
-              <p>Comprehensive documentation covering all features and functionality.</p>
-            </div>
-            <div className="doc-item">
-              <h4>API Documentation</h4>
-              <p>Technical reference for developers integrating with our services.</p>
-            </div>
-            <div className="doc-item">
-              <h4>Troubleshooting Guide</h4>
-              <p>Common issues and their solutions to help you resolve problems quickly.</p>
-            </div>
-            <div className="doc-item">
-              <h4>Video Tutorials</h4>
-              <p>Visual learning resources with step-by-step video guides.</p>
-            </div>
-          </DocSection>
+            <>
+                <DocSection>
+                    <div className="doc-item">
+                    <h4>General Platform Guide</h4>
+                    <p><a herf="perdu.com" target='_blank'>You can see our general platform guide by clicking this link!</a></p>
+                    </div>
+                </DocSection>
+                <Documentation />
+            </>
         );
       case 'report':
         return (
           <Support>
             <div className="report-item">
-              <div className="report-icon">✉️</div>
+              <div className="report-icon">🎟️</div>
               <div className="report-details">
-                <h4>Email Support</h4>
-                <p>support@yourcompany.com</p>
+                <div>
+                    {/* {t("fillRequestForm")} pour un new block<br></br> */}
+                    <a href="https://mindhive.notion.site/153d80abf4c48093b13cc8d50807c7b8?pvs=105" target="_blank">
+                    <button className="primaryBtn" style={{ border: `1px solid ${modalColor}`, background: modalColor }}>
+                        {t("fillSupportTicket")}
+                    </button>
+                    </a>
+                </div>
               </div>
             </div>
+            
             <div className="report-item">
-              <div className="report-icon">💬</div>
-              <div className="report-details">
-                <h4>Live Chat</h4>
-                <p>Monday-Friday, 9 AM - 6 PM EST</p>
-              </div>
+                <div className="report-icon">🧱</div>
+                <div className="report-details">
+                <div>
+                    {/* {t("fillRequestForm")} pour un new block<br></br> */}
+                    <a href="https://mindhive.notion.site/18bd80abf4c480749952e3c0498fab29?pvs=105" target="_blank">
+                    <button className="primaryBtn" style={{ border: `1px solid ${modalColor}`, background: modalColor }}>
+                        {t("fillRequestForm")}
+                    </button>
+                    </a>
+                </div>
+                </div>
             </div>
             <div className="report-item">
-              <div className="report-icon">⏰</div>
+              <div className="report-icon">📮</div>
               <div className="report-details">
-                <h4>Response Time</h4>
-                <p>We typically respond within 24 hours</p>
+                <h4>For urgent matters, email us!</h4>
+                <p>
+                    <a href="mailto:support.mindhive@nyu.edu">support.mindhive@nyu.edu</a><br />
+                </p>
               </div>
             </div>
           </Support>
@@ -503,7 +474,7 @@ export default function HelpCenter() {
       {/* Speed Dial Actions */}
       {isOpen && (
         <ActionsList>
-          {actions.map((action, index) => (
+          {getActions(user, theme, openModal).map((action, index) => (
             <ActionItem key={action.tooltip} delay={index * 100}>
               <ActionLabel>{action.tooltip}</ActionLabel>
               <ActionButton 
