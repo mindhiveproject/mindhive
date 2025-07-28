@@ -14,6 +14,7 @@ import withData from "../lib/withData";
 
 import Site from "../components/Global/Site";
 import Authorized from "../components/Global/Authorized";
+import HelpCenter from "../components/Global/HelpCenter";
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -47,6 +48,7 @@ function MyApp({ Component, pageProps, apollo }) {
         <Authorized>
           <LanguageSyncWrapper>
             <Component {...pageProps} />
+            <HelpCenter />
           </LanguageSyncWrapper>
         </Authorized>
       </Site>

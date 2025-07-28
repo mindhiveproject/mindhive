@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 
 import Meta from "./Meta";
-import HelpCenter from "./HelpCenter"; // Import the HelpCenter component
 
 const theme = {
 // Design System: https://www.figma.com/design/AODZL5Cne8QAt0Yy9ZcKkM/Design-System?node-id=2275-1249&t=i5eXhFYKPtMSetWj-1
@@ -231,7 +230,6 @@ export default function Site({ children }) {
       <GlobalStyles />
       <Meta />
       {children}
-      <HelpCenter />
     </ThemeProvider>
   );
 }
