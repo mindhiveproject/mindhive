@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 export default function handler(req, res) {
-  const { file } = req.query;
+  const { file, language_code } = req.query;
 
   if (!file) {
     return res.status(400).send('Missing file parameter');
@@ -20,11 +20,25 @@ export default function handler(req, res) {
     return res.status(400).send('Invalid file path');
   }
 
-  if (!fs.existsSync(targetPath)) {
+  // If language_code is provided, try to find localized version first
+  let content = null;
+  if (language_code && language_code !== 'en-us') {
+    // Try to find localized version: filename.{language_code}.md
+    const localizedPath = targetPath.replace(/\.md$/, `.${language_code}.md`);
+    if (fs.existsSync(localizedPath)) {
+      content = fs.readFileSync(localizedPath, 'utf-8');
+    }
+  }
+
+  // Fallback to default file if no localized version found or no language specified
+  if (!content && fs.existsSync(targetPath)) {
+    content = fs.readFileSync(targetPath, 'utf-8');
+  }
+
+  if (!content) {
     return res.status(404).send('File not found');
   }
 
-  const content = fs.readFileSync(targetPath, 'utf-8');
   res.setHeader('Content-Type', 'text/markdown');
   return res.status(200).send(content);
-}
+} 

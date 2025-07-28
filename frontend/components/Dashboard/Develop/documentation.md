@@ -1,4 +1,4 @@
-# Develop Area UI
+# Develop Area
 
 ## Overview  
 The **Develop Area** is where you can create, customize, and manage the research tools you’ll use in your projects—such as studies, tasks, surveys, and blocks. You’ll access it from your dashboard, and it will guide you step-by-step through building or editing these assets.
