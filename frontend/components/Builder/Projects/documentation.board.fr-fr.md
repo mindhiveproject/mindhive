@@ -1,4 +1,4 @@
-# Tableau des Propositions
+# Tableau de Projet
 
 ## Aperçu
 Le Tableau des Propositions est un espace central où les utilisateurs peuvent créer, consulter, modifier, soumettre et gérer des propositions de recherche dans le cadre d’un projet. Il est profondément intégré dans la zone Builder et le tableau de bord.
