@@ -84,10 +84,10 @@ export default function HelpCenter() {
     const actions = [
       {
         icon: '/assets/helpCenter/walkthrough.svg',
-        tooltip: 'Walkthrough (UNDER DEVELOPMENT 🏗️)',
+        tooltip: 'Walkthrough',
         bgColor: theme.primaryBlue,
         action: () => openModal('Walkthrough Tutorial', 'walkthrough'),
-        allowedRoles: ["ADMIN"]
+        allowedRoles: ["ADMIN", "MENTOR", "SCIENTIST", "TEACHER"]
       },
       {
         icon: '/assets/helpCenter/docs.svg',
@@ -154,7 +154,12 @@ export default function HelpCenter() {
   const getContent = (type) => {
     switch (type) {
       case 'walkthrough':
-        return <Walkthrough />;
+        return <Walkthrough onStartWalkthrough={() => {
+          setModalOpen(false);
+          setTimeout(() => {
+            window.dispatchEvent(new Event('start-walkthrough-tour'));
+          }, 300); // Give modal time to close
+        }} />;
       case 'docs':
         return (
             <>

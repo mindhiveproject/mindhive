@@ -84,7 +84,7 @@ export default function ActionCard({
       isSubmitted={isSubmitted}
     >
       <div className="card-drag-handle">
-        <div className="card-information">
+        <div className="card-information" id="submitCard">
           <div className="card-left-side">
             {isSubmitted ? (
               <img src="/assets/icons/eye.svg" />

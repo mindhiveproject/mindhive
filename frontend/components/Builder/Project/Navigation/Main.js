@@ -147,7 +147,7 @@ export default function Navigation({
       </div>
 
       <div className="secondLine">
-        <div className="menu">
+        <div className="menu" id="menue">
           {items.map((item, i) => (
             <Link
               key={i}

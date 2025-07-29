@@ -1,6 +1,7 @@
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import Trans from "next-translate/Trans";
+import { useEffect } from 'react';
 
 import Selector from "./DevelopNew/Selector";
 import Panels from "./Panels";
@@ -29,6 +30,34 @@ export default function DevelopMain({ query, user }) {
       developNewQuery = "study";
   }
 
+  useEffect(() => {
+    function handleStartTour() {
+      (async () => {
+        const introJs = (await import('intro.js')).default;
+        introJs.tour().setOptions({
+          steps: [
+            {
+              element: '#developNewBtn',
+              intro: "Click here to start developing a new study, task, survey, or block.",
+              position: "bottom",
+              disableInteraction: false
+            },
+            {
+              element: '#myPanel', // this id is in the Panels component
+              intro: "Click on the tab bellow to see the projects, studies, tasks, surveys, and blocks you have created.",
+              position: "auto",
+              disableInteraction: false,
+            }
+          ],
+          scrollToElement: false,
+          scrollTo: 'off',
+        }).start();
+      })();
+    }
+    window.addEventListener('start-walkthrough-tour', handleStartTour);
+    return () => window.removeEventListener('start-walkthrough-tour', handleStartTour);
+  }, []);
+
   if (selector === "new") {
     return (
       <StyledSelector>
@@ -56,7 +85,7 @@ export default function DevelopMain({ query, user }) {
               query: { develop: developNewQuery },
             }}
           >
-            <button>{t("developNew")}</button>
+            <button id="developNewBtn"> {t("developNew")} </button>
           </Link>
         </div>
       </div>
@@ -64,3 +93,6 @@ export default function DevelopMain({ query, user }) {
     </>
   );
 }
+
+// Indicate this page has a tour
+DevelopMain.hasTour = true;
