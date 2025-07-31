@@ -2,20 +2,18 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Modal } from "semantic-ui-react";
-
 import Form from "./Form";
-
 import { CREATE_POST } from "../../../Mutations/Post";
 import { GET_JOURNAL } from "../../../Queries/Journal";
-
 import StyledModal from "../../../styles/StyledModal";
+import useTranslation from "next-translate/useTranslation";
 
 export default function PostModal({ journal, user, children }) {
   const router = useRouter();
+  const { t } = useTranslation("common");
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-
   const [createPost, { loading, error }] = useMutation(CREATE_POST, {
     variables: {
       journalId: journal?.id,
@@ -26,7 +24,6 @@ export default function PostModal({ journal, user, children }) {
       { query: GET_JOURNAL, variables: { code: journal?.code } },
     ],
   });
-
   async function handleSave(e) {
     e.preventDefault();
     await createPost();
@@ -34,7 +31,6 @@ export default function PostModal({ journal, user, children }) {
     setContent("");
     setOpen(false);
   }
-
   return (
     <Modal
       closeIcon
@@ -51,7 +47,7 @@ export default function PostModal({ journal, user, children }) {
         title={title}
         setTitle={setTitle}
         handleSave={handleSave}
-        headerTitle="Create a new post"
+        headerTitle={t("journal.createNewPost")}
       />
     </Modal>
   );

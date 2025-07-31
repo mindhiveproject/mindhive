@@ -1,4 +1,5 @@
 {
+	"admin": "مسؤل",
 	"analyze": "تحليل",
 	"connect": "يتصل",
 	"consentProtocol": "بروتوكول الموافقة",
@@ -18,5 +19,6 @@
 	"review": "مراجعة",
 	"settings": "إعدادات",
 	"tags": "العلامات",
-	"updates": "التحديثات"
+	"updates": "Updates",
+	"workspace": "مساحة العمل"
 }

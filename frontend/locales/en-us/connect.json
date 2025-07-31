@@ -147,6 +147,7 @@
 			"title": "Organization"
 		}
 	},
+	"returnDashboard": "Return to Dashboard",
 	"searchPlaceholder": "Search by name, topic, or area of interest",
 	"steps": {
 		"aboutMe": "2. About Me",
@@ -156,6 +157,7 @@
 	},
 	"syncInPersonVisit": "Making an in-class visit to talk with program students about your work (in-person).",
 	"syncZoomVisit": "Making an in-class visit to talk with program students about your work (over Zoom).",
+	"underConstruction": "Under construction 🚧",
 	"unofficialBio": "Unofficial Bio",
 	"usersPerPage": "Number of users per page",
 	"videoNotSupported": "Your browser does not support the video tag.",

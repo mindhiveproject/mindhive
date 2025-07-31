@@ -84,7 +84,7 @@ export const CreatorWidget = props => {
 
   return (
     <StyledCreatorWidget>
-      <div className="creator-body">
+      <div className="creator-body" id="canvas">
         <div className="creator-content">
           <div
             className="creator-layer"

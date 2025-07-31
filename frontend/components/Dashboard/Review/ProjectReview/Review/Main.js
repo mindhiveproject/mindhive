@@ -15,7 +15,7 @@ export default function QuestionsMain({
       <div className="reviewQuestions">
         <h1>
           {status === "SUBMITTED_AS_PROPOSAL" || status === "PEER_REVIEW"
-            ? t("reviewDetail.proposalFeedback")
+            ? t("reviewTabs.proposalFeedback")
             : t("reviewDetail.studyFeedback")}
         </h1>
         <div className="subtitle">

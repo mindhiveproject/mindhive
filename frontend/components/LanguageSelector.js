@@ -41,8 +41,6 @@ const LanguageSelector = ({ handleChange, value }) => {
             type: "text",
           },
         });
-        // Also update the UI language
-        changeLanguage(data?.value);
       }}
     />
   );

@@ -149,7 +149,31 @@
 		}
 	},
 	"journal": {
-		"menuTitle": "Diario"
+		"createNewJournal": "Crear un nuevo diario",
+		"createNewPost": "Crear una nueva publicación",
+		"dateCreated": "Fecha de creación",
+		"deleteConfirm": "¿Estás seguro que deseas eliminar este diario?",
+		"deleteNotesFirst": "Primero borre todas las notas de su diario.",
+		"deletePostConfirm": "¿Estás seguro de que deseas eliminar esta publicación?",
+		"description": "Descripción",
+		"editNote": "Editar nota",
+		"enterTitle": "Por favor, introduzca un título",
+		"info": {
+			"class": "Algo que se discutió en clase y que no quieres olvidar.",
+			"ideas": "Ideas o reflexiones de seguimiento sobre los estudios de MindHive",
+			"intro": "Utilice el diario para documentar cualquier pensamiento o nota relacionada con MindHive, incluidos, entre otros:",
+			"read": "Algo que leíste y que quizás quieras usar más adelante.",
+			"shower": "Una idea de investigación que se te ocurrió en la ducha."
+		},
+		"journalName": "Nombre de la revista",
+		"journalTitle": "Título de la revista",
+		"menuTitle": "Diario",
+		"myJournals": "Mis diarios",
+		"noJournalsYet": "Aún no has creado ningún diario.",
+		"noJournalsYetDesc": "Una vez que cree un diario, aparecerá aquí.",
+		"notes": "Notas",
+		"numberOfNotes": "Número de notas",
+		"title": "Título"
 	},
 	"languages": {
 		"backToSettings": "Volver a la configuración",

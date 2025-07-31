@@ -150,7 +150,7 @@ export default function Builder({
           </p>
         </div>
       )}
-      <div className="board">
+      <div className="board" id="board">
         <Widget
           engine={engine}
           openComponentModal={openComponentModal}
@@ -158,7 +158,7 @@ export default function Builder({
           openStudyPreview={openStudyPreview}
           isCanvasLocked={isCanvasLocked}
         />
-        <div className="sidepanel">
+        <div className="sidepanel" id="sidepanel">
           <Menu
             user={user}
             engine={engine}
@@ -172,6 +172,7 @@ export default function Builder({
         </div>
         <button
           className="addCommentButton"
+          id="commentButton"
           onClick={lockedAddFunctions.addComment}
           disabled={isCanvasLocked}
         >

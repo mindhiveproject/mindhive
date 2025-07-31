@@ -20,7 +20,7 @@ export default function Panels({ query, user }) {
 
   return (
     <>
-      <div className="menu">
+      <div className="menu" id="myPanel">
         <Link href="/dashboard/develop/projects">
           <div
             className={

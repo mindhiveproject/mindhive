@@ -1,11 +1,12 @@
 import { useQuery } from "@apollo/client";
 import moment from "moment";
 import { GET_MY_JOURNALS } from "../../Queries/Journal";
-
 import Link from "next/link";
 import DeleteJournal from "./DeleteJournal";
+import useTranslation from "next-translate/useTranslation";
 
 export default function JournalsList({ query, user }) {
+  const { t } = useTranslation("common");
   const { data, error, loading } = useQuery(GET_MY_JOURNALS, {
     variables: {
       id: user?.id,
@@ -17,20 +18,20 @@ export default function JournalsList({ query, user }) {
   if (journals?.length === 0) {
     return (
       <>
-        <h3>You haven’t created any journals yet.</h3>
-        <p>Once you create a journal, it will appear here.</p>
+        <h3>{t("journal.noJournalsYet")}</h3>
+        <p>{t("journal.noJournalsYetDesc")}</p>
       </>
     );
   }
 
   return (
     <div className="journalsList">
-      <h3>My journals</h3>
+      <h3>{t("journal.myJournals")}</h3>
       <div className="row">
         <div className="topHeader">
-          <div>Journal name</div>
-          <div>Number of notes</div>
-          <div>Date created</div>
+          <div>{t("journal.journalName")}</div>
+          <div>{t("journal.numberOfNotes")}</div>
+          <div>{t("journal.dateCreated")}</div>
         </div>
         <div></div>
       </div>

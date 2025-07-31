@@ -23,7 +23,7 @@ export default function Library({ query, user, isDashboard }) {
               selector === "study" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>{t("studies")}</p>
+            <p>{t("navigation.studies")}</p>
           </Link>
 
           <Link

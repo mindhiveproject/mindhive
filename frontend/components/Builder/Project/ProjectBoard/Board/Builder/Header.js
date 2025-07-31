@@ -44,13 +44,15 @@ export default function ProposalHeader({
           <div>
             <div className="titleEditBtn">
               <h1>{t("header.myProjectBoard", "My Project Board")}</h1>
-              <Radio
+              <div id="switchMode" style={{display: "flex", width: "max-content"}}>
+                <Radio
                 toggle
                 checked={isPDF}
                 onChange={() => {
                   setIsPDF(!isPDF);
                 }}
               />
+              </div>
             </div>
 
             <p>

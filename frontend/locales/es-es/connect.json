@@ -147,6 +147,7 @@
 			"title": "Organización"
 		}
 	},
+	"returnDashboard": "Regresar al panel de control",
 	"searchPlaceholder": "Buscar por nombre, tema o área de interés",
 	"steps": {
 		"aboutMe": "2. Acerca de mí",
@@ -156,6 +157,7 @@
 	},
 	"syncInPersonVisit": "Realizar una visita a clase para hablar con los estudiantes del programa sobre su trabajo (en persona).",
 	"syncZoomVisit": "Realizar una visita a clase para hablar con los estudiantes del programa sobre su trabajo (vía Zoom).",
+	"underConstruction": "En construcción 🚧",
 	"unofficialBio": "Biografía no oficial",
 	"usersPerPage": "Número de usuarios por página",
 	"videoNotSupported": "Su navegador no soporta la etiqueta de vídeo.",

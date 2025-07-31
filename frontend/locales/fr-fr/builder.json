@@ -4,14 +4,14 @@
 		"dataCollection": "Collecte de données",
 		"deleteCardConfirmation": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible.",
 		"deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible.",
-		"peerFeedback": "Rétroaction des pairs",
+		"peerFeedback": "Revue par les pairs",
 		"projectReport": "Rapport de projet",
-		"proposalFeedback": "Commentaires sur la proposition",
+		"proposalFeedback": "Retours sur la proposition",
 		"submitFor": "Soumettre pour {{title}}",
-		"submitForDataCollection": "Soumettre pour la collecte de données",
-		"submitForPeerFeedback": "Soumettre pour un retour d'information par les pairs",
+		"submitForDataCollection": "Soumettre pour collecte de données",
+		"submitForPeerFeedback": "Soumettre pour revue par les pairs",
 		"submitForProjectReport": "Soumettre pour rapport de projet",
-		"submitForProposalFeedback": "Soumettre une proposition pour obtenir des commentaires",
+		"submitForProposalFeedback": "Soumettre une proposition pour revue",
 		"viewComments": "Voir les commentaires",
 		"viewCountComments": "Afficher {{count}} commentaires"
 	},
@@ -103,6 +103,7 @@
 		}
 	},
 	"cloneAndModify": "Cloner et modifier un {{taskType}}",
+	"closeButton": "Fermer",
 	"collect": {
 		"noProjectFound": "Aucun projet trouvé, veuillez d'abord enregistrer votre projet.",
 		"noStudyAttachedHeader": "🤷🏻 Votre projet n'a aucune étude qui lui est associée.",
@@ -114,7 +115,7 @@
 		"close": "Fermer",
 		"linkedClass": "Classe liée",
 		"noAuthor": "Aucun auteur",
-		"projectBoardCollaborators": "Collaborateurs du comité de projet",
+		"projectBoardCollaborators": "Collaborateurs",
 		"projectCreator": "Le créateur du projet est {{username}}",
 		"projectTitle": "Titre du projet",
 		"saveAndClose": "Enregistrer et fermer",
@@ -220,7 +221,7 @@
 	"develop": "Développer",
 	"developA": "Développer un {{développer}}",
 	"developHeaderDescription": "Créez, modifiez et gérez vos <strong>études, tâches et enquêtes</strong> ici.",
-	"developNew": "Développer de nouvelles",
+	"developNew": "Développer quelque chose de nouveau",
 	"duplicateEditBlock": "Dupliquez et modifiez un bloc MindHive préexistant et ses paramètres.",
 	"duplicateEditSurvey": "Dupliquez et modifiez une enquête MindHive préexistante et ses paramètres.",
 	"duration": "Durée",
@@ -313,7 +314,7 @@
 		"refreshAfterRelease": "Une fois la carte publiée, actualisez la page pour obtenir la dernière version de la carte.",
 		"reviewOptions": {
 			"collectingData": "Collecte de données",
-			"peerFeedback": "Rétroaction des pairs",
+			"peerFeedback": "Revue par les pairs",
 			"projectReport": "Rapport de projet",
 			"proposal": "Proposition"
 		},
@@ -368,7 +369,7 @@
 		"backToHome": "← Retour à l'accueil",
 		"createProject": "Créer un projet",
 		"giveNameAlert": "Donnez un nom à votre projet",
-		"goBackHome": "Retourner à la maison",
+		"goBackHome": "Retourner à l'accueil'",
 		"nameMessage": "Donnez un nom à votre projet. Il ne s'agit pas du titre de l'étude, mais du nom que vous souhaitez donner à votre espace de travail.",
 		"namePlaceholder": "Le nom de mon projet est",
 		"nameYourProject": "Nommez votre projet",
@@ -465,6 +466,7 @@
 	},
 	"participate": "Participer",
 	"participateAsGuest": "Participer en tant qu'invité",
+	"pleaseLogin": "Veuillez d'abord vous connecter !",
 	"preview": {
 		"description": "Description",
 		"timeToComplete": "Il est temps de terminer",
@@ -473,6 +475,7 @@
 		"uploadPreview": "Télécharger l'aperçu",
 		"uploadStudyImage": "Télécharger l'image de l'étude"
 	},
+	"printButton": "📄 Imprimer/Enregistrer au format PDF",
 	"project": {
 		"cancel": "Annuler",
 		"chooseStudy": "Choisissez une étude...",
@@ -495,8 +498,9 @@
 		"selectStudyFirst": "Sélectionnez d'abord l'étude",
 		"study": "Étude:",
 		"typeDeleteAlert": "Veuillez taper SUPPRIMER pour supprimer votre projet",
-		"typeDeleteToConfirm": "Tapez « SUPPRIMER » pour confirmer"
+		"typeDeleteToConfirm": "Tapez « DELETE » pour confirmer"
 	},
+	"projectBoard": "Tableau de projet",
 	"proposal": {
 		"actions": "Actes",
 		"addSection": "Ajouter une section",
@@ -556,6 +560,7 @@
 		"titlePlaceholder": "Saisissez le titre du tableau du projet"
 	},
 	"proposalPage": {
+		"download": "Télécharger",
 		"preview": "Aperçu",
 		"previewInfo": "Le contenu des cartes marquées comme « terminées » en mode édition apparaîtra ici, en mode aperçu, affichant ce que vos réviseurs verront.",
 		"submittedLocked": "La proposition a été soumise et verrouillée 🔒"
@@ -633,7 +638,7 @@
 		"participateInStudy": "Participer à l'étude",
 		"proposalTab": "Proposition",
 		"resubmitConfirm": "Êtes-vous sûr de vouloir soumettre à nouveau ? Vos commentaires seront mis à jour.",
-		"resubmitFeedback": "Renvoyer les commentaires",
+		"resubmitFeedback": "Re soumettre",
 		"reviewer": "Critique",
 		"scientist": "Scientifique",
 		"selectOption": "Sélectionnez une option",
@@ -657,7 +662,7 @@
 	},
 	"reviewTabs": {
 		"howTab": "Comment",
-		"peerFeedback": "Rétroaction des pairs",
+		"peerFeedback": "Revue par les pairs",
 		"projectReportFeedback": "Commentaires sur le rapport de projet",
 		"proposalFeedback": "Commentaires sur la proposition",
 		"whoTab": "OMS",

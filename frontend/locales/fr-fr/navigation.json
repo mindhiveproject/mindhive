@@ -1,11 +1,12 @@
 {
+	"admin": "Administrateur",
 	"analyze": "Analyser",
 	"connect": "Connecter",
 	"consentProtocol": "Protocole de consentement",
 	"dev": "Développer",
 	"discover": "Découvrir",
 	"feedbackCenter": "Centre de commentaires",
-	"home": "Maison",
+	"home": "Acceuil",
 	"IRBprotocols": "Protocoles IRB",
 	"journal": "Journal",
 	"lessons": "Leçons",
@@ -18,5 +19,6 @@
 	"review": "Revoir",
 	"settings": "Paramètres",
 	"tags": "Mots clés",
-	"updates": "Mises à jour"
+	"updates": "Updates",
+	"workspace": "Espace de travail"
 }

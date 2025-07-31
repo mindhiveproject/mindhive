@@ -269,7 +269,7 @@ export default function ProjectsBoard({
   return (
     <div className="board">
       <div className="searchTopArea">
-        <div className="searchArea">
+        <div className="searchArea" id="searchArea">
           <input
             placeholder={t("review.search")}
             type="text"
@@ -279,7 +279,7 @@ export default function ProjectsBoard({
           />
         </div>
 
-        <div>
+        <div id="sortBy">
           <Dropdown
             placeholder={t("review.sortBy")}
             fluid
@@ -295,21 +295,23 @@ export default function ProjectsBoard({
             value={sortBy}
           />
         </div>
-        <Dropdown
-          placeholder={t("review.filterByClasses")}
-          fluid
-          multiple
-          selection
-          options={allUniqueClasses.map((c) => ({
-            key: c.id,
-            value: c.id,
-            text: c.title,
-          }))}
-          onChange={(event, data) => {
-            setFilteredClasses(data.value);
-          }}
-          value={filteredClasses}
-        />
+        <div id="filterByClasses">
+          <Dropdown
+            placeholder={t("review.filterByClasses")}
+            fluid
+            multiple
+            selection
+            options={allUniqueClasses.map((c) => ({
+              key: c.id,
+              value: c.id,
+              text: c.title,
+            }))}
+            onChange={(event, data) => {
+              setFilteredClasses(data.value);
+            }}
+            value={filteredClasses}
+            />
+        </div>
       </div>
 
       <div className="p16_500">{filterSortMessage}</div>

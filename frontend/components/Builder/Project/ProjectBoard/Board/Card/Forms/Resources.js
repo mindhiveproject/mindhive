@@ -39,7 +39,7 @@ export default function Resources({ proposal, selectedResources }) {
     <div>
       {selectedResourcesMerged && selectedResourcesMerged.length ? (
         <>
-          <div className="cardSubheader">{t("resources.header", "Resources")}</div>
+          <div className="cardSubheader">{t("resourcesCards.header", "Resources")}</div>
           <div className="resourcePreview">
             {selectedResourcesMerged.map((resource) => (
               <div className="resourceBlockPreview">

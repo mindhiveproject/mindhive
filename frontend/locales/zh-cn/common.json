@@ -149,7 +149,31 @@
 		}
 	},
 	"journal": {
-		"menuTitle": "杂志"
+		"createNewJournal": "创建新日志",
+		"createNewPost": "创建新帖子",
+		"dateCreated": "创建日期",
+		"deleteConfirm": "您确定要删除此日志吗？",
+		"deleteNotesFirst": "请先删除日记中的所有笔记",
+		"deletePostConfirm": "您确定要删除此帖子吗？",
+		"description": "描述",
+		"editNote": "编辑笔记",
+		"enterTitle": "请输入标题",
+		"info": {
+			"class": "课堂上讨论过的一些你不想忘记的事情",
+			"ideas": "MindHive 研究的后续想法或反思",
+			"intro": "使用日志记录任何与 MindHive 相关的想法或笔记，包括但不限于：",
+			"read": "你读过的一些以后可能会用到的东西",
+			"shower": "你在淋浴时想到的一个研究想法"
+		},
+		"journalName": "期刊名称",
+		"journalTitle": "期刊名称",
+		"menuTitle": "杂志",
+		"myJournals": "我的日记",
+		"noJournalsYet": "您尚未创建任何日志。",
+		"noJournalsYetDesc": "一旦您创建日志，它就会出现在这里。",
+		"notes": "笔记",
+		"numberOfNotes": "注释数量",
+		"title": "标题"
 	},
 	"languages": {
 		"backToSettings": "返回设置",

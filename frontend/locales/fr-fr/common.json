@@ -101,7 +101,7 @@
 		"fileTooBig100Mb": "Le fichier est trop volumineux. Veuillez choisir un fichier inférieur à 100 Mo.",
 		"unknownFormat": "Format inconnu du fichier"
 	},
-	"goToStudy": "Aller étudier",
+	"goToStudy": "Aller à l'étude",
 	"homework": {
 		"menuTitle": "Devoirs"
 	},
@@ -149,7 +149,31 @@
 		}
 	},
 	"journal": {
-		"menuTitle": "Journal"
+		"createNewJournal": "Créer un nouveau journal",
+		"createNewPost": "Créer un nouveau message",
+		"dateCreated": "Date créée",
+		"deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce journal ?",
+		"deleteNotesFirst": "Veuillez d'abord supprimer toutes les notes de votre journal",
+		"deletePostConfirm": "Êtes-vous sûr de vouloir supprimer ce message ?",
+		"description": "Description",
+		"editNote": "Note éditée",
+		"enterTitle": "Veuillez entrer un titre",
+		"info": {
+			"class": "Quelque chose qui a été discuté en classe et que vous ne voulez pas oublier",
+			"ideas": "Idées de suivi ou réflexions sur les études MindHive",
+			"intro": "Utilisez le journal pour documenter toutes les pensées ou notes liées à MindHive, y compris, mais sans s'y limiter :",
+			"read": "Quelque chose que vous avez lu et que vous pourriez vouloir utiliser plus tard",
+			"shower": "Une idée de recherche qui vous est venue sous la douche"
+		},
+		"journalName": "Nom du journal",
+		"journalTitle": "Titre du journal",
+		"menuTitle": "Journal",
+		"myJournals": "Mes journaux",
+		"noJournalsYet": "Vous n’avez pas encore créé de journaux.",
+		"noJournalsYetDesc": "Une fois que vous avez créé un journal, il apparaîtra ici.",
+		"notes": "Remarques",
+		"numberOfNotes": "Nombre de notes",
+		"title": "Titre"
 	},
 	"languages": {
 		"backToSettings": "Retour aux paramètres",
@@ -285,8 +309,8 @@
 		"transferAuthorship": "Transférer la paternité",
 		"typeChangeAlert": "Veuillez taper CHANGE pour changer l'auteur de votre étude",
 		"typeChangeToConfirm": "Tapez « CHANGE » pour confirmer",
-		"typeDeleteAlert": "Veuillez taper SUPPRIMER pour supprimer votre étude",
-		"typeDeleteToConfirm": "Tapez « SUPPRIMER » pour confirmer",
+		"typeDeleteAlert": "Veuillez taper DELETE pour supprimer votre étude",
+		"typeDeleteToConfirm": "Tapez « DELETE » pour confirmer",
 		"unarchive": "Étude de désarchivage",
 		"unarchiveConfirm": "Êtes-vous sûr de vouloir désarchiver cette étude ?",
 		"unarchiveDescription": "L'étude sera renvoyée dans la section « Active » de votre espace Développement. Cela n'aura aucune incidence sur la façon dont les autres la verront. Vous pouvez réarchiver une étude à tout moment."
