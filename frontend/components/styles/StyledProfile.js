@@ -480,6 +480,25 @@ export const StyledSimpleSaveButton = styled.div`
     background: ${(props) => (props.changed ? "#347A70" : "#9a9a9a")};
     border-color: ${(props) => (props.changed ? "#347A70" : "#9a9a9a")};
   }
+    `;
+    
+export const StyledAdaptableButton = styled.button`
+  background: ${(props) => (props.changed ? props.color : "#9a9a9a")};
+  border-color: ${(props) => (props.changed ? props.color : "#9a9a9a")};
+  color: white;
+  border-radius: 4px;
+  font-size: 16px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-family: Lato;
+  font-weight: 600;
+  transition: background 0.2s, border-color 0.2s;
+  &:disabled {
+    background: #cccccc;
+    border-color: #cccccc;
+    cursor: not-allowed;
+    color: #f3f3f3;
+  }
 `;
 
 export default StyledProfile;

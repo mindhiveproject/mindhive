@@ -14,6 +14,7 @@ import withData from "../lib/withData";
 
 import Site from "../components/Global/Site";
 import Authorized from "../components/Global/Authorized";
+import HelpCenter from "../components/Global/HelpCenter";
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -29,6 +30,8 @@ function useSyncUserLanguage() {
     if (user?.language && user.language.toLowerCase() !== lang) {
       Cookies.set("NEXT_LOCALE", user.language.toLowerCase());
       router.push(router.asPath, router.asPath, { locale: user.language.toLowerCase() });
+    } else {
+      // console.log('useSyncUserLanguage: no sync needed', user?.language, lang);
     }
   }, [user, lang]);
 }
@@ -45,6 +48,7 @@ function MyApp({ Component, pageProps, apollo }) {
         <Authorized>
           <LanguageSyncWrapper>
             <Component {...pageProps} />
+            <HelpCenter />
           </LanguageSyncWrapper>
         </Authorized>
       </Site>

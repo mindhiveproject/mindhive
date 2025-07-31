@@ -42,7 +42,7 @@ export default function Connect({ project, user }) {
   const collaborators = inputs?.collaborators || [];
 
   return (
-    <div className="connectArea">
+    <div className="connectArea" id="connectArea">
       <div className="icons">
         {collaborators.map((collaborator, num) => (
           <Popup

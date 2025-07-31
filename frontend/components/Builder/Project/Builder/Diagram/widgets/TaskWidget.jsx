@@ -6,6 +6,7 @@ export const TaskWidget = props => (
   <StyledNode taskType={props.node?.options?.taskType}>
     <div
       className="node-header-container"
+      id="block"
       style={{ backgroundColor: props.node.color }}
     >
       <div className="node-header-text">
@@ -21,6 +22,7 @@ export const TaskWidget = props => (
         <div
           className="icon"
           aria-hidden="true"
+          id="blockSettings"
           onClick={() => {
             // lock the model
             props.engine.getModel().setLocked(true);
@@ -39,6 +41,7 @@ export const TaskWidget = props => (
         <div
           className="icon"
           aria-hidden="true"
+          id="blockInfo"
           onClick={() => {
             // lock the model
             props.engine.getModel().setLocked(true);
@@ -57,6 +60,7 @@ export const TaskWidget = props => (
         <div
           className="icon"
           aria-hidden="true"
+          id="blockPlay"
           onClick={() => {
             // lock the model
             props.engine.getModel().setLocked(true);

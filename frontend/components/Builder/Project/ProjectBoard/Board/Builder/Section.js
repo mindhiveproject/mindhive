@@ -313,7 +313,7 @@ const Section = ({
   };
 
   return (
-    <div className="section">
+    <div className="section" id="section">
       <div className="column-drag-handle">
         <div className="firstLine">
           {settings?.allowAddingCards && (

@@ -72,7 +72,7 @@ export default function Card({
         }}
       >
         <div className="card-drag-handle">
-          <div className="card-information">
+          <div className="card-information" id="card">
             <div className="card-left-side">
               <Popup
                 content={
@@ -112,11 +112,11 @@ export default function Card({
             {card?.settings?.includeInReport && (
               <>
                 {isLocked ? (
-                  <div className="card-public-status-submitted">
+                  <div className="card-public-status-submitted" id="cardWithTag">
                     <img src="/assets/icons/status/publicTemplatesubmitted.svg" />
                   </div>
                 ) : (
-                  <div className="card-public-status">
+                  <div className="card-public-status" id="cardWithTag">
                     <img src="/assets/icons/status/publicTemplate.svg" />
                   </div>
                 )}
