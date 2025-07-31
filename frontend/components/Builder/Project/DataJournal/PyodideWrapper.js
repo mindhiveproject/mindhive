@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { loadPyodide } from "pyodide";
 
-// import JournalManager from "./JournalManager";
 import Journals from "./Journals";
 
 const baseCode = `import js

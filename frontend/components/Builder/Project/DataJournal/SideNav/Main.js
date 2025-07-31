@@ -8,10 +8,16 @@ export default function SideNavigation({
   workspaces,
   selectedWorkspace,
   selectWorkspaceById,
+  collapsePanel,
 }) {
   return (
     <StyledSidebar>
-      <div>Collapse panel</div>
+      <div className="collapsePanelBtn">
+        <div onClick={() => collapsePanel()}>
+          <img src="/assets/dataviz/collapsePanel.png" />
+          Collapse Panel
+        </div>
+      </div>
       <div className="journals">
         {dataJournals.map((journal) => (
           <JournalNavigation

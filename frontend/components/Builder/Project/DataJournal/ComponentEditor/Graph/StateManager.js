@@ -103,15 +103,15 @@ export default function StateManager({
 
   return (
     <div className="graph">
-      {/* {!code && pyodide && (
+      {!code && pyodide && (
         <TemplateSelector
           handleContentChange={handleContentChange}
           runCode={runCode}
           sectionId={sectionId}
         />
-      )} */}
+      )}
 
-      {/* {isRunning && (
+      {isRunning && (
         <Message icon>
           <Icon name="circle notched" loading />
           <MessageContent>
@@ -119,19 +119,10 @@ export default function StateManager({
             The code is running.
           </MessageContent>
         </Message>
-      )} */}
+      )}
       {code && pyodide && (
         <>
-          <div className="graphContainer">
-            <Render
-              data={data}
-              code={code}
-              pyodide={pyodide}
-              runCode={runCode}
-              sectionId={sectionId}
-            />
-          </div>
-          {/* <div className="graphRenderContainer">
+          <div className="graphRenderContainer">
             <AxesComponent
               type={type}
               variables={variablesToDisplay}
@@ -180,7 +171,7 @@ export default function StateManager({
                 disabled
               />
             </AccordionContent>
-          </Accordion> */}
+          </Accordion>
         </>
       )}
     </div>

@@ -5,7 +5,6 @@ import { GET_DATA_JOURNAL } from "../../../Queries/DataJournal";
 import { StyledDataJournal } from "./styles/StyledDataJournal";
 
 import StudyDataWrapper from "./StudyDataWrapper";
-// import Workspace from "./Workspace";
 
 export default function Journal({
   user,
@@ -25,7 +24,8 @@ export default function Journal({
     },
   });
 
-  const journal = data?.vizPart || null;
+  const journal = data?.vizPart;
+
   const workspaces = journal?.vizChapters || [];
 
   useEffect(() => {
@@ -54,6 +54,7 @@ export default function Journal({
           user={user}
           studyId={studyId}
           dataJournals={dataJournals}
+          journal={journal}
           journalId={journalId}
           selectJournalById={selectJournalById}
           workspaces={workspaces}
@@ -61,15 +62,6 @@ export default function Journal({
           selectWorkspaceById={selectWorkspaceById}
           pyodide={pyodide}
         />
-        // <Workspace
-        //   dataJournals={dataJournals}
-        //   journalId={journalId}
-        //   selectJournalById={selectJournalById}
-        //   workspaces={workspaces}
-        //   workspaceId={workspace?.id}
-        //   selectWorkspaceById={selectWorkspaceById}
-        //   pyodide={pyodide}
-        // />
       )}
     </StyledDataJournal>
   );

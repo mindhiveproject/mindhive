@@ -171,6 +171,7 @@ export default function StudyDataWrapper({
   user,
   studyId,
   dataJournals,
+  journal,
   journalId,
   selectJournalById,
   workspaces,
@@ -178,7 +179,6 @@ export default function StudyDataWrapper({
   selectWorkspaceById,
   pyodide,
 }) {
-  console.log({ studyId });
   // get the username of the current user
   const username = user?.publicReadableId || user?.publicId || user?.id;
 
@@ -190,8 +190,6 @@ export default function StudyDataWrapper({
   } = useQuery(STUDY_SUMMARY_RESULTS, {
     variables: { studyId },
   });
-
-  console.log({ studyData });
 
   const study = studyData?.study || {};
   // filter only summary results that are selected by the user to be included in the data analysis
@@ -270,6 +268,7 @@ export default function StudyDataWrapper({
     <Workspace
       user={user}
       dataJournals={dataJournals}
+      journal={journal}
       journalId={journalId}
       selectJournalById={selectJournalById}
       workspaces={workspaces}

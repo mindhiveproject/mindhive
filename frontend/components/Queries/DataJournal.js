@@ -5,6 +5,8 @@ export const GET_DATA_JOURNAL = gql`
   query GET_DATA_JOURNAL($id: ID!) {
     vizPart(where: { id: $id }) {
       id
+      title
+      updatedAt
       vizChapters {
         id
         title

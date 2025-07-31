@@ -1,50 +1,76 @@
 import { useCallback, useMemo } from "react";
 import { StyledDataComponent } from "../styles/StyledDataJournal";
+import JoditEditor from "../../../../Jodit/Editor";
+
+import Graph from "./Graph/Main";
 
 export default function ComponentEditor({
   component,
   onChange,
   onSave,
   onDelete,
+  pyodide,
+  data,
+  variables,
 }) {
-  console.log("ComponentEditor component prop:", component);
+  const { type } = component;
 
   const content = useMemo(
     () => component?.content || { text: "" },
     [component]
   );
 
-  const handleChange = useCallback(
-    (e) => {
-      const newValue = e.target.value;
-      console.log("ComponentEditor handleChange:", { field: "text", newValue });
-      onChange({
-        componentId: component?.id,
-        field: "text",
-        value: newValue,
-      });
-    },
-    [component, onChange]
-  );
-
   const handleSave = useCallback(() => {
-    console.log("ComponentEditor handleSave:", { content });
     onSave();
   }, [content, onSave]);
 
-  console.log("ComponentEditor rendering:", { content });
+  // Render content based on component type
+  const renderContent = () => {
+    switch (type) {
+      case "PARAGRAPH":
+        return (
+          <div>
+            <JoditEditor
+              content={content?.text || ""}
+              setContent={(newContent) => {
+                onChange({
+                  componentId: component?.id,
+                  newContent: { text: newContent },
+                });
+              }}
+            />
+          </div>
+        );
+
+      case "TABLE":
+        return <div>TABLE component</div>;
+
+      case "GRAPH":
+        return (
+          <Graph
+            content={content}
+            handleContentChange={(newContent) => {
+              console.log({ newContent });
+              onChange({
+                componentId: component?.id,
+                newContent: newContent?.newContent,
+              });
+            }}
+            pyodide={pyodide}
+            sectionId={component?.id}
+            data={data}
+            variables={variables}
+          />
+        );
+
+      default:
+        return <div>Unsupported component type: {type}</div>;
+    }
+  };
 
   return (
     <StyledDataComponent>
-      <div>
-        <label htmlFor="notes-text">Notes</label>
-        <textarea
-          id="notes-text"
-          value={content.text || ""}
-          onChange={handleChange}
-          placeholder="Enter your notes here..."
-        />
-      </div>
+      {renderContent()}
       <button onClick={handleSave}>Save</button>
       <button onClick={onDelete}>Delete</button>
     </StyledDataComponent>

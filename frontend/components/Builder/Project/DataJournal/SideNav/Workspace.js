@@ -6,17 +6,42 @@ export default function WorkspaceNavigation({
 }) {
   if (!isWorkspaceSelected) {
     return (
-      <div onClick={() => selectWorkspaceById({ id: workspace?.id })}>
-        {workspace?.title}
+      <div
+        className="workspace"
+        onClick={() => selectWorkspaceById({ id: workspace?.id })}
+      >
+        <div className="titleLine">
+          <div>
+            <img src="/assets/dataviz/sidebar/workspace.png" />
+          </div>
+          <div>{workspace?.title}</div>
+        </div>
       </div>
     );
   }
   return (
-    <div>
-      <h2>{workspace?.title}</h2>
-      {selectedWorkspace?.vizSections?.map((component) => (
-        <div>{component?.type}</div>
-      ))}
+    <div className="selectedWorkspace">
+      <div className="titleLine">
+        <div>
+          <img src="/assets/dataviz/sidebar/workspaceSelected.png" />
+        </div>
+        <div>{workspace?.title}</div>
+      </div>
+
+      {selectedWorkspace?.vizSections?.length ? (
+        <div className="components">
+          {selectedWorkspace?.vizSections?.map((component) => (
+            <div className="component">
+              <div>
+                <img src="/assets/dataviz/sidebar/paragraph.png" />
+              </div>
+              <div>{component?.type}</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

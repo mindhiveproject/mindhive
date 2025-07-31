@@ -5,6 +5,8 @@ import ReactHtmlParser from "react-html-parser";
 import { Radio, Icon } from "semantic-ui-react";
 
 export default function Paragraph({ content, handleContentChange }) {
+  console.log({ content });
+
   const [isEditing, setIsEditing] = useState(!content?.text);
 
   // update content in the local state
@@ -15,7 +17,8 @@ export default function Paragraph({ content, handleContentChange }) {
 
   return (
     <div className="paragraph">
-      <div className="modeSwitch">
+      <div className="viewMode">{ReactHtmlParser(content?.text)}</div>
+      {/* <div className="modeSwitch">
         <div>
           <Radio
             toggle
@@ -32,7 +35,7 @@ export default function Paragraph({ content, handleContentChange }) {
         <JoditEditor content={content?.text || ""} setContent={handleChange} />
       ) : (
         <div className="viewMode">{ReactHtmlParser(content?.text)}</div>
-      )}
+      )} */}
     </div>
   );
 }

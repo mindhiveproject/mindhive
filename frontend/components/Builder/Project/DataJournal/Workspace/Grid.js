@@ -25,9 +25,11 @@ import {
   StyledDataWorkspace,
   StyledRightPanel,
 } from "../styles/StyledDataJournal";
+import ComponentPanel from "./ComponentPanel/Main";
 
 export default function Grid({
   dataJournals,
+  journal,
   journalId,
   selectJournalById,
   workspaces,
@@ -41,6 +43,7 @@ export default function Grid({
 }) {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [activeComponentId, setActiveComponentId] = useState(null);
+  const [isAddComponentPanelOpen, setIsAddComponentPanelOpen] = useState(false);
 
   const layout = useMemo(() => workspace?.layout || [], [workspace]);
   const components = useMemo(() => workspace?.vizSections || [], [workspace]);
@@ -99,9 +102,9 @@ export default function Grid({
 
   const handleComponentSelect = useCallback(
     (componentId) => {
-      console.log(
-        `Grid handleComponentSelect: ${componentId}, current active: ${activeComponentId}`
-      );
+      // console.log(
+      //   `Grid handleComponentSelect: ${componentId}, current active: ${activeComponentId}`
+      // );
       setActiveComponentId((prev) =>
         prev === componentId ? null : componentId
       );
@@ -110,13 +113,14 @@ export default function Grid({
   );
 
   const handleAddComponent = useCallback(
-    async (type) => {
+    async ({ title, type, content }) => {
+      console.log({ title, type, content });
       const res = await createComponent({
         variables: {
           input: {
+            title: title,
             type: type,
-            title: "TEST",
-            // content: { text: "" },
+            content: content,
             vizChapter: {
               connect: {
                 id: workspace?.id,
@@ -126,7 +130,8 @@ export default function Grid({
         },
       });
       const newComponentId = res?.data?.createVizSection?.id;
-      const newComponent = { id: newComponentId, type, content: { text: "" } };
+      console.log({ newComponentId });
+      const newComponent = { id: newComponentId, title, type, content };
       const newLayoutItem = {
         i: newComponentId,
         x: (layout?.length * 2) % 12,
@@ -142,6 +147,10 @@ export default function Grid({
       const newComponents = [...components, newComponent];
       const newLayout = [...layout, newLayoutItem];
       updateWorkspace({ vizSections: newComponents, layout: newLayout });
+      // close the add component panel
+      setIsAddComponentPanelOpen(false);
+      // open the panel
+      handleComponentSelect(newComponentId);
     },
     [createComponent, workspace, layout, components, updateWorkspace]
   );
@@ -159,13 +168,28 @@ export default function Grid({
     [deleteComponent, components, layout, activeComponentId, updateWorkspace]
   );
 
+  // const handleUpdateComponent = useCallback(
+  //   ({ componentId, field, value }) => {
+  //     const updatedComponents = components.map((comp) =>
+  //       comp.id === componentId
+  //         ? {
+  //             ...comp,
+  //             content: { ...comp?.content, [field]: value },
+  //           }
+  //         : comp
+  //     );
+  //     updateWorkspace({ vizSections: updatedComponents });
+  //   },
+  //   [components, updateWorkspace]
+  // );
+
   const handleUpdateComponent = useCallback(
-    ({ componentId, field, value }) => {
+    ({ componentId, newContent }) => {
       const updatedComponents = components.map((comp) =>
         comp.id === componentId
           ? {
               ...comp,
-              content: { ...value?.newContent },
+              content: { ...comp?.content, ...newContent },
             }
           : comp
       );
@@ -195,20 +219,33 @@ export default function Grid({
     [components, updateComponent]
   );
 
+  const toggleComponentPanel = () => {
+    setIsAddComponentPanelOpen(!isAddComponentPanelOpen);
+  };
+
   return (
     <StyledDataWorkspace>
       <TopNavigation
-        journalId={journalId}
+        journal={journal}
         workspace={workspace}
-        activeComponentId={activeComponentId}
+        activeComponent={components.find(
+          (comp) => comp.id === activeComponentId
+        )}
         handleAddComponent={handleAddComponent}
+        toggleComponentPanel={toggleComponentPanel}
       />
       <div className="dashboard">
-        <Checkbox
-          checked={sidebarVisible}
-          label={{ children: <code>visible</code> }}
-          onChange={(e, data) => setSidebarVisible(data.checked)}
-        />
+        <div>
+          {!sidebarVisible && (
+            <div
+              className="openPanelBtn"
+              onClick={() => setSidebarVisible(true)}
+            >
+              <img src="/assets/dataviz/openPanel.png" />
+            </div>
+          )}
+        </div>
+
         <SidebarPushable as={Segment}>
           <Sidebar
             animation="push"
@@ -225,67 +262,64 @@ export default function Grid({
               workspaces={workspaces}
               selectedWorkspace={workspace}
               selectWorkspaceById={selectWorkspaceById}
+              collapsePanel={() => setSidebarVisible(false)}
             />
           </Sidebar>
 
           <SidebarPusher>
-            <Segment basic>
-              <div className="canvas">
-                <GridLayout
-                  className="layout"
-                  layout={layout}
-                  cols={12}
-                  rowHeight={30}
-                  width={920}
-                  onLayoutChange={handleLayoutChange}
-                  isDraggable={true}
-                  isResizable={true}
-                  compactType="vertical"
-                  preventCollision={false}
-                  margin={[16, 16]}
-                  draggableHandle=".widget-header"
-                  draggableCancel=".widget-button" // Exclude buttons from dragging
-                >
-                  {components.map((widget) => {
-                    const layoutItem = layout.find(
-                      (l) => l.i === widget.id
-                    ) || {
-                      i: widget.id,
-                      x: 0,
-                      y: 0,
-                      w: 4,
-                      h: 10,
-                      minW: 2,
-                      minH: 5,
-                      maxW: 12,
-                      maxH: 20,
-                    };
-                    return (
-                      <div
-                        key={widget.id}
-                        data-grid={layoutItem}
-                        className="widgetContainer"
-                        style={{ position: "static" }}
-                      >
-                        <Widget
-                          id={widget.id}
-                          type={widget.type}
-                          content={widget.content}
-                          isActive={widget.id === activeComponentId}
-                          onSelect={handleComponentSelect}
-                          onChange={handleUpdateComponent}
-                          handleRemoveComponent={handleRemoveComponent}
-                          pyodide={pyodide}
-                          data={data}
-                          variables={variables}
-                          settings={settings}
-                        />
-                      </div>
-                    );
-                  })}
-                </GridLayout>
-              </div>
-            </Segment>
+            <div className="canvas">
+              <GridLayout
+                className="layout"
+                layout={layout}
+                cols={12}
+                rowHeight={30}
+                width={920}
+                onLayoutChange={handleLayoutChange}
+                isDraggable={true}
+                isResizable={true}
+                compactType="vertical"
+                preventCollision={false}
+                margin={[16, 16]}
+                draggableHandle=".widget-header"
+                draggableCancel=".widget-button" // Exclude buttons from dragging
+              >
+                {components.map((widget) => {
+                  const layoutItem = layout.find((l) => l.i === widget.id) || {
+                    i: widget.id,
+                    x: 0,
+                    y: 0,
+                    w: 4,
+                    h: 10,
+                    minW: 2,
+                    minH: 5,
+                    maxW: 12,
+                    maxH: 20,
+                  };
+                  return (
+                    <div
+                      key={widget.id}
+                      data-grid={layoutItem}
+                      className="widgetContainer"
+                      style={{ position: "static" }}
+                    >
+                      <Widget
+                        id={widget.id}
+                        type={widget.type}
+                        content={widget.content}
+                        isActive={widget.id === activeComponentId}
+                        onSelect={handleComponentSelect}
+                        onChange={handleUpdateComponent}
+                        handleRemoveComponent={handleRemoveComponent}
+                        pyodide={pyodide}
+                        data={data}
+                        variables={variables}
+                        settings={settings}
+                      />
+                    </div>
+                  );
+                })}
+              </GridLayout>
+            </div>
           </SidebarPusher>
         </SidebarPushable>
         {activeComponentId && (
@@ -297,8 +331,14 @@ export default function Grid({
               onChange={handleUpdateComponent}
               onSave={() => handleSaveComponent(activeComponentId)}
               onDelete={() => handleRemoveComponent(activeComponentId)}
+              pyodide={pyodide}
+              data={data}
+              variables={variables}
             />
           </StyledRightPanel>
+        )}
+        {isAddComponentPanelOpen && (
+          <ComponentPanel handleAddComponent={handleAddComponent} />
         )}
       </div>
     </StyledDataWorkspace>

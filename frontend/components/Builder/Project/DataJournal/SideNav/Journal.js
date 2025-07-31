@@ -10,22 +10,33 @@ export default function JournalNavigation({
 }) {
   if (!isJournalSelected) {
     return (
-      <div onClick={() => selectJournalById({ id: journal?.id })}>
-        {journal?.title}
+      <div className="journal">
+        <div
+          className="title"
+          onClick={() => selectJournalById({ id: journal?.id })}
+        >
+          {journal?.title}
+        </div>
+        <div className="timestamp">Last updated: Nov 13, 2024</div>
+        <div className="dataSource">Data source</div>
       </div>
     );
   }
   return (
-    <div>
-      <h2>{journal?.title}</h2>
-      {workspaces.map((workspace) => (
-        <WorkspaceNavigation
-          workspace={workspace}
-          isWorkspaceSelected={workspace?.id === selectedWorkspace?.id}
-          selectedWorkspace={selectedWorkspace}
-          selectWorkspaceById={selectWorkspaceById}
-        />
-      ))}
+    <div className="journal">
+      <div className="selectedTitle">{journal?.title}</div>
+      <div className="timestamp">Last updated: Nov 13, 2024</div>
+      <div className="dataSource">Data source</div>
+      <div className="workspaces">
+        {workspaces.map((workspace) => (
+          <WorkspaceNavigation
+            workspace={workspace}
+            isWorkspaceSelected={workspace?.id === selectedWorkspace?.id}
+            selectedWorkspace={selectedWorkspace}
+            selectWorkspaceById={selectWorkspaceById}
+          />
+        ))}
+      </div>
     </div>
   );
 }
