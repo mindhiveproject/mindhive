@@ -130,7 +130,7 @@ export default function StudyTasks({ study }) {
         {Object.values(paths).map(({ frequency, path, label }) => (
           <div className="condition">
             {path?.filter((block) => block?.type === "task").length > 0 && (
-              <div className="firstLine">
+              <div className="firstLine" id="firstLine">
                 <div>{label}</div>
                 <Popup
                   content={
@@ -142,7 +142,7 @@ export default function StudyTasks({ study }) {
               </div>
             )}
 
-            <div className="taskBlocks">
+            <div className="taskBlocks" id="taskBlocks">
               {path?.map((block) => {
                 if (block?.type === "task") {
                   return <TaskBlock task={block} />;

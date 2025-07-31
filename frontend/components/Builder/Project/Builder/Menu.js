@@ -25,6 +25,7 @@ export default function Menu({
           className={
             tab === "addBlock" ? "menuTitle selectedMenuTitle" : "menuTitle"
           }
+          id="addBlock"
         >
           <h2>{t("menu.addBlock", "Add a block")}</h2>
         </div>
@@ -34,6 +35,7 @@ export default function Menu({
           className={
             tab === "flow" ? "menuTitle selectedMenuTitle" : "menuTitle"
           }
+          id="flow"
         >
           <h2>{t("menu.studyFlow", "Study flow")}</h2>
         </div>
@@ -43,6 +45,7 @@ export default function Menu({
           className={
             tab === "study" ? "menuTitle selectedMenuTitle" : "menuTitle"
           }
+          id="studySettings"
         >
           <h2>{t("menu.studySettings", "Study settings")}</h2>
         </div>
@@ -57,7 +60,7 @@ export default function Menu({
       )}
 
       {tab === "flow" && (
-        <div className="studyFlow">
+        <div className="studyFlow" id="studyFlow">
           <StudyTasks study={study} />
         </div>
       )}

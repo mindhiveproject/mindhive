@@ -71,49 +71,52 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
   return (
     <div className="editPane">
       <div className="header">
-        <input
-          type="text"
-          name="keyword"
-          value={keyword}
-          onChange={saveToState}
-          placeholder={t("selector.searchPlaceholder", "🔍 Search")}
-          onFocus={() => {
-            engine.getModel().setLocked(true);
-          }}
-          onBlur={() => {
-            engine.getModel().setLocked(false);
-          }}
-        />
-
-        <Dropdown
-          fluid
-          selection
-          options={[
-            {
-              key: "anyone",
-              text: t("selector.filter.createdByAnyone", "Created by anyone"),
-              value: "anyone",
-            },
-            {
-              key: "me",
-              text: t("selector.filter.ownedByMe", "Owned by me"),
-              value: "me",
-            },
-            {
-              key: "favorite",
-              text: t("selector.filter.myFavorite", "My favorite"),
-              value: "favorite",
-            },
-          ]}
-          onChange={(event, data) => {
-            setCreatedBy(data.value);
-          }}
-          value={createdBy}
-          className="createdByDropdown"
-        />
+        <div id="search">
+          <input
+            type="text"
+            name="keyword"
+            value={keyword}
+            onChange={saveToState}
+            placeholder={t("selector.searchPlaceholder", "🔍 Search")}
+            onFocus={() => {
+              engine.getModel().setLocked(true);
+            }}
+            onBlur={() => {
+              engine.getModel().setLocked(false);
+            }}
+          />
+        </div>
+        <div id="createdBy">
+          <Dropdown
+            fluid
+            selection
+            options={[
+              {
+                key: "anyone",
+                text: t("selector.filter.createdByAnyone", "Created by anyone"),
+                value: "anyone",
+              },
+              {
+                key: "me",
+                text: t("selector.filter.ownedByMe", "Owned by me"),
+                value: "me",
+              },
+              {
+                key: "favorite",
+                text: t("selector.filter.myFavorite", "My favorite"),
+                value: "favorite",
+              },
+            ]}
+            onChange={(event, data) => {
+              setCreatedBy(data.value);
+            }}
+            value={createdBy}
+            className="createdByDropdown"
+          />
+        </div>
       </div>
 
-      <Accordion exclusive={false} fluid styled className="blocksMenu">
+      <Accordion exclusive={false} fluid styled className="blocksMenu" id="blocksMenu">
         {components.map((item, num) => (
           <div key={num}>
             <Accordion.Title

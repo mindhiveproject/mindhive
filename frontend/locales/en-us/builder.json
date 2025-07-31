@@ -722,7 +722,7 @@
 	},
 	"selector": {
 		"basicBlocks": {
-			"description": "Want to include <strong>custom instructions</strong> to your participants or <strong>embed a link and/or video</strong> in your study's procedure? Select and edit a basic block",
+			"description": "Want to include custom instructions to your participants or embed a link and/or video in your study's procedure? Select and edit a basic block",
 			"title": "Basic Blocks"
 		},
 		"filter": {
