@@ -6,14 +6,19 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import { Button, Icon } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 import { GET_CARD_CONTENT } from "../../Queries/Proposal";
 
-export default function Card({ card, cardId }) {
+export default function Card({ card, cardId, user }) {
+  const { t } = useTranslation("builder");
   const [content, setContent] = useState(card?.content || "");
+  const [comment, setComment] = useState(card?.comment || "");
   const [hasContentChanged, setHasContentChanged] = useState(false);
   const [saveStatus, setSaveStatus] = useState("idle"); // idle, loading, success
+
+  const isUsedLoggedIn = user;
 
   const [updateCard, { loading }] = useMutation(UPDATE_CARD_EDIT, {
     refetchQueries: [{ query: GET_CARD_CONTENT, variables: { id: cardId } }],
@@ -25,20 +30,25 @@ export default function Card({ card, cardId }) {
     onUpdate: ({ editor }) => {
       const newContent = editor.getHTML();
       setContent(newContent);
-      setHasContentChanged(newContent !== card?.content);
+      setHasContentChanged(
+        newContent !== card?.content || comment !== card?.comment
+      );
       setSaveStatus("idle");
     },
     editable: true,
   });
 
   useEffect(() => {
-    // Sync editor content when card prop changes
+    // Sync editor content and comment when card prop changes
     if (editor && card?.content !== content) {
       editor.commands.setContent(card?.content || "");
       setContent(card?.content || "");
-      setHasContentChanged(false);
-      setSaveStatus("idle");
     }
+    if (card?.comment !== comment) {
+      setComment(card?.comment || "");
+    }
+    setHasContentChanged(false);
+    setSaveStatus("idle");
   }, [card, editor]);
 
   const saveChanges = async () => {
@@ -51,6 +61,7 @@ export default function Card({ card, cardId }) {
           id: cardId,
           input: {
             content: content,
+            comment: comment,
           },
         },
       });
@@ -173,16 +184,79 @@ export default function Card({ card, cardId }) {
     >
       <h2 style={{ marginBottom: "10px" }}>{card?.title}</h2>
       <Toolbar editor={editor} />
-      <div style={{ flex: 1, overflow: "auto" }}>
-        <EditorContent
-          editor={editor}
+      <div
+        style={{
+          display: "flex",
+          flex: 1,
+          gap: "20px",
+          overflow: "hidden",
+        }}
+      >
+        <div
           style={{
-            border: "1px solid #ccc",
-            padding: "10px",
-            height: "100%",
-            boxSizing: "border-box",
+            flex: 2,
+            overflow: "auto",
           }}
-        />
+        >
+          <EditorContent
+            editor={editor}
+            style={{
+              border: "1px solid #ccc",
+              padding: "10px",
+              height: "100%",
+              boxSizing: "border-box",
+            }}
+          />
+        </div>
+        <div
+          className="proposalCardComments"
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+          }}
+        >
+          <div className="cardSubheader">
+            {t("mainCard.comments", "Comments")}
+          </div>
+          {isUsedLoggedIn ? (
+            <textarea
+              rows="5"
+              type="text"
+              id="comment"
+              name="comment"
+              value={comment}
+              onChange={(e) => {
+                setComment(e.target.value);
+                setHasContentChanged(
+                  e.target.value !== card?.comment || content !== card?.content
+                );
+              }}
+              style={{
+                flex: 1,
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                resize: "vertical",
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                flex: 1,
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                background: "#f9f9f9",
+                overflow: "auto",
+              }}
+            >
+              {comment}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

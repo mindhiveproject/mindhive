@@ -134,6 +134,7 @@ export const PROPOSAL_QUERY = gql`
           type
           title
           content
+          comment
           settings
           position
           section {
