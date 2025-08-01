@@ -8,48 +8,71 @@ import { useEffect } from 'react';
 import ProjectsBoard from "./Projects/Main";
 import StudiesBoard from "./Studies/Main";
 import useTranslation from "next-translate/useTranslation";
+import { reviewOverviewTours } from "./tours";
 
 export default function Overview({ query, user }) {
   const { t } = useTranslation("builder");
 
   useEffect(() => {
-    function handleStartTour() {
+    let currentTour = null;
+    let isStartingTour = false;
+    
+    function handleStartTour(event) {
+      const tourId = event?.detail?.tourId || 'overview';
+      
+      // Prevent multiple tours from starting simultaneously
+      if (isStartingTour) {
+        console.log('Tour already starting, ignoring request');
+        return;
+      }
+      
+      isStartingTour = true;
+      
+      // Exit any existing tour first
+      if (currentTour) {
+        currentTour.exit();
+        currentTour = null;
+      }
+      
       (async () => {
         const introJs = (await import('intro.js')).default;
-        introJs.tour().setOptions({
-          steps: [
-            {
-              element: '#options',
-              intro: "Click here to start developing a new study, task, survey, or block.",
-              position: "bottom",
-              disableInteraction: false
-            },
-            {
-              element: '#searchArea',
-              intro: "Search by name",
-              position: "auto",
-              disableInteraction: false,
-            },
-            {
-              element: '#sortBy',
-              intro: "Sort by time or number of comments posted",
-              position: "auto",
-              disableInteraction: false,
-            },
-            {
-              element: '#filterByClasses',
-              intro: "Filter to only see projects in a specific class",
-              position: "auto",
-              disableInteraction: false,
-            }
-          ],
+        const tours = reviewOverviewTours;
+        const selectedTour = tours[tourId];
+        
+        if (!selectedTour) {
+          console.error(`Tour ${tourId} not found`);
+          isStartingTour = false;
+          return;
+        }
+
+        // Create new tour instance
+        currentTour = introJs.tour();
+        currentTour.setOptions({
+          steps: selectedTour.steps,
           scrollToElement: false,
           scrollTo: 'off',
-        }).start();
+          exitOnOverlayClick: true,
+          exitOnEsc: true,
+          showBullets: true,
+        });
+        
+        // Start the tour
+        currentTour.start();
+        
       })();
     }
+    
+    // Remove any existing listeners first
+    window.removeEventListener('start-walkthrough-tour', handleStartTour);
     window.addEventListener('start-walkthrough-tour', handleStartTour);
-    return () => window.removeEventListener('start-walkthrough-tour', handleStartTour);
+    
+    return () => {
+      window.removeEventListener('start-walkthrough-tour', handleStartTour);
+      // Clean up any existing tour when component unmounts
+      if (currentTour) {
+        currentTour.exit();
+      }
+    };
   }, []);
 
   const selector = query?.selector || "proposals";
@@ -88,7 +111,7 @@ export default function Overview({ query, user }) {
       <div className="h24">{t("review.overviewIntro")}</div>
 
       <div id="options" className="menu">
-        <Link href="/dashboard/review/proposals">
+        <Link href="/dashboard/review/proposals" id="proposal">
           <div
             className={
               selector === "proposals" || !selector
@@ -100,7 +123,7 @@ export default function Overview({ query, user }) {
           </div>
         </Link>
 
-        <Link href="/dashboard/review/inreview">
+        <Link href="/dashboard/review/inreview" id="peerReview">
           <div
             className={
               selector === "inreview"
@@ -112,7 +135,7 @@ export default function Overview({ query, user }) {
           </div>
         </Link>
 
-        <Link href="/dashboard/review/collectingdata">
+        <Link href="/dashboard/review/collectingdata"  id="collectData">
           <div
             className={
               selector === "collectingdata"
@@ -124,7 +147,7 @@ export default function Overview({ query, user }) {
           </div>
         </Link>
 
-        <Link href="/dashboard/review/report">
+        <Link href="/dashboard/review/report" id="report">
           <div
             className={
               selector === "report"
