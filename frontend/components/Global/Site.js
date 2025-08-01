@@ -6,7 +6,90 @@ import Meta from "./Meta";
 const theme = {
 // Design System: https://www.figma.com/design/AODZL5Cne8QAt0Yy9ZcKkM/Design-System?node-id=2275-1249&t=i5eXhFYKPtMSetWj-1
 
-  // Blues
+  // Typography
+
+  titleLarge: {
+    color: "var(--MH-Theme-Neutrals-Black, #171717)",
+    fontFamily: "Nunito, sans-serif",
+    fontSize: "22px",
+    fontStyle: "normal",
+    fontWeight: 600,
+    lineHeight: "28px", // 127.273%
+  },
+  
+  titleBase: {
+    color: "#171717",
+    fontFamily: "Nunito, sans-serif",
+    fontSize: "16px",
+    fontStyle: "normal",
+    fontWeight: 600,
+    lineHeight: "24px"
+  },
+
+  titleSmall: {
+    color: "var(--MH-Theme-Neutrals-Black, #171717)",
+    fontFamily: "Nunito, sans-serif",
+    fontSize: "14px",
+    fontStyle: "normal",
+    fontWeight: 600,
+    lineHeight: "20px"
+  },
+
+  bodyLarge: {
+    color: "var(--MH-Theme-Neutrals-Black, #171717)",
+    fontFamily: "Nunito Sans",
+    fontSize: "22px",
+    fontStyle: "normal",
+    fontWeight: 400,
+    lineHeight: "28px"
+  },
+
+  bodyBase: {
+    color: "var(--MH-Theme-Neutrals-Black, #171717)",
+    fontFamily: "Nunito Sans",
+    fontSize: "16px",
+    fontStyle: "normal",
+    fontWeight: 400,
+    lineHeight: "24px"
+  },
+
+  bodySmall: {
+    color: "var(--MH-Theme-Neutrals-Black, #171717)",
+    fontFamily: "Nunito Sans",
+    fontSize: "12px",
+    fontStyle: "normal",
+    fontWeight: 400,
+    lineHeight: "16px"
+  },
+  labelLarge: {
+    color: "var(--MH-Theme-Neutrals-Black, #171717)",
+    fontFamily: "Nunito Sans",
+    fontSize: "16px",
+    fontStyle: "normal",
+    fontWeight: 600,
+    lineHeight: "24px"
+  },
+
+  labelBase: {
+    color: "var(--MH-Theme-Neutrals-Black, #171717)",
+    fontFamily: "Nunito Sans",
+    fontSize: "14px",
+    fontStyle: "normal",
+    fontWeight: 600,
+    lineHeight: "20px"
+  },
+
+  labelSmall: {
+    color: "var(--MH-Theme-Neutrals-Black, #171717)",
+    fontFamily: "Nunito Sans",
+    fontSize: "12px",
+    fontStyle: "normal",
+    fontWeight: 600,
+    lineHeight: "16px"
+  },
+
+  // Colors
+
   primaryBlue:   "#265390",  
   secondaryBlue: "#3D85B0",  
   accentBlue:    "#D3E2F1",  
@@ -63,6 +146,86 @@ const GlobalStyles = createGlobalStyle`
   @import url("https://fonts.googleapis.com/css?family=Inter");
   html {
     --green: #007C70;
+    --primary-blue: ${props => props.theme.primaryBlue};
+    --secondary-blue: ${props => props.theme.secondaryBlue};
+    --accent-blue: ${props => props.theme.accentBlue};
+    --primary-green: ${props => props.theme.primaryGreen};
+    --secondary-green: ${props => props.theme.secondaryGreen};
+    --accent-green: ${props => props.theme.accentGreen};
+    --primary-calyspo: ${props => props.theme.primaryCalyspo};
+    --secondary-calyspo: ${props => props.theme.secondaryCalyspo};
+    --accent-calyspo: ${props => props.theme.accentCalyspo};
+    --primary-yellow: ${props => props.theme.primaryYellow};
+    --secondary-yellow: ${props => props.theme.secondaryYellow};
+    --accent-yellow: ${props => props.theme.accentYellow};
+    --primary-red: ${props => props.theme.primaryRed};
+    --secondary-red: ${props => props.theme.secondaryRed};
+    --accent-red: ${props => props.theme.accentRed};
+    --primary-purple: ${props => props.theme.primaryPurple};
+    --secondary-purple: ${props => props.theme.secondaryPurple};
+    --accent-purple: ${props => props.theme.accentPurple};
+    --neutral-1: ${props => props.theme.neutral1};
+    --neutral-2: ${props => props.theme.neutral2};
+    --neutral-3: ${props => props.theme.neutral3};
+    --neutral-4: ${props => props.theme.neutral4};
+    --neutral-5: ${props => props.theme.neutral5};
+    --neutral-6: ${props => props.theme.neutral6};
+    
+    /* Typography CSS Variables */
+    --title-large-font-family: ${props => props.theme.titleLarge.fontFamily};
+    --title-large-font-size: ${props => props.theme.titleLarge.fontSize};
+    --title-large-font-weight: ${props => props.theme.titleLarge.fontWeight};
+    --title-large-line-height: ${props => props.theme.titleLarge.lineHeight};
+    --title-large-color: ${props => props.theme.titleLarge.color};
+    
+    --title-base-font-family: ${props => props.theme.titleBase.fontFamily};
+    --title-base-font-size: ${props => props.theme.titleBase.fontSize};
+    --title-base-font-weight: ${props => props.theme.titleBase.fontWeight};
+    --title-base-line-height: ${props => props.theme.titleBase.lineHeight};
+    --title-base-color: ${props => props.theme.titleBase.color};
+    
+    --title-small-font-family: ${props => props.theme.titleSmall.fontFamily};
+    --title-small-font-size: ${props => props.theme.titleSmall.fontSize};
+    --title-small-font-weight: ${props => props.theme.titleSmall.fontWeight};
+    --title-small-line-height: ${props => props.theme.titleSmall.lineHeight};
+    --title-small-color: ${props => props.theme.titleSmall.color};
+    
+    --body-large-font-family: ${props => props.theme.bodyLarge.fontFamily};
+    --body-large-font-size: ${props => props.theme.bodyLarge.fontSize};
+    --body-large-font-weight: ${props => props.theme.bodyLarge.fontWeight};
+    --body-large-line-height: ${props => props.theme.bodyLarge.lineHeight};
+    --body-large-color: ${props => props.theme.bodyLarge.color};
+    
+    --body-base-font-family: ${props => props.theme.bodyBase.fontFamily};
+    --body-base-font-size: ${props => props.theme.bodyBase.fontSize};
+    --body-base-font-weight: ${props => props.theme.bodyBase.fontWeight};
+    --body-base-line-height: ${props => props.theme.bodyBase.lineHeight};
+    --body-base-color: ${props => props.theme.bodyBase.color};
+    
+    --body-small-font-family: ${props => props.theme.bodySmall.fontFamily};
+    --body-small-font-size: ${props => props.theme.bodySmall.fontSize};
+    --body-small-font-weight: ${props => props.theme.bodySmall.fontWeight};
+    --body-small-line-height: ${props => props.theme.bodySmall.lineHeight};
+    --body-small-color: ${props => props.theme.bodySmall.color};
+    
+    --label-large-font-family: ${props => props.theme.labelLarge.fontFamily};
+    --label-large-font-size: ${props => props.theme.labelLarge.fontSize};
+    --label-large-font-weight: ${props => props.theme.labelLarge.fontWeight};
+    --label-large-line-height: ${props => props.theme.labelLarge.lineHeight};
+    --label-large-color: ${props => props.theme.labelLarge.color};
+    
+    --label-base-font-family: ${props => props.theme.labelBase.fontFamily};
+    --label-base-font-size: ${props => props.theme.labelBase.fontSize};
+    --label-base-font-weight: ${props => props.theme.labelBase.fontWeight};
+    --label-base-line-height: ${props => props.theme.labelBase.lineHeight};
+    --label-base-color: ${props => props.theme.labelBase.color};
+    
+    --label-small-font-family: ${props => props.theme.labelSmall.fontFamily};
+    --label-small-font-size: ${props => props.theme.labelSmall.fontSize};
+    --label-small-font-weight: ${props => props.theme.labelSmall.fontWeight};
+    --label-small-line-height: ${props => props.theme.labelSmall.lineHeight};
+    --label-small-color: ${props => props.theme.labelSmall.color};
+    
     box-sizing: border-box;
     font-size: 10px;
     height: 100%;
