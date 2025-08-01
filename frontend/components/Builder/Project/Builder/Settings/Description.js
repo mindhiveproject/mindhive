@@ -24,17 +24,17 @@ export default function StudyDescription({
 
   return (
     <div className="studyDescription">
-      <h2>{t("description.title", "Study description")}</h2>
+      <h2>{t("descriptionBuilder.title", "Study description")}</h2>
       <p>
         {t(
-          "description.internalUse",
+          "descriptionBuilder.internalUse",
           "This is for internal use only. Participants won't see this description."
         )}
       </p>
       <div className="selector">
-        <p>{t("description.selectSource", "Select a source")}</p>
+        <p>{t("descriptionBuilder.selectSource", "Select a source")}</p>
         <Dropdown
-          placeholder={t("description.linkToProposal", "Link to proposal")}
+          placeholder={t("descriptionBuilder.linkToProposal", "Link to proposal")}
           fluid
           selection
           options={proposalDropdownOptions}

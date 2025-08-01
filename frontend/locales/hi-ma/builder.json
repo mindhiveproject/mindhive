@@ -214,6 +214,12 @@
 	"descriptionBefore": "{{taskType}} कार्ड विवरण (भागीदारी-पूर्व)",
 	"descriptionBeforeHelp": "यह वह है जो प्रतिभागियों को {{taskType}} लेने से पहले दिखाई देगा।",
 	"descriptionBeforeVisible": "यह उन सभी लोगों को दिखाई देगा जिन्होंने अभी तक इस कार्य में भाग नहीं लिया है।",
+	"descriptionBuilder": {
+		"internalUse": "यह केवल आंतरिक उपयोग के लिए है। प्रतिभागियों को यह विवरण दिखाई नहीं देगा।",
+		"linkToProposal": "प्रस्ताव का लिंक",
+		"selectSource": "एक स्रोत चुनें",
+		"title": "अध्ययन विवरण"
+	},
 	"descriptionDevelop": "विवरण (डेवलप मोड के लिए)",
 	"descriptionDevelopHelp": "डेवलप मोड में कार्य या सर्वेक्षण चुनते समय यह शोधकर्ताओं, शिक्षकों और छात्रों को दिखाई देता है।",
 	"descriptionDiscover": "विवरण (डिस्कवर मोड के लिए)",
