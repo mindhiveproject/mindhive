@@ -107,12 +107,12 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
         currentTour.start();
         
         // Clean up when tour ends
-        currentTour.oncomplete(() => {
+        currentTour.onComplete(() => {
           currentTour = null;
           isStartingTour = false;
         });
         
-        currentTour.onexit(() => {
+        currentTour.onExit(() => {
           currentTour = null;
           isStartingTour = false;
         });

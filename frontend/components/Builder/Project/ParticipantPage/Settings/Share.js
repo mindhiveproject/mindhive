@@ -33,7 +33,7 @@ export default function ShareStudy({ study, handleChange }) {
   };
 
   return (
-    <div>
+    <div id="shareStudy">
       <h2>{t('share.shareYourStudy')}</h2>
 
       <div className="card">
@@ -51,7 +51,7 @@ export default function ShareStudy({ study, handleChange }) {
         )}
       </div>
 
-      <div className="card">
+      <div className="card" id="customizeUrl">
         <div className="settingsBlock">
           <div>
             <h3>{t('share.customizeUrl')}</h3>

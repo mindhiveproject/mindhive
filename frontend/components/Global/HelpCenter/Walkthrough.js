@@ -60,19 +60,34 @@ export default function Walkthrough({ onStartWalkthrough }) {
                             tours: toursImport.builderTours
                         };
                         break;
-                    case 'review':
-                        componentImport = await import('../../Builder/Project/Review/Main');
-                        break;
                     case 'page':
-                        componentImport = await import('../../Builder/Project/ParticipantPage/Main');
+                        // Import tours directly without importing the component
+                        const participantPageToursImport = await import('../../Builder/Project/ParticipantPage/tour');
+                        componentImport = {
+                            default: { hasTour: true },
+                            tours: participantPageToursImport.participantPageTours
+                        };
+                        break;
+                    case 'review':
+                        // Import tours directly without importing the component
+                        const reviewToursImport = await import('../../Builder/Project/Review/tour');
+                        componentImport = {
+                            default: { hasTour: true },
+                            tours: reviewToursImport.reviewTours
+                        };
                         break;
                     case 'collect':
-                        componentImport = await import('../../Builder/Project/Collect/Wrapper');
+                        // Import tours directly without importing the component
+                        const collectToursImport = await import('../../Builder/Project/Collect/tour');
+                        componentImport = {
+                            default: { hasTour: true },
+                            tours: collectToursImport.collectTours
+                        };
                         break;
-                    case 'visualize':
+                    case 'visualize': // will be deprecated
                         componentImport = await import('../../Builder/Project/Visualize/Wrapper');
                         break;
-                    case 'journal':
+                    case 'journal':  // TODO: add tours for visualize -- Not doing till the UI is ready
                         componentImport = await import('../../Builder/Project/DataJournal/Wrapper');
                         break;
                     default:

@@ -66,9 +66,20 @@ export default function ProjectBoard({ query, user, tab, toggleSidebar }) {
           showProgress: false,
         });
         
-        // Start the tour
+          // Start the tour
         currentTour.start();
         
+        // Clean up when tour ends
+        currentTour.onComplete(() => {
+          currentTour = null;
+          isStartingTour = false;
+        });
+        
+        currentTour.onExit(() => {
+          currentTour = null;
+          isStartingTour = false;
+        });
+
       })();
     }
     
