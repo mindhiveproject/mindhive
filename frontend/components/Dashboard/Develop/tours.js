@@ -6,7 +6,7 @@ export const developTours = {
     steps: [
       {
         element: '#developNewBtn',
-        intro: "Click here to start developing a new study, task, survey, ord block.",
+        intro: "Click here to start developing a new study, task, survey, or block.",
         position: "bottom",
         disableInteraction: false
       },
