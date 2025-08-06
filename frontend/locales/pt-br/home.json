@@ -8,8 +8,6 @@
 	"editYourProfile": "Edite seu perfil MindHive",
 	"favoritePeople": "Pessoas favoritas",
 	"favoriteTasks": "Tarefas e pesquisas favoritas",
-	"fillRequestForm": "Preencha um formulário de solicitação",
-	"fillSupportTicket": "Preencher tíquete de suporte",
 	"footer": {
 		"about": "Sobre",
 		"audience": "O MindHive foi criado para estudantes e professores que buscam uma experiência autêntica em pesquisa STEM, e para neurocientistas e psicólogos cognitivos/sociais que buscam abordar suas questões de pesquisa fora do laboratório.",
@@ -20,9 +18,25 @@
 		"terms": "Termos e Condições",
 		"title": "MindHive"
 	},
+	"helpCenter": {
+		"aiAssist": "Assistência de IA (EM DESENVOLVIMENTO 🏗️)",
+		"aiComingSoon": "Aí vem a IA ✨",
+		"close": "Fechar",
+		"contentNotAvailable": "Conteúdo não disponível.",
+		"documentation": "Documentação",
+		"fillRequestForm": "Preencha um formulário de solicitação",
+		"fillSupportTicket": "Preencher tíquete de suporte",
+		"generalPlatformGuide": "Guia Geral da Plataforma",
+		"language": "Linguagem",
+		"platformGuideLink": "Você pode ver nosso guia geral da plataforma clicando neste link!",
+		"reportIssue": "Relatar problema",
+		"saveLanguage": "Salvar idioma",
+		"saving": "Salvando...",
+		"urgentMattersEmail": "Para assuntos urgentes, envie-nos um e-mail!",
+		"walkthrough": "Passo a passo",
+		"walkthroughTutorial": "Tutorial passo a passo"
+	},
 	"info": "Mais informações",
-	"needNewBlock": "Precisa de um novo bloco?",
-	"needSupport": "Você precisa de suporte?",
 	"participantID": "ID do participante",
 	"permissions": "Permissões",
 	"preview": "Visualização",
@@ -48,6 +62,12 @@
 	"updates": {
 		"latestUpdates": "Últimas atualizações",
 		"noUpdate": "Não há atualizações no momento."
+	},
+	"walkthroughs": {
+		"availableTours": "Passeios disponíveis:",
+		"noWalkthroughAvailable": "Ops! Não há explicação passo a passo disponível para esta página.",
+		"startTour": "Comece um passeio!",
+		"startTourButton": "Comece o passeio!"
 	},
 	"welcome": "Bem-vindo"
 }

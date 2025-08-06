@@ -8,8 +8,6 @@
 	"editYourProfile": "Edita tu perfil de MindHive",
 	"favoritePeople": "Personas favoritas",
 	"favoriteTasks": "Tareas y encuestas favoritas",
-	"fillRequestForm": "Llene un formulario de solicitud",
-	"fillSupportTicket": "Completar ticket de soporte",
 	"footer": {
 		"about": "Acerca de",
 		"audience": "MindHive fue diseñado para estudiantes y profesores que buscan una auténtica experiencia de investigación STEM, y para neurocientíficos y psicólogos cognitivos/sociales que buscan abordar sus preguntas de investigación fuera del laboratorio.",
@@ -20,9 +18,25 @@
 		"terms": "Términos y condiciones",
 		"title": "MindHive"
 	},
+	"helpCenter": {
+		"aiAssist": "Ai Assist (EN DESARROLLO 🏗️)",
+		"aiComingSoon": "Aquí vendrá la IA ✨",
+		"close": "Cerca",
+		"contentNotAvailable": "Contenido no disponible.",
+		"documentation": "Documentación",
+		"fillRequestForm": "Llene un formulario de solicitud",
+		"fillSupportTicket": "Completar ticket de soporte",
+		"generalPlatformGuide": "Guía general de plataformas",
+		"language": "Idioma",
+		"platformGuideLink": "¡Puedes ver nuestra guía general de la plataforma haciendo clic en este enlace!",
+		"reportIssue": "Informar problema",
+		"saveLanguage": "Guardar idioma",
+		"saving": "Ahorro...",
+		"urgentMattersEmail": "Para asuntos urgentes, ¡envíenos un correo electrónico!",
+		"walkthrough": "Tutorial",
+		"walkthroughTutorial": "Tutorial paso a paso"
+	},
 	"info": "Más información",
-	"needNewBlock": "¿Necesitas un nuevo bloque?",
-	"needSupport": "¿Necesitas ayuda?",
 	"participantID": "ID del participante",
 	"permissions": "Permisos",
 	"preview": "Avance",
@@ -48,6 +62,12 @@
 	"updates": {
 		"latestUpdates": "Últimas actualizaciones",
 		"noUpdate": "No hay actualizaciones en este momento."
+	},
+	"walkthroughs": {
+		"availableTours": "Tours disponibles:",
+		"noWalkthroughAvailable": "¡Uy! No hay guía disponible para esta página.",
+		"startTour": "¡Empieza un recorrido!",
+		"startTourButton": "¡Comienza el recorrido!"
 	},
 	"welcome": "Bienvenido"
 }

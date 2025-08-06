@@ -37,6 +37,7 @@ export default function DevelopMain({ query, user }) {
     
     function handleStartTour(event) {
       const tourId = event?.detail?.tourId || 'overview';
+      const tourData = event?.detail?.tourData;
       
       // Prevent multiple tours from starting simultaneously
       if (isStartingTour) {
@@ -54,8 +55,13 @@ export default function DevelopMain({ query, user }) {
       
       (async () => {
         const introJs = (await import('intro.js')).default;
-        const tours = developTours;
-        const selectedTour = tours[tourId];
+        
+        // Use tour data from event if available, otherwise fallback to static import
+        let selectedTour = tourData;
+        if (!selectedTour) {
+          const tours = developTours;
+          selectedTour = tours[tourId];
+        }
         
         if (!selectedTour) {
           console.error(`Tour ${tourId} not found`);

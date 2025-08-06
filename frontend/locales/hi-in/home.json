@@ -8,8 +8,6 @@
 	"editYourProfile": "अपनी माइंडहाइव प्रोफ़ाइल संपादित करें",
 	"favoritePeople": "पसंदीदा लोग",
 	"favoriteTasks": "पसंदीदा कार्य और सर्वेक्षण",
-	"fillRequestForm": "अनुरोध फ़ॉर्म भरें",
-	"fillSupportTicket": "समर्थन टिकट भरें",
 	"footer": {
 		"about": "के बारे में",
 		"audience": "माइंडहाइव को उन छात्रों और शिक्षकों के लिए डिज़ाइन किया गया है जो प्रामाणिक STEM अनुसंधान अनुभव चाहते हैं, और उन न्यूरोसाइंटिस्ट और संज्ञानात्मक/सामाजिक मनोवैज्ञानिकों के लिए जो प्रयोगशाला के बाहर अपने शोध प्रश्नों का समाधान करना चाहते हैं।",
@@ -20,9 +18,25 @@
 		"terms": "नियम एवं शर्तें",
 		"title": "माइंडहाइव"
 	},
+	"helpCenter": {
+		"aiAssist": "एआई असिस्ट (विकासाधीन)",
+		"aiComingSoon": "यहाँ एआई आएगा ✨",
+		"close": "बंद करना",
+		"contentNotAvailable": "सामग्री उपलब्ध नहीं है.",
+		"documentation": "प्रलेखन",
+		"fillRequestForm": "अनुरोध फ़ॉर्म भरें",
+		"fillSupportTicket": "समर्थन टिकट भरें",
+		"generalPlatformGuide": "सामान्य प्लेटफ़ॉर्म गाइड",
+		"language": "भाषा",
+		"platformGuideLink": "आप इस लिंक पर क्लिक करके हमारी सामान्य प्लेटफ़ॉर्म गाइड देख सकते हैं!",
+		"reportIssue": "समस्या की रिपोर्ट करें",
+		"saveLanguage": "भाषा सहेजें",
+		"saving": "सहेजा जा रहा है...",
+		"urgentMattersEmail": "तत्काल मामलों के लिए, हमें ईमेल करें!",
+		"walkthrough": "पूर्वाभ्यास",
+		"walkthroughTutorial": "वॉकथ्रू ट्यूटोरियल"
+	},
 	"info": "अधिक जानकारी",
-	"needNewBlock": "क्या आपको नये ब्लॉक की आवश्यकता है?",
-	"needSupport": "क्या आपको सहायता की आवश्यकता है?",
 	"participantID": "प्रतिभागी आईडी",
 	"permissions": "अनुमतियां",
 	"preview": "पूर्व दर्शन",
@@ -48,6 +62,12 @@
 	"updates": {
 		"latestUpdates": "नवीनतम अपडेट",
 		"noUpdate": "फिलहाल कोई अपडेट नहीं है।"
+	},
+	"walkthroughs": {
+		"availableTours": "उपलब्ध पर्यटन:",
+		"noWalkthroughAvailable": "ओह! इस पृष्ठ के लिए कोई वॉकथ्रू उपलब्ध नहीं है।",
+		"startTour": "एक दौरा शुरू करें!",
+		"startTourButton": "दौरा शुरू करो!"
 	},
 	"welcome": "स्वागत"
 }
