@@ -484,6 +484,11 @@ export const StyledProposal = styled.div`
         display: grid;
         grid-template-columns: 1fr auto;
         grid-gap: 10px;
+        .editModeMessage {
+          display: grid;
+          align-items: center;
+          margin: 0px 10px;
+        }
         .saveButton {
           background: #3d85b0;
           color: white;

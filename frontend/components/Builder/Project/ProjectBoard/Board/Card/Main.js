@@ -18,7 +18,7 @@ import JoditEditor from "../../../../../Jodit/Editor";
 import Resources from "./Forms/Resources";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
-import { Dropdown } from "semantic-ui-react";
+import { Dropdown, Accordion, Icon } from "semantic-ui-react";
 
 export default function ProposalCard({
   proposalCard,
@@ -33,6 +33,7 @@ export default function ProposalCard({
   submitStatuses,
 }) {
   const { t } = useTranslation("builder");
+  const [originalActive, setOriginalActive] = useState(false); // For accordion state, default collapsed
 
   const reviewOptions = [
     {
@@ -236,21 +237,29 @@ export default function ProposalCard({
           {!areEditsAllowed && (
             <div className="lockedMessage">
               <div>
-                {t("mainCard.lockedMessage", "The card is currently being edited by")}
-                {" "}
+                {t(
+                  "mainCard.lockedMessage",
+                  "The card is currently being edited by"
+                )}{" "}
                 <span className="username">
                   {proposalCard?.isEditedBy?.username}
                 </span>
-                . {t("mainCard.askToClose", "Ask the user to close the card or wait until the card is released.")}
-                {" "}
-                {t("mainCard.cardWillBeReleased", "The card will be released")}
-                {" "}
-                <span className="username">{moment().to(releaseTime)}</span>.
-                {" "}
-                {t("mainCard.refreshAfterRelease", "After the card is released, refresh the page to get the latest version of the card.")}
+                .{" "}
+                {t(
+                  "mainCard.askToClose",
+                  "Ask the user to close the card or wait until the card is released."
+                )}{" "}
+                {t("mainCard.cardWillBeReleased", "The card will be released")}{" "}
+                <span className="username">{moment().to(releaseTime)}</span>.{" "}
+                {t(
+                  "mainCard.refreshAfterRelease",
+                  "After the card is released, refresh the page to get the latest version of the card."
+                )}
               </div>
               <div className="buttonHolder">
-                <button onClick={() => refreshPage()}>{t("mainCard.refresh", "Refresh")}</button>
+                <button onClick={() => refreshPage()}>
+                  {t("mainCard.refresh", "Refresh")}
+                </button>
               </div>
             </div>
           )}
@@ -258,20 +267,47 @@ export default function ProposalCard({
           <div className="proposalCardBoard">
             <div className="textBoard">
               <div className="cardHeader">{inputs?.title}</div>
-              <div className="cardSubheader">{t("mainCard.instructions", "Instructions")}</div>
+              <div className="cardSubheader">
+                {t("mainCard.instructions", "Instructions")}
+              </div>
               <div className="cardDescription">
                 {ReactHtmlParser(inputs?.description)}
               </div>
 
               {proposalCard?.settings?.includeInReport && (
                 <>
-                  <div className="cardSubheader">{t("mainCard.forMindHiveNetwork", "For MindHive Network")}</div>
+                  <div className="cardSubheader">
+                    {t("mainCard.forMindHiveNetwork", "For MindHive Network")}
+                  </div>
                   <div className="cardSubheaderComment">
-                    {t("mainCard.visibleInFeedbackCenter", "The content you include here will be visible in the Feedback Center once it is submitted via an Action Card.")}
+                    {t(
+                      "mainCard.visibleInFeedbackCenter",
+                      "The content you include here will be visible in the Feedback Center once it is submitted via an Action Card."
+                    )}
                   </div>
                   <div className="jodit">
                     {isLocked ? (
-                      ReactHtmlParser(content?.current)
+                      <Accordion styled fluid>
+                        <Accordion.Title
+                          active={originalActive}
+                          onClick={() => setOriginalActive(!originalActive)}
+                          style={{ fontSize: "16px", fontWeight: "bold" }}
+                        >
+                          <Icon name="dropdown" />
+                          {t("mainCard.forMindHiveNetwork", "Original Content")}
+                        </Accordion.Title>
+                        <Accordion.Content active={originalActive}>
+                          <div
+                            style={{
+                              border: "1px solid #ccc",
+                              padding: "10px",
+                              overflow: "auto",
+                            }}
+                          >
+                            {ReactHtmlParser(content?.current || "")}
+                          </div>
+                        </Accordion.Content>
+                      </Accordion>
                     ) : (
                       <div onFocus={handleFocus}>
                         <JoditEditor
@@ -292,9 +328,14 @@ export default function ProposalCard({
 
               {proposalCard?.settings?.includeInReport && isLocked && (
                 <>
-                  <div className="cardSubheader">{t("mainCard.revisedContent", "Revised Content")}</div>
+                  <div className="cardSubheader">
+                    {t("mainCard.revisedContent", "Revised Content")}
+                  </div>
                   <div className="cardSubheaderComment">
-                    {t("mainCard.revisedContentUsed", "The revised content you include here will be used in the final report.")}
+                    {t(
+                      "mainCard.revisedContentUsed",
+                      "The revised content you include here will be used in the final report."
+                    )}
                   </div>
                   <div className="jodit">
                     <div onFocus={handleFocus}>
@@ -316,10 +357,16 @@ export default function ProposalCard({
               {!proposalCard?.settings?.excludeFromCollaborators && (
                 <>
                   <div className="cardSubheader">
-                    {t("mainCard.forTeacherAndCollaborators", "For my teacher and project collaborators only")}
+                    {t(
+                      "mainCard.forTeacherAndCollaborators",
+                      "For my teacher and project collaborators only"
+                    )}
                   </div>
                   <div className="cardSubheaderComment">
-                    {t("mainCard.visibleToTeacherAndCollaborators", "The content you include below will only be visible to your teacher(s) and project collaborators")}
+                    {t(
+                      "mainCard.visibleToTeacherAndCollaborators",
+                      "The content you include below will only be visible to your teacher(s) and project collaborators"
+                    )}
                   </div>
                   <div className="jodit">
                     {isLocked ? (
@@ -344,7 +391,9 @@ export default function ProposalCard({
             </div>
             <div className="infoBoard">
               <div>
-                <div className="cardSubheader">{t("mainCard.assignedTo", "Assigned to")}</div>
+                <div className="cardSubheader">
+                  {t("mainCard.assignedTo", "Assigned to")}
+                </div>
                 <Assigned
                   users={allUsers}
                   assignedTo={inputs?.assignedTo}
@@ -360,7 +409,9 @@ export default function ProposalCard({
               </div>
 
               <div className="proposalCardComments">
-                <div className="cardSubheader">{t("mainCard.comments", "Comments")}</div>
+                <div className="cardSubheader">
+                  {t("mainCard.comments", "Comments")}
+                </div>
                 <textarea
                   rows="5"
                   type="text"
@@ -379,7 +430,10 @@ export default function ProposalCard({
               {proposalCard?.settings?.includeInReport && !isLocked && (
                 <div>
                   <div className="cardSubheaderComment">
-                    {t("mainCard.chooseReviewStep", "Choose which step of the peer review a card should go in")}
+                    {t(
+                      "mainCard.chooseReviewStep",
+                      "Choose which step of the peer review a card should go in"
+                    )}
                   </div>
                   <Dropdown
                     placeholder={t("mainCard.selectOption", "Select option")}
