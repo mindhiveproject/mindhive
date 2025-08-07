@@ -10,16 +10,19 @@ export default function FeedbackTabs({ user, query, proposal, selectReview }) {
     {
       value: "proposal",
       name: t("reviewTabs.proposalFeedback", "Proposal Feedback"),
+      id: "proposalFeedback",
       stage: "SUBMITTED_AS_PROPOSAL",
     },
     {
       value: "peer",
       name: t("reviewTabs.peerFeedback", "Peer Feedback"),
+      id: "peerFeedback",
       stage: "PEER_REVIEW",
     },
     {
       value: "report",
       name: t("reviewTabs.projectReportFeedback", "Project Report Feedback"),
+      id: "projectReportFeedback",
       stage: "PROJECT_REPORT",
     },
   ];
@@ -33,6 +36,7 @@ export default function FeedbackTabs({ user, query, proposal, selectReview }) {
             <Menu.Item
               key={i}
               name={tab.name}
+              id={tab.id}
               active={feedbackTab === tab.stage}
               onClick={() => setFeedbackTab(tab.stage)}
             >

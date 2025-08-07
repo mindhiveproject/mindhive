@@ -8,7 +8,7 @@ import JoditEditor from "../../Jodit/Editor";
 
 import CardType from "./Forms/Type";
 import Resources from "./Forms/Resources";
-import useTranslation from 'next-translate/useTranslation';
+import useTranslation from "next-translate/useTranslation";
 
 const peerReviewOptions = [
   {
@@ -39,7 +39,7 @@ export default function BuilderProposalCard({
   proposalCard,
   closeCard,
 }) {
-  const { t } = useTranslation('classes');
+  const { t } = useTranslation("classes");
   const { inputs, handleChange } = useForm({
     ...proposalCard,
   });
@@ -98,8 +98,9 @@ export default function BuilderProposalCard({
           <span className="studyTitle">{proposal?.title}</span>
         </div>
         <div className="right">
+          <div className="editModeMessage">You are in Edit Mode</div>
           <button onClick={() => onUpdateCard()} className="saveButton">
-            {t('board.save', 'Save')}
+            {t("board.save", "Save")}
           </button>
         </div>
       </div>
@@ -107,7 +108,7 @@ export default function BuilderProposalCard({
       <div className="proposalCardBoard">
         <div className="textBoard">
           <label htmlFor="title">
-            <div className="cardHeader">{t('board.cardTitle')}</div>
+            <div className="cardHeader">{t("board.cardTitle")}</div>
             <div className="cardSubheaderComment">
               Add or edit the card title. This title will appear as a section
               title if student input is made visible
@@ -122,7 +123,7 @@ export default function BuilderProposalCard({
             />
           </label>
           <label htmlFor="description">
-            <div className="cardHeader">{t('board.instructions')}</div>
+            <div className="cardHeader">{t("board.instructions")}</div>
             <div className="cardSubheaderComment">
               Add or edit instructions for students telling them how to complete
               the card
@@ -144,7 +145,9 @@ export default function BuilderProposalCard({
           {inputs?.settings?.includeInReport && (
             <>
               <label htmlFor="description">
-                <div className="cardHeader">{t('board.studentResponseBoxNetwork')}</div>
+                <div className="cardHeader">
+                  {t("board.studentResponseBoxNetwork")}
+                </div>
                 <div className="cardSubheaderComment">
                   The content students include here will be visible in the
                   Feedback Center once it is submitted via an Action Card.
@@ -169,7 +172,9 @@ export default function BuilderProposalCard({
           {!inputs?.settings?.excludeFromCollaborators && (
             <>
               <label htmlFor="description">
-                <div className="cardHeader">{t('board.studentResponseBoxCollaborators')}</div>
+                <div className="cardHeader">
+                  {t("board.studentResponseBoxCollaborators")}
+                </div>
                 <div className="cardSubheaderComment">
                   The content students include here will only be visible to
                   their project collaborators and teacher(s). Include any
@@ -194,7 +199,7 @@ export default function BuilderProposalCard({
         </div>
         <div className="infoBoard">
           <>
-            <div className="cardHeader">{t('board.visibility')}</div>
+            <div className="cardHeader">{t("board.visibility")}</div>
             <div className="cardSubheaderComment">
               Check the boxes below to indicate whether student responses should
               be kept private (only for collaborators on the project + teacher)
@@ -223,7 +228,7 @@ export default function BuilderProposalCard({
 
               <label for="collaboratorsCardToggle">
                 <div className="cardDescription">
-                  {t('board.includeTextCollaborators')}
+                  {t("board.includeTextCollaborators")}
                 </div>
               </label>
             </div>
@@ -248,7 +253,7 @@ export default function BuilderProposalCard({
 
               <label for="feedbackCenterCardToggle">
                 <div className="cardDescription">
-                  {t('board.includeTextFeedbackCenter')}
+                  {t("board.includeTextFeedbackCenter")}
                 </div>
               </label>
             </div>
@@ -256,9 +261,7 @@ export default function BuilderProposalCard({
 
           {inputs?.settings?.includeInReport && (
             <div>
-              <div className="cardSubheaderComment">
-                {t('board.status')}
-              </div>
+              <div className="cardSubheaderComment">{t("board.status")}</div>
               <Dropdown
                 placeholder="Select option"
                 fluid
@@ -291,14 +294,14 @@ export default function BuilderProposalCard({
           )} */}
 
           <div>
-            <div className="cardHeader">{t('board.type')}</div>
+            <div className="cardHeader">{t("board.type")}</div>
             <CardType type={inputs?.type} handleChange={handleChange} />
           </div>
 
           <>
-            <div className="cardHeader">{t('board.resources')}</div>
+            <div className="cardHeader">{t("board.resources")}</div>
             <div className="cardSubheaderComment">
-              {t('board.addExistingResources')}
+              {t("board.addExistingResources")}
             </div>
             <Resources
               proposal={proposal}
@@ -309,7 +312,7 @@ export default function BuilderProposalCard({
           </>
 
           <div className="proposalCardComments">
-            <div className="cardHeader">{t('board.comments')}</div>
+            <div className="cardHeader">{t("board.comments")}</div>
             <div className="cardSubheaderComment">
               This will pre-populate the Comment Box for students. You can
               delete comments later.

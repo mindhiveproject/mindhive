@@ -71,7 +71,7 @@ export default function Board({ user, projectId, status, reviews }) {
   };
 
   return (
-    <StyledFeedback>
+    <StyledFeedback id="feedbackArea">
       {reviews.map((review, num) => {
         const votedBefore = review?.upvotedBy
           ?.map((u) => u?.id)

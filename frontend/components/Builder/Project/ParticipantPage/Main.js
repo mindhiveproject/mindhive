@@ -21,6 +21,7 @@ import { StyledParticipantPage } from "../../../styles/StyledBuilder";
 
 import InDev from "../../../Global/InDev";
 import { disconnect } from "process";
+import { participantPageTours } from "./tour";
 
 export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
   const router = useRouter();
@@ -29,6 +30,82 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
   const projectId = query?.selector;
 
   const [hasStudyChanged, setHasStudyChanged] = useState(false);
+
+  // Tour setup
+  useEffect(() => {
+    let currentTour = null;
+    let isStartingTour = false;
+    
+    function handleStartTour(event) {
+      const tourId = event?.detail?.tourId || 'overview';
+      
+      // Prevent multiple tours from starting simultaneously
+      if (isStartingTour) {
+        console.log('Tour already starting, ignoring request');
+        return;
+      }
+      
+      isStartingTour = true;
+      
+      // Exit any existing tour first
+      if (currentTour) {
+        currentTour.exit();
+        currentTour = null;
+      }
+      
+      (async () => {
+        const introJs = (await import('intro.js')).default;
+        const tours = participantPageTours;
+        const selectedTour = tours[tourId];
+        
+        if (!selectedTour) {
+          console.error(`Tour ${tourId} not found`);
+          isStartingTour = false;
+          return;
+        }
+
+        // Create new tour instance
+        currentTour = introJs.tour();
+        currentTour.setOptions({
+          steps: selectedTour.steps,
+          scrollToElement: true,
+          scrollTo: 'on',
+          exitOnOverlayClick: true,
+          exitOnEsc: true,
+          showStepNumbers: false,
+          showBullets: true,
+          showProgress: false,
+        });
+        
+                  // Start the tour
+          currentTour.start();
+          
+          // Clean up when tour ends
+          currentTour.onComplete(() => {
+            currentTour = null;
+            isStartingTour = false;
+          });
+          
+          currentTour.onExit(() => {
+            currentTour = null;
+            isStartingTour = false;
+          });
+
+        })();
+    }
+    
+    // Remove any existing listeners first
+    window.removeEventListener('start-walkthrough-tour', handleStartTour);
+    window.addEventListener('start-walkthrough-tour', handleStartTour);
+    
+    return () => {
+      window.removeEventListener('start-walkthrough-tour', handleStartTour);
+      // Clean up any existing tour when component unmounts
+      if (currentTour) {
+        currentTour.exit();
+      }
+    };
+  }, []);
 
   const { data, error, loading } = useQuery(GET_PROJECT_STUDY, {
     variables: { id: projectId },
@@ -231,3 +308,6 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
     </>
   );
 }
+
+ParticipantPage.hasTour = true;
+ParticipantPage.tours = participantPageTours;

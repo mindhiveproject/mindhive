@@ -22,7 +22,7 @@ export default function StudyTagger({ study, engine, handleChange }) {
   };
 
   return (
-    <div>
+    <div id="studyTags">
       <h2>{t('tag.studyTagsHeader')}</h2>
       <p>{t('tag.chooseKeywords')}</p>
       <Drop

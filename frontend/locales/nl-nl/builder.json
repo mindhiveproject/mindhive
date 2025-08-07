@@ -214,6 +214,12 @@
 	"descriptionBefore": "Beschrijving van de {{taskType}}-kaart (vóór deelname)",
 	"descriptionBeforeHelp": "Dit is wat deelnemers zien voordat ze de {{taskType}} maken.",
 	"descriptionBeforeVisible": "Dit is zichtbaar voor iedereen die nog niet aan de taak heeft deelgenomen.",
+	"descriptionBuilder": {
+		"internalUse": "Dit is alleen voor intern gebruik. Deelnemers zien deze beschrijving niet.",
+		"linkToProposal": "Link naar voorstel",
+		"selectSource": "Selecteer een bron",
+		"title": "Studiebeschrijving"
+	},
 	"descriptionDevelop": "Beschrijving (voor ontwikkelmodus)",
 	"descriptionDevelopHelp": "Dit is zichtbaar voor onderzoekers, docenten en studenten wanneer ze taken of enquêtes kiezen in de Ontwikkelmodus.",
 	"descriptionDiscover": "Beschrijving (voor Ontdekmodus)",

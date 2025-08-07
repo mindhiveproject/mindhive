@@ -8,8 +8,6 @@
 	"editYourProfile": "Edit your MindHive profile",
 	"favoritePeople": "Favorite people",
 	"favoriteTasks": "Favorite tasks and surveys",
-	"fillRequestForm": "Fill a Request Form",
-	"fillSupportTicket": "Fill Support Ticket",
 	"footer": {
 		"about": "About",
 		"audience": "MindHive was designed for students & teachers who seek authentic STEM research experience, and for neuroscientists & cognitive/social psychologists who seek to address their research questions outside of the lab.",
@@ -20,9 +18,25 @@
 		"terms": "Terms & Conditions",
 		"title": "MindHive"
 	},
+	"helpCenter": {
+		"aiAssist": "Ai Assist (UNDER DEVELOPMENT 🏗️)",
+		"aiComingSoon": "Here will come the ai ✨",
+		"close": "Close",
+		"contentNotAvailable": "Content not available.",
+		"documentation": "Documentation",
+		"fillRequestForm": "Fill a Request Form",
+		"fillSupportTicket": "Fill Support Ticket",
+		"generalPlatformGuide": "General Platform Guide",
+		"language": "Language",
+		"platformGuideLink": "You can see our general platform guide by clicking this link!",
+		"reportIssue": "Report Issue",
+		"saveLanguage": "Save Language",
+		"saving": "Saving...",
+		"urgentMattersEmail": "For urgent matters, email us!",
+		"walkthrough": "Walkthrough",
+		"walkthroughTutorial": "Walkthrough Tutorial"
+	},
 	"info": "More information",
-	"needNewBlock": "Need a new block?",
-	"needSupport": "Do you need support?",
 	"participantID": "Participant ID",
 	"permissions": "Permissions",
 	"preview": "Preview",
@@ -48,6 +62,12 @@
 	"updates": {
 		"latestUpdates": "Latest updates",
 		"noUpdate": "There are no updates at the moment."
+	},
+	"walkthroughs": {
+		"availableTours": "Available Tours:",
+		"noWalkthroughAvailable": "Oops! No walkthrough available for this page.",
+		"startTour": "Start a tour !",
+		"startTourButton": "Start tour!"
 	},
 	"welcome": "Welcome"
 }

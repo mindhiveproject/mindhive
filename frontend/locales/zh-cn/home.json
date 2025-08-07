@@ -8,8 +8,6 @@
 	"editYourProfile": "编辑您的 MindHive 个人资料",
 	"favoritePeople": "最喜欢的人",
 	"favoriteTasks": "最喜欢的任务和调查",
-	"fillRequestForm": "填写申请表",
-	"fillSupportTicket": "填写支持票",
 	"footer": {
 		"about": "关于",
 		"audience": "MindHive 专为寻求真实 STEM 研究体验的学生和教师以及寻求在实验室外解决研究问题的神经科学家和认知/社会心理学家而设计。",
@@ -20,9 +18,25 @@
 		"terms": "条款和条件",
 		"title": "MindHive"
 	},
+	"helpCenter": {
+		"aiAssist": "人工智能辅助（正在开发中🏗️）",
+		"aiComingSoon": "人工智能来了✨",
+		"close": "关闭",
+		"contentNotAvailable": "内容不可用。",
+		"documentation": "文档",
+		"fillRequestForm": "填写申请表",
+		"fillSupportTicket": "填写支持票",
+		"generalPlatformGuide": "通用平台指南",
+		"language": "语言",
+		"platformGuideLink": "点击此链接即可查看我们的通用平台指南！",
+		"reportIssue": "报告问题",
+		"saveLanguage": "保存语言",
+		"saving": "保存...",
+		"urgentMattersEmail": "如有紧急事项，请给我们发送电子邮件！",
+		"walkthrough": "演练",
+		"walkthroughTutorial": "演练教程"
+	},
 	"info": "更多信息",
-	"needNewBlock": "需要新的区块吗？",
-	"needSupport": "您需要支持吗？",
 	"participantID": "参与者 ID",
 	"permissions": "权限",
 	"preview": "预览",
@@ -48,6 +62,12 @@
 	"updates": {
 		"latestUpdates": "最新更新",
 		"noUpdate": "目前没有更新。"
+	},
+	"walkthroughs": {
+		"availableTours": "可选旅游行程：",
+		"noWalkthroughAvailable": "哎呀！此页面没有可用的演练。",
+		"startTour": "开始游览！",
+		"startTourButton": "开始巡演！"
 	},
 	"welcome": "欢迎"
 }

@@ -84,37 +84,37 @@ export default function HelpCenter() {
     const actions = [
       {
         icon: '/assets/helpCenter/walkthrough.svg',
-        tooltip: 'Walkthrough',
+        tooltip: t('helpCenter.walkthrough'),
         bgColor: theme.primaryBlue,
-        action: () => openModal('Walkthrough Tutorial', 'walkthrough'),
+        action: () => openModal(t('helpCenter.walkthroughTutorial'), 'walkthrough'),
         allowedRoles: ["ADMIN", "MENTOR", "SCIENTIST", "TEACHER"]
       },
       {
         icon: '/assets/helpCenter/docs.svg',
-        tooltip: 'Documentation',
+        tooltip: t('helpCenter.documentation'),
         bgColor: theme.primaryCalyspo,
-        action: () => openModal('Documentation', 'docs'),
+        action: () => openModal(t('helpCenter.documentation'), 'docs'),
         // allowedRoles: undefined (visible to all)
     },
       {
         icon: '/assets/helpCenter/support.svg',
-        tooltip: 'Report Issue',
+        tooltip: t('helpCenter.reportIssue'),
         bgColor: theme.primaryRed,
-        action: () => openModal('Report Issue', 'report'),
+        action: () => openModal(t('helpCenter.reportIssue'), 'report'),
         allowedRoles: ["ADMIN", "MENTOR", "SCIENTIST", "TEACHER"]
       },
       {
         icon: '/assets/helpCenter/aichat.svg',
-        tooltip: 'Ai Assist (UNDER DEVELOPMENT 🏗️)',
+        tooltip: t('helpCenter.aiAssist'),
         bgColor: theme.primaryYellow,
-        action: () => openModal('Ai Assist', 'aiassist'),
+        action: () => openModal(t('helpCenter.aiAssist'), 'aiassist'),
         allowedRoles: ["ADMIN"]
       },
       {
         icon: '/assets/helpCenter/language.svg',
-        tooltip: 'Language',
+        tooltip: t('helpCenter.language'),
         bgColor: theme.secondaryPurple,
-        action: () => openModal('Language', 'language'),
+        action: () => openModal(t('helpCenter.language'), 'language'),
         // allowedRoles: undefined (visible to all)
       }
     ];
@@ -166,10 +166,10 @@ export default function HelpCenter() {
                 <Documentation />
                 <DocSection>
                     <div className="doc-item">
-                    <h4>General Platform Guide</h4>
+                    <h4>{t('helpCenter.generalPlatformGuide')}</h4>
                     <p>
                       <a href="https://docs.google.com/document/d/1wchcGV14rE2JKXpyOdQ5pLkj-7NEfXWwfS-MdxK8bqI/edit?tab=t.0" target="_blank" rel="noopener noreferrer">
-                        You can see our general platform guide by clicking this link!
+                        {t('helpCenter.platformGuideLink')}
                       </a>
                     </p>
                     </div>
@@ -183,10 +183,9 @@ export default function HelpCenter() {
               <div className="report-icon">🎟️</div>
               <div className="report-details">
                 <div>
-                    {/* {t("fillRequestForm")} pour un new block<br></br> */}
                     <a href="https://mindhive.notion.site/153d80abf4c48093b13cc8d50807c7b8?pvs=105" target="_blank">
                     <button className="primaryBtn" style={{ border: `1px solid ${modalColor}`, background: modalColor }}>
-                        {t("fillSupportTicket")}
+                        {t("helpCenter.fillSupportTicket")}
                     </button>
                     </a>
                 </div>
@@ -197,10 +196,9 @@ export default function HelpCenter() {
                 <div className="report-icon">🧱</div>
                 <div className="report-details">
                 <div>
-                    {/* {t("fillRequestForm")} pour un new block<br></br> */}
                     <a href="https://mindhive.notion.site/18bd80abf4c480749952e3c0498fab29?pvs=105" target="_blank">
                     <button className="primaryBtn" style={{ border: `1px solid ${modalColor}`, background: modalColor }}>
-                        {t("fillRequestForm")}
+                        {t("helpCenter.fillRequestForm")}
                     </button>
                     </a>
                 </div>
@@ -209,7 +207,7 @@ export default function HelpCenter() {
             <div className="report-item">
               <div className="report-icon">📮</div>
               <div className="report-details">
-                <h4>For urgent matters, email us!</h4>
+                <h4>{t('helpCenter.urgentMattersEmail')}</h4>
                 <p>
                     <a href="mailto:support.mindhive@nyu.edu">support.mindhive@nyu.edu</a><br />
                 </p>
@@ -220,7 +218,7 @@ export default function HelpCenter() {
       case 'aiassist':
         return (
           <div>
-            <p>Here will come the ai ✨</p>
+            <p>{t('helpCenter.aiComingSoon')}</p>
           </div>
         );
       case 'language':
@@ -237,12 +235,12 @@ export default function HelpCenter() {
               disabled={!changed || saving}
               color={theme.secondaryPurple}
               changed={changed} >
-                {saving ? 'Saving...' : 'Save Language'}
+                {saving ? t('helpCenter.saving') : t('helpCenter.saveLanguage')}
             </StyledAdaptableButton>
           </StyledInput>
         );
       default:
-        return <p>Content not available.</p>;
+        return <p>{t('helpCenter.contentNotAvailable')}</p>;
     }
   };
 
@@ -289,7 +287,7 @@ export default function HelpCenter() {
             </ModalBody>
             <ModalFooter>
               <button className="primaryBtn" style={{ border: `1px solid ${modalColor}`, background: modalColor }} onClick={() => setModalOpen(false)}>
-                Close
+                {t('helpCenter.close')}
               </button>
             </ModalFooter>
           </ModalContent>

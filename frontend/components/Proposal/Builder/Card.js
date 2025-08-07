@@ -3,7 +3,7 @@ import { Draggable } from "react-smooth-dnd";
 
 import { Image, Popup } from "semantic-ui-react";
 import { StyledProposalCard } from "../../styles/StyledProposal";
-import useTranslation from 'next-translate/useTranslation';
+import useTranslation from "next-translate/useTranslation";
 
 export default function Card({
   card,
@@ -14,7 +14,7 @@ export default function Card({
   settings,
   isPreview,
 }) {
-  const { t } = useTranslation('builder');
+  const { t } = useTranslation("builder");
   let status = card?.settings?.status ? card.settings.status : "Not started";
 
   let statusStyle = null;
@@ -46,18 +46,15 @@ export default function Card({
 
   return (
     <Draggable key={card.id}>
-      <StyledProposalCard>
+      <StyledProposalCard
+        onClick={() => {
+          openCard(card);
+        }}
+      >
         <div className="card-drag-handle">
           <div className="card-information">
             <div className="card-left-side">
-              {proposalBuildMode && (
-                <img
-                  src="/assets/icons/pencil.svg"
-                  onClick={() => {
-                    openCard(card);
-                  }}
-                />
-              )}
+              {proposalBuildMode && <img src="/assets/icons/pencil.svg" />}
 
               {!proposalBuildMode && !isPreview && (
                 <Popup
@@ -65,10 +62,16 @@ export default function Card({
                     card?.assignedTo.length
                       ? card?.assignedTo.map((user, i) => (
                           <div key={i} className="info-assigned">
-                            {t('card.assignedTo', { username: adminMode ? (user?.username || user?.publicReadableId || "John Doe") : user?.username })}
+                            {t("card.assignedTo", {
+                              username: adminMode
+                                ? user?.username ||
+                                  user?.publicReadableId ||
+                                  "John Doe"
+                                : user?.username,
+                            })}
                           </div>
                         ))
-                      : t('card.notAssigned')
+                      : t("card.notAssigned")
                   }
                   trigger={
                     <Image
@@ -89,7 +92,9 @@ export default function Card({
                   <div className="editedByAvatar">
                     {card?.isEditedBy?.username && (
                       <Popup
-                        content={t('card.editingBy', { username: card?.isEditedBy?.username })}
+                        content={t("card.editingBy", {
+                          username: card?.isEditedBy?.username,
+                        })}
                         trigger={
                           card?.isEditedBy?.image?.image
                             ?.publicUrlTransformed ? (
@@ -127,11 +132,7 @@ export default function Card({
               src="/assets/icons/proposal/delete.svg"
               onClick={(e) => {
                 e.stopPropagation();
-                if (
-                  confirm(
-                    t('actionCard.deleteConfirm')
-                  )
-                ) {
+                if (confirm(t("actionCard.deleteConfirm"))) {
                   onDeleteCard(card.id);
                 }
               }}

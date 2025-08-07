@@ -214,6 +214,12 @@
 	"descriptionBefore": "Descripción de la tarjeta {{taskType}} (preparticipación)",
 	"descriptionBeforeHelp": "Esto es lo que verán los participantes antes de realizar la prueba {{taskType}}.",
 	"descriptionBeforeVisible": "Esto es visible para cualquiera que aún no haya participado en la tarea.",
+	"descriptionBuilder": {
+		"internalUse": "Esto es solo para uso interno. Los participantes no verán esta descripción.",
+		"linkToProposal": "Enlace a la propuesta",
+		"selectSource": "Seleccione una fuente",
+		"title": "Descripción del estudio"
+	},
 	"descriptionDevelop": "Descripción (para el modo Desarrollo)",
 	"descriptionDevelopHelp": "Esto es visible para investigadores, profesores y estudiantes al elegir tareas o encuestas en el modo Desarrollar.",
 	"descriptionDiscover": "Descripción (para el modo Descubrir)",

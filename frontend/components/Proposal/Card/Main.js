@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import { Checkbox, Icon } from "semantic-ui-react";
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
-import useTranslation from 'next-translate/useTranslation';
+import useTranslation from "next-translate/useTranslation";
 
 import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
 import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
@@ -95,7 +95,7 @@ export default function ProposalCard({
   isPreview,
   refreshPage,
 }) {
-  const { t } = useTranslation('classes');
+  const { t } = useTranslation("classes");
   // check whether the card is locked - after 1 hour it is allowed to edit
   const releaseTime =
     new Date(proposalCard?.lastTimeEdited)?.getTime() + 60 * 60 * 1000;
@@ -231,7 +231,7 @@ export default function ProposalCard({
           </div>
           <div className="right">
             <button onClick={() => onUpdateCard()} className="saveButton">
-              {t('board.save', 'Save')}
+              {t("board.save", "Save")}
             </button>
           </div>
         </div>
@@ -239,10 +239,23 @@ export default function ProposalCard({
       {!areEditsAllowed && (
         <div className="lockedMessage">
           <div>
-            {t('board.lockedMessage', 'The card is currently being edited by')} {proposalCard?.isEditedBy?.username}. {t('board.askToClose', 'Ask the user to close the card or wait until the card is released.')} {t('board.cardWillBeReleased', 'The card will be released')} {moment().to(releaseTime)}. {t('board.refreshAfterRelease', 'After the card is released, refresh the page to get the latest version of the card.')}
+            {t("board.lockedMessage", "The card is currently being edited by")}{" "}
+            {proposalCard?.isEditedBy?.username}.{" "}
+            {t(
+              "board.askToClose",
+              "Ask the user to close the card or wait until the card is released."
+            )}{" "}
+            {t("board.cardWillBeReleased", "The card will be released")}{" "}
+            {moment().to(releaseTime)}.{" "}
+            {t(
+              "board.refreshAfterRelease",
+              "After the card is released, refresh the page to get the latest version of the card."
+            )}
           </div>
           <div className="buttonHolder">
-            <button onClick={() => refreshPage()}>{t('board.refresh', 'Refresh')}</button>
+            <button onClick={() => refreshPage()}>
+              {t("board.refresh", "Refresh")}
+            </button>
           </div>
         </div>
       )}
@@ -274,8 +287,15 @@ export default function ProposalCard({
           <div className="textBoard">
             {proposalBuildMode && (
               <label htmlFor="title">
-                <div className="cardHeader">{t('board.cardTitle', 'Card Title')}</div>
-                <div className="cardSubheaderComment">{t('board.cardTitleComment', 'Add or edit the card title. This title will appear as a section title if student input is made visible')}</div>
+                <div className="cardHeader">
+                  {t("board.cardTitle", "Card Title")}
+                </div>
+                <div className="cardSubheaderComment">
+                  {t(
+                    "board.cardTitleComment",
+                    "Add or edit the card title. This title will appear as a section title if student input is made visible"
+                  )}
+                </div>
                 <p></p>
                 <input
                   type="text"
@@ -288,8 +308,15 @@ export default function ProposalCard({
             )}
             {proposalBuildMode && (
               <label htmlFor="description">
-                <div className="cardHeader">{t('board.instructions', 'Instructions for Students')}</div>
-                <div className="cardSubheaderComment">{t('board.instructionsComment', 'Add or edit instructions for students telling them how to complete the card')}</div>
+                <div className="cardHeader">
+                  {t("board.instructions", "Instructions for Students")}
+                </div>
+                <div className="cardSubheaderComment">
+                  {t(
+                    "board.instructionsComment",
+                    "Add or edit instructions for students telling them how to complete the card"
+                  )}
+                </div>
                 <div className="jodit">
                   <JoditEditor
                     content={description?.current}
@@ -316,8 +343,18 @@ export default function ProposalCard({
             {proposalBuildMode && inputs?.settings?.includeInReport && (
               <>
                 <label htmlFor="description">
-                  <div className="cardHeader">{t('board.studentResponseBoxNetwork', 'Student Response Box - For MindHive Network')}</div>
-                  <div className="cardSubheaderComment">{t('board.studentResponseBoxNetworkComment', 'The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed')}</div>
+                  <div className="cardHeader">
+                    {t(
+                      "board.studentResponseBoxNetwork",
+                      "Student Response Box - For MindHive Network"
+                    )}
+                  </div>
+                  <div className="cardSubheaderComment">
+                    {t(
+                      "board.studentResponseBoxNetworkComment",
+                      "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed"
+                    )}
+                  </div>
                 </label>
                 <div className="jodit">
                   <JoditEditor
@@ -353,8 +390,18 @@ export default function ProposalCard({
 
             {proposalBuildMode && (
               <label htmlFor="description">
-                <div className="cardHeader">{t('board.studentResponseBoxCollaborators', 'Student Response Box - For Project Collaborators')}</div>
-                <div className="cardSubheaderComment">{t('board.studentResponseBoxCollaboratorsComment', 'The content students include here will only be visible to their project collaborators and teacher(s). Include any templates or placeholder text as needed')}</div>
+                <div className="cardHeader">
+                  {t(
+                    "board.studentResponseBoxCollaborators",
+                    "Student Response Box - For Project Collaborators"
+                  )}
+                </div>
+                <div className="cardSubheaderComment">
+                  {t(
+                    "board.studentResponseBoxCollaboratorsComment",
+                    "The content students include here will only be visible to their project collaborators and teacher(s). Include any templates or placeholder text as needed"
+                  )}
+                </div>
               </label>
             )}
 
@@ -393,8 +440,15 @@ export default function ProposalCard({
               {proposalBuildMode && (
                 <>
                   <div>
-                    <div className="cardHeader">{t('board.visibility', 'Visibility')}</div>
-                    <div className="cardSubheaderComment">{t('board.visibilityComment', 'Check box to include student input for the Feedback Center')}</div>
+                    <div className="cardHeader">
+                      {t("board.visibility", "Visibility")}
+                    </div>
+                    <div className="cardSubheaderComment">
+                      {t(
+                        "board.visibilityComment",
+                        "Check box to include student input for the Feedback Center"
+                      )}
+                    </div>
 
                     <div className="checkboxText">
                       <Checkbox
@@ -415,14 +469,21 @@ export default function ProposalCard({
                       />
 
                       <label for="includeCardToggle">
-                        <div className="cardDescription">{t('board.includeTextFeedbackCenter', 'Include text input for Feedback Center')}</div>
+                        <div className="cardDescription">
+                          {t(
+                            "board.includeTextFeedbackCenter",
+                            "Include text input for Feedback Center"
+                          )}
+                        </div>
                       </label>
                     </div>
                   </div>
 
                   {user.permissions.map((p) => p?.name).includes("ADMIN") && (
                     <div>
-                      <div className="cardHeader">{t('board.type', 'Type')}</div>
+                      <div className="cardHeader">
+                        {t("board.type", "Type")}
+                      </div>
                       <CardType
                         type={inputs?.type}
                         handleChange={handleChange}
@@ -431,8 +492,15 @@ export default function ProposalCard({
                   )}
 
                   <div>
-                    <div className="cardHeader">{t('board.resources', 'Resources')}</div>
-                    <div className="cardSubheaderComment">{t('board.addExistingResourcesComment', 'Add existing resources (See Resources in Navigation Pane)')}</div>
+                    <div className="cardHeader">
+                      {t("board.resources", "Resources")}
+                    </div>
+                    <div className="cardSubheaderComment">
+                      {t(
+                        "board.addExistingResourcesComment",
+                        "Add existing resources (See Resources in Navigation Pane)"
+                      )}
+                    </div>
                     <Resources
                       user={user}
                       handleChange={handleChange}
@@ -441,7 +509,12 @@ export default function ProposalCard({
                       }
                     />
                     <>
-                      <div className="cardHeader">{t('board.previewLinkedResources', 'Preview Linked Resources')}</div>
+                      <div className="cardHeader">
+                        {t(
+                          "board.previewLinkedResources",
+                          "Preview Linked Resources"
+                        )}
+                      </div>
                       {inputs?.resources && inputs?.resources.length ? (
                         <div className="resourcePreview">
                           {inputs?.resources.map((resource) => (
@@ -488,7 +561,7 @@ export default function ProposalCard({
               {!proposalBuildMode && (
                 <>
                   <div>
-                    <h4>{t('board.assignedTo', 'Assigned to')}</h4>
+                    <h4>{t("board.assignedTo", "Assigned to")}</h4>
                     <Assigned
                       users={allUsers}
                       assignedTo={inputs?.assignedTo}
@@ -496,7 +569,7 @@ export default function ProposalCard({
                     />
                   </div>
                   <div>
-                    <h4>{t('board.status', 'Status')}</h4>
+                    <h4>{t("board.status", "Status")}</h4>
                     <Status
                       settings={inputs?.settings}
                       onSettingsChange={handleSettingsChange}
@@ -507,7 +580,7 @@ export default function ProposalCard({
               {!proposalBuildMode && false && (
                 <>
                   <div>
-                    <h4>{t('board.assignedTo', 'Assigned to')}</h4>
+                    <h4>{t("board.assignedTo", "Assigned to")}</h4>
                     <div>
                       {proposalCard?.assignedTo?.map(
                         (c) => c?.id || "John Doe"
@@ -515,16 +588,23 @@ export default function ProposalCard({
                     </div>
                   </div>
                   <div>
-                    <h4>{t('board.status', 'Status')}</h4>
+                    <h4>{t("board.status", "Status")}</h4>
                     <div>{inputs.settings?.status}</div>
                   </div>
                 </>
               )}
 
               <div className="proposalCardComments">
-                <div className="cardHeader">{t('board.comments', 'Comments')}</div>
+                <div className="cardHeader">
+                  {t("board.comments", "Comments")}
+                </div>
                 {proposalBuildMode && (
-                  <div className="cardSubheaderComment">{t('board.commentsComment', 'This will pre-populate the Comment Box for students. You can delete comments later.')}</div>
+                  <div className="cardSubheaderComment">
+                    {t(
+                      "board.commentsComment",
+                      "This will pre-populate the Comment Box for students. You can delete comments later."
+                    )}
+                  </div>
                 )}
                 <textarea
                   rows="5"
