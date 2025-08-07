@@ -72,7 +72,7 @@ export default function Preview({
             </div>
           </div>
         </div>
-        <div>
+        <div id="studyTitle">
           <label htmlFor="title">
             <textarea
               id="title"

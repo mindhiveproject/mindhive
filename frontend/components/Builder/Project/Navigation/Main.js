@@ -99,7 +99,7 @@ export default function Navigation({
         </div>
         <div className="middle">
           <div className="studyTitle">
-            <span className="title">{t("project")} </span> {project?.title}
+            <span className="title">{t("studyManager.project")} </span> {project?.title}
           </div>
           {project?.study && (
             <div className="studyTitle">

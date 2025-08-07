@@ -90,7 +90,7 @@ export default function StudyVersion({
   };
 
   return (
-    <div className="studyVersion">
+    <div className="studyVersion" id="studyVersion">
       <div>
         <div className="studyVersionHeader">
           <h2>{t("version.title", "Study version")}</h2>

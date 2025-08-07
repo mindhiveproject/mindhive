@@ -8,8 +8,6 @@
 	"editYourProfile": "Bewerk uw MindHive-profiel",
 	"favoritePeople": "Favoriete mensen",
 	"favoriteTasks": "Favoriete taken en enquêtes",
-	"fillRequestForm": "Vul een aanvraagformulier in",
-	"fillSupportTicket": "Vul supportticket in",
 	"footer": {
 		"about": "Over",
 		"audience": "MindHive is ontworpen voor studenten en docenten die op zoek zijn naar een authentieke STEM-onderzoekservaring, en voor neurowetenschappers en cognitief/sociaal psychologen die hun onderzoeksvragen buiten het laboratorium willen beantwoorden.",
@@ -20,9 +18,25 @@
 		"terms": "Algemene voorwaarden",
 		"title": "MindHive"
 	},
+	"helpCenter": {
+		"aiAssist": "Ai Assist (IN ONTWIKKELING 🏗️)",
+		"aiComingSoon": "Hier komt de ai ✨",
+		"close": "Dichtbij",
+		"contentNotAvailable": "Inhoud niet beschikbaar.",
+		"documentation": "Documentatie",
+		"fillRequestForm": "Vul een aanvraagformulier in",
+		"fillSupportTicket": "Vul supportticket in",
+		"generalPlatformGuide": "Algemene platformgids",
+		"language": "Taal",
+		"platformGuideLink": "Klik op deze link om onze algemene platformgids te bekijken!",
+		"reportIssue": "Probleem melden",
+		"saveLanguage": "Taal opslaan",
+		"saving": "Besparing...",
+		"urgentMattersEmail": "Voor dringende zaken, mail ons!",
+		"walkthrough": "Doorloop",
+		"walkthroughTutorial": "Walkthrough-zelfstudie"
+	},
 	"info": "Meer informatie",
-	"needNewBlock": "Nieuw blok nodig?",
-	"needSupport": "Heeft u ondersteuning nodig?",
 	"participantID": "Deelnemers-ID",
 	"permissions": "Machtigingen",
 	"preview": "Voorvertoning",
@@ -48,6 +62,12 @@
 	"updates": {
 		"latestUpdates": "Laatste updates",
 		"noUpdate": "Er zijn op dit moment geen updates."
+	},
+	"walkthroughs": {
+		"availableTours": "Beschikbare rondleidingen:",
+		"noWalkthroughAvailable": "Oeps! Er is geen walkthrough beschikbaar voor deze pagina.",
+		"startTour": "Start een tour!",
+		"startTourButton": "Start de tour!"
 	},
 	"welcome": "Welkom"
 }

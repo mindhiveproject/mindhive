@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 
 import Selector from "./DevelopNew/Selector";
 import Panels from "./Panels";
+import { developTours } from "./tours";
 
 import { StyledSelector } from "../../styles/StyledSelector";
 
@@ -31,31 +32,82 @@ export default function DevelopMain({ query, user }) {
   }
 
   useEffect(() => {
-    function handleStartTour() {
+    let currentTour = null;
+    let isStartingTour = false;
+    
+    function handleStartTour(event) {
+      const tourId = event?.detail?.tourId || 'overview';
+      const tourData = event?.detail?.tourData;
+      
+      // Prevent multiple tours from starting simultaneously
+      if (isStartingTour) {
+        console.log('Tour already starting, ignoring request');
+        return;
+      }
+      
+      isStartingTour = true;
+      
+      // Exit any existing tour first
+      if (currentTour) {
+        currentTour.exit();
+        currentTour = null;
+      }
+      
       (async () => {
         const introJs = (await import('intro.js')).default;
-        introJs.tour().setOptions({
-          steps: [
-            {
-              element: '#developNewBtn',
-              intro: "Click here to start developing a new study, task, survey, or block.",
-              position: "bottom",
-              disableInteraction: false
-            },
-            {
-              element: '#myPanel', // this id is in the Panels component
-              intro: "Click on the tab bellow to see the projects, studies, tasks, surveys, and blocks you have created.",
-              position: "auto",
-              disableInteraction: false,
-            }
-          ],
+        
+        // Use tour data from event if available, otherwise fallback to static import
+        let selectedTour = tourData;
+        if (!selectedTour) {
+          const tours = developTours;
+          selectedTour = tours[tourId];
+        }
+        
+        if (!selectedTour) {
+          console.error(`Tour ${tourId} not found`);
+          isStartingTour = false;
+          return;
+        }
+
+        // Create new tour instance
+        currentTour = introJs.tour();
+        currentTour.setOptions({
+          steps: selectedTour.steps,
           scrollToElement: false,
           scrollTo: 'off',
-        }).start();
+          exitOnOverlayClick: true,
+          exitOnEsc: true,
+          showBullets: true,
+        });
+        
+        // Start the tour
+        currentTour.start();
+
+        // Clean up when tour ends
+        currentTour.onComplete(() => {
+          currentTour = null;
+          isStartingTour = false;
+        });
+        
+        currentTour.onExit(() => {
+          currentTour = null;
+          isStartingTour = false;
+        });
+
       })();
     }
+    
+    // Remove any existing listeners first
+    window.removeEventListener('start-walkthrough-tour', handleStartTour);
     window.addEventListener('start-walkthrough-tour', handleStartTour);
-    return () => window.removeEventListener('start-walkthrough-tour', handleStartTour);
+    
+    return () => {
+      window.removeEventListener('start-walkthrough-tour', handleStartTour);
+      // Clean up any existing tour when component unmounts
+      if (currentTour) {
+        currentTour.exit();
+      }
+    };
   }, []);
 
   if (selector === "new") {

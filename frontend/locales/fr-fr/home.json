@@ -8,8 +8,6 @@
 	"editYourProfile": "Modifiez votre profil MindHive",
 	"favoritePeople": "Personnes préférées",
 	"favoriteTasks": "Tâches et enquêtes préférées",
-	"fillRequestForm": "Remplissez un formulaire de demande",
-	"fillSupportTicket": "Remplir un ticket d'assistance",
 	"footer": {
 		"about": "À propos",
 		"audience": "MindHive a été conçu pour les étudiants et les enseignants qui recherchent une expérience authentique de recherche STEM, ainsi que pour les neuroscientifiques et les psychologues cognitifs/sociaux qui cherchent à répondre à leurs questions de recherche en dehors du laboratoire.",
@@ -20,9 +18,25 @@
 		"terms": "Conditions générales",
 		"title": "MindHive"
 	},
+	"helpCenter": {
+		"aiAssist": "Ai Assist (EN DÉVELOPPEMENT 🏗️)",
+		"aiComingSoon": "Voici venir l'IA ✨",
+		"close": "Fermer",
+		"contentNotAvailable": "Contenu non disponible.",
+		"documentation": "Documentation",
+		"fillRequestForm": "Remplissez un formulaire de demande",
+		"fillSupportTicket": "Remplir un ticket d'assistance",
+		"generalPlatformGuide": "Guide général de la plateforme",
+		"language": "Langue",
+		"platformGuideLink": "Vous pouvez consulter notre guide général de la plateforme en cliquant sur ce lien !",
+		"reportIssue": "Signaler un problème",
+		"saveLanguage": "Enregistrer la langue",
+		"saving": "Économie...",
+		"urgentMattersEmail": "Pour toute question urgente, envoyez-nous un e-mail !",
+		"walkthrough": "Procédure pas à pas",
+		"walkthroughTutorial": "Tutoriel pas à pas"
+	},
 	"info": "Plus d'informations",
-	"needNewBlock": "Besoin d'un nouveau bloc ?",
-	"needSupport": "Avez-vous besoin de soutien?",
 	"participantID": "ID du participant",
 	"permissions": "Autorisations",
 	"preview": "Aperçu",
@@ -48,6 +62,12 @@
 	"updates": {
 		"latestUpdates": "Dernières mises à jour",
 		"noUpdate": "Il n'y a pas de mises à jour pour le moment."
+	},
+	"walkthroughs": {
+		"availableTours": "Visites disponibles :",
+		"noWalkthroughAvailable": "Oups ! Aucune procédure pas à pas n'est disponible pour cette page.",
+		"startTour": "Commencez une visite !",
+		"startTourButton": "Commencez le tour !"
 	},
 	"welcome": "Bienvenue"
 }

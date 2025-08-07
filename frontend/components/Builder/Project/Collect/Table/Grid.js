@@ -147,6 +147,7 @@ export default function Grid({ studyId, participants }) {
 
   return (
     <div
+      id="collectTable"
       className="ag-theme-quartz" // applying the Data Grid theme
       style={{ height: "65vh" }} // the Data Grid will fill the size of the parent container
     >

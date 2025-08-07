@@ -214,6 +214,12 @@
 	"descriptionBefore": "Description de la carte {{taskType}} (pré-participation)",
 	"descriptionBeforeHelp": "Voici ce que les participants verront avant de passer le {{taskType}}.",
 	"descriptionBeforeVisible": "Ceci est visible par toute personne n’ayant pas encore participé à la tâche.",
+	"descriptionBuilder": {
+		"internalUse": "Ceci est réservé à un usage interne. Les participants ne verront pas cette description.",
+		"linkToProposal": "Lien vers la proposition",
+		"selectSource": "Sélectionnez une source",
+		"title": "Description de l'étude"
+	},
 	"descriptionDevelop": "Description (pour le mode Développement)",
 	"descriptionDevelopHelp": "Ceci est visible pour les chercheurs, les enseignants et les étudiants lors du choix de tâches ou d'enquêtes dans le mode Développement.",
 	"descriptionDiscover": "Description (pour le mode Découverte)",
