@@ -107,6 +107,7 @@
 		"create": "创建新类",
 		"createHeader": "添加新课程",
 		"description": "新课程描述",
+		"newBlock": "创建新块",
 		"title": "新班级名称"
 	},
 	"createdByOn": "由 {{username}} 于 {{date}} 创建",

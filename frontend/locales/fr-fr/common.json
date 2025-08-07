@@ -20,6 +20,7 @@
 		"requestReset": "Demande de réinitialisation",
 		"username": "Nom d'utilisateur"
 	},
+	"cancel": "Annuler",
 	"classes": {
 		"typeClassTitle": "Tapez le titre de la classe"
 	},

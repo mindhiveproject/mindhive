@@ -20,6 +20,7 @@
 		"requestReset": "طلب إعادة الضبط",
 		"username": "اسم المستخدم"
 	},
+	"cancel": "يلغي",
 	"classes": {
 		"typeClassTitle": "نوع فئة العنوان"
 	},

@@ -20,6 +20,7 @@
 		"requestReset": "Запрос сброса",
 		"username": "Имя пользователя"
 	},
+	"cancel": "Отмена",
 	"classes": {
 		"typeClassTitle": "Название класса типа"
 	},

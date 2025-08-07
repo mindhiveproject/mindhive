@@ -14,7 +14,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
   const aggregateVariables =
     (settings?.aggregateVariables &&
       JSON.parse(settings?.aggregateVariables)) ||
-    [];
+    [];  
 
   // parameters not from the survey builder
   const parameters =
@@ -151,7 +151,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
           {settings?.descriptionBefore && (
             <div>
               <h2>
-                {t("viewer.beforeParticipation", { taskType }, "What participants see <u>before</u> taking the {{taskType}}")}
+                <span dangerouslySetInnerHTML={{ __html: t("viewer.beforeParticipation", { taskType }, "What participants see <u>before</u> taking the {{taskType}}") }} />
               </h2>
               <p className="symbolBlock">{settings?.descriptionBefore}</p>
             </div>
@@ -160,7 +160,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
           {settings?.descriptionAfter && (
             <div>
               <h2>
-                {t("viewer.afterParticipation", { taskType }, "What participants see <u>after</u> taking the {{taskType}}")}
+                <span dangerouslySetInnerHTML={{ __html: t("viewer.afterParticipation", { taskType }, "What participants see <u>after</u> taking the {{taskType}}") }} />
               </h2>
               <p className="symbolBlock">{settings?.descriptionAfter}</p>
             </div>
@@ -201,7 +201,14 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
               )}
               <ul>
                 {aggregateVariables.map((variable, num) => (
-                  <li key={num}>{ReactHtmlParser(variable)}</li>
+                  <li>{ReactHtmlParser(typeof variable === 'string' ? variable : variable.name)}
+                    {typeof variable === 'object' && variable.description && (
+                      <>
+                        <br />
+                        <span className="bodySmall">{ReactHtmlParser(variable.description)}</span>
+                      </>
+                    )}
+                  </li>
                 ))}
               </ul>
             </div>

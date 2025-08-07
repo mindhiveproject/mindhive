@@ -107,6 +107,7 @@
 		"create": "إنشاء فئة جديدة",
 		"createHeader": "إضافة فصل جديد",
 		"description": "وصف الفصل الجديد",
+		"newBlock": "إنشاء كتلة جديدة",
 		"title": "اسم الفصل الجديد"
 	},
 	"createdByOn": "تم إنشاؤه بواسطة {{username}} في {{date}}",

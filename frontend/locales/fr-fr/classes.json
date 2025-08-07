@@ -107,6 +107,7 @@
 		"create": "Créer une nouvelle classe",
 		"createHeader": "Ajouter une nouvelle classe",
 		"description": "Nouvelle description de classe",
+		"newBlock": "Créer un nouveau bloc",
 		"title": "Nouveau nom de classe"
 	},
 	"createdByOn": "Créé par {{username}} le {{date}}",

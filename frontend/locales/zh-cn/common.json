@@ -20,6 +20,7 @@
 		"requestReset": "请求重置",
 		"username": "用户名"
 	},
+	"cancel": "取消",
 	"classes": {
 		"typeClassTitle": "键入类别标题"
 	},
