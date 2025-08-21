@@ -54,6 +54,8 @@ export default function Navigation({
 
   const studyId = query?.selector;
 
+  const items = area === "cloneofstudy" && studyId ? itemsClone : itemsOriginal;
+
   const { data, error, loading } = useQuery(MY_STUDY, {
     variables: { id: studyId },
   });
@@ -74,11 +76,7 @@ export default function Navigation({
 
   const tryToLeave = (e) => {
     if (hasStudyChanged) {
-      if (
-        !confirm(
-          t("unsavedChangesWarning")
-        )
-      ) {
+      if (!confirm(t("unsavedChangesWarning"))) {
         e.preventDefault();
       }
     }
@@ -100,6 +98,7 @@ export default function Navigation({
           </div>
           <div>
             <span className="studyTitle">{study?.title}</span>
+
             {/* {study?.currentVersion && (
               <span className="studyVersion">
                 [
@@ -114,6 +113,11 @@ export default function Navigation({
           </div>
         </div>
         <div className="rightPanel">
+          {area === "cloneofstudy" && studyId && (
+            <span className="saveFirstMessage">
+              Change the study name and click the Save button
+            </span>
+          )}
           {area !== "cloneofstudy" && (
             <>
               <Connect study={study} user={user} />
@@ -145,7 +149,7 @@ export default function Navigation({
 
       <div className="secondLine">
         <div className="menu">
-          {itemsOriginal.map((item, i) => (
+          {items.map((item, i) => (
             <Link
               key={i}
               href={{
