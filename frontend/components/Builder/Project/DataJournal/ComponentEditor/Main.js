@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react";
+import { Icon } from "semantic-ui-react";
 import { StyledDataComponent } from "../styles/StyledDataJournal";
 import JoditEditor from "../../../../Jodit/Editor";
 
@@ -70,9 +71,23 @@ export default function ComponentEditor({
 
   return (
     <StyledDataComponent>
+      <div className="buttons">
+        <Icon
+          name="save"
+          size="large"
+          className="actionIcon"
+          onClick={handleSave}
+          title="Save"
+        />
+        <Icon
+          name="trash"
+          size="large"
+          className="actionIcon"
+          onClick={onDelete}
+          title="Delete"
+        />
+      </div>
       {renderContent()}
-      <button onClick={handleSave}>Save</button>
-      <button onClick={onDelete}>Delete</button>
     </StyledDataComponent>
   );
 }

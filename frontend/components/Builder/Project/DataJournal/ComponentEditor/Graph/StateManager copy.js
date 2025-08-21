@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import {
   MessageHeader,
   MessageContent,
@@ -7,7 +8,6 @@ import {
   AccordionTitle,
   AccordionContent,
   Accordion,
-  Tab,
 } from "semantic-ui-react";
 
 import CodeEditor from "./Controller/CodeEditor";
@@ -44,17 +44,13 @@ export default function StateManager({
 
   const [isRunning, setIsRunning] = useState(false);
   const [output, setOutput] = useState("");
+
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [activeTab, setActiveTab] = useState(0);
 
   const handleClick = (e, titleProps) => {
     const { index } = titleProps;
     const newIndex = activeIndex === index ? -1 : index;
     setActiveIndex(newIndex);
-  };
-
-  const handleTabChange = (e, { activeIndex }) => {
-    setActiveTab(activeIndex);
   };
 
   // state of the python code
@@ -104,11 +100,27 @@ export default function StateManager({
   const AxesComponent = AxisTemplateMap[type] || AxesDefault;
   const OptionsComponent = OptionsTemplateMap[type] || OptionsDefault;
 
-  const panes = [
-    {
-      menuItem: "Graph properties",
-      render: () => (
-        <div className="tabContent">
+  return (
+    <div className="graph">
+      {/* {!code && pyodide && (
+        <TemplateSelector
+          handleContentChange={handleContentChange}
+          runCode={runCode}
+          sectionId={sectionId}
+        />
+      )} */}
+
+      {isRunning && (
+        <Message icon>
+          <Icon name="circle notched" loading />
+          <MessageContent>
+            <MessageHeader>Just one second</MessageHeader>
+            The code is running.
+          </MessageContent>
+        </Message>
+      )}
+      {code && pyodide && (
+        <div className="tabs">
           <div className="graphRenderContainer">
             <AxesComponent
               type={type}
@@ -133,32 +145,13 @@ export default function StateManager({
               />
             </div>
           </div>
-        </div>
-      ),
-    },
-    {
-      menuItem: "Style & Layout",
-      render: () => (
-        <div className="tabContent">
-          <div className="styleLayoutContainer">
-            <h3>Style & Layout Options</h3>
-            <p>
-              Customize the appearance and layout of the graph (to be
-              implemented).
-            </p>
-          </div>
-        </div>
-      ),
-    },
-    {
-      menuItem: "Code editor",
-      render: () => (
-        <div className="tabContent">
-          <CodeEditor
-            code={code}
-            handleContentChange={handleContentChange}
-            runCode={runCode}
-          />
+          {code && pyodide && (
+            <CodeEditor
+              code={code}
+              handleContentChange={handleContentChange}
+              runCode={runCode}
+            />
+          )}
           <Accordion>
             <AccordionTitle
               active={activeIndex === 0}
@@ -179,37 +172,6 @@ export default function StateManager({
             </AccordionContent>
           </Accordion>
         </div>
-      ),
-    },
-  ];
-
-  return (
-    <div className="graph">
-      {isRunning && (
-        <Message icon>
-          <Icon name="circle notched" loading />
-          <MessageContent>
-            <MessageHeader>Just one second</MessageHeader>
-            The code is running.
-          </MessageContent>
-        </Message>
-      )}
-      {code && pyodide && (
-        <div className="tabs">
-          <Tab
-            panes={panes}
-            activeIndex={activeTab}
-            onTabChange={handleTabChange}
-            className="customTabs"
-          />
-        </div>
-      )}
-      {!code && pyodide && (
-        <TemplateSelector
-          handleContentChange={handleContentChange}
-          runCode={runCode}
-          sectionId={sectionId}
-        />
       )}
     </div>
   );

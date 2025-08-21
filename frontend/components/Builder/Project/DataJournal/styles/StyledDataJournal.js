@@ -1,4 +1,3 @@
-// styles/StyledDataJournal.js
 import styled from "styled-components";
 
 export const StyledDataArea = styled.div`
@@ -160,12 +159,9 @@ export const StyledTopNavigation = styled.div`
       align-items: center;
       padding: 4px 24px;
       gap: 4px;
-      /* width: 164px; */
       height: 40px;
-      /* MH-Theme/Primary/Dark */
       background: #336f8a;
       border-radius: 100px;
-      /* Inside auto layout */
       flex: none;
       order: 1;
       flex-grow: 0;
@@ -191,13 +187,26 @@ export const StyledTopNavigation = styled.div`
 export const StyledDataComponent = styled.div`
   display: grid;
   align-content: baseline;
-  border: 1px solid grey;
-  padding: 16px;
-  background: #f9f9f9;
   textarea {
     width: 100%;
     min-height: 100px;
     resize: vertical;
+  }
+  .buttons {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 10px;
+    justify-content: end;
+    margin-bottom: 10px;
+    .actionIcon {
+      color: #336f8a;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      &:hover {
+        background: #f4f8f7;
+      }
+    }
   }
 `;
 
@@ -205,23 +214,21 @@ export const StyledRightPanel = styled.div`
   display: grid;
   align-content: baseline;
   grid-gap: 10px;
-  min-width: 900px; /* Fixed width for the panel */
-  border-left: 1px solid grey;
-  background: #f9f9f9;
+  min-width: 900px;
   padding: 16px;
   overflow-y: auto;
-  height: 100%; /* Fill available height */
+  height: 100%;
 `;
 
 export const StyledComponentPanel = styled.div`
   display: grid;
   align-content: baseline;
   grid-gap: 10px;
-  min-width: 300px; /* Fixed width for the panel */
+  min-width: 300px;
   background: white;
   padding: 16px;
   overflow-y: auto;
-  height: 100%; /* Fill available height */
+  height: 100%;
   margin: 10px;
   box-shadow: 0px 2px 4px 0px #00000012;
   border-radius: 8px;
@@ -326,9 +333,10 @@ export const StyledDataWorkspace = styled.div`
     border-radius: 12px;
 
     .widgetContainer {
-      border: 1px solid grey;
+      border: 2px solid #e6e6e6;
+      border-radius: 8px;
       &.active {
-        border: 2px solid blue; /* Highlight active widget */
+        border: 2px solid blue;
       }
     }
   }
@@ -368,7 +376,7 @@ export const StyledDataWorkspace = styled.div`
             font-size: 14px;
             font-style: normal;
             font-weight: 500;
-            line-height: 150%; /* 21px */
+            line-height: 150%;
           }
           .description {
             color: var(--gray-500666666, #666);
@@ -376,7 +384,7 @@ export const StyledDataWorkspace = styled.div`
             font-size: 12px;
             font-style: normal;
             font-weight: 400;
-            line-height: 150%; /* 18px */
+            line-height: 150%;
           }
         }
       }
@@ -439,7 +447,7 @@ export const StyledDataWorkspace = styled.div`
       font-size: 16px;
       font-style: normal;
       font-weight: 400;
-      line-height: 150%; /* 24px */
+      line-height: 150%;
       .title {
         display: grid;
         align-content: center;
@@ -460,6 +468,56 @@ export const StyledDataWorkspace = styled.div`
           overflow-wrap: break-word;
           word-wrap: break-word;
           word-break: break-word;
+        }
+      }
+    }
+    .customTabs {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      .menu {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        grid-gap: 10px;
+        padding: 10px;
+        background: #f8f9f8;
+        border-bottom: 1px solid #e6e6e6;
+        .item {
+          font-family: Nunito;
+          font-weight: 600;
+          font-size: 14px;
+          line-height: 20px;
+          padding: 10px 20px;
+          cursor: pointer;
+          border-radius: 8px;
+          color: #666;
+          &.active {
+            background: #336f8a;
+            color: white;
+            font-weight: 700;
+          }
+        }
+      }
+      .tabContent {
+        padding: 20px;
+        background: white;
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
+        .styleLayoutContainer {
+          display: grid;
+          grid-gap: 10px;
+          h3 {
+            font-family: Nunito;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 24px;
+            color: #333;
+          }
+          p {
+            font-family: Inter;
+            font-size: 14px;
+            line-height: 150%;
+            color: #666;
+          }
         }
       }
     }

@@ -125,21 +125,21 @@ function Widget({
   return (
     <WidgetContainer className={isActive ? "active" : ""}>
       <WidgetHeader className="widget-header">
-        <span>{type} Widget</span>
+        {/* <span>{type} Widget</span> */}
         <div>
-          <Button type="edit" className="widget-button" onClick={handleEdit}>
+          {/* <Button type="edit" className="widget-button">
             Edit
-          </Button>
-          <Button
+          </Button> */}
+          {/* <Button
             type="remove"
             className="widget-button"
             onClick={handleRemove}
           >
             Remove
-          </Button>
+          </Button> */}
         </div>
       </WidgetHeader>
-      <WidgetContent>{renderContent()}</WidgetContent>
+      <WidgetContent onClick={handleEdit}>{renderContent()}</WidgetContent>
     </WidgetContainer>
   );
 }
