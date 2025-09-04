@@ -2,12 +2,16 @@ import gql from "graphql-tag";
 
 // get all resources
 export const GET_PUBLIC_RESOURCES = gql`
-  query GET_RESOURCES {
+  query GET_PUBLIC_RESOURCES {
     resources(where: { isPublic: { equals: true } }) {
       id
       title
       slug
       author {
+        id
+        username
+      }
+      collaborators {
         id
         username
       }
@@ -68,6 +72,10 @@ export const GET_MY_AND_PUBLIC_RESOURCES = gql`
         id
         username
       }
+      collaborators {
+        id
+        username
+      }
       createdAt
       updatedAt
     }
@@ -90,6 +98,10 @@ export const GET_PUBLIC_AND_PROJECT_RESOURCES = gql`
       content
       slug
       author {
+        id
+        username
+      }
+      collaborators {
         id
         username
       }
@@ -154,6 +166,10 @@ export const GET_PUBLIC_AND_CLASS_RESOURCES = gql`
         id
         username
       }
+      collaborators {
+        id
+        username
+      }
       parent {
         id
       }
@@ -161,6 +177,29 @@ export const GET_PUBLIC_AND_CLASS_RESOURCES = gql`
       isPublic
       createdAt
       updatedAt
+    }
+  }
+`;
+
+// search users with specific permissions
+export const SEARCH_USERS = gql`
+  query SEARCH_USERS($search: String) {
+    profiles(
+      where: {
+        AND: [
+          { username: { contains: $search } }
+          {
+            OR: [
+              { permissions: { some: { name: { equals: "TEACHER" } } } }
+              { permissions: { some: { name: { equals: "ADMIN" } } } }
+              { permissions: { some: { name: { equals: "MENTOR" } } } }
+            ]
+          }
+        ]
+      }
+    ) {
+      id
+      username
     }
   }
 `;

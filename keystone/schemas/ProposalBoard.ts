@@ -128,6 +128,8 @@ export const ProposalBoard = list({
     usedInClass: relationship({
       ref: "Class.studentProposals",
     }),
+    clonedFrom: relationship({ ref: "ProposalBoard.prototypeFor" }),
+    prototypeFor: relationship({ ref: "ProposalBoard.clonedFrom", many: true }),
     resources: relationship({
       ref: "Resource.proposalBoard",
       many: true,

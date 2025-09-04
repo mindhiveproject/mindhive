@@ -19,6 +19,7 @@ export const UPDATE_RESOURCE = gql`
     $settings: JSON
     $isPublic: Boolean
     $updatedAt: DateTime
+    $collaborators: ProfileRelateToManyForUpdateInput
   ) {
     updateResource(
       where: { id: $id }
@@ -29,6 +30,7 @@ export const UPDATE_RESOURCE = gql`
         settings: $settings
         isPublic: $isPublic
         updatedAt: $updatedAt
+        collaborators: $collaborators
       }
     ) {
       id

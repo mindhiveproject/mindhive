@@ -70,6 +70,13 @@ async function copyProposalBoard(
               },
             }
           : null,
+        clonedFrom: id
+          ? {
+              connect: {
+                id: id,
+              },
+            }
+          : null,
         study: study
           ? {
               connect: {

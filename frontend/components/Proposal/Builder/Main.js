@@ -64,6 +64,7 @@ export default function ProposalBuilder({
         visible={page === "card"}
         direction="right"
         className="pushableSidebar"
+        width="very wide"
       >
         {card && (
           <ProposalCardWrapper
@@ -81,8 +82,7 @@ export default function ProposalBuilder({
         {isPreview ? (
           <>
             <h2>
-              {t("proposal.previewHeader", "Preview of proposal template")}
-              {" "}
+              {t("proposal.previewHeader", "Preview of proposal template")}{" "}
               <span className="templateName">{proposal.title}</span>
             </h2>
             <p>{proposal.description}</p>

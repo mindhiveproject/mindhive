@@ -1,10 +1,11 @@
 import { useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
-import useTranslation from 'next-translate/useTranslation';
-
-import { GET_PUBLIC_AND_PROJECT_RESOURCES } from "../../../Queries/Resource";
-
-import { Dropdown, Icon } from "semantic-ui-react";
+import {
+  GET_PUBLIC_RESOURCES,
+  GET_MY_RESOURCES,
+} from "../../../Queries/Resource";
+import { Button, Icon, Modal, Tab } from "semantic-ui-react";
+import React, { useState } from "react";
 
 export default function Resources({
   proposal,
@@ -12,92 +13,199 @@ export default function Resources({
   handleChange,
   selectedResources,
 }) {
-  const { t } = useTranslation('classes');
-  const { data, error, loading } = useQuery(GET_PUBLIC_AND_PROJECT_RESOURCES, {
-    variables: { projectId: proposal?.id },
+  // Query for public resources
+  const {
+    data: publicData,
+    error: publicError,
+    loading: publicLoading,
+  } = useQuery(GET_PUBLIC_RESOURCES);
+
+  // Query for user's own resources
+  const {
+    data: myData,
+    error: myError,
+    loading: myLoading,
+  } = useQuery(GET_MY_RESOURCES, {
+    variables: { id: user?.id },
   });
 
-  const resources = data?.resources || [];
+  const publicResources = publicData?.resources || [];
+  const myResources = myData?.resources || [];
 
-  const publicResources = resources.filter((resource) => resource?.isPublic);
-  const projectResources = resources.filter((resource) => resource?.isCustom);
+  // Filter out resources with a parent to avoid duplicates in "My Resources" tab
+  const myResourcesNoParent = myResources.filter((r) => !r?.parent);
 
+  // Merge selected resources, prioritizing custom versions
   const selectedResourcesMerged = selectedResources.map((selectedResource) => {
-    if (
-      projectResources.filter(
-        (projectResource) =>
-          projectResource?.parent?.id === selectedResource?.id
-      ).length > 0
-    ) {
-      const projectResource = projectResources.filter(
-        (projectResource) =>
-          projectResource?.parent?.id === selectedResource?.id
-      )[0];
-      return projectResource;
-    } else {
-      return selectedResource;
-    }
+    const customResource = myResources.find(
+      (myResource) => myResource?.parent?.id === selectedResource?.id
+    );
+    return customResource || selectedResource;
   });
 
-  const resourceOptions = publicResources.map((resource) => ({
-    key: resource.id,
-    text:
-      projectResources.filter((r) => r?.parent?.id === resource?.id).length > 0
-        ? projectResources
-            .filter((r) => r?.parent?.id === resource?.id)
-            .map((r) => r?.title)[0]
-        : resource?.title,
-    value: resource.id,
-  }));
+  const [open, setOpen] = useState(false);
 
-  const onChange = (event, data) => {
-    handleChange({
-      target: {
-        name: "resources",
-        value: resources?.filter((r) => data.value.includes(r?.id)),
-      },
-    });
+  const connect = (resource) => {
+    if (!selectedResources.some((s) => s.id === resource.id)) {
+      const newSelected = [...selectedResources, resource];
+      handleChange({ target: { name: "resources", value: newSelected } });
+    }
   };
+
+  const disconnect = (resource) => {
+    const newSelected = selectedResources.filter((s) => s.id !== resource.id);
+    handleChange({ target: { name: "resources", value: newSelected } });
+  };
+
+  const panes = [
+    {
+      menuItem: "Public Resources",
+      render: () => (
+        <ResourcesTab
+          resources={publicResources}
+          isPublic={true}
+          selectedResources={selectedResources}
+          connect={connect}
+          disconnect={disconnect}
+          myResources={myResources}
+          proposal={proposal}
+        />
+      ),
+    },
+    {
+      menuItem: "My Resources",
+      render: () => (
+        <ResourcesTab
+          resources={myResourcesNoParent}
+          isPublic={false}
+          selectedResources={selectedResources}
+          connect={connect}
+          disconnect={disconnect}
+          myResources={myResources}
+          proposal={proposal}
+        />
+      ),
+    },
+  ];
 
   return (
     <>
-      <Dropdown
-        placeholder={t('board.typeResource', 'Type resource')}
-        fluid
-        multiple
-        search
-        selection
-        lazyLoad
-        options={resourceOptions}
-        onChange={onChange}
-        value={selectedResources?.map((resource) => resource?.id)}
-      />
+      <Button
+        onClick={() => setOpen(true)}
+        style={{
+          background: "#f0f4f8",
+          color: "#007c70",
+          border: "1px solid #e0e0e0",
+          borderRadius: "8px",
+        }}
+      >
+        Select Resources ({selectedResources.length})
+      </Button>
+
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        size="large"
+        style={{ borderRadius: "12px", overflow: "hidden" }}
+      >
+        <Modal.Header
+          style={{
+            background: "#f9fafb",
+            borderBottom: "1px solid #e0e0e0",
+            fontFamily: "Nunito",
+            fontWeight: 600,
+          }}
+        >
+          Select Resources to Connect
+        </Modal.Header>
+        <Modal.Content scrolling style={{ background: "#ffffff", padding: 0 }}>
+          <Tab panes={panes} style={{ fontFamily: "Nunito" }} />
+        </Modal.Content>
+        <Modal.Actions
+          style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
+        >
+          <Button
+            onClick={() => setOpen(false)}
+            style={{
+              background: "#007c70",
+              color: "#ffffff",
+              borderRadius: "8px",
+            }}
+          >
+            Done
+          </Button>
+        </Modal.Actions>
+      </Modal>
 
       {selectedResourcesMerged && selectedResourcesMerged.length ? (
         <>
-          <div className="cardHeader">{t('board.previewLinkedResources', 'Preview Linked Resources')}</div>
-          <div className="resourcePreview">
+          <div
+            className="cardHeader"
+            style={{
+              fontFamily: "Nunito",
+              fontSize: "20px",
+              fontWeight: 600,
+              color: "#333",
+              marginTop: "20px",
+            }}
+          >
+            Preview Linked Resources
+          </div>
+          <div
+            className="resourcePreview"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+              gap: "20px",
+              marginTop: "10px",
+            }}
+          >
             {selectedResourcesMerged.map((resource) => (
-              <div className="resourceBlockPreview">
-                <div className="titleIcons">
-                  <div>
-                    <h2>{resource?.title}</h2>
-                  </div>
-                  <div>
+              <div
+                className="resourceBlockPreview"
+                key={resource.id}
+                style={{
+                  border: "1px solid #e0e0e0",
+                  borderRadius: "12px",
+                  padding: "16px",
+                  background: "#ffffff",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                }}
+              >
+                <div
+                  className="titleIcons"
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "12px",
+                  }}
+                >
+                  <h2
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: 600,
+                      color: "#333",
+                      margin: 0,
+                    }}
+                  >
+                    {resource?.title}
+                  </h2>
+                  <div style={{ display: "flex", gap: "12px" }}>
                     <a
                       href={`/dashboard/resources/view?id=${resource?.id}`}
                       target="_blank"
                       rel="noreferrer"
+                      style={{ color: "#007c70" }}
                     >
                       <Icon name="external alternate" />
                     </a>
-                  </div>
-                  <div>
                     {resource?.isCustom ? (
                       <a
                         href={`/dashboard/resources/edit?id=${resource?.id}`}
                         target="_blank"
                         rel="noreferrer"
+                        style={{ color: "#007c70" }}
                       >
                         <Icon name="pencil alternate" />
                       </a>
@@ -106,14 +214,17 @@ export default function Resources({
                         href={`/dashboard/resources/copy?id=${resource?.id}&p=${proposal?.id}`}
                         target="_blank"
                         rel="noreferrer"
+                        style={{ color: "#007c70" }}
                       >
                         <Icon name="pencil alternate" />
                       </a>
                     )}
                   </div>
                 </div>
-                <div>
-                  {ReactHtmlParser(truncateHtml(resource?.content?.main))}
+                <div
+                  style={{ fontSize: "14px", color: "#666", lineHeight: "1.5" }}
+                >
+                  {ReactHtmlParser(truncateHtml(resource?.content?.main, 50))}
                 </div>
               </div>
             ))}
@@ -126,11 +237,133 @@ export default function Resources({
   );
 }
 
+const ResourcesTab = ({
+  resources,
+  isPublic,
+  selectedResources,
+  connect,
+  disconnect,
+  myResources,
+  proposal,
+}) => {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+        gap: "24px",
+        padding: "24px",
+        background: "#f9fafb",
+      }}
+    >
+      {resources.map((r) => {
+        let displayR = r;
+        if (isPublic) {
+          const custom = myResources.find((p) => p.parent?.id === r.id);
+          if (custom) displayR = custom;
+        }
+
+        const isSelected = selectedResources.some((s) => s.id === r.id);
+
+        return (
+          <div
+            key={r.id}
+            style={{
+              border: "1px solid #e0e0e0",
+              borderRadius: "12px",
+              padding: "16px",
+              background: "#ffffff",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+              transition: "box-shadow 0.3s ease",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)")
+            }
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "12px",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "18px",
+                  fontWeight: 600,
+                  color: "#333",
+                  margin: 0,
+                }}
+              >
+                {displayR.title}
+              </h2>
+              <div style={{ display: "flex", gap: "12px" }}>
+                <a
+                  href={`/dashboard/resources/view?id=${displayR.id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "#007c70" }}
+                >
+                  <Icon name="external alternate" />
+                </a>
+                {displayR.isCustom ? (
+                  <a
+                    href={`/dashboard/resources/edit?id=${displayR.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: "#007c70" }}
+                  >
+                    <Icon name="pencil alternate" />
+                  </a>
+                ) : (
+                  <a
+                    href={`/dashboard/resources/copy?id=${displayR.id}&p=${proposal.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: "#007c70" }}
+                  >
+                    <Icon name="pencil alternate" />
+                  </a>
+                )}
+              </div>
+            </div>
+            <div
+              style={{
+                fontSize: "14px",
+                color: "#666",
+                lineHeight: "1.5",
+                marginBottom: "16px",
+              }}
+            >
+              {ReactHtmlParser(truncateHtml(displayR?.content?.main, 100))}
+            </div>
+            <Button
+              fluid
+              onClick={() => (isSelected ? disconnect(r) : connect(r))}
+              style={{
+                background: isSelected ? "#ff4d4f" : "#52c41a",
+                color: "#ffffff",
+                borderRadius: "8px",
+                fontWeight: 500,
+              }}
+            >
+              {isSelected ? "Disconnect" : "Connect"}
+            </Button>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 function truncateHtml(html, wordLimit = 10) {
   const div = document.createElement("div");
   div.innerHTML = html;
 
-  // Get text content
   const text = div.textContent || div.innerText;
   const words = text.trim().split(/\s+/);
 
@@ -140,10 +373,9 @@ function truncateHtml(html, wordLimit = 10) {
 
   let charCount = 0;
   for (let i = 0; i < wordLimit; i++) {
-    charCount += words[i].length + 1; // +1 for space
+    charCount += words[i].length + 1;
   }
 
-  // Create temporary element to handle HTML
   const tempDiv = document.createElement("div");
   tempDiv.innerHTML = html;
 
@@ -152,7 +384,6 @@ function truncateHtml(html, wordLimit = 10) {
 
   function processNode(node) {
     if (node.nodeType === 3) {
-      // Text node
       const text = node.textContent;
       const remaining = charCount - currentLength;
 
@@ -172,17 +403,14 @@ function truncateHtml(html, wordLimit = 10) {
       return true;
     }
 
-    // Element node
     result += `<${node.tagName.toLowerCase()}`;
 
-    // Add attributes
     Array.from(node.attributes).forEach((attr) => {
       result += ` ${attr.name}="${attr.value}"`;
     });
 
     result += ">";
 
-    // Process child nodes
     Array.from(node.childNodes).every((child) => processNode(child));
 
     result += `</${node.tagName.toLowerCase()}>`;

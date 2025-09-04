@@ -639,3 +639,70 @@ export const GET_MY_PROJECT_BOARDS_IN_CLASS = gql`
     }
   }
 `;
+
+export const GET_MY_AUTHORED_PROJECT_BOARDS = gql`
+  query GET_MY_AUTHORED_PROJECT_BOARDS($userId: ID!) {
+    proposalBoards(
+      where: {
+        AND: [
+          { isHidden: { equals: false } }
+          { author: { id: { equals: $userId } } }
+        ]
+      }
+    ) {
+      id
+      title
+      slug
+      description
+      isSubmitted
+      settings
+      author {
+        username
+      }
+      collaborators {
+        id
+        username
+      }
+      study {
+        id
+        title
+        slug
+      }
+      templateForClasses {
+        id
+        title
+        code
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const GET_PROPOSAL_TEMPLATE_CLASSES = gql`
+  query GET_PROPOSAL_TEMPLATE_CLASSES($id: ID!) {
+    proposalBoard(where: { id: $id }) {
+      id
+      title
+      templateForClasses {
+        id
+        title
+        code
+      }
+      prototypeFor {
+        id
+        title
+        author {
+          username
+        }
+        collaborators {
+          username
+        }
+        usedInClass {
+          title
+          code
+        }
+      }
+    }
+  }
+`;
