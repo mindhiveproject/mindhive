@@ -137,6 +137,10 @@
 	"consentSelector": {
 		"typeConsentProtocol": "Type consent protocol"
 	},
+	"createBlock": {
+		"currentlySelected": "Currently selected language: ",
+		"internationalContent": "i18n Editor"
+	},
 	"createdBy": "created by {{username}}",
 	"createNewBlock": "Create new block",
 	"createProposal": {
