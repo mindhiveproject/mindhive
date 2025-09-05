@@ -3,20 +3,14 @@ import { useRouter } from "next/router";
 import { Icon } from "semantic-ui-react";
 
 import { GET_RESOURCE } from "../../Queries/Resource";
-import { UPDATE_RESOURCE } from "../../Mutations/Resource";
+import { CREATE_RESOURCE } from "../../Mutations/Resource";
 import { GET_MY_RESOURCES } from "../../Queries/Resource";
 
 import useForm from "../../../lib/useForm";
 import ResourceForm from "./ResourceForm";
 import StyledResource from "../../styles/StyledResource";
 
-export default function EditResource({
-  selector,
-  query,
-  user,
-  isAdmin,
-  goBack,
-}) {
+export default function DuplicateResource({ query, user, goBack }) {
   const router = useRouter();
   const { id } = query;
 
@@ -27,29 +21,26 @@ export default function EditResource({
 
   const { inputs, handleChange } = useForm({
     ...resource,
-    title: resource.title || "",
-    description: resource.description || "",
-    content: resource.content || "",
-    settings: resource.settings || "",
-    isPublic: resource.isPublic || false,
+    title: `${resource.title} (Copy)`,
   });
 
-  const [updateResource] = useMutation(UPDATE_RESOURCE, {
+  const [createResource] = useMutation(CREATE_RESOURCE, {
     variables: {
-      id,
-      title: inputs?.title,
-      description: inputs?.description,
-      content: inputs?.content,
-      settings: inputs?.settings,
-      isPublic: inputs?.isPublic,
+      input: {
+        title: inputs?.title,
+        description: inputs?.description,
+        content: inputs?.content,
+        settings: inputs?.settings,
+        isPublic: inputs?.isPublic,
+      },
     },
     refetchQueries: [{ query: GET_MY_RESOURCES, variables: { id: user?.id } }],
   });
 
   async function handleSave(e) {
     e.preventDefault();
-    await updateResource();
-    alert("Resource updated successfully");
+    await createResource();
+    alert("Resource duplicated successfully");
     router.push({ pathname: "/dashboard/resources" });
   }
 
@@ -58,16 +49,9 @@ export default function EditResource({
       <button className="goBackBtn" onClick={goBack}>
         <Icon name="arrow left" /> Go Back
       </button>
-      <h1>Edit Resource</h1>
-      <ResourceForm
-        user={user}
-        inputs={inputs}
-        handleChange={handleChange}
-        isAdmin={isAdmin} // Pass isAdmin to show/hide isPublic checkbox
-      />
-      <button onClick={handleSave} disabled={loading}>
-        Save Changes
-      </button>
+      <h1>Duplicate Resource</h1>
+      <ResourceForm inputs={inputs} handleChange={handleChange} />
+      <button onClick={handleSave}>Save Duplicate</button>
     </StyledResource>
   );
 }

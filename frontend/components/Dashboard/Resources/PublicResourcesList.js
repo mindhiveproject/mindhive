@@ -1,80 +1,84 @@
 import { useQuery } from "@apollo/client";
 import moment from "moment";
+import Link from "next/link";
+import { Icon, Popup } from "semantic-ui-react";
+
 import { GET_PUBLIC_RESOURCES } from "../../Queries/Resource";
 
-import Link from "next/link";
+export default function PublicResourcesList({
+  query,
+  user,
+  searchTerm,
+  filter,
+  onPreview,
+}) {
+  const { data, error, loading } = useQuery(GET_PUBLIC_RESOURCES);
 
-export default function ResourcesList({ query, user }) {
-  const { data, error, loading } = useQuery(GET_PUBLIC_RESOURCES, {
-    variables: {
-      id: user?.id,
-    },
-  });
+  let resources = data?.resources ? [...data.resources] : []; // Create mutable copy
 
-  const resources = data?.resources || [];
+  // Client-side search and filter
+  if (searchTerm) {
+    resources = resources.filter(
+      (r) =>
+        r.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+  if (filter === "recent") {
+    resources = [...resources].sort(
+      (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+    ); // Sort on a new copy
+  }
 
-  const refetchQueries = [
-    {
-      query: GET_PUBLIC_RESOURCES,
-    },
-  ];
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error loading public resources.</p>;
 
   return (
     <div className="board">
-      <div className="headerPublic">
-        <p>Title</p>
-        <p>Created</p>
-        <p>Last updated</p>
-        <p>Author</p>
-      </div>
-      {resources?.map((resource, i) => (
-        <div key={i} className="wrapper">
-          <Link
-            href={{
-              pathname: `/dashboard/resources/view`,
-              query: {
-                id: resource?.id,
-              },
-            }}
-            key={i}
-          >
-            <div key={i} className="item">
-              <p>{resource?.title}</p>
-              <p>{moment(resource?.createdAt).format("MMMM D, YYYY")}</p>
-              <p>
-                {resource?.updatedAt &&
-                  moment(resource?.updatedAt).format("MMMM D, YYYY")}
-              </p>
-              <p>{resource?.author?.username}</p>
+      {resources.map((resource) => (
+        <div key={resource.id} className="card">
+          <h3 className="card-title">{resource.title}</h3>
+          <p className="card-meta">Author: {resource.author?.username}</p>
+          <p className="card-meta">
+            Created: {moment(resource.createdAt).format("MMMM D, YYYY")}
+          </p>
+          {resource.updatedAt && (
+            <p className="card-meta">
+              Updated: {moment(resource.updatedAt).format("MMMM D, YYYY")}
+            </p>
+          )}
+          {resource.collaborators?.length > 0 && (
+            <div className="card-collaborators">
+              <strong>Collaborators:</strong>{" "}
+              {resource.collaborators.map((c) => (
+                <span key={c.id}>{c.username}</span>
+              ))}
             </div>
-          </Link>
-
-          <div className="buttonLinks">
-            {/* <Link
-              href={{
-                pathname: `/dashboard/resources/copy`,
-                query: {
-                  id: resource?.id,
-                },
-              }}
-              key={i}
-            >
-              <button>Customize</button>
-            </Link> */}
-
-            {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
-              <Link
-                href={{
-                  pathname: `/dashboard/resources/edit`,
-                  query: {
-                    id: resource?.id,
-                  },
-                }}
-                key={i}
-              >
-                <button>Edit</button>
-              </Link>
-            )}
+          )}
+          <div className="card-actions">
+            <Popup
+              content="Preview"
+              trigger={
+                <Icon
+                  name="eye"
+                  className="action-icon preview"
+                  onClick={() => onPreview(resource.id)}
+                />
+              }
+            />
+            <Popup
+              content="Customize"
+              trigger={
+                <Link
+                  href={{
+                    pathname: "/dashboard/resources/copy",
+                    query: { id: resource.id },
+                  }}
+                >
+                  <Icon name="copy" className="action-icon copy" />
+                </Link>
+              }
+            />
           </div>
         </div>
       ))}

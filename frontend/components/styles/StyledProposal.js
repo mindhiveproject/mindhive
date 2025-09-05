@@ -179,7 +179,6 @@ export const StyledProposal = styled.div`
   .inner {
     display: grid;
     grid-template-columns: 1fr auto;
-    /* width: 90vw; */
     .scrollable {
       overflow-x: auto;
     }
@@ -322,15 +321,9 @@ export const StyledProposal = styled.div`
       cursor: pointer;
     }
     .title {
-      /* font-family: Lato;
-      font-size: 48px;
-      font-style: normal;
-      font-weight: 400;
-      /* line-height: 56px; */
       letter-spacing: 0em;
       text-align: left;
       color: #1a1a1a; */
-      /* margin-bottom: 23px; */
     }
     .description {
       font-family: Lato;
@@ -411,6 +404,7 @@ export const StyledProposal = styled.div`
     font-size: 18px;
     text-align: left;
     background: #F7F9F8;
+    padding: 10px;
 
     .resourcePreview {
       display: grid;

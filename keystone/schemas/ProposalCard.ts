@@ -78,5 +78,7 @@ export const ProposalCard = list({
       ref: "Resource.proposalCards",
       many: true,
     }),
+    // TODO Way 1 - connected to Assignment (preferred)
+    // "Resources": Assignments and Old Resources (Move assignments in Resources)
   },
 });

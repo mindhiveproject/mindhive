@@ -31,36 +31,6 @@ export default function ProposalPage({
         <div className="goBackButton" onClick={goToOverview}>
           <p>{t("projectBoard.goBack")}</p>
         </div>
-        {/* {proposal?.isSubmitted ? (
-          <div>
-            <h3>{t("projectBoard.submittedAndLocked")}</h3>
-          </div>
-        ) : (
-          <>
-            <Radio
-              toggle
-              checked={isPDF}
-              onChange={() => {
-                setIsPDF(!isPDF);
-              }}
-            />
-            <span>
-              {isPDF ? (
-                <div className="preview">
-                  {t("projectBoard.preview")}
-                  <span className="alert">
-                    <Icon name="info circle" />
-                    <span>
-                      {t("projectBoard.previewInfo")}
-                    </span>
-                  </span>
-                </div>
-              ) : (
-                <div className="preview">{t("projectBoard.edit")}</div>
-              )}
-            </span>
-          </>
-        )} */}
       </div>
       {isPDF || proposal?.isSubmitted ? (
         <ProposalPDF proposalId={proposalId} />

@@ -303,3 +303,23 @@ export const UPDATE_PROPOSAL_CARD = gql`
     }
   }
 `;
+
+export const CREATE_NEW_PROPOSAL_AS_AUTHOR = gql`
+  mutation CREATE_NEW_PROPOSAL_AS_AUTHOR(
+    $title: String!
+    $description: String
+    $settings: JSON
+    $authorId: ID!
+  ) {
+    createProposalBoard(
+      data: {
+        title: $title
+        description: $description
+        settings: $settings
+        author: { connect: { id: $authorId } }
+      }
+    ) {
+      id
+    }
+  }
+`;
