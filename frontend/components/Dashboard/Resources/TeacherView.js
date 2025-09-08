@@ -1,4 +1,5 @@
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 import PublicResourcesList from "./PublicResourcesList";
 import ProjectResourcesList from "./ProjectResourcesList";
@@ -17,9 +18,9 @@ import { Dropdown } from "semantic-ui-react";
 export default function TeacherView({ query, user }) {
   const router = useRouter();
   const { selector, c } = query;
+  const { t } = useTranslation("classes");
 
   const { data, loading, error } = useQuery(GET_USER_CLASSES);
-
   const classes = data?.authenticatedItem?.teacherIn || [];
 
   const options = classes.map((project) => ({
@@ -50,34 +51,11 @@ export default function TeacherView({ query, user }) {
   if (!selector) {
     return (
       <>
-        <h1>Resources center for teachers</h1>
-
-        {/* <div className="header">
-          <div className="menu">
-            {projects.map((p) => (
-              <Link
-                href={{
-                  pathname: `/dashboard/resources`,
-                  query: { project: p?.id },
-                }}
-              >
-                <div
-                  className={
-                    project === p?.id
-                      ? "menuTitle selectedMenuTitle"
-                      : "menuTitle"
-                  }
-                >
-                  <p>{p?.title}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div> */}
+        <h1>{t("boardManagement.resourcesCenterForTeachers")}</h1>
 
         <Dropdown
           selection
-          placeholder="Select the class"
+          placeholder={t("boardManagement.selectClass")}
           options={options}
           onChange={(event, data) => {
             router.push({

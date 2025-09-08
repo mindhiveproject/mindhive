@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import moment from "moment";
 import Link from "next/link";
 import { Icon, Popup } from "semantic-ui-react";
-
+import useTranslation from "next-translate/useTranslation";
 import { GET_PUBLIC_RESOURCES } from "../../Queries/Resource";
 
 export default function PublicResourcesList({
@@ -13,7 +13,7 @@ export default function PublicResourcesList({
   onPreview,
 }) {
   const { data, error, loading } = useQuery(GET_PUBLIC_RESOURCES);
-
+  const { t } = useTranslation("classes");
   let resources = data?.resources ? [...data.resources] : []; // Create mutable copy
 
   // Client-side search and filter
@@ -30,26 +30,26 @@ export default function PublicResourcesList({
     ); // Sort on a new copy
   }
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading public resources.</p>;
+  if (loading) return <p>{t("boardManagement.loadingDotdotdot")}</p>;
+  if (error) return <p>{t("boardManagement.errLoadingPublicResource")}</p>;
 
   return (
     <div className="board">
       {resources.map((resource) => (
         <div key={resource.id} className="card">
           <h3 className="card-title">{resource.title}</h3>
-          <p className="card-meta">Author: {resource.author?.username}</p>
+          <p className="card-meta">{t("boardManagement.author")}: {resource.author?.username}</p>
           <p className="card-meta">
-            Created: {moment(resource.createdAt).format("MMMM D, YYYY")}
+          {t("boardManagement.created")} {moment(resource.createdAt).format("MMMM D, YYYY")}
           </p>
           {resource.updatedAt && (
             <p className="card-meta">
-              Updated: {moment(resource.updatedAt).format("MMMM D, YYYY")}
+              {t("boardManagement.updated")}: {moment(resource.updatedAt).format("MMMM D, YYYY")}
             </p>
           )}
           {resource.collaborators?.length > 0 && (
             <div className="card-collaborators">
-              <strong>Collaborators:</strong>{" "}
+              <strong>{t("boardManagement.collaborators")}:</strong>{" "}
               {resource.collaborators.map((c) => (
                 <span key={c.id}>{c.username}</span>
               ))}
@@ -57,7 +57,7 @@ export default function PublicResourcesList({
           )}
           <div className="card-actions">
             <Popup
-              content="Preview"
+              content={t("boardManagement.preview")}
               trigger={
                 <Icon
                   name="eye"
@@ -67,7 +67,7 @@ export default function PublicResourcesList({
               }
             />
             <Popup
-              content="Customize"
+              content={t("boardManagement.copy")}
               trigger={
                 <Link
                   href={{

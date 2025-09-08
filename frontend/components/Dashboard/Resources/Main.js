@@ -14,12 +14,15 @@ import ResourcePreviewModal from "./ResourcePreviewModal";
 
 import StyledResource from "../../styles/StyledResource";
 
+import useTranslation from "next-translate/useTranslation";
+
 export default function ResourcesMain({ query, user }) {
   const { selector } = query;
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
   const [previewId, setPreviewId] = useState(null);
   const [shareId, setShareId] = useState(null);
+  const { t } = useTranslation("classes");
 
   // Hide header for action routes, but show for 'public' and overview
   const isActionRoute =
@@ -34,10 +37,8 @@ export default function ResourcesMain({ query, user }) {
     <StyledResource>
       {!isActionRoute && (
         <>
-          <h1>Resource Center</h1>
-          <p>
-            Browse, create, customize, and share resources for your projects.
-          </p>
+          <h1>{t("boardManagement.resourceCenterTitle")}</h1>
+          <p>{t("boardManagement.resourceCenterDescription")}</p>
           <div className="header">
             <div className="menu">
               <Link href="/dashboard/resources">
@@ -46,7 +47,7 @@ export default function ResourcesMain({ query, user }) {
                     !selector ? "menuTitle selectedMenuTitle" : "menuTitle"
                   }
                 >
-                  <p>My Resources</p>
+                  <p>{t("boardManagement.myResources")}</p>
                 </div>
               </Link>
               <Link href="/dashboard/resources/public">
@@ -57,26 +58,26 @@ export default function ResourcesMain({ query, user }) {
                       : "menuTitle"
                   }
                 >
-                  <p>Public Resources</p>
+                  <p>{t("boardManagement.publicResources")}</p>
                 </div>
               </Link>
             </div>
             <Link href="/dashboard/resources/add">
-              <button>Create New Resource</button>
+              <button>{t("boardManagement.createNewResource")}</button>
             </Link>
           </div>
           <div className="searchBar">
             <input
               type="text"
-              placeholder="Search by title or description..."
+              placeholder={t("boardManagement.searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-              <option value="all">All</option>
-              <option value="recent">Recent</option>
+              <option value="all">{t("boardManagement.filter.all")}</option>
+              <option value="recent">{t("boardManagement.filter.recent")}</option>
               {selector !== "public" && (
-                <option value="public">Public Only</option>
+                <option value="public">{t("boardManagement.filter.publicOnly")}</option>
               )}
             </select>
           </div>
@@ -85,11 +86,8 @@ export default function ResourcesMain({ query, user }) {
 
       {!selector && (
         <>
-          <h2>My Resources</h2>
-          <p>
-            Create from scratch, duplicate your own, or share with
-            collaborators.
-          </p>
+          <h2>{t("boardManagement.myResources")}</h2>
+          <p>{t("boardManagement.myResourcesDescription")}</p>
           <MyResourcesList
             query={query}
             user={user}
@@ -102,8 +100,8 @@ export default function ResourcesMain({ query, user }) {
       )}
       {selector === "public" && (
         <>
-          <h2>Public Resources</h2>
-          <p>Explore community resources and customize them for your use.</p>
+          <h2>{t("boardManagement.publicResources")}</h2>
+          <p>{t("boardManagement.publicResourcesDescription")}</p>
           <PublicResourcesList
             query={query}
             user={user}
