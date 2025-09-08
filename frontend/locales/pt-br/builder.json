@@ -137,6 +137,17 @@
 	"consentSelector": {
 		"typeConsentProtocol": "Protocolo de consentimento de tipo"
 	},
+	"createBlock": {
+		"currentlySelected": "Idioma selecionado atualmente:",
+		"howTo": "Como usar esse editor?",
+		"howTo1": "Escreva o conteúdo em inglês usando os campos abaixo desse bloco E ATUALIZE/CRIE o bloco. (Isso deve ter preenchido o campo sob a tag English no editor i18n).",
+		"howTo2": "Selecione um idioma abaixo para editar o conteúdo de cada um desses campos no idioma em questão. Observe que alguns campos podem ser exibidos em inglês porque são derivados do código interno da tarefa, que não pode ser traduzido.",
+		"internationalContent": "Editor i18n",
+		"intro": "Use este editor para fornecer uma tradução de seu bloco no idioma de sua escolha. (i18n = internacionalização)",
+		"notes": "Algumas observações importantes:",
+		"notes1": "O conteúdo em inglês pode ser modificado no editor i18n, mas certifique-se de que você criou a tarefa primeiro.",
+		"notes2": "Você pode notar que \"resources\" e \"aggregateVariables\" estão formatados como uma lista. Certifique-se de manter essa formatação limpa!"
+	},
 	"createdBy": "criado por {{username}}",
 	"createNewBlock": "Criar novo bloco",
 	"createProposal": {

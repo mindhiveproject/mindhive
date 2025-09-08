@@ -1,9 +1,13 @@
 import Link from "next/link";
-
+import { useRouter } from "next/router";
 import { StyledTaskCard } from "../../styles/StyledCard";
 import ManageFavorite from "../../User/ManageFavorite";
 
 export default function TaskCard({ user, task, url, id, name, domain }) {
+  const router = useRouter();
+  const { locale } = router;
+  console.log(locale)
+  console.log(task)
   return (
     <Link
       href={{
@@ -21,7 +25,7 @@ export default function TaskCard({ user, task, url, id, name, domain }) {
         )}
         <div className="cardInfo">
           <div className="title">
-            <div>{task?.title}</div>
+            <div>{task?.i18nContent[locale]?.title || task?.title}</div>
 
             <div className="rightSide">
               {user && <ManageFavorite user={user} id={task?.id} />}

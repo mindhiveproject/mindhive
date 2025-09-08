@@ -22,6 +22,7 @@ export const Template = list({
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
+    i18nContent: json(),
     slug: text({
       hooks: {
         async resolveInput({ context, operation, inputData }) {

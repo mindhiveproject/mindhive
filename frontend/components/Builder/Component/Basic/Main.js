@@ -1,8 +1,7 @@
 import DisplayError from "../../../ErrorMessage";
-
 import useTranslation from "next-translate/useTranslation";
-
 import SettingBlock from "./SettingBlock";
+import I18nContentEditor from "./I18nContentEditor"; // Import the new component
 
 export default function Basic({
   user,
@@ -45,6 +44,15 @@ export default function Basic({
       <DisplayError error={error} />
 
       <fieldset disabled={loading} aria-busy={loading}>
+        
+        {/* I18n Content Editor - Add this at the top */}
+        {!isInStudyBuilder && (
+          <I18nContentEditor 
+            task={task} 
+            handleChange={handleChange}
+          />
+        )}
+
         <div className="block">
           <label htmlFor="title">
             {t("title")}

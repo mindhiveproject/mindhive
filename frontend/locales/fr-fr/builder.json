@@ -137,6 +137,17 @@
 	"consentSelector": {
 		"typeConsentProtocol": "Protocole de consentement de type"
 	},
+	"createBlock": {
+		"currentlySelected": "Langue sélectionnée :",
+		"howTo": "Comment utiliser cet éditeur ?",
+		"howTo1": "Rédigez un contenu en anglais en utilisant les champs situés sous ce bloc et mettez à jour/créez le bloc. (Cela devrait remplir le champ sous la balise English dans l'éditeur i18n).",
+		"howTo2": "Sélectionnez une langue ci-dessous pour modifier le contenu de chacun de ces champs dans cette langue. Notez que certains champs peuvent être affichés en anglais parce qu'ils sont dérivés du code interne de la tâche, qui ne peut pas être traduit.",
+		"internationalContent": "Éditeur i18n",
+		"intro": "Utilisez cet éditeur pour fournir une traduction de votre bloc dans la langue de votre choix. (i18n = internationalisation)",
+		"notes": "Quelques remarques importantes :",
+		"notes1": "Le contenu anglais peut être modifié à partir de l'éditeur i18n, mais assurez-vous d'avoir d'abord créé la tâche.",
+		"notes2": "Vous remarquerez peut-être que les \"ressources\" et les \"variables agrégées\" sont formatées sous forme de liste. Veillez à ce que ce formatage ne soit pas altéré !"
+	},
 	"createdBy": "créé par {{username}}",
 	"createNewBlock": "Créer un nouveau bloc",
 	"createProposal": {

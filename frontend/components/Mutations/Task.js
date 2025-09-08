@@ -12,6 +12,7 @@ export const CREATE_TASK = gql`
     $link: String
     $parameters: JSON
     $settings: JSON
+    $i18nContent: JSON
     $collaborators: [ProfileWhereUniqueInput!]
   ) {
     createTask(
@@ -25,6 +26,7 @@ export const CREATE_TASK = gql`
         link: $link
         parameters: $parameters
         settings: $settings
+        i18nContent: $i18nContent
         collaborators: { connect: $collaborators }
       }
     ) {
@@ -76,6 +78,7 @@ export const UPDATE_TASK = gql`
     $link: String
     $parameters: JSON
     $settings: JSON
+    $i18nContent: JSON
     $collaborators: [ProfileWhereUniqueInput!]
   ) {
     updateTask(
@@ -87,6 +90,7 @@ export const UPDATE_TASK = gql`
         link: $link
         parameters: $parameters
         settings: $settings
+        i18nContent: $i18nContent
         collaborators: { set: $collaborators }
       }
     ) {

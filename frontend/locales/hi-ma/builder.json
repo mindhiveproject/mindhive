@@ -137,6 +137,17 @@
 	"consentSelector": {
 		"typeConsentProtocol": "सहमति प्रोटोकॉल टाइप करें"
 	},
+	"createBlock": {
+		"currentlySelected": "",
+		"howTo": "",
+		"howTo1": "",
+		"howTo2": "",
+		"internationalContent": "i18n संपादक",
+		"intro": "",
+		"notes": "",
+		"notes1": "",
+		"notes2": ""
+	},
 	"createdBy": "{{उपयोगकर्ता नाम}} द्वारा निर्मित",
 	"createNewBlock": "नया ब्लॉक बनाएँ",
 	"createProposal": {

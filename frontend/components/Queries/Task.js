@@ -6,6 +6,7 @@ export const ALL_PUBLIC_TASKS = gql`
     tasks(where: { public: { equals: true } }, orderBy: { title: asc }) {
       id
       title
+      i18nContent
       slug
     }
   }
@@ -17,6 +18,7 @@ export const PUBLIC_TASKS = gql`
     tasks(where: $where, orderBy: { title: asc }) {
       id
       title
+      i18nContent
       taskType
       slug
       image
@@ -41,6 +43,7 @@ export const MY_TASKS = gql`
     tasks(where: $where, orderBy: [{ createdAt: desc }]) {
       id
       title
+      i18nContent
       slug
       image
       description
@@ -64,6 +67,7 @@ export const FAVORITE_TASKS = gql`
     tasks(where: $where, orderBy: { title: asc }) {
       id
       title
+      i18nContent
       taskType
       slug
       image
@@ -88,6 +92,7 @@ export const GET_TASK = gql`
     task(where: { slug: $slug }) {
       id
       title
+      i18nContent
       slug
       taskType
       image
@@ -105,6 +110,7 @@ export const MY_TASK = gql`
     task(where: { id: $id }) {
       id
       title
+      i18nContent
       slug
       image
       description
@@ -117,6 +123,7 @@ export const MY_TASK = gql`
       template {
         id
         title
+        i18nContent
         slug
         description
         style
@@ -143,6 +150,7 @@ export const TASK_TO_CLONE = gql`
     task(where: { slug: $slug }) {
       id
       title
+      i18nContent
       slug
       image
       description
@@ -154,6 +162,7 @@ export const TASK_TO_CLONE = gql`
         id
         slug
         title
+        i18nContent
         description
         style
         scriptAddress
@@ -175,6 +184,7 @@ export const TASK_TO_PARTICIPATE = gql`
     task(where: { id: $id }) {
       id
       title
+      i18nContent
       slug
       image
       description
@@ -197,6 +207,7 @@ export const TASK_TO_EDIT = gql`
     task(where: { id: $id }) {
       id
       title
+      i18nContent
       slug
       description
       descriptionForParticipants
@@ -210,6 +221,7 @@ export const TASK_TO_EDIT = gql`
       template {
         id
         title
+        i18nContent
         description
         parameters
         style
@@ -250,6 +262,7 @@ export const MY_FAVORITE_TASKS = gql`
           id
           slug
           title
+          i18nContent
         }
       }
     }

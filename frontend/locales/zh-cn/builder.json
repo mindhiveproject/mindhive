@@ -137,6 +137,17 @@
 	"consentSelector": {
 		"typeConsentProtocol": "类型同意协议"
 	},
+	"createBlock": {
+		"currentlySelected": "当前选择的语言：",
+		"howTo": "如何使用该编辑器？",
+		"howTo1": "使用该区块下方的字段编写英文内容，然后更新/创建该区块。(这应该已经在 i18n 编辑器中的英文标签下填充了字段）。",
+		"howTo2": "在下面选择一种语言，以该语言编辑每个字段的内容。请注意，某些字段可能以英文显示，因为它们来自内部任务代码，无法翻译。",
+		"internationalContent": "国际化编辑器",
+		"intro": "使用此编辑器可将您的区块翻译成您选择的语言。(i18n = 国际化）",
+		"notes": "一些重要说明：",
+		"notes1": "英文内容可以通过 i18n 编辑器修改，但请确保您已首先创建了任务。",
+		"notes2": "您可能会注意到，\"resources\"（资源）和 \"aggregateVariables\"（变量聚合）的格式是一个列表。请确保对格式进行了消毒！"
+	},
 	"createdBy": "由 {{username}} 创建",
 	"createNewBlock": "创建新块",
 	"createProposal": {

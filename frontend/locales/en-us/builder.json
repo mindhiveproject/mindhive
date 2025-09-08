@@ -139,7 +139,14 @@
 	},
 	"createBlock": {
 		"currentlySelected": "Currently selected language: ",
-		"internationalContent": "i18n Editor"
+		"howTo": "How to use this editor?",
+		"howTo1": "Write English content using the fields below this block AND UPDATE/CREATE the block. (This should have populated the field under the English tag in the i18n editor.)",
+		"howTo2": "Select a language below to edit the content for each of these fields in that language. Note that some fields may be displayed in English because they are derived from the internal task code, which cannot be translated.",
+		"internationalContent": "i18n Editor",
+		"intro": "Use this editor to provide a translation of your block in the language of your choice. (i18n = internationalization)",
+		"notes": "Some important notes:",
+		"notes1": "English content may be modified from the i18n editor, but be sure that you have created the task first. ",
+		"notes2": "You may notice that the \"resources\" and \"aggregateVariables\" are formatted as a list. Ensure that you keep this formatting sanitized!"
 	},
 	"createdBy": "created by {{username}}",
 	"createNewBlock": "Create new block",
