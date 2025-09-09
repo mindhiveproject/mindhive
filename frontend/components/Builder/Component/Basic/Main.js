@@ -45,7 +45,6 @@ export default function Basic({
 
       <fieldset disabled={loading} aria-busy={loading}>
         
-        {/* I18n Content Editor - Add this at the top */}
         {!isInStudyBuilder && (
           <I18nContentEditor 
             task={task} 

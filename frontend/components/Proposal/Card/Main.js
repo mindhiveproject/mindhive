@@ -351,7 +351,7 @@ export default function ProposalCard({
                   </div>
                   <div className="cardSubheaderComment">
                     {t(
-                      "board.studentResponseBoxNetworkComment",
+                      "board.expendedCard.studentResponseBoxNetworkComment",
                       "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed"
                     )}
                   </div>
@@ -392,7 +392,7 @@ export default function ProposalCard({
               <label htmlFor="description">
                 <div className="cardHeader">
                   {t(
-                    "board.studentResponseBoxCollaborators",
+                    "board.expendedCard.studentResponseBoxCollaborators",
                     "Student Response Box - For Project Collaborators"
                   )}
                 </div>
@@ -441,7 +441,7 @@ export default function ProposalCard({
                 <>
                   <div>
                     <div className="cardHeader">
-                      {t("board.visibility", "Visibility")}
+                      {t("board.expendedCard.visibility", "Visibility")}
                     </div>
                     <div className="cardSubheaderComment">
                       {t(
