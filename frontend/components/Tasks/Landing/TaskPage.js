@@ -1,7 +1,7 @@
 import Head from "next/head";
 import ReactHtmlParser from "react-html-parser";
 import { Icon, Accordion } from "semantic-ui-react";
-
+import { useRouter } from "next/router";
 import { StyledContent } from "../../styles/StyledTaskPage";
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
@@ -11,8 +11,11 @@ export default function TaskPage({ user, task }) {
   const { t } = useTranslation("builder");
 
   const taskType = task?.taskType?.toLowerCase();
-
-  const settings = task?.settings || {};
+  const router = useRouter();
+  const { locale } = router;  
+  
+  const settings = task?.i18nContent?.[locale]?.settings ?? task?.settings ?? {};
+  console.log(settings);
   const resources =
     (settings?.resources && JSON.parse(settings?.resources)) || [];
   const aggregateVariables =
@@ -21,22 +24,36 @@ export default function TaskPage({ user, task }) {
     [];
 
   // parameters not from the survey builder
-  const parameters =
-    task?.parameters?.filter((p) => p?.type !== "survey") || [];
+    // Prefer localized parameters if available, else fallback
+    const parameters =
+    task?.i18nContent?.[locale]?.parameters?.filter((p) => p?.type !== "survey") ??
+    task?.parameters?.filter((p) => p?.type !== "survey") ??
+    [];
 
-  // parameters from the survey builder
-  const surveyItems =
-    task?.parameters
-      ?.filter((param) => param?.type === "survey")
-      .map((param) => JSON.parse(param?.value))
+    // Parameters coming from the survey builder
+    const surveyItems =
+    (
+      task?.i18nContent?.[locale]?.parameters ??
+      task?.parameters ??
+      []
+    )
+      .filter((param) => param?.type === "survey")
+      .map((param) => {
+        try {
+          return JSON.parse(param?.value);
+        } catch {
+          return null;
+        }
+      })
+      .filter(Boolean)
       .flat()
       .map((page) => page?.page)
-      .flat() || [];
+     .flat() ?? [];
 
   return (
     <StyledContent>
       <Head>
-        <title>MindHive | {task?.title}</title>
+        <title>MindHive | {task?.i18nContent?.[locale]?.title || task?.title}</title>
       </Head>
 
       <div className="leftPanel">

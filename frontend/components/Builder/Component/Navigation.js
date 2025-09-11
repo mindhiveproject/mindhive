@@ -1,5 +1,6 @@
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
+import { useRouter } from "next/router";
 
 const itemsInternalTask = [
   {
@@ -68,7 +69,8 @@ export default function Navigation({
   const items = task?.isExternal
     ? itemsExternalTask
     : itemsInternalTaskSelected;
-
+  const router = useRouter();   
+  const { locale } = router;
   return (
     <div className="navigation">
       <div className="firstLine">
@@ -90,7 +92,7 @@ export default function Navigation({
           )}
 
           <div>
-            <span className="studyTitle">{task?.title}</span>
+            <span className="studyTitle">{task?.i18nContent?.[locale]?.title || task?.title}</span>
           </div>
         </div>
         <div className="rightPanel">

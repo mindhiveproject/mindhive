@@ -993,6 +993,7 @@
 	"templateTab": "Template",
 	"testAndCollect": "Test & Collect",
 	"title": "Study Builder",
+	"titleText": "Title",
 	"typeCard": {
 		"article": "Article",
 		"assignment": "Assignment",

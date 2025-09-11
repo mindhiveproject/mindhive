@@ -1,10 +1,12 @@
 import { Icon, Accordion } from "semantic-ui-react";
 import ReactHtmlParser from "react-html-parser";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Viewer({ task, close, openEditor, openPreview }) {
   const [active, setActive] = useState(false);
-
+  const router = useRouter();
+  const { locale } = router;
   const taskType = task?.taskType?.toLowerCase();
   const settings = task?.settings || {};
   const resources =
@@ -31,7 +33,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
     <>
       <div className="taskViewerHeader">
         <div>
-          <h1>{task?.title}</h1>
+          <h1>{task?.i18nContent?.[locale]?.title || task?.title}</h1>
           <p>{task?.description}</p>
         </div>
         <div className="rightPanel">

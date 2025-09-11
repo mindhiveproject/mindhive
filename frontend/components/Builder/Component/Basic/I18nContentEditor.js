@@ -57,8 +57,19 @@ export default function I18nContentEditor({ task, handleChange }) {
         title: '',
         description: '',
         descriptionForParticipants: '',
-        settings: null,
-        parameters: null,
+        settings: {
+            mobileCompatible: false,
+            descriptionBefore: "",
+            descriptionAfter: "",
+            background: "",
+            duration: "",
+            scoring: "",
+            format: "",
+            resources: "[]",
+            aggregateVariables: "[]",
+            addInfo: "",
+          },
+          parameters: null,
       };
     }
   });
@@ -162,9 +173,26 @@ export default function I18nContentEditor({ task, handleChange }) {
       <div className="language-content">
         <p>{t("createBlock.currentlySelected")}{SUPPORTED_LANGUAGES[activeLanguage]}</p>
         
+        {console.log(task)}
         {getEditableFields().map((field) => {
-          const fieldValue = task.i18nContent[activeLanguage][field];
-          console.log(task)
+
+          let fieldValue = task.i18nContent[activeLanguage][field];
+          
+          if (!fieldValue && field === "settings") {
+              fieldValue = {
+                  mobileCompatible: false,
+                  descriptionBefore: "",
+                  descriptionAfter: "",
+                  background: "",
+                  duration: "",
+                  scoring: "",
+                  format: "",
+                  resources: "[]",
+                  aggregateVariables: "[]",
+                  addInfo: "",
+              };
+              } 
+          {console.log(fieldValue)}
           
           if (JSON_FIELDS.includes(field)) {
             // Handle JSON fields (like settings)
@@ -212,7 +240,7 @@ export default function I18nContentEditor({ task, handleChange }) {
             return (
               <div key={field} className="block">
                 <label htmlFor={`${activeLanguage}-${field}`}>
-                  {field === 'title' ? t("title") : 
+                  {field === 'title' ? t("titleText") : 
                    field === 'description' ? t("descriptionDevelop") :
                    field === 'descriptionForParticipants' ? t("descriptionDiscover") :
                    field}:
