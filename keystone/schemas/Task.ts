@@ -22,6 +22,7 @@ export const Task = list({
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
+    i18nContent: json(),
     taskType: select({
       type: "enum",
       options: [

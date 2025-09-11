@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
 import { Icon } from "semantic-ui-react";
-
+import useTranslation from "next-translate/useTranslation";
 import { GET_RESOURCE } from "../../Queries/Resource";
 import StyledResource from "../../styles/StyledResource";
 
@@ -13,6 +13,7 @@ export default function ResourcePreviewModal({ id, onClose }) {
   });
   const resource = data?.resource || {};
   const modalRef = useRef(null);
+  const { t } = useTranslation("classes");
 
   useEffect(() => {
     const handleEsc = (e) => {
@@ -35,7 +36,7 @@ export default function ResourcePreviewModal({ id, onClose }) {
     return (
       <div className="previewModalWrapper">
         <div className="previewModal">
-          <p>Loading preview...</p>
+          <p>{t("boardManagement.loadingPreview")}</p>
         </div>
       </div>
     );
@@ -43,7 +44,7 @@ export default function ResourcePreviewModal({ id, onClose }) {
     return (
       <div className="previewModalWrapper">
         <div className="previewModal">
-          <p>Error loading preview.</p>
+          <p>{t("boardManagement.errorLoadingPreview")}</p>
         </div>
       </div>
     );
@@ -57,23 +58,25 @@ export default function ResourcePreviewModal({ id, onClose }) {
           </button>
           <h2>{resource.title}</h2>
           <p>
-            <strong>Description:</strong> {resource.description || "N/A"}
+            <strong>{t("boardManagement.description")}:</strong>{" "}
+            {resource.description || t("boardManagement.notAvailable")}
           </p>
           <p>
-            <strong>Created:</strong>{" "}
+            <strong>{t("boardManagement.created")}:</strong>{" "}
             {moment(resource.createdAt).format("MMMM D, YYYY")}
           </p>
           <p>
-            <strong>Updated:</strong>{" "}
+            <strong>{t("boardManagement.updated")}:</strong>{" "}
             {resource.updatedAt
               ? moment(resource.updatedAt).format("MMMM D, YYYY")
-              : "N/A"}
+              : t("boardManagement.notAvailable")}
           </p>
           <p>
-            <strong>Author:</strong> {resource.author?.username}
+            <strong>{t("boardManagement.author")}:</strong>{" "}
+            {resource.author?.username}
           </p>
           <div>
-            <strong>Content Preview:</strong>{" "}
+            <strong>{t("boardManagement.contentPreview")}:</strong>{" "}
             {ReactHtmlParser(resource.content?.main?.slice(0, 500) + "...")}
           </div>
         </div>

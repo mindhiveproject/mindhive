@@ -1,10 +1,12 @@
 import StyledBoards from "../../styles/StyledBoards"; // Adjust path to your StyledBoards.js
 import TeacherProjects from "./TeacherProjects"; // Adjust path to your TeacherProjects.js component
+import useTranslation from "next-translate/useTranslation";
 import Edit from "./Edit";
 import ManageClasses from "./ManageClasses";
 
 export default function ProjectsMain({ query, user }) {
   const { selector, id } = query;
+  const { t } = useTranslation("classes");
 
   if (selector === "manage") {
     return (
@@ -28,7 +30,7 @@ export default function ProjectsMain({ query, user }) {
       user.permissions.map((p) => p?.name).includes("ADMIN") ? (
         <TeacherProjects user={user} query={query} />
       ) : (
-        <p>You do not have permission to view this page.</p>
+        <p>{t("boardManagement.noPermission")}</p>
       )}
     </StyledBoards>
   );

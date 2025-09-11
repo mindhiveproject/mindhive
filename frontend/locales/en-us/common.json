@@ -20,6 +20,7 @@
 		"requestReset": "Request reset",
 		"username": "Username"
 	},
+	"cancel": "Cancel",
 	"classes": {
 		"typeClassTitle": "Type class title"
 	},
@@ -363,6 +364,7 @@
 		"save": "Save",
 		"sendEmail": "Send an email",
 		"title": "Title",
+		"update": "Update",
 		"updatedAt": "Updated At",
 		"user": "User"
 	},

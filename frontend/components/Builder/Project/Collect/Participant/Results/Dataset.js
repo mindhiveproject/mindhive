@@ -13,7 +13,8 @@ import useTranslation from "next-translate/useTranslation";
 // A fetcher function to wrap the native fetch function and return the result of a call to url in json format
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export const studyStatuses = {
+// Export the raw status keys for use in other components
+export const studyStatusKeys = {
   WORKING: "dataset.status.working",
   SUBMITTED_AS_PROPOSAL: "dataset.status.submittedAsProposal",
   READY_FOR_REVIEW: "dataset.status.readyForReview",
@@ -21,6 +22,19 @@ export const studyStatuses = {
   REVIEWED: "dataset.status.reviewed",
   COLLECTING_DATA: "dataset.status.collectingData",
   DATA_COLLECTION_IS_COMPLETED: "dataset.status.dataCollectionCompleted",
+};
+
+// Helper function to get translated status strings
+export const getTranslatedStudyStatuses = (t) => {
+  return {
+    WORKING: t("dataset.status.working"),
+    SUBMITTED_AS_PROPOSAL: t("dataset.status.submittedAsProposal"),
+    READY_FOR_REVIEW: t("dataset.status.readyForReview"),
+    IN_REVIEW: t("dataset.status.inReview"),
+    REVIEWED: t("dataset.status.reviewed"),
+    COLLECTING_DATA: t("dataset.status.collectingData"),
+    DATA_COLLECTION_IS_COMPLETED: t("dataset.status.dataCollectionCompleted"),
+  };
 };
 
 export default function Dataset({
@@ -31,6 +45,10 @@ export default function Dataset({
 }) {
   const { t } = useTranslation("builder");
   const { date, token, isCompleted } = dataset;
+  
+  // Get translated status strings for use in this component
+  const studyStatuses = getTranslatedStudyStatuses(t);
+  
   // Set up SWR to run the fetcher function when calling "/api/staticdata"
   // There are 3 possible states: (1) loading when data is null (2) ready when the data is returned (3) error when there was an error fetching the data
   const [year, month, day] = date.split("-");
@@ -54,7 +72,7 @@ export default function Dataset({
         <div>{condition}</div>
         <div>{dataset?.isCompleted ? t("dataset.full", "full") : t("dataset.incremental", "incremental")}</div>
         <div>{dataset?.dataPolicy}</div>
-        <div>{dataset?.studyStatus && t(studyStatuses[dataset?.studyStatus])}</div>
+        <div>{dataset?.studyStatus && studyStatuses[dataset?.studyStatus]}</div>
         <div>{t("dataset.noData", "No data")}</div>
         <DeleteRecord
           studyId={studyId}
@@ -131,7 +149,7 @@ export default function Dataset({
       <div>{condition}</div>
       <div>{dataset?.isCompleted ? t("dataset.full", "full") : t("dataset.incremental", "incremental")}</div>
       <div>{dataset?.dataPolicy}</div>
-      <div>{dataset?.studyStatus && t(studyStatuses[dataset?.studyStatus])}</div>
+      <div>{dataset?.studyStatus && studyStatuses[dataset?.studyStatus]}</div>
       <ChangeDatasetStatus
         studyId={studyId}
         participantId={participantId}

@@ -6,6 +6,7 @@ import {
 } from "../../../Queries/Resource";
 import { Button, Icon, Modal, Tab } from "semantic-ui-react";
 import React, { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Resources({
   proposal,
@@ -13,6 +14,8 @@ export default function Resources({
   handleChange,
   selectedResources,
 }) {
+  const { t } = useTranslation("classes");
+
   // Query for public resources
   const {
     data: publicData,
@@ -59,7 +62,7 @@ export default function Resources({
 
   const panes = [
     {
-      menuItem: "Public Resources",
+      menuItem: t("board.expendedCard.publicResources"),
       render: () => (
         <ResourcesTab
           resources={publicResources}
@@ -73,7 +76,7 @@ export default function Resources({
       ),
     },
     {
-      menuItem: "My Resources",
+      menuItem: t("board.expendedCard.myResources"),
       render: () => (
         <ResourcesTab
           resources={myResourcesNoParent}
@@ -99,7 +102,8 @@ export default function Resources({
           borderRadius: "8px",
         }}
       >
-        Select Resources ({selectedResources.length})
+        {t("board.expendedCard.selectResources")} (
+        {selectedResources.length})
       </Button>
 
       <Modal
@@ -116,7 +120,7 @@ export default function Resources({
             fontWeight: 600,
           }}
         >
-          Select Resources to Connect
+          {t("board.expendedCard.selectResourcesToConnect")}
         </Modal.Header>
         <Modal.Content scrolling style={{ background: "#ffffff", padding: 0 }}>
           <Tab panes={panes} style={{ fontFamily: "Nunito" }} />
@@ -132,7 +136,7 @@ export default function Resources({
               borderRadius: "8px",
             }}
           >
-            Done
+            {t("board.expendedCard.done")}
           </Button>
         </Modal.Actions>
       </Modal>
@@ -149,7 +153,7 @@ export default function Resources({
               marginTop: "20px",
             }}
           >
-            Preview Linked Resources
+            {t("board.expendedCard.previewLinkedResources")}
           </div>
           <div
             className="resourcePreview"
@@ -246,6 +250,8 @@ const ResourcesTab = ({
   myResources,
   proposal,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div
       style={{
@@ -351,7 +357,9 @@ const ResourcesTab = ({
                 fontWeight: 500,
               }}
             >
-              {isSelected ? "Disconnect" : "Connect"}
+              {isSelected
+                ? t("board.expendedCard.disconnect")
+                : t("board.expendedCard.connect")}
             </Button>
           </div>
         );

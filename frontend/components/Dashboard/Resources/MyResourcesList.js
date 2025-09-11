@@ -6,6 +6,8 @@ import { Icon, Popup } from "semantic-ui-react";
 import { GET_MY_RESOURCES, GET_PUBLIC_RESOURCES } from "../../Queries/Resource";
 import DeleteResource from "./DeleteResource";
 
+import useTranslation from "next-translate/useTranslation";
+
 export default function MyResourcesList({
   query,
   user,
@@ -14,6 +16,8 @@ export default function MyResourcesList({
   onPreview,
   onShare,
 }) {
+  const { t } = useTranslation("classes");
+
   const { data, error, loading } = useQuery(GET_MY_RESOURCES, {
     variables: { id: user?.id },
   });
@@ -48,8 +52,8 @@ export default function MyResourcesList({
     },
   ];
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading your resources.</p>;
+  if (loading) return <p>{t("boardManagement.loading")}</p>;
+  if (error) return <p>{t("boardManagement.errorLoadingResources")}</p>;
   if (user.permissions?.map((p) => p?.name).includes("STUDENT")) {
     return <></>;
   }
@@ -59,18 +63,22 @@ export default function MyResourcesList({
       {resources.map((resource) => (
         <div key={resource.id} className="card">
           <h3 className="card-title">{resource.title}</h3>
-          <p className="card-meta">Author: {resource.author?.username}</p>
           <p className="card-meta">
-            Created: {moment(resource.createdAt).format("MMMM D, YYYY")}
+            {t("boardManagement.author")}: {resource.author?.username}
+          </p>
+          <p className="card-meta">
+            {t("boardManagement.created")}:{" "}
+            {moment(resource.createdAt).format("MMMM D, YYYY")}
           </p>
           {resource.updatedAt && (
             <p className="card-meta">
-              Updated: {moment(resource.updatedAt).format("MMMM D, YYYY")}
+              {t("boardManagement.updated")}:{" "}
+              {moment(resource.updatedAt).format("MMMM D, YYYY")}
             </p>
           )}
           {resource.collaborators?.length > 0 && (
             <div className="card-collaborators">
-              <strong>Collaborators:</strong>{" "}
+              <strong>{t("boardManagement.collaborators")}:</strong>{" "}
               {resource.collaborators.map((c) => (
                 <span key={c.id}>{c.username}</span>
               ))}
@@ -78,7 +86,7 @@ export default function MyResourcesList({
           )}
           <div className="card-actions">
             <Popup
-              content="Preview"
+              content={t("boardManagement.preview")}
               trigger={
                 <Icon
                   name="eye"
@@ -88,7 +96,7 @@ export default function MyResourcesList({
               }
             />
             <Popup
-              content="Edit"
+              content={t("boardManagement.edit")}
               trigger={
                 <Link href={`/dashboard/resources/edit?id=${resource.id}`}>
                   <Icon name="edit" className="action-icon edit" />
@@ -96,15 +104,17 @@ export default function MyResourcesList({
               }
             />
             <Popup
-              content="Duplicate"
+              content={t("boardManagement.duplicate")}
               trigger={
-                <Link href={`/dashboard/resources/duplicate?id=${resource.id}`}>
+                <Link
+                  href={`/dashboard/resources/duplicate?id=${resource.id}`}
+                >
                   <Icon name="copy" className="action-icon copy" />
                 </Link>
               }
             />
             <Popup
-              content="Share"
+              content={t("boardManagement.share")}
               trigger={
                 <Icon
                   name="share"
@@ -114,7 +124,7 @@ export default function MyResourcesList({
               }
             />
             <Popup
-              content="Delete"
+              content={t("boardManagement.delete")}
               trigger={
                 <DeleteResource
                   resourceId={resource.id}

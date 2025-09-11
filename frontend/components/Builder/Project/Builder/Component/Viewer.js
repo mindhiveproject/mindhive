@@ -2,11 +2,13 @@ import { Icon, Accordion } from "semantic-ui-react";
 import ReactHtmlParser from "react-html-parser";
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
+import { useRouter } from "next/router";
 
 export default function Viewer({ task, close, openEditor, openPreview }) {
   const { t } = useTranslation("builder");
   const [active, setActive] = useState(false);
-
+  const router = useRouter();
+  const { locale } = router;
   const taskType = task?.taskType?.toLowerCase();
   const settings = task?.settings || {};
   const resources =
@@ -14,7 +16,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
   const aggregateVariables =
     (settings?.aggregateVariables &&
       JSON.parse(settings?.aggregateVariables)) ||
-    [];
+    [];  
 
   // parameters not from the survey builder
   const parameters =
@@ -33,7 +35,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
     <>
       <div className="taskViewerHeader">
         <div>
-          <h1>{task?.title}</h1>
+          <h1>{task?.i18nContent?.[locale]?.title || task?.title}</h1>
           <p>{task?.description}</p>
         </div>
         <div className="rightPanel">
@@ -151,7 +153,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
           {settings?.descriptionBefore && (
             <div>
               <h2>
-                {t("viewer.beforeParticipation", { taskType }, "What participants see <u>before</u> taking the {{taskType}}")}
+                <span dangerouslySetInnerHTML={{ __html: t("viewer.beforeParticipation", { taskType }, "What participants see <u>before</u> taking the {{taskType}}") }} />
               </h2>
               <p className="symbolBlock">{settings?.descriptionBefore}</p>
             </div>
@@ -160,7 +162,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
           {settings?.descriptionAfter && (
             <div>
               <h2>
-                {t("viewer.afterParticipation", { taskType }, "What participants see <u>after</u> taking the {{taskType}}")}
+                <span dangerouslySetInnerHTML={{ __html: t("viewer.afterParticipation", { taskType }, "What participants see <u>after</u> taking the {{taskType}}") }} />
               </h2>
               <p className="symbolBlock">{settings?.descriptionAfter}</p>
             </div>
@@ -201,7 +203,14 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
               )}
               <ul>
                 {aggregateVariables.map((variable, num) => (
-                  <li key={num}>{ReactHtmlParser(variable)}</li>
+                  <li>{ReactHtmlParser(typeof variable === 'string' ? variable : variable.name)}
+                    {typeof variable === 'object' && variable.description && (
+                      <>
+                        <br />
+                        <span className="bodySmall">{ReactHtmlParser(variable.description)}</span>
+                      </>
+                    )}
+                  </li>
                 ))}
               </ul>
             </div>

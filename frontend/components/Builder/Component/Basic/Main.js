@@ -1,8 +1,8 @@
 import DisplayError from "../../../ErrorMessage";
-
 import useTranslation from "next-translate/useTranslation";
-
 import SettingBlock from "./SettingBlock";
+import I18nContentEditor from "./I18nContentEditor";
+import { useRouter } from "next/router";
 
 export default function Basic({
   user,
@@ -15,6 +15,8 @@ export default function Basic({
   isInStudyBuilder,
 }) {
   const { t } = useTranslation("builder");
+  const router = useRouter();   
+  const { locale } = router;
 
   // initialize task settings if there are no
   if (!task?.settings) {
@@ -45,9 +47,17 @@ export default function Basic({
       <DisplayError error={error} />
 
       <fieldset disabled={loading} aria-busy={loading}>
+        
+        {!isInStudyBuilder && (
+          <I18nContentEditor 
+            task={task} 
+            handleChange={handleChange}
+          />
+        )}
+
         <div className="block">
           <label htmlFor="title">
-            {t("title")}
+            {t("titleText")}
             <input
               type="text"
               name="title"

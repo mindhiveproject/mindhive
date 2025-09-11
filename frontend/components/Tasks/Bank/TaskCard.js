@@ -1,9 +1,11 @@
 import Link from "next/link";
-
+import { useRouter } from "next/router";
 import { StyledTaskCard } from "../../styles/StyledCard";
 import ManageFavorite from "../../User/ManageFavorite";
 
 export default function TaskCard({ user, task, url, id, name, domain }) {
+  const router = useRouter();
+  const { locale } = router;
   return (
     <Link
       href={{
@@ -16,12 +18,12 @@ export default function TaskCard({ user, task, url, id, name, domain }) {
       <StyledTaskCard taskType={task?.taskType}>
         {task?.image && (
           <div className="taskImage">
-            <img src={task?.image} alt={task?.title} />
+            <img src={task?.image} alt={task?.i18nContent?.[locale]?.title || task?.title} />
           </div>
         )}
         <div className="cardInfo">
           <div className="title">
-            <div>{task?.title}</div>
+            <div>{task?.i18nContent?.[locale]?.title || task?.title}</div>
 
             <div className="rightSide">
               {user && <ManageFavorite user={user} id={task?.id} />}
@@ -44,7 +46,7 @@ export default function TaskCard({ user, task, url, id, name, domain }) {
             </div>
           </div>
           {domain === "discover" && (
-            <div className="subtitle">{task?.settings?.addInfo}</div>
+            <div className="subtitle">{task?.i18nContent?.[locale]?.settings?.addInfo || task?.settings?.addInfo}</div>
           )}
           {/* 
         {this.props.participateMode && (

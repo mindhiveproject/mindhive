@@ -464,7 +464,7 @@ export default function DashboardNavigation() {
                     />
                   </svg>
                 </div>
-                <div>Project Boards</div>
+                <div>{t("boards")}</div>
               </StyledNavigationLink>
             </Link>
 

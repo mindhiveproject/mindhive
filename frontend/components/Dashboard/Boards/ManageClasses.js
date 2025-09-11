@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useQuery, useMutation } from "@apollo/client";
 import { useState, useEffect } from "react";
 import { Dropdown, Button, Icon } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 import { GET_PROPOSAL_TEMPLATE_CLASSES } from "../../Queries/Proposal";
 import { GET_TEACHER_CLASSES } from "../../Queries/Classes";
 import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal"; // Adjust path to mutations
@@ -9,6 +10,7 @@ import StyledBoards from "../../styles/StyledBoards"; // Adjust path
 
 export default function ManageTemplateClasses({ user, boardId }) {
   const router = useRouter();
+  const { t } = useTranslation("classes");
 
   const {
     data: boardData,
@@ -41,11 +43,11 @@ export default function ManageTemplateClasses({ user, boardId }) {
     }
   }, [boardData]);
 
-  if (!user) return <p>Please log in to manage classes.</p>;
-  if (boardLoading || classesLoading) return <p>Loading...</p>;
-  if (boardError) return <p>Error: {boardError.message}</p>;
-  if (classesError) return <p>Error: {classesError.message}</p>;
-  if (!boardData?.proposalBoard) return <p>Proposal board not found.</p>;
+  if (!user) return <p>{t("boardManagement.pleaseLogin")}</p>;
+  if (boardLoading || classesLoading) return <p>{t("boardManagement.loading")}</p>;
+  if (boardError) return <p>{t("boardManagement.error")}: {boardError.message}</p>;
+  if (classesError) return <p>{t("boardManagement.error")}: {classesError.message}</p>;
+  if (!boardData?.proposalBoard) return <p>{t("boardManagement.boardNotFound")}</p>;
 
   const board = boardData.proposalBoard;
   const teacherClasses = classesData?.classes || [];
@@ -53,7 +55,7 @@ export default function ManageTemplateClasses({ user, boardId }) {
 
   const classOptions = teacherClasses.map((c) => ({
     key: c.id,
-    text: `${c.title} (${c.code || "No code"})`,
+    text: `${c.title} (${c.code || t("boardManagement.noCode")})`,
     value: c.id,
   }));
 
@@ -85,9 +87,9 @@ export default function ManageTemplateClasses({ user, boardId }) {
           { query: GET_PROPOSAL_TEMPLATE_CLASSES, variables: { id: boardId } },
         ],
       });
-      alert("Changes saved successfully");
+      alert(t("boardManagement.changesSaved"));
     } catch (err) {
-      alert(`Error saving changes: ${err.message}`);
+      alert(`${t("boardManagement.errorSavingChanges")} ${err.message}`);
     }
   };
 
@@ -98,11 +100,11 @@ export default function ManageTemplateClasses({ user, boardId }) {
   return (
     <StyledBoards>
       <div className="headerSection">
-        <h1>Manage Classes for Template: {board.title}</h1>
-        <p>Select classes that use this proposal board as a template.</p>
+        <h1>{t("boardManagement.manageClassesForTemplate")}: {board.title}</h1>
+        <p>{t("boardManagement.selectClassesDescription")}</p>
         <div className="manageActions">
           <Dropdown
-            placeholder="Select classes"
+            placeholder={t("boardManagement.selectClasses")}
             fluid
             multiple
             selection
@@ -117,42 +119,42 @@ export default function ManageTemplateClasses({ user, boardId }) {
               onClick={handleSave}
               loading={updateLoading}
             >
-              <Icon name="check" /> Save Changes
+              <Icon name="check" /> {t("boardManagement.saveChanges")}
             </Button>
             <Button className="backButton" onClick={goBack}>
-              <Icon name="arrow left" /> Go Back
+              <Icon name="arrow left" /> {t("boardManagement.goBack")}
             </Button>
           </div>
         </div>
       </div>
 
       <div className="clonedBoardsSection">
-        <h2>Cloned Proposal Boards</h2>
+        <h2>{t("boardManagement.clonedProposalBoards")}</h2>
         {clonedBoards.length === 0 ? (
-          <p>No cloned proposals from this template.</p>
+          <p>{t("boardManagement.noClonedProposals")}</p>
         ) : (
           <div className="clonedBoardsGrid">
             {clonedBoards.map((cloned) => (
               <div key={cloned.id} className="clonedBoardItem">
                 <h3>{cloned.title}</h3>
                 <p>
-                  <strong>Author:</strong> {cloned.author?.username || "None"}
+                  <strong>{t("boardManagement.author")}:</strong> {cloned.author?.username || t("boardManagement.none")}
                 </p>
                 <p>
-                  <strong>Collaborators:</strong>{" "}
+                  <strong>{t("boardManagement.collaborators")}:</strong>{" "}
                   {cloned.collaborators.length
                     ? cloned.collaborators
                         .map((collab) => collab.username)
                         .join(", ")
-                    : "None"}
+                    : t("boardManagement.none")}
                 </p>
                 <p>
-                  <strong>Class:</strong>{" "}
+                  <strong>{t("boardManagement.class")}:</strong>{" "}
                   {cloned.usedInClass
                     ? `${cloned.usedInClass.title} (${
-                        cloned.usedInClass.code || "No code"
+                        cloned.usedInClass.code || t("boardManagement.noCode")
                       })`
-                    : "None"}
+                    : t("boardManagement.none")}
                 </p>
               </div>
             ))}

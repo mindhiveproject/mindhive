@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-
+import useTranslation from "next-translate/useTranslation";
 import { DELETE_RESOURCE } from "../../Mutations/Resource";
 
 export default function DeleteResource({
@@ -13,12 +13,13 @@ export default function DeleteResource({
     },
     refetchQueries: [...refetchQueries],
   });
+  const { t } = useTranslation("classes");
 
   return (
     <div
       style={{ cursor: "pointer" }}
       onClick={() => {
-        if (confirm("Are you sure you want to delete this resource?")) {
+        if (confirm(t("boardManagement.deleteResource"))) {
           deleteResource().catch((err) => {
             alert(err.message);
           });

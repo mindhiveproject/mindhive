@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Icon } from "semantic-ui-react";
-
+import useTranslation from "next-translate/useTranslation";
 import { GET_RESOURCE } from "../../Queries/Resource";
 import { CREATE_RESOURCE } from "../../Mutations/Resource";
 import {
@@ -16,6 +16,7 @@ import StyledResource from "../../styles/StyledResource";
 export default function CopyResource({ query, user, goBack }) {
   const router = useRouter();
   const { id, p, c } = query;
+  const { t } = useTranslation("classes");
 
   const { data, loading, error } = useQuery(GET_RESOURCE, {
     variables: { id },
@@ -47,18 +48,18 @@ export default function CopyResource({ query, user, goBack }) {
   async function handleSave(e) {
     e.preventDefault();
     await createResource();
-    alert("The resource is saved");
+    alert(t("boardManagement.savedRessource"));
     router.push({ pathname: "/dashboard/resources" });
   }
 
   return (
     <StyledResource>
       <button className="goBackBtn" onClick={goBack}>
-        <Icon name="arrow left" /> Go Back
+        <Icon name="arrow left" /> {t("boardManagement.goBack")}
       </button>
-      <h1>Customize Resource</h1>
+      <h1>{t("boardManagement.customizeRessource")}</h1>
       <ResourceForm user={user} inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>Save as Your Own Resource</button>
+      <button onClick={handleSave}>{t("boardManagement.saveOwnRessource")}Save as Your Own Resource</button>
     </StyledResource>
   );
 }

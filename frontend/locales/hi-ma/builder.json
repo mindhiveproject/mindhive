@@ -137,6 +137,17 @@
 	"consentSelector": {
 		"typeConsentProtocol": "सहमति प्रोटोकॉल टाइप करें"
 	},
+	"createBlock": {
+		"currentlySelected": "",
+		"howTo": "",
+		"howTo1": "",
+		"howTo2": "",
+		"internationalContent": "i18n संपादक",
+		"intro": "",
+		"notes": "",
+		"notes1": "",
+		"notes2": ""
+	},
 	"createdBy": "{{उपयोगकर्ता नाम}} द्वारा निर्मित",
 	"createNewBlock": "नया ब्लॉक बनाएँ",
 	"createProposal": {
@@ -892,9 +903,28 @@
 	},
 	"surveyBuilder": {
 		"addFirstPage": "अपना पहला पृष्ठ जोड़ें",
+		"addItemBtn": "",
+		"addOption": "",
 		"addPage": "+",
+		"block": "",
+		"checkbox": "",
 		"deletePage": "इस पृष्ठ को हटाएँ",
-		"page": "पृष्ठ {{संख्या}}"
+		"freeinput": "",
+		"header": "",
+		"likert": "",
+		"likertItems": "",
+		"maxValue": "",
+		"maxValueLabel": "",
+		"minValue": "",
+		"minValueLabel": "",
+		"options": "",
+		"page": "पृष्ठ {{संख्या}}",
+		"select": "",
+		"text": "",
+		"textLabel": "",
+		"type": "",
+		"variableName": "",
+		"vas": ""
 	},
 	"surveyDescription": "सर्वेक्षण में प्रतिभागियों से उनके बारे में, उनके व्यवहार के बारे में, या उनकी भावनाओं के बारे में प्रश्न पूछे जाते हैं।",
 	"tabs": {
@@ -963,6 +993,7 @@
 	"templateTab": "खाका",
 	"testAndCollect": "परीक्षण और संग्रह",
 	"title": "अध्ययन निर्माता",
+	"titleText": "",
 	"typeCard": {
 		"article": "लेख",
 		"assignment": "कार्यभार",

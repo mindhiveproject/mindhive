@@ -137,6 +137,17 @@
 	"consentSelector": {
 		"typeConsentProtocol": "Type toestemmingsprotocol"
 	},
+	"createBlock": {
+		"currentlySelected": "Momenteel geselecteerde taal:",
+		"howTo": "Hoe gebruik je deze editor?",
+		"howTo1": "Schrijf Engelse inhoud met behulp van de velden onder dit blok EN UPDATE/CREATE het blok. (Dit zou het veld onder de Engelse tag in de i18n editor moeten hebben gevuld).",
+		"howTo2": "Selecteer hieronder een taal om de inhoud van elk van deze velden in die taal te bewerken. Merk op dat sommige velden in het Engels kunnen worden weergegeven omdat ze zijn afgeleid van de interne taakcode, die niet kan worden vertaald.",
+		"internationalContent": "i18n-editor",
+		"intro": "Gebruik deze editor om een vertaling van je blok te maken in de taal van je keuze. (i18n = internationalisatie)",
+		"notes": "Enkele belangrijke opmerkingen:",
+		"notes1": "Engelse inhoud kan worden aangepast vanuit de i18n-editor, maar zorg ervoor dat je de taak eerst hebt gemaakt.",
+		"notes2": "Het kan je opvallen dat de \"resources\" en \"aggregateVariables\" zijn opgemaakt als een lijst. Zorg ervoor dat je deze opmaak schoon houdt!"
+	},
 	"createdBy": "gemaakt door {{gebruikersnaam}}",
 	"createNewBlock": "Nieuw blok maken",
 	"createProposal": {
@@ -892,9 +903,28 @@
 	},
 	"surveyBuilder": {
 		"addFirstPage": "Voeg uw eerste pagina toe",
+		"addItemBtn": "+ artikel",
+		"addOption": "+ optie",
 		"addPage": "+",
+		"block": "Blok",
+		"checkbox": "Meerkeuzevragen (selecteer meerdere opties)",
 		"deletePage": "Deze pagina verwijderen",
-		"page": "Pagina {{nummer}}"
+		"freeinput": "Tekstinvoer",
+		"header": "Koptekst",
+		"likert": "Likertschaal",
+		"likertItems": "Items voor de Likertschaal",
+		"maxValue": "Maximale waarde",
+		"maxValueLabel": "Maximale waarde label",
+		"minValue": "Minimale waarde",
+		"minValueLabel": "Minimumwaarde label",
+		"options": "Opties",
+		"page": "Pagina {{nummer}}",
+		"select": "Meerkeuzevraag (selecteer één)",
+		"text": "Tekst",
+		"textLabel": "Tekst",
+		"type": "Type",
+		"variableName": "Variabele naam",
+		"vas": "Visuele schaal"
 	},
 	"surveyDescription": "In een enquête worden deelnemers vragen gesteld over zichzelf, over hoe ze zich gedragen en hoe ze zich voelen.",
 	"tabs": {
@@ -963,6 +993,7 @@
 	"templateTab": "Sjabloon",
 	"testAndCollect": "Testen en verzamelen",
 	"title": "Studie Builder",
+	"titleText": "Titel",
 	"typeCard": {
 		"article": "Artikel",
 		"assignment": "Opdracht",

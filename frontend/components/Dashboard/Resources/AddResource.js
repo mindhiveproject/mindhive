@@ -49,12 +49,12 @@ export default function AddResource({ user, goBack }) {
   return (
     <StyledResource>
       <button className="goBackBtn" onClick={goBack}>
-        <Icon name="arrow left" /> Go Back
+        <Icon name="arrow left" />{t("boardManagement.back")}
       </button>
-      <h1>Create New Resource</h1>
+      <h1>{t("boardManagement.createNewRessource")}</h1>
       <ResourceForm inputs={inputs} handleChange={handleChange} />
       <button onClick={handleSave} disabled={loading}>
-        Save
+        {t("boardManagement.save")}
       </button>
     </StyledResource>
   );

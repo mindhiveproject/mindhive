@@ -20,6 +20,7 @@
 		"requestReset": "Solicitar restablecimiento",
 		"username": "Nombre de usuario"
 	},
+	"cancel": "Cancelar",
 	"classes": {
 		"typeClassTitle": "Título de clase de tipo"
 	},
@@ -363,6 +364,7 @@
 		"save": "Ahorrar",
 		"sendEmail": "Enviar un correo electrónico",
 		"title": "Título",
+		"update": "Actualización",
 		"updatedAt": "Actualizado en",
 		"user": "Usuario"
 	},

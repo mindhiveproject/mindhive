@@ -181,11 +181,11 @@ export default function Page({
             />
           </div>
           <div>
-            <label htmlFor="hideContinueBtn">{t("survey.hideContinueBtn", "Hide Continue button")}</label>
+            <label htmlFor="hideContinueBtn">{t("surveyBuilder.hideContinueBtn", "Hide Continue button")}</label>
           </div>
         </div>
         <div className="timeout">
-          <div>{t("survey.pageTimeout", "Page timeout (in milliseconds)")}</div>
+          <div>{t("surveyBuilder.pageTimeout", "Page timeout (in milliseconds)")}</div>
           <div>
             <input
               type="number"
@@ -216,14 +216,14 @@ export default function Page({
         </div>
 
         <button className="addButton" onClick={addItem}>
-          {t("survey.addItem", "+")}
+          {t("surveyBuilder.addItem", "+")}
         </button>
       </div>
     );
   }
   return (
     <button className="addButton" onClick={addItem}>
-      {t("survey.addItem", "+")}
+      {t("surveyBuilder.addItem", "+")}
     </button>
   );
 }
@@ -257,7 +257,7 @@ function Item({
   return (
     <div className="surveyBuilderItemLine">
       <div className="input">
-        <div>{t("survey.type", "Type")}</div>
+        <div>{t("surveyBuilder.type", "Type")}</div>
         <select
           type="text"
           name={id}
@@ -265,13 +265,13 @@ function Item({
           onChange={handleItemChange}
           className="type"
         >
-          <option value="text">{t("survey.text", "Text")}</option>
-          <option value="select">{t("survey.select", "Multiple choice (select one)")}</option>
-          <option value="checkbox">{t("survey.checkbox", "Multiple choice (select many options)")}</option>
-          <option value="freeinput">{t("survey.freeinput", "Text input")}</option>
-          <option value="vas">{t("survey.vas", "Visual scale")}</option>
-          <option value="likert">{t("survey.likert", "Likert scale")}</option>
-          <option value="block">{t("survey.block", "Block")}</option>
+          <option value="text">{t("surveyBuilder.text", "Text")}</option>
+          <option value="select">{t("surveyBuilder.select", "Multiple choice (select one)")}</option>
+          <option value="checkbox">{t("surveyBuilder.checkbox", "Multiple choice (select many options)")}</option>
+          <option value="freeinput">{t("surveyBuilder.freeinput", "Text input")}</option>
+          <option value="vas">{t("surveyBuilder.vas", "Visual scale")}</option>
+          <option value="likert">{t("surveyBuilder.likert", "Likert scale")}</option>
+          <option value="block">{t("surveyBuilder.block", "Block")}</option>
         </select>
 
         {(type === "freeinput" ||
@@ -280,7 +280,7 @@ function Item({
           type === "likert" ||
           type === "vas") && (
           <>
-            <div>{t("survey.variableName", "Variable name")}</div>
+            <div>{t("surveyBuilder.variableName", "Variable name")}</div>
             <input
               type="text"
               name={id}
@@ -294,7 +294,7 @@ function Item({
 
         {type !== "block" && (
           <>
-            <div>{t("survey.header", "Header")}</div>
+            <div>{t("surveyBuilder.header", "Header")}</div>
             <input
               type="text"
               name={id}
@@ -307,7 +307,7 @@ function Item({
 
         {type === "text" && (
           <>
-            <div>{t("survey.textLabel", "Text")}</div>
+            <div>{t("surveyBuilder.textLabel", "Text")}</div>
             <textarea
               type="text"
               name={id}
@@ -320,7 +320,7 @@ function Item({
 
         {(type === "select" || type === "checkbox" || type === "likert") && (
           <>
-            <div>{t("survey.options", "Options")}</div>
+            <div>{t("surveyBuilder.options", "Options")}</div>
             {options.map((option, num) => (
               <div key={num} className="optionRow">
                 <input
@@ -339,14 +339,14 @@ function Item({
               onClick={(e) => addNewOption(e, id, "options")}
               className="addOptionButton"
             >
-              {t("survey.addOption", "+ option")}
+              {t("surveyBuilder.addOption", "+ option")}
             </button>
           </>
         )}
 
         {type === "likert" && (
           <>
-            <div>{t("survey.likertItems", "Items for the Likert Scale")}</div>
+            <div>{t("surveyBuilder.likertItems", "Items for the Likert Scale")}</div>
             {items.map((item, num) => (
               <div key={num} className="optionRow">
                 <input
@@ -365,14 +365,14 @@ function Item({
               onClick={(e) => addNewOption(e, id, "items")}
               className="addOptionButton"
             >
-              {t("survey.addItemBtn", "+ item")}
+              {t("surveyBuilder.addItemBtn", "+ item")}
             </button>
           </>
         )}
 
         {type === "vas" && (
           <>
-            <div>{t("survey.minValueLabel", "Minimum value label")}</div>
+            <div>{t("surveyBuilder.minValueLabel", "Minimum value label")}</div>
             <input
               type="text"
               name={id}
@@ -381,7 +381,7 @@ function Item({
               className="min_rating_label"
             />
 
-            <div>{t("survey.maxValueLabel", "Maximum value label")}</div>
+            <div>{t("surveyBuilder.maxValueLabel", "Maximum value label")}</div>
             <input
               type="text"
               name={id}
@@ -390,7 +390,7 @@ function Item({
               className="max_rating_label"
             />
 
-            <div>{t("survey.minValue", "Minimum value")}</div>
+            <div>{t("surveyBuilder.minValue", "Minimum value")}</div>
             <input
               type="number"
               name={id}
@@ -399,7 +399,7 @@ function Item({
               className="min_value"
             />
 
-            <div>{t("survey.maxValue", "Maximum value")}</div>
+            <div>{t("surveyBuilder.maxValue", "Maximum value")}</div>
             <input
               type="number"
               name={id}

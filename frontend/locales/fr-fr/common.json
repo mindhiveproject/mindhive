@@ -20,6 +20,7 @@
 		"requestReset": "Demande de réinitialisation",
 		"username": "Nom d'utilisateur"
 	},
+	"cancel": "Annuler",
 	"classes": {
 		"typeClassTitle": "Tapez le titre de la classe"
 	},
@@ -363,6 +364,7 @@
 		"save": "Sauvegarder",
 		"sendEmail": "Envoyer un e-mail",
 		"title": "Titre",
+		"update": "Mise à jour",
 		"updatedAt": "Mis à jour à",
 		"user": "Utilisateur"
 	},

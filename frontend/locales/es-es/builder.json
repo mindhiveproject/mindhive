@@ -137,6 +137,17 @@
 	"consentSelector": {
 		"typeConsentProtocol": "Protocolo de consentimiento de tipos"
 	},
+	"createBlock": {
+		"currentlySelected": "Idioma seleccionado actualmente:",
+		"howTo": "¿Cómo utilizar este editor?",
+		"howTo1": "Escriba el contenido en inglés usando los campos debajo de este bloque Y ACTUALICE/CREE el bloque. (Esto debería haber rellenado el campo bajo la etiqueta English en el editor i18n).",
+		"howTo2": "Seleccione un idioma a continuación para editar el contenido de cada uno de estos campos en ese idioma. Tenga en cuenta que algunos campos pueden aparecer en inglés porque derivan del código interno de la tarea, que no puede traducirse.",
+		"internationalContent": "Editor de i18n",
+		"intro": "Utilice este editor para proporcionar una traducción de su bloque en el idioma de su elección. (i18n = internacionalización)",
+		"notes": "Algunas notas importantes:",
+		"notes1": "El contenido en inglés puede modificarse desde el editor i18n, pero asegúrese de haber creado primero la tarea.",
+		"notes2": "Puede observar que \"resources\" y \"aggregateVariables\" tienen formato de lista. Asegúrese de mantener este formato limpio."
+	},
 	"createdBy": "creado por {{username}}",
 	"createNewBlock": "Crear nuevo bloque",
 	"createProposal": {
@@ -892,9 +903,28 @@
 	},
 	"surveyBuilder": {
 		"addFirstPage": "Añade tu primera página",
+		"addItemBtn": "+ artículo",
+		"addOption": "+ opción",
 		"addPage": "+",
+		"block": "Bloquear",
+		"checkbox": "Opción múltiple (seleccione muchas opciones)",
 		"deletePage": "Eliminar esta página",
-		"page": "Número de página}}"
+		"freeinput": "Entrada de texto",
+		"header": "Encabezamiento",
+		"likert": "Escala de Likert",
+		"likertItems": "Elementos para la escala de Likert",
+		"maxValue": "Valor máximo",
+		"maxValueLabel": "Etiqueta de valor máximo",
+		"minValue": "Valor mínimo",
+		"minValueLabel": "Etiqueta de valor mínimo",
+		"options": "Opciones",
+		"page": "Número de página}}",
+		"select": "Opción múltiple (seleccione una)",
+		"text": "Texto",
+		"textLabel": "Texto",
+		"type": "Tipo",
+		"variableName": "Nombre de la variable",
+		"vas": "Escala visual"
 	},
 	"surveyDescription": "En una encuesta, a los participantes se les hacen preguntas sobre sí mismos, sobre cómo se comportan o sobre cómo se sienten.",
 	"tabs": {
@@ -963,6 +993,7 @@
 	"templateTab": "Plantilla",
 	"testAndCollect": "Prueba y recopila",
 	"title": "Constructor de estudios",
+	"titleText": "Título",
 	"typeCard": {
 		"article": "Artículo",
 		"assignment": "Asignación",

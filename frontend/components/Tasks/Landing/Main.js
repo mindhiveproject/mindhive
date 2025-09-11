@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import { UserContext } from "../../Global/Authorized";
-
+import { useRouter } from "next/router";
 import ReactHtmlParser from "react-html-parser";
 
 import { GET_TASK } from "../../Queries/Task";
@@ -18,16 +18,18 @@ export default function TaskLandingMain({ slug }) {
   });
 
   const task = data?.task || {};
+  const router = useRouter();
+  const { locale } = router;
 
   return (
     <>
       <div className="titleIcon">
-        <h1>{task?.title}</h1>
+        <h1>{task?.i18nContent?.[locale]?.title || task?.title}</h1>
         <div>{user && <ManageFavorite user={user} id={task?.id} />}</div>
       </div>
 
       <div>
-        <h3>{ReactHtmlParser(task?.descriptionForParticipants)}</h3>
+        <h3>{ReactHtmlParser(task?.i18nContent?.[locale]?.descriptionForParticipants || task?.descriptionForParticipants)}</h3>
       </div>
       <div className="controlBtns">
         <a
