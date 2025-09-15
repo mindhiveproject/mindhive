@@ -42,9 +42,6 @@ const safeJsonStringify = (value) => {
 export default function I18nContentEditor({ task, handleChange }) {
   const { t } = useTranslation("builder");
   const [activeLanguage, setActiveLanguage] = useState('en-us');
-
-  console.log("\n\n\n\n\nLet's see if we have it")
-  console.log(task?.i18nContent)
   // Initialize i18nContent if it doesn't exist
   if (!task?.i18nContent) {
     task.i18nContent = {};

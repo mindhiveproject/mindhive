@@ -15,7 +15,6 @@ export default function TaskPage({ user, task }) {
   const { locale } = router;  
   
   const settings = task?.i18nContent?.[locale]?.settings ?? task?.settings ?? {};
-  console.log(settings);
   const resources =
     (settings?.resources && JSON.parse(settings?.resources)) || [];
   const aggregateVariables =
