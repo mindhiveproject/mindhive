@@ -10,7 +10,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
   const router = useRouter();
   const { locale } = router;
   const taskType = task?.taskType?.toLowerCase();
-  const settings = task?.settings || {};
+  const settings = task?.i18nContent?.[locale]?.settings || task?.settings;
   const resources =
     (settings?.resources && JSON.parse(settings?.resources)) || [];
   const aggregateVariables =
@@ -36,7 +36,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
       <div className="taskViewerHeader">
         <div>
           <h1>{task?.i18nContent?.[locale]?.title || task?.title}</h1>
-          <p>{task?.description}</p>
+          <p>{task?.i18nContent?.[locale]?.description || task?.description}</p>
         </div>
         <div className="rightPanel">
           <div className="taskViewerButtons">
@@ -203,7 +203,8 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
               )}
               <ul>
                 {aggregateVariables.map((variable, num) => (
-                  <li>{ReactHtmlParser(typeof variable === 'string' ? variable : variable.name)}
+                  <li key={typeof variable === 'object' && variable.name ? variable.name : num}>
+                    {ReactHtmlParser(typeof variable === 'string' ? variable : variable.name)}
                     {typeof variable === 'object' && variable.description && (
                       <>
                         <br />

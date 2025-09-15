@@ -42,6 +42,12 @@ export default function Card({
                 testId: uniqid.time(),
                 taskType: component?.taskType,
                 subtitle: component?.subtitle,
+                descriptionForParticipants: component?.descriptionForParticipants,
+                settings: component?.settings,
+                resources: component?.resources,
+                aggregateVariables: component?.aggregateVariables,
+                addInfo: component?.addInfo,
+                parameters: component?.parameters,
               });
             }}
           />
@@ -58,6 +64,12 @@ export default function Card({
                 componentID: component.id,
                 taskType: component?.taskType,
                 subtitle: component?.subtitle,
+                descriptionForParticipants: component?.descriptionForParticipants,
+                settings: component?.settings,
+                resources: component?.resources,
+                aggregateVariables: component?.aggregateVariables,
+                addInfo: component?.addInfo,
+                parameters: component?.parameters,
               }}
               name={component?.title}
             ></NodeTypeLabel>
