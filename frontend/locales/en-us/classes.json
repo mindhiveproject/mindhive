@@ -460,7 +460,21 @@
 	"students": {
 		"goBack": "← Go back"
 	},
-	"studentsTab": "Students",
+	"studentsTab": {
+		"addToClass": "Add to class",
+		"assignToClass": "Are you sure you want to assign this student to the other class?",
+		"classResources": "Class resources",
+		"code": "Class access code",
+		"completionOverview": "Study completion overview",
+		"copiedLink": "The link is copied",
+		"copy": "Copy",
+		"email": "Email address",
+		"removeFromClass": "Remove from this class",
+		"removeStudent": "Are you sure you want to remove this student from the class?",
+		"shareMessage": "Share the link below with your students to invite them to join your class",
+		"student": "Student/Username",
+		"tab": "Students"
+	},
 	"studentsWillHaveAccessTo": "Your students will have access to:",
 	"studentUsername": "Student/Username",
 	"studies": {

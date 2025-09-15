@@ -460,7 +460,21 @@
 	"students": {
 		"goBack": "← العودة"
 	},
-	"studentsTab": "طلاب",
+	"studentsTab": {
+		"addToClass": "إضافة إلى الفصل",
+		"assignToClass": "هل أنت متأكد من أنك تريد تعيين هذا الطالب في الفصل الآخر؟",
+		"classResources": "موارد الفصل",
+		"code": "رمز الدخول إلى الفصل",
+		"completionOverview": "نظرة عامة على إكمال الدراسة",
+		"copiedLink": "تم نسخ الرابط",
+		"copy": "نسخ",
+		"email": "عنوان البريد الإلكتروني",
+		"removeFromClass": "إزالة من هذه الفئة",
+		"removeStudent": "هل أنت متأكد من رغبتك في إزالة هذا الطالب من الفصل؟",
+		"shareMessage": "شارك الرابط أدناه مع طلابك لدعوتهم للانضمام إلى صفك",
+		"student": "الطالب/اسم المستخدم",
+		"tab": "طلاب"
+	},
 	"studentsWillHaveAccessTo": "سيتمكن طلابك من الوصول إلى:",
 	"studentUsername": "الطالب/اسم المستخدم",
 	"studies": {

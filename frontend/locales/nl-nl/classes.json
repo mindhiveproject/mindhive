@@ -460,7 +460,21 @@
 	"students": {
 		"goBack": "← Ga terug"
 	},
-	"studentsTab": "Studenten",
+	"studentsTab": {
+		"addToClass": "Toevoegen aan klas",
+		"assignToClass": "Weet je zeker dat je deze leerling aan de andere klas wilt toewijzen?",
+		"classResources": "Klasse middelen",
+		"code": "Toegangscode klas",
+		"completionOverview": "Overzicht voltooiing studie",
+		"copiedLink": "De link is gekopieerd",
+		"copy": "Kopie",
+		"email": "E-mailadres",
+		"removeFromClass": "Verwijderen uit deze klasse",
+		"removeStudent": "Weet je zeker dat je deze leerling uit de klas wilt verwijderen?",
+		"shareMessage": "Deel de onderstaande link met je leerlingen om ze uit te nodigen voor je klas",
+		"student": "Student/Gebruikersnaam",
+		"tab": "Studenten"
+	},
 	"studentsWillHaveAccessTo": "Uw studenten krijgen toegang tot:",
 	"studentUsername": "Student/Gebruikersnaam",
 	"studies": {

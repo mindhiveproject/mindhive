@@ -460,7 +460,21 @@
 	"students": {
 		"goBack": "← 返回"
 	},
-	"studentsTab": "学生",
+	"studentsTab": {
+		"addToClass": "添加到班级",
+		"assignToClass": "您确定要将这名学生分配到另一个班级吗？",
+		"classResources": "班级资源",
+		"code": "班级访问代码",
+		"completionOverview": "学习完成概述",
+		"copiedLink": "链接已复制",
+		"copy": "复制",
+		"email": "电子邮件地址",
+		"removeFromClass": "从该类中删除",
+		"removeStudent": "您确定要将这名学生从班级中除名吗？",
+		"shareMessage": "与您的学生分享以下链接，邀请他们加入您的课堂",
+		"student": "学生/用户名",
+		"tab": "学生"
+	},
 	"studentsWillHaveAccessTo": "您的学生将可以访问：",
 	"studentUsername": "学生/用户名",
 	"studies": {

@@ -460,7 +460,21 @@
 	"students": {
 		"goBack": "← Regresar"
 	},
-	"studentsTab": "Estudiantes",
+	"studentsTab": {
+		"addToClass": "Añadir a la clase",
+		"assignToClass": "¿Estás seguro de que quieres asignar a este alumno a la otra clase?",
+		"classResources": "Recursos de clase",
+		"code": "Código de acceso a la clase",
+		"completionOverview": "Resumen de la finalización del estudio",
+		"copiedLink": "El enlace está copiado",
+		"copy": "Copia",
+		"email": "Dirección de correo electrónico",
+		"removeFromClass": "Eliminar de esta clase",
+		"removeStudent": "¿Está seguro de que quiere retirar a este alumno de la clase?",
+		"shareMessage": "Comparte el siguiente enlace con tus alumnos para invitarles a unirse a tu clase",
+		"student": "Estudiante/Nombre de usuario",
+		"tab": "Estudiantes"
+	},
 	"studentsWillHaveAccessTo": "Sus estudiantes tendrán acceso a:",
 	"studentUsername": "Estudiante/Nombre de usuario",
 	"studies": {

@@ -2,7 +2,7 @@ import { Dropdown } from "semantic-ui-react";
 import Link from "next/link";
 import { useQuery, useMutation } from "@apollo/client";
 import absoluteUrl from "next-absolute-url";
-
+import useTranslation from "next-translate/useTranslation";
 import { GET_CLASSES } from "../../../Queries/Classes";
 import {
   ASSIGN_STUDENT_TO_CLASS,
@@ -14,7 +14,7 @@ import StudyCompletionOverview from "./Overview/StudyCompletion";
 export default function ClassStudents({ myclass, user, query }) {
   const { action } = query;
   const { origin } = absoluteUrl();
-
+  const { t } = useTranslation("classes");
   const students = myclass?.students || [];
 
   const { data, error, loading } = useQuery(GET_CLASSES, {
@@ -84,7 +84,7 @@ export default function ClassStudents({ myclass, user, query }) {
     temp.select();
     document.execCommand("copy");
     temp.remove();
-    alert("The link is copied");
+    alert(t("studentsTab.copiedLink"));
   };
 
   if (action === "overview") {
@@ -96,20 +96,19 @@ export default function ClassStudents({ myclass, user, query }) {
       <div className="topNavigation">
         <div>
           <p>
-            Share the link below with your students to invite them to join your
-            class
+            {t("studentsTab.shareMessage")}
           </p>
           <div className="copyArea">
             <div className="link">
               {origin}/signup/student/?code={myclass.code}
             </div>
             <div className="copyButton" onClick={() => copyLink()}>
-              Copy
+              {t("studentsTab.copy")}
             </div>
           </div>
         </div>
         <div>
-          <p>Class access code</p>
+          <p>{t("studentsTab.code")}</p>
           <h2>{myclass.code}</h2>
         </div>
       </div>
@@ -124,7 +123,7 @@ export default function ClassStudents({ myclass, user, query }) {
             },
           }}
         >
-          <button className="secondary">Study completion overview</button>
+          <button className="secondary">{t("studentsTab.completionOverview")}</button>
         </Link>
 
         <Link
@@ -135,14 +134,14 @@ export default function ClassStudents({ myclass, user, query }) {
             },
           }}
         >
-          <button className="secondary">Class resources</button>
+          <button className="secondary">{t("studentsTab.classResources")}</button>
         </Link>
       </div>
 
       <div className="listHeader">
         <div></div>
-        <div>Student/Username</div>
-        <div>Email address</div>
+        <div>{t("studentsTab.student")}</div>
+        <div>{t("studentsTab.email")}</div>
       </div>
       {students.map((student, i) => {
         return (
@@ -155,7 +154,7 @@ export default function ClassStudents({ myclass, user, query }) {
                   onClick={() => {
                     if (
                       confirm(
-                        "Are you sure you want to remove this student from the class?"
+                        t("studentsTab.removeStudent")
                       )
                     ) {
                       removeFromClass({
@@ -166,12 +165,12 @@ export default function ClassStudents({ myclass, user, query }) {
                     }
                   }}
                 >
-                  Remove from this class
+                  {t("studentsTab.removeFromClass")}
                 </Dropdown.Item>
                 <Dropdown
                   item
                   simple
-                  text="Add to class"
+                  text={t("studentsTab.addToClass")}
                   className="dropdownItem"
                   options={otherClasses.map((myClass) => ({
                     key: myClass.id,
@@ -180,7 +179,7 @@ export default function ClassStudents({ myclass, user, query }) {
                     onClick: () => {
                       if (
                         confirm(
-                          "Are you sure you want to assign this student to the other class?"
+                          t("studentsTab.assignToClass")
                         )
                       ) {
                         assignStudentToClass({
