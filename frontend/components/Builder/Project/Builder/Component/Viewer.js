@@ -1,4 +1,4 @@
-import { Icon, Accordion } from "semantic-ui-react";
+import { Icon, Accordion, Popup } from "semantic-ui-react";
 import ReactHtmlParser from "react-html-parser";
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
@@ -181,12 +181,17 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
               <span>{t("viewer.mobileCompatible", "Mobile compatible")}</span>
             </div>
           )}
-          {aggregateVariables.length > 0 && (
+          {settings?.aggregateVariables && (
             <div className="contentBlock">
               <h2>{t("viewer.aggregateVariables", "Aggregate Variables")}</h2>
               <p>
-                {t("viewer.aggregateVariablesDesc", { taskType }, "These data are automatically written to a csv file upon completion of the {{taskType}}")}
+                {t(
+                  "viewer.aggregateVariablesDesc",
+                  { taskType },
+                  "These data are automatically written to a csv file upon completion of the {{taskType}}"
+                )}
               </p>
+
               {settings?.addInfo && (
                 <Accordion>
                   <Accordion.Title
@@ -201,18 +206,40 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                   </Accordion.Content>
                 </Accordion>
               )}
+
               <ul>
-                {aggregateVariables.map((variable, num) => (
-                  <li key={typeof variable === 'object' && variable.name ? variable.name : num}>
-                    {ReactHtmlParser(typeof variable === 'string' ? variable : variable.name)}
-                    {typeof variable === 'object' && variable.description && (
-                      <>
-                        <br />
-                        <span className="bodySmall">{ReactHtmlParser(variable.description)}</span>
-                      </>
-                    )}
-                  </li>
-                ))}
+                {(() => {
+                  let parsed = [];
+                  try {
+                    parsed = JSON.parse(settings.aggregateVariables);
+                  } catch (e) {
+                    console.warn("Invalid aggregateVariables JSON", e);
+                  }
+
+                  return parsed.map((variable, idx) => (
+                    <li key={variable.varName || idx} style={{ marginBottom: "0.5rem" }}>
+                      {ReactHtmlParser(variable.varName || "")}{" "}
+                      {variable.varDesc && (
+                        <Popup
+                          content={ReactHtmlParser(variable.varDesc)}
+                          trigger={
+                            <img
+                            src="/assets/icons/info.svg" // Next.js serves public/ as root
+                            alt="info"
+                            style={{
+                              width: "16px",
+                              height: "16px",
+                              marginLeft: "4px",
+                              cursor: "pointer",
+                              verticalAlign: "middle"
+                            }}
+                          />
+                          }
+                        />
+                      )}
+                    </li>
+                  ));
+                })()}
               </ul>
             </div>
           )}

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import ReactHtmlParser from "react-html-parser";
-import { Icon, Accordion } from "semantic-ui-react";
+import { Icon, Accordion, Popup } from "semantic-ui-react";
 import { useRouter } from "next/router";
 import { StyledContent } from "../../styles/StyledTaskPage";
 import { useState } from "react";
@@ -13,24 +13,31 @@ export default function TaskPage({ user, task }) {
   const taskType = task?.taskType?.toLowerCase();
   const router = useRouter();
   const { locale } = router;  
-  
-  const settings = task?.i18nContent?.[locale]?.settings ?? task?.settings ?? {};
-  const resources =
-    (settings?.resources && JSON.parse(settings?.resources)) || [];
-  const aggregateVariables =
-    (settings?.aggregateVariables &&
-      JSON.parse(settings?.aggregateVariables)) ||
-    [];
 
-  // parameters not from the survey builder
-    // Prefer localized parameters if available, else fallback
-    const parameters =
+  const settings = task?.i18nContent?.[locale]?.settings ?? task?.settings ?? {};
+
+  // Safe JSON parsing helper
+  const safeParse = (str, fallback = []) => {
+    try {
+      return str ? JSON.parse(str) : fallback;
+    } catch (err) {
+      console.error("Failed to parse JSON", err, str);
+      return fallback;
+    }
+  };
+
+  // Parse multilingual fields safely
+  const resources = safeParse(settings?.resources);
+  const aggregateVariables = safeParse(settings?.aggregateVariables);
+
+  // parameters not from the survey builder (prefer i18nContent)
+  const parameters =
     task?.i18nContent?.[locale]?.parameters?.filter((p) => p?.type !== "survey") ??
     task?.parameters?.filter((p) => p?.type !== "survey") ??
     [];
 
-    // Parameters coming from the survey builder
-    const surveyItems =
+  // Parameters from survey builder
+  const surveyItems =
     (
       task?.i18nContent?.[locale]?.parameters ??
       task?.parameters ??
@@ -47,12 +54,14 @@ export default function TaskPage({ user, task }) {
       .filter(Boolean)
       .flat()
       .map((page) => page?.page)
-     .flat() ?? [];
+      .flat() ?? [];
 
   return (
     <StyledContent>
       <Head>
-        <title>MindHive | {task?.i18nContent?.[locale]?.title || task?.title}</title>
+        <title>
+          MindHive | {task?.i18nContent?.[locale]?.title || task?.title}
+        </title>
       </Head>
 
       <div className="leftPanel">
@@ -67,9 +76,7 @@ export default function TaskPage({ user, task }) {
           <div className="contentBlock">
             <h2>{t("taskPage.background")}</h2>
             <div>
-              {settings?.background && (
-                <p>{ReactHtmlParser(settings?.background)}</p>
-              )}
+              <p>{ReactHtmlParser(settings?.background)}</p>
             </div>
           </div>
         )}
@@ -140,18 +147,14 @@ export default function TaskPage({ user, task }) {
 
         {settings?.descriptionBefore && (
           <div>
-            <h2>
-              {t("taskPage.before", { taskType })}
-            </h2>
+            <h2>{t("taskPage.before", { taskType })}</h2>
             <p className="symbolBlock">{settings?.descriptionBefore}</p>
           </div>
         )}
 
         {settings?.descriptionAfter && (
           <div>
-            <h2>
-              {t("taskPage.after", { taskType })}
-            </h2>
+            <h2>{t("taskPage.after", { taskType })}</h2>
             <p className="symbolBlock">{settings?.descriptionAfter}</p>
           </div>
         )}
@@ -173,9 +176,8 @@ export default function TaskPage({ user, task }) {
         {aggregateVariables.length > 0 && (
           <div className="contentBlock">
             <h2>{t("taskPage.aggregateVariables")}</h2>
-            <p>
-              {t("taskPage.aggregateVariablesDescription", { taskType })}
-            </p>
+            <p>{t("taskPage.aggregateVariablesDescription", { taskType })}</p>
+
             {settings?.addInfo && (
               <Accordion>
                 <Accordion.Title
@@ -191,10 +193,39 @@ export default function TaskPage({ user, task }) {
               </Accordion>
             )}
             <ul>
-              {aggregateVariables.map((variable, num) => (
-                <li key={num}>{ReactHtmlParser(variable)}</li>
-              ))}
-            </ul>
+                {(() => {
+                  let parsed = [];
+                  try {
+                    parsed = JSON.parse(settings.aggregateVariables);
+                  } catch (e) {
+                    console.warn("Invalid aggregateVariables JSON", e);
+                  }
+
+                  return parsed.map((variable, idx) => (
+                    <li key={variable.varName || idx} style={{ marginBottom: "0.5rem" }}>
+                      {ReactHtmlParser(variable.varName || "")}{" "}
+                      {variable.varDesc && (
+                        <Popup
+                          content={ReactHtmlParser(variable.varDesc)}
+                          trigger={
+                            <img
+                            src="/assets/icons/info.svg" // Next.js serves public/ as root
+                            alt="info"
+                            style={{
+                              width: "16px",
+                              height: "16px",
+                              marginLeft: "4px",
+                              cursor: "pointer",
+                              verticalAlign: "middle"
+                            }}
+                          />
+                          }
+                        />
+                      )}
+                    </li>
+                  ));
+                })()}
+              </ul>
           </div>
         )}
 

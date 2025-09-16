@@ -8,27 +8,24 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
   const [active, setActive] = useState(false);
   const router = useRouter();
   const { locale } = router;
+  const { t } = useTranslation();
   const taskType = task?.taskType?.toLowerCase();
+
   const settings = task?.i18nContent?.[locale]?.settings || task?.settings;
-  const resources =
-    (settings?.resources && JSON.parse(settings?.resources)) || [];
-  const aggregateVariables =
-    (settings?.aggregateVariables &&
-      JSON.parse(settings?.aggregateVariables)) ||
-    [];  
 
-  // parameters not from the survey builder
-  const parameters =
-    task?.parameters?.filter((p) => p?.type !== "survey") || [];
+  // Safe JSON parsing helper
+  const safeParse = (str, fallback = []) => {
+    try {
+      return str ? JSON.parse(str) : fallback;
+    } catch (err) {
+      console.error("Failed to parse JSON", err, str);
+      return fallback;
+    }
+  };
 
-  // parameters from the survey builder
-  const surveyItems =
-    task?.parameters
-      ?.filter((param) => param?.type === "survey")
-      .map((param) => JSON.parse(param?.value))
-      .flat()
-      .map((page) => page?.page)
-      .flat() || [];
+  // Parse multilingual fields
+  const resources = safeParse(settings?.resources);
+  const aggregateVariables = safeParse(settings?.aggregateVariables);
 
   return (
     <>
@@ -169,7 +166,7 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
         </div>
 
         <div className="rightPanel">
-          {task?.settings?.mobileCompatible && (
+          {settings?.mobileCompatible && (
             <div>
               <Icon
                 id="favoriteButton"
@@ -184,7 +181,11 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
             <div className="contentBlock">
               <h2>{t("viewer.aggregateVariables", "Aggregate Variables")}</h2>
               <p>
-                {t("viewer.aggregateVariablesDesc", { taskType }, "These data are automatically written to a csv file upon completion of the {{taskType}}")}
+                {t(
+                  "viewer.aggregateVariablesDesc",
+                  { taskType },
+                  "These data are automatically written to a csv file upon completion of the {{taskType}}"
+                )}
               </p>
               {settings?.addInfo && (
                 <Accordion>
@@ -201,39 +202,40 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                 </Accordion>
               )}
               <ul>
-                {aggregateVariables.map((variable, num) => (
-                  <li key={typeof variable === 'object' && variable.name ? variable.name : num}>
-                    {ReactHtmlParser(typeof variable === 'string' ? variable : variable.name)}
-                    {typeof variable === 'object' && variable.description && (
-                      <>
-                        <br />
-                        <span className="bodySmall">{ReactHtmlParser(variable.description)}</span>
-                      </>
-                    )}
-                  </li>
-                ))}
+                {(() => {
+                  let parsed = [];
+                  try {
+                    parsed = JSON.parse(settings.aggregateVariables);
+                  } catch (e) {
+                    console.warn("Invalid aggregateVariables JSON", e);
+                  }
+
+                  return parsed.map((variable, idx) => (
+                    <li key={variable.varName || idx} style={{ marginBottom: "0.5rem" }}>
+                      {ReactHtmlParser(variable.varName || "")}{" "}
+                      {variable.varDesc && (
+                        <Popup
+                          content={ReactHtmlParser(variable.varDesc)}
+                          trigger={
+                            <img
+                            src="/assets/icons/info.svg" // Next.js serves public/ as root
+                            alt="info"
+                            style={{
+                              width: "16px",
+                              height: "16px",
+                              marginLeft: "4px",
+                              cursor: "pointer",
+                              verticalAlign: "middle"
+                            }}
+                          />
+                          }
+                        />
+                      )}
+                    </li>
+                  ));
+                })()}
               </ul>
-            </div>
-          )}
 
-          {settings?.scoring && (
-            <div className="contentBlock">
-              <h2>{t("viewer.scoring", "Scoring")}</h2>
-              <p>{ReactHtmlParser(settings?.scoring)}</p>
-            </div>
-          )}
-
-          {settings?.format && (
-            <div className="contentBlock">
-              <h2>{t("viewer.format", "Format")}</h2>
-              <p>{ReactHtmlParser(settings?.format)}</p>
-            </div>
-          )}
-
-          {settings?.duration && (
-            <div className="contentBlock">
-              <h2>{t("viewer.duration", "Duration")}</h2>
-              <p>{settings?.duration}</p>
             </div>
           )}
 
