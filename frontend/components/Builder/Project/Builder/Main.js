@@ -64,6 +64,8 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
     
     function handleStartTour(event) {
       const tourId = event?.detail?.tourId || 'overview';
+      const tourData = event?.detail?.tourData;
+      console.log(event)
       
       // Prevent multiple tours from starting simultaneously
       if (isStartingTour) {
@@ -81,8 +83,13 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
       
       (async () => {
         const introJs = (await import('intro.js')).default;
-        const tours = builderTours;
-        const selectedTour = tours[tourId];
+        
+        // Use tour data from event if available, otherwise fallback to static import
+        let selectedTour = tourData;
+        if (!selectedTour) {
+          const tours = builderTours;
+          selectedTour = tours[tourId];
+        }
         
         if (!selectedTour) {
           console.error(`Tour ${tourId} not found`);
@@ -94,18 +101,16 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
         currentTour = introJs.tour();
         currentTour.setOptions({
           steps: selectedTour.steps,
-          scrollToElement: true,
-          scrollTo: 'on',
+          scrollToElement: false,
+          scrollTo: 'off',
           exitOnOverlayClick: true,
           exitOnEsc: true,
-          showStepNumbers: false,
-          showBullets: false,
-          showProgress: false,
+          showBullets: true,
         });
         
         // Start the tour
         currentTour.start();
-        
+
         // Clean up when tour ends
         currentTour.onComplete(() => {
           currentTour = null;
@@ -116,6 +121,7 @@ export default function Builder({ query, user, tab, toggleSidebar }) {
           currentTour = null;
           isStartingTour = false;
         });
+
       })();
     }
     

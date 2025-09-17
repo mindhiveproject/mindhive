@@ -87,7 +87,7 @@ export default function HelpCenter() {
         tooltip: t('helpCenter.walkthrough'),
         bgColor: theme.primaryBlue,
         action: () => openModal(t('helpCenter.walkthroughTutorial'), 'walkthrough'),
-        allowedRoles: ["ADMIN", "MENTOR", "SCIENTIST", "TEACHER"]
+        allowedRoles: ["ADMIN", "MENTOR", "SCIENTIST", "TEACHER", "STUDENT"]
       },
       {
         icon: '/assets/helpCenter/docs.svg',
