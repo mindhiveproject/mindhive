@@ -5,6 +5,7 @@ const nextConfig = {
     locales: [
       "en-us",
       "es-es",
+      "es-la",
       "zh-cn",
       "fr-fr",
       "ar-ae",

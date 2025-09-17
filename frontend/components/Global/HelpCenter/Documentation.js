@@ -8,6 +8,7 @@ const SUPPORTED_LOCALES = [
   'en-us',
   'fr-fr',
   'es-es',
+  'es-la',
   'ar-ae',
   'zh-cn',
   'hi-in',

@@ -11,6 +11,7 @@ import useTranslation from "next-translate/useTranslation";
 const SUPPORTED_LANGUAGES = {
   'en-us': 'English (US)',
   'es-es': 'Español (ES)',
+  'es-la': 'Español (LA)',
   'zh-cn': '中文 (CN)',
   'fr-fr': 'Français (FR)',
   'ar-ae': 'العربية (AE)',

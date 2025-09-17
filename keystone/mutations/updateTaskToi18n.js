@@ -123,6 +123,7 @@ function updateTasksWithI18nContent() {
             "parameters": template?.parameters || {}
           },
           "es-es": { "title": "", "description": "", "shortDescription": "", "settings": {}, "parameters": template?.parameters || {} },
+          "es-la": { "title": "", "description": "", "shortDescription": "", "settings": {}, "parameters": template?.parameters || {} },
           "zh-cn": { "title": "", "description": "", "shortDescription": "", "settings": {}, "parameters": template?.parameters || {} },
           "fr-fr": { "title": "", "description": "", "shortDescription": "", "settings": {}, "parameters": template?.parameters || {} },
           "ar-ae": { "title": "", "description": "", "shortDescription": "", "settings": {}, "parameters": template?.parameters || {} },

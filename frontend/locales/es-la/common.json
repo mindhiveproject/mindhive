@@ -1,0 +1,382 @@
+{
+	"activity": {
+		"backToConsent": "Volver a Datos y consentimiento",
+		"description": "Realiza un seguimiento de tu progreso y revisa los estudios y tareas en los que has participado.",
+		"title": "Mi actividad"
+	},
+	"assignments": {
+		"copyLink": "Copiar enlace",
+		"linkCopied": "El enlace está copiado",
+		"noAssignments": "Aún no hay tareas asignadas",
+		"open": "Abierto",
+		"save": "Ahorrar"
+	},
+	"auth": {
+		"checkYourMail": "Revisa tu correo electrónico",
+		"email": "Correo electrónico",
+		"forgotPassword": "¿Olvidaste tu contraseña?",
+		"login": "Acceso",
+		"password": "Contraseña",
+		"requestReset": "Solicitar restablecimiento",
+		"username": "Nombre de usuario"
+	},
+	"cancel": "Cancelar",
+	"classes": {
+		"typeClassTitle": "Título de clase de tipo"
+	},
+	"close": "Cerca",
+	"collaborators": {
+		"typeUsername": "Escriba el nombre de usuario"
+	},
+	"consent": {
+		"activityDescription": "Ver estudios y tareas en las que has participado",
+		"activityTitle": "Mi actividad",
+		"backToSettings": "Volver a la configuración",
+		"description": "A MindHive le gustaría utilizar los siguientes datos para crear mejores experiencias para nuestros usuarios y seguir contribuyendo a una investigación significativa.",
+		"documentsDescription": "Revisar y enviar documentos para respaldar la investigación en MindHive",
+		"documentsTitle": "Documentos de consentimiento",
+		"form": {
+			"coveredStudiesDesc": "Las tareas y encuestas asociadas con los siguientes estudios están cubiertas por este protocolo",
+			"iAgreeJoin": "Estoy de acuerdo, únete al estudio",
+			"iAgreeNext": "Estoy de acuerdo, siguiente",
+			"kidName": "Su nombre",
+			"parentEmail": "Dirección de correo electrónico de los padres",
+			"parentName": "Nombre del padre",
+			"skip": "Omitir el consentimiento",
+			"studyInfo": "Este estudio es parte del protocolo de investigación de <strong>{{organización}}</strong> <strong>{{título}}</strong>."
+		},
+		"permissionsDescription": "Revisar y editar sus permisos de datos y ver su actividad",
+		"permissionsTitle": "Permisos de datos",
+		"skipped": {
+			"contact": "Comuníquese con el administrador del estudio para obtener más información.",
+			"header": "No se puede participar",
+			"message": "Lamentablemente, no puede participar en el estudio porque no aceptó el formulario de consentimiento requerido."
+		},
+		"title": "Datos y consentimiento"
+	},
+	"created": {
+		"author": "Autor",
+		"collaborator": "Colaborador",
+		"dateCreated": "Fecha de creación",
+		"dateUpdated": "Fecha de actualización",
+		"menuTitle": "Estudios creados",
+		"noStudiesYet": "El estudiante aún no ha creado ningún estudio.",
+		"role": "Role",
+		"studyTitle": "Título del estudio"
+	},
+	"dataUsage": {
+		"education": "Quiero que mis datos se guarden únicamente para uso educativo (por ejemplo, conferencias y materiales de enseñanza).",
+		"header": "Uso de datos",
+		"no": "No registres mis datos en absoluto (si eres un estudiante de MindHive: ¡esto significa que tus datos no se incluirán en las demostraciones de clase!)",
+		"question": "¿Cómo desea que utilicemos sus datos?",
+		"science": "Puedes utilizar mis datos con fines científicos y/o educativos."
+	},
+	"discoverDescription": "Explora nuestra colección de estudios, tareas y encuestas creadas por estudiantes de secundaria del programa MindHive y científicos colaboradores. Participa en estudios o consulta las tareas y encuestas.",
+	"discoverHeader": "Descubra estudios, tareas y encuestas",
+	"documents": {
+		"description": "A MindHive le gustaría utilizar los siguientes datos para crear mejores experiencias para nuestros usuarios y seguir contribuyendo a una investigación significativa.",
+		"title": "Documentos de consentimiento",
+		"uploadNotice": "No has subido toda la documentación necesaria para participar en la mentoría. Por favor, revisa y sube los documentos restantes a continuación."
+	},
+	"email": {
+		"currentEmail": "Correo electrónico actual",
+		"description": "Actualice su configuración de correo electrónico de MindHive a continuación para seguir recibiendo actualizaciones importantes por correo electrónico.",
+		"newEmail": "Nuevo correo electrónico",
+		"title": "Configuración de correo electrónico",
+		"updatePreferences": "Actualizar preferencias"
+	},
+	"error": {
+		"oops": "¡Ups!"
+	},
+	"featured": "Presentado",
+	"flow": {
+		"header": {
+			"login": "Acceso",
+			"participantDetails": "Datos del participante",
+			"participation": "Participación",
+			"studyConsent": "Consentimiento del estudio"
+		}
+	},
+	"form": {
+		"fileTooBig10Mb": "El archivo es demasiado grande. Elija un archivo menor a 10 MB.",
+		"fileTooBig100Mb": "El archivo es demasiado grande. Elija un archivo menor a 100 MB.",
+		"unknownFormat": "Formato desconocido del archivo"
+	},
+	"goToStudy": "Ir a estudiar",
+	"homework": {
+		"menuTitle": "Tarea"
+	},
+	"inDev": {
+		"header": "Esta parte de la plataforma está actualmente en desarrollo 🚧👷🏻‍♂️🚜👷⚙️",
+		"message": "Por favor, vuelve más tarde para comprobarlo."
+	},
+	"join": {
+		"details": {
+			"dob": "¿Cual es tu fecha de nacimiento?",
+			"english": "¿Entiendes las instrucciones básicas escritas en inglés?",
+			"englishNo": "No",
+			"englishTranslationNote": "(La versión en español de la plataforma estará disponible en poco tiempo.)",
+			"englishYes": "Sí",
+			"error": {
+				"enterDob": "Por favor, introduzca su fecha de nacimiento",
+				"minorBlocked": "Lo sentimos mucho, pero en este momento solo pueden participar en este estudio los participantes mayores de 18 años."
+			},
+			"header": "Empecemos",
+			"intro": "Nos alegra que esté interesado en participar en \"{{title}}\".",
+			"joinButton": "Únase al estudio",
+			"next": "Próximo",
+			"nyuId": "¿Cuál es tu identificación de NYU?",
+			"nyuIdDesc": "Al ingresar su identificación, podemos asegurarnos de que recibirá crédito del curso por su participación en este estudio.",
+			"saveInfo": "Guardar mi información para futuros estudios",
+			"sona": "¿Es usted participante de NYU SONA?",
+			"sonaNo": "No",
+			"sonaYes": "Sí",
+			"zip": "Tu código postal"
+		},
+		"selector": {
+			"guestButton": "Continuar como invitado",
+			"guestDesc": "Acceda directamente al estudio. Los invitados no pueden guardar información para la próxima vez.",
+			"guestTitle": "Participante invitado",
+			"header": "¿Cómo te gustaría participar hoy?",
+			"memberButton": "Continuar como miembro",
+			"memberDesc": "Continúe como miembro para disfrutar de una experiencia de estudio más rápida.",
+			"memberTitle": "Miembro de MindHive",
+			"newButton": "Inscribirse",
+			"newDesc": "Regístrate para acelerar la participación en el estudio la próxima vez",
+			"newTitle": "Nuevo miembro de MindHive",
+			"returningButton": "Acceso",
+			"returningDesc": "¿Ya tienes una cuenta de MindHive? Inicia sesión para estudiar más rápido.",
+			"returningTitle": "Miembro que regresa de MindHive"
+		}
+	},
+	"journal": {
+		"createNewJournal": "Crear un nuevo diario",
+		"createNewPost": "Crear una nueva publicación",
+		"dateCreated": "Fecha de creación",
+		"deleteConfirm": "¿Estás seguro que deseas eliminar este diario?",
+		"deleteNotesFirst": "Primero borre todas las notas de su diario.",
+		"deletePostConfirm": "¿Estás seguro de que deseas eliminar esta publicación?",
+		"description": "Descripción",
+		"editNote": "Editar nota",
+		"enterTitle": "Por favor, introduzca un título",
+		"info": {
+			"class": "Algo que se discutió en clase y que no quieres olvidar.",
+			"ideas": "Ideas o reflexiones de seguimiento sobre los estudios de MindHive",
+			"intro": "Utilice el diario para documentar cualquier pensamiento o nota relacionada con MindHive, incluidos, entre otros:",
+			"read": "Algo que leíste y que quizás quieras usar más adelante.",
+			"shower": "Una idea de investigación que se te ocurrió en la ducha."
+		},
+		"journalName": "Nombre de la revista",
+		"journalTitle": "Título de la revista",
+		"menuTitle": "Diario",
+		"myJournals": "Mis diarios",
+		"noJournalsYet": "Aún no has creado ningún diario.",
+		"noJournalsYetDesc": "Una vez que cree un diario, aparecerá aquí.",
+		"notes": "Notas",
+		"numberOfNotes": "Número de notas",
+		"title": "Título"
+	},
+	"languages": {
+		"backToSettings": "Volver a la configuración",
+		"description": "Puede personalizar y cambiar su configuración de idioma a continuación.",
+		"displayLanguage": "Idioma de visualización",
+		"title": "Configuración de idioma",
+		"updatePreferences": "Actualizar preferencias"
+	},
+	"members": {
+		"typeUsername": "Escriba el nombre de usuario"
+	},
+	"navigation": {
+		"about": "Acerca de",
+		"dashboard": "Panel",
+		"discover": "Descubrir",
+		"login": "Acceso",
+		"signup": "Inscribirse",
+		"studies": "Estudios",
+		"tasks": "Tareas y encuestas",
+		"teachers": "Profesores"
+	},
+	"pagination": {
+		"next": "Próximo",
+		"of": "de {{pageCount}}",
+		"page": "Página",
+		"pageOf": "Página {{page}} de {{pageCount}}",
+		"prev": "Anterior",
+		"totalParticipants": "{{count}} participantes en total",
+		"totalUsers": "{{count}} usuarios en total"
+	},
+	"participated": {
+		"condition": "Condición",
+		"finished": "Finalizado",
+		"menuTitle": "Participó",
+		"name": "Nombre",
+		"noStudiesYet": "El estudiante aún no ha participado en ningún estudio.",
+		"started": "Comenzó",
+		"step": "Paso",
+		"studyTitle": "Título del estudio",
+		"taskSubtitle": "Subtítulo de la tarea",
+		"taskVersion": "Versión de la tarea",
+		"type": "Tipo"
+	},
+	"permissions": {
+		"description": "A MindHive le gustaría utilizar los siguientes datos para crear mejores experiencias para nuestros usuarios y seguir contribuyendo a una investigación significativa.",
+		"goBack": "Volver",
+		"help": "Si desea cambiar sus preferencias de datos actuales o cancelar por completo el intercambio de datos, puede hacerlo a continuación. Si tiene alguna pregunta, póngase en contacto con mindhive.question@mindhive.com.",
+		"title": "Configuración de datos y consentimiento",
+		"updatePreferences": "Actualizar preferencias"
+	},
+	"preview": {
+		"closeTabToStopPreview": "CERRAR ESTA PESTAÑA PARA DETENER LA VISTA PREVIA",
+		"taskBuilderPreviewMessage": "ESTA ES UNA VISTA PREVIA. SUS DATOS NO SE GUARDAN.",
+		"taskPreviewMessage": "ESTA ES UNA VISTA PREVIA DE LA TAREA. SUS DATOS NO SE GUARDAN."
+	},
+	"projects": {
+		"author": "Autor",
+		"collaborator": "Colaborador",
+		"dateCreated": "Fecha de creación",
+		"dateUpdated": "Fecha de actualización",
+		"error": "Error",
+		"failedToUpdateProjectStatus": "No se pudo actualizar el estado del proyecto. Inténtalo de nuevo.",
+		"mainProject": "Proyecto principal",
+		"menuTitle": "Proyectos creados",
+		"noProjectsYet": "El estudiante aún no ha creado ningún proyecto.",
+		"openInNewTab": "Abrir proyecto en una nueva pestaña",
+		"projectDeleted": "Proyecto eliminado",
+		"projectTitle": "Título del proyecto",
+		"role": "Role",
+		"setAsMainAria": "Establecer {{title}} como proyecto principal"
+	},
+	"prompt": {
+		"goBack": "Regresar a la página principal del estudio",
+		"next": "Próximo",
+		"pleaseAnswer": "Por favor responda la pregunta primero",
+		"proceedNextTask": "Proceder a la siguiente tarea",
+		"thankYou": "¡Gracias por participar en esta tarea!"
+	},
+	"reviewed": {
+		"menuTitle": "Revisado"
+	},
+	"save": "Ahorrar",
+	"searchMembers": {
+		"admin": "Administración",
+		"classes": "Clases",
+		"mentor": "Mentor",
+		"participant": "Partícipe",
+		"scientist": "Científico",
+		"searchByClass": "Buscar por clase",
+		"selectAll": "Seleccionar todo",
+		"selectClass": "Seleccione clase(s)",
+		"selectRole": "Seleccionar rol(es)",
+		"selectUser": "Seleccionar usuario(s)",
+		"student": "Alumno",
+		"teacher": "Maestro",
+		"userRole": "Rol de usuario",
+		"users": "Usuarios"
+	},
+	"settings": {
+		"dataConsent": "Configuración de datos y consentimiento",
+		"dataConsentDescription": "Gestionar el uso de la información personal",
+		"description": "Puede actualizar su cuenta MindHive y su configuración de privacidad aquí",
+		"email": "Correo electrónico",
+		"languagePreferences": "Establezca sus preferencias de idioma",
+		"languages": "Idiomas",
+		"quickLinks": "Enlaces rápidos",
+		"title": "Ajustes",
+		"username": "Nombre de usuario"
+	},
+	"signup": {
+		"haveAccount": "¿Ya tienes una cuenta?",
+		"loginHere": "Inicie sesión aquí",
+		"participant": "Participante del estudio",
+		"scientist": "Científico",
+		"student": "Alumno",
+		"teacher": "Maestro",
+		"title": "¿Qué rol te describe mejor?"
+	},
+	"studies": {
+		"typeStudyTitle": "Título del estudio tipográfico"
+	},
+	"study": {
+		"archive": "Estudio de archivo",
+		"archiveConfirm": "¿Está seguro de que desea archivar este estudio?",
+		"archiveDescription": "Archivar un estudio le permite centrarse en los estudios activos. El estudio se moverá a la sección \"Archivados\" dentro de su área de Desarrollo. Esto no afectará la forma en que otros lo vean. Puede desarchivar un estudio en cualquier momento.",
+		"authorshipConfirm": "¿Está seguro de que desea transferir la autoría de este estudio?",
+		"authorshipDescription": "Transferir tu autoría eliminará permanentemente la conexión entre tu cuenta y el estudio. Esta acción es irreversible.",
+		"change": "Cambiar",
+		"delete": "Eliminar estudio",
+		"deleteConfirm": "¿Está seguro de que desea eliminar este estudio?",
+		"deleteDescription": "Eliminar un estudio lo eliminará permanentemente, junto con todos sus datos, tanto para usted como para todos sus colaboradores. Si desea conservar sus datos, puede archivarlo. Archivarlo moverá el estudio a la sección \"Archivados\" dentro de su área de Desarrollo y lo mantendrá activo para todos sus colaboradores. Esta acción es irreversible.",
+		"selectUser": "Seleccione el usuario",
+		"transferAuthorship": "Transferir la autoría",
+		"typeChangeAlert": "Por favor escriba CAMBIAR para cambiar el autor de su estudio",
+		"typeChangeToConfirm": "Escriba \"CAMBIO\" para confirmar",
+		"typeDeleteAlert": "Por favor, escribe SUPR para eliminar tu estudio",
+		"typeDeleteToConfirm": "Escribe \"ELIMINAR\" para confirmar",
+		"unarchive": "Estudio desarchivado",
+		"unarchiveConfirm": "¿Está seguro de que desea desarchivar este estudio?",
+		"unarchiveDescription": "El estudio volverá a la sección \"Activo\" de su área de Desarrollo. Esto no afectará la forma en que otros usuarios lo vean. Puede volver a archivar un estudio en cualquier momento."
+	},
+	"studyInfo": {
+		"contactInformation": "Información del contacto",
+		"frequency": "Frecuencia",
+		"inPartnershipWith": "En asociación con",
+		"tabWhat": "Qué",
+		"tabWho": "OMS",
+		"tabWhy": "Por qué",
+		"tags": "Etiquetas",
+		"timeToComplete": "Tiempo para completar"
+	},
+	"tag": {
+		"chooseKeywords": "Elige palabras clave para tu estudio.",
+		"createdAt": "Creado en",
+		"createTag": "Crear etiqueta",
+		"deleteTagConfirm": "¿Estás seguro que deseas eliminar esta etiqueta?",
+		"firstLevel": "Primer nivel",
+		"level": "Nivel",
+		"myTags": "Mis etiquetas",
+		"noParentTag": "Sin etiqueta principal",
+		"searchPlaceholder": "Buscar etiquetas",
+		"secondLevel": "Segundo nivel",
+		"selectParentTag": "Seleccionar etiqueta principal",
+		"studyTagsHeader": "Etiquetas de estudio",
+		"tagLevel": "Nivel de etiqueta",
+		"thirdLevel": "Tercer nivel",
+		"title": "Título",
+		"updatedAt": "Actualizado en"
+	},
+	"taskCard": {
+		"duration": "Duración {{duration}}",
+		"retake": "Retomar {{type}}"
+	},
+	"tasksAndSurveys": "Tareas y encuestas",
+	"terms": {
+		"byClicking": "Al hacer clic en {btnName}, acepta los términos y condiciones de MindHive.",
+		"includingOur": "incluyendo nuestro",
+		"privacyPolicy": "política de privacidad",
+		"termsOfService": "Condiciones de servicio"
+	},
+	"update": {
+		"createdAt": "Creado en",
+		"createUpdate": "Crear actualización",
+		"deleteConfirm": "¿Está seguro de que desea eliminar esta actualización?",
+		"link": "Enlace",
+		"notificationsAndUpdates": "Notificaciones y actualizaciones",
+		"save": "Ahorrar",
+		"sendEmail": "Enviar un correo electrónico",
+		"title": "Título",
+		"update": "Actualización",
+		"updatedAt": "Actualizado en",
+		"user": "Usuario"
+	},
+	"username": {
+		"currentUsername": "Nombre de usuario actual",
+		"description": "Tu nombre de usuario de MindHive es lo que otros ven cuando creas contenido en la plataforma. Puedes cambiar la configuración de tu nombre de usuario a continuación.",
+		"newUsername": "Nuevo nombre de usuario",
+		"title": "Configuración de nombre de usuario",
+		"updatePreferences": "Actualizar preferencias"
+	},
+	"userPath": {
+		"guestMessage": "Participas como invitado. Tu ID público legible es <strong>{{id}}</strong>",
+		"startNextTask": "Iniciar la siguiente tarea"
+	}
+}
