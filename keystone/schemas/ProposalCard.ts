@@ -78,7 +78,17 @@ export const ProposalCard = list({
       ref: "Resource.proposalCards",
       many: true,
     }),
-    // TODO Way 1 - connected to Assignment (preferred)
-    // "Resources": Assignments and Old Resources (Move assignments in Resources)
+    assignments: relationship({
+      ref: "Assignment.proposalCards",
+      many: true,
+    }),
+    studies: relationship({
+      ref: "Study.proposalCards",
+      many: true,
+    }),
+    tasks: relationship({
+      ref: "Task.proposalCards",
+      many: true,
+    }),
   },
 });

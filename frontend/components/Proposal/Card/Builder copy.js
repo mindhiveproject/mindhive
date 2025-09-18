@@ -1,15 +1,7 @@
-import { useRef, useState } from "react";
-import { useMutation, useApolloClient } from "@apollo/client";
-import { Checkbox, Dropdown, Modal, Button } from "semantic-ui-react";
-import {
-  UPDATE_CARD_CONTENT,
-  UPDATE_CARD_EDIT,
-} from "../../Mutations/Proposal";
-import {
-  GET_SECTIONS_BY_BOARD,
-  GET_CARDS_BY_SECTION,
-  CLASS_PROJECTS_QUERY,
-} from "../../Queries/Proposal";
+import { useRef } from "react";
+import { useMutation } from "@apollo/client";
+import { Checkbox, Dropdown } from "semantic-ui-react";
+import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
 
 import useForm from "../../../lib/useForm";
 import TipTapEditor from "../../TipTap/Main";
@@ -58,13 +50,8 @@ export default function BuilderProposalCard({
 
   const [updateCard, { loading: updateLoading }] =
     useMutation(UPDATE_CARD_CONTENT);
-  const [updateClonedCard, { loading: updateClonedLoading }] =
-    useMutation(UPDATE_CARD_EDIT);
 
-  const client = useApolloClient();
-  const [showCloneDialog, setShowCloneDialog] = useState(false);
-
-  // Update card content in the local state
+  // update card content in the local state
   const handleContentChange = async ({ contentType, newContent }) => {
     if (contentType === "description") {
       description.current = newContent;
@@ -77,112 +64,8 @@ export default function BuilderProposalCard({
     }
   };
 
-  // Handler to update all clones
-  const updateClones = async () => {
-    if (!proposal?.prototypeFor?.length) return;
-
-    const originalSectionTitle = proposalCard?.section?.title;
-    const originalCardTitle = inputs?.title || proposalCard?.title;
-
-    if (!originalSectionTitle || !originalCardTitle) {
-      console.warn("Missing section or card title for matching clones");
-      return;
-    }
-
-    // Collect all matching card IDs across clones
-    const cardIds = [];
-
-    for (const clone of proposal.prototypeFor) {
-      try {
-        // Step 1: Query sections for this clone board
-        const { data: sectionsData } = await client.query({
-          query: GET_SECTIONS_BY_BOARD,
-          variables: { boardId: clone.id },
-        });
-
-        const sections = sectionsData?.proposalSections || [];
-        const matchingSection = sections.find(
-          (sec) => sec.title === originalSectionTitle
-        );
-
-        if (matchingSection) {
-          // Step 2: Query cards for the matching section
-          const { data: cardsData } = await client.query({
-            query: GET_CARDS_BY_SECTION,
-            variables: { sectionId: matchingSection.id },
-          });
-
-          const cards = cardsData?.proposalCards || [];
-          const matchingCard = cards.find(
-            (card) => card.title === originalCardTitle
-          );
-
-          if (matchingCard) {
-            cardIds.push(matchingCard.id);
-          } else {
-            console.warn(
-              `No matching card found in clone ${clone.id} (section: ${matchingSection.id}) for title "${originalCardTitle}"`
-            );
-          }
-        } else {
-          console.warn(
-            `No matching section found in clone ${clone.id} for title "${originalSectionTitle}"`
-          );
-        }
-      } catch (error) {
-        console.error(`Failed to process clone ${clone.id}:`, error);
-      }
-    }
-
-    // Update each cloned card individually using UPDATE_CARD_EDIT
-    if (cardIds.length > 0) {
-      const updateData = {
-        description: description.current,
-        resources: inputs?.resources?.length
-          ? {
-              connect: inputs.resources.map((resource) => ({
-                id: resource?.id,
-              })),
-            }
-          : null,
-        assignments: inputs?.assignments?.length
-          ? {
-              connect: inputs.assignments.map((assignment) => ({
-                id: assignment?.id,
-              })),
-            }
-          : null,
-        tasks: inputs?.tasks?.length
-          ? { connect: inputs.tasks.map((task) => ({ id: task?.id })) }
-          : null,
-        studies: inputs?.studies?.length
-          ? { connect: inputs.studies.map((study) => ({ id: study?.id })) }
-          : null,
-      };
-
-      for (const cardId of cardIds) {
-        try {
-          await updateClonedCard({
-            variables: {
-              id: cardId,
-              input: updateData,
-            },
-          });
-          console.log(`Updated clone card ${cardId}`);
-        } catch (error) {
-          console.error(`Failed to update clone card ${cardId}:`, error);
-        }
-      }
-      console.log(
-        `Updated ${cardIds.length} cloned cards: ${cardIds.join(", ")}`
-      );
-    } else {
-      console.warn("No matching cards found to update in clones");
-    }
-  };
-
-  // Update logic with clone check
-  const onUpdateCard = async (updateClonesToo = false) => {
+  // update the card and close the modal
+  const onUpdateCard = async () => {
     await updateCard({
       variables: {
         ...inputs,
@@ -198,33 +81,7 @@ export default function BuilderProposalCard({
         studies: inputs?.studies?.map((study) => ({ id: study?.id })),
       },
     });
-
-    // If updating clones, do it now
-    if (updateClonesToo) {
-      await updateClones();
-    }
-
     closeCard({ cardId: proposalCard?.id, lockedByUser: false });
-  };
-
-  // Trigger save with clone check
-  const handleSave = async () => {
-    if (proposal?.prototypeFor?.length > 0) {
-      setShowCloneDialog(true);
-    } else {
-      await onUpdateCard(false);
-    }
-  };
-
-  // Modal handlers
-  const handleCloneYes = async () => {
-    setShowCloneDialog(false);
-    await onUpdateCard(true); // true flag to update clones
-  };
-
-  const handleCloneNo = () => {
-    setShowCloneDialog(false);
-    onUpdateCard(false);
   };
 
   // Calculate total linked items
@@ -257,41 +114,11 @@ export default function BuilderProposalCard({
           <div className="editModeMessage">
             {t("board.editMode", "You are in Edit Mode")}
           </div>
-          <button
-            onClick={handleSave}
-            className="saveButton"
-            disabled={updateLoading || updateClonedLoading}
-          >
+          <button onClick={() => onUpdateCard()} className="saveButton">
             {t("board.save", "Save")}
           </button>
         </div>
       </div>
-
-      {/* Clone Update Modal */}
-      <Modal open={showCloneDialog} onClose={handleCloneNo} size="small">
-        <Modal.Header>Update Cloned Boards?</Modal.Header>
-        <Modal.Content>
-          <p>
-            This board has {proposal?.prototypeFor?.length} cloned project
-            board(s). Do you want to update the corresponding cards in all
-            cloned project boards with these changes? (This will update
-            descriptions and linked items: resources, assignments, tasks, and
-            studies.)
-          </p>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color="black" onClick={handleCloneNo}>
-            No, update only this board
-          </Button>
-          <Button
-            positive
-            onClick={handleCloneYes}
-            loading={updateLoading || updateClonedLoading}
-          >
-            Yes, update all clones
-          </Button>
-        </Modal.Actions>
-      </Modal>
 
       <div className="proposalCardBoard">
         <div className="textBoard">
@@ -390,6 +217,7 @@ export default function BuilderProposalCard({
                 }
                 checked={inputs?.settings?.includeInReport}
               />
+
               <label htmlFor="feedbackCenterCardToggle">
                 <div className="cardDescription">
                   {t("board.expendedCard.includeTextFeedbackCenter")}

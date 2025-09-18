@@ -14,11 +14,11 @@ import useForm from "../../../../../../lib/useForm";
 
 import Navigation from "./Navigation/Main";
 import Assigned from "./Forms/Assigned";
-import JoditEditor from "../../../../../Jodit/Editor";
-import Resources from "./Forms/Resources";
+import TipTapEditor from "../../../../../TipTap/Main";
+import { PreviewSection } from "../../../../../Proposal/Card/Forms/LinkedItems";
+import { Modal, Button, Icon, Dropdown, Accordion } from "semantic-ui-react";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
-import { Dropdown, Accordion, Icon } from "semantic-ui-react";
 
 export default function ProposalCard({
   proposalCard,
@@ -34,6 +34,8 @@ export default function ProposalCard({
 }) {
   const { t } = useTranslation("builder");
   const [originalActive, setOriginalActive] = useState(false); // For accordion state, default collapsed
+  const [assignmentModalOpen, setAssignmentModalOpen] = useState(false); // For assignment modal
+  const [selectedAssignment, setSelectedAssignment] = useState(null); // For selected assignment
 
   const reviewOptions = [
     {
@@ -82,6 +84,8 @@ export default function ProposalCard({
   const { inputs, handleChange } = useForm({
     ...proposalCard,
   });
+
+  console.log({ inputs });
 
   const content = useRef(proposalCard?.content);
   const internalContent = useRef(proposalCard?.internalContent);
@@ -218,6 +222,119 @@ export default function ProposalCard({
     });
   };
 
+  // Handler to open assignment modal
+  const openAssignmentModalHandler = (assignment) => {
+    if (!assignment) {
+      console.error("No assignment provided to openAssignmentModalHandler");
+      return;
+    }
+    console.log("Opening modal with assignment:", {
+      id: assignment.id,
+      title: assignment.title,
+      content: assignment.content,
+    });
+    setSelectedAssignment(assignment);
+    setAssignmentModalOpen(true);
+  };
+
+  // Assignment Modal Component
+  const AssignmentModal = ({ open, onClose, assignment }) => {
+    const [title, setTitle] = useState(assignment?.title || "");
+    const [content, setContent] = useState(assignment?.content || "");
+
+    useEffect(() => {
+      if (assignment) {
+        console.log("AssignmentModal: Syncing assignment", {
+          id: assignment.id,
+          title: assignment.title,
+          content: assignment.content,
+        });
+        setTitle(assignment.title || "");
+        setContent(assignment.content || "");
+      } else {
+        console.warn("AssignmentModal opened with no assignment");
+        setTitle("");
+        setContent("");
+      }
+    }, [assignment]);
+
+    if (!assignment && open) {
+      console.warn("AssignmentModal rendered without valid assignment");
+      return null;
+    }
+
+    return (
+      <Modal
+        open={open}
+        onClose={onClose}
+        size="large"
+        style={{ borderRadius: "12px", overflow: "hidden" }}
+      >
+        <Modal.Header
+          style={{
+            background: "#f9fafb",
+            borderBottom: "1px solid #e0e0e0",
+            fontFamily: "Nunito",
+            fontWeight: 600,
+          }}
+        >
+          {t("board.expendedCard.previewAssignment", "Preview Assignment")}
+        </Modal.Header>
+        <Modal.Content
+          scrolling
+          style={{ background: "#ffffff", padding: "24px" }}
+        >
+          <div>
+            <label htmlFor="assignmentTitle">
+              <div className="cardHeader">{t("board.expendedCard.title")}</div>
+              <input
+                type="text"
+                id="assignmentTitle"
+                value={title}
+                disabled
+                style={{
+                  width: "100%",
+                  padding: "8px",
+                  borderRadius: "4px",
+                  border: "1px solid #e0e0e0",
+                  marginBottom: "16px",
+                  background: "#f9fafb",
+                }}
+              />
+            </label>
+            <div className="cardHeader">{t("board.expendedCard.content")}</div>
+            <div
+              style={{
+                fontSize: "14px",
+                color: "#333",
+                lineHeight: "1.5",
+                border: "1px solid #e0e0e0",
+                borderRadius: "4px",
+                padding: "16px",
+              }}
+            >
+              {ReactHtmlParser(content || "")}
+            </div>
+          </div>
+        </Modal.Content>
+        <Modal.Actions
+          style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
+        >
+          <Button
+            onClick={onClose}
+            style={{
+              background: "#f0f4f8",
+              color: "#007c70",
+              borderRadius: "8px",
+            }}
+          >
+            {t("board.expendedCard.close", "Close")}
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    );
+  };
+
   return (
     <>
       <Navigation
@@ -310,15 +427,14 @@ export default function ProposalCard({
                       </Accordion>
                     ) : (
                       <div onFocus={handleFocus}>
-                        <JoditEditor
+                        <TipTapEditor
                           content={content?.current}
-                          setContent={(newContent) =>
+                          onUpdate={(newContent) =>
                             handleContentChange({
                               contentType: "content",
                               newContent,
                             })
                           }
-                          minHeight={600}
                         />
                       </div>
                     )}
@@ -339,52 +455,16 @@ export default function ProposalCard({
                   </div>
                   <div className="jodit">
                     <div onFocus={handleFocus}>
-                      <JoditEditor
+                      <TipTapEditor
                         content={revisedContent?.current}
-                        setContent={(newContent) =>
+                        onUpdate={(newContent) =>
                           handleContentChange({
                             contentType: "revisedContent",
                             newContent,
                           })
                         }
-                        minHeight={600}
                       />
                     </div>
-                  </div>
-                </>
-              )}
-
-              {!proposalCard?.settings?.excludeFromCollaborators && (
-                <>
-                  <div className="cardSubheader">
-                    {t(
-                      "mainCard.forTeacherAndCollaborators",
-                      "For my teacher and project collaborators only"
-                    )}
-                  </div>
-                  <div className="cardSubheaderComment">
-                    {t(
-                      "mainCard.visibleToTeacherAndCollaborators",
-                      "The content you include below will only be visible to your teacher(s) and project collaborators"
-                    )}
-                  </div>
-                  <div className="jodit">
-                    {isLocked ? (
-                      ReactHtmlParser(internalContent?.current)
-                    ) : (
-                      <div onFocus={handleFocus}>
-                        <JoditEditor
-                          content={internalContent?.current}
-                          setContent={(newContent) =>
-                            handleContentChange({
-                              contentType: "internalContent",
-                              newContent,
-                            })
-                          }
-                          minHeight={300}
-                        />
-                      </div>
-                    )}
                   </div>
                 </>
               )}
@@ -401,12 +481,47 @@ export default function ProposalCard({
                 />
               </div>
 
-              <div>
-                <Resources
+              {/* Display Linked Items using PreviewSection */}
+              {inputs?.resources?.length > 0 && (
+                <PreviewSection
+                  title={t("board.expendedCard.previewLinkedResources")}
+                  items={inputs?.resources}
+                  type="resource"
                   proposal={proposal}
-                  selectedResources={proposalCard?.resources || []}
+                  openAssignmentModal={openAssignmentModalHandler}
+                  user={user}
                 />
-              </div>
+              )}
+              {inputs?.assignments?.length > 0 && (
+                <PreviewSection
+                  title={t("board.expendedCard.previewLinkedAssignments")}
+                  items={inputs?.assignments}
+                  type="assignment"
+                  proposal={proposal}
+                  openAssignmentModal={openAssignmentModalHandler}
+                  user={user}
+                />
+              )}
+              {inputs?.tasks?.length > 0 && (
+                <PreviewSection
+                  title={t("board.expendedCard.previewLinkedTasks")}
+                  items={inputs?.tasks}
+                  type="task"
+                  proposal={proposal}
+                  openAssignmentModal={openAssignmentModalHandler}
+                  user={user}
+                />
+              )}
+              {inputs?.studies?.length > 0 && (
+                <PreviewSection
+                  title={t("board.expendedCard.previewLinkedStudies")}
+                  items={inputs?.studies}
+                  type="study"
+                  proposal={proposal}
+                  openAssignmentModal={openAssignmentModalHandler}
+                  user={user}
+                />
+              )}
 
               <div className="proposalCardComments">
                 <div className="cardSubheader">
@@ -462,6 +577,16 @@ export default function ProposalCard({
           </div>
         </div>
       </StyledProposal>
+
+      <AssignmentModal
+        open={assignmentModalOpen}
+        onClose={() => {
+          setAssignmentModalOpen(false);
+          setSelectedAssignment(null);
+        }}
+        assignment={selectedAssignment}
+        user={user}
+      />
     </>
   );
 }

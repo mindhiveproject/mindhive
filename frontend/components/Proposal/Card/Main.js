@@ -259,7 +259,6 @@ export default function ProposalCard({
           </div>
         </div>
       )}
-
       {isPreview ? (
         <div className="cardPreview">
           <div className="closeBtn">

@@ -106,6 +106,5 @@ export const Resource = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
-    // Way 2 -connection to Assignment
   },
 });

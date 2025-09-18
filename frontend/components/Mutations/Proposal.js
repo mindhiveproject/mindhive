@@ -217,6 +217,9 @@ export const UPDATE_CARD_CONTENT = gql`
     $type: String
     $shareType: String
     $resources: [ResourceWhereUniqueInput!]
+    $assignments: [AssignmentWhereUniqueInput!]
+    $tasks: [TaskWhereUniqueInput!]
+    $studies: [StudyWhereUniqueInput!]
   ) {
     updateProposalCard(
       where: { id: $id }
@@ -232,6 +235,9 @@ export const UPDATE_CARD_CONTENT = gql`
         type: $type
         shareType: $shareType
         resources: { set: $resources }
+        assignments: { set: $assignments }
+        tasks: { set: $tasks }
+        studies: { set: $studies }
       }
     ) {
       id
@@ -241,6 +247,18 @@ export const UPDATE_CARD_CONTENT = gql`
       comment
       settings
       assignedTo {
+        id
+      }
+      resources {
+        id
+      }
+      assignments {
+        id
+      }
+      tasks {
+        id
+      }
+      studies {
         id
       }
     }

@@ -53,6 +53,9 @@ export const OVERVIEW_PROPOSAL_BOARD_QUERY = gql`
       isSubmitted
       isTemplate
       settings
+      prototypeFor {
+        id
+      }
       study {
         id
         author {
@@ -85,6 +88,9 @@ export const PROPOSAL_QUERY = gql`
       projectReportStatus
       projectReportOpenForComments
       isTemplate
+      prototypeFor {
+        id
+      }
       usedInClass {
         id
         title
@@ -186,8 +192,24 @@ export const GET_CARD_CONTENT = gql`
         title
         content
       }
+      assignments {
+        id
+        title
+        content
+      }
+      tasks {
+        id
+        title
+        slug
+      }
+      studies {
+        id
+        title
+        slug
+      }
       section {
         id
+        title
       }
     }
   }
@@ -703,6 +725,24 @@ export const GET_PROPOSAL_TEMPLATE_CLASSES = gql`
           code
         }
       }
+    }
+  }
+`;
+
+export const GET_SECTIONS_BY_BOARD = gql`
+  query GET_SECTIONS_BY_BOARD($boardId: ID!) {
+    proposalSections(where: { board: { id: { equals: $boardId } } }) {
+      id
+      title
+    }
+  }
+`;
+
+export const GET_CARDS_BY_SECTION = gql`
+  query GET_CARDS_BY_SECTION($sectionId: ID!) {
+    proposalCards(where: { section: { id: { equals: $sectionId } } }) {
+      id
+      title
     }
   }
 `;

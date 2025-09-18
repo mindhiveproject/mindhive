@@ -125,3 +125,13 @@ export const GET_TEMPLATE_ASSIGNMENT = gql`
     }
   }
 `;
+
+// get my assignments
+export const GET_MY_ASSIGNMENTS = gql`
+  query GET_MY_ASSIGNMENTS($id: ID!) {
+    assignments(where: { author: { id: { equals: $id } } }) {
+      id
+      title
+    }
+  }
+`;

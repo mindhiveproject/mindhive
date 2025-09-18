@@ -110,6 +110,10 @@ export const Task = list({
       ref: "SummaryResult.task",
       many: true,
     }),
+    proposalCards: relationship({
+      ref: "ProposalCard.tasks",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
