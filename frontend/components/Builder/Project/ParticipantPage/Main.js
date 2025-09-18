@@ -21,7 +21,7 @@ import { StyledParticipantPage } from "../../../styles/StyledBuilder";
 
 import InDev from "../../../Global/InDev";
 import { disconnect } from "process";
-import { participantPageTours } from "./tour";
+import { participantPageTours } from "./tours";
 
 export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
   const router = useRouter();
@@ -31,13 +31,13 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
 
   const [hasStudyChanged, setHasStudyChanged] = useState(false);
 
-  // Tour setup
   useEffect(() => {
     let currentTour = null;
     let isStartingTour = false;
     
     function handleStartTour(event) {
       const tourId = event?.detail?.tourId || 'overview';
+      const tourData = event?.detail?.tourData;
       
       // Prevent multiple tours from starting simultaneously
       if (isStartingTour) {
@@ -55,8 +55,13 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
       
       (async () => {
         const introJs = (await import('intro.js')).default;
-        const tours = participantPageTours;
-        const selectedTour = tours[tourId];
+        
+        // Use tour data from event if available, otherwise fallback to static import
+        let selectedTour = tourData;
+        if (!selectedTour) {
+          const tours = participantPageTours;
+          selectedTour = tours[tourId];
+        }
         
         if (!selectedTour) {
           console.error(`Tour ${tourId} not found`);
@@ -68,30 +73,28 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
         currentTour = introJs.tour();
         currentTour.setOptions({
           steps: selectedTour.steps,
-          scrollToElement: true,
-          scrollTo: 'on',
+          scrollToElement: false,
+          scrollTo: 'off',
           exitOnOverlayClick: true,
           exitOnEsc: true,
-          showStepNumbers: false,
           showBullets: true,
-          showProgress: false,
         });
         
-                  // Start the tour
-          currentTour.start();
-          
-          // Clean up when tour ends
-          currentTour.onComplete(() => {
-            currentTour = null;
-            isStartingTour = false;
-          });
-          
-          currentTour.onExit(() => {
-            currentTour = null;
-            isStartingTour = false;
-          });
+        // Start the tour
+        currentTour.start();
 
-        })();
+        // Clean up when tour ends
+        currentTour.onComplete(() => {
+          currentTour = null;
+          isStartingTour = false;
+        });
+        
+        currentTour.onExit(() => {
+          currentTour = null;
+          isStartingTour = false;
+        });
+
+      })();
     }
     
     // Remove any existing listeners first

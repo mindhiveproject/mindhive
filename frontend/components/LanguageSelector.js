@@ -5,7 +5,8 @@ import { useRouter } from "next/router";
 // User preference language options (for GraphQL)
 export const userLanguageOptions = [
   { key: "EN-US", text: "English (American)", value: "EN-US" },
-  { key: "ES-ES", text: "Español", value: "ES-ES" },
+  { key: "ES-ES", text: "Español (Spain)", value: "ES-ES" },
+  { key: "ES-LA", text: "Español (Latin America)", value: "ES-LA" },
   { key: "ZH-CN", text: "中文", value: "ZH-CN" },
   { key: "FR-FR", text: "Français", value: "FR-FR" },
   { key: "AR-AE", text: "العربية", value: "AR-AE" },

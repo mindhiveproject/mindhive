@@ -22,7 +22,8 @@ Examples:
 The system supports the following language codes:
 - `en-us` (English - default)
 - `fr-fr` (French)
-- `es-es` (Spanish)
+- `es-es` (Spanish ES)
+- `es-la` (Spanish LA)
 - `ar-ae` (Arabic)
 - `zh-cn` (Chinese)
 - `hi-in` (Hindi)

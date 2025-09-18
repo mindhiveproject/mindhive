@@ -1,4 +1,3 @@
-// https://www.notion.so/mindhive/Study-Builder-Collect-245d80abf4c480ef9496e1e31b8829af
 export const collectTours = {
     overview: {
       title: "Collect Tab (Download)",

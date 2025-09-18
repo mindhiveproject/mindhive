@@ -123,10 +123,12 @@ export default function Walkthrough({ onStartWalkthrough }) {
                             let toursImport;
                             
                             // Try localized tour file first
+                            console.log(currentLocale)
                             if (currentLocale !== 'en-us') {
                                 try {
                                     toursImport = await import(`../../Builder/Project/Builder/tours.${currentLocale}.js`);
                                 } catch (localizedError) {
+                                    console.log(localizedError)
                                     // Fallback to English
                                     toursImport = await import('../../Builder/Project/Builder/tours.js');
                                 }
@@ -153,13 +155,13 @@ export default function Walkthrough({ onStartWalkthrough }) {
                             // Try localized tour file first
                             if (currentLocale !== 'en-us') {
                                 try {
-                                    participantPageToursImport = await import(`../../Builder/Project/ParticipantPage/tour.${currentLocale}.js`);
+                                    participantPageToursImport = await import(`../../Builder/Project/ParticipantPage/tours.${currentLocale}.js`);
                                 } catch (localizedError) {
                                     // Fallback to English
-                                    participantPageToursImport = await import('../../Builder/Project/ParticipantPage/tour.js');
+                                    participantPageToursImport = await import('../../Builder/Project/ParticipantPage/tours.js');
                                 }
                             } else {
-                                participantPageToursImport = await import('../../Builder/Project/ParticipantPage/tour.js');
+                                participantPageToursImport = await import('../../Builder/Project/ParticipantPage/tours.js');
                             }
                             
                             componentImport = {
@@ -181,13 +183,13 @@ export default function Walkthrough({ onStartWalkthrough }) {
                             // Try localized tour file first
                             if (currentLocale !== 'en-us') {
                                 try {
-                                    reviewToursImport = await import(`../../Builder/Project/Review/tour.${currentLocale}.js`);
+                                    reviewToursImport = await import(`../../Builder/Project/Review/tours.${currentLocale}.js`);
                                 } catch (localizedError) {
                                     // Fallback to English
-                                    reviewToursImport = await import('../../Builder/Project/Review/tour.js');
+                                    reviewToursImport = await import('../../Builder/Project/Review/tours.js');
                                 }
                             } else {
-                                reviewToursImport = await import('../../Builder/Project/Review/tour.js');
+                                reviewToursImport = await import('../../Builder/Project/Review/tours.js');
                             }
                             
                             componentImport = {
@@ -209,13 +211,13 @@ export default function Walkthrough({ onStartWalkthrough }) {
                             // Try localized tour file first
                             if (currentLocale !== 'en-us') {
                                 try {
-                                    collectToursImport = await import(`../../Builder/Project/Collect/tour.${currentLocale}.js`);
+                                    collectToursImport = await import(`../../Builder/Project/Collect/tours.${currentLocale}.js`);
                                 } catch (localizedError) {
                                     // Fallback to English
-                                    collectToursImport = await import('../../Builder/Project/Collect/tour.js');
+                                    collectToursImport = await import('../../Builder/Project/Collect/tours.js');
                                 }
                             } else {
-                                collectToursImport = await import('../../Builder/Project/Collect/tour.js');
+                                collectToursImport = await import('../../Builder/Project/Collect/tours.js');
                             }
                             
                             componentImport = {

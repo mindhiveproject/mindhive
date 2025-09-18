@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const StyledSurveyBuilderItemLine = styled.div`
-  border-bottom: 3px #e7d6d6 solid;
-  padding-bottom: 30px;
-  margin-bottom: 30px;
+  padding-Top: 16px;
+  padding-bottom: 16px;
+  padding-left: 16px;
   display: grid;
   grid-template-columns: 9fr 1fr;
   grid-column-gap: 10px;
@@ -131,7 +131,7 @@ export default function ArrayBuilder({ name, content, onChange, title }) {
             />
           ))}
         <button className="addButton" onClick={addItem}>
-          +
+        + Add
         </button>
       </div>
     );

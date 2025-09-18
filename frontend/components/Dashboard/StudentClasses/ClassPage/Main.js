@@ -50,7 +50,7 @@ export default function ClassPage({ code, user, query }) {
               page === "students" ? "menuTitle selectedMenuTitle" : "menuTitle"
             }
           >
-            <p>{t("studentsTab")}</p>
+            <p>{t("studentsTab.tab")}</p>
           </Link>
 
           <Link

@@ -1,11 +1,17 @@
-import { useState } from 'react';
-import useTranslation from "next-translate/useTranslation";
+// TODO: make settings json dynamic to add/remove in editor
+
 import { StyledBuilder } from "../../../styles/StyledBuilder";
+import { useState } from 'react';
+
+import ArrayBuilder from "./ArrayBuilder";
+import ObjectBuilder from "./ObjectBuilder";
+import useTranslation from "next-translate/useTranslation";
 
 // Language configuration with display names
 const SUPPORTED_LANGUAGES = {
   'en-us': 'English (US)',
   'es-es': 'Español (ES)',
+  'es-la': 'Español (LA)',
   'zh-cn': '中文 (CN)',
   'fr-fr': 'Français (FR)',
   'ar-ae': 'العربية (AE)',
@@ -42,9 +48,6 @@ const safeJsonStringify = (value) => {
 export default function I18nContentEditor({ task, handleChange }) {
   const { t } = useTranslation("builder");
   const [activeLanguage, setActiveLanguage] = useState('en-us');
-
-  console.log("\n\n\n\n\nLet's see if we have it")
-  console.log(task?.i18nContent)
   // Initialize i18nContent if it doesn't exist
   if (!task?.i18nContent) {
     task.i18nContent = {};
@@ -96,15 +99,46 @@ export default function I18nContentEditor({ task, handleChange }) {
   };
 
   // Handle changes to JSON fields within i18n content
-  const handleI18nJsonChange = (language, field, jsonKey, value) => {
-    const currentJson = task.i18nContent[language][field] || {};
-    const updatedJson = {
-      ...currentJson,
-      [jsonKey]: value,
+  const handleI18nJsonChange = (lang, field, key, value) => {
+    let safeValue = value;
+  
+    if (key === "resources" || key === "aggregateVariables") {
+      try {
+        // If it's already a string, validate it
+        if (typeof value === "string") {
+          JSON.parse(value); // throws if invalid
+          safeValue = value; // keep as-is if valid JSON
+        } else {
+          // Otherwise, stringify arrays/objects
+          safeValue = JSON.stringify(value);
+        }
+      } catch (err) {
+        console.warn(`Invalid JSON for ${key}:`, value, err.message);
+        safeValue = JSON.stringify([]); // fallback to empty array
+      }
+    }
+  
+    const updatedI18nContent = {
+      ...task.i18nContent,
+      [lang]: {
+        ...task.i18nContent[lang],
+        [field]: {
+          ...task.i18nContent[lang][field],
+          [key]: safeValue,
+        },
+      },
     };
-
-    handleI18nChange(language, field, updatedJson);
-  };
+  
+    // Create a synthetic event just like in handleI18nChange
+    const syntheticEvent = {
+      target: {
+        name: "i18nContent",
+        value: updatedI18nContent,
+      },
+    };
+  
+    handleChange(syntheticEvent);
+  };  
 
   // Get the available fields for editing (from en-us as template)
   const getEditableFields = () => {
@@ -191,54 +225,60 @@ export default function I18nContentEditor({ task, handleChange }) {
                   aggregateVariables: "[]",
                   addInfo: "",
               };
-              } 
-          {console.log(fieldValue)}
-          
+              }           
           if (JSON_FIELDS.includes(field)) {
             // Handle JSON fields (like settings)
             const jsonData = fieldValue || {};
             return (
               <div key={field} className="block" style={{ marginBottom: '1.5rem' }}>
-                <h2 style={{ marginBottom: '0.5rem', textTransform: 'capitalize' }}>
+                <h2 style={{ marginBottom: '1rem', marginTop: '2rem', textTransform: 'capitalize' }}>
                   {field}
                 </h2>
                 {Object.entries(jsonData).map(([jsonKey, jsonValue]) => (
-                  <div key={jsonKey} className="json-field" style={{ 
-                    marginBottom: '0.5rem',
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                    width: '100%'}}>
-                    <label style={{ width: '100%'}} htmlFor={`${activeLanguage}-${field}-${jsonKey}`}>
-                      {jsonKey}:
-                      {typeof jsonValue === 'boolean' ? (
-                        <input
-                          type="checkbox"
-                          id={`${activeLanguage}-${field}-${jsonKey}`}
-                          checked={jsonValue}
-                          onChange={(e) => 
-                            handleI18nJsonChange(activeLanguage, field, jsonKey, e.target.checked)
-                          }
-                        />
-                      ) : (
-                        <textarea
-                          id={`${activeLanguage}-${field}-${jsonKey}`}
-                          value={jsonValue || ''}
-                          onChange={(e) => 
-                            handleI18nJsonChange(activeLanguage, field, jsonKey, e.target.value)
-                          }
-                          rows={jsonValue && jsonValue.length > 50 ? 3 : 1}
-                          style={{ width: '100%', minHeight: '2rem' }}
-                        />
-                      )}
-                    </label>
+                  <div key={jsonKey} className="json-field" style={{ marginBottom: '0.5rem' }}>
+                    <p style={{ marginBottom: '1rem', marginTop: '2rem', textTransform: 'capitalize' }}>
+                        {jsonKey}</p>
+                    {jsonKey === "resources" ? (
+                    <ArrayBuilder
+                      name={`${activeLanguage}-${field}-${jsonKey}`}
+                      content={jsonValue}
+                      onChange={(e) => handleI18nJsonChange(activeLanguage, field, jsonKey, e.target.value)}
+                      title={t("resource")}
+                    />
+                    ) : jsonKey === "aggregateVariables" ? (
+                    <ObjectBuilder
+                      name={`${activeLanguage}-${field}-${jsonKey}`}
+                      content={jsonValue}
+                      onChange={(e) => handleI18nJsonChange(activeLanguage, field, jsonKey, e.target.value)}
+                      title={t("variable")}
+                    />
+                    ) : typeof jsonValue === "boolean" ? (
+                    <input
+                      type="checkbox"
+                      checked={jsonValue}
+                      onChange={(e) =>
+                      handleI18nJsonChange(activeLanguage, field, jsonKey, e.target.checked)
+                      }
+                    />
+                    ) : (
+                    <textarea
+                      value={jsonValue || ""}
+                      onChange={(e) =>
+                      handleI18nJsonChange(activeLanguage, field, jsonKey, e.target.value)
+                      }
+                      rows={jsonValue && jsonValue.length > 50 ? 3 : 1}
+                      style={{ width: "100%", minHeight: "2rem" }}
+                    />
+                    )}
                   </div>
-                ))}
+              ))}
               </div>
             );
           } else {
             // Handle string fields
             return (
               <div key={field} className="block">
+                <br></br>
                 <label htmlFor={`${activeLanguage}-${field}`}>
                   {field === 'title' ? t("titleText") : 
                    field === 'description' ? t("descriptionDevelop") :
@@ -262,6 +302,7 @@ export default function I18nContentEditor({ task, handleChange }) {
                     />
                   )}
                 </label>
+                <br></br>
               </div>
             );
           }

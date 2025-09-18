@@ -460,7 +460,21 @@
 	"students": {
 		"goBack": "← वापस जाएं"
 	},
-	"studentsTab": "छात्र",
+	"studentsTab": {
+		"addToClass": "",
+		"assignToClass": "",
+		"classResources": "",
+		"code": "",
+		"completionOverview": "",
+		"copiedLink": "",
+		"copy": "",
+		"email": "",
+		"removeFromClass": "",
+		"removeStudent": "",
+		"shareMessage": "",
+		"student": "",
+		"tab": "छात्र"
+	},
 	"studentsWillHaveAccessTo": "आपके छात्रों को निम्नलिखित तक पहुंच प्राप्त होगी:",
 	"studentUsername": "छात्र/उपयोगकर्ता नाम",
 	"studies": {

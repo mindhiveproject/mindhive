@@ -19,6 +19,7 @@ export default function Overview({ query, user }) {
     
     function handleStartTour(event) {
       const tourId = event?.detail?.tourId || 'overview';
+      const tourData = event?.detail?.tourData;
       
       // Prevent multiple tours from starting simultaneously
       if (isStartingTour) {
@@ -36,8 +37,13 @@ export default function Overview({ query, user }) {
       
       (async () => {
         const introJs = (await import('intro.js')).default;
-        const tours = reviewOverviewTours;
-        const selectedTour = tours[tourId];
+        
+        // Use tour data from event if available, otherwise fallback to static import
+        let selectedTour = tourData;
+        if (!selectedTour) {
+          const tours = reviewOverviewTours;
+          selectedTour = tours[tourId];
+        }
         
         if (!selectedTour) {
           console.error(`Tour ${tourId} not found`);
@@ -58,7 +64,7 @@ export default function Overview({ query, user }) {
         
         // Start the tour
         currentTour.start();
-        
+
         // Clean up when tour ends
         currentTour.onComplete(() => {
           currentTour = null;
@@ -69,6 +75,7 @@ export default function Overview({ query, user }) {
           currentTour = null;
           isStartingTour = false;
         });
+
       })();
     }
     
