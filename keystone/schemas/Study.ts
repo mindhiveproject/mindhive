@@ -158,6 +158,10 @@ export const Study = list({
       ref: "VizJournal.study",
       many: true,
     }),
+    proposalCards: relationship({
+      ref: "ProposalCard.studies",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

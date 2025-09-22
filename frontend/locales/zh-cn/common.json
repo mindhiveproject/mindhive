@@ -20,6 +20,7 @@
 		"requestReset": "请求重置",
 		"username": "用户名"
 	},
+	"cancel": "取消",
 	"classes": {
 		"typeClassTitle": "键入类别标题"
 	},
@@ -363,6 +364,7 @@
 		"save": "节省",
 		"sendEmail": "发送电子邮件",
 		"title": "标题",
+		"update": "更新",
 		"updatedAt": "更新于",
 		"user": "用户"
 	},

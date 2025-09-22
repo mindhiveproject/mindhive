@@ -78,5 +78,17 @@ export const ProposalCard = list({
       ref: "Resource.proposalCards",
       many: true,
     }),
+    assignments: relationship({
+      ref: "Assignment.proposalCards",
+      many: true,
+    }),
+    studies: relationship({
+      ref: "Study.proposalCards",
+      many: true,
+    }),
+    tasks: relationship({
+      ref: "Task.proposalCards",
+      many: true,
+    }),
   },
 });

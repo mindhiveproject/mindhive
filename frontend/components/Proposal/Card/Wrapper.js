@@ -32,6 +32,7 @@ export default function CardWrapper({
 
   // TODO also check whether the teacher/mentor is a teacher/mentor of the particular class
   const hasOverviewAccess =
+    user?.permissions.map((p) => p?.name).includes("ADMIN") ||
     user?.permissions.map((p) => p?.name).includes("TEACHER") ||
     user?.permissions.map((p) => p?.name).includes("MENTOR");
 

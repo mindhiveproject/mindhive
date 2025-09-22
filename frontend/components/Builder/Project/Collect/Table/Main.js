@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import Header from "./Header";
 import Grid from "./Grid";
 
-import { studyStatuses } from "../Participant/Results/Dataset";
+import { studyStatusKeys, getTranslatedStudyStatuses } from "../Participant/Results/Dataset";
 
 function getUnique(array) {
   return [...new Set(array)];
@@ -15,8 +16,12 @@ export default function ParticipantsTable({
   users,
   guests,
 }) {
+  const { t } = useTranslation("builder");
   // participants
   const [participants, setParticipants] = useState([]);
+
+  // Get translated study statuses
+  const studyStatuses = getTranslatedStudyStatuses(t);
 
   const processParticipant = ({ participant }) => {
     const generalInfo =
@@ -74,9 +79,11 @@ export default function ParticipantsTable({
       (dataset) => dataset?.studyStatus
     );
     const uniqueDatasetStatuses = getUnique(datasetStatuses);
-    const studyStatus = uniqueDatasetStatuses.map(
-      (status) => studyStatuses[status]
-    );
+    // Now returns translated strings instead of translation keys
+    const studyStatus = uniqueDatasetStatuses
+      .filter((status) => status) // Filter out undefined/null statuses
+      .map((status) => studyStatuses[status])
+      .filter((translatedStatus) => translatedStatus); // Filter out any undefined translations
 
     return {
       publicId: participant?.publicId,

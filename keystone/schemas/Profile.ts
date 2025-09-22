@@ -127,7 +127,8 @@ export const Profile = list({
     language: select({
       options: [
         { label: "English (American)", value: "EN-US" },
-        { label: "Español", value: "ES-ES" },
+        { label: "Español (ES)", value: "ES-ES" },
+        { label: "Español (LA)", value: "ES-LA" },
         { label: "中文", value: "ZH-CN" },
         { label: "Français", value: "FR-FR" },
         { label: "العربية", value: "AR-AE" },

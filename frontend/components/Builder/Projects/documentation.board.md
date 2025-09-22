@@ -1,7 +1,7 @@
-# Proposal Board
+# Project Board
 
 ## Overview
-The Proposal Board is a central place for users to create, view, edit, submit, and manage research proposals within a project. It is deeply integrated throughout the Builder area and Dashboard.
+The Project Board is a central place for users to create, view, edit, submit, and manage research proposals within a project. It is deeply integrated throughout the Builder area and Dashboard.
 
 ## Main Components
 - **Proposal Overview**: Displays a list of columns representing the different stages of your research proposal. Each card contains 

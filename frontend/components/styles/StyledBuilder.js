@@ -126,6 +126,13 @@ export const StyledBuilderArea = styled.div`
         display: grid;
         grid-gap: 20px;
         grid-template-columns: auto auto auto auto;
+        .saveFirstMessage {
+          padding: 10px 10px;
+          border-radius: 10px;
+          background: white;
+          color: #b9261a;
+          border: solid 1px #b9261a;
+        }
         .icon {
           display: grid;
           align-items: center;

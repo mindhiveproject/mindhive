@@ -6,6 +6,7 @@ import { GET_PUBLIC_AND_PROJECT_RESOURCES } from "../../Queries/Resource";
 import Link from "next/link";
 import DeleteResource from "./DeleteResource";
 
+import useTranslation from "next-translate/useTranslation";
 export default function ProjectResourcesList({ query, user, projectId }) {
   const { data, error, loading } = useQuery(GET_PUBLIC_AND_PROJECT_RESOURCES, {
     variables: {
@@ -14,7 +15,7 @@ export default function ProjectResourcesList({ query, user, projectId }) {
   });
 
   const resources = data?.resources || [];
-
+  const { t } = useTranslation("classes");
   const publicResources = resources.filter((resource) => resource?.isPublic);
   const projectResources = resources.filter((resource) => resource?.isCustom);
 
@@ -47,9 +48,9 @@ export default function ProjectResourcesList({ query, user, projectId }) {
   return (
     <div className="board">
       <div className="headerMy">
-        <p>Title</p>
-        <p>Created</p>
-        <p>Last updated</p>
+        <p>{t("boardManagement.title")}</p>
+        <p>{t("boardManagement.created")}</p>
+        <p>{t("boardManagement.lastUpdated")}</p>
       </div>
       {resourcesMerged?.map((resource, i) => (
         <div key={i} className="wrapper">
@@ -81,7 +82,7 @@ export default function ProjectResourcesList({ query, user, projectId }) {
               }}
               key={i}
             >
-              <button>Edit</button>
+              <button>{t("boardManagement.edit")}</button>
             </Link>
           ) : (
             <Link
@@ -94,7 +95,7 @@ export default function ProjectResourcesList({ query, user, projectId }) {
               }}
               key={i}
             >
-              <button>Customize</button>
+              <button>{t("boardManagement.customize")}</button>
             </Link>
           )}
           {/* <DeleteResource

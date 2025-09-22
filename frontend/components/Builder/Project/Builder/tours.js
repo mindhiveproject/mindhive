@@ -1,4 +1,3 @@
-// https://www.notion.so/mindhive/Study-Builder-Study-Builder-242d80abf4c4807bbacfe39f0f5b0e57
 export const builderTours = {
   overview: {
     title: "Study Builder Overview",

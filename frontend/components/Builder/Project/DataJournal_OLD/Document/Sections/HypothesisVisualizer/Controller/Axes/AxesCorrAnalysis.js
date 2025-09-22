@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Popup } from "semantic-ui-react";
 import { useQuery } from "@apollo/client";
-
+import { useRouter } from "next/router";
 import { GET_STUDY_FLOW, GET_BLOCK_AGGVAR } from "../../../../../../../../Queries/Study";
 
 import AggregateVarSelector from "../Fields/AggregateVarSelector";
@@ -17,6 +17,8 @@ export default function Axes({
   handleContentChange,
   studyId,
 }) {
+  const router = useRouter();
+  const currentLocale = router.locale || 'en-us'; // fallback to en-us
 
   const [activeIndex, setActiveIndex] = useState(-1);
   const [jsonObject, setJsonObject] = useState(selectors);
@@ -64,37 +66,53 @@ print("Py code parameters", parameters)
       label: block.name || block.type,
       ID: block.componentID,
     }));
-    const taskIds = aggregateVarOptions.map(block => block.ID);
+
+  const taskIds = aggregateVarOptions.map(block => block.ID);
     
-    const {
-      data: aggVarData,
-      loading: aggVarLoading,
-      error: aggVarError
-    } = useQuery(GET_BLOCK_AGGVAR, {
-      variables: {
-        where: {
-          id: {
-            in: taskIds
-          }
+  const {
+    data: aggVarData,
+    loading: aggVarLoading,
+    error: aggVarError
+  } = useQuery(GET_BLOCK_AGGVAR, {
+    variables: {
+      where: {
+        id: {
+          in: taskIds
         }
-      },
-    });
+      }
+    },
+  });
     
-  // const optionsAggVar = aggVarData.map(block => block.settings?.aggregateVariables || []);
-  const optionsAggVar = aggVarData?.tasks?.flatMap((task) => {
-    // Parse the aggregateVariables string into an array
-    return JSON.parse(task.settings?.aggregateVariables || "[]");
-  }) || [];
-  const formattedItems = optionsAggVar.map(item => {
+// Extract aggregate variables for the current locale
+  const optionsAggVar =
+    aggVarData?.tasks?.flatMap((task) => {
+      // Prefer i18nContent for the current locale, fallback to plain settings
+      const settings =
+        task?.i18nContent?.[currentLocale]?.settings || task?.settings;
+
+      // Parse safely (always a stringified JSON)
+      try {
+        return JSON.parse(settings?.aggregateVariables || "[]");
+      } catch (e) {
+        console.error("Failed to parse aggregateVariables", e, settings?.aggregateVariables);
+        return [];
+      }
+    }) || [];
+
+  // Format only the variable names for now
+  const formattedItems = optionsAggVar.map((item) => {
+    const varName = typeof item === "string" ? item : item.varName;
     const parser = new DOMParser();
-    const parsedDoc = parser.parseFromString(item, "text/html");
+    const parsedDoc = parser.parseFromString(varName, "text/html");
     const strippedContent = parsedDoc.body.textContent || "";
+
     return {
-      key: strippedContent.toLowerCase().replace(/\s+/g, '-'),
+      key: strippedContent.toLowerCase().replace(/\s+/g, "-"),
       text: strippedContent,
-      value: strippedContent
+      value: strippedContent,
     };
   });
+
 
   const updateCode = async ({ code, newJsonObject }) => {
     const updatedConnectSelectorsCode = connectSelectorsCode.replace('dashboardJSON', JSON.stringify(newJsonObject));

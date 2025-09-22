@@ -7,7 +7,7 @@ import Proposal from "./Proposal";
 import { PROPOSAL_REVIEWS_QUERY } from "../../../Queries/Proposal";
 
 import { StyledReviewPage } from "../../../styles/StyledReview";
-import { reviewTours } from "./tour";
+import { reviewTours } from "./tours";
 
 export default function Review({ query, user, tab, toggleSidebar }) {
   const projectId = query?.selector;
@@ -27,6 +27,7 @@ export default function Review({ query, user, tab, toggleSidebar }) {
       
       function handleStartTour(event) {
         const tourId = event?.detail?.tourId || 'overview';
+        const tourData = event?.detail?.tourData;
         
         // Prevent multiple tours from starting simultaneously
         if (isStartingTour) {
@@ -44,8 +45,13 @@ export default function Review({ query, user, tab, toggleSidebar }) {
         
         (async () => {
           const introJs = (await import('intro.js')).default;
-          const tours = reviewTours;
-          const selectedTour = tours[tourId];
+          
+          // Use tour data from event if available, otherwise fallback to static import
+          let selectedTour = tourData;
+          if (!selectedTour) {
+            const tours = reviewTours;
+            selectedTour = tours[tourId];
+          }
           
           if (!selectedTour) {
             console.error(`Tour ${tourId} not found`);
@@ -57,18 +63,16 @@ export default function Review({ query, user, tab, toggleSidebar }) {
           currentTour = introJs.tour();
           currentTour.setOptions({
             steps: selectedTour.steps,
-            scrollToElement: true,
-            scrollTo: 'on',
+            scrollToElement: false,
+            scrollTo: 'off',
             exitOnOverlayClick: true,
             exitOnEsc: true,
-            showStepNumbers: false,
             showBullets: true,
-            showProgress: false,
           });
           
-                    // Start the tour
+          // Start the tour
           currentTour.start();
-          
+  
           // Clean up when tour ends
           currentTour.onComplete(() => {
             currentTour = null;
@@ -79,7 +83,7 @@ export default function Review({ query, user, tab, toggleSidebar }) {
             currentTour = null;
             isStartingTour = false;
           });
-
+  
         })();
       }
       

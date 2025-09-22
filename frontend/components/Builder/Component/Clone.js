@@ -92,7 +92,7 @@ export default function CloneTask({ query, user, taskSlug, redirect }) {
       handleChange={handleChange}
       handleMultipleUpdate={handleMultipleUpdate}
       handleSubmit={handleSubmit}
-      submitBtnName={t("common.create")}
+      submitBtnName={t("create.newBlock")}
       loading={taskLoading}
       error={taskError}
       isTemplateAuthor={false}

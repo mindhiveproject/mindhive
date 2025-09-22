@@ -57,6 +57,10 @@ export const Assignment = list({
       ref: "Homework.assignment",
       many: true,
     }),
+    proposalCards: relationship({
+      ref: "ProposalCard.assignments",
+      many: true,
+    }),
     title: text({ validation: { isRequired: true } }),
     content: text(),
     settings: json(),

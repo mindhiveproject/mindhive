@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 import moment from "moment";
 
 import { GET_PUBLIC_AND_CLASS_RESOURCES } from "../../Queries/Resource";
@@ -20,7 +21,7 @@ export default function ClassResourcesList({
   });
 
   const resources = data?.resources || [];
-
+  const { t } = useTranslation("classes");
   const publicResources = resources.filter((resource) => resource?.isPublic);
   const projectResources = resources.filter((resource) => resource?.isCustom);
 
@@ -47,8 +48,7 @@ export default function ClassResourcesList({
     return (
       <>
         <h3>
-          You don't have a project board associated with this class. Please
-          first create the project board.
+          {t("boardManagement.noBoardAssociated")}
         </h3>
         <Link
           href={{
@@ -58,7 +58,7 @@ export default function ClassResourcesList({
             },
           }}
         >
-          <button>Create a project board</button>
+          <button>{t("boardManagement.createProject")}</button>
         </Link>
       </>
     );
@@ -68,9 +68,9 @@ export default function ClassResourcesList({
     <div className="board">
       <div className="wrapper">
         <div className="headerMy">
-          <p>Title</p>
-          <p>Created</p>
-          <p>Last updated</p>
+          <p>{t("boardManagement.titleText")}</p>
+          <p>{t("boardManagement.created")}</p>
+          <p>{t("boardManagement.lastUpdated")}</p>
         </div>
       </div>
 
@@ -104,7 +104,7 @@ export default function ClassResourcesList({
               }}
               key={i}
             >
-              <button>Edit</button>
+              <button>{t("boardManagement.edit")}</button>
             </Link>
           ) : (
             <Link
@@ -118,7 +118,7 @@ export default function ClassResourcesList({
               }}
               key={i}
             >
-              <button>Customize</button>
+              <button>{t("customize")}</button>
             </Link>
           )}
         </div>

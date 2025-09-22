@@ -22,6 +22,7 @@ export const Task = list({
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
+    i18nContent: json(),
     taskType: select({
       type: "enum",
       options: [
@@ -107,6 +108,10 @@ export const Task = list({
     }),
     summaryResults: relationship({
       ref: "SummaryResult.task",
+      many: true,
+    }),
+    proposalCards: relationship({
+      ref: "ProposalCard.tasks",
       many: true,
     }),
     createdAt: timestamp({

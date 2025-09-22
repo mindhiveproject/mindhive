@@ -1,13 +1,21 @@
-import { useRef } from "react";
-import { useMutation } from "@apollo/client";
-import { Checkbox, Dropdown } from "semantic-ui-react";
-import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
+import { useRef, useState } from "react";
+import { useMutation, useApolloClient } from "@apollo/client";
+import { Checkbox, Dropdown, Modal, Button } from "semantic-ui-react";
+import {
+  UPDATE_CARD_CONTENT,
+  UPDATE_CARD_EDIT,
+} from "../../Mutations/Proposal";
+import {
+  GET_SECTIONS_BY_BOARD,
+  GET_CARDS_BY_SECTION,
+  CLASS_PROJECTS_QUERY,
+} from "../../Queries/Proposal";
 
 import useForm from "../../../lib/useForm";
-import JoditEditor from "../../Jodit/Editor";
+import TipTapEditor from "../../TipTap/Main";
 
 import CardType from "./Forms/Type";
-import Resources from "./Forms/Resources";
+import LinkedItems from "./Forms/LinkedItems";
 import useTranslation from "next-translate/useTranslation";
 
 const peerReviewOptions = [
@@ -50,8 +58,13 @@ export default function BuilderProposalCard({
 
   const [updateCard, { loading: updateLoading }] =
     useMutation(UPDATE_CARD_CONTENT);
+  const [updateClonedCard, { loading: updateClonedLoading }] =
+    useMutation(UPDATE_CARD_EDIT);
 
-  // update card content in the local state
+  const client = useApolloClient();
+  const [showCloneDialog, setShowCloneDialog] = useState(false);
+
+  // Update card content in the local state
   const handleContentChange = async ({ contentType, newContent }) => {
     if (contentType === "description") {
       description.current = newContent;
@@ -64,8 +77,112 @@ export default function BuilderProposalCard({
     }
   };
 
-  // update the card and close the modal
-  const onUpdateCard = async () => {
+  // Handler to update all clones
+  const updateClones = async () => {
+    if (!proposal?.prototypeFor?.length) return;
+
+    const originalSectionTitle = proposalCard?.section?.title;
+    const originalCardTitle = inputs?.title || proposalCard?.title;
+
+    if (!originalSectionTitle || !originalCardTitle) {
+      console.warn("Missing section or card title for matching clones");
+      return;
+    }
+
+    // Collect all matching card IDs across clones
+    const cardIds = [];
+
+    for (const clone of proposal.prototypeFor) {
+      try {
+        // Step 1: Query sections for this clone board
+        const { data: sectionsData } = await client.query({
+          query: GET_SECTIONS_BY_BOARD,
+          variables: { boardId: clone.id },
+        });
+
+        const sections = sectionsData?.proposalSections || [];
+        const matchingSection = sections.find(
+          (sec) => sec.title === originalSectionTitle
+        );
+
+        if (matchingSection) {
+          // Step 2: Query cards for the matching section
+          const { data: cardsData } = await client.query({
+            query: GET_CARDS_BY_SECTION,
+            variables: { sectionId: matchingSection.id },
+          });
+
+          const cards = cardsData?.proposalCards || [];
+          const matchingCard = cards.find(
+            (card) => card.title === originalCardTitle
+          );
+
+          if (matchingCard) {
+            cardIds.push(matchingCard.id);
+          } else {
+            console.warn(
+              `No matching card found in clone ${clone.id} (section: ${matchingSection.id}) for title "${originalCardTitle}"`
+            );
+          }
+        } else {
+          console.warn(
+            `No matching section found in clone ${clone.id} for title "${originalSectionTitle}"`
+          );
+        }
+      } catch (error) {
+        console.error(`Failed to process clone ${clone.id}:`, error);
+      }
+    }
+
+    // Update each cloned card individually using UPDATE_CARD_EDIT
+    if (cardIds.length > 0) {
+      const updateData = {
+        description: description.current,
+        resources: inputs?.resources?.length
+          ? {
+              connect: inputs.resources.map((resource) => ({
+                id: resource?.id,
+              })),
+            }
+          : null,
+        assignments: inputs?.assignments?.length
+          ? {
+              connect: inputs.assignments.map((assignment) => ({
+                id: assignment?.id,
+              })),
+            }
+          : null,
+        tasks: inputs?.tasks?.length
+          ? { connect: inputs.tasks.map((task) => ({ id: task?.id })) }
+          : null,
+        studies: inputs?.studies?.length
+          ? { connect: inputs.studies.map((study) => ({ id: study?.id })) }
+          : null,
+      };
+
+      for (const cardId of cardIds) {
+        try {
+          await updateClonedCard({
+            variables: {
+              id: cardId,
+              input: updateData,
+            },
+          });
+          console.log(`Updated clone card ${cardId}`);
+        } catch (error) {
+          console.error(`Failed to update clone card ${cardId}:`, error);
+        }
+      }
+      console.log(
+        `Updated ${cardIds.length} cloned cards: ${cardIds.join(", ")}`
+      );
+    } else {
+      console.warn("No matching cards found to update in clones");
+    }
+  };
+
+  // Update logic with clone check
+  const onUpdateCard = async (updateClonesToo = false) => {
     await updateCard({
       variables: {
         ...inputs,
@@ -74,10 +191,49 @@ export default function BuilderProposalCard({
         content: content?.current,
         assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
         resources: inputs?.resources?.map((resource) => ({ id: resource?.id })),
+        assignments: inputs?.assignments?.map((assignment) => ({
+          id: assignment?.id,
+        })),
+        tasks: inputs?.tasks?.map((task) => ({ id: task?.id })),
+        studies: inputs?.studies?.map((study) => ({ id: study?.id })),
       },
     });
+
+    // If updating clones, do it now
+    if (updateClonesToo) {
+      await updateClones();
+    }
+
     closeCard({ cardId: proposalCard?.id, lockedByUser: false });
   };
+
+  // Trigger save with clone check
+  const handleSave = async () => {
+    if (proposal?.prototypeFor?.length > 0) {
+      setShowCloneDialog(true);
+    } else {
+      await onUpdateCard(false);
+    }
+  };
+
+  // Modal handlers
+  const handleCloneYes = async () => {
+    setShowCloneDialog(false);
+    await onUpdateCard(true); // true flag to update clones
+  };
+
+  const handleCloneNo = () => {
+    setShowCloneDialog(false);
+    onUpdateCard(false);
+  };
+
+  // Calculate total linked items
+  const totalLinked = [
+    ...(inputs?.resources || []),
+    ...(inputs?.assignments || []),
+    ...(inputs?.tasks || []),
+    ...(inputs?.studies || []),
+  ].length;
 
   return (
     <div className="post">
@@ -98,20 +254,54 @@ export default function BuilderProposalCard({
           <span className="studyTitle">{proposal?.title}</span>
         </div>
         <div className="right">
-          <div className="editModeMessage">You are in Edit Mode</div>
-          <button onClick={() => onUpdateCard()} className="saveButton">
+          <div className="editModeMessage">
+            {t("board.editMode", "You are in Edit Mode")}
+          </div>
+          <button
+            onClick={handleSave}
+            className="saveButton"
+            disabled={updateLoading || updateClonedLoading}
+          >
             {t("board.save", "Save")}
           </button>
         </div>
       </div>
 
+      {/* Clone Update Modal */}
+      <Modal open={showCloneDialog} onClose={handleCloneNo} size="small">
+        <Modal.Header>Update Cloned Boards?</Modal.Header>
+        <Modal.Content>
+          <p>
+            This board has {proposal?.prototypeFor?.length} cloned project
+            board(s). Do you want to update the corresponding cards in all
+            cloned project boards with these changes? (This will update
+            descriptions and linked items: resources, assignments, tasks, and
+            studies.)
+          </p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button color="black" onClick={handleCloneNo}>
+            No, update only this board
+          </Button>
+          <Button
+            positive
+            onClick={handleCloneYes}
+            loading={updateLoading || updateClonedLoading}
+          >
+            Yes, update all clones
+          </Button>
+        </Modal.Actions>
+      </Modal>
+
       <div className="proposalCardBoard">
         <div className="textBoard">
           <label htmlFor="title">
-            <div className="cardHeader">{t("board.cardTitle")}</div>
+            <div className="cardHeader">{t("board.expendedCard.title")}</div>
             <div className="cardSubheaderComment">
-              Add or edit the card title. This title will appear as a section
-              title if student input is made visible
+              {t(
+                "board.expendedCard.titleText",
+                "Add or edit the card title. This title will appear as a section title if student input is made visible"
+              )}
             </div>
             <p></p>
             <input
@@ -123,21 +313,24 @@ export default function BuilderProposalCard({
             />
           </label>
           <label htmlFor="description">
-            <div className="cardHeader">{t("board.instructions")}</div>
+            <div className="cardHeader">
+              {t("board.expendedCard.instructions")}
+            </div>
             <div className="cardSubheaderComment">
-              Add or edit instructions for students telling them how to complete
-              the card
+              {t(
+                "board.expendedCard.instructionsText",
+                "Add or edit instructions for students telling them how to complete the card"
+              )}
             </div>
             <div className="jodit">
-              <JoditEditor
+              <TipTapEditor
                 content={description?.current}
-                setContent={(newContent) =>
+                onUpdate={(newContent) =>
                   handleContentChange({
                     contentType: "description",
                     newContent,
                   })
                 }
-                minHeight={300}
               />
             </div>
           </label>
@@ -146,52 +339,24 @@ export default function BuilderProposalCard({
             <>
               <label htmlFor="description">
                 <div className="cardHeader">
-                  {t("board.studentResponseBoxNetwork")}
+                  {t("board.expendedCard.studentResponseBoxNetwork")}
                 </div>
                 <div className="cardSubheaderComment">
-                  The content students include here will be visible in the
-                  Feedback Center once it is submitted via an Action Card.
-                  Include any templates or placeholder text as needed
+                  {t(
+                    "board.expendedCard.studentResponseBoxNetworkText",
+                    "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed"
+                  )}
                 </div>
               </label>
               <div className="jodit">
-                <JoditEditor
+                <TipTapEditor
                   content={content?.current}
-                  setContent={(newContent) =>
+                  onUpdate={(newContent) =>
                     handleContentChange({
                       contentType: "content",
                       newContent,
                     })
                   }
-                  minHeight={200}
-                />
-              </div>
-            </>
-          )}
-
-          {!inputs?.settings?.excludeFromCollaborators && (
-            <>
-              <label htmlFor="description">
-                <div className="cardHeader">
-                  {t("board.studentResponseBoxCollaborators")}
-                </div>
-                <div className="cardSubheaderComment">
-                  The content students include here will only be visible to
-                  their project collaborators and teacher(s). Include any
-                  templates or placeholder text as needed
-                </div>
-              </label>
-
-              <div className="jodit">
-                <JoditEditor
-                  content={internalContent?.current}
-                  setContent={(newContent) =>
-                    handleContentChange({
-                      contentType: "internalContent",
-                      newContent,
-                    })
-                  }
-                  minHeight={200}
                 />
               </div>
             </>
@@ -199,40 +364,15 @@ export default function BuilderProposalCard({
         </div>
         <div className="infoBoard">
           <>
-            <div className="cardHeader">{t("board.visibility")}</div>
+            <div className="cardHeader">
+              {t("board.expendedCard.visibility")}
+            </div>
             <div className="cardSubheaderComment">
-              Check the boxes below to indicate whether student responses should
-              be kept private (only for collaborators on the project + teacher)
-              or made visible in the Feedback Center - or a combination of both.
-              Examples of “visible” responses you might want to include:
-              Proposal, Peer Review, or Final Report responses.
+              {t(
+                "board.expendedCard.visibilityText",
+                "Check the box below to indicate whether student responses should be made visible in the Feedback Center."
+              )}
             </div>
-
-            <div className="checkboxText">
-              <Checkbox
-                name="collaboratorsCardToggle"
-                id="collaboratorsCardToggle"
-                onChange={(event, data) =>
-                  handleChange({
-                    target: {
-                      name: "settings",
-                      value: {
-                        ...inputs.settings,
-                        excludeFromCollaborators: !data.checked,
-                      },
-                    },
-                  })
-                }
-                checked={!inputs?.settings?.excludeFromCollaborators}
-              />
-
-              <label for="collaboratorsCardToggle">
-                <div className="cardDescription">
-                  {t("board.includeTextCollaborators")}
-                </div>
-              </label>
-            </div>
-
             <div className="checkboxText">
               <Checkbox
                 name="feedbackCenterCardToggle"
@@ -250,10 +390,9 @@ export default function BuilderProposalCard({
                 }
                 checked={inputs?.settings?.includeInReport}
               />
-
-              <label for="feedbackCenterCardToggle">
+              <label htmlFor="feedbackCenterCardToggle">
                 <div className="cardDescription">
-                  {t("board.includeTextFeedbackCenter")}
+                  {t("board.expendedCard.includeTextFeedbackCenter")}
                 </div>
               </label>
             </div>
@@ -263,7 +402,7 @@ export default function BuilderProposalCard({
             <div>
               <div className="cardSubheaderComment">{t("board.status")}</div>
               <Dropdown
-                placeholder="Select option"
+                placeholder={t("board.expendedCard.select")}
                 fluid
                 multiple
                 search
@@ -286,36 +425,37 @@ export default function BuilderProposalCard({
             </div>
           )}
 
-          {/* {user.permissions.map((p) => p?.name).includes("ADMIN") && (
-            <div>
-              <div className="cardHeader">Type</div>
-              <CardType type={inputs?.type} handleChange={handleChange} />
-            </div>
-          )} */}
-
           <div>
-            <div className="cardHeader">{t("board.type")}</div>
+            <div className="cardHeader">{t("board.expendedCard.type")}</div>
             <CardType type={inputs?.type} handleChange={handleChange} />
           </div>
 
           <>
-            <div className="cardHeader">{t("board.resources")}</div>
-            <div className="cardSubheaderComment">
-              {t("board.addExistingResources")}
+            <div className="cardHeader">
+              {t("board.expendedCard.linkedItems", "Linked Items")}
             </div>
-            <Resources
+            <div className="cardSubheaderComment">
+              {t(
+                "board.expendedCard.addLinkedItems",
+                "Add existing assignments, tasks, studies, or resources"
+              )}
+            </div>
+            <LinkedItems
               proposal={proposal}
               user={user}
               handleChange={handleChange}
               selectedResources={inputs?.resources || []}
+              selectedAssignments={inputs?.assignments || []}
+              selectedTasks={inputs?.tasks || []}
+              selectedStudies={inputs?.studies || []}
+              totalLinked={totalLinked}
             />
           </>
 
           <div className="proposalCardComments">
-            <div className="cardHeader">{t("board.comments")}</div>
+            <div className="cardHeader">{t("board.expendedCard.comments")}</div>
             <div className="cardSubheaderComment">
-              This will pre-populate the Comment Box for students. You can
-              delete comments later.
+              {t("board.expendedCard.commentsText")}
             </div>
             <textarea
               rows="5"

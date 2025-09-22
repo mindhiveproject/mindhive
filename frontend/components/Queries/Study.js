@@ -562,6 +562,7 @@ export const GET_BLOCK_AGGVAR = gql`
   query Tasks($where: TaskWhereInput!) {
     tasks(where: $where) {
       settings
+      i18nContent
     }
   }
 `;

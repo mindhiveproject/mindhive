@@ -1,4 +1,3 @@
-// https://www.notion.so/mindhive/Study-Builder-Review-245d80abf4c4809db63df5b9d5cf1db3
 export const reviewTours = {
     overview: {
       title: "Review Tab",

@@ -53,6 +53,9 @@ export const OVERVIEW_PROPOSAL_BOARD_QUERY = gql`
       isSubmitted
       isTemplate
       settings
+      prototypeFor {
+        id
+      }
       study {
         id
         author {
@@ -85,6 +88,9 @@ export const PROPOSAL_QUERY = gql`
       projectReportStatus
       projectReportOpenForComments
       isTemplate
+      prototypeFor {
+        id
+      }
       usedInClass {
         id
         title
@@ -186,8 +192,24 @@ export const GET_CARD_CONTENT = gql`
         title
         content
       }
+      assignments {
+        id
+        title
+        content
+      }
+      tasks {
+        id
+        title
+        slug
+      }
+      studies {
+        id
+        title
+        slug
+      }
       section {
         id
+        title
       }
     }
   }
@@ -636,6 +658,91 @@ export const GET_MY_PROJECT_BOARDS_IN_CLASS = gql`
         username
       }
       createdAt
+    }
+  }
+`;
+
+export const GET_MY_AUTHORED_PROJECT_BOARDS = gql`
+  query GET_MY_AUTHORED_PROJECT_BOARDS($userId: ID!) {
+    proposalBoards(
+      where: {
+        AND: [
+          { isHidden: { equals: false } }
+          { author: { id: { equals: $userId } } }
+        ]
+      }
+    ) {
+      id
+      title
+      slug
+      description
+      isSubmitted
+      settings
+      author {
+        username
+      }
+      collaborators {
+        id
+        username
+      }
+      study {
+        id
+        title
+        slug
+      }
+      templateForClasses {
+        id
+        title
+        code
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const GET_PROPOSAL_TEMPLATE_CLASSES = gql`
+  query GET_PROPOSAL_TEMPLATE_CLASSES($id: ID!) {
+    proposalBoard(where: { id: $id }) {
+      id
+      title
+      templateForClasses {
+        id
+        title
+        code
+      }
+      prototypeFor {
+        id
+        title
+        author {
+          username
+        }
+        collaborators {
+          username
+        }
+        usedInClass {
+          title
+          code
+        }
+      }
+    }
+  }
+`;
+
+export const GET_SECTIONS_BY_BOARD = gql`
+  query GET_SECTIONS_BY_BOARD($boardId: ID!) {
+    proposalSections(where: { board: { id: { equals: $boardId } } }) {
+      id
+      title
+    }
+  }
+`;
+
+export const GET_CARDS_BY_SECTION = gql`
+  query GET_CARDS_BY_SECTION($sectionId: ID!) {
+    proposalCards(where: { section: { id: { equals: $sectionId } } }) {
+      id
+      title
     }
   }
 `;

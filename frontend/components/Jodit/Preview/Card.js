@@ -2,12 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useMutation } from "@apollo/client";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
 import { Button, Icon, Accordion } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import ReactHtmlParser from "react-html-parser";
+import TipTapEditor from "../../TipTap/Main";
 
 import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 import { GET_CARD_CONTENT } from "../../Queries/Proposal";
@@ -30,52 +28,11 @@ export default function Card({ card, cardId, user }) {
     refetchQueries: [{ query: GET_CARD_CONTENT, variables: { id: cardId } }],
   });
 
-  const editor = useEditor({
-    extensions: [StarterKit, Underline],
-    content: content,
-    onUpdate: ({ editor }) => {
-      const newContent = editor.getHTML();
-      setContent(newContent);
-      setHasContentChanged(
-        newContent !== card?.content ||
-          revised !== (card?.revisedContent || card?.content) ||
-          comment !== card?.comment
-      );
-      setSaveStatus("idle");
-    },
-    editable: !card.isLocked,
-  });
-
-  const revisedEditor = useEditor({
-    extensions: [StarterKit, Underline],
-    content: revised,
-    onUpdate: ({ editor }) => {
-      const newRevised = editor.getHTML();
-      setRevised(newRevised);
-      setHasContentChanged(
-        newRevised !== (card?.revisedContent || card?.content) ||
-          content !== card?.content ||
-          comment !== card?.comment
-      );
-      setSaveStatus("idle");
-    },
-    editable: isUsedLoggedIn && card.settings?.includeInReport,
-    immediatelyRender: false,
-  });
-
   useEffect(() => {
     // Sync content and comment only when cardId changes or on initial mount
     if (prevCardId.current !== cardId) {
-      if (editor && !card.isLocked) {
-        editor.commands.setContent(card?.content || "");
-        setContent(card?.content || "");
-      }
-      if (revisedEditor) {
-        revisedEditor.commands.setContent(
-          card?.revisedContent || card?.content || ""
-        );
-        setRevised(card?.revisedContent || card?.content || "");
-      }
+      setContent(card?.content || "");
+      setRevised(card?.revisedContent || card?.content || "");
       setComment(card?.comment || "");
       setHasContentChanged(false);
       setSaveStatus("idle");
@@ -86,17 +43,11 @@ export default function Card({ card, cardId, user }) {
         setComment(card?.comment || "");
       }
       // Sync content for unlocked cards if not changed
-      if (
-        editor &&
-        !card.isLocked &&
-        !hasContentChanged &&
-        card?.content !== content
-      ) {
-        editor.commands.setContent(card?.content || "");
+      if (!card.isLocked && !hasContentChanged && card?.content !== content) {
         setContent(card?.content || "");
       }
     }
-  }, [card, cardId, editor, revisedEditor]);
+  }, [card, cardId]);
 
   const saveChanges = async () => {
     if (!hasContentChanged || loading) return;
@@ -123,105 +74,6 @@ export default function Card({ card, cardId, user }) {
       console.error("Failed to save changes:", error);
       setSaveStatus("idle");
     }
-  };
-
-  const Toolbar = ({ editor, isRevised = false }) => {
-    if (!editor) return null;
-
-    const handleButtonClick = (action) => {
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
-      action();
-    };
-
-    return (
-      <div
-        tabIndex={0}
-        style={{
-          marginBottom: "10px",
-          display: "grid",
-          gridTemplateColumns: "auto auto auto auto 1fr",
-          background: "#f5f5f5",
-          padding: "5px 10px",
-          borderRadius: "5px",
-        }}
-      >
-        <Button
-          icon
-          onClick={() =>
-            handleButtonClick(() => editor.chain().focus().toggleBold().run())
-          }
-          disabled={loading || !editor.isEditable}
-          active={editor.isActive("bold")}
-          aria-label="Toggle bold"
-        >
-          <Icon name="bold" />
-        </Button>
-        <Button
-          icon
-          onClick={() =>
-            handleButtonClick(() => editor.chain().focus().toggleItalic().run())
-          }
-          disabled={loading || !editor.isEditable}
-          active={editor.isActive("italic")}
-          aria-label="Toggle italic"
-        >
-          <Icon name="italic" />
-        </Button>
-        <Button
-          icon
-          onClick={() =>
-            handleButtonClick(() =>
-              editor.chain().focus().toggleUnderline().run()
-            )
-          }
-          disabled={loading || !editor.isEditable}
-          active={editor.isActive("underline")}
-          aria-label="Toggle underline"
-        >
-          <Icon name="underline" />
-        </Button>
-        <Button
-          icon
-          onClick={() =>
-            handleButtonClick(() =>
-              editor.chain().focus().toggleHeading({ level: 1 }).run()
-            )
-          }
-          disabled={loading || !editor.isEditable}
-          active={editor.isActive("heading", { level: 1 })}
-          aria-label="Toggle heading 1"
-        >
-          <Icon name="header" />
-        </Button>
-        <Button
-          primary
-          size="medium"
-          onClick={() => handleButtonClick(saveChanges)}
-          disabled={loading || !hasContentChanged}
-          style={{
-            marginLeft: "15px",
-            transition: "background-color 0.2s",
-          }}
-          aria-label="Save changes"
-          aria-busy={loading}
-          className={saveStatus === "success" ? "positive" : ""}
-        >
-          {saveStatus === "success" ? (
-            <>
-              <Icon name="check" /> Saved
-            </>
-          ) : loading ? (
-            "Saving..."
-          ) : isRevised ? (
-            "Save Revised"
-          ) : (
-            "Save"
-          )}
-        </Button>
-      </div>
-    );
   };
 
   // Map review steps to user-friendly text
@@ -261,7 +113,32 @@ export default function Card({ card, cardId, user }) {
       >
         Status: {statusText} | Review Steps: {reviewStepsText}
       </div>
-      {!card.isLocked && <Toolbar editor={editor} />}
+      {!card.isLocked && (
+        <div style={{ marginBottom: "10px" }}>
+          <Button
+            primary
+            size="medium"
+            onClick={saveChanges}
+            disabled={loading || !hasContentChanged}
+            style={{
+              transition: "background-color 0.2s",
+            }}
+            aria-label="Save changes"
+            aria-busy={loading}
+            className={saveStatus === "success" ? "positive" : ""}
+          >
+            {saveStatus === "success" ? (
+              <>
+                <Icon name="check" /> Saved
+              </>
+            ) : loading ? (
+              "Saving..."
+            ) : (
+              "Save"
+            )}
+          </Button>
+        </div>
+      )}
       <div
         style={{
           display: "flex",
@@ -306,15 +183,36 @@ export default function Card({ card, cardId, user }) {
                   <h3>{t("mainCard.revisedContent", "Revised Content")}</h3>
                   {isUsedLoggedIn ? (
                     <>
-                      <Toolbar editor={revisedEditor} isRevised={true} />
-                      <EditorContent
-                        editor={revisedEditor}
+                      <Button
+                        primary
+                        size="medium"
+                        onClick={saveChanges}
+                        disabled={loading || !hasContentChanged}
                         style={{
-                          border: "1px solid #ccc",
-                          padding: "10px",
-                          boxSizing: "border-box",
-                          minHeight: "200px",
+                          marginBottom: "10px",
+                          transition: "background-color 0.2s",
                         }}
+                        aria-label="Save revised changes"
+                        aria-busy={loading}
+                        className={saveStatus === "success" ? "positive" : ""}
+                      >
+                        {saveStatus === "success" ? (
+                          <>
+                            <Icon name="check" /> Saved
+                          </>
+                        ) : loading ? (
+                          "Saving..."
+                        ) : (
+                          "Save Revised"
+                        )}
+                      </Button>
+                      <TipTapEditor
+                        content={revised}
+                        onUpdate={setRevised}
+                        isEditable={
+                          isUsedLoggedIn && card.settings?.includeInReport
+                        }
+                        toolbarVisible={true}
                       />
                     </>
                   ) : (
@@ -334,14 +232,19 @@ export default function Card({ card, cardId, user }) {
               )}
             </>
           ) : (
-            <EditorContent
-              editor={editor}
-              style={{
-                border: "1px solid #ccc",
-                padding: "10px",
-                height: "100%",
-                boxSizing: "border-box",
+            <TipTapEditor
+              content={content}
+              onUpdate={(newContent) => {
+                setContent(newContent);
+                setHasContentChanged(
+                  newContent !== card?.content ||
+                    revised !== (card?.revisedContent || card?.content) ||
+                    comment !== card?.comment
+                );
+                setSaveStatus("idle");
               }}
+              isEditable={!card.isLocked}
+              toolbarVisible={true}
             />
           )}
         </div>

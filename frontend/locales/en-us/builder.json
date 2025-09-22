@@ -137,6 +137,17 @@
 	"consentSelector": {
 		"typeConsentProtocol": "Type consent protocol"
 	},
+	"createBlock": {
+		"currentlySelected": "Currently selected language: ",
+		"howTo": "How to use this editor?",
+		"howTo1": "Write English content using the fields below this block AND UPDATE/CREATE the block. (This should have populated the field under the English tag in the i18n editor.)",
+		"howTo2": "Select a language below to edit the content for each of these fields in that language. Note that some fields may be displayed in English because they are derived from the internal task code, which cannot be translated.",
+		"internationalContent": "i18n Editor",
+		"intro": "Use this editor to provide a translation of your block in the language of your choice. (i18n = internationalization)",
+		"notes": "Some important notes:",
+		"notes1": "English content may be modified from the i18n editor, but be sure that you have created the task first. ",
+		"notes2": "You may notice that the \"resources\" and \"aggregateVariables\" are formatted as a list. Ensure that you keep this formatting sanitized!"
+	},
 	"createdBy": "created by {{username}}",
 	"createNewBlock": "Create new block",
 	"createProposal": {
@@ -892,9 +903,28 @@
 	},
 	"surveyBuilder": {
 		"addFirstPage": "Add your first page",
+		"addItemBtn": "+ item",
+		"addOption": "+ option",
 		"addPage": "+",
+		"block": "Block",
+		"checkbox": "Multiple choice (select many options)",
 		"deletePage": "Delete this page",
-		"page": "Page {{number}}"
+		"freeinput": "Text input",
+		"header": "Header",
+		"likert": "Likert scale",
+		"likertItems": "Items for the Likert Scale",
+		"maxValue": "Maximum value",
+		"maxValueLabel": "Maximum value label",
+		"minValue": "Minimum value",
+		"minValueLabel": "Minimum value label",
+		"options": "Options",
+		"page": "Page {{number}}",
+		"select": "Multiple choice (select one)",
+		"text": "Text",
+		"textLabel": "Text",
+		"type": "Type",
+		"variableName": "Variable name",
+		"vas": "Visual scale"
 	},
 	"surveyDescription": "In a survey, participants are asked questions about themselves, about how they behave, or about how they feel.",
 	"tabs": {
@@ -963,6 +993,7 @@
 	"templateTab": "Template",
 	"testAndCollect": "Test & Collect",
 	"title": "Study Builder",
+	"titleText": "Title",
 	"typeCard": {
 		"article": "Article",
 		"assignment": "Assignment",

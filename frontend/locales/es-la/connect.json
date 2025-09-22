@@ -1,0 +1,171 @@
+{
+	"asyncAnsweringQuestions": "Responder preguntas de los estudiantes (según su perfil).",
+	"asyncProvidingFeedback": "Proporcionar retroalimentación sobre los proyectos de los estudiantes",
+	"availability": "Disponibilidad",
+	"avatar": {
+		"error": "Por favor sube una imagen",
+		"title": "Crea tu avatar",
+		"upload": "Subir"
+	},
+	"background": {
+		"description": "¡Conozcámonos mejor! Por favor, completa tu información para que otros miembros de la comunidad MindHive puedan conectar contigo más fácilmente.",
+		"education": {
+			"addInstitution": "Agregar otra institución",
+			"degree": "Grado",
+			"institution": "Institución",
+			"title": "Educación"
+		},
+		"languages": {
+			"addLanguage": "Añadir otro idioma",
+			"title": "Idioma"
+		},
+		"occupation": {
+			"title": "Ocupación"
+		},
+		"officialBio": {
+			"description": "En aproximadamente 100 palabras, describa su experiencia, conocimientos y formación académica para una audiencia de escuela secundaria.",
+			"title": "Biografía oficial"
+		},
+		"saveChanges": "Guardar cambios",
+		"title": "Fondo",
+		"unofficialBio": {
+			"description": "En un par de frases, describe tu trayectoria profesional hasta llegar a donde estás ahora. Y mira hacia los próximos 5 años o más. El objetivo es que los estudiantes comprendan que la vida profesional no siempre es un camino recto y que existen coincidencias, buena y mala suerte, y a veces múltiples trayectorias profesionales ocultas tras las biografías oficiales que se pueden leer en el sitio web de un científico.",
+			"title": "Biografía no oficial"
+		}
+	},
+	"basic": {
+		"description": "Complete los siguientes elementos para crear su perfil y conectarse con la comunidad MindHive.",
+		"email": "Correo electrónico",
+		"firstName": "Nombre de pila",
+		"lastName": "Apellido",
+		"location": "Ubicación",
+		"organization": "Organización si corresponde",
+		"profilePhoto": "Foto de perfil",
+		"pronouns": "Pronombres",
+		"pronounsOptions": {
+			"he": "Él/Él",
+			"she": "Ella/Ella",
+			"they": "Ellos/Ellos"
+		},
+		"saveChanges": "Guardar cambios",
+		"subtitle": "Tu información básica ayuda a la comunidad de MindHive a conocerte mejor. Esto incluye quién eres, dónde te encuentras y cómo te ves.",
+		"tagline": "Lema",
+		"title": "Información básica"
+	},
+	"connectSubtitle": "Busque, descubra y conéctese con la comunidad MindHive",
+	"connectWithPeople": "Conectar con la gente",
+	"createProfile": "Crear perfil",
+	"interests": {
+		"description": "¿En qué temas te gustaría apoyar a los estudiantes? Selecciona algunos temas y áreas de interés de la lista a continuación para que otros miembros de la comunidad sepan dónde te entusiasma contribuir. Esto nos ayudará a conectarte con estudiantes y compañeros que comparten tus pasiones.",
+		"title": "¿Dónde puedes ayudar?"
+	},
+	"interestSelector": {
+		"add": "agregar",
+		"minMax": "Mínimo 3, máximo 10",
+		"navButtons": {
+			"complete": "Completo",
+			"previous": "Anterior"
+		},
+		"placeholder": "Comience a escribir para buscar intereses.",
+		"searchTitle": "Intereses de búsqueda",
+		"suggestedTitle": "Intereses sugeridos"
+	},
+	"introduction": {
+		"description": "Nos encantaría que subieras un video de introducción para compartir con estudiantes y otros miembros de MindHive. Puedes usarlo para compartir un proyecto que creas que les entusiasme.",
+		"passion": {
+			"description": "Por ejemplo, puedes describir brevemente un proyecto científico en el que estés trabajando. O puedes contarnos sobre tu experiencia acercando la ciencia al público. Este es tu espacio para mostrar en qué estás trabajando actualmente y cómo influye en la experiencia que aportas a nuestra comunidad.",
+			"title": "¿Qué te apasiona ahora mismo?"
+		},
+		"saveChanges": "Guardar cambios",
+		"title": "Vídeo de introducción",
+		"videoNotSupported": "Su navegador no soporta la etiqueta de vídeo."
+	},
+	"introductionVideo": "Vídeo de introducción",
+	"myConnections": "Mis conexiones",
+	"navigation": {
+		"next": "Próximo",
+		"previous": "Anterior"
+	},
+	"officialBio": "Biografía oficial",
+	"passionNow": "¿Qué te apasiona ahora mismo?",
+	"preferences": {
+		"availability": {
+			"async": {
+				"answeringQuestions": "Responder preguntas de los estudiantes (según su perfil).",
+				"providingFeedback": "Proporcionar retroalimentación sobre los proyectos de los estudiantes",
+				"title": "Asincrónico"
+			},
+			"sync": {
+				"inPersonVisit": "Realizar una visita a clase para hablar con los estudiantes del programa sobre su trabajo (en persona).",
+				"title": "Sincrónico",
+				"zoomVisit": "Realizar una visita a clase para hablar con los estudiantes del programa sobre su trabajo (vía Zoom)."
+			},
+			"title": "Indique a continuación cómo está disponible para asociarse con nosotros (seleccione todas las que correspondan)."
+		},
+		"classType": {
+			"description": "Cuéntanos qué tipo de aula te gustaría ser mentor. Selecciona todas las opciones que correspondan.",
+			"options": {
+				"accelerated": "Acelerado",
+				"ell": "ANA",
+				"no": "Sin preferencia",
+				"nonAccelerated": "No acelerado"
+			},
+			"title": "Tipo de clase"
+		},
+		"description": "Complete los siguientes elementos para informarnos los detalles de su participación.",
+		"gradeLevel": {
+			"description": "Cuéntanos sobre los grados en los que te sientes más cómodo apoyando como mentor. Selecciona todas las opciones que correspondan.",
+			"options": {
+				"eleven": "11º - 12º grado",
+				"middle": "Escuela secundaria",
+				"nine": "9 - 10 Grado",
+				"no": "Sin preferencia"
+			},
+			"title": "Nivel de grado"
+		},
+		"groupPreference": {
+			"description": "¿Prefieres apoyar a individuos o grupos en sesiones de mentoría? Selecciona todas las opciones que correspondan.",
+			"options": {
+				"group": "Grupo",
+				"individual": "Individual",
+				"no": "Sin preferencia"
+			},
+			"title": "Individual vs. Grupo"
+		},
+		"saveChanges": "Guardar cambios",
+		"title": "Su participación"
+	},
+	"profileType": {
+		"chooseType": "Elige tu tipo de perfil",
+		"description": "Configura tu perfil de MindHive seleccionando una de las opciones a continuación. ¿Estás creando un perfil personal o una página para tu organización?",
+		"individual": {
+			"description": "Este perfil es el más apropiado cuando estás creando una cuenta para ti.",
+			"title": "Individual"
+		},
+		"organization": {
+			"description": "Este perfil es más apropiado cuando estás creando una cuenta para representar a una organización comunitaria o empresa.",
+			"title": "Organización"
+		}
+	},
+	"returnDashboard": "Regresar al panel de control",
+	"searchPlaceholder": "Buscar por nombre, tema o área de interés",
+	"steps": {
+		"aboutMe": "2. Acerca de mí",
+		"complete": "4. Completar",
+		"interests": "3. Intereses",
+		"profileType": "1. Tipo de perfil"
+	},
+	"syncInPersonVisit": "Realizar una visita a clase para hablar con los estudiantes del programa sobre su trabajo (en persona).",
+	"syncZoomVisit": "Realizar una visita a clase para hablar con los estudiantes del programa sobre su trabajo (vía Zoom).",
+	"underConstruction": "En construcción 🚧",
+	"unofficialBio": "Biografía no oficial",
+	"usersPerPage": "Número de usuarios por página",
+	"videoNotSupported": "Su navegador no soporta la etiqueta de vídeo.",
+	"videoUploader": {
+		"dragAndDrop": "Arrastre y suelte el archivo de vídeo para cargarlo",
+		"error": "Se produjo un error al subir el video. Inténtalo de nuevo.",
+		"invalidFile": "Seleccione un archivo de vídeo.",
+		"selectFile": "Seleccionar archivo",
+		"uploadProgress": "Progreso de carga: {{progress}}%"
+	}
+}

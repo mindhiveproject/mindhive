@@ -1,0 +1,9 @@
+{
+	"overview": {
+		"database": {
+			"csvDownloadMessage": "Dale un nombre al CSV que estás a punto de descargar. No es necesario que agregues \".csv\", ¡nos encargamos de eso!",
+			"returnBrowse": "Volver a la navegación",
+			"sectionTitle": "Datos activos"
+		}
+	}
+}

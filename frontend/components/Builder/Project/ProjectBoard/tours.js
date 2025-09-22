@@ -1,4 +1,3 @@
-// https://www.notion.so/mindhive/Study-Builder-Project-Board-242d80abf4c4802281c6cba5adf69549
 export const projectBoardTours = {
   overview: {
     title: "Project Board Overview",

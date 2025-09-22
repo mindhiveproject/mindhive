@@ -27,6 +27,7 @@ export default function ProjectBoard({ query, user, tab, toggleSidebar }) {
     
     function handleStartTour(event) {
       const tourId = event?.detail?.tourId || 'overview';
+      const tourData = event?.detail?.tourData;
       
       // Prevent multiple tours from starting simultaneously
       if (isStartingTour) {
@@ -44,8 +45,13 @@ export default function ProjectBoard({ query, user, tab, toggleSidebar }) {
       
       (async () => {
         const introJs = (await import('intro.js')).default;
-        const tours = projectBoardTours;
-        const selectedTour = tours[tourId];
+        
+        // Use tour data from event if available, otherwise fallback to static import
+        let selectedTour = tourData;
+        if (!selectedTour) {
+          const tours = projectBoardTours;
+          selectedTour = tours[tourId];
+        }
         
         if (!selectedTour) {
           console.error(`Tour ${tourId} not found`);
@@ -61,14 +67,12 @@ export default function ProjectBoard({ query, user, tab, toggleSidebar }) {
           scrollTo: 'off',
           exitOnOverlayClick: true,
           exitOnEsc: true,
-          showStepNumbers: false,
           showBullets: true,
-          showProgress: false,
         });
         
-          // Start the tour
+        // Start the tour
         currentTour.start();
-        
+
         // Clean up when tour ends
         currentTour.onComplete(() => {
           currentTour = null;
