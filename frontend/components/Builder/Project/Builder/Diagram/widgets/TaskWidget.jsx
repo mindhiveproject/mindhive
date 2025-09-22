@@ -1,8 +1,16 @@
-import React from 'react';
 import { PortWidget } from '@projectstorm/react-diagrams-core';
 import { StyledNode } from '../styles';
 
-export const TaskWidget = props => (
+import { TASK_TO_PARTICIPATE } from '../../../../../Queries/Task';
+import { useQuery } from '@apollo/client';
+
+export const TaskWidget = props => {
+
+   const { data, error, loading } = useQuery(TASK_TO_PARTICIPATE, {
+    variables: { id: props.node?.options?.componentID },
+  });
+
+  return  (
   <StyledNode taskType={props.node?.options?.taskType}>
     <div
       className="node-header-container"
@@ -10,12 +18,7 @@ export const TaskWidget = props => (
       style={{ backgroundColor: props.node.color }}
     >
       <div className="node-header-text">
-        {props.node?.options?.name.length > 50
-          ? `${props.node?.options?.name
-              .split(' ')
-              .slice(0, 4)
-              .join(' ')} ...`
-          : props.node?.options?.name}
+        {data?.task?.title} 
       </div>
 
       <div className="node-header-icons">
@@ -98,4 +101,5 @@ export const TaskWidget = props => (
       <div className="my-out-port"></div>
     </PortWidget>
   </StyledNode>
-);
+)
+} ;
