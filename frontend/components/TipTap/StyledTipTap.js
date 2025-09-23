@@ -40,7 +40,7 @@ export const StyledTipTap = styled.div`
     border-radius: 16px; /* Rounded corners */
 
     .ProseMirror {
-      padding: 10px;
+      padding: 24px;
       outline: none;
       border-radius: 16px; /* Match outer radius or slightly smaller if nested */
       background: rgba(51, 111, 138, 0.04);
@@ -130,6 +130,37 @@ export const StyledTipTap = styled.div`
         &.ProseMirror-selectednode {
           outline: 3px solid #F9D978;
         }
+      }
+      
+      /* Prevent other elements from breaking container */
+      pre, code {
+        max-width: 100%;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+      
+      blockquote {
+        max-width: 100%;
+        overflow-wrap: break-word;
+        border-left: 4px solid #274E5B;
+        background-color: #EFEFEF;
+        margin: 1rem 0;
+        padding: 1rem 1.5rem;
+        font-style: italic;
+        border-radius: 0 8px 8px 0;
+      }
+      
+      /* Heading Styles */
+      h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        margin: 0 0 0.25rem 0;
+        color: #274E5B;
+        // border-bottom: 2px solid rgb(255, 255, 255);
+        // padding-bottom: 0.25rem;
+        max-width: 100%;
+        overflow-wrap: break-word;
       }
     }
   }

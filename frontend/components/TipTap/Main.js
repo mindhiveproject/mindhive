@@ -278,6 +278,18 @@ export default function TipTapEditor({
         >
           <Icon name="image" />
         </Button>
+        <Button
+          icon
+          className="toolbarButton"
+          onClick={(e) =>
+            handleStyleClick(() => editor.commands.toggleBlockquote(), e)
+          }
+          disabled={!editor.isEditable}
+          active={editor.isActive("blockquote")}
+          aria-label="Toggle blockquote"
+        >
+          <Icon name="quote left" />
+        </Button>
         
         <Dropdown
           trigger={
