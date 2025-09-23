@@ -172,7 +172,6 @@ export default function Proposal({
       }
     }
   };
-
   return (
     <>
       <Navigation
@@ -214,8 +213,10 @@ export default function Proposal({
                       }.svg`}
                     />
                   </div>
-                  <div className="cardText">
-                    {ReactHtmlParser(card?.content)}
+                  <div className="tiptapEditor">
+                    <div className="ProseMirror">
+                      {ReactHtmlParser(card?.content)}
+                    </div>
                   </div>
                 </div>
               ))}
