@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { loadPyodide } from "pyodide";
 
-import JournalManager from "./JournalManager";
+import Journals from "./Journals";
 
 const baseCode = `import js
 import micropip
@@ -71,7 +71,7 @@ export default function PyodideWrapper({ user, projectId, studyId }) {
         </div>
       )}
       {(studyId || projectId) && (
-        <JournalManager
+        <Journals
           user={user}
           projectId={projectId}
           studyId={studyId}

@@ -49,5 +49,9 @@ export const VizPart = list({
     }),
     updatedAt: timestamp(),
     position: float(),
+    datasources: relationship({
+      ref: "Datasource.journal",
+      many: true,
+    }),
   },
 });

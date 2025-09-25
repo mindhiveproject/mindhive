@@ -505,7 +505,6 @@ export const StyledDataViz = styled.div`
         justify-content: center;
         align-items: center;
         gap: 8px;
-
         border-radius: 100px;
         border: 1px solid var(--MH-Theme-Primary-Dark, #336F8A);
       }
