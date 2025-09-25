@@ -17,6 +17,7 @@ export default function EditAssignment({ user, id }) {
   const { inputs, handleChange } = useForm({
     title: assignment?.title,
     content: assignment?.content,
+    placeholder: assignment?.placeholder,
   });
 
   const [

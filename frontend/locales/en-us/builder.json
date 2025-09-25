@@ -32,6 +32,25 @@
 	"blockDescription": "In a block, participants are presented with information.",
 	"board": {
 		"error": "Error! {{message}}",
+		"expendedCard": {
+			"close": "Close",
+			"connect": "Connect",
+			"content": "Content",
+			"disconnect": "Disconnect",
+			"done": "Done",
+			"linkItems": "Link Items",
+			"myAssignments": "My Assignments",
+			"myResources": "My Resources",
+			"previewAssignment": "Preview Assignment",
+			"previewLinkedAssignments": "Preview Linked Assignments",
+			"previewLinkedResources": "Preview Linked Resources",
+			"previewLinkedStudies": "Preview Linked Studies",
+			"previewLinkedTasks": "Preview Linked Tasks",
+			"publicResources": "Public Resources",
+			"studies": "Studies",
+			"tasks": "Tasks",
+			"title": "Title"
+		},
 		"loading": "Loading..."
 	},
 	"build-create-new-study": "To create a new study, click the button below.",

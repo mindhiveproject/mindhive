@@ -25,7 +25,14 @@ export default function ViewAssignment({ code, myclass, user, query }) {
         <div className="header">
           <h2>{assignment?.title}</h2>
         </div>
-        <div className="content">{ReactHtmlParser(assignment?.content)}</div>
+        <div className="content">
+          <h2>Student Instruction</h2>
+          {ReactHtmlParser(assignment?.content)}
+        </div>
+        <div className="content">
+          <h2>Placeholder for student answer box</h2>
+          {ReactHtmlParser(assignment?.placeholder)}
+        </div>
       </div>
 
       {assignment?.homework?.length > 0 && (

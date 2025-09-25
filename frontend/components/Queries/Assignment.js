@@ -8,6 +8,7 @@ export const GET_ASSIGNMENT = gql`
       code
       title
       content
+      placeholder
       classes {
         id
       }
@@ -17,6 +18,7 @@ export const GET_ASSIGNMENT = gql`
         title
         public
         content
+        placeholder
         settings
         author {
           id
@@ -38,6 +40,7 @@ export const GET_ASSIGNMENT_FOR_STUDENT = gql`
       code
       title
       content
+      placeholder
     }
   }
 `;
@@ -58,6 +61,7 @@ export const GET_MY_CLASS_ASSIGNMENTS = gql`
       code
       title
       content
+      placeholder
       author {
         username
       }
@@ -84,6 +88,7 @@ export const GET_CLASS_ASSIGNMENTS_FOR_STUDENTS = gql`
       code
       title
       content
+      placeholder
       author {
         username
       }
@@ -107,6 +112,7 @@ export const GET_TEMPLATE_ASSIGNMENTS = gql`
       code
       title
       content
+      placeholder
       author {
         username
       }
@@ -122,6 +128,7 @@ export const GET_TEMPLATE_ASSIGNMENT = gql`
       code
       title
       content
+      placeholder
     }
   }
 `;
@@ -132,6 +139,33 @@ export const GET_MY_ASSIGNMENTS = gql`
     assignments(where: { author: { id: { equals: $id } } }) {
       id
       title
+      content
+      placeholder
+    }
+  }
+`;
+
+// get my assignments
+export const GET_AN_ASSIGNMENT = gql`
+  query GET_AN_ASSIGNMENT($id: ID!) {
+    assignments(where: { id: { equals: $id } }) {
+      id
+      title
+      content
+      placeholder
+      public
+      code
+      settings
+      homework {
+        id
+        title
+        code
+        content
+        comment
+        updatedAt
+        settings
+        placeholder
+      }
     }
   }
 `;

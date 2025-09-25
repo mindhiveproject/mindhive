@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import { Button, Icon, Modal, Tab } from "semantic-ui-react";
 import { useState, useEffect } from "react";
+import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import {
@@ -10,7 +11,11 @@ import {
 } from "../../../Queries/Resource";
 import { PUBLIC_STUDIES } from "../../../Queries/Study";
 import { ALL_PUBLIC_TASKS } from "../../../Queries/Task";
-import { GET_MY_ASSIGNMENTS } from "../../../Queries/Assignment";
+// import { GET_MY_CLASS_ASSIGNMENTS } from "../../../Queries/Assignment";
+import { GET_MY_ASSIGNMENTS, GET_AN_ASSIGNMENT } from "../../../Queries/Assignment";
+import { EDIT_ASSIGNMENT } from "../../../Mutations/Assignment";
+
+import { styleText } from "util";
 
 export default function LinkedItems({
   proposal,
@@ -71,7 +76,8 @@ export default function LinkedItems({
 
   const [open, setOpen] = useState(false);
   const [assignmentModalOpen, setAssignmentModalOpen] = useState(false);
-  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
+
 
   // Resource-specific merging for selected
   const selectedResourcesMerged = selectedResources.map((selectedResource) => {
@@ -99,14 +105,11 @@ export default function LinkedItems({
       console.error("No assignment provided to openAssignmentModalHandler");
       return;
     }
-    console.log("Opening modal with assignment:", {
-      id: assignment.id,
-      title: assignment.title,
-      content: assignment.content,
-    });
-    setSelectedAssignment(assignment);
+  
+    console.log("Opening modal for assignment ID:", assignment.id);
+    setSelectedAssignmentId(assignment.id); // <-- just store the ID
     setAssignmentModalOpen(true);
-  };
+  };  
 
   const panes = [
     {
@@ -260,11 +263,12 @@ export default function LinkedItems({
 
       <AssignmentModal
         open={assignmentModalOpen}
+        t={t}
         onClose={() => {
           setAssignmentModalOpen(false);
-          setSelectedAssignment(null);
+          // setSelectedAssignment(null);
         }}
-        assignment={selectedAssignment}
+        assignmentId={selectedAssignmentId}
         user={user}
       />
 
@@ -366,11 +370,16 @@ const ItemTab = ({
         const content = isResource
           ? item?.content?.main || ""
           : item?.content || "";
+        
+        const placeholder = isResource
+          ? item?.placeholder?.main || ""
+          : item?.placeholder || "";
 
         console.log(`ItemTab: Rendering ${type} item`, {
           id: item.id,
           title: item.title,
           content,
+          placeholder,
         });
 
         return (
@@ -442,7 +451,8 @@ const ItemTab = ({
                 marginBottom: "16px",
               }}
             >
-              {ReactHtmlParser(truncateHtml(content, 100))}
+              {ReactHtmlParser(truncateHtml(content, 15))}
+              {ReactHtmlParser(truncateHtml(placeholder, 10))}
             </div>
             <Button
               fluid
@@ -465,33 +475,170 @@ const ItemTab = ({
   );
 };
 
-const AssignmentModal = ({ open, onClose, assignment, user }) => {
-  const { t } = useTranslation("classes");
-  const [title, setTitle] = useState(assignment?.title || "");
-  const [content, setContent] = useState(assignment?.content || "");
+const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
+  const [editedAssignment, setEditedAssignment] = useState({
+    title: '',
+    content: '',
+    placeholder: ''
+  });
+  const [hasChanges, setHasChanges] = useState(false);
 
-  // Sync state with assignment prop
-  useEffect(() => {
-    if (assignment) {
-      console.log("AssignmentModal: Syncing assignment", {
-        id: assignment.id,
-        title: assignment.title,
-        content: assignment.content,
-      });
-      setTitle(assignment.title || "");
-      setContent(assignment.content || "");
-    } else {
-      console.warn("AssignmentModal opened with no assignment");
-      setTitle("");
-      setContent("");
-    }
-  }, [assignment]);
-
-  if (!assignment && open) {
-    console.warn("AssignmentModal rendered without valid assignment");
-    return null;
+  const styleField = {
+    fontSize: "14px",
+    lineHeight: "1.5",
+    color: "#274E5B",
+    border: "1px solid #e0e0e0",
+    borderRadius: "8px",
+    padding: "12px",
+    marginBottom: "3rem"
   }
 
+  const editableFieldStyle = {
+    ...styleField,
+    minWidth: "100%",
+    fontFamily: "inherit"
+  };
+  
+  // Add CSS for placeholder styling
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      [contenteditable][data-placeholder]:empty::before {
+        content: attr(data-placeholder);
+        color: #999;
+        font-style: italic;
+      }
+      [contenteditable]:focus {
+        outline: 2px solid #336F8A;
+        outline-offset: -2px;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
+
+  const [editAssignment, { loading: editLoading }] = useMutation(
+    EDIT_ASSIGNMENT,
+    {
+      variables: {
+        id: assignmentId,
+      },
+      refetchQueries: [
+        {
+          query: GET_AN_ASSIGNMENT,
+          variables: { id: assignmentId },
+        },
+      ],
+    }
+  );
+  
+  const { data, loading, error } = useQuery(GET_AN_ASSIGNMENT, {
+    variables: { id: assignmentId },
+    fetchPolicy: "network-only", // forces fresh fetch each time
+    skip: !assignmentId, // don't fetch if no ID
+  });
+
+  // Update local state when assignment data loads
+  useEffect(() => {
+    if (data?.assignments?.[0]) {
+      const assignment = data.assignments[0];
+      const newState = {
+        title: assignment.title || '',
+        content: assignment.content || '',
+        placeholder: assignment.placeholder || ''
+      };
+      setEditedAssignment(newState);
+      setHasChanges(false);
+    }
+  }, [data]);
+
+  const handleFieldChange = (field, value) => {
+    setEditedAssignment(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    setHasChanges(true);
+  };
+
+  // Helper function to save and restore cursor position
+  const saveSelection = (containerEl) => {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const preSelectionRange = range.cloneRange();
+      preSelectionRange.selectNodeContents(containerEl);
+      preSelectionRange.setEnd(range.startContainer, range.startOffset);
+      return preSelectionRange.toString().length;
+    }
+    return 0;
+  };
+
+  const restoreSelection = (containerEl, savedPos) => {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    let charCount = 0;
+    
+    const walker = document.createTreeWalker(
+      containerEl,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+
+    let node;
+    while (node = walker.nextNode()) {
+      const nodeLength = node.textContent.length;
+      if (charCount + nodeLength >= savedPos) {
+        range.setStart(node, savedPos - charCount);
+        range.setEnd(node, savedPos - charCount);
+        break;
+      }
+      charCount += nodeLength;
+    }
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
+  
+  const handleSave = async () => {
+    try {
+      await editAssignment({
+        variables: {
+          input: {
+            title: editedAssignment.title,
+            content: editedAssignment.content,
+            placeholder: editedAssignment.placeholder
+          }
+        }
+      });
+      setHasChanges(false);
+      // Optional: Show success message
+      alert(t("assignment.saveSuccess", "Assignment saved successfully!"));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const copyLink = () => {
+    const copyLink = `${origin}/dashboard/assignments/${assignment?.code}`;
+    const temp = document.createElement("input");
+    document.body.append(temp);
+    temp.value = copyLink;
+    temp.select();
+    document.execCommand("copy");
+    temp.remove();
+    alert(t("assignment.linkCopied"));  
+    console.log("Copy link functionality to be implemented");
+  };
+
+  if (!assignmentId) return null;
+  if (loading) return <p>Loading assignment…</p>;
+  if (error) return <p>Error loading assignment</p>;
+
+  const assignment = data.assignments[0];
+  console.log(assignment)
+
+  
   return (
     <Modal
       open={open}
@@ -508,57 +655,193 @@ const AssignmentModal = ({ open, onClose, assignment, user }) => {
         }}
       >
         {t("board.expendedCard.previewAssignment", "Preview Assignment")}
+        {hasChanges && (
+          <span style={{ 
+            color: "#8A2CF6", 
+            fontSize: "12px", 
+            marginLeft: "10px",
+            fontWeight: 400 
+          }}>
+            {t("assignment.unsavedChanges", "(Unsaved changes)")}
+          </span>
+        )}
       </Modal.Header>
       <Modal.Content
         scrolling
         style={{ background: "#ffffff", padding: "24px" }}
       >
-        <div>
-          <label htmlFor="assignmentTitle">
-            <div className="cardHeader">{t("board.expendedCard.title")}</div>
-            <input
-              type="text"
-              id="assignmentTitle"
-              value={title}
-              disabled
-              style={{
-                width: "100%",
-                padding: "8px",
-                borderRadius: "4px",
-                border: "1px solid #e0e0e0",
-                marginBottom: "16px",
-                background: "#f9fafb",
-              }}
-            />
-          </label>
-          <div className="cardHeader">{t("board.expendedCard.content")}</div>
+      <div>
+        <p>{t("board.expendedCard.title")}</p>
+        <textarea
+          style={editableFieldStyle}
+          value={editedAssignment.title}
+          onChange={(e) => handleFieldChange('title', e.target.value)}
+          placeholder={t("assignment.titlePlaceholder", "Enter assignment title...")}
+        />
+
+        <p>{t("assignment.instructions")}</p>
           <div
-            style={{
-              fontSize: "14px",
-              color: "#333",
-              lineHeight: "1.5",
-              border: "1px solid #e0e0e0",
-              borderRadius: "4px",
-              padding: "16px",
+            ref={(el) => {
+              if (el && editedAssignment.content !== el.innerHTML) {
+                const savedPos = saveSelection(el);
+                el.innerHTML = editedAssignment.content;
+                if (document.activeElement === el) {
+                  setTimeout(() => restoreSelection(el, savedPos), 0);
+                }
+              }
             }}
-          >
-            {ReactHtmlParser(content || "")}
-          </div>
+            style={{
+              ...editableFieldStyle,
+              minHeight: "150px",
+              outline: "none"
+            }}
+            contentEditable
+            onInput={(e) => handleFieldChange('content', e.target.innerHTML)}
+            suppressContentEditableWarning={true}
+            data-placeholder={editedAssignment.content === '' ? t("assignment.instructionsPlaceholder", "Enter assignment instructions...") : ''}
+          />
+
+          <p>{t("assignment.placeholder")}</p>
+          <div
+            ref={(el) => {
+              if (el && editedAssignment.placeholder !== el.innerHTML) {
+                const savedPos = saveSelection(el);
+                el.innerHTML = editedAssignment.placeholder;
+                if (document.activeElement === el) {
+                  setTimeout(() => restoreSelection(el, savedPos), 0);
+                }
+              }
+            }}
+            style={{
+              ...editableFieldStyle,
+              minHeight: "100px",
+              outline: "none"
+            }}
+            contentEditable
+            onInput={(e) => handleFieldChange('placeholder', e.target.innerHTML)}
+            suppressContentEditableWarning={true}
+            data-placeholder={editedAssignment.placeholder === '' ? t("assignment.placeholderPlaceholder", "Enter placeholder text...") : ''}
+          />
         </div>
-      </Modal.Content>
+    </Modal.Content>
       <Modal.Actions
         style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
       >
+        {/* Save button */}
+        {hasChanges && (
+          <Button
+            loading={editLoading}
+            disabled={editLoading}
+            style={{
+              borderRadius: "100px",
+              background: "#7D70AD",
+              fontSize: "16px",
+              color: "white",
+              border: "1px solid #7D70AD",
+              marginRight: "10px"
+            }}
+            onClick={handleSave}
+          >
+            {t("assignment.save", "Save Changes")}
+          </Button>
+        )}
+        
+        {!hasChanges && (
+          <>
+            {assignment?.public ? (
+              // Button when assignment is public
+              <>
+                {/* <Button
+                  style={{
+                    borderRadius: "100px",
+                    background: "white",
+                    fontSize: "16px",
+                    color: "#336F8A",
+                    border: "1px solid #336F8A"
+                  }}
+                  onClick={() => { () => copyLink() }}
+                >
+                  {t("assignment.copyLink")}
+                </Button> */}
+                <Button
+                  style={{
+                    borderRadius: "100px",
+                    background: "white",
+                    fontSize: "16px",
+                    color: "#336F8A",
+                    border: "1px solid #336F8A"
+                  }}
+                  onClick={() => {
+                    if (confirm(t("assignment.revokeConfirm"))) {
+                      editAssignment({
+                        variables: { input: { public: false } },
+                      }).catch((err) => {
+                        alert(err.message);
+                      });
+                    }
+                  }}
+                >
+                  {t("assignment.revoke")}
+                </Button>
+
+                {/* Optional: copyLink button */}
+                {/* 
+                <Button
+                  className="secondary"
+                  style={{
+                    borderRadius: "100px",
+                    background: "white",
+                    fontSize: "16px",
+                    color: "#336F8A",
+                    border: "1px solid #336F8A"
+                  }}
+                  onClick={() => copyLink()}
+                >
+                  {t("assignment.copyLink")}
+                </Button> 
+                */}
+              </>
+            ) : (
+              // Button when assignment is not public
+              <Button
+                style={{
+                  borderRadius: "100px",
+                  background: "white",
+                  fontSize: "16px",
+                  color: "#336F8A",
+                  border: "1px solid #336F8A"
+                }}
+                onClick={() => {
+                  if (confirm(t("assignment.submitConfirm"))) {
+                    editAssignment({
+                      variables: { input: { public: true } },
+                    }).catch((err) => {
+                      alert(err.message);
+                    });
+                  }
+                }}
+              >
+                {t("assignment.submitToStudents")}
+              </Button>
+            )}
+          </>
+        )}
+
+
         <Button
           onClick={onClose}
           style={{
-            background: "#f0f4f8",
-            color: "#007c70",
-            borderRadius: "8px",
+            borderRadius: "100px",
+            background: "#336F8A",
+            fontSize: "16px",
+            color: "white",
+            border: "1px solid #336F8A"
           }}
         >
           {t("board.expendedCard.close", "Close")}
         </Button>
+
+
       </Modal.Actions>
     </Modal>
   );

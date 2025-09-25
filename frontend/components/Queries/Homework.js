@@ -8,6 +8,7 @@ export const GET_HOMEWORK = gql`
       code
       title
       content
+      placeholder
       settings
       author {
         id
@@ -30,6 +31,7 @@ export const GET_MY_HOMEWORK = gql`
       code
       title
       content
+      placeholder
       settings
       author {
         id
@@ -83,6 +85,7 @@ export const GET_MY_HOMEWORK_FOR_PROPOSAL_CARD = gql`
       code
       title
       content
+      placeholder
       settings
       comment
       public
@@ -118,6 +121,7 @@ export const GET_HOMEWORK_BY_ID = gql`
       code
       title
       content
+      placeholder
       settings
       comment
       author {

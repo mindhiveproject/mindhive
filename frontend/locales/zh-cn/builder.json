@@ -32,6 +32,25 @@
 	"blockDescription": "在一个区块中，向参与者呈现信息。",
 	"board": {
 		"error": "错误信息}}",
+		"expendedCard": {
+			"close": "关闭",
+			"connect": "连接",
+			"content": "内容",
+			"disconnect": "断开",
+			"done": "完成的",
+			"linkItems": "链接项目",
+			"myAssignments": "我的作业",
+			"myResources": "我的资源",
+			"previewAssignment": "预览作业",
+			"previewLinkedAssignments": "预览链接作业",
+			"previewLinkedResources": "预览链接资源",
+			"previewLinkedStudies": "预览关联研究",
+			"previewLinkedTasks": "预览链接任务",
+			"publicResources": "公共资源",
+			"studies": "研究",
+			"tasks": "任务",
+			"title": "标题"
+		},
 		"loading": "加载中..."
 	},
 	"build-create-new-study": "要创建新研究，请单击下面的按钮。",
