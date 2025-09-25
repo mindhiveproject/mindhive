@@ -32,6 +32,25 @@
 	"blockDescription": "В блоке участникам предоставляется информация.",
 	"board": {
 		"error": "Ошибка! {{message}}",
+		"expendedCard": {
+			"close": "Закрыть",
+			"connect": "Подключайтесь",
+			"content": "Содержание",
+			"disconnect": "Отключить",
+			"done": "Готово",
+			"linkItems": "Предметы по ссылке",
+			"myAssignments": "Мои задания",
+			"myResources": "Мои ресурсы",
+			"previewAssignment": "Предварительное задание",
+			"previewLinkedAssignments": "Предварительный просмотр связанных заданий",
+			"previewLinkedResources": "Предварительный просмотр связанных ресурсов",
+			"previewLinkedStudies": "Предварительный просмотр Связанные исследования",
+			"previewLinkedTasks": "Предварительный просмотр связанных задач",
+			"publicResources": "Общественные ресурсы",
+			"studies": "Исследования",
+			"tasks": "Задачи",
+			"title": "Название"
+		},
 		"loading": "Загрузка..."
 	},
 	"build-create-new-study": "Чтобы создать новое исследование, нажмите кнопку ниже.",

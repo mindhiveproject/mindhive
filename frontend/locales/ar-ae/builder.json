@@ -32,6 +32,25 @@
 	"blockDescription": "في كتلة، يتم تقديم المعلومات للمشاركين.",
 	"board": {
 		"error": "خطأ! {{message}}",
+		"expendedCard": {
+			"close": "إغلاق",
+			"connect": "الاتصال",
+			"content": "المحتوى",
+			"disconnect": "قطع الاتصال",
+			"done": "تم",
+			"linkItems": "عناصر الارتباط",
+			"myAssignments": "مهامي",
+			"myResources": "مواردي",
+			"previewAssignment": "مهمة المعاينة",
+			"previewLinkedAssignments": "معاينة الواجبات المرتبطة",
+			"previewLinkedResources": "معاينة الموارد المرتبطة",
+			"previewLinkedStudies": "معاينة الدراسات المرتبطة",
+			"previewLinkedTasks": "معاينة المهام المرتبطة",
+			"publicResources": "الموارد العامة",
+			"studies": "الدراسات",
+			"tasks": "المهام",
+			"title": "العنوان"
+		},
 		"loading": "تحميل..."
 	},
 	"build-create-new-study": "لإنشاء دراسة جديدة، انقر على الزر أدناه.",

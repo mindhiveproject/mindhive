@@ -11,6 +11,7 @@ export default function NewAssignment({ user, myclass, assignment, children }) {
   const { inputs, handleChange, clearForm } = useForm({
     title: assignment?.title || "",
     content: assignment?.content || "",
+    placeholder: assignment?.placeholder || "",
     classes: assignment?.classes || [{ id: myclass?.id }],
   });
 
@@ -40,6 +41,7 @@ export default function NewAssignment({ user, myclass, assignment, children }) {
   return (
     <AssignmentModal
       btnName={t("assignment.save")}
+      assignment={assignment}
       inputs={inputs}
       handleChange={handleChange}
       submit={handleSave}

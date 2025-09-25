@@ -9,6 +9,7 @@ import useTranslation from "next-translate/useTranslation";
 
 export default function AssignmentModal({
   btnName,
+  assignment,
   inputs,
   handleChange,
   submit,
@@ -45,10 +46,18 @@ export default function AssignmentModal({
                 required
               />
             </label>
+            <p><br></br>Instruction for your students:</p>
             <JoditEditor
               content={inputs?.content}
               setContent={(content) =>
                 handleChange({ target: { name: "content", value: content } })
+              }
+            />
+            <p><br></br>Place holder for your students:</p>
+            <JoditEditor
+              content={inputs?.placeholder}
+              setContent={(placeholder) =>
+                handleChange({ target: { name: "placeholder", value: placeholder } })
               }
             />
             <button
