@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import useForm from "../../../lib/useForm";
 import { useMutation } from "@apollo/client";
 import HomeworkModal from "./Modal";
@@ -10,11 +10,18 @@ import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../Queries/Homework";
 export default function NewHomework({ user, assignment, children }) {
   const { inputs, handleChange, clearForm } = useForm({
     settings: { status: "Started" },
-    title:
-      assignment?.title + "-homework-" + moment().format("YYYY-MM-DD") || "",
+    title: "Homework | " + assignment?.title + " | " + moment().format("YYYY-MM-DD") + " | " + user?.username || "",
+    placeholder: assignment?.placeholder || "",
   });
 
   const content = useRef("");
+  
+  useEffect(() => {
+    if (!content.current && inputs.placeholder) {
+      content.current = inputs.placeholder;
+    }
+  }, [inputs.placeholder]);
+
   const updateContent = async (newContent) => {
     content.current = newContent;
   };

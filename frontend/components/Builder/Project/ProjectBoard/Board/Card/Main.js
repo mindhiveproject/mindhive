@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 
 import ReactHtmlParser from "react-html-parser";
@@ -9,6 +9,10 @@ import useTranslation from "next-translate/useTranslation";
 import { UPDATE_CARD_CONTENT } from "../../../../../Mutations/Proposal";
 import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
 import { GET_CARD_CONTENT } from "../../../../../Queries/Proposal";
+
+import { CREATE_HOMEWORK } from "../../../../../Mutations/Homework"; // Adjust path as needed
+import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../../../../Queries/Homework"; // Adjust path as needed
+import { GET_AN_ASSIGNMENT } from "../../../../../Queries/Assignment"; // Adjust path as needed
 
 import useForm from "../../../../../../lib/useForm";
 
@@ -232,15 +236,64 @@ export default function ProposalCard({
       id: assignment.id,
       title: assignment.title,
       content: assignment.content,
+      placeholder: assignment.placeholder,
     });
     setSelectedAssignment(assignment);
     setAssignmentModalOpen(true);
   };
 
   // Assignment Modal Component
-  const AssignmentModal = ({ open, onClose, assignment }) => {
+  const AssignmentModal = ({ open, onClose, assignment: assignmentProp }) => {
+    const { t } = useTranslation("classes");
     const [title, setTitle] = useState(assignment?.title || "");
     const [content, setContent] = useState(assignment?.content || "");
+    const [showNewHomework, setShowNewHomework] = useState(false);
+    
+    // Query for fresh assignment data with all fields including placeholder
+    const { data: assignmentData, loading: assignmentLoading, error: assignmentError } = useQuery(GET_AN_ASSIGNMENT, {
+      variables: { id: assignmentProp?.id },
+      fetchPolicy: "network-only", // Force fresh fetch
+      skip: !assignmentProp?.id || !open, // Only fetch when modal is open and we have an ID
+    });
+
+    const assignment = assignmentData?.assignments?.[0] || null;
+    console.log(assignmentData)
+    
+    // Query for existing homeworks for this assignment
+    const { data: homeworkData, refetch: refetchHomeworks } = useQuery(GET_MY_HOMEWORKS_FOR_ASSIGNMENT, {
+      variables: { userId: user?.id, assignmentCode: assignment?.code },
+      skip: !assignment?.code || !user?.id,
+    });
+
+    console.log(homeworkData)
+    const homeworks = homeworkData?.homeworks || [];
+
+    // New homework form state
+    const { inputs, handleChange, clearForm } = useForm({
+      settings: { status: "Started" },
+      title: `Homework | ${assignment?.title || ''} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`,
+      placeholder: assignment?.placeholder || "",
+    });
+    console.log(inputs)
+    console.log(assignment)
+
+    const homeworkContent = useRef("");
+
+    useEffect(() => {
+      if (!homeworkContent.current && inputs.placeholder) {
+        homeworkContent.current = inputs.placeholder;
+      }
+    }, [inputs.placeholder]);
+  
+    // Mutation for creating homework
+    const [createHomework, { loading: createLoading }] = useMutation(CREATE_HOMEWORK, {
+      refetchQueries: [
+        {
+          query: GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
+          variables: { userId: user?.id, assignmentCode: assignment?.code },
+        },
+      ],
+    });
 
     useEffect(() => {
       if (assignment) {
@@ -248,15 +301,148 @@ export default function ProposalCard({
           id: assignment.id,
           title: assignment.title,
           content: assignment.content,
+          placeholder: assignment.placeholder,
         });
         setTitle(assignment.title || "");
         setContent(assignment.content || "");
-      } else {
-        console.warn("AssignmentModal opened with no assignment");
+        
+        // Update homework form with assignment data
+        handleChange({
+          target: {
+            name: "title",
+            value: `Homework | ${assignment?.title || ''} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`
+          }
+        });
+        handleChange({
+          target: {
+            name: "placeholder",
+            value: assignment?.placeholder || ""
+          }
+        });
+      
+        // Reset homework content with fresh placeholder
+        if (assignment?.placeholder) {
+          homeworkContent.current = assignment.placeholder;
+        }
+      } else if (!assignmentLoading && open) {
+        console.warn("AssignmentModal opened but no assignment data available");
         setTitle("");
         setContent("");
       }
-    }, [assignment]);
+    }, [assignment, assignmentLoading, open]);
+
+    const h1 = {
+      fontSize: "18px",
+      fontWeight: "600",
+      marginBottom: "16px"
+    }
+    const instructionBox = {
+      lineHeight: "1.5",
+      // background: "#F3F3F3",
+      borderLeft: "4px solid #274E5B",
+      borderRadius: "4px",
+      padding: "16px",
+      fontSize: "16px",
+      fontWeight: "400",
+      marginBottom: "16px"
+    }
+    const styleField = {
+      fontSize: "14px",
+      lineHeight: "1.5",
+      color: "#274E5B",
+      border: "1px solid #e0e0e0",
+      borderRadius: "8px",
+      padding: "12px",
+      marginBottom: "3rem"
+    }  
+
+    const updateHomeworkContent = async (newContent) => {
+      homeworkContent.current = newContent;
+    };
+
+    const handleCreateHomework = async () => {
+      try {
+        await createHomework({
+          variables: {
+            ...inputs,
+            content: homeworkContent?.current || inputs.placeholder,
+            assignmentId: assignment?.id,
+          },
+        });
+        clearForm();
+        setShowNewHomework(false);
+        // Optionally close the modal or show success message
+        // onClose();
+      } catch (error) {
+        console.error("Error creating homework:", error);
+        alert("Error creating homework: " + error.message);
+      }
+    };
+
+    if (!assignmentProp?.id || (!assignment && !assignmentLoading)) {
+      return null;
+    }
+      // Show loading state while fetching assignment data
+    if (assignmentLoading) {
+      return (
+        <Modal
+          open={open}
+          onClose={onClose}
+          size="large"
+          style={{ borderRadius: "12px", overflow: "hidden" }}
+        >
+          <Modal.Header
+            style={{
+              background: "#f9fafb",
+              borderBottom: "1px solid #e0e0e0",
+              fontFamily: "Nunito",
+              fontWeight: 600,
+            }}
+          >
+            {t("assignment.loading", "Loading Assignment...")}
+          </Modal.Header>
+          <Modal.Content style={{ background: "#ffffff", padding: "24px", textAlign: "center" }}>
+            <Icon name="spinner" loading size="large" />
+            <p>{t("assignment.loadingMessage", "Fetching latest assignment data...")}</p>
+          </Modal.Content>
+        </Modal>
+      );
+    }
+
+    // Show error state if assignment failed to load
+    if (assignmentError) {
+      return (
+        <Modal
+          open={open}
+          onClose={onClose}
+          size="large"
+          style={{ borderRadius: "12px", overflow: "hidden" }}
+        >
+          <Modal.Header
+            style={{
+              background: "#f9fafb",
+              borderBottom: "1px solid #e0e0e0",
+              fontFamily: "Nunito",
+              fontWeight: 600,
+            }}
+          >
+            {t("assignment.error", "Error Loading Assignment")}
+          </Modal.Header>
+          <Modal.Content style={{ background: "#ffffff", padding: "24px" }}>
+            <p style={{ color: "#d32f2f" }}>
+              {t("assignment.errorMessage", "Failed to load assignment data. Please try again.")}
+            </p>
+          </Modal.Content>
+          <Modal.Actions
+            style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
+          >
+            <Button onClick={onClose} style={{ background: "#f0f4f8", color: "#007c70", borderRadius: "8px" }}>
+              {t("board.expendedCard.close", "Close")}
+            </Button>
+          </Modal.Actions>
+        </Modal>
+      );
+    }
 
     if (!assignment && open) {
       console.warn("AssignmentModal rendered without valid assignment");
@@ -285,37 +471,173 @@ export default function ProposalCard({
           style={{ background: "#ffffff", padding: "24px" }}
         >
           <div>
-            <label htmlFor="assignmentTitle">
-              <div className="cardHeader">{t("board.expendedCard.title")}</div>
-              <input
-                type="text"
-                id="assignmentTitle"
-                value={title}
-                disabled
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  borderRadius: "4px",
-                  border: "1px solid #e0e0e0",
-                  marginBottom: "16px",
-                  background: "#f9fafb",
-                }}
-              />
-            </label>
-            <div className="cardHeader">{t("board.expendedCard.content")}</div>
-            <div
-              style={{
-                fontSize: "14px",
-                color: "#333",
-                lineHeight: "1.5",
-                border: "1px solid #e0e0e0",
-                borderRadius: "4px",
-                padding: "16px",
-              }}
-            >
+            <div style={h1}>
+                {title}
+            </div>
+            <div style={instructionBox}>
               {ReactHtmlParser(content || "")}
             </div>
+          {/* Homework Section */}
+          <div style={{ marginTop: "24px", paddingTop: "24px" }}>
+            <h3 style={{ marginBottom: "16px", color: "#274E5B" }}>
+              {t("homework.myHomework", "My Homework")}
+            </h3>
+
+            {/* Show existing homeworks */}
+            {homeworks.length > 0 && (
+              <div style={{ marginBottom: "16px" }}>
+                <h4 style={{ marginBottom: "12px", fontSize: "16px" }}>
+                  {t("homework.existingHomeworks", "Existing Homeworks")}
+                </h4>
+                {homeworks.map((homework) => (
+                  <div
+                    key={homework?.id}
+                    style={{
+                      // border: "1px solid #274E5B",
+                      borderRadius: "8px",
+                      padding: "12px",
+                      marginBottom: "8px",
+                      background: "#F3F3F3",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: "600", marginBottom: "4px" }}>
+                        {homework.title}
+                      </div>
+                      <div style={{ fontSize: "12px", color: "#666" }}>
+                        Status: {homework.settings?.status || "Started"}
+                      </div>
+                    </div>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        console.log("Navigate to homework:", homework.id);
+                        if (!assignment?.code || !homework?.code) {
+                          console.error("Missing assignment or homework code");
+                          return;
+                        }
+
+                        const url = `http://localhost:3000/dashboard/assignments/${assignment.code}?homework=${homework.code}`;
+                        console.log("Navigate to homework:", url);
+
+                        // Open in a new tab
+                        window.open(url, "_blank", "noopener,noreferrer");
+                      }}
+                      style={{
+                        borderRadius: "100px",
+                        color: "white",
+                        fontSize: "10px",
+                        background: "#336F8A",
+                      }}
+                    >
+                      {t("homework.openHomework", "Open")}
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* New Homework Section */}
+            {!showNewHomework ? (
+              <Button
+                onClick={() => setShowNewHomework(true)}
+                style={{
+                  borderRadius: "100px",
+                  background: "#336F8A",
+                  fontSize: "14px",
+                  color: "white",
+                  border: "1px solid #336F8A",
+                  marginRight: "10px"
+                }}
+                disabled={createLoading}
+              >
+                {t("homework.newHomework", "New Homework")}
+              </Button>
+            ) : (
+              <div style={{
+                border: "1px solid #e0e0e0",
+                borderRadius: "8px",
+                padding: "16px",
+                background: "#f8f9fa",
+              }}>
+                <div style={h1}>
+                  {t("homework.createNewHomework", "Create New Homework")}
+                </div>
+                
+                <div style={{ marginBottom: "12px" }}>
+                  <p style={{ marginBottom: "0px" }}>
+                    {t("homework.homeworkTitle", "Homework Title")}
+                  </p>
+                  <input
+                    type="text"
+                    value={inputs.title}
+                    onChange={(e) => handleChange({
+                      target: { name: "title", value: e.target.value }
+                    })}
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                      marginTop: "4px",
+                    }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: "16px" }}>
+                  <p style={{ marginBottom: "8px" }}>
+                    {t("homework.firstDraft", "First Draft")}
+                  </p>
+                  <div 
+                    style={{
+                      // border: "1px solid #ccc",
+                      // borderRadius: "4px",
+                      minHeight: "100px",
+                      marginTop: "4px",
+                    }}
+                  >
+                    <TipTapEditor
+                      content={homeworkContent.current || inputs.placeholder}
+                      onUpdate={(newContent) => updateHomeworkContent(newContent)}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <Button
+                    onClick={handleCreateHomework}
+                    loading={createLoading}
+                    disabled={createLoading}
+                    style={{
+                      background: "#28a745",
+                      color: "white",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    {t("homework.createHomework", "Create Homework")}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowNewHomework(false);
+                      clearForm();
+                    }}
+                    style={{
+                      background: "transparent",
+                      color: "#666",
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    {t("homework.cancel", "Cancel")}
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
+        </div>
         </Modal.Content>
         <Modal.Actions
           style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
@@ -323,9 +645,12 @@ export default function ProposalCard({
           <Button
             onClick={onClose}
             style={{
-              background: "#f0f4f8",
-              color: "#007c70",
-              borderRadius: "8px",
+              borderRadius: "100px",
+              background: "#f7f9fa",
+              fontSize: "12px",
+              color: "336F8A",
+              border: "1px solid #336F8A",
+              marginRight: "10px"
             }}
           >
             {t("board.expendedCard.close", "Close")}

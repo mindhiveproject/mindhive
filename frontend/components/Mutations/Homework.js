@@ -5,6 +5,7 @@ export const CREATE_HOMEWORK = gql`
   mutation CREATE_HOMEWORK(
     $title: String
     $content: String
+    $placeholder: String
     $settings: JSON
     $public: Boolean
     $assignmentId: ID!
@@ -13,6 +14,7 @@ export const CREATE_HOMEWORK = gql`
       data: {
         title: $title
         content: $content
+        placeholder: $placeholder
         settings: $settings
         public: $public
         assignment: { connect: { id: $assignmentId } }
@@ -38,6 +40,7 @@ export const EDIT_HOMEWORK = gql`
     $id: ID!
     $title: String
     $content: String
+    $placeholder: String
     $settings: JSON
     $public: Boolean
     $updatedAt: DateTime
@@ -47,6 +50,7 @@ export const EDIT_HOMEWORK = gql`
       data: {
         title: $title
         content: $content
+        placeholder: $placeholder
         settings: $settings
         public: $public
         updatedAt: $updatedAt

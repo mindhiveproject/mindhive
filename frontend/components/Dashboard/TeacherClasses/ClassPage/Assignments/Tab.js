@@ -103,7 +103,7 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
                       }
                     }}
                   >
-                    {t("assignment.revoke")}
+                    {t("assignment.revoke")}sd
                   </button>
                   <button className="secondary" onClick={() => copyLink()}>
                     {t("assignment.copyLink")}
@@ -126,7 +126,7 @@ export default function AssignmentTab({ assignment, myclass, user, query }) {
                       }
                     }}
                   >
-                    {t("assignment.submit")}
+                    {t("assignment.submitToStudents")}
                   </button>
                 </div>
               )}

@@ -346,6 +346,7 @@ const StyledClass = styled.div`
           grid-gap: 20px;
           grid-template-columns: 1fr;
           align-items: center;
+          border-bottom: 5px solid #f7faf9;
         }
         .headerInfo {
           display: grid;

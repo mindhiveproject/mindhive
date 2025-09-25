@@ -32,6 +32,25 @@
 	"blockDescription": "In een blok krijgen de deelnemers informatie gepresenteerd.",
 	"board": {
 		"error": "Fout! {{bericht}}",
+		"expendedCard": {
+			"close": "Sluit",
+			"connect": "Maak verbinding met",
+			"content": "Inhoud",
+			"disconnect": "Ontkoppelen",
+			"done": "Gedaan",
+			"linkItems": "Link Items",
+			"myAssignments": "Mijn opdrachten",
+			"myResources": "Mijn bronnen",
+			"previewAssignment": "Voorbeeld opdracht",
+			"previewLinkedAssignments": "Een voorbeeld van gekoppelde opdrachten",
+			"previewLinkedResources": "Voorbeeld van gekoppelde bronnen",
+			"previewLinkedStudies": "Voorbeeld van gekoppelde studies",
+			"previewLinkedTasks": "Een voorbeeld van gekoppelde taken",
+			"publicResources": "Publieke middelen",
+			"studies": "Studies",
+			"tasks": "Taken",
+			"title": "Titel"
+		},
 		"loading": "Bezig met laden..."
 	},
 	"build-create-new-study": "Om een ​​nieuwe studie te maken, klikt u op onderstaande knop.",
