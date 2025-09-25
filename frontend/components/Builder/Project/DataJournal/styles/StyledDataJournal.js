@@ -307,6 +307,16 @@ export const StyledDataWorkspace = styled.div`
     background: #f8f9f8;
   }
 
+  .datasets {
+    display: grid;
+    .datasetCard {
+      display: grid;
+    }
+    .addDataset {
+      display: grid;
+    }
+  }
+
   .dashboard {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -575,4 +585,313 @@ export const StyledDataWorkspace = styled.div`
       }
     }
   }
+
+  .addNewChapter {
+    display: flex;
+    height: 40px;
+    padding: 8px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 100px;
+    border: 1px solid var(--MH-Theme-Primary-Dark, #336f8a);
+  }
+`;
+
+export const StyledDatasetGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+`;
+
+export const StyledAddDataset = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9f8;
+  color: #336f8a;
+  padding: 12px 24px;
+  border: 2px dashed #336f8a;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: Nunito;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #336f8a;
+    color: white;
+  }
+`;
+
+export const StyledDatasetCard = styled.div`
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border: 1px solid #e6e6e6;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .dataset-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .dataset-title {
+    font-family: Nunito;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    color: #333;
+    margin: 0;
+    flex: 1;
+  }
+
+  .dataset-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: 10px;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    background: #336f8a;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: Inter;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &:hover:not(:disabled) {
+      background: #2a5a6f;
+    }
+
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  .delete-btn {
+    background: #ff4d4d;
+
+    &:hover:not(:disabled) {
+      background: #cc0000;
+    }
+  }
+
+  .dataset-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .origin-badge {
+    background: #f0f8f7;
+    color: #336f8a;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: Inter;
+    align-self: flex-start;
+    max-width: fit-content;
+  }
+
+  .dataset-info {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    color: #666;
+    font-family: Inter;
+  }
+
+  .author {
+    font-weight: 500;
+  }
+
+  .updated {
+    color: #999;
+  }
+`;
+
+export const StyledDatasetView = styled.div`
+  .dataset-view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e6e6e6;
+
+    h2 {
+      margin: 0;
+      font-family: Nunito;
+      font-weight: 700;
+      font-size: 24px;
+      color: #333;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .refresh-btn,
+    .close-btn {
+      background: #336f8a;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: Inter;
+      font-size: 14px;
+
+      &:hover {
+        background: #2a5a6f;
+      }
+    }
+
+    .close-btn {
+      background: #ff4d4d;
+
+      &:hover {
+        background: #cc0000;
+      }
+    }
+  }
+
+  .dataset-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e6e6e6;
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 12px 24px;
+      cursor: pointer;
+      font-family: Nunito;
+      font-weight: 600;
+      font-size: 14px;
+      color: #666;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: #336f8a;
+      }
+
+      &.active {
+        color: #336f8a;
+        border-bottom-color: #336f8a;
+      }
+    }
+  }
+
+  .dataset-content {
+    min-height: 400px;
+  }
+
+  .preview-container,
+  .data-container,
+  .settings-container {
+    h4 {
+      font-family: Nunito;
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #333;
+    }
+  }
+
+  .table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e6e6e6;
+        font-family: Inter;
+        font-size: 14px;
+      }
+
+      th {
+        background: #f8f9f8;
+        font-weight: 600;
+        color: #333;
+        position: sticky;
+        top: 0;
+      }
+
+      tr:hover {
+        background: #f8f9f8;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .row-count {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+  }
+
+  .settings-container {
+    pre {
+      background: #f8f9f8;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
+
+  .dataset-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e6e6e6;
+    font-size: 12px;
+    color: #666;
+    font-family: Inter;
+  }
+`;
+
+export const StyledDataSourceLabels = styled.span`
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  color: #336f8a;
+  margin-left: 8px;
 `;

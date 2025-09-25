@@ -34,15 +34,6 @@ export default function StateManager({
   data,
   variables,
 }) {
-  console.log({
-    content,
-    handleContentChange,
-    pyodide,
-    sectionId,
-    data,
-    variables,
-  });
-
   const [isRunning, setIsRunning] = useState(false);
   const [output, setOutput] = useState("");
 

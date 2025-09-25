@@ -1,18 +1,14 @@
-// Journal
 import { list } from "@keystone-6/core";
 import {
-  text,
-  relationship,
-  password,
-  timestamp,
-  select,
-  integer,
-  checkbox,
   json,
-  float,
+  text,
+  timestamp,
+  relationship,
+  checkbox,
+  select,
 } from "@keystone-6/core/fields";
 
-export const VizPart = list({
+export const Datasource = list({
   access: {
     operation: {
       query: () => true,
@@ -24,6 +20,28 @@ export const VizPart = list({
   fields: {
     title: text(),
     description: text(),
+    author: relationship({
+      ref: "Profile.authoredDatasources",
+      hooks: {
+        async resolveInput({ context, operation, inputData }) {
+          if (operation === "create") {
+            return { connect: { id: context.session.itemId } };
+          } else {
+            return inputData.author;
+          }
+        },
+      },
+    }),
+    journal: relationship({
+      ref: "VizPart.datasources",
+      many: true,
+    }),
+    study: relationship({
+      ref: "Study.datasources",
+    }),
+    project: relationship({
+      ref: "ProposalBoard.datasources",
+    }),
     dataOrigin: select({
       options: [
         { label: "study", value: "STUDY" },
@@ -32,26 +50,11 @@ export const VizPart = list({
         { label: "template", value: "TEMPLATE" },
       ],
     }),
-    isPublic: checkbox({ isFilterable: true }),
-    isTemplate: checkbox({ isFilterable: true }),
-    isFeatured: checkbox({ isFilterable: true }),
     settings: json(),
     content: json(), // save uploaded data here
-    vizJournal: relationship({
-      ref: "VizJournal.vizParts",
-    }),
-    vizChapters: relationship({
-      ref: "VizChapter.vizPart",
-      many: true,
-    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
-    position: float(),
-    datasources: relationship({
-      ref: "Datasource.journal",
-      many: true,
-    }),
   },
 });

@@ -136,7 +136,7 @@ export const Profile = list({
         { label: "हिंदी मराठी", value: "HI-MA" },
         { label: "Русский", value: "RU-RU" },
         { label: "Nederlands", value: "NL-NL" },
-        { label: "Português", value: "PT-BR" }
+        { label: "Português", value: "PT-BR" },
       ],
       defaultValue: "EN-US",
     }),
@@ -281,6 +281,10 @@ export const Profile = list({
     }),
     authoredSpecs: relationship({
       ref: "Spec.author",
+      many: true,
+    }),
+    authoredDatasources: relationship({
+      ref: "Datasource.author",
       many: true,
     }),
     profileType: select({

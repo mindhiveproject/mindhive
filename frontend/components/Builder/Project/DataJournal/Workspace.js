@@ -12,6 +12,8 @@ import Grid from "./Workspace/Grid";
 
 export default function Workspace({
   user,
+  projectId,
+  studyId,
   dataJournals,
   journal,
   journalId,
@@ -70,6 +72,9 @@ export default function Workspace({
 
   return (
     <Grid
+      user={user}
+      projectId={projectId}
+      studyId={studyId}
       dataJournals={dataJournals}
       journal={journal}
       journalId={journalId}

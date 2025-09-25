@@ -12,6 +12,8 @@ import "react-resizable/css/styles.css";
 import Widget from "./Widget";
 
 import TopNavigation from "../TopNav/Main";
+
+import Datasets from "../Datasets/Main";
 import SideNavigation from "../SideNav/Main";
 import ComponentEditor from "../ComponentEditor/Main";
 import {
@@ -28,6 +30,9 @@ import {
 import ComponentPanel from "./ComponentPanel/Main";
 
 export default function Grid({
+  user,
+  projectId,
+  studyId,
   dataJournals,
   journal,
   journalId,
@@ -41,6 +46,7 @@ export default function Grid({
   initVariables,
   initSettings,
 }) {
+  const [area, setArea] = useState("journals");
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [activeComponentId, setActiveComponentId] = useState(null);
   const [isAddComponentPanelOpen, setIsAddComponentPanelOpen] = useState(false);
@@ -102,9 +108,6 @@ export default function Grid({
 
   const handleComponentSelect = useCallback(
     (componentId) => {
-      // console.log(
-      //   `Grid handleComponentSelect: ${componentId}, current active: ${activeComponentId}`
-      // );
       setActiveComponentId((prev) =>
         prev === componentId ? null : componentId
       );
@@ -114,7 +117,6 @@ export default function Grid({
 
   const handleAddComponent = useCallback(
     async ({ title, type, content }) => {
-      console.log({ title, type, content });
       const res = await createComponent({
         variables: {
           input: {
@@ -130,7 +132,7 @@ export default function Grid({
         },
       });
       const newComponentId = res?.data?.createVizSection?.id;
-      console.log({ newComponentId });
+
       const newComponent = { id: newComponentId, title, type, content };
       const newLayoutItem = {
         i: newComponentId,
@@ -226,6 +228,7 @@ export default function Grid({
   return (
     <StyledDataWorkspace>
       <TopNavigation
+        area={area}
         journal={journal}
         workspace={workspace}
         activeComponent={components.find(
@@ -233,114 +236,127 @@ export default function Grid({
         )}
         handleAddComponent={handleAddComponent}
         toggleComponentPanel={toggleComponentPanel}
+        setArea={setArea}
       />
-      <div className="dashboard">
-        <div>
-          {!sidebarVisible && (
-            <div
-              className="openPanelBtn"
-              onClick={() => setSidebarVisible(true)}
+
+      {area === "journals" && (
+        <div className="dashboard">
+          <div>
+            {!sidebarVisible && (
+              <div
+                className="openPanelBtn"
+                onClick={() => setSidebarVisible(true)}
+              >
+                <img src="/assets/dataviz/openPanel.png" />
+              </div>
+            )}
+          </div>
+
+          <SidebarPushable as={Segment}>
+            <Sidebar
+              animation="push"
+              icon="labeled"
+              inverted
+              vertical
+              visible={sidebarVisible}
+              width="wide"
             >
-              <img src="/assets/dataviz/openPanel.png" />
-            </div>
+              <SideNavigation
+                projectId={projectId}
+                studyId={studyId}
+                dataJournals={dataJournals}
+                selectedJournal={journal}
+                selectedJournalId={journalId}
+                selectJournalById={selectJournalById}
+                workspaces={workspaces}
+                selectedWorkspace={workspace}
+                selectWorkspaceById={selectWorkspaceById}
+                collapsePanel={() => setSidebarVisible(false)}
+              />
+            </Sidebar>
+
+            <SidebarPusher>
+              <div className="canvas">
+                <GridLayout
+                  className="layout"
+                  layout={layout}
+                  cols={12}
+                  rowHeight={30}
+                  width={920}
+                  onLayoutChange={handleLayoutChange}
+                  isDraggable={true}
+                  isResizable={true}
+                  compactType="vertical"
+                  preventCollision={false}
+                  margin={[16, 16]}
+                  draggableHandle=".widget-header"
+                  draggableCancel=".widget-button" // Exclude buttons from dragging
+                >
+                  {components.map((widget) => {
+                    const layoutItem = layout.find(
+                      (l) => l.i === widget.id
+                    ) || {
+                      i: widget.id,
+                      x: 0,
+                      y: 0,
+                      w: 4,
+                      h: 10,
+                      minW: 2,
+                      minH: 5,
+                      maxW: 12,
+                      maxH: 20,
+                    };
+                    return (
+                      <div
+                        key={widget.id}
+                        data-grid={layoutItem}
+                        className="widgetContainer"
+                        style={{ position: "static" }}
+                      >
+                        <Widget
+                          id={widget.id}
+                          type={widget.type}
+                          content={widget.content}
+                          isActive={widget.id === activeComponentId}
+                          onSelect={handleComponentSelect}
+                          onChange={handleUpdateComponent}
+                          handleRemoveComponent={handleRemoveComponent}
+                          pyodide={pyodide}
+                          data={data}
+                          variables={variables}
+                          settings={settings}
+                        />
+                      </div>
+                    );
+                  })}
+                </GridLayout>
+              </div>
+            </SidebarPusher>
+          </SidebarPushable>
+          {activeComponentId && (
+            <StyledRightPanel>
+              <ComponentEditor
+                component={components.find(
+                  (comp) => comp.id === activeComponentId
+                )}
+                onChange={handleUpdateComponent}
+                onSave={() => handleSaveComponent(activeComponentId)}
+                onDelete={() => handleRemoveComponent(activeComponentId)}
+                pyodide={pyodide}
+                data={data}
+                variables={variables}
+              />
+            </StyledRightPanel>
+          )}
+          {isAddComponentPanelOpen && (
+            <ComponentPanel handleAddComponent={handleAddComponent} />
           )}
         </div>
+      )}
 
-        <SidebarPushable as={Segment}>
-          <Sidebar
-            animation="push"
-            icon="labeled"
-            inverted
-            vertical
-            visible={sidebarVisible}
-            width="wide"
-          >
-            <SideNavigation
-              dataJournals={dataJournals}
-              selectedJournalId={journalId}
-              selectJournalById={selectJournalById}
-              workspaces={workspaces}
-              selectedWorkspace={workspace}
-              selectWorkspaceById={selectWorkspaceById}
-              collapsePanel={() => setSidebarVisible(false)}
-            />
-          </Sidebar>
-
-          <SidebarPusher>
-            <div className="canvas">
-              <GridLayout
-                className="layout"
-                layout={layout}
-                cols={12}
-                rowHeight={30}
-                width={920}
-                onLayoutChange={handleLayoutChange}
-                isDraggable={true}
-                isResizable={true}
-                compactType="vertical"
-                preventCollision={false}
-                margin={[16, 16]}
-                draggableHandle=".widget-header"
-                draggableCancel=".widget-button" // Exclude buttons from dragging
-              >
-                {components.map((widget) => {
-                  const layoutItem = layout.find((l) => l.i === widget.id) || {
-                    i: widget.id,
-                    x: 0,
-                    y: 0,
-                    w: 4,
-                    h: 10,
-                    minW: 2,
-                    minH: 5,
-                    maxW: 12,
-                    maxH: 20,
-                  };
-                  return (
-                    <div
-                      key={widget.id}
-                      data-grid={layoutItem}
-                      className="widgetContainer"
-                      style={{ position: "static" }}
-                    >
-                      <Widget
-                        id={widget.id}
-                        type={widget.type}
-                        content={widget.content}
-                        isActive={widget.id === activeComponentId}
-                        onSelect={handleComponentSelect}
-                        onChange={handleUpdateComponent}
-                        handleRemoveComponent={handleRemoveComponent}
-                        pyodide={pyodide}
-                        data={data}
-                        variables={variables}
-                        settings={settings}
-                      />
-                    </div>
-                  );
-                })}
-              </GridLayout>
-            </div>
-          </SidebarPusher>
-        </SidebarPushable>
-        {activeComponentId && (
-          <StyledRightPanel>
-            <ComponentEditor
-              component={components.find(
-                (comp) => comp.id === activeComponentId
-              )}
-              onChange={handleUpdateComponent}
-              onSave={() => handleSaveComponent(activeComponentId)}
-              onDelete={() => handleRemoveComponent(activeComponentId)}
-              pyodide={pyodide}
-              data={data}
-              variables={variables}
-            />
-          </StyledRightPanel>
-        )}
-        {isAddComponentPanelOpen && (
-          <ComponentPanel handleAddComponent={handleAddComponent} />
-        )}
-      </div>
+      {area === "datasets" && (
+        <Datasets user={user} projectId={projectId} studyId={studyId} />
+      )}
     </StyledDataWorkspace>
   );
 }

@@ -284,7 +284,7 @@ export default function Walkthrough({ onStartWalkthrough }) {
           case "journal": // TODO: add tours for visualize -- Not doing till the UI is ready
             try {
               componentImport = await import(
-                "../../Builder/Project/DataJournal/Wrapper.js"
+                "../../Builder/Project/DataJournal/Main.js"
               );
             } catch (error) {
               console.error("Failed to import journal wrapper:", error);

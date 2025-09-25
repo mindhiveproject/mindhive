@@ -6,32 +6,20 @@ export const GET_DATA_JOURNAL = gql`
     vizPart(where: { id: $id }) {
       id
       title
-      updatedAt
+      datasources {
+        id
+        dataOrigin
+        study {
+          id
+        }
+        content
+        settings
+      }
       vizChapters {
         id
         title
       }
+      updatedAt
     }
   }
 `;
-
-// title
-// description
-// dataOrigin
-// isTemplate
-// settings
-// content
-// vizChapters {
-//   id
-//   title
-//   description
-//   vizSections {
-//     id
-//     title
-//     description
-//     type
-//     content
-//   }
-// }
-// createdAt
-// updatedAt

@@ -158,6 +158,10 @@ export const Study = list({
       ref: "VizJournal.study",
       many: true,
     }),
+    datasources: relationship({
+      ref: "Datasource.study",
+      many: true,
+    }),
     proposalCards: relationship({
       ref: "ProposalCard.studies",
       many: true,

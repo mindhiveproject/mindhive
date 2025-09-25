@@ -51,7 +51,6 @@ export default function ComponentEditor({
           <Graph
             content={content}
             handleContentChange={(newContent) => {
-              console.log({ newContent });
               onChange({
                 componentId: component?.id,
                 newContent: newContent?.newContent,

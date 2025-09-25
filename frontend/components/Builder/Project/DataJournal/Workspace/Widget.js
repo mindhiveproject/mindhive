@@ -62,8 +62,6 @@ function Widget({
   variables,
   settings,
 }) {
-  // console.log({ content });
-
   const handleChange = useCallback(
     (content) => {
       // onChange({

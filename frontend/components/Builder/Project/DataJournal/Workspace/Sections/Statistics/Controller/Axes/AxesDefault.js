@@ -20,9 +20,9 @@ export default function Axes({
   selectors,
   handleContentChange,
 }) {
-  // console.log("Axes component rendered");
-  // console.log(selectors);
-  const [selectedDataFormat, setSelectedDataFormat] = useState(selectors["dataType"] || "quant");
+  const [selectedDataFormat, setSelectedDataFormat] = useState(
+    selectors["dataType"] || "quant"
+  );
   const [activeIndex, setActiveIndex] = useState(-1);
   const [jsonObject, setJsonObject] = useState(selectors);
 
@@ -46,7 +46,10 @@ parameters = dict(json.loads('dashboardJSON'))
   }));
 
   const updateCode = async ({ code, newJsonObject }) => {
-    const updatedConnectSelectorsCode = connectSelectorsCode.replace('dashboardJSON', JSON.stringify(newJsonObject));
+    const updatedConnectSelectorsCode = connectSelectorsCode.replace(
+      "dashboardJSON",
+      JSON.stringify(newJsonObject)
+    );
     await pyodide.runPythonAsync(updatedConnectSelectorsCode);
     await pyodide.runPythonAsync(code);
     if (runCode) {
@@ -81,7 +84,7 @@ parameters = dict(json.loads('dashboardJSON'))
   const onSelectorChoice = (option) => {
     const newDataFormat = option?.value;
     setSelectedDataFormat(newDataFormat);
-  
+
     // Update selectors and notify parent
     const updatedSelectors = { ...selectors, dataType: newDataFormat };
     handleContentChange({
@@ -89,12 +92,12 @@ parameters = dict(json.loads('dashboardJSON'))
         selectors: updatedSelectors,
       },
     });
-  
+
     // Optionally re-run the code to reflect changes in Render
     runCode({ code });
   };
 
-  useEffect(() => {  
+  useEffect(() => {
     const newJsonObject = { ...selectors };
     setJsonObject(newJsonObject);
     updateCode({ code, newJsonObject });

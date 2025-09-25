@@ -1,23 +1,23 @@
+// New file: components/DataJournal/useDatasourceData.js
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
 import useSWR from "swr";
 
-import { STUDY_SUMMARY_RESULTS } from "../../../Queries/SummaryResult";
+import { STUDY_SUMMARY_RESULTS } from "../../../../Queries/SummaryResult";
 
-import Workspace from "./Workspace";
-
-// A fetcher function to wrap the native fetch function and return the result of a call to url in json format
+// Fetcher for SWR
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-// pre-process and aggregate data
-const processRawData = ({
+// Exported from a new helpers file or copied from StudyDataWrapper.js/TemplateDataWrapper.js
+// Assuming we extract it to a shared helper since it's identical in both wrappers
+export function processRawData({
   rawdata,
   components,
   username,
-  modifiedData,
-  modifiedVariables,
-  modifiedSettings,
-}) => {
+  modifiedData = [],
+  modifiedVariables = [],
+  modifiedSettings = {},
+}) {
   const res = rawdata.map((result) => {
     const userID =
       result?.user?.publicReadableId ||
@@ -165,119 +165,125 @@ const processRawData = ({
   const settings = modifiedSettings || {};
 
   return { data: dataByParticipant, variables, settings };
-};
+}
 
-export default function StudyDataWrapper({
-  user,
-  studyId,
-  dataJournals,
-  journal,
-  journalId,
-  selectJournalById,
-  workspaces,
-  workspaceId,
-  selectWorkspaceById,
-  pyodide,
-}) {
-  // get the username of the current user
+// The hook
+export default function useDatasourceData({ datasource, user }) {
   const username = user?.publicReadableId || user?.publicId || user?.id;
-
-  // get the summary results of the study
   const {
-    data: studyData,
-    loading,
-    error,
-  } = useQuery(STUDY_SUMMARY_RESULTS, {
-    variables: { studyId },
-  });
+    dataOrigin,
+    study,
+    content,
+    settings: dsSettings,
+    title,
+    id,
+  } = datasource;
 
-  const study = studyData?.study || {};
-  // filter only summary results that are selected by the user to be included in the data analysis
-  const includedDatasets =
-    studyData?.study?.datasets
-      ?.filter((d) => d?.isIncluded)
-      .map((d) => d?.token) || [];
-  const summaryResults =
-    study?.summaryResults?.filter((s) =>
-      includedDatasets?.includes(s?.metadataId)
-    ) || [];
+  const prefix = title ? `${title}_` : `${id}_`;
 
-  // get the saved modified data
-  let modifiedData = [];
-  let modifiedVariables = [];
-  let modifiedSettings = {};
-  // if (part?.content?.isModified) {
-  //   const { year, month, day, token } = part?.content?.modified?.address;
-  //   const { data: dataModified, error: modifiedError } = useSWR(
-  //     `/api/data/${year}/${month}/${day}/${token}?type=modified`,
-  //     fetcher
-  //   );
-  //   if (dataModified) {
-  //     const parsedData = JSON.parse(dataModified);
-  //     modifiedData = parsedData.data;
-  //     modifiedVariables = parsedData?.metadata?.variables;
-  //     modifiedSettings = parsedData?.metadata?.settings || {};
-  //   }
-  // }
-
-  // find all tests in the study with recursive search
-  var components = [];
-  const findComponents = ({ flow, conditionLabel }) => {
-    flow?.forEach((stage) => {
-      if (stage?.type === "my-node") {
-        components.push({
-          testId: stage?.testId,
-          name: stage?.name,
-          subtitle: stage?.subtitle,
-          conditionLabel,
-        });
-      }
-      if (stage?.type === "design") {
-        stage?.conditions?.forEach((condition) => {
-          findComponents({
-            flow: condition?.flow,
-            conditionLabel: condition?.label,
-          });
-        });
-      }
+  if (dataOrigin === "STUDY" || dataOrigin === "TEMPLATE") {
+    const studyIdToUse = study?.id;
+    const {
+      data: studyData,
+      loading,
+      error,
+    } = useQuery(STUDY_SUMMARY_RESULTS, {
+      variables: { studyId: studyIdToUse },
+      skip: !studyIdToUse,
     });
-  };
-  findComponents({ flow: study?.flow });
 
-  // pre-process the data in the participant-by-row format
-  const { data, variables, settings } = useMemo(
-    () =>
-      processRawData({
+    return useMemo(() => {
+      if (loading || error || !studyData) {
+        return { data: [], variables: [], settings: {}, loading, error };
+      }
+
+      const studyObj = studyData?.study || {};
+      const includedDatasets =
+        studyObj?.datasets?.filter((d) => d?.isIncluded).map((d) => d?.token) ||
+        [];
+      const summaryResults =
+        studyObj?.summaryResults?.filter((s) =>
+          includedDatasets.includes(s?.metadataId)
+        ) || [];
+
+      // Find components (copied from wrappers)
+      const components = [];
+      const findComponents = ({ flow, conditionLabel }) => {
+        flow?.forEach((stage) => {
+          if (stage?.type === "my-node") {
+            components.push({
+              testId: stage?.testId,
+              name: stage?.name,
+              subtitle: stage?.subtitle,
+              conditionLabel,
+            });
+          }
+          if (stage?.type === "design") {
+            stage?.conditions?.forEach((condition) => {
+              findComponents({
+                flow: condition?.flow,
+                conditionLabel: condition?.label,
+              });
+            });
+          }
+        });
+      };
+      findComponents({ flow: studyObj?.flow });
+
+      // For simplicity, no modified data fetching in initial implementation
+      const { data, variables, settings } = processRawData({
         rawdata: summaryResults,
         components,
         username,
-        modifiedData,
-        modifiedVariables,
-        modifiedSettings,
-      }),
-    [
-      summaryResults,
-      components,
-      modifiedData,
-      modifiedVariables,
-      modifiedSettings,
-    ]
-  );
+        modifiedData: [],
+        modifiedVariables: [],
+        modifiedSettings: dsSettings || {},
+      });
 
-  return (
-    <Workspace
-      user={user}
-      dataJournals={dataJournals}
-      journal={journal}
-      journalId={journalId}
-      selectJournalById={selectJournalById}
-      workspaces={workspaces}
-      workspaceId={workspaceId}
-      selectWorkspaceById={selectWorkspaceById}
-      pyodide={pyodide}
-      initData={data}
-      initVariables={variables}
-      initSettings={settings}
-    />
-  );
+      return { data, variables, settings, loading: false, error: null };
+    }, [studyData, loading, error, username, dsSettings]);
+  } else if (dataOrigin === "UPLOADED" || dataOrigin === "SIMULATED") {
+    const { year, month, day, token } = content?.uploaded?.address || {};
+
+    const type = content?.isModified
+      ? "modified"
+      : content?.dataOrigin === "SIMULATED"
+      ? "simulated"
+      : "upload";
+
+    const url = year
+      ? `/api/data/${year}/${month}/${day}/${token}?type=${type}`
+      : null;
+
+    const { data: fetchedData, error } = useSWR(url, fetcher);
+
+    return useMemo(() => {
+      if (!fetchedData || error) {
+        return {
+          data: [],
+          variables: [],
+          settings: {},
+          loading: !fetchedData && !error,
+          error,
+        };
+      }
+
+      // trim the data, remove the comma at the end only for uploaded data (not modified)
+      let trimmedData;
+      if (content?.isModified) {
+        trimmedData = fetchedData.trim();
+        variables = fetchedData?.metadata?.variables;
+      } else {
+        trimmedData = fetchedData.trim().slice(0, -1);
+      }
+      const result = JSON.parse(trimmedData || "{}");
+      const data = result?.data || [];
+      let variables = result?.metadata?.variables || [];
+      const settings = result?.metadata?.settings || dsSettings || {};
+
+      return { data, variables, settings, loading: false, error: null };
+    }, [fetchedData, error, dsSettings]);
+  }
+
+  return { data: [], variables: [], settings: {}, loading: false, error: null };
 }

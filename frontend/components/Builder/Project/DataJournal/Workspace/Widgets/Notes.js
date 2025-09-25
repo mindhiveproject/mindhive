@@ -3,12 +3,9 @@ const NotesWidget = ({ component, isActive, onSelect }) => {
   const notes =
     settings?.text || "No notes entered yet. Right-click to add notes.";
 
-  // console.log({ settings });
-
   const handleRightClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(`Right-click on Notes widget ${id}, isActive: ${isActive}`);
     onSelect(id);
   };
 

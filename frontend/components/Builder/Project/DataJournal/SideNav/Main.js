@@ -2,7 +2,10 @@ import { StyledSidebar } from "../styles/StyledDataJournal";
 import JournalNavigation from "./Journal";
 
 export default function SideNavigation({
+  projectId,
+  studyId,
   dataJournals,
+  selectedJournal,
   selectedJournalId,
   selectJournalById,
   workspaces,
@@ -21,7 +24,10 @@ export default function SideNavigation({
       <div className="journals">
         {dataJournals.map((journal) => (
           <JournalNavigation
+            projectId={projectId}
+            studyId={studyId}
             journal={journal}
+            selectedJournal={selectedJournal}
             isJournalSelected={journal?.id === selectedJournalId}
             selectJournalById={selectJournalById}
             workspaces={workspaces}

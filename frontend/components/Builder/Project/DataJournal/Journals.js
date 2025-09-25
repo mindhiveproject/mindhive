@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 import { GET_DATA_JOURNALS } from "../../../Queries/DataArea";
 import { StyledDataArea } from "./styles/StyledDataJournal";
+
 import Journal from "./Journal";
 
 export default function Journals({ user, projectId, studyId, pyodide }) {
@@ -56,6 +57,7 @@ export default function Journals({ user, projectId, studyId, pyodide }) {
       {journal && (
         <Journal
           user={user}
+          projectId={projectId}
           studyId={studyId}
           dataJournals={dataJournals}
           journalId={journal?.id}

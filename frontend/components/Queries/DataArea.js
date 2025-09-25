@@ -8,6 +8,11 @@ export const GET_DATA_JOURNALS = gql`
       vizParts {
         id
         title
+        datasources {
+          id
+          dataOrigin
+        }
+        updatedAt
       }
     }
   }
