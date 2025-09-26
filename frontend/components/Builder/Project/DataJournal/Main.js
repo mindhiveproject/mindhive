@@ -1,44 +1,34 @@
 // ---- Structure ------
-// DataJournal (Main.js)
-// - Top navigation menu (internal, for data journal navigation)
-//  -- Switch between Journals/Datasets view
-//  -- Breadcrumbs
-//  -- Export function button
-//  -- Share function button
-//  -- Add a Componenent button
-//  -- Chat toggle
-//
-// - Sidebar (on the left): navigation, adding workspace
-//
-// - Workspace canvas
-// - Editor
-//
-// Open question - on which level the journal and dataset are connected?
-// Pyodide environment is connected to the whole Data Journals space (saves time when switching between journals)
-// Pyodide code is connected with Element
-//
-// Architecture
 //  Pyodide wrapper (PyodideWrapper.js)
-//    Journal manager (JournalManager.js)
-//      DataWrapper
-//
-// Keystone
-// Journal wrapper (My journals) (VizJournal)
-// Journal (VizPart)
-// Workspace (VizChapter)
-// Component (VizSection)
+//    Journals (Journals.js)
+//      Journal (Journal.js) // data fetching
+//        Workspace
+//          Grid ("./Workspace/Grid")
+//            Datasets
+//            SideNavigation
+//            GridLayout
+//            ComponentEditor
+//            ComponentPanel
 
 import Navigation from "../Navigation/Main";
 import PyodideWrapper from "./PyodideWrapper";
 
-export default function DataJournal({
-  query,
-  user,
-  tab,
-  toggleSidebar,
-  projectId,
-  studyId,
-}) {
+import { useQuery } from "@apollo/client";
+import { GET_PROJECT_STUDY_ID } from "../../../Queries/Proposal";
+
+export default function DataJournals({ user, query, tab, toggleSidebar }) {
+  const projectId = query?.selector;
+
+  if (!projectId) {
+    return <div>No project found, please save your project first.</div>;
+  }
+
+  const { data, error, loading } = useQuery(GET_PROJECT_STUDY_ID, {
+    variables: { id: projectId },
+  });
+
+  const studyId = data?.proposalBoard?.study?.id;
+
   return (
     <>
       <Navigation

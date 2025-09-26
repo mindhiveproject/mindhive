@@ -142,6 +142,10 @@ export const ProposalBoard = list({
       ref: "VizJournal.project",
       many: true,
     }),
+    datasources: relationship({
+      ref: "Datasource.project",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

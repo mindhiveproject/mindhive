@@ -32,6 +32,25 @@
 	"blockDescription": "Em um bloco, os participantes recebem informações.",
 	"board": {
 		"error": "Erro! {{message}}",
+		"expendedCard": {
+			"close": "Próximo",
+			"connect": "Conectar",
+			"content": "Conteúdo",
+			"disconnect": "Desconectar",
+			"done": "Feito",
+			"linkItems": "Itens de link",
+			"myAssignments": "Minhas atribuições",
+			"myResources": "Meus recursos",
+			"previewAssignment": "Tarefa de visualização",
+			"previewLinkedAssignments": "Visualizar atribuições vinculadas",
+			"previewLinkedResources": "Visualizar recursos vinculados",
+			"previewLinkedStudies": "Visualizar estudos vinculados",
+			"previewLinkedTasks": "Visualizar tarefas vinculadas",
+			"publicResources": "Recursos públicos",
+			"studies": "Estudos",
+			"tasks": "Tarefas",
+			"title": "Título"
+		},
 		"loading": "Carregando..."
 	},
 	"build-create-new-study": "Para criar um novo estudo, clique no botão abaixo.",

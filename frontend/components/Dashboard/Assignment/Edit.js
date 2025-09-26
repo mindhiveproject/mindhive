@@ -19,6 +19,7 @@ export default function EditAssignment({ assignment, myclass }) {
         input: {
           title: inputs?.title,
           content: inputs?.content,
+          placeholder: inputs?.placeholder,
           classes: inputs?.classes ? { connect: inputs?.classes } : null, // [ { id: "123" }, { id: "234" } ]
           tags: inputs?.tags ? { connect: inputs?.tags } : null,
         },

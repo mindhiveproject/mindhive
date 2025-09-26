@@ -63,6 +63,7 @@ export const Assignment = list({
     }),
     title: text({ validation: { isRequired: true } }),
     content: text(),
+    placeholder: text(),
     settings: json(),
     public: checkbox({ isFilterable: true }),
     isTemplate: checkbox({ isFilterable: true }),

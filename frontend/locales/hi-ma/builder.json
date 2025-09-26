@@ -32,6 +32,25 @@
 	"blockDescription": "एक ब्लॉक में प्रतिभागियों को जानकारी दी जाती है।",
 	"board": {
 		"error": "त्रुटि संदेश}}",
+		"expendedCard": {
+			"close": "",
+			"connect": "",
+			"content": "",
+			"disconnect": "",
+			"done": "",
+			"linkItems": "",
+			"myAssignments": "",
+			"myResources": "",
+			"previewAssignment": "",
+			"previewLinkedAssignments": "",
+			"previewLinkedResources": "",
+			"previewLinkedStudies": "",
+			"previewLinkedTasks": "",
+			"publicResources": "",
+			"studies": "",
+			"tasks": "",
+			"title": ""
+		},
 		"loading": "लोड हो रहा है..."
 	},
 	"build-create-new-study": "नया अध्ययन बनाने के लिए नीचे दिए गए बटन पर क्लिक करें।",

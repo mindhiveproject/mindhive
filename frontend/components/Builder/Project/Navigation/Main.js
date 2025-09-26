@@ -34,18 +34,14 @@ export default function Navigation({
     title: "",
   };
 
-  // const toggleChatSidebar = () => {
-  //   const [talk] = study?.talks;
-  //   toggleSidebar({ chatId: talk?.id });
-  // };
+  // Check if user has Admin permission
+  const isAdmin = user?.permissions?.some(
+    (permission) => permission.name === "ADMIN"
+  );
 
   const tryToLeave = (e) => {
     if (hasStudyChanged) {
-      if (
-        !confirm(
-          t("unsavedChangesWarning")
-        )
-      ) {
+      if (!confirm(t("unsavedChangesWarning"))) {
         e.preventDefault();
       }
     }
@@ -79,8 +75,14 @@ export default function Navigation({
     {
       value: "journal",
       name: t("dataJournals"),
+      requiresAdmin: true, // Add flag to indicate admin-only item
     },
   ];
+
+  // Filter items based on admin permission
+  const filteredItems = items.filter(
+    (item) => !item.requiresAdmin || (item.requiresAdmin && isAdmin)
+  );
 
   return (
     <div className="navigation">
@@ -99,7 +101,8 @@ export default function Navigation({
         </div>
         <div className="middle">
           <div className="studyTitle">
-            <span className="title">{t("studyManager.project")} </span> {project?.title}
+            <span className="title">{t("studyManager.project")} </span>{" "}
+            {project?.title}
           </div>
           {project?.study && (
             <div className="studyTitle">
@@ -148,7 +151,7 @@ export default function Navigation({
 
       <div className="secondLine">
         <div className="menu" id="menue">
-          {items.map((item, i) => (
+          {filteredItems.map((item, i) => (
             <Link
               key={i}
               href={{

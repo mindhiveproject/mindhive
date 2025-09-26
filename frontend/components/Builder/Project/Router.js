@@ -4,7 +4,7 @@ import Builder from "./Builder/Main";
 import Review from "./Review/Main";
 import Collect from "./Collect/Wrapper";
 import Visualize from "./Visualize/Wrapper";
-import DataJournal from "./DataJournal/Wrapper";
+import DataJournals from "./DataJournal/Main";
 
 export default function Router({ query, user, tab, toggleSidebar }) {
   if (tab === "board") {
@@ -75,9 +75,9 @@ export default function Router({ query, user, tab, toggleSidebar }) {
 
   if (tab === "journal") {
     return (
-      <DataJournal
-        query={query}
+      <DataJournals
         user={user}
+        query={query}
         tab={tab}
         toggleSidebar={toggleSidebar}
       />

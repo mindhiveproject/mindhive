@@ -32,6 +32,25 @@
 	"blockDescription": "Dans un bloc, des informations sont présentées aux participants.",
 	"board": {
 		"error": "Erreur ! {{message}}",
+		"expendedCard": {
+			"close": "Fermer",
+			"connect": "Connecter",
+			"content": "Contenu",
+			"disconnect": "Déconnexion",
+			"done": "Terminé",
+			"linkItems": "Liens",
+			"myAssignments": "Mes missions",
+			"myResources": "Mes ressources",
+			"previewAssignment": "Aperçu du travail",
+			"previewLinkedAssignments": "Prévisualisation des devoirs liés",
+			"previewLinkedResources": "Aperçu des ressources liées",
+			"previewLinkedStudies": "Prévisualisation des études liées",
+			"previewLinkedTasks": "Prévisualisation des tâches liées",
+			"publicResources": "Ressources publiques",
+			"studies": "Études",
+			"tasks": "Tâches",
+			"title": "Titre"
+		},
 		"loading": "Chargement..."
 	},
 	"build-create-new-study": "Pour créer une nouvelle étude, cliquez sur le bouton ci-dessous.",
