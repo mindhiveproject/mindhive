@@ -25,11 +25,11 @@ async function copyProposalBoard(
     throw new Error("You must be logged in to do this!");
   }
 
-  // get the original proposal board
+  // get the original proposal board with additional relationships
   const template = await context.query.ProposalBoard.findOne({
     where: { id: id },
     query:
-      "id slug title description settings resources { id } sections { id title position cards { id type shareType title description settings position content comment resources { id } } }",
+      "id slug title description settings resources { id } sections { id title position cards { id type shareType title description settings position content comment resources { id } assignments { id } studies { id } tasks { id } } }",
   });
 
   // make a full copy
@@ -135,10 +135,34 @@ async function copyProposalBoard(
                 comment: templateCard.comment,
                 position: templateCard.position,
                 resources:
-                  templateCard.resources.length > 0
+                  templateCard.resources?.length > 0
                     ? {
-                        connect: templateCard.resources?.map((resource) => ({
+                        connect: templateCard.resources.map((resource) => ({
                           id: resource.id,
+                        })),
+                      }
+                    : null,
+                assignments:
+                  templateCard.assignments?.length > 0
+                    ? {
+                        connect: templateCard.assignments.map((assignment) => ({
+                          id: assignment.id,
+                        })),
+                      }
+                    : null,
+                studies:
+                  templateCard.studies?.length > 0
+                    ? {
+                        connect: templateCard.studies.map((study) => ({
+                          id: study.id,
+                        })),
+                      }
+                    : null,
+                tasks:
+                  templateCard.tasks?.length > 0
+                    ? {
+                        connect: templateCard.tasks.map((task) => ({
+                          id: task.id,
                         })),
                       }
                     : null,
