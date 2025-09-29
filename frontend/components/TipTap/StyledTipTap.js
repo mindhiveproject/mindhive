@@ -5,32 +5,37 @@ export const StyledTipTap = styled.div`
   grid-gap: 10px;
 
   .toolbar {
-    background: rgba(51, 111, 138, 0.04);
-    border-radius: 8px;
-    padding: 8px 16px;
     display: flex;
-    grid-template-rows: repeat(auto-fill, minmax(40px, 1fr)); /* Vertical (column) layout */
     grid-gap: 10px;
-    width: fit-content;
-    
-    .toolbarButton { 
-      height: 32px;
-      background: #D3E0E3;
-      display: grid;
-      justify-content: center;
-      align-content: center;
 
-      &:hover {
-        background: #b0c7d0;
-        cursor: pointer;
+    .toolbarGroup {
+      background: rgba(51, 111, 138, 0.04);
+      border-radius: 8px;
+      padding: 8px 8px;
+      display: flex;
+      grid-template-rows: repeat(auto-fill, minmax(40px, 1fr)); /* Vertical (column) layout */
+      grid-gap: 6px;
+      width: fit-content;
+      
+      .toolbarButton { 
+        height: 32px;
+        background: #D3E0E3;
+        display: grid;
+        justify-content: center;
+        align-content: center;
+
+        &:hover {
+          background: #b0c7d0;
+          cursor: pointer;
+        }
       }
-    }
-    
-    .table-dropdown {
-      position: relative;
+      
+      .table-dropdown {
+        position: relative;
 
-      > .icon.dropdown {
-      display: none !important;
+        > .icon.dropdown {
+        display: none !important;
+        }
       }
     }
   }
@@ -150,6 +155,41 @@ export const StyledTipTap = styled.div`
         font-style: italic;
         border-radius: 0 8px 8px 0;
       }
+
+      .editor-link {
+        color: #3D85B0;
+        text-decoration: underline !important;
+        cursor: pointer;
+        font-weight: 500;
+        
+        &:hover {
+          color: #7D70AD;
+          font-weight: 500;
+        }
+      }
+
+      /* List styling */
+      ul, ol {
+        // padding-left: 1rem; // not setting a padding as the editor handles it
+        margin: 0.5rem 0;
+        
+        li {
+          // margin-bottom: 0.1rem;
+          color: #434343;
+          font-size: 1.5rem;
+        }
+
+
+      }
+
+      ol {
+        list-style-type: decimal;
+      }
+
+      ol li ol {
+        list-style-type: lower-alpha;
+      }
+
       
       /* Heading Styles */
       h1 {

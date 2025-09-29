@@ -720,7 +720,7 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
             contentEditable
             onInput={(e) => handleFieldChange('placeholder', e.target.innerHTML)}
             suppressContentEditableWarning={true}
-            data-placeholder={editedAssignment.placeholder === '' ? t("assignment.placeholderPlaceholder", "Enter placeholder text...") : ''}
+            data-placeholder={editedAssignment.placeholder === '' ? t("assignment.placeholder") : ''}
           />
         </div>
     </Modal.Content>
