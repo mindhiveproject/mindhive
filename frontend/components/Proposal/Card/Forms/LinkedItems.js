@@ -628,7 +628,6 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
     document.execCommand("copy");
     temp.remove();
     alert(t("assignment.linkCopied"));  
-    console.log("Copy link functionality to be implemented");
   };
 
   if (!assignmentId) return null;
@@ -751,7 +750,7 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
             {assignment?.public ? (
               // Button when assignment is public
               <>
-                {/* <Button
+                <Button
                   style={{
                     borderRadius: "100px",
                     background: "white",
@@ -759,10 +758,10 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
                     color: "#336F8A",
                     border: "1px solid #336F8A"
                   }}
-                  onClick={() => { () => copyLink() }}
+                  onClick={copyLink}
                 >
                   {t("assignment.copyLink")}
-                </Button> */}
+                </Button>
                 <Button
                   style={{
                     borderRadius: "100px",
@@ -783,23 +782,6 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
                 >
                   {t("assignment.revoke")}
                 </Button>
-
-                {/* Optional: copyLink button */}
-                {/* 
-                <Button
-                  className="secondary"
-                  style={{
-                    borderRadius: "100px",
-                    background: "white",
-                    fontSize: "16px",
-                    color: "#336F8A",
-                    border: "1px solid #336F8A"
-                  }}
-                  onClick={() => copyLink()}
-                >
-                  {t("assignment.copyLink")}
-                </Button> 
-                */}
               </>
             ) : (
               // Button when assignment is not public
