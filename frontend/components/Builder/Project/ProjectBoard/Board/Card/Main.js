@@ -515,7 +515,7 @@ export default function ProposalCard({
                               : homework.settings?.status === "Started" ? "normal"
                               : "normal",
                           color:
-                            homework.settings?.status === "Completed" ? "#274E5B"
+                            homework.settings?.status === "Completed" ? "#3D85B0"
                               : homework.settings?.status === "Started" ? "#7D70AD"
                               : homework.settings?.status === "Overdue" ? "red"
                               : "#666", // default color

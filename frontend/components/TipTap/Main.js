@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
+import { useEffect, useState } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
@@ -100,6 +101,8 @@ export default function TipTapEditor({
   isEditable = true,
   toolbarVisible = true,
 }) {
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -125,9 +128,9 @@ export default function TipTapEditor({
       TableHeader,
       TableCell,
     ],
-    content: content || "",
+    content: "",
     onUpdate: ({ editor }) => {
-      if (onUpdate) {
+      if (hasUserInteracted && onUpdate) {
         onUpdate(editor.getHTML());
       }
     },
@@ -135,6 +138,33 @@ export default function TipTapEditor({
     immediatelyRender: false,
   });
 
+  // Set content when editor + content are ready
+  useEffect(() => {
+    if (editor && content) {
+      const currentContent = editor.getHTML();
+      if (currentContent !== content) {
+        editor.commands.setContent(content, false); // hydrate without triggering onUpdate
+      }
+    }
+  }, [editor, content]);
+
+  // Set "user has interacted" flag
+  useEffect(() => {
+    if (!editor) return;
+
+    const handleTransaction = () => {
+      if (!hasUserInteracted) {
+        setHasUserInteracted(true);
+      }
+    };
+    
+    editor.on('transaction', handleTransaction);
+    
+    return () => {
+      editor.off('transaction', handleTransaction);
+    };
+    
+  }, [editor, hasUserInteracted]);
 
   const Toolbar = () => {
     if (!editor || !toolbarVisible) return null;
