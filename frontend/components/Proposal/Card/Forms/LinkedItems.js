@@ -652,7 +652,7 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
           fontWeight: 600,
         }}
       >
-        {t("board.expendedCard.previewAssignment", "Preview Assignment")}
+        {t("board.expendedCard.previewAssignment", "Preview Assignment")}asd
         {hasChanges && (
           <span style={{ 
             color: "#8A2CF6", 

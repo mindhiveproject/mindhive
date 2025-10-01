@@ -464,7 +464,7 @@ export default function ProposalCard({
             fontWeight: 600,
           }}
         >
-          {t("board.expendedCard.previewAssignment", "Preview Assignment")}
+          {t("board.expendedCard.previewAssignment", "Preview Assignment")}asd
         </Modal.Header>
         <Modal.Content
           scrolling

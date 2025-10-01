@@ -93,8 +93,6 @@ export default function ManageTemplateClasses({ user, boardId }) {
   });
   
   const classOptions = Array.from(combinedClassesMap.values());
-  
-  console.log(classOptions);
 
   const handleChange = (e, { value }) => {
     setSelectedClasses(value);
@@ -137,7 +135,7 @@ export default function ManageTemplateClasses({ user, boardId }) {
   return (
     <StyledBoards>
       <div className="headerSection">
-        <h1>{t("boardManagement.manageClassesForTemplate")}: {board.title}</h1>
+        <h1>{t("boardManagement.manageClassesForTemplate")} {board.title}</h1>
         <p>{t("boardManagement.selectClassesDescription")}</p>
         <div className="manageActions">
           <Dropdown
@@ -162,7 +160,8 @@ export default function ManageTemplateClasses({ user, boardId }) {
       </div>
 
       <div className="clonedBoardsSection">
-        <h2>{t("boardManagement.clonedProposalBoards")}</h2>
+        <h2>{t("boardManagement.studentProposalBoards")}</h2>
+        <br></br>
         {clonedBoards.length === 0 ? (
           <p>{t("boardManagement.noClonedProposals")}</p>
         ) : (

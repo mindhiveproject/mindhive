@@ -316,7 +316,7 @@ const TeacherProjects = ({ user, query }) => {
         <p>{t("boardManagement.loadingCollaborated")}</p>
       ) : uniqueCollaboratedBoards?.length ? (
         <>
-          <h3>{t("boardManagement.collaboratedTitle")}</h3>
+          <div style={{margin: "2rem auto", maxWidth: "1200px"}} ><h3>{t("boardManagement.collaboratedTitle")}</h3></div>
           <div className="cardGrid">
             {uniqueCollaboratedBoards.map((board) => (
               <div key={board.id} className="projectCard">
@@ -344,10 +344,18 @@ const TeacherProjects = ({ user, query }) => {
                     </button>
                   </Link>
                   <Link href={`/dashboard/boards/edit?id=${board.id}`}>
-                    <button className="editButton" title={t("boardManagement.viewOrEdit")}>
-                      <Icon name="edit" /> Edit
+                    <button className="editButton" title={t("boardManagement.viewOrEdit")}>  
+                      <Icon name="edit" />
                     </button>
                   </Link>
+                  <button
+                    className="duplicateButton"
+                    onClick={() => handleCopy(board.id)}
+                    disabled={copyLoading}
+                    title={t("boardManagement.duplicate")}
+                  >
+                    <Icon name="copy" />
+                  </button>
                 </div>
               </div>
             ))}
