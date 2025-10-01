@@ -701,6 +701,45 @@ export const GET_MY_AUTHORED_PROJECT_BOARDS = gql`
   }
 `;
 
+export const GET_MY_COLLABORATED_PROJECT_BOARDS = gql`
+  query GET_MY_COLLABORATED_PROJECT_BOARDS($userId: ID!) {
+    proposalBoards(
+      where: {
+        AND: [
+          { isHidden: { equals: false } }
+          { collaborators: { some: { id: { equals: $userId } } } }
+        ]
+      }
+    ) {
+      id
+      title
+      slug
+      description
+      isSubmitted
+      settings
+      author {
+        username
+      }
+      collaborators {
+        id
+        username
+      }
+      study {
+        id
+        title
+        slug
+      }
+      templateForClasses {
+        id
+        title
+        code
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const GET_PROPOSAL_TEMPLATE_CLASSES = gql`
   query GET_PROPOSAL_TEMPLATE_CLASSES($id: ID!) {
     proposalBoard(where: { id: $id }) {

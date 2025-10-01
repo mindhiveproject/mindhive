@@ -26,6 +26,10 @@
 	"assigned": {
 		"typeUsername": "Tapez le nom d'utilisateur"
 	},
+	"assignment": {
+		"loading": "Chargement de la tâche...",
+		"loadingMessage": "Récupération des dernières données d'affectation..."
+	},
 	"background": "Arrière-plan",
 	"backgroundHelp": "Utilisez ce champ pour fournir un bref aperçu du sujet de recherche. Quel est le problème étudié et pourquoi est-il important ?",
 	"basicTab": "Basique",

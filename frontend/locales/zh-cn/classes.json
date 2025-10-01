@@ -30,7 +30,7 @@
 		"noAssignments": "尚无任何作业。",
 		"notVisibleForStudents": "学生看不到作业",
 		"open": "打开",
-		"placeholder": "学生答案框占位符",
+		"placeholder": "为学生创建一个占位符，让他们从这里开始做作业...",
 		"revoke": "撤销访问权限",
 		"revokeConfirm": "您确定要撤销此作业吗？学生将无法再看到此作业。",
 		"save": "节省",
@@ -58,7 +58,7 @@
 		"close": "关闭",
 		"collective": "集体",
 		"commentsComment": "这将预先填充学生的评论框。您可以稍后删除评论。",
-		"editMode": "",
+		"editMode": "您处于编辑模式",
 		"expendedCard": {
 			"addExistingResources": "添加现有资源（参见导航窗格中的资源）",
 			"addLinkedItems": "添加现有作业、任务、研究或资源",
@@ -133,6 +133,7 @@
 		"changesSaved": "更改已成功保存",
 		"class": "班级",
 		"clonedProposalBoards": "克隆提案板",
+		"collaboratedTitle": "您参与合作的板块",
 		"collaborators": "合作者",
 		"confirmDelete": "您确定要删除此项目板吗？",
 		"contentPreview": "内容预览",
@@ -173,6 +174,7 @@
 		"intro": "浏览下方您创作的项目板。使用按钮进行管理、编辑、复制或删除。",
 		"lastUpdated": "最近更新时间",
 		"loading": "正在加载您的项目板...",
+		"loadingCollaborated": "正在加载您协作的看板...",
 		"loadingDotdotdot": "加载中 ...",
 		"loadingPreview": "正在加载预览...",
 		"login": "请登录查看您的项目板。",
@@ -220,7 +222,8 @@
 		"titleText": "标题",
 		"updateCollaboratorsFailed": "无法更新协作者。请查看控制台了解详情。",
 		"updated": "更新",
-		"usedInClasses": "在课程中使用："
+		"usedInClasses": "在课程中使用：",
+		"viewOrEdit": "查看或编辑"
 	},
 	"cancel": "取消",
 	"classes": "课程",

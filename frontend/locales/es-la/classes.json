@@ -30,7 +30,7 @@
 		"noAssignments": "Aún no hay tareas asignadas",
 		"notVisibleForStudents": "La tarea NO es visible para los estudiantes.",
 		"open": "Abierto",
-		"placeholder": "Marcador de posición para el cuadro de respuestas de los estudiantes",
+		"placeholder": "Crea un marcador de posición para que tus alumnos empiecen sus deberes con ...",
 		"revoke": "Revocar el acceso",
 		"revokeConfirm": "¿Seguro que desea revocar esta tarea? Los estudiantes ya no podrán verla.",
 		"save": "Ahorrar",
@@ -58,7 +58,7 @@
 		"close": "Cerca",
 		"collective": "Colectivo",
 		"commentsComment": "Esto rellenará automáticamente el cuadro de comentarios para los estudiantes. Puedes eliminar los comentarios más tarde.",
-		"editMode": "",
+		"editMode": "Estás en modo de edición",
 		"expendedCard": {
 			"addExistingResources": "Agregar recursos existentes (Ver Recursos en el panel de navegación)",
 			"addLinkedItems": "Añadir asignaciones, tareas, estudios o recursos existentes",
@@ -133,6 +133,7 @@
 		"changesSaved": "Los cambios se guardaron correctamente",
 		"class": "Clase",
 		"clonedProposalBoards": "Tableros de propuestas clonados",
+		"collaboratedTitle": "Tableros en los que colaboras",
 		"collaborators": "Colaboradores",
 		"confirmDelete": "¿Estás seguro que deseas eliminar este tablero de proyecto?",
 		"contentPreview": "Vista previa del contenido",
@@ -173,6 +174,7 @@
 		"intro": "Explora los tableros de tu proyecto creado a continuación. Usa los botones para administrarlos, editarlos, duplicarlos o eliminarlos.",
 		"lastUpdated": "Última actualización",
 		"loading": "Cargando sus tableros de proyecto...",
+		"loadingCollaborated": "Cargando tableros en los que colaboras...",
 		"loadingDotdotdot": "Cargando ...",
 		"loadingPreview": "Cargando vista previa...",
 		"login": "Inicie sesión para ver sus tableros de proyectos.",
@@ -220,7 +222,8 @@
 		"titleText": "Título",
 		"updateCollaboratorsFailed": "No se pudieron actualizar los colaboradores. Consulta la consola para más detalles.",
 		"updated": "Actualizado",
-		"usedInClasses": "Usado en clases:"
+		"usedInClasses": "Usado en clases:",
+		"viewOrEdit": "Ver o editar"
 	},
 	"cancel": "Cancelar",
 	"classes": "Clase(s)",

@@ -30,7 +30,7 @@
 		"noAssignments": "Il n'y a pas encore de devoirs.",
 		"notVisibleForStudents": "Le devoir n'est PAS visible pour les étudiants",
 		"open": "Ouvrir",
-		"placeholder": "Emplacement pour la boîte de réponse des élèves",
+		"placeholder": "Créez un espace réservé pour que vos élèves puissent commencer leurs devoirs avec ...",
 		"revoke": "Révoquer l'accès",
 		"revokeConfirm": "Êtes-vous sûr de vouloir révoquer ce devoir ? Il ne sera plus visible pour les étudiants.",
 		"save": "Sauvegarder",
@@ -58,7 +58,7 @@
 		"close": "Fermer",
 		"collective": "Collectif",
 		"commentsComment": "Cela préremplira la zone de commentaires des élèves. Vous pourrez supprimer les commentaires ultérieurement.",
-		"editMode": "",
+		"editMode": "Vous êtes en mode édition",
 		"expendedCard": {
 			"addExistingResources": "Ajouter des ressources existantes (voir Ressources dans le volet de navigation)",
 			"addLinkedItems": "Ajouter des missions, des tâches, des études ou des ressources existantes",
@@ -133,6 +133,7 @@
 		"changesSaved": "Modifications enregistrées avec succès",
 		"class": "Classe",
 		"clonedProposalBoards": "Tableaux de propositions clonés",
+		"collaboratedTitle": "Tableaux sur lesquels vous collaborez",
 		"collaborators": "Collaborateurs",
 		"confirmDelete": "Êtes-vous sûr de vouloir supprimer ce tableau de projet ?",
 		"contentPreview": "Aperçu du contenu",
@@ -173,6 +174,7 @@
 		"intro": "Explorez les tableaux de vos projets créés ci-dessous. Utilisez les boutons pour gérer, modifier, dupliquer ou supprimer.",
 		"lastUpdated": "Dernière mise à jour",
 		"loading": "Chargement de vos tableaux de projet...",
+		"loadingCollaborated": "Chargement des tableaux sur lesquels vous collaborez...",
 		"loadingDotdotdot": "Chargement ...",
 		"loadingPreview": "Chargement de l'aperçu...",
 		"login": "Veuillez vous connecter pour voir les tableaux de votre projet.",
@@ -220,7 +222,8 @@
 		"titleText": "Titre",
 		"updateCollaboratorsFailed": "Échec de la mise à jour des collaborateurs. Veuillez consulter la console pour plus de détails.",
 		"updated": "Mis à jour",
-		"usedInClasses": "Utilisé dans les cours :"
+		"usedInClasses": "Utilisé dans les cours :",
+		"viewOrEdit": "Afficher ou modifier"
 	},
 	"cancel": "Annuler",
 	"classes": "Classe(s)",

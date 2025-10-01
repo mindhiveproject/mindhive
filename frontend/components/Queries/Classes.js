@@ -203,3 +203,22 @@ export const GET_TEACHER_CLASSES = gql`
     }
   }
 `;
+
+export const GET_MENTOR_CLASSES = gql`
+  query GET_MENTOR_CLASSES($userId: ID!) {
+    classes(where: { 
+      mentors: { 
+        some: { 
+          id: { 
+            equals: $userId 
+          }
+        }
+      } 
+    })
+    {
+      id
+      title
+      code
+    }
+  }
+`;

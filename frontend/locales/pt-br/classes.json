@@ -30,7 +30,7 @@
 		"noAssignments": "Ainda não há tarefas.",
 		"notVisibleForStudents": "A tarefa NÃO é visível para os alunos",
 		"open": "Abrir",
-		"placeholder": "Espaço reservado para a caixa de respostas dos alunos",
+		"placeholder": "Crie um espaço reservado para que seus alunos iniciem a lição de casa com ...",
 		"revoke": "Revogação de acesso",
 		"revokeConfirm": "Tem certeza de que deseja revogar esta tarefa? Ela não ficará mais visível para os alunos.",
 		"save": "Salvar",
@@ -58,7 +58,7 @@
 		"close": "Fechar",
 		"collective": "Coletivo",
 		"commentsComment": "Isso preencherá previamente a Caixa de Comentários para os alunos. Você poderá excluir os comentários mais tarde.",
-		"editMode": "",
+		"editMode": "Você está no modo de edição",
 		"expendedCard": {
 			"addExistingResources": "Adicionar recursos existentes (consulte Recursos no Painel de Navegação)",
 			"addLinkedItems": "Adicionar atribuições, tarefas, estudos ou recursos existentes",
@@ -133,6 +133,7 @@
 		"changesSaved": "Alterações salvas com sucesso",
 		"class": "Aula",
 		"clonedProposalBoards": "Painéis de Propostas Clonados",
+		"collaboratedTitle": "Quadros em que você colabora",
 		"collaborators": "Colaboradores",
 		"confirmDelete": "Tem certeza de que deseja excluir este quadro de projeto?",
 		"contentPreview": "Visualização do conteúdo",
@@ -173,6 +174,7 @@
 		"intro": "Explore os painéis de projetos criados por você abaixo. Use os botões para gerenciar, editar, duplicar ou excluir.",
 		"lastUpdated": "Última atualização",
 		"loading": "Carregando seus painéis de projeto...",
+		"loadingCollaborated": "Carregando quadros nos quais você colabora...",
 		"loadingDotdotdot": "Carregando ...",
 		"loadingPreview": "Carregando visualização...",
 		"login": "Faça login para visualizar seus painéis de projeto.",
@@ -220,7 +222,8 @@
 		"titleText": "Título",
 		"updateCollaboratorsFailed": "Falha ao atualizar os colaboradores. Verifique o console para obter detalhes.",
 		"updated": "Atualizada",
-		"usedInClasses": "Usado nas aulas:"
+		"usedInClasses": "Usado nas aulas:",
+		"viewOrEdit": "Ver ou Editar"
 	},
 	"cancel": "Cancelar",
 	"classes": "Classe(s)",

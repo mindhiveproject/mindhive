@@ -133,6 +133,7 @@
 		"changesSaved": "",
 		"class": "",
 		"clonedProposalBoards": "",
+		"collaboratedTitle": "",
 		"collaborators": "",
 		"confirmDelete": "",
 		"contentPreview": "",
@@ -173,6 +174,7 @@
 		"intro": "",
 		"lastUpdated": "",
 		"loading": "",
+		"loadingCollaborated": "",
 		"loadingDotdotdot": "",
 		"loadingPreview": "",
 		"login": "",
@@ -220,7 +222,8 @@
 		"titleText": "",
 		"updateCollaboratorsFailed": "",
 		"updated": "",
-		"usedInClasses": ""
+		"usedInClasses": "",
+		"viewOrEdit": ""
 	},
 	"cancel": "रद्द करना",
 	"classes": "वर्ग",
