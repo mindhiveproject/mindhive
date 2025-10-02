@@ -23,6 +23,9 @@ export const ProposalBoard = list({
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
+    publicId: text({
+      defaultValue: uniqid(),
+    }),
     slug: text({
       validation: { isRequired: true },
       isIndexed: "unique",

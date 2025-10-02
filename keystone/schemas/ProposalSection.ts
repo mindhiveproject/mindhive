@@ -23,6 +23,9 @@ export const ProposalSection = list({
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
+    publicId: text({
+      defaultValue: uniqid(),
+    }),
     description: text(),
     position: float(),
     board: relationship({
