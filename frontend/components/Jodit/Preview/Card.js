@@ -28,7 +28,7 @@ export default function Card({ card, cardId, user }) {
     refetchQueries: [{ query: GET_CARD_CONTENT, variables: { id: cardId } }],
   });
 
-  useEffect(() => {
+useEffect(() => {
     // Sync content and comment only when cardId changes or on initial mount
     if (prevCardId.current !== cardId) {
       setContent(card?.content || "");
@@ -37,6 +37,11 @@ export default function Card({ card, cardId, user }) {
       setHasContentChanged(false);
       setSaveStatus("idle");
       prevCardId.current = cardId;
+    } else if (saveStatus === "success") {
+      // After successful save, sync all content from the refetched data
+      setContent(card?.content || "");
+      setRevised(card?.revisedContent || card?.content || "");
+      setComment(card?.comment || "");
     } else {
       // Only sync comment if it changes
       if (card?.comment !== comment) {
@@ -47,7 +52,7 @@ export default function Card({ card, cardId, user }) {
         setContent(card?.content || "");
       }
     }
-  }, [card, cardId]);
+  }, [card, cardId, saveStatus]);
 
   const saveChanges = async () => {
     if (!hasContentChanged || loading) return;
