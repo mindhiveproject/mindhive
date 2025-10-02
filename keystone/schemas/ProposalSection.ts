@@ -10,7 +10,6 @@ import {
   json,
 } from "@keystone-6/core/fields";
 import slugify from "slugify";
-import uniqid from "uniqid";
 
 export const ProposalSection = list({
   access: {
@@ -23,9 +22,7 @@ export const ProposalSection = list({
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
-    code: text({
-      defaultValue: uniqid(),
-    }),
+    code: text(),
     description: text(),
     position: float(),
     board: relationship({
