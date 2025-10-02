@@ -10,6 +10,7 @@ import {
   json,
 } from "@keystone-6/core/fields";
 import slugify from "slugify";
+import uniqid from "uniqid";
 
 export const ProposalCard = list({
   access: {
@@ -22,6 +23,10 @@ export const ProposalCard = list({
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
+    publicId: text({
+      defaultValue: uniqid(),
+      isIndexed: true, // NEW: Add this for indexing
+    }),
     description: text(),
     position: float(),
     internalContent: text(),

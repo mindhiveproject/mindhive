@@ -172,6 +172,7 @@ export const GET_CARD_CONTENT = gql`
       id
       type
       title
+      publicId
       description
       internalContent
       revisedContent
@@ -745,6 +746,10 @@ export const GET_PROPOSAL_TEMPLATE_CLASSES = gql`
     proposalBoard(where: { id: $id }) {
       id
       title
+      collaborators {
+        id
+        username
+      }
       templateForClasses {
         id
         title

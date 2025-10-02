@@ -29,7 +29,7 @@ async function copyProposalBoard(
   const template = await context.query.ProposalBoard.findOne({
     where: { id: id },
     query:
-      "id slug title description settings resources { id } sections { id title position cards { id type shareType title description settings position content comment resources { id } assignments { id } studies { id } tasks { id } } }",
+      "id publicId slug title description settings resources { id } sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } assignments { id } studies { id } tasks { id } } }",
   });
 
   // make a full copy
@@ -46,6 +46,7 @@ async function copyProposalBoard(
   const board = await context.db.ProposalBoard.createOne(
     {
       data: {
+        publicId: template.publicId,
         author: {
           connect: {
             id: sesh.itemId,
@@ -106,6 +107,7 @@ async function copyProposalBoard(
       const newSection = await context.db.ProposalSection.createOne(
         {
           data: {
+            publicId: templateSection.publicId,
             title: templateSection.title,
             position: templateSection.position,
             board: {
@@ -122,6 +124,7 @@ async function copyProposalBoard(
           await context.db.ProposalCard.createOne(
             {
               data: {
+                publicId: templateCard.publicId,
                 section: {
                   connect: {
                     id: newSection.id,

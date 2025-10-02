@@ -3,11 +3,11 @@ import { v1 as uuidv1 } from "uuid";
 import Sections from "./Sections";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
-import useTranslation from 'next-translate/useTranslation';
+import useTranslation from "next-translate/useTranslation";
 
 function Inner(props) {
   const [title, setTitle] = useState("");
-  const { t } = useTranslation('builder');
+  const { t } = useTranslation("builder");
 
   const handleChange = (e) => {
     const { name, type, value } = e.target;
@@ -104,21 +104,18 @@ function Inner(props) {
         (!props.isPreview && board?.settings?.allowAddingSections)) && (
         <div>
           <div className="newInput">
-            <div>{t('proposal.newSection', 'New section')}</div>
+            <div>{t("proposal.newSection", "New section")}</div>
             <input
               type="text"
               id="sectionTitle"
               name="title"
-              placeholder={t('proposal.sectionTitlePlaceholder', '')}
+              placeholder={t("proposal.sectionTitlePlaceholder", "")}
               value={title}
               onChange={handleChange}
               required
             />
-            <div
-              className="addBtn"
-              onClick={() => createSection(board.id)}
-            >
-              {t('proposal.addSection', 'Add section')}
+            <div className="addBtn" onClick={() => createSection(board.id)}>
+              {t("proposal.addSection", "Add section")}
             </div>
           </div>
         </div>

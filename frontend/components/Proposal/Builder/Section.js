@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import sortBy from "lodash/sortBy";
 import { Container } from "react-smooth-dnd";
 import { v1 as uuidv1 } from "uuid";
-import useTranslation from 'next-translate/useTranslation';
+import useTranslation from "next-translate/useTranslation";
 
 import Card from "./Card";
 import ActionCard from "./ActionCard";
@@ -30,7 +30,7 @@ const Section = ({
   isPreview,
   settings,
 }) => {
-  const { t } = useTranslation('builder');
+  const { t } = useTranslation("builder");
   const { cards } = section;
   const numOfCards = cards.length;
   // const sortedCards = sortBy(cards, item => item.position);
@@ -205,7 +205,7 @@ const Section = ({
 
   const addCardMutation = async (sectionId, title) => {
     if (!title) {
-      return alert(t('section.enterNewTitle', 'Please enter a title'));
+      return alert(t("section.enterNewTitle", "Please enter a title"));
     }
     setCardName("");
     const newCard = await createCard({
@@ -302,7 +302,9 @@ const Section = ({
             <img
               src="/assets/icons/proposal/edit.svg"
               onClick={() => {
-                const title = prompt(t('section.enterNewTitle', 'Please enter a new title'));
+                const title = prompt(
+                  t("section.enterNewTitle", "Please enter a new title")
+                );
                 if (title != null) {
                   onUpdateSection({
                     variables: {
@@ -318,7 +320,7 @@ const Section = ({
         </div>
         {!isPreview && !proposalBuildMode && (
           <div className="infoLine">
-            {t('section.cardsCount', { count: numOfCards })}
+            {t("section.cardsCount", { count: numOfCards })}
           </div>
         )}
       </div>
@@ -396,7 +398,10 @@ const Section = ({
             name={`input-${section.id}`}
             value={cardName}
             onChange={(e) => setCardName(e.target.value)}
-            placeholder={t('section.newCardPlaceholder', 'Enter a new card title')}
+            placeholder={t(
+              "section.newCardPlaceholder",
+              "Enter a new card title"
+            )}
           />
           <div
             className="addBtn"
@@ -404,7 +409,7 @@ const Section = ({
               addCardMutation(section.id, cardName);
             }}
           >
-            {t('section.addCardBtn', '[ Click to add a card ]')}
+            {t("section.addCardBtn", "[ Click to add a card ]")}
           </div>
         </div>
       )}
@@ -419,7 +424,10 @@ const Section = ({
               }
               if (
                 confirm(
-                  t('section.deleteSectionConfirm', 'Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone.')
+                  t(
+                    "section.deleteSectionConfirm",
+                    "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone."
+                  )
                 )
               ) {
                 deleteSection(section.id);
