@@ -25,7 +25,6 @@ export const ProposalSection = list({
     title: text({ validation: { isRequired: true } }),
     publicId: text({
       defaultValue: uniqid(),
-      isIndexed: true, // NEW: Add this for indexing
     }),
     description: text(),
     position: float(),

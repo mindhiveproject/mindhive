@@ -25,7 +25,6 @@ export const ProposalBoard = list({
     title: text({ validation: { isRequired: true } }),
     publicId: text({
       defaultValue: uniqid(),
-      isIndexed: true, // NEW: Add this for indexing
     }),
     slug: text({
       validation: { isRequired: true },
