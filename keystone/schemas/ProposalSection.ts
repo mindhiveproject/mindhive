@@ -23,7 +23,7 @@ export const ProposalSection = list({
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
-    publicId: text({
+    code: text({
       defaultValue: uniqid(),
     }),
     description: text(),
