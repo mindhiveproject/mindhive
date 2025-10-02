@@ -23,9 +23,6 @@ export const ProposalCard = list({
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
-    publicId: text({
-      defaultValue: uniqid(),
-    }),
     description: text(),
     position: float(),
     internalContent: text(),
