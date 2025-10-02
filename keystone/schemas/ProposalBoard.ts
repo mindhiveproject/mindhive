@@ -22,7 +22,7 @@ export const ProposalBoard = list({
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
-    code: text(),
+    publicId: text(),
     slug: text({
       validation: { isRequired: true },
       isIndexed: "unique",

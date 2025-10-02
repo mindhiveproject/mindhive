@@ -22,7 +22,7 @@ export const ProposalCard = list({
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
-    code: text(),
+    publicId: text(),
     description: text(),
     position: float(),
     internalContent: text(),

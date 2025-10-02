@@ -22,7 +22,7 @@ export const ProposalSection = list({
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
-    code: text(),
+    publicId: text(),
     description: text(),
     position: float(),
     board: relationship({
