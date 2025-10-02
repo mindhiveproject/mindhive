@@ -5,6 +5,9 @@ import moment from "moment";
 import { useRef } from "react";
 
 import { StyledInput } from "../../../styles/StyledForm";
+import TipTapEditor from "../../../TipTap/Main";
+import { StyledTipTap } from "../../../TipTap/StyledTipTap";
+
 
 import Status from "../../TeacherClasses/ClassPage/Assignments/Homework/Status";
 
@@ -50,12 +53,14 @@ export default function Editor({
                       required
                     />
                   </label>
-                  <JoditEditor
-                    content={content?.current}
-                    setContent={(newContent) => {
-                      content.current = newContent;
-                    }}
-                  />
+                  <StyledTipTap>
+                    <TipTapEditor
+                      content={content?.current}
+                      onUpdate={(newContent) => {
+                        content.current = newContent;
+                      }}
+                    />
+                  </StyledTipTap>
                 </div>
                 <div className="infoBoard">
                   <div>

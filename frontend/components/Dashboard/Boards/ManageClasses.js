@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Dropdown, Button, Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import { GET_PROPOSAL_TEMPLATE_CLASSES } from "../../Queries/Proposal";
-import { GET_TEACHER_CLASSES } from "../../Queries/Classes";
+import { GET_TEACHER_CLASSES, GET_MENTOR_CLASSES } from "../../Queries/Classes";
 import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal"; // Adjust path to mutations
 import StyledBoards from "../../styles/StyledBoards"; // Adjust path
 
@@ -19,6 +19,15 @@ export default function ManageTemplateClasses({ user, boardId }) {
   } = useQuery(GET_PROPOSAL_TEMPLATE_CLASSES, {
     variables: { id: boardId },
     skip: !boardId,
+  });
+
+  const {
+    data: mentorData,
+    loading: mentorLoading,
+    error: mentorError,
+  } = useQuery(GET_MENTOR_CLASSES, {
+    variables: { userId: user?.id },
+    skip: !user?.id,
   });
 
   const {
@@ -44,20 +53,46 @@ export default function ManageTemplateClasses({ user, boardId }) {
   }, [boardData]);
 
   if (!user) return <p>{t("boardManagement.pleaseLogin")}</p>;
-  if (boardLoading || classesLoading) return <p>{t("boardManagement.loading")}</p>;
+  if (boardLoading || classesLoading || mentorLoading) return <p>{t("boardManagement.loading")}</p>;
   if (boardError) return <p>{t("boardManagement.error")}: {boardError.message}</p>;
   if (classesError) return <p>{t("boardManagement.error")}: {classesError.message}</p>;
+  if (mentorError) return <p>{t("boardManagement.error")}: {mentorError.message}</p>;
   if (!boardData?.proposalBoard) return <p>{t("boardManagement.boardNotFound")}</p>;
 
   const board = boardData.proposalBoard;
   const teacherClasses = classesData?.classes || [];
+  const mentorClasses = mentorData?.classes || [];
   const clonedBoards = board.prototypeFor || [];
 
-  const classOptions = teacherClasses.map((c) => ({
-    key: c.id,
-    text: `${c.title} (${c.code || t("boardManagement.noCode")})`,
-    value: c.id,
-  }));
+  // const classOptions = teacherClasses.map((c) => ({
+  //   key: c.id,
+  //   text: `${c.title} (${c.code || t("boardManagement.noCode")})`,
+  //   value: c.id,
+  // }));
+
+  const combinedClassesMap = new Map();
+
+  // Add teacher classes with "(teacher)" label
+  teacherClasses.forEach((c) => {
+    combinedClassesMap.set(c.id, {
+      key: c.id,
+      text: `${c.title} (${c.code || t("boardManagement.noCode")}) (teacher)`,
+      value: c.id,
+    });
+  });
+  
+  // Add mentor classes only if not already added as teacher, with "(mentor)" label
+  mentorClasses.forEach((c) => {
+    if (!combinedClassesMap.has(c.id)) {
+      combinedClassesMap.set(c.id, {
+        key: c.id,
+        text: `${c.title} (${c.code || t("boardManagement.noCode")}) (mentor)`,
+        value: c.id,
+      });
+    }
+  });
+  
+  const classOptions = Array.from(combinedClassesMap.values());
 
   const handleChange = (e, { value }) => {
     setSelectedClasses(value);
@@ -100,7 +135,7 @@ export default function ManageTemplateClasses({ user, boardId }) {
   return (
     <StyledBoards>
       <div className="headerSection">
-        <h1>{t("boardManagement.manageClassesForTemplate")}: {board.title}</h1>
+        <h1>{t("boardManagement.manageClassesForTemplate")} {board.title}</h1>
         <p>{t("boardManagement.selectClassesDescription")}</p>
         <div className="manageActions">
           <Dropdown
@@ -114,11 +149,7 @@ export default function ManageTemplateClasses({ user, boardId }) {
             className="manageDropdown"
           />
           <div className="buttonGroup">
-            <Button
-              className="saveButton"
-              onClick={handleSave}
-              loading={updateLoading}
-            >
+            <Button className="saveButton" onClick={handleSave} loading={updateLoading}>
               <Icon name="check" /> {t("boardManagement.saveChanges")}
             </Button>
             <Button className="backButton" onClick={goBack}>
@@ -129,7 +160,8 @@ export default function ManageTemplateClasses({ user, boardId }) {
       </div>
 
       <div className="clonedBoardsSection">
-        <h2>{t("boardManagement.clonedProposalBoards")}</h2>
+        <h2>{t("boardManagement.studentProposalBoards")}</h2>
+        <br></br>
         {clonedBoards.length === 0 ? (
           <p>{t("boardManagement.noClonedProposals")}</p>
         ) : (
@@ -138,22 +170,19 @@ export default function ManageTemplateClasses({ user, boardId }) {
               <div key={cloned.id} className="clonedBoardItem">
                 <h3>{cloned.title}</h3>
                 <p>
-                  <strong>{t("boardManagement.author")}:</strong> {cloned.author?.username || t("boardManagement.none")}
+                  <strong>{t("boardManagement.author")}:</strong>{" "}
+                  {cloned.author?.username || t("boardManagement.none")}
                 </p>
                 <p>
                   <strong>{t("boardManagement.collaborators")}:</strong>{" "}
                   {cloned.collaborators.length
-                    ? cloned.collaborators
-                        .map((collab) => collab.username)
-                        .join(", ")
+                    ? cloned.collaborators.map((collab) => collab.username).join(", ")
                     : t("boardManagement.none")}
                 </p>
                 <p>
                   <strong>{t("boardManagement.class")}:</strong>{" "}
                   {cloned.usedInClass
-                    ? `${cloned.usedInClass.title} (${
-                        cloned.usedInClass.code || t("boardManagement.noCode")
-                      })`
+                    ? `${cloned.usedInClass.title} (${cloned.usedInClass.code || t("boardManagement.noCode")})`
                     : t("boardManagement.none")}
                 </p>
               </div>

@@ -1,3 +1,4 @@
+import TipTapEditor from "../../../TipTap/Main";
 import { useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import { Button, Icon, Modal, Tab } from "semantic-ui-react";
@@ -485,12 +486,10 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
 
   const styleField = {
     fontSize: "14px",
-    lineHeight: "1.5",
-    color: "#274E5B",
-    border: "1px solid #e0e0e0",
-    borderRadius: "8px",
-    padding: "12px",
-    marginBottom: "3rem"
+    padding: "20px",
+    borderRadius: "16px",
+    border: "0px",
+    background: "rgba(51, 111, 138, 0.04)",
   }
 
   const editableFieldStyle = {
@@ -540,7 +539,7 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
 
   // Update local state when assignment data loads
   useEffect(() => {
-    if (data?.assignments?.[0]) {
+    if (data?.assignments?.[0] && data.assignments[0].id === assignmentId) {
       const assignment = data.assignments[0];
       const newState = {
         title: assignment.title || '',
@@ -550,7 +549,8 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
       setEditedAssignment(newState);
       setHasChanges(false);
     }
-  }, [data]);
+  }, [data, assignmentId]);
+  
 
   const handleFieldChange = (field, value) => {
     setEditedAssignment(prev => ({
@@ -628,7 +628,6 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
     document.execCommand("copy");
     temp.remove();
     alert(t("assignment.linkCopied"));  
-    console.log("Copy link functionality to be implemented");
   };
 
   if (!assignmentId) return null;
@@ -636,7 +635,6 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
   if (error) return <p>Error loading assignment</p>;
 
   const assignment = data.assignments[0];
-  console.log(assignment)
 
   
   return (
@@ -671,58 +669,29 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
         style={{ background: "#ffffff", padding: "24px" }}
       >
       <div>
-        <p>{t("board.expendedCard.title")}</p>
+        <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("board.expendedCard.title")}</p>
         <textarea
           style={editableFieldStyle}
           value={editedAssignment.title}
           onChange={(e) => handleFieldChange('title', e.target.value)}
           placeholder={t("assignment.titlePlaceholder", "Enter assignment title...")}
         />
+        <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("assignment.instructions")}</p>
+        <TipTapEditor
+          content={editedAssignment.content}
+          placeholder={t("assignment.instructionsPlaceholder", "Enter assignment instructions...")}
+          onUpdate={(newContent) => handleFieldChange('content', newContent)}
+        />
 
-        <p>{t("assignment.instructions")}</p>
-          <div
-            ref={(el) => {
-              if (el && editedAssignment.content !== el.innerHTML) {
-                const savedPos = saveSelection(el);
-                el.innerHTML = editedAssignment.content;
-                if (document.activeElement === el) {
-                  setTimeout(() => restoreSelection(el, savedPos), 0);
-                }
-              }
-            }}
-            style={{
-              ...editableFieldStyle,
-              minHeight: "150px",
-              outline: "none"
-            }}
-            contentEditable
-            onInput={(e) => handleFieldChange('content', e.target.innerHTML)}
-            suppressContentEditableWarning={true}
-            data-placeholder={editedAssignment.content === '' ? t("assignment.instructionsPlaceholder", "Enter assignment instructions...") : ''}
-          />
 
-          <p>{t("assignment.placeholder")}</p>
-          <div
-            ref={(el) => {
-              if (el && editedAssignment.placeholder !== el.innerHTML) {
-                const savedPos = saveSelection(el);
-                el.innerHTML = editedAssignment.placeholder;
-                if (document.activeElement === el) {
-                  setTimeout(() => restoreSelection(el, savedPos), 0);
-                }
-              }
-            }}
-            style={{
-              ...editableFieldStyle,
-              minHeight: "100px",
-              outline: "none"
-            }}
-            contentEditable
-            onInput={(e) => handleFieldChange('placeholder', e.target.innerHTML)}
-            suppressContentEditableWarning={true}
-            data-placeholder={editedAssignment.placeholder === '' ? t("assignment.placeholderPlaceholder", "Enter placeholder text...") : ''}
-          />
-        </div>
+        <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("assignment.placeholder")}</p>
+        <TipTapEditor
+          content={editedAssignment.placeholder}
+          placeholder={t("assignment.placeholder", "Enter placeholder shown to students...")}
+          onUpdate={(newContent) => handleFieldChange('placeholder', newContent)}
+        />
+
+      </div>
     </Modal.Content>
       <Modal.Actions
         style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
@@ -751,7 +720,7 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
             {assignment?.public ? (
               // Button when assignment is public
               <>
-                {/* <Button
+                <Button
                   style={{
                     borderRadius: "100px",
                     background: "white",
@@ -759,10 +728,10 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
                     color: "#336F8A",
                     border: "1px solid #336F8A"
                   }}
-                  onClick={() => { () => copyLink() }}
+                  onClick={copyLink}
                 >
                   {t("assignment.copyLink")}
-                </Button> */}
+                </Button>
                 <Button
                   style={{
                     borderRadius: "100px",
@@ -783,23 +752,6 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
                 >
                   {t("assignment.revoke")}
                 </Button>
-
-                {/* Optional: copyLink button */}
-                {/* 
-                <Button
-                  className="secondary"
-                  style={{
-                    borderRadius: "100px",
-                    background: "white",
-                    fontSize: "16px",
-                    color: "#336F8A",
-                    border: "1px solid #336F8A"
-                  }}
-                  onClick={() => copyLink()}
-                >
-                  {t("assignment.copyLink")}
-                </Button> 
-                */}
               </>
             ) : (
               // Button when assignment is not public
@@ -938,7 +890,7 @@ export const PreviewSection = ({
                       onClick={() => openAssignmentModal?.(item)}
                       title={t("board.expendedCard.preview", "Preview")}
                     >
-                      <Icon name="external alternate" />
+                      <Icon name="pencil alternate" />
                     </div>
                   ) : (
                     <>

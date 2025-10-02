@@ -39,20 +39,32 @@ const StyledBoards = styled.div`
     align-items: center;
     padding: 0.75rem 1.5rem;
     margin: 1rem 0;
-    background: #3182ce;
+    // background: #3182ce;
+    background: #336F8A;
     color: white;
-    border-radius: 8px;
-    border: none;
-    font-size: 1.1rem;
+    border-radius: 100px;
+    // border: none;
+    border: 1px solid #336F8A;
+    font-size: 16px;
     font-weight: 500;
     cursor: pointer;
     transition: background 0.3s ease;
   }
 
   .createButton.narrowButton:hover,
-  .saveButton:hover,
   .backButton:hover {
-    background: #2b6cb0;
+    border-radius: 100px;
+    border: 1px #F9D978;
+    color: #274E5B;
+    background: #F9D978;
+    box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.15);
+  }
+  .saveButton:hover {
+    border-radius: 100px;
+    border: 1px #7D70AD;
+    color: white;
+    background: #7D70AD;
+    box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.15);
   }
 
   .backButton {
@@ -97,7 +109,7 @@ const StyledBoards = styled.div`
 
   .projectCard:hover,
   .clonedBoardItem:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 

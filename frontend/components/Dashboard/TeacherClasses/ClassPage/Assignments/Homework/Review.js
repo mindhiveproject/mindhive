@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
 import useTranslation from "next-translate/useTranslation";
 
-import JoditEditor from "../../../../../Jodit/Editor";
+import TipTapEditor from "../../../../../TipTap/Main";  
+import { StyledTipTap } from "../../../../../TipTap/StyledTipTap";
 
 import { GET_HOMEWORK } from "../../../../../Queries/Homework";
 import { EDIT_HOMEWORK } from "../../../../../Mutations/Homework";
@@ -44,14 +45,14 @@ export default function ReviewHomework({
     <div className="review">
       <div className="proposalCardBoard">
         <div className="textBoard">
-          <div className="jodit">
-            <JoditEditor
+          <StyledTipTap>
+            <TipTapEditor
               content={inputs?.content}
-              setContent={(content) => {
-                handleChange({ target: { name: "content", value: content } });
+              onUpdate={(newContent) => {
+                handleChange({ target: { name: "content", value: newContent } });
               }}
             />
-          </div>
+          </StyledTipTap>
         </div>
 
         <div className="infoBoard">

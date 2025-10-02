@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_ASSIGNMENT_FOR_STUDENT } from "../../Queries/Assignment";
 import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../Queries/Homework";
+import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap"
 import ReactHtmlParser from "react-html-parser";
 
 import NewHomework from "./New";
@@ -39,7 +40,11 @@ export default function AssignmentMain({ query, user }) {
   return (
     <StyledClass>
       <h1>{assignment?.title}</h1>
-      <div className="content">{ReactHtmlParser(assignment?.content)}</div>
+      <ReadOnlyTipTap>
+        <div className="ProseMirror">
+          {ReactHtmlParser(assignment?.content || "")}
+        </div>
+      </ReadOnlyTipTap>
       <h3>My homework</h3>
 
       {!homeworks.length && (

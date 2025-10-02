@@ -26,6 +26,10 @@
 	"assigned": {
 		"typeUsername": "Typ gebruikersnaam"
 	},
+	"assignment": {
+		"loading": "Opdracht laden...",
+		"loadingMessage": "Laatste toewijzingsgegevens ophalen..."
+	},
 	"background": "Achtergrond",
 	"backgroundHelp": "Gebruik dit veld om een ​​korte achtergrondinformatie over het onderzoeksonderwerp te geven. Wat is het onderzochte probleem en waarom is het belangrijk?",
 	"basicTab": "Basis",

@@ -6,6 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import StyledBoards from "../../styles/StyledBoards"; // Adjust path to your StyledBoards.js
 import {
   GET_MY_AUTHORED_PROJECT_BOARDS,
+  GET_MY_COLLABORATED_PROJECT_BOARDS,
   PROPOSAL_TEMPLATES_QUERY,
 } from "../../Queries/Proposal";
 import {
@@ -26,6 +27,15 @@ const TeacherProjects = ({ user, query }) => {
     error: authoredError,
     refetch,
   } = useQuery(GET_MY_AUTHORED_PROJECT_BOARDS, {
+    variables: { userId: user?.id },
+    skip: !user?.id,
+  });
+
+  const {
+    data: collaboratedData,
+    loading: collaboratedLoading,
+    error: collaboratedError,
+  } = useQuery(GET_MY_COLLABORATED_PROJECT_BOARDS, {
     variables: { userId: user?.id },
     skip: !user?.id,
   });
@@ -172,13 +182,23 @@ const TeacherProjects = ({ user, query }) => {
   if (authoredError)
     return <p>{t("boardManagement.errorLoadingBoards")}{authoredError.message}</p>;
 
+  const authoredIds = new Set(
+    authoredData?.proposalBoards?.map((board) => board.id)
+  );
+
+  const uniqueCollaboratedBoards = collaboratedData?.proposalBoards?.filter(
+    (board) => !authoredIds.has(board.id)
+  );
+
+
   return (
     <StyledBoards>
       <div className="headerSection">
-        <h2>{t("boardManagement.title")}</h2>
-        <p>{t("boardManagement.intro")}</p>
+        <h3>{t("boardManagement.title")}</h3>
+        <p style={{fontSize: "18px"}}>{t("boardManagement.intro")}</p>
         <button onClick={handleCreateNew} className="createButton narrowButton">
-          <Icon name="plus" /> {t("boardManagement.createBtn")}
+          {/* <Icon name="plus" /> */}
+          {t("boardManagement.createBtn")}
         </button>
       </div>
 
@@ -193,14 +213,14 @@ const TeacherProjects = ({ user, query }) => {
             </div>
             <div className="createOptions">
               <button
-                className="createButton optionButton"
+                className="createButton narrowButton"
                 onClick={handleCreateFromScratch}
                 disabled={createLoading}
               >
                 <Icon name="file outline" /> {t("boardManagement.createNewScratch")}
               </button>
               <button
-                className="createButton optionButton"
+                className="createButton narrowButton"
                 onClick={() => setCreateMode("copy")}
                 disabled={publicLoading}
               >
@@ -219,7 +239,7 @@ const TeacherProjects = ({ user, query }) => {
                   loading={publicLoading}
                 />
                 <button
-                  className="createButton optionButton"
+                  className="createButton narrowButton"
                   onClick={handleCopyFromPublic}
                   disabled={copyLoading || !selectedTemplateId}
                 >
@@ -290,6 +310,59 @@ const TeacherProjects = ({ user, query }) => {
         </div>
       ) : (
         <p>{t("boardManagement.noBoardsYet")}</p>
+      )}
+
+      {collaboratedLoading ? (
+        <p>{t("boardManagement.loadingCollaborated")}</p>
+      ) : uniqueCollaboratedBoards?.length ? (
+        <>
+          <div style={{margin: "2rem auto", maxWidth: "1200px"}} ><h3>{t("boardManagement.collaboratedTitle")}</h3></div>
+          <div className="cardGrid">
+            {uniqueCollaboratedBoards.map((board) => (
+              <div key={board.id} className="projectCard">
+                <h3>{board.title}</h3>
+                <p className="description">
+                  {board.description
+                    ? board.description.length > 100
+                      ? `${board.description.substring(0, 100)}...`
+                      : board.description
+                    : t("boardManagement.noDescription")}
+                </p>
+                <div className="meta">
+                  <p>
+                    <strong>{t("boardManagement.created")}</strong>{" "}
+                    {new Date(board.createdAt).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <strong>{t("boardManagement.author")}</strong> {board.author?.username}
+                  </p>
+                </div>
+                <div className="cardActions">
+                  <Link href={`/dashboard/boards/manage?id=${board.id}`}>
+                    <button className="viewButton" title={t("boardManagement.manageClasses")}>
+                      <Icon name="folder open" />
+                    </button>
+                  </Link>
+                  <Link href={`/dashboard/boards/edit?id=${board.id}`}>
+                    <button className="editButton" title={t("boardManagement.viewOrEdit")}>  
+                      <Icon name="edit" />
+                    </button>
+                  </Link>
+                  <button
+                    className="duplicateButton"
+                    onClick={() => handleCopy(board.id)}
+                    disabled={copyLoading}
+                    title={t("boardManagement.duplicate")}
+                  >
+                    <Icon name="copy" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <></>
       )}
     </StyledBoards>
   );

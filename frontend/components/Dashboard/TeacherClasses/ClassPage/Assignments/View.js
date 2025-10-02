@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import EditAssignment from "./Edit";
 
 import { GET_ASSIGNMENT } from "../../../../Queries/Assignment";
+import { ReadOnlyTipTap } from "../../../../TipTap/ReadOnlyTipTap"
 import HomeworkMain from "./Homework/Main";
 
 export default function ViewAssignment({ code, myclass, user, query }) {
@@ -27,11 +28,19 @@ export default function ViewAssignment({ code, myclass, user, query }) {
         </div>
         <div className="content">
           <h2>Student Instruction</h2>
-          {ReactHtmlParser(assignment?.content)}
+          <ReadOnlyTipTap>
+            <div className="ProseMirror">
+              {ReactHtmlParser(assignment?.content || "")}
+            </div>
+          </ReadOnlyTipTap>
         </div>
         <div className="content">
           <h2>Placeholder for student answer box</h2>
-          {ReactHtmlParser(assignment?.placeholder)}
+          <ReadOnlyTipTap>
+            <div className="ProseMirror">
+              {ReactHtmlParser(assignment?.placeholder || "")}
+            </div>
+          </ReadOnlyTipTap>
         </div>
       </div>
 

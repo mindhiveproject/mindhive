@@ -23,6 +23,7 @@ import { PreviewSection } from "../../../../../Proposal/Card/Forms/LinkedItems";
 import { Modal, Button, Icon, Dropdown, Accordion } from "semantic-ui-react";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
+import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
 
 export default function ProposalCard({
   proposalCard,
@@ -88,8 +89,6 @@ export default function ProposalCard({
   const { inputs, handleChange } = useForm({
     ...proposalCard,
   });
-
-  console.log({ inputs });
 
   const content = useRef(proposalCard?.content);
   const internalContent = useRef(proposalCard?.internalContent);
@@ -271,11 +270,9 @@ export default function ProposalCard({
     // New homework form state
     const { inputs, handleChange, clearForm } = useForm({
       settings: { status: "Started" },
-      title: `Homework | ${assignment?.title || ''} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`,
+      title: `Homework ${assignment?.title || ''} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`,
       placeholder: assignment?.placeholder || "",
     });
-    console.log(inputs)
-    console.log(assignment)
 
     const homeworkContent = useRef("");
 
@@ -399,11 +396,11 @@ export default function ProposalCard({
               fontWeight: 600,
             }}
           >
-            {t("assignment.loading", "Loading Assignment...")}
+            {t("assignment.loading")}
           </Modal.Header>
           <Modal.Content style={{ background: "#ffffff", padding: "24px", textAlign: "center" }}>
             <Icon name="spinner" loading size="large" />
-            <p>{t("assignment.loadingMessage", "Fetching latest assignment data...")}</p>
+            <p>{t("assignment.loadingMessage")}</p>
           </Modal.Content>
         </Modal>
       );
@@ -474,9 +471,11 @@ export default function ProposalCard({
             <div style={h1}>
                 {title}
             </div>
-            <div style={instructionBox}>
-              {ReactHtmlParser(content || "")}
-            </div>
+            <ReadOnlyTipTap>
+              <div className="ProseMirror">
+                {ReactHtmlParser(content || "")}
+              </div>
+            </ReadOnlyTipTap>
           {/* Homework Section */}
           <div style={{ marginTop: "24px", paddingTop: "24px" }}>
             <h3 style={{ marginBottom: "16px", color: "#274E5B" }}>
@@ -504,12 +503,26 @@ export default function ProposalCard({
                     }}
                   >
                     <div>
-                      <div style={{ fontWeight: "600", marginBottom: "4px" }}>
+                      <div style={{ fontWeight: "600", marginBottom: "4px" , fontSize: "14px"}}>
                         {homework.title}
                       </div>
-                      <div style={{ fontSize: "12px", color: "#666" }}>
-                        Status: {homework.settings?.status || "Started"}
+                      <div
+                        style={{
+                          fontSize: "14px",
+                          fontWeight:
+                            homework.settings?.status === "Completed" ? "bold"
+                              : homework.settings?.status === "Started" ? "normal"
+                              : "normal",
+                          color:
+                            homework.settings?.status === "Completed" ? "#3D85B0"
+                              : homework.settings?.status === "Started" ? "#7D70AD"
+                              : homework.settings?.status === "Overdue" ? "red"
+                              : "#666", // default color
+                        }}
+                      >
+                        {homework.settings?.status || "Open homework to see more"}
                       </div>
+
                     </div>
                     <Button
                       size="small"
@@ -520,22 +533,20 @@ export default function ProposalCard({
                           return;
                         }
 
-                        const url = `http://localhost:3000/dashboard/assignments/${assignment.code}?homework=${homework.code}`;
-                        console.log("Navigate to homework:", url);
-
-                        // Open in a new tab
+                        const url = `/dashboard/assignments/${assignment.code}?homework=${homework.code}`;
                         window.open(url, "_blank", "noopener,noreferrer");
                       }}
                       style={{
                         borderRadius: "100px",
-                        color: "white",
-                        fontSize: "10px",
-                        background: "#336F8A",
+                        color: "#69BBC4",
+                        fontSize: "12px",
+                        border: "0.5px solid #69BBC4",
+                        background: "white",
                       }}
                     >
                       {t("homework.openHomework", "Open")}
                     </Button>
-                  </div>
+                  </div>               
                 ))}
               </div>
             )}
@@ -558,10 +569,13 @@ export default function ProposalCard({
               </Button>
             ) : (
               <div style={{
-                border: "1px solid #e0e0e0",
+                // border: "1px solid #7D70AD",
+                border: "1px solid #A1A1A1",
                 borderRadius: "8px",
                 padding: "16px",
-                background: "#f8f9fa",
+                // background: "#f8f9fa",
+                background: "#FFF",
+                boxShadow: "2px 2px 8px 0 rgba(0, 0, 0, 0.10)",
               }}>
                 <div style={h1}>
                   {t("homework.createNewHomework", "Create New Homework")}
@@ -612,9 +626,12 @@ export default function ProposalCard({
                     loading={createLoading}
                     disabled={createLoading}
                     style={{
-                      background: "#28a745",
+                      borderRadius: "100px",
+                      background: "#69BBC4",
+                      fontSize: "12px",
                       color: "white",
-                      borderRadius: "4px",
+                      border: "1px solid #69BBC4",
+                      marginRight: "10px"
                     }}
                   >
                     {t("homework.createHomework", "Create Homework")}
@@ -625,10 +642,12 @@ export default function ProposalCard({
                       clearForm();
                     }}
                     style={{
-                      background: "transparent",
-                      color: "#666",
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
+                      borderRadius: "100px",
+                      background: "#f7f9fa",
+                      fontSize: "12px",
+                      color: "#B9261A",
+                      border: "1px solid #B9261A",
+                      marginRight: "10px"
                     }}
                   >
                     {t("homework.cancel", "Cancel")}
@@ -648,7 +667,7 @@ export default function ProposalCard({
               borderRadius: "100px",
               background: "#f7f9fa",
               fontSize: "12px",
-              color: "336F8A",
+              color: "#336F8A",
               border: "1px solid #336F8A",
               marginRight: "10px"
             }}

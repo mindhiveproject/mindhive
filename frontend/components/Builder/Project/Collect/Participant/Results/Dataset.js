@@ -128,10 +128,18 @@ export default function Dataset({
       .map((line) => Object.keys(line))
       .reduce((a, b) => a.concat(b), []);
     const keys = Array.from(new Set(allKeys));
-    const csv = jsonToCSV({ fields: keys, data: rows });
-    const blob = new Blob([csv], {
-      type: "text/csv",
+  
+    // Only stringify 'aggregated' field if it's an object
+    const processedRows = rows.map((row) => {
+      const newRow = { ...row };
+      const value = row["aggregated"];
+      if (value && typeof value === "object" && !Array.isArray(value)) {
+        newRow["aggregated"] = JSON.stringify(value);
+      }
+      return newRow;
     });
+    const csv = jsonToCSV({ fields: keys, data: processedRows });
+    const blob = new Blob([csv], { type: "text/csv" });
     saveAs(blob, `${token}.csv`);
   };
 

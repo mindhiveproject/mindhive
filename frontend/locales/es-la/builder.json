@@ -26,6 +26,10 @@
 	"assigned": {
 		"typeUsername": "Escriba el nombre de usuario"
 	},
+	"assignment": {
+		"loading": "Cargando tarea...",
+		"loadingMessage": "Obteniendo los últimos datos de la tarea..."
+	},
 	"background": "Fondo",
 	"backgroundHelp": "Utilice este campo para proporcionar una breve introducción al tema de investigación. ¿Cuál es el problema en estudio y por qué es importante?",
 	"basicTab": "Básico",

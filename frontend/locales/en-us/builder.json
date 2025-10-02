@@ -26,6 +26,10 @@
 	"assigned": {
 		"typeUsername": "Type username"
 	},
+	"assignment": {
+		"loading": "Loading Assignment...",
+		"loadingMessage": "Fetching latest assignment data..."
+	},
 	"background": "Background",
 	"backgroundHelp": "Use this field to provide some brief background on the topic of research. What is the problem under study and why is it important?",
 	"basicTab": "Basic",

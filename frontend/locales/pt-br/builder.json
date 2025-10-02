@@ -26,6 +26,10 @@
 	"assigned": {
 		"typeUsername": "Digite o nome de usuário"
 	},
+	"assignment": {
+		"loading": "Carregando tarefa...",
+		"loadingMessage": "Buscando os últimos dados de atribuição..."
+	},
 	"background": "Fundo",
 	"backgroundHelp": "Use este campo para fornecer um breve histórico sobre o tema da pesquisa. Qual é o problema em estudo e por que ele é importante?",
 	"basicTab": "Básico",
