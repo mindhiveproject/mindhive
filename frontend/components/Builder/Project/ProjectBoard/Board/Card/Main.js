@@ -23,6 +23,7 @@ import { PreviewSection } from "../../../../../Proposal/Card/Forms/LinkedItems";
 import { Modal, Button, Icon, Dropdown, Accordion } from "semantic-ui-react";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
+import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
 
 export default function ProposalCard({
   proposalCard,
@@ -88,8 +89,6 @@ export default function ProposalCard({
   const { inputs, handleChange } = useForm({
     ...proposalCard,
   });
-
-  console.log({ inputs });
 
   const content = useRef(proposalCard?.content);
   const internalContent = useRef(proposalCard?.internalContent);
@@ -274,8 +273,6 @@ export default function ProposalCard({
       title: `Homework ${assignment?.title || ''} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`,
       placeholder: assignment?.placeholder || "",
     });
-    console.log(inputs)
-    console.log(assignment)
 
     const homeworkContent = useRef("");
 
@@ -464,7 +461,7 @@ export default function ProposalCard({
             fontWeight: 600,
           }}
         >
-          {t("board.expendedCard.previewAssignment", "Preview Assignment")}asd
+          {t("board.expendedCard.previewAssignment", "Preview Assignment")}
         </Modal.Header>
         <Modal.Content
           scrolling
@@ -474,9 +471,11 @@ export default function ProposalCard({
             <div style={h1}>
                 {title}
             </div>
-            <div style={instructionBox}>
-              {ReactHtmlParser(content || "")}
-            </div>
+            <ReadOnlyTipTap>
+              <div className="ProseMirror">
+                {ReactHtmlParser(content || "")}
+              </div>
+            </ReadOnlyTipTap>
           {/* Homework Section */}
           <div style={{ marginTop: "24px", paddingTop: "24px" }}>
             <h3 style={{ marginBottom: "16px", color: "#274E5B" }}>
