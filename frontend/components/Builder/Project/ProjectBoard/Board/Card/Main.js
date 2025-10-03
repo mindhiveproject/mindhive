@@ -186,9 +186,11 @@ export default function ProposalCard({
           content: content?.current,
           revisedContent: revisedContent?.current,
           assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
-          resources: inputs?.resources?.map((resource) => ({
-            id: resource?.id,
-          })),
+          resources: inputs?.resources?.map((resource) => ({ id: resource?.id })),
+          // Add these three lines to fix the error:
+          assignments: inputs?.assignments?.map((assignment) => ({ id: assignment?.id })),
+          tasks: inputs?.tasks?.map((task) => ({ id: task?.id })),
+          studies: inputs?.studies?.map((study) => ({ id: study?.id })),
         },
       });
     } else {

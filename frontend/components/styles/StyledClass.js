@@ -31,6 +31,7 @@ const StyledClass = styled.div`
 
   .editableClassHeader {
     display: grid;
+    width: 100%;
     margin-bottom: 20px;
     padding: 10px;
     input,
@@ -54,8 +55,8 @@ const StyledClass = styled.div`
       cursor: pointer;
     }
     .title {
-      font-family: Lato;
-      font-size: 48px;
+      font-family: Nunito;
+      font-size: 32px;
       font-style: normal;
       font-weight: 400;
       line-height: 56px;
@@ -63,20 +64,26 @@ const StyledClass = styled.div`
       text-align: left;
       color: #1a1a1a;
       margin-bottom: 10px;
-    }
+      width: 100%;
+      resize: vertical;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      min-height: 40px;
+    } 
     .description {
-      font-family: Lato;
-      font-size: 24px;
+      font-family: Nunito
+      font-size: 28px;
       font-style: normal;
       font-weight: 400;
       /* line-height: 32px; */
       letter-spacing: 0em;
       text-align: left;
       color: #666666;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .teacher {
-      font-family: Lato;
+      font-family: Nunito
     }
   }
 

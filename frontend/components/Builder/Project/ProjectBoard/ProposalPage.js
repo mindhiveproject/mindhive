@@ -1,6 +1,6 @@
 import { useQuery, useApolloClient } from "@apollo/client";
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../../Queries/Proposal";
-import { Radio, Icon } from "semantic-ui-react";
+import { Icon} from "semantic-ui-react";
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import ProposalPDF from "./Board/PDF/Main";
@@ -36,52 +36,26 @@ export default function ProposalPage({ user, proposalId }) {
           <>
             {isPDF && (
               <>
-                <Radio
-                  toggle
-                  checked={isPDF}
-                  onChange={() => {
-                    setIsPDF(!isPDF);
-                  }}
-                />
-                <span>
+                <button onClick={() => exportPDF(proposalId, client, t)} className="narrowButtonSecondary">
+                  <Icon name="download"/> {t("proposalPage.download", "Download")}
+                </button>
+                {/* <span>
                   <div className="preview">
-                    {t("proposalPage.preview", "Preview")}
-                    <span className="alert">
-                      <Icon name="info circle" />
-                      <span>
-                        {t(
-                          "proposalPage.previewInfo",
-                          'Content from cards marked as "complete" in edit mode will appear here, in preview mode, displaying what your reviewers will see.'
-                        )}
-                      </span>
+                  {t("proposalPage.preview", "Preview")}
+                  <span className="alert">
+                  <Icon name="info circle" />
+                  <span>
+                  {t(
+                    "proposalPage.previewInfo",
+                    'Content from cards marked as "complete" in edit mode will appear here, in preview mode, displaying what your reviewers will see.'
+                    )}
                     </span>
-                  </div>
-                </span>
-                <DownloadButton
-                  style={{ color: "#fff" }}
-                  onClick={() => exportPDF(proposalId, client, t)}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <mask
-                      id="mask0_2248_374"
-                      style={{ maskType: "alpha" }}
-                      maskUnits="userSpaceOnUse"
-                      x="0"
-                      y="0"
-                      width="24"
-                      height="24"
-                    >
-                      <rect width="24" height="24" fill="#D9D9D9" />
-                    </mask>
-                    <g mask="url(#mask0_2248_374)">
-                      <path
-                        d="M5.05 22.375L3.65 20.95L6.6 18H4.35V16H10V21.65H8V19.425L5.05 22.375ZM12 22V20H18V9H13V4H6V14H4V4C4 3.45 4.19583 2.97917 4.5875 2.5875C4.97917 2.19583 5.45 2 6 2H14L20 8V20C20 20.55 19.8042 21.0208 19.4125 21.4125C19.0208 21.8042 18.55 22 18 22H12Z"
-                        fill="currentColor"
-                      />
-                    </g>
-                  </svg>
-                  {t("proposalPage.download", "Download")}
-                </DownloadButton>
+                    </span>
+                    </div>
+                    </span> */}
+                <button onClick={() => {setIsPDF(!isPDF);}} className="narrowButton">
+                  <Icon name="table"/> {t("proposalPage.viewBoard", "View Board")}
+                </button>
               </>
             )}
           </>

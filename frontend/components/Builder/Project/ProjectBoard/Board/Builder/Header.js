@@ -6,7 +6,7 @@ import { useMutation } from "@apollo/client";
 
 import useForm from "../../../../../../lib/useForm";
 
-import { Radio } from "semantic-ui-react";
+import { Icon, Radio } from "semantic-ui-react";
 
 import useTranslation from "next-translate/useTranslation";
 
@@ -45,13 +45,16 @@ export default function ProposalHeader({
             <div className="titleEditBtn">
               <h1>{t("header.myProjectBoard", "My Project Board")}</h1>
               <div id="switchMode" style={{display: "flex", width: "max-content"}}>
-                <Radio
+              <button onClick={() => {setIsPDF(!isPDF);}} className="narrowButton">
+                  <Icon name="file alternate outline"/> {t("proposalPage.viewFlattenBoard", "View flatten board")}
+              </button>
+              {/* <Radio
                 toggle
                 checked={isPDF}
                 onChange={() => {
                   setIsPDF(!isPDF);
                 }}
-              />
+              /> */}
               </div>
             </div>
 

@@ -603,7 +603,9 @@
 		"download": "Descargar",
 		"preview": "Avance",
 		"previewInfo": "El contenido de las tarjetas marcadas como \"completas\" en el modo de edición aparecerá aquí, en modo de vista previa, mostrando lo que verán sus revisores.",
-		"submittedLocked": "La propuesta ha sido enviada y bloqueada 🔒"
+		"submittedLocked": "La propuesta ha sido enviada y bloqueada 🔒",
+		"viewBoard": "Ver tablero",
+		"viewFlattenBoard": "Ver tablero aplanado"
 	},
 	"proposalSelector": {
 		"linkToProposal": "Enlace a la propuesta",
