@@ -106,13 +106,71 @@ export const StyledProposal = styled.div`
     display: grid;
     grid-template-rows: auto 1fr;
     margin: 20px;
+    
+    .narrowButton {
+      height: 40px;
+      padding: 8px 24px 8px 16px;
+      justify-content: center;
+      gap: 8px;
+      flex-shrink: 0;
+      width: auto;
+      display: inline-flex;
+      align-items: center;
+      margin: 1rem 0;
+      background: #336F8A;
+      color: white;
+      border-radius: 100px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .narrowButton:hover {
+      border-radius: 100px;
+      border: 1px #F9D978;
+      color: #274E5B;
+      background: #F9D978;
+      box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .narrowButtonSecondary {
+      height: 40px;
+      padding: 8px 24px 8px 16px;
+      justify-content: center;
+      gap: 8px;
+      flex-shrink: 0;
+      width: auto;
+      display: inline-flex;
+      align-items: center;
+      margin: 1rem 0;
+      background: white;
+      color: #336F8A;
+      border-radius: 100px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .narrowButtonSecondary:hover {
+      display: inline-flex;
+      height: 40px;
+      padding: 8px 24px 8px 16px;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      border-radius: 100px;
+      border: 1px solid var(--MH-Theme-Primary-Dark, #336F8A);
+      background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
+    }
 
     .previewToggle {
-      display: grid;
-      grid-template-columns: auto auto auto;
-      grid-gap: 1rem;
-      margin: 5px 0px 15px 0px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      column-gap: 16px;
       align-items: center;
+      margin: 5px 0px 15px 0px;
       span {
         font-family: Roboto;
         font-size: 18px;
@@ -347,9 +405,8 @@ export const StyledProposal = styled.div`
       }
     }
     .titleEditBtn {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      grid-gap: 10px;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
     }
   }
@@ -946,27 +1003,19 @@ export const StyledActionCard = styled.div`
 
 export const DownloadButton = styled.button`
   && {
+    color: white;
     display: inline-flex;
     height: 40px;
-    padding: 8px 24px 8px 16px;
+    padding: 8px 12px 8px 4px;
     justify-content: center;
     align-items: center;
     gap: 8px;
-    background: #007c70;
-    border: 1px solid #007c70;
+    flex-shrink: 0;
     border-radius: 100px;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    color: #ffffff;
-    cursor: pointer;
-    width: auto;
-    min-width: 0;
+    background: var(--MH-Theme-Primary-Dark, #336F8A);
     :hover {
-      transform: scale(1.1);
-      transition: transform 0.5s;
+      transform: scale(1.05);
+      transition: transform 1s;
     }
     :disabled {
       background: #cccccc;
@@ -979,3 +1028,5 @@ export const DownloadButton = styled.button`
     }
   }
 `;
+
+

@@ -10,6 +10,7 @@ import { CREATE_LOG } from "../../../../../../Mutations/Log";
 import Navigation from "./Navigation";
 import { cardTypes } from "../../Builder/Actions/ActionCard";
 
+import { ReadOnlyTipTap } from "../../../../../../TipTap/ReadOnlyTipTap";
 import { StyledActionPage } from "../../../../../../styles/StyledReview";
 import Feedback from "../../../../../../Dashboard/Review/Feedback/Main";
 
@@ -172,6 +173,7 @@ export default function Proposal({
       }
     }
   };
+
   return (
     <>
       <Navigation
@@ -213,11 +215,9 @@ export default function Proposal({
                       }.svg`}
                     />
                   </div>
-                  <div className="tiptapEditor">
-                    <div className="ProseMirror">
-                      {ReactHtmlParser(card?.content)}
-                    </div>
-                  </div>
+                  <ReadOnlyTipTap>
+                      {ReactHtmlParser(card?.content || "")}
+                  </ReadOnlyTipTap>
                 </div>
               ))}
             </div>

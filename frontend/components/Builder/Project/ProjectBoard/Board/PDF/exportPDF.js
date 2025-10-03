@@ -165,19 +165,25 @@ function generatePDFBrowserPrint(content, title, date, t) {
         }
 
         .print-controls {
-          position: fixed;
+          position: sticky;
           top: 20px;
           right: 20px;
           z-index: 1000;
-          background: white;
-          // padding: 10px;
-          // border: 1px solid #d1d5db;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          background: rgba(255, 255, 255, 0.6); /* semi-transparent white */
+          backdrop-filter: blur(8px); /* applies blur to background content */
+            -webkit-backdrop-filter: blur(8px); /* for Safari support */          padding: 10px;
+          border-bottom: 1px solid #d1d5db;
           // border-radius: 6px;
           // box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         .print-button {
           width: auto;
+          height: 40px;
           display: inline-flex;
           align-items: center;
           padding: 0.75rem 1.5rem;
@@ -202,6 +208,7 @@ function generatePDFBrowserPrint(content, title, date, t) {
 
         .close-button {
           width: auto;
+          height: 40px;
           display: inline-flex;
           align-items: center;
           padding: 0.75rem 1.5rem;
@@ -222,7 +229,7 @@ function generatePDFBrowserPrint(content, title, date, t) {
         }
 
         .no-print {
-          display: block;
+          display: flex;
         }
 
         @media print {

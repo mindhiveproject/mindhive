@@ -97,7 +97,7 @@ export const StyledForm = styled.form`
   line-height: 1.5;
   font-weight: 600;
   min-width: 320px;
-  max-width: 400px;
+  max-width: 100%;
   label {
     display: block;
     font-style: normal;
