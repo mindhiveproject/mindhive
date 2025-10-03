@@ -29,7 +29,7 @@ export default function Header({ user, myclass }) {
         <fieldset disabled={loading} aria-busy={loading}>
           <div className="infoPane">
             <label htmlFor="title">
-              <input
+              <textarea
                 className="title"
                 type="title"
                 name="title"
