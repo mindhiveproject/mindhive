@@ -39,7 +39,7 @@ export default function ClassPage({ code, user, query }) {
           >
             <p>{t("assignmentsTab")}</p>
           </Link>
-          <Link
+          {/* <Link
             href={{
               pathname: `/dashboard/classes/${code}`,
               query: {
@@ -51,7 +51,7 @@ export default function ClassPage({ code, user, query }) {
             }
           >
             <p>{t("studentsTab.tab")}</p>
-          </Link>
+          </Link> */}
 
           <Link
             href={{
@@ -75,11 +75,11 @@ export default function ClassPage({ code, user, query }) {
         )}
       </div>
 
-      <div>
+      {/* <div>
         {page === "students" && (
           <ClassStudents myclass={myclass} user={user} query={query} />
         )}
-      </div>
+      </div> */}
 
       <div>
         {page === "studies" && (
