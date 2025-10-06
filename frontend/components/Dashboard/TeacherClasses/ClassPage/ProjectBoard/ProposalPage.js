@@ -28,9 +28,9 @@ export default function ProposalPage({
   return (
     <div className="proposalBoard">
       <div className="previewToggle">
-        <div className="goBackButton" onClick={goToOverview}>
-          <p>{t("projectBoard.goBack")}</p>
-        </div>
+        <button onClick={goToOverview} className="narrowButton">
+          <Icon name="angle left"/> {t("board.back", "Back")}
+        </button>
       </div>
       {isPDF || proposal?.isSubmitted ? (
         <ProposalPDF proposalId={proposalId} />
