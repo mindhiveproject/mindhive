@@ -53,14 +53,6 @@ const Board = ({
     }
   }, [proposal]);
 
-  if (loading) return t("board.loading", "Loading...");
-  if (error)
-    return t(
-      "board.error",
-      { message: error.message },
-      `Error! ${error.message}`
-    );
-
   // Check for duplicate action cards only in proposalBuildMode
   const actionTypes = [
     "ACTION_SUBMIT",
@@ -98,6 +90,14 @@ const Board = ({
       setErrors([]);
     }
   }, [proposal, proposalBuildMode]);
+
+  if (loading) return t("board.loading", "Loading...");
+  if (error)
+    return t(
+      "board.error",
+      { message: error.message },
+      `Error! ${error.message}`
+    );
 
   return (
     <>

@@ -123,6 +123,7 @@ export default function BuilderProposalCard({
             publicId: originalCardPublicId,
             originalBoardId: originalBoardId,
           },
+          fetchPolicy: "network-only",
         });
 
         const directCards = directData?.proposalCards || [];
@@ -149,6 +150,7 @@ export default function BuilderProposalCard({
           const { data: sectionsData } = await client.query({
             query: GET_SECTIONS_BY_BOARD,
             variables: { boardId: clone.id },
+            fetchPolicy: "network-only",
           });
 
           const sections = sectionsData?.proposalSections || [];
@@ -161,6 +163,7 @@ export default function BuilderProposalCard({
             const { data: cardsData } = await client.query({
               query: GET_CARDS_BY_SECTION,
               variables: { sectionId: fallbackSection.id },
+              fetchPolicy: "network-only",
             });
 
             const cards = cardsData?.proposalCards || [];

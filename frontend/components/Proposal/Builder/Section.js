@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ReactHTMLParser from "react-html-parser";
-import { useMutation } from "@apollo/client";
+import { useMutation, useApolloClient, gql } from "@apollo/client";
 import sortBy from "lodash/sortBy";
 import { Container } from "react-smooth-dnd";
 import { v1 as uuidv1 } from "uuid";
@@ -10,12 +10,18 @@ import Card from "./Card";
 import ActionCard from "./ActionCard";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+import {
+  GET_SECTIONS_BY_BOARD,
+  GET_CARDS_BY_SECTION,
+} from "../../Queries/Proposal";
 
 import {
   CREATE_CARD,
   UPDATE_CARD_POSITION,
   DELETE_CARD,
 } from "../../Mutations/Proposal";
+
+import { Modal, Button } from "semantic-ui-react";
 
 const Section = ({
   section,
@@ -36,6 +42,11 @@ const Section = ({
   // const sortedCards = sortBy(cards, item => item.position);
 
   const [cardName, setCardName] = useState("");
+  const [showCloneDialog, setShowCloneDialog] = useState(false);
+  const [newCardInfo, setNewCardInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const client = useApolloClient();
   const [createCard, createCardState] = useMutation(CREATE_CARD);
   const [updateCard, updateCardState] = useMutation(UPDATE_CARD_POSITION);
   const [deleteCard, deleteCardState] = useMutation(DELETE_CARD);
@@ -203,11 +214,87 @@ const Section = ({
     }
   };
 
+  const propagateNewCardToClones = async (info, proposal) => {
+    const { title, sectionTitle, publicId } = info;
+    const clones = proposal.prototypeFor || [];
+
+    for (const clone of clones) {
+      let matchingSectionId = null;
+      try {
+        const { data: sectionsData } = await client.query({
+          query: gql`
+            query GetSectionsByBoard($boardId: ID!) {
+              proposalSections(where: { board: { id: { equals: $boardId } } }) {
+                id
+                title
+              }
+            }
+          `,
+          variables: { boardId: clone.id },
+        });
+
+        const sections = sectionsData?.proposalSections || [];
+        const matchingSection = sections.find(
+          (sec) => sec.title === sectionTitle
+        );
+
+        if (matchingSection) {
+          matchingSectionId = matchingSection.id;
+
+          const { data: cardsData } = await client.query({
+            query: gql`
+              query GetCardsBySection($sectionId: ID!) {
+                proposalCards(
+                  where: { section: { id: { equals: $sectionId } } }
+                ) {
+                  id
+                  title
+                  position
+                }
+              }
+            `,
+            variables: { sectionId: matchingSectionId },
+          });
+
+          const cloneCards = cardsData?.proposalCards || [];
+          const sortedCloneCards = sortBy(cloneCards, (card) => card.position);
+          const position =
+            sortedCloneCards.length > 0
+              ? sortedCloneCards[sortedCloneCards.length - 1].position + 16384
+              : 16384;
+
+          await createCard({
+            variables: {
+              boardId: clone.id,
+              title,
+              sectionId: matchingSectionId,
+              position,
+              publicId,
+            },
+          });
+
+          console.log(
+            `Added new card to clone ${clone.id} in section ${matchingSectionId}`
+          );
+        } else {
+          console.warn(
+            `No matching section found in clone ${clone.id} for title "${sectionTitle}"`
+          );
+        }
+      } catch (error) {
+        console.error(`Failed to add card to clone ${clone.id}:`, error);
+      }
+    }
+  };
+
   const addCardMutation = async (sectionId, title) => {
     if (!title) {
       return alert(t("section.enterNewTitle", "Please enter a title"));
     }
     setCardName("");
+
+    const publicId = uuidv1();
+
     const newCard = await createCard({
       variables: {
         boardId,
@@ -217,6 +304,7 @@ const Section = ({
           cards && cards.length > 0
             ? cards[cards.length - 1].position + 16384
             : 16384,
+        publicId,
       },
       update: (cache, { data: { createProposalCard } }) => {
         const data = cache.readQuery({
@@ -268,10 +356,51 @@ const Section = ({
           },
           assignedTo: [],
           settings: null,
+          publicId,
         },
       },
     });
-    openCard({ id: newCard?.data?.createProposalCard?.id });
+
+    const proposalQuery = await client.query({
+      query: PROPOSAL_QUERY,
+      variables: { id: boardId },
+    });
+    const proposal = proposalQuery?.data?.proposalBoard;
+
+    if (proposalBuildMode && proposal?.prototypeFor?.length > 0) {
+      setNewCardInfo({
+        id: newCard?.data?.createProposalCard?.id,
+        publicId: newCard?.data?.createProposalCard?.publicId || publicId,
+        title,
+        sectionTitle: section?.title,
+        cloneCount: proposal?.prototypeFor?.length,
+      });
+      setShowCloneDialog(true);
+    } else {
+      openCard({ id: newCard?.data?.createProposalCard?.id });
+    }
+  };
+
+  const handleCloneYes = async () => {
+    setIsLoading(true);
+    const proposalQuery = await client.query({
+      query: PROPOSAL_QUERY,
+      variables: { id: boardId },
+    });
+    const proposal = proposalQuery?.data?.proposalBoard;
+    try {
+      await propagateNewCardToClones(newCardInfo, proposal);
+    } catch (error) {
+      console.error("Failed to propagate new card to clones:", error);
+    }
+    setIsLoading(false);
+    setShowCloneDialog(false);
+    openCard({ id: newCardInfo?.id });
+  };
+
+  const handleCloneNo = () => {
+    setShowCloneDialog(false);
+    openCard({ id: newCardInfo?.id });
   };
 
   const deleteCardMutation = (id) => {
@@ -436,6 +565,30 @@ const Section = ({
           />
         </div>
       )}
+
+      {/* Clone Add Modal */}
+      <Modal open={showCloneDialog} onClose={handleCloneNo} size="small">
+        <Modal.Header>Add to Cloned Boards?</Modal.Header>
+        <Modal.Content>
+          <p>
+            This board has {newCardInfo?.cloneCount || 0} cloned project
+            board(s). Do you want to add this new card to the corresponding
+            sections in all cloned project boards?
+          </p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button color="black" onClick={handleCloneNo}>
+            No, add only to this board
+          </Button>
+          <Button
+            positive
+            onClick={handleCloneYes}
+            loading={isLoading || createCardState.loading}
+          >
+            Yes, add to all clones
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </div>
   );
 };
