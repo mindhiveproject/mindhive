@@ -43,6 +43,7 @@ export default function Journal({
   user,
   projectId,
   studyId,
+  journalCollections,
   dataJournals,
   journalId,
   selectJournalById,
@@ -60,6 +61,7 @@ export default function Journal({
     variables: {
       id: journalId,
     },
+    skip: !journalId,
   });
 
   const journal = data?.vizPart;
@@ -130,24 +132,23 @@ export default function Journal({
         ))}
       </div>
 
-      {workspace && (
-        <Workspace
-          user={user}
-          projectId={projectId}
-          studyId={studyId}
-          dataJournals={dataJournals}
-          journal={journal}
-          journalId={journalId}
-          selectJournalById={selectJournalById}
-          workspaces={workspaces}
-          workspaceId={workspace?.id}
-          selectWorkspaceById={selectWorkspaceById}
-          pyodide={pyodide}
-          initData={mergedData.initData}
-          initVariables={mergedData.initVariables}
-          initSettings={mergedData.initSettings}
-        />
-      )}
+      <Workspace
+        user={user}
+        projectId={projectId}
+        studyId={studyId}
+        journalCollections={journalCollections}
+        dataJournals={dataJournals}
+        journal={journal}
+        journalId={journalId}
+        selectJournalById={selectJournalById}
+        workspaces={workspaces}
+        workspaceId={workspace?.id}
+        selectWorkspaceById={selectWorkspaceById}
+        pyodide={pyodide}
+        initData={mergedData.initData}
+        initVariables={mergedData.initVariables}
+        initSettings={mergedData.initSettings}
+      />
     </StyledDataJournal>
   );
 }

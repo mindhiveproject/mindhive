@@ -14,6 +14,7 @@ export default function Workspace({
   user,
   projectId,
   studyId,
+  journalCollections,
   dataJournals,
   journal,
   journalId,
@@ -56,6 +57,7 @@ export default function Workspace({
 
   const { data, loading, error } = useQuery(GET_WORKSPACE, {
     variables: { id: workspaceId },
+    skip: !workspaceId,
   });
 
   const workspaceServer = data?.vizChapter || null;
@@ -75,6 +77,7 @@ export default function Workspace({
       user={user}
       projectId={projectId}
       studyId={studyId}
+      journalCollections={journalCollections}
       dataJournals={dataJournals}
       journal={journal}
       journalId={journalId}

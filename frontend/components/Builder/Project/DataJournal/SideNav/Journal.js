@@ -1,13 +1,20 @@
+// VizPart in navigation (which is journal in the UI)
+
 import { useState } from "react";
 import moment from "moment";
 import WorkspaceNavigation from "./Workspace";
 import DataSourceModal from "./DataSourceModal";
 
+import { Dropdown, DropdownMenu } from "semantic-ui-react";
+
 import { StyledDataSourceLabels } from "../styles/StyledDataJournal";
 
 import AddWorkspace from "./AddWorkspace";
+import EditJournal from "../Helpers/EditJournal";
+import DeleteJournal from "../Helpers/DeleteJournal";
 
 export default function JournalNavigation({
+  user,
   projectId,
   studyId,
   journal,
@@ -69,7 +76,30 @@ export default function JournalNavigation({
 
   return (
     <div className="journal">
-      <div className="selectedTitle">{journal?.title}</div>
+      <div className="titleHeader">
+        <div className="selectedTitle">{journal?.title}</div>
+        <div>
+          <Dropdown
+            icon={<img src={`/assets/dataviz/three-dots.png`} />}
+            direction="left"
+          >
+            <DropdownMenu>
+              <EditJournal
+                user={user}
+                projectId={projectId}
+                studyId={studyId}
+                part={journal}
+              />
+              <DeleteJournal
+                projectId={projectId}
+                studyId={studyId}
+                part={journal}
+              />
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      </div>
+
       <div className="timestamp">
         Last updated: {moment(journal.updatedAt).format("MMMM D, YYYY, h:mm")}
       </div>
@@ -85,6 +115,9 @@ export default function JournalNavigation({
         {workspaces.map((workspace) => (
           <WorkspaceNavigation
             key={workspace.id}
+            projectId={projectId}
+            studyId={studyId}
+            journal={journal}
             workspace={workspace}
             isWorkspaceSelected={workspace?.id === selectedWorkspace?.id}
             selectedWorkspace={selectedWorkspace}
@@ -92,9 +125,9 @@ export default function JournalNavigation({
           />
         ))}
       </div>
-      <div>
-        <AddWorkspace journalId={selectedJournal?.id} />
-      </div>
+
+      <AddWorkspace journalId={selectedJournal?.id} />
+
       <DataSourceModal
         projectId={projectId}
         studyId={studyId}

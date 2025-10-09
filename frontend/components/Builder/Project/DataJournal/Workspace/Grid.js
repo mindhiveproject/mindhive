@@ -33,6 +33,7 @@ export default function Grid({
   user,
   projectId,
   studyId,
+  journalCollections,
   dataJournals,
   journal,
   journalId,
@@ -262,8 +263,10 @@ export default function Grid({
               width="wide"
             >
               <SideNavigation
+                user={user}
                 projectId={projectId}
                 studyId={studyId}
+                journalCollections={journalCollections}
                 dataJournals={dataJournals}
                 selectedJournal={journal}
                 selectedJournalId={journalId}

@@ -33,6 +33,8 @@ export default function Journals({ user, projectId, studyId, pyodide }) {
   const dataJournals =
     data?.vizJournals?.map((vizJournal) => vizJournal.vizParts).flat() || [];
 
+  const journalCollections = data?.vizJournals || [];
+
   useEffect(() => {
     function initJournal() {
       if (dataJournals && dataJournals.length) {
@@ -54,17 +56,16 @@ export default function Journals({ user, projectId, studyId, pyodide }) {
 
   return (
     <StyledDataArea>
-      {journal && (
-        <Journal
-          user={user}
-          projectId={projectId}
-          studyId={studyId}
-          dataJournals={dataJournals}
-          journalId={journal?.id}
-          selectJournalById={selectJournalById}
-          pyodide={pyodide}
-        />
-      )}
+      <Journal
+        user={user}
+        projectId={projectId}
+        studyId={studyId}
+        journalCollections={journalCollections}
+        dataJournals={dataJournals}
+        journalId={journal?.id}
+        selectJournalById={selectJournalById}
+        pyodide={pyodide}
+      />
     </StyledDataArea>
   );
 }

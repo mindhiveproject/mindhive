@@ -70,29 +70,36 @@ export default function TopNavigation({
     <StyledTopNavigation>
       <div className="leftIconNav">
         <div
-          className={`icon ${area === "journals" && "active"}`}
+          className={`titleArea ${area === "journals" && "active"}`}
           onClick={() => setArea("journals")}
         >
-          {area === "journals" ? (
-            <img src="/assets/dataviz/journalsSelected.png" />
-          ) : (
-            <img src="/assets/dataviz/journals.png" />
-          )}
+          <div className="icon">
+            {area === "journals" ? (
+              <img src="/assets/dataviz/journalsSelected.png" />
+            ) : (
+              <img src="/assets/dataviz/journals.png" />
+            )}
+          </div>
+          <div>Journals</div>
         </div>
+
         <div
-          className={`icon ${area === "datasets" && "active"}`}
+          className={`titleArea ${area === "datasets" && "active"}`}
           onClick={() => setArea("datasets")}
         >
-          {area === "datasets" ? (
-            <img src="/assets/dataviz/datasetSelected.png" />
-          ) : (
-            <img src="/assets/dataviz/dataset.png" />
-          )}
+          <div className="icon">
+            {area === "datasets" ? (
+              <img src="/assets/dataviz/datasetSelected.png" />
+            ) : (
+              <img src="/assets/dataviz/dataset.png" />
+            )}
+          </div>
+          <div>Datasets</div>
         </div>
       </div>
 
       <div>
-        {area === "journals" && (
+        {area === "journals" && journal?.id && (
           <Breadcrumb size="massive">
             <BreadcrumbSection link>{journal?.title}</BreadcrumbSection>
             <BreadcrumbDivider icon="right angle" />
@@ -123,9 +130,12 @@ export default function TopNavigation({
             </BreadcrumbSection>
           </Breadcrumb>
         )}
+        {area === "journals" && !journal?.id && (
+          <div>Select a Journal to start ...</div>
+        )}
       </div>
       <div className="buttons">
-        {area === "journals" && (
+        {area === "journals" && workspace?.id && (
           <div>
             <button
               className="custonBtn"

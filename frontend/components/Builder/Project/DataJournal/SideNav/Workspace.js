@@ -1,4 +1,11 @@
+import { Dropdown, DropdownMenu } from "semantic-ui-react";
+
+import DeleteWorkspace from "../Helpers/DeleteWorkspace";
+
 export default function WorkspaceNavigation({
+  projectId,
+  studyId,
+  journal,
   workspace,
   isWorkspaceSelected,
   selectedWorkspace,
@@ -21,11 +28,27 @@ export default function WorkspaceNavigation({
   }
   return (
     <div className="selectedWorkspace">
-      <div className="titleLine">
-        <div>
-          <img src="/assets/dataviz/sidebar/workspaceSelected.png" />
+      <div className="titleHeader">
+        <div className="titleLine">
+          <div>
+            <img src="/assets/dataviz/sidebar/workspaceSelected.png" />
+          </div>
+          <div>{workspace?.title}</div>
         </div>
-        <div>{workspace?.title}</div>
+        <div>
+          <Dropdown
+            icon={<img src={`/assets/dataviz/three-dots.png`} />}
+            direction="left"
+          >
+            <DropdownMenu>
+              <DeleteWorkspace
+                journal={journal}
+                workspace={selectedWorkspace}
+                selectWorkspace={() => {}} // TODO finish it later to automatically select another workspace after deletion
+              />
+            </DropdownMenu>
+          </Dropdown>
+        </div>
       </div>
 
       {selectedWorkspace?.vizSections?.length ? (

@@ -38,6 +38,12 @@ export const StyledSidebar = styled.div`
       grid-gap: 4px;
       margin: 10px 0px 28px 0px;
     }
+    .titleHeader {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-gap: 8px;
+      align-items: center;
+    }
     .title {
       cursor: pointer;
       font-family: Nunito;
@@ -136,6 +142,34 @@ export const StyledSidebar = styled.div`
       align-items: center;
     }
   }
+  /* Change the default styles of the Dropdown Menu */
+  .menu {
+    border-radius: 8px !important;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07) !important;
+  }
+  /* Add the styles to the Dropdown Item inside the menu */
+  .menuItem {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 12px;
+    align-items: center;
+    color: #000;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  /* The button in the side menu */
+  .menuButton {
+    display: grid;
+    text-align: center;
+    padding: 11px 33px 11px 13px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
+    color: #000000;
+    cursor: pointer;
+  }
 `;
 
 export const StyledTopNavigation = styled.div`
@@ -173,9 +207,20 @@ export const StyledTopNavigation = styled.div`
     grid-template-columns: 1fr 1fr;
     grid-gap: 5px;
     border-right: 1px solid #e6e6e6;
-    .icon {
-      padding: 8px 10px;
+    .titleArea {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-gap: 5px;
+      align-items: center;
+      padding: 1px 15px;
+      margin: 5px 5px 5px 0px;
       cursor: pointer;
+      .icon {
+        display: grid;
+        padding: 8px 10px;
+        cursor: pointer;
+        align-items: center;
+      }
     }
     .active {
       background: #f4f8f7;
