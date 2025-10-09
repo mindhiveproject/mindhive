@@ -984,6 +984,21 @@ export const StyledActionCard = styled.div`
     margin: 0px 15px;
     display: grid;
   }
+
+  .deleteCardBtn {
+    position: absolute;
+    bottom: -12px;
+    left: -5px;
+    cursor: pointer;
+    img {
+      width: 20px;
+      opacity: 0.1;
+    }
+    img: hover {
+      opacity: 1;
+    }
+  }
+
   .card-information {
     display: grid;
     grid-gap: 10px;
@@ -1012,7 +1027,7 @@ export const DownloadButton = styled.button`
     gap: 8px;
     flex-shrink: 0;
     border-radius: 100px;
-    background: var(--MH-Theme-Primary-Dark, #336F8A);
+    background: var(--MH-Theme-Primary-Dark, #336f8a);
     :hover {
       transform: scale(1.05);
       transition: transform 1s;
@@ -1028,5 +1043,3 @@ export const DownloadButton = styled.button`
     }
   }
 `;
-
-

@@ -7,6 +7,8 @@ import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 import Inner from "./Inner";
 import useTranslation from "next-translate/useTranslation";
 
+import { Message } from "semantic-ui-react";
+
 import {
   CREATE_SECTION,
   UPDATE_SECTION,
@@ -31,6 +33,8 @@ const Board = ({
   const [createSection, createSectionState] = useMutation(CREATE_SECTION);
   const [updateSection, updateSectionState] = useMutation(UPDATE_SECTION);
   const [deleteSection, deleteSectionState] = useMutation(DELETE_SECTION);
+
+  const [errors, setErrors] = useState([]);
 
   useEffect(() => {
     if (proposal) {
@@ -57,19 +61,69 @@ const Board = ({
       `Error! ${error.message}`
     );
 
+  // Check for duplicate action cards only in proposalBuildMode
+  const actionTypes = [
+    "ACTION_SUBMIT",
+    "ACTION_PEER_FEEDBACK",
+    "ACTION_COLLECTING_DATA",
+    "ACTION_PROJECT_REPORT",
+  ];
+
+  useEffect(() => {
+    if (proposalBuildMode && proposal?.sections) {
+      let allCards = [];
+      proposal.sections.forEach((section) => {
+        if (section.cards) {
+          allCards = allCards.concat(section.cards);
+        }
+      });
+
+      let counts = {};
+      allCards.forEach((card) => {
+        if (actionTypes.includes(card.type)) {
+          counts[card.type] = (counts[card.type] || 0) + 1;
+        }
+      });
+
+      let newErrors = [];
+      for (let type in counts) {
+        if (counts[type] > 1) {
+          newErrors.push(
+            `There are ${counts[type]} cards of type ${type}. There should not be more than one action card of this type.`
+          );
+        }
+      }
+      setErrors(newErrors);
+    } else {
+      setErrors([]);
+    }
+  }, [proposal, proposalBuildMode]);
+
   return (
-    <Inner
-      board={proposal}
-      sections={sections}
-      onCreateSection={createSection}
-      onUpdateSection={updateSection}
-      onSetSections={setSections}
-      onDeleteSection={deleteSection}
-      openCard={openCard}
-      proposalBuildMode={proposalBuildMode}
-      adminMode={adminMode}
-      isPreview={isPreview}
-    />
+    <>
+      {proposalBuildMode && errors.length > 0 && (
+        <Message error>
+          <Message.Header>Error: Duplicate Action Cards</Message.Header>
+          <Message.List>
+            {errors.map((error, index) => (
+              <Message.Item key={index}>{error}</Message.Item>
+            ))}
+          </Message.List>
+        </Message>
+      )}
+      <Inner
+        board={proposal}
+        sections={sections}
+        onCreateSection={createSection}
+        onUpdateSection={updateSection}
+        onSetSections={setSections}
+        onDeleteSection={deleteSection}
+        openCard={openCard}
+        proposalBuildMode={proposalBuildMode}
+        adminMode={adminMode}
+        isPreview={isPreview}
+      />
+    </>
   );
 };
 

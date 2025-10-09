@@ -22,17 +22,17 @@ export default function ActionCard({
 
   return (
     <Draggable key={card.id}>
-      <StyledActionCard proposalBuildMode={proposalBuildMode}>
+      <StyledActionCard
+        proposalBuildMode={proposalBuildMode}
+        onClick={() => {
+          openCard(card);
+        }}
+      >
         <div className="card-drag-handle">
           <div className="card-information">
             <div className="card-left-side">
               {proposalBuildMode ? (
-                <img
-                  src="/assets/icons/upload.svg"
-                  onClick={() => {
-                    openCard(card);
-                  }}
-                />
+                <img src="/assets/icons/upload.svg" />
               ) : (
                 <img src="/assets/icons/status/publicTemplate.svg" />
               )}
@@ -41,32 +41,52 @@ export default function ActionCard({
               <div className="card-title">
                 {card?.type === "ACTION_SUBMIT" && (
                   <>
-                    <div>{t("actionCard.submitForProposalFeedback", "Submit for Proposal Feedback")}</div>
+                    <div>
+                      {t(
+                        "actionCard.submitForProposalFeedback",
+                        "Submit for Proposal Feedback"
+                      )}
+                    </div>
                   </>
                 )}
 
                 {card?.type === "ACTION_PEER_FEEDBACK" && (
                   <>
-                    <div>{t("actionCard.submitForPeerFeedback", "Submit for Peer Feedback")}</div>
+                    <div>
+                      {t(
+                        "actionCard.submitForPeerFeedback",
+                        "Submit for Peer Feedback"
+                      )}
+                    </div>
                   </>
                 )}
 
                 {card?.type === "ACTION_COLLECTING_DATA" && (
                   <>
-                    <div>{t("actionCard.submitForDataCollection", "Submit for Data Collection")}</div>
+                    <div>
+                      {t(
+                        "actionCard.submitForDataCollection",
+                        "Submit for Data Collection"
+                      )}
+                    </div>
                   </>
                 )}
 
                 {card?.type === "ACTION_PROJECT_REPORT" && (
                   <>
-                    <div>{t("actionCard.submitForProjectReport", "Submit for Project Report")}</div>
+                    <div>
+                      {t(
+                        "actionCard.submitForProjectReport",
+                        "Submit for Project Report"
+                      )}
+                    </div>
                   </>
                 )}
               </div>
             </div>
           </div>
         </div>
-        {settings?.allowAddingCards && (
+        {(proposalBuildMode || settings?.allowAddingCards) && (
           <div className="deleteCardBtn">
             <img
               src="/assets/icons/proposal/delete.svg"
@@ -74,7 +94,10 @@ export default function ActionCard({
                 e.stopPropagation();
                 if (
                   confirm(
-                    t("actionCard.deleteConfirm", "Are you sure you want to delete this card? This action cannot be undone.")
+                    t(
+                      "actionCard.deleteConfirm",
+                      "Are you sure you want to delete this card? This action cannot be undone."
+                    )
                   )
                 ) {
                   onDeleteCard(card.id);
