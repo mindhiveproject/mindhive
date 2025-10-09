@@ -687,7 +687,7 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
         <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("assignment.placeholder")}</p>
         <TipTapEditor
           content={editedAssignment.placeholder}
-          placeholder={t("assignment.placeholder", "Enter placeholder shown to students...")}
+          placeholder={t("assignment.instructionsPlaceholder", "Enter placeholder shown to students...")}
           onUpdate={(newContent) => handleFieldChange('placeholder', newContent)}
         />
 
