@@ -6,7 +6,9 @@ import useTranslation from "next-translate/useTranslation";
 import { GET_PROPOSAL_TEMPLATE_CLASSES } from "../../Queries/Proposal";
 import { GET_TEACHER_CLASSES, GET_MENTOR_CLASSES } from "../../Queries/Classes";
 import { GET_USERNAMES_WHERE } from "../../Queries/User";
+import { GET_BOARD_ASSIGNMENTS } from "../../Queries/Assignment";
 import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal"; // Adjust path to mutations
+import { EDIT_ASSIGNMENT } from "../../Mutations/Assignment";
 import StyledBoards from "../../styles/StyledBoards"; // Adjust path
 
 export default function ManageTemplateClasses({ user, boardId }) {
@@ -28,6 +30,12 @@ export default function ManageTemplateClasses({ user, boardId }) {
     skip: !boardId,
   });
 
+  // Fetch all assignments attached to any card on this board
+  const { data: boardAssignmentsData, loading: boardAssignmentsLoading } = useQuery(
+    GET_BOARD_ASSIGNMENTS,
+    { variables: { boardId }, skip: !boardId }
+  );
+
   const {
     data: mentorData,
     loading: mentorLoading,
@@ -48,6 +56,7 @@ export default function ManageTemplateClasses({ user, boardId }) {
 
   const [updateProposalBoard, { loading: updateLoading }] =
     useMutation(UPDATE_PROJECT_BOARD);
+  const [updateAssignment] = useMutation(EDIT_ASSIGNMENT);
 
   const [selectedClasses, setSelectedClasses] = useState([]);
   const [selectedCollaborators, setSelectedCollaborators] = useState([]);
@@ -87,7 +96,7 @@ export default function ManageTemplateClasses({ user, boardId }) {
   });
 
   if (!user) return <p>{t("boardManagement.pleaseLogin")}</p>;
-  if (boardLoading || classesLoading || mentorLoading || collabLoading)
+  if (boardLoading || classesLoading || mentorLoading || collabLoading || boardAssignmentsLoading)
     return <p>{t("boardManagement.loading")}</p>;
   if (boardError)
     return (
@@ -214,6 +223,39 @@ export default function ManageTemplateClasses({ user, boardId }) {
           { query: GET_PROPOSAL_TEMPLATE_CLASSES, variables: { id: boardId } },
         ],
       });
+
+      // After saving class associations on the board, ensure all board assignments are linked/unlinked to the selected classes
+      const assignments = boardAssignmentsData?.assignments || [];
+      const selectedClassIds = new Set(selectedClasses);
+      const initialClassIdsSet = new Set(initialClassIds);
+      
+      await Promise.all(
+        assignments.map(async (a) => {
+          const existing = new Set((a.classes || []).map((c) => c.id));
+          
+          // Connect assignments to newly selected classes
+          const toConnect = Array.from(selectedClassIds).filter((id) => !existing.has(id));
+          
+          // Disconnect assignments from classes that are being removed from the board
+          const toDisconnect = Array.from(existing).filter((id) => 
+            initialClassIdsSet.has(id) && !selectedClassIds.has(id)
+          );
+          
+          if (toConnect.length > 0 || toDisconnect.length > 0) {
+            await updateAssignment({
+              variables: {
+                id: a.id,
+                input: {
+                  classes: {
+                    ...(toConnect.length > 0 && { connect: toConnect.map((id) => ({ id })) }),
+                    ...(toDisconnect.length > 0 && { disconnect: toDisconnect.map((id) => ({ id })) }),
+                  },
+                },
+              },
+            });
+          }
+        })
+      );
       alert(t("boardManagement.changesSaved"));
     } catch (err) {
       alert(`${t("boardManagement.errorSavingChanges")} ${err.message}`);

@@ -33,6 +33,10 @@ class Sections extends Component {
       return;
     }
 
+    if (!payload || removedIndex === null || addedIndex === null) {
+      return;
+    }
+
     if (this.props.sections) {
       const updatePOS = this.calculatePosition(
         removedIndex,

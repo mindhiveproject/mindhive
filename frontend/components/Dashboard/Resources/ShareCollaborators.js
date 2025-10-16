@@ -114,7 +114,7 @@ export default function ShareCollaborators({ id, user, onClose }) {
           <div className="searchInputWrapper">
             <input
               type="text"
-              placeholder={t("boardManagement.searchPlaceholder")}
+              placeholder={t("boardManagement.searchPlaceholderUser")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />

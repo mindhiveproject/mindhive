@@ -1,5 +1,27 @@
 import gql from "graphql-tag";
 
+export const GET_ASSIGNMENTS_CHILD = gql`
+  query GET_ASSIGNMENTS_CHILD($parentId: ID!) {
+    assignments(where: { templateSource: { id: { equals: $parentId } } }) {
+      id
+      title
+      code
+      createdAt
+      author {
+        id
+        username
+      }
+      templateSource {
+        id
+        author {
+          id
+        }
+        title
+      }
+    }
+  }
+`;
+
 // get assignment by code
 export const GET_ASSIGNMENT = gql`
   query GET_ASSIGNMENT($code: String!) {
@@ -9,6 +31,10 @@ export const GET_ASSIGNMENT = gql`
       title
       content
       placeholder
+      templateSource {
+        id
+        title
+      }
       classes {
         id
       }
@@ -141,6 +167,18 @@ export const GET_MY_ASSIGNMENTS = gql`
       title
       content
       placeholder
+      public
+      templateSource {
+        id
+        title
+        author {
+          id
+        }
+      } 
+      classes {
+        id
+        title
+      }
     }
   }
 `;
@@ -156,6 +194,9 @@ export const GET_AN_ASSIGNMENT = gql`
       public
       code
       settings
+      author {
+        id
+      }
       homework {
         id
         title
@@ -166,6 +207,25 @@ export const GET_AN_ASSIGNMENT = gql`
         settings
         placeholder
       }
+      classes {
+        id
+      }
+    }
+  }
+`;
+
+// get assignments attached to any card on a board
+export const GET_BOARD_ASSIGNMENTS = gql`
+  query GET_BOARD_ASSIGNMENTS($boardId: ID!) {
+    assignments(
+      where: {
+        proposalCards: {
+          some: { section: { board: { id: { equals: $boardId } } } }
+        }
+      }
+    ) {
+      id
+      classes { id }
     }
   }
 `;
