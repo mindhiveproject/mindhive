@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useMutation, useApolloClient, gql } from "@apollo/client";
-import { Checkbox, Dropdown, Modal, Button } from "semantic-ui-react";
+import { Checkbox, Dropdown, Modal, Button, Popup } from "semantic-ui-react";
 import {
   UPDATE_CARD_CONTENT,
   UPDATE_CARD_EDIT,
@@ -394,7 +394,7 @@ export default function BuilderProposalCard({
             <div className="cardSubheaderComment">
               {t(
                 "board.expendedCard.titleText",
-                "Add or edit the card title. This title will appear as a section title if student input is made visible"
+                "Add or edit the card title. This title will appear as a section header in student submissions to the Feedback Center if the box titled 'Include text input for Feedback Center' is checked."
               )}
             </div>
             <p></p>
@@ -413,7 +413,7 @@ export default function BuilderProposalCard({
             <div className="cardSubheaderComment">
               {t(
                 "board.expendedCard.instructionsText",
-                "Add or edit instructions for students telling them how to complete the card"
+                "Add or edit instructions for students telling them how to complete the card."
               )}
             </div>
             <div className="jodit">
@@ -493,8 +493,26 @@ export default function BuilderProposalCard({
           </>
 
           {inputs?.settings?.includeInReport && (
-            <div>
-              <div className="cardSubheaderComment">{t("board.status")}</div>
+            <>
+              <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                <div className="cardSubheaderComment">{t("board.reviewPhase")}</div>
+                <Popup
+                  content={t("board.reviewPhaseDescription")}
+                  trigger={
+                    <img
+                    src="/assets/icons/question_mark.svg" // Next.js serves public/ as root
+                    alt="info"
+                    style={{
+                      width: "16px",
+                      height: "16px",
+                      marginLeft: "4px",
+                      cursor: "pointer",
+                      verticalAlign: "middle"
+                    }}
+                  />
+                  }
+                />
+              </div>
               <Dropdown
                 placeholder={t("board.expendedCard.select")}
                 fluid
@@ -516,7 +534,7 @@ export default function BuilderProposalCard({
                 }}
                 value={inputs?.settings?.includeInReviewSteps || []}
               />
-            </div>
+            </>
           )}
 
           <div>
@@ -551,13 +569,17 @@ export default function BuilderProposalCard({
             <div className="cardSubheaderComment">
               {t("board.expendedCard.commentsText")}
             </div>
-            <textarea
-              rows="5"
-              type="text"
-              id="comment"
-              name="comment"
-              value={inputs.comment}
-              onChange={handleChange}
+            <TipTapEditor
+              content={inputs.comment}
+              placeholder={t("board.commentPlaceholder", "Enter a comment...")}
+              onUpdate={(newContent) =>
+                handleChange({
+                  target: {
+                    name: "comment",
+                    value: newContent,
+                  },
+                })
+              }
             />
           </div>
         </div>
