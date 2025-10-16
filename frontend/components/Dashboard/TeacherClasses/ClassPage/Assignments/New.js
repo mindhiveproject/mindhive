@@ -40,7 +40,7 @@ export default function NewAssignment({ user, myclass, assignment, children }) {
 
   return (
     <AssignmentModal
-      btnName={t("assignment.save")}
+      btnName={t("assignment.saveOwnCopy")}
       assignment={assignment}
       inputs={inputs}
       handleChange={handleChange}

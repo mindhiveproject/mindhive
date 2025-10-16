@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 const StyledBoards = styled.div`
   padding: 2rem;
-  background: #f7fafc;
   min-height: 100vh;
 
   .headerSection {

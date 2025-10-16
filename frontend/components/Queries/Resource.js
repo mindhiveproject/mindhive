@@ -21,6 +21,22 @@ export const GET_PUBLIC_RESOURCES = gql`
   }
 `;
 
+// get all public assignment
+export const GET_TEMPLATE_ASSIGNMENT = gql`
+  query GET_TEMPLATE_ASSIGNMENT {
+    assignments(where: { isTemplate: { equals: true } }){
+      id
+      title
+      author {
+        id
+        username
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 // get my resources
 export const GET_MY_RESOURCES = gql`
   query GET_MY_RESOURCES($id: ID!) {
