@@ -1,9 +1,11 @@
 // this is a main central file to keep and sync the state of the workspace (VizChapter)
 
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { useState, useEffect } from "react";
 
 import { GET_WORKSPACE } from "../../../Queries/DataWorkspace";
+import { UPDATE_WORKSPACE } from "../../../Mutations/DataWorkspace";
+
 import { StyledDataWorkspace } from "./styles/StyledDataJournal";
 import filterData, { renameData } from "./Helpers/Filter";
 const prepareDataCode = ``;
@@ -58,6 +60,7 @@ export default function Workspace({
   const { data, loading, error } = useQuery(GET_WORKSPACE, {
     variables: { id: workspaceId },
     skip: !workspaceId,
+    fetchPolicy: "cache-and-network",
   });
 
   const workspaceServer = data?.vizChapter || null;
@@ -68,8 +71,23 @@ export default function Workspace({
     }
   }, [workspaceServer]);
 
+  const [updateWorkspaceOnServer, { data: updateWorkspaceOnServerData }] =
+    useMutation(UPDATE_WORKSPACE, {
+      refetchQueries: [],
+    });
+
   const updateWorkspace = (obj) => {
-    setWorkspace((prev) => ({ ...prev, ...obj }));
+    const updatedWorkspace = { ...workspace, ...obj };
+    setWorkspace(updatedWorkspace);
+    // run server mutation
+    updateWorkspaceOnServer({
+      variables: {
+        id: updatedWorkspace?.id,
+        input: {
+          layout: updatedWorkspace?.layout,
+        },
+      },
+    });
   };
 
   return (
@@ -83,6 +101,7 @@ export default function Workspace({
       journalId={journalId}
       selectJournalById={selectJournalById}
       workspaces={workspaces}
+      workspaceId={workspaceId}
       workspace={workspace}
       updateWorkspace={updateWorkspace}
       selectWorkspaceById={selectWorkspaceById}

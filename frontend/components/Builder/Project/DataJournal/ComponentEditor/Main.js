@@ -71,13 +71,13 @@ export default function ComponentEditor({
   return (
     <StyledDataComponent>
       <div className="buttons">
-        <Icon
+        {/* <Icon
           name="save"
           size="large"
           className="actionIcon"
           onClick={handleSave}
           title="Save"
-        />
+        /> */}
         <Icon
           name="trash"
           size="large"

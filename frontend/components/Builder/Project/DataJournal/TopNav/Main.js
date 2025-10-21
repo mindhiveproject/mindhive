@@ -7,7 +7,7 @@ import {
 } from "semantic-ui-react";
 
 import { StyledTopNavigation } from "../styles/StyledDataJournal";
-import SaveWorkspace from "../Workspace/Save";
+// import SaveWorkspace from "../Workspace/Save";
 
 import { UPDATE_VIZCHAPTER } from "../../../../Mutations/VizChapter";
 import { GET_WORKSPACE } from "../../../../Queries/DataWorkspace";

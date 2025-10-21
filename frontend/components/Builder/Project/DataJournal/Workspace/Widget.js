@@ -50,25 +50,23 @@ const WidgetContent = styled.div`
 `;
 
 function Widget({
+  widget,
   id,
   type,
   content,
   isActive,
   onSelect,
   onChange,
-  handleRemoveComponent,
+  // handleRemoveComponent,
   pyodide,
   data,
   variables,
   settings,
 }) {
+  // const { id, type, content } = widget;
+
   const handleChange = useCallback(
     (content) => {
-      // onChange({
-      //   componentId: id,
-      //   field: "text",
-      //   value: content,
-      // });
       onChange({
         componentId: id,
         value: content,
@@ -81,18 +79,9 @@ function Widget({
   const handleEdit = useCallback(
     (e) => {
       e.stopPropagation(); // Prevent triggering drag
-      onSelect(id);
+      onSelect(widget);
     },
     [id, onSelect]
-  );
-
-  // Handle remove button click
-  const handleRemove = useCallback(
-    (e) => {
-      e.stopPropagation(); // Prevent triggering drag
-      handleRemoveComponent(id);
-    },
-    [id, handleRemoveComponent]
   );
 
   // Render content based on component type
@@ -123,19 +112,7 @@ function Widget({
   return (
     <WidgetContainer className={isActive ? "active" : ""}>
       <WidgetHeader className="widget-header">
-        {/* <span>{type} Widget</span> */}
-        <div>
-          {/* <Button type="edit" className="widget-button">
-            Edit
-          </Button> */}
-          {/* <Button
-            type="remove"
-            className="widget-button"
-            onClick={handleRemove}
-          >
-            Remove
-          </Button> */}
-        </div>
+        <div></div>
       </WidgetHeader>
       <WidgetContent onClick={handleEdit}>{renderContent()}</WidgetContent>
     </WidgetContainer>

@@ -39,6 +39,7 @@ export default function Grid({
   journalId,
   selectJournalById,
   workspaces,
+  workspaceId,
   workspace,
   updateWorkspace,
   selectWorkspaceById,
@@ -49,7 +50,7 @@ export default function Grid({
 }) {
   const [area, setArea] = useState("journals");
   const [sidebarVisible, setSidebarVisible] = useState(true);
-  const [activeComponentId, setActiveComponentId] = useState(null);
+  const [activeComponent, setActiveComponent] = useState(null);
   const [isAddComponentPanelOpen, setIsAddComponentPanelOpen] = useState(false);
 
   const layout = useMemo(() => workspace?.layout || [], [workspace]);
@@ -107,14 +108,14 @@ export default function Grid({
     [updateWorkspace]
   );
 
-  const handleComponentSelect = useCallback(
-    (componentId) => {
-      setActiveComponentId((prev) =>
-        prev === componentId ? null : componentId
-      );
-    },
-    [activeComponentId]
-  );
+  const handleComponentSelect = (component) => {
+    if (activeComponent?.id === component?.id) {
+      handleSaveComponent(component?.id);
+      setActiveComponent(null); // close the component editor
+    } else {
+      setActiveComponent(component); // open the component editor
+    }
+  };
 
   const handleAddComponent = useCallback(
     async ({ title, type, content }) => {
@@ -153,7 +154,7 @@ export default function Grid({
       // close the add component panel
       setIsAddComponentPanelOpen(false);
       // open the panel
-      handleComponentSelect(newComponentId);
+      handleComponentSelect(newComponent);
     },
     [createComponent, workspace, layout, components, updateWorkspace]
   );
@@ -166,25 +167,10 @@ export default function Grid({
       const newComponents = components.filter((w) => w.id !== componentId);
       const newLayout = layout.filter((l) => l.i !== componentId);
       updateWorkspace({ vizSections: newComponents, layout: newLayout });
-      if (activeComponentId === componentId) setActiveComponentId(null);
+      if (activeComponent?.id === componentId) setActiveComponent(null);
     },
-    [deleteComponent, components, layout, activeComponentId, updateWorkspace]
+    [deleteComponent, components, layout, activeComponent, updateWorkspace]
   );
-
-  // const handleUpdateComponent = useCallback(
-  //   ({ componentId, field, value }) => {
-  //     const updatedComponents = components.map((comp) =>
-  //       comp.id === componentId
-  //         ? {
-  //             ...comp,
-  //             content: { ...comp?.content, [field]: value },
-  //           }
-  //         : comp
-  //     );
-  //     updateWorkspace({ vizSections: updatedComponents });
-  //   },
-  //   [components, updateWorkspace]
-  // );
 
   const handleUpdateComponent = useCallback(
     ({ componentId, newContent }) => {
@@ -203,14 +189,16 @@ export default function Grid({
 
   const handleSaveComponent = useCallback(
     async (componentId) => {
-      const component = components.find((comp) => comp.id === componentId);
-      if (component) {
+      const updatedComponent = components.find(
+        (comp) => comp.id === componentId
+      );
+      if (updatedComponent) {
         try {
           await updateComponent({
             variables: {
-              id: componentId,
+              id: updatedComponent?.id,
               input: {
-                content: component.content,
+                content: updatedComponent.content,
               },
             },
           });
@@ -232,9 +220,7 @@ export default function Grid({
         area={area}
         journal={journal}
         workspace={workspace}
-        activeComponent={components.find(
-          (comp) => comp.id === activeComponentId
-        )}
+        activeComponent={activeComponent}
         handleAddComponent={handleAddComponent}
         toggleComponentPanel={toggleComponentPanel}
         setArea={setArea}
@@ -317,13 +303,14 @@ export default function Grid({
                         style={{ position: "static" }}
                       >
                         <Widget
+                          widget={widget}
                           id={widget.id}
                           type={widget.type}
                           content={widget.content}
-                          isActive={widget.id === activeComponentId}
+                          isActive={widget.id === activeComponent?.id}
                           onSelect={handleComponentSelect}
                           onChange={handleUpdateComponent}
-                          handleRemoveComponent={handleRemoveComponent}
+                          // handleRemoveComponent={handleRemoveComponent}
                           pyodide={pyodide}
                           data={data}
                           variables={variables}
@@ -336,15 +323,13 @@ export default function Grid({
               </div>
             </SidebarPusher>
           </SidebarPushable>
-          {activeComponentId && (
+          {activeComponent && (
             <StyledRightPanel>
               <ComponentEditor
-                component={components.find(
-                  (comp) => comp.id === activeComponentId
-                )}
+                component={activeComponent}
                 onChange={handleUpdateComponent}
-                onSave={() => handleSaveComponent(activeComponentId)}
-                onDelete={() => handleRemoveComponent(activeComponentId)}
+                onSave={() => handleSaveComponent(activeComponent?.id)}
+                onDelete={() => handleRemoveComponent(activeComponent?.id)}
                 pyodide={pyodide}
                 data={data}
                 variables={variables}
