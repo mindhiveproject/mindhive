@@ -242,10 +242,11 @@ export default function BuilderProposalCard({
     const tasksUpdate = buildRelationUpdate(tasksDiff);
     const studiesUpdate = buildRelationUpdate(studiesDiff);
 
-    // Build updateData with description, title (propagate title changes), and conditional relational updates
+    // Build updateData with description, title (propagate title changes), settings (propagate settings changes), and conditional relational updates
     const updateData = {
       description: description.current,
       title: inputs?.title, // Propagate title changes to clones for consistency
+      settings: inputs?.settings, // Propagate settings to clones for consistency
       ...(resourcesUpdate && { resources: resourcesUpdate }),
       ...(assignmentsUpdate && { assignments: assignmentsUpdate }),
       ...(tasksUpdate && { tasks: tasksUpdate }),
@@ -368,9 +369,9 @@ export default function BuilderProposalCard({
           <p>
             This board has {proposal?.prototypeFor?.length} cloned project
             board(s). Do you want to update the corresponding cards in all
-            cloned project boards with these changes? (This will update
-            descriptions and linked items: resources, assignments, tasks, and
-            studies.)
+            cloned project boards with these changes? (This will update titles,
+            descriptions, settings, and linked items: resources, assignments,
+            tasks, and studies.)
           </p>
         </Modal.Content>
         <Modal.Actions>
@@ -494,22 +495,26 @@ export default function BuilderProposalCard({
 
           {inputs?.settings?.includeInReport && (
             <>
-              <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                <div className="cardSubheaderComment">{t("board.reviewPhase")}</div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              >
+                <div className="cardSubheaderComment">
+                  {t("board.reviewPhase")}
+                </div>
                 <Popup
                   content={t("board.reviewPhaseDescription")}
                   trigger={
                     <img
-                    src="/assets/icons/question_mark.svg" // Next.js serves public/ as root
-                    alt="info"
-                    style={{
-                      width: "16px",
-                      height: "16px",
-                      marginLeft: "4px",
-                      cursor: "pointer",
-                      verticalAlign: "middle"
-                    }}
-                  />
+                      src="/assets/icons/question_mark.svg" // Next.js serves public/ as root
+                      alt="info"
+                      style={{
+                        width: "16px",
+                        height: "16px",
+                        marginLeft: "4px",
+                        cursor: "pointer",
+                        verticalAlign: "middle",
+                      }}
+                    />
                   }
                 />
               </div>
