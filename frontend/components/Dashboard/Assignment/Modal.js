@@ -2,7 +2,8 @@ import { useState } from "react";
 
 import StyledModal from "../../styles/StyledModal";
 import { Modal } from "semantic-ui-react";
-import JoditEditor from "../../Jodit/Editor";
+import TipTapEditor from "../../TipTap/Main";
+import useTranslation from "next-translate/useTranslation";
 import Status from "../TeacherClasses/ClassPage/Assignments/Homework/Status";
 
 export default function HomeworkModal({
@@ -14,6 +15,7 @@ export default function HomeworkModal({
   submit,
   children,
 }) {
+  const t = useTranslation("classes")
   const [open, setOpen] = useState(false);
 
   return (
@@ -42,9 +44,9 @@ export default function HomeworkModal({
               <h4>Status</h4>
               <Status settings={inputs?.settings} handleChange={handleChange} />
             </div>
-            <JoditEditor
+            <TipTapEditor
               content={content?.current}
-              setContent={updateContent}
+              onUpdate={updateContent}
             />
 
             <button

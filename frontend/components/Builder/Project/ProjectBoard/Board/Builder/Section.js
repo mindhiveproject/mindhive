@@ -348,7 +348,9 @@ const Section = ({
           orientation="vertical"
           groupName="col"
           onDrop={(e) => {
-            onCardDrop(section.id, e.addedIndex, e.removedIndex, e.payload);
+            if (e) {
+              onCardDrop(section.id, e.addedIndex, e.removedIndex, e.payload);
+            }
           }}
           dragClass="card-ghost"
           dropClass="card-ghost-drop"

@@ -49,6 +49,10 @@ export const Assignment = list({
         },
       },
     }),
+    templateSource: relationship({
+      ref: "Assignment",
+      many: false,
+    }),
     classes: relationship({
       ref: "Class.assignments",
       many: true,

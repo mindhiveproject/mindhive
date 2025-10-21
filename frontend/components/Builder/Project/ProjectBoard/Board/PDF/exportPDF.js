@@ -45,7 +45,7 @@ export default async function exportPDF(proposalId, client, t) {
 
 function generatePDFBrowserPrint(content, title, date, t) {
   const printWindow = window.open('', '_blank');
-  const printLabel = typeof t === 'function' ? t('printButton') : 'Print/Save as PDF';
+  const printLabel = typeof t === 'function' ? t('proposalPage.download') : 'Download';
   const closeLabel = typeof t === 'function' ? t('closeButton') : '✕ Close';
   const htmlContent = `
     <!DOCTYPE html>

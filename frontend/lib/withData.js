@@ -32,7 +32,35 @@ function createClient({ headers, initialState }) {
         },
       }),
     ]),
-    cache: new InMemoryCache({}).restore(initialState || {}),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Assignment: {
+          fields: {
+            classes: {
+              merge(existing = [], incoming = []) {
+                // If incoming is empty, return existing
+                if (!incoming || incoming.length === 0) {
+                  return existing;
+                }
+                // If existing is empty, return incoming
+                if (!existing || existing.length === 0) {
+                  return incoming;
+                }
+                // Merge arrays by combining unique items based on id
+                const existingIds = new Set(existing.map(item => item.id));
+                const merged = [...existing];
+                incoming.forEach(item => {
+                  if (!existingIds.has(item.id)) {
+                    merged.push(item);
+                  }
+                });
+                return merged;
+              }
+            }
+          }
+        }
+      }
+    }).restore(initialState || {}),
   });
 }
 

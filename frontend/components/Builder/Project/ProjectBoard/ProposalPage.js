@@ -37,7 +37,7 @@ export default function ProposalPage({ user, proposalId }) {
             {isPDF && (
               <>
                 <button onClick={() => exportPDF(proposalId, client, t)} className="narrowButtonSecondary">
-                  <Icon name="download"/> {t("proposalPage.download", "Download")}
+                  <Icon name="download"/> {t("printButton", "Print/Save as PDF")}
                 </button>
                 {/* <span>
                   <div className="preview">
