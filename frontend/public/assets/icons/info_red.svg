@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="info_red.svg"
+   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="1.0833333"
+     inkscape:cx="12"
+     inkscape:cy="11.538462"
+     inkscape:window-width="1512"
+     inkscape:window-height="916"
+     inkscape:window-x="0"
+     inkscape:window-y="38"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <circle
+     cx="12"
+     cy="12"
+     r="9"
+     stroke="#212529"
+     stroke-width="1.5"
+     id="circle1"
+     style="stroke:#b9261a;stroke-opacity:1" />
+  <path
+     d="M12 9V9.001"
+     stroke="#212529"
+     stroke-width="2"
+     stroke-linecap="round"
+     id="path1"
+     style="stroke:#b9261a;stroke-opacity:1" />
+  <line
+     x1="12"
+     y1="12"
+     x2="12"
+     y2="16"
+     stroke="#212529"
+     stroke-width="2"
+     stroke-linecap="round"
+     id="line1"
+     style="stroke:#b9261a;stroke-opacity:1" />
+</svg>

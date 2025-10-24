@@ -361,7 +361,7 @@
 		"revisedContent": "Conteúdo Revisado",
 		"revisedContentUsed": "O conteúdo revisado que você incluir aqui será usado no relatório final.",
 		"selectOption": "Selecione a opção",
-		"visibleInFeedbackCenter": "O conteúdo que você incluir aqui ficará visível no Centro de Feedback assim que for enviado por meio de um Cartão de Ação.",
+		"visibleInFeedbackCenter": "O conteúdo que você incluir aqui ficará visível no Centro de Feedback assim que for enviado por meio de um Cartão de Ação amarelo.",
 		"visibleToTeacherAndCollaborators": "O conteúdo que você incluir abaixo só será visível para seu(s) professor(es) e colaboradores do projeto"
 	},
 	"makeMain": {
@@ -515,7 +515,7 @@
 		"uploadPreview": "Carregar visualização",
 		"uploadStudyImage": "Carregar imagem do estudo"
 	},
-	"printButton": "📄 Imprimir/Salvar como PDF",
+	"printButton": "Imprimir/Salvar como PDF",
 	"project": {
 		"cancel": "Cancelar",
 		"chooseStudy": "Escolha um estudo...",
@@ -661,6 +661,7 @@
 		"sortedByNewest": ", classificado do mais novo para o mais antigo",
 		"sortedByOldest": ", classificados do mais antigo para o mais novo",
 		"studyInPeerReview": "ESTUDO EM REVISÃO POR PARES",
+		"suggestedTasks": "Tarefas sugeridas",
 		"undefined": "Indefinido"
 	},
 	"reviewDetail": {
@@ -711,7 +712,7 @@
 		"whyTab": "Por que"
 	},
 	"reviewTemplate": {
-		"additionalComments": "Use o espaço abaixo para quaisquer comentários ou sugestões adicionais",
+		"additionalComments": "Use o espaço abaixo para quaisquer comentários ou sugestões adicionais.",
 		"additionalCommentsSubtitle": "Você pode mencionar qualquer coisa aqui, mas considere: clareza e/ou relevância da questão da investigação, viabilidade dentro do escopo do MindHive, obstáculos éticos, motivação do estudo/pesquisa de base, alinhamento da população participante com a questão da investigação.",
 		"confoundsQuestion": "Como os pesquisadores abordam possíveis fatores de confusão e vieses no desenho do estudo?",
 		"confoundsSubA": "Se os pesquisadores não conseguirem levar em conta algumas dessas confusões ou vieses no desenho do estudo, como eles os abordam em suas propostas de estudo (por exemplo, explicações alternativas/limitações do estudo)?",
@@ -727,7 +728,7 @@
 		"importanceSubB": "Como você revisaria a questão da investigação para esclarecer sua importância? Explique sua resposta.",
 		"isQuestionAnswerable": "A questão da investigação pode ser respondida com as ferramentas da MindHive? As tarefas e pesquisas propostas estão alinhadas com a questão da investigação? Você tem alguma sugestão de tarefas e pesquisas adicionais ou alternativas que possam ser adequadas para esta questão da investigação?",
 		"needsMinorAdjustments": "Precisa de pequenos ajustes",
-		"needsMinorAdjustmentsSubtitle": "A proposta está quase completa, mas poderia se beneficiar de pequenas melhorias ou refinamentos, como esclarecer a questão da pesquisa ou abordar pequenas lacunas.",
+		"needsMinorAdjustmentsSubtitle": "A proposta está praticamente completa, mas poderia se beneficiar de pequenas melhorias ou refinamentos, como esclarecer a questão da investigação ou abordar pequenas lacunas.",
 		"needsSignificantWork": "Precisa de trabalho significativo",
 		"needsSignificantWorkSubtitle": "O projeto está incompleto ou apresenta lacunas importantes que precisam de atenção. Pode ser necessário mais pesquisa, uma estrutura mais clara ou conteúdo adicional antes de prosseguir.",
 		"oneSentence": "Isso poderia ser apenas uma frase.",
@@ -928,6 +929,7 @@
 	},
 	"surveyBuilder": {
 		"addFirstPage": "Adicione sua primeira página",
+		"addItem": "+",
 		"addItemBtn": "+ item",
 		"addOption": "+ opção",
 		"addPage": "+",
@@ -936,6 +938,7 @@
 		"deletePage": "Excluir esta página",
 		"freeinput": "Entrada de texto",
 		"header": "Cabeçalho",
+		"hideContinueBtn": "Ocultar botão Continuar",
 		"likert": "Escala Likert",
 		"likertItems": "Itens para a Escala Likert",
 		"maxValue": "Valor máximo",
@@ -944,6 +947,7 @@
 		"minValueLabel": "Rótulo de valor mínimo",
 		"options": "Opções",
 		"page": "Página {{número}}",
+		"pageTimeout": "Tempo limite da página (em milissegundos)",
 		"select": "Múltipla escolha (selecione uma)",
 		"text": "Texto",
 		"textLabel": "Texto",

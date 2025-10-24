@@ -361,7 +361,7 @@
 		"revisedContent": "修订内容",
 		"revisedContentUsed": "您在此处包含的修订内容将用于最终报告。",
 		"selectOption": "选择选项",
-		"visibleInFeedbackCenter": "您在此处包含的内容一旦通过行动卡提交，就会显示在反馈中心中。",
+		"visibleInFeedbackCenter": "一旦通过黄色行动卡提交，您在此处包含的内容将显示在反馈中心。",
 		"visibleToTeacherAndCollaborators": "您在下面包含的内容只有您的老师和项目合作者才能看到"
 	},
 	"makeMain": {
@@ -515,7 +515,7 @@
 		"uploadPreview": "上传预览",
 		"uploadStudyImage": "上传学习图片"
 	},
-	"printButton": "📄 打印/保存为 PDF",
+	"printButton": "打印/保存为 PDF",
 	"project": {
 		"cancel": "取消",
 		"chooseStudy": "选择一项研究...",
@@ -661,6 +661,7 @@
 		"sortedByNewest": "，按最新到最旧排序",
 		"sortedByOldest": "，按从旧到新排序",
 		"studyInPeerReview": "同行评审研究",
+		"suggestedTasks": "建议的任务",
 		"undefined": "不明确的"
 	},
 	"reviewDetail": {
@@ -727,7 +728,7 @@
 		"importanceSubB": "你会如何修改调查问题以阐明其重要性？解释你的答案。",
 		"isQuestionAnswerable": "这个调查问题可以用 MindHive 工具来解答吗？建议的任务和调查问卷是否与调查问题相符？你对其他或替代的任务和调查问卷有什么建议，可以用于这个调查问题吗？",
 		"needsMinorAdjustments": "需要微调",
-		"needsMinorAdjustmentsSubtitle": "该提案基本完整，但可以通过小的改进或完善受益，例如澄清研究问题或解决小差距。",
+		"needsMinorAdjustmentsSubtitle": "该提案基本完整，但可以通过一些小的改进或完善来获益，例如澄清调查问题或解决小的差距。",
 		"needsSignificantWork": "需要大量工作",
 		"needsSignificantWorkSubtitle": "项目尚未完成，或存在需要关注的重大缺陷。在推进之前，可能需要进行更多研究、完善结构或补充内容。",
 		"oneSentence": "这可能只是一句话。",
@@ -928,6 +929,7 @@
 	},
 	"surveyBuilder": {
 		"addFirstPage": "添加您的第一页",
+		"addItem": "+",
 		"addItemBtn": "+ 项目",
 		"addOption": "+ 选项",
 		"addPage": "+",
@@ -936,6 +938,7 @@
 		"deletePage": "删除此页面",
 		"freeinput": "文本输入",
 		"header": "标头",
+		"hideContinueBtn": "隐藏“继续”按钮",
 		"likert": "李克特量表",
 		"likertItems": "李克特量表的项目",
 		"maxValue": "最大值",
@@ -944,6 +947,7 @@
 		"minValueLabel": "最小值标签",
 		"options": "选项",
 		"page": "页码}}",
+		"pageTimeout": "页面超时（毫秒）",
 		"select": "多项选择（选择一项）",
 		"text": "文本",
 		"textLabel": "文本",
