@@ -162,7 +162,7 @@ export default function EmptyState({ studyId }) {
   return (
     <div className="contents">
       <div className="emptyStateHeader">
-        It looks like you still don’t have any data visualizations!
+        It looks like you still don’t have any data journals!
       </div>
       <div className="emptyStateButtons">
         <div className="menuButton">

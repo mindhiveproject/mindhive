@@ -82,8 +82,9 @@ export default function JournalNavigation({
           <Dropdown
             icon={<img src={`/assets/dataviz/three-dots.png`} />}
             direction="left"
+            id="journalSettings"
           >
-            <DropdownMenu>
+            <DropdownMenu>           
               <EditJournal
                 user={user}
                 projectId={projectId}

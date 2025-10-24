@@ -97,6 +97,7 @@ export default function Contents({
             <Dropdown
               icon={<img src={`/assets/icons/visualize/more_vert.svg`} />}
               direction="left"
+              id="journalSettings"
             >
               <DropdownMenu>
                 <PartSettings user={user} studyId={studyId} part={part} />
