@@ -197,7 +197,7 @@ export default function EmptyState({ projectId, studyId }) {
   };
 
   return (
-    <div className="contents">
+    <div className="contents" id="navigation">
       <div className="emptyStateHeader">
         It looks like you still don’t have any data journals!
       </div>
@@ -209,7 +209,7 @@ export default function EmptyState({ projectId, studyId }) {
           icon={
             <div className="menuItem menuButton">
               <img src={`/assets/icons/visualize/draft.svg`} />
-              <div>From scratch</div>
+              <div id="createFromScratchButton" >From scratch</div>
             </div>
           }
         >
@@ -219,7 +219,7 @@ export default function EmptyState({ projectId, studyId }) {
               onClick={() => initializeJournal({ dataOrigin: "STUDY" })}
             >
               <img src={`/assets/icons/visualize/content_paste_go.svg`} />
-              <div>Use study data</div>
+              <div id= "useStudyData" >Use study data</div>
             </div>
             <label htmlFor="fileUpload">
               <input

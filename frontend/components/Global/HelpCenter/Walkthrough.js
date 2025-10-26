@@ -305,12 +305,35 @@ export default function Walkthrough({ onStartWalkthrough }) {
             }
             break;
           case "journal": // TODO: add tours for visualize -- Not doing till the UI is ready
+            // Import tours directly without importing the component
             try {
-              componentImport = await import(
-                "../../Builder/Project/DataJournal/Main.js"
-              );
+              const currentLocale = router.locale || "en-us";
+              let journalToursImport;
+
+              // Try localized tour file first
+              if (currentLocale !== "en-us") {
+                try {
+                  journalToursImport = await import(
+                    `../../Builder/Project/DataJournal/tours.${currentLocale}.js`
+                  );
+                } catch (localizedError) {
+                  // Fallback to English
+                  journalToursImport = await import(
+                    "../../Builder/Project/DataJournal/tours.js"
+                  );
+                }
+              } else {
+                journalToursImport = await import(
+                  "../../Builder/Project/DataJournal/tours.js"
+                );
+              }
+
+              componentImport = {
+                default: { hasTour: true },
+                tours: journalToursImport.journalTours,
+              };
             } catch (error) {
-              console.error("Failed to import journal wrapper:", error);
+              console.error("Failed to import journal tours:", error);
               setHasTour(false);
               return;
             }

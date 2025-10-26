@@ -61,7 +61,7 @@ export default function Contents({
   };
 
   return (
-    <div className="contents">
+    <div className="contents" id="navigation">
       {sortBy(journal?.vizParts, [
         (part) => part?.position || new Date(part?.createdAt).getTime(),
       ]).map((part, num) => (

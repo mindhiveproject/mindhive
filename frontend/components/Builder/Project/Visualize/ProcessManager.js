@@ -99,7 +99,9 @@ export default function ProcessManager({
   return (
     <>
       <StyledDataViz>
-        <div className={`vizMenu ${page === "browse" ? "navigation-mode" : ""}`}>
+        <div className={`vizMenu ${page === "browse" ? "navigation-mode" : ""}`}
+        id="vizMenu"
+        >
           <Overview
             user={user}
             page={page}

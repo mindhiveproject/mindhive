@@ -9,6 +9,7 @@ import sortBy from "lodash/sortBy";
 
 export default function Contents({
   user,
+  projectId,
   studyId,
   journal,
   activePart,
@@ -61,7 +62,7 @@ export default function Contents({
   };
 
   return (
-    <div className="contents">
+    <div className="contents" id="navigation">
       {sortBy(journal?.vizParts, [
         (part) => part?.position || new Date(part?.createdAt).getTime(),
       ]).map((part, num) => (
@@ -100,7 +101,7 @@ export default function Contents({
               id="journalSettings"
             >
               <DropdownMenu>
-                <PartSettings user={user} studyId={studyId} part={part} />
+                <PartSettings user={user} projectId={projectId} studyId={studyId} part={part} />
                 <DeletePart studyId={studyId} part={part} />
                 <DropdownItem>
                   <div

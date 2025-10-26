@@ -112,6 +112,7 @@ export default function ProcessManager({
       <div className="main">
         <div
           className={`vizMenu ${page === "browse" ? "navigation-mode" : ""}`}
+          id="vizMenu"
         >
           <Overview
             user={user}

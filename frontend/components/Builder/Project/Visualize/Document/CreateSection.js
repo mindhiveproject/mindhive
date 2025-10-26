@@ -49,7 +49,7 @@ export default function CreateSection({ projectId, studyId, chapterId }) {
   };
 
   return (
-    <Dropdown icon={<img src={`/assets/icons/visualize/add.svg`} />}>
+    <Dropdown icon={<img src={`/assets/icons/visualize/add.svg`} />} id="addSectionButton" >
       <DropdownMenu>
         <DropdownItem
           onClick={() => addSection({ type: "PARAGRAPH", title: "Text" })}

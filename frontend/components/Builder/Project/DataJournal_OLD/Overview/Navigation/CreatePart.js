@@ -180,7 +180,7 @@ export default function CreatePart({
       <DropdownItem>
         <div className="menuItem" onClick={() => addPart()}>
           <img src={`/assets/icons/visualize/content_paste_go.svg`} />
-          <div>Use study data</div>
+          <div id= "useStudyData" >Use study data</div>
         </div>
       </DropdownItem>
     );

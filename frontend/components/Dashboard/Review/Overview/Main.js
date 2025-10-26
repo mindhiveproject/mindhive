@@ -123,7 +123,7 @@ export default function Overview({ query, user }) {
   });
 
   return (
-    <div className="overview">
+    <div className="overview" id="overview">
       <div className="h40">{t("review.feedbackCenter")}</div>
       <div className="h24">{t("review.overviewIntro")}</div>
 
