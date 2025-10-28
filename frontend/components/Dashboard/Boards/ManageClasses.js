@@ -269,6 +269,11 @@ export default function ManageTemplateClasses({ user, boardId }) {
   return (
     <StyledBoards>
       <div className="headerSection">
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button className="backButton" onClick={goBack}>
+            <Icon name="arrow left" /> {t("boardManagement.goBack")}
+          </Button>
+        </div>
         <h1>
           {t("boardManagement.manageClassesForTemplate")} {board.title}
         </h1>
@@ -307,10 +312,7 @@ export default function ManageTemplateClasses({ user, boardId }) {
               onClick={handleSave}
               loading={updateLoading}
             >
-              <Icon name="check" /> {t("boardManagement.saveChanges")}
-            </Button>
-            <Button className="backButton" onClick={goBack}>
-              <Icon name="arrow left" /> {t("boardManagement.goBack")}
+              {t("boardManagement.saveChanges")}
             </Button>
           </div>
         </div>
