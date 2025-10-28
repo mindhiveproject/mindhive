@@ -12,6 +12,7 @@ export const GET_DATA_JOURNALS = gql`
           id
           dataOrigin
         }
+        createdAt
         updatedAt
       }
     }

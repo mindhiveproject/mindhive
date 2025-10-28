@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
 import { UPDATE_VIZPART } from "../../../../Mutations/VizPart";
+import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 
 import {
   StyledModalOverlay,
@@ -28,20 +29,47 @@ export default function DataSourceModal({
 
   const { data, loading, error, refetch } = useQuery(GET_DATASOURCES, {
     variables: {
-      where: journal?.id
-        ? {
-            OR: [
-              { project: { id: { equals: projectId } } },
-              { study: { id: { equals: studyId } } },
-            ],
-          }
-        : null,
+      where:
+        projectId && studyId
+          ? {
+              OR: [
+                { project: { id: { equals: projectId } } },
+                { study: { id: { equals: studyId } } },
+              ],
+            }
+          : projectId
+          ? { project: { id: { equals: projectId } } }
+          : studyId
+          ? { study: { id: { equals: studyId } } }
+          : null,
     },
-    skip: !isOpen,
   });
 
-  const [updateVizPart, { loading: updateLoading }] =
-    useMutation(UPDATE_VIZPART);
+  const [updateVizPart, { loading: updateLoading }] = useMutation(
+    UPDATE_VIZPART,
+    {
+      refetchQueries: [
+        {
+          query: GET_DATA_JOURNALS,
+          variables: {
+            where:
+              projectId && studyId
+                ? {
+                    OR: [
+                      { project: { id: { equals: projectId } } },
+                      { study: { id: { equals: studyId } } },
+                    ],
+                  }
+                : projectId
+                ? { project: { id: { equals: projectId } } }
+                : studyId
+                ? { study: { id: { equals: studyId } } }
+                : null,
+          },
+        },
+      ],
+    }
+  );
 
   const datasources = data?.datasources || [];
 
@@ -104,6 +132,7 @@ export default function DataSourceModal({
         <StyledModalBody>
           {loading && <div>Loading datasets...</div>}
           {error && <div>Error: {error.message}</div>}
+          {datasources?.length === 0 && <div>No datasets found</div>}
           {!loading && !error && (
             <StyledDataSourceList>
               {datasources.map((datasource) => {

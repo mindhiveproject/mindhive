@@ -60,7 +60,18 @@ export default function JournalNavigation({
           {journal?.title}
         </div>
         <div className="timestamp">
-          Last updated: {moment(journal.updatedAt).format("MMMM D, YYYY, h:mm")}
+          Last updated:
+          {journal?.updatedAt ? (
+            <span>
+              {" "}
+              {moment(journal.updatedAt).format("MMMM D, YYYY, h:mm")}
+            </span>
+          ) : (
+            <span>
+              {" "}
+              {moment(journal.createdAt).format("MMMM D, YYYY, h:mm")}
+            </span>
+          )}
         </div>
         <div
           className="dataSource"
@@ -102,7 +113,12 @@ export default function JournalNavigation({
       </div>
 
       <div className="timestamp">
-        Last updated: {moment(journal.updatedAt).format("MMMM D, YYYY, h:mm")}
+        Last updated:
+        {journal?.updatedAt ? (
+          <span> {moment(journal.updatedAt).format("MMMM D, YYYY, h:mm")}</span>
+        ) : (
+          <span> {moment(journal.createdAt).format("MMMM D, YYYY, h:mm")}</span>
+        )}
       </div>
       <div
         className="dataSource"

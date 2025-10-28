@@ -253,6 +253,71 @@ export const StyledDataComponent = styled.div`
       }
     }
   }
+  .menuItemThreeDiv {
+    display: grid;
+    grid-template-columns: 15px auto;
+    grid-column-gap: 12px;
+    grid-row-gap: 7px;
+    max-width: 250px;
+    align-items: center;
+    color: #000;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  .menuItem {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 12px;
+    align-items: center;
+    color: #000;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  .menuButton {
+    padding: 11px 33px 11px 13px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.07);
+    color: #000000;
+    cursor: pointer;
+  }
+  .menuItemDataStruct {
+    display: grid;
+    grid-template-columns: 350px;
+    grid-template-rows: 200px auto;
+    padding: 20px;
+    grid-gap: 12px;
+    align-items: start;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    cursor: pointer;
+    .img {
+      width: 100%;
+      height: auto;
+    }
+    div {
+      display: flex;
+      justify-content: start;
+      width: 350px;
+    }
+    h3 {
+      font-size: 18px;
+      color: #007c70;
+      margin: 0;
+    }
+    p {
+      font-size: 14px;
+      width: auto;
+      margin: 0 4;
+      word-break: break-word;
+      white-space: normal;
+    }
+  }
 `;
 
 export const StyledRightPanel = styled.div`
@@ -529,7 +594,7 @@ export const StyledDataWorkspace = styled.div`
     .customTabs {
       display: grid;
       grid-template-rows: auto 1fr;
-      .menu {
+      /* .menu {
         display: grid;
         grid-template-columns: repeat(3, auto);
         grid-gap: 10px;
@@ -550,6 +615,21 @@ export const StyledDataWorkspace = styled.div`
             color: white;
             font-weight: 700;
           }
+        }
+      } */
+      .item {
+        font-family: Nunito;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 20px;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 8px;
+        color: #666;
+        &.active {
+          background: #336f8a;
+          color: white;
+          font-weight: 700;
         }
       }
       .tabContent {
