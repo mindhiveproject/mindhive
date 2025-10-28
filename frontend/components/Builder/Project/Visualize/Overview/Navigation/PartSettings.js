@@ -20,17 +20,6 @@ export default function PartSettings({ user, projectId, studyId, part }) {
   });
 
   const [updatePart, { data, loading, error }] = useMutation(UPDATE_VIZPART, {
-    variables: {
-      id: part?.id,
-      input: {
-        title: inputs?.title,
-        description: inputs?.description,
-        isTemplate: inputs?.isTemplate,
-        settings: {
-          studyId: studyId,
-        },
-      },
-    },
     refetchQueries: [
       {
         query: GET_VIZJOURNALS,
@@ -54,7 +43,19 @@ export default function PartSettings({ user, projectId, studyId, part }) {
   });
 
   const update = async () => {
-    await updatePart();
+    await updatePart({
+      variables: {
+        id: part?.id,
+        input: {
+          title: inputs?.title,
+          description: inputs?.description,
+          isTemplate: inputs?.isTemplate,
+          settings: {
+            studyId: studyId,
+          },
+        },
+      },
+    });
     setIsOpen(false);
   };
 
@@ -124,9 +125,41 @@ export default function PartSettings({ user, projectId, studyId, part }) {
             </fieldset>
           </StyledInput>
         </Modal.Content>
-        <Modal.Actions>
-          <button onClick={() => setIsOpen(false)}>Close without saving</button>
-          <button onClick={() => update()}>Save & Close</button>
+        <Modal.Actions style={{ display: "flex", gap: "16px" }}>
+          <button
+            style={{
+              display: "inline-flex",
+              height: "40px",
+              padding: "8px 24px",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "8px",
+              flexShrink: 0,
+              borderRadius: "100px",
+              color: "var(--MH-Theme-Primary-Dark, #336F8A)",
+              border: "1px solid var(--MH-Theme-Primary-Dark, #336F8A)",
+              background: "white",
+            }}
+            onClick={() => setIsOpen(false)}
+          >
+            Close without saving
+          </button>
+          <button
+            style={{
+              display: "inline-flex",
+              height: "40px",
+              padding: "8px 24px",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "8px",
+              flexShrink: 0,
+              borderRadius: "100px",
+              background: "var(--MH-Theme-Primary-Dark, #336F8A)",
+            }}
+            onClick={() => update()}
+          >
+            Save & Close
+          </button>
         </Modal.Actions>
       </StyledModal>
     </Modal>

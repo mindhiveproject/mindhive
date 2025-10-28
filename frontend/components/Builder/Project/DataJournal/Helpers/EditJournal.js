@@ -78,7 +78,7 @@ export default function EditJournal({ user, projectId, studyId, part }) {
       onFocus={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
     >
-      <StyledModal>
+      <StyledModal id="editJournalModal">
         <Modal.Header>
           <h1>Edit</h1>
         </Modal.Header>

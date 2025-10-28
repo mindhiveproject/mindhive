@@ -361,7 +361,7 @@
 		"revisedContent": "Herziene inhoud",
 		"revisedContentUsed": "De herziene inhoud die u hier opneemt, wordt gebruikt in het eindrapport.",
 		"selectOption": "Selecteer optie",
-		"visibleInFeedbackCenter": "De content die u hier opneemt, is zichtbaar in het Feedbackcentrum nadat u deze via een Actiekaart hebt ingediend.",
+		"visibleInFeedbackCenter": "De content die u hier opneemt, is zichtbaar in het Feedback Center nadat u deze via een gele Actiekaart heeft ingediend.",
 		"visibleToTeacherAndCollaborators": "De inhoud die u hieronder opneemt, is alleen zichtbaar voor uw docent(en) en projectmedewerkers"
 	},
 	"makeMain": {
@@ -515,7 +515,7 @@
 		"uploadPreview": "Voorbeeld uploaden",
 		"uploadStudyImage": "Upload studie-afbeelding"
 	},
-	"printButton": "📄 Afdrukken/Opslaan als PDF",
+	"printButton": "Afdrukken/Opslaan als PDF",
 	"project": {
 		"cancel": "Annuleren",
 		"chooseStudy": "Kies een studie...",
@@ -661,6 +661,7 @@
 		"sortedByNewest": ", gesorteerd van nieuwste naar oudste",
 		"sortedByOldest": ", gesorteerd van oudste naar nieuwste",
 		"studyInPeerReview": "ONDERZOEK IN PEER REVIEW",
+		"suggestedTasks": "Voorgestelde taken",
 		"undefined": "Ongedefinieerd"
 	},
 	"reviewDetail": {
@@ -711,7 +712,7 @@
 		"whyTab": "Waarom"
 	},
 	"reviewTemplate": {
-		"additionalComments": "Gebruik de onderstaande ruimte voor eventuele aanvullende opmerkingen of suggesties",
+		"additionalComments": "Gebruik de onderstaande ruimte voor eventuele aanvullende opmerkingen of suggesties.",
 		"additionalCommentsSubtitle": "U kunt hier van alles noemen, maar u kunt onder meer rekening houden met: de duidelijkheid en/of relevantie van de onderzoeksvraag, de haalbaarheid binnen de reikwijdte van MindHive, ethische belemmeringen, de motivatie voor het onderzoek/onderzoeksachtergrond, en de afstemming van de deelnemerspopulatie op de onderzoeksvraag.",
 		"confoundsQuestion": "Hoe gaan de onderzoekers om met mogelijke verwarrende situaties en vertekeningen in hun onderzoeksopzet?",
 		"confoundsSubA": "Als onderzoekers niet in staat zijn om in hun onderzoeksopzet rekening te houden met een aantal van deze verstorende factoren of vertekeningen, hoe gaan ze daar dan mee om in hun onderzoeksvoorstellen (bijvoorbeeld alternatieve verklaringen/beperkingen van het onderzoek)?",
@@ -727,7 +728,7 @@
 		"importanceSubB": "Hoe zou je de onderzoeksvraag aanpassen om het belang ervan te verduidelijken? Leg je antwoord uit.",
 		"isQuestionAnswerable": "Is de onderzoeksvraag te beantwoorden met behulp van MindHive-tools? Sluiten de voorgestelde taken en enquêtes aan bij de onderzoeksvraag? Heb je suggesties voor aanvullende of alternatieve taken en enquêtes die geschikt zouden kunnen zijn voor deze onderzoeksvraag?",
 		"needsMinorAdjustments": "Kleine aanpassingen nodig",
-		"needsMinorAdjustmentsSubtitle": "Het voorstel is grotendeels compleet, maar zou baat kunnen hebben bij kleine verbeteringen of verfijningen, bijvoorbeeld door de onderzoeksvraag te verduidelijken of kleine lacunes op te vullen.",
+		"needsMinorAdjustmentsSubtitle": "Het voorstel is grotendeels compleet, maar zou baat kunnen hebben bij kleine verbeteringen of verfijningen, zoals verduidelijking van de onderzoeksvraag of het opvullen van kleine lacunes.",
 		"needsSignificantWork": "Er is aanzienlijk werk nodig",
 		"needsSignificantWorkSubtitle": "Het project is onvolledig of vertoont grote hiaten die aandacht behoeven. Mogelijk is er meer onderzoek, een duidelijkere structuur of aanvullende inhoud nodig voordat het verder kan.",
 		"oneSentence": "Dit kan gewoon één zin zijn.",
@@ -928,6 +929,7 @@
 	},
 	"surveyBuilder": {
 		"addFirstPage": "Voeg uw eerste pagina toe",
+		"addItem": "+",
 		"addItemBtn": "+ artikel",
 		"addOption": "+ optie",
 		"addPage": "+",
@@ -936,6 +938,7 @@
 		"deletePage": "Deze pagina verwijderen",
 		"freeinput": "Tekstinvoer",
 		"header": "Koptekst",
+		"hideContinueBtn": "Verberg Doorgaan-knop",
 		"likert": "Likertschaal",
 		"likertItems": "Items voor de Likertschaal",
 		"maxValue": "Maximale waarde",
@@ -944,6 +947,7 @@
 		"minValueLabel": "Minimumwaarde label",
 		"options": "Opties",
 		"page": "Pagina {{nummer}}",
+		"pageTimeout": "Pagina-time-out (in milliseconden)",
 		"select": "Meerkeuzevraag (selecteer één)",
 		"text": "Tekst",
 		"textLabel": "Tekst",

@@ -32,7 +32,7 @@ export default function ProposalOverview({
     );
   }
   return (
-    <div className="overview">
+    <div className="overview" id="overview">
       <div className="navigationHeader">
         <div></div>
         <div>

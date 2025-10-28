@@ -55,7 +55,7 @@ export default function Document({
   }
 
   return (
-    <div className="document">
+    <div className="document" id="document">
       <ChapterHeader
         user={user}
         projectId={projectId}

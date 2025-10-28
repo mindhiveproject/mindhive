@@ -82,7 +82,8 @@ export default function Document({
             section?.position || new Date(section?.createdAt).getTime(),
         ]).map((section) => (
           <Section
-            key={section?.id}
+            id="workspaceDocument"
+key={section?.id}
             user={user}
             projectId={projectId}
             studyId={studyId}

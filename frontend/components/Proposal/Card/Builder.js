@@ -363,9 +363,10 @@ export default function BuilderProposalCard({
       </div>
 
       {/* Clone Update Modal */}
-      <Modal open={showCloneDialog} onClose={handleCloneNo} size="small">
-        <Modal.Header>Update Cloned Boards?</Modal.Header>
-        <Modal.Content>
+      <Modal open={showCloneDialog} onClose={handleCloneNo} size="medium" style={{ borderRadius: "12px", overflow: "hidden" }}>
+        <Modal.Header style={{ background: "#f9fafb", borderBottom: "1px solid #e0e0e0", fontFamily: "Nunito", fontWeight: 600,
+        }}>Update Cloned Boards?</Modal.Header>
+        <Modal.Content style={{ background: "#ffffff", padding: "24px" }}>
           <p>
             This board has {proposal?.prototypeFor?.length} cloned project
             board(s). Do you want to update the corresponding cards in all
@@ -374,14 +375,31 @@ export default function BuilderProposalCard({
             tasks, and studies.)
           </p>
         </Modal.Content>
-        <Modal.Actions>
-          <Button color="black" onClick={handleCloneNo}>
+        <Modal.Actions style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }} >
+          <Button
+            style={{
+              borderRadius: "100px",
+              background: "white",
+              fontSize: "16px",
+              color: "#8A2CF6",
+              border: "1px solid #8A2CF6",
+              marginRight: "10px"
+            }}
+            onClick={handleCloneNo}
+          >
             No, update only this board
           </Button>
           <Button
-            positive
-            onClick={handleCloneYes}
             loading={updateLoading || updateClonedLoading}
+            style={{
+              borderRadius: "100px",
+              background: "#336F8A",
+              fontSize: "16px",
+              color: "white",
+              border: "1px solid #336F8A",
+              marginRight: "10px"
+            }}
+            onClick={handleCloneYes}
           >
             Yes, update all clones
           </Button>
@@ -417,17 +435,15 @@ export default function BuilderProposalCard({
                 "Add or edit instructions for students telling them how to complete the card."
               )}
             </div>
-            <div className="jodit">
-              <TipTapEditor
-                content={description?.current}
-                onUpdate={(newContent) =>
-                  handleContentChange({
-                    contentType: "description",
-                    newContent,
-                  })
-                }
-              />
-            </div>
+            <TipTapEditor
+              content={description?.current}
+              onUpdate={(newContent) =>
+                handleContentChange({
+                  contentType: "description",
+                  newContent,
+                })
+              }
+            />
           </label>
 
           {inputs?.settings?.includeInReport && (
@@ -442,18 +458,98 @@ export default function BuilderProposalCard({
                     "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed"
                   )}
                 </div>
+                
+                {/* Only show warning if proposal has child proposals */}
+                {proposal?.prototypeFor?.length > 0 && (
+                  <div 
+                    style={{
+                      position: "relative",
+                      display: "flex",
+                      width: "100%",
+                      marginTop: "16px",
+                      padding: "12px 16px",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      flexShrink: "0",
+                      borderRadius: "8px",
+                      background: "#EDCECD",
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      const tooltip = e.currentTarget.querySelector('.hover-tooltip');
+                      if (tooltip) {
+                        tooltip.style.opacity = "1";
+                        tooltip.style.transform = "translateY(0)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      const tooltip = e.currentTarget.querySelector('.hover-tooltip');
+                      if (tooltip) {
+                        tooltip.style.opacity = "0";
+                        tooltip.style.transform = "translateY(-5px)";
+                      }
+                    }}
+                  >
+                    <p style={{
+                      color: "#8F1F14",
+                      fontFamily: "Nunito",
+                      fontSize: "16px",
+                      fontStyle: "normal",
+                      fontWeight: "400",
+                      lineHeight: "24px",
+                      margin: 0,
+                      }}>
+                      {t("board.expendedCard.overwriteWarning", "")}
+                    </p>
+
+                    <div style={{
+                      width: "20px",
+                      height: "20px",
+                      flexShrink: 0,
+                    }}>
+                      <img src="/assets/icons/info_red.svg" alt="warning" />
+                    </div>
+
+                    {/* Hover tooltip */}
+                    <div 
+                      className="hover-tooltip"
+                      style={{
+                        position: "absolute",
+                        top: "100%",
+                        left: "0",
+                        right: "0",
+                        background: "#CF6D6A",
+                        color: "white",
+                        padding: "12px 16px",
+                        borderRadius: "8px",
+                        fontSize: "16px",
+                        fontFamily: "Nunito",
+                        lineHeight: "20px",
+                        opacity: "0",
+                        transform: "translateY(-5px)",
+                        transition: "all 0.3s ease",
+                        pointerEvents: "none",
+                        zIndex: 1000,
+                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+                      }}
+                    >
+                      <span>{t("board.expendedCard.overwriteWarningDetails1", "Making changes in the Student Response box will overwrite any content added by your students, which may result in the loss of their progress. Only proceed if you are certain that no students have already started working on this card.")}</span>
+                      <br /><br />
+                      <span>{t("board.expendedCard.overwriteWarningDetails2", "If you are unsure or want to update instructions without affecting student progress, consider editing the Instruction field instead. You can use it to provide updated guidance or new placeholder content.")}</span>
+                    </div>
+                  </div>
+                )}
               </label>
-              <div className="jodit">
-                <TipTapEditor
-                  content={content?.current}
-                  onUpdate={(newContent) =>
-                    handleContentChange({
-                      contentType: "content",
-                      newContent,
-                    })
-                  }
-                />
-              </div>
+              <TipTapEditor
+                content={content?.current}
+                onUpdate={(newContent) =>
+                  handleContentChange({
+                    contentType: "content",
+                    newContent,
+                  })
+                }
+              />
             </>
           )}
         </div>
@@ -502,7 +598,9 @@ export default function BuilderProposalCard({
                   {t("board.reviewPhase")}
                 </div>
                 <Popup
-                  content={t("board.reviewPhaseDescription")}
+                  content={
+                    <p > {t("board.reviewPhaseDescription")} </p>
+                  }
                   trigger={
                     <img
                       src="/assets/icons/question_mark.svg" // Next.js serves public/ as root

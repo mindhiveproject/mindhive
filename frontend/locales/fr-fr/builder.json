@@ -361,7 +361,7 @@
 		"revisedContent": "Contenu révisé",
 		"revisedContentUsed": "Le contenu révisé que vous incluez ici sera utilisé dans le rapport final.",
 		"selectOption": "Sélectionnez une option",
-		"visibleInFeedbackCenter": "Le contenu que vous incluez ici sera visible dans le centre de commentaires une fois qu'il sera soumis via une carte d'action.",
+		"visibleInFeedbackCenter": "Le contenu que vous incluez ici sera visible dans le centre de commentaires une fois qu'il sera soumis via une carte d'action jaune.",
 		"visibleToTeacherAndCollaborators": "Le contenu que vous incluez ci-dessous ne sera visible que par votre/vos enseignant(s) et collaborateurs du projet"
 	},
 	"makeMain": {
@@ -515,7 +515,7 @@
 		"uploadPreview": "Télécharger l'aperçu",
 		"uploadStudyImage": "Télécharger l'image de l'étude"
 	},
-	"printButton": "📄 Imprimer/Enregistrer au format PDF",
+	"printButton": "Imprimer/Enregistrer au format PDF",
 	"project": {
 		"cancel": "Annuler",
 		"chooseStudy": "Choisissez une étude...",
@@ -661,6 +661,7 @@
 		"sortedByNewest": ", classés du plus récent au plus ancien",
 		"sortedByOldest": ", classés du plus ancien au plus récent",
 		"studyInPeerReview": "ÉTUDE EN ÉVALUATION PAR LES PAIRS",
+		"suggestedTasks": "Tâches suggérées",
 		"undefined": "Indéfini"
 	},
 	"reviewDetail": {
@@ -711,7 +712,7 @@
 		"whyTab": "Pourquoi"
 	},
 	"reviewTemplate": {
-		"additionalComments": "Utilisez l'espace ci-dessous pour tout commentaire ou suggestion supplémentaire",
+		"additionalComments": "Utilisez l'espace ci-dessous pour tout commentaire ou suggestion supplémentaire.",
 		"additionalCommentsSubtitle": "Vous pouvez mentionner n'importe quoi ici, mais vous pourriez prendre en compte : la clarté et/ou la pertinence de la question d'enquête, la faisabilité dans le cadre de MindHive, les obstacles éthiques, la motivation de l'étude/la recherche de fond, l'alignement de la population participante avec la question d'enquête.",
 		"confoundsQuestion": "Comment les chercheurs abordent-ils les facteurs de confusion et les biais potentiels dans la conception de leur étude ?",
 		"confoundsSubA": "Si les chercheurs ne sont pas en mesure de tenir compte de certains de ces facteurs de confusion ou biais dans la conception de leur étude, comment les abordent-ils dans leurs propositions d’étude (par exemple, explications alternatives/limites de l’étude) ?",
@@ -727,7 +728,7 @@
 		"importanceSubB": "Comment réviseriez-vous la question d’enquête pour clarifier son importance ? Expliquez votre réponse.",
 		"isQuestionAnswerable": "La question d'enquête peut-elle être résolue à l'aide des outils MindHive ? Les tâches et les enquêtes proposées correspondent-elles à la question d'enquête ? Avez-vous des suggestions de tâches et d'enquêtes supplémentaires ou alternatives qui pourraient convenir à cette question d'enquête ?",
 		"needsMinorAdjustments": "Nécessite des ajustements mineurs",
-		"needsMinorAdjustmentsSubtitle": "La proposition est en grande partie complète mais pourrait bénéficier de petites améliorations ou précisions, telles que la clarification de la question de recherche ou le comblement de lacunes mineures.",
+		"needsMinorAdjustmentsSubtitle": "La proposition est en grande partie complète mais pourrait bénéficier de petites améliorations ou précisions, comme une clarification de la question de l’enquête ou le comblement de lacunes mineures.",
 		"needsSignificantWork": "Nécessite des travaux importants",
 		"needsSignificantWorkSubtitle": "Le projet est incomplet ou présente des lacunes importantes nécessitant une attention particulière. Il peut nécessiter des recherches plus approfondies, une structure plus claire ou du contenu supplémentaire avant de poursuivre.",
 		"oneSentence": "Cela pourrait n’être qu’une seule phrase.",
@@ -928,6 +929,7 @@
 	},
 	"surveyBuilder": {
 		"addFirstPage": "Ajoutez votre première page",
+		"addItem": "+",
 		"addItemBtn": "+ article",
 		"addOption": "+ option",
 		"addPage": "+",
@@ -936,6 +938,7 @@
 		"deletePage": "Supprimer cette page",
 		"freeinput": "Saisie de texte",
 		"header": "Entête",
+		"hideContinueBtn": "Masquer le bouton Continuer",
 		"likert": "Échelle de Likert",
 		"likertItems": "Éléments pour l'échelle de Likert",
 		"maxValue": "Valeur maximale",
@@ -944,6 +947,7 @@
 		"minValueLabel": "Étiquette de valeur minimale",
 		"options": "Possibilités",
 		"page": "Page {{number}}",
+		"pageTimeout": "Délai d'expiration de la page (en millisecondes)",
 		"select": "Choix multiple (sélectionnez-en un)",
 		"text": "Texte",
 		"textLabel": "Texte",

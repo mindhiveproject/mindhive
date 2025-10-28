@@ -29,7 +29,7 @@ export default function ChapterHeader({ user, studyId, part, chapter }) {
   );
 
   return (
-    <div id={chapter?.id}>
+    <div id={"document"}>
       <div className="originDataTitle">
         {part?.dataOrigin === "STUDY" && "Study data"}
         {part?.dataOrigin === "TEMPLATE" && "Template data"}

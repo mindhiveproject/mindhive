@@ -18,7 +18,7 @@ export default function Overview({
   onVariableChange,
 }) {
   return (
-    <div className="overview">
+    <div className="overview" id="overview">
       {page === "browse" && (
         <Browse
           user={user}

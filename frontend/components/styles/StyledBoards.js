@@ -30,9 +30,7 @@ const StyledBoards = styled.div`
     line-height: 1.5;
   }
 
-  .createButton.narrowButton,
-  .saveButton,
-  .backButton {
+  .createButton.narrowButton {
     width: auto;
     display: inline-flex;
     align-items: center;
@@ -50,29 +48,34 @@ const StyledBoards = styled.div`
     transition: background 0.3s ease;
   }
 
+  .backButton,
+  .saveButton {
+    height: 40px;
+    padding: 8px 24px 8px 24px;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    margin: 1rem 0;
+    background: #336F8A;
+    color: white;
+    border-radius: 100px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    }
+    
   .createButton.narrowButton:hover,
-  .backButton:hover {
+  .backButton:hover,
+  .saveButton:hover {
     border-radius: 100px;
     border: 1px #F9D978;
     color: #274E5B;
     background: #F9D978;
     box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.15);
-  }
-  .saveButton:hover {
-    border-radius: 100px;
-    border: 1px #7D70AD;
-    color: white;
-    background: #7D70AD;
-    box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.15);
-  }
-
-  .backButton {
-    background: #edf2f7;
-    color: #2d3748;
-  }
-
-  .backButton:hover {
-    background: #e2e8f0;
   }
 
   .buttonGroup {

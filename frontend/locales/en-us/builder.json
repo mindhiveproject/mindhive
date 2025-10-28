@@ -361,7 +361,7 @@
 		"revisedContent": "Revised Content",
 		"revisedContentUsed": "The revised content you include here will be used in the final report.",
 		"selectOption": "Select option",
-		"visibleInFeedbackCenter": "The content you include here will be visible in the Feedback Center once it is submitted via an Action Card.",
+		"visibleInFeedbackCenter": "The content you include here will be visible in the Feedback Center once it is submitted via a yellow Action Card.",
 		"visibleToTeacherAndCollaborators": "The content you include below will only be visible to your teacher(s) and project collaborators"
 	},
 	"makeMain": {
@@ -515,7 +515,7 @@
 		"uploadPreview": "Upload preview",
 		"uploadStudyImage": "Upload study image"
 	},
-	"printButton": "📄 Print/Save as PDF",
+	"printButton": "Print/Save as PDF",
 	"project": {
 		"cancel": "Cancel",
 		"chooseStudy": "Choose a study...",
@@ -661,6 +661,7 @@
 		"sortedByNewest": ", sorted by newest to oldest",
 		"sortedByOldest": ", sorted by oldest to newest",
 		"studyInPeerReview": "STUDY IN PEER REVIEW",
+		"suggestedTasks": "Suggested Tasks",
 		"undefined": "Undefined"
 	},
 	"reviewDetail": {
@@ -711,8 +712,8 @@
 		"whyTab": "Why"
 	},
 	"reviewTemplate": {
-		"additionalComments": "Use the space below for any additional comments or suggestions",
-		"additionalCommentsSubtitle": "You can mention anything here, but you might consider: clarity and/or relevance of investigation question, feasibility within the scope of MindHive, ethical obstacles, study motivation/background research, alignment of participant population with the investigation question.",
+		"additionalComments": "Use the space below for any additional comments or suggestions.",
+		"additionalCommentsSubtitle": "You can mention anything here, but you might consider: clarity and/or relevance of the investigation question, feasibility within the scope of MindHive, ethical obstacles, study motivation/background research, alignment of participant population with the investigation question.",
 		"confoundsQuestion": "How do the researchers address potential confounds and biases in their study design?",
 		"confoundsSubA": "If the researchers are unable to account for some of these confounds or biases in their study design, how do they address them in their study proposals (e.g. alternative explanations/study limitations)?",
 		"confoundsSubB": "What changes would you make to the study design to minimize researcher bias or the impacts of confounds? Explain your answer.",
@@ -727,7 +728,7 @@
 		"importanceSubB": "How would you revise the investigation question to clarify its importance? Explain your answer.",
 		"isQuestionAnswerable": "Is the investigation question answerable using MindHive tools? Do the proposed tasks and surveys align with the investigation question? Do you have any suggestions for additional or alternative tasks and surveys that might be suitable for this investigation question?",
 		"needsMinorAdjustments": "Needs Minor Adjustments",
-		"needsMinorAdjustmentsSubtitle": "The proposal is mostly complete but could benefit from small improvements or refinements, such as clarifying the research question or addressing minor gaps.",
+		"needsMinorAdjustmentsSubtitle": "The proposal is mostly complete but could benefit from small improvements or refinements, such as clarifying the investigation question or addressing minor gaps.",
 		"needsSignificantWork": "Needs Significant Work",
 		"needsSignificantWorkSubtitle": "The project is incomplete or has major gaps that need attention. It may require more research, a clearer structure, or additional content before moving forward.",
 		"oneSentence": "This could just be one sentence.",
@@ -928,6 +929,7 @@
 	},
 	"surveyBuilder": {
 		"addFirstPage": "Add your first page",
+		"addItem": "+",
 		"addItemBtn": "+ item",
 		"addOption": "+ option",
 		"addPage": "+",
@@ -936,6 +938,7 @@
 		"deletePage": "Delete this page",
 		"freeinput": "Text input",
 		"header": "Header",
+		"hideContinueBtn": "Hide Continue button",
 		"likert": "Likert scale",
 		"likertItems": "Items for the Likert Scale",
 		"maxValue": "Maximum value",
@@ -944,6 +947,7 @@
 		"minValueLabel": "Minimum value label",
 		"options": "Options",
 		"page": "Page {{number}}",
+		"pageTimeout": "Page timeout (in milliseconds)",
 		"select": "Multiple choice (select one)",
 		"text": "Text",
 		"textLabel": "Text",

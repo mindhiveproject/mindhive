@@ -361,7 +361,7 @@
 		"revisedContent": "Contenido revisado",
 		"revisedContentUsed": "El contenido revisado que incluya aquí se utilizará en el informe final.",
 		"selectOption": "Seleccionar opción",
-		"visibleInFeedbackCenter": "El contenido que incluya aquí será visible en el Centro de comentarios una vez que se envíe a través de una Tarjeta de acción.",
+		"visibleInFeedbackCenter": "El contenido que incluya aquí será visible en el Centro de comentarios una vez que se envíe a través de una Tarjeta de Acción amarilla.",
 		"visibleToTeacherAndCollaborators": "El contenido que incluyas a continuación solo será visible para tus profesores y colaboradores del proyecto."
 	},
 	"makeMain": {
@@ -515,7 +515,7 @@
 		"uploadPreview": "Subir vista previa",
 		"uploadStudyImage": "Subir imagen de estudio"
 	},
-	"printButton": "📄 Imprimir/Guardar como PDF",
+	"printButton": "Imprimir/Guardar como PDF",
 	"project": {
 		"cancel": "Cancelar",
 		"chooseStudy": "Elige un estudio...",
@@ -661,6 +661,7 @@
 		"sortedByNewest": ", ordenado del más nuevo al más antiguo",
 		"sortedByOldest": ", ordenado del más antiguo al más nuevo",
 		"studyInPeerReview": "ESTUDIO EN REVISIÓN POR PARES",
+		"suggestedTasks": "Tareas sugeridas",
 		"undefined": "Indefinido"
 	},
 	"reviewDetail": {
@@ -928,6 +929,7 @@
 	},
 	"surveyBuilder": {
 		"addFirstPage": "Añade tu primera página",
+		"addItem": "+",
 		"addItemBtn": "+ artículo",
 		"addOption": "+ opción",
 		"addPage": "+",
@@ -936,6 +938,7 @@
 		"deletePage": "Eliminar esta página",
 		"freeinput": "Entrada de texto",
 		"header": "Encabezamiento",
+		"hideContinueBtn": "Ocultar el botón Continuar",
 		"likert": "Escala de Likert",
 		"likertItems": "Elementos para la escala de Likert",
 		"maxValue": "Valor máximo",
@@ -944,6 +947,7 @@
 		"minValueLabel": "Etiqueta de valor mínimo",
 		"options": "Opciones",
 		"page": "Número de página}}",
+		"pageTimeout": "Tiempo de espera de la página (en milisegundos)",
 		"select": "Opción múltiple (seleccione una)",
 		"text": "Texto",
 		"textLabel": "Texto",
