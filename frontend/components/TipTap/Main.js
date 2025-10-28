@@ -1,7 +1,7 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
@@ -102,6 +102,8 @@ export default function TipTapEditor({
   toolbarVisible = true,
 }) {
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const editorRef = useRef(null);
 
   const editor = useEditor({
     extensions: [
@@ -136,6 +138,8 @@ export default function TipTapEditor({
     },
     editable: isEditable,
     immediatelyRender: false,
+    onFocus: () => setIsFocused(true),
+    onBlur: () => setIsFocused(false),
   });
 
   // Set content when editor + content are ready
@@ -166,8 +170,9 @@ export default function TipTapEditor({
     
   }, [editor, hasUserInteracted]);
 
+
   const Toolbar = () => {
-    if (!editor || !toolbarVisible) return null;
+    if (!editor || !toolbarVisible || !isFocused) return null;
 
     const handleStyleClick = (command, e) => {
       e.preventDefault();
@@ -317,220 +322,229 @@ export default function TipTapEditor({
     ];
 
     return (
-      <div className="toolbar">
-        <div
-          className="toolbarGroup"
-          onMouseDown={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
-          <Button
-            icon
-            className="toolbarButton"
-            onClick={(e) =>
-              handleStyleClick(() => editor.chain().focus().undo().run(), e)
-            }
-            disabled={!editor.isEditable || !editor.can().undo()}
-            aria-label="Undo"
-          >
-            <Icon name="undo" />
-          </Button>
-          <Button
-            icon
-            className="toolbarButton"
-            onClick={(e) =>
-              handleStyleClick(() => editor.chain().focus().redo().run(), e)
-            }
-            disabled={!editor.isEditable || !editor.can().redo()}
-            aria-label="Redo"
-          >
-            <Icon name="redo" />
-          </Button>
-        </div>
-        <div
-          className="toolbarGroup"
-          onMouseDown={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
-          {/* Text formatting */}
-
-          <Button
-            icon
-            className="toolbarButton"
-            onClick={(e) =>
-              handleStyleClick(
-                () => editor.commands.toggleHeading({ level: 1 }),
-                e
-              )
-            }
-            disabled={!editor.isEditable}
-            active={editor.isActive("heading", { level: 1 })}
-            aria-label="Toggle heading 1"
-          >
-            <Icon name="header" />
-          </Button>
-          <Button
-            icon
-            className="toolbarButton"
-            onClick={(e) =>
-              handleStyleClick(() => editor.commands.toggleBold(), e)
-            }
-            disabled={!editor.isEditable}
-            active={editor.isActive("bold")}
-            aria-label="Toggle bold"
-          >
-            <Icon name="bold" />
-          </Button>
-          <Button
-            icon
-            className="toolbarButton"
-            onClick={(e) =>
-              handleStyleClick(() => editor.commands.toggleItalic(), e)
-            }
-            disabled={!editor.isEditable}
-            active={editor.isActive("italic")}
-            aria-label="Toggle italic"
-          >
-            <Icon name="italic" />
-          </Button>
-          <Button
-            icon
-            className="toolbarButton"
-            onClick={(e) =>
-              handleStyleClick(() => editor.commands.toggleUnderline(), e)
-            }
-            disabled={!editor.isEditable}
-            active={editor.isActive("underline")}
-            aria-label="Toggle underline"
-          >
-            <Icon name="underline" />
-          </Button>
-          {/* Link */}
-          <Button
-            icon
-            className="toolbarButton"
-            onClick={handleLinkClick}
-            disabled={!editor.isEditable}
-            active={editor.isActive("link")}
-            aria-label="Insert/edit link"
-          >
-            <Icon name="linkify" />
-          </Button>
-          </div>
-        <div
-          className="toolbarGroup"
-          onMouseDown={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
-          <Button
-            icon
-            className="toolbarButton"
-            onClick={(e) =>
-              handleStyleClick(() => editor.commands.toggleBulletList(), e)
-            }
-            disabled={!editor.isEditable}
-            active={editor.isActive("bulletList")}
-            aria-label="Toggle bullet list"
-          >
-            <Icon name="list ul" />
-          </Button>
-          <Button
-            icon
-            className="toolbarButton"
-            onClick={(e) =>
-              handleStyleClick(() => editor.commands.toggleOrderedList(), e)
-            }
-            disabled={!editor.isEditable}
-            active={editor.isActive("orderedList")}
-            aria-label="Toggle numbered list"
-          >
-            <Icon name="list ol" />
-          </Button>
-          <Button
-            icon
-            className="toolbarButton"
-            onClick={(e) =>
-              handleStyleClick(() => editor.commands.toggleBlockquote(), e)
-            }
-            disabled={!editor.isEditable}
-            active={editor.isActive("blockquote")}
-            aria-label="Toggle blockquote"
-          >
-            <Icon name="quote left" />
-          </Button>
-        </div>
-        <div
-          className="toolbarGroup"
-          onMouseDown={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
-          
-          {/* Image */}
-          <Button
-            icon
-            className="toolbarButton"
-            onClick={(e) => {
+      <div className={`floatingToolbar ${isFocused ? 'visible' : ''}`}>
+        <div className="toolbar">
+          <div
+            className="toolbarGroup"
+            onMouseDown={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              const url = window.prompt('Enter image URL or paste base64 data:');
-              if (url && editor.isEditable) {
-                editor.chain().focus().setImage({ src: url }).run();
-              }
             }}
-            disabled={!editor.isEditable}
-            aria-label="Insert image"
           >
-            <Icon name="image" />
-          </Button>
-          
-          <Dropdown
-            trigger={
-              <Button
-                icon
-                className="toolbarButton"
-                disabled={!editor.isEditable}
-                active={editor.isActive("table")}
-                aria-label="Table options"
-              >
-                <Icon name="table" />
-              </Button>
-            }
-            pointing
-            className="table-dropdown"
-            disabled={!editor.isEditable}
+            <Button
+              icon
+              className="toolbarButton"
+              onClick={(e) =>
+                handleStyleClick(() => editor.chain().focus().undo().run(), e)
+              }
+              disabled={!editor.isEditable || !editor.can().undo()}
+              aria-label="Undo"
+            >
+              <Icon name="undo" />
+            </Button>
+            <Button
+              icon
+              className="toolbarButton"
+              onClick={(e) =>
+                handleStyleClick(() => editor.chain().focus().redo().run(), e)
+              }
+              disabled={!editor.isEditable || !editor.can().redo()}
+              aria-label="Redo"
+            >
+              <Icon name="redo" />
+            </Button>
+          </div>
+          <div
+            className="toolbarGroup"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
           >
-            <Dropdown.Menu>
-              {tableOptions.map((option) => (
-                <Dropdown.Item
-                  key={option.key}
-                  icon={option.icon}
-                  text={option.text}
-                  disabled={option.disabled}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    option.onClick();
-                  }}
-                />
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
+            {/* Text formatting */}
+
+            <Button
+              icon
+              className="toolbarButton"
+              onClick={(e) =>
+                handleStyleClick(
+                  () => editor.commands.toggleHeading({ level: 1 }),
+                  e
+                )
+              }
+              disabled={!editor.isEditable}
+              active={editor.isActive("heading", { level: 1 })}
+              aria-label="Toggle heading 1"
+            >
+              <Icon name="header" />
+            </Button>
+            <Button
+              icon
+              className="toolbarButton"
+              onClick={(e) =>
+                handleStyleClick(() => editor.commands.toggleBold(), e)
+              }
+              disabled={!editor.isEditable}
+              active={editor.isActive("bold")}
+              aria-label="Toggle bold"
+            >
+              <Icon name="bold" />
+            </Button>
+            <Button
+              icon
+              className="toolbarButton"
+              onClick={(e) =>
+                handleStyleClick(() => editor.commands.toggleItalic(), e)
+              }
+              disabled={!editor.isEditable}
+              active={editor.isActive("italic")}
+              aria-label="Toggle italic"
+            >
+              <Icon name="italic" />
+            </Button>
+            <Button
+              icon
+              className="toolbarButton"
+              onClick={(e) =>
+                handleStyleClick(() => editor.commands.toggleUnderline(), e)
+              }
+              disabled={!editor.isEditable}
+              active={editor.isActive("underline")}
+              aria-label="Toggle underline"
+            >
+              <Icon name="underline" />
+            </Button>
+            {/* Link */}
+            <Button
+              icon
+              className="toolbarButton"
+              onClick={handleLinkClick}
+              disabled={!editor.isEditable}
+              active={editor.isActive("link")}
+              aria-label="Insert/edit link"
+            >
+              <Icon name="linkify" />
+            </Button>
+            </div>
+          <div
+            className="toolbarGroup"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            <Button
+              icon
+              className="toolbarButton"
+              onClick={(e) =>
+                handleStyleClick(() => editor.commands.toggleBulletList(), e)
+              }
+              disabled={!editor.isEditable}
+              active={editor.isActive("bulletList")}
+              aria-label="Toggle bullet list"
+            >
+              <Icon name="list ul" />
+            </Button>
+            <Button
+              icon
+              className="toolbarButton"
+              onClick={(e) =>
+                handleStyleClick(() => editor.commands.toggleOrderedList(), e)
+              }
+              disabled={!editor.isEditable}
+              active={editor.isActive("orderedList")}
+              aria-label="Toggle numbered list"
+            >
+              <Icon name="list ol" />
+            </Button>
+            <Button
+              icon
+              className="toolbarButton"
+              onClick={(e) =>
+                handleStyleClick(() => editor.commands.toggleBlockquote(), e)
+              }
+              disabled={!editor.isEditable}
+              active={editor.isActive("blockquote")}
+              aria-label="Toggle blockquote"
+            >
+              <Icon name="quote left" />
+            </Button>
+          </div>
+          <div
+            className="toolbarGroup"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            
+            {/* Image */}
+            <Button
+              icon
+              className="toolbarButton"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const url = window.prompt('Enter image URL or paste base64 data:');
+                if (url && editor.isEditable) {
+                  editor.chain().focus().setImage({ src: url }).run();
+                }
+              }}
+              disabled={!editor.isEditable}
+              aria-label="Insert image"
+            >
+              <Icon name="image" />
+            </Button>
+            
+            <Dropdown
+              trigger={
+                <Button
+                  icon
+                  className="toolbarButton"
+                  disabled={!editor.isEditable}
+                  active={editor.isActive("table")}
+                  aria-label="Table options"
+                >
+                  <Icon name="table" />
+                </Button>
+              }
+              pointing
+              className="table-dropdown"
+              disabled={!editor.isEditable}
+            >
+              <Dropdown.Menu>
+                {tableOptions.map((option) => (
+                  <Dropdown.Item
+                    key={option.key}
+                    icon={option.icon}
+                    text={option.text}
+                    disabled={option.disabled}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      option.onClick();
+                    }}
+                  />
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
         </div>
       </div>
     );
   };
 
   return (
-    <StyledTipTap>
-      <Toolbar />
-      <EditorContent editor={editor} className="tiptapEditor" />
+    <StyledTipTap ref={editorRef}>
+      <div className="editorContainer">
+        <EditorContent 
+          editor={editor} 
+          className="tiptapEditor" 
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+        />
+        <Toolbar />
+      </div>
     </StyledTipTap>
   );
 }

@@ -1,32 +1,65 @@
 import styled from "styled-components";
 
 export const StyledTipTap = styled.div`
-  display: grid;
-  grid-gap: 10px;
+  position: relative;
+  z-index: 1; /* Ensure proper stacking context */
+
+  .editorContainer {
+    position: relative;
+    margin-top: 10px;
+  }
+
+  .floatingToolbar {
+    position: absolute;
+    top: -60px;
+    left: 0;
+    z-index: 10000;
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+
+    &.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   .toolbar {
     display: flex;
     grid-gap: 10px;
-
+    border-radius: 100px;
+    background: #f0f5f5;
+    padding: 0px 16px 0px 16px;
+    width: fit-content;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
     .toolbarGroup {
-      background: rgba(51, 111, 138, 0.04);
-      border-radius: 8px;
-      padding: 8px 8px;
+      // border-radius: 8px;
+      // background: #336F8A0a;
+      padding: 4px 4px;
       display: flex;
       grid-template-rows: repeat(auto-fill, minmax(40px, 1fr)); /* Vertical (column) layout */
-      grid-gap: 6px;
+      grid-gap: -1px;
       width: fit-content;
       
       .toolbarButton { 
         height: 32px;
-        background: #D3E0E3;
+        background: #00000000;
         display: grid;
         justify-content: center;
         align-content: center;
 
         &:hover {
-          background: #b0c7d0;
+          background: #55808C;
           cursor: pointer;
+          color: white; 
+        }
+         
+        &.active {
+        background: #D3E0E3;
+          color: #434343; 
         }
       }
       
@@ -41,14 +74,20 @@ export const StyledTipTap = styled.div`
   }
 
   .tiptapEditor {
-    display: grid;
-    border-radius: 16px; /* Rounded corners */
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    border-radius: 16px;
 
     .ProseMirror {
       padding: 24px;
       outline: none;
-      border-radius: 16px; /* Match outer radius or slightly smaller if nested */
-      background: rgba(51, 111, 138, 0.04);
+      border-radius: 16px;
+      border: 2px solid #D3E0E3;
+      background: white;
+      width: 100%;
+      max-height: 600px; 
+      overflow-y: auto;
       
       table {
         border-collapse: collapse;
@@ -105,7 +144,8 @@ export const StyledTipTap = styled.div`
       
       .tableWrapper {
         padding: 1rem 0;
-        overflow-x: auto;
+        overflow-x: scroll;
+        max-width: 100%;
       }
       
       .resize-cursor {

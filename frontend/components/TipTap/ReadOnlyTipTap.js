@@ -6,9 +6,11 @@ export const ReadOnlyTipTap = styled.div`
   color: #333;
 
   .ProseMirror {
-    padding: 0; /* No background */
+    padding: 24px;
     border-radius: 0;
-    background: none;
+    border-radius: 16px;
+    border: 2px solid #D3E2F1;
+    // background: white; // no background for non-editable stuff
     outline: none;
   }
 
@@ -17,6 +19,18 @@ export const ReadOnlyTipTap = styled.div`
     font-weight: bold;
     margin: 1rem 0 0.5rem;
     color: #274E5B;
+  }
+
+  a {
+    color: #3D85B0;
+    text-decoration: underline !important;
+    cursor: pointer;
+    font-weight: 500;
+    
+    &:hover {
+      color: #7D70AD;
+      font-weight: 500;
+    }
   }
 
   h1 { font-size: 2.5rem; }
@@ -29,6 +43,7 @@ export const ReadOnlyTipTap = styled.div`
   /* Paragraphs */
   p {
     margin: 0.75rem 0;
+    
   }
 
   /* Blockquote */
@@ -44,7 +59,7 @@ export const ReadOnlyTipTap = styled.div`
   /* Lists */
   ul, ol {
     margin: 1rem 0;
-    padding-left: 1.5rem;
+    padding-left: 2.5rem;
   }
 
   li {
@@ -103,20 +118,9 @@ export const ReadOnlyTipTap = styled.div`
 
   /* Images */
   .editor-image {
-    max-width: 100%;
+    max-width: 600px;
     height: auto;
     border-radius: 4px;
     margin: 1rem 0;
-  }
-
-  /* Links */
-  a {
-    color: #3D85B0;
-    text-decoration: underline;
-    cursor: pointer;
-
-    &:hover {
-      color: #7D70AD;
-    }
   }
 `;
