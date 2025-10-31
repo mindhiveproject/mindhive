@@ -49,7 +49,26 @@ export default function CreateSection({ projectId, studyId, chapterId }) {
   };
 
   return (
-    <Dropdown icon={<img src={`/assets/icons/visualize/add.svg`} />} id="addSectionButton" >
+    <Dropdown
+      trigger={
+        <button style={{
+          display: 'flex',
+          height: '40px',
+          padding: '8px 24px',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '8px',
+          borderRadius: '100px',
+          border: '1px solid var(--MH-Theme-Primary-Dark, #336f8a)',
+          background: 'transparent',
+          color: 'var(--MH-Theme-Primary-Dark, #336f8a)',
+        }}>
+          <span>+ Add</span>
+        </button>
+      }
+      id="addSectionButton"
+      icon={null}
+    >
       <DropdownMenu>
         <DropdownItem
           onClick={() => addSection({ type: "PARAGRAPH", title: "Text" })}

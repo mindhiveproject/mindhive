@@ -18,6 +18,7 @@ import useForm from "../../../../../../lib/useForm";
 
 import Navigation from "./Navigation/Main";
 import Assigned from "./Forms/Assigned";
+import Status from "../../../../../Dashboard/TeacherClasses/ClassPage/Assignments/Homework/Status";
 import TipTapEditor from "../../../../../TipTap/Main";
 import { PreviewSection } from "../../../../../Proposal/Card/Forms/LinkedItems";
 import { Modal, Button, Icon, Dropdown, Accordion } from "semantic-ui-react";
@@ -309,7 +310,7 @@ export default function ProposalCard({
         handleChange({
           target: {
             name: "title",
-            value: `Homework | ${assignment?.title || ''} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`
+            value: `Assignment | ${assignment?.title || ''} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`
           }
         });
         handleChange({
@@ -359,13 +360,33 @@ export default function ProposalCard({
       homeworkContent.current = newContent;
     };
 
-    const handleCreateHomework = async () => {
+    const handleCreateHomeworkDraft = async () => {
       try {
         await createHomework({
           variables: {
             ...inputs,
             content: homeworkContent?.current || inputs.placeholder,
             assignmentId: assignment?.id,
+          },
+        });
+        clearForm();
+        setShowNewHomework(false);
+        // Optionally close the modal or show success message
+        // onClose();
+      } catch (error) {
+        console.error("Error creating homework:", error);
+        alert("Error creating homework: " + error.message);
+      }
+    };
+
+    const handleCreateHomeworkSubmit = async () => {
+      try {
+        await createHomework({
+          variables: {
+            ...inputs,
+            content: homeworkContent?.current || inputs.placeholder,
+            assignmentId: assignment?.id,
+            settings: {"status": "Completed"},
           },
         });
         clearForm();
@@ -481,182 +502,186 @@ export default function ProposalCard({
           {/* Homework Section */}
           <div style={{ marginTop: "24px", paddingTop: "24px" }}>
             <h3 style={{ marginBottom: "16px", color: "#274E5B" }}>
-              {t("homework.myHomework", "My Homework")}
+              {t("homework.myAssignment", "My Assignment")}
             </h3>
 
-            {/* Show existing homeworks */}
-            {homeworks.length > 0 && (
-              <div style={{ marginBottom: "16px" }}>
-                <h4 style={{ marginBottom: "12px", fontSize: "16px" }}>
-                  {t("homework.existingHomeworks", "Existing Homeworks")}
-                </h4>
-                {homeworks.map((homework) => (
-                  <div
-                    key={homework?.id}
-                    style={{
-                      // border: "1px solid #274E5B",
-                      borderRadius: "8px",
-                      padding: "12px",
-                      marginBottom: "8px",
-                      background: "#F3F3F3",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontWeight: "600", marginBottom: "4px" , fontSize: "14px"}}>
-                        {homework.title}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          fontWeight:
-                            homework.settings?.status === "Completed" ? "bold"
-                              : homework.settings?.status === "Started" ? "normal"
-                              : "normal",
-                          color:
-                            homework.settings?.status === "Completed" ? "#3D85B0"
-                              : homework.settings?.status === "Started" ? "#7D70AD"
-                              : homework.settings?.status === "Overdue" ? "red"
-                              : "#666", // default color
-                        }}
-                      >
-                        {homework.settings?.status || "Open homework to see more"}
-                      </div>
-
+          {/* Show existing homeworks */}
+          {homeworks.length > 0 && (
+            <div style={{ marginBottom: "16px" }}>
+              {homeworks.map((homework) => (
+                <div
+                  key={homework?.id}
+                  style={{
+                    borderRadius: "8px",
+                    padding: "12px",
+                    marginBottom: "8px",
+                    background: "#F3F3F3",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div>
+                    <div style={{ fontWeight: "600", marginBottom: "4px", fontSize: "14px" }}>
+                      {homework.title}
                     </div>
-                    <Button
-                      size="small"
-                      onClick={() => {
-                        console.log("Navigate to homework:", homework.id);
-                        if (!assignment?.code || !homework?.code) {
-                          console.error("Missing assignment or homework code");
-                          return;
-                        }
-
-                        const url = `/dashboard/assignments/${assignment.code}?homework=${homework.code}`;
-                        window.open(url, "_blank", "noopener,noreferrer");
-                      }}
+                    <div
                       style={{
-                        borderRadius: "100px",
-                        color: "#69BBC4",
-                        fontSize: "12px",
-                        border: "0.5px solid #69BBC4",
-                        background: "white",
+                        fontSize: "14px",
+                        fontWeight:
+                          homework.settings?.status === "Completed" ? "bold"
+                            : homework.settings?.status === "Started" ? "normal"
+                            : "normal",
+                        color:
+                          homework.settings?.status === "Completed" ? "#3D85B0"
+                            : homework.settings?.status === "Started" ? "#7D70AD"
+                            : homework.settings?.status === "Overdue" ? "red"
+                            : "#666", // default color
                       }}
                     >
-                      {t("homework.openHomework", "Open")}
-                    </Button>
-                  </div>               
-                ))}
-              </div>
-            )}
+                      {homework.settings?.status || "Open homework to see more"}
+                    </div>
+                  </div>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      console.log("Navigate to homework:", homework.id);
+                      if (!assignment?.code || !homework?.code) {
+                        console.error("Missing assignment or homework code");
+                        return;
+                      }
 
-            {/* New Homework Section */}
-            {!showNewHomework ? (
-              <Button
-                onClick={() => setShowNewHomework(true)}
-                style={{
-                  borderRadius: "100px",
-                  background: "#336F8A",
-                  fontSize: "14px",
-                  color: "white",
-                  border: "1px solid #336F8A",
-                  marginRight: "10px"
-                }}
-                disabled={createLoading}
-              >
-                {t("homework.newHomework", "New Homework")}
-              </Button>
-            ) : (
-              <div style={{
-                // border: "1px solid #7D70AD",
-                border: "1px solid #A1A1A1",
-                borderRadius: "8px",
-                padding: "16px",
-                // background: "#f8f9fa",
-                background: "#FFF",
-                boxShadow: "2px 2px 8px 0 rgba(0, 0, 0, 0.10)",
-              }}>
-                <div style={h1}>
-                  {t("homework.createNewHomework", "Create New Homework")}
-                </div>
-                
-                <div style={{ marginBottom: "12px" }}>
-                  <p style={{ marginBottom: "0px" }}>
-                    {t("homework.homeworkTitle", "Homework Title")}
-                  </p>
-                  <input
-                    type="text"
-                    value={inputs.title}
-                    onChange={(e) => handleChange({
-                      target: { name: "title", value: e.target.value }
-                    })}
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ccc",
-                      marginTop: "4px",
+                      const url = `/dashboard/assignments/${assignment.code}?homework=${homework.code}`;
+                      window.open(url, "_blank", "noopener,noreferrer");
                     }}
+                    style={{
+                      borderRadius: "100px",
+                      color: "#69BBC4",
+                      fontSize: "12px",
+                      border: "0.5px solid #69BBC4",
+                      background: "white",
+                    }}
+                  >
+                    {t("homework.openHomework", "Open")}
+                  </Button>
+                </div>               
+              ))}
+            </div>
+          )}
+
+          {/* New Homework Section */}
+          {homeworks.length < 1 && !showNewHomework && (
+            <Button
+              onClick={() => setShowNewHomework(true)}
+              style={{
+                borderRadius: "100px",
+                background: "#336F8A",
+                fontSize: "14px",
+                color: "white",
+                border: "1px solid #336F8A",
+                marginRight: "10px"
+              }}
+              disabled={createLoading}
+            >
+              {t("homework.createNewAssignment", "Create New Assignment")}
+            </Button>
+          )}
+
+          {showNewHomework && (
+            <div style={{
+              border: "1px solid #A1A1A1",
+              borderRadius: "8px",
+              padding: "16px",
+              background: "#FFF",
+              boxShadow: "2px 2px 8px 0 rgba(0, 0, 0, 0.10)",
+            }}>
+              <div style={h1}>
+                {t("homework.createNewAssignment", "Create New Assignment")}
+              </div>
+
+              <div style={{ marginBottom: "12px" }}>
+                <p style={{ marginBottom: "0px" }}>
+                  {t("homework.assignmentTitle", "Assignment title")}
+                </p>
+                <input
+                  type="text"
+                  value={inputs.title}
+                  onChange={(e) => handleChange({
+                    target: { name: "title", value: e.target.value }
+                  })}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    borderRadius: "4px",
+                    border: "1px solid #ccc",
+                    marginTop: "4px",
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: "16px" }}>
+                <div style={{
+                  minHeight: "100px",
+                  marginTop: "4px",
+                }}>
+                  <TipTapEditor
+                    content={homeworkContent.current || inputs.placeholder}
+                    onUpdate={(newContent) => updateHomeworkContent(newContent)}
                   />
                 </div>
-
-                <div style={{ marginBottom: "16px" }}>
-                  <p style={{ marginBottom: "8px" }}>
-                    {t("homework.firstDraft", "First Draft")}
-                  </p>
-                  <div 
-                    style={{
-                      // border: "1px solid #ccc",
-                      // borderRadius: "4px",
-                      minHeight: "100px",
-                      marginTop: "4px",
-                    }}
-                  >
-                    <TipTapEditor
-                      content={homeworkContent.current || inputs.placeholder}
-                      onUpdate={(newContent) => updateHomeworkContent(newContent)}
-                    />
-                  </div>
-                </div>
-
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <Button
-                    onClick={handleCreateHomework}
-                    loading={createLoading}
-                    disabled={createLoading}
-                    style={{
-                      borderRadius: "100px",
-                      background: "#69BBC4",
-                      fontSize: "12px",
-                      color: "white",
-                      border: "1px solid #69BBC4",
-                      marginRight: "10px"
-                    }}
-                  >
-                    {t("homework.createHomework", "Create Homework")}
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setShowNewHomework(false);
-                      clearForm();
-                    }}
-                    style={{
-                      borderRadius: "100px",
-                      background: "#f7f9fa",
-                      fontSize: "12px",
-                      color: "#B9261A",
-                      border: "1px solid #B9261A",
-                      marginRight: "10px"
-                    }}
-                  >
-                    {t("homework.cancel", "Cancel")}
-                  </Button>
-                </div>
               </div>
-            )}
+
+              <div style={{ display: "flex", gap: "8px" }}>
+                <Button
+                  onClick={handleCreateHomeworkSubmit}
+                  loading={createLoading}
+                  disabled={createLoading}
+                  style={{
+                    borderRadius: "100px",
+                    background: "#336F8A",
+                    fontSize: "12px",
+                    color: "white",
+                    border: "1px solid #336F8A",
+                    marginRight: "10px"
+                  }}
+                >
+                  {t("homework.createHomeworkSubmit", "Create & Submit")}
+                </Button>
+                <Button
+                  onClick={handleCreateHomeworkDraft}
+                  loading={createLoading}
+                  disabled={createLoading}
+                  style={{
+                    borderRadius: "100px",
+                    background: "white",
+                    fontSize: "12px",
+                    color: "#336F8A",
+                    border: "1px solid #336F8A",
+                    marginRight: "10px"
+                  }}
+                >
+                  {t("homework.createHomeworkDraft", "Create Draft")}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowNewHomework(false);
+                    clearForm();
+                  }}
+                  style={{
+                    borderRadius: "100px",
+                    background: "#f7f9fa",
+                    fontSize: "12px",
+                    color: "#B9261A",
+                    border: "1px solid #B9261A",
+                    marginRight: "10px"
+                  }}
+                >
+                  {t("homework.cancel", "Cancel")}
+                </Button>
+              </div>
+            </div>
+          )}
+
           </div>
         </div>
         </Modal.Content>
@@ -733,10 +758,11 @@ export default function ProposalCard({
               <div className="cardSubheader">
                 {t("mainCard.instructions", "Instructions")}
               </div>
-              <div className="cardDescription">
-                {ReactHtmlParser(inputs?.description)}
-              </div>
-
+              <ReadOnlyTipTap>
+                <div className="ProseMirror">
+                  {ReactHtmlParser(inputs?.description)}
+                </div>
+              </ReadOnlyTipTap>
               {proposalCard?.settings?.includeInReport && (
                 <>
                   <div className="cardSubheader">
@@ -745,7 +771,7 @@ export default function ProposalCard({
                   <div className="cardSubheaderComment">
                     {t(
                       "mainCard.visibleInFeedbackCenter",
-                      "The content you include here will be visible in the Feedback Center once it is submitted via an Action Card."
+                      "The content you include here will be visible in the Feedback Center once it is submitted via a yellow Action Card."
                     )}
                   </div>
                   <div className="jodit">
@@ -760,15 +786,11 @@ export default function ProposalCard({
                           {t("mainCard.forMindHiveNetwork", "Original Content")}
                         </Accordion.Title>
                         <Accordion.Content active={originalActive}>
-                          <div
-                            style={{
-                              border: "1px solid #ccc",
-                              padding: "10px",
-                              overflow: "auto",
-                            }}
-                          >
-                            {ReactHtmlParser(content?.current || "")}
-                          </div>
+                          <ReadOnlyTipTap>
+                            <div className="ProseMirror">
+                              {ReactHtmlParser(content?.current || "")}
+                            </div>
+                          </ReadOnlyTipTap>
                         </Accordion.Content>
                       </Accordion>
                     ) : (
@@ -873,22 +895,28 @@ export default function ProposalCard({
                 <div className="cardSubheader">
                   {t("mainCard.comments", "Comments")}
                 </div>
-                <textarea
-                  rows="5"
-                  type="text"
-                  id="comment"
-                  name="comment"
-                  value={inputs.comment}
-                  onChange={(e, target) => {
+                <TipTapEditor
+                  content={inputs.comment}
+                  onUpdate={(newContent) => {
                     if (!hasContentChanged) {
                       setHasContentChanged(true);
                     }
-                    handleChange(e, target);
+                    handleChange({
+                      target: {
+                        name: "comment",
+                        value: newContent,
+                      },
+                    });
                   }}
+                  editable={areEditsAllowed}
+                  placeholder={t("mainCard.commentsPlaceholder", "Add your comment here...")}
                 />
               </div>
-
-              {proposalCard?.settings?.includeInReport && !isLocked && (
+              {proposalCard?.settings?.includeInReport &&
+                !isLocked &&
+                user?.permissions.some((p) =>
+                  ["SCIENTIST", "TEACHER", "MENTOR", "ADMIN"].includes(p?.name)
+                ) && (
                 <div>
                   <div className="cardSubheaderComment">
                     {t(
