@@ -124,6 +124,8 @@
 			"title": "Título",
 			"titleText": "Agregue o edite el título de la tarjeta. Este título aparecerá como encabezado de sección en los envíos de los estudiantes al Centro de Comentarios si la casilla \"Incluir entrada de texto para el Centro de Comentarios\" está marcada.",
 			"type": "Tipo",
+			"updateAllClones": "Sí, actualizar todos los clones.",
+			"updateOnlyThisBoard": "No, actualiza solo este tablero.",
 			"viewContent": "Ver contenido",
 			"viewingAssignment": "Asignación de visualización:",
 			"visibility": "Visibilidad",

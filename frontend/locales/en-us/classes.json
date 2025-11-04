@@ -124,6 +124,8 @@
 			"title": "Title",
 			"titleText": "Add or edit the card title. This title will appear as a section header in student submissions to the Feedback Center if the box titled 'Include text input for Feedback Center' is checked.",
 			"type": "Type",
+			"updateAllClones": "Yes, update all clones",
+			"updateOnlyThisBoard": "No, update only this board",
 			"viewContent": "View Content",
 			"viewingAssignment": "Viewing Assignment:",
 			"visibility": "Visibility",

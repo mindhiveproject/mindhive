@@ -124,6 +124,8 @@
 			"title": "Título",
 			"titleText": "Adicione ou edite o título do cartão. Este título aparecerá como cabeçalho de seção nos envios dos alunos para a Central de Feedback se a caixa \"Incluir entrada de texto para a Central de Feedback\" estiver marcada.",
 			"type": "Tipo",
+			"updateAllClones": "Sim, atualize todos os clones.",
+			"updateOnlyThisBoard": "Não, atualize apenas este quadro.",
 			"viewContent": "Ver conteúdo",
 			"viewingAssignment": "Tarefa de visualização:",
 			"visibility": "Visibilidade",
