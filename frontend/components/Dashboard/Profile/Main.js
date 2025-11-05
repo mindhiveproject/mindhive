@@ -76,7 +76,8 @@ export default function Profile() {
       </div>
 
       {(user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
-        user?.permissions?.map((p) => p?.name).includes("MENTOR")) && (
+        user?.permissions?.map((p) => p?.name).includes("MENTOR")||
+        user?.permissions?.map((p) => p?.name).includes("SCIENTIST")) && (
         <div className="createProfileAreaWrapper">
           <Link
             href={{
