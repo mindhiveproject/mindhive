@@ -100,3 +100,14 @@ export const UPDATE_TASK = gql`
     }
   }
 `;
+
+// update task i18nContent only (simpler mutation for translations)
+export const UPDATE_TASK_I18N = gql`
+  mutation UPDATE_TASK_I18N($id: ID!, $i18nContent: JSON!) {
+    updateTask(where: { id: $id }, data: { i18nContent: $i18nContent }) {
+      id
+      title
+      i18nContent
+    }
+  }
+`;
