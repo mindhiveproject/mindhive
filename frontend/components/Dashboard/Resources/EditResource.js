@@ -57,7 +57,7 @@ export default function EditResource({
   return (
     <StyledResource>
       <button className="goBackBtn" onClick={goBack}>
-        <Icon name="arrow left" /> {t("boardManagement.goBack")}
+        <Icon name="arrow left" /> {t("boardManagement.goBackToResourceArea")}
       </button>
       <h1>{t("boardManagement.editResource")}</h1>
       <ResourceForm

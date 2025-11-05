@@ -55,11 +55,11 @@ export default function CopyResource({ query, user, goBack }) {
   return (
     <StyledResource>
       <button className="goBackBtn" onClick={goBack}>
-        <Icon name="arrow left" /> {t("boardManagement.goBack")}
+        <Icon name="arrow left" /> {t("boardManagement.goBackToResourceArea")}
       </button>
       <h1>{t("boardManagement.customizeRessource")}</h1>
       <ResourceForm user={user} inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>{t("boardManagement.saveOwnRessource")}Save as Your Own Resource</button>
+      <button onClick={handleSave}>{t("boardManagement.saveOwnRessource")}</button>
     </StyledResource>
   );
 }

@@ -47,7 +47,7 @@ export default function DuplicateResource({ query, user, goBack }) {
   return (
     <StyledResource>
       <button className="goBackBtn" onClick={goBack}>
-        <Icon name="arrow left" /> {t("boardManagement.goBack")}
+        <Icon name="arrow left" /> {t("boardManagement.goBackToResourceArea")}
       </button>
       <h1>Duplicate Resource</h1>
       <ResourceForm inputs={inputs} handleChange={handleChange} />
