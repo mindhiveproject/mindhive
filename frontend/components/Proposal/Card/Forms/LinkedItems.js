@@ -9,13 +9,16 @@ import useTranslation from "next-translate/useTranslation";
 import {
   GET_PUBLIC_RESOURCES,
   GET_MY_RESOURCES,
+  GET_TEMPLATE_ASSIGNMENT,
 } from "../../../Queries/Resource";
 import { PUBLIC_STUDIES } from "../../../Queries/Study";
 import { ALL_PUBLIC_TASKS } from "../../../Queries/Task";
 // import { GET_MY_CLASS_ASSIGNMENTS } from "../../../Queries/Assignment";
-import { GET_MY_ASSIGNMENTS, GET_AN_ASSIGNMENT } from "../../../Queries/Assignment";
+import { GET_MY_ASSIGNMENTS, GET_AN_ASSIGNMENT, GET_ASSIGNMENTS_CHILD } from "../../../Queries/Assignment";
 import { EDIT_ASSIGNMENT } from "../../../Mutations/Assignment";
-
+import AssignmentEditModal from "../../../TipTap/AssignmentEditModal"
+import AssignmentViewModal from "../../../TipTap/AssignmentViewModal"
+import AssignmentCopyModal from "../../../TipTap/AssignmentCopyModal";
 import { styleText } from "util";
 
 export default function LinkedItems({
@@ -36,7 +39,15 @@ export default function LinkedItems({
     error: publicError,
     loading: publicLoading,
   } = useQuery(GET_PUBLIC_RESOURCES);
-
+  
+  // Queries for assignment
+  const {
+    data: publicAssignment,
+    error: publicAssignmentError,
+    loading: publicAssignmentLoading,
+  } = useQuery(GET_TEMPLATE_ASSIGNMENT);
+  
+  // Queries for ressource
   const {
     data: myData,
     error: myError,
@@ -45,7 +56,10 @@ export default function LinkedItems({
     variables: { id: user?.id },
   });
 
-  const publicResources = publicData?.resources || [];
+  const publicResources = {
+    assignments: publicAssignment?.assignments || {},
+    resources: publicData?.resources || {}
+  } || {};
   const myResources = myData?.resources || [];
   const myResourcesNoParent = myResources.filter((r) => !r?.parent);
 
@@ -78,6 +92,28 @@ export default function LinkedItems({
   const [open, setOpen] = useState(false);
   const [assignmentModalOpen, setAssignmentModalOpen] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
+  const [viewAssignmentModalOpen, setViewAssignmentModalOpen] = useState(false);
+  const [editAssignmentModalOpen, setEditAssignmentModalOpen] = useState(false);
+  const [viewAssignmentId, setViewAssignmentId] = useState(null);
+  const [editAssignmentId, setEditAssignmentId] = useState(null);
+  const [copyModalOpen, setCopyModalOpen] = useState(false);
+  const [copyAssignment, setCopyAssignment] = useState(null);
+
+  const openCopyModal = (assignment) => {
+    if (!assignment) return;
+    setCopyAssignment(assignment);
+    setCopyModalOpen(true);
+  };
+
+  const openViewAssignmentModal = (assignment) => {
+    setViewAssignmentId(assignment.id);
+    setViewAssignmentModalOpen(true);
+  };
+
+  const openEditAssignmentModal = (assignment) => {
+    setEditAssignmentId(assignment.id);
+    setEditAssignmentModalOpen(true);
+  };
 
 
   // Resource-specific merging for selected
@@ -87,6 +123,7 @@ export default function LinkedItems({
     );
     return customResource || selectedResource;
   });
+
 
   // Generic connect/disconnect
   const connectItem = (item, fieldName, selectedArray) => {
@@ -117,6 +154,7 @@ export default function LinkedItems({
       menuItem: t("board.expendedCard.publicResources"),
       render: () => (
         <ItemTab
+          user={user}
           items={publicResources}
           selected={selectedResources}
           connect={(item) => connectItem(item, "resources", selectedResources)}
@@ -124,11 +162,14 @@ export default function LinkedItems({
             disconnectItem(item, "resources", selectedResources)
           }
           myItems={myResources}
+          myAssignments={myAssignmentsData}
           proposal={proposal}
-          type="resource"
+          type="public"
           isPublic={true}
           loading={publicLoading}
           openAssignmentModal={openAssignmentModalHandler}
+          openViewAssignmentModal={openViewAssignmentModal}
+          openCopyModal={openCopyModal}
         />
       ),
     },
@@ -136,6 +177,7 @@ export default function LinkedItems({
       menuItem: t("board.expendedCard.myResources"),
       render: () => (
         <ItemTab
+          user={user}
           items={myResourcesNoParent}
           selected={selectedResources}
           connect={(item) => connectItem(item, "resources", selectedResources)}
@@ -155,6 +197,7 @@ export default function LinkedItems({
       menuItem: t("board.expendedCard.myAssignments"),
       render: () => (
         <ItemTab
+          user={user}
           items={myAssignments}
           selected={selectedAssignments}
           connect={(item) =>
@@ -169,6 +212,7 @@ export default function LinkedItems({
           isPublic={false}
           loading={myAssignmentsLoading}
           openAssignmentModal={openAssignmentModalHandler}
+          openEditAssignmentModal={openEditAssignmentModal}
         />
       ),
     },
@@ -176,6 +220,7 @@ export default function LinkedItems({
       menuItem: t("board.expendedCard.tasks"),
       render: () => (
         <ItemTab
+          user={user}
           items={publicTasks}
           selected={selectedTasks}
           connect={(item) => connectItem(item, "tasks", selectedTasks)}
@@ -193,6 +238,7 @@ export default function LinkedItems({
       menuItem: t("board.expendedCard.studies"),
       render: () => (
         <ItemTab
+          user={user}
           items={publicStudies}
           selected={selectedStudies}
           connect={(item) => connectItem(item, "studies", selectedStudies)}
@@ -209,6 +255,26 @@ export default function LinkedItems({
       ),
     },
   ];
+
+  const styledSecondaryButtonBlue = {
+    height: "30px",
+    padding: "16px 24px 16px 24px",
+    justifyContent: "center",
+    gap: "8px",
+    flexShrink: 0,
+    width: "auto",
+    display: "inline-flex",
+    alignItems: "center",
+    margin: "1rem 0",
+    background: "#336F8A",
+    color: "white",
+    borderRadius: "100px",
+    fontSize: "18px",
+    fontWeight: 500,
+    cursor: "pointer",
+    transition: "background 0.3s ease",
+    border: "1.5px solid #336F8A",
+  };
 
   return (
     <>
@@ -249,16 +315,13 @@ export default function LinkedItems({
         <Modal.Actions
           style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
         >
-          <Button
+
+          <button
             onClick={() => setOpen(false)}
-            style={{
-              background: "#007c70",
-              color: "#ffffff",
-              borderRadius: "8px",
-            }}
-          >
+            style={styledSecondaryButtonBlue}
+            >
             {t("board.expendedCard.done")}
-          </Button>
+          </button>
         </Modal.Actions>
       </Modal>
 
@@ -272,6 +335,38 @@ export default function LinkedItems({
         assignmentId={selectedAssignmentId}
         user={user}
       />
+  
+      <AssignmentViewModal
+        open={viewAssignmentModalOpen}
+        t={t}
+        onClose={() => setViewAssignmentModalOpen(false)}
+        assignmentId={viewAssignmentId}
+      />
+      
+      <AssignmentEditModal
+        open={editAssignmentModalOpen}
+        onClose={() => setEditAssignmentModalOpen(false)}
+        assignmentId={editAssignmentId}
+        user={user}
+        onSaved={() => {
+          setEditAssignmentModalOpen(false);
+          setEditAssignmentId(null);
+        }}
+      />
+
+      <AssignmentCopyModal
+        open={copyModalOpen}
+        onClose={() => setCopyModalOpen(false)}
+        assignment={copyAssignment}
+        user={user}
+        onCopied={() => {
+          // optional: refresh lists / refetch queries if needed
+          setCopyModalOpen(false);
+          setCopyAssignment(null);
+        }}
+      />
+
+
 
       {selectedResourcesMerged.length > 0 && (
         <PreviewSection
@@ -318,6 +413,7 @@ export default function LinkedItems({
 }
 
 const ItemTab = ({
+  user,
   items,
   selected,
   connect,
@@ -328,11 +424,515 @@ const ItemTab = ({
   isPublic,
   loading,
   openAssignmentModal,
+  openViewAssignmentModal,
+  openEditAssignmentModal,
+  openCopyModal,
+  myAssignments
 }) => {
   const { t } = useTranslation("classes");
+  
+  const styledPrimaryIconButton = {
+    display: "inline-flex",
+    height: "38px",
+    width: "38px",
+    padding: "8px",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "8px",
+    flexShrink: "0",
+    borderRadius: "100px",
+    border: "1px solid #336F8A",
+    background: "#336F8A",
+  };
+
+  const styledPrimaryButton = {
+    height: "30px",
+    padding: "8px 16px 8px 16px",
+    justifyContent: "center",
+    gap: "8px",
+    flexShrink: 0,
+    width: "100%",
+    display: "inline-flex",
+    alignItems: "center",
+    margin: "1rem 0",
+    background: "#336F8A",
+    color: "white",
+    borderRadius: "100px",
+    fontSize: "16px",
+    fontWeight: 500,
+    cursor: "pointer",
+    transition: "background 0.3s ease",
+    border: "none", // Add to reset default browser styles
+  };
+
+  const styledSecondaryButtonBlue = {
+    height: "30px",
+    padding: "8px 16px 8px 16px",
+    justifyContent: "center",
+    gap: "8px",
+    flexShrink: 0,
+    width: "100%",
+    display: "inline-flex",
+    alignItems: "center",
+    margin: "1rem 0",
+    background: "white",
+    color: "#3D85B0",
+    borderRadius: "100px",
+    fontSize: "16px",
+    fontWeight: 500,
+    cursor: "pointer",
+    transition: "background 0.3s ease",
+    border: "1.5px solid #3D85B0",
+  };
+  
+  const styledAccentButtonPurple = {
+    height: "30px",
+    padding: "8px 16px 8px 8px",
+    justifyContent: "center",
+    gap: "8px",
+    flexShrink: 0,
+    width: "100%",
+    display: "inline-flex",
+    alignItems: "center",
+    margin: "1rem 0",
+    background: "white",
+    color: "#7D70AD",
+    borderRadius: "100px",
+    fontSize: "16px",
+    fontWeight: 500,
+    cursor: "pointer",
+    transition: "background 0.3s ease",
+    border: "1.5px solid #7D70AD",
+  };
+  
+  const styledChip = {
+    display: "inline-flex",
+    height: "fit-content",
+    padding: "4px 8px 4px 8px",
+    justifyContent: "center",
+    alignItems: "center",
+    flexShrink: "0",
+    borderRadius: "8px",
+    border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+    maxWidth: '100%',
+    wordBreak: 'break-word',
+  };
+  
+  const styledChipPublished = {
+    display: "inline-flex",
+    height: "24px",
+    padding: "10px",
+    justifyContent: "center",
+    alignItems: "center",
+    flexShrink: "0",
+    borderRadius: "8px",
+    background: "#D8D3E7",
+    color: "#625B71",
+    // border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+    maxWidth: '100%',
+    wordBreak: 'break-word',
+  };
+  
+  const styledChipUnpublished = {
+    display: "inline-flex",
+    height: "24px",
+    padding: "10px",
+    justifyContent: "center",
+    alignItems: "center",
+    flexShrink: "0",
+    borderRadius: "8px",
+    background: "#F3F3F3",
+    // border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+    maxWidth: '100%',
+    wordBreak: 'break-word',
+  };
 
   if (loading) return <div>{t("common.loading", "Loading...")}</div>;
 
+  // --- Accordions UI State (moved outside conditional to fix hooks rule) ---
+  const [openAccordion, setOpenAccordion] = useState({
+    resources: true,
+    assignments: false,
+  });
+
+  const toggleAccordion = (key) => {
+    setOpenAccordion((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  if (type === "public") {
+    // For public type, render two sections: resources and assignments (in accordions)
+    const resources = items?.resources || [];
+    const assignments = items?.assignments || [];
+
+    // helper function to render items list (reuse existing item render logic)
+    const renderItems = (itemsList, currentType) => {
+      const displayItems = itemsList.map((item) => {
+        if (currentType === "resource" && isPublic) {
+          const custom = myItems.find((p) => p.parent?.id === item.id);
+          return custom || item;
+        }
+        return item;
+      });
+
+      return displayItems.map((item) => {
+        const isSelected = selected.some((s) => s.id === item.id);
+        const isTaskOrStudy = currentType === "task" || currentType === "study";
+        const isTask = currentType === "task";
+        const isStudy = currentType === "study";
+        const isAssignment = currentType === "assignment";
+        const isResource = currentType === "resource";
+        // TODO: add updatedAt to the card
+
+        const hasChildAssignement = myAssignments?.assignments?.some(
+          assignment => assignment.templateSource?.id === item.id
+        ) || false;     
+
+        let viewUrl = `/dashboard/${currentType}s/view?id=${item?.id}`;
+        
+        if (isAssignment) {
+          viewUrl = `/dashboard/${currentType}s/view?id=${item?.id}`;
+        }
+        if (isTask) {
+          viewUrl = `/dashboard/discover/tasks?name=${item?.slug}`;
+        }
+        if (isStudy) {
+          viewUrl = `/dashboard/discover/studies?name=${item?.slug}`;
+        }
+        const editUrl = item?.isCustom
+          ? `/dashboard/${currentType}s/edit?id=${item?.id}`
+          : `/dashboard/${currentType}s/copy?id=${item?.id}&p=${proposal?.id}`;
+        const content = isResource
+          ? item?.content?.main || ""
+          : item?.content || "";
+        const placeholder = isResource
+          ? item?.placeholder?.main || ""
+          : item?.placeholder || "";
+
+        return (
+          <div
+            key={item.id}
+            style={{
+              border: "1px solid #e0e0e0",
+              borderRadius: "12px",
+              padding: "16px",
+              background: "#ffffff",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+              transition: "box-shadow 0.3s ease",
+              marginBottom: "16px",
+              height: "fit-content",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)")
+            }
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "12px",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "18px",
+                  fontWeight: 600,
+                  color: "#333",
+                  margin: 0,
+                }}
+              >
+                {item?.title || "Untitled"}
+              </h2>
+              {isResource && (
+                <button
+                  onClick={() => window.open(editUrl, '_blank', 'noopener,noreferrer')}
+                  style={styledPrimaryIconButton}
+                >
+                  <p style={{color: "white"}}><Icon name="pencil" /></p>
+                </button>
+              )}
+              {item?.lastUpdate ? (<p>Last updated: {item?.lastUpdate}</p>) : (<></>)}
+              {/* <div style={{ display: "flex", flexDirection: "column",justifyContent: "top", minWidth: "fit-content", gap: "12px" }}>
+                {!isAssignment && (
+                  <>
+                    <a
+                      href={viewUrl}
+                      target={"_blank"}
+                      rel={isTaskOrStudy ? "noreferrer" : undefined}
+                      style={{ color: "#265390", fontWeight: "500" }}
+                    >
+                      <Icon name="external alternate" /> {t("boardManagement.openInTab")}
+                    </a>
+                    {isResource && (
+                      <a
+                        href={editUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ color: "#265390", fontWeight: "500" }}
+                      >
+                        <Icon name="pencil alternate" /> {t("boardManagement.duplicate")}
+                      </a>
+                    )}
+                  </>
+                )}
+              </div> */}
+            </div>
+            <div
+              style={{
+                fontSize: "14px",
+                color: "#666",
+                lineHeight: "1.5",
+                marginBottom: "16px",
+              }}
+            >
+              {/* {ReactHtmlParser(truncateHtml(content, 15))} */}
+              {/* {ReactHtmlParser(truncateHtml(placeholder, 10))} */}
+            </div>
+            {isResource && (
+              <div style={{display: "flex",  justifyContent: "flex-start", columnGap: "16px", flexWrap: "wrap"}}>
+                <button 
+                  onClick={() => (isSelected ? disconnect(item) : connect(item))}
+                  style={isSelected
+                    ? styledAccentButtonPurple
+                    : styledPrimaryButton}
+                  >
+                    {isSelected
+                    ? <Icon name="unlink"/>
+                    : <Icon name="linkify"/>
+                    }
+                    {isSelected
+                    ? t("board.expendedCard.disconnect")
+                    : t("board.expendedCard.connect")
+                    }
+                </button>
+              </div>
+            )}
+            {/* Add preview buttons for tasks and studies */}
+            {(isTask || isStudy) && (
+              <div style={{display: "flex",  justifyContent: "flex-start", columnGap: "16px", flexWrap: "wrap"}}>
+                <button 
+                  onClick={() => (isSelected ? disconnect(item) : connect(item))}
+                  style={isSelected
+                    ? styledAccentButtonPurple
+                    : styledPrimaryButton}
+                  >
+                    {isSelected
+                    ? <Icon name="unlink"/>
+                    : <Icon name="linkify"/>
+                    }
+                    {isSelected
+                    ? t("board.expendedCard.disconnect")
+                    : t("board.expendedCard.connect")
+                    }
+                </button>
+                <button
+                  onClick={() => window.open(viewUrl, '_blank', 'noopener,noreferrer')}
+                  style={styledPrimaryButton}
+                >
+                  <Icon name="eye" /> {t("boardManagement.preview", "Preview")}
+                </button>
+              </div>
+            )}
+            {isAssignment && (
+              <>
+                <div style={{display: "flex",  justifyContent: "flex-start", columnGap: "16px", flexWrap: "wrap"}}>
+                  {/* <button
+                    onClick={() => openViewAssignmentModal(item)}
+                    style={styledSecondaryButtonBlue}
+                  >
+                    <Icon name="eye" />
+                    {t("board.expendedCard.viewContent")}
+                  </button> */}
+
+                  {!hasChildAssignement
+                  ? (
+                    <button
+                      onClick={() => openCopyModal?.(item)}
+                      style={styledPrimaryButton}
+                    >
+                      <Icon name="copy outline" /> {t("boardManagement.viewAndCopy", "View & Copy")}
+                    </button>
+                    )
+                  : (<div style={{display: "flex", flexDirection: "column"}}>
+                      <p>{t("board.expendedCard.alreadyHaveCopy")}</p>
+                      <div style={{display: "flex", columnGap: "4px", rowGap: "8px", marginBottom: "8px", maxWidth: "100%", flexWrap: "wrap", alignItems: "center"}}>
+                        {myAssignments?.assignments
+                          ?.filter(assignment => assignment.templateSource?.id === item.id)
+                          ?.flatMap(assignment => assignment.classes || [])
+                          ?.filter((cls, index, self) => index === self.findIndex(c => c.id === cls.id))
+                          ?.map(cls => (
+                            <span key={cls.id} style={styledChip}>
+                              <p style={{ 
+                                maxWidth: "100%", 
+                                wordBreak: "break-word", 
+                                whiteSpace: "normal",
+                                overflowWrap: "anywhere",
+                                margin: 0
+                              }}>
+                                {cls.title}
+                              </p>
+                            </span>
+                            // <p><li key={cls.id}>{cls.title}</li></p>
+                          ))}
+                        </div>
+                      <button 
+                        onClick={() => openCopyModal?.(item)}
+                        style={styledPrimaryButton}
+                      >
+                        <Icon name="copy outline" /> {t("board.expendedCard.makeAdditionalCopy")}
+                      </button>
+                    </div>
+                    )}
+                </div>
+              </>
+            )}
+          </div>
+        );
+      });
+    };
+
+    // Styles for accordion components
+    const accordionHeaderStyle = {
+      display: "flex",
+      alignItems: "center",
+      width: "100%",
+      cursor: "pointer",
+      background: "none",
+      border: "none",
+      outline: "none",
+      padding: "0",
+      marginBottom: "24px",
+    };
+
+    const accordionTitleStyle = {
+      fontSize: "24px",
+      fontWeight: "500",
+      margin: "0 0.5rem 0 0",
+      color: "#3D3669"
+    };
+
+    const accordionChevronStyle = (open) => ({
+      transition: "transform 0.2s",
+      transform: open ? "rotate(90deg)" : "rotate(0deg)",
+      fontSize: "0.5em",
+      marginRight: "1em",
+      color: "#336F8A"
+    });
+
+    return (
+      <div style={{ padding: "24px", background: "#f9fafb", maxWidth: 1100, margin: "0 auto" }}>
+        {/* Resources Accordion */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          marginBottom: "24px",
+          gap: "16px"
+        }}>
+          <div style={{ flex: "0 1 25%", maxWidth: "25%" }}>
+            <Button
+              onClick={() => {
+                const url = `/dashboard/resources/`;
+                window.open(url, "_blank", "noopener,noreferrer");
+              }}
+              style={{
+                ...styledPrimaryButton,
+                width: "100%",
+                whiteSpace: "nowrap",
+                background: "#7D70AD"
+              }}
+            >
+              {t("boardManagement.openResourcesCenter", "Open Resources Center")}
+            </Button>
+          </div>
+          <div style={{ flex: 1 }}>
+            <span style={{ fontSize: "16px" }}>
+              {t("boardManagement.descGoToResourcesCenter", "This page allows you to link resources to your project board cards - to manage resources, go to the resources center.)")}
+            </span>
+          </div>
+        </div>
+        <section>
+          <button
+            type="button"
+            onClick={() => toggleAccordion("resources")}
+            style={accordionHeaderStyle}
+            aria-expanded={openAccordion.resources}
+            aria-controls="public-resources-accordion"
+          >
+            <span style={accordionChevronStyle(openAccordion.resources)}>
+              ▶
+            </span>
+            <span style={accordionTitleStyle}>
+              {t("board.expendedCard.resourcesSectionTitle", "Public Resources")}
+            </span>
+          </button>
+          <div
+            id="public-resources-accordion"
+            style={{
+              display: openAccordion.resources ? "block" : "none",
+              marginBottom: "28px"
+            }}
+          >
+            {resources.length > 0 ? (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+                  gap: "24px",
+                }}
+              >
+                {renderItems(resources, "resource")}
+              </div>
+            ) : (
+              <p>{t("noResources", "No public resources.")}</p>
+            )}
+          </div>
+        </section>
+
+        {/* Assignments Accordion */}
+        <section>
+          <button
+            type="button"
+            onClick={() => toggleAccordion("assignments")}
+            style={accordionHeaderStyle}
+            aria-expanded={openAccordion.assignments}
+            aria-controls="public-assignments-accordion"
+          >
+            <span style={accordionChevronStyle(openAccordion.assignments)}>
+              ▶
+            </span>
+            <span style={accordionTitleStyle}>
+              {t("board.expendedCard.assignmentsSectionTitle", "Assignments")}
+            </span>
+          </button>
+          <div
+            id="public-assignments-accordion"
+            style={{
+              display: openAccordion.assignments ? "block" : "none"
+            }}
+          >
+            {assignments.length > 0 ? (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+                  gap: "24px",
+                }}
+              >
+                {renderItems(assignments, "assignment")}
+              </div>
+            ) : (
+              <p>{t("noAssignments", "No assignments available.")}</p>
+            )}
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // original behavior for other types
   const displayItems = items.map((item) => {
     if (type === "resource" && isPublic) {
       const custom = myItems.find((p) => p.parent?.id === item.id);
@@ -367,7 +967,9 @@ const ItemTab = ({
         }
         const editUrl = item?.isCustom
           ? `/dashboard/${type}s/edit?id=${item?.id}`
-          : `/dashboard/${type}s/copy?id=${item?.id}&p=${proposal?.id}`;
+          : (isResource && item?.author?.id === user?.id)
+            ? `/dashboard/resources/edit?id=${item?.id}`
+            : `/dashboard/${type}s/copy?id=${item?.id}&p=${proposal?.id}`;
         const content = isResource
           ? item?.content?.main || ""
           : item?.content || "";
@@ -379,8 +981,10 @@ const ItemTab = ({
         console.log(`ItemTab: Rendering ${type} item`, {
           id: item.id,
           title: item.title,
+          public: item.public,
           content,
           placeholder,
+          item: item,
         });
 
         return (
@@ -393,6 +997,7 @@ const ItemTab = ({
               background: "#ffffff",
               boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
               transition: "box-shadow 0.3s ease",
+              height: "fit-content",
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)")
@@ -401,25 +1006,43 @@ const ItemTab = ({
               (e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)")
             }
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "12px",
-              }}
-            >
-              <h2
-                style={{
-                  fontSize: "18px",
-                  fontWeight: 600,
-                  color: "#333",
-                  margin: 0,
-                }}
-              >
+            <div style={{display: "flex",justifyContent: "space-between",alignItems: "center",marginBottom: "12px", columnGap: "8px"}}>
+              <h2 style={{fontSize: "18px", fontWeight: 600, color: "#333", margin: 0}}>
                 {item?.title || "Untitled"}
               </h2>
               <div style={{ display: "flex", gap: "12px" }}>
+                {isAssignment && (
+                  <button
+                    onClick={() => openAssignmentModal?.(item)}
+                    style={styledPrimaryIconButton}
+                  >
+                    <p style={{color: "white"}}><Icon name="pencil" /></p>
+                  </button>
+                )}
+                {isResource && (
+                  <button
+                  onClick={() => window.open(editUrl, '_blank', 'noopener,noreferrer')}
+                    style={styledPrimaryIconButton}
+                  >
+                    <p style={{color: "white"}}><Icon name="pencil" /></p>
+                  </button>
+                )}
+                {(isTask || isStudy) && (
+                  <button
+                    onClick={() => window.open(viewUrl, '_blank', 'noopener,noreferrer')}
+                    style={styledPrimaryIconButton}
+                    >
+                    <p style={{color: "white"}}><Icon name="external" /></p>
+                  </button>
+                  // <button
+                  //   onClick={() => window.open(viewUrl, '_blank', 'noopener,noreferrer')}
+                  //   style={styledSecondaryButtonBlue}
+                  // >
+                  //   <p style={{color: "white"}}><Icon name="external" /></p> {t("boardManagement.open", "Open")}
+                  // </button>
+                )}
+              </div>
+              {/* <div style={{ display: "flex", gap: "12px" }}>
                 {!isAssignment && (
                   <>
                     <a
@@ -442,7 +1065,7 @@ const ItemTab = ({
                     )}
                   </>
                 )}
-              </div>
+              </div> */}
             </div>
             <div
               style={{
@@ -452,23 +1075,54 @@ const ItemTab = ({
                 marginBottom: "16px",
               }}
             >
-              {ReactHtmlParser(truncateHtml(content, 15))}
-              {ReactHtmlParser(truncateHtml(placeholder, 10))}
+              {/* {ReactHtmlParser(truncateHtml(content, 15))}
+              {ReactHtmlParser(truncateHtml(placeholder, 10))} */}
             </div>
-            <Button
-              fluid
+            {isResource && (
+              <p>{item?.lastUpdate ? (<p>Last updated: {item?.lastUpdate}</p>) : (<></>)}</p>
+            )}
+            {isAssignment && (
+              <div style={{display: "flex", columnGap: "4px", rowGap: "8px", marginBottom: "8px", maxWidth: "100%", flexWrap: "wrap", alignItems: "center"}}>
+                <span style={item?.public ? styledChipPublished : styledChipUnpublished}><p>{item?.public ? "Published" : "Unpublished"}</p></span>
+                {item?.classes?.length ? (
+                  <>
+                    <p style={{margin: "0px"}}>
+                      •
+                    </p>
+                    {item.classes.map((cls, index) => (
+                      <span key={cls.id} style={styledChip}>
+                        <p style={{ 
+                          maxWidth: "100%", 
+                          wordBreak: "break-word", 
+                          whiteSpace: "normal",
+                          overflowWrap: "anywhere",
+                          margin: 0
+                        }}>
+                          {cls.title}
+                        </p>
+                      </span>
+                    ))}
+                    <p>{item?.lastUpdate ? (<p>Last updated: {item?.lastUpdate}</p>) : (<></>)}</p>
+                  </>
+                  ) : null
+                }
+              </div>            
+            )}
+            <button 
               onClick={() => (isSelected ? disconnect(item) : connect(item))}
-              style={{
-                background: isSelected ? "#ff4d4f" : "#52c41a",
-                color: "#ffffff",
-                borderRadius: "8px",
-                fontWeight: 500,
-              }}
-            >
-              {isSelected
+              style={isSelected
+                ? styledAccentButtonPurple
+                : styledPrimaryButton}
+              >
+                {isSelected
+                ? <Icon name="unlink"/>
+                : <Icon name="linkify"/>
+                }
+                {isSelected
                 ? t("board.expendedCard.disconnect")
-                : t("board.expendedCard.connect")}
-            </Button>
+                : t("board.expendedCard.connect")
+                }
+            </button>
           </div>
         );
       })}
@@ -684,13 +1338,12 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
         />
 
 
-        <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("assignment.placeholder")}</p>
+        <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("assignment.placeholderInstructions")}</p>
         <TipTapEditor
           content={editedAssignment.placeholder}
           placeholder={t("assignment.instructionsPlaceholder", "Enter placeholder shown to students...")}
           onUpdate={(newContent) => handleFieldChange('placeholder', newContent)}
         />
-
       </div>
     </Modal.Content>
       <Modal.Actions
@@ -717,6 +1370,33 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
         
         {!hasChanges && (
           <>
+            {/* Show alert if assignment is not connected to a class */}
+            {(assignment?.classes?.length === 0 || !assignment.classes) && (
+              <div
+                style={{
+                  background: "#fff7cd",
+                  color: "#664d03",
+                  border: "1px solid #ffecb5",
+                  borderRadius: "8px",
+                  padding: "16px",
+                  marginBottom: "16px",
+                  fontSize: "15px",
+                  display: "flex",
+                  alignItems: "center"
+                }}
+              >
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    marginRight: "8px"
+                  }}
+                >&#9888;</span>
+                {t(
+                  "assignment.classWarning",
+                  "This assignment is not connected to a class, you can do that by associating this project board to a class."
+                )}
+              </div>
+            )}
             {assignment?.public ? (
               // Button when assignment is public
               <>
@@ -750,7 +1430,7 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
                     }
                   }}
                 >
-                  {t("assignment.revoke")}
+                  {t("assignment.unpublish")}
                 </Button>
               </>
             ) : (
@@ -773,7 +1453,7 @@ const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
                   }
                 }}
               >
-                {t("assignment.submitToStudents")}
+                {t("assignment.publishToStudents")}
               </Button>
             )}
           </>
@@ -852,16 +1532,40 @@ export const PreviewSection = ({
             ? item?.content?.main || ""
             : item?.content || "";
 
+          // Handle click based on item type for PreviewSection
+          const handlePreviewCardClick = () => {
+            if (isAssignment) {
+              openAssignmentModal?.(item);
+            } else if (isResource) {
+              window.open(viewUrl, '_blank', 'noopener,noreferrer');
+            } else if (isTask || isStudy) {
+              window.open(viewUrl, '_blank', 'noopener,noreferrer');
+            }
+          };
+
           return (
             <div
               className="itemBlockPreview"
               key={item.id}
+              onClick={handlePreviewCardClick}
               style={{
                 border: "1px solid #e0e0e0",
                 borderRadius: "12px",
                 padding: "16px",
                 background: "#ffffff",
                 boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.borderColor = "#336F8A";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)";
+                e.currentTarget.style.transform = "translateY(0px)";
+                e.currentTarget.style.borderColor = "#e0e0e0";
               }}
             >
               <div
@@ -883,44 +1587,12 @@ export const PreviewSection = ({
                 >
                   {item?.title || "Untitled"}
                 </h2>
-                <div style={{ display: "flex", gap: "12px" }}>
-                  {isAssignment ? (
-                    <div
-                      style={{ cursor: "pointer", color: "#007c70" }}
-                      onClick={() => openAssignmentModal?.(item)}
-                      title={t("board.expendedCard.preview", "Preview")}
-                    >
-                      <Icon name="pencil alternate" />
-                    </div>
-                  ) : (
-                    <>
-                      <a
-                        href={viewUrl}
-                        target={isTaskOrStudy ? "_blank" : "_self"}
-                        rel={isTaskOrStudy ? "noreferrer" : undefined}
-                        style={{ color: "#007c70" }}
-                      >
-                        <Icon name="external alternate" />
-                      </a>
-                      {isResource && (
-                        <a
-                          href={editUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{ color: "#007c70" }}
-                        >
-                          <Icon name="pencil alternate" />
-                        </a>
-                      )}
-                    </>
-                  )}
-                </div>
               </div>
               {!isAssignment && (
                 <div
                   style={{ fontSize: "14px", color: "#666", lineHeight: "1.5" }}
                 >
-                  {ReactHtmlParser(truncateHtml(content, 50))}
+                  {/* {ReactHtmlParser(truncateHtml(content, 50))} */}
                 </div>
               )}
             </div>
