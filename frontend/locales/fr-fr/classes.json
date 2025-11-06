@@ -124,6 +124,8 @@
 			"title": "Titre",
 			"titleText": "Ajoutez ou modifiez le titre de la carte. Ce titre apparaîtra comme en-tête de section dans les soumissions des étudiants au Centre de commentaires si la case « Inclure la saisie de texte pour le Centre de commentaires » est cochée.",
 			"type": "Type de carte",
+			"updateAllClones": "Oui, mettez à jour tous les clones.",
+			"updateOnlyThisBoard": "Non, mettez à jour uniquement ce tableau.",
 			"viewContent": "Afficher le contenu",
 			"viewingAssignment": "Mission de visualisation :",
 			"visibility": "Visibilité",

@@ -63,6 +63,7 @@ export default function BuilderProposalCard({
 
   const client = useApolloClient();
   const [showCloneDialog, setShowCloneDialog] = useState(false);
+  const [showWarningBox, setShowWarningBox] = useState(false);
 
   // Update card content in the local state
   const handleContentChange = async ({ contentType, newContent }) => {
@@ -381,13 +382,13 @@ export default function BuilderProposalCard({
               borderRadius: "100px",
               background: "white",
               fontSize: "16px",
-              color: "#8A2CF6",
-              border: "1px solid #8A2CF6",
+              color: "#CF6D6A",
+              border: "1px solid #CF6D6A",
               marginRight: "10px"
             }}
             onClick={handleCloneNo}
           >
-            No, update only this board
+            {t("board.expendedCard.updateOnlyThisBoard", "No, update only this board")}
           </Button>
           <Button
             loading={updateLoading || updateClonedLoading}
@@ -401,7 +402,7 @@ export default function BuilderProposalCard({
             }}
             onClick={handleCloneYes}
           >
-            Yes, update all clones
+            {t("board.expendedCard.updateAllClones", "Yes, update all clones")}
           </Button>
         </Modal.Actions>
       </Modal>
@@ -459,97 +460,100 @@ export default function BuilderProposalCard({
                   )}
                 </div>
                 
-                {/* Only show warning if proposal has child proposals */}
-                {proposal?.prototypeFor?.length > 0 && (
+              </label>
+              <div onClick={() => proposal?.prototypeFor?.length > 0 && setShowWarningBox(true)}>
+                <TipTapEditor
+                  content={content?.current}
+                  onUpdate={(newContent) =>
+                    handleContentChange({
+                      contentType: "content",
+                      newContent,
+                    })
+                  }
+                />
+              </div>
+              {/* Show warning box after editor is clicked and if proposal has child proposals */}
+              {showWarningBox && proposal?.prototypeFor?.length > 0 && (
+                <div 
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                    width: "100%",
+                    marginTop: "16px",
+                    padding: "12px 16px",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexShrink: "0",
+                    borderRadius: "8px",
+                    background: "#EDCECD",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    const tooltip = e.currentTarget.querySelector('.hover-tooltip');
+                    if (tooltip) {
+                      tooltip.style.opacity = "1";
+                      tooltip.style.transform = "translateY(0)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    const tooltip = e.currentTarget.querySelector('.hover-tooltip');
+                    if (tooltip) {
+                      tooltip.style.opacity = "0";
+                      tooltip.style.transform = "translateY(-5px)";
+                    }
+                  }}
+                >
+                  <p style={{
+                    color: "#8F1F14",
+                    fontFamily: "Nunito",
+                    fontSize: "16px",
+                    fontStyle: "normal",
+                    fontWeight: "400",
+                    lineHeight: "24px",
+                    margin: 0,
+                    }}>
+                    {t("board.expendedCard.overwriteWarning", "")}
+                  </p>
+
+                  <div style={{
+                    width: "20px",
+                    height: "20px",
+                    flexShrink: 0,
+                  }}>
+                    <img src="/assets/icons/info_red.svg" alt="warning" />
+                  </div>
+
+                  {/* Hover tooltip */}
                   <div 
+                    className="hover-tooltip"
                     style={{
-                      position: "relative",
-                      display: "flex",
-                      width: "100%",
-                      marginTop: "16px",
+                      position: "absolute",
+                      top: "100%",
+                      left: "0",
+                      right: "0",
+                      background: "#CF6D6A",
+                      color: "white",
+                      marginTop: "8px",
                       padding: "12px 16px",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      flexShrink: "0",
                       borderRadius: "8px",
-                      background: "#EDCECD",
-                      cursor: "pointer",
+                      fontSize: "16px",
+                      fontFamily: "Nunito",
+                      lineHeight: "20px",
+                      opacity: "0",
+                      transform: "translateY(-5px)",
                       transition: "all 0.3s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      const tooltip = e.currentTarget.querySelector('.hover-tooltip');
-                      if (tooltip) {
-                        tooltip.style.opacity = "1";
-                        tooltip.style.transform = "translateY(0)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      const tooltip = e.currentTarget.querySelector('.hover-tooltip');
-                      if (tooltip) {
-                        tooltip.style.opacity = "0";
-                        tooltip.style.transform = "translateY(-5px)";
-                      }
+                      pointerEvents: "none",
+                      zIndex: 1000,
+                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
                     }}
                   >
-                    <p style={{
-                      color: "#8F1F14",
-                      fontFamily: "Nunito",
-                      fontSize: "16px",
-                      fontStyle: "normal",
-                      fontWeight: "400",
-                      lineHeight: "24px",
-                      margin: 0,
-                      }}>
-                      {t("board.expendedCard.overwriteWarning", "")}
-                    </p>
-
-                    <div style={{
-                      width: "20px",
-                      height: "20px",
-                      flexShrink: 0,
-                    }}>
-                      <img src="/assets/icons/info_red.svg" alt="warning" />
-                    </div>
-
-                    {/* Hover tooltip */}
-                    <div 
-                      className="hover-tooltip"
-                      style={{
-                        position: "absolute",
-                        top: "100%",
-                        left: "0",
-                        right: "0",
-                        background: "#CF6D6A",
-                        color: "white",
-                        padding: "12px 16px",
-                        borderRadius: "8px",
-                        fontSize: "16px",
-                        fontFamily: "Nunito",
-                        lineHeight: "20px",
-                        opacity: "0",
-                        transform: "translateY(-5px)",
-                        transition: "all 0.3s ease",
-                        pointerEvents: "none",
-                        zIndex: 1000,
-                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-                      }}
-                    >
-                      <span>{t("board.expendedCard.overwriteWarningDetails1", "Making changes in the Student Response box will overwrite any content added by your students, which may result in the loss of their progress. Only proceed if you are certain that no students have already started working on this card.")}</span>
-                      <br /><br />
-                      <span>{t("board.expendedCard.overwriteWarningDetails2", "If you are unsure or want to update instructions without affecting student progress, consider editing the Instruction field instead. You can use it to provide updated guidance or new placeholder content.")}</span>
-                    </div>
+                    <span>{t("board.expendedCard.overwriteWarningDetails1", "Making changes in the Student Response box will overwrite any content added by your students, which may result in the loss of their progress. Only proceed if you are certain that no students have already started working on this card.")}</span>
+                    <br /><br />
+                    <span>{t("board.expendedCard.overwriteWarningDetails2", "If you are unsure or want to update instructions without affecting student progress, consider editing the Instruction field instead. You can use it to provide updated guidance or new placeholder content.")}</span>
                   </div>
-                )}
-              </label>
-              <TipTapEditor
-                content={content?.current}
-                onUpdate={(newContent) =>
-                  handleContentChange({
-                    contentType: "content",
-                    newContent,
-                  })
-                }
-              />
+                </div>
+              )}
             </>
           )}
         </div>

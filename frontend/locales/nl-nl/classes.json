@@ -124,6 +124,8 @@
 			"title": "Titel",
 			"titleText": "Voeg de kaarttitel toe of bewerk deze. Deze titel verschijnt als sectiekop in de inzendingen van studenten voor het Feedback Center als het vakje 'Tekstinvoer voor Feedback Center toevoegen' is aangevinkt.",
 			"type": "Type",
+			"updateAllClones": "Ja, alle klonen bijwerken",
+			"updateOnlyThisBoard": "Nee, alleen dit bord bijwerken",
 			"viewContent": "Bekijk inhoud",
 			"viewingAssignment": "Bekijkopdracht:",
 			"visibility": "Zichtbaarheid",

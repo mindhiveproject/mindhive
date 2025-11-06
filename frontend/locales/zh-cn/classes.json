@@ -124,6 +124,8 @@
 			"title": "标题",
 			"titleText": "添加或编辑卡片标题。如果勾选了“包含反馈中心的文本输入”复选框，此标题将作为章节标题出现在学生提交至反馈中心的内容中。",
 			"type": "类型",
+			"updateAllClones": "是的，更新所有克隆版本。",
+			"updateOnlyThisBoard": "不，只更新这个板块。",
 			"viewContent": "查看内容",
 			"viewingAssignment": "观看任务：",
 			"visibility": "能见度",

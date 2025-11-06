@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import Classes from "./Classes/Main";
 import Networks from "./Networks/Main";
+import BlockDocumentation from "./BlockDocumentation/Main";
 
 import StyledManagement from "../../styles/StyledManagement";
 import TemplateAssignments from "./Assignments/Main";
@@ -17,8 +18,8 @@ export default function ManagementMain({ query, user }) {
         <h1>Management</h1>
         <div>
           <p>
-            All classes, class networks, and assignments on the platform
-            MindHive.
+            All classes, class networks, assignments, and block documentation on
+            the platform MindHive.
           </p>
         </div>
 
@@ -79,6 +80,20 @@ export default function ManagementMain({ query, user }) {
                 </div>
               </Link>
             </div>
+
+            <div>
+              <Link href="/dashboard/management/blockdocumentation">
+                <div
+                  className={
+                    selector === "blockdocumentation"
+                      ? "menuTitle selectedMenuTitle"
+                      : "menuTitle"
+                  }
+                >
+                  <p>Block Doc</p>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -88,6 +103,9 @@ export default function ManagementMain({ query, user }) {
         <TemplateAssignments query={query} user={user} />
       )}
       {selector === "users" && <Users query={query} user={user} />}
+      {selector === "blockdocumentation" && (
+        <BlockDocumentation query={query} user={user} />
+      )}
     </StyledManagement>
   );
 }
