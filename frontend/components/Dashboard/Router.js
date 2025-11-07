@@ -21,6 +21,7 @@ import UpdatesMain from "./Updates/Main";
 import UserPage from "./UserPage/Main";
 import Assignments from "./Assignment/Main";
 import Boards from "./Boards/Main";
+import ResearchMain from "./Research/Main";
 
 // admin area
 import ManagementMain from "./Management/Main";
@@ -72,6 +73,10 @@ export default function DashboardRouter({ query }) {
 
   if (area === "assignments") {
     return <Assignments query={query} user={user} />;
+  }
+
+  if (area === "research") {
+    return <ResearchMain query={query} user={user} />;
   }
 
   if (area === "proposals") {
