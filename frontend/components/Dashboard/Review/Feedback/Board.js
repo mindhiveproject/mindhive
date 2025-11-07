@@ -151,29 +151,33 @@ export default function Board({ user, projectId, status, reviews }) {
             </div>
 
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end",}}>
-              <p>{t('review.suggestedTasks')}</p>
-              <div className="tasksArea">
-                {recommendedTasks.map((id) => {
-                  const tasksWithId = publicTasks.filter(
-                    (task) => task?.id === id
-                  );
-                  let task = {};
-                  if (tasksWithId && tasksWithId.length) {
-                    task = tasksWithId[0];
-                  }
-                  return (
-                    <div key={num} className="task">
-                      <ManageFavorite user={user} id={id} />
-                      <a
-                        href={`/dashboard/discover/tasks?name=${task?.slug}`}
-                        target="_blank"
-                      >
-                        <div className="questionAnswer">{task.title}</div>
-                      </a>
-                    </div>
-                  );
-                })}
-              </div>
+              {recommendedTasks.length > 0 && (
+                <>
+                  <p>{t('review.suggestedTasks')}</p>
+                  <div className="tasksArea">
+                    {recommendedTasks.map((id) => {
+                      const tasksWithId = publicTasks.filter(
+                        (task) => task?.id === id
+                      );
+                      let task = {};
+                      if (tasksWithId && tasksWithId.length) {
+                        task = tasksWithId[0];
+                      }
+                      return (
+                        <div key={id} className="task">
+                          <ManageFavorite user={user} id={id} />
+                          <a
+                            href={`/dashboard/discover/tasks?name=${task?.slug}`}
+                            target="_blank"
+                          >
+                            <div className="questionAnswer">{task.title}</div>
+                          </a>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
             <div className="cards">
               {review.content
