@@ -1,0 +1,28 @@
+{
+	"boardData": "Dados do Conselho",
+	"buildYourExport": "Aumente suas exportações",
+	"classId": "ID da turma",
+	"csv": "CSV (.csv)",
+	"data": "Dados",
+	"downloadPayload": "Baixar carga útil",
+	"enterClassId": "Insira o ID da turma",
+	"errors": {
+		"formatUnsupported": "No momento, apenas as exportações em formato CSV estão disponíveis.",
+		"missingClassId": "Por favor, forneça um ID de turma antes de executar a exportação.",
+		"noDatasetSelected": "Selecione pelo menos um conjunto de dados (conselho ou avaliações)."
+	},
+	"filterByCardStatus": "Filtrar por status do cartão",
+	"intro": "Extraia o conteúdo das propostas e os dados de revisão diretamente da plataforma MindHive. Escolha a disciplina, selecione o escopo dos dados e exporte arquivos CSV formatados para análise, prontos para download.",
+	"json": "JSON (se realmente necessário)",
+	"noResearchAccess": "Você precisa de permissões de nível de pesquisa para acessar as ferramentas de exportação.",
+	"outputFormat": "Formato de saída",
+	"preparingExport": "Preparando a exportação…",
+	"research": "Pesquisar",
+	"resetFilters": "Redefinir filtros",
+	"reviewData": "Dados de revisão",
+	"runExport": "Executar Exportação",
+	"selectAllBoards": "Selecione 'Todos os quadros' se não quiser filtros.",
+	"selectDataScope": "(Opcional) Selecione o escopo de dados",
+	"whatAreTheFilteringPolicies": "Quais são as políticas de filtragem?",
+	"workflowStage": "Selecione a etapa pela qual deseja filtrar."
+}

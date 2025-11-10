@@ -1,0 +1,28 @@
+{
+	"boardData": "董事会数据",
+	"buildYourExport": "构建您的出口",
+	"classId": "类别 ID",
+	"csv": "CSV（.csv）",
+	"data": "数据",
+	"downloadPayload": "下载有效载荷",
+	"enterClassId": "请输入班级 ID",
+	"errors": {
+		"formatUnsupported": "目前仅支持导出 CSV 文件。",
+		"missingClassId": "请在导出前提供类 ID。",
+		"noDatasetSelected": "至少选择一个数据集（董事会或评论）。"
+	},
+	"filterByCardStatus": "按卡片状态筛选",
+	"intro": "直接从 MindHive 平台提取提案内容和审核数据。选择类别，选择数据范围，并导出可用于分析的 CSV 文件。",
+	"json": "JSON（如果确实需要的话）",
+	"noResearchAccess": "您需要研究级别的权限才能访问导出工具。",
+	"outputFormat": "输出格式",
+	"preparingExport": "准备出口……",
+	"research": "研究",
+	"resetFilters": "重置筛选条件",
+	"reviewData": "审查数据",
+	"runExport": "运行导出",
+	"selectAllBoards": "如果您不想使用任何筛选条件，请选择“所有板块”。",
+	"selectDataScope": "（可选）选择数据范围",
+	"whatAreTheFilteringPolicies": "过滤策略是什么？",
+	"workflowStage": "选择要筛选的阶段"
+}

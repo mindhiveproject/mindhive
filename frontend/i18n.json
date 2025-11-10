@@ -2,6 +2,6 @@
   "locales": ["en-us", "es-es", "es-la", "zh-cn", "fr-fr", "ar-ae", "hi-in", "hi-ma", "ru-ru", "nl-nl", "pt-br"],
   "defaultLocale": "en-us",
   "pages": {
-    "*": ["common", "dashboard", "builder", "home", "classes", "dataviz", "navigation", "connect"]
+    "*": ["common", "dashboard", "builder", "home", "classes", "dataviz", "navigation", "connect", "research"]
   }
 }

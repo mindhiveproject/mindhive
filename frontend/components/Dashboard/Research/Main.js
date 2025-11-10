@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import useTranslation from "next-translate/useTranslation";
 
 import StyledResearch from "./StyledResearch";
 
@@ -460,7 +461,7 @@ export default function ResearchMain({ query, user }) {
   const [format, setFormat] = useState("csv");
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState({ type: null, message: "" });
-
+  const { t } = useTranslation("research");
   const canAccess = useMemo(() => hasResearchAccess(user), [user]);
 
   const resetFilters = () => {
@@ -478,7 +479,9 @@ export default function ResearchMain({ query, user }) {
     if (!classId.trim()) {
       setFeedback({
         type: "error",
-        message: "Please provide a Class ID before running the export.",
+        message: t("errors.missingClassId", {
+          defaultValue: "Please provide a Class ID before running the export.",
+        }),
       });
       return;
     }
@@ -486,7 +489,9 @@ export default function ResearchMain({ query, user }) {
     if (!includeContent && !includeReviews) {
       setFeedback({
         type: "error",
-        message: "Select at least one dataset (proposal content or reviews).",
+        message: t("errors.noDatasetSelected", {
+          defaultValue: "Select at least one dataset (board or reviews).",
+        }),
       });
       return;
     }
@@ -494,7 +499,9 @@ export default function ResearchMain({ query, user }) {
     if (format !== "csv") {
       setFeedback({
         type: "error",
-        message: "Only CSV exports are available at this time.",
+        message: t("errors.formatUnsupported", {
+          defaultValue: "Only CSV exports are available at this time.",
+        }),
       });
       return;
     }
@@ -737,12 +744,16 @@ export default function ResearchMain({ query, user }) {
       <StyledResearch>
         <div className="pageHeader">
           <div className="headerIcon">
-            <img src="/assets/icons/visualize/database.svg" alt="Database" />
+            <img src="/assets/icons/education.svg" alt="Education" />
           </div>
-          <h1>Research</h1>
+          <h1>{t("research", {
+            defaultValue: "Research",
+          })}</h1>
         </div>
         <div className="toast error">
-          You need research-level permissions to access the export tools.
+          {t("errors.noResearchAccess", {
+            defaultValue: "You need research-level permissions to access the export tools.",
+          })}
         </div>
       </StyledResearch>
     );
@@ -752,54 +763,54 @@ export default function ResearchMain({ query, user }) {
     <StyledResearch>
       <div className="pageHeader">
         <div className="headerIcon">
-          <img src="/assets/icons/visualize/database.svg" alt="Database" />
+          <img src="/assets/icons/education.svg" alt="Education" />
         </div>
         <h1>Research</h1>
       </div>
 
       <p className="intro">
-        Pull proposal content and review data directly from the MindHive
-        platform. Choose the class, pick your data scope, and export
-        downloadable CSV files formatted for analysis.
+        {t("intro", {
+          defaultValue: "Pull proposal content and review data directly from the MindHive platform. Choose the class, pick your data scope, and export downloadable CSV files formatted for analysis.",
+        })}
       </p>
 
       <div className="filtersCard">
         <div className="cardHeader">
-          <h2>Build Your Export</h2>
-          <span>Configure filters to tailor the dataset before download.</span>
+          <h2>{t("buildYourExport", {
+            defaultValue: "Build Your Export",
+          })}</h2>
+          <span>Download board and associated review data.</span>
         </div>
 
         <div className="fieldGroup">
-          <label htmlFor="research-class-id">Class Identifier</label>
+          <label htmlFor="research-class-id">{t("classId", {
+            defaultValue: "Class ID",
+          })}</label>
           <input
             id="research-class-id"
             type="text"
-            placeholder="Enter the class ID"
+            placeholder={t("enterClassId", {
+              defaultValue: "Enter the class ID",
+            })}
             value={classId}
             onChange={(event) => setClassId(event.target.value)}
             autoComplete="off"
           />
         </div>
 
-        <div className="fieldGroup">
-          <label>Workflow Stage</label>
-          <div className="chipGroup">
-            {STAGE_OPTIONS.map((stage) => (
-              <button
-                key={stage.value}
-                type="button"
-                className={activeStage === stage.value ? "active" : ""}
-                onClick={() => setActiveStage(stage.value)}
-                title={stage.helper}
-              >
-                {stage.label}
-              </button>
-            ))}
-          </div>
+        <div className="cardHeader">
+        <h2>{t("selectDataScope", {
+          defaultValue: "(Optional) Select data scope",
+        })}</h2>
+        <span>{t("selectAllBoards", {
+          defaultValue: "Select 'All boards' if you want no filters",
+        })}</span>
         </div>
 
         <div className="fieldGroup">
-          <label>Data Scope</label>
+          <label>{t("filterByCardStatus", {
+            defaultValue: "Filter by card status",
+          })}</label>
           <div className="chipGroup">
             {SCOPE_OPTIONS.map((option) => (
               <button
@@ -814,8 +825,37 @@ export default function ResearchMain({ query, user }) {
           </div>
         </div>
 
+        {activeScope !== "ALL" && (
+          <div className="fieldGroup">
+            <label>{t("workflowStage", {
+              defaultValue: "Select which stage to filter by",
+            })}</label>
+            <div className="chipGroup">
+              {STAGE_OPTIONS.map((stage) => (
+                <button
+                  key={stage.value}
+                  type="button"
+                  className={activeStage === stage.value ? "active" : ""}
+                  onClick={() => setActiveStage(stage.value)}
+                  title={stage.helper}
+                >
+                  {stage.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="cardHeader">
+          <h2>{t("data", {
+            defaultValue: "Data",
+          })}</h2>
+        </div>
+
         <div className="fieldGroup">
-          <label>Datasets</label>
+          <label>{t("downloadPayload", {
+            defaultValue: "Download payload",
+          })}</label>
           <div className="checkboxGroup">
             <label className={includeContent ? "active" : ""}>
               <input
@@ -823,7 +863,9 @@ export default function ResearchMain({ query, user }) {
                 checked={includeContent}
                 onChange={(event) => setIncludeContent(event.target.checked)}
               />
-              Boards
+              {t("boardData", {
+                defaultValue: "Board Data",
+              })}
             </label>
             <label className={includeReviews ? "active" : ""}>
               <input
@@ -831,7 +873,9 @@ export default function ResearchMain({ query, user }) {
                 checked={includeReviews}
                 onChange={(event) => setIncludeReviews(event.target.checked)}
               />
-              Reviews
+              {t("reviewData", {
+                defaultValue: "Review Data",
+              })}
             </label>
           </div>
         </div>
@@ -840,8 +884,8 @@ export default function ResearchMain({ query, user }) {
           <label>Output Structure</label>
           <div className="chipGroup">
             {[
-              { value: "long", label: "Long (tidy)" },
-              { value: "wide", label: "Wide (pivoted)" },
+              { value: "long", label: "Long (better for filtering)" },
+              { value: "wide", label: "Wide (better for human readability)" },
             ].map((shape) => (
               <button
                 key={shape.value}
@@ -856,7 +900,9 @@ export default function ResearchMain({ query, user }) {
         </div>
 
         <div className="fieldGroup">
-          <label>Output Format</label>
+          <label>{t("outputFormat", {
+            defaultValue: "Output Format",
+          })}</label>
           <div className="radioGroup">
             <label className={format === "csv" ? "active" : ""}>
               <input
@@ -866,7 +912,9 @@ export default function ResearchMain({ query, user }) {
                 checked={format === "csv"}
                 onChange={(event) => setFormat(event.target.value)}
               />
-              CSV (.csv)
+              {t("csv", {
+                defaultValue: "CSV (.csv)",
+              })}
             </label>
             <label>
               <input
@@ -875,7 +923,9 @@ export default function ResearchMain({ query, user }) {
                 value="json"
                 disabled
               />
-              JSON (if needed really)
+              {t("json", {
+                defaultValue: "JSON (if needed really)",
+              })}
             </label>
           </div>
         </div>
@@ -887,7 +937,9 @@ export default function ResearchMain({ query, user }) {
             onClick={resetFilters}
             disabled={isLoading}
           >
-            Reset Filters
+            {t("resetFilters", {
+              defaultValue: "Reset Filters",
+            })}
           </button>
           <button
             type="button"
@@ -899,7 +951,11 @@ export default function ResearchMain({ query, user }) {
               (!includeContent && !includeReviews)
             }
           >
-            {isLoading ? "Preparing export…" : "Run Export"}
+            {isLoading ? t("preparingExport", {
+              defaultValue: "Preparing export…",
+            }) : t("runExport", {
+              defaultValue: "Run Export",
+            })}
           </button>
         </div>
       </div>
@@ -909,7 +965,9 @@ export default function ResearchMain({ query, user }) {
       )}
 
       <div className="statusPanel">
-        <h3>What are the filtering policies?</h3>
+        <h3>{t("whatAreTheFilteringPolicies", {
+          defaultValue: "What are the filtering policies?",
+        })}</h3>
         <ul>
           <li>
             Boards are pulled from <code>Class.studentProposals</code>. For each
@@ -928,8 +986,10 @@ export default function ResearchMain({ query, user }) {
             status filters (Not Started, In Progress, Submitted, Finished).
           </li>
           <li>
-            Selected datasets are bundled into a single ZIP archive for
-            download.
+            You can choose between long and wide export formats: long format outputs one row per board section card, while wide format flattens each board to a single row with many columns.
+          </li>
+          <li>
+            Selected datasets are bundled into a single ZIP archive for download.
           </li>
         </ul>
       </div>
