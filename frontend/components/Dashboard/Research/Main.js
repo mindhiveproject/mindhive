@@ -5,9 +5,9 @@ import { saveAs } from "file-saver";
 import StyledResearch from "./StyledResearch";
 
 const GRAPHQL_ENDPOINT =
-  process.env.NEXT_PUBLIC_RESEARCH_EXPORT_ENDPOINT ||
-  // "https://backend.mindhive.science/api/graphql/api/graphql";
-  "http://localhost:4444/api/graphql";
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:4444/api/graphql"
+    : process.env.NEXT_PUBLIC_RESEARCH_EXPORT_ENDPOINT;
 
 const EXPORT_QUERY = `
   query ResearchExport($id: ID!) {
@@ -143,7 +143,7 @@ const extractTextFromHTML = (htmlString) => {
 };
 
 const escapeCSV = (value) => {
-  if (value === null || value === undefined) return "\"\"";
+  if (value === null || value === undefined) return '""';
   if (typeof value === "string") {
     return `"${value.replace(/"/g, '""')}"`;
   }
@@ -327,11 +327,7 @@ const flattenReviews = (proposalBoards, classMeta = {}, shape = "long") => {
 const convertToCSV = (data) => {
   if (!data || data.length === 0) return "";
   const headers = Object.keys(data[0]).join(",");
-  const rows = data.map((row) =>
-    Object.values(row)
-      .map(escapeCSV)
-      .join(",")
-  );
+  const rows = data.map((row) => Object.values(row).map(escapeCSV).join(","));
   return [headers, ...rows].join("\n");
 };
 
@@ -383,7 +379,10 @@ const selectBoardsForClass = (boards = [], students = []) => {
         ];
         selectedBoards[index] = existing;
       }
-      if (selectionReason === "isMain" && existing.selectionReason !== "isMain") {
+      if (
+        selectionReason === "isMain" &&
+        existing.selectionReason !== "isMain"
+      ) {
         existing.selectionReason = "isMain";
       }
       return;
@@ -403,7 +402,9 @@ const selectBoardsForClass = (boards = [], students = []) => {
     if (!studentId) return;
 
     const candidateBoards = boards.filter((board) =>
-      board.collaborators?.some((collaborator) => collaborator?.id === studentId)
+      board.collaborators?.some(
+        (collaborator) => collaborator?.id === studentId
+      )
     );
 
     if (candidateBoards.length === 0) {
@@ -532,8 +533,11 @@ export default function ResearchMain({ query, user }) {
         );
       }
 
-      const { studentProposals = [], students = [], title: classTitle } =
-        classPayload;
+      const {
+        studentProposals = [],
+        students = [],
+        title: classTitle,
+      } = classPayload;
 
       if (!Array.isArray(studentProposals) || studentProposals.length === 0) {
         throw new Error(
@@ -755,8 +759,8 @@ export default function ResearchMain({ query, user }) {
 
       <p className="intro">
         Pull proposal content and review data directly from the MindHive
-        platform. Choose the class, pick your data scope, and export downloadable
-        CSV files formatted for analysis.
+        platform. Choose the class, pick your data scope, and export
+        downloadable CSV files formatted for analysis.
       </p>
 
       <div className="filtersCard">
@@ -901,9 +905,7 @@ export default function ResearchMain({ query, user }) {
       </div>
 
       {feedback.type && (
-        <div className={`toast ${feedback.type}`}>
-          {feedback.message}
-        </div>
+        <div className={`toast ${feedback.type}`}>{feedback.message}</div>
       )}
 
       <div className="statusPanel">
@@ -911,21 +913,23 @@ export default function ResearchMain({ query, user }) {
         <ul>
           <li>
             Boards are pulled from <code>Class.studentProposals</code>. For each
-            enrolled student we prioritise their board flagged as <code>isMain</code>;
-            if one is missing, we fall back to the board they have submitted
-            (<code>submitProposalStatus === SUBMITTED</code>).
+            enrolled student we prioritise their board flagged as{" "}
+            <code>isMain</code>; if one is missing, we fall back to the board
+            they have submitted (<code>submitProposalStatus === SUBMITTED</code>
+            ).
           </li>
           <li>
             Proposal content exports include plain-text cards, comments, review
-            flags, linked resources, and the class collaborators attached to each
-            board.
+            flags, linked resources, and the class collaborators attached to
+            each board.
           </li>
           <li>
-            Reviews export each response separately, respecting the same stage
-            + status filters (Not Started, In Progress, Submitted, Finished).
+            Reviews export each response separately, respecting the same stage +
+            status filters (Not Started, In Progress, Submitted, Finished).
           </li>
           <li>
-            Selected datasets are bundled into a single ZIP archive for download.
+            Selected datasets are bundled into a single ZIP archive for
+            download.
           </li>
         </ul>
       </div>
