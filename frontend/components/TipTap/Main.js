@@ -100,6 +100,7 @@ export default function TipTapEditor({
   onUpdate,
   isEditable = true,
   toolbarVisible = true,
+  specialButton = null,
 }) {
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -208,6 +209,69 @@ export default function TipTapEditor({
         href: normalizedUrl,
         target: '_blank',
       }).run();
+    };
+
+    const renderSpecialButton = () => {
+      if (!specialButton) return null;
+
+      const {
+        label,
+        onClick,
+        disabled: externalDisabled,
+        loading = false,
+        icon,
+        className = "",
+        primary = false,
+        positive = false,
+        negative = false,
+        color,
+        secondary = false,
+        basic = true,
+      } = specialButton;
+
+      if (!label || typeof onClick !== "function") {
+        return null;
+      }
+
+      const isDisabled = !!externalDisabled || !editor.isEditable;
+
+      const handleClick = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (isDisabled) {
+          return;
+        }
+        onClick(editor, event);
+      };
+
+      return (
+        <div
+          className="toolbarGroup specialButtonGroup"
+          style={{ marginLeft: "auto" }}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <Button
+            className={`toolbarButton specialToolbarButton ${className}`.trim()}
+            onClick={handleClick}
+            disabled={isDisabled}
+            loading={loading}
+            primary={primary}
+            positive={positive}
+            negative={negative}
+            secondary={secondary}
+            color={color}
+            aria-label={label}
+            basic={basic}
+            type="button"
+          >
+            {icon && <Icon name={icon} />}
+            {label}
+          </Button>
+        </div>
+      );
     };
 
     const tableOptions = [
@@ -529,6 +593,7 @@ export default function TipTapEditor({
               </Dropdown.Menu>
             </Dropdown>
           </div>
+        {renderSpecialButton()}
         </div>
       </div>
     );
