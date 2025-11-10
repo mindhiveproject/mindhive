@@ -54,8 +54,8 @@ export const StyledActionPage = styled.div`
   .card {
     display: grid;
     grid-gap: 10px;
-    padding: 24px;
-    border: 1px solid #deddd9;
+    padding-top: 24px;
+    // border: 1px solid #deddd9;
     border-radius: 10px;
   }
   .cardTitleIcon {

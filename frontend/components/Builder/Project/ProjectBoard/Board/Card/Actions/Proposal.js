@@ -1,8 +1,11 @@
 import { useQuery, useMutation } from "@apollo/client";
-import ReactHtmlParser from "react-html-parser";
+import { useEffect, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-import { UPDATE_PROJECT_BOARD } from "../../../../../../Mutations/Proposal";
+import {
+  UPDATE_CARD_EDIT,
+  UPDATE_PROJECT_BOARD,
+} from "../../../../../../Mutations/Proposal";
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
 import { CREATE_LOG } from "../../../../../../Mutations/Log";
@@ -10,9 +13,10 @@ import { CREATE_LOG } from "../../../../../../Mutations/Log";
 import Navigation from "./Navigation";
 import { cardTypes } from "../../Builder/Actions/ActionCard";
 
-import { ReadOnlyTipTap } from "../../../../../../TipTap/ReadOnlyTipTap";
+import TipTapEditor from "../../../../../../TipTap/Main";
 import { StyledActionPage } from "../../../../../../styles/StyledReview";
 import Feedback from "../../../../../../Dashboard/Review/Feedback/Main";
+import Status from "../Forms/Status";
 
 const submitOptions = {
   ACTION_SUBMIT: {
@@ -77,17 +81,24 @@ export default function Proposal({
     section?.cards.map((card) => card?.type).includes(proposalCard?.type)
   );
 
-  const cards = [...proposal?.sections]
-    ?.sort((a, b) => a?.position - b?.position)
-    .map((section) =>
-      section?.cards.filter(
-        (card) =>
-          (card?.settings?.includeInReport &&
-            currentSections?.map((s) => s?.id).includes(card?.section?.id)) ||
-          card?.settings?.includeInReviewSteps?.includes(proposalCard?.type)
-      )
-    )
-    .flat();
+  const cards =
+    proposal?.sections
+      ?.slice()
+      ?.sort((a, b) => (a?.position ?? 0) - (b?.position ?? 0))
+      ?.flatMap((section) =>
+        section?.cards
+          ?.filter(
+            (card) =>
+              (card?.settings?.includeInReport &&
+                currentSections?.map((s) => s?.id).includes(card?.section?.id)) ||
+              card?.settings?.includeInReviewSteps?.includes(proposalCard?.type)
+          )
+          ?.sort((a, b) => (a?.position ?? 0) - (b?.position ?? 0)) || []
+      ) || [];
+
+  const [editedCards, setEditedCards] = useState({});
+  const [saveStates, setSaveStates] = useState({});
+  const [saveErrors, setSaveErrors] = useState({});
 
   const statusesDict = {
     Completed: "completed",
@@ -124,6 +135,7 @@ export default function Proposal({
   });
 
   const [createLog] = useMutation(CREATE_LOG);
+  const [updateCardContent] = useMutation(UPDATE_CARD_EDIT);
 
   const submitProposal = async () => {
     const res = await updateProposal({
@@ -174,6 +186,331 @@ export default function Proposal({
     }
   };
 
+  useEffect(() => {
+    if (!cards?.length) return;
+
+    setEditedCards((prev) => {
+      let hasChanges = false;
+      const next = { ...prev };
+
+      cards.forEach((card) => {
+        if (!card?.id) return;
+        const serverContent = card?.content || "";
+        const serverStatus = card?.settings?.status || "Not started";
+        const existing = next[card.id];
+        if (!existing) {
+          next[card.id] = {
+            content: serverContent,
+            contentBaseline: serverContent,
+            status: serverStatus,
+            statusBaseline: serverStatus,
+            dirty: false,
+          };
+          hasChanges = true;
+          return;
+        }
+
+        if (!existing.dirty) {
+          const needsReset =
+            existing.content !== serverContent ||
+            existing.contentBaseline !== serverContent ||
+            existing.status !== serverStatus ||
+            existing.statusBaseline !== serverStatus;
+
+          if (needsReset) {
+            next[card.id] = {
+              content: serverContent,
+              contentBaseline: serverContent,
+              status: serverStatus,
+              statusBaseline: serverStatus,
+              dirty: false,
+            };
+            hasChanges = true;
+          }
+        } else {
+          let entryChanged = false;
+          const updatedEntry = { ...existing };
+
+          if (existing.contentBaseline !== serverContent) {
+            updatedEntry.contentBaseline = serverContent;
+            entryChanged = true;
+          }
+
+          if (existing.statusBaseline !== serverStatus) {
+            updatedEntry.statusBaseline = serverStatus;
+            entryChanged = true;
+          }
+
+          if (entryChanged) {
+            next[card.id] = updatedEntry;
+            hasChanges = true;
+          }
+        }
+      });
+
+      const nextCardIds = new Set(
+        cards.map((card) => card?.id).filter((id) => Boolean(id))
+      );
+
+      Object.keys(next).forEach((cardId) => {
+        if (!nextCardIds.has(cardId)) {
+          delete next[cardId];
+          hasChanges = true;
+        }
+      });
+
+      return hasChanges ? next : prev;
+    });
+  }, [cards]);
+
+  const handleCardContentChange = (card, newContent) => {
+    if (!card?.id) return;
+    const normalizedContent = newContent || "";
+    setEditedCards((prev) => {
+      const defaultContent = card?.content || "";
+      const defaultStatus = card?.settings?.status || "Not started";
+      const currentEntry =
+        prev[card.id] || {
+          content: defaultContent,
+          contentBaseline: defaultContent,
+          status: defaultStatus,
+          statusBaseline: defaultStatus,
+          dirty: false,
+        };
+
+      const contentBaseline =
+        currentEntry.contentBaseline !== undefined
+          ? currentEntry.contentBaseline
+          : defaultContent;
+      const statusBaseline =
+        currentEntry.statusBaseline !== undefined
+          ? currentEntry.statusBaseline
+          : defaultStatus;
+
+      const currentStatus =
+        currentEntry.status !== undefined
+          ? currentEntry.status
+          : defaultStatus;
+
+      const isDirty =
+        normalizedContent !== contentBaseline ||
+        currentStatus !== statusBaseline;
+
+      return {
+        ...prev,
+        [card.id]: {
+          ...currentEntry,
+          content: normalizedContent,
+          contentBaseline,
+          status: currentStatus,
+          statusBaseline,
+          dirty: isDirty,
+        },
+      };
+    });
+
+    setSaveStates((prev) => {
+      if (prev[card.id] && prev[card.id] !== "saving") {
+        return { ...prev, [card.id]: "idle" };
+      }
+      return prev;
+    });
+
+    setSaveErrors((prev) => {
+      if (!prev[card.id]) return prev;
+      const { [card.id]: _discard, ...rest } = prev;
+      return rest;
+    });
+  };
+
+  const handleStatusChange = (card, newStatus) => {
+    if (!card?.id) return;
+
+    const normalizedStatus = newStatus || "Not started";
+
+    let updatedEntryRef = null;
+
+    setEditedCards((prev) => {
+      const defaultContent = card?.content || "";
+      const defaultStatus = card?.settings?.status || "Not started";
+      const currentEntry =
+        prev[card.id] || {
+          content: defaultContent,
+          contentBaseline: defaultContent,
+          status: defaultStatus,
+          statusBaseline: defaultStatus,
+          dirty: false,
+        };
+
+      const contentBaseline =
+        currentEntry.contentBaseline !== undefined
+          ? currentEntry.contentBaseline
+          : defaultContent;
+      const statusBaseline =
+        currentEntry.statusBaseline !== undefined
+          ? currentEntry.statusBaseline
+          : defaultStatus;
+
+      const contentValue =
+        currentEntry.content !== undefined
+          ? currentEntry.content
+          : defaultContent;
+
+      const isDirty =
+        contentValue !== contentBaseline ||
+        normalizedStatus !== statusBaseline;
+
+      const nextEntry = {
+        ...currentEntry,
+        content: contentValue,
+        contentBaseline,
+        status: normalizedStatus,
+        statusBaseline,
+        dirty: isDirty,
+      };
+
+      updatedEntryRef = nextEntry;
+
+      return {
+        ...prev,
+        [card.id]: nextEntry,
+      };
+    });
+
+    setSaveStates((prev) => {
+      if (prev[card.id] && prev[card.id] !== "saving") {
+        return { ...prev, [card.id]: "idle" };
+      }
+      return prev;
+    });
+
+    setSaveErrors((prev) => {
+      if (!prev[card.id]) return prev;
+      const { [card.id]: _discard, ...rest } = prev;
+      return rest;
+    });
+
+    if (updatedEntryRef?.dirty) {
+      handleSaveCard(card, updatedEntryRef);
+    }
+  };
+
+  const handleSaveCard = async (card, overrideEntry = null) => {
+    if (!card?.id) return;
+    const defaultContent = card?.content || "";
+    const defaultStatus = card?.settings?.status || "Not started";
+
+    const entry =
+      overrideEntry ||
+      editedCards[card.id] || {
+        content: defaultContent,
+        contentBaseline: defaultContent,
+        status: defaultStatus,
+        statusBaseline: defaultStatus,
+        dirty: false,
+      };
+    if (!entry || !entry.dirty) return;
+
+    const contentBaseline =
+      entry.contentBaseline !== undefined ? entry.contentBaseline : defaultContent;
+    const statusBaseline =
+      entry.statusBaseline !== undefined ? entry.statusBaseline : defaultStatus;
+
+    const contentToSave =
+      entry.content !== undefined ? entry.content : defaultContent;
+    const statusToSave =
+      entry.status !== undefined ? entry.status : defaultStatus;
+
+    const shouldSaveContent = contentToSave !== contentBaseline;
+    const shouldSaveStatus = statusToSave !== statusBaseline;
+
+    const input = {};
+    if (shouldSaveContent) {
+      input.content = contentToSave;
+    }
+    if (shouldSaveStatus) {
+      input.settings = {
+        ...(card?.settings || {}),
+        status: statusToSave,
+      };
+    }
+
+    if (!shouldSaveContent && !shouldSaveStatus) {
+      setEditedCards((prev) => ({
+        ...prev,
+        [card.id]: {
+          ...prev[card.id],
+          content: contentToSave,
+          contentBaseline: contentToSave,
+          status: statusToSave,
+          statusBaseline: statusToSave,
+          dirty: false,
+        },
+      }));
+      return;
+    }
+
+    setSaveStates((prev) => ({ ...prev, [card.id]: "saving" }));
+    setSaveErrors((prev) => {
+      if (!prev[card.id]) return prev;
+      const { [card.id]: _discard, ...rest } = prev;
+      return rest;
+    });
+
+    try {
+      await updateCardContent({
+        variables: {
+          id: card.id,
+          input,
+        },
+        refetchQueries: [
+          {
+            query: PROPOSAL_QUERY,
+            variables: { id: proposal?.id },
+          },
+        ],
+        awaitRefetchQueries: true,
+      });
+
+      setEditedCards((prev) => ({
+        ...prev,
+        [card.id]: {
+          content: contentToSave,
+          contentBaseline: contentToSave,
+          status: statusToSave,
+          statusBaseline: statusToSave,
+          dirty: false,
+        },
+      }));
+
+      setSaveStates((prev) => ({ ...prev, [card.id]: "success" }));
+
+      setTimeout(() => {
+        setSaveStates((prev) => {
+          if (prev[card.id] !== "success") {
+            return prev;
+          }
+          const { [card.id]: _discard, ...rest } = prev;
+          return rest;
+        });
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to save proposal card content", error);
+      const fallbackMessage = t(
+        "proposalAction.saveError",
+        "Unable to save changes. Please try again."
+      );
+      setSaveErrors((prev) => ({
+        ...prev,
+        [card.id]: error?.message || fallbackMessage,
+      }));
+      setSaveStates((prev) => ({ ...prev, [card.id]: "error" }));
+    }
+  };
+
+  const canEditCards = !isProposalSubmitted;
+
+  console.log(cards);
   return (
     <>
       <Navigation
@@ -206,18 +543,124 @@ export default function Proposal({
             </div>
             <div className="cards">
               {cards?.map((card) => (
-                <div className="card">
-                  <div className="cardTitleIcon">
-                    <div className="cardTitle">{card?.title}</div>
-                    <img
-                      src={`/assets/icons/status/${
-                        statusesDict[card?.settings?.status] || "notStarted"
-                      }.svg`}
-                    />
+                <div className="card" key={card?.id || card?.title}>
+                  <div
+                    className="cardTitleIcon"
+                    style={{
+                      display: "flex",
+                      gap: "0.75rem",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gridColumn: "auto",
+                      flexWrap: "nowrap",
+                      width: "100%",
+                    }}
+                  >
+                    <div className="cardTitle">
+                      <a
+                        href={
+                          (() => {
+                            // Get current URL as object
+                            const url = new URL(window.location.href);
+                            // Update or add the 'card' search param
+                            if (card?.id) {
+                              url.searchParams.set("card", card.id);
+                            }
+                            return url.pathname + url.search + url.hash;
+                          })()
+                        }
+                      >
+                        {card?.title}
+                      </a>
+                    </div>
+                    {canEditCards ? (
+                      <div
+                        className="cardStatusDropdown"
+                        style={{
+                          minWidth: "200px",
+                          display: "inline-flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Status
+                          settings={{
+                            status:
+                              editedCards[card?.id]?.status ??
+                              card?.settings?.status,
+                          }}
+                          onSettingsChange={(_, value) =>
+                            handleStatusChange(card, value)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <img
+                        src={`/assets/icons/status/${
+                          statusesDict[
+                            (
+                              card?.settings?.status ??
+                              "Not started"
+                            ) || "Not started"
+                          ] || "notStarted"
+                        }.svg`}
+                        alt={t(
+                          "proposalAction.currentStatus",
+                          "Current card status"
+                        )}
+                        style={{ display: "block" }}
+                      />
+                    )}
                   </div>
-                  <ReadOnlyTipTap>
-                      {ReactHtmlParser(card?.content || "")}
-                  </ReadOnlyTipTap>
+                  <TipTapEditor
+                    content={
+                      card?.id && editedCards[card.id]
+                        ? editedCards[card.id].content
+                        : card?.content || ""
+                    }
+                    onUpdate={(newContent) =>
+                      handleCardContentChange(card, newContent)
+                    }
+                    isEditable={canEditCards}
+                    toolbarVisible={canEditCards}
+                    specialButton={
+                      canEditCards
+                        ? {
+                            label:
+                              saveStates[card?.id] === "success"
+                                ? t("proposalAction.saved", "Saved")
+                                : saveStates[card?.id] === "error"
+                                ? t("proposalAction.retrySave", "Retry save")
+                                : t(
+                                    "proposalAction.saveChangesButton",
+                                    "Save changes"
+                                  ),
+                            icon:
+                              saveStates[card?.id] === "success"
+                                ? "check"
+                                : undefined,
+                            onClick: () => handleSaveCard(card),
+                            disabled:
+                              !(card?.id && editedCards[card.id]?.dirty) ||
+                              saveStates[card?.id] === "saving",
+                            loading: saveStates[card?.id] === "saving",
+                            positive: saveStates[card?.id] === "success",
+                            negative: saveStates[card?.id] === "error",
+                          }
+                        : null
+                    }
+                  />
+                  {canEditCards && saveErrors[card?.id] && (
+                    <div
+                      className="cardSaveError"
+                      style={{
+                        marginTop: "0.5rem",
+                        color: "#b30000",
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      {saveErrors[card?.id]}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
