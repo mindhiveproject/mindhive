@@ -107,43 +107,52 @@ useEffect(() => {
         height: "100%",
       }}
     >
-      <h2 style={{ marginBottom: "5px" }}>{card?.title}</h2>
-      <div
-        style={{
-          marginBottom: "5px",
-          fontSize: "12px",
-          color: "#555",
-          lineHeight: "1.2",
-        }}
-      >
-        Status: {statusText} | Review Steps: {reviewStepsText}
-      </div>
-      {!card.isLocked && (
-        <div style={{ marginBottom: "10px" }}>
-          <Button
-            primary
-            size="medium"
-            onClick={saveChanges}
-            disabled={loading || !hasContentChanged}
+      <div style={{display: "flex", justifyContent: "space-around",}}>
+        <div style={{ display: "flex", flexDirection: "column", width: "100%",}}>
+          <h2 style={{ marginBottom: "5px" }}>{card?.title}</h2>
+          <div
             style={{
-              transition: "background-color 0.2s",
+              marginBottom: "5px",
+              fontSize: "12px",
+              color: "#555",
+              lineHeight: "1.2",
             }}
-            aria-label="Save changes"
-            aria-busy={loading}
-            className={saveStatus === "success" ? "positive" : ""}
           >
-            {saveStatus === "success" ? (
-              <>
-                <Icon name="check" /> Saved
-              </>
-            ) : loading ? (
-              "Saving..."
-            ) : (
-              "Save"
-            )}
-          </Button>
+            Status: {statusText} | Review Steps: {reviewStepsText}
+          </div>
         </div>
-      )}
+        {!card.isLocked && (
+          <div style={{ 
+            marginBottom: "10px",
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            }}>
+            <Button
+              primary
+              size="medium"
+              onClick={saveChanges}
+              disabled={loading || !hasContentChanged}
+              style={{
+                transition: "background-color 0.2s",
+              }}
+              aria-label="Save changes"
+              aria-busy={loading}
+              className={saveStatus === "success" ? "positive" : ""}
+            >
+              {saveStatus === "success" ? (
+                <>
+                  <Icon name="check" /> Saved
+                </>
+              ) : loading ? (
+                "Saving..."
+              ) : (
+                "Save"
+              )}
+            </Button>
+          </div>
+        )}
+      </div>
       <div
         style={{
           display: "flex",
@@ -266,26 +275,26 @@ useEffect(() => {
             {t("mainCard.comments", "Comments")}
           </div>
           {isUsedLoggedIn ? (
-            <textarea
-              rows="5"
-              type="text"
-              id="comment"
-              name="comment"
-              value={comment}
-              onChange={(e) => {
-                setComment(e.target.value);
+            <TipTapEditor
+              content={comment}
+              onUpdate={(newComment) => {
+                setComment(newComment);
                 setHasContentChanged(
-                  e.target.value !== card?.comment ||
+                  newComment !== card?.comment ||
                     content !== card?.content ||
                     revised !== (card?.revisedContent || card?.content)
                 );
               }}
+              isEditable={!card.isLocked}
+              toolbarVisible={true}
+              placeholder={t("mainCard.commentsPlaceholder", "Add your comment here...")}
               style={{
                 flex: 1,
                 width: "100%",
-                padding: "10px",
+                minHeight: "100px",
                 border: "1px solid #ccc",
                 borderRadius: "4px",
+                padding: "10px",
                 resize: "vertical",
               }}
             />
