@@ -438,7 +438,7 @@ export default function TipTapEditor({
               background: "#D3E0E3",
               height: "32px",
               alignSelf: "center",
-              margin: "0 8px",
+              margin: "0 4px",
             }}
           />
           <div
@@ -519,7 +519,7 @@ export default function TipTapEditor({
               background: "#D3E0E3",
               height: "32px",
               alignSelf: "center",
-              margin: "0 8px",
+              margin: "0 4px",
             }}
           />
           <div
