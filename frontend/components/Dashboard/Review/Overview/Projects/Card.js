@@ -6,6 +6,10 @@ export default function Card({
   project,
   status,
   isOpenForCommentsQuery,
+  onClick,
+  className = "",
+  style,
+  ...rest
 }) {
   const { t } = useTranslation("builder");
   const imageURL = null;
@@ -23,8 +27,28 @@ export default function Card({
 
   const reviewCount = project?.reviews?.filter((r) => r?.stage === status).length;
 
+  const handleKeyDown = (event) => {
+    if (!onClick) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onClick(event);
+    }
+  };
+
+  const cardClassName = ["card", onClick ? "isClickable" : "", className]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div className="card">
+    <div
+      className={cardClassName}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      style={style}
+      {...rest}
+    >
       <div className="headline">
         {project?.study?.featured && (
           <div className="p12">{t("review.featuredProject")}</div>

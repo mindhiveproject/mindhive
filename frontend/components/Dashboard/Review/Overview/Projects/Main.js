@@ -318,20 +318,17 @@ export default function ProjectsBoard({
 
       <div className="cardsArea">
         {filteredProjects.map((project) => (
-          <div
+          <Card
+            stage={selector}
+            project={project}
+            status={status}
+            isOpenForCommentsQuery={isOpenForCommentsQuery}
             key={project?.id}
             onClick={() =>
               navigateToProject({ id: project.id, stage: selector })
             }
-            style={{ cursor: "pointer" }}
-          >
-            <Card
-              stage={selector}
-              project={project}
-              status={status}
-              isOpenForCommentsQuery={isOpenForCommentsQuery}
-            />
-          </div>
+            style={{ cursor: "pointer"}}
+          />
         ))}
       </div>
     </div>
