@@ -27,10 +27,10 @@ export const StyledTipTap = styled.div`
 
   .toolbar {
     display: flex;
-    grid-gap: 10px;
+    // grid-gap: 4px;
     border-radius: 100px;
     background: #f0f5f5;
-    padding: 0px 16px 0px 16px;
+    padding: 0px 8px 0px 16px;
     width: fit-content;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -81,9 +81,9 @@ export const StyledTipTap = styled.div`
         min-width: 124px;
         padding: 0 18px;
         border-radius: 999px !important;
-        border: 1.5px solid #274e5b !important;
-        background: transparent !important;
-        color: #274e5b !important;
+        border: 1.5px solid var(--special-button-border, #274e5b) !important;
+        background: var(--special-button-background, #ffffff) !important;
+        color: var(--special-button-text, #274e5b) !important;
         font-weight: 600 !important;
         letter-spacing: 0.01em;
         display: inline-flex;
@@ -98,34 +98,15 @@ export const StyledTipTap = styled.div`
         }
 
         &:hover:not(.disabled):not(.loading) {
-          background: #274e5b !important;
-          color: #ffffff !important;
+          background: var(--special-button-hover-background, #274e5b) !important;
+          color: var(--special-button-hover-text, #ffffff) !important;
+          border-color: var(--special-button-hover-border, #274e5b) !important;
           box-shadow: 0 6px 16px rgba(39, 78, 91, 0.2);
         }
 
         &:active:not(.disabled):not(.loading) {
           transform: translateY(1px);
           box-shadow: 0 2px 8px rgba(39, 78, 91, 0.2);
-        }
-
-        &.positive {
-          border-color: #21ba45 !important;
-          color: #1c8f36 !important;
-
-          &:hover:not(.disabled):not(.loading) {
-            background: #21ba45 !important;
-            color: #ffffff !important;
-          }
-        }
-
-        &.negative {
-          border-color: #db2828 !important;
-          color: #b21e1e !important;
-
-          &:hover:not(.disabled):not(.loading) {
-            background: #db2828 !important;
-            color: #ffffff !important;
-          }
         }
 
         &.loading {

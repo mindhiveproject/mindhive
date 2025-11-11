@@ -643,8 +643,18 @@ export default function Proposal({
                               !(card?.id && editedCards[card.id]?.dirty) ||
                               saveStates[card?.id] === "saving",
                             loading: saveStates[card?.id] === "saving",
-                            positive: saveStates[card?.id] === "success",
-                            negative: saveStates[card?.id] === "error",
+                            color:
+                              saveStates[card?.id] === "success"
+                                ? "#1C8F36"
+                                : saveStates[card?.id] === "error"
+                                ? "#B21E1E"
+                                : "#274E5B",
+                            colorBackground:
+                              saveStates[card?.id] === "success"
+                                ? "#E8F7EC"
+                                : saveStates[card?.id] === "error"
+                                ? "#FDEAEA"
+                                : "#f0f5f5",
                           }
                         : null
                     }
