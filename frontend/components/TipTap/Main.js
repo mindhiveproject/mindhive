@@ -259,32 +259,43 @@ export default function TipTapEditor({
       };
 
       return (
-        <div
-          className="toolbarGroup specialButtonGroup"
-          style={{ marginLeft: "auto" }}
-          onMouseDown={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
-          <Button
-            className={`toolbarButton specialToolbarButton ${className}`.trim()}
-            onClick={handleClick}
-            disabled={isDisabled}
-            loading={loading}
-            primary={primary}
-            positive={positive}
-            negative={negative}
-            secondary={secondary}
-            aria-label={label}
-            basic={basic}
-            type="button"
-            style={buttonStyle}
+        <>
+          <div
+            style={{
+              width: "1px",
+              background: "#D3E0E3",
+              height: "32px",
+              alignSelf: "center",
+              margin: "0 4px",
+            }}
+          />
+          <div
+            className="toolbarGroup specialButtonGroup"
+            style={{ marginLeft: "auto" }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
           >
-            {icon && <Icon name={icon} />}
-            {label}
-          </Button>
-        </div>
+            <Button
+              className={`toolbarButton specialToolbarButton ${className}`.trim()}
+              onClick={handleClick}
+              disabled={isDisabled}
+              loading={loading}
+              primary={primary}
+              positive={positive}
+              negative={negative}
+              secondary={secondary}
+              aria-label={label}
+              basic={basic}
+              type="button"
+              style={buttonStyle}
+            >
+              {icon && <Icon name={icon} />}
+              {label}
+            </Button>
+          </div>
+        </>
       );
     };
 
