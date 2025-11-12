@@ -63,10 +63,32 @@ export default function Profile() {
 
         <div>
           {user?.image?.image?.publicUrlTransformed ? (
-            <img
-              src={user?.image?.image?.publicUrlTransformed}
-              alt={user?.name}
-            />
+            <div
+              style={{
+                borderRadius: "50%",
+                width: "128px",
+                height: "128px",
+                padding: "3px",
+                background:
+                  "conic-gradient(from 180deg, #39B7D4 0%, #FDBA32 20%, #ED6B59 45%, #7C66C2 65%, #4183C4 85%, #5E8C9A 100%)",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src={user?.image?.image?.publicUrlTransformed}
+                alt={user?.name}
+                style={{
+                  borderRadius: "50%",
+                  width: "120px",
+                  height: "120px",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  border: "none",
+                }}
+              />
+            </div>
           ) : (
             <div>
               <IdentIcon size="120" value={user?.name} />
