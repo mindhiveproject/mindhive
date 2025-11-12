@@ -646,39 +646,7 @@ const ItemTab = ({
               >
                 {item?.title || "Untitled"}
               </h2>
-              {isResource && (
-                <button
-                  onClick={() => window.open(editUrl, '_blank', 'noopener,noreferrer')}
-                  style={styledPrimaryIconButton}
-                >
-                  <p style={{color: "white"}}><Icon name="pencil" /></p>
-                </button>
-              )}
               {item?.lastUpdate ? (<p>Last updated: {item?.lastUpdate}</p>) : (<></>)}
-              {/* <div style={{ display: "flex", flexDirection: "column",justifyContent: "top", minWidth: "fit-content", gap: "12px" }}>
-                {!isAssignment && (
-                  <>
-                    <a
-                      href={viewUrl}
-                      target={"_blank"}
-                      rel={isTaskOrStudy ? "noreferrer" : undefined}
-                      style={{ color: "#265390", fontWeight: "500" }}
-                    >
-                      <Icon name="external alternate" /> {t("boardManagement.openInTab")}
-                    </a>
-                    {isResource && (
-                      <a
-                        href={editUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{ color: "#265390", fontWeight: "500" }}
-                      >
-                        <Icon name="pencil alternate" /> {t("boardManagement.duplicate")}
-                      </a>
-                    )}
-                  </>
-                )}
-              </div> */}
             </div>
             <div
               style={{
@@ -692,21 +660,49 @@ const ItemTab = ({
               {/* {ReactHtmlParser(truncateHtml(placeholder, 10))} */}
             </div>
             {isResource && (
-              <div style={{display: "flex",  justifyContent: "flex-start", columnGap: "16px", flexWrap: "wrap"}}>
-                <button 
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  width: "100%",
+                }}
+              >
+                <button
                   onClick={() => (isSelected ? disconnect(item) : connect(item))}
-                  style={isSelected
-                    ? styledAccentButtonPurple
-                    : styledPrimaryButton}
-                  >
-                    {isSelected
-                    ? <Icon name="unlink"/>
-                    : <Icon name="linkify"/>
-                    }
-                    {isSelected
+                  style={{
+                    ...(isSelected
+                      ? styledAccentButtonPurple
+                      : styledPrimaryButton),
+                    flex: "1 1 240px",
+                    maxWidth: "79%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Icon name={isSelected ? "unlink" : "linkify"} />
+                  {isSelected
                     ? t("board.expendedCard.disconnect")
-                    : t("board.expendedCard.connect")
-                    }
+                    : t("board.expendedCard.connect")}
+                </button>
+                <button
+                  onClick={() =>
+                    window.open(editUrl, "_blank", "noopener,noreferrer")
+                  }
+                  style={{
+                    ...styledSecondaryButtonBlue,
+                    flex: "0 1 120px",
+                    maxWidth: "19%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0 16px",
+                  }}
+                  aria-label={t("boardManagement.edit", "Edit")}
+                >
+                  <Icon name="pencil" />
                 </button>
               </div>
             )}
@@ -1010,62 +1006,6 @@ const ItemTab = ({
               <h2 style={{fontSize: "18px", fontWeight: 600, color: "#333", margin: 0}}>
                 {item?.title || "Untitled"}
               </h2>
-              <div style={{ display: "flex", gap: "12px" }}>
-                {isAssignment && (
-                  <button
-                    onClick={() => openAssignmentModal?.(item)}
-                    style={styledPrimaryIconButton}
-                  >
-                    <p style={{color: "white"}}><Icon name="pencil" /></p>
-                  </button>
-                )}
-                {isResource && (
-                  <button
-                  onClick={() => window.open(editUrl, '_blank', 'noopener,noreferrer')}
-                    style={styledPrimaryIconButton}
-                  >
-                    <p style={{color: "white"}}><Icon name="pencil" /></p>
-                  </button>
-                )}
-                {(isTask || isStudy) && (
-                  <button
-                    onClick={() => window.open(viewUrl, '_blank', 'noopener,noreferrer')}
-                    style={styledPrimaryIconButton}
-                    >
-                    <p style={{color: "white"}}><Icon name="external" /></p>
-                  </button>
-                  // <button
-                  //   onClick={() => window.open(viewUrl, '_blank', 'noopener,noreferrer')}
-                  //   style={styledSecondaryButtonBlue}
-                  // >
-                  //   <p style={{color: "white"}}><Icon name="external" /></p> {t("boardManagement.open", "Open")}
-                  // </button>
-                )}
-              </div>
-              {/* <div style={{ display: "flex", gap: "12px" }}>
-                {!isAssignment && (
-                  <>
-                    <a
-                      href={viewUrl}
-                      target={isTaskOrStudy ? "_blank" : "_self"}
-                      rel={isTaskOrStudy ? "noreferrer" : undefined}
-                      style={{ color: "#007c70" }}
-                    >
-                      <Icon name="external alternate" />
-                    </a>
-                    {isResource && (
-                      <a
-                        href={editUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{ color: "#007c70" }}
-                      >
-                        <Icon name="pencil alternate" />
-                      </a>
-                    )}
-                  </>
-                )}
-              </div> */}
             </div>
             <div
               style={{
@@ -1108,29 +1048,93 @@ const ItemTab = ({
                 }
               </div>            
             )}
-            <button 
-              onClick={() => (isSelected ? disconnect(item) : connect(item))}
-              style={isSelected
-                ? styledAccentButtonPurple
-                : styledPrimaryButton}
-              >
-                {isSelected
-                ? <Icon name="unlink"/>
-                : <Icon name="linkify"/>
-                }
-                {isSelected
-                ? t("board.expendedCard.disconnect")
-                : t("board.expendedCard.connect")
-                }
-            </button>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                width: "100%",
+              }}
+            >
+              <button 
+                onClick={() => (isSelected ? disconnect(item) : connect(item))}
+                style={{
+                  ...(isSelected
+                    ? styledAccentButtonPurple
+                    : styledPrimaryButton),
+                  flex: "1 1 240px",
+                  maxWidth: "79%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                >
+                  <Icon name={isSelected ? "unlink" : "linkify"} />
+                  {isSelected
+                    ? t("board.expendedCard.disconnect")
+                    : t("board.expendedCard.connect")}
+              </button>
+                {isAssignment && (
+                  <button
+                    onClick={() => openAssignmentModal?.(item)}
+                    style={{
+                      ...styledSecondaryButtonBlue,
+                      flex: "0 1 120px",
+                      maxWidth: "19%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "0 16px",
+                    }}
+                    aria-label={t("boardManagement.edit", "Edit")}
+                  >
+                    <Icon name="pencil" />
+                  </button>
+                )}
+                {(isTask || isStudy) && (
+                  <button
+                    onClick={() => window.open(viewUrl, '_blank', 'noopener,noreferrer')}
+                    style={{
+                      ...styledSecondaryButtonBlue,
+                      flex: "0 1 120px",
+                      maxWidth: "19%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "0 16px",
+                    }}
+                    aria-label={t("boardManagement.preview", "Preview")}
+                  >
+                    <Icon name="external" />
+                  </button>
+                )}
+                {isResource && (
+                  <button
+                    onClick={() => window.open(editUrl, '_blank', 'noopener,noreferrer')}
+                    style={{
+                      ...styledSecondaryButtonBlue,
+                      flex: "0 1 120px",
+                      maxWidth: "19%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "0 16px",
+                    }}
+                    aria-label={t("boardManagement.edit", "Edit")}
+                  >
+                    <Icon name="pencil" />
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
-const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
+  const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
   const [editedAssignment, setEditedAssignment] = useState({
     title: '',
     content: '',
