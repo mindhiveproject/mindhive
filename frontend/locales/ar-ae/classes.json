@@ -7,6 +7,7 @@
 	"areYouSureDeleteClass": "هل أنت متأكد أنك تريد حذف هذه الفئة؟",
 	"assignment": {
 		"addAssignment": "إضافة مهمة",
+		"changeSuccess": "تم حفظ التغييرات بنجاح",
 		"chooseClassFirst": "يجب عليك ربط هذه المهمة بفئة قبل حفظها",
 		"classes": "الفئة(الفئات)",
 		"classHomeworkOverview": "نظرة عامة على الواجبات المنزلية",
@@ -171,6 +172,7 @@
 		"contentPreview": "معاينة المحتوى",
 		"copy": "ينسخ",
 		"copySelection": "نسخ القالب المحدد",
+		"createAnotherCopy": "إنشاء نسخة إضافية",
 		"createBtn": "إنشاء لوحة مشروع جديدة",
 		"created": "مخلوق:",
 		"createFromNewTemplate": "نسخة من القالب العام",
@@ -187,15 +189,18 @@
 		"description": "وصف",
 		"duplicate": "ينسخ",
 		"edit": "يحرر",
+		"editExistingResource": "متابعة مع الإصدار المخصص الخاص بي",
 		"editResource": "تحرير المورد",
 		"errLoadingPublicResource": "حدث خطأ أثناء تحميل الموارد العامة.",
 		"error": "خطأ",
 		"errorCopyingBoard": "خطأ في نسخ لوحة المشروع:",
 		"errorCopyingPublicBoard": "حدث خطأ أثناء نسخ لوحة المشروع العامة:",
 		"errorCreatingBoard": "خطأ في إنشاء لوحة المشروع:",
+		"errorCreatingResource": "لم نتمكن من إنشاء نسخة من هذا المورد.",
 		"errorDeletingBoard": "خطأ في حذف لوحة المشروع:",
 		"errorLoadingBoards": "خطأ في تحميل لوحات المشروع:",
 		"errorLoadingPreview": "خطأ في تحميل المعاينة.",
+		"errorLoadingResource": "لم نتمكن من تحميل هذا المورد.",
 		"errorLoadingResources": "حدث خطأ أثناء تحميل الموارد الخاصة بك.",
 		"errorSavingChanges": "خطأ في حفظ التغييرات:",
 		"filter": {
@@ -238,6 +243,9 @@
 		"removeCollaborator": "إزالة المتعاون",
 		"resourceCenterDescription": "تصفح الموارد وإنشاءها وتخصيصها ومشاركتها لمشاريعك.",
 		"resourceCenterTitle": "مركز الموارد",
+		"resourceChoiceExistingCopy": "لقد خصّصتَ هذا المورد بالفعل. ماذا تريد أن تفعل؟",
+		"resourceContentPlaceholder": "إضافة أو تحديث محتوى الموارد...",
+		"resourceCopyInfo": "سيؤدي الحفظ إلى إنشاء نسخة شخصية مرتبطة بمشروعك.",
 		"resourcesCenterForTeachers": "مركز الموارد للمعلمين",
 		"save": "يحفظ",
 		"saveChanges": "حفظ التغييرات",
@@ -268,6 +276,20 @@
 		"viewAndCopy": "عرض ونسخ",
 		"viewOrEdit": "عرض أو تحرير"
 	},
+	"boardManagement (2)": {
+		"createAnotherCopy\"": "إنشاء نسخة إضافية",
+		"description": "وصف",
+		"editExistingResource": "متابعة مع الإصدار المخصص الخاص بي",
+		"errorLoadingResource": "لم نتمكن من تحميل هذا المورد.",
+		"makePrivate": "جعل خاص",
+		"makePublic": "جعلها عامة",
+		"resourceChoiceExistingCopy": "لقد خصّصتَ هذا المورد بالفعل. ماذا تريد أن تفعل؟",
+		"resourceContent": "محتوى الموارد",
+		"resourceContentPlaceholder": "إضافة أو تحديث محتوى الموارد...",
+		"resourceCopyInfo": "سيؤدي الحفظ إلى إنشاء نسخة شخصية مرتبطة بمشروعك.",
+		"saveOwnRessource": "احفظ نسختي",
+		"titleText": "عنوان"
+	},
 	"cancel": "يلغي",
 	"classes": "الفئة(الفئات)",
 	"classesList": {
@@ -285,6 +307,9 @@
 	"className": "اسم الفصل",
 	"classNetworks": "شبكات الطبقات",
 	"collaborators": "المتعاونون",
+	"common": {
+		"loading": "تحميل..."
+	},
 	"create": {
 		"create": "إنشاء فئة جديدة",
 		"createHeader": "إضافة فصل جديد",

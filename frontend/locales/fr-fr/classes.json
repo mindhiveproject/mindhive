@@ -7,6 +7,7 @@
 	"areYouSureDeleteClass": "Êtes-vous sûr de vouloir supprimer ce cours ?",
 	"assignment": {
 		"addAssignment": "Ajouter un devoir",
+		"changeSuccess": "Modifications enregistrées avec succès",
 		"chooseClassFirst": "Vous devez associer ce devoir à une classe avant de l'enregistrer",
 		"classes": "Classe(s)",
 		"classHomeworkOverview": "Aperçu des devoirs de classe",
@@ -171,6 +172,7 @@
 		"contentPreview": "Aperçu du contenu",
 		"copy": "Copie",
 		"copySelection": "Copier le modèle sélectionné",
+		"createAnotherCopy": "Créer une copie supplémentaire",
 		"createBtn": "Créer un nouveau tableau de projet",
 		"created": "Créé:",
 		"createFromNewTemplate": "Copie à partir du modèle public",
@@ -187,15 +189,18 @@
 		"description": "Description",
 		"duplicate": "Dupliquer",
 		"edit": "Modifier",
+		"editExistingResource": "Continuez avec ma version personnalisée",
 		"editResource": "Modifier la ressource",
 		"errLoadingPublicResource": "Erreur lors du chargement des ressources publiques.",
 		"error": "Erreur",
 		"errorCopyingBoard": "Erreur lors de la copie du tableau du projet :",
 		"errorCopyingPublicBoard": "Erreur lors de la copie du tableau de projet public :",
 		"errorCreatingBoard": "Erreur lors de la création du tableau de projet :",
+		"errorCreatingResource": "Nous n'avons pas pu créer de copie de cette ressource.",
 		"errorDeletingBoard": "Erreur lors de la suppression du tableau de projet :",
 		"errorLoadingBoards": "Erreur lors du chargement des tableaux du projet :",
 		"errorLoadingPreview": "Erreur lors du chargement de l'aperçu.",
+		"errorLoadingResource": "Impossible de charger cette ressource.",
 		"errorLoadingResources": "Erreur lors du chargement de vos ressources.",
 		"errorSavingChanges": "Erreur lors de l'enregistrement des modifications :",
 		"filter": {
@@ -238,6 +243,9 @@
 		"removeCollaborator": "Supprimer le collaborateur",
 		"resourceCenterDescription": "Parcourez, créez, personnalisez et partagez des ressources pour vos projets.",
 		"resourceCenterTitle": "Centre de ressources",
+		"resourceChoiceExistingCopy": "Vous avez déjà personnalisé cette ressource. Que souhaitez-vous faire ?",
+		"resourceContentPlaceholder": "Ajouter ou mettre à jour le contenu de la ressource...",
+		"resourceCopyInfo": "L'enregistrement créera une copie personnelle liée à votre projet.",
 		"resourcesCenterForTeachers": "Centre de ressources pour les enseignants",
 		"save": "Sauvegarder",
 		"saveChanges": "Sauvegarder les modifications",
@@ -268,6 +276,20 @@
 		"viewAndCopy": "Afficher et copier",
 		"viewOrEdit": "Afficher ou modifier"
 	},
+	"boardManagement (2)": {
+		"createAnotherCopy\"": "Créer une copie supplémentaire",
+		"description": "Description",
+		"editExistingResource": "Continuez avec ma version personnalisée",
+		"errorLoadingResource": "Impossible de charger cette ressource.",
+		"makePrivate": "Rendre privé",
+		"makePublic": "Rendre public",
+		"resourceChoiceExistingCopy": "Vous avez déjà personnalisé cette ressource. Que souhaitez-vous faire ?",
+		"resourceContent": "Contenu des ressources",
+		"resourceContentPlaceholder": "Ajouter ou mettre à jour le contenu de la ressource...",
+		"resourceCopyInfo": "L'enregistrement créera une copie personnelle liée à votre projet.",
+		"saveOwnRessource": "Sauvegarder ma copie",
+		"titleText": "Titre"
+	},
 	"cancel": "Annuler",
 	"classes": "Classe(s)",
 	"classesList": {
@@ -285,6 +307,9 @@
 	"className": "Nom de la classe",
 	"classNetworks": "Réseaux de classes",
 	"collaborators": "Collaborateur(s)",
+	"common": {
+		"loading": "Chargement..."
+	},
 	"create": {
 		"create": "Créer une nouvelle classe",
 		"createHeader": "Ajouter une nouvelle classe",

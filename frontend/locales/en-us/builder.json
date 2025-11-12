@@ -28,7 +28,8 @@
 	},
 	"assignment": {
 		"loading": "Loading Assignment...",
-		"loadingMessage": "Fetching latest assignment data..."
+		"loadingMessage": "Fetching latest assignment data...",
+		"unsavedChanges": "(Unsaved changes)"
 	},
 	"background": "Background",
 	"backgroundHelp": "Use this field to provide some brief background on the topic of research. What is the problem under study and why is it important?",
@@ -139,6 +140,9 @@
 		"noProjectFound": "No project found, please save your project first.",
 		"noStudyAttachedHeader": "🤷🏻 Your project has no Study attached to it.",
 		"noStudyAttachedMessage": "Let your teacher know so they can create one and associate it. If you need help, please contact tech support at support.mindhive@nyu.edu."
+	},
+	"common": {
+		"loading": "Loading..."
 	},
 	"connectModal": {
 		"addCollaborators": "Add collaborators",

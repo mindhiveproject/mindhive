@@ -7,6 +7,7 @@
 	"areYouSureDeleteClass": "Are you sure you want to delete this class?",
 	"assignment": {
 		"addAssignment": "Add assignment",
+		"changeSuccess": "Changes saved successfully",
 		"chooseClassFirst": "You must associate this assignment to a class before saving it",
 		"classes": "Class(es)",
 		"classHomeworkOverview": "Class homework overview",
@@ -171,6 +172,7 @@
 		"contentPreview": "Content Preview",
 		"copy": "Copy",
 		"copySelection": "Copy Selected Template",
+		"createAnotherCopy": "Create an additional copy",
 		"createBtn": "Create New Project Board",
 		"created": "Created",
 		"createFromNewTemplate": "Copy from Public Template",
@@ -187,15 +189,18 @@
 		"description": "Description",
 		"duplicate": "Duplicate",
 		"edit": "Edit",
+		"editExistingResource": "Continue with my customized version",
 		"editResource": "Edit Resource",
 		"errLoadingPublicResource": "Error loading public resources.",
 		"error": "Error",
 		"errorCopyingBoard": "Error copying project board:",
 		"errorCopyingPublicBoard": "Error copying public project board: ",
 		"errorCreatingBoard": "Error creating project board: ",
+		"errorCreatingResource": "We could not create a copy of this resource.",
 		"errorDeletingBoard": "Error deleting project board: ",
 		"errorLoadingBoards": "Error loading project boards: ",
 		"errorLoadingPreview": "Error loading preview.",
+		"errorLoadingResource": "We could not load this resource.",
 		"errorLoadingResources": "Error loading your resources.",
 		"errorSavingChanges": "Error saving changes:",
 		"filter": {
@@ -238,6 +243,9 @@
 		"removeCollaborator": "Remove collaborator",
 		"resourceCenterDescription": "Browse, create, customize, and share resources for your projects.",
 		"resourceCenterTitle": "Resource Center",
+		"resourceChoiceExistingCopy": "You already personalized this resource. What would you like to do?",
+		"resourceContentPlaceholder": "Add or update resource content...",
+		"resourceCopyInfo": "Saving will create a personal copy linked to your project.",
 		"resourcesCenterForTeachers": "Resources center for teachers",
 		"save": "Save",
 		"saveChanges": "Save Changes",
@@ -268,6 +276,20 @@
 		"viewAndCopy": "View & Copy",
 		"viewOrEdit": "View or Edit"
 	},
+	"boardManagement (2)": {
+		"createAnotherCopy\"": "Create an additional copy",
+		"description": "Description",
+		"editExistingResource": "Continue with my customized version",
+		"errorLoadingResource": "We could not load this resource.",
+		"makePrivate": "Make private",
+		"makePublic": "Make public",
+		"resourceChoiceExistingCopy": "You already personalized this resource. What would you like to do?",
+		"resourceContent": "Resource content",
+		"resourceContentPlaceholder": "Add or update resource content...",
+		"resourceCopyInfo": "Saving will create a personal copy linked to your project.",
+		"saveOwnRessource": "Save my copy",
+		"titleText": "Title"
+	},
 	"cancel": "Cancel",
 	"classes": "Class(es)",
 	"classesList": {
@@ -285,6 +307,9 @@
 	"className": "Class name",
 	"classNetworks": "Class networks",
 	"collaborators": "Collaborator(s)",
+	"common": {
+		"loading": "Loading..."
+	},
 	"create": {
 		"create": "Create new class",
 		"createHeader": "Add new class",

@@ -28,7 +28,8 @@
 	},
 	"assignment": {
 		"loading": "Carregando tarefa...",
-		"loadingMessage": "Buscando os últimos dados de atribuição..."
+		"loadingMessage": "Buscando os últimos dados de atribuição...",
+		"unsavedChanges": "(Alterações não salvas)"
 	},
 	"background": "Fundo",
 	"backgroundHelp": "Use este campo para fornecer um breve histórico sobre o tema da pesquisa. Qual é o problema em estudo e por que ele é importante?",
@@ -139,6 +140,9 @@
 		"noProjectFound": "Nenhum projeto encontrado, salve seu projeto primeiro.",
 		"noStudyAttachedHeader": "🤷🏻 Seu projeto não tem nenhum Estudo anexado.",
 		"noStudyAttachedMessage": "Avise seu professor para que ele possa criar um e associá-lo. Se precisar de ajuda, entre em contato com o suporte técnico pelo e-mail support.mindhive@nyu.edu."
+	},
+	"common": {
+		"loading": "Carregando..."
 	},
 	"connectModal": {
 		"addCollaborators": "Adicionar colaboradores",

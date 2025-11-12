@@ -28,7 +28,8 @@
 	},
 	"assignment": {
 		"loading": "Cargando tarea...",
-		"loadingMessage": "Obteniendo los últimos datos de la tarea..."
+		"loadingMessage": "Obteniendo los últimos datos de la tarea...",
+		"unsavedChanges": "(Cambios no guardados)"
 	},
 	"background": "Fondo",
 	"backgroundHelp": "Utilice este campo para proporcionar una breve introducción al tema de investigación. ¿Cuál es el problema en estudio y por qué es importante?",
@@ -139,6 +140,9 @@
 		"noProjectFound": "No se encontró ningún proyecto, por favor guarde su proyecto primero.",
 		"noStudyAttachedHeader": "🤷🏻 Tu proyecto no tiene ningún estudio adjunto.",
 		"noStudyAttachedMessage": "Avisa a tu profesor para que pueda crear uno y asociarlo. Si necesitas ayuda, contacta con el soporte técnico en support.mindhive@nyu.edu."
+	},
+	"common": {
+		"loading": "Cargando..."
 	},
 	"connectModal": {
 		"addCollaborators": "Agregar colaboradores",

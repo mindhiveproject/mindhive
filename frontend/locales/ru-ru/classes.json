@@ -7,6 +7,7 @@
 	"areYouSureDeleteClass": "Вы уверены, что хотите удалить этот класс?",
 	"assignment": {
 		"addAssignment": "Добавить задание",
+		"changeSuccess": "Изменения успешно сохранены",
 		"chooseClassFirst": "Перед сохранением задания необходимо связать его с классом.",
 		"classes": "Класс(ы)",
 		"classHomeworkOverview": "Обзор домашнего задания класса",
@@ -171,6 +172,7 @@
 		"contentPreview": "Предварительный просмотр контента",
 		"copy": "Копировать",
 		"copySelection": "Копировать выбранный шаблон",
+		"createAnotherCopy": "Создать дополнительную копию",
 		"createBtn": "Создать новую доску проекта",
 		"created": "Созданный:",
 		"createFromNewTemplate": "Копировать из публичного шаблона",
@@ -187,15 +189,18 @@
 		"description": "Описание",
 		"duplicate": "Дублировать",
 		"edit": "Редактировать",
+		"editExistingResource": "Продолжить с моей измененной версией",
 		"editResource": "Редактировать ресурс",
 		"errLoadingPublicResource": "Ошибка загрузки публичных ресурсов.",
 		"error": "Ошибка",
 		"errorCopyingBoard": "Ошибка копирования доски проекта:",
 		"errorCopyingPublicBoard": "Ошибка копирования доски публичного проекта:",
 		"errorCreatingBoard": "Ошибка создания доски проекта:",
+		"errorCreatingResource": "Мы не смогли создать копию этого ресурса.",
 		"errorDeletingBoard": "Ошибка удаления доски проекта:",
 		"errorLoadingBoards": "Ошибка загрузки досок проекта:",
 		"errorLoadingPreview": "Ошибка загрузки предварительного просмотра.",
+		"errorLoadingResource": "Мы не смогли загрузить этот ресурс.",
 		"errorLoadingResources": "Ошибка загрузки ваших ресурсов.",
 		"errorSavingChanges": "Ошибка сохранения изменений:",
 		"filter": {
@@ -238,6 +243,9 @@
 		"removeCollaborator": "Удалить соавтора",
 		"resourceCenterDescription": "Просматривайте, создавайте, настраивайте и делитесь ресурсами для своих проектов.",
 		"resourceCenterTitle": "Ресурсный центр",
+		"resourceChoiceExistingCopy": "Вы уже персонализировали этот ресурс. Что бы вы хотели сделать?",
+		"resourceContentPlaceholder": "Добавить или обновить содержимое ресурса...",
+		"resourceCopyInfo": "Сохранение приведет к созданию персональной копии, связанной с вашим проектом.",
 		"resourcesCenterForTeachers": "Ресурсный центр для учителей",
 		"save": "Сохранять",
 		"saveChanges": "Сохранить изменения",
@@ -268,6 +276,20 @@
 		"viewAndCopy": "Просмотреть и копировать",
 		"viewOrEdit": "Просмотреть или редактировать"
 	},
+	"boardManagement (2)": {
+		"createAnotherCopy\"": "Создать дополнительную копию",
+		"description": "Описание",
+		"editExistingResource": "Продолжить с моей измененной версией",
+		"errorLoadingResource": "Мы не смогли загрузить этот ресурс.",
+		"makePrivate": "Сделать приватным",
+		"makePublic": "Сделать публичным",
+		"resourceChoiceExistingCopy": "Вы уже персонализировали этот ресурс. Что бы вы хотели сделать?",
+		"resourceContent": "Содержание ресурса",
+		"resourceContentPlaceholder": "Добавить или обновить содержимое ресурса...",
+		"resourceCopyInfo": "Сохранение приведет к созданию персональной копии, связанной с вашим проектом.",
+		"saveOwnRessource": "Сохранить мою копию",
+		"titleText": "Заголовок"
+	},
 	"cancel": "Отмена",
 	"classes": "Класс(ы)",
 	"classesList": {
@@ -285,6 +307,9 @@
 	"className": "Имя класса",
 	"classNetworks": "Классовые сети",
 	"collaborators": "Соавторы",
+	"common": {
+		"loading": "Загрузка..."
+	},
 	"create": {
 		"create": "Создать новый класс",
 		"createHeader": "Добавить новый класс",

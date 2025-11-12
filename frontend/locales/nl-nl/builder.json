@@ -28,7 +28,8 @@
 	},
 	"assignment": {
 		"loading": "Opdracht laden...",
-		"loadingMessage": "Laatste toewijzingsgegevens ophalen..."
+		"loadingMessage": "Laatste toewijzingsgegevens ophalen...",
+		"unsavedChanges": "(Niet-opgeslagen wijzigingen)"
 	},
 	"background": "Achtergrond",
 	"backgroundHelp": "Gebruik dit veld om een ​​korte achtergrondinformatie over het onderzoeksonderwerp te geven. Wat is het onderzochte probleem en waarom is het belangrijk?",
@@ -139,6 +140,9 @@
 		"noProjectFound": "Er is geen project gevonden. Sla uw project eerst op.",
 		"noStudyAttachedHeader": "🤷🏻 Er is geen studie aan uw project gekoppeld.",
 		"noStudyAttachedMessage": "Laat het je docent weten, zodat hij of zij er een kan maken en koppelen. Heb je hulp nodig? Neem dan contact op met de technische ondersteuning via support.mindhive@nyu.edu."
+	},
+	"common": {
+		"loading": "Bezig met laden..."
 	},
 	"connectModal": {
 		"addCollaborators": "Medewerkers toevoegen",

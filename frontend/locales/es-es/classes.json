@@ -7,6 +7,7 @@
 	"areYouSureDeleteClass": "¿Estás seguro que deseas eliminar esta clase?",
 	"assignment": {
 		"addAssignment": "Agregar tarea",
+		"changeSuccess": "Los cambios se guardaron correctamente",
 		"chooseClassFirst": "Debes asociar esta tarea a una clase antes de guardarla",
 		"classes": "Clase(s)",
 		"classHomeworkOverview": "Descripción general de las tareas de clase",
@@ -171,6 +172,7 @@
 		"contentPreview": "Vista previa del contenido",
 		"copy": "Copiar",
 		"copySelection": "Copiar plantilla seleccionada",
+		"createAnotherCopy": "Crea una copia adicional",
 		"createBtn": "Crear un nuevo tablero de proyecto",
 		"created": "Creado: ",
 		"createFromNewTemplate": "Copiar de plantilla pública",
@@ -187,15 +189,18 @@
 		"description": "Descripción",
 		"duplicate": "Duplicar",
 		"edit": "Editar",
+		"editExistingResource": "Continúa con mi versión personalizada",
 		"editResource": "Editar recurso",
 		"errLoadingPublicResource": "Error al cargar recursos públicos.",
 		"error": "Error",
 		"errorCopyingBoard": "Error al copiar el tablero del proyecto:",
 		"errorCopyingPublicBoard": "Error al copiar el tablero del proyecto público:",
 		"errorCreatingBoard": "Error al crear el tablero del proyecto:",
+		"errorCreatingResource": "No pudimos crear una copia de este recurso.",
 		"errorDeletingBoard": "Error al eliminar el tablero del proyecto:",
 		"errorLoadingBoards": "Error al cargar los tableros del proyecto:",
 		"errorLoadingPreview": "Error al cargar la vista previa.",
+		"errorLoadingResource": "No pudimos cargar este recurso.",
 		"errorLoadingResources": "Error al cargar sus recursos.",
 		"errorSavingChanges": "Error al guardar los cambios:",
 		"filter": {
@@ -238,6 +243,9 @@
 		"removeCollaborator": "Eliminar colaborador",
 		"resourceCenterDescription": "Explora, crea, personaliza y comparte recursos para tus proyectos.",
 		"resourceCenterTitle": "Centro de recursos",
+		"resourceChoiceExistingCopy": "Ya has personalizado este recurso. ¿Qué te gustaría hacer?",
+		"resourceContentPlaceholder": "Agregar o actualizar el contenido de los recursos...",
+		"resourceCopyInfo": "Al guardar, se creará una copia personal vinculada a tu proyecto.",
 		"resourcesCenterForTeachers": "Centro de recursos para profesores",
 		"save": "Ahorrar",
 		"saveChanges": "Guardar cambios",
@@ -268,6 +276,20 @@
 		"viewAndCopy": "Ver y copiar",
 		"viewOrEdit": "Ver o editar"
 	},
+	"boardManagement (2)": {
+		"createAnotherCopy\"": "Crea una copia adicional",
+		"description": "Descripción",
+		"editExistingResource": "Continúa con mi versión personalizada",
+		"errorLoadingResource": "No pudimos cargar este recurso.",
+		"makePrivate": "Hacer privado",
+		"makePublic": "Promulgar",
+		"resourceChoiceExistingCopy": "Ya has personalizado este recurso. ¿Qué te gustaría hacer?",
+		"resourceContent": "Contenido del recurso",
+		"resourceContentPlaceholder": "Agregar o actualizar el contenido de los recursos...",
+		"resourceCopyInfo": "Al guardar, se creará una copia personal vinculada a tu proyecto.",
+		"saveOwnRessource": "Guarda mi copia",
+		"titleText": "Título"
+	},
 	"cancel": "Cancelar",
 	"classes": "Clase(s)",
 	"classesList": {
@@ -285,6 +307,9 @@
 	"className": "Nombre de la clase",
 	"classNetworks": "Redes de clases",
 	"collaborators": "Colaborador(es)",
+	"common": {
+		"loading": "Cargando..."
+	},
 	"create": {
 		"create": "Crear nueva clase",
 		"createHeader": "Agregar nueva clase",

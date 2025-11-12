@@ -7,6 +7,7 @@
 	"areYouSureDeleteClass": "Weet u zeker dat u deze klas wilt verwijderen?",
 	"assignment": {
 		"addAssignment": "Opdracht toevoegen",
+		"changeSuccess": "Veranderingen succesvol opgeslagen",
 		"chooseClassFirst": "U moet deze opdracht aan een klas koppelen voordat u deze opslaat",
 		"classes": "Klasse(n)",
 		"classHomeworkOverview": "Overzicht van klashuiswerk",
@@ -171,6 +172,7 @@
 		"contentPreview": "Inhoudsvoorbeeld",
 		"copy": "Kopiëren",
 		"copySelection": "Geselecteerde sjabloon kopiëren",
+		"createAnotherCopy": "Maak een extra kopie",
 		"createBtn": "Nieuw projectbord maken",
 		"created": "Gemaakt:",
 		"createFromNewTemplate": "Kopiëren van openbare sjabloon",
@@ -187,15 +189,18 @@
 		"description": "Beschrijving",
 		"duplicate": "Duplicaat",
 		"edit": "Bewerking",
+		"editExistingResource": "Ga door met mijn aangepaste versie",
 		"editResource": "Bron bewerken",
 		"errLoadingPublicResource": "Fout bij het laden van openbare bronnen.",
 		"error": "Fout",
 		"errorCopyingBoard": "Fout bij het kopiëren van het projectbord:",
 		"errorCopyingPublicBoard": "Fout bij het kopiëren van het openbare projectbord:",
 		"errorCreatingBoard": "Fout bij het aanmaken van het projectbord:",
+		"errorCreatingResource": "We konden geen kopie van deze bron maken.",
 		"errorDeletingBoard": "Fout bij het verwijderen van het projectbord:",
 		"errorLoadingBoards": "Fout bij het laden van projectborden:",
 		"errorLoadingPreview": "Fout bij het laden van de preview.",
+		"errorLoadingResource": "We konden deze bron niet laden.",
 		"errorLoadingResources": "Fout bij het laden van uw bronnen.",
 		"errorSavingChanges": "Fout bij het opslaan van wijzigingen:",
 		"filter": {
@@ -238,6 +243,9 @@
 		"removeCollaborator": "Medewerker verwijderen",
 		"resourceCenterDescription": "Blader door, maak, pas aan en deel bronnen voor uw projecten.",
 		"resourceCenterTitle": "Hulpbronnencentrum",
+		"resourceChoiceExistingCopy": "Je hebt deze bron al gepersonaliseerd. Wat wil je doen?",
+		"resourceContentPlaceholder": "Broninhoud toevoegen of bijwerken...",
+		"resourceCopyInfo": "Als u opslaat, wordt er een persoonlijke kopie aangemaakt die aan uw project is gekoppeld.",
 		"resourcesCenterForTeachers": "Hulpbronnencentrum voor leraren",
 		"save": "Redden",
 		"saveChanges": "Wijzigingen opslaan",
@@ -268,6 +276,20 @@
 		"viewAndCopy": "Bekijken en kopiëren",
 		"viewOrEdit": "Bekijken of bewerken"
 	},
+	"boardManagement (2)": {
+		"createAnotherCopy\"": "Maak een extra kopie",
+		"description": "Beschrijving",
+		"editExistingResource": "Ga door met mijn aangepaste versie",
+		"errorLoadingResource": "We konden deze bron niet laden.",
+		"makePrivate": "Maak privé",
+		"makePublic": "Openbaar maken",
+		"resourceChoiceExistingCopy": "Je hebt deze bron al gepersonaliseerd. Wat wil je doen?",
+		"resourceContent": "Broninhoud",
+		"resourceContentPlaceholder": "Broninhoud toevoegen of bijwerken...",
+		"resourceCopyInfo": "Als u opslaat, wordt er een persoonlijke kopie aangemaakt die aan uw project is gekoppeld.",
+		"saveOwnRessource": "Bewaar mijn exemplaar",
+		"titleText": "Titel"
+	},
 	"cancel": "Annuleren",
 	"classes": "Klasse(n)",
 	"classesList": {
@@ -285,6 +307,9 @@
 	"className": "Klassenaam",
 	"classNetworks": "Klassenetwerken",
 	"collaborators": "Medewerker(s)",
+	"common": {
+		"loading": "Bezig met laden..."
+	},
 	"create": {
 		"create": "Nieuwe klasse maken",
 		"createHeader": "Nieuwe klasse toevoegen",

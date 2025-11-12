@@ -1,9 +1,8 @@
 import TipTapEditor from "../../../TipTap/Main";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import { Button, Icon, Modal, Tab } from "semantic-ui-react";
 import { useState, useEffect } from "react";
-import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import {
@@ -16,6 +15,8 @@ import { ALL_PUBLIC_TASKS } from "../../../Queries/Task";
 // import { GET_MY_CLASS_ASSIGNMENTS } from "../../../Queries/Assignment";
 import { GET_MY_ASSIGNMENTS, GET_AN_ASSIGNMENT, GET_ASSIGNMENTS_CHILD } from "../../../Queries/Assignment";
 import { EDIT_ASSIGNMENT } from "../../../Mutations/Assignment";
+import { CREATE_RESOURCE, UPDATE_RESOURCE } from "../../../Mutations/Resource";
+import { GET_RESOURCE } from "../../../Queries/Resource";
 import AssignmentEditModal from "../../../TipTap/AssignmentEditModal"
 import AssignmentViewModal from "../../../TipTap/AssignmentViewModal"
 import AssignmentCopyModal from "../../../TipTap/AssignmentCopyModal";
@@ -38,6 +39,7 @@ export default function LinkedItems({
     data: publicData,
     error: publicError,
     loading: publicLoading,
+    refetch: refetchPublicResources,
   } = useQuery(GET_PUBLIC_RESOURCES);
   
   // Queries for assignment
@@ -52,6 +54,7 @@ export default function LinkedItems({
     data: myData,
     error: myError,
     loading: myLoading,
+    refetch: refetchMyResources,
   } = useQuery(GET_MY_RESOURCES, {
     variables: { id: user?.id },
   });
@@ -61,7 +64,9 @@ export default function LinkedItems({
     resources: publicData?.resources || {}
   } || {};
   const myResources = myData?.resources || [];
-  const myResourcesNoParent = myResources.filter((r) => !r?.parent);
+  const myResourcesForTab = myResources.filter(
+    (resource) => resource?.author?.id === user?.id || !resource?.parent
+  );
 
   // Queries for Assignments
   const {
@@ -98,6 +103,107 @@ export default function LinkedItems({
   const [editAssignmentId, setEditAssignmentId] = useState(null);
   const [copyModalOpen, setCopyModalOpen] = useState(false);
   const [copyAssignment, setCopyAssignment] = useState(null);
+
+  const createInitialResourceModalState = () => ({
+    open: false,
+    resourceId: null,
+    sourceType: null,
+    templateId: null,
+    existingCustomResourceId: null,
+  });
+
+  const [resourceModalState, setResourceModalState] = useState(
+    createInitialResourceModalState
+  );
+
+  const closeResourceModal = () =>
+    setResourceModalState(createInitialResourceModalState());
+
+  const openResourceModalHandler = (resource, context = {}) => {
+    if (!resource?.id) {
+      console.error("No resource provided to openResourceModalHandler");
+      return;
+    }
+
+    const derivedSourceType =
+      context.sourceType ||
+      (resource?.parent?.id ? "custom" : resource?.isPublic ? "public" : "mine");
+
+    const templateId =
+      derivedSourceType === "public"
+        ? resource.id
+        : resource?.parent?.id || resource.id;
+
+    const existingCustom = templateId
+      ? myResources.find(
+          (myResource) =>
+            myResource?.parent?.id === templateId &&
+            myResource?.author?.id === user?.id
+        )
+      : null;
+
+    setResourceModalState({
+      open: true,
+      resourceId: resource.id,
+      sourceType: derivedSourceType,
+      templateId,
+      existingCustomResourceId: existingCustom?.id || null,
+    });
+  };
+
+  const handleResourceModalSaved = async ({
+    mode,
+    resourceId: savedResourceId,
+    templateId,
+  }) => {
+    try {
+      await refetchPublicResources?.();
+    } catch (err) {
+      console.error("Failed to refetch public resources after saving:", err);
+    }
+
+    let myResourcesResult;
+    try {
+      if (refetchMyResources) {
+        myResourcesResult = await refetchMyResources();
+      }
+    } catch (err) {
+      console.error("Failed to refetch my resources after saving:", err);
+    }
+
+    if (!myResourcesResult?.data?.resources || !savedResourceId) {
+      return;
+    }
+
+    const updatedResource = myResourcesResult.data.resources.find(
+      (resource) => resource.id === savedResourceId
+    );
+
+    if (!updatedResource) {
+      return;
+    }
+
+    const currentSelected = selectedResources || [];
+    let shouldUpdateSelection = false;
+
+    const updatedSelection = currentSelected.map((res) => {
+      if (mode === "createCopy" && templateId && res.id === templateId) {
+        shouldUpdateSelection = true;
+        return updatedResource;
+      }
+      if (mode === "update" && res.id === savedResourceId) {
+        shouldUpdateSelection = true;
+        return updatedResource;
+      }
+      return res;
+    });
+
+    if (shouldUpdateSelection) {
+      handleChange({
+        target: { name: "resources", value: updatedSelection },
+      });
+    }
+  };
 
   const openCopyModal = (assignment) => {
     if (!assignment) return;
@@ -170,6 +276,7 @@ export default function LinkedItems({
           openAssignmentModal={openAssignmentModalHandler}
           openViewAssignmentModal={openViewAssignmentModal}
           openCopyModal={openCopyModal}
+          openResourceModal={openResourceModalHandler}
         />
       ),
     },
@@ -178,7 +285,7 @@ export default function LinkedItems({
       render: () => (
         <ItemTab
           user={user}
-          items={myResourcesNoParent}
+          items={myResourcesForTab}
           selected={selectedResources}
           connect={(item) => connectItem(item, "resources", selectedResources)}
           disconnect={(item) =>
@@ -190,6 +297,7 @@ export default function LinkedItems({
           isPublic={false}
           loading={myLoading}
           openAssignmentModal={openAssignmentModalHandler}
+          openResourceModal={openResourceModalHandler}
         />
       ),
     },
@@ -213,6 +321,7 @@ export default function LinkedItems({
           loading={myAssignmentsLoading}
           openAssignmentModal={openAssignmentModalHandler}
           openEditAssignmentModal={openEditAssignmentModal}
+          openResourceModal={openResourceModalHandler}
         />
       ),
     },
@@ -231,6 +340,7 @@ export default function LinkedItems({
           isPublic={true}
           loading={publicTasksLoading}
           openAssignmentModal={openAssignmentModalHandler}
+          openResourceModal={openResourceModalHandler}
         />
       ),
     },
@@ -251,6 +361,7 @@ export default function LinkedItems({
           isPublic={true}
           loading={publicStudiesLoading}
           openAssignmentModal={openAssignmentModalHandler}
+          openResourceModal={openResourceModalHandler}
         />
       ),
     },
@@ -366,6 +477,19 @@ export default function LinkedItems({
         }}
       />
 
+      <ResourceEditModal
+        open={resourceModalState.open}
+        t={t}
+        onClose={closeResourceModal}
+        resourceId={resourceModalState.resourceId}
+        sourceType={resourceModalState.sourceType}
+        templateId={resourceModalState.templateId}
+        existingCustomResourceId={resourceModalState.existingCustomResourceId}
+        user={user}
+        proposal={proposal}
+        onSaved={handleResourceModalSaved}
+      />
+
 
 
       {selectedResourcesMerged.length > 0 && (
@@ -427,7 +551,8 @@ const ItemTab = ({
   openViewAssignmentModal,
   openEditAssignmentModal,
   openCopyModal,
-  myAssignments
+  myAssignments,
+  openResourceModal,
 }) => {
   const { t } = useTranslation("classes");
   
@@ -521,14 +646,13 @@ const ItemTab = ({
   const styledChipPublished = {
     display: "inline-flex",
     height: "24px",
-    padding: "10px",
+    padding: "14px",
     justifyContent: "center",
     alignItems: "center",
     flexShrink: "0",
     borderRadius: "8px",
-    background: "#D8D3E7",
-    color: "#625B71",
-    // border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+    background: "#DEF8FB",
+    border: "1px solid #625B71",
     maxWidth: '100%',
     wordBreak: 'break-word',
   };
@@ -536,13 +660,13 @@ const ItemTab = ({
   const styledChipUnpublished = {
     display: "inline-flex",
     height: "24px",
-    padding: "10px",
+    padding: "14px",
     justifyContent: "center",
     alignItems: "center",
     flexShrink: "0",
     borderRadius: "8px",
     background: "#F3F3F3",
-    // border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+    border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
     maxWidth: '100%',
     wordBreak: 'break-word',
   };
@@ -689,7 +813,9 @@ const ItemTab = ({
                 </button>
                 <button
                   onClick={() =>
-                    window.open(editUrl, "_blank", "noopener,noreferrer")
+                    openResourceModal?.(item, {
+                      sourceType: "public",
+                    })
                   }
                   style={{
                     ...styledSecondaryButtonBlue,
@@ -1023,7 +1149,9 @@ const ItemTab = ({
             )}
             {isAssignment && (
               <div style={{display: "flex", columnGap: "4px", rowGap: "8px", marginBottom: "8px", maxWidth: "100%", flexWrap: "wrap", alignItems: "center"}}>
-                <span style={item?.public ? styledChipPublished : styledChipUnpublished}><p>{item?.public ? "Published" : "Unpublished"}</p></span>
+                <span style={item?.public ? styledChipPublished : styledChipUnpublished}>
+                  <p style={{color: item?.public ? "#625B71" : "", fontWeight: 600}}>{item?.public ? "Published" : "Unpublished"}</p>
+                </span>
                 {item?.classes?.length ? (
                   <>
                     <p style={{margin: "0px"}}>
@@ -1111,7 +1239,11 @@ const ItemTab = ({
                 )}
                 {isResource && (
                   <button
-                    onClick={() => window.open(editUrl, '_blank', 'noopener,noreferrer')}
+                    onClick={() =>
+                      openResourceModal?.(item, {
+                        sourceType: isPublic ? "public" : item?.parent?.id ? "custom" : "mine",
+                      })
+                    }
                     style={{
                       ...styledSecondaryButtonBlue,
                       flex: "0 1 120px",
@@ -1478,6 +1610,508 @@ const ItemTab = ({
         </Button>
 
 
+      </Modal.Actions>
+    </Modal>
+  );
+};
+
+const ResourceEditModal = ({
+  open,
+  t,
+  onClose,
+  resourceId,
+  sourceType,
+  templateId,
+  existingCustomResourceId,
+  user,
+  proposal,
+  onSaved,
+}) => {
+  const getDefaultFormState = () => ({
+    title: "",
+    description: "",
+    content: "",
+    settings: null,
+    isPublic: false,
+  });
+
+  const [choice, setChoice] = useState(null);
+  const [activeResourceId, setActiveResourceId] = useState(null);
+  const [formState, setFormState] = useState(getDefaultFormState);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [mutationError, setMutationError] = useState(null);
+
+  const isPublicTemplate = sourceType === "public";
+  const effectiveTemplateId = templateId || resourceId || null;
+  const needsChoice =
+    isPublicTemplate && existingCustomResourceId && choice === null;
+  const isCreatingCopy =
+    isPublicTemplate && choice !== "existing" && !needsChoice;
+
+  useEffect(() => {
+    if (open) {
+      if (isPublicTemplate) {
+        if (existingCustomResourceId) {
+          setChoice(null);
+          setActiveResourceId(effectiveTemplateId);
+        } else {
+          setChoice("new");
+          setActiveResourceId(effectiveTemplateId);
+        }
+      } else {
+        setChoice("existing");
+        setActiveResourceId(resourceId || null);
+      }
+      setFormState(getDefaultFormState());
+      setHasChanges(false);
+      setMutationError(null);
+    } else {
+      setChoice(null);
+      setActiveResourceId(null);
+      setFormState(getDefaultFormState());
+      setHasChanges(false);
+      setMutationError(null);
+    }
+  }, [
+    open,
+    resourceId,
+    isPublicTemplate,
+    existingCustomResourceId,
+    effectiveTemplateId,
+  ]);
+
+  useEffect(() => {
+    if (!open || needsChoice) {
+      return;
+    }
+
+    if (isPublicTemplate) {
+      const targetId =
+        choice === "existing" && existingCustomResourceId
+          ? existingCustomResourceId
+          : effectiveTemplateId;
+
+      if (targetId && targetId !== activeResourceId) {
+        setActiveResourceId(targetId);
+      }
+    } else if (resourceId && resourceId !== activeResourceId) {
+      setActiveResourceId(resourceId);
+    }
+  }, [
+    choice,
+    existingCustomResourceId,
+    effectiveTemplateId,
+    activeResourceId,
+    open,
+    needsChoice,
+    isPublicTemplate,
+    resourceId,
+  ]);
+
+  const { data, loading, error } = useQuery(GET_RESOURCE, {
+    variables: { id: activeResourceId },
+    skip: !open || !activeResourceId || needsChoice,
+    fetchPolicy: "network-only",
+  });
+
+  useEffect(() => {
+    if (!open || needsChoice) {
+      return;
+    }
+
+    const resource = data?.resource;
+    if (resource) {
+      setFormState({
+        title: resource.title || "",
+        description: resource.description || "",
+        content: resource.content?.main || "",
+        settings: resource.settings || null,
+        isPublic:
+          !isCreatingCopy && resource.isPublic ? resource.isPublic : false,
+      });
+      setHasChanges(false);
+    }
+  }, [data, open, needsChoice, isCreatingCopy]);
+
+  const [createResource, { loading: creating }] = useMutation(CREATE_RESOURCE);
+  const [updateResource, { loading: updating }] = useMutation(UPDATE_RESOURCE);
+  const saving = creating || updating;
+
+  const handleFieldChange = (field, value) => {
+    setFormState((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+    setHasChanges(true);
+  };
+
+  const handleSave = async () => {
+    if (!onSaved || (!isCreatingCopy && !activeResourceId)) {
+      return;
+    }
+
+    setMutationError(null);
+
+    try {
+      if (isCreatingCopy) {
+        const input = {
+          title: formState.title,
+          description: formState.description,
+          content: { main: formState.content },
+          settings: formState.settings,
+          isCustom: true,
+          parent: { connect: { id: effectiveTemplateId } },
+        };
+
+        if (proposal?.id) {
+          input.proposalBoard = { connect: { id: proposal.id } };
+        }
+
+        const response = await createResource({
+          variables: {
+            input,
+          },
+        });
+
+        const newResourceId = response?.data?.createResource?.id;
+
+        if (!newResourceId) {
+          throw new Error(
+            t(
+              "boardManagement.errorCreatingResource",
+              "We could not create a copy of this resource."
+            )
+          );
+        }
+
+        await onSaved({
+          mode: "createCopy",
+          resourceId: newResourceId,
+          templateId: effectiveTemplateId,
+        });
+
+        alert(t("boardManagement.savedRessource", "Resource saved"));
+      } else {
+        await updateResource({
+          variables: {
+            id: activeResourceId,
+            title: formState.title,
+            description: formState.description,
+            content: { main: formState.content },
+            settings: formState.settings,
+            isPublic: formState.isPublic,
+            updatedAt: new Date().toISOString(),
+          },
+        });
+
+        await onSaved({
+          mode: "update",
+          resourceId: activeResourceId,
+          templateId: effectiveTemplateId,
+        });
+
+        alert(t("assignment.changeSuccess", "Changes saved successfully"));
+      }
+
+      setHasChanges(false);
+      onClose();
+    } catch (err) {
+      console.error(err);
+      setMutationError(err.message || "Failed to save resource.");
+    }
+  };
+
+  if (!resourceId) return null;
+
+  const userIsAdmin = user?.permissions
+    ?.map((permission) => permission?.name)
+    .includes("ADMIN");
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      size="large"
+      style={{ borderRadius: "12px", overflow: "hidden" }}
+    >
+      <Modal.Header
+        style={{
+          background: "#f9fafb",
+          borderBottom: "1px solid #e0e0e0",
+          fontFamily: "Nunito",
+          fontWeight: 600,
+        }}
+      >
+        {isCreatingCopy
+          ? t("boardManagement.customizeRessource", "Customize Resource")
+          : t("boardManagement.editResource", "Edit Resource")}
+        {!isCreatingCopy && hasChanges && (
+          <span
+            style={{
+              color: "#8A2CF6",
+              fontSize: "12px",
+              marginLeft: "10px",
+              fontWeight: 400,
+            }}
+          >
+            {t("assignment.unsavedChanges", "(Unsaved changes)")}
+          </span>
+        )}
+      </Modal.Header>
+      <Modal.Content
+        scrolling
+        style={{ background: "#ffffff", padding: "24px" }}
+      >
+        {needsChoice ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+            }}
+          >
+            <p style={{ fontSize: "18px", color: "#274E5B", margin: 0 }}>
+              {t(
+                "boardManagement.resourceChoiceExistingCopy",
+                "You already personalized this resource. What would you like to do?"
+              )}
+            </p>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "12px",
+              }}
+            >
+              <Button
+                style={{
+                  borderRadius: "100px",
+                  background: "#336F8A",
+                  fontSize: "16px",
+                  color: "white",
+                  border: "1px solid #336F8A",
+                }}
+                onClick={() => setChoice("existing")}
+              >
+                {t(
+                  "boardManagement.editExistingResource",
+                  "Continue with my customized version"
+                )}
+              </Button>
+              <Button
+                style={{
+                  borderRadius: "100px",
+                  background: "white",
+                  fontSize: "16px",
+                  color: "#336F8A",
+                  border: "1px solid #336F8A",
+                }}
+                onClick={() => setChoice("new")}
+              >
+                {t(
+                  "boardManagement.createAnotherCopy",
+                  "Create an additional copy"
+                )}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            {mutationError && (
+              <div
+                style={{
+                  background: "#FDECEA",
+                  color: "#B42318",
+                  border: "1px solid #F97066",
+                  borderRadius: "8px",
+                  padding: "12px 16px",
+                  fontSize: "14px",
+                }}
+              >
+                {mutationError}
+              </div>
+            )}
+            {error && (
+              <div
+                style={{
+                  background: "#FDECEA",
+                  color: "#B42318",
+                  border: "1px solid #F97066",
+                  borderRadius: "8px",
+                  padding: "12px 16px",
+                  fontSize: "14px",
+                }}
+              >
+                {t(
+                  "boardManagement.errorLoadingResource",
+                  "We could not load this resource."
+                )}
+              </div>
+            )}
+            {isCreatingCopy && (
+              <div
+                style={{
+                  background: "#EEF6FB",
+                  color: "#1D4E89",
+                  border: "1px solid #B3D4F5",
+                  borderRadius: "8px",
+                  padding: "12px 16px",
+                  fontSize: "14px",
+                }}
+              >
+                {t(
+                  "boardManagement.resourceCopyInfo",
+                  "Saving will create a personal copy linked to your project."
+                )}
+              </div>
+            )}
+            {loading ? (
+              <p>{t("common.loading", "Loading...")}</p>
+            ) : (
+              <>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  <label
+                    htmlFor="resource-title"
+                    style={{ fontSize: "16px", color: "#274E5B" }}
+                  >
+                    {t("boardManagement.titleText", "Title")}
+                  </label>
+                  <input
+                    id="resource-title"
+                    type="text"
+                    value={formState.title}
+                    onChange={(e) => handleFieldChange("title", e.target.value)}
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      borderRadius: "12px",
+                      border: "1px solid #d0d5dd",
+                      fontSize: "16px",
+                      fontFamily: "inherit",
+                    }}
+                  />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  <label
+                    htmlFor="resource-description"
+                    style={{ fontSize: "16px", color: "#274E5B" }}
+                  >
+                    {t("boardManagement.description", "Description")}
+                  </label>
+                  <textarea
+                    id="resource-description"
+                    rows={4}
+                    value={formState.description || ""}
+                    onChange={(e) =>
+                      handleFieldChange("description", e.target.value)
+                    }
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      borderRadius: "12px",
+                      border: "1px solid #d0d5dd",
+                      fontSize: "16px",
+                      fontFamily: "inherit",
+                      minHeight: "120px",
+                    }}
+                  />
+                </div>
+
+                {userIsAdmin && !isCreatingCopy && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-start",
+                      gap: "12px",
+                    }}
+                  >
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        handleFieldChange("isPublic", !formState.isPublic)
+                      }
+                      style={{
+                        borderRadius: "100px",
+                        background: formState.isPublic ? "#336F8A" : "white",
+                        fontSize: "14px",
+                        color: formState.isPublic ? "white" : "#336F8A",
+                        border: "1px solid #336F8A",
+                      }}
+                    >
+                      {formState.isPublic
+                        ? t("boardManagement.makePrivate", "Make Private")
+                        : t("boardManagement.makePublic", "Make Public")}
+                    </Button>
+                  </div>
+                )}
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: "16px",
+                      color: "#274E5B",
+                    }}
+                  >
+                    {t(
+                      "boardManagement.resourceContent",
+                      "Resource content"
+                    )}
+                  </p>
+                  <TipTapEditor
+                    content={formState.content}
+                    placeholder={t(
+                      "boardManagement.resourceContentPlaceholder",
+                      "Add or update resource content..."
+                    )}
+                    onUpdate={(newContent) =>
+                      handleFieldChange("content", newContent)
+                    }
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </Modal.Content>
+      <Modal.Actions
+        style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
+      >
+        {!needsChoice && (
+          <Button
+            loading={saving}
+            disabled={
+              saving || (!isCreatingCopy && !hasChanges) || loading || !!error
+            }
+            style={{
+              borderRadius: "100px",
+              background: "#7D70AD",
+              fontSize: "16px",
+              color: "white",
+              border: "1px solid #7D70AD",
+              marginRight: "10px",
+            }}
+            onClick={handleSave}
+          >
+            {isCreatingCopy
+              ? t("boardManagement.saveOwnRessource", "Save my copy")
+              : t("assignment.save", "Save Changes")}
+          </Button>
+        )}
+
+        <Button
+          onClick={onClose}
+          style={{
+            borderRadius: "100px",
+            background: "#336F8A",
+            fontSize: "16px",
+            color: "white",
+            border: "1px solid #336F8A",
+          }}
+        >
+          {t("board.expendedCard.close", "Close")}
+        </Button>
       </Modal.Actions>
     </Modal>
   );

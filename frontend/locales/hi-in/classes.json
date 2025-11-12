@@ -7,6 +7,7 @@
 	"areYouSureDeleteClass": "क्या आप वाकई इस क्लास को हटाना चाहते हैं?",
 	"assignment": {
 		"addAssignment": "असाइनमेंट जोड़ें",
+		"changeSuccess": "परिवर्तनों को सफलतापूर्वक सहेजा",
 		"chooseClassFirst": "आपको इस असाइनमेंट को सहेजने से पहले इसे किसी क्लास से संबद्ध करना होगा",
 		"classes": "वर्ग",
 		"classHomeworkOverview": "कक्षा होमवर्क अवलोकन",
@@ -171,6 +172,7 @@
 		"contentPreview": "सामग्री पूर्वावलोकन",
 		"copy": "प्रतिलिपि",
 		"copySelection": "चयनित टेम्पलेट की प्रतिलिपि बनाएँ",
+		"createAnotherCopy": "एक अतिरिक्त प्रतिलिपि बनाएँ",
 		"createBtn": "नया प्रोजेक्ट बोर्ड बनाएँ",
 		"created": "बनाया था:",
 		"createFromNewTemplate": "सार्वजनिक टेम्पलेट से कॉपी करें",
@@ -187,15 +189,18 @@
 		"description": "विवरण",
 		"duplicate": "डुप्लिकेट",
 		"edit": "संपादन करना",
+		"editExistingResource": "मेरे अनुकूलित संस्करण के साथ जारी रखें",
 		"editResource": "संसाधन संपादित करें",
 		"errLoadingPublicResource": "सार्वजनिक संसाधन लोड करने में त्रुटि.",
 		"error": "गलती",
 		"errorCopyingBoard": "प्रोजेक्ट बोर्ड की प्रतिलिपि बनाने में त्रुटि:",
 		"errorCopyingPublicBoard": "सार्वजनिक परियोजना बोर्ड की प्रतिलिपि बनाने में त्रुटि:",
 		"errorCreatingBoard": "प्रोजेक्ट बोर्ड बनाते समय त्रुटि:",
+		"errorCreatingResource": "हम इस संसाधन की प्रतिलिपि नहीं बना सके.",
 		"errorDeletingBoard": "प्रोजेक्ट बोर्ड हटाने में त्रुटि:",
 		"errorLoadingBoards": "प्रोजेक्ट बोर्ड लोड करने में त्रुटि:",
 		"errorLoadingPreview": "पूर्वावलोकन लोड करने में त्रुटि.",
+		"errorLoadingResource": "हम इस संसाधन को लोड नहीं कर सके.",
 		"errorLoadingResources": "आपके संसाधन लोड करने में त्रुटि हुई.",
 		"errorSavingChanges": "परिवर्तन सहेजने में त्रुटि:",
 		"filter": {
@@ -238,6 +243,9 @@
 		"removeCollaborator": "सहयोगी को हटाएँ",
 		"resourceCenterDescription": "अपनी परियोजनाओं के लिए संसाधन ब्राउज़ करें, बनाएं, अनुकूलित करें और साझा करें।",
 		"resourceCenterTitle": "संसाधन केंद्र",
+		"resourceChoiceExistingCopy": "आपने इस संसाधन को पहले ही निजीकृत कर लिया है। आप क्या करना चाहेंगे?",
+		"resourceContentPlaceholder": "संसाधन सामग्री जोड़ें या अपडेट करें...",
+		"resourceCopyInfo": "सेव करने से आपकी परियोजना से जुड़ी एक व्यक्तिगत प्रतिलिपि बन जाएगी।",
 		"resourcesCenterForTeachers": "शिक्षकों के लिए संसाधन केंद्र",
 		"save": "बचाना",
 		"saveChanges": "परिवर्तनों को सुरक्षित करें",
@@ -268,6 +276,20 @@
 		"viewAndCopy": "देखें और कॉपी करें",
 		"viewOrEdit": "देखें या संपादित करें"
 	},
+	"boardManagement (2)": {
+		"createAnotherCopy\"": "एक अतिरिक्त प्रतिलिपि बनाएँ",
+		"description": "विवरण",
+		"editExistingResource": "मेरे अनुकूलित संस्करण के साथ जारी रखें",
+		"errorLoadingResource": "हम इस संसाधन को लोड नहीं कर सके.",
+		"makePrivate": "निजी बनाएं",
+		"makePublic": "सार्वजनिक करें",
+		"resourceChoiceExistingCopy": "आपने इस संसाधन को पहले ही निजीकृत कर लिया है। आप क्या करना चाहेंगे?",
+		"resourceContent": "संसाधन सामग्री",
+		"resourceContentPlaceholder": "संसाधन सामग्री जोड़ें या अपडेट करें...",
+		"resourceCopyInfo": "सेव करने से आपकी परियोजना से जुड़ी एक व्यक्तिगत प्रतिलिपि बन जाएगी।",
+		"saveOwnRessource": "मेरी प्रति सहेजें",
+		"titleText": "शीर्षक"
+	},
 	"cancel": "रद्द करना",
 	"classes": "वर्ग",
 	"classesList": {
@@ -285,6 +307,9 @@
 	"className": "कक्षा का नाम",
 	"classNetworks": "वर्ग नेटवर्क",
 	"collaborators": "सहयोगी",
+	"common": {
+		"loading": "लोड हो रहा है..."
+	},
 	"create": {
 		"create": "नया वर्ग बनाएँ",
 		"createHeader": "नया वर्ग जोड़ें",
