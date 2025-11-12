@@ -66,6 +66,14 @@
 		"lockedMessage": "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study.",
 		"studyBuilderLocked": "Study Builder Locked"
 	},
+	"builderSection": {
+		"cloneDialog": {
+			"description": "This board has {count} cloned project board(s). Do you want to add this new card to the corresponding sections in all cloned project boards?",
+			"noOption": "No, add only to this board",
+			"title": "Add to Cloned Boards?",
+			"yesOption": "Yes, add to all clones"
+		}
+	},
 	"buildStudyFromExisting": "Build a study based on a pre-existing MindHive study",
 	"buildTaskFromExisting": "Build a task based on a pre-existing MindHive task.",
 	"byComponent": {

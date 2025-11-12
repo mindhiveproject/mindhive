@@ -569,25 +569,69 @@ const Section = ({
       )}
 
       {/* Clone Add Modal */}
-      <Modal open={showCloneDialog} onClose={handleCloneNo} size="small">
-        <Modal.Header>Add to Cloned Boards?</Modal.Header>
-        <Modal.Content>
-          <p>
-            This board has {newCardInfo?.cloneCount || 0} cloned project
-            board(s). Do you want to add this new card to the corresponding
-            sections in all cloned project boards?
+      <Modal
+        open={showCloneDialog}
+        onClose={handleCloneNo}
+        size="medium"
+        style={{ borderRadius: "12px", overflow: "hidden" }}
+      >
+        <Modal.Header
+          style={{
+            background: "#f9fafb",
+            borderBottom: "1px solid #e0e0e0",
+            fontFamily: "Nunito",
+            fontWeight: 600,
+          }}
+        >
+          {t("builderSection.cloneDialog.title", "Add to Cloned Boards?")}
+        </Modal.Header>
+        <Modal.Content
+          style={{ background: "#ffffff", padding: "24px", fontSize: "16px" }}
+        >
+          <p style={{ marginBottom: "16px", color: "#3b3b3b" }}>
+            {t(
+              "builderSection.cloneDialog.description",
+              "This board has {count} cloned project board(s). Do you want to add this new card to the corresponding sections in all cloned project boards?",
+              {
+                count: newCardInfo?.cloneCount || 0,
+              }
+            )}
           </p>
         </Modal.Content>
-        <Modal.Actions>
-          <Button color="black" onClick={handleCloneNo}>
-            No, add only to this board
+        <Modal.Actions
+          style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
+        >
+          <Button
+            onClick={handleCloneNo}
+            style={{
+              borderRadius: "100px",
+              background: "white",
+              fontSize: "16px",
+              color: "#CF6D6A",
+              border: "1px solid #CF6D6A",
+              marginRight: "10px",
+            }}
+          >
+            {t(
+              "builderSection.cloneDialog.noOption",
+              "No, add only to this board"
+            )}
           </Button>
           <Button
-            positive
-            onClick={handleCloneYes}
             loading={isLoading || createCardState.loading}
+            onClick={handleCloneYes}
+            style={{
+              borderRadius: "100px",
+              background: "#336F8A",
+              fontSize: "16px",
+              color: "white",
+              border: "1px solid #336F8A",
+            }}
           >
-            Yes, add to all clones
+            {t(
+              "builderSection.cloneDialog.yesOption",
+              "Yes, add to all clones"
+            )}
           </Button>
         </Modal.Actions>
       </Modal>

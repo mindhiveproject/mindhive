@@ -66,6 +66,14 @@
 		"lockedMessage": "यह अध्ययन सबमिट कर दिया गया है और इसे संपादित नहीं किया जा सकता। इसमें बदलाव करने के लिए, कृपया अपने शिक्षक से अध्ययन को सबमिट न करने का अनुरोध करें।",
 		"studyBuilderLocked": "अध्ययन बिल्डर लॉक"
 	},
+	"builderSection": {
+		"cloneDialog": {
+			"description": "",
+			"noOption": "",
+			"title": "",
+			"yesOption": ""
+		}
+	},
 	"buildStudyFromExisting": "पहले से मौजूद माइंडहाइव अध्ययन के आधार पर एक अध्ययन तैयार करें",
 	"buildTaskFromExisting": "पहले से मौजूद माइंडहाइव कार्य के आधार पर एक कार्य बनाएं।",
 	"byComponent": {

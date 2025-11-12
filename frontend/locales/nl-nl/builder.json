@@ -66,6 +66,14 @@
 		"lockedMessage": "Deze studie is ingediend en kan niet worden bewerkt. Om wijzigingen aan te brengen, kunt u uw docent vragen de studie ongedaan te maken.",
 		"studyBuilderLocked": "Studiebouwer vergrendeld"
 	},
+	"builderSection": {
+		"cloneDialog": {
+			"description": "Dit bord bevat {count} gekloonde projectborden. Wilt u deze nieuwe kaart toevoegen aan de overeenkomstige secties in alle gekloonde projectborden?",
+			"noOption": "Nee, alleen toevoegen aan dit bord",
+			"title": "Toevoegen aan gekloonde borden?",
+			"yesOption": "Ja, toevoegen aan alle klonen"
+		}
+	},
 	"buildStudyFromExisting": "Een onderzoek opzetten op basis van een reeds bestaand MindHive-onderzoek",
 	"buildTaskFromExisting": "Maak een taak op basis van een reeds bestaande MindHive-taak.",
 	"byComponent": {

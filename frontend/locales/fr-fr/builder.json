@@ -66,6 +66,14 @@
 		"lockedMessage": "Cette étude a été soumise et ne peut pas être modifiée. Pour apporter des modifications, veuillez demander à votre enseignant d'annuler la soumission.",
 		"studyBuilderLocked": "Générateur d'études verrouillé"
 	},
+	"builderSection": {
+		"cloneDialog": {
+			"description": "Ce tableau contient {count} tableaux de projet clonés. Souhaitez-vous ajouter cette nouvelle carte aux sections correspondantes de tous les tableaux de projet clonés ?",
+			"noOption": "Non, ajoutez uniquement à ce tableau",
+			"title": "Ajouter aux forums clonés ?",
+			"yesOption": "Oui, ajoutez-le à tous les clones"
+		}
+	},
 	"buildStudyFromExisting": "Construire une étude basée sur une étude MindHive préexistante",
 	"buildTaskFromExisting": "Créez une tâche basée sur une tâche MindHive préexistante.",
 	"byComponent": {

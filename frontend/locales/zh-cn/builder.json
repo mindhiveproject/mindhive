@@ -66,6 +66,14 @@
 		"lockedMessage": "此研究已提交，无法编辑。如需更改，请告知您的老师取消提交此研究。",
 		"studyBuilderLocked": "学习构建器已锁定"
 	},
+	"builderSection": {
+		"cloneDialog": {
+			"description": "此看板有 {count} 个克隆的项目看板。是否要将此新卡片添加到所有克隆的项目看板的相应部分？",
+			"noOption": "不，只在这个版块添加内容。",
+			"title": "添加到克隆板？",
+			"yesOption": "是的，添加到所有克隆体中。"
+		}
+	},
 	"buildStudyFromExisting": "根据现有 MindHive 研究开展一项研究",
 	"buildTaskFromExisting": "根据预先存在的 MindHive 任​​务构建任务。",
 	"byComponent": {

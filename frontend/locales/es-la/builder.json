@@ -66,6 +66,14 @@
 		"lockedMessage": "Este estudio ya se envió y no se puede editar. Para realizar cambios, pídele a tu profesor que lo cancele.",
 		"studyBuilderLocked": "Constructor de estudios bloqueado"
 	},
+	"builderSection": {
+		"cloneDialog": {
+			"description": "Este tablero tiene {count} tableros de proyecto clonados. ¿Desea agregar esta nueva tarjeta a las secciones correspondientes en todos los tableros de proyecto clonados?",
+			"noOption": "No, añadir solo a este tablero",
+			"title": "¿Añadir a placas clonadas?",
+			"yesOption": "Sí, añadir a todos los clones"
+		}
+	},
 	"buildStudyFromExisting": "Construir un estudio basado en un estudio preexistente de MindHive",
 	"buildTaskFromExisting": "Cree una tarea basada en una tarea MindHive preexistente.",
 	"byComponent": {
