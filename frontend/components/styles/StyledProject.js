@@ -114,7 +114,7 @@ const StyledProject = styled.div`
     grid-template-columns: auto 1fr auto;
     grid-gap: 20px;
     position: sticky;
-    top: 120px;
+    top: 0px;
     z-index: 100;
     background: #ffffff;
     box-shadow: 0px 2px 12px rgba(15, 56, 75, 0.08);
