@@ -1,0 +1,28 @@
+{
+	"boardData": "Données du tableau",
+	"buildYourExport": "Développez votre exportation",
+	"classId": "ID de classe",
+	"csv": "CSV (.csv)",
+	"data": "Données",
+	"downloadPayload": "Télécharger la charge utile",
+	"enterClassId": "Saisissez l'identifiant de la classe",
+	"errors": {
+		"formatUnsupported": "Seuls les formats d'exportation CSV sont disponibles pour le moment.",
+		"missingClassId": "Veuillez fournir un identifiant de classe avant de lancer l'exportation.",
+		"noDatasetSelected": "Sélectionnez au moins un ensemble de données (conseil d'administration ou avis)."
+	},
+	"filterByCardStatus": "Filtrer par statut de la carte",
+	"intro": "Importez le contenu des propositions et les données d'évaluation directement depuis la plateforme MindHive. Choisissez la classe, définissez votre périmètre de données et exportez des fichiers CSV téléchargeables, formatés pour l'analyse.",
+	"json": "JSON (si nécessaire)",
+	"noResearchAccess": "Vous devez disposer d'autorisations de niveau recherche pour accéder aux outils d'exportation",
+	"outputFormat": "Format de sortie",
+	"preparingExport": "Préparation de l'exportation…",
+	"research": "Recherche",
+	"resetFilters": "Réinitialiser les filtres",
+	"reviewData": "Analyse des données",
+	"runExport": "Exécuter l'exportation",
+	"selectAllBoards": "Sélectionnez « Tous les forums » si vous ne souhaitez aucun filtre.",
+	"selectDataScope": "(Facultatif) Sélectionner l'étendue des données",
+	"whatAreTheFilteringPolicies": "Quelles sont les politiques de filtrage ?",
+	"workflowStage": "Sélectionnez l'étape à filtrer par"
+}

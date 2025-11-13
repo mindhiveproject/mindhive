@@ -100,6 +100,7 @@ export default function TipTapEditor({
   onUpdate,
   isEditable = true,
   toolbarVisible = true,
+  specialButton = null,
 }) {
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -208,6 +209,94 @@ export default function TipTapEditor({
         href: normalizedUrl,
         target: '_blank',
       }).run();
+    };
+
+    const renderSpecialButton = () => {
+      if (!specialButton) return null;
+
+      const {
+        label,
+        onClick,
+        disabled: externalDisabled,
+        loading = false,
+        icon,
+        className = "",
+        primary = false,
+        positive = false,
+        negative = false,
+        color,
+        colorBackground,
+        secondary = false,
+        basic = true,
+      } = specialButton;
+
+      if (!label || typeof onClick !== "function") {
+        return null;
+      }
+
+      const isDisabled = !!externalDisabled || !editor.isEditable;
+
+      const handleClick = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (isDisabled) {
+          return;
+        }
+        onClick(editor, event);
+      };
+
+      const borderColor = color || "#274E5B";
+      const backgroundColor =
+        colorBackground !== undefined ? colorBackground : "#FFFFFF";
+
+      const buttonStyle = {
+        "--special-button-border": borderColor,
+        "--special-button-text": borderColor,
+        "--special-button-background": backgroundColor,
+        "--special-button-hover-border": backgroundColor,
+        "--special-button-hover-text": backgroundColor,
+        "--special-button-hover-background": borderColor,
+      };
+
+      return (
+        <>
+          <div
+            style={{
+              width: "1px",
+              background: "#D3E0E3",
+              height: "32px",
+              alignSelf: "center",
+              margin: "0 4px",
+            }}
+          />
+          <div
+            className="toolbarGroup specialButtonGroup"
+            style={{ marginLeft: "auto" }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            <Button
+              className={`toolbarButton specialToolbarButton ${className}`.trim()}
+              onClick={handleClick}
+              disabled={isDisabled}
+              loading={loading}
+              primary={primary}
+              positive={positive}
+              negative={negative}
+              secondary={secondary}
+              aria-label={label}
+              basic={basic}
+              type="button"
+              style={buttonStyle}
+            >
+              {icon && <Icon name={icon} />}
+              {label}
+            </Button>
+          </div>
+        </>
+      );
     };
 
     const tableOptions = [
@@ -355,6 +444,15 @@ export default function TipTapEditor({
             </Button>
           </div>
           <div
+            style={{
+              width: "1px",
+              background: "#D3E0E3",
+              height: "32px",
+              alignSelf: "center",
+              margin: "0 4px",
+            }}
+          />
+          <div
             className="toolbarGroup"
             onMouseDown={(e) => {
               e.preventDefault();
@@ -427,6 +525,15 @@ export default function TipTapEditor({
             </Button>
             </div>
           <div
+            style={{
+              width: "1px",
+              background: "#D3E0E3",
+              height: "32px",
+              alignSelf: "center",
+              margin: "0 4px",
+            }}
+          />
+          <div
             className="toolbarGroup"
             onMouseDown={(e) => {
               e.preventDefault();
@@ -470,6 +577,15 @@ export default function TipTapEditor({
               <Icon name="quote left" />
             </Button>
           </div>
+          <div
+            style={{
+              width: "1px",
+              background: "#D3E0E3",
+              height: "32px",
+              alignSelf: "center",
+              margin: "0 4px",
+            }}
+          />
           <div
             className="toolbarGroup"
             onMouseDown={(e) => {
@@ -529,6 +645,7 @@ export default function TipTapEditor({
               </Dropdown.Menu>
             </Dropdown>
           </div>
+        {renderSpecialButton()}
         </div>
       </div>
     );

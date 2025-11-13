@@ -13,6 +13,7 @@ import { GET_CARD_CONTENT } from "../../../../../Queries/Proposal";
 import { CREATE_HOMEWORK } from "../../../../../Mutations/Homework"; // Adjust path as needed
 import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../../../../Queries/Homework"; // Adjust path as needed
 import { GET_AN_ASSIGNMENT } from "../../../../../Queries/Assignment"; // Adjust path as needed
+import { GET_RESOURCE } from "../../../../../Queries/Resource";
 
 import useForm from "../../../../../../lib/useForm";
 
@@ -42,6 +43,10 @@ export default function ProposalCard({
   const [originalActive, setOriginalActive] = useState(false); // For accordion state, default collapsed
   const [assignmentModalOpen, setAssignmentModalOpen] = useState(false); // For assignment modal
   const [selectedAssignment, setSelectedAssignment] = useState(null); // For selected assignment
+  const [resourceModalState, setResourceModalState] = useState({
+    open: false,
+    resourceId: null,
+  });
 
   const reviewOptions = [
     {
@@ -116,6 +121,33 @@ export default function ProposalCard({
       value: user.id,
     })) || [];
   const allUsers = [...users];
+
+  const openResourceModalHandler = (resource) => {
+    if (!resource?.id) {
+      return;
+    }
+    setResourceModalState({
+      open: true,
+      resourceId: resource.id,
+    });
+  };
+
+  const closeResourceModalHandler = () =>
+    setResourceModalState({
+      open: false,
+      resourceId: null,
+    });
+
+  const {
+    data: resourceModalData,
+    loading: resourceModalLoading,
+  } = useQuery(GET_RESOURCE, {
+    variables: { id: resourceModalState.resourceId },
+    skip: !resourceModalState.open || !resourceModalState.resourceId,
+    fetchPolicy: "network-only",
+  });
+
+  const activeResource = resourceModalData?.resource;
 
   // update the assignedTo in the local state
   const handleAssignedToChange = (assignedTo) => {
@@ -857,6 +889,7 @@ export default function ProposalCard({
                   type="resource"
                   proposal={proposal}
                   openAssignmentModal={openAssignmentModalHandler}
+                  openResourceModal={openResourceModalHandler}
                   user={user}
                 />
               )}
@@ -890,6 +923,69 @@ export default function ProposalCard({
                   user={user}
                 />
               )}
+
+              <Modal
+                open={resourceModalState.open}
+                onClose={closeResourceModalHandler}
+                size="large"
+                style={{ borderRadius: "12px", overflow: "hidden" }}
+              >
+                <Modal.Header
+                  style={{
+                    background: "#f9fafb",
+                    borderBottom: "1px solid #e0e0e0",
+                    fontFamily: "Nunito",
+                    fontWeight: 600,
+                  }}
+                >
+                  {activeResource?.title ||
+                    t("boardManagement.viewResource", "View Resource")}
+                </Modal.Header>
+                <Modal.Content
+                  scrolling
+                  style={{ background: "#ffffff", padding: "24px" }}
+                >
+                  {resourceModalLoading ? (
+                    <p>{t("common.loading", "Loading...")}</p>
+                  ) : activeResource ? (
+                    <ReadOnlyTipTap>
+                      <div className="ProseMirror">
+                        {ReactHtmlParser(activeResource?.content?.main || "")}
+                      </div>
+                    </ReadOnlyTipTap>
+                  ) : (
+                    <p>
+                      {t(
+                        "boardManagement.resourceUnavailable",
+                        "Resource unavailable."
+                      )}
+                    </p>
+                  )}
+                </Modal.Content>
+                <Modal.Actions
+                  style={{
+                    background: "#f9fafb",
+                    borderTop: "1px solid #e0e0e0",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap: "12px",
+                    padding: "16px 24px",
+                  }}
+                >
+                  <Button
+                    onClick={closeResourceModalHandler}
+                    style={{
+                      borderRadius: "100px",
+                      background: "#336F8A",
+                      fontSize: "16px",
+                      color: "white",
+                      border: "1px solid #336F8A",
+                    }}
+                  >
+                    {t("board.expendedCard.close", "Close")}
+                  </Button>
+                </Modal.Actions>
+              </Modal>
 
               <div className="proposalCardComments">
                 <div className="cardSubheader">

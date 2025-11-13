@@ -7,6 +7,8 @@ export const GET_PUBLIC_RESOURCES = gql`
       id
       title
       slug
+      isPublic
+      isCustom
       author {
         id
         username
@@ -17,6 +19,9 @@ export const GET_PUBLIC_RESOURCES = gql`
       }
       createdAt
       updatedAt
+      parent {
+        id
+      }
     }
   }
 `;
@@ -54,6 +59,8 @@ export const GET_MY_RESOURCES = gql`
       description
       content
       settings
+      isPublic
+      isCustom
       author {
         id
         username
@@ -64,6 +71,9 @@ export const GET_MY_RESOURCES = gql`
       }
       createdAt
       updatedAt
+      parent {
+        id
+      }
     }
   }
 `;
@@ -142,6 +152,7 @@ export const GET_RESOURCE = gql`
       description
       content
       isPublic
+      isCustom
       settings
       author {
         id
@@ -153,6 +164,9 @@ export const GET_RESOURCE = gql`
       }
       createdAt
       updatedAt
+      parent {
+        id
+      }
     }
   }
 `;

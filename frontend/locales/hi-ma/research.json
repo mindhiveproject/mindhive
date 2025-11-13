@@ -1,0 +1,28 @@
+{
+	"boardData": "",
+	"buildYourExport": "",
+	"classId": "",
+	"csv": "",
+	"data": "",
+	"downloadPayload": "",
+	"enterClassId": "",
+	"errors": {
+		"formatUnsupported": "",
+		"missingClassId": "",
+		"noDatasetSelected": ""
+	},
+	"filterByCardStatus": "",
+	"intro": "",
+	"json": "",
+	"noResearchAccess": "",
+	"outputFormat": "",
+	"preparingExport": "",
+	"research": "",
+	"resetFilters": "",
+	"reviewData": "",
+	"runExport": "",
+	"selectAllBoards": "",
+	"selectDataScope": "",
+	"whatAreTheFilteringPolicies": "",
+	"workflowStage": ""
+}

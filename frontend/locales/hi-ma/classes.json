@@ -7,6 +7,7 @@
 	"areYouSureDeleteClass": "क्या आप वाकई इस क्लास को हटाना चाहते हैं?",
 	"assignment": {
 		"addAssignment": "असाइनमेंट जोड़ें",
+		"changeSuccess": "",
 		"chooseClassFirst": "",
 		"classes": "वर्ग",
 		"classHomeworkOverview": "कक्षा होमवर्क अवलोकन",
@@ -171,6 +172,7 @@
 		"contentPreview": "",
 		"copy": "",
 		"copySelection": "",
+		"createAnotherCopy": "",
 		"createBtn": "",
 		"created": "",
 		"createFromNewTemplate": "",
@@ -187,15 +189,18 @@
 		"description": "",
 		"duplicate": "",
 		"edit": "",
+		"editExistingResource": "",
 		"editResource": "",
 		"errLoadingPublicResource": "",
 		"error": "",
 		"errorCopyingBoard": "",
 		"errorCopyingPublicBoard": "",
 		"errorCreatingBoard": "",
+		"errorCreatingResource": "",
 		"errorDeletingBoard": "",
 		"errorLoadingBoards": "",
 		"errorLoadingPreview": "",
+		"errorLoadingResource": "",
 		"errorLoadingResources": "",
 		"errorSavingChanges": "",
 		"filter": {
@@ -238,6 +243,9 @@
 		"removeCollaborator": "",
 		"resourceCenterDescription": "",
 		"resourceCenterTitle": "",
+		"resourceChoiceExistingCopy": "",
+		"resourceContentPlaceholder": "",
+		"resourceCopyInfo": "",
 		"resourcesCenterForTeachers": "",
 		"save": "",
 		"saveChanges": "",
@@ -268,6 +276,20 @@
 		"viewAndCopy": "",
 		"viewOrEdit": ""
 	},
+	"boardManagement (2)": {
+		"createAnotherCopy\"": "",
+		"description": "",
+		"editExistingResource": "",
+		"errorLoadingResource": "",
+		"makePrivate": "",
+		"makePublic": "",
+		"resourceChoiceExistingCopy": "",
+		"resourceContent": "",
+		"resourceContentPlaceholder": "",
+		"resourceCopyInfo": "",
+		"saveOwnRessource": "",
+		"titleText": ""
+	},
 	"cancel": "रद्द करना",
 	"classes": "वर्ग",
 	"classesList": {
@@ -285,6 +307,9 @@
 	"className": "कक्षा का नाम",
 	"classNetworks": "वर्ग नेटवर्क",
 	"collaborators": "सहयोगी",
+	"common": {
+		"loading": ""
+	},
 	"create": {
 		"create": "नया वर्ग बनाएँ",
 		"createHeader": "नया वर्ग जोड़ें",

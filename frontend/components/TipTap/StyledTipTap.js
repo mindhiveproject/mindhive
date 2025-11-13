@@ -27,10 +27,10 @@ export const StyledTipTap = styled.div`
 
   .toolbar {
     display: flex;
-    grid-gap: 10px;
+    // grid-gap: 4px;
     border-radius: 100px;
     background: #f0f5f5;
-    padding: 0px 16px 0px 16px;
+    padding: 0px 8px 0px 16px;
     width: fit-content;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -68,6 +68,58 @@ export const StyledTipTap = styled.div`
 
         > .icon.dropdown {
         display: none !important;
+        }
+      }
+
+      .specialButtonGroup {
+        margin-left: auto;
+        padding-right: 4px;
+      }
+
+      .specialToolbarButton {
+        height: 36px;
+        min-width: 124px;
+        padding: 0 18px;
+        border-radius: 999px !important;
+        border: 1.5px solid var(--special-button-border, #274e5b) !important;
+        background: var(--special-button-background, #ffffff) !important;
+        color: var(--special-button-text, #274e5b) !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease,
+          transform 0.2s ease;
+
+        .icon {
+          margin: 0 !important;
+          font-size: 1em;
+        }
+
+        &:hover:not(.disabled):not(.loading) {
+          background: var(--special-button-hover-background, #274e5b) !important;
+          color: var(--special-button-hover-text, #ffffff) !important;
+          border-color: var(--special-button-hover-border, #274e5b) !important;
+          box-shadow: 0 6px 16px rgba(39, 78, 91, 0.2);
+        }
+
+        &:active:not(.disabled):not(.loading) {
+          transform: translateY(1px);
+          box-shadow: 0 2px 8px rgba(39, 78, 91, 0.2);
+        }
+
+        &.loading {
+          opacity: 0.8;
+        }
+
+        &.disabled,
+        &:disabled {
+          opacity: 0.6 !important;
+          border-color: #d3e0e3 !important;
+          color: #7a7a7a !important;
+          box-shadow: none;
+          cursor: not-allowed;
         }
       }
     }

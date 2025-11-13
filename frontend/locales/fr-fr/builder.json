@@ -28,7 +28,8 @@
 	},
 	"assignment": {
 		"loading": "Chargement de la tâche...",
-		"loadingMessage": "Récupération des dernières données d'affectation..."
+		"loadingMessage": "Récupération des dernières données d'affectation...",
+		"unsavedChanges": "(Modifications non enregistrées)"
 	},
 	"background": "Arrière-plan",
 	"backgroundHelp": "Utilisez ce champ pour fournir un bref aperçu du sujet de recherche. Quel est le problème étudié et pourquoi est-il important ?",
@@ -65,6 +66,14 @@
 		"addStartingPoint": "Ajouter un point de départ",
 		"lockedMessage": "Cette étude a été soumise et ne peut pas être modifiée. Pour apporter des modifications, veuillez demander à votre enseignant d'annuler la soumission.",
 		"studyBuilderLocked": "Générateur d'études verrouillé"
+	},
+	"builderSection": {
+		"cloneDialog": {
+			"description": "Ce tableau contient {count} tableaux de projet clonés. Souhaitez-vous ajouter cette nouvelle carte aux sections correspondantes de tous les tableaux de projet clonés ?",
+			"noOption": "Non, ajoutez uniquement à ce tableau",
+			"title": "Ajouter aux forums clonés ?",
+			"yesOption": "Oui, ajoutez-le à tous les clones"
+		}
 	},
 	"buildStudyFromExisting": "Construire une étude basée sur une étude MindHive préexistante",
 	"buildTaskFromExisting": "Créez une tâche basée sur une tâche MindHive préexistante.",
@@ -131,6 +140,9 @@
 		"noProjectFound": "Aucun projet trouvé, veuillez d'abord enregistrer votre projet.",
 		"noStudyAttachedHeader": "🤷🏻 Votre projet n'a aucune étude qui lui est associée.",
 		"noStudyAttachedMessage": "Informez votre enseignant afin qu'il puisse en créer un et l'associer. Si vous avez besoin d'aide, veuillez contacter le support technique à l'adresse support.mindhive@nyu.edu."
+	},
+	"common": {
+		"loading": "Chargement..."
 	},
 	"connectModal": {
 		"addCollaborators": "Ajouter des collaborateurs",
@@ -580,6 +592,9 @@
 		"lockedForFeedback": "La proposition a été verrouillée pour commentaires",
 		"notStarted": "Pas commencé",
 		"readyToSubmit": "La proposition est prête à être soumise pour commentaires !",
+		"retrySave": "Réessayer d'enregistrer",
+		"saveChangesButton": "Sauvegarder les modifications",
+		"saved": "Enregistré",
 		"submitFor": "Soumettre pour {{title}}",
 		"submitForFeedbackIntro": "Une fois que vous avez soumis votre proposition pour commentaires :",
 		"submitForTitle": "Soumettez votre proposition pour {{name}}",

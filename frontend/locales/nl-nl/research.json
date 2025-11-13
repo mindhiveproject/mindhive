@@ -1,0 +1,28 @@
+{
+	"boardData": "Bordgegevens",
+	"buildYourExport": "Bouw uw export",
+	"classId": "Klasse-ID",
+	"csv": "CSV (.csv)",
+	"data": "Gegevens ",
+	"downloadPayload": "Payload downloaden",
+	"enterClassId": "Voer de klasse-ID in",
+	"errors": {
+		"formatUnsupported": "Op dit moment zijn alleen CSV-exporten beschikbaar.",
+		"missingClassId": "Geef een klasse-ID op voordat u de export uitvoert.",
+		"noDatasetSelected": "Selecteer minimaal één dataset (bord of reviews)."
+	},
+	"filterByCardStatus": "Filteren op kaartstatus",
+	"intro": "Haal de inhoud van het voorstel en de reviewgegevens rechtstreeks uit het MindHive-platform. Kies de klasse, selecteer de scope van je data en exporteer downloadbare CSV-bestanden die geschikt zijn voor analyse.",
+	"json": "JSON (indien echt nodig)",
+	"noResearchAccess": "U hebt toestemmingen op onderzoeksniveau nodig om toegang te krijgen tot de exporttools",
+	"outputFormat": "Uitvoerformaat",
+	"preparingExport": "Export voorbereiden…",
+	"research": "Onderzoek",
+	"resetFilters": "Filters opnieuw instellen",
+	"reviewData": "Gegevens beoordelen",
+	"runExport": "Exporteren uitvoeren",
+	"selectAllBoards": "Selecteer 'Alle borden' als u geen filters wilt",
+	"selectDataScope": "(Optioneel) Selecteer het gegevensbereik",
+	"whatAreTheFilteringPolicies": "Wat zijn de filterbeleidsregels?",
+	"workflowStage": "Selecteer op welke fase u wilt filteren"
+}

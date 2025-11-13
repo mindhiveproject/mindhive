@@ -28,7 +28,8 @@
 	},
 	"assignment": {
 		"loading": "Opdracht laden...",
-		"loadingMessage": "Laatste toewijzingsgegevens ophalen..."
+		"loadingMessage": "Laatste toewijzingsgegevens ophalen...",
+		"unsavedChanges": "(Niet-opgeslagen wijzigingen)"
 	},
 	"background": "Achtergrond",
 	"backgroundHelp": "Gebruik dit veld om een ​​korte achtergrondinformatie over het onderzoeksonderwerp te geven. Wat is het onderzochte probleem en waarom is het belangrijk?",
@@ -65,6 +66,14 @@
 		"addStartingPoint": "Startpunt toevoegen",
 		"lockedMessage": "Deze studie is ingediend en kan niet worden bewerkt. Om wijzigingen aan te brengen, kunt u uw docent vragen de studie ongedaan te maken.",
 		"studyBuilderLocked": "Studiebouwer vergrendeld"
+	},
+	"builderSection": {
+		"cloneDialog": {
+			"description": "Dit bord bevat {count} gekloonde projectborden. Wilt u deze nieuwe kaart toevoegen aan de overeenkomstige secties in alle gekloonde projectborden?",
+			"noOption": "Nee, alleen toevoegen aan dit bord",
+			"title": "Toevoegen aan gekloonde borden?",
+			"yesOption": "Ja, toevoegen aan alle klonen"
+		}
 	},
 	"buildStudyFromExisting": "Een onderzoek opzetten op basis van een reeds bestaand MindHive-onderzoek",
 	"buildTaskFromExisting": "Maak een taak op basis van een reeds bestaande MindHive-taak.",
@@ -131,6 +140,9 @@
 		"noProjectFound": "Er is geen project gevonden. Sla uw project eerst op.",
 		"noStudyAttachedHeader": "🤷🏻 Er is geen studie aan uw project gekoppeld.",
 		"noStudyAttachedMessage": "Laat het je docent weten, zodat hij of zij er een kan maken en koppelen. Heb je hulp nodig? Neem dan contact op met de technische ondersteuning via support.mindhive@nyu.edu."
+	},
+	"common": {
+		"loading": "Bezig met laden..."
 	},
 	"connectModal": {
 		"addCollaborators": "Medewerkers toevoegen",
@@ -580,6 +592,9 @@
 		"lockedForFeedback": "Het voorstel is geblokkeerd voor feedback",
 		"notStarted": "Niet gestart",
 		"readyToSubmit": "Het voorstel is klaar om ter feedback ingediend te worden!",
+		"retrySave": "Opnieuw opslaan",
+		"saveChangesButton": "Wijzigingen opslaan",
+		"saved": "Opgeslagen",
 		"submitFor": "Verzenden voor {{title}}",
 		"submitForFeedbackIntro": "Zodra u uw voorstel ter feedback indient:",
 		"submitForTitle": "Dien uw voorstel in voor {{name}}",

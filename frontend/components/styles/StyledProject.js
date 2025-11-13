@@ -30,6 +30,11 @@ const StyledProject = styled.div`
   grid-template-rows: auto 1fr;
   .navigation {
     display: grid;
+    position: sticky;
+    top: 0;
+    z-index: 105;
+    background: #ffffff;
+    box-shadow: 0px 2px 12px rgba(15, 56, 75, 0.08);
     .firstLine {
       display: grid;
       align-items: center;
@@ -108,6 +113,11 @@ const StyledProject = styled.div`
     padding: 6px 9px;
     grid-template-columns: auto 1fr auto;
     grid-gap: 20px;
+    position: sticky;
+    top: 0px;
+    z-index: 100;
+    background: #ffffff;
+    box-shadow: 0px 2px 12px rgba(15, 56, 75, 0.08);
     .left {
       display: grid;
       .icon {

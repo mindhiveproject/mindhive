@@ -54,8 +54,8 @@ export const StyledActionPage = styled.div`
   .card {
     display: grid;
     grid-gap: 10px;
-    padding: 24px;
-    border: 1px solid #deddd9;
+    padding-top: 24px;
+    // border: 1px solid #deddd9;
     border-radius: 10px;
   }
   .cardTitleIcon {
@@ -510,6 +510,21 @@ export const StyledDasboardReview = styled.div`
       background: white;
       padding: 12px 16px;
       border-radius: 8px;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+      &.isClickable {
+        cursor: pointer;
+
+        &:hover {
+          box-shadow: 0px 6px 16px rgba(15, 56, 75, 0.12);
+          transform: translateY(-2px);
+        }
+
+        &:focus-visible {
+          outline: 2px solid #28619e;
+          outline-offset: 3px;
+        }
+      }
 
       .headline {
         display: grid;

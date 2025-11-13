@@ -28,7 +28,8 @@
 	},
 	"assignment": {
 		"loading": "Cargando tarea...",
-		"loadingMessage": "Obteniendo los últimos datos de la tarea..."
+		"loadingMessage": "Obteniendo los últimos datos de la tarea...",
+		"unsavedChanges": "(Cambios no guardados)"
 	},
 	"background": "Fondo",
 	"backgroundHelp": "Utilice este campo para proporcionar una breve introducción al tema de investigación. ¿Cuál es el problema en estudio y por qué es importante?",
@@ -65,6 +66,14 @@
 		"addStartingPoint": "Añadir punto de partida",
 		"lockedMessage": "Este estudio ya se envió y no se puede editar. Para realizar cambios, pídele a tu profesor que lo cancele.",
 		"studyBuilderLocked": "Constructor de estudios bloqueado"
+	},
+	"builderSection": {
+		"cloneDialog": {
+			"description": "Este tablero tiene {count} tableros de proyecto clonados. ¿Desea agregar esta nueva tarjeta a las secciones correspondientes en todos los tableros de proyecto clonados?",
+			"noOption": "No, añadir solo a este tablero",
+			"title": "¿Añadir a placas clonadas?",
+			"yesOption": "Sí, añadir a todos los clones"
+		}
 	},
 	"buildStudyFromExisting": "Construir un estudio basado en un estudio preexistente de MindHive",
 	"buildTaskFromExisting": "Cree una tarea basada en una tarea MindHive preexistente.",
@@ -131,6 +140,9 @@
 		"noProjectFound": "No se encontró ningún proyecto, por favor guarde su proyecto primero.",
 		"noStudyAttachedHeader": "🤷🏻 Tu proyecto no tiene ningún estudio adjunto.",
 		"noStudyAttachedMessage": "Avisa a tu profesor para que pueda crear uno y asociarlo. Si necesitas ayuda, contacta con el soporte técnico en support.mindhive@nyu.edu."
+	},
+	"common": {
+		"loading": "Cargando..."
 	},
 	"connectModal": {
 		"addCollaborators": "Agregar colaboradores",
@@ -580,6 +592,9 @@
 		"lockedForFeedback": "La propuesta fue bloqueada para recibir comentarios.",
 		"notStarted": "No iniciado",
 		"readyToSubmit": "¡La propuesta está lista para ser enviada para recibir comentarios!",
+		"retrySave": "Reintentar guardar",
+		"saveChangesButton": "Guardar cambios",
+		"saved": "Salvado",
 		"submitFor": "Enviar para {{title}}",
 		"submitForFeedbackIntro": "Una vez que envíe su propuesta para recibir comentarios:",
 		"submitForTitle": "Envíe su propuesta para {{name}}",

@@ -1,0 +1,28 @@
+{
+	"boardData": "Datos de la placa",
+	"buildYourExport": "Crea tu estrategia de exportación",
+	"classId": "ID de clase",
+	"csv": "Archivo CSV (.csv)",
+	"data": "Datos",
+	"downloadPayload": "Descargar carga útil",
+	"enterClassId": "Introduzca el ID de la clase",
+	"errors": {
+		"formatUnsupported": "Por el momento, solo están disponibles las exportaciones en formato CSV.",
+		"missingClassId": "Por favor, proporcione un ID de clase antes de ejecutar la exportación.",
+		"noDatasetSelected": "Seleccione al menos un conjunto de datos (tablero o reseñas)."
+	},
+	"filterByCardStatus": "Filtrar por estado de la tarjeta",
+	"intro": "Obtén el contenido de las propuestas y revisa los datos directamente desde la plataforma MindHive. Elige la clase, selecciona el alcance de los datos y exporta archivos CSV descargables formateados para su análisis.",
+	"json": "JSON (si realmente es necesario)",
+	"noResearchAccess": "Necesitas permisos de nivel de investigación para acceder a las herramientas de exportación.",
+	"outputFormat": "Formato de salida",
+	"preparingExport": "Preparando la exportación…",
+	"research": "Investigación",
+	"resetFilters": "Restablecer filtros",
+	"reviewData": "Revisar datos",
+	"runExport": "Ejecutar exportación",
+	"selectAllBoards": "Seleccione «Todos los tableros» si no desea ningún filtro.",
+	"selectDataScope": "(Opcional) Seleccione el ámbito de datos",
+	"whatAreTheFilteringPolicies": "¿Cuáles son las políticas de filtrado?",
+	"workflowStage": "Seleccione la etapa por la que desea filtrar."
+}
