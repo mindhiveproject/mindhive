@@ -499,6 +499,7 @@ export default function LinkedItems({
           type="resource"
           proposal={proposal}
           openAssignmentModal={openAssignmentModalHandler}
+          openResourceModal={openResourceModalHandler}
           user={user}
         />
       )}
@@ -2123,6 +2124,7 @@ export const PreviewSection = ({
   type,
   proposal,
   openAssignmentModal,
+  openResourceModal,
   user,
 }) => {
   const { t } = useTranslation("classes");
@@ -2175,7 +2177,7 @@ export const PreviewSection = ({
             if (isAssignment) {
               openAssignmentModal?.(item);
             } else if (isResource) {
-              window.open(viewUrl, '_blank', 'noopener,noreferrer');
+              openResourceModal?.(item);
             } else if (isTask || isStudy) {
               window.open(viewUrl, '_blank', 'noopener,noreferrer');
             }
