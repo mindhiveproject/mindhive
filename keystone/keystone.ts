@@ -29,19 +29,6 @@ export default withAuth(
         credentials: true,
       },
     },
-    // db: {
-    //   // we're using sqlite for the fastest startup experience
-    //   //   for more information on what database might be appropriate for you
-    //   //   see https://keystonejs.com/docs/guides/choosing-a-database#title
-    //   provider: "postgresql",
-    //   url: process.env.NODE_ENV === "development"
-    //       ? process.env.DATABASE_DEV
-    //       : process.env.DATABASE_URL,
-    // },
-    // db: {
-    //   provider: 'sqlite',
-    //   url: 'file:./keystone.db',
-    // },
     db: {
       provider:
         process.env.NODE_ENV === "development" ? "sqlite" : "postgresql",
@@ -52,6 +39,11 @@ export default withAuth(
     },
     lists,
     extendGraphqlSchema,
+    graphql: {
+      bodyParser: {
+        limit: "100mb", // Set your desired limit here (e.g., 100MB)
+      },
+    },
     session,
     // ui: {
     //   isAccessAllowed: ({ session }) => {
