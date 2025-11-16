@@ -1,10 +1,13 @@
 {
 	"boardData": "Bordgegevens",
+	"boardTitleColumn": "Titel van het bord vermelden? (niet aanbevolen in verband met privacy)",
 	"buildYourExport": "Bouw uw export",
+	"classCode": "Klascode (zie URL bij bezoek aan de klas)",
 	"classId": "Klasse-ID",
 	"csv": "CSV (.csv)",
 	"data": "Gegevens ",
 	"downloadPayload": "Payload downloaden",
+	"enterClassCode": "Voer de klascode in",
 	"enterClassId": "Voer de klasse-ID in",
 	"errors": {
 		"formatUnsupported": "Op dit moment zijn alleen CSV-exporten beschikbaar.",
@@ -12,6 +15,7 @@
 		"noDatasetSelected": "Selecteer minimaal één dataset (bord of reviews)."
 	},
 	"filterByCardStatus": "Filteren op kaartstatus",
+	"includeBoardTitle": "Inclusief bordtitel",
 	"intro": "Haal de inhoud van het voorstel en de reviewgegevens rechtstreeks uit het MindHive-platform. Kies de klasse, selecteer de scope van je data en exporteer downloadbare CSV-bestanden die geschikt zijn voor analyse.",
 	"json": "JSON (indien echt nodig)",
 	"noResearchAccess": "U hebt toestemmingen op onderzoeksniveau nodig om toegang te krijgen tot de exporttools",

@@ -11,8 +11,8 @@ const GRAPHQL_ENDPOINT =
     : process.env.NEXT_PUBLIC_RESEARCH_EXPORT_ENDPOINT;
 
 const EXPORT_QUERY = `
-  query ResearchExport($id: ID!) {
-    class(where: { id: $id }) {
+  query ResearchExport($code: String!) {
+    class(where: { code: $code }) {
       id
       title
       students {
@@ -325,6 +325,15 @@ const flattenReviews = (proposalBoards, classMeta = {}, shape = "long") => {
   return rows;
 };
 
+const maybeStripBoardTitle = (rows = [], includeBoardTitle = false) => {
+  if (includeBoardTitle || !Array.isArray(rows)) return rows;
+  return rows.map((row) => {
+    if (!row || typeof row !== "object") return row;
+    const { boardTitle, ...rest } = row;
+    return rest;
+  });
+};
+
 const convertToCSV = (data) => {
   if (!data || data.length === 0) return "";
   const headers = Object.keys(data[0]).join(",");
@@ -452,9 +461,10 @@ const selectBoardsForClass = (boards = [], students = []) => {
 };
 
 export default function ResearchMain({ query, user }) {
-  const [classId, setClassId] = useState("");
+  const [classCode, setClassCode] = useState("");
   const [includeContent, setIncludeContent] = useState(true);
   const [includeReviews, setIncludeReviews] = useState(true);
+  const [includeBoardTitle, setIncludeBoardTitle] = useState(false);
   const [activeStage, setActiveStage] = useState(STAGE_OPTIONS[0].value);
   const [activeScope, setActiveScope] = useState(SCOPE_OPTIONS[0].value);
   const [outputShape, setOutputShape] = useState("long");
@@ -465,9 +475,10 @@ export default function ResearchMain({ query, user }) {
   const canAccess = useMemo(() => hasResearchAccess(user), [user]);
 
   const resetFilters = () => {
-    setClassId("");
+    setClassCode("");
     setIncludeContent(true);
     setIncludeReviews(true);
+    setIncludeBoardTitle(false);
     setActiveStage(STAGE_OPTIONS[0].value);
     setActiveScope(SCOPE_OPTIONS[0].value);
     setOutputShape("long");
@@ -476,11 +487,12 @@ export default function ResearchMain({ query, user }) {
   };
 
   const handleDownload = async () => {
-    if (!classId.trim()) {
+    if (!classCode.trim()) {
       setFeedback({
         type: "error",
-        message: t("errors.missingClassId", {
-          defaultValue: "Please provide a Class ID before running the export.",
+        message: t("errors.missingClassCode", {
+          defaultValue:
+            "Please provide a Class Code before running the export.",
         }),
       });
       return;
@@ -522,7 +534,7 @@ export default function ResearchMain({ query, user }) {
         body: JSON.stringify({
           query: EXPORT_QUERY,
           variables: {
-            id: classId.trim(),
+            code: classCode.trim(),
           },
         }),
       });
@@ -597,19 +609,22 @@ export default function ResearchMain({ query, user }) {
       const pendingDownloads = [];
 
       if (includeContent) {
-        const flattenedContent = flattenBoards(
-          scopedBoards,
-          {
-            title: classTitle,
-          },
-          outputShape
+        const flattenedContent = maybeStripBoardTitle(
+          flattenBoards(
+            scopedBoards,
+            {
+              title: classTitle,
+            },
+            outputShape
+          ),
+          includeBoardTitle
         );
         if (flattenedContent.length > 0) {
           const csv = convertToCSV(flattenedContent);
           console.log("Board rows prepared:", flattenedContent.length);
           pendingDownloads.push({
             csv,
-            filename: `proposal_boards_${classId.trim()}_${activeScope}.csv`,
+            filename: `proposal_boards_${classCode.trim()}_${activeScope}.csv`,
           });
           exportSummaries.push(
             `${flattenedContent.length} board rows prepared for download`
@@ -628,19 +643,22 @@ export default function ResearchMain({ query, user }) {
       }
 
       if (includeReviews) {
-        const flattenedReviewData = flattenReviews(
-          scopedBoards,
-          {
-            title: classTitle,
-          },
-          outputShape
+        const flattenedReviewData = maybeStripBoardTitle(
+          flattenReviews(
+            scopedBoards,
+            {
+              title: classTitle,
+            },
+            outputShape
+          ),
+          includeBoardTitle
         );
         if (flattenedReviewData.length > 0) {
           const csv = convertToCSV(flattenedReviewData);
           console.log("Review rows prepared:", flattenedReviewData.length);
           pendingDownloads.push({
             csv,
-            filename: `proposal_reviews_${classId.trim()}_${activeScope}.csv`,
+            filename: `proposal_reviews_${classCode.trim()}_${activeScope}.csv`,
           });
           exportSummaries.push(
             `${flattenedReviewData.length} review rows prepared for download`
@@ -666,7 +684,7 @@ export default function ResearchMain({ query, user }) {
         pendingDownloads.forEach((download) => {
           zip.file(download.filename, download.csv);
         });
-        const zipFilename = `proposal_export_${classId
+        const zipFilename = `proposal_export_${classCode
           .trim()
           .replace(/\s+/g, "-")}_${activeStage}_${activeScope}.zip`;
         const zipBlob = await zip.generateAsync({ type: "blob" });
@@ -783,17 +801,17 @@ export default function ResearchMain({ query, user }) {
         </div>
 
         <div className="fieldGroup">
-          <label htmlFor="research-class-id">{t("classId", {
-            defaultValue: "Class ID",
+          <label htmlFor="research-class-code">{t("classCode", {
+            defaultValue: "Class Code (see URL when visiting class)",
           })}</label>
           <input
-            id="research-class-id"
+            id="research-class-code"
             type="text"
-            placeholder={t("enterClassId", {
-              defaultValue: "Enter the class ID",
+            placeholder={t("enterClassCode", {
+              defaultValue: "Enter the class code",
             })}
-            value={classId}
-            onChange={(event) => setClassId(event.target.value)}
+            value={classCode}
+            onChange={(event) => setClassCode(event.target.value)}
             autoComplete="off"
           />
         </div>
@@ -850,6 +868,26 @@ export default function ResearchMain({ query, user }) {
           <h2>{t("data", {
             defaultValue: "Data",
           })}</h2>
+        </div>
+
+        <div className="fieldGroup">
+          <label>{t("boardTitleColumn", {
+            defaultValue: "Include board title? (not recommended re privacy)",
+          })}</label>
+          <div className="checkboxGroup">
+            <label className={includeBoardTitle ? "active" : ""}>
+              <input
+                type="checkbox"
+                checked={includeBoardTitle}
+                onChange={(event) =>
+                  setIncludeBoardTitle(event.target.checked)
+                }
+              />
+              {t("includeBoardTitle", {
+                defaultValue: "Include board title",
+              })}
+            </label>
+          </div>
         </div>
 
         <div className="fieldGroup">
@@ -947,7 +985,7 @@ export default function ResearchMain({ query, user }) {
             onClick={handleDownload}
             disabled={
               isLoading ||
-              !classId.trim() ||
+              !classCode.trim() ||
               (!includeContent && !includeReviews)
             }
           >

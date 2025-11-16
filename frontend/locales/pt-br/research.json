@@ -1,10 +1,13 @@
 {
 	"boardData": "Dados do Conselho",
+	"boardTitleColumn": "Incluir o título do fórum? (não recomendado devido à privacidade)",
 	"buildYourExport": "Aumente suas exportações",
+	"classCode": "Código da turma (consulte o URL ao visitar a página da turma)",
 	"classId": "ID da turma",
 	"csv": "CSV (.csv)",
 	"data": "Dados",
 	"downloadPayload": "Baixar carga útil",
+	"enterClassCode": "Digite o código da turma",
 	"enterClassId": "Insira o ID da turma",
 	"errors": {
 		"formatUnsupported": "No momento, apenas as exportações em formato CSV estão disponíveis.",
@@ -12,6 +15,7 @@
 		"noDatasetSelected": "Selecione pelo menos um conjunto de dados (conselho ou avaliações)."
 	},
 	"filterByCardStatus": "Filtrar por status do cartão",
+	"includeBoardTitle": "Incluir título do quadro",
 	"intro": "Extraia o conteúdo das propostas e os dados de revisão diretamente da plataforma MindHive. Escolha a disciplina, selecione o escopo dos dados e exporte arquivos CSV formatados para análise, prontos para download.",
 	"json": "JSON (se realmente necessário)",
 	"noResearchAccess": "Você precisa de permissões de nível de pesquisa para acessar as ferramentas de exportação.",

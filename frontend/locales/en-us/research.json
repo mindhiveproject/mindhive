@@ -1,10 +1,13 @@
 {
 	"boardData": "Board Data",
+	"boardTitleColumn": "Include board title? (not recommended re privacy)",
 	"buildYourExport": "Build Your Export",
+	"classCode": "Class Code (see URL when visiting class)",
 	"classId": "Class ID",
 	"csv": "CSV (.csv)",
 	"data": "Data",
 	"downloadPayload": "Download Payload",
+	"enterClassCode": "Enter the class code",
 	"enterClassId": "Enter the class ID",
 	"errors": {
 		"formatUnsupported": "Only CSV exports are available at this time.",
@@ -12,6 +15,7 @@
 		"noDatasetSelected": "Select at least one dataset (board or reviews)."
 	},
 	"filterByCardStatus": "Filter by card status",
+	"includeBoardTitle": "Include board title",
 	"intro": "Pull proposal content and review data directly from the MindHive platform. Choose the class, pick your data scope, and export downloadable CSV files formatted for analysis.",
 	"json": "JSON (if needed really)",
 	"noResearchAccess": "You need research-level permissions to access the export tools",
