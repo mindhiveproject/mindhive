@@ -112,12 +112,14 @@
 	},
 	"join": {
 		"details": {
+			"age": "Qual é a sua idade?",
 			"dob": "Qual é sua data de nascimento?",
 			"english": "Você entende instruções básicas escritas em inglês?",
 			"englishNo": "Não",
 			"englishTranslationNote": "(A versão em espanhol da plataforma estará disponível em pouco tempo.)",
 			"englishYes": "Sim",
 			"error": {
+				"enterAge": "Por favor, insira sua idade.",
 				"enterDob": "Por favor, insira sua data de nascimento",
 				"minorBlocked": "Lamentamos, mas somente participantes com 18 anos ou mais podem participar deste estudo neste momento."
 			},
