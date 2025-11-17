@@ -619,8 +619,8 @@
 		"preview": "Aperçu",
 		"previewInfo": "Le contenu des cartes marquées comme « terminées » en mode édition apparaîtra ici, en mode aperçu, affichant ce que vos réviseurs verront.",
 		"submittedLocked": "La proposition a été soumise et verrouillée 🔒",
-		"viewBoard": "Voir le tableau",
-		"viewFlattenBoard": "Vue du tableau plat"
+		"viewBoard": "Vue du tableau",
+		"viewFlattenBoard": "Affichage du texte"
 	},
 	"proposalSelector": {
 		"linkToProposal": "Lien vers la proposition",

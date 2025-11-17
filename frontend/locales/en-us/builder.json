@@ -619,8 +619,8 @@
 		"preview": "Preview",
 		"previewInfo": "Content from cards marked as \"complete\" in edit mode will appear here, in preview mode, displaying what your reviewers will see.",
 		"submittedLocked": "The proposal has been submitted and locked 🔒",
-		"viewBoard": "View Board",
-		"viewFlattenBoard": "View Flatten Board"
+		"viewBoard": "Board View",
+		"viewFlattenBoard": "Text View"
 	},
 	"proposalSelector": {
 		"linkToProposal": "Link to proposal",

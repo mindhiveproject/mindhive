@@ -46,7 +46,7 @@ export default function ProposalHeader({
               <h1>{t("header.myProjectBoard", "My Project Board")}</h1>
               <div id="switchMode" style={{display: "flex", width: "max-content"}}>
               <button onClick={() => {setIsPDF(!isPDF);}} className="narrowButton">
-                  <Icon name="file alternate outline"/> {t("proposalPage.viewFlattenBoard", "View flatten board")}
+                  <Icon name="list alternate"/> {t("proposalPage.viewFlattenBoard", "Text View")}
               </button>
               {/* <Radio
                 toggle

@@ -619,8 +619,8 @@
 		"preview": "Voorvertoning",
 		"previewInfo": "Inhoud van kaarten die in de bewerkingsmodus als 'voltooid' zijn gemarkeerd, worden hier weergegeven in de voorbeeldmodus, zodat uw reviewers kunnen zien wat ze zien.",
 		"submittedLocked": "Het voorstel is ingediend en vergrendeld 🔒",
-		"viewBoard": "Bekijk bord",
-		"viewFlattenBoard": "Bekijk plat bord"
+		"viewBoard": "Bestuursweergave",
+		"viewFlattenBoard": "Tekstweergave"
 	},
 	"proposalSelector": {
 		"linkToProposal": "Link naar voorstel",

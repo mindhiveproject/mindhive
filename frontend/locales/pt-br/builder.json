@@ -619,8 +619,8 @@
 		"preview": "Visualização",
 		"previewInfo": "O conteúdo dos cartões marcados como \"concluídos\" no modo de edição aparecerá aqui, no modo de visualização, exibindo o que seus revisores verão.",
 		"submittedLocked": "A proposta foi enviada e bloqueada 🔒",
-		"viewBoard": "Ver quadro",
-		"viewFlattenBoard": "Ver placa plana"
+		"viewBoard": "Visão do Conselho",
+		"viewFlattenBoard": "Visualização de texto"
 	},
 	"proposalSelector": {
 		"linkToProposal": "Link para proposta",
