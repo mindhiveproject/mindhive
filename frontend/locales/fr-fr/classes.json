@@ -73,6 +73,7 @@
 		"cardWillBeReleased": "La carte sera publiée",
 		"close": "Fermer",
 		"collective": "Collectif",
+		"commentPlaceholder": "Saisissez un commentaire...",
 		"commentsComment": "Cela préremplira la zone de commentaires des élèves. Vous pourrez supprimer les commentaires ultérieurement.",
 		"editMode": "Vous êtes en mode édition",
 		"expendedCard": {
