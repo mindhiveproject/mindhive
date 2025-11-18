@@ -2265,6 +2265,7 @@ export const PreviewSection = ({
   user,
 }) => {
   const { t } = useTranslation("classes");
+  const [hoveredItemId, setHoveredItemId] = useState(null);
 
   console.log("👁️ [PreviewSection] Rendering:", {
     title,
@@ -2278,9 +2279,30 @@ export const PreviewSection = ({
     }))
   });
 
+  // Get background color based on type (from Figma design)
+  const getBackgroundColor = (itemType) => {
+    if (itemType === "resource") {
+      return "rgba(211, 226, 241, 0.4)";
+    } else if (itemType === "assignment") {
+      return "rgba(228, 223, 246, 0.4)";
+    } else if (itemType === "task" || itemType === "study") {
+      return "rgba(253, 242, 208, 0.4)";
+    }
+    return "#ffffff"; // Default white
+  };
+
+  const getBorder = (itemType) => {
+    if (itemType === "resource") {
+      return "1px solid rgba(61, 134, 176, 0.5)";
+    } else if (itemType === "assignment") {
+      return "1px solid #C6BDEB";
+    } else if (itemType === "task" || itemType === "study") {
+      return "1px solid #F9D978";
+    }
+  };
   return (
     <>
-      <div
+      {/* <div
         className="cardHeader"
         style={{
           fontFamily: "Nunito",
@@ -2291,7 +2313,7 @@ export const PreviewSection = ({
         }}
       >
         {title}
-      </div>
+      </div> */}
       <div
         className="previewGrid"
         style={{
@@ -2332,46 +2354,70 @@ export const PreviewSection = ({
             }
           };
 
+          const isHovered = hoveredItemId === item.id;
+          const backgroundColor = getBackgroundColor(type);
+          const border = getBorder(type);
+
           return (
             <div
               className="itemBlockPreview"
               key={`${type}-${item.id}-${index}`}
               onClick={handlePreviewCardClick}
+              onMouseEnter={() => setHoveredItemId(item.id)}
+              onMouseLeave={() => setHoveredItemId(null)}
               style={{
-                border: "1px solid #e0e0e0",
+                border: border,
                 borderRadius: "12px",
-                padding: "16px",
-                background: "#ffffff",
+                padding: "16px 16px",
+                background: backgroundColor,
                 boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
                 cursor: "pointer",
                 transition: "all 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.borderColor = "#336F8A";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)";
-                e.currentTarget.style.transform = "translateY(0px)";
-                e.currentTarget.style.borderColor = "#e0e0e0";
+                position: "relative",
+                overflow: "hidden",
               }}
             >
+              {/* Hover overlay */}
+              {isHovered && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: "rgba(51, 111, 138, 0.1)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    paddingRight: "12px",
+                    borderRadius: "12px",
+                    transition: "all 0.3s ease",
+                    zIndex: 1,
+                    border: border ? border.replace(/\d+px/, "2px") : "3px solid #336F8A",
+                  }}
+                >
+                </div>
+              )}
+
               <div
                 className="titleIcons"
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  marginBottom: "12px",
+                  position: "relative",
+                  zIndex: 2,
                 }}
               >
                 <h2
                   style={{
-                    fontSize: "18px",
+                    fontSize: "16px",
                     fontWeight: "600",
-                    color: "#333",
+                    color: "#000000",
                     margin: 0,
+                    fontFamily: "Nunito, sans-serif",
+                    lineHeight: "24px",
                   }}
                 >
                   {item?.title || "Untitled"}
@@ -2379,7 +2425,13 @@ export const PreviewSection = ({
               </div>
               {!isAssignment && (
                 <div
-                  style={{ fontSize: "14px", color: "#666", lineHeight: "1.5" }}
+                  style={{
+                    fontSize: "14px",
+                    color: "#666",
+                    lineHeight: "1.5",
+                    position: "relative",
+                    zIndex: 2,
+                  }}
                 >
                   {/* {ReactHtmlParser(truncateHtml(content, 50))} */}
                 </div>
