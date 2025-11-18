@@ -34,6 +34,19 @@ export default function LinkedItems({
 }) {
   const { t } = useTranslation("classes");
 
+  // Track selectedResources changes
+  useEffect(() => {
+    console.log("📊 [selectedResources Changed]:", {
+      count: selectedResources.length,
+      resources: selectedResources.map(r => ({
+        id: r.id,
+        title: r.title,
+        isPublic: r.isPublic,
+        parentId: r.parent?.id
+      }))
+    });
+  }, [selectedResources]);
+
   // Queries for Resources
   const {
     data: publicData,
@@ -120,8 +133,16 @@ export default function LinkedItems({
     setResourceModalState(createInitialResourceModalState());
 
   const openResourceModalHandler = (resource, context = {}) => {
+    console.log("📝 [openResourceModalHandler] Called with:", {
+      resourceId: resource?.id,
+      resourceTitle: resource?.title,
+      resourceIsPublic: resource?.isPublic,
+      resourceParentId: resource?.parent?.id,
+      context
+    });
+    
     if (!resource?.id) {
-      console.error("No resource provided to openResourceModalHandler");
+      console.error("❌ [openResourceModalHandler] No resource provided");
       return;
     }
 
@@ -141,6 +162,13 @@ export default function LinkedItems({
             myResource?.author?.id === user?.id
         )
       : null;
+
+    console.log("📝 [openResourceModalHandler] Derived values:", {
+      derivedSourceType,
+      templateId,
+      existingCustomId: existingCustom?.id,
+      existingCustomTitle: existingCustom?.title
+    });
 
     setResourceModalState({
       open: true,
@@ -184,14 +212,39 @@ export default function LinkedItems({
     }
 
     const currentSelected = selectedResources || [];
+    console.log("💾 [handleResourceModalSaved] Current selection:", {
+      mode,
+      savedResourceId,
+      templateId,
+      currentSelectedIds: currentSelected.map(r => r.id),
+      currentSelectedDetails: currentSelected.map(r => ({
+        id: r.id,
+        title: r.title,
+        isPublic: r.isPublic,
+        parentId: r.parent?.id
+      })),
+      updatedResourceId: updatedResource?.id,
+      updatedResourceTitle: updatedResource?.title,
+      updatedResourceIsPublic: updatedResource?.isPublic,
+      updatedResourceParentId: updatedResource?.parent?.id
+    });
+    
     let shouldUpdateSelection = false;
 
     const updatedSelection = currentSelected.map((res) => {
       if (mode === "createCopy" && templateId && res.id === templateId) {
+        console.log("🔄 [handleResourceModalSaved] Replacing template with copy:", {
+          templateId: res.id,
+          newResourceId: updatedResource.id
+        });
         shouldUpdateSelection = true;
         return updatedResource;
       }
       if (mode === "update" && res.id === savedResourceId) {
+        console.log("🔄 [handleResourceModalSaved] Updating existing resource:", {
+          resourceId: res.id,
+          newResourceId: updatedResource.id
+        });
         shouldUpdateSelection = true;
         return updatedResource;
       }
@@ -199,9 +252,20 @@ export default function LinkedItems({
     });
 
     if (shouldUpdateSelection) {
+      console.log("✅ [handleResourceModalSaved] Updating selection:", {
+        newSelectionIds: updatedSelection.map(r => r.id),
+        newSelectionDetails: updatedSelection.map(r => ({
+          id: r.id,
+          title: r.title,
+          isPublic: r.isPublic,
+          parentId: r.parent?.id
+        }))
+      });
       handleChange({
         target: { name: "resources", value: updatedSelection },
       });
+    } else {
+      console.log("⚠️ [handleResourceModalSaved] No selection update needed");
     }
   };
 
@@ -223,19 +287,53 @@ export default function LinkedItems({
 
 
   // Resource-specific merging for selected
+  // NOTE: We do NOT merge public resources with custom copies here.
+  // When a user clicks "Connect" on a public resource, we want to keep the public resource.
+  // Custom copies are only relevant when using the "Copy" button flow.
   const selectedResourcesMerged = selectedResources.map((selectedResource) => {
-    const customResource = myResources.find(
-      (myResource) => myResource?.parent?.id === selectedResource?.id
-    );
-    return customResource || selectedResource;
+    // Keep the original resource as-is - don't replace with custom copy
+    // This ensures that when connecting a public resource, it stays as the public resource
+    console.log("🔄 [selectedResourcesMerged] Keeping original resource (no merge):", {
+      selectedResourceId: selectedResource?.id,
+      selectedResourceTitle: selectedResource?.title,
+      selectedResourceIsPublic: selectedResource?.isPublic,
+      selectedResourceParentId: selectedResource?.parent?.id
+    });
+    return selectedResource;
   });
 
 
   // Generic connect/disconnect
   const connectItem = (item, fieldName, selectedArray) => {
+    console.log("🔗 [connectItem] Called with:", {
+      itemId: item?.id,
+      itemTitle: item?.title,
+      itemIsPublic: item?.isPublic,
+      itemParentId: item?.parent?.id,
+      fieldName,
+      selectedArrayIds: selectedArray.map(s => s.id),
+      selectedArrayDetails: selectedArray.map(s => ({
+        id: s.id,
+        title: s.title,
+        isPublic: s.isPublic,
+        parentId: s.parent?.id
+      }))
+    });
+    
     if (!selectedArray.some((s) => s.id === item.id)) {
       const newSelected = [...selectedArray, item];
+      console.log("✅ [connectItem] Adding item to selection:", {
+        newSelectedIds: newSelected.map(s => s.id),
+        newSelectedDetails: newSelected.map(s => ({
+          id: s.id,
+          title: s.title,
+          isPublic: s.isPublic,
+          parentId: s.parent?.id
+        }))
+      });
       handleChange({ target: { name: fieldName, value: newSelected } });
+    } else {
+      console.log("⚠️ [connectItem] Item already in selection, skipping");
     }
   };
 
@@ -692,15 +790,35 @@ const ItemTab = ({
     // helper function to render items list (reuse existing item render logic)
     const renderItems = (itemsList, currentType) => {
       const displayItems = itemsList.map((item) => {
-        if (currentType === "resource" && isPublic) {
-          const custom = myItems.find((p) => p.parent?.id === item.id);
-          return custom || item;
-        }
+        // if (currentType === "resource" && isPublic) {
+        //   const custom = myItems.find((p) => p.parent?.id === item.id);
+        //   return custom || item;
+        // }
         return item;
       });
 
+      console.log("📋 [renderItems] displayItems:", displayItems.map(i => ({
+        id: i.id,
+        title: i.title,
+        isPublic: i.isPublic,
+        parentId: i.parent?.id
+      })));
       return displayItems.map((item) => {
         const isSelected = selected.some((s) => s.id === item.id);
+        console.log("🔍 [renderItems] Checking selection for item:", {
+          itemId: item.id,
+          itemTitle: item.title,
+          itemIsPublic: item.isPublic,
+          itemParentId: item.parent?.id,
+          isSelected,
+          selectedIds: selected.map(s => s.id),
+          selectedDetails: selected.map(s => ({
+            id: s.id,
+            title: s.title,
+            isPublic: s.isPublic,
+            parentId: s.parent?.id
+          }))
+        });
         const isTaskOrStudy = currentType === "task" || currentType === "study";
         const isTask = currentType === "task";
         const isStudy = currentType === "study";
@@ -795,7 +913,18 @@ const ItemTab = ({
                 }}
               >
                 <button
-                  onClick={() => (isSelected ? disconnect(item) : connect(item))}
+                  onClick={() => {
+                    console.log("🔘 [Connect Button Clicked] For resource:", {
+                      itemId: item.id,
+                      itemTitle: item.title,
+                      itemIsPublic: item.isPublic,
+                      itemParentId: item.parent?.id,
+                      isSelected,
+                      currentType: "resource",
+                      tabType: "public"
+                    });
+                    isSelected ? disconnect(item) : connect(item);
+                  }}
                   style={{
                     ...(isSelected
                       ? styledAccentButtonPurple
@@ -813,11 +942,19 @@ const ItemTab = ({
                     : t("board.expendedCard.connect")}
                 </button>
                 <button
-                  onClick={() =>
+                  onClick={() => {
+                    console.log("🔘 [Copy Button Clicked] For resource:", {
+                      itemId: item.id,
+                      itemTitle: item.title,
+                      itemIsPublic: item.isPublic,
+                      itemParentId: item.parent?.id,
+                      currentType: "resource",
+                      tabType: "public"
+                    });
                     openResourceModal?.(item, {
                       sourceType: "public",
-                    })
-                  }
+                    });
+                  }}
                   style={{
                     ...styledSecondaryButtonBlue,
                     flex: "0 1 120px",
@@ -829,7 +966,7 @@ const ItemTab = ({
                   }}
                   aria-label={t("boardManagement.edit", "Edit")}
                 >
-                  <Icon name="pencil" />
+                  <Icon name="copy" />
                 </button>
               </div>
             )}
@@ -1101,14 +1238,14 @@ const ItemTab = ({
           ? item?.placeholder?.main || ""
           : item?.placeholder || "";
 
-        console.log(`ItemTab: Rendering ${type} item`, {
-          id: item.id,
-          title: item.title,
-          public: item.public,
-          content,
-          placeholder,
-          item: item,
-        });
+        // console.log(`ItemTab: Rendering ${type} item`, {
+        //   id: item.id,
+        //   title: item.title,
+        //   public: item.public,
+        //   content,
+        //   placeholder,
+        //   item: item,
+        // });
 
         return (
           <div
@@ -2129,6 +2266,18 @@ export const PreviewSection = ({
 }) => {
   const { t } = useTranslation("classes");
 
+  console.log("👁️ [PreviewSection] Rendering:", {
+    title,
+    type,
+    itemsCount: items.length,
+    itemsDetails: items.map(item => ({
+      id: item.id,
+      title: item.title,
+      isPublic: item.isPublic,
+      parentId: item.parent?.id
+    }))
+  });
+
   return (
     <>
       <div
@@ -2152,7 +2301,7 @@ export const PreviewSection = ({
           marginTop: "10px",
         }}
       >
-        {items.map((item) => {
+        {items.map((item, index) => {
           const isTaskOrStudy = type === "task" || type === "study";
           const isTask = type === "task";
           const isStudy = type === "study";
@@ -2186,7 +2335,7 @@ export const PreviewSection = ({
           return (
             <div
               className="itemBlockPreview"
-              key={item.id}
+              key={`${type}-${item.id}-${index}`}
               onClick={handlePreviewCardClick}
               style={{
                 border: "1px solid #e0e0e0",
