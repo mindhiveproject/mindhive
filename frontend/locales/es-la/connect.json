@@ -2,6 +2,7 @@
 	"asyncAnsweringQuestions": "Responder preguntas de los estudiantes (según su perfil).",
 	"asyncProvidingFeedback": "Proporcionar retroalimentación sobre los proyectos de los estudiantes",
 	"availability": "Disponibilidad",
+	"availabilityFilter": "Disponibilidad",
 	"avatar": {
 		"error": "Por favor sube una imagen",
 		"title": "Crea tu avatar",
@@ -52,6 +53,8 @@
 		"tagline": "Lema",
 		"title": "Información básica"
 	},
+	"connectAction": "Conectar",
+	"connectionsLabel": "Conexiones",
 	"connectSubtitle": "Busque, descubra y conéctese con la comunidad MindHive",
 	"connectWithPeople": "Conectar con la gente",
 	"createProfile": "Crear perfil",
@@ -81,11 +84,14 @@
 		"videoNotSupported": "Su navegador no soporta la etiqueta de vídeo."
 	},
 	"introductionVideo": "Vídeo de introducción",
+	"locationFilter": "Ubicación",
 	"myConnections": "Mis conexiones",
 	"navigation": {
 		"next": "Próximo",
 		"previous": "Anterior"
 	},
+	"noOfficialBio": "Sin biografía oficial",
+	"noUnofficialBio": "Sin biografía no oficial",
 	"officialBio": "Biografía oficial",
 	"passionNow": "¿Qué te apasiona ahora mismo?",
 	"preferences": {
@@ -160,6 +166,7 @@
 	"underConstruction": "En construcción 🚧",
 	"unofficialBio": "Biografía no oficial",
 	"usersPerPage": "Número de usuarios por página",
+	"userTypeFilter": "Tipo de usuario",
 	"videoNotSupported": "Su navegador no soporta la etiqueta de vídeo.",
 	"videoUploader": {
 		"dragAndDrop": "Arrastre y suelte el archivo de vídeo para cargarlo",

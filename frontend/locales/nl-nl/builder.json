@@ -31,8 +31,10 @@
 		"loadingMessage": "Laatste toewijzingsgegevens ophalen...",
 		"unsavedChanges": "(Niet-opgeslagen wijzigingen)"
 	},
+	"availability": "",
 	"background": "Achtergrond",
 	"backgroundHelp": "Gebruik dit veld om een ​​korte achtergrondinformatie over het onderzoeksonderwerp te geven. Wat is het onderzochte probleem en waarom is het belangrijk?",
+	"backgroundTab": "",
 	"basicTab": "Basis",
 	"blockDescription": "In een blok krijgen de deelnemers informatie gepresenteerd.",
 	"board": {
@@ -342,6 +344,8 @@
 		"newSection": "Nieuwe sectie",
 		"sectionTitlePlaceholder": "Voer sectietitel in"
 	},
+	"interests": "",
+	"introductionVideo": "",
 	"link": "Link",
 	"linkClass": {
 		"doNotConnectClass": "❌ Sluit de klasse niet aan"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "Er zijn nog geen notities ingevoerd. Klik met de rechtermuisknop om notities toe te voegen."
 	},
+	"noVideoPlaceholder": "",
 	"overview": {
 		"actions": "Acties",
 		"copy": "Kopiëren",
@@ -1073,6 +1078,7 @@
 		"placeholder": "Studieversies",
 		"title": "Studieversie"
 	},
+	"videoNotSupported": "",
 	"viewer": {
 		"afterParticipation": "Wat deelnemers zien <u>na</u> het afleggen van de {{taskType}}",
 		"aggregateVariables": "Geaggregeerde variabelen",

@@ -31,8 +31,10 @@
 		"loadingMessage": "Получаю последние данные о назначении...",
 		"unsavedChanges": "(Несохраненные изменения)"
 	},
+	"availability": "",
 	"background": "Фон",
 	"backgroundHelp": "В этом поле можно кратко описать тему исследования. Какая проблема исследуется и почему она важна?",
+	"backgroundTab": "",
 	"basicTab": "Базовый",
 	"blockDescription": "В блоке участникам предоставляется информация.",
 	"board": {
@@ -342,6 +344,8 @@
 		"newSection": "Новый раздел",
 		"sectionTitlePlaceholder": "Введите название раздела"
 	},
+	"interests": "",
+	"introductionVideo": "",
 	"link": "Связь",
 	"linkClass": {
 		"doNotConnectClass": "❌ Не подключайте класс"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "Заметки пока не добавлены. Щёлкните правой кнопкой мыши, чтобы добавить заметки."
 	},
+	"noVideoPlaceholder": "",
 	"overview": {
 		"actions": "Действия",
 		"copy": "Копировать",
@@ -1073,6 +1078,7 @@
 		"placeholder": "Учебные версии",
 		"title": "Учебная версия"
 	},
+	"videoNotSupported": "",
 	"viewer": {
 		"afterParticipation": "Что видят участники <u>после</u> выполнения {{taskType}}",
 		"aggregateVariables": "Агрегированные переменные",

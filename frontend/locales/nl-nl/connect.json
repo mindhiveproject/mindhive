@@ -2,6 +2,7 @@
 	"asyncAnsweringQuestions": "Vragen van studenten beantwoorden (op basis van jouw profiel).",
 	"asyncProvidingFeedback": "Feedback geven op studentenprojecten",
 	"availability": "Beschikbaarheid",
+	"availabilityFilter": "Beschikbaarheid",
 	"avatar": {
 		"error": "Upload een afbeelding",
 		"title": "Maak je avatar",
@@ -52,6 +53,8 @@
 		"tagline": "Slogan",
 		"title": "Basisgegevens"
 	},
+	"connectAction": "Aansluiten",
+	"connectionsLabel": "Verbindingen",
 	"connectSubtitle": "Zoek, ontdek en maak contact met de MindHive-community",
 	"connectWithPeople": "Maak contact met mensen",
 	"createProfile": "Profiel aanmaken",
@@ -81,11 +84,14 @@
 		"videoNotSupported": "Uw browser ondersteunt de videotag niet."
 	},
 	"introductionVideo": "Introductievideo",
+	"locationFilter": "Plaats",
 	"myConnections": "Mijn connecties",
 	"navigation": {
 		"next": "Volgende",
 		"previous": "Vorig"
 	},
+	"noOfficialBio": "Geen officiële biografie",
+	"noUnofficialBio": "Geen onofficiële biografie",
 	"officialBio": "Officiële biografie",
 	"passionNow": "Waar ben je momenteel gepassioneerd over?",
 	"preferences": {
@@ -160,6 +166,7 @@
 	"underConstruction": "In aanbouw 🚧",
 	"unofficialBio": "Onofficiële biografie",
 	"usersPerPage": "Aantal gebruikers per pagina",
+	"userTypeFilter": "Gebruikerstype",
 	"videoNotSupported": "Uw browser ondersteunt de videotag niet.",
 	"videoUploader": {
 		"dragAndDrop": "Sleep en zet het videobestand neer om te uploaden",

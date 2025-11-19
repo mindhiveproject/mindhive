@@ -2,6 +2,7 @@
 	"asyncAnsweringQuestions": "छात्रों के प्रश्नों का उत्तर देना (आपकी प्रोफ़ाइल के आधार पर)।",
 	"asyncProvidingFeedback": "छात्र परियोजनाओं पर प्रतिक्रिया प्रदान करना",
 	"availability": "उपलब्धता",
+	"availabilityFilter": "",
 	"avatar": {
 		"error": "कृपया एक छवि अपलोड करें",
 		"title": "अपना अवतार बनाएँ",
@@ -52,6 +53,8 @@
 		"tagline": "TAGLINE",
 		"title": "मूल जानकारी"
 	},
+	"connectAction": "",
+	"connectionsLabel": "",
 	"connectSubtitle": "माइंडहाइव समुदाय को खोजें, खोजें और उससे जुड़ें",
 	"connectWithPeople": "लोगों से जुड़ें",
 	"createProfile": "प्रोफ़ाइल बनाएँ",
@@ -81,11 +84,14 @@
 		"videoNotSupported": "आपका ब्राउज़र में वीडियो टैग समर्थित नहीं है।"
 	},
 	"introductionVideo": "परिचय वीडियो",
+	"locationFilter": "",
 	"myConnections": "मेरे संबंध",
 	"navigation": {
 		"next": "अगला",
 		"previous": "पहले का"
 	},
+	"noOfficialBio": "",
+	"noUnofficialBio": "",
 	"officialBio": "आधिकारिक बायो",
 	"passionNow": "इस समय आप किस चीज़ के प्रति जुनूनी हैं?",
 	"preferences": {
@@ -160,6 +166,7 @@
 	"underConstruction": "",
 	"unofficialBio": "अनौपचारिक बायो",
 	"usersPerPage": "प्रति पृष्ठ उपयोगकर्ताओं की संख्या",
+	"userTypeFilter": "",
 	"videoNotSupported": "आपका ब्राउज़र में वीडियो टैग समर्थित नहीं है।",
 	"videoUploader": {
 		"dragAndDrop": "अपलोड करने के लिए वीडियो फ़ाइल को खींचें और छोड़ें",

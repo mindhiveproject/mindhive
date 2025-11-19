@@ -2,6 +2,7 @@
 	"asyncAnsweringQuestions": "Answering student questions (based on your profile).",
 	"asyncProvidingFeedback": "Providing feedback on student projects",
 	"availability": "Availability",
+	"availabilityFilter": "Availability",
 	"avatar": {
 		"error": "Please upload an image",
 		"title": "Create your avatar",
@@ -52,6 +53,8 @@
 		"tagline": "Tagline",
 		"title": "Basic Information"
 	},
+	"connectAction": "Connect",
+	"connectionsLabel": "Connections",
 	"connectSubtitle": "Search for, discover, and connect with the MindHive community",
 	"connectWithPeople": "Connect with people",
 	"createProfile": "Create Profile",
@@ -81,11 +84,14 @@
 		"videoNotSupported": "Your browser does not support the video tag."
 	},
 	"introductionVideo": "Introduction Video",
+	"locationFilter": "Location",
 	"myConnections": "My connections",
 	"navigation": {
 		"next": "Next",
 		"previous": "Previous"
 	},
+	"noOfficialBio": "No official bio",
+	"noUnofficialBio": "No unofficial bio",
 	"officialBio": "Official Bio",
 	"passionNow": "What are you passionate about right now?",
 	"preferences": {
@@ -160,6 +166,7 @@
 	"underConstruction": "Under construction 🚧",
 	"unofficialBio": "Unofficial Bio",
 	"usersPerPage": "Number of users per page",
+	"userTypeFilter": "User Type",
 	"videoNotSupported": "Your browser does not support the video tag.",
 	"videoUploader": {
 		"dragAndDrop": "Drag and drop video file to upload",

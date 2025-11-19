@@ -31,8 +31,10 @@
 		"loadingMessage": "Buscando os últimos dados de atribuição...",
 		"unsavedChanges": "(Alterações não salvas)"
 	},
+	"availability": "",
 	"background": "Fundo",
 	"backgroundHelp": "Use este campo para fornecer um breve histórico sobre o tema da pesquisa. Qual é o problema em estudo e por que ele é importante?",
+	"backgroundTab": "",
 	"basicTab": "Básico",
 	"blockDescription": "Em um bloco, os participantes recebem informações.",
 	"board": {
@@ -342,6 +344,8 @@
 		"newSection": "Nova seção",
 		"sectionTitlePlaceholder": "Digite o título da seção"
 	},
+	"interests": "",
+	"introductionVideo": "",
 	"link": "Link",
 	"linkClass": {
 		"doNotConnectClass": "❌ Não conecte a classe"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "Nenhuma nota inserida ainda. Clique com o botão direito para adicionar notas."
 	},
+	"noVideoPlaceholder": "",
 	"overview": {
 		"actions": "Ações",
 		"copy": "Cópia",
@@ -1073,6 +1078,7 @@
 		"placeholder": "Versões de estudo",
 		"title": "Versão de estudo"
 	},
+	"videoNotSupported": "",
 	"viewer": {
 		"afterParticipation": "O que os participantes veem <u>depois</u> de realizar o {{taskType}}",
 		"aggregateVariables": "Variáveis ​​Agregadas",

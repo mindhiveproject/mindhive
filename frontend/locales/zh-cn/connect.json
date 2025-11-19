@@ -2,6 +2,7 @@
 	"asyncAnsweringQuestions": "回答学生的问题（根据您的个人资料）。",
 	"asyncProvidingFeedback": "为学生项目提供反馈",
 	"availability": "可用性",
+	"availabilityFilter": "可用性",
 	"avatar": {
 		"error": "请上传图片",
 		"title": "创建你的头像",
@@ -52,6 +53,8 @@
 		"tagline": "标语",
 		"title": "基本信息"
 	},
+	"connectAction": "连接",
+	"connectionsLabel": "連接",
 	"connectSubtitle": "搜索、发现并联系 MindHive 社区",
 	"connectWithPeople": "与人联系",
 	"createProfile": "创建个人资料",
@@ -81,11 +84,14 @@
 		"videoNotSupported": "您的浏览器不支持视频标签。"
 	},
 	"introductionVideo": "介绍视频",
+	"locationFilter": "地点",
 	"myConnections": "我的联系人",
 	"navigation": {
 		"next": "下一个",
 		"previous": "以前的"
 	},
+	"noOfficialBio": "没有官方简介",
+	"noUnofficialBio": "没有非官方传记",
 	"officialBio": "官方简介",
 	"passionNow": "您现在对什么事情充满热情？",
 	"preferences": {
@@ -160,6 +166,7 @@
 	"underConstruction": "正在建设中🚧",
 	"unofficialBio": "非官方简历",
 	"usersPerPage": "每页用户数",
+	"userTypeFilter": "用户类型",
 	"videoNotSupported": "您的浏览器不支持视频标签。",
 	"videoUploader": {
 		"dragAndDrop": "拖放视频文件即可上传",

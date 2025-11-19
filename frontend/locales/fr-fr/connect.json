@@ -2,6 +2,7 @@
 	"asyncAnsweringQuestions": "Répondre aux questions des étudiants (en fonction de votre profil).",
 	"asyncProvidingFeedback": "Fournir des commentaires sur les projets des étudiants",
 	"availability": "Disponibilité",
+	"availabilityFilter": "Disponibilité",
 	"avatar": {
 		"error": "Veuillez télécharger une image",
 		"title": "Créez votre avatar",
@@ -52,6 +53,8 @@
 		"tagline": "Slogan",
 		"title": "Informations de base"
 	},
+	"connectAction": "Connecter",
+	"connectionsLabel": "Connexions",
 	"connectSubtitle": "Recherchez, découvrez et connectez-vous avec la communauté MindHive",
 	"connectWithPeople": "Connectez-vous avec les gens",
 	"createProfile": "Créer un profil",
@@ -81,11 +84,14 @@
 		"videoNotSupported": "Votre navigateur ne prend pas en charge la balise vidéo."
 	},
 	"introductionVideo": "Vidéo d'introduction",
+	"locationFilter": "Emplacement",
 	"myConnections": "Mes connexions",
 	"navigation": {
 		"next": "Suivant",
 		"previous": "Précédent"
 	},
+	"noOfficialBio": "Aucune biographie officielle",
+	"noUnofficialBio": "Aucune biographie non officielle",
 	"officialBio": "Biographie officielle",
 	"passionNow": "Qu'est-ce qui vous passionne en ce moment ?",
 	"preferences": {
@@ -160,6 +166,7 @@
 	"underConstruction": "En construction 🚧",
 	"unofficialBio": "Biographie non officielle",
 	"usersPerPage": "Nombre d'utilisateurs par page",
+	"userTypeFilter": "Type d'utilisateur",
 	"videoNotSupported": "Votre navigateur ne prend pas en charge la balise vidéo.",
 	"videoUploader": {
 		"dragAndDrop": "Faites glisser et déposez le fichier vidéo pour le télécharger",
