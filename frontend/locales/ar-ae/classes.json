@@ -73,6 +73,7 @@
 		"cardWillBeReleased": "سيتم إصدار البطاقة",
 		"close": "يغلق",
 		"collective": "جماعي",
+		"commentPlaceholder": "أدخل تعليقًا...",
 		"commentsComment": "سيؤدي هذا إلى ملء مربع التعليقات مسبقًا للطلاب. يمكنك حذف التعليقات لاحقًا.",
 		"editMode": "أنت في وضع التحرير",
 		"expendedCard": {
@@ -169,6 +170,7 @@
 		"collaboratedTitle": "المجالس التي تتعاون فيها",
 		"collaborators": "المتعاونون",
 		"confirmDelete": "هل أنت متأكد أنك تريد حذف لوحة المشروع هذه؟",
+		"content": "محتوى",
 		"contentPreview": "معاينة المحتوى",
 		"copy": "ينسخ",
 		"copySelection": "نسخ القالب المحدد",

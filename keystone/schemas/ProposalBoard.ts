@@ -36,23 +36,37 @@ export const ProposalBoard = list({
             }
             const { title } = inputData;
             if (title) {
-              let slug = slugify(title, {
+              let baseSlug = slugify(title, {
                 remove: /[*+~.()'"!:@]/g, // remove characters that match regex
                 lower: true, // convert to lower case
                 strict: true, // strip special characters except replacement
               });
-              const items = await context.query.ProposalBoard.findMany({
-                where: { slug: { startsWith: slug } },
-                query: "id slug",
-              });
-              if (items.length) {
-                const re = new RegExp(`${slug}-*\\d*$`);
-                const slugs = items.filter((item) => item.slug.match(re));
-                if (slugs.length) {
-                  slug = `${slug}-${slugs.length}`;
-                }
+              if (!baseSlug) {
+                baseSlug = `proposal-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
               }
-              return slug;
+              const items = await context.query.ProposalBoard.findMany({
+                where: { slug: { startsWith: baseSlug } },
+                query: "slug",
+              });
+              if (!items.length) {
+                return baseSlug;
+              }
+              const exactMatch = items.find((item) => item.slug === baseSlug);
+              if (!exactMatch) {
+                return baseSlug;
+              }
+              let maxSuffix = 0;
+              const suffixRegex = new RegExp(`^${baseSlug}-(\\d+)$`);
+              items.forEach((item) => {
+                const match = item.slug.match(suffixRegex);
+                if (match) {
+                  const suffix = parseInt(match[1], 10);
+                  if (!Number.isNaN(suffix) && suffix > maxSuffix) {
+                    maxSuffix = suffix;
+                  }
+                }
+              });
+              return `${baseSlug}-${maxSuffix + 1}`;
             }
           } else {
             return inputData.slug;

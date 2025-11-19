@@ -54,7 +54,7 @@ export default function ProposalPage({ user, proposalId }) {
                     </div>
                     </span> */}
                 <button onClick={() => {setIsPDF(!isPDF);}} className="narrowButton">
-                  <Icon name="table"/> {t("proposalPage.viewBoard", "View Board")}
+                  <Icon name="table"/> {t("proposalPage.viewBoard", "Board View")}
                 </button>
               </>
             )}

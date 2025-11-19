@@ -7,11 +7,11 @@ import { JOIN_STUDY_MUTATION } from "../../Mutations/User";
 import { GET_USER_STUDIES } from "../../Queries/User";
 import { CREATE_GUEST } from "../../Mutations/Guest";
 
-// to check whether a participant is under 18 based on the birthday
-const isUnder18 = (birthdayTimestamp) => {
-    const ageInMilliseconds = Date.now() - birthdayTimestamp;
-    const millisecondsInYear = 1000 * 60 * 60 * 24 * 365.2425;
-    return ageInMilliseconds / millisecondsInYear < 18;
+// to check whether a participant is under 18 based on age
+const isUnder18 = (age) => {
+    if (!age && age !== 0) return false; // treat missing age as not under 18 for safety
+    const ageNum = typeof age === 'string' ? parseInt(age, 10) : Number(age);
+    return !isNaN(ageNum) && ageNum < 18;
   };
 
 // function to join the study from any place
@@ -86,9 +86,9 @@ export default function JoinStudy({ user, study, userInfo, btnName }) {
     function handleJoin() {
          // check the age and block the minor
         if(settings?.minorsBlocked) {
-            if(!userInfo?.bd) {
-                return alert(t('join.details.error.enterDob'));
-            } else if (isUnder18(userInfo?.bd)) {
+            if(!userInfo?.age) {
+                return alert(t('join.details.error.enterAge'));
+            } else if (isUnder18(userInfo?.age)) {
                 return alert(t('join.details.error.minorBlocked'));
             }
         }

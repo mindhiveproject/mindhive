@@ -112,12 +112,14 @@
 	},
 	"join": {
 		"details": {
+			"age": "Hoe oud ben je?",
 			"dob": "Wat is uw geboortedatum?",
 			"english": "Begrijpt u de basisinstructies in het Engels?",
 			"englishNo": "Nee",
 			"englishTranslationNote": "(De españolversie van het plataforma is beschikbaar in poco tiempo.)",
 			"englishYes": "Ja",
 			"error": {
+				"enterAge": "Voer uw leeftijd in",
 				"enterDob": "Voer uw geboortedatum in",
 				"minorBlocked": "Helaas kunnen op dit moment alleen deelnemers van 18 jaar of ouder aan deze studie deelnemen."
 			},

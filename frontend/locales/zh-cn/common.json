@@ -112,12 +112,14 @@
 	},
 	"join": {
 		"details": {
+			"age": "你几岁？",
 			"dob": "您的出生日期是？",
 			"english": "您是否理解用英语写的基本指令？",
 			"englishNo": "不",
 			"englishTranslationNote": "（La version en español de la plataforma estará disponible en poco tiempo.）",
 			"englishYes": "是的",
 			"error": {
+				"enterAge": "请输入您的年龄",
 				"enterDob": "请输入您的出生日期",
 				"minorBlocked": "非常抱歉，但目前只有 18 岁或以上的参与者才能参加这项研究。"
 			},

@@ -73,6 +73,7 @@
 		"cardWillBeReleased": "La tarjeta será lanzada",
 		"close": "Cerca",
 		"collective": "Colectivo",
+		"commentPlaceholder": "Escribe un comentario...",
 		"commentsComment": "Esto rellenará automáticamente el cuadro de comentarios para los estudiantes. Puedes eliminar los comentarios más tarde.",
 		"editMode": "Estás en modo de edición",
 		"expendedCard": {
@@ -169,6 +170,7 @@
 		"collaboratedTitle": "Tableros en los que eres colaborador",
 		"collaborators": "Colaboradores",
 		"confirmDelete": "¿Estás seguro que deseas eliminar este tablero de proyecto?",
+		"content": "Contenido",
 		"contentPreview": "Vista previa del contenido",
 		"copy": "Copiar",
 		"copySelection": "Copiar plantilla seleccionada",

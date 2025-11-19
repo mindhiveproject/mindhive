@@ -619,8 +619,8 @@
 		"preview": "预览",
 		"previewInfo": "在编辑模式下标记为“完成”的卡片内容将以预览模式出现在这里，显示审阅者将看到的内容。",
 		"submittedLocked": "提案已提交并锁定🔒",
-		"viewBoard": "查看板",
-		"viewFlattenBoard": "查看平板"
+		"viewBoard": "板视图",
+		"viewFlattenBoard": "文本视图"
 	},
 	"proposalSelector": {
 		"linkToProposal": "提案链接",

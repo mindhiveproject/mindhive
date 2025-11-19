@@ -73,6 +73,7 @@
 		"cardWillBeReleased": "La carte sera publiée",
 		"close": "Fermer",
 		"collective": "Collectif",
+		"commentPlaceholder": "Saisissez un commentaire...",
 		"commentsComment": "Cela préremplira la zone de commentaires des élèves. Vous pourrez supprimer les commentaires ultérieurement.",
 		"editMode": "Vous êtes en mode édition",
 		"expendedCard": {
@@ -169,6 +170,7 @@
 		"collaboratedTitle": "Les forums sur lesquels vous collaborez",
 		"collaborators": "Collaborateurs",
 		"confirmDelete": "Êtes-vous sûr de vouloir supprimer ce tableau de projet ?",
+		"content": "Contenu",
 		"contentPreview": "Aperçu du contenu",
 		"copy": "Copie",
 		"copySelection": "Copier le modèle sélectionné",

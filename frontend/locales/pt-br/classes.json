@@ -73,6 +73,7 @@
 		"cardWillBeReleased": "O cartão será lançado",
 		"close": "Fechar",
 		"collective": "Coletivo",
+		"commentPlaceholder": "Insira um comentário...",
 		"commentsComment": "Isso preencherá previamente a Caixa de Comentários para os alunos. Você poderá excluir os comentários mais tarde.",
 		"editMode": "Você está no modo de edição",
 		"expendedCard": {
@@ -169,6 +170,7 @@
 		"collaboratedTitle": "Fóruns dos quais você é colaborador",
 		"collaborators": "Colaboradores",
 		"confirmDelete": "Tem certeza de que deseja excluir este quadro de projeto?",
+		"content": "Contente",
 		"contentPreview": "Visualização do conteúdo",
 		"copy": "Cópia de",
 		"copySelection": "Copiar modelo selecionado",

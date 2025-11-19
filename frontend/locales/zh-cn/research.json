@@ -1,10 +1,13 @@
 {
 	"boardData": "董事会数据",
+	"boardTitleColumn": "请包含版主名称？（出于隐私考虑，不建议这样做）",
 	"buildYourExport": "构建您的出口",
+	"classCode": "课程代码（访问课程时请查看网址）",
 	"classId": "类别 ID",
 	"csv": "CSV（.csv）",
 	"data": "数据",
 	"downloadPayload": "下载有效载荷",
+	"enterClassCode": "请输入班级代码",
 	"enterClassId": "请输入班级 ID",
 	"errors": {
 		"formatUnsupported": "目前仅支持导出 CSV 文件。",
@@ -12,6 +15,7 @@
 		"noDatasetSelected": "至少选择一个数据集（董事会或评论）。"
 	},
 	"filterByCardStatus": "按卡片状态筛选",
+	"includeBoardTitle": "包括董事会标题",
 	"intro": "直接从 MindHive 平台提取提案内容和审核数据。选择类别，选择数据范围，并导出可用于分析的 CSV 文件。",
 	"json": "JSON（如果确实需要的话）",
 	"noResearchAccess": "您需要研究级别的权限才能访问导出工具。",

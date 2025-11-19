@@ -73,6 +73,7 @@
 		"cardWillBeReleased": "The card will be released",
 		"close": "Close",
 		"collective": "Collective",
+		"commentPlaceholder": "Enter a comment...",
 		"commentsComment": "This will pre-populate the Comment Box for students. You can delete comments later.",
 		"editMode": "You are in Edit Mode",
 		"expendedCard": {
@@ -169,6 +170,7 @@
 		"collaboratedTitle": "Boards you are a collaborator on",
 		"collaborators": "Collaborators",
 		"confirmDelete": "Are you sure you want to delete this project board?",
+		"content": "Content",
 		"contentPreview": "Content Preview",
 		"copy": "Copy",
 		"copySelection": "Copy Selected Template",

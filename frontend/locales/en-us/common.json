@@ -112,12 +112,14 @@
 	},
 	"join": {
 		"details": {
+			"age": "What is your age?",
 			"dob": "What is your date of birth?",
 			"english": "Do you understand basic instruction written in English?",
 			"englishNo": "No",
 			"englishTranslationNote": "(La versión en español de la plataforma estará disponible en poco tiempo.)",
 			"englishYes": "Yes",
 			"error": {
+				"enterAge": "Please enter your age",
 				"enterDob": "Please enter your date of birth",
 				"minorBlocked": "We are very sorry but only participants who are 18 or older can take part in this study at this time."
 			},
