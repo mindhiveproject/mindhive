@@ -34,6 +34,7 @@
 			"title": "非官方简历"
 		}
 	},
+	"backgroundTab": "背景",
 	"basic": {
 		"description": "请完成以下项目以创建您的个人资料并与 MindHive 社区建立联系。",
 		"email": "电子邮件",
@@ -58,8 +59,10 @@
 	"connectSubtitle": "搜索、发现并联系 MindHive 社区",
 	"connectWithPeople": "与人联系",
 	"createProfile": "创建个人资料",
+	"exploreConnect": "探索连接",
 	"interests": {
 		"description": "您想在哪些主题上为学生提供支持？请从下方列表中选择一些您感兴趣的主题和领域，让其他社区成员了解您乐于贡献的内容。这有助于我们将您与志同道合的学生和同学联系起来。",
+		"interests": "兴趣",
 		"title": "您能提供什么帮助？"
 	},
 	"interestSelector": {
@@ -86,12 +89,14 @@
 	"introductionVideo": "介绍视频",
 	"locationFilter": "地点",
 	"myConnections": "我的联系人",
+	"myConnectionsSubtitle": "利用你的人脉关系，找到最适合你的合作者、导师或科学家。",
 	"navigation": {
 		"next": "下一个",
 		"previous": "以前的"
 	},
 	"noOfficialBio": "没有官方简介",
 	"noUnofficialBio": "没有非官方传记",
+	"noVideoPlaceholder": "无视频占位符",
 	"officialBio": "官方简介",
 	"passionNow": "您现在对什么事情充满热情？",
 	"preferences": {
@@ -155,12 +160,14 @@
 	},
 	"returnDashboard": "返回仪表板",
 	"searchPlaceholder": "按名称、主题或感兴趣的领域搜索",
+	"skillsTab": "技能和偏好",
 	"steps": {
 		"aboutMe": "2. 关于我",
 		"complete": "4. 完成",
 		"interests": "3. 利益",
 		"profileType": "1. 个人资料类型"
 	},
+	"studiesTab": "研究",
 	"syncInPersonVisit": "进行课堂访问，与项目学生面对面讨论您的工作。",
 	"syncZoomVisit": "进行课堂访问，与项目学生讨论您的工作（通过 Zoom）。",
 	"underConstruction": "正在建设中🚧",
