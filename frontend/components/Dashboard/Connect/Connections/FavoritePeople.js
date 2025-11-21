@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { MY_FAVORITE_PEOPLE } from "../../../Queries/User";
-import ProfileCard from "../Bank/Card";
+import ProfileCard from "../ConnectProfileCard";
 import StyledConnect from "../../../styles/StyledConnect";
 import useTranslation from "next-translate/useTranslation";
 
