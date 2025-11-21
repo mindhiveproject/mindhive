@@ -16,6 +16,7 @@ export default function ManageFavorite({ user, profileId }) {
     <div
       onClick={async (e) => {
         e.preventDefault();
+        e.stopPropagation();
         await manageFavorite({
           variables: {
             id: user?.id,
@@ -27,9 +28,9 @@ export default function ManageFavorite({ user, profileId }) {
       }}
     >
       {isFavorite ? (
-        <Icon size="big" name="favorite" color="yellow" />
+        <Icon size="large" name="favorite" color="yellow" />
       ) : (
-        <Icon size="big" name="favorite" color="grey" />
+        <Icon size="large" name="favorite" color="grey" />
       )}
     </div>
   );

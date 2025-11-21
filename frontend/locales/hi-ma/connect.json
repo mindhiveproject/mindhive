@@ -2,6 +2,7 @@
 	"asyncAnsweringQuestions": "छात्रों के प्रश्नों का उत्तर देना (आपकी प्रोफ़ाइल के आधार पर)।",
 	"asyncProvidingFeedback": "छात्र परियोजनाओं पर प्रतिक्रिया प्रदान करना",
 	"availability": "उपलब्धता",
+	"availabilityFilter": "",
 	"avatar": {
 		"error": "कृपया एक छवि अपलोड करें",
 		"title": "अपना अवतार बनाएँ",
@@ -33,6 +34,7 @@
 			"title": "अनौपचारिक बायो"
 		}
 	},
+	"backgroundTab": "",
 	"basic": {
 		"description": "कृपया अपना प्रोफ़ाइल बनाने और माइंडहाइव समुदाय से जुड़ने के लिए निम्नलिखित आइटम पूरे करें।",
 		"email": "ईमेल",
@@ -52,11 +54,15 @@
 		"tagline": "TAGLINE",
 		"title": "मूल जानकारी"
 	},
+	"connectAction": "",
+	"connectionsLabel": "",
 	"connectSubtitle": "माइंडहाइव समुदाय को खोजें, खोजें और उससे जुड़ें",
 	"connectWithPeople": "लोगों से जुड़ें",
 	"createProfile": "प्रोफ़ाइल बनाएँ",
+	"exploreConnect": "कनेक्ट का अन्वेषण करें",
 	"interests": {
 		"description": "आप किन विषयों पर छात्रों का समर्थन करना चाहेंगे? नीचे दी गई सूची में से कुछ विषय और रुचि के क्षेत्र चुनें ताकि समुदाय के अन्य सदस्यों को पता चल सके कि आप कहाँ योगदान देने के लिए उत्सुक हैं। इससे हमें आपको उन छात्रों और साथियों से जोड़ने में मदद मिलेगी जो आपकी रुचियों को साझा करते हैं।",
+		"interests": "",
 		"title": "आप कहां मदद कर सकते हैं?"
 	},
 	"interestSelector": {
@@ -81,11 +87,16 @@
 		"videoNotSupported": "आपका ब्राउज़र में वीडियो टैग समर्थित नहीं है।"
 	},
 	"introductionVideo": "परिचय वीडियो",
-	"myConnections": "मेरे संबंध",
+	"locationFilter": "",
+	"myConnections": "मेरे कनेक्शन",
+	"myConnectionsSubtitle": "",
 	"navigation": {
 		"next": "अगला",
 		"previous": "पहले का"
 	},
+	"noOfficialBio": "",
+	"noUnofficialBio": "",
+	"noVideoPlaceholder": "",
 	"officialBio": "आधिकारिक बायो",
 	"passionNow": "इस समय आप किस चीज़ के प्रति जुनूनी हैं?",
 	"preferences": {
@@ -149,17 +160,20 @@
 	},
 	"returnDashboard": "",
 	"searchPlaceholder": "नाम, विषय या रुचि के क्षेत्र के आधार पर खोजें",
+	"skillsTab": "",
 	"steps": {
 		"aboutMe": "2. मेरे बारे में",
 		"complete": "4. पूर्ण",
 		"interests": "3. रुचियां",
 		"profileType": "1. प्रोफ़ाइल प्रकार"
 	},
+	"studiesTab": "",
 	"syncInPersonVisit": "अपने कार्य के बारे में कार्यक्रम के छात्रों से बात करने के लिए कक्षा में जाना (व्यक्तिगत रूप से)।",
 	"syncZoomVisit": "अपने कार्य के बारे में कार्यक्रम के छात्रों से बात करने के लिए कक्षा में जाना (ज़ूम पर)।",
 	"underConstruction": "",
 	"unofficialBio": "अनौपचारिक बायो",
 	"usersPerPage": "प्रति पृष्ठ उपयोगकर्ताओं की संख्या",
+	"userTypeFilter": "",
 	"videoNotSupported": "आपका ब्राउज़र में वीडियो टैग समर्थित नहीं है।",
 	"videoUploader": {
 		"dragAndDrop": "अपलोड करने के लिए वीडियो फ़ाइल को खींचें और छोड़ें",

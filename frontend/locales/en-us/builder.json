@@ -31,8 +31,10 @@
 		"loadingMessage": "Fetching latest assignment data...",
 		"unsavedChanges": "(Unsaved changes)"
 	},
+	"availability": "Availability",
 	"background": "Background",
 	"backgroundHelp": "Use this field to provide some brief background on the topic of research. What is the problem under study and why is it important?",
+	"backgroundTab": "Background",
 	"basicTab": "Basic",
 	"blockDescription": "In a block, participants are presented with information.",
 	"board": {
@@ -342,6 +344,8 @@
 		"newSection": "New section",
 		"sectionTitlePlaceholder": "Enter section title"
 	},
+	"interests": "Interests",
+	"introductionVideo": "Introduction video",
 	"link": "Link",
 	"linkClass": {
 		"doNotConnectClass": "❌  Do not connect the class"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "No notes entered yet. Right-click to add notes."
 	},
+	"noVideoPlaceholder": "No introduction video available.",
 	"overview": {
 		"actions": "Actions",
 		"copy": "Copy",
@@ -1073,6 +1078,7 @@
 		"placeholder": "Study versions",
 		"title": "Study version"
 	},
+	"videoNotSupported": "Video not supported",
 	"viewer": {
 		"afterParticipation": "What participants see <u>after</u> taking the {{taskType}}",
 		"aggregateVariables": "Aggregate Variables",

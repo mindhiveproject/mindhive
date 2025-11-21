@@ -31,8 +31,10 @@
 		"loadingMessage": "正在获取最新的作业数据...",
 		"unsavedChanges": "（未保存的更改）"
 	},
+	"availability": "",
 	"background": "背景",
 	"backgroundHelp": "使用此字段提供研究主题的简要背景信息。研究的问题是什么？为什么它很重要？",
+	"backgroundTab": "",
 	"basicTab": "基本的",
 	"blockDescription": "在一个区块中，向参与者呈现信息。",
 	"board": {
@@ -342,6 +344,8 @@
 		"newSection": "新部分",
 		"sectionTitlePlaceholder": "输入章节标题"
 	},
+	"interests": "",
+	"introductionVideo": "",
 	"link": "关联",
 	"linkClass": {
 		"doNotConnectClass": "❌ 不要连接类"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "尚未输入任何注释。右键单击即可添加注释。"
 	},
+	"noVideoPlaceholder": "",
 	"overview": {
 		"actions": "行动",
 		"copy": "复制",
@@ -1073,6 +1078,7 @@
 		"placeholder": "学习版本",
 		"title": "学习版"
 	},
+	"videoNotSupported": "",
 	"viewer": {
 		"afterParticipation": "参与者在完成 {{taskType}}<u>之后</u>会看到什么",
 		"aggregateVariables": "聚合变量",

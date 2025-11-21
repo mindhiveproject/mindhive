@@ -31,8 +31,10 @@
 		"loadingMessage": "नवीनतम असाइनमेंट डेटा प्राप्त किया जा रहा है...",
 		"unsavedChanges": ""
 	},
+	"availability": "",
 	"background": "पृष्ठभूमि",
 	"backgroundHelp": "इस फ़ील्ड का उपयोग शोध के विषय पर संक्षिप्त पृष्ठभूमि प्रदान करने के लिए करें। अध्ययनाधीन समस्या क्या है और यह महत्वपूर्ण क्यों है?",
+	"backgroundTab": "",
 	"basicTab": "बुनियादी",
 	"blockDescription": "एक ब्लॉक में प्रतिभागियों को जानकारी दी जाती है।",
 	"board": {
@@ -342,6 +344,8 @@
 		"newSection": "नया खंड",
 		"sectionTitlePlaceholder": "अनुभाग शीर्षक दर्ज करें"
 	},
+	"interests": "",
+	"introductionVideo": "",
 	"link": "जोड़ना",
 	"linkClass": {
 		"doNotConnectClass": "❌ कक्षा को कनेक्ट न करें"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "अभी तक कोई नोट दर्ज नहीं किया गया है। नोट जोड़ने के लिए राइट-क्लिक करें।"
 	},
+	"noVideoPlaceholder": "",
 	"overview": {
 		"actions": "कार्रवाई",
 		"copy": "प्रतिलिपि",
@@ -1073,6 +1078,7 @@
 		"placeholder": "अध्ययन संस्करण",
 		"title": "अध्ययन संस्करण"
 	},
+	"videoNotSupported": "",
 	"viewer": {
 		"afterParticipation": "{{taskType}} लेने के <u>बाद</u> प्रतिभागी क्या देखते हैं",
 		"aggregateVariables": "समग्र चर",

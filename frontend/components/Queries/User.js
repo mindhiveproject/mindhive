@@ -382,6 +382,9 @@ export const PUBLIC_USER_QUERY = gql`
       mentorPreferClass
       interests {
         id
+        title
+        slug
+        description
       }
     }
   }
@@ -428,6 +431,90 @@ export const GET_ALL_USERS = gql`
       firstName
       lastName
     }
+  }
+`;
+
+// query to get public non-student users for Connect Bank
+export const GET_CONNECT_USERS = gql`
+  query GET_CONNECT_USERS($skip: Int, $take: Int, $search: String) {
+    profiles(
+      skip: $skip
+      take: $take
+      where: {
+        AND: [
+          { isPublic: { equals: true } }
+          {
+            NOT: {
+              permissions: {
+                some: {
+                  name: { equals: "STUDENT" }
+                }
+              }
+            }
+          }
+        ]
+        OR: [
+          { username: { contains: $search } }
+          { publicReadableId: { contains: $search } }
+          { publicId: { contains: $search } }
+          { firstName: { contains: $search } }
+          { lastName: { contains: $search } }
+        ]
+      }
+    ) {
+      id
+      username
+      email
+      publicId
+      publicReadableId
+      permissions {
+        name
+      }
+      dateCreated
+      image {
+        image {
+          publicUrlTransformed
+        }
+      }
+      location
+      organization
+      interests {
+        id
+        title
+      }
+      bioInformal
+      firstName
+      lastName
+    }
+  }
+`;
+
+// count public non-student users for Connect Bank pagination
+export const PAGINATION_CONNECT_USERS_QUERY = gql`
+  query PAGINATION_CONNECT_USERS_QUERY($search: String) {
+    profilesCount(
+      where: {
+        AND: [
+          { isPublic: { equals: true } }
+          {
+            NOT: {
+              permissions: {
+                some: {
+                  name: { equals: "STUDENT" }
+                }
+              }
+            }
+          }
+        ]
+        OR: [
+          { username: { contains: $search } }
+          { publicReadableId: { contains: $search } }
+          { publicId: { contains: $search } }
+          { firstName: { contains: $search } }
+          { lastName: { contains: $search } }
+        ]
+      }
+    )
   }
 `;
 

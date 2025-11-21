@@ -2,6 +2,7 @@
 	"asyncAnsweringQuestions": "Respondendo às perguntas dos alunos (com base no seu perfil).",
 	"asyncProvidingFeedback": "Fornecer feedback sobre projetos de alunos",
 	"availability": "Disponibilidade",
+	"availabilityFilter": "Disponibilidade",
 	"avatar": {
 		"error": "Por favor, carregue uma imagem",
 		"title": "Crie seu avatar",
@@ -33,6 +34,7 @@
 			"title": "Biografia não oficial"
 		}
 	},
+	"backgroundTab": "Fundo",
 	"basic": {
 		"description": "Preencha os seguintes itens para criar seu perfil e se conectar com a comunidade MindHive.",
 		"email": "E-mail",
@@ -52,11 +54,15 @@
 		"tagline": "Slogan",
 		"title": "Informações básicas"
 	},
+	"connectAction": "Conectar",
+	"connectionsLabel": "Conexões",
 	"connectSubtitle": "Pesquise, descubra e conecte-se com a comunidade MindHive",
 	"connectWithPeople": "Conecte-se com as pessoas",
 	"createProfile": "Criar perfil",
+	"exploreConnect": "Explorar Conectar",
 	"interests": {
 		"description": "Em quais tópicos você gostaria de apoiar os alunos? Selecione alguns tópicos e áreas de interesse da lista abaixo para que outros membros da comunidade saibam em quais áreas você tem interesse em contribuir. Isso nos ajudará a conectar você com alunos e colegas que compartilham suas paixões.",
+		"interests": "Interesses",
 		"title": "Onde você pode ajudar?"
 	},
 	"interestSelector": {
@@ -81,11 +87,16 @@
 		"videoNotSupported": "Seu navegador não suporta a tag de vídeo."
 	},
 	"introductionVideo": "Vídeo de introdução",
+	"locationFilter": "Localização",
 	"myConnections": "Minhas conexões",
+	"myConnectionsSubtitle": "Procure em sua rede de contatos o colaborador, mentor ou cientista ideal para você.",
 	"navigation": {
 		"next": "Próximo",
 		"previous": "Anterior"
 	},
+	"noOfficialBio": "Sem biografia oficial",
+	"noUnofficialBio": "Sem biografia não oficial",
+	"noVideoPlaceholder": "Sem espaço reservado para vídeo",
 	"officialBio": "Biografia oficial",
 	"passionNow": "O que te apaixona atualmente?",
 	"preferences": {
@@ -149,17 +160,20 @@
 	},
 	"returnDashboard": "Voltar ao painel",
 	"searchPlaceholder": "Pesquise por nome, tópico ou área de interesse",
+	"skillsTab": "Habilidades e preferências",
 	"steps": {
 		"aboutMe": "2. Sobre mim",
 		"complete": "4. Completo",
 		"interests": "3. Interesses",
 		"profileType": "1. Tipo de perfil"
 	},
+	"studiesTab": "Estudos",
 	"syncInPersonVisit": "Fazer uma visita presencial para conversar com os alunos do programa sobre seu trabalho.",
 	"syncZoomVisit": "Fazer uma visita presencial para conversar com os alunos do programa sobre seu trabalho (pelo Zoom).",
 	"underConstruction": "Em construção 🚧",
 	"unofficialBio": "Biografia não oficial",
 	"usersPerPage": "Número de usuários por página",
+	"userTypeFilter": "Tipo de usuário",
 	"videoNotSupported": "Seu navegador não suporta a tag de vídeo.",
 	"videoUploader": {
 		"dragAndDrop": "Arraste e solte o arquivo de vídeo para fazer upload",
