@@ -116,10 +116,26 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
 
   const study = data?.proposalBoard?.study || {};
 
+  // Default settings if study doesn't have settings
+  const defaultSettings = {
+    forbidRetake: true,
+    hideParticipateButton: false,
+    showEmailNotificationPropmt: false,
+    askStudentsNYC: false,
+    zipCode: false,
+    guestParticipation: true,
+    consentObtained: false,
+    proceedToFirstTask: true,
+    useExternalDevices: false,
+    sonaId: false,
+    minorsBlocked: false,
+  };
+
   // save and edit the study information
   const { inputs, handleChange, handleMultipleUpdate, captureFile, clearForm } =
     useForm({
       ...study,
+      settings: study?.settings || defaultSettings,
     });
 
   // modify the study if it has to be cloned

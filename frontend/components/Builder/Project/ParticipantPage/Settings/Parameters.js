@@ -28,7 +28,7 @@ export default function Parameters({
     showEmailNotificationPropmt: false,
     askStudentsNYC: false,
     zipCode: false,
-    guestParticipation: false,
+    guestParticipation: true,
     consentObtained: false,
     proceedToFirstTask: false,
     useExternalDevices: false,
