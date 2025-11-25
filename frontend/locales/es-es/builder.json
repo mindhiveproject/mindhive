@@ -658,6 +658,7 @@
 		"oldest": "El más antiguo",
 		"overviewIntro": "Ya sea que esté comenzando su estudio o reuniendo participantes, utilice esta página para brindar comentarios a sus colegas sobre sus propuestas y estudios finalizados.",
 		"participantOverOne": "{count, plural, uno {# participante} otros {# participantes}}",
+		"participantOverOnePlural": "{{count}} participantes ",
 		"participantUnder": "ningún participante",
 		"participate": "Participar",
 		"peerReviewTag": "Revisión por pares",

@@ -658,6 +658,7 @@
 		"oldest": "Oudste",
 		"overviewIntro": "Of u nu met uw onderzoek begint of deelnemers verzamelt, gebruik deze pagina om feedback te geven aan uw medestudenten op hun voorstellen en afgeronde onderzoeken.",
 		"participantOverOne": "{aantal, meervoud, één {# deelnemer} andere {# deelnemers}}",
+		"participantOverOnePlural": "{{count}} Deelnemers ",
 		"participantUnder": "geen deelnemers",
 		"participate": "Deelnemen",
 		"peerReviewTag": "Peer Review",

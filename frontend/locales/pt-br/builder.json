@@ -658,6 +658,7 @@
 		"oldest": "Mais antigo",
 		"overviewIntro": "Quer você esteja iniciando seu estudo ou coletando participantes, use esta página para dar feedback aos seus colegas sobre suas propostas e estudos finalizados.",
 		"participantOverOne": "{contagem, plural, um {# participante} outro {# participantes}}",
+		"participantOverOnePlural": "{{count}} Participantes ",
 		"participantUnder": "nenhum participante",
 		"participate": "Participar",
 		"peerReviewTag": "Revisão por Pares",

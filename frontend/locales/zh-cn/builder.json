@@ -658,6 +658,7 @@
 		"oldest": "最老的",
 		"overviewIntro": "无论您是开始研究还是收集参与者，都可以使用此页面向您的同行提供有关其提案和最终研究的反馈",
 		"participantOverOne": "{count，复数，一个 {# 位参与者} 其他 {# 位参与者}}",
+		"participantOverOnePlural": "{{count}} 名参与者",
 		"participantUnder": "没有参与者",
 		"participate": "参加",
 		"peerReviewTag": "同行评审",

@@ -55,7 +55,9 @@ export default function Card({ study }) {
           <div className="p12">
             {activeParticipantsCount === 0
               ? t("review.participantUnder")
-              : t("review.participantOverOne", { count: activeParticipantsCount })}
+              : activeParticipantsCount === 1
+              ? t("review.participantOverOne", { count: activeParticipantsCount })
+              : t("review.participantOverOnePlural", { count: activeParticipantsCount })}
           </div>
         )}
       </div>

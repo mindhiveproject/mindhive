@@ -658,6 +658,7 @@
 		"oldest": "الأقدم",
 		"overviewIntro": "سواء كنت تبدأ دراستك أو تجمع المشاركين، استخدم هذه الصفحة لتقديم تعليقات لزملائك حول مقترحاتهم ودراساتهم النهائية",
 		"participantOverOne": "{العدد، الجمع، واحد {# مشارك} آخر {# مشارك}}",
+		"participantOverOnePlural": "{{count}} مشاركًا",
 		"participantUnder": "لا يوجد مشاركين",
 		"participate": "يشارك",
 		"peerReviewTag": "مراجعة الأقران",

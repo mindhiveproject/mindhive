@@ -658,6 +658,7 @@
 		"oldest": "Le plus ancien",
 		"overviewIntro": "Que vous commenciez votre étude ou que vous recrutiez des participants, utilisez cette page pour donner votre avis à vos pairs sur leurs propositions et leurs études finalisées.",
 		"participantOverOne": "{compter, pluriel, un {# participant} autre {# participants}}",
+		"participantOverOnePlural": "{{count}}  Participants ",
 		"participantUnder": "aucun participant",
 		"participate": "Participer",
 		"peerReviewTag": "Évaluation par les pairs",
