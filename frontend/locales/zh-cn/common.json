@@ -43,7 +43,7 @@
 			"parentEmail": "家长电子邮件地址",
 			"parentName": "父母姓名",
 			"skip": "跳过同意",
-			"studyInfo": "这项研究是<strong>{{organization}</strong>研究协议<strong>{{title}</strong>的一部分。"
+			"studyInfo": "本研究是 {{organization}} 研究方案 {{title}}的一部分。"
 		},
 		"permissionsDescription": "查看和编辑您的数据权限并查看您的活动",
 		"permissionsTitle": "数据权限",
@@ -378,7 +378,7 @@
 		"updatePreferences": "更新偏好设置"
 	},
 	"userPath": {
-		"guestMessage": "您以访客身份参与。您的公开可读 ID 是 <strong>{{id} }",
+		"guestMessage": "您以访客身份参与。您的公开可读 ID 是 {{id} }",
 		"startNextTask": "开始下一个任务"
 	}
 }

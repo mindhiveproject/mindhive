@@ -274,7 +274,7 @@
 	"descriptionDiscoverHelp": "Dit is zichtbaar voor alle platformgebruikers wanneer ze taken of enquêtes kiezen in de Ontdekmodus.",
 	"develop": "Ontwikkelen",
 	"developA": "Ontwikkel een {{develop}}",
-	"developHeaderDescription": "Hier kunt u uw <strong>onderzoeken, taken en enquêtes</strong> maken, bewerken en beheren.",
+	"developHeaderDescription": "Hier kunt u uw onderzoeken, taken en enquêtes maken, bewerken en beheren.",
 	"developNew": "Ontwikkel nieuwe",
 	"duplicateEditBlock": "Dupliceer en bewerk een bestaand MindHive-blok en de bijbehorende parameters.",
 	"duplicateEditSurvey": "Dupliceer en bewerk een bestaande MindHive-enquête en de bijbehorende parameters.",
@@ -786,7 +786,7 @@
 	},
 	"selector": {
 		"basicBlocks": {
-			"description": "Wil je <strong>aangepaste instructies</strong> aan je deelnemers geven of <strong>een link en/of video</strong> in je studieprocedure insluiten? Selecteer en bewerk een basisblok.",
+			"description": "Wil je aangepaste instructies aan je deelnemers geven of een link en/of video in je studieprocedure insluiten? Selecteer en bewerk een basisblok.",
 			"title": "Basisblokken"
 		},
 		"filter": {
@@ -812,7 +812,7 @@
 			"title": "Taken"
 		},
 		"templates": {
-			"description": "Wil je niet helemaal opnieuw beginnen? Selecteer en bewerk een <strong>vooraf gemaakt onderzoeksontwerp</strong> met behulp van een van de sjablonen in deze database.",
+			"description": "Wil je niet helemaal opnieuw beginnen? Selecteer en bewerk een vooraf gemaakt onderzoeksontwerp met behulp van een van de sjablonen in deze database.",
 			"title": "Sjablonen"
 		}
 	},

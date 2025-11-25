@@ -274,7 +274,7 @@
 	"descriptionDiscoverHelp": "Esto es visible para todos los usuarios de la plataforma al elegir tareas o encuestas en el modo Descubrir.",
 	"develop": "Desarrollar",
 	"developA": "Desarrollar un {{desarrollar}}",
-	"developHeaderDescription": "Crea, edita y administra tus <strong>estudios, tareas y encuestas</strong> aquí.",
+	"developHeaderDescription": "Crea, edita y administra tus estudios, tareas y encuestas aquí.",
 	"developNew": "Desarrollar nuevos",
 	"duplicateEditBlock": "Duplicar y editar un bloque MindHive preexistente y sus parámetros.",
 	"duplicateEditSurvey": "Duplicar y editar una encuesta MindHive preexistente y sus parámetros.",

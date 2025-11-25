@@ -43,7 +43,7 @@
 			"parentEmail": "عنوان البريد الإلكتروني للوالدين",
 			"parentName": "اسم الوالد",
 			"skip": "تخطي الموافقة",
-			"studyInfo": "هذه الدراسة هي جزء من بروتوكول البحث الخاص بالمنظمة <strong>{{العنوان}</strong>."
+			"studyInfo": "هذه الدراسة هي جزء من بروتوكول البحث {{organization}}  {{title}}."
 		},
 		"permissionsDescription": "قم بمراجعة أذونات بياناتك وتعديلها وعرض نشاطك",
 		"permissionsTitle": "أذونات البيانات",
@@ -378,7 +378,7 @@
 		"updatePreferences": "تحديث التفضيلات"
 	},
 	"userPath": {
-		"guestMessage": "أنت تشارك كضيف. معرفك العام القابل للقراءة هو <strong>{{id}</strong>",
+		"guestMessage": "أنت تشارك كضيف. معرفك العام القابل للقراءة هو {{id}",
 		"startNextTask": "ابدأ المهمة التالية"
 	}
 }

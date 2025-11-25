@@ -43,7 +43,7 @@
 			"parentEmail": "Parent email address",
 			"parentName": "Parent name",
 			"skip": "Skip consent",
-			"studyInfo": "This study is part of the <strong>{{organization}}</strong> research protocol <strong>{{title}}</strong>."
+			"studyInfo": "This study is part of the {{organization}} research protocol {{title}}."
 		},
 		"permissionsDescription": "Review and edit your data permissions and view your activity",
 		"permissionsTitle": "Data Permissions",
@@ -378,7 +378,7 @@
 		"updatePreferences": "Update Preferences"
 	},
 	"userPath": {
-		"guestMessage": "You participate as a guest. Your public readable id is <strong>{{id}}</strong>",
+		"guestMessage": "You participate as a guest. Your public readable id is {{id}}",
 		"startNextTask": "Start the next task"
 	}
 }

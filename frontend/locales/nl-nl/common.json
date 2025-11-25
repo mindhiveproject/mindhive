@@ -43,7 +43,7 @@
 			"parentEmail": "E-mailadres van de ouder",
 			"parentName": "Naam van de ouder",
 			"skip": "Toestemming overslaan",
-			"studyInfo": "Deze studie maakt deel uit van het <strong>{{organization}}</strong> onderzoeksprotocol <strong>{{title}}</strong>."
+			"studyInfo": "Deze studie maakt deel uit van het {{organization}} onderzoeksprotocol {{title}}."
 		},
 		"permissionsDescription": "Bekijk en bewerk uw gegevensmachtigingen en bekijk uw activiteit",
 		"permissionsTitle": "Gegevensmachtigingen",
@@ -378,7 +378,7 @@
 		"updatePreferences": "Voorkeuren bijwerken"
 	},
 	"userPath": {
-		"guestMessage": "Je neemt deel als gast. Je openbare, leesbare ID is <strong>{{id}}</strong>",
+		"guestMessage": "Je neemt deel als gast. Je openbare, leesbare ID is {{id}}",
 		"startNextTask": "Start de volgende taak"
 	}
 }
