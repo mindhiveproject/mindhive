@@ -167,8 +167,8 @@ export default function ProfilePage({ query, user }) {
       </NavigationBar>
       <ProfileShell>
         <ProfileCard>
-          <CardHeader>
-            <HeaderText>
+          <HeaderSection>
+            <HeaderContent>
               <NameRow>
                 <h1 className="h1">
                   {(profile?.firstName || profile?.lastName)
@@ -178,62 +178,58 @@ export default function ProfilePage({ query, user }) {
                 {pronoun && <PronounTag>{pronoun}</PronounTag>}
               </NameRow>
               {profile?.tagline && <Tagline>{profile?.tagline}</Tagline>}
-            </HeaderText>
-            <HeaderActions>
-              <Avatar>
-                {avatar ? (
-                  <img
-                    src={avatar}
-                    alt={fullName}
-                  />
-                ) : (
-                  <div className="fallback" style={{ background: fallbackGradient }}>
-                    {fallbackLetter}
-                  </div>
+              <ContactInfoRow>
+                {profile?.email && (
+                  <MetaItem>
+                    <Icon name="send" />
+                    <a href={`mailto:${profile?.email}`}>{profile?.email}</a>
+                  </MetaItem>
                 )}
-              </Avatar>
-            </HeaderActions>
-          </CardHeader>
-
-          <MetaRow>
-            <MetaItems>
-              {profile?.email && (
+                {profile?.organization && (
+                  <MetaItem>
+                    <Icon name="building outline" />
+                    <span>
+                      {profile?.organization}
+                      {profile?.role ? ` · ${profile?.role}` : ""}
+                    </span>
+                  </MetaItem>
+                )}
+                {locationText && (
+                  <MetaItem>
+                    <Icon name="compass" />
+                    <span>{locationText}</span>
+                  </MetaItem>
+                )}
                 <MetaItem>
-                  <Icon name="send" />
-                  <a href={`mailto:${profile?.email}`}>{profile?.email}</a>
-                </MetaItem>
-              )}
-              {profile?.organization && (
-                <MetaItem>
-                  <Icon name="building outline" />
+                  <Icon name="users" />
                   <span>
-                    {profile?.organization}
-                    {profile?.role ? ` · ${profile?.role}` : ""}
+                    {connectionCount} {t("connectionsLabel", { defaultValue: "Connections" })}
                   </span>
                 </MetaItem>
+              </ContactInfoRow>
+              <ConnectActions>
+                <FavoriteButton> 
+                  <ManageFavorite user={user} profileId={profile?.id} />
+                </FavoriteButton>
+                {/* <ConnectButton type="button">
+                  <img src="/assets/connect/group.svg" alt="" />
+                  {t("connectAction", { defaultValue: "Connect" })}
+                </ConnectButton> */}
+              </ConnectActions>
+            </HeaderContent>
+            <Avatar>
+              {avatar ? (
+                <img
+                  src={avatar}
+                  alt={fullName}
+                />
+              ) : (
+                <div className="fallback" style={{ background: fallbackGradient }}>
+                  {fallbackLetter}
+                </div>
               )}
-              {locationText && (
-                <MetaItem>
-                  <Icon name="compass" />
-                  <span>{locationText}</span>
-                </MetaItem>
-              )}
-              <MetaItem>
-                <Icon name="users" />
-                <span>
-                  {connectionCount} {t("connectionsLabel", { defaultValue: "Connections" })}
-                </span>
-              </MetaItem>
-            </MetaItems>
-            <ConnectActions>
-              <FavoriteButton> 
-                <ManageFavorite user={user} profileId={profile?.id} />
-              </FavoriteButton>
-              {/* <ConnectButton type="button">
-                {t("connectAction", { defaultValue: "Connect" })}
-              </ConnectButton> */}
-            </ConnectActions>
-          </MetaRow>
+            </Avatar>
+          </HeaderSection>
 
           {hasBioContent && (
             <>
@@ -332,11 +328,12 @@ const ProfileCard = styled.div`
   gap: 32px;
 `;
 
-const CardHeader = styled.div`
+const HeaderSection = styled.div`
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  align-items: flex-end;
   gap: 24px;
+  width: 100%;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -344,63 +341,60 @@ const CardHeader = styled.div`
   }
 `;
 
-const HeaderText = styled.div`
+const HeaderContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
-
-  h1 {
-    margin: 0;
-    font-family: "Lato", sans-serif;
-    font-size: clamp(36px, 6vw, 90px);
-    font-weight: 600;
-    color: #171717;
-  }
+  gap: 24px;
+  flex: 1;
+  min-width: 0;
 `;
 
 const NameRow = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 16px;
+  align-items: flex-end;
+  gap: 15px;
   
   .h1 {
-    font-size: 64px;
-    font-weight: 600;
+    font-family: "Nunito", sans-serif;
+    font-size: 46px;
+    font-weight: 700;
+    line-height: 52px;
     color: #171717;
-    line-height: 1;
+    margin: 0;
   }
 `;
 
 const PronounTag = styled.span`
-  position: relative;
-  top: -8px;
-  padding: 6px 14px;
-  padding-bottom: 4px;
-  border-radius: 999px;
+  padding: 6px 12px;
+  border-radius: 8px;
   background: #edf2ee;
-  color: #3b3b3b;
-  font-family: "Inter", sans-serif;
-  font-size: 13px;
+  color: #171717;
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
 `;
 
 const Tagline = styled.p`
   margin: 0;
-  font-family: "Lato", sans-serif;
-  font-size: 18px;
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
   line-height: 24px;
-  color: #3b3b3b;
+  color: #171717;
 `;
 
-const HeaderActions = styled.div`
+const ContactInfoRow = styled.div`
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 16px;
+  align-items: center;
 `;
 
 const Avatar = styled.div`
-  width: 124px;
-  height: 124px;
+  width: 116px;
+  height: 116px;
   border-radius: 50%;
   border: 4px solid #434343;
   overflow: hidden;
@@ -408,6 +402,7 @@ const Avatar = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   font-family: "Lato", sans-serif;
   font-size: 40px;
   color: #1d1b20;
@@ -436,63 +431,71 @@ const FavoriteButton = styled.div`
   justify-content: center;
 `;
 
-const MetaRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
-`;
-
-const MetaItems = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px 24px;
-  align-items: center;
-
-  a {
-    color: #28619e;
-    text-decoration: none;
-  }
-`;
-
 const MetaItem = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 10px;
   color: #171717;
-  font-family: "Inter", sans-serif;
-  font-size: 13px;
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
 
   i.icon {
-    color: #336f8a;
-    width: 16px;
-    height: 16px;
+    color: #171717;
     margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    flex-shrink: 0;
+  }
+
+  a, span {
+    display: inline-flex;
+    align-items: center;
+    line-height: 20px;
+  }
+
+  a {
+    color: #171717;
+    text-decoration: none;
   }
 `;
 
 const ConnectActions = styled.div`
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 8px;
 `;
 
 const ConnectButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   padding: 8px 24px;
   border-radius: 100px;
-  border: 1.5px solid #336f8a;
-  background: #ffffff;
-  color: #336f8a;
+  border: 2px solid #336F8A;
+  background: #336F8A;
+  color: white;
   font-family: "Nunito", sans-serif;
-  font-weight: 600;
+  font-weight: 800;
   font-size: 16px;
   line-height: 24px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+
+  img {
+    width: 22px;
+    height: 16px;
+    display: block;
+    flex-shrink: 0;
+    filter: brightness(0) invert(1);
+  }
 
   &:hover {
     background: #336f8a;
