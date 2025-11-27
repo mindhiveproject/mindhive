@@ -200,12 +200,12 @@ export default function ProfilePage({ query, user }) {
                     <span>{locationText}</span>
                   </MetaItem>
                 )}
-                <MetaItem>
+                {/* <MetaItem>
                   <Icon name="users" />
                   <span>
                     {connectionCount} {t("connectionsLabel", { defaultValue: "Connections" })}
                   </span>
-                </MetaItem>
+                </MetaItem> */}
               </ContactInfoRow>
               <ConnectActions>
                 <FavoriteButton> 
