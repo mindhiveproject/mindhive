@@ -29,17 +29,19 @@ async function findTeacherEmailsForStudent(
   studentEmail: string,
   context?: any
 ): Promise<string[]> {
-  console.log(`[Password Reset] Checking if ${studentEmail} is a student...`);
+  // Normalize email to lowercase
+  const normalizedEmail = studentEmail?.toLowerCase().trim();
+  console.log(`[Password Reset] Checking if ${normalizedEmail} is a student...`);
   
   if (!context || !context.query) {
-    console.log(`[Password Reset] WARNING: No context available for ${studentEmail}. Cannot check student status.`);
+    console.log(`[Password Reset] WARNING: No context available for ${normalizedEmail}. Cannot check student status.`);
     return [];
   }
 
   try {
     // Find the student profile using context.query (for reading data)
     const profile = await context.query.Profile.findOne({
-      where: { email: studentEmail },
+      where: { email: normalizedEmail },
       query: `
         id
         permissions {
@@ -137,7 +139,8 @@ const { withAuth } = createAuth({
   passwordResetLink: {
     async sendToken(args: any) {
       const { token, identity } = args;
-      const userEmail = identity;
+      // Normalize email to lowercase for consistency
+      const userEmail = identity?.toLowerCase().trim();
 
       console.log(`[Password Reset] ========================================`);
       console.log(`[Password Reset] Password reset requested for: ${userEmail}`);

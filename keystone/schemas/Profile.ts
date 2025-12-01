@@ -97,6 +97,15 @@ export const Profile = list({
         create: () => true,
         update: rules.canManageUsers,
       },
+      hooks: {
+        resolveInput: ({ resolvedData }) => {
+          // Always lowercase email addresses on create and update
+          if (resolvedData.email && typeof resolvedData.email === "string") {
+            return resolvedData.email.toLowerCase().trim();
+          }
+          return resolvedData.email;
+        },
+      },
     }),
     permissions: relationship({
       ref: "Permission.assignedTo",
