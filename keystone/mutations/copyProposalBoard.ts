@@ -29,7 +29,7 @@ async function copyProposalBoard(
   const template = await context.query.ProposalBoard.findOne({
     where: { id: id },
     query:
-      "id publicId slug title description settings resources { id } sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } assignments { id title content placeholder settings public isTemplate tags { id } } studies { id } tasks { id } } }",
+      "id publicId slug title description settings resources { id } templateForClasses { id } sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } assignments { id title content placeholder settings public isTemplate tags { id } } studies { id } tasks { id } } }",
   });
 
   // make a full copy
@@ -168,33 +168,49 @@ async function copyProposalBoard(
             "id"
           );
 
-          // Duplicate assignments (not associated to any class)
+          // Handle assignments based on whether this is a student copy or teacher copy
           if (templateCard.assignments?.length > 0) {
-            await Promise.all(
-              templateCard.assignments.map(async (a: any) => {
-                await context.db.Assignment.createOne(
-                  {
-                    data: {
-                      title: a.title,
-                      content: a.content,
-                      placeholder: a.placeholder,
-                      settings: a.settings,
-                      public: a.public,
-                      isTemplate: false,
-                      templateSource: { connect: { id: a.id } },
-                      // carry tags
-                      tags:
-                        a.tags?.length > 0
-                          ? { connect: a.tags.map((t: any) => ({ id: t.id })) }
-                          : undefined,
-                      // link to the new card
-                      proposalCards: { connect: [{ id: newCard.id }] },
-                    },
+            // Check if the template board is a class template (has templateForClasses set)
+            const isClassTemplate = template.templateForClasses && template.templateForClasses.length > 0;
+            
+            if (isClassTemplate) {
+              // Student copying from teacher's template: reuse the same assignment IDs
+              await context.db.ProposalCard.updateOne({
+                where: { id: newCard.id },
+                data: {
+                  assignments: {
+                    connect: templateCard.assignments.map((a: any) => ({ id: a.id })),
                   },
-                  "id"
-                );
-              })
-            );
+                },
+              });
+            } else {
+              // Teacher copying from platform template: create new assignments (not associated to any class)
+              await Promise.all(
+                templateCard.assignments.map(async (a: any) => {
+                  await context.db.Assignment.createOne(
+                    {
+                      data: {
+                        title: a.title,
+                        content: a.content,
+                        placeholder: a.placeholder,
+                        settings: a.settings,
+                        public: a.public,
+                        isTemplate: false,
+                        templateSource: { connect: { id: a.id } },
+                        // carry tags
+                        tags:
+                          a.tags?.length > 0
+                            ? { connect: a.tags.map((t: any) => ({ id: t.id })) }
+                            : undefined,
+                        // link to the new card
+                        proposalCards: { connect: [{ id: newCard.id }] },
+                      },
+                    },
+                    "id"
+                  );
+                })
+              );
+            }
           }
         })
       );
