@@ -24,10 +24,12 @@ export default function GoogleSignup({ role, classCode }) {
       variables: { token: e.tokenId, role: role, classCode: classCode },
     });
     const email = res?.data?.googleSignup?.email;
+    // Normalize email to lowercase
+    const normalizedEmail = email?.toLowerCase().trim();
     // log in user
     const login = await signin({
       variables: {
-        email: email,
+        email: normalizedEmail,
         password: e.tokenId,
       },
     });

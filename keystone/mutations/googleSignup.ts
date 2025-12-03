@@ -29,7 +29,7 @@ async function googleSignup(
     {
       data: {
         username: name,
-        email: email,
+        email: email?.toLowerCase().trim(),
         password: token,
         permissions: role ? { connect: { name: role?.toUpperCase() } } : null,
         studentIn:

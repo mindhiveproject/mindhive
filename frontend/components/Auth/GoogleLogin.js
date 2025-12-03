@@ -25,10 +25,12 @@ export default function LoginWithGoogle({}) {
       variables: { token: e.tokenId },
     });
     const email = res?.data?.googleLogin?.email;
+    // Normalize email to lowercase
+    const normalizedEmail = email?.toLowerCase().trim();
     // log in user
     const login = await signin({
       variables: {
-        email: email,
+        email: normalizedEmail,
         password: e.tokenId,
       },
     });

@@ -24,6 +24,89 @@ import { permissionsList } from "./schemas/fields";
 // see https://keystonejs.com/docs/apis/session for the session docs
 import { statelessSessions } from "@keystone-6/core/session";
 
+// Helper function to find teacher emails for a student
+async function findTeacherEmailsForStudent(
+  studentEmail: string,
+  context?: any
+): Promise<string[]> {
+  // Normalize email to lowercase
+  const normalizedEmail = studentEmail?.toLowerCase().trim();
+  console.log(`[Password Reset] Checking if ${normalizedEmail} is a student...`);
+  
+  if (!context || !context.query) {
+    console.log(`[Password Reset] WARNING: No context available for ${normalizedEmail}. Cannot check student status.`);
+    return [];
+  }
+
+  try {
+    // Find the student profile using context.query (for reading data)
+    const profile = await context.query.Profile.findOne({
+      where: { email: normalizedEmail },
+      query: `
+        id
+        permissions {
+          name
+        }
+        studentIn {
+          id
+          creator {
+            id
+            email
+          }
+        }
+      `,
+    });
+
+    // Check if user exists and has STUDENT permission
+    if (!profile) {
+      console.log(`[Password Reset] User ${studentEmail} not found in database.`);
+      return [];
+    }
+
+    console.log(`[Password Reset] Found user ${studentEmail} with ID: ${profile.id}`);
+    console.log(`[Password Reset] User permissions:`, profile.permissions?.map((p: { name: string }) => p.name) || []);
+
+    const isStudent = profile.permissions?.some(
+      (permission: { name: string }) => permission.name === "STUDENT"
+    );
+
+    if (!isStudent) {
+      console.log(`[Password Reset] User ${studentEmail} does NOT have STUDENT permission. Proceeding with normal reset.`);
+      return [];
+    }
+
+    console.log(`[Password Reset] User ${studentEmail} HAS STUDENT permission.`);
+
+    if (!profile.studentIn || profile.studentIn.length === 0) {
+      console.log(`[Password Reset] Student ${studentEmail} is not enrolled in any classes. Proceeding with normal reset.`);
+      return [];
+    }
+
+    console.log(`[Password Reset] Student ${studentEmail} is enrolled in ${profile.studentIn.length} class(es).`);
+
+    // Collect all unique teacher emails from the student's classes
+    const teacherEmails = new Set<string>();
+    for (const classItem of profile.studentIn) {
+      if (classItem.creator?.email) {
+        teacherEmails.add(classItem.creator.email);
+        console.log(`[Password Reset] Found teacher email: ${classItem.creator.email} from class ${classItem.id}`);
+      } else {
+        console.log(`[Password Reset] WARNING: Class ${classItem.id} has no creator email.`);
+      }
+    }
+
+    const teacherEmailsArray = Array.from(teacherEmails);
+    console.log(`[Password Reset] Total unique teacher emails found: ${teacherEmailsArray.length}`);
+    console.log(`[Password Reset] Teacher emails:`, teacherEmailsArray);
+
+    return teacherEmailsArray;
+  } catch (error) {
+    console.error(`[Password Reset] Error finding teacher emails for ${studentEmail}:`, error);
+    console.error(`[Password Reset] Error stack:`, error instanceof Error ? error.stack : 'No stack trace');
+    return [];
+  }
+}
+
 // for a stateless session, a SESSION_SECRET should always be provided
 //   especially in production (statelessSessions will throw if SESSION_SECRET is undefined)
 let sessionSecret = process.env.SESSION_SECRET;
@@ -54,8 +137,41 @@ const { withAuth } = createAuth({
     //   you shouldn't use this in production
   },
   passwordResetLink: {
-    async sendToken(args) {
-      await sendPasswordResetEmail(args.token, args.identity);
+    async sendToken(args: any) {
+      const { token, identity } = args;
+      // Normalize email to lowercase for consistency
+      const userEmail = identity?.toLowerCase().trim();
+
+      console.log(`[Password Reset] ========================================`);
+      console.log(`[Password Reset] Password reset requested for: ${userEmail}`);
+      
+      const context = (args as any).context;
+      console.log(`[Password Reset] Context available: ${!!context}`);
+      console.log(`[Password Reset] Context.query available: ${!!(context?.query)}`);
+      console.log(`[Password Reset] Context.db available: ${!!(context?.db)}`);
+
+      // Check if the user is a student and find their teachers
+      const teacherEmails = await findTeacherEmailsForStudent(
+        userEmail,
+        context
+      );
+
+      if (teacherEmails.length > 0) {
+        // User is a student, send password reset email to all their teachers
+        console.log(`[Password Reset] ✓ REDIRECTING: Student ${userEmail} -> Sending to ${teacherEmails.length} teacher(s)`);
+        for (const teacherEmail of teacherEmails) {
+          console.log(`[Password Reset] Sending password reset email to teacher: ${teacherEmail}`);
+          await sendPasswordResetEmail(token, teacherEmail);
+          console.log(`[Password Reset] ✓ Email sent to ${teacherEmail}`);
+        }
+        console.log(`[Password Reset] ========================================`);
+      } else {
+        // User is not a student or has no teachers, send email to the original email
+        console.log(`[Password Reset] → NORMAL FLOW: Sending password reset email to original email: ${userEmail}`);
+        await sendPasswordResetEmail(token, userEmail);
+        console.log(`[Password Reset] ✓ Email sent to ${userEmail}`);
+        console.log(`[Password Reset] ========================================`);
+      }
     },
   },
 });

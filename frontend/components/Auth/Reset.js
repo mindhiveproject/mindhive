@@ -38,7 +38,14 @@ export default function Reset({ query }) {
     if (inputs?.password?.length < 9) {
       return alert("The password is too short");
     }
-    const res = await reset();
+    // Normalize email to lowercase
+    const normalizedInputs = {
+      ...inputs,
+      email: inputs.email?.toLowerCase().trim(),
+    };
+    const res = await reset({
+      variables: normalizedInputs,
+    });
     if (!res?.data?.redeemProfilePasswordResetToken) {
       alert("The password was changed");
       resetForm();
