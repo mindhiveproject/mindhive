@@ -1,5 +1,6 @@
 import useForm from "../../../../../lib/useForm";
 import UpdateAvatarModal from "../../../../Account/AvatarEditor/AvatarModal";
+import IdentIcon from "../../../../Account/IdentIcon";
 import { Dropdown, Divider } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
@@ -59,12 +60,36 @@ export default function BasicInformation({ query, user }) {
       <h3>{t("basic.profilePhoto")}</h3>
       <div>
         {user?.image?.image?.publicUrlTransformed ? (
-          <img
-            src={user?.image?.image?.publicUrlTransformed}
-            alt={user?.name}
-          />
+          <div
+            style={{
+              borderRadius: "50%",
+              width: "128px",
+              height: "128px",
+              padding: "3px",
+              background:
+                "conic-gradient(from 180deg, #39B7D4 0%, #FDBA32 20%, #ED6B59 45%, #7C66C2 65%, #4183C4 85%, #5E8C9A 100%)",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <img
+              src={user?.image?.image?.publicUrlTransformed}
+              alt={user?.name}
+              style={{
+                borderRadius: "50%",
+                width: "120px",
+                height: "120px",
+                objectFit: "cover",
+                objectPosition: "center",
+                border: "none",
+              }}
+            />
+          </div>
         ) : (
-          <div>{/* <IdentIcon size="120" value={user?.name} /> */}</div>
+          <div>
+            <IdentIcon size="120" value={user?.name} />
+          </div>
         )}
         <UpdateAvatarModal user={user} />
       </div>
