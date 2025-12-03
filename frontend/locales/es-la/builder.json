@@ -31,8 +31,10 @@
 		"loadingMessage": "Obteniendo los últimos datos de la tarea...",
 		"unsavedChanges": "(Cambios no guardados)"
 	},
+	"availability": "",
 	"background": "Fondo",
 	"backgroundHelp": "Utilice este campo para proporcionar una breve introducción al tema de investigación. ¿Cuál es el problema en estudio y por qué es importante?",
+	"backgroundTab": "",
 	"basicTab": "Básico",
 	"blockDescription": "En un bloque se presenta información a los participantes.",
 	"board": {
@@ -272,7 +274,7 @@
 	"descriptionDiscoverHelp": "Esto es visible para todos los usuarios de la plataforma al elegir tareas o encuestas en el modo Descubrir.",
 	"develop": "Desarrollar",
 	"developA": "Desarrollar un {{desarrollar}}",
-	"developHeaderDescription": "Crea, edita y administra tus <strong>estudios, tareas y encuestas</strong> aquí.",
+	"developHeaderDescription": "Crea, edita y administra tus estudios, tareas y encuestas aquí.",
 	"developNew": "Desarrollar nuevos",
 	"duplicateEditBlock": "Duplicar y editar un bloque MindHive preexistente y sus parámetros.",
 	"duplicateEditSurvey": "Duplicar y editar una encuesta MindHive preexistente y sus parámetros.",
@@ -342,6 +344,8 @@
 		"newSection": "Nueva sección",
 		"sectionTitlePlaceholder": "Introduzca el título de la sección"
 	},
+	"interests": "",
+	"introductionVideo": "",
 	"link": "Enlace",
 	"linkClass": {
 		"doNotConnectClass": "❌ No conectar la clase"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "Aún no hay notas ingresadas. Haz clic derecho para agregar notas."
 	},
+	"noVideoPlaceholder": "",
 	"overview": {
 		"actions": "Comportamiento",
 		"copy": "Copiar",
@@ -653,6 +658,7 @@
 		"oldest": "El más antiguo",
 		"overviewIntro": "Ya sea que esté comenzando su estudio o reuniendo participantes, utilice esta página para brindar comentarios a sus colegas sobre sus propuestas y estudios finalizados.",
 		"participantOverOne": "{count, plural, uno {# participante} otros {# participantes}}",
+		"participantOverOnePlural": "{{count}} participantes ",
 		"participantUnder": "ningún participante",
 		"participate": "Participar",
 		"peerReviewTag": "Revisión por pares",
@@ -1073,6 +1079,7 @@
 		"placeholder": "Versiones de estudio",
 		"title": "Versión de estudio"
 	},
+	"videoNotSupported": "",
 	"viewer": {
 		"afterParticipation": "Lo que ven los participantes después de realizar la {{taskType}}",
 		"aggregateVariables": "Variables agregadas",

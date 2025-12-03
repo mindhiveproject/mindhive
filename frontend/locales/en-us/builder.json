@@ -31,8 +31,10 @@
 		"loadingMessage": "Fetching latest assignment data...",
 		"unsavedChanges": "(Unsaved changes)"
 	},
+	"availability": "Availability",
 	"background": "Background",
 	"backgroundHelp": "Use this field to provide some brief background on the topic of research. What is the problem under study and why is it important?",
+	"backgroundTab": "Background",
 	"basicTab": "Basic",
 	"blockDescription": "In a block, participants are presented with information.",
 	"board": {
@@ -272,7 +274,7 @@
 	"descriptionDiscoverHelp": "This is visible to all platform users when choosing tasks or surveys in the Discover mode.",
 	"develop": "Develop",
 	"developA": "Develop a {{develop}}",
-	"developHeaderDescription": "Create, edit, and manage your <strong>studies, tasks, and surveys</strong> here.",
+	"developHeaderDescription": "Create, edit, and manage your studies, tasks, and surveys here.",
 	"developNew": "Develop new",
 	"duplicateEditBlock": "Duplicate and edit a pre-existing MindHive block and its parameters.",
 	"duplicateEditSurvey": "Duplicate and edit a pre-existing MindHive survey and its parameters.",
@@ -342,6 +344,8 @@
 		"newSection": "New section",
 		"sectionTitlePlaceholder": "Enter section title"
 	},
+	"interests": "Interests",
+	"introductionVideo": "Introduction video",
 	"link": "Link",
 	"linkClass": {
 		"doNotConnectClass": "❌  Do not connect the class"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "No notes entered yet. Right-click to add notes."
 	},
+	"noVideoPlaceholder": "No introduction video available.",
 	"overview": {
 		"actions": "Actions",
 		"copy": "Copy",
@@ -652,8 +657,9 @@
 		"newest": "Newest",
 		"oldest": "Oldest",
 		"overviewIntro": "Whether you're starting your study or collecting participants, use this page to give feedback to your fellow peers on their proposals and finalized studies",
-		"participantOverOne": "{count, plural, one {# participant} other {# participants}}",
-		"participantUnder": "no participants",
+		"participantOverOne": "{{count}} participant",
+		"participantOverOnePlural": "{{count}} participants",
+		"participantUnder": "No participants yet",
 		"participate": "Participate",
 		"peerReviewTag": "Peer Review",
 		"projectReport": "Project report",
@@ -798,15 +804,15 @@
 		},
 		"surveys": {
 			"buildOwn": "Cannot find a tools to measure one of you're study construct? Build your own with the Survey builder and teacher's help:",
-			"description": "Want to <strong>measure participants' attitudes, experiences, or opinions</strong> through <strong>self-report</strong>? Choose from this bank of validated surveys",
+			"description": "Want to measure participants' attitudes, experiences, or opinions through self-report? Choose from this bank of validated surveys",
 			"title": "Surveys"
 		},
 		"tasks": {
-			"description": "Want to <strong>measure a construct or variable</strong> by having participants <strong>complete an activity</strong>? Choose from this bank of validated tasks",
+			"description": "Want to measure a construct or variable by having participants complete an activity? Choose from this bank of validated tasks",
 			"title": "Tasks"
 		},
 		"templates": {
-			"description": "Don't want to start from scratch? Select and edit a <strong>pre-made study design</strong> using one of the templates in this bank",
+			"description": "Don't want to start from scratch? Select and edit a pre-made study design using one of the templates in this bank",
 			"title": "Templates"
 		}
 	},
@@ -1073,6 +1079,7 @@
 		"placeholder": "Study versions",
 		"title": "Study version"
 	},
+	"videoNotSupported": "Video not supported",
 	"viewer": {
 		"afterParticipation": "What participants see <u>after</u> taking the {{taskType}}",
 		"aggregateVariables": "Aggregate Variables",

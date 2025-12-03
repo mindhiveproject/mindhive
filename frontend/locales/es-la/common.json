@@ -43,7 +43,7 @@
 			"parentEmail": "Dirección de correo electrónico de los padres",
 			"parentName": "Nombre del padre",
 			"skip": "Omitir el consentimiento",
-			"studyInfo": "Este estudio es parte del protocolo de investigación de <strong>{{organización}}</strong> <strong>{{título}}</strong>."
+			"studyInfo": "Este estudio es parte del protocolo de investigación {{organization}}  {{title}}."
 		},
 		"permissionsDescription": "Revisar y editar sus permisos de datos y ver su actividad",
 		"permissionsTitle": "Permisos de datos",
@@ -378,7 +378,7 @@
 		"updatePreferences": "Actualizar preferencias"
 	},
 	"userPath": {
-		"guestMessage": "Participas como invitado. Tu ID público legible es <strong>{{id}}</strong>",
+		"guestMessage": "Participas como invitado. Tu ID público legible es {{id}}",
 		"startNextTask": "Iniciar la siguiente tarea"
 	}
 }

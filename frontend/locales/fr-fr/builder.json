@@ -31,8 +31,10 @@
 		"loadingMessage": "Récupération des dernières données d'affectation...",
 		"unsavedChanges": "(Modifications non enregistrées)"
 	},
+	"availability": "",
 	"background": "Arrière-plan",
 	"backgroundHelp": "Utilisez ce champ pour fournir un bref aperçu du sujet de recherche. Quel est le problème étudié et pourquoi est-il important ?",
+	"backgroundTab": "",
 	"basicTab": "Basique",
 	"blockDescription": "Dans un bloc, des informations sont présentées aux participants.",
 	"board": {
@@ -272,7 +274,7 @@
 	"descriptionDiscoverHelp": "Ceci est visible par tous les utilisateurs de la plateforme lors du choix de tâches ou d'enquêtes dans le mode Découvrir.",
 	"develop": "Développer",
 	"developA": "Développer un {{développer}}",
-	"developHeaderDescription": "Créez, modifiez et gérez vos <strong>études, tâches et enquêtes</strong> ici.",
+	"developHeaderDescription": "Créez, modifiez et gérez vos études, tâches et enquêtes ici.",
 	"developNew": "Développer quelque chose de nouveau",
 	"duplicateEditBlock": "Dupliquez et modifiez un bloc MindHive préexistant et ses paramètres.",
 	"duplicateEditSurvey": "Dupliquez et modifiez une enquête MindHive préexistante et ses paramètres.",
@@ -342,6 +344,8 @@
 		"newSection": "Nouvelle section",
 		"sectionTitlePlaceholder": "Entrez le titre de la section"
 	},
+	"interests": "",
+	"introductionVideo": "",
 	"link": "Lien",
 	"linkClass": {
 		"doNotConnectClass": "❌ Ne connectez pas la classe"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "Aucune note n'a encore été saisie. Faites un clic droit pour ajouter des notes."
 	},
+	"noVideoPlaceholder": "",
 	"overview": {
 		"actions": "Actes",
 		"copy": "Copie",
@@ -653,6 +658,7 @@
 		"oldest": "Le plus ancien",
 		"overviewIntro": "Que vous commenciez votre étude ou que vous recrutiez des participants, utilisez cette page pour donner votre avis à vos pairs sur leurs propositions et leurs études finalisées.",
 		"participantOverOne": "{compter, pluriel, un {# participant} autre {# participants}}",
+		"participantOverOnePlural": "{{count}}  Participants ",
 		"participantUnder": "aucun participant",
 		"participate": "Participer",
 		"peerReviewTag": "Évaluation par les pairs",
@@ -1073,6 +1079,7 @@
 		"placeholder": "Versions d'étude",
 		"title": "Version d'étude"
 	},
+	"videoNotSupported": "",
 	"viewer": {
 		"afterParticipation": "Ce que les participants voient <u>après</u> avoir effectué le {{taskType}}",
 		"aggregateVariables": "Variables agrégées",

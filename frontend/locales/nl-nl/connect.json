@@ -2,6 +2,7 @@
 	"asyncAnsweringQuestions": "Vragen van studenten beantwoorden (op basis van jouw profiel).",
 	"asyncProvidingFeedback": "Feedback geven op studentenprojecten",
 	"availability": "Beschikbaarheid",
+	"availabilityFilter": "Beschikbaarheid",
 	"avatar": {
 		"error": "Upload een afbeelding",
 		"title": "Maak je avatar",
@@ -33,6 +34,7 @@
 			"title": "Onofficiële biografie"
 		}
 	},
+	"backgroundTab": "Achtergrond",
 	"basic": {
 		"description": "Vul de volgende velden in om uw profiel aan te maken en verbinding te maken met de MindHive-community.",
 		"email": "E-mail",
@@ -52,11 +54,15 @@
 		"tagline": "Slogan",
 		"title": "Basisgegevens"
 	},
+	"connectAction": "Aansluiten",
+	"connectionsLabel": "Verbindingen",
 	"connectSubtitle": "Zoek, ontdek en maak contact met de MindHive-community",
 	"connectWithPeople": "Maak contact met mensen",
 	"createProfile": "Profiel aanmaken",
+	"exploreConnect": "Ontdekken Verbinden",
 	"interests": {
 		"description": "Met welke onderwerpen zou je studenten willen ondersteunen? Selecteer een aantal onderwerpen en interessegebieden uit de onderstaande lijst om andere communityleden te laten weten waar je graag een bijdrage aan wilt leveren. Zo kunnen we je in contact brengen met studenten en medestudenten die jouw passies delen.",
+		"interests": "Interesses",
 		"title": "Waar kunt u helpen?"
 	},
 	"interestSelector": {
@@ -81,11 +87,16 @@
 		"videoNotSupported": "Uw browser ondersteunt de videotag niet."
 	},
 	"introductionVideo": "Introductievideo",
+	"locationFilter": "Plaats",
 	"myConnections": "Mijn connecties",
+	"myConnectionsSubtitle": "Doorzoek uw connecties om de perfecte medewerker, mentor of wetenschapper voor u te vinden.",
 	"navigation": {
 		"next": "Volgende",
 		"previous": "Vorig"
 	},
+	"noOfficialBio": "Geen officiële biografie",
+	"noUnofficialBio": "Geen onofficiële biografie",
+	"noVideoPlaceholder": "Geen video-plaatsaanduiding",
 	"officialBio": "Officiële biografie",
 	"passionNow": "Waar ben je momenteel gepassioneerd over?",
 	"preferences": {
@@ -149,17 +160,20 @@
 	},
 	"returnDashboard": "Terug naar dashboard",
 	"searchPlaceholder": "Zoeken op naam, onderwerp of interessegebied",
+	"skillsTab": "Vaardigheden en voorkeuren",
 	"steps": {
 		"aboutMe": "2. Over mij",
 		"complete": "4. Voltooien",
 		"interests": "3. Belangen",
 		"profileType": "1. Profieltype"
 	},
+	"studiesTab": "Onderzoeken",
 	"syncInPersonVisit": "Een lesbezoek afleggen om met programmastudenten over je werk te praten (persoonlijk).",
 	"syncZoomVisit": "Een lesbezoek afleggen om met programmastudenten over je werk te praten (via Zoom).",
 	"underConstruction": "In aanbouw 🚧",
 	"unofficialBio": "Onofficiële biografie",
 	"usersPerPage": "Aantal gebruikers per pagina",
+	"userTypeFilter": "Gebruikerstype",
 	"videoNotSupported": "Uw browser ondersteunt de videotag niet.",
 	"videoUploader": {
 		"dragAndDrop": "Sleep en zet het videobestand neer om te uploaden",

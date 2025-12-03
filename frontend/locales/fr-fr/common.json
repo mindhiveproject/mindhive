@@ -43,7 +43,7 @@
 			"parentEmail": "Adresse e-mail des parents",
 			"parentName": "Nom du parent",
 			"skip": "Ignorer le consentement",
-			"studyInfo": "Cette étude fait partie du protocole de recherche <strong>{{organization}}</strong> <strong>{{title}}</strong>."
+			"studyInfo": "Cette étude fait partie du protocole de recherche {{organization}}  {{title}}."
 		},
 		"permissionsDescription": "Consultez et modifiez vos autorisations de données et visualisez votre activité",
 		"permissionsTitle": "Autorisations de données",
@@ -378,7 +378,7 @@
 		"updatePreferences": "Mettre à jour les préférences"
 	},
 	"userPath": {
-		"guestMessage": "Vous participez en tant qu'invité. Votre identifiant public est <strong>{{id}}</strong>",
+		"guestMessage": "Vous participez en tant qu'invité. Votre identifiant public est {{id}}",
 		"startNextTask": "Démarrer la tâche suivante"
 	}
 }

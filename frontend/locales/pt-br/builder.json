@@ -31,8 +31,10 @@
 		"loadingMessage": "Buscando os últimos dados de atribuição...",
 		"unsavedChanges": "(Alterações não salvas)"
 	},
+	"availability": "",
 	"background": "Fundo",
 	"backgroundHelp": "Use este campo para fornecer um breve histórico sobre o tema da pesquisa. Qual é o problema em estudo e por que ele é importante?",
+	"backgroundTab": "",
 	"basicTab": "Básico",
 	"blockDescription": "Em um bloco, os participantes recebem informações.",
 	"board": {
@@ -272,7 +274,7 @@
 	"descriptionDiscoverHelp": "Isso fica visível para todos os usuários da plataforma ao escolher tarefas ou pesquisas no modo Descobrir.",
 	"develop": "Desenvolver",
 	"developA": "Desenvolver um {{desenvolver}}",
-	"developHeaderDescription": "Crie, edite e gerencie seus <strong>estudos, tarefas e pesquisas</strong> aqui.",
+	"developHeaderDescription": "Crie, edite e gerencie seus estudos, tarefas e pesquisas aqui.",
 	"developNew": "Desenvolver novos",
 	"duplicateEditBlock": "Duplique e edite um bloco MindHive pré-existente e seus parâmetros.",
 	"duplicateEditSurvey": "Duplique e edite uma pesquisa MindHive pré-existente e seus parâmetros.",
@@ -342,6 +344,8 @@
 		"newSection": "Nova seção",
 		"sectionTitlePlaceholder": "Digite o título da seção"
 	},
+	"interests": "",
+	"introductionVideo": "",
 	"link": "Link",
 	"linkClass": {
 		"doNotConnectClass": "❌ Não conecte a classe"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "Nenhuma nota inserida ainda. Clique com o botão direito para adicionar notas."
 	},
+	"noVideoPlaceholder": "",
 	"overview": {
 		"actions": "Ações",
 		"copy": "Cópia",
@@ -653,6 +658,7 @@
 		"oldest": "Mais antigo",
 		"overviewIntro": "Quer você esteja iniciando seu estudo ou coletando participantes, use esta página para dar feedback aos seus colegas sobre suas propostas e estudos finalizados.",
 		"participantOverOne": "{contagem, plural, um {# participante} outro {# participantes}}",
+		"participantOverOnePlural": "{{count}} Participantes ",
 		"participantUnder": "nenhum participante",
 		"participate": "Participar",
 		"peerReviewTag": "Revisão por Pares",
@@ -780,7 +786,7 @@
 	},
 	"selector": {
 		"basicBlocks": {
-			"description": "Deseja incluir <strong>instruções personalizadas</strong> para seus participantes ou <strong>incorporar um link e/ou vídeo</strong> no procedimento do seu estudo? Selecione e edite um bloco básico",
+			"description": "Deseja incluir instruções personalizadas para seus participantes ou incorporar um link e/ou vídeo no procedimento do seu estudo? Selecione e edite um bloco básico",
 			"title": "Blocos Básicos"
 		},
 		"filter": {
@@ -798,15 +804,15 @@
 		},
 		"surveys": {
 			"buildOwn": "Não consegue encontrar uma ferramenta para medir um dos seus constructos de estudo? Crie a sua própria com o Construtor de Pesquisas e a ajuda do professor:",
-			"description": "Quer <strong>mensurar as atitudes, experiências ou opiniões dos participantes</strong> por meio de <strong>autorrelato</strong>? Escolha entre este banco de pesquisas validadas.",
+			"description": "Quer mensurar as atitudes, experiências ou opiniões dos participantes por meio de autorrelato? Escolha entre este banco de pesquisas validadas.",
 			"title": "Pesquisas"
 		},
 		"tasks": {
-			"description": "Deseja <strong>mensurar um constructo ou variável</strong> fazendo com que os participantes <strong>concluam uma atividade</strong>? Escolha entre este banco de tarefas validadas",
+			"description": "Deseja mensurar um constructo ou variável fazendo com que os participantes concluam uma atividade? Escolha entre este banco de tarefas validadas",
 			"title": "Tarefas"
 		},
 		"templates": {
-			"description": "Não quer começar do zero? Selecione e edite um <strong>desenho de estudo pré-definido</strong> usando um dos modelos deste banco.",
+			"description": "Não quer começar do zero? Selecione e edite um desenho de estudo pré-definido usando um dos modelos deste banco.",
 			"title": "Modelos"
 		}
 	},
@@ -1073,6 +1079,7 @@
 		"placeholder": "Versões de estudo",
 		"title": "Versão de estudo"
 	},
+	"videoNotSupported": "",
 	"viewer": {
 		"afterParticipation": "O que os participantes veem <u>depois</u> de realizar o {{taskType}}",
 		"aggregateVariables": "Variáveis ​​Agregadas",

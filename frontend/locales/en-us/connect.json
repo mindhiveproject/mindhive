@@ -2,6 +2,7 @@
 	"asyncAnsweringQuestions": "Answering student questions (based on your profile).",
 	"asyncProvidingFeedback": "Providing feedback on student projects",
 	"availability": "Availability",
+	"availabilityFilter": "Availability",
 	"avatar": {
 		"error": "Please upload an image",
 		"title": "Create your avatar",
@@ -33,6 +34,7 @@
 			"title": "Unofficial Bio"
 		}
 	},
+	"backgroundTab": "Background",
 	"basic": {
 		"description": "Please complete the following items to create your profile and connect with the MindHive community.",
 		"email": "Email",
@@ -52,11 +54,15 @@
 		"tagline": "Tagline",
 		"title": "Basic Information"
 	},
+	"connectAction": "Connect",
+	"connectionsLabel": "Connections",
 	"connectSubtitle": "Search for, discover, and connect with the MindHive community",
 	"connectWithPeople": "Connect with people",
 	"createProfile": "Create Profile",
+	"exploreConnect": "Explore Connect",
 	"interests": {
 		"description": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions.",
+		"interests": "Interests",
 		"title": "Where can you help?"
 	},
 	"interestSelector": {
@@ -81,11 +87,16 @@
 		"videoNotSupported": "Your browser does not support the video tag."
 	},
 	"introductionVideo": "Introduction Video",
-	"myConnections": "My connections",
+	"locationFilter": "Location",
+	"myConnections": "My Connections",
+	"myConnectionsSubtitle": "Search through your connections to find the perfect collaborator, mentor, or scientist for you.",
 	"navigation": {
 		"next": "Next",
 		"previous": "Previous"
 	},
+	"noOfficialBio": "No official bio",
+	"noUnofficialBio": "No unofficial bio",
+	"noVideoPlaceholder": "No Video Placeholder",
 	"officialBio": "Official Bio",
 	"passionNow": "What are you passionate about right now?",
 	"preferences": {
@@ -149,17 +160,20 @@
 	},
 	"returnDashboard": "Return to Dashboard",
 	"searchPlaceholder": "Search by name, topic, or area of interest",
+	"skillsTab": "Skills and Preferences",
 	"steps": {
 		"aboutMe": "2. About Me",
 		"complete": "4. Complete",
 		"interests": "3. Interests",
 		"profileType": "1. Profile Type"
 	},
+	"studiesTab": "Studies",
 	"syncInPersonVisit": "Making an in-class visit to talk with program students about your work (in-person).",
 	"syncZoomVisit": "Making an in-class visit to talk with program students about your work (over Zoom).",
 	"underConstruction": "Under construction 🚧",
 	"unofficialBio": "Unofficial Bio",
 	"usersPerPage": "Number of users per page",
+	"userTypeFilter": "User Type",
 	"videoNotSupported": "Your browser does not support the video tag.",
 	"videoUploader": {
 		"dragAndDrop": "Drag and drop video file to upload",

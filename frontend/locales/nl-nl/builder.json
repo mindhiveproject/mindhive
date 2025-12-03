@@ -31,8 +31,10 @@
 		"loadingMessage": "Laatste toewijzingsgegevens ophalen...",
 		"unsavedChanges": "(Niet-opgeslagen wijzigingen)"
 	},
+	"availability": "",
 	"background": "Achtergrond",
 	"backgroundHelp": "Gebruik dit veld om een ​​korte achtergrondinformatie over het onderzoeksonderwerp te geven. Wat is het onderzochte probleem en waarom is het belangrijk?",
+	"backgroundTab": "",
 	"basicTab": "Basis",
 	"blockDescription": "In een blok krijgen de deelnemers informatie gepresenteerd.",
 	"board": {
@@ -272,7 +274,7 @@
 	"descriptionDiscoverHelp": "Dit is zichtbaar voor alle platformgebruikers wanneer ze taken of enquêtes kiezen in de Ontdekmodus.",
 	"develop": "Ontwikkelen",
 	"developA": "Ontwikkel een {{develop}}",
-	"developHeaderDescription": "Hier kunt u uw <strong>onderzoeken, taken en enquêtes</strong> maken, bewerken en beheren.",
+	"developHeaderDescription": "Hier kunt u uw onderzoeken, taken en enquêtes maken, bewerken en beheren.",
 	"developNew": "Ontwikkel nieuwe",
 	"duplicateEditBlock": "Dupliceer en bewerk een bestaand MindHive-blok en de bijbehorende parameters.",
 	"duplicateEditSurvey": "Dupliceer en bewerk een bestaande MindHive-enquête en de bijbehorende parameters.",
@@ -342,6 +344,8 @@
 		"newSection": "Nieuwe sectie",
 		"sectionTitlePlaceholder": "Voer sectietitel in"
 	},
+	"interests": "",
+	"introductionVideo": "",
 	"link": "Link",
 	"linkClass": {
 		"doNotConnectClass": "❌ Sluit de klasse niet aan"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "Er zijn nog geen notities ingevoerd. Klik met de rechtermuisknop om notities toe te voegen."
 	},
+	"noVideoPlaceholder": "",
 	"overview": {
 		"actions": "Acties",
 		"copy": "Kopiëren",
@@ -653,6 +658,7 @@
 		"oldest": "Oudste",
 		"overviewIntro": "Of u nu met uw onderzoek begint of deelnemers verzamelt, gebruik deze pagina om feedback te geven aan uw medestudenten op hun voorstellen en afgeronde onderzoeken.",
 		"participantOverOne": "{aantal, meervoud, één {# deelnemer} andere {# deelnemers}}",
+		"participantOverOnePlural": "{{count}} Deelnemers ",
 		"participantUnder": "geen deelnemers",
 		"participate": "Deelnemen",
 		"peerReviewTag": "Peer Review",
@@ -780,7 +786,7 @@
 	},
 	"selector": {
 		"basicBlocks": {
-			"description": "Wil je <strong>aangepaste instructies</strong> aan je deelnemers geven of <strong>een link en/of video</strong> in je studieprocedure insluiten? Selecteer en bewerk een basisblok.",
+			"description": "Wil je aangepaste instructies aan je deelnemers geven of een link en/of video in je studieprocedure insluiten? Selecteer en bewerk een basisblok.",
 			"title": "Basisblokken"
 		},
 		"filter": {
@@ -806,7 +812,7 @@
 			"title": "Taken"
 		},
 		"templates": {
-			"description": "Wil je niet helemaal opnieuw beginnen? Selecteer en bewerk een <strong>vooraf gemaakt onderzoeksontwerp</strong> met behulp van een van de sjablonen in deze database.",
+			"description": "Wil je niet helemaal opnieuw beginnen? Selecteer en bewerk een vooraf gemaakt onderzoeksontwerp met behulp van een van de sjablonen in deze database.",
 			"title": "Sjablonen"
 		}
 	},
@@ -1073,6 +1079,7 @@
 		"placeholder": "Studieversies",
 		"title": "Studieversie"
 	},
+	"videoNotSupported": "",
 	"viewer": {
 		"afterParticipation": "Wat deelnemers zien <u>na</u> het afleggen van de {{taskType}}",
 		"aggregateVariables": "Geaggregeerde variabelen",

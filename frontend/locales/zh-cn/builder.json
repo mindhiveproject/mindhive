@@ -31,8 +31,10 @@
 		"loadingMessage": "正在获取最新的作业数据...",
 		"unsavedChanges": "（未保存的更改）"
 	},
+	"availability": "",
 	"background": "背景",
 	"backgroundHelp": "使用此字段提供研究主题的简要背景信息。研究的问题是什么？为什么它很重要？",
+	"backgroundTab": "",
 	"basicTab": "基本的",
 	"blockDescription": "在一个区块中，向参与者呈现信息。",
 	"board": {
@@ -272,7 +274,7 @@
 	"descriptionDiscoverHelp": "在发现模式下选择任务或调查时，所有平台用户都可以看到这一点。",
 	"develop": "发展",
 	"developA": "开发一个 {{develop}}",
-	"developHeaderDescription": "在此创建、编辑和管理您的<strong>研究、任务和调查</strong>。",
+	"developHeaderDescription": "在此创建、编辑和管理您的研究、任务和调查。",
 	"developNew": "开发新的",
 	"duplicateEditBlock": "复制并编辑预先存在的 MindHive 块及其参数。",
 	"duplicateEditSurvey": "复制并编辑现有的 MindHive 调查及其参数。",
@@ -342,6 +344,8 @@
 		"newSection": "新部分",
 		"sectionTitlePlaceholder": "输入章节标题"
 	},
+	"interests": "",
+	"introductionVideo": "",
 	"link": "关联",
 	"linkClass": {
 		"doNotConnectClass": "❌ 不要连接类"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "尚未输入任何注释。右键单击即可添加注释。"
 	},
+	"noVideoPlaceholder": "",
 	"overview": {
 		"actions": "行动",
 		"copy": "复制",
@@ -653,6 +658,7 @@
 		"oldest": "最老的",
 		"overviewIntro": "无论您是开始研究还是收集参与者，都可以使用此页面向您的同行提供有关其提案和最终研究的反馈",
 		"participantOverOne": "{count，复数，一个 {# 位参与者} 其他 {# 位参与者}}",
+		"participantOverOnePlural": "{{count}} 名参与者",
 		"participantUnder": "没有参与者",
 		"participate": "参加",
 		"peerReviewTag": "同行评审",
@@ -780,7 +786,7 @@
 	},
 	"selector": {
 		"basicBlocks": {
-			"description": "想要为参与者添加<strong>自定义说明</strong>或在研究过程中<strong>嵌入链接和/或视频</strong>吗？请选择并编辑基本区块",
+			"description": "想要为参与者添加自定义说明或在研究过程中嵌入链接和/或视频吗？请选择并编辑基本区块",
 			"title": "基本块"
 		},
 		"filter": {
@@ -798,15 +804,15 @@
 		},
 		"surveys": {
 			"buildOwn": "找不到工具来衡量你的学习内容？借助调查问卷构建器，在老师的帮助下，构建你自己的调查问卷：",
-			"description": "想要通过<strong>自我报告</strong>来<strong>衡量参与者的态度、经历或观点</strong>吗？从这个经过验证的调查库中选择吧！",
+			"description": "想要通过自我报告来衡量参与者的态度、经历或观点吗？从这个经过验证的调查库中选择吧！",
 			"title": "调查"
 		},
 		"tasks": {
-			"description": "想要通过让参与者<strong>完成一项活动</strong>来<strong>测量某个概念或变量</strong>吗？请从这套经过验证的任务库中选择",
+			"description": "想要通过让参与者完成一项活动来测量某个概念或变量吗？请从这套经过验证的任务库中选择",
 			"title": "任务"
 		},
 		"templates": {
-			"description": "不想从头开始？选择并编辑<strong>预制研究设计</strong>，使用本模板库中的模板之一",
+			"description": "不想从头开始？选择并编辑预制研究设计，使用本模板库中的模板之一",
 			"title": "模板"
 		}
 	},
@@ -1073,6 +1079,7 @@
 		"placeholder": "学习版本",
 		"title": "学习版"
 	},
+	"videoNotSupported": "",
 	"viewer": {
 		"afterParticipation": "参与者在完成 {{taskType}}<u>之后</u>会看到什么",
 		"aggregateVariables": "聚合变量",

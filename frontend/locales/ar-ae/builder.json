@@ -31,8 +31,10 @@
 		"loadingMessage": "جاري جلب أحدث بيانات المهمة...",
 		"unsavedChanges": "(التغييرات غير المحفوظة)"
 	},
+	"availability": "",
 	"background": "خلفية",
 	"backgroundHelp": "استخدم هذا الحقل لتقديم نبذة مختصرة عن موضوع البحث. ما هي المشكلة قيد الدراسة، ولماذا تُعد مهمة؟",
+	"backgroundTab": "",
 	"basicTab": "أساسي",
 	"blockDescription": "في كتلة، يتم تقديم المعلومات للمشاركين.",
 	"board": {
@@ -272,7 +274,7 @@
 	"descriptionDiscoverHelp": "يصبح هذا مرئيًا لجميع مستخدمي المنصة عند اختيار المهام أو الاستطلاعات في وضع الاكتشاف.",
 	"develop": "يطور",
 	"developA": "تطوير {{تطوير}}",
-	"developHeaderDescription": "قم بإنشاء وتحرير وإدارة <strong>دراساتك ومهامك واستطلاعاتك</strong> هنا.",
+	"developHeaderDescription": "قم بإنشاء وتحرير وإدارة دراساتك ومهامك واستطلاعاتك هنا.",
 	"developNew": "تطوير جديد",
 	"duplicateEditBlock": "قم بتكرار وتحرير كتلة MindHive الموجودة مسبقًا ومعلماتها.",
 	"duplicateEditSurvey": "قم بتكرار وتحرير استطلاع MindHive الموجود مسبقًا ومعامِلاته.",
@@ -342,6 +344,8 @@
 		"newSection": "قسم جديد",
 		"sectionTitlePlaceholder": "أدخل عنوان القسم"
 	},
+	"interests": "",
+	"introductionVideo": "",
 	"link": "وصلة",
 	"linkClass": {
 		"doNotConnectClass": "❌لا تربط الفصل"
@@ -433,6 +437,7 @@
 	"notes": {
 		"noNotes": "لم يتم إدخال أي ملاحظات بعد. انقر بزر الماوس الأيمن لإضافة ملاحظات."
 	},
+	"noVideoPlaceholder": "",
 	"overview": {
 		"actions": "الإجراءات",
 		"copy": "ينسخ",
@@ -653,6 +658,7 @@
 		"oldest": "الأقدم",
 		"overviewIntro": "سواء كنت تبدأ دراستك أو تجمع المشاركين، استخدم هذه الصفحة لتقديم تعليقات لزملائك حول مقترحاتهم ودراساتهم النهائية",
 		"participantOverOne": "{العدد، الجمع، واحد {# مشارك} آخر {# مشارك}}",
+		"participantOverOnePlural": "{{count}} مشاركًا",
 		"participantUnder": "لا يوجد مشاركين",
 		"participate": "يشارك",
 		"peerReviewTag": "مراجعة الأقران",
@@ -1073,6 +1079,7 @@
 		"placeholder": "إصدارات الدراسة",
 		"title": "نسخة الدراسة"
 	},
+	"videoNotSupported": "",
 	"viewer": {
 		"afterParticipation": "ما يراه المشاركون بعد إجراء {{taskType}}",
 		"aggregateVariables": "المتغيرات المجمعة",

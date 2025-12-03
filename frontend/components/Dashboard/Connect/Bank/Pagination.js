@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { StyledPagination } from "../../../styles/StyledPagination";
 
-import { PAGINATION_USERS_QUERY } from "../../../Queries/User";
+import { PAGINATION_CONNECT_USERS_QUERY } from "../../../Queries/User";
 
 import { Dropdown } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
@@ -12,14 +12,19 @@ export default function PaginationUsers({
   perPage,
   search,
   goToPage,
+  totalCount,
 }) {
   const { t } = useTranslation("common");
-  const { data, loading, error } = useQuery(PAGINATION_USERS_QUERY, {
+  
+  // Use provided totalCount if available, otherwise query for it
+  const { data, loading, error } = useQuery(PAGINATION_CONNECT_USERS_QUERY, {
     variables: {
       search: search,
     },
+    skip: totalCount !== undefined, // Skip query if totalCount is provided
   });
-  const countUsers = data?.profilesCount || [];
+  
+  const countUsers = totalCount !== undefined ? totalCount : (data?.profilesCount || 0);
   const pageCount = Math.ceil(countUsers / perPage);
 
   return (

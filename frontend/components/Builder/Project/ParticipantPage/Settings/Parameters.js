@@ -8,19 +8,6 @@ export default function Parameters({
   handleMultipleUpdate,
 }) {
   const { t } = useTranslation("builder");
-  // const settings = study.settings || {
-  //   forbidRetake: true,
-  //   hideParticipateButton: false,
-  //   showEmailNotificationPropmt: false,
-  //   askStudentsNYC: false,
-  //   zipCode: false,
-  //   guestParticipation: true,
-  //   consentObtained: false,
-  //   proceedToFirstTask: true,
-  //   useExternalDevices: false,
-  //   sonaId: false,
-  //   minorsBlocked: false,
-  // };
 
   const settings = study.settings || {
     forbidRetake: true,
@@ -28,7 +15,7 @@ export default function Parameters({
     showEmailNotificationPropmt: false,
     askStudentsNYC: false,
     zipCode: false,
-    guestParticipation: false,
+    guestParticipation: true,
     consentObtained: false,
     proceedToFirstTask: false,
     useExternalDevices: false,
