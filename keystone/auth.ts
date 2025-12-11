@@ -157,12 +157,12 @@ const { withAuth } = createAuth({
       );
 
       if (teacherEmails.length > 0) {
-        // User is a student, send password reset email to all their teachers
-        console.log(`[Password Reset] ✓ REDIRECTING: Student ${userEmail} -> Sending to ${teacherEmails.length} teacher(s)`);
+        // User is a student, send password reset email to all their teachers with student CC'd
+        console.log(`[Password Reset] ✓ REDIRECTING: Student ${userEmail} -> Sending to ${teacherEmails.length} teacher(s) with student CC'd`);
         for (const teacherEmail of teacherEmails) {
-          console.log(`[Password Reset] Sending password reset email to teacher: ${teacherEmail}`);
-          await sendPasswordResetEmail(token, teacherEmail);
-          console.log(`[Password Reset] ✓ Email sent to ${teacherEmail}`);
+          console.log(`[Password Reset] Sending password reset email to teacher: ${teacherEmail} (CC: ${userEmail})`);
+          await sendPasswordResetEmail(token, teacherEmail, userEmail);
+          console.log(`[Password Reset] ✓ Email sent to ${teacherEmail} with ${userEmail} CC'd`);
         }
         console.log(`[Password Reset] ========================================`);
       } else {
