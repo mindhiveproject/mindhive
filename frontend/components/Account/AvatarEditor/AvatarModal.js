@@ -68,6 +68,7 @@ export default function UpdateAvatarModal({ user }) {
                 onClose={(avatar) => updateAvatar(avatar)}
                 uploadTitle={t("avatar.upload")}
                 shortcut
+                isLoading={imageLoading}
               />
             </div>
           ) : (

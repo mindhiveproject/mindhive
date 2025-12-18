@@ -444,11 +444,9 @@ export const GET_CONNECT_USERS = gql`
         AND: [
           { isPublic: { equals: true } }
           {
-            NOT: {
-              permissions: {
-                some: {
-                  name: { equals: "STUDENT" }
-                }
+            permissions: {
+              some: {
+                name: { in: ["ADMIN", "TEACHER", "SCIENTIST", "MENTOR"] }
               }
             }
           }

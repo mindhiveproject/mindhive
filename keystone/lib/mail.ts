@@ -18,16 +18,13 @@ function makeEmail(text: string): string {
     `;
 }
 
-interface MailResponse {
-  message: string;
-}
-
 export async function sendPasswordResetEmail(
   resetToken: string,
-  to: string
+  to: string,
+  cc?: string
 ): Promise<void> {
   // email user a token
-  const info = (await client.sendEmailWithTemplate({
+  const emailOptions: any = {
     From: "info@mindhive.science",
     To: to,
     TemplateAlias: "password-reset",
@@ -38,7 +35,14 @@ export async function sendPasswordResetEmail(
       company_name: "MindHive",
       company_addres: "New York",
     },
-  })) as MailResponse;
+  };
+  
+  // Add CC if provided
+  if (cc) {
+    emailOptions.Cc = cc;
+  }
+  
+  await client.sendEmailWithTemplate(emailOptions);
 }
 
 export async function sendNotificationEmail(
@@ -47,7 +51,7 @@ export async function sendNotificationEmail(
   message: string,
   link: string
 ): Promise<void> {
-  const info = (await client.sendEmailWithTemplate({
+  await client.sendEmailWithTemplate({
     From: "info@mindhive.science",
     To: to,
     TemplateAlias: "new-update",
@@ -60,5 +64,5 @@ export async function sendNotificationEmail(
       company_name: "MindHive",
       company_addres: "New York",
     },
-  })) as MailResponse;
+  });
 }
