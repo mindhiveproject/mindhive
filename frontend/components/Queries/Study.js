@@ -347,6 +347,7 @@ export const GET_STUDY_RESULTS = gql`
         id
         title
       }
+      versionHistory
     }
   }
 `;

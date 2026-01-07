@@ -270,6 +270,7 @@ export const GET_STUDY_PARTICIPANTS = gql`
         isIncluded
         token
         studyStatus
+        studyVersion
         study {
           id
         }
@@ -293,6 +294,7 @@ export const GET_STUDY_GUESTS = gql`
         isIncluded
         token
         studyStatus
+        studyVersion
         study {
           id
         }
@@ -494,15 +496,7 @@ export const PAGINATION_CONNECT_USERS_QUERY = gql`
       where: {
         AND: [
           { isPublic: { equals: true } }
-          {
-            NOT: {
-              permissions: {
-                some: {
-                  name: { equals: "STUDENT" }
-                }
-              }
-            }
-          }
+          { NOT: { permissions: { some: { name: { equals: "STUDENT" } } } } }
         ]
         OR: [
           { username: { contains: $search } }

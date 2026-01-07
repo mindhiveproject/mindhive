@@ -16,11 +16,13 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
   const aggregateVariables =
     (settings?.aggregateVariables &&
       JSON.parse(settings?.aggregateVariables)) ||
-    [];  
+    [];
 
   // parameters not from the survey builder
   const parameters =
-    task?.parameters?.filter((p) => p?.type !== "survey") || [];
+    task?.parameters?.filter((p) => p?.type !== "survey") ||
+    task?.template?.parameters ||
+    [];
 
   // parameters from the survey builder
   const surveyItems =
@@ -89,9 +91,20 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
           {parameters.length > 0 && (
             <div>
               <h2>{t("viewer.parameters", "Parameters")}</h2>
-              <p>{t("viewer.tweakableFeatures", { taskType }, "The following features of this {{taskType}} can be tweaked:")}</p>
+              <p>
+                {t(
+                  "viewer.tweakableFeatures",
+                  { taskType },
+                  "The following features of this {{taskType}} can be tweaked:"
+                )}
+              </p>
               <p style={{ fontSize: "14px" }}>
-                * {t("viewer.defaultValues", { taskType }, "Default values are shown (can clone {{taskType}} and modify these)")}
+                *{" "}
+                {t(
+                  "viewer.defaultValues",
+                  { taskType },
+                  "Default values are shown (can clone {{taskType}} and modify these)"
+                )}
               </p>
               <div className="symbolBlock">
                 {parameters.map((parameter, num) => (
@@ -117,9 +130,20 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
           {surveyItems.length > 0 && (
             <div>
               <h2>{t("viewer.surveyParameters", "Survey parameters")}</h2>
-              <p>{t("viewer.tweakableFeatures", { taskType }, "The following features of this {{taskType}} can be tweaked:")}</p>
+              <p>
+                {t(
+                  "viewer.tweakableFeatures",
+                  { taskType },
+                  "The following features of this {{taskType}} can be tweaked:"
+                )}
+              </p>
               <p style={{ fontSize: "14px" }}>
-                * {t("viewer.defaultValues", { taskType }, "Default values are shown (can clone {{taskType}} and modify these)")}
+                *{" "}
+                {t(
+                  "viewer.defaultValues",
+                  { taskType },
+                  "Default values are shown (can clone {{taskType}} and modify these)"
+                )}
               </p>
               <div className="symbolBlock">
                 {surveyItems.map((item, num) => (
@@ -131,11 +155,19 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                       />
                       <span style={{ fontWeight: "600" }}>
                         {item?.type === "text" && t("viewer.text", "Text")}
-                        {item?.type === "vas" && t("viewer.visualAnalogueScale", "Visual analogue scale")}
-                        {item?.type === "likert" && t("viewer.likertScale", "Likert scale")}
-                        {item?.type === "freeinput" && t("viewer.freeTextInput", "Free text input")}
-                        {item?.type === "select" && t("viewer.selectOne", "Select one")}
-                        {item?.type === "checkbox" && t("viewer.selectMany", "Select many")}
+                        {item?.type === "vas" &&
+                          t(
+                            "viewer.visualAnalogueScale",
+                            "Visual analogue scale"
+                          )}
+                        {item?.type === "likert" &&
+                          t("viewer.likertScale", "Likert scale")}
+                        {item?.type === "freeinput" &&
+                          t("viewer.freeTextInput", "Free text input")}
+                        {item?.type === "select" &&
+                          t("viewer.selectOne", "Select one")}
+                        {item?.type === "checkbox" &&
+                          t("viewer.selectMany", "Select many")}
                       </span>
                     </p>
                     <p style={{ fontWeight: "lighter" }}>
@@ -153,7 +185,15 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
           {settings?.descriptionBefore && (
             <div>
               <h2>
-                <span dangerouslySetInnerHTML={{ __html: t("viewer.beforeParticipation", { taskType }, "What participants see <u>before</u> taking the {{taskType}}") }} />
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: t(
+                      "viewer.beforeParticipation",
+                      { taskType },
+                      "What participants see <u>before</u> taking the {{taskType}}"
+                    ),
+                  }}
+                />
               </h2>
               <p className="symbolBlock">{settings?.descriptionBefore}</p>
             </div>
@@ -162,7 +202,15 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
           {settings?.descriptionAfter && (
             <div>
               <h2>
-                <span dangerouslySetInnerHTML={{ __html: t("viewer.afterParticipation", { taskType }, "What participants see <u>after</u> taking the {{taskType}}") }} />
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: t(
+                      "viewer.afterParticipation",
+                      { taskType },
+                      "What participants see <u>after</u> taking the {{taskType}}"
+                    ),
+                  }}
+                />
               </h2>
               <p className="symbolBlock">{settings?.descriptionAfter}</p>
             </div>
@@ -217,23 +265,26 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
                   }
 
                   return parsed.map((variable, idx) => (
-                    <li key={variable.varName || idx} style={{ marginBottom: "0.5rem" }}>
+                    <li
+                      key={variable.varName || idx}
+                      style={{ marginBottom: "0.5rem" }}
+                    >
                       {ReactHtmlParser(variable.varName || "")}{" "}
                       {variable.varDesc && (
                         <Popup
                           content={ReactHtmlParser(variable.varDesc)}
                           trigger={
                             <img
-                            src="/assets/icons/info.svg" // Next.js serves public/ as root
-                            alt="info"
-                            style={{
-                              width: "16px",
-                              height: "16px",
-                              marginLeft: "4px",
-                              cursor: "pointer",
-                              verticalAlign: "middle"
-                            }}
-                          />
+                              src="/assets/icons/info.svg" // Next.js serves public/ as root
+                              alt="info"
+                              style={{
+                                width: "16px",
+                                height: "16px",
+                                marginLeft: "4px",
+                                cursor: "pointer",
+                                verticalAlign: "middle",
+                              }}
+                            />
                           }
                         />
                       )}

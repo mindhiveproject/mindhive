@@ -146,11 +146,18 @@ export default function Builder({
         <div className="lockedMessageOverlay">
           <h3>{t("builder.studyBuilderLocked", "Study Builder Locked")}</h3>
           <p>
-            {t("builder.lockedMessage", "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study.")}
+            {t(
+              "builder.lockedMessage",
+              "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study."
+            )}
           </p>
         </div>
       )}
-      <div className="board" id="board">
+      <div
+        className="board"
+        id="board"
+        // onContextMenu={(e) => e.preventDefault()}
+      >
         <Widget
           engine={engine}
           openComponentModal={openComponentModal}

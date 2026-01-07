@@ -5,6 +5,8 @@ export const CREATE_DATA_COMPONENT = gql`
   mutation CREATE_DATA_COMPONENT($input: VizSectionCreateInput!) {
     createVizSection(data: $input) {
       id
+      type
+      content
     }
   }
 `;

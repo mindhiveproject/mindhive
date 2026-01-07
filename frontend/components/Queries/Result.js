@@ -22,6 +22,7 @@ export const GET_PARTICIPANT_RESULTS = gql`
         title
       }
       studyStatus
+      studyVersion
       dataPolicy
       info
       isCompleted
