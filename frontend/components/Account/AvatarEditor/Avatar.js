@@ -110,7 +110,7 @@ class AvatarEditor extends React.Component {
     }
   }
 
-  // Process the cropped image to ensure max 300px in widest dimension
+  // Process the cropped image to ensure max 300px in widest dimension and ensure it's a true square
   processCroppedImage(croppedDataUrl) {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -123,20 +123,38 @@ class AvatarEditor extends React.Component {
         const widestDimension = Math.max(width, height);
         const MAX_DIMENSION = 300;
 
-        // Calculate new dimensions maintaining aspect ratio
-        if (widestDimension > MAX_DIMENSION) {
-          const scale = MAX_DIMENSION / widestDimension;
-          width = Math.round(width * scale);
-          height = Math.round(height * scale);
-        }
+        // Ensure square dimensions - use the larger dimension to create a square
+        const size = Math.min(widestDimension, MAX_DIMENSION);
+        width = size;
+        height = size;
 
         canvas.width = width;
         canvas.height = height;
 
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Fill with white background to ensure no transparency
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, width, height);
+        
+        // Calculate position to center the image if needed
+        let drawX = 0;
+        let drawY = 0;
+        let drawWidth = width;
+        let drawHeight = height;
+        
+        // If the source image isn't square, center it
+        if (img.width !== img.height) {
+          const scale = Math.min(width / img.width, height / img.height);
+          drawWidth = img.width * scale;
+          drawHeight = img.height * scale;
+          drawX = (width - drawWidth) / 2;
+          drawY = (height - drawHeight) / 2;
+        }
+        
+        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
 
-        // Convert to base64
+        // Convert to base64 as JPEG (no transparency)
         const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
         resolve(dataUrl);
       };
