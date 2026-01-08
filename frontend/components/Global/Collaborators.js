@@ -8,19 +8,38 @@ export default function Collaborators({
   userClasses,
   collaborators,
   handleChange,
+  selectedClass,
+  isStudent,
 }) {
   const { t } = useTranslation('common');
+  
+  // Build the OR conditions for the query
+  const orConditions = [];
+  
+  // Only show admins if user doesn't have STUDENT permission
+  if (!isStudent) {
+    orConditions.push({ permissions: { some: { name: { equals: "ADMIN" } } } });
+  }
+  
+  // If a class is selected, restrict to that class only
+  // Otherwise, show users from all userClasses (cross-class visibility)
+  const classesToFilter = selectedClass?.id ? [selectedClass.id] : userClasses;
+  
+  if (classesToFilter && classesToFilter.length > 0) {
+    orConditions.push(
+      { studentIn: { some: { id: { in: classesToFilter } } } },
+      { teacherIn: { some: { id: { in: classesToFilter } } } },
+      { mentorIn: { some: { id: { in: classesToFilter } } } }
+    );
+  }
+  
   const { data, loading, error } = useQuery(GET_USERNAMES_WHERE, {
     variables: {
       input: {
-        OR: [
-          { permissions: { some: { name: { equals: "ADMIN" } } } }, // get all admins
-          { studentIn: { some: { id: { in: userClasses } } } },
-          { teacherIn: { some: { id: { in: userClasses } } } },
-          { mentorIn: { some: { id: { in: userClasses } } } },
-        ],
+        OR: orConditions,
       },
     },
+    skip: orConditions.length === 0,
   });
   const profiles = data?.profiles || [];
 

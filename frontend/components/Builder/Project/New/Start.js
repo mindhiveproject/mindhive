@@ -188,6 +188,8 @@ export default function StartProject({ query, user }) {
                     (inputs && inputs?.collaborators?.map((c) => c?.id)) || []
                   }
                   handleChange={handleChange}
+                  selectedClass={inputs?.class}
+                  isStudent={isStudent}
                 />
               </div>
 
