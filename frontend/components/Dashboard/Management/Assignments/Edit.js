@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 import AssignmentForm from "./Form";
 
-import { GET_TEMPLATE_ASSIGNMENT } from "../../../Queries/Assignment";
+import { GET_TEMPLATE_ASSIGNMENT, GET_TEMPLATE_ASSIGNMENTS } from "../../../Queries/Assignment";
 import { EDIT_ASSIGNMENT } from "../../../Mutations/Assignment";
 
 import useForm from "../../../../lib/useForm";
@@ -28,7 +28,10 @@ export default function EditAssignment({ user, id }) {
       id: id,
       input: { ...inputs } 
     },
-    refetchQueries: [{ query: GET_TEMPLATE_ASSIGNMENT, variables: { id } }],
+    refetchQueries: [
+      { query: GET_TEMPLATE_ASSIGNMENT, variables: { id } },
+      { query: GET_TEMPLATE_ASSIGNMENTS },
+    ],
   });
 
   async function handleSave(e) {

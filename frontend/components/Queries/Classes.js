@@ -106,6 +106,8 @@ export const GET_STUDENTS_DATA = gql`
       lastName
       publicId
       authorOfHomework {
+        id
+        code
         assignment {
           id
         }

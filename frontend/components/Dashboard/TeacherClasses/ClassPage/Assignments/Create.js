@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import styled from "styled-components";
@@ -7,8 +7,8 @@ import TipTapEditor from "../../../../TipTap/Main";
 import useTranslation from "next-translate/useTranslation";
 import useForm from "../../../../../lib/useForm";
 
-import { GET_MY_CLASS_ASSIGNMENTS, GET_ASSIGNMENT } from "../../../../Queries/Assignment";
-import { EDIT_ASSIGNMENT } from "../../../../Mutations/Assignment";
+import { GET_MY_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
+import { CREATE_ASSIGNMENT } from "../../../../Mutations/Assignment";
 
 // Styled button matching Figma design (Primary Action - Teal)
 const PrimaryButton = styled.button`
@@ -125,50 +125,22 @@ const ButtonContainer = styled.div`
   margin-top: 32px;
 `;
 
-export default function EditAssignment({ code, myclass, user }) {
+export default function CreateAssignment({ myclass, user }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
 
-  const { data, loading: queryLoading } = useQuery(GET_ASSIGNMENT, {
-    variables: { code },
-    skip: !code,
-  });
-  const assignment = data?.assignment;
-
-  // Ensure classes is always an array and includes the current class
-  const getInitialClasses = () => {
-    if (!assignment?.classes || !Array.isArray(assignment.classes)) {
-      return [{ id: myclass?.id }];
-    }
-    // Check if current class is already in the list
-    const hasCurrentClass = assignment.classes.some(
-      (cls) => cls?.id === myclass?.id
-    );
-    if (hasCurrentClass) {
-      return assignment.classes;
-    }
-    // Add current class if not present
-    return [...assignment.classes, { id: myclass?.id }];
-  };
-
   const { inputs, handleChange, clearForm } = useForm({
-    title: assignment?.title || "",
-    content: assignment?.content || "",
-    placeholder: assignment?.placeholder || "",
-    classes: getInitialClasses(),
+    title: "",
+    content: "",
+    placeholder: "",
   });
 
-  const [editAssignment, { loading }] = useMutation(EDIT_ASSIGNMENT, {
+  const [createAssignment, { loading }] = useMutation(CREATE_ASSIGNMENT, {
     variables: {
-      id: assignment?.id,
       input: {
-        title: inputs?.title,
-        content: inputs?.content,
-        placeholder: inputs?.placeholder,
-        classes: inputs?.classes && Array.isArray(inputs.classes)
-          ? { set: inputs.classes.map((cl) => ({ id: cl?.id || cl })) }
-          : { set: [{ id: myclass?.id }] },
-        tags: inputs?.tags ? { set: inputs?.tags } : null,
+        ...inputs,
+        classes: { connect: [{ id: myclass?.id }] },
+        tags: inputs?.tags ? { connect: inputs?.tags } : null,
       },
     },
     refetchQueries: [
@@ -176,16 +148,12 @@ export default function EditAssignment({ code, myclass, user }) {
         query: GET_MY_CLASS_ASSIGNMENTS,
         variables: { userId: user?.id, classId: myclass?.id },
       },
-      {
-        query: GET_ASSIGNMENT,
-        variables: { code },
-      },
     ],
   });
 
   async function handleSave(e) {
     e.preventDefault();
-    await editAssignment();
+    await createAssignment();
     clearForm();
     router.push({
       pathname: `/dashboard/myclasses/${myclass?.code}`,
@@ -210,9 +178,6 @@ export default function EditAssignment({ code, myclass, user }) {
     handleChange({ target: { name: "placeholder", value: content } });
   };
 
-  if (queryLoading) return <div>Loading...</div>;
-  if (!assignment) return <div>Assignment not found</div>;
-
   return (
     <FormContainer>
       <TopSection>
@@ -221,13 +186,14 @@ export default function EditAssignment({ code, myclass, user }) {
             pathname: `/dashboard/myclasses/${myclass?.code}`,
             query: {
               page: "assignments",
+              action: "add",
             },
           }}
           style={{ textDecoration: 'none' }}
         >
           <SecondaryButton>← {t("assignment.goBack")}</SecondaryButton>
         </Link>
-        <HeaderTitle>{t("assignment.editAssignment")}</HeaderTitle>
+        <HeaderTitle>Create Assignment from Scratch</HeaderTitle>
       </TopSection>
 
       <form onSubmit={handleSave}>
@@ -273,6 +239,7 @@ export default function EditAssignment({ code, myclass, user }) {
               pathname: `/dashboard/myclasses/${myclass?.code}`,
               query: {
                 page: "assignments",
+                action: "add",
               },
             }}
             style={{ textDecoration: 'none' }}
@@ -280,7 +247,7 @@ export default function EditAssignment({ code, myclass, user }) {
             <SecondaryButton type="button">Cancel</SecondaryButton>
           </Link>
           <PrimaryButton type="submit" disabled={loading}>
-            {loading ? "Saving..." : t("assignment.saveLink")}
+            {loading ? "Creating..." : t("assignment.saveLink")}
           </PrimaryButton>
         </ButtonContainer>
       </form>

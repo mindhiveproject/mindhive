@@ -4,6 +4,12 @@
 		"description": "Acompanhe seu progresso e revise os estudos e tarefas em que participou",
 		"title": "Minha atividade"
 	},
+	"assignment": {
+		"actions": "Ações",
+		"dateCreated": "Data Criada",
+		"status": "Status",
+		"title": "Título"
+	},
 	"assignments": {
 		"copyLink": "Copiar link",
 		"linkCopied": "O link foi copiado",

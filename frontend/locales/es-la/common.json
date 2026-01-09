@@ -4,6 +4,12 @@
 		"description": "Realiza un seguimiento de tu progreso y revisa los estudios y tareas en los que has participado.",
 		"title": "Mi actividad"
 	},
+	"assignment": {
+		"actions": "Comportamiento",
+		"dateCreated": "Fecha de creación",
+		"status": "Estado",
+		"title": "Título"
+	},
 	"assignments": {
 		"copyLink": "Copiar enlace",
 		"linkCopied": "El enlace está copiado",

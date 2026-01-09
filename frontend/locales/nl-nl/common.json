@@ -4,6 +4,12 @@
 		"description": "Volg uw voortgang en bekijk de studies en taken waaraan u hebt deelgenomen",
 		"title": "Mijn activiteit"
 	},
+	"assignment": {
+		"actions": "Acties",
+		"dateCreated": "Datum gecreeërd",
+		"status": "Toestand",
+		"title": "Titel"
+	},
 	"assignments": {
 		"copyLink": "Link kopiëren",
 		"linkCopied": "De link is gekopieerd",

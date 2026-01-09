@@ -4,6 +4,12 @@
 		"description": "Track your progress and review the studies and tasks you've participated in",
 		"title": "My Activity"
 	},
+	"assignment": {
+		"actions": "Actions",
+		"dateCreated": "Date Created",
+		"status": "Status",
+		"title": "Title"
+	},
 	"assignments": {
 		"copyLink": "Copy link",
 		"linkCopied": "The link is copied",

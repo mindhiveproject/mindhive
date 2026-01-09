@@ -1,11 +1,49 @@
 import { useState } from "react";
+import styled from "styled-components";
 
 import { Modal } from "semantic-ui-react";
-import JoditEditor from "../../../../Jodit/Editor";
+import TipTapEditor from "../../../../TipTap/Main";
 
 import StyledModal from "../../../../styles/StyledModal";
 import ClassSelector from "./ClassSelector";
 import useTranslation from "next-translate/useTranslation";
+
+// Styled button matching Figma design (Primary Action - Teal)
+const PrimaryButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  font-family: Lato;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0.05em;
+  text-align: center;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  background: #336F8A;
+  color: #ffffff;
+  
+  &:hover {
+    background: #ffc107;
+    color: #1a1a1a;
+  }
+  
+  &:active {
+    background: #4db6ac;
+    color: #1a1a1a;
+  }
+  
+  &:disabled {
+    background: #e0e0e0;
+    color: #9e9e9e;
+    cursor: not-allowed;
+  }
+`;
 
 export default function AssignmentModal({
   btnName,
@@ -37,37 +75,41 @@ export default function AssignmentModal({
             />
             <label htmlFor="title">
               <p>{t("assignment.title")}</p>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                value={inputs?.title}
-                onChange={handleChange}
-                required
+              <TipTapEditor 
+                content={inputs?.title || ""} 
+                onUpdate={(content) =>
+                  handleChange({ target: { name: "title", value: content } })
+                }
+                isEditable={true}
+                toolbarVisible={false}
               />
             </label>
-            <p><br></br>Instruction for your students:</p>
-            <JoditEditor
-              content={inputs?.content}
-              setContent={(content) =>
+            <p><br />Instruction for your students:</p>
+            <TipTapEditor
+              content={inputs?.content || ""}
+              onUpdate={(content) =>
                 handleChange({ target: { name: "content", value: content } })
               }
+              isEditable={true}
+              toolbarVisible={true}
             />
-            <p><br></br>Place holder for your students:</p>
-            <JoditEditor
-              content={inputs?.placeholder}
-              setContent={(placeholder) =>
+            <p><br />Place holder for your students:</p>
+            <TipTapEditor
+              content={inputs?.placeholder || ""}
+              onUpdate={(placeholder) =>
                 handleChange({ target: { name: "placeholder", value: placeholder } })
               }
+              isEditable={true}
+              toolbarVisible={true}
             />
-            <button
+            <PrimaryButton
               onClick={() => {
                 submit();
                 setOpen(false);
               }}
             >
               {btnName}
-            </button>
+            </PrimaryButton>
           </StyledModal>
         </Modal.Description>
       </Modal.Content>

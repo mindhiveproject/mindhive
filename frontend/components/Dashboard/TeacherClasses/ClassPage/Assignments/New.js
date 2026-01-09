@@ -8,11 +8,19 @@ import { CREATE_ASSIGNMENT } from "../../../../Mutations/Assignment";
 
 export default function NewAssignment({ user, myclass, assignment, children }) {
   const { t } = useTranslation("classes");
+  
+  // When copying an assignment, only use the current class
+  // We don't want to link the new copy to other classes that the original assignment might be linked to
+  const getInitialClasses = () => {
+    // Always use only the current class, whether creating new or copying
+    return [{ id: myclass?.id }];
+  };
+  
   const { inputs, handleChange, clearForm } = useForm({
     title: assignment?.title || "",
     content: assignment?.content || "",
     placeholder: assignment?.placeholder || "",
-    classes: assignment?.classes || [{ id: myclass?.id }],
+    classes: getInitialClasses(),
   });
 
   const [createAssignment, { loading }] = useMutation(CREATE_ASSIGNMENT, {
@@ -40,7 +48,7 @@ export default function NewAssignment({ user, myclass, assignment, children }) {
 
   return (
     <AssignmentModal
-      btnName={t("assignment.saveOwnCopy")}
+      btnName={t("assignment.saveOwnCoasaasaspy")}
       assignment={assignment}
       inputs={inputs}
       handleChange={handleChange}
