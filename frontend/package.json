@@ -5,7 +5,7 @@
   "scripts": {
     "local": "next dev -p 3000",
     "dev": "node server",
-    "build": "next build",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 next build",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
