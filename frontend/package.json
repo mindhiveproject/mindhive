@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
+    "local": "next dev -p 3000",
+    "dev": "node server",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "server": "node server",
     "prod": "NODE_ENV=production node server"
   },
   "dependencies": {

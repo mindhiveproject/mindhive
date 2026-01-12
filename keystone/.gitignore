@@ -1,6 +1,5 @@
 node_modules
 .keystone
-keystone.ts
 keystone.db
 *.log
 .env
