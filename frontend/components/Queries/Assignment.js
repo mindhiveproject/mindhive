@@ -67,6 +67,11 @@ export const GET_ASSIGNMENT_FOR_STUDENT = gql`
       title
       content
       placeholder
+      classes {
+        id
+        code
+        title
+      }
     }
   }
 `;
@@ -88,17 +93,20 @@ export const GET_MY_CLASS_ASSIGNMENTS = gql`
       title
       content
       placeholder
+      createdAt
+      updatedAt
       author {
         username
       }
       public
       homework {
+        id
         public
+        settings
       }
       classes {
         id
       }
-      createdAt
     }
   }
 `;
@@ -139,8 +147,15 @@ export const GET_TEMPLATE_ASSIGNMENTS = gql`
       title
       content
       placeholder
+      createdAt
+      updatedAt
       author {
         username
+      }
+      classes {
+        id
+        title
+        code
       }
     }
   }

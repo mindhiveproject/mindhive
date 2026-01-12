@@ -17,10 +17,14 @@ import uniqid from "uniqid";
 import {
   uniqueNamesGenerator,
   Config,
-  adjectives,
+  adjectives as baseAdjectives,
   colors,
   animals,
 } from "unique-names-generator";
+
+const adjectives = baseAdjectives
+  .filter(w => !['booby', 'tasty'].includes(w))
+  .concat(['curious', 'kind']);
 
 const customConfig: Config = {
   dictionaries: [adjectives, colors, animals],

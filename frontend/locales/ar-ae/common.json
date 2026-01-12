@@ -4,6 +4,12 @@
 		"description": "تتبع تقدمك ومراجعة الدراسات والمهام التي شاركت فيها",
 		"title": "نشاطي"
 	},
+	"assignment": {
+		"actions": "أجراءات",
+		"dateCreated": "تاريخ الإنشاء",
+		"status": "حالة",
+		"title": "عنوان"
+	},
 	"assignments": {
 		"copyLink": "نسخ الوصلة",
 		"linkCopied": "تم نسخ الرابط",

@@ -78,6 +78,15 @@ export const Assignment = list({
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
-    updatedAt: timestamp(),
+    updatedAt: timestamp({
+      hooks: {
+        async resolveInput({ operation }) {
+          if (operation === "update") {
+            return new Date().toISOString();
+          }
+          return undefined;
+        },
+      },
+    }),
   },
 });

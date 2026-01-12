@@ -4,6 +4,12 @@
 		"description": "跟踪你的进度并回顾你参与的研究和任务",
 		"title": "我的活动"
 	},
+	"assignment": {
+		"actions": "操作",
+		"dateCreated": "创建日期",
+		"status": "地位",
+		"title": "标题"
+	},
 	"assignments": {
 		"copyLink": "复制链接",
 		"linkCopied": "链接已复制",

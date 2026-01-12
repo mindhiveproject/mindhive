@@ -1,59 +1,64 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
-import useTranslation from "next-translate/useTranslation";
-
 import { useQuery } from "@apollo/client";
-import { GET_CLASS_ASSIGNMENTS_FOR_STUDENTS } from "../../../../Queries/Assignment";
+import useTranslation from "next-translate/useTranslation";
+import styled from "styled-components";
 
+import { GET_CLASS_ASSIGNMENTS_FOR_STUDENTS } from "../../../../Queries/Assignment";
 import AssignmentTab from "./Tab";
+
+const Container = styled.div`
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+`;
+
+const EmptyState = styled.div`
+  text-align: center;
+  padding: 48px 24px;
+  color: #666666;
+  font-family: Lato;
+  font-size: 16px;
+`;
 
 export default function Settings({ myclass, user, query }) {
   const { t } = useTranslation("common");
-  const router = useRouter();
   const { action, assignment } = query;
 
   const { data, loading, error } = useQuery(
     GET_CLASS_ASSIGNMENTS_FOR_STUDENTS,
     {
-      variables: { userId: user?.id, classId: myclass?.id },
+      variables: { classId: myclass?.id },
     }
   );
   const assignments = data?.assignments || [];
 
+  if (loading) return <Container><div>Loading...</div></Container>;
+  if (error) return <Container><div>Error: {error.message}</div></Container>;
+
   if (action === "view" && assignment) {
-    return (
-      <div className="assignments">
-        <ViewAssignment
-          code={assignment}
-          myclass={myclass}
-          user={user}
-          query={query}
-        />
-      </div>
-    );
+    // For now, redirect to the assignment page
+    // Students view assignments at /dashboard/assignments/[code]
+    window.location.href = `/dashboard/assignments/${assignment}`;
+    return <Container><div>Redirecting...</div></Container>;
   }
 
-  if (assignments?.length === 0) {
+  if (!assignments || assignments.length === 0) {
     return (
-      <div className="empty">
-        <div>{t("assignments.noAssignments")}</div>
-      </div>
+      <Container>
+        <EmptyState>
+          <p>{t("assignments.noAssignments") || "No assignments available"}</p>
+        </EmptyState>
+      </Container>
     );
   }
 
   return (
-    <div className="assignments">
-      {assignments
-        .filter((a) => a?.public)
-        .map((assignment) => (
-          <AssignmentTab
-            key={assignment?.id}
-            myclass={myclass}
-            user={user}
-            query={query}
-            assignment={assignment}
-          />
-        ))}
-    </div>
+    <Container>
+      <AssignmentTab
+        assignments={assignments}
+        myclass={myclass}
+        user={user}
+        query={query}
+      />
+    </Container>
   );
 }
