@@ -1,16 +1,18 @@
+// components/DataJournal/SideNav/Workspace.js
 import { Dropdown, DropdownMenu } from "semantic-ui-react";
 
-import DeleteWorkspace from "../Helpers/DeleteWorkspace";
+import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
+import DeleteWorkspace from "../Helpers/DeleteWorkspace"; // Adjust path
 
 export default function WorkspaceNavigation({
-  projectId,
-  studyId,
   journal,
   workspace,
   isWorkspaceSelected,
   selectedWorkspace,
   selectWorkspaceById,
 }) {
+  const { projectId, studyId } = useDataJournal(); // Use context
+
   if (!isWorkspaceSelected) {
     return (
       <div
@@ -54,7 +56,7 @@ export default function WorkspaceNavigation({
       {selectedWorkspace?.vizSections?.length ? (
         <div className="components">
           {selectedWorkspace?.vizSections?.map((component) => (
-            <div className="component">
+            <div key={component.id} className="component">
               <div>
                 <img src="/assets/dataviz/sidebar/paragraph.png" />
               </div>

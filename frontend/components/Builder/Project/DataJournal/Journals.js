@@ -3,14 +3,14 @@ import { useState, useEffect } from "react";
 
 import { GET_DATA_JOURNALS } from "../../../Queries/DataArea";
 import { StyledDataArea } from "./styles/StyledDataJournal";
+import { useDataJournal } from "./Context/DataJournalContext";
 
 import Journal from "./Journal";
 
-export default function Journals({ user, projectId, studyId, pyodide }) {
-  // the state for the currently active journal
-  const [journal, setJournal] = useState(null);
+export default function Journals({ user, projectId, studyId }) {
+  const { selectedJournal, setSelectedJournal } = useDataJournal();
 
-  // get the data journals of the study and the project
+  // Get the data journals of the study and the project
   const { data, loading, error } = useQuery(GET_DATA_JOURNALS, {
     variables: {
       where:
@@ -29,7 +29,7 @@ export default function Journals({ user, projectId, studyId, pyodide }) {
     },
   });
 
-  // get all data journals
+  // Get all data journals
   const dataJournals =
     data?.vizJournals?.map((vizJournal) => vizJournal.vizParts).flat() || [];
 
@@ -39,32 +39,32 @@ export default function Journals({ user, projectId, studyId, pyodide }) {
     function initJournal() {
       if (dataJournals && dataJournals.length) {
         const j = dataJournals[0]; // set the first journal as the current one
-        setJournal(j);
+        setSelectedJournal(j);
       }
     }
     if (dataJournals && dataJournals.length) {
       initJournal();
     }
-  }, [dataJournals.length]);
+  }, [dataJournals.length, setSelectedJournal]);
 
   const selectJournalById = ({ id }) => {
     const journal = dataJournals.find((j) => j?.id === id);
     if (journal) {
-      setJournal(journal);
+      setSelectedJournal(journal);
     }
   };
+
+  if (loading) return <div>Loading journals...</div>;
+  if (error) return <div>Error loading journals: {error.message}</div>;
 
   return (
     <StyledDataArea>
       <Journal
         user={user}
-        projectId={projectId}
-        studyId={studyId}
         journalCollections={journalCollections}
         dataJournals={dataJournals}
-        journalId={journal?.id}
+        journalId={selectedJournal?.id}
         selectJournalById={selectJournalById}
-        pyodide={pyodide}
       />
     </StyledDataArea>
   );

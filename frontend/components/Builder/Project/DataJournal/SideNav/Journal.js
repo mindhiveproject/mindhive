@@ -1,22 +1,18 @@
-// VizPart in navigation (which is journal in the UI)
-
+// components/DataJournal/SideNav/Journal.js
 import { useState } from "react";
 import moment from "moment";
-import WorkspaceNavigation from "./Workspace";
-import DataSourceModal from "./DataSourceModal";
-
 import { Dropdown, DropdownMenu } from "semantic-ui-react";
 
-import { StyledDataSourceLabels } from "../styles/StyledDataJournal";
+import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
+import { StyledDataSourceLabels } from "../styles/StyledDataJournal"; // Adjust if needed
 
+import WorkspaceNavigation from "./Workspace";
+import DataSourceModal from "./DataSourceModal";
 import AddWorkspace from "./AddWorkspace";
-import EditJournal from "../Helpers/EditJournal";
-import DeleteJournal from "../Helpers/DeleteJournal";
+import EditJournal from "../Helpers/EditJournal"; // Adjust path
+import DeleteJournal from "../Helpers/DeleteJournal"; // Adjust path
 
 export default function JournalNavigation({
-  user,
-  projectId,
-  studyId,
   journal,
   selectedJournal,
   isJournalSelected,
@@ -25,15 +21,11 @@ export default function JournalNavigation({
   selectedWorkspace,
   selectWorkspaceById,
 }) {
+  const { user, projectId, studyId } = useDataJournal(); // Use context
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   // Define origin labels (same as in DataSourceModal.js)
   const originLabels = {
@@ -95,7 +87,7 @@ export default function JournalNavigation({
             direction="left"
             id="journalSettings"
           >
-            <DropdownMenu>           
+            <DropdownMenu>
               <EditJournal
                 user={user}
                 projectId={projectId}
@@ -132,8 +124,6 @@ export default function JournalNavigation({
         {workspaces.map((workspace) => (
           <WorkspaceNavigation
             key={workspace.id}
-            projectId={projectId}
-            studyId={studyId}
             journal={journal}
             workspace={workspace}
             isWorkspaceSelected={workspace?.id === selectedWorkspace?.id}
@@ -146,8 +136,6 @@ export default function JournalNavigation({
       <AddWorkspace journalId={selectedJournal?.id} />
 
       <DataSourceModal
-        projectId={projectId}
-        studyId={studyId}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         journal={journal}

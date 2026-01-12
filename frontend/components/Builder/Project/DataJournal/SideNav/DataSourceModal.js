@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
+
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
 import { UPDATE_VIZPART } from "../../../../Mutations/VizPart";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
+
+import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
 
 import {
   StyledModalOverlay,
@@ -14,15 +17,10 @@ import {
   StyledModalButton,
   StyledDataSourceList,
   StyledDataSourceOption,
-} from "../styles/StyledDataSourceModal";
+} from "../styles/StyledDataSourceModal"; // Adjust if moved
 
-export default function DataSourceModal({
-  projectId,
-  studyId,
-  isOpen,
-  onClose,
-  journal,
-}) {
+export default function DataSourceModal({ isOpen, onClose, journal }) {
+  const { projectId, studyId } = useDataJournal(); // Use context
   const [selectedDatasources, setSelectedDatasources] = useState(
     journal?.datasources?.map((ds) => ds.id) || []
   );
@@ -109,10 +107,11 @@ export default function DataSourceModal({
       refetch();
       onClose();
     } catch (err) {
-      console.error("Error updating VizPart:", err);
+      console.error("Error updating journal:", err);
     }
   };
 
+  // Origin labels
   const originLabels = {
     STUDY: "Study data",
     SIMULATED: "Simulated",

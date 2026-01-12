@@ -5,8 +5,18 @@ import { useState, useEffect, useCallback } from "react";
 import { GET_DATA_JOURNAL } from "../../../Queries/DataJournal";
 import { StyledDataJournal } from "./styles/StyledDataJournal";
 
-import Workspace from "./Workspace"; // Assuming this is the child component
+import Workspace from "./Workspace/Workspace";
 import DatasourceDataLoader from "./DataLoader/DatasourceDataLoader";
+
+import filterData, { renameData } from "./Helpers/Filter";
+import { useDataJournal } from "./Context/DataJournalContext";
+
+const prepareDataCode = `
+import pandas as pd
+import js_workspace as data
+data = data.to_py()
+df = pd.DataFrame(data)
+`;
 
 function mergeSourceDatas(sourceDatas) {
   let initData = [];
@@ -41,20 +51,23 @@ function mergeSourceDatas(sourceDatas) {
 
 export default function Journal({
   user,
-  projectId,
-  studyId,
   journalCollections,
   dataJournals,
   journalId,
   selectJournalById,
-  pyodide,
 }) {
-  // the state for the currently active workspace
-  const [workspace, setWorkspace] = useState(null);
-
-  // get the data journals of the study and the project
   const {
-    data,
+    pyodide,
+    selectedWorkspace,
+    setSelectedWorkspace,
+    setData,
+    setVariables,
+    setSettings,
+  } = useDataJournal();
+
+  // Get the data journal
+  const {
+    data: journalData,
     loading: queryLoading,
     error: queryError,
   } = useQuery(GET_DATA_JOURNAL, {
@@ -64,7 +77,7 @@ export default function Journal({
     skip: !journalId,
   });
 
-  const journal = data?.vizPart;
+  const journal = journalData?.vizPart;
 
   const datasources = journal?.datasources || [];
   const workspaces = journal?.vizChapters || [];
@@ -72,6 +85,11 @@ export default function Journal({
   // States for aggregating data from datasources
   const [sourceDatas, setSourceDatas] = useState([]);
   const [mergedData, setMergedData] = useState(null);
+  // Flag to gate rendering until data is registered in Pyodide
+  const [registered, setRegistered] = useState(false);
+
+  const initData = mergedData?.initData || [];
+  const initDataLength = initData.length;
 
   const handleSourceData = useCallback((sourceData) => {
     setSourceDatas((prev) => {
@@ -91,28 +109,49 @@ export default function Journal({
     }
   }, [sourceDatas, datasources.length]);
 
+  // Register data in Pyodide after merging
+  useEffect(() => {
+    async function registerData() {
+      if (pyodide && mergedData?.initData && initDataLength) {
+        const filteredData = filterData({
+          data: mergedData.initData,
+          settings: mergedData.initSettings,
+        });
+        const renamedData = renameData({
+          data: filteredData,
+          variables: mergedData.initVariables,
+        });
+        pyodide.registerJsModule("js_workspace", [...renamedData]);
+        // Make data available as data and df (pandas dataframe)
+        await pyodide.runPythonAsync(prepareDataCode);
+        // Update context with merged data
+        setData(mergedData.initData);
+        setVariables(mergedData.initVariables);
+        setSettings(mergedData.initSettings);
+        setRegistered(true);
+      }
+    }
+    registerData();
+  }, [pyodide, mergedData, setData, setVariables, setSettings, initDataLength]);
+
   useEffect(() => {
     function initWorkspace() {
       if (workspaces && workspaces.length) {
-        const j = workspaces[0]; // set the first journal as the current one
-        setWorkspace(j);
+        const w = workspaces[0]; // Set the first workspace as the current one
+        setSelectedWorkspace(w);
       }
     }
     if (workspaces && workspaces.length) {
       initWorkspace();
     }
-  }, [workspaces.length]);
+  }, [workspaces.length, setSelectedWorkspace]);
 
   const selectWorkspaceById = ({ id }) => {
     const workspace = workspaces.find((w) => w?.id === id);
     if (workspace) {
-      setWorkspace(workspace);
+      setSelectedWorkspace(workspace);
     }
   };
-
-  if (queryLoading || !mergedData) {
-    return <div>Loading...</div>;
-  }
 
   if (queryError) {
     return <div>Error loading journal</div>;
@@ -126,29 +165,26 @@ export default function Journal({
           <DatasourceDataLoader
             key={ds.id}
             datasource={ds}
-            user={user}
+            user={user} // Assuming user is available from higher context or prop if needed
             onDataReady={handleSourceData}
           />
         ))}
       </div>
 
-      <Workspace
-        user={user}
-        projectId={projectId}
-        studyId={studyId}
-        journalCollections={journalCollections}
-        dataJournals={dataJournals}
-        journal={journal}
-        journalId={journalId}
-        selectJournalById={selectJournalById}
-        workspaces={workspaces}
-        workspaceId={workspace?.id}
-        selectWorkspaceById={selectWorkspaceById}
-        pyodide={pyodide}
-        initData={mergedData.initData}
-        initVariables={mergedData.initVariables}
-        initSettings={mergedData.initSettings}
-      />
+      {queryLoading || !mergedData || !registered ? (
+        <div>Loading...</div>
+      ) : (
+        <Workspace
+          journalCollections={journalCollections}
+          dataJournals={dataJournals}
+          journal={journal}
+          journalId={journalId}
+          selectJournalById={selectJournalById}
+          workspaces={workspaces}
+          workspaceId={selectedWorkspace?.id}
+          selectWorkspaceById={selectWorkspaceById}
+        />
+      )}
     </StyledDataJournal>
   );
 }

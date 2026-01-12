@@ -319,12 +319,12 @@ export default function Walkthrough({ onStartWalkthrough }) {
                 } catch (localizedError) {
                   // Fallback to English
                   journalToursImport = await import(
-                    "../../Builder/Project/DataJournal/tours.js"
+                    "../../Builder/Project/DataJournal/Tours/journalTours.js"
                   );
                 }
               } else {
                 journalToursImport = await import(
-                  "../../Builder/Project/DataJournal/tours.js"
+                  "../../Builder/Project/DataJournal/Tours/journalTours.js"
                 );
               }
 

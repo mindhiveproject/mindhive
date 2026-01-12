@@ -1,12 +1,11 @@
+// components/DataJournal/SideNav/Main.js
+import { useDataJournal } from "../Context/DataJournalContext";
 import { StyledSidebar } from "../styles/StyledDataJournal";
 
 import CreateJournal from "../Helpers/CreateJournal";
 import JournalNavigation from "./Journal";
 
 export default function SideNavigation({
-  user,
-  projectId,
-  studyId,
   journalCollections,
   dataJournals,
   selectedJournal,
@@ -17,6 +16,8 @@ export default function SideNavigation({
   selectWorkspaceById,
   collapsePanel,
 }) {
+  const { projectId, studyId } = useDataJournal(); // Use context instead of props
+
   return (
     <StyledSidebar>
       <div className="collapsePanelBtn">
@@ -51,9 +52,7 @@ export default function SideNavigation({
       <div className="journals">
         {dataJournals.map((journal) => (
           <JournalNavigation
-            user={user}
-            projectId={projectId}
-            studyId={studyId}
+            key={journal.id}
             journal={journal}
             selectedJournal={selectedJournal}
             isJournalSelected={journal?.id === selectedJournalId}
