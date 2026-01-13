@@ -306,27 +306,11 @@ export default function Walkthrough({ onStartWalkthrough }) {
             break;
           case "journal": // TODO: add tours for visualize -- Not doing till the UI is ready
             // Import tours directly without importing the component
+            // DataJournal uses Tours/journalTours.js instead of tours.js
             try {
-              const currentLocale = router.locale || "en-us";
-              let journalToursImport;
-
-              // Try localized tour file first
-              if (currentLocale !== "en-us") {
-                try {
-                  journalToursImport = await import(
-                    `../../Builder/Project/DataJournal/tours.${currentLocale}.js`
-                  );
-                } catch (localizedError) {
-                  // Fallback to English
-                  journalToursImport = await import(
-                    "../../Builder/Project/DataJournal/Tours/journalTours.js"
-                  );
-                }
-              } else {
-                journalToursImport = await import(
-                  "../../Builder/Project/DataJournal/Tours/journalTours.js"
-                );
-              }
+              const journalToursImport = await import(
+                "../../Builder/Project/DataJournal/Tours/journalTours.js"
+              );
 
               componentImport = {
                 default: { hasTour: true },
