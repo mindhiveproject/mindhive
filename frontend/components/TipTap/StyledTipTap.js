@@ -134,9 +134,9 @@ export const StyledTipTap = styled.div`
     .ProseMirror {
       padding: 24px;
       outline: none;
-      border-radius: 16px;
-      border: 2px solid #D3E0E3;
-      background: white;
+      border-radius: 8px;
+      border: 1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1);
+      background: var(--MH-Theme-Neutrals-White, #FFF);
       width: 100%;
       max-height: 600px; 
       overflow-y: auto;
