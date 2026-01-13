@@ -1,5 +1,4 @@
-node_modules
-.keystone
+node_modules    
 keystone.db
 *.log
 .env
