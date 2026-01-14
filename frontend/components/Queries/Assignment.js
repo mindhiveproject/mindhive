@@ -113,7 +113,7 @@ export const GET_MY_CLASS_ASSIGNMENTS = gql`
 
 // get all my and class assignments
 export const GET_CLASS_ASSIGNMENTS_FOR_STUDENTS = gql`
-  query GET_CLASS_ASSIGNMENTS_FOR_STUDENTS($classId: ID) {
+  query GET_CLASS_ASSIGNMENTS_FOR_STUDENTS($classId: ID, $userId: ID) {
     assignments(
       where: { classes: { some: { id: { equals: $classId } } } }
       orderBy: [{ createdAt: desc }]
@@ -127,8 +127,12 @@ export const GET_CLASS_ASSIGNMENTS_FOR_STUDENTS = gql`
         username
       }
       public
-      homework {
+      homework(
+        where: { author: { id: { equals: $userId } } }
+      ) {
+        id
         public
+        settings
       }
       classes {
         id

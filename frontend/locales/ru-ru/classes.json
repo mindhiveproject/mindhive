@@ -469,20 +469,25 @@
 		"teacher": "Учитель"
 	},
 	"homework": {
+		"assignmentContent": "Содержание задания",
 		"assignmentTitle": "Название задания",
 		"cancel": "Отмена",
 		"createHomework": "Создать домашнее задание",
 		"createHomeworkDraft": "Создать черновик",
 		"createHomeworkSubmit": "Создать и отправить",
-		"createNewAssignment": "Создать новое задание",
+		"createNewHomework": "Создать новое домашнее задание",
 		"dateCreated": "Дата создания",
 		"dateUpdated": "Дата обновления",
 		"existingHomeworks": "Существующие домашние задания",
 		"homeworkTitle": "Название домашнего задания",
 		"initialContent": "Начальное содержание",
+		"markAsCompleted": "Отметить как выполненное",
+		"markAsUncompleted": "Отметить как незавершенное",
 		"myAssignment": "Мое задание",
 		"noHomeworkYet": "Студент еще не написал домашнее задание.",
-		"openHomework": "Открыть"
+		"openHomework": "Открыть",
+		"submitted": "Поданный",
+		"unsubmit": "Отменить отправку"
 	},
 	"joinClass": "Присоединиться к классу",
 	"joinClassInfo": "Как только вы присоединитесь к классу, он появится здесь.",
@@ -571,7 +576,7 @@
 		"studyTitle": "Название исследования"
 	},
 	"students": {
-		"goBack": "← Вернуться назад",
+		"goBack": "Вернитесь в класс",
 		"username": "Имя пользователя"
 	},
 	"studentsTab": {
@@ -614,6 +619,7 @@
 		"comments": "Комментарии",
 		"completed": "Завершенный",
 		"feedbackGiven": "Отзыв предоставлен",
+		"feedbackRequested": "Просьба оставить отзыв.",
 		"lastUpdated": "Последнее обновление",
 		"needsFeedback": "Нужна обратная связь",
 		"notStarted": "Не начато",

@@ -26,7 +26,7 @@ export default function Settings({ myclass, user, query }) {
   const { data, loading, error } = useQuery(
     GET_CLASS_ASSIGNMENTS_FOR_STUDENTS,
     {
-      variables: { classId: myclass?.id },
+      variables: { classId: myclass?.id, userId: user?.id },
     }
   );
   const assignments = data?.assignments || [];

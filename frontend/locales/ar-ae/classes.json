@@ -469,20 +469,25 @@
 		"teacher": "مدرس"
 	},
 	"homework": {
+		"assignmentContent": "محتوى الواجب",
 		"assignmentTitle": "عنوان المهمة",
 		"cancel": "إلغاء",
 		"createHomework": "إنشاء الواجبات المنزلية",
 		"createHomeworkDraft": "إنشاء مسودة",
 		"createHomeworkSubmit": "إنشاء وإرسال",
-		"createNewAssignment": "إنشاء مهمة جديدة",
+		"createNewHomework": "إنشاء واجب منزلي جديد",
 		"dateCreated": "تاريخ الإنشاء",
 		"dateUpdated": "تاريخ التحديث",
 		"existingHomeworks": "الأعمال المنزلية الحالية",
 		"homeworkTitle": "عنوان الواجب المنزلي",
 		"initialContent": "المحتوى الأولي",
+		"markAsCompleted": "وضع علامة كمكتمل",
+		"markAsUncompleted": "ضع علامة \"غير مكتمل\"",
 		"myAssignment": "مهمتي",
 		"noHomeworkYet": "لم يكتب الطالب أي واجب منزلي بعد.",
-		"openHomework": "مفتوح"
+		"openHomework": "مفتوح",
+		"submitted": "مُقَدَّم",
+		"unsubmit": "إلغاء الإرسال"
 	},
 	"joinClass": "انضم إلى الفصل",
 	"joinClassInfo": "بمجرد انضمامك إلى الفصل الدراسي، فسوف يظهر هنا.",
@@ -571,7 +576,7 @@
 		"studyTitle": "عنوان الدراسة"
 	},
 	"students": {
-		"goBack": "← العودة",
+		"goBack": "ارجع إلى الفصل",
 		"username": "اسم المستخدم"
 	},
 	"studentsTab": {
@@ -614,6 +619,7 @@
 		"comments": "تعليقات",
 		"completed": "مكتمل",
 		"feedbackGiven": "ردود الفعل المقدمة",
+		"feedbackRequested": "نطلب تعليقاتكم",
 		"lastUpdated": "آخر تحديث",
 		"needsFeedback": "يحتاج إلى ردود فعل",
 		"notStarted": "لم يتم البدء",

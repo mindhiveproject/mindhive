@@ -33,7 +33,7 @@
 		"homework": "{{count}} homework",
 		"homework_plural": "{{count}} homeworks",
 		"homeworkHeader": "Homework",
-		"instructions": "Instructions for Students",
+		"instructions": "Instructions",
 		"instructionsPlaceholder": "Enter assignment instructions...",
 		"linkAssignments": "Link Assignments to Class",
 		"linkCopied": "The link is copied",
@@ -469,20 +469,25 @@
 		"teacher": "Teacher"
 	},
 	"homework": {
+		"assignmentContent": "Assignment content",
 		"assignmentTitle": "Assignment title",
 		"cancel": "Cancel",
 		"createHomework": "Create Homework",
 		"createHomeworkDraft": "Create Draft",
 		"createHomeworkSubmit": "Create & Submit",
-		"createNewAssignment": "Create New Assignment",
+		"createNewHomework": "Create new homework",
 		"dateCreated": "Date created",
 		"dateUpdated": "Date updated",
 		"existingHomeworks": "Existing Homeworks",
 		"homeworkTitle": "Homework title",
 		"initialContent": "Initial Content",
+		"markAsCompleted": "Mark as completed",
+		"markAsUncompleted": "Mark as uncompleted",
 		"myAssignment": "My Assignment",
 		"noHomeworkYet": "The student hasn’t written any homework yet.",
-		"openHomework": "Open"
+		"openHomework": "Open",
+		"submitted": "Submitted",
+		"unsubmit": "Unsubmit"
 	},
 	"joinClass": "Join class",
 	"joinClassInfo": "Once you join a class, it will appear here.",
@@ -571,7 +576,7 @@
 		"studyTitle": "Study title"
 	},
 	"students": {
-		"goBack": "← Go back",
+		"goBack": "Go back to class",
 		"username": "Username"
 	},
 	"studentsTab": {
@@ -614,6 +619,7 @@
 		"comments": "Comments",
 		"completed": "Completed",
 		"feedbackGiven": "Feedback given",
+		"feedbackRequested": "Feedback requested",
 		"lastUpdated": "Last updated",
 		"needsFeedback": "Needs feedback",
 		"notStarted": "Not started",

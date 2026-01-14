@@ -469,20 +469,25 @@
 		"teacher": "老师"
 	},
 	"homework": {
+		"assignmentContent": "作业内容",
 		"assignmentTitle": "作业标题",
 		"cancel": "取消",
 		"createHomework": "创建家庭作业",
 		"createHomeworkDraft": "创建草稿",
 		"createHomeworkSubmit": "创建并提交",
-		"createNewAssignment": "创建新作业",
+		"createNewHomework": "创建新作业",
 		"dateCreated": "创建日期",
 		"dateUpdated": "更新日期",
 		"existingHomeworks": "现有家庭作业",
 		"homeworkTitle": "作业标题",
 		"initialContent": "初始内容",
+		"markAsCompleted": "标记为已完成",
+		"markAsUncompleted": "标记为未完成",
 		"myAssignment": "我的任务",
 		"noHomeworkYet": "该学生尚未写任何作业。",
-		"openHomework": "开放"
+		"openHomework": "开放",
+		"submitted": "已提交",
+		"unsubmit": "取消提交"
 	},
 	"joinClass": "加入班级",
 	"joinClassInfo": "一旦您加入某个课程，它就会出现在这里。",
@@ -571,7 +576,7 @@
 		"studyTitle": "研究标题"
 	},
 	"students": {
-		"goBack": "← 返回",
+		"goBack": "回教室",
 		"username": "用户名"
 	},
 	"studentsTab": {
@@ -614,6 +619,7 @@
 		"comments": "评论",
 		"completed": "完全的",
 		"feedbackGiven": "已给出反馈",
+		"feedbackRequested": "征求反馈意见",
 		"lastUpdated": "上次更新",
 		"needsFeedback": "需要反馈",
 		"notStarted": "未开始",

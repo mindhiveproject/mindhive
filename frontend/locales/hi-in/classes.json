@@ -469,20 +469,25 @@
 		"teacher": "अध्यापक"
 	},
 	"homework": {
+		"assignmentContent": "असाइनमेंट की सामग्री",
 		"assignmentTitle": "असाइनमेंट का शीर्षक",
 		"cancel": "रद्द करना",
 		"createHomework": "होमवर्क बनाएँ",
 		"createHomeworkDraft": "ड्राफ्ट बनाएँ",
 		"createHomeworkSubmit": "बनाएँ और सबमिट करें",
-		"createNewAssignment": "नया असाइनमेंट बनाएँ",
+		"createNewHomework": "नया होमवर्क बनाएँ",
 		"dateCreated": "बनाया गया दिनांक",
 		"dateUpdated": "तारीख अपडेट की गई",
 		"existingHomeworks": "मौजूदा होमवर्क",
 		"homeworkTitle": "होमवर्क शीर्षक",
 		"initialContent": "प्रारंभिक सामग्री",
+		"markAsCompleted": "पूर्ण के रूप में चिह्नित करें",
+		"markAsUncompleted": "इसे अधूरा चिह्नित करें",
 		"myAssignment": "मेरा असाइनमेंट",
 		"noHomeworkYet": "छात्र ने अभी तक कोई गृहकार्य नहीं लिखा है।",
-		"openHomework": "खुला"
+		"openHomework": "खुला",
+		"submitted": "प्रस्तुत",
+		"unsubmit": "सबमिट ना करें"
 	},
 	"joinClass": "कक्षा में शामिल हों",
 	"joinClassInfo": "जब आप किसी कक्षा में शामिल होंगे तो वह यहां दिखाई देगी।",
@@ -571,7 +576,7 @@
 		"studyTitle": "अध्ययन का शीर्षक"
 	},
 	"students": {
-		"goBack": "← वापस जाएं",
+		"goBack": "वापस कक्षा में जाओ",
 		"username": "उपयोगकर्ता नाम"
 	},
 	"studentsTab": {
@@ -614,6 +619,7 @@
 		"comments": "टिप्पणियाँ",
 		"completed": "पुरा होना।",
 		"feedbackGiven": "प्रतिक्रिया दी गई",
+		"feedbackRequested": "प्रतिक्रिया का अनुरोध किया गया है",
 		"lastUpdated": "आखरी अपडेट",
 		"needsFeedback": "प्रतिक्रिया की आवश्यकता है",
 		"notStarted": "शुरू नहीं",

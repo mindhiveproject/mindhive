@@ -469,20 +469,25 @@
 		"teacher": "Docent"
 	},
 	"homework": {
+		"assignmentContent": "Opdrachtinhoud",
 		"assignmentTitle": "Opdrachttitel",
 		"cancel": "Annuleren",
 		"createHomework": "Huiswerk maken",
 		"createHomeworkDraft": "Concept maken",
 		"createHomeworkSubmit": "Maken en indienen",
-		"createNewAssignment": "Nieuwe opdracht maken",
+		"createNewHomework": "Maak een nieuw huiswerk",
 		"dateCreated": "Datum aangemaakt",
 		"dateUpdated": "Datum bijgewerkt",
 		"existingHomeworks": "Bestaande thuiswerken",
 		"homeworkTitle": "Titel van het huiswerk",
 		"initialContent": "Initiële inhoud",
+		"markAsCompleted": "Markeer als voltooid",
+		"markAsUncompleted": "Markeren als onvoltooid",
 		"myAssignment": "Mijn opdracht",
 		"noHomeworkYet": "De student heeft nog geen huiswerk gemaakt.",
-		"openHomework": "Open"
+		"openHomework": "Open",
+		"submitted": "Ingediend",
+		"unsubmit": "Intrekken"
 	},
 	"joinClass": "Doe mee met de les",
 	"joinClassInfo": "Zodra u zich bij een klas aansluit, wordt deze hier weergegeven.",
@@ -571,7 +576,7 @@
 		"studyTitle": "Studietitel"
 	},
 	"students": {
-		"goBack": "← Ga terug",
+		"goBack": "Ga terug naar de les",
 		"username": "Gebruikersnaam"
 	},
 	"studentsTab": {
@@ -614,6 +619,7 @@
 		"comments": "Reacties",
 		"completed": "Voltooid",
 		"feedbackGiven": "Feedback gegeven",
+		"feedbackRequested": "Feedback gevraagd",
 		"lastUpdated": "Laatst bijgewerkt",
 		"needsFeedback": "Feedback nodig",
 		"notStarted": "Niet gestart",

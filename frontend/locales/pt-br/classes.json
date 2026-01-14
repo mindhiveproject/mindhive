@@ -469,20 +469,25 @@
 		"teacher": "Professor"
 	},
 	"homework": {
+		"assignmentContent": "Conteúdo da tarefa",
 		"assignmentTitle": "Título da tarefa",
 		"cancel": "Cancelar",
 		"createHomework": "Criar lição de casa",
 		"createHomeworkDraft": "Criar rascunho",
 		"createHomeworkSubmit": "Criar e Enviar",
-		"createNewAssignment": "Criar nova tarefa",
+		"createNewHomework": "Criar nova tarefa de casa",
 		"dateCreated": "Data de criação",
 		"dateUpdated": "Data de atualização",
 		"existingHomeworks": "Trabalhos de casa existentes",
 		"homeworkTitle": "Título da tarefa de casa",
 		"initialContent": "Conteúdo inicial",
+		"markAsCompleted": "Marcar como concluído",
+		"markAsUncompleted": "Marcar como não concluído",
 		"myAssignment": "Minha Tarefa",
 		"noHomeworkYet": "O aluno ainda não escreveu nenhuma tarefa de casa.",
-		"openHomework": "Aberto"
+		"openHomework": "Aberto",
+		"submitted": "Enviado",
+		"unsubmit": "Cancelar submissão"
 	},
 	"joinClass": "Junte-se à aula",
 	"joinClassInfo": "Quando você entrar em uma aula, ela aparecerá aqui.",
@@ -571,7 +576,7 @@
 		"studyTitle": "Título do estudo"
 	},
 	"students": {
-		"goBack": "← Voltar",
+		"goBack": "Voltar para a aula",
 		"username": "Nome de usuário"
 	},
 	"studentsTab": {
@@ -614,6 +619,7 @@
 		"comments": "Comentários",
 		"completed": "Concluído",
 		"feedbackGiven": "Feedback dado",
+		"feedbackRequested": "Solicita-se feedback",
 		"lastUpdated": "Última atualização",
 		"needsFeedback": "Precisa de feedback",
 		"notStarted": "Não iniciado",

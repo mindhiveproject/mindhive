@@ -469,20 +469,25 @@
 		"teacher": "अध्यापक"
 	},
 	"homework": {
+		"assignmentContent": "",
 		"assignmentTitle": "असाइनमेंट का शीर्षक",
 		"cancel": "",
 		"createHomework": "",
 		"createHomeworkDraft": "",
 		"createHomeworkSubmit": "",
-		"createNewAssignment": "नया असाइनमेंट बनाएँ",
+		"createNewHomework": "",
 		"dateCreated": "बनाया गया दिनांक",
 		"dateUpdated": "तारीख अपडेट की गई",
 		"existingHomeworks": "",
 		"homeworkTitle": "होमवर्क शीर्षक",
 		"initialContent": "",
+		"markAsCompleted": "",
+		"markAsUncompleted": "",
 		"myAssignment": "",
 		"noHomeworkYet": "छात्र ने अभी तक कोई गृहकार्य नहीं लिखा है।",
-		"openHomework": ""
+		"openHomework": "",
+		"submitted": "",
+		"unsubmit": ""
 	},
 	"joinClass": "कक्षा में शामिल हों",
 	"joinClassInfo": "जब आप किसी कक्षा में शामिल होंगे तो वह यहां दिखाई देगी।",
@@ -571,7 +576,7 @@
 		"studyTitle": "अध्ययन का शीर्षक"
 	},
 	"students": {
-		"goBack": "← वापस जाएं",
+		"goBack": "",
 		"username": "उपयोगकर्ता नाम"
 	},
 	"studentsTab": {
@@ -614,6 +619,7 @@
 		"comments": "टिप्पणियाँ",
 		"completed": "पुरा होना।",
 		"feedbackGiven": "प्रतिक्रिया दी गई",
+		"feedbackRequested": "",
 		"lastUpdated": "आखरी अपडेट",
 		"needsFeedback": "प्रतिक्रिया की आवश्यकता है",
 		"notStarted": "शुरू नहीं",
