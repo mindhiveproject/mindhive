@@ -8,6 +8,7 @@
 	"assignment": {
 		"actions": "Actions",
 		"addAssignment": "Add assignment",
+		"cancel": "Cancel",
 		"changeSuccess": "Changes saved successfully",
 		"chooseClassFirst": "You must associate this assignment to a class before saving it",
 		"classes": "Class(es)",
@@ -33,12 +34,14 @@
 		"homework": "{{count}} homework",
 		"homework_plural": "{{count}} homeworks",
 		"homeworkHeader": "Homework",
+		"homeworkOverview": "View and manage student homework submissions",
 		"instructions": "Instructions",
 		"instructionsPlaceholder": "Enter assignment instructions...",
 		"linkAssignments": "Link Assignments to Class",
 		"linkCopied": "The link is copied",
 		"makeYourCopy": "Make changes and save this assignment as your own",
 		"noAssignments": "There are no assignment linked to this class yet.",
+		"noHomework": "No homework",
 		"noPlaceholder": "This assignment has no predefined placeholder",
 		"notVisibleForStudents": "The assignment is NOT visible for students",
 		"open": "Open",
@@ -49,6 +52,8 @@
 		"publish": "Publish",
 		"published": "Published",
 		"publishToStudents": "Publish to students",
+		"requestFeedback": "Request feedback",
+		"reviewSubmissions": "Review submissions",
 		"revokeConfirm": "Are you sure you want to revoke this assignment? The assignment will no longer be visible for the students.",
 		"save": "Save Changes",
 		"saveAndMakeOwn": "Save changes & make your own",
@@ -66,6 +71,10 @@
 		"unpublished": "Unpublished",
 		"unsavedChanges": "Unsaved changes!",
 		"visibleForStudents": "The assignment is visible for students"
+	},
+	"assignments": {
+		"noAssignments": "No assignments available",
+		"open": "Open"
 	},
 	"assignmentsTab": "Assignments",
 	"board": {
@@ -321,7 +330,8 @@
 	"classNetworks": "Class networks",
 	"collaborators": "Collaborator(s)",
 	"common": {
-		"loading": "Loading..."
+		"loading": "Loading...",
+		"errorLoading": "Error loading assignment"
 	},
 	"create": {
 		"create": "Create new class",
@@ -623,6 +633,7 @@
 		"lastUpdated": "Last updated",
 		"needsFeedback": "Needs feedback",
 		"notStarted": "Not started",
+		"requestFeedback": "Request feedback",
 		"saveAndClose": "Save & close",
 		"saving": "Saving ...",
 		"selectStatus": "Select status",
@@ -635,5 +646,7 @@
 	},
 	"theirWorkspaceAndStudies": "Their workspace and any studies, tasks or surveys they created during your class",
 	"typeDeleteToConfirm": "Type \"DELETE\" to confirm",
-	"yourClass": "Your class"
+	"yourClass": "Your class",
+	"noResources": "No public resources.",
+	"noAssignments": "No assignments available."
 }

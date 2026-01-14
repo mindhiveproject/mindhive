@@ -107,7 +107,7 @@ const StatusChip = styled.span`
 `;
 
 export default function AssignmentTab({ assignments, myclass, user, query }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("classes");
 
   // Strip HTML from title
   const stripHtml = (html) => {

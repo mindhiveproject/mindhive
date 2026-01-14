@@ -257,6 +257,17 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       }
     };
 
+    const handleHomeworkOverview = () => {
+      router.push({
+        pathname: `/dashboard/myclasses/${myclass?.code}`,
+        query: {
+          page: "assignments",
+          action: "homeworkOverview",
+          assignment: assignment?.code,
+        },
+      });
+    };
+
     const menu = (
       <Menu vertical style={{ border: 'none', boxShadow: 'none' }}>
         <Menu.Item onClick={handleEdit} style={{ borderTop: 'none', borderBottom: 'none' }}>
@@ -264,6 +275,9 @@ export default function AssignmentTab({ assignments, myclass, user }) {
         </Menu.Item>
         <Menu.Item onClick={handlePreview} style={{ borderTop: 'none', borderBottom: 'none' }}>
           {t("assignment.preview")}
+        </Menu.Item>
+        <Menu.Item onClick={handleHomeworkOverview} style={{ borderTop: 'none', borderBottom: 'none' }}>
+          {t("assignment.reviewSubmissions") || "Review Submissions"}
         </Menu.Item>
         <Menu.Item onClick={handlePublish} style={{ borderTop: 'none', borderBottom: 'none' }}>
           {isPublished ? t("assignment.unpublish") : t("assignment.publishToStudents")}

@@ -381,7 +381,7 @@ export default function HomeworkTab({ user, assignment, homework }) {
                 >
                   {currentStatus === "Needs feedback"
                     ? (t("teacherClass.feedbackRequested") || "Feedback requested")
-                    : "Request feedback"}
+                    : t("teacherClass.requestFeedback")}
                 </Button>
               )}
               {currentStatus === "Completed" ? (

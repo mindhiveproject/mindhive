@@ -20,7 +20,7 @@ const EmptyState = styled.div`
 `;
 
 export default function Settings({ myclass, user, query }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("classes");
   const { action, assignment } = query;
 
   const { data, loading, error } = useQuery(
