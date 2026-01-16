@@ -8,6 +8,7 @@
 	"assignment": {
 		"actions": "",
 		"addAssignment": "Opdracht toevoegen",
+		"cancel": "Annuleren",
 		"changeSuccess": "Veranderingen succesvol opgeslagen",
 		"chooseClassFirst": "U moet deze opdracht aan een klas koppelen voordat u deze opslaat",
 		"classes": "Klasse(n)",
@@ -33,12 +34,14 @@
 		"homework": "{{count}} huiswerk",
 		"homework_plural": "{{count}} huiswerk",
 		"homeworkHeader": "Huiswerk",
+		"homeworkOverview": "Bekijk en beheer de ingeleverde huiswerkopdrachten van studenten.",
 		"instructions": "Instructie getoond aan studenten",
 		"instructionsPlaceholder": "Voer opdrachtinstructies in...",
 		"linkAssignments": "Koppel opdrachten aan de les.",
 		"linkCopied": "De link is gekopieerd",
 		"makeYourCopy": "Wijzigingen aanbrengen en deze opdracht opslaan als uw eigen opdracht",
 		"noAssignments": "Er zijn nog geen opdrachten gekoppeld aan deze cursus.",
+		"noHomework": "Geen huiswerk",
 		"noPlaceholder": "Deze opdracht heeft geen vooraf gedefinieerde tijdelijke aanduiding",
 		"notVisibleForStudents": "De opdracht is NIET zichtbaar voor studenten",
 		"open": "Open",
@@ -49,6 +52,8 @@
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Publiceren voor studenten",
+		"requestFeedback": "Vraag om feedback",
+		"reviewSubmissions": "Inzendingen beoordelen",
 		"revokeConfirm": "Weet u zeker dat u deze opdracht wilt intrekken? De opdracht is dan niet langer zichtbaar voor de studenten.",
 		"save": "Wijzigingen opslaan",
 		"saveAndMakeOwn": "Wijzigingen opslaan en uw eigen wijzigingen maken",
@@ -469,20 +474,25 @@
 		"teacher": "Docent"
 	},
 	"homework": {
+		"assignmentContent": "Opdrachtinhoud",
 		"assignmentTitle": "Opdrachttitel",
 		"cancel": "Annuleren",
 		"createHomework": "Huiswerk maken",
 		"createHomeworkDraft": "Concept maken",
 		"createHomeworkSubmit": "Maken en indienen",
-		"createNewAssignment": "Nieuwe opdracht maken",
+		"createNewHomework": "Maak een nieuw huiswerk",
 		"dateCreated": "Datum aangemaakt",
 		"dateUpdated": "Datum bijgewerkt",
 		"existingHomeworks": "Bestaande thuiswerken",
 		"homeworkTitle": "Titel van het huiswerk",
 		"initialContent": "Initiële inhoud",
+		"markAsCompleted": "Markeer als voltooid",
+		"markAsUncompleted": "Markeren als onvoltooid",
 		"myAssignment": "Mijn opdracht",
 		"noHomeworkYet": "De student heeft nog geen huiswerk gemaakt.",
-		"openHomework": "Open"
+		"openHomework": "Open",
+		"submitted": "Ingediend",
+		"unsubmit": "Intrekken"
 	},
 	"joinClass": "Doe mee met de les",
 	"joinClassInfo": "Zodra u zich bij een klas aansluit, wordt deze hier weergegeven.",
@@ -571,7 +581,7 @@
 		"studyTitle": "Studietitel"
 	},
 	"students": {
-		"goBack": "← Ga terug",
+		"goBack": "Ga terug naar de les",
 		"username": "Gebruikersnaam"
 	},
 	"studentsTab": {
@@ -614,6 +624,7 @@
 		"comments": "Reacties",
 		"completed": "Voltooid",
 		"feedbackGiven": "Feedback gegeven",
+		"feedbackRequested": "Feedback gevraagd",
 		"lastUpdated": "Laatst bijgewerkt",
 		"needsFeedback": "Feedback nodig",
 		"notStarted": "Niet gestart",

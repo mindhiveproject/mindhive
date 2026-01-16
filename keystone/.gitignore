@@ -1,5 +1,4 @@
-node_modules
-.keystone
+node_modules    
 keystone.db
 *.log
 .env
@@ -8,3 +7,4 @@ package-lock.json
 schema.graphql
 schema.prisma
 .DS_Store
+.keystone/

@@ -12,6 +12,7 @@ import "../components/styles/nprogress.css";
 import { ApolloProvider } from "@apollo/client";
 import withData from "../lib/withData";
 
+import "../components/styles/global.css"
 import Site from "../components/Global/Site";
 import Authorized from "../components/Global/Authorized";
 import HelpCenter from "../components/Global/HelpCenter";

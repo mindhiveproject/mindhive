@@ -8,6 +8,7 @@
 	"assignment": {
 		"actions": "",
 		"addAssignment": "Adicionar tarefa",
+		"cancel": "Cancelar",
 		"changeSuccess": "Alterações salvas com sucesso",
 		"chooseClassFirst": "Você deve associar esta tarefa a uma classe antes de salvá-la",
 		"classes": "Classe(s)",
@@ -33,12 +34,14 @@
 		"homework": "{{count}} lição de casa",
 		"homework_plural": "{{count}} tarefas de casa",
 		"homeworkHeader": "Trabalho de casa",
+		"homeworkOverview": "Visualizar e gerenciar os trabalhos de casa enviados pelos alunos.",
 		"instructions": "Instrução mostrada aos alunos",
 		"instructionsPlaceholder": "Insira as instruções da tarefa...",
 		"linkAssignments": "Vincular tarefas à turma",
 		"linkCopied": "O link foi copiado",
 		"makeYourCopy": "Faça alterações e salve esta tarefa como sua",
 		"noAssignments": "Ainda não há tarefas associadas a esta turma.",
+		"noHomework": "Sem dever de casa",
 		"noPlaceholder": "Esta tarefa não tem espaço reservado predefinido",
 		"notVisibleForStudents": "A tarefa NÃO é visível para os alunos",
 		"open": "Abrir",
@@ -49,6 +52,8 @@
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Publicar para estudantes",
+		"requestFeedback": "Solicitar feedback",
+		"reviewSubmissions": "Analisar submissões",
 		"revokeConfirm": "Tem certeza de que deseja revogar esta tarefa? Ela não ficará mais visível para os alunos.",
 		"save": "Salvar alterações",
 		"saveAndMakeOwn": "Salve as alterações e faça as suas próprias",
@@ -469,20 +474,25 @@
 		"teacher": "Professor"
 	},
 	"homework": {
+		"assignmentContent": "Conteúdo da tarefa",
 		"assignmentTitle": "Título da tarefa",
 		"cancel": "Cancelar",
 		"createHomework": "Criar lição de casa",
 		"createHomeworkDraft": "Criar rascunho",
 		"createHomeworkSubmit": "Criar e Enviar",
-		"createNewAssignment": "Criar nova tarefa",
+		"createNewHomework": "Criar nova tarefa de casa",
 		"dateCreated": "Data de criação",
 		"dateUpdated": "Data de atualização",
 		"existingHomeworks": "Trabalhos de casa existentes",
 		"homeworkTitle": "Título da tarefa de casa",
 		"initialContent": "Conteúdo inicial",
+		"markAsCompleted": "Marcar como concluído",
+		"markAsUncompleted": "Marcar como não concluído",
 		"myAssignment": "Minha Tarefa",
 		"noHomeworkYet": "O aluno ainda não escreveu nenhuma tarefa de casa.",
-		"openHomework": "Aberto"
+		"openHomework": "Aberto",
+		"submitted": "Enviado",
+		"unsubmit": "Cancelar submissão"
 	},
 	"joinClass": "Junte-se à aula",
 	"joinClassInfo": "Quando você entrar em uma aula, ela aparecerá aqui.",
@@ -571,7 +581,7 @@
 		"studyTitle": "Título do estudo"
 	},
 	"students": {
-		"goBack": "← Voltar",
+		"goBack": "Voltar para a aula",
 		"username": "Nome de usuário"
 	},
 	"studentsTab": {
@@ -614,6 +624,7 @@
 		"comments": "Comentários",
 		"completed": "Concluído",
 		"feedbackGiven": "Feedback dado",
+		"feedbackRequested": "Solicita-se feedback",
 		"lastUpdated": "Última atualização",
 		"needsFeedback": "Precisa de feedback",
 		"notStarted": "Não iniciado",

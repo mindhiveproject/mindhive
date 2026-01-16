@@ -80,17 +80,25 @@ export default function Documentation() {
     const relativePath = getRelativePath(pathOnly);
     const filePath = getDocsFilePath(relativePath);
 
-    // Get the tab from the query string
+    // Get the tab or page from the query string
     const tab = router.query.tab;
+    const page = router.query.page;
     const validTabs = ['board',
                        'builder',
                        'page',
                        'review',
                        'collect',
                        'journal'];
+    const validPages = ['students',
+                        'dashboard',
+                        'mentors',
+                        'projects',
+                        'studies',
+                        'assignments',
+                        'settings'];
 
     if (filePath) {
-      // If tab is valid, try tab-specific doc first
+      // Check for tab-specific doc (for builder/project pages)
       if (tab && validTabs.includes(tab)) {
         const tabFilePath = filePath.replace(/\.md$/, `.${tab}.md`);
         fetchDocumentation(tabFilePath)
@@ -101,8 +109,21 @@ export default function Documentation() {
               .then(setMarkdown)
               .catch(() => setMarkdown(`No page-specific documentation available here.`));
           });
-      } else {
-        // No tab or invalid tab, just fetch the default doc
+      } 
+      // Check for page-specific doc (for class pages)
+      else if (page && validPages.includes(page)) {
+        const pageFilePath = filePath.replace(/\.md$/, `.${page}.md`);
+        fetchDocumentation(pageFilePath)
+          .then(setMarkdown)
+          .catch(() => {
+            // Fallback to default doc if page-specific not found
+            fetchDocumentation(filePath)
+              .then(setMarkdown)
+              .catch(() => setMarkdown(`No page-specific documentation available here.`));
+          });
+      } 
+      // No tab/page or invalid, just fetch the default doc
+      else {
         fetchDocumentation(filePath)
           .then(setMarkdown)
           .catch(() => setMarkdown(`Oops!\nNo page-specific documentation available here.`));
@@ -110,7 +131,7 @@ export default function Documentation() {
     } else {
       setMarkdown('Oops!\nNo page-specific documentation available here.');
     }
-  }, [router.asPath, router.query.tab, fetchDocumentation]);
+  }, [router.asPath, router.query.tab, router.query.page, fetchDocumentation]);
 
   return (
     <StyledMarkdown>

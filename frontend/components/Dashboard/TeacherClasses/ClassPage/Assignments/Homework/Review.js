@@ -207,20 +207,25 @@ const CommentsLabel = styled.label`
   margin-bottom: 12px;
 `;
 
-const CommentsTextarea = styled.textarea`
+const CommentsEditorWrapper = styled.div`
   width: 100%;
   min-height: 150px;
-  padding: 12px;
-  font-family: Lato;
-  font-size: 14px;
-  line-height: 1.5;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  resize: vertical;
   
-  &:focus {
-    outline: none;
-    border-color: #336F8A;
+  .tiptapEditor {
+    .ProseMirror {
+      padding: 12px;
+      font-family: Lato;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 120px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      
+      &:focus {
+        outline: none;
+        border-color: #336F8A;
+      }
+    }
   }
 `;
 
@@ -286,6 +291,8 @@ export default function ReviewHomework({
       pathname: `/dashboard/myclasses/${myclass?.code}`,
       query: {
         page: "assignments",
+        action: "homeworkOverview",
+        assignment: code,
       },
     });
   };
@@ -302,6 +309,8 @@ export default function ReviewHomework({
               pathname: `/dashboard/myclasses/${myclass?.code}`,
               query: {
                 page: "assignments",
+                action: "homeworkOverview",
+                assignment: code,
               },
             }}
             style={{ textDecoration: 'none' }}
@@ -383,20 +392,22 @@ export default function ReviewHomework({
 
         <CommentsSection>
           <CommentsLabel>{t("teacherClass.comments") || "Comments"}</CommentsLabel>
-          <CommentsTextarea
-            id="comment"
-            name="comment"
-            value={inputs?.settings?.comment || ''}
-            onChange={(e) => {
-              handleChange({
-                target: {
-                  name: "settings",
-                  value: { ...inputs?.settings, comment: e.target.value },
-                },
-              });
-            }}
-            placeholder="Add your feedback and comments here..."
-          />
+          <CommentsEditorWrapper>
+            <TipTapEditor
+              content={inputs?.settings?.comment || ''}
+              onUpdate={(newContent) => {
+                handleChange({
+                  target: {
+                    name: "settings",
+                    value: { ...inputs?.settings, comment: newContent },
+                  },
+                });
+              }}
+              isEditable={true}
+              toolbarVisible={true}
+              limitedToolbar={true}
+            />
+          </CommentsEditorWrapper>
         </CommentsSection>
       </Section>
 
@@ -407,6 +418,8 @@ export default function ReviewHomework({
             pathname: `/dashboard/myclasses/${myclass?.code}`,
             query: {
               page: "assignments",
+              action: "homeworkOverview",
+              assignment: code,
             },
           }}
           style={{ textDecoration: 'none' }}

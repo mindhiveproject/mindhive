@@ -82,6 +82,21 @@ const StatusChip = styled.span`
         background: #E0F2F1; /* Light teal */
         color: #00695C;      /* Medium green */
       `;
+    } else if (status === 'needs feedback') {
+      return `
+        background: #FCE4EC; /* Light pink */
+        color: #C2185B;      /* Medium red */
+      `;
+    } else if (status === 'feedback given') {
+      return `
+        background: #F3E5F5; /* Light purple */
+        color: #7B1FA2;      /* Medium purple */
+      `;
+    } else if (status === 'in progress') {
+      return `
+        background: #E3F2FD; /* Light blue */
+        color: #1976D2;      /* Medium blue */
+      `;
     } else {
       return `
         background: #F5F5F5; /* Light gray */
@@ -92,7 +107,7 @@ const StatusChip = styled.span`
 `;
 
 export default function AssignmentTab({ assignments, myclass, user, query }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("classes");
 
   // Strip HTML from title
   const stripHtml = (html) => {
@@ -105,13 +120,36 @@ export default function AssignmentTab({ assignments, myclass, user, query }) {
     if (!assignments || !Array.isArray(assignments)) return [];
     return assignments
       .filter((a) => a?.public)
-      .map((assignment) => ({
-        id: assignment?.id,
-        code: assignment?.code,
-        title: stripHtml(assignment?.title || ''),
-        createdAt: assignment?.createdAt,
-        status: assignment?.homework && assignment.homework.length > 0 ? "Submitted" : "Not Started",
-      }));
+      .map((assignment) => {
+        // Get the user's homework for this assignment
+        const userHomework = assignment?.homework && assignment.homework.length > 0 
+          ? assignment.homework[0] 
+          : null;
+        
+        // Determine status based on homework settings
+        let status = "Not Started";
+        if (userHomework) {
+          const homeworkStatus = userHomework?.settings?.status || "Started";
+          // Map status values to display text
+          if (homeworkStatus === "Completed") {
+            status = "Submitted";
+          } else if (homeworkStatus === "Needs feedback") {
+            status = "Needs feedback";
+          } else if (homeworkStatus === "Feedback given") {
+            status = "Feedback given";
+          } else {
+            status = "In Progress";
+          }
+        }
+        
+        return {
+          id: assignment?.id,
+          code: assignment?.code,
+          title: stripHtml(assignment?.title || ''),
+          createdAt: assignment?.createdAt,
+          status: status,
+        };
+      });
   }, [assignments]);
 
   // Title renderer with HTML stripped

@@ -1,15 +1,20 @@
-import { useQuery } from "@apollo/client";
+import { useState, useEffect, useRef } from "react";
+import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
+import moment from "moment";
+import { Button } from "semantic-ui-react";
 
 import { GET_ASSIGNMENT_FOR_STUDENT } from "../../Queries/Assignment";
 import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../Queries/Homework";
+import { CREATE_HOMEWORK } from "../../Mutations/Homework";
 import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap"
 import ReactHtmlParser from "react-html-parser";
+import TipTapEditor from "../../TipTap/Main";
+import useForm from "../../../lib/useForm";
 
-import NewHomework from "./New";
 import HomeworkTab from "./Tab";
 import StyledClass from "../../styles/StyledClass";
 import Homework from "./Homework/Main";
@@ -59,6 +64,7 @@ const HeaderTitle = styled.h1`
   font-family: Lato;
   font-size: 28px;
   font-weight: 600;
+  padding-top: 16px;
   color: #1a1a1a;
 `;
 
@@ -69,6 +75,7 @@ const ButtonContainer = styled.div`
 `;
 
 const Container = styled.div`
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
@@ -90,10 +97,18 @@ const ContentTitle = styled.h2`
   color: #1a1a1a;
 `;
 
+const EditorWrapper = styled.div`
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+`;
+
 export default function AssignmentMain({ query, user }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
   const { selector, homework } = query;
+  const [showNewHomework, setShowNewHomework] = useState(false);
 
   const { data, loading, error } = useQuery(GET_ASSIGNMENT_FOR_STUDENT, {
     variables: { code: selector },
@@ -101,7 +116,7 @@ export default function AssignmentMain({ query, user }) {
 
   const assignment = data?.assignment || {};
 
-  const { data: homeworkData } = useQuery(GET_MY_HOMEWORKS_FOR_ASSIGNMENT, {
+  const { data: homeworkData, refetch: refetchHomeworks } = useQuery(GET_MY_HOMEWORKS_FOR_ASSIGNMENT, {
     variables: { userId: user?.id, assignmentCode: selector },
   });
 
@@ -117,6 +132,89 @@ export default function AssignmentMain({ query, user }) {
   const classCode = assignment?.classes && assignment.classes.length > 0 
     ? assignment.classes[0]?.code 
     : null;
+
+  // New homework form state
+  const { inputs, handleChange, clearForm } = useForm({
+    settings: { status: "Started" },
+    title: "",
+    placeholder: assignment?.placeholder || "",
+  });
+
+  const homeworkContent = useRef("");
+
+  useEffect(() => {
+    if (assignment?.placeholder && !homeworkContent.current) {
+      homeworkContent.current = assignment.placeholder;
+    }
+  }, [assignment?.placeholder]);
+
+  // Set title when form is shown
+  useEffect(() => {
+    if (showNewHomework && assignment?.title) {
+      const strippedTitle = stripHtml(assignment.title);
+      handleChange({
+        target: {
+          name: "title",
+          value: `Assignment | ${strippedTitle} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`
+        }
+      });
+    }
+  }, [showNewHomework, assignment?.title, user?.username, handleChange]);
+
+  // Mutation for creating homework
+  const [createHomework, { loading: createLoading }] = useMutation(CREATE_HOMEWORK, {
+    refetchQueries: [
+      {
+        query: GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
+        variables: { userId: user?.id, assignmentCode: selector },
+      },
+    ],
+  });
+
+  const updateHomeworkContent = async (newContent) => {
+    homeworkContent.current = newContent;
+  };
+
+  const handleCreateHomeworkDraft = async () => {
+    try {
+      await createHomework({
+        variables: {
+          ...inputs,
+          content: homeworkContent?.current || inputs.placeholder,
+          assignmentId: assignment?.id,
+        },
+      });
+      clearForm();
+      setShowNewHomework(false);
+      if (refetchHomeworks) {
+        refetchHomeworks();
+      }
+    } catch (error) {
+      console.error("Error creating homework:", error);
+      alert("Error creating homework: " + error.message);
+    }
+  };
+
+  const handleCreateHomeworkSubmit = async () => {
+    try {
+      await createHomework({
+        variables: {
+          ...inputs,
+          content: homeworkContent?.current || inputs.placeholder,
+          assignmentId: assignment?.id,
+          settings: {"status": "Completed"},
+        },
+      });
+      clearForm();
+      setShowNewHomework(false);
+      if (refetchHomeworks) {
+        refetchHomeworks();
+      }
+    } catch (error) {
+      console.error("Error creating homework:", error);
+      alert("Error creating homework: " + error.message);
+    }
+  };
 
   if (homework) {
     return (
@@ -150,7 +248,7 @@ export default function AssignmentMain({ query, user }) {
               }}
               style={{ textDecoration: 'none' }}
             >
-              <SecondaryButton>← {t("students.goBack") || "Go back"}</SecondaryButton>
+              <SecondaryButton>← {t("students.goBack") || "Go back to class"}</SecondaryButton>
             </Link>
           </ButtonContainer>
         )}
@@ -160,7 +258,7 @@ export default function AssignmentMain({ query, user }) {
       {/* Assignment Content */}
       {assignment?.content && (
         <ContentSection>
-          <ContentTitle>{t("assignment.instructions") || "Student Instructions"}</ContentTitle>
+          <ContentTitle>{t("assignment.instructions") || "Instructions"}</ContentTitle>
           <ReadOnlyTipTap>
             <div className="ProseMirror">
               {ReactHtmlParser(assignment.content || "")}
@@ -169,7 +267,7 @@ export default function AssignmentMain({ query, user }) {
         </ContentSection>
       )}
 
-      {assignment?.placeholder && (
+      {assignment?.placeholder && user?.permissions.name == "PARTICIPANT" && user?.permissions.name == "STUDENT" && (
         <ContentSection>
           <ContentTitle>{t("assignment.placeholderDescription") || "Placeholder for student answer box"}</ContentTitle>
           <ReadOnlyTipTap>
@@ -184,16 +282,9 @@ export default function AssignmentMain({ query, user }) {
       <ContentSection>
         <ContentTitle>My homework</ContentTitle>
 
-        {!homeworks.length && (
-          <NewHomework user={user} assignment={assignment}>
-            <div>
-              <button>New homework</button>
-            </div>
-          </NewHomework>
-        )}
-
+        {/* Show existing homeworks */}
         {homeworks.length > 0 && (
-          <div className="assignments">
+          <div>
             {homeworks.map((homework) => (
               <HomeworkTab
                 key={homework?.id}
@@ -202,6 +293,122 @@ export default function AssignmentMain({ query, user }) {
                 user={user}
               />
             ))}
+          </div>
+        )}
+
+        {/* New Homework Section */}
+        {homeworks.length < 1 && !showNewHomework && (
+          <Button
+            onClick={() => setShowNewHomework(true)}
+            style={{
+              borderRadius: "100px",
+              background: "#336F8A",
+              fontSize: "14px",
+              color: "white",
+              border: "1px solid #336F8A",
+              marginRight: "10px"
+            }}
+            disabled={createLoading}
+          >
+            {t("homework.createNewHomework", "Create New Homework")}
+          </Button>
+        )}
+
+        {showNewHomework && (
+          <div style={{
+            border: "1px solid #A1A1A1",
+            borderRadius: "8px",
+            padding: "16px",
+            background: "#FFF",
+            boxShadow: "2px 2px 8px 0 rgba(0, 0, 0, 0.10)",
+            marginTop: "16px",
+          }}>
+            <div style={{
+              fontSize: "18px",
+              fontWeight: "600",
+              marginBottom: "16px"
+            }}>
+              {t("homework.createNewHomework", "Create New Homework")}
+            </div>
+
+            <div style={{ marginBottom: "12px", width: "100%" }}>
+              <p style={{ marginBottom: "0px" }}>
+                {t("homework.homeworkTitle", "Homework title")}
+              </p>
+              <EditorWrapper style={{ marginTop: "4px" }}>
+                <TipTapEditor
+                  content={inputs.title}
+                  onUpdate={(newContent) => handleChange({
+                    target: { name: "title", value: newContent }
+                  })}
+                  toolbarVisible={false}
+                  placeholder={t("homework.homeworkTitle", "Homework title")}
+                />
+              </EditorWrapper>
+            </div>
+            <p style={{ marginBottom: "0px" }}>
+                {t("homework.assignmentContent", "Assignment content")}
+              </p>
+            <div style={{ marginBottom: "16px", width: "100%" }}>
+              <EditorWrapper style={{
+                minHeight: "100px",
+                marginTop: "4px",
+              }}>
+                <TipTapEditor
+                  content={homeworkContent.current || inputs.placeholder}
+                  onUpdate={(newContent) => updateHomeworkContent(newContent)}
+                />
+              </EditorWrapper>
+            </div>
+
+            <div style={{ display: "flex", gap: "8px" }}>
+              <Button
+                onClick={handleCreateHomeworkSubmit}
+                loading={createLoading}
+                disabled={createLoading}
+                style={{
+                  borderRadius: "100px",
+                  background: "#336F8A",
+                  fontSize: "12px",
+                  color: "white",
+                  border: "1px solid #336F8A",
+                  marginRight: "10px"
+                }}
+              >
+                {t("homework.createHomeworkSubmit", "Create & Submit")}
+              </Button>
+              <Button
+                onClick={handleCreateHomeworkDraft}
+                loading={createLoading}
+                disabled={createLoading}
+                style={{
+                  borderRadius: "100px",
+                  background: "white",
+                  fontSize: "12px",
+                  color: "#336F8A",
+                  border: "1px solid #336F8A",
+                  marginRight: "10px"
+                }}
+              >
+                {t("homework.createHomeworkDraft", "Create Draft")}
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowNewHomework(false);
+                  clearForm();
+                }}
+                style={{
+                  borderRadius: "100px",
+                  background: "#f7f9fa",
+                  fontSize: "12px",
+                  color: "#B9261A",
+                  border: "1px solid #B9261A",
+                  marginRight: "10px"
+                }}
+              >
+                {t("homework.cancel", "Cancel")}
+              </Button>
+            </div>
           </div>
         )}
       </ContentSection>

@@ -8,6 +8,7 @@
 	"assignment": {
 		"actions": "",
 		"addAssignment": "Добавить задание",
+		"cancel": "Отмена",
 		"changeSuccess": "Изменения успешно сохранены",
 		"chooseClassFirst": "Перед сохранением задания необходимо связать его с классом.",
 		"classes": "Класс(ы)",
@@ -33,12 +34,14 @@
 		"homework": "{{count}} домашнее задание",
 		"homework_plural": "{{count}} домашних заданий",
 		"homeworkHeader": "Домашнее задание",
+		"homeworkOverview": "Просмотр и управление отправленными учащимися домашними заданиями.",
 		"instructions": "Инструкции, демонстрируемые студентам",
 		"instructionsPlaceholder": "Введите инструкции по заданию...",
 		"linkAssignments": "Привязывайте задания к занятиям.",
 		"linkCopied": "Ссылка скопирована.",
 		"makeYourCopy": "Внесите изменения и сохраните это задание как свое собственное.",
 		"noAssignments": "К этому курсу пока не привязано ни одного задания.",
+		"noHomework": "Домашнее задание не требуется",
 		"noPlaceholder": "Это задание не имеет предопределенного заполнителя.",
 		"notVisibleForStudents": "Задание НЕ видно студентам",
 		"open": "Открыть",
@@ -49,6 +52,8 @@
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Опубликовать для студентов",
+		"requestFeedback": "Запросить обратную связь",
+		"reviewSubmissions": "Рассмотрение представленных работ",
 		"revokeConfirm": "Вы уверены, что хотите отменить это задание? Оно больше не будет видно студентам.",
 		"save": "Сохранить изменения",
 		"saveAndMakeOwn": "Сохраните изменения и внесите свои собственные",
@@ -469,20 +474,25 @@
 		"teacher": "Учитель"
 	},
 	"homework": {
+		"assignmentContent": "Содержание задания",
 		"assignmentTitle": "Название задания",
 		"cancel": "Отмена",
 		"createHomework": "Создать домашнее задание",
 		"createHomeworkDraft": "Создать черновик",
 		"createHomeworkSubmit": "Создать и отправить",
-		"createNewAssignment": "Создать новое задание",
+		"createNewHomework": "Создать новое домашнее задание",
 		"dateCreated": "Дата создания",
 		"dateUpdated": "Дата обновления",
 		"existingHomeworks": "Существующие домашние задания",
 		"homeworkTitle": "Название домашнего задания",
 		"initialContent": "Начальное содержание",
+		"markAsCompleted": "Отметить как выполненное",
+		"markAsUncompleted": "Отметить как незавершенное",
 		"myAssignment": "Мое задание",
 		"noHomeworkYet": "Студент еще не написал домашнее задание.",
-		"openHomework": "Открыть"
+		"openHomework": "Открыть",
+		"submitted": "Поданный",
+		"unsubmit": "Отменить отправку"
 	},
 	"joinClass": "Присоединиться к классу",
 	"joinClassInfo": "Как только вы присоединитесь к классу, он появится здесь.",
@@ -571,7 +581,7 @@
 		"studyTitle": "Название исследования"
 	},
 	"students": {
-		"goBack": "← Вернуться назад",
+		"goBack": "Вернитесь в класс",
 		"username": "Имя пользователя"
 	},
 	"studentsTab": {
@@ -614,6 +624,7 @@
 		"comments": "Комментарии",
 		"completed": "Завершенный",
 		"feedbackGiven": "Отзыв предоставлен",
+		"feedbackRequested": "Просьба оставить отзыв.",
 		"lastUpdated": "Последнее обновление",
 		"needsFeedback": "Нужна обратная связь",
 		"notStarted": "Не начато",

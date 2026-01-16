@@ -13,6 +13,7 @@ import CreateAssignment from "./Create";
 import EditAssignment from "./Edit";
 import CopyAssignment from "./Copy";
 import Overview from "../Overview/HomeworkCompletion";
+import HomeworkOverview from "./HomeworkOverview";
 
 // Styled button matching Figma design (Primary Action - Teal)
 const PrimaryButton = styled.button`
@@ -142,6 +143,19 @@ export default function Settings({ myclass, user, query }) {
           code={assignment}
           myclass={myclass}
           user={user}
+        />
+      </div>
+    );
+  }
+
+  if (action === "homeworkOverview" && assignment) {
+    return (
+      <div className="assignments">
+        <HomeworkOverview
+          code={assignment}
+          myclass={myclass}
+          user={user}
+          query={query}
         />
       </div>
     );

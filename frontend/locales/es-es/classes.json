@@ -8,6 +8,7 @@
 	"assignment": {
 		"actions": "",
 		"addAssignment": "Agregar tarea",
+		"cancel": "Cancelar",
 		"changeSuccess": "Los cambios se guardaron correctamente",
 		"chooseClassFirst": "Debes asociar esta tarea a una clase antes de guardarla",
 		"classes": "Clase(s)",
@@ -33,12 +34,14 @@
 		"homework": "{{count}} tarea",
 		"homework_plural": "{{count}} tareas",
 		"homeworkHeader": "Tarea",
+		"homeworkOverview": "Ver y administrar las entregas de tareas de los estudiantes",
 		"instructions": "Instrucción mostrada a los alumnos",
 		"instructionsPlaceholder": "Introduzca las instrucciones de la tarea...",
 		"linkAssignments": "Vincular tareas a la clase",
 		"linkCopied": "El enlace está copiado",
 		"makeYourCopy": "Realice cambios y guarde esta tarea como suya",
 		"noAssignments": "Todavía no hay ninguna tarea asociada a esta clase.",
+		"noHomework": "Sin tarea",
 		"noPlaceholder": "Esta tarea no tiene un marcador de posición predefinido",
 		"notVisibleForStudents": "La tarea NO es visible para los estudiantes.",
 		"open": "Abierto",
@@ -49,6 +52,8 @@
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Publicar para estudiantes",
+		"requestFeedback": "Solicitar comentarios",
+		"reviewSubmissions": "Revisar envíos",
 		"revokeConfirm": "¿Seguro que desea revocar esta tarea? Los estudiantes ya no podrán verla.",
 		"save": "Guardar cambios",
 		"saveAndMakeOwn": "Guarda los cambios y crea los tuyos propios",
@@ -469,20 +474,25 @@
 		"teacher": "Maestro"
 	},
 	"homework": {
+		"assignmentContent": "Contenido de la tarea",
 		"assignmentTitle": "Título de la tarea",
 		"cancel": "Cancelar",
 		"createHomework": "Crear deberes",
 		"createHomeworkDraft": "Crear borrador",
 		"createHomeworkSubmit": "Crear y enviar",
-		"createNewAssignment": "Crear nueva tarea",
+		"createNewHomework": "Crear nueva tarea",
 		"dateCreated": "Fecha de creación",
 		"dateUpdated": "Fecha de actualización",
 		"existingHomeworks": "Tareas existentes",
 		"homeworkTitle": "Título de la tarea",
 		"initialContent": "Contenido inicial",
+		"markAsCompleted": "Marcar como completado",
+		"markAsUncompleted": "Marcar como incompleto",
 		"myAssignment": "Mi tarea",
 		"noHomeworkYet": "El estudiante aún no ha escrito ninguna tarea.",
-		"openHomework": "Abrir"
+		"openHomework": "Abrir",
+		"submitted": "Enviado",
+		"unsubmit": "Cancelar envío"
 	},
 	"joinClass": "Unirse a la clase",
 	"joinClassInfo": "Una vez que te unas a una clase, aparecerá aquí.",
@@ -571,7 +581,7 @@
 		"studyTitle": "Título del estudio"
 	},
 	"students": {
-		"goBack": "← Regresar",
+		"goBack": "Regresar a clases",
 		"username": "Nombre de usuario"
 	},
 	"studentsTab": {
@@ -614,6 +624,7 @@
 		"comments": "Comentarios",
 		"completed": "Terminado",
 		"feedbackGiven": "Retroalimentación proporcionada",
+		"feedbackRequested": "Se solicita retroalimentación",
 		"lastUpdated": "Última actualización",
 		"needsFeedback": "Necesita retroalimentación",
 		"notStarted": "No iniciado",

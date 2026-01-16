@@ -4,6 +4,144 @@ import { useTheme } from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 import "intro.js/introjs.css";
 
+/**
+ * Configuration map for route patterns to tour file paths and export names.
+ * This allows automatic tour discovery without hardcoding each case.
+ * 
+ * To add a new tour:
+ * 1. Create a tours.js file in your component directory (e.g., `components/Builder/Project/MyNewTab/tours.js`)
+ * 2. Export a tours object with the naming convention: `export const myNewTabTours = { ... }`
+ * 3. Add an entry to the appropriate section below:
+ *    - For dashboard routes: Add to `dashboard` object
+ *    - For builder project tabs: Add to `builderProject` object
+ * 
+ * Example:
+ *   myNewTab: {
+ *     path: "../../Builder/Project/MyNewTab/tours",
+ *     exportName: "myNewTabTours",
+ *   },
+ * 
+ * Special cases:
+ * - If your tours file is in a subdirectory or has a different name, specify the full path
+ * - If you need to skip localization, add `isSpecialPath: true`
+ */
+const TOUR_CONFIG = {
+  // Dashboard routes
+  dashboard: {
+    develop: {
+      path: "../../Dashboard/Develop/tours",
+      exportName: "developTours",
+    },
+    review: {
+      path: "../../Dashboard/Review/Overview/tours",
+      exportName: "reviewOverviewTours",
+    },
+  },
+  // Builder Project routes - maps tab names to component paths and export names
+  builderProject: {
+    board: {
+      path: "../../Builder/Project/ProjectBoard/tours",
+      exportName: "projectBoardTours",
+    },
+    builder: {
+      path: "../../Builder/Project/Builder/tours",
+      exportName: "builderTours",
+    },
+    page: {
+      path: "../../Builder/Project/ParticipantPage/tours",
+      exportName: "participantPageTours",
+    },
+    review: {
+      path: "../../Builder/Project/Review/tours",
+      exportName: "reviewTours",
+    },
+    collect: {
+      path: "../../Builder/Project/Collect/tours",
+      exportName: "collectTours",
+    },
+    visualize: {
+      path: "../../Builder/Project/Visualize/tours",
+      exportName: "visualizeTours",
+    },
+    journal: {
+      // Special case: DataJournal uses Tours/journalTours.js instead of tours.js
+      path: "../../Builder/Project/DataJournal/Tours/journalTours",
+      exportName: "journalTours",
+      isSpecialPath: true, // Skip localization for this special path
+    },
+  },
+};
+
+/**
+ * Dynamically imports tour files based on route configuration
+ * @param {string} basePath - Base path to the tours file (without .js extension)
+ * @param {string} exportName - Name of the exported tours object
+ * @param {string} locale - Current locale
+ * @param {boolean} isSpecialPath - If true, skip localization attempts
+ * @returns {Promise<Object>} Imported tours module
+ */
+async function importTours(basePath, exportName, locale, isSpecialPath = false) {
+  // For special paths (like DataJournal), skip localization
+  if (isSpecialPath) {
+    try {
+      const toursImport = await import(`${basePath}.js`);
+      return toursImport[exportName];
+    } catch (error) {
+      console.error(`Failed to import tours from ${basePath}.js:`, error);
+      throw error;
+    }
+  }
+
+  // Try localized version first if not English
+  if (locale && locale !== "en-us") {
+    try {
+      const localizedImport = await import(`${basePath}.${locale}.js`);
+      return localizedImport[exportName];
+    } catch (localizedError) {
+      // Fallback to English if localized version doesn't exist
+      console.log(`Localized tours not found for ${locale}, falling back to English`);
+    }
+  }
+
+  // Fallback to English/default
+  try {
+    const defaultImport = await import(`${basePath}.js`);
+    return defaultImport[exportName];
+  } catch (error) {
+    console.error(`Failed to import tours from ${basePath}.js:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Determines tour configuration based on current route
+ * @param {Object} router - Next.js router object
+ * @returns {Object|null} Tour configuration or null if no match
+ */
+function getTourConfig(router) {
+  const { pathname, query } = router;
+
+  // Dashboard routes
+  if (pathname.startsWith("/dashboard/[area]")) {
+    const area = query.area;
+    const config = TOUR_CONFIG.dashboard[area];
+    if (config) {
+      return config;
+    }
+  }
+
+  // Builder Project routes
+  if (pathname === "/builder/[area]" && query.area === "projects" && query.selector) {
+    const tab = query.tab || "board";
+    const config = TOUR_CONFIG.builderProject[tab];
+    if (config) {
+      return config;
+    }
+  }
+
+  return null;
+}
+
 export default function Walkthrough({ onStartWalkthrough }) {
   const [hasTour, setHasTour] = useState(false);
   const [tours, setTours] = useState(null);
@@ -17,334 +155,34 @@ export default function Walkthrough({ onStartWalkthrough }) {
     async function checkTour() {
       let componentImport;
 
-      // Dashboard area routing
-      if (
-        router.pathname.startsWith("/dashboard/[area]") &&
-        router.query.area === "develop"
-      ) {
-        // Import tours directly without importing the component
-        try {
-          const currentLocale = router.locale || "en-us";
-          let developToursImport;
+      // Get tour configuration based on current route
+      const tourConfig = getTourConfig(router);
 
-          // Try localized tour file first
-          if (currentLocale !== "en-us") {
-            try {
-              developToursImport = await import(
-                `../../Dashboard/Develop/tours.${currentLocale}.js`
-              );
-            } catch (localizedError) {
-              // Fallback to English
-              developToursImport = await import(
-                "../../Dashboard/Develop/tours.js"
-              );
-            }
-          } else {
-            developToursImport = await import(
-              "../../Dashboard/Develop/tours.js"
-            );
-          }
-
-          componentImport = {
-            default: { hasTour: true },
-            tours: developToursImport.developTours,
-          };
-        } catch (error) {
-          console.error("Failed to import develop tours:", error);
-          setHasTour(false);
-          return;
+      if (!tourConfig) {
+        // Check for other routes that might have tours in the future
+        if (router.pathname.startsWith("/studies")) {
+          console.log("Walkthrough: Detected studies route");
         }
-      } else if (
-        router.pathname.startsWith("/dashboard/[area]") &&
-        router.query.area === "review"
-      ) {
-        // Import tours directly without importing the component
-        try {
-          const currentLocale = router.locale || "en-us";
-          let reviewOverviewToursImport;
+        setHasTour(false);
+        return;
+      }
 
-          // Try localized tour file first
-          if (currentLocale !== "en-us") {
-            try {
-              reviewOverviewToursImport = await import(
-                `../../Dashboard/Review/Overview/tours.${currentLocale}.js`
-              );
-            } catch (localizedError) {
-              // Fallback to English
-              reviewOverviewToursImport = await import(
-                "../../Dashboard/Review/Overview/tours.js"
-              );
-            }
-          } else {
-            reviewOverviewToursImport = await import(
-              "../../Dashboard/Review/Overview/tours.js"
-            );
-          }
+      // Dynamically import tours using the configuration
+      try {
+        const currentLocale = router.locale || "en-us";
+        const importedTours = await importTours(
+          tourConfig.path,
+          tourConfig.exportName,
+          currentLocale,
+          tourConfig.isSpecialPath
+        );
 
-          componentImport = {
-            default: { hasTour: true },
-            tours: reviewOverviewToursImport.reviewOverviewTours,
-          };
-        } catch (error) {
-          console.error("Failed to import review tours:", error);
-          setHasTour(false);
-          return;
-        }
-      } else if (
-        router.pathname === "/builder/[area]" &&
-        router.query.area === "projects" &&
-        router.query.selector
-      ) {
-        // Import the specific tab component based on the tab parameter
-        const tab = router.query.tab || "board"; // Default to 'board' if no tab specified
-        switch (tab) {
-          case "board":
-            // Import tours directly without importing the component
-            try {
-              const currentLocale = router.locale || "en-us";
-              let boardToursImport;
-
-              // Try localized tour file first
-              if (currentLocale !== "en-us") {
-                try {
-                  boardToursImport = await import(
-                    `../../Builder/Project/ProjectBoard/tours.${currentLocale}.js`
-                  );
-                } catch (localizedError) {
-                  // Fallback to English
-                  boardToursImport = await import(
-                    "../../Builder/Project/ProjectBoard/tours.js"
-                  );
-                }
-              } else {
-                boardToursImport = await import(
-                  "../../Builder/Project/ProjectBoard/tours.js"
-                );
-              }
-
-              componentImport = {
-                default: { hasTour: true },
-                tours: boardToursImport.projectBoardTours,
-              };
-            } catch (error) {
-              console.error("Failed to import board tours:", error);
-              setHasTour(false);
-              return;
-            }
-            break;
-          case "builder":
-            // Import tours directly without importing the component
-            try {
-              const currentLocale = router.locale || "en-us";
-              let toursImport;
-
-              // Try localized tour file first
-              console.log(currentLocale);
-              if (currentLocale !== "en-us") {
-                try {
-                  toursImport = await import(
-                    `../../Builder/Project/Builder/tours.${currentLocale}.js`
-                  );
-                } catch (localizedError) {
-                  console.log(localizedError);
-                  // Fallback to English
-                  toursImport = await import(
-                    "../../Builder/Project/Builder/tours.js"
-                  );
-                }
-              } else {
-                toursImport = await import(
-                  "../../Builder/Project/Builder/tours.js"
-                );
-              }
-
-              componentImport = {
-                default: { hasTour: true },
-                tours: toursImport.builderTours,
-              };
-            } catch (error) {
-              console.error("Failed to import builder tours:", error);
-              setHasTour(false);
-              return;
-            }
-            break;
-          case "page":
-            // Import tours directly without importing the component
-            try {
-              const currentLocale = router.locale || "en-us";
-              let participantPageToursImport;
-
-              // Try localized tour file first
-              if (currentLocale !== "en-us") {
-                try {
-                  participantPageToursImport = await import(
-                    `../../Builder/Project/ParticipantPage/tours.${currentLocale}.js`
-                  );
-                } catch (localizedError) {
-                  // Fallback to English
-                  participantPageToursImport = await import(
-                    "../../Builder/Project/ParticipantPage/tours.js"
-                  );
-                }
-              } else {
-                participantPageToursImport = await import(
-                  "../../Builder/Project/ParticipantPage/tours.js"
-                );
-              }
-
-              componentImport = {
-                default: { hasTour: true },
-                tours: participantPageToursImport.participantPageTours,
-              };
-            } catch (error) {
-              console.error("Failed to import participant page tours:", error);
-              setHasTour(false);
-              return;
-            }
-            break;
-          case "review":
-            // Import tours directly without importing the component
-            try {
-              const currentLocale = router.locale || "en-us";
-              let reviewToursImport;
-
-              // Try localized tour file first
-              if (currentLocale !== "en-us") {
-                try {
-                  reviewToursImport = await import(
-                    `../../Builder/Project/Review/tours.${currentLocale}.js`
-                  );
-                } catch (localizedError) {
-                  // Fallback to English
-                  reviewToursImport = await import(
-                    "../../Builder/Project/Review/tours.js"
-                  );
-                }
-              } else {
-                reviewToursImport = await import(
-                  "../../Builder/Project/Review/tours.js"
-                );
-              }
-
-              componentImport = {
-                default: { hasTour: true },
-                tours: reviewToursImport.reviewTours,
-              };
-            } catch (error) {
-              console.error("Failed to import review tours:", error);
-              setHasTour(false);
-              return;
-            }
-            break;
-          case "collect":
-            // Import tours directly without importing the component
-            try {
-              const currentLocale = router.locale || "en-us";
-              let collectToursImport;
-
-              // Try localized tour file first
-              if (currentLocale !== "en-us") {
-                try {
-                  collectToursImport = await import(
-                    `../../Builder/Project/Collect/tours.${currentLocale}.js`
-                  );
-                } catch (localizedError) {
-                  // Fallback to English
-                  collectToursImport = await import(
-                    "../../Builder/Project/Collect/tours.js"
-                  );
-                }
-              } else {
-                collectToursImport = await import(
-                  "../../Builder/Project/Collect/tours.js"
-                );
-              }
-
-              componentImport = {
-                default: { hasTour: true },
-                tours: collectToursImport.collectTours,
-              };
-            } catch (error) {
-              console.error("Failed to import collect tours:", error);
-              setHasTour(false);
-              return;
-            }
-            break;
-          case "visualize": // will be deprecated
-            // Import tours directly without importing the component
-            try {
-              const currentLocale = router.locale || "en-us";
-              let visualizeToursImport;
-
-              // Try localized tour file first
-              if (currentLocale !== "en-us") {
-                try {
-                  visualizeToursImport = await import(
-                    `../../Builder/Project/Visualize/tours.${currentLocale}.js`
-                  );
-                } catch (localizedError) {
-                  // Fallback to English
-                  visualizeToursImport = await import(
-                    "../../Builder/Project/Visualize/tours.js"
-                  );
-                }
-              } else {
-                visualizeToursImport = await import(
-                  "../../Builder/Project/Visualize/tours.js"
-                );
-              }
-
-              componentImport = {
-                default: { hasTour: true },
-                tours: visualizeToursImport.visualizeTours,
-              };
-            } catch (error) {
-              console.error("Failed to import visualize tours:", error);
-              setHasTour(false);
-              return;
-            }
-            break;
-          case "journal": // TODO: add tours for visualize -- Not doing till the UI is ready
-            // Import tours directly without importing the component
-            try {
-              const currentLocale = router.locale || "en-us";
-              let journalToursImport;
-
-              // Try localized tour file first
-              if (currentLocale !== "en-us") {
-                try {
-                  journalToursImport = await import(
-                    `../../Builder/Project/DataJournal/tours.${currentLocale}.js`
-                  );
-                } catch (localizedError) {
-                  // Fallback to English
-                  journalToursImport = await import(
-                    "../../Builder/Project/DataJournal/Tours/journalTours.js"
-                  );
-                }
-              } else {
-                journalToursImport = await import(
-                  "../../Builder/Project/DataJournal/Tours/journalTours.js"
-                );
-              }
-
-              componentImport = {
-                default: { hasTour: true },
-                tours: journalToursImport.journalTours,
-              };
-            } catch (error) {
-              console.error("Failed to import journal tours:", error);
-              setHasTour(false);
-              return;
-            }
-            break;
-          default:
-            setHasTour(false);
-            return;
-        }
-      } else if (router.pathname.startsWith("/studies")) {
-        console.log("Walkthrough: Detected studies route");
-      } else {
+        componentImport = {
+          default: { hasTour: true },
+          tours: importedTours,
+        };
+      } catch (error) {
+        console.error(`Failed to import tours for ${tourConfig.path}:`, error);
         setHasTour(false);
         return;
       }

@@ -48,7 +48,7 @@ export default function NewAssignment({ user, myclass, assignment, children }) {
 
   return (
     <AssignmentModal
-      btnName={t("assignment.saveOwnCoasaasaspy")}
+      btnName={t("assignment.saveLink")}
       assignment={assignment}
       inputs={inputs}
       handleChange={handleChange}

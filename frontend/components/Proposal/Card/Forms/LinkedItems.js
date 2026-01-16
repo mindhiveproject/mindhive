@@ -546,6 +546,7 @@ export default function LinkedItems({
       />
   
       <AssignmentViewModal
+        user={user}
         open={viewAssignmentModalOpen}
         t={t}
         onClose={() => setViewAssignmentModalOpen(false)}
