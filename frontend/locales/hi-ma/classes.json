@@ -8,6 +8,7 @@
 	"assignment": {
 		"actions": "",
 		"addAssignment": "असाइनमेंट जोड़ें",
+		"cancel": "रद्द करना",
 		"changeSuccess": "",
 		"chooseClassFirst": "",
 		"classes": "वर्ग",
@@ -33,12 +34,14 @@
 		"homework": "{{count}} होमवर्क",
 		"homework_plural": "{{count}} होमवर्क",
 		"homeworkHeader": "गृहकार्य",
+		"homeworkOverview": "",
 		"instructions": "",
 		"instructionsPlaceholder": "असाइनमेंट निर्देश दर्ज करें...",
 		"linkAssignments": "असाइनमेंट को कक्षा से लिंक करें",
 		"linkCopied": "लिंक कॉपी किया गया है",
 		"makeYourCopy": "",
 		"noAssignments": "इस कक्षा से संबंधित अभी तक कोई असाइनमेंट नहीं है।",
+		"noHomework": "कोई होमवर्क नहीं है",
 		"noPlaceholder": "",
 		"notVisibleForStudents": "असाइनमेंट छात्रों के लिए दृश्यमान नहीं है",
 		"open": "खुला",
@@ -49,6 +52,8 @@
 		"publish": "",
 		"published": "",
 		"publishToStudents": "छात्रों के लिए प्रकाशित करें",
+		"requestFeedback": "प्रतिक्रिया का अनुरोध करें",
+		"reviewSubmissions": "प्रस्तुतियाँ समीक्षा करें",
 		"revokeConfirm": "क्या आप वाकई इस असाइनमेंट को रद्द करना चाहते हैं? यह असाइनमेंट अब छात्रों को दिखाई नहीं देगा।",
 		"save": "",
 		"saveAndMakeOwn": "",
@@ -469,20 +474,25 @@
 		"teacher": "अध्यापक"
 	},
 	"homework": {
+		"assignmentContent": "",
 		"assignmentTitle": "असाइनमेंट का शीर्षक",
 		"cancel": "",
 		"createHomework": "",
 		"createHomeworkDraft": "",
 		"createHomeworkSubmit": "",
-		"createNewAssignment": "नया असाइनमेंट बनाएँ",
+		"createNewHomework": "",
 		"dateCreated": "बनाया गया दिनांक",
 		"dateUpdated": "तारीख अपडेट की गई",
 		"existingHomeworks": "",
 		"homeworkTitle": "होमवर्क शीर्षक",
 		"initialContent": "",
+		"markAsCompleted": "",
+		"markAsUncompleted": "",
 		"myAssignment": "",
 		"noHomeworkYet": "छात्र ने अभी तक कोई गृहकार्य नहीं लिखा है।",
-		"openHomework": ""
+		"openHomework": "",
+		"submitted": "",
+		"unsubmit": ""
 	},
 	"joinClass": "कक्षा में शामिल हों",
 	"joinClassInfo": "जब आप किसी कक्षा में शामिल होंगे तो वह यहां दिखाई देगी।",
@@ -571,7 +581,7 @@
 		"studyTitle": "अध्ययन का शीर्षक"
 	},
 	"students": {
-		"goBack": "← वापस जाएं",
+		"goBack": "",
 		"username": "उपयोगकर्ता नाम"
 	},
 	"studentsTab": {
@@ -614,6 +624,7 @@
 		"comments": "टिप्पणियाँ",
 		"completed": "पुरा होना।",
 		"feedbackGiven": "प्रतिक्रिया दी गई",
+		"feedbackRequested": "",
 		"lastUpdated": "आखरी अपडेट",
 		"needsFeedback": "प्रतिक्रिया की आवश्यकता है",
 		"notStarted": "शुरू नहीं",

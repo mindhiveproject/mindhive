@@ -8,6 +8,7 @@
 	"assignment": {
 		"actions": "",
 		"addAssignment": "إضافة مهمة",
+		"cancel": "يلغي",
 		"changeSuccess": "تم حفظ التغييرات بنجاح",
 		"chooseClassFirst": "يجب عليك ربط هذه المهمة بفئة قبل حفظها",
 		"classes": "الفئة(الفئات)",
@@ -33,12 +34,14 @@
 		"homework": "{{count}} واجب منزلي",
 		"homework_plural": "{{count}} واجبات منزلية",
 		"homeworkHeader": "العمل في المنزل",
+		"homeworkOverview": "عرض وإدارة واجبات الطلاب المنزلية",
 		"instructions": "التعليمات المعروضة للطلاب",
 		"instructionsPlaceholder": "أدخل تعليمات المهمة...",
 		"linkAssignments": "ربط الواجبات بالصف",
 		"linkCopied": "تم نسخ الرابط",
 		"makeYourCopy": "قم بإجراء التغييرات وحفظ هذه المهمة كمهمتك الخاصة",
 		"noAssignments": "لا توجد واجبات مرتبطة بهذا الفصل حتى الآن.",
+		"noHomework": "لا يوجد واجب منزلي",
 		"noPlaceholder": "لا يوجد عنصر نائب محدد مسبقًا لهذه المهمة",
 		"notVisibleForStudents": "المهمة غير مرئية للطلاب",
 		"open": "يفتح",
@@ -49,6 +52,8 @@
 		"publish": "",
 		"published": "",
 		"publishToStudents": "نشر للطلاب",
+		"requestFeedback": "طلب ملاحظات",
+		"reviewSubmissions": "مراجعة الطلبات",
 		"revokeConfirm": "هل أنت متأكد من رغبتك في إلغاء هذه المهمة؟ لن تكون المهمة مرئية للطلاب بعد الآن.",
 		"save": "حفظ التغييرات",
 		"saveAndMakeOwn": "احفظ التغييرات وأنشئها بنفسك",
@@ -469,20 +474,25 @@
 		"teacher": "مدرس"
 	},
 	"homework": {
+		"assignmentContent": "محتوى الواجب",
 		"assignmentTitle": "عنوان المهمة",
 		"cancel": "إلغاء",
 		"createHomework": "إنشاء الواجبات المنزلية",
 		"createHomeworkDraft": "إنشاء مسودة",
 		"createHomeworkSubmit": "إنشاء وإرسال",
-		"createNewAssignment": "إنشاء مهمة جديدة",
+		"createNewHomework": "إنشاء واجب منزلي جديد",
 		"dateCreated": "تاريخ الإنشاء",
 		"dateUpdated": "تاريخ التحديث",
 		"existingHomeworks": "الأعمال المنزلية الحالية",
 		"homeworkTitle": "عنوان الواجب المنزلي",
 		"initialContent": "المحتوى الأولي",
+		"markAsCompleted": "وضع علامة كمكتمل",
+		"markAsUncompleted": "ضع علامة \"غير مكتمل\"",
 		"myAssignment": "مهمتي",
 		"noHomeworkYet": "لم يكتب الطالب أي واجب منزلي بعد.",
-		"openHomework": "مفتوح"
+		"openHomework": "مفتوح",
+		"submitted": "مُقَدَّم",
+		"unsubmit": "إلغاء الإرسال"
 	},
 	"joinClass": "انضم إلى الفصل",
 	"joinClassInfo": "بمجرد انضمامك إلى الفصل الدراسي، فسوف يظهر هنا.",
@@ -571,7 +581,7 @@
 		"studyTitle": "عنوان الدراسة"
 	},
 	"students": {
-		"goBack": "← العودة",
+		"goBack": "ارجع إلى الفصل",
 		"username": "اسم المستخدم"
 	},
 	"studentsTab": {
@@ -614,6 +624,7 @@
 		"comments": "تعليقات",
 		"completed": "مكتمل",
 		"feedbackGiven": "ردود الفعل المقدمة",
+		"feedbackRequested": "نطلب تعليقاتكم",
 		"lastUpdated": "آخر تحديث",
 		"needsFeedback": "يحتاج إلى ردود فعل",
 		"notStarted": "لم يتم البدء",

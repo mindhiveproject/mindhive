@@ -8,6 +8,7 @@
 	"assignment": {
 		"actions": "",
 		"addAssignment": "असाइनमेंट जोड़ें",
+		"cancel": "रद्द करना",
 		"changeSuccess": "परिवर्तनों को सफलतापूर्वक सहेजा",
 		"chooseClassFirst": "आपको इस असाइनमेंट को सहेजने से पहले इसे किसी क्लास से संबद्ध करना होगा",
 		"classes": "वर्ग",
@@ -33,12 +34,14 @@
 		"homework": "{{count}} होमवर्क",
 		"homework_plural": "{{count}} होमवर्क",
 		"homeworkHeader": "गृहकार्य",
+		"homeworkOverview": "छात्रों द्वारा जमा किए गए गृहकार्यों को देखें और प्रबंधित करें",
 		"instructions": "छात्रों को दिखाए गए निर्देश",
 		"instructionsPlaceholder": "असाइनमेंट निर्देश दर्ज करें...",
 		"linkAssignments": "असाइनमेंट को कक्षा से लिंक करें",
 		"linkCopied": "लिंक कॉपी किया गया है",
 		"makeYourCopy": "परिवर्तन करें और इस असाइनमेंट को अपने असाइनमेंट के रूप में सहेजें",
 		"noAssignments": "इस कक्षा से संबंधित अभी तक कोई असाइनमेंट नहीं है।",
+		"noHomework": "कोई होमवर्क नहीं है",
 		"noPlaceholder": "इस असाइनमेंट में कोई पूर्वनिर्धारित प्लेसहोल्डर नहीं है",
 		"notVisibleForStudents": "असाइनमेंट छात्रों के लिए दृश्यमान नहीं है",
 		"open": "खुला",
@@ -49,6 +52,8 @@
 		"publish": "",
 		"published": "",
 		"publishToStudents": "छात्रों के लिए प्रकाशित करें",
+		"requestFeedback": "प्रतिक्रिया का अनुरोध करें",
+		"reviewSubmissions": "प्रस्तुतियाँ समीक्षा करें",
 		"revokeConfirm": "क्या आप वाकई इस असाइनमेंट को रद्द करना चाहते हैं? यह असाइनमेंट अब छात्रों को दिखाई नहीं देगा।",
 		"save": "परिवर्तनों को सुरक्षित करें",
 		"saveAndMakeOwn": "परिवर्तन सहेजें और अपना स्वयं का बनाएं",
@@ -469,20 +474,25 @@
 		"teacher": "अध्यापक"
 	},
 	"homework": {
+		"assignmentContent": "असाइनमेंट की सामग्री",
 		"assignmentTitle": "असाइनमेंट का शीर्षक",
 		"cancel": "रद्द करना",
 		"createHomework": "होमवर्क बनाएँ",
 		"createHomeworkDraft": "ड्राफ्ट बनाएँ",
 		"createHomeworkSubmit": "बनाएँ और सबमिट करें",
-		"createNewAssignment": "नया असाइनमेंट बनाएँ",
+		"createNewHomework": "नया होमवर्क बनाएँ",
 		"dateCreated": "बनाया गया दिनांक",
 		"dateUpdated": "तारीख अपडेट की गई",
 		"existingHomeworks": "मौजूदा होमवर्क",
 		"homeworkTitle": "होमवर्क शीर्षक",
 		"initialContent": "प्रारंभिक सामग्री",
+		"markAsCompleted": "पूर्ण के रूप में चिह्नित करें",
+		"markAsUncompleted": "इसे अधूरा चिह्नित करें",
 		"myAssignment": "मेरा असाइनमेंट",
 		"noHomeworkYet": "छात्र ने अभी तक कोई गृहकार्य नहीं लिखा है।",
-		"openHomework": "खुला"
+		"openHomework": "खुला",
+		"submitted": "प्रस्तुत",
+		"unsubmit": "सबमिट ना करें"
 	},
 	"joinClass": "कक्षा में शामिल हों",
 	"joinClassInfo": "जब आप किसी कक्षा में शामिल होंगे तो वह यहां दिखाई देगी।",
@@ -571,7 +581,7 @@
 		"studyTitle": "अध्ययन का शीर्षक"
 	},
 	"students": {
-		"goBack": "← वापस जाएं",
+		"goBack": "वापस कक्षा में जाओ",
 		"username": "उपयोगकर्ता नाम"
 	},
 	"studentsTab": {
@@ -614,6 +624,7 @@
 		"comments": "टिप्पणियाँ",
 		"completed": "पुरा होना।",
 		"feedbackGiven": "प्रतिक्रिया दी गई",
+		"feedbackRequested": "प्रतिक्रिया का अनुरोध किया गया है",
 		"lastUpdated": "आखरी अपडेट",
 		"needsFeedback": "प्रतिक्रिया की आवश्यकता है",
 		"notStarted": "शुरू नहीं",

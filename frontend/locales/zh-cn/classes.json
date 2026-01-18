@@ -8,6 +8,7 @@
 	"assignment": {
 		"actions": "",
 		"addAssignment": "添加作业",
+		"cancel": "取消",
 		"changeSuccess": "更改已成功保存",
 		"chooseClassFirst": "您必须先将此作业与课程关联，然后才能保存它",
 		"classes": "课程",
@@ -33,12 +34,14 @@
 		"homework": "{{count}} 作业",
 		"homework_plural": "{{count}} 个作业",
 		"homeworkHeader": "家庭作业",
+		"homeworkOverview": "查看和管理学生作业提交情况",
 		"instructions": "向学生展示教学内容",
 		"instructionsPlaceholder": "输入作业说明...",
 		"linkAssignments": "将作业与课程关联",
 		"linkCopied": "链接已复制",
 		"makeYourCopy": "进行更改并将此作业保存为您自己的作业",
 		"noAssignments": "这门课目前还没有作业。",
+		"noHomework": "没有作业",
 		"noPlaceholder": "此作业没有预定义的占位符",
 		"notVisibleForStudents": "学生看不到作业",
 		"open": "打开",
@@ -49,6 +52,8 @@
 		"publish": "",
 		"published": "",
 		"publishToStudents": "发布给学生",
+		"requestFeedback": "请求反馈",
+		"reviewSubmissions": "审阅提交内容",
 		"revokeConfirm": "您确定要撤销此作业吗？学生将无法再看到此作业。",
 		"save": "保存更改",
 		"saveAndMakeOwn": "保存更改并进行自己的更改",
@@ -469,20 +474,25 @@
 		"teacher": "老师"
 	},
 	"homework": {
+		"assignmentContent": "作业内容",
 		"assignmentTitle": "作业标题",
 		"cancel": "取消",
 		"createHomework": "创建家庭作业",
 		"createHomeworkDraft": "创建草稿",
 		"createHomeworkSubmit": "创建并提交",
-		"createNewAssignment": "创建新作业",
+		"createNewHomework": "创建新作业",
 		"dateCreated": "创建日期",
 		"dateUpdated": "更新日期",
 		"existingHomeworks": "现有家庭作业",
 		"homeworkTitle": "作业标题",
 		"initialContent": "初始内容",
+		"markAsCompleted": "标记为已完成",
+		"markAsUncompleted": "标记为未完成",
 		"myAssignment": "我的任务",
 		"noHomeworkYet": "该学生尚未写任何作业。",
-		"openHomework": "开放"
+		"openHomework": "开放",
+		"submitted": "已提交",
+		"unsubmit": "取消提交"
 	},
 	"joinClass": "加入班级",
 	"joinClassInfo": "一旦您加入某个课程，它就会出现在这里。",
@@ -571,7 +581,7 @@
 		"studyTitle": "研究标题"
 	},
 	"students": {
-		"goBack": "← 返回",
+		"goBack": "回教室",
 		"username": "用户名"
 	},
 	"studentsTab": {
@@ -614,6 +624,7 @@
 		"comments": "评论",
 		"completed": "完全的",
 		"feedbackGiven": "已给出反馈",
+		"feedbackRequested": "征求反馈意见",
 		"lastUpdated": "上次更新",
 		"needsFeedback": "需要反馈",
 		"notStarted": "未开始",
