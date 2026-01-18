@@ -311,7 +311,6 @@ const Section = ({
       },
     });
   };
-  console.log(cards);
 
   return (
     <div className="section" id="section">

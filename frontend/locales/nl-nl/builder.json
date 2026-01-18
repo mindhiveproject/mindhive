@@ -31,10 +31,10 @@
 		"loadingMessage": "Laatste toewijzingsgegevens ophalen...",
 		"unsavedChanges": "(Niet-opgeslagen wijzigingen)"
 	},
-	"availability": "",
+	"availability": "Beschikbaarheid",
 	"background": "Achtergrond",
 	"backgroundHelp": "Gebruik dit veld om een ​​korte achtergrondinformatie over het onderzoeksonderwerp te geven. Wat is het onderzochte probleem en waarom is het belangrijk?",
-	"backgroundTab": "",
+	"backgroundTab": "Achtergrond",
 	"basicTab": "Basis",
 	"blockDescription": "In een blok krijgen de deelnemers informatie gepresenteerd.",
 	"board": {
@@ -303,22 +303,34 @@
 		"studyStatus": "Studiestatus"
 	},
 	"header": {
+		"addCollaborator": "Medewerker toevoegen",
 		"allDataOneFile": "Alle gegevens in één bestand",
 		"allowAddingCards": "Toestaan ​​om nieuwe kaarten toe te voegen",
 		"allowAddingSections": "Toestaan ​​om nieuwe secties toe te voegen",
 		"allowMovingCards": "Sta het verplaatsen van kaarten toe",
 		"allowMovingSections": "Verplaatsen van secties toestaan",
+		"cancel": "Annuleren",
+		"collaborators": "Medewerkers",
 		"copyLink": "Kopieer studielink",
 		"createYourStudyProposal": "Maak hier uw studievoorstel om uw onderzoeksreis te beginnen",
 		"descriptionPlaceholder": "Voer de beschrijving van het projectbord in",
+		"error": "Fout",
 		"linkCopied": "De link is gekopieerd",
+		"linked": "Gekoppeld",
+		"linkedToStudy": "Gekoppeld aan",
 		"myProjectBoard": "Mijn projectbord",
+		"notLinkedToStudy": "Niet gekoppeld aan een onderzoek",
+		"noUsersFound": "Geen gebruikers gevonden...",
 		"publicTemplate": "Openbaar sjabloon",
+		"removeCollaborator": "Medewerker verwijderen",
 		"save": "Redden",
 		"saving": "Besparing",
+		"searchPlaceholder": "Zoeken op gebruikersnaam...",
+		"searchResults": "Zoekresultaten",
 		"shareInstructions": "Deel de onderstaande link met uw deelnemers om hen uit te nodigen deel te nemen aan uw onderzoek",
 		"testStudy": "Test je studie",
-		"titlePlaceholder": "Voer de titel van het projectbord in"
+		"titlePlaceholder": "Voer de titel van het projectbord in",
+		"unlinked": "Geen onderzoek gekoppeld"
 	},
 	"homeworkCard": {
 		"comments": "Reacties",
@@ -344,8 +356,8 @@
 		"newSection": "Nieuwe sectie",
 		"sectionTitlePlaceholder": "Voer sectietitel in"
 	},
-	"interests": "",
-	"introductionVideo": "",
+	"interests": "Interesses",
+	"introductionVideo": "Introductievideo",
 	"link": "Link",
 	"linkClass": {
 		"doNotConnectClass": "❌ Sluit de klasse niet aan"
@@ -437,7 +449,7 @@
 	"notes": {
 		"noNotes": "Er zijn nog geen notities ingevoerd. Klik met de rechtermuisknop om notities toe te voegen."
 	},
-	"noVideoPlaceholder": "",
+	"noVideoPlaceholder": "Er is geen introductievideo beschikbaar.",
 	"overview": {
 		"actions": "Acties",
 		"copy": "Kopiëren",
@@ -1079,7 +1091,7 @@
 		"placeholder": "Studieversies",
 		"title": "Studieversie"
 	},
-	"videoNotSupported": "",
+	"videoNotSupported": "Video wordt niet ondersteund",
 	"viewer": {
 		"afterParticipation": "Wat deelnemers zien <u>na</u> het afleggen van de {{taskType}}",
 		"aggregateVariables": "Geaggregeerde variabelen",

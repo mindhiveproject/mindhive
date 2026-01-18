@@ -31,10 +31,10 @@
 		"loadingMessage": "Buscando os últimos dados de atribuição...",
 		"unsavedChanges": "(Alterações não salvas)"
 	},
-	"availability": "",
+	"availability": "Disponibilidade",
 	"background": "Fundo",
 	"backgroundHelp": "Use este campo para fornecer um breve histórico sobre o tema da pesquisa. Qual é o problema em estudo e por que ele é importante?",
-	"backgroundTab": "",
+	"backgroundTab": "Fundo",
 	"basicTab": "Básico",
 	"blockDescription": "Em um bloco, os participantes recebem informações.",
 	"board": {
@@ -303,22 +303,34 @@
 		"studyStatus": "Status do estudo"
 	},
 	"header": {
+		"addCollaborator": "Adicionar colaborador",
 		"allDataOneFile": "Todos os dados em um arquivo",
 		"allowAddingCards": "Permitir adicionar novos cartões",
 		"allowAddingSections": "Permitir adicionar novas seções",
 		"allowMovingCards": "Permitir movimentação de cartas",
 		"allowMovingSections": "Permitir seções móveis",
+		"cancel": "Cancelar",
+		"collaborators": "Colaboradores",
 		"copyLink": "Copiar link do estudo",
 		"createYourStudyProposal": "Crie aqui sua proposta de estudo para começar sua jornada de pesquisa",
 		"descriptionPlaceholder": "Insira a descrição do quadro do projeto",
+		"error": "Erro",
 		"linkCopied": "O link foi copiado",
+		"linked": "Vinculado",
+		"linkedToStudy": "Ligado a",
 		"myProjectBoard": "Meu quadro de projetos",
+		"notLinkedToStudy": "Não relacionado a um estudo",
+		"noUsersFound": "Nenhum usuário encontrado...",
 		"publicTemplate": "Modelo público",
+		"removeCollaborator": "Remover colaborador",
 		"save": "Salvar",
 		"saving": "Salvando",
+		"searchPlaceholder": "Pesquisar por nome de usuário...",
+		"searchResults": "Procurar Resultados",
 		"shareInstructions": "Compartilhe o link abaixo com seus participantes para convidá-los a participar do seu estudo",
 		"testStudy": "Teste seu estudo",
-		"titlePlaceholder": "Insira o título do quadro do projeto"
+		"titlePlaceholder": "Insira o título do quadro do projeto",
+		"unlinked": "Nenhum estudo relacionado"
 	},
 	"homeworkCard": {
 		"comments": "Comentários",
@@ -344,8 +356,8 @@
 		"newSection": "Nova seção",
 		"sectionTitlePlaceholder": "Digite o título da seção"
 	},
-	"interests": "",
-	"introductionVideo": "",
+	"interests": "Interesses",
+	"introductionVideo": "Vídeo de introdução",
 	"link": "Link",
 	"linkClass": {
 		"doNotConnectClass": "❌ Não conecte a classe"
@@ -437,7 +449,7 @@
 	"notes": {
 		"noNotes": "Nenhuma nota inserida ainda. Clique com o botão direito para adicionar notas."
 	},
-	"noVideoPlaceholder": "",
+	"noVideoPlaceholder": "Não há vídeo de introdução disponível.",
 	"overview": {
 		"actions": "Ações",
 		"copy": "Cópia",
@@ -1079,7 +1091,7 @@
 		"placeholder": "Versões de estudo",
 		"title": "Versão de estudo"
 	},
-	"videoNotSupported": "",
+	"videoNotSupported": "Vídeo não suportado",
 	"viewer": {
 		"afterParticipation": "O que os participantes veem <u>depois</u> de realizar o {{taskType}}",
 		"aggregateVariables": "Variáveis ​​Agregadas",

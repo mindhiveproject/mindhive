@@ -72,6 +72,10 @@
 		"unsavedChanges": "Changements non sauvegardés !",
 		"visibleForStudents": "Le devoir est visible pour les étudiants"
 	},
+	"assignments": {
+		"noAssignments": "",
+		"open": ""
+	},
 	"assignmentsTab": "Devoirs",
 	"board": {
 		"actionCollectingData": "Carte d'action - Commencer à collecter des données",
@@ -326,6 +330,7 @@
 	"classNetworks": "Réseaux de classes",
 	"collaborators": "Collaborateur(s)",
 	"common": {
+		"errorLoading": "",
 		"loading": "Chargement..."
 	},
 	"create": {
@@ -528,7 +533,9 @@
 	},
 	"myClasses": "Mes cours",
 	"noAccessTo": "Vous n'aurez pas accès à :",
+	"noAssignments": "",
 	"noClasses": "Vous n’avez pas encore rejoint de cours.",
+	"noResources": "",
 	"noStudies": "Les étudiants n’ont pas encore créé d’études.",
 	"noteNewStudents": "Remarque : les nouveaux étudiants ne pourront pas rejoindre votre classe.",
 	"numberOfStudents": "Nombre d'étudiants",
@@ -628,6 +635,7 @@
 		"lastUpdated": "Dernière mise à jour",
 		"needsFeedback": "Besoin de commentaires",
 		"notStarted": "Pas commencé",
+		"requestFeedback": "",
 		"saveAndClose": "Enregistrer et fermer",
 		"saving": "Économies ...",
 		"selectStatus": "Sélectionnez le statut",

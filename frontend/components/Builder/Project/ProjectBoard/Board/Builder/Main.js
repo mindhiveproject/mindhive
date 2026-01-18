@@ -89,7 +89,7 @@ export default function ProposalBuilder({
             </h2>
             <p>{proposal.description}</p>
           </>
-        ) : (
+        ) : proposalBuildMode ? (
           <ProposalHeader
             user={user}
             proposal={proposal}
@@ -98,7 +98,7 @@ export default function ProposalBuilder({
             isPDF={isPDF}
             setIsPDF={setIsPDF}
           />
-        )}
+        ) : null}
         {proposal && (
           <ProposalBoard
             proposalId={proposal?.id}

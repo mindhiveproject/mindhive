@@ -72,6 +72,10 @@
 		"unsavedChanges": "تغييرات غير محفوظة",
 		"visibleForStudents": "المهمة مرئية للطلاب"
 	},
+	"assignments": {
+		"noAssignments": "",
+		"open": ""
+	},
 	"assignmentsTab": "المهام",
 	"board": {
 		"actionCollectingData": "بطاقة العمل - البدء في جمع البيانات",
@@ -326,6 +330,7 @@
 	"classNetworks": "شبكات الطبقات",
 	"collaborators": "المتعاونون",
 	"common": {
+		"errorLoading": "",
 		"loading": "تحميل..."
 	},
 	"create": {
@@ -528,7 +533,9 @@
 	},
 	"myClasses": "فصولي الدراسية",
 	"noAccessTo": "لن يكون لديك حق الوصول إلى:",
+	"noAssignments": "",
 	"noClasses": "لم تنضم إلى أي فصول بعد.",
+	"noResources": "",
 	"noStudies": "لم يقم الطلاب بإنشاء أي دراسات بعد.",
 	"noteNewStudents": "ملاحظة: لن يتمكن الطلاب الجدد من الانضمام إلى صفك",
 	"numberOfStudents": "عدد الطلاب",
@@ -628,6 +635,7 @@
 		"lastUpdated": "آخر تحديث",
 		"needsFeedback": "يحتاج إلى ردود فعل",
 		"notStarted": "لم يتم البدء",
+		"requestFeedback": "",
 		"saveAndClose": "حفظ وإغلاق",
 		"saving": "جاري الحفظ ...",
 		"selectStatus": "حدد الحالة",

@@ -72,6 +72,10 @@
 		"unsavedChanges": "Niet-opgeslagen wijzigingen!",
 		"visibleForStudents": "De opdracht is zichtbaar voor studenten"
 	},
+	"assignments": {
+		"noAssignments": "",
+		"open": ""
+	},
 	"assignmentsTab": "Opdrachten",
 	"board": {
 		"actionCollectingData": "Actiekaart - Begin met het verzamelen van gegevens",
@@ -326,6 +330,7 @@
 	"classNetworks": "Klassenetwerken",
 	"collaborators": "Medewerker(s)",
 	"common": {
+		"errorLoading": "",
 		"loading": "Bezig met laden..."
 	},
 	"create": {
@@ -528,7 +533,9 @@
 	},
 	"myClasses": "Mijn lessen",
 	"noAccessTo": "U heeft geen toegang tot:",
+	"noAssignments": "",
 	"noClasses": "Je hebt nog geen lessen gevolgd.",
+	"noResources": "",
 	"noStudies": "De studenten hebben nog geen studies gemaakt.",
 	"noteNewStudents": "Let op: Nieuwe studenten kunnen niet aan uw klas deelnemen",
 	"numberOfStudents": "Aantal studenten",
@@ -628,6 +635,7 @@
 		"lastUpdated": "Laatst bijgewerkt",
 		"needsFeedback": "Feedback nodig",
 		"notStarted": "Niet gestart",
+		"requestFeedback": "",
 		"saveAndClose": "Opslaan en sluiten",
 		"saving": "Opslaan ...",
 		"selectStatus": "Selecteer status",

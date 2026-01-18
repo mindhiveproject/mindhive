@@ -72,6 +72,10 @@
 		"unsavedChanges": "¡Cambios no guardados!",
 		"visibleForStudents": "La tarea es visible para los estudiantes."
 	},
+	"assignments": {
+		"noAssignments": "",
+		"open": ""
+	},
 	"assignmentsTab": "Tareas",
 	"board": {
 		"actionCollectingData": "Tarjeta de acción: Comenzar a recopilar datos",
@@ -326,6 +330,7 @@
 	"classNetworks": "Redes de clases",
 	"collaborators": "Colaborador(es)",
 	"common": {
+		"errorLoading": "",
 		"loading": "Cargando..."
 	},
 	"create": {
@@ -528,7 +533,9 @@
 	},
 	"myClasses": "Mis clases",
 	"noAccessTo": "No tendrás acceso a:",
+	"noAssignments": "",
 	"noClasses": "Aún no te has unido a ninguna clase.",
+	"noResources": "",
 	"noStudies": "Los estudiantes aún no han creado ningún estudio.",
 	"noteNewStudents": "Nota: Los estudiantes nuevos no podrán unirse a su clase.",
 	"numberOfStudents": "Número de estudiantes",
@@ -628,6 +635,7 @@
 		"lastUpdated": "Última actualización",
 		"needsFeedback": "Necesita retroalimentación",
 		"notStarted": "No iniciado",
+		"requestFeedback": "",
 		"saveAndClose": "Guardar y cerrar",
 		"saving": "Ahorrando...",
 		"selectStatus": "Seleccionar estado",

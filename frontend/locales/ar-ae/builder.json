@@ -31,10 +31,10 @@
 		"loadingMessage": "جاري جلب أحدث بيانات المهمة...",
 		"unsavedChanges": "(التغييرات غير المحفوظة)"
 	},
-	"availability": "",
+	"availability": "التوفر",
 	"background": "خلفية",
 	"backgroundHelp": "استخدم هذا الحقل لتقديم نبذة مختصرة عن موضوع البحث. ما هي المشكلة قيد الدراسة، ولماذا تُعد مهمة؟",
-	"backgroundTab": "",
+	"backgroundTab": "خلفية",
 	"basicTab": "أساسي",
 	"blockDescription": "في كتلة، يتم تقديم المعلومات للمشاركين.",
 	"board": {
@@ -303,22 +303,34 @@
 		"studyStatus": "حالة الدراسة"
 	},
 	"header": {
+		"addCollaborator": "إضافة متعاون",
 		"allDataOneFile": "جميع البيانات في ملف واحد",
 		"allowAddingCards": "السماح بإضافة بطاقات جديدة",
 		"allowAddingSections": "السماح بإضافة أقسام جديدة",
 		"allowMovingCards": "السماح بنقل البطاقات",
 		"allowMovingSections": "السماح بنقل الأقسام",
+		"cancel": "يلغي",
+		"collaborators": "المتعاونون",
 		"copyLink": "نسخ رابط الدراسة",
 		"createYourStudyProposal": "قم بإنشاء مقترح دراستك هنا لبدء رحلة البحث الخاصة بك",
 		"descriptionPlaceholder": "أدخل وصف لوحة المشروع",
+		"error": "خطأ",
 		"linkCopied": "تم نسخ الرابط",
+		"linked": "مرتبط",
+		"linkedToStudy": "مرتبط ب",
 		"myProjectBoard": "لوحة مشروعي",
+		"notLinkedToStudy": "غير مرتبط بدراسة",
+		"noUsersFound": "لم يتم العثور على مستخدمين ...",
 		"publicTemplate": "قالب عام",
+		"removeCollaborator": "إزالة المتعاون",
 		"save": "يحفظ",
 		"saving": "توفير",
+		"searchPlaceholder": "البحث باستخدام اسم المستخدم...",
+		"searchResults": "نتائج البحث",
 		"shareInstructions": "شارك الرابط أدناه مع المشاركين لدعوتهم للانضمام إلى دراستك",
 		"testStudy": "اختبر دراستك",
-		"titlePlaceholder": "أدخل عنوان لوحة المشروع"
+		"titlePlaceholder": "أدخل عنوان لوحة المشروع",
+		"unlinked": "لا توجد دراسة مرتبطة"
 	},
 	"homeworkCard": {
 		"comments": "تعليقات",
@@ -344,8 +356,8 @@
 		"newSection": "قسم جديد",
 		"sectionTitlePlaceholder": "أدخل عنوان القسم"
 	},
-	"interests": "",
-	"introductionVideo": "",
+	"interests": "الإهتمامات",
+	"introductionVideo": "فيديو تعريفي",
 	"link": "وصلة",
 	"linkClass": {
 		"doNotConnectClass": "❌لا تربط الفصل"
@@ -437,7 +449,7 @@
 	"notes": {
 		"noNotes": "لم يتم إدخال أي ملاحظات بعد. انقر بزر الماوس الأيمن لإضافة ملاحظات."
 	},
-	"noVideoPlaceholder": "",
+	"noVideoPlaceholder": "لا يوجد فيديو تعريفي متاح.",
 	"overview": {
 		"actions": "الإجراءات",
 		"copy": "ينسخ",
@@ -1079,7 +1091,7 @@
 		"placeholder": "إصدارات الدراسة",
 		"title": "نسخة الدراسة"
 	},
-	"videoNotSupported": "",
+	"videoNotSupported": "الفيديو غير مدعوم",
 	"viewer": {
 		"afterParticipation": "ما يراه المشاركون بعد إجراء {{taskType}}",
 		"aggregateVariables": "المتغيرات المجمعة",

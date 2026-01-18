@@ -304,7 +304,10 @@ export default function ProjectManager(props) {
                                 : t("dashboard.none")}
                             </div>
                             <Link
-                              href={`/builder/projects?selector=${project.id}`}
+                              href={{
+                                pathname: `/builder/projects`,
+                                query: { selector: project.id }
+                              }}
                               target="_blank"
                               className="project-link"
                             >

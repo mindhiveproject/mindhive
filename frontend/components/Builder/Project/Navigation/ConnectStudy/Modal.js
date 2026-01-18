@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Modal } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
+import Link from "next/link";
 
 import LinkClass from "./LinkClass";
 import Collaborators from "../../../../Global/Collaborators";
@@ -62,12 +63,15 @@ export default function ConnectModal({
                   {study?.proposal.map((project) => (
                     <div className="project" key={project?.id}>
                       <div>{project?.title}</div>
-                      <a
-                        href={`/builder/projects?selector=${project?.id}`}
+                      <Link
+                        href={{
+                          pathname: `/builder/projects`,
+                          query: { selector: project?.id }
+                        }}
                         target="_blank"
                       >
                         {t('builder:connectStudyModal.openInNewTab')}
-                      </a>
+                      </Link>
                     </div>
                   ))}
                 </div>

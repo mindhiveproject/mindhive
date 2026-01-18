@@ -56,8 +56,29 @@ export const OVERVIEW_PROPOSAL_BOARD_QUERY = gql`
       prototypeFor {
         id
       }
+      collaborators {
+        id
+        username
+      }
+      usedInClass {
+        id
+        title
+        students {
+          id
+          username
+        }
+        creator {
+          id
+          username
+        }
+        mentors {
+          id
+          username
+        }
+      }
       study {
         id
+        title
         author {
           id
           username
