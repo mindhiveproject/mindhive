@@ -35,6 +35,7 @@ const Section = ({
   adminMode,
   isPreview,
   settings,
+  submitStatuses = {},
 }) => {
   const { t } = useTranslation("builder");
   const { cards } = section;
@@ -498,6 +499,7 @@ const Section = ({
                     adminMode={adminMode}
                     isPreview={isPreview}
                     settings={settings}
+                    submitStatuses={submitStatuses}
                   />
                 );
               } else {
@@ -512,6 +514,7 @@ const Section = ({
                     adminMode={adminMode}
                     isPreview={isPreview}
                     settings={settings}
+                    submitStatuses={submitStatuses}
                   />
                 );
               }
