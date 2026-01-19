@@ -12,7 +12,11 @@ import useForm from "../../../../lib/useForm";
 export default function AddNetwork({}) {
   const router = useRouter();
 
-  const { inputs, handleChange } = useForm({ title: "" });
+  const { inputs, handleChange } = useForm({ 
+    title: "",
+    content: "",
+    placeholder: "",
+  });
 
   const [
     createAssignment,

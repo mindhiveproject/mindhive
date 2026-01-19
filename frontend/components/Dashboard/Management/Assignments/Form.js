@@ -12,6 +12,11 @@ export default function AssignmentForm({ inputs, handleChange }) {
     handleChange({ target: { name: "title", value: content } });
   };
 
+  // update placeholder in the local state
+  const handlePlaceholderChange = (content) => {
+    handleChange({ target: { name: "placeholder", value: content } });
+  };
+
   return (
     <div>
       <h2>Edit the assignment</h2>
@@ -32,6 +37,14 @@ export default function AssignmentForm({ inputs, handleChange }) {
       <TipTapEditor 
         content={inputs.content || ""} 
         onUpdate={handleContentChange}
+        isEditable={true}
+        toolbarVisible={true}
+      />
+
+      <p><br />Placeholder for your students:</p>
+      <TipTapEditor 
+        content={inputs.placeholder || ""} 
+        onUpdate={handlePlaceholderChange}
         isEditable={true}
         toolbarVisible={true}
       />

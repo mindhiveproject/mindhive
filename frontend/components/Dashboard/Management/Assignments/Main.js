@@ -190,18 +190,18 @@ export default function TemplateAssignments({ query, user }) {
       sortable: true,
       flex: 1,
     },
-    {
-      field: "classes",
-      headerName: "Associated Classes",
-      cellRenderer: ClassesRenderer,
-      filter: "agTextColumnFilter",
-      sortable: false,
-      flex: 1.5,
-      valueGetter: (params) => {
-        const classes = params?.data?.classes || [];
-        return classes.map(c => c?.title || c?.code || '').join(', ');
-      },
-    },
+    // {
+    //   field: "classes",
+    //   headerName: "Associated Classes",
+    //   cellRenderer: ClassesRenderer,
+    //   filter: "agTextColumnFilter",
+    //   sortable: false,
+    //   flex: 1.5,
+    //   valueGetter: (params) => {
+    //     const classes = params?.data?.classes || [];
+    //     return classes.map(c => c?.title || c?.code || '').join(', ');
+    //   },
+    // },
     {
       field: "createdAt",
       headerName: "Date created",
