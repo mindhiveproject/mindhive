@@ -5,7 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
 
 import { StyledActionCard } from "../../../../../../styles/StyledProposal";
-import { getActionCardVariant } from "../../../../../../utils/cardVariants";
+import { getActionCardVariant } from "../../../../../../Utils/cardVariants";
 
 export const cardTypes = {
   ACTION_SUBMIT: {
