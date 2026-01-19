@@ -5,7 +5,7 @@ export const StyledProposal = styled.div`
   width: 100%;
   overflow-y: auto;
   padding: 20px;
-  min-height: 80vh;
+  // min-height: 80vh;
   background: #f7f9f8;
   align-items: baseline;
   font-family: "Nunito";
@@ -248,15 +248,15 @@ export const StyledProposal = styled.div`
   .section {
     display: grid;
     justify-items: center;
-    grid-gap: 0.5rem;
+    grid-gap: 12px;
     position: relative;
-    background: #f5f5f5;
-    border: 1px solid #e6e6e6;
+    background: none;
+    border: 1px solid #A1A1A1;
     border-radius: 8px;
     min-width: 250px;
     margin: 15px;
-    padding: 0px 0px 20px 0px;
-    width: 410px;
+    padding: 24px;
+    // width: 410px;
     .infoLine {
       margin: 1rem 0px 0px 0rem;
       display: grid;
@@ -274,8 +274,8 @@ export const StyledProposal = styled.div`
       display: grid;
       width: 100%;
       margin: 0px 0px 0px 0px;
-      padding: 1rem 2rem 1rem 2rem;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      // padding: 1rem 2rem 1rem 2rem;
+      // box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
       cursor: pointer;
       .firstLine {
         display: grid;
@@ -288,10 +288,10 @@ export const StyledProposal = styled.div`
       }
       .sectionTitle {
         font-family: Nunito;
-        font-size: 24px;
-        font-weight: 500;
-        line-height: var(--BodySmallLineHeight);
-        letter-spacing: var(--BodySmallTracking);
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 28px;
+        letter-spacing: 0.05em;
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
@@ -1053,29 +1053,24 @@ export const StyledProposal = styled.div`
 `;
 
 export const StyledProposalCard = styled.div`
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
   background: #ffffff;
-  border: 1px solid #e6e6e6;
-  box-sizing: border-box;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #a1a1a1;
   border-radius: 12px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  width: calc(100% - 20px);
   cursor: pointer;
   margin: 3px 10px;
-  position: relative;
-  width: 362px;
-  height: 80px;
   font-family: Nunito;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: var(--TitleMediumLineHeight);
-  letter-spacing: var(--TitleMediumTracking);
-  text-align: left;
-  text-underline-position: from-font;
-  text-decoration-skip-ink: none;
+  box-sizing: border-box;
 
   .card-drag-handle {
     height: 100%;
-    display: grid;
+    display: flex;
+    flex: 1 0 0;
   }
   .deleteCardBtn {
     position: absolute;
@@ -1086,21 +1081,17 @@ export const StyledProposalCard = styled.div`
       width: 20px;
       opacity: 0.1;
     }
-    img: hover {
+    img:hover {
       opacity: 1;
     }
   }
   .card-information {
-    display: grid;
-    grid-template-columns: 40px 1fr auto;
+    display: flex;
+    flex: 1 0 0;
     align-items: center;
-    .status {
-      color: #007c70;
-      font-family: Lato;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 400;
-    }
+    gap: 8px;
+    min-height: 80px;
+    padding: 0px 0px 0px 16px;
 
     .info-assigned-container {
       display: grid;
@@ -1122,165 +1113,106 @@ export const StyledProposalCard = styled.div`
       letter-spacing: 0.05em;
       padding: 1px 7px 1px 7px;
     }
-    .info-status {
-      width: fit-content;
-      display: grid;
-      align-items: center;
-      box-sizing: border-box;
-      border: 1px solid transparent;
-      border-radius: 60px;
-      font-family: Lato;
-      font-size: 12px;
-      font-style: normal;
-      font-weight: 400;
-      letter-spacing: 0.05em;
-      padding: 1px 7px 1px 7px;
-    }
-    .status-not-started {
-      color: #896900;
-      background: rgba(254, 210, 79, 0.18);
-    }
-    .status-started {
-      color: #0063ce;
-      background: rgba(0, 117, 224, 0.12);
-    }
-    .status-needs-feedback {
-      color: #c92927;
-      background: rgba(224, 103, 102, 0.12);
-    }
-    .status-feedback-given {
-      color: #6f25ce !important;
-      background: rgba(111, 37, 206, 0.12) !important;
-    }
-    .status-completed {
-      color: #00635a;
-      background: rgba(0, 124, 112, 0.12);
-    }
-    img {
-      width: 20px !important;
-    }
+
     .card-left-side {
-      display: grid;
+      display: flex;
       justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      img {
+        width: 24px;
+        height: 24px;
+      }
     }
     .card-right-side {
-      display: grid;
+      display: flex;
+      flex: 1 0 0;
+      flex-direction: column;
       margin: 0px;
-      .card-type {
-        display: grid;
-        justify-content: end;
-        font-family: Lato;
-        font-size: 8px;
-        font-weight: 600;
-        line-height: 13px;
-        text-align: center;
-        span {
-          margin-top: 5px;
-          border-radius: 10px;
-          padding: 1px 8px 1px 8px;
-          /* background: ${(props) =>
-            props.type === "PROPOSAL"
-              ? "#ebe5e5"
-              : props.type === "ASSIGNMENT"
-              ? "#98cbc6"
-              : props.type === "LESSON"
-              ? "#f9e1df"
-              : props.type === "ARTICLE"
-              ? "#b8d2ec"
-              : props.type === "SURVEY"
-              ? "#FFC107"
-              : props.type === "LINK"
-              ? "#C9D6CD"
-              : "#FFE29D"};
-          color: ${(props) =>
-            props.type === "PROPOSAL"
-              ? "#623A39"
-              : props.type === "ASSIGNMENT"
-              ? "#004A43"
-              : props.type === "LESSON"
-              ? "#E06766"
-              : props.type === "ARTICLE"
-              ? "#28619E"
-              : props.type === "SURVEY"
-              ? "#856502"
-              : props.type === "LINK"
-              ? "#3C443E"
-              : "#FFE29D"}; */
-        }
-      }
+      min-width: 0;
       .card-title {
-        display: grid;
-        /* grid-template-columns: 1fr auto;
-        margin-bottom: 5px; */
+        display: flex;
+        flex: 1 0 0;
+        font-family: Nunito;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        color: #171717;
+        min-width: 0;
+        div {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          min-width: 100px;
+          max-width: 200px;
+        }
       }
       .editedByAvatar {
         display: grid;
         align-content: end;
       }
     }
-    .card-public-status {
-      display: grid;
-      background: #f9d978;
-      height: 100%;
-      width: 40px;
+    .card-feedback-tag {
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-items: center;
+      justify-content: center;
+      padding: 12px;
+      height: 100%;
       border-top-right-radius: 12px;
       border-bottom-right-radius: 12px;
-    }
-    .card-public-status-submitted {
-      display: grid;
-      background: #def8fb;
-      height: 100%;
-      width: 40px;
-      align-items: center;
-      justify-items: center;
-      border-top-right-radius: 12px;
-      border-bottom-right-radius: 12px;
-    }
-    .card-public-status-build-mode {
-      display: grid;
-      background: #f3f3f3;
-      height: 100%;
-      width: 40px;
-      align-items: center;
-      justify-items: center;
-      border-top-right-radius: 12px;
-      border-bottom-right-radius: 12px;
+      flex-shrink: 0;
+      img {
+        width: 24px;
+        height: 24px;
+      }
+      &.feedback-non-submitted {
+        background: #f9d978;
+        border-left: 1px solid #a1a1a1;
+      }
+      &.feedback-submitted {
+        background: #def8fb;
+        border-left: 1px solid #a1a1a1;
+      }
     }
   }
 `;
 
 export const StyledActionCard = styled.div`
-  display: grid;
-  align-content: center;
-  border-radius: 41px;
-  background: ${(props) =>
-    props.proposalBuildMode
-      ? "#FFFFFF"
-      : props.isSubmitted
-      ? "#DEF8FB"
-      : "#fdf2d0"};
-  border: 3px solid #FFC107
-  box-sizing: border-box;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  margin: 0px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: relative;
-  min-height: 71px;
+  border-radius: 12px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  margin: 3px 10px;
+  width: calc(100% - 20px);
   font-family: Nunito;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: var(--TitleMediumLineHeight);
-  letter-spacing: var(--TitleMediumTracking);
-  text-align: left;
-  text-underline-position: from-font;
-  text-decoration-skip-ink: none;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  background: ${(props) => {
+    if (props.proposalBuildMode) return "#FFFFFF";
+    if (props.variant === "ACTION_SUBMITTED") return "#def8fb";
+    if (props.variant === "ACTION_NOT_SUBMITTED") return "#fdf2d0";
+    return "#FFFFFF";
+  }};
+
+  border: ${(props) => {
+    if (props.proposalBuildMode) return "1px solid #a1a1a1";
+    if (props.variant === "ACTION_SUBMITTED") return "1px solid #336f8a";
+    if (props.variant === "ACTION_NOT_SUBMITTED") return "1px solid #5d5763";
+    return "1px solid #a1a1a1";
+  }};
 
   .card-drag-handle {
-    height: 100%;
-    margin: 0px 15px;
-    display: grid;
+    // height: 100%;
+    display: flex;
+    flex: 1 0 0;
   }
 
   .deleteCardBtn {
@@ -1292,24 +1224,85 @@ export const StyledActionCard = styled.div`
       width: 20px;
       opacity: 0.1;
     }
-    img: hover {
+    img:hover {
       opacity: 1;
     }
   }
 
   .card-information {
-    display: grid;
-    grid-gap: 10px;
-    grid-template-columns: 40px 1fr auto;
-  }
-  .card-left-side {
-    display: grid;
-    justify-content: center;
-    align-content: center;
-  }
-  .card-right-side{
-    display: grid;
-    justify-content: center;
-    align-content: center;
+    display: flex;
+    flex: 1 0 0;
+    align-items: stretch;
+
+    .card-left-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 0px 16px 16px;
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+      background: ${(props) => {
+        if (props.proposalBuildMode) return "transparent";
+        if (props.variant === "ACTION_SUBMITTED") return "#def8fb";
+        if (props.variant === "ACTION_NOT_SUBMITTED") return "#fdf2d0";
+        return "transparent";
+      }};
+      flex-shrink: 0;
+      img {
+        width: 24px;
+        height: 24px;
+      }
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .card-right-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 16px 16px 0px;
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+      background: ${(props) => {
+        if (props.proposalBuildMode) return "transparent";
+        if (props.variant === "ACTION_SUBMITTED") return "#def8fb";
+        if (props.variant === "ACTION_NOT_SUBMITTED") return "#fdf2d0";
+        return "transparent";
+      }};
+      flex-shrink: 0;
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .card-content {
+      display: flex;
+      flex: 1 0 0;
+      flex-direction: column;
+      justify-content: center;
+      padding: 16px;
+      gap: 4px;
+
+      .card-title {
+        font-family: Nunito;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 24px;
+        color: #171717;
+      }
+
+      .card-subtitle {
+        font-family: Nunito;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: #6a6a6a;
+      }
+    }
   }
 `;

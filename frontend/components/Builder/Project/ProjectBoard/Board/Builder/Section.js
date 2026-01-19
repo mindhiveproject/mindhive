@@ -336,13 +336,13 @@ const Section = ({
 
           <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
         </div>
-        {!isPreview && (
+        {/* {!isPreview && (
           <div className="infoLine">
             {sectionSummary?.numOfCards} {sectionSummary?.numOfCards == 1 ? t("section.card", "card") : t("section.cards", "cards")}
           </div>
-        )}
+        )} */}
       </div>
-
+      <hr />
       <div>
         <Container
           orientation="vertical"

@@ -2,8 +2,9 @@ import ReactHtmlParser from "react-html-parser";
 import { Draggable } from "react-smooth-dnd";
 import useTranslation from "next-translate/useTranslation";
 
-import { Image, Popup } from "semantic-ui-react";
+import { Popup } from "semantic-ui-react";
 import { StyledProposalCard } from "../../../../../styles/StyledProposal";
+import { getRegularCardVariant } from "../../../../../utils/cardVariants";
 
 import { useRouter } from "next/router";
 
@@ -20,47 +21,46 @@ export default function Card({
 }) {
   const { t } = useTranslation("builder");
 
-  const isCardLocked = card?.settings?.includeInReviewSteps?.some(
-    (step) => submitStatuses[step] === "SUBMITTED"
-  );
-  const isLocked = sectionSummary?.isLocked || isCardLocked;
-
   const router = useRouter();
-  let status = card?.settings?.status ? card.settings.status : "Not started";
-  let statusStyle = null;
-  switch (status) {
-    default:
-      statusStyle = "notStarted";
-      break;
-    case t("card.status.inProgress", "In progress"):
-    case "In progress":
-      statusStyle = "inProgress";
-      break;
-    case t("card.status.completed", "Completed"):
-    case "Completed":
-      statusStyle = "completed";
-      break;
-    case t("card.status.helpNeeded", "Help needed"):
-    case "Help needed":
-      statusStyle = "helpNeeded";
-      break;
-    case t("card.status.comments", "Comments"):
-    case "Comments":
-      statusStyle = "comments";
-      break;
-    case t("card.status.notStarted", "Not started"):
-    case "Not started":
-      statusStyle = "notStarted";
-      break;
-    case t("card.status.needsRevision", "Needs revision"):
-    case "Needs revision":
-      statusStyle = "TriangleWarning";
-      break;
-  }
+  
+  // Get card variant based on settings and statuses
+  const cardVariant = getRegularCardVariant(card, submitStatuses);
+
+  // Get status icon based on card status (matching Status.js options)
+  const getStatusIcon = () => {
+    const status = card?.settings?.status || "Not started";
+    const statusIconMap = {
+      "In progress": "/assets/icons/status/inProgress.svg",
+      "Completed": "/assets/icons/status/completed.svg",
+      "Help needed": "/assets/icons/status/helpNeeded.svg",
+      "Comments": "/assets/icons/status/comments.svg",
+      "Not started": "/assets/icons/status/notStarted.svg",
+      "Needs revision": "/assets/icons/status/TriangleWarning.svg",
+      // Also handle translated/alternative status values
+      [t("card.status.inProgress", "In progress")]: "/assets/icons/status/inProgress.svg",
+      [t("card.status.completed", "Completed")]: "/assets/icons/status/completed.svg",
+      [t("card.status.helpNeeded", "Help needed")]: "/assets/icons/status/helpNeeded.svg",
+      [t("card.status.comments", "Comments")]: "/assets/icons/status/comments.svg",
+      [t("card.status.notStarted", "Not started")]: "/assets/icons/status/notStarted.svg",
+      [t("card.status.needsRevision", "Needs revision")]: "/assets/icons/status/TriangleWarning.svg",
+    };
+    return statusIconMap[status] || "/assets/icons/status/notStarted.svg";
+  };
+
+  // Determine icon path for feedback tag
+  const getFeedbackIcon = () => {
+    if (cardVariant.variant === "FEEDBACK_SUBMITTED") {
+      return "/assets/icons/status/publicTemplatesubmitted.svg"; // Checkmark icon
+    } else if (cardVariant.variant === "FEEDBACK_NON_SUBMITTED") {
+      return "/assets/icons/status/publicTemplate.svg"; // Clipboard icon
+    }
+    return null;
+  };
 
   return (
     <Draggable key={card.id}>
       <StyledProposalCard
+        variant={cardVariant.variant}
         onClick={() => {
           router.push({
             pathname: `/builder/projects`,
@@ -74,33 +74,7 @@ export default function Card({
         <div className="card-drag-handle">
           <div className="card-information" id="card">
             <div className="card-left-side">
-              <Popup
-                content={
-                  card?.assignedTo.length
-                    ? card?.assignedTo.map((user, i) => (
-                        <div key={i} className="info-assigned">
-                          {t("card.assignedTo", {
-                            username: adminMode
-                              ? user?.username ||
-                                user?.publicReadableId ||
-                                t("card.defaultUser", "John Doe")
-                              : user?.username,
-                          },
-                          adminMode
-                            ? `The card is assigned to ${user?.username || user?.publicReadableId || "John Doe"}`
-                            : `The card is assigned to ${user?.username}`)}
-                        </div>
-                      ))
-                    : t("card.notAssigned", "The card is not assigned to anyone")
-                }
-                trigger={
-                  <Image
-                    src={`/assets/icons/status/${statusStyle}.svg`}
-                    avatar
-                  />
-                }
-                size="huge"
-              />
+              <img src={getStatusIcon()} alt="status icon" />
             </div>
             <div className="card-right-side">
               <div className="card-title">
@@ -109,18 +83,21 @@ export default function Card({
                 </div>
               </div>
             </div>
-            {card?.settings?.includeInReport && (
-              <>
-                {isLocked ? (
-                  <div className="card-public-status-submitted" id="cardWithTag">
-                    <img src="/assets/icons/status/publicTemplatesubmitted.svg" />
+            {cardVariant.variant !== "NO_FEEDBACK" && (
+              <Popup
+                content={cardVariant.tooltipText || null}
+                trigger={
+                  <div className={`card-feedback-tag ${
+                    cardVariant.variant === "FEEDBACK_SUBMITTED"
+                      ? "feedback-submitted"
+                      : "feedback-non-submitted"
+                  }`}>
+                    <img src={getFeedbackIcon()} alt="feedback status" />
                   </div>
-                ) : (
-                  <div className="card-public-status" id="cardWithTag">
-                    <img src="/assets/icons/status/publicTemplate.svg" />
-                  </div>
-                )}
-              </>
+                }
+                disabled={!cardVariant.tooltipText}
+                size="small"
+              />
             )}
           </div>
         </div>

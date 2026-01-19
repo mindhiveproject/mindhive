@@ -1,8 +1,9 @@
 import ReactHtmlParser from "react-html-parser";
 import { Draggable } from "react-smooth-dnd";
 
-import { Image, Popup } from "semantic-ui-react";
+import { Popup } from "semantic-ui-react";
 import { StyledProposalCard } from "../../styles/StyledProposal";
+import { getRegularCardVariant } from "../../utils/cardVariants";
 import useTranslation from "next-translate/useTranslation";
 
 export default function Card({
@@ -13,40 +14,56 @@ export default function Card({
   onDeleteCard,
   settings,
   isPreview,
+  submitStatuses = {},
 }) {
   const { t } = useTranslation("builder");
-  let status = card?.settings?.status ? card.settings.status : "Not started";
+  
+  // Get card variant based on settings and statuses
+  const cardVariant = getRegularCardVariant(card, submitStatuses);
 
-  let statusStyle = null;
-  switch (status) {
-    default:
-      statusStyle = "status-not-started";
-      break;
-    case "Started":
-      statusStyle = "status-started";
-      break;
-    case "Needs feedback":
-      statusStyle = "status-needs-feedback";
-      break;
-    case "Feedback given":
-      statusStyle = "status-feedback-given";
-      break;
-    case "Completed":
-      statusStyle = "status-completed";
-      break;
-    // in case any cards are still tagged 'Closed' or 'On-Hold'
-    case "Closed":
-      status = "Started";
-      statusStyle = "status-started";
-      break;
-    case "On-Hold":
-      status = "Needs feedback";
-      statusStyle = "status-needs-feedback";
-  }
+  // Get status icon based on card status (matching Status.js options)
+  const getStatusIcon = () => {
+    const status = card?.settings?.status || "Not started";
+    const statusIconMap = {
+      "In progress": "/assets/icons/status/inProgress.svg",
+      "Completed": "/assets/icons/status/completed.svg",
+      "Help needed": "/assets/icons/status/helpNeeded.svg",
+      "Comments": "/assets/icons/status/comments.svg",
+      "Not started": "/assets/icons/status/notStarted.svg",
+      "Needs revision": "/assets/icons/status/TriangleWarning.svg",
+      // Also handle legacy status values
+      "Started": "/assets/icons/status/inProgress.svg",
+      "Needs feedback": "/assets/icons/status/helpNeeded.svg",
+      "Feedback given": "/assets/icons/status/comments.svg",
+      "Closed": "/assets/icons/status/inProgress.svg",
+      "On-Hold": "/assets/icons/status/helpNeeded.svg",
+    };
+    // Also check translated values
+    const translatedStatusMap = {
+      [t("statusCard.inProgress", "In progress")]: "/assets/icons/status/inProgress.svg",
+      [t("statusCard.completed", "Completed")]: "/assets/icons/status/completed.svg",
+      [t("statusCard.helpNeeded", "Help needed")]: "/assets/icons/status/helpNeeded.svg",
+      [t("statusCard.comments", "Comments")]: "/assets/icons/status/comments.svg",
+      [t("statusCard.notStarted", "Not started")]: "/assets/icons/status/notStarted.svg",
+      [t("statusCard.needsRevision", "Needs revision")]: "/assets/icons/status/TriangleWarning.svg",
+    };
+    return statusIconMap[status] || translatedStatusMap[status] || "/assets/icons/status/notStarted.svg";
+  };
+
+  // Determine icon path for feedback tag
+  const getFeedbackIcon = () => {
+    if (cardVariant.variant === "FEEDBACK_SUBMITTED") {
+      return "/assets/icons/status/publicTemplatesubmitted.svg"; // Checkmark icon
+    } else if (cardVariant.variant === "FEEDBACK_NON_SUBMITTED") {
+      return "/assets/icons/status/publicTemplate.svg"; // Clipboard icon
+    }
+    return null;
+  };
 
   return (
     <Draggable key={card.id}>
       <StyledProposalCard
+        variant={cardVariant.variant}
         onClick={() => {
           openCard(card);
         }}
@@ -54,33 +71,9 @@ export default function Card({
         <div className="card-drag-handle">
           <div className="card-information">
             <div className="card-left-side">
-              {proposalBuildMode && <img src="/assets/icons/pencil.svg" />}
-
+              {proposalBuildMode && <img src="/assets/icons/pencil.svg" alt="edit" />}
               {!proposalBuildMode && !isPreview && (
-                <Popup
-                  content={
-                    card?.assignedTo.length
-                      ? card?.assignedTo.map((user, i) => (
-                          <div key={i} className="info-assigned">
-                            {t("card.assignedTo", {
-                              username: adminMode
-                                ? user?.username ||
-                                  user?.publicReadableId ||
-                                  "John Doe"
-                                : user?.username,
-                            })}
-                          </div>
-                        ))
-                      : t("card.notAssigned")
-                  }
-                  trigger={
-                    <Image
-                      src={`/assets/icons/proposal/${statusStyle}.svg`}
-                      avatar
-                    />
-                  }
-                  size="huge"
-                />
+                <img src={getStatusIcon()} alt="status icon" />
               )}
             </div>
             <div className="card-right-side">
@@ -88,41 +81,23 @@ export default function Card({
                 <div>
                   <div>{ReactHtmlParser(card.title)}</div>
                 </div>
-                {!proposalBuildMode && (
-                  <div className="editedByAvatar">
-                    {card?.isEditedBy?.username && (
-                      <Popup
-                        content={t("card.editingBy", {
-                          username: card?.isEditedBy?.username,
-                        })}
-                        trigger={
-                          card?.isEditedBy?.image?.image
-                            ?.publicUrlTransformed ? (
-                            <Image
-                              src={
-                                card?.isEditedBy?.image?.image
-                                  ?.publicUrlTransformed
-                              }
-                              avatar
-                            />
-                          ) : (
-                            <Image
-                              src="/assets/icons/builder/page.svg"
-                              avatar
-                            />
-                          )
-                        }
-                        size="huge"
-                      />
-                    )}
-                  </div>
-                )}
               </div>
             </div>
-            {card?.settings?.includeInReport && (
-              <div className="card-public-status-build-mode">
-                <img src="/assets/icons/status/publicTemplate.svg" />
-              </div>
+            {cardVariant.variant !== "NO_FEEDBACK" && (
+              <Popup
+                content={cardVariant.tooltipText || null}
+                trigger={
+                  <div className={`card-feedback-tag ${
+                    cardVariant.variant === "FEEDBACK_SUBMITTED"
+                      ? "feedback-submitted"
+                      : "feedback-non-submitted"
+                  }`}>
+                    <img src={getFeedbackIcon()} alt="feedback status" />
+                  </div>
+                }
+                disabled={!cardVariant.tooltipText}
+                size="small"
+              />
             )}
           </div>
         </div>
