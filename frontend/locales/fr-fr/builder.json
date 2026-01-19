@@ -31,10 +31,10 @@
 		"loadingMessage": "Récupération des dernières données d'affectation...",
 		"unsavedChanges": "(Modifications non enregistrées)"
 	},
-	"availability": "",
+	"availability": "Disponibilité",
 	"background": "Arrière-plan",
 	"backgroundHelp": "Utilisez ce champ pour fournir un bref aperçu du sujet de recherche. Quel est le problème étudié et pourquoi est-il important ?",
-	"backgroundTab": "",
+	"backgroundTab": "Arrière-plan",
 	"basicTab": "Basique",
 	"blockDescription": "Dans un bloc, des informations sont présentées aux participants.",
 	"board": {
@@ -303,22 +303,34 @@
 		"studyStatus": "Statut d'étude"
 	},
 	"header": {
+		"addCollaborator": "Ajouter un collaborateur",
 		"allDataOneFile": "Toutes les données dans un seul fichier",
 		"allowAddingCards": "Autoriser l'ajout de nouvelles cartes",
 		"allowAddingSections": "Autoriser l'ajout de nouvelles sections",
 		"allowMovingCards": "Autoriser le déplacement des cartes",
 		"allowMovingSections": "Autoriser le déplacement des sections",
+		"cancel": "Annuler",
+		"collaborators": "Collaborateurs",
 		"copyLink": "Copier le lien de l'étude",
 		"createYourStudyProposal": "Créez votre proposition d'étude ici pour commencer votre parcours de recherche",
 		"descriptionPlaceholder": "Entrez la description du projet",
+		"error": "Erreur",
 		"linkCopied": "Le lien est copié",
+		"linked": "Lié",
+		"linkedToStudy": "Lié à",
 		"myProjectBoard": "Mon tableau de projets",
+		"notLinkedToStudy": "Non lié à une étude",
+		"noUsersFound": "Aucun utilisateur trouvé...",
 		"publicTemplate": "Modèle public",
+		"removeCollaborator": "Supprimer le collaborateur",
 		"save": "Sauvegarder",
 		"saving": "Économie",
+		"searchPlaceholder": "Recherche par nom d'utilisateur...",
+		"searchResults": "Résultats de recherche",
 		"shareInstructions": "Partagez le lien ci-dessous avec vos participants pour les inviter à rejoindre votre étude",
 		"testStudy": "Testez votre étude",
-		"titlePlaceholder": "Saisissez le titre du tableau du projet"
+		"titlePlaceholder": "Saisissez le titre du tableau du projet",
+		"unlinked": "Aucune étude n'a été liée"
 	},
 	"homeworkCard": {
 		"comments": "Commentaires",
@@ -344,8 +356,8 @@
 		"newSection": "Nouvelle section",
 		"sectionTitlePlaceholder": "Entrez le titre de la section"
 	},
-	"interests": "",
-	"introductionVideo": "",
+	"interests": "Intérêts",
+	"introductionVideo": "Vidéo d'introduction",
 	"link": "Lien",
 	"linkClass": {
 		"doNotConnectClass": "❌ Ne connectez pas la classe"
@@ -437,7 +449,7 @@
 	"notes": {
 		"noNotes": "Aucune note n'a encore été saisie. Faites un clic droit pour ajouter des notes."
 	},
-	"noVideoPlaceholder": "",
+	"noVideoPlaceholder": "Aucune vidéo d'introduction disponible.",
 	"overview": {
 		"actions": "Actes",
 		"copy": "Copie",
@@ -1079,7 +1091,7 @@
 		"placeholder": "Versions d'étude",
 		"title": "Version d'étude"
 	},
-	"videoNotSupported": "",
+	"videoNotSupported": "Vidéo non prise en charge",
 	"viewer": {
 		"afterParticipation": "Ce que les participants voient <u>après</u> avoir effectué le {{taskType}}",
 		"aggregateVariables": "Variables agrégées",

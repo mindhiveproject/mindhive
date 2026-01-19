@@ -72,6 +72,10 @@
 		"unsavedChanges": "Несохраненные изменения!",
 		"visibleForStudents": "Задание видно студентам"
 	},
+	"assignments": {
+		"noAssignments": "",
+		"open": ""
+	},
 	"assignmentsTab": "Задания",
 	"board": {
 		"actionCollectingData": "Карточка действия — Начать сбор данных",
@@ -326,6 +330,7 @@
 	"classNetworks": "Классовые сети",
 	"collaborators": "Соавторы",
 	"common": {
+		"errorLoading": "",
 		"loading": "Загрузка..."
 	},
 	"create": {
@@ -528,7 +533,9 @@
 	},
 	"myClasses": "Мои занятия",
 	"noAccessTo": "У вас не будет доступа к:",
+	"noAssignments": "",
 	"noClasses": "Вы еще не присоединились ни к одному занятию.",
+	"noResources": "",
 	"noStudies": "Студенты пока не создали ни одного исследования.",
 	"noteNewStudents": "Примечание: новые ученики не смогут присоединиться к вашему классу.",
 	"numberOfStudents": "Количество студентов",
@@ -628,6 +635,7 @@
 		"lastUpdated": "Последнее обновление",
 		"needsFeedback": "Нужна обратная связь",
 		"notStarted": "Не начато",
+		"requestFeedback": "",
 		"saveAndClose": "Сохранить и закрыть",
 		"saving": "Сохранение ...",
 		"selectStatus": "Выберите статус",

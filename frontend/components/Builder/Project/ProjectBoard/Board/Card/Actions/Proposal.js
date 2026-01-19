@@ -510,7 +510,6 @@ export default function Proposal({
 
   const canEditCards = !isProposalSubmitted;
 
-  console.log(cards);
   return (
     <>
       <Navigation

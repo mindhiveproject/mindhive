@@ -173,9 +173,15 @@ export const StyledResource = styled.div`
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
     z-index: 2000;
+    
+    /* Ensure Semantic UI Popups appear above the modal */
+    :global(.ui.popup),
+    :global(.ui.popup.visible) {
+      z-index: 3000 !important;
+    }
   }
 
   .previewModal,

@@ -323,6 +323,304 @@ export const StyledProposal = styled.div`
 
   .header {
     display: grid;
+    .headerContent {
+      width: 100%;
+    }
+    .headerMainContent {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 100%;
+    }
+    .headerLeftSection {
+      display: flex;
+      flex: 1 0 0;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+    }
+    .headerRightSection {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      padding-left: 8px;
+    }
+    .headerTitleRow {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .headerEditIcon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: #F3F3F3;
+      border-radius: 100px;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      .icon {
+        // color: #336F8A;
+        margin: 0;
+        width: 24px;
+        height: 24px;
+        aspect-ratio: 1 / 1;
+      }
+      img {
+        width: 24px;
+        height: 24px;
+        aspect-ratio: 1 / 1;
+        object-fit: contain;
+        border: none;
+      }
+      &:hover {
+      // background: #E6E6E6;
+      border: 1px solid #336F8A;
+      img {
+        border: none;
+      }
+    }
+    }
+    .headerTitle {
+      font-family: "Nunito", sans-serif;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 36px;
+      line-height: 44px;
+      color: #171717;
+      margin: 0;
+      flex: 1;
+    }
+    .headerInfoRow {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 8px;
+      width: 100%;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+    .studyLinkChip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      height: 32px;
+      border-radius: 8px;
+      padding: 6px 12px;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1.5px solid;
+      white-space: nowrap;
+      font-family: inherit;
+      width: fit-content;
+      &:focus {
+        outline: none;
+      }
+      &.board {
+        background: #F9D978;
+        border-color: #5D5763;
+        color: #171717;
+        &:hover:not(:disabled) {
+          background: #F5D165;
+          border-color: #4A4550;
+        }
+      }
+      &.list {
+        background: #DEF8FB;
+        border-color: #336F8A;
+        color: #171717;
+        width: max-content;
+        max-width: 100%;
+        &:hover:not(:disabled) {
+          background: #C8F0F5;
+          border-color: #2A5A6D;
+        }
+      }
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+    .studyLinkChipContent {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      padding: 0;
+      min-width: 0;
+      flex: 0 1 auto;
+    }
+    .studyLinkIcon {
+      width: fit-content;
+      height: fit-content;
+      flex-shrink: 0;
+      margin: 0;
+      display: block;
+    }
+    .studyLinkText {
+      margin: 0;
+      font-family: "Nunito", sans-serif;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      color: #171717;
+      white-space: nowrap;
+      text-align: left;
+      letter-spacing: 0px;
+      width: fit-content;
+      vertical-align: middle;
+      min-width: 0;
+    }
+    .collaboratorArray {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+    .collaboratorChip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      border: 1px solid #A1A1A1;
+      border-radius: 30px;
+      padding: 4px 12px 4px 12px;
+      gap: 8px;
+      background: white;
+      overflow: hidden;
+      width: fit-content;
+      max-width: 300px;
+      span {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: flex;
+        height: 100%;
+        align-items: center;
+      }
+    }
+    .addCollaboratorButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border: 1px solid #A1A1A1;
+      border-radius: 20px;
+      background: white;
+      cursor: pointer;
+      padding: 4px;
+      flex-shrink: 0;
+      &:hover {
+        background: #F3F3F3;
+      }
+      .icon {
+        color: #171717;
+        margin: 0;
+      }
+    }
+    .downloadButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 40px;
+      padding: 8px 12px 8px 16px;
+      border-radius: 100px;
+      // border: 1px solid #336F8A;
+      // background: white;
+      color: #336F8A;
+      font-family: "Nunito", sans-serif;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      cursor: pointer;
+      flex-shrink: 0;
+      &:hover {
+        background: #FDF2D0;
+        color: #625B71;
+        .icon {
+          color: #625B71;
+        }
+      }
+      .icon {
+        margin: 0;
+        width: 24px;
+        height: 24px;
+        color: #336F8A;
+      }
+    }
+    .downloadButtonText {
+      white-space: nowrap;
+    }
+    .viewToggleGroup {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .viewToggleButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 40px;
+      padding: 8px 24px 8px 16px;
+      border: 1px solid #336F8A;
+      font-family: "Nunito", sans-serif;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      margin-right: -1px;
+      &.left {
+        border-top-left-radius: 100px;
+        border-bottom-left-radius: 100px;
+      }
+      &.right {
+        border-top-right-radius: 100px;
+        border-bottom-right-radius: 100px;
+      }
+      &.active {
+        background: #D3E0E3;
+        color: #336F8A;
+        border-color: #336F8A;
+        .icon {
+          color: #336F8A;
+          margin: 0;
+        }
+      }
+      &.inactive {
+        background: white;
+        color: #336F8A;
+        border-color: #336F8A;
+        .icon {
+          color: #336F8A;
+          margin: 0;
+        }
+      }
+      &:hover {
+        background: #F3F3F3;
+      }
+      img {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+        margin: 0;
+        filter: brightness(0) saturate(100%) invert(26%) sepia(94%) saturate(1234%) hue-rotate(158deg) brightness(92%) contrast(87%);
+      }
+    }
     .titleEdit {
       font-family: "Nunito";
       font-style: normal;
@@ -1013,33 +1311,5 @@ export const StyledActionCard = styled.div`
     display: grid;
     justify-content: center;
     align-content: center;
-  }
-`;
-
-export const DownloadButton = styled.button`
-  && {
-    color: white;
-    display: inline-flex;
-    height: 40px;
-    padding: 8px 12px 8px 4px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-    border-radius: 100px;
-    background: var(--MH-Theme-Primary-Dark, #336f8a);
-    :hover {
-      transform: scale(1.05);
-      transition: transform 1s;
-    }
-    :disabled {
-      background: #cccccc;
-      border-color: #cccccc;
-      cursor: not-allowed;
-    }
-    .icon {
-      align-items: center !important;
-      margin: 0 !important;
-    }
   }
 `;

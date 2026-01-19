@@ -31,10 +31,10 @@
 		"loadingMessage": "Получаю последние данные о назначении...",
 		"unsavedChanges": "(Несохраненные изменения)"
 	},
-	"availability": "",
+	"availability": "Доступность",
 	"background": "Фон",
 	"backgroundHelp": "В этом поле можно кратко описать тему исследования. Какая проблема исследуется и почему она важна?",
-	"backgroundTab": "",
+	"backgroundTab": "Фон",
 	"basicTab": "Базовый",
 	"blockDescription": "В блоке участникам предоставляется информация.",
 	"board": {
@@ -303,22 +303,34 @@
 		"studyStatus": "Статус исследования"
 	},
 	"header": {
+		"addCollaborator": "Добавить соавтора",
 		"allDataOneFile": "Все данные в одном файле",
 		"allowAddingCards": "Разрешить добавление новых карт",
 		"allowAddingSections": "Разрешить добавление новых разделов",
 		"allowMovingCards": "Разрешить перемещение карт",
 		"allowMovingSections": "Разрешить перемещение разделов",
+		"cancel": "Отмена",
+		"collaborators": "Соавторы",
 		"copyLink": "Копировать ссылку на исследование",
 		"createYourStudyProposal": "Создайте здесь свое предложение по исследованию, чтобы начать свой исследовательский путь",
 		"descriptionPlaceholder": "Введите описание доски проекта",
+		"error": "Ошибка",
 		"linkCopied": "Ссылка скопирована.",
+		"linked": "Связанный",
+		"linkedToStudy": "Связано с",
 		"myProjectBoard": "Моя проектная доска",
+		"notLinkedToStudy": "Не связано с исследованием",
+		"noUsersFound": "Пользователи не найдены...",
 		"publicTemplate": "Публичный шаблон",
+		"removeCollaborator": "Удалить соавтора",
 		"save": "Сохранять",
 		"saving": "Экономия",
+		"searchPlaceholder": "Поиск по имени пользователя...",
+		"searchResults": "Результаты поиска",
 		"shareInstructions": "Поделитесь ссылкой ниже с участниками, чтобы пригласить их присоединиться к вашему исследованию.",
 		"testStudy": "Проверьте свое исследование",
-		"titlePlaceholder": "Введите название доски проекта"
+		"titlePlaceholder": "Введите название доски проекта",
+		"unlinked": "Исследование не проводилось."
 	},
 	"homeworkCard": {
 		"comments": "Комментарии",
@@ -344,8 +356,8 @@
 		"newSection": "Новый раздел",
 		"sectionTitlePlaceholder": "Введите название раздела"
 	},
-	"interests": "",
-	"introductionVideo": "",
+	"interests": "Интересы",
+	"introductionVideo": "Вводное видео",
 	"link": "Связь",
 	"linkClass": {
 		"doNotConnectClass": "❌ Не подключайте класс"
@@ -437,7 +449,7 @@
 	"notes": {
 		"noNotes": "Заметки пока не добавлены. Щёлкните правой кнопкой мыши, чтобы добавить заметки."
 	},
-	"noVideoPlaceholder": "",
+	"noVideoPlaceholder": "Вступительный видеоролик отсутствует.",
 	"overview": {
 		"actions": "Действия",
 		"copy": "Копировать",
@@ -1079,7 +1091,7 @@
 		"placeholder": "Учебные версии",
 		"title": "Учебная версия"
 	},
-	"videoNotSupported": "",
+	"videoNotSupported": "Видео не поддерживается",
 	"viewer": {
 		"afterParticipation": "Что видят участники <u>после</u> выполнения {{taskType}}",
 		"aggregateVariables": "Агрегированные переменные",

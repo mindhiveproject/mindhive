@@ -72,6 +72,10 @@
 		"unsavedChanges": "सहेजे नहीं गए परिवर्तन!",
 		"visibleForStudents": "असाइनमेंट छात्रों के लिए दृश्यमान है"
 	},
+	"assignments": {
+		"noAssignments": "",
+		"open": ""
+	},
 	"assignmentsTab": "कार्य",
 	"board": {
 		"actionCollectingData": "एक्शन कार्ड - डेटा एकत्र करना शुरू करें",
@@ -326,6 +330,7 @@
 	"classNetworks": "वर्ग नेटवर्क",
 	"collaborators": "सहयोगी",
 	"common": {
+		"errorLoading": "",
 		"loading": "लोड हो रहा है..."
 	},
 	"create": {
@@ -528,7 +533,9 @@
 	},
 	"myClasses": "मेरी कक्षाएँ",
 	"noAccessTo": "आपको इन तक पहुंच नहीं होगी:",
+	"noAssignments": "",
 	"noClasses": "आपने अभी तक किसी भी कक्षा में प्रवेश नहीं लिया है।",
+	"noResources": "",
 	"noStudies": "छात्रों ने अभी तक कोई अध्ययन नहीं किया है।",
 	"noteNewStudents": "नोट: नए छात्र आपकी कक्षा में शामिल नहीं हो पाएंगे",
 	"numberOfStudents": "छात्रों की संख्या",
@@ -628,6 +635,7 @@
 		"lastUpdated": "आखरी अपडेट",
 		"needsFeedback": "प्रतिक्रिया की आवश्यकता है",
 		"notStarted": "शुरू नहीं",
+		"requestFeedback": "",
 		"saveAndClose": "सहेजे बंद करें",
 		"saving": "बचत...",
 		"selectStatus": "स्थिति चुनें",

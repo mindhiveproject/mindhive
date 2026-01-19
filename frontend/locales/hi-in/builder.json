@@ -31,10 +31,10 @@
 		"loadingMessage": "नवीनतम असाइनमेंट डेटा प्राप्त किया जा रहा है...",
 		"unsavedChanges": "(असहेजित परिवर्तन)"
 	},
-	"availability": "",
+	"availability": "उपलब्धता",
 	"background": "पृष्ठभूमि",
 	"backgroundHelp": "इस फ़ील्ड का उपयोग शोध के विषय पर संक्षिप्त पृष्ठभूमि प्रदान करने के लिए करें। अध्ययनाधीन समस्या क्या है और यह महत्वपूर्ण क्यों है?",
-	"backgroundTab": "",
+	"backgroundTab": "पृष्ठभूमि",
 	"basicTab": "बुनियादी",
 	"blockDescription": "एक ब्लॉक में प्रतिभागियों को जानकारी दी जाती है।",
 	"board": {
@@ -303,22 +303,34 @@
 		"studyStatus": "अध्ययन की स्थिति"
 	},
 	"header": {
+		"addCollaborator": "सहयोगी जोड़ें",
 		"allDataOneFile": "सभी डेटा एक फ़ाइल में",
 		"allowAddingCards": "नए कार्ड जोड़ने की अनुमति दें",
 		"allowAddingSections": "नए अनुभाग जोड़ने की अनुमति दें",
 		"allowMovingCards": "कार्डों को स्थानांतरित करने की अनुमति दें",
 		"allowMovingSections": "गतिशील अनुभागों की अनुमति दें",
+		"cancel": "रद्द करना",
+		"collaborators": "सहयोगियों",
 		"copyLink": "अध्ययन लिंक कॉपी करें",
 		"createYourStudyProposal": "अपनी शोध यात्रा शुरू करने के लिए यहां अपना अध्ययन प्रस्ताव बनाएं",
 		"descriptionPlaceholder": "प्रोजेक्ट बोर्ड विवरण दर्ज करें",
+		"error": "गलती",
 		"linkCopied": "लिंक कॉपी किया गया है",
+		"linked": "लिंक्ड",
+		"linkedToStudy": "से जुड़ा हुआ",
 		"myProjectBoard": "मेरा प्रोजेक्ट बोर्ड",
+		"notLinkedToStudy": "किसी अध्ययन से संबंधित नहीं",
+		"noUsersFound": "कोई उपयोगकर्ता नहीं मिला...",
 		"publicTemplate": "सार्वजनिक टेम्पलेट",
+		"removeCollaborator": "सहयोगी को हटाएँ",
 		"save": "बचाना",
 		"saving": "सहेजा जा रहा है",
+		"searchPlaceholder": "उपयोगकर्ता नाम से खोजें...",
+		"searchResults": "खोज के परिणाम",
 		"shareInstructions": "अपने प्रतिभागियों को अपने अध्ययन में शामिल होने के लिए आमंत्रित करने हेतु नीचे दिए गए लिंक को उनके साथ साझा करें",
 		"testStudy": "अपने अध्ययन का परीक्षण करें",
-		"titlePlaceholder": "प्रोजेक्ट बोर्ड का शीर्षक दर्ज करें"
+		"titlePlaceholder": "प्रोजेक्ट बोर्ड का शीर्षक दर्ज करें",
+		"unlinked": "किसी भी अध्ययन में इसका संबंध नहीं पाया गया।"
 	},
 	"homeworkCard": {
 		"comments": "टिप्पणियाँ",
@@ -344,8 +356,8 @@
 		"newSection": "नया खंड",
 		"sectionTitlePlaceholder": "अनुभाग शीर्षक दर्ज करें"
 	},
-	"interests": "",
-	"introductionVideo": "",
+	"interests": "रुचियां",
+	"introductionVideo": "परिचय वीडियो",
 	"link": "जोड़ना",
 	"linkClass": {
 		"doNotConnectClass": "❌ कक्षा को कनेक्ट न करें"
@@ -437,7 +449,7 @@
 	"notes": {
 		"noNotes": "अभी तक कोई नोट दर्ज नहीं किया गया है। नोट जोड़ने के लिए राइट-क्लिक करें।"
 	},
-	"noVideoPlaceholder": "",
+	"noVideoPlaceholder": "कोई परिचयात्मक वीडियो उपलब्ध नहीं है।",
 	"overview": {
 		"actions": "कार्रवाई",
 		"copy": "प्रतिलिपि",
@@ -1079,7 +1091,7 @@
 		"placeholder": "अध्ययन संस्करण",
 		"title": "अध्ययन संस्करण"
 	},
-	"videoNotSupported": "",
+	"videoNotSupported": "वीडियो समर्थित नहीं है",
 	"viewer": {
 		"afterParticipation": "{{taskType}} लेने के <u>बाद</u> प्रतिभागी क्या देखते हैं",
 		"aggregateVariables": "समग्र चर",

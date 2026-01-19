@@ -330,8 +330,8 @@
 	"classNetworks": "Class networks",
 	"collaborators": "Collaborator(s)",
 	"common": {
-		"loading": "Loading...",
-		"errorLoading": "Error loading assignment"
+		"errorLoading": "Error loading assignment",
+		"loading": "Loading..."
 	},
 	"create": {
 		"create": "Create new class",
@@ -533,7 +533,9 @@
 	},
 	"myClasses": "My classes",
 	"noAccessTo": "You will not have access to:",
+	"noAssignments": "No assignments available.",
 	"noClasses": "You haven’t joined any classes yet.",
+	"noResources": "No public resources.",
 	"noStudies": "The students haven’t created any studies yet.",
 	"noteNewStudents": "Note: New students will not be able to join your class",
 	"numberOfStudents": "Number of students",
@@ -646,7 +648,5 @@
 	},
 	"theirWorkspaceAndStudies": "Their workspace and any studies, tasks or surveys they created during your class",
 	"typeDeleteToConfirm": "Type \"DELETE\" to confirm",
-	"yourClass": "Your class",
-	"noResources": "No public resources.",
-	"noAssignments": "No assignments available."
+	"yourClass": "Your class"
 }

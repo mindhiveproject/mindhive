@@ -72,6 +72,10 @@
 		"unsavedChanges": "未保存的更改！",
 		"visibleForStudents": "学生可以看到作业"
 	},
+	"assignments": {
+		"noAssignments": "",
+		"open": ""
+	},
 	"assignmentsTab": "作业",
 	"board": {
 		"actionCollectingData": "行动卡 - 开始收集数据",
@@ -326,6 +330,7 @@
 	"classNetworks": "类网络",
 	"collaborators": "合作者",
 	"common": {
+		"errorLoading": "",
 		"loading": "加载中..."
 	},
 	"create": {
@@ -528,7 +533,9 @@
 	},
 	"myClasses": "我的课程",
 	"noAccessTo": "您将无权访问：",
+	"noAssignments": "",
 	"noClasses": "您尚未加入任何课程。",
+	"noResources": "",
 	"noStudies": "学生尚未创建任何研究。",
 	"noteNewStudents": "注意：新生将无法加入你的班级",
 	"numberOfStudents": "学生人数",
@@ -628,6 +635,7 @@
 		"lastUpdated": "上次更新",
 		"needsFeedback": "需要反馈",
 		"notStarted": "未开始",
+		"requestFeedback": "",
 		"saveAndClose": "保存并关闭",
 		"saving": "正在保存...",
 		"selectStatus": "选择状态",

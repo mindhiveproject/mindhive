@@ -4,6 +4,7 @@ import moment from "moment";
 import styled from "styled-components";
 import { useMutation } from "@apollo/client";
 import useTranslation from 'next-translate/useTranslation';
+import Link from "next/link";
 
 import { GET_USER } from "../../Queries/User";
 import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal";
@@ -93,14 +94,17 @@ export default function Projects({ query, user, profile }) {
           <TitleCell>
             <span>{project?.title}</span>
             {!project?.isHidden && (
-              <a
-                href={`${origin}/builder/projects?selector=${project.id}`}
+              <Link
+                href={{
+                  pathname: `/builder/projects`,
+                  query: { selector: project.id }
+                }}
                 target="_blank"
                 rel="noreferrer"
                 title={t('projects.openInNewTab', 'Open project in new tab')}
               >
                 <StyledIcon name="external alternate" />
-              </a>
+              </Link>
             )}
           </TitleCell>
           <Cell>{project?.role}</Cell>
