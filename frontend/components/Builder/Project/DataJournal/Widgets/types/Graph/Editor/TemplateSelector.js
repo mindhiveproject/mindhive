@@ -4,32 +4,230 @@ import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
 
+# Load df from js_workspace if available (OLD behavior), otherwise assume global df
+try:
+    import js_workspace as jsdata
+    data = jsdata.to_py()
+    df = pd.DataFrame(data)
+except (ModuleNotFoundError, AttributeError, NameError):
+    pass  # df already defined in environment (NEW behavior)
+
+
+def get_or_default(var_value, default=""):
+    return var_value if var_value else default
+
+
 if not X or not Y:
     fig = go.Figure()
-    fig.add_annotation(text="Please select X and Y variables", 
-                       xref="paper", yref="paper", x=0.5, y=0.5, 
-                       showarrow=False, font_size=18)
+    fig.add_annotation(
+        text="Please select X and Y variables",
+        xref="paper", yref="paper", x=0.5, y=0.5,
+        showarrow=False, font_size=18
+    )
+elif X not in df.columns or Y not in df.columns:
+    fig = go.Figure()
+    fig.add_annotation(
+        text=f"Column '{X}' or '{Y}' not found",
+        xref="paper", yref="paper", x=0.5, y=0.5,
+        showarrow=False, font_size=16
+    )
 else:
-    if X not in df.columns or Y not in df.columns:
-        fig = go.Figure()
-        fig.add_annotation(text=f"Column '{X}' or '{Y}' not found", 
-                           xref="paper", yref="paper", x=0.5, y=0.5, 
-                           showarrow=False, font_size=16)
+    print(f"DEBUG: Using X='{X}', Y='{Y}', Group='{Group}', trendline={trendline}")
+    
+    # OLD logic: participant grouping/aggregation
+    if 'participant' not in df.columns and 'id' not in df.columns:
+        userDefWide = True
     else:
-        df_plot = df[[X, Y]].copy()
-        df_plot[X] = pd.to_numeric(df_plot[X], errors='coerce')
-        df_plot[Y] = pd.to_numeric(df_plot[Y], errors='coerce')
+        if 'id' in df.columns and 'participant' not in df.columns:
+            df = df.rename(columns={'id': 'participant'})
+        userDefWide = False
 
-        fig = px.scatter(df_plot, x=X, y=Y,
-                         color=Group if Group and Group in df.columns else None,
-                         color_discrete_sequence=[color] if color else None,
-                         trendline=trendline if trendline and trendline != "none" else None,
-                         title=graphTitle or f"{Y} vs {X}")
+    cols_to_use = [X, Y]
+    if Group and Group in df.columns:
+        cols_to_use.append(Group)
 
-        fig.update_layout(template="seaborn")
+    df_plot = df[cols_to_use].copy()
+    df_plot.replace('NaN', np.nan, inplace=True)
+    df_plot[X] = pd.to_numeric(df_plot[X], errors='coerce')
+    df_plot[Y] = pd.to_numeric(df_plot[Y], errors='coerce')
+
+    def agg_func(x):
+        non_nan_values = x.dropna()
+        return non_nan_values.iloc[0] if not non_nan_values.empty else np.nan
+
+    if userDefWide:
+        grouped_df = df_plot
+        has_group = bool(Group and Group in df_plot.columns)
+    else:
+        if Group and Group in df_plot.columns:
+            grouped_df = df_plot.groupby('participant').agg({X: agg_func, Y: agg_func, Group: agg_func}).reset_index()
+            has_group = True
+        else:
+            grouped_df = df_plot.groupby('participant').agg({X: agg_func, Y: agg_func}).reset_index()
+            has_group = False
+
+    print(f"DEBUG: grouped_df shape: {grouped_df.shape}, NaNs in X/Y: {grouped_df[X].isna().sum()}/{len(grouped_df)}, {grouped_df[Y].isna().sum()}/{len(grouped_df)}")
+    print(f"DEBUG: has_group={has_group}, use_trendline={trendline}")
+
+    # Configuration
+    marginalPlot = get_or_default(marginalPlot)
+    optional_params = {
+        k: v for k, v in {
+            "marginal_x": "rug" if marginalPlot == 'rug' else "box" if marginalPlot == 'box' else None,
+            "marginal_y": "rug" if marginalPlot == 'rug' else "box" if marginalPlot == 'box' else None
+        }.items() if v
+    }
+    legend_title_text = get_or_default(legend_title_text)
+    title = get_or_default(graphTitle, f"{X} vs {Y}")
+    use_trendline = bool(trendline) and str(trendline).lower() not in ("none", "false", "")
+    color_param = Group if has_group else None
+    color_seq_param = [get_or_default(color)] if get_or_default(color) and not has_group else None
+    showlegend = has_group
+
+    common_kwargs = {
+        "data_frame": grouped_df,
+        "x": X,
+        "y": Y,
+        "color": color_param,
+        "color_discrete_sequence": color_seq_param,
+        "title": title,
+        "template": "seaborn",
+        **optional_params
+    }
+
+    fig_kwargs = common_kwargs.copy()
+    if use_trendline:
+        fig_kwargs["trendline"] = "lowess"
+        print("DEBUG: Adding lowess trendline")
+
+    fig = px.scatter(**fig_kwargs)
+
+    # Bring trendline to front (common issue)
+    if use_trendline:
+        for trace in reversed(fig.data):
+            if 'lowess' in trace.name.lower():
+                fig.data = fig.data[-1:] + fig.data[:-1]
+                break
+
+    fig.update_layout(
+        showlegend=showlegend,
+        xaxis_title=get_or_default(xLabel, X),
+        yaxis_title=get_or_default(yLabel, Y),
+        legend_title_text=None if legend_title_text == '' else legend_title_text
+    )
+
+    xRangeMin = get_or_default(xRangeMin)
+    xRangeMax = get_or_default(xRangeMax)
+    yRangeMin = get_or_default(yRangeMin)
+    yRangeMax = get_or_default(yRangeMax)
+
+    fig.update_xaxes(range=[
+        None if xRangeMin == '' else xRangeMin,
+        None if xRangeMax == '' else xRangeMax
+    ])
+    fig.update_yaxes(range=[
+        None if yRangeMin == '' else yRangeMin,
+        None if yRangeMax == '' else yRangeMax
+    ])
 
 fig_json_output = fig.to_json()
 `;
+
+// const scatterPlotCode = `
+// import plotly.express as px
+// import plotly.graph_objects as go
+// import pandas as pd
+// import numpy as np
+
+// def get_or_default(var_name, default=""):
+//     try:
+//         return locals()[var_name] if var_name in locals() else default
+//     except (KeyError, NameError):
+//         return default
+
+// if not X or not Y:
+//     fig = go.Figure()
+//     fig.add_annotation(text="Please select X and Y variables",
+//                        xref="paper", yref="paper", x=0.5, y=0.5,
+//                        showarrow=False, font_size=18)
+// else:
+//     if X not in df.columns or Y not in df.columns:
+//         fig = go.Figure()
+//         fig.add_annotation(text=f"Column '{X}' or '{Y}' not found",
+//                            xref="paper", yref="paper", x=0.5, y=0.5,
+//                            showarrow=False, font_size=16)
+//     else:
+//         df_plot = df[[X, Y]].copy()
+//         df_plot[X] = pd.to_numeric(df_plot[X], errors='coerce')
+//         df_plot[Y] = pd.to_numeric(df_plot[Y], errors='coerce')
+
+//         marginalPlot = marginalPlot or get_or_default(marginalPlot)
+//         optional_params = {
+//           "marginal_x": "rug" if marginalPlot == 'rug' else "box" if marginalPlot=='box' else None,
+//           "marginal_y": "rug" if marginalPlot == 'rug' else "box" if marginalPlot=='box' else None,
+//         }
+//         legend_title_text = legend_title_text or get_or_default(legend_title_text)
+
+//         fig = px.scatter(df_plot, x=X, y=Y,
+//                          color=Group if Group and Group in df.columns else None,
+//                          color_discrete_sequence=[color] if color else None,
+//                          trendline=trendline if trendline and trendline != "none" else None,
+//                          title=graphTitle or f"{Y} vs {X}",
+//                          **{k: v for k, v in optional_params.items() if v})
+
+//         fig.update_layout(
+//           template="seaborn",
+//           xaxis_title = xLabel or get_or_default(xLabel, X),
+//           yaxis_title = yLabel or get_or_default(yLabel, Y),
+//           legend_title_text= None if legend_title_text == '' else legend_title_text
+//         )
+
+//         xRangeMin = xRangeMin or get_or_default(xRangeMin)
+//         xRangeMax = xRangeMax or get_or_default(xRangeMax)
+//         yRangeMin = yRangeMin or get_or_default(yRangeMin)
+//         yRangeMax = yRangeMax or get_or_default(yRangeMax)
+
+//         fig.update_xaxes(range=[None if xRangeMin == '' else xRangeMin,
+//                         None if xRangeMax == '' else xRangeMax])
+
+//         fig.update_yaxes(range=[None if yRangeMin == '' else yRangeMin,
+//                         None if yRangeMax == '' else yRangeMax])
+
+// fig_json_output = fig.to_json()
+// `;
+
+// const scatterPlotCode = `
+// import plotly.express as px
+// import plotly.graph_objects as go
+// import pandas as pd
+// import numpy as np
+
+// if not X or not Y:
+//     fig = go.Figure()
+//     fig.add_annotation(text="Please select X and Y variables",
+//                        xref="paper", yref="paper", x=0.5, y=0.5,
+//                        showarrow=False, font_size=18)
+// else:
+//     if X not in df.columns or Y not in df.columns:
+//         fig = go.Figure()
+//         fig.add_annotation(text=f"Column '{X}' or '{Y}' not found",
+//                            xref="paper", yref="paper", x=0.5, y=0.5,
+//                            showarrow=False, font_size=16)
+//     else:
+//         df_plot = df[[X, Y]].copy()
+//         df_plot[X] = pd.to_numeric(df_plot[X], errors='coerce')
+//         df_plot[Y] = pd.to_numeric(df_plot[Y], errors='coerce')
+
+//         fig = px.scatter(df_plot, x=X, y=Y,
+//                          color=Group if Group and Group in df.columns else None,
+//                          color_discrete_sequence=[color] if color else None,
+//                          trendline=trendline if trendline and trendline != "none" else None,
+//                          title=graphTitle or f"{Y} vs {X}")
+
+//         fig.update_layout(template="seaborn")
+
+// fig_json_output = fig.to_json()
+// `;
 
 // const scatterPlotCode = `
 // print("The value of X is: ", X)

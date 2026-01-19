@@ -58,8 +58,6 @@ export default function Workspace({
       workspaces={workspaces}
       workspaceId={workspaceId}
       selectWorkspaceById={selectWorkspaceById}
-      // Context-provided values (no need to pass as props)
-      // workspace, updateWorkspace, pyodide, data, variables, settings are accessed in Grid via context
     />
   );
 }

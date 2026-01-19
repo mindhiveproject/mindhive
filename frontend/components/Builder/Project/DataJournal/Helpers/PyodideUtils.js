@@ -6,6 +6,7 @@ import micropip
 import pandas as pd
 import numpy as np
 await micropip.install('plotly==5.20.0')
+await micropip.install('statsmodels')
 import plotly.express as px
 import plotly.graph_objects as go
 import json`;
@@ -35,9 +36,7 @@ export const runCode = async (pyodide, code) => {
     throw new Error("Pyodide is not initialized");
   }
   try {
-    console.log({ code });
     const result = await pyodide.runPythonAsync(code);
-    console.log({ result });
     return result;
   } catch (err) {
     console.error("Python execution error:", err);

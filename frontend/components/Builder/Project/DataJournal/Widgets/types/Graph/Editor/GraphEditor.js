@@ -30,47 +30,6 @@ import AxesHistogram from "./Axes/AxesHistogram";
 const defaultCode = ``;
 
 // Centralized prepareCanvasCode (move to PyodideUtils.js if shared)
-// const getPrepareCanvasCode = () => `
-// # get relevant html elements
-// html_output = js.document.getElementById('figure')
-
-// Xmultiple = js.document.getElementById("xVariableMultiple")
-
-// X     = None if js.document.getElementById("xVariable")     == None else js.document.getElementById("xVariable").value
-// Y     = None if js.document.getElementById("yVariable")     == None else js.document.getElementById("yVariable").value
-// Group = None if js.document.getElementById("groupVariable") == None else js.document.getElementById("groupVariable").value
-
-// graphTitle = None if js.document.getElementById('graphTitle') == None else js.document.getElementById('graphTitle').value
-
-// legend_title = None if js.document.getElementById('legend_title') == None else js.document.getElementById('legend_title').value
-// legend_title_text = None if js.document.getElementById('legend_title_text') == None else js.document.getElementById('legend_title_text').value
-// x_labels = None if js.document.getElementById('x_labels') == None else js.document.getElementById('x_labels').value
-// xLabel = None if js.document.getElementById('xLabel') == None else js.document.getElementById('xLabel').value
-// xRangeMin = None if js.document.getElementById('xRangeMin') == None else js.document.getElementById('xRangeMin').value
-// xRangeMax = None if js.document.getElementById('xRangeMax') == None else js.document.getElementById('xRangeMax').value
-// yLabel = None if js.document.getElementById('yLabel') == None else js.document.getElementById('yLabel').value
-// yRangeMin = None if js.document.getElementById('yRangeMin') == None else js.document.getElementById('yRangeMin').value
-// yRangeMax = None if js.document.getElementById('yRangeMax') == None else js.document.getElementById('yRangeMax').value
-// color = None if js.document.getElementById('color') == None else js.document.getElementById('color').value
-// marginalPlot = None if js.document.getElementById('marginalPlot') == None else js.document.getElementById('marginalPlot').value
-// trendline = None if js.document.getElementById('trendline') == None else js.document.getElementById('trendline').value
-// dataFormat = None if js.document.getElementById('dataFormat') == None else js.document.getElementById('dataFormat').value
-// errBar = None if js.document.getElementById('errBar') == None else js.document.getElementById('errBar').value
-
-// isWide = dataFormat == 'wide'
-// if isWide:
-//     columns = Xmultiple.value.split(',') if Xmultiple is not None else None
-// else:
-//     qualCol = None if js.document.getElementById("qualCol") == None else js.document.getElementById("qualCol").value
-//     quantCol = None if js.document.getElementById("quantCol") == None else js.document.getElementById("quantCol").value
-
-// # clear the html output
-// if html_output is not None:
-//     while html_output.firstChild:
-//         html_output.removeChild(html_output.firstChild)
-// `;
-
-// Centralized prepareCanvasCode (move to PyodideUtils.js if shared)
 const getPrepareCanvasCode = (sectionId) => `
 # get relevant html elements
 html_output = js.document.getElementById('figure-${sectionId}')
@@ -78,7 +37,6 @@ html_output = js.document.getElementById('figure-${sectionId}')
 Xmultiple = js.document.getElementById("xVariableMultiple-${sectionId}")
 
 X     = None if js.document.getElementById("xVariable-${sectionId}")     == None else js.document.getElementById("xVariable-${sectionId}").value
-print(X)
 Y     = None if js.document.getElementById("yVariable-${sectionId}")     == None else js.document.getElementById("yVariable-${sectionId}").value
 Group = None if js.document.getElementById("groupVariable-${sectionId}") == None else js.document.getElementById("groupVariable-${sectionId}").value
 
@@ -128,8 +86,6 @@ export default function GraphEditor({ content, onChange, sectionId }) {
   const selectors = content?.selectors || {};
   const variablesToDisplay = variables.filter((column) => !column?.hide);
 
-  // console.log({ defaultCode, content, code, pyodide });
-
   const handleTabChange = (e, { activeIndex }) => setActiveTab(activeIndex);
 
   const handleClick = (e, { index }) => {
@@ -140,7 +96,6 @@ export default function GraphEditor({ content, onChange, sectionId }) {
     setIsRunning(true);
     const prepareCode = getPrepareCanvasCode(sectionId);
     const fullCode = prepareCode + "\n" + code;
-    // const fullCode = code;
     try {
       const res = await runCode(pyodide, fullCode);
       setOutput(res || "");
@@ -169,18 +124,6 @@ export default function GraphEditor({ content, onChange, sectionId }) {
   const OptionsComponent = OptionsTemplateMap[type] || OptionsDefault;
 
   const panes = [
-    // {
-    //   menuItem: "Options",
-    //   render: () => (
-    //     <div className="tabContent">
-    //       <OptionsComponent
-    //         content={content}
-    //         handleContentChange={handleContentChange}
-    //         runCode={runGraphCode}
-    //       />
-    //     </div>
-    //   ),
-    // },
     {
       menuItem: "Axes",
       render: () => (
@@ -204,10 +147,15 @@ export default function GraphEditor({ content, onChange, sectionId }) {
         <div className="tabContent">
           <div className="styleLayoutContainer">
             <h3>Style & Layout Options</h3>
-            <p>
-              Customize the appearance and layout of the graph (to be
-              implemented).
-            </p>
+            <p>Customize the appearance and layout of the graph.</p>
+            <OptionsComponent
+              handleContentChange={handleContentChange}
+              code={code}
+              pyodide={pyodide}
+              runCode={runGraphCode}
+              sectionId={sectionId}
+              selectors={selectors}
+            />
           </div>
         </div>
       ),

@@ -28,21 +28,6 @@ export default function AxesScatterPlot({
     setActiveIndex(newIndex);
   };
 
-  //   const connectSelectorsCode = `
-  // html_output = js.document.getElementById('figure-${sectionId}')
-  // X = js.document.getElementById("xVariable-${sectionId}").value
-  // Y = js.document.getElementById("yVariable-${sectionId}").value
-  // Group = js.document.getElementById("groupVariable-${sectionId}").value
-
-  // trendline         = js.document.getElementById("trendLine-${sectionId}").checked
-  // legend_title_text = js.document.getElementById("legend_title_text-${sectionId}").value
-  // `;
-
-  const connectSelectorsCode = `
-X     = None if js.document.getElementById("xVariable-${sectionId}") == None else js.document.getElementById("xVariable-${sectionId}").value
-Y     = None if js.document.getElementById("yVariable-${sectionId}") == None else js.document.getElementById("yVariable-${sectionId}").value
-`;
-
   const options = [
     ...variables.map((variable) => ({
       key: variable?.field,
@@ -66,11 +51,6 @@ Y     = None if js.document.getElementById("yVariable-${sectionId}") == None els
     },
   ];
 
-  const updateCode = async ({ code }) => {
-    await pyodide.runPythonAsync(connectSelectorsCode);
-    runCode({ code });
-  };
-
   const onSelectorChange = ({ target }) => {
     handleContentChange({
       componentId: sectionId,
@@ -78,7 +58,6 @@ Y     = None if js.document.getElementById("yVariable-${sectionId}") == None els
         selectors: { ...selectors, [target?.name]: target?.value },
       },
     });
-    // updateCode({ code });
   };
 
   return (

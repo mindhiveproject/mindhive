@@ -59,13 +59,28 @@ def ${funcName}():
     graphTitle = "${(s.graphTitle || "")
       .replace(/"/g, '\\"')
       .replace(/\n/g, "\\n")}"
+    xLabel = "${(s.xLabel || "").replace(/"/g, '\\"').replace(/\n/g, "\\n")}"
+    yLabel = "${(s.yLabel || "").replace(/"/g, '\\"').replace(/\n/g, "\\n")}"
+    xRangeMin = "${(s.xRangeMin || "")
+      .replace(/"/g, '\\"')
+      .replace(/\n/g, "\\n")}"
+    xRangeMax = "${(s.xRangeMax || "")
+      .replace(/"/g, '\\"')
+      .replace(/\n/g, "\\n")}"
+    yRangeMin = "${(s.yRangeMin || "")
+      .replace(/"/g, '\\"')
+      .replace(/\n/g, "\\n")}"
+    yRangeMax = "${(s.yRangeMax || "")
+      .replace(/"/g, '\\"')
+      .replace(/\n/g, "\\n")}"
+    marginalPlot = "${(s.marginalPlot || "")
+      .replace(/"/g, '\\"')
+      .replace(/\n/g, "\\n")}"
+    legend_title_text = "${(s.legend_title_text || "")
+      .replace(/"/g, '\\"')
+      .replace(/\n/g, "\\n")}"
     color = "${(s.color || "pink").replace(/"/g, '\\"').replace(/\n/g, "\\n")}"
-    trendline = ${
-      s.trendline
-        ? `"${s.trendline.replace(/"/g, '\\"').replace(/\n/g, "\\n")}"`
-        : "None"
-    }
-
+    trendline = ${s.trendLine ? '"lowess"' : "None"}
 ${
   userCodeDedented
     ? "    " + userCodeDedented.replace(/\n/g, "\n    ")
@@ -79,7 +94,7 @@ ${outputVar} = ${funcName}()
 print("[DEBUG ${sectionId}] Returned value exists:", ${outputVar} is not None)
 `.trim();
 
-        console.log(`[Graph ${sectionId}] Generated Python:\n${pythonCode}`);
+        // console.log(`[Graph ${sectionId}] Generated Python:\n${pythonCode}`);
 
         await pyodide.runPythonAsync(pythonCode);
 

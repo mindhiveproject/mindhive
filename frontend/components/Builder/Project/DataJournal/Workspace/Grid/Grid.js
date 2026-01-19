@@ -41,7 +41,6 @@ export default function Grid({
   journalId,
   selectJournalById,
   workspaces,
-  workspaceId,
   selectWorkspaceById,
 }) {
   const gridRef = useRef(null);

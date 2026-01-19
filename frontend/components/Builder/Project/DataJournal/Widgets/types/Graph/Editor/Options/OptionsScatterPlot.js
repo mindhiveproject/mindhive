@@ -28,9 +28,13 @@ marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value
 legend_title_text = js.document.getElementById('legend_title_text-${sectionId}').value
 `;
 
-  const updateCode = async ({ code }) => {
-    await pyodide.runPythonAsync(connectDashboardCode);
-    runCode({ code });
+  const onChange = ({ name, value }) => {
+    handleContentChange({
+      componentId: sectionId,
+      newContent: {
+        selectors: { ...selectors, [name]: value },
+      },
+    });
   };
 
   return (
@@ -47,13 +51,8 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
           name="graphTitle"
           value={selectors.graphTitle}
           onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, graphTitle: target.value },
-              },
-            })
+            onChange({ name: "graphTitle", value: target?.value })
           }
-          onBlur={() => updateCode({ code })}
         />
       </div>
 
@@ -69,13 +68,8 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
           name="xLabel"
           value={selectors["xLabel"]}
           onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, xLabel: target.value },
-              },
-            })
+            onChange({ name: "xLabel", value: target?.value })
           }
-          onBlur={() => updateCode({ code })}
         />
 
         <label htmlFor="xRange" className="title">
@@ -88,13 +82,8 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
             name="xRangeMin"
             value={selectors["xRangeMin"]}
             onChange={({ target }) =>
-              handleContentChange({
-                newContent: {
-                  selectors: { ...selectors, xRangeMin: target.value },
-                },
-              })
+              onChange({ name: "xRangeMin", value: target?.value })
             }
-            onBlur={() => updateCode({ code })}
           />
           <input
             id={`xRangeMax-${sectionId}`}
@@ -102,13 +91,8 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
             name="xRangeMax"
             value={selectors["xRangeMax"]}
             onChange={({ target }) =>
-              handleContentChange({
-                newContent: {
-                  selectors: { ...selectors, xRangeMax: target.value },
-                },
-              })
+              onChange({ name: "xRangeMax", value: target?.value })
             }
-            onBlur={() => updateCode({ code })}
           />
         </div>
       </div>
@@ -125,13 +109,8 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
           name="yLabel"
           value={selectors["yLabel"]}
           onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, yLabel: target.value },
-              },
-            })
+            onChange({ name: "yLabel", value: target?.value })
           }
-          onBlur={() => updateCode({ code })}
         />
 
         <label htmlFor="yRange" className="title">
@@ -144,13 +123,8 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
             name="yRangeMin"
             value={selectors["yRangeMin"]}
             onChange={({ target }) =>
-              handleContentChange({
-                newContent: {
-                  selectors: { ...selectors, yRangeMin: target.value },
-                },
-              })
+              onChange({ name: "yRangeMin", value: target?.value })
             }
-            onBlur={() => updateCode({ code })}
           />
           <input
             id={`yRangeMax-${sectionId}`}
@@ -158,13 +132,8 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
             name="yRangeMax"
             value={selectors["yRangeMax"]}
             onChange={({ target }) =>
-              handleContentChange({
-                newContent: {
-                  selectors: { ...selectors, yRangeMax: target.value },
-                },
-              })
+              onChange({ name: "yRangeMax", value: target?.value })
             }
-            onBlur={() => updateCode({ code })}
           />
         </div>
       </div>
@@ -177,25 +146,21 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
           name="marginalPlot"
           value={selectors["marginalPlot"]}
           onChange={({ target }) =>
-            handleContentChange({
-              newContent: {
-                selectors: { ...selectors, marginalPlot: target.value },
-              },
-            })
+            onChange({ name: "marginalPlot", value: target?.value })
           }
-          onBlur={() => updateCode({ code })}
         >
           {marginalPlotsOptions.map((option) => (
-            <option key={option.value} value={option.value}>{option.text}</option>
+            <option key={option.value} value={option.value}>
+              {option.text}
+            </option>
           ))}
-
         </select>
       </div>
 
       <div className="subheader">Legend title</div>
 
       <label htmlFor="legend_title_text" className="title">
-      (leave empty if not needed)
+        (leave empty if not needed)
       </label>
       <input
         id={`legend_title_text-${sectionId}`}
@@ -203,14 +168,9 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
         name="legend_title_text"
         value={selectors["legend_title_text"]}
         onChange={({ target }) =>
-          handleContentChange({
-            newContent: {
-              selectors: { ...selectors, legend_title_text: target.value },
-            },
-          })
+          onChange({ name: "legend_title_text", value: target?.value })
         }
-        onBlur={() => updateCode({ code })}
-      />      
+      />
     </div>
   );
 }

@@ -57,7 +57,6 @@ export default function Datasets() {
   };
 
   const handleCreate = (newDatasource) => {
-    // console.log("Dataset created:", newDatasource);
     refetch(); // Refresh list after create
   };
 

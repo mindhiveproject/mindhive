@@ -24,25 +24,26 @@ function mergeSourceDatas(sourceDatas) {
   let initSettings = {};
 
   sourceDatas.forEach(({ data, variables, settings, prefix }) => {
-    const prefixedData = data.map((row) => {
-      const newRow = {};
-      Object.keys(row).forEach((key) => {
-        const newKey = `${prefix}${key}`;
-        newRow[newKey] =
-          key === "participant" ? `${prefix}${row[key]}` : row[key];
-      });
-      return newRow;
-    });
+    // const prefixedData = data.map((row) => {
+    //   const newRow = {};
+    //   Object.keys(row).forEach((key) => {
+    //     const newKey = `${prefix}${key}`;
+    //     newRow[newKey] =
+    //       key === "participant" ? `${prefix}${row[key]}` : row[key];
+    //   });
+    //   return newRow;
+    // });
 
-    initData = [...initData, ...prefixedData];
+    // initData = [...initData, ...prefixedData];
+    initData = [...initData, ...data];
 
-    const prefixedVariables = variables.map((v) => ({
-      ...v,
-      field: `${prefix}${v.field}`,
-    }));
+    // const prefixedVariables = variables.map((v) => ({
+    //   ...v,
+    //   field: `${prefix}${v.field}`,
+    // }));
+    // initVariables = [...initVariables, ...prefixedVariables];
 
-    initVariables = [...initVariables, ...prefixedVariables];
-
+    initVariables = [...initVariables, ...variables];
     initSettings = { ...initSettings, ...settings };
   });
 
@@ -171,7 +172,7 @@ export default function Journal({
         ))}
       </div>
 
-      {queryLoading || !mergedData || !registered ? (
+      {queryLoading || !mergedData || (initDataLength && !registered) ? (
         <div>Loading...</div>
       ) : (
         <Workspace

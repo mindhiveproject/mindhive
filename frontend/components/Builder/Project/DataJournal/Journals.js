@@ -37,10 +37,8 @@ export default function Journals({ user, projectId, studyId }) {
 
   useEffect(() => {
     function initJournal() {
-      if (dataJournals && dataJournals.length) {
-        const j = dataJournals[0]; // set the first journal as the current one
-        setSelectedJournal(j);
-      }
+      const j = dataJournals[0]; // set the first journal as the current one
+      setSelectedJournal(j);
     }
     if (dataJournals && dataJournals.length) {
       initJournal();
