@@ -1,7 +1,7 @@
 import { Draggable } from "react-smooth-dnd";
 
 import { StyledActionCard } from "../../styles/StyledProposal";
-import { getActionCardVariant } from "../../utils/cardVariants";
+import { getActionCardVariant } from "../../Utils/cardVariants";
 
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";

@@ -3,7 +3,7 @@ import { Draggable } from "react-smooth-dnd";
 
 import { Popup } from "semantic-ui-react";
 import { StyledProposalCard } from "../../styles/StyledProposal";
-import { getRegularCardVariant } from "../../utils/cardVariants";
+import { getRegularCardVariant } from "../../Utils/cardVariants";
 import useTranslation from "next-translate/useTranslation";
 
 export default function Card({

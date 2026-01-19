@@ -4,7 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { Popup } from "semantic-ui-react";
 import { StyledProposalCard } from "../../../../../styles/StyledProposal";
-import { getRegularCardVariant } from "../../../../../utils/cardVariants";
+import { getRegularCardVariant } from "../../../../../Utils/cardVariants";
 
 import { useRouter } from "next/router";
 
