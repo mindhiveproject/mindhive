@@ -147,6 +147,7 @@ export default function CopyAssignment({ code, myclass, user }) {
         ...inputs,
         classes: { connect: [{ id: myclass?.id }] },
         tags: inputs?.tags ? { connect: inputs?.tags } : null,
+        templateSource: assignment?.id ? { connect: { id: assignment.id } } : null,
       },
     },
     refetchQueries: [
