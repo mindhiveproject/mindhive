@@ -152,7 +152,7 @@ export default function AddAssignment({ myclass, user, query }) {
         style={{ textDecoration: 'none' }}
       >
         <PrimaryButton style={{ padding: '8px 16px', fontSize: '14px' }}>
-          Link a Copy
+          {t("assignment.linkACopy")}
         </PrimaryButton>
       </Link>
     );
@@ -179,7 +179,7 @@ export default function AddAssignment({ myclass, user, query }) {
     },
     {
       field: "action",
-      headerName: "Action",
+      headerName: t("assignment.action"),
       cellRenderer: (params) => UseButtonRenderer(params, false),
       suppressFilter: true,
       sortable: false,
@@ -247,7 +247,7 @@ export default function AddAssignment({ myclass, user, query }) {
     },
     {
       field: "action",
-      headerName: "Action",
+      headerName: t("assignment.action"),
       cellRenderer: (params) => UseButtonRenderer(params, true),
       suppressFilter: true,
       sortable: false,
@@ -304,8 +304,8 @@ export default function AddAssignment({ myclass, user, query }) {
     defaultMinWidth: 100,
   };
 
-  if (loading || templatesLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (loading || templatesLoading) return <div>{t("assignment.loading")}</div>;
+  if (error) return <div>{t("assignment.error")}: {error.message}</div>;
 
   return (
     <div className="selector">
@@ -325,9 +325,9 @@ export default function AddAssignment({ myclass, user, query }) {
 
       {/* Create from Scratch Section */}
       <SectionContainer>
-        <SectionTitle>Create from scratch and link this class</SectionTitle>
+        <SectionTitle>{t("assignment.startFromScratch")}</SectionTitle>
         <SectionDescription>
-          Start with a blank assignment and build it from the ground up. You'll have full control over the title, instructions, and placeholder content. This is ideal when you want to create something completely new and unique to your class.
+        {t("assignment.startFromScratchDescription")}
         </SectionDescription>
         <ButtonWrapper>
           <Link
@@ -340,20 +340,20 @@ export default function AddAssignment({ myclass, user, query }) {
             }}
             style={{ textDecoration: 'none' }}
           >
-            <PrimaryButton>{t("assignment.createNew")} from scratch</PrimaryButton>
+            <PrimaryButton>{t("assignment.createFromScratch")}</PrimaryButton>
           </Link>
         </ButtonWrapper>
       </SectionContainer>
 
       {/* My Assignments Section */}
       <SectionContainer>
-        <SectionTitle>{t("assignment.createFromExisting")}</SectionTitle>
+        <SectionTitle>{t("assignment.copyOwn")}</SectionTitle>
         <SectionDescription>
-          Select an assignment you've created to use as a starting point. These are your own assignments.
+          {t("assignment.copyOwnDescription")}
         </SectionDescription>
         {assignments.length === 0 ? (
           <p style={{ color: '#999', fontStyle: 'italic' }}>
-            You don't have any existing assignments yet.
+            {t("assignment.noExistingAssignments")}
           </p>
         ) : (
           <div
@@ -376,11 +376,11 @@ export default function AddAssignment({ myclass, user, query }) {
       <SectionContainer>
         <SectionTitle>{t("assignment.createFromTemplate")}</SectionTitle>
         <SectionDescription>
-          Select from pre-made assignment templates created by administrators. These are shared templates available to all teachers.
+          {t("assignment.templatesDescription")}
         </SectionDescription>
         {templates.length === 0 ? (
           <p style={{ color: '#999', fontStyle: 'italic' }}>
-            No templates are available at this time.
+            {t("assignment.noTemplatesAvailable")}
           </p>
         ) : (
           <div
