@@ -319,6 +319,7 @@
 		"linked": "Linked",
 		"linkedToStudy": "Linked to",
 		"myProjectBoard": "My Project Board",
+		"noClassAssociated": "This proposal is not associated with a class.",
 		"notLinkedToStudy": "Not linked to a study",
 		"noUsersFound": "No users found ...",
 		"publicTemplate": "Public template",
@@ -330,7 +331,9 @@
 		"shareInstructions": "Share the link below with your participants to invite them to join your study",
 		"testStudy": "Test your study",
 		"titlePlaceholder": "Enter project board title",
-		"unlinked": "No study linked"
+		"unlinked": "No study linked",
+		"updateCollaboratorsFailed": "Failed to update collaborators. Please try again.",
+		"userNoClasses": "You are not associated with any classes."
 	},
 	"homeworkCard": {
 		"comments": "Comments",

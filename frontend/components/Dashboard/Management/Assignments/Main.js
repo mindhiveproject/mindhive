@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import moment from "moment";
 import Link from "next/link";
 import styled from "styled-components";
-import { Icon } from "semantic-ui-react";
+import { Icon, Popup } from "semantic-ui-react";
 
 // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-grid.css";
@@ -14,7 +14,7 @@ import { AgGridReact } from "ag-grid-react";
 import EditAssignment from "./Edit";
 import AddAssignment from "./Add";
 
-import { GET_TEMPLATE_ASSIGNMENTS } from "../../../Queries/Assignment";
+import { GET_TEMPLATE_ASSIGNMENTS, GET_ASSIGNMENTS_BY_TEMPLATE_SOURCE } from "../../../Queries/Assignment";
 import DeleteAssignment from "./Delete";
 
 // Styled button matching Figma design (Primary Action - Teal)
@@ -95,8 +95,49 @@ const EditButton = styled.button`
 
 export default function TemplateAssignments({ query, user }) {
   const { data, loading, error } = useQuery(GET_TEMPLATE_ASSIGNMENTS);
+  
+  // Query all non-template assignments to find classes using each template
+  const { data: assignmentsByTemplateData, loading: assignmentsLoading } = useQuery(
+    GET_ASSIGNMENTS_BY_TEMPLATE_SOURCE
+  );
 
-  const assignments = data?.assignments || [];
+  const templateAssignments = data?.assignments || [];
+  const allAssignments = assignmentsByTemplateData?.assignments || [];
+
+  // Filter to only assignments that have a templateSource (copied assignments)
+  const assignmentsWithTemplate = allAssignments.filter(
+    (assignment) => assignment?.templateSource?.id
+  );
+
+  // Build a map: templateId -> Set of unique classes
+  const templateClassesMap = {};
+  assignmentsWithTemplate.forEach((assignment) => {
+    const templateId = assignment?.templateSource?.id;
+    if (templateId) {
+      if (!templateClassesMap[templateId]) {
+        templateClassesMap[templateId] = new Map();
+      }
+      assignment?.classes?.forEach((cls) => {
+        if (cls?.id) {
+          templateClassesMap[templateId].set(cls.id, {
+            id: cls.id,
+            title: cls.title || 'Unknown',
+          });
+        }
+      });
+    }
+  });
+
+  // Enrich template assignments with unique classes from their copies
+  const assignments = templateAssignments.map((template) => {
+    const uniqueClasses = templateClassesMap[template.id]
+      ? Array.from(templateClassesMap[template.id].values())
+      : [];
+    return {
+      ...template,
+      classesFromCopies: uniqueClasses,
+    };
+  });
 
   const { id, action } = query;
   if (action) {
@@ -127,18 +168,38 @@ export default function TemplateAssignments({ query, user }) {
     );
   };
 
-  // Cell renderer for classes
+  // Cell renderer for classes (shows count with tooltip listing all classes)
   const ClassesRenderer = (params) => {
-    const classes = params?.data?.classes || [];
-    if (classes.length === 0) {
-      return <span style={{ color: '#999' }}>No classes</span>;
+    const classesFromCopies = params?.data?.classesFromCopies || [];
+    if (classesFromCopies.length === 0) {
+      return <span style={{ color: '#999' }}>Not used in any classes</span>;
     }
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-        {classes.map((cls) => (
-          <span key={cls?.id}>{cls?.title || cls?.code || 'Unknown'}</span>
-        ))}
+    
+    const classTitles = classesFromCopies.map((cls) => cls?.title || 'Unknown');
+    const tooltipContent = (
+      <div style={{ padding: '8px' }}>
+        <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>
+          Classes using this template ({classesFromCopies.length}):
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {classTitles.map((title, index) => (
+            <div key={index}>{title}</div>
+          ))}
+        </div>
       </div>
+    );
+
+    return (
+      <Popup
+        content={tooltipContent}
+        trigger={
+          <span style={{ cursor: 'pointer', color: '#336F8A', textDecoration: 'underline' }}>
+            {classesFromCopies.length} {classesFromCopies.length === 1 ? 'class' : 'classes'}
+          </span>
+        }
+        position="top center"
+        size="small"
+      />
     );
   };
 
@@ -190,18 +251,18 @@ export default function TemplateAssignments({ query, user }) {
       sortable: true,
       flex: 1,
     },
-    // {
-    //   field: "classes",
-    //   headerName: "Associated Classes",
-    //   cellRenderer: ClassesRenderer,
-    //   filter: "agTextColumnFilter",
-    //   sortable: false,
-    //   flex: 1.5,
-    //   valueGetter: (params) => {
-    //     const classes = params?.data?.classes || [];
-    //     return classes.map(c => c?.title || c?.code || '').join(', ');
-    //   },
-    // },
+    {
+      field: "classes",
+      headerName: "Associated Classes",
+      cellRenderer: ClassesRenderer,
+      filter: "agTextColumnFilter",
+      sortable: false,
+      flex: 1.5,
+      valueGetter: (params) => {
+        const classesFromCopies = params?.data?.classesFromCopies || [];
+        return classesFromCopies.map(c => c?.title || '').join(', ') || 'Not used';
+      },
+    },
     {
       field: "createdAt",
       headerName: "Date created",
@@ -252,7 +313,7 @@ export default function TemplateAssignments({ query, user }) {
     defaultMinWidth: 100,
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading || assignmentsLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (

@@ -319,6 +319,7 @@
 		"linked": "链接",
 		"linkedToStudy": "链接到",
 		"myProjectBoard": "我的项目板",
+		"noClassAssociated": "该提案与任何类别无关。",
 		"notLinkedToStudy": "与某项研究无关",
 		"noUsersFound": "未找到用户...",
 		"publicTemplate": "公共模板",
@@ -330,7 +331,9 @@
 		"shareInstructions": "与您的参与者分享以下链接，邀请他们加入您的研究",
 		"testStudy": "测试你的学习",
 		"titlePlaceholder": "输入项目板标题",
-		"unlinked": "没有相关研究"
+		"unlinked": "没有相关研究",
+		"updateCollaboratorsFailed": "更新协作者信息失败，请重试。",
+		"userNoClasses": "您未参加任何课程。"
 	},
 	"homeworkCard": {
 		"comments": "评论",

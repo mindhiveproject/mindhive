@@ -319,6 +319,7 @@
 		"linked": "Lié",
 		"linkedToStudy": "Lié à",
 		"myProjectBoard": "Mon tableau de projets",
+		"noClassAssociated": "Cette proposition n'est associée à aucun cours.",
 		"notLinkedToStudy": "Non lié à une étude",
 		"noUsersFound": "Aucun utilisateur trouvé...",
 		"publicTemplate": "Modèle public",
@@ -330,7 +331,9 @@
 		"shareInstructions": "Partagez le lien ci-dessous avec vos participants pour les inviter à rejoindre votre étude",
 		"testStudy": "Testez votre étude",
 		"titlePlaceholder": "Saisissez le titre du tableau du projet",
-		"unlinked": "Aucune étude n'a été liée"
+		"unlinked": "Aucune étude n'a été liée",
+		"updateCollaboratorsFailed": "Impossible de mettre à jour les collaborateurs. Veuillez réessayer.",
+		"userNoClasses": "Vous n'êtes associé à aucun cours."
 	},
 	"homeworkCard": {
 		"comments": "Commentaires",
