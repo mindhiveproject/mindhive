@@ -7,6 +7,10 @@ import ProposalHeader from "./Board/Builder/Header";
 
 export default function ProposalPage({ user, proposalId }) {
   const [isPDF, setIsPDF] = useState(false);
+  // Persist filter selections across view toggles
+  const [selectedStatuses, setSelectedStatuses] = useState([]);
+  const [selectedReviewSteps, setSelectedReviewSteps] = useState([]);
+  
   const { data, error, loading } = useQuery(OVERVIEW_PROPOSAL_BOARD_QUERY, {
     variables: {
       id: proposalId,
@@ -24,9 +28,18 @@ export default function ProposalPage({ user, proposalId }) {
         refetchQueries={[]}
         isPDF={isPDF}
         setIsPDF={setIsPDF}
+        selectedStatuses={selectedStatuses}
+        selectedReviewSteps={selectedReviewSteps}
       />
       {isPDF || proposal?.isSubmitted ? (
-        <ProposalPDF proposalId={proposalId} user={user} />
+        <ProposalPDF 
+          proposalId={proposalId} 
+          user={user}
+          selectedStatuses={selectedStatuses}
+          setSelectedStatuses={setSelectedStatuses}
+          selectedReviewSteps={selectedReviewSteps}
+          setSelectedReviewSteps={setSelectedReviewSteps}
+        />
       ) : (
         <ProposalBuilder
           user={user}

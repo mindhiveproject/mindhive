@@ -60,6 +60,9 @@
 		},
 		"loading": "Bezig met laden..."
 	},
+	"boardManagement": {
+		"viewResource": "Bron bekijken"
+	},
 	"build-create-new-study": "Om een ​​nieuwe studie te maken, klikt u op onderstaande knop.",
 	"build-intro": "In deze builder kunt u een nieuwe studie aanmaken, uw eigen taken uploaden of taken uit de bibliotheek gebruiken.",
 	"buildBlockFromScratch": "Selecteer deze optie als u liever een blok helemaal vanaf nul wilt opbouwen.",
@@ -377,10 +380,14 @@
 		"cardWillBeReleased": "De kaart wordt vrijgegeven",
 		"chooseReviewStep": "Kies in welke stap van de peer review een kaart moet komen",
 		"comments": "Reacties",
-		"forMindHiveNetwork": "Voor MindHive Network",
+		"commentsPlaceholder": "Voeg hier uw commentaar toe...",
+		"forMindHiveNetwork": "Voor het MindHive-netwerk",
 		"forTeacherAndCollaborators": "Alleen voor mijn docent en projectmedewerkers",
 		"instructions": "Instructies",
 		"lockedMessage": "De kaart wordt momenteel bewerkt door",
+		"newSubmission": "Nieuwe inzending",
+		"originalSubmission": "Originele inzending",
+		"originalSubmissionTooltip": "Dit is de inhoud die u oorspronkelijk naar het Feedbackcentrum hebt verzonden. We hebben deze hieronder voor u gekopieerd zodat u deze kunt bewerken en hebben een 'Herziene inhoud' bewaard.",
 		"refresh": "Vernieuwen",
 		"refreshAfterRelease": "Nadat de kaart is vrijgegeven, vernieuwt u de pagina om de nieuwste versie van de kaart te bekijken.",
 		"reviewOptions": {
@@ -391,7 +398,9 @@
 		},
 		"revisedContent": "Herziene inhoud",
 		"revisedContentUsed": "De herziene inhoud die u hier opneemt, wordt gebruikt in het eindrapport.",
+		"seeOriginalSubmission": "Klik hier om je oorspronkelijke inzending te bekijken.",
 		"selectOption": "Selecteer optie",
+		"submission": "Dwang",
 		"visibleInFeedbackCenter": "De content die u hier opneemt, is zichtbaar in het Feedback Center nadat u deze via een gele Actiekaart heeft ingediend.",
 		"visibleToTeacherAndCollaborators": "De inhoud die u hieronder opneemt, is alleen zichtbaar voor uw docent(en) en projectmedewerkers"
 	},
@@ -636,11 +645,12 @@
 	},
 	"proposalPage": {
 		"download": "Downloaden",
+		"downloadTooltip": "De te downloaden inhoud is gebaseerd op de status- en beoordelingsstapfilters die hieronder zijn geselecteerd.",
 		"preview": "Voorvertoning",
 		"previewInfo": "Inhoud van kaarten die in de bewerkingsmodus als 'voltooid' zijn gemarkeerd, worden hier weergegeven in de voorbeeldmodus, zodat uw reviewers kunnen zien wat ze zien.",
 		"submittedLocked": "Het voorstel is ingediend en vergrendeld 🔒",
 		"viewBoard": "Bestuursweergave",
-		"viewFlattenBoard": "Tekstweergave"
+		"viewFlattenBoard": "Lijstweergave"
 	},
 	"proposalSelector": {
 		"linkToProposal": "Link naar voorstel",

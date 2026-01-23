@@ -162,7 +162,12 @@ async function copyProposalBoard(
                         })),
                       }
                     : null,
-                settings: templateCard.settings,
+                settings: templateCard.settings
+                  ? {
+                      ...templateCard.settings,
+                      status: "Not started",
+                    }
+                  : { status: "Not started" },
               },
             },
             "id"

@@ -168,6 +168,7 @@ export const CREATE_CARD = gql`
     $content: String
     $sectionId: ID!
     $position: Float!
+    $settings: JSON
   ) {
     createProposalCard(
       data: {
@@ -175,12 +176,14 @@ export const CREATE_CARD = gql`
         title: $title
         content: $content
         position: $position
+        settings: $settings
       }
     ) {
       id
       title
       content
       position
+      settings
       section {
         id
       }

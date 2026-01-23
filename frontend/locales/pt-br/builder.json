@@ -60,6 +60,9 @@
 		},
 		"loading": "Carregando..."
 	},
+	"boardManagement": {
+		"viewResource": "Ver recurso"
+	},
 	"build-create-new-study": "Para criar um novo estudo, clique no botão abaixo.",
 	"build-intro": "Neste construtor, você pode criar um novo estudo, carregar suas próprias tarefas ou usar tarefas da biblioteca.",
 	"buildBlockFromScratch": "Selecione esta opção se preferir construir um bloco inteiramente do zero.",
@@ -377,10 +380,14 @@
 		"cardWillBeReleased": "O cartão será lançado",
 		"chooseReviewStep": "Escolha em qual etapa da revisão por pares um cartão deve passar",
 		"comments": "Comentários",
+		"commentsPlaceholder": "Adicione seu comentário aqui...",
 		"forMindHiveNetwork": "Para a rede MindHive",
 		"forTeacherAndCollaborators": "Somente para meus professores e colaboradores do projeto",
 		"instructions": "Instruções",
 		"lockedMessage": "O cartão está sendo editado por",
+		"newSubmission": "Nova submissão",
+		"originalSubmission": "Envio original",
+		"originalSubmissionTooltip": "Este é o conteúdo que você enviou originalmente para a Central de Feedback. Copiamos o conteúdo abaixo para que você possa editá-lo e o salvamos como 'Conteúdo revisado'.",
 		"refresh": "Atualizar",
 		"refreshAfterRelease": "Após o lançamento do cartão, atualize a página para obter a versão mais recente do cartão.",
 		"reviewOptions": {
@@ -391,7 +398,9 @@
 		},
 		"revisedContent": "Conteúdo Revisado",
 		"revisedContentUsed": "O conteúdo revisado que você incluir aqui será usado no relatório final.",
+		"seeOriginalSubmission": "Clique para ver sua inscrição original.",
 		"selectOption": "Selecione a opção",
+		"submission": "Submissão",
 		"visibleInFeedbackCenter": "O conteúdo que você incluir aqui ficará visível no Centro de Feedback assim que for enviado por meio de um Cartão de Ação amarelo.",
 		"visibleToTeacherAndCollaborators": "O conteúdo que você incluir abaixo só será visível para seu(s) professor(es) e colaboradores do projeto"
 	},
@@ -636,11 +645,12 @@
 	},
 	"proposalPage": {
 		"download": "Download",
+		"downloadTooltip": "O conteúdo para download é baseado nos filtros de status e etapa de revisão selecionados abaixo.",
 		"preview": "Visualização",
 		"previewInfo": "O conteúdo dos cartões marcados como \"concluídos\" no modo de edição aparecerá aqui, no modo de visualização, exibindo o que seus revisores verão.",
 		"submittedLocked": "A proposta foi enviada e bloqueada 🔒",
 		"viewBoard": "Visão do Conselho",
-		"viewFlattenBoard": "Visualização de texto"
+		"viewFlattenBoard": "Exibição de lista"
 	},
 	"proposalSelector": {
 		"linkToProposal": "Link para proposta",

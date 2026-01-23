@@ -26,6 +26,7 @@ import { Modal, Button, Icon, Dropdown, Accordion } from "semantic-ui-react";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
+import { mergeCardSettings } from "../../../../../utils/mergeCardSettings";
 
 export default function ProposalCard({
   proposalCard,
@@ -212,12 +213,20 @@ export default function ProposalCard({
   const onUpdateCard = async ({ shoudBeSaved }) => {
     // update the content of the card
     if (shoudBeSaved) {
+      // Merge settings to ensure we don't lose existing properties like includeInReport and includeInReviewSteps
+      // Always merge with the current card's settings from props to avoid overwriting with stale local state
+      const mergedSettings = mergeCardSettings(
+        proposalCard?.settings,
+        inputs?.settings
+      );
+
       await updateCard({
         variables: {
           ...inputs,
           internalContent: internalContent?.current,
           content: content?.current,
           revisedContent: revisedContent?.current,
+          settings: mergedSettings,
           assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
           resources: inputs?.resources?.map((resource) => ({ id: resource?.id })),
           // Add these three lines to fix the error:
@@ -449,6 +458,7 @@ export default function ProposalCard({
               borderBottom: "1px solid #e0e0e0",
               fontFamily: "Nunito",
               fontWeight: 600,
+              letterSpacing: "0.15px",
             }}
           >
             {t("assignment.loading")}
@@ -476,6 +486,7 @@ export default function ProposalCard({
               borderBottom: "1px solid #e0e0e0",
               fontFamily: "Nunito",
               fontWeight: 600,
+              letterSpacing: "0.15px",
             }}
           >
             {t("assignment.error", "Error Loading Assignment")}
@@ -514,6 +525,7 @@ export default function ProposalCard({
             borderBottom: "1px solid #e0e0e0",
             fontFamily: "Nunito",
             fontWeight: 600,
+            letterSpacing: "0.15px",
           }}
         >
           {t("board.expendedCard.previewAssignment", "Preview Assignment")}
@@ -936,6 +948,7 @@ export default function ProposalCard({
                     borderBottom: "1px solid #e0e0e0",
                     fontFamily: "Nunito",
                     fontWeight: 600,
+                    letterSpacing: "0.15px",
                   }}
                 >
                   {activeResource?.title ||
@@ -1004,7 +1017,7 @@ export default function ProposalCard({
                       },
                     });
                   }}
-                  editable={areEditsAllowed}
+                  editable={true}
                   placeholder={t("mainCard.commentsPlaceholder", "Add your comment here...")}
                 />
               </div>

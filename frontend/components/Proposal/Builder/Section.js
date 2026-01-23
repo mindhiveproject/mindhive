@@ -271,6 +271,7 @@ const Section = ({
               sectionId: matchingSectionId,
               position,
               publicId,
+              settings: { status: "Not started" },
             },
           });
 
@@ -306,6 +307,7 @@ const Section = ({
             ? cards[cards.length - 1].position + 16384
             : 16384,
         publicId,
+        settings: { status: "Not started" },
       },
       update: (cache, { data: { createProposalCard } }) => {
         const data = cache.readQuery({
@@ -356,7 +358,7 @@ const Section = ({
             id: sectionId,
           },
           assignedTo: [],
-          settings: null,
+          settings: { status: "Not started" },
           publicId,
         },
       },

@@ -167,6 +167,7 @@ export const PROPOSAL_QUERY = gql`
           position
           section {
             id
+            title
           }
           assignedTo {
             id

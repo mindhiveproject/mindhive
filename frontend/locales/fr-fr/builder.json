@@ -60,6 +60,9 @@
 		},
 		"loading": "Chargement..."
 	},
+	"boardManagement": {
+		"viewResource": "Afficher la ressource"
+	},
 	"build-create-new-study": "Pour créer une nouvelle étude, cliquez sur le bouton ci-dessous.",
 	"build-intro": "Dans ce générateur, vous pouvez créer une nouvelle étude, télécharger vos propres tâches ou utiliser des tâches de la bibliothèque.",
 	"buildBlockFromScratch": "Sélectionnez cette option si vous préférez construire un bloc entièrement à partir de zéro.",
@@ -377,10 +380,14 @@
 		"cardWillBeReleased": "La carte sera publiée",
 		"chooseReviewStep": "Choisissez à quelle étape de l'évaluation par les pairs une carte doit être soumise",
 		"comments": "Commentaires",
+		"commentsPlaceholder": "Ajoutez votre commentaire ici...",
 		"forMindHiveNetwork": "Pour le réseau MindHive",
 		"forTeacherAndCollaborators": "Réservé à mon professeur et aux collaborateurs du projet",
 		"instructions": "Instructions",
 		"lockedMessage": "La carte est actuellement en cours d'édition par",
+		"newSubmission": "Nouvelle soumission",
+		"originalSubmission": "Soumission originale",
+		"originalSubmissionTooltip": "Voici le contenu que vous avez initialement soumis au Centre de commentaires. Nous l'avons copié ci-dessous afin que vous puissiez le modifier et avons conservé une version révisée.",
 		"refresh": "Rafraîchir",
 		"refreshAfterRelease": "Une fois la carte publiée, actualisez la page pour obtenir la dernière version de la carte.",
 		"reviewOptions": {
@@ -391,7 +398,9 @@
 		},
 		"revisedContent": "Contenu révisé",
 		"revisedContentUsed": "Le contenu révisé que vous incluez ici sera utilisé dans le rapport final.",
+		"seeOriginalSubmission": "Cliquez pour voir votre soumission originale",
 		"selectOption": "Sélectionnez une option",
+		"submission": "Soumission",
 		"visibleInFeedbackCenter": "Le contenu que vous incluez ici sera visible dans le centre de commentaires une fois qu'il sera soumis via une carte d'action jaune.",
 		"visibleToTeacherAndCollaborators": "Le contenu que vous incluez ci-dessous ne sera visible que par votre/vos enseignant(s) et collaborateurs du projet"
 	},
@@ -636,11 +645,12 @@
 	},
 	"proposalPage": {
 		"download": "Télécharger",
+		"downloadTooltip": "Le contenu téléchargé dépend des filtres d'état et d'étape de révision sélectionnés ci-dessous.",
 		"preview": "Aperçu",
 		"previewInfo": "Le contenu des cartes marquées comme « terminées » en mode édition apparaîtra ici, en mode aperçu, affichant ce que vos réviseurs verront.",
 		"submittedLocked": "La proposition a été soumise et verrouillée 🔒",
 		"viewBoard": "Vue du tableau",
-		"viewFlattenBoard": "Affichage du texte"
+		"viewFlattenBoard": "Vue en liste"
 	},
 	"proposalSelector": {
 		"linkToProposal": "Lien vers la proposition",
