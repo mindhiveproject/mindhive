@@ -253,7 +253,9 @@ const TeacherProjects = ({ user, query }) => {
 
       {authoredData?.proposalBoards?.length ? (
         <div className="cardGrid">
-          {authoredData.proposalBoards.map((board) => (
+          {[...authoredData.proposalBoards]
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map((board) => (
             <div key={board.id} className="projectCard">
               <h3>{board.title}</h3>
               <p className="description">
@@ -318,7 +320,9 @@ const TeacherProjects = ({ user, query }) => {
         <>
           <div style={{margin: "2rem auto", maxWidth: "1200px"}} ><h3>{t("boardManagement.collaboratedTitle")}</h3></div>
           <div className="cardGrid">
-            {uniqueCollaboratedBoards.map((board) => (
+            {[...(uniqueCollaboratedBoards || [])]
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map((board) => (
               <div key={board.id} className="projectCard">
                 <h3>{board.title}</h3>
                 <p className="description">
