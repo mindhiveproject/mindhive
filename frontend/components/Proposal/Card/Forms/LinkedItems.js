@@ -5,6 +5,12 @@ import { Button, Icon, Modal, Tab } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 import useTranslation from "next-translate/useTranslation";
 
+// Strip HTML tags from text
+const stripHtml = (html) => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+};
+
 import {
   GET_PUBLIC_RESOURCES,
   GET_MY_RESOURCES,
@@ -888,7 +894,7 @@ const ItemTab = ({
                   margin: 0,
                 }}
               >
-                {item?.title || "Untitled"}
+                {stripHtml(item?.title) || "Untitled"}
               </h2>
               {item?.lastUpdate ? (<p>Last updated: {item?.lastUpdate}</p>) : (<></>)}
             </div>
@@ -1033,7 +1039,7 @@ const ItemTab = ({
                                 overflowWrap: "anywhere",
                                 margin: 0
                               }}>
-                                {cls.title}
+                                {stripHtml(cls.title)}
                               </p>
                             </span>
                             // <p><li key={cls.id}>{cls.title}</li></p>
@@ -1269,7 +1275,7 @@ const ItemTab = ({
           >
             <div style={{display: "flex",justifyContent: "space-between",alignItems: "center",marginBottom: "12px", columnGap: "8px"}}>
               <h2 style={{fontSize: "18px", fontWeight: 600, color: "#333", margin: 0}}>
-                {item?.title || "Untitled"}
+                {stripHtml(item?.title) || "Untitled"}
               </h2>
             </div>
             <div
@@ -1305,7 +1311,7 @@ const ItemTab = ({
                           overflowWrap: "anywhere",
                           margin: 0
                         }}>
-                          {cls.title}
+                          {stripHtml(cls.title)}
                         </p>
                       </span>
                     ))}
@@ -2421,7 +2427,7 @@ export const PreviewSection = ({
                     lineHeight: "24px",
                   }}
                 >
-                  {item?.title || "Untitled"}
+                  {stripHtml(item?.title) || "Untitled"}
                 </h2>
               </div>
               {!isAssignment && (
