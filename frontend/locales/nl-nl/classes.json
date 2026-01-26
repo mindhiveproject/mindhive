@@ -310,20 +310,6 @@
 		"viewAndCopy": "Bekijken en kopiëren",
 		"viewOrEdit": "Bekijken of bewerken"
 	},
-	"boardManagement (2)": {
-		"createAnotherCopy\"": "Maak een extra kopie",
-		"description": "Beschrijving",
-		"editExistingResource": "Ga door met mijn aangepaste versie",
-		"errorLoadingResource": "We konden deze bron niet laden.",
-		"makePrivate": "Maak privé",
-		"makePublic": "Openbaar maken",
-		"resourceChoiceExistingCopy": "Je hebt deze bron al gepersonaliseerd. Wat wil je doen?",
-		"resourceContent": "Broninhoud",
-		"resourceContentPlaceholder": "Broninhoud toevoegen of bijwerken...",
-		"resourceCopyInfo": "Als u opslaat, wordt er een persoonlijke kopie aangemaakt die aan uw project is gekoppeld.",
-		"saveOwnRessource": "Bewaar mijn exemplaar",
-		"titleText": "Titel"
-	},
 	"cancel": "Annuleren",
 	"classes": "Klasse(n)",
 	"classesList": {
@@ -497,6 +483,7 @@
 		"createHomework": "Huiswerk maken",
 		"createHomeworkDraft": "Concept maken",
 		"createHomeworkSubmit": "Maken en indienen",
+		"createNewAssignment": "Nieuwe opdracht maken",
 		"createNewHomework": "Maak een nieuw huiswerk",
 		"dateCreated": "Datum aangemaakt",
 		"dateUpdated": "Datum bijgewerkt",

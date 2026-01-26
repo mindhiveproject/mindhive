@@ -310,20 +310,6 @@
 		"viewAndCopy": "",
 		"viewOrEdit": ""
 	},
-	"boardManagement (2)": {
-		"createAnotherCopy\"": "",
-		"description": "",
-		"editExistingResource": "",
-		"errorLoadingResource": "",
-		"makePrivate": "",
-		"makePublic": "",
-		"resourceChoiceExistingCopy": "",
-		"resourceContent": "",
-		"resourceContentPlaceholder": "",
-		"resourceCopyInfo": "",
-		"saveOwnRessource": "",
-		"titleText": ""
-	},
 	"cancel": "रद्द करना",
 	"classes": "वर्ग",
 	"classesList": {
@@ -497,6 +483,7 @@
 		"createHomework": "",
 		"createHomeworkDraft": "",
 		"createHomeworkSubmit": "",
+		"createNewAssignment": "",
 		"createNewHomework": "",
 		"dateCreated": "बनाया गया दिनांक",
 		"dateUpdated": "तारीख अपडेट की गई",

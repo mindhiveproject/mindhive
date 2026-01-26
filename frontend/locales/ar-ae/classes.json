@@ -310,20 +310,6 @@
 		"viewAndCopy": "عرض ونسخ",
 		"viewOrEdit": "عرض أو تحرير"
 	},
-	"boardManagement (2)": {
-		"createAnotherCopy\"": "إنشاء نسخة إضافية",
-		"description": "وصف",
-		"editExistingResource": "متابعة مع الإصدار المخصص الخاص بي",
-		"errorLoadingResource": "لم نتمكن من تحميل هذا المورد.",
-		"makePrivate": "جعل خاص",
-		"makePublic": "جعلها عامة",
-		"resourceChoiceExistingCopy": "لقد خصّصتَ هذا المورد بالفعل. ماذا تريد أن تفعل؟",
-		"resourceContent": "محتوى الموارد",
-		"resourceContentPlaceholder": "إضافة أو تحديث محتوى الموارد...",
-		"resourceCopyInfo": "سيؤدي الحفظ إلى إنشاء نسخة شخصية مرتبطة بمشروعك.",
-		"saveOwnRessource": "احفظ نسختي",
-		"titleText": "عنوان"
-	},
 	"cancel": "يلغي",
 	"classes": "الفئة(الفئات)",
 	"classesList": {
@@ -497,6 +483,7 @@
 		"createHomework": "إنشاء الواجبات المنزلية",
 		"createHomeworkDraft": "إنشاء مسودة",
 		"createHomeworkSubmit": "إنشاء وإرسال",
+		"createNewAssignment": "إنشاء مهمة جديدة",
 		"createNewHomework": "إنشاء واجب منزلي جديد",
 		"dateCreated": "تاريخ الإنشاء",
 		"dateUpdated": "تاريخ التحديث",

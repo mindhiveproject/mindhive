@@ -310,20 +310,6 @@
 		"viewAndCopy": "Afficher et copier",
 		"viewOrEdit": "Afficher ou modifier"
 	},
-	"boardManagement (2)": {
-		"createAnotherCopy\"": "Créer une copie supplémentaire",
-		"description": "Description",
-		"editExistingResource": "Continuez avec ma version personnalisée",
-		"errorLoadingResource": "Impossible de charger cette ressource.",
-		"makePrivate": "Rendre privé",
-		"makePublic": "Rendre public",
-		"resourceChoiceExistingCopy": "Vous avez déjà personnalisé cette ressource. Que souhaitez-vous faire ?",
-		"resourceContent": "Contenu des ressources",
-		"resourceContentPlaceholder": "Ajouter ou mettre à jour le contenu de la ressource...",
-		"resourceCopyInfo": "L'enregistrement créera une copie personnelle liée à votre projet.",
-		"saveOwnRessource": "Sauvegarder ma copie",
-		"titleText": "Titre"
-	},
 	"cancel": "Annuler",
 	"classes": "Classe(s)",
 	"classesList": {
@@ -497,6 +483,7 @@
 		"createHomework": "Créer des devoirs",
 		"createHomeworkDraft": "Créer un brouillon",
 		"createHomeworkSubmit": "Créer et soumettre",
+		"createNewAssignment": "Créer une nouvelle tâche",
 		"createNewHomework": "Créer de nouveaux devoirs",
 		"dateCreated": "Date de création",
 		"dateUpdated": "Date de mise à jour",

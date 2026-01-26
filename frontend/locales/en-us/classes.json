@@ -310,20 +310,6 @@
 		"viewAndCopy": "View & Copy",
 		"viewOrEdit": "View or Edit"
 	},
-	"boardManagement (2)": {
-		"createAnotherCopy\"": "Create an additional copy",
-		"description": "Description",
-		"editExistingResource": "Continue with my customized version",
-		"errorLoadingResource": "We could not load this resource.",
-		"makePrivate": "Make private",
-		"makePublic": "Make public",
-		"resourceChoiceExistingCopy": "You already personalized this resource. What would you like to do?",
-		"resourceContent": "Resource content",
-		"resourceContentPlaceholder": "Add or update resource content...",
-		"resourceCopyInfo": "Saving will create a personal copy linked to your project.",
-		"saveOwnRessource": "Save my copy",
-		"titleText": "Title"
-	},
 	"cancel": "Cancel",
 	"classes": "Class(es)",
 	"classesList": {
@@ -497,6 +483,7 @@
 		"createHomework": "Create Homework",
 		"createHomeworkDraft": "Create Draft",
 		"createHomeworkSubmit": "Create & Submit",
+		"createNewAssignment": "Create new assignment",
 		"createNewHomework": "Create new homework",
 		"dateCreated": "Date created",
 		"dateUpdated": "Date updated",

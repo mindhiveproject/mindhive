@@ -310,20 +310,6 @@
 		"viewAndCopy": "查看和复制",
 		"viewOrEdit": "查看或编辑"
 	},
-	"boardManagement (2)": {
-		"createAnotherCopy\"": "创建另一个副本",
-		"description": "描述",
-		"editExistingResource": "继续使用我的定制版本",
-		"errorLoadingResource": "我们无法加载此资源。",
-		"makePrivate": "设为私人",
-		"makePublic": "公开",
-		"resourceChoiceExistingCopy": "您已对该资源进行了个性化设置。您想做什么？",
-		"resourceContent": "资源内容",
-		"resourceContentPlaceholder": "添加或更新资源内容……",
-		"resourceCopyInfo": "保存后将创建一个与您的项目关联的个人副本。",
-		"saveOwnRessource": "保存我的副本",
-		"titleText": "标题"
-	},
 	"cancel": "取消",
 	"classes": "课程",
 	"classesList": {
@@ -497,6 +483,7 @@
 		"createHomework": "创建家庭作业",
 		"createHomeworkDraft": "创建草稿",
 		"createHomeworkSubmit": "创建并提交",
+		"createNewAssignment": "创建新作业",
 		"createNewHomework": "创建新作业",
 		"dateCreated": "创建日期",
 		"dateUpdated": "更新日期",

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useQuery, useMutation } from "@apollo/client";
 import { useState, useEffect } from "react";
-import { Dropdown, Button, Icon } from "semantic-ui-react";
+import { Dropdown, Button, Icon, Message } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import { GET_PROPOSAL_TEMPLATE_CLASSES } from "../../Queries/Proposal";
 import { GET_TEACHER_CLASSES, GET_MENTOR_CLASSES } from "../../Queries/Classes";
@@ -60,12 +60,14 @@ export default function ManageTemplateClasses({ user, boardId }) {
 
   const [selectedClasses, setSelectedClasses] = useState([]);
   const [selectedCollaborators, setSelectedCollaborators] = useState([]);
+  const [showMultiClassWarning, setShowMultiClassWarning] = useState(false);
 
   useEffect(() => {
     if (boardData?.proposalBoard?.templateForClasses) {
-      setSelectedClasses(
-        boardData.proposalBoard.templateForClasses.map((c) => c.id)
-      );
+      const classIds = boardData.proposalBoard.templateForClasses.map((c) => c.id);
+      setSelectedClasses(classIds);
+      // Show warning if multiple classes are initially selected
+      setShowMultiClassWarning(classIds.length > 1);
     }
   }, [boardData]);
 
@@ -181,6 +183,8 @@ export default function ManageTemplateClasses({ user, boardId }) {
 
   const handleClassesChange = (e, { value }) => {
     setSelectedClasses(value);
+    // Show warning if multiple classes are selected
+    setShowMultiClassWarning(value.length > 1);
   };
 
   const handleCollaboratorsChange = (e, { value }) => {
@@ -224,36 +228,23 @@ export default function ManageTemplateClasses({ user, boardId }) {
         ],
       });
 
-      // After saving class associations on the board, ensure all board assignments are linked/unlinked to the selected classes
+      // After saving class associations on the board, replace all class associations for assignments
+      // with only the currently selected classes (not additive)
       const assignments = boardAssignmentsData?.assignments || [];
-      const selectedClassIds = new Set(selectedClasses);
-      const initialClassIdsSet = new Set(initialClassIds);
       
       await Promise.all(
         assignments.map(async (a) => {
-          const existing = new Set((a.classes || []).map((c) => c.id));
-          
-          // Connect assignments to newly selected classes
-          const toConnect = Array.from(selectedClassIds).filter((id) => !existing.has(id));
-          
-          // Disconnect assignments from classes that are being removed from the board
-          const toDisconnect = Array.from(existing).filter((id) => 
-            initialClassIdsSet.has(id) && !selectedClassIds.has(id)
-          );
-          
-          if (toConnect.length > 0 || toDisconnect.length > 0) {
-            await updateAssignment({
-              variables: {
-                id: a.id,
-                input: {
-                  classes: {
-                    ...(toConnect.length > 0 && { connect: toConnect.map((id) => ({ id })) }),
-                    ...(toDisconnect.length > 0 && { disconnect: toDisconnect.map((id) => ({ id })) }),
-                  },
+          // Use 'set' to replace all existing class associations with only the selected ones
+          await updateAssignment({
+            variables: {
+              id: a.id,
+              input: {
+                classes: {
+                  set: selectedClasses.map((id) => ({ id })),
                 },
               },
-            });
-          }
+            },
+          });
         })
       );
       alert(t("boardManagement.changesSaved"));
@@ -289,6 +280,12 @@ export default function ManageTemplateClasses({ user, boardId }) {
             onChange={handleClassesChange}
             className="manageDropdown"
           />
+          {showMultiClassWarning && selectedClasses.length > 1 && (
+            <Message warning style={{ marginTop: "16px" }}>
+              <Message.Header>{t("boardManagement.multipleClassesWarningTitle") || "Multiple Classes Selected"}</Message.Header>
+              <p>{t("boardManagement.multipleClassesWarning")}</p>
+            </Message>
+          )}
           <h2>
             {t("boardManagement.manageCollaborators") || "Manage Collaborators"}
           </h2>

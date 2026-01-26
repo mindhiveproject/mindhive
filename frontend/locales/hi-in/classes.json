@@ -310,20 +310,6 @@
 		"viewAndCopy": "देखें और कॉपी करें",
 		"viewOrEdit": "देखें या संपादित करें"
 	},
-	"boardManagement (2)": {
-		"createAnotherCopy\"": "एक अतिरिक्त प्रतिलिपि बनाएँ",
-		"description": "विवरण",
-		"editExistingResource": "मेरे अनुकूलित संस्करण के साथ जारी रखें",
-		"errorLoadingResource": "हम इस संसाधन को लोड नहीं कर सके.",
-		"makePrivate": "निजी बनाएं",
-		"makePublic": "सार्वजनिक करें",
-		"resourceChoiceExistingCopy": "आपने इस संसाधन को पहले ही निजीकृत कर लिया है। आप क्या करना चाहेंगे?",
-		"resourceContent": "संसाधन सामग्री",
-		"resourceContentPlaceholder": "संसाधन सामग्री जोड़ें या अपडेट करें...",
-		"resourceCopyInfo": "सेव करने से आपकी परियोजना से जुड़ी एक व्यक्तिगत प्रतिलिपि बन जाएगी।",
-		"saveOwnRessource": "मेरी प्रति सहेजें",
-		"titleText": "शीर्षक"
-	},
 	"cancel": "रद्द करना",
 	"classes": "वर्ग",
 	"classesList": {
@@ -497,6 +483,7 @@
 		"createHomework": "होमवर्क बनाएँ",
 		"createHomeworkDraft": "ड्राफ्ट बनाएँ",
 		"createHomeworkSubmit": "बनाएँ और सबमिट करें",
+		"createNewAssignment": "नया असाइनमेंट बनाएँ",
 		"createNewHomework": "नया होमवर्क बनाएँ",
 		"dateCreated": "बनाया गया दिनांक",
 		"dateUpdated": "तारीख अपडेट की गई",
