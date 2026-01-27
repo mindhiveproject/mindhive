@@ -70,6 +70,12 @@ const CloseButton = styled(Button)`
   border: 1px solid #336F8A !important;
 `;
 
+// Strip HTML tags from text
+const stripHtml = (html) => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+};
+
 const AssignmentViewModal = ({ open, t, onClose, assignmentId }) => {
 
   const { data, loading, error } = useQuery(GET_AN_ASSIGNMENT, {
@@ -90,7 +96,7 @@ const AssignmentViewModal = ({ open, t, onClose, assignmentId }) => {
     <StyledModal open={open} onClose={onClose} size="large">
       <StyledHeader>
         {t("board.expendedCard.viewingAssignment", "Viewing Assignment:")}
-        <Title>{assignment?.title}</Title>
+        <Title>{stripHtml(assignment?.title || '')}</Title>
       </StyledHeader>
 
       <StyledContent scrolling>

@@ -264,8 +264,8 @@ export default function HomeworkCompletion({
     return [...baseColumns, ...assignmentColumns];
   }, [assignmentsPublic, t, myclass]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (loading) return <div>{t("assignment.loading")}</div>;
+  if (error) return <div>{t("assignment.error")}: {error.message}</div>;
 
   // Grid settings
   const pagination = true;
@@ -292,7 +292,7 @@ export default function HomeworkCompletion({
           <SecondaryButton>← {t("assignment.goBack")}</SecondaryButton>
         </Link>
         <HeaderTitle>{t("assignment.classHomeworkOverview")}</HeaderTitle>
-        <Subtitle>Click on a status to view and review the student's homework submission</Subtitle>
+        <Subtitle>{t("assignment.homeworkOverviewSubtitle")}</Subtitle>
       </TopSection>
 
       <div style={{ width: '100%', height: '600px' }}>

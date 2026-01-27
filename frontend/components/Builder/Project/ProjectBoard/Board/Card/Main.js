@@ -26,6 +26,7 @@ import { Modal, Button, Icon, Dropdown, Accordion } from "semantic-ui-react";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
+import { mergeCardSettings } from "../../../../../utils/mergeCardSettings";
 
 export default function ProposalCard({
   proposalCard,
@@ -212,12 +213,20 @@ export default function ProposalCard({
   const onUpdateCard = async ({ shoudBeSaved }) => {
     // update the content of the card
     if (shoudBeSaved) {
+      // Merge settings to ensure we don't lose existing properties like includeInReport and includeInReviewSteps
+      // Always merge with the current card's settings from props to avoid overwriting with stale local state
+      const mergedSettings = mergeCardSettings(
+        proposalCard?.settings,
+        inputs?.settings
+      );
+
       await updateCard({
         variables: {
           ...inputs,
           internalContent: internalContent?.current,
           content: content?.current,
           revisedContent: revisedContent?.current,
+          settings: mergedSettings,
           assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
           resources: inputs?.resources?.map((resource) => ({ id: resource?.id })),
           // Add these three lines to fix the error:
@@ -279,8 +288,15 @@ export default function ProposalCard({
   // Assignment Modal Component
   const AssignmentModal = ({ open, onClose, assignment: assignmentProp }) => {
     const { t } = useTranslation("classes");
-    const [title, setTitle] = useState(assignment?.title || "");
-    const [content, setContent] = useState(assignment?.content || "");
+    
+    // Strip HTML tags from text
+    const stripHtml = (html) => {
+      if (!html) return '';
+      return html.replace(/<[^>]*>/g, '').trim();
+    };
+    
+    const [title, setTitle] = useState(stripHtml(assignmentProp?.title || ""));
+    const [content, setContent] = useState(assignmentProp?.content || "");
     const [showNewHomework, setShowNewHomework] = useState(false);
     
     // Query for fresh assignment data with all fields including placeholder
@@ -305,7 +321,7 @@ export default function ProposalCard({
     // New homework form state
     const { inputs, handleChange, clearForm } = useForm({
       settings: { status: "Started" },
-      title: `Homework ${assignment?.title || ''} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`,
+      title: `Homework ${stripHtml(assignment?.title || '')} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`,
       placeholder: assignment?.placeholder || "",
     });
 
@@ -335,14 +351,14 @@ export default function ProposalCard({
           content: assignment.content,
           placeholder: assignment.placeholder,
         });
-        setTitle(assignment.title || "");
+        setTitle(stripHtml(assignment.title || ""));
         setContent(assignment.content || "");
         
         // Update homework form with assignment data
         handleChange({
           target: {
             name: "title",
-            value: `Assignment | ${assignment?.title || ''} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`
+            value: `Assignment | ${stripHtml(assignment?.title || '')} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`
           }
         });
         handleChange({
@@ -449,6 +465,7 @@ export default function ProposalCard({
               borderBottom: "1px solid #e0e0e0",
               fontFamily: "Nunito",
               fontWeight: 600,
+              letterSpacing: "0.15px",
             }}
           >
             {t("assignment.loading")}
@@ -476,6 +493,7 @@ export default function ProposalCard({
               borderBottom: "1px solid #e0e0e0",
               fontFamily: "Nunito",
               fontWeight: 600,
+              letterSpacing: "0.15px",
             }}
           >
             {t("assignment.error", "Error Loading Assignment")}
@@ -514,6 +532,7 @@ export default function ProposalCard({
             borderBottom: "1px solid #e0e0e0",
             fontFamily: "Nunito",
             fontWeight: 600,
+            letterSpacing: "0.15px",
           }}
         >
           {t("board.expendedCard.previewAssignment", "Preview Assignment")}
@@ -936,6 +955,7 @@ export default function ProposalCard({
                     borderBottom: "1px solid #e0e0e0",
                     fontFamily: "Nunito",
                     fontWeight: 600,
+                    letterSpacing: "0.15px",
                   }}
                 >
                   {activeResource?.title ||
@@ -1004,7 +1024,7 @@ export default function ProposalCard({
                       },
                     });
                   }}
-                  editable={areEditsAllowed}
+                  editable={true}
                   placeholder={t("mainCard.commentsPlaceholder", "Add your comment here...")}
                 />
               </div>

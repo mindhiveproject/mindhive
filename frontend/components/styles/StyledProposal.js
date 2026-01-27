@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const StyledProposal = styled.div`
   display: grid;
   width: 100%;
+  height: 100%;
   overflow-y: auto;
   padding: 20px;
   // min-height: 80vh;
@@ -1230,6 +1231,7 @@ export const StyledActionCard = styled.div`
   }
 
   .card-information {
+    min-width: 350px;
     display: flex;
     flex: 1 0 0;
     align-items: stretch;

@@ -31,6 +31,7 @@ export default function NewAssignment({ user, myclass, assignment, children }) {
           ? { connect: inputs?.classes.map((cl) => ({ id: cl?.id })) }
           : null,
         tags: inputs?.tags ? { connect: inputs?.tags } : null,
+        templateSource: assignment?.id ? { connect: { id: assignment.id } } : null,
       },
     },
     refetchQueries: [

@@ -165,6 +165,22 @@ export const GET_TEMPLATE_ASSIGNMENTS = gql`
   }
 `;
 
+// get assignments by templateSource (for finding classes that use each template)
+// Query all non-template assignments and filter client-side for those with templateSource
+export const GET_ASSIGNMENTS_BY_TEMPLATE_SOURCE = gql`
+  query GET_ASSIGNMENTS_BY_TEMPLATE_SOURCE {
+    assignments(where: { isTemplate: { equals: false } }) {
+      templateSource {
+        id
+      }
+      classes {
+        id
+        title
+      }
+    }
+  }
+`;
+
 // get assignment by id
 export const GET_TEMPLATE_ASSIGNMENT = gql`
   query GET_ASSIGNMENT($id: ID!) {

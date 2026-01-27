@@ -10,6 +10,7 @@ import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 
 import useForm from "../../../lib/useForm";
 import JoditEditor from "../../Jodit/Editor";
+import { mergeCardSettings } from "../../utils/mergeCardSettings";
 
 import Assigned from "./Forms/Assigned";
 import Status from "./Forms/Status";
@@ -199,12 +200,20 @@ export default function ProposalCard({
 
   // update the card and close the modal
   const onUpdateCard = async () => {
+    // Merge settings to ensure we don't lose existing properties like includeInReport and includeInReviewSteps
+    // Always merge with the current card's settings from props to avoid overwriting with stale local state
+    const mergedSettings = mergeCardSettings(
+      proposalCard?.settings,
+      inputs?.settings
+    );
+
     await updateCard({
       variables: {
         ...inputs,
         description: description?.current,
         internalContent: internalContent?.current,
         content: content?.current,
+        settings: mergedSettings,
         assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
         resources: inputs?.resources?.map((resource) => ({ id: resource?.id })),
       },

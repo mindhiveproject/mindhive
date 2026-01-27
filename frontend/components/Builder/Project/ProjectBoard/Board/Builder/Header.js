@@ -23,6 +23,8 @@ export default function ProposalHeader({
   refetchQueries,
   isPDF,
   setIsPDF,
+  selectedStatuses = [],
+  selectedReviewSteps = [],
 }) {
   const { t } = useTranslation("builder");
   const client = useApolloClient();
@@ -63,7 +65,7 @@ export default function ProposalHeader({
 
   const handleDownload = () => {
     if (proposalId && client) {
-      exportPDF(proposalId, client, t);
+      exportPDF(proposalId, client, t, selectedStatuses, selectedReviewSteps);
     }
   };
 
@@ -110,6 +112,7 @@ export default function ProposalHeader({
                       minWidth: "60px",
                       padding: "0 12px",
                       fontFamily: "Nunito, sans-serif",
+                      letterSpacing: "0.15px",
                     }}
                   >
                     {loading ? (
@@ -167,6 +170,7 @@ export default function ProposalHeader({
                       fontWeight: 600,
                       fontSize: "36px",
                       lineHeight: "44px",
+                      letterSpacing: "0.15px",
                       color: "#171717",
                       margin: 0,
                       flex: 1,
@@ -216,9 +220,6 @@ export default function ProposalHeader({
                     </div>
                   ))}
                   {(() => {
-                    console.log("user?.studentIn?.length", user?.studentIn);
-                    console.log("user?.mentorIn?.length", user?.mentorIn);
-                    console.log("user?.teacherIn?.length", user?.teacherIn);
                     const userHasClasses = 
                       (user?.studentIn?.length > 0) ||
                       (user?.mentorIn?.length > 0) ||
@@ -243,14 +244,63 @@ export default function ProposalHeader({
                 onClick={handleDownload} 
                 className="downloadButton"
                 style={{ 
+                  position: "relative",
                   visibility: isPDF ? "visible" : "hidden",
                   cursor: isPDF ? "pointer" : "default"
+                }}
+                onMouseEnter={(e) => {
+                  if (isPDF) {
+                    const tooltip = e.currentTarget.querySelector('.hover-tooltip');
+                    if (tooltip) {
+                      tooltip.style.opacity = "1";
+                      tooltip.style.transform = "translateY(0)";
+                    }
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (isPDF) {
+                    const tooltip = e.currentTarget.querySelector('.hover-tooltip');
+                    if (tooltip) {
+                      tooltip.style.opacity = "0";
+                      tooltip.style.transform = "translateY(-5px)";
+                    }
+                  }
                 }}
               >
                 <span className="downloadButtonText">
                   {t("proposalPage.download", "Download")}
                 </span>
                 <Icon name="download" />
+                
+                {/* Hover tooltip */}
+                {isPDF && (
+                  <div 
+                    className="hover-tooltip"
+                    style={{
+                      position: "absolute",
+                      top: "100%",
+                      left: "0",
+                      right: "0",
+                      width: "250px",
+                      background: "#FDF2D0",
+                      color: "#625B71",
+                      marginTop: "8px",
+                      padding: "12px 16px",
+                      borderRadius: "8px",
+                      fontSize: "16px",
+                      fontFamily: "Nunito",
+                      lineHeight: "20px",
+                      opacity: "0",
+                      transform: "translateY(-5px)",
+                      transition: "all 0.3s ease",
+                      pointerEvents: "none",
+                      zIndex: 1000,
+                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.10)",
+                    }}
+                  >
+                    <span>{t("proposalPage.downloadTooltip", "Download content is based on the status and review step filters selected below.")}</span>
+                  </div>
+                )}
               </div>
               
               <div className="viewToggleGroup">

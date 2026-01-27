@@ -5,6 +5,12 @@ import { Button, Icon, Modal, Tab } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 import useTranslation from "next-translate/useTranslation";
 
+// Strip HTML tags from text
+const stripHtml = (html) => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+};
+
 import {
   GET_PUBLIC_RESOURCES,
   GET_MY_RESOURCES,
@@ -773,6 +779,23 @@ const ItemTab = ({
 
   if (loading) return <div>{t("common.loading", "Loading...")}</div>;
 
+  // --- Search State ---
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // --- Filter Function ---
+  const filterItems = (itemsList, query) => {
+    if (!query.trim()) return itemsList;
+    const lowerQuery = query.toLowerCase();
+    return itemsList.filter(item => {
+      const title = stripHtml(item?.title || "").toLowerCase();
+      return title.includes(lowerQuery);
+    });
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+  };
+
   // --- Accordions UI State (moved outside conditional to fix hooks rule) ---
   const [openAccordion, setOpenAccordion] = useState({
     resources: true,
@@ -888,7 +911,7 @@ const ItemTab = ({
                   margin: 0,
                 }}
               >
-                {item?.title || "Untitled"}
+                {stripHtml(item?.title) || "Untitled"}
               </h2>
               {item?.lastUpdate ? (<p>Last updated: {item?.lastUpdate}</p>) : (<></>)}
             </div>
@@ -1033,7 +1056,7 @@ const ItemTab = ({
                                 overflowWrap: "anywhere",
                                 margin: 0
                               }}>
-                                {cls.title}
+                                {stripHtml(cls.title)}
                               </p>
                             </span>
                             // <p><li key={cls.id}>{cls.title}</li></p>
@@ -1083,8 +1106,62 @@ const ItemTab = ({
       color: "#336F8A"
     });
 
+    // Filter resources and assignments based on search query
+    const filteredResources = filterItems(resources, searchQuery);
+    const filteredAssignments = filterItems(assignments, searchQuery);
+
     return (
       <div style={{ padding: "24px", background: "#f9fafb", maxWidth: 1100, margin: "0 auto" }}>
+        {/* Search Bar */}
+        <div style={{ marginBottom: "24px" }}>
+          <div style={{ position: "relative", marginBottom: "16px" }}>
+            <input
+              type="text"
+              placeholder={t("board.expendedCard.searchPlaceholder", "Search by title...")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "12px 40px 12px 40px",
+                border: "1px solid #d0d5dd",
+                borderRadius: "8px",
+                fontSize: "16px",
+                fontFamily: "inherit",
+              }}
+            />
+            <Icon
+              name="search"
+              style={{
+                position: "absolute",
+                left: "12px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "#6c757d",
+                pointerEvents: "none",
+              }}
+            />
+            {searchQuery && (
+              <button
+                onClick={handleClearSearch}
+                style={{
+                  position: "absolute",
+                  right: "8px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: "4px",
+                  display: "flex",
+                  alignItems: "center",
+                  color: "#6c757d",
+                }}
+              >
+                <Icon name="close" />
+              </button>
+            )}
+          </div>
+        </div>
         {/* Resources Accordion */}
         <div style={{
           display: "flex",
@@ -1136,7 +1213,7 @@ const ItemTab = ({
               marginBottom: "28px"
             }}
           >
-            {resources.length > 0 ? (
+            {filteredResources.length > 0 ? (
               <div
                 style={{
                   display: "grid",
@@ -1144,10 +1221,14 @@ const ItemTab = ({
                   gap: "24px",
                 }}
               >
-                {renderItems(resources, "resource")}
+                {renderItems(filteredResources, "resource")}
               </div>
             ) : (
-              <p>{t("noResources", "No public resources.")}</p>
+              <p>
+                {searchQuery
+                  ? t("board.expendedCard.noSearchResults", "No resources found matching your search.")
+                  : t("noResources", "No public resources.")}
+              </p>
             )}
           </div>
         </section>
@@ -1174,7 +1255,7 @@ const ItemTab = ({
               display: openAccordion.assignments ? "block" : "none"
             }}
           >
-            {assignments.length > 0 ? (
+            {filteredAssignments.length > 0 ? (
               <div
                 style={{
                   display: "grid",
@@ -1182,10 +1263,14 @@ const ItemTab = ({
                   gap: "24px",
                 }}
               >
-                {renderItems(assignments, "assignment")}
+                {renderItems(filteredAssignments, "assignment")}
               </div>
             ) : (
-              <p>{t("noAssignments", "No assignments available.")}</p>
+              <p>
+                {searchQuery
+                  ? t("board.expendedCard.noSearchResults", "No assignments found matching your search.")
+                  : t("noAssignments", "No assignments available.")}
+              </p>
             )}
           </div>
         </section>
@@ -1202,17 +1287,70 @@ const ItemTab = ({
     return item;
   });
 
+  // Filter displayItems based on search query
+  const filteredDisplayItems = filterItems(displayItems, searchQuery);
+
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-        gap: "24px",
-        padding: "24px",
-        background: "#f9fafb",
-      }}
-    >
-      {displayItems.map((item) => {
+    <div style={{ padding: "24px", background: "#f9fafb" }}>
+      {/* Search Bar */}
+      <div style={{ marginBottom: "24px" }}>
+        <div style={{ position: "relative", marginBottom: "16px" }}>
+          <input
+            type="text"
+            placeholder={t("board.expendedCard.searchPlaceholder", "Search by title...")}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "12px 40px 12px 40px",
+              border: "1px solid #d0d5dd",
+              borderRadius: "8px",
+              fontSize: "16px",
+              fontFamily: "inherit",
+            }}
+          />
+          <Icon
+            name="search"
+            style={{
+              position: "absolute",
+              left: "12px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "#6c757d",
+              pointerEvents: "none",
+            }}
+          />
+          {searchQuery && (
+            <button
+              onClick={handleClearSearch}
+              style={{
+                position: "absolute",
+                right: "8px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "4px",
+                display: "flex",
+                alignItems: "center",
+                color: "#6c757d",
+              }}
+            >
+              <Icon name="close" />
+            </button>
+          )}
+        </div>
+      </div>
+      {filteredDisplayItems.length > 0 ? (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+            gap: "24px",
+          }}
+        >
+          {filteredDisplayItems.map((item) => {
         const isSelected = selected.some((s) => s.id === item.id);
         const isTaskOrStudy = type === "task" || type === "study";
         const isTask = type === "task";
@@ -1269,7 +1407,7 @@ const ItemTab = ({
           >
             <div style={{display: "flex",justifyContent: "space-between",alignItems: "center",marginBottom: "12px", columnGap: "8px"}}>
               <h2 style={{fontSize: "18px", fontWeight: 600, color: "#333", margin: 0}}>
-                {item?.title || "Untitled"}
+                {stripHtml(item?.title) || "Untitled"}
               </h2>
             </div>
             <div
@@ -1305,7 +1443,7 @@ const ItemTab = ({
                           overflowWrap: "anywhere",
                           margin: 0
                         }}>
-                          {cls.title}
+                          {stripHtml(cls.title)}
                         </p>
                       </span>
                     ))}
@@ -1401,7 +1539,17 @@ const ItemTab = ({
             </div>
           );
         })}
-      </div>
+        </div>
+      ) : (
+        <div style={{ padding: "24px", textAlign: "center" }}>
+          <p>
+            {searchQuery
+              ? t("board.expendedCard.noSearchResults", "No items found matching your search.")
+              : t("board.expendedCard.noItems", "No items available.")}
+          </p>
+        </div>
+      )}
+    </div>
     );
   };
 
@@ -1599,11 +1747,11 @@ const ItemTab = ({
       >
       <div>
         <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("board.expendedCard.title")}</p>
-        <textarea
-          style={editableFieldStyle}
-          value={editedAssignment.title}
-          onChange={(e) => handleFieldChange('title', e.target.value)}
+        <TipTapEditor
+          content={editedAssignment.title}
           placeholder={t("assignment.titlePlaceholder", "Enter assignment title...")}
+          onUpdate={(newContent) => handleFieldChange('title', newContent)}
+          toolbarVisible={false}
         />
         <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("assignment.instructions")}</p>
         <TipTapEditor
@@ -2115,19 +2263,10 @@ const ResourceEditModal = ({
                   >
                     {t("boardManagement.titleText", "Title")}
                   </label>
-                  <input
-                    id="resource-title"
-                    type="text"
-                    value={formState.title}
-                    onChange={(e) => handleFieldChange("title", e.target.value)}
-                    style={{
-                      width: "100%",
-                      padding: "12px",
-                      borderRadius: "12px",
-                      border: "1px solid #d0d5dd",
-                      fontSize: "16px",
-                      fontFamily: "inherit",
-                    }}
+                  <TipTapEditor
+                    content={formState.title}
+                    onUpdate={(newContent) => handleFieldChange("title", newContent)}
+                    toolbarVisible={false}
                   />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -2421,7 +2560,7 @@ export const PreviewSection = ({
                     lineHeight: "24px",
                   }}
                 >
-                  {item?.title || "Untitled"}
+                  {stripHtml(item?.title) || "Untitled"}
                 </h2>
               </div>
               {!isAssignment && (

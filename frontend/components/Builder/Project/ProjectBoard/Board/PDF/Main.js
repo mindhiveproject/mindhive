@@ -3,12 +3,18 @@ import { useQuery } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
 import moment from "moment";
 import Head from "next/head";
-import Preview from "../../../../../Jodit/Preview/Main";
+import Preview from "./Preview/Main";
 import { useState } from "react";
-import { Dropdown } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
-export default function ProposalPDF({ proposalId, user }) {
+export default function ProposalPDF({ 
+  proposalId, 
+  user,
+  selectedStatuses = [],
+  setSelectedStatuses,
+  selectedReviewSteps = [],
+  setSelectedReviewSteps,
+}) {
   const { t } = useTranslation("builder");
   const { origin } = absoluteUrl();
   const { data, loading, error } = useQuery(PROPOSAL_QUERY, {
@@ -21,9 +27,14 @@ export default function ProposalPDF({ proposalId, user }) {
   const sections = proposal?.sections || [];
   const study = proposal?.study || {};
 
-  // State for selected statuses and review steps
-  const [selectedStatuses, setSelectedStatuses] = useState(["Completed"]);
-  const [selectedReviewSteps, setSelectedReviewSteps] = useState([]);
+  // If props are not provided, use local state as fallback (for backwards compatibility)
+  const [localSelectedStatuses, setLocalSelectedStatuses] = useState(["Not started", "In progress"]);
+  const [localSelectedReviewSteps, setLocalSelectedReviewSteps] = useState([]);
+  
+  const effectiveSelectedStatuses = setSelectedStatuses !== undefined ? selectedStatuses : localSelectedStatuses;
+  const effectiveSetSelectedStatuses = setSelectedStatuses !== undefined ? setSelectedStatuses : setLocalSelectedStatuses;
+  const effectiveSelectedReviewSteps = setSelectedReviewSteps !== undefined ? selectedReviewSteps : localSelectedReviewSteps;
+  const effectiveSetSelectedReviewSteps = setSelectedReviewSteps !== undefined ? setSelectedReviewSteps : setLocalSelectedReviewSteps;
 
   // Status options for dropdown (icons removed)
   const statusOptions = [
@@ -118,10 +129,11 @@ export default function ProposalPDF({ proposalId, user }) {
     const filteredCardsWithTitles = orderedCards
       .filter(
         (card) =>
-          selectedStatuses.includes(card?.settings?.status) &&
+          (effectiveSelectedStatuses.length === 0 ||
+            effectiveSelectedStatuses.includes(card?.settings?.status)) &&
           card?.settings?.includeInReport &&
-          (selectedReviewSteps.length === 0 ||
-            selectedReviewSteps.some((step) =>
+          (effectiveSelectedReviewSteps.length === 0 ||
+            effectiveSelectedReviewSteps.some((step) =>
               card?.settings?.includeInReviewSteps?.includes(step)
             ))
       )
@@ -170,10 +182,11 @@ export default function ProposalPDF({ proposalId, user }) {
     const filteredCards = orderedCards
       .filter(
         (card) =>
-          selectedStatuses.includes(card?.settings?.status) &&
+          (effectiveSelectedStatuses.length === 0 ||
+            effectiveSelectedStatuses.includes(card?.settings?.status)) &&
           card?.settings?.includeInReport &&
-          (selectedReviewSteps.length === 0 ||
-            selectedReviewSteps.some((step) =>
+          (effectiveSelectedReviewSteps.length === 0 ||
+            effectiveSelectedReviewSteps.some((step) =>
               card?.settings?.includeInReviewSteps?.includes(step)
             ))
       )
@@ -188,91 +201,391 @@ export default function ProposalPDF({ proposalId, user }) {
     return filteredCards;
   });
 
+  // Helper function to toggle status selection
+  const toggleStatus = (status) => {
+    effectiveSetSelectedStatuses((prev) =>
+      prev.includes(status)
+        ? prev.filter((s) => s !== status)
+        : [...prev, status]
+    );
+  };
+
+  // Helper function to toggle review step selection
+  const toggleReviewStep = (step) => {
+    effectiveSetSelectedReviewSteps((prev) =>
+      prev.includes(step)
+        ? prev.filter((s) => s !== step)
+        : [...prev, step]
+    );
+  };
+
+  // Get review step icon
+  const getReviewStepIcon = (step) => {
+    // These icons would need to be created or mapped to existing assets
+    // For now, using a placeholder approach
+    const iconMap = {
+      ACTION_SUBMIT: "/assets/icons/status/publicTemplate.svg",
+      ACTION_PEER_FEEDBACK: "/assets/icons/status/publicTemplate.svg",
+      ACTION_COLLECTING_DATA: "/assets/icons/status/publicTemplate.svg",
+      ACTION_PROJECT_REPORT: "/assets/icons/status/publicTemplate.svg",
+    };
+    return iconMap[step] || "/assets/icons/status/publicTemplate.svg";
+  };
+
   return (
     <>
       <Head>
         <title>
           {studyTitle}-{date}
         </title>
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            .hide-scrollbar::-webkit-scrollbar {
+              display: none;
+            }
+            .proposal-pdf-filter-sidebar {
+              order: 1;
+            }
+            .proposal-pdf-cards-list {
+              order: 0;
+            }
+            @media (max-width: 768px) {
+              .proposal-pdf-container {
+                flex-direction: column !important;
+                padding: 0 16px 16px 16px !important;
+                gap: 16px !important;
+              }
+              .proposal-pdf-filter-sidebar {
+                width: 100% !important;
+                order: -1 !important;
+              }
+              .proposal-pdf-cards-list {
+                max-width: 100% !important;
+                order: 0 !important;
+              }
+            }
+          `
+        }} />
       </Head>
-      <div className="proposalPDF">
-        <div className="status-filter" style={{ marginBottom: "10px" }}>
-          <p
-            style={{
-              marginBottom: "5px",
-              fontSize: "12px",
-              color: "#333",
-              lineHeight: "1.3",
-            }}
-          >
-            Select statuses and review steps to filter cards below (only
-            report-included cards shown).
-          </p>
+      <div
+        className="proposalPDF"
+        style={{
+          backgroundColor: "#f6f9f8",
+          height: "100vh",
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div
+          className="proposal-pdf-container"
+          style={{
+            display: "flex",
+            gap: "24px",
+            alignItems: "stretch",
+            justifyContent: "center",
+            padding: "0 24px 24px 24px",
+            height: "100%",
+            overflow: "hidden",
+          }}
+        >
+          {/* Right Column - Filter Sidebar */}
           <div
+            className="proposal-pdf-filter-sidebar"
             style={{
+              width: "250px",
+              flexShrink: 0,
               display: "flex",
-              gap: "20px",
-              alignItems: "center",
-              flexWrap: "wrap",
+              flexDirection: "column",
+              gap: "16px",
+              overflowY: "auto",
+              overflowX: "hidden",
+              position: "relative",
+              zIndex: 0,
             }}
           >
+            {/* Filter by title */}
+            <h2
+              style={{
+                fontFamily: "Nunito, sans-serif",
+                fontWeight: 600,
+                fontSize: "22px",
+                lineHeight: "28px",
+                letterSpacing: "0.15px",
+                color: "#171717",
+                margin: 0,
+              }}
+            >
+              Filter by
+            </h2>
+
+            {/* Status Filters */}
             <div
               style={{
                 display: "flex",
-                alignItems: "center",
-                flex: 1,
-                minWidth: "200px",
+                flexDirection: "column",
+                gap: "4px",
               }}
             >
               <label
                 style={{
-                  marginRight: "8px",
-                  fontSize: "12px",
-                  fontWeight: "bold",
+                  fontFamily: "Nunito, sans-serif",
+                  fontWeight: 600,
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  letterSpacing: "0.15px",
+                  color: "#171717",
+                  marginBottom: "4px",
                 }}
               >
-                Status:
+                Status
               </label>
-              <Dropdown
-                placeholder="Select statuses"
-                multiple
-                selection
-                options={statusOptions}
-                value={selectedStatuses}
-                onChange={(e, { value }) => setSelectedStatuses(value)}
-                style={{ fontSize: "12px", flex: 1 }}
-              />
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "8px",
+                }}
+              >
+                {statusOptions.map((option) => {
+                  const isSelected = effectiveSelectedStatuses.includes(option.value);
+                  return (
+                    <button
+                      key={option.key}
+                      onClick={() => toggleStatus(option.value)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        padding: isSelected
+                          ? "6px 8px 6px 12px"
+                          : "6px 12px",
+                        height: "32px",
+                        border: "1px solid #a1a1a1",
+                        borderRadius: "8px",
+                        backgroundColor: isSelected ? "#FDF2D0" : "#ffffff",
+                        cursor: "pointer",
+                        fontFamily: "Nunito, sans-serif",
+                        fontWeight: 600,
+                        fontSize: "14px",
+                        lineHeight: "20px",
+                        letterSpacing: "0.15px",
+                        color: "#171717",
+                        transition: "background-color 0.2s",
+                        width: "fit-content",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isSelected) {
+                          e.currentTarget.style.backgroundColor = "#f9f9f9";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isSelected) {
+                          e.currentTarget.style.backgroundColor = "#ffffff";
+                        }
+                      }}
+                    >
+                      <span>{option.text}</span>
+                      {isSelected && (
+                        <span
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "18px",
+                            height: "18px",
+                            cursor: "pointer",
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleStatus(option.value);
+                          }}
+                        >
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+                              fill="#171717"
+                            />
+                          </svg>
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
+
+            {/* Review Steps Filters */}
             <div
               style={{
                 display: "flex",
-                alignItems: "center",
-                flex: 1,
-                minWidth: "200px",
+                flexDirection: "column",
+                gap: "4px",
               }}
             >
               <label
                 style={{
-                  marginRight: "8px",
-                  fontSize: "12px",
-                  fontWeight: "bold",
+                  fontFamily: "Nunito, sans-serif",
+                  fontWeight: 600,
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  letterSpacing: "0.15px",
+                  color: "#171717",
+                  marginBottom: "4px",
                 }}
               >
-                Review Steps:
+                Review Steps
               </label>
-              <Dropdown
-                placeholder="Select review steps"
-                multiple
-                selection
-                options={reviewStepOptions}
-                value={selectedReviewSteps}
-                onChange={(e, { value }) => setSelectedReviewSteps(value)}
-                style={{ fontSize: "12px", flex: 1 }}
-              />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  gap: "8px",
+                }}
+              >
+                {reviewStepOptions.map((option) => {
+                  const isSelected = effectiveSelectedReviewSteps.includes(
+                    option.value
+                  );
+                  return (
+                    <button
+                      key={option.key}
+                      onClick={() => toggleReviewStep(option.value)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        padding: isSelected
+                          ? "6px 8px 6px 8px"
+                          : "6px 8px 6px 8px",
+                        height: "32px",
+                        border: "1px solid #a1a1a1",
+                        borderRadius: "8px",
+                        backgroundColor: isSelected ? "#FDF2D0" : "#ffffff",
+                        cursor: "pointer",
+                        fontFamily: "Nunito, sans-serif",
+                        fontWeight: 600,
+                        fontSize: "14px",
+                        lineHeight: "20px",
+                        letterSpacing: "0.15px",
+                        color: "#171717",
+                        transition: "background-color 0.2s",
+                        width: "fit-content",
+                        justifyContent: "flex-start",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isSelected) {
+                          e.currentTarget.style.backgroundColor = "#f9f9f9";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isSelected) {
+                          e.currentTarget.style.backgroundColor = "#ffffff";
+                        }
+                      }}
+                    >
+                      <img
+                        src={getReviewStepIcon(option.value)}
+                        alt=""
+                        style={{
+                          width: "18px",
+                          height: "18px",
+                          flexShrink: 0,
+                        }}
+                      />
+                      <span style={{ flex: 1, textAlign: "left", whiteSpace: "nowrap" }}>
+                        {option.text}
+                      </span>
+                      {isSelected && (
+                        <span
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "18px",
+                            height: "18px",
+                            cursor: "pointer",
+                            flexShrink: 0,
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleReviewStep(option.value);
+                          }}
+                        >
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+                              fill="#171717"
+                            />
+                          </svg>
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
+
+          {/* Left Column - Cards List */}
+          <div
+            className="hide-scrollbar proposal-pdf-cards-list"
+            style={{
+              flex: 1,
+              maxWidth: "900px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+              overflowY: "auto",
+              overflowX: "hidden",
+              scrollbarWidth: "none", // Firefox
+              msOverflowStyle: "none", // IE and Edge
+              position: "relative",
+              zIndex: 10,
+            }}
+          >
+            {cards.flat().length === 0 ? (
+              <div
+                style={{
+                  backgroundColor: "#ffffff",
+                  borderRadius: "12px",
+                  padding: "40px",
+                  textAlign: "center",
+                  boxShadow: "2px 2px 8px 0px rgba(0,0,0,0.1)",
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "Nunito, sans-serif",
+                    fontWeight: 600,
+                    fontSize: "16px",
+                    lineHeight: "24px",
+                    letterSpacing: "0.15px",
+                    color: "#6a6a6a",
+                    margin: 0,
+                  }}
+                >
+                  No cards match the selected filters. Please adjust your status or review step filters to see cards.
+                </p>
+              </div>
+            ) : (
+              <Preview cards={cards.flat()} user={user} submitStatuses={submitStatuses} />
+            )}
+          </div>
         </div>
-        <Preview cards={cards.flat()} user={user} />
       </div>
     </>
   );

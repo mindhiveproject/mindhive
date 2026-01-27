@@ -76,11 +76,9 @@ export default function Proposal({
 }) {
   const { t } = useTranslation("builder");
 
-  // find the current section for preview
-  const currentSections = proposal?.sections?.filter((section) =>
-    section?.cards.map((card) => card?.type).includes(proposalCard?.type)
-  );
-
+  // Filter cards to show only those that are included in this specific review step
+  // Cards must have this action card type in their includeInReviewSteps array
+  // The includeInReport flag is for the final project report, not for intermediate review steps
   const cards =
     proposal?.sections
       ?.slice()
@@ -89,8 +87,7 @@ export default function Proposal({
         section?.cards
           ?.filter(
             (card) =>
-              (card?.settings?.includeInReport &&
-                currentSections?.map((s) => s?.id).includes(card?.section?.id)) ||
+              // Only show cards that explicitly include this action card type in their review steps
               card?.settings?.includeInReviewSteps?.includes(proposalCard?.type)
           )
           ?.sort((a, b) => (a?.position ?? 0) - (b?.position ?? 0)) || []

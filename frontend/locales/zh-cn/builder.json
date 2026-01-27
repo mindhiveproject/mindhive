@@ -60,6 +60,9 @@
 		},
 		"loading": "加载中..."
 	},
+	"boardManagement": {
+		"viewResource": "查看资源"
+	},
 	"build-create-new-study": "要创建新研究，请单击下面的按钮。",
 	"build-intro": "在此构建器中，您可以创建新的研究、上传自己的任务或使用库中的任务。",
 	"buildBlockFromScratch": "如果您希望从头开始构建一个块，请选择此选项。",
@@ -319,6 +322,7 @@
 		"linked": "链接",
 		"linkedToStudy": "链接到",
 		"myProjectBoard": "我的项目板",
+		"noClassAssociated": "该提案与任何类别无关。",
 		"notLinkedToStudy": "与某项研究无关",
 		"noUsersFound": "未找到用户...",
 		"publicTemplate": "公共模板",
@@ -330,7 +334,9 @@
 		"shareInstructions": "与您的参与者分享以下链接，邀请他们加入您的研究",
 		"testStudy": "测试你的学习",
 		"titlePlaceholder": "输入项目板标题",
-		"unlinked": "没有相关研究"
+		"unlinked": "没有相关研究",
+		"updateCollaboratorsFailed": "更新协作者信息失败，请重试。",
+		"userNoClasses": "您未参加任何课程。"
 	},
 	"homeworkCard": {
 		"comments": "评论",
@@ -374,10 +380,14 @@
 		"cardWillBeReleased": "该卡将发布",
 		"chooseReviewStep": "选择卡片应进入同行评审的哪个步骤",
 		"comments": "评论",
-		"forMindHiveNetwork": "对于 MindHive 网络",
+		"commentsPlaceholder": "请在此处添加您的评论……",
+		"forMindHiveNetwork": "为 MindHive 网络",
 		"forTeacherAndCollaborators": "仅供我的老师和项目合作者使用",
 		"instructions": "指示",
 		"lockedMessage": "该卡片目前正在被编辑",
+		"newSubmission": "新提交",
+		"originalSubmission": "原始提交",
+		"originalSubmissionTooltip": "这是您最初提交给反馈中心的内容。我们已将其复制到下方供您编辑，并保留了“修改后的内容”。",
 		"refresh": "刷新",
 		"refreshAfterRelease": "卡片发布后，请刷新页面以获取最新版本的卡片。",
 		"reviewOptions": {
@@ -388,7 +398,9 @@
 		},
 		"revisedContent": "修订内容",
 		"revisedContentUsed": "您在此处包含的修订内容将用于最终报告。",
+		"seeOriginalSubmission": "点击查看您的原始提交内容",
 		"selectOption": "选择选项",
+		"submission": "提交",
 		"visibleInFeedbackCenter": "一旦通过黄色行动卡提交，您在此处包含的内容将显示在反馈中心。",
 		"visibleToTeacherAndCollaborators": "您在下面包含的内容只有您的老师和项目合作者才能看到"
 	},
@@ -633,11 +645,12 @@
 	},
 	"proposalPage": {
 		"download": "下载",
+		"downloadTooltip": "下载内容取决于下面选择的状态和审核步骤筛选条件。",
 		"preview": "预览",
 		"previewInfo": "在编辑模式下标记为“完成”的卡片内容将以预览模式出现在这里，显示审阅者将看到的内容。",
 		"submittedLocked": "提案已提交并锁定🔒",
 		"viewBoard": "板视图",
-		"viewFlattenBoard": "文本视图"
+		"viewFlattenBoard": "列表显示"
 	},
 	"proposalSelector": {
 		"linkToProposal": "提案链接",
@@ -1001,11 +1014,11 @@
 		"preview": "预览 {{taskType}}"
 	},
 	"taskPage": {
-		"after": "参与者在完成 {{taskType}}<u>之后</u>会看到什么",
+		"after": "参与者在接受 {{taskType}}后看到的内容",
 		"aggregateVariables": "聚合变量",
 		"aggregateVariablesDescription": "完成 {{taskType}} 后，这些数据会自动写入 csv 文件",
 		"background": "背景",
-		"before": "参与者在执行 {{taskType}} 之前看到的内容",
+		"before": "参与者在进行 {{taskType}}之前看到的内容",
 		"checkbox": "选择多项",
 		"duration": "期间",
 		"format": "格式",
@@ -1093,11 +1106,11 @@
 	},
 	"videoNotSupported": "视频不支持",
 	"viewer": {
-		"afterParticipation": "参与者在完成 {{taskType}}<u>之后</u>会看到什么",
+		"afterParticipation": "参与者在接受 {{taskType}}后看到的内容",
 		"aggregateVariables": "聚合变量",
 		"aggregateVariablesDesc": "完成 {{taskType}} 后，这些数据会自动写入 csv 文件",
 		"background": "背景",
-		"beforeParticipation": "参与者在执行 {{taskType}} 之前看到的内容",
+		"beforeParticipation": "参与者在进行 {{taskType}}之前看到的内容",
 		"customize": "定制",
 		"defaultValues": "显示默认值（可以克隆 {{taskType}} 并修改它们）",
 		"duration": "期间",

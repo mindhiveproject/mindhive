@@ -60,6 +60,9 @@
 		},
 		"loading": "Carregando..."
 	},
+	"boardManagement": {
+		"viewResource": "Ver recurso"
+	},
 	"build-create-new-study": "Para criar um novo estudo, clique no botão abaixo.",
 	"build-intro": "Neste construtor, você pode criar um novo estudo, carregar suas próprias tarefas ou usar tarefas da biblioteca.",
 	"buildBlockFromScratch": "Selecione esta opção se preferir construir um bloco inteiramente do zero.",
@@ -319,6 +322,7 @@
 		"linked": "Vinculado",
 		"linkedToStudy": "Ligado a",
 		"myProjectBoard": "Meu quadro de projetos",
+		"noClassAssociated": "Esta proposta não está associada a nenhuma classe.",
 		"notLinkedToStudy": "Não relacionado a um estudo",
 		"noUsersFound": "Nenhum usuário encontrado...",
 		"publicTemplate": "Modelo público",
@@ -330,7 +334,9 @@
 		"shareInstructions": "Compartilhe o link abaixo com seus participantes para convidá-los a participar do seu estudo",
 		"testStudy": "Teste seu estudo",
 		"titlePlaceholder": "Insira o título do quadro do projeto",
-		"unlinked": "Nenhum estudo relacionado"
+		"unlinked": "Nenhum estudo relacionado",
+		"updateCollaboratorsFailed": "Falha ao atualizar os colaboradores. Tente novamente.",
+		"userNoClasses": "Você não está associado a nenhuma turma."
 	},
 	"homeworkCard": {
 		"comments": "Comentários",
@@ -374,10 +380,14 @@
 		"cardWillBeReleased": "O cartão será lançado",
 		"chooseReviewStep": "Escolha em qual etapa da revisão por pares um cartão deve passar",
 		"comments": "Comentários",
+		"commentsPlaceholder": "Adicione seu comentário aqui...",
 		"forMindHiveNetwork": "Para a rede MindHive",
 		"forTeacherAndCollaborators": "Somente para meus professores e colaboradores do projeto",
 		"instructions": "Instruções",
 		"lockedMessage": "O cartão está sendo editado por",
+		"newSubmission": "Nova submissão",
+		"originalSubmission": "Envio original",
+		"originalSubmissionTooltip": "Este é o conteúdo que você enviou originalmente para a Central de Feedback. Copiamos o conteúdo abaixo para que você possa editá-lo e o salvamos como 'Conteúdo revisado'.",
 		"refresh": "Atualizar",
 		"refreshAfterRelease": "Após o lançamento do cartão, atualize a página para obter a versão mais recente do cartão.",
 		"reviewOptions": {
@@ -388,7 +398,9 @@
 		},
 		"revisedContent": "Conteúdo Revisado",
 		"revisedContentUsed": "O conteúdo revisado que você incluir aqui será usado no relatório final.",
+		"seeOriginalSubmission": "Clique para ver sua inscrição original.",
 		"selectOption": "Selecione a opção",
+		"submission": "Submissão",
 		"visibleInFeedbackCenter": "O conteúdo que você incluir aqui ficará visível no Centro de Feedback assim que for enviado por meio de um Cartão de Ação amarelo.",
 		"visibleToTeacherAndCollaborators": "O conteúdo que você incluir abaixo só será visível para seu(s) professor(es) e colaboradores do projeto"
 	},
@@ -633,11 +645,12 @@
 	},
 	"proposalPage": {
 		"download": "Download",
+		"downloadTooltip": "O conteúdo para download é baseado nos filtros de status e etapa de revisão selecionados abaixo.",
 		"preview": "Visualização",
 		"previewInfo": "O conteúdo dos cartões marcados como \"concluídos\" no modo de edição aparecerá aqui, no modo de visualização, exibindo o que seus revisores verão.",
 		"submittedLocked": "A proposta foi enviada e bloqueada 🔒",
 		"viewBoard": "Visão do Conselho",
-		"viewFlattenBoard": "Visualização de texto"
+		"viewFlattenBoard": "Exibição de lista"
 	},
 	"proposalSelector": {
 		"linkToProposal": "Link para proposta",
@@ -1001,11 +1014,11 @@
 		"preview": "Visualizar {{taskType}}"
 	},
 	"taskPage": {
-		"after": "O que os participantes veem <u>depois</u> de realizar o {{taskType}}",
+		"after": "O que os participantes veem depois de tomar o {{taskType}}",
 		"aggregateVariables": "Variáveis ​​Agregadas",
 		"aggregateVariablesDescription": "Esses dados são gravados automaticamente em um arquivo csv após a conclusão do {{taskType}}",
 		"background": "Fundo",
-		"before": "O que os participantes veem <u>antes</u> de realizar a tarefa {{taskType}}",
+		"before": "O que os participantes veem antes de fazer o {{taskType}}",
 		"checkbox": "Selecione muitos",
 		"duration": "Duração",
 		"format": "Formatar",
@@ -1093,11 +1106,11 @@
 	},
 	"videoNotSupported": "Vídeo não suportado",
 	"viewer": {
-		"afterParticipation": "O que os participantes veem <u>depois</u> de realizar o {{taskType}}",
+		"afterParticipation": "O que os participantes veem depois de tomar o {{taskType}}",
 		"aggregateVariables": "Variáveis ​​Agregadas",
 		"aggregateVariablesDesc": "Esses dados são gravados automaticamente em um arquivo csv após a conclusão do {{taskType}}",
 		"background": "Fundo",
-		"beforeParticipation": "O que os participantes veem <u>antes</u> de realizar a tarefa {{taskType}}",
+		"beforeParticipation": "O que os participantes veem antes de fazer o {{taskType}}",
 		"customize": "Personalizar",
 		"defaultValues": "Os valores padrão são mostrados (pode clonar {{taskType}} e modificá-los)",
 		"duration": "Duração",

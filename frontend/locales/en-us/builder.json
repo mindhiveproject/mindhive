@@ -60,6 +60,9 @@
 		},
 		"loading": "Loading..."
 	},
+	"boardManagement": {
+		"viewResource": "View Resource"
+	},
 	"build-create-new-study": "To create a new study, click the button below.",
 	"build-intro": "In this builder, you can create a new study, upload your own tasks, or use tasks from the library.",
 	"buildBlockFromScratch": "Select this option if you would prefer to build a block entirely from scratch.",
@@ -319,6 +322,7 @@
 		"linked": "Linked",
 		"linkedToStudy": "Linked to",
 		"myProjectBoard": "My Project Board",
+		"noClassAssociated": "This proposal is not associated with a class.",
 		"notLinkedToStudy": "Not linked to a study",
 		"noUsersFound": "No users found ...",
 		"publicTemplate": "Public template",
@@ -330,7 +334,9 @@
 		"shareInstructions": "Share the link below with your participants to invite them to join your study",
 		"testStudy": "Test your study",
 		"titlePlaceholder": "Enter project board title",
-		"unlinked": "No study linked"
+		"unlinked": "No study linked",
+		"updateCollaboratorsFailed": "Failed to update collaborators. Please try again.",
+		"userNoClasses": "You are not associated with any classes."
 	},
 	"homeworkCard": {
 		"comments": "Comments",
@@ -374,10 +380,14 @@
 		"cardWillBeReleased": "The card will be released",
 		"chooseReviewStep": "Choose which step of the peer review a card should go in",
 		"comments": "Comments",
-		"forMindHiveNetwork": "For MindHive Network",
+		"commentsPlaceholder": "Add your comment here...",
+		"forMindHiveNetwork": "For MindHive network",
 		"forTeacherAndCollaborators": "For my teacher and project collaborators only",
 		"instructions": "Instructions",
 		"lockedMessage": "The card is currently being edited by",
+		"newSubmission": "New submission",
+		"originalSubmission": "Original Submission",
+		"originalSubmissionTooltip": "This is the content you originaly submitted to the Feedback Center. We copied it bellow for you to make edits and conserved a 'Revised content'.",
 		"refresh": "Refresh",
 		"refreshAfterRelease": "After the card is released, refresh the page to get the latest version of the card.",
 		"reviewOptions": {
@@ -388,7 +398,9 @@
 		},
 		"revisedContent": "Revised Content",
 		"revisedContentUsed": "The revised content you include here will be used in the final report.",
+		"seeOriginalSubmission": "Click to see your original submission",
 		"selectOption": "Select option",
+		"submission": "Submission",
 		"visibleInFeedbackCenter": "The content you include here will be visible in the Feedback Center once it is submitted via a yellow Action Card.",
 		"visibleToTeacherAndCollaborators": "The content you include below will only be visible to your teacher(s) and project collaborators"
 	},
@@ -633,11 +645,12 @@
 	},
 	"proposalPage": {
 		"download": "Download",
+		"downloadTooltip": "Download content is based on the status and review step filters selected below.",
 		"preview": "Preview",
 		"previewInfo": "Content from cards marked as \"complete\" in edit mode will appear here, in preview mode, displaying what your reviewers will see.",
 		"submittedLocked": "The proposal has been submitted and locked 🔒",
 		"viewBoard": "Board View",
-		"viewFlattenBoard": "Text View"
+		"viewFlattenBoard": "List View"
 	},
 	"proposalSelector": {
 		"linkToProposal": "Link to proposal",
@@ -1001,11 +1014,11 @@
 		"preview": "Preview {{taskType}}"
 	},
 	"taskPage": {
-		"after": "What participants see <u>after</u> taking the {{taskType}}",
+		"after": "What participants see after taking the {{taskType}}",
 		"aggregateVariables": "Aggregate Variables",
 		"aggregateVariablesDescription": "These data are automatically written to a csv file upon completion of the {{taskType}}",
 		"background": "Background",
-		"before": "What participants see <u>before</u> taking the {{taskType}}",
+		"before": "What participants see before taking the {{taskType}}",
 		"checkbox": "Select many",
 		"duration": "Duration",
 		"format": "Format",
@@ -1093,11 +1106,11 @@
 	},
 	"videoNotSupported": "Video not supported",
 	"viewer": {
-		"afterParticipation": "What participants see <u>after</u> taking the {{taskType}}",
+		"afterParticipation": "What participants see after taking the {{taskType}}",
 		"aggregateVariables": "Aggregate Variables",
 		"aggregateVariablesDesc": "These data are automatically written to a csv file upon completion of the {{taskType}}",
 		"background": "Background",
-		"beforeParticipation": "What participants see <u>before</u> taking the {{taskType}}",
+		"beforeParticipation": "What participants see before taking the {{taskType}}",
 		"customize": "Customize",
 		"defaultValues": "Default values are shown (can clone {{taskType}} and modify these)",
 		"duration": "Duration",
