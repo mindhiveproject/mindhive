@@ -143,6 +143,7 @@
 			"publicResources": "Openbaar",
 			"resources": "Bronnen",
 			"resourcesSectionTitle": "Openbare bronnen",
+			"searchPlaceholder": "Zoeken op titel...",
 			"select": "Selecteer optie",
 			"selectItemsToConnect": "Items selecteren om aan te sluiten",
 			"selectResources": "Selecteer bronnen",

@@ -143,6 +143,7 @@
 			"publicResources": "民众",
 			"resources": "资源",
 			"resourcesSectionTitle": "公共资源",
+			"searchPlaceholder": "按标题搜索...",
 			"select": "选择选项",
 			"selectItemsToConnect": "选择要连接的项目",
 			"selectResources": "选择资源",

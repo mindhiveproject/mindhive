@@ -143,6 +143,7 @@
 			"publicResources": "عام",
 			"resources": "موارد",
 			"resourcesSectionTitle": "الموارد العامة",
+			"searchPlaceholder": "البحث حسب العنوان...",
 			"select": "حدد الخيار",
 			"selectItemsToConnect": "حدد العناصر المراد توصيلها",
 			"selectResources": "اختر الموارد",

@@ -143,6 +143,7 @@
 			"publicResources": "Publique",
 			"resources": "Ressources",
 			"resourcesSectionTitle": "Ressources publiques",
+			"searchPlaceholder": "Recherche par titre...",
 			"select": "Sélectionner une option",
 			"selectItemsToConnect": "Sélectionner les éléments à connecter",
 			"selectResources": "Sélectionner des ressources",

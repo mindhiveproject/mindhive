@@ -143,6 +143,7 @@
 			"publicResources": "Общественный",
 			"resources": "Ресурсы",
 			"resourcesSectionTitle": "Общественные ресурсы",
+			"searchPlaceholder": "Поиск по названию...",
 			"select": "ВЫБЕРИТЕ ВАРИАНТ",
 			"selectItemsToConnect": "Выберите элементы для подключения",
 			"selectResources": "Выберите ресурсы",

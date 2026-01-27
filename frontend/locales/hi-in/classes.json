@@ -143,6 +143,7 @@
 			"publicResources": "जनता",
 			"resources": "संसाधन",
 			"resourcesSectionTitle": "सार्वजनिक संसाधन",
+			"searchPlaceholder": "शीर्षक के आधार पर खोजें...",
 			"select": "विकल्प चुनें",
 			"selectItemsToConnect": "कनेक्ट करने के लिए आइटम चुनें",
 			"selectResources": "संसाधन चुनें",
