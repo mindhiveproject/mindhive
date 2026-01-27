@@ -9,7 +9,7 @@ const DataJournalContext = createContext();
 export const DataJournalProvider = ({ children, initialProps = {} }) => {
   // Workspace state (layout, components/vizSections)
   const [workspace, setWorkspace] = useState(
-    initialProps.workspace || { id: null, layout: [], vizSections: [] }
+    initialProps.workspace || { id: null, layout: [], vizSections: [] },
   );
 
   // Merged data from datasources
@@ -26,12 +26,12 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
 
   // Selected journal (for Journals.js)
   const [selectedJournal, setSelectedJournal] = useState(
-    initialProps.selectedJournal || null
+    initialProps.selectedJournal || null,
   );
 
   // Selected workspace (for Journal.js)
   const [selectedWorkspace, setSelectedWorkspace] = useState(
-    initialProps.selectedWorkspace || null
+    initialProps.selectedWorkspace || null,
   );
 
   // Active component (for editing in Grid.js)

@@ -1,57 +1,41 @@
 // https://uiwjs.github.io/react-codemirror/#/theme/home
-
-import {
-  AccordionTitle,
-  AccordionContent,
-  Accordion,
-  Icon,
-} from "semantic-ui-react";
-
 import { useState, useCallback } from "react";
 
 import { python } from "@codemirror/lang-python";
 import CodeMirror from "@uiw/react-codemirror";
 
-export default function CodeEditor({ code, handleContentChange, runCode }) {
-  const [activeIndex, setActiveIndex] = useState(-1);
+export default function CodeEditor({ sectionId, code, onChange }) {
+  const [localCode, setLocalCode] = useState(code);
 
-  const handleClick = (e, titleProps) => {
-    const { index } = titleProps;
-    const newIndex = activeIndex === index ? -1 : index;
-    setActiveIndex(newIndex);
-  };
-
-  const onChange = useCallback((val, viewUpdate) => {
-    handleContentChange({
+  // update the component with the local code
+  const onRunCode = () => {
+    onChange({
+      componentId: sectionId,
       newContent: {
-        code: val,
+        code: localCode,
       },
     });
+  };
+
+  // keep the local version of code
+  const onCodeChange = useCallback((val, viewUpdate) => {
+    setLocalCode(val);
   }, []);
 
   return (
     <>
-      <div>
-        <button onClick={() => runCode({ code })}>Run the code</button>
+      <div className="runCodeButton">
+        <button onClick={() => onRunCode({ code })}>Run the code</button>
       </div>
-      <Accordion>
-        <AccordionTitle
-          active={activeIndex === 0}
-          index={0}
-          onClick={handleClick}
-        >
-          <Icon name="dropdown" />
-          Code editor
-        </AccordionTitle>
-        <AccordionContent active={activeIndex === 0}>
-          <CodeMirror
-            value={code}
-            extensions={python()}
-            onChange={onChange}
-            theme="light"
-          />
-        </AccordionContent>
-      </Accordion>
+      <div className="editor-wrapper">
+        <CodeMirror
+          width="100%"
+          value={code}
+          extensions={python()}
+          onChange={onCodeChange}
+          theme="light"
+        />
+      </div>
     </>
   );
 }

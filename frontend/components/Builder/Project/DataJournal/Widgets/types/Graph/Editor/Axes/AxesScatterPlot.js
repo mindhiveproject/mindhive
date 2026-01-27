@@ -1,7 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
-  Dropdown,
-  DropdownMenu,
   Icon,
   AccordionTitle,
   AccordionContent,
@@ -11,14 +9,10 @@ import SelectOne from "../Fields/SelectOne";
 import ToggleOne from "../Fields/ToggleOne";
 
 export default function AxesScatterPlot({
-  type,
   variables,
-  code,
-  pyodide,
-  runCode,
   sectionId,
   selectors,
-  handleContentChange,
+  onChange,
 }) {
   const [activeIndex, setActiveIndex] = useState(-1);
 
@@ -52,7 +46,7 @@ export default function AxesScatterPlot({
   ];
 
   const onSelectorChange = ({ target }) => {
-    handleContentChange({
+    onChange({
       componentId: sectionId,
       newContent: {
         selectors: { ...selectors, [target?.name]: target?.value },

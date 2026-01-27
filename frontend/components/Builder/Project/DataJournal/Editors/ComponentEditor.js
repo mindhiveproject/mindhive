@@ -42,14 +42,7 @@ export default function ComponentEditor({ onChange, onSave, onDelete }) {
         );
       case "GRAPH":
         return (
-          <GraphEditor
-            content={content}
-            onChange={onChange}
-            sectionId={id}
-            // pyodide={pyodide}
-            // data={data}
-            // variables={variables}
-          />
+          <GraphEditor content={content} onChange={onChange} sectionId={id} />
         );
       default:
         return <div>Unsupported component type: {type}</div>;

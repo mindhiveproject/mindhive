@@ -2,22 +2,128 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
+import {
+  MessageHeader,
+  MessageContent,
+  Message,
+  Icon,
+} from "semantic-ui-react";
+
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
-export default function Render({ data, code, pyodide, sectionId, content }) {
+export default function Render({ code, pyodide, sectionId, content }) {
   const [figJson, setFigJson] = useState(null);
   const [error, setError] = useState(null);
+  const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
     async function renderGraph() {
       if (!pyodide || !code || !content?.selectors || !sectionId) {
         setFigJson(null);
+        setIsRunning(false);
         return;
       }
 
+      setIsRunning(true);
+
       const s = content.selectors;
-      if (!s.xVariable || !s.yVariable) {
-        setFigJson(null);
+      const type = content.type;
+
+      // ── Very defensive escaping for Python string literals ──────────────────
+      const escaped = (val) => {
+        if (val == null) return "";
+        if (Array.isArray(val)) {
+          return val.map(String).join(",");
+        }
+        const str = String(val);
+        return str.replace(/"/g, '\\"').replace(/\n/g, "\\n");
+      };
+
+      let variablesCode = "";
+      let hasRequiredSelectors = false;
+
+      if (type === "scatterPlot") {
+        hasRequiredSelectors = !!s.xVariable && !!s.yVariable;
+        if (!hasRequiredSelectors) {
+          setFigJson(null);
+          setIsRunning(false);
+          return;
+        }
+        variablesCode = `
+X = "${escaped(s.xVariable)}"
+Y = "${escaped(s.yVariable)}"
+Group = "${escaped(s.groupVariable || "")}"
+graphTitle = "${escaped(s.graphTitle || "")}"
+xLabel = "${escaped(s.xLabel || "")}"
+yLabel = "${escaped(s.yLabel || "")}"
+xRangeMin = "${escaped(s.xRangeMin || "")}"
+xRangeMax = "${escaped(s.xRangeMax || "")}"
+yRangeMin = "${escaped(s.yRangeMin || "")}"
+yRangeMax = "${escaped(s.yRangeMax || "")}"
+marginalPlot = "${escaped(s.marginalPlot || "")}"
+legend_title_text = "${escaped(s.legend_title_text || "")}"
+color = "${escaped(s.color || "pink")}"
+trendline = ${s.trendLine ? "True" : "False"}
+        `;
+      } else if (type === "barGraph") {
+        const dataFormatStr = String(s.dataFormat || "")
+          .trim()
+          .toLowerCase();
+        const isLong = dataFormatStr === "long" || !dataFormatStr;
+        const isWide = dataFormatStr === "wide";
+
+        hasRequiredSelectors = isWide
+          ? Array.isArray(s.colToPlot) && s.colToPlot.length > 0
+          : !!s.qualCol && !!s.quantCol;
+
+        if (!hasRequiredSelectors) {
+          setFigJson(null);
+          setIsRunning(false);
+          return;
+        }
+
+        variablesCode = `
+dataFormat = "${escaped(dataFormatStr)}"
+isWide = ${isWide ? "True" : "False"}
+qualCol = "${escaped(s.qualCol || "")}"
+quantCol = "${escaped(s.quantCol || "")}"
+colToPlot = "${escaped(s.colToPlot || "")}"
+errBar = "${escaped(s.errBar || "")}"
+graphTitle = "${escaped(s.graphTitle || "")}"
+xLabel = "${escaped(s.xLabel || "")}"
+yLabel = "${escaped(s.yLabel || "")}"
+yRangeMin = "${escaped(s.yRangeMin || "")}"
+yRangeMax = "${escaped(s.yRangeMax || "")}"
+legend_title = "${escaped(s.legend_title || s.legend_title_text || "")}"
+color = "${escaped(s.color || "pink")}"
+        `;
+      } else if (type === "histogram") {
+        hasRequiredSelectors = !!s.X;
+
+        if (!hasRequiredSelectors) {
+          setFigJson(null);
+          setIsRunning(false);
+          return;
+        }
+
+        variablesCode = `
+X = "${escaped(s.X || "")}"
+Group = "${escaped(s.Group || "")}"
+marginalPlot = "${escaped(s.marginalPlot || "")}"
+graphTitle = "${escaped(s.graphTitle || "")}"
+xLabel = "${escaped(s.xLabel || "")}"
+yLabel = "${escaped(s.yLabel || "")}"
+xRangeMin = "${escaped(s.xRangeMin || "")}"
+xRangeMax = "${escaped(s.xRangeMax || "")}"
+yRangeMin = "${escaped(s.yRangeMin || "")}"
+yRangeMax = "${escaped(s.yRangeMax || "")}"
+legend_title_text = "${escaped(s.legend_title_text || "")}"
+color = "${escaped(s.color || "")}"
+bargap = ${Number(s.bargap ?? 0.1)}
+        `;
+      } else {
+        setError(`Unsupported graph type: ${type}`);
+        setIsRunning(false);
         return;
       }
 
@@ -26,7 +132,7 @@ export default function Render({ data, code, pyodide, sectionId, content }) {
       const outputVar = `${prefix}fig_json`;
 
       try {
-        // Robust dedent that works in plain JS
+        // Robust dedent helper
         const dedentCode = (str) => {
           const lines = str.split("\n");
           if (lines.length <= 1) return str.trim();
@@ -35,9 +141,7 @@ export default function Render({ data, code, pyodide, sectionId, content }) {
           const minIndent = Math.min(
             ...contentLines
               .filter((line) => line.trim() !== "")
-              .map((line) =>
-                line.match(/^\s*/) ? line.match(/^\s*/)[0].length : 0
-              )
+              .map((line) => line.match(/^\s*/)?.[0]?.length || 0),
           );
 
           return contentLines
@@ -48,53 +152,20 @@ export default function Render({ data, code, pyodide, sectionId, content }) {
 
         const userCodeDedented = dedentCode(code);
 
-        // Build Python code
         const pythonCode = `
 def ${funcName}():
-    X = "${s.xVariable.replace(/"/g, '\\"').replace(/\n/g, "\\n")}"
-    Y = "${s.yVariable.replace(/"/g, '\\"').replace(/\n/g, "\\n")}"
-    Group = "${(s.groupVariable || "")
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, "\\n")}"
-    graphTitle = "${(s.graphTitle || "")
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, "\\n")}"
-    xLabel = "${(s.xLabel || "").replace(/"/g, '\\"').replace(/\n/g, "\\n")}"
-    yLabel = "${(s.yLabel || "").replace(/"/g, '\\"').replace(/\n/g, "\\n")}"
-    xRangeMin = "${(s.xRangeMin || "")
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, "\\n")}"
-    xRangeMax = "${(s.xRangeMax || "")
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, "\\n")}"
-    yRangeMin = "${(s.yRangeMin || "")
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, "\\n")}"
-    yRangeMax = "${(s.yRangeMax || "")
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, "\\n")}"
-    marginalPlot = "${(s.marginalPlot || "")
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, "\\n")}"
-    legend_title_text = "${(s.legend_title_text || "")
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, "\\n")}"
-    color = "${(s.color || "pink").replace(/"/g, '\\"').replace(/\n/g, "\\n")}"
-    trendline = ${s.trendLine ? '"lowess"' : "None"}
+${variablesCode ? "    " + variablesCode.trim().split("\n").join("\n    ") : ""}
 ${
   userCodeDedented
     ? "    " + userCodeDedented.replace(/\n/g, "\n    ")
     : "    pass"
 }
 
-    # ── Return the variable the template actually uses ──
     return fig_json_output if 'fig_json_output' in locals() else None
 
 ${outputVar} = ${funcName}()
-print("[DEBUG ${sectionId}] Returned value exists:", ${outputVar} is not None)
-`.trim();
-
-        // console.log(`[Graph ${sectionId}] Generated Python:\n${pythonCode}`);
+print("[DEBUG ${sectionId}] fig_json_output exists:", ${outputVar} is not None)
+        `.trim();
 
         await pyodide.runPythonAsync(pythonCode);
 
@@ -103,14 +174,16 @@ print("[DEBUG ${sectionId}] Returned value exists:", ${outputVar} is not None)
           setFigJson(JSON.parse(jsonStr));
           setError(null);
         } else {
-          console.warn(`No valid fig_json_output produced for ${sectionId}`);
+          console.warn(`No valid fig_json_output for ${sectionId}`);
           setFigJson(null);
-          setError("Graph code ran but did not produce figure JSON");
+          setError("Code ran but did not produce figure JSON");
         }
       } catch (err) {
         console.error(`Graph render failed [${sectionId}]:`, err);
-        setError(`Graph error: ${err.message.split("\n")[0] || err}`);
+        setError(`Code error: ${err.message}`);
         setFigJson(null);
+      } finally {
+        setIsRunning(false);
       }
     }
 
@@ -123,8 +196,18 @@ print("[DEBUG ${sectionId}] Returned value exists:", ${outputVar} is not None)
       id={`figure-${sectionId}`}
       style={{ width: "100%", height: "100%" }}
     >
+      {isRunning && (
+        <Message icon>
+          <Icon name="circle notched" loading />
+          <MessageContent>
+            <MessageHeader>Just one second</MessageHeader>
+            The code is running.
+          </MessageContent>
+        </Message>
+      )}
+
       {error ? (
-        <div>{error}</div>
+        <div style={{ color: "red", padding: "1rem" }}>{error}</div>
       ) : figJson ? (
         <Plot
           data={figJson.data}
@@ -133,7 +216,9 @@ print("[DEBUG ${sectionId}] Returned value exists:", ${outputVar} is not None)
           style={{ width: "100%", height: "100%" }}
         />
       ) : (
-        <div>Select variables to render the graph</div>
+        <div style={{ padding: "2rem", textAlign: "center", color: "#666" }}>
+          Select variables to render the graph
+        </div>
       )}
     </div>
   );

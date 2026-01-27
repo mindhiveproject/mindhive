@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// components/DataJournal/Widgets/types/Graph/Editor/Axes/AxesBarPlot.js
+import { useState } from "react";
 import {
   Dropdown,
   DropdownMenu,
@@ -11,18 +12,14 @@ import {
 import SelectMultiple from "../Fields/SelectMultiple";
 import SelectOne from "../Fields/SelectOne";
 
-export default function Axes({
-  type,
+export default function AxesBarPlot({
   variables,
-  code,
-  pyodide,
-  runCode,
   sectionId,
   selectors,
-  handleContentChange,
+  onChange,
 }) {
   const [selectedDataFormat, setSelectedDataFormat] = useState(
-    selectors["dataFormat"] || "long"
+    selectors["dataFormat"] || "long",
   );
 
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -60,33 +57,11 @@ export default function Axes({
     },
   ];
 
-  const connectSelectorsCode = `
-html_output = js.document.getElementById('figure-${sectionId}')
-
-dataFormat= None if js.document.getElementById("dataFormat-${sectionId}") == None else js.document.getElementById("dataFormat-${sectionId}").value
-isWide = dataFormat == "wide"
-
-if isWide: 
-  Xmultiple = None if js.document.getElementById("colToPlot-${sectionId}") == None else js.document.getElementById("colToPlot-${sectionId}")
-  xMultiple_value_json = Xmultiple.value.split(",")
-  columns = xMultiple_value_json
-else: 
-  qualCol  = None if js.document.getElementById("qualCol-${sectionId}") == None else js.document.getElementById("qualCol-${sectionId}").value
-  quantCol = None if js.document.getElementById("quantCol-${sectionId}") == None else js.document.getElementById("quantCol-${sectionId}").value
-
-errBar = None if js.document.getElementById("errBar-${sectionId}") == None else js.document.getElementById("errBar-${sectionId}").value
-`;
-
   const options = variables.map((variable) => ({
     key: variable?.field,
     value: variable?.displayName || variable?.field,
     text: variable?.displayName || variable?.field,
   }));
-
-  const updateCode = async ({ code }) => {
-    await pyodide.runPythonAsync(connectSelectorsCode);
-    runCode({ code });
-  };
 
   const onSelectorChoice = (option) => {
     setSelectedDataFormat(option.value);
@@ -94,12 +69,12 @@ errBar = None if js.document.getElementById("errBar-${sectionId}") == None else 
   };
 
   const onSelectorChange = ({ target }) => {
-    handleContentChange({
+    onChange({
+      componentId: sectionId,
       newContent: {
         selectors: { ...selectors, [target?.name]: target?.value },
       },
     });
-    updateCode({ code });
   };
 
   return (

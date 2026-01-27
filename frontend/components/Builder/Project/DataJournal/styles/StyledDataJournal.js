@@ -328,6 +328,37 @@ export const StyledRightPanel = styled.div`
   padding: 16px;
   overflow-y: auto;
   height: 100%;
+  .outputArea {
+    width: 100%; /* ← takes full available width */
+    box-sizing: border-box; /* ← very important! includes padding + border in width */
+    /* Optional but very useful improvements */
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db; /* gray-300 */
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: vertical; /* or resize: none / both / horizontal */
+    min-height: 80px;
+    background-color: white;
+  }
+  /* globals.css or .module.css */
+  .editor-wrapper {
+    width: 100%;
+    max-width: 800px; /* ← your max desired editor width */
+    margin: 0 auto; /* center if wanted */
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .runCodeButton {
+    display: grid;
+    margin: 10px 0px !important;
+  }
+
+  /* Optional: make sure CodeMirror doesn't fight the container */
+  .editor-wrapper .cm-editor {
+    width: 100% !important;
+  }
 `;
 
 export const StyledComponentPanel = styled.div`

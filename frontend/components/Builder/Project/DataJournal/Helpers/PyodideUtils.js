@@ -25,13 +25,21 @@ export const initializePyodide = async () => {
   const pyodideLoad = await loadPyodide({
     indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/",
   });
-  await pyodideLoad.loadPackage(["numpy", "pandas", "micropip", "scipy"]);
+  await pyodideLoad.loadPackage([
+    "numpy",
+    "pandas",
+    "micropip",
+    "scipy",
+    "matplotlib",
+  ]);
   await pyodideLoad.runPythonAsync(baseCode);
   window.render_html = render_html; // Global if needed -> Might be removed later?
   return pyodideLoad;
 };
 
+// TODO OUTDATED - REMOVE LATER
 export const runCode = async (pyodide, code) => {
+  console.log("CODE FROM UTILS");
   if (!pyodide) {
     throw new Error("Pyodide is not initialized");
   }

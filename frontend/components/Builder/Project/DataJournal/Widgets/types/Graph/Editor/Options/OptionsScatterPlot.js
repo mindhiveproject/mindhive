@@ -1,35 +1,12 @@
-import { Dropdown } from "semantic-ui-react";
-
 const marginalPlotsOptions = [
   { value: "", text: "" },
   { value: "box", text: "Boxplot" },
   { value: "rug", text: "Rug" },
 ];
 
-export default function Options({
-  type,
-  variables,
-  code,
-  pyodide,
-  runCode,
-  sectionId,
-  selectors,
-  handleContentChange,
-}) {
-  const connectDashboardCode = `# get relevant html elements
-graphTitle = js.document.getElementById('graphTitle-${sectionId}').value
-xLabel = js.document.getElementById('xLabel-${sectionId}').value
-xRangeMin = js.document.getElementById('xRangeMin-${sectionId}').value
-xRangeMax = js.document.getElementById('xRangeMax-${sectionId}').value
-yLabel = js.document.getElementById('yLabel-${sectionId}').value
-yRangeMin = js.document.getElementById('yRangeMin-${sectionId}').value
-yRangeMax = js.document.getElementById('yRangeMax-${sectionId}').value
-marginalPlot = js.document.getElementById('marginalPlot-${sectionId}').value
-legend_title_text = js.document.getElementById('legend_title_text-${sectionId}').value
-`;
-
-  const onChange = ({ name, value }) => {
-    handleContentChange({
+export default function Options({ sectionId, selectors, onChange }) {
+  const onSelectorChange = ({ name, value }) => {
+    onChange({
       componentId: sectionId,
       newContent: {
         selectors: { ...selectors, [name]: value },
@@ -51,7 +28,7 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
           name="graphTitle"
           value={selectors.graphTitle}
           onChange={({ target }) =>
-            onChange({ name: "graphTitle", value: target?.value })
+            onSelectorChange({ name: "graphTitle", value: target?.value })
           }
         />
       </div>
@@ -68,7 +45,7 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
           name="xLabel"
           value={selectors["xLabel"]}
           onChange={({ target }) =>
-            onChange({ name: "xLabel", value: target?.value })
+            onSelectorChange({ name: "xLabel", value: target?.value })
           }
         />
 
@@ -91,7 +68,7 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
             name="xRangeMax"
             value={selectors["xRangeMax"]}
             onChange={({ target }) =>
-              onChange({ name: "xRangeMax", value: target?.value })
+              onSelectorChange({ name: "xRangeMax", value: target?.value })
             }
           />
         </div>
@@ -109,7 +86,7 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
           name="yLabel"
           value={selectors["yLabel"]}
           onChange={({ target }) =>
-            onChange({ name: "yLabel", value: target?.value })
+            onSelectorChange({ name: "yLabel", value: target?.value })
           }
         />
 
@@ -123,7 +100,7 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
             name="yRangeMin"
             value={selectors["yRangeMin"]}
             onChange={({ target }) =>
-              onChange({ name: "yRangeMin", value: target?.value })
+              onSelectorChange({ name: "yRangeMin", value: target?.value })
             }
           />
           <input
@@ -132,7 +109,7 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
             name="yRangeMax"
             value={selectors["yRangeMax"]}
             onChange={({ target }) =>
-              onChange({ name: "yRangeMax", value: target?.value })
+              onSelectorChange({ name: "yRangeMax", value: target?.value })
             }
           />
         </div>
@@ -146,7 +123,7 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
           name="marginalPlot"
           value={selectors["marginalPlot"]}
           onChange={({ target }) =>
-            onChange({ name: "marginalPlot", value: target?.value })
+            onSelectorChange({ name: "marginalPlot", value: target?.value })
           }
         >
           {marginalPlotsOptions.map((option) => (
@@ -168,7 +145,7 @@ legend_title_text = js.document.getElementById('legend_title_text-${sectionId}')
         name="legend_title_text"
         value={selectors["legend_title_text"]}
         onChange={({ target }) =>
-          onChange({ name: "legend_title_text", value: target?.value })
+          onSelectorChange({ name: "legend_title_text", value: target?.value })
         }
       />
     </div>

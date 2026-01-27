@@ -133,292 +133,273 @@ else:
 fig_json_output = fig.to_json()
 `;
 
-// const scatterPlotCode = `
-// import plotly.express as px
-// import plotly.graph_objects as go
-// import pandas as pd
-// import numpy as np
-
-// def get_or_default(var_name, default=""):
-//     try:
-//         return locals()[var_name] if var_name in locals() else default
-//     except (KeyError, NameError):
-//         return default
-
-// if not X or not Y:
-//     fig = go.Figure()
-//     fig.add_annotation(text="Please select X and Y variables",
-//                        xref="paper", yref="paper", x=0.5, y=0.5,
-//                        showarrow=False, font_size=18)
-// else:
-//     if X not in df.columns or Y not in df.columns:
-//         fig = go.Figure()
-//         fig.add_annotation(text=f"Column '{X}' or '{Y}' not found",
-//                            xref="paper", yref="paper", x=0.5, y=0.5,
-//                            showarrow=False, font_size=16)
-//     else:
-//         df_plot = df[[X, Y]].copy()
-//         df_plot[X] = pd.to_numeric(df_plot[X], errors='coerce')
-//         df_plot[Y] = pd.to_numeric(df_plot[Y], errors='coerce')
-
-//         marginalPlot = marginalPlot or get_or_default(marginalPlot)
-//         optional_params = {
-//           "marginal_x": "rug" if marginalPlot == 'rug' else "box" if marginalPlot=='box' else None,
-//           "marginal_y": "rug" if marginalPlot == 'rug' else "box" if marginalPlot=='box' else None,
-//         }
-//         legend_title_text = legend_title_text or get_or_default(legend_title_text)
-
-//         fig = px.scatter(df_plot, x=X, y=Y,
-//                          color=Group if Group and Group in df.columns else None,
-//                          color_discrete_sequence=[color] if color else None,
-//                          trendline=trendline if trendline and trendline != "none" else None,
-//                          title=graphTitle or f"{Y} vs {X}",
-//                          **{k: v for k, v in optional_params.items() if v})
-
-//         fig.update_layout(
-//           template="seaborn",
-//           xaxis_title = xLabel or get_or_default(xLabel, X),
-//           yaxis_title = yLabel or get_or_default(yLabel, Y),
-//           legend_title_text= None if legend_title_text == '' else legend_title_text
-//         )
-
-//         xRangeMin = xRangeMin or get_or_default(xRangeMin)
-//         xRangeMax = xRangeMax or get_or_default(xRangeMax)
-//         yRangeMin = yRangeMin or get_or_default(yRangeMin)
-//         yRangeMax = yRangeMax or get_or_default(yRangeMax)
-
-//         fig.update_xaxes(range=[None if xRangeMin == '' else xRangeMin,
-//                         None if xRangeMax == '' else xRangeMax])
-
-//         fig.update_yaxes(range=[None if yRangeMin == '' else yRangeMin,
-//                         None if yRangeMax == '' else yRangeMax])
-
-// fig_json_output = fig.to_json()
-// `;
-
-// const scatterPlotCode = `
-// import plotly.express as px
-// import plotly.graph_objects as go
-// import pandas as pd
-// import numpy as np
-
-// if not X or not Y:
-//     fig = go.Figure()
-//     fig.add_annotation(text="Please select X and Y variables",
-//                        xref="paper", yref="paper", x=0.5, y=0.5,
-//                        showarrow=False, font_size=18)
-// else:
-//     if X not in df.columns or Y not in df.columns:
-//         fig = go.Figure()
-//         fig.add_annotation(text=f"Column '{X}' or '{Y}' not found",
-//                            xref="paper", yref="paper", x=0.5, y=0.5,
-//                            showarrow=False, font_size=16)
-//     else:
-//         df_plot = df[[X, Y]].copy()
-//         df_plot[X] = pd.to_numeric(df_plot[X], errors='coerce')
-//         df_plot[Y] = pd.to_numeric(df_plot[Y], errors='coerce')
-
-//         fig = px.scatter(df_plot, x=X, y=Y,
-//                          color=Group if Group and Group in df.columns else None,
-//                          color_discrete_sequence=[color] if color else None,
-//                          trendline=trendline if trendline and trendline != "none" else None,
-//                          title=graphTitle or f"{Y} vs {X}")
-
-//         fig.update_layout(template="seaborn")
-
-// fig_json_output = fig.to_json()
-// `;
-
-// const scatterPlotCode = `
-// print("The value of X is: ", X)
-// print("The value of Y is: ", Y)
-// if X is None or Y is None or X == '' or Y == '':
-//   fig = go.Figure()
-// else:
-//   if X not in df.columns or Y not in df.columns:
-//     fig = go.Figure()
-//   else:
-//     # convert string to numbers
-//     columns = [X, Y]
-//     df[columns] = df[columns].apply(pd.to_numeric, errors='coerce')
-
-//     # Convert 'NaN' strings to actual NaN values
-//     df.replace('NaN', np.nan, inplace=True)
-
-//     fig = px.scatter(df, x=X, y=Y,
-//                       title=graphTitle if graphTitle != '' else f"{X} vs {Y}",
-//                       labels={X: X, Y: Y},
-//                       template="seaborn")
-
-// fig_json = fig.to_json()
-// `;
-
-const histogramCode = `
-#~ OPTIONS ~#
-bargap = 0.1
-#nbins = ""
-
-#############################################################################################
-######################### Don't change anything below #######################################
-#############################################################################################
-
-if not X:
-  fig = go.Figure()
-else:
-  # Currently takes the name of the parameter given in GUI input
-  axis_title = {
-    X: X if xLabel == "" else xLabel, 
-    "count": yLabel if yLabel == "" else yLabel
-  }
-
-  optional_params = {
-    "marginal": "rug" if marginalPlot == 'rug' else "box" if marginalPlot=='box' else None,
-    "color": Group,
-    "barmode": "overlay",
-    "bargap": bargap,
-    "hover_data": ["count"],
-    "opacity": 0.7,
-  }
-
-  import numpy as np
-  import pandas as pd
-  import js_workspace as data
-
-  data = data.to_py()
-  df = pd.DataFrame(data)
-
-  # convert string to numbers
-  df[X] = df[X].apply(pd.to_numeric, errors='coerce')
-
-  # Convert 'NaN' strings to actual NaN values
-  df.replace('NaN', np.nan, inplace=True)
-
-  # Group by participant ID and aggregate data
-  if Group == '':
-    fig = px.histogram(df, x=X,
-                        title=graphTitle if graphTitle != '' else f"{X}",
-                        labels=axis_title, 
-                        template="seaborn",
-                        **{k: v for k, v in optional_params.items() if v})
-    fig.update_layout(showlegend=False)
-  else:
-    fig = px.histogram(df, x=X,
-                        title=graphTitle if graphTitle != '' else f"{X}",
-                        labels=axis_title, 
-                        template="seaborn",
-                        **{k: v for k, v in optional_params.items() if v})
-    fig.update_layout(showlegend=True)
-
-  fig.update_layout(legend_title_text= None if legend_title_text == '' else legend_title_text)
-    
-  fig.update_xaxes(range=[None if xRangeMin == '' else xRangeMin, 
-                          None if xRangeMax == '' else xRangeMax])  
-
-  fig.update_yaxes(range=[None if yRangeMin == '' else yRangeMin, 
-                          None if yRangeMax == '' else yRangeMax])
-`;
-
 const barGraphCode = `
-#############################################################################################
-######################### Don't change anything below #######################################
-#############################################################################################
+import plotly.express as px
+import plotly.graph_objects as go
+import pandas as pd
+import numpy as np
+import matplotlib.colors as mcolors
 
-if not (quantCol if not isWide else columns):
-  fig = go.Figure()
-else:
-  import numpy as np
-  import pandas as pd
-  import js_workspace as data
-  import matplotlib.colors as mcolors
-
-  data = data.to_py()
-  df = pd.DataFrame(data)
-
-  # convert string to numbers
-  if not isWide:
-      df[quantCol] = df[quantCol].apply(pd.to_numeric, errors='coerce')
-  else:
-      for col in columns:
-        df[col] = df[col].apply(pd.to_numeric, errors='coerce')
-
-  # Convert 'NaN' strings to actual NaN values
-  df.replace('NaN', np.nan, inplace=True)
-
-  def calculate_statistics(df, column):
-      mean = df[column].mean()
-      std = df[column].std()
-      n = len(df[column].dropna())
-      sem = std / np.sqrt(n)
-      conf_interval = 1.96 * sem  # 95% confidence interval
-      return {'mean': mean, 'conf_interval': conf_interval}
-
-  if not isWide:
-      unique_labels = df[qualCol].unique()
-      statistics = {}
-      for label in unique_labels:
-          subset = df[df[qualCol] == label]
-          statistics[label] = calculate_statistics(subset, quantCol)
-      average_percentages = [statistics[label]['mean'] for label in unique_labels]
-      error_bars = [statistics[label]['conf_interval'] for label in unique_labels]
-      categories = unique_labels
-  else:
-      statistics = {column: calculate_statistics(df, column) for column in columns}
-      average_percentages = [statistics[column]['mean'] for column in columns]
-      error_bars = [statistics[column]['conf_interval'] for column in columns}
-      categories = x_labels if x_labels is not None else columns
-
-  def parse_color(color):
-      if color.startswith("#"):
-          # HEX color string
-          return mcolors.to_rgb(color)
-      elif "," in color:
-          # RGB color string
-          rgb_values = tuple(map(int, color.split(",")))
-          return tuple([val / 255.0 for val in rgb_values])
-      else:
-          # Assume color name string
-          return mcolors.to_rgb(color)
-
-  def generate_complementary_colors(base_color, n):
-      base_rgb = parse_color(base_color)
-      complementary_rgb = mcolors.rgb_to_hsv(base_rgb)
-      complementary_rgb[0] = (complementary_rgb[0] + 0.5) % 1  # Shift hue by 180 degrees (complementary color)
-      
-      # Generate n harmonious colors
-      harmonious_colors = []
-      for _ in range(n):
-          complementary_rgb[0] = (complementary_rgb[0] + 0.2) % 1  # Shift hue by 72 degrees (for example)
-          harmonious_colors.append(mcolors.to_hex(mcolors.hsv_to_rgb(complementary_rgb)))
-      
-      return harmonious_colors
+if 'isWide' not in locals():
+    isWide = False
+elif isinstance(isWide, str):
+    isWide = isWide.lower() in ('true', '1', 'yes')
     
-  n = len(categories)
-  colors = generate_complementary_colors(base_color, n)
+# ── Load data ────────────────────────────────────────────────────────────────
+try:
+    import js_workspace as jsdata
+    data = jsdata.to_py()
+    df = pd.DataFrame(data)
+except (ModuleNotFoundError, AttributeError, NameError):
+    pass  # assume df is already in global scope
 
-  df_bar = pd.DataFrame({
-      'Categories': categories,
-      'Y': average_percentages,
-      'Error Bars': error_bars
-  })
+# ── Helper ───────────────────────────────────────────────────────────────────
+def get_or_default(var_value, default=""):
+    return var_value if var_value not in (None, "", "undefined") else default
 
-  # If errBar is empty, do not include error bars
-  error_y_param = None if errBar == "" else 'Error Bars'
+# ── Debug input values ───────────────────────────────────────────────────────
+print(f"DEBUG barGraph: isWide={isWide}, dataFormat='{dataFormat}'")
+print(f"DEBUG barGraph: colToPlot='{colToPlot}', qualCol='{qualCol}', quantCol='{quantCol}'")
+print(f"DEBUG barGraph: errBar='{errBar}', color='{color}'")
 
-  fig = px.bar(df_bar, 
-                x='Categories', 
-                y='Y', 
-                color='Categories',
-                error_y=error_y_param,  # Include error bars based on the condition
-                color_discrete_sequence=colors,
-                labels={'Categories': xLabel if xLabel != "" else "Categories",
-                        'Y': yLabel if yLabel != "" else 'Average value'
-                        })
+# ── Prepare figure ───────────────────────────────────────────────────────────
+fig = go.Figure()
 
-  fig.update_layout(
-      title=title,
-      legend_title=legend_title,
-      yaxis_range=yaxis_range
-  )
+if isWide:
+    # Wide format: compare multiple columns (means across entire dataset)
+    if not colToPlot:
+        fig.add_annotation(
+            text="No columns selected (wide format)",
+            xref="paper", yref="paper", x=0.5, y=0.5,
+            showarrow=False, font_size=18
+        )
+    else:
+        columns = [c.strip() for c in str(colToPlot).split(",") if c.strip()]
+        valid_columns = [col for col in columns if col in df.columns]
+        
+        print(f"DEBUG wide: requested={columns}, valid={valid_columns}")
+        
+        if not valid_columns:
+            fig.add_annotation(
+                text="None of the selected columns exist in the data",
+                xref="paper", yref="paper", x=0.5, y=0.5,
+                showarrow=False, font_size=16
+            )
+        else:
+            # Convert columns to numeric
+            for col in valid_columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
+            df.replace('NaN', np.nan, inplace=True)
+            
+            # Compute stats
+            stats = {}
+            for col in valid_columns:
+                non_nan = df[col].dropna()
+                if len(non_nan) == 0:
+                    stats[col] = {'mean': np.nan, 'error': 0}
+                    continue
+                mean = non_nan.mean()
+                std = non_nan.std(ddof=0)  # population std
+                n = len(non_nan)
+                sem = std / np.sqrt(n) if n > 1 else 0
+                
+                error = 0
+                if errBar == "stdErr":
+                    error = sem
+                elif errBar in ("95pi", "95% confidence interval"):
+                    error = 1.96 * sem
+                elif errBar in ("99pi", "99% confidence interval"):
+                    error = 2.576 * sem
+                
+                stats[col] = {'mean': mean, 'error': error}
+            
+            categories = valid_columns
+            y_values = [stats[col]['mean'] for col in valid_columns]
+            error_values = [stats[col]['error'] for col in valid_columns]
+
+else:
+    # Long format: group by qualitative column
+    if not qualCol or not quantCol:
+        fig.add_annotation(
+            text="Please select both qualitative and quantitative columns",
+            xref="paper", yref="paper", x=0.5, y=0.5,
+            showarrow=False, font_size=18
+        )
+    elif qualCol not in df.columns or quantCol not in df.columns:
+        fig.add_annotation(
+            text=f"Column '{qualCol}' or '{quantCol}' not found",
+            xref="paper", yref="paper", x=0.5, y=0.5,
+            showarrow=False, font_size=16
+        )
+    else:
+        df[quantCol] = pd.to_numeric(df[quantCol], errors='coerce')
+        df.replace('NaN', np.nan, inplace=True)
+        
+        groups = sorted(df[qualCol].dropna().unique())
+        if len(groups) == 0:
+            fig.add_annotation(text="No valid groups found", x=0.5, y=0.5, showarrow=False)
+        else:
+            stats = {}
+            for group in groups:
+                subset = df[df[qualCol] == group][quantCol]
+                non_nan = subset.dropna()
+                if len(non_nan) == 0:
+                    stats[group] = {'mean': np.nan, 'error': 0}
+                    continue
+                mean = non_nan.mean()
+                std = non_nan.std(ddof=0)
+                n = len(non_nan)
+                sem = std / np.sqrt(n) if n > 1 else 0
+                
+                error = 0
+                if errBar == "stdErr":
+                    error = sem
+                elif errBar in ("95pi", "95% confidence interval"):
+                    error = 1.96 * sem
+                elif errBar in ("99pi", "99% confidence interval"):
+                    error = 2.576 * sem
+                
+                stats[group] = {'mean': mean, 'error': error}
+            
+            categories = groups
+            y_values = [stats[g]['mean'] for g in groups]
+            error_values = [stats[g]['error'] for g in groups]
+
+# ── Only create bar plot if we have data ─────────────────────────────────────
+if 'categories' in locals() and len(categories) > 0:
+    df_bar = pd.DataFrame({
+        'Category': categories,
+        'Mean': y_values,
+        'Error': error_values
+    })
+    
+    show_error = any(e > 0 for e in error_values) and errBar != ""
+    
+    # Color generation
+    base_color = get_or_default(color, "#636EFA")  # default plotly blue-ish
+    try:
+        base_rgb = mcolors.to_rgb(base_color)
+        base_hsv = mcolors.rgb_to_hsv(base_rgb)
+        colors = []
+        for i in range(len(categories)):
+            h = (base_hsv[0] + i * 0.618) % 1.0   # golden angle for harmony
+            colors.append(mcolors.to_hex(mcolors.hsv_to_rgb((h, base_hsv[1], base_hsv[2]))))
+    except:
+        colors = px.colors.qualitative.Plotly[:len(categories)]  # fallback
+    
+    fig = px.bar(
+        df_bar,
+        x='Category',
+        y='Mean',
+        error_y='Error' if show_error else None,
+        color='Category',
+        color_discrete_sequence=colors,
+        title=get_or_default(graphTitle, "Bar Graph"),
+        labels={
+            'Category': get_or_default(xLabel, "Categories"),
+            'Mean': get_or_default(yLabel, "Mean Value")
+        },
+        template="seaborn"
+    )
+    
+    fig.update_layout(
+        showlegend=True,
+        legend_title_text=get_or_default(legend_title, "Categories"),
+        yaxis_range=[
+            float(yRangeMin) if yRangeMin and yRangeMin.strip() else None,
+            float(yRangeMax) if yRangeMax and yRangeMax.strip() else None
+        ],
+        bargap=0.2,
+        bargroupgap=0.1
+    )
+
+# ── Output ───────────────────────────────────────────────────────────────────
+fig_json_output = fig.to_json()
+`;
+const histogramCode = `
+import plotly.express as px
+import plotly.graph_objects as go
+import pandas as pd
+import numpy as np
+
+# ── Load data ────────────────────────────────────────────────────────────────
+try:
+    import js_workspace as jsdata
+    data = jsdata.to_py()
+    df = pd.DataFrame(data)
+except (ModuleNotFoundError, AttributeError, NameError):
+    pass  # assume df is already in global scope
+
+# ── Helper ───────────────────────────────────────────────────────────────────
+def get_or_default(var_value, default=""):
+    if var_value in (None, "", "undefined", "None"):
+        return default
+    return var_value
+
+# ── Debug inputs ─────────────────────────────────────────────────────────────
+print(f"DEBUG histogram: X='{X}', Group='{Group}', marginalPlot='{marginalPlot}'")
+print(f"DEBUG histogram: bargap={bargap}, color='{color}'")
+
+# ── Initialize empty figure ─────────────────────────────────────────────────
+fig = go.Figure()
+
+if not X or X not in df.columns:
+    fig.add_annotation(
+        text="Please select a valid column for the histogram",
+        xref="paper", yref="paper", x=0.5, y=0.5,
+        showarrow=False, font_size=18
+    )
+else:
+    # Prepare data
+    df[X] = pd.to_numeric(df[X], errors='coerce')
+    df.replace('NaN', np.nan, inplace=True)
+
+    # Grouping / coloring
+    color_param = Group if Group and Group in df.columns else None
+    showlegend = bool(color_param)
+
+    # Marginal plots
+    marginal = "rug" if marginalPlot == "rug" else "box" if marginalPlot == "box" else None
+
+    # Titles & labels
+    title = get_or_default(graphTitle, f"Distribution of {X}")
+    x_title = get_or_default(xLabel, X)
+    y_title = get_or_default(yLabel, "Count")
+
+    # Create histogram
+    fig = px.histogram(
+        df,
+        x=X,
+        color=color_param,
+        marginal=marginal,
+        title=title,
+        labels={X: x_title, "count": y_title},
+        template="seaborn",
+        opacity=0.75,
+        color_discrete_sequence=[color] if color and not color_param else None
+    )
+
+    # Apply layout settings (including bargap)
+    fig.update_layout(
+        showlegend=showlegend,
+        legend_title_text=get_or_default(legend_title_text, color_param or "Groups"),
+        bargap=float(bargap) if bargap else 0.1,
+        bargroupgap=0.05,
+        xaxis_range=[
+            float(xRangeMin) if xRangeMin else None,
+            float(xRangeMax) if xRangeMax else None
+        ],
+        yaxis_range=[
+            float(yRangeMin) if yRangeMin else None,
+            float(yRangeMax) if yRangeMax else None
+        ],
+    )
+
+    # Common histogram preference: y starts at 0
+    fig.update_yaxes(rangemode="tozero")
+
+# ── Output ───────────────────────────────────────────────────────────────────
+fig_json_output = fig.to_json()
 `;
 
 const sectionCodeStart = ``;
@@ -432,20 +413,16 @@ export const templates = {
   barGraph: sectionCodeStart + "\n" + barGraphCode + "\n" + sectionCodeEnd,
 };
 
-export default function TemplateSelector({
-  handleContentChange,
-  runCode,
-  sectionId,
-}) {
+export default function TemplateSelector({ sectionId, onChange }) {
   const selectGraphType = ({ type, title }) => {
     const code = templates[type];
-    handleContentChange({
+    onChange({
+      componentId: sectionId,
       newContent: {
         type,
         code,
       },
     });
-    runCode({ code });
   };
 
   return (
@@ -492,20 +469,6 @@ export default function TemplateSelector({
           <div className="description">Compare quantities</div>
         </div>
       </div>
-      {/* <div
-        className="template"
-        onClick={() =>
-          selectGraphType({ type: "linePlot", title: "Line Plot" })
-        }
-      >
-        <div>
-          <img src="/assets/icons/visualize/linePlot.svg" />
-        </div>
-        <div className="text">
-          <div className="title">Line Plot</div>
-          <div className="description">Observe a variable across time</div>
-        </div>
-      </div> */}
     </div>
   );
 }
