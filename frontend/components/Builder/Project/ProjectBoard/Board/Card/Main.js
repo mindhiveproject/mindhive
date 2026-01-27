@@ -26,7 +26,7 @@ import { Modal, Button, Icon, Dropdown, Accordion } from "semantic-ui-react";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
-import { mergeCardSettings } from "../../../../../utils/mergeCardSettings";
+import { mergeCardSettings } from "../../../../../Utils/mergeCardSettings";
 
 export default function ProposalCard({
   proposalCard,
@@ -73,7 +73,7 @@ export default function ProposalCard({
   ];
 
   const filteredReviewOptions = reviewOptions.filter(
-    (option) => submitStatuses[option?.value] !== "SUBMITTED"
+    (option) => submitStatuses[option?.value] !== "SUBMITTED",
   );
 
   const router = useRouter();
@@ -100,19 +100,21 @@ export default function ProposalCard({
   const content = useRef(proposalCard?.content);
   const internalContent = useRef(proposalCard?.internalContent);
   const revisedContent = useRef(
-    proposalCard?.revisedContent || proposalCard?.content
+    proposalCard?.revisedContent || proposalCard?.content,
   );
 
   const [updateCard, { loading: updateLoading }] = useMutation(
     UPDATE_CARD_CONTENT,
-    { refetchQueries: [{ query: GET_CARD_CONTENT, variables: { id: cardId } }] }
+    {
+      refetchQueries: [{ query: GET_CARD_CONTENT, variables: { id: cardId } }],
+    },
   );
 
   const [updateEdit, { loading: updateEditLoading }] = useMutation(
     UPDATE_CARD_EDIT,
     {
       ignoreResults: true,
-    }
+    },
   );
 
   const users =
@@ -139,14 +141,14 @@ export default function ProposalCard({
       resourceId: null,
     });
 
-  const {
-    data: resourceModalData,
-    loading: resourceModalLoading,
-  } = useQuery(GET_RESOURCE, {
-    variables: { id: resourceModalState.resourceId },
-    skip: !resourceModalState.open || !resourceModalState.resourceId,
-    fetchPolicy: "network-only",
-  });
+  const { data: resourceModalData, loading: resourceModalLoading } = useQuery(
+    GET_RESOURCE,
+    {
+      variables: { id: resourceModalState.resourceId },
+      skip: !resourceModalState.open || !resourceModalState.resourceId,
+      fetchPolicy: "network-only",
+    },
+  );
 
   const activeResource = resourceModalData?.resource;
 
@@ -217,7 +219,7 @@ export default function ProposalCard({
       // Always merge with the current card's settings from props to avoid overwriting with stale local state
       const mergedSettings = mergeCardSettings(
         proposalCard?.settings,
-        inputs?.settings
+        inputs?.settings,
       );
 
       await updateCard({
@@ -228,9 +230,13 @@ export default function ProposalCard({
           revisedContent: revisedContent?.current,
           settings: mergedSettings,
           assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
-          resources: inputs?.resources?.map((resource) => ({ id: resource?.id })),
+          resources: inputs?.resources?.map((resource) => ({
+            id: resource?.id,
+          })),
           // Add these three lines to fix the error:
-          assignments: inputs?.assignments?.map((assignment) => ({ id: assignment?.id })),
+          assignments: inputs?.assignments?.map((assignment) => ({
+            id: assignment?.id,
+          })),
           tasks: inputs?.tasks?.map((task) => ({ id: task?.id })),
           studies: inputs?.studies?.map((study) => ({ id: study?.id })),
         },
@@ -239,7 +245,7 @@ export default function ProposalCard({
       if (hasContentChanged) {
         if (
           !confirm(
-            "Your unsaved changes will be lost. Click Cancel to return and save the changes."
+            "Your unsaved changes will be lost. Click Cancel to return and save the changes.",
           )
         ) {
           return;
@@ -288,40 +294,49 @@ export default function ProposalCard({
   // Assignment Modal Component
   const AssignmentModal = ({ open, onClose, assignment: assignmentProp }) => {
     const { t } = useTranslation("classes");
-    
+
     // Strip HTML tags from text
     const stripHtml = (html) => {
-      if (!html) return '';
-      return html.replace(/<[^>]*>/g, '').trim();
+      if (!html) return "";
+      return html.replace(/<[^>]*>/g, "").trim();
     };
-    
+
     const [title, setTitle] = useState(stripHtml(assignmentProp?.title || ""));
     const [content, setContent] = useState(assignmentProp?.content || "");
     const [showNewHomework, setShowNewHomework] = useState(false);
-    
+
     // Query for fresh assignment data with all fields including placeholder
-    const { data: assignmentData, loading: assignmentLoading, error: assignmentError } = useQuery(GET_AN_ASSIGNMENT, {
+    const {
+      data: assignmentData,
+      loading: assignmentLoading,
+      error: assignmentError,
+    } = useQuery(GET_AN_ASSIGNMENT, {
       variables: { id: assignmentProp?.id },
       fetchPolicy: "network-only", // Force fresh fetch
       skip: !assignmentProp?.id || !open, // Only fetch when modal is open and we have an ID
     });
 
     const assignment = assignmentData?.assignments?.[0] || null;
-    console.log(assignmentData)
-    
-    // Query for existing homeworks for this assignment
-    const { data: homeworkData, refetch: refetchHomeworks } = useQuery(GET_MY_HOMEWORKS_FOR_ASSIGNMENT, {
-      variables: { userId: user?.id, assignmentCode: assignment?.code },
-      skip: !assignment?.code || !user?.id,
-    });
+    console.log(assignmentData);
 
-    console.log(homeworkData)
+    // Query for existing homeworks for this assignment
+    const { data: homeworkData, refetch: refetchHomeworks } = useQuery(
+      GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
+      {
+        variables: { userId: user?.id, assignmentCode: assignment?.code },
+        skip: !assignment?.code || !user?.id,
+      },
+    );
+
+    console.log(homeworkData);
     const homeworks = homeworkData?.homeworks || [];
 
     // New homework form state
     const { inputs, handleChange, clearForm } = useForm({
       settings: { status: "Started" },
-      title: `Homework ${stripHtml(assignment?.title || '')} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`,
+      title: `Homework ${stripHtml(
+        assignment?.title || "",
+      )} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ""}`,
       placeholder: assignment?.placeholder || "",
     });
 
@@ -332,16 +347,19 @@ export default function ProposalCard({
         homeworkContent.current = inputs.placeholder;
       }
     }, [inputs.placeholder]);
-  
+
     // Mutation for creating homework
-    const [createHomework, { loading: createLoading }] = useMutation(CREATE_HOMEWORK, {
-      refetchQueries: [
-        {
-          query: GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
-          variables: { userId: user?.id, assignmentCode: assignment?.code },
-        },
-      ],
-    });
+    const [createHomework, { loading: createLoading }] = useMutation(
+      CREATE_HOMEWORK,
+      {
+        refetchQueries: [
+          {
+            query: GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
+            variables: { userId: user?.id, assignmentCode: assignment?.code },
+          },
+        ],
+      },
+    );
 
     useEffect(() => {
       if (assignment) {
@@ -353,21 +371,23 @@ export default function ProposalCard({
         });
         setTitle(stripHtml(assignment.title || ""));
         setContent(assignment.content || "");
-        
+
         // Update homework form with assignment data
         handleChange({
           target: {
             name: "title",
-            value: `Assignment | ${stripHtml(assignment?.title || '')} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`
-          }
+            value: `Assignment | ${stripHtml(
+              assignment?.title || "",
+            )} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ""}`,
+          },
         });
         handleChange({
           target: {
             name: "placeholder",
-            value: assignment?.placeholder || ""
-          }
+            value: assignment?.placeholder || "",
+          },
         });
-      
+
         // Reset homework content with fresh placeholder
         if (assignment?.placeholder) {
           homeworkContent.current = assignment.placeholder;
@@ -382,8 +402,8 @@ export default function ProposalCard({
     const h1 = {
       fontSize: "18px",
       fontWeight: "600",
-      marginBottom: "16px"
-    }
+      marginBottom: "16px",
+    };
     const instructionBox = {
       lineHeight: "1.5",
       // background: "#F3F3F3",
@@ -392,8 +412,8 @@ export default function ProposalCard({
       padding: "16px",
       fontSize: "16px",
       fontWeight: "400",
-      marginBottom: "16px"
-    }
+      marginBottom: "16px",
+    };
     const styleField = {
       fontSize: "14px",
       lineHeight: "1.5",
@@ -401,8 +421,8 @@ export default function ProposalCard({
       border: "1px solid #e0e0e0",
       borderRadius: "8px",
       padding: "12px",
-      marginBottom: "3rem"
-    }  
+      marginBottom: "3rem",
+    };
 
     const updateHomeworkContent = async (newContent) => {
       homeworkContent.current = newContent;
@@ -434,7 +454,7 @@ export default function ProposalCard({
             ...inputs,
             content: homeworkContent?.current || inputs.placeholder,
             assignmentId: assignment?.id,
-            settings: {"status": "Completed"},
+            settings: { status: "Completed" },
           },
         });
         clearForm();
@@ -450,7 +470,7 @@ export default function ProposalCard({
     if (!assignmentProp?.id || (!assignment && !assignmentLoading)) {
       return null;
     }
-      // Show loading state while fetching assignment data
+    // Show loading state while fetching assignment data
     if (assignmentLoading) {
       return (
         <Modal
@@ -470,7 +490,13 @@ export default function ProposalCard({
           >
             {t("assignment.loading")}
           </Modal.Header>
-          <Modal.Content style={{ background: "#ffffff", padding: "24px", textAlign: "center" }}>
+          <Modal.Content
+            style={{
+              background: "#ffffff",
+              padding: "24px",
+              textAlign: "center",
+            }}
+          >
             <Icon name="spinner" loading size="large" />
             <p>{t("assignment.loadingMessage")}</p>
           </Modal.Content>
@@ -500,13 +526,23 @@ export default function ProposalCard({
           </Modal.Header>
           <Modal.Content style={{ background: "#ffffff", padding: "24px" }}>
             <p style={{ color: "#d32f2f" }}>
-              {t("assignment.errorMessage", "Failed to load assignment data. Please try again.")}
+              {t(
+                "assignment.errorMessage",
+                "Failed to load assignment data. Please try again.",
+              )}
             </p>
           </Modal.Content>
           <Modal.Actions
             style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
           >
-            <Button onClick={onClose} style={{ background: "#f0f4f8", color: "#007c70", borderRadius: "8px" }}>
+            <Button
+              onClick={onClose}
+              style={{
+                background: "#f0f4f8",
+                color: "#007c70",
+                borderRadius: "8px",
+              }}
+            >
               {t("board.expendedCard.close", "Close")}
             </Button>
           </Modal.Actions>
@@ -542,199 +578,218 @@ export default function ProposalCard({
           style={{ background: "#ffffff", padding: "24px" }}
         >
           <div>
-            <div style={h1}>
-                {title}
-            </div>
+            <div style={h1}>{title}</div>
             <ReadOnlyTipTap>
               <div className="ProseMirror">
                 {ReactHtmlParser(content || "")}
               </div>
             </ReadOnlyTipTap>
-          {/* Homework Section */}
-          <div style={{ marginTop: "24px", paddingTop: "24px" }}>
-            <h3 style={{ marginBottom: "16px", color: "#274E5B" }}>
-              {t("homework.myAssignment", "My Assignment")}
-            </h3>
+            {/* Homework Section */}
+            <div style={{ marginTop: "24px", paddingTop: "24px" }}>
+              <h3 style={{ marginBottom: "16px", color: "#274E5B" }}>
+                {t("homework.myAssignment", "My Assignment")}
+              </h3>
 
-          {/* Show existing homeworks */}
-          {homeworks.length > 0 && (
-            <div style={{ marginBottom: "16px" }}>
-              {homeworks.map((homework) => (
-                <div
-                  key={homework?.id}
-                  style={{
-                    borderRadius: "8px",
-                    padding: "12px",
-                    marginBottom: "8px",
-                    background: "#F3F3F3",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <div>
-                    <div style={{ fontWeight: "600", marginBottom: "4px", fontSize: "14px" }}>
-                      {homework.title}
-                    </div>
+              {/* Show existing homeworks */}
+              {homeworks.length > 0 && (
+                <div style={{ marginBottom: "16px" }}>
+                  {homeworks.map((homework) => (
                     <div
+                      key={homework?.id}
                       style={{
-                        fontSize: "14px",
-                        fontWeight:
-                          homework.settings?.status === "Completed" ? "bold"
-                            : homework.settings?.status === "Started" ? "normal"
-                            : "normal",
-                        color:
-                          homework.settings?.status === "Completed" ? "#3D85B0"
-                            : homework.settings?.status === "Started" ? "#7D70AD"
-                            : homework.settings?.status === "Overdue" ? "red"
-                            : "#666", // default color
+                        borderRadius: "8px",
+                        padding: "12px",
+                        marginBottom: "8px",
+                        background: "#F3F3F3",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
                       }}
                     >
-                      {homework.settings?.status || "Open homework to see more"}
+                      <div>
+                        <div
+                          style={{
+                            fontWeight: "600",
+                            marginBottom: "4px",
+                            fontSize: "14px",
+                          }}
+                        >
+                          {homework.title}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "14px",
+                            fontWeight:
+                              homework.settings?.status === "Completed"
+                                ? "bold"
+                                : homework.settings?.status === "Started"
+                                ? "normal"
+                                : "normal",
+                            color:
+                              homework.settings?.status === "Completed"
+                                ? "#3D85B0"
+                                : homework.settings?.status === "Started"
+                                ? "#7D70AD"
+                                : homework.settings?.status === "Overdue"
+                                ? "red"
+                                : "#666", // default color
+                          }}
+                        >
+                          {homework.settings?.status ||
+                            "Open homework to see more"}
+                        </div>
+                      </div>
+                      <Button
+                        size="small"
+                        onClick={() => {
+                          console.log("Navigate to homework:", homework.id);
+                          if (!assignment?.code || !homework?.code) {
+                            console.error(
+                              "Missing assignment or homework code",
+                            );
+                            return;
+                          }
+
+                          const url = `/dashboard/assignments/${assignment.code}?homework=${homework.code}`;
+                          window.open(url, "_blank", "noopener,noreferrer");
+                        }}
+                        style={{
+                          borderRadius: "100px",
+                          color: "#69BBC4",
+                          fontSize: "12px",
+                          border: "0.5px solid #69BBC4",
+                          background: "white",
+                        }}
+                      >
+                        {t("homework.openHomework", "Open")}
+                      </Button>
                     </div>
-                  </div>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      console.log("Navigate to homework:", homework.id);
-                      if (!assignment?.code || !homework?.code) {
-                        console.error("Missing assignment or homework code");
-                        return;
-                      }
-
-                      const url = `/dashboard/assignments/${assignment.code}?homework=${homework.code}`;
-                      window.open(url, "_blank", "noopener,noreferrer");
-                    }}
-                    style={{
-                      borderRadius: "100px",
-                      color: "#69BBC4",
-                      fontSize: "12px",
-                      border: "0.5px solid #69BBC4",
-                      background: "white",
-                    }}
-                  >
-                    {t("homework.openHomework", "Open")}
-                  </Button>
-                </div>               
-              ))}
-            </div>
-          )}
-
-          {/* New Homework Section */}
-          {homeworks.length < 1 && !showNewHomework && (
-            <Button
-              onClick={() => setShowNewHomework(true)}
-              style={{
-                borderRadius: "100px",
-                background: "#336F8A",
-                fontSize: "14px",
-                color: "white",
-                border: "1px solid #336F8A",
-                marginRight: "10px"
-              }}
-              disabled={createLoading}
-            >
-              {t("homework.createNewAssignment", "Create New Assignment")}
-            </Button>
-          )}
-
-          {showNewHomework && (
-            <div style={{
-              border: "1px solid #A1A1A1",
-              borderRadius: "8px",
-              padding: "16px",
-              background: "#FFF",
-              boxShadow: "2px 2px 8px 0 rgba(0, 0, 0, 0.10)",
-            }}>
-              <div style={h1}>
-                {t("homework.createNewAssignment", "Create New Assignment")}
-              </div>
-
-              <div style={{ marginBottom: "12px" }}>
-                <p style={{ marginBottom: "0px" }}>
-                  {t("homework.assignmentTitle", "Assignment title")}
-                </p>
-                <input
-                  type="text"
-                  value={inputs.title}
-                  onChange={(e) => handleChange({
-                    target: { name: "title", value: e.target.value }
-                  })}
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    borderRadius: "4px",
-                    border: "1px solid #ccc",
-                    marginTop: "4px",
-                  }}
-                />
-              </div>
-
-              <div style={{ marginBottom: "16px" }}>
-                <div style={{
-                  minHeight: "100px",
-                  marginTop: "4px",
-                }}>
-                  <TipTapEditor
-                    content={homeworkContent.current || inputs.placeholder}
-                    onUpdate={(newContent) => updateHomeworkContent(newContent)}
-                  />
+                  ))}
                 </div>
-              </div>
+              )}
 
-              <div style={{ display: "flex", gap: "8px" }}>
+              {/* New Homework Section */}
+              {homeworks.length < 1 && !showNewHomework && (
                 <Button
-                  onClick={handleCreateHomeworkSubmit}
-                  loading={createLoading}
-                  disabled={createLoading}
+                  onClick={() => setShowNewHomework(true)}
                   style={{
                     borderRadius: "100px",
                     background: "#336F8A",
-                    fontSize: "12px",
+                    fontSize: "14px",
                     color: "white",
                     border: "1px solid #336F8A",
-                    marginRight: "10px"
+                    marginRight: "10px",
                   }}
-                >
-                  {t("homework.createHomeworkSubmit", "Create & Submit")}
-                </Button>
-                <Button
-                  onClick={handleCreateHomeworkDraft}
-                  loading={createLoading}
                   disabled={createLoading}
-                  style={{
-                    borderRadius: "100px",
-                    background: "white",
-                    fontSize: "12px",
-                    color: "#336F8A",
-                    border: "1px solid #336F8A",
-                    marginRight: "10px"
-                  }}
                 >
-                  {t("homework.createHomeworkDraft", "Create Draft")}
+                  {t("homework.createNewAssignment", "Create New Assignment")}
                 </Button>
-                <Button
-                  onClick={() => {
-                    setShowNewHomework(false);
-                    clearForm();
-                  }}
-                  style={{
-                    borderRadius: "100px",
-                    background: "#f7f9fa",
-                    fontSize: "12px",
-                    color: "#B9261A",
-                    border: "1px solid #B9261A",
-                    marginRight: "10px"
-                  }}
-                >
-                  {t("homework.cancel", "Cancel")}
-                </Button>
-              </div>
-            </div>
-          )}
+              )}
 
+              {showNewHomework && (
+                <div
+                  style={{
+                    border: "1px solid #A1A1A1",
+                    borderRadius: "8px",
+                    padding: "16px",
+                    background: "#FFF",
+                    boxShadow: "2px 2px 8px 0 rgba(0, 0, 0, 0.10)",
+                  }}
+                >
+                  <div style={h1}>
+                    {t("homework.createNewAssignment", "Create New Assignment")}
+                  </div>
+
+                  <div style={{ marginBottom: "12px" }}>
+                    <p style={{ marginBottom: "0px" }}>
+                      {t("homework.assignmentTitle", "Assignment title")}
+                    </p>
+                    <input
+                      type="text"
+                      value={inputs.title}
+                      onChange={(e) =>
+                        handleChange({
+                          target: { name: "title", value: e.target.value },
+                        })
+                      }
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ccc",
+                        marginTop: "4px",
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: "16px" }}>
+                    <div
+                      style={{
+                        minHeight: "100px",
+                        marginTop: "4px",
+                      }}
+                    >
+                      <TipTapEditor
+                        content={homeworkContent.current || inputs.placeholder}
+                        onUpdate={(newContent) =>
+                          updateHomeworkContent(newContent)
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <Button
+                      onClick={handleCreateHomeworkSubmit}
+                      loading={createLoading}
+                      disabled={createLoading}
+                      style={{
+                        borderRadius: "100px",
+                        background: "#336F8A",
+                        fontSize: "12px",
+                        color: "white",
+                        border: "1px solid #336F8A",
+                        marginRight: "10px",
+                      }}
+                    >
+                      {t("homework.createHomeworkSubmit", "Create & Submit")}
+                    </Button>
+                    <Button
+                      onClick={handleCreateHomeworkDraft}
+                      loading={createLoading}
+                      disabled={createLoading}
+                      style={{
+                        borderRadius: "100px",
+                        background: "white",
+                        fontSize: "12px",
+                        color: "#336F8A",
+                        border: "1px solid #336F8A",
+                        marginRight: "10px",
+                      }}
+                    >
+                      {t("homework.createHomeworkDraft", "Create Draft")}
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setShowNewHomework(false);
+                        clearForm();
+                      }}
+                      style={{
+                        borderRadius: "100px",
+                        background: "#f7f9fa",
+                        fontSize: "12px",
+                        color: "#B9261A",
+                        border: "1px solid #B9261A",
+                        marginRight: "10px",
+                      }}
+                    >
+                      {t("homework.cancel", "Cancel")}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
         </Modal.Content>
         <Modal.Actions
           style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
@@ -747,7 +802,7 @@ export default function ProposalCard({
               fontSize: "12px",
               color: "#336F8A",
               border: "1px solid #336F8A",
-              marginRight: "10px"
+              marginRight: "10px",
             }}
           >
             {t("board.expendedCard.close", "Close")}
@@ -778,7 +833,7 @@ export default function ProposalCard({
               <div>
                 {t(
                   "mainCard.lockedMessage",
-                  "The card is currently being edited by"
+                  "The card is currently being edited by",
                 )}{" "}
                 <span className="username">
                   {proposalCard?.isEditedBy?.username}
@@ -786,13 +841,13 @@ export default function ProposalCard({
                 .{" "}
                 {t(
                   "mainCard.askToClose",
-                  "Ask the user to close the card or wait until the card is released."
+                  "Ask the user to close the card or wait until the card is released.",
                 )}{" "}
                 {t("mainCard.cardWillBeReleased", "The card will be released")}{" "}
                 <span className="username">{moment().to(releaseTime)}</span>.{" "}
                 {t(
                   "mainCard.refreshAfterRelease",
-                  "After the card is released, refresh the page to get the latest version of the card."
+                  "After the card is released, refresh the page to get the latest version of the card.",
                 )}
               </div>
               <div className="buttonHolder">
@@ -822,7 +877,7 @@ export default function ProposalCard({
                   <div className="cardSubheaderComment">
                     {t(
                       "mainCard.visibleInFeedbackCenter",
-                      "The content you include here will be visible in the Feedback Center once it is submitted via a yellow Action Card."
+                      "The content you include here will be visible in the Feedback Center once it is submitted via a yellow Action Card.",
                     )}
                   </div>
                   <div className="jodit">
@@ -869,7 +924,7 @@ export default function ProposalCard({
                   <div className="cardSubheaderComment">
                     {t(
                       "mainCard.revisedContentUsed",
-                      "The revised content you include here will be used in the final report."
+                      "The revised content you include here will be used in the final report.",
                     )}
                   </div>
                   <div className="jodit">
@@ -977,7 +1032,7 @@ export default function ProposalCard({
                     <p>
                       {t(
                         "boardManagement.resourceUnavailable",
-                        "Resource unavailable."
+                        "Resource unavailable.",
                       )}
                     </p>
                   )}
@@ -1025,44 +1080,47 @@ export default function ProposalCard({
                     });
                   }}
                   editable={true}
-                  placeholder={t("mainCard.commentsPlaceholder", "Add your comment here...")}
+                  placeholder={t(
+                    "mainCard.commentsPlaceholder",
+                    "Add your comment here...",
+                  )}
                 />
               </div>
               {proposalCard?.settings?.includeInReport &&
                 !isLocked &&
                 user?.permissions.some((p) =>
-                  ["SCIENTIST", "TEACHER", "MENTOR", "ADMIN"].includes(p?.name)
+                  ["SCIENTIST", "TEACHER", "MENTOR", "ADMIN"].includes(p?.name),
                 ) && (
-                <div>
-                  <div className="cardSubheaderComment">
-                    {t(
-                      "mainCard.chooseReviewStep",
-                      "Choose which step of the peer review a card should go in"
-                    )}
-                  </div>
-                  <Dropdown
-                    placeholder={t("mainCard.selectOption", "Select option")}
-                    fluid
-                    multiple
-                    search
-                    selection
-                    lazyLoad
-                    options={filteredReviewOptions}
-                    onChange={(event, data) => {
-                      handleChange({
-                        target: {
-                          name: "settings",
-                          value: {
-                            ...inputs.settings,
-                            includeInReviewSteps: data.value,
+                  <div>
+                    <div className="cardSubheaderComment">
+                      {t(
+                        "mainCard.chooseReviewStep",
+                        "Choose which step of the peer review a card should go in",
+                      )}
+                    </div>
+                    <Dropdown
+                      placeholder={t("mainCard.selectOption", "Select option")}
+                      fluid
+                      multiple
+                      search
+                      selection
+                      lazyLoad
+                      options={filteredReviewOptions}
+                      onChange={(event, data) => {
+                        handleChange({
+                          target: {
+                            name: "settings",
+                            value: {
+                              ...inputs.settings,
+                              includeInReviewSteps: data.value,
+                            },
                           },
-                        },
-                      });
-                    }}
-                    value={inputs?.settings?.includeInReviewSteps || []}
-                  />
-                </div>
-              )}
+                        });
+                      }}
+                      value={inputs?.settings?.includeInReviewSteps || []}
+                    />
+                  </div>
+                )}
             </div>
           </div>
         </div>
