@@ -288,8 +288,15 @@ export default function ProposalCard({
   // Assignment Modal Component
   const AssignmentModal = ({ open, onClose, assignment: assignmentProp }) => {
     const { t } = useTranslation("classes");
-    const [title, setTitle] = useState(assignment?.title || "");
-    const [content, setContent] = useState(assignment?.content || "");
+    
+    // Strip HTML tags from text
+    const stripHtml = (html) => {
+      if (!html) return '';
+      return html.replace(/<[^>]*>/g, '').trim();
+    };
+    
+    const [title, setTitle] = useState(stripHtml(assignmentProp?.title || ""));
+    const [content, setContent] = useState(assignmentProp?.content || "");
     const [showNewHomework, setShowNewHomework] = useState(false);
     
     // Query for fresh assignment data with all fields including placeholder
@@ -314,7 +321,7 @@ export default function ProposalCard({
     // New homework form state
     const { inputs, handleChange, clearForm } = useForm({
       settings: { status: "Started" },
-      title: `Homework ${assignment?.title || ''} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`,
+      title: `Homework ${stripHtml(assignment?.title || '')} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`,
       placeholder: assignment?.placeholder || "",
     });
 
@@ -344,14 +351,14 @@ export default function ProposalCard({
           content: assignment.content,
           placeholder: assignment.placeholder,
         });
-        setTitle(assignment.title || "");
+        setTitle(stripHtml(assignment.title || ""));
         setContent(assignment.content || "");
         
         // Update homework form with assignment data
         handleChange({
           target: {
             name: "title",
-            value: `Assignment | ${assignment?.title || ''} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`
+            value: `Assignment | ${stripHtml(assignment?.title || '')} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ''}`
           }
         });
         handleChange({
