@@ -1014,11 +1014,11 @@
 		"preview": "Visualizar {{taskType}}"
 	},
 	"taskPage": {
-		"after": "O que os participantes veem <u>depois</u> de realizar o {{taskType}}",
+		"after": "O que os participantes veem depois de tomar o {{taskType}}",
 		"aggregateVariables": "Variáveis ​​Agregadas",
 		"aggregateVariablesDescription": "Esses dados são gravados automaticamente em um arquivo csv após a conclusão do {{taskType}}",
 		"background": "Fundo",
-		"before": "O que os participantes veem <u>antes</u> de realizar a tarefa {{taskType}}",
+		"before": "O que os participantes veem antes de fazer o {{taskType}}",
 		"checkbox": "Selecione muitos",
 		"duration": "Duração",
 		"format": "Formatar",
@@ -1106,11 +1106,11 @@
 	},
 	"videoNotSupported": "Vídeo não suportado",
 	"viewer": {
-		"afterParticipation": "O que os participantes veem <u>depois</u> de realizar o {{taskType}}",
+		"afterParticipation": "O que os participantes veem depois de tomar o {{taskType}}",
 		"aggregateVariables": "Variáveis ​​Agregadas",
 		"aggregateVariablesDesc": "Esses dados são gravados automaticamente em um arquivo csv após a conclusão do {{taskType}}",
 		"background": "Fundo",
-		"beforeParticipation": "O que os participantes veem <u>antes</u> de realizar a tarefa {{taskType}}",
+		"beforeParticipation": "O que os participantes veem antes de fazer o {{taskType}}",
 		"customize": "Personalizar",
 		"defaultValues": "Os valores padrão são mostrados (pode clonar {{taskType}} e modificá-los)",
 		"duration": "Duração",

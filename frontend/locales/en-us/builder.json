@@ -1014,11 +1014,11 @@
 		"preview": "Preview {{taskType}}"
 	},
 	"taskPage": {
-		"after": "What participants see <u>after</u> taking the {{taskType}}",
+		"after": "What participants see after taking the {{taskType}}",
 		"aggregateVariables": "Aggregate Variables",
 		"aggregateVariablesDescription": "These data are automatically written to a csv file upon completion of the {{taskType}}",
 		"background": "Background",
-		"before": "What participants see <u>before</u> taking the {{taskType}}",
+		"before": "What participants see before taking the {{taskType}}",
 		"checkbox": "Select many",
 		"duration": "Duration",
 		"format": "Format",
@@ -1106,11 +1106,11 @@
 	},
 	"videoNotSupported": "Video not supported",
 	"viewer": {
-		"afterParticipation": "What participants see <u>after</u> taking the {{taskType}}",
+		"afterParticipation": "What participants see after taking the {{taskType}}",
 		"aggregateVariables": "Aggregate Variables",
 		"aggregateVariablesDesc": "These data are automatically written to a csv file upon completion of the {{taskType}}",
 		"background": "Background",
-		"beforeParticipation": "What participants see <u>before</u> taking the {{taskType}}",
+		"beforeParticipation": "What participants see before taking the {{taskType}}",
 		"customize": "Customize",
 		"defaultValues": "Default values are shown (can clone {{taskType}} and modify these)",
 		"duration": "Duration",

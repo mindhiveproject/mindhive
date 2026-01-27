@@ -1014,11 +1014,11 @@
 		"preview": "Voorbeeld {{taskType}}"
 	},
 	"taskPage": {
-		"after": "Wat deelnemers zien <u>na</u> het afleggen van de {{taskType}}",
+		"after": "Wat deelnemers zien na het nemen van de {{taskType}}",
 		"aggregateVariables": "Geaggregeerde variabelen",
 		"aggregateVariablesDescription": "Deze gegevens worden automatisch naar een csv-bestand geschreven zodra de {{taskType}} is voltooid.",
 		"background": "Achtergrond",
-		"before": "Wat deelnemers zien <u>voordat</u> ze de {{taskType}} afleggen",
+		"before": "Wat deelnemers zien voordat ze de {{taskType}}nemen",
 		"checkbox": "Selecteer veel",
 		"duration": "Duur",
 		"format": "Formaat",
@@ -1106,11 +1106,11 @@
 	},
 	"videoNotSupported": "Video wordt niet ondersteund",
 	"viewer": {
-		"afterParticipation": "Wat deelnemers zien <u>na</u> het afleggen van de {{taskType}}",
+		"afterParticipation": "Wat deelnemers zien na het nemen van de {{taskType}}",
 		"aggregateVariables": "Geaggregeerde variabelen",
 		"aggregateVariablesDesc": "Deze gegevens worden automatisch naar een csv-bestand geschreven zodra de {{taskType}} is voltooid.",
 		"background": "Achtergrond",
-		"beforeParticipation": "Wat deelnemers zien <u>voordat</u> ze de {{taskType}} afleggen",
+		"beforeParticipation": "Wat deelnemers zien voordat ze de {{taskType}}nemen",
 		"customize": "Aanpassen",
 		"defaultValues": "Standaardwaarden worden weergegeven (u kunt {{taskType}} klonen en deze wijzigen)",
 		"duration": "Duur",

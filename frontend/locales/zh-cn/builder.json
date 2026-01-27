@@ -1014,11 +1014,11 @@
 		"preview": "预览 {{taskType}}"
 	},
 	"taskPage": {
-		"after": "参与者在完成 {{taskType}}<u>之后</u>会看到什么",
+		"after": "参与者在接受 {{taskType}}后看到的内容",
 		"aggregateVariables": "聚合变量",
 		"aggregateVariablesDescription": "完成 {{taskType}} 后，这些数据会自动写入 csv 文件",
 		"background": "背景",
-		"before": "参与者在执行 {{taskType}} 之前看到的内容",
+		"before": "参与者在进行 {{taskType}}之前看到的内容",
 		"checkbox": "选择多项",
 		"duration": "期间",
 		"format": "格式",
@@ -1106,11 +1106,11 @@
 	},
 	"videoNotSupported": "视频不支持",
 	"viewer": {
-		"afterParticipation": "参与者在完成 {{taskType}}<u>之后</u>会看到什么",
+		"afterParticipation": "参与者在接受 {{taskType}}后看到的内容",
 		"aggregateVariables": "聚合变量",
 		"aggregateVariablesDesc": "完成 {{taskType}} 后，这些数据会自动写入 csv 文件",
 		"background": "背景",
-		"beforeParticipation": "参与者在执行 {{taskType}} 之前看到的内容",
+		"beforeParticipation": "参与者在进行 {{taskType}}之前看到的内容",
 		"customize": "定制",
 		"defaultValues": "显示默认值（可以克隆 {{taskType}} 并修改它们）",
 		"duration": "期间",

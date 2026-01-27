@@ -1014,11 +1014,11 @@
 		"preview": "पूर्वावलोकन {{taskType}}"
 	},
 	"taskPage": {
-		"after": "{{taskType}} लेने के <u>बाद</u> प्रतिभागी क्या देखते हैं",
+		"after": "",
 		"aggregateVariables": "समग्र चर",
 		"aggregateVariablesDescription": "{{taskType}} के पूरा होने पर ये डेटा स्वचालित रूप से एक csv फ़ाइल में लिख दिए जाते हैं",
 		"background": "पृष्ठभूमि",
-		"before": "{{taskType}} लेने से पहले प्रतिभागी क्या देखते हैं",
+		"before": "",
 		"checkbox": "कई का चयन करें",
 		"duration": "अवधि",
 		"format": "प्रारूप",
@@ -1106,11 +1106,11 @@
 	},
 	"videoNotSupported": "",
 	"viewer": {
-		"afterParticipation": "{{taskType}} लेने के <u>बाद</u> प्रतिभागी क्या देखते हैं",
+		"afterParticipation": "",
 		"aggregateVariables": "समग्र चर",
 		"aggregateVariablesDesc": "{{taskType}} के पूरा होने पर ये डेटा स्वचालित रूप से एक csv फ़ाइल में लिख दिए जाते हैं",
 		"background": "पृष्ठभूमि",
-		"beforeParticipation": "{{taskType}} लेने से पहले प्रतिभागी क्या देखते हैं",
+		"beforeParticipation": "",
 		"customize": "अनुकूलित करें",
 		"defaultValues": "डिफ़ॉल्ट मान दिखाए गए हैं ({{taskType}} को क्लोन कर सकते हैं और इन्हें संशोधित कर सकते हैं)",
 		"duration": "अवधि",

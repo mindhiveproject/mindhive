@@ -1014,11 +1014,11 @@
 		"preview": "Предварительный просмотр {{taskType}}"
 	},
 	"taskPage": {
-		"after": "Что видят участники <u>после</u> выполнения {{taskType}}",
+		"after": "Что видят участники после прохождения теста {{taskType}}",
 		"aggregateVariables": "Агрегированные переменные",
 		"aggregateVariablesDescription": "Эти данные автоматически записываются в CSV-файл после завершения {{taskType}}",
 		"background": "Фон",
-		"before": "Что видят участники <u>перед</u> выполнением {{taskType}}",
+		"before": "Что видят участники перед тем, как принять {{taskType}}",
 		"checkbox": "Выбрать много",
 		"duration": "Продолжительность",
 		"format": "Формат",
@@ -1106,11 +1106,11 @@
 	},
 	"videoNotSupported": "Видео не поддерживается",
 	"viewer": {
-		"afterParticipation": "Что видят участники <u>после</u> выполнения {{taskType}}",
+		"afterParticipation": "Что видят участники после прохождения теста {{taskType}}",
 		"aggregateVariables": "Агрегированные переменные",
 		"aggregateVariablesDesc": "Эти данные автоматически записываются в CSV-файл после завершения {{taskType}}",
 		"background": "Фон",
-		"beforeParticipation": "Что видят участники <u>перед</u> выполнением {{taskType}}",
+		"beforeParticipation": "Что видят участники перед тем, как принять {{taskType}}",
 		"customize": "Настроить",
 		"defaultValues": "Показаны значения по умолчанию (можно клонировать {{taskType}} и изменять их)",
 		"duration": "Продолжительность",
