@@ -2,7 +2,7 @@ import TipTapEditor from "../../../TipTap/Main";
 import { useQuery, useMutation } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import { Button, Icon, Modal, Tab } from "semantic-ui-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 // Strip HTML tags from text
@@ -525,7 +525,7 @@ export default function LinkedItems({
           )}
         </Modal.Header>
         <Modal.Content scrolling style={{ background: "#ffffff", padding: 0 }}>
-          <Tab panes={panes} style={{ fontFamily: "Nunito" }} />
+          <Tab panes={panes} style={{ fontFamily: "Nunito"}} />
         </Modal.Content>
         <Modal.Actions
           style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
@@ -781,6 +781,8 @@ const ItemTab = ({
 
   // --- Search State ---
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedPublishedFilter, setSelectedPublishedFilter] = useState(null);
+  const [selectedClassIds, setSelectedClassIds] = useState([]);
 
   // --- Filter Function ---
   const filterItems = (itemsList, query) => {
@@ -805,6 +807,18 @@ const ItemTab = ({
   const toggleAccordion = (key) => {
     setOpenAccordion((prev) => ({ ...prev, [key]: !prev[key] }));
   };
+
+  // Unique classes from items (assignment tab only) - must run unconditionally for hooks rules
+  const uniqueClasses = useMemo(() => {
+    if (type !== "assignment" || !items || !Array.isArray(items)) return [];
+    const m = new Map();
+    items.forEach((i) => {
+      (i?.classes || []).forEach((c) => {
+        if (c?.id && !m.has(c.id)) m.set(c.id, { id: c.id, title: c.title || "Untitled Class" });
+      });
+    });
+    return Array.from(m.values());
+  }, [type, items]);
 
   if (type === "public") {
     // For public type, render two sections: resources and assignments (in accordions)
@@ -1287,8 +1301,28 @@ const ItemTab = ({
     return item;
   });
 
-  // Filter displayItems based on search query
-  const filteredDisplayItems = filterItems(displayItems, searchQuery);
+  // When type === "assignment", apply published and class filters before search
+  let preSearchItems = displayItems;
+  if (type === "assignment") {
+    if (selectedPublishedFilter !== null) {
+      preSearchItems = preSearchItems.filter((item) => item?.public === selectedPublishedFilter);
+    }
+    if (selectedClassIds.length > 0) {
+      preSearchItems = preSearchItems.filter((item) =>
+        (item?.classes || []).some((c) => selectedClassIds.includes(c.id))
+      );
+    }
+  }
+  const filteredDisplayItems = filterItems(preSearchItems, searchQuery);
+
+  const handlePublishedFilterToggle = (value) => {
+    setSelectedPublishedFilter((prev) => (prev === value ? null : value));
+  };
+  const handleClassFilterToggle = (classId) => {
+    setSelectedClassIds((prev) =>
+      prev.includes(classId) ? prev.filter((id) => id !== classId) : [...prev, classId]
+    );
+  };
 
   return (
     <div style={{ padding: "24px", background: "#f9fafb" }}>
@@ -1342,6 +1376,66 @@ const ItemTab = ({
           )}
         </div>
       </div>
+      {type === "assignment" && (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "8px",
+            alignItems: "center",
+            marginBottom: "16px",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => handlePublishedFilterToggle(true)}
+            style={{
+              ...styledChipPublished,
+              color: "#434343",
+              backgroundColor: selectedPublishedFilter === true ? "#DEF8FB" : "#FFFFFF",
+              borderColor: selectedPublishedFilter === true ? "#434343" : "#434343",
+            }}
+            >
+            {t("assignment.published", "Published")}
+          </button>
+          <button
+            type="button"
+            onClick={() => handlePublishedFilterToggle(false)}
+            style={{
+              ...styledChipUnpublished,
+              color: "#434343",
+              backgroundColor: selectedPublishedFilter === false ? "#EFEFEF" : "#FFFFFF",
+              borderColor: selectedPublishedFilter === false ? "#434343" : "#434343",
+            }}
+          >
+            {t("assignment.unpublished", "Unpublished")}
+          </button>
+          {uniqueClasses.length > 0 && (
+            <>
+              <span style={{ margin: "0 8px", color: "#A1A1A1" }}>|</span>
+              {uniqueClasses.map((cls) => {
+                const isSelected = selectedClassIds.includes(cls.id);
+                return (
+                  <button
+                    key={cls.id}
+                    type="button"
+                    onClick={() => handleClassFilterToggle(cls.id)}
+                    style={{
+                      ...styledChip,
+                      backgroundColor: isSelected ? "#FDF2D0" : "#FFFFFF",
+                      borderColor: isSelected ? "#434343" : "#434343",
+                      cursor: "pointer",
+                      color: "#434343",
+                    }}
+                  >
+                    {stripHtml(cls.title)}
+                  </button>
+                );
+              })}
+            </>
+          )}
+        </div>
+      )}
       {filteredDisplayItems.length > 0 ? (
         <div
           style={{
