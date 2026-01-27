@@ -1747,11 +1747,11 @@ const ItemTab = ({
       >
       <div>
         <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("board.expendedCard.title")}</p>
-        <textarea
-          style={editableFieldStyle}
-          value={editedAssignment.title}
-          onChange={(e) => handleFieldChange('title', e.target.value)}
+        <TipTapEditor
+          content={editedAssignment.title}
           placeholder={t("assignment.titlePlaceholder", "Enter assignment title...")}
+          onUpdate={(newContent) => handleFieldChange('title', newContent)}
+          toolbarVisible={false}
         />
         <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("assignment.instructions")}</p>
         <TipTapEditor
@@ -2263,19 +2263,10 @@ const ResourceEditModal = ({
                   >
                     {t("boardManagement.titleText", "Title")}
                   </label>
-                  <input
-                    id="resource-title"
-                    type="text"
-                    value={formState.title}
-                    onChange={(e) => handleFieldChange("title", e.target.value)}
-                    style={{
-                      width: "100%",
-                      padding: "12px",
-                      borderRadius: "12px",
-                      border: "1px solid #d0d5dd",
-                      fontSize: "16px",
-                      fontFamily: "inherit",
-                    }}
+                  <TipTapEditor
+                    content={formState.title}
+                    onUpdate={(newContent) => handleFieldChange("title", newContent)}
+                    toolbarVisible={false}
                   />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
