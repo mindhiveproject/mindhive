@@ -14,6 +14,8 @@ export default function ProposalPDF({
   setSelectedStatuses,
   selectedReviewSteps = [],
   setSelectedReviewSteps,
+  selectedAssignedUsers = [],
+  setSelectedAssignedUsers,
 }) {
   const { t } = useTranslation("builder");
   const { origin } = absoluteUrl();
@@ -30,11 +32,20 @@ export default function ProposalPDF({
   // If props are not provided, use local state as fallback (for backwards compatibility)
   const [localSelectedStatuses, setLocalSelectedStatuses] = useState(["Not started", "In progress"]);
   const [localSelectedReviewSteps, setLocalSelectedReviewSteps] = useState([]);
+  const [localSelectedAssignedUsers, setLocalSelectedAssignedUsers] = useState([]);
   
   const effectiveSelectedStatuses = setSelectedStatuses !== undefined ? selectedStatuses : localSelectedStatuses;
   const effectiveSetSelectedStatuses = setSelectedStatuses !== undefined ? setSelectedStatuses : setLocalSelectedStatuses;
   const effectiveSelectedReviewSteps = setSelectedReviewSteps !== undefined ? selectedReviewSteps : localSelectedReviewSteps;
   const effectiveSetSelectedReviewSteps = setSelectedReviewSteps !== undefined ? setSelectedReviewSteps : setLocalSelectedReviewSteps;
+  const effectiveSelectedAssignedUsers =
+    setSelectedAssignedUsers !== undefined
+      ? selectedAssignedUsers
+      : localSelectedAssignedUsers;
+  const effectiveSetSelectedAssignedUsers =
+    setSelectedAssignedUsers !== undefined
+      ? setSelectedAssignedUsers
+      : setLocalSelectedAssignedUsers;
 
   // Status options for dropdown (icons removed)
   const statusOptions = [
@@ -110,6 +121,19 @@ export default function ProposalPDF({
   // Order sections by position
   const orderedSections = [...sections].sort((a, b) => a.position - b.position);
 
+  // Unique assigned users across the whole board (used for filter UI)
+  const assignedUserOptions = orderedSections
+    .flatMap((section) => section?.cards || [])
+    .flatMap((card) => card?.assignedTo || [])
+    .filter(Boolean)
+    .reduce((acc, u) => {
+      if (!u?.id) return acc;
+      if (acc.some((x) => x.id === u.id)) return acc;
+      acc.push({ id: u.id, username: u.username || "" });
+      return acc;
+    }, [])
+    .sort((a, b) => (a.username || "").localeCompare(b.username || ""));
+
   // Generate content for PDF
   const allCardsContent = orderedSections.map((section) => {
     const orderedCards = [...section.cards].sort(
@@ -135,6 +159,10 @@ export default function ProposalPDF({
           (effectiveSelectedReviewSteps.length === 0 ||
             effectiveSelectedReviewSteps.some((step) =>
               card?.settings?.includeInReviewSteps?.includes(step)
+            )) &&
+          (effectiveSelectedAssignedUsers.length === 0 ||
+            effectiveSelectedAssignedUsers.some((userId) =>
+              (card?.assignedTo || []).some((u) => u?.id === userId)
             ))
       )
       .map((card) => {
@@ -188,6 +216,10 @@ export default function ProposalPDF({
           (effectiveSelectedReviewSteps.length === 0 ||
             effectiveSelectedReviewSteps.some((step) =>
               card?.settings?.includeInReviewSteps?.includes(step)
+            )) &&
+          (effectiveSelectedAssignedUsers.length === 0 ||
+            effectiveSelectedAssignedUsers.some((userId) =>
+              (card?.assignedTo || []).some((u) => u?.id === userId)
             ))
       )
       .map((card) => ({
@@ -216,6 +248,13 @@ export default function ProposalPDF({
       prev.includes(step)
         ? prev.filter((s) => s !== step)
         : [...prev, step]
+    );
+  };
+
+  // Helper function to toggle assigned user selection
+  const toggleAssignedUser = (userId) => {
+    effectiveSetSelectedAssignedUsers((prev) =>
+      prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
     );
   };
 
@@ -316,7 +355,7 @@ export default function ProposalPDF({
                 margin: 0,
               }}
             >
-              Filter by
+              {t("proposalPDF.filters.title", "Filter by")}
             </h2>
 
             {/* Status Filters */}
@@ -338,7 +377,7 @@ export default function ProposalPDF({
                   marginBottom: "4px",
                 }}
               >
-                Status
+                {t("board.status", "Status")}
               </label>
               <div
                 style={{
@@ -440,7 +479,7 @@ export default function ProposalPDF({
                   marginBottom: "4px",
                 }}
               >
-                Review Steps
+                {t("proposalPDF.filters.reviewSteps", "Review Steps")}
               </label>
               <div
                 style={{
@@ -538,6 +577,128 @@ export default function ProposalPDF({
                 })}
               </div>
             </div>
+
+            {/* Assigned People Filters */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "4px",
+              }}
+            >
+              <label
+                style={{
+                  fontFamily: "Nunito, sans-serif",
+                  fontWeight: 600,
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  letterSpacing: "0.15px",
+                  color: "#171717",
+                  marginBottom: "4px",
+                }}
+              >
+                {t("board.filterByAssignedTo", "Filter by assigned to")}
+              </label>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  gap: "8px",
+                }}
+              >
+                {assignedUserOptions.length === 0 ? (
+                  <div
+                    style={{
+                      fontFamily: "Nunito, sans-serif",
+                      fontWeight: 600,
+                      fontSize: "14px",
+                      lineHeight: "20px",
+                      letterSpacing: "0.15px",
+                      color: "#6a6a6a",
+                      padding: "6px 0",
+                    }}
+                  >
+                    {t(
+                      "proposalPDF.filters.assignedTo.empty",
+                      "No assigned people on this board yet."
+                    )}
+                  </div>
+                ) : (
+                  assignedUserOptions.map((u) => {
+                    const isSelected = effectiveSelectedAssignedUsers.includes(u.id);
+                    return (
+                      <button
+                        key={u.id}
+                        onClick={() => toggleAssignedUser(u.id)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          padding: isSelected ? "6px 8px 6px 12px" : "6px 12px",
+                          height: "32px",
+                          border: "1px solid #a1a1a1",
+                          borderRadius: "8px",
+                          backgroundColor: isSelected ? "#FDF2D0" : "#ffffff",
+                          cursor: "pointer",
+                          fontFamily: "Nunito, sans-serif",
+                          fontWeight: 600,
+                          fontSize: "14px",
+                          lineHeight: "20px",
+                          letterSpacing: "0.15px",
+                          color: "#171717",
+                          transition: "background-color 0.2s",
+                          width: "fit-content",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isSelected) {
+                            e.currentTarget.style.backgroundColor = "#f9f9f9";
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSelected) {
+                            e.currentTarget.style.backgroundColor = "#ffffff";
+                          }
+                        }}
+                      >
+                        <span>
+                          {u.username || t("proposalPDF.filters.assignedTo.unknown", "Unknown")}
+                        </span>
+                        {isSelected && (
+                          <span
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              width: "18px",
+                              height: "18px",
+                              cursor: "pointer",
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleAssignedUser(u.id);
+                            }}
+                          >
+                            <svg
+                              width="18"
+                              height="18"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+                                fill="#171717"
+                              />
+                            </svg>
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Left Column - Cards List */}
@@ -578,7 +739,10 @@ export default function ProposalPDF({
                     margin: 0,
                   }}
                 >
-                  No cards match the selected filters. Please adjust your status or review step filters to see cards.
+                  {t(
+                    "proposalPDF.filters.emptyState",
+                    "No cards match the selected filters. Please adjust your status, review step, or assigned filters to see cards."
+                  )}
                 </p>
               </div>
             ) : (

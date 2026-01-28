@@ -136,6 +136,7 @@ export const GET_CLASS_ASSIGNMENTS_FOR_STUDENTS = gql`
       }
       classes {
         id
+        title
       }
       createdAt
     }

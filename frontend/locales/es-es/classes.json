@@ -70,6 +70,7 @@
 		"saveChanges": "Guardar cambios",
 		"saveLink": "Guardar y vincular",
 		"saveSuccess": "Asignación guardada correctamente",
+		"saveWithoutClass": "Guardar sin asociación de clases",
 		"startFromScratch": "Empezar desde el principio",
 		"startFromScratchDescription": "Crea una tarea completamente nueva con control total sobre el título, las instrucciones y el contenido del marcador. Ideal para algo completamente único para tu clase.",
 		"status": "",

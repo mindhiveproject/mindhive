@@ -141,9 +141,53 @@ const StatusChip = styled.span`
   `}
 `;
 
+// Chip styles reused from LinkedItems.js (Published/Unpublished only)
+const styledChipPublished = {
+  display: "inline-flex",
+  height: "24px",
+  padding: "14px",
+  justifyContent: "center",
+  alignItems: "center",
+  flexShrink: "0",
+  borderRadius: "8px",
+  background: "#DEF8FB",
+  border: "1px solid #625B71",
+  maxWidth: '100%',
+  wordBreak: 'break-word',
+  cursor: 'pointer',
+  transition: 'all 0.2s ease',
+  fontFamily: 'Lato',
+  fontSize: '14px',
+  fontWeight: 400,
+  color: '#434343',
+};
+
+const styledChipUnpublished = {
+  display: "inline-flex",
+  height: "24px",
+  padding: "14px",
+  justifyContent: "center",
+  alignItems: "center",
+  flexShrink: "0",
+  borderRadius: "8px",
+  background: "#F3F3F3",
+  border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  maxWidth: '100%',
+  wordBreak: 'break-word',
+  cursor: 'pointer',
+  transition: 'all 0.2s ease',
+  fontFamily: 'Lato',
+  fontSize: '14px',
+  fontWeight: 400,
+  color: '#434343',
+};
+
 export default function AssignmentTab({ assignments, myclass, user }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
+
+  // Filter state: Published/Unpublished chips only
+  const [selectedPublishedFilter, setSelectedPublishedFilter] = useState(null); // null = all, true = published, false = unpublished
 
   const [editAssignment] = useMutation(EDIT_ASSIGNMENT, {
     refetchQueries: [
@@ -167,6 +211,16 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   const stripHtml = (html) => {
     if (!html) return '';
     return html.replace(/<[^>]*>/g, '').trim();
+  };
+
+  // Filter assignments by published state only
+  const filteredAssignments =
+    selectedPublishedFilter === null
+      ? assignments
+      : (assignments || []).filter((a) => a?.public === selectedPublishedFilter);
+
+  const handlePublishedFilterToggle = (value) => {
+    setSelectedPublishedFilter((prev) => (prev === value ? null : value));
   };
 
   // Count completed homework
@@ -392,21 +446,56 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   }
 
   return (
-    <div style={{ width: '100%', height: '600px' }}>
-      <div className="ag-theme-quartz" style={{ height: '100%', width: '100%' }}>
-        <AgGridReact
-          rowData={assignments}
-          columnDefs={columnDefs}
-          pagination={pagination}
-          paginationPageSize={paginationPageSize}
-          paginationPageSizeSelector={paginationPageSizeSelector}
-          autoSizeStrategy={autoSizeStrategy}
-          defaultColDef={{
-            resizable: true,
-            sortable: true,
-            filter: true,
+    <div style={{ width: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "8px",
+          alignItems: "center",
+          marginBottom: "16px",
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => handlePublishedFilterToggle(true)}
+          style={{
+            ...styledChipPublished,
+            backgroundColor: selectedPublishedFilter === true ? "#DEF8FB" : "#ffffff",
+            borderColor: selectedPublishedFilter === true ? "#625B71" : "#A1A1A1",
           }}
-        />
+        >
+          {t("assignment.published") || "Published"}
+        </button>
+        <button
+          type="button"
+          onClick={() => handlePublishedFilterToggle(false)}
+          style={{
+            ...styledChipUnpublished,
+            backgroundColor: selectedPublishedFilter === false ? "#F3F3F3" : "#ffffff",
+            borderColor: selectedPublishedFilter === false ? "#625B71" : "#A1A1A1",
+          }}
+        >
+          {t("assignment.unpublished") || "Unpublished"}
+        </button>
+      </div>
+
+      <div style={{ width: "100%", height: "600px" }}>
+        <div className="ag-theme-quartz" style={{ height: "100%", width: "100%" }}>
+          <AgGridReact
+            rowData={filteredAssignments}
+            columnDefs={columnDefs}
+            pagination={pagination}
+            paginationPageSize={paginationPageSize}
+            paginationPageSizeSelector={paginationPageSizeSelector}
+            autoSizeStrategy={autoSizeStrategy}
+            defaultColDef={{
+              resizable: true,
+              sortable: true,
+              filter: true,
+            }}
+          />
+        </div>
       </div>
     </div>
   );

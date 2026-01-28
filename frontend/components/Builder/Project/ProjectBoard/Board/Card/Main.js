@@ -117,13 +117,13 @@ export default function ProposalCard({
     },
   );
 
-  const users =
+  // Get collaborators
+  const collaborators =
     proposal?.collaborators?.map((user) => ({
       key: user.id,
       text: user.username,
       value: user.id,
     })) || [];
-  const allUsers = [...users];
 
   const openResourceModalHandler = (resource) => {
     if (!resource?.id) {
@@ -949,9 +949,13 @@ export default function ProposalCard({
                   {t("mainCard.assignedTo", "Assigned to")}
                 </div>
                 <Assigned
-                  users={allUsers}
+                  users={collaborators}
                   assignedTo={inputs?.assignedTo}
                   onAssignedToChange={handleAssignedToChange}
+                  user={user}
+                  proposal={proposal}
+                  cardId={cardId}
+                  cardData={inputs}
                 />
               </div>
 

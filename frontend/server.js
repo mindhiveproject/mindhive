@@ -33,6 +33,8 @@ const dev = env !== "production";
 const port = 3000;
 const serverUrl = env === "production" ? prodEndpoint : endpoint;
 
+const url = require("url");
+
 const app = next({
   dir: ".", // base directory where everything is, could move to src later
   dev,
@@ -248,11 +250,17 @@ app
     });
 
     server.post("*", (req, res) => {
-      return handle(req, res);
+      const parsedUrl = url.parse(req.url || "", true);
+      return handle(req, res, parsedUrl);
     });
 
-    // Default catch-all handler to allow Next.js to handle all other routes
-    server.get("*", (req, res) => handle(req, res));
+    // Default catch-all handler to allow Next.js to handle all other routes.
+    // Pass parsedUrl so Next.js uses consistent pathname+query (fixes 404 on reload
+    // for /builder/projects?selector=... and on-demand-entries fetches).
+    server.get("*", (req, res) => {
+      const parsedUrl = url.parse(req.url || "", true);
+      return handle(req, res, parsedUrl);
+    });
 
     server.listen(port, (err) => {
       if (err) {

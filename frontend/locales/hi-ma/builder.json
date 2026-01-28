@@ -24,6 +24,16 @@
 	"allStudies": "सभी अध्ययन",
 	"archivedStudies": "संग्रहीत अध्ययन",
 	"assigned": {
+		"addUser": "",
+		"assignCard": "",
+		"cancel": "",
+		"noCollaborators": "",
+		"noUsersFound": "",
+		"removeUser": "",
+		"save": "",
+		"searchPlaceholder": "",
+		"searchResults": "",
+		"selected": "",
 		"typeUsername": "उपयोगकर्ता नाम टाइप करें"
 	},
 	"assignment": {
@@ -58,9 +68,12 @@
 			"tasks": "",
 			"title": ""
 		},
-		"loading": "लोड हो रहा है..."
+		"filterByAssignedTo": "",
+		"loading": "लोड हो रहा है...",
+		"status": ""
 	},
 	"boardManagement": {
+		"resourceUnavailable": "",
 		"viewResource": ""
 	},
 	"build-create-new-study": "नया अध्ययन बनाने के लिए नीचे दिए गए बटन पर क्लिक करें।",
@@ -651,6 +664,16 @@
 		"submittedLocked": "प्रस्ताव प्रस्तुत कर दिया गया है और लॉक कर दिया गया है 🔒",
 		"viewBoard": "",
 		"viewFlattenBoard": ""
+	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "",
+			"title": ""
+		}
 	},
 	"proposalSelector": {
 		"linkToProposal": "प्रस्ताव का लिंक",

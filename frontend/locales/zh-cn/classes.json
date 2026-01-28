@@ -70,6 +70,7 @@
 		"saveChanges": "保存更改",
 		"saveLink": "保存并链接",
 		"saveSuccess": "作业已成功保存",
+		"saveWithoutClass": "保存时不关联类",
 		"startFromScratch": "从零开始",
 		"startFromScratchDescription": "创建全新的作业，完全掌控标题、说明和占位符内容。最适合创建班级独有的作业。",
 		"status": "",

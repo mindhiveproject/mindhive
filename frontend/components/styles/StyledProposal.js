@@ -516,7 +516,7 @@ export const StyledProposal = styled.div`
       width: 32px;
       height: 32px;
       border: 1px solid #A1A1A1;
-      border-radius: 20px;
+      border-radius: 50%;
       background: white;
       cursor: pointer;
       padding: 4px;
@@ -998,6 +998,57 @@ export const StyledProposal = styled.div`
       letter-spacing: 0em;
       text-align: left;
       height: 100%;
+      .collaboratorArray {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: nowrap;
+        width: 100%;
+        margin-top: 8px;
+      }
+      .collaboratorChip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        border: 1px solid #A1A1A1;
+        border-radius: 30px;
+        padding: 4px 12px 4px 12px;
+        gap: 8px;
+        background: white;
+        overflow: hidden;
+        width: fit-content;
+        max-width: 300px;
+        span {
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          display: flex;
+          height: 100%;
+          align-items: center;
+        }
+      }
+      .addCollaboratorButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: 1px solid #A1A1A1;
+        border-radius: 50%;
+        background: white;
+        cursor: pointer;
+        padding: 4px;
+        flex-shrink: 0;
+        &:hover {
+          background: #F3F3F3;
+        }
+        .icon {
+          color: #171717;
+          margin: 0;
+        }
+      }
     }
     .resourceLinks {
       display: grid;

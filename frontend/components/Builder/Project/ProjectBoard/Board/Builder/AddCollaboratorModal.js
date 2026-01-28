@@ -20,6 +20,11 @@ export default function AddCollaboratorModal({
   const classId = proposal?.usedInClass?.id;
   const currentCollaborators = proposal?.collaborators || [];
 
+  // Check if user is a student, mentor, or teacher
+  const isStudent = user?.permissions?.some((p) => p?.name === "STUDENT");
+  const isMentor = user?.permissions?.some((p) => p?.name === "MENTOR");
+  const isTeacher = user?.permissions?.some((p) => p?.name === "TEACHER");
+
   useEffect(() => {
     if (currentCollaborators.length > 0) {
       // Always include all collaborators (including student themselves if they're a collaborator)
@@ -28,55 +33,66 @@ export default function AddCollaboratorModal({
     }
   }, [proposal]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Step 1: Get user's class IDs (from classes where user is student, mentor, or teacher)
+  // Step 1: Get user's class IDs (from classes where user is a student, mentor, or teacher)
   const userClasses = [
-    ...(user?.studentIn?.map((cl) => cl?.id) || []),
-    ...(user?.mentorIn?.map((cl) => cl?.id) || []),
-    ...(user?.teacherIn?.map((cl) => cl?.id) || []),
-  ];
+    ...(user?.studentIn || []),
+    ...(user?.mentorIn || []),
+    ...(user?.teacherIn || []),
+  ].map((cl) => cl?.id);
+
+  // For all roles, proposal class members include students, teachers, and mentors in this class.
+  // Students will only see members of this class (no cross‑class intersection),
+  // while teachers/mentors still intersect with their own classes below.
+  const proposalClassWhere = {
+    OR: [
+      { studentIn: { some: { id: { equals: classId } } } },
+      { teacherIn: { some: { id: { equals: classId } } } },
+      { mentorIn: { some: { id: { equals: classId } } } },
+    ],
+  };
 
   // Step 1: Query users from the user's classes (students first, then mentors, then teachers)
-  const { data: usersFromUserClassesData, loading: usersFromUserClassesLoading } = useQuery(
-    GET_USERNAMES_WHERE,
-    {
-      variables: {
-        input: {
-          OR: [
-            { studentIn: { some: { id: { in: userClasses } } } },
-            { mentorIn: { some: { id: { in: userClasses } } } },
-            { teacherIn: { some: { id: { in: userClasses } } } },
-          ],
-        },
+  // Skip this query entirely for students – they should only see classmates from the proposal's class.
+  const {
+    data: usersFromUserClassesData,
+    loading: usersFromUserClassesLoading,
+  } = useQuery(GET_USERNAMES_WHERE, {
+    variables: {
+      input: {
+        OR: [
+          { studentIn: { some: { id: { in: userClasses } } } },
+          { mentorIn: { some: { id: { in: userClasses } } } },
+          { teacherIn: { some: { id: { in: userClasses } } } },
+        ],
       },
-      skip: userClasses.length === 0,
-    }
-  );
+    },
+    skip: isStudent || userClasses.length === 0,
+  });
 
-  // Step 2: Query users from the proposal's class to filter against
-  const { data: proposalClassUsersData, loading: proposalClassUsersLoading } = useQuery(
-    GET_USERNAMES_WHERE,
-    {
-      variables: {
-        input: {
-          OR: [
-            { studentIn: { some: { id: { equals: classId } } } },
-            { teacherIn: { some: { id: { equals: classId } } } },
-            { mentorIn: { some: { id: { equals: classId } } } },
-          ],
-        },
-      },
-      skip: !classId,
-    }
-  );
+  // Step 2: Query users from the proposal's class
+  const {
+    data: proposalClassUsersData,
+    loading: proposalClassUsersLoading,
+  } = useQuery(GET_USERNAMES_WHERE, {
+    variables: {
+      input: proposalClassWhere,
+    },
+    skip: !classId,
+  });
 
-  // Step 2: Filter users from user's classes to only include those also in proposal's class
-  const usersFromUserClasses = usersFromUserClassesData?.profiles || [];
-  const proposalClassUserIds = new Set(
-    (proposalClassUsersData?.profiles || []).map((u) => u.id)
-  );
-  
-  // Filter to only users who are in both the user's classes AND the proposal's class
-  const allUsers = usersFromUserClasses.filter((u) => proposalClassUserIds.has(u.id));
+  const proposalClassUsers = proposalClassUsersData?.profiles || [];
+
+  // For students: available users are exactly classmates (students) in this proposal's class.
+  // For mentors/teachers: intersect users from their classes with the proposal's class users.
+  let allUsers = [];
+
+  if (isStudent) {
+    allUsers = proposalClassUsers;
+  } else {
+    const usersFromUserClasses = usersFromUserClassesData?.profiles || [];
+    const proposalClassUserIds = new Set(proposalClassUsers.map((u) => u.id));
+    allUsers = usersFromUserClasses.filter((u) => proposalClassUserIds.has(u.id));
+  }
 
   // Filter users by search term and exclude current user (always) and already selected
   // If user is a student, exclude themselves from the list
@@ -175,9 +191,6 @@ export default function AddCollaboratorModal({
 
   const handleClearSearch = () => setSearch("");
 
-  // Check if user is a student
-  const isStudent = user?.permissions?.some((p) => p?.name === "STUDENT");
-  
   // Check if user has classes and proposal has a class
   const userHasClasses = 
     (user?.studentIn?.length > 0) ||

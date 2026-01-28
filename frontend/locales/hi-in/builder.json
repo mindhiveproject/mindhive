@@ -24,6 +24,16 @@
 	"allStudies": "सभी अध्ययन",
 	"archivedStudies": "संग्रहीत अध्ययन",
 	"assigned": {
+		"addUser": "लोगों को जोड़ें",
+		"assignCard": "इस कार्ड को इस प्रोजेक्ट के किसी सहयोगी को सौंपें",
+		"cancel": "रद्द करना",
+		"noCollaborators": "इस बोर्ड के लिए कोई सहयोगी उपलब्ध नहीं हैं।",
+		"noUsersFound": "कोई प्रोफ़ाइल नहीं मिली",
+		"removeUser": "उपयोगकर्ता हटाएँ",
+		"save": "बचाना",
+		"searchPlaceholder": "उपयोगकर्ता नाम से खोजें...",
+		"searchResults": "खोज के परिणाम",
+		"selected": "चयनित",
 		"typeUsername": "उपयोगकर्ता नाम टाइप करें"
 	},
 	"assignment": {
@@ -49,18 +59,21 @@
 			"myAssignments": "मेरे कार्य",
 			"myResources": "मेरे संसाधन",
 			"previewAssignment": "पूर्वावलोकन असाइनमेंट",
-			"previewLinkedAssignments": "लिंक किए गए असाइनमेंट का पूर्वावलोकन करें",
-			"previewLinkedResources": "लिंक किए गए संसाधनों का पूर्वावलोकन करें",
-			"previewLinkedStudies": "लिंक किए गए अध्ययनों का पूर्वावलोकन करें",
-			"previewLinkedTasks": "लिंक किए गए कार्यों का पूर्वावलोकन करें",
+			"previewLinkedAssignments": "कार्य",
+			"previewLinkedResources": "संसाधन",
+			"previewLinkedStudies": "संबंधित अध्ययन",
+			"previewLinkedTasks": "लिंक किए गए कार्य",
 			"publicResources": "सार्वजनिक संसाधन",
 			"studies": "अध्ययन करते हैं",
 			"tasks": "कार्य",
 			"title": "शीर्षक"
 		},
-		"loading": "लोड हो रहा है..."
+		"filterByAssignedTo": "असाइन किए गए के अनुसार फ़िल्टर करें",
+		"loading": "लोड हो रहा है...",
+		"status": "स्थिति"
 	},
 	"boardManagement": {
+		"resourceUnavailable": "संसाधन अनुपलब्ध है",
 		"viewResource": "संसाधन देखें"
 	},
 	"build-create-new-study": "नया अध्ययन बनाने के लिए नीचे दिए गए बटन पर क्लिक करें।",
@@ -651,6 +664,16 @@
 		"submittedLocked": "प्रस्ताव प्रस्तुत कर दिया गया है और लॉक कर दिया गया है 🔒",
 		"viewBoard": "बोर्ड दृश्य",
 		"viewFlattenBoard": "लिस्ट व्यू"
+	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "समीक्षा चरण",
+			"title": "फिल्टर के द्वारा"
+		}
 	},
 	"proposalSelector": {
 		"linkToProposal": "प्रस्ताव का लिंक",

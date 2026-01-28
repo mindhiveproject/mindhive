@@ -2,7 +2,7 @@ import TipTapEditor from "../../../TipTap/Main";
 import { useQuery, useMutation } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import { Button, Icon, Modal, Tab } from "semantic-ui-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 // Strip HTML tags from text
@@ -525,7 +525,7 @@ export default function LinkedItems({
           )}
         </Modal.Header>
         <Modal.Content scrolling style={{ background: "#ffffff", padding: 0 }}>
-          <Tab panes={panes} style={{ fontFamily: "Nunito" }} />
+          <Tab panes={panes} style={{ fontFamily: "Nunito"}} />
         </Modal.Content>
         <Modal.Actions
           style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
@@ -781,6 +781,8 @@ const ItemTab = ({
 
   // --- Search State ---
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedPublishedFilter, setSelectedPublishedFilter] = useState(null);
+  const [selectedClassIds, setSelectedClassIds] = useState([]);
 
   // --- Filter Function ---
   const filterItems = (itemsList, query) => {
@@ -805,6 +807,18 @@ const ItemTab = ({
   const toggleAccordion = (key) => {
     setOpenAccordion((prev) => ({ ...prev, [key]: !prev[key] }));
   };
+
+  // Unique classes from items (assignment tab only) - must run unconditionally for hooks rules
+  const uniqueClasses = useMemo(() => {
+    if (type !== "assignment" || !items || !Array.isArray(items)) return [];
+    const m = new Map();
+    items.forEach((i) => {
+      (i?.classes || []).forEach((c) => {
+        if (c?.id && !m.has(c.id)) m.set(c.id, { id: c.id, title: c.title || "Untitled Class" });
+      });
+    });
+    return Array.from(m.values());
+  }, [type, items]);
 
   if (type === "public") {
     // For public type, render two sections: resources and assignments (in accordions)
@@ -1287,8 +1301,28 @@ const ItemTab = ({
     return item;
   });
 
-  // Filter displayItems based on search query
-  const filteredDisplayItems = filterItems(displayItems, searchQuery);
+  // When type === "assignment", apply published and class filters before search
+  let preSearchItems = displayItems;
+  if (type === "assignment") {
+    if (selectedPublishedFilter !== null) {
+      preSearchItems = preSearchItems.filter((item) => item?.public === selectedPublishedFilter);
+    }
+    if (selectedClassIds.length > 0) {
+      preSearchItems = preSearchItems.filter((item) =>
+        (item?.classes || []).some((c) => selectedClassIds.includes(c.id))
+      );
+    }
+  }
+  const filteredDisplayItems = filterItems(preSearchItems, searchQuery);
+
+  const handlePublishedFilterToggle = (value) => {
+    setSelectedPublishedFilter((prev) => (prev === value ? null : value));
+  };
+  const handleClassFilterToggle = (classId) => {
+    setSelectedClassIds((prev) =>
+      prev.includes(classId) ? prev.filter((id) => id !== classId) : [...prev, classId]
+    );
+  };
 
   return (
     <div style={{ padding: "24px", background: "#f9fafb" }}>
@@ -1342,6 +1376,66 @@ const ItemTab = ({
           )}
         </div>
       </div>
+      {type === "assignment" && (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "8px",
+            alignItems: "center",
+            marginBottom: "16px",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => handlePublishedFilterToggle(true)}
+            style={{
+              ...styledChipPublished,
+              color: "#434343",
+              backgroundColor: selectedPublishedFilter === true ? "#DEF8FB" : "#FFFFFF",
+              borderColor: selectedPublishedFilter === true ? "#434343" : "#434343",
+            }}
+            >
+            {t("assignment.published", "Published")}
+          </button>
+          <button
+            type="button"
+            onClick={() => handlePublishedFilterToggle(false)}
+            style={{
+              ...styledChipUnpublished,
+              color: "#434343",
+              backgroundColor: selectedPublishedFilter === false ? "#EFEFEF" : "#FFFFFF",
+              borderColor: selectedPublishedFilter === false ? "#434343" : "#434343",
+            }}
+          >
+            {t("assignment.unpublished", "Unpublished")}
+          </button>
+          {uniqueClasses.length > 0 && (
+            <>
+              <span style={{ margin: "0 8px", color: "#A1A1A1" }}>|</span>
+              {uniqueClasses.map((cls) => {
+                const isSelected = selectedClassIds.includes(cls.id);
+                return (
+                  <button
+                    key={cls.id}
+                    type="button"
+                    onClick={() => handleClassFilterToggle(cls.id)}
+                    style={{
+                      ...styledChip,
+                      backgroundColor: isSelected ? "#FDF2D0" : "#FFFFFF",
+                      borderColor: isSelected ? "#434343" : "#434343",
+                      cursor: "pointer",
+                      color: "#434343",
+                    }}
+                  >
+                    {stripHtml(cls.title)}
+                  </button>
+                );
+              })}
+            </>
+          )}
+        </div>
+      )}
       {filteredDisplayItems.length > 0 ? (
         <div
           style={{
@@ -2406,6 +2500,7 @@ export const PreviewSection = ({
 }) => {
   const { t } = useTranslation("classes");
   const [hoveredItemId, setHoveredItemId] = useState(null);
+  const tooltipTimeoutRef = useRef(null);
 
   console.log("👁️ [PreviewSection] Rendering:", {
     title,
@@ -2419,163 +2514,176 @@ export const PreviewSection = ({
     }))
   });
 
-  // Get background color based on type (from Figma design)
+  // Background and border per type (Figma: Resources = MH-Theme/Secondary/Lighter #E6F1F9, border #BBC0CA)
   const getBackgroundColor = (itemType) => {
     if (itemType === "resource") {
-      return "rgba(211, 226, 241, 0.4)";
-    } else if (itemType === "assignment") {
-      return "rgba(228, 223, 246, 0.4)";
-    } else if (itemType === "task" || itemType === "study") {
-      return "rgba(253, 242, 208, 0.4)";
+      return "#E6F1F9"; // MH-Theme/Secondary/Lighter
     }
-    return "#ffffff"; // Default white
+    if (itemType === "assignment") {
+      return "#e4dff6";
+    }
+    if (itemType === "task" || itemType === "study") {
+      return "#fdf2d0";
+    }
+    return "#ffffff";
   };
 
   const getBorder = (itemType) => {
     if (itemType === "resource") {
-      return "1px solid rgba(61, 134, 176, 0.5)";
-    } else if (itemType === "assignment") {
+      return "1px solid #D3E2F1"; // Figma Resources chip border
+    }
+    if (itemType === "assignment") {
       return "1px solid #C6BDEB";
-    } else if (itemType === "task" || itemType === "study") {
+    }
+    if (itemType === "task" || itemType === "study") {
       return "1px solid #F9D978";
     }
+    return "1px solid transparent";
   };
+
   return (
     <>
-      {/* <div
-        className="cardHeader"
-        style={{
-          fontFamily: "Nunito",
-          fontSize: "20px",
-          fontWeight: 600,
-          color: "#333",
-          marginTop: "20px",
-        }}
-      >
-        {title}
-      </div> */}
+      {title && (
+        <div
+          className="cardHeader"
+          style={{
+            fontFamily: "Nunito, sans-serif",
+            fontSize: "16px",
+            fontWeight: 600,
+            lineHeight: "24px",
+            color: "#171717", // MH-Theme/Neutrals/Black
+            marginTop: "8px",
+            marginBottom: "4px",
+          }}
+        >
+          {title}
+        </div>
+      )}
       <div
         className="previewGrid"
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-          gap: "20px",
-          marginTop: "10px",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "8px",
+          marginTop: title ? 0 : "10px",
+          alignItems: "center",
         }}
       >
         {items.map((item, index) => {
-          const isTaskOrStudy = type === "task" || type === "study";
           const isTask = type === "task";
           const isStudy = type === "study";
           const isAssignment = type === "assignment";
           const isResource = type === "resource";
           let viewUrl = `/dashboard/${type}s/view?id=${item?.id}`;
-          if (isTask) {
-            viewUrl = `/dashboard/discover/tasks?name=${item?.slug}`;
-          }
-          if (isStudy) {
-            viewUrl = `/dashboard/discover/studies?name=${item?.slug}`;
-          }
-          const editUrl = item?.isCustom
-            ? `/dashboard/${type}s/edit?id=${item?.id}`
-            : `/dashboard/${type}s/copy?id=${item?.id}&p=${proposal?.id}`;
-          const content = isResource
-            ? item?.content?.main || ""
-            : item?.content || "";
+          if (isTask) viewUrl = `/dashboard/discover/tasks?name=${item?.slug}`;
+          if (isStudy) viewUrl = `/dashboard/discover/studies?name=${item?.slug}`;
 
-          // Handle click based on item type for PreviewSection
           const handlePreviewCardClick = () => {
-            if (isAssignment) {
-              openAssignmentModal?.(item);
-            } else if (isResource) {
-              openResourceModal?.(item);
-            } else if (isTask || isStudy) {
-              window.open(viewUrl, '_blank', 'noopener,noreferrer');
-            }
+            if (isAssignment) openAssignmentModal?.(item);
+            else if (isResource) openResourceModal?.(item);
+            else if (isTask || isStudy) window.open(viewUrl, "_blank", "noopener,noreferrer");
           };
 
           const isHovered = hoveredItemId === item.id;
           const backgroundColor = getBackgroundColor(type);
           const border = getBorder(type);
+          const fullTitle = stripHtml(item?.title) || "Untitled";
+          const typeLabel =
+            type === "resource"
+              ? t("board.expendedCard.resources", "Resources")
+              : type === "assignment"
+                ? t("board.expendedCard.myAssignments", "Assignments")
+                : type === "task"
+                  ? t("board.expendedCard.tasks", "Tasks")
+                  : t("board.expendedCard.studies", "Studies");
 
           return (
             <div
               className="itemBlockPreview"
               key={`${type}-${item.id}-${index}`}
               onClick={handlePreviewCardClick}
-              onMouseEnter={() => setHoveredItemId(item.id)}
-              onMouseLeave={() => setHoveredItemId(null)}
+              onMouseEnter={(e) => {
+                setHoveredItemId(item.id);
+                const el = e.currentTarget;
+                if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current);
+                tooltipTimeoutRef.current = setTimeout(() => {
+                  const tooltip = el.querySelector(".hover-tooltip");
+                  if (tooltip) {
+                    tooltip.style.opacity = "1";
+                    tooltip.style.transform = "translateY(0)";
+                  }
+                }, 550);
+              }}
+              onMouseLeave={(e) => {
+                setHoveredItemId(null);
+                if (tooltipTimeoutRef.current) {
+                  clearTimeout(tooltipTimeoutRef.current);
+                  tooltipTimeoutRef.current = null;
+                }
+                const tooltip = e.currentTarget.querySelector(".hover-tooltip");
+                if (tooltip) {
+                  tooltip.style.opacity = "0";
+                  tooltip.style.transform = "translateY(-5px)";
+                }
+              }}
               style={{
-                border: border,
-                borderRadius: "12px",
-                padding: "16px 16px",
-                background: backgroundColor,
-                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
                 position: "relative",
-                overflow: "hidden",
+                display: "inline-flex",
+                alignItems: "center",
+                padding: "10px 16px",
+                borderRadius: "8px",
+                border,
+                background: backgroundColor,
+                cursor: "pointer",
+                transition: "box-shadow 0.2s ease",
+                boxShadow: isHovered ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
+                fontFamily: "Nunito, sans-serif",
+                fontSize: "16px",
+                fontWeight: 600,
+                lineHeight: "24px",
+                color: "#171717",
+                maxWidth: "320px",
+                minWidth: 0,
               }}
             >
-              {/* Hover overlay */}
-              {isHovered && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: "rgba(51, 111, 138, 0.1)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    paddingRight: "12px",
-                    borderRadius: "12px",
-                    transition: "all 0.3s ease",
-                    zIndex: 1,
-                    border: border ? border.replace(/\d+px/, "2px") : "3px solid #336F8A",
-                  }}
-                >
-                </div>
-              )}
-
-              <div
-                className="titleIcons"
+              <span
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  position: "relative",
-                  zIndex: 2,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  minWidth: 0,
                 }}
               >
-                <h2
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: "600",
-                    color: "#000000",
-                    margin: 0,
-                    fontFamily: "Nunito, sans-serif",
-                    lineHeight: "24px",
-                  }}
-                >
-                  {stripHtml(item?.title) || "Untitled"}
-                </h2>
+                {fullTitle}
+              </span>
+              {/* Hover tooltip: type + full name (1.5s delay, matches chip color) */}
+              <div
+                className="hover-tooltip"
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: "0",
+                  width: "max-content",
+                  maxWidth: "320px",
+                  background: backgroundColor,
+                  border,
+                  color: "#171717",
+                  marginTop: "8px",
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  fontFamily: "Nunito, sans-serif",
+                  lineHeight: "20px",
+                  opacity: 0,
+                  transform: "translateY(-5px)",
+                  transition: "all 0.3s ease",
+                  pointerEvents: "none",
+                  zIndex: 1000,
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.10)",
+                }}
+              >
+                <span style={{ fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
               </div>
-              {!isAssignment && (
-                <div
-                  style={{
-                    fontSize: "14px",
-                    color: "#666",
-                    lineHeight: "1.5",
-                    position: "relative",
-                    zIndex: 2,
-                  }}
-                >
-                  {/* {ReactHtmlParser(truncateHtml(content, 50))} */}
-                </div>
-              )}
             </div>
           );
         })}
