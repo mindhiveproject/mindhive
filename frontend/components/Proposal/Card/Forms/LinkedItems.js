@@ -2,7 +2,7 @@ import TipTapEditor from "../../../TipTap/Main";
 import { useQuery, useMutation } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import { Button, Icon, Modal, Tab } from "semantic-ui-react";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 // Strip HTML tags from text
@@ -2500,6 +2500,7 @@ export const PreviewSection = ({
 }) => {
   const { t } = useTranslation("classes");
   const [hoveredItemId, setHoveredItemId] = useState(null);
+  const tooltipTimeoutRef = useRef(null);
 
   console.log("👁️ [PreviewSection] Rendering:", {
     title,
@@ -2513,163 +2514,176 @@ export const PreviewSection = ({
     }))
   });
 
-  // Get background color based on type (from Figma design)
+  // Background and border per type (Figma: Resources = MH-Theme/Secondary/Lighter #E6F1F9, border #BBC0CA)
   const getBackgroundColor = (itemType) => {
     if (itemType === "resource") {
-      return "rgba(211, 226, 241, 0.4)";
-    } else if (itemType === "assignment") {
-      return "rgba(228, 223, 246, 0.4)";
-    } else if (itemType === "task" || itemType === "study") {
-      return "rgba(253, 242, 208, 0.4)";
+      return "#E6F1F9"; // MH-Theme/Secondary/Lighter
     }
-    return "#ffffff"; // Default white
+    if (itemType === "assignment") {
+      return "#e4dff6";
+    }
+    if (itemType === "task" || itemType === "study") {
+      return "#fdf2d0";
+    }
+    return "#ffffff";
   };
 
   const getBorder = (itemType) => {
     if (itemType === "resource") {
-      return "1px solid rgba(61, 134, 176, 0.5)";
-    } else if (itemType === "assignment") {
+      return "1px solid #D3E2F1"; // Figma Resources chip border
+    }
+    if (itemType === "assignment") {
       return "1px solid #C6BDEB";
-    } else if (itemType === "task" || itemType === "study") {
+    }
+    if (itemType === "task" || itemType === "study") {
       return "1px solid #F9D978";
     }
+    return "1px solid transparent";
   };
+
   return (
     <>
-      {/* <div
-        className="cardHeader"
-        style={{
-          fontFamily: "Nunito",
-          fontSize: "20px",
-          fontWeight: 600,
-          color: "#333",
-          marginTop: "20px",
-        }}
-      >
-        {title}
-      </div> */}
+      {title && (
+        <div
+          className="cardHeader"
+          style={{
+            fontFamily: "Nunito, sans-serif",
+            fontSize: "16px",
+            fontWeight: 600,
+            lineHeight: "24px",
+            color: "#171717", // MH-Theme/Neutrals/Black
+            marginTop: "8px",
+            marginBottom: "4px",
+          }}
+        >
+          {title}
+        </div>
+      )}
       <div
         className="previewGrid"
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-          gap: "20px",
-          marginTop: "10px",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "8px",
+          marginTop: title ? 0 : "10px",
+          alignItems: "center",
         }}
       >
         {items.map((item, index) => {
-          const isTaskOrStudy = type === "task" || type === "study";
           const isTask = type === "task";
           const isStudy = type === "study";
           const isAssignment = type === "assignment";
           const isResource = type === "resource";
           let viewUrl = `/dashboard/${type}s/view?id=${item?.id}`;
-          if (isTask) {
-            viewUrl = `/dashboard/discover/tasks?name=${item?.slug}`;
-          }
-          if (isStudy) {
-            viewUrl = `/dashboard/discover/studies?name=${item?.slug}`;
-          }
-          const editUrl = item?.isCustom
-            ? `/dashboard/${type}s/edit?id=${item?.id}`
-            : `/dashboard/${type}s/copy?id=${item?.id}&p=${proposal?.id}`;
-          const content = isResource
-            ? item?.content?.main || ""
-            : item?.content || "";
+          if (isTask) viewUrl = `/dashboard/discover/tasks?name=${item?.slug}`;
+          if (isStudy) viewUrl = `/dashboard/discover/studies?name=${item?.slug}`;
 
-          // Handle click based on item type for PreviewSection
           const handlePreviewCardClick = () => {
-            if (isAssignment) {
-              openAssignmentModal?.(item);
-            } else if (isResource) {
-              openResourceModal?.(item);
-            } else if (isTask || isStudy) {
-              window.open(viewUrl, '_blank', 'noopener,noreferrer');
-            }
+            if (isAssignment) openAssignmentModal?.(item);
+            else if (isResource) openResourceModal?.(item);
+            else if (isTask || isStudy) window.open(viewUrl, "_blank", "noopener,noreferrer");
           };
 
           const isHovered = hoveredItemId === item.id;
           const backgroundColor = getBackgroundColor(type);
           const border = getBorder(type);
+          const fullTitle = stripHtml(item?.title) || "Untitled";
+          const typeLabel =
+            type === "resource"
+              ? t("board.expendedCard.resources", "Resources")
+              : type === "assignment"
+                ? t("board.expendedCard.myAssignments", "Assignments")
+                : type === "task"
+                  ? t("board.expendedCard.tasks", "Tasks")
+                  : t("board.expendedCard.studies", "Studies");
 
           return (
             <div
               className="itemBlockPreview"
               key={`${type}-${item.id}-${index}`}
               onClick={handlePreviewCardClick}
-              onMouseEnter={() => setHoveredItemId(item.id)}
-              onMouseLeave={() => setHoveredItemId(null)}
+              onMouseEnter={(e) => {
+                setHoveredItemId(item.id);
+                const el = e.currentTarget;
+                if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current);
+                tooltipTimeoutRef.current = setTimeout(() => {
+                  const tooltip = el.querySelector(".hover-tooltip");
+                  if (tooltip) {
+                    tooltip.style.opacity = "1";
+                    tooltip.style.transform = "translateY(0)";
+                  }
+                }, 550);
+              }}
+              onMouseLeave={(e) => {
+                setHoveredItemId(null);
+                if (tooltipTimeoutRef.current) {
+                  clearTimeout(tooltipTimeoutRef.current);
+                  tooltipTimeoutRef.current = null;
+                }
+                const tooltip = e.currentTarget.querySelector(".hover-tooltip");
+                if (tooltip) {
+                  tooltip.style.opacity = "0";
+                  tooltip.style.transform = "translateY(-5px)";
+                }
+              }}
               style={{
-                border: border,
-                borderRadius: "12px",
-                padding: "16px 16px",
-                background: backgroundColor,
-                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
                 position: "relative",
-                overflow: "hidden",
+                display: "inline-flex",
+                alignItems: "center",
+                padding: "10px 16px",
+                borderRadius: "8px",
+                border,
+                background: backgroundColor,
+                cursor: "pointer",
+                transition: "box-shadow 0.2s ease",
+                boxShadow: isHovered ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
+                fontFamily: "Nunito, sans-serif",
+                fontSize: "16px",
+                fontWeight: 600,
+                lineHeight: "24px",
+                color: "#171717",
+                maxWidth: "320px",
+                minWidth: 0,
               }}
             >
-              {/* Hover overlay */}
-              {isHovered && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: "rgba(51, 111, 138, 0.1)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    paddingRight: "12px",
-                    borderRadius: "12px",
-                    transition: "all 0.3s ease",
-                    zIndex: 1,
-                    border: border ? border.replace(/\d+px/, "2px") : "3px solid #336F8A",
-                  }}
-                >
-                </div>
-              )}
-
-              <div
-                className="titleIcons"
+              <span
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  position: "relative",
-                  zIndex: 2,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  minWidth: 0,
                 }}
               >
-                <h2
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: "600",
-                    color: "#000000",
-                    margin: 0,
-                    fontFamily: "Nunito, sans-serif",
-                    lineHeight: "24px",
-                  }}
-                >
-                  {stripHtml(item?.title) || "Untitled"}
-                </h2>
+                {fullTitle}
+              </span>
+              {/* Hover tooltip: type + full name (1.5s delay, matches chip color) */}
+              <div
+                className="hover-tooltip"
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: "0",
+                  width: "max-content",
+                  maxWidth: "320px",
+                  background: backgroundColor,
+                  border,
+                  color: "#171717",
+                  marginTop: "8px",
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  fontFamily: "Nunito, sans-serif",
+                  lineHeight: "20px",
+                  opacity: 0,
+                  transform: "translateY(-5px)",
+                  transition: "all 0.3s ease",
+                  pointerEvents: "none",
+                  zIndex: 1000,
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.10)",
+                }}
+              >
+                <span style={{ fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
               </div>
-              {!isAssignment && (
-                <div
-                  style={{
-                    fontSize: "14px",
-                    color: "#666",
-                    lineHeight: "1.5",
-                    position: "relative",
-                    zIndex: 2,
-                  }}
-                >
-                  {/* {ReactHtmlParser(truncateHtml(content, 50))} */}
-                </div>
-              )}
             </div>
           );
         })}
