@@ -68,7 +68,9 @@
 			"tasks": "任务",
 			"title": "标题"
 		},
-		"loading": "加载中..."
+		"filterByAssignedTo": "按分配给",
+		"loading": "加载中...",
+		"status": "地位"
 	},
 	"boardManagement": {
 		"resourceUnavailable": "资源不可用",
@@ -662,6 +664,16 @@
 		"submittedLocked": "提案已提交并锁定🔒",
 		"viewBoard": "板视图",
 		"viewFlattenBoard": "列表显示"
+	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "复习步骤",
+			"title": "过滤"
+		}
 	},
 	"proposalSelector": {
 		"linkToProposal": "提案链接",

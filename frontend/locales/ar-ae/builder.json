@@ -68,7 +68,9 @@
 			"tasks": "المهام",
 			"title": "العنوان"
 		},
-		"loading": "تحميل..."
+		"filterByAssignedTo": "تصفية حسب المُعين إلى",
+		"loading": "تحميل...",
+		"status": "حالة"
 	},
 	"boardManagement": {
 		"resourceUnavailable": "المورد غير متوفر",
@@ -662,6 +664,16 @@
 		"submittedLocked": "تم تقديم الاقتراح وقفل 🔒",
 		"viewBoard": "عرض اللوحة",
 		"viewFlattenBoard": "عرض القائمة"
+	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "خطوات المراجعة",
+			"title": "مصنف بواسطة"
+		}
 	},
 	"proposalSelector": {
 		"linkToProposal": "رابط إلى الاقتراح",

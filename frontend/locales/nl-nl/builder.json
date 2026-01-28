@@ -68,7 +68,9 @@
 			"tasks": "Taken",
 			"title": "Titel"
 		},
-		"loading": "Bezig met laden..."
+		"filterByAssignedTo": "Filteren op toegewezen aan",
+		"loading": "Bezig met laden...",
+		"status": "Toestand"
 	},
 	"boardManagement": {
 		"resourceUnavailable": "Bron niet beschikbaar",
@@ -662,6 +664,16 @@
 		"submittedLocked": "Het voorstel is ingediend en vergrendeld 🔒",
 		"viewBoard": "Bestuursweergave",
 		"viewFlattenBoard": "Lijstweergave"
+	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "Beoordelingsstappen",
+			"title": "Filteren op"
+		}
 	},
 	"proposalSelector": {
 		"linkToProposal": "Link naar voorstel",

@@ -68,7 +68,9 @@
 			"tasks": "Tareas",
 			"title": "Título"
 		},
-		"loading": "Cargando..."
+		"filterByAssignedTo": "Filtrar por asignado a",
+		"loading": "Cargando...",
+		"status": "Estado"
 	},
 	"boardManagement": {
 		"resourceUnavailable": "Recurso no disponible",
@@ -662,6 +664,16 @@
 		"submittedLocked": "La propuesta ha sido enviada y bloqueada 🔒",
 		"viewBoard": "Vista del tablero",
 		"viewFlattenBoard": "Vista de la lista"
+	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "Pasos de revisión",
+			"title": "Filtrar por"
+		}
 	},
 	"proposalSelector": {
 		"linkToProposal": "Enlace a la propuesta",

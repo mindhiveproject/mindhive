@@ -68,7 +68,9 @@
 			"tasks": "Tasks",
 			"title": "Title"
 		},
-		"loading": "Loading..."
+		"filterByAssignedTo": "Filter by assigned to",
+		"loading": "Loading...",
+		"status": "Status"
 	},
 	"boardManagement": {
 		"resourceUnavailable": "Resource unavailable",
@@ -662,6 +664,16 @@
 		"submittedLocked": "The proposal has been submitted and locked 🔒",
 		"viewBoard": "Board View",
 		"viewFlattenBoard": "List View"
+	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": "No assigned people on this board yet."
+			},
+			"emptyState": "No cards match the selected filters. Please adjust your status, review step, or assigned filters to see cards.",
+			"reviewSteps": "Review Steps",
+			"title": "Filter by"
+		}
 	},
 	"proposalSelector": {
 		"linkToProposal": "Link to proposal",

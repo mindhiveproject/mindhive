@@ -68,7 +68,9 @@
 			"tasks": "",
 			"title": ""
 		},
-		"loading": "लोड हो रहा है..."
+		"filterByAssignedTo": "",
+		"loading": "लोड हो रहा है...",
+		"status": ""
 	},
 	"boardManagement": {
 		"resourceUnavailable": "",
@@ -662,6 +664,16 @@
 		"submittedLocked": "प्रस्ताव प्रस्तुत कर दिया गया है और लॉक कर दिया गया है 🔒",
 		"viewBoard": "",
 		"viewFlattenBoard": ""
+	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "",
+			"title": ""
+		}
 	},
 	"proposalSelector": {
 		"linkToProposal": "प्रस्ताव का लिंक",
