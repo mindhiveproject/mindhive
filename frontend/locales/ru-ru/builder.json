@@ -24,6 +24,16 @@
 	"allStudies": "Все исследования",
 	"archivedStudies": "Архивные исследования",
 	"assigned": {
+		"addUser": "Добавить людей",
+		"assignCard": "Назначьте эту карточку соавтору из этого проекта.",
+		"cancel": "Отмена",
+		"noCollaborators": "Для этой доски нет доступных для сотрудничества участников.",
+		"noUsersFound": "Профиль не найден",
+		"removeUser": "Удалить пользователя",
+		"save": "Сохранять",
+		"searchPlaceholder": "Поиск по имени пользователя...",
+		"searchResults": "Результаты поиска",
+		"selected": "Выбрано",
 		"typeUsername": "Введите имя пользователя"
 	},
 	"assignment": {
@@ -61,6 +71,7 @@
 		"loading": "Загрузка..."
 	},
 	"boardManagement": {
+		"resourceUnavailable": "Ресурс недоступен",
 		"viewResource": "Просмотреть ресурс"
 	},
 	"build-create-new-study": "Чтобы создать новое исследование, нажмите кнопку ниже.",

@@ -24,6 +24,16 @@
 	"allStudies": "सभी अध्ययन",
 	"archivedStudies": "संग्रहीत अध्ययन",
 	"assigned": {
+		"addUser": "लोगों को जोड़ें",
+		"assignCard": "इस कार्ड को इस प्रोजेक्ट के किसी सहयोगी को सौंपें",
+		"cancel": "रद्द करना",
+		"noCollaborators": "इस बोर्ड के लिए कोई सहयोगी उपलब्ध नहीं हैं।",
+		"noUsersFound": "कोई प्रोफ़ाइल नहीं मिली",
+		"removeUser": "उपयोगकर्ता हटाएँ",
+		"save": "बचाना",
+		"searchPlaceholder": "उपयोगकर्ता नाम से खोजें...",
+		"searchResults": "खोज के परिणाम",
+		"selected": "चयनित",
 		"typeUsername": "उपयोगकर्ता नाम टाइप करें"
 	},
 	"assignment": {
@@ -61,6 +71,7 @@
 		"loading": "लोड हो रहा है..."
 	},
 	"boardManagement": {
+		"resourceUnavailable": "संसाधन अनुपलब्ध है",
 		"viewResource": "संसाधन देखें"
 	},
 	"build-create-new-study": "नया अध्ययन बनाने के लिए नीचे दिए गए बटन पर क्लिक करें।",

@@ -24,6 +24,16 @@
 	"allStudies": "Todos os estudos",
 	"archivedStudies": "Estudos arquivados",
 	"assigned": {
+		"addUser": "Adicionar pessoas",
+		"assignCard": "Atribua este cartão a um colaborador deste projeto.",
+		"cancel": "Cancelar",
+		"noCollaborators": "Não há colaboradores disponíveis para este conselho.",
+		"noUsersFound": "Nenhum perfil encontrado",
+		"removeUser": "Remover usuário",
+		"save": "Salvar",
+		"searchPlaceholder": "Pesquisar por nome de usuário...",
+		"searchResults": "Procurar Resultados",
+		"selected": "Selecionado",
 		"typeUsername": "Digite o nome de usuário"
 	},
 	"assignment": {
@@ -61,6 +71,7 @@
 		"loading": "Carregando..."
 	},
 	"boardManagement": {
+		"resourceUnavailable": "Recurso indisponível",
 		"viewResource": "Ver recurso"
 	},
 	"build-create-new-study": "Para criar um novo estudo, clique no botão abaixo.",

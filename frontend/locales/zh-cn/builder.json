@@ -24,6 +24,16 @@
 	"allStudies": "所有研究",
 	"archivedStudies": "已存档的研究",
 	"assigned": {
+		"addUser": "添加人员",
+		"assignCard": "将此卡片分配给此项目的合作者",
+		"cancel": "取消",
+		"noCollaborators": "该董事会暂无合作者。",
+		"noUsersFound": "未找到个人资料",
+		"removeUser": "移除用户",
+		"save": "节省",
+		"searchPlaceholder": "按用户名搜索...",
+		"searchResults": "搜索结果",
+		"selected": "选定",
 		"typeUsername": "输入用户名"
 	},
 	"assignment": {
@@ -61,6 +71,7 @@
 		"loading": "加载中..."
 	},
 	"boardManagement": {
+		"resourceUnavailable": "资源不可用",
 		"viewResource": "查看资源"
 	},
 	"build-create-new-study": "要创建新研究，请单击下面的按钮。",

@@ -24,6 +24,16 @@
 	"allStudies": "Alle studies",
 	"archivedStudies": "Gearchiveerde studies",
 	"assigned": {
+		"addUser": "Mensen toevoegen",
+		"assignCard": "Wijs deze kaart toe aan een medewerker van dit project.",
+		"cancel": "Annuleren",
+		"noCollaborators": "Er zijn geen medewerkers beschikbaar voor dit bestuur.",
+		"noUsersFound": "Geen profiel gevonden",
+		"removeUser": "Gebruiker verwijderen",
+		"save": "Redden",
+		"searchPlaceholder": "Zoeken op gebruikersnaam...",
+		"searchResults": "Zoekresultaten",
+		"selected": "Geselecteerd",
 		"typeUsername": "Typ gebruikersnaam"
 	},
 	"assignment": {
@@ -61,6 +71,7 @@
 		"loading": "Bezig met laden..."
 	},
 	"boardManagement": {
+		"resourceUnavailable": "Bron niet beschikbaar",
 		"viewResource": "Bron bekijken"
 	},
 	"build-create-new-study": "Om een ​​nieuwe studie te maken, klikt u op onderstaande knop.",

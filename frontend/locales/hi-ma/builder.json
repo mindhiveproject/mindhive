@@ -24,6 +24,16 @@
 	"allStudies": "सभी अध्ययन",
 	"archivedStudies": "संग्रहीत अध्ययन",
 	"assigned": {
+		"addUser": "",
+		"assignCard": "",
+		"cancel": "",
+		"noCollaborators": "",
+		"noUsersFound": "",
+		"removeUser": "",
+		"save": "",
+		"searchPlaceholder": "",
+		"searchResults": "",
+		"selected": "",
 		"typeUsername": "उपयोगकर्ता नाम टाइप करें"
 	},
 	"assignment": {
@@ -61,6 +71,7 @@
 		"loading": "लोड हो रहा है..."
 	},
 	"boardManagement": {
+		"resourceUnavailable": "",
 		"viewResource": ""
 	},
 	"build-create-new-study": "नया अध्ययन बनाने के लिए नीचे दिए गए बटन पर क्लिक करें।",

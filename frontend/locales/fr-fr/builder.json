@@ -24,6 +24,16 @@
 	"allStudies": "Toutes les études",
 	"archivedStudies": "Études archivées",
 	"assigned": {
+		"addUser": "Ajouter des personnes",
+		"assignCard": "Attribuez cette carte à un collaborateur de ce projet.",
+		"cancel": "Annuler",
+		"noCollaborators": "Aucun collaborateur disponible pour ce conseil.",
+		"noUsersFound": "Aucun profil trouvé",
+		"removeUser": "Supprimer un utilisateur",
+		"save": "Sauvegarder",
+		"searchPlaceholder": "Recherche par nom d'utilisateur...",
+		"searchResults": "Résultats de recherche",
+		"selected": "Choisi",
 		"typeUsername": "Tapez le nom d'utilisateur"
 	},
 	"assignment": {
@@ -61,6 +71,7 @@
 		"loading": "Chargement..."
 	},
 	"boardManagement": {
+		"resourceUnavailable": "Ressource indisponible",
 		"viewResource": "Afficher la ressource"
 	},
 	"build-create-new-study": "Pour créer une nouvelle étude, cliquez sur le bouton ci-dessous.",

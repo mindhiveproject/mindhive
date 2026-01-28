@@ -24,6 +24,16 @@
 	"allStudies": "جميع الدراسات",
 	"archivedStudies": "الدراسات المؤرشفة",
 	"assigned": {
+		"addUser": "إضافة أشخاص",
+		"assignCard": "قم بتعيين هذه البطاقة لأحد المتعاونين من هذا المشروع",
+		"cancel": "يلغي",
+		"noCollaborators": "لا يوجد متعاونون متاحون لهذه اللوحة.",
+		"noUsersFound": "لم يتم العثور على ملف تعريف",
+		"removeUser": "إزالة المستخدم",
+		"save": "يحفظ",
+		"searchPlaceholder": "البحث باستخدام اسم المستخدم...",
+		"searchResults": "نتائج البحث",
+		"selected": "المحدد",
 		"typeUsername": "اكتب اسم المستخدم"
 	},
 	"assignment": {
@@ -61,6 +71,7 @@
 		"loading": "تحميل..."
 	},
 	"boardManagement": {
+		"resourceUnavailable": "المورد غير متوفر",
 		"viewResource": "عرض المورد"
 	},
 	"build-create-new-study": "لإنشاء دراسة جديدة، انقر على الزر أدناه.",

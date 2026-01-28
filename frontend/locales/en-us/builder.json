@@ -24,6 +24,16 @@
 	"allStudies": "All studies",
 	"archivedStudies": "Archived studies",
 	"assigned": {
+		"addUser": "Add people",
+		"assignCard": "Assign this card to a collaborator from this project",
+		"cancel": "Cancel",
+		"noCollaborators": "No collaborators available for this board.",
+		"noUsersFound": "No profile found",
+		"removeUser": "Remove user",
+		"save": "Save",
+		"searchPlaceholder": "Search by username...",
+		"searchResults": "Search results",
+		"selected": "Selected",
 		"typeUsername": "Type username"
 	},
 	"assignment": {
@@ -61,6 +71,7 @@
 		"loading": "Loading..."
 	},
 	"boardManagement": {
+		"resourceUnavailable": "Resource unavailable",
 		"viewResource": "View Resource"
 	},
 	"build-create-new-study": "To create a new study, click the button below.",
