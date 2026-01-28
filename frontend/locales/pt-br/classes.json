@@ -70,6 +70,7 @@
 		"saveChanges": "Salvar alterações",
 		"saveLink": "Salvar e vincular",
 		"saveSuccess": "Atribuição salva com sucesso",
+		"saveWithoutClass": "Salvar sem associação de classe",
 		"startFromScratch": "Comece do zero",
 		"startFromScratchDescription": "Crie uma nova tarefa com controle total sobre o título, as instruções e o conteúdo de exemplo. Ideal para algo completamente exclusivo da sua turma.",
 		"status": "",

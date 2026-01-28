@@ -70,6 +70,7 @@
 		"saveChanges": "Save Changes",
 		"saveLink": "Save and Link",
 		"saveSuccess": "Assignment saved successfully",
+		"saveWithoutClass": "Save without class association",
 		"startFromScratch": "Start from scratch",
 		"startFromScratchDescription": "Create a brand new assignment with full control over the title, instructions, and placeholder content. Best for something completely unique to your class.",
 		"status": "Status",

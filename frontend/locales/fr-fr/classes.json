@@ -70,6 +70,7 @@
 		"saveChanges": "Sauvegarder les modifications",
 		"saveLink": "Enregistrer et lier",
 		"saveSuccess": "L'affectation a été sauvegardée avec succès",
+		"saveWithoutClass": "Sauvegarder sans association de classe",
 		"startFromScratch": "Partir de zéro",
 		"startFromScratchDescription": "Créez un devoir inédit en contrôlant entièrement le titre, les consignes et le contenu fictif. Idéal pour un exercice totalement unique pour votre classe.",
 		"status": "",

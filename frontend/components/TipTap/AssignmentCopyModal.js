@@ -52,6 +52,9 @@ export default function AssignmentCopyModal({ open, onClose, assignment, user, o
         setHasChanges(true);
     };
 
+    // Check if the current user is an ADMIN
+    const isAdmin = user?.permissions?.map((p) => p?.name).includes("ADMIN");
+
     const handleSaveCopy = async () => {
         try {
         await createAssignment({
@@ -65,6 +68,27 @@ export default function AssignmentCopyModal({ open, onClose, assignment, user, o
                     public: false,
                     templateSource: { connect: { id: assignmentId } },
                     classes: { connect: selectedClasses.map(c => ({ id: c.id })) }, // or adapt depending on your API
+                },
+            },
+        });
+        } catch (err) {
+        alert(err.message);
+        }
+    };
+
+    // For ADMINs only: allow saving a copy without associating a class
+    const handleSaveCopyWithoutClass = async () => {
+        try {
+        if (!isAdmin) return;
+        await createAssignment({
+            variables: {
+                input: {
+                    title: editedAssignment.title,
+                    content: editedAssignment.content,
+                    placeholder: editedAssignment.placeholder,
+                    public: false,
+                    templateSource: { connect: { id: assignmentId } },
+                    // No classes association here on purpose (admin-only behavior)
                 },
             },
         });
@@ -160,34 +184,53 @@ export default function AssignmentCopyModal({ open, onClose, assignment, user, o
                 {t("board.expendedCard.close", "Close")}
             </Button>
 
-            <Button
-                loading={createLoading}
-                disabled={createLoading || selectedClasses.length === 0}
-                onClick={handleSaveCopy}
-                style={selectedClasses.length === 0
-                        ? {
+            <div style={{ display: "flex", gap: "12px" }}>
+                {isAdmin && (
+                    <Button
+                        loading={createLoading}
+                        disabled={createLoading}
+                        onClick={handleSaveCopyWithoutClass}
+                        style={{
                             borderRadius: "100px",
-                            border:  "1px solid #171717",
-                            background: "#EFEFEF",
-                            color: "#171717",
-                            fontSize: "16px",}
-                        : {
-                            borderRadius: "100px",
-                            border:  "1px solid #336F8A",
-                            background: "#336F8A",
-                            color: "white",
-                            fontSize: "16px",}
-                        }
-                >
-                {selectedClasses.length === 0 ? (
-                    t("assignment.chooseClassFirst", "You must associate this assignment to a class before saving it")
-                ) : (
-                    hasChanges 
-                        ? t("assignment.saveAndMakeOwn", "Save changes & make your own") 
-                        : t("assignment.saveAsOwn", "Save as your own")                    
+                            border: "1px solid #336F8A",
+                            background: "white",
+                            color: "#336F8A",
+                            fontSize: "16px",
+                        }}
+                    >
+                        {t("assignment.saveWithoutClass", "Save without class association")}
+                    </Button>
                 )}
 
-            </Button>
+                <Button
+                    loading={createLoading}
+                    disabled={createLoading || selectedClasses.length === 0}
+                    onClick={handleSaveCopy}
+                    style={selectedClasses.length === 0
+                            ? {
+                                borderRadius: "100px",
+                                border:  "1px solid #171717",
+                                background: "#EFEFEF",
+                                color: "#171717",
+                                fontSize: "16px",}
+                            : {
+                                borderRadius: "100px",
+                                border:  "1px solid #336F8A",
+                                background: "#336F8A",
+                                color: "white",
+                                fontSize: "16px",}
+                            }
+                    >
+                    {selectedClasses.length === 0 ? (
+                        t("assignment.chooseClassFirst", "You must associate this assignment to a class before saving it")
+                    ) : (
+                        hasChanges 
+                            ? t("assignment.saveAndMakeOwn", "Save changes & make your own") 
+                            : t("assignment.saveAsOwn", "Save as your own")                    
+                    )}
+
+                </Button>
+            </div>
 
         </Modal.Actions>
         </Modal>
