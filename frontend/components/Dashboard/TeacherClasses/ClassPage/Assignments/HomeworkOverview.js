@@ -110,14 +110,25 @@ const Subtitle = styled.p`
 `;
 
 const OptionsLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  margin-left: 8px;
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
   color: #336F8A;
   text-decoration: none;
   cursor: pointer;
-  margin-left: 8px;
-  
+
   &:hover {
-    text-decoration: underline;
-    color: #274E5B;
+    background: #FDF2D0;
+    color: #171717;
   }
 `;
 
@@ -353,7 +364,7 @@ export default function HomeworkOverview({ code, myclass, user, query }) {
         field: "updatedAt",
         headerName: t("assignment.dateUpdated") || "Last Updated",
         valueFormatter: (params) =>
-          params.value ? moment(params.value).format("MMMM D, YYYY") : '-',
+          params.value ? moment(params.value).format("MMMM D, h:mm A") : '-',
         filter: "agDateColumnFilter",
         sortable: true,
         flex: 1,

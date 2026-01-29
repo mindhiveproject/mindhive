@@ -68,7 +68,9 @@ export const Homework = list({
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
-    updatedAt: timestamp(),
+    updatedAt: timestamp({
+      defaultValue: { kind: "now" },
+    }),
   },
   graphql: {
     plural: "homeworks",
