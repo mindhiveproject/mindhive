@@ -828,6 +828,7 @@
 		"cardsCount": "{{count}} kaart{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "Weet u zeker dat u deze voorstelsectie wilt verwijderen? Alle kaarten in deze sectie worden ook verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
 		"enterNewTitle": "Voer een titel in",
+		"sectionTitlePlaceholder": "Voer sectietitel in",
 		"newCard": "Nieuwe kaart",
 		"newCardPlaceholder": "Voer een nieuwe kaarttitel in",
 		"newTitlePrompt": "Voer een nieuwe titel in"

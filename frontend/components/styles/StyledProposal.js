@@ -297,6 +297,26 @@ export const StyledProposal = styled.div`
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
       }
+      .sectionTitleInput {
+        font-family: Nunito;
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 28px;
+        letter-spacing: 0.05em;
+        text-align: left;
+        width: 100%;
+        min-width: 0;
+        border: 1px solid #336F8A;
+        border-radius: 4px;
+        padding: 2px 6px;
+        outline: none;
+        box-sizing: border-box;
+        resize: vertical;
+        min-height: 36px;
+        max-height: 80px;
+        white-space: pre-line;
+        overflow-y: auto;
+      }
       span {
         font-family: Lato;
         font-size: 14px;
