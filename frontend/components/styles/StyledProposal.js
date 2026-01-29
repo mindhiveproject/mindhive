@@ -255,9 +255,10 @@ export const StyledProposal = styled.div`
     border: 1px solid #A1A1A1;
     border-radius: 8px;
     min-width: 250px;
+    width: 410px;
+    max-width: 410px;
     margin: 15px;
     padding: 24px;
-    // width: 410px;
     .infoLine {
       margin: 1rem 0px 0px 0rem;
       display: grid;
@@ -274,13 +275,14 @@ export const StyledProposal = styled.div`
     .column-drag-handle {
       display: grid;
       width: 100%;
+      min-width: 0;
       margin: 0px 0px 0px 0px;
       // padding: 1rem 2rem 1rem 2rem;
       // box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
       cursor: pointer;
       .firstLine {
         display: grid;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: minmax(0, 1fr) auto;
         grid-gap: 10px;
         justify-items: baseline;
         align-items: center;
@@ -296,6 +298,13 @@ export const StyledProposal = styled.div`
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
+        min-width: 0;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        word-break: break-word;
+        text-overflow: ellipsis;
       }
       .sectionTitleInput {
         font-family: Nunito;
