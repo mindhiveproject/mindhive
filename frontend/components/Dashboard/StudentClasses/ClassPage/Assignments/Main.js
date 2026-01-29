@@ -27,6 +27,7 @@ export default function Settings({ myclass, user, query }) {
     GET_CLASS_ASSIGNMENTS_FOR_STUDENTS,
     {
       variables: { classId: myclass?.id, userId: user?.id },
+      fetchPolicy: "cache-and-network",
     }
   );
   const assignments = data?.assignments || [];
