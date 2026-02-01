@@ -24,6 +24,16 @@
 	"allStudies": "Todos os estudos",
 	"archivedStudies": "Estudos arquivados",
 	"assigned": {
+		"addUser": "Adicionar pessoas",
+		"assignCard": "Atribua este cartão a um colaborador deste projeto.",
+		"cancel": "Cancelar",
+		"noCollaborators": "Não há colaboradores disponíveis para este conselho.",
+		"noUsersFound": "Nenhum perfil encontrado",
+		"removeUser": "Remover usuário",
+		"save": "Salvar",
+		"searchPlaceholder": "Pesquisar por nome de usuário...",
+		"searchResults": "Procurar Resultados",
+		"selected": "Selecionado",
 		"typeUsername": "Digite o nome de usuário"
 	},
 	"assignment": {
@@ -49,18 +59,21 @@
 			"myAssignments": "Minhas atribuições",
 			"myResources": "Meus recursos",
 			"previewAssignment": "Tarefa de visualização",
-			"previewLinkedAssignments": "Visualizar atribuições vinculadas",
-			"previewLinkedResources": "Visualizar recursos vinculados",
-			"previewLinkedStudies": "Visualizar estudos vinculados",
-			"previewLinkedTasks": "Visualizar tarefas vinculadas",
+			"previewLinkedAssignments": "Tarefas",
+			"previewLinkedResources": "Recursos",
+			"previewLinkedStudies": "Estudos relacionados",
+			"previewLinkedTasks": "Tarefas Vinculadas",
 			"publicResources": "Recursos públicos",
 			"studies": "Estudos",
 			"tasks": "Tarefas",
 			"title": "Título"
 		},
-		"loading": "Carregando..."
+		"filterByAssignedTo": "Filtrar por atribuído a",
+		"loading": "Carregando...",
+		"status": "Status"
 	},
 	"boardManagement": {
+		"resourceUnavailable": "Recurso indisponível",
 		"viewResource": "Ver recurso"
 	},
 	"build-create-new-study": "Para criar um novo estudo, clique no botão abaixo.",
@@ -652,6 +665,16 @@
 		"viewBoard": "Visão do Conselho",
 		"viewFlattenBoard": "Exibição de lista"
 	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "Etapas de revisão",
+			"title": "Filtrar por"
+		}
+	},
 	"proposalSelector": {
 		"linkToProposal": "Link para proposta",
 		"selectCard": "Selecione o cartão"
@@ -805,6 +828,7 @@
 		"cardsCount": "{{count}} carta{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "Tem certeza de que deseja excluir esta seção de propostas? Todos os cartões nesta seção também serão excluídos. Esta ação não pode ser desfeita.",
 		"enterNewTitle": "Por favor insira um título",
+		"sectionTitlePlaceholder": "Digite o título da seção",
 		"newCard": "Novo cartão",
 		"newCardPlaceholder": "Insira um novo título de cartão",
 		"newTitlePrompt": "Por favor insira um novo título"

@@ -489,7 +489,11 @@ export default function HomeworkTab({ user, assignment, homework }) {
         <CommentsSection>
           <CommentsLabel>{t("teacherClass.comments") || "Comments"}</CommentsLabel>
           <CommentsContent>
-            {homework.settings.comment}
+            <ReadOnlyTipTap>
+              <div className="ProseMirror">
+                {ReactHtmlParser(homework.settings.comment || '')}
+              </div>
+            </ReadOnlyTipTap>
           </CommentsContent>
         </CommentsSection>
       )}

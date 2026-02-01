@@ -24,6 +24,16 @@
 	"allStudies": "Alle studies",
 	"archivedStudies": "Gearchiveerde studies",
 	"assigned": {
+		"addUser": "Mensen toevoegen",
+		"assignCard": "Wijs deze kaart toe aan een medewerker van dit project.",
+		"cancel": "Annuleren",
+		"noCollaborators": "Er zijn geen medewerkers beschikbaar voor dit bestuur.",
+		"noUsersFound": "Geen profiel gevonden",
+		"removeUser": "Gebruiker verwijderen",
+		"save": "Redden",
+		"searchPlaceholder": "Zoeken op gebruikersnaam...",
+		"searchResults": "Zoekresultaten",
+		"selected": "Geselecteerd",
 		"typeUsername": "Typ gebruikersnaam"
 	},
 	"assignment": {
@@ -49,18 +59,21 @@
 			"myAssignments": "Mijn opdrachten",
 			"myResources": "Mijn bronnen",
 			"previewAssignment": "Voorbeeld opdracht",
-			"previewLinkedAssignments": "Een voorbeeld van gekoppelde opdrachten",
-			"previewLinkedResources": "Voorbeeld van gekoppelde bronnen",
-			"previewLinkedStudies": "Voorbeeld van gekoppelde studies",
-			"previewLinkedTasks": "Een voorbeeld van gekoppelde taken",
+			"previewLinkedAssignments": "Opdrachten",
+			"previewLinkedResources": "Bronnen",
+			"previewLinkedStudies": "Gekoppelde studies",
+			"previewLinkedTasks": "Gekoppelde taken",
 			"publicResources": "Publieke middelen",
 			"studies": "Studies",
 			"tasks": "Taken",
 			"title": "Titel"
 		},
-		"loading": "Bezig met laden..."
+		"filterByAssignedTo": "Filteren op toegewezen aan",
+		"loading": "Bezig met laden...",
+		"status": "Toestand"
 	},
 	"boardManagement": {
+		"resourceUnavailable": "Bron niet beschikbaar",
 		"viewResource": "Bron bekijken"
 	},
 	"build-create-new-study": "Om een ​​nieuwe studie te maken, klikt u op onderstaande knop.",
@@ -652,6 +665,16 @@
 		"viewBoard": "Bestuursweergave",
 		"viewFlattenBoard": "Lijstweergave"
 	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "Beoordelingsstappen",
+			"title": "Filteren op"
+		}
+	},
 	"proposalSelector": {
 		"linkToProposal": "Link naar voorstel",
 		"selectCard": "Selecteer kaart"
@@ -805,6 +828,7 @@
 		"cardsCount": "{{count}} kaart{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "Weet u zeker dat u deze voorstelsectie wilt verwijderen? Alle kaarten in deze sectie worden ook verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
 		"enterNewTitle": "Voer een titel in",
+		"sectionTitlePlaceholder": "Voer sectietitel in",
 		"newCard": "Nieuwe kaart",
 		"newCardPlaceholder": "Voer een nieuwe kaarttitel in",
 		"newTitlePrompt": "Voer een nieuwe titel in"

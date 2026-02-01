@@ -32,6 +32,10 @@ export const PUBLIC_STUDIES = gql`
         }
       }
       description
+      author {
+        id
+        username
+      }
     }
   }
 `;

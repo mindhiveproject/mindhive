@@ -24,6 +24,16 @@
 	"allStudies": "Toutes les études",
 	"archivedStudies": "Études archivées",
 	"assigned": {
+		"addUser": "Ajouter des personnes",
+		"assignCard": "Attribuez cette carte à un collaborateur de ce projet.",
+		"cancel": "Annuler",
+		"noCollaborators": "Aucun collaborateur disponible pour ce conseil.",
+		"noUsersFound": "Aucun profil trouvé",
+		"removeUser": "Supprimer un utilisateur",
+		"save": "Sauvegarder",
+		"searchPlaceholder": "Recherche par nom d'utilisateur...",
+		"searchResults": "Résultats de recherche",
+		"selected": "Choisi",
 		"typeUsername": "Tapez le nom d'utilisateur"
 	},
 	"assignment": {
@@ -49,18 +59,21 @@
 			"myAssignments": "Mes missions",
 			"myResources": "Mes ressources",
 			"previewAssignment": "Aperçu du travail",
-			"previewLinkedAssignments": "Prévisualisation des devoirs liés",
-			"previewLinkedResources": "Aperçu des ressources liées",
-			"previewLinkedStudies": "Prévisualisation des études liées",
-			"previewLinkedTasks": "Prévisualisation des tâches liées",
+			"previewLinkedAssignments": "Devoirs",
+			"previewLinkedResources": "Ressources",
+			"previewLinkedStudies": "Études liées",
+			"previewLinkedTasks": "Tâches liées",
 			"publicResources": "Ressources publiques",
 			"studies": "Études",
 			"tasks": "Tâches",
 			"title": "Titre"
 		},
-		"loading": "Chargement..."
+		"filterByAssignedTo": "Filtrer par affecté à",
+		"loading": "Chargement...",
+		"status": "Statut"
 	},
 	"boardManagement": {
+		"resourceUnavailable": "Ressource indisponible",
 		"viewResource": "Afficher la ressource"
 	},
 	"build-create-new-study": "Pour créer une nouvelle étude, cliquez sur le bouton ci-dessous.",
@@ -652,6 +665,16 @@
 		"viewBoard": "Vue du tableau",
 		"viewFlattenBoard": "Vue en liste"
 	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "Étapes de révision",
+			"title": "Filtrer par"
+		}
+	},
 	"proposalSelector": {
 		"linkToProposal": "Lien vers la proposition",
 		"selectCard": "Sélectionnez la carte"
@@ -805,6 +828,7 @@
 		"cardsCount": "{{count}} carte{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "Êtes-vous sûr de vouloir supprimer cette section de propositions ? Toutes les cartes de cette section seront également supprimées. Cette action est irréversible.",
 		"enterNewTitle": "Veuillez entrer un titre",
+		"sectionTitlePlaceholder": "Entrez le titre de la section",
 		"newCard": "Nouvelle carte",
 		"newCardPlaceholder": "Entrez un nouveau titre de carte",
 		"newTitlePrompt": "Veuillez saisir un nouveau titre"

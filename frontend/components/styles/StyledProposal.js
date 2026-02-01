@@ -255,9 +255,10 @@ export const StyledProposal = styled.div`
     border: 1px solid #A1A1A1;
     border-radius: 8px;
     min-width: 250px;
+    width: 410px;
+    max-width: 410px;
     margin: 15px;
     padding: 24px;
-    // width: 410px;
     .infoLine {
       margin: 1rem 0px 0px 0rem;
       display: grid;
@@ -274,13 +275,14 @@ export const StyledProposal = styled.div`
     .column-drag-handle {
       display: grid;
       width: 100%;
+      min-width: 0;
       margin: 0px 0px 0px 0px;
       // padding: 1rem 2rem 1rem 2rem;
       // box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
       cursor: pointer;
       .firstLine {
         display: grid;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: minmax(0, 1fr) auto;
         grid-gap: 10px;
         justify-items: baseline;
         align-items: center;
@@ -296,6 +298,33 @@ export const StyledProposal = styled.div`
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
+        min-width: 0;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        word-break: break-word;
+        text-overflow: ellipsis;
+      }
+      .sectionTitleInput {
+        font-family: Nunito;
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 28px;
+        letter-spacing: 0.05em;
+        text-align: left;
+        width: 100%;
+        min-width: 0;
+        border: 1px solid #336F8A;
+        border-radius: 4px;
+        padding: 2px 6px;
+        outline: none;
+        box-sizing: border-box;
+        resize: vertical;
+        min-height: 36px;
+        max-height: 80px;
+        white-space: pre-line;
+        overflow-y: auto;
       }
       span {
         font-family: Lato;
@@ -516,7 +545,7 @@ export const StyledProposal = styled.div`
       width: 32px;
       height: 32px;
       border: 1px solid #A1A1A1;
-      border-radius: 20px;
+      border-radius: 50%;
       background: white;
       cursor: pointer;
       padding: 4px;
@@ -998,6 +1027,57 @@ export const StyledProposal = styled.div`
       letter-spacing: 0em;
       text-align: left;
       height: 100%;
+      .collaboratorArray {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: nowrap;
+        width: 100%;
+        margin-top: 8px;
+      }
+      .collaboratorChip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        border: 1px solid #A1A1A1;
+        border-radius: 30px;
+        padding: 4px 12px 4px 12px;
+        gap: 8px;
+        background: white;
+        overflow: hidden;
+        width: fit-content;
+        max-width: 300px;
+        span {
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          display: flex;
+          height: 100%;
+          align-items: center;
+        }
+      }
+      .addCollaboratorButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: 1px solid #A1A1A1;
+        border-radius: 50%;
+        background: white;
+        cursor: pointer;
+        padding: 4px;
+        flex-shrink: 0;
+        &:hover {
+          background: #F3F3F3;
+        }
+        .icon {
+          color: #171717;
+          margin: 0;
+        }
+      }
     }
     .resourceLinks {
       display: grid;

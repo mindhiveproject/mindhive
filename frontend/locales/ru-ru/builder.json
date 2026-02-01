@@ -24,6 +24,16 @@
 	"allStudies": "Все исследования",
 	"archivedStudies": "Архивные исследования",
 	"assigned": {
+		"addUser": "Добавить людей",
+		"assignCard": "Назначьте эту карточку соавтору из этого проекта.",
+		"cancel": "Отмена",
+		"noCollaborators": "Для этой доски нет доступных для сотрудничества участников.",
+		"noUsersFound": "Профиль не найден",
+		"removeUser": "Удалить пользователя",
+		"save": "Сохранять",
+		"searchPlaceholder": "Поиск по имени пользователя...",
+		"searchResults": "Результаты поиска",
+		"selected": "Выбрано",
 		"typeUsername": "Введите имя пользователя"
 	},
 	"assignment": {
@@ -49,18 +59,21 @@
 			"myAssignments": "Мои задания",
 			"myResources": "Мои ресурсы",
 			"previewAssignment": "Предварительное задание",
-			"previewLinkedAssignments": "Предварительный просмотр связанных заданий",
-			"previewLinkedResources": "Предварительный просмотр связанных ресурсов",
-			"previewLinkedStudies": "Предварительный просмотр Связанные исследования",
-			"previewLinkedTasks": "Предварительный просмотр связанных задач",
+			"previewLinkedAssignments": "Задания",
+			"previewLinkedResources": "Ресурсы",
+			"previewLinkedStudies": "Связанные исследования",
+			"previewLinkedTasks": "Связанные задачи",
 			"publicResources": "Общественные ресурсы",
 			"studies": "Исследования",
 			"tasks": "Задачи",
 			"title": "Название"
 		},
-		"loading": "Загрузка..."
+		"filterByAssignedTo": "Фильтрация по назначению",
+		"loading": "Загрузка...",
+		"status": "Положение дел"
 	},
 	"boardManagement": {
+		"resourceUnavailable": "Ресурс недоступен",
 		"viewResource": "Просмотреть ресурс"
 	},
 	"build-create-new-study": "Чтобы создать новое исследование, нажмите кнопку ниже.",
@@ -652,6 +665,16 @@
 		"viewBoard": "Вид доски",
 		"viewFlattenBoard": "Посмотреть список"
 	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "Этапы проверки",
+			"title": "Фильтровать по"
+		}
+	},
 	"proposalSelector": {
 		"linkToProposal": "Ссылка на предложение",
 		"selectCard": "Выбрать карту"
@@ -805,6 +828,7 @@
 		"cardsCount": "{{count}} карта{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "Вы уверены, что хотите удалить этот раздел предложений? Все карточки в этом разделе также будут удалены. Это действие не может быть отменено.",
 		"enterNewTitle": "Пожалуйста, введите название",
+		"sectionTitlePlaceholder": "Введите название раздела",
 		"newCard": "Новая карта",
 		"newCardPlaceholder": "Введите новое название карты",
 		"newTitlePrompt": "Пожалуйста, введите новый заголовок"

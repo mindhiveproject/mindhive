@@ -141,9 +141,56 @@ const StatusChip = styled.span`
   `}
 `;
 
+// Chip styles reused from LinkedItems.js (Published/Unpublished only)
+// Fixed height; padding and width adapt to presence of cross icon
+const styledChipPublished = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "8px",
+  height: "32px",
+  boxSizing: "border-box",
+  justifyContent: "center",
+  flexShrink: "0",
+  borderRadius: "8px",
+  background: "#DEF8FB",
+  border: "1px solid #625B71",
+  maxWidth: '100%',
+  wordBreak: 'break-word',
+  cursor: 'pointer',
+  transition: 'background-color 0.2s ease, border-color 0.2s ease',
+  fontFamily: 'Lato',
+  fontSize: '14px',
+  fontWeight: 400,
+  color: '#434343',
+};
+
+const styledChipUnpublished = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "8px",
+  height: "32px",
+  boxSizing: "border-box",
+  justifyContent: "center",
+  flexShrink: "0",
+  borderRadius: "8px",
+  background: "#F3F3F3",
+  border: "1px solid var(--MH-Theme-Neutrals-Medium, #A1A1A1)",
+  maxWidth: '100%',
+  wordBreak: 'break-word',
+  cursor: 'pointer',
+  transition: 'background-color 0.2s ease, border-color 0.2s ease',
+  fontFamily: 'Lato',
+  fontSize: '14px',
+  fontWeight: 400,
+  color: '#434343',
+};
+
 export default function AssignmentTab({ assignments, myclass, user }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
+
+  // Filter state: Published/Unpublished chips only
+  const [selectedPublishedFilter, setSelectedPublishedFilter] = useState(null); // null = all, true = published, false = unpublished
 
   const [editAssignment] = useMutation(EDIT_ASSIGNMENT, {
     refetchQueries: [
@@ -167,6 +214,16 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   const stripHtml = (html) => {
     if (!html) return '';
     return html.replace(/<[^>]*>/g, '').trim();
+  };
+
+  // Filter assignments by published state only
+  const filteredAssignments =
+    selectedPublishedFilter === null
+      ? assignments
+      : (assignments || []).filter((a) => a?.public === selectedPublishedFilter);
+
+  const handlePublishedFilterToggle = (value) => {
+    setSelectedPublishedFilter((prev) => (prev === value ? null : value));
   };
 
   // Count completed homework
@@ -392,21 +449,118 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   }
 
   return (
-    <div style={{ width: '100%', height: '600px' }}>
-      <div className="ag-theme-quartz" style={{ height: '100%', width: '100%' }}>
-        <AgGridReact
-          rowData={assignments}
-          columnDefs={columnDefs}
-          pagination={pagination}
-          paginationPageSize={paginationPageSize}
-          paginationPageSizeSelector={paginationPageSizeSelector}
-          autoSizeStrategy={autoSizeStrategy}
-          defaultColDef={{
-            resizable: true,
-            sortable: true,
-            filter: true,
+    <div style={{ width: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "8px",
+          alignItems: "center",
+          marginBottom: "16px",
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => handlePublishedFilterToggle(true)}
+          style={{
+            ...styledChipPublished,
+            padding: selectedPublishedFilter === true ? "6px 8px 6px 12px" : "6px 12px",
+            backgroundColor: selectedPublishedFilter === true ? "#DEF8FB" : "#ffffff",
+            borderColor: selectedPublishedFilter === true ? "#625B71" : "#A1A1A1",
           }}
-        />
+        >
+          <span>{t("assignment.published") || "Published"}</span>
+          {selectedPublishedFilter === true && (
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "18px",
+                height: "18px",
+                flexShrink: 0,
+                cursor: "pointer",
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePublishedFilterToggle(true);
+              }}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+                  fill="#171717"
+                />
+              </svg>
+            </span>
+          )}
+        </button>
+        <button
+          type="button"
+          onClick={() => handlePublishedFilterToggle(false)}
+          style={{
+            ...styledChipUnpublished,
+            padding: selectedPublishedFilter === false ? "6px 8px 6px 12px" : "6px 12px",
+            backgroundColor: selectedPublishedFilter === false ? "#F3F3F3" : "#ffffff",
+            borderColor: selectedPublishedFilter === false ? "#625B71" : "#A1A1A1",
+          }}
+        >
+          <span>{t("assignment.unpublished") || "Unpublished"}</span>
+          {selectedPublishedFilter === false && (
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "18px",
+                height: "18px",
+                flexShrink: 0,
+                cursor: "pointer",
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePublishedFilterToggle(false);
+              }}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+                  fill="#171717"
+                />
+              </svg>
+            </span>
+          )}
+        </button>
+      </div>
+
+      <div style={{ width: "100%", height: "600px" }}>
+        <div className="ag-theme-quartz" style={{ height: "100%", width: "100%" }}>
+          <AgGridReact
+            rowData={filteredAssignments}
+            columnDefs={columnDefs}
+            pagination={pagination}
+            paginationPageSize={paginationPageSize}
+            paginationPageSizeSelector={paginationPageSizeSelector}
+            autoSizeStrategy={autoSizeStrategy}
+            defaultColDef={{
+              resizable: true,
+              sortable: true,
+              filter: true,
+            }}
+          />
+        </div>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ export default function ProposalPage({ user, proposalId }) {
   // Persist filter selections across view toggles
   const [selectedStatuses, setSelectedStatuses] = useState([]);
   const [selectedReviewSteps, setSelectedReviewSteps] = useState([]);
+  const [selectedAssignedUsers, setSelectedAssignedUsers] = useState([]);
   
   const { data, error, loading } = useQuery(OVERVIEW_PROPOSAL_BOARD_QUERY, {
     variables: {
@@ -30,6 +31,7 @@ export default function ProposalPage({ user, proposalId }) {
         setIsPDF={setIsPDF}
         selectedStatuses={selectedStatuses}
         selectedReviewSteps={selectedReviewSteps}
+        selectedAssignedUsers={selectedAssignedUsers}
       />
       {isPDF || proposal?.isSubmitted ? (
         <ProposalPDF 
@@ -39,6 +41,8 @@ export default function ProposalPage({ user, proposalId }) {
           setSelectedStatuses={setSelectedStatuses}
           selectedReviewSteps={selectedReviewSteps}
           setSelectedReviewSteps={setSelectedReviewSteps}
+          selectedAssignedUsers={selectedAssignedUsers}
+          setSelectedAssignedUsers={setSelectedAssignedUsers}
         />
       ) : (
         <ProposalBuilder

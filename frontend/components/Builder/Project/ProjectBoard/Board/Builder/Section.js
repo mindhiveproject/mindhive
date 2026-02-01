@@ -317,6 +317,7 @@ const Section = ({
     <div className="section" id="section">
       <div className="column-drag-handle">
         <div className="firstLine">
+          <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
           {settings?.allowAddingCards && (
             <img
               src="/assets/icons/proposal/edit.svg"
@@ -334,8 +335,6 @@ const Section = ({
               }}
             />
           )}
-
-          <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
         </div>
         {/* {!isPreview && (
           <div className="infoLine">

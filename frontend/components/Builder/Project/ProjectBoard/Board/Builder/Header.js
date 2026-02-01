@@ -25,6 +25,7 @@ export default function ProposalHeader({
   setIsPDF,
   selectedStatuses = [],
   selectedReviewSteps = [],
+  selectedAssignedUsers = [],
 }) {
   const { t } = useTranslation("builder");
   const client = useApolloClient();
@@ -65,7 +66,14 @@ export default function ProposalHeader({
 
   const handleDownload = () => {
     if (proposalId && client) {
-      exportPDF(proposalId, client, t, selectedStatuses, selectedReviewSteps);
+      exportPDF(
+        proposalId,
+        client,
+        t,
+        selectedStatuses,
+        selectedReviewSteps,
+        selectedAssignedUsers
+      );
     }
   };
 

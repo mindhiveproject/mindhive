@@ -24,6 +24,16 @@
 	"allStudies": "所有研究",
 	"archivedStudies": "已存档的研究",
 	"assigned": {
+		"addUser": "添加人员",
+		"assignCard": "将此卡片分配给此项目的合作者",
+		"cancel": "取消",
+		"noCollaborators": "该董事会暂无合作者。",
+		"noUsersFound": "未找到个人资料",
+		"removeUser": "移除用户",
+		"save": "节省",
+		"searchPlaceholder": "按用户名搜索...",
+		"searchResults": "搜索结果",
+		"selected": "选定",
 		"typeUsername": "输入用户名"
 	},
 	"assignment": {
@@ -49,18 +59,21 @@
 			"myAssignments": "我的作业",
 			"myResources": "我的资源",
 			"previewAssignment": "预览作业",
-			"previewLinkedAssignments": "预览链接作业",
-			"previewLinkedResources": "预览链接资源",
-			"previewLinkedStudies": "预览关联研究",
-			"previewLinkedTasks": "预览链接任务",
+			"previewLinkedAssignments": "作业",
+			"previewLinkedResources": "资源",
+			"previewLinkedStudies": "相关研究",
+			"previewLinkedTasks": "链接任务",
 			"publicResources": "公共资源",
 			"studies": "研究",
 			"tasks": "任务",
 			"title": "标题"
 		},
-		"loading": "加载中..."
+		"filterByAssignedTo": "按分配给",
+		"loading": "加载中...",
+		"status": "地位"
 	},
 	"boardManagement": {
+		"resourceUnavailable": "资源不可用",
 		"viewResource": "查看资源"
 	},
 	"build-create-new-study": "要创建新研究，请单击下面的按钮。",
@@ -652,6 +665,16 @@
 		"viewBoard": "板视图",
 		"viewFlattenBoard": "列表显示"
 	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "复习步骤",
+			"title": "过滤"
+		}
+	},
 	"proposalSelector": {
 		"linkToProposal": "提案链接",
 		"selectCard": "选择卡"
@@ -805,6 +828,7 @@
 		"cardsCount": "{{count}} 张卡{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "您确定要删除此提案部分吗？此部分中的所有卡片也将被删除。此操作无法撤消。",
 		"enterNewTitle": "请输入标题",
+		"sectionTitlePlaceholder": "输入章节标题",
 		"newCard": "新卡",
 		"newCardPlaceholder": "输入新的卡片标题",
 		"newTitlePrompt": "请输入新标题"

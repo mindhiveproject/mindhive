@@ -2,8 +2,15 @@ import absoluteUrl from "next-absolute-url";
 import moment from "moment";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
 
-// Accept t as optional third argument, selectedStatuses and selectedReviewSteps as optional fourth and fifth arguments
-export default async function exportPDF(proposalId, client, t, selectedStatuses = [], selectedReviewSteps = []) {
+// Accept t as optional third argument; filters are optional following arguments
+export default async function exportPDF(
+  proposalId,
+  client,
+  t,
+  selectedStatuses = [],
+  selectedReviewSteps = [],
+  selectedAssignedUsers = []
+) {
   if (!proposalId || !client) return;
 
   const { origin } = absoluteUrl();
@@ -65,6 +72,11 @@ export default async function exportPDF(proposalId, client, t, selectedStatuses 
           (selectedReviewSteps.length === 0 ||
             selectedReviewSteps.some((step) =>
               card?.settings?.includeInReviewSteps?.includes(step)
+            )) &&
+          // Assigned users filter: empty array means show all, otherwise check if any selected assignee matches
+          (selectedAssignedUsers.length === 0 ||
+            selectedAssignedUsers.some((userId) =>
+              (card?.assignedTo || []).some((u) => u?.id === userId)
             ))
       )
       .map((card) => {
