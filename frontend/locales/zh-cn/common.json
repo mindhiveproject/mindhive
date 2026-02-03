@@ -92,6 +92,7 @@
 		"updatePreferences": "更新偏好设置"
 	},
 	"error": {
+		"emailAlreadyInUse": "此邮箱已被注册。请登录或使用其他邮箱。",
 		"oops": "哎呀！"
 	},
 	"featured": "精选",

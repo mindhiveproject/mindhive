@@ -92,6 +92,7 @@
 		"updatePreferences": "Mettre à jour les préférences"
 	},
 	"error": {
+		"emailAlreadyInUse": "Cette adresse e-mail est déjà enregistrée. Veuillez vous connecter ou utiliser une autre adresse e-mail.",
 		"oops": "Oups !"
 	},
 	"featured": "En vedette",

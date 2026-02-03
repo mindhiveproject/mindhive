@@ -828,10 +828,10 @@
 		"cardsCount": "{{count}} بطاقة{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "هل أنت متأكد من رغبتك في حذف قسم الاقتراحات هذا؟ سيتم حذف جميع البطاقات في هذا القسم أيضًا. لا يمكن التراجع عن هذا الإجراء.",
 		"enterNewTitle": "الرجاء إدخال عنوان",
-		"sectionTitlePlaceholder": "أدخل عنوان القسم",
 		"newCard": "بطاقة جديدة",
 		"newCardPlaceholder": "أدخل عنوان بطاقة جديد",
-		"newTitlePrompt": "الرجاء إدخال عنوان جديد"
+		"newTitlePrompt": "الرجاء إدخال عنوان جديد",
+		"sectionTitlePlaceholder": "أدخل عنوان القسم"
 	},
 	"selector": {
 		"basicBlocks": {

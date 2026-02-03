@@ -828,10 +828,10 @@
 		"cardsCount": "{{count}} карта{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "Вы уверены, что хотите удалить этот раздел предложений? Все карточки в этом разделе также будут удалены. Это действие не может быть отменено.",
 		"enterNewTitle": "Пожалуйста, введите название",
-		"sectionTitlePlaceholder": "Введите название раздела",
 		"newCard": "Новая карта",
 		"newCardPlaceholder": "Введите новое название карты",
-		"newTitlePrompt": "Пожалуйста, введите новый заголовок"
+		"newTitlePrompt": "Пожалуйста, введите новый заголовок",
+		"sectionTitlePlaceholder": "Введите название раздела"
 	},
 	"selector": {
 		"basicBlocks": {
