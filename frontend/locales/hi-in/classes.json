@@ -310,6 +310,7 @@
 		"titleText": "शीर्षक",
 		"updateCollaboratorsFailed": "सहयोगियों को अपडेट करने में विफल। कृपया विवरण के लिए कंसोल देखें।",
 		"updated": "अद्यतन",
+		"filterByClass": "कक्षा के अनुसार फ़िल्टर करें",
 		"usedInClasses": "कक्षाओं में प्रयुक्त:",
 		"view": "देखना",
 		"viewAndCopy": "देखें और कॉपी करें",

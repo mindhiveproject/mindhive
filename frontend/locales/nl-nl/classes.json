@@ -310,6 +310,7 @@
 		"titleText": "Titel",
 		"updateCollaboratorsFailed": "Bijwerken van medewerkers mislukt. Controleer de console voor details.",
 		"updated": "Bijgewerkt",
+		"filterByClass": "Filter op klas",
 		"usedInClasses": "Gebruikt in lessen:",
 		"view": "Weergave",
 		"viewAndCopy": "Bekijken en kopiëren",

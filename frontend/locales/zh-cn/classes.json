@@ -310,6 +310,7 @@
 		"titleText": "标题",
 		"updateCollaboratorsFailed": "无法更新协作者。请查看控制台了解详情。",
 		"updated": "更新",
+		"filterByClass": "按课程筛选",
 		"usedInClasses": "在课程中使用：",
 		"view": "看法",
 		"viewAndCopy": "查看和复制",

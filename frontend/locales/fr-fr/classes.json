@@ -310,6 +310,7 @@
 		"titleText": "Titre",
 		"updateCollaboratorsFailed": "Échec de la mise à jour des collaborateurs. Veuillez consulter la console pour plus de détails.",
 		"updated": "Mis à jour",
+		"filterByClass": "Filtrer par classe",
 		"usedInClasses": "Utilisé dans les cours :",
 		"view": "Voir",
 		"viewAndCopy": "Afficher et copier",

@@ -10,6 +10,55 @@ const StyledBoards = styled.div`
     margin-bottom: 2rem;
   }
 
+  .filterChips {
+    margin-top: 1rem;
+  }
+
+  .filterChipsLabel {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+  }
+
+  .filterChipList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .filterChip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 100px;
+    border: 1px solid #e2e8f0;
+    background: #edf2f7;
+    color: #2d3748;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .filterChip:hover {
+    background: #e2e8f0;
+    border-color: #cbd5e0;
+  }
+
+  .filterChip.selected {
+    background: #336F8A;
+    border-color: #336F8A;
+    color: white;
+  }
+
+  .filterChip.selected:hover {
+    background: #274E5B;
+    border-color: #274E5B;
+    color: #F9D978;
+  }
+
   h1 {
     font-size: 2.2rem;
     font-weight: 600;

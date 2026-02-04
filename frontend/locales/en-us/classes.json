@@ -310,6 +310,7 @@
 		"titleText": "Title",
 		"updateCollaboratorsFailed": "Failed to update collaborators. Please check the console for details.",
 		"updated": "Updated",
+		"filterByClass": "Filter by class",
 		"usedInClasses": "Used in Classes:",
 		"view": "View",
 		"viewAndCopy": "View & Copy",

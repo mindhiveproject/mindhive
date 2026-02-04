@@ -310,6 +310,7 @@
 		"titleText": "Título",
 		"updateCollaboratorsFailed": "Falha ao atualizar os colaboradores. Verifique o console para obter detalhes.",
 		"updated": "Atualizada",
+		"filterByClass": "Filtrar por turma",
 		"usedInClasses": "Usado nas aulas:",
 		"view": "Visualizar",
 		"viewAndCopy": "Ver e Copiar",

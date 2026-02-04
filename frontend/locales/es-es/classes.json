@@ -310,6 +310,7 @@
 		"titleText": "Título",
 		"updateCollaboratorsFailed": "No se pudieron actualizar los colaboradores. Consulta la consola para más detalles.",
 		"updated": "Actualizado",
+		"filterByClass": "Filtrar por clase",
 		"usedInClasses": "Usado en clases:",
 		"view": "Vista",
 		"viewAndCopy": "Ver y copiar",

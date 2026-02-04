@@ -226,7 +226,7 @@ const GlobalStyles = createGlobalStyle`
     --label-small-color: ${props => props.theme.labelSmall.color};
     
     box-sizing: border-box;
-    font-size: 10px;
+    font-size: 14px;
     height: 100%;
     font-family: 'Lato';
   }
