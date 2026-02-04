@@ -560,6 +560,51 @@ export default function BuilderProposalCard({
         <div className="infoBoard">
           <>
             <div className="cardHeader">
+              {t("board.expendedCard.linkedItems", "Linked Items")}
+            </div>
+            <div className="cardSubheaderComment">
+              {t(
+                "board.expendedCard.addLinkedItems",
+                "Add existing assignments, tasks, studies, or resources"
+              )}
+            </div>
+            <LinkedItems
+              proposal={proposal}
+              user={user}
+              handleChange={handleChange}
+              selectedResources={inputs?.resources || []}
+              selectedAssignments={inputs?.assignments || []}
+              selectedTasks={inputs?.tasks || []}
+              selectedStudies={inputs?.studies || []}
+              totalLinked={totalLinked}
+            />
+          </>
+
+          <div className="proposalCardComments">
+            <div className="cardHeader">{t("board.expendedCard.comments")}</div>
+            <div className="cardSubheaderComment">
+              {t("board.expendedCard.commentsText")}
+            </div>
+            <TipTapEditor
+              content={inputs.comment}
+              placeholder={t("board.commentPlaceholder", "Enter a comment...")}
+              onUpdate={(newContent) =>
+                handleChange({
+                  target: {
+                    name: "comment",
+                    value: newContent,
+                  },
+                })
+              }
+            />
+          </div>
+
+          <div>
+            <div className="cardHeader">{t("board.expendedCard.type")}</div>
+            <CardType type={inputs?.type} handleChange={handleChange} />
+          </div>
+          <>
+            <div className="cardHeader">
               {t("board.expendedCard.visibility")}
             </div>
             <div className="cardSubheaderComment">
@@ -644,51 +689,7 @@ export default function BuilderProposalCard({
             </>
           )}
 
-          <div>
-            <div className="cardHeader">{t("board.expendedCard.type")}</div>
-            <CardType type={inputs?.type} handleChange={handleChange} />
-          </div>
 
-          <>
-            <div className="cardHeader">
-              {t("board.expendedCard.linkedItems", "Linked Items")}
-            </div>
-            <div className="cardSubheaderComment">
-              {t(
-                "board.expendedCard.addLinkedItems",
-                "Add existing assignments, tasks, studies, or resources"
-              )}
-            </div>
-            <LinkedItems
-              proposal={proposal}
-              user={user}
-              handleChange={handleChange}
-              selectedResources={inputs?.resources || []}
-              selectedAssignments={inputs?.assignments || []}
-              selectedTasks={inputs?.tasks || []}
-              selectedStudies={inputs?.studies || []}
-              totalLinked={totalLinked}
-            />
-          </>
-
-          <div className="proposalCardComments">
-            <div className="cardHeader">{t("board.expendedCard.comments")}</div>
-            <div className="cardSubheaderComment">
-              {t("board.expendedCard.commentsText")}
-            </div>
-            <TipTapEditor
-              content={inputs.comment}
-              placeholder={t("board.commentPlaceholder", "Enter a comment...")}
-              onUpdate={(newContent) =>
-                handleChange({
-                  target: {
-                    name: "comment",
-                    value: newContent,
-                  },
-                })
-              }
-            />
-          </div>
         </div>
       </div>
     </div>

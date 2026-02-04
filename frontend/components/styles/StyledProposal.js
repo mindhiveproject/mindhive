@@ -962,6 +962,7 @@ export const StyledProposal = styled.div`
       }
     }
     .cardHeader {
+      margin-top: 16px;
       font-family: 'Nunito';
       font-style: normal;
       font-weight: 600;
