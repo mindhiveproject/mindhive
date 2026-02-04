@@ -201,9 +201,9 @@ export default function AddAssignment({ myclass, user, query }) {
       autoHeight: true,
     },
     {
-      field: "createdAt",
-      headerName: t("assignment.dateCreated"),
-      valueGetter: (params) => params?.data?.createdAt || null,
+      field: "updatedAt",
+      headerName: t("assignment.dateUpdated"),
+      valueGetter: (params) => params?.data?.updatedAt || null,
       valueFormatter: (params) =>
         params.value ? moment(params.value).format("MMMM D, YYYY") : '',
       filter: "agDateColumnFilter",
@@ -213,9 +213,9 @@ export default function AddAssignment({ myclass, user, query }) {
       autoHeight: true,
     },
     {
-      field: "updatedAt",
-      headerName: t("assignment.dateUpdated"),
-      valueGetter: (params) => params?.data?.updatedAt || null,
+      field: "createdAt",
+      headerName: t("assignment.dateCreated"),
+      valueGetter: (params) => params?.data?.createdAt || null,
       valueFormatter: (params) =>
         params.value ? moment(params.value).format("MMMM D, YYYY") : '',
       filter: "agDateColumnFilter",
@@ -269,9 +269,9 @@ export default function AddAssignment({ myclass, user, query }) {
       autoHeight: true,
     },
     {
-      field: "createdAt",
-      headerName: t("assignment.dateCreated"),
-      valueGetter: (params) => params?.data?.createdAt || null,
+      field: "updatedAt",
+      headerName: t("assignment.dateUpdated"),
+      valueGetter: (params) => params?.data?.updatedAt || null,
       valueFormatter: (params) =>
         params.value ? moment(params.value).format("MMMM D, YYYY") : '',
       filter: "agDateColumnFilter",
@@ -281,9 +281,9 @@ export default function AddAssignment({ myclass, user, query }) {
       autoHeight: true,
     },
     {
-      field: "updatedAt",
-      headerName: t("assignment.dateUpdated"),
-      valueGetter: (params) => params?.data?.updatedAt || null,
+      field: "createdAt",
+      headerName: t("assignment.dateCreated"),
+      valueGetter: (params) => params?.data?.createdAt || null,
       valueFormatter: (params) =>
         params.value ? moment(params.value).format("MMMM D, YYYY") : '',
       filter: "agDateColumnFilter",
