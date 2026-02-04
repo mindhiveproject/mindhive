@@ -256,6 +256,8 @@
 		"manageClasses": "إدارة الفصول الدراسية",
 		"manageClassesForTemplate": "أنت تدير:",
 		"manageCollaborators": "إدارة المتعاونين",
+		"multipleClassesWarning": "لاحظ أن جميع الواجبات المرتبطة بهذه اللوحة ستكون مرتبطة بنفس مجموعة الصفوف المذكورة أعلاه. وهذا يعني أنه سيتم تجميع جميع واجبات الطلاب من هذه الصفوف معًا.",
+		"multipleClassesWarningTitle": "تم اختيار عدة فئات",
 		"myResources": "مواردي",
 		"myResourcesDescription": "أنشئ من الصفر، أو انسخ نسختك الخاصة، أو شاركها مع زملائك.",
 		"newBoard": "مجلس المشروع الجديد",

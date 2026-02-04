@@ -256,6 +256,8 @@
 		"manageClasses": "Gerenciar Classes",
 		"manageClassesForTemplate": "Você está gerenciando:",
 		"manageCollaborators": "Gerenciar Colaboradores",
+		"multipleClassesWarning": "Observe que todas as tarefas associadas a este quadro estarão vinculadas ao mesmo conjunto de aulas acima. Isso significa que todas as tarefas de casa dos alunos dessas aulas serão reunidas em um só lugar.",
+		"multipleClassesWarningTitle": "Várias classes selecionadas",
 		"myResources": "Meus Recursos",
 		"myResourcesDescription": "Crie do zero, duplique o seu próprio ou compartilhe com colaboradores.",
 		"newBoard": "Novo Conselho de Projetos",

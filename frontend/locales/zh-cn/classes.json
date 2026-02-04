@@ -256,6 +256,8 @@
 		"manageClasses": "管理课程",
 		"manageClassesForTemplate": "您正在管理：",
 		"manageCollaborators": "管理合作者",
+		"multipleClassesWarning": "请注意，与此看板相关的所有作业都将与上述同一组课程关联。这意味着这些课程的所有学生作业都将汇总在一起。",
+		"multipleClassesWarningTitle": "已选择多个课程",
 		"myResources": "我的资源",
 		"myResourcesDescription": "从头开始创建、复制您自己的或与合作者共享。",
 		"newBoard": "新项目委员会",

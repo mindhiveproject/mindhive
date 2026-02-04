@@ -256,6 +256,8 @@
 		"manageClasses": "Gérer les classes",
 		"manageClassesForTemplate": "Vous gérez :",
 		"manageCollaborators": "Gérer les collaborateurs",
+		"multipleClassesWarning": "Veuillez noter que tous les devoirs associés à ce tableau seront liés au même ensemble de cours mentionné ci-dessus. Cela signifie que tous les devoirs des élèves de ces cours seront regroupés.",
+		"multipleClassesWarningTitle": "Plusieurs classes sélectionnées",
 		"myResources": "Mes ressources",
 		"myResourcesDescription": "Créez à partir de zéro, dupliquez le vôtre ou partagez-le avec des collaborateurs.",
 		"newBoard": "Nouveau comité de projet",

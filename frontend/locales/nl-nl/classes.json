@@ -256,6 +256,8 @@
 		"manageClasses": "Klassen beheren",
 		"manageClassesForTemplate": "U beheert:",
 		"manageCollaborators": "Medewerkers beheren",
+		"multipleClassesWarning": "Let op: alle opdrachten die aan dit bord zijn gekoppeld, zijn verbonden aan dezelfde lessenreeks hierboven. Dit betekent dat al het huiswerk van de leerlingen uit deze lessen bij elkaar wordt gebracht.",
+		"multipleClassesWarningTitle": "Meerdere klassen geselecteerd",
 		"myResources": "Mijn bronnen",
 		"myResourcesDescription": "Maak uw eigen ontwerp, dupliceer het of deel het met collega's.",
 		"newBoard": "Nieuw projectbestuur",

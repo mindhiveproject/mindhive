@@ -256,6 +256,8 @@
 		"manageClasses": "Manage Classes",
 		"manageClassesForTemplate": "You are managing: ",
 		"manageCollaborators": "Manage Collaborators",
+		"multipleClassesWarning": "Note that all assignments associated to this board will be connected to the same set of class above. This means all student homework from these classes will be pulled together.",
+		"multipleClassesWarningTitle": "Multiple Classes Selected",
 		"myResources": "My Resources",
 		"myResourcesDescription": "Create from scratch, duplicate your own, or share with collaborators.",
 		"newBoard": "New Project Board",
