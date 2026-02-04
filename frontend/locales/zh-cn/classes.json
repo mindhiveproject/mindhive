@@ -54,6 +54,7 @@
 		"noTemplatesAvailable": "目前没有可用的模板。",
 		"notVisibleForStudents": "学生看不到作业",
 		"open": "打开",
+		"ownedBy": "所有者",
 		"placeholder": "为学生创建一个占位符，让他们从这里开始做作业...",
 		"placeholderDescription": "向学生展示占位符",
 		"placeholderInstructions": "为学生的答案框写一个占位符",

@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { DELETE_ASSIGNMENT } from "../../../../Mutations/Assignment";
-import { GET_MY_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
+import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import useTranslation from "next-translate/useTranslation";
 
 export default function DeleteAssignment({ user, myclass, id, children }) {
@@ -9,8 +9,8 @@ export default function DeleteAssignment({ user, myclass, id, children }) {
     variables: { id },
     refetchQueries: [
       {
-        query: GET_MY_CLASS_ASSIGNMENTS,
-        variables: { userId: user?.id, classId: myclass?.id },
+        query: GET_CLASS_ASSIGNMENTS,
+        variables: { classId: myclass?.id },
       },
     ],
   });

@@ -7,7 +7,7 @@ import TipTapEditor from "../../../../TipTap/Main";
 import useTranslation from "next-translate/useTranslation";
 import useForm from "../../../../../lib/useForm";
 
-import { GET_MY_CLASS_ASSIGNMENTS, GET_ASSIGNMENT } from "../../../../Queries/Assignment";
+import { GET_CLASS_ASSIGNMENTS, GET_ASSIGNMENT } from "../../../../Queries/Assignment";
 import { CREATE_ASSIGNMENT } from "../../../../Mutations/Assignment";
 
 // Styled button matching Figma design (Primary Action - Teal)
@@ -152,8 +152,8 @@ export default function CopyAssignment({ code, myclass, user }) {
     },
     refetchQueries: [
       {
-        query: GET_MY_CLASS_ASSIGNMENTS,
-        variables: { userId: user?.id, classId: myclass?.id },
+        query: GET_CLASS_ASSIGNMENTS,
+        variables: { classId: myclass?.id },
       },
     ],
   });

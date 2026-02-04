@@ -54,6 +54,7 @@
 		"noTemplatesAvailable": "No templates are available at this time.",
 		"notVisibleForStudents": "The assignment is NOT visible for students",
 		"open": "Open",
+		"ownedBy": "Owned by",
 		"placeholder": "Create a placeholder for your students to start their homework with ...",
 		"placeholderDescription": "Placeholder presented to students",
 		"placeholderInstructions": "Template for your students to fill in (you can leave this blank):",

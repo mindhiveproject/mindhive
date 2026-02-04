@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import AssignmentModal from "./Modal";
 import useTranslation from "next-translate/useTranslation";
 
-import { GET_MY_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
+import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import { CREATE_ASSIGNMENT } from "../../../../Mutations/Assignment";
 
 export default function NewAssignment({ user, myclass, assignment, children }) {
@@ -36,8 +36,8 @@ export default function NewAssignment({ user, myclass, assignment, children }) {
     },
     refetchQueries: [
       {
-        query: GET_MY_CLASS_ASSIGNMENTS,
-        variables: { userId: user?.id, classId: myclass?.id },
+        query: GET_CLASS_ASSIGNMENTS,
+        variables: { classId: myclass?.id },
       },
     ],
   });

@@ -111,6 +111,37 @@ export const GET_MY_CLASS_ASSIGNMENTS = gql`
   }
 `;
 
+// get all assignments for a class (any author) - for teacher grid
+export const GET_CLASS_ASSIGNMENTS = gql`
+  query GET_CLASS_ASSIGNMENTS($classId: ID!) {
+    assignments(
+      where: { classes: { some: { id: { equals: $classId } } } }
+      orderBy: [{ createdAt: desc }]
+    ) {
+      id
+      code
+      title
+      content
+      placeholder
+      createdAt
+      updatedAt
+      author {
+        id
+        username
+      }
+      public
+      homework {
+        id
+        public
+        settings
+      }
+      classes {
+        id
+      }
+    }
+  }
+`;
+
 // get all my and class assignments
 export const GET_CLASS_ASSIGNMENTS_FOR_STUDENTS = gql`
   query GET_CLASS_ASSIGNMENTS_FOR_STUDENTS($classId: ID, $userId: ID) {

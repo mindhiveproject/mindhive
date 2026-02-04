@@ -15,7 +15,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
 import { EDIT_ASSIGNMENT, DELETE_ASSIGNMENT } from "../../../../Mutations/Assignment";
-import { GET_MY_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
+import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 
 // Styled button matching Figma design (Primary Action - Teal)
 const PrimaryButton = styled.button`
@@ -195,8 +195,8 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   const [editAssignment] = useMutation(EDIT_ASSIGNMENT, {
     refetchQueries: [
       {
-        query: GET_MY_CLASS_ASSIGNMENTS,
-        variables: { userId: user?.id, classId: myclass?.id },
+        query: GET_CLASS_ASSIGNMENTS,
+        variables: { classId: myclass?.id },
       },
     ],
   });
@@ -204,8 +204,8 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   const [deleteAssignment] = useMutation(DELETE_ASSIGNMENT, {
     refetchQueries: [
       {
-        query: GET_MY_CLASS_ASSIGNMENTS,
-        variables: { userId: user?.id, classId: myclass?.id },
+        query: GET_CLASS_ASSIGNMENTS,
+        variables: { classId: myclass?.id },
       },
     ],
   });
@@ -263,6 +263,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   const ActionsRenderer = (params) => {
     const assignment = params?.data;
     const isPublished = assignment?.public || false;
+    const isOwner = assignment?.author?.id === user?.id;
     const router = useRouter();
 
     const handleEdit = () => {
@@ -327,22 +328,28 @@ export default function AssignmentTab({ assignments, myclass, user }) {
 
     const menu = (
       <Menu vertical style={{ border: 'none', boxShadow: 'none' }}>
-        <Menu.Item onClick={handleEdit} style={{ borderTop: 'none', borderBottom: 'none' }}>
-          {t("assignment.edit")}
-        </Menu.Item>
+        {isOwner && (
+          <Menu.Item onClick={handleEdit} style={{ borderTop: 'none', borderBottom: 'none' }}>
+            {t("assignment.edit")}
+          </Menu.Item>
+        )}
         <Menu.Item onClick={handlePreview} style={{ borderTop: 'none', borderBottom: 'none' }}>
           {t("assignment.preview")}
         </Menu.Item>
         <Menu.Item onClick={handleHomeworkOverview} style={{ borderTop: 'none', borderBottom: 'none' }}>
           {t("assignment.reviewSubmissions") || "Review Submissions"}
         </Menu.Item>
-        <Menu.Item onClick={handlePublish} style={{ borderTop: 'none', borderBottom: 'none' }}>
-          {isPublished ? t("assignment.unpublish") : t("assignment.publishToStudents")}
-        </Menu.Item>
-        <Menu.Item onClick={handleDelete} style={{ color: '#d32f2f', borderTop: 'none', borderBottom: 'none' }}>
-          <Icon name="trash" style={{ color: '#d32f2f' }} />
-          {t("assignment.delete")}
-        </Menu.Item>
+        {isOwner && (
+          <Menu.Item onClick={handlePublish} style={{ borderTop: 'none', borderBottom: 'none' }}>
+            {isPublished ? t("assignment.unpublish") : t("assignment.publishToStudents")}
+          </Menu.Item>
+        )}
+        {isOwner && (
+          <Menu.Item onClick={handleDelete} style={{ color: '#d32f2f', borderTop: 'none', borderBottom: 'none' }}>
+            <Icon name="trash" style={{ color: '#d32f2f' }} />
+            {t("assignment.delete")}
+          </Menu.Item>
+        )}
       </Menu>
     );
 
