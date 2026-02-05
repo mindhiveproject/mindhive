@@ -138,6 +138,18 @@ export const GET_CLASS_ASSIGNMENTS = gql`
       classes {
         id
       }
+      proposalCards {
+        id
+        title
+        publicId
+        section {
+          id
+          title
+          board {
+            id
+          }
+        }
+      }
     }
   }
 `;

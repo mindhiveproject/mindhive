@@ -1,0 +1,10 @@
+{
+  "assignment": {
+    "linkedToCard": "Linked to card",
+    "clickToConnectToCard": "Click to connect to card",
+    "connectToCardModalTitle": "Connect assignment to card",
+    "noTemplateBoard": "No template board for this class.",
+    "connectToCardSave": "Save",
+    "connectToCardCancel": "Cancel"
+  }
+}

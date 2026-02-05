@@ -68,7 +68,7 @@
 			"tasks": "Задачи",
 			"title": "Название"
 		},
-		"filterByAssignedTo": "Фильтрация по назначению",
+		"filterByAssignedTo": "Назначено",
 		"loading": "Загрузка...",
 		"status": "Положение дел"
 	},

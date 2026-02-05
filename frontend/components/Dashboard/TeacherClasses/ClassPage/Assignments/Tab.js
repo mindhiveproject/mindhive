@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import moment from "moment";
 import { useMutation } from "@apollo/client";
-import { Button, Popup, Menu, Icon } from "semantic-ui-react";
+import { Button, Modal, Popup, Menu, Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
@@ -16,6 +16,7 @@ import { AgGridReact } from "ag-grid-react";
 
 import { EDIT_ASSIGNMENT, DELETE_ASSIGNMENT } from "../../../../Mutations/Assignment";
 import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
+import ConnectAssignmentToCardModal from "./ConnectAssignmentToCardModal";
 
 // Styled button matching Figma design (Primary Action - Teal)
 const PrimaryButton = styled.button`
@@ -141,6 +142,26 @@ const StatusChip = styled.span`
   `}
 `;
 
+// Chip for "Linked to card" column (Section > Card or "Click to connect to card")
+const LinkedCardChip = styled.span`
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-family: Lato;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  border: 1px solid #E0E0E0;
+  background: ${(props) => (props.$placeholder ? "#D3E2F1" : "#F5F5F5")};
+  color: #434343;
+  margin: 2px 4px 2px 0;
+`;
+
 // Chip styles reused from LinkedItems.js (Published/Unpublished only)
 // Fixed height; padding and width adapt to presence of cross icon
 const styledChipPublished = {
@@ -191,6 +212,9 @@ export default function AssignmentTab({ assignments, myclass, user }) {
 
   // Filter state: Published/Unpublished chips only
   const [selectedPublishedFilter, setSelectedPublishedFilter] = useState(null); // null = all, true = published, false = unpublished
+  const [assignmentForConnectModal, setAssignmentForConnectModal] = useState(null);
+  const [assignmentForPublishModal, setAssignmentForPublishModal] = useState(null);
+  const [updatingStatusAssignmentId, setUpdatingStatusAssignmentId] = useState(null);
 
   const [editAssignment] = useMutation(EDIT_ASSIGNMENT, {
     refetchQueries: [
@@ -226,6 +250,23 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     setSelectedPublishedFilter((prev) => (prev === value ? null : value));
   };
 
+  const handleOpenPublishConfirm = (assignment) => {
+    if (!assignment?.id) return;
+    setAssignmentForPublishModal(assignment);
+  };
+
+  const handleConfirmPublishToggle = () => {
+    if (!assignmentForPublishModal?.id) return;
+    setUpdatingStatusAssignmentId(assignmentForPublishModal.id);
+    setAssignmentForPublishModal(null);
+    editAssignment({
+      variables: {
+        id: assignmentForPublishModal.id,
+        input: { public: !assignmentForPublishModal.public },
+      },
+    }).finally(() => setUpdatingStatusAssignmentId(null));
+  };
+
   // Count completed homework
   const getCompletedHomeworkCount = (homework) => {
     if (!homework || !Array.isArray(homework)) return 0;
@@ -238,13 +279,34 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     return <span>{title}</span>;
   };
 
-  // Status chip renderer
+  // Status chip renderer (clickable to toggle publish state)
   const StatusRenderer = (params) => {
-    const isPublished = params?.data?.public || false;
+    const assignment = params?.data;
+    const isPublished = assignment?.public || false;
+    const isUpdating = params?.context?.updatingStatusAssignmentId === assignment?.id;
+    const onToggle = params?.context?.onTogglePublishStatus;
     return (
-      <StatusChip isPublished={isPublished}>
-        {isPublished ? t("assignment.published") : t("assignment.unpublished")}
-      </StatusChip>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle?.(assignment);
+        }}
+        aria-label={isPublished ? t("assignment.unpublish") : t("assignment.publishToStudents")}
+        disabled={isUpdating}
+        style={{
+          background: "none",
+          border: "none",
+          padding: 0,
+          cursor: isUpdating ? "wait" : "pointer",
+          opacity: isUpdating ? 0.7 : 1,
+        }}
+        title={isUpdating ? t("common.loading", "Updating…") : (isPublished ? t("assignment.unpublish") : t("assignment.publishToStudents"))}
+      >
+        <StatusChip isPublished={isPublished}>
+          {isUpdating ? t("common.loading", "Updating…") : (isPublished ? t("assignment.published") : t("assignment.unpublished"))}
+        </StatusChip>
+      </button>
     );
   };
 
@@ -256,6 +318,59 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       <span>
         {completedCount} / {totalCount}
       </span>
+    );
+  };
+
+  // Linked to card renderer: [Section] > [Card] (section and card each in a chip)
+  const LinkedToCardRenderer = (params) => {
+    const assignment = params?.data;
+    const templateBoardId = myclass?.templateProposal?.id;
+    const templateCards = (assignment?.proposalCards || []).filter(
+      (c) => c?.section?.board?.id === templateBoardId
+    );
+    const handleClick = () => {
+      if (!templateBoardId) {
+        alert("No template board for this class.");
+        return;
+      }
+      setAssignmentForConnectModal(assignment);
+    };
+    return (
+      <button
+        type="button"
+        onClick={handleClick}
+        style={{
+          background: "none",
+          border: "none",
+          padding: 0,
+          cursor: "pointer",
+          textAlign: "left",
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 0,
+        }}
+      >
+        {templateCards.length > 0 ? (
+          templateCards.map((c, i) => (
+            <span
+              key={i}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                flexWrap: "wrap",
+                marginRight: i < templateCards.length - 1 ? "8px" : 0,
+              }}
+            >
+              <LinkedCardChip>{c?.section?.title || "Section"}</LinkedCardChip>
+              <span style={{ margin: "0 4px", fontSize: "14px", color: "#616161" }}>&gt;</span>
+              <LinkedCardChip>{c?.title || "Card"}</LinkedCardChip>
+            </span>
+          ))
+        ) : (
+          <LinkedCardChip $placeholder>Click to connect to card</LinkedCardChip>
+        )}
+      </button>
     );
   };
 
@@ -404,6 +519,33 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       sortable: true,
       flex: 1,
       valueGetter: (params) => params?.data?.public ? "Published" : "Unpublished",
+    },
+    {
+      field: "linkedToCard",
+      headerName: "Linked to card",
+      cellRenderer: LinkedToCardRenderer,
+      filter: "agTextColumnFilter",
+      sortable: true,
+      flex: 2,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: {
+        whiteSpace: "normal",
+        lineHeight: "1.5",
+        display: "flex",
+        alignItems: "center",
+        wordBreak: "break-word",
+      },
+      valueGetter: (params) => {
+        const a = params?.data;
+        const templateBoardId = params?.context?.templateBoardId;
+        const templateCards = (a?.proposalCards || []).filter(
+          (c) => c?.section?.board?.id === templateBoardId
+        );
+        return templateCards.length > 0
+          ? templateCards.map((c) => `${c?.section?.title} > ${c?.title}`).join(", ")
+          : "";
+      },
     },
     {
       field: "completedHomework",
@@ -557,6 +699,11 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           <AgGridReact
             rowData={filteredAssignments}
             columnDefs={columnDefs}
+            context={{
+              templateBoardId: myclass?.templateProposal?.id,
+              onTogglePublishStatus: handleOpenPublishConfirm,
+              updatingStatusAssignmentId,
+            }}
             pagination={pagination}
             paginationPageSize={paginationPageSize}
             paginationPageSizeSelector={paginationPageSizeSelector}
@@ -569,6 +716,59 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           />
         </div>
       </div>
+      <ConnectAssignmentToCardModal
+        open={!!assignmentForConnectModal}
+        onClose={() => setAssignmentForConnectModal(null)}
+        assignment={assignmentForConnectModal}
+        myclass={myclass}
+        onSuccess={() => setAssignmentForConnectModal(null)}
+      />
+
+      <Modal
+        open={!!assignmentForPublishModal}
+        onClose={() => setAssignmentForPublishModal(null)}
+        size="small"
+        style={{ borderRadius: "12px" }}
+      >
+        <Modal.Header>
+          {assignmentForPublishModal?.public
+            ? t("assignment.confirmUnpublishTitle", "Unpublish assignment?")
+            : t("assignment.confirmPublishTitle", "Publish assignment?")}
+        </Modal.Header>
+        <Modal.Content>
+          <p style={{ margin: 0 }}>
+            {assignmentForPublishModal?.public
+              ? t("assignment.confirmUnpublishMessage", "Students will no longer see this assignment in their list.")
+              : t("assignment.confirmPublishMessage", "Students will see this assignment in their class.")}
+          </p>
+        </Modal.Content>
+        <Modal.Actions style={{ padding: "1rem 1.5rem", gap: "8px" }}>
+          <Button
+            onClick={() => setAssignmentForPublishModal(null)}
+            style={{
+              borderRadius: "100px",
+              border: "1px solid #336F8A",
+              background: "white",
+              color: "#336F8A",
+            }}
+          >
+            {t("assignment.cancel", "Cancel")}
+          </Button>
+          <Button
+            primary
+            onClick={handleConfirmPublishToggle}
+            style={{
+              borderRadius: "100px",
+              background: "#336F8A",
+              color: "white",
+            }}
+          >
+            {assignmentForPublishModal?.public
+              ? t("assignment.unpublish", "Unpublish")
+              : t("assignment.publishToStudents", "Publish to students")}
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </div>
   );
 }

@@ -2574,13 +2574,16 @@ export const PreviewSection = ({
           const isStudy = type === "study";
           const isAssignment = type === "assignment";
           const isResource = type === "resource";
+          const isAssignmentDisabled = isAssignment && !item?.public;
           let viewUrl = `/dashboard/${type}s/view?id=${item?.id}`;
           if (isTask) viewUrl = `/dashboard/discover/tasks?name=${item?.slug}`;
           if (isStudy) viewUrl = `/dashboard/discover/studies?name=${item?.slug}`;
 
           const handlePreviewCardClick = () => {
-            if (isAssignment) openAssignmentModal?.(item);
-            else if (isResource) openResourceModal?.(item);
+            if (isAssignment) {
+              if (isAssignmentDisabled) return;
+              openAssignmentModal?.(item);
+            } else if (isResource) openResourceModal?.(item);
             else if (isTask || isStudy) window.open(viewUrl, "_blank", "noopener,noreferrer");
           };
 
@@ -2596,6 +2599,9 @@ export const PreviewSection = ({
                 : type === "task"
                   ? t("board.expendedCard.tasks", "Tasks")
                   : t("board.expendedCard.studies", "Studies");
+          const tooltipContent = isAssignmentDisabled
+            ? t("board.expendedCard.assignmentNotPublished", "Not published")
+            : `${typeLabel}: ${fullTitle}`;
 
           return (
             <div
@@ -2634,9 +2640,9 @@ export const PreviewSection = ({
                 borderRadius: "8px",
                 border,
                 background: backgroundColor,
-                cursor: "pointer",
+                cursor: isAssignmentDisabled ? "not-allowed" : "pointer",
                 transition: "box-shadow 0.2s ease",
-                boxShadow: isHovered ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
+                boxShadow: !isAssignmentDisabled && isHovered ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
                 fontFamily: "Nunito, sans-serif",
                 fontSize: "16px",
                 fontWeight: 600,
@@ -2644,6 +2650,7 @@ export const PreviewSection = ({
                 color: "#171717",
                 maxWidth: "320px",
                 minWidth: 0,
+                opacity: isAssignmentDisabled ? 0.55 : 1,
               }}
             >
               <span
@@ -2656,7 +2663,7 @@ export const PreviewSection = ({
               >
                 {fullTitle}
               </span>
-              {/* Hover tooltip: type + full name (1.5s delay, matches chip color) */}
+              {/* Hover tooltip: type + full name (1.5s delay), or "Not published" when disabled */}
               <div
                 className="hover-tooltip"
                 style={{
@@ -2682,7 +2689,13 @@ export const PreviewSection = ({
                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.10)",
                 }}
               >
-                <span style={{ fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
+                {isAssignmentDisabled ? (
+                  tooltipContent
+                ) : (
+                  <>
+                    <span style={{ fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
+                  </>
+                )}
               </div>
             </div>
           );

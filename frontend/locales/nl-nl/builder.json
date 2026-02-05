@@ -68,7 +68,7 @@
 			"tasks": "Taken",
 			"title": "Titel"
 		},
-		"filterByAssignedTo": "Filteren op toegewezen aan",
+		"filterByAssignedTo": "Toegewezen aan",
 		"loading": "Bezig met laden...",
 		"status": "Toestand"
 	},

@@ -6,6 +6,7 @@ import deleteProposal from "./deleteProposal";
 import archiveStudy from "./archiveStudy";
 import googleSignup from "./googleSignup";
 import googleLogin from "./googleLogin";
+import linkAssignmentToTemplateCard from "./linkAssignmentToTemplateCard";
 
 // make a fake gql tagged template literal
 const graphql = String.raw;
@@ -34,6 +35,11 @@ export const extendGraphqlSchema = (schema) =>
         archiveStudy(study: ID!, isArchived: Boolean!): Profile
         googleSignup(token: String!, role: String, classCode: String): Profile
         googleLogin(token: String!): Profile
+        linkAssignmentToTemplateCard(
+          assignmentId: ID!
+          templateCardId: ID!
+          classId: ID!
+        ): Assignment
       }
     `,
     resolvers: {
@@ -44,6 +50,7 @@ export const extendGraphqlSchema = (schema) =>
         archiveStudy,
         googleSignup,
         googleLogin,
+        linkAssignmentToTemplateCard,
       },
     },
   });

@@ -68,7 +68,7 @@
 			"tasks": "任务",
 			"title": "标题"
 		},
-		"filterByAssignedTo": "按分配给",
+		"filterByAssignedTo": "分配给",
 		"loading": "加载中...",
 		"status": "地位"
 	},

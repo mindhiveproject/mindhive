@@ -68,7 +68,7 @@
 			"tasks": "Tarefas",
 			"title": "Título"
 		},
-		"filterByAssignedTo": "Filtrar por atribuído a",
+		"filterByAssignedTo": "Atribuído a",
 		"loading": "Carregando...",
 		"status": "Status"
 	},
