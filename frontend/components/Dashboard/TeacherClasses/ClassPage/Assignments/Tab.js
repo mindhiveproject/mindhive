@@ -64,15 +64,14 @@ const SecondaryButton = styled.button`
   font-size: 14px;
   font-weight: 400;
   line-height: 18px;
-  letter-spacing: 0.05em;
   text-align: center;
-  border-radius: 100px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
   
   background: #ffffff;
-  color: #336F8A;
-  border: 1.5px solid #336F8A;
+  color: #434343;
+  border: 1.5px solid #625B71;
   
   &:hover {
     background: #f5f5f5;
@@ -85,6 +84,27 @@ const SecondaryButton = styled.button`
     border-color: #4db6ac;
     color: #4db6ac;
   }
+`;
+
+// Toggle button matching Design System (Figma node 1049-3662) with optional active/pressed state
+const LinkedCardsToggleButton = styled(SecondaryButton)`
+  ${(props) =>
+    props.$active &&
+    `
+    background: #DEF8FB;
+    border-color: #625B71;
+    color: #434343;
+    &:hover {
+      background: #DEF8FB;
+      border-color: #625B71;
+      color: #434343;
+    }
+    &:active {
+      background: #DEF8FB;
+      border-color: #625B71;
+      color: #434343;
+    }
+  `}
 `;
 
 const EditButton = styled.button`
@@ -124,7 +144,7 @@ const StatusChip = styled.span`
   display: inline-flex;
   align-items: center;
   padding: 4px 12px;
-  border-radius: 16px;
+  border-radius: 8px;
   font-family: Lato;
   font-size: 14px;
   font-weight: 400;
@@ -134,10 +154,12 @@ const StatusChip = styled.span`
   background: transparent;
   
   ${props => props.isPublished ? `
-    border-color: #B2DFDB;
-    color: #00695C;
+    background: #def8fb;
+    border-color: #625b71;
+    color: #434343;
   ` : `
-    border-color: #E0E0E0;
+    background: #f3f3f3;
+    border-color: #616161;
     color: #616161;
   `}
 `;
@@ -147,7 +169,7 @@ const LinkedCardChip = styled.span`
   display: inline-flex;
   align-items: center;
   padding: 4px 12px;
-  border-radius: 16px;
+  border-radius: 8px;
   font-family: Lato;
   font-size: 14px;
   font-weight: 400;
@@ -156,8 +178,8 @@ const LinkedCardChip = styled.span`
   overflow-wrap: break-word;
   word-break: break-word;
   max-width: 100%;
-  border: 1px solid #E0E0E0;
-  background: ${(props) => (props.$placeholder ? "#D3E2F1" : "#F5F5F5")};
+  border: 1px solid #625B71;
+  background: ${(props) => (props.$placeholder ? "#D8D3E7" : "#F5F5F5")};
   color: #434343;
   margin: 2px 4px 2px 0;
 `;
@@ -212,6 +234,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
 
   // Filter state: Published/Unpublished chips only
   const [selectedPublishedFilter, setSelectedPublishedFilter] = useState(null); // null = all, true = published, false = unpublished
+  const [showLinkedToCardColumn, setShowLinkedToCardColumn] = useState(false); // default: hide "Linked to card" column
   const [assignmentForConnectModal, setAssignmentForConnectModal] = useState(null);
   const [assignmentForPublishModal, setAssignmentForPublishModal] = useState(null);
   const [updatingStatusAssignmentId, setUpdatingStatusAssignmentId] = useState(null);
@@ -492,6 +515,35 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     );
   };
 
+  // Linked to card column definition (included in grid only when showLinkedToCardColumn is true)
+  const linkedToCardColumnDef = {
+    field: "linkedToCard",
+    headerName: t("assignment.linkedToCard", "Linked to card"),
+    cellRenderer: LinkedToCardRenderer,
+    filter: "agTextColumnFilter",
+    sortable: true,
+    flex: 2,
+    wrapText: true,
+    autoHeight: true,
+    cellStyle: {
+      whiteSpace: "normal",
+      lineHeight: "1.5",
+      display: "flex",
+      alignItems: "center",
+      wordBreak: "break-word",
+    },
+    valueGetter: (params) => {
+      const a = params?.data;
+      const templateBoardId = params?.context?.templateBoardId;
+      const templateCards = (a?.proposalCards || []).filter(
+        (c) => c?.section?.board?.id === templateBoardId
+      );
+      return templateCards.length > 0
+        ? templateCards.map((c) => `${c?.section?.title} > ${c?.title}`).join(", ")
+        : "";
+    },
+  };
+
   // Column definitions
   const columnDefs = [
     {
@@ -520,33 +572,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       flex: 1,
       valueGetter: (params) => params?.data?.public ? "Published" : "Unpublished",
     },
-    {
-      field: "linkedToCard",
-      headerName: "Linked to card",
-      cellRenderer: LinkedToCardRenderer,
-      filter: "agTextColumnFilter",
-      sortable: true,
-      flex: 2,
-      wrapText: true,
-      autoHeight: true,
-      cellStyle: {
-        whiteSpace: "normal",
-        lineHeight: "1.5",
-        display: "flex",
-        alignItems: "center",
-        wordBreak: "break-word",
-      },
-      valueGetter: (params) => {
-        const a = params?.data;
-        const templateBoardId = params?.context?.templateBoardId;
-        const templateCards = (a?.proposalCards || []).filter(
-          (c) => c?.section?.board?.id === templateBoardId
-        );
-        return templateCards.length > 0
-          ? templateCards.map((c) => `${c?.section?.title} > ${c?.title}`).join(", ")
-          : "";
-      },
-    },
+    ...(showLinkedToCardColumn ? [linkedToCardColumnDef] : []),
     {
       field: "completedHomework",
       headerName: t("assignment.completedHomework"),
@@ -602,12 +628,31 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       <div
         style={{
           display: "flex",
+          alignItems: "center", 
           flexWrap: "wrap",
           gap: "8px",
           alignItems: "center",
+          borderTop: "1px solid #E0E0E0",
+          paddingTop: "16px",
           marginBottom: "16px",
         }}
       >
+        {/* <p style={{ margin: 0 }}>{t("assignment.filter")}</p> */}
+        <LinkedCardsToggleButton
+          type="button"
+          $active={showLinkedToCardColumn}
+          onClick={() => setShowLinkedToCardColumn((prev) => !prev)}
+        >
+          <span>{t("assignment.projectCard", "Project card")}</span>
+          <img
+            src={showLinkedToCardColumn ? "/assets/icons/eye_open.svg" : "/assets/icons/eye_close.svg"}
+            alt=""
+            width={18}
+            height={18}
+            style={{ flexShrink: 0 }}
+          />
+        </LinkedCardsToggleButton>
+        |
         <button
           type="button"
           onClick={() => handlePublishedFilterToggle(true)}
