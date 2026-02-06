@@ -1,17 +1,24 @@
 import { useQuery } from "@apollo/client";
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../../Queries/Proposal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProposalPDF from "./Board/PDF/Main";
 import ProposalBuilder from "./Board/Builder/Main";
 import ProposalHeader from "./Board/Builder/Header";
 
-export default function ProposalPage({ user, proposalId }) {
+export default function ProposalPage({
+  user,
+  proposalId,
+  onCardOpenChange,
+}) {
   const [isPDF, setIsPDF] = useState(false);
   // Persist filter selections across view toggles
   const [selectedStatuses, setSelectedStatuses] = useState([]);
   const [selectedReviewSteps, setSelectedReviewSteps] = useState([]);
   const [selectedAssignedUsers, setSelectedAssignedUsers] = useState([]);
-  
+  // Lift card state so we can hide header when card is open
+  const [page, setPage] = useState("board");
+  const [card, setCard] = useState(null);
+
   const { data, error, loading } = useQuery(OVERVIEW_PROPOSAL_BOARD_QUERY, {
     variables: {
       id: proposalId,
@@ -19,23 +26,41 @@ export default function ProposalPage({ user, proposalId }) {
   });
 
   const proposal = data?.proposalBoard || {};
+  const isCardOpen = page === "card";
+
+  useEffect(() => {
+    onCardOpenChange?.(isCardOpen);
+  }, [isCardOpen, onCardOpenChange]);
 
   return (
-    <div className="proposalBoard">
-      <ProposalHeader
-        user={user}
-        proposal={proposal}
-        proposalBuildMode={false}
-        refetchQueries={[]}
-        isPDF={isPDF}
-        setIsPDF={setIsPDF}
-        selectedStatuses={selectedStatuses}
-        selectedReviewSteps={selectedReviewSteps}
-        selectedAssignedUsers={selectedAssignedUsers}
-      />
+    <div
+      className="proposalBoard"
+      style={
+        isCardOpen
+          ? {
+              flex: 1,
+              minHeight: 0,
+              margin: 0,
+            }
+          : undefined
+      }
+    >
+      {!isCardOpen && (
+        <ProposalHeader
+          user={user}
+          proposal={proposal}
+          proposalBuildMode={false}
+          refetchQueries={[]}
+          isPDF={isPDF}
+          setIsPDF={setIsPDF}
+          selectedStatuses={selectedStatuses}
+          selectedReviewSteps={selectedReviewSteps}
+          selectedAssignedUsers={selectedAssignedUsers}
+        />
+      )}
       {isPDF || proposal?.isSubmitted ? (
-        <ProposalPDF 
-          proposalId={proposalId} 
+        <ProposalPDF
+          proposalId={proposalId}
           user={user}
           selectedStatuses={selectedStatuses}
           setSelectedStatuses={setSelectedStatuses}
@@ -45,15 +70,34 @@ export default function ProposalPage({ user, proposalId }) {
           setSelectedAssignedUsers={setSelectedAssignedUsers}
         />
       ) : (
-        <ProposalBuilder
-          user={user}
-          proposal={proposal}
-          onClose={() => {}}
-          proposalBuildMode={false}
-          refetchQueries={[]}
-          isPDF={isPDF}
-          setIsPDF={setIsPDF}
-        />
+        <div
+          style={
+            isCardOpen
+              ? {
+                  gridRow: "1 / -1",
+                  minHeight: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  overflow: "hidden",
+                  height: "100%",
+                }
+              : undefined
+          }
+        >
+          <ProposalBuilder
+            user={user}
+            proposal={proposal}
+            onClose={() => {}}
+            proposalBuildMode={false}
+            refetchQueries={[]}
+            isPDF={isPDF}
+            setIsPDF={setIsPDF}
+            page={page}
+            setPage={setPage}
+            card={card}
+            setCard={setCard}
+          />
+        </div>
       )}
     </div>
   );

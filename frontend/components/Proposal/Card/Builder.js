@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useMutation, useApolloClient, gql } from "@apollo/client";
-import { Checkbox, Dropdown, Modal, Button, Popup } from "semantic-ui-react";
+import { Checkbox, Dropdown, Modal, Icon, Popup } from "semantic-ui-react";
 import {
   UPDATE_CARD_CONTENT,
   UPDATE_CARD_EDIT,
@@ -11,11 +11,14 @@ import {
   CLASS_PROJECTS_QUERY,
 } from "../../Queries/Proposal";
 
+import ReactHtmlParser from "react-html-parser";
+
 import useForm from "../../../lib/useForm";
 import TipTapEditor from "../../TipTap/Main";
+import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap";
 
 import CardType from "./Forms/Type";
-import LinkedItems from "./Forms/LinkedItems";
+import LinkedItems, { PreviewSection } from "./Forms/LinkedItems";
 import useTranslation from "next-translate/useTranslation";
 
 const peerReviewOptions = [
@@ -64,6 +67,7 @@ export default function BuilderProposalCard({
   const client = useApolloClient();
   const [showCloneDialog, setShowCloneDialog] = useState(false);
   const [showWarningBox, setShowWarningBox] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false);
 
   // Update card content in the local state
   const handleContentChange = async ({ contentType, newContent }) => {
@@ -277,8 +281,8 @@ export default function BuilderProposalCard({
     }
   };
 
-  // Update logic with clone check
-  const onUpdateCard = async (updateClonesToo = false) => {
+  // Save card content only (no close, no clone dialog). Used before entering preview.
+  const saveCardContentOnly = async () => {
     await updateCard({
       variables: {
         ...inputs,
@@ -294,6 +298,11 @@ export default function BuilderProposalCard({
         studies: inputs?.studies?.map((study) => ({ id: study?.id })),
       },
     });
+  };
+
+  // Update logic with clone check
+  const onUpdateCard = async (updateClonesToo = false) => {
+    await saveCardContentOnly();
 
     // If updating clones, do it now
     if (updateClonesToo) {
@@ -309,6 +318,16 @@ export default function BuilderProposalCard({
       setShowCloneDialog(true);
     } else {
       await onUpdateCard(false);
+    }
+  };
+
+  // Enter preview: save current content then show read-only preview
+  const handlePreviewAsUser = async () => {
+    try {
+      await saveCardContentOnly();
+      setPreviewMode(true);
+    } catch (error) {
+      // Leave in edit mode; mutation error handling applies
     }
   };
 
@@ -349,17 +368,39 @@ export default function BuilderProposalCard({
         <div className="middle">
           <span className="studyTitle">{proposal?.title}</span>
         </div>
-        <div className="right">
-          <div className="editModeMessage">
-            {t("board.editMode", "You are in Edit Mode")}
-          </div>
-          <button
-            onClick={handleSave}
-            className="saveButton"
-            disabled={updateLoading || updateClonedLoading}
-          >
-            {t("board.save", "Save")}
-          </button>
+        <div className={`right${previewMode ? " rightPreviewMode" : ""}`}>
+          {previewMode ? (
+            <button
+              type="button"
+              onClick={() => setPreviewMode(false)}
+              className="narrowButton"
+              style={{ marginRight: "10px" }}
+            >
+              <Icon name="angle left" /> {t("board.expendedCard.backToEditing", "Back to editing")}
+            </button>
+          ) : (
+            <>
+              <div className="editModeMessage">
+                {t("board.editMode", "You are in Edit Mode")}
+              </div>
+              <button
+                type="button"
+                onClick={handlePreviewAsUser}
+                disabled={updateLoading || updateClonedLoading}
+                className="narrowButtonSecondary"
+              >
+                {t("board.expendedCard.preview", "Preview")}
+              </button>
+              <button
+                type="button"
+                onClick={handleSave}
+                className="narrowButton"
+                disabled={updateLoading || updateClonedLoading}
+              >
+                {t("board.save", "Save")}
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -377,36 +418,140 @@ export default function BuilderProposalCard({
           </p>
         </Modal.Content>
         <Modal.Actions style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }} >
-          <Button
+          <button
+            type="button"
+            className="narrowButtonSecondary"
+            onClick={handleCloneNo}
             style={{
+              marginRight: "10px",
+              height: "40px",
+              padding: "8px 24px 8px 16px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
               borderRadius: "100px",
-              background: "white",
               fontSize: "16px",
+              fontWeight: 500,
+              cursor: "pointer",
+              background: "white",
               color: "#CF6D6A",
               border: "1px solid #CF6D6A",
-              marginRight: "10px"
             }}
-            onClick={handleCloneNo}
           >
             {t("board.expendedCard.updateOnlyThisBoard", "No, update only this board")}
-          </Button>
-          <Button
-            loading={updateLoading || updateClonedLoading}
+          </button>
+          <button
+            type="button"
+            className="narrowButton"
+            onClick={handleCloneYes}
+            disabled={updateLoading || updateClonedLoading}
             style={{
+              marginRight: "10px",
+              height: "40px",
+              padding: "8px 24px 8px 16px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
               borderRadius: "100px",
-              background: "#336F8A",
               fontSize: "16px",
+              fontWeight: 500,
+              cursor: updateLoading || updateClonedLoading ? "not-allowed" : "pointer",
+              background: "#336F8A",
               color: "white",
               border: "1px solid #336F8A",
-              marginRight: "10px"
             }}
-            onClick={handleCloneYes}
           >
-            {t("board.expendedCard.updateAllClones", "Yes, update all clones")}
-          </Button>
+            {updateLoading || updateClonedLoading ? (
+              t("board.expendedCard.updating", "Updating…")
+            ) : (
+              t("board.expendedCard.updateAllClones", "Yes, update all clones")
+            )}
+          </button>
         </Modal.Actions>
       </Modal>
 
+      {previewMode ? (
+        <div className="proposalCardBoard">
+          <div className="textBoard">
+            <div className="cardHeader">{inputs?.title || proposalCard?.title}</div>
+            <div className="cardSubheader">{t("board.expendedCard.instructions", "Instructions for Students")}</div>
+            <ReadOnlyTipTap>
+              <div className="ProseMirror">
+                {ReactHtmlParser(description?.current || inputs?.description || "")}
+              </div>
+            </ReadOnlyTipTap>
+            {inputs?.settings?.includeInReport && (
+              <>
+                <div className="cardSubheader">{t("board.expendedCard.studentResponseBoxNetwork", "Student Response Box - For MindHive Network")}</div>
+                <ReadOnlyTipTap>
+                  <div className="ProseMirror">
+                    {ReactHtmlParser(content?.current || inputs?.content || "")}
+                  </div>
+                </ReadOnlyTipTap>
+              </>
+            )}
+          </div>
+          <div className="infoBoard">
+            {/* Display Linked Items using PreviewSection */}
+            {inputs?.resources?.length > 0 && (
+              <PreviewSection
+                title={t("board.expendedCard.previewLinkedResources")}
+                items={inputs?.resources}
+                type="resource"
+                proposal={proposal}
+                openAssignmentModal={undefined}
+                openResourceModal={undefined}
+                user={user}
+              />
+            )}
+            {inputs?.assignments?.length > 0 && (
+              <PreviewSection
+                title={t("board.expendedCard.previewLinkedAssignments")}
+                items={inputs?.assignments}
+                type="assignment"
+                proposal={proposal}
+                openAssignmentModal={undefined}
+                user={user}
+              />
+            )}
+            {inputs?.tasks?.length > 0 && (
+              <PreviewSection
+                title={t("board.expendedCard.previewLinkedTasks")}
+                items={inputs?.tasks}
+                type="task"
+                proposal={proposal}
+                openAssignmentModal={undefined}
+                user={user}
+              />
+            )}
+            {inputs?.studies?.length > 0 && (
+              <PreviewSection
+                title={t("board.expendedCard.previewLinkedStudies")}
+                items={inputs?.studies}
+                type="study"
+                proposal={proposal}
+                openAssignmentModal={undefined}
+                user={user}
+              />
+            )}
+            {[
+              ...(inputs?.resources || []),
+              ...(inputs?.assignments || []),
+              ...(inputs?.tasks || []),
+              ...(inputs?.studies || []),
+            ].length === 0 && (
+              <div>
+                <div className="cardHeader">{t("board.expendedCard.linkedItems", "Linked Items")}</div>
+                <div className="cardSubheaderComment">
+                  {t("board.expendedCard.addLinkedItems", "Add existing assignments, tasks, studies, or resources")}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
       <div className="proposalCardBoard">
         <div className="textBoard">
           <label htmlFor="title">
@@ -596,6 +741,7 @@ export default function BuilderProposalCard({
                   },
                 })
               }
+              limitedToolbar={true}
             />
           </div>
 
@@ -692,6 +838,7 @@ export default function BuilderProposalCard({
 
         </div>
       </div>
+      )}
     </div>
   );
 }

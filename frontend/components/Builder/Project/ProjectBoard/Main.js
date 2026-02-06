@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Sidebar } from "semantic-ui-react";
-import { useEffect } from 'react';
+import { useEffect, useState } from "react";
 
 import CardWrapper from "./Board/Card/Wrapper";
 import Navigation from "../Navigation/Main";
@@ -20,6 +20,7 @@ export default function ProjectBoard({ query, user, tab, toggleSidebar }) {
   });
 
   const proposal = data?.proposalBoard || { sections: [] };
+  const [isCardFullView, setIsCardFullView] = useState(false);
 
   useEffect(() => {
     let currentTour = null;
@@ -127,8 +128,12 @@ export default function ProjectBoard({ query, user, tab, toggleSidebar }) {
             tab={tab}
             toggleSidebar={toggleSidebar}
           />
-          <StyledProposal>
-            <ProposalPage user={user} proposalId={proposalId} />
+          <StyledProposal $cardFullView={isCardFullView}>
+            <ProposalPage
+              user={user}
+              proposalId={proposalId}
+              onCardOpenChange={setIsCardFullView}
+            />
           </StyledProposal>
         </>
       )}
