@@ -2543,7 +2543,7 @@ export const PreviewSection = ({
 
   return (
     <>
-      {title && (
+      {/* {title && (
         <div
           className="cardHeader"
           style={{
@@ -2558,7 +2558,7 @@ export const PreviewSection = ({
         >
           {title}
         </div>
-      )}
+      )} */}
       <div
         className="previewGrid"
         style={{

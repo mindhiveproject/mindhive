@@ -960,48 +960,49 @@ export default function ProposalCard({
               </div>
 
               {/* Display Linked Items using PreviewSection */}
-              {inputs?.resources?.length > 0 && (
-                <PreviewSection
-                  title={t("board.expendedCard.previewLinkedResources")}
-                  items={inputs?.resources}
-                  type="resource"
-                  proposal={proposal}
-                  openAssignmentModal={openAssignmentModalHandler}
-                  openResourceModal={openResourceModalHandler}
-                  user={user}
-                />
-              )}
-              {inputs?.assignments?.length > 0 && (
-                <PreviewSection
-                  title={t("board.expendedCard.previewLinkedAssignments")}
-                  items={inputs?.assignments}
-                  type="assignment"
-                  proposal={proposal}
-                  openAssignmentModal={openAssignmentModalHandler}
-                  user={user}
-                />
-              )}
-              {inputs?.tasks?.length > 0 && (
-                <PreviewSection
-                  title={t("board.expendedCard.previewLinkedTasks")}
-                  items={inputs?.tasks}
-                  type="task"
-                  proposal={proposal}
-                  openAssignmentModal={openAssignmentModalHandler}
-                  user={user}
-                />
-              )}
-              {inputs?.studies?.length > 0 && (
-                <PreviewSection
-                  title={t("board.expendedCard.previewLinkedStudies")}
-                  items={inputs?.studies}
-                  type="study"
-                  proposal={proposal}
-                  openAssignmentModal={openAssignmentModalHandler}
-                  user={user}
-                />
-              )}
-
+              <div style={{ marginTop: "24px", marginBottom: "24px", display: "flex", flexDirection: "column", gap: "16px" }}> 
+                {inputs?.resources?.length > 0 && (
+                  <PreviewSection
+                    title={t("board.expendedCard.previewLinkedResources")}
+                    items={inputs?.resources}
+                    type="resource"
+                    proposal={proposal}
+                    openAssignmentModal={openAssignmentModalHandler}
+                    openResourceModal={openResourceModalHandler}
+                    user={user}
+                  />
+                )}
+                {inputs?.assignments?.length > 0 && (
+                  <PreviewSection
+                    title={t("board.expendedCard.previewLinkedAssignments")}
+                    items={inputs?.assignments}
+                    type="assignment"
+                    proposal={proposal}
+                    openAssignmentModal={openAssignmentModalHandler}
+                    user={user}
+                  />
+                )}
+                {inputs?.tasks?.length > 0 && (
+                  <PreviewSection
+                    title={t("board.expendedCard.previewLinkedTasks")}
+                    items={inputs?.tasks}
+                    type="task"
+                    proposal={proposal}
+                    openAssignmentModal={openAssignmentModalHandler}
+                    user={user}
+                  />
+                )}
+                {inputs?.studies?.length > 0 && (
+                  <PreviewSection
+                    title={t("board.expendedCard.previewLinkedStudies")}
+                    items={inputs?.studies}
+                    type="study"
+                    proposal={proposal}
+                    openAssignmentModal={openAssignmentModalHandler}
+                    user={user}
+                  />
+                )}
+              </div>
               <Modal
                 open={resourceModalState.open}
                 onClose={closeResourceModalHandler}
