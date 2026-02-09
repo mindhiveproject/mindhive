@@ -142,7 +142,6 @@ const GlobalStyles = createGlobalStyle`
   @import url("https://fonts.googleapis.com/css?family=Lato");
   @import url("https://fonts.googleapis.com/css?family=Roboto");
   @import url("https://fonts.googleapis.com/css?family=Inconsolata");
-  @import url("https://fonts.googleapis.com/css?family=Inter");
   html {
     --green: #007C70;
     --primary-blue: ${props => props.theme.primaryBlue};
@@ -226,7 +225,7 @@ const GlobalStyles = createGlobalStyle`
     --label-small-color: ${props => props.theme.labelSmall.color};
     
     box-sizing: border-box;
-    font-size: 10px;
+    font-size: 14px;
     height: 100%;
     font-family: 'Lato';
   }

@@ -68,7 +68,7 @@
 			"tasks": "Tareas",
 			"title": "Título"
 		},
-		"filterByAssignedTo": "Filtrar por asignado a",
+		"filterByAssignedTo": "Asignado a",
 		"loading": "Cargando...",
 		"status": "Estado"
 	},
@@ -828,10 +828,10 @@
 		"cardsCount": "{{count}} tarjeta{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "¿Seguro que desea eliminar esta sección de propuestas? Todas las tarjetas de esta sección también se eliminarán. Esta acción no se puede deshacer.",
 		"enterNewTitle": "Por favor, introduzca un título",
-		"sectionTitlePlaceholder": "Introduzca el título de la sección",
 		"newCard": "Nueva tarjeta",
 		"newCardPlaceholder": "Introduzca un nuevo título de tarjeta",
-		"newTitlePrompt": "Por favor, introduzca un nuevo título"
+		"newTitlePrompt": "Por favor, introduzca un nuevo título",
+		"sectionTitlePlaceholder": "Introduzca el título de la sección"
 	},
 	"selector": {
 		"basicBlocks": {

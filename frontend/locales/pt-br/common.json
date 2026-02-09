@@ -92,6 +92,7 @@
 		"updatePreferences": "Atualizar preferências"
 	},
 	"error": {
+		"emailAlreadyInUse": "Este endereço de e-mail já está cadastrado. Faça login ou utilize outro endereço de e-mail.",
 		"oops": "Ops!"
 	},
 	"featured": "Apresentou",

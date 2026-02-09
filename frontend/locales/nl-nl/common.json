@@ -92,6 +92,7 @@
 		"updatePreferences": "Voorkeuren bijwerken"
 	},
 	"error": {
+		"emailAlreadyInUse": "Dit e-mailadres is al geregistreerd. Log in of gebruik een ander e-mailadres.",
 		"oops": "Oeps!"
 	},
 	"featured": "Uitgelicht",

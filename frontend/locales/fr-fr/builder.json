@@ -68,7 +68,7 @@
 			"tasks": "Tâches",
 			"title": "Titre"
 		},
-		"filterByAssignedTo": "Filtrer par affecté à",
+		"filterByAssignedTo": "Assigné à",
 		"loading": "Chargement...",
 		"status": "Statut"
 	},
@@ -828,10 +828,10 @@
 		"cardsCount": "{{count}} carte{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "Êtes-vous sûr de vouloir supprimer cette section de propositions ? Toutes les cartes de cette section seront également supprimées. Cette action est irréversible.",
 		"enterNewTitle": "Veuillez entrer un titre",
-		"sectionTitlePlaceholder": "Entrez le titre de la section",
 		"newCard": "Nouvelle carte",
 		"newCardPlaceholder": "Entrez un nouveau titre de carte",
-		"newTitlePrompt": "Veuillez saisir un nouveau titre"
+		"newTitlePrompt": "Veuillez saisir un nouveau titre",
+		"sectionTitlePlaceholder": "Entrez le titre de la section"
 	},
 	"selector": {
 		"basicBlocks": {

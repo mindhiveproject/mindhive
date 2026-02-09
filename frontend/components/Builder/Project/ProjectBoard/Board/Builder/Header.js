@@ -11,6 +11,7 @@ import { Icon, Radio } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import exportPDF from "../PDF/exportPDF";
+import InfoTooltip from "../PDF/Preview/InfoTooltip";
 
 import { useRef, useState } from "react";
 
@@ -119,7 +120,7 @@ export default function ProposalHeader({
                     style={{
                       minWidth: "60px",
                       padding: "0 12px",
-                      fontFamily: "Nunito, sans-serif",
+                      fontFamily: "Inter, sans-serif",
                       letterSpacing: "0.15px",
                     }}
                   >
@@ -173,7 +174,7 @@ export default function ProposalHeader({
                     }}
                     className="headerTitle"
                     style={{ 
-                      fontFamily: "Nunito, sans-serif",
+                      fontFamily: "Inter, sans-serif",
                       fontStyle: "normal",
                       fontWeight: 600,
                       fontSize: "36px",
@@ -239,19 +240,88 @@ export default function ProposalHeader({
                         aria-label="Add collaborator"
                         onClick={handleAddCollaboratorClick}
                       >
-                        <Icon name="add" />
+                        <img src="/assets/icons/plus.svg" alt="Add" />
                       </button>
                     ) : null;
                   })()}
                 </div>
               </div>
+
+              {/* View toggle and download row: underneath collaborators, left-aligned; toggle left, download right */}
+              <div className="viewToggleDownloadRow" style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: "12px", width: "100%" }}>
+                <div className="viewToggleGroup">
+                  <button
+                    onClick={() => setIsPDF(false)}
+                    className={`viewToggleButton left ${!isPDF ? "active" : "inactive"}`}
+                  >
+                    <img src="/assets/icons/pencil.svg" alt="Edit" />
+                    <span>{t("proposalPage.viewBoard", "Board View")}</span>
+                  </button>
+                  <button
+                    onClick={() => setIsPDF(true)}
+                    className={`viewToggleButton right ${isPDF ? "active" : "inactive"}`}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M18.75 10.4166L17.2812 8.93748L10.4167 15.8021L7.71875 13.1146L6.25 14.5833L10.4167 18.75L18.75 10.4166ZM19.7917 4.16665H15.4375C15 2.95831 13.8542 2.08331 12.5 2.08331C11.1458 2.08331 10 2.95831 9.5625 4.16665H5.20833C5.0625 4.16665 4.92708 4.17706 4.79167 4.20831C4.38542 4.29165 4.02083 4.49998 3.73958 4.78123C3.55208 4.96873 3.39583 5.1979 3.29167 5.4479C3.1875 5.68748 3.125 5.95831 3.125 6.24998V20.8333C3.125 21.1146 3.1875 21.3958 3.29167 21.6458C3.39583 21.8958 3.55208 22.1146 3.73958 22.3125C4.02083 22.5937 4.38542 22.8021 4.79167 22.8854C4.92708 22.9062 5.0625 22.9166 5.20833 22.9166H19.7917C20.9375 22.9166 21.875 21.9791 21.875 20.8333V6.24998C21.875 5.10415 20.9375 4.16665 19.7917 4.16665ZM12.5 3.90623C12.9271 3.90623 13.2812 4.2604 13.2812 4.68748C13.2812 5.11456 12.9271 5.46873 12.5 5.46873C12.0729 5.46873 11.7188 5.11456 11.7188 4.68748C11.7188 4.2604 12.0729 3.90623 12.5 3.90623ZM19.7917 20.8333H5.20833V6.24998H19.7917V20.8333Z" fill="#336F8A"/>
+                    </svg>
+                    <span>{t("proposalPage.viewFlattenBoard", "List View")}</span>
+                  </button>
+                </div>
+                {isPDF ? (
+                  <InfoTooltip
+                    content={t("proposalPage.downloadTooltip", "Download content is based on the status and review step filters selected below.")}
+                    tooltipStyle={{
+                      // width: "250px",
+                      // background: "#FDF2D0",
+                      // borderRadius: "8px",
+                      // border: "none",
+                    }}
+                  >
+                    <div
+                      onClick={handleDownload}
+                      className="downloadButton"
+                      style={{
+                        position: "relative",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <img
+                        src="/assets/icons/download.svg"
+                        alt=""
+                        style={{ width: 18, height: 18 }}
+                      />
+                      <span className="downloadButtonText">
+                        {t("proposalPage.download", "Download")}
+                      </span>
+                    </div>
+                  </InfoTooltip>
+                ) : (
+                  <div
+                    className="downloadButton"
+                    style={{
+                      visibility: "hidden",
+                      cursor: "default",
+                    }}
+                  >
+                    <img
+                      src="/assets/icons/download.svg"
+                      alt=""
+                      style={{ width: 18, height: 18 }}
+                    />
+                    <span className="downloadButtonText">
+                      {t("proposalPage.download", "Download")}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="headerRightSection">
-              <div 
-                onClick={handleDownload} 
+              {/* Commented out: download + toggle moved underneath collaborator array (toggle left, download right)
+              <div
+                onClick={handleDownload}
                 className="downloadButton"
-                style={{ 
+                style={{
                   position: "relative",
                   visibility: isPDF ? "visible" : "hidden",
                   cursor: isPDF ? "pointer" : "default"
@@ -279,10 +349,9 @@ export default function ProposalHeader({
                   {t("proposalPage.download", "Download")}
                 </span>
                 <Icon name="download" />
-                
-                {/* Hover tooltip */}
+
                 {isPDF && (
-                  <div 
+                  <div
                     className="hover-tooltip"
                     style={{
                       position: "absolute",
@@ -296,7 +365,7 @@ export default function ProposalHeader({
                       padding: "12px 16px",
                       borderRadius: "8px",
                       fontSize: "16px",
-                      fontFamily: "Nunito",
+                      fontFamily: "Inter, sans-serif",
                       lineHeight: "20px",
                       opacity: "0",
                       transform: "translateY(-5px)",
@@ -310,7 +379,7 @@ export default function ProposalHeader({
                   </div>
                 )}
               </div>
-              
+
               <div className="viewToggleGroup">
                 <button
                   onClick={() => setIsPDF(false)}
@@ -329,6 +398,7 @@ export default function ProposalHeader({
                   <span>{t("proposalPage.viewFlattenBoard", "List View")}</span>
                 </button>
               </div>
+              */}
             </div>
           </div>
         )}

@@ -92,6 +92,7 @@
 		"updatePreferences": "Update Preferences"
 	},
 	"error": {
+		"emailAlreadyInUse": "This email is already registered. Please log in or use a different email.",
 		"oops": "Oops!"
 	},
 	"featured": "Featured",

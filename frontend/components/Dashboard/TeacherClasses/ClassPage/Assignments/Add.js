@@ -12,7 +12,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
 import {
-  GET_MY_CLASS_ASSIGNMENTS,
+  GET_CLASS_ASSIGNMENTS,
   GET_TEMPLATE_ASSIGNMENTS,
 } from "../../../../Queries/Assignment";
 
@@ -123,8 +123,8 @@ const SecondaryButton = styled.button`
 export default function AddAssignment({ myclass, user, query }) {
   const { t } = useTranslation("classes");
 
-  const { data, loading, error } = useQuery(GET_MY_CLASS_ASSIGNMENTS, {
-    variables: { userId: user?.id, classId: myclass?.id },
+  const { data, loading, error } = useQuery(GET_CLASS_ASSIGNMENTS, {
+    variables: { classId: myclass?.id },
   });
   const assignments = data?.assignments || [];
 
@@ -201,9 +201,9 @@ export default function AddAssignment({ myclass, user, query }) {
       autoHeight: true,
     },
     {
-      field: "createdAt",
-      headerName: t("assignment.dateCreated"),
-      valueGetter: (params) => params?.data?.createdAt || null,
+      field: "updatedAt",
+      headerName: t("assignment.dateUpdated"),
+      valueGetter: (params) => params?.data?.updatedAt || null,
       valueFormatter: (params) =>
         params.value ? moment(params.value).format("MMMM D, YYYY") : '',
       filter: "agDateColumnFilter",
@@ -213,9 +213,9 @@ export default function AddAssignment({ myclass, user, query }) {
       autoHeight: true,
     },
     {
-      field: "updatedAt",
-      headerName: t("assignment.dateUpdated"),
-      valueGetter: (params) => params?.data?.updatedAt || null,
+      field: "createdAt",
+      headerName: t("assignment.dateCreated"),
+      valueGetter: (params) => params?.data?.createdAt || null,
       valueFormatter: (params) =>
         params.value ? moment(params.value).format("MMMM D, YYYY") : '',
       filter: "agDateColumnFilter",
@@ -269,9 +269,9 @@ export default function AddAssignment({ myclass, user, query }) {
       autoHeight: true,
     },
     {
-      field: "createdAt",
-      headerName: t("assignment.dateCreated"),
-      valueGetter: (params) => params?.data?.createdAt || null,
+      field: "updatedAt",
+      headerName: t("assignment.dateUpdated"),
+      valueGetter: (params) => params?.data?.updatedAt || null,
       valueFormatter: (params) =>
         params.value ? moment(params.value).format("MMMM D, YYYY") : '',
       filter: "agDateColumnFilter",
@@ -281,9 +281,9 @@ export default function AddAssignment({ myclass, user, query }) {
       autoHeight: true,
     },
     {
-      field: "updatedAt",
-      headerName: t("assignment.dateUpdated"),
-      valueGetter: (params) => params?.data?.updatedAt || null,
+      field: "createdAt",
+      headerName: t("assignment.dateCreated"),
+      valueGetter: (params) => params?.data?.createdAt || null,
       valueFormatter: (params) =>
         params.value ? moment(params.value).format("MMMM D, YYYY") : '',
       filter: "agDateColumnFilter",

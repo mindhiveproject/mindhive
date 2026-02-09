@@ -202,6 +202,7 @@ export const GET_TEACHER_CLASSES = gql`
       id
       title
       code
+      createdAt
     }
   }
 `;
@@ -221,6 +222,7 @@ export const GET_MENTOR_CLASSES = gql`
       id
       title
       code
+      createdAt
     }
   }
 `;

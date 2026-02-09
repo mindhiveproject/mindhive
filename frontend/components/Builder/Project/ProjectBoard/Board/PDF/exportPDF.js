@@ -34,9 +34,9 @@ export default async function exportPDF(
   };
 
   const styles = {
-    h1: "color: #171717; font-family: Nunito, sans-serif; font-size: 32px; font-weight: 600; line-height: 44px;",
-    h2: "color: #171717; font-family: 'Nunito Sans', sans-serif; font-size: 24px; font-weight: 400; line-height: 28px;",
-    h3: "color: #171717; font-family: 'Nunito Sans', sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;"
+    h1: "color: #171717; font-family: Inter, sans-serif; font-size: 32px; font-weight: 600; line-height: 44px;",
+    h2: "color: #171717; font-family: Inter, sans-serif; font-size: 24px; font-weight: 400; line-height: 28px;",
+    h3: "color: #171717; font-family: Inter, sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;"
   };
 
   // Order sections by position
@@ -117,10 +117,10 @@ function generatePDFBrowserPrint(content, title, date, t) {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>${title || 'Proposal'}</title>
-      <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
       <style>
         body {
-          font-family: 'Nunito Sans', sans-serif;
+          font-family: Inter, sans-serif;
           color: #333;
           background: white;
           padding: 20px;

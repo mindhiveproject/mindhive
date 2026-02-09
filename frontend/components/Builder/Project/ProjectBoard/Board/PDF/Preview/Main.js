@@ -9,7 +9,7 @@ export default function Preview({ cards, user, submitStatuses = {} }) {
         flexDirection: "column",
         gap: "16px",
         borderRadius: "12px",
-        padding: "16px",
+        padding: "16px 16px 16px 0",
         overflow: "visible",
         touchAction: "pan-y",
         WebkitUserDrag: "none",

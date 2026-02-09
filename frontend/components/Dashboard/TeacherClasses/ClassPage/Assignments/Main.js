@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 
 import { useQuery } from "@apollo/client";
-import { GET_MY_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
+import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import useTranslation from "next-translate/useTranslation";
 
 import AssignmentTab from "./Tab";
@@ -90,8 +90,8 @@ export default function Settings({ myclass, user, query }) {
   const router = useRouter();
   const { action, assignment } = query;
 
-  const { data, loading, error } = useQuery(GET_MY_CLASS_ASSIGNMENTS, {
-    variables: { userId: user?.id, classId: myclass?.id },
+  const { data, loading, error } = useQuery(GET_CLASS_ASSIGNMENTS, {
+    variables: { classId: myclass?.id },
   });
   const assignments = data?.assignments || [];
 

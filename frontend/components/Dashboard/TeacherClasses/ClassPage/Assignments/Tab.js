@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import moment from "moment";
 import { useMutation } from "@apollo/client";
-import { Button, Popup, Menu, Icon } from "semantic-ui-react";
+import { Button, Modal, Popup, Menu, Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
@@ -15,7 +15,8 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
 import { EDIT_ASSIGNMENT, DELETE_ASSIGNMENT } from "../../../../Mutations/Assignment";
-import { GET_MY_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
+import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
+import ConnectAssignmentToCardModal from "./ConnectAssignmentToCardModal";
 
 // Styled button matching Figma design (Primary Action - Teal)
 const PrimaryButton = styled.button`
@@ -63,15 +64,14 @@ const SecondaryButton = styled.button`
   font-size: 14px;
   font-weight: 400;
   line-height: 18px;
-  letter-spacing: 0.05em;
   text-align: center;
-  border-radius: 100px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
   
   background: #ffffff;
-  color: #336F8A;
-  border: 1.5px solid #336F8A;
+  color: #434343;
+  border: 1.5px solid #625B71;
   
   &:hover {
     background: #f5f5f5;
@@ -84,6 +84,27 @@ const SecondaryButton = styled.button`
     border-color: #4db6ac;
     color: #4db6ac;
   }
+`;
+
+// Toggle button matching Design System (Figma node 1049-3662) with optional active/pressed state
+const LinkedCardsToggleButton = styled(SecondaryButton)`
+  ${(props) =>
+    props.$active &&
+    `
+    background: #DEF8FB;
+    border-color: #625B71;
+    color: #434343;
+    &:hover {
+      background: #DEF8FB;
+      border-color: #625B71;
+      color: #434343;
+    }
+    &:active {
+      background: #DEF8FB;
+      border-color: #625B71;
+      color: #434343;
+    }
+  `}
 `;
 
 const EditButton = styled.button`
@@ -123,7 +144,7 @@ const StatusChip = styled.span`
   display: inline-flex;
   align-items: center;
   padding: 4px 12px;
-  border-radius: 16px;
+  border-radius: 8px;
   font-family: Lato;
   font-size: 14px;
   font-weight: 400;
@@ -133,12 +154,34 @@ const StatusChip = styled.span`
   background: transparent;
   
   ${props => props.isPublished ? `
-    border-color: #B2DFDB;
-    color: #00695C;
+    background: #def8fb;
+    border-color: #625b71;
+    color: #434343;
   ` : `
-    border-color: #E0E0E0;
+    background: #f3f3f3;
+    border-color: #616161;
     color: #616161;
   `}
+`;
+
+// Chip for "Linked to card" column (Section > Card or "Click to connect to card")
+const LinkedCardChip = styled.span`
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-family: Lato;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  border: 1px solid #625B71;
+  background: ${(props) => (props.$placeholder ? "#D8D3E7" : "#F5F5F5")};
+  color: #434343;
+  margin: 2px 4px 2px 0;
 `;
 
 // Chip styles reused from LinkedItems.js (Published/Unpublished only)
@@ -191,12 +234,16 @@ export default function AssignmentTab({ assignments, myclass, user }) {
 
   // Filter state: Published/Unpublished chips only
   const [selectedPublishedFilter, setSelectedPublishedFilter] = useState(null); // null = all, true = published, false = unpublished
+  const [showLinkedToCardColumn, setShowLinkedToCardColumn] = useState(false); // default: hide "Linked to card" column
+  const [assignmentForConnectModal, setAssignmentForConnectModal] = useState(null);
+  const [assignmentForPublishModal, setAssignmentForPublishModal] = useState(null);
+  const [updatingStatusAssignmentId, setUpdatingStatusAssignmentId] = useState(null);
 
   const [editAssignment] = useMutation(EDIT_ASSIGNMENT, {
     refetchQueries: [
       {
-        query: GET_MY_CLASS_ASSIGNMENTS,
-        variables: { userId: user?.id, classId: myclass?.id },
+        query: GET_CLASS_ASSIGNMENTS,
+        variables: { classId: myclass?.id },
       },
     ],
   });
@@ -204,8 +251,8 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   const [deleteAssignment] = useMutation(DELETE_ASSIGNMENT, {
     refetchQueries: [
       {
-        query: GET_MY_CLASS_ASSIGNMENTS,
-        variables: { userId: user?.id, classId: myclass?.id },
+        query: GET_CLASS_ASSIGNMENTS,
+        variables: { classId: myclass?.id },
       },
     ],
   });
@@ -226,6 +273,23 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     setSelectedPublishedFilter((prev) => (prev === value ? null : value));
   };
 
+  const handleOpenPublishConfirm = (assignment) => {
+    if (!assignment?.id) return;
+    setAssignmentForPublishModal(assignment);
+  };
+
+  const handleConfirmPublishToggle = () => {
+    if (!assignmentForPublishModal?.id) return;
+    setUpdatingStatusAssignmentId(assignmentForPublishModal.id);
+    setAssignmentForPublishModal(null);
+    editAssignment({
+      variables: {
+        id: assignmentForPublishModal.id,
+        input: { public: !assignmentForPublishModal.public },
+      },
+    }).finally(() => setUpdatingStatusAssignmentId(null));
+  };
+
   // Count completed homework
   const getCompletedHomeworkCount = (homework) => {
     if (!homework || !Array.isArray(homework)) return 0;
@@ -238,13 +302,34 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     return <span>{title}</span>;
   };
 
-  // Status chip renderer
+  // Status chip renderer (clickable to toggle publish state)
   const StatusRenderer = (params) => {
-    const isPublished = params?.data?.public || false;
+    const assignment = params?.data;
+    const isPublished = assignment?.public || false;
+    const isUpdating = params?.context?.updatingStatusAssignmentId === assignment?.id;
+    const onToggle = params?.context?.onTogglePublishStatus;
     return (
-      <StatusChip isPublished={isPublished}>
-        {isPublished ? t("assignment.published") : t("assignment.unpublished")}
-      </StatusChip>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle?.(assignment);
+        }}
+        aria-label={isPublished ? t("assignment.unpublish") : t("assignment.publishToStudents")}
+        disabled={isUpdating}
+        style={{
+          background: "none",
+          border: "none",
+          padding: 0,
+          cursor: isUpdating ? "wait" : "pointer",
+          opacity: isUpdating ? 0.7 : 1,
+        }}
+        title={isUpdating ? t("common.loading", "Updating…") : (isPublished ? t("assignment.unpublish") : t("assignment.publishToStudents"))}
+      >
+        <StatusChip isPublished={isPublished}>
+          {isUpdating ? t("common.loading", "Updating…") : (isPublished ? t("assignment.published") : t("assignment.unpublished"))}
+        </StatusChip>
+      </button>
     );
   };
 
@@ -259,10 +344,64 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     );
   };
 
+  // Linked to card renderer: [Section] > [Card] (section and card each in a chip)
+  const LinkedToCardRenderer = (params) => {
+    const assignment = params?.data;
+    const templateBoardId = myclass?.templateProposal?.id;
+    const templateCards = (assignment?.proposalCards || []).filter(
+      (c) => c?.section?.board?.id === templateBoardId
+    );
+    const handleClick = () => {
+      if (!templateBoardId) {
+        alert("No template board for this class.");
+        return;
+      }
+      setAssignmentForConnectModal(assignment);
+    };
+    return (
+      <button
+        type="button"
+        onClick={handleClick}
+        style={{
+          background: "none",
+          border: "none",
+          padding: 0,
+          cursor: "pointer",
+          textAlign: "left",
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 0,
+        }}
+      >
+        {templateCards.length > 0 ? (
+          templateCards.map((c, i) => (
+            <span
+              key={i}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                flexWrap: "wrap",
+                marginRight: i < templateCards.length - 1 ? "8px" : 0,
+              }}
+            >
+              <LinkedCardChip>{c?.section?.title || "Section"}</LinkedCardChip>
+              <span style={{ margin: "0 4px", fontSize: "14px", color: "#616161" }}>&gt;</span>
+              <LinkedCardChip>{c?.title || "Card"}</LinkedCardChip>
+            </span>
+          ))
+        ) : (
+          <LinkedCardChip $placeholder>Click to connect to card</LinkedCardChip>
+        )}
+      </button>
+    );
+  };
+
   // Actions dropdown renderer
   const ActionsRenderer = (params) => {
     const assignment = params?.data;
     const isPublished = assignment?.public || false;
+    const isOwner = assignment?.author?.id === user?.id;
     const router = useRouter();
 
     const handleEdit = () => {
@@ -327,22 +466,28 @@ export default function AssignmentTab({ assignments, myclass, user }) {
 
     const menu = (
       <Menu vertical style={{ border: 'none', boxShadow: 'none' }}>
-        <Menu.Item onClick={handleEdit} style={{ borderTop: 'none', borderBottom: 'none' }}>
-          {t("assignment.edit")}
-        </Menu.Item>
+        {isOwner && (
+          <Menu.Item onClick={handleEdit} style={{ borderTop: 'none', borderBottom: 'none' }}>
+            {t("assignment.edit")}
+          </Menu.Item>
+        )}
         <Menu.Item onClick={handlePreview} style={{ borderTop: 'none', borderBottom: 'none' }}>
           {t("assignment.preview")}
         </Menu.Item>
         <Menu.Item onClick={handleHomeworkOverview} style={{ borderTop: 'none', borderBottom: 'none' }}>
           {t("assignment.reviewSubmissions") || "Review Submissions"}
         </Menu.Item>
-        <Menu.Item onClick={handlePublish} style={{ borderTop: 'none', borderBottom: 'none' }}>
-          {isPublished ? t("assignment.unpublish") : t("assignment.publishToStudents")}
-        </Menu.Item>
-        <Menu.Item onClick={handleDelete} style={{ color: '#d32f2f', borderTop: 'none', borderBottom: 'none' }}>
-          <Icon name="trash" style={{ color: '#d32f2f' }} />
-          {t("assignment.delete")}
-        </Menu.Item>
+        {isOwner && (
+          <Menu.Item onClick={handlePublish} style={{ borderTop: 'none', borderBottom: 'none' }}>
+            {isPublished ? t("assignment.unpublish") : t("assignment.publishToStudents")}
+          </Menu.Item>
+        )}
+        {isOwner && (
+          <Menu.Item onClick={handleDelete} style={{ color: '#d32f2f', borderTop: 'none', borderBottom: 'none' }}>
+            <Icon name="trash" style={{ color: '#d32f2f' }} />
+            {t("assignment.delete")}
+          </Menu.Item>
+        )}
       </Menu>
     );
 
@@ -368,6 +513,35 @@ export default function AssignmentTab({ assignments, myclass, user }) {
         style={{ zIndex: 10000 }}
       />
     );
+  };
+
+  // Linked to card column definition (included in grid only when showLinkedToCardColumn is true)
+  const linkedToCardColumnDef = {
+    field: "linkedToCard",
+    headerName: t("assignment.linkedToCard", "Linked to card"),
+    cellRenderer: LinkedToCardRenderer,
+    filter: "agTextColumnFilter",
+    sortable: true,
+    flex: 2,
+    wrapText: true,
+    autoHeight: true,
+    cellStyle: {
+      whiteSpace: "normal",
+      lineHeight: "1.5",
+      display: "flex",
+      alignItems: "center",
+      wordBreak: "break-word",
+    },
+    valueGetter: (params) => {
+      const a = params?.data;
+      const templateBoardId = params?.context?.templateBoardId;
+      const templateCards = (a?.proposalCards || []).filter(
+        (c) => c?.section?.board?.id === templateBoardId
+      );
+      return templateCards.length > 0
+        ? templateCards.map((c) => `${c?.section?.title} > ${c?.title}`).join(", ")
+        : "";
+    },
   };
 
   // Column definitions
@@ -398,6 +572,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       flex: 1,
       valueGetter: (params) => params?.data?.public ? "Published" : "Unpublished",
     },
+    ...(showLinkedToCardColumn ? [linkedToCardColumnDef] : []),
     {
       field: "completedHomework",
       headerName: t("assignment.completedHomework"),
@@ -453,12 +628,31 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       <div
         style={{
           display: "flex",
+          alignItems: "center", 
           flexWrap: "wrap",
           gap: "8px",
           alignItems: "center",
+          borderTop: "1px solid #E0E0E0",
+          paddingTop: "16px",
           marginBottom: "16px",
         }}
       >
+        {/* <p style={{ margin: 0 }}>{t("assignment.filter")}</p> */}
+        <LinkedCardsToggleButton
+          type="button"
+          $active={showLinkedToCardColumn}
+          onClick={() => setShowLinkedToCardColumn((prev) => !prev)}
+        >
+          <span>{t("assignment.projectCard", "Project card")}</span>
+          <img
+            src={showLinkedToCardColumn ? "/assets/icons/eye_open.svg" : "/assets/icons/eye_close.svg"}
+            alt=""
+            width={18}
+            height={18}
+            style={{ flexShrink: 0 }}
+          />
+        </LinkedCardsToggleButton>
+        |
         <button
           type="button"
           onClick={() => handlePublishedFilterToggle(true)}
@@ -550,6 +744,11 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           <AgGridReact
             rowData={filteredAssignments}
             columnDefs={columnDefs}
+            context={{
+              templateBoardId: myclass?.templateProposal?.id,
+              onTogglePublishStatus: handleOpenPublishConfirm,
+              updatingStatusAssignmentId,
+            }}
             pagination={pagination}
             paginationPageSize={paginationPageSize}
             paginationPageSizeSelector={paginationPageSizeSelector}
@@ -562,6 +761,59 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           />
         </div>
       </div>
+      <ConnectAssignmentToCardModal
+        open={!!assignmentForConnectModal}
+        onClose={() => setAssignmentForConnectModal(null)}
+        assignment={assignmentForConnectModal}
+        myclass={myclass}
+        onSuccess={() => setAssignmentForConnectModal(null)}
+      />
+
+      <Modal
+        open={!!assignmentForPublishModal}
+        onClose={() => setAssignmentForPublishModal(null)}
+        size="small"
+        style={{ borderRadius: "12px" }}
+      >
+        <Modal.Header>
+          {assignmentForPublishModal?.public
+            ? t("assignment.confirmUnpublishTitle", "Unpublish assignment?")
+            : t("assignment.confirmPublishTitle", "Publish assignment?")}
+        </Modal.Header>
+        <Modal.Content>
+          <p style={{ margin: 0 }}>
+            {assignmentForPublishModal?.public
+              ? t("assignment.confirmUnpublishMessage", "Students will no longer see this assignment in their list.")
+              : t("assignment.confirmPublishMessage", "Students will see this assignment in their class.")}
+          </p>
+        </Modal.Content>
+        <Modal.Actions style={{ padding: "1rem 1.5rem", gap: "8px" }}>
+          <Button
+            onClick={() => setAssignmentForPublishModal(null)}
+            style={{
+              borderRadius: "100px",
+              border: "1px solid #336F8A",
+              background: "white",
+              color: "#336F8A",
+            }}
+          >
+            {t("assignment.cancel", "Cancel")}
+          </Button>
+          <Button
+            primary
+            onClick={handleConfirmPublishToggle}
+            style={{
+              borderRadius: "100px",
+              background: "#336F8A",
+              color: "white",
+            }}
+          >
+            {assignmentForPublishModal?.public
+              ? t("assignment.unpublish", "Unpublish")
+              : t("assignment.publishToStudents", "Publish to students")}
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </div>
   );
 }

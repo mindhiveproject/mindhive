@@ -10,6 +10,8 @@ import TipTapEditor from "../../../../../../TipTap/Main";
 import { UPDATE_CARD_EDIT, UPDATE_CARD_CONTENT } from "../../../../../../Mutations/Proposal";
 import { GET_CARD_CONTENT } from "../../../../../../Queries/Proposal";
 import { getRegularCardVariant } from "../../../../../../Utils/cardVariants";
+import StatusChip from "./StatusChip";
+import InfoTooltip from "./InfoTooltip";
 
 export default function Card({ card, cardId, user, submitStatuses = {} }) {
   const { t } = useTranslation("builder");
@@ -22,9 +24,7 @@ export default function Card({ card, cardId, user, submitStatuses = {} }) {
   const [saveStatus, setSaveStatus] = useState("idle"); // idle, loading, success
   const [originalActive, setOriginalActive] = useState(false); // For accordion state, default collapsed
   const [commentsActive, setCommentsActive] = useState(false); // For comments accordion state, default collapsed
-  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
   const prevCardId = useRef(cardId); // Track previous cardId
-  const statusDropdownRef = useRef(null);
 
   const isUsedLoggedIn = user;
 
@@ -230,96 +230,9 @@ useEffect(() => {
   const feedbackInfo = getFeedbackInfo();
   const statusText = card?.settings?.status || "Completed";
 
-  // Get status icon
-  const getStatusIcon = () => {
-    const status = card?.settings?.status || "Not started";
-    const statusIconMap = {
-      "In progress": "/assets/icons/status/inProgress.svg",
-      "Completed": "/assets/icons/status/completed.svg",
-      "Help needed": "/assets/icons/status/helpNeeded.svg",
-      "Comments": "/assets/icons/status/comments.svg",
-      "Not started": "/assets/icons/status/notStarted.svg",
-      "Needs revision": "/assets/icons/status/TriangleWarning.svg",
-    };
-    return statusIconMap[status] || "/assets/icons/status/completed.svg";
-  };
-
-  // Get status background color and text color based on status
-  const getStatusStyles = (status) => {
-    const statusStyleMap = {
-      "In progress": {
-        backgroundColor: "#fdf2d0",
-        color: "#666666",
-      },
-      "Completed": {
-        backgroundColor: "#def8fb",
-        color: "#55808c",
-      },
-      "Help needed": {
-        backgroundColor: "#edcecd",
-        color: "#b9261a",
-      },
-      "Comments": {
-        backgroundColor: "#d8d3e7",
-        color: "#7d70ad",
-      },
-      "Not started": {
-        backgroundColor: "#f3f3f3",
-        color: "#8a919d",
-      },
-      "Needs revision": {
-        backgroundColor: "#8a2cf6",
-        color: "#8a919d",
-      },
-    };
-    return statusStyleMap[status] || statusStyleMap["Completed"];
-  };
-
-  // Status options for dropdown
-  const statusOptions = [
-    {
-      key: "inProgress",
-      text: t("statusCard.inProgress", "In progress"),
-      value: "In progress",
-      image: { src: "/assets/icons/status/inProgress.svg" },
-    },
-    {
-      key: "completed",
-      text: t("statusCard.completed", "Completed"),
-      value: "Completed",
-      image: { src: "/assets/icons/status/completed.svg" },
-    },
-    {
-      key: "helpNeeded",
-      text: t("statusCard.helpNeeded", "Help needed"),
-      value: "Help needed",
-      image: { src: "/assets/icons/status/helpNeeded.svg" },
-    },
-    {
-      key: "comments",
-      text: t("statusCard.comments", "Comments"),
-      value: "Comments",
-      image: { src: "/assets/icons/status/comments.svg" },
-    },
-    {
-      key: "notStarted",
-      text: t("statusCard.notStarted", "Not started"),
-      value: "Not started",
-      image: { src: "/assets/icons/status/notStarted.svg" },
-    },
-    {
-      key: "needsRevision",
-      text: t("statusCard.needsRevision", "Needs revision"),
-      value: "Needs revision",
-      image: { src: "/assets/icons/status/TriangleWarning.svg" },
-    },
-  ];
-
   // Handle status change
   const handleStatusChange = async (newStatus) => {
     if (!canEditStatus || statusLoading) return;
-    
-    setStatusDropdownOpen(false);
     try {
       await updateCardStatus({
         variables: {
@@ -338,25 +251,6 @@ useEffect(() => {
     }
   };
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (statusDropdownRef.current && !statusDropdownRef.current.contains(event.target)) {
-        setStatusDropdownOpen(false);
-      }
-    };
-
-    if (statusDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [statusDropdownOpen]);
-
-  const currentStatusStyles = getStatusStyles(statusText);
-
   // Get card content to display
   const getCardContent = () => {
     if (card.isLocked) {
@@ -370,6 +264,7 @@ useEffect(() => {
       style={{
         backgroundColor: "#ffffff",
         borderRadius: "12px",
+        border: "1px solid #E6E6E6",
         padding: "16px",
         boxShadow: "2px 2px 8px 0px rgba(0,0,0,0.1)",
         display: "flex",
@@ -392,8 +287,8 @@ useEffect(() => {
           alignItems: "center",
           justifyContent: "space-between",
           width: "100%",
-          position: "relative",
-          zIndex: statusDropdownOpen ? 1000 : "auto",
+        position: "relative",
+        zIndex: "auto",
         }}
       >
         {/* Left side - Icon and Title */}
@@ -438,7 +333,7 @@ useEffect(() => {
           >
             <div
               style={{
-                fontFamily: "Nunito, sans-serif",
+                fontFamily: "Inter, sans-serif",
                 fontWeight: 600,
                 fontSize: "16px",
                 lineHeight: "24px",
@@ -449,7 +344,7 @@ useEffect(() => {
               {card?.section?.title && (
                 <span
                   style={{
-                    fontFamily: "Nunito, sans-serif",
+                    fontFamily: "Inter, sans-serif",
                     fontWeight: 400,
                     fontSize: "12px",
                     lineHeight: "16px",
@@ -468,133 +363,12 @@ useEffect(() => {
         </div>
 
         {/* Right side - Status Chip */}
-        <div ref={statusDropdownRef} style={{ position: "relative", zIndex: statusDropdownOpen ? 1001 : "auto" }}>
-          <div
-            onClick={() => {
-              if (canEditStatus && !statusLoading) {
-                setStatusDropdownOpen(!statusDropdownOpen);
-              }
-            }}
-            style={{
-              backgroundColor: currentStatusStyles.backgroundColor,
-              border: "1px solid #a1a1a1",
-              borderRadius: "8px",
-              padding: "6px 8px",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              height: "32px",
-              cursor: canEditStatus ? "pointer" : "default",
-              userSelect: "none",
-            }}
-          >
-            <img
-              src={getStatusIcon()}
-              alt=""
-              draggable="false"
-              style={{
-                width: "18px",
-                height: "18px",
-              }}
-            />
-            <span
-              style={{
-                fontFamily: "Nunito, sans-serif",
-                fontWeight: 600,
-                fontSize: "14px",
-                lineHeight: "20px",
-                letterSpacing: "0.15px",
-                color: currentStatusStyles.color,
-              }}
-            >
-              {statusText}
-            </span>
-            {canEditStatus && (
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{
-                  flexShrink: 0,
-                  transform: statusDropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
-                  transition: "transform 0.2s",
-                }}
-              >
-                <path
-                  d="M7 10L12 15L17 10H7Z"
-                  fill={currentStatusStyles.color}
-                />
-              </svg>
-            )}
-          </div>
-          {canEditStatus && statusDropdownOpen && (
-            <div
-              style={{
-                position: "absolute",
-                top: "100%",
-                right: 0,
-                marginTop: "4px",
-                backgroundColor: "#ffffff",
-                border: "1px solid #a1a1a1",
-                borderRadius: "8px",
-                boxShadow: "0px 4px 8px rgba(0,0,0,0.1)",
-                overflow: "hidden",
-                minWidth: "200px",
-                zIndex: 10000,
-              }}
-            >
-              {statusOptions.map((option) => {
-                const optionStyles = getStatusStyles(option.value);
-                const isSelected = option.value === statusText;
-                return (
-                  <div
-                    key={option.key}
-                    onClick={() => handleStatusChange(option.value)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      padding: "6px 8px",
-                      backgroundColor: isSelected ? optionStyles.backgroundColor : "transparent",
-                      color: optionStyles.color,
-                      fontFamily: "Nunito, sans-serif",
-                      fontWeight: 600,
-                      fontSize: "14px",
-                      lineHeight: "20px",
-                      letterSpacing: "0.15px",
-                      cursor: "pointer",
-                      transition: "background-color 0.2s",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isSelected) {
-                        e.currentTarget.style.backgroundColor = "#f5f5f5";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isSelected) {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                      }
-                    }}
-                  >
-                    <img
-                      src={option.image.src}
-                      alt=""
-                      draggable="false"
-                      style={{
-                        width: "18px",
-                        height: "18px",
-                        flexShrink: 0,
-                      }}
-                    />
-                    <span>{option.text}</span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+        <StatusChip
+          value={statusText}
+          onStatusChange={handleStatusChange}
+          canEdit={canEditStatus}
+          loading={statusLoading}
+        />
       </div>
 
       {/* Card Content - Submission */}
@@ -617,69 +391,11 @@ useEffect(() => {
         >
           {card.isLocked ? (
             <>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" , marginBottom: "16px"}}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
                 <h2 style={{ margin: 0 }}>{t("mainCard.originalSubmission", "Original Submission")}</h2>
-                <div
-                  style={{
-                    position: "relative",
-                    display: "flex",
-                    alignItems: "center",
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => {
-                    const tooltip = e.currentTarget.querySelector('.hover-tooltip');
-                    if (tooltip) {
-                      tooltip.style.opacity = "1";
-                      tooltip.style.transform = "translateY(0)";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    const tooltip = e.currentTarget.querySelector('.hover-tooltip');
-                    if (tooltip) {
-                      tooltip.style.opacity = "0";
-                      tooltip.style.transform = "translateY(-5px)";
-                    }
-                  }}
-                >
-                  <img 
-                    src="/assets/icons/info.svg" 
-                    alt="info"
-                    style={{ 
-                      width: "20px", 
-                      height: "20px", 
-                      flexShrink: 0,
-                      filter: "brightness(0) saturate(100%) invert(28%) sepia(8%) saturate(1200%) hue-rotate(240deg) brightness(95%) contrast(85%)"
-                    }}
-                  />
-                  
-                  {/* Hover tooltip */}
-                  <div 
-                    className="hover-tooltip"
-                    style={{
-                      position: "absolute",
-                      top: "100%",
-                      left: "0",
-                      width: "400px",
-                      background: "#f7f9f8",
-                      color: "#625B71",
-                      marginTop: "8px",
-                      padding: "12px 16px",
-                      border: "1px solid #F3F3F3",
-                      borderRadius: "8px",
-                      fontSize: "16px",
-                      fontFamily: "Nunito",
-                      lineHeight: "20px",
-                      opacity: "0",
-                      transform: "translateX(-5px)",
-                      transition: "all 0.3s ease",
-                      pointerEvents: "none",
-                      zIndex: 1000,
-                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.10)",
-                    }}
-                  >
-                    <span>{t("mainCard.originalSubmissionTooltip", "This is the content you originaly submitted to the Feedback Center. We copied it bellow for you to make edits and conserved a 'Revised content'.")}</span>
-                  </div>
-                </div>
+                <InfoTooltip
+                  content={t("mainCard.originalSubmissionTooltip", "This is the content you originaly submitted to the Feedback Center. We copied it bellow for you to make edits and conserved a 'Revised content'.")}
+                />
               </div>
               <Accordion styled={card.isLocked ? false : true} fluid style={{ border: "none" }}>
                 <Accordion.Title

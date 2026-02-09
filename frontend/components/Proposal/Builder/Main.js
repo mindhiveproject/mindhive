@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
@@ -8,8 +8,6 @@ import ProposalCardWrapper from "../Card/Wrapper";
 
 import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
-
-import { Menu, Sidebar } from "semantic-ui-react";
 
 export default function ProposalBuilder({
   user,
@@ -56,54 +54,56 @@ export default function ProposalBuilder({
 
   return (
     <>
-      <Sidebar
-        as={Menu}
-        animation="overlay"
-        icon="labeled"
-        vertical
-        visible={page === "card"}
-        direction="right"
-        className="pushableSidebar"
-        width="very wide"
-      >
-        {card && (
-          <ProposalCardWrapper
-            user={user}
-            proposal={proposal}
-            cardId={card?.id}
-            closeCard={closeCard}
-            proposalBuildMode={proposalBuildMode}
-            isPreview={isPreview}
-          />
-        )}
-      </Sidebar>
-
-      <Sidebar.Pusher>
-        {isPreview ? (
-          <>
-            <h2>
-              {t("proposal.previewHeader", "Preview of proposal template")}{" "}
-              <span className="templateName">{proposal.title}</span>
-            </h2>
-            <p>{proposal.description}</p>
-          </>
-        ) : (
-          <ProposalHeader
-            user={user}
-            proposal={proposal}
-            proposalBuildMode={proposalBuildMode}
-            refetchQueries={refetchQueries}
-          />
-        )}
-        {proposal && (
-          <ProposalBoard
-            proposalId={proposal?.id}
-            openCard={openCard}
-            isPreview={isPreview}
-            proposalBuildMode={proposalBuildMode}
-          />
-        )}
-      </Sidebar.Pusher>
+      {page === "board" ? (
+        <>
+          {isPreview ? (
+            <>
+              <h2>
+                {t("proposal.previewHeader", "Preview of proposal template")}{" "}
+                <span className="templateName">{proposal.title}</span>
+              </h2>
+              <p>{proposal.description}</p>
+            </>
+          ) : (
+            <ProposalHeader
+              user={user}
+              proposal={proposal}
+              proposalBuildMode={proposalBuildMode}
+              refetchQueries={refetchQueries}
+            />
+          )}
+          {proposal && (
+            <ProposalBoard
+              proposalId={proposal?.id}
+              openCard={openCard}
+              isPreview={isPreview}
+              proposalBuildMode={proposalBuildMode}
+            />
+          )}
+        </>
+      ) : (
+        card && (
+          <div
+            className="hideScrollbar"
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              minHeight: 0,
+              overflowY: "auto",
+            }}
+          >
+            <ProposalCardWrapper
+              user={user}
+              proposal={proposal}
+              cardId={card?.id}
+              closeCard={closeCard}
+              proposalBuildMode={proposalBuildMode}
+              isPreview={isPreview}
+            />
+          </div>
+        )
+      )}
     </>
   );
 }

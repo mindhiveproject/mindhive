@@ -92,6 +92,7 @@
 		"updatePreferences": "प्राथमिकताएं अपडेट करें"
 	},
 	"error": {
+		"emailAlreadyInUse": "",
 		"oops": "उफ़!"
 	},
 	"featured": "प्रदर्शित",

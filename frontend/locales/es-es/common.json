@@ -92,6 +92,7 @@
 		"updatePreferences": "Actualizar preferencias"
 	},
 	"error": {
+		"emailAlreadyInUse": "Este correo electrónico ya está registrado. Inicie sesión o utilice otro.",
 		"oops": "¡Ups!"
 	},
 	"featured": "Presentado",

@@ -134,17 +134,14 @@ export default function AssignmentCopyModal({ open, onClose, assignment, user, o
                 inputs={{ classes: selectedClasses }}
                 handleChange={handleClassChange}
             />
-            <label htmlFor="title">
-                <p>{t("assignment.title")}</p>
-                <input
-                type="text"
-                id="title"
-                name="title"
-                value={editedAssignment.title}
-                onChange={(e) => handleFieldChange("title", e.target.value)}
-                required
-                />
-            </label>
+            <p>{t("assignment.title")}</p>
+            <TipTapEditor
+                content={editedAssignment.title}
+                placeholder={t("assignment.titlePlaceholder", "Enter title...")}
+                onUpdate={(newContent) => handleFieldChange("title", newContent)}
+                isEditable={true}
+                toolbarVisible={false}
+            />
 
             <p><br />{t("assignment.instructions", "Instructions for your students:")}</p>
             <TipTapEditor

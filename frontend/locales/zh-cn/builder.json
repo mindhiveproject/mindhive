@@ -68,7 +68,7 @@
 			"tasks": "任务",
 			"title": "标题"
 		},
-		"filterByAssignedTo": "按分配给",
+		"filterByAssignedTo": "分配给",
 		"loading": "加载中...",
 		"status": "地位"
 	},
@@ -828,10 +828,10 @@
 		"cardsCount": "{{count}} 张卡{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "您确定要删除此提案部分吗？此部分中的所有卡片也将被删除。此操作无法撤消。",
 		"enterNewTitle": "请输入标题",
-		"sectionTitlePlaceholder": "输入章节标题",
 		"newCard": "新卡",
 		"newCardPlaceholder": "输入新的卡片标题",
-		"newTitlePrompt": "请输入新标题"
+		"newTitlePrompt": "请输入新标题",
+		"sectionTitlePlaceholder": "输入章节标题"
 	},
 	"selector": {
 		"basicBlocks": {

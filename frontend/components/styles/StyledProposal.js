@@ -1,15 +1,25 @@
 import styled from "styled-components";
 
 export const StyledProposal = styled.div`
-  display: grid;
+  display: ${(props) => (props.$cardFullView ? "flex" : "grid")};
+  flex-direction: ${(props) => (props.$cardFullView ? "column" : "unset")};
   width: 100%;
   height: 100%;
-  overflow-y: auto;
-  padding: 20px;
+  overflow-y: ${(props) => (props.$cardFullView ? "hidden" : "auto")};
+  padding: ${(props) => (props.$cardFullView ? "0" : "20px")};
   // min-height: 80vh;
   background: #f7f9f8;
-  align-items: baseline;
+  align-items: ${(props) => (props.$cardFullView ? "stretch" : "baseline")};
   font-family: "Nunito";
+  min-height: ${(props) => (props.$cardFullView ? "0" : "unset")};
+
+  .hideScrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hideScrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
   .closeBtn {
     line-height: 3rem;
@@ -171,7 +181,7 @@ export const StyledProposal = styled.div`
       justify-content: flex-end;
       column-gap: 16px;
       align-items: center;
-      margin: 5px 0px 15px 0px;
+      margin: 5px 36px 15px 0px;
       span {
         font-family: Roboto;
         font-size: 18px;
@@ -353,6 +363,7 @@ export const StyledProposal = styled.div`
 
   .header {
     display: grid;
+    margin-bottom: 24px;
     .headerContent {
       width: 100%;
     }
@@ -548,10 +559,17 @@ export const StyledProposal = styled.div`
       border-radius: 50%;
       background: white;
       cursor: pointer;
-      padding: 4px;
+      padding: 0;
       flex-shrink: 0;
+      overflow: hidden;
       &:hover {
         background: #F3F3F3;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
       }
       .icon {
         color: #171717;
@@ -577,8 +595,10 @@ export const StyledProposal = styled.div`
       cursor: pointer;
       flex-shrink: 0;
       &:hover {
-        background: #FDF2D0;
-        color: #625B71;
+        background: #ffffff;
+        paddingRight: 12px;
+        border: 1px solid #336F8A;
+        // color: #625B71;
         .icon {
           color: #625B71;
         }
@@ -829,10 +849,12 @@ export const StyledProposal = styled.div`
     .navigation-build-mode {
       display: grid;
       align-items: center;
-      padding: 6px 9px;
+      padding: 8px 24px 8px 24px;
       grid-template-columns: auto 1fr auto;
       grid-gap: 20px;
       background: white;
+      border-radius: 24px;
+      border: 2px solid #D3E0E3;
       .left {
         display: grid;
         .icon {
@@ -861,8 +883,12 @@ export const StyledProposal = styled.div`
       }
       .right {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr auto 1fr;
         grid-gap: 10px;
+        &.rightPreviewMode {
+          grid-template-columns: 1fr;
+          justify-items: end;
+        }
         .editModeMessage {
           display: grid;
           align-items: center;
@@ -962,6 +988,7 @@ export const StyledProposal = styled.div`
       }
     }
     .cardHeader {
+      margin-top: 16px;
       font-family: 'Nunito';
       font-style: normal;
       font-weight: 600;
@@ -1068,10 +1095,17 @@ export const StyledProposal = styled.div`
         border-radius: 50%;
         background: white;
         cursor: pointer;
-        padding: 4px;
+        padding: 0;
         flex-shrink: 0;
+        overflow: hidden;
         &:hover {
           background: #F3F3F3;
+        }
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          display: block;
         }
         .icon {
           color: #171717;

@@ -68,7 +68,7 @@
 			"tasks": "Tasks",
 			"title": "Title"
 		},
-		"filterByAssignedTo": "Filter by assigned to",
+		"filterByAssignedTo": "Assigned to",
 		"loading": "Loading...",
 		"status": "Status"
 	},
@@ -828,10 +828,10 @@
 		"cardsCount": "{{count}} card{{count == 1 ? '' : 's'}}",
 		"deleteSectionConfirm": "Are you sure you want to delete this proposal section? All cards in this section will be deleted as well. This action cannot be undone.",
 		"enterNewTitle": "Please enter a title",
-		"sectionTitlePlaceholder": "Enter section title",
 		"newCard": "New card",
 		"newCardPlaceholder": "Enter a new card title",
-		"newTitlePrompt": "Please enter a new title"
+		"newTitlePrompt": "Please enter a new title",
+		"sectionTitlePlaceholder": "Enter section title"
 	},
 	"selector": {
 		"basicBlocks": {
