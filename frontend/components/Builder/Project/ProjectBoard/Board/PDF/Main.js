@@ -347,7 +347,7 @@ export default function ProposalPDF({
             {/* Filter by title */}
             <h2
               style={{
-                fontFamily: "Nunito, sans-serif",
+                fontFamily: "Inter, sans-serif",
                 fontWeight: 600,
                 fontSize: "22px",
                 lineHeight: "28px",
@@ -369,7 +369,7 @@ export default function ProposalPDF({
             >
               <label
                 style={{
-                  fontFamily: "Nunito, sans-serif",
+                  fontFamily: "Inter, sans-serif",
                   fontWeight: 600,
                   fontSize: "16px",
                   lineHeight: "24px",
@@ -405,7 +405,7 @@ export default function ProposalPDF({
                         borderRadius: "8px",
                         backgroundColor: isSelected ? "#FDF2D0" : "#ffffff",
                         cursor: "pointer",
-                        fontFamily: "Nunito, sans-serif",
+                        fontFamily: "Inter, sans-serif",
                         fontWeight: 600,
                         fontSize: "14px",
                         lineHeight: "20px",
@@ -471,7 +471,7 @@ export default function ProposalPDF({
             >
               <label
                 style={{
-                  fontFamily: "Nunito, sans-serif",
+                  fontFamily: "Inter, sans-serif",
                   fontWeight: 600,
                   fontSize: "16px",
                   lineHeight: "24px",
@@ -510,7 +510,7 @@ export default function ProposalPDF({
                         borderRadius: "8px",
                         backgroundColor: isSelected ? "#FDF2D0" : "#ffffff",
                         cursor: "pointer",
-                        fontFamily: "Nunito, sans-serif",
+                        fontFamily: "Inter, sans-serif",
                         fontWeight: 600,
                         fontSize: "14px",
                         lineHeight: "20px",
@@ -589,7 +589,7 @@ export default function ProposalPDF({
             >
               <label
                 style={{
-                  fontFamily: "Nunito, sans-serif",
+                  fontFamily: "Inter, sans-serif",
                   fontWeight: 600,
                   fontSize: "16px",
                   lineHeight: "24px",
@@ -611,7 +611,7 @@ export default function ProposalPDF({
                 {assignedUserOptions.length === 0 ? (
                   <div
                     style={{
-                      fontFamily: "Nunito, sans-serif",
+                      fontFamily: "Inter, sans-serif",
                       fontWeight: 600,
                       fontSize: "14px",
                       lineHeight: "20px",
@@ -642,7 +642,7 @@ export default function ProposalPDF({
                           borderRadius: "8px",
                           backgroundColor: isSelected ? "#FDF2D0" : "#ffffff",
                           cursor: "pointer",
-                          fontFamily: "Nunito, sans-serif",
+                          fontFamily: "Inter, sans-serif",
                           fontWeight: 600,
                           fontSize: "14px",
                           lineHeight: "20px",
@@ -733,7 +733,7 @@ export default function ProposalPDF({
               >
                 <p
                   style={{
-                    fontFamily: "Nunito, sans-serif",
+                    fontFamily: "Inter, sans-serif",
                     fontWeight: 600,
                     fontSize: "16px",
                     lineHeight: "24px",

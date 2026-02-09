@@ -1,9 +1,18 @@
 import { useQuery } from "@apollo/client";
+import styled from "styled-components";
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../../Queries/Proposal";
 import { useState, useEffect } from "react";
 import ProposalPDF from "./Board/PDF/Main";
 import ProposalBuilder from "./Board/Builder/Main";
 import ProposalHeader from "./Board/Builder/Header";
+
+const BoardFontWrapper = styled.div`
+  font-family: "Inter", sans-serif;
+  &,
+  & * {
+    font-family: "Inter", sans-serif !important;
+  }
+`;
 
 export default function ProposalPage({
   user,
@@ -33,7 +42,7 @@ export default function ProposalPage({
   }, [isCardOpen, onCardOpenChange]);
 
   return (
-    <div
+    <BoardFontWrapper
       className="proposalBoard"
       style={
         isCardOpen
@@ -99,6 +108,6 @@ export default function ProposalPage({
           />
         </div>
       )}
-    </div>
+    </BoardFontWrapper>
   );
 }

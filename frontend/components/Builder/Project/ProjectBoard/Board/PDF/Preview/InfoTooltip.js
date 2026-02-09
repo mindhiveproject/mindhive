@@ -21,7 +21,7 @@ const defaultTooltipStyle = {
   border: "1px solid #5D5763",
   borderRadius: "16px",
   fontSize: "16px",
-  fontFamily: "Nunito",
+  fontFamily: "Inter, sans-serif",
   lineHeight: "20px",
   opacity: 0,
   transform: "translateX(-5px)",

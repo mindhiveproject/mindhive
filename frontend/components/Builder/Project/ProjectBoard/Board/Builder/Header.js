@@ -120,7 +120,7 @@ export default function ProposalHeader({
                     style={{
                       minWidth: "60px",
                       padding: "0 12px",
-                      fontFamily: "Nunito, sans-serif",
+                      fontFamily: "Inter, sans-serif",
                       letterSpacing: "0.15px",
                     }}
                   >
@@ -174,7 +174,7 @@ export default function ProposalHeader({
                     }}
                     className="headerTitle"
                     style={{ 
-                      fontFamily: "Nunito, sans-serif",
+                      fontFamily: "Inter, sans-serif",
                       fontStyle: "normal",
                       fontWeight: 600,
                       fontSize: "36px",
@@ -365,7 +365,7 @@ export default function ProposalHeader({
                       padding: "12px 16px",
                       borderRadius: "8px",
                       fontSize: "16px",
-                      fontFamily: "Nunito",
+                      fontFamily: "Inter, sans-serif",
                       lineHeight: "20px",
                       opacity: "0",
                       transform: "translateY(-5px)",

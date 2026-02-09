@@ -483,7 +483,7 @@ export default function ProposalCard({
             style={{
               background: "#f9fafb",
               borderBottom: "1px solid #e0e0e0",
-              fontFamily: "Nunito",
+              fontFamily: "Inter, sans-serif",
               fontWeight: 600,
               letterSpacing: "0.15px",
             }}
@@ -517,7 +517,7 @@ export default function ProposalCard({
             style={{
               background: "#f9fafb",
               borderBottom: "1px solid #e0e0e0",
-              fontFamily: "Nunito",
+              fontFamily: "Inter, sans-serif",
               fontWeight: 600,
               letterSpacing: "0.15px",
             }}
@@ -566,7 +566,7 @@ export default function ProposalCard({
           style={{
             background: "#f9fafb",
             borderBottom: "1px solid #e0e0e0",
-            fontFamily: "Nunito",
+            fontFamily: "Inter, sans-serif",
             fontWeight: 600,
             letterSpacing: "0.15px",
           }}
@@ -1013,7 +1013,7 @@ export default function ProposalCard({
                   style={{
                     background: "#f9fafb",
                     borderBottom: "1px solid #e0e0e0",
-                    fontFamily: "Nunito",
+                    fontFamily: "Inter, sans-serif",
                     fontWeight: 600,
                     letterSpacing: "0.15px",
                   }}

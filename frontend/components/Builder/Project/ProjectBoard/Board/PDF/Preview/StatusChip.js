@@ -135,7 +135,7 @@ export default function StatusChip({
         />
         <span
           style={{
-            fontFamily: "Nunito, sans-serif",
+            fontFamily: "Inter, sans-serif",
             fontWeight: 600,
             fontSize: "14px",
             lineHeight: "20px",
@@ -192,7 +192,7 @@ export default function StatusChip({
                   padding: "6px 8px",
                   backgroundColor: isSelected ? optionStyles.backgroundColor : "transparent",
                   color: optionStyles.color,
-                  fontFamily: "Nunito, sans-serif",
+                  fontFamily: "Inter, sans-serif",
                   fontWeight: 600,
                   fontSize: "14px",
                   lineHeight: "20px",

@@ -333,7 +333,7 @@ useEffect(() => {
           >
             <div
               style={{
-                fontFamily: "Nunito, sans-serif",
+                fontFamily: "Inter, sans-serif",
                 fontWeight: 600,
                 fontSize: "16px",
                 lineHeight: "24px",
@@ -344,7 +344,7 @@ useEffect(() => {
               {card?.section?.title && (
                 <span
                   style={{
-                    fontFamily: "Nunito, sans-serif",
+                    fontFamily: "Inter, sans-serif",
                     fontWeight: 400,
                     fontSize: "12px",
                     lineHeight: "16px",
