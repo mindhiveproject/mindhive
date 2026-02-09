@@ -363,6 +363,7 @@ export const StyledProposal = styled.div`
 
   .header {
     display: grid;
+    margin-bottom: 24px;
     .headerContent {
       width: 100%;
     }

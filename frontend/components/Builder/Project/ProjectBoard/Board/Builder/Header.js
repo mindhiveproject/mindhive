@@ -11,6 +11,7 @@ import { Icon, Radio } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import exportPDF from "../PDF/exportPDF";
+import InfoTooltip from "../PDF/Preview/InfoTooltip";
 
 import { useRef, useState } from "react";
 
@@ -266,66 +267,52 @@ export default function ProposalHeader({
                     <span>{t("proposalPage.viewFlattenBoard", "List View")}</span>
                   </button>
                 </div>
-                <div
-                  onClick={handleDownload}
-                  className="downloadButton"
-                  style={{
-                    position: "relative",
-                    visibility: isPDF ? "visible" : "hidden",
-                    cursor: isPDF ? "pointer" : "default"
-                  }}
-                  onMouseEnter={(e) => {
-                    if (isPDF) {
-                      const tooltip = e.currentTarget.querySelector('.hover-tooltip');
-                      if (tooltip) {
-                        tooltip.style.opacity = "1";
-                        tooltip.style.transform = "translateY(0)";
-                      }
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (isPDF) {
-                      const tooltip = e.currentTarget.querySelector('.hover-tooltip');
-                      if (tooltip) {
-                        tooltip.style.opacity = "0";
-                        tooltip.style.transform = "translateY(-5px)";
-                      }
-                    }
-                  }}
-                >
-                  <span className="downloadButtonText">
-                    {t("proposalPage.download", "Download")}
-                  </span>
-                  <Icon name="download" />
-                  {isPDF && (
+                {isPDF ? (
+                  <InfoTooltip
+                    content={t("proposalPage.downloadTooltip", "Download content is based on the status and review step filters selected below.")}
+                    tooltipStyle={{
+                      // width: "250px",
+                      // background: "#FDF2D0",
+                      // borderRadius: "8px",
+                      // border: "none",
+                    }}
+                  >
                     <div
-                      className="hover-tooltip"
+                      onClick={handleDownload}
+                      className="downloadButton"
                       style={{
-                        position: "absolute",
-                        top: "100%",
-                        left: "0",
-                        right: "0",
-                        width: "250px",
-                        background: "#FDF2D0",
-                        color: "#625B71",
-                        marginTop: "8px",
-                        padding: "12px 16px",
-                        borderRadius: "8px",
-                        fontSize: "16px",
-                        fontFamily: "Nunito",
-                        lineHeight: "20px",
-                        opacity: "0",
-                        transform: "translateY(-5px)",
-                        transition: "all 0.3s ease",
-                        pointerEvents: "none",
-                        zIndex: 1000,
-                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.10)",
+                        position: "relative",
+                        cursor: "pointer",
                       }}
                     >
-                      <span>{t("proposalPage.downloadTooltip", "Download content is based on the status and review step filters selected below.")}</span>
+                      <img
+                        src="/assets/icons/download.svg"
+                        alt=""
+                        style={{ width: 18, height: 18 }}
+                      />
+                      <span className="downloadButtonText">
+                        {t("proposalPage.download", "Download")}
+                      </span>
                     </div>
-                  )}
-                </div>
+                  </InfoTooltip>
+                ) : (
+                  <div
+                    className="downloadButton"
+                    style={{
+                      visibility: "hidden",
+                      cursor: "default",
+                    }}
+                  >
+                    <img
+                      src="/assets/icons/download.svg"
+                      alt=""
+                      style={{ width: 18, height: 18 }}
+                    />
+                    <span className="downloadButtonText">
+                      {t("proposalPage.download", "Download")}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
