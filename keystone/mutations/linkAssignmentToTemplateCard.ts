@@ -35,7 +35,7 @@ async function linkAssignmentToTemplateCard(
     (b: any) => b?.clonedFrom?.id === templateBoardId
   );
 
-  console.log("[linkAssignmentToTemplateCard] classId:", classId, "templateBoardId:", templateBoardId, "studentProposals:", (classData.studentProposals || []).length, "studentBoards (cloned from template):", studentBoards.length);
+  // console.log("[linkAssignmentToTemplateCard] classId:", classId, "templateBoardId:", templateBoardId, "studentProposals:", (classData.studentProposals || []).length, "studentBoards (cloned from template):", studentBoards.length);
 
   const templateCard = await context.query.ProposalCard.findOne({
     where: { id: templateCardId },
@@ -132,11 +132,11 @@ async function linkAssignmentToTemplateCard(
       templateSectionPosition != null && templateCardPosition != null;
 
     if (matchBySectionPublicId || matchByPosition) {
-      console.log(
-        "[linkAssignmentToTemplateCard] matching clone cards by",
-        matchBySectionPublicId ? "section publicId + position" : "section position + card position",
-        "(template card has no publicId)"
-      );
+      // console.log(
+      //   "[linkAssignmentToTemplateCard] matching clone cards by",
+      //   matchBySectionPublicId ? "section publicId + position" : "section position + card position",
+      //   "(template card has no publicId)"
+      // );
       for (const board of studentBoards || []) {
         for (const sec of board.sections || []) {
           const sectionMatches = matchBySectionPublicId
@@ -155,7 +155,7 @@ async function linkAssignmentToTemplateCard(
 
   const disconnectAll = [...toDisconnectTemplate, ...toDisconnectStudent];
 
-  console.log("[linkAssignmentToTemplateCard] toConnect:", toConnect.length, "ids:", toConnect.map((x) => x.id), "| disconnectAll:", disconnectAll.length, "| newPublicId:", newPublicId);
+  // console.log("[linkAssignmentToTemplateCard] toConnect:", toConnect.length, "ids:", toConnect.map((x) => x.id), "| disconnectAll:", disconnectAll.length, "| newPublicId:", newPublicId);
 
   await context.db.Assignment.updateOne({
     where: { id: assignmentId },
