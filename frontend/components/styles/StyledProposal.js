@@ -559,10 +559,17 @@ export const StyledProposal = styled.div`
       border-radius: 50%;
       background: white;
       cursor: pointer;
-      padding: 4px;
+      padding: 0;
       flex-shrink: 0;
+      overflow: hidden;
       &:hover {
         background: #F3F3F3;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
       }
       .icon {
         color: #171717;
@@ -588,8 +595,10 @@ export const StyledProposal = styled.div`
       cursor: pointer;
       flex-shrink: 0;
       &:hover {
-        background: #FDF2D0;
-        color: #625B71;
+        background: #ffffff;
+        paddingRight: 12px;
+        border: 1px solid #336F8A;
+        // color: #625B71;
         .icon {
           color: #625B71;
         }
@@ -1086,10 +1095,17 @@ export const StyledProposal = styled.div`
         border-radius: 50%;
         background: white;
         cursor: pointer;
-        padding: 4px;
+        padding: 0;
         flex-shrink: 0;
+        overflow: hidden;
         &:hover {
           background: #F3F3F3;
+        }
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          display: block;
         }
         .icon {
           color: #171717;

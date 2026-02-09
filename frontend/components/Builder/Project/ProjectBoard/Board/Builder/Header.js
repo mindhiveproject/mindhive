@@ -240,7 +240,7 @@ export default function ProposalHeader({
                         aria-label="Add collaborator"
                         onClick={handleAddCollaboratorClick}
                       >
-                        <Icon name="add" />
+                        <img src="/assets/icons/plus.svg" alt="Add" />
                       </button>
                     ) : null;
                   })()}
