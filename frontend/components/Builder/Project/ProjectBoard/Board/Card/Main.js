@@ -10,7 +10,10 @@ import { UPDATE_CARD_CONTENT } from "../../../../../Mutations/Proposal";
 import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
 import { GET_CARD_CONTENT } from "../../../../../Queries/Proposal";
 
-import { CREATE_HOMEWORK } from "../../../../../Mutations/Homework"; // Adjust path as needed
+import {
+  CREATE_HOMEWORK,
+  UPDATE_HOMEWORK,
+} from "../../../../../Mutations/Homework"; // Adjust path as needed
 import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../../../../Queries/Homework"; // Adjust path as needed
 import { GET_AN_ASSIGNMENT } from "../../../../../Queries/Assignment"; // Adjust path as needed
 import { GET_RESOURCE } from "../../../../../Queries/Resource";
@@ -281,12 +284,12 @@ export default function ProposalCard({
       console.error("No assignment provided to openAssignmentModalHandler");
       return;
     }
-    console.log("Opening modal with assignment:", {
-      id: assignment.id,
-      title: assignment.title,
-      content: assignment.content,
-      placeholder: assignment.placeholder,
-    });
+    // console.log("Opening modal with assignment:", {
+    //   id: assignment.id,
+    //   title: assignment.title,
+    //   content: assignment.content,
+    //   placeholder: assignment.placeholder,
+    // });
     setSelectedAssignment(assignment);
     setAssignmentModalOpen(true);
   };
@@ -304,6 +307,9 @@ export default function ProposalCard({
     const [title, setTitle] = useState(stripHtml(assignmentProp?.title || ""));
     const [content, setContent] = useState(assignmentProp?.content || "");
     const [showNewHomework, setShowNewHomework] = useState(false);
+    const [activeHomework, setActiveHomework] = useState(null);
+
+    const isStudent = user?.role === "STUDENT";
 
     // Query for fresh assignment data with all fields including placeholder
     const {
@@ -317,7 +323,7 @@ export default function ProposalCard({
     });
 
     const assignment = assignmentData?.assignments?.[0] || null;
-    console.log(assignmentData);
+    // console.log(assignmentData);
 
     // Query for existing homeworks for this assignment
     const { data: homeworkData, refetch: refetchHomeworks } = useQuery(
@@ -328,13 +334,13 @@ export default function ProposalCard({
       },
     );
 
-    console.log(homeworkData);
+    // console.log(homeworkData);
     const homeworks = homeworkData?.homeworks || [];
 
     // New homework form state
-    const { inputs, handleChange, clearForm } = useForm({
+    const { inputs, handleChange, handleMultipleUpdate, clearForm } = useForm({
       settings: { status: "Started" },
-      title: `Homework ${stripHtml(
+      title: `Assignment${stripHtml(
         assignment?.title || "",
       )} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ""}`,
       placeholder: assignment?.placeholder || "",
@@ -361,14 +367,48 @@ export default function ProposalCard({
       },
     );
 
+    // Mutation for updating homework
+    const [updateHomework, { loading: updateLoading }] = useMutation(
+      UPDATE_HOMEWORK,
+      {
+        refetchQueries: [
+          {
+            query: GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
+            variables: { userId: user?.id, assignmentCode: assignment?.code },
+          },
+        ],
+      },
+    );
+
+    const loadHomeworkIntoForm = (homework) => {
+      if (!homework) return;
+
+      // Populate form fields in one update so title/placeholder/settings all apply (avoid batching overwriting)
+      handleMultipleUpdate({
+        title: homework.title || "",
+        placeholder:
+          homework.placeholder ||
+          assignment?.placeholder ||
+          "",
+        settings: homework.settings || { status: "Started" },
+      });
+
+      // Initialize editor content with the homework content or fallback
+      homeworkContent.current =
+        homework.content ||
+        homework.placeholder ||
+        assignment?.placeholder ||
+        "";
+    };
+
     useEffect(() => {
       if (assignment) {
-        console.log("AssignmentModal: Syncing assignment", {
-          id: assignment.id,
-          title: assignment.title,
-          content: assignment.content,
-          placeholder: assignment.placeholder,
-        });
+        // console.log("AssignmentModal: Syncing assignment", {
+        //   id: assignment.id,
+        //   title: assignment.title,
+        //   content: assignment.content,
+        //   placeholder: assignment.placeholder,
+        // });
         setTitle(stripHtml(assignment.title || ""));
         setContent(assignment.content || "");
 
@@ -376,7 +416,7 @@ export default function ProposalCard({
         handleChange({
           target: {
             name: "title",
-            value: `Assignment | ${stripHtml(
+            value: `Assignment: ${stripHtml(
               assignment?.title || "",
             )} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ""}`,
           },
@@ -398,6 +438,21 @@ export default function ProposalCard({
         setContent("");
       }
     }, [assignment, assignmentLoading, open]);
+
+    // Reset create/edit state when modal closes so reopen starts from list view
+    useEffect(() => {
+      if (!open) {
+        setShowNewHomework(false);
+        setActiveHomework(null);
+        homeworkContent.current = "";
+      }
+    }, [open]);
+
+    // Reset create/edit state when switching to a different assignment
+    useEffect(() => {
+      setActiveHomework(null);
+      setShowNewHomework(false);
+    }, [assignmentProp?.id]);
 
     const h1 = {
       fontSize: "18px",
@@ -444,6 +499,94 @@ export default function ProposalCard({
       } catch (error) {
         console.error("Error creating homework:", error);
         alert("Error creating homework: " + error.message);
+      }
+    };
+
+    const handleUpdateHomeworkDraft = async () => {
+      if (!activeHomework?.id) return;
+      try {
+        await updateHomework({
+          variables: {
+            id: activeHomework.id,
+            input: {
+              title: inputs.title,
+              content: homeworkContent?.current || inputs.placeholder,
+              placeholder: inputs.placeholder,
+              settings: inputs?.settings,
+              updatedAt: new Date(),
+            },
+          },
+        });
+        clearForm();
+        setActiveHomework(null);
+        // Reset homework content to assignment placeholder for future creates
+        homeworkContent.current = assignment?.placeholder || "";
+      } catch (error) {
+        console.error("Error updating homework draft:", error);
+        alert("Error updating homework draft: " + error.message);
+      }
+    };
+
+    const handleUpdateHomeworkSubmit = async () => {
+      if (!activeHomework?.id) return;
+      try {
+        await updateHomework({
+          variables: {
+            id: activeHomework.id,
+            input: {
+              title: inputs.title,
+              content: homeworkContent?.current || inputs.placeholder,
+              placeholder: inputs.placeholder,
+              settings: {
+                ...(inputs?.settings || {}),
+                status: "Completed",
+              },
+              updatedAt: new Date(),
+            },
+          },
+        });
+        clearForm();
+        setActiveHomework(null);
+        // Reset homework content to assignment placeholder for future creates
+        homeworkContent.current = assignment?.placeholder || "";
+      } catch (error) {
+        console.error("Error submitting updated homework:", error);
+        alert("Error submitting updated homework: " + error.message);
+      }
+    };
+
+    const handleStatusUpdate = async (newStatus) => {
+      if (!activeHomework?.id) return;
+      try {
+        await updateHomework({
+          variables: {
+            id: activeHomework.id,
+            input: {
+              title: inputs.title,
+              content: homeworkContent?.current || inputs.placeholder,
+              placeholder: inputs.placeholder,
+              settings: {
+                ...(inputs?.settings || {}),
+                status: newStatus,
+              },
+              updatedAt: new Date(),
+            },
+          },
+        });
+        handleChange({
+          target: {
+            name: "settings",
+            value: { ...(inputs?.settings || {}), status: newStatus },
+          },
+        });
+        setActiveHomework((prev) =>
+          prev
+            ? { ...prev, settings: { ...(prev.settings || {}), status: newStatus } }
+            : null,
+        );
+      } catch (error) {
+        console.error("Error updating homework status:", error);
+        alert("Error updating homework status: " + error.message);
       }
     };
 
@@ -586,10 +729,11 @@ export default function ProposalCard({
             </ReadOnlyTipTap>
             {/* Homework Section */}
             <div style={{ marginTop: "24px", paddingTop: "24px" }}>
-              <h3 style={{ marginBottom: "16px", color: "#274E5B" }}>
-                {t("homework.myAssignment", "My Assignment")}
-              </h3>
-
+              {homeworks.length > 0 && (
+                <h3 style={{ marginBottom: "16px", color: "#274E5B" }}>
+                  {t("homework.myEntry", "My entry")}
+                </h3>
+              )}
               {/* Show existing homeworks */}
               {homeworks.length > 0 && (
                 <div style={{ marginBottom: "16px" }}>
@@ -600,7 +744,24 @@ export default function ProposalCard({
                         borderRadius: "8px",
                         padding: "12px",
                         marginBottom: "8px",
-                        background: "#F3F3F3",
+                        border: homework.settings?.status === "Completed"
+                            ? "1px solid #3D85B0"
+                            : homework.settings?.status === "Started"
+                            ? "1px solid #5D5763"
+                            : homework.settings?.status === "Needs feedback"
+                            ? "1px solid #3F288F"
+                            : homework.settings?.status === "Feedback given"
+                            ? "1px solid #0D3944"
+                            : "1px solid #5D5763", // default color
+                        background: homework.settings?.status === "Completed"
+                            ? "#DEF8FB"
+                            : homework.settings?.status === "Started"
+                            ? "#FDF2D0"
+                            : homework.settings?.status === "Needs feedback"
+                            ? "#E4DFF6"
+                            : homework.settings?.status === "Feedback given"
+                            ? "#F6F9F8"
+                            : "#DEF8FB", // default color
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
@@ -619,45 +780,52 @@ export default function ProposalCard({
                         <div
                           style={{
                             fontSize: "14px",
-                            fontWeight:
-                              homework.settings?.status === "Completed"
-                                ? "bold"
-                                : homework.settings?.status === "Started"
-                                ? "normal"
-                                : "normal",
+                            fontWeight: "normal",
                             color:
                               homework.settings?.status === "Completed"
                                 ? "#3D85B0"
                                 : homework.settings?.status === "Started"
-                                ? "#7D70AD"
-                                : homework.settings?.status === "Overdue"
-                                ? "red"
+                                ? "#5D5763"
+                                : homework.settings?.status === "Needs feedback"
+                                ? "#3F288F"
+                                : homework.settings?.status === "Feedback given"
+                                ? "#0D3944"
                                 : "#666", // default color
                           }}
                         >
                           {homework.settings?.status ||
-                            "Open homework to see more"}
+                            "Open assignment to see more"}
                         </div>
                       </div>
                       <Button
                         size="small"
                         onClick={() => {
-                          console.log("Navigate to homework:", homework.id);
-                          if (!assignment?.code || !homework?.code) {
-                            console.error(
-                              "Missing assignment or homework code",
-                            );
-                            return;
-                          }
-
-                          const url = `/dashboard/assignments/${assignment.code}?homework=${homework.code}`;
-                          window.open(url, "_blank", "noopener,noreferrer");
+                          // console.log("Open homework in modal:", homework.id);
+                          setActiveHomework(homework);
+                          setShowNewHomework(false);
+                          loadHomeworkIntoForm(homework);
                         }}
                         style={{
                           borderRadius: "100px",
-                          color: "#69BBC4",
+                          color: homework.settings?.status === "Completed"
+                            ? "#3D85B0"
+                            : homework.settings?.status === "Started"
+                            ? "#5D5763"
+                            : homework.settings?.status === "Needs feedback"
+                            ? "#3F288F"
+                            : homework.settings?.status === "Feedback given"
+                            ? "#0D3944"
+                            : "#69BBC4", // default color
                           fontSize: "12px",
-                          border: "0.5px solid #69BBC4",
+                          border: homework.settings?.status === "Completed"
+                            ? "1px solid #3D85B0"
+                            : homework.settings?.status === "Started"
+                            ? "1px solid #5D5763"
+                            : homework.settings?.status === "Needs feedback"
+                            ? "1px solid #3F288F"
+                            : homework.settings?.status === "Feedback given"
+                            ? "1px solid #0D3944"
+                            : "1px solid #69BBC4", // default color
                           background: "white",
                         }}
                       >
@@ -671,18 +839,43 @@ export default function ProposalCard({
               {/* New Homework Section */}
               {homeworks.length < 1 && !showNewHomework && (
                 <Button
-                  onClick={() => setShowNewHomework(true)}
+                  onClick={() => {
+                    setActiveHomework(null);
+                    setShowNewHomework(true);
+                    // Prefill form for a fresh create (no clearForm to avoid race with title)
+                    const newTitle = `Assignment${stripHtml(
+                      assignment?.title || "",
+                    )} | ${moment().format("YYYY-MM-DD")} | ${
+                      user?.username || ""
+                    }`;
+                    handleChange({
+                      target: { name: "title", value: newTitle },
+                    });
+                    handleChange({
+                      target: {
+                        name: "placeholder",
+                        value: assignment?.placeholder || "",
+                      },
+                    });
+                    handleChange({
+                      target: {
+                        name: "settings",
+                        value: { status: "Started" },
+                      },
+                    });
+                    homeworkContent.current = assignment?.placeholder || "";
+                  }}
                   style={{
                     borderRadius: "100px",
-                    background: "#336F8A",
+                    background: "#FDF2D0",
                     fontSize: "14px",
-                    color: "white",
-                    border: "1px solid #336F8A",
+                    color: "#5D5763",
+                    border: "2px solid #5D5763",
                     marginRight: "10px",
                   }}
                   disabled={createLoading}
                 >
-                  {t("homework.createNewAssignment", "Create New Assignment")}
+                  {t("homework.createNewEntry", "Create New Assignment")}
                 </Button>
               )}
 
@@ -697,7 +890,7 @@ export default function ProposalCard({
                   }}
                 >
                   <div style={h1}>
-                    {t("homework.createNewAssignment", "Create New Assignment")}
+                    {t("homework.createNewEntry", "Create New Assignment")}
                   </div>
 
                   <div style={{ marginBottom: "12px" }}>
@@ -713,7 +906,8 @@ export default function ProposalCard({
                         })
                       }
                       style={{
-                        width: "100%",
+                        width: "50%",
+                        minWidth: "20px",
                         padding: "8px",
                         borderRadius: "4px",
                         border: "1px solid #ccc",
@@ -729,6 +923,9 @@ export default function ProposalCard({
                         marginTop: "4px",
                       }}
                     >
+                      <p style={{ marginBottom: "0px" }}>
+                        {t("homework.yourEntry", "Your entry")}
+                      </p>
                       <TipTapEditor
                         content={homeworkContent.current || inputs.placeholder}
                         onUpdate={(newContent) =>
@@ -752,7 +949,7 @@ export default function ProposalCard({
                         marginRight: "10px",
                       }}
                     >
-                      {t("homework.createHomeworkSubmit", "Create & Submit")}
+                      {t("homework.createHomeworkSubmit", "Submit")}
                     </Button>
                     <Button
                       onClick={handleCreateHomeworkDraft}
@@ -767,7 +964,7 @@ export default function ProposalCard({
                         marginRight: "10px",
                       }}
                     >
-                      {t("homework.createHomeworkDraft", "Create Draft")}
+                      {t("homework.saveHomeworkDraft", "Save Draft")}
                     </Button>
                     <Button
                       onClick={() => {
@@ -785,6 +982,178 @@ export default function ProposalCard({
                     >
                       {t("homework.cancel", "Cancel")}
                     </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Edit Existing Homework Section */}
+              {activeHomework && (
+                <div
+                  style={{
+                    border: "1px solid #A1A1A1",
+                    borderRadius: "8px",
+                    padding: "16px",
+                    background: "#FFF",
+                    boxShadow: "2px 2px 8px 0 rgba(0, 0, 0, 0.10)",
+                    marginTop: "16px",
+                  }}
+                >
+                  <div style={h1}>
+                    {t(
+                      "homework.editEntry",
+                      "Edit your entry",
+                    )}
+                  </div>
+
+                  <div style={{ marginBottom: "12px" }}>
+                    <p style={{ marginBottom: "0px" }}>
+                      {t("homework.assignmentTitle", "Assignment title")}
+                    </p>
+                    <input
+                      type="text"
+                      value={inputs.title}
+                      onChange={(e) =>
+                        handleChange({
+                          target: { name: "title", value: e.target.value },
+                        })
+                      }
+                      style={{
+                        width: "50%",
+                        minWidth: "20px",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ccc",
+                        marginTop: "4px",
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: "16px" }}>
+                    <div
+                      style={{
+                        minHeight: "100px",
+                        marginTop: "4px",
+                      }}
+                    >
+                      <p style={{ marginBottom: "0px" }}>
+                        {t("homework.yourEntry", "Your entry")}
+                      </p>
+                      <TipTapEditor
+                        content={
+                          homeworkContent.current ||
+                          activeHomework.content ||
+                          activeHomework.placeholder ||
+                          inputs.placeholder
+                        }
+                        onUpdate={(newContent) =>
+                          updateHomeworkContent(newContent)
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <Button
+                      onClick={handleUpdateHomeworkSubmit}
+                      loading={updateLoading}
+                      disabled={updateLoading}
+                      style={{
+                        borderRadius: "100px",
+                        background: "#336F8A",
+                        fontSize: "12px",
+                        color: "white",
+                        border: "1px solid #336F8A",
+                        marginRight: "10px",
+                      }}
+                    >
+                      {t("homework.createHomeworkSubmit", "Submit")}
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setActiveHomework(null);
+                        clearForm();
+                        homeworkContent.current =
+                          assignment?.placeholder || "";
+                      }}
+                      style={{
+                        borderRadius: "100px",
+                        background: "#f7f9fa",
+                        fontSize: "12px",
+                        color: "#B9261A",
+                        border: "1px solid #B9261A",
+                        marginRight: "10px",
+                      }}
+                    >
+                      {t("homework.cancel", "Cancel")}
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        const currentStatus =
+                          inputs?.settings?.status ||
+                          activeHomework?.settings?.status;
+                        handleStatusUpdate(
+                          currentStatus === "Needs feedback"
+                            ? "Started"
+                            : "Needs feedback",
+                        );
+                      }}
+                      loading={updateLoading}
+                      disabled={updateLoading}
+                      style={{
+                        borderRadius: "100px",
+                        background:
+                          (inputs?.settings?.status ||
+                            activeHomework?.settings?.status) ===
+                          "Needs feedback"
+                            ? "#D8D3E7"
+                            : "#ffffff",
+                        fontSize: "12px",
+                        color: "#434343",
+                        border: `1.5px solid ${
+                          (inputs?.settings?.status ||
+                            activeHomework?.settings?.status) ===
+                          "Needs feedback"
+                            ? "#7D70AD"
+                            : "#625B71"
+                        }`,
+                        marginRight: "10px",
+                      }}
+                    >
+                      {(inputs?.settings?.status ||
+                        activeHomework?.settings?.status) ===
+                      "Needs feedback"
+                        ? t(
+                            "teacherClass.feedbackRequested",
+                            "Feedback requested",
+                          )
+                        : t(
+                            "teacherClass.requestFeedback",
+                            "Request feedback",
+                          )}
+                    </Button>
+                    {!isStudent &&
+                      (inputs?.settings?.status ||
+                        activeHomework?.settings?.status) ===
+                        "Needs feedback" && (
+                      <Button
+                        onClick={() => handleStatusUpdate("Feedback given")}
+                        loading={updateLoading}
+                        disabled={updateLoading}
+                        style={{
+                          borderRadius: "100px",
+                          background: "white",
+                          fontSize: "12px",
+                          color: "#0D3944",
+                          border: "1.5px solid #0D3944",
+                          marginRight: "10px",
+                        }}
+                      >
+                        {t(
+                          "teacherClass.feedbackGiven",
+                          "Feedback given",
+                        )}
+                      </Button>
+                    )}
                   </div>
                 </div>
               )}

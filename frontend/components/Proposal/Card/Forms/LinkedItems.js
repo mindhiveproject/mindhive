@@ -2502,17 +2502,18 @@ export const PreviewSection = ({
   const [hoveredItemId, setHoveredItemId] = useState(null);
   const tooltipTimeoutRef = useRef(null);
 
-  console.log("👁️ [PreviewSection] Rendering:", {
-    title,
-    type,
-    itemsCount: items.length,
-    itemsDetails: items.map(item => ({
-      id: item.id,
-      title: item.title,
-      isPublic: item.isPublic,
-      parentId: item.parent?.id
-    }))
-  });
+  // console.log("👁️ [PreviewSection] Rendering:", {
+  //   title,
+  //   type,
+  //   itemsCount: items.length,
+  //   itemsDetails: items.map(item => ({
+  //     id: item.id,
+  //     title: item.title,
+  //     isPublic: item.isPublic,
+  //     parentId: item.parent?.id
+  //   }))
+  // })
+  ;
 
   // Background and border per type (Figma: Resources = MH-Theme/Secondary/Lighter #E6F1F9, border #BBC0CA)
   const getBackgroundColor = (itemType) => {
