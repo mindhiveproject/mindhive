@@ -351,6 +351,9 @@
 		"updateCollaboratorsFailed": "",
 		"userNoClasses": ""
 	},
+	"homework": {
+		"createHomeworkSubmit": ""
+	},
 	"homeworkCard": {
 		"comments": "टिप्पणियाँ",
 		"completed": "पुरा होना।",

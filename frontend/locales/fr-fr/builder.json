@@ -351,6 +351,9 @@
 		"updateCollaboratorsFailed": "Impossible de mettre à jour les collaborateurs. Veuillez réessayer.",
 		"userNoClasses": "Vous n'êtes associé à aucun cours."
 	},
+	"homework": {
+		"createHomeworkSubmit": "Marquer comme terminé"
+	},
 	"homeworkCard": {
 		"comments": "Commentaires",
 		"completed": "Complété",

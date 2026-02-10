@@ -351,6 +351,9 @@
 		"updateCollaboratorsFailed": "更新协作者信息失败，请重试。",
 		"userNoClasses": "您未参加任何课程。"
 	},
+	"homework": {
+		"createHomeworkSubmit": "标记为完成"
+	},
 	"homeworkCard": {
 		"comments": "评论",
 		"completed": "完全的",

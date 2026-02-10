@@ -14,7 +14,10 @@ import {
   CREATE_HOMEWORK,
   UPDATE_HOMEWORK,
 } from "../../../../../Mutations/Homework"; // Adjust path as needed
-import { GET_MY_HOMEWORKS_FOR_ASSIGNMENT } from "../../../../../Queries/Homework"; // Adjust path as needed
+import {
+  GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
+  GET_ALL_HOMEWORKS_FOR_ASSIGNMENT,
+} from "../../../../../Queries/Homework"; // Adjust path as needed
 import { GET_AN_ASSIGNMENT } from "../../../../../Queries/Assignment"; // Adjust path as needed
 import { GET_RESOURCE } from "../../../../../Queries/Resource";
 
@@ -310,6 +313,9 @@ export default function ProposalCard({
     const [activeHomework, setActiveHomework] = useState(null);
 
     const isStudent = user?.role === "STUDENT";
+    const isMentorOrTeacher =
+      user?.permissions?.map((p) => p?.name)?.includes("TEACHER") ||
+      user?.permissions?.map((p) => p?.name)?.includes("MENTOR");
 
     // Query for fresh assignment data with all fields including placeholder
     const {
@@ -325,17 +331,22 @@ export default function ProposalCard({
     const assignment = assignmentData?.assignments?.[0] || null;
     // console.log(assignmentData);
 
-    // Query for existing homeworks for this assignment
-    const { data: homeworkData, refetch: refetchHomeworks } = useQuery(
-      GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
+    // Query for existing homeworks: all for Mentor/Teacher, only own for others
+    const { data: myHomeworkData } = useQuery(GET_MY_HOMEWORKS_FOR_ASSIGNMENT, {
+      variables: { userId: user?.id, assignmentCode: assignment?.code },
+      skip: isMentorOrTeacher || !assignment?.code || !user?.id,
+    });
+    const { data: allHomeworkData } = useQuery(
+      GET_ALL_HOMEWORKS_FOR_ASSIGNMENT,
       {
-        variables: { userId: user?.id, assignmentCode: assignment?.code },
-        skip: !assignment?.code || !user?.id,
+        variables: { assignmentCode: assignment?.code },
+        skip: !isMentorOrTeacher || !assignment?.code,
       },
     );
 
-    // console.log(homeworkData);
-    const homeworks = homeworkData?.homeworks || [];
+    const homeworks = isMentorOrTeacher
+      ? allHomeworkData?.homeworks || []
+      : myHomeworkData?.homeworks || [];
 
     // New homework form state
     const { inputs, handleChange, handleMultipleUpdate, clearForm } = useForm({
@@ -363,6 +374,10 @@ export default function ProposalCard({
             query: GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
             variables: { userId: user?.id, assignmentCode: assignment?.code },
           },
+          {
+            query: GET_ALL_HOMEWORKS_FOR_ASSIGNMENT,
+            variables: { assignmentCode: assignment?.code },
+          },
         ],
       },
     );
@@ -375,6 +390,10 @@ export default function ProposalCard({
           {
             query: GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
             variables: { userId: user?.id, assignmentCode: assignment?.code },
+          },
+          {
+            query: GET_ALL_HOMEWORKS_FOR_ASSIGNMENT,
+            variables: { assignmentCode: assignment?.code },
           },
         ],
       },
@@ -731,15 +750,17 @@ export default function ProposalCard({
             <div style={{ marginTop: "24px", paddingTop: "24px" }}>
               {homeworks.length > 0 && (
                 <h3 style={{ marginBottom: "16px", color: "#274E5B" }}>
-                  {t("homework.myEntry", "My entry")}
+                  {isMentorOrTeacher
+                    ? t("homework.allEntries", "All entries")
+                    : t("homework.myEntry", "My entry")}
                 </h3>
               )}
               {/* Show existing homeworks */}
               {homeworks.length > 0 && (
                 <div style={{ marginBottom: "16px" }}>
                   {homeworks.map((homework) => (
+                    <div key={homework?.id}>
                     <div
-                      key={homework?.id}
                       style={{
                         borderRadius: "8px",
                         padding: "12px",
@@ -776,6 +797,19 @@ export default function ProposalCard({
                           }}
                         >
                           {homework.title}
+                          {isMentorOrTeacher && homework.author && (
+                            <span
+                              style={{
+                                fontWeight: "normal",
+                                color: "#666",
+                                marginLeft: "6px",
+                              }}
+                            >
+                              — {homework.author.username ||
+                                homework.author.publicReadableId ||
+                                t("homework.unknownAuthor", "Unknown")}
+                            </span>
+                          )}
                         </div>
                         <div
                           style={{
@@ -800,37 +834,232 @@ export default function ProposalCard({
                       <Button
                         size="small"
                         onClick={() => {
-                          // console.log("Open homework in modal:", homework.id);
-                          setActiveHomework(homework);
-                          setShowNewHomework(false);
-                          loadHomeworkIntoForm(homework);
+                          const isActive = activeHomework?.id === homework?.id;
+                          if (isActive) {
+                            // Save current edits for this homework
+                            handleUpdateHomeworkDraft();
+                          } else {
+                            // Open this homework in the edit panel
+                            // console.log("Open homework in modal:", homework.id);
+                            setActiveHomework(homework);
+                            setShowNewHomework(false);
+                            loadHomeworkIntoForm(homework);
+                          }
                         }}
                         style={{
                           borderRadius: "100px",
-                          color: homework.settings?.status === "Completed"
-                            ? "#3D85B0"
-                            : homework.settings?.status === "Started"
-                            ? "#5D5763"
-                            : homework.settings?.status === "Needs feedback"
-                            ? "#3F288F"
-                            : homework.settings?.status === "Feedback given"
-                            ? "#0D3944"
-                            : "#69BBC4", // default color
                           fontSize: "12px",
-                          border: homework.settings?.status === "Completed"
-                            ? "1px solid #3D85B0"
-                            : homework.settings?.status === "Started"
-                            ? "1px solid #5D5763"
-                            : homework.settings?.status === "Needs feedback"
-                            ? "1px solid #3F288F"
-                            : homework.settings?.status === "Feedback given"
-                            ? "1px solid #0D3944"
-                            : "1px solid #69BBC4", // default color
-                          background: "white",
+                          ...(activeHomework?.id === homework?.id
+                            ? {
+                                background: "#ffffff",
+                                color: "#171717",
+                                border: "2px solid #171717",
+                              }
+                            : {
+                                color:
+                                  homework.settings?.status === "Completed"
+                                    ? "#3D85B0"
+                                    : homework.settings?.status === "Started"
+                                    ? "#5D5763"
+                                    : homework.settings?.status ===
+                                      "Needs feedback"
+                                    ? "#3F288F"
+                                    : homework.settings?.status ===
+                                      "Feedback given"
+                                    ? "#0D3944"
+                                    : "#69BBC4", // default color
+                                border:
+                                  homework.settings?.status === "Completed"
+                                    ? "1px solid #3D85B0"
+                                    : homework.settings?.status === "Started"
+                                    ? "1px solid #5D5763"
+                                    : homework.settings?.status ===
+                                      "Needs feedback"
+                                    ? "1px solid #3F288F"
+                                    : homework.settings?.status ===
+                                      "Feedback given"
+                                    ? "1px solid #0D3944"
+                                    : "1px solid #69BBC4", // default color
+                                background: "white",
+                              }),
                         }}
                       >
-                        {t("homework.openHomework", "Open")}
+                        {activeHomework?.id === homework?.id
+                          ? t("homework.save", "Save")
+                          : t("homework.openHomework", "Open")}
                       </Button>
+                    </div>
+                    {activeHomework?.id === homework?.id && (
+                      <div
+                        style={{
+                          border: "1px solid #A1A1A1",
+                          borderRadius: "8px",
+                          padding: "16px",
+                          background: "#FFF",
+                          boxShadow: "2px 2px 8px 0 rgba(0, 0, 0, 0.10)",
+                          marginTop: "8px",
+                          marginBottom: "16px",
+                        }}
+                      >
+                        <div style={h1}>
+                          {t(
+                            "homework.editEntry",
+                            "Edit your entry",
+                          )}
+                        </div>
+
+                        <div style={{ marginBottom: "12px" }}>
+                          <p style={{ marginBottom: "0px" }}>
+                            {t("homework.assignmentTitle", "Assignment title")}
+                          </p>
+                          <input
+                            type="text"
+                            value={inputs.title}
+                            onChange={(e) =>
+                              handleChange({
+                                target: { name: "title", value: e.target.value },
+                              })
+                            }
+                            style={{
+                              width: "50%",
+                              minWidth: "20px",
+                              padding: "8px",
+                              borderRadius: "4px",
+                              border: "1px solid #ccc",
+                              marginTop: "4px",
+                            }}
+                          />
+                        </div>
+
+                        <div style={{ marginBottom: "16px" }}>
+                          <div
+                            style={{
+                              minHeight: "100px",
+                              marginTop: "4px",
+                            }}
+                          >
+                            <p style={{ marginBottom: "0px" }}>
+                              {t("homework.yourEntry", "Your entry")}
+                            </p>
+                            <TipTapEditor
+                              content={
+                                homeworkContent.current ||
+                                activeHomework.content ||
+                                activeHomework.placeholder ||
+                                inputs.placeholder
+                              }
+                              onUpdate={(newContent) =>
+                                updateHomeworkContent(newContent)
+                              }
+                            />
+                          </div>
+                        </div>
+
+                        <div style={{ display: "flex", gap: "8px" }}>
+                          <Button
+                            onClick={handleUpdateHomeworkSubmit}
+                            loading={updateLoading}
+                            disabled={updateLoading}
+                            style={{
+                              borderRadius: "100px",
+                              background: "#def8fb",
+                              fontSize: "12px",
+                              color: "#3d85b0",
+                              border: "1px solid #3d85b0",
+                              marginRight: "10px",
+                            }}
+                          >
+                            {t("homework.createHomeworkSubmit", "Mark as complete")}
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setActiveHomework(null);
+                              clearForm();
+                              homeworkContent.current =
+                                assignment?.placeholder || "";
+                            }}
+                            style={{
+                              borderRadius: "100px",
+                              background: "#f7f9fa",
+                              fontSize: "12px",
+                              color: "#B9261A",
+                              border: "1px solid #B9261A",
+                              marginRight: "10px",
+                            }}
+                          >
+                            {t("homework.cancel", "Cancel")}
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              const currentStatus =
+                                inputs?.settings?.status ||
+                                activeHomework?.settings?.status;
+                              handleStatusUpdate(
+                                currentStatus === "Needs feedback"
+                                  ? "Started"
+                                  : "Needs feedback",
+                              );
+                            }}
+                            loading={updateLoading}
+                            disabled={updateLoading}
+                            style={{
+                              borderRadius: "100px",
+                              background:
+                                (inputs?.settings?.status ||
+                                  activeHomework?.settings?.status) ===
+                                "Needs feedback"
+                                  ? "#D8D3E7"
+                                  : "#ffffff",
+                              fontSize: "12px",
+                              color: "#434343",
+                              border: `1.5px solid ${
+                                (inputs?.settings?.status ||
+                                  activeHomework?.settings?.status) ===
+                                "Needs feedback"
+                                  ? "#7D70AD"
+                                  : "#625B71"
+                              }`,
+                              marginRight: "10px",
+                            }}
+                          >
+                            {(inputs?.settings?.status ||
+                              activeHomework?.settings?.status) ===
+                            "Needs feedback"
+                              ? t(
+                                  "teacherClass.feedbackRequested",
+                                  "Feedback requested",
+                                )
+                              : t(
+                                  "teacherClass.requestFeedback",
+                                  "Request feedback",
+                                )}
+                          </Button>
+                          {!isStudent &&
+                            (inputs?.settings?.status ||
+                              activeHomework?.settings?.status) ===
+                              "Needs feedback" && (
+                              <Button
+                                onClick={() => handleStatusUpdate("Feedback given")}
+                                loading={updateLoading}
+                                disabled={updateLoading}
+                                style={{
+                                  borderRadius: "100px",
+                                  background: "white",
+                                  fontSize: "12px",
+                                  color: "#0D3944",
+                                  border: "1.5px solid #0D3944",
+                                  marginRight: "10px",
+                                }}
+                              >
+                                {t(
+                                  "teacherClass.feedbackGiven",
+                                  "Feedback given",
+                                )}
+                              </Button>
+                            )}
+                        </div>
+                      </div>
+                    )}
                     </div>
                   ))}
                 </div>
@@ -942,14 +1171,14 @@ export default function ProposalCard({
                       disabled={createLoading}
                       style={{
                         borderRadius: "100px",
-                        background: "#336F8A",
+                        background: "#def8fb",
                         fontSize: "12px",
-                        color: "white",
-                        border: "1px solid #336F8A",
+                        color: "#3d85b0",
+                        border: "1px solid #3d85b0",
                         marginRight: "10px",
                       }}
                     >
-                      {t("homework.createHomeworkSubmit", "Submit")}
+                      {t("homework.createHomeworkSubmit", "Mark as complete")}
                     </Button>
                     <Button
                       onClick={handleCreateHomeworkDraft}
@@ -982,178 +1211,6 @@ export default function ProposalCard({
                     >
                       {t("homework.cancel", "Cancel")}
                     </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Edit Existing Homework Section */}
-              {activeHomework && (
-                <div
-                  style={{
-                    border: "1px solid #A1A1A1",
-                    borderRadius: "8px",
-                    padding: "16px",
-                    background: "#FFF",
-                    boxShadow: "2px 2px 8px 0 rgba(0, 0, 0, 0.10)",
-                    marginTop: "16px",
-                  }}
-                >
-                  <div style={h1}>
-                    {t(
-                      "homework.editEntry",
-                      "Edit your entry",
-                    )}
-                  </div>
-
-                  <div style={{ marginBottom: "12px" }}>
-                    <p style={{ marginBottom: "0px" }}>
-                      {t("homework.assignmentTitle", "Assignment title")}
-                    </p>
-                    <input
-                      type="text"
-                      value={inputs.title}
-                      onChange={(e) =>
-                        handleChange({
-                          target: { name: "title", value: e.target.value },
-                        })
-                      }
-                      style={{
-                        width: "50%",
-                        minWidth: "20px",
-                        padding: "8px",
-                        borderRadius: "4px",
-                        border: "1px solid #ccc",
-                        marginTop: "4px",
-                      }}
-                    />
-                  </div>
-
-                  <div style={{ marginBottom: "16px" }}>
-                    <div
-                      style={{
-                        minHeight: "100px",
-                        marginTop: "4px",
-                      }}
-                    >
-                      <p style={{ marginBottom: "0px" }}>
-                        {t("homework.yourEntry", "Your entry")}
-                      </p>
-                      <TipTapEditor
-                        content={
-                          homeworkContent.current ||
-                          activeHomework.content ||
-                          activeHomework.placeholder ||
-                          inputs.placeholder
-                        }
-                        onUpdate={(newContent) =>
-                          updateHomeworkContent(newContent)
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex", gap: "8px" }}>
-                    <Button
-                      onClick={handleUpdateHomeworkSubmit}
-                      loading={updateLoading}
-                      disabled={updateLoading}
-                      style={{
-                        borderRadius: "100px",
-                        background: "#336F8A",
-                        fontSize: "12px",
-                        color: "white",
-                        border: "1px solid #336F8A",
-                        marginRight: "10px",
-                      }}
-                    >
-                      {t("homework.createHomeworkSubmit", "Submit")}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setActiveHomework(null);
-                        clearForm();
-                        homeworkContent.current =
-                          assignment?.placeholder || "";
-                      }}
-                      style={{
-                        borderRadius: "100px",
-                        background: "#f7f9fa",
-                        fontSize: "12px",
-                        color: "#B9261A",
-                        border: "1px solid #B9261A",
-                        marginRight: "10px",
-                      }}
-                    >
-                      {t("homework.cancel", "Cancel")}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        const currentStatus =
-                          inputs?.settings?.status ||
-                          activeHomework?.settings?.status;
-                        handleStatusUpdate(
-                          currentStatus === "Needs feedback"
-                            ? "Started"
-                            : "Needs feedback",
-                        );
-                      }}
-                      loading={updateLoading}
-                      disabled={updateLoading}
-                      style={{
-                        borderRadius: "100px",
-                        background:
-                          (inputs?.settings?.status ||
-                            activeHomework?.settings?.status) ===
-                          "Needs feedback"
-                            ? "#D8D3E7"
-                            : "#ffffff",
-                        fontSize: "12px",
-                        color: "#434343",
-                        border: `1.5px solid ${
-                          (inputs?.settings?.status ||
-                            activeHomework?.settings?.status) ===
-                          "Needs feedback"
-                            ? "#7D70AD"
-                            : "#625B71"
-                        }`,
-                        marginRight: "10px",
-                      }}
-                    >
-                      {(inputs?.settings?.status ||
-                        activeHomework?.settings?.status) ===
-                      "Needs feedback"
-                        ? t(
-                            "teacherClass.feedbackRequested",
-                            "Feedback requested",
-                          )
-                        : t(
-                            "teacherClass.requestFeedback",
-                            "Request feedback",
-                          )}
-                    </Button>
-                    {!isStudent &&
-                      (inputs?.settings?.status ||
-                        activeHomework?.settings?.status) ===
-                        "Needs feedback" && (
-                      <Button
-                        onClick={() => handleStatusUpdate("Feedback given")}
-                        loading={updateLoading}
-                        disabled={updateLoading}
-                        style={{
-                          borderRadius: "100px",
-                          background: "white",
-                          fontSize: "12px",
-                          color: "#0D3944",
-                          border: "1.5px solid #0D3944",
-                          marginRight: "10px",
-                        }}
-                      >
-                        {t(
-                          "teacherClass.feedbackGiven",
-                          "Feedback given",
-                        )}
-                      </Button>
-                    )}
                   </div>
                 </div>
               )}

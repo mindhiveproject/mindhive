@@ -351,6 +351,9 @@
 		"updateCollaboratorsFailed": "Het bijwerken van de medewerkers is mislukt. Probeer het opnieuw.",
 		"userNoClasses": "Je bent aan geen enkele cursus verbonden."
 	},
+	"homework": {
+		"createHomeworkSubmit": "Markeer als voltooid"
+	},
 	"homeworkCard": {
 		"comments": "Reacties",
 		"completed": "Voltooid",

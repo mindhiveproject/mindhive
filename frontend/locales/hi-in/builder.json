@@ -351,6 +351,9 @@
 		"updateCollaboratorsFailed": "सहयोगियों को अपडेट करने में विफलता। कृपया पुनः प्रयास करें।",
 		"userNoClasses": "आप किसी भी कक्षा से संबद्ध नहीं हैं।"
 	},
+	"homework": {
+		"createHomeworkSubmit": "पूर्ण के रूप में चिह्नित करें"
+	},
 	"homeworkCard": {
 		"comments": "टिप्पणियाँ",
 		"completed": "पुरा होना।",

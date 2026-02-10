@@ -351,6 +351,9 @@
 		"updateCollaboratorsFailed": "Failed to update collaborators. Please try again.",
 		"userNoClasses": "You are not associated with any classes."
 	},
+	"homework": {
+		"createHomeworkSubmit": "Mark as complete"
+	},
 	"homeworkCard": {
 		"comments": "Comments",
 		"completed": "Completed",

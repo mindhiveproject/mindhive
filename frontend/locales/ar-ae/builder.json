@@ -351,6 +351,9 @@
 		"updateCollaboratorsFailed": "فشل تحديث بيانات المتعاونين. يرجى المحاولة مرة أخرى.",
 		"userNoClasses": "أنت غير مرتبط بأي صفوف دراسية."
 	},
+	"homework": {
+		"createHomeworkSubmit": "وضع علامة على أنه مكتمل"
+	},
 	"homeworkCard": {
 		"comments": "تعليقات",
 		"completed": "مكتمل",

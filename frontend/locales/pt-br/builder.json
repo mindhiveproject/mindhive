@@ -351,6 +351,9 @@
 		"updateCollaboratorsFailed": "Falha ao atualizar os colaboradores. Tente novamente.",
 		"userNoClasses": "Você não está associado a nenhuma turma."
 	},
+	"homework": {
+		"createHomeworkSubmit": "Marcar como concluído"
+	},
 	"homeworkCard": {
 		"comments": "Comentários",
 		"completed": "Concluído",
