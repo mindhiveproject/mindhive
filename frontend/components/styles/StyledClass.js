@@ -538,25 +538,26 @@ const StyledClass = styled.div`
               /* position: absolute; */
               margin: 8px;
             }
+            /* Homework status colors match Builder Card scheme */
             .status-not-started {
-              color: #896900 !important;
-              background: rgba(254, 210, 79, 0.18) !important;
+              color: #666 !important;
+              background: #FFFFFF !important;
             }
             .status-started {
-              color: #0063ce !important;
-              background: rgba(0, 117, 224, 0.12) !important;
+              color: #5D5763 !important;
+              background: #FFFFFF !important;
             }
             .status-needs-feedback {
-              color: #c92927 !important;
-              background: rgba(224, 103, 102, 0.12) !important;
+              color: #3F288F !important;
+              background: #FFFFFF !important;
             }
             .status-feedback-given {
-              color: #6f25ce !important;
-              background: rgba(111, 37, 206, 0.12) !important;
+              color: #0D3944 !important;
+              background: #FFFFFF !important;
             }
             .status-completed {
-              color: #00635a !important;
-              background: rgba(0, 124, 112, 0.12) !important;
+              color: #337C84 !important;
+              background: #FFFFFF !important;
             }
             .info-status :hover {
               background: #f7f7f7 !important;

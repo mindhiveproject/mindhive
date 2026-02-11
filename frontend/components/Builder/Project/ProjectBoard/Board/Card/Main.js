@@ -1166,7 +1166,7 @@ export default function ProposalCard({
                   }}
                   disabled={createLoading}
                 >
-                  {t("homework.createNewEntry", "Create New Assignment")}
+                  {t("homework.createNewEntry", "Create entry")}
                 </Button>
               )}
 
@@ -1181,7 +1181,7 @@ export default function ProposalCard({
                   }}
                 >
                   <div style={h1}>
-                    {t("homework.createNewEntry", "Create New Assignment")}
+                    {t("homework.createNewEntry", "Create entry")}
                   </div>
 
                   <div style={{ marginBottom: "12px" }}>

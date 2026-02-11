@@ -25,11 +25,34 @@ async function copyProposalBoard(
     throw new Error("You must be logged in to do this!");
   }
 
+  // Determine if this should be the first (main) board for this user in the given class
+  let shouldBeMain = false;
+  if (classIdUsed) {
+    try {
+      const existingBoardsForClassAndAuthor =
+        await context.query.ProposalBoard.findMany({
+          where: {
+            author: { id: { equals: sesh.itemId } },
+            usedInClass: { id: { equals: classIdUsed } },
+          },
+          query: "id",
+          take: 1,
+        });
+
+      // If there are no existing boards authored by this user for this class,
+      // mark the new board as main.
+      shouldBeMain = !existingBoardsForClassAndAuthor.length;
+    } catch (error) {
+      // On any failure, fall back to not setting isMain automatically.
+      shouldBeMain = false;
+    }
+  }
+
   // get the original proposal board with additional relationships
   const template = await context.query.ProposalBoard.findOne({
     where: { id: id },
     query:
-      "id publicId slug title description settings resources { id } templateForClasses { id } sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } assignments { id title content placeholder settings public isTemplate tags { id } } studies { id } tasks { id } } }",
+      "id publicId slug title description isTemplate settings resources { id } templateForClasses { id } sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } assignments { id title content placeholder settings public isTemplate tags { id } } studies { id } tasks { id } } }",
   });
 
   // make a full copy
@@ -71,6 +94,7 @@ async function copyProposalBoard(
               },
             }
           : null,
+        isMain: shouldBeMain,
         clonedFrom: id
           ? {
               connect: {
@@ -199,7 +223,7 @@ async function copyProposalBoard(
                         content: a.content,
                         placeholder: a.placeholder,
                         settings: a.settings,
-                        public: a.public,
+                        public: template.isTemplate ? false : a.public,
                         isTemplate: false,
                         templateSource: { connect: { id: a.id } },
                         // carry tags
