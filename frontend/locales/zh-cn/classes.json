@@ -494,6 +494,7 @@
 		"teacher": "老师"
 	},
 	"homework": {
+		"allEntries": "所有条目",
 		"assignmentContent": "作业内容",
 		"assignmentTitle": "作业标题",
 		"cancel": "取消",
@@ -513,7 +514,7 @@
 		"myEntry": "我的参赛作品",
 		"noHomeworkYet": "该学生尚未写任何作业。",
 		"openHomework": "开放",
-		"save": "节省",
+		"saveAndClose": "保存并关闭",
 		"saveHomeworkDraft": "保存草稿",
 		"submitted": "已提交",
 		"unsubmit": "取消提交",

@@ -494,6 +494,7 @@
 		"teacher": "Professeur"
 	},
 	"homework": {
+		"allEntries": "Toutes les entrées",
 		"assignmentContent": "Contenu du devoir",
 		"assignmentTitle": "Titre de la mission",
 		"cancel": "Annuler",
@@ -513,7 +514,7 @@
 		"myEntry": "Mon entrée",
 		"noHomeworkYet": "L'élève n'a pas encore écrit de devoirs.",
 		"openHomework": "Ouvrir",
-		"save": "Sauvegarder",
+		"saveAndClose": "Enregistrer et fermer",
 		"saveHomeworkDraft": "Enregistrer le brouillon",
 		"submitted": "Soumis",
 		"unsubmit": "Annuler la soumission",

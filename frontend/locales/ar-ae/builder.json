@@ -50,6 +50,7 @@
 	"board": {
 		"error": "خطأ! {{message}}",
 		"expendedCard": {
+			"assignment": "تكليف",
 			"close": "إغلاق",
 			"connect": "الاتصال",
 			"content": "المحتوى",
@@ -352,7 +353,8 @@
 		"userNoClasses": "أنت غير مرتبط بأي صفوف دراسية."
 	},
 	"homework": {
-		"createHomeworkSubmit": "وضع علامة على أنه مكتمل"
+		"createHomeworkSubmit": "وضع علامة على أنه مكتمل",
+		"saveAndClose": "حفظ وإغلاق"
 	},
 	"homeworkCard": {
 		"comments": "تعليقات",

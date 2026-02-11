@@ -312,7 +312,6 @@ export default function ProposalCard({
     const [showNewHomework, setShowNewHomework] = useState(false);
     const [activeHomework, setActiveHomework] = useState(null);
 
-    const isStudent = user?.role === "STUDENT";
     const isMentorOrTeacher =
       user?.permissions?.map((p) => p?.name)?.includes("TEACHER") ||
       user?.permissions?.map((p) => p?.name)?.includes("MENTOR");
@@ -358,12 +357,14 @@ export default function ProposalCard({
     });
 
     const homeworkContent = useRef("");
+    const editorGetContentRef = useRef(null);
 
     useEffect(() => {
-      if (!homeworkContent.current && inputs.placeholder) {
+      // Only init ref from placeholder when not editing existing homework (create flow only)
+      if (!homeworkContent.current && inputs.placeholder && !activeHomework) {
         homeworkContent.current = inputs.placeholder;
       }
-    }, [inputs.placeholder]);
+    }, [inputs.placeholder, activeHomework]);
 
     // Mutation for creating homework
     const [createHomework, { loading: createLoading }] = useMutation(
@@ -422,41 +423,35 @@ export default function ProposalCard({
 
     useEffect(() => {
       if (assignment) {
-        // console.log("AssignmentModal: Syncing assignment", {
-        //   id: assignment.id,
-        //   title: assignment.title,
-        //   content: assignment.content,
-        //   placeholder: assignment.placeholder,
-        // });
         setTitle(stripHtml(assignment.title || ""));
         setContent(assignment.content || "");
 
-        // Update homework form with assignment data
-        handleChange({
-          target: {
-            name: "title",
-            value: `Assignment: ${stripHtml(
-              assignment?.title || "",
-            )} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ""}`,
-          },
-        });
-        handleChange({
-          target: {
-            name: "placeholder",
-            value: assignment?.placeholder || "",
-          },
-        });
-
-        // Reset homework content with fresh placeholder
-        if (assignment?.placeholder) {
-          homeworkContent.current = assignment.placeholder;
+        // Only set homework form and editor placeholder when no existing homework is open (create flow)
+        if (!activeHomework) {
+          handleChange({
+            target: {
+              name: "title",
+              value: `Assignment: ${stripHtml(
+                assignment?.title || "",
+              )} | ${moment().format("YYYY-MM-DD")} | ${user?.username || ""}`,
+            },
+          });
+          handleChange({
+            target: {
+              name: "placeholder",
+              value: assignment?.placeholder || "",
+            },
+          });
+          if (assignment?.placeholder) {
+            homeworkContent.current = assignment.placeholder;
+          }
         }
       } else if (!assignmentLoading && open) {
         console.warn("AssignmentModal opened but no assignment data available");
         setTitle("");
         setContent("");
       }
-    }, [assignment, assignmentLoading, open]);
+    }, [assignment, assignmentLoading, open, activeHomework]);
 
     // Reset create/edit state when modal closes so reopen starts from list view
     useEffect(() => {
@@ -502,6 +497,31 @@ export default function ProposalCard({
       homeworkContent.current = newContent;
     };
 
+    const editorBlurSaveTimeoutRef = useRef(null);
+    const handleEditorBlur = () => {
+      if (!activeHomework?.id) return;
+      if (editorBlurSaveTimeoutRef.current) {
+        clearTimeout(editorBlurSaveTimeoutRef.current);
+      }
+      editorBlurSaveTimeoutRef.current = setTimeout(() => {
+        editorBlurSaveTimeoutRef.current = null;
+        updateHomework({
+          variables: {
+            id: activeHomework.id,
+            input: {
+              title: inputs.title,
+              content: homeworkContent?.current ?? inputs.placeholder ?? "",
+              placeholder: inputs.placeholder ?? "",
+              settings: inputs?.settings ?? {},
+              updatedAt: new Date(),
+            },
+          },
+        }).catch((err) => {
+          console.error("Auto-save on blur failed:", err);
+        });
+      }, 300);
+    };
+
     const handleCreateHomeworkDraft = async () => {
       try {
         await createHomework({
@@ -523,13 +543,23 @@ export default function ProposalCard({
 
     const handleUpdateHomeworkDraft = async () => {
       if (!activeHomework?.id) return;
+      // Cancel any pending auto-save on blur to avoid racing writes
+      if (editorBlurSaveTimeoutRef.current) {
+        clearTimeout(editorBlurSaveTimeoutRef.current);
+        editorBlurSaveTimeoutRef.current = null;
+      }
+      const latestContent = editorGetContentRef.current?.();
+      const contentToSave =
+        latestContent !== undefined && latestContent !== null
+          ? latestContent
+          : homeworkContent?.current || inputs.placeholder;
       try {
         await updateHomework({
           variables: {
             id: activeHomework.id,
             input: {
               title: inputs.title,
-              content: homeworkContent?.current || inputs.placeholder,
+              content: contentToSave,
               placeholder: inputs.placeholder,
               settings: inputs?.settings,
               updatedAt: new Date(),
@@ -548,13 +578,23 @@ export default function ProposalCard({
 
     const handleUpdateHomeworkSubmit = async () => {
       if (!activeHomework?.id) return;
+      // Cancel any pending auto-save on blur so status change doesn't get overwritten
+      if (editorBlurSaveTimeoutRef.current) {
+        clearTimeout(editorBlurSaveTimeoutRef.current);
+        editorBlurSaveTimeoutRef.current = null;
+      }
+      const latestContent = editorGetContentRef.current?.();
+      const contentToSave =
+        latestContent !== undefined && latestContent !== null
+          ? latestContent
+          : homeworkContent?.current || inputs.placeholder;
       try {
         await updateHomework({
           variables: {
             id: activeHomework.id,
             input: {
               title: inputs.title,
-              content: homeworkContent?.current || inputs.placeholder,
+              content: contentToSave,
               placeholder: inputs.placeholder,
               settings: {
                 ...(inputs?.settings || {}),
@@ -576,6 +616,11 @@ export default function ProposalCard({
 
     const handleStatusUpdate = async (newStatus) => {
       if (!activeHomework?.id) return;
+      // Cancel any pending auto-save on blur so status change is the last write
+      if (editorBlurSaveTimeoutRef.current) {
+        clearTimeout(editorBlurSaveTimeoutRef.current);
+        editorBlurSaveTimeoutRef.current = null;
+      }
       try {
         await updateHomework({
           variables: {
@@ -733,7 +778,7 @@ export default function ProposalCard({
             letterSpacing: "0.15px",
           }}
         >
-          {t("board.expendedCard.previewAssignment", "Preview Assignment")}
+          {t("board.expendedCard.assignment", "Assignment")}
         </Modal.Header>
         <Modal.Content
           scrolling
@@ -815,9 +860,24 @@ export default function ProposalCard({
                           style={{
                             fontSize: "14px",
                             fontWeight: "normal",
+                            marginTop: "4px",
+                            display: "inline-block",
+                            padding: "4px 8px",
+                            borderRadius: "8px",
+                            border: "1px solid",
+                            borderColor: homework.settings?.status === "Completed"
+                                ? "#337C84"
+                                : homework.settings?.status === "Started"
+                                ? "#5D5763"
+                                : homework.settings?.status === "Needs feedback"
+                                ? "#3F288F"
+                                : homework.settings?.status === "Feedback given"
+                                ? "#0D3944"
+                                : "#666",
+                            background: "#FFFFFF",
                             color:
                               homework.settings?.status === "Completed"
-                                ? "#3D85B0"
+                                ? "#337C84"
                                 : homework.settings?.status === "Started"
                                 ? "#5D5763"
                                 : homework.settings?.status === "Needs feedback"
@@ -885,7 +945,7 @@ export default function ProposalCard({
                         }}
                       >
                         {activeHomework?.id === homework?.id
-                          ? t("homework.save", "Save")
+                          ? t("homework.saveAndClose", "Save & close")
                           : t("homework.openHomework", "Open")}
                       </Button>
                     </div>
@@ -951,6 +1011,8 @@ export default function ProposalCard({
                               onUpdate={(newContent) =>
                                 updateHomeworkContent(newContent)
                               }
+                              onBlur={handleEditorBlur}
+                              getContentRef={editorGetContentRef}
                             />
                           </div>
                         </div>
@@ -971,7 +1033,7 @@ export default function ProposalCard({
                           >
                             {t("homework.createHomeworkSubmit", "Mark as complete")}
                           </Button>
-                          <Button
+                          {/* <Button
                             onClick={() => {
                               setActiveHomework(null);
                               clearForm();
@@ -988,7 +1050,7 @@ export default function ProposalCard({
                             }}
                           >
                             {t("homework.cancel", "Cancel")}
-                          </Button>
+                          </Button> */}
                           <Button
                             onClick={() => {
                               const currentStatus =
@@ -1034,7 +1096,7 @@ export default function ProposalCard({
                                   "Request feedback",
                                 )}
                           </Button>
-                          {!isStudent &&
+                          {isMentorOrTeacher &&
                             (inputs?.settings?.status ||
                               activeHomework?.settings?.status) ===
                               "Needs feedback" && (

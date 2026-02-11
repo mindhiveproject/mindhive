@@ -494,6 +494,7 @@
 		"teacher": "Teacher"
 	},
 	"homework": {
+		"allEntries": "All entries",
 		"assignmentContent": "Assignment content",
 		"assignmentTitle": "Assignment title",
 		"cancel": "Cancel",
@@ -513,7 +514,7 @@
 		"myEntry": "My entry",
 		"noHomeworkYet": "The student hasn’t written any homework yet.",
 		"openHomework": "Open",
-		"save": "Save",
+		"saveAndClose": "Save & close",
 		"saveHomeworkDraft": "Save draft",
 		"submitted": "Submitted",
 		"unsubmit": "Unsubmit",

@@ -494,6 +494,7 @@
 		"teacher": "Professor"
 	},
 	"homework": {
+		"allEntries": "Todas as inscrições",
 		"assignmentContent": "Conteúdo da tarefa",
 		"assignmentTitle": "Título da tarefa",
 		"cancel": "Cancelar",
@@ -513,7 +514,7 @@
 		"myEntry": "Minha inscrição",
 		"noHomeworkYet": "O aluno ainda não escreveu nenhuma tarefa de casa.",
 		"openHomework": "Aberto",
-		"save": "Salvar",
+		"saveAndClose": "Salvar e fechar",
 		"saveHomeworkDraft": "Salvar rascunho",
 		"submitted": "Enviado",
 		"unsubmit": "Cancelar submissão",

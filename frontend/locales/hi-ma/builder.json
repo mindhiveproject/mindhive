@@ -50,6 +50,7 @@
 	"board": {
 		"error": "त्रुटि संदेश}}",
 		"expendedCard": {
+			"assignment": "",
 			"close": "",
 			"connect": "",
 			"content": "",
@@ -352,7 +353,8 @@
 		"userNoClasses": ""
 	},
 	"homework": {
-		"createHomeworkSubmit": ""
+		"createHomeworkSubmit": "",
+		"saveAndClose": ""
 	},
 	"homeworkCard": {
 		"comments": "टिप्पणियाँ",

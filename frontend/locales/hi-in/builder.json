@@ -50,6 +50,7 @@
 	"board": {
 		"error": "त्रुटि संदेश}}",
 		"expendedCard": {
+			"assignment": "कार्यभार",
 			"close": "बंद करना",
 			"connect": "जोड़ना",
 			"content": "सामग्री",
@@ -352,7 +353,8 @@
 		"userNoClasses": "आप किसी भी कक्षा से संबद्ध नहीं हैं।"
 	},
 	"homework": {
-		"createHomeworkSubmit": "पूर्ण के रूप में चिह्नित करें"
+		"createHomeworkSubmit": "पूर्ण के रूप में चिह्नित करें",
+		"saveAndClose": "सहेजे बंद करें"
 	},
 	"homeworkCard": {
 		"comments": "टिप्पणियाँ",

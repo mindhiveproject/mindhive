@@ -50,6 +50,7 @@
 	"board": {
 		"error": "Fout! {{bericht}}",
 		"expendedCard": {
+			"assignment": "Opdracht",
 			"close": "Sluit",
 			"connect": "Maak verbinding met",
 			"content": "Inhoud",
@@ -352,7 +353,8 @@
 		"userNoClasses": "Je bent aan geen enkele cursus verbonden."
 	},
 	"homework": {
-		"createHomeworkSubmit": "Markeer als voltooid"
+		"createHomeworkSubmit": "Markeer als voltooid",
+		"saveAndClose": "Opslaan en sluiten"
 	},
 	"homeworkCard": {
 		"comments": "Reacties",

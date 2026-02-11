@@ -98,6 +98,8 @@ const CustomLink = Link.extend({
 export default function TipTapEditor({
   content,
   onUpdate,
+  onBlur: onBlurCallback,
+  getContentRef,
   isEditable = true,
   toolbarVisible = true,
   specialButton = null,
@@ -141,8 +143,30 @@ export default function TipTapEditor({
     editable: isEditable,
     immediatelyRender: false,
     onFocus: () => setIsFocused(true),
-    onBlur: () => setIsFocused(false),
+    onBlur: () => {
+      setIsFocused(false);
+    },
   });
+
+  // Expose getContent so parent can read latest HTML before submit (e.g. Mark as complete)
+  useEffect(() => {
+    if (!getContentRef || !editor) return;
+    getContentRef.current = () => editor.getHTML();
+    return () => {
+      getContentRef.current = null;
+    };
+  }, [editor, getContentRef]);
+
+  // Flush latest content to parent when editor blurs; optional parent callback (e.g. persist draft)
+  useEffect(() => {
+    if (!editor) return;
+    const handleBlur = () => {
+      if (onUpdate) onUpdate(editor.getHTML());
+      onBlurCallback?.();
+    };
+    editor.on("blur", handleBlur);
+    return () => editor.off("blur", handleBlur);
+  }, [editor, onUpdate, onBlurCallback]);
 
   // Set content when editor + content are ready
   useEffect(() => {

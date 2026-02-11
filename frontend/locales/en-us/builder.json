@@ -50,6 +50,7 @@
 	"board": {
 		"error": "Error! {{message}}",
 		"expendedCard": {
+			"assignment": "Assignment",
 			"close": "Close",
 			"connect": "Connect",
 			"content": "Content",
@@ -352,7 +353,8 @@
 		"userNoClasses": "You are not associated with any classes."
 	},
 	"homework": {
-		"createHomeworkSubmit": "Mark as complete"
+		"createHomeworkSubmit": "Mark as complete",
+		"saveAndClose": "Save & close"
 	},
 	"homeworkCard": {
 		"comments": "Comments",

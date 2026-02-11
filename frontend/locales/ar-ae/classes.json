@@ -494,6 +494,7 @@
 		"teacher": "مدرس"
 	},
 	"homework": {
+		"allEntries": "جميع المشاركات",
 		"assignmentContent": "محتوى الواجب",
 		"assignmentTitle": "عنوان المهمة",
 		"cancel": "إلغاء",
@@ -513,7 +514,7 @@
 		"myEntry": "مشاركتي",
 		"noHomeworkYet": "لم يكتب الطالب أي واجب منزلي بعد.",
 		"openHomework": "مفتوح",
-		"save": "يحفظ",
+		"saveAndClose": "حفظ وإغلاق",
 		"saveHomeworkDraft": "حفظ المسودة",
 		"submitted": "مُقَدَّم",
 		"unsubmit": "إلغاء الإرسال",

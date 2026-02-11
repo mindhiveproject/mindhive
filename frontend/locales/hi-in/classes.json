@@ -494,6 +494,7 @@
 		"teacher": "अध्यापक"
 	},
 	"homework": {
+		"allEntries": "सभी प्रविष्टियों",
 		"assignmentContent": "असाइनमेंट की सामग्री",
 		"assignmentTitle": "असाइनमेंट का शीर्षक",
 		"cancel": "रद्द करना",
@@ -513,7 +514,7 @@
 		"myEntry": "मेरी प्रविष्टि",
 		"noHomeworkYet": "छात्र ने अभी तक कोई गृहकार्य नहीं लिखा है।",
 		"openHomework": "खुला",
-		"save": "बचाना",
+		"saveAndClose": "सहेजे बंद करें",
 		"saveHomeworkDraft": "मसौदा सेव करें",
 		"submitted": "प्रस्तुत",
 		"unsubmit": "सबमिट ना करें",

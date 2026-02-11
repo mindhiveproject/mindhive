@@ -50,6 +50,7 @@
 	"board": {
 		"error": "Ошибка! {{message}}",
 		"expendedCard": {
+			"assignment": "Назначение",
 			"close": "Закрыть",
 			"connect": "Подключайтесь",
 			"content": "Содержание",
@@ -352,7 +353,8 @@
 		"userNoClasses": "Вы не связаны ни с какими занятиями."
 	},
 	"homework": {
-		"createHomeworkSubmit": "Отметить как выполненное"
+		"createHomeworkSubmit": "Отметить как выполненное",
+		"saveAndClose": "Сохранить и закрыть"
 	},
 	"homeworkCard": {
 		"comments": "Комментарии",

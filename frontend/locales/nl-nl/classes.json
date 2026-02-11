@@ -494,6 +494,7 @@
 		"teacher": "Docent"
 	},
 	"homework": {
+		"allEntries": "Alle inzendingen",
 		"assignmentContent": "Opdrachtinhoud",
 		"assignmentTitle": "Opdrachttitel",
 		"cancel": "Annuleren",
@@ -513,7 +514,7 @@
 		"myEntry": "Mijn inzending",
 		"noHomeworkYet": "De student heeft nog geen huiswerk gemaakt.",
 		"openHomework": "Open",
-		"save": "Redden",
+		"saveAndClose": "Opslaan en sluiten",
 		"saveHomeworkDraft": "Concept opslaan",
 		"submitted": "Ingediend",
 		"unsubmit": "Intrekken",

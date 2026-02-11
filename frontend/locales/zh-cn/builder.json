@@ -50,6 +50,7 @@
 	"board": {
 		"error": "错误信息}}",
 		"expendedCard": {
+			"assignment": "任务",
 			"close": "关闭",
 			"connect": "连接",
 			"content": "内容",
@@ -352,7 +353,8 @@
 		"userNoClasses": "您未参加任何课程。"
 	},
 	"homework": {
-		"createHomeworkSubmit": "标记为完成"
+		"createHomeworkSubmit": "标记为完成",
+		"saveAndClose": "保存并关闭"
 	},
 	"homeworkCard": {
 		"comments": "评论",
