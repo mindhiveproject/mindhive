@@ -331,6 +331,8 @@
 		"viewOrEdit": "Ver o editar"
 	},
 	"cancel": "Cancelar",
+	"cardAssignmentDisabled": "Las tarjetas no se pueden asignar a estudiantes",
+	"cardAssignmentEnabled": "Las tarjetas se pueden asignar a los estudiantes.",
 	"classes": "Clase(s)",
 	"classesList": {
 		"className": "Nombre de la clase",

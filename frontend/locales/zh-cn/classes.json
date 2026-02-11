@@ -331,6 +331,8 @@
 		"viewOrEdit": "查看或编辑"
 	},
 	"cancel": "取消",
+	"cardAssignmentDisabled": "卡片不能分配给学生。",
+	"cardAssignmentEnabled": "卡片可以分配给学生",
 	"classes": "课程",
 	"classesList": {
 		"className": "类名",

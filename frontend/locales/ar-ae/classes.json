@@ -331,6 +331,8 @@
 		"viewOrEdit": "عرض أو تحرير"
 	},
 	"cancel": "يلغي",
+	"cardAssignmentDisabled": "لا يمكن تخصيص البطاقات للطلاب",
+	"cardAssignmentEnabled": "يمكن تخصيص البطاقات للطلاب",
 	"classes": "الفئة(الفئات)",
 	"classesList": {
 		"className": "اسم الفصل",

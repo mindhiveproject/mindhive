@@ -331,6 +331,8 @@
 		"viewOrEdit": "देखें या संपादित करें"
 	},
 	"cancel": "रद्द करना",
+	"cardAssignmentDisabled": "छात्रों को कार्ड आवंटित नहीं किए जा सकते।",
+	"cardAssignmentEnabled": "कार्ड छात्रों को आवंटित किए जा सकते हैं",
 	"classes": "वर्ग",
 	"classesList": {
 		"className": "कक्षा का नाम",

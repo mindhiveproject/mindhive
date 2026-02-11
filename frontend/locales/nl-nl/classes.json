@@ -331,6 +331,8 @@
 		"viewOrEdit": "Bekijken of bewerken"
 	},
 	"cancel": "Annuleren",
+	"cardAssignmentDisabled": "Kaarten kunnen niet aan studenten worden toegewezen.",
+	"cardAssignmentEnabled": "Kaarten kunnen aan studenten worden toegewezen.",
 	"classes": "Klasse(n)",
 	"classesList": {
 		"className": "Klassenaam",

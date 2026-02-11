@@ -331,6 +331,8 @@
 		"viewOrEdit": "Ver ou Editar"
 	},
 	"cancel": "Cancelar",
+	"cardAssignmentDisabled": "Não é possível atribuir cartões a alunos.",
+	"cardAssignmentEnabled": "Os cartões podem ser atribuídos aos alunos.",
 	"classes": "Classe(s)",
 	"classesList": {
 		"className": "Nome da classe",

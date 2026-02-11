@@ -1432,20 +1432,22 @@ export default function ProposalCard({
               )}
             </div>
             <div className="infoBoard">
-              <div>
-                <div className="cardSubheader">
-                  {t("mainCard.assignedTo", "Assigned to")}
+              {proposal?.usedInClass?.settings?.assignableToStudents === true && (
+                <div>
+                  <div className="cardSubheader">
+                    {t("mainCard.assignedTo", "Assigned to")}
+                  </div>
+                  <Assigned
+                    users={collaborators}
+                    assignedTo={inputs?.assignedTo}
+                    onAssignedToChange={handleAssignedToChange}
+                    user={user}
+                    proposal={proposal}
+                    cardId={cardId}
+                    cardData={inputs}
+                  />
                 </div>
-                <Assigned
-                  users={collaborators}
-                  assignedTo={inputs?.assignedTo}
-                  onAssignedToChange={handleAssignedToChange}
-                  user={user}
-                  proposal={proposal}
-                  cardId={cardId}
-                  cardData={inputs}
-                />
-              </div>
+              )}
 
               {/* Display Linked Items using PreviewSection */}
               <div style={{ marginTop: "24px", marginBottom: "24px", display: "flex", flexDirection: "column", gap: "16px" }}> 

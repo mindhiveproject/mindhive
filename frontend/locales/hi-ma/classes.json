@@ -331,6 +331,8 @@
 		"viewOrEdit": ""
 	},
 	"cancel": "रद्द करना",
+	"cardAssignmentDisabled": "",
+	"cardAssignmentEnabled": "",
 	"classes": "वर्ग",
 	"classesList": {
 		"className": "कक्षा का नाम",
