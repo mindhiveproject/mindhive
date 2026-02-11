@@ -111,7 +111,10 @@ export default function TipTapEditor({
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        link: false,
+        underline: false,
+      }),
       Underline,
       CustomLink.configure({
         openOnClick: true,
