@@ -17,15 +17,26 @@ import { lists } from "./schema";
 import { withAuth, session } from "./auth";
 import { permissions } from "./access";
 
+const baseUrl =
+  process.env.NODE_ENV === "development"
+    ? process.env.ASSET_BASE_URL_DEV
+    : process.env.ASSET_BASE_URL;
+
+const yqFrontendURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.FRONTEND_URL_DEV_YQ
+    : process.env.FRONTEND_URL_YQ;
+
+const mhFrontendURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.FRONTEND_URL_DEV
+    : process.env.FRONTEND_URL;
+
 export default withAuth(
   config({
     server: {
       cors: {
-        origin: [
-          process.env.NODE_ENV === "development"
-            ? process.env.FRONTEND_URL_DEV
-            : process.env.FRONTEND_URL,
-        ],
+        origin: [mhFrontendURL, yqFrontendURL],
         credentials: true,
       },
     },
@@ -45,10 +56,30 @@ export default withAuth(
       },
     },
     session,
-    // ui: {
-    //   isAccessAllowed: ({ session }) => {
-    //     return permissions.canAccessAdminUI({ session });
-    //   },
-    // },
+    storage: {
+      cover_images: {
+        kind: "local",
+        type: "image",
+        generateUrl: (path) => `${baseUrl}/yq-images${path}`,
+        serverRoute: {
+          path: "/yq-images",
+        },
+        storagePath: `yq-visuals/yq-images`,
+      },
+      p5_visuals: {
+        kind: "local",
+        type: "file",
+        generateUrl: (path) => `${baseUrl}/yq-code${path}`,
+        serverRoute: {
+          path: "/yq-code",
+        },
+        storagePath: `yq-visuals/yq-code`,
+      },
+    },
   })
+  // ui: {
+  //   isAccessAllowed: ({ session }) => {
+  //     return permissions.canAccessAdminUI({ session });
+  //   },
+  // },
 );
