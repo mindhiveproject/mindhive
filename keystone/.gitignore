@@ -1,5 +1,7 @@
 node_modules
 .keystone
+public
+yq-visuals
 keystone.db
 *.log
 .env

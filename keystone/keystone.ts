@@ -64,7 +64,7 @@ export default withAuth(
         serverRoute: {
           path: "/yq-images",
         },
-        storagePath: `public/yq-images`,
+        storagePath: `yq-visuals/yq-images`,
       },
       p5_visuals: {
         kind: "local",
@@ -73,7 +73,7 @@ export default withAuth(
         serverRoute: {
           path: "/yq-code",
         },
-        storagePath: `public/yq-code`,
+        storagePath: `yq-visuals/yq-code`,
       },
     },
   })
