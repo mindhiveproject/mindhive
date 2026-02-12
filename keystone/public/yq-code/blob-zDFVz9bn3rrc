@@ -1,0 +1,15 @@
+
+windowResized = () => {
+  // Allows the canvas to resize when you resize your window
+  resizeCanvas(windowWidth, windowHeight);
+};
+
+setup = () => {
+  // This creates the Canvas so that it takes the size of your window.
+  createCanvas(windowWidth, windowHeight);
+};
+
+// Code that is constantly being updated
+draw = () => {
+  background(220);
+};
