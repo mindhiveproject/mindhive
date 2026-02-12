@@ -1,5 +1,8 @@
+// components/DataJournal/Datasets/Main.js
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
+
+import { useDataJournal } from "../Context/DataJournalContext";
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
 
 import AddDataset from "./AddDataset";
@@ -13,9 +16,11 @@ import {
   StyledRightPanel,
   StyledDatasetGrid,
   StyledAddDataset,
-} from "../styles/StyledDataJournal";
+} from "../styles/StyledDataJournal"; // Adjust if extracting to Datasets/styles.js
 
-export default function Datasets({ user, projectId, studyId }) {
+export default function Datasets() {
+  const { user, projectId, studyId } = useDataJournal();
+
   const { data, loading, error, refetch } = useQuery(GET_DATASOURCES, {
     variables: {
       where:
@@ -52,7 +57,7 @@ export default function Datasets({ user, projectId, studyId }) {
   };
 
   const handleCreate = (newDatasource) => {
-    // console.log("Dataset created:", newDatasource);
+    refetch(); // Refresh list after create
   };
 
   const handleEdit = (dataset) => {
@@ -95,8 +100,6 @@ export default function Datasets({ user, projectId, studyId }) {
               onCancel={handleCancel}
               onCreate={handleCreate}
               refetchDatasources={refetch}
-              studyId={studyId}
-              projectId={projectId}
             />
           ) : editingDataset ? (
             <EditDataset

@@ -4,7 +4,10 @@ import useTranslation from "next-translate/useTranslation";
 import Header from "./Header";
 import Grid from "./Grid";
 
-import { studyStatusKeys, getTranslatedStudyStatuses } from "../Participant/Results/Dataset";
+import {
+  studyStatusKeys,
+  getTranslatedStudyStatuses,
+} from "../Participant/Results/Dataset";
 
 function getUnique(array) {
   return [...new Set(array)];
@@ -16,6 +19,8 @@ export default function ParticipantsTable({
   users,
   guests,
 }) {
+  const studyVersionHistory = study?.versionHistory || [];
+
   const { t } = useTranslation("builder");
   // participants
   const [participants, setParticipants] = useState([]);
@@ -85,6 +90,16 @@ export default function ParticipantsTable({
       .map((status) => studyStatuses[status])
       .filter((translatedStatus) => translatedStatus); // Filter out any undefined translations
 
+    const datasetVersions = participant?.datasets?.map(
+      (dataset) => dataset?.studyVersion
+    );
+    const uniqueStudyVersions = getUnique(datasetVersions);
+    const studyVersion = uniqueStudyVersions
+      .filter((version) => version) // Filter out undefined/null statuses
+      .map((version) =>
+        studyVersionHistory.filter((v) => v?.id === version).map((v) => v?.name)
+      );
+
     return {
       publicId: participant?.publicId,
       publicReadableId: participant?.publicReadableId,
@@ -97,6 +112,7 @@ export default function ParticipantsTable({
       includeAnalysis,
       datasets: participant?.datasets,
       studyStatus,
+      studyVersion,
     };
   };
 

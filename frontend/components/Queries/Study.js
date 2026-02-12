@@ -32,6 +32,10 @@ export const PUBLIC_STUDIES = gql`
         }
       }
       description
+      author {
+        id
+        username
+      }
     }
   }
 `;
@@ -347,6 +351,7 @@ export const GET_STUDY_RESULTS = gql`
         id
         title
       }
+      versionHistory
     }
   }
 `;

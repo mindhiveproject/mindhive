@@ -19,8 +19,14 @@ export default function RequestReset() {
   );
   async function handleSubmit(e) {
     e.preventDefault();
-    const res = await requestreset();
-    alert("If this user exists, we have sent you a password reset email");
+    // Normalize email to lowercase
+    const normalizedInputs = {
+      email: inputs.email?.toLowerCase().trim(),
+    };
+    const res = await requestreset({
+      variables: normalizedInputs,
+    });
+    alert("If this email is associated to a user, we have sent them a password reset email. If this user is a student, we have sent the password reset email to their teacher(s).");
     resetForm();
   }
 

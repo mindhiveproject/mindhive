@@ -37,10 +37,13 @@ export default function RoleSignup(query) {
 
   async function handleSubmit({ e, classCode }) {
     e.preventDefault();
+    // Normalize email to lowercase
+    const normalizedEmail = inputs.email?.toLowerCase().trim();
     await signup({
       variables: {
         input: {
           ...inputs,
+          email: normalizedEmail,
           permissions: { connect: { name: role?.toUpperCase() } },
           studentIn:
             role === "student" && classCode
@@ -56,7 +59,7 @@ export default function RoleSignup(query) {
     // log in user
     const login = await signin({
       variables: {
-        email: inputs.email,
+        email: normalizedEmail,
         password: inputs.password,
       },
     });

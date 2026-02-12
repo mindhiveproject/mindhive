@@ -8,6 +8,12 @@ export default function ParticipantInformation({ study, participant, type }) {
   const generalInfo =
     { ...participant?.generalInfo, ...participant?.info } || {};
 
+  const path = studyInfo?.info?.path || [];
+  const condition = path
+    .filter((stage) => stage?.conditionLabel)
+    .map((stage) => stage?.conditionLabel)
+    .join(", ");
+
   return (
     <div>
       <div className="infoItem">
@@ -19,21 +25,37 @@ export default function ParticipantInformation({ study, participant, type }) {
         <p>{participant?.publicReadableId}</p>
       </div>
 
-      <h2>{t("participantInfo.studyRelatedInfo", "Study-related information")}</h2>
+      <h2>
+        {t("participantInfo.studyRelatedInfo", "Study-related information")}
+      </h2>
       <div>
         {Object.keys(generalInfo).map((key) => {
           if (key === "eng") {
             return (
               <div className="infoItem" key={key}>
-                <p>{t("participantInfo.englishQuestion", "Do you understand basic instruction written in English?")}</p>
-                <p>{generalInfo[key] === "yes" ? t("participantInfo.yes", "Yes") : t("participantInfo.no", "No")}</p>
+                <p>
+                  {t(
+                    "participantInfo.englishQuestion",
+                    "Do you understand basic instruction written in English?"
+                  )}
+                </p>
+                <p>
+                  {generalInfo[key] === "yes"
+                    ? t("participantInfo.yes", "Yes")
+                    : t("participantInfo.no", "No")}
+                </p>
               </div>
             );
           }
           if (key === "blockName") {
             return (
               <div className="infoItem" key={key}>
-                <p>{t("participantInfo.betweenSubjectCondition", "Between-subject condition")}</p>
+                <p>
+                  {t(
+                    "participantInfo.betweenSubjectCondition",
+                    "Between-subject condition"
+                  )}
+                </p>
                 <p>{generalInfo[key]}</p>
               </div>
             );
@@ -41,8 +63,17 @@ export default function ParticipantInformation({ study, participant, type }) {
           if (key === "share") {
             return (
               <div className="infoItem" key={key}>
-                <p>{t("participantInfo.agreedToSave", "Agreed to save information for future studies")}</p>
-                <p>{generalInfo[key] === "true" ? t("participantInfo.yes", "Yes") : t("participantInfo.no", "No")}</p>
+                <p>
+                  {t(
+                    "participantInfo.agreedToSave",
+                    "Agreed to save information for future studies"
+                  )}
+                </p>
+                <p>
+                  {generalInfo[key] === "true"
+                    ? t("participantInfo.yes", "Yes")
+                    : t("participantInfo.no", "No")}
+                </p>
               </div>
             );
           }
@@ -94,25 +125,40 @@ export default function ParticipantInformation({ study, participant, type }) {
 
                 {generalInfo?.[`consent-${consent?.id}-parentname`] && (
                   <p>
-                    {t("participantInfo.parentName", "Parent name:")} {generalInfo?.[`consent-${consent?.id}-parentname`]}
+                    {t("participantInfo.parentName", "Parent name:")}{" "}
+                    {generalInfo?.[`consent-${consent?.id}-parentname`]}
                   </p>
                 )}
 
                 {generalInfo?.[`consent-${consent?.id}-parentemail`] && (
                   <p>
-                    {t("participantInfo.parentEmail", "Parent email:")} {generalInfo?.[`consent-${consent?.id}-parentemail`]}
+                    {t("participantInfo.parentEmail", "Parent email:")}{" "}
+                    {generalInfo?.[`consent-${consent?.id}-parentemail`]}
                   </p>
                 )}
 
                 {generalInfo?.[`consent-${consent?.id}-kidname`] && (
                   <p>
-                    {t("participantInfo.kidName", "Your name:")} {generalInfo?.[`consent-${consent?.id}-kidname`]}
+                    {t("participantInfo.kidName", "Your name:")}{" "}
+                    {generalInfo?.[`consent-${consent?.id}-kidname`]}
                   </p>
                 )}
               </div>
             );
           })}
         </>
+      )}
+
+      {condition && (
+        <div className="infoItem">
+          <p>
+            {t(
+              "participantInfo.betweenSubjectCondition",
+              "Between-subject condition"
+            )}
+          </p>
+          <p>{condition}</p>
+        </div>
       )}
     </div>
   );

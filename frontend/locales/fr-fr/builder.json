@@ -24,6 +24,16 @@
 	"allStudies": "Toutes les études",
 	"archivedStudies": "Études archivées",
 	"assigned": {
+		"addUser": "Ajouter des personnes",
+		"assignCard": "Attribuez cette carte à un collaborateur de ce projet.",
+		"cancel": "Annuler",
+		"noCollaborators": "Aucun collaborateur disponible pour ce conseil.",
+		"noUsersFound": "Aucun profil trouvé",
+		"removeUser": "Supprimer un utilisateur",
+		"save": "Sauvegarder",
+		"searchPlaceholder": "Recherche par nom d'utilisateur...",
+		"searchResults": "Résultats de recherche",
+		"selected": "Choisi",
 		"typeUsername": "Tapez le nom d'utilisateur"
 	},
 	"assignment": {
@@ -31,8 +41,10 @@
 		"loadingMessage": "Récupération des dernières données d'affectation...",
 		"unsavedChanges": "(Modifications non enregistrées)"
 	},
+	"availability": "Disponibilité",
 	"background": "Arrière-plan",
 	"backgroundHelp": "Utilisez ce champ pour fournir un bref aperçu du sujet de recherche. Quel est le problème étudié et pourquoi est-il important ?",
+	"backgroundTab": "Arrière-plan",
 	"basicTab": "Basique",
 	"blockDescription": "Dans un bloc, des informations sont présentées aux participants.",
 	"board": {
@@ -47,16 +59,22 @@
 			"myAssignments": "Mes missions",
 			"myResources": "Mes ressources",
 			"previewAssignment": "Aperçu du travail",
-			"previewLinkedAssignments": "Prévisualisation des devoirs liés",
-			"previewLinkedResources": "Aperçu des ressources liées",
-			"previewLinkedStudies": "Prévisualisation des études liées",
-			"previewLinkedTasks": "Prévisualisation des tâches liées",
+			"previewLinkedAssignments": "Devoirs",
+			"previewLinkedResources": "Ressources",
+			"previewLinkedStudies": "Études liées",
+			"previewLinkedTasks": "Tâches liées",
 			"publicResources": "Ressources publiques",
 			"studies": "Études",
 			"tasks": "Tâches",
 			"title": "Titre"
 		},
-		"loading": "Chargement..."
+		"filterByAssignedTo": "Assigné à",
+		"loading": "Chargement...",
+		"status": "Statut"
+	},
+	"boardManagement": {
+		"resourceUnavailable": "Ressource indisponible",
+		"viewResource": "Afficher la ressource"
 	},
 	"build-create-new-study": "Pour créer une nouvelle étude, cliquez sur le bouton ci-dessous.",
 	"build-intro": "Dans ce générateur, vous pouvez créer une nouvelle étude, télécharger vos propres tâches ou utiliser des tâches de la bibliothèque.",
@@ -272,7 +290,7 @@
 	"descriptionDiscoverHelp": "Ceci est visible par tous les utilisateurs de la plateforme lors du choix de tâches ou d'enquêtes dans le mode Découvrir.",
 	"develop": "Développer",
 	"developA": "Développer un {{développer}}",
-	"developHeaderDescription": "Créez, modifiez et gérez vos <strong>études, tâches et enquêtes</strong> ici.",
+	"developHeaderDescription": "Créez, modifiez et gérez vos études, tâches et enquêtes ici.",
 	"developNew": "Développer quelque chose de nouveau",
 	"duplicateEditBlock": "Dupliquez et modifiez un bloc MindHive préexistant et ses paramètres.",
 	"duplicateEditSurvey": "Dupliquez et modifiez une enquête MindHive préexistante et ses paramètres.",
@@ -301,22 +319,37 @@
 		"studyStatus": "Statut d'étude"
 	},
 	"header": {
+		"addCollaborator": "Ajouter un collaborateur",
 		"allDataOneFile": "Toutes les données dans un seul fichier",
 		"allowAddingCards": "Autoriser l'ajout de nouvelles cartes",
 		"allowAddingSections": "Autoriser l'ajout de nouvelles sections",
 		"allowMovingCards": "Autoriser le déplacement des cartes",
 		"allowMovingSections": "Autoriser le déplacement des sections",
+		"cancel": "Annuler",
+		"collaborators": "Collaborateurs",
 		"copyLink": "Copier le lien de l'étude",
 		"createYourStudyProposal": "Créez votre proposition d'étude ici pour commencer votre parcours de recherche",
 		"descriptionPlaceholder": "Entrez la description du projet",
+		"error": "Erreur",
 		"linkCopied": "Le lien est copié",
+		"linked": "Lié",
+		"linkedToStudy": "Lié à",
 		"myProjectBoard": "Mon tableau de projets",
+		"noClassAssociated": "Cette proposition n'est associée à aucun cours.",
+		"notLinkedToStudy": "Non lié à une étude",
+		"noUsersFound": "Aucun utilisateur trouvé...",
 		"publicTemplate": "Modèle public",
+		"removeCollaborator": "Supprimer le collaborateur",
 		"save": "Sauvegarder",
 		"saving": "Économie",
+		"searchPlaceholder": "Recherche par nom d'utilisateur...",
+		"searchResults": "Résultats de recherche",
 		"shareInstructions": "Partagez le lien ci-dessous avec vos participants pour les inviter à rejoindre votre étude",
 		"testStudy": "Testez votre étude",
-		"titlePlaceholder": "Saisissez le titre du tableau du projet"
+		"titlePlaceholder": "Saisissez le titre du tableau du projet",
+		"unlinked": "Aucune étude n'a été liée",
+		"updateCollaboratorsFailed": "Impossible de mettre à jour les collaborateurs. Veuillez réessayer.",
+		"userNoClasses": "Vous n'êtes associé à aucun cours."
 	},
 	"homeworkCard": {
 		"comments": "Commentaires",
@@ -342,6 +375,8 @@
 		"newSection": "Nouvelle section",
 		"sectionTitlePlaceholder": "Entrez le titre de la section"
 	},
+	"interests": "Intérêts",
+	"introductionVideo": "Vidéo d'introduction",
 	"link": "Lien",
 	"linkClass": {
 		"doNotConnectClass": "❌ Ne connectez pas la classe"
@@ -358,10 +393,14 @@
 		"cardWillBeReleased": "La carte sera publiée",
 		"chooseReviewStep": "Choisissez à quelle étape de l'évaluation par les pairs une carte doit être soumise",
 		"comments": "Commentaires",
+		"commentsPlaceholder": "Ajoutez votre commentaire ici...",
 		"forMindHiveNetwork": "Pour le réseau MindHive",
 		"forTeacherAndCollaborators": "Réservé à mon professeur et aux collaborateurs du projet",
 		"instructions": "Instructions",
 		"lockedMessage": "La carte est actuellement en cours d'édition par",
+		"newSubmission": "Nouvelle soumission",
+		"originalSubmission": "Soumission originale",
+		"originalSubmissionTooltip": "Voici le contenu que vous avez initialement soumis au Centre de commentaires. Nous l'avons copié ci-dessous afin que vous puissiez le modifier et avons conservé une version révisée.",
 		"refresh": "Rafraîchir",
 		"refreshAfterRelease": "Une fois la carte publiée, actualisez la page pour obtenir la dernière version de la carte.",
 		"reviewOptions": {
@@ -372,7 +411,9 @@
 		},
 		"revisedContent": "Contenu révisé",
 		"revisedContentUsed": "Le contenu révisé que vous incluez ici sera utilisé dans le rapport final.",
+		"seeOriginalSubmission": "Cliquez pour voir votre soumission originale",
 		"selectOption": "Sélectionnez une option",
+		"submission": "Soumission",
 		"visibleInFeedbackCenter": "Le contenu que vous incluez ici sera visible dans le centre de commentaires une fois qu'il sera soumis via une carte d'action jaune.",
 		"visibleToTeacherAndCollaborators": "Le contenu que vous incluez ci-dessous ne sera visible que par votre/vos enseignant(s) et collaborateurs du projet"
 	},
@@ -433,6 +474,7 @@
 	"notes": {
 		"noNotes": "Aucune note n'a encore été saisie. Faites un clic droit pour ajouter des notes."
 	},
+	"noVideoPlaceholder": "Aucune vidéo d'introduction disponible.",
 	"overview": {
 		"actions": "Actes",
 		"copy": "Copie",
@@ -616,11 +658,22 @@
 	},
 	"proposalPage": {
 		"download": "Télécharger",
+		"downloadTooltip": "Le contenu téléchargé dépend des filtres d'état et d'étape de révision sélectionnés ci-dessous.",
 		"preview": "Aperçu",
 		"previewInfo": "Le contenu des cartes marquées comme « terminées » en mode édition apparaîtra ici, en mode aperçu, affichant ce que vos réviseurs verront.",
 		"submittedLocked": "La proposition a été soumise et verrouillée 🔒",
-		"viewBoard": "Voir le tableau",
-		"viewFlattenBoard": "Vue du tableau plat"
+		"viewBoard": "Vue du tableau",
+		"viewFlattenBoard": "Vue en liste"
+	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "Étapes de révision",
+			"title": "Filtrer par"
+		}
 	},
 	"proposalSelector": {
 		"linkToProposal": "Lien vers la proposition",
@@ -653,6 +706,7 @@
 		"oldest": "Le plus ancien",
 		"overviewIntro": "Que vous commenciez votre étude ou que vous recrutiez des participants, utilisez cette page pour donner votre avis à vos pairs sur leurs propositions et leurs études finalisées.",
 		"participantOverOne": "{compter, pluriel, un {# participant} autre {# participants}}",
+		"participantOverOnePlural": "{{count}}  Participants ",
 		"participantUnder": "aucun participant",
 		"participate": "Participer",
 		"peerReviewTag": "Évaluation par les pairs",
@@ -776,7 +830,8 @@
 		"enterNewTitle": "Veuillez entrer un titre",
 		"newCard": "Nouvelle carte",
 		"newCardPlaceholder": "Entrez un nouveau titre de carte",
-		"newTitlePrompt": "Veuillez saisir un nouveau titre"
+		"newTitlePrompt": "Veuillez saisir un nouveau titre",
+		"sectionTitlePlaceholder": "Entrez le titre de la section"
 	},
 	"selector": {
 		"basicBlocks": {
@@ -983,11 +1038,11 @@
 		"preview": "Aperçu {{taskType}}"
 	},
 	"taskPage": {
-		"after": "Ce que les participants voient <u>après</u> avoir effectué le {{taskType}}",
+		"after": "Ce que les participants voient après avoir pris le {{taskType}}",
 		"aggregateVariables": "Variables agrégées",
 		"aggregateVariablesDescription": "Ces données sont automatiquement écrites dans un fichier csv à la fin de la {{taskType}}",
 		"background": "Arrière-plan",
-		"before": "Ce que les participants voient <u>avant</u> de passer la {{taskType}}",
+		"before": "Ce que les participants voient avant de prendre le {{taskType}}",
 		"checkbox": "Sélectionnez plusieurs",
 		"duration": "Durée",
 		"format": "Format",
@@ -1073,12 +1128,13 @@
 		"placeholder": "Versions d'étude",
 		"title": "Version d'étude"
 	},
+	"videoNotSupported": "Vidéo non prise en charge",
 	"viewer": {
-		"afterParticipation": "Ce que les participants voient <u>après</u> avoir effectué le {{taskType}}",
+		"afterParticipation": "Ce que les participants voient après avoir pris le {{taskType}}",
 		"aggregateVariables": "Variables agrégées",
 		"aggregateVariablesDesc": "Ces données sont automatiquement écrites dans un fichier csv à la fin de la {{taskType}}",
 		"background": "Arrière-plan",
-		"beforeParticipation": "Ce que les participants voient <u>avant</u> de passer la {{taskType}}",
+		"beforeParticipation": "Ce que les participants voient avant de prendre le {{taskType}}",
 		"customize": "Personnaliser",
 		"defaultValues": "Les valeurs par défaut sont affichées (vous pouvez cloner {{taskType}} et les modifier)",
 		"duration": "Durée",

@@ -101,6 +101,7 @@ export default function TipTapEditor({
   isEditable = true,
   toolbarVisible = true,
   specialButton = null,
+  limitedToolbar = false,
 }) {
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -410,6 +411,96 @@ export default function TipTapEditor({
       },
     ];
 
+    // Limited toolbar mode - only show: bold, italic, underline, link, bullet list, ordered list
+    if (limitedToolbar) {
+      return (
+        <div className={`floatingToolbar ${isFocused ? 'visible' : ''}`}>
+          <div className="toolbar">
+            <div
+              className="toolbarGroup"
+              onMouseDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              <Button
+                icon
+                className="toolbarButton"
+                onClick={(e) =>
+                  handleStyleClick(() => editor.commands.toggleBold(), e)
+                }
+                disabled={!editor.isEditable}
+                active={editor.isActive("bold")}
+                aria-label="Toggle bold"
+              >
+                <Icon name="bold" />
+              </Button>
+              <Button
+                icon
+                className="toolbarButton"
+                onClick={(e) =>
+                  handleStyleClick(() => editor.commands.toggleItalic(), e)
+                }
+                disabled={!editor.isEditable}
+                active={editor.isActive("italic")}
+                aria-label="Toggle italic"
+              >
+                <Icon name="italic" />
+              </Button>
+              <Button
+                icon
+                className="toolbarButton"
+                onClick={(e) =>
+                  handleStyleClick(() => editor.commands.toggleUnderline(), e)
+                }
+                disabled={!editor.isEditable}
+                active={editor.isActive("underline")}
+                aria-label="Toggle underline"
+              >
+                <Icon name="underline" />
+              </Button>
+              <Button
+                icon
+                className="toolbarButton"
+                onClick={handleLinkClick}
+                disabled={!editor.isEditable}
+                active={editor.isActive("link")}
+                aria-label="Insert/edit link"
+              >
+                <Icon name="linkify" />
+              </Button>
+              <Button
+                icon
+                className="toolbarButton"
+                onClick={(e) =>
+                  handleStyleClick(() => editor.commands.toggleBulletList(), e)
+                }
+                disabled={!editor.isEditable}
+                active={editor.isActive("bulletList")}
+                aria-label="Toggle bullet list"
+              >
+                <Icon name="list ul" />
+              </Button>
+              <Button
+                icon
+                className="toolbarButton"
+                onClick={(e) =>
+                  handleStyleClick(() => editor.commands.toggleOrderedList(), e)
+                }
+                disabled={!editor.isEditable}
+                active={editor.isActive("orderedList")}
+                aria-label="Toggle numbered list"
+              >
+                <Icon name="list ol" />
+              </Button>
+            </div>
+            {renderSpecialButton()}
+          </div>
+        </div>
+      );
+    }
+
+    // Full toolbar mode
     return (
       <div className={`floatingToolbar ${isFocused ? 'visible' : ''}`}>
         <div className="toolbar">

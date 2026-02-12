@@ -26,3 +26,20 @@ export const DELETE_ASSIGNMENT = gql`
     }
   }
 `;
+
+// link assignment to a template card (and propagate to student boards)
+export const LINK_ASSIGNMENT_TO_TEMPLATE_CARD = gql`
+  mutation LINK_ASSIGNMENT_TO_TEMPLATE_CARD(
+    $assignmentId: ID!
+    $templateCardId: ID!
+    $classId: ID!
+  ) {
+    linkAssignmentToTemplateCard(
+      assignmentId: $assignmentId
+      templateCardId: $templateCardId
+      classId: $classId
+    ) {
+      id
+    }
+  }
+`;

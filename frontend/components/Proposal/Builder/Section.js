@@ -35,6 +35,7 @@ const Section = ({
   adminMode,
   isPreview,
   settings,
+  submitStatuses = {},
 }) => {
   const { t } = useTranslation("builder");
   const { cards } = section;
@@ -45,6 +46,8 @@ const Section = ({
   const [showCloneDialog, setShowCloneDialog] = useState(false);
   const [newCardInfo, setNewCardInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditingSectionTitle, setIsEditingSectionTitle] = useState(false);
+  const [editingSectionTitle, setEditingSectionTitle] = useState("");
 
   const client = useApolloClient();
   const [createCard, createCardState] = useMutation(CREATE_CARD);
@@ -270,6 +273,7 @@ const Section = ({
               sectionId: matchingSectionId,
               position,
               publicId,
+              settings: { status: "Not started" },
             },
           });
 
@@ -305,6 +309,7 @@ const Section = ({
             ? cards[cards.length - 1].position + 16384
             : 16384,
         publicId,
+        settings: { status: "Not started" },
       },
       update: (cache, { data: { createProposalCard } }) => {
         const data = cache.readQuery({
@@ -355,7 +360,7 @@ const Section = ({
             id: sectionId,
           },
           assignedTo: [],
-          settings: null,
+          settings: { status: "Not started" },
           publicId,
         },
       },
@@ -422,29 +427,70 @@ const Section = ({
     });
   };
 
+  const startSectionTitleEdit = () => {
+    setEditingSectionTitle(section.title || "");
+    setIsEditingSectionTitle(true);
+  };
+
+  const handleSectionTitleSubmit = () => {
+    const trimmed = editingSectionTitle.trim();
+    if (trimmed && trimmed !== section.title) {
+      onUpdateSection({
+        variables: {
+          id: section.id,
+          boardId,
+          title: trimmed,
+        },
+      });
+    }
+    setIsEditingSectionTitle(false);
+  };
+
+  const handleSectionTitleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSectionTitleSubmit();
+    } else if (e.key === "Escape") {
+      setEditingSectionTitle(section.title || "");
+      setIsEditingSectionTitle(false);
+    }
+  };
+
   return (
     <div className="section">
       <div className="column-drag-handle">
         <div className="firstLine">
-          <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
-          {!isPreview && (
-            <img
-              src="/assets/icons/proposal/edit.svg"
-              onClick={() => {
-                const title = prompt(
-                  t("section.enterNewTitle", "Please enter a new title")
-                );
-                if (title != null) {
-                  onUpdateSection({
-                    variables: {
-                      id: section.id,
-                      boardId,
-                      title,
-                    },
-                  });
-                }
-              }}
+          {isEditingSectionTitle ? (
+            <input
+              className="sectionTitleInput"
+              type="text"
+              value={editingSectionTitle}
+              onChange={(e) => setEditingSectionTitle(e.target.value)}
+              onBlur={handleSectionTitleSubmit}
+              onKeyDown={handleSectionTitleKeyDown}
+              placeholder={t(
+                "section.sectionTitlePlaceholder",
+                "Enter section title"
+              )}
+              autoFocus
+              onFocus={(e) => e.target.select()}
             />
+          ) : (
+            <>
+              <div
+                className="sectionTitle"
+                onClick={!isPreview ? startSectionTitleEdit : undefined}
+                style={!isPreview ? { cursor: "pointer" } : undefined}
+              >
+                {ReactHTMLParser(section.title)}
+              </div>
+              {!isPreview && (
+                <img
+                  src="/assets/icons/proposal/edit.svg"
+                  onClick={startSectionTitleEdit}
+                  alt=""
+                />
+              )}
+            </>
           )}
         </div>
         {!isPreview && !proposalBuildMode && (
@@ -498,6 +544,7 @@ const Section = ({
                     adminMode={adminMode}
                     isPreview={isPreview}
                     settings={settings}
+                    submitStatuses={submitStatuses}
                   />
                 );
               } else {
@@ -512,6 +559,7 @@ const Section = ({
                     adminMode={adminMode}
                     isPreview={isPreview}
                     settings={settings}
+                    submitStatuses={submitStatuses}
                   />
                 );
               }

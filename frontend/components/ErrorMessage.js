@@ -25,20 +25,28 @@ const ErrorStyles = styled.div`
   }
 `;
 
+function getDisplayMessage(rawMessage, t) {
+  if (!rawMessage) return "";
+  const stripped = rawMessage.replace(/^GraphQL error: \s*/i, "");
+  const isEmailUniqueConstraint =
+    /unique constraint failed/i.test(stripped) && /email/i.test(stripped);
+  return isEmailUniqueConstraint ? t("error.emailAlreadyInUse") : stripped;
+}
+
 const DisplayError = ({ error }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
   if (!error || !error.message) return null;
   if (
     error.networkError &&
     error.networkError.result &&
     error.networkError.result.errors?.length
   ) {
-    return error.networkError.result.errors.map((error, i) => (
+    return error.networkError.result.errors.map((err, i) => (
       <ErrorStyles key={i}>
         <div className="errorInner">
           <p data-test="graphql-error">
-            <strong>{t('error.oops')}</strong>
-            {error.message.replace("GraphQL error: ", "")}
+            <strong>{t("error.oops")}</strong>
+            {getDisplayMessage(err.message, t)}
           </p>
         </div>
       </ErrorStyles>
@@ -48,8 +56,8 @@ const DisplayError = ({ error }) => {
     <ErrorStyles>
       <div className="errorInner">
         <p data-test="graphql-error">
-          <strong>{t('error.oops')}</strong>
-          {error.message.replace("GraphQL error: ", "")}
+          <strong>{t("error.oops")}</strong>
+          {getDisplayMessage(error.message, t)}
         </p>
       </div>
     </ErrorStyles>

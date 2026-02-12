@@ -24,6 +24,16 @@
 	"allStudies": "Alle studies",
 	"archivedStudies": "Gearchiveerde studies",
 	"assigned": {
+		"addUser": "Mensen toevoegen",
+		"assignCard": "Wijs deze kaart toe aan een medewerker van dit project.",
+		"cancel": "Annuleren",
+		"noCollaborators": "Er zijn geen medewerkers beschikbaar voor dit bestuur.",
+		"noUsersFound": "Geen profiel gevonden",
+		"removeUser": "Gebruiker verwijderen",
+		"save": "Redden",
+		"searchPlaceholder": "Zoeken op gebruikersnaam...",
+		"searchResults": "Zoekresultaten",
+		"selected": "Geselecteerd",
 		"typeUsername": "Typ gebruikersnaam"
 	},
 	"assignment": {
@@ -31,8 +41,10 @@
 		"loadingMessage": "Laatste toewijzingsgegevens ophalen...",
 		"unsavedChanges": "(Niet-opgeslagen wijzigingen)"
 	},
+	"availability": "Beschikbaarheid",
 	"background": "Achtergrond",
 	"backgroundHelp": "Gebruik dit veld om een ​​korte achtergrondinformatie over het onderzoeksonderwerp te geven. Wat is het onderzochte probleem en waarom is het belangrijk?",
+	"backgroundTab": "Achtergrond",
 	"basicTab": "Basis",
 	"blockDescription": "In een blok krijgen de deelnemers informatie gepresenteerd.",
 	"board": {
@@ -47,16 +59,22 @@
 			"myAssignments": "Mijn opdrachten",
 			"myResources": "Mijn bronnen",
 			"previewAssignment": "Voorbeeld opdracht",
-			"previewLinkedAssignments": "Een voorbeeld van gekoppelde opdrachten",
-			"previewLinkedResources": "Voorbeeld van gekoppelde bronnen",
-			"previewLinkedStudies": "Voorbeeld van gekoppelde studies",
-			"previewLinkedTasks": "Een voorbeeld van gekoppelde taken",
+			"previewLinkedAssignments": "Opdrachten",
+			"previewLinkedResources": "Bronnen",
+			"previewLinkedStudies": "Gekoppelde studies",
+			"previewLinkedTasks": "Gekoppelde taken",
 			"publicResources": "Publieke middelen",
 			"studies": "Studies",
 			"tasks": "Taken",
 			"title": "Titel"
 		},
-		"loading": "Bezig met laden..."
+		"filterByAssignedTo": "Toegewezen aan",
+		"loading": "Bezig met laden...",
+		"status": "Toestand"
+	},
+	"boardManagement": {
+		"resourceUnavailable": "Bron niet beschikbaar",
+		"viewResource": "Bron bekijken"
 	},
 	"build-create-new-study": "Om een ​​nieuwe studie te maken, klikt u op onderstaande knop.",
 	"build-intro": "In deze builder kunt u een nieuwe studie aanmaken, uw eigen taken uploaden of taken uit de bibliotheek gebruiken.",
@@ -272,7 +290,7 @@
 	"descriptionDiscoverHelp": "Dit is zichtbaar voor alle platformgebruikers wanneer ze taken of enquêtes kiezen in de Ontdekmodus.",
 	"develop": "Ontwikkelen",
 	"developA": "Ontwikkel een {{develop}}",
-	"developHeaderDescription": "Hier kunt u uw <strong>onderzoeken, taken en enquêtes</strong> maken, bewerken en beheren.",
+	"developHeaderDescription": "Hier kunt u uw onderzoeken, taken en enquêtes maken, bewerken en beheren.",
 	"developNew": "Ontwikkel nieuwe",
 	"duplicateEditBlock": "Dupliceer en bewerk een bestaand MindHive-blok en de bijbehorende parameters.",
 	"duplicateEditSurvey": "Dupliceer en bewerk een bestaande MindHive-enquête en de bijbehorende parameters.",
@@ -301,22 +319,37 @@
 		"studyStatus": "Studiestatus"
 	},
 	"header": {
+		"addCollaborator": "Medewerker toevoegen",
 		"allDataOneFile": "Alle gegevens in één bestand",
 		"allowAddingCards": "Toestaan ​​om nieuwe kaarten toe te voegen",
 		"allowAddingSections": "Toestaan ​​om nieuwe secties toe te voegen",
 		"allowMovingCards": "Sta het verplaatsen van kaarten toe",
 		"allowMovingSections": "Verplaatsen van secties toestaan",
+		"cancel": "Annuleren",
+		"collaborators": "Medewerkers",
 		"copyLink": "Kopieer studielink",
 		"createYourStudyProposal": "Maak hier uw studievoorstel om uw onderzoeksreis te beginnen",
 		"descriptionPlaceholder": "Voer de beschrijving van het projectbord in",
+		"error": "Fout",
 		"linkCopied": "De link is gekopieerd",
+		"linked": "Gekoppeld",
+		"linkedToStudy": "Gekoppeld aan",
 		"myProjectBoard": "Mijn projectbord",
+		"noClassAssociated": "Dit voorstel is niet gekoppeld aan een les.",
+		"notLinkedToStudy": "Niet gekoppeld aan een onderzoek",
+		"noUsersFound": "Geen gebruikers gevonden...",
 		"publicTemplate": "Openbaar sjabloon",
+		"removeCollaborator": "Medewerker verwijderen",
 		"save": "Redden",
 		"saving": "Besparing",
+		"searchPlaceholder": "Zoeken op gebruikersnaam...",
+		"searchResults": "Zoekresultaten",
 		"shareInstructions": "Deel de onderstaande link met uw deelnemers om hen uit te nodigen deel te nemen aan uw onderzoek",
 		"testStudy": "Test je studie",
-		"titlePlaceholder": "Voer de titel van het projectbord in"
+		"titlePlaceholder": "Voer de titel van het projectbord in",
+		"unlinked": "Geen onderzoek gekoppeld",
+		"updateCollaboratorsFailed": "Het bijwerken van de medewerkers is mislukt. Probeer het opnieuw.",
+		"userNoClasses": "Je bent aan geen enkele cursus verbonden."
 	},
 	"homeworkCard": {
 		"comments": "Reacties",
@@ -342,6 +375,8 @@
 		"newSection": "Nieuwe sectie",
 		"sectionTitlePlaceholder": "Voer sectietitel in"
 	},
+	"interests": "Interesses",
+	"introductionVideo": "Introductievideo",
 	"link": "Link",
 	"linkClass": {
 		"doNotConnectClass": "❌ Sluit de klasse niet aan"
@@ -358,10 +393,14 @@
 		"cardWillBeReleased": "De kaart wordt vrijgegeven",
 		"chooseReviewStep": "Kies in welke stap van de peer review een kaart moet komen",
 		"comments": "Reacties",
-		"forMindHiveNetwork": "Voor MindHive Network",
+		"commentsPlaceholder": "Voeg hier uw commentaar toe...",
+		"forMindHiveNetwork": "Voor het MindHive-netwerk",
 		"forTeacherAndCollaborators": "Alleen voor mijn docent en projectmedewerkers",
 		"instructions": "Instructies",
 		"lockedMessage": "De kaart wordt momenteel bewerkt door",
+		"newSubmission": "Nieuwe inzending",
+		"originalSubmission": "Originele inzending",
+		"originalSubmissionTooltip": "Dit is de inhoud die u oorspronkelijk naar het Feedbackcentrum hebt verzonden. We hebben deze hieronder voor u gekopieerd zodat u deze kunt bewerken en hebben een 'Herziene inhoud' bewaard.",
 		"refresh": "Vernieuwen",
 		"refreshAfterRelease": "Nadat de kaart is vrijgegeven, vernieuwt u de pagina om de nieuwste versie van de kaart te bekijken.",
 		"reviewOptions": {
@@ -372,7 +411,9 @@
 		},
 		"revisedContent": "Herziene inhoud",
 		"revisedContentUsed": "De herziene inhoud die u hier opneemt, wordt gebruikt in het eindrapport.",
+		"seeOriginalSubmission": "Klik hier om je oorspronkelijke inzending te bekijken.",
 		"selectOption": "Selecteer optie",
+		"submission": "Dwang",
 		"visibleInFeedbackCenter": "De content die u hier opneemt, is zichtbaar in het Feedback Center nadat u deze via een gele Actiekaart heeft ingediend.",
 		"visibleToTeacherAndCollaborators": "De inhoud die u hieronder opneemt, is alleen zichtbaar voor uw docent(en) en projectmedewerkers"
 	},
@@ -433,6 +474,7 @@
 	"notes": {
 		"noNotes": "Er zijn nog geen notities ingevoerd. Klik met de rechtermuisknop om notities toe te voegen."
 	},
+	"noVideoPlaceholder": "Er is geen introductievideo beschikbaar.",
 	"overview": {
 		"actions": "Acties",
 		"copy": "Kopiëren",
@@ -616,11 +658,22 @@
 	},
 	"proposalPage": {
 		"download": "Downloaden",
+		"downloadTooltip": "De te downloaden inhoud is gebaseerd op de status- en beoordelingsstapfilters die hieronder zijn geselecteerd.",
 		"preview": "Voorvertoning",
 		"previewInfo": "Inhoud van kaarten die in de bewerkingsmodus als 'voltooid' zijn gemarkeerd, worden hier weergegeven in de voorbeeldmodus, zodat uw reviewers kunnen zien wat ze zien.",
 		"submittedLocked": "Het voorstel is ingediend en vergrendeld 🔒",
-		"viewBoard": "Bekijk bord",
-		"viewFlattenBoard": "Bekijk plat bord"
+		"viewBoard": "Bestuursweergave",
+		"viewFlattenBoard": "Lijstweergave"
+	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "Beoordelingsstappen",
+			"title": "Filteren op"
+		}
 	},
 	"proposalSelector": {
 		"linkToProposal": "Link naar voorstel",
@@ -653,6 +706,7 @@
 		"oldest": "Oudste",
 		"overviewIntro": "Of u nu met uw onderzoek begint of deelnemers verzamelt, gebruik deze pagina om feedback te geven aan uw medestudenten op hun voorstellen en afgeronde onderzoeken.",
 		"participantOverOne": "{aantal, meervoud, één {# deelnemer} andere {# deelnemers}}",
+		"participantOverOnePlural": "{{count}} Deelnemers ",
 		"participantUnder": "geen deelnemers",
 		"participate": "Deelnemen",
 		"peerReviewTag": "Peer Review",
@@ -776,11 +830,12 @@
 		"enterNewTitle": "Voer een titel in",
 		"newCard": "Nieuwe kaart",
 		"newCardPlaceholder": "Voer een nieuwe kaarttitel in",
-		"newTitlePrompt": "Voer een nieuwe titel in"
+		"newTitlePrompt": "Voer een nieuwe titel in",
+		"sectionTitlePlaceholder": "Voer sectietitel in"
 	},
 	"selector": {
 		"basicBlocks": {
-			"description": "Wil je <strong>aangepaste instructies</strong> aan je deelnemers geven of <strong>een link en/of video</strong> in je studieprocedure insluiten? Selecteer en bewerk een basisblok.",
+			"description": "Wil je aangepaste instructies aan je deelnemers geven of een link en/of video in je studieprocedure insluiten? Selecteer en bewerk een basisblok.",
 			"title": "Basisblokken"
 		},
 		"filter": {
@@ -806,7 +861,7 @@
 			"title": "Taken"
 		},
 		"templates": {
-			"description": "Wil je niet helemaal opnieuw beginnen? Selecteer en bewerk een <strong>vooraf gemaakt onderzoeksontwerp</strong> met behulp van een van de sjablonen in deze database.",
+			"description": "Wil je niet helemaal opnieuw beginnen? Selecteer en bewerk een vooraf gemaakt onderzoeksontwerp met behulp van een van de sjablonen in deze database.",
 			"title": "Sjablonen"
 		}
 	},
@@ -983,11 +1038,11 @@
 		"preview": "Voorbeeld {{taskType}}"
 	},
 	"taskPage": {
-		"after": "Wat deelnemers zien <u>na</u> het afleggen van de {{taskType}}",
+		"after": "Wat deelnemers zien na het nemen van de {{taskType}}",
 		"aggregateVariables": "Geaggregeerde variabelen",
 		"aggregateVariablesDescription": "Deze gegevens worden automatisch naar een csv-bestand geschreven zodra de {{taskType}} is voltooid.",
 		"background": "Achtergrond",
-		"before": "Wat deelnemers zien <u>voordat</u> ze de {{taskType}} afleggen",
+		"before": "Wat deelnemers zien voordat ze de {{taskType}}nemen",
 		"checkbox": "Selecteer veel",
 		"duration": "Duur",
 		"format": "Formaat",
@@ -1073,12 +1128,13 @@
 		"placeholder": "Studieversies",
 		"title": "Studieversie"
 	},
+	"videoNotSupported": "Video wordt niet ondersteund",
 	"viewer": {
-		"afterParticipation": "Wat deelnemers zien <u>na</u> het afleggen van de {{taskType}}",
+		"afterParticipation": "Wat deelnemers zien na het nemen van de {{taskType}}",
 		"aggregateVariables": "Geaggregeerde variabelen",
 		"aggregateVariablesDesc": "Deze gegevens worden automatisch naar een csv-bestand geschreven zodra de {{taskType}} is voltooid.",
 		"background": "Achtergrond",
-		"beforeParticipation": "Wat deelnemers zien <u>voordat</u> ze de {{taskType}} afleggen",
+		"beforeParticipation": "Wat deelnemers zien voordat ze de {{taskType}}nemen",
 		"customize": "Aanpassen",
 		"defaultValues": "Standaardwaarden worden weergegeven (u kunt {{taskType}} klonen en deze wijzigen)",
 		"duration": "Duur",

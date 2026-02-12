@@ -106,6 +106,8 @@ export const GET_STUDENTS_DATA = gql`
       lastName
       publicId
       authorOfHomework {
+        id
+        code
         assignment {
           id
         }
@@ -200,6 +202,7 @@ export const GET_TEACHER_CLASSES = gql`
       id
       title
       code
+      createdAt
     }
   }
 `;
@@ -219,6 +222,7 @@ export const GET_MENTOR_CLASSES = gql`
       id
       title
       code
+      createdAt
     }
   }
 `;

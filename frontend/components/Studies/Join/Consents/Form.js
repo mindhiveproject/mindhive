@@ -4,11 +4,11 @@ import useTranslation from "next-translate/useTranslation";
 const getConsent = (consent, name) =>
   consent?.info.filter((info) => info.name === name).map((info) => info.text) || "";
 
-// to check whether a participant is under 18 based on the birthday
-const isUnder18 = (birthdayTimestamp) => {
-  const ageInMilliseconds = Date.now() - birthdayTimestamp;
-  const millisecondsInYear = 1000 * 60 * 60 * 24 * 365.2425;
-  return ageInMilliseconds / millisecondsInYear < 18;
+// to check whether a participant is under 18 based on age
+const isUnder18 = (age) => {
+  if (!age && age !== 0) return false; // treat missing age as not under 18 for safety
+  const ageNum = typeof age === 'string' ? parseInt(age, 10) : Number(age);
+  return !isNaN(ageNum) && ageNum < 18;
 };
 
 export default function ConsentForm({
@@ -48,7 +48,7 @@ export default function ConsentForm({
   if (anyoneConsent && anyoneConsent.length) {
     // If an "anyone" consent exists, use it regardless of age
     consentContent = anyoneConsent;
-  } else if (isUnder18(userInfo?.bd)) {
+  } else if (isUnder18(userInfo?.age)) {
     // For participants under 18, choose based on other criteria:
     if (
       userInfo.sona === "yes" &&
@@ -111,7 +111,7 @@ export default function ConsentForm({
       </div>
 
       {/* Additional fields for participants under 18 */}
-      {isUnder18(userInfo?.bd) && (
+      {isUnder18(userInfo?.age) && (
         <>
           <div>
             <label htmlFor="parentname">

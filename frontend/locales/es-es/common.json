@@ -4,6 +4,12 @@
 		"description": "Realiza un seguimiento de tu progreso y revisa los estudios y tareas en los que has participado.",
 		"title": "Mi actividad"
 	},
+	"assignment": {
+		"actions": "Comportamiento",
+		"dateCreated": "Fecha de creación",
+		"status": "Estado",
+		"title": "Título"
+	},
 	"assignments": {
 		"copyLink": "Copiar enlace",
 		"linkCopied": "El enlace está copiado",
@@ -43,7 +49,7 @@
 			"parentEmail": "Dirección de correo electrónico de los padres",
 			"parentName": "Nombre del padre",
 			"skip": "Omitir el consentimiento",
-			"studyInfo": "Este estudio es parte del protocolo de investigación de <strong>{{organización}}</strong> <strong>{{título}}</strong>."
+			"studyInfo": "Este estudio es parte del protocolo de investigación {{organization}}  {{title}}."
 		},
 		"permissionsDescription": "Revisar y editar sus permisos de datos y ver su actividad",
 		"permissionsTitle": "Permisos de datos",
@@ -86,6 +92,7 @@
 		"updatePreferences": "Actualizar preferencias"
 	},
 	"error": {
+		"emailAlreadyInUse": "Este correo electrónico ya está registrado. Inicie sesión o utilice otro.",
 		"oops": "¡Ups!"
 	},
 	"featured": "Presentado",
@@ -112,12 +119,14 @@
 	},
 	"join": {
 		"details": {
+			"age": "¿Cuál es tu edad?",
 			"dob": "¿Cual es tu fecha de nacimiento?",
 			"english": "¿Entiendes las instrucciones básicas escritas en inglés?",
 			"englishNo": "No",
 			"englishTranslationNote": "(La versión en español de la plataforma estará disponible en poco tiempo.)",
 			"englishYes": "Sí",
 			"error": {
+				"enterAge": "Por favor, introduce tu edad",
 				"enterDob": "Por favor, introduzca su fecha de nacimiento",
 				"minorBlocked": "Lo sentimos mucho, pero en este momento solo pueden participar en este estudio los participantes mayores de 18 años."
 			},
@@ -376,7 +385,7 @@
 		"updatePreferences": "Actualizar preferencias"
 	},
 	"userPath": {
-		"guestMessage": "Participas como invitado. Tu ID público legible es <strong>{{id}}</strong>",
+		"guestMessage": "Participas como invitado. Tu ID público legible es {{id}}",
 		"startNextTask": "Iniciar la siguiente tarea"
 	}
 }

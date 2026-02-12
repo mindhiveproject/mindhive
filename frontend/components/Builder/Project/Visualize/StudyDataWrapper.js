@@ -11,6 +11,7 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 
 // pre-process and aggregate data
 const processRawData = ({
+  studyId,
   rawdata,
   components,
   username,
@@ -41,7 +42,18 @@ const processRawData = ({
         condition: c?.conditionLabel,
       }))[0];
     const subtitle = component?.subtitle;
-    const condition = component?.condition;
+
+    // const condition = component?.condition;
+    // get the condition from the user study information
+    const studyInfo =
+      result?.type === "GUEST"
+        ? result?.guest?.studiesInfo?.[studyId]
+        : result?.user?.studiesInfo?.[studyId];
+    const path = studyInfo?.info?.path || [];
+    const condition = path
+      .filter((stage) => stage?.conditionLabel)
+      .map((stage) => stage?.conditionLabel)
+      .join(", ");
 
     return {
       general: {
@@ -245,6 +257,7 @@ export default function StudyDataWrapper({
   const { data, variables, settings } = useMemo(
     () =>
       processRawData({
+        studyId,
         rawdata: summaryResults,
         components,
         username,

@@ -2,8 +2,15 @@ import absoluteUrl from "next-absolute-url";
 import moment from "moment";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
 
-// Accept t as an optional third argument
-export default async function exportPDF(proposalId, client, t) {
+// Accept t as optional third argument; filters are optional following arguments
+export default async function exportPDF(
+  proposalId,
+  client,
+  t,
+  selectedStatuses = [],
+  selectedReviewSteps = [],
+  selectedAssignedUsers = []
+) {
   if (!proposalId || !client) return;
 
   const { origin } = absoluteUrl();
@@ -19,20 +26,76 @@ export default async function exportPDF(proposalId, client, t) {
   const sections = proposal?.sections || [];
   const study = proposal?.study || {};
 
-  const styles = {
-    h1: "color: #171717; font-family: Nunito, sans-serif; font-size: 32px; font-weight: 600; line-height: 44px;",
-    h2: "color: #171717; font-family: 'Nunito Sans', sans-serif; font-size: 24px; font-weight: 400; line-height: 28px;",
-    h3: "color: #171717; font-family: 'Nunito Sans', sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;"
+  // Submit statuses from proposal (same as PDF/Main.js)
+  const submitStatuses = {
+    ACTION_SUBMIT: proposal?.submitProposalStatus,
+    ACTION_PEER_FEEDBACK: proposal?.peerFeedbackStatus,
+    ACTION_PROJECT_REPORT: proposal?.projectReportStatus,
   };
 
+  const styles = {
+    h1: "color: #171717; font-family: Inter, sans-serif; font-size: 32px; font-weight: 600; line-height: 44px;",
+    h2: "color: #171717; font-family: Inter, sans-serif; font-size: 24px; font-weight: 400; line-height: 28px;",
+    h3: "color: #171717; font-family: Inter, sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;"
+  };
+
+  // Order sections by position
   const orderedSections = [...sections].sort((a, b) => a.position - b.position);
+  
+  // Generate content for PDF using the same filtering logic as PDF/Main.js
   const allCardsContent = orderedSections.map((section) => {
     const orderedCards = [...section.cards].sort((a, b) => a.position - b.position);
-    const completedCardsWithTitles = orderedCards
-      .filter(card => card?.settings?.status === "Completed" && card?.settings?.includeInReport)
-      .map(card => `<h3 style="${styles.h3}">${card?.title}</h3>${card?.content}`);
-    return `<h2 style="${styles.h2}">${section?.title}</h2>${completedCardsWithTitles.join("")}`;
+    
+    // Find action cards to determine submission stage (same logic as PDF/Main.js)
+    const actionCards = orderedCards
+      .filter(
+        (card) =>
+          card?.type === "ACTION_SUBMIT" ||
+          card?.type === "ACTION_PEER_FEEDBACK" ||
+          card?.type === "ACTION_COLLECTING_DATA" ||
+          card?.type === "ACTION_PROJECT_REPORT"
+      )
+      .map((c) => c?.type);
+    const submissionStage = actionCards?.length ? actionCards[0] : undefined;
+    const submissionStatus = submitStatuses[submissionStage];
+    
+    // Filter cards using the same logic as PDF/Main.js
+    const filteredCardsWithTitles = orderedCards
+      .filter(
+        (card) =>
+          // Status filter: empty array means show all, otherwise check if status is included
+          (selectedStatuses.length === 0 ||
+            selectedStatuses.includes(card?.settings?.status)) &&
+          // Must be included in report
+          card?.settings?.includeInReport &&
+          // Review steps filter: empty array means show all, otherwise check if any selected step matches
+          (selectedReviewSteps.length === 0 ||
+            selectedReviewSteps.some((step) =>
+              card?.settings?.includeInReviewSteps?.includes(step)
+            )) &&
+          // Assigned users filter: empty array means show all, otherwise check if any selected assignee matches
+          (selectedAssignedUsers.length === 0 ||
+            selectedAssignedUsers.some((userId) =>
+              (card?.assignedTo || []).some((u) => u?.id === userId)
+            ))
+      )
+      .map((card) => {
+        // Determine if card is locked (same logic as PDF/Main.js)
+        const isLocked =
+          submissionStatus === "SUBMITTED" ||
+          card?.settings?.includeInReviewSteps?.some(
+            (step) => submitStatuses[step] === "SUBMITTED"
+          );
+        // Use revisedContent for locked cards, content for unlocked cards
+        const cardContent = isLocked
+          ? card?.revisedContent || card?.content
+          : card?.content;
+        return `<h3 style="${styles.h3}">${card?.title}</h3>${cardContent}`;
+      });
+    
+    return `<h2 style="${styles.h2}">${section?.title}</h2>${filteredCardsWithTitles.join("")}`;
   });
+  
   const cardsContent = allCardsContent.flat().join("");
   let studyURL = "";
   if (study?.slug) {
@@ -54,10 +117,10 @@ function generatePDFBrowserPrint(content, title, date, t) {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>${title || 'Proposal'}</title>
-      <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
       <style>
         body {
-          font-family: 'Nunito Sans', sans-serif;
+          font-family: Inter, sans-serif;
           color: #333;
           background: white;
           padding: 20px;

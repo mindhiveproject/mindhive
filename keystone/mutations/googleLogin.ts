@@ -21,7 +21,7 @@ async function googleLogin(
   const { email } = payload;
   // update a profile with the new password
   const profile = await context.db.Profile.updateOne({
-    where: { email: email },
+    where: { email: email?.toLowerCase().trim() },
     data: { password: token },
   });
   return profile;

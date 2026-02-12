@@ -4,6 +4,12 @@
 		"description": "跟踪你的进度并回顾你参与的研究和任务",
 		"title": "我的活动"
 	},
+	"assignment": {
+		"actions": "操作",
+		"dateCreated": "创建日期",
+		"status": "地位",
+		"title": "标题"
+	},
 	"assignments": {
 		"copyLink": "复制链接",
 		"linkCopied": "链接已复制",
@@ -43,7 +49,7 @@
 			"parentEmail": "家长电子邮件地址",
 			"parentName": "父母姓名",
 			"skip": "跳过同意",
-			"studyInfo": "这项研究是<strong>{{organization}</strong>研究协议<strong>{{title}</strong>的一部分。"
+			"studyInfo": "本研究是 {{organization}} 研究方案 {{title}}的一部分。"
 		},
 		"permissionsDescription": "查看和编辑您的数据权限并查看您的活动",
 		"permissionsTitle": "数据权限",
@@ -86,6 +92,7 @@
 		"updatePreferences": "更新偏好设置"
 	},
 	"error": {
+		"emailAlreadyInUse": "此邮箱已被注册。请登录或使用其他邮箱。",
 		"oops": "哎呀！"
 	},
 	"featured": "精选",
@@ -112,12 +119,14 @@
 	},
 	"join": {
 		"details": {
+			"age": "你几岁？",
 			"dob": "您的出生日期是？",
 			"english": "您是否理解用英语写的基本指令？",
 			"englishNo": "不",
 			"englishTranslationNote": "（La version en español de la plataforma estará disponible en poco tiempo.）",
 			"englishYes": "是的",
 			"error": {
+				"enterAge": "请输入您的年龄",
 				"enterDob": "请输入您的出生日期",
 				"minorBlocked": "非常抱歉，但目前只有 18 岁或以上的参与者才能参加这项研究。"
 			},
@@ -376,7 +385,7 @@
 		"updatePreferences": "更新偏好设置"
 	},
 	"userPath": {
-		"guestMessage": "您以访客身份参与。您的公开可读 ID 是 <strong>{{id} }",
+		"guestMessage": "您以访客身份参与。您的公开可读 ID 是 {{id} }",
 		"startNextTask": "开始下一个任务"
 	}
 }

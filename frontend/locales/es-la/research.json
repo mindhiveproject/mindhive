@@ -1,10 +1,13 @@
 {
 	"boardData": "Datos de la placa",
+	"boardTitleColumn": "¿Incluir el título del foro? (no recomendado por motivos de privacidad)",
 	"buildYourExport": "Crea tu estrategia de exportación",
+	"classCode": "Código de la clase (ver URL al visitar la clase)",
 	"classId": "ID de clase",
 	"csv": "Archivo CSV (.csv)",
 	"data": "Datos",
 	"downloadPayload": "Descargar carga útil",
+	"enterClassCode": "Introduce el código de la clase",
 	"enterClassId": "Introduzca el ID de la clase",
 	"errors": {
 		"formatUnsupported": "Por el momento, solo están disponibles las exportaciones en formato CSV.",
@@ -12,6 +15,7 @@
 		"noDatasetSelected": "Seleccione al menos un conjunto de datos (tablero o reseñas)."
 	},
 	"filterByCardStatus": "Filtrar por estado de la tarjeta",
+	"includeBoardTitle": "Incluir título del tablero",
 	"intro": "Obtén el contenido de las propuestas y revisa los datos directamente desde la plataforma MindHive. Elige la clase, selecciona el alcance de los datos y exporta archivos CSV descargables formateados para su análisis.",
 	"json": "JSON (si realmente es necesario)",
 	"noResearchAccess": "Necesitas permisos de nivel de investigación para acceder a las herramientas de exportación.",

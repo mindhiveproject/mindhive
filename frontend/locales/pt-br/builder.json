@@ -24,6 +24,16 @@
 	"allStudies": "Todos os estudos",
 	"archivedStudies": "Estudos arquivados",
 	"assigned": {
+		"addUser": "Adicionar pessoas",
+		"assignCard": "Atribua este cartão a um colaborador deste projeto.",
+		"cancel": "Cancelar",
+		"noCollaborators": "Não há colaboradores disponíveis para este conselho.",
+		"noUsersFound": "Nenhum perfil encontrado",
+		"removeUser": "Remover usuário",
+		"save": "Salvar",
+		"searchPlaceholder": "Pesquisar por nome de usuário...",
+		"searchResults": "Procurar Resultados",
+		"selected": "Selecionado",
 		"typeUsername": "Digite o nome de usuário"
 	},
 	"assignment": {
@@ -31,8 +41,10 @@
 		"loadingMessage": "Buscando os últimos dados de atribuição...",
 		"unsavedChanges": "(Alterações não salvas)"
 	},
+	"availability": "Disponibilidade",
 	"background": "Fundo",
 	"backgroundHelp": "Use este campo para fornecer um breve histórico sobre o tema da pesquisa. Qual é o problema em estudo e por que ele é importante?",
+	"backgroundTab": "Fundo",
 	"basicTab": "Básico",
 	"blockDescription": "Em um bloco, os participantes recebem informações.",
 	"board": {
@@ -47,16 +59,22 @@
 			"myAssignments": "Minhas atribuições",
 			"myResources": "Meus recursos",
 			"previewAssignment": "Tarefa de visualização",
-			"previewLinkedAssignments": "Visualizar atribuições vinculadas",
-			"previewLinkedResources": "Visualizar recursos vinculados",
-			"previewLinkedStudies": "Visualizar estudos vinculados",
-			"previewLinkedTasks": "Visualizar tarefas vinculadas",
+			"previewLinkedAssignments": "Tarefas",
+			"previewLinkedResources": "Recursos",
+			"previewLinkedStudies": "Estudos relacionados",
+			"previewLinkedTasks": "Tarefas Vinculadas",
 			"publicResources": "Recursos públicos",
 			"studies": "Estudos",
 			"tasks": "Tarefas",
 			"title": "Título"
 		},
-		"loading": "Carregando..."
+		"filterByAssignedTo": "Atribuído a",
+		"loading": "Carregando...",
+		"status": "Status"
+	},
+	"boardManagement": {
+		"resourceUnavailable": "Recurso indisponível",
+		"viewResource": "Ver recurso"
 	},
 	"build-create-new-study": "Para criar um novo estudo, clique no botão abaixo.",
 	"build-intro": "Neste construtor, você pode criar um novo estudo, carregar suas próprias tarefas ou usar tarefas da biblioteca.",
@@ -272,7 +290,7 @@
 	"descriptionDiscoverHelp": "Isso fica visível para todos os usuários da plataforma ao escolher tarefas ou pesquisas no modo Descobrir.",
 	"develop": "Desenvolver",
 	"developA": "Desenvolver um {{desenvolver}}",
-	"developHeaderDescription": "Crie, edite e gerencie seus <strong>estudos, tarefas e pesquisas</strong> aqui.",
+	"developHeaderDescription": "Crie, edite e gerencie seus estudos, tarefas e pesquisas aqui.",
 	"developNew": "Desenvolver novos",
 	"duplicateEditBlock": "Duplique e edite um bloco MindHive pré-existente e seus parâmetros.",
 	"duplicateEditSurvey": "Duplique e edite uma pesquisa MindHive pré-existente e seus parâmetros.",
@@ -301,22 +319,37 @@
 		"studyStatus": "Status do estudo"
 	},
 	"header": {
+		"addCollaborator": "Adicionar colaborador",
 		"allDataOneFile": "Todos os dados em um arquivo",
 		"allowAddingCards": "Permitir adicionar novos cartões",
 		"allowAddingSections": "Permitir adicionar novas seções",
 		"allowMovingCards": "Permitir movimentação de cartas",
 		"allowMovingSections": "Permitir seções móveis",
+		"cancel": "Cancelar",
+		"collaborators": "Colaboradores",
 		"copyLink": "Copiar link do estudo",
 		"createYourStudyProposal": "Crie aqui sua proposta de estudo para começar sua jornada de pesquisa",
 		"descriptionPlaceholder": "Insira a descrição do quadro do projeto",
+		"error": "Erro",
 		"linkCopied": "O link foi copiado",
+		"linked": "Vinculado",
+		"linkedToStudy": "Ligado a",
 		"myProjectBoard": "Meu quadro de projetos",
+		"noClassAssociated": "Esta proposta não está associada a nenhuma classe.",
+		"notLinkedToStudy": "Não relacionado a um estudo",
+		"noUsersFound": "Nenhum usuário encontrado...",
 		"publicTemplate": "Modelo público",
+		"removeCollaborator": "Remover colaborador",
 		"save": "Salvar",
 		"saving": "Salvando",
+		"searchPlaceholder": "Pesquisar por nome de usuário...",
+		"searchResults": "Procurar Resultados",
 		"shareInstructions": "Compartilhe o link abaixo com seus participantes para convidá-los a participar do seu estudo",
 		"testStudy": "Teste seu estudo",
-		"titlePlaceholder": "Insira o título do quadro do projeto"
+		"titlePlaceholder": "Insira o título do quadro do projeto",
+		"unlinked": "Nenhum estudo relacionado",
+		"updateCollaboratorsFailed": "Falha ao atualizar os colaboradores. Tente novamente.",
+		"userNoClasses": "Você não está associado a nenhuma turma."
 	},
 	"homeworkCard": {
 		"comments": "Comentários",
@@ -342,6 +375,8 @@
 		"newSection": "Nova seção",
 		"sectionTitlePlaceholder": "Digite o título da seção"
 	},
+	"interests": "Interesses",
+	"introductionVideo": "Vídeo de introdução",
 	"link": "Link",
 	"linkClass": {
 		"doNotConnectClass": "❌ Não conecte a classe"
@@ -358,10 +393,14 @@
 		"cardWillBeReleased": "O cartão será lançado",
 		"chooseReviewStep": "Escolha em qual etapa da revisão por pares um cartão deve passar",
 		"comments": "Comentários",
+		"commentsPlaceholder": "Adicione seu comentário aqui...",
 		"forMindHiveNetwork": "Para a rede MindHive",
 		"forTeacherAndCollaborators": "Somente para meus professores e colaboradores do projeto",
 		"instructions": "Instruções",
 		"lockedMessage": "O cartão está sendo editado por",
+		"newSubmission": "Nova submissão",
+		"originalSubmission": "Envio original",
+		"originalSubmissionTooltip": "Este é o conteúdo que você enviou originalmente para a Central de Feedback. Copiamos o conteúdo abaixo para que você possa editá-lo e o salvamos como 'Conteúdo revisado'.",
 		"refresh": "Atualizar",
 		"refreshAfterRelease": "Após o lançamento do cartão, atualize a página para obter a versão mais recente do cartão.",
 		"reviewOptions": {
@@ -372,7 +411,9 @@
 		},
 		"revisedContent": "Conteúdo Revisado",
 		"revisedContentUsed": "O conteúdo revisado que você incluir aqui será usado no relatório final.",
+		"seeOriginalSubmission": "Clique para ver sua inscrição original.",
 		"selectOption": "Selecione a opção",
+		"submission": "Submissão",
 		"visibleInFeedbackCenter": "O conteúdo que você incluir aqui ficará visível no Centro de Feedback assim que for enviado por meio de um Cartão de Ação amarelo.",
 		"visibleToTeacherAndCollaborators": "O conteúdo que você incluir abaixo só será visível para seu(s) professor(es) e colaboradores do projeto"
 	},
@@ -433,6 +474,7 @@
 	"notes": {
 		"noNotes": "Nenhuma nota inserida ainda. Clique com o botão direito para adicionar notas."
 	},
+	"noVideoPlaceholder": "Não há vídeo de introdução disponível.",
 	"overview": {
 		"actions": "Ações",
 		"copy": "Cópia",
@@ -616,11 +658,22 @@
 	},
 	"proposalPage": {
 		"download": "Download",
+		"downloadTooltip": "O conteúdo para download é baseado nos filtros de status e etapa de revisão selecionados abaixo.",
 		"preview": "Visualização",
 		"previewInfo": "O conteúdo dos cartões marcados como \"concluídos\" no modo de edição aparecerá aqui, no modo de visualização, exibindo o que seus revisores verão.",
 		"submittedLocked": "A proposta foi enviada e bloqueada 🔒",
-		"viewBoard": "Ver quadro",
-		"viewFlattenBoard": "Ver placa plana"
+		"viewBoard": "Visão do Conselho",
+		"viewFlattenBoard": "Exibição de lista"
+	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "Etapas de revisão",
+			"title": "Filtrar por"
+		}
 	},
 	"proposalSelector": {
 		"linkToProposal": "Link para proposta",
@@ -653,6 +706,7 @@
 		"oldest": "Mais antigo",
 		"overviewIntro": "Quer você esteja iniciando seu estudo ou coletando participantes, use esta página para dar feedback aos seus colegas sobre suas propostas e estudos finalizados.",
 		"participantOverOne": "{contagem, plural, um {# participante} outro {# participantes}}",
+		"participantOverOnePlural": "{{count}} Participantes ",
 		"participantUnder": "nenhum participante",
 		"participate": "Participar",
 		"peerReviewTag": "Revisão por Pares",
@@ -776,11 +830,12 @@
 		"enterNewTitle": "Por favor insira um título",
 		"newCard": "Novo cartão",
 		"newCardPlaceholder": "Insira um novo título de cartão",
-		"newTitlePrompt": "Por favor insira um novo título"
+		"newTitlePrompt": "Por favor insira um novo título",
+		"sectionTitlePlaceholder": "Digite o título da seção"
 	},
 	"selector": {
 		"basicBlocks": {
-			"description": "Deseja incluir <strong>instruções personalizadas</strong> para seus participantes ou <strong>incorporar um link e/ou vídeo</strong> no procedimento do seu estudo? Selecione e edite um bloco básico",
+			"description": "Deseja incluir instruções personalizadas para seus participantes ou incorporar um link e/ou vídeo no procedimento do seu estudo? Selecione e edite um bloco básico",
 			"title": "Blocos Básicos"
 		},
 		"filter": {
@@ -798,15 +853,15 @@
 		},
 		"surveys": {
 			"buildOwn": "Não consegue encontrar uma ferramenta para medir um dos seus constructos de estudo? Crie a sua própria com o Construtor de Pesquisas e a ajuda do professor:",
-			"description": "Quer <strong>mensurar as atitudes, experiências ou opiniões dos participantes</strong> por meio de <strong>autorrelato</strong>? Escolha entre este banco de pesquisas validadas.",
+			"description": "Quer mensurar as atitudes, experiências ou opiniões dos participantes por meio de autorrelato? Escolha entre este banco de pesquisas validadas.",
 			"title": "Pesquisas"
 		},
 		"tasks": {
-			"description": "Deseja <strong>mensurar um constructo ou variável</strong> fazendo com que os participantes <strong>concluam uma atividade</strong>? Escolha entre este banco de tarefas validadas",
+			"description": "Deseja mensurar um constructo ou variável fazendo com que os participantes concluam uma atividade? Escolha entre este banco de tarefas validadas",
 			"title": "Tarefas"
 		},
 		"templates": {
-			"description": "Não quer começar do zero? Selecione e edite um <strong>desenho de estudo pré-definido</strong> usando um dos modelos deste banco.",
+			"description": "Não quer começar do zero? Selecione e edite um desenho de estudo pré-definido usando um dos modelos deste banco.",
 			"title": "Modelos"
 		}
 	},
@@ -983,11 +1038,11 @@
 		"preview": "Visualizar {{taskType}}"
 	},
 	"taskPage": {
-		"after": "O que os participantes veem <u>depois</u> de realizar o {{taskType}}",
+		"after": "O que os participantes veem depois de tomar o {{taskType}}",
 		"aggregateVariables": "Variáveis ​​Agregadas",
 		"aggregateVariablesDescription": "Esses dados são gravados automaticamente em um arquivo csv após a conclusão do {{taskType}}",
 		"background": "Fundo",
-		"before": "O que os participantes veem <u>antes</u> de realizar a tarefa {{taskType}}",
+		"before": "O que os participantes veem antes de fazer o {{taskType}}",
 		"checkbox": "Selecione muitos",
 		"duration": "Duração",
 		"format": "Formatar",
@@ -1073,12 +1128,13 @@
 		"placeholder": "Versões de estudo",
 		"title": "Versão de estudo"
 	},
+	"videoNotSupported": "Vídeo não suportado",
 	"viewer": {
-		"afterParticipation": "O que os participantes veem <u>depois</u> de realizar o {{taskType}}",
+		"afterParticipation": "O que os participantes veem depois de tomar o {{taskType}}",
 		"aggregateVariables": "Variáveis ​​Agregadas",
 		"aggregateVariablesDesc": "Esses dados são gravados automaticamente em um arquivo csv após a conclusão do {{taskType}}",
 		"background": "Fundo",
-		"beforeParticipation": "O que os participantes veem <u>antes</u> de realizar a tarefa {{taskType}}",
+		"beforeParticipation": "O que os participantes veem antes de fazer o {{taskType}}",
 		"customize": "Personalizar",
 		"defaultValues": "Os valores padrão são mostrados (pode clonar {{taskType}} e modificá-los)",
 		"duration": "Duração",

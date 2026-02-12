@@ -91,10 +91,24 @@ export default function TaskParameters({
   if (!isInStudyBuilder && parameters.length === 0) {
     return (
       <div>
-        <label>{t("parameters.templateParameters", "Template parameters")}</label>
-        {!task?.template?.file && <p>{t("parameters.uploadLabjs", "Please upload a lab.js json file first")}</p>}
+        <label>
+          {t("parameters.templateParameters", "Template parameters")}
+        </label>
+        {!task?.template?.file && (
+          <p>
+            {t(
+              "parameters.uploadLabjs",
+              "Please upload a lab.js json file first"
+            )}
+          </p>
+        )}
         {task?.template?.file && (
-          <p>{t("parameters.noParameters", "The template does not contain any parameters.")}</p>
+          <p>
+            {t(
+              "parameters.noParameters",
+              "The template does not contain any parameters."
+            )}
+          </p>
         )}
       </div>
     );
@@ -137,7 +151,10 @@ export default function TaskParameters({
                 </div>
                 <div>
                   <label htmlFor="askDataUsageQuestion">
-                    {t("parameters.askDataUsage", "Ask students a data usage question after the task")}
+                    {t(
+                      "parameters.askDataUsage",
+                      "Ask students a data usage question after the task"
+                    )}
                   </label>
                 </div>
               </div>
@@ -152,14 +169,9 @@ export default function TaskParameters({
             ({ name, value, type, help, example, options, array }) => (
               <div className="wideBlock" key={name}>
                 <div className="taskBlock" htmlFor={name}>
-                  <div className="help">
-                    <p>{name || help}</p>
-                  </div>
-                  {example && (
-                    <div className="example">
-                      <p>{example}</p>
-                    </div>
-                  )}
+                  {help && <div className="help">{help}</div>}
+                  {name && <div className="example">Name: {name}</div>}
+                  {example && <div className="example">Example: {example}</div>}
 
                   <div className="input">
                     {renderInput({ type, name, value, options, array })}
@@ -171,7 +183,10 @@ export default function TaskParameters({
           {!isInStudyBuilder && (
             <div>
               <button onClick={setParametersFromTemplate}>
-                {t("parameters.getFromTemplate", "Get parameters from the template")}
+                {t(
+                  "parameters.getFromTemplate",
+                  "Get parameters from the template"
+                )}
               </button>
             </div>
           )}

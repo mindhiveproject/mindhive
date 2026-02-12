@@ -4,6 +4,12 @@
 		"description": "Acompanhe seu progresso e revise os estudos e tarefas em que participou",
 		"title": "Minha atividade"
 	},
+	"assignment": {
+		"actions": "Ações",
+		"dateCreated": "Data Criada",
+		"status": "Status",
+		"title": "Título"
+	},
 	"assignments": {
 		"copyLink": "Copiar link",
 		"linkCopied": "O link foi copiado",
@@ -43,7 +49,7 @@
 			"parentEmail": "Endereço de e-mail dos pais",
 			"parentName": "Nome dos pais",
 			"skip": "Pular consentimento",
-			"studyInfo": "Este estudo faz parte do protocolo de pesquisa <strong>{{organization}}</strong> <strong>{{title}}</strong>."
+			"studyInfo": "Este estudo faz parte do protocolo de pesquisa {{organization}}  {{title}}."
 		},
 		"permissionsDescription": "Revise e edite suas permissões de dados e visualize sua atividade",
 		"permissionsTitle": "Permissões de dados",
@@ -86,6 +92,7 @@
 		"updatePreferences": "Atualizar preferências"
 	},
 	"error": {
+		"emailAlreadyInUse": "Este endereço de e-mail já está cadastrado. Faça login ou utilize outro endereço de e-mail.",
 		"oops": "Ops!"
 	},
 	"featured": "Apresentou",
@@ -112,12 +119,14 @@
 	},
 	"join": {
 		"details": {
+			"age": "Qual é a sua idade?",
 			"dob": "Qual é sua data de nascimento?",
 			"english": "Você entende instruções básicas escritas em inglês?",
 			"englishNo": "Não",
 			"englishTranslationNote": "(A versão em espanhol da plataforma estará disponível em pouco tempo.)",
 			"englishYes": "Sim",
 			"error": {
+				"enterAge": "Por favor, insira sua idade.",
 				"enterDob": "Por favor, insira sua data de nascimento",
 				"minorBlocked": "Lamentamos, mas somente participantes com 18 anos ou mais podem participar deste estudo neste momento."
 			},
@@ -376,7 +385,7 @@
 		"updatePreferences": "Atualizar preferências"
 	},
 	"userPath": {
-		"guestMessage": "Você participa como convidado. Seu ID público legível é <strong>{{id}}</strong>",
+		"guestMessage": "Você participa como convidado. Seu ID público legível é {{id}}",
 		"startNextTask": "Comece a próxima tarefa"
 	}
 }

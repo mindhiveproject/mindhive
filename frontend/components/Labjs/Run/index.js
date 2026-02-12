@@ -98,6 +98,7 @@ export default function ExperimentWindow({
             date: dateString,
             testVersion: testVersion,
             studyStatus: study?.status,
+            studyVersion: study?.currentVersion,
           },
         },
       });

@@ -24,6 +24,16 @@
 	"allStudies": "所有研究",
 	"archivedStudies": "已存档的研究",
 	"assigned": {
+		"addUser": "添加人员",
+		"assignCard": "将此卡片分配给此项目的合作者",
+		"cancel": "取消",
+		"noCollaborators": "该董事会暂无合作者。",
+		"noUsersFound": "未找到个人资料",
+		"removeUser": "移除用户",
+		"save": "节省",
+		"searchPlaceholder": "按用户名搜索...",
+		"searchResults": "搜索结果",
+		"selected": "选定",
 		"typeUsername": "输入用户名"
 	},
 	"assignment": {
@@ -31,8 +41,10 @@
 		"loadingMessage": "正在获取最新的作业数据...",
 		"unsavedChanges": "（未保存的更改）"
 	},
+	"availability": "可用性",
 	"background": "背景",
 	"backgroundHelp": "使用此字段提供研究主题的简要背景信息。研究的问题是什么？为什么它很重要？",
+	"backgroundTab": "背景",
 	"basicTab": "基本的",
 	"blockDescription": "在一个区块中，向参与者呈现信息。",
 	"board": {
@@ -47,16 +59,22 @@
 			"myAssignments": "我的作业",
 			"myResources": "我的资源",
 			"previewAssignment": "预览作业",
-			"previewLinkedAssignments": "预览链接作业",
-			"previewLinkedResources": "预览链接资源",
-			"previewLinkedStudies": "预览关联研究",
-			"previewLinkedTasks": "预览链接任务",
+			"previewLinkedAssignments": "作业",
+			"previewLinkedResources": "资源",
+			"previewLinkedStudies": "相关研究",
+			"previewLinkedTasks": "链接任务",
 			"publicResources": "公共资源",
 			"studies": "研究",
 			"tasks": "任务",
 			"title": "标题"
 		},
-		"loading": "加载中..."
+		"filterByAssignedTo": "分配给",
+		"loading": "加载中...",
+		"status": "地位"
+	},
+	"boardManagement": {
+		"resourceUnavailable": "资源不可用",
+		"viewResource": "查看资源"
 	},
 	"build-create-new-study": "要创建新研究，请单击下面的按钮。",
 	"build-intro": "在此构建器中，您可以创建新的研究、上传自己的任务或使用库中的任务。",
@@ -272,7 +290,7 @@
 	"descriptionDiscoverHelp": "在发现模式下选择任务或调查时，所有平台用户都可以看到这一点。",
 	"develop": "发展",
 	"developA": "开发一个 {{develop}}",
-	"developHeaderDescription": "在此创建、编辑和管理您的<strong>研究、任务和调查</strong>。",
+	"developHeaderDescription": "在此创建、编辑和管理您的研究、任务和调查。",
 	"developNew": "开发新的",
 	"duplicateEditBlock": "复制并编辑预先存在的 MindHive 块及其参数。",
 	"duplicateEditSurvey": "复制并编辑现有的 MindHive 调查及其参数。",
@@ -301,22 +319,37 @@
 		"studyStatus": "研究现状"
 	},
 	"header": {
+		"addCollaborator": "添加合作者",
 		"allDataOneFile": "所有数据在一个文件中",
 		"allowAddingCards": "允许添加新卡",
 		"allowAddingSections": "允许添加新部分",
 		"allowMovingCards": "允许移动卡片",
 		"allowMovingSections": "允许移动部分",
+		"cancel": "取消",
+		"collaborators": "合作者",
 		"copyLink": "复制学习链接",
 		"createYourStudyProposal": "在此创建您的研究计划以开始您的研究之旅",
 		"descriptionPlaceholder": "输入项目板描述",
+		"error": "错误",
 		"linkCopied": "链接已复制",
+		"linked": "链接",
+		"linkedToStudy": "链接到",
 		"myProjectBoard": "我的项目板",
+		"noClassAssociated": "该提案与任何类别无关。",
+		"notLinkedToStudy": "与某项研究无关",
+		"noUsersFound": "未找到用户...",
 		"publicTemplate": "公共模板",
+		"removeCollaborator": "移除协作者",
 		"save": "节省",
 		"saving": "保存",
+		"searchPlaceholder": "按用户名搜索...",
+		"searchResults": "搜索结果",
 		"shareInstructions": "与您的参与者分享以下链接，邀请他们加入您的研究",
 		"testStudy": "测试你的学习",
-		"titlePlaceholder": "输入项目板标题"
+		"titlePlaceholder": "输入项目板标题",
+		"unlinked": "没有相关研究",
+		"updateCollaboratorsFailed": "更新协作者信息失败，请重试。",
+		"userNoClasses": "您未参加任何课程。"
 	},
 	"homeworkCard": {
 		"comments": "评论",
@@ -342,6 +375,8 @@
 		"newSection": "新部分",
 		"sectionTitlePlaceholder": "输入章节标题"
 	},
+	"interests": "兴趣",
+	"introductionVideo": "介绍视频",
 	"link": "关联",
 	"linkClass": {
 		"doNotConnectClass": "❌ 不要连接类"
@@ -358,10 +393,14 @@
 		"cardWillBeReleased": "该卡将发布",
 		"chooseReviewStep": "选择卡片应进入同行评审的哪个步骤",
 		"comments": "评论",
-		"forMindHiveNetwork": "对于 MindHive 网络",
+		"commentsPlaceholder": "请在此处添加您的评论……",
+		"forMindHiveNetwork": "为 MindHive 网络",
 		"forTeacherAndCollaborators": "仅供我的老师和项目合作者使用",
 		"instructions": "指示",
 		"lockedMessage": "该卡片目前正在被编辑",
+		"newSubmission": "新提交",
+		"originalSubmission": "原始提交",
+		"originalSubmissionTooltip": "这是您最初提交给反馈中心的内容。我们已将其复制到下方供您编辑，并保留了“修改后的内容”。",
 		"refresh": "刷新",
 		"refreshAfterRelease": "卡片发布后，请刷新页面以获取最新版本的卡片。",
 		"reviewOptions": {
@@ -372,7 +411,9 @@
 		},
 		"revisedContent": "修订内容",
 		"revisedContentUsed": "您在此处包含的修订内容将用于最终报告。",
+		"seeOriginalSubmission": "点击查看您的原始提交内容",
 		"selectOption": "选择选项",
+		"submission": "提交",
 		"visibleInFeedbackCenter": "一旦通过黄色行动卡提交，您在此处包含的内容将显示在反馈中心。",
 		"visibleToTeacherAndCollaborators": "您在下面包含的内容只有您的老师和项目合作者才能看到"
 	},
@@ -433,6 +474,7 @@
 	"notes": {
 		"noNotes": "尚未输入任何注释。右键单击即可添加注释。"
 	},
+	"noVideoPlaceholder": "暂无介绍视频。",
 	"overview": {
 		"actions": "行动",
 		"copy": "复制",
@@ -616,11 +658,22 @@
 	},
 	"proposalPage": {
 		"download": "下载",
+		"downloadTooltip": "下载内容取决于下面选择的状态和审核步骤筛选条件。",
 		"preview": "预览",
 		"previewInfo": "在编辑模式下标记为“完成”的卡片内容将以预览模式出现在这里，显示审阅者将看到的内容。",
 		"submittedLocked": "提案已提交并锁定🔒",
-		"viewBoard": "查看板",
-		"viewFlattenBoard": "查看平板"
+		"viewBoard": "板视图",
+		"viewFlattenBoard": "列表显示"
+	},
+	"proposalPDF": {
+		"filters": {
+			"assignedTo": {
+				"empty": ""
+			},
+			"emptyState": "",
+			"reviewSteps": "复习步骤",
+			"title": "过滤"
+		}
 	},
 	"proposalSelector": {
 		"linkToProposal": "提案链接",
@@ -653,6 +706,7 @@
 		"oldest": "最老的",
 		"overviewIntro": "无论您是开始研究还是收集参与者，都可以使用此页面向您的同行提供有关其提案和最终研究的反馈",
 		"participantOverOne": "{count，复数，一个 {# 位参与者} 其他 {# 位参与者}}",
+		"participantOverOnePlural": "{{count}} 名参与者",
 		"participantUnder": "没有参与者",
 		"participate": "参加",
 		"peerReviewTag": "同行评审",
@@ -776,11 +830,12 @@
 		"enterNewTitle": "请输入标题",
 		"newCard": "新卡",
 		"newCardPlaceholder": "输入新的卡片标题",
-		"newTitlePrompt": "请输入新标题"
+		"newTitlePrompt": "请输入新标题",
+		"sectionTitlePlaceholder": "输入章节标题"
 	},
 	"selector": {
 		"basicBlocks": {
-			"description": "想要为参与者添加<strong>自定义说明</strong>或在研究过程中<strong>嵌入链接和/或视频</strong>吗？请选择并编辑基本区块",
+			"description": "想要为参与者添加自定义说明或在研究过程中嵌入链接和/或视频吗？请选择并编辑基本区块",
 			"title": "基本块"
 		},
 		"filter": {
@@ -798,15 +853,15 @@
 		},
 		"surveys": {
 			"buildOwn": "找不到工具来衡量你的学习内容？借助调查问卷构建器，在老师的帮助下，构建你自己的调查问卷：",
-			"description": "想要通过<strong>自我报告</strong>来<strong>衡量参与者的态度、经历或观点</strong>吗？从这个经过验证的调查库中选择吧！",
+			"description": "想要通过自我报告来衡量参与者的态度、经历或观点吗？从这个经过验证的调查库中选择吧！",
 			"title": "调查"
 		},
 		"tasks": {
-			"description": "想要通过让参与者<strong>完成一项活动</strong>来<strong>测量某个概念或变量</strong>吗？请从这套经过验证的任务库中选择",
+			"description": "想要通过让参与者完成一项活动来测量某个概念或变量吗？请从这套经过验证的任务库中选择",
 			"title": "任务"
 		},
 		"templates": {
-			"description": "不想从头开始？选择并编辑<strong>预制研究设计</strong>，使用本模板库中的模板之一",
+			"description": "不想从头开始？选择并编辑预制研究设计，使用本模板库中的模板之一",
 			"title": "模板"
 		}
 	},
@@ -983,11 +1038,11 @@
 		"preview": "预览 {{taskType}}"
 	},
 	"taskPage": {
-		"after": "参与者在完成 {{taskType}}<u>之后</u>会看到什么",
+		"after": "参与者在接受 {{taskType}}后看到的内容",
 		"aggregateVariables": "聚合变量",
 		"aggregateVariablesDescription": "完成 {{taskType}} 后，这些数据会自动写入 csv 文件",
 		"background": "背景",
-		"before": "参与者在执行 {{taskType}} 之前看到的内容",
+		"before": "参与者在进行 {{taskType}}之前看到的内容",
 		"checkbox": "选择多项",
 		"duration": "期间",
 		"format": "格式",
@@ -1073,12 +1128,13 @@
 		"placeholder": "学习版本",
 		"title": "学习版"
 	},
+	"videoNotSupported": "视频不支持",
 	"viewer": {
-		"afterParticipation": "参与者在完成 {{taskType}}<u>之后</u>会看到什么",
+		"afterParticipation": "参与者在接受 {{taskType}}后看到的内容",
 		"aggregateVariables": "聚合变量",
 		"aggregateVariablesDesc": "完成 {{taskType}} 后，这些数据会自动写入 csv 文件",
 		"background": "背景",
-		"beforeParticipation": "参与者在执行 {{taskType}} 之前看到的内容",
+		"beforeParticipation": "参与者在进行 {{taskType}}之前看到的内容",
 		"customize": "定制",
 		"defaultValues": "显示默认值（可以克隆 {{taskType}} 并修改它们）",
 		"duration": "期间",

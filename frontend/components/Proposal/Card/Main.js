@@ -10,6 +10,7 @@ import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 
 import useForm from "../../../lib/useForm";
 import JoditEditor from "../../Jodit/Editor";
+import { mergeCardSettings } from "../../Utils/mergeCardSettings";
 
 import Assigned from "./Forms/Assigned";
 import Status from "./Forms/Status";
@@ -127,7 +128,7 @@ export default function ProposalCard({
     UPDATE_CARD_EDIT,
     {
       ignoreResults: true,
-    }
+    },
   );
 
   const users =
@@ -199,12 +200,20 @@ export default function ProposalCard({
 
   // update the card and close the modal
   const onUpdateCard = async () => {
+    // Merge settings to ensure we don't lose existing properties like includeInReport and includeInReviewSteps
+    // Always merge with the current card's settings from props to avoid overwriting with stale local state
+    const mergedSettings = mergeCardSettings(
+      proposalCard?.settings,
+      inputs?.settings,
+    );
+
     await updateCard({
       variables: {
         ...inputs,
         description: description?.current,
         internalContent: internalContent?.current,
         content: content?.current,
+        settings: mergedSettings,
         assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
         resources: inputs?.resources?.map((resource) => ({ id: resource?.id })),
       },
@@ -243,13 +252,13 @@ export default function ProposalCard({
             {proposalCard?.isEditedBy?.username}.{" "}
             {t(
               "board.askToClose",
-              "Ask the user to close the card or wait until the card is released."
+              "Ask the user to close the card or wait until the card is released.",
             )}{" "}
             {t("board.cardWillBeReleased", "The card will be released")}{" "}
             {moment().to(releaseTime)}.{" "}
             {t(
               "board.refreshAfterRelease",
-              "After the card is released, refresh the page to get the latest version of the card."
+              "After the card is released, refresh the page to get the latest version of the card.",
             )}
           </div>
           <div className="buttonHolder">
@@ -292,7 +301,7 @@ export default function ProposalCard({
                 <div className="cardSubheaderComment">
                   {t(
                     "board.cardTitleComment",
-                    "Add or edit the card title. This title will appear as a section title if student input is made visible"
+                    "Add or edit the card title. This title will appear as a section title if student input is made visible",
                   )}
                 </div>
                 <p></p>
@@ -313,7 +322,7 @@ export default function ProposalCard({
                 <div className="cardSubheaderComment">
                   {t(
                     "board.instructionsComment",
-                    "Add or edit instructions for students telling them how to complete the card"
+                    "Add or edit instructions for students telling them how to complete the card",
                   )}
                 </div>
                 <div className="jodit">
@@ -345,13 +354,13 @@ export default function ProposalCard({
                   <div className="cardHeader">
                     {t(
                       "board.studentResponseBoxNetwork",
-                      "Student Response Box - For MindHive Network"
+                      "Student Response Box - For MindHive Network",
                     )}
                   </div>
                   <div className="cardSubheaderComment">
                     {t(
                       "board.expendedCard.studentResponseBoxNetworkComment",
-                      "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed"
+                      "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed",
                     )}
                   </div>
                 </label>
@@ -392,13 +401,13 @@ export default function ProposalCard({
                 <div className="cardHeader">
                   {t(
                     "board.expendedCard.studentResponseBoxCollaborators",
-                    "Student Response Box - For Project Collaborators"
+                    "Student Response Box - For Project Collaborators",
                   )}
                 </div>
                 <div className="cardSubheaderComment">
                   {t(
                     "board.studentResponseBoxCollaboratorsComment",
-                    "The content students include here will only be visible to their project collaborators and teacher(s). Include any templates or placeholder text as needed"
+                    "The content students include here will only be visible to their project collaborators and teacher(s). Include any templates or placeholder text as needed",
                   )}
                 </div>
               </label>
@@ -445,7 +454,7 @@ export default function ProposalCard({
                     <div className="cardSubheaderComment">
                       {t(
                         "board.visibilityComment",
-                        "Check box to include student input for the Feedback Center"
+                        "Check box to include student input for the Feedback Center",
                       )}
                     </div>
 
@@ -471,7 +480,7 @@ export default function ProposalCard({
                         <div className="cardDescription">
                           {t(
                             "board.includeTextFeedbackCenter",
-                            "Include text input for Feedback Center"
+                            "Include text input for Feedback Center",
                           )}
                         </div>
                       </label>
@@ -497,7 +506,7 @@ export default function ProposalCard({
                     <div className="cardSubheaderComment">
                       {t(
                         "board.addExistingResourcesComment",
-                        "Add existing resources (See Resources in Navigation Pane)"
+                        "Add existing resources (See Resources in Navigation Pane)",
                       )}
                     </div>
                     <Resources
@@ -511,7 +520,7 @@ export default function ProposalCard({
                       <div className="cardHeader">
                         {t(
                           "board.previewLinkedResources",
-                          "Preview Linked Resources"
+                          "Preview Linked Resources",
                         )}
                       </div>
                       {inputs?.resources && inputs?.resources.length ? (
@@ -543,7 +552,7 @@ export default function ProposalCard({
                               </div>
                               <div>
                                 {ReactHtmlParser(
-                                  truncateHtml(resource?.content?.main)
+                                  truncateHtml(resource?.content?.main),
                                 )}
                               </div>
                             </div>
@@ -582,7 +591,7 @@ export default function ProposalCard({
                     <h4>{t("board.assignedTo", "Assigned to")}</h4>
                     <div>
                       {proposalCard?.assignedTo?.map(
-                        (c) => c?.id || "John Doe"
+                        (c) => c?.id || "John Doe",
                       )}
                     </div>
                   </div>
@@ -601,7 +610,7 @@ export default function ProposalCard({
                   <div className="cardSubheaderComment">
                     {t(
                       "board.commentsComment",
-                      "This will pre-populate the Comment Box for students. You can delete comments later."
+                      "This will pre-populate the Comment Box for students. You can delete comments later.",
                     )}
                   </div>
                 )}

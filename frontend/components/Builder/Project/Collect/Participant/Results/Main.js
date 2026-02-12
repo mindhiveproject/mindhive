@@ -37,10 +37,11 @@ export default function ParticipantResults({
         <div>{t("participantResults.taskId", "Task ID")}</div>
         <div>{t("participantResults.started", "Started")}</div>
         <div>{t("participantResults.completed", "Completed")}</div>
-        <div>{t("participantResults.condition", "Condition")}</div>
+        {/* <div>{t("participantResults.condition", "Condition")}</div> */}
         <div>{t("participantResults.dataType", "Data type")}</div>
         <div>{t("participantResults.dataPolicy", "Data policy")}</div>
         <div>{t("participantResults.studyStatus", "Study status")}</div>
+        <div>{t("Study version")}</div>
         <div>{t("participantResults.dataAnalysis", "Data analysis")}</div>
         <div></div>
       </div>
@@ -50,6 +51,7 @@ export default function ParticipantResults({
           key={dataset?.token}
           dataset={dataset}
           components={components}
+          study={study}
           studyId={study?.id}
           participantId={participantId}
         />

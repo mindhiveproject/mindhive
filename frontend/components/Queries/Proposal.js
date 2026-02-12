@@ -56,8 +56,29 @@ export const OVERVIEW_PROPOSAL_BOARD_QUERY = gql`
       prototypeFor {
         id
       }
+      collaborators {
+        id
+        username
+      }
+      usedInClass {
+        id
+        title
+        students {
+          id
+          username
+        }
+        creator {
+          id
+          username
+        }
+        mentors {
+          id
+          username
+        }
+      }
       study {
         id
+        title
         author {
           id
           username
@@ -65,6 +86,26 @@ export const OVERVIEW_PROPOSAL_BOARD_QUERY = gql`
         collaborators {
           id
           username
+        }
+      }
+    }
+  }
+`;
+
+// template board sections and cards for "connect assignment to card" modal
+export const GET_TEMPLATE_BOARD_SECTIONS_CARDS = gql`
+  query GET_TEMPLATE_BOARD_SECTIONS_CARDS($id: ID!) {
+    proposalBoard(where: { id: $id }) {
+      id
+      sections(orderBy: [{ position: asc }]) {
+        id
+        title
+        position
+        cards(orderBy: [{ position: asc }]) {
+          id
+          title
+          publicId
+          position
         }
       }
     }
@@ -146,6 +187,7 @@ export const PROPOSAL_QUERY = gql`
           position
           section {
             id
+            title
           }
           assignedTo {
             id
@@ -197,6 +239,7 @@ export const GET_CARD_CONTENT = gql`
         id
         title
         content
+        public
       }
       tasks {
         id

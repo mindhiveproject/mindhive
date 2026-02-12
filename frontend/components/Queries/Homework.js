@@ -59,6 +59,8 @@ export const GET_MY_HOMEWORKS_FOR_ASSIGNMENT = gql`
       id
       code
       title
+      content
+      placeholder
       settings
       public
       author {

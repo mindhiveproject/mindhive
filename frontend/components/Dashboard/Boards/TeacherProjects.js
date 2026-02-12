@@ -14,11 +14,13 @@ import {
   DELETE_COMPLETE_PROPOSAL,
   CREATE_NEW_PROPOSAL_AS_AUTHOR,
 } from "../../Mutations/Proposal"; // Updated import
+import { GET_TEACHER_CLASSES, GET_MENTOR_CLASSES } from "../../Queries/Classes";
 
 const TeacherProjects = ({ user, query }) => {
   const [isCreating, setIsCreating] = useState(false);
   const [createMode, setCreateMode] = useState(null); // 'scratch' or 'copy'
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
+  const [selectedClassIds, setSelectedClassIds] = useState([]);
   const { t } = useTranslation("classes");
   
   const {
@@ -46,6 +48,16 @@ const TeacherProjects = ({ user, query }) => {
       skip: !isCreating,
     }
   );
+
+  const { data: teacherClassesData } = useQuery(GET_TEACHER_CLASSES, {
+    variables: { userId: user?.id },
+    skip: !user?.id,
+  });
+
+  const { data: mentorClassesData } = useQuery(GET_MENTOR_CLASSES, {
+    variables: { userId: user?.id },
+    skip: !user?.id,
+  });
 
   const [copyProposal, { loading: copyLoading }] = useMutation(
     COPY_PROPOSAL_MUTATION,
@@ -170,6 +182,14 @@ const TeacherProjects = ({ user, query }) => {
     setSelectedTemplateId(null);
   };
 
+  const handleChipToggle = (classId) => {
+    setSelectedClassIds((prev) =>
+      prev.includes(classId)
+        ? prev.filter((id) => id !== classId)
+        : [...prev, classId]
+    );
+  };
+
   const dropdownTemplates =
     publicData?.proposalBoards?.map((template) => ({
       key: template.id,
@@ -190,6 +210,33 @@ const TeacherProjects = ({ user, query }) => {
     (board) => !authoredIds.has(board.id)
   );
 
+  const teacherClasses = teacherClassesData?.classes ?? [];
+  const mentorClasses = mentorClassesData?.classes ?? [];
+  const myClassesById = new Map();
+  [...teacherClasses, ...mentorClasses].forEach((c) =>
+    myClassesById.set(c.id, c)
+  );
+  const myClasses = Array.from(myClassesById.values()).sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+  const authoredBoards = authoredData?.proposalBoards ?? [];
+  const filteredAuthoredBoards =
+    selectedClassIds.length === 0
+      ? authoredBoards
+      : authoredBoards.filter((board) =>
+          board.templateForClasses?.some((c) =>
+            selectedClassIds.includes(c.id)
+          )
+        );
+  const filteredCollaboratedBoards =
+    selectedClassIds.length === 0
+      ? uniqueCollaboratedBoards ?? []
+      : (uniqueCollaboratedBoards ?? []).filter((board) =>
+          board.templateForClasses?.some((c) =>
+            selectedClassIds.includes(c.id)
+          )
+        );
 
   return (
     <StyledBoards>
@@ -200,6 +247,28 @@ const TeacherProjects = ({ user, query }) => {
           {/* <Icon name="plus" /> */}
           {t("boardManagement.createBtn")}
         </button>
+        {myClasses.length > 0 && (
+          <div className="filterChips">
+            <span className="filterChipsLabel">
+              {t("boardManagement.filterByClass")}
+            </span>
+            <div className="filterChipList">
+              {myClasses.map((cls) => {
+                const isSelected = selectedClassIds.includes(cls.id);
+                return (
+                  <button
+                    key={cls.id}
+                    type="button"
+                    className={`filterChip ${isSelected ? "selected" : ""}`}
+                    onClick={() => handleChipToggle(cls.id)}
+                  >
+                    {cls.title} ({cls.code || t("boardManagement.noCode")})
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {isCreating && (
@@ -251,9 +320,11 @@ const TeacherProjects = ({ user, query }) => {
         </div>
       )}
 
-      {authoredData?.proposalBoards?.length ? (
+      {filteredAuthoredBoards?.length ? (
         <div className="cardGrid">
-          {authoredData.proposalBoards.map((board) => (
+          {[...filteredAuthoredBoards]
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map((board) => (
             <div key={board.id} className="projectCard">
               <h3>{board.title}</h3>
               <p className="description">
@@ -314,11 +385,13 @@ const TeacherProjects = ({ user, query }) => {
 
       {collaboratedLoading ? (
         <p>{t("boardManagement.loadingCollaborated")}</p>
-      ) : uniqueCollaboratedBoards?.length ? (
+      ) : filteredCollaboratedBoards?.length ? (
         <>
           <div style={{margin: "2rem auto", maxWidth: "1200px"}} ><h3>{t("boardManagement.collaboratedTitle")}</h3></div>
           <div className="cardGrid">
-            {uniqueCollaboratedBoards.map((board) => (
+            {[...filteredCollaboratedBoards]
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map((board) => (
               <div key={board.id} className="projectCard">
                 <h3>{board.title}</h3>
                 <p className="description">

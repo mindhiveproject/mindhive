@@ -29,6 +29,19 @@ export const ProposalCard = list({
     revisedContent: text(),
     content: text(),
     comment: text(),
+    /**
+     * Settings JSON field for ProposalCard.
+     * 
+     * Expected structure:
+     * {
+     *   status?: string;                    // Card completion status: "Not started", "Completed", "In progress", etc.
+     *   includeInReport?: boolean;          // Whether card should be included in project reports
+     *   includeInReviewSteps?: string[];   // Array of review step types (e.g., ["ACTION_SUBMIT", "ACTION_PEER_FEEDBACK"])
+     * }
+     * 
+     * IMPORTANT: Settings merging is handled in the frontend (see mergeCardSettings utility).
+     * The frontend ensures that when updating settings, existing properties are preserved.
+     */
     settings: json(),
     section: relationship({
       ref: "ProposalSection.cards",

@@ -4,6 +4,12 @@
 		"description": "Volg uw voortgang en bekijk de studies en taken waaraan u hebt deelgenomen",
 		"title": "Mijn activiteit"
 	},
+	"assignment": {
+		"actions": "Acties",
+		"dateCreated": "Datum gecreeërd",
+		"status": "Toestand",
+		"title": "Titel"
+	},
 	"assignments": {
 		"copyLink": "Link kopiëren",
 		"linkCopied": "De link is gekopieerd",
@@ -43,7 +49,7 @@
 			"parentEmail": "E-mailadres van de ouder",
 			"parentName": "Naam van de ouder",
 			"skip": "Toestemming overslaan",
-			"studyInfo": "Deze studie maakt deel uit van het <strong>{{organization}}</strong> onderzoeksprotocol <strong>{{title}}</strong>."
+			"studyInfo": "Deze studie maakt deel uit van het {{organization}} onderzoeksprotocol {{title}}."
 		},
 		"permissionsDescription": "Bekijk en bewerk uw gegevensmachtigingen en bekijk uw activiteit",
 		"permissionsTitle": "Gegevensmachtigingen",
@@ -86,6 +92,7 @@
 		"updatePreferences": "Voorkeuren bijwerken"
 	},
 	"error": {
+		"emailAlreadyInUse": "Dit e-mailadres is al geregistreerd. Log in of gebruik een ander e-mailadres.",
 		"oops": "Oeps!"
 	},
 	"featured": "Uitgelicht",
@@ -112,12 +119,14 @@
 	},
 	"join": {
 		"details": {
+			"age": "Hoe oud ben je?",
 			"dob": "Wat is uw geboortedatum?",
 			"english": "Begrijpt u de basisinstructies in het Engels?",
 			"englishNo": "Nee",
 			"englishTranslationNote": "(De españolversie van het plataforma is beschikbaar in poco tiempo.)",
 			"englishYes": "Ja",
 			"error": {
+				"enterAge": "Voer uw leeftijd in",
 				"enterDob": "Voer uw geboortedatum in",
 				"minorBlocked": "Helaas kunnen op dit moment alleen deelnemers van 18 jaar of ouder aan deze studie deelnemen."
 			},
@@ -376,7 +385,7 @@
 		"updatePreferences": "Voorkeuren bijwerken"
 	},
 	"userPath": {
-		"guestMessage": "Je neemt deel als gast. Je openbare, leesbare ID is <strong>{{id}}</strong>",
+		"guestMessage": "Je neemt deel als gast. Je openbare, leesbare ID is {{id}}",
 		"startNextTask": "Start de volgende taak"
 	}
 }

@@ -67,6 +67,11 @@ export const GET_ASSIGNMENT_FOR_STUDENT = gql`
       title
       content
       placeholder
+      classes {
+        id
+        code
+        title
+      }
     }
   }
 `;
@@ -88,24 +93,70 @@ export const GET_MY_CLASS_ASSIGNMENTS = gql`
       title
       content
       placeholder
+      createdAt
+      updatedAt
       author {
         username
       }
       public
       homework {
+        id
         public
+        settings
       }
       classes {
         id
       }
+    }
+  }
+`;
+
+// get all assignments for a class (any author) - for teacher grid
+export const GET_CLASS_ASSIGNMENTS = gql`
+  query GET_CLASS_ASSIGNMENTS($classId: ID!) {
+    assignments(
+      where: { classes: { some: { id: { equals: $classId } } } }
+      orderBy: [{ createdAt: desc }]
+    ) {
+      id
+      code
+      title
+      content
+      placeholder
       createdAt
+      updatedAt
+      author {
+        id
+        username
+      }
+      public
+      homework {
+        id
+        public
+        settings
+      }
+      classes {
+        id
+      }
+      proposalCards {
+        id
+        title
+        publicId
+        section {
+          id
+          title
+          board {
+            id
+          }
+        }
+      }
     }
   }
 `;
 
 // get all my and class assignments
 export const GET_CLASS_ASSIGNMENTS_FOR_STUDENTS = gql`
-  query GET_CLASS_ASSIGNMENTS_FOR_STUDENTS($classId: ID) {
+  query GET_CLASS_ASSIGNMENTS_FOR_STUDENTS($classId: ID, $userId: ID) {
     assignments(
       where: { classes: { some: { id: { equals: $classId } } } }
       orderBy: [{ createdAt: desc }]
@@ -119,11 +170,16 @@ export const GET_CLASS_ASSIGNMENTS_FOR_STUDENTS = gql`
         username
       }
       public
-      homework {
+      homework(
+        where: { author: { id: { equals: $userId } } }
+      ) {
+        id
         public
+        settings
       }
       classes {
         id
+        title
       }
       createdAt
     }
@@ -139,8 +195,31 @@ export const GET_TEMPLATE_ASSIGNMENTS = gql`
       title
       content
       placeholder
+      createdAt
+      updatedAt
       author {
         username
+      }
+      classes {
+        id
+        title
+        code
+      }
+    }
+  }
+`;
+
+// get assignments by templateSource (for finding classes that use each template)
+// Query all non-template assignments and filter client-side for those with templateSource
+export const GET_ASSIGNMENTS_BY_TEMPLATE_SOURCE = gql`
+  query GET_ASSIGNMENTS_BY_TEMPLATE_SOURCE {
+    assignments(where: { isTemplate: { equals: false } }) {
+      templateSource {
+        id
+      }
+      classes {
+        id
+        title
       }
     }
   }

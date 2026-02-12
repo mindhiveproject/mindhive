@@ -1,3 +1,4 @@
+// components/DataJournal/TopNav/Main.js
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import {
@@ -6,21 +7,23 @@ import {
   Breadcrumb,
 } from "semantic-ui-react";
 
-import { StyledTopNavigation } from "../styles/StyledDataJournal";
-// import SaveWorkspace from "../Workspace/Save";
+import { StyledTopNavigation } from "../styles/StyledDataJournal"; // Adjust path
 
 import { UPDATE_VIZCHAPTER } from "../../../../Mutations/VizChapter";
 import { GET_WORKSPACE } from "../../../../Queries/DataWorkspace";
 
-export default function TopNavigation({
-  area,
-  setArea,
-  journal,
-  workspace,
-  activeComponent,
-  handleAddComponent,
-  toggleComponentPanel,
-}) {
+import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
+
+export default function TopNavigation() {
+  const {
+    area,
+    setArea,
+    selectedJournal: journal,
+    workspace,
+    activeComponent,
+    setIsAddComponentPanelOpen,
+  } = useDataJournal();
+
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(workspace?.title || "");
   const [updateVizChapter] = useMutation(UPDATE_VIZCHAPTER, {
@@ -64,6 +67,10 @@ export default function TopNavigation({
     if (e.key === "Enter") {
       handleTitleSubmit();
     }
+  };
+
+  const toggleComponentPanel = () => {
+    setIsAddComponentPanelOpen((prev) => !prev);
   };
 
   return (
@@ -137,10 +144,7 @@ export default function TopNavigation({
       <div className="buttons">
         {area === "journals" && workspace?.id && (
           <div>
-            <button
-              className="custonBtn"
-              onClick={() => toggleComponentPanel(true)}
-            >
+            <button className="custonBtn" onClick={toggleComponentPanel}>
               Add a Component
             </button>
           </div>

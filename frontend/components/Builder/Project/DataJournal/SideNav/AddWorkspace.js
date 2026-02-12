@@ -24,6 +24,10 @@ export default function AddWorkspace({ journalId }) {
       },
     ],
   });
+
+  if (loading) return <div>Adding...</div>;
+  if (error) return <div>Error adding workspace</div>;
+
   return (
     <div className="addNewChapter" onClick={addChapter}>
       + Add Workspace

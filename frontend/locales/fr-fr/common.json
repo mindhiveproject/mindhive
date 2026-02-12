@@ -4,6 +4,12 @@
 		"description": "Suivez vos progrès et passez en revue les études et les tâches auxquelles vous avez participé",
 		"title": "Mon activité"
 	},
+	"assignment": {
+		"actions": "Actions",
+		"dateCreated": "Date créée",
+		"status": "Statut",
+		"title": "Titre"
+	},
 	"assignments": {
 		"copyLink": "Copier le lien",
 		"linkCopied": "Le lien est copié",
@@ -43,7 +49,7 @@
 			"parentEmail": "Adresse e-mail des parents",
 			"parentName": "Nom du parent",
 			"skip": "Ignorer le consentement",
-			"studyInfo": "Cette étude fait partie du protocole de recherche <strong>{{organization}}</strong> <strong>{{title}}</strong>."
+			"studyInfo": "Cette étude fait partie du protocole de recherche {{organization}}  {{title}}."
 		},
 		"permissionsDescription": "Consultez et modifiez vos autorisations de données et visualisez votre activité",
 		"permissionsTitle": "Autorisations de données",
@@ -86,6 +92,7 @@
 		"updatePreferences": "Mettre à jour les préférences"
 	},
 	"error": {
+		"emailAlreadyInUse": "Cette adresse e-mail est déjà enregistrée. Veuillez vous connecter ou utiliser une autre adresse e-mail.",
 		"oops": "Oups !"
 	},
 	"featured": "En vedette",
@@ -112,12 +119,14 @@
 	},
 	"join": {
 		"details": {
+			"age": "Quel âge avez-vous?",
 			"dob": "Quelle est votre date de naissance ?",
 			"english": "Comprenez-vous les instructions de base écrites en anglais ?",
 			"englishNo": "Non",
 			"englishTranslationNote": "(La version espagnole de la plateforme est disponible peu de temps après.)",
 			"englishYes": "Oui",
 			"error": {
+				"enterAge": "Veuillez indiquer votre âge",
 				"enterDob": "Veuillez entrer votre date de naissance",
 				"minorBlocked": "Nous sommes vraiment désolés, mais seuls les participants âgés de 18 ans ou plus peuvent participer à cette étude pour le moment."
 			},
@@ -376,7 +385,7 @@
 		"updatePreferences": "Mettre à jour les préférences"
 	},
 	"userPath": {
-		"guestMessage": "Vous participez en tant qu'invité. Votre identifiant public est <strong>{{id}}</strong>",
+		"guestMessage": "Vous participez en tant qu'invité. Votre identifiant public est {{id}}",
 		"startNextTask": "Démarrer la tâche suivante"
 	}
 }

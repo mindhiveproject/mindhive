@@ -318,6 +318,40 @@ export default function Engine({
   };
 
   const buildStudy = () => {
+    const model = engine?.model;
+
+    // CLEANUP: Remove any dangling/loose links before saving
+    const linksToRemove = [];
+    model.getLinks().forEach((link) => {
+      if (!link.getSourcePort() || !link.getTargetPort()) {
+        linksToRemove.push(link);
+      }
+    });
+    linksToRemove.forEach((link) => {
+      link.remove();
+    });
+
+    if (linksToRemove.length > 0) {
+      // Notify the user clearly
+      alert(
+        t(
+          `We found ${linksToRemove.length} incomplete link${
+            linksToRemove.length > 1 ? "s" : ""
+          } (not connected on both ends) and removed ${
+            linksToRemove.length > 1 ? "them" : "it"
+          } automatically to keep your study valid.\n\n` +
+            `How to create a correct connection between blocks:\n` +
+            `1. Click and drag from the output port (small circle at the bottom of the starting block).\n` +
+            `2. Move the link toward the next block – it should show a highlighted orange border when you're over a valid drop spot.\n` +
+            `3. Release the mouse/button on the highlighted block.\n` +
+            `4. Confirm success: A clear arrow should appear at the end of the link, pointing into the next block.\n\n` +
+            `This arrow shows the direction of your study flow (from one block to the next). Your study is now cleaned up and saved successfully!`,
+          { count: linksToRemove.length }
+        )
+      );
+      engine.repaintCanvas();
+    }
+
     const { flow, diagram } = saveDiagramState();
     const updatedVersionHistory = study?.versionHistory?.map((v) => {
       if (v?.id === study?.currentVersion) {

@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import MyDatePicker from "../../Utils/DatePicker";
 import useForm from "../../../lib/useForm";
 import useTranslation from "next-translate/useTranslation";
 
@@ -17,7 +16,7 @@ export default function Details({ user, study, query }) {
     sona: "",
     sonaid: "",
     eng: "",
-    bd: "",
+    age: "",
     share: "true",
     ...query, // populate by information from query
     ...user?.generalInfo, // populate by the saved user information
@@ -122,12 +121,18 @@ export default function Details({ user, study, query }) {
       </div>
 
       <div>
-        <p className="questionTitle">{t('join.details.dob')}</p>
-        <MyDatePicker
-          onDateInput={(timestamp) =>
-            handleChange({ target: { name: "bd", value: timestamp } })
-          }
-        />
+        <label htmlFor="age">
+          <p className="questionTitle">{t('join.details.age')}</p>
+          <input
+            type="number"
+            id="age"
+            name="age"
+            min="0"
+            max="120"
+            onChange={handleChange}
+            value={inputs?.age}
+          />
+        </label>
       </div>
 
       <div>

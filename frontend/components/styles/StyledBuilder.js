@@ -304,7 +304,7 @@ export const StyledCanvasBuilder = styled.div`
 
   .addCommentButton {
     position: absolute;
-    z-index: 10;
+    z-index: 0;
     left: 10px;
     top: 10px;
     background: #007c70;

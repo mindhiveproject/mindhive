@@ -19,6 +19,7 @@ export const STUDY_SUMMARY_RESULTS = gql`
         user {
           id
           publicReadableId
+          studiesInfo
           studentIn {
             code
           }
@@ -27,6 +28,7 @@ export const STUDY_SUMMARY_RESULTS = gql`
           id
           publicId
           publicReadableId
+          studiesInfo
         }
         study {
           id

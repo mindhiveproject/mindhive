@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
-    "build": "next build",
+    "local": "next dev -p 3000",
+    "dev": "node server",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 next build",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "server": "node server",
     "prod": "NODE_ENV=production node server"
   },
   "dependencies": {
@@ -70,6 +70,7 @@
     "openai": "^4.10.0",
     "pathfinding": "^0.4.18",
     "paths-js": "^0.4.11",
+    "plotly.js": "^2.35.3",
     "project-name-generator": "^2.1.9",
     "pyodide": "^0.23.4",
     "react": "18.2.0",
@@ -85,6 +86,7 @@
     "react-json-editor-ajrm": "^2.5.14",
     "react-markdown": "^10.1.0",
     "react-papaparse": "^4.1.0",
+    "react-plotly.js": "^2.6.0",
     "react-rating-stars-component": "^2.2.0",
     "react-resizable": "^3.0.5",
     "react-responsive-carousel": "^3.2.23",

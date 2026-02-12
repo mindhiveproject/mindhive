@@ -19,6 +19,12 @@ export class InCustomPort extends DefaultPortModel {
     return false;
   }
 
+  // Prevent creating ANY new link when dragging FROM this input port
+  createLinkModel() {
+    // Return null/undefined → no link model created, drag doesn't start
+    return null;
+  }
+
   serialize() {
     return {
       ...super.serialize(),

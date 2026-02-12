@@ -1,10 +1,13 @@
 {
 	"boardData": "Données du tableau",
+	"boardTitleColumn": "Inclure le titre du forum ? (non recommandé pour des raisons de confidentialité)",
 	"buildYourExport": "Développez votre exportation",
+	"classCode": "Code du cours (voir l'URL lors de la consultation du cours)",
 	"classId": "ID de classe",
 	"csv": "CSV (.csv)",
 	"data": "Données",
 	"downloadPayload": "Télécharger la charge utile",
+	"enterClassCode": "Saisissez le code de la classe",
 	"enterClassId": "Saisissez l'identifiant de la classe",
 	"errors": {
 		"formatUnsupported": "Seuls les formats d'exportation CSV sont disponibles pour le moment.",
@@ -12,6 +15,7 @@
 		"noDatasetSelected": "Sélectionnez au moins un ensemble de données (conseil d'administration ou avis)."
 	},
 	"filterByCardStatus": "Filtrer par statut de la carte",
+	"includeBoardTitle": "Inclure le titre du tableau",
 	"intro": "Importez le contenu des propositions et les données d'évaluation directement depuis la plateforme MindHive. Choisissez la classe, définissez votre périmètre de données et exportez des fichiers CSV téléchargeables, formatés pour l'analyse.",
 	"json": "JSON (si nécessaire)",
 	"noResearchAccess": "Vous devez disposer d'autorisations de niveau recherche pour accéder aux outils d'exportation",

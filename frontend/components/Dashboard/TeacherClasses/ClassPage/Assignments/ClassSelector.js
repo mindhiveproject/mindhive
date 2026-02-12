@@ -31,7 +31,13 @@ export default function ClassSelector({ user, inputs, handleChange }) {
     value: myClass.id,
   }));
 
-  const selectedClasses = inputs?.classes?.map((c) => c?.id) || [];
+  // Ensure classes is always an array
+  const classesArray = Array.isArray(inputs?.classes) 
+    ? inputs.classes 
+    : inputs?.classes 
+      ? [inputs.classes] 
+      : [];
+  const selectedClasses = classesArray.map((c) => c?.id || c) || [];
 
   return (
     <div className="consentSelector">

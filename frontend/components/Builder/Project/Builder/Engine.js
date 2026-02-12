@@ -38,7 +38,7 @@ export default function Engine({
   toggleSidebar,
 }) {
   const { t } = useTranslation("builder");
-  
+
   // Lock the canvas if dataCollectionStatus is SUBMITTED
   const isCanvasLocked = study?.dataCollectionStatus === "SUBMITTED";
 
@@ -46,6 +46,7 @@ export default function Engine({
   // force update canvas
   const forceUpdate = useReducer((bool) => !bool)[1];
   const [engine, setEngine] = useState(null);
+
   useEffect(() => {
     function handleEngine() {
       const engine = createEngine();
@@ -142,7 +143,8 @@ export default function Engine({
     subtitle,
     createCopy,
   }) => {
-    if (isCanvasLocked) return alert(t("engine.studyLocked", "The study has been locked"));
+    if (isCanvasLocked)
+      return alert(t("engine.studyLocked", "The study has been locked"));
     let newNode;
     if (createCopy) {
       newNode = new TaskModel({
@@ -177,7 +179,8 @@ export default function Engine({
   };
 
   const addStudyTemplateToCanvas = ({ study }) => {
-    if (isCanvasLocked) return alert(t("engine.studyLocked", "The study has been locked"));
+    if (isCanvasLocked)
+      return alert(t("engine.studyLocked", "The study has been locked"));
     const { diagram } = study;
     const model = new DiagramModel();
     model.deserializeModel(JSON.parse(diagram), engine);
@@ -186,7 +189,8 @@ export default function Engine({
   };
 
   const addComment = () => {
-    if (isCanvasLocked) return alert(t("engine.studyLocked", "The study has been locked"));
+    if (isCanvasLocked)
+      return alert(t("engine.studyLocked", "The study has been locked"));
     const note = new CommentModel({
       author: user?.username,
       time: Date.now(),
@@ -204,7 +208,8 @@ export default function Engine({
   };
 
   const addAnchor = () => {
-    if (isCanvasLocked) return alert(t("engine.studyLocked", "The study has been locked"));
+    if (isCanvasLocked)
+      return alert(t("engine.studyLocked", "The study has been locked"));
     const anchor = new AnchorModel({});
     const event = {
       clientX: getRandomIntInclusive(300, 500),
@@ -217,7 +222,8 @@ export default function Engine({
   };
 
   const addDesignToCanvas = ({ name, details, conditions }) => {
-    if (isCanvasLocked) return alert(t("engine.studyLocked", "The study has been locked"));
+    if (isCanvasLocked)
+      return alert(t("engine.studyLocked", "The study has been locked"));
     const newNode = new DesignModel({
       name,
       details,
@@ -328,6 +334,51 @@ export default function Engine({
   };
 
   const buildStudy = () => {
+    const model = engine?.model;
+
+    // CLEANUP: Remove any dangling/loose links before saving
+    const linksToRemove = [];
+    model.getLinks().forEach((link) => {
+      if (!link.getSourcePort() || !link.getTargetPort()) {
+        linksToRemove.push(link);
+      }
+    });
+    linksToRemove.forEach((link) => {
+      link.remove();
+    });
+
+    if (linksToRemove.length > 0) {
+      // Detect Safari for conditional message
+      const isSafariBrowser = /^((?!chrome|android).)*safari/i.test(
+        navigator.userAgent
+      );
+
+      const safariNote = isSafariBrowser
+        ? `\nNote for Safari users: The orange highlight border may not appear during dragging (a known browser limitation). Instead, drop the link directly on the top line (input area) of the next block.`
+        : "";
+      // Notify the user clearly
+      alert(
+        t(
+          `We found ${linksToRemove.length} incomplete link${
+            linksToRemove.length > 1 ? "s" : ""
+          } (not connected on both ends) and removed ${
+            linksToRemove.length > 1 ? "them" : "it"
+          } automatically to keep your study valid.\n\n` +
+            `How to create a correct connection between blocks:\n` +
+            `1. Click and drag from the output port (small circle at the bottom of the starting block).\n` +
+            `2. Move the link toward the next block – it should show a highlighted orange border when you're over a valid drop spot${
+              isSafariBrowser ? " (or aim for the top line in Safari)" : ""
+            }.\n` +
+            `3. Release the mouse/button on the highlighted block (or top line in Safari).\n` +
+            `4. Confirm success: A clear arrow should appear at the end of the link, pointing into the next block.\n\n` +
+            `This arrow shows the direction of your study flow (from one block to the next).${safariNote}\n\n` +
+            `Your study is now cleaned up and saved successfully!`,
+          { count: linksToRemove.length }
+        )
+      );
+      engine.repaintCanvas();
+    }
+
     const { flow, diagram } = saveDiagramState();
     const updatedVersionHistory = study?.versionHistory?.map((v) => {
       if (v?.id === study?.currentVersion) {

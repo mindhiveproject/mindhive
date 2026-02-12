@@ -3,6 +3,12 @@ import Link from "next/link";
 import HomeworkPage from "./HomeworkPage";
 import useTranslation from "next-translate/useTranslation";
 
+// Strip HTML tags from text
+const stripHtml = (html) => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+};
+
 export default function Homework({ query, user, profile }) {
   const { t } = useTranslation("classes");
   const homeworks = profile?.authorOfHomework || [];
@@ -53,7 +59,7 @@ export default function Homework({ query, user, profile }) {
           >
             <div className="journalRow">
               <div>{homework?.title}</div>
-              <div>{homework?.assignment?.title}</div>
+              <div>{stripHtml(homework?.assignment?.title || '')}</div>
               <div>{moment(homework?.createdAt).format("MMMM D, YYYY")}</div>
               <div>{moment(homework?.updatedAt).format("MMMM D, YYYY")}</div>
             </div>

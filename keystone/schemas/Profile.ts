@@ -17,10 +17,14 @@ import uniqid from "uniqid";
 import {
   uniqueNamesGenerator,
   Config,
-  adjectives,
+  adjectives as baseAdjectives,
   colors,
   animals,
 } from "unique-names-generator";
+
+const adjectives = baseAdjectives
+  .filter(w => !['booby', 'tasty'].includes(w))
+  .concat(['curious', 'kind']);
 
 const customConfig: Config = {
   dictionaries: [adjectives, colors, animals],
@@ -96,6 +100,15 @@ export const Profile = list({
         read: () => true,
         create: () => true,
         update: rules.canManageUsers,
+      },
+      hooks: {
+        resolveInput: ({ resolvedData }) => {
+          // Always lowercase email addresses on create and update
+          if (resolvedData.email && typeof resolvedData.email === "string") {
+            return resolvedData.email.toLowerCase().trim();
+          }
+          return resolvedData.email;
+        },
       },
     }),
     permissions: relationship({

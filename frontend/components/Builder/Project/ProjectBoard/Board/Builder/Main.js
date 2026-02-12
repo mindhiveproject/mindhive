@@ -9,8 +9,6 @@ import ProposalCardWrapper from "../Card/Wrapper";
 import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
 
-import { Menu, Sidebar } from "semantic-ui-react";
-
 export default function ProposalBuilder({
   user,
   proposal,
@@ -20,6 +18,10 @@ export default function ProposalBuilder({
   refetchQueries,
   isPDF,
   setIsPDF,
+  page: controlledPage,
+  setPage: controlledSetPage,
+  card: controlledCard,
+  setCard: controlledSetCard,
 }) {
   const { t } = useTranslation("builder");
   const [updateEdit, { loading: updateEditLoading }] = useMutation(
@@ -31,8 +33,14 @@ export default function ProposalBuilder({
     }
   );
 
-  const [page, setPage] = useState("board");
-  const [card, setCard] = useState(null);
+  const [internalPage, setInternalPage] = useState("board");
+  const [internalCard, setInternalCard] = useState(null);
+
+  const isControlled = controlledSetPage != null;
+  const page = isControlled ? controlledPage : internalPage;
+  const setPage = isControlled ? controlledSetPage : setInternalPage;
+  const card = isControlled ? controlledCard : internalCard;
+  const setCard = isControlled ? controlledSetCard : setInternalCard;
 
   const openCard = (card) => {
     setCard(card);
@@ -58,55 +66,58 @@ export default function ProposalBuilder({
 
   return (
     <>
-      <Sidebar
-        as={Menu}
-        animation="overlay"
-        icon="labeled"
-        vertical
-        visible={page === "card"}
-        direction="right"
-        className="pushableSidebar"
-      >
-        {card && (
-          <ProposalCardWrapper
-            user={user}
-            proposal={proposal}
-            cardId={card?.id}
-            closeCard={closeCard}
-            proposalBuildMode={proposalBuildMode}
-            isPreview={isPreview}
-          />
-        )}
-      </Sidebar>
-
-      <Sidebar.Pusher>
-        {isPreview ? (
-          <>
-            <h2>
-              {t("proposal.previewHeader", "Preview of proposal template")}
-              {" "}
-              <span className="templateName">{proposal.title}</span>
-            </h2>
-            <p>{proposal.description}</p>
-          </>
-        ) : (
-          <ProposalHeader
-            user={user}
-            proposal={proposal}
-            proposalBuildMode={proposalBuildMode}
-            refetchQueries={refetchQueries}
-            isPDF={isPDF}
-            setIsPDF={setIsPDF}
-          />
-        )}
-        {proposal && (
-          <ProposalBoard
-            proposalId={proposal?.id}
-            openCard={openCard}
-            isPreview={isPreview}
-          />
-        )}
-      </Sidebar.Pusher>
+      {page === "board" ? (
+        <>
+          {isPreview ? (
+            <>
+              <h2>
+                {t("proposal.previewHeader", "Preview of proposal template")}
+                {" "}
+                <span className="templateName">{proposal.title}</span>
+              </h2>
+              <p>{proposal.description}</p>
+            </>
+          ) : proposalBuildMode ? (
+            <ProposalHeader
+              user={user}
+              proposal={proposal}
+              proposalBuildMode={proposalBuildMode}
+              refetchQueries={refetchQueries}
+              isPDF={isPDF}
+              setIsPDF={setIsPDF}
+            />
+          ) : null}
+          {proposal && (
+            <ProposalBoard
+              proposalId={proposal?.id}
+              openCard={openCard}
+              isPreview={isPreview}
+            />
+          )}
+        </>
+      ) : (
+        card && (
+          <div
+            className="hideScrollbar"
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              minHeight: 0,
+              overflowY: "auto",
+            }}
+          >
+            <ProposalCardWrapper
+              user={user}
+              proposal={proposal}
+              cardId={card?.id}
+              closeCard={closeCard}
+              proposalBuildMode={proposalBuildMode}
+              isPreview={isPreview}
+            />
+          </div>
+        )
+      )}
     </>
   );
 }

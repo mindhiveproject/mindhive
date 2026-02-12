@@ -236,6 +236,7 @@ const Section = ({
           cards && cards.length > 0
             ? cards[cards.length - 1].position + 16384
             : 16384,
+        settings: { status: "Not started" },
       },
       update: (cache, { data: { createProposalCard } }) => {
         const data = cache.readQuery({
@@ -286,7 +287,7 @@ const Section = ({
             id: sectionId,
           },
           assignedTo: [],
-          settings: null,
+          settings: { status: "Not started" },
         },
       },
     });
@@ -311,12 +312,12 @@ const Section = ({
       },
     });
   };
-  console.log(cards);
 
   return (
     <div className="section" id="section">
       <div className="column-drag-handle">
         <div className="firstLine">
+          <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
           {settings?.allowAddingCards && (
             <img
               src="/assets/icons/proposal/edit.svg"
@@ -334,16 +335,14 @@ const Section = ({
               }}
             />
           )}
-
-          <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
         </div>
-        {!isPreview && (
+        {/* {!isPreview && (
           <div className="infoLine">
             {sectionSummary?.numOfCards} {sectionSummary?.numOfCards == 1 ? t("section.card", "card") : t("section.cards", "cards")}
           </div>
-        )}
+        )} */}
       </div>
-
+      <hr />
       <div>
         <Container
           orientation="vertical"
@@ -377,18 +376,20 @@ const Section = ({
                 card?.type === "ACTION_PROJECT_REPORT"
               ) {
                 return (
-                  <ActionCard
-                    key={card.id}
-                    card={card}
-                    onDeleteCard={deleteCardMutation}
-                    boardId={boardId}
-                    openCard={openCard}
-                    proposalBuildMode={proposalBuildMode}
-                    adminMode={adminMode}
-                    isPreview={isPreview}
-                    settings={settings}
-                    submitStatuses={submitStatuses}
-                  />
+                  <React.Fragment key={card.id}>
+                    <hr style={{ margin: "16px 8px 16px 8px", border: "1px solid #EFEFEF" }} />
+                    <ActionCard
+                      card={card}
+                      onDeleteCard={deleteCardMutation}
+                      boardId={boardId}
+                      openCard={openCard}
+                      proposalBuildMode={proposalBuildMode}
+                      adminMode={adminMode}
+                      isPreview={isPreview}
+                      settings={settings}
+                      submitStatuses={submitStatuses}
+                    />
+                  </React.Fragment>
                 );
               } else {
                 return (

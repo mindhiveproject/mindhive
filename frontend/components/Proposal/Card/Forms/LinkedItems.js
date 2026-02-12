@@ -2,8 +2,14 @@ import TipTapEditor from "../../../TipTap/Main";
 import { useQuery, useMutation } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import { Button, Icon, Modal, Tab } from "semantic-ui-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import useTranslation from "next-translate/useTranslation";
+
+// Strip HTML tags from text
+const stripHtml = (html) => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+};
 
 import {
   GET_PUBLIC_RESOURCES,
@@ -33,6 +39,19 @@ export default function LinkedItems({
   totalLinked,
 }) {
   const { t } = useTranslation("classes");
+
+  // Track selectedResources changes
+  useEffect(() => {
+    console.log("📊 [selectedResources Changed]:", {
+      count: selectedResources.length,
+      resources: selectedResources.map(r => ({
+        id: r.id,
+        title: r.title,
+        isPublic: r.isPublic,
+        parentId: r.parent?.id
+      }))
+    });
+  }, [selectedResources]);
 
   // Queries for Resources
   const {
@@ -120,8 +139,16 @@ export default function LinkedItems({
     setResourceModalState(createInitialResourceModalState());
 
   const openResourceModalHandler = (resource, context = {}) => {
+    console.log("📝 [openResourceModalHandler] Called with:", {
+      resourceId: resource?.id,
+      resourceTitle: resource?.title,
+      resourceIsPublic: resource?.isPublic,
+      resourceParentId: resource?.parent?.id,
+      context
+    });
+    
     if (!resource?.id) {
-      console.error("No resource provided to openResourceModalHandler");
+      console.error("❌ [openResourceModalHandler] No resource provided");
       return;
     }
 
@@ -141,6 +168,13 @@ export default function LinkedItems({
             myResource?.author?.id === user?.id
         )
       : null;
+
+    console.log("📝 [openResourceModalHandler] Derived values:", {
+      derivedSourceType,
+      templateId,
+      existingCustomId: existingCustom?.id,
+      existingCustomTitle: existingCustom?.title
+    });
 
     setResourceModalState({
       open: true,
@@ -184,14 +218,39 @@ export default function LinkedItems({
     }
 
     const currentSelected = selectedResources || [];
+    console.log("💾 [handleResourceModalSaved] Current selection:", {
+      mode,
+      savedResourceId,
+      templateId,
+      currentSelectedIds: currentSelected.map(r => r.id),
+      currentSelectedDetails: currentSelected.map(r => ({
+        id: r.id,
+        title: r.title,
+        isPublic: r.isPublic,
+        parentId: r.parent?.id
+      })),
+      updatedResourceId: updatedResource?.id,
+      updatedResourceTitle: updatedResource?.title,
+      updatedResourceIsPublic: updatedResource?.isPublic,
+      updatedResourceParentId: updatedResource?.parent?.id
+    });
+    
     let shouldUpdateSelection = false;
 
     const updatedSelection = currentSelected.map((res) => {
       if (mode === "createCopy" && templateId && res.id === templateId) {
+        console.log("🔄 [handleResourceModalSaved] Replacing template with copy:", {
+          templateId: res.id,
+          newResourceId: updatedResource.id
+        });
         shouldUpdateSelection = true;
         return updatedResource;
       }
       if (mode === "update" && res.id === savedResourceId) {
+        console.log("🔄 [handleResourceModalSaved] Updating existing resource:", {
+          resourceId: res.id,
+          newResourceId: updatedResource.id
+        });
         shouldUpdateSelection = true;
         return updatedResource;
       }
@@ -199,9 +258,20 @@ export default function LinkedItems({
     });
 
     if (shouldUpdateSelection) {
+      console.log("✅ [handleResourceModalSaved] Updating selection:", {
+        newSelectionIds: updatedSelection.map(r => r.id),
+        newSelectionDetails: updatedSelection.map(r => ({
+          id: r.id,
+          title: r.title,
+          isPublic: r.isPublic,
+          parentId: r.parent?.id
+        }))
+      });
       handleChange({
         target: { name: "resources", value: updatedSelection },
       });
+    } else {
+      console.log("⚠️ [handleResourceModalSaved] No selection update needed");
     }
   };
 
@@ -223,19 +293,53 @@ export default function LinkedItems({
 
 
   // Resource-specific merging for selected
+  // NOTE: We do NOT merge public resources with custom copies here.
+  // When a user clicks "Connect" on a public resource, we want to keep the public resource.
+  // Custom copies are only relevant when using the "Copy" button flow.
   const selectedResourcesMerged = selectedResources.map((selectedResource) => {
-    const customResource = myResources.find(
-      (myResource) => myResource?.parent?.id === selectedResource?.id
-    );
-    return customResource || selectedResource;
+    // Keep the original resource as-is - don't replace with custom copy
+    // This ensures that when connecting a public resource, it stays as the public resource
+    console.log("🔄 [selectedResourcesMerged] Keeping original resource (no merge):", {
+      selectedResourceId: selectedResource?.id,
+      selectedResourceTitle: selectedResource?.title,
+      selectedResourceIsPublic: selectedResource?.isPublic,
+      selectedResourceParentId: selectedResource?.parent?.id
+    });
+    return selectedResource;
   });
 
 
   // Generic connect/disconnect
   const connectItem = (item, fieldName, selectedArray) => {
+    console.log("🔗 [connectItem] Called with:", {
+      itemId: item?.id,
+      itemTitle: item?.title,
+      itemIsPublic: item?.isPublic,
+      itemParentId: item?.parent?.id,
+      fieldName,
+      selectedArrayIds: selectedArray.map(s => s.id),
+      selectedArrayDetails: selectedArray.map(s => ({
+        id: s.id,
+        title: s.title,
+        isPublic: s.isPublic,
+        parentId: s.parent?.id
+      }))
+    });
+    
     if (!selectedArray.some((s) => s.id === item.id)) {
       const newSelected = [...selectedArray, item];
+      console.log("✅ [connectItem] Adding item to selection:", {
+        newSelectedIds: newSelected.map(s => s.id),
+        newSelectedDetails: newSelected.map(s => ({
+          id: s.id,
+          title: s.title,
+          isPublic: s.isPublic,
+          parentId: s.parent?.id
+        }))
+      });
       handleChange({ target: { name: fieldName, value: newSelected } });
+    } else {
+      console.log("⚠️ [connectItem] Item already in selection, skipping");
     }
   };
 
@@ -421,7 +525,7 @@ export default function LinkedItems({
           )}
         </Modal.Header>
         <Modal.Content scrolling style={{ background: "#ffffff", padding: 0 }}>
-          <Tab panes={panes} style={{ fontFamily: "Nunito" }} />
+          <Tab panes={panes} style={{ fontFamily: "Nunito"}} />
         </Modal.Content>
         <Modal.Actions
           style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
@@ -448,6 +552,7 @@ export default function LinkedItems({
       />
   
       <AssignmentViewModal
+        user={user}
         open={viewAssignmentModalOpen}
         t={t}
         onClose={() => setViewAssignmentModalOpen(false)}
@@ -674,6 +779,25 @@ const ItemTab = ({
 
   if (loading) return <div>{t("common.loading", "Loading...")}</div>;
 
+  // --- Search State ---
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedPublishedFilter, setSelectedPublishedFilter] = useState(null);
+  const [selectedClassIds, setSelectedClassIds] = useState([]);
+
+  // --- Filter Function ---
+  const filterItems = (itemsList, query) => {
+    if (!query.trim()) return itemsList;
+    const lowerQuery = query.toLowerCase();
+    return itemsList.filter(item => {
+      const title = stripHtml(item?.title || "").toLowerCase();
+      return title.includes(lowerQuery);
+    });
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+  };
+
   // --- Accordions UI State (moved outside conditional to fix hooks rule) ---
   const [openAccordion, setOpenAccordion] = useState({
     resources: true,
@@ -684,6 +808,18 @@ const ItemTab = ({
     setOpenAccordion((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // Unique classes from items (assignment tab only) - must run unconditionally for hooks rules
+  const uniqueClasses = useMemo(() => {
+    if (type !== "assignment" || !items || !Array.isArray(items)) return [];
+    const m = new Map();
+    items.forEach((i) => {
+      (i?.classes || []).forEach((c) => {
+        if (c?.id && !m.has(c.id)) m.set(c.id, { id: c.id, title: c.title || "Untitled Class" });
+      });
+    });
+    return Array.from(m.values());
+  }, [type, items]);
+
   if (type === "public") {
     // For public type, render two sections: resources and assignments (in accordions)
     const resources = items?.resources || [];
@@ -692,15 +828,35 @@ const ItemTab = ({
     // helper function to render items list (reuse existing item render logic)
     const renderItems = (itemsList, currentType) => {
       const displayItems = itemsList.map((item) => {
-        if (currentType === "resource" && isPublic) {
-          const custom = myItems.find((p) => p.parent?.id === item.id);
-          return custom || item;
-        }
+        // if (currentType === "resource" && isPublic) {
+        //   const custom = myItems.find((p) => p.parent?.id === item.id);
+        //   return custom || item;
+        // }
         return item;
       });
 
+      console.log("📋 [renderItems] displayItems:", displayItems.map(i => ({
+        id: i.id,
+        title: i.title,
+        isPublic: i.isPublic,
+        parentId: i.parent?.id
+      })));
       return displayItems.map((item) => {
         const isSelected = selected.some((s) => s.id === item.id);
+        console.log("🔍 [renderItems] Checking selection for item:", {
+          itemId: item.id,
+          itemTitle: item.title,
+          itemIsPublic: item.isPublic,
+          itemParentId: item.parent?.id,
+          isSelected,
+          selectedIds: selected.map(s => s.id),
+          selectedDetails: selected.map(s => ({
+            id: s.id,
+            title: s.title,
+            isPublic: s.isPublic,
+            parentId: s.parent?.id
+          }))
+        });
         const isTaskOrStudy = currentType === "task" || currentType === "study";
         const isTask = currentType === "task";
         const isStudy = currentType === "study";
@@ -769,7 +925,7 @@ const ItemTab = ({
                   margin: 0,
                 }}
               >
-                {item?.title || "Untitled"}
+                {stripHtml(item?.title) || "Untitled"}
               </h2>
               {item?.lastUpdate ? (<p>Last updated: {item?.lastUpdate}</p>) : (<></>)}
             </div>
@@ -795,7 +951,18 @@ const ItemTab = ({
                 }}
               >
                 <button
-                  onClick={() => (isSelected ? disconnect(item) : connect(item))}
+                  onClick={() => {
+                    console.log("🔘 [Connect Button Clicked] For resource:", {
+                      itemId: item.id,
+                      itemTitle: item.title,
+                      itemIsPublic: item.isPublic,
+                      itemParentId: item.parent?.id,
+                      isSelected,
+                      currentType: "resource",
+                      tabType: "public"
+                    });
+                    isSelected ? disconnect(item) : connect(item);
+                  }}
                   style={{
                     ...(isSelected
                       ? styledAccentButtonPurple
@@ -813,11 +980,19 @@ const ItemTab = ({
                     : t("board.expendedCard.connect")}
                 </button>
                 <button
-                  onClick={() =>
+                  onClick={() => {
+                    console.log("🔘 [Copy Button Clicked] For resource:", {
+                      itemId: item.id,
+                      itemTitle: item.title,
+                      itemIsPublic: item.isPublic,
+                      itemParentId: item.parent?.id,
+                      currentType: "resource",
+                      tabType: "public"
+                    });
                     openResourceModal?.(item, {
                       sourceType: "public",
-                    })
-                  }
+                    });
+                  }}
                   style={{
                     ...styledSecondaryButtonBlue,
                     flex: "0 1 120px",
@@ -829,7 +1004,7 @@ const ItemTab = ({
                   }}
                   aria-label={t("boardManagement.edit", "Edit")}
                 >
-                  <Icon name="pencil" />
+                  <Icon name="copy" />
                 </button>
               </div>
             )}
@@ -895,7 +1070,7 @@ const ItemTab = ({
                                 overflowWrap: "anywhere",
                                 margin: 0
                               }}>
-                                {cls.title}
+                                {stripHtml(cls.title)}
                               </p>
                             </span>
                             // <p><li key={cls.id}>{cls.title}</li></p>
@@ -945,8 +1120,62 @@ const ItemTab = ({
       color: "#336F8A"
     });
 
+    // Filter resources and assignments based on search query
+    const filteredResources = filterItems(resources, searchQuery);
+    const filteredAssignments = filterItems(assignments, searchQuery);
+
     return (
       <div style={{ padding: "24px", background: "#f9fafb", maxWidth: 1100, margin: "0 auto" }}>
+        {/* Search Bar */}
+        <div style={{ marginBottom: "24px" }}>
+          <div style={{ position: "relative", marginBottom: "16px" }}>
+            <input
+              type="text"
+              placeholder={t("board.expendedCard.searchPlaceholder", "Search by title...")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "12px 40px 12px 40px",
+                border: "1px solid #d0d5dd",
+                borderRadius: "8px",
+                fontSize: "16px",
+                fontFamily: "inherit",
+              }}
+            />
+            <Icon
+              name="search"
+              style={{
+                position: "absolute",
+                left: "12px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "#6c757d",
+                pointerEvents: "none",
+              }}
+            />
+            {searchQuery && (
+              <button
+                onClick={handleClearSearch}
+                style={{
+                  position: "absolute",
+                  right: "8px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: "4px",
+                  display: "flex",
+                  alignItems: "center",
+                  color: "#6c757d",
+                }}
+              >
+                <Icon name="close" />
+              </button>
+            )}
+          </div>
+        </div>
         {/* Resources Accordion */}
         <div style={{
           display: "flex",
@@ -998,7 +1227,7 @@ const ItemTab = ({
               marginBottom: "28px"
             }}
           >
-            {resources.length > 0 ? (
+            {filteredResources.length > 0 ? (
               <div
                 style={{
                   display: "grid",
@@ -1006,10 +1235,14 @@ const ItemTab = ({
                   gap: "24px",
                 }}
               >
-                {renderItems(resources, "resource")}
+                {renderItems(filteredResources, "resource")}
               </div>
             ) : (
-              <p>{t("noResources", "No public resources.")}</p>
+              <p>
+                {searchQuery
+                  ? t("board.expendedCard.noSearchResults", "No resources found matching your search.")
+                  : t("noResources", "No public resources.")}
+              </p>
             )}
           </div>
         </section>
@@ -1036,7 +1269,7 @@ const ItemTab = ({
               display: openAccordion.assignments ? "block" : "none"
             }}
           >
-            {assignments.length > 0 ? (
+            {filteredAssignments.length > 0 ? (
               <div
                 style={{
                   display: "grid",
@@ -1044,10 +1277,14 @@ const ItemTab = ({
                   gap: "24px",
                 }}
               >
-                {renderItems(assignments, "assignment")}
+                {renderItems(filteredAssignments, "assignment")}
               </div>
             ) : (
-              <p>{t("noAssignments", "No assignments available.")}</p>
+              <p>
+                {searchQuery
+                  ? t("board.expendedCard.noSearchResults", "No assignments found matching your search.")
+                  : t("noAssignments", "No assignments available.")}
+              </p>
             )}
           </div>
         </section>
@@ -1064,17 +1301,150 @@ const ItemTab = ({
     return item;
   });
 
+  // When type === "assignment", apply published and class filters before search
+  let preSearchItems = displayItems;
+  if (type === "assignment") {
+    if (selectedPublishedFilter !== null) {
+      preSearchItems = preSearchItems.filter((item) => item?.public === selectedPublishedFilter);
+    }
+    if (selectedClassIds.length > 0) {
+      preSearchItems = preSearchItems.filter((item) =>
+        (item?.classes || []).some((c) => selectedClassIds.includes(c.id))
+      );
+    }
+  }
+  const filteredDisplayItems = filterItems(preSearchItems, searchQuery);
+
+  const handlePublishedFilterToggle = (value) => {
+    setSelectedPublishedFilter((prev) => (prev === value ? null : value));
+  };
+  const handleClassFilterToggle = (classId) => {
+    setSelectedClassIds((prev) =>
+      prev.includes(classId) ? prev.filter((id) => id !== classId) : [...prev, classId]
+    );
+  };
+
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-        gap: "24px",
-        padding: "24px",
-        background: "#f9fafb",
-      }}
-    >
-      {displayItems.map((item) => {
+    <div style={{ padding: "24px", background: "#f9fafb" }}>
+      {/* Search Bar */}
+      <div style={{ marginBottom: "24px" }}>
+        <div style={{ position: "relative", marginBottom: "16px" }}>
+          <input
+            type="text"
+            placeholder={t("board.expendedCard.searchPlaceholder", "Search by title...")}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "12px 40px 12px 40px",
+              border: "1px solid #d0d5dd",
+              borderRadius: "8px",
+              fontSize: "16px",
+              fontFamily: "inherit",
+            }}
+          />
+          <Icon
+            name="search"
+            style={{
+              position: "absolute",
+              left: "12px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "#6c757d",
+              pointerEvents: "none",
+            }}
+          />
+          {searchQuery && (
+            <button
+              onClick={handleClearSearch}
+              style={{
+                position: "absolute",
+                right: "8px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "4px",
+                display: "flex",
+                alignItems: "center",
+                color: "#6c757d",
+              }}
+            >
+              <Icon name="close" />
+            </button>
+          )}
+        </div>
+      </div>
+      {type === "assignment" && (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "8px",
+            alignItems: "center",
+            marginBottom: "16px",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => handlePublishedFilterToggle(true)}
+            style={{
+              ...styledChipPublished,
+              color: "#434343",
+              backgroundColor: selectedPublishedFilter === true ? "#DEF8FB" : "#FFFFFF",
+              borderColor: selectedPublishedFilter === true ? "#434343" : "#434343",
+            }}
+            >
+            {t("assignment.published", "Published")}
+          </button>
+          <button
+            type="button"
+            onClick={() => handlePublishedFilterToggle(false)}
+            style={{
+              ...styledChipUnpublished,
+              color: "#434343",
+              backgroundColor: selectedPublishedFilter === false ? "#EFEFEF" : "#FFFFFF",
+              borderColor: selectedPublishedFilter === false ? "#434343" : "#434343",
+            }}
+          >
+            {t("assignment.unpublished", "Unpublished")}
+          </button>
+          {uniqueClasses.length > 0 && (
+            <>
+              <span style={{ margin: "0 8px", color: "#A1A1A1" }}>|</span>
+              {uniqueClasses.map((cls) => {
+                const isSelected = selectedClassIds.includes(cls.id);
+                return (
+                  <button
+                    key={cls.id}
+                    type="button"
+                    onClick={() => handleClassFilterToggle(cls.id)}
+                    style={{
+                      ...styledChip,
+                      backgroundColor: isSelected ? "#FDF2D0" : "#FFFFFF",
+                      borderColor: isSelected ? "#434343" : "#434343",
+                      cursor: "pointer",
+                      color: "#434343",
+                    }}
+                  >
+                    {stripHtml(cls.title)}
+                  </button>
+                );
+              })}
+            </>
+          )}
+        </div>
+      )}
+      {filteredDisplayItems.length > 0 ? (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+            gap: "24px",
+          }}
+        >
+          {filteredDisplayItems.map((item) => {
         const isSelected = selected.some((s) => s.id === item.id);
         const isTaskOrStudy = type === "task" || type === "study";
         const isTask = type === "task";
@@ -1101,14 +1471,14 @@ const ItemTab = ({
           ? item?.placeholder?.main || ""
           : item?.placeholder || "";
 
-        console.log(`ItemTab: Rendering ${type} item`, {
-          id: item.id,
-          title: item.title,
-          public: item.public,
-          content,
-          placeholder,
-          item: item,
-        });
+        // console.log(`ItemTab: Rendering ${type} item`, {
+        //   id: item.id,
+        //   title: item.title,
+        //   public: item.public,
+        //   content,
+        //   placeholder,
+        //   item: item,
+        // });
 
         return (
           <div
@@ -1131,7 +1501,7 @@ const ItemTab = ({
           >
             <div style={{display: "flex",justifyContent: "space-between",alignItems: "center",marginBottom: "12px", columnGap: "8px"}}>
               <h2 style={{fontSize: "18px", fontWeight: 600, color: "#333", margin: 0}}>
-                {item?.title || "Untitled"}
+                {stripHtml(item?.title) || "Untitled"}
               </h2>
             </div>
             <div
@@ -1167,7 +1537,7 @@ const ItemTab = ({
                           overflowWrap: "anywhere",
                           margin: 0
                         }}>
-                          {cls.title}
+                          {stripHtml(cls.title)}
                         </p>
                       </span>
                     ))}
@@ -1263,7 +1633,17 @@ const ItemTab = ({
             </div>
           );
         })}
-      </div>
+        </div>
+      ) : (
+        <div style={{ padding: "24px", textAlign: "center" }}>
+          <p>
+            {searchQuery
+              ? t("board.expendedCard.noSearchResults", "No items found matching your search.")
+              : t("board.expendedCard.noItems", "No items available.")}
+          </p>
+        </div>
+      )}
+    </div>
     );
   };
 
@@ -1461,11 +1841,11 @@ const ItemTab = ({
       >
       <div>
         <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("board.expendedCard.title")}</p>
-        <textarea
-          style={editableFieldStyle}
-          value={editedAssignment.title}
-          onChange={(e) => handleFieldChange('title', e.target.value)}
+        <TipTapEditor
+          content={editedAssignment.title}
           placeholder={t("assignment.titlePlaceholder", "Enter assignment title...")}
+          onUpdate={(newContent) => handleFieldChange('title', newContent)}
+          toolbarVisible={false}
         />
         <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("assignment.instructions")}</p>
         <TipTapEditor
@@ -1977,19 +2357,10 @@ const ResourceEditModal = ({
                   >
                     {t("boardManagement.titleText", "Title")}
                   </label>
-                  <input
-                    id="resource-title"
-                    type="text"
-                    value={formState.title}
-                    onChange={(e) => handleFieldChange("title", e.target.value)}
-                    style={{
-                      width: "100%",
-                      padding: "12px",
-                      borderRadius: "12px",
-                      border: "1px solid #d0d5dd",
-                      fontSize: "16px",
-                      fontFamily: "inherit",
-                    }}
+                  <TipTapEditor
+                    content={formState.title}
+                    onUpdate={(newContent) => handleFieldChange("title", newContent)}
+                    toolbarVisible={false}
                   />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -2128,113 +2499,204 @@ export const PreviewSection = ({
   user,
 }) => {
   const { t } = useTranslation("classes");
+  const [hoveredItemId, setHoveredItemId] = useState(null);
+  const tooltipTimeoutRef = useRef(null);
+
+  console.log("👁️ [PreviewSection] Rendering:", {
+    title,
+    type,
+    itemsCount: items.length,
+    itemsDetails: items.map(item => ({
+      id: item.id,
+      title: item.title,
+      isPublic: item.isPublic,
+      parentId: item.parent?.id
+    }))
+  });
+
+  // Background and border per type (Figma: Resources = MH-Theme/Secondary/Lighter #E6F1F9, border #BBC0CA)
+  const getBackgroundColor = (itemType) => {
+    if (itemType === "resource") {
+      return "#E6F1F9"; // MH-Theme/Secondary/Lighter
+    }
+    if (itemType === "assignment") {
+      return "#e4dff6";
+    }
+    if (itemType === "task" || itemType === "study") {
+      return "#fdf2d0";
+    }
+    return "#ffffff";
+  };
+
+  const getBorder = (itemType) => {
+    if (itemType === "resource") {
+      return "1px solid #D3E2F1"; // Figma Resources chip border
+    }
+    if (itemType === "assignment") {
+      return "1px solid #C6BDEB";
+    }
+    if (itemType === "task" || itemType === "study") {
+      return "1px solid #F9D978";
+    }
+    return "1px solid transparent";
+  };
 
   return (
     <>
-      <div
-        className="cardHeader"
-        style={{
-          fontFamily: "Nunito",
-          fontSize: "20px",
-          fontWeight: 600,
-          color: "#333",
-          marginTop: "20px",
-        }}
-      >
-        {title}
-      </div>
+      {/* {title && (
+        <div
+          className="cardHeader"
+          style={{
+            fontFamily: "Nunito, sans-serif",
+            fontSize: "16px",
+            fontWeight: 600,
+            lineHeight: "24px",
+            color: "#171717", // MH-Theme/Neutrals/Black
+            marginTop: "8px",
+            marginBottom: "4px",
+          }}
+        >
+          {title}
+        </div>
+      )} */}
       <div
         className="previewGrid"
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-          gap: "20px",
-          marginTop: "10px",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "8px",
+          marginTop: title ? 0 : "10px",
+          alignItems: "center",
         }}
       >
-        {items.map((item) => {
-          const isTaskOrStudy = type === "task" || type === "study";
+        {items.map((item, index) => {
           const isTask = type === "task";
           const isStudy = type === "study";
           const isAssignment = type === "assignment";
           const isResource = type === "resource";
+          const isAssignmentDisabled = isAssignment && !item?.public;
           let viewUrl = `/dashboard/${type}s/view?id=${item?.id}`;
-          if (isTask) {
-            viewUrl = `/dashboard/discover/tasks?name=${item?.slug}`;
-          }
-          if (isStudy) {
-            viewUrl = `/dashboard/discover/studies?name=${item?.slug}`;
-          }
-          const editUrl = item?.isCustom
-            ? `/dashboard/${type}s/edit?id=${item?.id}`
-            : `/dashboard/${type}s/copy?id=${item?.id}&p=${proposal?.id}`;
-          const content = isResource
-            ? item?.content?.main || ""
-            : item?.content || "";
+          if (isTask) viewUrl = `/dashboard/discover/tasks?name=${item?.slug}`;
+          if (isStudy) viewUrl = `/dashboard/discover/studies?name=${item?.slug}`;
 
-          // Handle click based on item type for PreviewSection
           const handlePreviewCardClick = () => {
             if (isAssignment) {
+              if (isAssignmentDisabled) return;
               openAssignmentModal?.(item);
-            } else if (isResource) {
-              openResourceModal?.(item);
-            } else if (isTask || isStudy) {
-              window.open(viewUrl, '_blank', 'noopener,noreferrer');
-            }
+            } else if (isResource) openResourceModal?.(item);
+            else if (isTask || isStudy) window.open(viewUrl, "_blank", "noopener,noreferrer");
           };
+
+          const isHovered = hoveredItemId === item.id;
+          const backgroundColor = getBackgroundColor(type);
+          const border = getBorder(type);
+          const fullTitle = stripHtml(item?.title) || "Untitled";
+          const typeLabel =
+            type === "resource"
+              ? t("board.expendedCard.resources", "Resources")
+              : type === "assignment"
+                ? t("board.expendedCard.myAssignments", "Assignments")
+                : type === "task"
+                  ? t("board.expendedCard.tasks", "Tasks")
+                  : t("board.expendedCard.studies", "Studies");
+          const tooltipContent = isAssignmentDisabled
+            ? t("board.expendedCard.assignmentNotPublished", "Not published")
+            : `${typeLabel}: ${fullTitle}`;
 
           return (
             <div
               className="itemBlockPreview"
-              key={item.id}
+              key={`${type}-${item.id}-${index}`}
               onClick={handlePreviewCardClick}
-              style={{
-                border: "1px solid #e0e0e0",
-                borderRadius: "12px",
-                padding: "16px",
-                background: "#ffffff",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-              }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.borderColor = "#336F8A";
+                setHoveredItemId(item.id);
+                const el = e.currentTarget;
+                if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current);
+                tooltipTimeoutRef.current = setTimeout(() => {
+                  const tooltip = el.querySelector(".hover-tooltip");
+                  if (tooltip) {
+                    tooltip.style.opacity = "1";
+                    tooltip.style.transform = "translateY(0)";
+                  }
+                }, 550);
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)";
-                e.currentTarget.style.transform = "translateY(0px)";
-                e.currentTarget.style.borderColor = "#e0e0e0";
+                setHoveredItemId(null);
+                if (tooltipTimeoutRef.current) {
+                  clearTimeout(tooltipTimeoutRef.current);
+                  tooltipTimeoutRef.current = null;
+                }
+                const tooltip = e.currentTarget.querySelector(".hover-tooltip");
+                if (tooltip) {
+                  tooltip.style.opacity = "0";
+                  tooltip.style.transform = "translateY(-5px)";
+                }
+              }}
+              style={{
+                position: "relative",
+                display: "inline-flex",
+                alignItems: "center",
+                padding: "10px 16px",
+                borderRadius: "8px",
+                border,
+                background: backgroundColor,
+                cursor: isAssignmentDisabled ? "not-allowed" : "pointer",
+                transition: "box-shadow 0.2s ease",
+                boxShadow: !isAssignmentDisabled && isHovered ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
+                fontFamily: "Nunito, sans-serif",
+                fontSize: "16px",
+                fontWeight: 600,
+                lineHeight: "24px",
+                color: "#171717",
+                maxWidth: "320px",
+                minWidth: 0,
+                opacity: isAssignmentDisabled ? 0.55 : 1,
               }}
             >
-              <div
-                className="titleIcons"
+              <span
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "12px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  minWidth: 0,
                 }}
               >
-                <h2
-                  style={{
-                    fontSize: "18px",
-                    fontWeight: "600",
-                    color: "#333",
-                    margin: 0,
-                  }}
-                >
-                  {item?.title || "Untitled"}
-                </h2>
+                {fullTitle}
+              </span>
+              {/* Hover tooltip: type + full name (1.5s delay), or "Not published" when disabled */}
+              <div
+                className="hover-tooltip"
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: "0",
+                  width: "max-content",
+                  maxWidth: "320px",
+                  background: backgroundColor,
+                  border,
+                  color: "#171717",
+                  marginTop: "8px",
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  fontFamily: "Nunito, sans-serif",
+                  lineHeight: "20px",
+                  opacity: 0,
+                  transform: "translateY(-5px)",
+                  transition: "all 0.3s ease",
+                  pointerEvents: "none",
+                  zIndex: 1000,
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.10)",
+                }}
+              >
+                {isAssignmentDisabled ? (
+                  tooltipContent
+                ) : (
+                  <>
+                    <span style={{ fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
+                  </>
+                )}
               </div>
-              {!isAssignment && (
-                <div
-                  style={{ fontSize: "14px", color: "#666", lineHeight: "1.5" }}
-                >
-                  {/* {ReactHtmlParser(truncateHtml(content, 50))} */}
-                </div>
-              )}
             </div>
           );
         })}

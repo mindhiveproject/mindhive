@@ -1,17 +1,33 @@
-import { useQuery, useApolloClient } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import styled from "styled-components";
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../../Queries/Proposal";
-import { Icon} from "semantic-ui-react";
-import { useState } from "react";
-import useTranslation from "next-translate/useTranslation";
+import { useState, useEffect } from "react";
 import ProposalPDF from "./Board/PDF/Main";
 import ProposalBuilder from "./Board/Builder/Main";
-import { DownloadButton } from "../../../styles/StyledProposal";
-import exportPDF from "./Board/PDF/exportPDF";
+import ProposalHeader from "./Board/Builder/Header";
 
-export default function ProposalPage({ user, proposalId }) {
+const BoardFontWrapper = styled.div`
+  font-family: "Inter", sans-serif;
+  &,
+  & * {
+    font-family: "Inter", sans-serif !important;
+  }
+`;
+
+export default function ProposalPage({
+  user,
+  proposalId,
+  onCardOpenChange,
+}) {
   const [isPDF, setIsPDF] = useState(false);
-  const { t } = useTranslation("builder");
-  const client = useApolloClient();
+  // Persist filter selections across view toggles
+  const [selectedStatuses, setSelectedStatuses] = useState([]);
+  const [selectedReviewSteps, setSelectedReviewSteps] = useState([]);
+  const [selectedAssignedUsers, setSelectedAssignedUsers] = useState([]);
+  // Lift card state so we can hide header when card is open
+  const [page, setPage] = useState("board");
+  const [card, setCard] = useState(null);
+
   const { data, error, loading } = useQuery(OVERVIEW_PROPOSAL_BOARD_QUERY, {
     variables: {
       id: proposalId,
@@ -19,61 +35,79 @@ export default function ProposalPage({ user, proposalId }) {
   });
 
   const proposal = data?.proposalBoard || {};
+  const isCardOpen = page === "card";
+
+  useEffect(() => {
+    onCardOpenChange?.(isCardOpen);
+  }, [isCardOpen, onCardOpenChange]);
 
   return (
-    <div className="proposalBoard">
-      <div className="previewToggle">
-        {proposal?.isSubmitted ? (
-          <div>
-            <h3>
-              {t(
-                "proposalPage.submittedLocked",
-                "The proposal has been submitted and locked 🔒"
-              )}
-            </h3>
-          </div>
-        ) : (
-          <>
-            {isPDF && (
-              <>
-                <button onClick={() => exportPDF(proposalId, client, t)} className="narrowButtonSecondary">
-                  <Icon name="download"/> {t("printButton", "Print/Save as PDF")}
-                </button>
-                {/* <span>
-                  <div className="preview">
-                  {t("proposalPage.preview", "Preview")}
-                  <span className="alert">
-                  <Icon name="info circle" />
-                  <span>
-                  {t(
-                    "proposalPage.previewInfo",
-                    'Content from cards marked as "complete" in edit mode will appear here, in preview mode, displaying what your reviewers will see.'
-                    )}
-                    </span>
-                    </span>
-                    </div>
-                    </span> */}
-                <button onClick={() => {setIsPDF(!isPDF);}} className="narrowButton">
-                  <Icon name="table"/> {t("proposalPage.viewBoard", "View Board")}
-                </button>
-              </>
-            )}
-          </>
-        )}
-      </div>
-      {isPDF || proposal?.isSubmitted ? (
-        <ProposalPDF proposalId={proposalId} user={user} />
-      ) : (
-        <ProposalBuilder
+    <BoardFontWrapper
+      className="proposalBoard"
+      style={
+        isCardOpen
+          ? {
+              flex: 1,
+              minHeight: 0,
+              margin: 0,
+            }
+          : undefined
+      }
+    >
+      {!isCardOpen && (
+        <ProposalHeader
           user={user}
           proposal={proposal}
-          onClose={() => {}}
           proposalBuildMode={false}
           refetchQueries={[]}
           isPDF={isPDF}
           setIsPDF={setIsPDF}
+          selectedStatuses={selectedStatuses}
+          selectedReviewSteps={selectedReviewSteps}
+          selectedAssignedUsers={selectedAssignedUsers}
         />
       )}
-    </div>
+      {isPDF || proposal?.isSubmitted ? (
+        <ProposalPDF
+          proposalId={proposalId}
+          user={user}
+          selectedStatuses={selectedStatuses}
+          setSelectedStatuses={setSelectedStatuses}
+          selectedReviewSteps={selectedReviewSteps}
+          setSelectedReviewSteps={setSelectedReviewSteps}
+          selectedAssignedUsers={selectedAssignedUsers}
+          setSelectedAssignedUsers={setSelectedAssignedUsers}
+        />
+      ) : (
+        <div
+          style={
+            isCardOpen
+              ? {
+                  gridRow: "1 / -1",
+                  minHeight: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  overflow: "hidden",
+                  height: "100%",
+                }
+              : undefined
+          }
+        >
+          <ProposalBuilder
+            user={user}
+            proposal={proposal}
+            onClose={() => {}}
+            proposalBuildMode={false}
+            refetchQueries={[]}
+            isPDF={isPDF}
+            setIsPDF={setIsPDF}
+            page={page}
+            setPage={setPage}
+            card={card}
+            setCard={setCard}
+          />
+        </div>
+      )}
+    </BoardFontWrapper>
   );
 }

@@ -295,7 +295,10 @@ export default function studyManager(props) {
                               : t("dashboard.studyManager.none")}
                           </div>
                           <Link
-                            href={`/builder/projects?selector=${project.id}&tab=builder`}
+                            href={{
+                              pathname: `/builder/projects`,
+                              query: { selector: project.id, tab: "builder" }
+                            }}
                             target="_blank"
                             className="study-link"
                           >

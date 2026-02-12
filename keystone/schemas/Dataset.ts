@@ -68,6 +68,7 @@ export const Dataset = list({
       ],
       defaultValue: "WORKING",
     }),
+    studyVersion: text(),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

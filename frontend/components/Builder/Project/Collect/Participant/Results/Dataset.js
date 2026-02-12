@@ -38,6 +38,7 @@ export const getTranslatedStudyStatuses = (t) => {
 };
 
 export default function Dataset({
+  study,
   studyId,
   participantId,
   dataset,
@@ -45,10 +46,12 @@ export default function Dataset({
 }) {
   const { t } = useTranslation("builder");
   const { date, token, isCompleted } = dataset;
-  
+
   // Get translated status strings for use in this component
   const studyStatuses = getTranslatedStudyStatuses(t);
-  
+
+  const studyVersionHistory = study?.versionHistory || [];
+
   // Set up SWR to run the fetcher function when calling "/api/staticdata"
   // There are 3 possible states: (1) loading when data is null (2) ready when the data is returned (3) error when there was an error fetching the data
   const [year, month, day] = date.split("-");
@@ -69,10 +72,21 @@ export default function Dataset({
         <div>{metadata?.testVersion}</div>
         <div>{moment(dataset?.createdAt).format("MMMM D, YY, h:mm:ss")}</div>
         <div>{moment(dataset?.completedAt).format("MMMM D, YY, h:mm:ss")}</div>
-        <div>{condition}</div>
-        <div>{dataset?.isCompleted ? t("dataset.full", "full") : t("dataset.incremental", "incremental")}</div>
+        {/* <div>{condition}</div> */}
+        <div>
+          {dataset?.isCompleted
+            ? t("dataset.full", "full")
+            : t("dataset.incremental", "incremental")}
+        </div>
         <div>{dataset?.dataPolicy}</div>
         <div>{dataset?.studyStatus && studyStatuses[dataset?.studyStatus]}</div>
+        <div>
+          {dataset?.studyVersion
+            ? studyVersionHistory
+                .filter((v) => v?.id === dataset?.studyVersion)
+                .map((v) => v?.name)
+            : " "}
+        </div>
         <div>{t("dataset.noData", "No data")}</div>
         <DeleteRecord
           studyId={studyId}
@@ -128,7 +142,7 @@ export default function Dataset({
       .map((line) => Object.keys(line))
       .reduce((a, b) => a.concat(b), []);
     const keys = Array.from(new Set(allKeys));
-  
+
     // Only stringify 'aggregated' field if it's an object
     const processedRows = rows.map((row) => {
       const newRow = { ...row };
@@ -154,10 +168,21 @@ export default function Dataset({
         {dataset?.completedAt &&
           moment(dataset?.completedAt).format("MMMM D, YY, h:mm:ss")}
       </div>
-      <div>{condition}</div>
-      <div>{dataset?.isCompleted ? t("dataset.full", "full") : t("dataset.incremental", "incremental")}</div>
+      {/* <div>{condition}</div> */}
+      <div>
+        {dataset?.isCompleted
+          ? t("dataset.full", "full")
+          : t("dataset.incremental", "incremental")}
+      </div>
       <div>{dataset?.dataPolicy}</div>
       <div>{dataset?.studyStatus && studyStatuses[dataset?.studyStatus]}</div>
+      <div>
+        {dataset?.studyVersion
+          ? studyVersionHistory
+              .filter((v) => v?.id === dataset?.studyVersion)
+              .map((v) => v?.name)
+          : " "}
+      </div>
       <ChangeDatasetStatus
         studyId={studyId}
         participantId={participantId}

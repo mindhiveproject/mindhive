@@ -31,8 +31,15 @@ export default function Login({ redirectType, redirectTo }) {
   async function handleSubmit(e) {
     e.preventDefault();
     // send the email and password to graphql api
+    // Normalize email to lowercase
+    const normalizedInputs = {
+      ...inputs,
+      email: inputs.email?.toLowerCase().trim(),
+    };
     try {
-      const res = await signin();
+      const res = await signin({
+        variables: normalizedInputs,
+      });
       // if error
       if (
         res?.data?.authenticateProfileWithPassword?.__typename ===

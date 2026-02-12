@@ -1,14 +1,25 @@
 import styled from "styled-components";
 
 export const StyledProposal = styled.div`
-  display: grid;
+  display: ${(props) => (props.$cardFullView ? "flex" : "grid")};
+  flex-direction: ${(props) => (props.$cardFullView ? "column" : "unset")};
   width: 100%;
-  overflow-y: auto;
-  padding: 20px;
-  min-height: 80vh;
+  height: 100%;
+  overflow-y: ${(props) => (props.$cardFullView ? "hidden" : "auto")};
+  padding: ${(props) => (props.$cardFullView ? "0" : "20px")};
+  // min-height: 80vh;
   background: #f7f9f8;
-  align-items: baseline;
+  align-items: ${(props) => (props.$cardFullView ? "stretch" : "baseline")};
   font-family: "Nunito";
+  min-height: ${(props) => (props.$cardFullView ? "0" : "unset")};
+
+  .hideScrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hideScrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
   .closeBtn {
     line-height: 3rem;
@@ -170,7 +181,7 @@ export const StyledProposal = styled.div`
       justify-content: flex-end;
       column-gap: 16px;
       align-items: center;
-      margin: 5px 0px 15px 0px;
+      margin: 5px 36px 15px 0px;
       span {
         font-family: Roboto;
         font-size: 18px;
@@ -248,15 +259,16 @@ export const StyledProposal = styled.div`
   .section {
     display: grid;
     justify-items: center;
-    grid-gap: 0.5rem;
+    grid-gap: 12px;
     position: relative;
-    background: #f5f5f5;
-    border: 1px solid #e6e6e6;
+    background: none;
+    border: 1px solid #A1A1A1;
     border-radius: 8px;
     min-width: 250px;
-    margin: 15px;
-    padding: 0px 0px 20px 0px;
     width: 410px;
+    max-width: 410px;
+    margin: 15px;
+    padding: 24px;
     .infoLine {
       margin: 1rem 0px 0px 0rem;
       display: grid;
@@ -273,13 +285,14 @@ export const StyledProposal = styled.div`
     .column-drag-handle {
       display: grid;
       width: 100%;
+      min-width: 0;
       margin: 0px 0px 0px 0px;
-      padding: 1rem 2rem 1rem 2rem;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      // padding: 1rem 2rem 1rem 2rem;
+      // box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
       cursor: pointer;
       .firstLine {
         display: grid;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: minmax(0, 1fr) auto;
         grid-gap: 10px;
         justify-items: baseline;
         align-items: center;
@@ -288,13 +301,40 @@ export const StyledProposal = styled.div`
       }
       .sectionTitle {
         font-family: Nunito;
-        font-size: 24px;
-        font-weight: 500;
-        line-height: var(--BodySmallLineHeight);
-        letter-spacing: var(--BodySmallTracking);
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 28px;
+        letter-spacing: 0.05em;
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
+        min-width: 0;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        word-break: break-word;
+        text-overflow: ellipsis;
+      }
+      .sectionTitleInput {
+        font-family: Nunito;
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 28px;
+        letter-spacing: 0.05em;
+        text-align: left;
+        width: 100%;
+        min-width: 0;
+        border: 1px solid #336F8A;
+        border-radius: 4px;
+        padding: 2px 6px;
+        outline: none;
+        box-sizing: border-box;
+        resize: vertical;
+        min-height: 36px;
+        max-height: 80px;
+        white-space: pre-line;
+        overflow-y: auto;
       }
       span {
         font-family: Lato;
@@ -323,6 +363,314 @@ export const StyledProposal = styled.div`
 
   .header {
     display: grid;
+    margin-bottom: 24px;
+    .headerContent {
+      width: 100%;
+    }
+    .headerMainContent {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 100%;
+    }
+    .headerLeftSection {
+      display: flex;
+      flex: 1 0 0;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+    }
+    .headerRightSection {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      padding-left: 8px;
+    }
+    .headerTitleRow {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .headerEditIcon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: #F3F3F3;
+      border-radius: 100px;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      .icon {
+        // color: #336F8A;
+        margin: 0;
+        width: 24px;
+        height: 24px;
+        aspect-ratio: 1 / 1;
+      }
+      img {
+        width: 24px;
+        height: 24px;
+        aspect-ratio: 1 / 1;
+        object-fit: contain;
+        border: none;
+      }
+      &:hover {
+      // background: #E6E6E6;
+      border: 1px solid #336F8A;
+      img {
+        border: none;
+      }
+    }
+    }
+    .headerTitle {
+      font-family: "Nunito", sans-serif;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 36px;
+      line-height: 44px;
+      color: #171717;
+      margin: 0;
+      flex: 1;
+    }
+    .headerInfoRow {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 8px;
+      width: 100%;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+    .studyLinkChip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      height: 32px;
+      border-radius: 8px;
+      padding: 6px 12px;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1.5px solid;
+      white-space: nowrap;
+      font-family: inherit;
+      width: fit-content;
+      &:focus {
+        outline: none;
+      }
+      &.board {
+        background: #F9D978;
+        border-color: #5D5763;
+        color: #171717;
+        &:hover:not(:disabled) {
+          background: #F5D165;
+          border-color: #4A4550;
+        }
+      }
+      &.list {
+        background: #DEF8FB;
+        border-color: #336F8A;
+        color: #171717;
+        width: max-content;
+        max-width: 100%;
+        &:hover:not(:disabled) {
+          background: #C8F0F5;
+          border-color: #2A5A6D;
+        }
+      }
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+    .studyLinkChipContent {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      padding: 0;
+      min-width: 0;
+      flex: 0 1 auto;
+    }
+    .studyLinkIcon {
+      width: fit-content;
+      height: fit-content;
+      flex-shrink: 0;
+      margin: 0;
+      display: block;
+    }
+    .studyLinkText {
+      margin: 0;
+      font-family: "Nunito", sans-serif;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      color: #171717;
+      white-space: nowrap;
+      text-align: left;
+      letter-spacing: 0px;
+      width: fit-content;
+      vertical-align: middle;
+      min-width: 0;
+    }
+    .collaboratorArray {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+    .collaboratorChip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      border: 1px solid #A1A1A1;
+      border-radius: 30px;
+      padding: 4px 12px 4px 12px;
+      gap: 8px;
+      background: white;
+      overflow: hidden;
+      width: fit-content;
+      max-width: 300px;
+      span {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: flex;
+        height: 100%;
+        align-items: center;
+      }
+    }
+    .addCollaboratorButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border: 1px solid #A1A1A1;
+      border-radius: 50%;
+      background: white;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      overflow: hidden;
+      &:hover {
+        background: #F3F3F3;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+      .icon {
+        color: #171717;
+        margin: 0;
+      }
+    }
+    .downloadButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 40px;
+      padding: 8px 12px 8px 16px;
+      border-radius: 100px;
+      // border: 1px solid #336F8A;
+      // background: white;
+      color: #336F8A;
+      font-family: "Nunito", sans-serif;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      cursor: pointer;
+      flex-shrink: 0;
+      &:hover {
+        background: #ffffff;
+        paddingRight: 12px;
+        border: 1px solid #336F8A;
+        // color: #625B71;
+        .icon {
+          color: #625B71;
+        }
+      }
+      .icon {
+        margin: 0;
+        width: 24px;
+        height: 24px;
+        color: #336F8A;
+      }
+    }
+    .downloadButtonText {
+      white-space: nowrap;
+    }
+    .viewToggleGroup {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .viewToggleButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 40px;
+      padding: 8px 24px 8px 16px;
+      border: 1px solid #336F8A;
+      font-family: "Nunito", sans-serif;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      margin-right: -1px;
+      &.left {
+        border-top-left-radius: 100px;
+        border-bottom-left-radius: 100px;
+      }
+      &.right {
+        border-top-right-radius: 100px;
+        border-bottom-right-radius: 100px;
+      }
+      &.active {
+        background: #D3E0E3;
+        color: #336F8A;
+        border-color: #336F8A;
+        .icon {
+          color: #336F8A;
+          margin: 0;
+        }
+      }
+      &.inactive {
+        background: white;
+        color: #336F8A;
+        border-color: #336F8A;
+        .icon {
+          color: #336F8A;
+          margin: 0;
+        }
+      }
+      &:hover {
+        background: #F3F3F3;
+      }
+      img {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+        margin: 0;
+        filter: brightness(0) saturate(100%) invert(26%) sepia(94%) saturate(1234%) hue-rotate(158deg) brightness(92%) contrast(87%);
+      }
+    }
     .titleEdit {
       font-family: "Nunito";
       font-style: normal;
@@ -501,10 +849,12 @@ export const StyledProposal = styled.div`
     .navigation-build-mode {
       display: grid;
       align-items: center;
-      padding: 6px 9px;
+      padding: 8px 24px 8px 24px;
       grid-template-columns: auto 1fr auto;
       grid-gap: 20px;
       background: white;
+      border-radius: 24px;
+      border: 2px solid #D3E0E3;
       .left {
         display: grid;
         .icon {
@@ -533,8 +883,12 @@ export const StyledProposal = styled.div`
       }
       .right {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr auto 1fr;
         grid-gap: 10px;
+        &.rightPreviewMode {
+          grid-template-columns: 1fr;
+          justify-items: end;
+        }
         .editModeMessage {
           display: grid;
           align-items: center;
@@ -634,6 +988,7 @@ export const StyledProposal = styled.div`
       }
     }
     .cardHeader {
+      margin-top: 16px;
       font-family: 'Nunito';
       font-style: normal;
       font-weight: 600;
@@ -699,6 +1054,64 @@ export const StyledProposal = styled.div`
       letter-spacing: 0em;
       text-align: left;
       height: 100%;
+      .collaboratorArray {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: nowrap;
+        width: 100%;
+        margin-top: 8px;
+      }
+      .collaboratorChip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        border: 1px solid #A1A1A1;
+        border-radius: 30px;
+        padding: 4px 12px 4px 12px;
+        gap: 8px;
+        background: white;
+        overflow: hidden;
+        width: fit-content;
+        max-width: 300px;
+        span {
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          display: flex;
+          height: 100%;
+          align-items: center;
+        }
+      }
+      .addCollaboratorButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: 1px solid #A1A1A1;
+        border-radius: 50%;
+        background: white;
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
+        overflow: hidden;
+        &:hover {
+          background: #F3F3F3;
+        }
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          display: block;
+        }
+        .icon {
+          color: #171717;
+          margin: 0;
+        }
+      }
     }
     .resourceLinks {
       display: grid;
@@ -755,29 +1168,24 @@ export const StyledProposal = styled.div`
 `;
 
 export const StyledProposalCard = styled.div`
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
   background: #ffffff;
-  border: 1px solid #e6e6e6;
-  box-sizing: border-box;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #a1a1a1;
   border-radius: 12px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  width: calc(100% - 20px);
   cursor: pointer;
   margin: 3px 10px;
-  position: relative;
-  width: 362px;
-  height: 80px;
   font-family: Nunito;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: var(--TitleMediumLineHeight);
-  letter-spacing: var(--TitleMediumTracking);
-  text-align: left;
-  text-underline-position: from-font;
-  text-decoration-skip-ink: none;
+  box-sizing: border-box;
 
   .card-drag-handle {
     height: 100%;
-    display: grid;
+    display: flex;
+    flex: 1 0 0;
   }
   .deleteCardBtn {
     position: absolute;
@@ -788,21 +1196,17 @@ export const StyledProposalCard = styled.div`
       width: 20px;
       opacity: 0.1;
     }
-    img: hover {
+    img:hover {
       opacity: 1;
     }
   }
   .card-information {
-    display: grid;
-    grid-template-columns: 40px 1fr auto;
+    display: flex;
+    flex: 1 0 0;
     align-items: center;
-    .status {
-      color: #007c70;
-      font-family: Lato;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 400;
-    }
+    gap: 8px;
+    min-height: 80px;
+    padding: 0px 0px 0px 16px;
 
     .info-assigned-container {
       display: grid;
@@ -824,165 +1228,106 @@ export const StyledProposalCard = styled.div`
       letter-spacing: 0.05em;
       padding: 1px 7px 1px 7px;
     }
-    .info-status {
-      width: fit-content;
-      display: grid;
-      align-items: center;
-      box-sizing: border-box;
-      border: 1px solid transparent;
-      border-radius: 60px;
-      font-family: Lato;
-      font-size: 12px;
-      font-style: normal;
-      font-weight: 400;
-      letter-spacing: 0.05em;
-      padding: 1px 7px 1px 7px;
-    }
-    .status-not-started {
-      color: #896900;
-      background: rgba(254, 210, 79, 0.18);
-    }
-    .status-started {
-      color: #0063ce;
-      background: rgba(0, 117, 224, 0.12);
-    }
-    .status-needs-feedback {
-      color: #c92927;
-      background: rgba(224, 103, 102, 0.12);
-    }
-    .status-feedback-given {
-      color: #6f25ce !important;
-      background: rgba(111, 37, 206, 0.12) !important;
-    }
-    .status-completed {
-      color: #00635a;
-      background: rgba(0, 124, 112, 0.12);
-    }
-    img {
-      width: 20px !important;
-    }
+
     .card-left-side {
-      display: grid;
+      display: flex;
       justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      img {
+        width: 24px;
+        height: 24px;
+      }
     }
     .card-right-side {
-      display: grid;
+      display: flex;
+      flex: 1 0 0;
+      flex-direction: column;
       margin: 0px;
-      .card-type {
-        display: grid;
-        justify-content: end;
-        font-family: Lato;
-        font-size: 8px;
-        font-weight: 600;
-        line-height: 13px;
-        text-align: center;
-        span {
-          margin-top: 5px;
-          border-radius: 10px;
-          padding: 1px 8px 1px 8px;
-          /* background: ${(props) =>
-            props.type === "PROPOSAL"
-              ? "#ebe5e5"
-              : props.type === "ASSIGNMENT"
-              ? "#98cbc6"
-              : props.type === "LESSON"
-              ? "#f9e1df"
-              : props.type === "ARTICLE"
-              ? "#b8d2ec"
-              : props.type === "SURVEY"
-              ? "#FFC107"
-              : props.type === "LINK"
-              ? "#C9D6CD"
-              : "#FFE29D"};
-          color: ${(props) =>
-            props.type === "PROPOSAL"
-              ? "#623A39"
-              : props.type === "ASSIGNMENT"
-              ? "#004A43"
-              : props.type === "LESSON"
-              ? "#E06766"
-              : props.type === "ARTICLE"
-              ? "#28619E"
-              : props.type === "SURVEY"
-              ? "#856502"
-              : props.type === "LINK"
-              ? "#3C443E"
-              : "#FFE29D"}; */
-        }
-      }
+      min-width: 0;
       .card-title {
-        display: grid;
-        /* grid-template-columns: 1fr auto;
-        margin-bottom: 5px; */
+        display: flex;
+        flex: 1 0 0;
+        font-family: Nunito;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        color: #171717;
+        min-width: 0;
+        div {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          min-width: 100px;
+          max-width: 200px;
+        }
       }
       .editedByAvatar {
         display: grid;
         align-content: end;
       }
     }
-    .card-public-status {
-      display: grid;
-      background: #f9d978;
-      height: 100%;
-      width: 40px;
+    .card-feedback-tag {
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-items: center;
+      justify-content: center;
+      padding: 12px;
+      height: 100%;
       border-top-right-radius: 12px;
       border-bottom-right-radius: 12px;
-    }
-    .card-public-status-submitted {
-      display: grid;
-      background: #def8fb;
-      height: 100%;
-      width: 40px;
-      align-items: center;
-      justify-items: center;
-      border-top-right-radius: 12px;
-      border-bottom-right-radius: 12px;
-    }
-    .card-public-status-build-mode {
-      display: grid;
-      background: #f3f3f3;
-      height: 100%;
-      width: 40px;
-      align-items: center;
-      justify-items: center;
-      border-top-right-radius: 12px;
-      border-bottom-right-radius: 12px;
+      flex-shrink: 0;
+      img {
+        width: 24px;
+        height: 24px;
+      }
+      &.feedback-non-submitted {
+        background: #f9d978;
+        border-left: 1px solid #a1a1a1;
+      }
+      &.feedback-submitted {
+        background: #def8fb;
+        border-left: 1px solid #a1a1a1;
+      }
     }
   }
 `;
 
 export const StyledActionCard = styled.div`
-  display: grid;
-  align-content: center;
-  border-radius: 41px;
-  background: ${(props) =>
-    props.proposalBuildMode
-      ? "#FFFFFF"
-      : props.isSubmitted
-      ? "#DEF8FB"
-      : "#fdf2d0"};
-  border: 3px solid #FFC107
-  box-sizing: border-box;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  margin: 0px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: relative;
-  min-height: 71px;
+  border-radius: 12px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  margin: 3px 10px;
+  width: calc(100% - 20px);
   font-family: Nunito;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: var(--TitleMediumLineHeight);
-  letter-spacing: var(--TitleMediumTracking);
-  text-align: left;
-  text-underline-position: from-font;
-  text-decoration-skip-ink: none;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  background: ${(props) => {
+    if (props.proposalBuildMode) return "#FFFFFF";
+    if (props.variant === "ACTION_SUBMITTED") return "#def8fb";
+    if (props.variant === "ACTION_NOT_SUBMITTED") return "#fdf2d0";
+    return "#FFFFFF";
+  }};
+
+  border: ${(props) => {
+    if (props.proposalBuildMode) return "1px solid #a1a1a1";
+    if (props.variant === "ACTION_SUBMITTED") return "1px solid #336f8a";
+    if (props.variant === "ACTION_NOT_SUBMITTED") return "1px solid #5d5763";
+    return "1px solid #a1a1a1";
+  }};
 
   .card-drag-handle {
-    height: 100%;
-    margin: 0px 15px;
-    display: grid;
+    // height: 100%;
+    display: flex;
+    flex: 1 0 0;
   }
 
   .deleteCardBtn {
@@ -994,52 +1339,86 @@ export const StyledActionCard = styled.div`
       width: 20px;
       opacity: 0.1;
     }
-    img: hover {
+    img:hover {
       opacity: 1;
     }
   }
 
   .card-information {
-    display: grid;
-    grid-gap: 10px;
-    grid-template-columns: 40px 1fr auto;
-  }
-  .card-left-side {
-    display: grid;
-    justify-content: center;
-    align-content: center;
-  }
-  .card-right-side{
-    display: grid;
-    justify-content: center;
-    align-content: center;
-  }
-`;
+    min-width: 350px;
+    display: flex;
+    flex: 1 0 0;
+    align-items: stretch;
 
-export const DownloadButton = styled.button`
-  && {
-    color: white;
-    display: inline-flex;
-    height: 40px;
-    padding: 8px 12px 8px 4px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-    border-radius: 100px;
-    background: var(--MH-Theme-Primary-Dark, #336f8a);
-    :hover {
-      transform: scale(1.05);
-      transition: transform 1s;
+    .card-left-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 0px 16px 16px;
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+      background: ${(props) => {
+        if (props.proposalBuildMode) return "transparent";
+        if (props.variant === "ACTION_SUBMITTED") return "#def8fb";
+        if (props.variant === "ACTION_NOT_SUBMITTED") return "#fdf2d0";
+        return "transparent";
+      }};
+      flex-shrink: 0;
+      img {
+        width: 24px;
+        height: 24px;
+      }
+      svg {
+        width: 24px;
+        height: 24px;
+      }
     }
-    :disabled {
-      background: #cccccc;
-      border-color: #cccccc;
-      cursor: not-allowed;
+
+    .card-right-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 16px 16px 0px;
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+      background: ${(props) => {
+        if (props.proposalBuildMode) return "transparent";
+        if (props.variant === "ACTION_SUBMITTED") return "#def8fb";
+        if (props.variant === "ACTION_NOT_SUBMITTED") return "#fdf2d0";
+        return "transparent";
+      }};
+      flex-shrink: 0;
+      svg {
+        width: 24px;
+        height: 24px;
+      }
     }
-    .icon {
-      align-items: center !important;
-      margin: 0 !important;
+
+    .card-content {
+      display: flex;
+      flex: 1 0 0;
+      flex-direction: column;
+      justify-content: center;
+      padding: 16px;
+      gap: 4px;
+
+      .card-title {
+        font-family: Nunito;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 24px;
+        color: #171717;
+      }
+
+      .card-subtitle {
+        font-family: Nunito;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: #6a6a6a;
+      }
     }
   }
 `;
