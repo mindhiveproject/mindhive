@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "",
 		"assignCard": "",
+		"canAssignTooltip": "",
 		"cancel": "",
 		"noCollaborators": "",
 		"noUsersFound": "",
+		"onlyTeachersMentorsCanAdd": "",
 		"removeUser": "",
 		"save": "",
 		"searchPlaceholder": "",
@@ -480,6 +482,7 @@
 		"noNotes": "अभी तक कोई नोट दर्ज नहीं किया गया है। नोट जोड़ने के लिए राइट-क्लिक करें।"
 	},
 	"noVideoPlaceholder": "",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "कार्रवाई",
 		"copy": "प्रतिलिपि",
@@ -673,7 +676,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "कार्ड असाइन करने से छात्रों को अक्षम करें",
+				"disableStudentsAssign": "केवल शिक्षकों और मेंटर्स तक सीमित करें",
+				"empty": "",
+				"enable": "कार्ड असाइन करने के लिए छात्रों को सक्षम करें",
+				"enableStudentsAssign": "छात्रों को कार्ड असाइन करने की अनुमति दें"
 			},
 			"emptyState": "",
 			"reviewSteps": "",

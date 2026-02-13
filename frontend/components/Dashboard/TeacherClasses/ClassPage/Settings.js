@@ -20,6 +20,9 @@ export default function Settings({ myclass, user }) {
   const [assignableToStudents, setAssignableToStudents] = useState(
     myclass?.settings?.assignableToStudents ?? false
   );
+  const [studentsCanAssignToCards, setStudentsCanAssignToCards] = useState(
+    myclass?.settings?.studentsCanAssignToCards ?? false
+  );
 
   // Sync from server when myclass (e.g. after refetch) changes
   useEffect(() => {
@@ -28,6 +31,13 @@ export default function Settings({ myclass, user }) {
       value === undefined || value === null ? false : !!value
     );
   }, [myclass?.settings?.assignableToStudents]);
+
+  useEffect(() => {
+    const value = myclass?.settings?.studentsCanAssignToCards;
+    setStudentsCanAssignToCards(
+      value === undefined || value === null ? false : !!value
+    );
+  }, [myclass?.settings?.studentsCanAssignToCards]);
 
   const handleChange = (e) => {
     setInputValue(e.target.value);
@@ -49,9 +59,28 @@ export default function Settings({ myclass, user }) {
       myclass?.settings && typeof myclass.settings === "object"
         ? myclass.settings
         : {};
+    const newSettings = { ...existingSettings, assignableToStudents: value };
+    // When enabling, default to students cannot assign (only teachers/mentors can)
+    if (value) {
+      newSettings.studentsCanAssignToCards = false;
+      setStudentsCanAssignToCards(false);
+    }
     updateClassSettings({
       variables: {
-        settings: { ...existingSettings, assignableToStudents: value },
+        settings: newSettings,
+      },
+    }).catch((err) => alert(err?.message || "Failed to update settings"));
+  };
+
+  const updateStudentsCanAssignToCards = (value) => {
+    setStudentsCanAssignToCards(value);
+    const existingSettings =
+      myclass?.settings && typeof myclass.settings === "object"
+        ? myclass.settings
+        : {};
+    updateClassSettings({
+      variables: {
+        settings: { ...existingSettings, studentsCanAssignToCards: value },
       },
     }).catch((err) => alert(err?.message || "Failed to update settings"));
   };
@@ -101,7 +130,7 @@ export default function Settings({ myclass, user }) {
 
       input {
         width: 16px;
-        height: 16px;
+        height: 16px; 
       }
 
       &.active {
@@ -170,6 +199,35 @@ export default function Settings({ myclass, user }) {
             </label>
           </CheckboxGroup>
         </div>
+        {assignableToStudents && (
+          <div className="block">
+            <p>{t("whoCanAssignCards", "Who can assign profiles to cards?")}</p>
+            <CheckboxGroup>
+              <label className={studentsCanAssignToCards ? "active" : ""}>
+                <input
+                  type="checkbox"
+                  checked={studentsCanAssignToCards}
+                  disabled={updatingSettings}
+                  onChange={(event) =>
+                    updateStudentsCanAssignToCards(event.target.checked)
+                  }
+                />
+                {t("studentsCanAssignCards", "Students can assign cards")}
+              </label>
+              <label className={!studentsCanAssignToCards ? "active" : ""}>
+                <input
+                  type="checkbox"
+                  checked={!studentsCanAssignToCards}
+                  disabled={updatingSettings}
+                  onChange={(event) =>
+                    updateStudentsCanAssignToCards(!event.target.checked)
+                  }
+                />
+                {t("onlyTeachersMentorsAssignCards", "Only teachers and mentors can assign cards")}
+              </label>
+            </CheckboxGroup>
+          </div>
+        )}
       </div>
 
       <h3>{t("deleteYourClass")}</h3>

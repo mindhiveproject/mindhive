@@ -565,6 +565,7 @@
 	"noStudies": "The students haven’t created any studies yet.",
 	"noteNewStudents": "Note: New students will not be able to join your class",
 	"numberOfStudents": "Number of students",
+	"onlyTeachersMentorsAssignCards": "Only teachers and mentors can assign cards",
 	"participants": "Participants",
 	"pleaseTypeDelete": "Please type DELETE to delete your class",
 	"projectBoard": {
@@ -617,6 +618,7 @@
 		"goBack": "Go back to class",
 		"username": "Username"
 	},
+	"studentsCanAssignCards": "Students can assign cards",
 	"studentsTab": {
 		"addToClass": "Add to class",
 		"assignToClass": "Are you sure you want to assign this student to the other class?",
@@ -674,5 +676,6 @@
 	},
 	"theirWorkspaceAndStudies": "Their workspace and any studies, tasks or surveys they created during your class",
 	"typeDeleteToConfirm": "Type \"DELETE\" to confirm",
+	"whoCanAssignCards": "Who can assign profiles to cards?",
 	"yourClass": "Your class"
 }

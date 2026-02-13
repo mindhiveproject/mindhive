@@ -565,6 +565,7 @@
 	"noStudies": "学生尚未创建任何研究。",
 	"noteNewStudents": "注意：新生将无法加入你的班级",
 	"numberOfStudents": "学生人数",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "参与者",
 	"pleaseTypeDelete": "请输入 DELETE 来删除您的班级",
 	"projectBoard": {
@@ -617,6 +618,7 @@
 		"goBack": "回教室",
 		"username": "用户名"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "添加到班级",
 		"assignToClass": "您确定要将这名学生分配到另一个班级吗？",
@@ -674,5 +676,6 @@
 	},
 	"theirWorkspaceAndStudies": "他们的工作空间以及他们在课堂上创建的任何研究、任务或调查",
 	"typeDeleteToConfirm": "输入“DELETE”确认",
+	"whoCanAssignCards": "谁可以将个人资料分配给卡片？",
 	"yourClass": "你的班级"
 }

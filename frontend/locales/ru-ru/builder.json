@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "Добавить людей",
 		"assignCard": "Назначьте эту карточку соавтору из этого проекта.",
+		"canAssignTooltip": "",
 		"cancel": "Отмена",
 		"noCollaborators": "Для этой доски нет доступных для сотрудничества участников.",
 		"noUsersFound": "Профиль не найден",
+		"onlyTeachersMentorsCanAdd": "Только учителя и наставники могут назначать людям карточки.",
 		"removeUser": "Удалить пользователя",
 		"save": "Сохранять",
 		"searchPlaceholder": "Поиск по имени пользователя...",
@@ -480,6 +482,7 @@
 		"noNotes": "Заметки пока не добавлены. Щёлкните правой кнопкой мыши, чтобы добавить заметки."
 	},
 	"noVideoPlaceholder": "Вступительный видеоролик отсутствует.",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "Действия",
 		"copy": "Копировать",
@@ -673,7 +676,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "Отключить назначение студентов на карточки",
+				"disableStudentsAssign": "Ограничить учителями и наставниками",
+				"empty": "",
+				"enable": "Включить назначение студентов на карточки",
+				"enableStudentsAssign": "Разрешить студентам назначать карточки"
 			},
 			"emptyState": "",
 			"reviewSteps": "Этапы проверки",

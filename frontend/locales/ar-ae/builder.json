@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "إضافة أشخاص",
 		"assignCard": "قم بتعيين هذه البطاقة لأحد المتعاونين من هذا المشروع",
+		"canAssignTooltip": "",
 		"cancel": "يلغي",
 		"noCollaborators": "لا يوجد متعاونون متاحون لهذه اللوحة.",
 		"noUsersFound": "لم يتم العثور على ملف تعريف",
+		"onlyTeachersMentorsCanAdd": "لا يُسمح إلا للمعلمين والموجهين بتعيين الأشخاص على البطاقات",
 		"removeUser": "إزالة المستخدم",
 		"save": "يحفظ",
 		"searchPlaceholder": "البحث باستخدام اسم المستخدم...",
@@ -480,6 +482,7 @@
 		"noNotes": "لم يتم إدخال أي ملاحظات بعد. انقر بزر الماوس الأيمن لإضافة ملاحظات."
 	},
 	"noVideoPlaceholder": "لا يوجد فيديو تعريفي متاح.",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "الإجراءات",
 		"copy": "ينسخ",
@@ -673,7 +676,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "تعطيل تعيين الطلاب للبطاقات",
+				"disableStudentsAssign": "تقييد للمعلمين والمرشدين فقط",
+				"empty": "",
+				"enable": "تفعيل تعيين الطلاب للبطاقات",
+				"enableStudentsAssign": "السماح للطلاب بتعيين البطاقات"
 			},
 			"emptyState": "",
 			"reviewSteps": "خطوات المراجعة",

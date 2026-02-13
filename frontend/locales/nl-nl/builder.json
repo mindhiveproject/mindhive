@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "Mensen toevoegen",
 		"assignCard": "Wijs deze kaart toe aan een medewerker van dit project.",
+		"canAssignTooltip": "",
 		"cancel": "Annuleren",
 		"noCollaborators": "Er zijn geen medewerkers beschikbaar voor dit bestuur.",
 		"noUsersFound": "Geen profiel gevonden",
+		"onlyTeachersMentorsCanAdd": "Alleen docenten en mentoren kunnen mensen kaarten toewijzen.",
 		"removeUser": "Gebruiker verwijderen",
 		"save": "Redden",
 		"searchPlaceholder": "Zoeken op gebruikersnaam...",
@@ -480,6 +482,7 @@
 		"noNotes": "Er zijn nog geen notities ingevoerd. Klik met de rechtermuisknop om notities toe te voegen."
 	},
 	"noVideoPlaceholder": "Er is geen introductievideo beschikbaar.",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "Acties",
 		"copy": "Kopiëren",
@@ -673,7 +676,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "Toewijzing van studenten aan kaarten uitschakelen",
+				"disableStudentsAssign": "Beperken tot leraren en mentoren",
+				"empty": "",
+				"enable": "Toewijzing van studenten aan kaarten inschakelen",
+				"enableStudentsAssign": "Studenten toestaan kaarten toe te wijzen"
 			},
 			"emptyState": "",
 			"reviewSteps": "Beoordelingsstappen",

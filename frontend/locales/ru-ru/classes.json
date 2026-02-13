@@ -565,6 +565,7 @@
 	"noStudies": "Студенты пока не создали ни одного исследования.",
 	"noteNewStudents": "Примечание: новые ученики не смогут присоединиться к вашему классу.",
 	"numberOfStudents": "Количество студентов",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "Участники",
 	"pleaseTypeDelete": "Пожалуйста, введите DELETE, чтобы удалить свой класс.",
 	"projectBoard": {
@@ -617,6 +618,7 @@
 		"goBack": "Вернитесь в класс",
 		"username": "Имя пользователя"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "Добавить в класс",
 		"assignToClass": "Вы уверены, что хотите перевести этого ученика в другой класс?",
@@ -674,5 +676,6 @@
 	},
 	"theirWorkspaceAndStudies": "Их рабочее пространство и любые исследования, задания или опросы, которые они создали во время вашего занятия",
 	"typeDeleteToConfirm": "Нажмите «DELETE» для подтверждения.",
+	"whoCanAssignCards": "Кто может назначать профили карточкам?",
 	"yourClass": "Ваш класс"
 }

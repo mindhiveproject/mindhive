@@ -33,6 +33,7 @@ import { Modal, Button, Icon, Dropdown, Accordion } from "semantic-ui-react";
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
 import { mergeCardSettings } from "../../../../../Utils/mergeCardSettings";
+import InfoTooltip from "../PDF/Preview/InfoTooltip";
 
 export default function ProposalCard({
   proposalCard,
@@ -122,6 +123,15 @@ export default function ProposalCard({
       ignoreResults: true,
     },
   );
+
+  // Assignment visibility & permissions for "Assigned to" section
+  const assignedCount = inputs?.assignedTo?.length || 0;
+  const isTeacherOrMentor = user?.permissions?.some((p) =>
+    ["TEACHER", "MENTOR"].includes(p?.name),
+  );
+  const studentsCanAssignToCards =
+    proposal?.usedInClass?.settings?.studentsCanAssignToCards === true;
+  const canAddAssignment = isTeacherOrMentor || studentsCanAssignToCards;
 
   // Get collaborators
   const collaborators =
@@ -1432,22 +1442,40 @@ export default function ProposalCard({
               )}
             </div>
             <div className="infoBoard">
-              {proposal?.usedInClass?.settings?.assignableToStudents === true && (
-                <div>
-                  <div className="cardSubheader">
-                    {t("mainCard.assignedTo", "Assigned to")}
+              {proposal?.usedInClass?.settings?.assignableToStudents === true &&
+                (assignedCount > 0 || canAddAssignment) && (
+                  <div>
+                    <div className="cardSubheader" style={{ display: "flex", alignItems: "center", gap: "8px"}}>
+                      {t("mainCard.assignedTo", "Assigned to")}
+                      {!canAddAssignment ? (
+                        <InfoTooltip
+                          content={t(
+                            "assigned.onlyTeachersMentorsCanAdd",
+                            "Only teachers and mentors can add assignments"
+                          )}
+                        >
+                          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            <img style={{ opacity: 0.5 }} src="/assets/icons/question_mark.svg" alt="Lock" />
+                          </div>
+                        </InfoTooltip>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    
+                    
+                    <Assigned
+                      users={collaborators}
+                      assignedTo={inputs?.assignedTo}
+                      onAssignedToChange={handleAssignedToChange}
+                      user={user}
+                      proposal={proposal}
+                      cardId={cardId}
+                      cardData={inputs}
+                      studentsCanAssignToCards={studentsCanAssignToCards}
+                    />
                   </div>
-                  <Assigned
-                    users={collaborators}
-                    assignedTo={inputs?.assignedTo}
-                    onAssignedToChange={handleAssignedToChange}
-                    user={user}
-                    proposal={proposal}
-                    cardId={cardId}
-                    cardData={inputs}
-                  />
-                </div>
-              )}
+                )}
 
               {/* Display Linked Items using PreviewSection */}
               <div style={{ marginTop: "24px", marginBottom: "24px", display: "flex", flexDirection: "column", gap: "16px" }}> 

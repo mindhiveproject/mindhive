@@ -565,6 +565,7 @@
 	"noStudies": "لم يقم الطلاب بإنشاء أي دراسات بعد.",
 	"noteNewStudents": "ملاحظة: لن يتمكن الطلاب الجدد من الانضمام إلى صفك",
 	"numberOfStudents": "عدد الطلاب",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "مشاركون",
 	"pleaseTypeDelete": "الرجاء كتابة DELETE لحذف صفك",
 	"projectBoard": {
@@ -617,6 +618,7 @@
 		"goBack": "ارجع إلى الفصل",
 		"username": "اسم المستخدم"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "إضافة إلى الفصل",
 		"assignToClass": "هل أنت متأكد من أنك تريد تعيين هذا الطالب في الفصل الآخر؟",
@@ -674,5 +676,6 @@
 	},
 	"theirWorkspaceAndStudies": "مساحة عملهم وأي دراسات أو مهام أو استطلاعات رأي قاموا بإنشائها أثناء الفصل الدراسي",
 	"typeDeleteToConfirm": "اكتب \"حذف\" للتأكيد",
+	"whoCanAssignCards": "من يستطيع تعيين الملفات الشخصية للبطاقات؟",
 	"yourClass": "صفك"
 }

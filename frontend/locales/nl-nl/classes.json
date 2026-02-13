@@ -565,6 +565,7 @@
 	"noStudies": "De studenten hebben nog geen studies gemaakt.",
 	"noteNewStudents": "Let op: Nieuwe studenten kunnen niet aan uw klas deelnemen",
 	"numberOfStudents": "Aantal studenten",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "Deelnemers",
 	"pleaseTypeDelete": "Typ DELETE om uw klas te verwijderen",
 	"projectBoard": {
@@ -617,6 +618,7 @@
 		"goBack": "Ga terug naar de les",
 		"username": "Gebruikersnaam"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "Toevoegen aan klas",
 		"assignToClass": "Weet je zeker dat je deze leerling aan de andere klas wilt toewijzen?",
@@ -674,5 +676,6 @@
 	},
 	"theirWorkspaceAndStudies": "Hun werkruimte en alle studies, taken of enquêtes die ze tijdens jouw les hebben gemaakt",
 	"typeDeleteToConfirm": "Typ \"DELETE\" om te bevestigen",
+	"whoCanAssignCards": "Wie kan profielen aan kaarten toewijzen?",
 	"yourClass": "Jouw klas"
 }

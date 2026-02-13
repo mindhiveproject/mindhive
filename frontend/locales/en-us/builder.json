@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "Add people",
 		"assignCard": "Assign this card to a collaborator from this project",
+		"canAssignTooltip": "You can assign profiles to this card.",
 		"cancel": "Cancel",
 		"noCollaborators": "No collaborators available for this board.",
 		"noUsersFound": "No profile found",
+		"onlyTeachersMentorsCanAdd": "Only teachers and mentors can assign people to cards",
 		"removeUser": "Remove user",
 		"save": "Save",
 		"searchPlaceholder": "Search by username...",
@@ -480,6 +482,7 @@
 		"noNotes": "No notes entered yet. Right-click to add notes."
 	},
 	"noVideoPlaceholder": "No introduction video available.",
+	"onlyTeachersMentorsAssignCards": "Students cannot assign others to their cards themselves",
 	"overview": {
 		"actions": "Actions",
 		"copy": "Copy",
@@ -673,7 +676,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": "No assigned people on this board yet."
+				"disable": "Disable assigning students to cards",
+				"disableStudentsAssign": "Restrict to teachers and mentors",
+				"empty": "No assigned people on this board yet.",
+				"enable": "Enable assigning students to cards",
+				"enableStudentsAssign": "Allow students to assign cards"
 			},
 			"emptyState": "No cards match the selected filters. Please adjust your status, review step, or assigned filters to see cards.",
 			"reviewSteps": "Review Steps",

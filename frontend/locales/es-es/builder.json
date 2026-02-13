@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "Añadir personas",
 		"assignCard": "Asignar esta tarjeta a un colaborador de este proyecto",
+		"canAssignTooltip": "",
 		"cancel": "Cancelar",
 		"noCollaborators": "No hay colaboradores disponibles para este tablero.",
 		"noUsersFound": "No se encontró ningún perfil",
+		"onlyTeachersMentorsCanAdd": "Sólo los profesores y mentores pueden asignar personas a las tarjetas.",
 		"removeUser": "Eliminar usuario",
 		"save": "Ahorrar",
 		"searchPlaceholder": "Buscar por nombre de usuario...",
@@ -480,6 +482,7 @@
 		"noNotes": "Aún no hay notas ingresadas. Haz clic derecho para agregar notas."
 	},
 	"noVideoPlaceholder": "No hay vídeo de introducción disponible.",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "Comportamiento",
 		"copy": "Copiar",
@@ -673,7 +676,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "Desactivar asignación de estudiantes a tarjetas",
+				"disableStudentsAssign": "Restringir a profesores y mentores",
+				"empty": "",
+				"enable": "Activar asignación de estudiantes a tarjetas",
+				"enableStudentsAssign": "Permitir a estudiantes asignar tarjetas"
 			},
 			"emptyState": "",
 			"reviewSteps": "Pasos de revisión",

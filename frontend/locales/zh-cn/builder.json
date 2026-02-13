@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "添加人员",
 		"assignCard": "将此卡片分配给此项目的合作者",
+		"canAssignTooltip": "",
 		"cancel": "取消",
 		"noCollaborators": "该董事会暂无合作者。",
 		"noUsersFound": "未找到个人资料",
+		"onlyTeachersMentorsCanAdd": "只有教师和导师才能将学员分配到卡片上。",
 		"removeUser": "移除用户",
 		"save": "节省",
 		"searchPlaceholder": "按用户名搜索...",
@@ -480,6 +482,7 @@
 		"noNotes": "尚未输入任何注释。右键单击即可添加注释。"
 	},
 	"noVideoPlaceholder": "暂无介绍视频。",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "行动",
 		"copy": "复制",
@@ -673,7 +676,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "禁用将学生分配到卡片",
+				"disableStudentsAssign": "仅限教师和导师",
+				"empty": "",
+				"enable": "启用将学生分配到卡片",
+				"enableStudentsAssign": "允许学生分配卡片"
 			},
 			"emptyState": "",
 			"reviewSteps": "复习步骤",

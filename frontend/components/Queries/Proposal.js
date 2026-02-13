@@ -139,6 +139,9 @@ export const PROPOSAL_QUERY = gql`
         creator {
           id
         }
+        mentors {
+          id
+        }
         templateProposal {
           id
         }

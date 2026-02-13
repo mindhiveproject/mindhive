@@ -565,6 +565,7 @@
 	"noStudies": "Les étudiants n’ont pas encore créé d’études.",
 	"noteNewStudents": "Remarque : les nouveaux étudiants ne pourront pas rejoindre votre classe.",
 	"numberOfStudents": "Nombre d'étudiants",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "Participants",
 	"pleaseTypeDelete": "Veuillez taper SUPPRIMER pour supprimer votre classe",
 	"projectBoard": {
@@ -617,6 +618,7 @@
 		"goBack": "Retournez en classe",
 		"username": "Nom d'utilisateur"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "Ajouter à la classe",
 		"assignToClass": "Êtes-vous sûr de vouloir affecter cet élève à l'autre classe ?",
@@ -674,5 +676,6 @@
 	},
 	"theirWorkspaceAndStudies": "Leur espace de travail et toutes les études, tâches ou enquêtes qu'ils ont créées pendant votre cours",
 	"typeDeleteToConfirm": "Tapez « DELETE » pour confirmer",
+	"whoCanAssignCards": "Qui peut attribuer des profils aux cartes ?",
 	"yourClass": "Votre classe"
 }
