@@ -1,4 +1,6 @@
 import { useQuery } from "@apollo/client";
+import InfoTooltip from "../../PDF/Preview/InfoTooltip";
+import StatusChip from "../../PDF/Preview/StatusChip";
 import useTranslation from "next-translate/useTranslation";
 
 import Status from "../Forms/Status";
@@ -40,14 +42,29 @@ export default function Navigation({
           </div>
         </div>
       </div>
-      <div className="middle">
-        <span className="studyTitle">{study?.title}</span>
-      </div>
+      <InfoTooltip
+        content={study?.title || t("header.myProjectBoard", "My Project Board")}
+        delayMs={650}
+        wrapperStyle={{ width: "100%", minWidth: 0 }}
+        tooltipStyle={{
+          width: "400px",
+          background: "#F7F9F8",
+        }}
+      >
+        <div className="middle">
+          <span className="studyTitle">{study?.title}</span>
+        </div>
+      </InfoTooltip>
       <div className="right">
-        <Status
+        <StatusChip
+          value={inputs?.settings?.status}
+          onStatusChange={(newValue) => handleSettingsChange("status", newValue)}
+          canEdit
+        />
+        {/* <Status
           settings={inputs?.settings}
           onSettingsChange={handleSettingsChange}
-        />
+        /> */}
 
         {cardId && (
           <button

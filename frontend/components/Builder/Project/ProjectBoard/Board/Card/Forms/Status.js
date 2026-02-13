@@ -1,3 +1,17 @@
+/**
+ * DEPRECATED COMPONENT
+ * 
+ * This Status dropdown UI component is slated for deprecation.
+ * 
+ * Please use the new <StatusChip /> component from 
+ *   frontend/components/Builder/Project/ProjectBoard/Board/PDF/Preview/StatusChip.js
+ * instead for all new development.
+ * 
+ * This file remains only to support legacy forms. Do not make improvements here.
+ */
+
+
+
 import React from "react";
 import { Dropdown } from "semantic-ui-react";
 import styled from "styled-components";
