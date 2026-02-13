@@ -74,6 +74,28 @@ export const GET_MY_HOMEWORKS_FOR_ASSIGNMENT = gql`
   }
 `;
 
+// get all homework for specific assignment (for Mentor/Teacher)
+export const GET_ALL_HOMEWORKS_FOR_ASSIGNMENT = gql`
+  query GET_ALL_HOMEWORKS_FOR_ASSIGNMENT($assignmentCode: String!) {
+    homeworks(where: { assignment: { code: { equals: $assignmentCode } } }) {
+      id
+      code
+      title
+      content
+      placeholder
+      settings
+      public
+      author {
+        id
+        username
+        publicReadableId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 // get student homework for specific proposal card
 export const GET_MY_HOMEWORK_FOR_PROPOSAL_CARD = gql`
   query GET_MY_HOMEWORK_FOR_PROPOSAL_CARD($userId: ID!, $cardId: ID!) {

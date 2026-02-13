@@ -66,10 +66,12 @@
 		"placeholderDescription": "Marcador de posición presentado a los estudiantes",
 		"placeholderInstructions": "Escriba un marcador de posición para el cuadro de respuestas de sus estudiantes",
 		"preview": "",
+		"projectCard": "",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Publicar para estudiantes",
 		"requestFeedback": "Solicitar comentarios",
+		"reviewAndFeedback": "Reseñas y comentarios",
 		"reviewSubmissions": "Revisar envíos",
 		"revokeConfirm": "¿Seguro que desea revocar esta tarea? Los estudiantes ya no podrán verla.",
 		"save": "Guardar cambios",
@@ -83,6 +85,7 @@
 		"startFromScratch": "Empezar desde el principio",
 		"startFromScratchDescription": "Crea una tarea completamente nueva con control total sobre el título, las instrucciones y el contenido del marcador. Ideal para algo completamente único para tu clase.",
 		"status": "",
+		"studentEntry": "Entrada del estudiante",
 		"submit": "Entregar",
 		"submitConfirm": "¿Estás seguro de que quieres enviar esta tarea? Los estudiantes podrán verla.",
 		"templatesDescription": "Seleccione entre las plantillas de tareas prediseñadas creadas por los administradores. Estas plantillas son compartidas y están disponibles para todos los profesores.",
@@ -120,6 +123,7 @@
 			"addExistingResources": "Agregar recursos existentes (Ver Recursos en el panel de navegación)",
 			"addLinkedItems": "Añadir asignaciones, tareas, estudios o recursos existentes",
 			"alreadyHaveCopy": "Esta tarea ya está copiada en la siguiente clase:",
+			"assignment": "Asignación",
 			"assignmentNotPublished": "Esta tarea no está publicada",
 			"assignmentsSectionTitle": "Asignaciones públicas",
 			"backToEditing": "Volver a la edición",
@@ -327,6 +331,8 @@
 		"viewOrEdit": "Ver o editar"
 	},
 	"cancel": "Cancelar",
+	"cardAssignmentDisabled": "Las tarjetas no se pueden asignar a estudiantes",
+	"cardAssignmentEnabled": "Las tarjetas se pueden asignar a los estudiantes.",
 	"classes": "Clase(s)",
 	"classesList": {
 		"className": "Nombre de la clase",
@@ -493,26 +499,31 @@
 		"teacher": "Maestro"
 	},
 	"homework": {
+		"allEntries": "Todas las entradas",
 		"assignmentContent": "Contenido de la tarea",
 		"assignmentTitle": "Título de la tarea",
 		"cancel": "Cancelar",
 		"createHomework": "Crear deberes",
-		"createHomeworkDraft": "Crear borrador",
-		"createHomeworkSubmit": "Crear y enviar",
-		"createNewAssignment": "Crear nueva tarea",
+		"createHomeworkSubmit": "Marcar como completo",
+		"createNewEntry": "Crear entrada",
 		"createNewHomework": "Crear nueva tarea",
 		"dateCreated": "Fecha de creación",
 		"dateUpdated": "Fecha de actualización",
+		"editEntry": "Editar tu entrada",
 		"existingHomeworks": "Tareas existentes",
 		"homeworkTitle": "Título de la tarea",
 		"initialContent": "Contenido inicial",
 		"markAsCompleted": "Marcar como completado",
 		"markAsUncompleted": "Marcar como incompleto",
 		"myAssignment": "Mi tarea",
+		"myEntry": "Mi entrada",
 		"noHomeworkYet": "El estudiante aún no ha escrito ninguna tarea.",
 		"openHomework": "Abrir",
+		"saveAndClose": "Guardar y cerrar",
+		"saveHomeworkDraft": "Guardar borrador",
 		"submitted": "Enviado",
-		"unsubmit": "Cancelar envío"
+		"unsubmit": "Cancelar envío",
+		"yourEntry": "Tu entrada"
 	},
 	"joinClass": "Unirse a la clase",
 	"joinClassInfo": "Una vez que te unas a una clase, aparecerá aquí.",
@@ -554,6 +565,7 @@
 	"noStudies": "Los estudiantes aún no han creado ningún estudio.",
 	"noteNewStudents": "Nota: Los estudiantes nuevos no podrán unirse a su clase.",
 	"numberOfStudents": "Número de estudiantes",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "Participantes",
 	"pleaseTypeDelete": "Por favor escribe SUPR para eliminar tu clase",
 	"projectBoard": {
@@ -606,6 +618,7 @@
 		"goBack": "Regresar a clases",
 		"username": "Nombre de usuario"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "Añadir a la clase",
 		"assignToClass": "¿Estás seguro de que quieres asignar a este alumno a la otra clase?",
@@ -663,5 +676,6 @@
 	},
 	"theirWorkspaceAndStudies": "Su espacio de trabajo y cualquier estudio, tarea o encuesta que hayan creado durante su clase.",
 	"typeDeleteToConfirm": "Escribe \"ELIMINAR\" para confirmar",
+	"whoCanAssignCards": "¿Quién puede asignar perfiles a las tarjetas?",
 	"yourClass": "Tu clase"
 }

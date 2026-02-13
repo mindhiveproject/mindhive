@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "Adicionar pessoas",
 		"assignCard": "Atribua este cartão a um colaborador deste projeto.",
+		"canAssignTooltip": "",
 		"cancel": "Cancelar",
 		"noCollaborators": "Não há colaboradores disponíveis para este conselho.",
 		"noUsersFound": "Nenhum perfil encontrado",
+		"onlyTeachersMentorsCanAdd": "Somente professores e mentores podem atribuir pessoas aos cartões.",
 		"removeUser": "Remover usuário",
 		"save": "Salvar",
 		"searchPlaceholder": "Pesquisar por nome de usuário...",
@@ -50,6 +52,7 @@
 	"board": {
 		"error": "Erro! {{message}}",
 		"expendedCard": {
+			"assignment": "Atribuição",
 			"close": "Próximo",
 			"connect": "Conectar",
 			"content": "Conteúdo",
@@ -351,6 +354,10 @@
 		"updateCollaboratorsFailed": "Falha ao atualizar os colaboradores. Tente novamente.",
 		"userNoClasses": "Você não está associado a nenhuma turma."
 	},
+	"homework": {
+		"createHomeworkSubmit": "Marcar como concluído",
+		"saveAndClose": "Salvar e fechar"
+	},
 	"homeworkCard": {
 		"comments": "Comentários",
 		"completed": "Concluído",
@@ -475,6 +482,7 @@
 		"noNotes": "Nenhuma nota inserida ainda. Clique com o botão direito para adicionar notas."
 	},
 	"noVideoPlaceholder": "Não há vídeo de introdução disponível.",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "Ações",
 		"copy": "Cópia",
@@ -668,7 +676,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "Desativar atribuição de estudantes aos cartões",
+				"disableStudentsAssign": "Restringir a professores e mentores",
+				"empty": "",
+				"enable": "Ativar atribuição de estudantes aos cartões",
+				"enableStudentsAssign": "Permitir que estudantes atribuam cartões"
 			},
 			"emptyState": "",
 			"reviewSteps": "Etapas de revisão",

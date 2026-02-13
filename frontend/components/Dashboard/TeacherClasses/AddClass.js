@@ -56,6 +56,7 @@ export default function AddClass({ user }) {
     await createClass({
       variables: {
         code: nanoid(),
+        settings: { assignableToStudents: false },
       },
     });
     router.push({

@@ -13,6 +13,9 @@ export const StyledProposal = styled.div`
   font-family: "Nunito";
   min-height: ${(props) => (props.$cardFullView ? "0" : "unset")};
 
+  i.icon {
+    font-family: Icons !important; /* or the exact name from semantic.min.css */
+  }
   .hideScrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -269,6 +272,12 @@ export const StyledProposal = styled.div`
     max-width: 410px;
     margin: 15px;
     padding: 24px;
+    & > div {
+      width: 100%;
+    }
+    .smooth-dnd-container.vertical {
+      width: 100%;
+    }
     .infoLine {
       margin: 1rem 0px 0px 0rem;
       display: grid;
@@ -1261,8 +1270,9 @@ export const StyledProposalCard = styled.div`
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          min-width: 100px;
-          max-width: 200px;
+          min-width: 0;
+          max-width: 100%;
+          width: 100%;
         }
       }
       .editedByAvatar {
@@ -1306,7 +1316,7 @@ export const StyledActionCard = styled.div`
   cursor: pointer;
   margin: 3px 10px;
   width: calc(100% - 20px);
-  font-family: Nunito;
+  font-family: Inter;
   overflow: hidden;
   box-sizing: border-box;
 

@@ -138,7 +138,7 @@ const ButtonContainer = styled.div`
   align-items: center;
 `;
 
-// Status chip matching the design from HomeworkCompletion
+// Status chip (colors match Builder Card homework status scheme)
 const StatusChip = styled.span`
   display: inline-flex;
   align-items: center;
@@ -149,36 +149,33 @@ const StatusChip = styled.span`
   font-weight: 400;
   line-height: 18px;
   white-space: nowrap;
-  border: none;
+  border: 1px solid;
   
   ${props => {
     const status = props.status?.toLowerCase() || '';
-    if (status === 'completed') {
-      return `
-        background: #E0F2F1; /* Light teal */
-        color: #00695C;      /* Medium green */
-      `;
-    } else if (status === 'started') {
-      return `
-        background: #E3F2FD; /* Very light pastel blue */
-        color: #1976D2;      /* Medium blue */
-      `;
-    } else if (status === 'needs feedback') {
-      return `
-        background: #FCE4EC; /* Very light pastel pink/light red */
-        color: #C2185B;      /* Medium red */
-      `;
-    } else if (status === 'feedback given') {
-      return `
-        background: #F3E5F5; /* Very light pastel lavender/light purple */
-        color: #7B1FA2;      /* Medium purple */
-      `;
-    } else {
-      return `
-        background: #F5F5F5; /* Light gray */
-        color: #616161;      /* Gray text */
-      `;
-    }
+    const backgroundColor = status === 'completed'
+      ? '#DEF8FB'
+      : status === 'started'
+      ? '#FDFEF0'
+      : status === 'needs feedback'
+      ? '#E4DFF6'
+      : status === 'feedback given'
+      ? '#F6F9F8'
+      : '#666';
+    const color = status === 'completed'
+      ? '#337C84'
+      : status === 'started'
+      ? '#5D5763'
+      : status === 'needs feedback'
+      ? '#3F288F'
+      : status === 'feedback given'
+      ? '#0D3944'
+      : '#666';
+    return `
+      background-color: ${backgroundColor};
+      border-color: ${color};
+      color: ${color};
+    `;
   }}
 `;
 
@@ -356,6 +353,11 @@ export default function HomeworkOverview({ code, myclass, user, query }) {
       filter: "agTextColumnFilter",
       sortable: true,
       flex: 1.5,
+      cellStyle: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
     });
     
     // Conditionally add updatedAt column

@@ -109,14 +109,16 @@ const PrimaryButton = styled.button`
 const UsernameChip = styled.div`
   display: inline-flex;
   align-items: center;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-family: Lato;
-  font-size: 16px;
+  width: fit-content;
+  padding: 4px 12px 4px 12px;
+  margin-top: 16px;
+  border-radius: 100px;
+  font-family: Inter;
+  font-size: 14px;
   font-weight: 600;
-  background: #E3F2FD;
-  color: #1976D2;
-  margin-bottom: 24px;
+  border: 1px solid #171717;
+  background: #FFFFFF;
+  color: #171717;
 `;
 
 const Section = styled.div`
@@ -318,9 +320,6 @@ export default function ReviewHomework({
             <SecondaryButton>← {t("assignment.goBack") || "Go back"}</SecondaryButton>
           </Link>
         </ButtonContainer>
-        <UsernameChip>
-          {homework?.author?.username || 'Unknown Student'}
-        </UsernameChip>
       </TopSection>
 
       {/* Assignment Section - Hidden by default */}
@@ -363,7 +362,10 @@ export default function ReviewHomework({
 
       {/* Student's Homework Section */}
       <Section>
-        <SectionTitle>Student's Submission</SectionTitle>
+        <SectionTitle>{t("assignment.studentEntry") || "Student's entry"}</SectionTitle>
+        <UsernameChip>
+          {homework?.author?.username || 'Unknown Student'}
+        </UsernameChip>
         <StyledTipTap>
           <TipTapEditor
             content={inputs?.content}
@@ -376,7 +378,7 @@ export default function ReviewHomework({
 
       {/* Information and Feedback Section */}
       <Section>
-        <SectionTitle>Review & Feedback</SectionTitle>
+        <SectionTitle>{t("assignment.reviewAndFeedback") || "Review & Feedback"} {t("assignment.studentEntry") || "Student's entry"}</SectionTitle>
         <InfoSection>
           <InfoItem>
             <InfoLabel>{t("teacherClass.status") || "Status"}</InfoLabel>

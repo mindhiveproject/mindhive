@@ -4,30 +4,47 @@ import useTranslation from "next-translate/useTranslation";
 import AssignCardModal from "./AssignCardModal";
 
 export default function Assigned(props) {
+  const {
+    studentsCanAssignToCards = false,
+    user,
+    users,
+    assignedTo,
+    onAssignedToChange,
+    proposal,
+    cardId,
+    cardData,
+  } = props;
   const { t } = useTranslation("builder");
   const [showModal, setShowModal] = useState(false);
 
+  const isTeacherOrMentor = user?.permissions?.some((p) =>
+    ["TEACHER", "MENTOR"].includes(p?.name)
+  );
+  const canAddAssignment = isTeacherOrMentor || studentsCanAssignToCards;
+
   // Build lookup from users prop (id → username)
   const userLookup = {};
-  props.users?.forEach((user) => {
-    userLookup[user.value] = user.text;
+  users?.forEach((u) => {
+    userLookup[u.value] = u.text;
   });
 
   // Get array of assigned user IDs
-  const assignedIds = props.assignedTo?.map((obj) => obj["id"]) || [];
+  const assignedIds = assignedTo?.map((obj) => obj["id"]) || [];
 
   // Convert users prop to collaborators format for modal
-  const collaborators = props.users?.map((u) => ({
-    id: u.value,
-    username: u.text,
-  })) || [];
+  const collaborators =
+    users?.map((u) => ({
+      id: u.value,
+      username: u.text,
+    })) || [];
 
   const handleOpenModal = () => {
+    if (!canAddAssignment) return;
     setShowModal(true);
   };
 
   const handleSave = (selectedIds) => {
-    props.onAssignedToChange(selectedIds);
+    onAssignedToChange(selectedIds);
     setShowModal(false);
   };
 
@@ -42,24 +59,28 @@ export default function Assigned(props) {
             </div>
           );
         })}
-        <button
-          className="addCollaboratorButton"
-          aria-label={t("assigned.addUser", "Add user")}
-          onClick={handleOpenModal}
-        >
-          <Icon name="add" />
-        </button>
+        {canAddAssignment ? (
+          <button
+            className="addCollaboratorButton"
+            aria-label={t("assigned.addUser", "Add user")}
+            onClick={handleOpenModal}
+          >
+            <img src="/assets/icons/plus.svg" alt="Lock" />
+          </button>
+        ) : (
+          undefined
+        )}
       </div>
       {showModal && (
         <AssignCardModal
           collaborators={collaborators}
-          assignedTo={props.assignedTo}
+          assignedTo={assignedTo}
           onSave={handleSave}
           onClose={() => setShowModal(false)}
-          user={props.user}
-          proposal={props.proposal}
-          cardId={props.cardId}
-          cardData={props.cardData}
+          user={user}
+          proposal={proposal}
+          cardId={cardId}
+          cardData={cardData}
         />
       )}
     </>

@@ -112,7 +112,7 @@ const Container = styled.div`
   padding: 24px;
 `;
 
-// Status chip styled components
+// Status chip styled components (colors match Builder Card homework status scheme)
 const StatusChip = styled.span`
   display: inline-flex;
   align-items: center;
@@ -123,36 +123,34 @@ const StatusChip = styled.span`
   font-weight: 400;
   line-height: 18px;
   white-space: nowrap;
-  border: none;
+  background: #FFFFFF;
+  border: 1px solid;
   
   ${props => {
     const status = props.status?.toLowerCase() || '';
-    if (status === 'completed') {
-      return `
-        background: #E0F2F1;
-        color: #00695C;
-      `;
-    } else if (status === 'started') {
-      return `
-        background: #E3F2FD;
-        color: #1976D2;
-      `;
-    } else if (status === 'needs feedback') {
-      return `
-        background: #FCE4EC;
-        color: #C2185B;
-      `;
-    } else if (status === 'feedback given') {
-      return `
-        background: #F3E5F5;
-        color: #7B1FA2;
-      `;
-    } else {
-      return `
-        background: #F5F5F5;
-        color: #616161;
-      `;
-    }
+    const backgroundColor = status === 'completed'
+      ? '#DEF8FB'
+      : status === 'started'
+      ? '#FDFEF0'
+      : status === 'needs feedback'
+      ? '#E4DFF6'
+      : status === 'feedback given'
+      ? '#F6F9F8'
+      : '#666';
+    const color = status === 'completed'
+      ? '#337C84'
+      : status === 'started'
+      ? '#5D5763'
+      : status === 'needs feedback'
+      ? '#3F288F'
+      : status === 'feedback given'
+      ? '#0D3944'
+      : '#666';
+    return `
+      background-color: ${backgroundColor};
+      border-color: ${color};
+      color: ${color};
+    `;
   }}
 `;
 

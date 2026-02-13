@@ -278,9 +278,9 @@ export default function AssignmentMain({ query, user }) {
         </ContentSection>
       )}
 
-      {/* My Homework Section */}
+      {/* My Assignment Section */}
       <ContentSection>
-        <ContentTitle>My homework</ContentTitle>
+        <ContentTitle>My assignment</ContentTitle>
 
         {/* Show existing homeworks */}
         {homeworks.length > 0 && (
@@ -310,7 +310,7 @@ export default function AssignmentMain({ query, user }) {
             }}
             disabled={createLoading}
           >
-            {t("homework.createNewHomework", "Create New Homework")}
+            {t("homework.createNewHomework", "Create New Assignment")}
           </Button>
         )}
 
@@ -328,12 +328,12 @@ export default function AssignmentMain({ query, user }) {
               fontWeight: "600",
               marginBottom: "16px"
             }}>
-              {t("homework.createNewHomework", "Create New Homework")}
+              {t("homework.createNewHomework", "Create New Assignment")}
             </div>
 
             <div style={{ marginBottom: "12px", width: "100%" }}>
               <p style={{ marginBottom: "0px" }}>
-                {t("homework.homeworkTitle", "Homework title")}
+                {t("homework.homeworkTitle", "Assignment title")}
               </p>
               <EditorWrapper style={{ marginTop: "4px" }}>
                 <TipTapEditor
@@ -342,7 +342,7 @@ export default function AssignmentMain({ query, user }) {
                     target: { name: "title", value: newContent }
                   })}
                   toolbarVisible={false}
-                  placeholder={t("homework.homeworkTitle", "Homework title")}
+                  placeholder={t("homework.homeworkTitle", "Assignment title")}
                 />
               </EditorWrapper>
             </div>

@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "添加人员",
 		"assignCard": "将此卡片分配给此项目的合作者",
+		"canAssignTooltip": "",
 		"cancel": "取消",
 		"noCollaborators": "该董事会暂无合作者。",
 		"noUsersFound": "未找到个人资料",
+		"onlyTeachersMentorsCanAdd": "只有教师和导师才能将学员分配到卡片上。",
 		"removeUser": "移除用户",
 		"save": "节省",
 		"searchPlaceholder": "按用户名搜索...",
@@ -50,6 +52,7 @@
 	"board": {
 		"error": "错误信息}}",
 		"expendedCard": {
+			"assignment": "任务",
 			"close": "关闭",
 			"connect": "连接",
 			"content": "内容",
@@ -351,6 +354,10 @@
 		"updateCollaboratorsFailed": "更新协作者信息失败，请重试。",
 		"userNoClasses": "您未参加任何课程。"
 	},
+	"homework": {
+		"createHomeworkSubmit": "标记为完成",
+		"saveAndClose": "保存并关闭"
+	},
 	"homeworkCard": {
 		"comments": "评论",
 		"completed": "完全的",
@@ -475,6 +482,7 @@
 		"noNotes": "尚未输入任何注释。右键单击即可添加注释。"
 	},
 	"noVideoPlaceholder": "暂无介绍视频。",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "行动",
 		"copy": "复制",
@@ -668,7 +676,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "禁用将学生分配到卡片",
+				"disableStudentsAssign": "仅限教师和导师",
+				"empty": "",
+				"enable": "启用将学生分配到卡片",
+				"enableStudentsAssign": "允许学生分配卡片"
 			},
 			"emptyState": "",
 			"reviewSteps": "复习步骤",
