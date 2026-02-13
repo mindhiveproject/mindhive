@@ -436,6 +436,10 @@ export const StyledProposal = styled.div`
       }
     }
     }
+    .headerTitleWrapper {
+      flex: 1;
+      min-width: 0;
+    }
     .headerTitle {
       font-family: "Nunito", sans-serif;
       font-style: normal;
@@ -444,7 +448,11 @@ export const StyledProposal = styled.div`
       line-height: 44px;
       color: #171717;
       margin: 0;
-      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .headerInfoRow {
       display: flex;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 
 const defaultIconStyle = {
   width: "20px",
@@ -42,6 +42,8 @@ const defaultTooltipStyle = {
  * @param {string} [iconSrc="/assets/icons/info.svg"] - Icon image source (when no custom trigger).
  * @param {object} [iconStyle] - Override styles for the icon.
  * @param {object} [tooltipStyle] - Override styles for the tooltip container.
+ * @param {object} [wrapperStyle] - Override styles for the wrapper (e.g. width when used as custom trigger).
+ * @param {number} [delayMs=0] - Delay in milliseconds before the tooltip appears on hover. Leave before this time cancels showing.
  */
 export default function InfoTooltip({
   content,
@@ -49,8 +51,34 @@ export default function InfoTooltip({
   iconSrc = "/assets/icons/info.svg",
   iconStyle,
   tooltipStyle,
+  wrapperStyle: wrapperStyleOverride,
+  delayMs = 0,
 }) {
   const [hover, setHover] = useState(false);
+  const showTimeoutRef = useRef(null);
+
+  const clearShowTimeout = useCallback(() => {
+    if (showTimeoutRef.current != null) {
+      clearTimeout(showTimeoutRef.current);
+      showTimeoutRef.current = null;
+    }
+  }, []);
+
+  const handleMouseEnter = useCallback(() => {
+    clearShowTimeout();
+    if (delayMs <= 0) {
+      setHover(true);
+      return;
+    }
+    showTimeoutRef.current = setTimeout(() => setHover(true), delayMs);
+  }, [delayMs, clearShowTimeout]);
+
+  const handleMouseLeave = useCallback(() => {
+    clearShowTimeout();
+    setHover(false);
+  }, [clearShowTimeout]);
+
+  useEffect(() => () => clearShowTimeout(), [clearShowTimeout]);
 
   const useCustomTrigger = content != null && children != null;
   const tooltipContent = useCustomTrigger ? content : (content ?? children);
@@ -62,7 +90,7 @@ export default function InfoTooltip({
     transform: hover ? "translateY(0)" : "translateY(-5px)",
   };
 
-  const wrapperStyle = useCustomTrigger
+  const baseWrapperStyle = useCustomTrigger
     ? { position: "relative", display: "inline-block" }
     : {
         position: "relative",
@@ -70,12 +98,13 @@ export default function InfoTooltip({
         alignItems: "center",
         cursor: "pointer",
       };
+  const wrapperStyle = { ...baseWrapperStyle, ...wrapperStyleOverride };
 
   return (
     <div
       style={wrapperStyle}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {useCustomTrigger ? children : <img src={iconSrc} alt="info" style={mergedIconStyle} />}
       <div style={mergedTooltipStyle}>
