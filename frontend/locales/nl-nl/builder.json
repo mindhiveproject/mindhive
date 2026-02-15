@@ -401,7 +401,7 @@
 		"chooseReviewStep": "Kies in welke stap van de peer review een kaart moet komen",
 		"comments": "Reacties",
 		"commentsPlaceholder": "Voeg hier uw commentaar toe...",
-		"forMindHiveNetwork": "Voor het MindHive-netwerk",
+		"expandOriginalEntry": "Uitvouwen om je oorspronkelijke invoer te bekijken",
 		"forTeacherAndCollaborators": "Alleen voor mijn docent en projectmedewerkers",
 		"instructions": "Instructies",
 		"lockedMessage": "De kaart wordt momenteel bewerkt door",
@@ -416,13 +416,14 @@
 			"projectReport": "Projectrapport",
 			"proposal": "Voorstel"
 		},
-		"revisedContent": "Herziene inhoud",
 		"revisedContentUsed": "De herziene inhoud die u hier opneemt, wordt gebruikt in het eindrapport.",
+		"revisedEntry": "Uw herziene invoer",
 		"seeOriginalSubmission": "Klik hier om je oorspronkelijke inzending te bekijken.",
 		"selectOption": "Selecteer optie",
 		"submission": "Dwang",
 		"visibleInFeedbackCenter": "De content die u hier opneemt, is zichtbaar in het Feedback Center nadat u deze via een gele Actiekaart heeft ingediend.",
-		"visibleToTeacherAndCollaborators": "De inhoud die u hieronder opneemt, is alleen zichtbaar voor uw docent(en) en projectmedewerkers"
+		"visibleToTeacherAndCollaborators": "De inhoud die u hieronder opneemt, is alleen zichtbaar voor uw docent(en) en projectmedewerkers",
+		"yourEntry": "Uw inzending"
 	},
 	"makeMain": {
 		"confirm": "Weet u zeker dat u dit voorstel het hoofdvoorstel wilt maken?"

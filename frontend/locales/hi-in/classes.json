@@ -544,6 +544,9 @@
 		"students": "छात्र",
 		"studies": "अध्ययन करते हैं"
 	},
+	"mainCard": {
+		"forMindHiveNetwork": "आपकी प्रविष्टि"
+	},
 	"mentors": {
 		"copy": "प्रतिलिपि",
 		"createLink": "लिंक बनाएं",

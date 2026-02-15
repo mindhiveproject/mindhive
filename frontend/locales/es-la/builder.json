@@ -401,7 +401,7 @@
 		"chooseReviewStep": "Elija en qué paso de la revisión por pares debe ir una tarjeta",
 		"comments": "Comentarios",
 		"commentsPlaceholder": "Añade tu comentario aquí...",
-		"forMindHiveNetwork": "Para la red MindHive",
+		"expandOriginalEntry": "Expandir para ver tu entrada original",
 		"forTeacherAndCollaborators": "Solo para mi profesor y colaboradores del proyecto.",
 		"instructions": "Instrucciones",
 		"lockedMessage": "La tarjeta está siendo editada actualmente por",
@@ -416,13 +416,14 @@
 			"projectReport": "Informe del proyecto",
 			"proposal": "Propuesta"
 		},
-		"revisedContent": "Contenido revisado",
 		"revisedContentUsed": "El contenido revisado que incluya aquí se utilizará en el informe final.",
+		"revisedEntry": "Su entrada revisada",
 		"seeOriginalSubmission": "Haga clic para ver su envío original",
 		"selectOption": "Seleccionar opción",
 		"submission": "Envío",
 		"visibleInFeedbackCenter": "El contenido que incluya aquí será visible en el Centro de comentarios una vez que se envíe a través de una Tarjeta de Acción amarilla.",
-		"visibleToTeacherAndCollaborators": "El contenido que incluyas a continuación solo será visible para tus profesores y colaboradores del proyecto."
+		"visibleToTeacherAndCollaborators": "El contenido que incluyas a continuación solo será visible para tus profesores y colaboradores del proyecto.",
+		"yourEntry": "Tu entrada"
 	},
 	"makeMain": {
 		"confirm": "¿Estás seguro de que deseas que esta propuesta sea la principal?"

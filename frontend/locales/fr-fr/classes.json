@@ -544,6 +544,9 @@
 		"students": "Étudiants",
 		"studies": "Études"
 	},
+	"mainCard": {
+		"forMindHiveNetwork": "Votre entrée"
+	},
 	"mentors": {
 		"copy": "Copie",
 		"createLink": "Créer un lien",

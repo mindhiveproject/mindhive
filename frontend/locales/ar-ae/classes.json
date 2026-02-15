@@ -544,6 +544,9 @@
 		"students": "طلاب",
 		"studies": "دراسات"
 	},
+	"mainCard": {
+		"forMindHiveNetwork": "مشاركتك"
+	},
 	"mentors": {
 		"copy": "ينسخ",
 		"createLink": "إنشاء رابط",

@@ -544,6 +544,9 @@
 		"students": "Студенты",
 		"studies": "Исследования"
 	},
+	"mainCard": {
+		"forMindHiveNetwork": "Ваша заявка"
+	},
 	"mentors": {
 		"copy": "Копировать",
 		"createLink": "Создать ссылку",

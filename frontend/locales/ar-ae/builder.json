@@ -401,7 +401,7 @@
 		"chooseReviewStep": "اختر الخطوة التي يجب أن تدخل فيها البطاقة في مراجعة الأقران",
 		"comments": "تعليقات",
 		"commentsPlaceholder": "أضف تعليقك هنا...",
-		"forMindHiveNetwork": "لشبكة MindHive",
+		"expandOriginalEntry": "قم بالتوسيع لرؤية إدخالك الأصلي",
 		"forTeacherAndCollaborators": "للمعلمين وزملاء المشروع فقط",
 		"instructions": "تعليمات",
 		"lockedMessage": "يتم تحرير البطاقة حاليًا بواسطة",
@@ -416,13 +416,14 @@
 			"projectReport": "تقرير المشروع",
 			"proposal": "عرض"
 		},
-		"revisedContent": "المحتوى المنقح",
 		"revisedContentUsed": "سيتم استخدام المحتوى المنقح الذي قمت بتضمينه هنا في التقرير النهائي.",
+		"revisedEntry": "إدخالك المعدل",
 		"seeOriginalSubmission": "انقر لعرض مشاركتك الأصلية",
 		"selectOption": "حدد الخيار",
 		"submission": "استسلام",
 		"visibleInFeedbackCenter": "سيكون المحتوى الذي تقوم بتضمينه هنا مرئيًا في مركز التعليقات بمجرد إرساله عبر بطاقة العمل الصفراء.",
-		"visibleToTeacherAndCollaborators": "سيكون المحتوى الذي تقوم بتضمينه أدناه مرئيًا فقط لمعلميك وزملاءك في المشروع"
+		"visibleToTeacherAndCollaborators": "سيكون المحتوى الذي تقوم بتضمينه أدناه مرئيًا فقط لمعلميك وزملاءك في المشروع",
+		"yourEntry": "مشاركتك"
 	},
 	"makeMain": {
 		"confirm": "هل أنت متأكد أنك تريد جعل هذا الاقتراح هو الاقتراح الرئيسي؟"

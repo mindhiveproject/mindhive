@@ -28,7 +28,7 @@ import Assigned from "./Forms/Assigned";
 import Status from "../../../../../Dashboard/TeacherClasses/ClassPage/Assignments/Homework/Status";
 import TipTapEditor from "../../../../../TipTap/Main";
 import { PreviewSection } from "../../../../../Proposal/Card/Forms/LinkedItems";
-import { Modal, Button, Icon, Dropdown, Accordion } from "semantic-ui-react";
+import { Modal, Button, Icon, Dropdown } from "semantic-ui-react";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
@@ -1359,93 +1359,15 @@ export default function ProposalCard({
           <div className="proposalCardBoard">
             <div className="textBoard">
               <div className="cardHeader">{inputs?.title}</div>
-              <div className="cardSubheader">
-                {t("mainCard.instructions", "Instructions")}
-              </div>
               <ReadOnlyTipTap>
                 <div className="ProseMirror">
                   {ReactHtmlParser(inputs?.description)}
                 </div>
               </ReadOnlyTipTap>
-              {proposalCard?.settings?.includeInReport && (
-                <>
-                  <div className="cardSubheader">
-                    {t("mainCard.forMindHiveNetwork", "For MindHive Network")}
-                  </div>
-                  <div className="cardSubheaderComment">
-                    {t(
-                      "mainCard.visibleInFeedbackCenter",
-                      "The content you include here will be visible in the Feedback Center once it is submitted via a yellow Action Card.",
-                    )}
-                  </div>
-                  <div className="jodit">
-                    {isLocked ? (
-                      <Accordion styled fluid>
-                        <Accordion.Title
-                          active={originalActive}
-                          onClick={() => setOriginalActive(!originalActive)}
-                          style={{ fontSize: "16px", fontWeight: "bold" }}
-                        >
-                          <Icon name="dropdown" />
-                          {t("mainCard.forMindHiveNetwork", "Original Content")}
-                        </Accordion.Title>
-                        <Accordion.Content active={originalActive}>
-                          <ReadOnlyTipTap>
-                            <div className="ProseMirror">
-                              {ReactHtmlParser(content?.current || "")}
-                            </div>
-                          </ReadOnlyTipTap>
-                        </Accordion.Content>
-                      </Accordion>
-                    ) : (
-                      <div onFocus={handleFocus}>
-                        <TipTapEditor
-                          content={content?.current}
-                          onUpdate={(newContent) =>
-                            handleContentChange({
-                              contentType: "content",
-                              newContent,
-                            })
-                          }
-                        />
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
-
-              {proposalCard?.settings?.includeInReport && isLocked && (
-                <>
-                  <div className="cardSubheader">
-                    {t("mainCard.revisedContent", "Revised Content")}
-                  </div>
-                  <div className="cardSubheaderComment">
-                    {t(
-                      "mainCard.revisedContentUsed",
-                      "The revised content you include here will be used in the final report.",
-                    )}
-                  </div>
-                  <div className="jodit">
-                    <div onFocus={handleFocus}>
-                      <TipTapEditor
-                        content={revisedContent?.current}
-                        onUpdate={(newContent) =>
-                          handleContentChange({
-                            contentType: "revisedContent",
-                            newContent,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-            <div className="infoBoard">
               {proposal?.usedInClass?.settings?.assignableToStudents === true &&
                 (assignedCount > 0 || canAddAssignment) && (
                   <div>
-                    <div className="cardSubheader" style={{ display: "flex", alignItems: "center", gap: "8px"}}>
+                    <div className="cardSubheaderAssign" style={{ display: "flex", alignItems: "center", gap: "8px"}}>
                       {t("mainCard.assignedTo", "Assigned to")}
                       {!canAddAssignment ? (
                         <InfoTooltip
@@ -1462,8 +1384,6 @@ export default function ProposalCard({
                         <></>
                       )}
                     </div>
-                    
-                    
                     <Assigned
                       users={collaborators}
                       assignedTo={inputs?.assignedTo}
@@ -1476,7 +1396,74 @@ export default function ProposalCard({
                     />
                   </div>
                 )}
+              {proposalCard?.settings?.includeInReport && (
+                <>
+                  <div className="cardSubheader">
+                    {t("mainCard.yourEntry", "Your entry")}
+                  </div>
+                  {isLocked ? (
+                    <div className="originalEntryBlock">
+                      <button
+                        type="button"
+                        className="originalEntryBlockHeader"
+                        onClick={() => setOriginalActive(!originalActive)}
+                        aria-expanded={originalActive}
+                        aria-label={t("mainCard.expandOriginalEntry", "Expand to see your original entry")}
+                      >
+                        <span>{t("mainCard.expandOriginalEntry", "Expand to see your original entry")}</span>
+                        <span style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                          <img style={{ transform: `${originalActive ? 'rotate(270deg)' : 'rotate(90deg)'}`,  width: "8px", height: "8px" }} src="/assets/icons/back.svg" alt={t("cardNavigation.back", "back")} />
+                          <img style={{ transform: `${originalActive ? 'rotate(90deg)' : 'rotate(270deg)'}`,  width: "8px", height: "8px" }} src="/assets/icons/back.svg" alt={t("cardNavigation.back", "back")} />
+                          {/* <Icon name="chevron up" />
+                          <Icon name="chevron down" /> */}
+                        </span>
+                      </button>
+                      {originalActive && (
+                        <div className="originalEntryBlockContent">
+                          <ReadOnlyTipTap>
+                            <div className="ProseMirror">
+                              {ReactHtmlParser(content?.current || "")}
+                            </div>
+                          </ReadOnlyTipTap>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div onFocus={handleFocus}>
+                      <TipTapEditor
+                        content={content?.current}
+                        onUpdate={(newContent) =>
+                          handleContentChange({
+                            contentType: "content",
+                            newContent,
+                          })
+                        }
+                      />
+                    </div>
+                  )}
+                </>
+              )}
 
+              {proposalCard?.settings?.includeInReport && isLocked && (
+                <>
+                  <div className="cardSubheader">
+                    {t("mainCard.revisedEntry", "Your revised entry")}
+                  </div>
+                    <div onFocus={handleFocus}>
+                      <TipTapEditor
+                        content={revisedContent?.current}
+                        onUpdate={(newContent) =>
+                          handleContentChange({
+                            contentType: "revisedContent",
+                            newContent,
+                          })
+                        }
+                      />
+                    </div>
+                </>
+              )}
+            </div>
+            <div className="infoBoard">
               {/* Display Linked Items using PreviewSection */}
               <div style={{ marginTop: "24px", marginBottom: "24px", display: "flex", flexDirection: "column", gap: "16px" }}> 
                 {inputs?.resources?.length > 0 && (

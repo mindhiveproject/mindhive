@@ -401,7 +401,7 @@
 		"chooseReviewStep": "选择卡片应进入同行评审的哪个步骤",
 		"comments": "评论",
 		"commentsPlaceholder": "请在此处添加您的评论……",
-		"forMindHiveNetwork": "为 MindHive 网络",
+		"expandOriginalEntry": "展开查看您的原始条目",
 		"forTeacherAndCollaborators": "仅供我的老师和项目合作者使用",
 		"instructions": "指示",
 		"lockedMessage": "该卡片目前正在被编辑",
@@ -416,13 +416,14 @@
 			"projectReport": "项目报告",
 			"proposal": "提议"
 		},
-		"revisedContent": "修订内容",
 		"revisedContentUsed": "您在此处包含的修订内容将用于最终报告。",
+		"revisedEntry": "您修改后的条目",
 		"seeOriginalSubmission": "点击查看您的原始提交内容",
 		"selectOption": "选择选项",
 		"submission": "提交",
 		"visibleInFeedbackCenter": "一旦通过黄色行动卡提交，您在此处包含的内容将显示在反馈中心。",
-		"visibleToTeacherAndCollaborators": "您在下面包含的内容只有您的老师和项目合作者才能看到"
+		"visibleToTeacherAndCollaborators": "您在下面包含的内容只有您的老师和项目合作者才能看到",
+		"yourEntry": "您的参赛作品"
 	},
 	"makeMain": {
 		"confirm": "您确定要将此提案作为主要提案吗？"

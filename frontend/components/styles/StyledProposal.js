@@ -6,7 +6,7 @@ export const StyledProposal = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: ${(props) => (props.$cardFullView ? "hidden" : "auto")};
-  padding: ${(props) => (props.$cardFullView ? "0" : "20px")};
+  // padding: ${(props) => (props.$cardFullView ? "0" : "20px")};
   // min-height: 80vh;
   background: #f7f9f8;
   align-items: ${(props) => (props.$cardFullView ? "stretch" : "baseline")};
@@ -826,7 +826,8 @@ export const StyledProposal = styled.div`
     font-size: 18px;
     text-align: left;
     background: #F7F9F8;
-    padding: 10px;
+    padding: 0px;
+    height: 100%;
 
     .resourcePreview {
       display: grid;
@@ -946,15 +947,11 @@ export const StyledProposal = styled.div`
     }
 
     .proposalCardBoard {
-      display: grid;
-      align-items: baseline;
-      grid-gap: 30px;
-      grid-template-columns: 6fr 4fr;
-      height: 100%;
-    }
-
-    .jodit-container {
-      border: none !important;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      flex: 1 0 0;
+      align-self: stretch;
     }
 
     label {
@@ -1005,23 +1002,36 @@ export const StyledProposal = styled.div`
       }
     }
     .cardHeader {
-      margin-top: 16px;
-      font-family: 'Nunito';
+      align-self: stretch;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+
+      /* MH-Theme/heading/small */
+      font-family: Inter;
+      font-size: 28px;
       font-style: normal;
       font-weight: 600;
-      font-size: 24px;
-      line-height: 32px;
-      color: #3B3B3B;
+      line-height: 36px; /* 128.571% */
+    }
+    .cardSubheaderAssign {
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+
+      /* MH-Theme/title/base */
+      font-family: Inter;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 24px; /* 150% */
     }
     .cardSubheader {
-      color: var(--neutral_grey2, #3b3b3b);
-      font-family: Nunito;
-      font-size: 24px;
+      margin-top: 16px;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+
+      /* MH-Theme/title/large */
+      font-family: Inter;
+      font-size: 22px;
+      font-style: normal;
       font-weight: 600;
-      line-height: 32px;
-      text-align: left;
-      text-underline-position: from-font;
-      text-decoration-skip-ink: none;
+      line-height: 28px; /* 127.273% */
     }
     .cardSubheaderComment {
       font-family: 'Nunito';
@@ -1034,6 +1044,47 @@ export const StyledProposal = styled.div`
       color: #626269;
       mix-blend-mode: normal;
       opacity: 0.7;
+    }
+    .originalEntryBlock {
+      background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
+      border-radius: 8px;
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      width: 100%;
+      .originalEntryBlockHeader {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: none;
+        padding: 12px 16px;
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
+        border: 0;
+        border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+        border-radius: 0;
+        cursor: pointer;
+        user-select: none;
+        text-align: left;
+        &:focus-visible {
+          outline: 2px solid var(--MH-Theme-Neutrals-Dark, #6A6A6A);
+          outline-offset: 2px;
+        }
+      }
+      .originalEntryBlockContent {
+        padding: 16px;
+        background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+      }
     }
     .cardDescription {
       color: #626269;
@@ -1052,25 +1103,94 @@ export const StyledProposal = styled.div`
       align-items: center;
     }
     .textBoard {
-      display: grid;
-      grid-gap: 10px;
-      margin: 15px 10px 100px 20px;
+      display: flex;
+      margin: 12px 24px 24px 24px;
+      padding: 24px 24px 24px 24px;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 10px;
+      flex: 1 0 0;
+      width: 100%;
+      height: 100%;
+
+      & > div {
+        width: 100%;
+      }
+      /* Assigned section in textBoard – chips and add button (mirrors infoBoard) */
+      .collaboratorArray {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: nowrap;
+        width: 100%;
+        margin-top: 8px;
+      }
+      .collaboratorChip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 24px;
+        border: 1px solid #A1A1A1;
+        border-radius: 30px;
+        padding: 4px 12px 4px 12px;
+        gap: 8px;
+        background: white;
+        overflow: hidden;
+        width: fit-content;
+        max-width: 300px;
+        span {
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 14px;
+          display: flex;
+          height: 100%;
+          align-items: center;
+        }
+      }
+      .addCollaboratorButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border: 1px solid #A1A1A1;
+        border-radius: 50%;
+        background: white;
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
+        overflow: hidden;
+        &:hover {
+          background: #F3F3F3;
+        }
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          display: block;
+        }
+        .icon {
+          color: #171717;
+          margin: 0;
+        }
+      }
     }
     .infoBoard {
-      display: grid;
-      grid-gap: 10px;
-      align-content: baseline;
-      border-radius: 0px 4px 4px 0px;
-      margin: 10px;
-      /* padding: 53px 30px 30px 37px; */
-      font-family: Roboto;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: 30px;
-      letter-spacing: 0em;
-      text-align: left;
-      height: 100%;
+      display: flex;
+      max-width: 500px;
+      padding: 24px;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 24px;
+      flex: 1 0 0;
+      align-self: stretch;
+      border-left: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      background: var(--MH-Theme-Neutrals-White, #FFF);
+
       .collaboratorArray {
         display: flex;
         gap: 8px;

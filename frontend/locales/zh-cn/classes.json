@@ -544,6 +544,9 @@
 		"students": "学生",
 		"studies": "研究"
 	},
+	"mainCard": {
+		"forMindHiveNetwork": "您的参赛作品"
+	},
 	"mentors": {
 		"copy": "复制",
 		"createLink": "创建链接",

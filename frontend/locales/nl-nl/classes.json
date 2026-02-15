@@ -544,6 +544,9 @@
 		"students": "Studenten",
 		"studies": "Onderzoeken"
 	},
+	"mainCard": {
+		"forMindHiveNetwork": "Uw inzending"
+	},
 	"mentors": {
 		"copy": "Kopiëren",
 		"createLink": "Link maken",

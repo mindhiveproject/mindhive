@@ -401,7 +401,7 @@
 		"chooseReviewStep": "Choisissez à quelle étape de l'évaluation par les pairs une carte doit être soumise",
 		"comments": "Commentaires",
 		"commentsPlaceholder": "Ajoutez votre commentaire ici...",
-		"forMindHiveNetwork": "Pour le réseau MindHive",
+		"expandOriginalEntry": "Déroulez pour voir votre entrée originale",
 		"forTeacherAndCollaborators": "Réservé à mon professeur et aux collaborateurs du projet",
 		"instructions": "Instructions",
 		"lockedMessage": "La carte est actuellement en cours d'édition par",
@@ -416,13 +416,14 @@
 			"projectReport": "Rapport de projet",
 			"proposal": "Proposition"
 		},
-		"revisedContent": "Contenu révisé",
 		"revisedContentUsed": "Le contenu révisé que vous incluez ici sera utilisé dans le rapport final.",
+		"revisedEntry": "Votre entrée révisée",
 		"seeOriginalSubmission": "Cliquez pour voir votre soumission originale",
 		"selectOption": "Sélectionnez une option",
 		"submission": "Soumission",
 		"visibleInFeedbackCenter": "Le contenu que vous incluez ici sera visible dans le centre de commentaires une fois qu'il sera soumis via une carte d'action jaune.",
-		"visibleToTeacherAndCollaborators": "Le contenu que vous incluez ci-dessous ne sera visible que par votre/vos enseignant(s) et collaborateurs du projet"
+		"visibleToTeacherAndCollaborators": "Le contenu que vous incluez ci-dessous ne sera visible que par votre/vos enseignant(s) et collaborateurs du projet",
+		"yourEntry": "Votre entrée"
 	},
 	"makeMain": {
 		"confirm": "Êtes-vous sûr de vouloir faire de cette proposition la proposition principale ?"

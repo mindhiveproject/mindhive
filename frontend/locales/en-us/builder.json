@@ -401,7 +401,7 @@
 		"chooseReviewStep": "Choose which step of the peer review a card should go in",
 		"comments": "Comments",
 		"commentsPlaceholder": "Add your comment here...",
-		"forMindHiveNetwork": "For MindHive network",
+		"expandOriginalEntry": "Expand to see your original entry",
 		"forTeacherAndCollaborators": "For my teacher and project collaborators only",
 		"instructions": "Instructions",
 		"lockedMessage": "The card is currently being edited by",
@@ -416,13 +416,14 @@
 			"projectReport": "Project Report",
 			"proposal": "Proposal"
 		},
-		"revisedContent": "Revised Content",
 		"revisedContentUsed": "The revised content you include here will be used in the final report.",
+		"revisedEntry": "Your revised entry",
 		"seeOriginalSubmission": "Click to see your original submission",
 		"selectOption": "Select option",
 		"submission": "Submission",
 		"visibleInFeedbackCenter": "The content you include here will be visible in the Feedback Center once it is submitted via a yellow Action Card.",
-		"visibleToTeacherAndCollaborators": "The content you include below will only be visible to your teacher(s) and project collaborators"
+		"visibleToTeacherAndCollaborators": "The content you include below will only be visible to your teacher(s) and project collaborators",
+		"yourEntry": "Your entry"
 	},
 	"makeMain": {
 		"confirm": "Are you sure you want to make this proposal the main one?"
