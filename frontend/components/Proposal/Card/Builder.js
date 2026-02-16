@@ -20,6 +20,7 @@ import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap";
 import CardType from "./Forms/Type";
 import LinkedItems from "./Forms/LinkedItems";
 import { PreviewSection } from "./Forms/PreviewSection";
+import InfoTooltip from "../../Builder/Project/ProjectBoard/Board/PDF/Preview/InfoTooltip";
 import useTranslation from "next-translate/useTranslation";
 
 const peerReviewOptions = [
@@ -539,12 +540,18 @@ export default function BuilderProposalCard({
       <div className="proposalCardBoard">
         <div className="textBoard">
           <label htmlFor="title">
-            <div className="cardHeader">{t("board.expendedCard.title")}</div>
-            <div className="cardSubheaderComment">
-              {t(
-                "board.expendedCard.titleText",
-                "Add or edit the card title. This title will appear as a section header in student submissions to the Feedback Center if the box titled 'Include text input for Feedback Center' is checked."
-              )}
+            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              {t("board.expendedCard.title")}
+              <InfoTooltip
+                content={t(
+                  "board.expendedCard.titleText",
+                  "Add or edit the card title. This title will appear as a section header in student submissions to the Feedback Center if the box titled 'Include text input for Feedback Center' is checked."
+                )}
+                iconSrc="/assets/icons/question_mark.svg"
+                iconStyle={{
+                  opacity: 0.7,
+                }}
+              />
             </div>
             <p></p>
             <input
@@ -556,14 +563,18 @@ export default function BuilderProposalCard({
             />
           </label>
           <label htmlFor="description">
-            <div className="cardHeader">
+            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.instructions")}
-            </div>
-            <div className="cardSubheaderComment">
-              {t(
-                "board.expendedCard.instructionsText",
-                "Add or edit instructions for students telling them how to complete the card."
-              )}
+              <InfoTooltip
+                content={t(
+                  "board.expendedCard.instructionsText",
+                  "Add or edit instructions for students telling them how to complete the card."
+                )}
+                iconSrc="/assets/icons/question_mark.svg"
+                iconStyle={{
+                  opacity: 0.7,
+                }}
+              />
             </div>
             <TipTapEditor
               content={description?.current}
@@ -579,16 +590,16 @@ export default function BuilderProposalCard({
           {inputs?.settings?.includeInReport && (
             <>
               <label htmlFor="description">
-                <div className="cardHeader">
+                <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   {t("board.expendedCard.studentResponseBoxNetwork")}
+                  <InfoTooltip
+                    content={t(
+                      "board.expendedCard.studentResponseBoxNetworkText",
+                      "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed"
+                    )}
+                    iconSrc="/assets/icons/question_mark.svg"
+                  />
                 </div>
-                <div className="cardSubheaderComment">
-                  {t(
-                    "board.expendedCard.studentResponseBoxNetworkText",
-                    "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed"
-                  )}
-                </div>
-                
               </label>
               <div onClick={() => proposal?.prototypeFor?.length > 0 && setShowWarningBox(true)}>
                 <TipTapEditor
@@ -688,14 +699,20 @@ export default function BuilderProposalCard({
         </div>
         <div className="infoBoard">
           <>
-            <div className="cardHeader">
+            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.linkedItems", "Linked Items")}
-            </div>
-            <div className="cardSubheaderComment">
-              {t(
-                "board.expendedCard.addLinkedItems",
-                "Add existing assignments, tasks, studies, or resources"
-              )}
+              <InfoTooltip
+                content={t(
+                  "board.expendedCard.addLinkedItems",
+                  "Add existing assignments, tasks, studies, or resources"
+                )}
+                iconStyle={{
+                  opacity: 0.7,
+                }}
+                tooltipStyle={{
+                  width: "200px",
+                }}
+              />
             </div>
             <LinkedItems
               proposal={proposal}
@@ -710,9 +727,12 @@ export default function BuilderProposalCard({
           </>
 
           <div className="proposalCardComments">
-            <div className="cardHeader">{t("board.expendedCard.comments")}</div>
-            <div className="cardSubheaderComment">
-              {t("board.expendedCard.commentsText")}
+            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              {t("board.expendedCard.comments")}
+              <InfoTooltip
+                content={t("board.expendedCard.commentsText")}
+                iconSrc="/assets/icons/question_mark.svg"
+              />
             </div>
             <TipTapEditor
               content={inputs.comment}
@@ -734,14 +754,15 @@ export default function BuilderProposalCard({
             <CardType type={inputs?.type} handleChange={handleChange} />
           </div>
           <>
-            <div className="cardHeader">
+            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.visibility")}
-            </div>
-            <div className="cardSubheaderComment">
-              {t(
-                "board.expendedCard.visibilityText",
-                "Check the box below to indicate whether student responses should be made visible in the Feedback Center."
-              )}
+              <InfoTooltip
+                content={t(
+                  "board.expendedCard.visibilityText",
+                  "Check the box below to indicate whether student responses should be made visible in the Feedback Center."
+                )}
+                iconSrc="/assets/icons/question_mark.svg"
+              />
             </div>
             <div className="checkboxText">
               <Checkbox

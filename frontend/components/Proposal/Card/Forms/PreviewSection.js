@@ -1,6 +1,10 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
+import { useMutation } from "@apollo/client";
 import { Icon } from "semantic-ui-react";
+import InfoTooltip from "../../../Builder/Project/ProjectBoard/Board/PDF/Preview/InfoTooltip";
+import { MANAGE_FAVORITE_TASKS } from "../../../Mutations/User";
+import { CURRENT_USER_QUERY } from "../../../Queries/User";
 
 // Strip HTML tags from text (used for item titles in chips)
 const stripHtml = (html) => {
@@ -49,7 +53,7 @@ const RESOURCE_STUDY_STYLES = {
   // boxShadow: "2px 2px 12px 0 rgba(0, 0, 0, 0.15)",
 };
 
-// Task chip styles (Accent variant as default)
+// Task chip styles (Figma: favorited = 2244-2325, not favorited = 2303-2309)
 const TASK_STYLES = {
   accent: {
     border: "1px solid var(--MH-Theme-Additional-Accent-Medium, #D8D3E7)",
@@ -61,9 +65,32 @@ const TASK_STYLES = {
     background: "#FFFFFF",
     color: "#171717",
   },
+  favorited: {
+    border: "1px solid var(--MH-Theme-Accent-Dark, #5D5763)",
+    background: "var(--MH-Theme-Accent-Light, #FDF2D0)",
+    color: "#5D5763",
+    starColor: "#F2BE42",
+  },
+  notFavorited: {
+    border: "1px solid var(--MH-Theme-Accent-Dark, #5D5763)",
+    background: "#FFFFFF",
+    color: "#171717",
+    starColor: "#5D5763",
+  },
+};
+
+// Shared tooltip container style for chip tooltips
+const CHIP_TOOLTIP_STYLE = {
+  width: "max-content",
+  maxWidth: "320px",
+  borderRadius: "8px",
+  padding: "12px 16px",
+  marginTop: "8px",
+  ...TYPO.label,
 };
 
 // Assignment chip (Disabled, Public, Completed states)
+// Teachers and mentors can click disabled (unpublished) chips; style stays greyed.
 const AssignmentChip = ({
   item,
   index,
@@ -72,10 +99,14 @@ const AssignmentChip = ({
   openAssignmentModal,
   hoveredItemId,
   setHoveredItemId,
-  tooltipTimeoutRef,
+  user,
 }) => {
   const fullTitle = stripHtml(item?.title) || "Untitled";
   const isDisabled = !item?.public;
+  const isTeacherOrMentor = user?.permissions?.some(
+    (p) => p?.name !== "STUDENT"
+  );
+  const canClick = !isDisabled || isTeacherOrMentor;
   const status = homeworkStatusByAssignmentId?.[item?.id];
   const isCompleted = status === "Completed";
 
@@ -84,88 +115,51 @@ const AssignmentChip = ({
   else if (isCompleted) chipStyle = ASSIGNMENT_STYLES.completed;
 
   const handleClick = () => {
-    if (isDisabled) return;
+    if (!canClick) return;
     openAssignmentModal?.(item);
   };
 
   const typeLabel = t("board.expendedCard.myAssignments", "Assignments");
   const tooltipContent = isDisabled
     ? t("board.expendedCard.assignmentNotPublished", "Not published")
-    : `${typeLabel}: ${fullTitle}`;
+    : (
+        <>
+          <span style={{ ...TYPO.labelSemibold, fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
+        </>
+      );
   const isHovered = hoveredItemId === item.id;
 
   return (
-    <div
-      className="itemBlockPreview"
-      key={`assignment-${item.id}-${index}`}
-      onClick={handleClick}
-      onMouseEnter={(e) => {
-        setHoveredItemId(item.id);
-        const el = e.currentTarget;
-        if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current);
-        tooltipTimeoutRef.current = setTimeout(() => {
-          const tooltip = el.querySelector(".hover-tooltip");
-          if (tooltip) {
-            tooltip.style.opacity = "1";
-            tooltip.style.transform = "translateY(0)";
-          }
-        }, 550);
-      }}
-      onMouseLeave={(e) => {
-        setHoveredItemId(null);
-        if (tooltipTimeoutRef.current) {
-          clearTimeout(tooltipTimeoutRef.current);
-          tooltipTimeoutRef.current = null;
-        }
-        const tooltip = e.currentTarget.querySelector(".hover-tooltip");
-        if (tooltip) {
-          tooltip.style.opacity = "0";
-          tooltip.style.transform = "translateY(-5px)";
-        }
-      }}
-      style={{
-        position: "relative",
-        ...CHIP_BASE_STYLES,
-        flexDirection: "row",
-        alignItems: "center",
-        ...chipStyle,
-        cursor: isDisabled ? "not-allowed" : "pointer",
-        transition: "box-shadow 0.2s ease",
-        boxShadow: isHovered && !isDisabled ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
-        ...TYPO.bodySemibold,
-        color: chipStyle.color || "#171717",
-        maxWidth: "320px",
-        minWidth: 0,
-        opacity: isDisabled ? 0.55 : 1,
-      }}
+    <InfoTooltip
+      content={tooltipContent}
+      delayMs={550}
+      tooltipStyle={{ ...CHIP_TOOLTIP_STYLE, background: chipStyle.background, border: chipStyle.border, color: "#171717" }}
+      wrapperStyle={{ display: "inline-block", maxWidth: "320px" }}
     >
-      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{fullTitle}</span>
       <div
-        className="hover-tooltip"
+        className="itemBlockPreview"
+        onClick={handleClick}
+        onMouseEnter={() => setHoveredItemId(item.id)}
+        onMouseLeave={() => setHoveredItemId(null)}
         style={{
-          position: "absolute",
-          top: "100%",
-          left: "0",
-          width: "max-content",
-          maxWidth: "320px",
-          background: chipStyle.background,
-          border: chipStyle.border,
-          color: "#171717",
-          marginTop: "8px",
-          padding: "12px 16px",
-          borderRadius: "8px",
+          position: "relative",
+          ...CHIP_BASE_STYLES,
+          flexDirection: "row",
+          alignItems: "center",
+          ...chipStyle,
+          cursor: canClick ? "pointer" : "not-allowed",
+          transition: "box-shadow 0.2s ease",
+          boxShadow: isHovered && canClick ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
           ...TYPO.label,
-          opacity: 0,
-          transform: "translateY(-5px)",
-          transition: "all 0.3s ease",
-          pointerEvents: "none",
-          zIndex: 1000,
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.10)",
+          color: chipStyle.color || "#171717",
+          maxWidth: "320px",
+          minWidth: 0,
+          opacity: isDisabled ? 0.55 : 1,
         }}
       >
-        {isDisabled ? tooltipContent : <><span style={{ ...TYPO.labelSemibold, fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}</>}
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{fullTitle}</span>
       </div>
-    </div>
+    </InfoTooltip>
   );
 };
 
@@ -176,16 +170,16 @@ const ResourceStudyChip = ({
   index,
   t,
   openResourceModal,
-  hoveredItemId,
-  setHoveredItemId,
-  tooltipTimeoutRef,
 }) => {
   const fullTitle = stripHtml(item?.title) || "Untitled";
   const isStudy = type === "study";
   const viewUrl = isStudy ? `/dashboard/discover/studies?name=${item?.slug}` : null;
   const typeLabel = isStudy ? t("board.expendedCard.studies", "Studies") : t("board.expendedCard.resources", "Resources");
-  const tooltipContent = `${typeLabel}: ${fullTitle}`;
-  const isHovered = hoveredItemId === item.id;
+  const tooltipContent = (
+    <>
+      <span style={{ ...TYPO.labelSemibold, fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
+    </>
+  );
 
   const handleClick = () => {
     if (isStudy) window.open(viewUrl, "_blank", "noopener,noreferrer");
@@ -193,179 +187,147 @@ const ResourceStudyChip = ({
   };
 
   return (
-    <div
-      className="itemBlockPreview"
-      key={`${type}-${item.id}-${index}`}
-      onClick={handleClick}
-      onMouseEnter={(e) => {
-        setHoveredItemId(item.id);
-        const el = e.currentTarget;
-        if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current);
-        tooltipTimeoutRef.current = setTimeout(() => {
-          const tooltip = el.querySelector(".hover-tooltip");
-          if (tooltip) {
-            tooltip.style.opacity = "1";
-            tooltip.style.transform = "translateY(0)";
-          }
-        }, 550);
-      }}
-      onMouseLeave={(e) => {
-        setHoveredItemId(null);
-        if (tooltipTimeoutRef.current) {
-          clearTimeout(tooltipTimeoutRef.current);
-          tooltipTimeoutRef.current = null;
-        }
-        const tooltip = e.currentTarget.querySelector(".hover-tooltip");
-        if (tooltip) {
-          tooltip.style.opacity = "0";
-          tooltip.style.transform = "translateY(-5px)";
-        }
-      }}
-      style={{
-        position: "relative",
-        ...CHIP_BASE_STYLES,
-        flexDirection: "row",
-        alignItems: "center",
-        ...RESOURCE_STUDY_STYLES,
-        background: "#FFFFFF",
-        color: "#171717",
-        cursor: "pointer",
-        transition: "box-shadow 0.2s ease",
-        // boxShadow: isHovered ? "2px 2px 12px 0 rgba(0, 0, 0, 0.2)" : RESOURCE_STUDY_STYLES.boxShadow,
-        ...TYPO.bodySemibold,
-        maxWidth: "320px",
-        minWidth: 0,
-      }}
+    <InfoTooltip
+      content={tooltipContent}
+      delayMs={550}
+      tooltipStyle={{ ...CHIP_TOOLTIP_STYLE, background: "#FFFFFF", border: RESOURCE_STUDY_STYLES.border, color: "#171717" }}
+      wrapperStyle={{ display: "inline-block", maxWidth: "320px" }}
     >
-      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{fullTitle}</span>
       <div
-        className="hover-tooltip"
+        className="itemBlockPreview"
+        onClick={handleClick}
         style={{
-          position: "absolute",
-          top: "100%",
-          left: "0",
-          width: "max-content",
-          maxWidth: "320px",
+          position: "relative",
+          ...CHIP_BASE_STYLES,
+          flexDirection: "row",
+          alignItems: "center",
+          ...RESOURCE_STUDY_STYLES,
           background: "#FFFFFF",
-          border: RESOURCE_STUDY_STYLES.border,
           color: "#171717",
-          marginTop: "8px",
-          padding: "12px 16px",
-          borderRadius: "8px",
+          cursor: "pointer",
+          transition: "box-shadow 0.2s ease",
           ...TYPO.label,
-          opacity: 0,
-          transform: "translateY(-5px)",
-          transition: "all 0.3s ease",
-          pointerEvents: "none",
-          zIndex: 1000,
-          // boxShadow: "0 4px 12px rgba(0, 0, 0, 0.10)",
+          maxWidth: "320px",
+          minWidth: 0,
         }}
       >
-        <span style={{ ...TYPO.labelSemibold, fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, ...TYPO.label, color: "#171717" }}>{fullTitle}</span>
       </div>
-    </div>
+    </InfoTooltip>
   );
 };
 
-// Task chip (star icon + label, accent style)
+// Task chip (star icon + label; favorited vs not favorited per Figma)
 const TaskSurveyChip = ({
   item,
   index,
   t,
-  hoveredItemId,
-  setHoveredItemId,
-  tooltipTimeoutRef,
+  user,
 }) => {
   const fullTitle = stripHtml(item?.title) || "Untitled";
   const viewUrl = `/dashboard/discover/tasks?name=${item?.slug}`;
   const typeLabel = t("board.expendedCard.tasks", "Tasks");
-  const tooltipContent = `${typeLabel}: ${fullTitle}`;
-  const isHovered = hoveredItemId === item.id;
+  const tooltipContent = (
+    <>
+      <span style={{ ...TYPO.labelSemibold, fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
+    </>
+  );
 
-  const handleClick = () => {
+  const isFavorited = user?.favoriteTasks?.some((fav) => fav?.id === item?.id) ?? false;
+  const style = user ? (isFavorited ? TASK_STYLES.favorited : TASK_STYLES.notFavorited) : TASK_STYLES.notFavorited;
+  const starColor = style.starColor || TASK_STYLES.notFavorited.starColor;
+  const canToggleFavorite = !!user?.id && !!item?.id;
+
+  const [manageFavorite] = useMutation(MANAGE_FAVORITE_TASKS, {
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+  });
+
+  const handleStarClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!canToggleFavorite) return;
+    manageFavorite({
+      variables: {
+        id: user.id,
+        taskAction: { [isFavorited ? "disconnect" : "connect"]: { id: item.id } },
+      },
+    });
+  };
+
+  const handleTitleClick = (e) => {
+    e.stopPropagation();
     window.open(viewUrl, "_blank", "noopener,noreferrer");
   };
 
-  // const style = isHovered ? TASK_STYLES.plain : TASK_STYLES.accent;
-  const style = TASK_STYLES.plain
-
   return (
-    <div
-      className="itemBlockPreview"
-      key={`task-${item.id}-${index}`}
-      onClick={handleClick}
-      onMouseEnter={(e) => {
-        setHoveredItemId(item.id);
-        const el = e.currentTarget;
-        if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current);
-        tooltipTimeoutRef.current = setTimeout(() => {
-          const tooltip = el.querySelector(".hover-tooltip");
-          if (tooltip) {
-            tooltip.style.opacity = "1";
-            tooltip.style.transform = "translateY(0)";
-          }
-        }, 550);
-      }}
-      onMouseLeave={(e) => {
-        setHoveredItemId(null);
-        if (tooltipTimeoutRef.current) {
-          clearTimeout(tooltipTimeoutRef.current);
-          tooltipTimeoutRef.current = null;
-        }
-        const tooltip = e.currentTarget.querySelector(".hover-tooltip");
-        if (tooltip) {
-          tooltip.style.opacity = "0";
-          tooltip.style.transform = "translateY(-5px)";
-        }
-      }}
-      style={{
-        position: "relative",
-        ...CHIP_BASE_STYLES,
-        flexDirection: "row",
-        alignItems: "center",
-        gap: "8px",
-        ...style,
-        cursor: "pointer",
-        transition: "all 0.2s ease",
-        // boxShadow: isHovered ? "2px 2px 12px 0 rgba(0, 0, 0, 0.15)" : "none",
-        ...TYPO.bodySemibold,
-        maxWidth: "320px",
-        minWidth: 0,
-      }}
+    <InfoTooltip
+      content={tooltipContent}
+      delayMs={550}
+      tooltipStyle={{ ...CHIP_TOOLTIP_STYLE, background: style.background, border: style.border, color: "#171717" }}
+      wrapperStyle={{ display: "inline-block", maxWidth: "320px" }}
     >
-      {/* <Icon name="star" style={{ flexShrink: 0, color: style.color || "#5D5763", margin: 0 }} /> */}
-      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{fullTitle}</span>
       <div
-        className="hover-tooltip"
+        className="itemBlockPreview"
         style={{
-          position: "absolute",
-          top: "100%",
-          left: "0",
-          width: "max-content",
-          maxWidth: "320px",
-          background: style.background,
+          position: "relative",
+          ...CHIP_BASE_STYLES,
+          flexDirection: "row",
+          alignItems: "center",
+          gap: "8px",
           border: style.border,
-          color: "#171717",
-          marginTop: "8px",
-          padding: "12px 16px",
-          borderRadius: "8px",
+          background: style.background,
+          color: style.color,
+          transition: "all 0.2s ease",
           ...TYPO.label,
-          opacity: 0,
-          transform: "translateY(-5px)",
-          transition: "all 0.3s ease",
-          pointerEvents: "none",
-          zIndex: 1000,
-          // boxShadow: "0 4px 12px rgba(0, 0, 0, 0.10)",
+          maxWidth: "320px",
+          minWidth: 0,
         }}
       >
-        <span style={{ ...TYPO.labelSemibold, fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
+        <button
+          type="button"
+          onClick={handleStarClick}
+          disabled={!canToggleFavorite}
+          aria-label={isFavorited ? t("board.expendedCard.removeFromFavorites", "Remove from favorites") : t("board.expendedCard.addToFavorites", "Add to favorites")}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "left",
+            gap: "8px",
+            padding: 0,
+            margin: 0,
+            border: "none",
+            background: "none",
+            cursor: canToggleFavorite ? "pointer" : "default",
+            color: starColor,
+            flexShrink: 0,
+            ...TYPO.label,
+          }}
+        >
+          <Icon name="star" style={{ margin: 0, height: "20px", width: "20px" }} />
+          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, ...TYPO.label, color: "#171717" }}>{fullTitle}</span>
+        </button>
+        <span
+          role="button"
+          tabIndex={0}
+          onClick={handleTitleClick}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleTitleClick(e); } }}
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            minWidth: 0,
+            cursor: "pointer",
+          }}
+        >
+          {fullTitle}
+        </span>
       </div>
-    </div>
+    </InfoTooltip>
   );
 };
 
 // Render chip by type
-const ChipByType = ({ item, type, index, t, openAssignmentModal, openResourceModal, homeworkStatusByAssignmentId, hoveredItemId, setHoveredItemId, tooltipTimeoutRef }) => {
+const ChipByType = ({ item, type, index, t, openAssignmentModal, openResourceModal, homeworkStatusByAssignmentId, hoveredItemId, setHoveredItemId, user }) => {
   if (type === "assignment") {
     return (
       <AssignmentChip
@@ -376,7 +338,7 @@ const ChipByType = ({ item, type, index, t, openAssignmentModal, openResourceMod
         openAssignmentModal={openAssignmentModal}
         hoveredItemId={hoveredItemId}
         setHoveredItemId={setHoveredItemId}
-        tooltipTimeoutRef={tooltipTimeoutRef}
+        user={user}
       />
     );
   }
@@ -386,9 +348,7 @@ const ChipByType = ({ item, type, index, t, openAssignmentModal, openResourceMod
         item={item}
         index={index}
         t={t}
-        hoveredItemId={hoveredItemId}
-        setHoveredItemId={setHoveredItemId}
-        tooltipTimeoutRef={tooltipTimeoutRef}
+        user={user}
       />
     );
   }
@@ -399,9 +359,6 @@ const ChipByType = ({ item, type, index, t, openAssignmentModal, openResourceMod
       index={index}
       t={t}
       openResourceModal={openResourceModal}
-      hoveredItemId={hoveredItemId}
-      setHoveredItemId={setHoveredItemId}
-      tooltipTimeoutRef={tooltipTimeoutRef}
     />
   );
 };
@@ -424,7 +381,6 @@ export const PreviewSection = ({
 }) => {
   const { t } = useTranslation("classes");
   const [hoveredItemId, setHoveredItemId] = useState(null);
-  const tooltipTimeoutRef = useRef(null);
 
   const renderChips = (itemsToRender, itemType) =>
     (itemsToRender || []).map((item, index) => (
@@ -439,20 +395,20 @@ export const PreviewSection = ({
         homeworkStatusByAssignmentId={homeworkStatusByAssignmentId}
         hoveredItemId={hoveredItemId}
         setHoveredItemId={setHoveredItemId}
-        tooltipTimeoutRef={tooltipTimeoutRef}
+        user={user}
       />
     ));
 
   // Multi-section mode
   if (sections && sections.length > 0) {
     return (
-      <>
+      <div style={{ display: "flex", flexDirection: "column", gap: "16px"}}>
         {title && (
-          <div className="cardHeader" style={{ ...TYPO.bodySemibold, color: "#171717", marginTop: "8px", marginBottom: "4px" }}>
+          <div className="cardHeader" style={{ ...TYPO.bodySemibold, color: "#171717", marginTop: "8px"}}>
             {title}
           </div>
         )}
-        <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginTop: title ? 0 : "10px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "24px"}}>
           {sections.map((sec, sectionIndex) =>
             sec.items && sec.items.length > 0 ? (
               <div key={sectionIndex} className="previewGrid" style={{ display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center" }}>
@@ -461,21 +417,21 @@ export const PreviewSection = ({
             ) : null
           )}
         </div>
-      </>
+      </div>
     );
   }
 
   // Single-section mode
   return (
-    <>
+    <div style={{ display: "flex", flexDirection: "column", gap: "16px"}}>
       {title && (
-        <div className="cardHeader" style={{ ...TYPO.bodySemibold, color: "#171717", marginTop: "8px", marginBottom: "4px" }}>
+        <div className="cardHeader" style={{ ...TYPO.bodySemibold, color: "#171717", marginTop: "8px" }}>
           {title}
         </div>
       )}
       <div className="previewGrid" style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: title ? 0 : "10px", alignItems: "center" }}>
         {renderChips(items, type)}
       </div>
-    </>
+    </div>
   );
 };

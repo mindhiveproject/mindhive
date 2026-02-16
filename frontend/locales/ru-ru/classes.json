@@ -122,6 +122,7 @@
 		"expendedCard": {
 			"addExistingResources": "Добавить существующие ресурсы (см. Ресурсы на панели навигации)",
 			"addLinkedItems": "Добавляйте существующие задания, задачи, исследования или ресурсы.",
+			"addToFavorites": "Добавить в избранное",
 			"alreadyHaveCopy": "Это задание уже скопировано в следующем классе:",
 			"assignment": "Назначение",
 			"assignmentNotPublished": "Данная работа не опубликована.",
@@ -157,6 +158,7 @@
 			"previewLinkedStudies": "Предварительный просмотр Связанные исследования",
 			"previewLinkedTasks": "Предварительный просмотр связанных задач",
 			"publicResources": "Общественный",
+			"removeFromFavorites": "Удалить из Избранного",
 			"resources": "Ресурсы",
 			"resourcesSectionTitle": "Общественные ресурсы",
 			"searchPlaceholder": "Поиск по названию...",

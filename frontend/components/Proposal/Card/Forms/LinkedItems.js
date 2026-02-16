@@ -518,11 +518,18 @@ export default function LinkedItems({
       <Button
         onClick={() => setOpen(true)}
         style={{
-          background: "#f0f4f8",
-          color: "#007c70",
-          border: "1px solid #e0e0e0",
-          borderRadius: "8px",
-          ...TYPO.body,
+          display: "inline-flex",
+          height: "40px",
+          padding: "8px 24px 8px 16px",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "8px",
+          color: "#336F8A",
+          background: "white",
+          border: "2px solid #336F8A",
+          borderRadius: "100px",
+          cursor: "pointer",
+          ...TYPO.bodyMedium,
         }}
       >
         {t("board.expendedCard.linkItems", "Link Items")} ({totalLinked})

@@ -122,6 +122,7 @@
 		"expendedCard": {
 			"addExistingResources": "मौजूदा संसाधन जोड़ें (नेविगेशन पैन में संसाधन देखें)",
 			"addLinkedItems": "मौजूदा असाइनमेंट, कार्य, अध्ययन या संसाधन जोड़ें",
+			"addToFavorites": "पसंदीदा में जोड़े",
 			"alreadyHaveCopy": "यह असाइनमेंट पहले से ही निम्नलिखित क्लास में कॉपी किया गया है:",
 			"assignment": "कार्यभार",
 			"assignmentNotPublished": "यह असाइनमेंट प्रकाशित नहीं किया गया है।",
@@ -157,6 +158,7 @@
 			"previewLinkedStudies": "लिंक किए गए अध्ययनों का पूर्वावलोकन करें",
 			"previewLinkedTasks": "लिंक किए गए कार्यों का पूर्वावलोकन करें",
 			"publicResources": "जनता",
+			"removeFromFavorites": "पसंदीदा से हटाएं",
 			"resources": "संसाधन",
 			"resourcesSectionTitle": "सार्वजनिक संसाधन",
 			"searchPlaceholder": "शीर्षक के आधार पर खोजें...",

@@ -346,7 +346,7 @@ export const StyledProposal = styled.div`
         overflow-y: auto;
       }
       span {
-        font-family: Lato;
+        font-family: Inter;
         font-size: 14px;
         font-style: normal;
         font-weight: 400;
@@ -749,7 +749,7 @@ export const StyledProposal = styled.div`
       color: #1a1a1a; */
     }
     .description {
-      font-family: Lato;
+      font-family: Inter;
       font-size: 24px;
       font-style: normal;
       font-weight: 400;
@@ -798,7 +798,7 @@ export const StyledProposal = styled.div`
         border-radius: 4px;
         align-items: center;
         padding: 14px 24px;
-        font-family: Lato;
+        font-family: Inter;
         font-size: 18px;
         font-style: normal;
         font-weight: 400;
@@ -822,7 +822,7 @@ export const StyledProposal = styled.div`
   .post {
     display: grid;
     grid-row-gap: 10px;
-    font-family: Lato;
+    font-family: Inter;
     font-size: 18px;
     text-align: left;
     background: #F7F9F8;
@@ -1361,7 +1361,7 @@ export const StyledProposalCard = styled.div`
       border: 1px solid #e6e6e6;
       box-sizing: border-box;
       border-radius: 60px;
-      font-family: Lato;
+      font-family: Inter;
       font-size: 12px;
       font-style: normal;
       font-weight: 400;

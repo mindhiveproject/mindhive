@@ -122,6 +122,7 @@
 		"expendedCard": {
 			"addExistingResources": "添加现有资源（参见导航窗格中的资源）",
 			"addLinkedItems": "添加现有作业、任务、研究或资源",
+			"addToFavorites": "添加到收藏夹",
 			"alreadyHaveCopy": "此作业已复制到以下课程中：",
 			"assignment": "任务",
 			"assignmentNotPublished": "这项作业尚未发表",
@@ -157,6 +158,7 @@
 			"previewLinkedStudies": "预览关联研究",
 			"previewLinkedTasks": "预览链接任务",
 			"publicResources": "民众",
+			"removeFromFavorites": "从收藏夹中删除",
 			"resources": "资源",
 			"resourcesSectionTitle": "公共资源",
 			"searchPlaceholder": "按标题搜索...",
