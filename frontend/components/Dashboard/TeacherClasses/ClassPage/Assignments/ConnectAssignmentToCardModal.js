@@ -21,6 +21,7 @@ export default function ConnectAssignmentToCardModal({
     {
       variables: { id: templateBoardId },
       skip: !open || !templateBoardId,
+      fetchPolicy: open ? "network-only" : "cache-first",
     }
   );
 

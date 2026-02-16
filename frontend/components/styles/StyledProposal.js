@@ -1061,10 +1061,10 @@ export const StyledProposal = styled.div`
         max-width: none;
         padding: 12px 16px;
         font-family: Inter;
-        font-size: 14px;
-        font-weight: 600;
+        font-size: 12px;
+        font-weight: 400;
         line-height: 20px;
-        color: var(--MH-Theme-Neutrals-Black, #171717);
+        color: var(--MH-Theme-Accent-Dark, #5D5763);
         background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
         border: 0;
         border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
@@ -1275,6 +1275,9 @@ export const StyledProposal = styled.div`
     }
     .proposalCardComments {
       display: grid;
+      width: 100%;
+      border-top: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      padding-top: 24px;
     }
   }
 

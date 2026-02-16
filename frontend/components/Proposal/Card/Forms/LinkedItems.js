@@ -16,17 +16,40 @@ import {
   GET_MY_RESOURCES,
   GET_TEMPLATE_ASSIGNMENT,
 } from "../../../Queries/Resource";
+
 import { PUBLIC_STUDIES } from "../../../Queries/Study";
 import { ALL_PUBLIC_TASKS } from "../../../Queries/Task";
-// import { GET_MY_CLASS_ASSIGNMENTS } from "../../../Queries/Assignment";
+
 import { GET_MY_ASSIGNMENTS, GET_AN_ASSIGNMENT, GET_ASSIGNMENTS_CHILD } from "../../../Queries/Assignment";
 import { EDIT_ASSIGNMENT } from "../../../Mutations/Assignment";
 import { CREATE_RESOURCE, UPDATE_RESOURCE } from "../../../Mutations/Resource";
 import { GET_RESOURCE } from "../../../Queries/Resource";
+
 import AssignmentEditModal from "../../../TipTap/AssignmentEditModal"
 import AssignmentViewModal from "../../../TipTap/AssignmentViewModal"
 import AssignmentCopyModal from "../../../TipTap/AssignmentCopyModal";
 import { styleText } from "util";
+import { PreviewSection } from "./PreviewSection";
+
+// Design system typography (Figma Design System node 1-706 / StyledProposal alignment)
+const TYPO = {
+  fontFamily: "Inter, sans-serif",
+  // Body
+  body: { fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px", fontWeight: 400 },
+  bodyMedium: { fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px", fontWeight: 500 },
+  bodySemibold: { fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px", fontWeight: 600 },
+  // Body small / Label
+  label: { fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px", fontWeight: 400 },
+  labelSemibold: { fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px", fontWeight: 600 },
+  // Caption
+  caption: { fontFamily: "Inter, sans-serif", fontSize: "12px", lineHeight: "16px", fontWeight: 400 },
+  // Titles
+  titleS: { fontFamily: "Inter, sans-serif", fontSize: "18px", lineHeight: "24px", fontWeight: 600 },
+  titleM: { fontFamily: "Inter, sans-serif", fontSize: "22px", lineHeight: "28px", fontWeight: 600 },
+  titleL: { fontFamily: "Inter, sans-serif", fontSize: "24px", lineHeight: "32px", fontWeight: 600 },
+  // Section label (e.g. modal section headings)
+  sectionLabel: { fontFamily: "Inter, sans-serif", fontSize: "24px", lineHeight: "32px", fontWeight: 600, color: "#274E5B" },
+};
 
 export default function LinkedItems({
   proposal,
@@ -484,8 +507,7 @@ export default function LinkedItems({
     background: "#336F8A",
     color: "white",
     borderRadius: "100px",
-    fontSize: "18px",
-    fontWeight: 500,
+    ...TYPO.bodyMedium,
     cursor: "pointer",
     transition: "background 0.3s ease",
     border: "1.5px solid #336F8A",
@@ -500,6 +522,7 @@ export default function LinkedItems({
           color: "#007c70",
           border: "1px solid #e0e0e0",
           borderRadius: "8px",
+          ...TYPO.body,
         }}
       >
         {t("board.expendedCard.linkItems", "Link Items")} ({totalLinked})
@@ -515,8 +538,7 @@ export default function LinkedItems({
           style={{
             background: "#f9fafb",
             borderBottom: "1px solid #e0e0e0",
-            fontFamily: "Nunito",
-            fontWeight: 600,
+            ...TYPO.titleS,
           }}
         >
           {t(
@@ -524,8 +546,8 @@ export default function LinkedItems({
             "Select Items to Connect"
           )}
         </Modal.Header>
-        <Modal.Content scrolling style={{ background: "#ffffff", padding: 0 }}>
-          <Tab panes={panes} style={{ fontFamily: "Nunito"}} />
+        <Modal.Content scrolling style={{ background: "#ffffff", padding: 0, ...TYPO.body }}>
+          <Tab panes={panes} style={{ fontFamily: TYPO.fontFamily }} />
         </Modal.Content>
         <Modal.Actions
           style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
@@ -597,17 +619,7 @@ export default function LinkedItems({
 
 
 
-      {selectedResourcesMerged.length > 0 && (
-        <PreviewSection
-          title={t("board.expendedCard.previewLinkedResources")}
-          items={selectedResourcesMerged}
-          type="resource"
-          proposal={proposal}
-          openAssignmentModal={openAssignmentModalHandler}
-          openResourceModal={openResourceModalHandler}
-          user={user}
-        />
-      )}
+      {/* Assignments first (top section) */}
       {selectedAssignments.length > 0 && (
         <PreviewSection
           title={t("board.expendedCard.previewLinkedAssignments")}
@@ -618,23 +630,18 @@ export default function LinkedItems({
           user={user}
         />
       )}
-      {selectedTasks.length > 0 && (
+      {/* Combined Resources section: resources, then 24px gap, then tasks and studies */}
+      {(selectedResourcesMerged.length > 0 || selectedTasks.length > 0 || selectedStudies.length > 0) && (
         <PreviewSection
-          title={t("board.expendedCard.previewLinkedTasks")}
-          items={selectedTasks}
-          type="task"
+          title={t("board.expendedCard.previewLinkedResources")}
+          sections={[
+            ...(selectedResourcesMerged.length > 0 ? [{ items: selectedResourcesMerged, type: "resource" }] : []),
+            ...(selectedTasks.length > 0 ? [{ items: selectedTasks, type: "task" }] : []),
+            ...(selectedStudies.length > 0 ? [{ items: selectedStudies, type: "study" }] : []),
+          ]}
           proposal={proposal}
           openAssignmentModal={openAssignmentModalHandler}
-          user={user}
-        />
-      )}
-      {selectedStudies.length > 0 && (
-        <PreviewSection
-          title={t("board.expendedCard.previewLinkedStudies")}
-          items={selectedStudies}
-          type="study"
-          proposal={proposal}
-          openAssignmentModal={openAssignmentModalHandler}
+          openResourceModal={openResourceModalHandler}
           user={user}
         />
       )}
@@ -689,8 +696,7 @@ const ItemTab = ({
     background: "#336F8A",
     color: "white",
     borderRadius: "100px",
-    fontSize: "16px",
-    fontWeight: 500,
+    ...TYPO.bodyMedium,
     cursor: "pointer",
     transition: "background 0.3s ease",
     border: "none", // Add to reset default browser styles
@@ -709,8 +715,7 @@ const ItemTab = ({
     background: "white",
     color: "#3D85B0",
     borderRadius: "100px",
-    fontSize: "16px",
-    fontWeight: 500,
+    ...TYPO.bodyMedium,
     cursor: "pointer",
     transition: "background 0.3s ease",
     border: "1.5px solid #3D85B0",
@@ -729,8 +734,7 @@ const ItemTab = ({
     background: "white",
     color: "#7D70AD",
     borderRadius: "100px",
-    fontSize: "16px",
-    fontWeight: 500,
+    ...TYPO.bodyMedium,
     cursor: "pointer",
     transition: "background 0.3s ease",
     border: "1.5px solid #7D70AD",
@@ -919,26 +923,14 @@ const ItemTab = ({
             >
               <h2
                 style={{
-                  fontSize: "18px",
-                  fontWeight: 600,
+                  ...TYPO.titleS,
                   color: "#333",
                   margin: 0,
                 }}
               >
                 {stripHtml(item?.title) || "Untitled"}
               </h2>
-              {item?.lastUpdate ? (<p>Last updated: {item?.lastUpdate}</p>) : (<></>)}
-            </div>
-            <div
-              style={{
-                fontSize: "14px",
-                color: "#666",
-                lineHeight: "1.5",
-                marginBottom: "16px",
-              }}
-            >
-              {/* {ReactHtmlParser(truncateHtml(content, 15))} */}
-              {/* {ReactHtmlParser(truncateHtml(placeholder, 10))} */}
+              {item?.lastUpdate ? (<p style={TYPO.label}>Last updated: {item?.lastUpdate}</p>) : (<></>)}
             </div>
             {isResource && (
               <div
@@ -1106,8 +1098,8 @@ const ItemTab = ({
     };
 
     const accordionTitleStyle = {
-      fontSize: "24px",
-      fontWeight: "500",
+      ...TYPO.titleL,
+      fontWeight: 500,
       margin: "0 0.5rem 0 0",
       color: "#3D3669"
     };
@@ -1139,8 +1131,7 @@ const ItemTab = ({
                 padding: "12px 40px 12px 40px",
                 border: "1px solid #d0d5dd",
                 borderRadius: "8px",
-                fontSize: "16px",
-                fontFamily: "inherit",
+                ...TYPO.body,
               }}
             />
             <Icon
@@ -1200,7 +1191,7 @@ const ItemTab = ({
             </Button>
           </div>
           <div style={{ flex: 1 }}>
-            <span style={{ fontSize: "16px" }}>
+            <span style={TYPO.body}>
               {t("boardManagement.descGoToResourcesCenter", "This page allows you to link resources to your project board cards - to manage resources, go to the resources center.)")}
             </span>
           </div>
@@ -1339,8 +1330,7 @@ const ItemTab = ({
               padding: "12px 40px 12px 40px",
               border: "1px solid #d0d5dd",
               borderRadius: "8px",
-              fontSize: "16px",
-              fontFamily: "inherit",
+              ...TYPO.body,
             }}
           />
           <Icon
@@ -1500,15 +1490,14 @@ const ItemTab = ({
             }
           >
             <div style={{display: "flex",justifyContent: "space-between",alignItems: "center",marginBottom: "12px", columnGap: "8px"}}>
-              <h2 style={{fontSize: "18px", fontWeight: 600, color: "#333", margin: 0}}>
+              <h2 style={{ ...TYPO.titleS, color: "#333", margin: 0 }}>
                 {stripHtml(item?.title) || "Untitled"}
               </h2>
             </div>
             <div
               style={{
-                fontSize: "14px",
+                ...TYPO.label,
                 color: "#666",
-                lineHeight: "1.5",
                 marginBottom: "16px",
               }}
             >
@@ -1521,7 +1510,7 @@ const ItemTab = ({
             {isAssignment && (
               <div style={{display: "flex", columnGap: "4px", rowGap: "8px", marginBottom: "8px", maxWidth: "100%", flexWrap: "wrap", alignItems: "center"}}>
                 <span style={item?.public ? styledChipPublished : styledChipUnpublished}>
-                  <p style={{color: item?.public ? "#625B71" : "", fontWeight: 600}}>{item?.public ? "Published" : "Unpublished"}</p>
+                  <p style={{ ...TYPO.labelSemibold, color: item?.public ? "#625B71" : undefined, margin: 0 }}>{item?.public ? "Published" : "Unpublished"}</p>
                 </span>
                 {item?.classes?.length ? (
                   <>
@@ -1656,7 +1645,7 @@ const ItemTab = ({
   const [hasChanges, setHasChanges] = useState(false);
 
   const styleField = {
-    fontSize: "14px",
+    ...TYPO.label,
     padding: "20px",
     borderRadius: "16px",
     border: "0px",
@@ -1666,7 +1655,6 @@ const ItemTab = ({
   const editableFieldStyle = {
     ...styleField,
     minWidth: "100%",
-    fontFamily: "inherit"
   };
   
   // Add CSS for placeholder styling
@@ -1819,18 +1807,12 @@ const ItemTab = ({
         style={{
           background: "#f9fafb",
           borderBottom: "1px solid #e0e0e0",
-          fontFamily: "Nunito",
-          fontWeight: 600,
+          ...TYPO.titleS,
         }}
       >
         {t("board.expendedCard.previewAssignment", "Preview Assignment")}
         {hasChanges && (
-          <span style={{ 
-            color: "#8A2CF6", 
-            fontSize: "12px", 
-            marginLeft: "10px",
-            fontWeight: 400 
-          }}>
+          <span style={{ ...TYPO.caption, color: "#8A2CF6", marginLeft: "10px" }}>
             {t("assignment.unsavedChanges", "(Unsaved changes)")}
           </span>
         )}
@@ -1840,22 +1822,21 @@ const ItemTab = ({
         style={{ background: "#ffffff", padding: "24px" }}
       >
       <div>
-        <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("board.expendedCard.title")}</p>
+        <p style={{ marginTop: "3rem", ...TYPO.sectionLabel }}>{t("board.expendedCard.title")}</p>
         <TipTapEditor
           content={editedAssignment.title}
           placeholder={t("assignment.titlePlaceholder", "Enter assignment title...")}
           onUpdate={(newContent) => handleFieldChange('title', newContent)}
           toolbarVisible={false}
         />
-        <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("assignment.instructions")}</p>
+        <p style={{ marginTop: "3rem", ...TYPO.sectionLabel }}>{t("assignment.instructions")}</p>
         <TipTapEditor
           content={editedAssignment.content}
           placeholder={t("assignment.instructionsPlaceholder", "Enter assignment instructions...")}
           onUpdate={(newContent) => handleFieldChange('content', newContent)}
         />
 
-
-        <p style={{marginTop: "10px", fontSize: "24px", color: "#274E5B", marginTop: "3rem"}} >{t("assignment.placeholderInstructions")}</p>
+        <p style={{ marginTop: "3rem", ...TYPO.sectionLabel }}>{t("assignment.placeholderInstructions")}</p>
         <TipTapEditor
           content={editedAssignment.placeholder}
           placeholder={t("assignment.instructionsPlaceholder", "Enter placeholder shown to students...")}
@@ -1874,7 +1855,7 @@ const ItemTab = ({
             style={{
               borderRadius: "100px",
               background: "#7D70AD",
-              fontSize: "16px",
+              ...TYPO.bodyMedium,
               color: "white",
               border: "1px solid #7D70AD",
               marginRight: "10px"
@@ -1897,14 +1878,14 @@ const ItemTab = ({
                   borderRadius: "8px",
                   padding: "16px",
                   marginBottom: "16px",
-                  fontSize: "15px",
+                  ...TYPO.body,
                   display: "flex",
                   alignItems: "center"
                 }}
               >
                 <span
                   style={{
-                    fontWeight: "bold",
+                    ...TYPO.labelSemibold,
                     marginRight: "8px"
                   }}
                 >&#9888;</span>
@@ -1921,7 +1902,7 @@ const ItemTab = ({
                   style={{
                     borderRadius: "100px",
                     background: "white",
-                    fontSize: "16px",
+                    ...TYPO.bodyMedium,
                     color: "#336F8A",
                     border: "1px solid #336F8A"
                   }}
@@ -1933,7 +1914,7 @@ const ItemTab = ({
                   style={{
                     borderRadius: "100px",
                     background: "white",
-                    fontSize: "16px",
+                    ...TYPO.bodyMedium,
                     color: "#336F8A",
                     border: "1px solid #336F8A"
                   }}
@@ -1956,7 +1937,7 @@ const ItemTab = ({
                 style={{
                   borderRadius: "100px",
                   background: "white",
-                  fontSize: "16px",
+                  ...TYPO.bodyMedium,
                   color: "#336F8A",
                   border: "1px solid #336F8A"
                 }}
@@ -1982,7 +1963,7 @@ const ItemTab = ({
           style={{
             borderRadius: "100px",
             background: "#336F8A",
-            fontSize: "16px",
+            ...TYPO.bodyMedium,
             color: "white",
             border: "1px solid #336F8A"
           }}
@@ -2219,22 +2200,14 @@ const ResourceEditModal = ({
         style={{
           background: "#f9fafb",
           borderBottom: "1px solid #e0e0e0",
-          fontFamily: "Nunito",
-          fontWeight: 600,
+          ...TYPO.titleS,
         }}
       >
         {isCreatingCopy
           ? t("boardManagement.customizeRessource", "Customize Resource")
           : t("boardManagement.editResource", "Edit Resource")}
         {!isCreatingCopy && hasChanges && (
-          <span
-            style={{
-              color: "#8A2CF6",
-              fontSize: "12px",
-              marginLeft: "10px",
-              fontWeight: 400,
-            }}
-          >
+          <span style={{ ...TYPO.caption, color: "#8A2CF6", marginLeft: "10px" }}>
             {t("assignment.unsavedChanges", "(Unsaved changes)")}
           </span>
         )}
@@ -2251,7 +2224,7 @@ const ResourceEditModal = ({
               gap: "16px",
             }}
           >
-            <p style={{ fontSize: "18px", color: "#274E5B", margin: 0 }}>
+            <p style={{ ...TYPO.titleS, color: "#274E5B", margin: 0 }}>
               {t(
                 "boardManagement.resourceChoiceExistingCopy",
                 "You already personalized this resource. What would you like to do?"
@@ -2268,7 +2241,7 @@ const ResourceEditModal = ({
                 style={{
                   borderRadius: "100px",
                   background: "#336F8A",
-                  fontSize: "16px",
+                  ...TYPO.bodyMedium,
                   color: "white",
                   border: "1px solid #336F8A",
                 }}
@@ -2283,7 +2256,7 @@ const ResourceEditModal = ({
                 style={{
                   borderRadius: "100px",
                   background: "white",
-                  fontSize: "16px",
+                  ...TYPO.bodyMedium,
                   color: "#336F8A",
                   border: "1px solid #336F8A",
                 }}
@@ -2306,7 +2279,7 @@ const ResourceEditModal = ({
                   border: "1px solid #F97066",
                   borderRadius: "8px",
                   padding: "12px 16px",
-                  fontSize: "14px",
+                  ...TYPO.label,
                 }}
               >
                 {mutationError}
@@ -2320,7 +2293,7 @@ const ResourceEditModal = ({
                   border: "1px solid #F97066",
                   borderRadius: "8px",
                   padding: "12px 16px",
-                  fontSize: "14px",
+                  ...TYPO.label,
                 }}
               >
                 {t(
@@ -2337,7 +2310,7 @@ const ResourceEditModal = ({
                   border: "1px solid #B3D4F5",
                   borderRadius: "8px",
                   padding: "12px 16px",
-                  fontSize: "14px",
+                  ...TYPO.label,
                 }}
               >
                 {t(
@@ -2353,7 +2326,7 @@ const ResourceEditModal = ({
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                   <label
                     htmlFor="resource-title"
-                    style={{ fontSize: "16px", color: "#274E5B" }}
+                    style={{ ...TYPO.body, color: "#274E5B" }}
                   >
                     {t("boardManagement.titleText", "Title")}
                   </label>
@@ -2366,7 +2339,7 @@ const ResourceEditModal = ({
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                   <label
                     htmlFor="resource-description"
-                    style={{ fontSize: "16px", color: "#274E5B" }}
+                    style={{ ...TYPO.body, color: "#274E5B" }}
                   >
                     {t("boardManagement.description", "Description")}
                   </label>
@@ -2382,8 +2355,7 @@ const ResourceEditModal = ({
                       padding: "12px",
                       borderRadius: "12px",
                       border: "1px solid #d0d5dd",
-                      fontSize: "16px",
-                      fontFamily: "inherit",
+                      ...TYPO.body,
                       minHeight: "120px",
                     }}
                   />
@@ -2406,7 +2378,7 @@ const ResourceEditModal = ({
                       style={{
                         borderRadius: "100px",
                         background: formState.isPublic ? "#336F8A" : "white",
-                        fontSize: "14px",
+                        ...TYPO.label,
                         color: formState.isPublic ? "white" : "#336F8A",
                         border: "1px solid #336F8A",
                       }}
@@ -2422,7 +2394,7 @@ const ResourceEditModal = ({
                   <p
                     style={{
                       margin: 0,
-                      fontSize: "16px",
+                      ...TYPO.body,
                       color: "#274E5B",
                     }}
                   >
@@ -2459,7 +2431,7 @@ const ResourceEditModal = ({
             style={{
               borderRadius: "100px",
               background: "#7D70AD",
-              fontSize: "16px",
+              ...TYPO.bodyMedium,
               color: "white",
               border: "1px solid #7D70AD",
               marginRight: "10px",
@@ -2477,7 +2449,7 @@ const ResourceEditModal = ({
           style={{
             borderRadius: "100px",
             background: "#336F8A",
-            fontSize: "16px",
+            ...TYPO.bodyMedium,
             color: "white",
             border: "1px solid #336F8A",
           }}
@@ -2488,282 +2460,3 @@ const ResourceEditModal = ({
     </Modal>
   );
 };
-
-export const PreviewSection = ({
-  title,
-  items,
-  type,
-  proposal,
-  openAssignmentModal,
-  openResourceModal,
-  user,
-}) => {
-  const { t } = useTranslation("classes");
-  const [hoveredItemId, setHoveredItemId] = useState(null);
-  const tooltipTimeoutRef = useRef(null);
-
-  // console.log("👁️ [PreviewSection] Rendering:", {
-  //   title,
-  //   type,
-  //   itemsCount: items.length,
-  //   itemsDetails: items.map(item => ({
-  //     id: item.id,
-  //     title: item.title,
-  //     isPublic: item.isPublic,
-  //     parentId: item.parent?.id
-  //   }))
-  // })
-  ;
-
-  // Background and border per type (Figma: Resources = MH-Theme/Secondary/Lighter #E6F1F9, border #BBC0CA)
-  const getBackgroundColor = (itemType) => {
-    if (itemType === "resource") {
-      return "#E6F1F9"; // MH-Theme/Secondary/Lighter
-    }
-    if (itemType === "assignment") {
-      return "#e4dff6";
-    }
-    if (itemType === "task" || itemType === "study") {
-      return "#fdf2d0";
-    }
-    return "#ffffff";
-  };
-
-  const getBorder = (itemType) => {
-    if (itemType === "resource") {
-      return "1px solid #D3E2F1"; // Figma Resources chip border
-    }
-    if (itemType === "assignment") {
-      return "1px solid #C6BDEB";
-    }
-    if (itemType === "task" || itemType === "study") {
-      return "1px solid #F9D978";
-    }
-    return "1px solid transparent";
-  };
-
-  return (
-    <>
-      {/* {title && (
-        <div
-          className="cardHeader"
-          style={{
-            fontFamily: "Nunito, sans-serif",
-            fontSize: "16px",
-            fontWeight: 600,
-            lineHeight: "24px",
-            color: "#171717", // MH-Theme/Neutrals/Black
-            marginTop: "8px",
-            marginBottom: "4px",
-          }}
-        >
-          {title}
-        </div>
-      )} */}
-      <div
-        className="previewGrid"
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "8px",
-          marginTop: title ? 0 : "10px",
-          alignItems: "center",
-        }}
-      >
-        {items.map((item, index) => {
-          const isTask = type === "task";
-          const isStudy = type === "study";
-          const isAssignment = type === "assignment";
-          const isResource = type === "resource";
-          const isAssignmentDisabled = isAssignment && !item?.public;
-          let viewUrl = `/dashboard/${type}s/view?id=${item?.id}`;
-          if (isTask) viewUrl = `/dashboard/discover/tasks?name=${item?.slug}`;
-          if (isStudy) viewUrl = `/dashboard/discover/studies?name=${item?.slug}`;
-
-          const handlePreviewCardClick = () => {
-            if (isAssignment) {
-              if (isAssignmentDisabled) return;
-              openAssignmentModal?.(item);
-            } else if (isResource) openResourceModal?.(item);
-            else if (isTask || isStudy) window.open(viewUrl, "_blank", "noopener,noreferrer");
-          };
-
-          const isHovered = hoveredItemId === item.id;
-          const backgroundColor = getBackgroundColor(type);
-          const border = getBorder(type);
-          const fullTitle = stripHtml(item?.title) || "Untitled";
-          const typeLabel =
-            type === "resource"
-              ? t("board.expendedCard.resources", "Resources")
-              : type === "assignment"
-                ? t("board.expendedCard.myAssignments", "Assignments")
-                : type === "task"
-                  ? t("board.expendedCard.tasks", "Tasks")
-                  : t("board.expendedCard.studies", "Studies");
-          const tooltipContent = isAssignmentDisabled
-            ? t("board.expendedCard.assignmentNotPublished", "Not published")
-            : `${typeLabel}: ${fullTitle}`;
-
-          return (
-            <div
-              className="itemBlockPreview"
-              key={`${type}-${item.id}-${index}`}
-              onClick={handlePreviewCardClick}
-              onMouseEnter={(e) => {
-                setHoveredItemId(item.id);
-                const el = e.currentTarget;
-                if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current);
-                tooltipTimeoutRef.current = setTimeout(() => {
-                  const tooltip = el.querySelector(".hover-tooltip");
-                  if (tooltip) {
-                    tooltip.style.opacity = "1";
-                    tooltip.style.transform = "translateY(0)";
-                  }
-                }, 550);
-              }}
-              onMouseLeave={(e) => {
-                setHoveredItemId(null);
-                if (tooltipTimeoutRef.current) {
-                  clearTimeout(tooltipTimeoutRef.current);
-                  tooltipTimeoutRef.current = null;
-                }
-                const tooltip = e.currentTarget.querySelector(".hover-tooltip");
-                if (tooltip) {
-                  tooltip.style.opacity = "0";
-                  tooltip.style.transform = "translateY(-5px)";
-                }
-              }}
-              style={{
-                position: "relative",
-                display: "inline-flex",
-                alignItems: "center",
-                padding: "10px 16px",
-                borderRadius: "8px",
-                border,
-                background: backgroundColor,
-                cursor: isAssignmentDisabled ? "not-allowed" : "pointer",
-                transition: "box-shadow 0.2s ease",
-                boxShadow: !isAssignmentDisabled && isHovered ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
-                fontFamily: "Nunito, sans-serif",
-                fontSize: "16px",
-                fontWeight: 600,
-                lineHeight: "24px",
-                color: "#171717",
-                maxWidth: "320px",
-                minWidth: 0,
-                opacity: isAssignmentDisabled ? 0.55 : 1,
-              }}
-            >
-              <span
-                style={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  minWidth: 0,
-                }}
-              >
-                {fullTitle}
-              </span>
-              {/* Hover tooltip: type + full name (1.5s delay), or "Not published" when disabled */}
-              <div
-                className="hover-tooltip"
-                style={{
-                  position: "absolute",
-                  top: "100%",
-                  left: "0",
-                  width: "max-content",
-                  maxWidth: "320px",
-                  background: backgroundColor,
-                  border,
-                  color: "#171717",
-                  marginTop: "8px",
-                  padding: "12px 16px",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                  fontFamily: "Nunito, sans-serif",
-                  lineHeight: "20px",
-                  opacity: 0,
-                  transform: "translateY(-5px)",
-                  transition: "all 0.3s ease",
-                  pointerEvents: "none",
-                  zIndex: 1000,
-                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.10)",
-                }}
-              >
-                {isAssignmentDisabled ? (
-                  tooltipContent
-                ) : (
-                  <>
-                    <span style={{ fontWeight: 700 }}>{typeLabel}:</span> {fullTitle}
-                  </>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </>
-  );
-};
-
-function truncateHtml(html, wordLimit = 10) {
-  const div = document.createElement("div");
-  div.innerHTML = html || "";
-
-  const text = div.textContent || div.innerText;
-  const words = text.trim().split(/\s+/);
-
-  if (words.length <= wordLimit) {
-    return html || "";
-  }
-
-  let charCount = 0;
-  for (let i = 0; i < wordLimit; i++) {
-    charCount += words[i].length + 1;
-  }
-
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = html || "";
-
-  let result = "";
-  let currentLength = 0;
-
-  function processNode(node) {
-    if (node.nodeType === 3) {
-      const text = node.textContent;
-      const remaining = charCount - currentLength;
-
-      if (currentLength >= charCount) {
-        return false;
-      }
-
-      if (currentLength + text.length > charCount) {
-        const truncated = text.substr(0, remaining).trim();
-        result += truncated;
-        currentLength += truncated.length;
-        return false;
-      }
-
-      result += text;
-      currentLength += text.length;
-      return true;
-    }
-
-    result += `<${node.tagName.toLowerCase()}`;
-
-    Array.from(node.attributes).forEach((attr) => {
-      result += ` ${attr.name}="${attr.value}"`;
-    });
-
-    result += ">";
-
-    Array.from(node.childNodes).every((child) => processNode(child));
-
-    result += `</${node.tagName.toLowerCase()}>`;
-    return true;
-  }
-
-  Array.from(tempDiv.childNodes).every((node) => processNode(node));
-
-  return result + "...";
-}

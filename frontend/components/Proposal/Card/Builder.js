@@ -18,7 +18,8 @@ import TipTapEditor from "../../TipTap/Main";
 import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap";
 
 import CardType from "./Forms/Type";
-import LinkedItems, { PreviewSection } from "./Forms/LinkedItems";
+import LinkedItems from "./Forms/LinkedItems";
+import { PreviewSection } from "./Forms/PreviewSection";
 import useTranslation from "next-translate/useTranslation";
 
 const peerReviewOptions = [
@@ -494,18 +495,7 @@ export default function BuilderProposalCard({
             )}
           </div>
           <div className="infoBoard">
-            {/* Display Linked Items using PreviewSection */}
-            {inputs?.resources?.length > 0 && (
-              <PreviewSection
-                title={t("board.expendedCard.previewLinkedResources")}
-                items={inputs?.resources}
-                type="resource"
-                proposal={proposal}
-                openAssignmentModal={undefined}
-                openResourceModal={undefined}
-                user={user}
-              />
-            )}
+            {/* Display Linked Items: Assignments first, then combined Resources */}
             {inputs?.assignments?.length > 0 && (
               <PreviewSection
                 title={t("board.expendedCard.previewLinkedAssignments")}
@@ -516,23 +506,17 @@ export default function BuilderProposalCard({
                 user={user}
               />
             )}
-            {inputs?.tasks?.length > 0 && (
+            {(inputs?.resources?.length > 0 || inputs?.tasks?.length > 0 || inputs?.studies?.length > 0) && (
               <PreviewSection
-                title={t("board.expendedCard.previewLinkedTasks")}
-                items={inputs?.tasks}
-                type="task"
+                title={t("board.expendedCard.previewLinkedResources")}
+                sections={[
+                  ...(inputs?.resources?.length > 0 ? [{ items: inputs.resources, type: "resource" }] : []),
+                  ...(inputs?.tasks?.length > 0 ? [{ items: inputs.tasks, type: "task" }] : []),
+                  ...(inputs?.studies?.length > 0 ? [{ items: inputs.studies, type: "study" }] : []),
+                ]}
                 proposal={proposal}
                 openAssignmentModal={undefined}
-                user={user}
-              />
-            )}
-            {inputs?.studies?.length > 0 && (
-              <PreviewSection
-                title={t("board.expendedCard.previewLinkedStudies")}
-                items={inputs?.studies}
-                type="study"
-                proposal={proposal}
-                openAssignmentModal={undefined}
+                openResourceModal={undefined}
                 user={user}
               />
             )}

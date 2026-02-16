@@ -113,6 +113,9 @@ export const GET_MY_HOMEWORK_FOR_PROPOSAL_CARD = gql`
       settings
       comment
       public
+      assignment {
+        id
+      }
       author {
         id
         username
@@ -129,6 +132,50 @@ export const GET_ALL_HOMEWORK_FOR_PROPOSAL_CARD = gql`
   query GET_ALL_HOMEWORK_FOR_PROPOSAL_CARD($cardId: ID!) {
     homeworks(where: { proposalCard: { id: { equals: $cardId } } }) {
       id
+      settings
+      assignment {
+        id
+      }
+      author {
+        id
+        username
+      }
+    }
+  }
+`;
+
+// get student homework for assignments attached to a card (for chip status)
+export const GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS = gql`
+  query GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS($userId: ID!, $assignmentIds: [ID!]!) {
+    homeworks(
+      where: {
+        author: { id: { equals: $userId } }
+        assignment: { id: { in: $assignmentIds } }
+      }
+    ) {
+      id
+      settings
+      assignment {
+        id
+      }
+      author {
+        id
+        username
+        publicReadableId
+      }
+    }
+  }
+`;
+
+// get all homework for assignments attached to a card (for Mentor/Teacher chip status)
+export const GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS = gql`
+  query GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS($assignmentIds: [ID!]!) {
+    homeworks(where: { assignment: { id: { in: $assignmentIds } } }) {
+      id
+      settings
+      assignment {
+        id
+      }
       author {
         id
         username

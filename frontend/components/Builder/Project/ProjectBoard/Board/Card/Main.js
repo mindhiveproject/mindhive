@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 
@@ -17,7 +17,9 @@ import {
 import {
   GET_MY_HOMEWORKS_FOR_ASSIGNMENT,
   GET_ALL_HOMEWORKS_FOR_ASSIGNMENT,
-} from "../../../../../Queries/Homework"; // Adjust path as needed
+  GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS,
+  GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS,
+} from "../../../../../Queries/Homework";
 import { GET_AN_ASSIGNMENT } from "../../../../../Queries/Assignment"; // Adjust path as needed
 import { GET_RESOURCE } from "../../../../../Queries/Resource";
 
@@ -27,7 +29,7 @@ import Navigation from "./Navigation/Main";
 import Assigned from "./Forms/Assigned";
 import Status from "../../../../../Dashboard/TeacherClasses/ClassPage/Assignments/Homework/Status";
 import TipTapEditor from "../../../../../TipTap/Main";
-import { PreviewSection } from "../../../../../Proposal/Card/Forms/LinkedItems";
+import { PreviewSection } from "../../../../../Proposal/Card/Forms/PreviewSection";
 import { Modal, Button, Icon, Dropdown } from "semantic-ui-react";
 
 import { StyledProposal } from "../../../../../styles/StyledProposal";
@@ -129,6 +131,34 @@ export default function ProposalCard({
   const isTeacherOrMentor = user?.permissions?.some((p) =>
     ["TEACHER", "MENTOR"].includes(p?.name),
   );
+
+  // Homework status per assignment for chip styling (homework belongs to assignment, not card)
+  const assignmentIds = (inputs?.assignments || proposalCard?.assignments || [])
+    .map((a) => a?.id)
+    .filter(Boolean);
+  const { data: myCardHomeworkData } = useQuery(GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS, {
+    variables: { userId: user?.id, assignmentIds },
+    skip: isTeacherOrMentor || !user?.id || assignmentIds.length === 0,
+  });
+  const { data: allCardHomeworkData } = useQuery(GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS, {
+    variables: { assignmentIds },
+    skip: !isTeacherOrMentor || assignmentIds.length === 0,
+  });
+  const cardHomeworks = isTeacherOrMentor
+    ? allCardHomeworkData?.homeworks || []
+    : myCardHomeworkData?.homeworks || [];
+  const homeworkStatusByAssignmentId = useMemo(() => {
+    const map = {};
+    cardHomeworks.forEach((hw) => {
+      const aid = hw?.assignment?.id;
+      if (aid && hw?.settings?.status) {
+        if (!map[aid] || hw.settings.status === "Completed") {
+          map[aid] = hw.settings.status;
+        }
+      }
+    });
+    return map;
+  }, [cardHomeworks]);
   const studentsCanAssignToCards =
     proposal?.usedInClass?.settings?.studentsCanAssignToCards === true;
   const canAddAssignment = isTeacherOrMentor || studentsCanAssignToCards;
@@ -389,6 +419,14 @@ export default function ProposalCard({
             query: GET_ALL_HOMEWORKS_FOR_ASSIGNMENT,
             variables: { assignmentCode: assignment?.code },
           },
+          {
+            query: GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS,
+            variables: { userId: user?.id, assignmentIds },
+          },
+          {
+            query: GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS,
+            variables: { assignmentIds },
+          },
         ],
       },
     );
@@ -405,6 +443,14 @@ export default function ProposalCard({
           {
             query: GET_ALL_HOMEWORKS_FOR_ASSIGNMENT,
             variables: { assignmentCode: assignment?.code },
+          },
+          {
+            query: GET_MY_HOMEWORK_FOR_CARD_ASSIGNMENTS,
+            variables: { userId: user?.id, assignmentIds },
+          },
+          {
+            query: GET_ALL_HOMEWORK_FOR_CARD_ASSIGNMENTS,
+            variables: { assignmentIds },
           },
         ],
       },
@@ -1464,19 +1510,8 @@ export default function ProposalCard({
               )}
             </div>
             <div className="infoBoard">
-              {/* Display Linked Items using PreviewSection */}
-              <div style={{ marginTop: "24px", marginBottom: "24px", display: "flex", flexDirection: "column", gap: "16px" }}> 
-                {inputs?.resources?.length > 0 && (
-                  <PreviewSection
-                    title={t("board.expendedCard.previewLinkedResources")}
-                    items={inputs?.resources}
-                    type="resource"
-                    proposal={proposal}
-                    openAssignmentModal={openAssignmentModalHandler}
-                    openResourceModal={openResourceModalHandler}
-                    user={user}
-                  />
-                )}
+              {/* Display Linked Items: Assignments first, then combined Resources */}
+              <div style={{ marginTop: "24px", marginBottom: "24px", display: "flex", flexDirection: "column", gap: "24px" }}>
                 {inputs?.assignments?.length > 0 && (
                   <PreviewSection
                     title={t("board.expendedCard.previewLinkedAssignments")}
@@ -1485,25 +1520,20 @@ export default function ProposalCard({
                     proposal={proposal}
                     openAssignmentModal={openAssignmentModalHandler}
                     user={user}
+                    homeworkStatusByAssignmentId={homeworkStatusByAssignmentId}
                   />
                 )}
-                {inputs?.tasks?.length > 0 && (
+                {(inputs?.resources?.length > 0 || inputs?.tasks?.length > 0 || inputs?.studies?.length > 0) && (
                   <PreviewSection
-                    title={t("board.expendedCard.previewLinkedTasks")}
-                    items={inputs?.tasks}
-                    type="task"
+                    title={t("board.expendedCard.previewLinkedResources")}
+                    sections={[
+                      ...(inputs?.resources?.length > 0 ? [{ items: inputs.resources, type: "resource" }] : []),
+                      ...(inputs?.tasks?.length > 0 ? [{ items: inputs.tasks, type: "task" }] : []),
+                      ...(inputs?.studies?.length > 0 ? [{ items: inputs.studies, type: "study" }] : []),
+                    ]}
                     proposal={proposal}
                     openAssignmentModal={openAssignmentModalHandler}
-                    user={user}
-                  />
-                )}
-                {inputs?.studies?.length > 0 && (
-                  <PreviewSection
-                    title={t("board.expendedCard.previewLinkedStudies")}
-                    items={inputs?.studies}
-                    type="study"
-                    proposal={proposal}
-                    openAssignmentModal={openAssignmentModalHandler}
+                    openResourceModal={openResourceModalHandler}
                     user={user}
                   />
                 )}
@@ -1590,6 +1620,7 @@ export default function ProposalCard({
                     });
                   }}
                   editable={true}
+                  limitedToolbar={true}
                   placeholder={t(
                     "mainCard.commentsPlaceholder",
                     "Add your comment here...",
