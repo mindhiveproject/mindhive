@@ -170,8 +170,11 @@ const ResourceStudyChip = ({
   index,
   t,
   openResourceModal,
+  hoveredItemId,
+  setHoveredItemId,
 }) => {
   const fullTitle = stripHtml(item?.title) || "Untitled";
+  const isHovered = hoveredItemId === item.id;
   const isStudy = type === "study";
   const viewUrl = isStudy ? `/dashboard/discover/studies?name=${item?.slug}` : null;
   const typeLabel = isStudy ? t("board.expendedCard.studies", "Studies") : t("board.expendedCard.resources", "Resources");
@@ -196,6 +199,8 @@ const ResourceStudyChip = ({
       <div
         className="itemBlockPreview"
         onClick={handleClick}
+        onMouseEnter={() => setHoveredItemId?.(item.id)}
+        onMouseLeave={() => setHoveredItemId?.(null)}
         style={{
           position: "relative",
           ...CHIP_BASE_STYLES,
@@ -206,6 +211,7 @@ const ResourceStudyChip = ({
           color: "#171717",
           cursor: "pointer",
           transition: "box-shadow 0.2s ease",
+          boxShadow: isHovered ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
           ...TYPO.label,
           maxWidth: "320px",
           minWidth: 0,
@@ -223,8 +229,11 @@ const TaskSurveyChip = ({
   index,
   t,
   user,
+  hoveredItemId,
+  setHoveredItemId,
 }) => {
   const fullTitle = stripHtml(item?.title) || "Untitled";
+  const isHovered = hoveredItemId === item.id;
   const viewUrl = `/dashboard/discover/tasks?name=${item?.slug}`;
   const typeLabel = t("board.expendedCard.tasks", "Tasks");
   const tooltipContent = (
@@ -259,15 +268,36 @@ const TaskSurveyChip = ({
     window.open(viewUrl, "_blank", "noopener,noreferrer");
   };
 
+  const tooltipAction = (
+    <button
+      type="button"
+      onClick={() => window.open(viewUrl, "_blank", "noopener,noreferrer")}
+      style={{
+        ...TYPO.labelSemibold,
+        padding: 0,
+        border: "none",
+        background: "none",
+        color: "#5D5763",
+        textDecoration: "underline",
+        cursor: "pointer",
+      }}
+    >
+      {t("board.expendedCard.readDocumentation", "Read Documentation")}
+    </button>
+  );
+
   return (
     <InfoTooltip
       content={tooltipContent}
       delayMs={550}
+      action={tooltipAction}
       tooltipStyle={{ ...CHIP_TOOLTIP_STYLE, background: style.background, border: style.border, color: "#171717" }}
       wrapperStyle={{ display: "inline-block", maxWidth: "320px" }}
     >
       <div
         className="itemBlockPreview"
+        onMouseEnter={() => setHoveredItemId?.(item.id)}
+        onMouseLeave={() => setHoveredItemId?.(null)}
         style={{
           position: "relative",
           ...CHIP_BASE_STYLES,
@@ -278,6 +308,7 @@ const TaskSurveyChip = ({
           background: style.background,
           color: style.color,
           transition: "all 0.2s ease",
+          boxShadow: isHovered ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
           ...TYPO.label,
           maxWidth: "320px",
           minWidth: 0,
@@ -304,7 +335,13 @@ const TaskSurveyChip = ({
           }}
         >
           <Icon name="star" style={{ margin: 0, height: "20px", width: "20px" }} />
-          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, ...TYPO.label, color: "#171717" }}>{fullTitle}</span>
+          <a
+            style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, ...TYPO.label, color: "#171717" }}
+            href={`/dashboard/discover/tasks?name=${item?.slug}`}
+            target="_blank"
+          >
+            {fullTitle}
+          </a>
         </button>
         <span
           role="button"
@@ -349,6 +386,8 @@ const ChipByType = ({ item, type, index, t, openAssignmentModal, openResourceMod
         index={index}
         t={t}
         user={user}
+        hoveredItemId={hoveredItemId}
+        setHoveredItemId={setHoveredItemId}
       />
     );
   }
@@ -359,6 +398,8 @@ const ChipByType = ({ item, type, index, t, openAssignmentModal, openResourceMod
       index={index}
       t={t}
       openResourceModal={openResourceModal}
+      hoveredItemId={hoveredItemId}
+      setHoveredItemId={setHoveredItemId}
     />
   );
 };
