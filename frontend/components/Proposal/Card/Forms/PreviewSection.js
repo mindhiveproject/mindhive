@@ -274,15 +274,16 @@ const TaskSurveyChip = ({
       onClick={() => window.open(viewUrl, "_blank", "noopener,noreferrer")}
       style={{
         ...TYPO.labelSemibold,
-        padding: 0,
-        border: "none",
-        background: "none",
+        padding: "8px 16px",
+        border: "2px solid #5D5763",
+        borderRadius: "999px",
+        background: "#F3F3F3",
         color: "#5D5763",
-        textDecoration: "underline",
+        // textDecoration: "underline",
         cursor: "pointer",
       }}
     >
-      {t("board.expendedCard.readDocumentation", "Read Documentation")}
+      {t("board.expendedCard.discoverMore", "Discover more about this block")}
     </button>
   );
 
@@ -323,6 +324,7 @@ const TaskSurveyChip = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "left",
+            width: "fit-content",
             gap: "8px",
             padding: 0,
             margin: 0,
@@ -335,13 +337,21 @@ const TaskSurveyChip = ({
           }}
         >
           <Icon name="star" style={{ margin: 0, height: "20px", width: "20px" }} />
-          <a
-            style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, ...TYPO.label, color: "#171717" }}
-            href={`/dashboard/discover/tasks?name=${item?.slug}`}
-            target="_blank"
+          <p
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              minWidth: 0,
+              width: "fit-content",
+              maxWidth: "100%",
+              ...TYPO.label,
+              color: "#171717",
+              margin: 0,
+            }}
           >
             {fullTitle}
-          </a>
+          </p>
         </button>
         <span
           role="button"

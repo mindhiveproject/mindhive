@@ -1511,7 +1511,7 @@ export default function ProposalCard({
             </div>
             <div className="infoBoard">
               {/* Display Linked Items: Assignments first, then combined Resources */}
-              <div style={{ marginTop: "24px", marginBottom: "24px", display: "flex", flexDirection: "column", gap: "24px" }}>
+              <div className="linkedItemsSection">
                 {inputs?.assignments?.length > 0 && (
                   <PreviewSection
                     title={t("board.expendedCard.previewLinkedAssignments")}

@@ -1249,6 +1249,11 @@ export const StyledProposal = styled.div`
           margin: 0;
         }
       }
+      .linkedItemsSection {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
     }
     .resourceLinks {
       display: grid;
@@ -1277,32 +1282,6 @@ export const StyledProposal = styled.div`
       display: grid;
       width: 100%;
       border-top: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
-      padding-top: 24px;
-    }
-  }
-
-  .jodit {
-    input,
-    textarea,
-    select {
-      width: 100%;
-      &:focus {
-        outline: 0;
-        background: white;
-        border-color: mintcream;
-      }
-    }
-    button {
-      margin: 1px;
-      border: 0px solid #e6e6e6;
-      cursor: pointer;
-    }
-    .jodit-toolbar-button__button {
-      background: transparent;
-      color: black;
-    }
-    .jodit-ui-button__text {
-      color: black;
     }
   }
 `;
