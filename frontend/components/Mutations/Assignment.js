@@ -43,3 +43,18 @@ export const LINK_ASSIGNMENT_TO_TEMPLATE_CARD = gql`
     }
   }
 `;
+
+// unlink assignment from all cards on the class template board and its student boards
+export const UNLINK_ASSIGNMENT_FROM_TEMPLATE_CARDS = gql`
+  mutation UNLINK_ASSIGNMENT_FROM_TEMPLATE_CARDS(
+    $assignmentId: ID!
+    $classId: ID!
+  ) {
+    unlinkAssignmentFromTemplateCards(
+      assignmentId: $assignmentId
+      classId: $classId
+    ) {
+      id
+    }
+  }
+`;

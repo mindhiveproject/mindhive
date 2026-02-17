@@ -7,6 +7,7 @@ import archiveStudy from "./archiveStudy";
 import googleSignup from "./googleSignup";
 import googleLogin from "./googleLogin";
 import linkAssignmentToTemplateCard from "./linkAssignmentToTemplateCard";
+import unlinkAssignmentFromTemplateCards from "./unlinkAssignmentFromTemplateCards";
 
 // make a fake gql tagged template literal
 const graphql = String.raw;
@@ -40,6 +41,10 @@ export const extendGraphqlSchema = (schema) =>
           templateCardId: ID!
           classId: ID!
         ): Assignment
+        unlinkAssignmentFromTemplateCards(
+          assignmentId: ID!
+          classId: ID!
+        ): Assignment
       }
     `,
     resolvers: {
@@ -51,6 +56,7 @@ export const extendGraphqlSchema = (schema) =>
         googleSignup,
         googleLogin,
         linkAssignmentToTemplateCard,
+        unlinkAssignmentFromTemplateCards,
       },
     },
   });
