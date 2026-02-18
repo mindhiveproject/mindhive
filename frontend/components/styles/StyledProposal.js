@@ -1405,7 +1405,7 @@ export const StyledProposalCard = styled.div`
           text-overflow: ellipsis;
           white-space: nowrap;
           min-width: 0;
-          max-width: 100%;
+          max-width: 200px;
           width: 100%;
         }
       }
