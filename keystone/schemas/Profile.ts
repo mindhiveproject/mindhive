@@ -388,5 +388,11 @@ export const Profile = list({
       ref: "Log.user",
       many: true,
     }),
+    // YQ-related properties
+    visuals: relationship({ ref: "Visual.author", many: true }),
+    liked: relationship({ ref: "Visual.likes", many: true }),
+    following: relationship({ ref: "Friendship.requester", many: true }),
+    followers: relationship({ ref: "Friendship.recipient", many: true }),
+    yqGenAI: relationship({ ref: "YQGenAI.author", many: true }),
   },
 });
