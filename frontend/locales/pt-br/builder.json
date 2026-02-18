@@ -69,7 +69,8 @@
 			"publicResources": "Recursos públicos",
 			"studies": "Estudos",
 			"tasks": "Tarefas",
-			"title": "Título"
+			"title": "Título",
+			"viewingResource": "Recurso de visualização:"
 		},
 		"filterByAssignedTo": "Atribuído a",
 		"loading": "Carregando...",

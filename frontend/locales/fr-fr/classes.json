@@ -193,6 +193,7 @@
 			"updateOnlyThisBoard": "Non, mettez à jour uniquement ce tableau.",
 			"viewContent": "Afficher le contenu",
 			"viewingAssignment": "Mission de visualisation :",
+			"viewingResource": "Ressource de visualisation :",
 			"visibility": "Visibilité",
 			"visibilityText": "Cochez les cases ci-dessous pour indiquer si les réponses des étudiants doivent rester privées (uniquement pour les collaborateurs du projet + l'enseignant) ou être rendues visibles dans le Centre de feedback - ou une combinaison des deux. Exemples de réponses \"visibles\" que vous pourriez vouloir inclure : Les réponses à la proposition, à l'évaluation par les pairs ou au rapport final."
 		},

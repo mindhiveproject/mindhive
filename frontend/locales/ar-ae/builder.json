@@ -69,7 +69,8 @@
 			"publicResources": "الموارد العامة",
 			"studies": "الدراسات",
 			"tasks": "المهام",
-			"title": "العنوان"
+			"title": "العنوان",
+			"viewingResource": "مصدر العرض:"
 		},
 		"filterByAssignedTo": "مخصص ل",
 		"loading": "تحميل...",

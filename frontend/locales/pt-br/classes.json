@@ -193,6 +193,7 @@
 			"updateOnlyThisBoard": "Não, atualize apenas este quadro.",
 			"viewContent": "Ver conteúdo",
 			"viewingAssignment": "Tarefa de visualização:",
+			"viewingResource": "Recurso de visualização:",
 			"visibility": "Visibilidade",
 			"visibilityText": "Marque as caixas abaixo para indicar se as respostas dos alunos devem ser mantidas em sigilo (somente para os colaboradores do projeto + professor) ou tornadas visíveis no Centro de Feedback - ou uma combinação de ambos. Exemplos de respostas \"visíveis\" que você pode querer incluir: Respostas da proposta, da revisão por pares ou do relatório final."
 		},

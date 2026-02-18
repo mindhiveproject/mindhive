@@ -69,7 +69,8 @@
 			"publicResources": "Общественные ресурсы",
 			"studies": "Исследования",
 			"tasks": "Задачи",
-			"title": "Название"
+			"title": "Название",
+			"viewingResource": "Просмотр ресурса:"
 		},
 		"filterByAssignedTo": "Назначено",
 		"loading": "Загрузка...",

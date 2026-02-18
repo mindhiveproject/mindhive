@@ -69,7 +69,8 @@
 			"publicResources": "Publieke middelen",
 			"studies": "Studies",
 			"tasks": "Taken",
-			"title": "Titel"
+			"title": "Titel",
+			"viewingResource": "Bekijk de bron:"
 		},
 		"filterByAssignedTo": "Toegewezen aan",
 		"loading": "Bezig met laden...",

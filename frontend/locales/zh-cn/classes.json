@@ -193,6 +193,7 @@
 			"updateOnlyThisBoard": "不，只更新这个板块。",
 			"viewContent": "查看内容",
 			"viewingAssignment": "观看任务：",
+			"viewingResource": "查看资源：",
 			"visibility": "能见度",
 			"visibilityText": "选中下面的复选框，说明学生的回复是应该保密（只给项目的合作者和教师），还是在反馈中心可见，或者两者兼而有之。您可能希望包含的 \"可见 \"回复示例有建议、同行评审或最终报告回复。"
 		},

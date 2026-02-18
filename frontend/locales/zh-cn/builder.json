@@ -69,7 +69,8 @@
 			"publicResources": "公共资源",
 			"studies": "研究",
 			"tasks": "任务",
-			"title": "标题"
+			"title": "标题",
+			"viewingResource": "查看资源："
 		},
 		"filterByAssignedTo": "分配给",
 		"loading": "加载中...",

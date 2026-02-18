@@ -69,7 +69,8 @@
 			"publicResources": "सार्वजनिक संसाधन",
 			"studies": "अध्ययन करते हैं",
 			"tasks": "कार्य",
-			"title": "शीर्षक"
+			"title": "शीर्षक",
+			"viewingResource": "संसाधन देखें:"
 		},
 		"filterByAssignedTo": "को सौंपना",
 		"loading": "लोड हो रहा है...",

@@ -193,6 +193,7 @@
 			"updateOnlyThisBoard": "No, actualiza solo este tablero.",
 			"viewContent": "Ver contenido",
 			"viewingAssignment": "Asignación de visualización:",
+			"viewingResource": "Recurso de visualización:",
 			"visibility": "Visibilidad",
 			"visibilityText": "Marque las casillas siguientes para indicar si las respuestas de los estudiantes deben mantenerse privadas (sólo para los colaboradores del proyecto + el profesor) o hacerse visibles en el Centro de comentarios, o una combinación de ambas opciones. Ejemplos de respuestas \"visibles\" que puede querer incluir: Respuestas de la propuesta, de la revisión por pares o del informe final."
 		},

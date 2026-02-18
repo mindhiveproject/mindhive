@@ -20,6 +20,8 @@ import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap";
 import CardType from "./Forms/Type";
 import LinkedItems from "./Forms/LinkedItems";
 import { PreviewSection } from "./Forms/PreviewSection";
+import AssignmentViewModal from "../../TipTap/AssignmentViewModal";
+import ResourceViewModal from "../../TipTap/ResourceViewModal";
 import InfoTooltip from "../../Builder/Project/ProjectBoard/Board/PDF/Preview/InfoTooltip";
 import useTranslation from "next-translate/useTranslation";
 
@@ -70,6 +72,24 @@ export default function BuilderProposalCard({
   const [showCloneDialog, setShowCloneDialog] = useState(false);
   const [showWarningBox, setShowWarningBox] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
+
+  // Preview modals: assignment view + resource view (when user clicks items in preview mode)
+  const [viewAssignmentModalOpen, setViewAssignmentModalOpen] = useState(false);
+  const [viewAssignmentId, setViewAssignmentId] = useState(null);
+  const [viewResourceModalOpen, setViewResourceModalOpen] = useState(false);
+  const [viewResourceId, setViewResourceId] = useState(null);
+
+  const openViewAssignmentModal = (assignment) => {
+    if (!assignment?.id) return;
+    setViewAssignmentId(assignment.id);
+    setViewAssignmentModalOpen(true);
+  };
+
+  const openViewResourceModal = (resource) => {
+    if (!resource?.id) return;
+    setViewResourceId(resource.id);
+    setViewResourceModalOpen(true);
+  };
 
   // Update card content in the local state
   const handleContentChange = async ({ contentType, newContent }) => {
@@ -474,6 +494,21 @@ export default function BuilderProposalCard({
         </Modal.Actions>
       </Modal>
 
+      {/* Preview modals: open when user clicks linked items in preview mode */}
+      <AssignmentViewModal
+        user={user}
+        open={viewAssignmentModalOpen}
+        t={t}
+        onClose={() => setViewAssignmentModalOpen(false)}
+        assignmentId={viewAssignmentId}
+      />
+      <ResourceViewModal
+        open={viewResourceModalOpen}
+        t={t}
+        onClose={() => setViewResourceModalOpen(false)}
+        resourceId={viewResourceId}
+      />
+
       {previewMode ? (
         <div className="proposalCardBoard">
           <div className="textBoard">
@@ -503,7 +538,7 @@ export default function BuilderProposalCard({
                 items={inputs?.assignments}
                 type="assignment"
                 proposal={proposal}
-                openAssignmentModal={undefined}
+                openAssignmentModal={openViewAssignmentModal}
                 user={user}
               />
             )}
@@ -516,8 +551,8 @@ export default function BuilderProposalCard({
                   ...(inputs?.studies?.length > 0 ? [{ items: inputs.studies, type: "study" }] : []),
                 ]}
                 proposal={proposal}
-                openAssignmentModal={undefined}
-                openResourceModal={undefined}
+                openAssignmentModal={openViewAssignmentModal}
+                openResourceModal={openViewResourceModal}
                 user={user}
               />
             )}

@@ -69,7 +69,8 @@
 			"publicResources": "",
 			"studies": "",
 			"tasks": "",
-			"title": ""
+			"title": "",
+			"viewingResource": ""
 		},
 		"filterByAssignedTo": "",
 		"loading": "लोड हो रहा है...",

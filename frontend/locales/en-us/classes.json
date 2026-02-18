@@ -193,6 +193,7 @@
 			"updateOnlyThisBoard": "No, update only this board",
 			"viewContent": "View Content",
 			"viewingAssignment": "Viewing Assignment:",
+			"viewingResource": "Viewing Resource:",
 			"visibility": "Visibility",
 			"visibilityText": "Check the box below to indicate whether student responses should be made visible in the Feedback Center."
 		},
