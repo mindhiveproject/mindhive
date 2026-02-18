@@ -547,8 +547,7 @@ export default function BuilderProposalCard({
                   "board.expendedCard.titleText",
                   "Add or edit the card title. This title will appear as a section header in student submissions to the Feedback Center if the box titled 'Include text input for Feedback Center' is checked."
                 )}
-                iconSrc="/assets/icons/question_mark.svg"
-                iconStyle={{opacity: 0.7}}
+                iconStyle={{opacity: 0.4}}
               />
             </div>
             <p></p>
@@ -568,8 +567,7 @@ export default function BuilderProposalCard({
                   "board.expendedCard.instructionsText",
                   "Add or edit instructions for students telling them how to complete the card."
                 )}
-                iconSrc="/assets/icons/question_mark.svg"
-                iconStyle={{opacity: 0.7}}
+                iconStyle={{opacity: 0.4}}
               />
             </div>
             <TipTapEditor
@@ -593,8 +591,7 @@ export default function BuilderProposalCard({
                       "board.expendedCard.studentResponseBoxNetworkText",
                       "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed"
                     )}
-                    iconSrc="/assets/icons/question_mark.svg"
-                    iconStyle={{opacity: 0.7}}
+                    iconStyle={{opacity: 0.4}}
                   />
                 </div>
               </label>
@@ -704,7 +701,7 @@ export default function BuilderProposalCard({
                   "Add existing assignments, tasks, studies, or resources"
                 )}
                 iconStyle={{
-                  opacity: 0.7,
+                  opacity: 0.4,
                 }}
                 tooltipStyle={{
                   width: "200px",
@@ -728,8 +725,7 @@ export default function BuilderProposalCard({
               {t("board.expendedCard.comments")}
               <InfoTooltip
                 content={t("board.expendedCard.commentsText")}
-                iconSrc="/assets/icons/question_mark.svg"
-                iconStyle={{opacity: 0.7}}
+                iconStyle={{opacity: 0.4}}
               />
             </div>
             <TipTapEditor
@@ -747,7 +743,7 @@ export default function BuilderProposalCard({
             />
           </div>
 
-          <div>
+          <div className="proposalCardComments">
             <div className="cardHeader">{t("board.expendedCard.type")}</div>
             <CardType type={inputs?.type} handleChange={handleChange} />
           </div>
@@ -759,8 +755,7 @@ export default function BuilderProposalCard({
                   "board.expendedCard.visibilityText",
                   "Check the box below to indicate whether student responses should be made visible in the Feedback Center."
                 )}
-                iconSrc="/assets/icons/question_mark.svg"
-                iconStyle={{opacity: 0.7}}
+                iconStyle={{opacity: 0.4}}
               />
             </div>
             <div className="checkboxText">

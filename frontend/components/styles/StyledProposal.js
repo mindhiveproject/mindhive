@@ -118,7 +118,9 @@ export const StyledProposal = styled.div`
 
   .proposalBoard {
     display: grid;
-    grid-template-rows: auto 1fr;
+    height: 100%;
+    grid-template-rows: auto auto 1fr;
+    align-content: start;
     margin: 20px;
     
     .narrowButton {
@@ -373,6 +375,7 @@ export const StyledProposal = styled.div`
   .header {
     display: grid;
     margin-bottom: 24px;
+    height: fit-content;
     .headerContent {
       width: 100%;
     }
@@ -827,6 +830,7 @@ export const StyledProposal = styled.div`
     text-align: left;
     background: #F7F9F8;
     padding: 0px;
+    width: 100%;
     height: 100%;
 
     .resourcePreview {
@@ -867,6 +871,7 @@ export const StyledProposal = styled.div`
     .navigation-build-mode {
       display: grid;
       align-items: center;
+      height: fit-content;
       padding: 8px 24px 8px 24px;
       grid-template-columns: auto 1fr auto;
       grid-gap: 20px;
@@ -948,6 +953,7 @@ export const StyledProposal = styled.div`
 
     .proposalCardBoard {
       display: flex;
+      height: 100%;
       align-items: flex-start;
       gap: 24px;
       flex: 1 0 0;
@@ -1005,12 +1011,12 @@ export const StyledProposal = styled.div`
       align-self: stretch;
       color: var(--MH-Theme-Neutrals-Black, #171717);
 
-      /* MH-Theme/heading/small */
+      /* MH-Theme/title/large */
       font-family: Inter;
-      font-size: 28px;
+      font-size: 22px;
       font-style: normal;
       font-weight: 600;
-      line-height: 36px; /* 128.571% */
+      line-height: 28px; /* 127.273% */
     }
     .cardSubheaderAssign {
       color: var(--MH-Theme-Neutrals-Black, #171717);
@@ -1117,6 +1123,22 @@ export const StyledProposal = styled.div`
       & > div {
         width: 100%;
       }
+      & > label {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        box-sizing: border-box;
+        input[type="text"] {
+          width: 100%;
+          box-sizing: border-box;
+        }
+        /* Editor and other content blocks take full width */
+        & > div:not(.cardHeader) {
+          width: 100%;
+          min-width: 0;
+        }
+      }
       /* Assigned section in textBoard – chips and add button (mirrors infoBoard) */
       .collaboratorArray {
         display: flex;
@@ -1181,6 +1203,7 @@ export const StyledProposal = styled.div`
     .infoBoard {
       display: flex;
       max-width: 500px;
+      height: 100%;
       padding: 24px;
       flex-direction: column;
       justify-content: flex-start;
@@ -1281,6 +1304,7 @@ export const StyledProposal = styled.div`
     .proposalCardComments {
       display: grid;
       width: 100%;
+      padding-top: 16px;
       border-top: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
     }
   }
