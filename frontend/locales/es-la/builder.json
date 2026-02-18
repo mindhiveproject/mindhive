@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "Añadir personas",
 		"assignCard": "Asignar esta tarjeta a un colaborador de este proyecto",
+		"canAssignTooltip": "",
 		"cancel": "Cancelar",
 		"noCollaborators": "No hay colaboradores disponibles para este tablero.",
 		"noUsersFound": "No se encontró ningún perfil",
+		"onlyTeachersMentorsCanAdd": "Sólo los profesores y mentores pueden asignar personas a las tarjetas.",
 		"removeUser": "Eliminar usuario",
 		"save": "Ahorrar",
 		"searchPlaceholder": "Buscar por nombre de usuario...",
@@ -50,6 +52,7 @@
 	"board": {
 		"error": "Mensaje de error}}",
 		"expendedCard": {
+			"assignment": "Asignación",
 			"close": "Cerrar",
 			"connect": "Conectar",
 			"content": "Contenido",
@@ -351,6 +354,10 @@
 		"updateCollaboratorsFailed": "No se pudieron actualizar los colaboradores. Inténtalo de nuevo.",
 		"userNoClasses": "No estás asociado a ninguna clase."
 	},
+	"homework": {
+		"createHomeworkSubmit": "Marcar como completo",
+		"saveAndClose": "Guardar y cerrar"
+	},
 	"homeworkCard": {
 		"comments": "Comentarios",
 		"completed": "Terminado",
@@ -394,7 +401,7 @@
 		"chooseReviewStep": "Elija en qué paso de la revisión por pares debe ir una tarjeta",
 		"comments": "Comentarios",
 		"commentsPlaceholder": "Añade tu comentario aquí...",
-		"forMindHiveNetwork": "Para la red MindHive",
+		"expandOriginalEntry": "Expandir para ver tu entrada original",
 		"forTeacherAndCollaborators": "Solo para mi profesor y colaboradores del proyecto.",
 		"instructions": "Instrucciones",
 		"lockedMessage": "La tarjeta está siendo editada actualmente por",
@@ -409,13 +416,14 @@
 			"projectReport": "Informe del proyecto",
 			"proposal": "Propuesta"
 		},
-		"revisedContent": "Contenido revisado",
 		"revisedContentUsed": "El contenido revisado que incluya aquí se utilizará en el informe final.",
+		"revisedEntry": "Su entrada revisada",
 		"seeOriginalSubmission": "Haga clic para ver su envío original",
 		"selectOption": "Seleccionar opción",
 		"submission": "Envío",
 		"visibleInFeedbackCenter": "El contenido que incluya aquí será visible en el Centro de comentarios una vez que se envíe a través de una Tarjeta de Acción amarilla.",
-		"visibleToTeacherAndCollaborators": "El contenido que incluyas a continuación solo será visible para tus profesores y colaboradores del proyecto."
+		"visibleToTeacherAndCollaborators": "El contenido que incluyas a continuación solo será visible para tus profesores y colaboradores del proyecto.",
+		"yourEntry": "Tu entrada"
 	},
 	"makeMain": {
 		"confirm": "¿Estás seguro de que deseas que esta propuesta sea la principal?"
@@ -475,6 +483,7 @@
 		"noNotes": "Aún no hay notas ingresadas. Haz clic derecho para agregar notas."
 	},
 	"noVideoPlaceholder": "No hay vídeo de introducción disponible.",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "Comportamiento",
 		"copy": "Copiar",
@@ -668,7 +677,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "Desactivar asignación de estudiantes a tarjetas",
+				"disableStudentsAssign": "Restringir a profesores y mentores",
+				"empty": "",
+				"enable": "Activar asignación de estudiantes a tarjetas",
+				"enableStudentsAssign": "Permitir a estudiantes asignar tarjetas"
 			},
 			"emptyState": "",
 			"reviewSteps": "Pasos de revisión",

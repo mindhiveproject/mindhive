@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "लोगों को जोड़ें",
 		"assignCard": "इस कार्ड को इस प्रोजेक्ट के किसी सहयोगी को सौंपें",
+		"canAssignTooltip": "",
 		"cancel": "रद्द करना",
 		"noCollaborators": "इस बोर्ड के लिए कोई सहयोगी उपलब्ध नहीं हैं।",
 		"noUsersFound": "कोई प्रोफ़ाइल नहीं मिली",
+		"onlyTeachersMentorsCanAdd": "केवल शिक्षक और मार्गदर्शक ही लोगों को कार्ड आवंटित कर सकते हैं।",
 		"removeUser": "उपयोगकर्ता हटाएँ",
 		"save": "बचाना",
 		"searchPlaceholder": "उपयोगकर्ता नाम से खोजें...",
@@ -50,6 +52,7 @@
 	"board": {
 		"error": "त्रुटि संदेश}}",
 		"expendedCard": {
+			"assignment": "कार्यभार",
 			"close": "बंद करना",
 			"connect": "जोड़ना",
 			"content": "सामग्री",
@@ -351,6 +354,10 @@
 		"updateCollaboratorsFailed": "सहयोगियों को अपडेट करने में विफलता। कृपया पुनः प्रयास करें।",
 		"userNoClasses": "आप किसी भी कक्षा से संबद्ध नहीं हैं।"
 	},
+	"homework": {
+		"createHomeworkSubmit": "पूर्ण के रूप में चिह्नित करें",
+		"saveAndClose": "सहेजे बंद करें"
+	},
 	"homeworkCard": {
 		"comments": "टिप्पणियाँ",
 		"completed": "पुरा होना।",
@@ -394,7 +401,7 @@
 		"chooseReviewStep": "चुनें कि कार्ड को सहकर्मी समीक्षा के किस चरण में जाना चाहिए",
 		"comments": "टिप्पणियाँ",
 		"commentsPlaceholder": "अपनी टिप्पणी यहाँ लिखें...",
-		"forMindHiveNetwork": "माइंडहाइव नेटवर्क के लिए",
+		"expandOriginalEntry": "अपनी मूल प्रविष्टि देखने के लिए विस्तार करें",
 		"forTeacherAndCollaborators": "केवल मेरे शिक्षक और परियोजना सहयोगियों के लिए",
 		"instructions": "निर्देश",
 		"lockedMessage": "कार्ड का संपादन वर्तमान में किया जा रहा है",
@@ -409,13 +416,14 @@
 			"projectReport": "परियोजना रिपोर्ट",
 			"proposal": "प्रस्ताव"
 		},
-		"revisedContent": "संशोधित सामग्री",
 		"revisedContentUsed": "आपके द्वारा यहां शामिल संशोधित सामग्री का उपयोग अंतिम रिपोर्ट में किया जाएगा।",
+		"revisedEntry": "आपकी संशोधित प्रविष्टि",
 		"seeOriginalSubmission": "अपना मूल सबमिशन देखने के लिए क्लिक करें",
 		"selectOption": "विकल्प चुनें",
 		"submission": "जमा करना",
 		"visibleInFeedbackCenter": "आपके द्वारा यहां शामिल की गई सामग्री पीले एक्शन कार्ड के माध्यम से सबमिट किए जाने पर फीडबैक सेंटर में दिखाई देगी।",
-		"visibleToTeacherAndCollaborators": "आपके द्वारा नीचे शामिल की गई सामग्री केवल आपके शिक्षक(शिक्षकों) और परियोजना सहयोगियों को ही दिखाई देगी"
+		"visibleToTeacherAndCollaborators": "आपके द्वारा नीचे शामिल की गई सामग्री केवल आपके शिक्षक(शिक्षकों) और परियोजना सहयोगियों को ही दिखाई देगी",
+		"yourEntry": "आपकी प्रविष्टि"
 	},
 	"makeMain": {
 		"confirm": "क्या आप वाकई इस प्रस्ताव को मुख्य प्रस्ताव बनाना चाहते हैं?"
@@ -475,6 +483,7 @@
 		"noNotes": "अभी तक कोई नोट दर्ज नहीं किया गया है। नोट जोड़ने के लिए राइट-क्लिक करें।"
 	},
 	"noVideoPlaceholder": "कोई परिचयात्मक वीडियो उपलब्ध नहीं है।",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "कार्रवाई",
 		"copy": "प्रतिलिपि",
@@ -668,7 +677,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "कार्ड असाइन करने से छात्रों को अक्षम करें",
+				"disableStudentsAssign": "केवल शिक्षकों और मेंटर्स तक सीमित करें",
+				"empty": "",
+				"enable": "कार्ड असाइन करने के लिए छात्रों को सक्षम करें",
+				"enableStudentsAssign": "छात्रों को कार्ड असाइन करने की अनुमति दें"
 			},
 			"emptyState": "",
 			"reviewSteps": "समीक्षा चरण",

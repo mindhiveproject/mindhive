@@ -20,6 +20,19 @@
 		"confirmPublishTitle": "Opdracht publiceren?",
 		"confirmUnpublishMessage": "Studenten zullen deze opdracht niet langer in hun lijst zien.",
 		"confirmUnpublishTitle": "Opdracht deactiveren?",
+		"connectModal": {
+			"cancel": "Annuleren",
+			"description": "Selecteer een kaart op het sjabloonbord van de klas. De opdracht wordt gekoppeld aan deze kaart en aan dezelfde kaart op alle leerlingborden.",
+			"disconnect": "Ontkoppel de kaart",
+			"error": "Fout bij het laden van het bord",
+			"loading": "Bezig met laden...",
+			"noSections": "Dit bord bevat nog geen secties of kaarten.",
+			"noTemplate": "Er is geen sjabloonbord beschikbaar voor deze les.",
+			"save": "Redden",
+			"title": "Koppel de opdracht aan de kaart.",
+			"untitledCard": "Naamloze kaart",
+			"untitledSection": "Naamloos gedeelte"
+		},
 		"content": "Inhoud",
 		"copyLink": "Link kopiëren",
 		"copyOwn": "Kopieer een van je opdrachten.",
@@ -66,10 +79,12 @@
 		"placeholderDescription": "Tijdelijke aanduiding gepresenteerd aan studenten",
 		"placeholderInstructions": "Schrijf een tijdelijke aanduiding voor het antwoordvak van uw studenten",
 		"preview": "",
+		"projectCard": "",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Publiceren voor studenten",
 		"requestFeedback": "Vraag om feedback",
+		"reviewAndFeedback": "Beoordeling en feedback",
 		"reviewSubmissions": "Inzendingen beoordelen",
 		"revokeConfirm": "Weet u zeker dat u deze opdracht wilt intrekken? De opdracht is dan niet langer zichtbaar voor de studenten.",
 		"save": "Wijzigingen opslaan",
@@ -83,6 +98,7 @@
 		"startFromScratch": "Begin helemaal opnieuw.",
 		"startFromScratchDescription": "Maak een gloednieuwe opdracht met volledige controle over de titel, instructies en voorbeeldtekst. Ideaal voor iets dat volledig uniek is voor jouw klas.",
 		"status": "",
+		"studentEntry": "Inzending van de student",
 		"submit": "Indienen",
 		"submitConfirm": "Weet je zeker dat je deze opdracht wilt inleveren? De opdracht is zichtbaar voor de studenten.",
 		"templatesDescription": "Kies uit vooraf gemaakte opdrachtsjablonen die door beheerders zijn aangemaakt. Dit zijn gedeelde sjablonen die beschikbaar zijn voor alle docenten.",
@@ -119,7 +135,9 @@
 		"expendedCard": {
 			"addExistingResources": "Bestaande bronnen toevoegen (zie Bronnen in navigatievenster)",
 			"addLinkedItems": "Bestaande opdrachten, taken, studies of bronnen toevoegen",
+			"addToFavorites": "Toevoegen aan favorieten",
 			"alreadyHaveCopy": "Deze opdracht is al gekopieerd in de volgende klas:",
+			"assignment": "Opdracht",
 			"assignmentNotPublished": "Deze opdracht is niet gepubliceerd.",
 			"assignmentsSectionTitle": "Openbare opdrachten",
 			"backToEditing": "Terug naar bewerken",
@@ -129,6 +147,7 @@
 			"connect": "Aan kaart toevoegen",
 			"content": "Inhoud",
 			"disconnect": "Verwijderen van kaart",
+			"discoverMore": "Ontdek meer over dit blok",
 			"done": "Gedaan",
 			"includeTextCollaborators": "Voeg tekstinvoer toe voor projectmedewerkers",
 			"includeTextFeedbackCenter": "Tekstinvoer toevoegen voor Feedback Center",
@@ -153,6 +172,7 @@
 			"previewLinkedStudies": "Voorbeeld van gekoppelde studies",
 			"previewLinkedTasks": "Een voorbeeld van gekoppelde taken",
 			"publicResources": "Openbaar",
+			"removeFromFavorites": "Verwijderen uit favorieten",
 			"resources": "Bronnen",
 			"resourcesSectionTitle": "Openbare bronnen",
 			"searchPlaceholder": "Zoeken op titel...",
@@ -327,6 +347,8 @@
 		"viewOrEdit": "Bekijken of bewerken"
 	},
 	"cancel": "Annuleren",
+	"cardAssignmentDisabled": "Kaarten kunnen niet aan studenten worden toegewezen.",
+	"cardAssignmentEnabled": "Kaarten kunnen aan studenten worden toegewezen.",
 	"classes": "Klasse(n)",
 	"classesList": {
 		"className": "Klassenaam",
@@ -493,26 +515,31 @@
 		"teacher": "Docent"
 	},
 	"homework": {
+		"allEntries": "Alle inzendingen",
 		"assignmentContent": "Opdrachtinhoud",
 		"assignmentTitle": "Opdrachttitel",
 		"cancel": "Annuleren",
 		"createHomework": "Huiswerk maken",
-		"createHomeworkDraft": "Concept maken",
-		"createHomeworkSubmit": "Maken en indienen",
-		"createNewAssignment": "Nieuwe opdracht maken",
-		"createNewHomework": "Maak een nieuw huiswerk",
+		"createHomeworkSubmit": "Markeer als voltooid",
+		"createNewEntry": "Maak een item aan",
+		"createNewHomework": "Nieuwe opdracht maken",
 		"dateCreated": "Datum aangemaakt",
 		"dateUpdated": "Datum bijgewerkt",
+		"editEntry": "Bewerk je invoer",
 		"existingHomeworks": "Bestaande thuiswerken",
-		"homeworkTitle": "Titel van het huiswerk",
+		"homeworkTitle": "Opdrachttitel",
 		"initialContent": "Initiële inhoud",
 		"markAsCompleted": "Markeer als voltooid",
 		"markAsUncompleted": "Markeren als onvoltooid",
 		"myAssignment": "Mijn opdracht",
+		"myEntry": "Mijn inzending",
 		"noHomeworkYet": "De student heeft nog geen huiswerk gemaakt.",
 		"openHomework": "Open",
+		"saveAndClose": "Opslaan en sluiten",
+		"saveHomeworkDraft": "Concept opslaan",
 		"submitted": "Ingediend",
-		"unsubmit": "Intrekken"
+		"unsubmit": "Intrekken",
+		"yourEntry": "Uw inzending"
 	},
 	"joinClass": "Doe mee met de les",
 	"joinClassInfo": "Zodra u zich bij een klas aansluit, wordt deze hier weergegeven.",
@@ -532,6 +559,9 @@
 		"settings": "Instellingen",
 		"students": "Studenten",
 		"studies": "Onderzoeken"
+	},
+	"mainCard": {
+		"forMindHiveNetwork": "Uw inzending"
 	},
 	"mentors": {
 		"copy": "Kopiëren",
@@ -554,6 +584,7 @@
 	"noStudies": "De studenten hebben nog geen studies gemaakt.",
 	"noteNewStudents": "Let op: Nieuwe studenten kunnen niet aan uw klas deelnemen",
 	"numberOfStudents": "Aantal studenten",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "Deelnemers",
 	"pleaseTypeDelete": "Typ DELETE om uw klas te verwijderen",
 	"projectBoard": {
@@ -606,6 +637,7 @@
 		"goBack": "Ga terug naar de les",
 		"username": "Gebruikersnaam"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "Toevoegen aan klas",
 		"assignToClass": "Weet je zeker dat je deze leerling aan de andere klas wilt toewijzen?",
@@ -663,5 +695,6 @@
 	},
 	"theirWorkspaceAndStudies": "Hun werkruimte en alle studies, taken of enquêtes die ze tijdens jouw les hebben gemaakt",
 	"typeDeleteToConfirm": "Typ \"DELETE\" om te bevestigen",
+	"whoCanAssignCards": "Wie kan profielen aan kaarten toewijzen?",
 	"yourClass": "Jouw klas"
 }

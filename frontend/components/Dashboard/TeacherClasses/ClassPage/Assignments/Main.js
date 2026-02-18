@@ -92,6 +92,7 @@ export default function Settings({ myclass, user, query }) {
 
   const { data, loading, error } = useQuery(GET_CLASS_ASSIGNMENTS, {
     variables: { classId: myclass?.id },
+    fetchPolicy: "cache-and-network",
   });
   const assignments = data?.assignments || [];
 

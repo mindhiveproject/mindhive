@@ -20,6 +20,19 @@
 		"confirmPublishTitle": "Publier le devoir ?",
 		"confirmUnpublishMessage": "Les étudiants ne verront plus ce devoir dans leur liste.",
 		"confirmUnpublishTitle": "Dépublier le devoir ?",
+		"connectModal": {
+			"cancel": "Annuler",
+			"description": "Sélectionnez une carte sur le tableau modèle de la classe. Le devoir sera lié à cette carte et à la même carte sur tous les tableaux des élèves.",
+			"disconnect": "Déconnectez la carte",
+			"error": "Erreur de chargement du tableau",
+			"loading": "Chargement...",
+			"noSections": "Ce tableau ne comporte encore aucune section ni carte.",
+			"noTemplate": "Aucun modèle de tableau n'est prévu pour ce cours.",
+			"save": "Sauvegarder",
+			"title": "Associer l'affectation à la carte",
+			"untitledCard": "Carte sans titre",
+			"untitledSection": "Section sans titre"
+		},
 		"content": "Contenu",
 		"copyLink": "Copier le lien",
 		"copyOwn": "Recopiez l'un de vos devoirs",
@@ -66,10 +79,12 @@
 		"placeholderDescription": "Espace réservé présenté aux étudiants",
 		"placeholderInstructions": "Écrivez un espace réservé pour la boîte de réponse de vos élèves",
 		"preview": "",
+		"projectCard": "",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Publier pour les étudiants",
 		"requestFeedback": "Demander des commentaires",
+		"reviewAndFeedback": "Avis et commentaires",
 		"reviewSubmissions": "Soumissions d'examen",
 		"revokeConfirm": "Êtes-vous sûr de vouloir révoquer ce devoir ? Il ne sera plus visible pour les étudiants.",
 		"save": "Sauvegarder les modifications",
@@ -83,6 +98,7 @@
 		"startFromScratch": "Partir de zéro",
 		"startFromScratchDescription": "Créez un devoir inédit en contrôlant entièrement le titre, les consignes et le contenu fictif. Idéal pour un exercice totalement unique pour votre classe.",
 		"status": "",
+		"studentEntry": "Entrée des étudiants",
 		"submit": "Soumettre",
 		"submitConfirm": "Êtes-vous sûr de vouloir soumettre ce devoir ? Il sera visible par les élèves.",
 		"templatesDescription": "Choisissez parmi les modèles de devoirs prédéfinis créés par les administrateurs. Ce sont des modèles partagés, accessibles à tous les enseignants.",
@@ -119,7 +135,9 @@
 		"expendedCard": {
 			"addExistingResources": "Ajouter des ressources existantes (voir Ressources dans le volet de navigation)",
 			"addLinkedItems": "Ajouter des missions, des tâches, des études ou des ressources existantes",
+			"addToFavorites": "Ajouter aux Favoris",
 			"alreadyHaveCopy": "Ce devoir est déjà copié dans la classe suivante :",
+			"assignment": "Affectation",
 			"assignmentNotPublished": "Ce devoir n'est pas publié",
 			"assignmentsSectionTitle": "Missions publiques",
 			"backToEditing": "Retour à la modification",
@@ -129,6 +147,7 @@
 			"connect": "Ajouter au panier",
 			"content": "Contenu",
 			"disconnect": "Retirer de la carte",
+			"discoverMore": "Découvrez-en plus sur ce bloc",
 			"done": "Terminé",
 			"includeTextCollaborators": "Inclure la saisie de texte pour les collaborateurs du projet",
 			"includeTextFeedbackCenter": "Inclure la saisie de texte pour le centre de commentaires",
@@ -153,6 +172,7 @@
 			"previewLinkedStudies": "Prévisualisation des études liées",
 			"previewLinkedTasks": "Prévisualisation des tâches liées",
 			"publicResources": "Publique",
+			"removeFromFavorites": "Retirer des favoris",
 			"resources": "Ressources",
 			"resourcesSectionTitle": "Ressources publiques",
 			"searchPlaceholder": "Recherche par titre...",
@@ -327,6 +347,8 @@
 		"viewOrEdit": "Afficher ou modifier"
 	},
 	"cancel": "Annuler",
+	"cardAssignmentDisabled": "Les cartes ne peuvent pas être attribuées aux élèves",
+	"cardAssignmentEnabled": "Des cartes peuvent être attribuées aux élèves",
 	"classes": "Classe(s)",
 	"classesList": {
 		"className": "Nom de la classe",
@@ -493,26 +515,31 @@
 		"teacher": "Professeur"
 	},
 	"homework": {
+		"allEntries": "Toutes les entrées",
 		"assignmentContent": "Contenu du devoir",
 		"assignmentTitle": "Titre de la mission",
 		"cancel": "Annuler",
 		"createHomework": "Créer des devoirs",
-		"createHomeworkDraft": "Créer un brouillon",
-		"createHomeworkSubmit": "Créer et soumettre",
-		"createNewAssignment": "Créer une nouvelle tâche",
-		"createNewHomework": "Créer de nouveaux devoirs",
+		"createHomeworkSubmit": "Marquer comme terminé",
+		"createNewEntry": "Créer une entrée",
+		"createNewHomework": "Créer une nouvelle tâche",
 		"dateCreated": "Date de création",
 		"dateUpdated": "Date de mise à jour",
+		"editEntry": "Modifiez votre entrée",
 		"existingHomeworks": "Travaux à domicile existants",
-		"homeworkTitle": "Titre du devoir",
+		"homeworkTitle": "Titre de la mission",
 		"initialContent": "Contenu initial",
 		"markAsCompleted": "Marquer comme terminé",
 		"markAsUncompleted": "Marquer comme inachevé",
 		"myAssignment": "Ma mission",
+		"myEntry": "Mon entrée",
 		"noHomeworkYet": "L'élève n'a pas encore écrit de devoirs.",
 		"openHomework": "Ouvrir",
+		"saveAndClose": "Enregistrer et fermer",
+		"saveHomeworkDraft": "Enregistrer le brouillon",
 		"submitted": "Soumis",
-		"unsubmit": "Annuler la soumission"
+		"unsubmit": "Annuler la soumission",
+		"yourEntry": "Votre entrée"
 	},
 	"joinClass": "Rejoindre la classe",
 	"joinClassInfo": "Une fois que vous avez rejoint une classe, elle apparaîtra ici.",
@@ -532,6 +559,9 @@
 		"settings": "Paramètres",
 		"students": "Étudiants",
 		"studies": "Études"
+	},
+	"mainCard": {
+		"forMindHiveNetwork": "Votre entrée"
 	},
 	"mentors": {
 		"copy": "Copie",
@@ -554,6 +584,7 @@
 	"noStudies": "Les étudiants n’ont pas encore créé d’études.",
 	"noteNewStudents": "Remarque : les nouveaux étudiants ne pourront pas rejoindre votre classe.",
 	"numberOfStudents": "Nombre d'étudiants",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "Participants",
 	"pleaseTypeDelete": "Veuillez taper SUPPRIMER pour supprimer votre classe",
 	"projectBoard": {
@@ -606,6 +637,7 @@
 		"goBack": "Retournez en classe",
 		"username": "Nom d'utilisateur"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "Ajouter à la classe",
 		"assignToClass": "Êtes-vous sûr de vouloir affecter cet élève à l'autre classe ?",
@@ -663,5 +695,6 @@
 	},
 	"theirWorkspaceAndStudies": "Leur espace de travail et toutes les études, tâches ou enquêtes qu'ils ont créées pendant votre cours",
 	"typeDeleteToConfirm": "Tapez « DELETE » pour confirmer",
+	"whoCanAssignCards": "Qui peut attribuer des profils aux cartes ?",
 	"yourClass": "Votre classe"
 }

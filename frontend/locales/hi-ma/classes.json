@@ -20,6 +20,19 @@
 		"confirmPublishTitle": "",
 		"confirmUnpublishMessage": "",
 		"confirmUnpublishTitle": "",
+		"connectModal": {
+			"cancel": "",
+			"description": "",
+			"disconnect": "",
+			"error": "",
+			"loading": "",
+			"noSections": "",
+			"noTemplate": "",
+			"save": "",
+			"title": "",
+			"untitledCard": "",
+			"untitledSection": ""
+		},
 		"content": "",
 		"copyLink": "लिंक की प्रतिलिपि करें",
 		"copyOwn": "",
@@ -66,10 +79,12 @@
 		"placeholderDescription": "",
 		"placeholderInstructions": "",
 		"preview": "",
+		"projectCard": "",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "छात्रों के लिए प्रकाशित करें",
 		"requestFeedback": "प्रतिक्रिया का अनुरोध करें",
+		"reviewAndFeedback": "",
 		"reviewSubmissions": "प्रस्तुतियाँ समीक्षा करें",
 		"revokeConfirm": "क्या आप वाकई इस असाइनमेंट को रद्द करना चाहते हैं? यह असाइनमेंट अब छात्रों को दिखाई नहीं देगा।",
 		"save": "",
@@ -83,6 +98,7 @@
 		"startFromScratch": "",
 		"startFromScratchDescription": "",
 		"status": "",
+		"studentEntry": "",
 		"submit": "जमा करना",
 		"submitConfirm": "क्या आप वाकई यह असाइनमेंट सबमिट करना चाहते हैं? यह असाइनमेंट छात्रों को दिखाई देगा।",
 		"templatesDescription": "",
@@ -119,7 +135,9 @@
 		"expendedCard": {
 			"addExistingResources": "मौजूदा संसाधन जोड़ें (नेविगेशन पैन में संसाधन देखें)",
 			"addLinkedItems": "",
+			"addToFavorites": "",
 			"alreadyHaveCopy": "",
+			"assignment": "",
 			"assignmentNotPublished": "",
 			"assignmentsSectionTitle": "",
 			"backToEditing": "",
@@ -129,6 +147,7 @@
 			"connect": "",
 			"content": "",
 			"disconnect": "",
+			"discoverMore": "",
 			"done": "",
 			"includeTextCollaborators": "परियोजना सहयोगियों के लिए पाठ इनपुट शामिल करें",
 			"includeTextFeedbackCenter": "फ़ीडबैक केंद्र के लिए पाठ इनपुट शामिल करें",
@@ -153,6 +172,7 @@
 			"previewLinkedStudies": "",
 			"previewLinkedTasks": "",
 			"publicResources": "",
+			"removeFromFavorites": "",
 			"resources": "संसाधन",
 			"resourcesSectionTitle": "",
 			"searchPlaceholder": "",
@@ -327,6 +347,8 @@
 		"viewOrEdit": ""
 	},
 	"cancel": "रद्द करना",
+	"cardAssignmentDisabled": "",
+	"cardAssignmentEnabled": "",
 	"classes": "वर्ग",
 	"classesList": {
 		"className": "कक्षा का नाम",
@@ -493,26 +515,31 @@
 		"teacher": "अध्यापक"
 	},
 	"homework": {
+		"allEntries": "",
 		"assignmentContent": "",
 		"assignmentTitle": "असाइनमेंट का शीर्षक",
 		"cancel": "",
 		"createHomework": "",
-		"createHomeworkDraft": "",
 		"createHomeworkSubmit": "",
-		"createNewAssignment": "",
+		"createNewEntry": "",
 		"createNewHomework": "",
 		"dateCreated": "बनाया गया दिनांक",
 		"dateUpdated": "तारीख अपडेट की गई",
+		"editEntry": "",
 		"existingHomeworks": "",
-		"homeworkTitle": "होमवर्क शीर्षक",
+		"homeworkTitle": "",
 		"initialContent": "",
 		"markAsCompleted": "",
 		"markAsUncompleted": "",
 		"myAssignment": "",
+		"myEntry": "",
 		"noHomeworkYet": "छात्र ने अभी तक कोई गृहकार्य नहीं लिखा है।",
 		"openHomework": "",
+		"saveAndClose": "",
+		"saveHomeworkDraft": "",
 		"submitted": "",
-		"unsubmit": ""
+		"unsubmit": "",
+		"yourEntry": ""
 	},
 	"joinClass": "कक्षा में शामिल हों",
 	"joinClassInfo": "जब आप किसी कक्षा में शामिल होंगे तो वह यहां दिखाई देगी।",
@@ -532,6 +559,9 @@
 		"settings": "सेटिंग्स",
 		"students": "छात्र",
 		"studies": "अध्ययन करते हैं"
+	},
+	"mainCard": {
+		"forMindHiveNetwork": ""
 	},
 	"mentors": {
 		"copy": "प्रतिलिपि",
@@ -554,6 +584,7 @@
 	"noStudies": "छात्रों ने अभी तक कोई अध्ययन नहीं किया है।",
 	"noteNewStudents": "नोट: नए छात्र आपकी कक्षा में शामिल नहीं हो पाएंगे",
 	"numberOfStudents": "छात्रों की संख्या",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "प्रतिभागियों",
 	"pleaseTypeDelete": "कृपया अपनी कक्षा हटाने के लिए DELETE टाइप करें",
 	"projectBoard": {
@@ -606,6 +637,7 @@
 		"goBack": "",
 		"username": "उपयोगकर्ता नाम"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "",
 		"assignToClass": "",
@@ -663,5 +695,6 @@
 	},
 	"theirWorkspaceAndStudies": "उनका कार्यक्षेत्र और आपकी कक्षा के दौरान उनके द्वारा बनाए गए कोई भी अध्ययन, कार्य या सर्वेक्षण",
 	"typeDeleteToConfirm": "पुष्टि करने के लिए \"DELETE\" टाइप करें",
+	"whoCanAssignCards": "",
 	"yourClass": "आपकी कक्षा"
 }

@@ -34,8 +34,8 @@ const STATUS_STYLE_MAP = {
     color: "#8a919d",
   },
   "Needs revision": {
-    backgroundColor: "#8a2cf6",
-    color: "#8a919d",
+    backgroundColor: "#E4DFF6",
+    color: "#5D5763",
   },
 };
 

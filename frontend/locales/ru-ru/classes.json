@@ -20,6 +20,19 @@
 		"confirmPublishTitle": "Опубликовать задание?",
 		"confirmUnpublishMessage": "Студенты больше не будут видеть это задание в своем списке.",
 		"confirmUnpublishTitle": "Отменить публикацию задания?",
+		"connectModal": {
+			"cancel": "Отмена",
+			"description": "Выберите карточку на доске шаблонов класса. Задание будет привязано к этой карточке, а также к той же карточке на всех досках учащихся.",
+			"disconnect": "Отключитесь от карты",
+			"error": "Ошибка загрузки платы",
+			"loading": "Загрузка...",
+			"noSections": "На этой доске пока нет разделов или карточек.",
+			"noTemplate": "Для этого занятия нет шаблона доски.",
+			"save": "Сохранять",
+			"title": "Привяжите задание к карточке",
+			"untitledCard": "Безымянная карта",
+			"untitledSection": "Раздел без названия"
+		},
 		"content": "Содержание",
 		"copyLink": "Копировать ссылку",
 		"copyOwn": "Скопируйте одно из своих заданий.",
@@ -66,10 +79,12 @@
 		"placeholderDescription": "Заполнитель, представленный студентам",
 		"placeholderInstructions": "Напишите заполнитель для поля ответа вашего ученика.",
 		"preview": "",
+		"projectCard": "",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Опубликовать для студентов",
 		"requestFeedback": "Запросить обратную связь",
+		"reviewAndFeedback": "Отзывы и обратная связь",
 		"reviewSubmissions": "Рассмотрение представленных работ",
 		"revokeConfirm": "Вы уверены, что хотите отменить это задание? Оно больше не будет видно студентам.",
 		"save": "Сохранить изменения",
@@ -83,6 +98,7 @@
 		"startFromScratch": "Начать с нуля",
 		"startFromScratchDescription": "Создайте совершенно новое задание, полностью контролируя заголовок, инструкции и содержимое-заполнитель. Идеально подходит для чего-то совершенно уникального для вашего класса.",
 		"status": "",
+		"studentEntry": "Вступление студента",
 		"submit": "Представлять на рассмотрение",
 		"submitConfirm": "Вы уверены, что хотите отправить это задание? Задание будет видно студентам.",
 		"templatesDescription": "Выберите один из готовых шаблонов заданий, созданных администраторами. Эти шаблоны доступны всем учителям.",
@@ -119,7 +135,9 @@
 		"expendedCard": {
 			"addExistingResources": "Добавить существующие ресурсы (см. Ресурсы на панели навигации)",
 			"addLinkedItems": "Добавляйте существующие задания, задачи, исследования или ресурсы.",
+			"addToFavorites": "Добавить в избранное",
 			"alreadyHaveCopy": "Это задание уже скопировано в следующем классе:",
+			"assignment": "Назначение",
 			"assignmentNotPublished": "Данная работа не опубликована.",
 			"assignmentsSectionTitle": "Публичные задания",
 			"backToEditing": "Вернуться к редактированию",
@@ -129,6 +147,7 @@
 			"connect": "Добавить на карту",
 			"content": "Содержание",
 			"disconnect": "Удалить с карты",
+			"discoverMore": "Узнайте больше об этом блоке.",
 			"done": "Готово",
 			"includeTextCollaborators": "Включить текстовый ввод для участников проекта",
 			"includeTextFeedbackCenter": "Включить текстовый ввод для Центра обратной связи",
@@ -153,6 +172,7 @@
 			"previewLinkedStudies": "Предварительный просмотр Связанные исследования",
 			"previewLinkedTasks": "Предварительный просмотр связанных задач",
 			"publicResources": "Общественный",
+			"removeFromFavorites": "Удалить из Избранного",
 			"resources": "Ресурсы",
 			"resourcesSectionTitle": "Общественные ресурсы",
 			"searchPlaceholder": "Поиск по названию...",
@@ -327,6 +347,8 @@
 		"viewOrEdit": "Просмотреть или редактировать"
 	},
 	"cancel": "Отмена",
+	"cardAssignmentDisabled": "Карты не могут быть выданы студентам.",
+	"cardAssignmentEnabled": "Карты могут быть выданы студентам.",
 	"classes": "Класс(ы)",
 	"classesList": {
 		"className": "Имя класса",
@@ -493,26 +515,31 @@
 		"teacher": "Учитель"
 	},
 	"homework": {
+		"allEntries": "Все записи",
 		"assignmentContent": "Содержание задания",
 		"assignmentTitle": "Название задания",
 		"cancel": "Отмена",
 		"createHomework": "Создать домашнее задание",
-		"createHomeworkDraft": "Создать черновик",
-		"createHomeworkSubmit": "Создать и отправить",
-		"createNewAssignment": "Создать новое задание",
-		"createNewHomework": "Создать новое домашнее задание",
+		"createHomeworkSubmit": "Отметить как выполненное",
+		"createNewEntry": "Создать запись",
+		"createNewHomework": "Создать новое задание",
 		"dateCreated": "Дата создания",
 		"dateUpdated": "Дата обновления",
+		"editEntry": "Отредактируйте свою запись",
 		"existingHomeworks": "Существующие домашние задания",
-		"homeworkTitle": "Название домашнего задания",
+		"homeworkTitle": "Название задания",
 		"initialContent": "Начальное содержание",
 		"markAsCompleted": "Отметить как выполненное",
 		"markAsUncompleted": "Отметить как незавершенное",
 		"myAssignment": "Мое задание",
+		"myEntry": "Моя заявка",
 		"noHomeworkYet": "Студент еще не написал домашнее задание.",
 		"openHomework": "Открыть",
+		"saveAndClose": "Сохранить и закрыть",
+		"saveHomeworkDraft": "Сохранить черновик",
 		"submitted": "Поданный",
-		"unsubmit": "Отменить отправку"
+		"unsubmit": "Отменить отправку",
+		"yourEntry": "Ваша заявка"
 	},
 	"joinClass": "Присоединиться к классу",
 	"joinClassInfo": "Как только вы присоединитесь к классу, он появится здесь.",
@@ -532,6 +559,9 @@
 		"settings": "Настройки",
 		"students": "Студенты",
 		"studies": "Исследования"
+	},
+	"mainCard": {
+		"forMindHiveNetwork": "Ваша заявка"
 	},
 	"mentors": {
 		"copy": "Копировать",
@@ -554,6 +584,7 @@
 	"noStudies": "Студенты пока не создали ни одного исследования.",
 	"noteNewStudents": "Примечание: новые ученики не смогут присоединиться к вашему классу.",
 	"numberOfStudents": "Количество студентов",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "Участники",
 	"pleaseTypeDelete": "Пожалуйста, введите DELETE, чтобы удалить свой класс.",
 	"projectBoard": {
@@ -606,6 +637,7 @@
 		"goBack": "Вернитесь в класс",
 		"username": "Имя пользователя"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "Добавить в класс",
 		"assignToClass": "Вы уверены, что хотите перевести этого ученика в другой класс?",
@@ -663,5 +695,6 @@
 	},
 	"theirWorkspaceAndStudies": "Их рабочее пространство и любые исследования, задания или опросы, которые они создали во время вашего занятия",
 	"typeDeleteToConfirm": "Нажмите «DELETE» для подтверждения.",
+	"whoCanAssignCards": "Кто может назначать профили карточкам?",
 	"yourClass": "Ваш класс"
 }

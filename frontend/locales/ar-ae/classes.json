@@ -20,6 +20,19 @@
 		"confirmPublishTitle": "هل يتم نشر المهمة؟",
 		"confirmUnpublishMessage": "لن يرى الطلاب هذا الواجب في قائمتهم بعد الآن.",
 		"confirmUnpublishTitle": "إلغاء نشر المهمة؟",
+		"connectModal": {
+			"cancel": "يلغي",
+			"description": "اختر بطاقة من لوحة نموذج الفصل. سيتم ربط المهمة بهذه البطاقة وبنفس البطاقة على جميع لوحات الطلاب.",
+			"disconnect": "افصل البطاقة",
+			"error": "لوحة تحميل الأخطاء",
+			"loading": "تحميل...",
+			"noSections": "لا تحتوي هذه اللوحة على أقسام أو بطاقات حتى الآن.",
+			"noTemplate": "لا يوجد نموذج لوحة لهذا الفصل.",
+			"save": "يحفظ",
+			"title": "ربط المهمة بالبطاقة",
+			"untitledCard": "بطاقة بدون عنوان",
+			"untitledSection": "قسم بدون عنوان"
+		},
 		"content": "المحتوى",
 		"copyLink": "نسخ الوصلة",
 		"copyOwn": "انسخ إحدى واجباتك",
@@ -66,10 +79,12 @@
 		"placeholderDescription": "تم تقديم العنصر النائب للطلاب",
 		"placeholderInstructions": "اكتب مكانًا لمربع إجابة طلابك",
 		"preview": "",
+		"projectCard": "",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "نشر للطلاب",
 		"requestFeedback": "طلب ملاحظات",
+		"reviewAndFeedback": "مراجعة وتعليقات",
 		"reviewSubmissions": "مراجعة الطلبات",
 		"revokeConfirm": "هل أنت متأكد من رغبتك في إلغاء هذه المهمة؟ لن تكون المهمة مرئية للطلاب بعد الآن.",
 		"save": "حفظ التغييرات",
@@ -83,6 +98,7 @@
 		"startFromScratch": "ابدأ من الصفر",
 		"startFromScratchDescription": "أنشئ مهمة جديدة تمامًا مع تحكم كامل في العنوان والتعليمات والمحتوى الافتراضي. هذا الخيار مثالي لمهمة فريدة تمامًا لطلاب صفك.",
 		"status": "",
+		"studentEntry": "مشاركة الطالب",
 		"submit": "يُقدِّم",
 		"submitConfirm": "هل أنت متأكد من رغبتك في تسليم هذه المهمة؟ ستكون المهمة مرئية للطلاب.",
 		"templatesDescription": "اختر من بين قوالب الواجبات الجاهزة التي أنشأها المشرفون. هذه قوالب مشتركة متاحة لجميع المعلمين.",
@@ -119,7 +135,9 @@
 		"expendedCard": {
 			"addExistingResources": "إضافة الموارد الموجودة (انظر الموارد في جزء التنقل)",
 			"addLinkedItems": "إضافة الواجبات أو المهام أو الدراسات أو الموارد الحالية",
+			"addToFavorites": "أضف إلى المفضلة",
 			"alreadyHaveCopy": "تم نسخ هذه المهمة بالفعل في الفصل التالي:",
+			"assignment": "تكليف",
 			"assignmentNotPublished": "لم يتم نشر هذا الواجب",
 			"assignmentsSectionTitle": "المهام العامة",
 			"backToEditing": "العودة إلى التحرير",
@@ -129,6 +147,7 @@
 			"connect": "أضف إلى البطاقة",
 			"content": "المحتوى",
 			"disconnect": "إزالة من البطاقة",
+			"discoverMore": "اكتشف المزيد عن هذه الكتلة",
 			"done": "تم",
 			"includeTextCollaborators": "تضمين إدخال النص للمتعاونين في المشروع",
 			"includeTextFeedbackCenter": "تضمين إدخال النص لمركز التعليقات",
@@ -153,6 +172,7 @@
 			"previewLinkedStudies": "معاينة الدراسات المرتبطة",
 			"previewLinkedTasks": "معاينة المهام المرتبطة",
 			"publicResources": "عام",
+			"removeFromFavorites": "إزالة من المفضلة",
 			"resources": "موارد",
 			"resourcesSectionTitle": "الموارد العامة",
 			"searchPlaceholder": "البحث حسب العنوان...",
@@ -327,6 +347,8 @@
 		"viewOrEdit": "عرض أو تحرير"
 	},
 	"cancel": "يلغي",
+	"cardAssignmentDisabled": "لا يمكن تخصيص البطاقات للطلاب",
+	"cardAssignmentEnabled": "يمكن تخصيص البطاقات للطلاب",
 	"classes": "الفئة(الفئات)",
 	"classesList": {
 		"className": "اسم الفصل",
@@ -493,26 +515,31 @@
 		"teacher": "مدرس"
 	},
 	"homework": {
+		"allEntries": "جميع المشاركات",
 		"assignmentContent": "محتوى الواجب",
 		"assignmentTitle": "عنوان المهمة",
 		"cancel": "إلغاء",
 		"createHomework": "إنشاء الواجبات المنزلية",
-		"createHomeworkDraft": "إنشاء مسودة",
-		"createHomeworkSubmit": "إنشاء وإرسال",
-		"createNewAssignment": "إنشاء مهمة جديدة",
-		"createNewHomework": "إنشاء واجب منزلي جديد",
+		"createHomeworkSubmit": "وضع علامة على أنه مكتمل",
+		"createNewEntry": "إنشاء إدخال",
+		"createNewHomework": "إنشاء مهمة جديدة",
 		"dateCreated": "تاريخ الإنشاء",
 		"dateUpdated": "تاريخ التحديث",
+		"editEntry": "عدّل إدخالك",
 		"existingHomeworks": "الأعمال المنزلية الحالية",
-		"homeworkTitle": "عنوان الواجب المنزلي",
+		"homeworkTitle": "عنوان المهمة",
 		"initialContent": "المحتوى الأولي",
 		"markAsCompleted": "وضع علامة كمكتمل",
 		"markAsUncompleted": "ضع علامة \"غير مكتمل\"",
 		"myAssignment": "مهمتي",
+		"myEntry": "مشاركتي",
 		"noHomeworkYet": "لم يكتب الطالب أي واجب منزلي بعد.",
 		"openHomework": "مفتوح",
+		"saveAndClose": "حفظ وإغلاق",
+		"saveHomeworkDraft": "حفظ المسودة",
 		"submitted": "مُقَدَّم",
-		"unsubmit": "إلغاء الإرسال"
+		"unsubmit": "إلغاء الإرسال",
+		"yourEntry": "مشاركتك"
 	},
 	"joinClass": "انضم إلى الفصل",
 	"joinClassInfo": "بمجرد انضمامك إلى الفصل الدراسي، فسوف يظهر هنا.",
@@ -532,6 +559,9 @@
 		"settings": "إعدادات",
 		"students": "طلاب",
 		"studies": "دراسات"
+	},
+	"mainCard": {
+		"forMindHiveNetwork": "مشاركتك"
 	},
 	"mentors": {
 		"copy": "ينسخ",
@@ -554,6 +584,7 @@
 	"noStudies": "لم يقم الطلاب بإنشاء أي دراسات بعد.",
 	"noteNewStudents": "ملاحظة: لن يتمكن الطلاب الجدد من الانضمام إلى صفك",
 	"numberOfStudents": "عدد الطلاب",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "مشاركون",
 	"pleaseTypeDelete": "الرجاء كتابة DELETE لحذف صفك",
 	"projectBoard": {
@@ -606,6 +637,7 @@
 		"goBack": "ارجع إلى الفصل",
 		"username": "اسم المستخدم"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "إضافة إلى الفصل",
 		"assignToClass": "هل أنت متأكد من أنك تريد تعيين هذا الطالب في الفصل الآخر؟",
@@ -663,5 +695,6 @@
 	},
 	"theirWorkspaceAndStudies": "مساحة عملهم وأي دراسات أو مهام أو استطلاعات رأي قاموا بإنشائها أثناء الفصل الدراسي",
 	"typeDeleteToConfirm": "اكتب \"حذف\" للتأكيد",
+	"whoCanAssignCards": "من يستطيع تعيين الملفات الشخصية للبطاقات؟",
 	"yourClass": "صفك"
 }

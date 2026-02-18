@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { Modal, Button, Icon } from "semantic-ui-react";
 import { useMutation, useQuery } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 import StyledModal from "../../../../styles/StyledModal";
 import { GET_TEMPLATE_BOARD_SECTIONS_CARDS } from "../../../../Queries/Proposal";
-import { LINK_ASSIGNMENT_TO_TEMPLATE_CARD } from "../../../../Mutations/Assignment";
+import {
+  LINK_ASSIGNMENT_TO_TEMPLATE_CARD,
+  UNLINK_ASSIGNMENT_FROM_TEMPLATE_CARDS,
+} from "../../../../Mutations/Assignment";
 import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 
 export default function ConnectAssignmentToCardModal({
@@ -13,6 +17,7 @@ export default function ConnectAssignmentToCardModal({
   myclass,
   onSuccess,
 }) {
+  const { t } = useTranslation("classes");
   const [selectedCardId, setSelectedCardId] = useState(null);
   const templateBoardId = myclass?.templateProposal?.id;
 
@@ -21,11 +26,31 @@ export default function ConnectAssignmentToCardModal({
     {
       variables: { id: templateBoardId },
       skip: !open || !templateBoardId,
+      fetchPolicy: open ? "network-only" : "cache-first",
     }
   );
 
   const [linkAssignment, { loading: linkLoading }] = useMutation(
     LINK_ASSIGNMENT_TO_TEMPLATE_CARD,
+    {
+      refetchQueries: [
+        {
+          query: GET_CLASS_ASSIGNMENTS,
+          variables: { classId: myclass?.id },
+        },
+      ],
+      onCompleted: () => {
+        onSuccess?.();
+        onClose();
+      },
+      onError: (err) => {
+        alert(err.message);
+      },
+    }
+  );
+
+  const [unlinkAssignment, { loading: unlinkLoading }] = useMutation(
+    UNLINK_ASSIGNMENT_FROM_TEMPLATE_CARDS,
     {
       refetchQueries: [
         {
@@ -65,6 +90,18 @@ export default function ConnectAssignmentToCardModal({
     onClose();
   };
 
+  const handleDisconnect = () => {
+    if (!assignment?.id || !myclass?.id) return;
+    unlinkAssignment({
+      variables: {
+        assignmentId: assignment.id,
+        classId: myclass.id,
+      },
+    });
+  };
+
+  const isBusy = linkLoading || unlinkLoading;
+
   if (!open) return null;
 
   if (!templateBoardId) {
@@ -83,7 +120,12 @@ export default function ConnectAssignmentToCardModal({
             alignItems: "center",
           }}
         >
-          <span>Connect assignment to card</span>
+          <span>
+            {t(
+              "assignment.connectModal.title",
+              "Connect assignment to card"
+            )}
+          </span>
           <Button
             icon
             onClick={handleClose}
@@ -94,7 +136,12 @@ export default function ConnectAssignmentToCardModal({
         </Modal.Header>
         <Modal.Content>
           <StyledModal>
-            <p>No template board for this class.</p>
+            <p>
+              {t(
+                "assignment.connectModal.noTemplate",
+                "No template board for this class."
+              )}
+            </p>
           </StyledModal>
         </Modal.Content>
         <Modal.Actions
@@ -113,8 +160,9 @@ export default function ConnectAssignmentToCardModal({
               fontSize: "16px",
             }}
             onClick={handleClose}
+            disabled={isBusy}
           >
-            Cancel
+            {t("assignment.connectModal.cancel", "Cancel")}
           </Button>
         </Modal.Actions>
       </Modal>
@@ -125,7 +173,9 @@ export default function ConnectAssignmentToCardModal({
     return (
       <Modal open={open} onClose={handleClose} size="large" style={{ borderRadius: "12px" }}>
         <Modal.Content>
-          <p>Loading…</p>
+          <p>
+            {t("assignment.connectModal.loading", "Loading...")}
+          </p>
         </Modal.Content>
       </Modal>
     );
@@ -135,7 +185,13 @@ export default function ConnectAssignmentToCardModal({
     return (
       <Modal open={open} onClose={handleClose} size="large" style={{ borderRadius: "12px" }}>
         <Modal.Content>
-          <p>Error loading board: {boardError.message}</p>
+          <p>
+            {t(
+              "assignment.connectModal.error",
+              "Error loading board"
+            )}
+            : {boardError.message}
+          </p>
         </Modal.Content>
       </Modal>
     );
@@ -156,7 +212,9 @@ export default function ConnectAssignmentToCardModal({
           alignItems: "center",
         }}
       >
-        <span>Connect assignment to card</span>
+        <span>
+          {t("assignment.connectModal.title", "Connect assignment to card")}
+        </span>
         <Button
           icon
           onClick={handleClose}
@@ -169,7 +227,10 @@ export default function ConnectAssignmentToCardModal({
       <Modal.Content scrolling>
         <StyledModal>
           <p style={{ marginBottom: "16px" }}>
-            Select a card on the class template board. The assignment will be linked to this card and to the same card on all student boards.
+            {t(
+              "assignment.connectModal.description",
+              "Select a card on the class template board. The assignment will be linked to this card and to the same card on all student boards."
+            )}
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             {sectionsSorted.map((section) => {
@@ -186,7 +247,11 @@ export default function ConnectAssignmentToCardModal({
                       fontSize: "16px",
                     }}
                   >
-                    {section.title || "Untitled section"}
+                    {section.title ||
+                      t(
+                        "assignment.connectModal.untitledSection",
+                        "Untitled section"
+                      )}
                   </div>
                   <ul style={{ listStyle: "none", paddingLeft: 0, margin: 0 }}>
                     {cards.map((card) => {
@@ -209,7 +274,11 @@ export default function ConnectAssignmentToCardModal({
                           }}
                           onClick={() => setSelectedCardId(card.id)}
                         >
-                          {card.title || "Untitled card"}
+                          {card.title ||
+                            t(
+                              "assignment.connectModal.untitledCard",
+                              "Untitled card"
+                            )}
                         </li>
                       );
                     })}
@@ -219,7 +288,12 @@ export default function ConnectAssignmentToCardModal({
             })}
           </div>
           {sectionsSorted.length === 0 && (
-            <p>This board has no sections or cards yet.</p>
+            <p>
+              {t(
+                "assignment.connectModal.noSections",
+                "This board has no sections or cards yet."
+              )}
+            </p>
           )}
         </StyledModal>
       </Modal.Content>
@@ -228,6 +302,7 @@ export default function ConnectAssignmentToCardModal({
         style={{
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
           padding: "1.5rem",
           borderTop: "1px solid #e0e0e0",
           background: "#fafafa",
@@ -242,12 +317,31 @@ export default function ConnectAssignmentToCardModal({
             fontSize: "16px",
           }}
           onClick={handleClose}
+          disabled={isBusy}
         >
-          Cancel
+          {t("assignment.connectModal.cancel", "Cancel")}
+        </Button>
+        <Button
+          loading={unlinkLoading}
+          disabled={isBusy}
+          onClick={handleDisconnect}
+          style={{
+            borderRadius: "100px",
+            width: "fit-content",
+            border: "1px solid #336F8A",
+            background: "white",
+            color: "#336F8A",
+            fontSize: "16px",
+          }}
+        >
+          {t(
+            "assignment.connectModal.disconnect",
+            "Disconnect from card"
+          )}
         </Button>
         <Button
           loading={linkLoading}
-          disabled={linkLoading || !selectedCardId}
+          disabled={isBusy || !selectedCardId}
           onClick={handleSave}
           style={{
             borderRadius: "100px",
@@ -257,7 +351,7 @@ export default function ConnectAssignmentToCardModal({
             fontSize: "16px",
           }}
         >
-          Save
+          {t("assignment.connectModal.save", "Save")}
         </Button>
       </Modal.Actions>
     </Modal>

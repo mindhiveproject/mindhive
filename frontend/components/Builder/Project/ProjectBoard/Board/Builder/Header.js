@@ -191,9 +191,21 @@ export default function ProposalHeader({
                     autoFocus
                   />
                 ) : (
-                  <h1 className="headerTitle">
-                    {inputs.title || proposal?.title || t("header.myProjectBoard", "My Project Board")}
-                  </h1>
+                  <div className="headerTitleWrapper">
+                    <InfoTooltip
+                      content={inputs.title || proposal?.title || t("header.myProjectBoard", "My Project Board")}
+                      delayMs={650}
+                      wrapperStyle={{ width: "100%", minWidth: 0 }}
+                      tooltipStyle={{
+                        width: "400px",
+                        background: "#F7F9F8",
+                      }}
+                    >
+                      <h1 className="headerTitle">
+                        {inputs.title || proposal?.title || t("header.myProjectBoard", "My Project Board")}
+                      </h1>
+                    </InfoTooltip>
+                  </div>
                 )}
               </div>
               

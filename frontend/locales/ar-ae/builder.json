@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "إضافة أشخاص",
 		"assignCard": "قم بتعيين هذه البطاقة لأحد المتعاونين من هذا المشروع",
+		"canAssignTooltip": "",
 		"cancel": "يلغي",
 		"noCollaborators": "لا يوجد متعاونون متاحون لهذه اللوحة.",
 		"noUsersFound": "لم يتم العثور على ملف تعريف",
+		"onlyTeachersMentorsCanAdd": "لا يُسمح إلا للمعلمين والموجهين بتعيين الأشخاص على البطاقات",
 		"removeUser": "إزالة المستخدم",
 		"save": "يحفظ",
 		"searchPlaceholder": "البحث باستخدام اسم المستخدم...",
@@ -50,6 +52,7 @@
 	"board": {
 		"error": "خطأ! {{message}}",
 		"expendedCard": {
+			"assignment": "تكليف",
 			"close": "إغلاق",
 			"connect": "الاتصال",
 			"content": "المحتوى",
@@ -351,6 +354,10 @@
 		"updateCollaboratorsFailed": "فشل تحديث بيانات المتعاونين. يرجى المحاولة مرة أخرى.",
 		"userNoClasses": "أنت غير مرتبط بأي صفوف دراسية."
 	},
+	"homework": {
+		"createHomeworkSubmit": "وضع علامة على أنه مكتمل",
+		"saveAndClose": "حفظ وإغلاق"
+	},
 	"homeworkCard": {
 		"comments": "تعليقات",
 		"completed": "مكتمل",
@@ -394,7 +401,7 @@
 		"chooseReviewStep": "اختر الخطوة التي يجب أن تدخل فيها البطاقة في مراجعة الأقران",
 		"comments": "تعليقات",
 		"commentsPlaceholder": "أضف تعليقك هنا...",
-		"forMindHiveNetwork": "لشبكة MindHive",
+		"expandOriginalEntry": "قم بالتوسيع لرؤية إدخالك الأصلي",
 		"forTeacherAndCollaborators": "للمعلمين وزملاء المشروع فقط",
 		"instructions": "تعليمات",
 		"lockedMessage": "يتم تحرير البطاقة حاليًا بواسطة",
@@ -409,13 +416,14 @@
 			"projectReport": "تقرير المشروع",
 			"proposal": "عرض"
 		},
-		"revisedContent": "المحتوى المنقح",
 		"revisedContentUsed": "سيتم استخدام المحتوى المنقح الذي قمت بتضمينه هنا في التقرير النهائي.",
+		"revisedEntry": "إدخالك المعدل",
 		"seeOriginalSubmission": "انقر لعرض مشاركتك الأصلية",
 		"selectOption": "حدد الخيار",
 		"submission": "استسلام",
 		"visibleInFeedbackCenter": "سيكون المحتوى الذي تقوم بتضمينه هنا مرئيًا في مركز التعليقات بمجرد إرساله عبر بطاقة العمل الصفراء.",
-		"visibleToTeacherAndCollaborators": "سيكون المحتوى الذي تقوم بتضمينه أدناه مرئيًا فقط لمعلميك وزملاءك في المشروع"
+		"visibleToTeacherAndCollaborators": "سيكون المحتوى الذي تقوم بتضمينه أدناه مرئيًا فقط لمعلميك وزملاءك في المشروع",
+		"yourEntry": "مشاركتك"
 	},
 	"makeMain": {
 		"confirm": "هل أنت متأكد أنك تريد جعل هذا الاقتراح هو الاقتراح الرئيسي؟"
@@ -475,6 +483,7 @@
 		"noNotes": "لم يتم إدخال أي ملاحظات بعد. انقر بزر الماوس الأيمن لإضافة ملاحظات."
 	},
 	"noVideoPlaceholder": "لا يوجد فيديو تعريفي متاح.",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "الإجراءات",
 		"copy": "ينسخ",
@@ -668,7 +677,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "تعطيل تعيين الطلاب للبطاقات",
+				"disableStudentsAssign": "تقييد للمعلمين والمرشدين فقط",
+				"empty": "",
+				"enable": "تفعيل تعيين الطلاب للبطاقات",
+				"enableStudentsAssign": "السماح للطلاب بتعيين البطاقات"
 			},
 			"emptyState": "",
 			"reviewSteps": "خطوات المراجعة",

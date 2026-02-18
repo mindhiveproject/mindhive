@@ -113,11 +113,9 @@ const StyledProject = styled.div`
     padding: 6px 9px;
     grid-template-columns: auto 1fr auto;
     grid-gap: 20px;
-    // position: sticky;
-    // top: 0px;
-    // z-index: 100;
-    // background: #ffffff;
-    // box-shadow: 0px 2px 12px rgba(15, 56, 75, 0.08);
+    height: 64px;
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+    background: var(--MH-Theme-Neutrals-White, #FFF);
     .left {
       display: grid;
       .icon {
@@ -132,15 +130,20 @@ const StyledProject = styled.div`
         border-radius: 12px;
         width: 40px;
         height: 40px;
-        box-shadow: 0px 1px 3px 0px #0000004d;
+        // box-shadow: 0px 1px 3px 0px #0000004d;
         cursor: pointer;
       }
     }
     .middle {
-      font-family: Nunito;
-      font-size: 24px;
-      font-weight: 500;
-      line-height: 40px;
+      overflow: hidden;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: Inter;
+      font-size: 22px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 28px;
       text-align: left;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
@@ -150,18 +153,31 @@ const StyledProject = styled.div`
       display: grid;
       grid-template-columns: 1fr auto;
       grid-gap: 10px;
+      align-items: center;
       .saveButton {
-        background: #3d85b0;
+        display: flex;
+        height: 40px;
+        padding: 8px 24px;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
         border-radius: 100px;
-        font-family: Nunito;
-        font-size: 20px;
-        font-weight: 700;
-        line-height: var(--LabelLargeLineHeight);
-        letter-spacing: var(--LabelLargeTracking);
+        background: var(--MH-Theme-Primary-Dark, #336F8A);
+        border: 1px solid var(--MH-Theme-Neutrals-White, #336F8A);
+
         text-align: center;
-        text-underline-position: from-font;
-        text-decoration-skip-ink: none;
-        padding: 10px 24px;
+        /* MH-Theme/label/base */
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px; /* 142.857% */
+          &:hover {
+            background: var(--MH-Theme-Accent-Medium, #F9D978);
+            color: var(--MH-Theme-Accent-Dark, #5D5763);
+            border: 1px solid var(--MH-Theme-Accent-Dark, #5D5763);
+            border-color: var(--MH-Theme-Accent-Dark, #5D5763);
+          }
       }
       .disabled {
         opacity: 50%;
@@ -197,8 +213,9 @@ const StyledProject = styled.div`
         padding: 10px 24px;
       }
       .off {
-        background: lightGrey;
-        border: 1px solid lightGrey;
+        background: var(--MH-Theme-Neutrals-Light, #E6E6E6);
+        color: var(--MH-Theme-Neutrals-Dark, #6A6A6A);
+        border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
       }
     }
   }

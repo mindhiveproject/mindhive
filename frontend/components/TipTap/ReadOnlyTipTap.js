@@ -6,10 +6,8 @@ export const ReadOnlyTipTap = styled.div`
   color: #333;
 
   .ProseMirror {
-    padding: 24px;
+    padding: 0px;
     border-radius: 0;
-    // border: 2px solid #D3E2F1;
-    // background: white; // no background for non-editable stuff
     outline: none;
   }
 

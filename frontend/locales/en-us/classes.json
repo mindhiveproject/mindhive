@@ -20,6 +20,19 @@
 		"confirmPublishTitle": "Publish assignment?",
 		"confirmUnpublishMessage": "Students will no longer see this assignment in their list.",
 		"confirmUnpublishTitle": "Unpublish assignment?",
+		"connectModal": {
+			"cancel": "Cancel",
+			"description": "Select a card on the class template board. The assignment will be linked to this card and to the same card on all student boards.",
+			"disconnect": "Disconnect from card",
+			"error": "Error loading board",
+			"loading": "Loading...",
+			"noSections": "This board has no sections or cards yet.",
+			"noTemplate": "No template board for this class.",
+			"save": "Save",
+			"title": "Connect assignment to card",
+			"untitledCard": "Untitled card",
+			"untitledSection": "Untitled section"
+		},
 		"content": "Content",
 		"copyLink": "Copy link",
 		"copyOwn": "Copy one of your assignments",
@@ -52,7 +65,6 @@
 		"linkAssignments": "Add assignments",
 		"linkCopied": "The link is copied",
 		"linkedToCard": "Linked to card",
-		"projectCard": "Project card",
 		"loading": "Loading",
 		"makeYourCopy": "Make changes and save this assignment as your own",
 		"noAssignments": "There are no assignment linked to this class yet.",
@@ -67,10 +79,12 @@
 		"placeholderDescription": "Placeholder presented to students",
 		"placeholderInstructions": "Template for your students to fill in (you can leave this blank):",
 		"preview": "Preview",
+		"projectCard": "Project card",
 		"publish": "Publish",
 		"published": "Published",
 		"publishToStudents": "Publish to students",
 		"requestFeedback": "Request feedback",
+		"reviewAndFeedback": "Review & Feedback",
 		"reviewSubmissions": "Review submissions",
 		"revokeConfirm": "Are you sure you want to revoke this assignment? The assignment will no longer be visible for the students.",
 		"save": "Save Changes",
@@ -84,6 +98,7 @@
 		"startFromScratch": "Start from scratch",
 		"startFromScratchDescription": "Create a brand new assignment with full control over the title, instructions, and placeholder content. Best for something completely unique to your class.",
 		"status": "Status",
+		"studentEntry": "Student's entry",
 		"submit": "Submit",
 		"submitConfirm": "Are you sure you want to submit this assignment? The assignment will be visible for the students.",
 		"templatesDescription": "Select from pre-made assignment templates created by administrators. These are shared templates available to all teachers.",
@@ -120,7 +135,9 @@
 		"expendedCard": {
 			"addExistingResources": "Add existing resources (See Resources in Navigation Pane)",
 			"addLinkedItems": "Add existing assignments, tasks, studies, or resources",
+			"addToFavorites": "Add to favorites",
 			"alreadyHaveCopy": "This assignment is already copied in the following class:",
+			"assignment": "Assignment",
 			"assignmentNotPublished": "This assignment is not published",
 			"assignmentsSectionTitle": "Public Assignments",
 			"backToEditing": "Back to editing",
@@ -130,6 +147,7 @@
 			"connect": "Add to card",
 			"content": "Content",
 			"disconnect": "Remove from card",
+			"discoverMore": "Discover more about this block",
 			"done": "Done",
 			"includeTextCollaborators": "Include text input for project collaborators",
 			"includeTextFeedbackCenter": "Include text input for Feedback Center",
@@ -154,6 +172,7 @@
 			"previewLinkedStudies": "Preview Linked Studies",
 			"previewLinkedTasks": "Preview Linked Tasks",
 			"publicResources": "Public",
+			"removeFromFavorites": "Remove from favorites",
 			"resources": "Resources",
 			"resourcesSectionTitle": "Public Resources",
 			"searchPlaceholder": "Search by title...",
@@ -328,6 +347,8 @@
 		"viewOrEdit": "View or Edit"
 	},
 	"cancel": "Cancel",
+	"cardAssignmentDisabled": "Cards cannot be assigned to students",
+	"cardAssignmentEnabled": "Cards can be assigned to students",
 	"classes": "Class(es)",
 	"classesList": {
 		"className": "Class name",
@@ -494,26 +515,31 @@
 		"teacher": "Teacher"
 	},
 	"homework": {
+		"allEntries": "All entries",
 		"assignmentContent": "Assignment content",
 		"assignmentTitle": "Assignment title",
 		"cancel": "Cancel",
 		"createHomework": "Create Homework",
-		"createHomeworkDraft": "Create Draft",
-		"createHomeworkSubmit": "Create & Submit",
-		"createNewAssignment": "Create new assignment",
-		"createNewHomework": "Create new homework",
+		"createHomeworkSubmit": "Mark as complete",
+		"createNewEntry": "Create entry",
+		"createNewHomework": "Create new assignment",
 		"dateCreated": "Date created",
 		"dateUpdated": "Date updated",
+		"editEntry": "Edit your entry",
 		"existingHomeworks": "Existing Homeworks",
-		"homeworkTitle": "Homework title",
+		"homeworkTitle": "Assignment title",
 		"initialContent": "Initial Content",
 		"markAsCompleted": "Mark as completed",
 		"markAsUncompleted": "Mark as uncompleted",
 		"myAssignment": "My Assignment",
+		"myEntry": "My entry",
 		"noHomeworkYet": "The student hasn’t written any homework yet.",
 		"openHomework": "Open",
+		"saveAndClose": "Save & close",
+		"saveHomeworkDraft": "Save draft",
 		"submitted": "Submitted",
-		"unsubmit": "Unsubmit"
+		"unsubmit": "Unsubmit",
+		"yourEntry": "Your entry"
 	},
 	"joinClass": "Join class",
 	"joinClassInfo": "Once you join a class, it will appear here.",
@@ -533,6 +559,9 @@
 		"settings": "Settings",
 		"students": "Students",
 		"studies": "Studies"
+	},
+	"mainCard": {
+		"forMindHiveNetwork": "Your entry"
 	},
 	"mentors": {
 		"copy": "Copy",
@@ -555,6 +584,7 @@
 	"noStudies": "The students haven’t created any studies yet.",
 	"noteNewStudents": "Note: New students will not be able to join your class",
 	"numberOfStudents": "Number of students",
+	"onlyTeachersMentorsAssignCards": "Only teachers and mentors can assign cards",
 	"participants": "Participants",
 	"pleaseTypeDelete": "Please type DELETE to delete your class",
 	"projectBoard": {
@@ -607,6 +637,7 @@
 		"goBack": "Go back to class",
 		"username": "Username"
 	},
+	"studentsCanAssignCards": "Students can assign cards",
 	"studentsTab": {
 		"addToClass": "Add to class",
 		"assignToClass": "Are you sure you want to assign this student to the other class?",
@@ -664,5 +695,6 @@
 	},
 	"theirWorkspaceAndStudies": "Their workspace and any studies, tasks or surveys they created during your class",
 	"typeDeleteToConfirm": "Type \"DELETE\" to confirm",
+	"whoCanAssignCards": "Who can assign profiles to cards?",
 	"yourClass": "Your class"
 }

@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "Mensen toevoegen",
 		"assignCard": "Wijs deze kaart toe aan een medewerker van dit project.",
+		"canAssignTooltip": "",
 		"cancel": "Annuleren",
 		"noCollaborators": "Er zijn geen medewerkers beschikbaar voor dit bestuur.",
 		"noUsersFound": "Geen profiel gevonden",
+		"onlyTeachersMentorsCanAdd": "Alleen docenten en mentoren kunnen mensen kaarten toewijzen.",
 		"removeUser": "Gebruiker verwijderen",
 		"save": "Redden",
 		"searchPlaceholder": "Zoeken op gebruikersnaam...",
@@ -50,6 +52,7 @@
 	"board": {
 		"error": "Fout! {{bericht}}",
 		"expendedCard": {
+			"assignment": "Opdracht",
 			"close": "Sluit",
 			"connect": "Maak verbinding met",
 			"content": "Inhoud",
@@ -351,6 +354,10 @@
 		"updateCollaboratorsFailed": "Het bijwerken van de medewerkers is mislukt. Probeer het opnieuw.",
 		"userNoClasses": "Je bent aan geen enkele cursus verbonden."
 	},
+	"homework": {
+		"createHomeworkSubmit": "Markeer als voltooid",
+		"saveAndClose": "Opslaan en sluiten"
+	},
 	"homeworkCard": {
 		"comments": "Reacties",
 		"completed": "Voltooid",
@@ -394,7 +401,7 @@
 		"chooseReviewStep": "Kies in welke stap van de peer review een kaart moet komen",
 		"comments": "Reacties",
 		"commentsPlaceholder": "Voeg hier uw commentaar toe...",
-		"forMindHiveNetwork": "Voor het MindHive-netwerk",
+		"expandOriginalEntry": "Uitvouwen om je oorspronkelijke invoer te bekijken",
 		"forTeacherAndCollaborators": "Alleen voor mijn docent en projectmedewerkers",
 		"instructions": "Instructies",
 		"lockedMessage": "De kaart wordt momenteel bewerkt door",
@@ -409,13 +416,14 @@
 			"projectReport": "Projectrapport",
 			"proposal": "Voorstel"
 		},
-		"revisedContent": "Herziene inhoud",
 		"revisedContentUsed": "De herziene inhoud die u hier opneemt, wordt gebruikt in het eindrapport.",
+		"revisedEntry": "Uw herziene invoer",
 		"seeOriginalSubmission": "Klik hier om je oorspronkelijke inzending te bekijken.",
 		"selectOption": "Selecteer optie",
 		"submission": "Dwang",
 		"visibleInFeedbackCenter": "De content die u hier opneemt, is zichtbaar in het Feedback Center nadat u deze via een gele Actiekaart heeft ingediend.",
-		"visibleToTeacherAndCollaborators": "De inhoud die u hieronder opneemt, is alleen zichtbaar voor uw docent(en) en projectmedewerkers"
+		"visibleToTeacherAndCollaborators": "De inhoud die u hieronder opneemt, is alleen zichtbaar voor uw docent(en) en projectmedewerkers",
+		"yourEntry": "Uw inzending"
 	},
 	"makeMain": {
 		"confirm": "Weet u zeker dat u dit voorstel het hoofdvoorstel wilt maken?"
@@ -475,6 +483,7 @@
 		"noNotes": "Er zijn nog geen notities ingevoerd. Klik met de rechtermuisknop om notities toe te voegen."
 	},
 	"noVideoPlaceholder": "Er is geen introductievideo beschikbaar.",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "Acties",
 		"copy": "Kopiëren",
@@ -668,7 +677,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "Toewijzing van studenten aan kaarten uitschakelen",
+				"disableStudentsAssign": "Beperken tot leraren en mentoren",
+				"empty": "",
+				"enable": "Toewijzing van studenten aan kaarten inschakelen",
+				"enableStudentsAssign": "Studenten toestaan kaarten toe te wijzen"
 			},
 			"emptyState": "",
 			"reviewSteps": "Beoordelingsstappen",

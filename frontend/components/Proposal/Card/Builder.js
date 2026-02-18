@@ -18,7 +18,9 @@ import TipTapEditor from "../../TipTap/Main";
 import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap";
 
 import CardType from "./Forms/Type";
-import LinkedItems, { PreviewSection } from "./Forms/LinkedItems";
+import LinkedItems from "./Forms/LinkedItems";
+import { PreviewSection } from "./Forms/PreviewSection";
+import InfoTooltip from "../../Builder/Project/ProjectBoard/Board/PDF/Preview/InfoTooltip";
 import useTranslation from "next-translate/useTranslation";
 
 const peerReviewOptions = [
@@ -494,18 +496,7 @@ export default function BuilderProposalCard({
             )}
           </div>
           <div className="infoBoard">
-            {/* Display Linked Items using PreviewSection */}
-            {inputs?.resources?.length > 0 && (
-              <PreviewSection
-                title={t("board.expendedCard.previewLinkedResources")}
-                items={inputs?.resources}
-                type="resource"
-                proposal={proposal}
-                openAssignmentModal={undefined}
-                openResourceModal={undefined}
-                user={user}
-              />
-            )}
+            {/* Display Linked Items: Assignments first, then combined Resources */}
             {inputs?.assignments?.length > 0 && (
               <PreviewSection
                 title={t("board.expendedCard.previewLinkedAssignments")}
@@ -516,23 +507,17 @@ export default function BuilderProposalCard({
                 user={user}
               />
             )}
-            {inputs?.tasks?.length > 0 && (
+            {(inputs?.resources?.length > 0 || inputs?.tasks?.length > 0 || inputs?.studies?.length > 0) && (
               <PreviewSection
-                title={t("board.expendedCard.previewLinkedTasks")}
-                items={inputs?.tasks}
-                type="task"
+                title={t("board.expendedCard.previewLinkedResources")}
+                sections={[
+                  ...(inputs?.resources?.length > 0 ? [{ items: inputs.resources, type: "resource" }] : []),
+                  ...(inputs?.tasks?.length > 0 ? [{ items: inputs.tasks, type: "task" }] : []),
+                  ...(inputs?.studies?.length > 0 ? [{ items: inputs.studies, type: "study" }] : []),
+                ]}
                 proposal={proposal}
                 openAssignmentModal={undefined}
-                user={user}
-              />
-            )}
-            {inputs?.studies?.length > 0 && (
-              <PreviewSection
-                title={t("board.expendedCard.previewLinkedStudies")}
-                items={inputs?.studies}
-                type="study"
-                proposal={proposal}
-                openAssignmentModal={undefined}
+                openResourceModal={undefined}
                 user={user}
               />
             )}
@@ -555,12 +540,15 @@ export default function BuilderProposalCard({
       <div className="proposalCardBoard">
         <div className="textBoard">
           <label htmlFor="title">
-            <div className="cardHeader">{t("board.expendedCard.title")}</div>
-            <div className="cardSubheaderComment">
-              {t(
-                "board.expendedCard.titleText",
-                "Add or edit the card title. This title will appear as a section header in student submissions to the Feedback Center if the box titled 'Include text input for Feedback Center' is checked."
-              )}
+            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              {t("board.expendedCard.title")}
+              <InfoTooltip
+                content={t(
+                  "board.expendedCard.titleText",
+                  "Add or edit the card title. This title will appear as a section header in student submissions to the Feedback Center if the box titled 'Include text input for Feedback Center' is checked."
+                )}
+                iconStyle={{opacity: 0.4}}
+              />
             </div>
             <p></p>
             <input
@@ -572,14 +560,15 @@ export default function BuilderProposalCard({
             />
           </label>
           <label htmlFor="description">
-            <div className="cardHeader">
+            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.instructions")}
-            </div>
-            <div className="cardSubheaderComment">
-              {t(
-                "board.expendedCard.instructionsText",
-                "Add or edit instructions for students telling them how to complete the card."
-              )}
+              <InfoTooltip
+                content={t(
+                  "board.expendedCard.instructionsText",
+                  "Add or edit instructions for students telling them how to complete the card."
+                )}
+                iconStyle={{opacity: 0.4}}
+              />
             </div>
             <TipTapEditor
               content={description?.current}
@@ -595,16 +584,16 @@ export default function BuilderProposalCard({
           {inputs?.settings?.includeInReport && (
             <>
               <label htmlFor="description">
-                <div className="cardHeader">
+                <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   {t("board.expendedCard.studentResponseBoxNetwork")}
+                  <InfoTooltip
+                    content={t(
+                      "board.expendedCard.studentResponseBoxNetworkText",
+                      "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed"
+                    )}
+                    iconStyle={{opacity: 0.4}}
+                  />
                 </div>
-                <div className="cardSubheaderComment">
-                  {t(
-                    "board.expendedCard.studentResponseBoxNetworkText",
-                    "The content students include here will be visible in the Feedback Center once it is submitted via an Action Card. Include any templates or placeholder text as needed"
-                  )}
-                </div>
-                
               </label>
               <div onClick={() => proposal?.prototypeFor?.length > 0 && setShowWarningBox(true)}>
                 <TipTapEditor
@@ -704,14 +693,20 @@ export default function BuilderProposalCard({
         </div>
         <div className="infoBoard">
           <>
-            <div className="cardHeader">
+            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.linkedItems", "Linked Items")}
-            </div>
-            <div className="cardSubheaderComment">
-              {t(
-                "board.expendedCard.addLinkedItems",
-                "Add existing assignments, tasks, studies, or resources"
-              )}
+              <InfoTooltip
+                content={t(
+                  "board.expendedCard.addLinkedItems",
+                  "Add existing assignments, tasks, studies, or resources"
+                )}
+                iconStyle={{
+                  opacity: 0.4,
+                }}
+                tooltipStyle={{
+                  width: "200px",
+                }}
+              />
             </div>
             <LinkedItems
               proposal={proposal}
@@ -726,9 +721,12 @@ export default function BuilderProposalCard({
           </>
 
           <div className="proposalCardComments">
-            <div className="cardHeader">{t("board.expendedCard.comments")}</div>
-            <div className="cardSubheaderComment">
-              {t("board.expendedCard.commentsText")}
+            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              {t("board.expendedCard.comments")}
+              <InfoTooltip
+                content={t("board.expendedCard.commentsText")}
+                iconStyle={{opacity: 0.4}}
+              />
             </div>
             <TipTapEditor
               content={inputs.comment}
@@ -745,19 +743,20 @@ export default function BuilderProposalCard({
             />
           </div>
 
-          <div>
+          <div className="proposalCardComments">
             <div className="cardHeader">{t("board.expendedCard.type")}</div>
             <CardType type={inputs?.type} handleChange={handleChange} />
           </div>
           <>
-            <div className="cardHeader">
+            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {t("board.expendedCard.visibility")}
-            </div>
-            <div className="cardSubheaderComment">
-              {t(
-                "board.expendedCard.visibilityText",
-                "Check the box below to indicate whether student responses should be made visible in the Feedback Center."
-              )}
+              <InfoTooltip
+                content={t(
+                  "board.expendedCard.visibilityText",
+                  "Check the box below to indicate whether student responses should be made visible in the Feedback Center."
+                )}
+                iconStyle={{opacity: 0.4}}
+              />
             </div>
             <div className="checkboxText">
               <Checkbox

@@ -26,9 +26,11 @@
 	"assigned": {
 		"addUser": "",
 		"assignCard": "",
+		"canAssignTooltip": "",
 		"cancel": "",
 		"noCollaborators": "",
 		"noUsersFound": "",
+		"onlyTeachersMentorsCanAdd": "",
 		"removeUser": "",
 		"save": "",
 		"searchPlaceholder": "",
@@ -50,6 +52,7 @@
 	"board": {
 		"error": "त्रुटि संदेश}}",
 		"expendedCard": {
+			"assignment": "",
 			"close": "",
 			"connect": "",
 			"content": "",
@@ -351,6 +354,10 @@
 		"updateCollaboratorsFailed": "",
 		"userNoClasses": ""
 	},
+	"homework": {
+		"createHomeworkSubmit": "",
+		"saveAndClose": ""
+	},
 	"homeworkCard": {
 		"comments": "टिप्पणियाँ",
 		"completed": "पुरा होना।",
@@ -394,7 +401,7 @@
 		"chooseReviewStep": "चुनें कि कार्ड को सहकर्मी समीक्षा के किस चरण में जाना चाहिए",
 		"comments": "टिप्पणियाँ",
 		"commentsPlaceholder": "",
-		"forMindHiveNetwork": "",
+		"expandOriginalEntry": "",
 		"forTeacherAndCollaborators": "केवल मेरे शिक्षक और परियोजना सहयोगियों के लिए",
 		"instructions": "निर्देश",
 		"lockedMessage": "कार्ड का संपादन वर्तमान में किया जा रहा है",
@@ -409,13 +416,14 @@
 			"projectReport": "परियोजना रिपोर्ट",
 			"proposal": "प्रस्ताव"
 		},
-		"revisedContent": "संशोधित सामग्री",
 		"revisedContentUsed": "आपके द्वारा यहां शामिल संशोधित सामग्री का उपयोग अंतिम रिपोर्ट में किया जाएगा।",
+		"revisedEntry": "",
 		"seeOriginalSubmission": "",
 		"selectOption": "विकल्प चुनें",
 		"submission": "",
 		"visibleInFeedbackCenter": "आपके द्वारा यहां शामिल की गई सामग्री पीले एक्शन कार्ड के माध्यम से सबमिट किए जाने पर फीडबैक सेंटर में दिखाई देगी।",
-		"visibleToTeacherAndCollaborators": "आपके द्वारा नीचे शामिल की गई सामग्री केवल आपके शिक्षक(शिक्षकों) और परियोजना सहयोगियों को ही दिखाई देगी"
+		"visibleToTeacherAndCollaborators": "आपके द्वारा नीचे शामिल की गई सामग्री केवल आपके शिक्षक(शिक्षकों) और परियोजना सहयोगियों को ही दिखाई देगी",
+		"yourEntry": ""
 	},
 	"makeMain": {
 		"confirm": "क्या आप वाकई इस प्रस्ताव को मुख्य प्रस्ताव बनाना चाहते हैं?"
@@ -475,6 +483,7 @@
 		"noNotes": "अभी तक कोई नोट दर्ज नहीं किया गया है। नोट जोड़ने के लिए राइट-क्लिक करें।"
 	},
 	"noVideoPlaceholder": "",
+	"onlyTeachersMentorsAssignCards": "",
 	"overview": {
 		"actions": "कार्रवाई",
 		"copy": "प्रतिलिपि",
@@ -668,7 +677,11 @@
 	"proposalPDF": {
 		"filters": {
 			"assignedTo": {
-				"empty": ""
+				"disable": "कार्ड असाइन करने से छात्रों को अक्षम करें",
+				"disableStudentsAssign": "केवल शिक्षकों और मेंटर्स तक सीमित करें",
+				"empty": "",
+				"enable": "कार्ड असाइन करने के लिए छात्रों को सक्षम करें",
+				"enableStudentsAssign": "छात्रों को कार्ड असाइन करने की अनुमति दें"
 			},
 			"emptyState": "",
 			"reviewSteps": "",

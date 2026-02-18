@@ -20,6 +20,19 @@
 		"confirmPublishTitle": "असाइनमेंट प्रकाशित करें?",
 		"confirmUnpublishMessage": "छात्रों को यह असाइनमेंट अब उनकी सूची में नहीं दिखेगा।",
 		"confirmUnpublishTitle": "असाइनमेंट अप्रकाशित करें?",
+		"connectModal": {
+			"cancel": "रद्द करना",
+			"description": "कक्षा के टेम्पलेट बोर्ड पर एक कार्ड चुनें। असाइनमेंट इस कार्ड से और सभी छात्र बोर्डों पर मौजूद इसी कार्ड से लिंक हो जाएगा।",
+			"disconnect": "कार्ड से डिस्कनेक्ट करें",
+			"error": "बोर्ड लोड करने में त्रुटि",
+			"loading": "लोड हो रहा है...",
+			"noSections": "इस बोर्ड में अभी तक कोई सेक्शन या कार्ड नहीं हैं।",
+			"noTemplate": "इस कक्षा के लिए कोई टेम्पलेट बोर्ड उपलब्ध नहीं है।",
+			"save": "बचाना",
+			"title": "असाइनमेंट को कार्ड से कनेक्ट करें",
+			"untitledCard": "शीर्षकहीन कार्ड",
+			"untitledSection": "शीर्षकहीन अनुभाग"
+		},
 		"content": "सामग्री",
 		"copyLink": "लिंक की प्रतिलिपि करें",
 		"copyOwn": "अपने असाइनमेंट में से किसी एक की कॉपी करें",
@@ -66,10 +79,12 @@
 		"placeholderDescription": "छात्रों को प्लेसहोल्डर प्रस्तुत किया गया",
 		"placeholderInstructions": "अपने छात्रों के उत्तर बॉक्स के लिए एक प्लेसहोल्डर लिखें",
 		"preview": "",
+		"projectCard": "",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "छात्रों के लिए प्रकाशित करें",
 		"requestFeedback": "प्रतिक्रिया का अनुरोध करें",
+		"reviewAndFeedback": "समीक्षा और प्रतिक्रिया",
 		"reviewSubmissions": "प्रस्तुतियाँ समीक्षा करें",
 		"revokeConfirm": "क्या आप वाकई इस असाइनमेंट को रद्द करना चाहते हैं? यह असाइनमेंट अब छात्रों को दिखाई नहीं देगा।",
 		"save": "परिवर्तनों को सुरक्षित करें",
@@ -83,6 +98,7 @@
 		"startFromScratch": "शून्य से शुरू करें",
 		"startFromScratchDescription": "शीर्षक, निर्देश और प्लेसहोल्डर सामग्री पर पूर्ण नियंत्रण के साथ एक बिल्कुल नया असाइनमेंट बनाएं। यह आपकी कक्षा के लिए एकदम अनोखा असाइनमेंट बनाने के लिए सबसे उपयुक्त है।",
 		"status": "",
+		"studentEntry": "छात्र का प्रवेश",
 		"submit": "जमा करना",
 		"submitConfirm": "क्या आप वाकई यह असाइनमेंट सबमिट करना चाहते हैं? यह असाइनमेंट छात्रों को दिखाई देगा।",
 		"templatesDescription": "प्रशासकों द्वारा तैयार किए गए पूर्व-निर्मित असाइनमेंट टेम्प्लेट में से चुनें। ये साझा टेम्प्लेट सभी शिक्षकों के लिए उपलब्ध हैं।",
@@ -119,7 +135,9 @@
 		"expendedCard": {
 			"addExistingResources": "मौजूदा संसाधन जोड़ें (नेविगेशन पैन में संसाधन देखें)",
 			"addLinkedItems": "मौजूदा असाइनमेंट, कार्य, अध्ययन या संसाधन जोड़ें",
+			"addToFavorites": "पसंदीदा में जोड़े",
 			"alreadyHaveCopy": "यह असाइनमेंट पहले से ही निम्नलिखित क्लास में कॉपी किया गया है:",
+			"assignment": "कार्यभार",
 			"assignmentNotPublished": "यह असाइनमेंट प्रकाशित नहीं किया गया है।",
 			"assignmentsSectionTitle": "सार्वजनिक कार्य",
 			"backToEditing": "संपादन पर वापस",
@@ -129,6 +147,7 @@
 			"connect": "कार्ड में जोड़ें",
 			"content": "सामग्री",
 			"disconnect": "कार्ड से निकालें",
+			"discoverMore": "इस ब्लॉक के बारे में और अधिक जानें",
 			"done": "हो गया",
 			"includeTextCollaborators": "परियोजना सहयोगियों के लिए पाठ इनपुट शामिल करें",
 			"includeTextFeedbackCenter": "फ़ीडबैक केंद्र के लिए पाठ इनपुट शामिल करें",
@@ -153,6 +172,7 @@
 			"previewLinkedStudies": "लिंक किए गए अध्ययनों का पूर्वावलोकन करें",
 			"previewLinkedTasks": "लिंक किए गए कार्यों का पूर्वावलोकन करें",
 			"publicResources": "जनता",
+			"removeFromFavorites": "पसंदीदा से हटाएं",
 			"resources": "संसाधन",
 			"resourcesSectionTitle": "सार्वजनिक संसाधन",
 			"searchPlaceholder": "शीर्षक के आधार पर खोजें...",
@@ -327,6 +347,8 @@
 		"viewOrEdit": "देखें या संपादित करें"
 	},
 	"cancel": "रद्द करना",
+	"cardAssignmentDisabled": "छात्रों को कार्ड आवंटित नहीं किए जा सकते।",
+	"cardAssignmentEnabled": "कार्ड छात्रों को आवंटित किए जा सकते हैं",
 	"classes": "वर्ग",
 	"classesList": {
 		"className": "कक्षा का नाम",
@@ -493,26 +515,31 @@
 		"teacher": "अध्यापक"
 	},
 	"homework": {
+		"allEntries": "सभी प्रविष्टियों",
 		"assignmentContent": "असाइनमेंट की सामग्री",
 		"assignmentTitle": "असाइनमेंट का शीर्षक",
 		"cancel": "रद्द करना",
 		"createHomework": "होमवर्क बनाएँ",
-		"createHomeworkDraft": "ड्राफ्ट बनाएँ",
-		"createHomeworkSubmit": "बनाएँ और सबमिट करें",
-		"createNewAssignment": "नया असाइनमेंट बनाएँ",
-		"createNewHomework": "नया होमवर्क बनाएँ",
+		"createHomeworkSubmit": "पूर्ण के रूप में चिह्नित करें",
+		"createNewEntry": "प्रविष्टि बनाएं",
+		"createNewHomework": "नया असाइनमेंट बनाएँ",
 		"dateCreated": "बनाया गया दिनांक",
 		"dateUpdated": "तारीख अपडेट की गई",
+		"editEntry": "अपनी प्रविष्टि संपादित करें",
 		"existingHomeworks": "मौजूदा होमवर्क",
-		"homeworkTitle": "होमवर्क शीर्षक",
+		"homeworkTitle": "असाइनमेंट शीर्षक",
 		"initialContent": "प्रारंभिक सामग्री",
 		"markAsCompleted": "पूर्ण के रूप में चिह्नित करें",
 		"markAsUncompleted": "इसे अधूरा चिह्नित करें",
 		"myAssignment": "मेरा असाइनमेंट",
+		"myEntry": "मेरी प्रविष्टि",
 		"noHomeworkYet": "छात्र ने अभी तक कोई गृहकार्य नहीं लिखा है।",
 		"openHomework": "खुला",
+		"saveAndClose": "सहेजे बंद करें",
+		"saveHomeworkDraft": "मसौदा सेव करें",
 		"submitted": "प्रस्तुत",
-		"unsubmit": "सबमिट ना करें"
+		"unsubmit": "सबमिट ना करें",
+		"yourEntry": "आपकी प्रविष्टि"
 	},
 	"joinClass": "कक्षा में शामिल हों",
 	"joinClassInfo": "जब आप किसी कक्षा में शामिल होंगे तो वह यहां दिखाई देगी।",
@@ -532,6 +559,9 @@
 		"settings": "सेटिंग्स",
 		"students": "छात्र",
 		"studies": "अध्ययन करते हैं"
+	},
+	"mainCard": {
+		"forMindHiveNetwork": "आपकी प्रविष्टि"
 	},
 	"mentors": {
 		"copy": "प्रतिलिपि",
@@ -554,6 +584,7 @@
 	"noStudies": "छात्रों ने अभी तक कोई अध्ययन नहीं किया है।",
 	"noteNewStudents": "नोट: नए छात्र आपकी कक्षा में शामिल नहीं हो पाएंगे",
 	"numberOfStudents": "छात्रों की संख्या",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "प्रतिभागियों",
 	"pleaseTypeDelete": "कृपया अपनी कक्षा हटाने के लिए DELETE टाइप करें",
 	"projectBoard": {
@@ -606,6 +637,7 @@
 		"goBack": "वापस कक्षा में जाओ",
 		"username": "उपयोगकर्ता नाम"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "कक्षा में जोड़ें",
 		"assignToClass": "क्या आप वाकई इस छात्र को अन्य कक्षा में भेजना चाहते हैं?",
@@ -663,5 +695,6 @@
 	},
 	"theirWorkspaceAndStudies": "उनका कार्यक्षेत्र और आपकी कक्षा के दौरान उनके द्वारा बनाए गए कोई भी अध्ययन, कार्य या सर्वेक्षण",
 	"typeDeleteToConfirm": "पुष्टि करने के लिए \"DELETE\" टाइप करें",
+	"whoCanAssignCards": "कार्डों को प्रोफाइल कौन असाइन कर सकता है?",
 	"yourClass": "आपकी कक्षा"
 }

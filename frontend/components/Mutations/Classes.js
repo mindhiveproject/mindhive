@@ -2,9 +2,19 @@ import gql from "graphql-tag";
 
 // create new class
 export const CREATE_CLASS = gql`
-  mutation CREATE_CLASS($code: String!, $title: String!, $description: String) {
+  mutation CREATE_CLASS(
+    $code: String!
+    $title: String!
+    $description: String
+    $settings: JSON
+  ) {
     createClass(
-      data: { code: $code, title: $title, description: $description }
+      data: {
+        code: $code
+        title: $title
+        description: $description
+        settings: $settings
+      }
     ) {
       id
     }

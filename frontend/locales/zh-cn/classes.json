@@ -20,6 +20,19 @@
 		"confirmPublishTitle": "发布任务？",
 		"confirmUnpublishMessage": "学生将不再在作业列表中看到这项作业。",
 		"confirmUnpublishTitle": "取消发布作业？",
+		"connectModal": {
+			"cancel": "取消",
+			"description": "在课堂模板板上选择一张卡片。作业将链接到这张卡片，并链接到所有学生板上的同一张卡片。",
+			"disconnect": "断开与卡的连接",
+			"error": "加载板时出错",
+			"loading": "加载中...",
+			"noSections": "此版块目前还没有任何分区或卡片。",
+			"noTemplate": "本课程没有模板板。",
+			"save": "节省",
+			"title": "将分配连接到卡片",
+			"untitledCard": "无标题卡片",
+			"untitledSection": "无标题部分"
+		},
 		"content": "内容",
 		"copyLink": "复制链接",
 		"copyOwn": "抄写你的一份作业",
@@ -66,10 +79,12 @@
 		"placeholderDescription": "向学生展示占位符",
 		"placeholderInstructions": "为学生的答案框写一个占位符",
 		"preview": "",
+		"projectCard": "",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "发布给学生",
 		"requestFeedback": "请求反馈",
+		"reviewAndFeedback": "评论与反馈",
 		"reviewSubmissions": "审阅提交内容",
 		"revokeConfirm": "您确定要撤销此作业吗？学生将无法再看到此作业。",
 		"save": "保存更改",
@@ -83,6 +98,7 @@
 		"startFromScratch": "从零开始",
 		"startFromScratchDescription": "创建全新的作业，完全掌控标题、说明和占位符内容。最适合创建班级独有的作业。",
 		"status": "",
+		"studentEntry": "学生参赛作品",
 		"submit": "提交",
 		"submitConfirm": "您确定要提交此作业吗？学生将可以看到此作业。",
 		"templatesDescription": "您可以从管理员创建的预制作业模板中进行选择。这些模板是共享的，所有教师均可使用。",
@@ -119,7 +135,9 @@
 		"expendedCard": {
 			"addExistingResources": "添加现有资源（参见导航窗格中的资源）",
 			"addLinkedItems": "添加现有作业、任务、研究或资源",
+			"addToFavorites": "添加到收藏夹",
 			"alreadyHaveCopy": "此作业已复制到以下课程中：",
+			"assignment": "任务",
 			"assignmentNotPublished": "这项作业尚未发表",
 			"assignmentsSectionTitle": "公共任务",
 			"backToEditing": "返回编辑",
@@ -129,6 +147,7 @@
 			"connect": "加入购物车",
 			"content": "内容",
 			"disconnect": "从卡片上移除",
+			"discoverMore": "了解更多关于此模块的信息",
 			"done": "完成的",
 			"includeTextCollaborators": "为项目合作者提供文本输入",
 			"includeTextFeedbackCenter": "包括反馈中心的文本输入",
@@ -153,6 +172,7 @@
 			"previewLinkedStudies": "预览关联研究",
 			"previewLinkedTasks": "预览链接任务",
 			"publicResources": "民众",
+			"removeFromFavorites": "从收藏夹中删除",
 			"resources": "资源",
 			"resourcesSectionTitle": "公共资源",
 			"searchPlaceholder": "按标题搜索...",
@@ -327,6 +347,8 @@
 		"viewOrEdit": "查看或编辑"
 	},
 	"cancel": "取消",
+	"cardAssignmentDisabled": "卡片不能分配给学生。",
+	"cardAssignmentEnabled": "卡片可以分配给学生",
 	"classes": "课程",
 	"classesList": {
 		"className": "类名",
@@ -493,26 +515,31 @@
 		"teacher": "老师"
 	},
 	"homework": {
+		"allEntries": "所有条目",
 		"assignmentContent": "作业内容",
 		"assignmentTitle": "作业标题",
 		"cancel": "取消",
 		"createHomework": "创建家庭作业",
-		"createHomeworkDraft": "创建草稿",
-		"createHomeworkSubmit": "创建并提交",
-		"createNewAssignment": "创建新作业",
+		"createHomeworkSubmit": "标记为完成",
+		"createNewEntry": "创建条目",
 		"createNewHomework": "创建新作业",
 		"dateCreated": "创建日期",
 		"dateUpdated": "更新日期",
+		"editEntry": "编辑您的条目",
 		"existingHomeworks": "现有家庭作业",
-		"homeworkTitle": "作业标题",
+		"homeworkTitle": "任务名称",
 		"initialContent": "初始内容",
 		"markAsCompleted": "标记为已完成",
 		"markAsUncompleted": "标记为未完成",
 		"myAssignment": "我的任务",
+		"myEntry": "我的参赛作品",
 		"noHomeworkYet": "该学生尚未写任何作业。",
 		"openHomework": "开放",
+		"saveAndClose": "保存并关闭",
+		"saveHomeworkDraft": "保存草稿",
 		"submitted": "已提交",
-		"unsubmit": "取消提交"
+		"unsubmit": "取消提交",
+		"yourEntry": "您的参赛作品"
 	},
 	"joinClass": "加入班级",
 	"joinClassInfo": "一旦您加入某个课程，它就会出现在这里。",
@@ -532,6 +559,9 @@
 		"settings": "设置",
 		"students": "学生",
 		"studies": "研究"
+	},
+	"mainCard": {
+		"forMindHiveNetwork": "您的参赛作品"
 	},
 	"mentors": {
 		"copy": "复制",
@@ -554,6 +584,7 @@
 	"noStudies": "学生尚未创建任何研究。",
 	"noteNewStudents": "注意：新生将无法加入你的班级",
 	"numberOfStudents": "学生人数",
+	"onlyTeachersMentorsAssignCards": "",
 	"participants": "参与者",
 	"pleaseTypeDelete": "请输入 DELETE 来删除您的班级",
 	"projectBoard": {
@@ -606,6 +637,7 @@
 		"goBack": "回教室",
 		"username": "用户名"
 	},
+	"studentsCanAssignCards": "",
 	"studentsTab": {
 		"addToClass": "添加到班级",
 		"assignToClass": "您确定要将这名学生分配到另一个班级吗？",
@@ -663,5 +695,6 @@
 	},
 	"theirWorkspaceAndStudies": "他们的工作空间以及他们在课堂上创建的任何研究、任务或调查",
 	"typeDeleteToConfirm": "输入“DELETE”确认",
+	"whoCanAssignCards": "谁可以将个人资料分配给卡片？",
 	"yourClass": "你的班级"
 }

@@ -135,7 +135,11 @@ export const PROPOSAL_QUERY = gql`
       usedInClass {
         id
         title
+        settings
         creator {
+          id
+        }
+        mentors {
           id
         }
         templateProposal {
