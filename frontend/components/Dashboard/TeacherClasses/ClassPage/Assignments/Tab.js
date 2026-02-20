@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import moment from "moment";
@@ -17,6 +17,7 @@ import { AgGridReact } from "ag-grid-react";
 import { EDIT_ASSIGNMENT, DELETE_ASSIGNMENT } from "../../../../Mutations/Assignment";
 import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import ConnectAssignmentToCardModal from "./ConnectAssignmentToCardModal";
+import BulkActionsModal from "./BulkActionsModal";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 
 const SecondaryButton = styled.button`
@@ -101,6 +102,16 @@ const EditButton = styled.button`
     border-color: #4db6ac;
     color: #4db6ac;
   }
+`;
+
+// Wrapper for Bulk actions button: smooth appear/disappear
+const BulkActionsButtonWrapper = styled.div`
+  display: inline-flex;
+  align-items: center;
+  max-width: ${(props) => (props.$visible ? "200px" : "0")};
+  opacity: ${(props) => (props.$visible ? 1 : 0)};
+  overflow: hidden;
+  transition: max-width 0.2s ease, opacity 0.2s ease;
 `;
 
 // Status chip styled components based on Figma design
@@ -203,6 +214,13 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   const [assignmentForConnectModal, setAssignmentForConnectModal] = useState(null);
   const [assignmentForPublishModal, setAssignmentForPublishModal] = useState(null);
   const [updatingStatusAssignmentId, setUpdatingStatusAssignmentId] = useState(null);
+  const [selectedAssignments, setSelectedAssignments] = useState([]);
+  const [bulkActionsModalOpen, setBulkActionsModalOpen] = useState(false);
+  const gridRef = useRef(null);
+
+  const canManageAssignmentsBulk =
+    myclass?.creator?.id === user?.id ||
+    (myclass?.mentors || []).some((m) => m?.id === user?.id);
 
   const [editAssignment] = useMutation(EDIT_ASSIGNMENT, {
     refetchQueries: [
@@ -558,6 +576,19 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   // Column definitions
   const columnDefs = [
     {
+      field: "selection",
+      headerName: "",
+      checkboxSelection: true,
+      headerCheckboxSelection: true,
+      width: 48,
+      minWidth: 48,
+      maxWidth: 52,
+      pinned: "left",
+      suppressFilter: true,
+      sortable: false,
+      resizable: false,
+    },
+    {
       field: "title",
       headerName: t("assignment.title"),
       cellRenderer: TitleRenderer,
@@ -668,6 +699,16 @@ export default function AssignmentTab({ assignments, myclass, user }) {
             style={{ flexShrink: 0 }}
           />
         </LinkedCardsToggleButton>
+        <BulkActionsButtonWrapper
+          $visible={canManageAssignmentsBulk && selectedAssignments.length > 0}
+        >
+          <SecondaryButton
+            type="button"
+            onClick={() => setBulkActionsModalOpen(true)}
+          >
+            {t("assignment.bulkActions", "Bulk actions")}
+          </SecondaryButton>
+        </BulkActionsButtonWrapper>
         |
         <button
           type="button"
@@ -810,8 +851,15 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       <div style={{ width: "100%", height: "600px" }}>
         <div className="ag-theme-quartz" style={{ height: "100%", width: "100%" }}>
           <AgGridReact
+            ref={gridRef}
             rowData={filteredAssignments}
             columnDefs={columnDefs}
+            rowSelection="multiple"
+            suppressRowClickSelection
+            getRowId={(params) => params.data?.id}
+            onSelectionChanged={(e) => {
+              if (e.api) setSelectedAssignments(e.api.getSelectedRows());
+            }}
             context={{
               templateBoardId: myclass?.templateProposal?.id,
               onTogglePublishStatus: handleOpenPublishConfirm,
@@ -836,6 +884,16 @@ export default function AssignmentTab({ assignments, myclass, user }) {
         assignment={assignmentForConnectModal}
         myclass={myclass}
         onSuccess={() => setAssignmentForConnectModal(null)}
+      />
+
+      <BulkActionsModal
+        open={bulkActionsModalOpen}
+        onClose={() => setBulkActionsModalOpen(false)}
+        selectedAssignments={selectedAssignments}
+        myclass={myclass}
+        onSuccess={() => {
+          gridRef.current?.api?.deselectAll();
+        }}
       />
 
       <Modal

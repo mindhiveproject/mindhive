@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Modal, Button, Icon } from "semantic-ui-react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import StyledModal from "../../../../styles/StyledModal";
-import { GET_TEMPLATE_BOARD_SECTIONS_CARDS } from "../../../../Queries/Proposal";
 import {
   LINK_ASSIGNMENT_TO_TEMPLATE_CARD,
   UNLINK_ASSIGNMENT_FROM_TEMPLATE_CARDS,
 } from "../../../../Mutations/Assignment";
 import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
+import TemplateBoardCardPicker from "./TemplateBoardCardPicker";
 
 export default function ConnectAssignmentToCardModal({
   open,
@@ -20,15 +20,6 @@ export default function ConnectAssignmentToCardModal({
   const { t } = useTranslation("classes");
   const [selectedCardId, setSelectedCardId] = useState(null);
   const templateBoardId = myclass?.templateProposal?.id;
-
-  const { data: boardData, loading: boardLoading, error: boardError } = useQuery(
-    GET_TEMPLATE_BOARD_SECTIONS_CARDS,
-    {
-      variables: { id: templateBoardId },
-      skip: !open || !templateBoardId,
-      fetchPolicy: open ? "network-only" : "cache-first",
-    }
-  );
 
   const [linkAssignment, { loading: linkLoading }] = useMutation(
     LINK_ASSIGNMENT_TO_TEMPLATE_CARD,
@@ -66,12 +57,6 @@ export default function ConnectAssignmentToCardModal({
         alert(err.message);
       },
     }
-  );
-
-  const board = boardData?.proposalBoard;
-  const sections = board?.sections || [];
-  const sectionsSorted = [...sections].sort(
-    (a, b) => (a?.position ?? 0) - (b?.position ?? 0)
   );
 
   const handleSave = () => {
@@ -169,34 +154,6 @@ export default function ConnectAssignmentToCardModal({
     );
   }
 
-  if (boardLoading) {
-    return (
-      <Modal open={open} onClose={handleClose} size="large" style={{ borderRadius: "12px" }}>
-        <Modal.Content>
-          <p>
-            {t("assignment.connectModal.loading", "Loading...")}
-          </p>
-        </Modal.Content>
-      </Modal>
-    );
-  }
-
-  if (boardError) {
-    return (
-      <Modal open={open} onClose={handleClose} size="large" style={{ borderRadius: "12px" }}>
-        <Modal.Content>
-          <p>
-            {t(
-              "assignment.connectModal.error",
-              "Error loading board"
-            )}
-            : {boardError.message}
-          </p>
-        </Modal.Content>
-      </Modal>
-    );
-  }
-
   return (
     <Modal
       closeIcon
@@ -226,75 +183,13 @@ export default function ConnectAssignmentToCardModal({
 
       <Modal.Content scrolling>
         <StyledModal>
-          <p style={{ marginBottom: "16px" }}>
-            {t(
-              "assignment.connectModal.description",
-              "Select a card on the class template board. The assignment will be linked to this card and to the same card on all student boards."
-            )}
-          </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            {sectionsSorted.map((section) => {
-              const cards = [...(section.cards || [])].sort(
-                (a, b) => (a?.position ?? 0) - (b?.position ?? 0)
-              );
-              return (
-                <div key={section.id}>
-                  <div
-                    style={{
-                      fontWeight: 600,
-                      marginBottom: "8px",
-                      fontFamily: "Lato",
-                      fontSize: "16px",
-                    }}
-                  >
-                    {section.title ||
-                      t(
-                        "assignment.connectModal.untitledSection",
-                        "Untitled section"
-                      )}
-                  </div>
-                  <ul style={{ listStyle: "none", paddingLeft: 0, margin: 0 }}>
-                    {cards.map((card) => {
-                      const isSelected = selectedCardId === card.id;
-                      return (
-                        <li
-                          key={card.id}
-                          style={{
-                            marginBottom: "4px",
-                            padding: "8px 12px",
-                            borderRadius: "8px",
-                            background: isSelected ? "#E3F2FD" : "transparent",
-                            border:
-                              isSelected
-                                ? "1px solid #336F8A"
-                                : "1px solid #e0e0e0",
-                            cursor: "pointer",
-                            fontFamily: "Lato",
-                            fontSize: "14px",
-                          }}
-                          onClick={() => setSelectedCardId(card.id)}
-                        >
-                          {card.title ||
-                            t(
-                              "assignment.connectModal.untitledCard",
-                              "Untitled card"
-                            )}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              );
-            })}
-          </div>
-          {sectionsSorted.length === 0 && (
-            <p>
-              {t(
-                "assignment.connectModal.noSections",
-                "This board has no sections or cards yet."
-              )}
-            </p>
-          )}
+          <TemplateBoardCardPicker
+            templateBoardId={templateBoardId}
+            selectedCardId={selectedCardId}
+            onSelectCard={setSelectedCardId}
+            disabled={isBusy}
+            showDescription
+          />
         </StyledModal>
       </Modal.Content>
 
