@@ -1,15 +1,7 @@
 import { useRef, useState } from "react";
-import { useMutation, useApolloClient, gql } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Checkbox, Dropdown, Modal, Icon, Popup } from "semantic-ui-react";
-import {
-  UPDATE_CARD_CONTENT,
-  UPDATE_CARD_EDIT,
-} from "../../Mutations/Proposal";
-import {
-  GET_SECTIONS_BY_BOARD,
-  GET_CARDS_BY_SECTION,
-  CLASS_PROJECTS_QUERY,
-} from "../../Queries/Proposal";
+import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
 
 import ReactHtmlParser from "react-html-parser";
 
@@ -53,6 +45,8 @@ export default function BuilderProposalCard({
   proposal,
   proposalCard,
   closeCard,
+  autoUpdateStudentBoards,
+  propagateToClones,
 }) {
   const { t } = useTranslation("classes");
   const { inputs, handleChange } = useForm({
@@ -65,10 +59,7 @@ export default function BuilderProposalCard({
 
   const [updateCard, { loading: updateLoading }] =
     useMutation(UPDATE_CARD_CONTENT);
-  const [updateClonedCard, { loading: updateClonedLoading }] =
-    useMutation(UPDATE_CARD_EDIT);
 
-  const client = useApolloClient();
   const [showCloneDialog, setShowCloneDialog] = useState(false);
   const [showWarningBox, setShowWarningBox] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
@@ -104,205 +95,6 @@ export default function BuilderProposalCard({
     }
   };
 
-  // Handler to update all clones
-  const updateClones = async () => {
-    if (!proposal?.prototypeFor?.length) return;
-
-    // FIXED: Use original (pre-update) titles for fallback matching
-    const originalSectionTitle = proposalCard?.section?.title;
-    const originalCardTitle = proposalCard?.title;
-    const originalBoardId = proposal?.id;
-    const originalCardPublicId = proposalCard?.publicId;
-
-    if (!originalCardPublicId) {
-      console.warn("Missing publicId for card; falling back to title matching");
-    }
-
-    if (!originalSectionTitle || !originalCardTitle) {
-      console.warn("Missing section or card title for fallback matching");
-    }
-
-    // Collect all matching card IDs across clones
-    const cardIds = [];
-
-    // NEW: Primary logic - Direct query for clone cards by publicId (efficient, single query)
-    if (originalCardPublicId) {
-      try {
-        const { data: directData } = await client.query({
-          query: gql`
-            query GetCloneCardsByPublicId(
-              $publicId: String!
-              $originalBoardId: ID!
-            ) {
-              proposalCards(
-                where: {
-                  publicId: { equals: $publicId }
-                  section: {
-                    board: { clonedFrom: { id: { equals: $originalBoardId } } }
-                  }
-                }
-              ) {
-                id
-              }
-            }
-          `,
-          variables: {
-            publicId: originalCardPublicId,
-            originalBoardId: originalBoardId,
-          },
-          fetchPolicy: "network-only",
-        });
-
-        const directCards = directData?.proposalCards || [];
-        if (directCards.length > 0) {
-          directCards.forEach((card) => cardIds.push(card.id));
-          console.log(`Found ${directCards.length} clone cards via publicId`);
-        } else {
-          console.log(
-            "No clone cards found via publicId; falling back to title matching"
-          );
-        }
-      } catch (error) {
-        console.error("Failed to query clone cards by publicId:", error);
-      }
-    }
-
-    // FALLBACK: If no matches via publicId (e.g., legacy clones), use title-based loop
-    if (cardIds.length === 0 && originalSectionTitle && originalCardTitle) {
-      for (const clone of proposal.prototypeFor) {
-        let matchingCardId = null;
-
-        try {
-          // Step 1: Query sections for this clone board
-          const { data: sectionsData } = await client.query({
-            query: GET_SECTIONS_BY_BOARD,
-            variables: { boardId: clone.id },
-            fetchPolicy: "network-only",
-          });
-
-          const sections = sectionsData?.proposalSections || [];
-          const fallbackSection = sections.find(
-            (sec) => sec.title === originalSectionTitle
-          );
-
-          if (fallbackSection) {
-            // Step 2: Query cards for the fallback section
-            const { data: cardsData } = await client.query({
-              query: GET_CARDS_BY_SECTION,
-              variables: { sectionId: fallbackSection.id },
-              fetchPolicy: "network-only",
-            });
-
-            const cards = cardsData?.proposalCards || [];
-            const fallbackCard = cards.find(
-              (card) => card.title === originalCardTitle
-            );
-
-            if (fallbackCard) {
-              matchingCardId = fallbackCard.id;
-            } else {
-              console.warn(
-                `No matching card found in clone ${clone.id} (section: ${fallbackSection.id}) for title "${originalCardTitle}"`
-              );
-            }
-          } else {
-            console.warn(
-              `No matching section found in clone ${clone.id} for title "${originalSectionTitle}"`
-            );
-          }
-        } catch (error) {
-          console.error(
-            `Failed to process fallback in clone ${clone.id}:`,
-            error
-          );
-        }
-
-        if (matchingCardId) {
-          cardIds.push(matchingCardId);
-        }
-      }
-    }
-
-    // Compute diffs for relational fields (once, before updating clones)
-    // Extract original IDs from proposalCard
-    const originalResources = proposalCard?.resources || [];
-    const originalAssignments = proposalCard?.assignments || [];
-    const originalTasks = proposalCard?.tasks || [];
-    const originalStudies = proposalCard?.studies || [];
-
-    const currentResources = inputs?.resources || [];
-    const currentAssignments = inputs?.assignments || [];
-    const currentTasks = inputs?.tasks || [];
-    const currentStudies = inputs?.studies || [];
-
-    // Helper to compute disconnect/connect IDs
-    const computeDiff = (originalItems, currentItems) => {
-      const originalIds = originalItems.map((item) => item.id);
-      const currentIds = currentItems.map((item) => item.id);
-      const toDisconnect = originalIds.filter((id) => !currentIds.includes(id));
-      const toConnect = currentIds.filter((id) => !originalIds.includes(id));
-      return { toDisconnect, toConnect };
-    };
-
-    const resourcesDiff = computeDiff(originalResources, currentResources);
-    const assignmentsDiff = computeDiff(
-      originalAssignments,
-      currentAssignments
-    );
-    const tasksDiff = computeDiff(originalTasks, currentTasks);
-    const studiesDiff = computeDiff(originalStudies, currentStudies);
-
-    // Build relational update objects (only if changes)
-    const buildRelationUpdate = (diff) => {
-      const update = {};
-      if (diff.toDisconnect.length > 0) {
-        update.disconnect = diff.toDisconnect.map((id) => ({ id }));
-      }
-      if (diff.toConnect.length > 0) {
-        update.connect = diff.toConnect.map((id) => ({ id }));
-      }
-      return Object.keys(update).length > 0 ? update : null;
-    };
-
-    const resourcesUpdate = buildRelationUpdate(resourcesDiff);
-    const assignmentsUpdate = buildRelationUpdate(assignmentsDiff);
-    const tasksUpdate = buildRelationUpdate(tasksDiff);
-    const studiesUpdate = buildRelationUpdate(studiesDiff);
-
-    // Build updateData with description, title (propagate title changes), settings (propagate settings changes), and conditional relational updates
-    const updateData = {
-      description: description.current,
-      title: inputs?.title, // Propagate title changes to clones for consistency
-      settings: inputs?.settings, // Propagate settings to clones for consistency
-      ...(resourcesUpdate && { resources: resourcesUpdate }),
-      ...(assignmentsUpdate && { assignments: assignmentsUpdate }),
-      ...(tasksUpdate && { tasks: tasksUpdate }),
-      ...(studiesUpdate && { studies: studiesUpdate }),
-    };
-
-    // Update each cloned card individually using UPDATE_CARD_EDIT
-    if (cardIds.length > 0) {
-      for (const cardId of cardIds) {
-        try {
-          await updateClonedCard({
-            variables: {
-              id: cardId,
-              input: updateData,
-            },
-          });
-          console.log(`Updated clone card ${cardId}`);
-        } catch (error) {
-          console.error(`Failed to update clone card ${cardId}:`, error);
-        }
-      }
-      console.log(
-        `Updated ${cardIds.length} cloned cards: ${cardIds.join(", ")}`
-      );
-    } else {
-      console.warn("No matching cards found to update in clones");
-    }
-  };
-
   // Save card content only (no close, no clone dialog). Used before entering preview.
   const saveCardContentOnly = async () => {
     await updateCard({
@@ -322,13 +114,23 @@ export default function BuilderProposalCard({
     });
   };
 
-  // Update logic with clone check
+  // Update logic with clone check: use backend propagateToClones when user chooses to update clones.
+  // If the teacher changed the content field (placeholder), pass that card id so clones get the new placeholder.
   const onUpdateCard = async (updateClonesToo = false) => {
     await saveCardContentOnly();
 
-    // If updating clones, do it now
-    if (updateClonesToo) {
-      await updateClones();
+    if (updateClonesToo && propagateToClones) {
+      try {
+        const contentChanged =
+          String(content?.current ?? "") !==
+          String(proposalCard?.content ?? "");
+        await propagateToClones({
+          contentChangedCardIds:
+            contentChanged && proposalCard?.id ? [proposalCard.id] : [],
+        });
+      } catch (e) {
+        console.error("Propagate to clones failed:", e);
+      }
     }
 
     closeCard({ cardId: proposalCard?.id, lockedByUser: false });
@@ -337,7 +139,11 @@ export default function BuilderProposalCard({
   // Trigger save with clone check
   const handleSave = async () => {
     if (proposal?.prototypeFor?.length > 0) {
-      setShowCloneDialog(true);
+      if (autoUpdateStudentBoards && propagateToClones) {
+        await onUpdateCard(true);
+      } else {
+        setShowCloneDialog(true);
+      }
     } else {
       await onUpdateCard(false);
     }
@@ -356,7 +162,7 @@ export default function BuilderProposalCard({
   // Modal handlers
   const handleCloneYes = async () => {
     setShowCloneDialog(false);
-    await onUpdateCard(true); // true flag to update clones
+    await onUpdateCard(true);
   };
 
   const handleCloneNo = () => {
@@ -408,7 +214,7 @@ export default function BuilderProposalCard({
               <button
                 type="button"
                 onClick={handlePreviewAsUser}
-                disabled={updateLoading || updateClonedLoading}
+                disabled={updateLoading}
                 className="narrowButtonSecondary"
               >
                 {t("board.expendedCard.preview", "Preview")}
@@ -417,7 +223,7 @@ export default function BuilderProposalCard({
                 type="button"
                 onClick={handleSave}
                 className="narrowButton"
-                disabled={updateLoading || updateClonedLoading}
+                disabled={updateLoading}
               >
                 {t("board.save", "Save")}
               </button>
@@ -467,7 +273,7 @@ export default function BuilderProposalCard({
             type="button"
             className="narrowButton"
             onClick={handleCloneYes}
-            disabled={updateLoading || updateClonedLoading}
+            disabled={updateLoading}
             style={{
               marginRight: "10px",
               height: "40px",
@@ -479,13 +285,13 @@ export default function BuilderProposalCard({
               borderRadius: "100px",
               fontSize: "16px",
               fontWeight: 500,
-              cursor: updateLoading || updateClonedLoading ? "not-allowed" : "pointer",
+              cursor: updateLoading ? "not-allowed" : "pointer",
               background: "#336F8A",
               color: "white",
               border: "1px solid #336F8A",
             }}
           >
-            {updateLoading || updateClonedLoading ? (
+            {updateLoading ? (
               t("board.expendedCard.updating", "Updating…")
             ) : (
               t("board.expendedCard.updateAllClones", "Yes, update all clones")

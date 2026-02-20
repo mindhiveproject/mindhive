@@ -15,6 +15,8 @@ export default function CardWrapper({
   closeCard,
   proposalBuildMode,
   isPreview,
+  autoUpdateStudentBoards,
+  propagateToClones,
 }) {
   const {
     data,
@@ -65,6 +67,8 @@ export default function CardWrapper({
             proposal={proposal}
             proposalCard={proposalCard}
             closeCard={closeCard}
+            autoUpdateStudentBoards={autoUpdateStudentBoards}
+            propagateToClones={propagateToClones}
           />
         );
       } else {

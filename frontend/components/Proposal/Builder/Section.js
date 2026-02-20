@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ReactHTMLParser from "react-html-parser";
-import { useMutation, useApolloClient, gql } from "@apollo/client";
+import { useMutation, useApolloClient } from "@apollo/client";
 import sortBy from "lodash/sortBy";
 import { Container } from "react-smooth-dnd";
 import { v1 as uuidv1 } from "uuid";
@@ -10,10 +10,6 @@ import Card from "./Card";
 import ActionCard from "./ActionCard";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
-import {
-  GET_SECTIONS_BY_BOARD,
-  GET_CARDS_BY_SECTION,
-} from "../../Queries/Proposal";
 
 import {
   CREATE_CARD,
@@ -36,6 +32,8 @@ const Section = ({
   isPreview,
   settings,
   submitStatuses = {},
+  autoUpdateStudentBoards,
+  propagateToClones,
 }) => {
   const { t } = useTranslation("builder");
   const { cards } = section;
@@ -61,6 +59,13 @@ const Section = ({
         id,
         sectionId,
         position,
+      },
+      onCompleted: () => {
+        if (autoUpdateStudentBoards && propagateToClones) {
+          propagateToClones().catch((e) =>
+            console.error("Auto-propagate after card move failed:", e)
+          );
+        }
       },
       update: (cache, { data: { updateProposalCard } }) => {
         // Read the data from the cache for this query.
@@ -217,80 +222,6 @@ const Section = ({
     }
   };
 
-  const propagateNewCardToClones = async (info, proposal) => {
-    const { title, sectionTitle, publicId } = info;
-    const clones = proposal.prototypeFor || [];
-
-    for (const clone of clones) {
-      let matchingSectionId = null;
-      try {
-        const { data: sectionsData } = await client.query({
-          query: gql`
-            query GetSectionsByBoard($boardId: ID!) {
-              proposalSections(where: { board: { id: { equals: $boardId } } }) {
-                id
-                title
-              }
-            }
-          `,
-          variables: { boardId: clone.id },
-        });
-
-        const sections = sectionsData?.proposalSections || [];
-        const matchingSection = sections.find(
-          (sec) => sec.title === sectionTitle
-        );
-
-        if (matchingSection) {
-          matchingSectionId = matchingSection.id;
-
-          const { data: cardsData } = await client.query({
-            query: gql`
-              query GetCardsBySection($sectionId: ID!) {
-                proposalCards(
-                  where: { section: { id: { equals: $sectionId } } }
-                ) {
-                  id
-                  title
-                  position
-                }
-              }
-            `,
-            variables: { sectionId: matchingSectionId },
-          });
-
-          const cloneCards = cardsData?.proposalCards || [];
-          const sortedCloneCards = sortBy(cloneCards, (card) => card.position);
-          const position =
-            sortedCloneCards.length > 0
-              ? sortedCloneCards[sortedCloneCards.length - 1].position + 16384
-              : 16384;
-
-          await createCard({
-            variables: {
-              boardId: clone.id,
-              title,
-              sectionId: matchingSectionId,
-              position,
-              publicId,
-              settings: { status: "Not started" },
-            },
-          });
-
-          console.log(
-            `Added new card to clone ${clone.id} in section ${matchingSectionId}`
-          );
-        } else {
-          console.warn(
-            `No matching section found in clone ${clone.id} for title "${sectionTitle}"`
-          );
-        }
-      } catch (error) {
-        console.error(`Failed to add card to clone ${clone.id}:`, error);
-      }
-    }
-  };
-
   const addCardMutation = async (sectionId, title) => {
     if (!title) {
       return alert(t("section.enterNewTitle", "Please enter a title"));
@@ -373,14 +304,23 @@ const Section = ({
     const proposal = proposalQuery?.data?.proposalBoard;
 
     if (proposalBuildMode && proposal?.prototypeFor?.length > 0) {
-      setNewCardInfo({
-        id: newCard?.data?.createProposalCard?.id,
-        publicId: newCard?.data?.createProposalCard?.publicId || publicId,
-        title,
-        sectionTitle: section?.title,
-        cloneCount: proposal?.prototypeFor?.length,
-      });
-      setShowCloneDialog(true);
+      if (autoUpdateStudentBoards && propagateToClones) {
+        try {
+          await propagateToClones();
+        } catch (error) {
+          console.error("Auto-propagate after card add failed:", error);
+        }
+        openCard({ id: newCard?.data?.createProposalCard?.id });
+      } else {
+        setNewCardInfo({
+          id: newCard?.data?.createProposalCard?.id,
+          publicId: newCard?.data?.createProposalCard?.publicId || publicId,
+          title,
+          sectionTitle: section?.title,
+          cloneCount: proposal?.prototypeFor?.length,
+        });
+        setShowCloneDialog(true);
+      }
     } else {
       openCard({ id: newCard?.data?.createProposalCard?.id });
     }
@@ -388,15 +328,10 @@ const Section = ({
 
   const handleCloneYes = async () => {
     setIsLoading(true);
-    const proposalQuery = await client.query({
-      query: PROPOSAL_QUERY,
-      variables: { id: boardId },
-    });
-    const proposal = proposalQuery?.data?.proposalBoard;
     try {
-      await propagateNewCardToClones(newCardInfo, proposal);
+      if (propagateToClones) await propagateToClones();
     } catch (error) {
-      console.error("Failed to propagate new card to clones:", error);
+      console.error("Failed to propagate to clones:", error);
     }
     setIsLoading(false);
     setShowCloneDialog(false);
@@ -412,6 +347,13 @@ const Section = ({
     deleteCard({
       variables: {
         id,
+      },
+      onCompleted: () => {
+        if (autoUpdateStudentBoards && propagateToClones) {
+          propagateToClones().catch((e) =>
+            console.error("Auto-propagate after card delete failed:", e)
+          );
+        }
       },
       update: (cache, payload) => {
         cache.evict({ id: cache.identify(payload.data.deleteProposalCard) });

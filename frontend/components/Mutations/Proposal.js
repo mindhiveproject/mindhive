@@ -63,6 +63,22 @@ export const CREATE_NEW_PROPOSAL = gql`
   }
 `;
 
+export const APPLY_TEMPLATE_BOARD_CHANGES = gql`
+  mutation APPLY_TEMPLATE_BOARD_CHANGES(
+    $templateBoardId: ID!
+    $cardIdsWithContentUpdate: [ID!]
+  ) {
+    applyTemplateBoardChanges(
+      templateBoardId: $templateBoardId
+      cardIdsWithContentUpdate: $cardIdsWithContentUpdate
+    ) {
+      id
+      updatedCloneCount
+      errors
+    }
+  }
+`;
+
 export const UPDATE_PROPOSAL_BOARD = gql`
   mutation UPDATE_PROPOSAL_BOARD(
     $id: ID!
@@ -169,6 +185,7 @@ export const CREATE_CARD = gql`
     $sectionId: ID!
     $position: Float!
     $settings: JSON
+    $publicId: String
   ) {
     createProposalCard(
       data: {
@@ -177,6 +194,7 @@ export const CREATE_CARD = gql`
         content: $content
         position: $position
         settings: $settings
+        publicId: $publicId
       }
     ) {
       id
@@ -184,6 +202,7 @@ export const CREATE_CARD = gql`
       content
       position
       settings
+      publicId
       section {
         id
       }

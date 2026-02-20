@@ -8,6 +8,7 @@ import googleSignup from "./googleSignup";
 import googleLogin from "./googleLogin";
 import linkAssignmentToTemplateCard from "./linkAssignmentToTemplateCard";
 import unlinkAssignmentFromTemplateCards from "./unlinkAssignmentFromTemplateCards";
+import applyTemplateBoardChanges from "./applyTemplateBoardChanges";
 
 // make a fake gql tagged template literal
 const graphql = String.raw;
@@ -16,6 +17,11 @@ export const extendGraphqlSchema = (schema) =>
   mergeSchemas({
     schemas: [schema],
     typeDefs: graphql`
+      type ApplyTemplateBoardChangesResult {
+        id: ID!
+        updatedCloneCount: Int!
+        errors: [String!]!
+      }
       type Mutation {
         sendEmail(
           receiverId: ID!
@@ -45,6 +51,10 @@ export const extendGraphqlSchema = (schema) =>
           assignmentId: ID!
           classId: ID!
         ): Assignment
+        applyTemplateBoardChanges(
+          templateBoardId: ID!
+          cardIdsWithContentUpdate: [ID!]
+        ): ApplyTemplateBoardChangesResult
       }
     `,
     resolvers: {
@@ -57,6 +67,7 @@ export const extendGraphqlSchema = (schema) =>
         googleLogin,
         linkAssignmentToTemplateCard,
         unlinkAssignmentFromTemplateCards,
+        applyTemplateBoardChanges,
       },
     },
   });

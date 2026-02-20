@@ -10,7 +10,7 @@ export const StyledProposal = styled.div`
   // min-height: 80vh;
   background: #f7f9f8;
   align-items: ${(props) => (props.$cardFullView ? "stretch" : "baseline")};
-  font-family: "Nunito";
+  font-family: "Inter";
   min-height: ${(props) => (props.$cardFullView ? "0" : "unset")};
 
   i.icon {
@@ -284,7 +284,7 @@ export const StyledProposal = styled.div`
       margin: 1rem 0px 0px 0rem;
       display: grid;
       color: #b3b3b3;
-      font-family: Nunito;
+      font-family: Inter;
       font-size: 16px;
       font-weight: 500;
       line-height: 24px;
@@ -311,7 +311,7 @@ export const StyledProposal = styled.div`
         margin: 1rem 0px 0px 0rem;
       }
       .sectionTitle {
-        font-family: Nunito;
+        font-family: Inter;
         font-size: 22px;
         font-weight: 600;
         line-height: 28px;
@@ -328,7 +328,7 @@ export const StyledProposal = styled.div`
         text-overflow: ellipsis;
       }
       .sectionTitleInput {
-        font-family: Nunito;
+        font-family: Inter;
         font-size: 22px;
         font-weight: 600;
         line-height: 28px;
@@ -444,7 +444,7 @@ export const StyledProposal = styled.div`
       min-width: 0;
     }
     .headerTitle {
-      font-family: "Nunito", sans-serif;
+      font-family: "Inter", sans-serif;
       font-style: normal;
       font-weight: 600;
       font-size: 36px;
@@ -526,7 +526,7 @@ export const StyledProposal = styled.div`
     }
     .studyLinkText {
       margin: 0;
-      font-family: "Nunito", sans-serif;
+      font-family: "Inter", sans-serif;
       font-style: normal;
       font-weight: 600;
       font-size: 14px;
@@ -607,7 +607,7 @@ export const StyledProposal = styled.div`
       // border: 1px solid #336F8A;
       // background: white;
       color: #336F8A;
-      font-family: "Nunito", sans-serif;
+      font-family: "Inter", sans-serif;
       font-style: normal;
       font-weight: 600;
       font-size: 14px;
@@ -646,7 +646,7 @@ export const StyledProposal = styled.div`
       height: 40px;
       padding: 8px 24px 8px 16px;
       border: 1px solid #336F8A;
-      font-family: "Nunito", sans-serif;
+      font-family: "Inter", sans-serif;
       font-style: normal;
       font-weight: 600;
       font-size: 14px;
@@ -692,7 +692,7 @@ export const StyledProposal = styled.div`
       }
     }
     .titleEdit {
-      font-family: "Nunito";
+      font-family: "Inter";
       font-style: normal;
       font-weight: 600;
       font-size: 40px;
@@ -705,7 +705,7 @@ export const StyledProposal = styled.div`
       grid-gap: 20px;
       grid-template-columns: auto 1fr;
       .title {
-        font-family: "Nunito";
+        font-family: "Inter";
         font-style: normal;
         font-weight: 600;
         font-size: 40px;
@@ -719,7 +719,7 @@ export const StyledProposal = styled.div`
       }
     }
     .subtitle {
-      font-family: "Nunito";
+      font-family: "Inter";
       font-style: normal;
       font-weight: 400;
       font-size: 24px;
@@ -776,6 +776,155 @@ export const StyledProposal = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+  }
+
+  .templateBanner {
+    margin-top: 16px;
+    margin-bottom: 24px;
+    border-radius: 16px;
+    overflow: visible;
+    background: red;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  .templateBannerHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    background: #5D5763;
+    padding: 16px 20px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    /* when collapsed, header is the only child — round bottom to match container */
+    &:only-child {
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+    }
+  }
+  .templateBannerHeaderLeft {
+    min-width: 0;
+    flex: 1;
+  }
+  .templateBanner .templateBannerHeaderToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    padding: 16px;
+    background: transparent;
+    border: 0;
+    border-radius: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+    color: var(--MH-Theme-Neutrals-White, #FFFFFF);
+    &:hover {
+      background: var(--MH-Theme-Accent-Dark, #6A6A6A);      
+    }
+    &:active {
+      background: var(--MH-Theme-Primary-Light, #DEF8FB);
+      color: var(--MH-Theme-Primary-Dark, #336F8A);
+      img {
+        filter: none;
+      }
+    }
+    &:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.8);
+      outline-offset: 2px;
+    }
+    img {
+      filter: brightness(0) invert(1);
+    }
+  }
+  .templateBannerTitle {
+    font-family: "Inter", sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 28px;
+    color: #ffffff;
+    margin: 0;
+  }
+  .templateBannerSubtitle {
+    font-family: "Inter", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 4px 0 0 0;
+  }
+  .templateBannerContent {
+    padding: 20px;
+    background: #F3F3F3;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+  .templateBannerSection {
+    margin-bottom: 16px;
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+  .templateBannerSectionHeading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Inter", sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    color: #171717;
+    margin: 0 0 6px 0;
+  }
+  .templateBannerSectionBody {
+    font-family: "Inter", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #625B71;
+    margin: 0;
+    padding-left: 0;
+  }
+  .templateBannerToggleRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .templateBannerActions {
+    margin-top: 16px;
+  }
+  .templateBanner .templateBannerPrimaryBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background: var(--MH-Theme-Primary-Dark, #5D5763);
+    color: var(--MH-Theme-Neutrals-White, #FFFFFF);
+    border: none;
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    cursor: pointer;
+    max-width: 320px;
+    &:hover:not(:disabled) {
+      background: #2a5d6f;
+    }
+    &:active:not(:disabled) {
+      background: var(--MH-Theme-Primary-Light, #DEF8FB);
+      color: var(--MH-Theme-Primary-Dark, #336F8A);
+    }
+    &:disabled {
+      background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
+      color: var(--MH-Theme-Neutrals-Medium, #A1A1A1);
+      cursor: not-allowed;
     }
   }
 
@@ -896,7 +1045,7 @@ export const StyledProposal = styled.div`
         }
       }
       .middle {
-        font-family: Nunito;
+        font-family: Inter;
         font-size: 24px;
         font-weight: 500;
         line-height: 40px;
@@ -921,7 +1070,7 @@ export const StyledProposal = styled.div`
           background: #3d85b0;
           color: white;
           border-radius: 100px;
-          font-family: Nunito;
+          font-family: Inter;
           font-size: 20px;
           font-weight: 700;
           line-height: var(--LabelLargeLineHeight);
@@ -1040,7 +1189,7 @@ export const StyledProposal = styled.div`
       line-height: 28px; /* 127.273% */
     }
     .cardSubheaderComment {
-      font-family: 'Nunito';
+      font-family: 'Inter';
       font-style: normal;
       font-weight: 400;
       font-size: 16px;
@@ -1094,7 +1243,7 @@ export const StyledProposal = styled.div`
     }
     .cardDescription {
       color: #626269;
-      font-family: Nunito;
+      font-family: Inter;
       font-size: 17px;
       font-weight: 400;
       line-height: 23.19px;
@@ -1289,7 +1438,7 @@ export const StyledProposal = styled.div`
         border: 1px solid #cccccc;
         border-radius: 20px;
         padding: 9px 16px;
-        font-family: Nunito;
+        font-family: Inter;
         font-size: 16px;
         font-weight: 400;
         line-height: 21.82px;
@@ -1322,7 +1471,7 @@ export const StyledProposalCard = styled.div`
   width: calc(100% - 20px);
   cursor: pointer;
   margin: 3px 10px;
-  font-family: Nunito;
+  font-family: Inter;
   box-sizing: border-box;
 
   .card-drag-handle {
@@ -1393,7 +1542,7 @@ export const StyledProposalCard = styled.div`
       .card-title {
         display: flex;
         flex: 1 0 0;
-        font-family: Nunito;
+        font-family: Inter;
         font-style: normal;
         font-weight: 400;
         font-size: 16px;
@@ -1547,7 +1696,7 @@ export const StyledActionCard = styled.div`
       gap: 4px;
 
       .card-title {
-        font-family: Nunito;
+        font-family: Inter;
         font-style: normal;
         font-weight: 600;
         font-size: 16px;
@@ -1556,7 +1705,7 @@ export const StyledActionCard = styled.div`
       }
 
       .card-subtitle {
-        font-family: Nunito;
+        font-family: Inter;
         font-style: normal;
         font-weight: 400;
         font-size: 14px;
