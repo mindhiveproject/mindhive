@@ -98,6 +98,8 @@ function Inner(props) {
           adminMode={props.adminMode}
           isPreview={props.isPreview}
           settings={board?.settings}
+          autoUpdateStudentBoards={props.autoUpdateStudentBoards}
+          propagateToClones={props.propagateToClones}
         />
       </div>
       {(proposalBuildMode ||

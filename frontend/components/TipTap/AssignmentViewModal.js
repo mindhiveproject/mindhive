@@ -76,7 +76,7 @@ const stripHtml = (html) => {
   return html.replace(/<[^>]*>/g, '').trim();
 };
 
-const AssignmentViewModal = ({ open, t, onClose, assignmentId }) => {
+const AssignmentViewModal = ({ user, open, t, onClose, assignmentId }) => {
 
   const { data, loading, error } = useQuery(GET_AN_ASSIGNMENT, {
     variables: { id: assignmentId },

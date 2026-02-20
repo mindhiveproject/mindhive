@@ -154,6 +154,8 @@ class Sections extends Component {
                 adminMode={this.props.adminMode}
                 isPreview={this.props.isPreview}
                 settings={settings}
+                autoUpdateStudentBoards={this.props.autoUpdateStudentBoards}
+                propagateToClones={this.props.propagateToClones}
               />
             </Draggable>
           ))}

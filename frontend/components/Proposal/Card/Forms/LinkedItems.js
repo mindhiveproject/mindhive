@@ -2467,3 +2467,5 @@ const ResourceEditModal = ({
     </Modal>
   );
 };
+
+export { ResourceEditModal };
