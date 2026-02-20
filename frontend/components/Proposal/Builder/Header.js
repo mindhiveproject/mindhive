@@ -29,7 +29,7 @@ export default function ProposalHeader({
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTitleEditing, setIsTitleEditing] = useState(false);
   const [applyLoading, setApplyLoading] = useState(false);
-  const [templateBannerExpanded, setTemplateBannerExpanded] = useState(true);
+  const [templateBannerExpanded, setTemplateBannerExpanded] = useState(false);
   const isTemplateWithClones =
     proposalBuildMode &&
     proposal?.prototypeFor?.length > 0;
@@ -146,7 +146,13 @@ export default function ProposalHeader({
                   label={t("proposal.templateAutoUpdate", "Auto-update student boards")}
                 />
                 <InfoTooltip
+                  tooltipStyle={{
+                    background: "#F3F3F3",
+                    borderRadius: "8px",
+                    border: "1px solid #5D5763",
+                  }}
                   content={t("proposal.templateAutoUpdateHelp", "When on, structural and content changes are pushed to student boards after each save. When off, use the button below to update when ready.")}
+
                 />
               </div>
               {!autoUpdateStudentBoards && (

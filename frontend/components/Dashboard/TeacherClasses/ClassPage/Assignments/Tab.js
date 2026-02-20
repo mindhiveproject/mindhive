@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import moment from "moment";
 import { useMutation } from "@apollo/client";
-import { Button, Modal, Popup, Menu, Icon } from "semantic-ui-react";
+import { Button, Modal } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
@@ -17,43 +17,7 @@ import { AgGridReact } from "ag-grid-react";
 import { EDIT_ASSIGNMENT, DELETE_ASSIGNMENT } from "../../../../Mutations/Assignment";
 import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import ConnectAssignmentToCardModal from "./ConnectAssignmentToCardModal";
-
-// Styled button matching Figma design (Primary Action - Teal)
-const PrimaryButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  font-family: Lato;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  background: #336F8A;
-  color: #ffffff;
-  
-  &:hover {
-    background: #ffc107;
-    color: #1a1a1a;
-  }
-  
-  &:active {
-    background: #4db6ac;
-    color: #1a1a1a;
-  }
-  
-  &:disabled {
-    background: #e0e0e0;
-    color: #9e9e9e;
-    cursor: not-allowed;
-  }
-`;
+import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 
 const SecondaryButton = styled.button`
   display: inline-flex;
@@ -111,7 +75,7 @@ const EditButton = styled.button`
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
+  padding: 6px 12px;
   font-family: Lato;
   font-size: 14px;
   font-weight: 400;
@@ -123,8 +87,8 @@ const EditButton = styled.button`
   transition: all 0.2s ease;
   
   background: #ffffff;
-  color: #336F8A;
-  border: 1.5px solid #336F8A;
+  color: #5D5763;
+  border: 1.5px solid #5D5763;
   
   &:hover {
     background: #f5f5f5;
@@ -234,6 +198,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
 
   // Filter state: Published/Unpublished chips only
   const [selectedPublishedFilter, setSelectedPublishedFilter] = useState(null); // null = all, true = published, false = unpublished
+  const [linkedCardFilter, setLinkedCardFilter] = useState(null); // { type: 'section'|'card', value: string } | null
   const [showLinkedToCardColumn, setShowLinkedToCardColumn] = useState(false); // default: hide "Linked to card" column
   const [assignmentForConnectModal, setAssignmentForConnectModal] = useState(null);
   const [assignmentForPublishModal, setAssignmentForPublishModal] = useState(null);
@@ -263,11 +228,29 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     return html.replace(/<[^>]*>/g, '').trim();
   };
 
-  // Filter assignments by published state only
-  const filteredAssignments =
-    selectedPublishedFilter === null
-      ? assignments
+  const templateBoardId = myclass?.templateProposal?.id;
+
+  // Filter assignments by published state, then by linked card (section/card) if set
+  const filteredAssignments = (() => {
+    let list = selectedPublishedFilter === null
+      ? (assignments || [])
       : (assignments || []).filter((a) => a?.public === selectedPublishedFilter);
+    if (linkedCardFilter && templateBoardId) {
+      list = list.filter((a) => {
+        const templateCards = (a?.proposalCards || []).filter(
+          (c) => c?.section?.board?.id === templateBoardId
+        );
+        return templateCards.some((c) =>
+          linkedCardFilter.type === "section"
+            ? (c?.section?.title ?? "") === linkedCardFilter.value
+            : (c?.title ?? "") === linkedCardFilter.value
+        );
+      });
+    }
+    return list;
+  })();
+
+  const clearLinkedCardFilter = () => setLinkedCardFilter(null);
 
   const handlePublishedFilterToggle = (value) => {
     setSelectedPublishedFilter((prev) => (prev === value ? null : value));
@@ -344,173 +327,185 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     );
   };
 
-  // Linked to card renderer: [Section] > [Card] (section and card each in a chip)
+  const chipButtonStyle = {
+    background: "none",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    textAlign: "left",
+  };
+
+  // Linked to card renderer: [Section] > [Card] (section and card each in its own button; clicking filters by that section/card)
   const LinkedToCardRenderer = (params) => {
     const assignment = params?.data;
-    const templateBoardId = myclass?.templateProposal?.id;
+    const boardId = params?.context?.templateBoardId ?? myclass?.templateProposal?.id;
     const templateCards = (assignment?.proposalCards || []).filter(
-      (c) => c?.section?.board?.id === templateBoardId
+      (c) => c?.section?.board?.id === boardId
     );
-    const handleClick = () => {
-      if (!templateBoardId) {
-        alert("No template board for this class.");
+    const onLinkedCardFilterClick = params?.context?.onLinkedCardFilterClick;
+    const handleConnectClick = () => {
+      if (!boardId) {
+        alert(t("assignment.connectModal.noTemplate", "No template board for this class."));
         return;
       }
       setAssignmentForConnectModal(assignment);
     };
+    if (templateCards.length === 0) {
+      return (
+        <button
+          type="button"
+          onClick={handleConnectClick}
+          style={{ ...chipButtonStyle, display: "flex", alignItems: "center" }}
+        >
+          <LinkedCardChip $placeholder>Click to connect to card</LinkedCardChip>
+        </button>
+      );
+    }
     return (
-      <button
-        type="button"
-        onClick={handleClick}
+      <span
         style={{
-          background: "none",
-          border: "none",
-          padding: 0,
-          cursor: "pointer",
-          textAlign: "left",
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",
           gap: 0,
         }}
       >
-        {templateCards.length > 0 ? (
-          templateCards.map((c, i) => (
-            <span
-              key={i}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                flexWrap: "wrap",
-                marginRight: i < templateCards.length - 1 ? "8px" : 0,
+        {templateCards.map((c, i) => (
+          <span
+            key={i}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              flexWrap: "wrap",
+              marginRight: i < templateCards.length - 1 ? "8px" : 0,
+            }}
+          >
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onLinkedCardFilterClick?.("section", c?.section?.title ?? "");
               }}
+              style={chipButtonStyle}
             >
               <LinkedCardChip>{c?.section?.title || "Section"}</LinkedCardChip>
-              <span style={{ margin: "0 4px", fontSize: "14px", color: "#616161" }}>&gt;</span>
+            </button>
+            <span style={{ margin: "0 4px", fontSize: "14px", color: "#616161" }}>&gt;</span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onLinkedCardFilterClick?.("card", c?.title ?? "");
+              }}
+              style={chipButtonStyle}
+            >
               <LinkedCardChip>{c?.title || "Card"}</LinkedCardChip>
-            </span>
-          ))
-        ) : (
-          <LinkedCardChip $placeholder>Click to connect to card</LinkedCardChip>
-        )}
-      </button>
+            </button>
+          </span>
+        ))}
+      </span>
     );
   };
 
-  // Actions dropdown renderer
+  // Change link: opens connect-to-card modal for this row (only shown when Linked to card column is visible)
+  const ChangeLinkRenderer = (params) => {
+    const assignment = params?.data;
+    const templateBoardId = params?.context?.templateBoardId ?? myclass?.templateProposal?.id;
+    const handleClick = () => {
+      if (!templateBoardId) {
+        alert(t("assignment.connectModal.noTemplate", "No template board for this class."));
+        return;
+      }
+      setAssignmentForConnectModal(assignment);
+    };
+    return (
+      <EditButton type="button" onClick={handleClick}>
+        {t("assignment.changeLinkToCard", "Change card")}
+      </EditButton>
+    );
+  };
+
+  // Actions dropdown renderer (uses DesignSystem DropdownMenu)
   const ActionsRenderer = (params) => {
     const assignment = params?.data;
     const isPublished = assignment?.public || false;
     const isOwner = assignment?.author?.id === user?.id;
+    const isClassTeacherOrMentor =
+      myclass?.creator?.id === user?.id ||
+      (myclass?.mentors || []).some((m) => m?.id === user?.id);
+    const canManageAssignment = isOwner || isClassTeacherOrMentor;
     const router = useRouter();
 
-    const handleEdit = () => {
-      router.push({
-        pathname: `/dashboard/myclasses/${myclass?.code}`,
-        query: {
-          page: "assignments",
-          action: "edit",
-          assignment: assignment?.code,
-        },
-      });
-    };
-
-    const handlePreview = () => {
-      router.push({
-        pathname: `/dashboard/myclasses/${myclass?.code}`,
-        query: {
-          page: "assignments",
-          action: "view",
-          assignment: assignment?.code,
-        },
-      });
-    };
-
-    const handlePublish = () => {
-      const confirmMessage = isPublished 
-        ? t("assignment.revokeConfirm")
-        : t("assignment.submitConfirm");
-      
-      if (confirm(confirmMessage)) {
-        editAssignment({
-          variables: { 
-            id: assignment?.id,
-            input: { public: !isPublished } 
-          },
-        }).catch((err) => {
-          alert(err.message);
-        });
-      }
-    };
-
-    const handleDelete = () => {
-      if (confirm(t("assignment.deleteConfirm"))) {
-        deleteAssignment({
-          variables: { id: assignment?.id },
-        }).catch((err) => {
-          alert(err.message);
-        });
-      }
-    };
-
-    const handleHomeworkOverview = () => {
-      router.push({
-        pathname: `/dashboard/myclasses/${myclass?.code}`,
-        query: {
-          page: "assignments",
-          action: "homeworkOverview",
-          assignment: assignment?.code,
-        },
-      });
-    };
-
-    const menu = (
-      <Menu vertical style={{ border: 'none', boxShadow: 'none' }}>
-        {isOwner && (
-          <Menu.Item onClick={handleEdit} style={{ borderTop: 'none', borderBottom: 'none' }}>
-            {t("assignment.edit")}
-          </Menu.Item>
-        )}
-        <Menu.Item onClick={handlePreview} style={{ borderTop: 'none', borderBottom: 'none' }}>
-          {t("assignment.preview")}
-        </Menu.Item>
-        <Menu.Item onClick={handleHomeworkOverview} style={{ borderTop: 'none', borderBottom: 'none' }}>
-          {t("assignment.reviewSubmissions") || "Review Submissions"}
-        </Menu.Item>
-        {isOwner && (
-          <Menu.Item onClick={handlePublish} style={{ borderTop: 'none', borderBottom: 'none' }}>
-            {isPublished ? t("assignment.unpublish") : t("assignment.publishToStudents")}
-          </Menu.Item>
-        )}
-        {isOwner && (
-          <Menu.Item onClick={handleDelete} style={{ color: '#d32f2f', borderTop: 'none', borderBottom: 'none' }}>
-            <Icon name="trash" style={{ color: '#d32f2f' }} />
-            {t("assignment.delete")}
-          </Menu.Item>
-        )}
-      </Menu>
-    );
+    const items = [
+      ...(canManageAssignment
+        ? [
+            {
+              key: "edit",
+              label: t("assignment.edit"),
+              onClick: () =>
+                router.push({
+                  pathname: `/dashboard/myclasses/${myclass?.code}`,
+                  query: { page: "assignments", action: "edit", assignment: assignment?.code },
+                }),
+            },
+          ]
+        : []),
+      {
+        key: "preview",
+        label: t("assignment.preview"),
+        onClick: () =>
+          router.push({
+            pathname: `/dashboard/myclasses/${myclass?.code}`,
+            query: { page: "assignments", action: "view", assignment: assignment?.code },
+          }),
+      },
+      {
+        key: "homeworkOverview",
+        label: t("assignment.reviewSubmissions", "Review submissions"),
+        onClick: () =>
+          router.push({
+            pathname: `/dashboard/myclasses/${myclass?.code}`,
+            query: { page: "assignments", action: "homeworkOverview", assignment: assignment?.code },
+          }),
+      },
+      ...(canManageAssignment
+        ? [
+            {
+              key: "publish",
+              label: isPublished ? t("assignment.unpublish") : t("assignment.publishToStudents"),
+              onClick: () => {
+                const confirmMessage = isPublished
+                  ? t("assignment.revokeConfirm")
+                  : t("assignment.submitConfirm");
+                if (confirm(confirmMessage)) {
+                  editAssignment({
+                    variables: { id: assignment?.id, input: { public: !isPublished } },
+                  }).catch((err) => alert(err.message));
+                }
+              },
+            },
+            ...(isOwner
+              ? [{
+                  key: "delete",
+                  label: t("assignment.delete"),
+                  danger: true,
+                  onClick: () => {
+                    if (confirm(t("assignment.deleteConfirm"))) {
+                      deleteAssignment({ variables: { id: assignment?.id } }).catch((err) =>
+                        alert(err.message)
+                      );
+                    }
+                  },
+                }]
+              : []),
+          ]
+        : []),
+    ];
 
     return (
-      <Popup
-        trigger={
-          <Button
-            icon="ellipsis vertical"
-            style={{ 
-              borderRadius: '100px',
-              border: '1.5px solid #336F8A',
-              background: '#ffffff',
-              color: '#336F8A',
-              padding: '8px 16px',
-            }}
-          >
-            See actions
-          </Button>
-        }
-        content={menu}
-        on="click"
-        position="bottom right"
-        style={{ zIndex: 10000 }}
+      <DropdownMenu
+        triggerLabel={t("assignment.more", "More")}
+        items={items}
       />
     );
   };
@@ -544,6 +539,22 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     },
   };
 
+  const changeLinkColumnDef = {
+    field: "changeLink",
+    headerName: "",
+    cellRenderer: ChangeLinkRenderer,
+    suppressFilter: true,
+    sortable: false,
+    flex: 0,
+    minWidth: 90,
+    maxWidth: 120,
+    cellStyle: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  };
+
   // Column definitions
   const columnDefs = [
     {
@@ -572,26 +583,30 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       flex: 1,
       valueGetter: (params) => params?.data?.public ? "Published" : "Unpublished",
     },
-    ...(showLinkedToCardColumn ? [linkedToCardColumnDef] : []),
-    {
-      field: "completedHomework",
-      headerName: t("assignment.completedHomework"),
-      cellRenderer: CompletedHomeworkRenderer,
-      filter: "agNumberColumnFilter",
-      sortable: true,
-      flex: 1,
-      valueGetter: (params) => getCompletedHomeworkCount(params?.data?.homework),
-    },
-    {
-      field: "createdAt",
-      headerName: t("assignment.dateCreated"),
-      valueGetter: (params) => params?.data?.createdAt || null,
-      valueFormatter: (params) =>
-        params.value ? moment(params.value).format("MMMM D, YYYY") : '',
-      filter: "agDateColumnFilter",
-      sortable: true,
-      flex: 1,
-    },
+    ...(showLinkedToCardColumn ? [linkedToCardColumnDef, changeLinkColumnDef] : []),
+    ...(!showLinkedToCardColumn
+      ? [
+          {
+            field: "completedHomework",
+            headerName: t("assignment.completedHomework"),
+            cellRenderer: CompletedHomeworkRenderer,
+            filter: "agNumberColumnFilter",
+            sortable: true,
+            flex: 1,
+            valueGetter: (params) => getCompletedHomeworkCount(params?.data?.homework),
+          },
+          {
+            field: "createdAt",
+            headerName: t("assignment.dateCreated"),
+            valueGetter: (params) => params?.data?.createdAt || null,
+            valueFormatter: (params) =>
+              params.value ? moment(params.value).format("MMMM D, YYYY") : "",
+            filter: "agDateColumnFilter",
+            sortable: true,
+            flex: 1,
+          },
+        ]
+      : []),
     {
       field: "actions",
       headerName: t("assignment.actions"),
@@ -605,6 +620,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        overflow: 'visible',
       },
     },
   ];
@@ -737,6 +753,58 @@ export default function AssignmentTab({ assignments, myclass, user }) {
             </span>
           )}
         </button>
+        {linkedCardFilter != null && (
+          <>
+          |
+            <button
+              type="button"
+              onClick={clearLinkedCardFilter}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                height: "32px",
+                boxSizing: "border-box",
+                justifyContent: "center",
+                fontSize: "14px",
+                flexShrink: 0,
+                borderRadius: "8px",
+                padding: "6px 8px 6px 12px",
+                background: "#E4DFF6",
+                border: "1px solid #625B71",
+                color: "#625B71",
+                maxWidth: "100%",
+                wordBreak: "break-word",
+                cursor: "pointer",
+              }}
+            >
+              <span>{t("assignment.removeCardColumnFilter", "Remove card/column filter")}</span>
+              <span
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "18px",
+                  height: "18px",
+                  flexShrink: 0,
+                }}
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+                    fill="#171717"
+                  />
+                </svg>
+              </span>
+            </button>
+          </>
+        )}
       </div>
 
       <div style={{ width: "100%", height: "600px" }}>
@@ -748,6 +816,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
               templateBoardId: myclass?.templateProposal?.id,
               onTogglePublishStatus: handleOpenPublishConfirm,
               updatingStatusAssignmentId,
+              onLinkedCardFilterClick: (type, value) => setLinkedCardFilter({ type, value }),
             }}
             pagination={pagination}
             paginationPageSize={paginationPageSize}
