@@ -25,6 +25,7 @@
 			"unpublishAll": "إلغاء نشر جميع العناصر المحددة"
 		},
 		"cancel": "يلغي",
+		"changeAssignedProjectCard": "تغيير بطاقة المشروع المرتبطة",
 		"changeLinkToCard": "بطاقة التغيير",
 		"changeSuccess": "تم حفظ التغييرات بنجاح",
 		"chooseClassFirst": "يجب عليك ربط هذه المهمة بفئة قبل حفظها",
@@ -96,7 +97,7 @@
 		"placeholderDescription": "تم تقديم العنصر النائب للطلاب",
 		"placeholderInstructions": "اكتب مكانًا لمربع إجابة طلابك",
 		"preview": "",
-		"projectCard": "تغيير بطاقة المشروع المرتبطة",
+		"projectCard": "بطاقة المشروع",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "نشر للطلاب",

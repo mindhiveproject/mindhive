@@ -25,6 +25,7 @@
 			"unpublishAll": "सभी चयनित सामग्री को अप्रकाशित करें"
 		},
 		"cancel": "रद्द करना",
+		"changeAssignedProjectCard": "संबंधित प्रोजेक्ट कार्ड बदलें",
 		"changeLinkToCard": "कार्ड बदलें",
 		"changeSuccess": "परिवर्तनों को सफलतापूर्वक सहेजा",
 		"chooseClassFirst": "आपको इस असाइनमेंट को सहेजने से पहले इसे किसी क्लास से संबद्ध करना होगा",
@@ -96,7 +97,7 @@
 		"placeholderDescription": "छात्रों को प्लेसहोल्डर प्रस्तुत किया गया",
 		"placeholderInstructions": "अपने छात्रों के उत्तर बॉक्स के लिए एक प्लेसहोल्डर लिखें",
 		"preview": "",
-		"projectCard": "संबंधित प्रोजेक्ट कार्ड बदलें",
+		"projectCard": "प्रोजेक्ट कार्ड",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "छात्रों के लिए प्रकाशित करें",

@@ -25,6 +25,7 @@
 			"unpublishAll": "Dépublier tous les éléments sélectionnés"
 		},
 		"cancel": "Annuler",
+		"changeAssignedProjectCard": "Carte de projet associée à la modification",
 		"changeLinkToCard": "Carte de change",
 		"changeSuccess": "Modifications enregistrées avec succès",
 		"chooseClassFirst": "Vous devez associer ce devoir à une classe avant de l'enregistrer",
@@ -96,7 +97,7 @@
 		"placeholderDescription": "Espace réservé présenté aux étudiants",
 		"placeholderInstructions": "Écrivez un espace réservé pour la boîte de réponse de vos élèves",
 		"preview": "",
-		"projectCard": "Carte de projet associée à la modification",
+		"projectCard": "Carte de projet",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Publier pour les étudiants",

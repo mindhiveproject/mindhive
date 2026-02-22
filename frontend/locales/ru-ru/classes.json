@@ -25,6 +25,7 @@
 			"unpublishAll": "Снять с публикации все выбранные элементы"
 		},
 		"cancel": "Отмена",
+		"changeAssignedProjectCard": "Изменить соответствующую карточку проекта",
 		"changeLinkToCard": "Сменить карту",
 		"changeSuccess": "Изменения успешно сохранены",
 		"chooseClassFirst": "Перед сохранением задания необходимо связать его с классом.",
@@ -96,7 +97,7 @@
 		"placeholderDescription": "Заполнитель, представленный студентам",
 		"placeholderInstructions": "Напишите заполнитель для поля ответа вашего ученика.",
 		"preview": "",
-		"projectCard": "Изменить соответствующую карточку проекта",
+		"projectCard": "Проектная карта",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Опубликовать для студентов",

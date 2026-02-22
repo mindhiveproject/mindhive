@@ -25,6 +25,7 @@
 			"unpublishAll": "取消发布所有选定内容"
 		},
 		"cancel": "取消",
+		"changeAssignedProjectCard": "更改关联的项目卡",
 		"changeLinkToCard": "找零卡",
 		"changeSuccess": "更改已成功保存",
 		"chooseClassFirst": "您必须先将此作业与课程关联，然后才能保存它",
@@ -96,7 +97,7 @@
 		"placeholderDescription": "向学生展示占位符",
 		"placeholderInstructions": "为学生的答案框写一个占位符",
 		"preview": "",
-		"projectCard": "更改关联的项目卡",
+		"projectCard": "项目卡",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "发布给学生",

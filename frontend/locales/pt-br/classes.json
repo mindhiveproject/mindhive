@@ -25,6 +25,7 @@
 			"unpublishAll": "Despublicar todos os selecionados"
 		},
 		"cancel": "Cancelar",
+		"changeAssignedProjectCard": "Alterar o cartão do projeto associado",
 		"changeLinkToCard": "Cartão de troco",
 		"changeSuccess": "Alterações salvas com sucesso",
 		"chooseClassFirst": "Você deve associar esta tarefa a uma classe antes de salvá-la",
@@ -96,7 +97,7 @@
 		"placeholderDescription": "Espaço reservado apresentado aos alunos",
 		"placeholderInstructions": "Escreva um espaço reservado para a caixa de resposta dos seus alunos",
 		"preview": "",
-		"projectCard": "Alterar o cartão do projeto associado",
+		"projectCard": "Cartão do projeto",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Publicar para estudantes",

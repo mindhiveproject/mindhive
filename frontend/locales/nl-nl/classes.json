@@ -25,6 +25,7 @@
 			"unpublishAll": "Verwijder alle geselecteerde items"
 		},
 		"cancel": "Annuleren",
+		"changeAssignedProjectCard": "Wijzig de bijbehorende projectkaart",
 		"changeLinkToCard": "Wisselkaart",
 		"changeSuccess": "Veranderingen succesvol opgeslagen",
 		"chooseClassFirst": "U moet deze opdracht aan een klas koppelen voordat u deze opslaat",
@@ -96,7 +97,7 @@
 		"placeholderDescription": "Tijdelijke aanduiding gepresenteerd aan studenten",
 		"placeholderInstructions": "Schrijf een tijdelijke aanduiding voor het antwoordvak van uw studenten",
 		"preview": "",
-		"projectCard": "Wijzig de bijbehorende projectkaart",
+		"projectCard": "Projectkaart",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Publiceren voor studenten",

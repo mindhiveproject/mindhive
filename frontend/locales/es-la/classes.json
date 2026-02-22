@@ -25,6 +25,7 @@
 			"unpublishAll": "Anular la publicación de todos los seleccionados"
 		},
 		"cancel": "Cancelar",
+		"changeAssignedProjectCard": "Cambiar la tarjeta de proyecto asociada",
 		"changeLinkToCard": "Cambiar tarjeta",
 		"changeSuccess": "Los cambios se guardaron correctamente",
 		"chooseClassFirst": "Debes asociar esta tarea a una clase antes de guardarla",
@@ -96,7 +97,7 @@
 		"placeholderDescription": "Marcador de posición presentado a los estudiantes",
 		"placeholderInstructions": "Escriba un marcador de posición para el cuadro de respuestas de sus estudiantes",
 		"preview": "",
-		"projectCard": "Cambiar la tarjeta de proyecto asociada",
+		"projectCard": "Tarjeta de proyecto",
 		"publish": "",
 		"published": "",
 		"publishToStudents": "Publicar para estudiantes",

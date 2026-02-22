@@ -25,6 +25,7 @@
 			"unpublishAll": "Unpublish all selected"
 		},
 		"cancel": "Cancel",
+		"changeAssignedProjectCard": "Change associated Project card",
 		"changeLinkToCard": "Change card",
 		"changeSuccess": "Changes saved successfully",
 		"chooseClassFirst": "You must associate this assignment to a class before saving it",
@@ -96,7 +97,7 @@
 		"placeholderDescription": "Placeholder presented to students",
 		"placeholderInstructions": "Template for your students to fill in (you can leave this blank):",
 		"preview": "Preview",
-		"projectCard": "Change associated Project card",
+		"projectCard": "Project card",
 		"publish": "Publish",
 		"published": "Published",
 		"publishToStudents": "Publish to students",

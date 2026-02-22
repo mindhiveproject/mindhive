@@ -211,7 +211,7 @@ export default function BulkActionsModal({
         </Section>
 
         <Section>
-          <SectionTitle>{t("assignment.projectCard", "Change associated Project card")}</SectionTitle>
+          <SectionTitle>{t("assignment.bulkActionsModal.changeProjectCard", "Change associated Project card")}</SectionTitle>
           <ActionButton
             type="button"
             onClick={handleDisconnectAll}

@@ -108,10 +108,13 @@ const EditButton = styled.button`
 const BulkActionsButtonWrapper = styled.div`
   display: inline-flex;
   align-items: center;
+  min-width: 0;
   max-width: ${(props) => (props.$visible ? "200px" : "0")};
+  min-height: 0;
+  max-height: ${(props) => (props.$visible ? "none" : "0")};
   opacity: ${(props) => (props.$visible ? 1 : 0)};
   overflow: hidden;
-  transition: max-width 0.2s ease, opacity 0.2s ease;
+  transition: max-width 0.2s ease, max-height 0.2s ease, opacity 0.2s ease;
 `;
 
 // Status chip styled components based on Figma design
@@ -675,10 +678,9 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       <div
         style={{
           display: "flex",
-          alignItems: "center", 
+          alignItems: "center",
           flexWrap: "wrap",
           gap: "8px",
-          alignItems: "center",
           borderTop: "1px solid #E0E0E0",
           paddingTop: "16px",
           marginBottom: "16px",
@@ -689,14 +691,16 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           type="button"
           $active={showLinkedToCardColumn}
           onClick={() => setShowLinkedToCardColumn((prev) => !prev)}
+          style={{ gap: 12, marginRight: 0, paddingRight: 12 }}
         >
           <span>{t("assignment.projectCard", "Project card")}</span>
           <img
-            src={showLinkedToCardColumn ? "/assets/icons/eye_open.svg" : "/assets/icons/eye_close.svg"}
+            // src={showLinkedToCardColumn ? "/assets/icons/eye_open.svg" : "/assets/icons/eye_close.svg"}
+            src="/assets/icons/project_card_icon.svg"
             alt=""
-            width={18}
+            width={34}
             height={18}
-            style={{ flexShrink: 0 }}
+            style={{ flexShrink: 0, opacity: showLinkedToCardColumn ? 1 : 0.8 }}
           />
         </LinkedCardsToggleButton>
         <BulkActionsButtonWrapper
@@ -709,7 +713,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
             {t("assignment.bulkActions", "Bulk actions")}
           </SecondaryButton>
         </BulkActionsButtonWrapper>
-        |
+        <span style={{ flexShrink: 0 }} aria-hidden>|</span>
         <button
           type="button"
           onClick={() => handlePublishedFilterToggle(true)}
@@ -796,7 +800,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
         </button>
         {linkedCardFilter != null && (
           <>
-          |
+            <span style={{ flexShrink: 0 }} aria-hidden>|</span>
             <button
               type="button"
               onClick={clearLinkedCardFilter}
