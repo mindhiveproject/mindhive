@@ -46,6 +46,7 @@ export const GET_CLASS = gql`
       description
       code
       creator {
+        id
         username
       }
       students {

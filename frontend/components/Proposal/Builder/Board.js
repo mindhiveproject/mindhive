@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import sortBy from "lodash/sortBy";
 
 import { useQuery, useMutation } from "@apollo/client";
@@ -21,6 +21,8 @@ const Board = ({
   proposalBuildMode,
   adminMode,
   isPreview,
+  autoUpdateStudentBoards,
+  propagateToClones,
 }) => {
   const { t } = useTranslation("builder");
   const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
@@ -30,9 +32,51 @@ const Board = ({
   const proposal = data?.proposalBoard || undefined;
 
   const [sections, setSections] = useState([]);
-  const [createSection, createSectionState] = useMutation(CREATE_SECTION);
-  const [updateSection, updateSectionState] = useMutation(UPDATE_SECTION);
-  const [deleteSection, deleteSectionState] = useMutation(DELETE_SECTION);
+  const [createSectionMut, createSectionState] = useMutation(CREATE_SECTION);
+  const [updateSectionMut, updateSectionState] = useMutation(UPDATE_SECTION);
+  const [deleteSectionMut, deleteSectionState] = useMutation(DELETE_SECTION);
+
+  const createSection = useCallback(
+    async (opts) => {
+      await createSectionMut(opts);
+      if (autoUpdateStudentBoards && propagateToClones) {
+        try {
+          await propagateToClones();
+        } catch (e) {
+          console.error("Auto-propagate after section create failed:", e);
+        }
+      }
+    },
+    [createSectionMut, autoUpdateStudentBoards, propagateToClones]
+  );
+
+  const deleteSection = useCallback(
+    async (opts) => {
+      await deleteSectionMut(opts);
+      if (autoUpdateStudentBoards && propagateToClones) {
+        try {
+          await propagateToClones();
+        } catch (e) {
+          console.error("Auto-propagate after section delete failed:", e);
+        }
+      }
+    },
+    [deleteSectionMut, autoUpdateStudentBoards, propagateToClones]
+  );
+
+  const updateSection = useCallback(
+    async (opts) => {
+      await updateSectionMut(opts);
+      if (autoUpdateStudentBoards && propagateToClones) {
+        try {
+          await propagateToClones();
+        } catch (e) {
+          console.error("Auto-propagate after section update failed:", e);
+        }
+      }
+    },
+    [updateSectionMut, autoUpdateStudentBoards, propagateToClones]
+  );
 
   const [errors, setErrors] = useState([]);
 
@@ -122,6 +166,8 @@ const Board = ({
         proposalBuildMode={proposalBuildMode}
         adminMode={adminMode}
         isPreview={isPreview}
+        autoUpdateStudentBoards={autoUpdateStudentBoards}
+        propagateToClones={propagateToClones}
       />
     </>
   );
