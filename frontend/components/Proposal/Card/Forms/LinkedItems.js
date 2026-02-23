@@ -28,6 +28,7 @@ import { GET_RESOURCE } from "../../../Queries/Resource";
 import AssignmentEditModal from "../../../TipTap/AssignmentEditModal"
 import AssignmentViewModal from "../../../TipTap/AssignmentViewModal"
 import AssignmentCopyModal from "../../../TipTap/AssignmentCopyModal";
+import Chip from "../../../DesignSystem/Chip";
 import { styleText } from "util";
 import { PreviewSection } from "./PreviewSection";
 
@@ -1815,14 +1816,25 @@ const ItemTab = ({
           background: "#f9fafb",
           borderBottom: "1px solid #e0e0e0",
           ...TYPO.titleS,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "12px",
         }}
       >
-        {t("board.expendedCard.previewAssignment", "Preview Assignment")}
-        {hasChanges && (
-          <span style={{ ...TYPO.caption, color: "#8A2CF6", marginLeft: "10px" }}>
-            {t("assignment.unsavedChanges", "(Unsaved changes)")}
-          </span>
-        )}
+        <span style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
+          {t("board.expendedCard.previewAssignment", "Preview Assignment")}
+          {hasChanges && (
+            <span style={{ ...TYPO.caption, color: "#8A2CF6" }}>
+              {t("assignment.unsavedChanges", "(Unsaved changes)")}
+            </span>
+          )}
+        </span>
+        <Chip 
+          label={t("board.editMode", "You are in Edit Mode")}
+          selected={false}
+          shape="square"
+        />
       </Modal.Header>
       <Modal.Content
         scrolling
@@ -2208,16 +2220,27 @@ const ResourceEditModal = ({
           background: "#f9fafb",
           borderBottom: "1px solid #e0e0e0",
           ...TYPO.titleS,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "12px",
         }}
       >
-        {isCreatingCopy
-          ? t("boardManagement.customizeRessource", "Customize Resource")
-          : t("boardManagement.editResource", "Edit Resource")}
-        {!isCreatingCopy && hasChanges && (
-          <span style={{ ...TYPO.caption, color: "#8A2CF6", marginLeft: "10px" }}>
-            {t("assignment.unsavedChanges", "(Unsaved changes)")}
-          </span>
-        )}
+        <span style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
+          {isCreatingCopy
+            ? t("boardManagement.customizeRessource", "Customize Resource")
+            : t("boardManagement.editResource", "Edit Resource")}
+          {!isCreatingCopy && hasChanges && (
+            <span style={{ ...TYPO.caption, color: "#8A2CF6" }}>
+              {t("assignment.unsavedChanges", "(Unsaved changes)")}
+            </span>
+          )}
+        </span>
+        <Chip 
+          label={t("board.editMode", "You are in Edit Mode")}
+          selected={false}
+          shape="square"
+         />
       </Modal.Header>
       <Modal.Content
         scrolling
