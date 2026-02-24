@@ -7,12 +7,7 @@ import {
 import { Button, Icon, Modal, Tab } from "semantic-ui-react";
 import React, { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
-
-// Strip HTML tags from text
-const stripHtml = (html) => {
-  if (!html) return '';
-  return html.replace(/<[^>]*>/g, '').trim();
-};
+import { stripHtml } from "./utils";
 
 export default function Resources({
   proposal,
