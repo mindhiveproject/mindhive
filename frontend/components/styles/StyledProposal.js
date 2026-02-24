@@ -1052,6 +1052,14 @@ export const StyledProposal = styled.div`
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
+        min-width: 0;
+        .studyTitle {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
       .right {
         display: grid;
