@@ -193,9 +193,15 @@ export default function BuilderProposalCard({
             </div>
           </div>
         </div>
-        <div className="middle">
-          <span className="studyTitle">{proposal?.title}</span>
-        </div>
+        <InfoTooltip
+          content={proposal?.title || ""}
+          wrapperStyle={{ minWidth: 0, width: "100%" }}
+          tooltipStyle={{ maxWidth: "min(400px, 90vw)" }}
+        >
+          <div className="middle">
+            <span className="studyTitle">{proposal?.title}</span>
+          </div>
+        </InfoTooltip>
         <div className={`right${previewMode ? " rightPreviewMode" : ""}`}>
           {previewMode ? (
             <button
