@@ -564,6 +564,12 @@ export default function BuilderProposalCard({
               selectedTasks={inputs?.tasks || []}
               selectedStudies={inputs?.studies || []}
               totalLinked={totalLinked}
+              onAssignmentPublicChange={(assignmentId, publicValue) => {
+                const next = (inputs?.assignments || []).map((a) =>
+                  a?.id === assignmentId ? { ...a, public: publicValue } : a
+                );
+                handleChange({ target: { name: "assignments", value: next } });
+              }}
             />
           </>
 

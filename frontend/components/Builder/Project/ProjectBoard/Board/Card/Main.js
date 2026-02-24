@@ -1514,7 +1514,7 @@ export default function ProposalCard({
               <div className="linkedItemsSection">
                 {inputs?.assignments?.length > 0 && (
                   <PreviewSection
-                    title={t("board.expendedCard.previewLinkedAssignments")}
+                    title={t("board.expendedCard.previewLinkedAssignments")}asd
                     items={inputs?.assignments}
                     type="assignment"
                     proposal={proposal}
