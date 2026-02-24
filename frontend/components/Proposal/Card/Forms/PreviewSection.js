@@ -5,12 +5,7 @@ import { Icon } from "semantic-ui-react";
 import InfoTooltip from "../../../Builder/Project/ProjectBoard/Board/PDF/Preview/InfoTooltip";
 import { MANAGE_FAVORITE_TASKS } from "../../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
-
-// Strip HTML tags from text (used for item titles in chips)
-const stripHtml = (html) => {
-  if (!html) return "";
-  return String(html).replace(/<[^>]*>/g, "").trim();
-};
+import { stripHtml, TYPO } from "./utils";
 
 // Base chip layout (all chips)
 const CHIP_BASE_STYLES = {
@@ -21,14 +16,6 @@ const CHIP_BASE_STYLES = {
   alignItems: "flex-start",
   gap: "10px",
   borderRadius: "8px",
-};
-
-// Typography (Figma Design System)
-const TYPO = {
-  fontFamily: "Inter, sans-serif",
-  bodySemibold: { fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px", fontWeight: 600 },
-  label: { fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px", fontWeight: 400 },
-  labelSemibold: { fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px", fontWeight: 600 },
 };
 
 // Assignment chip styles (Disabled, Public, Completed)
