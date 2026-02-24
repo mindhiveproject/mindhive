@@ -61,6 +61,7 @@ export default function LinkedItems({
   selectedTasks,
   selectedStudies,
   totalLinked,
+  onAssignmentPublicChange,
 }) {
   const { t } = useTranslation("classes");
 
@@ -579,6 +580,7 @@ export default function LinkedItems({
         }}
         assignmentId={selectedAssignmentId}
         user={user}
+        onAssignmentPublicChange={onAssignmentPublicChange}
       />
   
       <AssignmentViewModal
@@ -1644,7 +1646,7 @@ const ItemTab = ({
     );
   };
 
-  const AssignmentModal = ({ open, t, onClose, assignmentId, user }) => {
+  const AssignmentModal = ({ open, t, onClose, assignmentId, user, onAssignmentPublicChange }) => {
   const [editedAssignment, setEditedAssignment] = useState({
     title: '',
     content: '',
@@ -1941,9 +1943,13 @@ const ItemTab = ({
                     if (confirm(t("assignment.revokeConfirm"))) {
                       editAssignment({
                         variables: { input: { public: false } },
-                      }).catch((err) => {
-                        alert(err.message);
-                      });
+                      })
+                        .then(() => {
+                          onAssignmentPublicChange?.(assignmentId, false);
+                        })
+                        .catch((err) => {
+                          alert(err.message);
+                        });
                     }
                   }}
                 >
@@ -1964,9 +1970,13 @@ const ItemTab = ({
                   if (confirm(t("assignment.submitConfirm"))) {
                     editAssignment({
                       variables: { input: { public: true } },
-                    }).catch((err) => {
-                      alert(err.message);
-                    });
+                    })
+                      .then(() => {
+                        onAssignmentPublicChange?.(assignmentId, true);
+                      })
+                      .catch((err) => {
+                        alert(err.message);
+                      });
                   }
                 }}
               >
