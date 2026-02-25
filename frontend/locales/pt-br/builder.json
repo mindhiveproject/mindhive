@@ -683,6 +683,7 @@
 		"titlePlaceholder": "Insira o título do quadro do projeto"
 	},
 	"proposalPage": {
+		"confirmLeaveListView": "Deseja sair da visualização em lista e voltar ao quadro? As alterações não salvas serão perdidas.",
 		"download": "Download",
 		"downloadTooltip": "O conteúdo para download é baseado nos filtros de status e etapa de revisão selecionados abaixo.",
 		"preview": "Visualização",

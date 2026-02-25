@@ -24,6 +24,7 @@ export default function ProposalHeader({
   refetchQueries,
   isPDF,
   setIsPDF,
+  hasUnsavedChangesInPDFView = false,
   selectedStatuses = [],
   selectedReviewSteps = [],
   selectedAssignedUsers = [],
@@ -89,7 +90,14 @@ export default function ProposalHeader({
       setShowCollaboratorModal(true);
     }
   };
-  
+
+  const handleSwitchToBoardView = () => {
+    if (isPDF && hasUnsavedChangesInPDFView && !window.confirm(t("proposalPage.confirmLeaveListView", "Do you want to leave the list view and go back to the board? Your unsaved changes will be lost."))) {
+      return;
+    }
+    setIsPDF(false);
+  };
+
   return (
     <div className="header">
       <div className="headerContent">
@@ -263,7 +271,7 @@ export default function ProposalHeader({
               <div className="viewToggleDownloadRow" style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: "12px", width: "100%" }}>
                 <div className="viewToggleGroup">
                   <button
-                    onClick={() => setIsPDF(false)}
+                    onClick={handleSwitchToBoardView}
                     className={`viewToggleButton left ${!isPDF ? "active" : "inactive"}`}
                   >
                     <img src="/assets/icons/pencil.svg" alt="Edit" />
@@ -394,7 +402,7 @@ export default function ProposalHeader({
 
               <div className="viewToggleGroup">
                 <button
-                  onClick={() => setIsPDF(false)}
+                  onClick={handleSwitchToBoardView}
                   className={`viewToggleButton left ${!isPDF ? "active" : "inactive"}`}
                 >
                   <img src="/assets/icons/pencil.svg" alt="Edit" />

@@ -683,6 +683,7 @@
 		"titlePlaceholder": "Introduzca el título del tablero del proyecto"
 	},
 	"proposalPage": {
+		"confirmLeaveListView": "¿Quieres salir de la vista de lista y volver al tablero? Los cambios no guardados se perderán.",
 		"download": "Descargar",
 		"downloadTooltip": "La descarga de contenido se basa en los filtros de estado y paso de revisión seleccionados a continuación.",
 		"preview": "Avance",

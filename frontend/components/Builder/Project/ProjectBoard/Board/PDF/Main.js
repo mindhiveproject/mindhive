@@ -11,6 +11,7 @@ import useTranslation from "next-translate/useTranslation";
 export default function ProposalPDF({ 
   proposalId, 
   user,
+  onUnsavedChangesChange,
   selectedStatuses = [],
   setSelectedStatuses,
   selectedReviewSteps = [],
@@ -894,7 +895,7 @@ export default function ProposalPDF({
                 </p>
               </div>
             ) : (
-              <Preview cards={cards.flat()} user={user} submitStatuses={submitStatuses} />
+              <Preview cards={cards.flat()} user={user} submitStatuses={submitStatuses} proposalId={proposalId} onUnsavedChangesChange={onUnsavedChangesChange} />
             )}
           </div>
         </div>

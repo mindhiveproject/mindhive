@@ -683,6 +683,7 @@
 		"titlePlaceholder": "Saisissez le titre du tableau du projet"
 	},
 	"proposalPage": {
+		"confirmLeaveListView": "Voulez-vous quitter la vue liste et revenir au tableau ? Vos modifications non enregistrées seront perdues.",
 		"download": "Télécharger",
 		"downloadTooltip": "Le contenu téléchargé dépend des filtres d'état et d'étape de révision sélectionnés ci-dessous.",
 		"preview": "Aperçu",

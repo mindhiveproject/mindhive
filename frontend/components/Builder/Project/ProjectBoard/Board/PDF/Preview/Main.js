@@ -1,6 +1,20 @@
+import { useRef, useCallback } from "react";
 import Card from "./Card";
 
-export default function Preview({ cards, user, submitStatuses = {} }) {
+export default function Preview({ cards, user, submitStatuses = {}, proposalId, onUnsavedChangesChange }) {
+  const cardUnsavedRef = useRef({});
+
+  const handleUnsavedChange = useCallback(
+    (cardId, hasChanges) => {
+      if (cardId != null) {
+        cardUnsavedRef.current[cardId] = hasChanges;
+      }
+      const hasAny = Object.values(cardUnsavedRef.current).some(Boolean);
+      onUnsavedChangesChange?.(hasAny);
+    },
+    [onUnsavedChangesChange]
+  );
+
   return (
     <div
       style={{
@@ -25,7 +39,15 @@ export default function Preview({ cards, user, submitStatuses = {} }) {
       }}
     >
       {cards.map((card, index) => (
-        <Card key={card?.id || index} card={card} cardId={card?.id} user={user} submitStatuses={submitStatuses} />
+        <Card
+          key={card?.id || index}
+          card={card}
+          cardId={card?.id}
+          user={user}
+          submitStatuses={submitStatuses}
+          proposalId={proposalId}
+          onUnsavedChange={onUnsavedChangesChange ? (hasChanges) => handleUnsavedChange(card?.id, hasChanges) : undefined}
+        />
       ))}
     </div>
   );
