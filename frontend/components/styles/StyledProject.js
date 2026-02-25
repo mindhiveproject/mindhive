@@ -38,7 +38,6 @@ const StyledProject = styled.div`
     .firstLine {
       display: grid;
       align-items: center;
-      padding: 6px 9px;
       grid-template-columns: auto 1fr auto;
       grid-gap: 20px;
       padding: 7px 10px;
@@ -102,9 +101,64 @@ const StyledProject = styled.div`
       }
     }
     .secondLine {
-      padding: 0px 15px;
-      background: #e8ebef;
-      box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
+      /* Project journey tab bar (Figma Navbar 2187:2324) */
+      padding: 0 8px;
+      background: #f3f3f3;
+
+      .menu {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .menuTitle {
+        display: flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-bottom: 4px solid transparent;
+        cursor: pointer;
+
+        .titleWithIcon {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          white-space: nowrap;
+
+          img {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+          }
+
+          p {
+            font-family: Inter, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            color: #171717;
+            margin: 0;
+          }
+        }
+      }
+
+      .selectedMenuTitle {
+        border-bottom-color: #f2be42;
+      }
+
+      @media (max-width: 768px) {
+        .menu {
+          flex-wrap: wrap;
+          row-gap: 8px;
+        }
+
+        .menuTitle {
+          flex: 1 1 45%;
+        }
+
+        .menuTitle .titleWithIcon {
+          white-space: normal;
+        }
+      }
     }
   }
   .cardNavigation {

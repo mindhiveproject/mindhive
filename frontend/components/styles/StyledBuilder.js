@@ -146,9 +146,7 @@ export const StyledBuilderArea = styled.div`
       }
     }
     .secondLine {
-      padding: 0px 15px;
-      background: #e8ebef;
-      box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
+      /* Second line styling is provided by child components (e.g. project journey tabs) */
     }
   }
   .board {

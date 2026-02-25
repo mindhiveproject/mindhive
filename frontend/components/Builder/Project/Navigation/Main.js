@@ -151,9 +151,9 @@ export default function Navigation({
 
       <div className="secondLine">
         <div className="menu" id="menue">
-          {filteredItems.map((item, i) => (
+          {filteredItems.map((item) => (
             <Link
-              key={i}
+              key={item.value}
               href={{
                 pathname: `/builder/${area}`,
                 query: {
@@ -162,6 +162,7 @@ export default function Navigation({
                 },
               }}
               onClick={tryToLeave}
+              aria-current={tab === item?.value ? "page" : undefined}
             >
               <div
                 className={
@@ -171,7 +172,10 @@ export default function Navigation({
                 }
               >
                 <div className="titleWithIcon">
-                  <img src={`/assets/icons/project/${item?.value}.svg`} />
+                  <img
+                    src={`/assets/icons/project/${item?.value}.svg`}
+                    alt=""
+                  />
                   <p>{item?.name}</p>
                 </div>
               </div>
