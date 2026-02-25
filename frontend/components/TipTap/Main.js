@@ -14,7 +14,15 @@ import { Extension } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { Button, Icon, Dropdown } from "semantic-ui-react";
 
+import DesignSystemButton from "../DesignSystem/Button";
 import { StyledTipTap } from "./StyledTipTap";
+
+// 24×24 checkmark for special toolbar button (e.g. "Saved"); uses currentColor
+const CHECK_ICON = (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor" />
+  </svg>
+);
 
 // Custom extension to handle base64 image pasting
 const PasteImageExtension = Extension.create({
@@ -273,18 +281,7 @@ export default function TipTapEditor({
         onClick(editor, event);
       };
 
-      const borderColor = color || "#274E5B";
-      const backgroundColor =
-        colorBackground !== undefined ? colorBackground : "#FFFFFF";
-
-      const buttonStyle = {
-        "--special-button-border": borderColor,
-        "--special-button-text": borderColor,
-        "--special-button-background": backgroundColor,
-        "--special-button-hover-border": backgroundColor,
-        "--special-button-hover-text": backgroundColor,
-        "--special-button-hover-background": borderColor,
-      };
+      const leadingIcon = icon === "check" ? CHECK_ICON : null;
 
       return (
         <>
@@ -305,23 +302,17 @@ export default function TipTapEditor({
               e.stopPropagation();
             }}
           >
-            <Button
-              className={`toolbarButton specialToolbarButton ${className}`.trim()}
+            <DesignSystemButton
+              variant="tonal"
               onClick={handleClick}
               disabled={isDisabled}
-              loading={loading}
-              primary={primary}
-              positive={positive}
-              negative={negative}
-              secondary={secondary}
-              aria-label={label}
-              basic={basic}
               type="button"
-              style={buttonStyle}
+              leadingIcon={leadingIcon}
+              aria-label={label}
+              className={className.trim() || undefined}
             >
-              {icon && <Icon name={icon} />}
               {label}
-            </Button>
+            </DesignSystemButton>
           </div>
         </>
       );
