@@ -683,6 +683,7 @@
 		"titlePlaceholder": "प्रोजेक्ट बोर्ड का शीर्षक दर्ज करें"
 	},
 	"proposalPage": {
+		"confirmLeaveListView": "",
 		"download": "डाउनलोड करना",
 		"downloadTooltip": "",
 		"preview": "पूर्व दर्शन",

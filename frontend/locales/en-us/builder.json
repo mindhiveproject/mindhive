@@ -683,6 +683,7 @@
 		"titlePlaceholder": "Enter project board title"
 	},
 	"proposalPage": {
+		"confirmLeaveListView": "Do you want to leave the list view and go back to the board? Your unsaved changes will be lost.",
 		"download": "Download",
 		"downloadTooltip": "Download content is based on the status and review step filters selected below.",
 		"preview": "Preview",

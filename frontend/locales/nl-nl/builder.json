@@ -683,6 +683,7 @@
 		"titlePlaceholder": "Voer de titel van het projectbord in"
 	},
 	"proposalPage": {
+		"confirmLeaveListView": "Wil je de lijstweergave verlaten en teruggaan naar het bord? Je niet-opgeslagen wijzigingen gaan dan verloren.",
 		"download": "Downloaden",
 		"downloadTooltip": "De te downloaden inhoud is gebaseerd op de status- en beoordelingsstapfilters die hieronder zijn geselecteerd.",
 		"preview": "Voorvertoning",

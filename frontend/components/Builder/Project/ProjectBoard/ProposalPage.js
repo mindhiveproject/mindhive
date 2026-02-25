@@ -20,6 +20,7 @@ export default function ProposalPage({
   onCardOpenChange,
 }) {
   const [isPDF, setIsPDF] = useState(false);
+  const [hasUnsavedChangesInPDFView, setHasUnsavedChangesInPDFView] = useState(false);
   // Persist filter selections across view toggles
   const [selectedStatuses, setSelectedStatuses] = useState([]);
   const [selectedReviewSteps, setSelectedReviewSteps] = useState([]);
@@ -62,6 +63,7 @@ export default function ProposalPage({
           refetchQueries={[]}
           isPDF={isPDF}
           setIsPDF={setIsPDF}
+          hasUnsavedChangesInPDFView={hasUnsavedChangesInPDFView}
           selectedStatuses={selectedStatuses}
           selectedReviewSteps={selectedReviewSteps}
           selectedAssignedUsers={selectedAssignedUsers}
@@ -71,6 +73,7 @@ export default function ProposalPage({
         <ProposalPDF
           proposalId={proposalId}
           user={user}
+          onUnsavedChangesChange={setHasUnsavedChangesInPDFView}
           selectedStatuses={selectedStatuses}
           setSelectedStatuses={setSelectedStatuses}
           selectedReviewSteps={selectedReviewSteps}

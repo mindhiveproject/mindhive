@@ -683,6 +683,7 @@
 		"titlePlaceholder": "输入项目板标题"
 	},
 	"proposalPage": {
+		"confirmLeaveListView": "您想离开列表视图并返回看板吗？您未保存的更改将会丢失。",
 		"download": "下载",
 		"downloadTooltip": "下载内容取决于下面选择的状态和审核步骤筛选条件。",
 		"preview": "预览",

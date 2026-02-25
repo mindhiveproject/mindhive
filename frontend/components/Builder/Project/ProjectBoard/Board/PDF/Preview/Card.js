@@ -8,12 +8,12 @@ import ReactHtmlParser from "react-html-parser";
 import TipTapEditor from "../../../../../../TipTap/Main";
 
 import { UPDATE_CARD_EDIT, UPDATE_CARD_CONTENT } from "../../../../../../Mutations/Proposal";
-import { GET_CARD_CONTENT } from "../../../../../../Queries/Proposal";
+import { GET_CARD_CONTENT, PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 import { getRegularCardVariant } from "../../../../../../Utils/cardVariants";
 import StatusChip from "./StatusChip";
 import InfoTooltip from "./InfoTooltip";
 
-export default function Card({ card, cardId, user, submitStatuses = {} }) {
+export default function Card({ card, cardId, user, submitStatuses = {}, proposalId, onUnsavedChange }) {
   const { t } = useTranslation("builder");
   const [content, setContent] = useState(card?.content || "");
   const [revised, setRevised] = useState(
@@ -25,15 +25,28 @@ export default function Card({ card, cardId, user, submitStatuses = {} }) {
   const [originalActive, setOriginalActive] = useState(false); // For accordion state, default collapsed
   const [commentsActive, setCommentsActive] = useState(false); // For comments accordion state, default collapsed
   const prevCardId = useRef(cardId); // Track previous cardId
+  // After save, skip syncing content/revised from card briefly so we don't overwrite with stale cache (card comes from PROPOSAL_QUERY)
+  const skipContentSyncUntilRef = useRef(0);
 
   const isUsedLoggedIn = user;
 
+  // Report unsaved state to parent so List View can show leave confirmation when needed
+  useEffect(() => {
+    onUnsavedChange?.(hasContentChanged);
+    return () => onUnsavedChange?.(false);
+  }, [hasContentChanged, onUnsavedChange]);
+
+  const refetchQueries = [
+    { query: GET_CARD_CONTENT, variables: { id: cardId } },
+    ...(proposalId ? [{ query: PROPOSAL_QUERY, variables: { id: proposalId } }] : []),
+  ];
+
   const [updateCard, { loading }] = useMutation(UPDATE_CARD_EDIT, {
-    refetchQueries: [{ query: GET_CARD_CONTENT, variables: { id: cardId } }],
+    refetchQueries,
   });
 
   const [updateCardStatus, { loading: statusLoading }] = useMutation(UPDATE_CARD_CONTENT, {
-    refetchQueries: [{ query: GET_CARD_CONTENT, variables: { id: cardId } }],
+    refetchQueries,
   });
 
   // Permission check: can edit if card is not locked
@@ -58,26 +71,22 @@ useEffect(() => {
     } else {
       // Sync when card prop updates, but only if we haven't made local changes
       // This handles both external updates and refetches after save
+      const skipContentSync = Date.now() < skipContentSyncUntilRef.current;
       if (!hasContentChanged) {
         // Only sync comment if it changes
         if (card?.comment !== comment) {
           setComment(card?.comment || "");
         }
-        // Sync content for unlocked cards if it changes
-        if (!card.isLocked && card?.content !== content) {
-          setContent(card?.content || "");
-        }
-        // Sync revised content for locked cards if it changes
-        // Only sync if server has a revisedContent value (not null/undefined)
-        // This prevents reverting to original content if refetch hasn't completed or returns stale data
-        if (card.isLocked) {
-          if (card?.revisedContent !== undefined && card?.revisedContent !== null) {
-            // Server has revisedContent value, sync it if different
-            if (revised !== card.revisedContent) {
-              setRevised(card.revisedContent);
-            }
+        // Skip syncing content/revised briefly after save so we don't overwrite with stale card (parent gets card from PROPOSAL_QUERY; refetch may not have updated yet)
+        if (!skipContentSync) {
+          // Sync content for unlocked cards if it changes
+          if (!card.isLocked && card?.content !== content) {
+            setContent(card?.content || "");
           }
-          // If server has null/undefined revisedContent, keep local state (might be what we just saved)
+          // Sync revised content for locked cards if it changes
+          if (card.isLocked && card?.revisedContent !== undefined && card?.revisedContent !== null && revised !== card.revisedContent) {
+            setRevised(card.revisedContent);
+          }
         }
       } else {
         // Even if we have local changes, sync comment if it changed externally
@@ -108,6 +117,8 @@ useEffect(() => {
         },
       });
       setHasContentChanged(false);
+      // Prevent useEffect from syncing content/revised from card for 3s so we don't overwrite with stale cache before PROPOSAL_QUERY refetch lands
+      skipContentSyncUntilRef.current = Date.now() + 3000;
       setSaveStatus("success");
       setTimeout(() => setSaveStatus("idle"), 2000);
     } catch (error) {
