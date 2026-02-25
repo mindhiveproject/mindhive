@@ -223,7 +223,7 @@ export default function Settings({ myclass, user, query }) {
             }}
             style={{ textDecoration: 'none' }}
           >
-            <SecondaryButton>{t("assignment.classHomeworkOverview")}</SecondaryButton>
+            <SecondaryButton>{t("assignment.classAssignmentOverview")}</SecondaryButton>
           </Link>
         </div>
       </div>

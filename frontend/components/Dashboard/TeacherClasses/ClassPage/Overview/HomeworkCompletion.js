@@ -289,7 +289,7 @@ export default function HomeworkCompletion({
         >
           <SecondaryButton>← {t("assignment.goBack")}</SecondaryButton>
         </Link>
-        <HeaderTitle>{t("assignment.classHomeworkOverview")}</HeaderTitle>
+        <HeaderTitle>{t("assignment.classAssignmentOverview")}</HeaderTitle>
         <Subtitle>{t("assignment.homeworkOverviewSubtitle")}</Subtitle>
       </TopSection>
 
