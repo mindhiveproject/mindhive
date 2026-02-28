@@ -3,9 +3,11 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import moment from "moment";
 import { useMutation } from "@apollo/client";
-import { Button, Modal } from "semantic-ui-react";
+import { Modal } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
+
+import Button from "../../../../DesignSystem/Button";
 
 // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-grid.css";
@@ -378,10 +380,34 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           onClick={handleConnectClick}
           style={{ ...chipButtonStyle, display: "flex", alignItems: "center" }}
         >
-          <LinkedCardChip $placeholder>Click to connect to card</LinkedCardChip>
+          <LinkedCardChip $placeholder>
+            {t("assignment.clickToConnectToCard", "Click to connect to card")}
+          </LinkedCardChip>
         </button>
       );
     }
+    const countLabel =
+      templateCards.length > 1
+        ? t("assignment.linkedToCardCount", {
+            count: templateCards.length,
+            default: "Linked to {{count}} cards",
+          })
+        : null;
+        // A visual line divider instead of ampersand
+    const separator = (
+      <span
+        aria-hidden="true"
+        style={{
+          display: "inline-block",
+          width: "100%",
+          height: "1px",
+          background: "#cccccc",
+          margin: "8px 8px",
+          verticalAlign: "middle",
+          alignSelf: "center"
+        }}
+      />
+    );
     return (
       <span
         style={{
@@ -391,16 +417,22 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           gap: 0,
         }}
       >
+        {countLabel && (
+          <span style={{ marginRight: "8px", fontSize: "13px", color: "#616161" }}>
+            {countLabel}:
+          </span>
+        )}
         {templateCards.map((c, i) => (
           <span
-            key={i}
+            key={c?.id ?? i}
             style={{
               display: "inline-flex",
               alignItems: "center",
               flexWrap: "wrap",
-              marginRight: i < templateCards.length - 1 ? "8px" : 0,
+              gap: "0px",
             }}
           >
+            {i > 0 && separator}
             <button
               type="button"
               onClick={(e) => {
@@ -411,7 +443,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
             >
               <LinkedCardChip>{c?.section?.title || "Section"}</LinkedCardChip>
             </button>
-            <span style={{ margin: "0 4px", fontSize: "14px", color: "#616161" }}>&gt;</span>
+            <span style={{ margin: "0 4px", fontSize: "14px", color: "#616161" }}>/</span>
             <button
               type="button"
               onClick={(e) => {
@@ -706,12 +738,13 @@ export default function AssignmentTab({ assignments, myclass, user }) {
         <BulkActionsButtonWrapper
           $visible={canManageAssignmentsBulk && selectedAssignments.length > 0}
         >
-          <SecondaryButton
+          <Button
+            variant="outline"
             type="button"
             onClick={() => setBulkActionsModalOpen(true)}
           >
             {t("assignment.bulkActions", "Bulk actions")}
-          </SecondaryButton>
+          </Button>
         </BulkActionsButtonWrapper>
         <span style={{ flexShrink: 0 }} aria-hidden>|</span>
         <button
@@ -919,26 +952,10 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           </p>
         </Modal.Content>
         <Modal.Actions style={{ padding: "1rem 1.5rem", gap: "8px" }}>
-          <Button
-            onClick={() => setAssignmentForPublishModal(null)}
-            style={{
-              borderRadius: "100px",
-              border: "1px solid #336F8A",
-              background: "white",
-              color: "#336F8A",
-            }}
-          >
+          <Button variant="outline" onClick={() => setAssignmentForPublishModal(null)}>
             {t("assignment.cancel", "Cancel")}
           </Button>
-          <Button
-            primary
-            onClick={handleConfirmPublishToggle}
-            style={{
-              borderRadius: "100px",
-              background: "#336F8A",
-              color: "white",
-            }}
-          >
+          <Button variant="filled" onClick={handleConfirmPublishToggle}>
             {assignmentForPublishModal?.public
               ? t("assignment.unpublish", "Unpublish")
               : t("assignment.publishToStudents", "Publish to students")}

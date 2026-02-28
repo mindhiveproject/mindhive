@@ -68,6 +68,10 @@ export const Class = list({
       ref: "ProposalBoard.usedInClass",
       many: true,
     }),
+    resources: relationship({
+      ref: "Resource.classes",
+      many: true,
+    }),
     logs: relationship({
       ref: "Log.class",
       many: true,

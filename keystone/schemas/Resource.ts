@@ -54,7 +54,11 @@ export const Resource = list({
     }),
     description: text(),
     content: json(),
-    settings: json(),
+    settings: json({
+      defaultValue: {
+        publishedToAssociatedClass: false,
+      },
+    }),
     author: relationship({
       ref: "Profile.authorOfResource",
       hooks: {
@@ -99,6 +103,10 @@ export const Resource = list({
     }),
     proposalBoard: relationship({
       ref: "ProposalBoard.resources",
+      many: true,
+    }),
+    classes: relationship({
+      ref: "Class.resources",
       many: true,
     }),
     isCustom: checkbox({ isFilterable: true }),

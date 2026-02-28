@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useMutation } from "@apollo/client";
-import { Checkbox, Dropdown, Modal, Icon, Popup } from "semantic-ui-react";
+import { Checkbox, Dropdown, Icon, Popup } from "semantic-ui-react";
 import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
 
 import ReactHtmlParser from "react-html-parser";
@@ -47,6 +47,7 @@ export default function BuilderProposalCard({
   closeCard,
   autoUpdateStudentBoards,
   propagateToClones,
+  onTemplateChangedWithoutPropagation,
 }) {
   const { t } = useTranslation("classes");
   const { inputs, handleChange } = useForm({
@@ -60,7 +61,6 @@ export default function BuilderProposalCard({
   const [updateCard, { loading: updateLoading }] =
     useMutation(UPDATE_CARD_CONTENT);
 
-  const [showCloneDialog, setShowCloneDialog] = useState(false);
   const [showWarningBox, setShowWarningBox] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
 
@@ -136,17 +136,14 @@ export default function BuilderProposalCard({
     closeCard({ cardId: proposalCard?.id, lockedByUser: false });
   };
 
-  // Trigger save with clone check
+  // Trigger save: follow template banner setting (auto-update on = propagate; off = save only).
   const handleSave = async () => {
-    if (proposal?.prototypeFor?.length > 0) {
-      if (autoUpdateStudentBoards && propagateToClones) {
-        await onUpdateCard(true);
-      } else {
-        setShowCloneDialog(true);
-      }
-    } else {
-      await onUpdateCard(false);
+    const hasClones = proposal?.prototypeFor?.length > 0;
+    const shouldPropagate = hasClones && autoUpdateStudentBoards && propagateToClones;
+    if (hasClones && !shouldPropagate) {
+      onTemplateChangedWithoutPropagation?.();
     }
+    await onUpdateCard(!!shouldPropagate);
   };
 
   // Enter preview: save current content then show read-only preview
@@ -159,15 +156,18 @@ export default function BuilderProposalCard({
     }
   };
 
-  // Modal handlers
-  const handleCloneYes = async () => {
-    setShowCloneDialog(false);
-    await onUpdateCard(true);
-  };
-
-  const handleCloneNo = () => {
-    setShowCloneDialog(false);
-    onUpdateCard(false);
+  // When linked items modal closes: save card then propagate if auto-mode on.
+  const handleLinkedItemsClose = async () => {
+    await saveCardContentOnly();
+    const hasClones = proposal?.prototypeFor?.length > 0;
+    const shouldPropagate = hasClones && autoUpdateStudentBoards && propagateToClones;
+    if (shouldPropagate) {
+      try {
+        await propagateToClones({ contentChangedCardIds: [] });
+      } catch (e) {
+        console.error("Propagate to clones failed:", e);
+      }
+    }
   };
 
   // Calculate total linked items
@@ -184,9 +184,32 @@ export default function BuilderProposalCard({
         <div className="left">
           <div
             className="icon"
-            onClick={() =>
-              closeCard({ cardId: proposalCard?.id, lockedByUser: false })
-            }
+            onClick={async () => {
+              try {
+                await saveCardContentOnly();
+                const hasClones = proposal?.prototypeFor?.length > 0;
+                const shouldPropagate = hasClones && autoUpdateStudentBoards && propagateToClones;
+                if (shouldPropagate) {
+                  try {
+                    const contentChanged =
+                      String(content?.current ?? "") !==
+                      String(proposalCard?.content ?? "");
+                    await propagateToClones({
+                      contentChangedCardIds:
+                        contentChanged && proposalCard?.id ? [proposalCard.id] : [],
+                    });
+                  } catch (e) {
+                    console.error("Propagate to clones failed:", e);
+                  }
+                } else if (hasClones) {
+                  onTemplateChangedWithoutPropagation?.();
+                }
+                closeCard({ cardId: proposalCard?.id, lockedByUser: false });
+              } catch (e) {
+                // Leave card open; mutation error handling applies
+              }
+            }}
+            style={{ opacity: updateLoading ? 0.6 : 1, pointerEvents: updateLoading ? "none" : "auto" }}
           >
             <div className="selector">
               <img src="/assets/icons/back.svg" alt="back" />
@@ -237,74 +260,6 @@ export default function BuilderProposalCard({
           )}
         </div>
       </div>
-
-      {/* Clone Update Modal */}
-      <Modal open={showCloneDialog} onClose={handleCloneNo} size="medium" style={{ borderRadius: "12px", overflow: "hidden" }}>
-        <Modal.Header style={{ background: "#f9fafb", borderBottom: "1px solid #e0e0e0", fontFamily: "Nunito", fontWeight: 600,
-        }}>Update Cloned Boards?</Modal.Header>
-        <Modal.Content style={{ background: "#ffffff", padding: "24px" }}>
-          <p>
-            This board has {proposal?.prototypeFor?.length} cloned project
-            board(s). Do you want to update the corresponding cards in all
-            cloned project boards with these changes? (This will update titles,
-            descriptions, settings, and linked items: resources, assignments,
-            tasks, and studies.)
-          </p>
-        </Modal.Content>
-        <Modal.Actions style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }} >
-          <button
-            type="button"
-            className="narrowButtonSecondary"
-            onClick={handleCloneNo}
-            style={{
-              marginRight: "10px",
-              height: "40px",
-              padding: "8px 24px 8px 16px",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              borderRadius: "100px",
-              fontSize: "16px",
-              fontWeight: 500,
-              cursor: "pointer",
-              background: "white",
-              color: "#CF6D6A",
-              border: "1px solid #CF6D6A",
-            }}
-          >
-            {t("board.expendedCard.updateOnlyThisBoard", "No, update only this board")}
-          </button>
-          <button
-            type="button"
-            className="narrowButton"
-            onClick={handleCloneYes}
-            disabled={updateLoading}
-            style={{
-              marginRight: "10px",
-              height: "40px",
-              padding: "8px 24px 8px 16px",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              borderRadius: "100px",
-              fontSize: "16px",
-              fontWeight: 500,
-              cursor: updateLoading ? "not-allowed" : "pointer",
-              background: "#336F8A",
-              color: "white",
-              border: "1px solid #336F8A",
-            }}
-          >
-            {updateLoading ? (
-              t("board.expendedCard.updating", "Updating…")
-            ) : (
-              t("board.expendedCard.updateAllClones", "Yes, update all clones")
-            )}
-          </button>
-        </Modal.Actions>
-      </Modal>
 
       {/* Preview modals: open when user clicks linked items in preview mode */}
       <AssignmentViewModal
@@ -570,6 +525,7 @@ export default function BuilderProposalCard({
                 );
                 handleChange({ target: { name: "assignments", value: next } });
               }}
+              onLinkedItemsClose={handleLinkedItemsClose}
             />
           </>
 

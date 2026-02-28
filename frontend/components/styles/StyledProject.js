@@ -145,7 +145,7 @@ const StyledProject = styled.div`
         border-bottom-color: #f2be42;
       }
 
-      @media (max-width: 768px) {
+      @media (max-width: 800px) {
         .menu {
           flex-wrap: wrap;
           row-gap: 8px;

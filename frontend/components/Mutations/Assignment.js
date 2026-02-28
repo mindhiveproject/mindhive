@@ -58,3 +58,20 @@ export const UNLINK_ASSIGNMENT_FROM_TEMPLATE_CARDS = gql`
     }
   }
 `;
+
+// set assignment's linked template cards (multi-card); propagates to student boards
+export const SET_ASSIGNMENT_TEMPLATE_CARDS = gql`
+  mutation SET_ASSIGNMENT_TEMPLATE_CARDS(
+    $assignmentId: ID!
+    $templateCardIds: [ID!]!
+    $classId: ID!
+  ) {
+    setAssignmentTemplateCards(
+      assignmentId: $assignmentId
+      templateCardIds: $templateCardIds
+      classId: $classId
+    ) {
+      id
+    }
+  }
+`;

@@ -43,6 +43,7 @@ const CLONE_BOARD_QUERY = `
       title
       position
       section { id }
+      settings
       resources { id }
       assignments { id }
       studies { id }
@@ -91,6 +92,7 @@ export type CloneBoard = {
       title: string;
       position: number | null;
       section: { id: string };
+      settings?: Record<string, unknown> | null;
       resources?: Array<{ id: string }>;
       assignments?: Array<{ id: string }>;
       studies?: Array<{ id: string }>;
@@ -103,6 +105,35 @@ function sortByPosition<T extends { position?: number | null }>(arr: T[]): T[] {
   return [...arr].sort(
     (a, b) => (a.position ?? 0) - (b.position ?? 0)
   );
+}
+
+/**
+ * Merge template card settings into clone card settings. All keys from template
+ * are applied except `status`; the clone's `status` is always preserved.
+ */
+function mergeSettingsPreservingStatus(
+  cloneSettings: Record<string, unknown> | null | undefined,
+  templateSettings: Record<string, unknown> | null | undefined
+): Record<string, unknown> {
+  const clone =
+    cloneSettings && typeof cloneSettings === "object" ? cloneSettings : {};
+  const template =
+    templateSettings && typeof templateSettings === "object"
+      ? templateSettings
+      : {};
+  const { status: cloneStatus, ...cloneRest } = clone as {
+    status?: unknown;
+    [k: string]: unknown;
+  };
+  const { status: _templateStatus, ...templateRest } = template as {
+    status?: unknown;
+    [k: string]: unknown;
+  };
+  return {
+    ...cloneRest,
+    ...templateRest,
+    ...(cloneStatus !== undefined ? { status: cloneStatus } : {}),
+  };
 }
 
 /**
@@ -244,12 +275,12 @@ export type SyncCardsOptions = {
 /**
  * Sync cards in one clone board to match template, using section id mapping.
  * Creates/updates/deletes cards and syncs template-owned fields and linked items.
- * When updating an existing clone card: preserves student-owned fields (content,
- * settings) unless the template card id is in options.cardIdsWithContentUpdate,
- * in which case the template's content (new placeholder) is written to the clone.
+ * When updating an existing clone card: preserves student-owned fields (content
+ * unless in cardIdsWithContentUpdate; settings.status). Template card settings
+ * (all keys except status) are merged into clone card settings.
  *
- * Student-owned fields never synced for existing clones (do not add to query/update):
- * content (unless in cardIdsWithContentUpdate), settings, internalContent,
+ * Student-owned fields never synced for existing clones:
+ * content (unless in cardIdsWithContentUpdate), settings.status, internalContent,
  * revisedContent, comment, assignedTo.
  */
 export async function syncCardsToClone(
@@ -283,9 +314,14 @@ export async function syncCardsToClone(
           : { status: "Not started" };
 
       if (existing) {
-        // Update template-owned fields; preserve student content/settings unless
-        // this template card is in cardIdsWithContentUpdate (teacher changed content).
+        // Update template-owned fields; preserve student content unless in
+        // cardIdsWithContentUpdate. Merge settings from template into clone,
+        // preserving the clone's status.
         const overwriteContent = contentUpdateSet.has(tc.id);
+        const mergedSettings = mergeSettingsPreservingStatus(
+          (existing as { settings?: Record<string, unknown> | null }).settings,
+          tc.settings
+        );
         await context.db.ProposalCard.updateOne({
           where: { id: existing.id },
           data: {
@@ -296,18 +332,11 @@ export async function syncCardsToClone(
             position,
             ...(overwriteContent ? { content: tc.content ?? undefined } : {}),
             ...(tc.publicId ? { publicId: tc.publicId } : {}),
-            resources: tc.resources?.length
-              ? { set: tc.resources.map((r) => ({ id: r.id })) }
-              : undefined,
-            assignments: tc.assignments?.length
-              ? { set: tc.assignments.map((a) => ({ id: a.id })) }
-              : undefined,
-            studies: tc.studies?.length
-              ? { set: tc.studies.map((s) => ({ id: s.id })) }
-              : undefined,
-            tasks: tc.tasks?.length
-              ? { set: tc.tasks.map((t) => ({ id: t.id })) }
-              : undefined,
+            settings: mergedSettings,
+            resources: { set: (tc.resources ?? []).map((r) => ({ id: r.id })) },
+            assignments: { set: (tc.assignments ?? []).map((a) => ({ id: a.id })) },
+            studies: { set: (tc.studies ?? []).map((s) => ({ id: s.id })) },
+            tasks: { set: (tc.tasks ?? []).map((t) => ({ id: t.id })) },
           },
         });
       } else {
@@ -322,22 +351,18 @@ export async function syncCardsToClone(
             position,
             content: tc.content ?? undefined,
             settings,
-            resources:
-              tc.resources?.length > 0
-                ? { connect: tc.resources.map((r) => ({ id: r.id })) }
-                : undefined,
-            assignments:
-              tc.assignments?.length > 0
-                ? { connect: tc.assignments.map((a) => ({ id: a.id })) }
-                : undefined,
-            studies:
-              tc.studies?.length > 0
-                ? { connect: tc.studies.map((s) => ({ id: s.id })) }
-                : undefined,
-            tasks:
-              tc.tasks?.length > 0
-                ? { connect: tc.tasks.map((t) => ({ id: t.id })) }
-                : undefined,
+            resources: {
+              connect: (tc.resources ?? []).map((r) => ({ id: r.id })),
+            },
+            assignments: {
+              connect: (tc.assignments ?? []).map((a) => ({ id: a.id })),
+            },
+            studies: {
+              connect: (tc.studies ?? []).map((s) => ({ id: s.id })),
+            },
+            tasks: {
+              connect: (tc.tasks ?? []).map((t) => ({ id: t.id })),
+            },
           },
           query: "id",
         });

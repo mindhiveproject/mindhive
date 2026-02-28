@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Icon } from "semantic-ui-react";
 
 import { GET_RESOURCE } from "../../Queries/Resource";
-import { UPDATE_RESOURCE } from "../../Mutations/Resource";
+import { UPDATE_RESOURCE, mergeResourceSettings } from "../../Mutations/Resource";
 import { GET_MY_RESOURCES } from "../../Queries/Resource";
 
 import useTranslation from "next-translate/useTranslation";
@@ -31,7 +31,7 @@ export default function EditResource({
     title: resource.title || "",
     description: resource.description || "",
     content: resource.content || "",
-    settings: resource.settings || "",
+    settings: mergeResourceSettings(resource.settings),
     isPublic: resource.isPublic || false,
   });
 

@@ -136,7 +136,7 @@ const StatusChip = styled.span`
       ? '#E4DFF6'
       : status === 'feedback given'
       ? '#F6F9F8'
-      : '#666';
+      : '#FFFFFF';
     const color = status === 'completed'
       ? '#337C84'
       : status === 'started'

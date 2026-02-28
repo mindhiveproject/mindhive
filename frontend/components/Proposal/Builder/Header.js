@@ -15,6 +15,7 @@ import { useState } from "react";
 import useTranslation from 'next-translate/useTranslation';
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../Queries/Proposal";
 import InfoTooltip from "../../Builder/Project/ProjectBoard/Board/PDF/Preview/InfoTooltip";
+import Chip from "../../DesignSystem/Chip";
 
 export default function ProposalHeader({
   user,
@@ -24,6 +25,8 @@ export default function ProposalHeader({
   onAutoUpdateChange,
   autoUpdateStudentBoards,
   propagateToClones,
+  hasUnpropagatedChanges,
+  onPropagationSuccess,
 }) {
   const { t } = useTranslation('builder');
   const [activeIndex, setActiveIndex] = useState(0);
@@ -47,6 +50,7 @@ export default function ProposalHeader({
           })
         );
       } else {
+        onPropagationSuccess?.();
         alert(
           t("proposal.studentBoardsUpdated", { count: data?.updatedCloneCount ?? 0 })
         );
@@ -88,6 +92,21 @@ export default function ProposalHeader({
                   {t("proposal.editingClassProjectTemplateSubtitle", "Changes can be applied to all student boards.")}
                 </div>
               </div>
+              <div className="templateBannerHeaderChips">
+                <Chip
+                  shape = "square"
+                  label={autoUpdateStudentBoards ? t("proposal.templateAutoUpdateOn", "Auto-update: ON") : t("proposal.templateAutoUpdateOff", "Auto-update: OFF")}
+                  style={{ backgroundColor: "#5D5763", border: "1px solid #F3F3F3", color: "#F3F3F3", fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px" }}
+                />
+                {hasUnpropagatedChanges && (
+                  <Chip
+                    shape = "square"
+                    label={t("proposal.templateUnpropagatedChanges", "Unpropagated changes")}
+                    style={{ backgroundColor: "#F3F3F3", border: "2px solid #8F1F14", color: "#8F1F14", fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px" }}
+                    // style={{ borderColor: "#b45309", background: "#fff7ed" }}
+                  />
+                )}
+              </div>
               <button
                 type="button"
                 className="templateBannerHeaderToggle"
@@ -127,7 +146,7 @@ export default function ProposalHeader({
                   /> */}
                 </div>
                 <p className="templateBannerSectionBody">
-                  {t("proposal.whatWillBeUpdatedBody", "Section names and order, card titles and positions, linked assignments/resources/tasks/studies.")}
+                  {t("proposal.whatWillBeUpdatedBody", "Section names and order, card titles and positions, linked assignments/resources/tasks/studies, and card settings (e.g. report and review options).")}
                 </p>
               </div>
               <div className="templateBannerSection">
@@ -135,7 +154,7 @@ export default function ProposalHeader({
                   {t("proposal.whatWillNotChange", "What will NOT change")}
                 </div>
                 <p className="templateBannerSectionBody">
-                  {t("proposal.whatWillNotChangeBody", "Students' own written answers, comments, and submissions.")}
+                  {t("proposal.whatWillNotChangeBody", "Students' own written answers, comments, submissions, and progress status on each card.")}
                 </p>
               </div>
               <div className="templateBannerToggleRow">
@@ -151,7 +170,7 @@ export default function ProposalHeader({
                     borderRadius: "8px",
                     border: "1px solid #5D5763",
                   }}
-                  content={t("proposal.templateAutoUpdateHelp", "When on, structural and content changes are pushed to student boards after each save. When off, use the button below to update when ready.")}
+                  content={t("proposal.templateAutoUpdateHelp", "When on, structural changes, template-controlled card settings (except progress status), and optionally content are pushed to student boards after each save. Students' own answers and their progress status on each card are preserved. When off, use the button below to update when ready.")}
 
                 />
               </div>

@@ -20,6 +20,53 @@ export const ProposalBoard = list({
       delete: () => true,
     },
   },
+  hooks: {
+    async afterOperation({ operation, item, context }) {
+      if ((operation !== "create" && operation !== "update") || !item?.id) {
+        return;
+      }
+
+      const board = await context.query.ProposalBoard.findOne({
+        where: { id: item.id },
+        query:
+          "id usedInClass { id } sections { cards { resources { id } } }",
+      });
+
+      if (!board?.usedInClass?.id) {
+        return;
+      }
+
+      const classId = board.usedInClass.id;
+      const resourceIdsSet = new Set<string>();
+
+      for (const section of board.sections || []) {
+        for (const card of section.cards || []) {
+          for (const resource of card.resources || []) {
+            if (resource?.id) {
+              resourceIdsSet.add(resource.id);
+            }
+          }
+        }
+      }
+
+      if (!resourceIdsSet.size) {
+        return;
+      }
+
+      const resourceIds = Array.from(resourceIdsSet);
+
+      await Promise.all(
+        resourceIds.map((resourceId) =>
+          context.db.Resource.updateOne({
+            where: { id: resourceId },
+            data: {
+              classes: { connect: { id: classId } },
+            },
+          })
+        )
+      );
+    },
+  },
   fields: {
     title: text({ validation: { isRequired: true } }),
     publicId: text(),

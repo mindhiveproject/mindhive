@@ -17,6 +17,7 @@ export default function CardWrapper({
   isPreview,
   autoUpdateStudentBoards,
   propagateToClones,
+  onTemplateChangedWithoutPropagation,
 }) {
   const {
     data,
@@ -69,6 +70,7 @@ export default function CardWrapper({
             closeCard={closeCard}
             autoUpdateStudentBoards={autoUpdateStudentBoards}
             propagateToClones={propagateToClones}
+            onTemplateChangedWithoutPropagation={onTemplateChangedWithoutPropagation}
           />
         );
       } else {

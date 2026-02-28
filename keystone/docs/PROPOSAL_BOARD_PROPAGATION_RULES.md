@@ -19,14 +19,14 @@ When a **template** proposal board (with `prototypeFor` clones) is edited, propa
 
 ### Cards
 
-- **Existing clone cards**: Sync `title`, `description`, `type`, `shareType`, `position`, `publicId`, and relations (`resources`, `assignments`, `studies`, `tasks`). **Do not** overwrite `content` or `settings` unless see below.
+- **Existing clone cards**: Sync `title`, `description`, `type`, `shareType`, `position`, `publicId`, relations (`resources`, `assignments`, `studies`, `tasks`), and **settings** (merged; see below). **Do not** overwrite `content` unless see below.
 - **Content**: Overwrite clone card `content` only when the template card id is in `cardIdsWithContentUpdate` (teacher changed the placeholder in this run). Otherwise preserve student’s content.
-- **Settings**: Never overwrite on existing clone cards (preserve student status and other settings).
+- **Settings**: On existing clone cards, merge template card settings into clone settings. Add or update any key from the template; **only `settings.status`** is never overwritten (student progress status is preserved). All other setting keys (e.g. `includeInReport`, `includeInReviewSteps`) come from the template.
 - **New clone cards** (card added on template): Create with template’s title, description, type, shareType, position, content, settings (status "Not started"), publicId, and relations.
 
 ## Student-owned (never overwrite on existing clones)
 
-- **Card**: `content` (unless in `cardIdsWithContentUpdate`), `settings`, `internalContent`, `revisedContent`, `comment`, `assignedTo`. Do not add these to the template query or update payload for existing clone cards.
+- **Card**: `content` (unless in `cardIdsWithContentUpdate`), **`settings.status`** (progress status on the card), `internalContent`, `revisedContent`, `comment`, `assignedTo`. Do not overwrite these for existing clone cards.
 - **Board**: Clone board metadata (author, usedInClass, etc.) is unchanged.
 
 ## Triggers

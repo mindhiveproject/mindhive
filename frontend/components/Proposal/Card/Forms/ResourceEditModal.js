@@ -4,7 +4,11 @@ import { Button, Modal } from "semantic-ui-react";
 import TipTapEditor from "../../../TipTap/Main";
 import Chip from "../../../DesignSystem/Chip";
 import { GET_RESOURCE } from "../../../Queries/Resource";
-import { CREATE_RESOURCE, UPDATE_RESOURCE } from "../../../Mutations/Resource";
+import {
+  CREATE_RESOURCE,
+  UPDATE_RESOURCE,
+  mergeResourceSettings,
+} from "../../../Mutations/Resource";
 import { TYPO } from "./utils";
 
 export default function ResourceEditModal({
@@ -23,7 +27,7 @@ export default function ResourceEditModal({
     title: "",
     description: "",
     content: "",
-    settings: null,
+    settings: mergeResourceSettings(null),
     isPublic: false,
   });
 
@@ -117,7 +121,7 @@ export default function ResourceEditModal({
         title: resource.title || "",
         description: resource.description || "",
         content: resource.content?.main || "",
-        settings: resource.settings || null,
+        settings: mergeResourceSettings(resource.settings),
         isPublic:
           !isCreatingCopy && resource.isPublic ? resource.isPublic : false,
       });
@@ -150,7 +154,7 @@ export default function ResourceEditModal({
           title: formState.title,
           description: formState.description,
           content: { main: formState.content },
-          settings: formState.settings,
+          settings: mergeResourceSettings(formState.settings),
           isCustom: true,
           parent: { connect: { id: effectiveTemplateId } },
         };
@@ -190,7 +194,7 @@ export default function ResourceEditModal({
             title: formState.title,
             description: formState.description,
             content: { main: formState.content },
-            settings: formState.settings,
+            settings: mergeResourceSettings(formState.settings),
             isPublic: formState.isPublic,
             updatedAt: new Date().toISOString(),
           },

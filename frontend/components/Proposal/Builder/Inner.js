@@ -100,6 +100,8 @@ function Inner(props) {
           settings={board?.settings}
           autoUpdateStudentBoards={props.autoUpdateStudentBoards}
           propagateToClones={props.propagateToClones}
+          onTemplateChangedWithoutPropagation={props.onTemplateChangedWithoutPropagation}
+          hasClones={props.hasClones}
         />
       </div>
       {(proposalBuildMode ||

@@ -35,6 +35,7 @@ const CHIP_BASE_STYLE = {
   paddingBottom: "6px",
   border: "1px solid #a1a1a1",
   background: "#ffffff",
+  backgroundColor: "#ffffff",
   color: "#171717",
   fontFamily: "Inter, sans-serif",
   fontWeight: 600,
@@ -47,12 +48,14 @@ const CHIP_BASE_STYLE = {
 const CHIP_SELECTED_STYLE = {
   ...CHIP_BASE_STYLE,
   background: "#def8fb",
+  backgroundColor: "#def8fb",
   border: "none",
 };
 
 const CHIP_DISABLED_STYLE = {
   ...CHIP_BASE_STYLE,
   background: "#f3f3f3",
+  backgroundColor: "#f3f3f3",
   color: "#a1a1a1",
   border: "1px solid #e6e6e6",
   cursor: "default",

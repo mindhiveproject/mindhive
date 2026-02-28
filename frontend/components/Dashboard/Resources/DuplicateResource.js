@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import { GET_RESOURCE } from "../../Queries/Resource";
-import { CREATE_RESOURCE } from "../../Mutations/Resource";
+import { CREATE_RESOURCE, mergeResourceSettings } from "../../Mutations/Resource";
 import { GET_MY_RESOURCES } from "../../Queries/Resource";
 
 import useForm from "../../../lib/useForm";
@@ -30,7 +30,7 @@ export default function DuplicateResource({ query, user, goBack }) {
         title: inputs?.title,
         description: inputs?.description,
         content: inputs?.content,
-        settings: inputs?.settings,
+        settings: mergeResourceSettings(inputs?.settings),
         isPublic: inputs?.isPublic,
       },
     },

@@ -1,14 +1,22 @@
-import { useState } from "react";
-import { Modal, Button, Icon } from "semantic-ui-react";
+import { useState, useEffect } from "react";
+import { Modal, Button } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import StyledModal from "../../../../styles/StyledModal";
 import {
-  LINK_ASSIGNMENT_TO_TEMPLATE_CARD,
+  SET_ASSIGNMENT_TEMPLATE_CARDS,
   UNLINK_ASSIGNMENT_FROM_TEMPLATE_CARDS,
 } from "../../../../Mutations/Assignment";
 import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import TemplateBoardCardPicker from "./TemplateBoardCardPicker";
+
+function getTemplateCardIds(assignment, templateBoardId) {
+  if (!assignment?.proposalCards || !templateBoardId) return [];
+  return (assignment.proposalCards || [])
+    .filter((c) => c?.section?.board?.id === templateBoardId)
+    .map((c) => c.id)
+    .filter(Boolean);
+}
 
 export default function ConnectAssignmentToCardModal({
   open,
@@ -18,11 +26,23 @@ export default function ConnectAssignmentToCardModal({
   onSuccess,
 }) {
   const { t } = useTranslation("classes");
-  const [selectedCardId, setSelectedCardId] = useState(null);
   const templateBoardId = myclass?.templateProposal?.id;
+  const [selectedCardIds, setSelectedCardIds] = useState([]);
 
-  const [linkAssignment, { loading: linkLoading }] = useMutation(
-    LINK_ASSIGNMENT_TO_TEMPLATE_CARD,
+  useEffect(() => {
+    if (open && assignment && templateBoardId) {
+      setSelectedCardIds(getTemplateCardIds(assignment, templateBoardId));
+    }
+  }, [open, assignment?.id, templateBoardId, assignment?.proposalCards]);
+
+  const handleToggleCard = (cardId) => {
+    setSelectedCardIds((prev) =>
+      prev.includes(cardId) ? prev.filter((id) => id !== cardId) : [...prev, cardId]
+    );
+  };
+
+  const [setTemplateCards, { loading: setLoading }] = useMutation(
+    SET_ASSIGNMENT_TEMPLATE_CARDS,
     {
       refetchQueries: [
         {
@@ -60,18 +80,18 @@ export default function ConnectAssignmentToCardModal({
   );
 
   const handleSave = () => {
-    if (!assignment?.id || !selectedCardId || !myclass?.id) return;
-    linkAssignment({
+    if (!assignment?.id || !myclass?.id) return;
+    setTemplateCards({
       variables: {
         assignmentId: assignment.id,
-        templateCardId: selectedCardId,
+        templateCardIds: selectedCardIds,
         classId: myclass.id,
       },
     });
   };
 
   const handleClose = () => {
-    setSelectedCardId(null);
+    setSelectedCardIds([]);
     onClose();
   };
 
@@ -85,39 +105,31 @@ export default function ConnectAssignmentToCardModal({
     });
   };
 
-  const isBusy = linkLoading || unlinkLoading;
+  const templateCardsWithAssignment = (assignment?.proposalCards || []).filter(
+    (c) => c?.section?.board?.id === templateBoardId
+  );
+  const hasLinkedCards = templateCardsWithAssignment.length > 0;
+
+  const isBusy = setLoading || unlinkLoading;
 
   if (!open) return null;
 
   if (!templateBoardId) {
     return (
       <Modal
-        closeIcon
+        // closeIcon
         open={open}
         onClose={handleClose}
         size="large"
         style={{ borderRadius: "12px" }}
       >
-        <Modal.Header
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <Modal.Header>
           <span>
             {t(
               "assignment.connectModal.title",
               "Connect assignment to card"
             )}
           </span>
-          <Button
-            icon
-            onClick={handleClose}
-            style={{ background: "transparent", color: "#666" }}
-          >
-            <Icon name="close" />
-          </Button>
         </Modal.Header>
         <Modal.Content>
           <StyledModal>
@@ -156,39 +168,29 @@ export default function ConnectAssignmentToCardModal({
 
   return (
     <Modal
-      closeIcon
       open={open}
       onClose={handleClose}
       size="large"
       style={{ borderRadius: "12px" }}
     >
-      <Modal.Header
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <Modal.Header>
         <span>
           {t("assignment.connectModal.title", "Connect assignment to card")}
         </span>
-        <Button
-          icon
-          onClick={handleClose}
-          style={{ background: "transparent", color: "#666" }}
-        >
-          <Icon name="close" />
-        </Button>
       </Modal.Header>
 
       <Modal.Content scrolling>
         <StyledModal>
           <TemplateBoardCardPicker
             templateBoardId={templateBoardId}
-            selectedCardId={selectedCardId}
-            onSelectCard={setSelectedCardId}
+            selectedCardIds={selectedCardIds}
+            onToggleCard={handleToggleCard}
             disabled={isBusy}
             showDescription
+            description={t(
+              "assignment.connectModal.descriptionMulti",
+              "Select one or more cards to link this assignment to. Toggle chips to add or remove."
+            )}
           />
         </StyledModal>
       </Modal.Content>
@@ -216,38 +218,41 @@ export default function ConnectAssignmentToCardModal({
         >
           {t("assignment.connectModal.cancel", "Cancel")}
         </Button>
-        <Button
-          loading={unlinkLoading}
-          disabled={isBusy}
-          onClick={handleDisconnect}
-          style={{
-            borderRadius: "100px",
-            width: "fit-content",
-            border: "1px solid #336F8A",
-            background: "white",
-            color: "#336F8A",
-            fontSize: "16px",
-          }}
-        >
-          {t(
-            "assignment.connectModal.disconnect",
-            "Disconnect from card"
+        <div style={{ display: "flex", gap: "12px" }}>
+          {hasLinkedCards && (
+            <Button
+              disabled={isBusy}
+              onClick={handleDisconnect}
+              style={{
+                borderRadius: "100px",
+                width: "fit-content",
+                border: "1px solid #336F8A",
+                background: "white",
+                color: "#336F8A",
+                fontSize: "16px",
+              }}
+            >
+              {t(
+                "assignment.connectModal.disconnect",
+                "Disconnect from card(s)"
+              )}
+            </Button>
           )}
-        </Button>
-        <Button
-          loading={linkLoading}
-          disabled={isBusy || !selectedCardId}
-          onClick={handleSave}
-          style={{
-            borderRadius: "100px",
-            border: "1px solid #336F8A",
-            background: selectedCardId ? "#336F8A" : "#EFEFEF",
-            color: selectedCardId ? "white" : "#171717",
-            fontSize: "16px",
-          }}
-        >
-          {t("assignment.connectModal.save", "Save")}
-        </Button>
+          <Button
+            loading={setLoading}
+            disabled={isBusy}
+            onClick={handleSave}
+            style={{
+              borderRadius: "100px",
+              border: "1px solid #336F8A",
+              background: "#336F8A",
+              color: "white",
+              fontSize: "16px",
+            }}
+          >
+            {t("assignment.connectModal.save", "Save")}
+          </Button>
+        </div>
       </Modal.Actions>
     </Modal>
   );
