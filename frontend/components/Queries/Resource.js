@@ -59,6 +59,9 @@ export const GET_MY_RESOURCES = gql`
       description
       content
       settings
+      classes {
+        id
+      }
       isPublic
       isCustom
       author {
@@ -154,6 +157,9 @@ export const GET_RESOURCE = gql`
       isPublic
       isCustom
       settings
+      classes {
+        id
+      }
       author {
         id
         username
@@ -166,6 +172,41 @@ export const GET_RESOURCE = gql`
       updatedAt
       parent {
         id
+      }
+    }
+  }
+`;
+
+// get all resources for a class (teacher tab grid)
+export const GET_CLASS_RESOURCES = gql`
+  query GET_CLASS_RESOURCES($classId: ID!) {
+    resources(
+      where: { classes: { some: { id: { equals: $classId } } } }
+      orderBy: [{ createdAt: desc }]
+    ) {
+      id
+      title
+      slug
+      settings
+      createdAt
+      updatedAt
+      classes {
+        id
+      }
+      author {
+        id
+        username
+      }
+      proposalCards {
+        id
+        title
+        section {
+          id
+          title
+          board {
+            id
+          }
+        }
       }
     }
   }
@@ -184,6 +225,7 @@ export const GET_PUBLIC_AND_CLASS_RESOURCES = gql`
               }
             }
           }
+          { classes: { some: { id: { equals: $classId } } } }
           { isPublic: { equals: true } }
         ]
       }

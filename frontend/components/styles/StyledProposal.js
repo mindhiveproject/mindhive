@@ -807,6 +807,12 @@ export const StyledProposal = styled.div`
     min-width: 0;
     flex: 1;
   }
+  .templateBannerHeaderChips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
   .templateBanner .templateBannerHeaderToggle {
     display: flex;
     align-items: center;

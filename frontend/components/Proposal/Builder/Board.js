@@ -23,6 +23,7 @@ const Board = ({
   isPreview,
   autoUpdateStudentBoards,
   propagateToClones,
+  onTemplateChangedWithoutPropagation,
 }) => {
   const { t } = useTranslation("builder");
   const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
@@ -36,6 +37,8 @@ const Board = ({
   const [updateSectionMut, updateSectionState] = useMutation(UPDATE_SECTION);
   const [deleteSectionMut, deleteSectionState] = useMutation(DELETE_SECTION);
 
+  const hasClones = proposal?.prototypeFor?.length > 0;
+
   const createSection = useCallback(
     async (opts) => {
       await createSectionMut(opts);
@@ -45,9 +48,11 @@ const Board = ({
         } catch (e) {
           console.error("Auto-propagate after section create failed:", e);
         }
+      } else if (hasClones && onTemplateChangedWithoutPropagation) {
+        onTemplateChangedWithoutPropagation();
       }
     },
-    [createSectionMut, autoUpdateStudentBoards, propagateToClones]
+    [createSectionMut, autoUpdateStudentBoards, propagateToClones, hasClones, onTemplateChangedWithoutPropagation]
   );
 
   const deleteSection = useCallback(
@@ -59,9 +64,11 @@ const Board = ({
         } catch (e) {
           console.error("Auto-propagate after section delete failed:", e);
         }
+      } else if (hasClones && onTemplateChangedWithoutPropagation) {
+        onTemplateChangedWithoutPropagation();
       }
     },
-    [deleteSectionMut, autoUpdateStudentBoards, propagateToClones]
+    [deleteSectionMut, autoUpdateStudentBoards, propagateToClones, hasClones, onTemplateChangedWithoutPropagation]
   );
 
   const updateSection = useCallback(
@@ -73,9 +80,11 @@ const Board = ({
         } catch (e) {
           console.error("Auto-propagate after section update failed:", e);
         }
+      } else if (hasClones && onTemplateChangedWithoutPropagation) {
+        onTemplateChangedWithoutPropagation();
       }
     },
-    [updateSectionMut, autoUpdateStudentBoards, propagateToClones]
+    [updateSectionMut, autoUpdateStudentBoards, propagateToClones, hasClones, onTemplateChangedWithoutPropagation]
   );
 
   const [errors, setErrors] = useState([]);
@@ -168,6 +177,8 @@ const Board = ({
         isPreview={isPreview}
         autoUpdateStudentBoards={autoUpdateStudentBoards}
         propagateToClones={propagateToClones}
+        onTemplateChangedWithoutPropagation={onTemplateChangedWithoutPropagation}
+        hasClones={hasClones}
       />
     </>
   );

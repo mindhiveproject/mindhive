@@ -21,6 +21,10 @@ export default function ProposalBuilder({
 }) {
   const { t } = useTranslation("builder");
   const [autoUpdateStudentBoards, setAutoUpdateStudentBoards] = useState(false);
+  const [hasUnpropagatedChanges, setHasUnpropagatedChanges] = useState(false);
+
+  const markUnpropagatedChange = useCallback(() => setHasUnpropagatedChanges(true), []);
+  const clearUnpropagatedChange = useCallback(() => setHasUnpropagatedChanges(false), []);
 
   useEffect(() => {
     if (typeof window === "undefined" || !proposal?.id) return;
@@ -121,6 +125,8 @@ export default function ProposalBuilder({
               autoUpdateStudentBoards={autoUpdateStudentBoards}
               onAutoUpdateChange={handleAutoUpdateChange}
               propagateToClones={propagateToClones}
+              hasUnpropagatedChanges={hasUnpropagatedChanges}
+              onPropagationSuccess={clearUnpropagatedChange}
             />
           )}
           {proposal && (
@@ -131,6 +137,7 @@ export default function ProposalBuilder({
               proposalBuildMode={proposalBuildMode}
               autoUpdateStudentBoards={autoUpdateStudentBoards}
               propagateToClones={propagateToClones}
+              onTemplateChangedWithoutPropagation={markUnpropagatedChange}
             />
           )}
         </>
@@ -156,6 +163,7 @@ export default function ProposalBuilder({
               isPreview={isPreview}
               autoUpdateStudentBoards={autoUpdateStudentBoards}
               propagateToClones={propagateToClones}
+              onTemplateChangedWithoutPropagation={markUnpropagatedChange}
             />
           </div>
         )

@@ -156,6 +156,8 @@ class Sections extends Component {
                 settings={settings}
                 autoUpdateStudentBoards={this.props.autoUpdateStudentBoards}
                 propagateToClones={this.props.propagateToClones}
+                onTemplateChangedWithoutPropagation={this.props.onTemplateChangedWithoutPropagation}
+                hasClones={this.props.hasClones}
               />
             </Draggable>
           ))}

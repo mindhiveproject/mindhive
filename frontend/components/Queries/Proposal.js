@@ -106,6 +106,7 @@ export const GET_TEMPLATE_BOARD_SECTIONS_CARDS = gql`
           title
           publicId
           position
+          type
         }
       }
     }

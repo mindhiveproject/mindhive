@@ -8,6 +8,8 @@ import googleSignup from "./googleSignup";
 import googleLogin from "./googleLogin";
 import linkAssignmentToTemplateCard from "./linkAssignmentToTemplateCard";
 import unlinkAssignmentFromTemplateCards from "./unlinkAssignmentFromTemplateCards";
+import setAssignmentTemplateCards from "./setAssignmentTemplateCards";
+import setResourceTemplateCards from "./setResourceTemplateCards";
 import applyTemplateBoardChanges from "./applyTemplateBoardChanges";
 
 // make a fake gql tagged template literal
@@ -51,6 +53,16 @@ export const extendGraphqlSchema = (schema) =>
           assignmentId: ID!
           classId: ID!
         ): Assignment
+        setAssignmentTemplateCards(
+          assignmentId: ID!
+          templateCardIds: [ID!]!
+          classId: ID!
+        ): Assignment
+        setResourceTemplateCards(
+          resourceId: ID!
+          templateCardIds: [ID!]!
+          classId: ID!
+        ): Resource
         applyTemplateBoardChanges(
           templateBoardId: ID!
           cardIdsWithContentUpdate: [ID!]
@@ -67,6 +79,8 @@ export const extendGraphqlSchema = (schema) =>
         googleLogin,
         linkAssignmentToTemplateCard,
         unlinkAssignmentFromTemplateCards,
+        setAssignmentTemplateCards,
+        setResourceTemplateCards,
         applyTemplateBoardChanges,
       },
     },

@@ -34,6 +34,7 @@ export default function LinkedItems({
   selectedStudies,
   totalLinked,
   onAssignmentPublicChange,
+  onLinkedItemsClose,
 }) {
   const { t } = useTranslation("classes");
 
@@ -111,6 +112,12 @@ export default function LinkedItems({
   const publicStudies = publicStudiesData?.studies || [];
 
   const [open, setOpen] = useState(false);
+
+  const handleCloseModal = () => {
+    onLinkedItemsClose?.();
+    setOpen(false);
+  };
+
   const [assignmentModalOpen, setAssignmentModalOpen] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
   const [viewAssignmentModalOpen, setViewAssignmentModalOpen] = useState(false);
@@ -511,7 +518,7 @@ export default function LinkedItems({
 
       <Modal
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleCloseModal}
         size="large"
         style={{ borderRadius: "12px", overflow: "hidden" }}
       >
@@ -535,7 +542,7 @@ export default function LinkedItems({
         >
 
           <button
-            onClick={() => setOpen(false)}
+            onClick={handleCloseModal}
             style={styledSecondaryButtonBlue}
             >
             {t("board.expendedCard.done")}

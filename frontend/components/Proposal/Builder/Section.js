@@ -17,8 +17,6 @@ import {
   DELETE_CARD,
 } from "../../Mutations/Proposal";
 
-import { Modal, Button } from "semantic-ui-react";
-
 const Section = ({
   section,
   sections,
@@ -34,6 +32,8 @@ const Section = ({
   submitStatuses = {},
   autoUpdateStudentBoards,
   propagateToClones,
+  onTemplateChangedWithoutPropagation,
+  hasClones,
 }) => {
   const { t } = useTranslation("builder");
   const { cards } = section;
@@ -41,9 +41,6 @@ const Section = ({
   // const sortedCards = sortBy(cards, item => item.position);
 
   const [cardName, setCardName] = useState("");
-  const [showCloneDialog, setShowCloneDialog] = useState(false);
-  const [newCardInfo, setNewCardInfo] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [isEditingSectionTitle, setIsEditingSectionTitle] = useState(false);
   const [editingSectionTitle, setEditingSectionTitle] = useState("");
 
@@ -65,6 +62,8 @@ const Section = ({
           propagateToClones().catch((e) =>
             console.error("Auto-propagate after card move failed:", e)
           );
+        } else if (hasClones && onTemplateChangedWithoutPropagation) {
+          onTemplateChangedWithoutPropagation();
         }
       },
       update: (cache, { data: { updateProposalCard } }) => {
@@ -312,35 +311,12 @@ const Section = ({
         }
         openCard({ id: newCard?.data?.createProposalCard?.id });
       } else {
-        setNewCardInfo({
-          id: newCard?.data?.createProposalCard?.id,
-          publicId: newCard?.data?.createProposalCard?.publicId || publicId,
-          title,
-          sectionTitle: section?.title,
-          cloneCount: proposal?.prototypeFor?.length,
-        });
-        setShowCloneDialog(true);
+        onTemplateChangedWithoutPropagation?.();
+        openCard({ id: newCard?.data?.createProposalCard?.id });
       }
     } else {
       openCard({ id: newCard?.data?.createProposalCard?.id });
     }
-  };
-
-  const handleCloneYes = async () => {
-    setIsLoading(true);
-    try {
-      if (propagateToClones) await propagateToClones();
-    } catch (error) {
-      console.error("Failed to propagate to clones:", error);
-    }
-    setIsLoading(false);
-    setShowCloneDialog(false);
-    openCard({ id: newCardInfo?.id });
-  };
-
-  const handleCloneNo = () => {
-    setShowCloneDialog(false);
-    openCard({ id: newCardInfo?.id });
   };
 
   const deleteCardMutation = (id) => {
@@ -353,6 +329,8 @@ const Section = ({
           propagateToClones().catch((e) =>
             console.error("Auto-propagate after card delete failed:", e)
           );
+        } else if (hasClones && onTemplateChangedWithoutPropagation) {
+          onTemplateChangedWithoutPropagation();
         }
       },
       update: (cache, payload) => {
@@ -558,73 +536,6 @@ const Section = ({
         </div>
       )}
 
-      {/* Clone Add Modal */}
-      <Modal
-        open={showCloneDialog}
-        onClose={handleCloneNo}
-        size="medium"
-        style={{ borderRadius: "12px", overflow: "hidden" }}
-      >
-        <Modal.Header
-          style={{
-            background: "#f9fafb",
-            borderBottom: "1px solid #e0e0e0",
-            fontFamily: "Nunito",
-            fontWeight: 600,
-          }}
-        >
-          {t("builderSection.cloneDialog.title", "Add to Cloned Boards?")}
-        </Modal.Header>
-        <Modal.Content
-          style={{ background: "#ffffff", padding: "24px", fontSize: "16px" }}
-        >
-          <p style={{ marginBottom: "16px", color: "#3b3b3b" }}>
-            {t(
-              "builderSection.cloneDialog.description",
-              "This board has {count} cloned project board(s). Do you want to add this new card to the corresponding sections in all cloned project boards?",
-              {
-                count: newCardInfo?.cloneCount || 0,
-              }
-            )}
-          </p>
-        </Modal.Content>
-        <Modal.Actions
-          style={{ background: "#f9fafb", borderTop: "1px solid #e0e0e0" }}
-        >
-          <Button
-            onClick={handleCloneNo}
-            style={{
-              borderRadius: "100px",
-              background: "white",
-              fontSize: "16px",
-              color: "#CF6D6A",
-              border: "1px solid #CF6D6A",
-              marginRight: "10px",
-            }}
-          >
-            {t(
-              "builderSection.cloneDialog.noOption",
-              "No, add only to this board"
-            )}
-          </Button>
-          <Button
-            loading={isLoading || createCardState.loading}
-            onClick={handleCloneYes}
-            style={{
-              borderRadius: "100px",
-              background: "#336F8A",
-              fontSize: "16px",
-              color: "white",
-              border: "1px solid #336F8A",
-            }}
-          >
-            {t(
-              "builderSection.cloneDialog.yesOption",
-              "Yes, add to all clones"
-            )}
-          </Button>
-        </Modal.Actions>
-      </Modal>
     </div>
   );
 };

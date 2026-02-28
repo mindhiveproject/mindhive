@@ -14,7 +14,7 @@ export default function ResourceForm({ user, inputs, handleChange, loading }) {
   return (
     <div>
       <StyledInput>
-        <h1>{inputs.title}</h1>
+        {/* <h1>{inputs.title}</h1> */}
         {user?.permissions.map((p) => p.name).includes("ADMIN") && (
           <div className="iconTitle">
             <div>{t("boardManagement.makePublic")}</div>
@@ -45,7 +45,7 @@ export default function ResourceForm({ user, inputs, handleChange, loading }) {
             />
           </label>
         </div>
-        <div>
+        {/* <div>
           <label htmlFor="description">
             {t("boardManagement.description")}
             <textarea
@@ -56,7 +56,7 @@ export default function ResourceForm({ user, inputs, handleChange, loading }) {
               onChange={handleChange}
             />
           </label>
-        </div>
+        </div> */}
       </StyledInput>
 
       {t("boardManagement.content")}
