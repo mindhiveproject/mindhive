@@ -40,7 +40,7 @@ export default function BasicInformation({ query, user }) {
         input: { ...inputs },
       },
       refetchQueries: [{ query: GET_PROFILE }],
-    }
+    },
   );
 
   async function handleSubmit(e) {
@@ -88,7 +88,7 @@ export default function BasicInformation({ query, user }) {
           </div>
         ) : (
           <div>
-            <IdentIcon size="120" value={user?.name} />
+            <IdentIcon size="120" value={user?.username} />
           </div>
         )}
         <UpdateAvatarModal user={user} />
