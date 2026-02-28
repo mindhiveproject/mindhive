@@ -20,6 +20,8 @@ function getVisualFilterQuery(session: any) {
       { author: { id: { equals: session?.itemId } } },
       // Public visuals
       { privacy: { equals: "public" } },
+      // Unlisted visuals
+      { privacy: { equals: "unlisted" } },
       // You have liked & they are unlisted or for friends
       {
         AND: [
