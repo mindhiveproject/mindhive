@@ -51,13 +51,17 @@ export default function ProposalBuilder({
     [proposal?.id]
   );
 
-  const [applyTemplateChanges] = useMutation(APPLY_TEMPLATE_BOARD_CHANGES, {
-    refetchQueries: [
-      { query: OVERVIEW_PROPOSAL_BOARD_QUERY, variables: { id: proposal?.id } },
-      { query: PROPOSAL_QUERY, variables: { id: proposal?.id } },
-      ...(refetchQueries || []),
-    ],
-  });
+  const [applyTemplateChanges, { loading: propagateLoading }] = useMutation(
+    APPLY_TEMPLATE_BOARD_CHANGES,
+    {
+      refetchQueries: [
+        { query: OVERVIEW_PROPOSAL_BOARD_QUERY, variables: { id: proposal?.id } },
+        { query: PROPOSAL_QUERY, variables: { id: proposal?.id } },
+        ...(refetchQueries || []),
+      ],
+      onCompleted: () => clearUnpropagatedChange(),
+    }
+  );
 
   const propagateToClones = useCallback(async (options) => {
     if (!proposal?.id) return null;
@@ -127,6 +131,7 @@ export default function ProposalBuilder({
               propagateToClones={propagateToClones}
               hasUnpropagatedChanges={hasUnpropagatedChanges}
               onPropagationSuccess={clearUnpropagatedChange}
+              isPropagatingToClones={propagateLoading}
             />
           )}
           {proposal && (

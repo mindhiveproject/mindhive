@@ -27,6 +27,7 @@ export default function ProposalHeader({
   propagateToClones,
   hasUnpropagatedChanges,
   onPropagationSuccess,
+  isPropagatingToClones,
 }) {
   const { t } = useTranslation('builder');
   const [activeIndex, setActiveIndex] = useState(0);
@@ -98,6 +99,13 @@ export default function ProposalHeader({
                   label={autoUpdateStudentBoards ? t("proposal.templateAutoUpdateOn", "Auto-update: ON") : t("proposal.templateAutoUpdateOff", "Auto-update: OFF")}
                   style={{ backgroundColor: "#5D5763", border: "1px solid #F3F3F3", color: "#F3F3F3", fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px" }}
                 />
+                {isPropagatingToClones && (
+                  <Chip
+                    shape="square"
+                    label={t("proposal.updatingStudentBoards", "Updating student boards…")}
+                    style={{ backgroundColor: "#5D5763", border: "1px solid #F3F3F3", color: "#F3F3F3", fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px" }}
+                  />
+                )}
                 {hasUnpropagatedChanges && (
                   <Chip
                     shape = "square"

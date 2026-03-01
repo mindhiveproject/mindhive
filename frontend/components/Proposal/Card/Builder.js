@@ -95,6 +95,26 @@ export default function BuilderProposalCard({
     }
   };
 
+  // Compare current state to initial proposalCard to detect unsaved changes.
+  const hasCardChanges = () => {
+    const descEq = String(description?.current ?? "") === String(proposalCard?.description ?? "");
+    const contentEq = String(content?.current ?? "") === String(proposalCard?.content ?? "");
+    const internalEq = String(internalContent?.current ?? "") === String(proposalCard?.internalContent ?? "");
+    const titleEq = String(inputs?.title ?? "") === String(proposalCard?.title ?? "");
+    const settingsEq =
+      JSON.stringify(inputs?.settings ?? null) === JSON.stringify(proposalCard?.settings ?? null);
+    const ids = (arr) => (arr ?? []).map((x) => x?.id).filter(Boolean).sort().join(",");
+    const resourcesEq = ids(inputs?.resources) === ids(proposalCard?.resources);
+    const assignmentsEq = ids(inputs?.assignments) === ids(proposalCard?.assignments);
+    const tasksEq = ids(inputs?.tasks) === ids(proposalCard?.tasks);
+    const studiesEq = ids(inputs?.studies) === ids(proposalCard?.studies);
+    const assignedToEq = ids(inputs?.assignedTo) === ids(proposalCard?.assignedTo);
+    return (
+      !descEq || !contentEq || !internalEq || !titleEq || !settingsEq ||
+      !resourcesEq || !assignmentsEq || !tasksEq || !studiesEq || !assignedToEq
+    );
+  };
+
   // Save card content only (no close, no clone dialog). Used before entering preview.
   const saveCardContentOnly = async () => {
     await updateCard({
@@ -186,25 +206,27 @@ export default function BuilderProposalCard({
             className="icon"
             onClick={async () => {
               try {
+                if (!hasCardChanges()) {
+                  closeCard({ cardId: proposalCard?.id, lockedByUser: false });
+                  return;
+                }
                 await saveCardContentOnly();
+                closeCard({ cardId: proposalCard?.id, lockedByUser: false });
                 const hasClones = proposal?.prototypeFor?.length > 0;
                 const shouldPropagate = hasClones && autoUpdateStudentBoards && propagateToClones;
                 if (shouldPropagate) {
-                  try {
-                    const contentChanged =
-                      String(content?.current ?? "") !==
-                      String(proposalCard?.content ?? "");
-                    await propagateToClones({
-                      contentChangedCardIds:
-                        contentChanged && proposalCard?.id ? [proposalCard.id] : [],
-                    });
-                  } catch (e) {
+                  const contentChanged =
+                    String(content?.current ?? "") !==
+                    String(proposalCard?.content ?? "");
+                  propagateToClones({
+                    contentChangedCardIds:
+                      contentChanged && proposalCard?.id ? [proposalCard.id] : [],
+                  }).catch((e) => {
                     console.error("Propagate to clones failed:", e);
-                  }
+                  });
                 } else if (hasClones) {
                   onTemplateChangedWithoutPropagation?.();
                 }
-                closeCard({ cardId: proposalCard?.id, lockedByUser: false });
               } catch (e) {
                 // Leave card open; mutation error handling applies
               }
