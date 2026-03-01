@@ -11,12 +11,9 @@ const defaultIconStyle = {
 
 const defaultTooltipStyle = {
   position: "absolute",
-  top: "100%",
-  left: 0,
   width: "400px",
   background: "#ffffff",
   color: "#625B71",
-  marginTop: "8px",
   padding: "12px 16px",
   border: "1px solid #5D5763",
   borderRadius: "16px",
@@ -24,11 +21,30 @@ const defaultTooltipStyle = {
   fontFamily: "Inter, sans-serif",
   lineHeight: "20px",
   opacity: 0,
-  transform: "translateX(-5px)",
   transition: "all 0.3s ease",
   pointerEvents: "none",
   zIndex: 1000,
   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.10)",
+};
+
+const POSITION_STYLES = {
+  bottomLeft: {
+    top: "100%",
+    left: 0,
+    marginTop: "8px",
+    transformHidden: "translateY(-5px)",
+    transformVisible: "translateY(0)",
+  },
+  topRight: {
+    top: "auto",
+    bottom: "100%",
+    left: "auto",
+    right: 0,
+    marginTop: 0,
+    marginBottom: "8px",
+    transformHidden: "translateY(5px)",
+    transformVisible: "translateY(0)",
+  },
 };
 
 // When tooltip has an action, delay before hiding after pointer leaves trigger so user can cross the gap
@@ -48,6 +64,7 @@ const INTERACTIVE_HIDE_DELAY_MS = 150;
  * @param {object} [wrapperStyle] - Override styles for the wrapper (e.g. width when used as custom trigger).
  * @param {number} [delayMs=0] - Delay in milliseconds before the tooltip appears on hover. Leave before this time cancels showing.
  * @param {React.ReactNode} [action] - Optional node (e.g. link/button) rendered below the tooltip content. When present, the tooltip is interactive: it stays visible when the pointer is over the trigger or the tooltip so the user can click the action.
+ * @param {"bottomLeft"|"topRight"} [position="bottomLeft"] - Tooltip placement: "bottomLeft" (below trigger, left-aligned) or "topRight" (above trigger, right-aligned).
  */
 export default function InfoTooltip({
   content,
@@ -58,6 +75,7 @@ export default function InfoTooltip({
   wrapperStyle: wrapperStyleOverride,
   delayMs = 0,
   action,
+  position = "bottomLeft",
 }) {
   const [triggerHover, setTriggerHover] = useState(false);
   const [tooltipHover, setTooltipHover] = useState(false);
@@ -116,11 +134,14 @@ export default function InfoTooltip({
   const useCustomTrigger = content != null && children != null;
   const tooltipContent = useCustomTrigger ? content : (content ?? children);
   const mergedIconStyle = { ...defaultIconStyle, ...iconStyle };
+  const positionConfig = POSITION_STYLES[position] ?? POSITION_STYLES.bottomLeft;
+  const { transformHidden, transformVisible, ...positionPlacement } = positionConfig;
   const mergedTooltipStyle = {
     ...defaultTooltipStyle,
+    ...positionPlacement,
     ...tooltipStyle,
     opacity: hover ? 1 : 0,
-    transform: hover ? "translateY(0)" : "translateY(-5px)",
+    transform: hover ? transformVisible : transformHidden,
     ...(action != null && { pointerEvents: hover ? "auto" : "none" }),
   };
 
