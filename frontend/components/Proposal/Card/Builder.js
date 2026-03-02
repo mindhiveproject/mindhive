@@ -302,7 +302,9 @@ export default function BuilderProposalCard({
         <div className="proposalCardBoard">
           <div className="textBoard">
             <div className="cardHeader">{inputs?.title || proposalCard?.title}</div>
-            <div className="cardSubheader">{t("board.expendedCard.instructions", "Instructions for Students")}</div>
+            <div className="cardSubheader">
+              {t("assignment.instructions", "Instructions")}
+            </div>
             <ReadOnlyTipTap>
               <div className="ProseMirror">
                 {ReactHtmlParser(description?.current || inputs?.description || "")}
@@ -310,7 +312,9 @@ export default function BuilderProposalCard({
             </ReadOnlyTipTap>
             {inputs?.settings?.includeInReport && (
               <>
-                <div className="cardSubheader">{t("board.expendedCard.studentResponseBoxNetwork", "Student Response Box - For MindHive Network")}</div>
+                <div className="cardSubheader">
+                  {t("mainCard.forMindHiveNetwork", "Your entry")}
+                </div>
                 <ReadOnlyTipTap>
                   <div className="ProseMirror">
                     {ReactHtmlParser(content?.current || inputs?.content || "")}
