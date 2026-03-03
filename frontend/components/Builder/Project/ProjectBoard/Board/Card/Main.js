@@ -1627,41 +1627,6 @@ export default function ProposalCard({
                   )}
                 />
               </div>
-              {proposalCard?.settings?.includeInReport &&
-                !isLocked &&
-                user?.permissions.some((p) =>
-                  ["SCIENTIST", "TEACHER", "MENTOR", "ADMIN"].includes(p?.name),
-                ) && (
-                  <div>
-                    <div className="cardSubheaderComment">
-                      {t(
-                        "mainCard.chooseReviewStep",
-                        "Choose which step of the peer review a card should go in",
-                      )}
-                    </div>
-                    <Dropdown
-                      placeholder={t("mainCard.selectOption", "Select option")}
-                      fluid
-                      multiple
-                      search
-                      selection
-                      lazyLoad
-                      options={filteredReviewOptions}
-                      onChange={(event, data) => {
-                        handleChange({
-                          target: {
-                            name: "settings",
-                            value: {
-                              ...inputs.settings,
-                              includeInReviewSteps: data.value,
-                            },
-                          },
-                        });
-                      }}
-                      value={inputs?.settings?.includeInReviewSteps || []}
-                    />
-                  </div>
-                )}
             </div>
           </div>
         </div>

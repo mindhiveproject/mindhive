@@ -1476,6 +1476,88 @@ export const StyledProposal = styled.div`
         text-align: center;
       }
     }
+    .visibilityPanel,
+    .feedbackCenterPanel {
+      width: 100%;
+      background: var(--MH-Theme-Tertiary-Light, #F6F9F8);
+      border-radius: 12px;
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      padding: 16px 16px;
+      margin-top: 16px;
+    }
+    .feedbackCenterPanel {
+      margin-top: 12px;
+      background: var(--MH-Theme-Neutrals-White, #FFF);
+    }
+    .visibilityPanelHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .visibilityPanelTitleRow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .feedbackCenterPanelHeader {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .feedbackCenterPanelTitleRow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .feedbackOptionCards {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .feedbackOptionCard {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--MH-Theme-Tertiary-Light, #F6F9F8);
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .feedbackOptionCard.feedbackOptionCardSelected {
+      border-color: var(--MH-Theme-Primary-Dark, #336F8A);
+      background: var(--MH-Theme-Primary-Light, #DEF8FB);
+    }
+    .feedbackOptionCardIcon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .feedbackOptionCardContent {
+      flex: 1;
+      min-width: 0;
+    }
+    .feedbackOptionCardTitle {
+      font-family: Inter;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 22px;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+      margin-bottom: 2px;
+    }
+    .feedbackOptionCardDescription {
+      font-family: Inter;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      color: #626269;
+    }
     .proposalCardComments {
       display: grid;
       width: 100%;

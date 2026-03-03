@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useMutation } from "@apollo/client";
-import { Checkbox, Dropdown, Icon, Popup } from "semantic-ui-react";
+import { Checkbox, Dropdown, Icon } from "semantic-ui-react";
+import { useRouter } from "next/router";
 import { UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
 
 import ReactHtmlParser from "react-html-parser";
@@ -23,21 +24,37 @@ const peerReviewOptions = [
     key: "actionSubmit",
     text: "Proposal",
     value: "ACTION_SUBMIT",
+    icon: "/assets/icons/user.svg",
+    titleKey: "board.expendedCard.proposalFeedback",
+    descriptionKey: "board.expendedCard.proposalFeedbackDescription",
+    descriptionFallback: "Card content is shown anonymously to mentors associated with class networks.",
   },
   {
     key: "actionPeerFeedback",
     text: "Peer Feedback",
     value: "ACTION_PEER_FEEDBACK",
+    icon: "/assets/connect/group.svg",
+    titleKey: "board.expendedCard.peerFeedback",
+    descriptionKey: "board.expendedCard.peerFeedbackDescription",
+    descriptionFallback: "Content and participation links shown to both mentors and students in the networks.",
   },
-  {
-    key: "actionCollectingData",
-    text: "Collecting Data",
-    value: "ACTION_COLLECTING_DATA",
-  },
+  // {
+  //   key: "actionCollectingData",
+  //   text: "Collecting Data",
+  //   value: "ACTION_COLLECTING_DATA",
+  //   icon: "/assets/icons/project/collect.svg",
+  //   titleKey: "board.expendedCard.collectingData",
+  //   descriptionKey: "board.expendedCard.collectingDataDescription",
+  //   descriptionFallback: "Card marked as submitted while associated studies are locked for stable data collection.",
+  // },
   {
     key: "actionProjectReport",
     text: "Project Report",
     value: "ACTION_PROJECT_REPORT",
+    icon: "/assets/icons/document.svg",
+    titleKey: "board.expendedCard.projectReport",
+    descriptionKey: "board.expendedCard.projectReportDescription",
+    descriptionFallback: "A simple label to select cards that will be included in the exported PDF report.",
   },
 ];
 
@@ -51,6 +68,7 @@ export default function BuilderProposalCard({
   onTemplateChangedWithoutPropagation,
 }) {
   const { t } = useTranslation("classes");
+  const router = useRouter();
   const { inputs, handleChange } = useForm({
     ...proposalCard,
   });
@@ -584,94 +602,178 @@ export default function BuilderProposalCard({
             <div className="cardHeader">{t("board.expendedCard.type")}</div>
             <CardType type={inputs?.type} handleChange={handleChange} />
           </div>
-          <>
-            <div className="cardHeader" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              {t("board.expendedCard.visibility")}
-              <InfoTooltip
-                content={t(
-                  "board.expendedCard.visibilityText",
-                  "Check the box below to indicate whether student responses should be made visible in the Feedback Center."
-                )}
-                iconStyle={{opacity: 0.4}}
-              />
-            </div>
-            <div className="checkboxText">
+          {/* Student Answer Box panel */}
+          <div className="visibilityPanel">
+            <div className="visibilityPanelHeader">
+              <div>
+                <div className="visibilityPanelTitleRow">
+                  <span className="cardHeader">
+                    {t("board.expendedCard.studentAnswerBox", "Student Answer Box")}
+                  </span>
+                  <InfoTooltip
+                    content={t(
+                      "board.expendedCard.studentAnswerBoxTooltip",
+                      "When enabled, students can type a response in a dedicated field on this card."
+                    )}
+                    iconStyle={{ opacity: 0.4 }}
+                    position="topRight"
+                  />
+                </div>
+                <div className="cardDescription" style={{ marginTop: "4px" }}>
+                  {t("board.expendedCard.studentAnswerBoxDescription", "Enable input field for students on this card")}
+                </div>
+              </div>
               <Checkbox
+                toggle
                 name="feedbackCenterCardToggle"
                 id="feedbackCenterCardToggle"
-                onChange={(event, data) =>
-                  handleChange({
-                    target: {
-                      name: "settings",
-                      value: {
-                        ...inputs.settings,
-                        includeInReport: data.checked,
-                      },
-                    },
-                  })
-                }
-                checked={inputs?.settings?.includeInReport}
-              />
-              <label htmlFor="feedbackCenterCardToggle">
-                <div className="cardDescription">
-                  {t("board.expendedCard.includeTextFeedbackCenter")}
-                </div>
-              </label>
-            </div>
-          </>
-
-          {inputs?.settings?.includeInReport && (
-            <>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "4px" }}
-              >
-                <div className="cardSubheaderComment">
-                  {t("board.reviewPhase")}
-                </div>
-                <Popup
-                  content={
-                    <p > {t("board.reviewPhaseDescription")} </p>
-                  }
-                  trigger={
-                    <img
-                      src="/assets/icons/question_mark.svg" // Next.js serves public/ as root
-                      alt="info"
-                      style={{
-                        width: "16px",
-                        height: "16px",
-                        marginLeft: "4px",
-                        cursor: "pointer",
-                        verticalAlign: "middle",
-                      }}
-                    />
-                  }
-                />
-              </div>
-              <Dropdown
-                placeholder={t("board.expendedCard.select")}
-                fluid
-                multiple
-                search
-                selection
-                lazyLoad
-                options={peerReviewOptions}
                 onChange={(event, data) => {
+                  const wasIncluded = !!inputs?.settings?.includeInReport;
+                  const nextSettings = {
+                    ...(inputs.settings || {}),
+                    includeInReport: data.checked,
+                  };
+
+                  if (data.checked && !wasIncluded) {
+                    const currentSteps = inputs?.settings?.includeInReviewSteps || [];
+                    if (!currentSteps.length) {
+                      nextSettings.includeInReviewSteps = peerReviewOptions.map(
+                        (option) => option.value
+                      );
+                    }
+
+                    alert(
+                      t(
+                        "board.expendedCard.feedbackCenterToggleOnAlert",
+                        "Response box added!\n- The default selection will show text from this response box in the Feedback Center for all action card steps on the Project Board.\n- Please deselect any action card steps if you do not want the student response to go to the Feedback Center."
+                      )
+                    );
+                  }
+
                   handleChange({
                     target: {
                       name: "settings",
-                      value: {
-                        ...inputs.settings,
-                        includeInReviewSteps: data.value,
-                      },
+                      value: nextSettings,
                     },
                   });
                 }}
-                value={inputs?.settings?.includeInReviewSteps || []}
+                checked={!!inputs?.settings?.includeInReport}
               />
-            </>
-          )}
+            </div>
+            
+            {/* Feedback Center panel — only when Student Answer Box is enabled */}
+            {inputs?.settings?.includeInReport && (
+              <div className="feedbackCenterPanel">
+                <div className="feedbackCenterPanelHeader">
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px" }}>
+                    <div className="feedbackCenterPanelTitleRow">
+                      <img
+                        src="/assets/connect/group.svg"
+                        alt=""
+                        aria-hidden
+                        style={{ width: 24, height: 24, flexShrink: 0 }}
+                      />
+                      <span className="cardHeader">
+                        {t("board.expendedCard.feedbackCenter", "Feedback Center")}
+                      </span>
+                    </div>
+                    <div className="cardDescription" style={{ marginTop: "4px" }}>
+                      {t("board.expendedCard.feedbackCenterDescription", "Choose how students' contributions will be shared and reviewed within the network.")}
+                    </div>
+                    {/* <Button
+                      variant="text"
+                      leadingIcon={
+                        <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                          <path
+                            d="M11 17H7C5.61667 17 4.4375 16.5125 3.4625 15.5375C2.4875 14.5625 2 13.3833 2 12C2 10.6167 2.4875 9.4375 3.4625 8.4625C4.4375 7.4875 5.61667 7 7 7H11V9H7C6.16667 9 5.45833 9.29167 4.875 9.875C4.29167 10.4583 4 11.1667 4 12C4 12.8333 4.29167 13.5417 4.875 14.125C5.45833 14.7083 6.16667 15 7 15H11V17ZM8 13V11H16V13H8ZM13 17V15H17C17.8333 15 18.5417 14.7083 19.125 14.125C19.7083 13.5417 20 12.8333 20 12C20 11.1667 19.7083 10.4583 19.125 9.875C18.5417 9.29167 17.8333 9 17 9H13V7H17C18.3833 7 19.5625 7.4875 20.5375 8.4625C21.5125 9.4375 22 10.6167 22 12C22 13.3833 21.5125 14.5625 20.5375 15.5375C19.5625 16.5125 18.3833 17 17 17H13Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      }
+                      onClick={() => {
+                        const classCode = proposal?.templateForClasses?.[0]?.code;
+                        if (classCode) {
+                          const url = `/dashboard/myclasses/${classCode}?page=settings`;
+                          window.open(url, "_blank", "noopener,noreferrer");
+                        } else {
+                          alert(t("board.expendedCard.manageNetworksAlert", "Please connect a class to this proposal before managing networks."));
+                        }
+                      }}
+                    >
+                      {t("board.expendedCard.manageNetworks", "Manage Networks")}
+                    </Button> */}
+                  </div>
+                </div>
 
-
+                <div className="feedbackOptionCards">
+                  {peerReviewOptions.map((option) => {
+                    const current = inputs?.settings?.includeInReviewSteps || [];
+                    const selected = current.includes(option.value);
+                    const toggleReviewStep = () => {
+                      const next = selected
+                        ? current.filter((v) => v !== option.value)
+                        : [...current, option.value];
+                      handleChange({
+                        target: {
+                          name: "settings",
+                          value: {
+                            ...inputs.settings,
+                            includeInReviewSteps: next,
+                          },
+                        },
+                      });
+                    };
+                    return (
+                      <div
+                        key={option.key}
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={selected}
+                        className={`feedbackOptionCard ${selected ? "feedbackOptionCardSelected" : ""}`}
+                        onClick={toggleReviewStep}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            toggleReviewStep();
+                          }
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            background: "rgba(255, 255, 255, 0.7)",
+                            border: `1px solid ${selected ? "#336F8A" : "#E0E0E0"}`,
+                            padding: "4px",
+                            borderRadius: "8px",
+                            width: "40px",
+                            height: "40px",
+                          }}
+                        >
+                          <img
+                            src={option.icon}
+                            alt=""
+                            aria-hidden
+                            className="feedbackOptionCardIcon"
+                            style={{ filter: selected ? "opacity(1)" : "opacity(0.6)" }}
+                          />
+                        </div>
+                        <div className="feedbackOptionCardContent">
+                          <div className="feedbackOptionCardTitle">
+                            {t(option.titleKey, option.text)}
+                          </div>
+                          <div className="feedbackOptionCardDescription">
+                            {t(option.descriptionKey, option.descriptionFallback)}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       )}
