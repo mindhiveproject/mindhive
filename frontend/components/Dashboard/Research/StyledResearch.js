@@ -43,6 +43,13 @@ const StyledResearch = styled.div`
     line-height: 1.6;
   }
 
+  .filterModeRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+
   .filtersCard {
     background: #ffffff;
     border: 1px solid #d4d4d5;

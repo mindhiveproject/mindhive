@@ -3,6 +3,7 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import useTranslation from "next-translate/useTranslation";
 
+import Chip from "../../DesignSystem/Chip";
 import StyledResearch from "./StyledResearch";
 
 const GRAPHQL_ENDPOINT =
@@ -67,6 +68,66 @@ const EXPORT_QUERY = `
           }
           content
         }
+      }
+    }
+  }
+`;
+
+const BOARD_EXPORT_QUERY = `
+  query BoardExport($id: ID!) {
+    proposalBoard(where: { id: $id }) {
+      id
+      title
+      isMain
+      submitProposalStatus
+      peerFeedbackStatus
+      projectReportStatus
+      reviewsCount
+      collaborators {
+        id
+      }
+      usedInClass {
+        id
+        title
+      }
+      sections {
+        title
+        cardsCount
+        cards {
+          id
+          title
+          internalContent
+          revisedContent
+          content
+          comment
+          settings
+          resources {
+            id
+          }
+          assignments {
+            id
+          }
+          studies {
+            id
+          }
+          tasks {
+            id
+          }
+          createdAt
+        }
+      }
+      reviews {
+        id
+        stage
+        upvotedBy {
+          id
+        }
+        createdAt
+        author {
+          id
+          username
+        }
+        content
       }
     }
   }
@@ -480,6 +541,8 @@ const selectBoardsForClass = (
 
 export default function ResearchMain({ query, user }) {
   const [classCode, setClassCode] = useState("");
+  const [boardId, setBoardId] = useState("");
+  const [filterMode, setFilterMode] = useState("byClass");
   const [includeContent, setIncludeContent] = useState(true);
   const [includeReviews, setIncludeReviews] = useState(true);
   const [includeBoardTitle, setIncludeBoardTitle] = useState(false);
@@ -493,8 +556,21 @@ export default function ResearchMain({ query, user }) {
   const { t } = useTranslation("research");
   const canAccess = useMemo(() => hasResearchAccess(user), [user]);
 
+  const getScopeLabel = (value) => {
+    if (value === "ALL" && filterMode === "byBoard") {
+      return t("noStatusFilter", {
+        defaultValue: "No status filter",
+      });
+    }
+    return (
+      SCOPE_OPTIONS.find((option) => option.value === value)?.label || value
+    );
+  };
+
   const resetFilters = () => {
     setClassCode("");
+    setBoardId("");
+    setFilterMode("byClass");
     setIncludeContent(true);
     setIncludeReviews(true);
     setIncludeBoardTitle(false);
@@ -507,7 +583,17 @@ export default function ResearchMain({ query, user }) {
   };
 
   const handleDownload = async () => {
-    if (!classCode.trim()) {
+    if (!includeContent && !includeReviews) {
+      setFeedback({
+        type: "error",
+        message: t("errors.noDatasetSelected", {
+          defaultValue: "Select at least one dataset (board or reviews).",
+        }),
+      });
+      return;
+    }
+
+    if (filterMode === "byClass" && !classCode.trim()) {
       setFeedback({
         type: "error",
         message: t("errors.missingClassCode", {
@@ -518,11 +604,12 @@ export default function ResearchMain({ query, user }) {
       return;
     }
 
-    if (!includeContent && !includeReviews) {
+    if (filterMode === "byBoard" && !boardId.trim()) {
       setFeedback({
         type: "error",
-        message: t("errors.noDatasetSelected", {
-          defaultValue: "Select at least one dataset (board or reviews).",
+        message: t("errors.missingBoardId", {
+          defaultValue:
+            "Please provide a Board ID before running the export.",
         }),
       });
       return;
@@ -542,264 +629,463 @@ export default function ResearchMain({ query, user }) {
     setFeedback({ type: null, message: "" });
 
     try {
-      const response = await fetch(GRAPHQL_ENDPOINT, {
-        method: "POST",
-        mode: "cors",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          "x-apollo-operation-name": "RESEARCH_EXPORT",
-          "apollo-require-preflight": "true",
-        },
-        body: JSON.stringify({
-          query: EXPORT_QUERY,
-          variables: {
-            code: classCode.trim(),
+      if (filterMode === "byClass") {
+        const response = await fetch(GRAPHQL_ENDPOINT, {
+          method: "POST",
+          mode: "cors",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "x-apollo-operation-name": "RESEARCH_EXPORT",
+            "apollo-require-preflight": "true",
           },
-        }),
-      });
+          body: JSON.stringify({
+            query: EXPORT_QUERY,
+            variables: {
+              code: classCode.trim(),
+            },
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error(`Request failed with status ${response.status}`);
-      }
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
 
-      const payload = await response.json();
-      const classPayload = payload?.data?.class;
+        const payload = await response.json();
+        const classPayload = payload?.data?.class;
 
-      if (!classPayload) {
-        throw new Error(
-          t("errors.noClassForId", {
-            defaultValue:
-              "No class found for that identifier. Double-check it and try again.",
-          })
-        );
-      }
-
-      const {
-        studentProposals = [],
-        students = [],
-        title: classTitle,
-      } = classPayload;
-
-      if (!Array.isArray(studentProposals) || studentProposals.length === 0) {
-        throw new Error(
-          t("errors.noProposalsForClass", {
-            defaultValue:
-              "This class does not currently have any linked student proposal boards.",
-          })
-        );
-      }
-
-      const {
-        boards: selectedBoards,
-        matchedStudentCount,
-        totalStudentCount,
-        unmatchedStudentIds,
-        nonStudentOwnedBoardCount,
-      } = selectBoardsForClass(studentProposals, students, selectionMode);
-
-      if (selectedBoards.length === 0) {
-        if (selectionMode === "perStudent") {
+        if (!classPayload) {
           throw new Error(
-            t("errors.noStudentOwnedBoards", {
+            t("errors.noClassForId", {
               defaultValue:
-                "This class has proposal boards, but none are owned by enrolled students (no student collaborators). Try switching to 'All class boards' or linking boards to students.",
+                "No class found for that identifier. Double-check it and try again.",
             })
           );
         }
 
-        throw new Error(
-          t("errors.noBoardsAfterOwnershipFilter", {
-            defaultValue:
-              "No proposal boards matched the current ownership filter.",
-          })
+        const {
+          studentProposals = [],
+          students = [],
+          title: classTitle,
+        } = classPayload;
+
+        if (
+          !Array.isArray(studentProposals) ||
+          studentProposals.length === 0
+        ) {
+          throw new Error(
+            t("errors.noProposalsForClass", {
+              defaultValue:
+                "This class does not currently have any linked student proposal boards.",
+            })
+          );
+        }
+
+        const {
+          boards: selectedBoards,
+          matchedStudentCount,
+          totalStudentCount,
+          unmatchedStudentIds,
+          nonStudentOwnedBoardCount,
+        } = selectBoardsForClass(studentProposals, students, selectionMode);
+
+        if (selectedBoards.length === 0) {
+          if (selectionMode === "perStudent") {
+            throw new Error(
+              t("errors.noStudentOwnedBoards", {
+                defaultValue:
+                  "This class has proposal boards, but none are owned by enrolled students (no student collaborators). Try switching to 'All class boards' or linking boards to students.",
+              })
+            );
+          }
+
+          throw new Error(
+            t("errors.noBoardsAfterOwnershipFilter", {
+              defaultValue:
+                "No proposal boards matched the current ownership filter.",
+            })
+          );
+        }
+
+        const stageMeta =
+          STAGE_OPTIONS.find((option) => option.value === activeStage) ||
+          STAGE_OPTIONS[0];
+        const filterFn = scopeFilterMap[activeScope] || scopeFilterMap.ALL;
+        const scopedBoards = selectedBoards.filter((board) =>
+          filterFn(board?.[activeStage])
         );
-      }
 
-      const stageMeta =
-        STAGE_OPTIONS.find((option) => option.value === activeStage) ||
-        STAGE_OPTIONS[0];
-      const filterFn = scopeFilterMap[activeScope] || scopeFilterMap.ALL;
-      const scopedBoards = selectedBoards.filter((board) =>
-        filterFn(board?.[activeStage])
-      );
+        console.group("Research export");
+        console.log("Mode: byClass");
+        console.log("Stage:", activeStage, "Scope:", activeScope);
+        console.log("Boards selected:", selectedBoards.length);
+        console.log("Boards after scope filter:", scopedBoards.length);
 
-      console.group("Research export");
-      console.log("Stage:", activeStage, "Scope:", activeScope);
-      console.log("Boards selected:", selectedBoards.length);
-      console.log("Boards after scope filter:", scopedBoards.length);
+        if (scopedBoards.length === 0) {
+          const scopeLabel = getScopeLabel(activeScope);
+          console.warn("No boards matched scope", {
+            activeStage,
+            activeScope,
+            selectedBoards,
+          });
+          console.groupEnd();
+          throw new Error(
+            t("errors.noBoardsForScope", {
+              stageLabel: stageMeta.label,
+              scopeLabel,
+              defaultValue: `No boards matched the selected ${stageMeta.label} scope (${scopeLabel}).`,
+            })
+          );
+        }
 
-      if (scopedBoards.length === 0) {
-        const scopeLabel =
-          SCOPE_OPTIONS.find((option) => option.value === activeScope)?.label ||
-          activeScope;
-        console.warn("No boards matched scope", {
-          activeStage,
-          activeScope,
-          selectedBoards,
-        });
+        const exportSummaries = [];
+        const pendingDownloads = [];
+
+        if (includeContent) {
+          const flattenedContent = maybeStripBoardTitle(
+            flattenBoards(
+              scopedBoards,
+              {
+                title: classTitle,
+              },
+              outputShape
+            ),
+            includeBoardTitle
+          );
+          if (flattenedContent.length > 0) {
+            const csv = convertToCSV(flattenedContent);
+            console.log("Board rows prepared:", flattenedContent.length);
+            pendingDownloads.push({
+              csv,
+              filename: `proposal_boards_${classCode.trim()}_${activeScope}.csv`,
+            });
+            exportSummaries.push(
+              `${flattenedContent.length} board rows prepared for download`
+            );
+            exportSummaries.push(`Boards exported in ${outputShape} format`);
+            if (outputShape === "wide") {
+              exportSummaries.push(
+                "Board cards pivoted by cardTitle (wide format)"
+              );
+            }
+          } else {
+            exportSummaries.push(
+              "No proposal card content matched the current scope."
+            );
+          }
+        }
+
+        if (includeReviews) {
+          const flattenedReviewData = maybeStripBoardTitle(
+            flattenReviews(
+              scopedBoards,
+              {
+                title: classTitle,
+              },
+              outputShape
+            ),
+            includeBoardTitle
+          );
+          if (flattenedReviewData.length > 0) {
+            const csv = convertToCSV(flattenedReviewData);
+            console.log("Review rows prepared:", flattenedReviewData.length);
+            pendingDownloads.push({
+              csv,
+              filename: `proposal_reviews_${classCode.trim()}_${activeScope}.csv`,
+            });
+            exportSummaries.push(
+              `${flattenedReviewData.length} review rows prepared for download`
+            );
+            exportSummaries.push(`Reviews exported in ${outputShape} format`);
+            if (outputShape === "wide") {
+              exportSummaries.push(
+                "Review responses pivoted by reviewQuestion (wide format)"
+              );
+            }
+          } else {
+            exportSummaries.push("No reviews matched the current scope.");
+          }
+        }
+
+        console.log(
+          "Files queued for zip:",
+          pendingDownloads.map((d) => d.filename)
+        );
+
+        if (pendingDownloads.length > 0) {
+          const zip = new JSZip();
+          pendingDownloads.forEach((download) => {
+            zip.file(download.filename, download.csv);
+          });
+          const zipFilename = `proposal_export_${classCode
+            .trim()
+            .replace(/\s+/g, "-")}_${activeStage}_${activeScope}.zip`;
+          const zipBlob = await zip.generateAsync({ type: "blob" });
+          saveAs(zipBlob, zipFilename);
+          exportSummaries.push(`Generated archive: ${zipFilename}`);
+        } else {
+          exportSummaries.push("No files were generated for download.");
+        }
+
+        const unmatchedCount = unmatchedStudentIds.length;
+        const scopeLabel = getScopeLabel(activeScope);
+        const selectionSummary = [
+          `${selectedBoards.length} board${
+            selectedBoards.length === 1 ? "" : "s"
+          } selected for ${matchedStudentCount} of ${totalStudentCount} student${
+            totalStudentCount === 1 ? "" : "s"
+          }`,
+          "Priority: isMain → submitted",
+          `Data scope (${stageMeta.label}): ${
+            activeScope === "ALL"
+              ? "no status filter applied"
+              : `${scopeLabel} only`
+          } (${scopedBoards.length} board${
+            scopedBoards.length === 1 ? "" : "s"
+          })`,
+        ];
+
+        if (selectionMode === "perClass" && nonStudentOwnedBoardCount > 0) {
+          const suffix = nonStudentOwnedBoardCount === 1 ? "" : "s";
+          selectionSummary.push(
+            t("summary.nonStudentOwnedBoards", {
+              count: nonStudentOwnedBoardCount,
+              suffix,
+              defaultValue: `${nonStudentOwnedBoardCount} additional board${suffix} not owned by enrolled students (pilots/template boards)`,
+            })
+          );
+        }
+
+        if (unmatchedCount > 0) {
+          const unmatchedNames = unmatchedStudentIds
+            .map((id) => {
+              const student = students.find((entry) => entry?.id === id);
+              return id;
+            })
+            .filter(Boolean)
+            .slice(0, 5)
+            .join(", ");
+          let unmatchedMessage = `${unmatchedCount} student${
+            unmatchedCount === 1 ? "" : "s"
+          } without an isMain/submitted board`;
+          if (unmatchedNames) {
+            unmatchedMessage += `: ${unmatchedNames}`;
+            if (unmatchedStudentIds.length > 5) {
+              unmatchedMessage += "…";
+            }
+          }
+          selectionSummary.push(unmatchedMessage);
+        }
+
+        const feedbackMessage = selectionSummary
+          .concat(exportSummaries)
+          .join(" • ");
+
+        console.log("Export summaries:", exportSummaries);
         console.groupEnd();
-        throw new Error(
-          t("errors.noBoardsForScope", {
-            stageLabel: stageMeta.label,
-            scopeLabel,
-            defaultValue: `No boards matched the selected ${stageMeta.label} scope (${scopeLabel}).`,
-          })
-        );
-      }
 
-      const exportSummaries = [];
-      const pendingDownloads = [];
-
-      if (includeContent) {
-        const flattenedContent = maybeStripBoardTitle(
-          flattenBoards(
-            scopedBoards,
-            {
-              title: classTitle,
-            },
-            outputShape
-          ),
-          includeBoardTitle
-        );
-        if (flattenedContent.length > 0) {
-          const csv = convertToCSV(flattenedContent);
-          console.log("Board rows prepared:", flattenedContent.length);
-          pendingDownloads.push({
-            csv,
-            filename: `proposal_boards_${classCode.trim()}_${activeScope}.csv`,
-          });
-          exportSummaries.push(
-            `${flattenedContent.length} board rows prepared for download`
-          );
-          exportSummaries.push(`Boards exported in ${outputShape} format`);
-          if (outputShape === "wide") {
-            exportSummaries.push(
-              "Board cards pivoted by cardTitle (wide format)"
-            );
-          }
-        } else {
-          exportSummaries.push(
-            "No proposal card content matched the current scope."
-          );
-        }
-      }
-
-      if (includeReviews) {
-        const flattenedReviewData = maybeStripBoardTitle(
-          flattenReviews(
-            scopedBoards,
-            {
-              title: classTitle,
-            },
-            outputShape
-          ),
-          includeBoardTitle
-        );
-        if (flattenedReviewData.length > 0) {
-          const csv = convertToCSV(flattenedReviewData);
-          console.log("Review rows prepared:", flattenedReviewData.length);
-          pendingDownloads.push({
-            csv,
-            filename: `proposal_reviews_${classCode.trim()}_${activeScope}.csv`,
-          });
-          exportSummaries.push(
-            `${flattenedReviewData.length} review rows prepared for download`
-          );
-          exportSummaries.push(`Reviews exported in ${outputShape} format`);
-          if (outputShape === "wide") {
-            exportSummaries.push(
-              "Review responses pivoted by reviewQuestion (wide format)"
-            );
-          }
-        } else {
-          exportSummaries.push("No reviews matched the current scope.");
-        }
-      }
-
-      console.log(
-        "Files queued for zip:",
-        pendingDownloads.map((d) => d.filename)
-      );
-
-      if (pendingDownloads.length > 0) {
-        const zip = new JSZip();
-        pendingDownloads.forEach((download) => {
-          zip.file(download.filename, download.csv);
+        setFeedback({
+          type: "success",
+          message: feedbackMessage,
         });
-        const zipFilename = `proposal_export_${classCode
-          .trim()
-          .replace(/\s+/g, "-")}_${activeStage}_${activeScope}.zip`;
-        const zipBlob = await zip.generateAsync({ type: "blob" });
-        saveAs(zipBlob, zipFilename);
-        exportSummaries.push(`Generated archive: ${zipFilename}`);
       } else {
-        exportSummaries.push("No files were generated for download.");
-      }
+        const response = await fetch(GRAPHQL_ENDPOINT, {
+          method: "POST",
+          mode: "cors",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "x-apollo-operation-name": "RESEARCH_EXPORT_BY_BOARD",
+            "apollo-require-preflight": "true",
+          },
+          body: JSON.stringify({
+            query: BOARD_EXPORT_QUERY,
+            variables: {
+              id: boardId.trim(),
+            },
+          }),
+        });
 
-      const unmatchedCount = unmatchedStudentIds.length;
-      const scopeLabel =
-        SCOPE_OPTIONS.find((option) => option.value === activeScope)?.label ||
-        activeScope;
-      const selectionSummary = [
-        `${selectedBoards.length} board${
-          selectedBoards.length === 1 ? "" : "s"
-        } selected for ${matchedStudentCount} of ${totalStudentCount} student${
-          totalStudentCount === 1 ? "" : "s"
-        }`,
-        "Priority: isMain → submitted",
-        `Data scope (${stageMeta.label}): ${
-          activeScope === "ALL"
-            ? "no status filter applied"
-            : `${scopeLabel} only`
-        } (${scopedBoards.length} board${
-          scopedBoards.length === 1 ? "" : "s"
-        })`,
-      ];
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
 
-      if (selectionMode === "perClass" && nonStudentOwnedBoardCount > 0) {
-        const suffix = nonStudentOwnedBoardCount === 1 ? "" : "s";
-        selectionSummary.push(
-          t("summary.nonStudentOwnedBoards", {
-            count: nonStudentOwnedBoardCount,
-            suffix,
-            defaultValue: `${nonStudentOwnedBoardCount} additional board${suffix} not owned by enrolled students (pilots/template boards)`,
-          })
-        );
-      }
+        const payload = await response.json();
+        const boardPayload = payload?.data?.proposalBoard;
 
-      if (unmatchedCount > 0) {
-        const unmatchedNames = unmatchedStudentIds
-          .map((id) => {
-            const student = students.find((entry) => entry?.id === id);
-            return id;
-          })
-          .filter(Boolean)
-          .slice(0, 5)
-          .join(", ");
-        let unmatchedMessage = `${unmatchedCount} student${
-          unmatchedCount === 1 ? "" : "s"
-        } without an isMain/submitted board`;
-        if (unmatchedNames) {
-          unmatchedMessage += `: ${unmatchedNames}`;
-          if (unmatchedStudentIds.length > 5) {
-            unmatchedMessage += "…";
+        if (!boardPayload) {
+          throw new Error(
+            t("errors.noBoardForId", {
+              defaultValue:
+                "No board found for that identifier. Double-check it and try again.",
+            })
+          );
+        }
+
+        const stageMeta =
+          STAGE_OPTIONS.find((option) => option.value === activeStage) ||
+          STAGE_OPTIONS[0];
+        const filterFn = scopeFilterMap[activeScope] || scopeFilterMap.ALL;
+
+        const linkedClassStudents = Array.isArray(boardPayload.collaborators)
+          ? boardPayload.collaborators
+              .map((collab) => (collab?.id ? { id: collab.id } : null))
+              .filter(Boolean)
+          : [];
+
+        const boardWithMeta = {
+          ...boardPayload,
+          selectionReason: "singleBoard",
+          linkedClassStudents,
+        };
+
+        const scopedBoards = filterFn(boardWithMeta?.[activeStage])
+          ? [boardWithMeta]
+          : [];
+
+        console.group("Research export");
+        console.log("Mode: byBoard");
+        console.log("Stage:", activeStage, "Scope:", activeScope);
+        console.log("Board ID:", boardId.trim());
+        console.log("Boards after scope filter:", scopedBoards.length);
+
+        if (scopedBoards.length === 0) {
+          const scopeLabel = getScopeLabel(activeScope);
+          console.warn("Single board did not match scope", {
+            activeStage,
+            activeScope,
+            boardId: boardId.trim(),
+          });
+          console.groupEnd();
+          throw new Error(
+            t("errors.noBoardsForScope", {
+              stageLabel: stageMeta.label,
+              scopeLabel,
+              defaultValue: `No boards matched the selected ${stageMeta.label} scope (${scopeLabel}).`,
+            })
+          );
+        }
+
+        const exportSummaries = [];
+        const pendingDownloads = [];
+        const classTitle = boardPayload.usedInClass?.title || "";
+
+        if (includeContent) {
+          const flattenedContent = maybeStripBoardTitle(
+            flattenBoards(
+              scopedBoards,
+              {
+                title: classTitle,
+              },
+              outputShape
+            ),
+            includeBoardTitle
+          );
+
+          if (flattenedContent.length > 0) {
+            const csv = convertToCSV(flattenedContent);
+            console.log("Board rows prepared:", flattenedContent.length);
+            pendingDownloads.push({
+              csv,
+              filename: `proposal_boards_board_${boardId
+                .trim()
+                .replace(/\s+/g, "-")}_${activeScope}.csv`,
+            });
+            exportSummaries.push(
+              `${flattenedContent.length} board rows prepared for download`
+            );
+            exportSummaries.push(`Boards exported in ${outputShape} format`);
+            if (outputShape === "wide") {
+              exportSummaries.push(
+                "Board cards pivoted by cardTitle (wide format)"
+              );
+            }
+          } else {
+            exportSummaries.push(
+              "No proposal card content matched the current scope."
+            );
           }
         }
-        selectionSummary.push(unmatchedMessage);
+
+        if (includeReviews) {
+          const flattenedReviewData = maybeStripBoardTitle(
+            flattenReviews(
+              scopedBoards,
+              {
+                title: classTitle,
+              },
+              outputShape
+            ),
+            includeBoardTitle
+          );
+
+          if (flattenedReviewData.length > 0) {
+            const csv = convertToCSV(flattenedReviewData);
+            console.log("Review rows prepared:", flattenedReviewData.length);
+            pendingDownloads.push({
+              csv,
+              filename: `proposal_reviews_board_${boardId
+                .trim()
+                .replace(/\s+/g, "-")}_${activeScope}.csv`,
+            });
+            exportSummaries.push(
+              `${flattenedReviewData.length} review rows prepared for download`
+            );
+            exportSummaries.push(`Reviews exported in ${outputShape} format`);
+            if (outputShape === "wide") {
+              exportSummaries.push(
+                "Review responses pivoted by reviewQuestion (wide format)"
+              );
+            }
+          } else {
+            exportSummaries.push("No reviews matched the current scope.");
+          }
+        }
+
+        console.log(
+          "Files queued for zip:",
+          pendingDownloads.map((d) => d.filename)
+        );
+
+        if (pendingDownloads.length > 0) {
+          const zip = new JSZip();
+          pendingDownloads.forEach((download) => {
+            zip.file(download.filename, download.csv);
+          });
+          const zipFilename = `proposal_export_board_${boardId
+            .trim()
+            .replace(/\s+/g, "-")}_${activeStage}_${activeScope}.zip`;
+          const zipBlob = await zip.generateAsync({ type: "blob" });
+          saveAs(zipBlob, zipFilename);
+          exportSummaries.push(`Generated archive: ${zipFilename}`);
+        } else {
+          exportSummaries.push("No files were generated for download.");
+        }
+
+        const scopeLabel = getScopeLabel(activeScope);
+        const selectionSummary = [
+          t("summary.singleBoardSelection", {
+            defaultValue: "Single board selected for export.",
+          }),
+          `Data scope (${stageMeta.label}): ${
+            activeScope === "ALL"
+              ? "no status filter applied"
+              : `${scopeLabel} only`
+          } (${scopedBoards.length} board)`,
+        ];
+
+        const feedbackMessage = selectionSummary
+          .concat(exportSummaries)
+          .join(" • ");
+
+        console.log("Export summaries:", exportSummaries);
+        console.groupEnd();
+
+        setFeedback({
+          type: "success",
+          message: feedbackMessage,
+        });
       }
-
-      const feedbackMessage = selectionSummary
-        .concat(exportSummaries)
-        .join(" • ");
-
-      console.log("Export summaries:", exportSummaries);
-      console.groupEnd();
-
-      setFeedback({
-        type: "success",
-        message: feedbackMessage,
-      });
     } catch (error) {
       setFeedback({
         type: "error",
@@ -846,6 +1132,25 @@ export default function ResearchMain({ query, user }) {
         })}
       </p>
 
+      <div className="filterModeRow">
+        <Chip
+          shape="square"
+          label={t("filterByClass", {
+            defaultValue: "Class boards",
+          })}
+          selected={filterMode === "byClass"}
+          onClick={() => setFilterMode("byClass")}
+        />
+        <Chip
+          shape="square"
+          label={t("byBoard", {
+            defaultValue: "Individual board",
+          })}
+          selected={filterMode === "byBoard"}
+          onClick={() => setFilterMode("byBoard")}
+        />
+      </div>
+
       <div className="filtersCard">
         <div className="cardHeader">
           <h2>{t("buildYourExport", {
@@ -854,69 +1159,97 @@ export default function ResearchMain({ query, user }) {
           <span>Download board and associated review data.</span>
         </div>
 
-        <div className="fieldGroup">
-          <label htmlFor="research-class-code">{t("classCode", {
-            defaultValue: "Class Code (see URL when visiting class)",
-          })}</label>
-          <input
-            id="research-class-code"
-            type="text"
-            placeholder={t("enterClassCode", {
-              defaultValue: "Enter the class code",
-            })}
-            value={classCode}
-            onChange={(event) => setClassCode(event.target.value)}
-            autoComplete="off"
-          />
-        </div>
+        {filterMode === "byClass" ? (
+          <div className="fieldGroup">
+            <label htmlFor="research-class-code">{t("classCode", {
+              defaultValue: "Class Code (see URL when visiting class)",
+            })}</label>
+            <input
+              id="research-class-code"
+              type="text"
+              placeholder={t("enterClassCode", {
+                defaultValue: "Enter the class code",
+              })}
+              value={classCode}
+              onChange={(event) => setClassCode(event.target.value)}
+              autoComplete="off"
+            />
+          </div>
+        ) : (
+          <div className="fieldGroup">
+            <label htmlFor="research-board-id">{t("boardId", {
+              defaultValue: "Board ID",
+            })}</label>
+            <input
+              id="research-board-id"
+              type="text"
+              placeholder={t("enterBoardId", {
+                defaultValue: "Enter the board ID",
+              })}
+              value={boardId}
+              onChange={(event) => setBoardId(event.target.value)}
+              autoComplete="off"
+            />
+          </div>
+        )}
 
         <div className="cardHeader">
-        <h2>{t("selectDataScope", {
-          defaultValue: "(Optional) Select data scope",
-        })}</h2>
-        <span>{t("selectAllBoards", {
-          defaultValue: "Select 'All boards' if you want no filters",
-        })}</span>
+          <h2>{t("selectDataScope", {
+            defaultValue: "(Optional) Select data scope",
+          })}</h2>
+          <span>
+            {filterMode === "byBoard"
+              ? t("selectNoStatusFilter", {
+                  defaultValue:
+                    "Select 'No status filter' if you want no filters",
+                })
+              : t("selectAllBoards", {
+                  defaultValue:
+                    "Select 'All boards' if you want no filters",
+                })}
+          </span>
         </div>
 
-        <div className="fieldGroup">
-          <label>
-            {t("whichBoardsToInclude", {
-              defaultValue: "Which boards should be included?",
-            })}
-          </label>
-          <div className="chipGroup">
-            <button
-              type="button"
-              className={selectionMode === "perStudent" ? "active" : ""}
-              onClick={() => setSelectionMode("perStudent")}
-            >
-              {t("ownership.perStudentLabel", {
-                defaultValue: "Boards owned by class students",
+        {filterMode === "byClass" && (
+          <div className="fieldGroup">
+            <label>
+              {t("whichBoardsToInclude", {
+                defaultValue: "Which boards should be included?",
               })}
-            </button>
-            <button
-              type="button"
-              className={selectionMode === "perClass" ? "active" : ""}
-              onClick={() => setSelectionMode("perClass")}
-            >
-              {t("ownership.perClassLabel", {
-                defaultValue: "All proposal boards for this class",
-              })}
-            </button>
-          </div>
-          <p>
-            {selectionMode === "perStudent"
-              ? t("ownership.perStudentHelper", {
-                  defaultValue:
-                    "Only export boards where at least one collaborator is an enrolled student.",
-                })
-              : t("ownership.perClassHelper", {
-                  defaultValue:
-                    "Export every proposal board attached to this class, including pilots/template boards.",
+            </label>
+            <div className="chipGroup">
+              <button
+                type="button"
+                className={selectionMode === "perStudent" ? "active" : ""}
+                onClick={() => setSelectionMode("perStudent")}
+              >
+                {t("ownership.perStudentLabel", {
+                  defaultValue: "Boards owned by class students",
                 })}
-          </p>
-        </div>
+              </button>
+              <button
+                type="button"
+                className={selectionMode === "perClass" ? "active" : ""}
+                onClick={() => setSelectionMode("perClass")}
+              >
+                {t("ownership.perClassLabel", {
+                  defaultValue: "All proposal boards for this class",
+                })}
+              </button>
+            </div>
+            <p>
+              {selectionMode === "perStudent"
+                ? t("ownership.perStudentHelper", {
+                    defaultValue:
+                      "Only export boards where at least one collaborator is an enrolled student.",
+                  })
+                : t("ownership.perClassHelper", {
+                    defaultValue:
+                      "Export every proposal board attached to this class, including pilots/template boards.",
+                  })}
+            </p>
+          </div>
+        )}
 
         <div className="fieldGroup">
           <label>{t("filterByCardStatus", {
@@ -930,7 +1263,7 @@ export default function ResearchMain({ query, user }) {
                 className={option.value === activeScope ? "active" : ""}
                 onClick={() => setActiveScope(option.value)}
               >
-                {option.label}
+                {getScopeLabel(option.value)}
               </button>
             ))}
           </div>
@@ -1078,7 +1411,9 @@ export default function ResearchMain({ query, user }) {
             onClick={handleDownload}
             disabled={
               isLoading ||
-              !classCode.trim() ||
+              (filterMode === "byClass"
+                ? !classCode.trim()
+                : !boardId.trim()) ||
               (!includeContent && !includeReviews)
             }
           >

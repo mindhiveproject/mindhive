@@ -1,18 +1,23 @@
 {
 	"boardData": "Bordgegevens",
+	"boardId": "",
 	"boardTitleColumn": "Titel van het bord vermelden? (niet aanbevolen in verband met privacy)",
 	"buildYourExport": "Bouw uw export",
+	"byBoard": "",
 	"classCode": "Klascode (zie URL bij bezoek aan de klas)",
 	"classId": "Klasse-ID",
 	"csv": "CSV (.csv)",
 	"data": "Gegevens ",
 	"downloadPayload": "Payload downloaden",
+	"enterBoardId": "",
 	"enterClassCode": "Voer de klascode in",
 	"enterClassId": "Voer de klasse-ID in",
 	"errors": {
 		"formatUnsupported": "Op dit moment zijn alleen CSV-exporten beschikbaar.",
+		"missingBoardId": "",
 		"missingClassCode": "Geef een klassecode op voordat u de export uitvoert.",
 		"missingClassId": "Geef een klasse-ID op voordat u de export uitvoert.",
+		"noBoardForId": "",
 		"noBoardsAfterOwnershipFilter": "Geen enkel voorstelbord voldeed aan de huidige eigendomscriteria.",
 		"noBoardsForScope": "Er zijn geen boards gevonden die overeenkomen met het geselecteerde statusbereik.",
 		"noClassForId": "Er is geen klasse gevonden voor die identifier. Controleer het nogmaals en probeer het opnieuw.",
@@ -22,10 +27,12 @@
 		"noStudentOwnedBoards": "Deze cursus heeft wel forums voor voorstellen, maar geen enkel forum is eigendom van ingeschreven studenten (er zijn geen studenten die meewerken). Probeer over te schakelen naar 'Alle forums van de cursus' of koppel de forums aan studenten."
 	},
 	"filterByCardStatus": "Filteren op kaartstatus",
+	"filterByClass": "",
 	"includeBoardTitle": "Inclusief bordtitel",
 	"intro": "Haal de inhoud van het voorstel en de reviewgegevens rechtstreeks uit het MindHive-platform. Kies de klasse, selecteer de scope van je data en exporteer downloadbare CSV-bestanden die geschikt zijn voor analyse.",
 	"json": "JSON (indien echt nodig)",
 	"noResearchAccess": "U hebt toestemmingen op onderzoeksniveau nodig om toegang te krijgen tot de exporttools",
+	"noStatusFilter": "",
 	"outputFormat": "Uitvoerformaat",
 	"ownership": {
 		"perClassHelper": "Exporteer alle voorstelborden die aan deze klasse zijn gekoppeld, inclusief pilot-/sjabloonborden.",
@@ -43,8 +50,10 @@
 	"runExport": "Exporteren uitvoeren",
 	"selectAllBoards": "Selecteer 'Alle borden' als u geen filters wilt",
 	"selectDataScope": "(Optioneel) Selecteer het gegevensbereik",
+	"selectNoStatusFilter": "",
 	"summary": {
-		"nonStudentOwnedBoards": "{{count}} extra bord{{suffix}} niet in bezit van ingeschreven studenten (piloten/sjabloonborden)"
+		"nonStudentOwnedBoards": "{{count}} extra bord{{suffix}} niet in bezit van ingeschreven studenten (piloten/sjabloonborden)",
+		"singleBoardSelection": ""
 	},
 	"whatAreTheFilteringPolicies": "Wat zijn de filterbeleidsregels?",
 	"whichBoardsToInclude": "Welke boards moeten worden opgenomen?",

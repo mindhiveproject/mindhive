@@ -1,18 +1,23 @@
 {
 	"boardData": "بيانات المجلس",
+	"boardId": "",
 	"boardTitleColumn": "هل تريد تضمين عنوان اللوحة؟ (لا يُنصح بذلك فيما يتعلق بالخصوصية)",
 	"buildYourExport": "بناء التصدير الخاص بك",
+	"byBoard": "",
 	"classCode": "رمز الفصل (انظر عنوان URL عند زيارة الفصل)",
 	"classId": "معرف الفصل",
 	"csv": "CSV (.csv)",
 	"data": "بيانات",
 	"downloadPayload": "تنزيل الحمولة",
+	"enterBoardId": "",
 	"enterClassCode": "أدخل رمز الفصل",
 	"enterClassId": "أدخل معرف الفصل",
 	"errors": {
 		"formatUnsupported": "في الوقت الحالي، تتوفر فقط إمكانية تصدير ملفات CSV.",
+		"missingBoardId": "",
 		"missingClassCode": "يرجى تقديم رمز الفئة قبل تشغيل عملية التصدير.",
 		"missingClassId": "يرجى تقديم معرف الفئة قبل تشغيل عملية التصدير.",
+		"noBoardForId": "",
 		"noBoardsAfterOwnershipFilter": "لم تتطابق أي لوحات مقترحات مع فلتر الملكية الحالي.",
 		"noBoardsForScope": "لم يتم العثور على أي لوحات مطابقة لنطاق الحالة المحدد.",
 		"noClassForId": "لم يتم العثور على فئة لهذا المعرّف. يرجى التحقق منه مرة أخرى والمحاولة مجدداً.",
@@ -22,10 +27,12 @@
 		"noStudentOwnedBoards": "يحتوي هذا المقرر على لوحات مقترحات، لكن لا يملك أي منها طلاب مسجلون (لا يوجد طلاب متعاونون). حاول التبديل إلى \"جميع لوحات المقرر\" أو ربط اللوحات بالطلاب."
 	},
 	"filterByCardStatus": "تصفية حسب حالة البطاقة",
+	"filterByClass": "",
 	"includeBoardTitle": "تضمين عنوان اللوحة",
 	"intro": "استخرج محتوى المقترحات وراجع البيانات مباشرةً من منصة MindHive. اختر الفئة، ونطاق بياناتك، ثم صدّره بصيغة CSV قابلة للتنزيل ومُهيأة للتحليل.",
 	"json": "JSON (إذا لزم الأمر حقًا)",
 	"noResearchAccess": "تحتاج إلى أذونات على مستوى البحث للوصول إلى أدوات التصدير",
+	"noStatusFilter": "",
 	"outputFormat": "تنسيق الإخراج",
 	"ownership": {
 		"perClassHelper": "قم بتصدير كل لوحة اقتراح مرفقة بهذه الفئة، بما في ذلك لوحات النماذج الأولية/القوالب.",
@@ -43,8 +50,10 @@
 	"runExport": "تشغيل التصدير",
 	"selectAllBoards": "حدد \"جميع اللوحات\" إذا كنت لا تريد أي مرشحات",
 	"selectDataScope": "(اختياري) حدد نطاق البيانات",
+	"selectNoStatusFilter": "",
 	"summary": {
-		"nonStudentOwnedBoards": "{{count}} لوحة إضافية{{suffix}} غير مملوكة للطلاب المسجلين (لوحات تجريبية/قوالب)"
+		"nonStudentOwnedBoards": "{{count}} لوحة إضافية{{suffix}} غير مملوكة للطلاب المسجلين (لوحات تجريبية/قوالب)",
+		"singleBoardSelection": ""
 	},
 	"whatAreTheFilteringPolicies": "ما هي سياسات التصفية؟",
 	"whichBoardsToInclude": "ما هي اللوحات التي يجب تضمينها؟",

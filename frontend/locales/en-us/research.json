@@ -1,18 +1,23 @@
 {
 	"boardData": "Board Data",
+	"boardId": "Board ID",
 	"boardTitleColumn": "Include board title? (not recommended re privacy)",
 	"buildYourExport": "Build Your Export",
+	"byBoard": "Individual board",
 	"classCode": "Class Code (see URL when visiting class)",
 	"classId": "Class ID",
 	"csv": "CSV (.csv)",
 	"data": "Data",
 	"downloadPayload": "Download Payload",
+	"enterBoardId": "Enter the board ID",
 	"enterClassCode": "Enter the class code",
 	"enterClassId": "Enter the class ID",
 	"errors": {
 		"formatUnsupported": "Only CSV exports are available at this time.",
+		"missingBoardId": "Please provide a Board ID before running the export.",
 		"missingClassCode": "Please provide a Class Code before running the export.",
 		"missingClassId": "Please provide a Class ID before running the export.",
+		"noBoardForId": "No board found for that identifier. Double-check it and try again.",
 		"noBoardsAfterOwnershipFilter": "No proposal boards matched the current ownership filter.",
 		"noBoardsForScope": "No boards matched the selected status scope.",
 		"noClassForId": "No class found for that identifier. Double-check it and try again.",
@@ -22,10 +27,12 @@
 		"noStudentOwnedBoards": "This class has proposal boards, but none are owned by enrolled students (no student collaborators). Try switching to 'All class boards' or linking boards to students."
 	},
 	"filterByCardStatus": "Filter by card status",
+	"filterByClass": "Class boards",
 	"includeBoardTitle": "Include board title",
 	"intro": "Pull proposal content and review data directly from the MindHive platform. Choose the class, pick your data scope, and export downloadable CSV files formatted for analysis.",
 	"json": "JSON (if needed really)",
 	"noResearchAccess": "You need research-level permissions to access the export tools",
+	"noStatusFilter": "No status filter",
 	"outputFormat": "Output Format",
 	"ownership": {
 		"perClassHelper": "Export every proposal board attached to this class, including pilots/template boards.",
@@ -43,8 +50,10 @@
 	"runExport": "Run Export",
 	"selectAllBoards": "Select 'All boards' if you want no filters",
 	"selectDataScope": "(Optional) Select data scope",
+	"selectNoStatusFilter": "Select 'No status filter' if you want no filters",
 	"summary": {
-		"nonStudentOwnedBoards": "{{count}} additional board{{suffix}} not owned by enrolled students (pilots/template boards)"
+		"nonStudentOwnedBoards": "{{count}} additional board{{suffix}} not owned by enrolled students (pilots/template boards)",
+		"singleBoardSelection": "Single board selected for export."
 	},
 	"whatAreTheFilteringPolicies": "What are the filtering policies?",
 	"whichBoardsToInclude": "Which boards should be included?",

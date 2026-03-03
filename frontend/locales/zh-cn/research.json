@@ -1,18 +1,23 @@
 {
 	"boardData": "董事会数据",
+	"boardId": "",
 	"boardTitleColumn": "请包含版主名称？（出于隐私考虑，不建议这样做）",
 	"buildYourExport": "构建您的出口",
+	"byBoard": "",
 	"classCode": "课程代码（访问课程时请查看网址）",
 	"classId": "类别 ID",
 	"csv": "CSV（.csv）",
 	"data": "数据",
 	"downloadPayload": "下载有效载荷",
+	"enterBoardId": "",
 	"enterClassCode": "请输入班级代码",
 	"enterClassId": "请输入班级 ID",
 	"errors": {
 		"formatUnsupported": "目前仅支持导出 CSV 文件。",
+		"missingBoardId": "",
 		"missingClassCode": "请在运行导出程序之前提供类代码。",
 		"missingClassId": "请在导出前提供类 ID。",
+		"noBoardForId": "",
 		"noBoardsAfterOwnershipFilter": "没有提案委员会符合当前所有权筛选条件。",
 		"noBoardsForScope": "没有电路板符合所选状态范围。",
 		"noClassForId": "未找到与该标识符对应的类。请仔细检查并重试。",
@@ -22,10 +27,12 @@
 		"noStudentOwnedBoards": "这门课有提案看板，但所有看板都不属于注册学生（没有学生合作者）。请尝试切换到“所有课程看板”或将看板关联到学生。"
 	},
 	"filterByCardStatus": "按卡片状态筛选",
+	"filterByClass": "",
 	"includeBoardTitle": "包括董事会标题",
 	"intro": "直接从 MindHive 平台提取提案内容和审核数据。选择类别，选择数据范围，并导出可用于分析的 CSV 文件。",
 	"json": "JSON（如果确实需要的话）",
 	"noResearchAccess": "您需要研究级别的权限才能访问导出工具。",
+	"noStatusFilter": "",
 	"outputFormat": "输出格式",
 	"ownership": {
 		"perClassHelper": "导出与此类别关联的所有提案板，包括试点/模板板。",
@@ -43,8 +50,10 @@
 	"runExport": "运行导出",
 	"selectAllBoards": "如果您不想使用任何筛选条件，请选择“所有板块”。",
 	"selectDataScope": "（可选）选择数据范围",
+	"selectNoStatusFilter": "",
 	"summary": {
-		"nonStudentOwnedBoards": "{{count}} 额外的电路板{{suffix}} 非注册学生所有（试点/模板电路板）"
+		"nonStudentOwnedBoards": "{{count}} 额外的电路板{{suffix}} 非注册学生所有（试点/模板电路板）",
+		"singleBoardSelection": ""
 	},
 	"whatAreTheFilteringPolicies": "过滤策略是什么？",
 	"whichBoardsToInclude": "应该包含哪些电路板？",
