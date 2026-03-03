@@ -118,10 +118,10 @@ export const StyledProposal = styled.div`
 
   .proposalBoard {
     display: grid;
-    height: 100%;
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto auto;
     align-content: start;
     margin: 20px;
+    min-height: 0;
     
     .narrowButton {
       height: 40px;
@@ -979,14 +979,20 @@ export const StyledProposal = styled.div`
 
   .post {
     display: grid;
-    grid-row-gap: 10px;
+    // grid-row-gap: 10px;
     font-family: Inter;
     font-size: 18px;
     text-align: left;
     background: #F7F9F8;
     padding: 0px;
     width: 100%;
-    height: 100%;
+    min-height: 0;
+
+    /* Single scrollbar: TipTap editors grow with content so only StyledProposal scrolls */
+    .ProseMirror {
+      max-height: none;
+      overflow-y: visible;
+    }
 
     .resourcePreview {
       display: grid;
@@ -1032,7 +1038,8 @@ export const StyledProposal = styled.div`
       grid-gap: 20px;
       background: white;
       border-radius: 24px;
-      border: 2px solid #D3E0E3;
+      border-bottom-right-radius: 0;
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
       .left {
         display: grid;
         .icon {
@@ -1116,11 +1123,12 @@ export const StyledProposal = styled.div`
 
     .proposalCardBoard {
       display: flex;
-      height: 100%;
       align-items: flex-start;
       gap: 24px;
       flex: 1 0 0;
       align-self: stretch;
+      min-height: 0;
+      overflow-y: visible;
     }
 
     label {
@@ -1281,7 +1289,8 @@ export const StyledProposal = styled.div`
       gap: 10px;
       flex: 1 0 0;
       width: 100%;
-      height: 100%;
+      min-width: 0;
+      overflow-y: visible;
 
       & > div {
         width: 100%;
@@ -1366,7 +1375,6 @@ export const StyledProposal = styled.div`
     .infoBoard {
       display: flex;
       max-width: 500px;
-      height: 100%;
       padding: 24px;
       flex-direction: column;
       justify-content: flex-start;
@@ -1374,8 +1382,11 @@ export const StyledProposal = styled.div`
       gap: 24px;
       flex: 1 0 0;
       align-self: stretch;
-      border-left: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      border-top: none;
       background: var(--MH-Theme-Neutrals-White, #FFF);
+      overflow-y: visible;
+      min-height: 0;
 
       .collaboratorArray {
         display: flex;

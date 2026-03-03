@@ -15,6 +15,7 @@ import { PreviewSection } from "./Forms/PreviewSection";
 import AssignmentViewModal from "../../TipTap/AssignmentViewModal";
 import ResourceViewModal from "../../TipTap/ResourceViewModal";
 import InfoTooltip from "../../Builder/Project/ProjectBoard/Board/PDF/Preview/InfoTooltip";
+import Button from "../../DesignSystem/Button";
 import useTranslation from "next-translate/useTranslation";
 
 const peerReviewOptions = [
@@ -561,6 +562,7 @@ export default function BuilderProposalCard({
               <InfoTooltip
                 content={t("board.expendedCard.commentsText")}
                 iconStyle={{opacity: 0.4}}
+                position="topRight"
               />
             </div>
             <TipTapEditor

@@ -149,14 +149,11 @@ export default function ProposalBuilder({
       ) : (
         card && (
           <div
-            className="hideScrollbar"
             style={{
               flex: 1,
               display: "flex",
               flexDirection: "column",
-              minHeight: 0,
-              height: "100%",
-              overflowY: "auto",
+              minWidth: 0,
             }}
           >
             <ProposalCardWrapper
