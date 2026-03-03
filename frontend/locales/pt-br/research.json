@@ -11,8 +11,15 @@
 	"enterClassId": "Insira o ID da turma",
 	"errors": {
 		"formatUnsupported": "No momento, apenas as exportações em formato CSV estão disponíveis.",
+		"missingClassCode": "Por favor, forneça um código de classe antes de executar a exportação.",
 		"missingClassId": "Por favor, forneça um ID de turma antes de executar a exportação.",
-		"noDatasetSelected": "Selecione pelo menos um conjunto de dados (conselho ou avaliações)."
+		"noBoardsAfterOwnershipFilter": "Nenhuma das propostas correspondeu ao filtro de propriedade atual.",
+		"noBoardsForScope": "Nenhuma placa correspondeu ao escopo de status selecionado.",
+		"noClassForId": "Nenhuma classe encontrada para esse identificador. Verifique novamente e tente de novo.",
+		"noDatasetSelected": "Selecione pelo menos um conjunto de dados (conselho ou avaliações).",
+		"noProposalsForClass": "Esta turma não possui, no momento, nenhum quadro de propostas de alunos vinculado.",
+		"noResearchAccess": "Você precisa de permissões de nível de pesquisa para acessar as ferramentas de exportação.",
+		"noStudentOwnedBoards": "Esta turma possui quadros de propostas, mas nenhum deles pertence a alunos matriculados (nenhum aluno colaborador). Tente alternar para \"Todos os quadros da turma\" ou vincular os quadros aos alunos."
 	},
 	"filterByCardStatus": "Filtrar por status do cartão",
 	"includeBoardTitle": "Incluir título do quadro",
@@ -20,6 +27,15 @@
 	"json": "JSON (se realmente necessário)",
 	"noResearchAccess": "Você precisa de permissões de nível de pesquisa para acessar as ferramentas de exportação.",
 	"outputFormat": "Formato de saída",
+	"ownership": {
+		"perClassHelper": "Exporte todos os painéis de propostas associados a esta classe, incluindo painéis piloto/modelos.",
+		"perClassLabel": "Todas as bancas de propostas para esta turma",
+		"perStudentHelper": "Exportar apenas placas onde pelo menos um dos colaboradores seja um aluno matriculado.",
+		"perStudentLabel": "Quadros pertencentes aos alunos da turma"
+	},
+	"policies": {
+		"boardSelection": "Os quadros são extraídos de Class.studentProposals. Por padrão, priorizamos o quadro principal de cada aluno matriculado; se nenhum estiver faltando, usamos um quadro enviado por um aluno. Você pode usar o filtro de propriedade acima para incluir todos os quadros da turma, incluindo quadros piloto/modelo que não pertencem a alunos matriculados."
+	},
 	"preparingExport": "Preparando a exportação…",
 	"research": "Pesquisar",
 	"resetFilters": "Redefinir filtros",
@@ -27,6 +43,10 @@
 	"runExport": "Executar Exportação",
 	"selectAllBoards": "Selecione 'Todos os quadros' se não quiser filtros.",
 	"selectDataScope": "(Opcional) Selecione o escopo de dados",
+	"summary": {
+		"nonStudentOwnedBoards": "{{count}} quadro adicional{{suffix}} ​​não pertencente a alunos matriculados (quadros piloto/modelo)"
+	},
 	"whatAreTheFilteringPolicies": "Quais são as políticas de filtragem?",
+	"whichBoardsToInclude": "Quais placas devem ser incluídas?",
 	"workflowStage": "Selecione a etapa pela qual deseja filtrar."
 }

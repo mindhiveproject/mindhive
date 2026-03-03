@@ -11,8 +11,15 @@
 	"enterClassId": "Saisissez l'identifiant de la classe",
 	"errors": {
 		"formatUnsupported": "Seuls les formats d'exportation CSV sont disponibles pour le moment.",
+		"missingClassCode": "Veuillez fournir un code de classe avant d'exécuter l'exportation.",
 		"missingClassId": "Veuillez fournir un identifiant de classe avant de lancer l'exportation.",
-		"noDatasetSelected": "Sélectionnez au moins un ensemble de données (conseil d'administration ou avis)."
+		"noBoardsAfterOwnershipFilter": "Aucun tableau de proposition ne correspondait au filtre de propriété actuel.",
+		"noBoardsForScope": "Aucune carte ne correspondait à la plage d'état sélectionnée.",
+		"noClassForId": "Aucune classe n'a été trouvée pour cet identifiant. Veuillez vérifier et réessayer.",
+		"noDatasetSelected": "Sélectionnez au moins un ensemble de données (conseil d'administration ou avis).",
+		"noProposalsForClass": "Ce cours ne dispose actuellement d'aucun tableau d'affichage pour les propositions étudiantes.",
+		"noResearchAccess": "Vous devez disposer d'autorisations de niveau recherche pour accéder aux outils d'exportation",
+		"noStudentOwnedBoards": "Ce cours dispose de tableaux de propositions, mais aucun n'appartient à un étudiant inscrit (aucun étudiant collaborateur). Essayez de sélectionner « Tous les tableaux de la classe » ou d'associer les tableaux aux étudiants."
 	},
 	"filterByCardStatus": "Filtrer par statut de la carte",
 	"includeBoardTitle": "Inclure le titre du tableau",
@@ -20,6 +27,15 @@
 	"json": "JSON (si nécessaire)",
 	"noResearchAccess": "Vous devez disposer d'autorisations de niveau recherche pour accéder aux outils d'exportation",
 	"outputFormat": "Format de sortie",
+	"ownership": {
+		"perClassHelper": "Exportez tous les tableaux de propositions associés à cette classe, y compris les tableaux pilotes/modèles.",
+		"perClassLabel": "Tous les tableaux de propositions pour cette classe",
+		"perStudentHelper": "N’exportez que les cartes dont au moins un collaborateur est un étudiant inscrit.",
+		"perStudentLabel": "Tableaux appartenant aux élèves de la classe"
+	},
+	"policies": {
+		"boardSelection": "Les tableaux sont extraits de Class.studentProposals. Par défaut, la priorité est donnée au tableau isMain de chaque étudiant inscrit ; s'il est manquant, un tableau soumis est utilisé par défaut. Vous pouvez utiliser le filtre de propriété ci-dessus pour inclure tous les tableaux de la classe, y compris les tableaux pilotes/modèles qui n'appartiennent pas aux étudiants inscrits."
+	},
 	"preparingExport": "Préparation de l'exportation…",
 	"research": "Recherche",
 	"resetFilters": "Réinitialiser les filtres",
@@ -27,6 +43,10 @@
 	"runExport": "Exécuter l'exportation",
 	"selectAllBoards": "Sélectionnez « Tous les forums » si vous ne souhaitez aucun filtre.",
 	"selectDataScope": "(Facultatif) Sélectionner l'étendue des données",
+	"summary": {
+		"nonStudentOwnedBoards": "{{count}} tableau supplémentaire{{suffix}} n'appartenant pas aux étudiants inscrits (tableaux pilotes/modèles)"
+	},
 	"whatAreTheFilteringPolicies": "Quelles sont les politiques de filtrage ?",
+	"whichBoardsToInclude": "Quelles cartes devraient être incluses ?",
 	"workflowStage": "Sélectionnez l'étape à filtrer par"
 }

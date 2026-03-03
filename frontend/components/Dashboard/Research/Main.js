@@ -355,99 +355,116 @@ const downloadCSV = (csvContent, filename) => {
   URL.revokeObjectURL(url);
 };
 
-const selectBoardsForClass = (boards = [], students = []) => {
+const selectBoardsForClass = (
+  boards = [],
+  students = [],
+  selectionMode = "perStudent"
+) => {
   const studentMap = new Map();
   students
     .filter((student) => student?.id)
     .forEach((student) => studentMap.set(student.id, student));
+  const totalStudentCount = studentMap.size;
 
-  const selectedBoards = [];
-  const boardIndexMap = new Map();
-  const matchedStudentIds = new Set();
+  const candidateBoards = Array.isArray(boards)
+    ? boards.filter((board) => board && board.id)
+    : [];
 
-  const ensureBoardEntry = (board, matchedIds, selectionReason) => {
-    const collaboratorLookup = new Map();
-    (board.collaborators || [])
-      .filter((collab) => collab?.id)
-      .forEach((collab) => collaboratorLookup.set(collab.id, collab));
-
-    if (boardIndexMap.has(board.id)) {
-      const index = boardIndexMap.get(board.id);
-      const existing = selectedBoards[index];
-      const existingIds = new Set(
-        (existing.classStudentCollaboratorsIds || []).concat()
-      );
-      const newIds = matchedIds.filter((id) => !existingIds.has(id));
-      if (newIds.length > 0) {
-        existing.classStudentCollaboratorsIds = [
-          ...existing.classStudentCollaboratorsIds,
-          ...newIds,
-        ];
-        existing.linkedClassStudents = [
-          ...(existing.linkedClassStudents || []),
-          ...newIds,
-        ];
-        selectedBoards[index] = existing;
-      }
-      if (
-        selectionReason === "isMain" &&
-        existing.selectionReason !== "isMain"
-      ) {
-        existing.selectionReason = "isMain";
-      }
-      return;
+  const boardById = new Map();
+  candidateBoards.forEach((board) => {
+    if (board?.id && !boardById.has(board.id)) {
+      boardById.set(board.id, board);
     }
-
-    selectedBoards.push({
-      ...board,
-      selectionReason,
-      classStudentCollaboratorsIds: matchedIds,
-      linkedClassStudents: matchedIds,
-    });
-    boardIndexMap.set(board.id, selectedBoards.length - 1);
-  };
-
-  students.forEach((student) => {
-    const studentId = student?.id;
-    if (!studentId) return;
-
-    const candidateBoards = boards.filter((board) =>
-      board.collaborators?.some(
-        (collaborator) => collaborator?.id === studentId
-      )
-    );
-
-    if (candidateBoards.length === 0) {
-      return;
-    }
-
-    let chosenBoard = candidateBoards.find((board) => board.isMain);
-    let selectionReason = "isMain";
-
-    if (!chosenBoard) {
-      chosenBoard = candidateBoards.find(
-        (board) => board.submitProposalStatus === "SUBMITTED"
-      );
-      selectionReason = "submitted";
-    }
-
-    if (!chosenBoard) {
-      return;
-    }
-
-    const matchedIds = (chosenBoard.collaborators || [])
-      .map((collaborator) => collaborator?.id)
-      .filter((id) => id && studentMap.has(id));
-
-    if (matchedIds.length === 0) {
-      return;
-    }
-
-    matchedIds.forEach((id) => matchedStudentIds.add(id));
-    ensureBoardEntry(chosenBoard, matchedIds, selectionReason);
   });
 
-  const totalStudentCount = studentMap.size;
+  const boardsByStudentId = new Map();
+  const unownedBoards = [];
+
+  candidateBoards.forEach((board) => {
+    const collaborators = Array.isArray(board.collaborators)
+      ? board.collaborators
+      : [];
+    const collaboratorIds = collaborators
+      .map((collab) => collab?.id)
+      .filter(Boolean);
+    const classCollaboratorIds = collaboratorIds.filter((id) =>
+      studentMap.has(id)
+    );
+
+    if (classCollaboratorIds.length === 0) {
+      unownedBoards.push(board);
+      return;
+    }
+
+    classCollaboratorIds.forEach((studentId) => {
+      if (!boardsByStudentId.has(studentId)) {
+        boardsByStudentId.set(studentId, []);
+      }
+      boardsByStudentId.get(studentId).push(board);
+    });
+  });
+
+  const matchedStudentIds = new Set();
+  const boardToStudentIds = new Map();
+
+  const choosePreferredBoard = (boardsForStudent = []) => {
+    if (!boardsForStudent || boardsForStudent.length === 0) return null;
+    const byIsMain = boardsForStudent.find((b) => b.isMain);
+    if (byIsMain) return byIsMain;
+    const bySubmitted = boardsForStudent.find(
+      (b) => b.submitProposalStatus === "SUBMITTED"
+    );
+    if (bySubmitted) return bySubmitted;
+    return boardsForStudent[0];
+  };
+
+  boardsByStudentId.forEach((boardsForStudent, studentId) => {
+    const preferred = choosePreferredBoard(boardsForStudent);
+    if (!preferred || !preferred.id) return;
+    matchedStudentIds.add(studentId);
+    const boardId = preferred.id;
+    if (!boardToStudentIds.has(boardId)) {
+      boardToStudentIds.set(boardId, []);
+    }
+    const existing = boardToStudentIds.get(boardId);
+    if (!existing.includes(studentId)) {
+      existing.push(studentId);
+    }
+  });
+
+  const selectedBoards = [];
+
+  boardToStudentIds.forEach((studentIds, boardId) => {
+    const baseBoard = boardById.get(boardId);
+    if (!baseBoard) return;
+
+    const selectionReason = baseBoard.isMain
+      ? "isMain"
+      : baseBoard.submitProposalStatus === "SUBMITTED"
+      ? "submitted"
+      : "candidate";
+
+    selectedBoards.push({
+      ...baseBoard,
+      selectionReason,
+      classStudentCollaboratorsIds: studentIds,
+      linkedClassStudents: studentIds,
+    });
+  });
+
+  if (selectionMode === "perClass") {
+    const existingIds = new Set(selectedBoards.map((board) => board.id));
+    unownedBoards.forEach((board) => {
+      if (!board?.id || existingIds.has(board.id)) return;
+      selectedBoards.push({
+        ...board,
+        selectionReason: "unowned",
+        classStudentCollaboratorsIds: [],
+        linkedClassStudents: [],
+      });
+    });
+  }
+
   const unmatchedStudentIds = Array.from(studentMap.keys()).filter(
     (id) => !matchedStudentIds.has(id)
   );
@@ -457,6 +474,7 @@ const selectBoardsForClass = (boards = [], students = []) => {
     matchedStudentCount: matchedStudentIds.size,
     totalStudentCount,
     unmatchedStudentIds,
+    nonStudentOwnedBoardCount: unownedBoards.length,
   };
 };
 
@@ -467,6 +485,7 @@ export default function ResearchMain({ query, user }) {
   const [includeBoardTitle, setIncludeBoardTitle] = useState(false);
   const [activeStage, setActiveStage] = useState(STAGE_OPTIONS[0].value);
   const [activeScope, setActiveScope] = useState(SCOPE_OPTIONS[0].value);
+  const [selectionMode, setSelectionMode] = useState("perStudent");
   const [outputShape, setOutputShape] = useState("long");
   const [format, setFormat] = useState("csv");
   const [isLoading, setIsLoading] = useState(false);
@@ -481,6 +500,7 @@ export default function ResearchMain({ query, user }) {
     setIncludeBoardTitle(false);
     setActiveStage(STAGE_OPTIONS[0].value);
     setActiveScope(SCOPE_OPTIONS[0].value);
+    setSelectionMode("perStudent");
     setOutputShape("long");
     setFormat("csv");
     setFeedback({ type: null, message: "" });
@@ -548,7 +568,10 @@ export default function ResearchMain({ query, user }) {
 
       if (!classPayload) {
         throw new Error(
-          "No class found for that ID. Double-check the identifier and try again."
+          t("errors.noClassForId", {
+            defaultValue:
+              "No class found for that identifier. Double-check it and try again.",
+          })
         );
       }
 
@@ -560,7 +583,10 @@ export default function ResearchMain({ query, user }) {
 
       if (!Array.isArray(studentProposals) || studentProposals.length === 0) {
         throw new Error(
-          "This class does not currently have any linked student proposal boards."
+          t("errors.noProposalsForClass", {
+            defaultValue:
+              "This class does not currently have any linked student proposal boards.",
+          })
         );
       }
 
@@ -569,11 +595,24 @@ export default function ResearchMain({ query, user }) {
         matchedStudentCount,
         totalStudentCount,
         unmatchedStudentIds,
-      } = selectBoardsForClass(studentProposals, students);
+        nonStudentOwnedBoardCount,
+      } = selectBoardsForClass(studentProposals, students, selectionMode);
 
       if (selectedBoards.length === 0) {
+        if (selectionMode === "perStudent") {
+          throw new Error(
+            t("errors.noStudentOwnedBoards", {
+              defaultValue:
+                "This class has proposal boards, but none are owned by enrolled students (no student collaborators). Try switching to 'All class boards' or linking boards to students.",
+            })
+          );
+        }
+
         throw new Error(
-          "None of the students in this class have an isMain or submitted proposal board."
+          t("errors.noBoardsAfterOwnershipFilter", {
+            defaultValue:
+              "No proposal boards matched the current ownership filter.",
+          })
         );
       }
 
@@ -601,7 +640,11 @@ export default function ResearchMain({ query, user }) {
         });
         console.groupEnd();
         throw new Error(
-          `No boards matched the selected ${stageMeta.label} scope (${scopeLabel}).`
+          t("errors.noBoardsForScope", {
+            stageLabel: stageMeta.label,
+            scopeLabel,
+            defaultValue: `No boards matched the selected ${stageMeta.label} scope (${scopeLabel}).`,
+          })
         );
       }
 
@@ -714,6 +757,17 @@ export default function ResearchMain({ query, user }) {
         })`,
       ];
 
+      if (selectionMode === "perClass" && nonStudentOwnedBoardCount > 0) {
+        const suffix = nonStudentOwnedBoardCount === 1 ? "" : "s";
+        selectionSummary.push(
+          t("summary.nonStudentOwnedBoards", {
+            count: nonStudentOwnedBoardCount,
+            suffix,
+            defaultValue: `${nonStudentOwnedBoardCount} additional board${suffix} not owned by enrolled students (pilots/template boards)`,
+          })
+        );
+      }
+
       if (unmatchedCount > 0) {
         const unmatchedNames = unmatchedStudentIds
           .map((id) => {
@@ -823,6 +877,45 @@ export default function ResearchMain({ query, user }) {
         <span>{t("selectAllBoards", {
           defaultValue: "Select 'All boards' if you want no filters",
         })}</span>
+        </div>
+
+        <div className="fieldGroup">
+          <label>
+            {t("whichBoardsToInclude", {
+              defaultValue: "Which boards should be included?",
+            })}
+          </label>
+          <div className="chipGroup">
+            <button
+              type="button"
+              className={selectionMode === "perStudent" ? "active" : ""}
+              onClick={() => setSelectionMode("perStudent")}
+            >
+              {t("ownership.perStudentLabel", {
+                defaultValue: "Boards owned by class students",
+              })}
+            </button>
+            <button
+              type="button"
+              className={selectionMode === "perClass" ? "active" : ""}
+              onClick={() => setSelectionMode("perClass")}
+            >
+              {t("ownership.perClassLabel", {
+                defaultValue: "All proposal boards for this class",
+              })}
+            </button>
+          </div>
+          <p>
+            {selectionMode === "perStudent"
+              ? t("ownership.perStudentHelper", {
+                  defaultValue:
+                    "Only export boards where at least one collaborator is an enrolled student.",
+                })
+              : t("ownership.perClassHelper", {
+                  defaultValue:
+                    "Export every proposal board attached to this class, including pilots/template boards.",
+                })}
+          </p>
         </div>
 
         <div className="fieldGroup">
@@ -1008,11 +1101,10 @@ export default function ResearchMain({ query, user }) {
         })}</h3>
         <ul>
           <li>
-            Boards are pulled from <code>Class.studentProposals</code>. For each
-            enrolled student we prioritise their board flagged as{" "}
-            <code>isMain</code>; if one is missing, we fall back to the board
-            they have submitted (<code>submitProposalStatus === SUBMITTED</code>
-            ).
+            {t("policies.boardSelection", {
+              defaultValue:
+                "Boards are pulled from Class.studentProposals. By default we prioritise each enrolled student's isMain board; if one is missing, we fall back to a submitted board. You can use the ownership filter above to include all class boards, including pilots/template boards not owned by enrolled students.",
+            })}
           </li>
           <li>
             Proposal content exports include plain-text cards, comments, review

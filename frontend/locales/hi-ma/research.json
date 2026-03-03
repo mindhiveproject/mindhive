@@ -11,8 +11,15 @@
 	"enterClassId": "",
 	"errors": {
 		"formatUnsupported": "",
+		"missingClassCode": "",
 		"missingClassId": "",
-		"noDatasetSelected": ""
+		"noBoardsAfterOwnershipFilter": "",
+		"noBoardsForScope": "",
+		"noClassForId": "",
+		"noDatasetSelected": "",
+		"noProposalsForClass": "",
+		"noResearchAccess": "",
+		"noStudentOwnedBoards": ""
 	},
 	"filterByCardStatus": "",
 	"includeBoardTitle": "",
@@ -20,6 +27,15 @@
 	"json": "",
 	"noResearchAccess": "",
 	"outputFormat": "",
+	"ownership": {
+		"perClassHelper": "",
+		"perClassLabel": "",
+		"perStudentHelper": "",
+		"perStudentLabel": ""
+	},
+	"policies": {
+		"boardSelection": ""
+	},
 	"preparingExport": "",
 	"research": "",
 	"resetFilters": "",
@@ -27,6 +43,10 @@
 	"runExport": "",
 	"selectAllBoards": "",
 	"selectDataScope": "",
+	"summary": {
+		"nonStudentOwnedBoards": ""
+	},
 	"whatAreTheFilteringPolicies": "",
+	"whichBoardsToInclude": "",
 	"workflowStage": ""
 }

@@ -11,8 +11,15 @@
 	"enterClassId": "Voer de klasse-ID in",
 	"errors": {
 		"formatUnsupported": "Op dit moment zijn alleen CSV-exporten beschikbaar.",
+		"missingClassCode": "Geef een klassecode op voordat u de export uitvoert.",
 		"missingClassId": "Geef een klasse-ID op voordat u de export uitvoert.",
-		"noDatasetSelected": "Selecteer minimaal één dataset (bord of reviews)."
+		"noBoardsAfterOwnershipFilter": "Geen enkel voorstelbord voldeed aan de huidige eigendomscriteria.",
+		"noBoardsForScope": "Er zijn geen boards gevonden die overeenkomen met het geselecteerde statusbereik.",
+		"noClassForId": "Er is geen klasse gevonden voor die identifier. Controleer het nogmaals en probeer het opnieuw.",
+		"noDatasetSelected": "Selecteer minimaal één dataset (bord of reviews).",
+		"noProposalsForClass": "Deze cursus heeft momenteel geen gekoppelde forums voor studentenvoorstellen.",
+		"noResearchAccess": "U hebt toestemmingen op onderzoeksniveau nodig om toegang te krijgen tot de exporttools",
+		"noStudentOwnedBoards": "Deze cursus heeft wel forums voor voorstellen, maar geen enkel forum is eigendom van ingeschreven studenten (er zijn geen studenten die meewerken). Probeer over te schakelen naar 'Alle forums van de cursus' of koppel de forums aan studenten."
 	},
 	"filterByCardStatus": "Filteren op kaartstatus",
 	"includeBoardTitle": "Inclusief bordtitel",
@@ -20,6 +27,15 @@
 	"json": "JSON (indien echt nodig)",
 	"noResearchAccess": "U hebt toestemmingen op onderzoeksniveau nodig om toegang te krijgen tot de exporttools",
 	"outputFormat": "Uitvoerformaat",
+	"ownership": {
+		"perClassHelper": "Exporteer alle voorstelborden die aan deze klasse zijn gekoppeld, inclusief pilot-/sjabloonborden.",
+		"perClassLabel": "Alle voorstelborden voor deze klas",
+		"perStudentHelper": "Exporteer alleen boards waarbij ten minste één medewerker een ingeschreven student is.",
+		"perStudentLabel": "Borden in bezit van klasstudenten"
+	},
+	"policies": {
+		"boardSelection": "De boards worden opgehaald uit Class.studentProposals. Standaard geven we prioriteit aan het isMain-board van elke ingeschreven student; als er een ontbreekt, gebruiken we een ingediend board. Je kunt het eigenaarsfilter hierboven gebruiken om alle klasboards op te nemen, inclusief pilot-/sjabloonboards die niet van ingeschreven studenten zijn."
+	},
 	"preparingExport": "Export voorbereiden…",
 	"research": "Onderzoek",
 	"resetFilters": "Filters opnieuw instellen",
@@ -27,6 +43,10 @@
 	"runExport": "Exporteren uitvoeren",
 	"selectAllBoards": "Selecteer 'Alle borden' als u geen filters wilt",
 	"selectDataScope": "(Optioneel) Selecteer het gegevensbereik",
+	"summary": {
+		"nonStudentOwnedBoards": "{{count}} extra bord{{suffix}} niet in bezit van ingeschreven studenten (piloten/sjabloonborden)"
+	},
 	"whatAreTheFilteringPolicies": "Wat zijn de filterbeleidsregels?",
+	"whichBoardsToInclude": "Welke boards moeten worden opgenomen?",
 	"workflowStage": "Selecteer op welke fase u wilt filteren"
 }

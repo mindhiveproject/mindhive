@@ -11,8 +11,15 @@
 	"enterClassId": "Introduzca el ID de la clase",
 	"errors": {
 		"formatUnsupported": "Por el momento, solo están disponibles las exportaciones en formato CSV.",
+		"missingClassCode": "Proporcione un código de clase antes de ejecutar la exportación.",
 		"missingClassId": "Por favor, proporcione un ID de clase antes de ejecutar la exportación.",
-		"noDatasetSelected": "Seleccione al menos un conjunto de datos (tablero o reseñas)."
+		"noBoardsAfterOwnershipFilter": "No hay ningún tablero de propuestas que coincida con el filtro de propiedad actual.",
+		"noBoardsForScope": "No hay ningún tablero que coincida con el ámbito de estado seleccionado.",
+		"noClassForId": "No se encontró ninguna clase para ese identificador. Compruébelo y vuelva a intentarlo.",
+		"noDatasetSelected": "Seleccione al menos un conjunto de datos (tablero o reseñas).",
+		"noProposalsForClass": "Esta clase actualmente no tiene ningún tablero de propuestas de estudiantes vinculado.",
+		"noResearchAccess": "Necesitas permisos de nivel de investigación para acceder a las herramientas de exportación.",
+		"noStudentOwnedBoards": "Esta clase tiene tableros de propuestas, pero ninguno pertenece a los estudiantes matriculados (no hay estudiantes colaboradores). Intenta cambiar a \"Todos los tableros de la clase\" o vincular los tableros a los estudiantes."
 	},
 	"filterByCardStatus": "Filtrar por estado de la tarjeta",
 	"includeBoardTitle": "Incluir título del tablero",
@@ -20,6 +27,15 @@
 	"json": "JSON (si realmente es necesario)",
 	"noResearchAccess": "Necesitas permisos de nivel de investigación para acceder a las herramientas de exportación.",
 	"outputFormat": "Formato de salida",
+	"ownership": {
+		"perClassHelper": "Exportar todos los tableros de propuestas adjuntos a esta clase, incluidos los tableros piloto/plantillas.",
+		"perClassLabel": "Todos los tableros de propuestas para esta clase",
+		"perStudentHelper": "Exportar únicamente tableros en los que al menos uno de los colaboradores sea un estudiante matriculado.",
+		"perStudentLabel": "Tableros propiedad de los estudiantes de la clase"
+	},
+	"policies": {
+		"boardSelection": "Los tableros se extraen de Class.studentProposals. Por defecto, priorizamos el tablero principal de cada estudiante matriculado; si falta alguno, recurrimos a un tablero enviado. Puedes usar el filtro de propiedad anterior para incluir todos los tableros de la clase, incluyendo los tableros piloto o de plantilla que no pertenecen a los estudiantes matriculados."
+	},
 	"preparingExport": "Preparando la exportación…",
 	"research": "Investigación",
 	"resetFilters": "Restablecer filtros",
@@ -27,6 +43,10 @@
 	"runExport": "Ejecutar exportación",
 	"selectAllBoards": "Seleccione «Todos los tableros» si no desea ningún filtro.",
 	"selectDataScope": "(Opcional) Seleccione el ámbito de datos",
+	"summary": {
+		"nonStudentOwnedBoards": "{{count}} tablero adicional{{suffix}} ​​que no es propiedad de los estudiantes matriculados (tableros piloto/plantilla)"
+	},
 	"whatAreTheFilteringPolicies": "¿Cuáles son las políticas de filtrado?",
+	"whichBoardsToInclude": "¿Qué tableros deben incluirse?",
 	"workflowStage": "Seleccione la etapa por la que desea filtrar."
 }

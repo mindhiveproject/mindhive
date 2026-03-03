@@ -11,8 +11,15 @@
 	"enterClassId": "Enter the class ID",
 	"errors": {
 		"formatUnsupported": "Only CSV exports are available at this time.",
+		"missingClassCode": "Please provide a Class Code before running the export.",
 		"missingClassId": "Please provide a Class ID before running the export.",
-		"noDatasetSelected": "Select at least one dataset (board or reviews)."
+		"noBoardsAfterOwnershipFilter": "No proposal boards matched the current ownership filter.",
+		"noBoardsForScope": "No boards matched the selected status scope.",
+		"noClassForId": "No class found for that identifier. Double-check it and try again.",
+		"noDatasetSelected": "Select at least one dataset (board or reviews).",
+		"noProposalsForClass": "This class does not currently have any linked student proposal boards.",
+		"noResearchAccess": "You need research-level permissions to access the export tools",
+		"noStudentOwnedBoards": "This class has proposal boards, but none are owned by enrolled students (no student collaborators). Try switching to 'All class boards' or linking boards to students."
 	},
 	"filterByCardStatus": "Filter by card status",
 	"includeBoardTitle": "Include board title",
@@ -20,6 +27,15 @@
 	"json": "JSON (if needed really)",
 	"noResearchAccess": "You need research-level permissions to access the export tools",
 	"outputFormat": "Output Format",
+	"ownership": {
+		"perClassHelper": "Export every proposal board attached to this class, including pilots/template boards.",
+		"perClassLabel": "All proposal boards for this class",
+		"perStudentHelper": "Only export boards where at least one collaborator is an enrolled student.",
+		"perStudentLabel": "Boards owned by class students"
+	},
+	"policies": {
+		"boardSelection": "Boards are pulled from Class.studentProposals. By default we prioritise each enrolled student's isMain board; if one is missing, we fall back to a submitted board. You can use the ownership filter above to include all class boards, including pilots/template boards not owned by enrolled students."
+	},
 	"preparingExport": "Preparing export…",
 	"research": "Research",
 	"resetFilters": "Reset Filters",
@@ -27,6 +43,10 @@
 	"runExport": "Run Export",
 	"selectAllBoards": "Select 'All boards' if you want no filters",
 	"selectDataScope": "(Optional) Select data scope",
+	"summary": {
+		"nonStudentOwnedBoards": "{{count}} additional board{{suffix}} not owned by enrolled students (pilots/template boards)"
+	},
 	"whatAreTheFilteringPolicies": "What are the filtering policies?",
+	"whichBoardsToInclude": "Which boards should be included?",
 	"workflowStage": "Select which stage to filter by"
 }
