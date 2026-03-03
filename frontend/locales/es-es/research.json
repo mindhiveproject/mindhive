@@ -1,23 +1,23 @@
 {
 	"boardData": "Datos de la placa",
-	"boardId": "",
+	"boardId": "Identificación de la placa",
 	"boardTitleColumn": "¿Incluir el título del foro? (no recomendado por motivos de privacidad)",
 	"buildYourExport": "Crea tu estrategia de exportación",
-	"byBoard": "",
+	"byBoard": "Tablero individual",
 	"classCode": "Código de la clase (ver URL al visitar la clase)",
 	"classId": "ID de clase",
 	"csv": "Archivo CSV (.csv)",
 	"data": "Datos",
 	"downloadPayload": "Descargar carga útil",
-	"enterBoardId": "",
+	"enterBoardId": "Introduzca el ID del tablero",
 	"enterClassCode": "Introduce el código de la clase",
 	"enterClassId": "Introduzca el ID de la clase",
 	"errors": {
 		"formatUnsupported": "Por el momento, solo están disponibles las exportaciones en formato CSV.",
-		"missingBoardId": "",
+		"missingBoardId": "Proporcione un ID de placa antes de ejecutar la exportación.",
 		"missingClassCode": "Proporcione un código de clase antes de ejecutar la exportación.",
 		"missingClassId": "Por favor, proporcione un ID de clase antes de ejecutar la exportación.",
-		"noBoardForId": "",
+		"noBoardForId": "No se encontró ninguna placa para ese identificador. Compruébalo y vuelve a intentarlo.",
 		"noBoardsAfterOwnershipFilter": "No hay ningún tablero de propuestas que coincida con el filtro de propiedad actual.",
 		"noBoardsForScope": "No hay ningún tablero que coincida con el ámbito de estado seleccionado.",
 		"noClassForId": "No se encontró ninguna clase para ese identificador. Compruébelo y vuelva a intentarlo.",
@@ -27,12 +27,13 @@
 		"noStudentOwnedBoards": "Esta clase tiene tableros de propuestas, pero ninguno pertenece a los estudiantes matriculados (no hay estudiantes colaboradores). Intenta cambiar a \"Todos los tableros de la clase\" o vincular los tableros a los estudiantes."
 	},
 	"filterByCardStatus": "Filtrar por estado de la tarjeta",
-	"filterByClass": "",
+	"filterByClass": "Pizarras de clase",
+	"filteringPolicies": "Políticas de extracción de datos",
 	"includeBoardTitle": "Incluir título del tablero",
 	"intro": "Obtén el contenido de las propuestas y revisa los datos directamente desde la plataforma MindHive. Elige la clase, selecciona el alcance de los datos y exporta archivos CSV descargables formateados para su análisis.",
 	"json": "JSON (si realmente es necesario)",
 	"noResearchAccess": "Necesitas permisos de nivel de investigación para acceder a las herramientas de exportación.",
-	"noStatusFilter": "",
+	"noStatusFilter": "Sin filtro de estado",
 	"outputFormat": "Formato de salida",
 	"ownership": {
 		"perClassHelper": "Exportar todos los tableros de propuestas adjuntos a esta clase, incluidos los tableros piloto/plantillas.",
@@ -41,7 +42,11 @@
 		"perStudentLabel": "Tableros propiedad de los estudiantes de la clase"
 	},
 	"policies": {
-		"boardSelection": "Los tableros se extraen de Class.studentProposals. Por defecto, priorizamos el tablero principal de cada estudiante matriculado; si falta alguno, recurrimos a un tablero enviado. Puedes usar el filtro de propiedad anterior para incluir todos los tableros de la clase, incluyendo los tableros piloto o de plantilla que no pertenecen a los estudiantes matriculados."
+		"boardSelection": "Los tableros se extraen de Class.studentProposals. Por defecto, priorizamos el tablero principal de cada estudiante matriculado; si falta alguno, recurrimos a un tablero enviado. Puedes usar el filtro de propiedad anterior para incluir todos los tableros de la clase, incluyendo los tableros piloto o de plantilla que no pertenecen a los estudiantes matriculados.",
+		"exportFormatChoice": "Puede elegir entre formatos de exportación largos y anchos: el formato largo genera una fila por tarjeta de sección del tablero, mientras que el formato ancho aplana cada tablero en una sola fila con muchas columnas.",
+		"exportIncludes": "Las exportaciones de contenido de la propuesta incluyen tarjetas de texto sin formato, comentarios, indicadores de revisión, recursos vinculados y los colaboradores de clase adjuntos a cada tablero.",
+		"exportReviews": "Las revisiones exportan cada respuesta por separado, respetando la misma etapa + filtros de estado (No iniciado, En progreso, Enviado, Finalizado).",
+		"exportZip": "Los conjuntos de datos seleccionados se agrupan en un único archivo ZIP para su descarga."
 	},
 	"preparingExport": "Preparando la exportación…",
 	"research": "Investigación",
@@ -50,12 +55,11 @@
 	"runExport": "Ejecutar exportación",
 	"selectAllBoards": "Seleccione «Todos los tableros» si no desea ningún filtro.",
 	"selectDataScope": "(Opcional) Seleccione el ámbito de datos",
-	"selectNoStatusFilter": "",
+	"selectNoStatusFilter": "Seleccione 'Sin filtro de estado' si no desea filtros",
 	"summary": {
 		"nonStudentOwnedBoards": "{{count}} tablero adicional{{suffix}} ​​que no es propiedad de los estudiantes matriculados (tableros piloto/plantilla)",
-		"singleBoardSelection": ""
+		"singleBoardSelection": "Placa única seleccionada para exportación."
 	},
-	"whatAreTheFilteringPolicies": "¿Cuáles son las políticas de filtrado?",
 	"whichBoardsToInclude": "¿Qué tableros deben incluirse?",
 	"workflowStage": "Seleccione la etapa por la que desea filtrar."
 }

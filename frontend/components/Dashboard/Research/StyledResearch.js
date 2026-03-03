@@ -77,6 +77,19 @@ const StyledResearch = styled.div`
       }
     }
 
+    .cardHeaderRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+
+      .cardHeader {
+        flex: 1;
+        min-width: 0;
+      }
+    }
+
     .fieldGroup {
       display: grid;
       gap: 16px;
@@ -245,30 +258,6 @@ const StyledResearch = styled.div`
           box-shadow: none;
         }
       }
-    }
-  }
-
-  .statusPanel {
-    display: grid;
-    gap: 12px;
-    padding: 16px 20px;
-    border: 1px dashed #c7d2d9;
-    border-radius: 16px;
-    background: rgba(51, 111, 138, 0.05);
-
-    h3 {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 600;
-      color: #2c4f5f;
-    }
-
-    ul {
-      margin: 0;
-      padding-left: 18px;
-      color: #3a4b56;
-      font-size: 14px;
-      line-height: 1.5;
     }
   }
 

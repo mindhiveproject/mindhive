@@ -1,23 +1,23 @@
 {
 	"boardData": "Bordgegevens",
-	"boardId": "",
+	"boardId": "Bestuurs-ID",
 	"boardTitleColumn": "Titel van het bord vermelden? (niet aanbevolen in verband met privacy)",
 	"buildYourExport": "Bouw uw export",
-	"byBoard": "",
+	"byBoard": "Individueel bestuur",
 	"classCode": "Klascode (zie URL bij bezoek aan de klas)",
 	"classId": "Klasse-ID",
 	"csv": "CSV (.csv)",
 	"data": "Gegevens ",
 	"downloadPayload": "Payload downloaden",
-	"enterBoardId": "",
+	"enterBoardId": "Voer de bord-ID in",
 	"enterClassCode": "Voer de klascode in",
 	"enterClassId": "Voer de klasse-ID in",
 	"errors": {
 		"formatUnsupported": "Op dit moment zijn alleen CSV-exporten beschikbaar.",
-		"missingBoardId": "",
+		"missingBoardId": "Geef een bord-ID op voordat u de export uitvoert.",
 		"missingClassCode": "Geef een klassecode op voordat u de export uitvoert.",
 		"missingClassId": "Geef een klasse-ID op voordat u de export uitvoert.",
-		"noBoardForId": "",
+		"noBoardForId": "Er is geen bord gevonden voor die identificatiecode. Controleer het nogmaals en probeer het opnieuw.",
 		"noBoardsAfterOwnershipFilter": "Geen enkel voorstelbord voldeed aan de huidige eigendomscriteria.",
 		"noBoardsForScope": "Er zijn geen boards gevonden die overeenkomen met het geselecteerde statusbereik.",
 		"noClassForId": "Er is geen klasse gevonden voor die identifier. Controleer het nogmaals en probeer het opnieuw.",
@@ -27,12 +27,13 @@
 		"noStudentOwnedBoards": "Deze cursus heeft wel forums voor voorstellen, maar geen enkel forum is eigendom van ingeschreven studenten (er zijn geen studenten die meewerken). Probeer over te schakelen naar 'Alle forums van de cursus' of koppel de forums aan studenten."
 	},
 	"filterByCardStatus": "Filteren op kaartstatus",
-	"filterByClass": "",
+	"filterByClass": "Klasborden",
+	"filteringPolicies": "Beleid voor het ophalen van gegevens",
 	"includeBoardTitle": "Inclusief bordtitel",
 	"intro": "Haal de inhoud van het voorstel en de reviewgegevens rechtstreeks uit het MindHive-platform. Kies de klasse, selecteer de scope van je data en exporteer downloadbare CSV-bestanden die geschikt zijn voor analyse.",
 	"json": "JSON (indien echt nodig)",
 	"noResearchAccess": "U hebt toestemmingen op onderzoeksniveau nodig om toegang te krijgen tot de exporttools",
-	"noStatusFilter": "",
+	"noStatusFilter": "Geen statusfilter",
 	"outputFormat": "Uitvoerformaat",
 	"ownership": {
 		"perClassHelper": "Exporteer alle voorstelborden die aan deze klasse zijn gekoppeld, inclusief pilot-/sjabloonborden.",
@@ -41,7 +42,11 @@
 		"perStudentLabel": "Borden in bezit van klasstudenten"
 	},
 	"policies": {
-		"boardSelection": "De boards worden opgehaald uit Class.studentProposals. Standaard geven we prioriteit aan het isMain-board van elke ingeschreven student; als er een ontbreekt, gebruiken we een ingediend board. Je kunt het eigenaarsfilter hierboven gebruiken om alle klasboards op te nemen, inclusief pilot-/sjabloonboards die niet van ingeschreven studenten zijn."
+		"boardSelection": "De boards worden opgehaald uit Class.studentProposals. Standaard geven we prioriteit aan het isMain-board van elke ingeschreven student; als er een ontbreekt, gebruiken we een ingediend board. Je kunt het eigenaarsfilter hierboven gebruiken om alle klasboards op te nemen, inclusief pilot-/sjabloonboards die niet van ingeschreven studenten zijn.",
+		"exportFormatChoice": "Je kunt kiezen tussen een lange en een brede exportindeling: de lange indeling voert één rij per bordsectiekaart uit, terwijl de brede indeling elk bord samenvoegt tot één rij met meerdere kolommen.",
+		"exportIncludes": "De inhoud van de voorstellen die geëxporteerd kan worden, omvat platte tekstkaarten, opmerkingen, beoordelingsmarkeringen, gekoppelde bronnen en de klasmedewerkers die aan elk bord zijn gekoppeld.",
+		"exportReviews": "Bij het exporteren van beoordelingen wordt elk antwoord afzonderlijk geëxporteerd, waarbij dezelfde fase- en statusfilters (Niet gestart, In uitvoering, Ingediend, Voltooid) worden gerespecteerd.",
+		"exportZip": "De geselecteerde datasets zijn gebundeld in één ZIP-archief dat kan worden gedownload."
 	},
 	"preparingExport": "Export voorbereiden…",
 	"research": "Onderzoek",
@@ -50,12 +55,11 @@
 	"runExport": "Exporteren uitvoeren",
 	"selectAllBoards": "Selecteer 'Alle borden' als u geen filters wilt",
 	"selectDataScope": "(Optioneel) Selecteer het gegevensbereik",
-	"selectNoStatusFilter": "",
+	"selectNoStatusFilter": "Selecteer 'Geen statusfilter' als u geen filters wilt.",
 	"summary": {
 		"nonStudentOwnedBoards": "{{count}} extra bord{{suffix}} niet in bezit van ingeschreven studenten (piloten/sjabloonborden)",
-		"singleBoardSelection": ""
+		"singleBoardSelection": "Eén printplaat geselecteerd voor export."
 	},
-	"whatAreTheFilteringPolicies": "Wat zijn de filterbeleidsregels?",
 	"whichBoardsToInclude": "Welke boards moeten worden opgenomen?",
 	"workflowStage": "Selecteer op welke fase u wilt filteren"
 }

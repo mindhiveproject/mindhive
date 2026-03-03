@@ -28,6 +28,7 @@
 	},
 	"filterByCardStatus": "",
 	"filterByClass": "",
+	"filteringPolicies": "",
 	"includeBoardTitle": "",
 	"intro": "",
 	"json": "",
@@ -41,7 +42,11 @@
 		"perStudentLabel": ""
 	},
 	"policies": {
-		"boardSelection": ""
+		"boardSelection": "",
+		"exportFormatChoice": "",
+		"exportIncludes": "",
+		"exportReviews": "",
+		"exportZip": ""
 	},
 	"preparingExport": "",
 	"research": "",
@@ -55,7 +60,6 @@
 		"nonStudentOwnedBoards": "",
 		"singleBoardSelection": ""
 	},
-	"whatAreTheFilteringPolicies": "",
 	"whichBoardsToInclude": "",
 	"workflowStage": ""
 }
