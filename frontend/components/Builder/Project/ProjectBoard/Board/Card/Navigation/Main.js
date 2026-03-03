@@ -1,9 +1,7 @@
 import { useQuery } from "@apollo/client";
-import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
+import InfoTooltip from "../../../../../../DesignSystem/InfoTooltip";
 import StatusChip from "../../PDF/Preview/StatusChip";
 import useTranslation from "next-translate/useTranslation";
-
-import Status from "../Forms/Status";
 
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 

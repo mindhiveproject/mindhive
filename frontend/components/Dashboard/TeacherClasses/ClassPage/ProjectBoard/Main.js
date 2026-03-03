@@ -29,7 +29,7 @@ export default function ProjectBoard({ myclass, query, user }) {
   }
 
   return (
-    <Sidebar.Pushable>
+    <Sidebar.Pushable style={{ overflowY: "hidden" }}>
       <Link
         href={{
           pathname: `/dashboard/myclasses/${myclass?.code}`,
