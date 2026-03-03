@@ -35,6 +35,14 @@ const POSITION_STYLES = {
     transformHidden: "translateY(-5px)",
     transformVisible: "translateY(0)",
   },
+  bottomRight: {
+    top: "100%",
+    left: "auto",
+    right: 0,
+    marginTop: "8px",
+    transformHidden: "translateY(-5px)",
+    transformVisible: "translateY(0)",
+  },
   topRight: {
     top: "auto",
     bottom: "100%",
@@ -64,7 +72,7 @@ const INTERACTIVE_HIDE_DELAY_MS = 150;
  * @param {object} [wrapperStyle] - Override styles for the wrapper (e.g. width when used as custom trigger).
  * @param {number} [delayMs=0] - Delay in milliseconds before the tooltip appears on hover. Leave before this time cancels showing.
  * @param {React.ReactNode} [action] - Optional node (e.g. link/button) rendered below the tooltip content. When present, the tooltip is interactive: it stays visible when the pointer is over the trigger or the tooltip so the user can click the action.
- * @param {"bottomLeft"|"topRight"} [position="bottomLeft"] - Tooltip placement: "bottomLeft" (below trigger, left-aligned) or "topRight" (above trigger, right-aligned).
+ * @param {"bottomLeft"|"bottomRight"|"topRight"} [position="bottomLeft"] - Tooltip placement: "bottomLeft" (below trigger, left-aligned), "bottomRight" (below trigger, right-aligned), or "topRight" (above trigger, right-aligned).
  */
 export default function InfoTooltip({
   content,
