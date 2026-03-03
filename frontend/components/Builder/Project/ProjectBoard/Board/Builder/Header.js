@@ -11,7 +11,7 @@ import { Icon, Radio } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import exportPDF from "../PDF/exportPDF";
-import InfoTooltip from "../PDF/Preview/InfoTooltip";
+import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
 
 import { useRef, useState } from "react";
 

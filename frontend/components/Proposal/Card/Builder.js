@@ -14,7 +14,7 @@ import LinkedItems from "./Forms/LinkedItems";
 import { PreviewSection } from "./Forms/PreviewSection";
 import AssignmentViewModal from "../../TipTap/AssignmentViewModal";
 import ResourceViewModal from "../../TipTap/ResourceViewModal";
-import InfoTooltip from "../../Builder/Project/ProjectBoard/Board/PDF/Preview/InfoTooltip";
+import InfoTooltip from "../../DesignSystem/InfoTooltip";
 import Button from "../../DesignSystem/Button";
 import useTranslation from "next-translate/useTranslation";
 

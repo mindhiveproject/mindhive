@@ -2,7 +2,7 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useMutation } from "@apollo/client";
 import { Icon } from "semantic-ui-react";
-import InfoTooltip from "../../../Builder/Project/ProjectBoard/Board/PDF/Preview/InfoTooltip";
+import InfoTooltip from "../../../DesignSystem/InfoTooltip";
 import { MANAGE_FAVORITE_TASKS } from "../../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { stripHtml, TYPO } from "./utils";

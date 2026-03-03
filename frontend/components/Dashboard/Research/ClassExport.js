@@ -4,7 +4,7 @@ import { saveAs } from "file-saver";
 import useTranslation from "next-translate/useTranslation";
 
 import Chip from "../../DesignSystem/Chip";
-import InfoTooltip from "../../Builder/Project/ProjectBoard/Board/PDF/Preview/InfoTooltip";
+import InfoTooltip from "../../DesignSystem/InfoTooltip";
 import {
   GRAPHQL_ENDPOINT,
   EXPORT_QUERY,

@@ -6,7 +6,8 @@ const defaultIconStyle = {
   width: "20px",
   height: "20px",
   flexShrink: 0,
-  filter: "brightness(0) saturate(100%) invert(28%) sepia(8%) saturate(1200%) hue-rotate(240deg) brightness(95%) contrast(85%)",
+  filter:
+    "brightness(0) saturate(100%) invert(28%) sepia(8%) saturate(1200%) hue-rotate(240deg) brightness(95%) contrast(85%)",
 };
 
 const defaultTooltipStyle = {
@@ -90,7 +91,7 @@ export default function InfoTooltip({
   const showTimeoutRef = useRef(null);
   const hideTimeoutRef = useRef(null);
 
-  const hover = action != null ? (triggerHover || tooltipHover) : triggerHover;
+  const hover = action != null ? triggerHover || tooltipHover : triggerHover;
 
   const clearShowTimeout = useCallback(() => {
     if (showTimeoutRef.current != null) {
@@ -120,7 +121,10 @@ export default function InfoTooltip({
     clearShowTimeout();
     if (action != null) {
       clearHideTimeout();
-      hideTimeoutRef.current = setTimeout(() => setTriggerHover(false), INTERACTIVE_HIDE_DELAY_MS);
+      hideTimeoutRef.current = setTimeout(
+        () => setTriggerHover(false),
+        INTERACTIVE_HIDE_DELAY_MS
+      );
     } else {
       setTriggerHover(false);
     }
@@ -140,10 +144,11 @@ export default function InfoTooltip({
   }, [clearShowTimeout, clearHideTimeout]);
 
   const useCustomTrigger = content != null && children != null;
-  const tooltipContent = useCustomTrigger ? content : (content ?? children);
+  const tooltipContent = useCustomTrigger ? content : content ?? children;
   const mergedIconStyle = { ...defaultIconStyle, ...iconStyle };
   const positionConfig = POSITION_STYLES[position] ?? POSITION_STYLES.bottomLeft;
-  const { transformHidden, transformVisible, ...positionPlacement } = positionConfig;
+  const { transformHidden, transformVisible, ...positionPlacement } =
+    positionConfig;
   const mergedTooltipStyle = {
     ...defaultTooltipStyle,
     ...positionPlacement,
@@ -169,7 +174,11 @@ export default function InfoTooltip({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {useCustomTrigger ? children : <img src={iconSrc} alt="info" style={mergedIconStyle} />}
+      {useCustomTrigger ? (
+        children
+      ) : (
+        <img src={iconSrc} alt="info" style={mergedIconStyle} />
+      )}
       <div
         style={mergedTooltipStyle}
         {...(action != null && {
@@ -177,9 +186,14 @@ export default function InfoTooltip({
           onMouseLeave: handleTooltipMouseLeave,
         })}
       >
-        {typeof tooltipContent === "string" ? <span>{tooltipContent}</span> : tooltipContent}
+        {typeof tooltipContent === "string" ? (
+          <span>{tooltipContent}</span>
+        ) : (
+          tooltipContent
+        )}
         {action != null && <div style={{ marginTop: "8px" }}>{action}</div>}
       </div>
     </div>
   );
 }
+

@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import InfoTooltip from "../../PDF/Preview/InfoTooltip";
+import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
 import StatusChip from "../../PDF/Preview/StatusChip";
 import useTranslation from "next-translate/useTranslation";
 

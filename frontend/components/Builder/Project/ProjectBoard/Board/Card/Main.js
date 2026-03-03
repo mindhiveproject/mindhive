@@ -35,7 +35,7 @@ import { Modal, Button, Icon, Dropdown } from "semantic-ui-react";
 import { StyledProposal } from "../../../../../styles/StyledProposal";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
 import { mergeCardSettings } from "../../../../../Utils/mergeCardSettings";
-import InfoTooltip from "../PDF/Preview/InfoTooltip";
+import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
 
 export default function ProposalCard({
   proposalCard,
