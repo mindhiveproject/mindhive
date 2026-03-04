@@ -442,19 +442,8 @@ export default function BuilderProposalCard({
                   />
                 </div>
               </label>
-              <div onClick={() => proposal?.prototypeFor?.length > 0 && setShowWarningBox(true)}>
-                <TipTapEditor
-                  content={content?.current}
-                  onUpdate={(newContent) =>
-                    handleContentChange({
-                      contentType: "content",
-                      newContent,
-                    })
-                  }
-                />
-              </div>
-              {/* Show warning box after editor is clicked and if proposal has child proposals */}
-              {showWarningBox && proposal?.prototypeFor?.length > 0 && (
+                            {/* Show warning box after editor is clicked and if proposal has child proposals */}
+                            {showWarningBox && proposal?.prototypeFor?.length > 0 && (
                 <div 
                   style={{
                     position: "relative",
@@ -535,6 +524,17 @@ export default function BuilderProposalCard({
                   </div>
                 </div>
               )}
+              <div onClick={() => proposal?.prototypeFor?.length > 0 && setShowWarningBox(true)}>
+                <TipTapEditor
+                  content={content?.current}
+                  onUpdate={(newContent) =>
+                    handleContentChange({
+                      contentType: "content",
+                      newContent,
+                    })
+                  }
+                />
+              </div>
             </>
           )}
         </div>
