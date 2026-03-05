@@ -38,18 +38,18 @@ export default function LinkedItems({
 }) {
   const { t } = useTranslation("classes");
 
-  // Track selectedResources changes
-  useEffect(() => {
-    console.log("📊 [selectedResources Changed]:", {
-      count: selectedResources.length,
-      resources: selectedResources.map(r => ({
-        id: r.id,
-        title: r.title,
-        isPublic: r.isPublic,
-        parentId: r.parent?.id
-      }))
-    });
-  }, [selectedResources]);
+  // // Track selectedResources changes
+  // useEffect(() => {
+  //   console.log("📊 [selectedResources Changed]:", {
+  //     count: selectedResources.length,
+  //     resources: selectedResources.map(r => ({
+  //       id: r.id,
+  //       title: r.title,
+  //       isPublic: r.isPublic,
+  //       parentId: r.parent?.id
+  //     }))
+  //   });
+  // }, [selectedResources]);
 
   // Queries for Resources
   const {

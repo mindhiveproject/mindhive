@@ -11,7 +11,7 @@ import { UPDATE_CARD_EDIT, UPDATE_CARD_CONTENT } from "../../../../../../Mutatio
 import { GET_CARD_CONTENT, PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 import { getRegularCardVariant } from "../../../../../../Utils/cardVariants";
 import StatusChip from "./StatusChip";
-import InfoTooltip from "./InfoTooltip";
+import InfoTooltip from "../../../../../../DesignSystem/InfoTooltip";
 
 export default function Card({ card, cardId, user, submitStatuses = {}, proposalId, onUnsavedChange }) {
   const { t } = useTranslation("builder");

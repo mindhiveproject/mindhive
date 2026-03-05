@@ -8,6 +8,9 @@ const BASE_STYLE = {
   alignItems: "center",
   justifyContent: "center",
   gap: "8px",
+  width: "fit-content",
+  flexGrow: 0,
+  flexShrink: 0,
   height: "40px",
   paddingTop: "8px",
   paddingBottom: "8px",
@@ -79,7 +82,7 @@ const TONAL_DISABLED = {
 const TEXT_BASE = {
   ...BASE_STYLE,
   background: "transparent",
-  color: "var(--MH-Theme-Primary-Base, #69BBC4)",
+  color: "var(--MH-Theme-Primary-Base, #337C84)",
 };
 const TEXT_HOVER = { background: "#F3F3F3" };
 const TEXT_PRESSED = { background: "#E6E6E6" };
@@ -107,6 +110,9 @@ const FOCUS_VISIBLE_STYLE = `
 .DesignSystem-Button:focus-visible {
   outline: 2px solid var(--MH-Theme-Primary-Dark, #336F8A);
   outline-offset: 2px;
+}
+.DesignSystem-Button-LeadingIcon svg {
+  fill: currentColor;
 }
 `;
 
@@ -194,7 +200,7 @@ export default function Button({
         {...rest}
       >
         {leadingIcon != null && (
-          <span style={LEADING_ICON_WRAPPER_STYLE} aria-hidden>
+          <span className="DesignSystem-Button-LeadingIcon" style={LEADING_ICON_WRAPPER_STYLE} aria-hidden>
             {leadingIcon}
           </span>
         )}

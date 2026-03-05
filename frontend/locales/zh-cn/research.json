@@ -1,25 +1,53 @@
 {
 	"boardData": "董事会数据",
+	"boardId": "板号",
 	"boardTitleColumn": "请包含版主名称？（出于隐私考虑，不建议这样做）",
 	"buildYourExport": "构建您的出口",
+	"byBoard": "个人板",
 	"classCode": "课程代码（访问课程时请查看网址）",
 	"classId": "类别 ID",
 	"csv": "CSV（.csv）",
 	"data": "数据",
 	"downloadPayload": "下载有效载荷",
+	"enterBoardId": "请输入电路板 ID",
 	"enterClassCode": "请输入班级代码",
 	"enterClassId": "请输入班级 ID",
 	"errors": {
 		"formatUnsupported": "目前仅支持导出 CSV 文件。",
+		"missingBoardId": "请在导出前提供主板 ID。",
+		"missingClassCode": "请在运行导出程序之前提供类代码。",
 		"missingClassId": "请在导出前提供类 ID。",
-		"noDatasetSelected": "至少选择一个数据集（董事会或评论）。"
+		"noBoardForId": "未找到与该标识符匹配的电路板。请仔细检查并重试。",
+		"noBoardsAfterOwnershipFilter": "没有提案委员会符合当前所有权筛选条件。",
+		"noBoardsForScope": "没有电路板符合所选状态范围。",
+		"noClassForId": "未找到与该标识符对应的类。请仔细检查并重试。",
+		"noDatasetSelected": "至少选择一个数据集（董事会或评论）。",
+		"noProposalsForClass": "本课程目前没有任何关联的学生提案讨论区。",
+		"noResearchAccess": "您需要研究级别的权限才能访问导出工具。",
+		"noStudentOwnedBoards": "这门课有提案看板，但所有看板都不属于注册学生（没有学生合作者）。请尝试切换到“所有课程看板”或将看板关联到学生。"
 	},
 	"filterByCardStatus": "按卡片状态筛选",
+	"filterByClass": "班级公告板",
+	"filteringPolicies": "数据提取策略",
 	"includeBoardTitle": "包括董事会标题",
 	"intro": "直接从 MindHive 平台提取提案内容和审核数据。选择类别，选择数据范围，并导出可用于分析的 CSV 文件。",
 	"json": "JSON（如果确实需要的话）",
 	"noResearchAccess": "您需要研究级别的权限才能访问导出工具。",
+	"noStatusFilter": "无状态筛选器",
 	"outputFormat": "输出格式",
+	"ownership": {
+		"perClassHelper": "导出与此类别关联的所有提案板，包括试点/模板板。",
+		"perClassLabel": "本课程的所有提案委员会",
+		"perStudentHelper": "仅导出至少有一名合作者是注册学生的董事会。",
+		"perStudentLabel": "学生拥有的董事会"
+	},
+	"policies": {
+		"boardSelection": "看板信息取自 Class.studentProposals。默认情况下，我们会优先选择每位已注册学生的 isMain 看板；如果缺少 isMain 看板，则会选择已提交的看板。您可以使用上方的所有权筛选器来包含所有课程看板，包括未注册学生拥有的试点/模板看板。",
+		"exportFormatChoice": "您可以选择长格式和宽格式导出：长格式每张板卡输出一行，而宽格式将每张板展成一行多列。",
+		"exportIncludes": "提案内容导出包括纯文本卡片、评论、审核标记、链接资源以及附加到每个看板的班级合作者。",
+		"exportReviews": "评论会分别导出每个回复，遵循相同的阶段和状态筛选条件（未开始、进行中、已提交、已完成）。",
+		"exportZip": "选定的数据集被打包到一个 ZIP 压缩包中供下载。"
+	},
 	"preparingExport": "准备出口……",
 	"research": "研究",
 	"resetFilters": "重置筛选条件",
@@ -27,6 +55,11 @@
 	"runExport": "运行导出",
 	"selectAllBoards": "如果您不想使用任何筛选条件，请选择“所有板块”。",
 	"selectDataScope": "（可选）选择数据范围",
-	"whatAreTheFilteringPolicies": "过滤策略是什么？",
+	"selectNoStatusFilter": "如果您不想使用任何筛选条件，请选择“无状态筛选”。",
+	"summary": {
+		"nonStudentOwnedBoards": "{{count}} 额外的电路板{{suffix}} 非注册学生所有（试点/模板电路板）",
+		"singleBoardSelection": "单块电路板被选中用于出口。"
+	},
+	"whichBoardsToInclude": "应该包含哪些电路板？",
 	"workflowStage": "选择要筛选的阶段"
 }

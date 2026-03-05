@@ -14,7 +14,7 @@ import {
 import { useState } from "react";
 import useTranslation from 'next-translate/useTranslation';
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../Queries/Proposal";
-import InfoTooltip from "../../Builder/Project/ProjectBoard/Board/PDF/Preview/InfoTooltip";
+import InfoTooltip from "../../DesignSystem/InfoTooltip";
 import Chip from "../../DesignSystem/Chip";
 
 export default function ProposalHeader({
@@ -103,7 +103,7 @@ export default function ProposalHeader({
                   <Chip
                     shape="square"
                     label={t("proposal.updatingStudentBoards", "Updating student boards…")}
-                    style={{ backgroundColor: "#5D5763", border: "1px solid #F3F3F3", color: "#F3F3F3", fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px" }}
+                    style={{ backgroundColor: "#E4DFF6", border: "1px solid #3F288F", color: "#3F288F", fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px" }}
                   />
                 )}
                 {hasUnpropagatedChanges && (

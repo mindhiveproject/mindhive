@@ -1,25 +1,53 @@
 {
 	"boardData": "Données du tableau",
+	"boardId": "ID du conseil d'administration",
 	"boardTitleColumn": "Inclure le titre du forum ? (non recommandé pour des raisons de confidentialité)",
 	"buildYourExport": "Développez votre exportation",
+	"byBoard": "Conseil individuel",
 	"classCode": "Code du cours (voir l'URL lors de la consultation du cours)",
 	"classId": "ID de classe",
 	"csv": "CSV (.csv)",
 	"data": "Données",
 	"downloadPayload": "Télécharger la charge utile",
+	"enterBoardId": "Saisissez l'identifiant du forum",
 	"enterClassCode": "Saisissez le code de la classe",
 	"enterClassId": "Saisissez l'identifiant de la classe",
 	"errors": {
 		"formatUnsupported": "Seuls les formats d'exportation CSV sont disponibles pour le moment.",
+		"missingBoardId": "Veuillez fournir un identifiant de carte avant de lancer l'exportation.",
+		"missingClassCode": "Veuillez fournir un code de classe avant d'exécuter l'exportation.",
 		"missingClassId": "Veuillez fournir un identifiant de classe avant de lancer l'exportation.",
-		"noDatasetSelected": "Sélectionnez au moins un ensemble de données (conseil d'administration ou avis)."
+		"noBoardForId": "Aucune carte trouvée pour cet identifiant. Veuillez vérifier et réessayer.",
+		"noBoardsAfterOwnershipFilter": "Aucun tableau de proposition ne correspondait au filtre de propriété actuel.",
+		"noBoardsForScope": "Aucune carte ne correspondait à la plage d'état sélectionnée.",
+		"noClassForId": "Aucune classe n'a été trouvée pour cet identifiant. Veuillez vérifier et réessayer.",
+		"noDatasetSelected": "Sélectionnez au moins un ensemble de données (conseil d'administration ou avis).",
+		"noProposalsForClass": "Ce cours ne dispose actuellement d'aucun tableau d'affichage pour les propositions étudiantes.",
+		"noResearchAccess": "Vous devez disposer d'autorisations de niveau recherche pour accéder aux outils d'exportation",
+		"noStudentOwnedBoards": "Ce cours dispose de tableaux de propositions, mais aucun n'appartient à un étudiant inscrit (aucun étudiant collaborateur). Essayez de sélectionner « Tous les tableaux de la classe » ou d'associer les tableaux aux étudiants."
 	},
 	"filterByCardStatus": "Filtrer par statut de la carte",
+	"filterByClass": "Tableaux de classe",
+	"filteringPolicies": "Politiques d'extraction de données",
 	"includeBoardTitle": "Inclure le titre du tableau",
 	"intro": "Importez le contenu des propositions et les données d'évaluation directement depuis la plateforme MindHive. Choisissez la classe, définissez votre périmètre de données et exportez des fichiers CSV téléchargeables, formatés pour l'analyse.",
 	"json": "JSON (si nécessaire)",
 	"noResearchAccess": "Vous devez disposer d'autorisations de niveau recherche pour accéder aux outils d'exportation",
+	"noStatusFilter": "Aucun filtre d'état",
 	"outputFormat": "Format de sortie",
+	"ownership": {
+		"perClassHelper": "Exportez tous les tableaux de propositions associés à cette classe, y compris les tableaux pilotes/modèles.",
+		"perClassLabel": "Tous les tableaux de propositions pour cette classe",
+		"perStudentHelper": "N’exportez que les cartes dont au moins un collaborateur est un étudiant inscrit.",
+		"perStudentLabel": "Tableaux appartenant aux élèves de la classe"
+	},
+	"policies": {
+		"boardSelection": "Les tableaux sont extraits de Class.studentProposals. Par défaut, la priorité est donnée au tableau isMain de chaque étudiant inscrit ; s'il est manquant, un tableau soumis est utilisé par défaut. Vous pouvez utiliser le filtre de propriété ci-dessus pour inclure tous les tableaux de la classe, y compris les tableaux pilotes/modèles qui n'appartiennent pas aux étudiants inscrits.",
+		"exportFormatChoice": "Vous pouvez choisir entre les formats d'exportation long et large : le format long génère une ligne par carte de section de plateau, tandis que le format large aplatit chaque plateau sur une seule ligne avec de nombreuses colonnes.",
+		"exportIncludes": "Les exportations de contenu des propositions incluent des cartes en texte brut, des commentaires, des indicateurs de révision, des ressources liées et les collaborateurs de la classe associés à chaque tableau.",
+		"exportReviews": "Les évaluations exportent chaque réponse séparément, en respectant les mêmes filtres d'étape et de statut (Non commencé, En cours, Soumis, Terminé).",
+		"exportZip": "Les jeux de données sélectionnés sont regroupés dans une seule archive ZIP à télécharger."
+	},
 	"preparingExport": "Préparation de l'exportation…",
 	"research": "Recherche",
 	"resetFilters": "Réinitialiser les filtres",
@@ -27,6 +55,11 @@
 	"runExport": "Exécuter l'exportation",
 	"selectAllBoards": "Sélectionnez « Tous les forums » si vous ne souhaitez aucun filtre.",
 	"selectDataScope": "(Facultatif) Sélectionner l'étendue des données",
-	"whatAreTheFilteringPolicies": "Quelles sont les politiques de filtrage ?",
+	"selectNoStatusFilter": "Sélectionnez « Aucun filtre d'état » si vous ne souhaitez aucun filtre.",
+	"summary": {
+		"nonStudentOwnedBoards": "{{count}} tableau supplémentaire{{suffix}} n'appartenant pas aux étudiants inscrits (tableaux pilotes/modèles)",
+		"singleBoardSelection": "Carte unique sélectionnée pour l'exportation."
+	},
+	"whichBoardsToInclude": "Quelles cartes devraient être incluses ?",
 	"workflowStage": "Sélectionnez l'étape à filtrer par"
 }

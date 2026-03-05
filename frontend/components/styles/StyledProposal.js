@@ -118,10 +118,10 @@ export const StyledProposal = styled.div`
 
   .proposalBoard {
     display: grid;
-    height: 100%;
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto auto;
     align-content: start;
     margin: 20px;
+    min-height: 0;
     
     .narrowButton {
       height: 40px;
@@ -979,7 +979,7 @@ export const StyledProposal = styled.div`
 
   .post {
     display: grid;
-    grid-row-gap: 10px;
+    // grid-row-gap: 10px;
     font-family: Inter;
     font-size: 18px;
     text-align: left;
@@ -987,6 +987,13 @@ export const StyledProposal = styled.div`
     padding: 0px;
     width: 100%;
     height: 100%;
+    min-height: 0;
+
+    /* Single scrollbar: TipTap editors grow with content so only StyledProposal scrolls */
+    .ProseMirror {
+      max-height: none;
+      overflow-y: visible;
+    }
 
     .resourcePreview {
       display: grid;
@@ -1032,7 +1039,8 @@ export const StyledProposal = styled.div`
       grid-gap: 20px;
       background: white;
       border-radius: 24px;
-      border: 2px solid #D3E0E3;
+      border-bottom-right-radius: 0;
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
       .left {
         display: grid;
         .icon {
@@ -1116,11 +1124,12 @@ export const StyledProposal = styled.div`
 
     .proposalCardBoard {
       display: flex;
-      height: 100%;
       align-items: flex-start;
       gap: 24px;
       flex: 1 0 0;
       align-self: stretch;
+      min-height: 0;
+      overflow-y: visible;
     }
 
     label {
@@ -1281,7 +1290,8 @@ export const StyledProposal = styled.div`
       gap: 10px;
       flex: 1 0 0;
       width: 100%;
-      height: 100%;
+      min-width: 0;
+      overflow-y: visible;
 
       & > div {
         width: 100%;
@@ -1366,7 +1376,6 @@ export const StyledProposal = styled.div`
     .infoBoard {
       display: flex;
       max-width: 500px;
-      height: 100%;
       padding: 24px;
       flex-direction: column;
       justify-content: flex-start;
@@ -1374,8 +1383,11 @@ export const StyledProposal = styled.div`
       gap: 24px;
       flex: 1 0 0;
       align-self: stretch;
-      border-left: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      border-top: none;
       background: var(--MH-Theme-Neutrals-White, #FFF);
+      overflow-y: visible;
+      min-height: 0;
 
       .collaboratorArray {
         display: flex;
@@ -1463,6 +1475,88 @@ export const StyledProposal = styled.div`
         justify-items: center;
         text-align: center;
       }
+    }
+    .visibilityPanel,
+    .feedbackCenterPanel {
+      width: 100%;
+      background: var(--MH-Theme-Tertiary-Light, #F6F9F8);
+      border-radius: 12px;
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      padding: 16px 16px;
+      margin-top: 16px;
+    }
+    .feedbackCenterPanel {
+      margin-top: 12px;
+      background: var(--MH-Theme-Neutrals-White, #FFF);
+    }
+    .visibilityPanelHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .visibilityPanelTitleRow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .feedbackCenterPanelHeader {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .feedbackCenterPanelTitleRow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .feedbackOptionCards {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .feedbackOptionCard {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--MH-Theme-Tertiary-Light, #F6F9F8);
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .feedbackOptionCard.feedbackOptionCardSelected {
+      border-color: var(--MH-Theme-Primary-Dark, #336F8A);
+      background: var(--MH-Theme-Primary-Light, #DEF8FB);
+    }
+    .feedbackOptionCardIcon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .feedbackOptionCardContent {
+      flex: 1;
+      min-width: 0;
+    }
+    .feedbackOptionCardTitle {
+      font-family: Inter;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 22px;
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+      margin-bottom: 2px;
+    }
+    .feedbackOptionCardDescription {
+      font-family: Inter;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      color: #626269;
     }
     .proposalCardComments {
       display: grid;

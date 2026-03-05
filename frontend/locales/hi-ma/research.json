@@ -1,25 +1,53 @@
 {
 	"boardData": "",
+	"boardId": "",
 	"boardTitleColumn": "",
 	"buildYourExport": "",
+	"byBoard": "",
 	"classCode": "",
 	"classId": "",
 	"csv": "",
 	"data": "",
 	"downloadPayload": "",
+	"enterBoardId": "",
 	"enterClassCode": "",
 	"enterClassId": "",
 	"errors": {
 		"formatUnsupported": "",
+		"missingBoardId": "",
+		"missingClassCode": "",
 		"missingClassId": "",
-		"noDatasetSelected": ""
+		"noBoardForId": "",
+		"noBoardsAfterOwnershipFilter": "",
+		"noBoardsForScope": "",
+		"noClassForId": "",
+		"noDatasetSelected": "",
+		"noProposalsForClass": "",
+		"noResearchAccess": "",
+		"noStudentOwnedBoards": ""
 	},
 	"filterByCardStatus": "",
+	"filterByClass": "",
+	"filteringPolicies": "",
 	"includeBoardTitle": "",
 	"intro": "",
 	"json": "",
 	"noResearchAccess": "",
+	"noStatusFilter": "",
 	"outputFormat": "",
+	"ownership": {
+		"perClassHelper": "",
+		"perClassLabel": "",
+		"perStudentHelper": "",
+		"perStudentLabel": ""
+	},
+	"policies": {
+		"boardSelection": "",
+		"exportFormatChoice": "",
+		"exportIncludes": "",
+		"exportReviews": "",
+		"exportZip": ""
+	},
 	"preparingExport": "",
 	"research": "",
 	"resetFilters": "",
@@ -27,6 +55,11 @@
 	"runExport": "",
 	"selectAllBoards": "",
 	"selectDataScope": "",
-	"whatAreTheFilteringPolicies": "",
+	"selectNoStatusFilter": "",
+	"summary": {
+		"nonStudentOwnedBoards": "",
+		"singleBoardSelection": ""
+	},
+	"whichBoardsToInclude": "",
 	"workflowStage": ""
 }

@@ -76,6 +76,10 @@ export const OVERVIEW_PROPOSAL_BOARD_QUERY = gql`
           username
         }
       }
+      templateForClasses {
+        id
+        code
+      }
       study {
         id
         title
@@ -135,6 +139,7 @@ export const PROPOSAL_QUERY = gql`
       }
       usedInClass {
         id
+        code
         title
         settings
         creator {
@@ -146,6 +151,10 @@ export const PROPOSAL_QUERY = gql`
         templateProposal {
           id
         }
+      }
+      templateForClasses {
+        id
+        code
       }
       author {
         username
