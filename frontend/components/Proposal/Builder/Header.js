@@ -4,18 +4,13 @@ import { useMutation } from "@apollo/client";
 
 import useForm from "../../../lib/useForm";
 
-import {
-  AccordionTitle,
-  AccordionContent,
-  Accordion,
-  Icon,
-  Checkbox,
-} from "semantic-ui-react";
+import { Checkbox } from "semantic-ui-react";
 import { useState } from "react";
 import useTranslation from 'next-translate/useTranslation';
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../Queries/Proposal";
 import InfoTooltip from "../../DesignSystem/InfoTooltip";
 import Chip from "../../DesignSystem/Chip";
+import Button from "../../DesignSystem/Button";
 
 export default function ProposalHeader({
   user,
@@ -30,10 +25,10 @@ export default function ProposalHeader({
   isPropagatingToClones,
 }) {
   const { t } = useTranslation('builder');
-  const [activeIndex, setActiveIndex] = useState(0);
   const [isTitleEditing, setIsTitleEditing] = useState(false);
   const [applyLoading, setApplyLoading] = useState(false);
   const [templateBannerExpanded, setTemplateBannerExpanded] = useState(false);
+  const [templateBannerSection, setTemplateBannerSection] = useState('autoUpdate');
   const isTemplateWithClones =
     proposalBuildMode &&
     proposal?.prototypeFor?.length > 0;
@@ -64,10 +59,12 @@ export default function ProposalHeader({
   };
 
   // save and edit the study information
-  const { inputs, handleChange, toggleBoolean, toggleSettingsBoolean } =
+  const { inputs, handleChange, handleMultipleUpdate, toggleBoolean, toggleSettingsBoolean } =
     useForm({
       ...proposal,
     });
+
+  const boardTypeSelection = inputs.settings?.curriculumType === 'youquantified' ? 'youquantified' : 'mindhive';
 
   const [updateProposal, { loading }] = useMutation(UPDATE_PROPOSAL_BOARD, {
     variables: {
@@ -79,42 +76,76 @@ export default function ProposalHeader({
     ],
   });
 
+  const settingsEqual = (a, b) => {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+    const curriculumA = a?.curriculumType ?? 'mindhive';
+    const curriculumB = b?.curriculumType ?? 'mindhive';
+    return (
+      (a.allowMovingSections === b.allowMovingSections) &&
+      (a.allowMovingCards === b.allowMovingCards) &&
+      (a.allowAddingSections === b.allowAddingSections) &&
+      (a.allowAddingCards === b.allowAddingCards) &&
+      curriculumA === curriculumB
+    );
+  };
+
+  const hasUnsavedChanges =
+    inputs.title !== proposal?.title ||
+    inputs.description !== proposal?.description ||
+    inputs.isTemplate !== proposal?.isTemplate ||
+    !settingsEqual(inputs.settings, proposal?.settings) ||
+    inputs.isSubmitted !== proposal?.isSubmitted;
+
   return (
     <div className="header">
       <div>
-      {isTemplateWithClones && (
-          <div className="templateBanner">
-            <div className="templateBannerHeader">
-              <div className="templateBannerHeaderLeft">
-                <div className="templateBannerTitle">
-                  {t("proposal.editingClassProjectTemplateTitle", "Editing Class Project Template")}
-                </div>
-                <div className="templateBannerSubtitle">
-                  {t("proposal.editingClassProjectTemplateSubtitle", "Changes can be applied to all student boards.")}
-                </div>
-              </div>
-              <div className="templateBannerHeaderChips">
-                <Chip
-                  shape = "square"
-                  label={autoUpdateStudentBoards ? t("proposal.templateAutoUpdateOn", "Auto-update: ON") : t("proposal.templateAutoUpdateOff", "Auto-update: OFF")}
-                  style={{ backgroundColor: "#5D5763", border: "1px solid #F3F3F3", color: "#F3F3F3", fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px" }}
+
+      <div className="headerTitleRow" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', width: '100%', minWidth: 0 }}>
+        <div className="headerTitleWrapper" style={{ minWidth: 0 }}>
+          {isTitleEditing ? (
+            <input
+              type="text"
+              id="propsalTitle"
+              name="title"
+              value={inputs.title}
+              onChange={handleChange}
+              className="titleEdit"
+            />
+          ) : (
+            <div className="titleIcon">
+              <div className="title">{inputs?.title}</div>
+
+              <div className="icon">
+                <img
+                  src="/assets/icons/pencil.svg"
+                  onClick={() => {
+                    setIsTitleEditing(!isTitleEditing);
+                  }}
                 />
-                {isPropagatingToClones && (
-                  <Chip
-                    shape="square"
-                    label={t("proposal.updatingStudentBoards", "Updating student boards…")}
-                    style={{ backgroundColor: "#E4DFF6", border: "1px solid #3F288F", color: "#3F288F", fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px" }}
-                  />
-                )}
-                {hasUnpropagatedChanges && (
-                  <Chip
-                    shape = "square"
-                    label={t("proposal.templateUnpropagatedChanges", "Unpropagated changes")}
-                    style={{ backgroundColor: "#F3F3F3", border: "2px solid #8F1F14", color: "#8F1F14", fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px" }}
-                    // style={{ borderColor: "#b45309", background: "#fff7ed" }}
-                  />
-                )}
               </div>
+            </div>
+          )}
+        </div>
+        {hasUnsavedChanges && (
+          <div style={{ flexShrink: 0 }}>
+            <Button
+              variant="tonal"
+              onClick={async () => {
+                setIsTitleEditing(false);
+                await updateProposal();
+              }}
+            >
+              {loading ? t('proposal.saving', 'Saving') : t('proposal.save', 'Save')}
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {isTemplateWithClones && (
+        <div className="templateBanner">
+          <div className="templateBannerHeader">
+            <div className="templateBannerHeaderLeft">
               <button
                 type="button"
                 className="templateBannerHeaderToggle"
@@ -122,7 +153,7 @@ export default function ProposalHeader({
                 aria-expanded={templateBannerExpanded}
                 aria-label={t("proposal.expandCollapseTemplateBanner", "Expand or minimize template section")}
               >
-                <span style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <span className="templateBannerHeaderToggleIcon" style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                   <img
                     style={{
                       transform: templateBannerExpanded ? "rotate(270deg)" : "rotate(90deg)",
@@ -142,217 +173,232 @@ export default function ProposalHeader({
                     alt=""
                   />
                 </span>
+                <span className="templateBannerTitle">
+                  {t("proposal.advancedOptions", "Advanced options")}
+                </span>
               </button>
             </div>
-            {templateBannerExpanded && (
-            <div className="templateBannerContent">
-              <div className="templateBannerSection">
-                <div className="templateBannerSectionHeading">
-                  {t("proposal.whatWillBeUpdated", "What will be updated")}
-                  {/* <InfoTooltip
-                    content={t("proposal.saveAndUpdateStudentBoardsHelp", "Will update: section names and order, card titles and positions, linked assignments/resources/tasks/studies. Will NOT change: students' own written answers, comments, and submissions.")}
-                  /> */}
-                </div>
-                <p className="templateBannerSectionBody">
-                  {t("proposal.whatWillBeUpdatedBody", "Section names and order, card titles and positions, linked assignments/resources/tasks/studies, and card settings (e.g. report and review options).")}
-                </p>
-              </div>
-              <div className="templateBannerSection">
-                <div className="templateBannerSectionHeading">
-                  {t("proposal.whatWillNotChange", "What will NOT change")}
-                </div>
-                <p className="templateBannerSectionBody">
-                  {t("proposal.whatWillNotChangeBody", "Students' own written answers, comments, submissions, and progress status on each card.")}
-                </p>
-              </div>
-              <div className="templateBannerToggleRow">
-                <Checkbox
-                  toggle
-                  checked={!!autoUpdateStudentBoards}
-                  onChange={(_, { checked }) => onAutoUpdateChange?.(!!checked)}
-                  label={t("proposal.templateAutoUpdate", "Auto-update student boards")}
+            <div className="templateBannerHeaderChips">
+              <Chip
+                shape = "square"
+                label={autoUpdateStudentBoards ? t("proposal.templateAutoUpdateOn", "Auto-update: ON") : t("proposal.templateAutoUpdateOff", "Auto-update: OFF")}
+                selected={autoUpdateStudentBoards}
+                // style={{ backgroundColor: "#5D5763", border: "1px solid #F3F3F3", color: "#F3F3F3", fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px" }}
+                style={{ fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px" }}
+              />
+              {isPropagatingToClones && (
+                <Chip
+                  shape="square"
+                  label={t("proposal.updatingStudentBoards", "Updating student boards…")}
+                  style={{ backgroundColor: "#E4DFF6", border: "1px solid #3F288F", color: "#3F288F", fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px" }}
                 />
-                <InfoTooltip
-                  tooltipStyle={{
-                    background: "#F3F3F3",
-                    borderRadius: "8px",
-                    border: "1px solid #5D5763",
+              )}
+              {hasUnpropagatedChanges && (
+                <Chip
+                  shape="square"
+                  label={t("proposal.templateUnpropagatedChanges", "Unpropagated changes")}
+                  style={{ backgroundColor: "#F3F3F3", border: "3px solid #8F1F14", color: "#8F1F14", fontSize: "12px", fontWeight: "800", lineHeight: "18px", padding: "4px 12px" }}
+                  onClick={() => {
+                    setTemplateBannerExpanded(true);
+                    setTemplateBannerSection("autoUpdate");
                   }}
-                  content={t("proposal.templateAutoUpdateHelp", "When on, structural changes, template-controlled card settings (except progress status), and optionally content are pushed to student boards after each save. Students' own answers and their progress status on each card are preserved. When off, use the button below to update when ready.")}
-
                 />
-              </div>
-              {!autoUpdateStudentBoards && (
-                <div className="templateBannerActions">
-                  <button
-                    type="button"
-                    className="templateBannerPrimaryBtn"
-                    onClick={handleSaveAndUpdateStudentBoards}
-                    disabled={applyLoading}
-                  >
-                    {applyLoading
-                      ? t("proposal.updatingStudentBoards", "Updating student boards…")
-                      : t("proposal.saveAndUpdateStudentBoards", "Save & Update student boards")}
-                    {cloneCount > 0 && ` (${cloneCount})`}
-                  </button>
-                </div>
               )}
             </div>
-            )}
           </div>
-        )}
-
-        {isTitleEditing ? (
-          <input
-            type="text"
-            id="propsalTitle"
-            name="title"
-            value={inputs.title}
-            onChange={handleChange}
-            className="titleEdit"
-          />
-        ) : (
-          <div className="titleIcon">
-            <div className="title">{inputs?.title}</div>
-
-            <div className="icon">
-              <img
-                src="/assets/icons/pencil.svg"
-                onClick={() => {
-                  setIsTitleEditing(!isTitleEditing);
-                }}
-              />
+          {templateBannerExpanded && (
+          <div className="templateBannerContent">
+            <div className="templateBannerContentInner">
+              <div className="templateBannerContentLeft">
+                <Chip
+                  shape="square"
+                  label={t("proposal.templateSectionAutoUpdate", "Auto-update")}
+                  selected={templateBannerSection === "autoUpdate"}
+                  onClick={() => setTemplateBannerSection("autoUpdate")}
+                />
+                {proposalBuildMode && (
+                  <Chip
+                    shape="square"
+                    label={t("proposal.templateSectionStudentSettings", "Student settings")}
+                    selected={templateBannerSection === "studentSettings"}
+                    onClick={() => setTemplateBannerSection("studentSettings")}
+                  />
+                )}
+                <Chip
+                  shape="square"
+                  label={t("proposal.templateSectionBoardType", "Board type")}
+                  selected={templateBannerSection === "boardType"}
+                  onClick={() => setTemplateBannerSection("boardType")}
+                />
+              </div>
+              <div className="templateBannerContentDivider" aria-hidden="true" />
+              <div className="templateBannerContentRight">
+                {templateBannerSection === "autoUpdate" && (
+                  <>
+                    <div className="templateBannerSection">
+                      <div className="templateBannerSectionHeading">
+                        {t("proposal.whatWillBeUpdated", "What will be updated")}
+                      </div>
+                      <p className="templateBannerSectionBody">
+                        {t("proposal.whatWillBeUpdatedBody", "Section names and order, card titles and positions, linked assignments/resources/tasks/studies, and card settings (e.g. report and review options).")}
+                      </p>
+                    </div>
+                    <div className="templateBannerSection">
+                      <div className="templateBannerSectionHeading">
+                        {t("proposal.whatWillNotChange", "What will NOT change")}
+                      </div>
+                      <p className="templateBannerSectionBody">
+                        {t("proposal.whatWillNotChangeBody", "Students' own written answers, comments, submissions, and progress status on each card.")}
+                      </p>
+                    </div>
+                    <div className="templateBannerToggleRow">
+                      <Checkbox
+                        toggle
+                        checked={!!autoUpdateStudentBoards}
+                        onChange={(_, { checked }) => onAutoUpdateChange?.(!!checked)}
+                        label={t("proposal.templateAutoUpdate", "Auto-update student boards")}
+                      />
+                      <InfoTooltip
+                        position="topRight"
+                        content={t("proposal.templateAutoUpdateHelp", "When on, structural changes, template-controlled card settings (except progress status), and optionally content are pushed to student boards after each save. Students' own answers and their progress status on each card are preserved. When off, use the button below to update when ready.")}
+                      />
+                    </div>
+                    {!autoUpdateStudentBoards && (
+                      <div className="templateBannerActions">
+                        <Button
+                          variant="primary"
+                          className="templateBannerPrimaryBtn"
+                          onClick={handleSaveAndUpdateStudentBoards}
+                          disabled={applyLoading}
+                        >
+                          {applyLoading
+                            ? t("proposal.updatingStudentBoards", "Updating student boards…")
+                            : t("proposal.saveAndUpdateStudentBoards", "Save & Update student boards")}
+                          {cloneCount > 0 && ` (${cloneCount})`}
+                        </Button>
+                      </div>
+                    )}
+                  </>
+                )}
+                {templateBannerSection === "studentSettings" && proposalBuildMode && (
+                  <div className="templateBannerStudentSettings">
+                    <h2 className="templateBannerStudentSettingsHeading">
+                      {t("proposal.templateSectionStudentSettings", "Student settings")}
+                    </h2>
+                    <p className="templateBannerStudentSettingsHelp">
+                      {t("proposal.advancedOptionsHelp", "Checking the boxes below enables students to modify the board. Check in with the MindHive team if you're unsure what this means.")}
+                    </p>
+                    {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+                      <div className="templateBannerStudentSettingsItem">
+                        <Checkbox
+                          toggle
+                          id="isTemplate"
+                          name="isTemplate"
+                          checked={!!inputs.isTemplate}
+                          onChange={(_, { name }) => toggleBoolean({ target: { name } })}
+                          label={t("proposal.makeTemplate", "Make this project board a public template")}
+                        />
+                      </div>
+                    )}
+                    <div className="templateBannerStudentSettingsItem">
+                      <Checkbox
+                        toggle
+                        id="allowMovingSections"
+                        name="allowMovingSections"
+                        checked={!!inputs?.settings?.allowMovingSections}
+                        onChange={(_, { name, checked }) => toggleSettingsBoolean({ target: { name, checked } })}
+                        label={t("proposal.allowMovingSections", "Allow students to move sections")}
+                      />
+                    </div>
+                    <div className="templateBannerStudentSettingsItem">
+                      <Checkbox
+                        toggle
+                        id="allowMovingCards"
+                        name="allowMovingCards"
+                        checked={!!inputs?.settings?.allowMovingCards}
+                        onChange={(_, { name, checked }) => toggleSettingsBoolean({ target: { name, checked } })}
+                        label={t("proposal.allowMovingCards", "Allow students to move cards")}
+                      />
+                    </div>
+                    <div className="templateBannerStudentSettingsItem">
+                      <Checkbox
+                        toggle
+                        id="allowAddingSections"
+                        name="allowAddingSections"
+                        checked={!!inputs?.settings?.allowAddingSections}
+                        onChange={(_, { name, checked }) => toggleSettingsBoolean({ target: { name, checked } })}
+                        label={t("proposal.allowAddingSections", "Allow students to add/delete sections")}
+                      />
+                    </div>
+                    <div className="templateBannerStudentSettingsItem">
+                      <Checkbox
+                        toggle
+                        id="allowAddingCards"
+                        name="allowAddingCards"
+                        checked={!!inputs?.settings?.allowAddingCards}
+                        onChange={(_, { name, checked }) => toggleSettingsBoolean({ target: { name, checked } })}
+                        label={t("proposal.allowAddingCards", "Allow students to add/delete cards")}
+                      />
+                    </div>
+                  </div>
+                )}
+                {templateBannerSection === "boardType" && (
+                  <div className="templateBannerBoardTypeOptions">
+                    <p className="templateBannerBoardTypeIntro">
+                      {t("proposal.boardTypeIntro", "Please indicate here if this board manages a MindHive or YouQuantified project.")}
+                    </p>
+                    <p className="templateBannerBoardTypeMentorNote">
+                      {t("proposal.boardTypeMentorNote", "This is relevant for mentors giving feedback to your student boards. If you have any questions, please contact a MindHive member.")}
+                    </p>
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      className={`templateBannerBoardTypeOption ${boardTypeSelection === 'mindhive' ? 'templateBannerBoardTypeOptionSelected' : ''}`}
+                      onClick={() => handleMultipleUpdate({ settings: { ...inputs.settings, curriculumType: 'mindhive' } })}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleMultipleUpdate({ settings: { ...inputs.settings, curriculumType: 'mindhive' } });
+                        }
+                      }}
+                      aria-pressed={boardTypeSelection === 'mindhive'}
+                    >
+                      <div className="templateBannerBoardTypeOptionLogos">
+                        <img src="/logo.png" alt="" className="templateBannerBoardTypeLogo" />
+                      </div>
+                      {/* <span className="templateBannerBoardTypeOptionLabel">
+                        {t("proposal.boardTypeMindHive", "MindHive")}
+                      </span> */}
+                    </div>
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      className={`templateBannerBoardTypeOption ${boardTypeSelection === 'youquantified' ? 'templateBannerBoardTypeOptionSelected' : ''}`}
+                      onClick={() => handleMultipleUpdate({ settings: { ...inputs.settings, curriculumType: 'youquantified' } })}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleMultipleUpdate({ settings: { ...inputs.settings, curriculumType: 'youquantified' } });
+                        }
+                      }}
+                      aria-pressed={boardTypeSelection === 'youquantified'}
+                    >
+                      <div className="templateBannerBoardTypeOptionLogos">
+                        <img src="/logo_yq.svg" alt="" className="templateBannerBoardTypeLogo" />
+                      </div>
+                      {/* <span className="templateBannerBoardTypeOptionLabel">
+                        {t("proposal.boardTypeYouQuantified", "YouQuantified")}
+                      </span> */}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        )}
-
-        <div className="subtitle">
-          {t('proposal.subtitle', 'This board will guide your students through their MindHive project step by step')}
+          )}
         </div>
+      )}
 
-        
-        {proposalBuildMode && (
-          <div>
-            <Accordion>
-              <AccordionTitle
-                active={activeIndex === 1}
-                index={1}
-                onClick={() => {
-                  setActiveIndex(activeIndex === 1 ? 0 : 1);
-                }}
-              >
-                <Icon name="dropdown" />
-                {t('proposal.advancedOptions', 'Advanced options')}
-              </AccordionTitle>
-              <AccordionContent active={activeIndex === 1}>
-                <>
-                  {user?.permissions.map((p) => p?.name).includes("ADMIN") && (
-                    <>
-                      <div>
-                        <label htmlFor="isTemplate">
-                          <div className="checkboxField">
-                            <input
-                              type="checkbox"
-                              id="isTemplate"
-                              name="isTemplate"
-                              checked={inputs.isTemplate}
-                              onChange={toggleBoolean}
-                            />
-                            <span>{t('proposal.makeTemplate', 'Make this project board a public template')}</span>
-                          </div>
-                        </label>
-                      </div>
-                    </>
-                  )}
-
-                  <h2>{t('proposal.advancedOptionsHelp', "Checking the boxes below enables students to modify the board. Check in with the MindHive team if you're unsure what this means.")}</h2>
-
-                  <div>
-                    <label htmlFor="allowMovingSections">
-                      <div className="checkboxField">
-                        <input
-                          type="checkbox"
-                          id="allowMovingSections"
-                          name="allowMovingSections"
-                          checked={
-                            inputs?.settings?.allowMovingSections || false
-                          }
-                          onChange={toggleSettingsBoolean}
-                        />
-                        <span>{t('proposal.allowMovingSections', 'Allow students to move sections')}</span>
-                      </div>
-                    </label>
-                  </div>
-
-                  <div>
-                    <label htmlFor="allowMovingCards">
-                      <div className="checkboxField">
-                        <input
-                          type="checkbox"
-                          id="allowMovingCards"
-                          name="allowMovingCards"
-                          checked={inputs?.settings?.allowMovingCards || false}
-                          onChange={toggleSettingsBoolean}
-                        />
-                        <span>{t('proposal.allowMovingCards', 'Allow students to move cards')}</span>
-                      </div>
-                    </label>
-                  </div>
-
-                  <div>
-                    <label htmlFor="allowAddingSections">
-                      <div className="checkboxField">
-                        <input
-                          type="checkbox"
-                          id="allowAddingSections"
-                          name="allowAddingSections"
-                          checked={
-                            inputs?.settings?.allowAddingSections || false
-                          }
-                          onChange={toggleSettingsBoolean}
-                        />
-                        <span>{t('proposal.allowAddingSections', 'Allow students to add/delete sections')}</span>
-                      </div>
-                    </label>
-                  </div>
-
-                  <div>
-                    <label htmlFor="allowAddingCards">
-                      <div className="checkboxField">
-                        <input
-                          type="checkbox"
-                          id="allowAddingCards"
-                          name="allowAddingCards"
-                          checked={inputs?.settings?.allowAddingCards || false}
-                          onChange={toggleSettingsBoolean}
-                        />
-                        <span>{t('proposal.allowAddingCards', 'Allow students to add/delete cards')}</span>
-                      </div>
-                    </label>
-                  </div>
-                </>
-              </AccordionContent>
-            </Accordion>
-          </div>
-        )}
-
-        {(inputs.title !== proposal?.title ||
-          inputs.description !== proposal?.description ||
-          inputs.isTemplate !== proposal?.isTemplate ||
-          inputs.settings !== proposal?.settings ||
-          inputs.isSubmitted !== proposal?.isSubmitted) && (
-          <div>
-            <button
-              className="secondaryBtn"
-              onClick={async () => {
-                setIsTitleEditing(false);
-                const res = await updateProposal();
-              }}
-            >
-              {loading ? t('proposal.saving', 'Saving') : t('proposal.save', 'Save')}
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
