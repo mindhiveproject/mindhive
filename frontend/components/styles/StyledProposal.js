@@ -699,11 +699,15 @@ export const StyledProposal = styled.div`
       line-height: 125%;
       color: #171717;
       background: white;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
     }
     .titleIcon {
       display: grid;
       grid-gap: 20px;
       grid-template-columns: auto 1fr;
+      min-width: 0;
       .title {
         font-family: "Inter";
         font-style: normal;
@@ -711,6 +715,8 @@ export const StyledProposal = styled.div`
         font-size: 40px;
         line-height: 125%;
         color: #171717;
+        min-width: 0;
+        overflow-wrap: break-word;
       }
       .icon {
         display: grid;
@@ -784,8 +790,9 @@ export const StyledProposal = styled.div`
     margin-bottom: 24px;
     border-radius: 16px;
     overflow: visible;
-    background: red;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    // border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
   }
   .templateBannerHeader {
     display: flex;
@@ -793,7 +800,7 @@ export const StyledProposal = styled.div`
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-    background: #5D5763;
+    background: #ffffff;
     padding: 16px 20px;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
@@ -805,7 +812,11 @@ export const StyledProposal = styled.div`
   }
   .templateBannerHeaderLeft {
     min-width: 0;
-    flex: 1;
+    flex: 1 1 0%;
+    display: flex;
+    align-items: center;
+    gap: 12px; /* ensures spacing between multiple elements (e.g. title and subtitle) */
+    flex-wrap: wrap; /* allows for two elements to stack vertically if space runs out */
   }
   .templateBannerHeaderChips {
     display: flex;
@@ -816,40 +827,41 @@ export const StyledProposal = styled.div`
   .templateBanner .templateBannerHeaderToggle {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 12px;
     width: fit-content;
     padding: 16px;
-    background: transparent;
-    border: 0;
+    background: #F6F9F8;
     border-radius: 16px;
+    border: none;
     cursor: pointer;
     flex-shrink: 0;
-    color: var(--MH-Theme-Neutrals-White, #FFFFFF);
+    color: #171717;
     &:hover {
-      background: var(--MH-Theme-Accent-Dark, #6A6A6A);      
+      background: #FDF2D0;
     }
     &:active {
       background: var(--MH-Theme-Primary-Light, #DEF8FB);
       color: var(--MH-Theme-Primary-Dark, #336F8A);
+      .templateBannerTitle {
+        color: inherit;
+      }
       img {
         filter: none;
       }
     }
     &:focus-visible {
-      outline: 2px solid rgba(255, 255, 255, 0.8);
       outline-offset: 2px;
     }
     img {
-      filter: brightness(0) invert(1);
+      flex-shrink: 0;
     }
   }
-  .templateBannerTitle {
+  .templateBanner .templateBannerHeaderToggle .templateBannerTitle {
     font-family: "Inter", sans-serif;
     font-style: normal;
     font-weight: 600;
-    font-size: 20px;
-    line-height: 28px;
-    color: #ffffff;
+    font-size: 16px;
+    color: #5D5763;
     margin: 0;
   }
   .templateBannerSubtitle {
@@ -862,10 +874,129 @@ export const StyledProposal = styled.div`
     margin: 4px 0 0 0;
   }
   .templateBannerContent {
-    padding: 20px;
-    background: #F3F3F3;
+    padding: 0 20px 0 20px;
+    background: #ffffff;
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;
+    border-top: 3px solid #F6F9F8;
+  }
+  .templateBannerContentInner {
+    display: flex;
+    flex-direction: row;
+    min-height: 0;
+  }
+  .templateBannerContentLeft {
+    flex: 0 0 20%;
+    max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 16px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  .templateBannerContentDivider {
+    width: 3px;
+    background: #F6F9F8;
+    align-self: stretch;
+    flex-shrink: 0;
+  }
+  .templateBannerContentRight {
+    flex: 1;
+    min-width: 0;
+    padding-left: 20px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  .templateBannerStudentSettings {
+    .templateBannerStudentSettingsHeading {
+      font-family: "Inter", sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 22px;
+      color: #171717;
+      margin: 0 0 8px 0;
+    }
+    .templateBannerStudentSettingsHelp {
+      font-family: "Inter", sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      color: #625B71;
+      margin: 0 0 16px 0;
+    }
+    .templateBannerStudentSettingsItem {
+      margin-bottom: 12px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+  .templateBannerBoardTypeOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .templateBannerBoardTypeIntro {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    color: #171717;
+    margin: 0 0 4px 0;
+  }
+  .templateBannerBoardTypeMentorNote {
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #625B71;
+    margin: 0 0 16px 0;
+  }
+  .templateBannerBoardTypeOption {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    min-width: 0;
+    width: fit-content;
+    border: 1px solid #A1A1A1;
+    border-radius: 12px;
+    background: #ffffff;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+    transition: border-color 0.2s, background-color 0.2s;
+    &:hover {
+      border-color: #A1A1A1;
+      background: #F6F9F8;
+    }
+    &.templateBannerBoardTypeOptionSelected {
+      border-color: var(--MH-Theme-Primary-Yellow, #F9D978);
+      border-width: 3px;
+      // background: var(--MH-Theme-Primary-Light, #DEF8FB);
+    }
+  }
+  .templateBannerBoardTypeOptionLogos {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;      /* Maximize height for children */
+    justify-content: flex-start;
+    width: fit-content;        /* Fit content for width */
+    height: 100%;              /* Maximize height relative to parent/container */
+    gap: 12px;
+  }
+  .templateBannerBoardTypeLogo {
+    width: 200px;
+    height: 42px;
+    object-fit: contain;
+  }
+  .templateBannerBoardTypeOptionLabel {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #171717;
   }
   .templateBannerSection {
     margin-bottom: 16px;
@@ -910,28 +1041,12 @@ export const StyledProposal = styled.div`
     align-items: center;
     justify-content: center;
     padding: 10px 20px;
-    background: var(--MH-Theme-Primary-Dark, #5D5763);
-    color: var(--MH-Theme-Neutrals-White, #FFFFFF);
-    border: none;
-    border-radius: 8px;
     font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 14px;
     line-height: 20px;
     cursor: pointer;
     max-width: 320px;
-    &:hover:not(:disabled) {
-      background: #2a5d6f;
-    }
-    &:active:not(:disabled) {
-      background: var(--MH-Theme-Primary-Light, #DEF8FB);
-      color: var(--MH-Theme-Primary-Dark, #336F8A);
-    }
-    &:disabled {
-      background: var(--MH-Theme-Neutrals-Lighter, #F3F3F3);
-      color: var(--MH-Theme-Neutrals-Medium, #A1A1A1);
-      cursor: not-allowed;
-    }
   }
 
   .cardPreview {
