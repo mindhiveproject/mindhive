@@ -6,6 +6,7 @@ import styled from "styled-components";
 import Paragraph from "./types/Paragraph";
 import Table from "./types/Table";
 import Graph from "./types/Graph/Graph";
+import StatisticalTest from "./types/StatisticalTests/StatisticalTest";
 
 // Styled container for the widget
 const WidgetContainer = styled.div`
@@ -67,7 +68,7 @@ function Widget({
         value: newContent,
       });
     },
-    [id, onChange]
+    [id, onChange],
   );
 
   // Handle edit button or content click
@@ -76,7 +77,7 @@ function Widget({
       e.stopPropagation(); // Prevent triggering drag
       onSelect(widget);
     },
-    [onSelect, widget]
+    [onSelect, widget],
   );
 
   // Render content based on component type
@@ -89,14 +90,12 @@ function Widget({
         );
       case "TABLE":
         return <Table />;
+      // for visualization of graphs
       case "GRAPH":
-        return (
-          <Graph
-            content={content}
-            handleContentChange={handleChange}
-            sectionId={id}
-          />
-        );
+        return <Graph content={content} sectionId={id} />;
+      // for statistical tests
+      case "STATTEST":
+        return <StatisticalTest content={content} sectionId={id} />;
       default:
         return <div>Unsupported component type: {type}</div>;
     }

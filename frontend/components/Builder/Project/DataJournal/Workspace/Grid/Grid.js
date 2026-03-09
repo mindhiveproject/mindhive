@@ -92,7 +92,7 @@ export default function Grid({
   useEffect(() => {
     if (activeComponent) {
       const freshComponent = components.find(
-        (comp) => comp.id === activeComponent.id
+        (comp) => comp.id === activeComponent.id,
       );
       if (
         freshComponent &&
@@ -133,25 +133,28 @@ export default function Grid({
         });
       }
     },
-    [components, updateComponent]
+    [components, updateComponent],
   );
 
   const debouncedSave = useCallback(
     debounce((componentId) => {
       handleSaveComponent(componentId);
     }, 3000),
-    [handleSaveComponent]
+    [handleSaveComponent],
   );
 
   const handleLayoutChange = useCallback(
     (newLayout) => {
       updateWorkspace({ layout: newLayout });
     },
-    [updateWorkspace]
+    [updateWorkspace],
   );
 
   const handleComponentSelect = useCallback(
     (component) => {
+      if (component?.type === "TABLE") {
+        return; // do not open the component editor for tables
+      }
       if (activeComponent?.id === component?.id) {
         handleSaveComponent(component?.id);
         setActiveComponent(null); // Close the component editor
@@ -159,7 +162,7 @@ export default function Grid({
         setActiveComponent(component); // Open the component editor
       }
     },
-    [activeComponent, setActiveComponent, handleSaveComponent]
+    [activeComponent, setActiveComponent, handleSaveComponent],
   );
 
   const handleAddComponent = useCallback(
@@ -193,7 +196,7 @@ export default function Grid({
       components,
       updateWorkspace,
       setIsAddComponentPanelOpen,
-    ]
+    ],
   );
 
   const handleUpdateComponent = useCallback(
@@ -201,12 +204,12 @@ export default function Grid({
       const updatedComponents = components.map((comp) =>
         comp.id === componentId
           ? { ...comp, content: { ...comp?.content, ...newContent } }
-          : comp
+          : comp,
       );
       updateWorkspace({ vizSections: updatedComponents });
       debouncedSave(componentId);
     },
-    [components, updateWorkspace, debouncedSave]
+    [components, updateWorkspace, debouncedSave],
   );
 
   const handleRemoveComponent = useCallback(
@@ -216,7 +219,7 @@ export default function Grid({
       });
       // Update local workspace
       const updatedComponents = components.filter(
-        (comp) => comp.id !== componentId
+        (comp) => comp.id !== componentId,
       );
       updateWorkspace({ vizSections: updatedComponents });
       if (activeComponent?.id === componentId) {
@@ -229,7 +232,7 @@ export default function Grid({
       updateWorkspace,
       activeComponent,
       setActiveComponent,
-    ]
+    ],
   );
 
   return (
@@ -290,7 +293,7 @@ export default function Grid({
                 >
                   {components.map((widget) => {
                     const layoutItem = layout.find(
-                      (l) => l.i === widget.id
+                      (l) => l.i === widget.id,
                     ) || {
                       i: widget.id,
                       x: 0,

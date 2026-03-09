@@ -1,12 +1,12 @@
 // components/DataJournal/Editors/ComponentEditor.js
-import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
-import GraphEditor from "../Widgets/types/Graph/Editor/GraphEditor"; // Adjust path to GraphEditor
-// Import other type-specific editors if needed (e.g., ParagraphEditor, TableEditor)
+import { useDataJournal } from "../Context/DataJournalContext";
+import GraphEditor from "../Widgets/types/Graph/Editor/GraphEditor";
+import StatisticalTestEditor from "../Widgets/types/StatisticalTests/Editor/StatisticalTestEditor";
 
 import { StyledRightPanel } from "../styles/StyledDataJournal"; // Adjust path if needed
 
 export default function ComponentEditor({ onChange, onSave, onDelete }) {
-  const { activeComponent, pyodide, data, variables } = useDataJournal();
+  const { activeComponent } = useDataJournal();
 
   if (!activeComponent) return null;
 
@@ -36,13 +36,21 @@ export default function ComponentEditor({ onChange, onSave, onDelete }) {
         // Placeholder for Table editor (e.g., configure columns/filters)
         return (
           <div>
-            <h3>Edit Table</h3>
+            {/* <h3>Edit Table</h3> */}
             {/* Add table-specific config here */}
           </div>
         );
       case "GRAPH":
         return (
           <GraphEditor content={content} onChange={onChange} sectionId={id} />
+        );
+      case "STATTEST":
+        return (
+          <StatisticalTestEditor
+            content={content}
+            onChange={onChange}
+            sectionId={id}
+          />
         );
       default:
         return <div>Unsupported component type: {type}</div>;

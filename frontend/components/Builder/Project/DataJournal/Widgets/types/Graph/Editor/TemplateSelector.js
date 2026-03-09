@@ -413,62 +413,62 @@ export const templates = {
   barGraph: sectionCodeStart + "\n" + barGraphCode + "\n" + sectionCodeEnd,
 };
 
-export default function TemplateSelector({ sectionId, onChange }) {
-  const selectGraphType = ({ type, title }) => {
-    const code = templates[type];
-    onChange({
-      componentId: sectionId,
-      newContent: {
-        type,
-        code,
-      },
-    });
-  };
+// export default function TemplateSelector({ sectionId, onChange }) {
+//   const selectGraphType = ({ type, title }) => {
+//     const code = templates[type];
+//     onChange({
+//       componentId: sectionId,
+//       newContent: {
+//         type,
+//         code,
+//       },
+//     });
+//   };
 
-  return (
-    <div className="templates">
-      <div
-        className="template"
-        onClick={() =>
-          selectGraphType({ type: "scatterPlot", title: "Scatter Plot" })
-        }
-      >
-        <div>
-          <img src="/assets/icons/visualize/scatterPlot.svg" />
-        </div>
-        <div className="text">
-          <div className="title">Scatter Plot</div>
-          <div className="description">Shows variables relationship</div>
-        </div>
-      </div>
-      <div
-        className="template"
-        onClick={() =>
-          selectGraphType({ type: "histogram", title: "Histogram" })
-        }
-      >
-        <div>
-          <img src="/assets/icons/visualize/histogram.svg" />
-        </div>
-        <div className="text">
-          <div className="title">Histogram</div>
-          <div className="description">Compare distributions</div>
-        </div>
-      </div>
-      <div
-        className="template"
-        onClick={() =>
-          selectGraphType({ type: "barGraph", title: "Bar Graph" })
-        }
-      >
-        <div>
-          <img src="/assets/icons/visualize/barGraph.svg" />
-        </div>
-        <div className="text">
-          <div className="title">Bar graph</div>
-          <div className="description">Compare quantities</div>
-        </div>
-      </div>
-    </div>
-  );
-}
+//   return (
+//     <div className="templates">
+//       <div
+//         className="template"
+//         onClick={() =>
+//           selectGraphType({ type: "scatterPlot", title: "Scatter Plot" })
+//         }
+//       >
+//         <div>
+//           <img src="/assets/icons/visualize/scatterPlot.svg" />
+//         </div>
+//         <div className="text">
+//           <div className="title">Scatter Plot</div>
+//           <div className="description">Shows variables relationship</div>
+//         </div>
+//       </div>
+//       <div
+//         className="template"
+//         onClick={() =>
+//           selectGraphType({ type: "histogram", title: "Histogram" })
+//         }
+//       >
+//         <div>
+//           <img src="/assets/icons/visualize/histogram.svg" />
+//         </div>
+//         <div className="text">
+//           <div className="title">Histogram</div>
+//           <div className="description">Compare distributions</div>
+//         </div>
+//       </div>
+//       <div
+//         className="template"
+//         onClick={() =>
+//           selectGraphType({ type: "barGraph", title: "Bar Graph" })
+//         }
+//       >
+//         <div>
+//           <img src="/assets/icons/visualize/barGraph.svg" />
+//         </div>
+//         <div className="text">
+//           <div className="title">Bar graph</div>
+//           <div className="description">Compare quantities</div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }

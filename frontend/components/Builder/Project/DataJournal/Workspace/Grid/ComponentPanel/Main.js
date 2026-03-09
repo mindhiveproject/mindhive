@@ -2,6 +2,7 @@
 import { StyledComponentPanel } from "../../../styles/StyledDataJournal"; // Adjust path
 
 import { templates } from "../../../Widgets/types/Graph/Editor/TemplateSelector"; // Adjust path to Templates
+import { testTemplates } from "../../../Widgets/types/StatisticalTests/Editor/TempateSelector";
 
 export default function ComponentPanel({ handleAddComponent }) {
   return (
@@ -109,8 +110,8 @@ export default function ComponentPanel({ handleAddComponent }) {
             onClick={async () =>
               await handleAddComponent({
                 title: "T-Test",
-                type: "GRAPH",
-                content: { type: "tTest", code: templates?.tTest },
+                type: "STATTEST",
+                content: { type: "tTest", code: testTemplates?.tTest },
               })
             }
           >
@@ -128,10 +129,10 @@ export default function ComponentPanel({ handleAddComponent }) {
             onClick={async () =>
               await handleAddComponent({
                 title: "One Way Anova",
-                type: "GRAPH",
+                type: "STATTEST",
                 content: {
                   type: "oneWayAnova",
-                  code: templates?.oneWayAnova,
+                  code: testTemplates?.oneWayAnova,
                 },
               })
             }

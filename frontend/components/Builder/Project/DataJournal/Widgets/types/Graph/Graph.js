@@ -6,8 +6,8 @@ import { useDataJournal } from "../../../Context/DataJournalContext"; // Adjust 
 
 const defaultCode = ``;
 
-export default function Graph({ content, handleContentChange, sectionId }) {
-  const { pyodide, data, variables } = useDataJournal();
+export default function Graph({ content, sectionId }) {
+  const { pyodide, data } = useDataJournal();
 
   const [isRunning, setIsRunning] = useState(false);
   const [output, setOutput] = useState("");
