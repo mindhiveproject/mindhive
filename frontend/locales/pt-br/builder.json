@@ -648,6 +648,7 @@
 		"templateAutoUpdateOff": "Atualização automática: DESATIVADA",
 		"templateAutoUpdateOn": "Atualização automática: ATIVADA",
 		"templateBanner": "Você está editando um modelo de projeto de classe. As alterações podem ser aplicadas a todos os painéis dos alunos.",
+		"templateSectionAdminSettings": "Configurações de administrador",
 		"templateSectionAutoUpdate": "Atualização automática",
 		"templateSectionBoardType": "Tipo de placa",
 		"templateSectionStudentSettings": "Ambientes estudantis",

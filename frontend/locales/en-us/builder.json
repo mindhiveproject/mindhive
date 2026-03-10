@@ -648,6 +648,7 @@
 		"templateAutoUpdateOff": "Auto-update: OFF",
 		"templateAutoUpdateOn": "Auto-update: ON",
 		"templateBanner": "You are editing a class project template. Changes can be applied to all student boards.",
+		"templateSectionAdminSettings": "Admin settings",
 		"templateSectionAutoUpdate": "Auto-update",
 		"templateSectionBoardType": "Board type",
 		"templateSectionStudentSettings": "Student settings",

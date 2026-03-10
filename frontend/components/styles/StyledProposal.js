@@ -932,6 +932,22 @@ export const StyledProposal = styled.div`
       }
     }
   }
+  .templateBannerAdminSettings {
+    .templateBannerAdminSettingsHeading {
+      font-family: "Inter", sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 22px;
+      color: #171717;
+      margin: 0 0 8px 0;
+    }
+    .templateBannerAdminSettingsItem {
+      margin-bottom: 12px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
   .templateBannerBoardTypeOptions {
     display: flex;
     flex-direction: column;
@@ -1566,6 +1582,7 @@ export const StyledProposal = styled.div`
         display: flex;
         flex-direction: column;
         gap: 24px;
+        width: 100%;
       }
     }
     .resourceLinks {
@@ -1676,8 +1693,6 @@ export const StyledProposal = styled.div`
     .proposalCardComments {
       display: grid;
       width: 100%;
-      padding-top: 16px;
-      border-top: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
     }
   }
 `;

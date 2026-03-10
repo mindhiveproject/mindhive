@@ -648,6 +648,7 @@
 		"templateAutoUpdateOff": "Автоматическое обновление: ВЫКЛ.",
 		"templateAutoUpdateOn": "Автоматическое обновление: ВКЛ.",
 		"templateBanner": "Вы редактируете шаблон классного проекта. Изменения могут быть применены ко всем доскам учащихся.",
+		"templateSectionAdminSettings": "Настройки администратора",
 		"templateSectionAutoUpdate": "Автоматическое обновление",
 		"templateSectionBoardType": "Тип платы",
 		"templateSectionStudentSettings": "Студенческие настройки",

@@ -648,6 +648,7 @@
 		"templateAutoUpdateOff": "Mise à jour automatique : désactivée",
 		"templateAutoUpdateOn": "Mise à jour automatique : activée",
 		"templateBanner": "Vous modifiez un modèle de projet de classe. Les modifications peuvent être appliquées à tous les tableaux des élèves.",
+		"templateSectionAdminSettings": "Paramètres d'administration",
 		"templateSectionAutoUpdate": "Mise à jour automatique",
 		"templateSectionBoardType": "Type de carte",
 		"templateSectionStudentSettings": "Environnement étudiant",

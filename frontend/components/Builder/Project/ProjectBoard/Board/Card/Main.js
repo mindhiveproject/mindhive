@@ -1511,32 +1511,80 @@ export default function ProposalCard({
             </div>
             <div className="infoBoard">
               {/* Display Linked Items: Assignments first, then combined Resources */}
-              <div className="linkedItemsSection">
-                {inputs?.assignments?.length > 0 && (
-                  <PreviewSection
-                    title={t("board.expendedCard.previewLinkedAssignments")}
-                    items={inputs?.assignments}
-                    type="assignment"
-                    proposal={proposal}
-                    openAssignmentModal={openAssignmentModalHandler}
-                    user={user}
-                    homeworkStatusByAssignmentId={homeworkStatusByAssignmentId}
-                  />
-                )}
-                {(inputs?.resources?.length > 0 || inputs?.tasks?.length > 0 || inputs?.studies?.length > 0) && (
-                  <PreviewSection
-                    title={t("board.expendedCard.previewLinkedResources")}
-                    sections={[
-                      ...(inputs?.resources?.length > 0 ? [{ items: inputs.resources, type: "resource" }] : []),
-                      ...(inputs?.tasks?.length > 0 ? [{ items: inputs.tasks, type: "task" }] : []),
-                      ...(inputs?.studies?.length > 0 ? [{ items: inputs.studies, type: "study" }] : []),
-                    ]}
-                    proposal={proposal}
-                    openAssignmentModal={openAssignmentModalHandler}
-                    openResourceModal={openResourceModalHandler}
-                    user={user}
-                  />
-                )}
+              {(inputs?.assignments?.length > 0 ||
+                inputs?.resources?.length > 0 ||
+                inputs?.tasks?.length > 0 ||
+                inputs?.studies?.length > 0) && (
+                <div className="linkedItemsSection">
+                  {inputs?.assignments?.length > 0 && (
+                    <PreviewSection
+                      title={t("board.expendedCard.previewLinkedAssignments", "Linked Assignments")}
+                      items={inputs.assignments}
+                      type="assignment"
+                      proposal={proposal}
+                      classId={proposal?.usedInClass?.id}
+                      openAssignmentModal={openAssignmentModalHandler}
+                      user={user}
+                      homeworkStatusByAssignmentId={homeworkStatusByAssignmentId}
+                    />  
+                  )}
+                  {(inputs?.resources?.length > 0 ||
+                    inputs?.tasks?.length > 0 ||
+                    inputs?.studies?.length > 0) && (
+                    <PreviewSection
+                      title={t("board.expendedCard.previewLinkedResources", "Linked Resources")}
+                      sections={[
+                        ...(inputs?.resources?.length > 0
+                          ? [{ items: inputs.resources, type: "resource" }]
+                          : []),
+                        ...(inputs?.tasks?.length > 0
+                          ? [{ items: inputs.tasks, type: "task" }]
+                          : []),
+                        ...(inputs?.studies?.length > 0
+                          ? [{ items: inputs.studies, type: "study" }]
+                          : []),
+                      ]}
+                      proposal={proposal}
+                      classId={proposal?.usedInClass?.id}
+                      openAssignmentModal={openAssignmentModalHandler}
+                      openResourceModal={openResourceModalHandler}
+                      user={user}
+                    />
+                  )}
+                <div
+                  style={{
+                    borderTop: "1px solid #E0E0E0",
+                    width: "100%",
+                  }}
+                  aria-hidden="true"
+                />
+                </div>
+
+              )}
+              <div className="proposalCardComments">
+                <div className="cardSubheader">
+                  {t("mainCard.comments", "Comments")}
+                </div>
+                <TipTapEditor
+                  content={inputs.comment}
+                  onUpdate={(newContent) => {
+                    if (!hasContentChanged) {
+                      setHasContentChanged(true);
+                    }
+                    handleChange({
+                      target: {
+                        name: "comment",
+                        value: newContent,
+                      },
+                    });
+                  }}
+                  editable={true}
+                  limitedToolbar={true}
+                  placeholder={t(
+                    "mainCard.commentsPlaceholder",
+                    "Add your comment here...",
+                  )}
+                />
               </div>
               <Modal
                 open={resourceModalState.open}
@@ -1601,32 +1649,6 @@ export default function ProposalCard({
                   </Button>
                 </Modal.Actions>
               </Modal>
-
-              <div className="proposalCardComments">
-                <div className="cardSubheader">
-                  {t("mainCard.comments", "Comments")}
-                </div>
-                <TipTapEditor
-                  content={inputs.comment}
-                  onUpdate={(newContent) => {
-                    if (!hasContentChanged) {
-                      setHasContentChanged(true);
-                    }
-                    handleChange({
-                      target: {
-                        name: "comment",
-                        value: newContent,
-                      },
-                    });
-                  }}
-                  editable={true}
-                  limitedToolbar={true}
-                  placeholder={t(
-                    "mainCard.commentsPlaceholder",
-                    "Add your comment here...",
-                  )}
-                />
-              </div>
             </div>
           </div>
         </div>

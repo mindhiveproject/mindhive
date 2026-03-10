@@ -19,11 +19,7 @@ import DeleteAssignment from "./Delete";
 
 
 const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
   margin-bottom: 24px;
-
 `;
 
 // Styled edit button for grid (Outline style from Figma)

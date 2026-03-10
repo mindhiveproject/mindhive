@@ -648,6 +648,7 @@
 		"templateAutoUpdateOff": "Actualización automática: DESACTIVADA",
 		"templateAutoUpdateOn": "Actualización automática: activada",
 		"templateBanner": "Estás editando una plantilla de proyecto de clase. Los cambios se pueden aplicar a todos los tableros de estudiantes.",
+		"templateSectionAdminSettings": "Configuración de administrador",
 		"templateSectionAutoUpdate": "Actualización automática",
 		"templateSectionBoardType": "Tipo de tablero",
 		"templateSectionStudentSettings": "Configuración de estudiantes",
