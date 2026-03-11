@@ -3,6 +3,8 @@ import { StyledComponentPanel } from "../../../styles/StyledDataJournal"; // Adj
 
 import { templates } from "../../../Widgets/types/Graph/Editor/TemplateSelector"; // Adjust path to Templates
 import { testTemplates } from "../../../Widgets/types/StatisticalTests/Editor/TempateSelector";
+import { summaryTemplates } from "../../../Widgets/types/Statistics/Editor/TempateSelector";
+import { codeTemplates } from "../../../Widgets/types/Code/Editor/TempateSelector";
 
 export default function ComponentPanel({ handleAddComponent }) {
   return (
@@ -72,7 +74,16 @@ export default function ComponentPanel({ handleAddComponent }) {
             <div>Histogram</div>
           </div>
 
-          <div className="card">
+          <div
+            className="card"
+            onClick={async () =>
+              await handleAddComponent({
+                title: "Code from scratch",
+                type: "CODE",
+                content: { type: "code", code: codeTemplates?.plainCode },
+              })
+            }
+          >
             <div>
               <img
                 src="/assets/dataviz/componentPanel/code.png"
@@ -173,9 +184,10 @@ export default function ComponentPanel({ handleAddComponent }) {
             onClick={async () =>
               await handleAddComponent({
                 title: "Summary",
-                type: "SUMMARY",
+                type: "STATISTICS",
                 content: {
-                  /* Add default summary config if needed */
+                  type: "summary",
+                  code: summaryTemplates?.summary,
                 },
               })
             }
@@ -189,23 +201,28 @@ export default function ComponentPanel({ handleAddComponent }) {
             <div>Summary</div>
           </div>
 
-          <div
-            className="card"
-            onClick={async () =>
-              await handleAddComponent({
-                title: "Media",
-                type: "MEDIA",
-                content: {
-                  /* Add default media config if needed */
-                },
-              })
-            }
-          >
-            <div>
-              <img src="/assets/dataviz/componentPanel/media.png" alt="Media" />
+          {false && (
+            <div
+              className="card"
+              onClick={async () =>
+                await handleAddComponent({
+                  title: "Media",
+                  type: "MEDIA",
+                  content: {
+                    /* Add default media config if needed */
+                  },
+                })
+              }
+            >
+              <div>
+                <img
+                  src="/assets/dataviz/componentPanel/media.png"
+                  alt="Media"
+                />
+              </div>
+              <div>Media</div>
             </div>
-            <div>Media</div>
-          </div>
+          )}
         </div>
       </div>
     </StyledComponentPanel>

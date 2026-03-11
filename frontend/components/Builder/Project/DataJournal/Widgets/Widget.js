@@ -7,6 +7,8 @@ import Paragraph from "./types/Paragraph";
 import Table from "./types/Table";
 import Graph from "./types/Graph/Graph";
 import StatisticalTest from "./types/StatisticalTests/StatisticalTest";
+import Statistics from "./types/Statistics/Statistics";
+import Code from "./types/Code/Code";
 
 // Styled container for the widget
 const WidgetContainer = styled.div`
@@ -96,6 +98,12 @@ function Widget({
       // for statistical tests
       case "STATTEST":
         return <StatisticalTest content={content} sectionId={id} />;
+      // for descriptive statistics
+      case "STATISTICS":
+        return <Statistics content={content} sectionId={id} />;
+      // for user-generated code
+      case "CODE":
+        return <Code content={content} sectionId={id} />;
       default:
         return <div>Unsupported component type: {type}</div>;
     }

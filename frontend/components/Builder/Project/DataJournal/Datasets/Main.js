@@ -97,6 +97,8 @@ export default function Datasets() {
             </div>
           ) : showAddDataset ? (
             <AddDataset
+              projectId={projectId}
+              studyId={studyId}
               onCancel={handleCancel}
               onCreate={handleCreate}
               refetchDatasources={refetch}
