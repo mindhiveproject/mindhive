@@ -1,8 +1,8 @@
+// AddDataset.js
 import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 
-import DatasetNameInput from "./Add/DatasetNameInput";
-import DataSourceSelector from "./Add/DataSourceSelector";
+import DatasetForm from "./Add/DatasetForm";
 
 import { CREATE_DATASOURCE } from "../../../../Mutations/Datasource";
 import { STUDY_TO_JOIN } from "../../../../Queries/Study";
@@ -20,7 +20,6 @@ export default function AddDataset({
   onCreate,
   refetchDatasources,
 }) {
-  const [step, setStep] = useState(1);
   const [datasetName, setDatasetName] = useState("");
   const [dataOrigin, setDataOrigin] = useState("");
   const [file, setFile] = useState(null);
@@ -40,7 +39,6 @@ export default function AddDataset({
       onCompleted: (data) => {
         if (refetchDatasources) refetchDatasources();
         if (onCreate) onCreate(data.createDatasource);
-        setStep(1);
         setDatasetName("");
         setDataOrigin("");
         setFile(null);
@@ -49,43 +47,30 @@ export default function AddDataset({
       onError: (error) => {
         console.error("Mutation error:", error);
       },
-    }
+    },
   );
-
-  const handleNameSubmit = () => {
-    if (datasetName) setStep(2);
-  };
 
   return (
     <StyledDataArea>
       <StyledDataJournal>
         <StyledRightPanel>
-          {step === 1 && (
-            <DatasetNameInput
-              datasetName={datasetName}
-              setDatasetName={setDatasetName}
-              onSubmit={handleNameSubmit}
-              onCancel={onCancel}
-            />
-          )}
-          {step === 2 && (
-            <DataSourceSelector
-              dataOrigin={dataOrigin}
-              setDataOrigin={setDataOrigin}
-              file={file}
-              setFile={setFile}
-              createDatasource={createDatasource}
-              datasetName={datasetName}
-              projectId={projectId}
-              studyId={studyId}
-              studyData={studyData}
-              studyLoading={studyLoading}
-              studyError={studyError}
-              loading={loading}
-              error={error}
-              onCancel={onCancel}
-            />
-          )}
+          <DatasetForm
+            datasetName={datasetName}
+            setDatasetName={setDatasetName}
+            dataOrigin={dataOrigin}
+            setDataOrigin={setDataOrigin}
+            file={file}
+            setFile={setFile}
+            createDatasource={createDatasource}
+            projectId={projectId}
+            studyId={studyId}
+            studyData={studyData}
+            studyLoading={studyLoading}
+            studyError={studyError}
+            loading={loading}
+            error={error}
+            onCancel={onCancel}
+          />
         </StyledRightPanel>
       </StyledDataJournal>
     </StyledDataArea>

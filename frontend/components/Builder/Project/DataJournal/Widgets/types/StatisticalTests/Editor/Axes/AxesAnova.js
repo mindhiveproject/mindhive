@@ -33,22 +33,6 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
     },
   ];
 
-  const connectSelectorsCode = `
-html_output = js.document.getElementById('figure-${sectionId}')
-
-dataFormat= None if js.document.getElementById("dataFormat-${sectionId}") == None else js.document.getElementById("dataFormat-${sectionId}").value
-isWide = dataFormat == "wide"
-
-if isWide: 
-  colMultiple = None if js.document.getElementById("colToAnalyse-${sectionId}") == None else js.document.getElementById("colToAnalyse-${sectionId}")
-  colMultiple_json = colMultiple.value.split(",")
-  columns = colMultiple_json
-
-else: 
-  quantCol = None if js.document.getElementById("valCol-${sectionId}") == None else js.document.getElementById("valCol-${sectionId}").value
-  groupcol = None if js.document.getElementById("groupcol-${sectionId}") == None else js.document.getElementById("groupcol-${sectionId}").value
-`;
-
   const options = variables.map((variable) => ({
     key: variable?.field,
     value: variable?.field,

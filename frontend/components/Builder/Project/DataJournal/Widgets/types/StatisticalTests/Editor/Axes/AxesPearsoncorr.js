@@ -8,15 +8,7 @@ import {
 
 import SelectOne from "../Fields/SelectOne";
 
-export default function Axes({
-  variables,
-  code,
-  pyodide,
-  runCode,
-  sectionId,
-  selectors,
-  handleContentChange,
-}) {
+export default function Axes({ variables, sectionId, selectors, onChange }) {
   const [selectedDataFormat, setSelectedDataFormat] = useState("wide");
   const [activeIndex, setActiveIndex] = useState(-1);
 
@@ -35,29 +27,19 @@ export default function Axes({
     },
   ];
 
-  const connectSelectorsCode = `# get relevant html elements
-html_output = js.document.getElementById('figure-${sectionId}')
-col1 = js.document.getElementById("col1-${sectionId}").value
-col2 = js.document.getElementById("col2-${sectionId}").value`;
-
   const options = variables.map((variable) => ({
     key: variable?.field,
     value: variable?.field,
     text: variable?.displayName || variable?.field,
   }));
 
-  const updateCode = async ({ code }) => {
-    await pyodide.runPythonAsync(connectSelectorsCode);
-    runCode({ code });
-  };
-
   const onSelectorChange = ({ target }) => {
-    handleContentChange({
+    onChange({
+      componentId: sectionId,
       newContent: {
         selectors: { ...selectors, [target?.name]: target?.value },
       },
     });
-    updateCode({ code });
   };
 
   return (

@@ -1,7 +1,10 @@
 // components/DataJournal/Editors/ComponentEditor.js
 import { useDataJournal } from "../Context/DataJournalContext";
+
 import GraphEditor from "../Widgets/types/Graph/Editor/GraphEditor";
 import StatisticalTestEditor from "../Widgets/types/StatisticalTests/Editor/StatisticalTestEditor";
+import StatisticsEditor from "../Widgets/types/Statistics/Editor/StatisticsEditor";
+import CodeEditor from "../Widgets/types/Code/Editor/CodeEditor";
 
 import { StyledRightPanel } from "../styles/StyledDataJournal"; // Adjust path if needed
 
@@ -51,6 +54,18 @@ export default function ComponentEditor({ onChange, onSave, onDelete }) {
             onChange={onChange}
             sectionId={id}
           />
+        );
+      case "STATISTICS":
+        return (
+          <StatisticsEditor
+            content={content}
+            onChange={onChange}
+            sectionId={id}
+          />
+        );
+      case "CODE":
+        return (
+          <CodeEditor content={content} onChange={onChange} sectionId={id} />
         );
       default:
         return <div>Unsupported component type: {type}</div>;
