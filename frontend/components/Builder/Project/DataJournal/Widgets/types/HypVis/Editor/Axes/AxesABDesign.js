@@ -2,19 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Popup, Rating } from "semantic-ui-react";
 
 import AggregateVarSelector from "../Fields/AggregateVarSelector";
-// import reformulateHypothesis from "./ReformulateHypothesis";
 
 export default function Axes({
-  type,
-  variables,
   user,
-  code,
-  pyodide,
-  runCode,
+  variables,
   sectionId,
   selectors,
-  handleContentChange,
-  studyId,
+  onChange,
 }) {
   const [groupNb, setGroupNb] = useState(selectors?.ivConditions || 2); // Default to 2 groups
   const [groupLabels, setGroupLabels] = useState({ group1: "", group2: "" });
@@ -29,8 +23,8 @@ export default function Axes({
       ...prevGroupLabels,
       [group]: newRating,
     }));
-    // console.log('Handling new rating:', selectors);
-    handleContentChange({
+    onChange({
+      componentId: sectionId,
       newContent: { selectors: { ...selectors, [group]: newRating } },
     });
   };
@@ -60,18 +54,6 @@ print("Py code parameters", parameters)
     fontSize: "15px",
   };
 
-  const updateCode = async ({ code, newJsonObject }) => {
-    const updatedConnectSelectorsCode = connectSelectorsCode.replace(
-      "dashboardJSON",
-      JSON.stringify(newJsonObject),
-    );
-    await pyodide.runPythonAsync(updatedConnectSelectorsCode);
-    await pyodide.runPythonAsync(code);
-    if (runCode) {
-      runCode({ code }); // Trigger the runCode function passed from StateManager
-    }
-  };
-
   const copyToClipboard = () => {
     const { dependentVariable, independentVariable, ivConditions } = selectors;
     let textContent = `I predict that the ${
@@ -90,7 +72,6 @@ print("Py code parameters", parameters)
       .writeText(textContent)
       .then(() => {
         alert("Text copied to clipboard: " + textContent);
-        console.log("Text copied to clipboard: " + textContent);
       })
       .catch((err) => {
         console.error("Error copying text: ", err);
@@ -113,7 +94,6 @@ print("Py code parameters", parameters)
       .writeText(textContent)
       .then(() => {
         alert("AI-reformulated hypothesis copied to clipboard: " + textContent);
-        console.log("Text copied to clipboard: " + textContent);
       })
       .catch((err) => {
         console.error("Error copying text: ", err);
@@ -131,8 +111,8 @@ print("Py code parameters", parameters)
   };
 
   const handleAggregateVarChange = (name, value) => {
-    // console.log('Handling aggregate var change:', selectors);
-    handleContentChange({
+    onChange({
+      componentId: sectionId,
       newContent: {
         selectors: { ...selectors, [name]: value },
       },
@@ -140,17 +120,12 @@ print("Py code parameters", parameters)
   };
 
   const handleIvConditionsChange = (e) => {
-    handleContentChange({
+    onChange({
+      componentId: sectionId,
       newContent: { selectors: { ...selectors, ivConditions: e.target.value } },
     });
     handleGroupNbChange(e);
   };
-
-  useEffect(() => {
-    const newJsonObject = { ...selectors };
-    setJsonObject(newJsonObject);
-    updateCode({ code, newJsonObject });
-  }, [selectors]);
 
   return (
     <div className="graph-dashboard">
@@ -170,7 +145,8 @@ print("Py code parameters", parameters)
           name="graphTitle"
           value={selectors.graphTitle || ""}
           onChange={({ target }) =>
-            handleContentChange({
+            onChange({
+              componentId: sectionId,
               newContent: {
                 selectors: { ...selectors, graphTitle: target.value },
               },
@@ -213,7 +189,8 @@ print("Py code parameters", parameters)
             name="dependentVariable"
             value={selectors.dependentVariable || ""}
             onChange={({ target }) =>
-              handleContentChange({
+              onChange({
+                componentId: sectionId,
                 newContent: {
                   selectors: { ...selectors, dependentVariable: target.value },
                 },
@@ -233,7 +210,8 @@ print("Py code parameters", parameters)
             name="independentVariable"
             value={selectors.independentVariable || ""}
             onChange={({ target }) =>
-              handleContentChange({
+              onChange({
+                componentId: sectionId,
                 newContent: {
                   selectors: {
                     ...selectors,

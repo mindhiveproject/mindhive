@@ -59,6 +59,7 @@ export default function Journals({ user, projectId, studyId }) {
     <StyledDataArea>
       <Journal
         user={user}
+        studyId={studyId}
         journalCollections={journalCollections}
         dataJournals={dataJournals}
         journalId={selectedJournal?.id}

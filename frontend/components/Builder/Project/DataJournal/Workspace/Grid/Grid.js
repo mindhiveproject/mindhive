@@ -35,6 +35,8 @@ import Widget from "../../Widgets/Widget";
 import { useDataJournal } from "../../Context/DataJournalContext";
 
 export default function Grid({
+  user,
+  studyId,
   journalCollections,
   dataJournals,
   journal,
@@ -332,6 +334,8 @@ export default function Grid({
           {activeComponent && (
             <StyledRightPanel>
               <ComponentEditor
+                user={user}
+                studyId={studyId}
                 onChange={handleUpdateComponent}
                 onSave={() => handleSaveComponent(activeComponent?.id)}
                 onDelete={() => handleRemoveComponent(activeComponent?.id)}

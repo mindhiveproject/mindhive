@@ -13,7 +13,6 @@ export const useTour = (journalTours) => {
 
       // Prevent multiple tours from starting simultaneously
       if (isStartingTour) {
-        console.log("Tour already starting, ignoring request");
         return;
       }
 

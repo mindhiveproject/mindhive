@@ -5,7 +5,6 @@ import { Tab } from "semantic-ui-react";
 import { useDataJournal } from "../../../../Context/DataJournalContext";
 
 import CodeEditor from "./CodeEditor";
-// import TemplateSelector from "./TemplateSelector";
 
 import OptionsDefault from "./Options/OptionsDefault"; // TODO - TO UPDATE
 import OptionsScatterPlot from "./Options/OptionsScatterPlot";
@@ -101,9 +100,6 @@ export default function GraphEditor({ content, onChange, sectionId }) {
           />
         </div>
       )}
-      {/* {!code && pyodide && (
-        <TemplateSelector sectionId={sectionId} onChange={onChange} />
-      )} */}
     </div>
   );
 }

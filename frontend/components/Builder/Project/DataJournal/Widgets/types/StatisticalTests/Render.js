@@ -71,6 +71,21 @@ quantCol = "${escapePy(s.valCol || "")}"
 groupcol = "${escapePy(s.groupcol || "")}"
           `;
         }
+      } else if (type === "pearsonCorr") {
+        const required = ["col1", "col2"];
+        hasRequired = required.every((key) => !!s[key]);
+
+        if (!hasRequired) {
+          setResult(null);
+          setIsRunning(false);
+          return;
+        }
+
+        // No leading spaces before variable names!
+        variablesCode = `
+col1 = "${escapePy(s.col1 || "")}"
+col2 = "${escapePy(s.col2 || "")}"
+  `.trim(); // .trim() removes leading/trailing newlines & spaces
       }
 
       setIsRunning(true);
@@ -291,6 +306,25 @@ ${funcName}()
               </Table.Cell>
               <Table.Cell>{result.df}</Table.Cell>
             </Table.Row>
+          )}
+
+          {/* Pearson-specific */}
+          {result.type === "pearsonCorr" && (
+            <>
+              <Table.Row>
+                <Table.Cell collapsing style={{ fontWeight: "bold" }}>
+                  Correlation coefficient (r)
+                </Table.Cell>
+                <Table.Cell>{result.r?.toFixed(3) ?? "—"}</Table.Cell>
+              </Table.Row>
+
+              <Table.Row>
+                <Table.Cell collapsing style={{ fontWeight: "bold" }}>
+                  Sample size (valid pairs)
+                </Table.Cell>
+                <Table.Cell>{result.n ?? "—"}</Table.Cell>
+              </Table.Row>
+            </>
           )}
 
           {/* Common */}

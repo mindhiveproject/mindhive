@@ -1,4 +1,4 @@
-// components/DataJournal/Widgets/types/StatisticTest/Controller/StatisticalTestEditor.js
+// components/DataJournal/Widgets/types/HypVis/Editor/HypVisEditor.js
 
 import { Tab } from "semantic-ui-react";
 import { useState } from "react";
@@ -7,12 +7,17 @@ import { useDataJournal } from "../../../../Context/DataJournalContext";
 
 import CodeEditor from "./CodeEditor";
 
-import AxesTtest from "./Axes/AxesTtest";
-import AxesAnova from "./Axes/AxesAnova";
-import AxesPearsonCorr from "./Axes/AxesPearsonCorr";
 import AxesDefault from "./Axes/AxesDefault";
+import AxesABDesign from "./Axes/AxesABDesign";
+import AxesCorrAnalysis from "./Axes/AxesCorrAnalysis";
 
-export default function StatisticalTestEditor({
+import OptionsDefault from "./Options/OptionsDefault";
+import OptionsABDesign from "./Options/OptionsABDesign";
+import OptionsCorrAnalysis from "./Options/OptionsCorrAnalysis";
+
+export default function HypVisEditor({
+  user,
+  studyId,
   content,
   onChange,
   sectionId,
@@ -24,13 +29,18 @@ export default function StatisticalTestEditor({
   const code = content?.code || "";
   const type = content?.type || "";
 
-  const AxisMap = {
-    tTest: AxesTtest,
-    oneWayAnova: AxesAnova,
-    pearsonCorr: AxesPearsonCorr,
+  const AxisTemplateMap = {
+    abDesign: AxesABDesign,
+    corStudy: AxesCorrAnalysis,
   };
 
-  const AxesComp = AxisMap[type] || AxesDefault;
+  const OptionsTemplateMap = {
+    abDesign: OptionsABDesign,
+    corStudy: OptionsCorrAnalysis,
+  };
+
+  const AxesComp = AxisTemplateMap[type] || AxesDefault;
+  const OptionsComp = OptionsTemplateMap[type] || OptionsDefault;
 
   const panes = [
     {
@@ -38,6 +48,8 @@ export default function StatisticalTestEditor({
       render: () => (
         <div style={{ padding: "1rem" }}>
           <AxesComp
+            user={user}
+            studyId={studyId}
             sectionId={sectionId}
             selectors={content?.selectors || {}}
             onChange={onChange}
@@ -56,7 +68,7 @@ export default function StatisticalTestEditor({
 
   return (
     <div className="graph">
-      {/* <h3>Statistical Test: {type ? type.toUpperCase() : "New"}</h3> */}
+      {/* <h3>Hypothesis visualizer: {type ? type.toUpperCase() : "New"}</h3> */}
 
       <Tab
         panes={panes}

@@ -39,7 +39,6 @@ export const initializePyodide = async () => {
 
 // TODO OUTDATED - REMOVE LATER
 export const runCode = async (pyodide, code) => {
-  console.log("CODE FROM UTILS");
   if (!pyodide) {
     throw new Error("Pyodide is not initialized");
   }

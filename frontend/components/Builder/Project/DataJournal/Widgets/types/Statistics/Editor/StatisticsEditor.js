@@ -40,7 +40,7 @@ export default function StatisticsEditor({ content, onChange, sectionId }) {
 
   return (
     <div className="graph">
-      <h3>Summary Statistics</h3>
+      {/* <h3>Summary Statistics</h3> */}
 
       <Tab
         panes={panes}

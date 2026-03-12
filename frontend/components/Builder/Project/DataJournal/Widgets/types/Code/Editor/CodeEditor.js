@@ -21,7 +21,7 @@ export default function CodeEditor({ content, onChange, sectionId }) {
 
   return (
     <div className="graph">
-      <h3>Code</h3>
+      {/* <h3>Code</h3> */}
 
       <Tab
         panes={panes}
