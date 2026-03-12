@@ -92,6 +92,7 @@
 		"noExistingAssignments": "",
 		"noHomework": "कोई होमवर्क नहीं है",
 		"noPlaceholder": "",
+		"noTemplateBoardAssociated": "",
 		"noTemplatesAvailable": "",
 		"notVisibleForStudents": "असाइनमेंट छात्रों के लिए दृश्यमान नहीं है",
 		"open": "खुला",
@@ -684,6 +685,7 @@
 			"save": "",
 			"title": ""
 		},
+		"copy": "",
 		"createFromScratch": "",
 		"creator": "",
 		"dateCreated": "",
@@ -698,13 +700,17 @@
 		"linkedToCardCount": "",
 		"linkError": "",
 		"linkToClass": "",
+		"makeCopyAndEdit": "",
 		"more": "",
 		"noPublicResourcesToLink": "",
 		"noResources": "",
 		"noResourcesToLink": "",
+		"noTemplateBoardAssociated": "",
 		"notFound": "",
+		"owner": "",
 		"preview": "",
 		"projectCard": "",
+		"public": "",
 		"publicResourcesDescription": "",
 		"publicResourcesTitle": "",
 		"published": "",
@@ -721,7 +727,8 @@
 		"unlinkError": "",
 		"unlinkFromClass": "",
 		"unpublish": "",
-		"unpublished": ""
+		"unpublished": "",
+		"you": ""
 	},
 	"reviewed": {
 		"author": "लेखक",

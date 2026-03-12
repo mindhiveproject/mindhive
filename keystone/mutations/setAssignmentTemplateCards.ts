@@ -1,6 +1,12 @@
+import {
+  getTemplateSectionAndCardIndices,
+  getCloneCardAtIndices,
+} from "./utils/templateCloneMatch";
+
 /**
  * Sets an assignment's linked template cards to the given list, and propagates
- * to all student boards. Clone cards are matched by publicId, or section publicId + position.
+ * to all student boards. Clone cards are matched by publicId, or section publicId + position,
+ * or by section/card index when publicId is missing (avoids wrong matches when position is duplicated).
  */
 async function setAssignmentTemplateCards(
   _root: unknown,
@@ -71,24 +77,33 @@ async function setAssignmentTemplateCards(
         }
       }
     } else {
-      const templateSectionPosition = templateCard.section?.position;
       const matchBySectionPublicId =
         templateSectionPublicId != null && templateCardPosition != null;
-      const matchByPosition =
-        templateSectionPosition != null && templateCardPosition != null;
-
-      if (matchBySectionPublicId || matchByPosition) {
+      if (matchBySectionPublicId) {
         for (const board of studentBoards || []) {
           for (const sec of board.sections || []) {
-            const sectionMatches = matchBySectionPublicId
-              ? sec?.publicId === templateSectionPublicId
-              : sec?.position === templateSectionPosition;
-            if (!sectionMatches) continue;
+            if (sec?.publicId !== templateSectionPublicId) continue;
             for (const card of sec.cards || []) {
               if (card?.position === templateCardPosition) {
                 toConnect.push({ id: card.id });
               }
             }
+          }
+        }
+      } else {
+        const indices = await getTemplateSectionAndCardIndices(
+          context,
+          templateBoardId,
+          templateCard
+        );
+        if (indices) {
+          for (const board of studentBoards || []) {
+            const cloneCard = getCloneCardAtIndices(
+              board,
+              indices.sectionIndex,
+              indices.cardIndex
+            );
+            if (cloneCard) toConnect.push(cloneCard);
           }
         }
       }
@@ -118,28 +133,44 @@ async function setAssignmentTemplateCards(
     const oldSectionPosition = oldTemplateCard.section?.position;
     const oldPosition = oldTemplateCard.position;
 
-    for (const board of studentBoards || []) {
-      for (const sec of board.sections || []) {
-        for (const card of sec.cards || []) {
-          const matchByPublicId =
-            oldPublicId && card?.publicId === oldPublicId;
-          const matchBySectionPublicIdAndPosition =
-            oldSectionPublicId != null &&
-            oldPosition != null &&
-            sec?.publicId === oldSectionPublicId &&
-            card?.position === oldPosition;
-          const matchBySectionPositionAndPosition =
-            oldSectionPosition != null &&
-            oldPosition != null &&
-            sec?.position === oldSectionPosition &&
-            card?.position === oldPosition;
-          if (
-            matchByPublicId ||
-            matchBySectionPublicIdAndPosition ||
-            matchBySectionPositionAndPosition
-          ) {
-            toDisconnectStudentFromOldTemplate.push(card.id);
+    if (oldPublicId) {
+      for (const board of studentBoards || []) {
+        for (const sec of board.sections || []) {
+          for (const card of sec.cards || []) {
+            if (card?.publicId === oldPublicId) {
+              toDisconnectStudentFromOldTemplate.push(card.id);
+            }
           }
+        }
+      }
+    } else if (
+      oldSectionPublicId != null &&
+      oldPosition != null
+    ) {
+      for (const board of studentBoards || []) {
+        for (const sec of board.sections || []) {
+          if (sec?.publicId !== oldSectionPublicId) continue;
+          for (const card of sec.cards || []) {
+            if (card?.position === oldPosition) {
+              toDisconnectStudentFromOldTemplate.push(card.id);
+            }
+          }
+        }
+      }
+    } else {
+      const indices = await getTemplateSectionAndCardIndices(
+        context,
+        templateBoardId,
+        oldTemplateCard
+      );
+      if (indices) {
+        for (const board of studentBoards || []) {
+          const cloneCard = getCloneCardAtIndices(
+            board,
+            indices.sectionIndex,
+            indices.cardIndex
+          );
+          if (cloneCard) toDisconnectStudentFromOldTemplate.push(cloneCard.id);
         }
       }
     }

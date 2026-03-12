@@ -92,6 +92,7 @@
 		"noExistingAssignments": "You don't have any existing assignments yet.",
 		"noHomework": "No homework",
 		"noPlaceholder": "This assignment has no predefined placeholder",
+		"noTemplateBoardAssociated": "No template board associated to class",
 		"noTemplatesAvailable": "No templates are available at this time.",
 		"notVisibleForStudents": "The assignment is NOT visible for students",
 		"open": "Open",
@@ -684,6 +685,7 @@
 			"save": "Save",
 			"title": "Connect resource to card"
 		},
+		"copy": "Copy",
 		"createFromScratch": "Create from scratch",
 		"creator": "Creator",
 		"dateCreated": "Date created",
@@ -698,13 +700,17 @@
 		"linkedToCardCount": "{{count}} cards",
 		"linkError": "Failed to link resource.",
 		"linkToClass": "Link to class",
+		"makeCopyAndEdit": "Make a copy and edit",
 		"more": "More",
 		"noPublicResourcesToLink": "No public resources available to link.",
 		"noResources": "No resources linked to this class yet.",
 		"noResourcesToLink": "No resources available to link.",
+		"noTemplateBoardAssociated": "No template board associated to class",
 		"notFound": "Resource not found.",
+		"owner": "Owner",
 		"preview": "Preview",
 		"projectCard": "Project card",
+		"public": "Public",
 		"publicResourcesDescription": "Link public resources shared by the community to this class.",
 		"publicResourcesTitle": "Add a public resource",
 		"published": "Published",
@@ -721,7 +727,8 @@
 		"unlinkError": "Failed to unlink resource.",
 		"unlinkFromClass": "Unlink",
 		"unpublish": "Unpublish",
-		"unpublished": "Unpublished"
+		"unpublished": "Unpublished",
+		"you": "You"
 	},
 	"reviewed": {
 		"author": "Author",

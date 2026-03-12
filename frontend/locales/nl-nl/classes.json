@@ -92,6 +92,7 @@
 		"noExistingAssignments": "Je hebt nog geen opdrachten.",
 		"noHomework": "Geen huiswerk",
 		"noPlaceholder": "Deze opdracht heeft geen vooraf gedefinieerde tijdelijke aanduiding",
+		"noTemplateBoardAssociated": "Er is geen sjabloonbord aan de les gekoppeld.",
 		"noTemplatesAvailable": "Er zijn momenteel geen sjablonen beschikbaar.",
 		"notVisibleForStudents": "De opdracht is NIET zichtbaar voor studenten",
 		"open": "Open",
@@ -684,6 +685,7 @@
 			"save": "Redden",
 			"title": "Koppel de bron aan de kaart."
 		},
+		"copy": "Kopiëren",
 		"createFromScratch": "Creëer vanaf nul",
 		"creator": "Schepper",
 		"dateCreated": "Datum gecreeërd",
@@ -698,13 +700,17 @@
 		"linkedToCardCount": "{{count}} kaarten",
 		"linkError": "Het koppelen van de bron is mislukt.",
 		"linkToClass": "Link naar de les",
+		"makeCopyAndEdit": "Maak een kopie en bewerk deze.",
 		"more": "Meer",
 		"noPublicResourcesToLink": "Er zijn geen openbare bronnen beschikbaar om naar te linken.",
 		"noResources": "Er zijn nog geen bronnen aan deze cursus gekoppeld.",
 		"noResourcesToLink": "Er zijn geen bronnen beschikbaar om naar te linken.",
+		"noTemplateBoardAssociated": "Er is geen sjabloonbord aan de les gekoppeld.",
 		"notFound": "Bron niet gevonden.",
+		"owner": "Eigenaar",
 		"preview": "Voorbeeld",
 		"projectCard": "Projectkaart",
+		"public": "Openbaar",
 		"publicResourcesDescription": "Koppel openbare bronnen die door de gemeenschap worden gedeeld aan deze cursus.",
 		"publicResourcesTitle": "Voeg een openbare bron toe",
 		"published": "Gepubliceerd",
@@ -721,7 +727,8 @@
 		"unlinkError": "Het is niet gelukt om de bron te ontkoppelen.",
 		"unlinkFromClass": "Ontkoppelen",
 		"unpublish": "Niet publiceren",
-		"unpublished": "Niet gepubliceerd"
+		"unpublished": "Niet gepubliceerd",
+		"you": "Jij"
 	},
 	"reviewed": {
 		"author": "Auteur",

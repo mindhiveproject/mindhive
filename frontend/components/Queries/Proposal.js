@@ -192,6 +192,7 @@ export const PROPOSAL_QUERY = gql`
         position
         cards {
           id
+          publicId
           type
           title
           content
@@ -248,6 +249,7 @@ export const GET_CARD_CONTENT = gql`
         id
         title
         content
+        settings
       }
       assignments {
         id
@@ -468,6 +470,9 @@ export const GET_MY_PROPOSALS = gql`
         id
       }
       isTemplate
+      templateForClasses {
+        id
+      }
       createdAt
     }
   }

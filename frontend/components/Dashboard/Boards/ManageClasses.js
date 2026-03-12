@@ -229,7 +229,10 @@ export default function ManageTemplateClasses({ user, boardId }) {
       });
 
       // After saving class associations on the board, replace all class associations for assignments
-      // with only the currently selected classes (not additive)
+      // with only the currently selected classes (not additive).
+      // Initial association for assignments and resources when a class template
+      // is created from a platform/admin template happens in the copyProposalBoard
+      // mutation; this screen is used to edit those associations later.
       const assignments = boardAssignmentsData?.assignments || [];
       
       await Promise.all(

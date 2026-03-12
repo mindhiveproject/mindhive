@@ -56,7 +56,7 @@ export const Resource = list({
     content: json(),
     settings: json({
       defaultValue: {
-        publishedToAssociatedClass: false,
+        publishedToClassIds: [],
       },
     }),
     author: relationship({

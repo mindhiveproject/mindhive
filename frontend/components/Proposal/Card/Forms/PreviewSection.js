@@ -6,6 +6,7 @@ import InfoTooltip from "../../../DesignSystem/InfoTooltip";
 import { MANAGE_FAVORITE_TASKS } from "../../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { stripHtml, TYPO } from "./utils";
+import { isPublishedToClassId } from "../../../Mutations/Resource";
 
 // Base chip layout (all chips)
 const CHIP_BASE_STYLES = {
@@ -412,6 +413,7 @@ export const PreviewSection = ({
   type,
   sections,
   proposal,
+  classId,
   openAssignmentModal,
   openResourceModal,
   user,
@@ -420,8 +422,16 @@ export const PreviewSection = ({
   const { t } = useTranslation("classes");
   const [hoveredItemId, setHoveredItemId] = useState(null);
 
+  const isPublishedToClass = (item) =>
+    classId ? isPublishedToClassId(item?.settings, classId) : true;
+  const filterItemsByType = (itemsToRender, itemType) => {
+    const list = itemsToRender || [];
+    if (itemType === "resource") return list.filter(isPublishedToClass);
+    return list;
+  };
+
   const renderChips = (itemsToRender, itemType) =>
-    (itemsToRender || []).map((item, index) => (
+    filterItemsByType(itemsToRender, itemType).map((item, index) => (
       <ChipByType
         key={`${itemType}-${item.id}-${index}`}
         item={item}
@@ -447,13 +457,14 @@ export const PreviewSection = ({
           </div>
         )}
         <div style={{ display: "flex", flexDirection: "column", gap: "24px"}}>
-          {sections.map((sec, sectionIndex) =>
-            sec.items && sec.items.length > 0 ? (
+          {sections.map((sec, sectionIndex) => {
+            const itemsToShow = filterItemsByType(sec.items, sec.type);
+            return itemsToShow.length > 0 ? (
               <div key={sectionIndex} className="previewGrid" style={{ display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center" }}>
                 {renderChips(sec.items, sec.type)}
               </div>
-            ) : null
-          )}
+            ) : null;
+          })}
         </div>
       </div>
     );

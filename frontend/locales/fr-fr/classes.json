@@ -92,6 +92,7 @@
 		"noExistingAssignments": "Vous n'avez pas encore de devoirs.",
 		"noHomework": "Pas de devoirs",
 		"noPlaceholder": "Cette tâche n'a pas d'espace réservé prédéfini",
+		"noTemplateBoardAssociated": "Aucun modèle de tableau n'est associé à la classe.",
 		"noTemplatesAvailable": "Aucun modèle n'est disponible pour le moment.",
 		"notVisibleForStudents": "Le devoir n'est PAS visible pour les étudiants",
 		"open": "Ouvrir",
@@ -684,6 +685,7 @@
 			"save": "Sauvegarder",
 			"title": "Associer la ressource à la carte"
 		},
+		"copy": "Copié",
 		"createFromScratch": "Créer à partir de zéro",
 		"creator": "Créateur",
 		"dateCreated": "Date créée",
@@ -698,13 +700,17 @@
 		"linkedToCardCount": "{{count}} cartes",
 		"linkError": "Impossible de lier la ressource.",
 		"linkToClass": "Lien vers le cours",
+		"makeCopyAndEdit": "Faites une copie et modifiez-la",
 		"more": "Plus",
 		"noPublicResourcesToLink": "Aucune ressource publique disponible pour établir un lien.",
 		"noResources": "Aucune ressource n'est encore liée à ce cours.",
 		"noResourcesToLink": "Aucune ressource disponible pour établir un lien.",
+		"noTemplateBoardAssociated": "Aucun modèle de tableau n'est associé à la classe.",
 		"notFound": "Ressource introuvable.",
+		"owner": "Propriétaire",
 		"preview": "Aperçu",
 		"projectCard": "Carte de projet",
+		"public": "Publique",
 		"publicResourcesDescription": "Associez à ce cours les ressources publiques partagées par la communauté.",
 		"publicResourcesTitle": "Ajouter une ressource publique",
 		"published": "Publié",
@@ -721,7 +727,8 @@
 		"unlinkError": "Impossible de dissocier la ressource.",
 		"unlinkFromClass": "Dissocier",
 		"unpublish": "Annuler la publication",
-		"unpublished": "Inédit"
+		"unpublished": "Inédit",
+		"you": "Toi"
 	},
 	"reviewed": {
 		"author": "Auteur",

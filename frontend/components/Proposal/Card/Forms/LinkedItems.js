@@ -615,6 +615,7 @@ export default function LinkedItems({
           items={selectedAssignments}
           type="assignment"
           proposal={proposal}
+          classId={proposal?.usedInClass?.id}
           openAssignmentModal={openAssignmentModalHandler}
           user={user}
         />
@@ -629,6 +630,7 @@ export default function LinkedItems({
             ...(selectedStudies.length > 0 ? [{ items: selectedStudies, type: "study" }] : []),
           ]}
           proposal={proposal}
+          classId={proposal?.usedInClass?.id}
           openAssignmentModal={openAssignmentModalHandler}
           openResourceModal={openResourceModalHandler}
           user={user}

@@ -92,6 +92,7 @@
 		"noExistingAssignments": "У вас пока нет действующих заданий.",
 		"noHomework": "Домашнее задание не требуется",
 		"noPlaceholder": "Это задание не имеет предопределенного заполнителя.",
+		"noTemplateBoardAssociated": "К классу не привязана доска шаблонов.",
 		"noTemplatesAvailable": "В настоящий момент шаблоны недоступны.",
 		"notVisibleForStudents": "Задание НЕ видно студентам",
 		"open": "Открыть",
@@ -684,6 +685,7 @@
 			"save": "Сохранять",
 			"title": "Подключить ресурс к карточке"
 		},
+		"copy": "Копировать",
 		"createFromScratch": "Создать с нуля",
 		"creator": "Создатель",
 		"dateCreated": "Дата создания",
@@ -698,13 +700,17 @@
 		"linkedToCardCount": "{{count}} карт",
 		"linkError": "Не удалось связать ресурс.",
 		"linkToClass": "Ссылка на занятие",
+		"makeCopyAndEdit": "Сделайте копию и отредактируйте.",
 		"more": "Более",
 		"noPublicResourcesToLink": "Нет общедоступных ресурсов для размещения ссылок.",
 		"noResources": "К этому курсу пока не привязаны никакие ресурсы.",
 		"noResourcesToLink": "Ресурсы для размещения ссылок отсутствуют.",
+		"noTemplateBoardAssociated": "К классу не привязана доска шаблонов.",
 		"notFound": "Ресурс не найден.",
+		"owner": "Владелец",
 		"preview": "Предварительный просмотр",
 		"projectCard": "Проектная карта",
+		"public": "Общественный",
 		"publicResourcesDescription": "Свяжите общедоступные ресурсы, которыми пользуется сообщество, с этим курсом.",
 		"publicResourcesTitle": "Добавить общедоступный ресурс",
 		"published": "Опубликовано",
@@ -721,7 +727,8 @@
 		"unlinkError": "Не удалось удалить ресурс.",
 		"unlinkFromClass": "Отсоединить",
 		"unpublish": "Отменить публикацию",
-		"unpublished": "Неопубликовано"
+		"unpublished": "Неопубликовано",
+		"you": "Ты"
 	},
 	"reviewed": {
 		"author": "Автор",

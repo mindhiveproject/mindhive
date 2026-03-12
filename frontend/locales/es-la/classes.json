@@ -92,6 +92,7 @@
 		"noExistingAssignments": "Aún no tienes ninguna tarea existente.",
 		"noHomework": "Sin tarea",
 		"noPlaceholder": "Esta tarea no tiene un marcador de posición predefinido",
+		"noTemplateBoardAssociated": "No hay ningún tablero de plantilla asociado a la clase",
 		"noTemplatesAvailable": "No hay plantillas disponibles en este momento.",
 		"notVisibleForStudents": "La tarea NO es visible para los estudiantes.",
 		"open": "Abierto",
@@ -684,6 +685,7 @@
 			"save": "Ahorrar",
 			"title": "Conectar recurso a tarjeta"
 		},
+		"copy": "Copiar",
 		"createFromScratch": "Crear desde cero",
 		"creator": "Creador",
 		"dateCreated": "Fecha de creación",
@@ -698,13 +700,17 @@
 		"linkedToCardCount": "{{count}} tarjetas",
 		"linkError": "No se pudo vincular el recurso.",
 		"linkToClass": "Enlace a la clase",
+		"makeCopyAndEdit": "Hacer una copia y editarla",
 		"more": "Más",
 		"noPublicResourcesToLink": "No hay recursos públicos disponibles para vincular.",
 		"noResources": "Aún no hay recursos vinculados a esta clase.",
 		"noResourcesToLink": "No hay recursos disponibles para vincular.",
+		"noTemplateBoardAssociated": "No hay ningún tablero de plantilla asociado a la clase",
 		"notFound": "Recurso no encontrado.",
+		"owner": "Dueño",
 		"preview": "Avance",
 		"projectCard": "Tarjeta de proyecto",
+		"public": "Público",
 		"publicResourcesDescription": "Vincular recursos públicos compartidos por la comunidad a esta clase.",
 		"publicResourcesTitle": "Agregar un recurso público",
 		"published": "Publicado",
@@ -721,7 +727,8 @@
 		"unlinkError": "No se pudo desvincular el recurso.",
 		"unlinkFromClass": "Desconectar",
 		"unpublish": "Anular publicación",
-		"unpublished": "Inédito"
+		"unpublished": "Inédito",
+		"you": "Tú"
 	},
 	"reviewed": {
 		"author": "Autor",
