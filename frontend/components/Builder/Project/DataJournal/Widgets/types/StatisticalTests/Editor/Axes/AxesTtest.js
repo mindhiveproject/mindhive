@@ -10,7 +10,12 @@ import {
 
 import SelectOne from "../Fields/SelectOne";
 
-export default function Axes({ variables, sectionId, selectors, onChange }) {
+export default function AxesTtest({
+  variables,
+  sectionId,
+  selectors,
+  onChange,
+}) {
   const [selectedDataFormat, setSelectedDataFormat] = useState(
     selectors["dataFormat"] || "long",
   );

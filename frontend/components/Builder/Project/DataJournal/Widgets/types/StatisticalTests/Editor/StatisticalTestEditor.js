@@ -10,7 +10,7 @@ import CodeEditor from "./CodeEditor";
 import AxesDefault from "./Axes/AxesDefault";
 import AxesTtest from "./Axes/AxesTtest";
 import AxesAnova from "./Axes/AxesAnova";
-import AxesPearsonCorr from "./Axes/AxesPearsonCorr";
+import AxesPearsonCorr from "./Axes/AxesPearson";
 
 export default function StatisticalTestEditor({
   content,

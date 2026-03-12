@@ -1,6 +1,11 @@
 import SelectOne from "../Fields/SelectOne";
 
-export default function Axes({ variables, sectionId, selectors, onChange }) {
+export default function AxesDefault({
+  variables,
+  sectionId,
+  selectors,
+  onChange,
+}) {
   const connectSelectorsCode = `# get relevant html elements
 html_output = js.document.getElementById('figure-${sectionId}')
 X = js.document.getElementById("xVariable-${sectionId}").value

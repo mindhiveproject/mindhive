@@ -11,7 +11,12 @@ import {
 import SelectMultiple from "../Fields/SelectMultiple";
 import SelectOne from "../Fields/SelectOne";
 
-export default function Axes({ variables, sectionId, selectors, onChange }) {
+export default function AxesAnova({
+  variables,
+  sectionId,
+  selectors,
+  onChange,
+}) {
   const [selectedDataFormat, setSelectedDataFormat] = useState(
     selectors["dataFormat"] || "long",
   );
