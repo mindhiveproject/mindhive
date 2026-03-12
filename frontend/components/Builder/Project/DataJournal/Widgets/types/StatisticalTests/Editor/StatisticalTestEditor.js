@@ -7,10 +7,10 @@ import { useDataJournal } from "../../../../Context/DataJournalContext";
 
 import CodeEditor from "./CodeEditor";
 
+import AxesDefault from "./Axes/AxesDefault";
 import AxesTtest from "./Axes/AxesTtest";
 import AxesAnova from "./Axes/AxesAnova";
 import AxesPearsonCorr from "./Axes/AxesPearsonCorr";
-import AxesDefault from "./Axes/AxesDefault";
 
 export default function StatisticalTestEditor({
   content,
