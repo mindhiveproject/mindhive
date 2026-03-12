@@ -9,6 +9,7 @@ import Graph from "./types/Graph/Graph";
 import StatisticalTest from "./types/StatisticalTests/StatisticalTest";
 import Statistics from "./types/Statistics/Statistics";
 import Code from "./types/Code/Code";
+import HypVis from "./types/HypVis/HypVis";
 
 // Styled container for the widget
 const WidgetContainer = styled.div`
@@ -104,6 +105,9 @@ function Widget({
       // for user-generated code
       case "CODE":
         return <Code content={content} sectionId={id} />;
+      // for hypothesis visualizer
+      case "HYPVIS":
+        return <HypVis content={content} sectionId={id} />;
       default:
         return <div>Unsupported component type: {type}</div>;
     }

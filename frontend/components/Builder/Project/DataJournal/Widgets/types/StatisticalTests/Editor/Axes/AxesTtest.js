@@ -10,7 +10,12 @@ import {
 
 import SelectOne from "../Fields/SelectOne";
 
-export default function Axes({ variables, sectionId, selectors, onChange }) {
+export default function AxesTtest({
+  variables,
+  sectionId,
+  selectors,
+  onChange,
+}) {
   const [selectedDataFormat, setSelectedDataFormat] = useState(
     selectors["dataFormat"] || "long",
   );
@@ -22,20 +27,6 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
     const newIndex = activeIndex === index ? -1 : index;
     setActiveIndex(newIndex);
   };
-
-  const connectSelectorsCode = `
-html_output = js.document.getElementById('figure-${sectionId}')
-
-dataFormat= None if js.document.getElementById("dataFormat-${sectionId}") == None else js.document.getElementById("dataFormat-${sectionId}").value
-isWide = dataFormat == "wide"
-
-if isWide: 
-  col1 = None if js.document.getElementById("col1-${sectionId}") == None else js.document.getElementById("col1-${sectionId}").value
-  col2 = None if js.document.getElementById("col2-${sectionId}") == None else js.document.getElementById("col2-${sectionId}").value
-else: 
-  quantCol = None if js.document.getElementById("valCol-${sectionId}") == None else js.document.getElementById("valCol-${sectionId}").value
-  groupcol = None if js.document.getElementById("groupcol-${sectionId}") == None else js.document.getElementById("groupcol-${sectionId}").value
-`;
 
   const resourcesList = [
     {

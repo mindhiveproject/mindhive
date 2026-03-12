@@ -52,6 +52,7 @@ function mergeSourceDatas(sourceDatas) {
 
 export default function Journal({
   user,
+  studyId,
   journalCollections,
   dataJournals,
   journalId,
@@ -176,6 +177,8 @@ export default function Journal({
         <div>Loading...</div>
       ) : (
         <Workspace
+          user={user}
+          studyId={studyId}
           journalCollections={journalCollections}
           dataJournals={dataJournals}
           journal={journal}

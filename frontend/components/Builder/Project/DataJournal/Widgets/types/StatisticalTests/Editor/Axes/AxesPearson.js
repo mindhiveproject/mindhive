@@ -8,7 +8,12 @@ import {
 
 import SelectOne from "../Fields/SelectOne";
 
-export default function Axes({ variables, sectionId, selectors, onChange }) {
+export default function AxesPearsonCorr({
+  variables,
+  sectionId,
+  selectors,
+  onChange,
+}) {
   const [selectedDataFormat, setSelectedDataFormat] = useState("wide");
   const [activeIndex, setActiveIndex] = useState(-1);
 

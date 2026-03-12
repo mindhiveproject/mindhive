@@ -111,7 +111,7 @@ export default function StateManager({
 
   // Commenting out the copy to clipboard functionality becuase it has
   // been implemented in the child components
-  
+
   // const copyToClipboard = async () => {
   //   try {
   //     // Retrieve the variable from Pyodide

@@ -5,6 +5,7 @@ import { templates } from "../../../Widgets/types/Graph/Editor/TemplateSelector"
 import { testTemplates } from "../../../Widgets/types/StatisticalTests/Editor/TempateSelector";
 import { summaryTemplates } from "../../../Widgets/types/Statistics/Editor/TempateSelector";
 import { codeTemplates } from "../../../Widgets/types/Code/Editor/TempateSelector";
+import { hypvisTemplates } from "../../../Widgets/types/HypVis/Editor/TemplateSelector";
 
 export default function ComponentPanel({ handleAddComponent }) {
   return (
@@ -113,9 +114,76 @@ export default function ComponentPanel({ handleAddComponent }) {
           </div>
         </div>
 
-        <div className="subtitle">Statistics</div>
+        <div className="subtitle">Hypothesis Visualizer</div>
 
         <div className="cards">
+          <div
+            className="card"
+            onClick={async () =>
+              await handleAddComponent({
+                title: "AB Design",
+                type: "HYPVIS",
+                content: {
+                  type: "abDesign",
+                  code: hypvisTemplates?.abDesign,
+                },
+              })
+            }
+          >
+            <div>
+              <img
+                src="/assets/dataviz/componentPanel/abDesign.png"
+                alt="AB Design"
+              />
+            </div>
+            <div>AB Design</div>
+          </div>
+
+          <div
+            className="card"
+            onClick={async () =>
+              await handleAddComponent({
+                title: "Correlation study",
+                type: "HYPVIS",
+                content: { type: "corStudy", code: hypvisTemplates?.corStudy },
+              })
+            }
+          >
+            <div>
+              <img
+                src="/assets/dataviz/componentPanel/correlationStudy.png"
+                alt="Correlation study"
+              />
+            </div>
+            <div>Correlation study</div>
+          </div>
+        </div>
+
+        <div className="subtitle">Statistical Tests</div>
+
+        <div className="cards">
+          <div
+            className="card"
+            onClick={async () =>
+              await handleAddComponent({
+                title: "Pearson Correlation",
+                type: "STATTEST",
+                content: {
+                  type: "pearsonCorr",
+                  code: testTemplates?.pearsonCorr,
+                },
+              })
+            }
+          >
+            <div>
+              <img
+                src="/assets/dataviz/componentPanel/scatterPlot.png"
+                alt="Pearson Correlation"
+              />
+            </div>
+            <div>Pearson Correlation</div>
+          </div>
+
           <div
             className="card"
             onClick={async () =>

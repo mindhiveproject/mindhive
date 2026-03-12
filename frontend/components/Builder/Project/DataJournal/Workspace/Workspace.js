@@ -8,6 +8,8 @@ import { useDataJournal } from "../Context/DataJournalContext";
 import Grid from "./Grid/Grid"; // Adjust path based on structure
 
 export default function Workspace({
+  user,
+  studyId,
   journalCollections,
   dataJournals,
   journal,
@@ -50,6 +52,8 @@ export default function Workspace({
 
   return (
     <Grid
+      user={user}
+      studyId={studyId}
       journalCollections={journalCollections}
       dataJournals={dataJournals}
       journal={journal}

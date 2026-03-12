@@ -50,8 +50,6 @@ export default function DatasetForm({
   const handleCreateDataset = async () => {
     if (!datasetName || !dataOrigin) return;
 
-    console.log({ projectId });
-
     const mutationVariables = {
       data: {
         title: datasetName,

@@ -5,10 +5,17 @@ import GraphEditor from "../Widgets/types/Graph/Editor/GraphEditor";
 import StatisticalTestEditor from "../Widgets/types/StatisticalTests/Editor/StatisticalTestEditor";
 import StatisticsEditor from "../Widgets/types/Statistics/Editor/StatisticsEditor";
 import CodeEditor from "../Widgets/types/Code/Editor/CodeEditor";
+import HypVisEditor from "../Widgets/types/HypVis/Editor/HypVisEditor";
 
 import { StyledRightPanel } from "../styles/StyledDataJournal"; // Adjust path if needed
 
-export default function ComponentEditor({ onChange, onSave, onDelete }) {
+export default function ComponentEditor({
+  user,
+  studyId,
+  onChange,
+  onSave,
+  onDelete,
+}) {
   const { activeComponent } = useDataJournal();
 
   if (!activeComponent) return null;
@@ -66,6 +73,16 @@ export default function ComponentEditor({ onChange, onSave, onDelete }) {
       case "CODE":
         return (
           <CodeEditor content={content} onChange={onChange} sectionId={id} />
+        );
+      case "HYPVIS":
+        return (
+          <HypVisEditor
+            user={user}
+            studyId={studyId}
+            content={content}
+            onChange={onChange}
+            sectionId={id}
+          />
         );
       default:
         return <div>Unsupported component type: {type}</div>;
