@@ -685,6 +685,7 @@
 			"save": "يحفظ",
 			"title": "ربط المورد بالبطاقة"
 		},
+		"copy": "ينسخ",
 		"createFromScratch": "إنشاء من الصفر",
 		"creator": "المنشئ",
 		"dateCreated": "تاريخ الإنشاء",
@@ -699,14 +700,17 @@
 		"linkedToCardCount": "{{count}} بطاقات",
 		"linkError": "فشل ربط المورد.",
 		"linkToClass": "رابط الفصل",
+		"makeCopyAndEdit": "أنشئ نسخة وقم بتحريرها",
 		"more": "أكثر",
 		"noPublicResourcesToLink": "لا توجد موارد عامة متاحة للربط.",
 		"noResources": "لا توجد موارد مرتبطة بهذه الفئة حتى الآن.",
 		"noResourcesToLink": "لا توجد موارد متاحة للربط.",
 		"noTemplateBoardAssociated": "لا توجد لوحة نموذجية مرتبطة بالصف",
 		"notFound": "لم يتم العثور على المورد.",
+		"owner": "مالك",
 		"preview": "معاينة",
 		"projectCard": "بطاقة المشروع",
+		"public": "عام",
 		"publicResourcesDescription": "قم بربط الموارد العامة التي يشاركها المجتمع بهذه الفئة.",
 		"publicResourcesTitle": "أضف موردًا عامًا",
 		"published": "نشرت",
@@ -723,7 +727,8 @@
 		"unlinkError": "فشل فصل المورد.",
 		"unlinkFromClass": "إلغاء الارتباط",
 		"unpublish": "إلغاء النشر",
-		"unpublished": "غير منشور"
+		"unpublished": "غير منشور",
+		"you": "أنت"
 	},
 	"reviewed": {
 		"author": "مؤلف",

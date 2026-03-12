@@ -685,6 +685,7 @@
 			"save": "",
 			"title": ""
 		},
+		"copy": "",
 		"createFromScratch": "",
 		"creator": "",
 		"dateCreated": "",
@@ -699,14 +700,17 @@
 		"linkedToCardCount": "",
 		"linkError": "",
 		"linkToClass": "",
+		"makeCopyAndEdit": "",
 		"more": "",
 		"noPublicResourcesToLink": "",
 		"noResources": "",
 		"noResourcesToLink": "",
 		"noTemplateBoardAssociated": "",
 		"notFound": "",
+		"owner": "",
 		"preview": "",
 		"projectCard": "",
+		"public": "",
 		"publicResourcesDescription": "",
 		"publicResourcesTitle": "",
 		"published": "",
@@ -723,7 +727,8 @@
 		"unlinkError": "",
 		"unlinkFromClass": "",
 		"unpublish": "",
-		"unpublished": ""
+		"unpublished": "",
+		"you": ""
 	},
 	"reviewed": {
 		"author": "लेखक",

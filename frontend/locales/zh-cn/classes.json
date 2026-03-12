@@ -685,6 +685,7 @@
 			"save": "节省",
 			"title": "将资源连接到卡片"
 		},
+		"copy": "复制",
 		"createFromScratch": "从头开始创建",
 		"creator": "创建者",
 		"dateCreated": "创建日期",
@@ -699,14 +700,17 @@
 		"linkedToCardCount": "{{count}} 张卡片",
 		"linkError": "资源链接失败。",
 		"linkToClass": "课程链接",
+		"makeCopyAndEdit": "复制一份并编辑",
 		"more": "更多的",
 		"noPublicResourcesToLink": "没有可供链接的公开资源。",
 		"noResources": "目前还没有与此课程相关的资源。",
 		"noResourcesToLink": "没有可链接的资源。",
 		"noTemplateBoardAssociated": "没有与该课程关联的模板板",
 		"notFound": "资源未找到。",
+		"owner": "所有者",
 		"preview": "预览",
 		"projectCard": "项目卡",
+		"public": "民众",
 		"publicResourcesDescription": "将社区共享的公共资源链接到本课程。",
 		"publicResourcesTitle": "添加公共资源",
 		"published": "发布",
@@ -723,7 +727,8 @@
 		"unlinkError": "取消资源链接失败。",
 		"unlinkFromClass": "解除链接",
 		"unpublish": "取消发布",
-		"unpublished": "未发表"
+		"unpublished": "未发表",
+		"you": "你"
 	},
 	"reviewed": {
 		"author": "作者",

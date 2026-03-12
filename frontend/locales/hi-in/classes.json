@@ -685,6 +685,7 @@
 			"save": "बचाना",
 			"title": "संसाधन को कार्ड से कनेक्ट करें"
 		},
+		"copy": "प्रतिलिपि",
 		"createFromScratch": "स्क्रैच से बनाएं",
 		"creator": "निर्माता",
 		"dateCreated": "बनाया गया दिनांक",
@@ -699,14 +700,17 @@
 		"linkedToCardCount": "{{count}} कार्ड",
 		"linkError": "संसाधन को लिंक करने में विफल।",
 		"linkToClass": "कक्षा का लिंक",
+		"makeCopyAndEdit": "एक कॉपी बनाएं और संपादित करें",
 		"more": "अधिक",
 		"noPublicResourcesToLink": "लिंक करने के लिए कोई सार्वजनिक संसाधन उपलब्ध नहीं हैं।",
 		"noResources": "इस क्लास से संबंधित कोई संसाधन अभी तक उपलब्ध नहीं हैं।",
 		"noResourcesToLink": "लिंक करने के लिए कोई संसाधन उपलब्ध नहीं हैं।",
 		"noTemplateBoardAssociated": "इस कक्षा से कोई टेम्पलेट बोर्ड संबद्ध नहीं है।",
 		"notFound": "संसाधन नहीं मिला।",
+		"owner": "मालिक",
 		"preview": "पूर्व दर्शन",
 		"projectCard": "प्रोजेक्ट कार्ड",
+		"public": "जनता",
 		"publicResourcesDescription": "समुदाय द्वारा साझा किए गए सार्वजनिक संसाधनों को इस क्लास से लिंक करें।",
 		"publicResourcesTitle": "एक सार्वजनिक संसाधन जोड़ें",
 		"published": "प्रकाशित",
@@ -723,7 +727,8 @@
 		"unlinkError": "संसाधन को अनलिंक करने में विफल।",
 		"unlinkFromClass": "अनलिंक",
 		"unpublish": "अप्रकाशित करें",
-		"unpublished": "अप्रकाशित"
+		"unpublished": "अप्रकाशित",
+		"you": "आप"
 	},
 	"reviewed": {
 		"author": "लेखक",

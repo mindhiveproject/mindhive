@@ -685,6 +685,7 @@
 			"save": "Salvar",
 			"title": "Conectar recurso ao cartão"
 		},
+		"copy": "Cópia de",
 		"createFromScratch": "Crie do zero",
 		"creator": "O Criador",
 		"dateCreated": "Data Criada",
@@ -699,14 +700,17 @@
 		"linkedToCardCount": "{{count}} cartas",
 		"linkError": "Não foi possível vincular o recurso.",
 		"linkToClass": "Link para a aula",
+		"makeCopyAndEdit": "Faça uma cópia e edite",
 		"more": "Mais",
 		"noPublicResourcesToLink": "Não há recursos públicos disponíveis para inclusão de links.",
 		"noResources": "Ainda não existem recursos associados a esta aula.",
 		"noResourcesToLink": "Não há recursos disponíveis para inclusão de links.",
 		"noTemplateBoardAssociated": "Não há quadro modelo associado à turma.",
 		"notFound": "Recurso não encontrado.",
+		"owner": "Proprietário",
 		"preview": "Visualização",
 		"projectCard": "Cartão do projeto",
+		"public": "Público",
 		"publicResourcesDescription": "Inclua links para esta aula nos recursos públicos compartilhados pela comunidade.",
 		"publicResourcesTitle": "Adicionar um recurso público",
 		"published": "Publicados",
@@ -723,7 +727,8 @@
 		"unlinkError": "Falha ao desvincular o recurso.",
 		"unlinkFromClass": "Desvincular",
 		"unpublish": "Despublicar",
-		"unpublished": "Não publicado"
+		"unpublished": "Não publicado",
+		"you": "Você"
 	},
 	"reviewed": {
 		"author": "Autor",
