@@ -11,11 +11,12 @@ import unlinkAssignmentFromTemplateCards from "./unlinkAssignmentFromTemplateCar
 import setAssignmentTemplateCards from "./setAssignmentTemplateCards";
 import setResourceTemplateCards from "./setResourceTemplateCards";
 import applyTemplateBoardChanges from "./applyTemplateBoardChanges";
+import { GraphQLSchema } from "graphql";
 
 // make a fake gql tagged template literal
 const graphql = String.raw;
 
-export const extendGraphqlSchema = (schema) =>
+export const extendGraphqlSchema = (schema: GraphQLSchema) =>
   mergeSchemas({
     schemas: [schema],
     typeDefs: graphql`

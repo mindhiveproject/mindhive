@@ -8,6 +8,7 @@ import ClassMentors from "./Mentors";
 import ClassStudies from "./Studies";
 import ClassProjects from "./Projects";
 import ClassAssignments from "./Assignments/Main";
+import ClassResources from "./Resources/Main";
 import ClassSettings from "./Settings";
 
 import { GET_CLASS } from "../../../Queries/Classes";
@@ -147,6 +148,22 @@ export default function ClassPage({ code, user, query }) {
                 href={{
                   pathname: `/dashboard/myclasses/${code}`,
                   query: {
+                    page: "resources",
+                  },
+                }}
+                className={
+                  page === "resources"
+                    ? "menuTitle selectedMenuTitle"
+                    : "menuTitle"
+                }
+              >
+                <p>{t("main.resources")}</p>
+              </Link>
+
+              <Link
+                href={{
+                  pathname: `/dashboard/myclasses/${code}`,
+                  query: {
                     page: "settings",
                   },
                 }}
@@ -189,6 +206,11 @@ export default function ClassPage({ code, user, query }) {
           <div>
             {page === "assignments" && (
               <ClassAssignments myclass={myclass} user={user} query={query} />
+            )}
+          </div>
+          <div>
+            {page === "resources" && (
+              <ClassResources myclass={myclass} user={user} query={query} />
             )}
           </div>
           <div>

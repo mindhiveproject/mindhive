@@ -1,3 +1,5 @@
+import uniqid from "uniqid";
+
 async function copyProposalBoard(
   root: any,
   {
@@ -117,7 +119,9 @@ async function copyProposalBoard(
                 })),
               }
             : null,
-        isTemplate: isTemplate,
+        // Class templates are identified by templateForClasses; do not set isTemplate
+        // when this copy is for a class (classIdTemplate). isTemplate is for platform-wide templates only.
+        isTemplate: classIdTemplate ? false : isTemplate,
         ...argumentsToCopy,
       },
     },
@@ -149,7 +153,7 @@ async function copyProposalBoard(
           const newCard = await context.db.ProposalCard.createOne(
             {
               data: {
-                publicId: templateCard.publicId,
+                publicId: templateCard.publicId ?? uniqid(),
                 section: {
                   connect: {
                     id: newSection.id,
@@ -197,7 +201,11 @@ async function copyProposalBoard(
             "id"
           );
 
-          // Handle assignments based on whether this is a student copy or teacher copy
+          // Handle assignments based on whether this is a student copy or teacher copy.
+          // When a teacher copies a platform/admin template into a class template
+          // (classIdTemplate is provided, template.templateForClasses is empty),
+          // any new assignments should be associated with that class so they
+          // immediately appear in the class assignment context.
           if (templateCard.assignments?.length > 0) {
             // Check if the template board is a class template (has templateForClasses set)
             const isClassTemplate = template.templateForClasses && template.templateForClasses.length > 0;
@@ -213,7 +221,9 @@ async function copyProposalBoard(
                 },
               });
             } else {
-              // Teacher copying from platform template: create new assignments (not associated to any class)
+              // Teacher copying from platform template: create new assignments.
+              // If this copy is being used as a class template (classIdTemplate),
+              // also associate the new assignments with that class.
               await Promise.all(
                 templateCard.assignments.map(async (a: any) => {
                   await context.db.Assignment.createOne(
@@ -231,6 +241,13 @@ async function copyProposalBoard(
                           a.tags?.length > 0
                             ? { connect: a.tags.map((t: any) => ({ id: t.id })) }
                             : undefined,
+                        ...(classIdTemplate
+                          ? {
+                              classes: {
+                                connect: [{ id: classIdTemplate }],
+                              },
+                            }
+                          : {}),
                         // link to the new card
                         proposalCards: { connect: [{ id: newCard.id }] },
                       },
@@ -245,6 +262,38 @@ async function copyProposalBoard(
       );
     })
   );
+
+  // If this copy is being used as a class template (classIdTemplate),
+  // ensure that any resources linked on the template's cards are also
+  // associated with that class via Resource.classes, so they are
+  // immediately visible in the class context (similar to what
+  // applyTemplateBoardChanges and the ProposalBoard hooks do).
+  if (classIdTemplate && template.sections?.length) {
+    const resourceIdsSet = new Set<string>();
+    for (const section of template.sections || []) {
+      for (const card of section.cards || []) {
+        for (const resource of card.resources || []) {
+          if (resource?.id) {
+            resourceIdsSet.add(resource.id);
+          }
+        }
+      }
+    }
+
+    if (resourceIdsSet.size > 0) {
+      const resourceIds = Array.from(resourceIdsSet);
+      await Promise.all(
+        resourceIds.map((resourceId) =>
+          context.db.Resource.updateOne({
+            where: { id: resourceId },
+            data: {
+              classes: { connect: [{ id: classIdTemplate }] },
+            },
+          })
+        )
+      );
+    }
+  }
 
   return board;
 }

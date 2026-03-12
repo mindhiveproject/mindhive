@@ -362,9 +362,11 @@ export default function AssignmentTab({ assignments, myclass, user }) {
   const LinkedToCardRenderer = (params) => {
     const assignment = params?.data;
     const boardId = params?.context?.templateBoardId ?? myclass?.templateProposal?.id;
-    const templateCards = (assignment?.proposalCards || []).filter(
-      (c) => c?.section?.board?.id === boardId
-    );
+    const templateCards = !boardId
+      ? []
+      : (assignment?.proposalCards || []).filter(
+          (c) => c?.section?.board?.id === boardId
+        );
     const onLinkedCardFilterClick = params?.context?.onLinkedCardFilterClick;
     const handleConnectClick = () => {
       if (!boardId) {
@@ -374,6 +376,21 @@ export default function AssignmentTab({ assignments, myclass, user }) {
       setAssignmentForConnectModal(assignment);
     };
     if (templateCards.length === 0) {
+      if (!boardId) {
+        return (
+          <Link
+            href={{
+              pathname: `/dashboard/myclasses/${myclass?.code}`,
+              query: { page: "projects" },
+            }}
+            style={{ ...chipButtonStyle, display: "flex", alignItems: "center", textDecoration: "none" }}
+          >
+            <LinkedCardChip $placeholder>
+              {t("assignment.noTemplateBoardAssociated", "No template board associated to class")}
+            </LinkedCardChip>
+          </Link>
+        );
+      }
       return (
         <button
           type="button"
@@ -402,7 +419,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
           width: "100%",
           height: "1px",
           background: "#cccccc",
-          margin: "8px 8px",
+          margin: "8px 0px",
           verticalAlign: "middle",
           alignSelf: "center"
         }}
@@ -430,6 +447,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
               alignItems: "center",
               flexWrap: "wrap",
               gap: "0px",
+              width: "100%",
             }}
           >
             {i > 0 && separator}
@@ -466,7 +484,10 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     const templateBoardId = params?.context?.templateBoardId ?? myclass?.templateProposal?.id;
     const handleClick = () => {
       if (!templateBoardId) {
-        alert(t("assignment.connectModal.noTemplate", "No template board for this class."));
+        router.push({
+          pathname: `/dashboard/myclasses/${myclass?.code}`,
+          query: { page: "projects" },
+        });
         return;
       }
       setAssignmentForConnectModal(assignment);
@@ -583,6 +604,7 @@ export default function AssignmentTab({ assignments, myclass, user }) {
     valueGetter: (params) => {
       const a = params?.data;
       const templateBoardId = params?.context?.templateBoardId;
+      if (!templateBoardId) return "";
       const templateCards = (a?.proposalCards || []).filter(
         (c) => c?.section?.board?.id === templateBoardId
       );

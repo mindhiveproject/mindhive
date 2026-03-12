@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import ProposalHeader from "./Header";
 import ProposalBoard from "./Board";
 import ProposalCardWrapper from "../Card/Wrapper";
+import useTemplatePropagation from "../../../../../Proposal/Builder/useTemplatePropagation";
 
 import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
@@ -32,6 +33,19 @@ export default function ProposalBuilder({
       ],
     }
   );
+
+  const {
+    autoUpdateStudentBoards,
+    handleAutoUpdateChange,
+    hasUnpropagatedChanges,
+    markUnpropagatedChange,
+    clearUnpropagatedChange,
+    propagateToClones,
+    propagateLoading,
+  } = useTemplatePropagation({
+    proposalId: proposal?.id,
+    refetchQueries,
+  });
 
   const [internalPage, setInternalPage] = useState("board");
   const [internalCard, setInternalCard] = useState(null);
@@ -71,8 +85,7 @@ export default function ProposalBuilder({
           {isPreview ? (
             <>
               <h2>
-                {t("proposal.previewHeader", "Preview of proposal template")}
-                {" "}
+                {t("proposal.previewHeader", "Preview of proposal template")}{" "}
                 <span className="templateName">{proposal.title}</span>
               </h2>
               <p>{proposal.description}</p>
@@ -85,6 +98,12 @@ export default function ProposalBuilder({
               refetchQueries={refetchQueries}
               isPDF={isPDF}
               setIsPDF={setIsPDF}
+              autoUpdateStudentBoards={autoUpdateStudentBoards}
+              onAutoUpdateChange={handleAutoUpdateChange}
+              propagateToClones={propagateToClones}
+              hasUnpropagatedChanges={hasUnpropagatedChanges}
+              onPropagationSuccess={clearUnpropagatedChange}
+              isPropagatingToClones={propagateLoading}
             />
           ) : null}
           {proposal && (
@@ -92,6 +111,10 @@ export default function ProposalBuilder({
               proposalId={proposal?.id}
               openCard={openCard}
               isPreview={isPreview}
+              proposalBuildMode={proposalBuildMode}
+              autoUpdateStudentBoards={autoUpdateStudentBoards}
+              propagateToClones={propagateToClones}
+              onTemplateChangedWithoutPropagation={markUnpropagatedChange}
             />
           )}
         </>

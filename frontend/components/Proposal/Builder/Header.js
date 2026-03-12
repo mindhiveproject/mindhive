@@ -11,6 +11,7 @@ import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../Queries/Proposal";
 import InfoTooltip from "../../DesignSystem/InfoTooltip";
 import Chip from "../../DesignSystem/Chip";
 import Button from "../../DesignSystem/Button";
+import { isClassTemplateBoard } from "../../Utils/proposalBoard";
 
 export default function ProposalHeader({
   user,
@@ -29,9 +30,10 @@ export default function ProposalHeader({
   const [applyLoading, setApplyLoading] = useState(false);
   const [templateBannerExpanded, setTemplateBannerExpanded] = useState(false);
   const [templateBannerSection, setTemplateBannerSection] = useState('autoUpdate');
+  const isClassTemplate = isClassTemplateBoard(proposal);
   const isTemplateWithClones =
     proposalBuildMode &&
-    proposal?.prototypeFor?.length > 0;
+    (proposal?.prototypeFor?.length > 0 || isClassTemplate);
   const cloneCount = proposal?.prototypeFor?.length ?? 0;
 
   const handleSaveAndUpdateStudentBoards = async () => {
@@ -230,12 +232,28 @@ export default function ProposalHeader({
                   selected={templateBannerSection === "boardType"}
                   onClick={() => setTemplateBannerSection("boardType")}
                 />
+                {proposalBuildMode && user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+                  <Chip
+                    shape="square"
+                    label={t("proposal.templateSectionAdminSettings", "Admin settings")}
+                    selected={templateBannerSection === "adminSettings"}
+                    onClick={() => setTemplateBannerSection("adminSettings")}
+                  />
+                )}
               </div>
               <div className="templateBannerContentDivider" aria-hidden="true" />
               <div className="templateBannerContentRight">
                 {templateBannerSection === "autoUpdate" && (
                   <>
                     <div className="templateBannerSection">
+                      {isClassTemplate && (
+                        <Chip
+                          shape="pill"
+                          leading={<img src="/assets/icons/info.svg" alt="" style={{ transform: "rotate(180deg)" }} />}
+                          label={t("proposal.classTemplateLabel", "This board is a class template")}
+                          style={{ fontSize: "12px", fontWeight: "600", lineHeight: "18px", padding: "4px 12px", marginBottom: "16px" }}
+                        />
+                      )}
                       <div className="templateBannerSectionHeading">
                         {t("proposal.whatWillBeUpdated", "What will be updated")}
                       </div>
@@ -288,18 +306,6 @@ export default function ProposalHeader({
                     <p className="templateBannerStudentSettingsHelp">
                       {t("proposal.advancedOptionsHelp", "Checking the boxes below enables students to modify the board. Check in with the MindHive team if you're unsure what this means.")}
                     </p>
-                    {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
-                      <div className="templateBannerStudentSettingsItem">
-                        <Checkbox
-                          toggle
-                          id="isTemplate"
-                          name="isTemplate"
-                          checked={!!inputs.isTemplate}
-                          onChange={(_, { name }) => toggleBoolean({ target: { name } })}
-                          label={t("proposal.makeTemplate", "Make this project board a public template")}
-                        />
-                      </div>
-                    )}
                     <div className="templateBannerStudentSettingsItem">
                       <Checkbox
                         toggle
@@ -338,6 +344,23 @@ export default function ProposalHeader({
                         checked={!!inputs?.settings?.allowAddingCards}
                         onChange={(_, { name, checked }) => toggleSettingsBoolean({ target: { name, checked } })}
                         label={t("proposal.allowAddingCards", "Allow students to add/delete cards")}
+                      />
+                    </div>
+                  </div>
+                )}
+                {templateBannerSection === "adminSettings" && user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+                  <div className="templateBannerAdminSettings">
+                    <h2 className="templateBannerAdminSettingsHeading">
+                      {t("proposal.templateSectionAdminSettings", "Admin settings")}
+                    </h2>
+                    <div className="templateBannerAdminSettingsItem">
+                      <Checkbox
+                        toggle
+                        id="isTemplate"
+                        name="isTemplate"
+                        checked={!!inputs.isTemplate}
+                        onChange={(_, { name }) => toggleBoolean({ target: { name } })}
+                        label={t("proposal.makeTemplate", "Make this project board a public template")}
                       />
                     </div>
                   </div>

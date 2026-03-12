@@ -16,6 +16,7 @@ function Inner(props) {
   };
 
   const createSection = (id) => {
+    const publicId = uuidv1();
     props.onCreateSection({
       variables: {
         boardId: id,
@@ -24,6 +25,7 @@ function Inner(props) {
           props.sections && props.sections.length > 0
             ? props.sections[props.sections.length - 1].position + 16384
             : 16384,
+        publicId,
       },
       update: (cache, { data: { createProposalSection } }) => {
         const data = cache.readQuery({
@@ -58,6 +60,7 @@ function Inner(props) {
             props.sections && props.sections.length > 0
               ? props.sections[props.sections.length - 1].position + 16384
               : 16384,
+          publicId,
           cards: [],
         },
       },

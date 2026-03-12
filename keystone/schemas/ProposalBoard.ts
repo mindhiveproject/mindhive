@@ -123,7 +123,7 @@ export const ProposalBoard = list({
     }),
     description: text(),
     isDefault: checkbox({ isFilterable: true }),
-    isTemplate: checkbox({ isFilterable: true }),
+    isTemplate: checkbox({ isFilterable: true }), // Reserved for platform-wide templates (admin-only). For class templates, use templateForClasses; do not rely on isTemplate for class-template logic.
     isSubmitted: checkbox({ isFilterable: true }),
     isMain: checkbox({ isFilterable: true }),
     isHidden: checkbox({ isFilterable: true }),

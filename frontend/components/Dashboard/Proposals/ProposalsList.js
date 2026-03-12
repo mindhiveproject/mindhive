@@ -47,7 +47,12 @@ export default function ProposalsList({ query, user }) {
               <p>{proposal?.title}</p>
               <p>{proposal?.creator?.username}</p>
               <p>{proposal?.isSubmitted ? "Yes" : "No"}</p>
-              <p>{proposal?.isTemplate ? "Yes" : "No"}</p>
+              <p>
+                {proposal?.isTemplate ? "Platform template" : "—"}
+                {proposal?.templateForClasses?.length > 0 && (
+                  <> · Class template ({proposal.templateForClasses.length})</>
+                )}
+              </p>
               <p>{moment(proposal?.createdAt).format("MMMM D, YYYY")}</p>
             </div>
           </Link>

@@ -3,9 +3,26 @@
  * Used by applyTemplateBoardChanges mutation.
  */
 
+const uniqid = require("uniqid") as () => string;
+
+/**
+ * Returns true when the board is used as a class template (has at least one
+ * class in templateForClasses). Use this instead of isTemplate for class-template
+ * logic; isTemplate is reserved for platform-wide templates (admin-only).
+ */
+export function isClassTemplateBoard(board: {
+  templateForClasses?: Array<{ id: string }> | null;
+} | null): boolean {
+  return Boolean(
+    board?.templateForClasses && board.templateForClasses.length > 0
+  );
+}
+
 const TEMPLATE_QUERY = `
   id
   publicId
+  templateForClasses { id }
+  clonedFrom { id }
   sections {
     id
     publicId
@@ -55,6 +72,8 @@ const CLONE_BOARD_QUERY = `
 export type TemplateBoard = {
   id: string;
   publicId?: string | null;
+  templateForClasses?: Array<{ id: string }>;
+  clonedFrom?: { id: string } | null;
   sections: Array<{
     id: string;
     publicId?: string | null;
@@ -331,7 +350,7 @@ export async function syncCardsToClone(
             shareType: tc.shareType ?? undefined,
             position,
             ...(overwriteContent ? { content: tc.content ?? undefined } : {}),
-            ...(tc.publicId ? { publicId: tc.publicId } : {}),
+            publicId: tc.publicId ?? uniqid(),
             settings: mergedSettings,
             resources: { set: (tc.resources ?? []).map((r) => ({ id: r.id })) },
             assignments: { set: (tc.assignments ?? []).map((a) => ({ id: a.id })) },
@@ -343,7 +362,7 @@ export async function syncCardsToClone(
         await context.db.ProposalCard.createOne({
           data: {
             section: { connect: { id: cloneSectionId } },
-            ...(tc.publicId ? { publicId: tc.publicId } : {}),
+            publicId: tc.publicId ?? uniqid(),
             title: tc.title,
             description: tc.description ?? undefined,
             type: tc.type ?? undefined,

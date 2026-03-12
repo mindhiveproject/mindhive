@@ -227,6 +227,7 @@ const Section = ({
       return alert("Please enter a title");
     }
     setCardName("");
+    const publicId = uuidv1();
     const newCard = await createCard({
       variables: {
         boardId,
@@ -236,6 +237,7 @@ const Section = ({
           cards && cards.length > 0
             ? cards[cards.length - 1].position + 16384
             : 16384,
+        publicId,
         settings: { status: "Not started" },
       },
       update: (cache, { data: { createProposalCard } }) => {
@@ -288,6 +290,7 @@ const Section = ({
           },
           assignedTo: [],
           settings: { status: "Not started" },
+          publicId,
         },
       },
     });

@@ -2,11 +2,11 @@ import gql from "graphql-tag";
 
 /** Default Resource settings; matches Keystone schema defaultValue. */
 export const DEFAULT_RESOURCE_SETTINGS = {
-  publishedToAssociatedClass: false,
+  publishedToClassIds: [],
 };
 
 /**
- * Merges partial settings with defaults so publishedToAssociatedClass is always present.
+ * Merges partial settings with defaults so publishedToClassIds is always present.
  * Use when reading or sending Resource.settings to respect the schema default.
  */
 export function mergeResourceSettings(settings) {
@@ -14,6 +14,16 @@ export function mergeResourceSettings(settings) {
     ...DEFAULT_RESOURCE_SETTINGS,
     ...(settings && typeof settings === "object" ? settings : {}),
   };
+}
+
+/**
+ * Returns true if the resource is published for the given class (by class.id).
+ */
+export function isPublishedToClassId(settings, classId) {
+  if (!classId) return false;
+  const merged = mergeResourceSettings(settings);
+  const ids = merged.publishedToClassIds;
+  return Array.isArray(ids) && ids.includes(classId);
 }
 
 // create new resource

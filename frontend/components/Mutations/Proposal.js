@@ -119,6 +119,7 @@ export const CREATE_SECTION = gql`
     $title: String!
     $description: String
     $position: Float!
+    $publicId: String
   ) {
     createProposalSection(
       data: {
@@ -126,12 +127,14 @@ export const CREATE_SECTION = gql`
         title: $title
         description: $description
         position: $position
+        publicId: $publicId
       }
     ) {
       id
       title
       description
       position
+      publicId
       cards {
         id
       }

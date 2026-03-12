@@ -188,6 +188,7 @@ export const GET_CLASS_RESOURCES = gql`
       title
       slug
       settings
+      isPublic
       createdAt
       updatedAt
       classes {
@@ -196,6 +197,9 @@ export const GET_CLASS_RESOURCES = gql`
       author {
         id
         username
+      }
+      collaborators {
+        id
       }
       proposalCards {
         id

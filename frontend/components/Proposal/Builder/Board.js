@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import sortBy from "lodash/sortBy";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
+import { v1 as uuidv1 } from "uuid";
 
 import Inner from "./Inner";
 import useTranslation from "next-translate/useTranslation";
@@ -14,6 +16,7 @@ import {
   UPDATE_SECTION,
   DELETE_SECTION,
 } from "../../Mutations/Proposal";
+import { isClassTemplateBoard } from "../../Utils/proposalBoard";
 
 const Board = ({
   proposalId,
@@ -36,6 +39,7 @@ const Board = ({
   const [createSectionMut, createSectionState] = useMutation(CREATE_SECTION);
   const [updateSectionMut, updateSectionState] = useMutation(UPDATE_SECTION);
   const [deleteSectionMut, deleteSectionState] = useMutation(DELETE_SECTION);
+  const [updateCardEdit] = useMutation(UPDATE_CARD_EDIT);
 
   const hasClones = proposal?.prototypeFor?.length > 0;
 
@@ -88,6 +92,7 @@ const Board = ({
   );
 
   const [errors, setErrors] = useState([]);
+  const backfillPublicIdDoneRef = useRef(null);
 
   useEffect(() => {
     if (proposal) {
@@ -105,6 +110,41 @@ const Board = ({
       setSections(sortedCardsSections);
     }
   }, [proposal]);
+
+  useEffect(() => {
+    if (!proposal?.id || !isClassTemplateBoard(proposal)) return;
+    if (!Array.isArray(proposal.sections)) return;
+    if (backfillPublicIdDoneRef.current === proposal.id) return;
+
+    const sectionsWithCards = proposal.sections || [];
+    const cardsWithoutPublicId = sectionsWithCards
+      .flatMap((section) => section?.cards || [])
+      .filter((card) => card && !card.publicId);
+
+    if (cardsWithoutPublicId.length === 0) {
+      backfillPublicIdDoneRef.current = proposal.id;
+      return;
+    }
+
+    cardsWithoutPublicId.forEach((card) => {
+      updateCardEdit({
+        variables: {
+          id: card.id,
+          input: {
+            publicId: uuidv1(),
+          },
+        },
+      }).catch((e) => {
+        // eslint-disable-next-line no-console
+        console.error(
+          "Failed to backfill card publicId in Proposal Board:",
+          e
+        );
+      });
+    });
+
+    backfillPublicIdDoneRef.current = proposal.id;
+  }, [proposal, updateCardEdit]);
 
   // Check for duplicate action cards only in proposalBuildMode
   const actionTypes = [

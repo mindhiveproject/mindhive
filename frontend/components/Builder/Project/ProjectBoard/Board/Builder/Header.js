@@ -16,6 +16,7 @@ import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
 import { useRef, useState } from "react";
 
 import AddCollaboratorModal from "./AddCollaboratorModal";
+import { isClassTemplateBoard } from "../../../../../Utils/proposalBoard";
 
 export default function ProposalHeader({
   user,
@@ -461,6 +462,12 @@ export default function ProposalHeader({
                 />
               </label>
             </div>
+
+            {isClassTemplateBoard(proposal) && (
+              <div style={{ marginBottom: "8px", fontSize: "14px", color: "#5D5763" }}>
+                {t("header.classTemplateReadOnly", "Class template (used by class board)")}
+              </div>
+            )}
 
             {user?.permissions.map((p) => p?.name).includes("ADMIN") && (
               <>
