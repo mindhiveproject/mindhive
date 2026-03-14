@@ -11,7 +11,10 @@ const axios = require("axios");
 require("dotenv").config();
 
 const { Client } = require("@notionhq/client");
-const notion = new Client({ auth: process.env.NOTION_KEY });
+const notion = new Client({
+  auth: process.env.NOTION_KEY,
+  notionVersion: "2025-09-03",
+});
 
 const endpoint = `http://localhost:4444/api/graphql`;
 const prodEndpoint = `https://backend.mindhive.science/api/graphql`;
@@ -68,14 +71,30 @@ app
       const { pageId } = req.query;
       console.log("Received pageId:", pageId);
 
+      if (!pageId) {
+        return res.status(400).json({ error: "Missing pageId query parameter" });
+      }
+
       try {
+        const dbResponse = await notion.databases.retrieve({
+          database_id: pageId,
+        });
+        const dataSources = dbResponse.data_sources;
+        if (!dataSources || dataSources.length === 0) {
+          return res.status(502).json({
+            error:
+              "Database has no data sources; Notion API 2025-09-03 requires at least one data source.",
+          });
+        }
+        const dataSourceId = dataSources[0].id;
+
         let results = [];
         let hasMore = true;
         let start_cursor = undefined;
 
         while (hasMore) {
-          const response = await notion.databases.query({
-            database_id: pageId,
+          const response = await notion.dataSources.query({
+            data_source_id: dataSourceId,
             start_cursor,
             page_size: 100, // max allowed
           });
@@ -83,9 +102,23 @@ app
           hasMore = response.has_more;
           start_cursor = response.next_cursor;
         }
-        res.json(results); // Return all pages (rows) of the database
+        res.json(results); // Return all pages (rows) of the data source
       } catch (error) {
         console.error("Error retrieving Notion database pages:", error);
+        const code = error?.code;
+        const body = error?.body;
+        const isValidationError =
+          body?.code === "validation_error" ||
+          (body?.message &&
+            (String(body.message).includes("multiple_data_sources_for_database") ||
+              String(body.message).includes("minimum_api_version")));
+        if (isValidationError) {
+          return res.status(400).json({
+            error:
+              "Notion API validation error. This integration uses API version 2025-09-03 and data source resolution.",
+            details: body?.message || code,
+          });
+        }
         res
           .status(500)
           .json({ error: "Failed to retrieve Notion database pages" });
