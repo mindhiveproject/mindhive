@@ -6,6 +6,7 @@ import {
 } from "@keystone-6/core/fields";
 
 import { allowAll } from "@keystone-6/core/access";
+import { Session } from "../types";
 
 export const YQGenAI = list({
   access: {
@@ -16,8 +17,8 @@ export const YQGenAI = list({
       delete: () => true,
     },
     filter: {
-      query: ({ session }) => {
-        if (session?.data.permissions?.canAccessAdminUI) return true;
+      query: ({ session }: {session?: Session}) => {
+        if (session?.data?.permissions?.some(p => p.canAccessAdminUI)) return true;
         return {
           author: {
             id: {

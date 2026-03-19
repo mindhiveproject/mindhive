@@ -124,7 +124,7 @@ const { withAuth } = createAuth({
   //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
 
   // Adding ID to session data
-  sessionData: `id username permissions { ${permissionsList.join(" ")} }`,
+  sessionData: `id username permissions { name ${permissionsList.join(" ")} }`,
   secretField: "password",
 
   // WARNING: remove initFirstItem functionality in production
