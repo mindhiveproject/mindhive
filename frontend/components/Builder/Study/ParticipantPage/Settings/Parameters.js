@@ -6,7 +6,7 @@ export default function Parameters({
   handleChange,
   handleMultipleUpdate,
 }) {
-  const settings = study.settings || {
+  const defaultSettings = {
     forbidRetake: true,
     hideParticipateButton: false,
     showEmailNotificationPropmt: false,
@@ -18,6 +18,13 @@ export default function Parameters({
     useExternalDevices: false,
     sonaId: false,
     minorsBlocked: false,
+  };
+
+  // Merge defaults to ensure missing keys still have a stable boolean value.
+  // Also avoid mutating `study.settings` directly (Apollo cache objects can be frozen).
+  const settings = {
+    ...defaultSettings,
+    ...(study.settings || {}),
   };
 
   // settings that are shown only to students
@@ -35,8 +42,12 @@ export default function Parameters({
 
   const handleSettingsChange = (e) => {
     const { name } = e.target;
-    settings[name] = !settings[name];
-    handleMultipleUpdate({ settings, unsavedChanges: true });
+    const updatedSettings = {
+      ...settings,
+      [name]: !settings[name],
+    };
+
+    handleMultipleUpdate({ settings: updatedSettings, unsavedChanges: true });
   };
 
   const hasIRBAccess =

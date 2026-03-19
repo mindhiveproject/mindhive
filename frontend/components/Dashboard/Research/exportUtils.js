@@ -194,8 +194,11 @@ const scopeFilterMap = {
 const hasResearchAccess = (user) => {
   const permissions = user?.permissions?.map((permission) => permission?.name);
   if (!permissions || permissions.length === 0) return false;
-  if (permissions.includes("ADMIN")) return true;
-  return permissions.includes("RESEARCH");
+  const allowedPermissions = ["ADMIN", "RESEARCHER"];
+  console.log("permissions", permissions);
+  return permissions.some((permission) =>
+    allowedPermissions.includes(permission)
+  );
 };
 
 const escapeCSV = (value) => {

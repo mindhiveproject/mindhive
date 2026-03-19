@@ -226,7 +226,8 @@ export default function DashboardNavigation() {
           </Link>
         )}
 
-        {permissions?.includes("ADMIN") && (
+        {(permissions?.includes("ADMIN") ||
+        permissions?.includes("RESEARCHER")) && (
           <>
             <div className="workspaceHeader">{t("research")}</div>
 
