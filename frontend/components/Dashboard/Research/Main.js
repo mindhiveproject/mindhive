@@ -38,7 +38,7 @@ export default function ResearchMain({ query, user }) {
     <StyledResearch>
       <div className="pageHeader">
         <div className="headerIcon">
-          <img src="/assets/icons/education.svg" alt="Education" />
+          <img src="/assets/icons/visualize/statisticalTest.svg" alt="Research" />
         </div>
         <h1>
           {t("research", {
