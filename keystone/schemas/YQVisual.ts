@@ -78,10 +78,10 @@ export const Visual = list({
     },
     item: {
       update: ({ session, item }) =>
-        item.authorId === session?.itemId || session?.data.isAdmin,
+        item.authorId === session?.itemId || session?.data.permissions?.canAccessAdminUI,
       create: ({ session }) => !!session,
       delete: ({ session, item }) =>
-        item.authorId === session?.itemId || session?.data.isAdmin,
+        item.authorId === session?.itemId || session?.data.permissions?.canAccessAdminUI,
     },
     filter: {
       query: ({ session }) => getVisualFilterQuery(session),
