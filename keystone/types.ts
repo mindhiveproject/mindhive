@@ -7,17 +7,19 @@ import { KeystoneGraphQLAPI, KeystoneListsAPI } from '@keystone-next/types';
 import type { Permission } from './schemas/fields';
 export type { Permission } from './schemas/fields';
 
+export type PermissionRecord = {
+  name: string;
+} & {
+  [key in Permission]: boolean;
+};
+
 export type Session = {
   itemId: string;
   listKey: string;
   data: {
-    name: string;
-    role?: {
-      id: string;
-      name: string;
-    } & {
-      [key in Permission]: boolean;
-    };
+    id: string;
+    username: string;
+    permissions?: PermissionRecord[];
   };
 };
 

@@ -9,11 +9,12 @@ import {
   file,
   image,
 } from "@keystone-6/core/fields";
+import { Session } from "../types";
 
 
 // Will have to modify to new profile fields
-function getVisualFilterQuery(session: any) {
-  if (session?.data.permissions?.canAccessAdminUI) return true;
+function getVisualFilterQuery(session: Session) {
+  if (session?.data?.permissions?.some((p) => p.canAccessAdminUI)) return true;
   return {
     OR: [
       // You're the author
@@ -77,11 +78,11 @@ export const Visual = list({
       delete: () => true,
     },
     item: {
-      update: ({ session, item }) =>
-        item.authorId === session?.itemId || session?.data.permissions?.canAccessAdminUI,
-      create: ({ session }) => !!session,
-      delete: ({ session, item }) =>
-        item.authorId === session?.itemId || session?.data.permissions?.canAccessAdminUI,
+      update: ({ session, item }: { session?: Session; item: any }) =>
+        item.authorId == session?.itemId || session?.data?.permissions?.some((p) => p.canAccessAdminUI) || false,
+      create: ({ session }: { session?: Session }) => !!session,
+      delete: ({ session, item }: { session?: Session; item: any }) =>
+        item.authorId == session?.itemId || session?.data?.permissions?.some((p) => p.canAccessAdminUI) || false,
     },
     filter: {
       query: ({ session }) => getVisualFilterQuery(session),
