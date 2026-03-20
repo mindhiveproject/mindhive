@@ -515,6 +515,9 @@ export const STUDY_PROPOSALS_QUERY = gql`
       status
       proposal {
         id
+        author {
+          id
+        }
         title
         slug
         description
@@ -526,6 +529,9 @@ export const STUDY_PROPOSALS_QUERY = gql`
       }
       proposalMain {
         id
+        author {
+          id
+        }
         title
         slug
         description
