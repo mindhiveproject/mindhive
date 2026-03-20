@@ -1,5 +1,7 @@
 // components/DataJournal/Editors/ComponentEditor.js
+import useTranslation from "next-translate/useTranslation";
 import { useDataJournal } from "../Context/DataJournalContext";
+import Button from "../../../../DesignSystem/Button";
 
 import GraphEditor from "../Widgets/types/Graph/Editor/GraphEditor";
 import StatisticalTestEditor from "../Widgets/types/StatisticalTests/Editor/StatisticalTestEditor";
@@ -16,11 +18,13 @@ export default function ComponentEditor({
   onSave,
   onDelete,
 }) {
-  const { activeComponent } = useDataJournal();
+  const { t } = useTranslation("builder");
+  const { activeComponent, setActiveComponent } = useDataJournal();
 
   if (!activeComponent) return null;
 
   const { id, type, content } = activeComponent;
+  const handleClosePanel = () => setActiveComponent(null);
 
   // Render editor based on component type
   const renderEditor = () => {
@@ -29,7 +33,7 @@ export default function ComponentEditor({
         // Placeholder for Paragraph editor (e.g., simple textarea)
         return (
           <div>
-            <h3>Edit Paragraph</h3>
+            <h3>{t("dataJournal.componentEditor.editParagraph", "Edit Paragraph")}</h3>
             <textarea
               value={content?.text || ""}
               onChange={(e) =>
@@ -85,22 +89,36 @@ export default function ComponentEditor({
           />
         );
       default:
-        return <div>Unsupported component type: {type}</div>;
+        return (
+          <div>
+            {t(
+              "dataJournal.componentEditor.unsupportedType",
+              { type },
+              "Unsupported component type: {{type}}",
+            )}
+          </div>
+        );
     }
   };
 
   return (
     <StyledRightPanel>
       <div className="editor-header">
-        <h2>Edit Component: {activeComponent?.title || "Untitled"}</h2>
+        <h2>
+          {t("dataJournal.componentEditor.editComponent", "Edit Component")}:{" "}
+          {activeComponent?.title ||
+            t("dataJournal.componentEditor.untitled", "Untitled")}
+        </h2>
         <div className="actions">
-          <button onClick={onSave}>Save</button>
-          <button
-            onClick={onDelete}
-            style={{ backgroundColor: "#ff4d4d", color: "white" }}
-          >
-            Delete
-          </button>
+          <Button variant="outline" onClick={handleClosePanel}>
+            {t("dataJournal.componentEditor.close", "Close")}
+          </Button>
+          <Button variant="filled" onClick={onSave}>
+            {t("dataJournal.componentEditor.save", "Save")}
+          </Button>
+          <Button variant="tonal" onClick={onDelete}>
+            {t("dataJournal.componentEditor.delete", "Delete")}
+          </Button>
         </div>
       </div>
       {renderEditor()}

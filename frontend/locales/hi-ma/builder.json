@@ -158,6 +158,11 @@
 	},
 	"cloneAndModify": "एक {{taskType}} को क्लोन और संशोधित करें",
 	"closeButton": "बंद करना",
+	"codeExecution": {
+		"codeRunningMessage": "",
+		"justOneSecondTitle": "",
+		"librariesLoadingMessage": ""
+	},
 	"collect": {
 		"noProjectFound": "कोई प्रोजेक्ट नहीं मिला, कृपया पहले अपना प्रोजेक्ट सेव करें।",
 		"noStudyAttachedHeader": "🤷🏻 आपके प्रोजेक्ट में कोई अध्ययन संलग्न नहीं है।",
@@ -222,6 +227,87 @@
 	"dataJournal": {
 		"addComponent": "घटक जोड़ें",
 		"addNotes": "नोट्स जोड़ें",
+		"collapsePanel": "",
+		"componentEditor": {
+			"close": "",
+			"delete": "",
+			"editComponent": "",
+			"editParagraph": "",
+			"save": "",
+			"unsupportedType": "",
+			"untitled": ""
+		},
+		"hypVis": {
+			"axes": {
+				"abDesign": {
+					"clipboardAiCopied": "",
+					"clipboardFigCopied": "",
+					"clipboardHypothesisCopied": "",
+					"copyAiHypothesis": "",
+					"copyGraph": "",
+					"copyHypothesis": "",
+					"describeHypothesisFirst": "",
+					"dvLabel": "",
+					"dvPlaceholder": "",
+					"headerTitle": "",
+					"iPredictThat": "",
+					"ivConditionsLabel": "",
+					"ivConditionsPlaceholder": "",
+					"ivLabel": "",
+					"ivPlaceholder": "",
+					"rankHelpIntro": "",
+					"rankHelpStep1": "",
+					"rankHelpStep2": "",
+					"rankSectionTitle": "",
+					"sectionHypothesisTitle": "",
+					"titleLabel": "",
+					"titlePlaceholder": "",
+					"willOccupyRank": "",
+					"yourHypothesisHelpIntro": "",
+					"yourHypothesisHelpStep1": "",
+					"yourHypothesisHelpStep2": "",
+					"yourHypothesisHelpStep3": ""
+				},
+				"clipboard": {
+					"abDesignConditionLine": "",
+					"abDesignIntro": "",
+					"copyGraphNoFigHtml": "",
+					"copyGraphNoPyodide": "",
+					"corrHypothesis": "",
+					"fallbackCondition": "",
+					"fallbackDependentVariable": "",
+					"fallbackIndependentVariable": "",
+					"fallbackNumberOfConditions": ""
+				},
+				"corr": {
+					"clipboardFigCopied": "",
+					"clipboardHypothesisCopied": "",
+					"copyGraph": "",
+					"copyHypothesis": "",
+					"dependentPlaceholder": "",
+					"directionalityPlaceholder": "",
+					"errorLoading": "",
+					"errorLoadingBlocks": "",
+					"headerTitle": "",
+					"helpExampleQuote": "",
+					"helpForInstance": "",
+					"helpIntro": "",
+					"helpNote": "",
+					"independentPlaceholder": "",
+					"iPredictThat": "",
+					"loading": "",
+					"loadingBlocks": "",
+					"sectionTitle": "",
+					"titleLabel": "",
+					"willBeRelatedTo": ""
+				}
+			},
+			"editor": {
+				"codeTab": "",
+				"variablesTab": ""
+			},
+			"helpAriaLabel": ""
+		},
 		"settingsPanel": {
 			"deleteWidget": "विजेट हटाएं",
 			"notes": "नोट्स",
@@ -232,7 +318,7 @@
 			"unsupportedType": "असमर्थित विजेट प्रकार: {{type}}"
 		}
 	},
-	"dataJournals": "डेटा जर्नल्स 🚧",
+	"dataJournals": "",
 	"dataset": {
 		"deleteInvalidRecord": "अमान्य रिकॉर्ड हटाएं",
 		"download": "डाउनलोड करना",
@@ -296,6 +382,21 @@
 	"developA": "एक {{विकसित}} विकसित करें",
 	"developHeaderDescription": "यहां अपने अध्ययन, कार्य और सर्वेक्षण बनाएं, संपादित करें और प्रबंधित करें।",
 	"developNew": "नया विकास करें",
+	"developProjects": {
+		"activeProjects": "",
+		"allProjects": "",
+		"archivedProjects": "",
+		"classFilterPlaceholder": "",
+		"filterByClass": "",
+		"filterByStatus": "",
+		"unnamedClass": ""
+	},
+	"developStudies": {
+		"classFilterPlaceholder": "",
+		"filterByClass": "",
+		"filterByStatus": "",
+		"unnamedClass": ""
+	},
 	"duplicateEditBlock": "पहले से मौजूद माइंडहाइव ब्लॉक और उसके पैरामीटर्स की प्रतिलिपि बनाएँ और उन्हें संपादित करें।",
 	"duplicateEditSurvey": "पहले से मौजूद माइंडहाइव सर्वेक्षण और उसके मापदंडों की प्रतिलिपि बनाना और उन्हें संपादित करना।",
 	"duration": "अवधि",

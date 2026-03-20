@@ -493,6 +493,7 @@ export const GET_MY_PROJECT_BOARDS = gql`
           }
         ]
       }
+      orderBy: [{ createdAt: desc }]
     ) {
       id
       title
@@ -504,6 +505,61 @@ export const GET_MY_PROJECT_BOARDS = gql`
         id
       }
       createdAt
+      study {
+        id
+      }
+      templateForClasses {
+        id
+      }
+      usedInClass {
+        id
+      }
+    }
+  }
+`;
+
+// Same as GET_MY_PROJECT_BOARDS but includes boards linked via class template / used-in-class for teachers
+export const TEACHER_PROJECT_BOARDS = gql`
+  query TEACHER_PROJECT_BOARDS($userId: ID!) {
+    proposalBoards(
+      where: {
+        AND: [
+          { isHidden: { equals: false } }
+          {
+            OR: [
+              { author: { id: { equals: $userId } } }
+              { collaborators: { some: { id: { equals: $userId } } } }
+              {
+                templateForClasses: {
+                  some: { creator: { id: { equals: $userId } } }
+                }
+              }
+              { usedInClass: { creator: { id: { equals: $userId } } } }
+            ]
+          }
+        ]
+      }
+      orderBy: [{ createdAt: desc }]
+    ) {
+      id
+      title
+      author {
+        id
+        username
+      }
+      collaborators {
+        id
+      }
+      createdAt
+      study {
+        id
+      }
+      templateForClasses {
+        id
+      }
+      usedInClass {
+        id
+      }
     }
   }
 `;

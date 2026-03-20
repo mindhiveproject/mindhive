@@ -14,7 +14,8 @@ export const StyledDataJournal = styled.div`
 `;
 
 export const StyledSidebar = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   grid-gap: 10px;
   padding: 10px;
   margin: 10px;
@@ -23,12 +24,13 @@ export const StyledSidebar = styled.div`
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
-  border-radius: 12px;
+  border-radius: 16px;
   .collapsePanelBtn {
-    display: grid;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     margin: 10px 10px;
-    justify-content: end;
-    cursor: pointer;
+    justify-content: flex-start;
   }
   .journals {
     display: grid;
@@ -179,52 +181,23 @@ export const StyledTopNavigation = styled.div`
   height: 56px;
   align-content: center;
   align-items: center;
-  border: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
   background: white;
   .buttons {
     display: grid;
     grid-template-columns: 1fr auto;
     grid-gap: 10px;
-
-    .custonBtn {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      padding: 4px 24px;
-      gap: 4px;
-      height: 40px;
-      background: #336f8a;
-      border-radius: 100px;
-      flex: none;
-      order: 1;
-      flex-grow: 0;
-    }
   }
   .leftIconNav {
-    margin: 0px 10px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 5px;
+    margin: 0px 8px 0px 12px;
+    padding-right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 0;
     border-right: 1px solid #e6e6e6;
-    .titleArea {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      grid-gap: 5px;
-      align-items: center;
-      padding: 1px 15px;
-      margin: 5px 5px 5px 0px;
-      cursor: pointer;
-      .icon {
-        display: grid;
-        padding: 8px 10px;
-        cursor: pointer;
-        align-items: center;
-      }
-    }
-    .active {
-      background: #f4f8f7;
-      border-radius: 8px;
+    .leftNavChip {
+      min-width: 120px;
+      justify-content: center;
     }
   }
 `;
@@ -324,10 +297,53 @@ export const StyledRightPanel = styled.div`
   display: grid;
   align-content: baseline;
   grid-gap: 10px;
-  min-width: 900px;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
   padding: 16px;
+  box-sizing: border-box;
+  overflow-x: hidden;
   overflow-y: auto;
   height: 100%;
+  align-self: stretch;
+  & > * {
+    min-width: 0;
+  }
+  .editor-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+    h2 {
+      margin: 0;
+      min-width: 0;
+      flex: 1 1 auto;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+  }
+  .editor-header .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ui.tab {
+    max-width: 100%;
+  }
+  .ui.menu {
+    flex-wrap: wrap;
+  }
+  /* HypVis Variables tab: pane should fit the right rail; graph-dashboard CSS handles width */
+  .graph .hypvis-tab-pane {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 1rem;
+  }
   .outputArea {
     width: 100%; /* ← takes full available width */
     box-sizing: border-box; /* ← very important! includes padding + border in width */
@@ -344,8 +360,8 @@ export const StyledRightPanel = styled.div`
   /* globals.css or .module.css */
   .editor-wrapper {
     width: 100%;
-    max-width: 800px; /* ← your max desired editor width */
-    margin: 0 auto; /* center if wanted */
+    max-width: 100%;
+    margin: 0;
     border: 1px solid #e5e7eb;
     border-radius: 6px;
     overflow: hidden;
@@ -421,31 +437,37 @@ export const StyledComponentPanel = styled.div`
 `;
 
 export const StyledDataWorkspace = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   align-content: baseline;
-  grid-gap: 10px;
   background: #f8f9f8;
+  gap: 10px;
+  --dashboard-gap: 10px;
+  /* Space between the left journal sidebar and the grid canvas when the sidebar is open */
+  --left-panel-canvas-gap: 16px;
+  --right-rail-width: clamp(380px, 36vw, 900px);
 
-  .pushable {
-    background: #f8f9f8;
-    border-radius: 12px;
-  }
-
-  .sidebar {
+  /* Left journal sidebar: never show a box-shadow (Semantic UI + themes often add one) */
+  .sidebar,
+  .dashboardPushable .ui.sidebar,
+  .dashboardPushable .ui.sidebar.visible,
+  .dashboardPushable .ui.sidebar.animating {
     background: white;
-    box-shadow: 2px 2px 8px 0px #0000001a;
-    border-radius: 12px !important;
+    border: 1px solid #e6e6e6;
+    border-left: none;
+    /* Flush to the left: no radius on the outer (left) edge; keep radius toward the canvas */
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-top-right-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
+    box-shadow: none !important;
   }
 
   .segment {
-    border: 1px solid #f8f9f8;
-    background: #f8f9f8;
+    border: none;
+    background: none;
     box-shadow: none;
-  }
-
-  .pusher {
-    background: #f8f9f8;
   }
 
   .datasets {
@@ -459,35 +481,94 @@ export const StyledDataWorkspace = styled.div`
   }
 
   .dashboard {
+    background: transparent;
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    grid-gap: 10px;
-    align-content: baseline;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    gap: var(--dashboard-gap);
+    align-content: stretch;
     height: calc(100vh - 50px);
+    min-width: 0;
+    min-height: 0;
+
+    &.hasRightPanel {
+      grid-template-columns: minmax(0, 1fr) var(--right-rail-width);
+    }
+
+    .dashboardMain {
+      min-width: 0;
+      position: relative;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr);
+      gap: var(--dashboard-gap);
+    }
+
+    .openPanelBtnSlot {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 3;
+    }
+
     .openPanelBtn {
       cursor: pointer;
-      margin: 10px;
-      padding: 20px;
+      padding: 16px;
       border-radius: 12px;
       background: white;
+      border: 1px solid #e6e6e6;
       box-shadow: 2px 2px 8px 0px #0000001a;
+    }
+
+    /* Semantic UI can apply margin-top on .ui.segment.pushable when sidebar is hidden — removes “extra padding” at top */
+    .dashboardPushable.ui.segment.pushable {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
+
+    .dashboardPushable {
+      min-width: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .dashboardPusher {
+      min-width: 0;
+      min-height: 0;
+      background: transparent;
+    }
+
+    &.hasLeftSidebar .dashboardPusher {
+      padding-left: var(--left-panel-canvas-gap);
+      box-sizing: border-box;
+    }
+
+    .dashboardRightRail {
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr);
+      align-content: stretch;
+      align-items: stretch;
     }
   }
   .canvas {
     display: grid;
     width: 100%;
+    min-width: 0;
     min-height: 80vh;
 
     background: white;
-    margin-left: 14px;
-    box-shadow: 2px 2px 8px 0px #0000001a;
+    // box-shadow: 2px 2px 8px 0px #0000001a;
+    border: 1px solid #e6e6e6;
     border-radius: 12px;
 
     .widgetContainer {
-      border: 2px solid #e6e6e6;
-      border-radius: 8px;
-      &.active {
-        border: 2px solid blue;
+      border-radius: 14px;
+      &:hover {
+        outline: 2px solid #e6e6e6;
+        outline-offset: 2px;
       }
     }
   }
@@ -547,7 +628,7 @@ export const StyledDataWorkspace = styled.div`
       grid-gap: 10px;
       justify-content: center;
       box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
-      border-radius: 10px;
+      border-radius: 8px;
 
       .dashboardContainer {
       }
@@ -582,7 +663,7 @@ export const StyledDataWorkspace = styled.div`
       grid-gap: 21px;
     }
     .selectorsStats {
-      margin: 20px 100px 50px;
+      margin: 20px clamp(12px, 4vw, 48px) 50px;
       display: grid;
       grid-gap: 41px;
     }
@@ -743,15 +824,37 @@ export const StyledDataWorkspace = styled.div`
   }
 
   .graph-dashboard {
-    color: ;
+    color: inherit;
     display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    align-self: stretch;
     padding: 20px 16px;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 22px;
 
     border-radius: 16px;
     background: var(--Schemes-On-Primary, #fff);
+
+    .ui.selection.dropdown {
+      min-width: 0 !important;
+      max-width: 100%;
+    }
+
+    .ui.selection.dropdown > .dropdown.icon {
+      flex-shrink: 0;
+    }
+
+    input.input-box,
+    input.input-box-number,
+    textarea.input-box {
+      font-family: Nunito, sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+    }
 
     .header {
       display: flex;
@@ -773,7 +876,9 @@ export const StyledDataWorkspace = styled.div`
 
     .text-input {
       display: flex;
-      min-width: 378px;
+      box-sizing: border-box;
+      min-width: 0;
+      width: 100%;
       padding: 0px 10px;
       flex-direction: column;
       align-items: flex-start;
@@ -793,7 +898,9 @@ export const StyledDataWorkspace = styled.div`
 
       .input-box {
         display: flex;
-        min-width: 256px;
+        box-sizing: border-box;
+        min-width: 0;
+        width: 100%;
         min-height: 40px;
         padding: 4px 16px;
         justify-content: flex-end;
@@ -820,7 +927,9 @@ export const StyledDataWorkspace = styled.div`
 
     .parameter-panel {
       display: flex;
-      min-width: 600px;
+      box-sizing: border-box;
+      min-width: 0;
+      width: 100%;
       flex-direction: column;
       align-items: flex-start;
       gap: 16px;
@@ -849,10 +958,13 @@ export const StyledDataWorkspace = styled.div`
     }
 
     .button-panel {
-      display: inline-flex;
+      display: flex;
+      flex-wrap: wrap;
       padding: 3px 10px;
       align-items: center;
       gap: 10px;
+      width: 100%;
+      box-sizing: border-box;
 
       .clipboard-copy-button {
         display: flex;
@@ -929,9 +1041,17 @@ export const StyledDataWorkspace = styled.div`
 
     .fill-in-ranks {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       gap: 8px;
       align-self: stretch;
+      min-width: 0;
+
+      input[type="range"] {
+        min-width: 120px;
+        flex: 1 1 160px;
+        max-width: 100%;
+      }
 
       .text {
         color: var(--MH-Theme-Neutrals-Black, #171717);

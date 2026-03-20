@@ -84,6 +84,10 @@
 		"title": "Toestemmingsdocumenten",
 		"uploadNotice": "Je hebt nog niet alle documentatie geüpload die nodig is voor deelname aan het mentorschap. Controleer en upload de overige documenten hieronder."
 	},
+	"dropdownSelect": {
+		"noMatchingOptions": "Geen overeenkomende opties",
+		"searchPlaceholder": "Zoekopties"
+	},
 	"email": {
 		"currentEmail": "Huidig ​​e-mailadres",
 		"description": "Werk hieronder uw MindHive-e-mailinstellingen bij om belangrijke e-mailupdates te blijven ontvangen",

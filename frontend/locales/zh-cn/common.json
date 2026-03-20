@@ -84,6 +84,10 @@
 		"title": "同意文件",
 		"uploadNotice": "您尚未上传参与导师计划所需的全部文件。请检查并上传以下剩余文件。"
 	},
+	"dropdownSelect": {
+		"noMatchingOptions": "没有匹配项",
+		"searchPlaceholder": "搜索选项"
+	},
 	"email": {
 		"currentEmail": "当前电子邮件",
 		"description": "更新以下 MindHive 电子邮件设置以继续接收重要的电子邮件更新",

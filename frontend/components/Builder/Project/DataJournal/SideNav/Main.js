@@ -1,4 +1,7 @@
 // components/DataJournal/SideNav/Main.js
+import useTranslation from "next-translate/useTranslation";
+
+import Button from "../../../../DesignSystem/Button";
 import { useDataJournal } from "../Context/DataJournalContext";
 import { StyledSidebar } from "../styles/StyledDataJournal";
 
@@ -16,15 +19,21 @@ export default function SideNavigation({
   selectWorkspaceById,
   collapsePanel,
 }) {
+  const { t } = useTranslation("builder");
   const { projectId, studyId } = useDataJournal(); // Use context instead of props
 
   return (
     <StyledSidebar>
       <div className="collapsePanelBtn">
-        <div onClick={() => collapsePanel()}>
-          <img src="/assets/dataviz/collapsePanel.png" />
-          Collapse Panel
-        </div>
+        <Button
+          type="button"
+          variant="text"
+          style={{ color: "#171717" }}
+          onClick={() => collapsePanel()}
+          leadingIcon={<img src="/assets/dataviz/openPanel.svg" alt="" aria-hidden />}
+        >
+          {t("dataJournal.collapsePanel", "Collapse panel")}
+        </Button>
       </div>
 
       {journalCollections.length === 0 && (

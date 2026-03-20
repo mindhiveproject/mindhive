@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Popup } from "semantic-ui-react";
+import React from "react";
+import useTranslation from "next-translate/useTranslation";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import {
@@ -7,7 +7,17 @@ import {
   GET_BLOCK_AGGVAR,
 } from "../../../../../../../../Queries/Study";
 
+import InfoTooltip from "../../../../../../../../DesignSystem/InfoTooltip";
 import AggregateVarSelector from "../Fields/AggregateVarSelector";
+import { figHtmlStringFromPyodide } from "./figHtmlFromPyodide";
+
+const hypVisTooltipStyle = {
+  fontFamily: "Inter",
+  fontSize: "14px",
+  lineHeight: "20px",
+  maxWidth: "min(calc(100vw - 32px), 400px)",
+  width: "max-content",
+};
 
 export default function Axes({
   studyId,
@@ -15,19 +25,14 @@ export default function Axes({
   sectionId,
   selectors,
   onChange,
+  pyodide,
 }) {
+  const { t } = useTranslation("builder");
+  const corr = "dataJournal.hypVis.axes.corr";
+  const clip = "dataJournal.hypVis.axes.clipboard";
+
   const router = useRouter();
-  const currentLocale = router.locale || "en-us"; // fallback to en-us
-
-  const [activeIndex, setActiveIndex] = useState(-1);
-  const [jsonObject, setJsonObject] = useState(selectors);
-
-  const popupStyle = {
-    borderRadius: 8,
-    opacity: 0.9,
-    padding: "2em",
-    fontSize: "15px",
-  };
+  const currentLocale = router.locale || "en-us";
 
   const { data, loading, error } = useQuery(GET_STUDY_FLOW, {
     variables: {
@@ -64,14 +69,11 @@ export default function Axes({
     },
   });
 
-  // Extract aggregate variables for the current locale
   const optionsAggVar =
     aggVarData?.tasks?.flatMap((task) => {
-      // Prefer i18nContent for the current locale, fallback to plain settings
       const settings =
         task?.i18nContent?.[currentLocale]?.settings || task?.settings;
 
-      // Parse safely (always a stringified JSON)
       try {
         return JSON.parse(settings?.aggregateVariables || "[]");
       } catch (e) {
@@ -84,7 +86,6 @@ export default function Axes({
       }
     }) || [];
 
-  // Format only the variable names for now
   const formattedItems = optionsAggVar.map((item) => {
     const varName = typeof item === "string" ? item : item.varName;
     const parser = new DOMParser();
@@ -105,30 +106,52 @@ export default function Axes({
       dvDirectionality,
       dependentVariable,
     } = selectors;
-    const textContent = `I predict that ${ivDirectionality || ""} ${
-      independentVariable || ""
-    } will be related to ${dvDirectionality || ""} ${dependentVariable || ""}.`;
+    const textContent = t(
+      `${clip}.corrHypothesis`,
+      {
+        ivDir: ivDirectionality || "",
+        iv: independentVariable || "",
+        dvDir: dvDirectionality || "",
+        dv: dependentVariable || "",
+      },
+      "I predict that {{ivDir}} {{iv}} will be related to {{dvDir}} {{dv}}.",
+    );
 
     navigator.clipboard
       .writeText(textContent)
       .then(() => {
-        alert("Text copied to clipboard: " + textContent);
+        alert(
+          t(`${corr}.clipboardHypothesisCopied`, { text: textContent }, "Text copied to clipboard: {{text}}"),
+        );
       })
       .catch((err) => {
         console.error("Error copying text: ", err);
       });
   };
+
   const copyFigToClipboard = async () => {
+    if (!pyodide) {
+      alert(
+        t(
+          `${clip}.copyGraphNoPyodide`,
+          "The Python runtime is not ready yet. Please wait for the journal to finish loading.",
+        ),
+      );
+      return;
+    }
     try {
-      // Retrieve the variable from Pyodide
-      try {
-        const variableValue = await pyodide.runPythonAsync("fig_html");
-        // Copy the variable value to the clipboard
-        await navigator.clipboard.writeText(variableValue);
-        alert("Copied to clipboard!");
-      } catch (error) {
-        console.error("Failed to retrieve variable: ", error);
+      const variableValue = figHtmlStringFromPyodide(pyodide);
+      if (!variableValue?.trim()) {
+        alert(
+          t(
+            `${clip}.copyGraphNoFigHtml`,
+            "No graph is available yet. Fill in your variables and wait for the visualization to appear in the journal, then try again.",
+          ),
+        );
+        return;
       }
+      await navigator.clipboard.writeText(variableValue);
+      alert(t(`${corr}.clipboardFigCopied`, "Copied to clipboard!"));
     } catch (error) {
       console.error("Failed to copy: ", error);
     }
@@ -143,143 +166,174 @@ export default function Axes({
     });
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-  if (aggVarLoading) return <p>Loading block data...</p>;
+  const correlationalHelpContent = (
+    <div>
+      <p>
+        {t(
+          `${corr}.helpIntro`,
+          "Fill in the blanks to create your correlational hypothesis!",
+        )}
+      </p>
+      <p>
+        {t(`${corr}.helpForInstance`, "For instance")}
+        <br />
+        <q>
+          {t(
+            `${corr}.helpExampleQuote`,
+            "It is predicted that higher anxiety will be related to lower % of trials gambled.",
+          )}
+        </q>
+      </p>
+      <p>
+        <i>
+          {t(
+            `${corr}.helpNote`,
+            "Note that the options suggested under the variable fields are pulled from the public blocks in your study builder",
+          )}
+        </i>
+      </p>
+    </div>
+  );
+
+  if (loading) return <p>{t(`${corr}.loading`, "Loading...")}</p>;
+  if (error)
+    return (
+      <p>
+        {t(`${corr}.errorLoading`, { message: error.message }, "Error: {{message}}")}
+      </p>
+    );
+  if (aggVarLoading)
+    return <p>{t(`${corr}.loadingBlocks`, "Loading block data...")}</p>;
   if (aggVarError)
-    return <p>Error loading block data: {aggVarError.message}</p>;
+    return (
+      <p>
+        {t(
+          `${corr}.errorLoadingBlocks`,
+          { message: aggVarError.message },
+          "Error loading block data: {{message}}",
+        )}
+      </p>
+    );
 
   return (
-    <>
-      <div className="graph-dashboard">
-        <div className="header">
-          <img src={`/assets/icons/visualize/hypVis_corrAnalysis.svg`} />
-          <div className="header-title">Correlational Hypothesis</div>
+    <div className="graph-dashboard">
+      <div className="header">
+        <img src="/assets/icons/visualize/hypVis_corrAnalysis.svg" alt="" />
+        <div className="header-title">
+          {t(`${corr}.headerTitle`, "Correlational Hypothesis")}
         </div>
-        <div className="text-input">
-          <label htmlFor="graphTitle" className="header-text">
-            Title
-          </label>
-          <input
-            className="input-box"
-            id={`title-${sectionId}`}
-            type="text"
-            name="graphTitle"
-            value={selectors.graphTitle || ""}
-            onChange={({ target }) =>
-              onChange({
-                componentId: sectionId,
-                newContent: {
-                  selectors: { ...selectors, graphTitle: target.value },
-                },
-              })
+      </div>
+      <div className="text-input">
+        <label htmlFor="graphTitle" className="header-text">
+          {t(`${corr}.titleLabel`, "Title")}
+        </label>
+        <input
+          className="input-box"
+          id={`title-${sectionId}`}
+          type="text"
+          name="graphTitle"
+          value={selectors.graphTitle || ""}
+          onChange={({ target }) =>
+            onChange({
+              componentId: sectionId,
+              newContent: {
+                selectors: { ...selectors, graphTitle: target.value },
+              },
+            })
+          }
+        />
+      </div>
+      <div className="parameter-panel">
+        <div className="header">
+          <div className="header-title">
+            {t(`${corr}.sectionTitle`, "Your correlational hypothesis")}
+          </div>
+          <InfoTooltip
+            content={correlationalHelpContent}
+            tooltipStyle={hypVisTooltipStyle}
+            position="bottomRight"
+          >
+            <img
+              src="/assets/icons/visualize/question_mark.svg"
+              alt={t("dataJournal.hypVis.helpAriaLabel", "More information")}
+            />
+          </InfoTooltip>
+        </div>
+        <div className="fill-in-the-blanks">
+          <div className="text">
+            {t(`${corr}.iPredictThat`, "I predict that")}
+          </div>
+
+          <AggregateVarSelector
+            placeholder={t(`${corr}.directionalityPlaceholder`, "directionality")}
+            isDirectionality={true}
+            allowAdditions={false}
+            optionsAggVar={formattedItems}
+            studyId={studyId}
+            value={selectors.ivDirectionality || ""}
+            onChange={(e, { value }) =>
+              handleAggregateVarChange("ivDirectionality", value)
+            }
+          />
+          <AggregateVarSelector
+            placeholder={
+              selectors.independentVariable ||
+              t(`${corr}.independentPlaceholder`, "independent variable")
+            }
+            isDirectionality={false}
+            allowAdditions={true}
+            optionsAggVar={formattedItems}
+            studyId={studyId}
+            value={selectors[`independentVariable`] || ""}
+            onChange={(e, { value }) =>
+              handleAggregateVarChange("independentVariable", value)
+            }
+          />
+          <div className="text">
+            {t(`${corr}.willBeRelatedTo`, "will be related to")}
+          </div>
+          <AggregateVarSelector
+            placeholder={t(`${corr}.directionalityPlaceholder`, "directionality")}
+            isDirectionality={true}
+            allowAdditions={false}
+            optionsAggVar={formattedItems}
+            studyId={studyId}
+            value={selectors.dvDirectionality || ""}
+            onChange={(e, { value }) =>
+              handleAggregateVarChange("dvDirectionality", value)
+            }
+          />
+          <AggregateVarSelector
+            placeholder={
+              selectors[`dependentVariable`] ||
+              t(`${corr}.dependentPlaceholder`, "dependent variable")
+            }
+            isDirectionality={false}
+            allowAdditions={true}
+            optionsAggVar={formattedItems}
+            studyId={studyId}
+            value={selectors[`dependentVariable`] || ""}
+            onChange={(e, { value }) =>
+              handleAggregateVarChange("dependentVariable", value)
             }
           />
         </div>
-        <div className="parameter-panel">
-          <div className="header">
-            <div className="header-title">Your correlational hypothesis</div>
-            <Popup
-              content={
-                <div>
-                  <>
-                    Fill in the blanks to create your correlational hypothesis!
-                  </>
-                  <br />
-                  <br />
-                  <>For instance</>
-                  <br />
-                  <q>
-                    It is predicted that higher anxiety will be related to lower
-                    % of trials gambled.
-                  </q>
-                  <br />
-                  <br />
-                  <i>
-                    Note that the options suggested under the variable fields
-                    are pulled from the public blocks in your study builder
-                  </i>
-                  <br />
-                </div>
-              }
-              trigger={
-                <img src={`/assets/icons/visualize/question_mark.svg`} />
-              }
-              inverted
-              style={popupStyle}
-            />
+      </div>
+      <div className="button-panel">
+        <div className="clipboard-copy-button" onClick={copyToClipboard}>
+          <div>
+            {t(`${corr}.copyHypothesis`, "Copy hypothesis text to clipboard")}
           </div>
-          <div className="fill-in-the-blanks">
-            <div className="text">I predict that </div>
-
-            <AggregateVarSelector
-              placeholder="directionality"
-              isDirectionality={true}
-              allowAdditions={false}
-              optionsAggVar={formattedItems}
-              studyId={studyId}
-              value={selectors.ivDirectionality || ""}
-              onChange={(e, { value }) =>
-                handleAggregateVarChange("ivDirectionality", value)
-              }
-            />
-            <AggregateVarSelector
-              placeholder={
-                selectors[`independentVariable`] || "independent variable"
-              }
-              isDirectionality={false}
-              allowAdditions={true}
-              optionsAggVar={formattedItems}
-              studyId={studyId}
-              value={selectors[`independentVariable`] || ""}
-              onChange={(e, { value }) =>
-                handleAggregateVarChange("independentVariable", value)
-              }
-            />
-            <div className="text">will be related to</div>
-            <AggregateVarSelector
-              placeholder="directionality"
-              isDirectionality={true}
-              allowAdditions={false}
-              optionsAggVar={formattedItems}
-              studyId={studyId}
-              value={selectors.dvDirectionality || ""}
-              onChange={(e, { value }) =>
-                handleAggregateVarChange("dvDirectionality", value)
-              }
-            />
-            <AggregateVarSelector
-              placeholder={
-                selectors[`dependentVariable`] || "dependent variable"
-              }
-              isDirectionality={false}
-              allowAdditions={true}
-              optionsAggVar={formattedItems}
-              studyId={studyId}
-              value={selectors[`dependentVariable`] || ""}
-              onChange={(e, { value }) =>
-                handleAggregateVarChange("dependentVariable", value)
-              }
-            />
-
-            {/* <div className="text">.</div> */}
-          </div>
+          <img src="/assets/icons/visualize/clipboard-copy.svg" alt="" />
         </div>
-        <div className="button-panel">
-          <div className="clipboard-copy-button" onClick={copyToClipboard}>
-            <div>Copy hypothesis text to clipboard</div>
-            <img src={`/assets/icons/visualize/clipboard-copy.svg`} />
-          </div>
-          <div
-            className="clipboard-fig-copy-button"
-            onClick={copyFigToClipboard}
-          >
-            <div>Copy graph to clipboard</div>
-            <img src={`/assets/icons/visualize/clipboard-copy.svg`} />
-          </div>
+        <div
+          className="clipboard-fig-copy-button"
+          onClick={copyFigToClipboard}
+        >
+          <div>{t(`${corr}.copyGraph`, "Copy graph to clipboard")}</div>
+          <img src="/assets/icons/visualize/clipboard-copy.svg" alt="" />
         </div>
       </div>
-    </>
+    </div>
   );
 }
-//TODO: Add aggregate variables from study builder to the dropdowns

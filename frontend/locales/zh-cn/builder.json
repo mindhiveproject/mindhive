@@ -158,6 +158,11 @@
 	},
 	"cloneAndModify": "克隆并修改 {{taskType}}",
 	"closeButton": "关闭",
+	"codeExecution": {
+		"codeRunningMessage": "代码正在运行。",
+		"justOneSecondTitle": "只需一秒钟",
+		"librariesLoadingMessage": "数据分析库正在加载。"
+	},
 	"collect": {
 		"noProjectFound": "未找到项目，请先保存您的项目。",
 		"noStudyAttachedHeader": "🤷🏻 您的项目没有附加任何研究。",
@@ -222,6 +227,87 @@
 	"dataJournal": {
 		"addComponent": "添加组件",
 		"addNotes": "添加注释",
+		"collapsePanel": "折叠面板",
+		"componentEditor": {
+			"close": "关闭",
+			"delete": "删除",
+			"editComponent": "编辑组件",
+			"editParagraph": "编辑段落",
+			"save": "节省",
+			"unsupportedType": "不支持的组件类型： {{type}}",
+			"untitled": "无标题"
+		},
+		"hypVis": {
+			"axes": {
+				"abDesign": {
+					"clipboardAiCopied": "人工智能重新构建的假设已复制到剪贴板： {{text}}",
+					"clipboardFigCopied": "已复制到剪贴板！",
+					"clipboardHypothesisCopied": "复制到剪贴板的文本： {{text}}",
+					"copyAiHypothesis": "将人工智能生成的假设文本复制到剪贴板（进行中）",
+					"copyGraph": "将图表复制到剪贴板",
+					"copyHypothesis": "将假设文本复制到剪贴板",
+					"describeHypothesisFirst": "请先描述一下你的假设。",
+					"dvLabel": "你的因变量（DV）叫什么名字？",
+					"dvPlaceholder": "因变量",
+					"headerTitle": "实验假设",
+					"iPredictThat": "我预测",
+					"ivConditionsLabel": "你的自变量（IV）有多少个条件？",
+					"ivConditionsPlaceholder": "2",
+					"ivLabel": "你的自变量（IV）名称是什么？",
+					"ivPlaceholder": "自变量",
+					"rankHelpIntro": "如果您满足以下三个条件：",
+					"rankHelpStep1": "请使用下拉菜单为每个条件命名（您也可以手动输入！）",
+					"rankHelpStep2": "使用标签右侧的滑块来指示在此条件下因变量相对于其他因变量的预期排名。",
+					"rankSectionTitle": "对你的条件进行排序",
+					"sectionHypothesisTitle": "你的实验假设",
+					"titleLabel": "标题",
+					"titlePlaceholder": "条件对变量的影响",
+					"willOccupyRank": "将占据排名第#",
+					"yourHypothesisHelpIntro": "要构建实验假设，请按照以下步骤操作：",
+					"yourHypothesisHelpStep1": "请命名您的自变量和因变量",
+					"yourHypothesisHelpStep2": "请说明您的静脉输液有多少种条件",
+					"yourHypothesisHelpStep3": "预测自变量在每种条件下的因变量值。"
+				},
+				"clipboard": {
+					"abDesignConditionLine": "",
+					"abDesignIntro": "我预测 {{dv}} 将根据 {{iv}} 的 {{n}} 条件而变化，具体如下：\n\n",
+					"copyGraphNoFigHtml": "目前还没有图表。请填写您的变量，等待图表出现在期刊中，然后再试一次。",
+					"copyGraphNoPyodide": "Python运行时环境尚未准备就绪。请等待日志加载完成。",
+					"corrHypothesis": "我预测 {{ivDir}} {{iv}} 将与 {{dvDir}} {{dv}}相关。",
+					"fallbackCondition": "条件 {{n}}",
+					"fallbackDependentVariable": "因变量",
+					"fallbackIndependentVariable": "自变量",
+					"fallbackNumberOfConditions": "数量"
+				},
+				"corr": {
+					"clipboardFigCopied": "已复制到剪贴板！",
+					"clipboardHypothesisCopied": "复制到剪贴板的文本： {{text}}",
+					"copyGraph": "将图表复制到剪贴板",
+					"copyHypothesis": "将假设文本复制到剪贴板",
+					"dependentPlaceholder": "因变量",
+					"directionalityPlaceholder": "方向性",
+					"errorLoading": "错误： {{message}}",
+					"errorLoadingBlocks": "加载数据块时出错： {{message}}",
+					"headerTitle": "相关假设",
+					"helpExampleQuote": "据预测，焦虑程度越高，参与赌博的次数百分比越低。",
+					"helpForInstance": "例如",
+					"helpIntro": "请填空，创建你的相关性假设！",
+					"helpNote": "请注意，变量字段下建议的选项取自您的研究构建器中的公共模块。",
+					"independentPlaceholder": "自变量",
+					"iPredictThat": "我预测",
+					"loading": "加载中...",
+					"loadingBlocks": "正在加载数据块...",
+					"sectionTitle": "你的相关性假设",
+					"titleLabel": "标题",
+					"willBeRelatedTo": "将与"
+				}
+			},
+			"editor": {
+				"codeTab": "代码",
+				"variablesTab": "变量"
+			},
+			"helpAriaLabel": "更多信息"
+		},
 		"settingsPanel": {
 			"deleteWidget": "删除小部件",
 			"notes": "笔记",
@@ -232,7 +318,7 @@
 			"unsupportedType": "不支持的小部件类型：{{type}}"
 		}
 	},
-	"dataJournals": "数据日志🚧",
+	"dataJournals": "期刊",
 	"dataset": {
 		"deleteInvalidRecord": "删除无效记录",
 		"download": "下载",
@@ -296,6 +382,21 @@
 	"developA": "开发一个 {{develop}}",
 	"developHeaderDescription": "在此创建、编辑和管理您的研究、任务和调查。",
 	"developNew": "开发新的",
+	"developProjects": {
+		"activeProjects": "活跃项目",
+		"allProjects": "所有项目",
+		"archivedProjects": "已存档项目",
+		"classFilterPlaceholder": "选择课程",
+		"filterByClass": "按类别筛选",
+		"filterByStatus": "按状态过滤",
+		"unnamedClass": "班级"
+	},
+	"developStudies": {
+		"classFilterPlaceholder": "选择课程",
+		"filterByClass": "按类别筛选",
+		"filterByStatus": "按状态过滤",
+		"unnamedClass": "班级"
+	},
 	"duplicateEditBlock": "复制并编辑预先存在的 MindHive 块及其参数。",
 	"duplicateEditSurvey": "复制并编辑现有的 MindHive 调查及其参数。",
 	"duration": "期间",

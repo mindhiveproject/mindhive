@@ -12,12 +12,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import json`;
 
-import {
-  MessageHeader,
-  MessageContent,
-  Message,
-  Icon,
-} from "semantic-ui-react";
+import JustOneSecondNotice from "../../../DesignSystem/JustOneSecondNotice";
 
 function render_html(container, html) {
   var range = document.createRange();
@@ -61,13 +56,7 @@ export default function PyodideWrapper({ user, studyId }) {
     <>
       {isLoading && (
         <div className="pyodideLoadingMessage">
-          <Message icon>
-            <Icon name="circle notched" loading />
-            <MessageContent>
-              <MessageHeader>Just one second</MessageHeader>
-              The data analysis libraries are loading.
-            </MessageContent>
-          </Message>
+          <JustOneSecondNotice variant="librariesLoading" />
         </div>
       )}
       <JournalManager user={user} studyId={studyId} pyodide={pyodide} />

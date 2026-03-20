@@ -1,4 +1,13 @@
 {
+	"dataJournal": {
+		"topNav": {
+			"addComponent": "إضافة مكون",
+			"datasets": "مجموعات البيانات",
+			"editWorkspaceName": "تعديل اسم مساحة العمل",
+			"journals": "المجلات",
+			"selectJournal": "اختر دفتر يوميات للبدء ..."
+		}
+	},
 	"overview": {
 		"database": {
 			"csvDownloadMessage": "أعط اسمًا لملف CSV الذي تريد تنزيله\\nلا حاجة لإضافة \".csv\" فنحن نعتني بذلك!",

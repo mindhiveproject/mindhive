@@ -1,5 +1,5 @@
 // components/DataJournal/Widgets/Widget.js
-import { useCallback, memo } from "react";
+import { useCallback, memo, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 // Widget type-specific renderers
@@ -14,38 +14,12 @@ import HypVis from "./types/HypVis/HypVis";
 // Styled container for the widget
 const WidgetContainer = styled.div`
   display: grid;
-  grid-template-rows: auto 1fr; /* Header and content */
-  background: #fff;
-  border: 1px solid #ddd;
+  background: transparent;
+  border: 2px solid transparent;
   border-radius: 4px;
   height: 100%;
   box-sizing: border-box;
   position: static;
-`;
-
-const WidgetHeader = styled.div`
-  background: #e6e6e6;
-  padding: 8px;
-  cursor: move; /* Indicate draggable area */
-  font-weight: bold;
-  border-bottom: 1px solid #ccc;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Button = styled.button`
-  background: ${(props) => (props.type === "edit" ? "#1890ff" : "#ff4d4f")};
-  color: white;
-  border: none;
-  border-radius: 3px;
-  padding: 4px 8px;
-  cursor: pointer;
-  font-size: 12px;
-  margin-left: 8px;
-  &:hover {
-    background: ${(props) => (props.type === "edit" ? "#40a9ff" : "#d9363e")};
-  }
 `;
 
 const WidgetContent = styled.div`
@@ -53,6 +27,8 @@ const WidgetContent = styled.div`
   height: 100%;
   overflow: auto; /* Handle overflow in content */
 `;
+
+const DRAG_DISTANCE_THRESHOLD = 6;
 
 function Widget({
   widget,
@@ -64,6 +40,17 @@ function Widget({
   onChange,
   // handleRemoveComponent, // Uncomment if needed
 }) {
+  const gestureRef = useRef({
+    isPointerDown: false,
+    isDrag: false,
+    startX: 0,
+    startY: 0,
+  });
+  const listenersRef = useRef({
+    moveHandler: null,
+    upHandler: null,
+  });
+
   const handleChange = useCallback(
     (newContent) => {
       onChange({
@@ -74,14 +61,51 @@ function Widget({
     [id, onChange],
   );
 
-  // Handle edit button or content click
-  const handleEdit = useCallback(
-    (e) => {
-      e.stopPropagation(); // Prevent triggering drag
-      onSelect(widget);
-    },
-    [onSelect, widget],
-  );
+  const handlePointerDown = useCallback((e) => {
+    gestureRef.current = {
+      isPointerDown: true,
+      isDrag: false,
+      startX: e.clientX,
+      startY: e.clientY,
+    };
+
+    const moveHandler = (moveEvent) => {
+      if (!gestureRef.current.isPointerDown || gestureRef.current.isDrag) return;
+
+      const deltaX = Math.abs(moveEvent.clientX - gestureRef.current.startX);
+      const deltaY = Math.abs(moveEvent.clientY - gestureRef.current.startY);
+
+      if (Math.max(deltaX, deltaY) >= DRAG_DISTANCE_THRESHOLD) {
+        gestureRef.current.isDrag = true;
+      }
+    };
+
+    const upHandler = () => {
+      const wasDrag = gestureRef.current.isDrag;
+      gestureRef.current.isPointerDown = false;
+      gestureRef.current.isDrag = false;
+
+      window.removeEventListener("mousemove", moveHandler);
+      window.removeEventListener("mouseup", upHandler);
+      listenersRef.current = { moveHandler: null, upHandler: null };
+
+      if (!wasDrag) {
+        onSelect(widget);
+      }
+    };
+
+    listenersRef.current = { moveHandler, upHandler };
+    window.addEventListener("mousemove", moveHandler);
+    window.addEventListener("mouseup", upHandler);
+  }, [onSelect, widget]);
+
+  useEffect(() => {
+    return () => {
+      const { moveHandler, upHandler } = listenersRef.current;
+      if (moveHandler) window.removeEventListener("mousemove", moveHandler);
+      if (upHandler) window.removeEventListener("mouseup", upHandler);
+    };
+  }, []);
 
   // Render content based on component type
   // Note: pyodide, data, variables, settings are accessed via context in child components (Table, Graph)
@@ -115,10 +139,12 @@ function Widget({
 
   return (
     <WidgetContainer className={isActive ? "active" : ""}>
-      <WidgetHeader className="widget-header">
-        <div></div>
-      </WidgetHeader>
-      <WidgetContent onClick={handleEdit}>{renderContent()}</WidgetContent>
+      <WidgetContent
+        className="widget-content-handle"
+        onMouseDown={handlePointerDown}
+      >
+        {renderContent()}
+      </WidgetContent>
     </WidgetContainer>
   );
 }

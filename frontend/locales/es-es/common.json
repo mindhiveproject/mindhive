@@ -84,6 +84,10 @@
 		"title": "Documentos de consentimiento",
 		"uploadNotice": "No has subido toda la documentación necesaria para participar en la mentoría. Por favor, revisa y sube los documentos restantes a continuación."
 	},
+	"dropdownSelect": {
+		"noMatchingOptions": "No hay opciones coincidentes",
+		"searchPlaceholder": "Opciones de búsqueda"
+	},
 	"email": {
 		"currentEmail": "Correo electrónico actual",
 		"description": "Actualice su configuración de correo electrónico de MindHive a continuación para seguir recibiendo actualizaciones importantes por correo electrónico.",

@@ -158,6 +158,11 @@
 	},
 	"cloneAndModify": "Clonar y modificar un {{taskType}}",
 	"closeButton": "Cerca",
+	"codeExecution": {
+		"codeRunningMessage": "El código se está ejecutando.",
+		"justOneSecondTitle": "Solo un segundo",
+		"librariesLoadingMessage": "Las bibliotecas de análisis de datos se están cargando."
+	},
 	"collect": {
 		"noProjectFound": "No se encontró ningún proyecto, por favor guarde su proyecto primero.",
 		"noStudyAttachedHeader": "🤷🏻 Tu proyecto no tiene ningún estudio adjunto.",
@@ -222,6 +227,87 @@
 	"dataJournal": {
 		"addComponent": "Agregar componente",
 		"addNotes": "Agregar notas",
+		"collapsePanel": "Panel colapsado",
+		"componentEditor": {
+			"close": "Cerca",
+			"delete": "BORRAR",
+			"editComponent": "Editar componente",
+			"editParagraph": "Editar párrafo",
+			"save": "Ahorrar",
+			"unsupportedType": "Tipo de componente no compatible: {{type}}",
+			"untitled": "Intitulado"
+		},
+		"hypVis": {
+			"axes": {
+				"abDesign": {
+					"clipboardAiCopied": "Hipótesis reformulada por IA copiada al portapapeles: {{text}}",
+					"clipboardFigCopied": "¡Copiado al portapapeles!",
+					"clipboardHypothesisCopied": "Texto copiado al portapapeles: {{text}}",
+					"copyAiHypothesis": "Copiar el texto de la hipótesis formulada por IA al portapapeles (en curso)",
+					"copyGraph": "Copiar gráfico al portapapeles",
+					"copyHypothesis": "Copiar el texto de la hipótesis al portapapeles",
+					"describeHypothesisFirst": "Por favor, describa primero su hipótesis.",
+					"dvLabel": "¿Cuál es el nombre de su variable dependiente (VD)?",
+					"dvPlaceholder": "Variable dependiente",
+					"headerTitle": "Hipótesis experimental",
+					"iPredictThat": "Predigo que",
+					"ivConditionsLabel": "¿Cuántas condiciones tiene tu variable independiente (VI)?",
+					"ivConditionsPlaceholder": "2",
+					"ivLabel": "¿Cuál es el nombre de su variable independiente (VI)?",
+					"ivPlaceholder": "Variable independiente",
+					"rankHelpIntro": "Si usted tiene tres condiciones:",
+					"rankHelpStep1": "Nombra cada condición usando el menú desplegable (¡puedes escribirla!).",
+					"rankHelpStep2": "Utilice el control deslizante del lado derecho de la etiqueta para indicar el rango esperado de la variable dependiente en esta condición en comparación con el resto.",
+					"rankSectionTitle": "Clasifique sus condiciones",
+					"sectionHypothesisTitle": "Tu hipótesis experimental",
+					"titleLabel": "Título",
+					"titlePlaceholder": "Efecto de la condición sobre la variable",
+					"willOccupyRank": "ocupará el puesto #",
+					"yourHypothesisHelpIntro": "Para formular tu hipótesis experimental, sigue estos pasos:",
+					"yourHypothesisHelpStep1": "Nombra tu IV y DV",
+					"yourHypothesisHelpStep2": "Indique cuántas condiciones tiene su IV",
+					"yourHypothesisHelpStep3": "Prediga los valores de DV para cada condición de la IV"
+				},
+				"clipboard": {
+					"abDesignConditionLine": "- {{condition}} ocupará el puesto número{{rank}}",
+					"abDesignIntro": "Predigo que el {{dv}} variará en función de las {{n}} condiciones del {{iv}} de la siguiente manera:\n",
+					"copyGraphNoFigHtml": "Aún no hay ningún gráfico disponible. Introduce tus variables y espera a que la visualización aparezca en el registro; luego, inténtalo de nuevo.",
+					"copyGraphNoPyodide": "El entorno de ejecución de Python aún no está listo. Por favor, espere a que finalice la carga del registro.",
+					"corrHypothesis": "Predigo que {{ivDir}} {{iv}} estará relacionado con {{dvDir}} {{dv}}.",
+					"fallbackCondition": "condición {{n}}",
+					"fallbackDependentVariable": "Variable dependiente",
+					"fallbackIndependentVariable": "variable independiente",
+					"fallbackNumberOfConditions": "Número de"
+				},
+				"corr": {
+					"clipboardFigCopied": "¡Copiado al portapapeles!",
+					"clipboardHypothesisCopied": "Texto copiado al portapapeles: {{text}}",
+					"copyGraph": "Copiar gráfico al portapapeles",
+					"copyHypothesis": "Copiar el texto de la hipótesis al portapapeles",
+					"dependentPlaceholder": "Variable dependiente",
+					"directionalityPlaceholder": "direccionalidad",
+					"errorLoading": "Error: {{message}}",
+					"errorLoadingBlocks": "Error al cargar los datos del bloque: {{message}}",
+					"headerTitle": "Hipótesis correlacional",
+					"helpExampleQuote": "Se prevé que una mayor ansiedad estará relacionada con un menor porcentaje de ensayos apostados.",
+					"helpForInstance": "Por ejemplo",
+					"helpIntro": "¡Completa los espacios en blanco para crear tu hipótesis de correlación!",
+					"helpNote": "Tenga en cuenta que las opciones sugeridas en los campos variables se obtienen de los bloques públicos de su creador de estudios.",
+					"independentPlaceholder": "variable independiente",
+					"iPredictThat": "Predigo que",
+					"loading": "Cargando...",
+					"loadingBlocks": "Cargando datos del bloque...",
+					"sectionTitle": "Tu hipótesis de correlación",
+					"titleLabel": "Título",
+					"willBeRelatedTo": "estará relacionado con"
+				}
+			},
+			"editor": {
+				"codeTab": "Código",
+				"variablesTab": "Variables"
+			},
+			"helpAriaLabel": "Más información"
+		},
 		"settingsPanel": {
 			"deleteWidget": "Eliminar widget",
 			"notes": "Notas",
@@ -232,7 +318,7 @@
 			"unsupportedType": "Tipo de widget no compatible: {{type}}"
 		}
 	},
-	"dataJournals": "Diarios de datos 🚧",
+	"dataJournals": "Revistas",
 	"dataset": {
 		"deleteInvalidRecord": "Eliminar registro no válido",
 		"download": "Descargar",
@@ -296,6 +382,21 @@
 	"developA": "Desarrollar un {{desarrollar}}",
 	"developHeaderDescription": "Crea, edita y administra tus estudios, tareas y encuestas aquí.",
 	"developNew": "Desarrollar nuevos",
+	"developProjects": {
+		"activeProjects": "Proyectos activos",
+		"allProjects": "Todos los proyectos",
+		"archivedProjects": "Proyectos archivados",
+		"classFilterPlaceholder": "Seleccionar clases",
+		"filterByClass": "Filtrar por clase",
+		"filterByStatus": "Filtrar por estado",
+		"unnamedClass": "Clase"
+	},
+	"developStudies": {
+		"classFilterPlaceholder": "Seleccionar clases",
+		"filterByClass": "Filtrar por clase",
+		"filterByStatus": "Filtrar por estado",
+		"unnamedClass": "Clase"
+	},
 	"duplicateEditBlock": "Duplicar y editar un bloque MindHive preexistente y sus parámetros.",
 	"duplicateEditSurvey": "Duplicar y editar una encuesta MindHive preexistente y sus parámetros.",
 	"duration": "Duración",

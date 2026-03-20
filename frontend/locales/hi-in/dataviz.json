@@ -1,4 +1,13 @@
 {
+	"dataJournal": {
+		"topNav": {
+			"addComponent": "एक घटक जोड़ें",
+			"datasets": "डेटासेट",
+			"editWorkspaceName": "वर्कस्पेस का नाम संपादित करें",
+			"journals": "पत्रिकाओं",
+			"selectJournal": "शुरू करने के लिए एक जर्नल चुनें..."
+		}
+	},
 	"overview": {
 		"database": {
 			"csvDownloadMessage": "आप जिस CSV को डाउनलोड करने वाले हैं उसे एक नाम दें\\n'.csv' जोड़ने की कोई ज़रूरत नहीं है, हम उसका ध्यान रख रहे हैं!",

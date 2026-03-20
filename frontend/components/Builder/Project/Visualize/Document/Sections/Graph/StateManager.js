@@ -1,9 +1,6 @@
 import { useState } from "react";
 
 import {
-  MessageHeader,
-  MessageContent,
-  Message,
   Icon,
   AccordionTitle,
   AccordionContent,
@@ -13,6 +10,8 @@ import {
 import Render from "./Render";
 import CodeEditor from "./Controller/CodeEditor";
 import TemplateSelector from "./Controller/Templates";
+
+import JustOneSecondNotice from "../../../../../../DesignSystem/JustOneSecondNotice";
 
 import OptionsDefault from "./Controller/Options/OptionsDefault";
 import OptionsScatterPlot from "./Controller/Options/OptionsScatterPlot";
@@ -102,15 +101,7 @@ export default function StateManager({
         />
       )}
 
-      {isRunning && (
-        <Message icon>
-          <Icon name="circle notched" loading />
-          <MessageContent>
-            <MessageHeader>Just one second</MessageHeader>
-            The code is running.
-          </MessageContent>
-        </Message>
-      )}
+      {isRunning && <JustOneSecondNotice variant="codeRunning" />}
       {code && pyodide && (
         <>
           <div className="graphContainer">

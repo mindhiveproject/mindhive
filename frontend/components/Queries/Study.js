@@ -67,6 +67,12 @@ export const MY_STUDIES = gql`
         id
         username
       }
+      createdAt
+      classes {
+        id
+        title
+        code
+      }
     }
   }
 `;
@@ -98,6 +104,12 @@ export const TEACHER_STUDIES = gql`
       author {
         id
         username
+      }
+      createdAt
+      classes {
+        id
+        title
+        code
       }
     }
   }
@@ -515,6 +527,9 @@ export const STUDY_PROPOSALS_QUERY = gql`
       status
       proposal {
         id
+        author {
+          id
+        }
         title
         slug
         description
@@ -526,6 +541,9 @@ export const STUDY_PROPOSALS_QUERY = gql`
       }
       proposalMain {
         id
+        author {
+          id
+        }
         title
         slug
         description

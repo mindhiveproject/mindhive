@@ -40,7 +40,7 @@ const StyledProject = styled.div`
       align-items: center;
       grid-template-columns: auto 1fr auto;
       grid-gap: 20px;
-      padding: 7px 10px;
+      padding: 8px 0px 8px 16px;
       min-height: 55px;
     }
 
@@ -82,11 +82,29 @@ const StyledProject = styled.div`
     }
     .middle {
       display: grid;
-      grid-template-columns: auto 1fr;
+      grid-template-columns: minmax(0, 1fr) auto;
       grid-gap: 20px;
       align-items: center;
       .title {
         color: #00635a;
+      }
+      span.studyTitle {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+        font-family: Inter;
+        font-size: 22px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 28px;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
       }
     }
     .right {
@@ -103,7 +121,9 @@ const StyledProject = styled.div`
     .secondLine {
       /* Project journey tab bar (Figma Navbar 2187:2324) */
       padding: 0 8px;
-      background: #f3f3f3;
+      background: #F6F9F8;
+      border-bottom: 1px solid #E6E6E6;
+      border-top: 1px solid #E6E6E6;
 
       .menu {
         display: flex;
@@ -114,7 +134,7 @@ const StyledProject = styled.div`
       .menuTitle {
         display: flex;
         align-items: center;
-        padding: 6px 10px;
+        padding: 0px 8px 8px 8px;
         border-bottom: 4px solid transparent;
         cursor: pointer;
 
@@ -133,7 +153,7 @@ const StyledProject = styled.div`
           p {
             font-family: Inter, sans-serif;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             line-height: 20px;
             color: #171717;
             margin: 0;

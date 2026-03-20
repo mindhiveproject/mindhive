@@ -2,12 +2,7 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
-import {
-  MessageHeader,
-  MessageContent,
-  Message,
-  Icon,
-} from "semantic-ui-react";
+import JustOneSecondNotice from "../../../../../../DesignSystem/JustOneSecondNotice";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
@@ -196,15 +191,7 @@ print("[DEBUG ${sectionId}] fig_json_output exists:", ${outputVar} is not None)
       id={`figure-${sectionId}`}
       style={{ width: "100%", height: "100%" }}
     >
-      {isRunning && (
-        <Message icon>
-          <Icon name="circle notched" loading />
-          <MessageContent>
-            <MessageHeader>Just one second</MessageHeader>
-            The code is running.
-          </MessageContent>
-        </Message>
-      )}
+      {isRunning && <JustOneSecondNotice variant="codeRunning" />}
 
       {error ? (
         <div style={{ color: "red", padding: "1rem" }}>{error}</div>

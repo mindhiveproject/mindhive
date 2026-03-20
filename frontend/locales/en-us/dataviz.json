@@ -1,4 +1,13 @@
 {
+	"dataJournal": {
+		"topNav": {
+			"addComponent": "Add a Component",
+			"datasets": "Datasets",
+			"editWorkspaceName": "Edit workspace name",
+			"journals": "Journals",
+			"selectJournal": "Select a Journal to start ..."
+		}
+	},
 	"overview": {
 		"database": {
 			"csvDownloadMessage": "Give a name to the CSV you're about to download\\nNo need to add '.csv' we're taking care of that!",

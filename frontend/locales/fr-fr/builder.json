@@ -158,6 +158,11 @@
 	},
 	"cloneAndModify": "Cloner et modifier un {{taskType}}",
 	"closeButton": "Fermer",
+	"codeExecution": {
+		"codeRunningMessage": "Le code est en cours d'exécution.",
+		"justOneSecondTitle": "Une seule seconde",
+		"librariesLoadingMessage": "Les bibliothèques d'analyse de données sont en cours de chargement."
+	},
 	"collect": {
 		"noProjectFound": "Aucun projet trouvé, veuillez d'abord enregistrer votre projet.",
 		"noStudyAttachedHeader": "🤷🏻 Votre projet n'a aucune étude qui lui est associée.",
@@ -222,6 +227,87 @@
 	"dataJournal": {
 		"addComponent": "Ajouter un composant",
 		"addNotes": "Ajouter des notes",
+		"collapsePanel": "Réduire le panneau",
+		"componentEditor": {
+			"close": "Fermer",
+			"delete": "SUPPRIMER",
+			"editComponent": "Modifier le composant",
+			"editParagraph": "Modifier le paragraphe",
+			"save": "Sauvegarder",
+			"unsupportedType": "Type de composant non pris en charge : {{type}}",
+			"untitled": "Sans titre"
+		},
+		"hypVis": {
+			"axes": {
+				"abDesign": {
+					"clipboardAiCopied": "Hypothèse reformulée par l'IA copiée dans le presse-papiers : {{text}}",
+					"clipboardFigCopied": "Copié dans le presse-papiers !",
+					"clipboardHypothesisCopied": "Texte copié dans le presse-papiers : {{text}}",
+					"copyAiHypothesis": "Copier le texte de l'hypothèse formulée par l'IA dans le presse-papiers (en cours)",
+					"copyGraph": "Copier le graphique dans le presse-papiers",
+					"copyHypothesis": "Copier le texte de l'hypothèse dans le presse-papiers",
+					"describeHypothesisFirst": "Veuillez d'abord décrire votre hypothèse.",
+					"dvLabel": "Quel est le nom de votre variable dépendante (VD) ?",
+					"dvPlaceholder": "Variable dépendante",
+					"headerTitle": "Hypothèse expérimentale",
+					"iPredictThat": "Je prévois que",
+					"ivConditionsLabel": "Combien de conditions comporte votre variable indépendante (VI) ?",
+					"ivConditionsPlaceholder": "2",
+					"ivLabel": "Quel est le nom de votre variable indépendante (VI) ?",
+					"ivPlaceholder": "Variable indépendante",
+					"rankHelpIntro": "Si vous avez trois conditions :",
+					"rankHelpStep1": "Nommez chaque condition à l'aide du menu déroulant (vous pouvez saisir du texte !).",
+					"rankHelpStep2": "Utilisez le curseur situé à droite de l'étiquette pour indiquer le rang attendu de la variable dépendante dans cette condition par rapport aux autres.",
+					"rankSectionTitle": "Classez vos conditions",
+					"sectionHypothesisTitle": "Votre hypothèse expérimentale",
+					"titleLabel": "Titre",
+					"titlePlaceholder": "Effet de la condition sur la variable",
+					"willOccupyRank": "occupera le rang #",
+					"yourHypothesisHelpIntro": "Pour formuler votre hypothèse expérimentale, suivez ces étapes :",
+					"yourHypothesisHelpStep1": "Nommez votre IV et votre DV",
+					"yourHypothesisHelpStep2": "Indiquez le nombre de conditions dans lesquelles votre perfusion intraveineuse est associée.",
+					"yourHypothesisHelpStep3": "Prédire les valeurs de la variable dépendante pour chaque condition de la variable indépendante"
+				},
+				"clipboard": {
+					"abDesignConditionLine": "- {{condition}} occupera le rang n°{{rank}}\n",
+					"abDesignIntro": "Je prévois que les valeurs de {{dv}} varieront selon les conditions {{n}} de {{iv}} comme suit :\n\n",
+					"copyGraphNoFigHtml": "Aucun graphique n'est disponible pour le moment. Veuillez renseigner vos variables et patienter jusqu'à ce que la visualisation apparaisse dans le journal, puis réessayer.",
+					"copyGraphNoPyodide": "L'environnement d'exécution Python n'est pas encore prêt. Veuillez patienter pendant le chargement du journal.",
+					"corrHypothesis": "Je prévois que {{ivDir}} {{iv}} sera lié à {{dvDir}} {{dv}}.",
+					"fallbackCondition": "État  {{n}}",
+					"fallbackDependentVariable": "Variable dépendante",
+					"fallbackIndependentVariable": "Variable indépendante",
+					"fallbackNumberOfConditions": "Nombre de"
+				},
+				"corr": {
+					"clipboardFigCopied": "Copié dans le presse-papiers !",
+					"clipboardHypothesisCopied": "Texte copié dans le presse-papiers : {{text}}",
+					"copyGraph": "Copier le graphique dans le presse-papiers",
+					"copyHypothesis": "Copier le texte de l'hypothèse dans le presse-papiers",
+					"dependentPlaceholder": "Variable dépendante",
+					"directionalityPlaceholder": "directionnalité",
+					"errorLoading": "Erreur :  {{message}}",
+					"errorLoadingBlocks": "Erreur lors du chargement des données du bloc : {{message}}",
+					"headerTitle": "Hypothèse corrélationnelle",
+					"helpExampleQuote": "On prévoit qu'une anxiété plus élevée sera liée à un pourcentage plus faible d'essais misés.",
+					"helpForInstance": "Par exemple",
+					"helpIntro": "Remplissez les blancs pour créer votre hypothèse de corrélation !",
+					"helpNote": "Notez que les options suggérées sous les champs variables sont extraites des blocs publics de votre générateur d'étude.",
+					"independentPlaceholder": "Variable indépendante",
+					"iPredictThat": "Je prévois que",
+					"loading": "Chargement...",
+					"loadingBlocks": "Chargement des données du bloc...",
+					"sectionTitle": "Votre hypothèse de corrélation",
+					"titleLabel": "Titre",
+					"willBeRelatedTo": "sera lié à"
+				}
+			},
+			"editor": {
+				"codeTab": "Code",
+				"variablesTab": "Variables"
+			},
+			"helpAriaLabel": "Plus d'information"
+		},
 		"settingsPanel": {
 			"deleteWidget": "Supprimer le widget",
 			"notes": "Remarques",
@@ -232,7 +318,7 @@
 			"unsupportedType": "Type de widget non pris en charge : {{type}}"
 		}
 	},
-	"dataJournals": "Journaux de données 🚧",
+	"dataJournals": "Journaux",
 	"dataset": {
 		"deleteInvalidRecord": "Supprimer l'enregistrement invalide",
 		"download": "Télécharger",
@@ -296,6 +382,21 @@
 	"developA": "Développer un {{développer}}",
 	"developHeaderDescription": "Créez, modifiez et gérez vos études, tâches et enquêtes ici.",
 	"developNew": "Développer quelque chose de nouveau",
+	"developProjects": {
+		"activeProjects": "Projets actifs",
+		"allProjects": "Tous les projets",
+		"archivedProjects": "Projets archivés",
+		"classFilterPlaceholder": "Sélectionnez les cours",
+		"filterByClass": "Filtrer par classe",
+		"filterByStatus": "Filtrer par statut",
+		"unnamedClass": "Classe"
+	},
+	"developStudies": {
+		"classFilterPlaceholder": "Sélectionnez les cours",
+		"filterByClass": "Filtrer par classe",
+		"filterByStatus": "Filtrer par statut",
+		"unnamedClass": "Classe"
+	},
 	"duplicateEditBlock": "Dupliquez et modifiez un bloc MindHive préexistant et ses paramètres.",
 	"duplicateEditSurvey": "Dupliquez et modifiez une enquête MindHive préexistante et ses paramètres.",
 	"duration": "Durée",
