@@ -8,6 +8,7 @@ import ConnectStudy from "./ConnectStudy/Main";
 
 import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
 import StudyDropdown from "../../../Projects/StudyConnector/StudyDropdown";
+import InfoTooltip from "../../../DesignSystem/InfoTooltip";
 
 export default function Navigation({
   proposalId,
@@ -100,10 +101,19 @@ export default function Navigation({
           </div>
         </div>
         <div className="middle">
-          <div className="studyTitle">
-            <span className="title">{t("studyManager.project")} </span>{" "}
-            {project?.title}
-          </div>
+          <InfoTooltip
+            content={
+              project?.title || t("header.myProjectBoard", "My Project Board")
+            }
+            delayMs={650}
+            wrapperStyle={{ width: "100%", minWidth: 0 }}
+            tooltipStyle={{
+              width: "100%",
+              background: "#F7F9F8",
+            }}
+          >
+            <span className="studyTitle">{project?.title ?? ""}</span>
+          </InfoTooltip>
           {project?.study && (
             <div className="studyTitle">
               <StudyDropdown user={user} project={project} />
