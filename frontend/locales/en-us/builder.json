@@ -227,6 +227,85 @@
 	"dataJournal": {
 		"addComponent": "Add Component",
 		"addNotes": "Add Notes",
+		"collapsePanel": "Collapse panel",
+		"componentEditor": {
+			"close": "Close",
+			"delete": "Delete",
+			"editComponent": "Edit Component",
+			"editParagraph": "Edit Paragraph",
+			"save": "Save",
+			"unsupportedType": "Unsupported component type: {{type}}",
+			"untitled": "Untitled"
+		},
+		"hypVis": {
+			"axes": {
+				"abDesign": {
+					"clipboardAiCopied": "AI-reformulated hypothesis copied to clipboard: {{text}}",
+					"clipboardFigCopied": "Copied to clipboard!",
+					"clipboardHypothesisCopied": "Text copied to clipboard: {{text}}",
+					"copyAiHypothesis": "Copy AI-formulated hypothesis text to clipboard (in progress)",
+					"copyGraph": "Copy graph to clipboard",
+					"copyHypothesis": "Copy hypothesis text to clipboard",
+					"describeHypothesisFirst": "Please describe your hypothesis first",
+					"dvLabel": "What is the name of your Dependent Variable (DV)?",
+					"dvPlaceholder": "Dependent variable",
+					"headerTitle": "Experimental Hypothesis",
+					"iPredictThat": "I predict that",
+					"ivConditionsLabel": "How many conditions does your Independent Variable (IV) have?",
+					"ivConditionsPlaceholder": "2",
+					"ivLabel": "What is the name of your Independent Variable (IV)?",
+					"ivPlaceholder": "Independent variable",
+					"rankHelpIntro": "If you have three conditions:",
+					"rankHelpStep1": "Name each condition using the dropdown (you can type in!)",
+					"rankHelpStep2": "Use the slider on the right side of the label to indicate the expected rank of the DV in this condition compared to the rest",
+					"rankSectionTitle": "Rank your conditions",
+					"sectionHypothesisTitle": "Your experimental hypothesis",
+					"titleLabel": "Title",
+					"titlePlaceholder": "Effect of condition on variable",
+					"willOccupyRank": "will occupy rank #",
+					"yourHypothesisHelpIntro": "To build your experimental hypothesis, follow these steps:",
+					"yourHypothesisHelpStep1": "Name your IV and DV",
+					"yourHypothesisHelpStep2": "State how many conditions your IV has",
+					"yourHypothesisHelpStep3": "Predict the DV values for each condition of the IV"
+				},
+				"clipboard": {
+					"abDesignConditionLine": "- {{condition}} will occupy rank #{{rank}}\n",
+					"abDesignIntro": "I predict that the {{dv}} will vary across the {{n}} conditions of the {{iv}} as follows:\n",
+					"corrHypothesis": "I predict that {{ivDir}} {{iv}} will be related to {{dvDir}} {{dv}}.",
+					"fallbackCondition": "condition {{n}}",
+					"fallbackDependentVariable": "dependent variable",
+					"fallbackIndependentVariable": "independent variable",
+					"fallbackNumberOfConditions": "number of"
+				},
+				"corr": {
+					"clipboardFigCopied": "Copied to clipboard!",
+					"clipboardHypothesisCopied": "Text copied to clipboard: {{text}}",
+					"copyGraph": "Copy graph to clipboard",
+					"copyHypothesis": "Copy hypothesis text to clipboard",
+					"dependentPlaceholder": "dependent variable",
+					"directionalityPlaceholder": "directionality",
+					"errorLoading": "Error: {{message}}",
+					"errorLoadingBlocks": "Error loading block data: {{message}}",
+					"headerTitle": "Correlational Hypothesis",
+					"helpExampleQuote": "It is predicted that higher anxiety will be related to lower % of trials gambled.",
+					"helpForInstance": "For instance",
+					"helpIntro": "Fill in the blanks to create your correlational hypothesis!",
+					"helpNote": "Note that the options suggested under the variable fields are pulled from the public blocks in your study builder",
+					"independentPlaceholder": "independent variable",
+					"iPredictThat": "I predict that",
+					"loading": "Loading...",
+					"loadingBlocks": "Loading block data...",
+					"sectionTitle": "Your correlational hypothesis",
+					"titleLabel": "Title",
+					"willBeRelatedTo": "will be related to"
+				}
+			},
+			"editor": {
+				"codeTab": "Code",
+				"variablesTab": "Variables"
+			},
+			"helpAriaLabel": "More information"
+		},
 		"settingsPanel": {
 			"deleteWidget": "Delete Widget",
 			"notes": "Notes",

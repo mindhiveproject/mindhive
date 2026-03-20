@@ -2,6 +2,7 @@
 
 import { Tab } from "semantic-ui-react";
 import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import { useDataJournal } from "../../../../Context/DataJournalContext";
 
@@ -22,6 +23,7 @@ export default function HypVisEditor({
   onChange,
   sectionId,
 }) {
+  const { t } = useTranslation("builder");
   const { pyodide, data, variables } = useDataJournal();
 
   const [activeTab, setActiveTab] = useState(0);
@@ -44,9 +46,12 @@ export default function HypVisEditor({
 
   const panes = [
     {
-      menuItem: "Variables",
+      menuItem: t(
+        "dataJournal.hypVis.editor.variablesTab",
+        "Variables",
+      ),
       render: () => (
-        <div style={{ padding: "1rem" }}>
+        <div className="hypvis-tab-pane">
           <AxesComp
             user={user}
             studyId={studyId}
@@ -59,7 +64,7 @@ export default function HypVisEditor({
       ),
     },
     {
-      menuItem: "Code",
+      menuItem: t("dataJournal.hypVis.editor.codeTab", "Code"),
       render: () => (
         <CodeEditor sectionId={sectionId} code={code} onChange={onChange} />
       ),

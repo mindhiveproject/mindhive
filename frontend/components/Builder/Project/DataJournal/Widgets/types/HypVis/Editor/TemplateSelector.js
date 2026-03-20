@@ -42,42 +42,43 @@ max_height = 100
 bar_values = [(max_height / max(1, n_conditions)) * rank for rank in conditionRanks]
 
 # ── Create the plot ─────────────────────────────────────────────────────────
-fig, ax = plt.subplots(figsize=(5.4, 3.9), dpi=150)
+with plt.xkcd():
+    fig, ax = plt.subplots(figsize=(5.4, 3.9), dpi=150)
 
-bars = ax.bar(
-    conditionNames,
-    bar_values,
-    color=["#a6cee3", "#b2df8a", "#fb9a99", "#fdbf6f", "#cab2d6", "#ffff99", "#8dd3c7", "#bebada", "#fb8072", "#80b1d3"][:n_conditions],
-    edgecolor="navy",
-    linewidth=0.8,
-    width=0.68
-)
-
-# Title and labels
-ax.set_title(title_str, fontsize=12, pad=14, wrap=True)
-ax.set_ylabel(dv_label, fontsize=11)
-ax.set_ylim(0, max(bar_values) * 1.38 if bar_values else 140)
-
-# Annotate each bar with its rank
-for bar, rank in zip(bars, conditionRanks):
-    height = bar.get_height()
-    ax.text(
-        bar.get_x() + bar.get_width() / 2,
-        height + (max_height * 0.018),
-        f"Rank {int(rank) if rank.is_integer() else rank:.1f}",
-        ha="center",
-        va="bottom",
-        fontsize=10,
-        fontweight="bold",
-        color="#2c3e50"
+    bars = ax.bar(
+        conditionNames,
+        bar_values,
+        color=["#a6cee3", "#b2df8a", "#fb9a99", "#fdbf6f", "#cab2d6", "#ffff99", "#8dd3c7", "#bebada", "#fb8072", "#80b1d3"][:n_conditions],
+        edgecolor="navy",
+        linewidth=0.8,
+        width=0.68
     )
 
-# Styling
-ax.tick_params(axis="x", rotation=35, labelsize=9.5)
-ax.yaxis.set_ticks([])
-ax.grid(axis="y", linestyle="--", alpha=0.15)
+    # Title and labels
+    ax.set_title(title_str, fontsize=12, pad=14, wrap=True)
+    ax.set_ylabel(dv_label, fontsize=11)
+    ax.set_ylim(0, max(bar_values) * 1.38 if bar_values else 140)
 
-plt.tight_layout(pad=1.1)
+    # Annotate each bar with its rank
+    for bar, rank in zip(bars, conditionRanks):
+        height = bar.get_height()
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            height + (max_height * 0.018),
+            f"Rank {int(rank) if rank.is_integer() else rank:.1f}",
+            ha="center",
+            va="bottom",
+            fontsize=10,
+            fontweight="bold",
+            color="#2c3e50"
+        )
+
+    # Styling
+    ax.tick_params(axis="x", rotation=35, labelsize=9.5)
+    ax.yaxis.set_ticks([])
+    ax.grid(axis="y", linestyle="--", alpha=0.15)
+
+    plt.tight_layout(pad=1.1)
 
 # ── Export to base64 image ──────────────────────────────────────────────────
 buf = BytesIO()
@@ -128,27 +129,28 @@ else:
     y = -x * 0.9 + 9 + np.random.normal(0, 1.6, n)
 
 # Plot
-fig, ax = plt.subplots(figsize=(6.2, 4.4), dpi=140)
+with plt.xkcd():
+    fig, ax = plt.subplots(figsize=(6.2, 4.4), dpi=140)
 
-ax.scatter(x, y, s=45, color="#1f77b4", alpha=0.75, edgecolor="navy", linewidth=0.6)
+    ax.scatter(x, y, s=45, color="#1f77b4", alpha=0.75, edgecolor="navy", linewidth=0.6)
 
-# Trend line
-z = np.polyfit(x, y, 1)
-p = np.poly1d(z)
-ax.plot(x, p(x), "--", color="#d62728", lw=1.8, label="Predicted trend")
+    # Trend line
+    z = np.polyfit(x, y, 1)
+    p = np.poly1d(z)
+    ax.plot(x, p(x), "--", color="#d62728", lw=1.8, label="Predicted trend")
 
-ax.set_title(title_text, fontsize=13, pad=14, wrap=True)
-ax.set_xlabel(iv_label, fontsize=11)
-ax.set_ylabel(dv_label, fontsize=11)
+    ax.set_title(title_text, fontsize=13, pad=14, wrap=True)
+    ax.set_xlabel(iv_label, fontsize=11)
+    ax.set_ylabel(dv_label, fontsize=11)
 
-ax.legend(loc="upper left", fontsize=10, framealpha=0.92)
-ax.grid(True, linestyle="--", alpha=0.25)
+    ax.legend(loc="upper left", fontsize=10, framealpha=0.92)
+    ax.grid(True, linestyle="--", alpha=0.25)
 
-# Hide ticks for schematic look
-ax.set_xticks([])
-ax.set_yticks([])
+    # Hide ticks for schematic look
+    ax.set_xticks([])
+    ax.set_yticks([])
 
-plt.tight_layout(pad=1.2)
+    plt.tight_layout(pad=1.2)
 
 # Export to base64
 buf = BytesIO()

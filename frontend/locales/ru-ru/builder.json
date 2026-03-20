@@ -227,6 +227,85 @@
 	"dataJournal": {
 		"addComponent": "Добавить компонент",
 		"addNotes": "Добавить заметки",
+		"collapsePanel": "Свернуть панель",
+		"componentEditor": {
+			"close": "Закрывать",
+			"delete": "Удалить",
+			"editComponent": "Редактировать компонент",
+			"editParagraph": "Редактировать абзац",
+			"save": "Сохранять",
+			"unsupportedType": "Неподдерживаемый тип компонента: {{type}}",
+			"untitled": "Без названия"
+		},
+		"hypVis": {
+			"axes": {
+				"abDesign": {
+					"clipboardAiCopied": "Гипотеза, переформулированная ИИ и скопированная в буфер обмена: {{text}}",
+					"clipboardFigCopied": "Скопировано в буфер обмена!",
+					"clipboardHypothesisCopied": "Текст скопирован в буфер обмена: {{text}}",
+					"copyAiHypothesis": "Скопировать текст гипотезы, сформулированной ИИ, в буфер обмена (в процессе)",
+					"copyGraph": "Скопировать график в буфер обмена",
+					"copyHypothesis": "Скопировать текст гипотезы в буфер обмена",
+					"describeHypothesisFirst": "Пожалуйста, сначала изложите свою гипотезу.",
+					"dvLabel": "Как называется ваша зависимая переменная (ЗП)?",
+					"dvPlaceholder": "Зависимая переменная",
+					"headerTitle": "Экспериментальная гипотеза",
+					"iPredictThat": "Я предсказываю, что",
+					"ivConditionsLabel": "Сколько условий включает ваша независимая переменная (НП)?",
+					"ivConditionsPlaceholder": "2",
+					"ivLabel": "Как называется ваша независимая переменная (НП)?",
+					"ivPlaceholder": "Независимая переменная",
+					"rankHelpIntro": "Если у вас есть три условия:",
+					"rankHelpStep1": "Назовите каждое условие, используя выпадающий список (вы также можете ввести текст!).",
+					"rankHelpStep2": "Используйте ползунок справа от метки, чтобы указать ожидаемый ранг зависимой переменной в данном состоянии по сравнению с остальными.",
+					"rankSectionTitle": "Оцените ваши условия по порядку.",
+					"sectionHypothesisTitle": "Ваша экспериментальная гипотеза",
+					"titleLabel": "Заголовок",
+					"titlePlaceholder": "Влияние условий на переменную",
+					"willOccupyRank": "займет ранг #",
+					"yourHypothesisHelpIntro": "Для формулирования экспериментальной гипотезы выполните следующие шаги:",
+					"yourHypothesisHelpStep1": "Назовите свою независимую и зависимую переменные.",
+					"yourHypothesisHelpStep2": "Укажите, сколько заболеваний у вашей внутривенной капельницы.",
+					"yourHypothesisHelpStep3": "Спрогнозируйте значения зависимой переменной для каждого условия независимой переменной."
+				},
+				"clipboard": {
+					"abDesignConditionLine": "- {{condition}} займет место №{{rank}}",
+					"abDesignIntro": "Я предполагаю, что {{dv}} будет изменяться в зависимости от условий {{n}} условия {{iv}} следующим образом:\n\n",
+					"corrHypothesis": "Я предполагаю, что {{ivDir}} {{iv}} будет связано с {{dvDir}} {{dv}}.",
+					"fallbackCondition": "условие {{n}}",
+					"fallbackDependentVariable": "Зависимая переменная",
+					"fallbackIndependentVariable": "Независимая переменная",
+					"fallbackNumberOfConditions": "Количество"
+				},
+				"corr": {
+					"clipboardFigCopied": "Скопировано в буфер обмена!",
+					"clipboardHypothesisCopied": "Текст скопирован в буфер обмена: {{text}}",
+					"copyGraph": "Скопировать график в буфер обмена",
+					"copyHypothesis": "Скопировать текст гипотезы в буфер обмена",
+					"dependentPlaceholder": "Зависимая переменная",
+					"directionalityPlaceholder": "направленность",
+					"errorLoading": "Ошибка: {{message}}",
+					"errorLoadingBlocks": "Ошибка загрузки данных блока: {{message}}",
+					"headerTitle": "Корреляционная гипотеза",
+					"helpExampleQuote": "Предполагается, что более высокий уровень тревожности будет связан с меньшим процентом рискованных попыток.",
+					"helpForInstance": "Например",
+					"helpIntro": "Заполните пропуски, чтобы сформулировать свою корреляционную гипотезу!",
+					"helpNote": "Обратите внимание, что варианты, предлагаемые в полях переменных, берутся из общедоступных блоков в вашем конструкторе исследований.",
+					"independentPlaceholder": "Независимая переменная",
+					"iPredictThat": "Я предсказываю, что",
+					"loading": "Загрузка...",
+					"loadingBlocks": "Загрузка данных блока...",
+					"sectionTitle": "Ваша корреляционная гипотеза",
+					"titleLabel": "Заголовок",
+					"willBeRelatedTo": "будет связано с"
+				}
+			},
+			"editor": {
+				"codeTab": "Код",
+				"variablesTab": "Переменные"
+			},
+			"helpAriaLabel": "Более подробная информация"
+		},
 		"settingsPanel": {
 			"deleteWidget": "Удалить виджет",
 			"notes": "Примечания",

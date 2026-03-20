@@ -227,6 +227,85 @@
 	"dataJournal": {
 		"addComponent": "إضافة مكون",
 		"addNotes": "إضافة ملاحظات",
+		"collapsePanel": "لوحة قابلة للطي",
+		"componentEditor": {
+			"close": "يغلق",
+			"delete": "يمسح",
+			"editComponent": "تعديل المكون",
+			"editParagraph": "تعديل الفقرة",
+			"save": "يحفظ",
+			"unsupportedType": "نوع المكون غير مدعوم: {{type}}",
+			"untitled": "بدون عنوان"
+		},
+		"hypVis": {
+			"axes": {
+				"abDesign": {
+					"clipboardAiCopied": "تم نسخ الفرضية المعاد صياغتها بواسطة الذكاء الاصطناعي إلى الحافظة: {{text}}",
+					"clipboardFigCopied": "تمت نسخها إلى الحافظة!",
+					"clipboardHypothesisCopied": "النص المنسوخ إلى الحافظة: {{text}}",
+					"copyAiHypothesis": "نسخ نص الفرضية التي صاغها الذكاء الاصطناعي إلى الحافظة (قيد التنفيذ)",
+					"copyGraph": "انسخ الرسم البياني إلى الحافظة",
+					"copyHypothesis": "انسخ نص الفرضية إلى الحافظة",
+					"describeHypothesisFirst": "يرجى وصف فرضيتك أولاً",
+					"dvLabel": "ما اسم المتغير التابع (DV) الخاص بك؟",
+					"dvPlaceholder": "المتغير التابع",
+					"headerTitle": "الفرضية التجريبية",
+					"iPredictThat": "أتوقع ذلك",
+					"ivConditionsLabel": "كم عدد الشروط التي يتضمنها المتغير المستقل (IV) الخاص بك؟",
+					"ivConditionsPlaceholder": "2",
+					"ivLabel": "ما اسم المتغير المستقل (IV) الخاص بك؟",
+					"ivPlaceholder": "المتغير المستقل",
+					"rankHelpIntro": "إذا توفرت لديك ثلاثة شروط:",
+					"rankHelpStep1": "قم بتسمية كل شرط باستخدام القائمة المنسدلة (يمكنك الكتابة!).",
+					"rankHelpStep2": "استخدم شريط التمرير الموجود على الجانب الأيمن من الملصق لتحديد الترتيب المتوقع للمتغير التابع في هذه الحالة مقارنةً بالبقية.",
+					"rankSectionTitle": "رتب ظروفك",
+					"sectionHypothesisTitle": "فرضيتك التجريبية",
+					"titleLabel": "عنوان",
+					"titlePlaceholder": "تأثير الحالة على المتغير",
+					"willOccupyRank": "سيحتل المرتبة",
+					"yourHypothesisHelpIntro": "لبناء فرضيتك التجريبية، اتبع الخطوات التالية:",
+					"yourHypothesisHelpStep1": "قم بتسمية المتغير التابع والمتغير التابع",
+					"yourHypothesisHelpStep2": "حدد عدد الحالات التي يعاني منها المحلول الوريدي الخاص بك",
+					"yourHypothesisHelpStep3": "توقع قيم المتغير التابع لكل حالة من حالات المتغير المستقل"
+				},
+				"clipboard": {
+					"abDesignConditionLine": "- سيحتل {{condition}} المرتبة رقم{{rank}}\n",
+					"abDesignIntro": "أتوقع أن تتغير قيمة {{dv}} تبعاً لشروط {{n}} في {{iv}} على النحو التالي:\n\n",
+					"corrHypothesis": "أتوقع أن {{ivDir}} {{iv}} ستكون مرتبطة بـ {{dvDir}} {{dv}}.",
+					"fallbackCondition": "الشرط {{n}}",
+					"fallbackDependentVariable": "المتغير التابع",
+					"fallbackIndependentVariable": "المتغير المستقل",
+					"fallbackNumberOfConditions": "عدد من"
+				},
+				"corr": {
+					"clipboardFigCopied": "تمت نسخها إلى الحافظة!",
+					"clipboardHypothesisCopied": "النص المنسوخ إلى الحافظة: {{text}}",
+					"copyGraph": "انسخ الرسم البياني إلى الحافظة",
+					"copyHypothesis": "انسخ نص الفرضية إلى الحافظة",
+					"dependentPlaceholder": "المتغير التابع",
+					"directionalityPlaceholder": "الاتجاهية",
+					"errorLoading": "خطأ: {{message}}",
+					"errorLoadingBlocks": "خطأ في تحميل بيانات الكتلة: {{message}}",
+					"headerTitle": "فرضية الارتباط",
+					"helpExampleQuote": "من المتوقع أن يرتبط ارتفاع مستوى القلق بانخفاض نسبة التجارب التي يتم المراهنة عليها.",
+					"helpForInstance": "على سبيل المثال",
+					"helpIntro": "املأ الفراغات لإنشاء فرضيتك الارتباطية!",
+					"helpNote": "لاحظ أن الخيارات المقترحة ضمن الحقول المتغيرة يتم استخلاصها من الكتل العامة في أداة إنشاء الدراسة الخاصة بك",
+					"independentPlaceholder": "المتغير المستقل",
+					"iPredictThat": "أتوقع ذلك",
+					"loading": "تحميل...",
+					"loadingBlocks": "جارٍ تحميل بيانات الكتلة...",
+					"sectionTitle": "فرضيتك الارتباطية",
+					"titleLabel": "عنوان",
+					"willBeRelatedTo": "سيكون مرتبطًا بـ"
+				}
+			},
+			"editor": {
+				"codeTab": "شفرة",
+				"variablesTab": "المتغيرات"
+			},
+			"helpAriaLabel": "معلومات اكثر"
+		},
 		"settingsPanel": {
 			"deleteWidget": "حذف الأداة",
 			"notes": "ملحوظات",

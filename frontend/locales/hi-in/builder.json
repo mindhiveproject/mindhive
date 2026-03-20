@@ -227,6 +227,85 @@
 	"dataJournal": {
 		"addComponent": "घटक जोड़ें",
 		"addNotes": "नोट्स जोड़ें",
+		"collapsePanel": "पैनल को बंद करें",
+		"componentEditor": {
+			"close": "बंद करना",
+			"delete": "मिटाना",
+			"editComponent": "घटक संपादित करें",
+			"editParagraph": "पैराग्राफ संपादित करें",
+			"save": "बचाना",
+			"unsupportedType": "असमर्थित घटक प्रकार: {{type}}",
+			"untitled": "शीर्षकहीन"
+		},
+		"hypVis": {
+			"axes": {
+				"abDesign": {
+					"clipboardAiCopied": "एआई द्वारा पुनर्गठित परिकल्पना क्लिपबोर्ड पर कॉपी की गई: {{text}}",
+					"clipboardFigCopied": "क्लिपबोर्ड पर कॉपी हो गया!",
+					"clipboardHypothesisCopied": "क्लिपबोर्ड पर कॉपी किया गया पाठ: {{text}}",
+					"copyAiHypothesis": "एआई द्वारा तैयार की गई परिकल्पना के पाठ को क्लिपबोर्ड पर कॉपी करें (प्रगति में)",
+					"copyGraph": "ग्राफ़ को क्लिपबोर्ड पर कॉपी करें",
+					"copyHypothesis": "परिकल्पना का पाठ क्लिपबोर्ड पर कॉपी करें",
+					"describeHypothesisFirst": "कृपया पहले अपनी परिकल्पना का वर्णन करें।",
+					"dvLabel": "आपके आश्रित चर (DV) का नाम क्या है?",
+					"dvPlaceholder": "आश्रित चर",
+					"headerTitle": "प्रायोगिक परिकल्पना",
+					"iPredictThat": "मैं भविष्यवाणी करता हूँ कि",
+					"ivConditionsLabel": "आपके स्वतंत्र चर (IV) में कितनी शर्तें हैं?",
+					"ivConditionsPlaceholder": "2",
+					"ivLabel": "आपके स्वतंत्र चर (IV) का नाम क्या है?",
+					"ivPlaceholder": "स्वतंत्र चर",
+					"rankHelpIntro": "यदि आपमें ये तीन शर्तें हैं:",
+					"rankHelpStep1": "ड्रॉपडाउन का उपयोग करके प्रत्येक स्थिति का नाम दें (आप टाइप भी कर सकते हैं!)",
+					"rankHelpStep2": "लेबल के दाईं ओर स्थित स्लाइडर का उपयोग करके इस स्थिति में DV की अपेक्षित रैंक को बाकी की तुलना में इंगित करें।",
+					"rankSectionTitle": "अपनी स्थितियों को क्रमबद्ध करें",
+					"sectionHypothesisTitle": "आपकी प्रायोगिक परिकल्पना",
+					"titleLabel": "शीर्षक",
+					"titlePlaceholder": "स्थिति का चर पर प्रभाव",
+					"willOccupyRank": "रैंक # पर कब्जा करेगा",
+					"yourHypothesisHelpIntro": "अपनी प्रायोगिक परिकल्पना बनाने के लिए, इन चरणों का पालन करें:",
+					"yourHypothesisHelpStep1": "अपने IV और DV के नाम बताइए",
+					"yourHypothesisHelpStep2": "बताइए कि आपके IV में कितनी स्थितियां हैं",
+					"yourHypothesisHelpStep3": "IV की प्रत्येक स्थिति के लिए DV मानों का अनुमान लगाइए।"
+				},
+				"clipboard": {
+					"abDesignConditionLine": "- {{condition}} रैंक #{{rank}}पर रहेगा\n\n",
+					"abDesignIntro": "मैं भविष्यवाणी करता हूँ कि {{dv}}  {{iv}} की {{n}} स्थितियों के अनुसार निम्नानुसार परिवर्तित होगा:\n\n",
+					"corrHypothesis": "मैं भविष्यवाणी करता हूँ कि {{ivDir}} {{iv}}  {{dvDir}} {{dv}}से संबंधित होगा।",
+					"fallbackCondition": "स्थिति {{n}}",
+					"fallbackDependentVariable": "आश्रित चर",
+					"fallbackIndependentVariable": "स्वतंत्र चर",
+					"fallbackNumberOfConditions": "की संख्या"
+				},
+				"corr": {
+					"clipboardFigCopied": "क्लिपबोर्ड पर कॉपी हो गया!",
+					"clipboardHypothesisCopied": "क्लिपबोर्ड पर कॉपी किया गया पाठ: {{text}}",
+					"copyGraph": "ग्राफ़ को क्लिपबोर्ड पर कॉपी करें",
+					"copyHypothesis": "परिकल्पना का पाठ क्लिपबोर्ड पर कॉपी करें",
+					"dependentPlaceholder": "आश्रित चर",
+					"directionalityPlaceholder": "दिशात्मकता",
+					"errorLoading": "त्रुटि: {{message}}",
+					"errorLoadingBlocks": "ब्लॉक डेटा लोड करने में त्रुटि: {{message}}",
+					"headerTitle": "सहसंबंधी परिकल्पना",
+					"helpExampleQuote": "यह अनुमान लगाया गया है कि अधिक चिंता का संबंध जुए में लगाए गए परीक्षणों के कम प्रतिशत से होगा।",
+					"helpForInstance": "उदाहरण के लिए",
+					"helpIntro": "सहसंबंध संबंधी परिकल्पना बनाने के लिए रिक्त स्थान भरें!",
+					"helpNote": "ध्यान दें कि वेरिएबल फ़ील्ड के अंतर्गत सुझाए गए विकल्प आपके स्टडी बिल्डर में मौजूद सार्वजनिक ब्लॉक से लिए गए हैं।",
+					"independentPlaceholder": "स्वतंत्र चर",
+					"iPredictThat": "मैं भविष्यवाणी करता हूँ कि",
+					"loading": "लोड हो रहा है...",
+					"loadingBlocks": "ब्लॉक डेटा लोड हो रहा है...",
+					"sectionTitle": "आपकी सहसंबंधी परिकल्पना",
+					"titleLabel": "शीर्षक",
+					"willBeRelatedTo": "संबंधित होगा"
+				}
+			},
+			"editor": {
+				"codeTab": "कोड",
+				"variablesTab": "चर"
+			},
+			"helpAriaLabel": "अधिक जानकारी"
+		},
 		"settingsPanel": {
 			"deleteWidget": "विजेट हटाएं",
 			"notes": "नोट्स",

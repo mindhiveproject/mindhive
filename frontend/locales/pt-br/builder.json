@@ -227,6 +227,85 @@
 	"dataJournal": {
 		"addComponent": "Adicionar componente",
 		"addNotes": "Adicionar notas",
+		"collapsePanel": "Painel recolhido",
+		"componentEditor": {
+			"close": "Fechar",
+			"delete": "Excluir",
+			"editComponent": "Editar componente",
+			"editParagraph": "Editar parágrafo",
+			"save": "Salvar",
+			"unsupportedType": "Tipo de componente não suportado: {{type}}",
+			"untitled": "Sem título"
+		},
+		"hypVis": {
+			"axes": {
+				"abDesign": {
+					"clipboardAiCopied": "Hipótese reformulada por IA copiada para a área de transferência: {{text}}",
+					"clipboardFigCopied": "Copiado para a área de transferência!",
+					"clipboardHypothesisCopied": "Texto copiado para a área de transferência: {{text}}",
+					"copyAiHypothesis": "Copiar texto da hipótese formulada por IA para a área de transferência (em andamento)",
+					"copyGraph": "Copiar gráfico para a área de transferência",
+					"copyHypothesis": "Copiar texto da hipótese para a área de transferência",
+					"describeHypothesisFirst": "Por favor, descreva primeiro a sua hipótese.",
+					"dvLabel": "Qual é o nome da sua variável dependente (VD)?",
+					"dvPlaceholder": "Variável dependente",
+					"headerTitle": "Hipótese Experimental",
+					"iPredictThat": "Prevejo que",
+					"ivConditionsLabel": "Quantas condições sua variável independente (VI) possui?",
+					"ivConditionsPlaceholder": "2",
+					"ivLabel": "Qual é o nome da sua variável independente (VI)?",
+					"ivPlaceholder": "Variável independente",
+					"rankHelpIntro": "Se você tiver três condições:",
+					"rankHelpStep1": "Dê um nome a cada condição usando o menu suspenso (você pode digitar!).",
+					"rankHelpStep2": "Use o controle deslizante à direita do rótulo para indicar a classificação esperada da variável dependente nesta condição em comparação com as demais.",
+					"rankSectionTitle": "Classifique suas condições",
+					"sectionHypothesisTitle": "Sua hipótese experimental",
+					"titleLabel": "Título",
+					"titlePlaceholder": "Efeito da condição sobre a variável",
+					"willOccupyRank": "ocupará a posição #",
+					"yourHypothesisHelpIntro": "Para formular sua hipótese experimental, siga estes passos:",
+					"yourHypothesisHelpStep1": "Dê nomes aos seus vetores IV e DV.",
+					"yourHypothesisHelpStep2": "Indique quantas condições o seu IV possui.",
+					"yourHypothesisHelpStep3": "Preveja os valores de DV para cada condição da IV."
+				},
+				"clipboard": {
+					"abDesignConditionLine": "- {{condition}} ocupará a posição #{{rank}}",
+					"abDesignIntro": "Prevejo que o {{dv}} variará nas condições {{n}} do {{iv}} da seguinte forma:\n",
+					"corrHypothesis": "Prevejo que {{ivDir}} {{iv}} estará relacionado a {{dvDir}} {{dv}}.",
+					"fallbackCondition": "condição {{n}}",
+					"fallbackDependentVariable": "Variável dependente",
+					"fallbackIndependentVariable": "Variável independente",
+					"fallbackNumberOfConditions": "número de"
+				},
+				"corr": {
+					"clipboardFigCopied": "Copiado para a área de transferência!",
+					"clipboardHypothesisCopied": "Texto copiado para a área de transferência: {{text}}",
+					"copyGraph": "Copiar gráfico para a área de transferência",
+					"copyHypothesis": "Copiar texto da hipótese para a área de transferência",
+					"dependentPlaceholder": "Variável dependente",
+					"directionalityPlaceholder": "direcionalidade",
+					"errorLoading": "Erro: {{message}}",
+					"errorLoadingBlocks": "Erro ao carregar os dados do bloco: {{message}}",
+					"headerTitle": "Hipótese Correlacional",
+					"helpExampleQuote": "Prevê-se que níveis mais elevados de ansiedade estejam relacionados a uma menor percentagem de tentativas de jogo.",
+					"helpForInstance": "Por exemplo",
+					"helpIntro": "Preencha os espaços em branco para criar sua hipótese correlacional!",
+					"helpNote": "Observe que as opções sugeridas nos campos variáveis ​​são extraídas dos blocos públicos do seu construtor de estudos.",
+					"independentPlaceholder": "Variável independente",
+					"iPredictThat": "Prevejo que",
+					"loading": "Carregando...",
+					"loadingBlocks": "Carregando dados do bloco...",
+					"sectionTitle": "Sua hipótese correlacional",
+					"titleLabel": "Título",
+					"willBeRelatedTo": "estará relacionado a"
+				}
+			},
+			"editor": {
+				"codeTab": "Código",
+				"variablesTab": "Variáveis"
+			},
+			"helpAriaLabel": "Mais Informações"
+		},
 		"settingsPanel": {
 			"deleteWidget": "Excluir widget",
 			"notes": "Notas",
