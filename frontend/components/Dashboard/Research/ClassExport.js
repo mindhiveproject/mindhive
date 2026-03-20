@@ -418,6 +418,7 @@ export default function ClassExport() {
                 defaultValue: "Data pulling policies",
               })}
               shape="square"
+              style={{ border: "none"}}
             />
           </InfoTooltip>
         </div>

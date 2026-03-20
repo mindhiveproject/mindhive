@@ -361,6 +361,7 @@ export default function BoardExport() {
                 defaultValue: "Data pulling policies",
               })}
               shape="square"
+              style={{ border: "none"}}
             />
           </InfoTooltip>
         </div>
