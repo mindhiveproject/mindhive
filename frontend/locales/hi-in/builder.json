@@ -158,6 +158,11 @@
 	},
 	"cloneAndModify": "एक {{taskType}} को क्लोन और संशोधित करें",
 	"closeButton": "बंद करना",
+	"codeExecution": {
+		"codeRunningMessage": "कोड चल रहा है।",
+		"justOneSecondTitle": "बस एक सेकंड",
+		"librariesLoadingMessage": "डेटा विश्लेषण लाइब्रेरी लोड हो रही हैं।"
+	},
 	"collect": {
 		"noProjectFound": "कोई प्रोजेक्ट नहीं मिला, कृपया पहले अपना प्रोजेक्ट सेव करें।",
 		"noStudyAttachedHeader": "🤷🏻 आपके प्रोजेक्ट में कोई अध्ययन संलग्न नहीं है।",

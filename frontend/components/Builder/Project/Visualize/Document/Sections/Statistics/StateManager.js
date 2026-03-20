@@ -1,9 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
 import {
-  MessageHeader,
-  MessageContent,
-  Message,
   Icon,
   AccordionTitle,
   AccordionContent,
@@ -13,6 +10,8 @@ import {
 import Render from "./Render";
 import CodeEditor from "./Controller/CodeEditor";
 import AxesComponent from "./Controller/Axes/AxesDefault";
+
+import JustOneSecondNotice from "../../../../../../DesignSystem/JustOneSecondNotice";
 
 const allInOneCode = `
 #column_input = columns # ['COLUMN_NAME', 'COLUMN_NAME', 'COLUMN_NAME']
@@ -168,15 +167,7 @@ export default function StateManager({
         />
       )} */}
 
-      {isRunning && (
-        <Message icon>
-          <Icon name="circle notched" loading />
-          <MessageContent>
-            <MessageHeader>Just one second</MessageHeader>
-            The code is running.
-          </MessageContent>
-        </Message>
-      )}
+      {isRunning && <JustOneSecondNotice variant="codeRunning" />}
 
       {code && pyodide && (
         <>

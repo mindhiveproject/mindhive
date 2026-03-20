@@ -158,6 +158,11 @@
 	},
 	"cloneAndModify": "Een {{taskType}} klonen en wijzigen",
 	"closeButton": "Dichtbij",
+	"codeExecution": {
+		"codeRunningMessage": "De code wordt uitgevoerd.",
+		"justOneSecondTitle": "Nog maar een seconde",
+		"librariesLoadingMessage": "De data-analysebibliotheken worden geladen."
+	},
 	"collect": {
 		"noProjectFound": "Er is geen project gevonden. Sla uw project eerst op.",
 		"noStudyAttachedHeader": "🤷🏻 Er is geen studie aan uw project gekoppeld.",

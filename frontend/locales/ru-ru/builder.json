@@ -158,6 +158,11 @@
 	},
 	"cloneAndModify": "Клонировать и изменить {{taskType}}",
 	"closeButton": "Закрывать",
+	"codeExecution": {
+		"codeRunningMessage": "Код выполняется.",
+		"justOneSecondTitle": "Всего одна секунда",
+		"librariesLoadingMessage": "Библиотеки для анализа данных загружаются."
+	},
 	"collect": {
 		"noProjectFound": "Проект не найден. Пожалуйста, сначала сохраните свой проект.",
 		"noStudyAttachedHeader": "🤷🏻 К вашему проекту не прикреплено исследование.",

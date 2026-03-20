@@ -158,6 +158,11 @@
 	},
 	"cloneAndModify": "Clone & modify a {{taskType}}",
 	"closeButton": "Close",
+	"codeExecution": {
+		"codeRunningMessage": "The code is running.",
+		"justOneSecondTitle": "Just one second",
+		"librariesLoadingMessage": "The data analysis libraries are loading."
+	},
 	"collect": {
 		"noProjectFound": "No project found, please save your project first.",
 		"noStudyAttachedHeader": "🤷🏻 Your project has no Study attached to it.",

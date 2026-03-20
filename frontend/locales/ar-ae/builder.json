@@ -158,6 +158,11 @@
 	},
 	"cloneAndModify": "استنساخ وتعديل {{taskType}}",
 	"closeButton": "يغلق",
+	"codeExecution": {
+		"codeRunningMessage": "البرنامج قيد التشغيل.",
+		"justOneSecondTitle": "ثانية واحدة فقط",
+		"librariesLoadingMessage": "يتم تحميل مكتبات تحليل البيانات."
+	},
 	"collect": {
 		"noProjectFound": "لم يتم العثور على أي مشروع، يرجى حفظ مشروعك أولاً.",
 		"noStudyAttachedHeader": "🤷🏻 مشروعك لا يحتوي على دراسة مرتبطة به.",

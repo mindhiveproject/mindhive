@@ -4,10 +4,10 @@ import { useDataJournal } from "../Context/DataJournalContext"; // Import Contex
 import { initializePyodide } from "../Helpers/PyodideUtils"; // Extracted helper
 import {
   MessageHeader,
-  MessageContent,
   Message,
-  Icon,
 } from "semantic-ui-react";
+
+import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 
 export default function PyodideWrapper({ children, user, projectId, studyId }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -46,13 +46,7 @@ export default function PyodideWrapper({ children, user, projectId, studyId }) {
   if (isLoading) {
     return (
       <div className="pyodideLoadingMessage">
-        <Message icon>
-          <Icon name="circle notched" loading />
-          <MessageContent>
-            <MessageHeader>Just one second</MessageHeader>
-            The data analysis libraries are loading.
-          </MessageContent>
-        </Message>
+        <JustOneSecondNotice variant="librariesLoading" />
       </div>
     );
   }

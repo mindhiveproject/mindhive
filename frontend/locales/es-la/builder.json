@@ -158,6 +158,11 @@
 	},
 	"cloneAndModify": "Clonar y modificar un {{taskType}}",
 	"closeButton": "Cerca",
+	"codeExecution": {
+		"codeRunningMessage": "El código se está ejecutando.",
+		"justOneSecondTitle": "Solo un segundo",
+		"librariesLoadingMessage": "Las bibliotecas de análisis de datos se están cargando."
+	},
 	"collect": {
 		"noProjectFound": "No se encontró ningún proyecto, por favor guarde su proyecto primero.",
 		"noStudyAttachedHeader": "🤷🏻 Tu proyecto no tiene ningún estudio adjunto.",

@@ -158,6 +158,11 @@
 	},
 	"cloneAndModify": "克隆并修改 {{taskType}}",
 	"closeButton": "关闭",
+	"codeExecution": {
+		"codeRunningMessage": "代码正在运行。",
+		"justOneSecondTitle": "只需一秒钟",
+		"librariesLoadingMessage": "数据分析库正在加载。"
+	},
 	"collect": {
 		"noProjectFound": "未找到项目，请先保存您的项目。",
 		"noStudyAttachedHeader": "🤷🏻 您的项目没有附加任何研究。",
