@@ -232,7 +232,7 @@
 			"unsupportedType": "Unsupported widget type: {{type}}"
 		}
 	},
-	"dataJournals": "Data Journals 🚧",
+	"dataJournals": "Journals",
 	"dataset": {
 		"deleteInvalidRecord": "Delete invalid record",
 		"download": "Download",

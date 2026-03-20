@@ -72,11 +72,12 @@ export default function Navigation({
     {
       value: "visualize",
       name: t("visualize"),
+      requiresAdmin: true, // made sneaky March 20th 2026
     },
     {
       value: "journal",
       name: t("dataJournals"),
-      requiresAdmin: true, // Add flag to indicate admin-only item
+      requiresAdmin: false, // made public March 20th 2026
     },
   ];
 

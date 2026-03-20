@@ -232,7 +232,7 @@
 			"unsupportedType": "نوع الأداة غير المدعوم: {{type}}"
 		}
 	},
-	"dataJournals": "مجلات البيانات 🚧",
+	"dataJournals": "المجلات",
 	"dataset": {
 		"deleteInvalidRecord": "حذف السجل غير الصالح",
 		"download": "تحميل",

@@ -232,7 +232,7 @@
 			"unsupportedType": "असमर्थित विजेट प्रकार: {{type}}"
 		}
 	},
-	"dataJournals": "डेटा जर्नल्स 🚧",
+	"dataJournals": "पत्रिकाओं",
 	"dataset": {
 		"deleteInvalidRecord": "अमान्य रिकॉर्ड हटाएं",
 		"download": "डाउनलोड करना",

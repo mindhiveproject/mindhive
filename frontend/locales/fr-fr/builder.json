@@ -232,7 +232,7 @@
 			"unsupportedType": "Type de widget non pris en charge : {{type}}"
 		}
 	},
-	"dataJournals": "Journaux de données 🚧",
+	"dataJournals": "Journaux",
 	"dataset": {
 		"deleteInvalidRecord": "Supprimer l'enregistrement invalide",
 		"download": "Télécharger",

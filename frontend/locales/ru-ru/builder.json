@@ -232,7 +232,7 @@
 			"unsupportedType": "Неподдерживаемый тип виджета: {{type}}"
 		}
 	},
-	"dataJournals": "Журналы данных 🚧",
+	"dataJournals": "Журналы",
 	"dataset": {
 		"deleteInvalidRecord": "Удалить недействительную запись",
 		"download": "Скачать",

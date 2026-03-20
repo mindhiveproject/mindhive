@@ -232,7 +232,7 @@
 			"unsupportedType": "不支持的小部件类型：{{type}}"
 		}
 	},
-	"dataJournals": "数据日志🚧",
+	"dataJournals": "期刊",
 	"dataset": {
 		"deleteInvalidRecord": "删除无效记录",
 		"download": "下载",
