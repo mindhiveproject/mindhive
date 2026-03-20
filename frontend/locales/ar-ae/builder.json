@@ -271,6 +271,8 @@
 				"clipboard": {
 					"abDesignConditionLine": "- سيحتل {{condition}} المرتبة رقم{{rank}}\n",
 					"abDesignIntro": "أتوقع أن تتغير قيمة {{dv}} تبعاً لشروط {{n}} في {{iv}} على النحو التالي:\n\n",
+					"copyGraphNoFigHtml": "لا يوجد رسم بياني متاح حتى الآن. أدخل متغيراتك وانتظر ظهور الرسم البياني في المجلة، ثم حاول مرة أخرى.",
+					"copyGraphNoPyodide": "بيئة تشغيل بايثون غير جاهزة بعد. يرجى الانتظار حتى يكتمل تحميل السجل.",
 					"corrHypothesis": "أتوقع أن {{ivDir}} {{iv}} ستكون مرتبطة بـ {{dvDir}} {{dv}}.",
 					"fallbackCondition": "الشرط {{n}}",
 					"fallbackDependentVariable": "المتغير التابع",

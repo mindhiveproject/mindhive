@@ -271,6 +271,8 @@
 				"clipboard": {
 					"abDesignConditionLine": "- {{condition}} ocupará el puesto número{{rank}}",
 					"abDesignIntro": "Predigo que el {{dv}} variará en función de las {{n}} condiciones del {{iv}} de la siguiente manera:\n",
+					"copyGraphNoFigHtml": "Aún no hay ningún gráfico disponible. Introduce tus variables y espera a que la visualización aparezca en el registro; luego, inténtalo de nuevo.",
+					"copyGraphNoPyodide": "El entorno de ejecución de Python aún no está listo. Por favor, espere a que finalice la carga del registro.",
 					"corrHypothesis": "Predigo que {{ivDir}} {{iv}} estará relacionado con {{dvDir}} {{dv}}.",
 					"fallbackCondition": "condición {{n}}",
 					"fallbackDependentVariable": "Variable dependiente",

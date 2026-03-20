@@ -59,6 +59,7 @@ export default function HypVisEditor({
             selectors={content?.selectors || {}}
             onChange={onChange}
             variables={variables}
+            pyodide={pyodide}
           />
         </div>
       ),

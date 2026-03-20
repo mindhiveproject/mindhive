@@ -271,6 +271,8 @@
 				"clipboard": {
 					"abDesignConditionLine": "- {{condition}} zal rangnummer{{rank}}innemen\n",
 					"abDesignIntro": "Ik voorspel dat de {{dv}} zal variëren afhankelijk van de {{n}} -condities van de {{iv}} als volgt:\n\n",
+					"copyGraphNoFigHtml": "Er is nog geen grafiek beschikbaar. Vul uw variabelen in en wacht tot de visualisatie in het logboek verschijnt. Probeer het daarna opnieuw.",
+					"copyGraphNoPyodide": "De Python-runtime is nog niet gereed. Wacht tot het logboek volledig is geladen.",
 					"corrHypothesis": "Ik voorspel dat {{ivDir}} {{iv}} gerelateerd zal zijn aan {{dvDir}} {{dv}}.",
 					"fallbackCondition": "voorwaarde {{n}}",
 					"fallbackDependentVariable": "Afhankelijke variabele",

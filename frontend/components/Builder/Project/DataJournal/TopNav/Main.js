@@ -23,6 +23,7 @@ export default function TopNavigation() {
     selectedJournal: journal,
     workspace,
     setIsAddComponentPanelOpen,
+    setActiveComponent,
   } = useDataJournal();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -71,7 +72,12 @@ export default function TopNavigation() {
   };
 
   const toggleComponentPanel = () => {
-    setIsAddComponentPanelOpen((prev) => !prev);
+    setIsAddComponentPanelOpen((wasOpen) => {
+      if (!wasOpen) {
+        setActiveComponent(null);
+      }
+      return !wasOpen;
+    });
   };
 
   return (

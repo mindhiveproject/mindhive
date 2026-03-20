@@ -271,6 +271,8 @@
 				"clipboard": {
 					"abDesignConditionLine": "- {{condition}} will occupy rank #{{rank}}\n",
 					"abDesignIntro": "I predict that the {{dv}} will vary across the {{n}} conditions of the {{iv}} as follows:\n",
+					"copyGraphNoFigHtml": "No graph is available yet. Fill in your variables and wait for the visualization to appear in the journal, then try again.",
+					"copyGraphNoPyodide": "The Python runtime is not ready yet. Please wait for the journal to finish loading.",
 					"corrHypothesis": "I predict that {{ivDir}} {{iv}} will be related to {{dvDir}} {{dv}}.",
 					"fallbackCondition": "condition {{n}}",
 					"fallbackDependentVariable": "dependent variable",

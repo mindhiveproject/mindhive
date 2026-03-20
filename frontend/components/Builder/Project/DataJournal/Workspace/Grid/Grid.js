@@ -176,10 +176,16 @@ export default function Grid({
         handleSaveComponent(component?.id);
         setActiveComponent(null); // Close the component editor
       } else {
+        setIsAddComponentPanelOpen(false);
         setActiveComponent(component); // Open the component editor
       }
     },
-    [activeComponent, setActiveComponent, handleSaveComponent],
+    [
+      activeComponent,
+      setActiveComponent,
+      handleSaveComponent,
+      setIsAddComponentPanelOpen,
+    ],
   );
 
   const handleAddComponent = useCallback(

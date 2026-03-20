@@ -271,6 +271,8 @@
 				"clipboard": {
 					"abDesignConditionLine": "- {{condition}} ocupará a posição #{{rank}}",
 					"abDesignIntro": "Prevejo que o {{dv}} variará nas condições {{n}} do {{iv}} da seguinte forma:\n",
+					"copyGraphNoFigHtml": "Nenhum gráfico está disponível ainda. Preencha suas variáveis ​​e aguarde a visualização aparecer no periódico. Em seguida, tente novamente.",
+					"copyGraphNoPyodide": "O ambiente de execução do Python ainda não está pronto. Aguarde até que o registro termine de carregar.",
 					"corrHypothesis": "Prevejo que {{ivDir}} {{iv}} estará relacionado a {{dvDir}} {{dv}}.",
 					"fallbackCondition": "condição {{n}}",
 					"fallbackDependentVariable": "Variável dependente",

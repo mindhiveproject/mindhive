@@ -9,6 +9,7 @@ import {
 
 import InfoTooltip from "../../../../../../../../DesignSystem/InfoTooltip";
 import AggregateVarSelector from "../Fields/AggregateVarSelector";
+import { figHtmlStringFromPyodide } from "./figHtmlFromPyodide";
 
 const hypVisTooltipStyle = {
   fontFamily: "Inter",
@@ -24,6 +25,7 @@ export default function Axes({
   sectionId,
   selectors,
   onChange,
+  pyodide,
 }) {
   const { t } = useTranslation("builder");
   const corr = "dataJournal.hypVis.axes.corr";
@@ -128,14 +130,28 @@ export default function Axes({
   };
 
   const copyFigToClipboard = async () => {
+    if (!pyodide) {
+      alert(
+        t(
+          `${clip}.copyGraphNoPyodide`,
+          "The Python runtime is not ready yet. Please wait for the journal to finish loading.",
+        ),
+      );
+      return;
+    }
     try {
-      try {
-        const variableValue = await pyodide.runPythonAsync("fig_html");
-        await navigator.clipboard.writeText(variableValue);
-        alert(t(`${corr}.clipboardFigCopied`, "Copied to clipboard!"));
-      } catch (error) {
-        console.error("Failed to retrieve variable: ", error);
+      const variableValue = figHtmlStringFromPyodide(pyodide);
+      if (!variableValue?.trim()) {
+        alert(
+          t(
+            `${clip}.copyGraphNoFigHtml`,
+            "No graph is available yet. Fill in your variables and wait for the visualization to appear in the journal, then try again.",
+          ),
+        );
+        return;
       }
+      await navigator.clipboard.writeText(variableValue);
+      alert(t(`${corr}.clipboardFigCopied`, "Copied to clipboard!"));
     } catch (error) {
       console.error("Failed to copy: ", error);
     }

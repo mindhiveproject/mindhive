@@ -271,6 +271,8 @@
 				"clipboard": {
 					"abDesignConditionLine": "",
 					"abDesignIntro": "我预测 {{dv}} 将根据 {{iv}} 的 {{n}} 条件而变化，具体如下：\n\n",
+					"copyGraphNoFigHtml": "目前还没有图表。请填写您的变量，等待图表出现在期刊中，然后再试一次。",
+					"copyGraphNoPyodide": "Python运行时环境尚未准备就绪。请等待日志加载完成。",
 					"corrHypothesis": "我预测 {{ivDir}} {{iv}} 将与 {{dvDir}} {{dv}}相关。",
 					"fallbackCondition": "条件 {{n}}",
 					"fallbackDependentVariable": "因变量",
