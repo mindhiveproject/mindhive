@@ -121,7 +121,9 @@ const StyledProject = styled.div`
     .secondLine {
       /* Project journey tab bar (Figma Navbar 2187:2324) */
       padding: 0 8px;
-      background: #f3f3f3;
+      background: #F6F9F8;
+      border-bottom: 1px solid #E6E6E6;
+      border-top: 1px solid #E6E6E6;
 
       .menu {
         display: flex;
@@ -132,7 +134,7 @@ const StyledProject = styled.div`
       .menuTitle {
         display: flex;
         align-items: center;
-        padding: 6px 10px;
+        padding: 0px 8px 8px 8px;
         border-bottom: 4px solid transparent;
         cursor: pointer;
 
@@ -151,7 +153,7 @@ const StyledProject = styled.div`
           p {
             font-family: Inter, sans-serif;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             line-height: 20px;
             color: #171717;
             margin: 0;

@@ -1,4 +1,13 @@
 {
+	"dataJournal": {
+		"topNav": {
+			"addComponent": "添加组件",
+			"datasets": "数据集",
+			"editWorkspaceName": "编辑工作区名称",
+			"journals": "期刊",
+			"selectJournal": "选择期刊开始阅读……"
+		}
+	},
 	"overview": {
 		"database": {
 			"csvDownloadMessage": "为您即将下载的 CSV 命名\\n无需添加“.csv”，我们会处理好这个！",

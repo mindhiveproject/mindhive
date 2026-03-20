@@ -1,4 +1,13 @@
 {
+	"dataJournal": {
+		"topNav": {
+			"addComponent": "Добавить компонент",
+			"datasets": "Наборы данных",
+			"editWorkspaceName": "Изменить название рабочей области",
+			"journals": "Журналы",
+			"selectJournal": "Выберите журнал, чтобы начать..."
+		}
+	},
 	"overview": {
 		"database": {
 			"csvDownloadMessage": "Дайте имя CSV-файлу, который вы собираетесь загрузить.\\nНе нужно добавлять «.csv», мы позаботимся об этом!",

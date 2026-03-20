@@ -1,26 +1,27 @@
 // components/DataJournal/TopNav/Main.js
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import {
-  BreadcrumbSection,
-  BreadcrumbDivider,
-  Breadcrumb,
-} from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { StyledTopNavigation } from "../styles/StyledDataJournal"; // Adjust path
+import Chip from "../../../../DesignSystem/Chip";
+import Button from "../../../../DesignSystem/Button";
+import Breadcrumbs from "./Breadcrumbs/Main";
 
 import { UPDATE_VIZCHAPTER } from "../../../../Mutations/VizChapter";
 import { GET_WORKSPACE } from "../../../../Queries/DataWorkspace";
 
 import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
 
+const LEFT_NAV_SELECTED_BG = "#EDF4F5";
+
 export default function TopNavigation() {
+  const { t } = useTranslation("dataviz");
   const {
     area,
     setArea,
     selectedJournal: journal,
     workspace,
-    activeComponent,
     setIsAddComponentPanelOpen,
   } = useDataJournal();
 
@@ -76,77 +77,86 @@ export default function TopNavigation() {
   return (
     <StyledTopNavigation>
       <div className="leftIconNav">
-        <div
-          className={`titleArea ${area === "journals" && "active"}`}
+        <Chip
+          className="leftNavChip"
+          label={t("dataJournal.topNav.journals", "Journals")}
+          selected={area === "journals"}
           onClick={() => setArea("journals")}
-        >
-          <div className="icon">
-            {area === "journals" ? (
-              <img src="/assets/dataviz/journalsSelected.png" />
-            ) : (
-              <img src="/assets/dataviz/journals.png" />
-            )}
-          </div>
-          <div>Journals</div>
-        </div>
+          shape="square"
+          style={{
+            border: "none",
+            background: area === "journals" ? LEFT_NAV_SELECTED_BG : "transparent",
+            backgroundColor:
+              area === "journals" ? LEFT_NAV_SELECTED_BG : "transparent",
+          }}
+          leading={
+            <img
+              src={
+                area === "journals"
+                  ? "/assets/dataviz/journalsSelected.svg"
+                  : "/assets/dataviz/journals.svg"
+              }
+              alt=""
+              width="24"
+              height="24"
+            />
+          }
+        />
 
-        <div
-          className={`titleArea ${area === "datasets" && "active"}`}
+        <Chip
+          className="leftNavChip"
+          label={t("dataJournal.topNav.datasets", "Datasets")}
+          selected={area === "datasets"}
           onClick={() => setArea("datasets")}
-        >
-          <div className="icon">
-            {area === "datasets" ? (
-              <img src="/assets/dataviz/datasetSelected.png" />
-            ) : (
-              <img src="/assets/dataviz/dataset.png" />
-            )}
-          </div>
-          <div>Datasets</div>
-        </div>
+          shape="square"
+          style={{
+            border: "none",
+            background: area === "datasets" ? LEFT_NAV_SELECTED_BG : "transparent",
+            backgroundColor:
+              area === "datasets" ? LEFT_NAV_SELECTED_BG : "transparent",
+          }}
+          leading={
+            <img
+              src={
+                area === "datasets"
+                  ? "/assets/dataviz/datasetSelected.svg"
+                  : "/assets/dataviz/dataset.svg"
+              }
+              alt=""
+              width="24"
+              height="24"
+            />
+          }
+        />
       </div>
 
       <div>
         {area === "journals" && journal?.id && (
-          <Breadcrumb size="massive">
-            <BreadcrumbSection link>{journal?.title}</BreadcrumbSection>
-            <BreadcrumbDivider icon="right angle" />
-            <BreadcrumbSection link>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={newTitle}
-                  onChange={handleTitleChange}
-                  onKeyPress={handleKeyPress}
-                  onBlur={handleTitleSubmit}
-                  autoFocus
-                />
-              ) : (
-                <>
-                  {workspace?.title}
-                  <img
-                    src="/assets/dataviz/edit.png"
-                    onClick={handleEditClick}
-                    style={{ cursor: "pointer", marginLeft: "5px" }}
-                  />
-                </>
-              )}
-            </BreadcrumbSection>
-            <BreadcrumbDivider icon="right angle" />
-            <BreadcrumbSection active>
-              {activeComponent?.title}
-            </BreadcrumbSection>
-          </Breadcrumb>
+          <Breadcrumbs
+            journalTitle={journal?.title}
+            workspaceTitle={workspace?.title}
+            isEditing={isEditing}
+            newTitle={newTitle}
+            onTitleChange={handleTitleChange}
+            onKeyPress={handleKeyPress}
+            onTitleSubmit={handleTitleSubmit}
+            onEditClick={handleEditClick}
+            editWorkspaceLabel={t(
+              "dataJournal.topNav.editWorkspaceName",
+              "Edit workspace name"
+            )}
+          />
         )}
         {area === "journals" && !journal?.id && (
-          <div>Select a Journal to start ...</div>
+          <div>{t("dataJournal.topNav.selectJournal", "Select a Journal to start ...")}</div>
         )}
       </div>
       <div className="buttons">
         {area === "journals" && workspace?.id && (
           <div>
-            <button className="custonBtn" onClick={toggleComponentPanel}>
-              Add a Component
-            </button>
+            <Button variant="filled" onClick={toggleComponentPanel}>
+              {t("dataJournal.topNav.addComponent", "Add a Component")}
+            </Button>
           </div>
         )}
         {/* <SaveWorkspace workspace={workspace} /> */}
