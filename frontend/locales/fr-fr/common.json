@@ -84,6 +84,10 @@
 		"title": "Documents de consentement",
 		"uploadNotice": "Vous n'avez pas téléchargé tous les documents requis pour participer au mentorat. Veuillez consulter et télécharger les documents restants ci-dessous."
 	},
+	"dropdownSelect": {
+		"noMatchingOptions": "Aucune option correspondante",
+		"searchPlaceholder": "Options de recherche"
+	},
 	"email": {
 		"currentEmail": "Courriel actuel",
 		"description": "Mettez à jour vos paramètres de messagerie MindHive ci-dessous pour continuer à recevoir des mises à jour importantes par e-mail",

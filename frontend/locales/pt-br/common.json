@@ -84,6 +84,10 @@
 		"title": "Documentos de Consentimento",
 		"uploadNotice": "Você não enviou toda a documentação necessária para participar da mentoria. Revise e envie os documentos restantes abaixo."
 	},
+	"dropdownSelect": {
+		"noMatchingOptions": "Nenhuma opção correspondente",
+		"searchPlaceholder": "Opções de pesquisa"
+	},
 	"email": {
 		"currentEmail": "E-mail atual",
 		"description": "Atualize suas configurações de e-mail do MindHive abaixo para continuar recebendo atualizações importantes por e-mail",

@@ -382,6 +382,21 @@
 	"developA": "Ontwikkel een {{develop}}",
 	"developHeaderDescription": "Hier kunt u uw onderzoeken, taken en enquêtes maken, bewerken en beheren.",
 	"developNew": "Ontwikkel nieuwe",
+	"developProjects": {
+		"activeProjects": "Actieve projecten",
+		"allProjects": "Alle projecten",
+		"archivedProjects": "Gearchiveerde projecten",
+		"classFilterPlaceholder": "Selecteer klassen",
+		"filterByClass": "Filteren op klasse",
+		"filterByStatus": "Filter op status",
+		"unnamedClass": "Klas"
+	},
+	"developStudies": {
+		"classFilterPlaceholder": "Selecteer klassen",
+		"filterByClass": "Filteren op klasse",
+		"filterByStatus": "Filter op status",
+		"unnamedClass": "Klas"
+	},
 	"duplicateEditBlock": "Dupliceer en bewerk een bestaand MindHive-blok en de bijbehorende parameters.",
 	"duplicateEditSurvey": "Dupliceer en bewerk een bestaande MindHive-enquête en de bijbehorende parameters.",
 	"duration": "Duur",

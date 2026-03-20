@@ -67,6 +67,12 @@ export const MY_STUDIES = gql`
         id
         username
       }
+      createdAt
+      classes {
+        id
+        title
+        code
+      }
     }
   }
 `;
@@ -98,6 +104,12 @@ export const TEACHER_STUDIES = gql`
       author {
         id
         username
+      }
+      createdAt
+      classes {
+        id
+        title
+        code
       }
     }
   }

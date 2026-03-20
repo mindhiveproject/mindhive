@@ -382,6 +382,21 @@
 	"developA": "Develop a {{develop}}",
 	"developHeaderDescription": "Create, edit, and manage your studies, tasks, and surveys here.",
 	"developNew": "Develop new",
+	"developProjects": {
+		"activeProjects": "Active projects",
+		"allProjects": "All projects",
+		"archivedProjects": "Archived projects",
+		"classFilterPlaceholder": "Select classes",
+		"filterByClass": "Filter by class",
+		"filterByStatus": "Filter by status",
+		"unnamedClass": "Class"
+	},
+	"developStudies": {
+		"classFilterPlaceholder": "Select classes",
+		"filterByClass": "Filter by class",
+		"filterByStatus": "Filter by status",
+		"unnamedClass": "Class"
+	},
 	"duplicateEditBlock": "Duplicate and edit a pre-existing MindHive block and its parameters.",
 	"duplicateEditSurvey": "Duplicate and edit a pre-existing MindHive survey and its parameters.",
 	"duration": "Duration",

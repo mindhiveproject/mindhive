@@ -382,6 +382,21 @@
 	"developA": "Разработать {{develop}}",
 	"developHeaderDescription": "Создавайте, редактируйте и управляйте своими исследованиями, задачами и опросами здесь.",
 	"developNew": "Разрабатывать новые",
+	"developProjects": {
+		"activeProjects": "Активные проекты",
+		"allProjects": "Все проекты",
+		"archivedProjects": "Архивные проекты",
+		"classFilterPlaceholder": "Выберите классы",
+		"filterByClass": "Фильтр по классу",
+		"filterByStatus": "Фильтрация по статусу",
+		"unnamedClass": "Сорт"
+	},
+	"developStudies": {
+		"classFilterPlaceholder": "Выберите классы",
+		"filterByClass": "Фильтр по классу",
+		"filterByStatus": "Фильтрация по статусу",
+		"unnamedClass": "Сорт"
+	},
 	"duplicateEditBlock": "Дублируйте и редактируйте существующий блок MindHive и его параметры.",
 	"duplicateEditSurvey": "Дублируйте и редактируйте существующий опрос MindHive и его параметры.",
 	"duration": "Продолжительность",

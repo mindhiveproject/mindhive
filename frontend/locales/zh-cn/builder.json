@@ -382,6 +382,21 @@
 	"developA": "开发一个 {{develop}}",
 	"developHeaderDescription": "在此创建、编辑和管理您的研究、任务和调查。",
 	"developNew": "开发新的",
+	"developProjects": {
+		"activeProjects": "活跃项目",
+		"allProjects": "所有项目",
+		"archivedProjects": "已存档项目",
+		"classFilterPlaceholder": "选择课程",
+		"filterByClass": "按类别筛选",
+		"filterByStatus": "按状态过滤",
+		"unnamedClass": "班级"
+	},
+	"developStudies": {
+		"classFilterPlaceholder": "选择课程",
+		"filterByClass": "按类别筛选",
+		"filterByStatus": "按状态过滤",
+		"unnamedClass": "班级"
+	},
 	"duplicateEditBlock": "复制并编辑预先存在的 MindHive 块及其参数。",
 	"duplicateEditSurvey": "复制并编辑现有的 MindHive 调查及其参数。",
 	"duration": "期间",

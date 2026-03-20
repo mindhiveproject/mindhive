@@ -382,6 +382,21 @@
 	"developA": "Développer un {{développer}}",
 	"developHeaderDescription": "Créez, modifiez et gérez vos études, tâches et enquêtes ici.",
 	"developNew": "Développer quelque chose de nouveau",
+	"developProjects": {
+		"activeProjects": "Projets actifs",
+		"allProjects": "Tous les projets",
+		"archivedProjects": "Projets archivés",
+		"classFilterPlaceholder": "Sélectionnez les cours",
+		"filterByClass": "Filtrer par classe",
+		"filterByStatus": "Filtrer par statut",
+		"unnamedClass": "Classe"
+	},
+	"developStudies": {
+		"classFilterPlaceholder": "Sélectionnez les cours",
+		"filterByClass": "Filtrer par classe",
+		"filterByStatus": "Filtrer par statut",
+		"unnamedClass": "Classe"
+	},
 	"duplicateEditBlock": "Dupliquez et modifiez un bloc MindHive préexistant et ses paramètres.",
 	"duplicateEditSurvey": "Dupliquez et modifiez une enquête MindHive préexistante et ses paramètres.",
 	"duration": "Durée",

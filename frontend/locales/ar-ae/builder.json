@@ -382,6 +382,21 @@
 	"developA": "تطوير {{تطوير}}",
 	"developHeaderDescription": "قم بإنشاء وتحرير وإدارة دراساتك ومهامك واستطلاعاتك هنا.",
 	"developNew": "تطوير جديد",
+	"developProjects": {
+		"activeProjects": "المشاريع النشطة",
+		"allProjects": "جميع المشاريع",
+		"archivedProjects": "المشاريع المؤرشفة",
+		"classFilterPlaceholder": "حدد الطبقات",
+		"filterByClass": "تصفية حسب الفئة",
+		"filterByStatus": "تصفية حسب الحالة",
+		"unnamedClass": "فصل"
+	},
+	"developStudies": {
+		"classFilterPlaceholder": "حدد الطبقات",
+		"filterByClass": "تصفية حسب الفئة",
+		"filterByStatus": "تصفية حسب الحالة",
+		"unnamedClass": "فصل"
+	},
 	"duplicateEditBlock": "قم بتكرار وتحرير كتلة MindHive الموجودة مسبقًا ومعلماتها.",
 	"duplicateEditSurvey": "قم بتكرار وتحرير استطلاع MindHive الموجود مسبقًا ومعامِلاته.",
 	"duration": "مدة",

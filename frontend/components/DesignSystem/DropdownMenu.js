@@ -36,6 +36,7 @@ const ITEM_STYLE = {
   gap: "8px",
   padding: "8px 12px",
   fontFamily: "Inter, sans-serif",
+  color: "red",
   fontWeight: 500,
   fontSize: "14px",
   lineHeight: "20px",

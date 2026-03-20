@@ -382,6 +382,21 @@
 	"developA": "एक {{विकसित}} विकसित करें",
 	"developHeaderDescription": "यहां अपने अध्ययन, कार्य और सर्वेक्षण बनाएं, संपादित करें और प्रबंधित करें।",
 	"developNew": "नया विकास करें",
+	"developProjects": {
+		"activeProjects": "सक्रिय परियोजनाएँ",
+		"allProjects": "सभी परियोजनाएँ",
+		"archivedProjects": "संग्रहित परियोजनाएँ",
+		"classFilterPlaceholder": "कक्षाएं चुनें",
+		"filterByClass": "वर्ग के आधार पर फ़िल्टर करें",
+		"filterByStatus": "स्थिति के अनुसार फ़िल्टर करें",
+		"unnamedClass": "कक्षा"
+	},
+	"developStudies": {
+		"classFilterPlaceholder": "कक्षाएं चुनें",
+		"filterByClass": "वर्ग के आधार पर फ़िल्टर करें",
+		"filterByStatus": "स्थिति के अनुसार फ़िल्टर करें",
+		"unnamedClass": "कक्षा"
+	},
 	"duplicateEditBlock": "पहले से मौजूद माइंडहाइव ब्लॉक और उसके पैरामीटर्स की प्रतिलिपि बनाएँ और उन्हें संपादित करें।",
 	"duplicateEditSurvey": "पहले से मौजूद माइंडहाइव सर्वेक्षण और उसके मापदंडों की प्रतिलिपि बनाना और उन्हें संपादित करना।",
 	"duration": "अवधि",
