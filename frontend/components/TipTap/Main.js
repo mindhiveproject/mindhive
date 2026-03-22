@@ -1,7 +1,8 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
+import useTranslation from "next-translate/useTranslation";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
@@ -9,13 +10,34 @@ import { Table } from "@tiptap/extension-table";
 import { TableRow } from "@tiptap/extension-table-row";
 import { TableHeader } from "@tiptap/extension-table-header";
 import { TableCell } from "@tiptap/extension-table-cell";
-import Image from "@tiptap/extension-image";
-import { Extension } from "@tiptap/core";
-import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { Button, Icon, Dropdown } from "semantic-ui-react";
+import { Button, Dropdown } from "semantic-ui-react";
+import { useApolloClient } from "@apollo/client";
 
 import DesignSystemButton from "../DesignSystem/Button";
 import { StyledTipTap } from "./StyledTipTap";
+import { PasteImageExtension } from "./pasteImageExtension";
+import MediaLibraryModal from "./MediaLibraryModal";
+import { MindHiveImage } from "./mindHiveImage";
+import {
+  CREATE_MEDIA_ASSET,
+  buildMediaAssetCreateData,
+} from "../Mutations/MediaAsset";
+import { uploadMediaImageToCloudinary } from "../../lib/cloudinaryMediaUpload";
+
+const TIPTAP_ICONS_BASE = "/assets/tiptapIcons";
+
+function TipTapToolbarIcon({ file, width = 18, height = 18 }) {
+  return (
+    <img
+      src={`${TIPTAP_ICONS_BASE}/${file}.svg`}
+      alt=""
+      width={width}
+      height={height}
+      className="tiptap-toolbar-icon"
+      draggable={false}
+    />
+  );
+}
 
 // 24×24 checkmark for special toolbar button (e.g. "Saved"); uses currentColor
 const CHECK_ICON = (
@@ -24,61 +46,7 @@ const CHECK_ICON = (
   </svg>
 );
 
-// Custom extension to handle base64 image pasting
-const PasteImageExtension = Extension.create({
-  name: 'pasteImage',
-
-  addProseMirrorPlugins() {
-    return [
-      new Plugin({
-        key: new PluginKey('pasteImage'),
-        props: {
-          handlePaste(view, event) {
-            const clipboardData = event.clipboardData;
-            if (!clipboardData) return false;
-
-            const { schema } = view.state;
-            const text = clipboardData.getData('text/plain');
-
-            if (text) {
-              const trimmedText = text.trim();
-
-              // Case 1: Raw data URI (starts with data:image/)
-              if (trimmedText.startsWith('data:image/')) {
-                try {
-                  const node = schema.nodes.image.create({ src: trimmedText });
-                  const transaction = view.state.tr.replaceSelectionWith(node);
-                  view.dispatch(transaction);
-                  return true;
-                } catch (err) {
-                  console.error("Error inserting image from data URI", err);
-                }
-              }
-
-              // Case 2: <img src="data:image/..."> (extract src attribute safely)
-              const imgTagStart = trimmedText.indexOf('<img');
-              if (imgTagStart !== -1) {
-                const srcMatch = trimmedText.match(/<img[^>]+src=['"]([^'"]+)['"]/i);
-                if (srcMatch && srcMatch[1] && srcMatch[1].startsWith('data:image/')) {
-                  try {
-                    const node = schema.nodes.image.create({ src: srcMatch[1] });
-                    const transaction = view.state.tr.replaceSelectionWith(node);
-                    view.dispatch(transaction);
-                    return true;
-                  } catch (err) {
-                    console.error("Error inserting image from <img> tag", err);
-                  }
-                }
-              }
-            }
-
-            return false;
-          },
-        },
-      }),
-    ];
-  },
-});
+const MEDIA_LIBRARY_ICON = <TipTapToolbarIcon file="imagePlus" width={20} height={20} />;
 
 // Extend the default Link extension to support `target="_blank"`
 const CustomLink = Link.extend({
@@ -112,13 +80,62 @@ export default function TipTapEditor({
   toolbarVisible = true,
   specialButton = null,
   limitedToolbar = false,
+  mediaLibraryId = null,
+  mediaLibrarySource = null,
+  mediaDisplayedInProposalCardId = null,
 }) {
+  const { t } = useTranslation("builder");
+  const apolloClient = useApolloClient();
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [mediaLibraryModalOpen, setMediaLibraryModalOpen] = useState(false);
   const editorRef = useRef(null);
+  const pasteImageContextRef = useRef({});
+  pasteImageContextRef.current = {
+    onPasteImageNoMediaScope: () =>
+      window.alert(
+        t(
+          "tiptap.pasteImageNoMediaScope",
+          "Pasting images is not available here. Use the image button and enter an image URL.",
+        ),
+      ),
+    onPasteImageUploadFailed: () =>
+      window.alert(
+        t(
+          "tiptap.pasteImageUploadFailed",
+          "Could not upload the pasted image. Check your connection and try again.",
+        ),
+      ),
+    mediaScopeId: mediaLibraryId || null,
+    uploadPastedImage: async (file) => {
+      const scopeId = mediaLibraryId;
+      if (!scopeId || !file) return null;
+      const { secureUrl, publicId } = await uploadMediaImageToCloudinary(
+        file,
+        scopeId,
+      );
+      const baseName = file.name.replace(/\.[^.]+$/, "") || "";
+      const createData = buildMediaAssetCreateData({
+        scopeId,
+        fileName: baseName,
+        url: secureUrl,
+        publicId,
+        mediaLibrarySource,
+        mediaCreatedWithOverride: "paste",
+        mediaDisplayedInProposalCardId,
+      });
+      const { data } = await apolloClient.mutate({
+        mutation: CREATE_MEDIA_ASSET,
+        variables: { data: createData },
+      });
+      const row = data?.createMediaAsset;
+      if (!row?.id || !row?.url) return null;
+      return { id: row.id, url: row.url };
+    },
+  };
 
-  const editor = useEditor({
-    extensions: [
+  const extensions = useMemo(
+    () => [
       StarterKit.configure({
         link: false,
         underline: false,
@@ -127,17 +144,19 @@ export default function TipTapEditor({
       CustomLink.configure({
         openOnClick: true,
         HTMLAttributes: {
-          class: 'editor-link',
+          class: "editor-link",
         },
       }),
-      Image.configure({
+      MindHiveImage.configure({
         inline: true,
-        allowBase64: true,
+        allowBase64: false,
         HTMLAttributes: {
-          class: 'editor-image',
+          class: "editor-image",
         },
       }),
-      PasteImageExtension,
+      PasteImageExtension.configure({
+        getPasteContext: () => pasteImageContextRef.current,
+      }),
       Table.configure({
         resizable: true,
       }),
@@ -145,6 +164,11 @@ export default function TipTapEditor({
       TableHeader,
       TableCell,
     ],
+    [],
+  );
+
+  const editor = useEditor({
+    extensions,
     content: "",
     onUpdate: ({ editor }) => {
       if (hasUserInteracted && onUpdate) {
@@ -157,7 +181,7 @@ export default function TipTapEditor({
     onBlur: () => {
       setIsFocused(false);
     },
-  });
+  }, [extensions]);
 
   // Expose getContent so parent can read latest HTML before submit (e.g. Mark as complete)
   useEffect(() => {
@@ -323,7 +347,7 @@ export default function TipTapEditor({
         key: "insert",
         text: "Insert Table",
         value: "insert",
-        icon: "table",
+        iconSrc: `${TIPTAP_ICONS_BASE}/table.svg`,
         onClick: () =>
           editor
             .chain()
@@ -335,7 +359,6 @@ export default function TipTapEditor({
         key: "addColumnBefore",
         text: "Add Column Before",
         value: "addColumnBefore",
-        icon: "plus",
         onClick: () => editor.chain().focus().addColumnBefore().run(),
         disabled: !editor.can().addColumnBefore(),
       },
@@ -343,7 +366,6 @@ export default function TipTapEditor({
         key: "addColumnAfter",
         text: "Add Column After",
         value: "addColumnAfter",
-        icon: "plus",
         onClick: () => editor.chain().focus().addColumnAfter().run(),
         disabled: !editor.can().addColumnAfter(),
       },
@@ -351,7 +373,6 @@ export default function TipTapEditor({
         key: "deleteColumn",
         text: "Delete Column",
         value: "deleteColumn",
-        icon: "minus",
         onClick: () => editor.chain().focus().deleteColumn().run(),
         disabled: !editor.can().deleteColumn(),
       },
@@ -359,7 +380,6 @@ export default function TipTapEditor({
         key: "addRowBefore",
         text: "Add Row Before",
         value: "addRowBefore",
-        icon: "plus",
         onClick: () => editor.chain().focus().addRowBefore().run(),
         disabled: !editor.can().addRowBefore(),
       },
@@ -367,7 +387,6 @@ export default function TipTapEditor({
         key: "addRowAfter",
         text: "Add Row After",
         value: "addRowAfter",
-        icon: "plus",
         onClick: () => editor.chain().focus().addRowAfter().run(),
         disabled: !editor.can().addRowAfter(),
       },
@@ -375,7 +394,6 @@ export default function TipTapEditor({
         key: "deleteRow",
         text: "Delete Row",
         value: "deleteRow",
-        icon: "minus",
         onClick: () => editor.chain().focus().deleteRow().run(),
         disabled: !editor.can().deleteRow(),
       },
@@ -383,7 +401,6 @@ export default function TipTapEditor({
         key: "deleteTable",
         text: "Delete Table",
         value: "deleteTable",
-        icon: "trash",
         onClick: () => editor.chain().focus().deleteTable().run(),
         disabled: !editor.can().deleteTable(),
       },
@@ -391,7 +408,6 @@ export default function TipTapEditor({
         key: "toggleHeaderColumn",
         text: "Toggle Header Column",
         value: "toggleHeaderColumn",
-        icon: "columns",
         onClick: () => editor.chain().focus().toggleHeaderColumn().run(),
         disabled: !editor.can().toggleHeaderColumn(),
       },
@@ -399,7 +415,6 @@ export default function TipTapEditor({
         key: "toggleHeaderRow",
         text: "Toggle Header Row",
         value: "toggleHeaderRow",
-        icon: "rows",
         onClick: () => editor.chain().focus().toggleHeaderRow().run(),
         disabled: !editor.can().toggleHeaderRow(),
       },
@@ -407,7 +422,6 @@ export default function TipTapEditor({
         key: "toggleHeaderCell",
         text: "Toggle Header Cell",
         value: "toggleHeaderCell",
-        icon: "square outline",
         onClick: () => editor.chain().focus().toggleHeaderCell().run(),
         disabled: !editor.can().toggleHeaderCell(),
       },
@@ -415,7 +429,6 @@ export default function TipTapEditor({
         key: "mergeCells",
         text: "Merge Cells",
         value: "mergeCells",
-        icon: "compress",
         onClick: () => editor.chain().focus().mergeCells().run(),
         disabled: !editor.can().mergeCells(),
       },
@@ -423,7 +436,6 @@ export default function TipTapEditor({
         key: "splitCell",
         text: "Split Cell",
         value: "splitCell",
-        icon: "expand",
         onClick: () => editor.chain().focus().splitCell().run(),
         disabled: !editor.can().splitCell(),
       },
@@ -451,7 +463,7 @@ export default function TipTapEditor({
                 active={editor.isActive("bold")}
                 aria-label="Toggle bold"
               >
-                <Icon name="bold" />
+                <TipTapToolbarIcon file="bold" />
               </Button>
               <Button
                 icon
@@ -463,7 +475,7 @@ export default function TipTapEditor({
                 active={editor.isActive("italic")}
                 aria-label="Toggle italic"
               >
-                <Icon name="italic" />
+                <TipTapToolbarIcon file="italics" />
               </Button>
               <Button
                 icon
@@ -475,7 +487,7 @@ export default function TipTapEditor({
                 active={editor.isActive("underline")}
                 aria-label="Toggle underline"
               >
-                <Icon name="underline" />
+                <TipTapToolbarIcon file="underline" />
               </Button>
               <Button
                 icon
@@ -485,7 +497,7 @@ export default function TipTapEditor({
                 active={editor.isActive("link")}
                 aria-label="Insert/edit link"
               >
-                <Icon name="linkify" />
+                <TipTapToolbarIcon file="link" />
               </Button>
               <Button
                 icon
@@ -497,7 +509,7 @@ export default function TipTapEditor({
                 active={editor.isActive("bulletList")}
                 aria-label="Toggle bullet list"
               >
-                <Icon name="list ul" />
+                <TipTapToolbarIcon file="bulletList" />
               </Button>
               <Button
                 icon
@@ -509,8 +521,25 @@ export default function TipTapEditor({
                 active={editor.isActive("orderedList")}
                 aria-label="Toggle numbered list"
               >
-                <Icon name="list ol" />
+                <TipTapToolbarIcon file="numberedList" />
               </Button>
+              {mediaLibraryId && (
+                <Button
+                  className="toolbarButton"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setMediaLibraryModalOpen(true);
+                  }}
+                  disabled={!editor.isEditable}
+                  aria-label={t(
+                    "tiptap.mediaLibraryAria",
+                    "Open media library",
+                  )}
+                >
+                  {MEDIA_LIBRARY_ICON}
+                </Button>
+              )}
             </div>
             {renderSpecialButton()}
           </div>
@@ -538,7 +567,7 @@ export default function TipTapEditor({
               disabled={!editor.isEditable || !editor.can().undo()}
               aria-label="Undo"
             >
-              <Icon name="undo" />
+              <TipTapToolbarIcon file="undo" />
             </Button>
             <Button
               icon
@@ -549,7 +578,7 @@ export default function TipTapEditor({
               disabled={!editor.isEditable || !editor.can().redo()}
               aria-label="Redo"
             >
-              <Icon name="redo" />
+              <TipTapToolbarIcon file="redo" />
             </Button>
           </div>
           <div
@@ -583,7 +612,7 @@ export default function TipTapEditor({
               active={editor.isActive("heading", { level: 1 })}
               aria-label="Toggle heading 1"
             >
-              <Icon name="header" />
+              <TipTapToolbarIcon file="h1" />
             </Button>
             <Button
               icon
@@ -595,7 +624,7 @@ export default function TipTapEditor({
               active={editor.isActive("bold")}
               aria-label="Toggle bold"
             >
-              <Icon name="bold" />
+              <TipTapToolbarIcon file="bold" />
             </Button>
             <Button
               icon
@@ -607,7 +636,7 @@ export default function TipTapEditor({
               active={editor.isActive("italic")}
               aria-label="Toggle italic"
             >
-              <Icon name="italic" />
+              <TipTapToolbarIcon file="italics" />
             </Button>
             <Button
               icon
@@ -619,7 +648,7 @@ export default function TipTapEditor({
               active={editor.isActive("underline")}
               aria-label="Toggle underline"
             >
-              <Icon name="underline" />
+              <TipTapToolbarIcon file="underline" />
             </Button>
             {/* Link */}
             <Button
@@ -630,7 +659,7 @@ export default function TipTapEditor({
               active={editor.isActive("link")}
               aria-label="Insert/edit link"
             >
-              <Icon name="linkify" />
+              <TipTapToolbarIcon file="link" />
             </Button>
             </div>
           <div
@@ -659,7 +688,7 @@ export default function TipTapEditor({
               active={editor.isActive("bulletList")}
               aria-label="Toggle bullet list"
             >
-              <Icon name="list ul" />
+              <TipTapToolbarIcon file="bulletList" />
             </Button>
             <Button
               icon
@@ -671,7 +700,7 @@ export default function TipTapEditor({
               active={editor.isActive("orderedList")}
               aria-label="Toggle numbered list"
             >
-              <Icon name="list ol" />
+              <TipTapToolbarIcon file="numberedList" />
             </Button>
             <Button
               icon
@@ -683,7 +712,7 @@ export default function TipTapEditor({
               active={editor.isActive("blockquote")}
               aria-label="Toggle blockquote"
             >
-              <Icon name="quote left" />
+              <TipTapToolbarIcon file="quotes" />
             </Button>
           </div>
           <div
@@ -703,24 +732,47 @@ export default function TipTapEditor({
             }}
           >
             
-            {/* Image */}
-            <Button
-              icon
-              className="toolbarButton"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const url = window.prompt('Enter image URL or paste base64 data:');
-                if (url && editor.isEditable) {
-                  editor.chain().focus().setImage({ src: url }).run();
-                }
-              }}
-              disabled={!editor.isEditable}
-              aria-label="Insert image"
-            >
-              <Icon name="image" />
-            </Button>
-            
+            {/* Image: URL only when no board media scope (e.g. assignments) */}
+            {!mediaLibraryId && (
+              <Button
+                icon
+                className="toolbarButton"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const url = window.prompt(
+                    t(
+                      "tiptap.insertImagePrompt",
+                      "Enter image URL:",
+                    ),
+                  );
+                  if (url && editor.isEditable) {
+                    editor.chain().focus().setImage({ src: url }).run();
+                  }
+                }}
+                disabled={!editor.isEditable}
+                aria-label={t("tiptap.insertImageAria", "Insert image")}
+              >
+                <TipTapToolbarIcon file="imagePlus" />
+              </Button>
+            )}
+            {mediaLibraryId && (
+              <Button
+                className="toolbarButton"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setMediaLibraryModalOpen(true);
+                }}
+                disabled={!editor.isEditable}
+                aria-label={t(
+                  "tiptap.mediaLibraryAria",
+                  "Open media library",
+                )}
+              >
+                {MEDIA_LIBRARY_ICON}
+              </Button>
+            )}
             <Dropdown
               trigger={
                 <Button
@@ -730,7 +782,7 @@ export default function TipTapEditor({
                   active={editor.isActive("table")}
                   aria-label="Table options"
                 >
-                  <Icon name="table" />
+                  <TipTapToolbarIcon file="table" />
                 </Button>
               }
               pointing
@@ -741,15 +793,33 @@ export default function TipTapEditor({
                 {tableOptions.map((option) => (
                   <Dropdown.Item
                     key={option.key}
-                    icon={option.icon}
-                    text={option.text}
                     disabled={option.disabled}
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       option.onClick();
                     }}
-                  />
+                  >
+                    <span
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                      }}
+                    >
+                      {option.iconSrc ? (
+                        <img
+                          src={option.iconSrc}
+                          alt=""
+                          width={18}
+                          height={18}
+                          style={{ flexShrink: 0 }}
+                          draggable={false}
+                        />
+                      ) : null}
+                      {option.text}
+                    </span>
+                  </Dropdown.Item>
                 ))}
               </Dropdown.Menu>
             </Dropdown>
@@ -761,16 +831,39 @@ export default function TipTapEditor({
   };
 
   return (
-    <StyledTipTap ref={editorRef}>
-      <div className="editorContainer">
-        <EditorContent 
-          editor={editor} 
-          className="tiptapEditor" 
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+    <>
+      <StyledTipTap ref={editorRef}>
+        <div className="editorContainer">
+          <EditorContent
+            editor={editor}
+            className="tiptapEditor"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
+          <Toolbar />
+        </div>
+      </StyledTipTap>
+      {mediaLibraryId && (
+        <MediaLibraryModal
+          open={mediaLibraryModalOpen}
+          onClose={() => setMediaLibraryModalOpen(false)}
+          mediaScopeId={mediaLibraryId}
+          mediaLibrarySource={mediaLibrarySource}
+          mediaDisplayedInProposalCardId={mediaDisplayedInProposalCardId}
+          onInsertMedia={({ id, url }) => {
+            if (url && editor?.isEditable) {
+              editor
+                .chain()
+                .focus()
+                .setImage({
+                  src: url,
+                  ...(id ? { mediaAssetId: id } : {}),
+                })
+                .run();
+            }
+          }}
         />
-        <Toolbar />
-      </div>
-    </StyledTipTap>
+      )}
+    </>
   );
 }

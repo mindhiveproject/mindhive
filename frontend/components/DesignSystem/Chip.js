@@ -98,6 +98,8 @@ const CLOSE_BUTTON_STYLE = {
  * @param {"square"|"pill"} [shape="pill"] - Corner radius: "square" (8px) or "pill" (100px).
  * @param {React.CSSProperties} [style] - Optional override for the root chip container.
  * @param {string} [className] - Optional class for the root (e.g. for parent layout).
+ * @param {string} [ariaLabel] - Optional accessible name (e.g. icon-only chips).
+ * @param {string} [title] - Optional native tooltip on the root.
  *
  * @example
  * // Removable chip
@@ -122,6 +124,8 @@ export default function Chip({
   shape = "pill",
   style = {},
   className,
+  ariaLabel,
+  title,
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -175,6 +179,8 @@ export default function Chip({
     <div
       role={isClickable ? "button" : undefined}
       tabIndex={isClickable ? 0 : undefined}
+      aria-label={ariaLabel}
+      title={title}
       className={className}
       style={{
         ...rootStyle,

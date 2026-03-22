@@ -28,12 +28,14 @@ export const StyledTipTap = styled.div`
   .toolbar {
     display: flex;
     // grid-gap: 4px;
-    border-radius: 100px;
-    background: #f0f5f5;
     padding: 0px 8px 0px 16px;
     width: fit-content;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 32px;
+    border: 1px solid #A1A1A1;
+    background: var(--MH-Theme-Neutrals-Light-Green, #F6F9F8);
+
+    /* MH-Theme/Elevation/High */
+    box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.15);
     
     .toolbarGroup {
       // border-radius: 8px;
@@ -52,15 +54,36 @@ export const StyledTipTap = styled.div`
         align-content: center;
 
         &:hover {
-          background: #55808C;
+          background: #5D5763;
           cursor: pointer;
           color: white; 
+        }
+
+        /* Toolbar SVGs use fixed gray fills; invert on hover to match former Semantic icon color */
+        &:hover .tiptap-toolbar-icon {
+          filter: brightness(0) invert(1);
         }
          
         &.active {
         background: #D3E0E3;
           color: #434343; 
         }
+
+        &.active .tiptap-toolbar-icon {
+          filter: none;
+          opacity: 0.92;
+        }
+
+        &.active:hover .tiptap-toolbar-icon {
+          filter: brightness(0) invert(1);
+          opacity: 1;
+        }
+      }
+
+      .tiptap-toolbar-icon {
+        display: block;
+        flex-shrink: 0;
+        object-fit: contain;
       }
       
       .table-dropdown {

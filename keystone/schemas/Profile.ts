@@ -260,6 +260,14 @@ export const Profile = list({
       ref: "Resource.author",
       many: true,
     }),
+    authoredMediaAssets: relationship({
+      ref: "MediaAsset.author",
+      many: true,
+    }),
+    favoritedMediaAssets: relationship({
+      ref: "MediaAsset.favoriteBy",
+      many: true,
+    }),
     collaboratorInLesson: relationship({
       ref: "Lesson.collaborators",
       many: true,

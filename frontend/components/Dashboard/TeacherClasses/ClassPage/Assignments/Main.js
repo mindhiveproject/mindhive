@@ -15,6 +15,7 @@ import CopyAssignment from "./Copy";
 import Overview from "../Overview/HomeworkCompletion";
 import HomeworkOverview from "./HomeworkOverview";
 import Button from "../../../../DesignSystem/Button";
+import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 
 // Styled button matching Figma design (Primary Action - Teal)
 const PrimaryButton = styled.button`
@@ -63,6 +64,24 @@ export default function Settings({ myclass, user, query }) {
     fetchPolicy: "cache-and-network",
   });
   const assignments = data?.assignments || [];
+  const isListQueryPending = loading && !data;
+
+  const listLoadingView = (
+    <div
+      className="assignments"
+      style={{ display: "flex", justifyContent: "center" }}
+    >
+      <JustOneSecondNotice
+        message={{
+          h1: t("assignment.loadingListTitle", "Just a moment"),
+          p: t(
+            "assignment.loadingListBody",
+            "Loading assignments linked to this class."
+          ),
+        }}
+      />
+    </div>
+  );
 
   if (action === "create") {
     return (
@@ -93,6 +112,9 @@ export default function Settings({ myclass, user, query }) {
   }
 
   if (action === "overview") {
+    if (isListQueryPending) {
+      return listLoadingView;
+    }
     return (
       <div className="assignments">
         <Overview
@@ -141,6 +163,10 @@ export default function Settings({ myclass, user, query }) {
         />
       </div>
     );
+  }
+
+  if (isListQueryPending) {
+    return listLoadingView;
   }
 
   if (assignments?.length === 0) {

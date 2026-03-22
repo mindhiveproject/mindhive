@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Modal, Button, Icon } from "semantic-ui-react";
+import { Modal, Button } from "semantic-ui-react";
 import { useMutation, useQuery } from "@apollo/client";
 import StyledModal from "../styles/StyledModal";
 import useTranslation from "next-translate/useTranslation";
@@ -122,8 +122,15 @@ export default function AssignmentCopyModal({ open, onClose, assignment, user, o
             icon
             onClick={onClose}
             style={{ background: "transparent", color: "#666" }}
+            aria-label={t("board.expendedCard.close", "Close")}
             >
-            <Icon name="close" />
+            <img
+              src="/assets/icons/close.svg"
+              alt=""
+              width={20}
+              height={20}
+              draggable={false}
+            />
             </Button>
         </Modal.Header>
 
