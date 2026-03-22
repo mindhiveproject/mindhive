@@ -457,6 +457,12 @@ export default function ResourceEditModal({
                     onUpdate={(newContent) =>
                       handleFieldChange("content", newContent)
                     }
+                    mediaLibraryId={proposal?.id}
+                    mediaLibrarySource={{
+                      sourceType: "resourceContent",
+                      sourceId: activeResourceId || resourceId || null,
+                      createdWith: "upload",
+                    }}
                   />
                 </div>
               </>

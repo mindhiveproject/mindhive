@@ -1069,6 +1069,17 @@ export default function ProposalCard({
                               }
                               onBlur={handleEditorBlur}
                               getContentRef={editorGetContentRef}
+                              mediaLibraryId={
+                                proposal?.id || proposalId
+                              }
+                              mediaLibrarySource={{
+                                sourceType: "projectCard",
+                                sourceId: proposalCard?.id ?? null,
+                                createdWith: "upload",
+                              }}
+                              mediaDisplayedInProposalCardId={
+                                proposalCard?.id ?? null
+                              }
                             />
                           </div>
                         </div>
@@ -1278,6 +1289,17 @@ export default function ProposalCard({
                         onUpdate={(newContent) =>
                           updateHomeworkContent(newContent)
                         }
+                        mediaLibraryId={
+                          proposal?.id || proposalId
+                        }
+                        mediaLibrarySource={{
+                          sourceType: "projectCard",
+                          sourceId: proposalCard?.id ?? null,
+                          createdWith: "upload",
+                        }}
+                        mediaDisplayedInProposalCardId={
+                          proposalCard?.id ?? null
+                        }
                       />
                     </div>
                   </div>
@@ -1484,6 +1506,17 @@ export default function ProposalCard({
                             newContent,
                           })
                         }
+                        mediaLibraryId={
+                          proposal?.id || proposalId
+                        }
+                        mediaLibrarySource={{
+                          sourceType: "projectCard",
+                          sourceId: proposalCard?.id ?? null,
+                          createdWith: "upload",
+                        }}
+                        mediaDisplayedInProposalCardId={
+                          proposalCard?.id ?? null
+                        }
                       />
                     </div>
                   )}
@@ -1503,6 +1536,17 @@ export default function ProposalCard({
                             contentType: "revisedContent",
                             newContent,
                           })
+                        }
+                        mediaLibraryId={
+                          proposal?.id || proposalId
+                        }
+                        mediaLibrarySource={{
+                          sourceType: "projectCard",
+                          sourceId: proposalCard?.id ?? null,
+                          createdWith: "upload",
+                        }}
+                        mediaDisplayedInProposalCardId={
+                          proposalCard?.id ?? null
                         }
                       />
                     </div>
@@ -1580,6 +1624,17 @@ export default function ProposalCard({
                   }}
                   editable={true}
                   limitedToolbar={true}
+                  mediaLibraryId={
+                    proposal?.id || proposalId
+                  }
+                  mediaLibrarySource={{
+                    sourceType: "projectCard",
+                    sourceId: proposalCard?.id ?? null,
+                    createdWith: "upload",
+                  }}
+                  mediaDisplayedInProposalCardId={
+                    proposalCard?.id ?? null
+                  }
                   placeholder={t(
                     "mainCard.commentsPlaceholder",
                     "Add your comment here...",

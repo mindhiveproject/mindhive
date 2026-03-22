@@ -425,6 +425,15 @@ export default function BuilderProposalCard({
                   newContent,
                 })
               }
+              mediaLibraryId={proposal?.id}
+              mediaLibrarySource={{
+                sourceType: "projectCard",
+                sourceId: inputs?.id || proposalCard?.id || null,
+                createdWith: "upload",
+              }}
+              mediaDisplayedInProposalCardId={
+                inputs?.id || proposalCard?.id || null
+              }
             />
           </label>
 
@@ -533,6 +542,15 @@ export default function BuilderProposalCard({
                       newContent,
                     })
                   }
+                  mediaLibraryId={proposal?.id}
+                  mediaLibrarySource={{
+                    sourceType: "projectCard",
+                    sourceId: inputs?.id || proposalCard?.id || null,
+                    createdWith: "upload",
+                  }}
+                  mediaDisplayedInProposalCardId={
+                    inputs?.id || proposalCard?.id || null
+                  }
                 />
               </div>
             </>
@@ -595,6 +613,15 @@ export default function BuilderProposalCard({
                 })
               }
               limitedToolbar={true}
+              mediaLibraryId={proposal?.id}
+              mediaLibrarySource={{
+                sourceType: "projectCard",
+                sourceId: inputs?.id || proposalCard?.id || null,
+                createdWith: "upload",
+              }}
+              mediaDisplayedInProposalCardId={
+                inputs?.id || proposalCard?.id || null
+              }
             />
           </div>
 

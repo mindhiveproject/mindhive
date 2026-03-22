@@ -104,5 +104,9 @@ export const ProposalCard = list({
       ref: "Task.proposalCards",
       many: true,
     }),
+    mediaAssetsDisplayedIn: relationship({
+      ref: "MediaAsset.displayedIn",
+      many: true,
+    }),
   },
 });

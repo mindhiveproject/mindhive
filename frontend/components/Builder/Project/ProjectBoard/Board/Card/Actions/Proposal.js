@@ -618,6 +618,13 @@ export default function Proposal({
                     }
                     isEditable={canEditCards}
                     toolbarVisible={canEditCards}
+                    mediaLibraryId={proposalId}
+                    mediaLibrarySource={{
+                      sourceType: "projectCard",
+                      sourceId: card?.id ?? null,
+                      createdWith: "upload",
+                    }}
+                    mediaDisplayedInProposalCardId={card?.id ?? null}
                     specialButton={
                       canEditCards
                         ? {

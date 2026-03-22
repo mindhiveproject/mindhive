@@ -28,6 +28,7 @@ import { Dataset } from "./schemas/Dataset";
 import { ProposalBoard } from "./schemas/ProposalBoard";
 import { ProposalSection } from "./schemas/ProposalSection";
 import { ProposalCard } from "./schemas/ProposalCard";
+import { MediaAsset } from "./schemas/MediaAsset";
 import { Review } from "./schemas/Review";
 import { Curriculum } from "./schemas/Curriculum";
 import { Lesson } from "./schemas/Lesson";
@@ -88,6 +89,7 @@ export const lists: Lists = {
   ProposalBoard,
   ProposalSection,
   ProposalCard,
+  MediaAsset,
   Review,
   Curriculum,
   Lesson,
