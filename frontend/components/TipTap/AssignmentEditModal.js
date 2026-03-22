@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Modal, Button, Icon } from "semantic-ui-react";
+import { Modal, Button } from "semantic-ui-react";
 import { useMutation, useQuery } from "@apollo/client";
 import StyledModal from "../styles/StyledModal";
 import useTranslation from "next-translate/useTranslation";
