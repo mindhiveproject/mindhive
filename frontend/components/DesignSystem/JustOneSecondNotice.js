@@ -3,10 +3,18 @@
 import useTranslation from "next-translate/useTranslation";
 import { Loader } from "semantic-ui-react";
 
-export default function JustOneSecondNotice({ variant = "codeRunning", className }) {
+/**
+ * @param {{ h1?: string, p?: string }} [message] — Optional copy; keys match heading + paragraph.
+ * When set, `h1` / `p` fall back to builder defaults if omitted.
+ */
+export default function JustOneSecondNotice({
+  variant = "codeRunning",
+  className,
+  message,
+}) {
   const { t } = useTranslation("builder");
 
-  const title = t("codeExecution.justOneSecondTitle", "Just one second");
+  const defaultTitle = t("codeExecution.justOneSecondTitle", "Just one second");
 
   const codeRunningMessage = t(
     "codeExecution.codeRunningMessage",
@@ -18,8 +26,17 @@ export default function JustOneSecondNotice({ variant = "codeRunning", className
     "The data analysis libraries are loading."
   );
 
-  const body =
+  const defaultBody =
     variant === "librariesLoading" ? librariesLoadingMessage : codeRunningMessage;
+
+  const hasCustomMessage =
+    message &&
+    typeof message === "object" &&
+    (message.h1 != null || message.p != null);
+
+  const title = hasCustomMessage ? message.h1 ?? defaultTitle : defaultTitle;
+
+  const body = hasCustomMessage ? message.p ?? defaultBody : defaultBody;
 
   return (
     <div
@@ -61,8 +78,9 @@ export default function JustOneSecondNotice({ variant = "codeRunning", className
           alignItems: "center",
           lineHeight: "24px",
           fontStyle: "normal",
-          whiteSpace: "nowrap",
+          whiteSpace: hasCustomMessage ? "normal" : "nowrap",
           textAlign: "center",
+          maxWidth: hasCustomMessage ? 420 : undefined,
         }}
       >
         <p

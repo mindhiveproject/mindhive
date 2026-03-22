@@ -10,6 +10,7 @@ import AddResource from "./Add";
 import ViewResource from "./View";
 import EditResource from "./Edit";
 import CreateResource from "./Create";
+import JustOneSecondNotice from "../../../../DesignSystem/JustOneSecondNotice";
 
 // Styled button matching Figma design (Primary Action - Teal)
 const PrimaryButton = styled.button`
@@ -57,6 +58,7 @@ export default function ClassResources({ myclass, user, query }) {
     fetchPolicy: "cache-and-network",
   });
   const resources = data?.resources || [];
+  const isListQueryPending = loading && !data;
 
   if (action === "create") {
     return (
@@ -73,22 +75,6 @@ export default function ClassResources({ myclass, user, query }) {
       </div>
     );
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   if (action === "edit" && resourceId) {
     return (
       <div className="resources">
@@ -100,23 +86,6 @@ export default function ClassResources({ myclass, user, query }) {
       </div>
     );
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   if (action === "view" && resourceId) {
     return (
       <div className="resources">
@@ -129,22 +98,25 @@ export default function ClassResources({ myclass, user, query }) {
       </div>
     );
   }
+  if (isListQueryPending) {
+    return (
+      <div
+        className="resources"
+        style={{ display: "flex", justifyContent: "center" }}
+      >
+        <JustOneSecondNotice
+          message={{
+            h1: t("resource.loadingListTitle", "Just a moment"),
+            p: t(
+              "resource.loadingListBody",
+              "Loading resources linked to this class."
+            ),
+          }}
+        />
+      </div>
+    );
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   if (resources?.length === 0) {
     return (
       <div className="empty">

@@ -386,9 +386,10 @@ export const StyledComponentPanel = styled.div`
   padding: 16px;
   overflow-y: auto;
   height: 100%;
-  margin: 10px;
+  // margin: 10px;
   box-shadow: 0px 2px 4px 0px #00000012;
-  border-radius: 8px;
+  border-radius: 12px;
+  border: 1px solid #e6e6e6;
   .title {
     font-family: Nunito;
     font-weight: 700;
