@@ -16,7 +16,38 @@ const StyledBreadcrumbs = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
-    height: 23px;
+    min-height: 23px;
+  }
+
+  .journalTitleWrap {
+    display: inline-flex;
+    align-items: center;
+    max-width: 350px;
+    min-height: 28px;
+    padding: 0;
+    border-bottom: 2px solid transparent;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .crumbClickable {
+    cursor: pointer;
+    padding: 0 4px;
+    border-radius: 0px;
+  }
+
+  .crumbClickable:hover:not(.isEditing) {
+    background-color: rgba(23, 23, 23, 0.06);
+  }
+
+  .journalTitleWrap.crumbClickable:hover:not(.isEditing) {
+    border-bottom-color: #f2be42;
+  }
+
+  .journalTitle {
+    max-width: 350px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .crumbChevron {
@@ -49,6 +80,12 @@ const StyledBreadcrumbs = styled.div`
     border-bottom: 2px solid #f2be42;
     height: 100%;
     padding: 0;
+    border-radius: 4px;
+    transition: background-color 0.15s ease;
+  }
+
+  .workspaceTitleWrap.crumbClickable:hover:not(.isEditing) {
+    background-color: rgba(23, 23, 23, 0.06);
   }
 
   .workspaceInput {
@@ -59,20 +96,6 @@ const StyledBreadcrumbs = styled.div`
     padding: 0;
     margin: 0;
     background: transparent;
-    
-  }
-
-  .editButton {
-    width: 24px;
-    height: 24px;
-    border: none;
-    background: transparent;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #a1a1a1;
   }
 `;
 
@@ -85,50 +108,95 @@ function Separator() {
 export default function Breadcrumbs({
   journalTitle,
   workspaceTitle,
-  isEditing,
-  newTitle,
-  onTitleChange,
-  onTitleSubmit,
-  onEditClick,
-  onKeyPress,
+  editingTarget,
+  draftTitle,
+  onDraftChange,
+  onJournalTitleClick,
+  onWorkspaceTitleClick,
+  onSubmit,
+  onKeyDown,
+  editJournalLabel,
   editWorkspaceLabel,
+  workspaceEditable,
 }) {
+  const editingJournal = editingTarget === "journal";
+  const editingWorkspace = editingTarget === "workspace";
+
   return (
     <StyledBreadcrumbs>
       <div className="crumbRow">
-        <span>{journalTitle}</span>
+        {editingJournal ? (
+          <div className={`journalTitleWrap isEditing`}>
+            <input
+              type="text"
+              className="workspaceInput"
+              value={draftTitle}
+              onChange={onDraftChange}
+              onKeyDown={onKeyDown}
+              onBlur={onSubmit}
+              autoFocus
+              aria-label={editJournalLabel}
+            />
+          </div>
+        ) : (
+          <div
+            className="journalTitleWrap crumbClickable"
+            onClick={onJournalTitleClick}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onJournalTitleClick();
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label={editJournalLabel}
+          >
+            <span className="journalTitle">{journalTitle}</span>
+          </div>
+        )}
       </div>
 
       <div className="workspaceRow">
         <span className="crumbChevron">
           <Separator />
         </span>
-        {isEditing ? (
-          <div className="workspaceTitleWrap">
+        {editingWorkspace ? (
+          <div className={`workspaceTitleWrap isEditing`}>
             <input
               type="text"
               className="workspaceInput"
-              value={newTitle}
-              onChange={onTitleChange}
-              onKeyPress={onKeyPress}
-              onBlur={onTitleSubmit}
+              value={draftTitle}
+              onChange={onDraftChange}
+              onKeyDown={onKeyDown}
+              onBlur={onSubmit}
               autoFocus
+              aria-label={editWorkspaceLabel}
             />
           </div>
         ) : (
-          <>
-            <div className="workspaceTitleWrap">
-              <span className="workspaceTitle">{workspaceTitle}</span>
-            </div>
-            <button
-              type="button"
-              className="editButton"
-              onClick={onEditClick}
-              aria-label={editWorkspaceLabel}
-            >
-              <img src="/assets/icons/visualize/edit.svg" alt="" />
-            </button>
-          </>
+          <div
+            className={`workspaceTitleWrap${
+              workspaceEditable ? " crumbClickable" : ""
+            }`}
+            onClick={workspaceEditable ? onWorkspaceTitleClick : undefined}
+            onKeyDown={
+              workspaceEditable
+                ? (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onWorkspaceTitleClick();
+                    }
+                  }
+                : undefined
+            }
+            role={workspaceEditable ? "button" : undefined}
+            tabIndex={workspaceEditable ? 0 : undefined}
+            aria-label={workspaceEditable ? editWorkspaceLabel : undefined}
+            style={!workspaceEditable ? { cursor: "default" } : undefined}
+          >
+            <span className="workspaceTitle">{workspaceTitle}</span>
+          </div>
         )}
       </div>
     </StyledBreadcrumbs>

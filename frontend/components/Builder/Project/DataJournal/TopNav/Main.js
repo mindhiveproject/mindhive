@@ -9,9 +9,26 @@ import Button from "../../../../DesignSystem/Button";
 import Breadcrumbs from "./Breadcrumbs/Main";
 
 import { UPDATE_VIZCHAPTER } from "../../../../Mutations/VizChapter";
+import { UPDATE_VIZPART } from "../../../../Mutations/VizPart";
 import { GET_WORKSPACE } from "../../../../Queries/DataWorkspace";
+import { GET_DATA_JOURNAL } from "../../../../Queries/DataJournal";
+import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 
 import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
+
+function journalsWhereClause(projectId, studyId) {
+  if (projectId && studyId) {
+    return {
+      OR: [
+        { project: { id: { equals: projectId } } },
+        { study: { id: { equals: studyId } } },
+      ],
+    };
+  }
+  if (projectId) return { project: { id: { equals: projectId } } };
+  if (studyId) return { study: { id: { equals: studyId } } };
+  return null;
+}
 
 const LEFT_NAV_SELECTED_BG = "#EDF4F5";
 
@@ -21,53 +38,111 @@ export default function TopNavigation() {
     area,
     setArea,
     selectedJournal: journal,
+    setSelectedJournal,
     workspace,
+    projectId,
+    studyId,
     setIsAddComponentPanelOpen,
     setActiveComponent,
   } = useDataJournal();
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [newTitle, setNewTitle] = useState(workspace?.title || "");
-  const [updateVizChapter] = useMutation(UPDATE_VIZCHAPTER, {
-    refetchQueries: [
-      {
-        query: GET_WORKSPACE,
-        variables: { id: workspace?.id },
-      },
-    ],
-  });
+  const [editingTarget, setEditingTarget] = useState(null);
+  const [draftTitle, setDraftTitle] = useState("");
 
-  const handleEditClick = () => {
-    setIsEditing(true);
-    setNewTitle(workspace?.title || "");
+  const journalsWhere = journalsWhereClause(projectId, studyId);
+
+  const refetchAfterWorkspaceTitle = [
+    {
+      query: GET_WORKSPACE,
+      variables: { id: workspace?.id },
+    },
+  ];
+
+  const refetchAfterJournalTitle = [
+    {
+      query: GET_DATA_JOURNAL,
+      variables: { id: journal?.id },
+    },
+    ...(journalsWhere
+      ? [
+          {
+            query: GET_DATA_JOURNALS,
+            variables: { where: journalsWhere },
+          },
+        ]
+      : []),
+  ];
+
+  const [updateVizChapter] = useMutation(UPDATE_VIZCHAPTER);
+  const [updateVizPart] = useMutation(UPDATE_VIZPART);
+
+  const handleJournalTitleClick = () => {
+    setEditingTarget("journal");
+    setDraftTitle(journal?.title || "");
   };
 
-  const handleTitleChange = (e) => {
-    setNewTitle(e.target.value);
+  const handleWorkspaceTitleClick = () => {
+    if (!workspace?.id) return;
+    setEditingTarget("workspace");
+    setDraftTitle(workspace?.title || "");
   };
 
-  const handleTitleSubmit = async () => {
-    if (newTitle.trim() && newTitle !== workspace?.title) {
+  const handleDraftChange = (e) => {
+    setDraftTitle(e.target.value);
+  };
+
+  const handleSubmit = async () => {
+    if (!editingTarget) return;
+
+    const trimmed = draftTitle.trim();
+
+    if (editingTarget === "journal") {
+      if (!trimmed || trimmed === journal?.title) {
+        setEditingTarget(null);
+        return;
+      }
+      try {
+        await updateVizPart({
+          variables: {
+            id: journal.id,
+            input: { title: trimmed },
+          },
+          refetchQueries: refetchAfterJournalTitle,
+        });
+        setSelectedJournal((prev) =>
+          prev?.id === journal.id ? { ...prev, title: trimmed } : prev,
+        );
+      } catch (error) {
+        console.error("Error updating journal title:", error);
+      }
+      setEditingTarget(null);
+      return;
+    }
+
+    if (editingTarget === "workspace") {
+      if (!trimmed || trimmed === workspace?.title) {
+        setEditingTarget(null);
+        return;
+      }
       try {
         await updateVizChapter({
           variables: {
             id: workspace?.id,
-            input: { title: newTitle },
+            input: { title: trimmed },
           },
+          refetchQueries: refetchAfterWorkspaceTitle,
         });
-        // Update local state or refetch data if needed
-        setIsEditing(false);
       } catch (error) {
         console.error("Error updating workspace title:", error);
       }
-    } else {
-      setIsEditing(false);
+      setEditingTarget(null);
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      handleTitleSubmit();
+      e.preventDefault();
+      handleSubmit();
     }
   };
 
@@ -141,16 +216,22 @@ export default function TopNavigation() {
           <Breadcrumbs
             journalTitle={journal?.title}
             workspaceTitle={workspace?.title}
-            isEditing={isEditing}
-            newTitle={newTitle}
-            onTitleChange={handleTitleChange}
-            onKeyPress={handleKeyPress}
-            onTitleSubmit={handleTitleSubmit}
-            onEditClick={handleEditClick}
+            editingTarget={editingTarget}
+            draftTitle={draftTitle}
+            onDraftChange={handleDraftChange}
+            onJournalTitleClick={handleJournalTitleClick}
+            onWorkspaceTitleClick={handleWorkspaceTitleClick}
+            onSubmit={handleSubmit}
+            onKeyDown={handleKeyDown}
+            editJournalLabel={t(
+              "dataJournal.topNav.editJournalName",
+              "Edit journal name"
+            )}
             editWorkspaceLabel={t(
               "dataJournal.topNav.editWorkspaceName",
               "Edit workspace name"
             )}
+            workspaceEditable={Boolean(workspace?.id)}
           />
         )}
         {area === "journals" && !journal?.id && (
