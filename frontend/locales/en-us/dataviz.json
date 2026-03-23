@@ -3,6 +3,7 @@
 		"topNav": {
 			"addComponent": "Add a Component",
 			"datasets": "Datasets",
+			"editJournalName": "Edit journal name",
 			"editWorkspaceName": "Edit workspace name",
 			"journals": "Journals",
 			"selectJournal": "Select a Journal to start ..."

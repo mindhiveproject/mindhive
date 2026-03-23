@@ -567,8 +567,9 @@ export const StyledDataWorkspace = styled.div`
 
     .widgetContainer {
       border-radius: 14px;
+      border: 2px solid #F3F3F3;
       &:hover {
-        outline: 2px solid #e6e6e6;
+        outline: 4px solid #e6e6e6;
         outline-offset: 2px;
       }
     }

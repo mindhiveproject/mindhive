@@ -83,7 +83,7 @@ export default function JournalNavigation({
         <div className="selectedTitle">{journal?.title}</div>
         <div>
           <Dropdown
-            icon={<img src={`/assets/dataviz/three-dots.png`} />}
+            icon={<img src={`/assets/dataviz/three-dots.svg`} />}
             direction="left"
             id="journalSettings"
           >
