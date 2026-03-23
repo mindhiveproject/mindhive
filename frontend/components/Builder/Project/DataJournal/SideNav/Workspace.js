@@ -60,7 +60,7 @@ export default function WorkspaceNavigation({
               <div>
                 <img src="/assets/dataviz/sidebar/paragraph.png" />
               </div>
-              <div>{component?.type}</div>
+              <div>{component?.title || "Component Name"}</div>
             </div>
           ))}
         </div>

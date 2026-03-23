@@ -12,6 +12,7 @@ export const GET_WORKSPACE = gql`
       layout
       vizSections {
         id
+        title
         type
         content
       }

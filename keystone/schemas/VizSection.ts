@@ -49,4 +49,13 @@ export const VizSection = list({
     updatedAt: timestamp(),
     position: float(),
   },
+  hooks: {
+    async resolveInput({ operation, resolvedData, item }) {
+      // Automatically set updatedAt on create + update
+      if (operation === "create" || operation === "update") {
+        resolvedData.updatedAt = new Date().toISOString();
+      }
+      return resolvedData;
+    },
+  },
 });

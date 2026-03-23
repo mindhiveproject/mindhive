@@ -375,6 +375,42 @@ export const StyledRightPanel = styled.div`
   .editor-wrapper .cm-editor {
     width: 100% !important;
   }
+
+  .editor-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 20px;
+    align-items: center;
+    .editor-component-name-input  {
+      input {
+        font-family: Lato;
+        border: 1px solid #cccccc;
+        border-radius: 10px;
+        width: 100%;
+        padding: 12px;
+        &:focus {
+          outline: 0;
+          border-color: ${(props) => props.theme.red};
+        }
+      }
+    }
+    .editor-component-name {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-gap: 10px;
+      align-items: center;
+      border: 1px solid #d3e0e3;
+      padding-top: 2px;
+      padding-right: 8px;
+      padding-bottom: 2px;
+      padding-left: 16px;
+      border-radius: 8px;
+      background: white;
+    }
+    .button {
+      cursor: pointer;
+    }
+  }
 `;
 
 export const StyledComponentPanel = styled.div`

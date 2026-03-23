@@ -1,11 +1,5 @@
 // components/DataJournal/Workspace/Grid/Grid.js
-import {
-  useMemo,
-  useCallback,
-  useEffect,
-  useState,
-  useRef,
-} from "react";
+import { useMemo, useCallback, useEffect, useState, useRef } from "react";
 import { useMutation } from "@apollo/client";
 import { debounce } from "lodash";
 import GridLayout from "react-grid-layout";
@@ -71,9 +65,9 @@ export default function Grid({
   const layout = useMemo(() => workspace?.layout || [], [workspace]);
   const components = useMemo(() => workspace?.vizSections || [], [workspace]);
   const hasRightPanel = Boolean(activeComponent || isAddComponentPanelOpen);
-  const dashboardClassName = `dashboard ${sidebarVisible ? "hasLeftSidebar" : "noLeftSidebar"} ${
-    hasRightPanel ? "hasRightPanel" : "noRightPanel"
-  }`;
+  const dashboardClassName = `dashboard ${
+    sidebarVisible ? "hasLeftSidebar" : "noLeftSidebar"
+  } ${hasRightPanel ? "hasRightPanel" : "noRightPanel"}`;
 
   // Measure the actual width of the canvas/container
   useEffect(() => {
@@ -118,7 +112,12 @@ export default function Grid({
     if ((activeComponent || isAddComponentPanelOpen) && sidebarVisible) {
       setSidebarVisible(false);
     }
-  }, [activeComponent, isAddComponentPanelOpen, sidebarVisible, setSidebarVisible]);
+  }, [
+    activeComponent,
+    isAddComponentPanelOpen,
+    sidebarVisible,
+    setSidebarVisible,
+  ]);
 
   const [createComponent] = useMutation(CREATE_DATA_COMPONENT, {
     variables: {},
@@ -135,8 +134,11 @@ export default function Grid({
   });
 
   const handleSaveComponent = useCallback(
-    async (componentId) => {
-      const component = components.find((comp) => comp.id === componentId);
+    async ({ componentId, updatedComponents }) => {
+      const component = updatedComponents.find(
+        (comp) => comp.id === componentId,
+      );
+      console.log({ component });
       if (component) {
         await updateComponent({
           variables: {
@@ -154,8 +156,8 @@ export default function Grid({
   );
 
   const debouncedSave = useCallback(
-    debounce((componentId) => {
-      handleSaveComponent(componentId);
+    debounce(({ componentId, updatedComponents }) => {
+      handleSaveComponent({ componentId, updatedComponents });
     }, 3000),
     [handleSaveComponent],
   );
@@ -173,7 +175,10 @@ export default function Grid({
         return; // do not open the component editor for tables
       }
       if (activeComponent?.id === component?.id) {
-        handleSaveComponent(component?.id);
+        handleSaveComponent({
+          componentId: component?.id,
+          updatedComponents: components,
+        });
         setActiveComponent(null); // Close the component editor
       } else {
         setIsAddComponentPanelOpen(false);
@@ -223,14 +228,18 @@ export default function Grid({
   );
 
   const handleUpdateComponent = useCallback(
-    ({ componentId, newContent }) => {
+    ({ componentId, newContent, newTitle }) => {
       const updatedComponents = components.map((comp) =>
         comp.id === componentId
-          ? { ...comp, content: { ...comp?.content, ...newContent } }
+          ? {
+              ...comp,
+              content: { ...comp?.content, ...newContent },
+              title: newTitle,
+            }
           : comp,
       );
       updateWorkspace({ vizSections: updatedComponents });
-      debouncedSave(componentId);
+      debouncedSave({ componentId, updatedComponents });
     },
     [components, updateWorkspace, debouncedSave],
   );
@@ -283,11 +292,11 @@ export default function Grid({
           <div className="dashboardMain">
             {!sidebarVisible && (
               <div className="openPanelBtnSlot">
-                <div
-                  className="openPanelBtn"
-                  onClick={handleOpenLeftPanel}
-                >
-                  <img src="/assets/dataviz/openPanel.svg" style={{ rotate: "180deg" }} />
+                <div className="openPanelBtn" onClick={handleOpenLeftPanel}>
+                  <img
+                    src="/assets/dataviz/openPanel.svg"
+                    style={{ rotate: "180deg" }}
+                  />
                 </div>
               </div>
             )}
@@ -378,7 +387,10 @@ export default function Grid({
                   studyId={studyId}
                   onChange={handleUpdateComponent}
                   onSave={async () => {
-                    await handleSaveComponent(activeComponent?.id);
+                    await handleSaveComponent({
+                      componentId: activeComponent?.id,
+                      updatedComponents: components,
+                    });
                     setActiveComponent(null);
                   }}
                   onDelete={() => handleRemoveComponent(activeComponent?.id)}
