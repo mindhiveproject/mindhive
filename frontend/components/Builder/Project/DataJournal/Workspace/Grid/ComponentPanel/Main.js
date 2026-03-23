@@ -121,7 +121,7 @@ export default function ComponentPanel({ handleAddComponent }) {
             className="card"
             onClick={async () =>
               await handleAddComponent({
-                title: "AB Design",
+                title: "Experimental Hypothesis",
                 type: "HYPVIS",
                 content: {
                   type: "abDesign",
@@ -133,17 +133,17 @@ export default function ComponentPanel({ handleAddComponent }) {
             <div>
               <img
                 src="/assets/dataviz/componentPanel/abDesign.png"
-                alt="AB Design"
+                alt="Experimental Hypothesis"
               />
             </div>
-            <div>AB Design</div>
+            <div>Experimental Hypothesis</div>
           </div>
 
           <div
             className="card"
             onClick={async () =>
               await handleAddComponent({
-                title: "Correlation study",
+                title: "Correlational Hypothesis",
                 type: "HYPVIS",
                 content: { type: "corStudy", code: hypvisTemplates?.corStudy },
               })
@@ -152,10 +152,10 @@ export default function ComponentPanel({ handleAddComponent }) {
             <div>
               <img
                 src="/assets/dataviz/componentPanel/correlationStudy.png"
-                alt="Correlation study"
+                alt="Correlational Hypothesis"
               />
             </div>
-            <div>Correlation study</div>
+            <div>Correlational Hypothesis</div>
           </div>
         </div>
 

@@ -116,7 +116,7 @@ export default function ComponentEditor({
           <Button variant="filled" onClick={onSave}>
             {t("dataJournal.componentEditor.save", "Save")}
           </Button>
-          <Button variant="tonal" onClick={onDelete}>
+          <Button variant="tonal" style={{ backgroundColor: "#8F1F14", color: "#FFFFFF" }} onClick={onDelete}>
             {t("dataJournal.componentEditor.delete", "Delete")}
           </Button>
         </div>

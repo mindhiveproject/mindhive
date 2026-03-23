@@ -76,7 +76,7 @@ export default function Navigation({
     },
     {
       value: "journal",
-      name: t("dataJournals"),
+      name: t("visualize"),
       requiresAdmin: false, // made public March 20th 2026
     },
   ];
