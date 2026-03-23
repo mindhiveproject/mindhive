@@ -1,23 +1,16 @@
 import { list } from "@keystone-6/core";
-import {
-  text,
-  relationship,
-  password,
-  timestamp,
-  select,
-  integer,
-  checkbox,
-} from "@keystone-6/core/fields";
-// import { permissions, rules } from "../access";
+import { text, relationship } from "@keystone-6/core/fields";
 import { permissionFields } from "./fields";
+import { isSignedIn, rules } from "../access";
 
 export const Permission = list({
   access: {
     operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      query: ({ session }) =>
+        isSignedIn({ session }) && rules.canManageRoles({ session }),
+      create: ({ session }) => rules.canManageRoles({ session }),
+      update: ({ session }) => rules.canManageRoles({ session }),
+      delete: ({ session }) => rules.canManageRoles({ session }),
     },
   },
   fields: {

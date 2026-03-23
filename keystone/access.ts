@@ -1,226 +1,273 @@
-// access functions, the access control returns yes or no
+// access.ts
+// Central access-control helpers for Keystone lists
 
 import { permissionsList } from "./schemas/fields";
 import { ListAccessArgs } from "./types";
 
+// ---------- Basic helpers ----------
+
 export function isSignedIn({ session }: ListAccessArgs) {
-  return !!session; // if undefinened, return false
+  return !!session;
 }
+
+export function isAdmin({ session }: ListAccessArgs) {
+  return !!session && permissions.canManageUsers({ session });
+}
+
+export function isSelf({ session, item }: ListAccessArgs & { item?: any }) {
+  if (!session || !item) return false;
+  return item.id === session.itemId;
+}
+
+// ---------- Generated permissions ----------
 
 const generatedPermissions = Object.fromEntries(
   permissionsList.map((permission) => [
     permission,
     function ({ session }: ListAccessArgs) {
       return (
-        session?.data.permissions
-          ?.map((role) => role[permission])
-          .filter((p) => !!p).length > 0
+        (session?.data.permissions
+          ?.map((role: any) => role[permission])
+          .filter((p: any) => !!p).length ?? 0) > 0
       );
     },
-  ])
+  ]),
 );
 
-// Permissions check if someone meets a criteris - yes or no
+// ---------- Permissions object ----------
+
 export const permissions = {
   ...generatedPermissions,
-  isAwesome({ session }: ListAccessArgs) {
-    return session?.data.username === "shevchenko_yury";
-  },
 };
 
-// Rule based functions
-// rules can return a boolean or a filter that limits which products they can CRUD
+// ---------- UI rules (Admin UI field modes) ----------
+
 export const rules = {
+  // Admin UI: who can edit things in the Keystone UI
   canEditAdminUI({ session }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return "hidden";
-    }
-    // Do they have the the admin permission?
-    if (permissions.isAwesome({ session })) {
-      return "edit";
-    }
-    if (permissions.canManageUsers({ session })) {
-      return "edit";
-    }
+    if (!isSignedIn({ session })) return "hidden";
+
+    if (permissions.canManageUsers({ session })) return "edit";
+
     return "hidden";
   },
+
+  // Admin UI: who can read things in the Keystone UI
   canReadAdminUI({ session }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return "hidden";
-    }
-    // Do they have the the admin permission?
-    if (permissions.isAwesome({ session })) {
-      return "read";
-    }
-    if (permissions.canManageUsers({ session })) {
-      return "read";
-    }
+    if (!isSignedIn({ session })) return "hidden";
+
+    if (permissions.canManageUsers({ session })) return "read";
+
     return "hidden";
   },
-  canManageUsers({ session, item, listKey, context }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return false;
-    }
-    // 1. Do they have the the admin permission
+
+  // ---------- Profile-related ----------
+
+  // For list-level access.filter on Profile (query)
+  // - Admins: all profiles
+  // - Others: own profile and public profiles
+  canReadProfiles({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (isAdmin({ session })) return true;
+
+    return {
+      OR: [{ id: { equals: session!.itemId } }, { isPublic: { equals: true } }],
+    };
+  },
+
+  // ---------- Study ----------
+
+  // For Study access.filter/update/delete
+  // - Admins: all studies
+  // - Others: author or collaborator
+  canManageOwnStudies({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (isAdmin({ session })) return true;
+
+    return {
+      OR: [
+        { author: { id: { equals: session!.itemId } } },
+        { collaborators: { some: { id: { equals: session!.itemId } } } },
+      ],
+    };
+  },
+
+  // ---------- Class ----------
+
+  // - Admins: all classes
+  // - Others: creator only
+  canManageOwnClasses({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (isAdmin({ session })) return true;
+
+    return {
+      creator: { id: { equals: session!.itemId } },
+    };
+  },
+
+  // ---------- Task ----------
+
+  // - Admins: all tasks
+  // - Others: author or collaborator
+  canManageOwnTasks({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (isAdmin({ session })) return true;
+
+    return {
+      OR: [
+        { author: { id: { equals: session!.itemId } } },
+        { collaborators: { some: { id: { equals: session!.itemId } } } },
+      ],
+    };
+  },
+
+  // ---------- Dataset ----------
+
+  // - Admins: all datasets
+  // - Others: datasets linked to their Profile
+  canReadOwnDatasets({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (isAdmin({ session })) return true;
+
+    return {
+      OR: [{ profile: { id: { equals: session!.itemId } } }],
+    };
+  },
+
+  // ---------- SummaryResult ----------
+
+  // - Admins: all summary results
+  // - Others: results linked to their Profile
+  canReadOwnSummaryResults({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (isAdmin({ session })) return true;
+
+    return {
+      OR: [{ user: { id: { equals: session!.itemId } } }],
+    };
+  },
+
+  // ---------- Update ----------
+
+  // - Admins: all updates
+  // - Others: updates linked to their Profile
+  canReadOwnUpdates({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (isAdmin({ session })) return true;
+
+    return {
+      user: { id: { equals: session!.itemId } },
+    };
+  },
+
+  // ---------- Existing rules you already had ----------
+
+  canManageUsers({ session, item, context }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+
     if (permissions.canManageUsers({ session })) {
       return true;
     }
-    // 2. Otherwise, they may only update themselves
+
     if (item?.id === session?.itemId) {
       return true;
     }
-    // allow the follow user mutation
+
     if (
       context?.req?.body?.operationName === "FOLLOW_USER_MUTATION" ||
       context?.req?.body?.operationName === "UNFOLLOW_USER_MUTATION"
     ) {
       return true;
     }
+
     return false;
   },
-  canManagePosts({ session, item }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return false;
-    }
-    // 1. Do they have the admin permission
-    if (permissions.canManagePosts({ session })) {
-      return true;
-    }
-    // 2. Otherwise, they may only update themselves
-    if (item.authorId === session.itemId) {
-      return true;
-    }
+
+  canManagePosts({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManagePosts({ session })) return true;
+    if (item?.authorId === session?.itemId) return true;
+    return false;
   },
-  canManageCollections({ session, item }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return false;
-    }
-    // 1. Do they have the admin permission
-    if (permissions.canManageCollections({ session })) {
-      return true;
-    }
-    // 2. If not, do they own this item
-    if (item.ownerId === session.itemId) {
-      return true;
-    }
+
+  canManageCollections({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageCollections({ session })) return true;
+    if (item?.ownerId === session?.itemId) return true;
+    return false;
   },
-  canManageContracts({ session, item }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return false;
-    }
-    // 1. Do they have the admin permission
-    if (permissions.canManageContracts({ session })) {
-      return true;
-    }
-    // 2. If not, are they a customer or a client
+
+  canManageContracts({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageContracts({ session })) return true;
     if (
-      item.customerId === session.itemId ||
-      item.supplierId === session.itemId
+      item?.customerId === session?.itemId ||
+      item?.supplierId === session?.itemId
     ) {
       return true;
     }
+    return false;
   },
-  canManageProposals({ session, item }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return false;
-    }
-    // 1. Do they have the admin permission
-    if (permissions.canManageProposals({ session })) {
-      return true;
-    }
-    // 2. If not, are they a customer or a client
-    if (item.fromId === session.itemId || item.toId === session.itemId) {
-      return true;
-    }
-  },
-  canManagePriceBids({ session, item }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return false;
-    }
-    // 1. Do they have the admin permission
-    if (permissions.canManagePriceBids({ session })) {
-      return true;
-    }
-    // 2. If not, are they a customer or a client
-    if (item.fromId === session.itemId || item.toId === session.itemId) {
-      return true;
-    }
-  },
-  canManageTransactions({ session, item }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return false;
-    }
-    // 1. Do they have the admin permission
-    if (permissions.canManageTransactions({ session })) {
-      return true;
-    }
-    // 2. If not, are they a customer or a client
-    if (item.fromId === session.itemId || item.toId === session.itemId) {
-      return true;
-    }
-  },
-  canManageUserImages({ session }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return false;
-    }
-    // 1. Do they have the permission of canManageUsers
-    if (permissions.canManageUserImages({ session })) {
-      return true;
-    }
-    // 2. If not, do they own this item
-    if (item.userId === session.itemId) {
-      return true;
-    }
-  },
-  canManageRoles({ session }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return false;
-    }
-    if (permissions.canManageRoles({ session })) {
-      return true;
-    }
-    if (permissions.isAwesome({ session })) {
+
+  canManageProposals({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageProposals({ session })) return true;
+    if (item?.fromId === session?.itemId || item?.toId === session?.itemId) {
       return true;
     }
     return false;
   },
-  canManageTemplates({ session, item }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return false;
-    }
-    // 1. Do they have the admin permission
-    if (permissions.canManageTemplates({ session })) {
+
+  canManagePriceBids({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManagePriceBids({ session })) return true;
+    if (item?.fromId === session?.itemId || item?.toId === session?.itemId) {
       return true;
     }
-    // 2. If not, are they are a template author
-    if (item.author === session.itemId) {
-      return true;
-    }
+    return false;
   },
-  canManageTasks({ session, item }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return false;
-    }
-    // 1. Do they have the admin permission
-    if (permissions.canManageTasks({ session })) {
+
+  canManageTransactions({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageTransactions({ session })) return true;
+    if (item?.fromId === session?.itemId || item?.toId === session?.itemId) {
       return true;
     }
-    // 2. If not, are they are a template author
-    if (item.author === session.itemId) {
-      return true;
-    }
+    return false;
   },
-  canManageProjects({ session, item }: ListAccessArgs) {
-    if (!isSignedIn({ session })) {
-      return false;
-    }
-    // 1. Do they have the admin permission
-    if (permissions.canManageProjects({ session })) {
-      return true;
-    }
-    // 2. If not, are they are a template author
-    if (item.author === session.itemId) {
-      return true;
-    }
+
+  canManageUserImages({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUserImages({ session })) return true;
+    if (item?.userId === session?.itemId) return true;
+    return false;
+  },
+
+  canManageRoles({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    // treat canManageUsers as the admin-level permission for roles/permissions
+    if (permissions.canManageUsers({ session })) return true;
+    return false;
+  },
+
+  canManageTemplates({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageTemplates({ session })) return true;
+    if (item?.author === session?.itemId) return true;
+    return false;
+  },
+
+  canManageTasks({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageTasks({ session })) return true;
+    if (item?.author === session?.itemId) return true;
+    return false;
+  },
+
+  canManageProjects({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageProjects({ session })) return true;
+    if (item?.author === session?.itemId) return true;
+    return false;
   },
 };

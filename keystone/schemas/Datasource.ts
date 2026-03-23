@@ -4,17 +4,32 @@ import {
   text,
   timestamp,
   relationship,
-  checkbox,
   select,
 } from "@keystone-6/core/fields";
+import { isSignedIn, isAdmin } from "../access";
 
 export const Datasource = list({
   access: {
     operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: isSignedIn,
+    },
+    filter: {
+      // Admins: all; others: own datasources (author)
+      query: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { author: { id: { equals: session?.itemId } } },
+      update: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { author: { id: { equals: session?.itemId } } },
+      delete: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { author: { id: { equals: session?.itemId } } },
     },
   },
   fields: {
@@ -51,7 +66,7 @@ export const Datasource = list({
       ],
     }),
     settings: json(),
-    content: json(), // save uploaded data here
+    content: json(),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

@@ -2,22 +2,50 @@ import { list } from "@keystone-6/core";
 import {
   text,
   relationship,
-  password,
   timestamp,
-  select,
-  float,
   checkbox,
   json,
 } from "@keystone-6/core/fields";
 import slugify from "slugify";
+import { isSignedIn, isAdmin } from "../access";
 
 export const Lesson = list({
   access: {
     operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: isSignedIn,
+    },
+    filter: {
+      // Admins: all; others: public lessons or where they are author/collaborator
+      query: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              OR: [
+                { isPublic: { equals: true } },
+                { author: { id: { equals: session?.itemId } } },
+                {
+                  collaborators: { some: { id: { equals: session?.itemId } } },
+                },
+              ],
+            },
+      update: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              OR: [
+                { author: { id: { equals: session?.itemId } } },
+                {
+                  collaborators: { some: { id: { equals: session?.itemId } } },
+                },
+              ],
+            },
+      delete: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { author: { id: { equals: session?.itemId } } },
     },
   },
   fields: {
@@ -31,9 +59,9 @@ export const Lesson = list({
           const { title } = inputData;
           if (title) {
             let slug = slugify(title, {
-              remove: /[*+~.()'"!:@]/g, // remove characters that match regex
-              lower: true, // convert to lower case
-              strict: true, // strip special characters except replacement
+              remove: /[*+~.()'"!:@]/g,
+              lower: true,
+              strict: true,
             });
             const items = await context.query.Lesson.findMany({
               where: { slug: { startsWith: slug } },
@@ -41,7 +69,7 @@ export const Lesson = list({
             });
             if (items.length) {
               const re = new RegExp(`${slug}-*\\d*$`);
-              const slugs = items.filter((item) => item.slug.match(re));
+              const slugs = items.filter((item: any) => item.slug.match(re));
               if (slugs.length) {
                 slug = `${slug}-${slugs.length}`;
               }
@@ -73,7 +101,7 @@ export const Lesson = list({
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
-            return { connect: { id: context.session.itemId } };
+            return inputData.collaborators;
           } else {
             return inputData.collaborators;
           }

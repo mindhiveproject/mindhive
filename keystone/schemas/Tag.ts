@@ -1,23 +1,15 @@
 import { list } from "@keystone-6/core";
-import {
-  text,
-  relationship,
-  password,
-  timestamp,
-  select,
-  integer,
-  checkbox,
-  json,
-} from "@keystone-6/core/fields";
+import { text, relationship, timestamp, select } from "@keystone-6/core/fields";
 import slugify from "slugify";
+import { isSignedIn, isAdmin } from "../access";
 
 export const Tag = list({
   access: {
     operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      query: isSignedIn,
+      create: isAdmin,
+      update: isAdmin,
+      delete: isAdmin,
     },
   },
   fields: {
@@ -32,9 +24,9 @@ export const Tag = list({
             const { title } = inputData;
             if (title) {
               let slug = slugify(title, {
-                remove: /[*+~.()'"!:@]/g, // remove characters that match regex
-                lower: true, // convert to lower case
-                strict: true, // strip special characters except replacement
+                remove: /[*+~.()'"!:@]/g,
+                lower: true,
+                strict: true,
               });
               const items = await context.query.Tag.findMany({
                 where: { slug: { startsWith: slug } },
@@ -42,7 +34,7 @@ export const Tag = list({
               });
               if (items.length) {
                 const re = new RegExp(`${slug}-*\\d*$`);
-                const slugs = items.filter((item) => item.slug.match(re));
+                const slugs = items.filter((item: any) => item.slug.match(re));
                 if (slugs.length) {
                   slug = `${slug}-${slugs.length}`;
                 }

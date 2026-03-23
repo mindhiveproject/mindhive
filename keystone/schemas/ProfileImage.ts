@@ -1,8 +1,7 @@
 import { list } from "@keystone-6/core";
 import { text, relationship } from "@keystone-6/core/fields";
-
 import { cloudinaryImage } from "@keystone-6/cloudinary";
-// import { rules, permissions } from "../access";
+import { isSignedIn, isAdmin } from "../access";
 
 const cloudinary = {
   cloudName: process.env.CLOUDINARY_CLOUD_NAME,
@@ -14,10 +13,25 @@ const cloudinary = {
 export const ProfileImage = list({
   access: {
     operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: isSignedIn,
+    },
+    filter: {
+      // Admins: all; others: images attached to their own profile
+      query: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { profile: { id: { equals: session?.itemId } } },
+      update: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { profile: { id: { equals: session?.itemId } } },
+      delete: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { profile: { id: { equals: session?.itemId } } },
     },
   },
   fields: {
