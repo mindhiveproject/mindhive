@@ -16,8 +16,8 @@ const notion = new Client({
   notionVersion: "2025-09-03",
 });
 
-const endpoint = `http://localhost:4444/api/graphql`;
-const prodEndpoint = `https://backend.mindhive.science/api/graphql`;
+const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/graphql`;
+const prodEndpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL_PRODUCTION}/api/graphql`;
 
 const SAVE_AGGREGATED_RESULTS = `
   mutation createSummaryResult(
@@ -72,7 +72,9 @@ app
       console.log("Received pageId:", pageId);
 
       if (!pageId) {
-        return res.status(400).json({ error: "Missing pageId query parameter" });
+        return res
+          .status(400)
+          .json({ error: "Missing pageId query parameter" });
       }
 
       try {
@@ -110,7 +112,9 @@ app
         const isValidationError =
           body?.code === "validation_error" ||
           (body?.message &&
-            (String(body.message).includes("multiple_data_sources_for_database") ||
+            (String(body.message).includes(
+              "multiple_data_sources_for_database",
+            ) ||
               String(body.message).includes("minimum_api_version")));
         if (isValidationError) {
           return res.status(400).json({
@@ -202,7 +206,7 @@ app
           },
           function (err) {
             if (err) console.error(err);
-          }
+          },
         );
       } else {
         jsonfile.writeFile(
@@ -214,7 +218,7 @@ app
           { flag: "a", EOL: ",\n" },
           function (err) {
             if (err) console.error(err);
-          }
+          },
         );
       }
 

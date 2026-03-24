@@ -3,7 +3,9 @@ import { onError } from "@apollo/link-error";
 import { getDataFromTree } from "@apollo/client/react/ssr";
 import { createUploadLink } from "apollo-upload-client";
 import withApollo from "next-with-apollo";
-import { endpoint, prodEndpoint } from "../config";
+
+const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/graphql`;
+const prodEndpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL_PRODUCTION}/api/graphql`;
 
 function createClient({ headers, initialState }) {
   return new ApolloClient({
@@ -12,12 +14,12 @@ function createClient({ headers, initialState }) {
         if (graphQLErrors)
           graphQLErrors.forEach(({ message, locations, path }) =>
             console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-            )
+              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+            ),
           );
         if (networkError)
           console.log(
-            `[Network error]: ${networkError}. Backend is unreachable. Is it running?`
+            `[Network error]: ${networkError}. Backend is unreachable. Is it running?`,
           );
       }),
       // this uses apollo-link-http under the hood, so all the options here come from that package
@@ -47,19 +49,19 @@ function createClient({ headers, initialState }) {
                   return incoming;
                 }
                 // Merge arrays by combining unique items based on id
-                const existingIds = new Set(existing.map(item => item.id));
+                const existingIds = new Set(existing.map((item) => item.id));
                 const merged = [...existing];
-                incoming.forEach(item => {
+                incoming.forEach((item) => {
                   if (!existingIds.has(item.id)) {
                     merged.push(item);
                   }
                 });
                 return merged;
-              }
-            }
-          }
-        }
-      }
+              },
+            },
+          },
+        },
+      },
     }).restore(initialState || {}),
   });
 }
