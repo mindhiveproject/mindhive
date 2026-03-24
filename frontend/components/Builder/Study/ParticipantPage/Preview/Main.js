@@ -1,4 +1,5 @@
 import Tabs from "./Tabs";
+import { getStudyImageUrl } from "../../../../../lib/profileStudyImageUrls";
 
 export default function Preview({
   user,
@@ -37,19 +38,21 @@ export default function Preview({
     });
   };
 
+  const studyImageUrl = getStudyImageUrl(study);
+
   return (
     <div className="preview">
       <div className="studyInformation">
         <div className="uploadImageContainer">
           <div
             className={
-              study?.image?.image?.publicUrlTransformed
+              studyImageUrl
                 ? "upload-btn-wrapper-with-image"
                 : "upload-btn-wrapper"
             }
           >
             <button className="btn">
-              {study?.image?.image?.publicUrlTransformed
+              {studyImageUrl
                 ? "Update study image"
                 : "Upload study image"}
             </button>
@@ -60,10 +63,10 @@ export default function Preview({
               onChange={(e) => captureFile(e)}
             />
             <div>
-              {study?.image?.image?.publicUrlTransformed && (
+              {studyImageUrl && (
                 <img
                   width="213"
-                  src={study?.image?.image?.publicUrlTransformed}
+                  src={studyImageUrl}
                   alt="Upload preview"
                 />
               )}

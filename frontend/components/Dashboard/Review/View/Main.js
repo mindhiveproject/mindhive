@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { STUDY_TO_JOIN } from "../../../Queries/Study";
 import StudyInfo from "./StudyInfo";
 import useTranslation from "next-translate/useTranslation";
+import { getStudyImageUrl } from "../../../../lib/profileStudyImageUrls";
 
 export default function View({ query, user }) {
   const { t } = useTranslation("builder");
@@ -13,7 +14,7 @@ export default function View({ query, user }) {
   });
 
   const study = data?.study || {};
-  const imageURL = study?.image?.image?.publicUrlTransformed;
+  const imageURL = getStudyImageUrl(study);
 
   const permissions = user?.permissions?.map((p) => p?.name);
   // A user can review if the user has mentor, teacher, or scientist permission or if

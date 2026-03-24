@@ -61,9 +61,9 @@ export const Study = list({
       ref: "StudyImage.study",
       ui: {
         displayMode: "cards",
-        cardFields: ["image", "altText"],
-        inlineCreate: { fields: ["image", "altText"] },
-        inlineEdit: { fields: ["image", "altText"] },
+        cardFields: ["keystoneImage", "image", "altText"],
+        inlineCreate: { fields: ["keystoneImage", "image", "altText"] },
+        inlineEdit: { fields: ["keystoneImage", "image", "altText"] },
       },
     }),
     settings: json(),

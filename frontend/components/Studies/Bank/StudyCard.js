@@ -1,5 +1,6 @@
 import { useLazyQuery } from "@apollo/client";
 import Link from "next/link";
+import { getStudyImageUrl } from "../../../lib/profileStudyImageUrls";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
@@ -10,7 +11,7 @@ import StudyOptions from "./StudyOptions";
 
 export default function StudyCard({ user, study, url, id, name, studiesInfo }) {
   const { t } = useTranslation("builder");
-  const imageURL = study?.image?.image?.publicUrlTransformed;
+  const imageURL = getStudyImageUrl(study);
   const router = useRouter();
 
   const [fetchStudyProjects, { loading: redirectLoading }] = useLazyQuery(

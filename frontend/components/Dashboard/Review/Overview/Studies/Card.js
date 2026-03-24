@@ -1,8 +1,9 @@
 import useTranslation from "next-translate/useTranslation";
+import { getStudyImageUrl } from "../../../../../lib/profileStudyImageUrls";
 
 export default function Card({ study }) {
   const { t } = useTranslation("builder");
-  const imageURL = study?.image?.image?.publicUrlTransformed;
+  const imageURL = getStudyImageUrl(study);
 
   let status;
   switch (study?.status) {

@@ -8,6 +8,7 @@ import { PUBLIC_USER_QUERY } from "../../../Queries/User";
 import { languageOptions } from "../../../User/LanguageSelector";
 import useTranslation from "next-translate/useTranslation";
 import ManageFavorite from "../ManageFavorite";
+import { getProfileImageUrl } from "../../../../lib/profileStudyImageUrls";
 
 const pronouns = {
   he: "he/him/his",
@@ -140,7 +141,7 @@ export default function ProfilePage({ query, user }) {
     ? `${profile?.firstName || ""} ${profile?.lastName || ""}`.trim()
     : profile?.username || "MindHive Member";
   
-  const avatar = profile?.image?.image?.publicUrlTransformed;
+  const avatar = getProfileImageUrl(profile);
   const fallbackLetter = fullName.charAt(0).toUpperCase();
   const fallbackGradient = useMemo(() => {
     const key = profile?.id || profile?.publicId || fullName;

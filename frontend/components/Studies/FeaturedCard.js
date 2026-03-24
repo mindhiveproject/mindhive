@@ -1,10 +1,11 @@
 import ReactHtmlParser from "react-html-parser";
 import Link from "next/link";
+import { getStudyImageUrl } from "../../lib/profileStudyImageUrls";
 import useTranslation from "next-translate/useTranslation";
 
 export default function StudyCard({ user, study, isDashboard }) {
   const { t } = useTranslation("common");
-  const imageURL = study?.image?.image?.publicUrlTransformed;
+  const imageURL = getStudyImageUrl(study);
 
   const { description } = study;
   let publicCardDescription = description;

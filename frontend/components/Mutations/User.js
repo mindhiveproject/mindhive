@@ -66,12 +66,24 @@ export const UPDATE_USER = gql`
   }
 `;
 
-// update image of the profile
+// update image of the profile (use when the profile has no ProfileImage row yet)
 export const UPDATE_PROFILE_IMAGE = gql`
-  mutation UPDATE_PROFILE_IMAGE($id: ID!, $image: Upload) {
+  mutation UPDATE_PROFILE_IMAGE($id: ID!, $file: Upload!) {
     updateProfile(
       where: { id: $id }
-      data: { image: { create: { image: $image } } }
+      data: { image: { create: { keystoneImage: { upload: $file } } } }
+    ) {
+      id
+    }
+  }
+`;
+
+// update Keystone file on an existing ProfileImage (most users already have a row from legacy Cloudinary)
+export const UPDATE_PROFILE_IMAGE_FILE = gql`
+  mutation UPDATE_PROFILE_IMAGE_FILE($profileImageId: ID!, $file: Upload!) {
+    updateProfileImage(
+      where: { id: $profileImageId }
+      data: { keystoneImage: { upload: $file } }
     ) {
       id
     }

@@ -3,6 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { StyledStudyCard } from "../../styles/StyledCard";
 import ProjectOptions from "./ProjectOptions";
+import { getStudyImageUrl } from "../../../lib/profileStudyImageUrls";
 
 export default function ProjectCard({
   user,
@@ -13,7 +14,7 @@ export default function ProjectCard({
   projectsInfo,
 }) {
   const { t } = useTranslation("builder");
-  const imageURL = project?.image?.image?.publicUrlTransformed;
+  const imageURL = getStudyImageUrl(project);
 
   return (
     <StyledStudyCard>

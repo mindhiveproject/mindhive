@@ -10,6 +10,7 @@ import { PUBLIC_USER_QUERY } from "../Queries/User";
 
 import { UserContext } from "../Global/Authorized";
 import { languageOptions } from "./LanguageSelector";
+import { getProfileImageUrl } from "../../lib/profileStudyImageUrls";
 
 export default function PublicUserPage({ id }) {
   const me = useContext(UserContext);
@@ -20,6 +21,7 @@ export default function PublicUserPage({ id }) {
     variables: { id },
   });
   const user = data?.profile || {};
+  const profileImageUrl = getProfileImageUrl(user);
 
   const language = languageOptions?.filter(
     (l) => l.value === user?.language
@@ -37,9 +39,9 @@ export default function PublicUserPage({ id }) {
         <div className="profileContainer">
           <div className="firstLine">
             <div>
-              {user?.image?.image?.publicUrlTransformed ? (
+              {profileImageUrl ? (
                 <img
-                  src={user?.image?.image?.publicUrlTransformed}
+                  src={profileImageUrl}
                   alt={user?.username}
                 />
               ) : (

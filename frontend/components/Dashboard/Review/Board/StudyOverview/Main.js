@@ -1,6 +1,7 @@
 import Head from "next/head";
 import ReactHtmlParser from "react-html-parser";
 import StudyInfo from "./StudyInfo";
+import { getStudyImageUrl } from "../../../../../lib/profileStudyImageUrls";
 
 export default function StudyPreview({ study, user }) {
   const permissions = user?.permissions?.map((p) => p?.name);
@@ -10,7 +11,7 @@ export default function StudyPreview({ study, user }) {
     permissions.includes("TEACHER") ||
     permissions.includes("SCIENTIST") ||
     study?.status === "IN_REVIEW";
-  const imageURL = study?.image?.image?.publicUrlTransformed;
+  const imageURL = getStudyImageUrl(study);
 
   return (
     <div className="studyPage">

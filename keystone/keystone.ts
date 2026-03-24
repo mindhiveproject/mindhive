@@ -85,6 +85,24 @@ export default withAuth(
         },
         storagePath: `media-library`,
       },
+      profile_images: {
+        kind: "local",
+        type: "image",
+        generateUrl: (path) => `${assetBaseUrl}/profile-images${path}`,
+        serverRoute: {
+          path: "/profile-images",
+        },
+        storagePath: `profile-images`,
+      },
+      study_images: {
+        kind: "local",
+        type: "image",
+        generateUrl: (path) => `${assetBaseUrl}/study-images${path}`,
+        serverRoute: {
+          path: "/study-images",
+        },
+        storagePath: `study-images`,
+      },
     },
   })
   // ui: {

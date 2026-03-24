@@ -212,6 +212,10 @@ export const PROPOSAL_QUERY = gql`
             username
             image {
               id
+              keystoneImage {
+                id
+                url
+              }
               image {
                 publicUrlTransformed
               }
@@ -339,6 +343,10 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
           }
           image {
             id
+            keystoneImage {
+              id
+              url
+            }
             image {
               publicUrlTransformed
             }
@@ -638,6 +646,10 @@ export const GET_PROJECT_STUDY = gql`
         settings
         image {
           id
+          keystoneImage {
+            id
+            url
+          }
           image {
             publicUrlTransformed
           }
@@ -657,6 +669,10 @@ export const GET_PROJECT_STUDY = gql`
           username
           image {
             id
+            keystoneImage {
+              id
+              url
+            }
             image {
               publicUrlTransformed
             }

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 
 import ManageFavorite from "./ManageFavorite";
+import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
 
 const FALLBACK_COLORS = [
   "#DEF8FB",
@@ -168,7 +169,7 @@ export default function ConnectProfileCard({ user, profile }) {
     profile?.bio ||
     "Click to view profile"
 
-  const avatar = profile?.image?.image?.publicUrlTransformed;
+  const avatar = getProfileImageUrl(profile);
   const fallbackLetter = fullName.charAt(0).toUpperCase();
   const fallbackGradient = useMemo(() => {
     const key = profile?.id || profile?.publicId || fullName;

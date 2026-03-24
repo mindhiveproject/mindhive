@@ -132,7 +132,12 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
         settings: inputs?.settings,
         info: inputs?.info,
         image: inputs?.file
-          ? { create: { image: inputs?.file, altText: inputs?.title } }
+          ? {
+              create: {
+                keystoneImage: { upload: inputs?.file },
+                altText: inputs?.title,
+              },
+            }
           : null,
         consent: inputs?.consent?.length
           ? { connect: inputs?.consent?.map((cl) => ({ id: cl?.id })) }
@@ -165,7 +170,12 @@ export default function ParticipantPage({ query, user, tab, toggleSidebar }) {
         settings: inputs?.settings,
         info: inputs?.info,
         image: inputs?.file
-          ? { create: { image: inputs?.file, altText: inputs?.title } }
+          ? {
+              create: {
+                keystoneImage: { upload: inputs?.file },
+                altText: inputs?.title,
+              },
+            }
           : null,
         consent: inputs?.consent?.length
           ? { connect: inputs?.consent.map((c) => ({ id: c?.id })) }

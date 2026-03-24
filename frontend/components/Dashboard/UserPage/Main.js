@@ -11,6 +11,7 @@ import Reviewed from "./Reviewed/Main";
 import Journal from "./Journal/Main";
 import Homework from "./Homework/Main";
 import useTranslation from 'next-translate/useTranslation';
+import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
 
 export default function StudentPage({ query, user }) {
   const { t } = useTranslation('common');
@@ -27,6 +28,7 @@ export default function StudentPage({ query, user }) {
     authorOfProposal: [],
     collaboratorInProposal: [],
   };
+  const profileImageUrl = getProfileImageUrl(profile);
 
   return (
     <StyledProfile>
@@ -37,7 +39,7 @@ export default function StudentPage({ query, user }) {
         </div>
         <div>
           <img
-            src={profile?.image?.image?.publicUrlTransformed}
+            src={profileImageUrl}
             alt={profile?.username}
           />
         </div>
