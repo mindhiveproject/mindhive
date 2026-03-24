@@ -11,7 +11,7 @@ import { AgGridReact } from "ag-grid-react";
 
 import Button from "../../../../DesignSystem/Button";
 import { GET_MY_RESOURCES, GET_PUBLIC_RESOURCES, GET_CLASS_RESOURCES } from "../../../../Queries/Resource";
-import { UPDATE_RESOURCE } from "../../../../Mutations/Resource";
+import { UPDATE_RESOURCE, SET_RESOURCE_TEMPLATE_CARDS } from "../../../../Mutations/Resource";
 
 const SectionContainer = styled.div`
   margin-bottom: 48px;
@@ -79,12 +79,19 @@ export default function AddResource({ myclass, user, query }) {
   });
   const myResourcesUnionClass = Array.from(byId.values());
 
+  const refetchAfterUnlink = [
+    { query: GET_CLASS_RESOURCES, variables: { classId: myclass?.id } },
+    { query: GET_MY_RESOURCES, variables: { id: user?.id } },
+    { query: GET_PUBLIC_RESOURCES },
+  ];
+
   const [updateResource, { loading: linkUnlinkLoading }] = useMutation(UPDATE_RESOURCE, {
-    refetchQueries: [
-      { query: GET_CLASS_RESOURCES, variables: { classId: myclass?.id } },
-      { query: GET_MY_RESOURCES, variables: { id: user?.id } },
-      { query: GET_PUBLIC_RESOURCES },
-    ],
+    refetchQueries: refetchAfterUnlink,
+    awaitRefetchQueries: true,
+  });
+
+  const [setResourceTemplateCards] = useMutation(SET_RESOURCE_TEMPLATE_CARDS, {
+    refetchQueries: refetchAfterUnlink,
     awaitRefetchQueries: true,
   });
 
@@ -105,6 +112,15 @@ export default function AddResource({ myclass, user, query }) {
   const handleUnlinkFromClass = async (resourceId) => {
     if (!resourceId || !myclass?.id) return;
     try {
+      if (myclass?.templateProposal?.id) {
+        await setResourceTemplateCards({
+          variables: {
+            resourceId,
+            templateCardIds: [],
+            classId: myclass.id,
+          },
+        });
+      }
       await updateResource({
         variables: {
           id: resourceId,
