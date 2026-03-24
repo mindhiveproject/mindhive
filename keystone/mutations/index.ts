@@ -11,6 +11,7 @@ import unlinkAssignmentFromTemplateCards from "./unlinkAssignmentFromTemplateCar
 import setAssignmentTemplateCards from "./setAssignmentTemplateCards";
 import setResourceTemplateCards from "./setResourceTemplateCards";
 import applyTemplateBoardChanges from "./applyTemplateBoardChanges";
+import backfillMediaAssetOrigins from "./backfillMediaAssetOrigins";
 import { GraphQLSchema } from "graphql";
 
 // make a fake gql tagged template literal
@@ -68,6 +69,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           templateBoardId: ID!
           cardIdsWithContentUpdate: [ID!]
         ): ApplyTemplateBoardChangesResult
+        backfillMediaAssetOrigins(limit: Int): Int!
       }
     `,
     resolvers: {
@@ -83,6 +85,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         setAssignmentTemplateCards,
         setResourceTemplateCards,
         applyTemplateBoardChanges,
+        backfillMediaAssetOrigins,
       },
     },
   });

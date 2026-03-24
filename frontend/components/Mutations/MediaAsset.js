@@ -13,7 +13,7 @@ export const MEDIA_LIBRARY_PROFILE_ID = gql`
 export const MEDIA_ASSETS = gql`
   query MEDIA_ASSETS($scopeId: ID!) {
     mediaAssets(
-      where: { board: { id: { equals: $scopeId } } }
+      where: { createdInBoard: { id: { equals: $scopeId } } }
       orderBy: [{ createdAt: desc }]
     ) {
       id
@@ -21,6 +21,10 @@ export const MEDIA_ASSETS = gql`
       title
       description
       url
+      image {
+        id
+        url
+      }
       createdAt
       settings
       author {
@@ -38,6 +42,10 @@ export const CREATE_MEDIA_ASSET = gql`
     createMediaAsset(data: $data) {
       id
       url
+      image {
+        id
+        url
+      }
       fileName
       title
     }
@@ -78,18 +86,44 @@ function resolveInitialMediaTitle({ title, fileName }) {
  * @param {object} opts
  * @param {string} opts.scopeId - ProposalBoard id
  * @param {string} opts.fileName - base file name (no extension ok)
- * @param {string} opts.url
- * @param {string} [opts.publicId]
  * @param {string} [opts.title] - display title; defaults from fileName so it is always set when a name exists
  * @param {{ sourceType?: string | null, sourceId?: string | null, createdWith?: string | null }} [opts.mediaLibrarySource]
  * @param {string | null} [opts.mediaCreatedWithOverride] - e.g. "paste" when inserting from clipboard upload path
  * @param {string | null} [opts.mediaDisplayedInProposalCardId]
  */
+function resolveCreatedInConnection(mediaLibrarySource) {
+  const sourceType = mediaLibrarySource?.sourceType;
+  const sourceId = mediaLibrarySource?.sourceId;
+  if (!sourceType || !sourceId) return {};
+
+  if (sourceType === "projectCard" || sourceType === "proposalCard") {
+    return { createdInCard: { connect: { id: sourceId } } };
+  }
+  if (sourceType === "proposalBoard" || sourceType === "board") {
+    return { createdInBoard: { connect: { id: sourceId } } };
+  }
+  if (sourceType === "vizSection") {
+    return { createdInVizSection: { connect: { id: sourceId } } };
+  }
+  if (sourceType === "resource" || sourceType === "resourceContent") {
+    return { createdInResource: { connect: { id: sourceId } } };
+  }
+  if (sourceType === "study") {
+    return { createdInStudy: { connect: { id: sourceId } } };
+  }
+  if (sourceType === "assignment") {
+    return { createdInAssignment: { connect: { id: sourceId } } };
+  }
+  if (sourceType === "profile") {
+    return { createdInProfile: { connect: { id: sourceId } } };
+  }
+
+  return {};
+}
+
 export function buildMediaAssetCreateData({
   scopeId,
   fileName,
-  url,
-  publicId,
   title,
   mediaLibrarySource,
   mediaCreatedWithOverride = null,
@@ -100,23 +134,26 @@ export function buildMediaAssetCreateData({
     mediaLibrarySource?.createdWith ??
     "upload";
   const settings = {
-    sourceType: mediaLibrarySource?.sourceType ?? null,
-    sourceId: mediaLibrarySource?.sourceId ?? null,
     createdWith,
   };
   const resolvedTitle = resolveInitialMediaTitle({ title, fileName });
   const resolvedFileName =
     (typeof fileName === "string" && fileName.trim()) || resolvedTitle;
+  const createdInConnection = resolveCreatedInConnection(mediaLibrarySource);
   const data = {
     fileName: resolvedFileName,
     title: resolvedTitle,
-    url,
-    publicId: publicId || undefined,
-    board: { connect: { id: scopeId } },
     settings,
+    ...(Object.keys(createdInConnection).length
+      ? createdInConnection
+      : { createdInBoard: { connect: { id: scopeId } } }),
   };
   if (mediaDisplayedInProposalCardId) {
-    data.displayedIn = { connect: [{ id: mediaDisplayedInProposalCardId }] };
+    data.usedInCards = { connect: [{ id: mediaDisplayedInProposalCardId }] };
   }
   return data;
+}
+
+export function resolveMediaAssetUrl(asset) {
+  return asset?.image?.url || asset?.url || "";
 }

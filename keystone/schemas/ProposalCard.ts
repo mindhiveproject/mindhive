@@ -104,8 +104,8 @@ export const ProposalCard = list({
       ref: "Task.proposalCards",
       many: true,
     }),
-    mediaAssetsDisplayedIn: relationship({
-      ref: "MediaAsset.displayedIn",
+    mediaAssetsUsed: relationship({
+      ref: "MediaAsset.usedInCards",
       many: true,
     }),
   },

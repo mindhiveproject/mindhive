@@ -166,6 +166,10 @@ export const Study = list({
       ref: "ProposalCard.studies",
       many: true,
     }),
+    mediaAssetsUsed: relationship({
+      ref: "MediaAsset.usedInStudies",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

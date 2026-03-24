@@ -109,6 +109,10 @@ export const Resource = list({
       ref: "Class.resources",
       many: true,
     }),
+    mediaAssetsUsed: relationship({
+      ref: "MediaAsset.usedInResources",
+      many: true,
+    }),
     isCustom: checkbox({ isFilterable: true }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },

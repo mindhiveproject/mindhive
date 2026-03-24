@@ -65,6 +65,10 @@ export const Assignment = list({
       ref: "ProposalCard.assignments",
       many: true,
     }),
+    mediaAssetsUsed: relationship({
+      ref: "MediaAsset.usedInAssignments",
+      many: true,
+    }),
     title: text({ validation: { isRequired: true } }),
     content: text(),
     placeholder: text(),

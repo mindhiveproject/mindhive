@@ -21,6 +21,7 @@ const baseUrl =
   process.env.NODE_ENV === "development"
     ? process.env.ASSET_BASE_URL_DEV
     : process.env.ASSET_BASE_URL;
+const assetBaseUrl = baseUrl || "";
 
 const yqFrontendURL =
   process.env.NODE_ENV === "development"
@@ -46,7 +47,7 @@ export default withAuth(
       url:
         process.env.NODE_ENV === "development"
           ? "file:./keystone.db"
-          : process.env.DATABASE_URL,
+          : process.env.DATABASE_URL || "",
     },
     lists,
     extendGraphqlSchema,
@@ -60,7 +61,7 @@ export default withAuth(
       cover_images: {
         kind: "local",
         type: "image",
-        generateUrl: (path) => `${baseUrl}/yq-images${path}`,
+        generateUrl: (path) => `${assetBaseUrl}/yq-images${path}`,
         serverRoute: {
           path: "/yq-images",
         },
@@ -69,11 +70,20 @@ export default withAuth(
       p5_visuals: {
         kind: "local",
         type: "file",
-        generateUrl: (path) => `${baseUrl}/yq-code${path}`,
+        generateUrl: (path) => `${assetBaseUrl}/yq-code${path}`,
         serverRoute: {
           path: "/yq-code",
         },
         storagePath: `yq-visuals/yq-code`,
+      },
+      media_library_images: {
+        kind: "local",
+        type: "image",
+        generateUrl: (path) => `${assetBaseUrl}/media-library${path}`,
+        serverRoute: {
+          path: "/media-library",
+        },
+        storagePath: `media-library`,
       },
     },
   })

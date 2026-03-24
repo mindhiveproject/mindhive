@@ -268,6 +268,10 @@ export const Profile = list({
       ref: "MediaAsset.favoriteBy",
       many: true,
     }),
+    mediaAssetsUsed: relationship({
+      ref: "MediaAsset.usedInProfiles",
+      many: true,
+    }),
     collaboratorInLesson: relationship({
       ref: "Lesson.collaborators",
       many: true,
