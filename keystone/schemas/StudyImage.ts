@@ -1,5 +1,5 @@
 import { list } from "@keystone-6/core";
-import { text, relationship } from "@keystone-6/core/fields";
+import { text, relationship, image } from "@keystone-6/core/fields";
 
 import { cloudinaryImage } from "@keystone-6/cloudinary";
 // import { rules, permissions } from "../access";
@@ -21,9 +21,14 @@ export const StudyImage = list({
     },
   },
   fields: {
+    /** Legacy Cloudinary asset; prefer `keystoneImage` for new uploads. */
     image: cloudinaryImage({
       cloudinary,
-      label: "Source",
+      label: "Source (legacy)",
+    }),
+    keystoneImage: image({
+      storage: "study_images",
+      label: "Image (Keystone)",
     }),
     altText: text(),
     study: relationship({ ref: "Study.image" }),

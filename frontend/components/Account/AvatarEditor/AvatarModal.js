@@ -12,7 +12,10 @@ import { dataURItoBlob } from "../../../lib/useForm";
 import NoAccount from "../NoAccount";
 
 import { CURRENT_USER_QUERY } from "../../Queries/User";
-import { UPDATE_PROFILE_IMAGE } from "../../Mutations/User";
+import {
+  UPDATE_PROFILE_IMAGE,
+  UPDATE_PROFILE_IMAGE_FILE,
+} from "../../Mutations/User";
 
 const AvatarEditor = dynamic(() => import("./Avatar"), { ssr: false });
 
@@ -21,21 +24,38 @@ export default function UpdateAvatarModal({ user }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const [
-    updateImage,
+    updateImageCreate,
     { data: imageData, loading: imageLoading, error: imageError },
   ] = useMutation(UPDATE_PROFILE_IMAGE, {
     refetchQueries: [{ query: CURRENT_USER_QUERY }],
   });
 
+  const [updateImageFile, { loading: imageFileLoading }] = useMutation(
+    UPDATE_PROFILE_IMAGE_FILE,
+    {
+      refetchQueries: [{ query: CURRENT_USER_QUERY }],
+    }
+  );
+
   async function updateAvatar(avatar) {
     if (avatar) {
-      const image = dataURItoBlob(avatar);
-      await updateImage({
-        variables: {
-          id: user?.id,
-          image,
-        },
-      });
+      const blob = dataURItoBlob(avatar);
+      const image = new File([blob], "profile.jpg", { type: "image/jpeg" });
+      if (user?.image?.id) {
+        await updateImageFile({
+          variables: {
+            profileImageId: user.image.id,
+            file: image,
+          },
+        });
+      } else {
+        await updateImageCreate({
+          variables: {
+            id: user?.id,
+            file: image,
+          },
+        });
+      }
       setIsOpen(false);
     } else {
       alert(t("avatar.error"));
@@ -68,7 +88,7 @@ export default function UpdateAvatarModal({ user }) {
                 onClose={(avatar) => updateAvatar(avatar)}
                 uploadTitle={t("avatar.upload")}
                 shortcut
-                isLoading={imageLoading}
+                isLoading={imageLoading || imageFileLoading}
               />
             </div>
           ) : (

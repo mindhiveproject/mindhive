@@ -2,6 +2,7 @@ import Head from "next/head";
 import ReactHtmlParser from "react-html-parser";
 import StudyInfo from "./StudyInfo";
 import useTranslation from "next-translate/useTranslation";
+import { getStudyImageUrl } from "../../../../../lib/profileStudyImageUrls";
 
 export default function StudyPreview({ study, user }) {
   const { t } = useTranslation("builder");
@@ -12,7 +13,7 @@ export default function StudyPreview({ study, user }) {
     permissions.includes("TEACHER") ||
     permissions.includes("SCIENTIST") ||
     study?.status === "IN_REVIEW";
-  const imageURL = study?.image?.image?.publicUrlTransformed;
+  const imageURL = getStudyImageUrl(study);
 
   return (
     <div className="studyPage">

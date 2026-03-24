@@ -85,6 +85,10 @@ export const GET_CHAT = gql`
         username
         image {
           id
+          keystoneImage {
+            id
+            url
+          }
           image {
             publicUrlTransformed
           }

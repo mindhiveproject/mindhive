@@ -43,6 +43,10 @@ export const VizSection = list({
     vizChapter: relationship({
       ref: "VizChapter.vizSections",
     }),
+    mediaAssetsUsed: relationship({
+      ref: "MediaAsset.usedInVizSections",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

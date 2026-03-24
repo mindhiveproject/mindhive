@@ -1,8 +1,10 @@
 import Link from "next/link";
 
 import ManageFavorite from "../ManageFavorite";
+import { getProfileImageUrl } from "../../../../lib/profileStudyImageUrls";
 
 export default function ProfileCard({ user, profile }) {
+  const profileImageUrl = getProfileImageUrl(profile);
   return (
     <Link
       href={{
@@ -37,9 +39,9 @@ export default function ProfileCard({ user, profile }) {
         <div>{profile?.permissions.map((p) => p?.name).join(" ")}</div>
         <div>{profile?.organization}</div>
         <div className="avatar">
-          {profile?.image?.image?.publicUrlTransformed ? (
+          {profileImageUrl ? (
             <img
-              src={profile?.image?.image?.publicUrlTransformed}
+              src={profileImageUrl}
               alt={profile?.name}
             />
           ) : (

@@ -23,7 +23,7 @@ async function dataUriToFile(dataUri, filename = "pasted-image.jpg") {
 /**
  * TipTap extension: paste image files or data-URI / &lt;img src="data:..."&gt; text.
  * When `getPasteContext().mediaScopeId` and `uploadPastedImage` are set, uploads to
- * Cloudinary + MediaAsset and inserts HTTPS src + mediaAssetId.
+ * Keystone MediaAsset image storage and inserts HTTPS src + mediaAssetId.
  * Without a media scope, image pastes are blocked (URL-only via toolbar).
  */
 export const PasteImageExtension = Extension.create({

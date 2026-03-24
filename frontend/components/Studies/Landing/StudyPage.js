@@ -8,6 +8,7 @@ import { StyledStudyPage } from "../../styles/StyledStudyPage";
 import StudyInfo from "./StudyInfo";
 
 import UserPath from "./UserPath";
+import { getStudyImageUrl } from "../../../lib/profileStudyImageUrls";
 
 export default function StudyPage({ query, user, study, isDashboard }) {
   const { t } = useTranslation("builder");
@@ -26,7 +27,7 @@ export default function StudyPage({ query, user, study, isDashboard }) {
   const participantInfo = studiesInfo[study?.id];
   const path = participantInfo?.info?.path || [];
 
-  const imageURL = study?.image?.image?.publicUrlTransformed;
+  const imageURL = getStudyImageUrl(study);
 
   return (
     <StyledStudyPage>

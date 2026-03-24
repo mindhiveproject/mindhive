@@ -11,10 +11,12 @@ import { UPDATE_PROFILE } from "../../../../Mutations/User";
 import { StyledInput } from "../../../../styles/StyledForm";
 import { StyledSaveButton } from "../../../../styles/StyledProfile";
 import { useState } from "react";
+import { getProfileImageUrl } from "../../../../../lib/profileStudyImageUrls";
 
 export default function BasicInformation({ query, user }) {
   const { t } = useTranslation("connect");
   const [changed, setChanged] = useState(false);
+  const profileImageUrl = getProfileImageUrl(user);
 
   const { inputs, handleChange } = useForm({
     firstName: user?.firstName,
@@ -59,7 +61,7 @@ export default function BasicInformation({ query, user }) {
       <Divider />
       <h3>{t("basic.profilePhoto")}</h3>
       <div>
-        {user?.image?.image?.publicUrlTransformed ? (
+        {profileImageUrl ? (
           <div
             style={{
               borderRadius: "50%",
@@ -74,7 +76,7 @@ export default function BasicInformation({ query, user }) {
             }}
           >
             <img
-              src={user?.image?.image?.publicUrlTransformed}
+              src={profileImageUrl}
               alt={user?.name}
               style={{
                 borderRadius: "50%",

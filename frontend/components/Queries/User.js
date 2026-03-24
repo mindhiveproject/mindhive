@@ -16,6 +16,10 @@ export const CURRENT_USER_QUERY = gql`
         }
         image {
           id
+          keystoneImage {
+            id
+            url
+          }
           image {
             publicUrlTransformed
           }
@@ -155,6 +159,10 @@ export const GET_USER = gql`
       email
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -356,6 +364,10 @@ export const PUBLIC_USER_QUERY = gql`
       }
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -419,6 +431,10 @@ export const GET_ALL_USERS = gql`
       }
       dateCreated
       image {
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -472,6 +488,10 @@ export const GET_CONNECT_USERS = gql`
       }
       dateCreated
       image {
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -723,6 +743,10 @@ export const GET_PUBLIC_PROFILE = gql`
       }
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -755,6 +779,10 @@ export const MY_FAVORITE_PEOPLE = gql`
           }
           dateCreated
           image {
+            keystoneImage {
+              id
+              url
+            }
             image {
               publicUrlTransformed
             }
@@ -813,6 +841,10 @@ export const GET_FULL_UPDATES = gql`
             name
             slug
             image {
+              keystoneImage {
+                id
+                url
+              }
               image {
                 publicUrlTransformed
               }
@@ -851,6 +883,10 @@ export const PUBLIC_USERS_QUERY = gql`
       bio
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -880,6 +916,10 @@ export const LIGHT_USER_QUERY = gql`
         status
         isAccountApproved
         image {
+          keystoneImage {
+            id
+            url
+          }
           image {
             publicUrlTransformed
           }
@@ -918,6 +958,10 @@ export const GET_PROFILE = gql`
         }
         image {
           id
+          keystoneImage {
+            id
+            url
+          }
           image {
             publicUrlTransformed
           }

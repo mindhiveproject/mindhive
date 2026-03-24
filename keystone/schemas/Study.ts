@@ -61,9 +61,9 @@ export const Study = list({
       ref: "StudyImage.study",
       ui: {
         displayMode: "cards",
-        cardFields: ["image", "altText"],
-        inlineCreate: { fields: ["image", "altText"] },
-        inlineEdit: { fields: ["image", "altText"] },
+        cardFields: ["keystoneImage", "image", "altText"],
+        inlineCreate: { fields: ["keystoneImage", "image", "altText"] },
+        inlineEdit: { fields: ["keystoneImage", "image", "altText"] },
       },
     }),
     settings: json(),
@@ -164,6 +164,10 @@ export const Study = list({
     }),
     proposalCards: relationship({
       ref: "ProposalCard.studies",
+      many: true,
+    }),
+    mediaAssetsUsed: relationship({
+      ref: "MediaAsset.usedInStudies",
       many: true,
     }),
     createdAt: timestamp({

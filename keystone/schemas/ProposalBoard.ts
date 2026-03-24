@@ -192,8 +192,8 @@ export const ProposalBoard = list({
     }),
     clonedFrom: relationship({ ref: "ProposalBoard.prototypeFor" }),
     prototypeFor: relationship({ ref: "ProposalBoard.clonedFrom", many: true }),
-    mediaAssets: relationship({
-      ref: "MediaAsset.board",
+    mediaAssetsUsed: relationship({
+      ref: "MediaAsset.usedInBoards",
       many: true,
     }),
     resources: relationship({

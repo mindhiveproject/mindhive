@@ -4,12 +4,14 @@ import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../Queries/User";
+import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
 
 export default function Profile() {
   const { t } = useTranslation("home");
   // query the full profile of the user
   const { data } = useQuery(GET_PROFILE);
   const user = data?.authenticatedItem || {};
+  const profileImageUrl = getProfileImageUrl(user);
 
   const {
     profileType,
@@ -62,7 +64,7 @@ export default function Profile() {
         </div>
 
         <div>
-          {user?.image?.image?.publicUrlTransformed ? (
+          {profileImageUrl ? (
             <div
               style={{
                 borderRadius: "50%",
@@ -77,7 +79,7 @@ export default function Profile() {
               }}
             >
               <img
-                src={user?.image?.image?.publicUrlTransformed}
+                src={profileImageUrl}
                 alt={user?.name}
                 style={{
                   borderRadius: "50%",

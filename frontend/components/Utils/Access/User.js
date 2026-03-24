@@ -4,6 +4,7 @@ import {
   CURRENT_USER_QUERY,
   // GET_UPDATES,
 } from "../../Queries/User";
+import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
 // import { MY_NOTIFICATIONS } from './Queries/Notification';
 
 export function useUser() {
@@ -11,9 +12,10 @@ export function useUser() {
     fetchPolicy: "cache-and-network",
   });
   if (data?.authenticatedItem) {
+    const item = data.authenticatedItem;
     return {
-      ...data?.authenticatedItem,
-      avatar: data?.authenticatedItem?.image?.image?.publicUrlTransformed,
+      ...item,
+      avatar: getProfileImageUrl(item),
     };
   }
   return null;

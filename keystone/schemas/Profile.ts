@@ -268,6 +268,10 @@ export const Profile = list({
       ref: "MediaAsset.favoriteBy",
       many: true,
     }),
+    mediaAssetsUsed: relationship({
+      ref: "MediaAsset.usedInProfiles",
+      many: true,
+    }),
     collaboratorInLesson: relationship({
       ref: "Lesson.collaborators",
       many: true,
@@ -319,9 +323,9 @@ export const Profile = list({
       ref: "ProfileImage.profile",
       ui: {
         displayMode: "cards",
-        cardFields: ["image", "altText"],
-        inlineCreate: { fields: ["image", "altText"] },
-        inlineEdit: { fields: ["image", "altText"] },
+        cardFields: ["keystoneImage", "image", "altText"],
+        inlineCreate: { fields: ["keystoneImage", "image", "altText"] },
+        inlineEdit: { fields: ["keystoneImage", "image", "altText"] },
       },
     }),
     firstName: text(),

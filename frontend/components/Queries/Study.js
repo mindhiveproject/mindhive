@@ -9,6 +9,10 @@ export const FEATURED_STUDIES = gql`
       slug
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -27,6 +31,10 @@ export const PUBLIC_STUDIES = gql`
       slug
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -58,6 +66,10 @@ export const MY_STUDIES = gql`
       slug
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -96,6 +108,10 @@ export const TEACHER_STUDIES = gql`
       slug
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -126,6 +142,10 @@ export const MY_STUDY = gql`
       settings
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -145,6 +165,10 @@ export const MY_STUDY = gql`
         username
         image {
           id
+          keystoneImage {
+            id
+            url
+          }
           image {
             publicUrlTransformed
           }
@@ -202,6 +226,10 @@ export const STUDY_TO_DISCOVER = gql`
       }
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -228,6 +256,10 @@ export const STUDY_TO_JOIN = gql`
       status
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -275,6 +307,10 @@ export const STUDY_TO_CLONE = gql`
       slug
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -394,6 +430,10 @@ export const STUDIES_COLLECTING_DATA = gql`
       }
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }
@@ -455,6 +495,10 @@ export const STUDY_TO_REVIEW = gql`
       }
       image {
         id
+        keystoneImage {
+          id
+          url
+        }
         image {
           publicUrlTransformed
         }

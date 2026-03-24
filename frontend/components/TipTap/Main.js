@@ -21,8 +21,8 @@ import { MindHiveImage } from "./mindHiveImage";
 import {
   CREATE_MEDIA_ASSET,
   buildMediaAssetCreateData,
+  resolveMediaAssetUrl,
 } from "../Mutations/MediaAsset";
-import { uploadMediaImageToCloudinary } from "../../lib/cloudinaryMediaUpload";
 
 const TIPTAP_ICONS_BASE = "/assets/tiptapIcons";
 
@@ -110,27 +110,23 @@ export default function TipTapEditor({
     uploadPastedImage: async (file) => {
       const scopeId = mediaLibraryId;
       if (!scopeId || !file) return null;
-      const { secureUrl, publicId } = await uploadMediaImageToCloudinary(
-        file,
-        scopeId,
-      );
       const baseName = file.name.replace(/\.[^.]+$/, "") || "";
       const createData = buildMediaAssetCreateData({
         scopeId,
         fileName: baseName,
-        url: secureUrl,
-        publicId,
         mediaLibrarySource,
         mediaCreatedWithOverride: "paste",
         mediaDisplayedInProposalCardId,
       });
+      createData.image = { upload: file };
       const { data } = await apolloClient.mutate({
         mutation: CREATE_MEDIA_ASSET,
         variables: { data: createData },
       });
       const row = data?.createMediaAsset;
-      if (!row?.id || !row?.url) return null;
-      return { id: row.id, url: row.url };
+      const resolvedUrl = resolveMediaAssetUrl(row);
+      if (!row?.id || !resolvedUrl) return null;
+      return { id: row.id, url: resolvedUrl };
     },
   };
 

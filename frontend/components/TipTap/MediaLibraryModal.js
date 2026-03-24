@@ -20,8 +20,8 @@ import {
   DELETE_MEDIA_ASSET,
   MEDIA_LIBRARY_PROFILE_ID,
   buildMediaAssetCreateData,
+  resolveMediaAssetUrl,
 } from "../Mutations/MediaAsset";
-import { uploadMediaImageToCloudinary } from "../../lib/cloudinaryMediaUpload";
 
 const FAVORITE_ICON_OUTLINE = (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
@@ -61,8 +61,8 @@ function displayLabel(asset, untitled) {
 /** Portaled preview so AG Grid scroll/clipping does not crop the hover panel. */
 function MediaThumbPreviewPortal({ url, open, anchorRect }) {
   if (!open || !anchorRect || typeof document === "undefined") return null;
-  const maxW = 280;
-  const maxH = 248;
+  const maxW = 420;
+  const maxH = 360;
   const gap = 10;
   let top = anchorRect.bottom + gap;
   let left = anchorRect.left + anchorRect.width / 2 - maxW / 2;
@@ -93,7 +93,7 @@ function MediaThumbPreviewPortal({ url, open, anchorRect }) {
         alt=""
         style={{
           maxWidth: "100%",
-          maxHeight: 228,
+          maxHeight: 340,
           width: "auto",
           height: "auto",
           objectFit: "contain",
@@ -125,7 +125,8 @@ function MediaLibraryThumbCell(params) {
   if (!data) return null;
   const insertAria = ctx.t("tiptap.mediaInsertThisAria", "Insert this image");
 
-  if (!data.url) {
+  const resolvedUrl = resolveMediaAssetUrl(data);
+  if (!resolvedUrl) {
     return (
       <div
         style={{
@@ -173,7 +174,7 @@ function MediaLibraryThumbCell(params) {
   return (
     <>
       <MediaThumbPreviewPortal
-        url={data.url}
+        url={resolvedUrl}
         open={previewOpen}
         anchorRect={anchorRect}
       />
@@ -194,7 +195,7 @@ function MediaLibraryThumbCell(params) {
         }}
       >
         <img
-          src={data.url}
+          src={resolvedUrl}
           alt=""
           width={40}
           height={40}
@@ -261,7 +262,7 @@ function MediaLibraryActionsCell(params) {
       <Chip
         shape="square"
         label={ctx.t("tiptap.mediaEdit", "Edit")}
-        disabled={ctx.editingId === data.id}
+        disabled={ctx.savingMeta}
         onClick={() => ctx.startEdit(data)}
         style={{ flexShrink: 0, border: "none" }}
       />
@@ -504,8 +505,9 @@ export default function MediaLibraryModal({
 
   const pick = useCallback(
     (img) => {
-      if (img?.url && img?.id) {
-        onInsertMedia?.({ id: img.id, url: img.url });
+      const resolvedUrl = resolveMediaAssetUrl(img);
+      if (resolvedUrl && img?.id) {
+        onInsertMedia?.({ id: img.id, url: resolvedUrl });
       }
       onClose();
     },
@@ -650,29 +652,26 @@ export default function MediaLibraryModal({
     setUploading(true);
     const baseName = file.name.replace(/\.[^.]+$/, "") || "";
     try {
-      const { secureUrl, publicId } = await uploadMediaImageToCloudinary(
-        file,
-        mediaScopeId,
-      );
       const createPayload = buildMediaAssetCreateData({
         scopeId: mediaScopeId,
         fileName: baseName,
-        url: secureUrl,
-        publicId,
         mediaLibrarySource,
         mediaDisplayedInProposalCardId,
       });
+      createPayload.image = { upload: file };
       const { data: createData } = await createMediaAsset({
         variables: { data: createPayload },
       });
       const created = createData?.createMediaAsset;
-      if (created?.id && created?.url) {
+      const createdUrl = resolveMediaAssetUrl(created);
+      if (created?.id && createdUrl) {
         const initialTitle =
           (created.title && String(created.title).trim()) || baseName || "";
-        onInsertMedia?.({ id: created.id, url: created.url });
+        onInsertMedia?.({ id: created.id, url: createdUrl });
         startEdit({
           id: created.id,
-          url: created.url,
+          image: created.image || null,
+          url: created.url || "",
           fileName: created.fileName || baseName,
           title: initialTitle,
           description: "",
