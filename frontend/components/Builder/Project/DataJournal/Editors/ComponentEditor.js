@@ -1,7 +1,9 @@
 // components/DataJournal/Editors/ComponentEditor.js
+import { useCallback, useEffect, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useDataJournal } from "../Context/DataJournalContext";
 
+import MediaLibraryModal from "../../../../TipTap/MediaLibraryModal";
 import EditorHeader from "./Header";
 
 import GraphEditor from "../Widgets/types/Graph/Editor/GraphEditor";
@@ -9,8 +11,25 @@ import StatisticalTestEditor from "../Widgets/types/StatisticalTests/Editor/Stat
 import StatisticsEditor from "../Widgets/types/Statistics/Editor/StatisticsEditor";
 import CodeEditor from "../Widgets/types/Code/Editor/CodeEditor";
 import HypVisEditor from "../Widgets/types/HypVis/Editor/HypVisEditor";
+import { figPngFileFromPyodide } from "../Widgets/types/HypVis/Editor/Axes/figHtmlFromPyodide";
+import { plotlyPngFileFromFigureSection } from "../Widgets/types/Graph/plotlyPngFileFromFigure";
 
 import { StyledRightPanel } from "../styles/StyledDataJournal"; // Adjust path if needed
+
+/** Stored on MediaAsset.settings.createdWith for HypVis figure exports */
+function hypVisMediaCreatedWithKey(contentType) {
+  if (contentType === "abDesign") return "hypvis_abdesign";
+  if (contentType === "corStudy") return "hypvis_correlational";
+  return "hypvis";
+}
+
+/** Stored on MediaAsset.settings.createdWith for Graph (Plotly) exports */
+function graphMediaCreatedWithKey(graphContentType) {
+  if (graphContentType === "scatterPlot") return "graph_scatter";
+  if (graphContentType === "barGraph") return "graph_bar";
+  if (graphContentType === "histogram") return "graph_histogram";
+  return "graph";
+}
 
 export default function ComponentEditor({
   user,
@@ -20,12 +39,103 @@ export default function ComponentEditor({
   onDelete,
 }) {
   const { t } = useTranslation("builder");
-  const { activeComponent, setActiveComponent } = useDataJournal();
+  const { activeComponent, setActiveComponent, pyodide, projectId } =
+    useDataJournal();
+
+  const [saveFigureModalOpen, setSaveFigureModalOpen] = useState(false);
+  const [saveFigurePrefillFile, setSaveFigurePrefillFile] = useState(null);
+
+  useEffect(() => {
+    setSaveFigureModalOpen(false);
+    setSaveFigurePrefillFile(null);
+  }, [activeComponent?.id]);
+
+  const handleClosePanel = useCallback(
+    () => setActiveComponent(null),
+    [setActiveComponent],
+  );
+
+  const closeSaveFigureModal = useCallback(() => {
+    setSaveFigureModalOpen(false);
+    setSaveFigurePrefillFile(null);
+  }, []);
+
+  const handleSaveFigurePrefillConsumed = useCallback(() => {
+    setSaveFigurePrefillFile(null);
+  }, []);
+
+  const handleSaveFigureToMedia = useCallback(async () => {
+    const comp = activeComponent;
+    if (!comp) return;
+
+    if (comp.type === "HYPVIS") {
+      if (!pyodide) {
+        window.alert(
+          t(
+            "dataJournal.hypVis.axes.clipboard.copyGraphNoPyodide",
+            "The Python runtime is not ready yet. Please wait for the journal to finish loading.",
+          ),
+        );
+        return;
+      }
+      const file = figPngFileFromPyodide(pyodide, {
+        fileName: comp.title || "hypvis-figure",
+      });
+      if (!file) {
+        window.alert(
+          t(
+            "dataJournal.hypVis.axes.clipboard.copyGraphNoFigHtml",
+            "No graph is available yet. Fill in your variables and wait for the visualization to appear in the journal, then try again.",
+          ),
+        );
+        return;
+      }
+      setSaveFigurePrefillFile(file);
+      setSaveFigureModalOpen(true);
+      return;
+    }
+
+    if (comp.type === "GRAPH") {
+      const file = await plotlyPngFileFromFigureSection(comp.id, {
+        fileName: comp.title || "graph-figure",
+      });
+      if (!file) {
+        window.alert(
+          t(
+            "dataJournal.componentEditor.saveGraphNoPlot",
+            "No graph is available to save yet. Configure your chart and wait for it to appear in the journal, then try again.",
+          ),
+        );
+        return;
+      }
+      setSaveFigurePrefillFile(file);
+      setSaveFigureModalOpen(true);
+    }
+  }, [activeComponent, pyodide, t]);
 
   if (!activeComponent) return null;
 
   const { id, type, content } = activeComponent;
-  const handleClosePanel = () => setActiveComponent(null);
+
+  const saveFigureCreatedWith =
+    type === "GRAPH"
+      ? graphMediaCreatedWithKey(content?.type)
+      : hypVisMediaCreatedWithKey(content?.type);
+
+  const mediaLibrarySourceForSave = projectId
+    ? {
+        sourceType: "proposalBoard",
+        sourceId: projectId,
+        createdWith: saveFigureCreatedWith,
+      }
+    : {
+        sourceType: "vizSection",
+        sourceId: id,
+        createdWith: saveFigureCreatedWith,
+      };
+
+  const showSaveFigureButton = type === "HYPVIS" || type === "GRAPH";
+  const showSaveFigureModal = type === "HYPVIS" || type === "GRAPH";
 
   // Render editor based on component type
   const renderEditor = () => {
@@ -114,8 +224,22 @@ export default function ComponentEditor({
         onSave={onSave}
         onDelete={onDelete}
         activeComponent={activeComponent}
+        showSaveFigureToMedia={showSaveFigureButton}
+        onSaveFigureToMedia={handleSaveFigureToMedia}
       />
       {renderEditor()}
+      {showSaveFigureModal ? (
+        <MediaLibraryModal
+          open={saveFigureModalOpen}
+          onClose={closeSaveFigureModal}
+          mediaScopeId={projectId || null}
+          mediaLibrarySource={mediaLibrarySourceForSave}
+          usedInVizSectionIds={[id]}
+          prefillImageFile={saveFigurePrefillFile}
+          onPrefillConsumed={handleSaveFigurePrefillConsumed}
+          onInsertMedia={() => {}}
+        />
+      ) : null}
     </StyledRightPanel>
   );
 }

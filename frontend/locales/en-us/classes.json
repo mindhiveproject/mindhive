@@ -668,6 +668,20 @@
 	"resource": {
 		"action": "Action",
 		"actions": "Actions",
+		"bulkActions": "Bulk actions",
+		"bulkActionsModal": {
+			"applying": "Applying…",
+			"applyToCount": "Apply to {{count}} resources",
+			"cancel": "Cancel",
+			"changeProjectCard": "Change associated Project card",
+			"confirmDisconnectAll": "Disconnect all selected resources from their project cards?",
+			"confirmPublishAll": "Publish all selected resources? Students will see them in their class.",
+			"confirmUnpublishAll": "Unpublish all selected? Students will no longer see these resources.",
+			"disconnectFromCards": "Disconnect from cards",
+			"publishAll": "Publish all selected",
+			"title": "Bulk actions",
+			"unpublishAll": "Unpublish all selected"
+		},
 		"addResources": "Add resources to class",
 		"addResourcesDescription": "Select resources below to link them to this class. Linked resources can be published to students.",
 		"addResourcesTitle": "Add your resources to this class",
@@ -714,6 +728,7 @@
 		"owner": "Owner",
 		"preview": "Preview",
 		"projectCard": "Project card",
+		"publishUnpublish": "Publish/Unpublish",
 		"public": "Public",
 		"publicResourcesDescription": "Link public resources shared by the community to this class.",
 		"publicResourcesTitle": "Add a public resource",
@@ -730,6 +745,8 @@
 		"title": "Title",
 		"unlinkError": "Failed to unlink resource.",
 		"unlinkFromClass": "Unlink",
+		"unlinkFromClassConfirm": "Remove this resource from this class? It will no longer appear for teachers or students in this class.",
+		"unlinkFromClassMenu": "Unlink from class",
 		"unpublish": "Unpublish",
 		"unpublished": "Unpublished",
 		"you": "You"

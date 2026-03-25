@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import moment from "moment";
 import { useMutation, useApolloClient } from "@apollo/client";
-import { Button, Modal } from "semantic-ui-react";
+import { Button as SemanticButton, Modal } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
@@ -14,8 +14,10 @@ import { AgGridReact } from "ag-grid-react";
 import { UPDATE_RESOURCE, DELETE_RESOURCE, CREATE_RESOURCE, SET_RESOURCE_TEMPLATE_CARDS, mergeResourceSettings, isPublishedToClassId } from "../../../../Mutations/Resource";
 import { GET_CLASS_RESOURCES, GET_RESOURCE } from "../../../../Queries/Resource";
 import ConnectResourceToCardModal from "./ConnectResourceToCardModal";
+import BulkActionsModal from "./BulkActionsModal";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import Chip from "../../../../DesignSystem/Chip";
+import Button from "../../../../DesignSystem/Button";
 
 const SecondaryButton = styled.button`
   display: inline-flex;
@@ -171,6 +173,18 @@ const styledChipUnpublished = {
   color: "#434343",
 };
 
+const BulkActionsButtonWrapper = styled.div`
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  max-width: ${(props) => (props.$visible ? "200px" : "0")};
+  min-height: 0;
+  max-height: ${(props) => (props.$visible ? "none" : "0")};
+  opacity: ${(props) => (props.$visible ? 1 : 0)};
+  overflow: hidden;
+  transition: max-width 0.2s ease, max-height 0.2s ease, opacity 0.2s ease;
+`;
+
 export default function ResourceTab({ resources, myclass, user }) {
   const classId = myclass?.id;
   const getIsPublishedForThisClass = (resource) => isPublishedToClassId(resource?.settings, classId);
@@ -185,8 +199,14 @@ export default function ResourceTab({ resources, myclass, user }) {
   const [resourceForPublishModal, setResourceForPublishModal] = useState(null);
   const [updatingStatusResourceId, setUpdatingStatusResourceId] = useState(null);
   const [copyingResourceId, setCopyingResourceId] = useState(null);
+  const [selectedResources, setSelectedResources] = useState([]);
+  const [bulkActionsModalOpen, setBulkActionsModalOpen] = useState(false);
   const gridRef = useRef(null);
   const client = useApolloClient();
+
+  const canManageResourcesBulk =
+    myclass?.creator?.id === user?.id ||
+    (myclass?.mentors || []).some((m) => m?.id === user?.id);
 
   const refetchClassResources = () =>
     client.refetchQueries({
@@ -682,9 +702,59 @@ export default function ResourceTab({ resources, myclass, user }) {
                     label: t("resource.delete", "Delete"),
                     danger: true,
                     onClick: () => {
-                      if (confirm(t("resource.deleteConfirm", "Are you sure you want to delete this resource?"))) {
+                      if (
+                        confirm(
+                          t(
+                            "resource.deleteConfirm",
+                            "Are you sure you want to delete this resource?"
+                          )
+                        )
+                      ) {
                         deleteResource({ variables: { id: resource?.id } }).catch((err) =>
                           alert(err.message)
+                        );
+                      }
+                    },
+                  },
+                ]
+              : []),
+            ...(!isOwner && isClassTeacherOrMentor
+              ? [
+                  {
+                    key: "unlinkFromClass",
+                    label: t("resource.unlinkFromClassMenu", "Unlink from class"),
+                    danger: true,
+                    onClick: async () => {
+                      if (
+                        !classId ||
+                        !confirm(
+                          t(
+                            "resource.unlinkFromClassConfirm",
+                            "Remove this resource from this class? It will no longer appear for teachers or students in this class."
+                          )
+                        )
+                      )
+                        return;
+                      try {
+                        if (templateBoardId && resource?.id) {
+                          await setResourceTemplateCards({
+                            variables: {
+                              resourceId: resource.id,
+                              templateCardIds: [],
+                              classId,
+                            },
+                          });
+                        }
+                        await updateResource({
+                          variables: {
+                            id: resource?.id,
+                            classes: { disconnect: [{ id: classId }] },
+                          },
+                        });
+                      } catch (err) {
+                        alert(
+                          err?.message ||
+                            t("resource.unlinkError", "Failed to unlink resource.")
                         );
                       }
                     },
@@ -704,6 +774,19 @@ export default function ResourceTab({ resources, myclass, user }) {
   };
 
   const columnDefs = [
+    {
+      field: "selection",
+      headerName: "",
+      checkboxSelection: true,
+      headerCheckboxSelection: true,
+      width: 48,
+      minWidth: 48,
+      maxWidth: 52,
+      pinned: "left",
+      suppressFilter: true,
+      sortable: false,
+      resizable: false,
+    },
     {
       field: "title",
       headerName: t("resource.title", "Title"),
@@ -826,6 +909,17 @@ export default function ResourceTab({ resources, myclass, user }) {
         >
           <span>{t("resource.classNetwork", "Class network")}</span>
         </LinkedCardsToggleButton> */}
+        <BulkActionsButtonWrapper
+          $visible={canManageResourcesBulk && selectedResources.length > 0}
+        >
+          <Button
+            variant="outline"
+            type="button"
+            onClick={() => setBulkActionsModalOpen(true)}
+          >
+            {t("resource.bulkActions", "Bulk actions")}
+          </Button>
+        </BulkActionsButtonWrapper>
         <span style={{ flexShrink: 0 }} aria-hidden>|</span>
         <button
           type="button"
@@ -935,7 +1029,12 @@ export default function ResourceTab({ resources, myclass, user }) {
             ref={gridRef}
             rowData={filteredResources}
             columnDefs={columnDefs}
+            rowSelection="multiple"
+            suppressRowClickSelection
             getRowId={(params) => params.data?.id}
+            onSelectionChanged={(e) => {
+              if (e.api) setSelectedResources(e.api.getSelectedRows());
+            }}
             context={{
               templateBoardId: myclass?.templateProposal?.id,
               onTogglePublishStatus: handleOpenPublishConfirm,
@@ -951,6 +1050,16 @@ export default function ResourceTab({ resources, myclass, user }) {
           />
         </div>
       </div>
+
+      <BulkActionsModal
+        open={bulkActionsModalOpen}
+        onClose={() => setBulkActionsModalOpen(false)}
+        selectedResources={selectedResources}
+        myclass={myclass}
+        onSuccess={() => {
+          gridRef.current?.api?.deselectAll();
+        }}
+      />
 
       <ConnectResourceToCardModal
         open={!!resourceForConnectModal}
@@ -981,13 +1090,13 @@ export default function ResourceTab({ resources, myclass, user }) {
           </p>
         </Modal.Content>
         <Modal.Actions style={{ padding: "1rem 1.5rem", gap: "8px" }}>
-          <Button
+          <SemanticButton
             onClick={() => setResourceForPublishModal(null)}
             style={{ borderRadius: "100px", border: "1px solid #336F8A", background: "white", color: "#336F8A" }}
           >
             {t("resource.cancel", "Cancel")}
-          </Button>
-          <Button
+          </SemanticButton>
+          <SemanticButton
             primary
             onClick={handleConfirmPublishToggle}
             style={{ borderRadius: "100px", background: "#336F8A", color: "white" }}
@@ -996,7 +1105,7 @@ export default function ResourceTab({ resources, myclass, user }) {
               (getIsPublishedForThisClass(resourceForPublishModal)
                 ? t("resource.unpublish", "Unpublish")
                 : t("resource.publishToStudents", "Publish to students"))}
-          </Button>
+          </SemanticButton>
         </Modal.Actions>
       </Modal>
     </div>

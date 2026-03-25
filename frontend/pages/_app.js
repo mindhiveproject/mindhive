@@ -12,7 +12,9 @@ import "../components/styles/nprogress.css";
 import { ApolloProvider } from "@apollo/client";
 import withData from "../lib/withData";
 
-import "../components/styles/global.css"
+import "../components/styles/global.css";
+// Data Journal / Plotly map traces — MapLibre (vendored from maplibre-gl; see next.config.js alias)
+import "../components/styles/maplibre-gl-vendor.css";
 import Site from "../components/Global/Site";
 import Authorized from "../components/Global/Authorized";
 import HelpCenter from "../components/Global/HelpCenter";

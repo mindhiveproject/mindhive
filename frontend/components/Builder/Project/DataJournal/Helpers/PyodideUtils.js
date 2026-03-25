@@ -5,6 +5,7 @@ export const baseCode = `import js
 import micropip
 import pandas as pd
 import numpy as np
+# Plotly (JS) uses maplibre-gl for map traces; global CSS: components/styles/maplibre-gl-vendor.css + pages/_app.js (see next.config.js alias)
 await micropip.install('plotly==5.20.0')
 await micropip.install('statsmodels')
 import plotly.express as px

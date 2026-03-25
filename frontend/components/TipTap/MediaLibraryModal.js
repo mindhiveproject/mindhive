@@ -20,6 +20,7 @@ import {
   DELETE_MEDIA_ASSET,
   MEDIA_LIBRARY_PROFILE_ID,
   buildMediaAssetCreateData,
+  mediaCreateHasOwnerFromSource,
   resolveMediaAssetUrl,
 } from "../Mutations/MediaAsset";
 
@@ -455,6 +456,9 @@ const GRID_THEME_STYLE = {
   minHeight: 320,
 };
 
+/**
+ * @param {string | null} mediaScopeId - Proposal board id for default `createdInBoard` on upload when `mediaLibrarySource` does not set a createdIn* owner (not used to filter the grid; list is by author profile).
+ */
 export default function MediaLibraryModal({
   open,
   onClose,
@@ -462,6 +466,9 @@ export default function MediaLibraryModal({
   onInsertMedia,
   mediaLibrarySource = null,
   mediaDisplayedInProposalCardId = null,
+  prefillImageFile = null,
+  onPrefillConsumed = null,
+  usedInVizSectionIds = null,
 }) {
   const { t } = useTranslation("builder");
   const fileInputRef = useRef(null);
@@ -481,10 +488,15 @@ export default function MediaLibraryModal({
   const myProfileId = profileData?.authenticatedItem?.id ?? null;
 
   const { data, loading, error, refetch } = useQuery(MEDIA_ASSETS, {
-    variables: { scopeId: mediaScopeId },
-    skip: !open || !mediaScopeId,
+    variables: { profileId: myProfileId },
+    skip: !open || !myProfileId,
     fetchPolicy: "network-only",
   });
+
+  const canCreateUpload = Boolean(
+    myProfileId &&
+      (mediaScopeId || mediaCreateHasOwnerFromSource(mediaLibrarySource)),
+  );
 
   const [createMediaAsset] = useMutation(CREATE_MEDIA_ASSET, {
     onCompleted: () => refetch(),
@@ -638,65 +650,118 @@ export default function MediaLibraryModal({
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  const handleFile = async (e) => {
-    const file = e.target.files?.[0];
-    e.target.value = "";
-    if (!file || !mediaScopeId) return;
-    if (!file.type?.startsWith?.("image/")) {
-      setUploadError(
-        t("tiptap.mediaNotImage", "Please choose an image file."),
-      );
-      return;
-    }
-    setUploadError(null);
-    setUploading(true);
-    const baseName = file.name.replace(/\.[^.]+$/, "") || "";
-    try {
-      const createPayload = buildMediaAssetCreateData({
-        scopeId: mediaScopeId,
-        fileName: baseName,
-        mediaLibrarySource,
-        mediaDisplayedInProposalCardId,
-      });
-      createPayload.image = { upload: file };
-      const { data: createData } = await createMediaAsset({
-        variables: { data: createPayload },
-      });
-      const created = createData?.createMediaAsset;
-      const createdUrl = resolveMediaAssetUrl(created);
-      if (created?.id && createdUrl) {
-        const initialTitle =
-          (created.title && String(created.title).trim()) || baseName || "";
-        onInsertMedia?.({ id: created.id, url: createdUrl });
-        startEdit({
-          id: created.id,
-          image: created.image || null,
-          url: created.url || "",
-          fileName: created.fileName || baseName,
-          title: initialTitle,
-          description: "",
-          author: myProfileId ? { id: myProfileId } : null,
-          favoriteBy: [],
+  const uploadImageFile = useCallback(
+    async (file) => {
+      if (!file || !myProfileId) return;
+      if (!mediaScopeId && !mediaCreateHasOwnerFromSource(mediaLibrarySource)) {
+        setUploadError(
+          t(
+            "tiptap.mediaNoCreateContext",
+            "Cannot upload: missing board or library context.",
+          ),
+        );
+        return;
+      }
+      if (!file.type?.startsWith?.("image/")) {
+        setUploadError(
+          t("tiptap.mediaNotImage", "Please choose an image file."),
+        );
+        return;
+      }
+      setUploadError(null);
+      setUploading(true);
+      const baseName = file.name.replace(/\.[^.]+$/, "") || "";
+      try {
+        const createPayload = buildMediaAssetCreateData({
+          scopeId: mediaScopeId,
+          fileName: baseName,
+          mediaLibrarySource,
+          mediaDisplayedInProposalCardId,
+          usedInVizSectionIds,
         });
-      } else {
+        createPayload.image = { upload: file };
+        const { data: createData } = await createMediaAsset({
+          variables: { data: createPayload },
+        });
+        const created = createData?.createMediaAsset;
+        const createdUrl = resolveMediaAssetUrl(created);
+        if (created?.id && createdUrl) {
+          const initialTitle =
+            (created.title && String(created.title).trim()) || baseName || "";
+          onInsertMedia?.({ id: created.id, url: createdUrl });
+          startEdit({
+            id: created.id,
+            image: created.image || null,
+            url: created.url || "",
+            fileName: created.fileName || baseName,
+            title: initialTitle,
+            description: "",
+            author: myProfileId ? { id: myProfileId } : null,
+            favoriteBy: [],
+          });
+        } else {
+          setUploadError(
+            t(
+              "tiptap.mediaUploadFailed",
+              "Upload failed. Check your connection and try again.",
+            ),
+          );
+        }
+      } catch (err) {
+        console.error(err);
         setUploadError(
           t(
             "tiptap.mediaUploadFailed",
             "Upload failed. Check your connection and try again.",
           ),
         );
+      } finally {
+        setUploading(false);
       }
-    } catch (err) {
-      console.error(err);
-      setUploadError(
-        t(
-          "tiptap.mediaUploadFailed",
-          "Upload failed. Check your connection and try again.",
-        ),
-      );
-    } finally {
-      setUploading(false);
+    },
+    [
+      createMediaAsset,
+      mediaScopeId,
+      mediaLibrarySource,
+      mediaDisplayedInProposalCardId,
+      usedInVizSectionIds,
+      myProfileId,
+      onInsertMedia,
+      startEdit,
+      t,
+    ],
+  );
+
+  const uploadImageFileRef = useRef(uploadImageFile);
+  uploadImageFileRef.current = uploadImageFile;
+
+  useEffect(() => {
+    if (!open || !prefillImageFile || !myProfileId) return undefined;
+    if (!mediaScopeId && !mediaCreateHasOwnerFromSource(mediaLibrarySource)) {
+      return undefined;
     }
+    let cancelled = false;
+    (async () => {
+      await uploadImageFileRef.current(prefillImageFile);
+      if (!cancelled) onPrefillConsumed?.();
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    open,
+    prefillImageFile,
+    myProfileId,
+    mediaScopeId,
+    mediaLibrarySource,
+    onPrefillConsumed,
+  ]);
+
+  const handleFile = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    await uploadImageFile(file);
   };
 
   const helpText = t(
@@ -841,7 +906,7 @@ export default function MediaLibraryModal({
           <Button
             type="button"
             variant="filled"
-            disabled={uploading || !mediaScopeId}
+            disabled={uploading || !canCreateUpload}
             onClick={() => fileInputRef.current?.click()}
             style={{ marginBottom: 16, alignSelf: "flex-start" }}
             // leadingIcon={<img src="/assets/icons/upload.svg" alt="Upload" />}

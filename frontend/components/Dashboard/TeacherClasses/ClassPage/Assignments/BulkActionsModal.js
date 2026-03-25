@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Modal, Button, Icon } from "semantic-ui-react";
+import { Modal } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
+import Button from "../../../../DesignSystem/Button";
 import {
   EDIT_ASSIGNMENT,
   LINK_ASSIGNMENT_TO_TEMPLATE_CARD,
@@ -24,36 +25,6 @@ const SectionTitle = styled.div`
   font-size: 16px;
   line-height: 24px;
   color: #171717;
-`;
-
-const ActionButton = styled.button`
-  dispdisplay: inline-flex;
-  height: 40px;
-  padding: 8px 16px 8px 16px;
-  justify-content: center;
-  align-items: center;
-  width: fit-content;
-  gap: 8px;
-  border-radius: 100px;
-  background: #ffffff;
-  border: 1px solid var(--MH-Theme-Primary-Dark, #336F8A);
-
-  font-family: Inter, sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--MH-Theme-Primary-Dark, #336F8A);
-
-  &:hover:not(:disabled) {
-    background: #f5f5f5;
-    border-color: #b3b3b3;
-    color: #666666;
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
 `;
 
 const CardPickerContainer = styled.div`
@@ -193,53 +164,53 @@ export default function BulkActionsModal({
         <Section>
           <SectionTitle>{t("assignment.publishUnpublish", "Publish/Unpublish")}</SectionTitle>
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", gap: 12 }}>
-            <ActionButton 
+            <Button variant="outline" 
               type="button"
               onClick={handlePublishAll}
               disabled={!canPublishAll || applying}
             >
               {t("assignment.bulkActionsModal.publishAll", "Publish all selected")}
-            </ActionButton>
-            <ActionButton
+            </Button>
+            <Button variant="outline"
               type="button"
               onClick={handleUnpublishAll}
               disabled={!canUnpublishAll || applying}
             >
               {t("assignment.bulkActionsModal.unpublishAll", "Unpublish all selected")}
-            </ActionButton>
+            </Button>
           </div>
         </Section>
 
         <Section>
           <SectionTitle>{t("assignment.bulkActionsModal.changeProjectCard", "Change associated Project card")}</SectionTitle>
-          <ActionButton
+          <Button variant="outline"
             type="button"
             onClick={handleDisconnectAll}
             disabled={count === 0 || applying}
           >
             {t("assignment.bulkActionsModal.disconnectFromCards", "Disconnect from cards")}
-          </ActionButton>
+          </Button>
           {!showChangeCard ? (
-            <ActionButton
+            <Button variant="outline"
               type="button"
               onClick={() => setShowChangeCard(true)}
               disabled={!templateBoardId || applying}
               style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 12 }}
             >
               {t("assignment.bulkActionsModal.changeProjectCard", "Change associated Project card")}
-            </ActionButton>
+            </Button>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 12 , borderTop: "1px solid #E6E6E6", paddingTop: "16px"}}>
               <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 12 }}>
-              <ActionButton
+              <Button variant="outline"
                 type="button"
                 onClick={() => setShowChangeCard(false)}
                 disabled={applying}
                 style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 12 }}
               >
                 {t("assignment.bulkActionsModal.cancel", "Cancel")}
-              </ActionButton>
-              <ActionButton
+              </Button>
+              <Button variant="tonal"
                 type="button"
                 onClick={handleApplyCardToAll}
                 disabled={!selectedCardId || applying}
@@ -247,7 +218,7 @@ export default function BulkActionsModal({
                 {applying
                   ? t("assignment.bulkActionsModal.applying", "Applying…")
                   : t("assignment.bulkActionsModal.applyToCount", { count, default: "Apply to {{count}} assignments" })}
-              </ActionButton>
+              </Button>
               </div>
               <CardPickerContainer>
                 <TemplateBoardCardPicker
@@ -271,17 +242,7 @@ export default function BulkActionsModal({
           background: "#fafafa",
         }}
       >
-        <Button
-          style={{
-            borderRadius: "100px",
-            border: "1px solid #336F8A",
-            background: "white",
-            color: "#336F8A",
-            fontSize: "16px",
-          }}
-          onClick={handleClose}
-          disabled={applying}
-        >
+        <Button variant="outline" type="button" onClick={handleClose} disabled={applying}>
           {t("assignment.connectModal.cancel", "Cancel")}
         </Button>
       </Modal.Actions>

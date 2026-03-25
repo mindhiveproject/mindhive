@@ -11,9 +11,9 @@ export const MEDIA_LIBRARY_PROFILE_ID = gql`
 `;
 
 export const MEDIA_ASSETS = gql`
-  query MEDIA_ASSETS($scopeId: ID!) {
+  query MEDIA_ASSETS($profileId: ID!) {
     mediaAssets(
-      where: { createdInBoard: { id: { equals: $scopeId } } }
+      where: { author: { id: { equals: $profileId } } }
       orderBy: [{ createdAt: desc }]
     ) {
       id
@@ -84,12 +84,13 @@ function resolveInitialMediaTitle({ title, fileName }) {
 
 /**
  * @param {object} opts
- * @param {string} opts.scopeId - ProposalBoard id
+ * @param {string} opts.scopeId - ProposalBoard id (fallback when `mediaLibrarySource` has no createdIn*)
  * @param {string} opts.fileName - base file name (no extension ok)
  * @param {string} [opts.title] - display title; defaults from fileName so it is always set when a name exists
  * @param {{ sourceType?: string | null, sourceId?: string | null, createdWith?: string | null }} [opts.mediaLibrarySource]
  * @param {string | null} [opts.mediaCreatedWithOverride] - e.g. "paste" when inserting from clipboard upload path
  * @param {string | null} [opts.mediaDisplayedInProposalCardId]
+ * @param {string[] | null | undefined} [opts.usedInVizSectionIds] - VizSection ids (e.g. Data Journal widget id) for usedInVizSections
  */
 function resolveCreatedInConnection(mediaLibrarySource) {
   const sourceType = mediaLibrarySource?.sourceType;
@@ -121,6 +122,16 @@ function resolveCreatedInConnection(mediaLibrarySource) {
   return {};
 }
 
+/**
+ * True when `mediaLibrarySource` supplies a createdIn* owner so `buildMediaAssetCreateData`
+ * does not need `scopeId` as fallback `createdInBoard`.
+ */
+export function mediaCreateHasOwnerFromSource(mediaLibrarySource) {
+  return (
+    Object.keys(resolveCreatedInConnection(mediaLibrarySource || {})).length > 0
+  );
+}
+
 export function buildMediaAssetCreateData({
   scopeId,
   fileName,
@@ -128,6 +139,7 @@ export function buildMediaAssetCreateData({
   mediaLibrarySource,
   mediaCreatedWithOverride = null,
   mediaDisplayedInProposalCardId,
+  usedInVizSectionIds,
 }) {
   const createdWith =
     mediaCreatedWithOverride ??
@@ -150,6 +162,14 @@ export function buildMediaAssetCreateData({
   };
   if (mediaDisplayedInProposalCardId) {
     data.usedInCards = { connect: [{ id: mediaDisplayedInProposalCardId }] };
+  }
+  const vizIds = Array.isArray(usedInVizSectionIds)
+    ? usedInVizSectionIds.filter((x) => typeof x === "string" && String(x).trim())
+    : [];
+  if (vizIds.length) {
+    data.usedInVizSections = {
+      connect: vizIds.map((x) => ({ id: String(x).trim() })),
+    };
   }
   return data;
 }
