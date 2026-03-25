@@ -19,6 +19,10 @@ export function isSelf({ session, item }: ListAccessArgs & { item?: any }) {
   return item.id === session.itemId;
 }
 
+export function isSuperAdmin({ session }: ListAccessArgs) {
+  return !!session && session?.data.username === "shevchenko_yury";
+}
+
 // ---------- Generated permissions ----------
 
 const generatedPermissions = Object.fromEntries(
@@ -183,53 +187,9 @@ export const rules = {
     return false;
   },
 
-  canManagePosts({ session, item }: ListAccessArgs & { item?: any }) {
+  canManageStudies({ session, item }: ListAccessArgs & { item?: any }) {
     if (!isSignedIn({ session })) return false;
-    if (permissions.canManagePosts({ session })) return true;
-    if (item?.authorId === session?.itemId) return true;
-    return false;
-  },
-
-  canManageCollections({ session, item }: ListAccessArgs & { item?: any }) {
-    if (!isSignedIn({ session })) return false;
-    if (permissions.canManageCollections({ session })) return true;
-    if (item?.ownerId === session?.itemId) return true;
-    return false;
-  },
-
-  canManageContracts({ session, item }: ListAccessArgs & { item?: any }) {
-    if (!isSignedIn({ session })) return false;
-    if (permissions.canManageContracts({ session })) return true;
-    if (
-      item?.customerId === session?.itemId ||
-      item?.supplierId === session?.itemId
-    ) {
-      return true;
-    }
-    return false;
-  },
-
-  canManageProposals({ session, item }: ListAccessArgs & { item?: any }) {
-    if (!isSignedIn({ session })) return false;
-    if (permissions.canManageProposals({ session })) return true;
-    if (item?.fromId === session?.itemId || item?.toId === session?.itemId) {
-      return true;
-    }
-    return false;
-  },
-
-  canManagePriceBids({ session, item }: ListAccessArgs & { item?: any }) {
-    if (!isSignedIn({ session })) return false;
-    if (permissions.canManagePriceBids({ session })) return true;
-    if (item?.fromId === session?.itemId || item?.toId === session?.itemId) {
-      return true;
-    }
-    return false;
-  },
-
-  canManageTransactions({ session, item }: ListAccessArgs & { item?: any }) {
-    if (!isSignedIn({ session })) return false;
-    if (permissions.canManageTransactions({ session })) return true;
+    if (permissions.canManageStudies({ session })) return true;
     if (item?.fromId === session?.itemId || item?.toId === session?.itemId) {
       return true;
     }
@@ -244,9 +204,9 @@ export const rules = {
   },
 
   canManageRoles({ session }: ListAccessArgs) {
+    if (isSuperAdmin({ session })) return true;
     if (!isSignedIn({ session })) return false;
-    // treat canManageUsers as the admin-level permission for roles/permissions
-    if (permissions.canManageUsers({ session })) return true;
+    if (permissions.canManageRoles({ session })) return true;
     return false;
   },
 
@@ -268,6 +228,13 @@ export const rules = {
     if (!isSignedIn({ session })) return false;
     if (permissions.canManageProjects({ session })) return true;
     if (item?.author === session?.itemId) return true;
+    return false;
+  },
+
+  canManageJournals({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageJournals({ session })) return true;
+    if (item?.authorId === session?.itemId) return true;
     return false;
   },
 };

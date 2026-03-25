@@ -59,7 +59,7 @@ export const Profile = list({
     operation: {
       // Anyone can query, but filters below restrict which items they see
       query: isSignedIn,
-      create: isSignedIn,
+      create: () => true,
       update: isSignedIn,
       delete: permissions.canManageUsers,
     },
@@ -87,7 +87,7 @@ export const Profile = list({
       isFilterable: true,
       access: {
         read: () => true, // safe public identifier
-        create: isSignedIn,
+        create: () => true,
         update: ({ session, item }) =>
           isAdmin({ session }) || session?.itemId === item.id,
       },
@@ -105,7 +105,7 @@ export const Profile = list({
       isFilterable: true,
       access: {
         read: () => true,
-        create: isSignedIn,
+        create: () => true,
         update: ({ session, item }) =>
           isAdmin({ session }) || session?.itemId === item.id,
       },
@@ -131,7 +131,7 @@ export const Profile = list({
         // Only self or admins can see/change email
         read: ({ session, item }) =>
           isAdmin({ session }) || session?.itemId === item.id,
-        create: isSignedIn,
+        create: () => true,
         update: ({ session, item }) =>
           isAdmin({ session }) || session?.itemId === item.id,
       },
@@ -149,7 +149,11 @@ export const Profile = list({
       ref: "Permission.assignedTo",
       many: true,
       access: {
-        read: rules.canManageRoles,
+        // Only admins and the owner of the profile can read its permissions
+        read: ({ session, item }) =>
+          !!session &&
+          (rules.canManageRoles({ session }) || session.itemId === item.id),
+        create: () => true, // allow setting on Profile.create (signup)
         update: rules.canManageRoles,
       },
     }),
