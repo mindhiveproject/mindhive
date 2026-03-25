@@ -20,7 +20,7 @@ function hasManageUsersPermission(session: any) {
  *
  * `settings` JSON (expected shape):
  * {
- *   createdWith?: string | null; // how the file was produced, e.g. upload, paste, datatool-hv, datatool-graph
+ *   createdWith?: string | null; // e.g. upload, paste, hypvis_ab_design, hypvis_correlational (Data Journal HypVis figure export)
  * }
  */
 export const MediaAsset = list({

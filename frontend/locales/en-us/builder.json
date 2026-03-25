@@ -234,6 +234,9 @@
 			"editComponent": "Edit Component",
 			"editParagraph": "Edit Paragraph",
 			"save": "Save",
+			"saveFigureNoBoard": "This journal is not linked to a project board, so the media library cannot be opened.",
+			"saveFigureToMedia": "Save figure to media library",
+			"saveGraphNoPlot": "No graph is available to save yet. Configure your chart and wait for it to appear in the journal, then try again.",
 			"unsupportedType": "Unsupported component type: {{type}}",
 			"untitled": "Untitled"
 		},
@@ -1245,6 +1248,7 @@
 		"mediaLibraryLoadingTitle": "Loading your library",
 		"mediaLibraryLoadingBody": "Fetching saved images.",
 		"mediaLibraryQueryError": "Could not load your media library.",
+		"mediaNoCreateContext": "Cannot upload: missing board or library context.",
 		"mediaNotImage": "Please choose an image file.",
 		"mediaUntitled": "Image",
 		"mediaUploadFailed": "Upload failed. Check your connection and try again.",

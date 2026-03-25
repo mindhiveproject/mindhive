@@ -138,7 +138,7 @@ export default function Grid({
       const component = updatedComponents.find(
         (comp) => comp.id === componentId,
       );
-      console.log({ component });
+      // console.log({ component });
       if (component) {
         await updateComponent({
           variables: {

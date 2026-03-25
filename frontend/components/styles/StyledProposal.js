@@ -792,7 +792,7 @@ export const StyledProposal = styled.div`
     overflow: visible;
     background: #ffffff;
     // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    // border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
   }
   .templateBannerHeader {
     display: flex;
@@ -836,6 +836,7 @@ export const StyledProposal = styled.div`
     cursor: pointer;
     flex-shrink: 0;
     color: #171717;
+    border: 1px solid #E6E6E6;
     &:hover {
       background: #FDF2D0;
     }
