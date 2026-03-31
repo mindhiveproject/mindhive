@@ -230,11 +230,27 @@
 		"collapsePanel": "Collapse panel",
 		"componentEditor": {
 			"close": "Close",
+			"componentName": "Component Name",
 			"delete": "Delete",
+			"deleteConfirm": "Are you sure you want to delete this component?",
 			"editComponent": "Edit Component",
 			"editParagraph": "Edit Paragraph",
+			"editTitle": "Edit component title",
 			"save": "Save",
 			"saveFigureToMedia": "Save figure to media library",
+			"typeLabel": {
+				"barGraph": "Bar Graph",
+				"code": "Code",
+				"component": "Component",
+				"graph": "Graph",
+				"histogram": "Histogram",
+				"hypVis": "Hypothesis Visualizer",
+				"paragraph": "Paragraph",
+				"scatterPlot": "Scatter Plot",
+				"statTest": "Statistical Test",
+				"summary": "Summary",
+				"table": "Table"
+			},
 			"unsupportedType": "Unsupported component type: {{type}}",
 			"untitled": "Untitled"
 		},

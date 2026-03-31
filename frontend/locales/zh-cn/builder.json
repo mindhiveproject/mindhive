@@ -230,11 +230,27 @@
 		"collapsePanel": "折叠面板",
 		"componentEditor": {
 			"close": "关闭",
+			"componentName": "",
 			"delete": "删除",
+			"deleteConfirm": "您确定要删除此组件吗？",
 			"editComponent": "编辑组件",
 			"editParagraph": "编辑段落",
+			"editTitle": "",
 			"save": "节省",
 			"saveFigureToMedia": "将图片保存到媒体库",
+			"typeLabel": {
+				"barGraph": "条形图",
+				"code": "代码",
+				"component": "成分",
+				"graph": "图形",
+				"histogram": "直方图",
+				"hypVis": "假设可视化工具",
+				"paragraph": "段落",
+				"scatterPlot": "散点图",
+				"statTest": "统计检验",
+				"summary": "概括",
+				"table": "桌子"
+			},
 			"unsupportedType": "不支持的组件类型： {{type}}",
 			"untitled": "无标题"
 		},

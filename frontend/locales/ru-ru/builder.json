@@ -230,11 +230,27 @@
 		"collapsePanel": "Свернуть панель",
 		"componentEditor": {
 			"close": "Закрывать",
+			"componentName": "",
 			"delete": "Удалить",
+			"deleteConfirm": "Вы уверены, что хотите удалить этот компонент?",
 			"editComponent": "Редактировать компонент",
 			"editParagraph": "Редактировать абзац",
+			"editTitle": "",
 			"save": "Сохранять",
 			"saveFigureToMedia": "Сохранить изображение в медиатеку",
+			"typeLabel": {
+				"barGraph": "Гистограмма",
+				"code": "Код",
+				"component": "Компонент",
+				"graph": "График",
+				"histogram": "Гистограмма",
+				"hypVis": "Визуализатор гипотез",
+				"paragraph": "Абзац",
+				"scatterPlot": "Диаграмма рассеяния",
+				"statTest": "Статистический тест",
+				"summary": "Краткое содержание",
+				"table": "Стол"
+			},
 			"unsupportedType": "Неподдерживаемый тип компонента: {{type}}",
 			"untitled": "Без названия"
 		},

@@ -230,11 +230,27 @@
 		"collapsePanel": "Panel colapsado",
 		"componentEditor": {
 			"close": "Cerca",
+			"componentName": "",
 			"delete": "BORRAR",
+			"deleteConfirm": "¿Está seguro de que desea eliminar este componente?",
 			"editComponent": "Editar componente",
 			"editParagraph": "Editar párrafo",
+			"editTitle": "",
 			"save": "Ahorrar",
 			"saveFigureToMedia": "Guardar la figura en la biblioteca multimedia.",
+			"typeLabel": {
+				"barGraph": "Gráfico de barras",
+				"code": "Código",
+				"component": "Componente",
+				"graph": "Gráfico",
+				"histogram": "Histograma",
+				"hypVis": "Visualizador de hipótesis",
+				"paragraph": "Párrafo",
+				"scatterPlot": "Diagrama de dispersión",
+				"statTest": "Prueba estadística",
+				"summary": "Resumen",
+				"table": "Mesa"
+			},
 			"unsupportedType": "Tipo de componente no compatible: {{type}}",
 			"untitled": "Intitulado"
 		},

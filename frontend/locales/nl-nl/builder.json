@@ -230,11 +230,27 @@
 		"collapsePanel": "Inklappaneel",
 		"componentEditor": {
 			"close": "Dichtbij",
+			"componentName": "",
 			"delete": "Verwijderen",
+			"deleteConfirm": "Weet je zeker dat je dit onderdeel wilt verwijderen?",
 			"editComponent": "Component bewerken",
 			"editParagraph": "Alinea bewerken",
+			"editTitle": "",
 			"save": "Redden",
 			"saveFigureToMedia": "Afbeelding opslaan in de mediabibliotheek",
+			"typeLabel": {
+				"barGraph": "Staafdiagram",
+				"code": "Code",
+				"component": "Onderdeel",
+				"graph": "Grafiek",
+				"histogram": "Histogram",
+				"hypVis": "Hypothese-visualisator",
+				"paragraph": "Alinea",
+				"scatterPlot": "Spreidingsdiagram",
+				"statTest": "Statistische toets",
+				"summary": "Samenvatting",
+				"table": "Tafel"
+			},
 			"unsupportedType": "Niet-ondersteund componenttype: {{type}}",
 			"untitled": "Zonder titel"
 		},

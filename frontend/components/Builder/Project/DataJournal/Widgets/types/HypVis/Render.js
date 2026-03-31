@@ -219,9 +219,9 @@ json.dumps(to_native(result))
         textAlign: "center",
       }}
     >
-      <h3 style={{ marginBottom: "1.25rem", color: "#2d3748" }}>
+      {/* <h3 style={{ marginBottom: "1.25rem", color: "#2d3748" }}>
         {result.title}
-      </h3>
+      </h3> */}
       <div dangerouslySetInnerHTML={{ __html: result.fig_html }} />
     </div>
   );

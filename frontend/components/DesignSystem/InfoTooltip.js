@@ -29,6 +29,20 @@ const defaultTooltipStyle = {
 };
 
 const POSITION_STYLES = {
+  left: {
+    top: 0,
+    right: "100%",
+    marginRight: "8px",
+    transformHidden: "translateY(-5px)",
+    transformVisible: "translateY(0)",
+  },
+  right: {
+    top: 0,
+    left: "100%",
+    marginLeft: "8px",
+    transformHidden: "translateY(-5px)",
+    transformVisible: "translateY(0)",
+  },
   bottomLeft: {
     top: "100%",
     left: 0,

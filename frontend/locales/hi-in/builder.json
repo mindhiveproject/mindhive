@@ -230,11 +230,27 @@
 		"collapsePanel": "पैनल को बंद करें",
 		"componentEditor": {
 			"close": "बंद करना",
+			"componentName": "",
 			"delete": "मिटाना",
+			"deleteConfirm": "क्या आप वाकई इस कंपोनेंट को डिलीट करना चाहते हैं?",
 			"editComponent": "घटक संपादित करें",
 			"editParagraph": "पैराग्राफ संपादित करें",
+			"editTitle": "",
 			"save": "बचाना",
 			"saveFigureToMedia": "चित्र को मीडिया लाइब्रेरी में सहेजें",
+			"typeLabel": {
+				"barGraph": "दंड आरेख",
+				"code": "कोड",
+				"component": "अवयव",
+				"graph": "ग्राफ़",
+				"histogram": "हिस्टोग्राम",
+				"hypVis": "परिकल्पना दृश्यक",
+				"paragraph": "अनुच्छेद",
+				"scatterPlot": "स्कैटर प्लॉट",
+				"statTest": "सांख्यिकीय परीक्षण",
+				"summary": "सारांश",
+				"table": "मेज़"
+			},
 			"unsupportedType": "असमर्थित घटक प्रकार: {{type}}",
 			"untitled": "शीर्षकहीन"
 		},
