@@ -1,12 +1,12 @@
 // components/DataJournal/Widgets/types/Graph/Graph.js
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import Render from "./Render";
 import { useDataJournal } from "../../../Context/DataJournalContext"; // Adjust path
 
 const defaultCode = ``;
 
-export default function Graph({ content, sectionId }) {
+export default function Graph({ content, sectionId, onFigureReadyChange }) {
   const { pyodide, data } = useDataJournal();
 
   const [isRunning, setIsRunning] = useState(false);
@@ -24,6 +24,12 @@ export default function Graph({ content, sectionId }) {
     setIsRunning(false);
   }, []); // Empty deps: stable unless you need to capture something
 
+  useEffect(() => {
+    if (!code || !pyodide) {
+      onFigureReadyChange?.(false);
+    }
+  }, [code, pyodide, onFigureReadyChange]);
+
   if (code && pyodide) {
     return (
       <div className="graphContainer">
@@ -33,10 +39,10 @@ export default function Graph({ content, sectionId }) {
           pyodide={pyodide}
           sectionId={sectionId}
           content={content}
+          onFigureReadyChange={onFigureReadyChange}
         />
       </div>
     );
-  } else {
-    return <div>Loading graph...</div>; // Fallback if no code or pyodide
   }
+  return <div>Loading graph...</div>; // Fallback if no code or pyodide
 }

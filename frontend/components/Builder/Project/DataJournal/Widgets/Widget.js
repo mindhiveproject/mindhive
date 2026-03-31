@@ -10,6 +10,7 @@ import StatisticalTest from "./types/StatisticalTests/StatisticalTest";
 import Statistics from "./types/Statistics/Statistics";
 import Code from "./types/Code/Code";
 import HypVis from "./types/HypVis/HypVis";
+import { useDataJournal } from "../Context/DataJournalContext";
 
 // Styled container for the widget
 const WidgetContainer = styled.div`
@@ -40,6 +41,7 @@ function Widget({
   onChange,
   // handleRemoveComponent, // Uncomment if needed
 }) {
+  const { setComponentFigureReady, clearComponentFigureReady } = useDataJournal();
   const gestureRef = useRef({
     isPointerDown: false,
     isDrag: false,
@@ -107,6 +109,18 @@ function Widget({
     };
   }, []);
 
+  useEffect(() => {
+    if (type !== "GRAPH" && type !== "HYPVIS") return undefined;
+    return () => clearComponentFigureReady(id);
+  }, [type, id, clearComponentFigureReady]);
+
+  const handleFigureReadyChange = useCallback(
+    (isReady) => {
+      setComponentFigureReady(id, isReady);
+    },
+    [id, setComponentFigureReady],
+  );
+
   // Render content based on component type
   // Note: pyodide, data, variables, settings are accessed via context in child components (Table, Graph)
   const renderContent = () => {
@@ -119,7 +133,13 @@ function Widget({
         return <Table />;
       // for visualization of graphs
       case "GRAPH":
-        return <Graph content={content} sectionId={id} />;
+        return (
+          <Graph
+            content={content}
+            sectionId={id}
+            onFigureReadyChange={handleFigureReadyChange}
+          />
+        );
       // for statistical tests
       case "STATTEST":
         return <StatisticalTest content={content} sectionId={id} />;
@@ -131,7 +151,13 @@ function Widget({
         return <Code content={content} sectionId={id} />;
       // for hypothesis visualizer
       case "HYPVIS":
-        return <HypVis content={content} sectionId={id} />;
+        return (
+          <HypVis
+            content={content}
+            sectionId={id}
+            onFigureReadyChange={handleFigureReadyChange}
+          />
+        );
       default:
         return <div>Unsupported component type: {type}</div>;
     }

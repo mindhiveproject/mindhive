@@ -300,7 +300,7 @@ export const StyledRightPanel = styled.div`
   width: 100%;
   min-width: 0;
   min-height: 0;
-  padding: 16px;
+  padding: 0px 16px 16px 4px;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
@@ -313,7 +313,7 @@ export const StyledRightPanel = styled.div`
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 12px;
     min-width: 0;
     h2 {
@@ -378,10 +378,11 @@ export const StyledRightPanel = styled.div`
 
   .editor-header {
     display: grid;
-    grid-template-columns: auto 1fr;
-    grid-gap: 20px;
+    grid-template-columns: auto 1fr auto;
+    grid-gap: 8px;
     align-items: center;
-    .editor-component-name-input  {
+    .editor-component-name-input {
+
       input {
         font-family: Lato;
         border: 1px solid #cccccc;
@@ -390,22 +391,31 @@ export const StyledRightPanel = styled.div`
         padding: 12px;
         &:focus {
           outline: 0;
-          border-color: ${(props) => props.theme.red};
+          border-color: #69BBC4;
         }
       }
     }
     .editor-component-name {
-      display: grid;
+      display: flex;
+      flex-direction: row;
       grid-template-columns: auto 1fr;
-      grid-gap: 10px;
+      justify-content: space-between;
       align-items: center;
       border: 1px solid #d3e0e3;
-      padding-top: 2px;
-      padding-right: 8px;
-      padding-bottom: 2px;
-      padding-left: 16px;
+      padding: 2px 8px 2px 16px;
       border-radius: 8px;
       background: white;
+      cursor: pointer;
+      .editor-component-title {
+        min-width: 0;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        white-space: normal;
+        word-break: break-word;
+      }
     }
     .button {
       cursor: pointer;
@@ -422,10 +432,17 @@ export const StyledComponentPanel = styled.div`
   padding: 16px;
   overflow-y: auto;
   height: 100%;
-  // margin: 10px;
+  margin: 0px 8px 0px 0px;
   box-shadow: 0px 2px 4px 0px #00000012;
   border-radius: 12px;
   border: 1px solid #e6e6e6;
+  .panelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-bottom: 5px;
+  }
   .title {
     font-family: Nunito;
     font-weight: 700;
@@ -434,7 +451,8 @@ export const StyledComponentPanel = styled.div`
     leading-trim: NONE;
     line-height: 24px;
     letter-spacing: 0px;
-    padding-bottom: 5px;
+    flex: 1;
+    min-width: 0;
   }
   .subtitle {
     font-family: Nunito;
@@ -449,27 +467,72 @@ export const StyledComponentPanel = styled.div`
   }
   .cards {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 16px;
-    margin: 10px 0px 20px 0px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-gap: 10px;
+    margin: 8px 8px 20px 0px;
   }
   .card {
     cursor: pointer;
-    border: 1px solid
-      var(--State-Layers-On-Secondary-Container-Opacity-12, #4a44591f);
-    border-radius: 8px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    align-items: start;
     justify-items: center;
-    padding: 5px;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    padding: 8px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    background: #fff;
 
     font-family: Nunito;
     font-weight: 600;
-    font-style: SemiBold;
-    font-size: 12px;
-    leading-trim: NONE;
-    line-height: 16px;
+    font-size: 13px;
+    line-height: 18px;
     letter-spacing: 0px;
     text-align: center;
-    vertical-align: middle;
+
+    &:hover {
+      background: #F6F9F8;
+      border: 1px solid #A1A1A1;
+      box-shadow: 0px 1px 4px 0px #00000012;
+    }
+  }
+
+  .cardImage {
+    width: 72px;
+    height: 72px;
+    border-radius: 8px;
+    border: 1px solid #D3E0E3;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    background: #F6F9F8;
+    padding: 4px 8px 4px 8px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+  }
+
+  .cardContent {
+    min-width: 0;
+    display: grid;
+    gap: 0;
+    align-content: start;
+    justify-items: center;
+  }
+
+  .cardTitle {
+    font-family: Nunito;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 18px;
+    color: #111827;
+    max-width: 100%;
   }
 `;
 

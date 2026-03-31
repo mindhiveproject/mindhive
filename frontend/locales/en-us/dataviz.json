@@ -1,5 +1,45 @@
 {
 	"dataJournal": {
+		"components": {
+			"descriptions": {
+				"barChart": "Compare values across categories with grouped bars.",
+				"codeFromScratch": "Write custom code to build fully tailored analyses or visuals.",
+				"correlationalHypothesis": "Hypothesis about how two variables relate to each other.",
+				"experimentalHypothesis": "Plan controlled experimental designs and compare outcomes.",
+				"histogram": "Show the distribution of values in your dataset.",
+				"oneWayAnova": "Compare means across three or more groups in one test.",
+				"pearsonCorrelation": "Measure linear association strength between two continuous variables.",
+				"scatterPlot": "Visualize relationships between two continuous variables.",
+				"summary": "Generate key descriptive statistics for selected data (mean, median, mode, etc.).",
+				"table": "Insert a structured table to show your dataset values.",
+				"textBlock": "Add notes, interpretation, and context to your analysis.",
+				"tTest": "Compare means between two groups and test significance."
+			},
+			"items": {
+				"barChart": "Bar Chart",
+				"barGraph": "Bar Graph",
+				"codeFromScratch": "Code from scratch",
+				"correlationalHypothesis": "Correlational Hypothesis",
+				"experimentalHypothesis": "Experimental Hypothesis",
+				"histogram": "Histogram",
+				"media": "Media",
+				"oneWayAnova": "One Way Anova",
+				"pearsonCorrelation": "Pearson Correlation",
+				"scatterPlot": "Scatter Plot",
+				"summary": "Summary",
+				"table": "Table",
+				"textBlock": "Text Block",
+				"tTest": "T-Test"
+			},
+			"sections": {
+				"graphs": "Graphs & Visuals",
+				"hypothesisVisualizer": "Hypothesis Visualizer",
+				"statisticalTests": "Statistical Tests",
+				"studyAssets": "Study Assets"
+			},
+			"title": "Component Panel",
+			"closePanel": "Close component panel"
+		},
 		"topNav": {
 			"addComponent": "Add a Component",
 			"datasets": "Datasets",

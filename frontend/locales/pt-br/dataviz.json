@@ -1,8 +1,48 @@
 {
 	"dataJournal": {
+		"components": {
+			"descriptions": {
+				"barChart": "Compare os valores entre as categorias com barras agrupadas.",
+				"codeFromScratch": "Escreva código personalizado para criar análises ou visualizações totalmente adaptadas às suas necessidades.",
+				"correlationalHypothesis": "Investigar como as variáveis ​​se movem juntas sem intervenção.",
+				"experimentalHypothesis": "Planeje experimentos controlados do tipo A/B e compare os resultados.",
+				"histogram": "Mostre a distribuição dos valores entre os intervalos numéricos.",
+				"oneWayAnova": "Comparar as médias de três ou mais grupos em um único teste.",
+				"pearsonCorrelation": "Medir a força da associação linear entre duas variáveis.",
+				"scatterPlot": "Visualize as relações e os padrões entre duas variáveis.",
+				"summary": "Gere estatísticas descritivas importantes para os dados selecionados.",
+				"table": "Insira uma tabela estruturada para inspecionar e organizar os valores brutos.",
+				"textBlock": "Adicione notas, interpretações e contexto ao seu diário.",
+				"tTest": "Comparar as médias entre os dois grupos e testar a significância estatística."
+			},
+			"items": {
+				"barChart": "Gráfico de barras",
+				"barGraph": "Gráfico de barras",
+				"codeFromScratch": "Código criado do zero",
+				"correlationalHypothesis": "Hipótese Correlacional",
+				"experimentalHypothesis": "Hipótese Experimental",
+				"histogram": "Histograma",
+				"media": "Meios de comunicação",
+				"oneWayAnova": "Anova unidirecional",
+				"pearsonCorrelation": "Correlação de Pearson",
+				"scatterPlot": "Gráfico de dispersão",
+				"summary": "Resumo",
+				"table": "Mesa",
+				"textBlock": "Bloco de texto",
+				"tTest": "Teste t"
+			},
+			"sections": {
+				"graphs": "Gráficos e elementos visuais",
+				"hypothesisVisualizer": "Visualizador de Hipóteses",
+				"statisticalTests": "Testes Estatísticos",
+				"studyAssets": "Materiais de estudo"
+			},
+			"title": "Painel de componentes"
+		},
 		"topNav": {
 			"addComponent": "Adicionar um componente",
 			"datasets": "Conjuntos de dados",
+			"editJournalName": "Editar nome do diário",
 			"editWorkspaceName": "Editar nome do espaço de trabalho",
 			"journals": "Revistas",
 			"selectJournal": "Selecione um diário para começar..."

@@ -1,8 +1,48 @@
 {
 	"dataJournal": {
+		"components": {
+			"descriptions": {
+				"barChart": "Vergelijk waarden tussen categorieën met behulp van gegroepeerde balken.",
+				"codeFromScratch": "Schrijf aangepaste code om volledig op maat gemaakte analyses of visualisaties te creëren.",
+				"correlationalHypothesis": "Onderzoek hoe variabelen zich gezamenlijk ontwikkelen zonder ingrijpen.",
+				"experimentalHypothesis": "Plan gecontroleerde A/B-experimenten en vergelijk de resultaten.",
+				"histogram": "Toon de verdeling van de waarden over de numerieke categorieën.",
+				"oneWayAnova": "Vergelijk gemiddelden van drie of meer groepen in één test.",
+				"pearsonCorrelation": "Meet de sterkte van de lineaire samenhang tussen twee variabelen.",
+				"scatterPlot": "Visualiseer de relaties en patronen tussen twee variabelen.",
+				"summary": "Genereer belangrijke beschrijvende statistieken voor geselecteerde gegevens.",
+				"table": "Voeg een gestructureerde tabel in om de ruwe waarden te inspecteren en te ordenen.",
+				"textBlock": "Voeg notities, interpretaties en context toe aan je dagboek.",
+				"tTest": "Vergelijk de gemiddelden van twee groepen en toets de significantie."
+			},
+			"items": {
+				"barChart": "Staafdiagram",
+				"barGraph": "Staafdiagram",
+				"codeFromScratch": "Codeer helemaal vanaf nul.",
+				"correlationalHypothesis": "Correlatiehypothese",
+				"experimentalHypothesis": "Experimentele hypothese",
+				"histogram": "Histogram",
+				"media": "Media",
+				"oneWayAnova": "Eénrichtings-Anova",
+				"pearsonCorrelation": "Pearson-correlatie",
+				"scatterPlot": "Spreidingsdiagram",
+				"summary": "Samenvatting",
+				"table": "Tafel",
+				"textBlock": "Tekstblok",
+				"tTest": "T-toets"
+			},
+			"sections": {
+				"graphs": "Grafieken en visualisaties",
+				"hypothesisVisualizer": "Hypothese-visualisator",
+				"statisticalTests": "Statistische toetsen",
+				"studyAssets": "Studiemiddelen"
+			},
+			"title": "Componentenpaneel"
+		},
 		"topNav": {
 			"addComponent": "Een component toevoegen",
 			"datasets": "Gegevenssets",
+			"editJournalName": "Bewerk de naam van het tijdschrift",
 			"editWorkspaceName": "Werkruimtenaam bewerken",
 			"journals": "Tijdschriften",
 			"selectJournal": "Kies een tijdschrift om mee te beginnen..."

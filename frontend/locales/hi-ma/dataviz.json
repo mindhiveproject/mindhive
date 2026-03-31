@@ -1,8 +1,48 @@
 {
 	"dataJournal": {
+		"components": {
+			"descriptions": {
+				"barChart": "",
+				"codeFromScratch": "",
+				"correlationalHypothesis": "",
+				"experimentalHypothesis": "",
+				"histogram": "",
+				"oneWayAnova": "",
+				"pearsonCorrelation": "",
+				"scatterPlot": "",
+				"summary": "",
+				"table": "",
+				"textBlock": "",
+				"tTest": ""
+			},
+			"items": {
+				"barChart": "",
+				"barGraph": "",
+				"codeFromScratch": "",
+				"correlationalHypothesis": "",
+				"experimentalHypothesis": "",
+				"histogram": "",
+				"media": "",
+				"oneWayAnova": "",
+				"pearsonCorrelation": "",
+				"scatterPlot": "",
+				"summary": "",
+				"table": "",
+				"textBlock": "",
+				"tTest": ""
+			},
+			"sections": {
+				"graphs": "",
+				"hypothesisVisualizer": "",
+				"statisticalTests": "",
+				"studyAssets": ""
+			},
+			"title": ""
+		},
 		"topNav": {
 			"addComponent": "",
 			"datasets": "",
+			"editJournalName": "",
 			"editWorkspaceName": "",
 			"journals": "",
 			"selectJournal": ""
