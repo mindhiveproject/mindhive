@@ -668,6 +668,9 @@
 	"resource": {
 		"action": "Action",
 		"actions": "Actions",
+		"addResources": "Add resources to class",
+		"addResourcesDescription": "Select resources below to link them to this class. Linked resources can be published to students.",
+		"addResourcesTitle": "Add your resources to this class",
 		"bulkActions": "Bulk actions",
 		"bulkActionsModal": {
 			"applying": "Applying…",
@@ -682,9 +685,6 @@
 			"title": "Bulk actions",
 			"unpublishAll": "Unpublish all selected"
 		},
-		"addResources": "Add resources to class",
-		"addResourcesDescription": "Select resources below to link them to this class. Linked resources can be published to students.",
-		"addResourcesTitle": "Add your resources to this class",
 		"cancel": "Cancel",
 		"changeLinkToCard": "Change card",
 		"classNetwork": "Class network",
@@ -728,12 +728,12 @@
 		"owner": "Owner",
 		"preview": "Preview",
 		"projectCard": "Project card",
-		"publishUnpublish": "Publish/Unpublish",
 		"public": "Public",
 		"publicResourcesDescription": "Link public resources shared by the community to this class.",
 		"publicResourcesTitle": "Add a public resource",
 		"published": "Published",
 		"publishToStudents": "Publish to students",
+		"publishUnpublish": "Publish/Unpublish",
 		"removeCardColumnFilter": "Remove card/column filter",
 		"revokeConfirm": "Are you sure you want to unpublish? Students will no longer see this resource.",
 		"saveChanges": "Save changes",

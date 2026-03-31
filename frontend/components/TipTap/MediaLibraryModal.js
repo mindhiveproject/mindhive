@@ -353,14 +353,6 @@ const FOOTER_STYLE = {
   flexShrink: 0,
 };
 
-const HELP_TEXT_STYLE = {
-  margin: "0 0 16px",
-  fontSize: 14,
-  lineHeight: "20px",
-  fontWeight: 400,
-  // color: "var(--MH-Theme-Primary-Dark, #336F8A)",
-};
-
 const LABEL_STYLE = {
   display: "block",
   fontSize: 14,
@@ -894,8 +886,6 @@ export default function MediaLibraryModal({
         </header>
 
         <div style={BODY_STYLE}>
-          <p style={HELP_TEXT_STYLE}>{helpText}</p>
-
           <input
             ref={fileInputRef}
             type="file"
