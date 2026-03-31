@@ -337,7 +337,10 @@ const TITLE_STYLE = {
 
 const BODY_STYLE = {
   padding: "16px 20px",
-  overflow: "hidden",
+  overflowX: "hidden",
+  overflowY: "auto",
+  overscrollBehavior: "contain",
+  WebkitOverflowScrolling: "touch",
   flex: 1,
   minHeight: 0,
   display: "flex",
@@ -465,8 +468,10 @@ export default function MediaLibraryModal({
   const { t } = useTranslation("builder");
   const fileInputRef = useRef(null);
   const [uploadError, setUploadError] = useState(null);
-  const [uploading, setUploading] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  /** New image chosen locally; persisted only after Save. */
+  const [pendingUploadFile, setPendingUploadFile] = useState(null);
+  const [pendingPreviewUrl, setPendingPreviewUrl] = useState(null);
   const [editFileName, setEditFileName] = useState("");
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -519,6 +524,11 @@ export default function MediaLibraryModal({
   );
 
   const startEdit = useCallback((img) => {
+    setPendingPreviewUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setPendingUploadFile(null);
     setEditingId(img.id);
     setEditFileName(img.fileName || "");
     setEditTitle(img.title || "");
@@ -527,6 +537,11 @@ export default function MediaLibraryModal({
   }, []);
 
   const cancelEdit = useCallback(() => {
+    setPendingPreviewUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setPendingUploadFile(null);
     setEditingId(null);
     setEditMetaError(null);
   }, []);
@@ -581,7 +596,6 @@ export default function MediaLibraryModal({
   );
 
   const saveEdit = useCallback(async () => {
-    if (!editingId) return;
     const fn = editFileName.trim();
     const tt = editTitle.trim();
     const desc = editDescription.trim();
@@ -595,8 +609,61 @@ export default function MediaLibraryModal({
       );
       return;
     }
+    if (!pendingUploadFile && !editingId) return;
+
     setEditMetaError(null);
     setSavingMeta(true);
+
+    if (pendingUploadFile) {
+      try {
+        const createPayload = buildMediaAssetCreateData({
+          scopeId: mediaScopeId,
+          fileName: fn,
+          title: tt,
+          mediaLibrarySource,
+          mediaDisplayedInProposalCardId,
+          usedInVizSectionIds,
+        });
+        createPayload.description = desc || null;
+        createPayload.image = { upload: pendingUploadFile };
+        const { data: createData } = await createMediaAsset({
+          variables: { data: createPayload },
+        });
+        const created = createData?.createMediaAsset;
+        const createdUrl = resolveMediaAssetUrl(created);
+        if (created?.id && createdUrl) {
+          onInsertMedia?.({ id: created.id, url: createdUrl });
+          setPendingPreviewUrl((prev) => {
+            if (prev) URL.revokeObjectURL(prev);
+            return null;
+          });
+          setPendingUploadFile(null);
+          setEditingId(null);
+          setEditFileName("");
+          setEditTitle("");
+          setEditDescription("");
+        } else {
+          window.alert(
+            t(
+              "tiptap.mediaUploadFailed",
+              "Upload failed. Check your connection and try again.",
+            ),
+          );
+        }
+      } catch (err) {
+        console.error(err);
+        window.alert(
+          t(
+            "tiptap.mediaUploadFailed",
+            "Upload failed. Check your connection and try again.",
+          ),
+        );
+      } finally {
+        setSavingMeta(false);
+      }
+      return;
+    }
+
     try {
       await updateMediaAsset({
         variables: {
@@ -620,7 +687,21 @@ export default function MediaLibraryModal({
     } finally {
       setSavingMeta(false);
     }
-  }, [editingId, editFileName, editTitle, editDescription, updateMediaAsset, t]);
+  }, [
+    pendingUploadFile,
+    editingId,
+    editFileName,
+    editTitle,
+    editDescription,
+    createMediaAsset,
+    mediaScopeId,
+    mediaLibrarySource,
+    mediaDisplayedInProposalCardId,
+    usedInVizSectionIds,
+    updateMediaAsset,
+    onInsertMedia,
+    t,
+  ]);
 
   useEffect(() => {
     if (!open) {
@@ -630,6 +711,11 @@ export default function MediaLibraryModal({
       setEditDescription("");
       setEditMetaError(null);
       setUploadError(null);
+      setPendingPreviewUrl((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return null;
+      });
+      setPendingUploadFile(null);
     }
   }, [open]);
 
@@ -642,8 +728,17 @@ export default function MediaLibraryModal({
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
+  useEffect(() => {
+    if (!open || typeof document === "undefined") return undefined;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open]);
+
   const uploadImageFile = useCallback(
-    async (file) => {
+    (file) => {
       if (!file || !myProfileId) return;
       if (!mediaScopeId && !mediaCreateHasOwnerFromSource(mediaLibrarySource)) {
         setUploadError(
@@ -661,67 +756,19 @@ export default function MediaLibraryModal({
         return;
       }
       setUploadError(null);
-      setUploading(true);
       const baseName = file.name.replace(/\.[^.]+$/, "") || "";
-      try {
-        const createPayload = buildMediaAssetCreateData({
-          scopeId: mediaScopeId,
-          fileName: baseName,
-          mediaLibrarySource,
-          mediaDisplayedInProposalCardId,
-          usedInVizSectionIds,
-        });
-        createPayload.image = { upload: file };
-        const { data: createData } = await createMediaAsset({
-          variables: { data: createPayload },
-        });
-        const created = createData?.createMediaAsset;
-        const createdUrl = resolveMediaAssetUrl(created);
-        if (created?.id && createdUrl) {
-          const initialTitle =
-            (created.title && String(created.title).trim()) || baseName || "";
-          onInsertMedia?.({ id: created.id, url: createdUrl });
-          startEdit({
-            id: created.id,
-            image: created.image || null,
-            url: created.url || "",
-            fileName: created.fileName || baseName,
-            title: initialTitle,
-            description: "",
-            author: myProfileId ? { id: myProfileId } : null,
-            favoriteBy: [],
-          });
-        } else {
-          setUploadError(
-            t(
-              "tiptap.mediaUploadFailed",
-              "Upload failed. Check your connection and try again.",
-            ),
-          );
-        }
-      } catch (err) {
-        console.error(err);
-        setUploadError(
-          t(
-            "tiptap.mediaUploadFailed",
-            "Upload failed. Check your connection and try again.",
-          ),
-        );
-      } finally {
-        setUploading(false);
-      }
+      setPendingPreviewUrl((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return URL.createObjectURL(file);
+      });
+      setPendingUploadFile(file);
+      setEditingId(null);
+      setEditFileName(baseName);
+      setEditTitle(baseName || "");
+      setEditDescription("");
+      setEditMetaError(null);
     },
-    [
-      createMediaAsset,
-      mediaScopeId,
-      mediaLibrarySource,
-      mediaDisplayedInProposalCardId,
-      usedInVizSectionIds,
-      myProfileId,
-      onInsertMedia,
-      startEdit,
-      t,
-    ],
+    [myProfileId, mediaScopeId, mediaLibrarySource, t],
   );
 
   const uploadImageFileRef = useRef(uploadImageFile);
@@ -896,14 +943,12 @@ export default function MediaLibraryModal({
           <Button
             type="button"
             variant="filled"
-            disabled={uploading || !canCreateUpload}
+            disabled={!canCreateUpload || savingMeta}
             onClick={() => fileInputRef.current?.click()}
             style={{ marginBottom: 16, alignSelf: "flex-start" }}
             // leadingIcon={<img src="/assets/icons/upload.svg" alt="Upload" />}
           >
-            {uploading
-              ? t("tiptap.mediaUploading", "Uploading…")
-              : t("tiptap.mediaUploadNew", "Upload new image")}
+            {t("tiptap.mediaUploadNew", "Upload new image")}
           </Button>
 
           {uploadError && <div style={ERROR_BOX_STYLE}>{uploadError}</div>}
@@ -918,11 +963,26 @@ export default function MediaLibraryModal({
             </div>
           )}
 
-          {editingId && (
+          {(editingId || pendingUploadFile) && (
             <div style={EDIT_PANEL_STYLE}>
               <div style={EDIT_TITLE_STYLE}>
                 {t("tiptap.mediaEditMeta", "Edit details")}
               </div>
+              {pendingPreviewUrl && pendingUploadFile && (
+                <div style={{ marginBottom: 14 }}>
+                  <img
+                    src={pendingPreviewUrl}
+                    alt=""
+                    style={{
+                      maxWidth: "100%",
+                      maxHeight: 200,
+                      objectFit: "contain",
+                      borderRadius: 8,
+                      display: "block",
+                    }}
+                  />
+                </div>
+              )}
               {editMetaError && (
                 <div style={{ ...ERROR_BOX_STYLE, marginBottom: 14 }}>
                   {editMetaError}
