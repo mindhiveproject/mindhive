@@ -3,6 +3,7 @@
 		"topNav": {
 			"addComponent": "إضافة مكون",
 			"datasets": "مجموعات البيانات",
+			"editJournalName": "تعديل اسم المجلة",
 			"editWorkspaceName": "تعديل اسم مساحة العمل",
 			"journals": "المجلات",
 			"selectJournal": "اختر دفتر يوميات للبدء ..."

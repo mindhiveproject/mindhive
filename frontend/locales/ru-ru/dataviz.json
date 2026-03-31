@@ -3,6 +3,7 @@
 		"topNav": {
 			"addComponent": "Добавить компонент",
 			"datasets": "Наборы данных",
+			"editJournalName": "Изменить название журнала",
 			"editWorkspaceName": "Изменить название рабочей области",
 			"journals": "Журналы",
 			"selectJournal": "Выберите журнал, чтобы начать..."

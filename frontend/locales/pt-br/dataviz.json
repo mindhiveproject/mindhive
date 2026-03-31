@@ -3,6 +3,7 @@
 		"topNav": {
 			"addComponent": "Adicionar um componente",
 			"datasets": "Conjuntos de dados",
+			"editJournalName": "Editar nome do diário",
 			"editWorkspaceName": "Editar nome do espaço de trabalho",
 			"journals": "Revistas",
 			"selectJournal": "Selecione um diário para começar..."

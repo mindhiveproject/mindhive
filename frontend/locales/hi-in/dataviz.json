@@ -3,6 +3,7 @@
 		"topNav": {
 			"addComponent": "एक घटक जोड़ें",
 			"datasets": "डेटासेट",
+			"editJournalName": "जर्नल का नाम संपादित करें",
 			"editWorkspaceName": "वर्कस्पेस का नाम संपादित करें",
 			"journals": "पत्रिकाओं",
 			"selectJournal": "शुरू करने के लिए एक जर्नल चुनें..."

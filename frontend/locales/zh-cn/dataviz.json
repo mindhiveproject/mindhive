@@ -3,6 +3,7 @@
 		"topNav": {
 			"addComponent": "添加组件",
 			"datasets": "数据集",
+			"editJournalName": "编辑期刊名称",
 			"editWorkspaceName": "编辑工作区名称",
 			"journals": "期刊",
 			"selectJournal": "选择期刊开始阅读……"

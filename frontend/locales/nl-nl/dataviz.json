@@ -3,6 +3,7 @@
 		"topNav": {
 			"addComponent": "Een component toevoegen",
 			"datasets": "Gegevenssets",
+			"editJournalName": "Bewerk de naam van het tijdschrift",
 			"editWorkspaceName": "Werkruimtenaam bewerken",
 			"journals": "Tijdschriften",
 			"selectJournal": "Kies een tijdschrift om mee te beginnen..."
