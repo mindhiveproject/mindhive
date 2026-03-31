@@ -1,5 +1,5 @@
 // components/DataJournal/Context/DataJournalContext.js
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
 
 import { UPDATE_WORKSPACE } from "../../../../Mutations/DataWorkspace";
@@ -46,6 +46,8 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
   const [user, setUser] = useState(initialProps.user || null);
   const [projectId, setProjectId] = useState(initialProps.projectId || null);
   const [studyId, setStudyId] = useState(initialProps.studyId || null);
+  const [figureReadinessByComponentId, setFigureReadinessByComponentId] =
+    useState({});
 
   // Apollo mutation for updating workspace on server
   const [updateWorkspaceOnServer] = useMutation(UPDATE_WORKSPACE, {
@@ -70,6 +72,35 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
       });
     }
   };
+
+  const setComponentFigureReady = useCallback((componentId, isReady) => {
+    if (typeof componentId !== "string" || !componentId.trim()) return;
+    const safeComponentId = componentId.trim();
+    const nextValue = Boolean(isReady);
+    setFigureReadinessByComponentId((prev) => {
+      if (prev[safeComponentId] === nextValue) return prev;
+      return { ...prev, [safeComponentId]: nextValue };
+    });
+  }, []);
+
+  const clearComponentFigureReady = useCallback((componentId) => {
+    if (typeof componentId !== "string" || !componentId.trim()) return;
+    const safeComponentId = componentId.trim();
+    setFigureReadinessByComponentId((prev) => {
+      if (!(safeComponentId in prev)) return prev;
+      const next = { ...prev };
+      delete next[safeComponentId];
+      return next;
+    });
+  }, []);
+
+  const resetFigureReadiness = useCallback(() => {
+    setFigureReadinessByComponentId({});
+  }, []);
+
+  useEffect(() => {
+    resetFigureReadiness();
+  }, [workspace?.id, resetFigureReadiness]);
 
   // Provide value to children
   const value = {
@@ -99,6 +130,10 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     user,
     projectId,
     studyId,
+    figureReadinessByComponentId,
+    setComponentFigureReady,
+    clearComponentFigureReady,
+    resetFigureReadiness,
   };
 
   return (

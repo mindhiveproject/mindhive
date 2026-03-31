@@ -11,6 +11,7 @@ export default function EditorHeader({
   onDelete,
   activeComponent,
   showSaveFigureToMedia = false,
+  disableSaveFigureToMedia = false,
   onSaveFigureToMedia,
 }) {
   const { t } = useTranslation("builder");
@@ -81,7 +82,11 @@ export default function EditorHeader({
         </div> */}
         <div className="actions">
           {showSaveFigureToMedia ? (
-            <Button variant="outline" onClick={onSaveFigureToMedia}>
+            <Button
+              variant="outline"
+              onClick={onSaveFigureToMedia}
+              disabled={disableSaveFigureToMedia}
+            >
               {t(
                 "dataJournal.componentEditor.saveFigureToMedia",
                 "Save figure to media library",

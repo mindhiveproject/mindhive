@@ -1,5 +1,5 @@
 // components/DataJournal/Editors/ComponentEditor.js
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useDataJournal } from "../Context/DataJournalContext";
 
@@ -39,12 +39,16 @@ export default function ComponentEditor({
   onDelete,
 }) {
   const { t } = useTranslation("builder");
-  const { activeComponent, setActiveComponent, pyodide, projectId } =
-    useDataJournal();
+  const {
+    activeComponent,
+    setActiveComponent,
+    pyodide,
+    projectId,
+    figureReadinessByComponentId,
+  } = useDataJournal();
 
   const [saveFigureModalOpen, setSaveFigureModalOpen] = useState(false);
   const [saveFigurePrefillFile, setSaveFigurePrefillFile] = useState(null);
-
   useEffect(() => {
     setSaveFigureModalOpen(false);
     setSaveFigurePrefillFile(null);
@@ -136,6 +140,12 @@ export default function ComponentEditor({
 
   const showSaveFigureButton = type === "HYPVIS" || type === "GRAPH";
   const showSaveFigureModal = type === "HYPVIS" || type === "GRAPH";
+  const canSaveFigureToMedia = useMemo(() => {
+    if (!showSaveFigureButton) return false;
+    const componentId = typeof id === "string" ? id.trim() : "";
+    if (!componentId) return false;
+    return figureReadinessByComponentId?.[componentId] === true;
+  }, [showSaveFigureButton, id, figureReadinessByComponentId]);
 
   // Render editor based on component type
   const renderEditor = () => {
@@ -225,6 +235,7 @@ export default function ComponentEditor({
         onDelete={onDelete}
         activeComponent={activeComponent}
         showSaveFigureToMedia={showSaveFigureButton}
+        disableSaveFigureToMedia={!canSaveFigureToMedia}
         onSaveFigureToMedia={handleSaveFigureToMedia}
       />
       {renderEditor()}

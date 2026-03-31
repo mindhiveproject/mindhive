@@ -2,10 +2,21 @@
 import { useEffect, useState } from "react";
 import { Message, Icon } from "semantic-ui-react";
 
-export default function Render({ code, pyodide, sectionId, content }) {
+export default function Render({
+  code,
+  pyodide,
+  sectionId,
+  content,
+  onFigureReadyChange,
+}) {
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+
+  const hasMeaningfulFigureHtml = (figHtml) => {
+    if (typeof figHtml !== "string" || !figHtml.trim()) return false;
+    return /data:image\/png;base64,[A-Za-z0-9+/=\s]+/.test(figHtml);
+  };
 
   const escapePy = (val) => {
     if (val == null || val === "") return "";
@@ -17,6 +28,7 @@ export default function Render({ code, pyodide, sectionId, content }) {
       if (!pyodide || !code?.trim() || !content?.selectors || !sectionId) {
         setResult(null);
         setIsRunning(false);
+        onFigureReadyChange?.(false);
         return;
       }
 
@@ -29,6 +41,7 @@ export default function Render({ code, pyodide, sectionId, content }) {
       if (!hasRequired) {
         setResult(null);
         setIsRunning(false);
+        onFigureReadyChange?.(false);
         return;
       }
 
@@ -65,6 +78,7 @@ dvDirectionality = "${escapePy(s.dvDirectionality || "more")}"
       setIsRunning(true);
       setError(null);
       setResult(null);
+      onFigureReadyChange?.(false);
 
       try {
         const funcName = `run_hypvis_${sectionId.replace(
@@ -115,19 +129,24 @@ json.dumps(to_native(result))
         if (typeof returned === "string" && returned.trim().startsWith("{")) {
           const parsed = JSON.parse(returned);
           setResult(parsed);
+          onFigureReadyChange?.(
+            Boolean(parsed?.success) && hasMeaningfulFigureHtml(parsed?.fig_html),
+          );
         } else {
           setError("Python did not return valid JSON string");
+          onFigureReadyChange?.(false);
         }
       } catch (err) {
         console.error(`[HypVis ${sectionId}] Execution failed:`, err);
         setError(`Python error: ${err.message || String(err)}`);
+        onFigureReadyChange?.(false);
       } finally {
         setIsRunning(false);
       }
     }
 
     executeHypVis();
-  }, [pyodide, code, content?.selectors, sectionId, content?.type]);
+  }, [pyodide, code, content?.selectors, sectionId, content?.type, onFigureReadyChange]);
 
   // ── Rendering ─────────────────────────────────────────────────────────────
   if (isRunning) {

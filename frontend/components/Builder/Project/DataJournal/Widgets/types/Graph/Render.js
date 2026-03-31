@@ -6,7 +6,13 @@ import JustOneSecondNotice from "../../../../../../DesignSystem/JustOneSecondNot
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
-export default function Render({ code, pyodide, sectionId, content }) {
+export default function Render({
+  code,
+  pyodide,
+  sectionId,
+  content,
+  onFigureReadyChange,
+}) {
   const [figJson, setFigJson] = useState(null);
   const [error, setError] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -16,10 +22,12 @@ export default function Render({ code, pyodide, sectionId, content }) {
       if (!pyodide || !code || !content?.selectors || !sectionId) {
         setFigJson(null);
         setIsRunning(false);
+        onFigureReadyChange?.(false);
         return;
       }
 
       setIsRunning(true);
+      onFigureReadyChange?.(false);
 
       const s = content.selectors;
       const type = content.type;
@@ -42,6 +50,7 @@ export default function Render({ code, pyodide, sectionId, content }) {
         if (!hasRequiredSelectors) {
           setFigJson(null);
           setIsRunning(false);
+          onFigureReadyChange?.(false);
           return;
         }
         variablesCode = `
@@ -74,6 +83,7 @@ trendline = ${s.trendLine ? "True" : "False"}
         if (!hasRequiredSelectors) {
           setFigJson(null);
           setIsRunning(false);
+          onFigureReadyChange?.(false);
           return;
         }
 
@@ -98,6 +108,7 @@ color = "${escaped(s.color || "pink")}"
         if (!hasRequiredSelectors) {
           setFigJson(null);
           setIsRunning(false);
+          onFigureReadyChange?.(false);
           return;
         }
 
@@ -119,6 +130,7 @@ bargap = ${Number(s.bargap ?? 0.1)}
       } else {
         setError(`Unsupported graph type: ${type}`);
         setIsRunning(false);
+        onFigureReadyChange?.(false);
         return;
       }
 
@@ -166,24 +178,30 @@ print("[DEBUG ${sectionId}] fig_json_output exists:", ${outputVar} is not None)
 
         const jsonStr = pyodide.globals.get(outputVar);
         if (jsonStr && typeof jsonStr === "string" && jsonStr.trim()) {
-          setFigJson(JSON.parse(jsonStr));
+          const parsed = JSON.parse(jsonStr);
+          const hasMeaningfulFigure =
+            Array.isArray(parsed?.data) && parsed.data.length > 0;
+          setFigJson(parsed);
           setError(null);
+          onFigureReadyChange?.(hasMeaningfulFigure);
         } else {
           console.warn(`No valid fig_json_output for ${sectionId}`);
           setFigJson(null);
           setError("Code ran but did not produce figure JSON");
+          onFigureReadyChange?.(false);
         }
       } catch (err) {
         console.error(`Graph render failed [${sectionId}]:`, err);
         setError(`Code error: ${err.message}`);
         setFigJson(null);
+        onFigureReadyChange?.(false);
       } finally {
         setIsRunning(false);
       }
     }
 
     renderGraph();
-  }, [pyodide, code, sectionId, content]);
+  }, [pyodide, code, sectionId, content, onFigureReadyChange]);
 
   return (
     <div
