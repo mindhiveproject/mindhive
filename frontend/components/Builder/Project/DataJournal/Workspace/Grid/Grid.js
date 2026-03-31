@@ -397,7 +397,10 @@ export default function Grid({
                 />
               )}
               {isAddComponentPanelOpen && (
-                <ComponentPanel handleAddComponent={handleAddComponent} />
+                <ComponentPanel
+                  handleAddComponent={handleAddComponent}
+                  onClose={() => setIsAddComponentPanelOpen(false)}
+                />
               )}
             </div>
           )}

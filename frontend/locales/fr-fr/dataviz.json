@@ -1,5 +1,44 @@
 {
 	"dataJournal": {
+		"components": {
+			"descriptions": {
+				"barChart": "Comparez les valeurs entre les catégories grâce aux barres groupées.",
+				"codeFromScratch": "Écrivez du code personnalisé pour créer des analyses ou des visualisations entièrement sur mesure.",
+				"correlationalHypothesis": "Étudier comment les variables évoluent ensemble sans intervention.",
+				"experimentalHypothesis": "Planifiez des expériences contrôlées de type A/B et comparez les résultats.",
+				"histogram": "Afficher la répartition des valeurs dans les intervalles numériques.",
+				"oneWayAnova": "Comparer les moyennes de trois groupes ou plus dans un seul test.",
+				"pearsonCorrelation": "Mesurer la force de l'association linéaire entre deux variables.",
+				"scatterPlot": "Visualisez les relations et les tendances entre deux variables.",
+				"summary": "Générer des statistiques descriptives clés pour les données sélectionnées.",
+				"table": "Insérez un tableau structuré pour examiner et organiser les valeurs brutes.",
+				"textBlock": "Ajoutez des notes, des interprétations et du contexte à votre journal.",
+				"tTest": "Comparer les moyennes entre deux groupes et tester la signification statistique."
+			},
+			"items": {
+				"barChart": "Diagramme à bandes",
+				"barGraph": "Graphique à barres",
+				"codeFromScratch": "Coder à partir de zéro",
+				"correlationalHypothesis": "Hypothèse corrélationnelle",
+				"experimentalHypothesis": "Hypothèse expérimentale",
+				"histogram": "Histogramme",
+				"media": "Médias",
+				"oneWayAnova": "One Way Anova",
+				"pearsonCorrelation": "Corrélation de Pearson",
+				"scatterPlot": "Nuage de points",
+				"summary": "Résumé",
+				"table": "Tableau",
+				"textBlock": "Bloc de texte",
+				"tTest": "Test T"
+			},
+			"sections": {
+				"graphs": "Graphiques et visuels",
+				"hypothesisVisualizer": "Visualiseur d'hypothèses",
+				"statisticalTests": "Tests statistiques",
+				"studyAssets": "Ressources d'étude"
+			},
+			"title": "Panneau des composants"
+		},
 		"topNav": {
 			"addComponent": "Ajouter un composant",
 			"datasets": "Ensembles de données",

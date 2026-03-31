@@ -432,10 +432,17 @@ export const StyledComponentPanel = styled.div`
   padding: 16px;
   overflow-y: auto;
   height: 100%;
-  // margin: 10px;
+  margin: 0px 8px 0px 0px;
   box-shadow: 0px 2px 4px 0px #00000012;
   border-radius: 12px;
   border: 1px solid #e6e6e6;
+  .panelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-bottom: 5px;
+  }
   .title {
     font-family: Nunito;
     font-weight: 700;
@@ -444,7 +451,8 @@ export const StyledComponentPanel = styled.div`
     leading-trim: NONE;
     line-height: 24px;
     letter-spacing: 0px;
-    padding-bottom: 5px;
+    flex: 1;
+    min-width: 0;
   }
   .subtitle {
     font-family: Nunito;
@@ -459,27 +467,72 @@ export const StyledComponentPanel = styled.div`
   }
   .cards {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 16px;
-    margin: 10px 0px 20px 0px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-gap: 10px;
+    margin: 8px 8px 20px 0px;
   }
   .card {
     cursor: pointer;
-    border: 1px solid
-      var(--State-Layers-On-Secondary-Container-Opacity-12, #4a44591f);
-    border-radius: 8px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    align-items: start;
     justify-items: center;
-    padding: 5px;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    padding: 8px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    background: #fff;
 
     font-family: Nunito;
     font-weight: 600;
-    font-style: SemiBold;
-    font-size: 12px;
-    leading-trim: NONE;
-    line-height: 16px;
+    font-size: 13px;
+    line-height: 18px;
     letter-spacing: 0px;
     text-align: center;
-    vertical-align: middle;
+
+    &:hover {
+      background: #F6F9F8;
+      border: 1px solid #A1A1A1;
+      box-shadow: 0px 1px 4px 0px #00000012;
+    }
+  }
+
+  .cardImage {
+    width: 72px;
+    height: 72px;
+    border-radius: 8px;
+    border: 1px solid #D3E0E3;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    background: #F6F9F8;
+    padding: 4px 8px 4px 8px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+  }
+
+  .cardContent {
+    min-width: 0;
+    display: grid;
+    gap: 0;
+    align-content: start;
+    justify-items: center;
+  }
+
+  .cardTitle {
+    font-family: Nunito;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 18px;
+    color: #111827;
+    max-width: 100%;
   }
 `;
 
