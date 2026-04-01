@@ -31,10 +31,10 @@ async function findTeacherEmailsForStudent(
 ): Promise<string[]> {
   // Normalize email to lowercase
   const normalizedEmail = studentEmail?.toLowerCase().trim();
-  console.log(`[Password Reset] Checking if ${normalizedEmail} is a student...`);
-  
+  console.log(`[Password Reset] Checking student status for a user.`);
+
   if (!context || !context.query) {
-    console.log(`[Password Reset] WARNING: No context available for ${normalizedEmail}. Cannot check student status.`);
+    console.log(`[Password Reset] WARNING: No context available. Cannot check student status.`);
     return [];
   }
 
@@ -59,50 +59,47 @@ async function findTeacherEmailsForStudent(
 
     // Check if user exists and has STUDENT permission
     if (!profile) {
-      console.log(`[Password Reset] User ${studentEmail} not found in database.`);
+      console.log(`[Password Reset] User not found in database.`);
       return [];
     }
 
-    console.log(`[Password Reset] Found user ${studentEmail} with ID: ${profile.id}`);
-    console.log(`[Password Reset] User permissions:`, profile.permissions?.map((p: { name: string }) => p.name) || []);
+    console.log(`[Password Reset] Found user profile.`);
 
     const isStudent = profile.permissions?.some(
       (permission: { name: string }) => permission.name === "STUDENT"
     );
 
     if (!isStudent) {
-      console.log(`[Password Reset] User ${studentEmail} does NOT have STUDENT permission. Proceeding with normal reset.`);
+      console.log(`[Password Reset] User does NOT have STUDENT permission. Proceeding with normal reset.`);
       return [];
     }
 
-    console.log(`[Password Reset] User ${studentEmail} HAS STUDENT permission.`);
+    console.log(`[Password Reset] User HAS STUDENT permission.`);
 
     if (!profile.studentIn || profile.studentIn.length === 0) {
-      console.log(`[Password Reset] Student ${studentEmail} is not enrolled in any classes. Proceeding with normal reset.`);
+      console.log(`[Password Reset] Student is not enrolled in any classes. Proceeding with normal reset.`);
       return [];
     }
 
-    console.log(`[Password Reset] Student ${studentEmail} is enrolled in ${profile.studentIn.length} class(es).`);
+    console.log(`[Password Reset] Student is enrolled in ${profile.studentIn.length} class(es).`);
 
     // Collect all unique teacher emails from the student's classes
     const teacherEmails = new Set<string>();
     for (const classItem of profile.studentIn) {
       if (classItem.creator?.email) {
         teacherEmails.add(classItem.creator.email);
-        console.log(`[Password Reset] Found teacher email: ${classItem.creator.email} from class ${classItem.id}`);
+        console.log(`[Password Reset] Found a teacher for class ${classItem.id}.`);
       } else {
         console.log(`[Password Reset] WARNING: Class ${classItem.id} has no creator email.`);
       }
     }
 
     const teacherEmailsArray = Array.from(teacherEmails);
-    console.log(`[Password Reset] Total unique teacher emails found: ${teacherEmailsArray.length}`);
-    console.log(`[Password Reset] Teacher emails:`, teacherEmailsArray);
+    console.log(`[Password Reset] Total unique teachers found: ${teacherEmailsArray.length}`);
 
     return teacherEmailsArray;
   } catch (error) {
-    console.error(`[Password Reset] Error finding teacher emails for ${studentEmail}:`, error);
-    console.error(`[Password Reset] Error stack:`, error instanceof Error ? error.stack : 'No stack trace');
+    console.error(`[Password Reset] Error finding teacher emails for user:`, error instanceof Error ? error.message : "Unknown error");
     return [];
   }
 }
@@ -144,13 +141,10 @@ const { withAuth } = createAuth({
       // Normalize email to lowercase for consistency
       const userEmail = identity?.toLowerCase().trim();
 
-      console.log(`[Password Reset] ========================================`);
-      console.log(`[Password Reset] Password reset requested for: ${userEmail}`);
-      
+      console.log(`[Password Reset] Password reset requested.`);
+
       const context = (args as any).context;
       console.log(`[Password Reset] Context available: ${!!context}`);
-      console.log(`[Password Reset] Context.query available: ${!!(context?.query)}`);
-      console.log(`[Password Reset] Context.db available: ${!!(context?.db)}`);
 
       // Check if the user is a student and find their teachers
       const teacherEmails = await findTeacherEmailsForStudent(
@@ -159,20 +153,17 @@ const { withAuth } = createAuth({
       );
 
       if (teacherEmails.length > 0) {
-        // User is a student, send password reset email to all their teachers with student CC'd
-        console.log(`[Password Reset] ✓ REDIRECTING: Student ${userEmail} -> Sending to ${teacherEmails.length} teacher(s) with student CC'd`);
+        // User is a student — redirect reset email to teachers, CC the student
+        console.log(`[Password Reset] Redirecting to ${teacherEmails.length} teacher(s) with student CC'd.`);
         for (const teacherEmail of teacherEmails) {
-          console.log(`[Password Reset] Sending password reset email to teacher: ${teacherEmail} (CC: ${userEmail})`);
           await sendPasswordResetEmail(token, teacherEmail, userEmail);
-          console.log(`[Password Reset] ✓ Email sent to ${teacherEmail} with ${userEmail} CC'd`);
         }
-        console.log(`[Password Reset] ========================================`);
+        console.log(`[Password Reset] Reset email(s) sent.`);
       } else {
-        // User is not a student or has no teachers, send email to the original email
-        console.log(`[Password Reset] → NORMAL FLOW: Sending password reset email to original email: ${userEmail}`);
+        // Normal flow — send directly to the requesting user
+        console.log(`[Password Reset] Normal flow: sending to requesting user.`);
         await sendPasswordResetEmail(token, userEmail);
-        console.log(`[Password Reset] ✓ Email sent to ${userEmail}`);
-        console.log(`[Password Reset] ========================================`);
+        console.log(`[Password Reset] Reset email sent.`);
       }
     },
   },
@@ -187,6 +178,12 @@ const sessionMaxAge = 60 * 60 * 24 * 30;
 const session = statelessSessions({
   maxAge: sessionMaxAge,
   secret: sessionSecret!,
+  // Issue #16: explicit cookie security flags.
+  // secure: true ensures the cookie is only sent over HTTPS.
+  // sameSite: 'strict' prevents the cookie from being sent in cross-site requests.
+  // httpOnly is enforced by Keystone's iron-session by default, confirmed here.
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict",
 });
 
 export { withAuth, session };

@@ -8,6 +8,8 @@ const fs = require("fs");
 const path = require("path");
 const jsonfile = require("jsonfile");
 const axios = require("axios");
+const { v4: uuidv4 } = require("uuid");
+const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 
 const { Client } = require("@notionhq/client");
@@ -38,23 +40,91 @@ const serverUrl = env === "production" ? prodEndpoint : endpoint;
 
 const url = require("url");
 
+// ---------------------------------------------------------------------------
+// Security helpers
+// ---------------------------------------------------------------------------
+
+// Verify the caller has an active Keystone session by forwarding their cookie.
+async function isAuthenticated(req) {
+  try {
+    const response = await axios({
+      method: "post",
+      url: serverUrl,
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: req.headers.cookie || "",
+      },
+      data: JSON.stringify({
+        query: "{ authenticatedItem { ... on Profile { id } } }",
+      }),
+    });
+    return !!response.data?.data?.authenticatedItem?.id;
+  } catch {
+    return false;
+  }
+}
+
+// Validate a path segment so it cannot contain traversal sequences.
+// Allowed: alphanumeric, hyphens, underscores, dots (no leading dot).
+const SAFE_SEGMENT_RE = /^[a-zA-Z0-9][a-zA-Z0-9_\-\.]{0,63}$/;
+function validatePathSegment(value, label) {
+  if (typeof value !== "string" || !SAFE_SEGMENT_RE.test(value)) {
+    throw new Error(`Invalid ${label}: "${value}"`);
+  }
+}
+
+// Ensure a resolved path stays inside an expected base directory.
+function assertWithinBase(resolvedPath, basePath) {
+  if (!resolvedPath.startsWith(basePath + path.sep) && resolvedPath !== basePath) {
+    throw new Error("Path traversal detected");
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Multer: safe video upload (issue #5)
+// Replace originalname with a UUID-based filename; validate extension.
+// ---------------------------------------------------------------------------
+const ALLOWED_VIDEO_EXTENSIONS = new Set([".mp4", ".webm", ".ogg", ".mov", ".avi"]);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/videos/");
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (!ALLOWED_VIDEO_EXTENSIONS.has(ext)) {
+      return cb(new Error(`Unsupported file type: ${ext}`));
+    }
+    cb(null, `${uuidv4()}${ext}`);
+  },
+});
+const upload = multer({ storage: storage });
+
+// ---------------------------------------------------------------------------
+// Rate limiters (issue #10)
+// ---------------------------------------------------------------------------
+const generalApiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later." },
+});
+
+const saveDataLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later." },
+});
+
 const app = next({
-  dir: ".", // base directory where everything is, could move to src later
+  dir: ".",
   dev,
 });
 
 const handle = app.getRequestHandler();
-
-// Configure multer for handling file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/videos/"); // Make sure this folder exists
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-const upload = multer({ storage: storage });
 
 let server;
 app
@@ -62,12 +132,14 @@ app
   .then(() => {
     server = express();
 
-    server.use(body.json({ limit: "100mb" }));
+    // Issue #11: reduce global body limit from 100mb to a safe default.
+    // Individual routes that need larger bodies apply their own parsers.
+    server.use(body.json({ limit: "1mb" }));
 
     // Serve static files from the 'public' directory
     server.use(express.static(path.join(__dirname, "public")));
 
-    server.get("/api/notion", async (req, res) => {
+    server.get("/api/notion", generalApiLimiter, async (req, res) => {
       const { pageId } = req.query;
       console.log("Received pageId:", pageId);
 
@@ -96,13 +168,13 @@ app
           const response = await notion.dataSources.query({
             data_source_id: dataSourceId,
             start_cursor,
-            page_size: 100, // max allowed
+            page_size: 100,
           });
           results = results.concat(response.results);
           hasMore = response.has_more;
           start_cursor = response.next_cursor;
         }
-        res.json(results); // Return all pages (rows) of the data source
+        res.json(results);
       } catch (error) {
         console.error("Error retrieving Notion database pages:", error);
         const code = error?.code;
@@ -125,160 +197,206 @@ app
       }
     });
 
-    server.post("/api/templates/upload", async (req, res) => {
-      const { name, script, file } = req.body;
-
-      // check whether the folder "data" exists
-      const dirTemplates = path.join(__dirname, "templates");
-      !fs.existsSync(dirTemplates) && fs.mkdirSync(dirTemplates);
-      const dir = path.join(dirTemplates, name);
-      !fs.existsSync(dir) && fs.mkdirSync(dir);
-
-      const filePathScript = path.join(dir, "script.txt");
-      const filePathFile = path.join(dir, "file.json");
-
-      await jsonfile.writeFile(filePathFile, file, function (err) {
-        if (err) console.error(err);
-      });
-
-      await fs.writeFile(filePathScript, script, function (err) {
-        if (err) {
-          return console.log(err);
+    // Issue #3: require authentication before writing template files.
+    // Issue #4: validate the `name` param to prevent path traversal.
+    server.post(
+      "/api/templates/upload",
+      generalApiLimiter,
+      body.json({ limit: "10mb" }),
+      async (req, res) => {
+        // Authentication check
+        const authenticated = await isAuthenticated(req);
+        if (!authenticated) {
+          return res.status(401).json({ error: "Authentication required." });
         }
-      });
 
-      const scriptAddress = `/templates/${name}/script.txt`;
-      const fileAddress = `/templates/${name}/file.json`;
+        const { name, script, file } = req.body;
 
-      res.send({
-        message: { scriptAddress, fileAddress },
-        status: 201,
-        statusText: "Saved",
-      });
-    });
+        // Validate template name to prevent path traversal (issue #4 equivalent)
+        try {
+          validatePathSegment(name, "template name");
+        } catch (e) {
+          return res.status(400).json({ error: e.message });
+        }
 
-    server.post("/api/save", async (req, res) => {
-      const { metadata, data } = req.body;
-      const { id, payload } = metadata;
+        const dirTemplates = path.resolve(__dirname, "templates");
+        const dir = path.resolve(dirTemplates, name);
 
-      const year = req.query.y;
-      const month = req.query.m;
-      const day = req.query.d;
+        // Ensure resolved path stays within templates base directory
+        try {
+          assertWithinBase(dir, dirTemplates);
+        } catch (e) {
+          return res.status(400).json({ error: "Invalid template name." });
+        }
 
-      // check whether the folder "data" exists
-      const dirData = path.join(__dirname, "data");
-      !fs.existsSync(dirData) && fs.mkdirSync(dirData);
-      // check whether the folder with year exists
-      const dirDataYear = path.join(dirData, year);
-      !fs.existsSync(dirDataYear) && fs.mkdirSync(dirDataYear);
-      // check whether the folder with month exists
-      const dirDataYearMonth = path.join(dirDataYear, month);
-      !fs.existsSync(dirDataYearMonth) && fs.mkdirSync(dirDataYearMonth);
-      // check whether the folder with date exists
-      const dirDataYearMonthDay = path.join(dirDataYearMonth, day);
-      !fs.existsSync(dirDataYearMonthDay) && fs.mkdirSync(dirDataYearMonthDay);
-      // check whether the folder with result ID exists
-      const dir = path.join(dirDataYearMonthDay, id);
-      !fs.existsSync(dir) && fs.mkdirSync(dir);
+        !fs.existsSync(dirTemplates) && fs.mkdirSync(dirTemplates);
+        !fs.existsSync(dir) && fs.mkdirSync(dir);
 
-      const filePath = path.join(dir, payload + ".json");
+        const filePathScript = path.join(dir, "script.txt");
+        const filePathFile = path.join(dir, "file.json");
 
-      const enhancedMetadata = {
-        study: req.query.st === "undefined" ? null : req.query.st,
-        template: req.query.te === "undefined" ? null : req.query.te,
-        task: req.query.ta === "undefined" ? null : req.query.ta,
-        type: req.query.type === "guest" ? "GUEST" : "USER",
-        testVersion: req.query.v === "undefined" ? null : req.query.v,
-        publicId: req.query.upid === "undefined" ? null : req.query.upid,
-      };
+        jsonfile.writeFile(filePathFile, file, function (err) {
+          if (err) console.error(err);
+        });
 
-      // in case if a modified data file is uploaded, replace the existing file
-      if (payload === "modified") {
-        jsonfile.writeFile(
-          filePath,
-          {
-            ...req.body,
-            metadata: { ...req.body.metadata, ...enhancedMetadata },
-          },
-          function (err) {
-            if (err) console.error(err);
+        fs.writeFile(filePathScript, script, function (err) {
+          if (err) {
+            return console.log(err);
           }
-        );
-      } else {
-        jsonfile.writeFile(
-          filePath,
-          {
-            ...req.body,
-            metadata: { ...req.body.metadata, ...enhancedMetadata },
-          },
-          { flag: "a", EOL: ",\n" },
-          function (err) {
-            if (err) console.error(err);
-          }
-        );
-      }
+        });
 
-      // save aggregated data
-      if (payload === "full") {
-        const aggregated = data
-          .filter((row) => row.aggregated)
-          .map((row) => row.aggregated)
-          .reduce((prev, current) => ({ ...prev, ...current }), {});
+        const scriptAddress = `/templates/${name}/script.txt`;
+        const fileAddress = `/templates/${name}/file.json`;
 
-        await axios({
-          method: "post",
-          url: serverUrl,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          data: JSON.stringify({
-            query: SAVE_AGGREGATED_RESULTS,
-            operationName: "createSummaryResult",
-            variables: {
-              input: {
-                metadataId: id,
-                data: aggregated,
-                study:
-                  req.query.st === "undefined"
-                    ? null
-                    : { connect: { id: req.query.st } },
-                template:
-                  req.query.te === "undefined"
-                    ? null
-                    : { connect: { id: req.query.te } },
-                task:
-                  req.query.ta === "undefined"
-                    ? null
-                    : { connect: { id: req.query.ta } },
-                user:
-                  req.query.us === "undefined" || req.query.type === "guest"
-                    ? null
-                    : { connect: { id: req.query.us } },
-                guest:
-                  req.query.us === "undefined" || req.query.type === "user"
-                    ? null
-                    : { connect: { id: req.query.us } },
-                type: req.query.type === "guest" ? "GUEST" : "USER",
-                testVersion: req.query.v === "undefined" ? null : req.query.v,
-              },
-            },
-          }),
+        res.send({
+          message: { scriptAddress, fileAddress },
+          status: 201,
+          statusText: "Saved",
         });
       }
+    );
 
-      res.send({
-        message: "The data was sent successfully",
-        status: 202,
-        statusText: "it worked",
-      });
-    });
+    // Issue #4: validate all path components to prevent directory traversal.
+    server.post(
+      "/api/save",
+      saveDataLimiter,
+      body.json({ limit: "50mb" }),
+      async (req, res) => {
+        const { metadata, data } = req.body;
+        const { id, payload } = metadata;
 
-    server.post("/api/upload", upload.single("video"), async (req, res) => {
+        const year = req.query.y;
+        const month = req.query.m;
+        const day = req.query.d;
+
+        // Validate every segment used to build the file path
+        try {
+          validatePathSegment(year, "year");
+          validatePathSegment(month, "month");
+          validatePathSegment(day, "day");
+          validatePathSegment(id, "id");
+          validatePathSegment(payload, "payload");
+        } catch (e) {
+          return res.status(400).json({ error: e.message });
+        }
+
+        const dirData = path.resolve(__dirname, "data");
+        const dir = path.resolve(dirData, year, month, day, id);
+
+        // Confirm the resolved path is still within the data directory
+        try {
+          assertWithinBase(dir, dirData);
+        } catch (e) {
+          return res.status(400).json({ error: "Invalid path parameters." });
+        }
+
+        !fs.existsSync(dirData) && fs.mkdirSync(dirData);
+        !fs.existsSync(path.resolve(dirData, year)) &&
+          fs.mkdirSync(path.resolve(dirData, year));
+        !fs.existsSync(path.resolve(dirData, year, month)) &&
+          fs.mkdirSync(path.resolve(dirData, year, month));
+        !fs.existsSync(path.resolve(dirData, year, month, day)) &&
+          fs.mkdirSync(path.resolve(dirData, year, month, day));
+        !fs.existsSync(dir) && fs.mkdirSync(dir);
+
+        const filePath = path.join(dir, payload + ".json");
+
+        const enhancedMetadata = {
+          study: req.query.st === "undefined" ? null : req.query.st,
+          template: req.query.te === "undefined" ? null : req.query.te,
+          task: req.query.ta === "undefined" ? null : req.query.ta,
+          type: req.query.type === "guest" ? "GUEST" : "USER",
+          testVersion: req.query.v === "undefined" ? null : req.query.v,
+          publicId: req.query.upid === "undefined" ? null : req.query.upid,
+        };
+
+        // in case if a modified data file is uploaded, replace the existing file
+        if (payload === "modified") {
+          jsonfile.writeFile(
+            filePath,
+            {
+              ...req.body,
+              metadata: { ...req.body.metadata, ...enhancedMetadata },
+            },
+            function (err) {
+              if (err) console.error(err);
+            }
+          );
+        } else {
+          jsonfile.writeFile(
+            filePath,
+            {
+              ...req.body,
+              metadata: { ...req.body.metadata, ...enhancedMetadata },
+            },
+            { flag: "a", EOL: ",\n" },
+            function (err) {
+              if (err) console.error(err);
+            }
+          );
+        }
+
+        // save aggregated data
+        if (payload === "full") {
+          const aggregated = data
+            .filter((row) => row.aggregated)
+            .map((row) => row.aggregated)
+            .reduce((prev, current) => ({ ...prev, ...current }), {});
+
+          await axios({
+            method: "post",
+            url: serverUrl,
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            data: JSON.stringify({
+              query: SAVE_AGGREGATED_RESULTS,
+              operationName: "createSummaryResult",
+              variables: {
+                input: {
+                  metadataId: id,
+                  data: aggregated,
+                  study:
+                    req.query.st === "undefined"
+                      ? null
+                      : { connect: { id: req.query.st } },
+                  template:
+                    req.query.te === "undefined"
+                      ? null
+                      : { connect: { id: req.query.te } },
+                  task:
+                    req.query.ta === "undefined"
+                      ? null
+                      : { connect: { id: req.query.ta } },
+                  user:
+                    req.query.us === "undefined" || req.query.type === "guest"
+                      ? null
+                      : { connect: { id: req.query.us } },
+                  guest:
+                    req.query.us === "undefined" || req.query.type === "user"
+                      ? null
+                      : { connect: { id: req.query.us } },
+                  type: req.query.type === "guest" ? "GUEST" : "USER",
+                  testVersion: req.query.v === "undefined" ? null : req.query.v,
+                },
+              },
+            }),
+          });
+        }
+
+        res.send({
+          message: "The data was sent successfully",
+          status: 202,
+          statusText: "it worked",
+        });
+      }
+    );
+
+    server.post("/api/upload", generalApiLimiter, upload.single("video"), async (req, res) => {
       if (!req.file) {
         return res.status(400).send("No file uploaded.");
       }
-      // Send the file URL back to the client
       res.json({ filename: req.file.filename });
     });
 

@@ -12,6 +12,8 @@ import setAssignmentTemplateCards from "./setAssignmentTemplateCards";
 import setResourceTemplateCards from "./setResourceTemplateCards";
 import applyTemplateBoardChanges from "./applyTemplateBoardChanges";
 import backfillMediaAssetOrigins from "./backfillMediaAssetOrigins";
+import followUser from "./followUser";
+import unfollowUser from "./unfollowUser";
 import { GraphQLSchema } from "graphql";
 
 // make a fake gql tagged template literal
@@ -70,6 +72,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           cardIdsWithContentUpdate: [ID!]
         ): ApplyTemplateBoardChangesResult
         backfillMediaAssetOrigins(limit: Int): Int!
+        followUser(userId: ID!): Friendship
+        unfollowUser(userId: ID!): Boolean
       }
     `,
     resolvers: {
@@ -86,6 +90,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         setResourceTemplateCards,
         applyTemplateBoardChanges,
         backfillMediaAssetOrigins,
+        followUser,
+        unfollowUser,
       },
     },
   });

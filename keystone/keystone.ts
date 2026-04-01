@@ -6,6 +6,7 @@
 //   you can find out more at https://keystonejs.com/docs/apis/config
 import "dotenv/config";
 import { config } from "@keystone-6/core";
+import depthLimit from "graphql-depth-limit";
 
 import { extendGraphqlSchema } from "./mutations/index";
 
@@ -52,8 +53,15 @@ export default withAuth(
     lists,
     extendGraphqlSchema,
     graphql: {
+      // Issue #11: reduced from 100mb. File uploads go through Cloudinary/local
+      // storage routes, not the GraphQL body, so 10mb covers all legitimate queries.
       bodyParser: {
-        limit: "100mb", // Set your desired limit here (e.g., 100MB)
+        limit: "10mb",
+      },
+      // Issue #12 + #13: disable introspection in production and cap query depth.
+      apolloConfig: {
+        introspection: process.env.NODE_ENV !== "production",
+        validationRules: [depthLimit(10)],
       },
     },
     session,

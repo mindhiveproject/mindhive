@@ -162,14 +162,10 @@ export const MANAGE_FAVORITE_TASKS = gql`
   }
 `;
 
-// UPDATE FROM HERE LATER
 // follow user
 export const FOLLOW_USER_MUTATION = gql`
-  mutation FOLLOW_USER_MUTATION($id: ID!, $userId: ID!) {
-    updateUser(
-      where: { id: $id }
-      data: { followedBy: { connect: { id: $userId } } }
-    ) {
+  mutation FOLLOW_USER_MUTATION($userId: ID!) {
+    followUser(userId: $userId) {
       id
     }
   }
@@ -177,13 +173,8 @@ export const FOLLOW_USER_MUTATION = gql`
 
 // unfollow user
 export const UNFOLLOW_USER_MUTATION = gql`
-  mutation UNFOLLOW_USER_MUTATION($id: ID!, $userId: ID!) {
-    updateUser(
-      where: { id: $id }
-      data: { followedBy: { disconnect: { id: $userId } } }
-    ) {
-      id
-    }
+  mutation UNFOLLOW_USER_MUTATION($userId: ID!) {
+    unfollowUser(userId: $userId)
   }
 `;
 

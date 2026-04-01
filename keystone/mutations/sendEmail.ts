@@ -27,9 +27,11 @@ async function sendEmail(
     query: "email",
   });
 
-  const email = user?.email || "produkt5@yandex.ru";
+  if (!user?.email) {
+    throw new Error(`Receiver not found: ${receiverId}`);
+  }
 
-  await sendNotificationEmail(email, title, message, link);
+  await sendNotificationEmail(user.email, title, message, link);
 
   return { message: "Email was sent" };
 }

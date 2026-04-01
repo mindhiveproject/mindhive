@@ -38,4 +38,7 @@ export type AccessControl = {
 export type ListAccessArgs = {
   itemId?: string;
   session?: Session;
+  item?: any;
+  listKey?: string;
+  context?: any;
 };
