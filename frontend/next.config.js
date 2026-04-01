@@ -45,7 +45,9 @@ const securityHeaders = [
       "img-src 'self' data: blob: https:",
       // Fetch/XHR: self + MindHive backends + Google auth
       // cdn.jsdelivr.net: Pyodide fetches .wasm and package files at runtime
-      "connect-src 'self' https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science https://cdn.jsdelivr.net",
+      // pypi.org: Pyodide micropip queries PyPI to resolve Python package metadata
+      // files.pythonhosted.org: Pyodide micropip downloads wheel files from here
+      "connect-src 'self' https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science https://cdn.jsdelivr.net https://pypi.org https://files.pythonhosted.org",
       // iframes for Google OAuth popup
       "frame-src 'self' https://accounts.google.com",
       // Workers needed by Pyodide (blob: for inline workers, cdn.jsdelivr.net for Pyodide worker scripts)
