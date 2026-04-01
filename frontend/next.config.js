@@ -33,19 +33,23 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       // Scripts: self + Google OAuth + inline/eval needed by TipTap & Pyodide
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com",
+      // cdn.plot.ly: Plotly charting library
+      // cdn.jsdelivr.net: Pyodide WASM runtime
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://cdn.plot.ly https://cdn.jsdelivr.net",
       // Styles: self + inline (Emotion/Styled-Components) + Google Fonts
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      // Fonts
-      "font-src 'self' https://fonts.gstatic.com data:",
+      // cdnjs.cloudflare.com: Semantic UI CSS
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
+      // Fonts: Google Fonts + Semantic UI ships woff/woff2 from cdnjs
+      "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:",
       // Images: self + data URIs + any HTTPS (Cloudinary, profile images, etc.)
       "img-src 'self' data: blob: https:",
       // Fetch/XHR: self + MindHive backends + Google auth
-      "connect-src 'self' https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science",
+      // cdn.jsdelivr.net: Pyodide fetches .wasm and package files at runtime
+      "connect-src 'self' https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science https://cdn.jsdelivr.net",
       // iframes for Google OAuth popup
       "frame-src 'self' https://accounts.google.com",
-      // Workers needed by Pyodide
-      "worker-src 'self' blob:",
+      // Workers needed by Pyodide (blob: for inline workers, cdn.jsdelivr.net for Pyodide worker scripts)
+      "worker-src 'self' blob: https://cdn.jsdelivr.net",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
