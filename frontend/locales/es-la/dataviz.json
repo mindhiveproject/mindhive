@@ -1,19 +1,20 @@
 {
 	"dataJournal": {
 		"components": {
+			"closePanel": "",
 			"descriptions": {
-				"barChart": "Compara valores entre categorías con barras agrupadas.",
+				"barChart": "Visualiza la relación entre una variable cualitativa y una cuantitativa mediante barras agrupadas.",
 				"codeFromScratch": "Escriba código personalizado para crear análisis o visualizaciones totalmente adaptados a sus necesidades.",
-				"correlationalHypothesis": "Investigar cómo se comportan las variables conjuntamente sin intervención.",
-				"experimentalHypothesis": "Planifica experimentos controlados de tipo A/B y compara los resultados.",
-				"histogram": "Muestra la distribución de valores en los distintos intervalos numéricos.",
-				"oneWayAnova": "Comparar las medias de tres o más grupos en una misma prueba.",
-				"pearsonCorrelation": "Medir la fuerza de la asociación lineal entre dos variables.",
-				"scatterPlot": "Visualiza las relaciones y los patrones entre dos variables.",
-				"summary": "Generar estadísticas descriptivas clave para los datos seleccionados.",
-				"table": "Inserte una tabla estructurada para inspeccionar y organizar los valores sin procesar.",
-				"textBlock": "Añade notas, interpretaciones y contexto a tu diario.",
-				"tTest": "Compara las medias entre dos grupos y comprueba su significación estadística."
+				"correlationalHypothesis": "Hipótesis sobre el grado y la dirección de la relación lineal entre dos variables cuantitativas.",
+				"experimentalHypothesis": "Hipótesis sobre la diferencia de medias entre grupos definidos por una variable independiente cualitativa.",
+				"histogram": "Muestra la distribución de valores para una variable cuantitativa en tu conjunto de datos.",
+				"oneWayAnova": "Compara las medias de tres o más grupos cuando tu variable independiente sea cualitativa.",
+				"pearsonCorrelation": "Examine el grado y la dirección de la relación lineal entre dos variables cuantitativas.",
+				"scatterPlot": "Visualiza la relación entre dos variables cuantitativas.",
+				"summary": "Genera estadísticas descriptivas clave para los datos seleccionados (media, mediana, moda, etc.).",
+				"table": "Inserta una tabla estructurada para mostrar los valores de tu conjunto de datos.",
+				"textBlock": "Añade notas, interpretación y contexto a tu análisis.",
+				"tTest": "Compara las medias entre dos grupos cuando tu variable independiente es cualitativa con 2 grupos."
 			},
 			"items": {
 				"barChart": "Gráfico de barras",

@@ -1,19 +1,20 @@
 {
 	"dataJournal": {
 		"components": {
+			"closePanel": "",
 			"descriptions": {
-				"barChart": "Compare os valores entre as categorias com barras agrupadas.",
+				"barChart": "Visualize a relação entre uma variável qualitativa e uma variável quantitativa usando barras agrupadas.",
 				"codeFromScratch": "Escreva código personalizado para criar análises ou visualizações totalmente adaptadas às suas necessidades.",
-				"correlationalHypothesis": "Investigar como as variáveis ​​se movem juntas sem intervenção.",
-				"experimentalHypothesis": "Planeje experimentos controlados do tipo A/B e compare os resultados.",
-				"histogram": "Mostre a distribuição dos valores entre os intervalos numéricos.",
-				"oneWayAnova": "Comparar as médias de três ou mais grupos em um único teste.",
-				"pearsonCorrelation": "Medir a força da associação linear entre duas variáveis.",
-				"scatterPlot": "Visualize as relações e os padrões entre duas variáveis.",
-				"summary": "Gere estatísticas descritivas importantes para os dados selecionados.",
-				"table": "Insira uma tabela estruturada para inspecionar e organizar os valores brutos.",
-				"textBlock": "Adicione notas, interpretações e contexto ao seu diário.",
-				"tTest": "Comparar as médias entre os dois grupos e testar a significância estatística."
+				"correlationalHypothesis": "Hipótese sobre o grau e a direção da relação linear entre duas variáveis ​​quantitativas.",
+				"experimentalHypothesis": "Hipótese sobre a diferença de médias entre grupos definidos por uma variável independente qualitativa.",
+				"histogram": "Mostre a distribuição dos valores de uma variável quantitativa em seu conjunto de dados.",
+				"oneWayAnova": "Compare as médias entre três ou mais grupos quando sua variável independente for qualitativa.",
+				"pearsonCorrelation": "Analise o grau e a direção da relação linear entre duas variáveis ​​quantitativas.",
+				"scatterPlot": "Visualize a relação entre duas variáveis ​​quantitativas.",
+				"summary": "Gere estatísticas descritivas importantes para os dados selecionados (média, mediana, moda, etc.).",
+				"table": "Insira uma tabela estruturada para exibir os valores do seu conjunto de dados.",
+				"textBlock": "Adicione notas, interpretações e contexto à sua análise.",
+				"tTest": "Comparar as médias entre dois grupos quando a variável independente é qualitativa e envolve dois grupos."
 			},
 			"items": {
 				"barChart": "Gráfico de barras",

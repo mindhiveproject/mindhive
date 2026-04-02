@@ -255,10 +255,9 @@ function MediaLibraryActionsCell(params) {
       )}
       <Chip
         shape="square"
-        selected
         label={ctx.t("tiptap.mediaInsert", "Insert")}
         onClick={() => ctx.pick(data)}
-        style={{ flexShrink: 0, border: "none" }}
+        style={{ flexShrink: 0, border: "1px solid #A1A1A1" }}
       />
       <Chip
         shape="square"

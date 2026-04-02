@@ -1,6 +1,7 @@
 {
 	"dataJournal": {
 		"components": {
+			"closePanel": "",
 			"descriptions": {
 				"barChart": "",
 				"codeFromScratch": "",
