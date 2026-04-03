@@ -47,7 +47,7 @@ const securityHeaders = [
       // cdn.jsdelivr.net: Pyodide fetches .wasm and package files at runtime
       // pypi.org: Pyodide micropip queries PyPI to resolve Python package metadata
       // files.pythonhosted.org: Pyodide micropip downloads wheel files from here
-      "connect-src 'self' https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science https://cdn.jsdelivr.net https://pypi.org https://files.pythonhosted.org",
+      "connect-src 'self' http://localhost:4444 https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science https://cdn.jsdelivr.net https://pypi.org https://files.pythonhosted.org https://api.cloudinary.com",
       // iframes for Google OAuth popup
       "frame-src 'self' https://accounts.google.com",
       // Workers needed by Pyodide (blob: for inline workers, cdn.jsdelivr.net for Pyodide worker scripts)
@@ -77,7 +77,7 @@ const nextConfig = {
       ...config.resolve.alias,
       "maplibre-gl/dist/maplibre-gl.css": path.resolve(
         __dirname,
-        "lib/maplibreGlPlotlyCssNoop.js"
+        "lib/maplibreGlPlotlyCssNoop.js",
       ),
     };
     return config;
