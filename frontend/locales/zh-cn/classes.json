@@ -397,13 +397,22 @@
 		"className": "类名",
 		"createClassToAppear": "一旦您创建了一个类，它就会出现在这里。",
 		"dateCreated": "创建日期",
+		"loadError": "",
+		"noClassesMatchSearch": "",
 		"noClassesYet": "您尚未创建任何课程。",
 		"numberOfStudents": "学生人数",
+		"searchClassesPlaceholder": "",
+		"sortByLabel": "",
+		"sortDateChipHintNewest": "",
+		"sortDateChipHintOldest": "",
+		"sortDateChipLabelNewest": "",
+		"sortDateChipLabelOldest": "",
 		"teacher": "老师"
 	},
 	"classForm": {
 		"description": "描述",
-		"title": "标题"
+		"title": "标题",
+		"titleRequired": "请输入课程名称。"
 	},
 	"className": "类名",
 	"classNetworks": "类网络",

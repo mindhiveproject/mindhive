@@ -105,6 +105,13 @@ const StyledClass = styled.div`
     margin-top: 12px;
   }
 
+  .classListContainer {
+    margin-top: 12px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 0 24px 16px 24px;
+  }
+
   .classListBoard a {
     font-size: 14px;
     line-height: 20px;
@@ -116,7 +123,7 @@ const StyledClass = styled.div`
     padding: 1.5rem 1rem;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     cursor: pointer;
-    background: #ffffff;
+    background: transparent;
     border-radius: 8px;
     border: 1px solid #E6E6E6;
     font-family: Inter, sans-serif;
@@ -125,7 +132,10 @@ const StyledClass = styled.div`
     font-weight: 400;
     transition: box-shadow 300ms ease-out;
     :hover {
-      box-shadow: 0px 2px 24px 0px #0000001a;
+      background-color: #DEF8FB;
+      color: #07365F;
+      font-weight: 600;
+      box-shadow: 0px 2px 24px 0px #DEF8FB;
     }
   }
 

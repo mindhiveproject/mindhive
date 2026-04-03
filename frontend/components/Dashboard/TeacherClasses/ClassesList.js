@@ -86,7 +86,7 @@ export default function ClassesList({
   }
 
   return (
-    <>
+    <div className="classListContainer">
       <div className="classListHeader">
         <div>{t("classesList.className")}</div>
         <div>{t("classesList.teacher")}</div>
@@ -119,6 +119,6 @@ export default function ClassesList({
           );
         })}
       </div>
-    </>
+    </div>
   );
 }

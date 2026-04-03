@@ -397,13 +397,22 @@
 		"className": "कक्षा का नाम",
 		"createClassToAppear": "एक बार जब आप कोई क्लास बना लेंगे तो वह यहां दिखाई देगी।",
 		"dateCreated": "बनाया गया दिनांक",
+		"loadError": "",
+		"noClassesMatchSearch": "",
 		"noClassesYet": "आपने अभी तक कोई कक्षा नहीं बनाई है.",
 		"numberOfStudents": "छात्रों की संख्या",
+		"searchClassesPlaceholder": "",
+		"sortByLabel": "",
+		"sortDateChipHintNewest": "",
+		"sortDateChipHintOldest": "",
+		"sortDateChipLabelNewest": "",
+		"sortDateChipLabelOldest": "",
 		"teacher": "अध्यापक"
 	},
 	"classForm": {
 		"description": "विवरण",
-		"title": "शीर्षक"
+		"title": "शीर्षक",
+		"titleRequired": "कृपया कक्षा का शीर्षक दर्ज करें।"
 	},
 	"className": "कक्षा का नाम",
 	"classNetworks": "वर्ग नेटवर्क",

@@ -237,6 +237,36 @@ export const StyledForm = styled.form`
     padding: 1rem 3rem;
     font-weight: 400;
   }
+
+  .infoPane {
+    display: grid;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .infoPane label {
+    margin-bottom: 8px;
+    font-size: 18px;
+    line-height: 24px;
+    color: #171717;
+  }
+
+  .infoPane .editorContainer {
+    margin-top: 8px;
+  }
+
+  .infoPane .classFormTitleEditor .tiptapEditor {
+    min-height: 48px;
+  }
+
+  .infoPane .submitButton {
+    margin-top: 0;
+  }
+
+  .infoPane .submitButton button {
+    margin-top: 16px;
+    margin-bottom: 0;
+  }
 `;
 
 export const SignupButton = styled.div`

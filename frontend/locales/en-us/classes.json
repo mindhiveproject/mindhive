@@ -411,7 +411,8 @@
 	},
 	"classForm": {
 		"description": "Description",
-		"title": "Title"
+		"title": "Title",
+		"titleRequired": "Please enter a class title."
 	},
 	"className": "Class name",
 	"classNetworks": "Class networks",
