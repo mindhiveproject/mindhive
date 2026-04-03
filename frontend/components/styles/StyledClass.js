@@ -3,6 +3,83 @@ import styled from "styled-components";
 const StyledClass = styled.div`
   display: grid;
 
+  .teacherClassesHeader {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px 16px;
+    margin-bottom: 16px;
+  }
+
+  .teacherClassesHeader h1 {
+    margin: 0;
+  }
+
+  .teacherClassesToolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+  .teacherClassesSortChip {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .teacherClassesSortLabel {
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0.01em;
+    color: #171717;
+  }
+
+  .teacherClassesSearch {
+    flex: 1;
+    width: 70%;
+    min-width: 200px;
+    max-width: 400px;
+    min-height: 40px;
+    padding: 8px 14px;
+    box-sizing: border-box;
+    border: 1px solid #a1a1a1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #171717;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .teacherClassesSearch::placeholder {
+    color: #6a6a6a;
+  }
+
+  .teacherClassesSearch:hover {
+    border-color: #6a6a6a;
+  }
+
+  .teacherClassesSearch:focus {
+    outline: none;
+    border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+    box-shadow: 0 0 0 2px rgba(51, 111, 138, 0.2);
+  }
+
+  .classListNoMatch {
+    margin-top: 24px;
+    padding: 12px 0;
+    max-width: 36rem;
+    color: #666666;
+  }
+
   .upperMenu {
     display: grid;
     margin-bottom: 30px;
@@ -10,11 +87,28 @@ const StyledClass = styled.div`
 
   .classListHeader {
     display: grid;
-    margin: 5px;
-    padding: 10px;
+    margin: 0;
+    margin-top: 16px;
+    padding: 0.75rem 1rem;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    cursor: pointer;
-    font-weight: bold;
+    font-family: Inter, sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 14px;
+    color: #171717;
+    align-items: end;
+  }
+
+  .classListBoard {
+    display: grid;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .classListBoard a {
+    font-size: 14px;
+    line-height: 20px;
+    color: inherit;
   }
 
   .classListRow {
@@ -22,11 +116,40 @@ const StyledClass = styled.div`
     padding: 1.5rem 1rem;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     cursor: pointer;
-    box-shadow: 0px 2px 4px 0px #00000026;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #E6E6E6;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 400;
     transition: box-shadow 300ms ease-out;
     :hover {
       box-shadow: 0px 2px 24px 0px #0000001a;
     }
+  }
+
+  .classListRow > div {
+    font-size: inherit;
+    line-height: inherit;
+    font-weight: inherit;
+  }
+
+  .classListEmpty {
+    margin-top: 16px;
+    padding: 8px 0 16px;
+    max-width: 36rem;
+  }
+
+  .classListLoading {
+    margin-top: 16px;
+    color: #666666;
+  }
+
+  .classListError {
+    margin-top: 16px;
+    color: #b00020;
+    max-width: 36rem;
   }
 
   .editableClassHeader {
@@ -55,7 +178,7 @@ const StyledClass = styled.div`
       cursor: pointer;
     }
     .title {
-      font-family: Nunito;
+      font-family: Inter;
       font-size: 32px;
       font-style: normal;
       font-weight: 400;
@@ -72,7 +195,7 @@ const StyledClass = styled.div`
       min-height: 40px;
     } 
     .description {
-      font-family: Nunito
+      font-family: Inter
       font-size: 28px;
       font-style: normal;
       font-weight: 400;
@@ -83,7 +206,7 @@ const StyledClass = styled.div`
       margin-bottom: 8px;
     }
     .teacher {
-      font-family: Nunito
+      font-family: Inter
     }
   }
 
