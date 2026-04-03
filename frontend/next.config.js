@@ -42,7 +42,7 @@ const securityHeaders = [
       // Fonts: Google Fonts + Semantic UI ships woff/woff2 from cdnjs
       "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:",
       // Images: self + data URIs + any HTTPS (Cloudinary, profile images, etc.)
-      "img-src 'self' data: blob: https:",
+      "img-src 'self' http://localhost:4444 data: blob: https:",
       // Fetch/XHR: self + MindHive backends + Google auth
       // cdn.jsdelivr.net: Pyodide fetches .wasm and package files at runtime
       // pypi.org: Pyodide micropip queries PyPI to resolve Python package metadata
