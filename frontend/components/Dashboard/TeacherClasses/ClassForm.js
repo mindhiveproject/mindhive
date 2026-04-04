@@ -5,15 +5,7 @@ import DisplayError from "../../ErrorMessage";
 import useTranslation from "next-translate/useTranslation";
 import TipTapEditor from "../../TipTap/Main";
 import Button from "../../DesignSystem/Button";
-import { stripHtml } from "../../Proposal/Card/Forms/utils";
-
-function descriptionValueForState(html) {
-  if (html == null) return "";
-  const s = String(html).trim();
-  if (!s) return "";
-  if (/<img[\s>]/i.test(s)) return s;
-  return stripHtml(s).trim() === "" ? "" : s;
-}
+import { descriptionValueForState } from "../../Proposal/Card/Forms/utils";
 
 export default function ClassForm({
   user,
@@ -26,15 +18,21 @@ export default function ClassForm({
 }) {
   const { t } = useTranslation("classes");
 
+// Strip HTML tags from text
+  const stripHtml = (html) => {
+    if (!html) return "";
+    return html.replace(/<[^>]*>/g, "").trim();
+  };
+
   const handleTitleChange = (content) => {
-    handleChange({ target: { name: "title", value: content } });
+    handleChange({ target: { name: "title", value: stripHtml(content) } });
   };
 
   const handleDescriptionChange = (content) => {
     handleChange({
       target: {
         name: "description",
-        value: descriptionValueForState(content),
+        value: content,
       },
     });
   };

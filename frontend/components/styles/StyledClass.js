@@ -167,6 +167,79 @@ const StyledClass = styled.div`
     width: 100%;
     margin-bottom: 20px;
     padding: 10px;
+    .infoPane {
+      display: grid;
+      gap: 8px;
+      width: 100%;
+    }
+    .infoPane label {
+      margin-bottom: 8px;
+      font-size: 18px;
+      line-height: 24px;
+      color: #171717;
+    }
+    .classHeaderTitleBlock {
+      display: grid;
+      width: 100%;
+      min-width: 0;
+    }
+    .classHeaderTitleDisplay {
+      margin: 0;
+      width: 100%;
+      min-width: 0;
+    }
+    .classHeaderTitleDisplayEditable {
+      cursor: pointer;
+      border-radius: 4px;
+      border: none;
+      background: transparent;
+      &:hover {
+        background: transparent;
+      }
+      &:focus-visible {
+        outline: 2px solid #007c70;
+        outline-offset: 2px;
+      }
+    }
+    .classHeaderTitleInput {
+      margin-top: 0;
+      margin-bottom: 0;
+      background: transparent !important;
+      border: none !important;
+      &:focus,
+      &:focus-visible {
+        background: #fff !important;
+        border: none !important;
+      }
+      &:focus-visible {
+        outline: 1px solid #e6e6e6;
+        outline-offset: 2px;
+      }
+    }
+    .classHeaderTitleEditor {
+      margin-top: 8px;
+      width: 100%;
+      min-width: 0;
+    }
+    .classHeaderTitleEditor .tiptapEditor,
+    .classFormTitleEditor .tiptapEditor {
+      min-height: 48px;
+    }
+    .classHeaderDescriptionEditor {
+      width: 100%;
+      min-width: 0;
+    }
+    .classHeaderDescriptionEditor .tiptapEditor {
+      min-height: 120px;
+    }
+    .classHeaderDescriptionEditor .tiptapEditor .ProseMirror {
+      background: transparent !important;
+      border: none !important;
+      &:focus {
+        background: #fff !important;
+        outline: 1px solid #e6e6e6;
+      }
+    }
     input,
     textarea,
     select {
