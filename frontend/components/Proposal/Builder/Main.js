@@ -50,29 +50,6 @@ export default function ProposalBuilder({
       return;
     }
 
-    // #region agent log
-    fetch("http://127.0.0.1:7242/ingest/cac9774b-1be2-40a4-9366-a933699e0381", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "6786dd",
-      },
-      body: JSON.stringify({
-        sessionId: "6786dd",
-        runId: "pre-fix",
-        hypothesisId: "H1",
-        location: "frontend/components/Proposal/Builder/Main.js:backfillEffect",
-        message: "ProposalBuilder backfill effect evaluated",
-        data: {
-          proposalId: proposal?.id ?? null,
-          isClassTemplate: isClassTemplateBoard(proposal),
-          templateForClassesCount: (proposal?.templateForClasses || []).length,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion agent log
-
     if (!isClassTemplateBoard(proposal)) return;
     if (backfillPublicIdDoneRef.current === proposal.id) return;
 
@@ -80,33 +57,6 @@ export default function ProposalBuilder({
     const cardsWithoutPublicId = sections
       .flatMap((section) => section?.cards || [])
       .filter((card) => card && !card.publicId);
-
-    // #region agent log
-    fetch("http://127.0.0.1:7242/ingest/cac9774b-1be2-40a4-9366-a933699e0381", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "6786dd",
-      },
-      body: JSON.stringify({
-        sessionId: "6786dd",
-        runId: "pre-fix",
-        hypothesisId: "H2",
-        location: "frontend/components/Proposal/Builder/Main.js:backfillEffect",
-        message: "ProposalBuilder backfill computed cardsWithoutPublicId",
-        data: {
-          proposalId: proposal?.id ?? null,
-          totalSections: sections.length,
-          totalCards: sections.reduce(
-            (acc, s) => acc + ((s?.cards || []).length),
-            0
-          ),
-          cardsWithoutPublicIdCount: cardsWithoutPublicId.length,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion agent log
 
     if (cardsWithoutPublicId.length === 0) {
       backfillPublicIdDoneRef.current = proposal.id;

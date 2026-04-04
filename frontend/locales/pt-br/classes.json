@@ -397,13 +397,22 @@
 		"className": "Nome da classe",
 		"createClassToAppear": "Depois de criar uma classe, ela aparecerá aqui.",
 		"dateCreated": "Data de criação",
+		"loadError": "",
+		"noClassesMatchSearch": "",
 		"noClassesYet": "Você ainda não criou nenhuma classe.",
 		"numberOfStudents": "Número de alunos",
+		"searchClassesPlaceholder": "",
+		"sortByLabel": "",
+		"sortDateChipHintNewest": "",
+		"sortDateChipHintOldest": "",
+		"sortDateChipLabelNewest": "",
+		"sortDateChipLabelOldest": "",
 		"teacher": "Professor"
 	},
 	"classForm": {
 		"description": "Descrição",
-		"title": "Título"
+		"title": "Título",
+		"titleRequired": "Por favor, insira o título da disciplina."
 	},
 	"className": "Nome da classe",
 	"classNetworks": "Redes de classes",

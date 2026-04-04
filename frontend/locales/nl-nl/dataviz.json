@@ -1,19 +1,20 @@
 {
 	"dataJournal": {
 		"components": {
+			"closePanel": "",
 			"descriptions": {
-				"barChart": "Vergelijk waarden tussen categorieën met behulp van gegroepeerde balken.",
+				"barChart": "Visualiseer de relatie tussen een kwalitatieve en een kwantitatieve variabele met behulp van gegroepeerde balken.",
 				"codeFromScratch": "Schrijf aangepaste code om volledig op maat gemaakte analyses of visualisaties te creëren.",
-				"correlationalHypothesis": "Onderzoek hoe variabelen zich gezamenlijk ontwikkelen zonder ingrijpen.",
-				"experimentalHypothesis": "Plan gecontroleerde A/B-experimenten en vergelijk de resultaten.",
-				"histogram": "Toon de verdeling van de waarden over de numerieke categorieën.",
-				"oneWayAnova": "Vergelijk gemiddelden van drie of meer groepen in één test.",
-				"pearsonCorrelation": "Meet de sterkte van de lineaire samenhang tussen twee variabelen.",
-				"scatterPlot": "Visualiseer de relaties en patronen tussen twee variabelen.",
-				"summary": "Genereer belangrijke beschrijvende statistieken voor geselecteerde gegevens.",
-				"table": "Voeg een gestructureerde tabel in om de ruwe waarden te inspecteren en te ordenen.",
-				"textBlock": "Voeg notities, interpretaties en context toe aan je dagboek.",
-				"tTest": "Vergelijk de gemiddelden van twee groepen en toets de significantie."
+				"correlationalHypothesis": "Hypothese over de mate en richting van de lineaire relatie tussen twee kwantitatieve variabelen.",
+				"experimentalHypothesis": "Hypothese over het verschil in gemiddelden tussen groepen gedefinieerd door een kwalitatieve onafhankelijke variabele.",
+				"histogram": "Geef de verdeling van de waarden voor een kwantitatieve variabele in uw dataset weer.",
+				"oneWayAnova": "Vergelijk gemiddelden tussen drie of meer groepen wanneer uw onafhankelijke variabele kwalitatief is.",
+				"pearsonCorrelation": "Onderzoek de mate en richting van de lineaire relatie tussen twee kwantitatieve variabelen.",
+				"scatterPlot": "Visualiseer de relatie tussen twee kwantitatieve variabelen.",
+				"summary": "Genereer belangrijke beschrijvende statistieken voor geselecteerde gegevens (gemiddelde, mediaan, modus, enz.).",
+				"table": "Voeg een gestructureerde tabel in om de waarden uit uw dataset weer te geven.",
+				"textBlock": "Voeg notities, interpretaties en context toe aan je analyse.",
+				"tTest": "Vergelijk de gemiddelden tussen twee groepen wanneer uw onafhankelijke variabele kwalitatief is en er twee groepen zijn."
 			},
 			"items": {
 				"barChart": "Staafdiagram",

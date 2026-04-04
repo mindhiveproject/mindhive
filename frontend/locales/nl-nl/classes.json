@@ -397,13 +397,22 @@
 		"className": "Klassenaam",
 		"createClassToAppear": "Zodra u een klasse hebt aangemaakt, wordt deze hier weergegeven.",
 		"dateCreated": "Datum aangemaakt",
+		"loadError": "",
+		"noClassesMatchSearch": "",
 		"noClassesYet": "Je hebt nog geen klassen aangemaakt.",
 		"numberOfStudents": "Aantal studenten",
+		"searchClassesPlaceholder": "",
+		"sortByLabel": "",
+		"sortDateChipHintNewest": "",
+		"sortDateChipHintOldest": "",
+		"sortDateChipLabelNewest": "",
+		"sortDateChipLabelOldest": "",
 		"teacher": "Docent"
 	},
 	"classForm": {
 		"description": "Beschrijving",
-		"title": "Titel"
+		"title": "Titel",
+		"titleRequired": "Voer een klasnaam in."
 	},
 	"className": "Klassenaam",
 	"classNetworks": "Klassenetwerken",

@@ -397,13 +397,22 @@
 		"className": "Имя класса",
 		"createClassToAppear": "После того, как вы создадите класс, он появится здесь.",
 		"dateCreated": "Дата создания",
+		"loadError": "",
+		"noClassesMatchSearch": "",
 		"noClassesYet": "Вы еще не создали ни одного класса.",
 		"numberOfStudents": "Количество студентов",
+		"searchClassesPlaceholder": "",
+		"sortByLabel": "",
+		"sortDateChipHintNewest": "",
+		"sortDateChipHintOldest": "",
+		"sortDateChipLabelNewest": "",
+		"sortDateChipLabelOldest": "",
 		"teacher": "Учитель"
 	},
 	"classForm": {
 		"description": "Описание",
-		"title": "Заголовок"
+		"title": "Заголовок",
+		"titleRequired": "Пожалуйста, введите название класса."
 	},
 	"className": "Имя класса",
 	"classNetworks": "Классовые сети",

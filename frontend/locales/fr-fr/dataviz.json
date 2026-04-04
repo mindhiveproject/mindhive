@@ -1,19 +1,20 @@
 {
 	"dataJournal": {
 		"components": {
+			"closePanel": "",
 			"descriptions": {
-				"barChart": "Comparez les valeurs entre les catégories grâce aux barres groupées.",
+				"barChart": "Visualisez la relation entre une variable qualitative et une variable quantitative à l'aide de barres groupées.",
 				"codeFromScratch": "Écrivez du code personnalisé pour créer des analyses ou des visualisations entièrement sur mesure.",
-				"correlationalHypothesis": "Étudier comment les variables évoluent ensemble sans intervention.",
-				"experimentalHypothesis": "Planifiez des expériences contrôlées de type A/B et comparez les résultats.",
-				"histogram": "Afficher la répartition des valeurs dans les intervalles numériques.",
-				"oneWayAnova": "Comparer les moyennes de trois groupes ou plus dans un seul test.",
-				"pearsonCorrelation": "Mesurer la force de l'association linéaire entre deux variables.",
-				"scatterPlot": "Visualisez les relations et les tendances entre deux variables.",
-				"summary": "Générer des statistiques descriptives clés pour les données sélectionnées.",
-				"table": "Insérez un tableau structuré pour examiner et organiser les valeurs brutes.",
-				"textBlock": "Ajoutez des notes, des interprétations et du contexte à votre journal.",
-				"tTest": "Comparer les moyennes entre deux groupes et tester la signification statistique."
+				"correlationalHypothesis": "Hypothèse concernant le degré et la direction de la relation linéaire entre deux variables quantitatives.",
+				"experimentalHypothesis": "Hypothèse concernant la différence des moyennes entre les groupes définis par une variable indépendante qualitative.",
+				"histogram": "Présentez la distribution des valeurs d'une variable quantitative dans votre ensemble de données.",
+				"oneWayAnova": "Comparez les moyennes de trois groupes ou plus lorsque votre variable indépendante est qualitative.",
+				"pearsonCorrelation": "Examinez le degré et la direction de la relation linéaire entre deux variables quantitatives.",
+				"scatterPlot": "Visualisez la relation entre deux variables quantitatives.",
+				"summary": "Générer les principales statistiques descriptives pour les données sélectionnées (moyenne, médiane, mode, etc.).",
+				"table": "Insérez un tableau structuré pour afficher les valeurs de votre ensemble de données.",
+				"textBlock": "Ajoutez des notes, une interprétation et du contexte à votre analyse.",
+				"tTest": "Comparez les moyennes entre deux groupes lorsque votre variable indépendante est qualitative et comporte deux groupes."
 			},
 			"items": {
 				"barChart": "Diagramme à bandes",

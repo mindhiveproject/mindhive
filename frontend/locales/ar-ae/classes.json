@@ -397,13 +397,22 @@
 		"className": "اسم الفصل",
 		"createClassToAppear": "بمجرد إنشاء الفصل، سوف يظهر هنا.",
 		"dateCreated": "تاريخ الإنشاء",
+		"loadError": "",
+		"noClassesMatchSearch": "",
 		"noClassesYet": "لم تقم بإنشاء أي فئات بعد.",
 		"numberOfStudents": "عدد الطلاب",
+		"searchClassesPlaceholder": "",
+		"sortByLabel": "",
+		"sortDateChipHintNewest": "",
+		"sortDateChipHintOldest": "",
+		"sortDateChipLabelNewest": "",
+		"sortDateChipLabelOldest": "",
 		"teacher": "مدرس"
 	},
 	"classForm": {
 		"description": "وصف",
-		"title": "عنوان"
+		"title": "عنوان",
+		"titleRequired": "الرجاء إدخال عنوان الفصل."
 	},
 	"className": "اسم الفصل",
 	"classNetworks": "شبكات الطبقات",

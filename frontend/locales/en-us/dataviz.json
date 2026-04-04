@@ -1,19 +1,20 @@
 {
 	"dataJournal": {
 		"components": {
+			"closePanel": "Close component panel",
 			"descriptions": {
-				"barChart": "Compare values across categories with grouped bars.",
+				"barChart": "Visualize the relationship between a qualitative and a quantitative variable using grouped bars.",
 				"codeFromScratch": "Write custom code to build fully tailored analyses or visuals.",
-				"correlationalHypothesis": "Hypothesis about how two variables relate to each other.",
-				"experimentalHypothesis": "Plan controlled experimental designs and compare outcomes.",
-				"histogram": "Show the distribution of values in your dataset.",
-				"oneWayAnova": "Compare means across three or more groups in one test.",
-				"pearsonCorrelation": "Measure linear association strength between two continuous variables.",
-				"scatterPlot": "Visualize relationships between two continuous variables.",
+				"correlationalHypothesis": "Hypothesis about the degree and direction of the linear relationship between two quantitative variables.",
+				"experimentalHypothesis": "Hypothesis about the difference in means between groups defined by a qualitative independent variable.",
+				"histogram": "Show the distribution of values for a quantitative variable in your dataset.",
+				"oneWayAnova": "Compare means across three or more groups when your independent variable is qualitative.",
+				"pearsonCorrelation": "Examine the degree and direction of the linear relationship between two quantitative variables.",
+				"scatterPlot": "Visualize the relationship between two quantitative variables.",
 				"summary": "Generate key descriptive statistics for selected data (mean, median, mode, etc.).",
 				"table": "Insert a structured table to show your dataset values.",
 				"textBlock": "Add notes, interpretation, and context to your analysis.",
-				"tTest": "Compare means between two groups and test significance."
+				"tTest": "Compare means between two groups when your independent variable is qualitative with 2 groups."
 			},
 			"items": {
 				"barChart": "Bar Chart",
@@ -37,8 +38,7 @@
 				"statisticalTests": "Statistical Tests",
 				"studyAssets": "Study Assets"
 			},
-			"title": "Component Panel",
-			"closePanel": "Close component panel"
+			"title": "Component Panel"
 		},
 		"topNav": {
 			"addComponent": "Add a Component",

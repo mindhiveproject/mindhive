@@ -1,19 +1,20 @@
 {
 	"dataJournal": {
 		"components": {
+			"closePanel": "",
 			"descriptions": {
-				"barChart": "使用分组柱状图比较不同类别的值。",
+				"barChart": "使用分组条形图可视化定性变量和定量变量之间的关系。",
 				"codeFromScratch": "编写自定义代码以构建完全定制的分析或可视化效果。",
-				"correlationalHypothesis": "研究变量在无干预情况下如何协同变化。",
-				"experimentalHypothesis": "设计受控的A/B测试实验并比较结果。",
-				"histogram": "显示数值在各个数值区间内的分布情况。",
-				"oneWayAnova": "在一个测试中比较三个或更多组的均值。",
-				"pearsonCorrelation": "测量两个变量之间的线性关联强度。",
-				"scatterPlot": "将两个变量之间的关系和模式可视化。",
-				"summary": "生成所选数据的关键描述性统计信息。",
-				"table": "插入结构化表格以检查和整理原始值。",
-				"textBlock": "在日记中添加注释、解释和背景信息。",
-				"tTest": "比较两组均值并检验其显著性。"
+				"correlationalHypothesis": "关于两个定量变量之间线性关系的程度和方向的假设。",
+				"experimentalHypothesis": "关于由定性自变量定义的各组之间均值差异的假设。",
+				"histogram": "显示数据集中定量变量的值分布情况。",
+				"oneWayAnova": "当自变量为定性变量时，比较三个或更多组的均值。",
+				"pearsonCorrelation": "检验两个定量变量之间线性关系的程度和方向。",
+				"scatterPlot": "将两个定量变量之间的关系可视化。",
+				"summary": "生成所选数据的关键描述统计信息（均值、中位数、众数等）。",
+				"table": "插入一个结构化表格来显示您的数据集值。",
+				"textBlock": "在分析中添加注释、解释和背景信息。",
+				"tTest": "当自变量为定性变量且分为两组时，比较两组的均值。"
 			},
 			"items": {
 				"barChart": "条形图",

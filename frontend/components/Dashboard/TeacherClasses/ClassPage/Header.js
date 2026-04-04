@@ -1,66 +1,177 @@
+"use client";
+
 import { useMutation } from "@apollo/client";
-import { StyledForm } from "../../../styles/StyledForm";
+import { useEffect, useRef, useCallback, useState } from "react";
 import DisplayError from "../../../ErrorMessage";
 import useTranslation from "next-translate/useTranslation";
 
 import useForm from "../../../../lib/useForm";
 
 import { EDIT_CLASS } from "../../../Mutations/Classes";
-// import { GET_TEACHER_CLASSES } from "../../../Queries/Classes";
+import { GET_CLASS } from "../../../Queries/Classes";
+import TipTapEditor from "../../../TipTap/Main";
+
+/** Remove HTML tags only (preserve spaces — used for controlled title input). */
+function stripTags(html) {
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, "");
+}
+
+/** Tags removed + trim (used for H1 display / empty check). */
+function stripHtml(html) {
+  return stripTags(html).trim();
+}
 
 export default function Header({ user, myclass }) {
   const { t } = useTranslation("classes");
 
-  const { inputs, handleChange, clearForm } = useForm({
+  const { inputs, handleChange } = useForm({
     ...myclass,
   });
 
-  const [updateClass, { data, loading, error }] = useMutation(EDIT_CLASS, {
-    variables: inputs,
-    refetchQueries: [
-      // { query: GET_TEACHER_CLASSES, variables: { id: user?.id } },
-    ],
+  const [isTitleEditing, setIsTitleEditing] = useState(false);
+
+  const titleRef = useRef("");
+  const descriptionRef = useRef("");
+
+  useEffect(() => {
+    titleRef.current = inputs?.title ?? "";
+    descriptionRef.current = inputs?.description ?? "";
+  }, [inputs?.title, inputs?.description]);
+
+  useEffect(() => {
+    setIsTitleEditing(false);
+  }, [myclass?.id, myclass?.code]);
+
+  const refetchClass =
+    myclass?.code != null
+      ? [{ query: GET_CLASS, variables: { code: myclass.code } }]
+      : [];
+
+  const [updateClass, { loading, error }] = useMutation(EDIT_CLASS, {
+    refetchQueries: refetchClass,
   });
 
+  const canEditTitle = !loading && Boolean(myclass?.id);
+
+  const persistIfDirty = useCallback(() => {
+    if (!myclass?.id) return;
+    const title = titleRef.current;
+    const description = descriptionRef.current;
+    const serverTitle = myclass.title ?? "";
+    const serverDescription = myclass.description ?? "";
+    if (title === serverTitle && description === serverDescription) return;
+    updateClass({
+      variables: {
+        id: myclass.id,
+        title,
+        description,
+      },
+    });
+  }, [myclass?.id, myclass?.title, myclass?.description, updateClass]);
+
+  const finishTitleEdit = useCallback(() => {
+    persistIfDirty();
+    setIsTitleEditing(false);
+  }, [persistIfDirty]);
+
+  const handleDescriptionUpdate = (content) => {
+    const value = content ?? "";
+    descriptionRef.current = value;
+    handleChange({
+      target: { name: "description", value },
+    });
+  };
+
+  const titleInputValue = stripTags(inputs?.title ?? "");
+  const titleDisplayTrimmed = stripHtml(inputs?.title ?? "");
+  const titleDisplay =
+    titleDisplayTrimmed ||
+    t("header.titleFallback", "Untitled class");
+
   return (
-    <StyledForm>
-      <div className="editableClassHeader">
-        <DisplayError error={error} />
-        <fieldset disabled={loading} aria-busy={loading}>
-          <div className="infoPane">
-            <label htmlFor="title">
-              <textarea
-                className="title"
-                type="title"
-                name="title"
-                value={inputs?.title}
-                onChange={handleChange}
-                required
-              />
-            </label>
+    <div className="editableClassHeader">
+      <DisplayError error={error} />
+      <div className="infoPane" aria-busy={loading}>
+        <div className="classHeaderTitleBlock">
+          {isTitleEditing ? (
+            <input
+              type="text"
+              name="title"
+              className="title classHeaderTitleInput"
+              value={titleInputValue}
+              onChange={(e) => {
+                const value = e.target.value;
+                titleRef.current = value;
+                handleChange({
+                  target: { name: "title", value },
+                });
+              }}
+              onBlur={finishTitleEdit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  finishTitleEdit();
+                } else if (e.key === "Escape") {
+                  const reverted = myclass?.title ?? "";
+                  titleRef.current = reverted;
+                  handleChange({
+                    target: { name: "title", value: reverted },
+                  });
+                  setIsTitleEditing(false);
+                } else if (e.key === " " || e.code === "Space") {
+                  // So ancestors (e.g. page shortcuts) cannot preventDefault and block the character
+                  e.stopPropagation();
+                }
+              }}
+              autoFocus
+              aria-label={t("classForm.title", "Title")}
+            />
+          ) : (
+            <h1
+              className={
+                canEditTitle
+                  ? "title classHeaderTitleDisplay classHeaderTitleDisplayEditable"
+                  : "title classHeaderTitleDisplay"
+              }
+              onClick={
+                canEditTitle ? () => setIsTitleEditing(true) : undefined
+              }
+              onKeyDown={
+                canEditTitle
+                  ? (e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setIsTitleEditing(true);
+                      }
+                    }
+                  : undefined
+              }
+              tabIndex={canEditTitle ? 0 : undefined}
+            >
+              {titleDisplay}
+            </h1>
+          )}
+        </div>
 
-            <label htmlFor="description">
-              <textarea
-                className="description"
-                id="description"
-                name="description"
-                value={inputs?.description}
-                onChange={handleChange}
-              />
-            </label>
-
-            {(inputs?.title !== myclass.title ||
-              inputs?.description !== myclass.description) && (
-              <div className="submitButton">
-                <button onClick={() => updateClass()} type="submit">
-                  {t("header.save")}
-                </button>
-              </div>
-            )}
+        <label>
+          <div className="classHeaderDescriptionEditor classFormDescriptionEditor">
+            <TipTapEditor
+              content={inputs?.description ?? ""}
+              onUpdate={handleDescriptionUpdate}
+              onBlur={persistIfDirty}
+              isEditable={!loading && Boolean(myclass?.id)}
+              toolbarVisible={false}
+              limitedToolbar={true}
+              // mediaLibraryId={user?.id ?? null}
+              // mediaLibrarySource={mediaLibrarySource}
+            />
           </div>
-        </fieldset>
-        <div className="teacher">{t("header.teacher")} {myclass?.creator?.username}</div>
+        </label>
       </div>
-    </StyledForm>
+      <div className="teacher">
+        {t("header.teacher")} {myclass?.creator?.username}
+      </div>
+    </div>
   );
 }

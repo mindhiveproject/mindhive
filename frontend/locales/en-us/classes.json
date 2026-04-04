@@ -397,13 +397,22 @@
 		"className": "Class name",
 		"createClassToAppear": "Once you create a class, it will appear here.",
 		"dateCreated": "Date created",
+		"loadError": "We couldn’t load your classes. Please try again.",
+		"noClassesMatchSearch": "No classes match your search. Try a different name.",
 		"noClassesYet": "You haven't created any classes yet.",
-		"numberOfStudents": "Number of students",
+		"numberOfStudents": "Students",
+		"searchClassesPlaceholder": "Search by class name",
+		"sortByLabel": "Sorted by:",
+		"sortDateChipHintNewest": "Showing most recent first. Click to show least recent first.",
+		"sortDateChipHintOldest": "Showing least recent first. Click to show most recent first.",
+		"sortDateChipLabelNewest": "Newest first",
+		"sortDateChipLabelOldest": "Oldest first",
 		"teacher": "Teacher"
 	},
 	"classForm": {
 		"description": "Description",
-		"title": "Title"
+		"title": "Title",
+		"titleRequired": "Please enter a class title."
 	},
 	"className": "Class name",
 	"classNetworks": "Class networks",
@@ -554,8 +563,8 @@
 	"deleteYourClass": "Delete your class",
 	"emailAddress": "Email address",
 	"header": {
-		"save": "Save",
-		"teacher": "Teacher"
+		"teacher": "Teacher",
+		"titleFallback": "Untitled class"
 	},
 	"homework": {
 		"allEntries": "All entries",
