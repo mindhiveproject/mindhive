@@ -135,7 +135,15 @@ app
     // Issue #11: reduce global body limit from 100mb to a safe default.
     // Individual routes that need larger bodies apply their own parsers.
     // change the limit to 10mb (Apr 7th 2026)
-    server.use(body.json({ limit: "10mb" }));
+    // Do NOT parse JSON for /api/graphql: Next.js dev rewrites proxy to Keystone must
+    // receive the raw request body stream; express.json() consumes it and breaks the proxy.
+    server.use((req, res, next) => {
+      const pathname = req.url ? req.url.split("?")[0] : "";
+      if (pathname === "/api/graphql") {
+        return next();
+      }
+      body.json({ limit: "10mb" })(req, res, next);
+    });
 
     // Serve static files from the 'public' directory
     server.use(express.static(path.join(__dirname, "public")));
