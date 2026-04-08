@@ -563,8 +563,10 @@
 	"deleteYourClass": "Eliminar tu clase",
 	"emailAddress": "Dirección de correo electrónico",
 	"header": {
+		"addDescription": "Añadir descripción",
 		"save": "Ahorrar",
-		"teacher": "Maestro"
+		"teacher": "Maestro",
+		"titleFallback": ""
 	},
 	"homework": {
 		"allEntries": "Todas las entradas",

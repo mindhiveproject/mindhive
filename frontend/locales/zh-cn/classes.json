@@ -563,8 +563,10 @@
 	"deleteYourClass": "删除你的班级",
 	"emailAddress": "电子邮件",
 	"header": {
+		"addDescription": "添加描述",
 		"save": "节省",
-		"teacher": "老师"
+		"teacher": "老师",
+		"titleFallback": ""
 	},
 	"homework": {
 		"allEntries": "所有条目",

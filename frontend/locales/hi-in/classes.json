@@ -563,8 +563,10 @@
 	"deleteYourClass": "अपनी कक्षा हटाएँ",
 	"emailAddress": "मेल पता",
 	"header": {
+		"addDescription": "विवरण जोड़ें",
 		"save": "बचाना",
-		"teacher": "अध्यापक"
+		"teacher": "अध्यापक",
+		"titleFallback": ""
 	},
 	"homework": {
 		"allEntries": "सभी प्रविष्टियों",

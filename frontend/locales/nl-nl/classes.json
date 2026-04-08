@@ -563,8 +563,10 @@
 	"deleteYourClass": "Verwijder uw klas",
 	"emailAddress": "E-mailadres",
 	"header": {
+		"addDescription": "Voeg een beschrijving toe",
 		"save": "Redden",
-		"teacher": "Docent"
+		"teacher": "Docent",
+		"titleFallback": ""
 	},
 	"homework": {
 		"allEntries": "Alle inzendingen",

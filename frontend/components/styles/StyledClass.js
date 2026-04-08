@@ -169,8 +169,9 @@ const StyledClass = styled.div`
     padding: 10px;
     .infoPane {
       display: grid;
-      gap: 8px;
+      // gap: 8px;
       width: 100%;
+      margin-bottom: 8px;
     }
     .infoPane label {
       margin-bottom: 8px;
@@ -226,9 +227,17 @@ const StyledClass = styled.div`
       min-height: 48px;
     }
     .classHeaderDescriptionEditor {
+      display: flex;
+      border-radius: 8px;
       width: 100%;
       min-width: 0;
+      // &:hover {
+      //   width: 100%;
+      //   box-shadow: 0 0 0 1px #F2BE42 inset;
+      //   background: #FDF2D0;
+      // }
     }
+
     .classHeaderDescriptionEditor .tiptapEditor {
       min-height: 120px;
     }

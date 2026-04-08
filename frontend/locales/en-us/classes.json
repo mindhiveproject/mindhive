@@ -563,6 +563,8 @@
 	"deleteYourClass": "Delete your class",
 	"emailAddress": "Email address",
 	"header": {
+		"addDescription": "Add description",
+		"save": "",
 		"teacher": "Teacher",
 		"titleFallback": "Untitled class"
 	},
