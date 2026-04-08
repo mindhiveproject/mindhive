@@ -42,6 +42,7 @@ yarn-error.log*
 
 # config file
 config.js
+next.config.js
 
 # videos
 /public/videos

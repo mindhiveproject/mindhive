@@ -7,6 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import useForm from "../../../../lib/useForm";
 
+import Button from "../../../DesignSystem/Button";
 import { EDIT_CLASS } from "../../../Mutations/Classes";
 import { GET_CLASS } from "../../../Queries/Classes";
 import TipTapEditor from "../../../TipTap/Main";
@@ -30,9 +31,11 @@ export default function Header({ user, myclass }) {
   });
 
   const [isTitleEditing, setIsTitleEditing] = useState(false);
+  const [isAddingDescription, setIsAddingDescription] = useState(false);
 
   const titleRef = useRef("");
   const descriptionRef = useRef("");
+  const descriptionEditorContainerRef = useRef(null);
 
   useEffect(() => {
     titleRef.current = inputs?.title ?? "";
@@ -41,7 +44,34 @@ export default function Header({ user, myclass }) {
 
   useEffect(() => {
     setIsTitleEditing(false);
+    setIsAddingDescription(false);
   }, [myclass?.id, myclass?.code]);
+
+  /** Focus TipTap ProseMirror after opening from the empty-state button (editor may mount async). */
+  useEffect(() => {
+    if (!isAddingDescription) return;
+    let cancelled = false;
+    let attempts = 0;
+    const maxAttempts = 40;
+    const tryFocus = () => {
+      if (cancelled) return;
+      const pm = descriptionEditorContainerRef.current?.querySelector(
+        ".ProseMirror[contenteditable='true']",
+      );
+      if (pm) {
+        pm.focus();
+        return;
+      }
+      attempts += 1;
+      if (attempts < maxAttempts) {
+        requestAnimationFrame(tryFocus);
+      }
+    };
+    requestAnimationFrame(tryFocus);
+    return () => {
+      cancelled = true;
+    };
+  }, [isAddingDescription]);
 
   const refetchClass =
     myclass?.code != null
@@ -82,6 +112,19 @@ export default function Header({ user, myclass }) {
       target: { name: "description", value },
     });
   };
+
+  const handleDescriptionBlur = useCallback(() => {
+    persistIfDirty();
+    const html = descriptionRef.current ?? "";
+    if (!stripHtml(html)) {
+      setIsAddingDescription(false);
+    }
+  }, [persistIfDirty]);
+
+  const descriptionIsEmpty =
+    stripHtml(inputs?.description ?? "") === "";
+  const showDescriptionEditor =
+    !descriptionIsEmpty || isAddingDescription;
 
   const titleInputValue = stripTags(inputs?.title ?? "");
   const titleDisplayTrimmed = stripHtml(inputs?.title ?? "");
@@ -155,22 +198,36 @@ export default function Header({ user, myclass }) {
         </div>
 
         <label>
-          <div className="classHeaderDescriptionEditor classFormDescriptionEditor">
-            <TipTapEditor
-              content={inputs?.description ?? ""}
-              onUpdate={handleDescriptionUpdate}
-              onBlur={persistIfDirty}
-              isEditable={!loading && Boolean(myclass?.id)}
-              toolbarVisible={false}
-              limitedToolbar={true}
-              // mediaLibraryId={user?.id ?? null}
-              // mediaLibrarySource={mediaLibrarySource}
-            />
+          <div
+            ref={descriptionEditorContainerRef}
+            className="classHeaderDescriptionEditor classFormDescriptionEditor"
+          >
+            {showDescriptionEditor ? (
+              <TipTapEditor
+                content={inputs?.description ?? ""}
+                onUpdate={handleDescriptionUpdate}
+                onBlur={handleDescriptionBlur}
+                isEditable={!loading && Boolean(myclass?.id)}
+                toolbarVisible={false}
+                limitedToolbar={true}
+                // mediaLibraryId={user?.id ?? null}
+                // mediaLibrarySource={mediaLibrarySource}
+              />
+            ) : (
+              <Button
+                type="button"
+                variant="text"
+                disabled={!canEditTitle}
+                onClick={() => setIsAddingDescription(true)}
+              >
+                {t("header.addDescription", "Add a description to your class")}
+              </Button>
+            )}
           </div>
         </label>
       </div>
       <div className="teacher">
-        {t("header.teacher")} {myclass?.creator?.username}
+        <p>{t("header.teacher")}:</p>{myclass?.creator?.username}
       </div>
     </div>
   );

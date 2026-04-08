@@ -563,8 +563,10 @@
 	"deleteYourClass": "Удалить свой класс",
 	"emailAddress": "Адрес электронной почты",
 	"header": {
+		"addDescription": "Добавить описание",
 		"save": "Сохранять",
-		"teacher": "Учитель"
+		"teacher": "Учитель",
+		"titleFallback": ""
 	},
 	"homework": {
 		"allEntries": "Все записи",

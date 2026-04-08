@@ -62,6 +62,20 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Non-production: browser Apollo uses same-origin /api/graphql (see config.js). Proxy to Keystone.
+  // `npm run dev` runs `node server` without NODE_ENV=development; rewrites must still apply.
+  // Omit when NODE_ENV=production — client uses https://backend.mindhive.science via withData.js.
+  async rewrites() {
+    if (process.env.NODE_ENV === "production") {
+      return [];
+    }
+    return [
+      {
+        source: "/api/graphql",
+        destination: "http://localhost:4444/api/graphql",
+      },
+    ];
+  },
   async headers() {
     return [
       {

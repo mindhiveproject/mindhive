@@ -563,8 +563,10 @@
 	"deleteYourClass": "حذف صفك",
 	"emailAddress": "عنوان البريد الإلكتروني",
 	"header": {
+		"addDescription": "اضف وصفا",
 		"save": "يحفظ",
-		"teacher": "مدرس"
+		"teacher": "مدرس",
+		"titleFallback": ""
 	},
 	"homework": {
 		"allEntries": "جميع المشاركات",

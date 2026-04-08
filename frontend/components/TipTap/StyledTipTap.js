@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const StyledTipTap = styled.div`
   position: relative;
   z-index: 1; /* Ensure proper stacking context */
+  width: 100%;
 
   .editorContainer {
     position: relative;
