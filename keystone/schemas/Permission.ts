@@ -6,8 +6,7 @@ import { isSignedIn, rules } from "../access";
 export const Permission = list({
   access: {
     operation: {
-      query: ({ session }) =>
-        isSignedIn({ session }) && rules.canManageRoles({ session }),
+      query: () => true,
       create: ({ session }) => rules.canManageRoles({ session }),
       update: ({ session }) => rules.canManageRoles({ session }),
       delete: ({ session }) => rules.canManageRoles({ session }),

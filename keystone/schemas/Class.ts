@@ -14,17 +14,41 @@ export const Class = list({
       delete: isSignedIn,
     },
     filter: {
-      // What items a user can see:
-      // - Admins: all
-      // - Others: classes where they are creator, mentor, or student
       query: ({ session }) =>
         isAdmin({ session })
           ? true
           : {
               OR: [
+                // Classes where the user is creator / mentor / student
                 { creator: { id: { equals: session?.itemId } } },
                 { mentors: { some: { id: { equals: session?.itemId } } } },
                 { students: { some: { id: { equals: session?.itemId } } } },
+
+                // Classes that are in at least one network that also contains
+                // a class where the user is creator / mentor / student
+                {
+                  networks: {
+                    some: {
+                      classes: {
+                        some: {
+                          OR: [
+                            { creator: { id: { equals: session?.itemId } } },
+                            {
+                              mentors: {
+                                some: { id: { equals: session?.itemId } },
+                              },
+                            },
+                            {
+                              students: {
+                                some: { id: { equals: session?.itemId } },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
               ],
             },
       // Who can update/delete:

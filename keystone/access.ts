@@ -195,4 +195,11 @@ export const rules = {
     }
     return false;
   },
+
+  canManageJournals({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageJournals({ session })) return true;
+    if (item?.authorId === session?.itemId) return true;
+    return false;
+  },
 };
