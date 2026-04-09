@@ -18,8 +18,8 @@ const notion = new Client({
   notionVersion: "2025-09-03",
 });
 
-const endpoint = `http://localhost:4444/api/graphql`;
-const prodEndpoint = `https://backend.mindhive.science/api/graphql`;
+const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/graphql`;
+const prodEndpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL_PRODUCTION}/api/graphql`;
 
 const SAVE_AGGREGATED_RESULTS = `
   mutation createSummaryResult(
@@ -75,7 +75,10 @@ function validatePathSegment(value, label) {
 
 // Ensure a resolved path stays inside an expected base directory.
 function assertWithinBase(resolvedPath, basePath) {
-  if (!resolvedPath.startsWith(basePath + path.sep) && resolvedPath !== basePath) {
+  if (
+    !resolvedPath.startsWith(basePath + path.sep) &&
+    resolvedPath !== basePath
+  ) {
     throw new Error("Path traversal detected");
   }
 }
@@ -84,7 +87,13 @@ function assertWithinBase(resolvedPath, basePath) {
 // Multer: safe video upload (issue #5)
 // Replace originalname with a UUID-based filename; validate extension.
 // ---------------------------------------------------------------------------
-const ALLOWED_VIDEO_EXTENSIONS = new Set([".mp4", ".webm", ".ogg", ".mov", ".avi"]);
+const ALLOWED_VIDEO_EXTENSIONS = new Set([
+  ".mp4",
+  ".webm",
+  ".ogg",
+  ".mov",
+  ".avi",
+]);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -153,7 +162,9 @@ app
       console.log("Received pageId:", pageId);
 
       if (!pageId) {
-        return res.status(400).json({ error: "Missing pageId query parameter" });
+        return res
+          .status(400)
+          .json({ error: "Missing pageId query parameter" });
       }
 
       try {
@@ -191,7 +202,9 @@ app
         const isValidationError =
           body?.code === "validation_error" ||
           (body?.message &&
-            (String(body.message).includes("multiple_data_sources_for_database") ||
+            (String(body.message).includes(
+              "multiple_data_sources_for_database",
+            ) ||
               String(body.message).includes("minimum_api_version")));
         if (isValidationError) {
           return res.status(400).json({
@@ -262,7 +275,7 @@ app
           status: 201,
           statusText: "Saved",
         });
-      }
+      },
     );
 
     // Issue #4: validate all path components to prevent directory traversal.
@@ -329,7 +342,7 @@ app
             },
             function (err) {
               if (err) console.error(err);
-            }
+            },
           );
         } else {
           jsonfile.writeFile(
@@ -341,7 +354,7 @@ app
             { flag: "a", EOL: ",\n" },
             function (err) {
               if (err) console.error(err);
-            }
+            },
           );
         }
 
@@ -399,15 +412,20 @@ app
           status: 202,
           statusText: "it worked",
         });
-      }
+      },
     );
 
-    server.post("/api/upload", generalApiLimiter, upload.single("video"), async (req, res) => {
-      if (!req.file) {
-        return res.status(400).send("No file uploaded.");
-      }
-      res.json({ filename: req.file.filename });
-    });
+    server.post(
+      "/api/upload",
+      generalApiLimiter,
+      upload.single("video"),
+      async (req, res) => {
+        if (!req.file) {
+          return res.status(400).send("No file uploaded.");
+        }
+        res.json({ filename: req.file.filename });
+      },
+    );
 
     server.post("*", (req, res) => {
       const parsedUrl = url.parse(req.url || "", true);
