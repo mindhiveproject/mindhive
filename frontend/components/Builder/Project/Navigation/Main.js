@@ -61,10 +61,10 @@ export default function Navigation({
       value: "page",
       name: t("participantPage"),
     },
-    {
-      value: "review",
-      name: t("review.review"),
-    },
+    // {
+    //   value: "review",
+    //   name: t("review.review"),
+    // },
     {
       value: "collect",
       name: t("testAndCollect"),

@@ -574,6 +574,7 @@
 	"myTasks": "Mes tâches",
 	"navigation": {
 		"back": "dos",
+		"cloneSavePrompt": "Modifiez le nom de l'étude et cliquez sur le bouton Enregistrer",
 		"enoughComments": "Assez de commentaires ? Faites-le savoir aux évaluateurs.",
 		"enoughParticipants": "Assez de participants ?",
 		"lockFeedback": "Verrouillage des commentaires",

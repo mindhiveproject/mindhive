@@ -574,6 +574,7 @@
 	"myTasks": "我的任务",
 	"navigation": {
 		"back": "后退",
+		"cloneSavePrompt": "更改研究名称，然后单击“保存”按钮",
 		"enoughComments": "评论够多了？请告知评论者",
 		"enoughParticipants": "参与者够多吗？",
 		"lockFeedback": "锁定反馈",

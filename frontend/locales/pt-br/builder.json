@@ -574,6 +574,7 @@
 	"myTasks": "Minhas tarefas",
 	"navigation": {
 		"back": "voltar",
+		"cloneSavePrompt": "Altere o nome do estudo e clique no botão Salvar.",
 		"enoughComments": "Comentários suficientes? Avise os revisores",
 		"enoughParticipants": "Participantes suficientes?",
 		"lockFeedback": "Bloqueio de feedback",

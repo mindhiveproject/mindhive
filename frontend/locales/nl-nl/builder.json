@@ -574,6 +574,7 @@
 	"myTasks": "Mijn taken",
 	"navigation": {
 		"back": "rug",
+		"cloneSavePrompt": "Wijzig de naam van de studie en klik op de knop 'Opslaan'.",
 		"enoughComments": "Genoeg reacties? Laat het de reviewers weten.",
 		"enoughParticipants": "Genoeg deelnemers?",
 		"lockFeedback": "Vergrendelingsfeedback",

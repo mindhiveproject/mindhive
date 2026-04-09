@@ -574,6 +574,7 @@
 	"myTasks": "मेरे कार्य",
 	"navigation": {
 		"back": "पीछे",
+		"cloneSavePrompt": "",
 		"enoughComments": "क्या टिप्पणियाँ काफ़ी हो गईं? समीक्षकों को बताएँ",
 		"enoughParticipants": "पर्याप्त प्रतिभागी?",
 		"lockFeedback": "लॉक फीडबैक",

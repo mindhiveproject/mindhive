@@ -574,6 +574,7 @@
 	"myTasks": "مهامي",
 	"navigation": {
 		"back": "خلف",
+		"cloneSavePrompt": "غيّر اسم الدراسة وانقر على زر الحفظ",
 		"enoughComments": "هل يكفي من التعليقات؟ أخبر المراجعين.",
 		"enoughParticipants": "هل عدد المشاركين كافي؟",
 		"lockFeedback": "قفل التعليقات",

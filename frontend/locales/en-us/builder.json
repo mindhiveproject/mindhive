@@ -574,6 +574,7 @@
 	"myTasks": "My tasks",
 	"navigation": {
 		"back": "back",
+		"cloneSavePrompt": "Change the study name and click the Save button",
 		"enoughComments": "Enough comments? Let reviewers know",
 		"enoughParticipants": "Enough participants?",
 		"lockFeedback": "Lock Feedback",
