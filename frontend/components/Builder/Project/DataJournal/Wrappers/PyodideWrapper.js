@@ -1,7 +1,7 @@
 // components/DataJournal/Wrappers/PyodideWrapper.js
 import { useState, useEffect } from "react";
 import { useDataJournal } from "../Context/DataJournalContext"; // Import Context hook
-import { initializePyodide } from "../Helpers/PyodideUtils"; // Extracted helper
+import { getSharedPyodide } from "../Helpers/PyodideUtils";
 import {
   MessageHeader,
   Message,
@@ -18,7 +18,7 @@ export default function PyodideWrapper({ children, user, projectId, studyId }) {
     async function loadAndInitializePyodide() {
       try {
         setIsLoading(true);
-        const pyodideInstance = await initializePyodide();
+        const pyodideInstance = await getSharedPyodide();
         setPyodide(pyodideInstance); // Set in Context for global access
         setIsLoading(false);
       } catch (err) {

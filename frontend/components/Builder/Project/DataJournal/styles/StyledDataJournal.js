@@ -25,12 +25,20 @@ export const StyledSidebar = styled.div`
   font-size: 14px;
   line-height: 17px;
   border-radius: 16px;
-  .collapsePanelBtn {
+  .navigationPanelHeader {
     display: flex;
-    align-items: center;
+    align-items: baseline;
+    justify-content: space-between;
     gap: 8px;
-    margin: 10px 10px;
-    justify-content: flex-start;
+    .collapsePanelBtn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-start;
+      .collapsePanelBtnIcon {
+        opacity: 0.5;
+      }
+    }
   }
   .journals {
     display: grid;
@@ -121,6 +129,12 @@ export const StyledSidebar = styled.div`
       font-weight: 700;
       font-style: Bold;
     }
+  }
+  
+  .createJournalBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .components {

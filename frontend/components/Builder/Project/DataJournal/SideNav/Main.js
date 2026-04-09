@@ -24,36 +24,37 @@ export default function SideNavigation({
 
   return (
     <StyledSidebar>
-      <div className="collapsePanelBtn">
-        <Button
-          type="button"
-          variant="text"
-          style={{ color: "#171717" }}
-          onClick={() => collapsePanel()}
-          leadingIcon={<img src="/assets/dataviz/openPanel.svg" alt="" aria-hidden />}
-        >
-          {t("dataJournal.collapsePanel", "Collapse panel")}
-        </Button>
+      <div className="navigationPanelHeader">
+        <div className="collapsePanelBtn">
+          <Button
+            type="button"
+            variant="text"
+            style={{ color: "#5D5763", fontWeight: 400 }}
+            onClick={() => collapsePanel()}
+            leadingIcon={<img src="/assets/dataviz/openPanel.svg" alt="" aria-hidden className="collapsePanelBtnIcon" />}
+          >
+            {t("dataJournal.sideNav.collapsePanel", "Collapse panel")}
+          </Button>
+        </div>
+        {journalCollections.length > 0 && (
+          <div>
+            <CreateJournal
+              projectId={projectId}
+              studyId={studyId}
+              createNewJournalCollection={false}
+              journalCollections={journalCollections}
+            />
+          </div>
+        )}
       </div>
 
       {journalCollections.length === 0 && (
         <div>
-          <p>It looks like you still don’t have any data journals!</p>
+          <p>{t("dataJournal.sideNav.noJournalsYet", "It looks like you still don't have any data journals!")}</p>
           <CreateJournal
             projectId={projectId}
             studyId={studyId}
             createNewJournalCollection={true}
-          />
-        </div>
-      )}
-
-      {journalCollections.length > 0 && (
-        <div>
-          <CreateJournal
-            projectId={projectId}
-            studyId={studyId}
-            createNewJournalCollection={false}
-            journalCollections={journalCollections}
           />
         </div>
       )}

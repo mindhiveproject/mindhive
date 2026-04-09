@@ -38,6 +38,23 @@ export const initializePyodide = async () => {
   return pyodideLoad;
 };
 
+// One interpreter per browser tab: survives Data Journal tab unmount/remount in the Builder.
+// Per-journal data is re-bound via registerJsModule / prepareDataCode in Journal.js.
+let sharedPyodidePromise = null;
+
+/**
+ * Reuses the same Pyodide init across mounts. On failure, clears the cache so the next call retries.
+ */
+export function getSharedPyodide() {
+  if (!sharedPyodidePromise) {
+    sharedPyodidePromise = initializePyodide().catch((err) => {
+      sharedPyodidePromise = null;
+      throw err;
+    });
+  }
+  return sharedPyodidePromise;
+}
+
 // TODO OUTDATED - REMOVE LATER
 export const runCode = async (pyodide, code) => {
   if (!pyodide) {

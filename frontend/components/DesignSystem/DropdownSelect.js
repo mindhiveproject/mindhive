@@ -100,8 +100,9 @@ function getOptionLabelString(opt) {
  * @param {React.CSSProperties} [triggerStyle] - Optional override for trigger button styles.
  * @param {boolean} [fitContent=false] - When true, the control sizes to its label (no full-width stretch).
  * @param {boolean} [multiple=false] - When true, value is `string[]`, options toggle on click, menu stays open until outside/Escape.
- * @param {string} [placeholder] - When `multiple` and nothing selected, shown in the trigger.
+ * @param {string} [placeholder] - Shown in the trigger when nothing is selected: single-select (no matching `value`) or multi-select (empty array).
  * @param {boolean} [searchableMultiple=true] - When `multiple`, show a type-to-filter field above the options (default true).
+ * @param {React.ReactNode} [icon] - Replaces the default chevron after the label. Omit for built-in chevron; pass `null` to show no trailing icon.
  */
 export default function DropdownSelect({
   value,
@@ -113,6 +114,7 @@ export default function DropdownSelect({
   multiple = false,
   placeholder = "",
   searchableMultiple = true,
+  icon,
 }) {
   const { t } = useTranslation("common");
   const [open, setOpen] = useState(false);
@@ -141,7 +143,10 @@ export default function DropdownSelect({
       return parts.join(", ");
     }
     const selected = options.find((o) => o.value === value);
-    return selected?.label ?? "";
+    if (selected) {
+      return selected.label ?? "";
+    }
+    return placeholder;
   }, [multiple, selectedIds, options, value, placeholder]);
 
   const filteredOptions = useMemo(() => {
@@ -256,6 +261,8 @@ export default function DropdownSelect({
         color: "#5D5763",
       };
 
+  const triggerIcon = icon === undefined ? CHEVRON : icon;
+
   return (
     <div ref={triggerRef} style={rootStyle}>
       <button
@@ -267,7 +274,18 @@ export default function DropdownSelect({
         style={triggerMerged}
       >
         <span style={labelSpanStyle}>{displayLabel}</span>
-        {CHEVRON}
+        {triggerIcon != null ? (
+          <span
+            style={{
+              flexShrink: 0,
+              display: "inline-flex",
+              alignItems: "center",
+              lineHeight: 0,
+            }}
+          >
+            {triggerIcon}
+          </span>
+        ) : null}
       </button>
       {open &&
         rect &&

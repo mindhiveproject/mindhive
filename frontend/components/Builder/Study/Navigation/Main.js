@@ -1,9 +1,10 @@
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
 import Connect from "./Connect/Main";
 import StudyOptions from "../../../Studies/Bank/StudyOptions";
+import InfoTooltip from "../../../DesignSystem/InfoTooltip";
 
 import { MY_STUDY } from "../../../Queries/Study";
 
@@ -40,10 +41,10 @@ export default function Navigation({
       value: "collect",
       name: t("testAndCollect"),
     },
-    {
-      value: "visualize",
-      name: t("visualize"),
-    },
+    // {
+    //   value: "visualize",
+    //   name: t("visualize"),
+    // },
     {
       value: "journal",
       name: t("visualize"),
@@ -60,7 +61,7 @@ export default function Navigation({
 
   const items = area === "cloneofstudy" && studyId ? itemsClone : itemsOriginal;
 
-  const { data, error, loading } = useQuery(MY_STUDY, {
+  const { data } = useQuery(MY_STUDY, {
     variables: { id: studyId },
   });
   const study = data?.study || {
@@ -100,26 +101,28 @@ export default function Navigation({
               ←
             </Link>
           </div>
-          <div>
-            <span className="studyTitle">{study?.title}</span>
-
-            {/* {study?.currentVersion && (
-              <span className="studyVersion">
-                [
-                {
-                  study?.versionHistory.filter(
-                    (v) => v?.id === study?.currentVersion
-                  )[0]?.name
-                }
-                ]
-              </span>
-            )} */}
-          </div>
         </div>
-        <div className="rightPanel">
+        <div className="middle">
+          <InfoTooltip
+            content={study?.title || t("myStudies", "My Studies")}
+            delayMs={650}
+            wrapperStyle={{ width: "100%", minWidth: 0 }}
+            tooltipStyle={{
+              maxWidth: "100%",
+              width: "fit-content",
+              background: "#F7F9F8",
+            }}
+          >
+            <span className="studyTitle">{study?.title ?? ""}</span>
+          </InfoTooltip>
+        </div>
+        <div className="right">
           {area === "cloneofstudy" && studyId && (
             <span className="saveFirstMessage">
-              Change the study name and click the Save button
+              {t(
+                "navigation.cloneSavePrompt",
+                "Change the study name and click the Save button"
+              )}
             </span>
           )}
           {area !== "cloneofstudy" && (
@@ -128,7 +131,7 @@ export default function Navigation({
 
               {study?.talks?.length > 0 && (
                 <div className="icon" onClick={toggleChatSidebar}>
-                  <img src="/assets/icons/chat.svg" />
+                  <img src="/assets/icons/chat.svg" alt="" />
                 </div>
               )}
 
@@ -155,7 +158,7 @@ export default function Navigation({
         <div className="menu">
           {items.map((item, i) => (
             <Link
-              key={i}
+              key={item.value}
               href={{
                 pathname: `/builder/${area}`,
                 query: {
@@ -164,6 +167,7 @@ export default function Navigation({
                 },
               }}
               onClick={tryToLeave}
+              aria-current={tab === item?.value ? "page" : undefined}
             >
               <div
                 className={
@@ -173,7 +177,7 @@ export default function Navigation({
                 }
               >
                 <div className="titleWithIcon">
-                  <img src={`/assets/icons/project/${item?.value}.svg`} />
+                  <img src={`/assets/icons/project/${item?.value}.svg`} alt="" />
                   <p>{item?.name}</p>
                 </div>
               </div>
