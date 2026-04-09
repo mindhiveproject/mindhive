@@ -54,7 +54,8 @@ export default function DatasetForm({
       data: {
         title: datasetName,
         dataOrigin: dataOrigin,
-        project: { connect: { id: projectId } },
+        ...(projectId && { project: { connect: { id: projectId } } }),
+        ...(studyId && { study: { connect: { id: studyId } } }),
       },
     };
 

@@ -44,6 +44,10 @@ export default function Navigation({
       value: "visualize",
       name: t("visualize"),
     },
+    {
+      value: "journal",
+      name: t("visualize"),
+    },
   ];
   const itemsClone = [
     {
@@ -169,7 +173,7 @@ export default function Navigation({
                 }
               >
                 <div className="titleWithIcon">
-                  <img src={`/assets/icons/builder/${item?.value}.svg`} />
+                  <img src={`/assets/icons/project/${item?.value}.svg`} />
                   <p>{item?.name}</p>
                 </div>
               </div>
