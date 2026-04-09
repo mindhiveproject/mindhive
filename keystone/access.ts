@@ -3,10 +3,6 @@
 import { permissionsList } from "./schemas/fields";
 import { ListAccessArgs } from "./types";
 
-export function isSignedIn({ session }: ListAccessArgs) {
-  return !!session; // if undefinened, return false
-}
-
 const generatedPermissions = Object.fromEntries(
   permissionsList.map((permission) => [
     permission,
@@ -23,6 +19,14 @@ const generatedPermissions = Object.fromEntries(
 export const permissions = {
   ...generatedPermissions,
 };
+
+export function isSignedIn({ session }: ListAccessArgs) {
+  return !!session; // if undefinened, return false
+}
+
+export function isAdmin({ session }: ListAccessArgs) {
+  return permissions.canAccessAdminUI({ session });
+}
 
 // Rule based functions
 // rules can return a boolean or a filter that limits which products they can CRUD
