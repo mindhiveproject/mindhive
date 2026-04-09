@@ -227,7 +227,6 @@
 	"dataJournal": {
 		"addComponent": "Component toevoegen",
 		"addNotes": "Notities toevoegen",
-		"collapsePanel": "Inklappaneel",
 		"componentEditor": {
 			"close": "Dichtbij",
 			"componentName": "",
@@ -330,6 +329,13 @@
 			"notes": "Notities",
 			"notesPlaceholder": "Voer hier uw aantekeningen in...",
 			"widgetSettings": "Widget-instellingen"
+		},
+		"sideNav": {
+			"add": "Toevoegen",
+			"addJournalScratch": "Begin helemaal opnieuw.",
+			"addJournalTemplate": "Gebruik een sjabloon (nog te bepalen)",
+			"collapsePanel": "Inklappaneel",
+			"noJournalsYet": "Het lijkt erop dat je nog steeds geen datalogboeken hebt!"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Niet-ondersteund widgettype: {{type}}"

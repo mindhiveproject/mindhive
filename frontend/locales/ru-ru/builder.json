@@ -227,7 +227,6 @@
 	"dataJournal": {
 		"addComponent": "Добавить компонент",
 		"addNotes": "Добавить заметки",
-		"collapsePanel": "Свернуть панель",
 		"componentEditor": {
 			"close": "Закрывать",
 			"componentName": "",
@@ -330,6 +329,13 @@
 			"notes": "Примечания",
 			"notesPlaceholder": "Введите ваши заметки здесь...",
 			"widgetSettings": "Настройки виджета"
+		},
+		"sideNav": {
+			"add": "Добавлять",
+			"addJournalScratch": "Начать с нуля",
+			"addJournalTemplate": "Используйте шаблон (будет определено позже).",
+			"collapsePanel": "Свернуть панель",
+			"noJournalsYet": "Похоже, у вас до сих пор нет журналов данных!"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Неподдерживаемый тип виджета: {{type}}"

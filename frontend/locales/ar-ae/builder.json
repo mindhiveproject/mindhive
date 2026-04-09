@@ -227,7 +227,6 @@
 	"dataJournal": {
 		"addComponent": "إضافة مكون",
 		"addNotes": "إضافة ملاحظات",
-		"collapsePanel": "لوحة قابلة للطي",
 		"componentEditor": {
 			"close": "يغلق",
 			"componentName": "",
@@ -330,6 +329,13 @@
 			"notes": "ملحوظات",
 			"notesPlaceholder": "أدخل ملاحظاتك هنا...",
 			"widgetSettings": "إعدادات الأداة"
+		},
+		"sideNav": {
+			"add": "يضيف",
+			"addJournalScratch": "ابدأ من الصفر",
+			"addJournalTemplate": "استخدم قالبًا (سيتم تحديده لاحقًا)",
+			"collapsePanel": "لوحة قابلة للطي",
+			"noJournalsYet": "يبدو أنك لا تزال لا تملك أي سجلات بيانات!"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "نوع الأداة غير المدعوم: {{type}}"

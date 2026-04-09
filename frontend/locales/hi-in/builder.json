@@ -227,7 +227,6 @@
 	"dataJournal": {
 		"addComponent": "घटक जोड़ें",
 		"addNotes": "नोट्स जोड़ें",
-		"collapsePanel": "पैनल को बंद करें",
 		"componentEditor": {
 			"close": "बंद करना",
 			"componentName": "",
@@ -330,6 +329,13 @@
 			"notes": "नोट्स",
 			"notesPlaceholder": "अपने नोट्स यहां दर्ज करें...",
 			"widgetSettings": "विजेट सेटिंग्स"
+		},
+		"sideNav": {
+			"add": "जोड़ना",
+			"addJournalScratch": "शून्य से शुरू करें",
+			"addJournalTemplate": "एक टेम्पलेट का उपयोग करें (तय होना बाकी है)",
+			"collapsePanel": "पैनल को बंद करें",
+			"noJournalsYet": "ऐसा लगता है कि आपके पास अभी भी कोई डेटा जर्नल नहीं है!"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "असमर्थित विजेट प्रकार: {{type}}"

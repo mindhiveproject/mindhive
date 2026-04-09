@@ -227,7 +227,6 @@
 	"dataJournal": {
 		"addComponent": "添加组件",
 		"addNotes": "添加注释",
-		"collapsePanel": "折叠面板",
 		"componentEditor": {
 			"close": "关闭",
 			"componentName": "",
@@ -330,6 +329,13 @@
 			"notes": "笔记",
 			"notesPlaceholder": "在此输入您的注释...",
 			"widgetSettings": "小部件设置"
+		},
+		"sideNav": {
+			"add": "添加",
+			"addJournalScratch": "从零开始",
+			"addJournalTemplate": "使用模板（待定）",
+			"collapsePanel": "折叠面板",
+			"noJournalsYet": "看来你仍然没有任何数据日志！"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "不支持的小部件类型：{{type}}"

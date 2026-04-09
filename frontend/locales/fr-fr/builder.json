@@ -227,7 +227,6 @@
 	"dataJournal": {
 		"addComponent": "Ajouter un composant",
 		"addNotes": "Ajouter des notes",
-		"collapsePanel": "Réduire le panneau",
 		"componentEditor": {
 			"close": "Fermer",
 			"componentName": "",
@@ -330,6 +329,13 @@
 			"notes": "Remarques",
 			"notesPlaceholder": "Entrez vos notes ici...",
 			"widgetSettings": "Paramètres des widgets"
+		},
+		"sideNav": {
+			"add": "Ajouter",
+			"addJournalScratch": "Partir de zéro",
+			"addJournalTemplate": "Utiliser un modèle (à préciser)",
+			"collapsePanel": "Réduire le panneau",
+			"noJournalsYet": "Il semblerait que vous n'ayez toujours pas de journaux de données !"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Type de widget non pris en charge : {{type}}"

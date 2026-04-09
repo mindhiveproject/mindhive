@@ -227,7 +227,6 @@
 	"dataJournal": {
 		"addComponent": "Agregar componente",
 		"addNotes": "Agregar notas",
-		"collapsePanel": "Panel colapsado",
 		"componentEditor": {
 			"close": "Cerca",
 			"componentName": "",
@@ -330,6 +329,13 @@
 			"notes": "Notas",
 			"notesPlaceholder": "Introduce tus notas aquí...",
 			"widgetSettings": "Configuración del widget"
+		},
+		"sideNav": {
+			"add": "Agregar",
+			"addJournalScratch": "Empezar desde el principio",
+			"addJournalTemplate": "Utilizar una plantilla (por determinar)",
+			"collapsePanel": "Panel colapsado",
+			"noJournalsYet": "¡Parece que todavía no tienes ningún registro de datos!"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Tipo de widget no compatible: {{type}}"

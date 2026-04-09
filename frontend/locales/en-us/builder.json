@@ -227,7 +227,6 @@
 	"dataJournal": {
 		"addComponent": "Add Component",
 		"addNotes": "Add Notes",
-		"collapsePanel": "Collapse panel",
 		"componentEditor": {
 			"close": "Close",
 			"componentName": "Component Name",
@@ -330,6 +329,13 @@
 			"notes": "Notes",
 			"notesPlaceholder": "Enter your notes here...",
 			"widgetSettings": "Widget Settings"
+		},
+		"sideNav": {
+			"add": "Add",
+			"addJournalScratch": "Start from scratch",
+			"addJournalTemplate": "Use a template (tbd)",
+			"collapsePanel": "Collapse panel",
+			"noJournalsYet": "It looks like you still don't have any data journals!"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Unsupported widget type: {{type}}"
