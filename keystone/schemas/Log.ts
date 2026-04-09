@@ -1,20 +1,29 @@
 import { list } from "@keystone-6/core";
 import {
   relationship,
-  checkbox,
   json,
   text,
   timestamp,
   select,
 } from "@keystone-6/core/fields";
+import { isSignedIn, isAdmin } from "../access";
 
 export const Log = list({
   access: {
     operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isAdmin,
+      delete: isAdmin,
+    },
+    filter: {
+      // Admins: all; others: logs related to them (user)
+      query: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { user: { id: { equals: session?.itemId } } },
+      update: ({ session }) => (isAdmin({ session }) ? true : false),
+      delete: ({ session }) => (isAdmin({ session }) ? true : false),
     },
   },
   fields: {

@@ -2,22 +2,66 @@ import { list } from "@keystone-6/core";
 import {
   text,
   relationship,
-  password,
   timestamp,
   select,
-  integer,
   checkbox,
   json,
 } from "@keystone-6/core/fields";
 import slugify from "slugify";
+import { isSignedIn, isAdmin } from "../access";
 
 export const ProposalBoard = list({
   access: {
     operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: isSignedIn,
+    },
+    filter: {
+      // Admins: all;
+      // Others: boards where they are creator/author/collaborator or used in their class
+      query: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              OR: [
+                { creator: { id: { equals: session?.itemId } } },
+                { author: { id: { equals: session?.itemId } } },
+                {
+                  collaborators: { some: { id: { equals: session?.itemId } } },
+                },
+                {
+                  usedInClass: {
+                    OR: [
+                      { creator: { id: { equals: session?.itemId } } },
+                      {
+                        mentors: { some: { id: { equals: session?.itemId } } },
+                      },
+                      {
+                        students: { some: { id: { equals: session?.itemId } } },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+      update: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              OR: [
+                { creator: { id: { equals: session?.itemId } } },
+                { author: { id: { equals: session?.itemId } } },
+                {
+                  collaborators: { some: { id: { equals: session?.itemId } } },
+                },
+              ],
+            },
+      delete: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { creator: { id: { equals: session?.itemId } } },
     },
   },
   hooks: {
@@ -28,8 +72,7 @@ export const ProposalBoard = list({
 
       const board = await context.query.ProposalBoard.findOne({
         where: { id: item.id },
-        query:
-          "id usedInClass { id } sections { cards { resources { id } } }",
+        query: "id usedInClass { id } sections { cards { resources { id } } }",
       });
 
       if (!board?.usedInClass?.id) {
@@ -62,8 +105,8 @@ export const ProposalBoard = list({
             data: {
               classes: { connect: { id: classId } },
             },
-          })
-        )
+          }),
+        ),
       );
     },
   },
@@ -77,19 +120,20 @@ export const ProposalBoard = list({
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
-            // in case if slug is given use that slug (e.g., for cloning templates)
             if (inputData.slug) {
               return inputData.slug;
             }
             const { title } = inputData;
             if (title) {
               let baseSlug = slugify(title, {
-                remove: /[*+~.()'"!:@]/g, // remove characters that match regex
-                lower: true, // convert to lower case
-                strict: true, // strip special characters except replacement
+                remove: /[*+~.()'"!:@]/g,
+                lower: true,
+                strict: true,
               });
               if (!baseSlug) {
-                baseSlug = `proposal-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+                baseSlug = `proposal-${Date.now()}-${Math.floor(
+                  Math.random() * 1000,
+                )}`;
               }
               const items = await context.query.ProposalBoard.findMany({
                 where: { slug: { startsWith: baseSlug } },
@@ -98,13 +142,15 @@ export const ProposalBoard = list({
               if (!items.length) {
                 return baseSlug;
               }
-              const exactMatch = items.find((item) => item.slug === baseSlug);
+              const exactMatch = items.find(
+                (item: any) => item.slug === baseSlug,
+              );
               if (!exactMatch) {
                 return baseSlug;
               }
               let maxSuffix = 0;
               const suffixRegex = new RegExp(`^${baseSlug}-(\\d+)$`);
-              items.forEach((item) => {
+              items.forEach((item: any) => {
                 const match = item.slug.match(suffixRegex);
                 if (match) {
                   const suffix = parseInt(match[1], 10);
@@ -123,7 +169,7 @@ export const ProposalBoard = list({
     }),
     description: text(),
     isDefault: checkbox({ isFilterable: true }),
-    isTemplate: checkbox({ isFilterable: true }), // Reserved for platform-wide templates (admin-only). For class templates, use templateForClasses; do not rely on isTemplate for class-template logic.
+    isTemplate: checkbox({ isFilterable: true }),
     isSubmitted: checkbox({ isFilterable: true }),
     isMain: checkbox({ isFilterable: true }),
     isHidden: checkbox({ isFilterable: true }),

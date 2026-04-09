@@ -1,23 +1,98 @@
-// Journal wrapper
+// VizJournal.js
 import { list } from "@keystone-6/core";
 import {
   text,
   relationship,
-  password,
   timestamp,
-  select,
-  integer,
   checkbox,
   json,
 } from "@keystone-6/core/fields";
+import { isSignedIn, isAdmin } from "../access";
 
 export const VizJournal = list({
   access: {
     operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: isSignedIn,
+    },
+    filter: {
+      // Admins: all; others: any journal attached to a study/project they can see
+      query: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              OR: [
+                {
+                  study: {
+                    OR: [
+                      { public: { equals: true } },
+                      { author: { id: { equals: session?.itemId } } },
+                      {
+                        collaborators: {
+                          some: { id: { equals: session?.itemId } },
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  project: {
+                    OR: [
+                      { creator: { id: { equals: session?.itemId } } },
+                      { author: { id: { equals: session?.itemId } } },
+                      {
+                        collaborators: {
+                          some: { id: { equals: session?.itemId } },
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+      update: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              OR: [
+                {
+                  study: {
+                    OR: [
+                      { author: { id: { equals: session?.itemId } } },
+                      {
+                        collaborators: {
+                          some: { id: { equals: session?.itemId } },
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  project: {
+                    OR: [
+                      { creator: { id: { equals: session?.itemId } } },
+                      { author: { id: { equals: session?.itemId } } },
+                      {
+                        collaborators: {
+                          some: { id: { equals: session?.itemId } },
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+      delete: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              OR: [
+                { study: { author: { id: { equals: session?.itemId } } } },
+                { project: { creator: { id: { equals: session?.itemId } } } },
+              ],
+            },
     },
   },
   fields: {

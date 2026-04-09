@@ -2,22 +2,87 @@ import { list } from "@keystone-6/core";
 import {
   text,
   relationship,
-  password,
   timestamp,
   select,
   float,
   checkbox,
   json,
 } from "@keystone-6/core/fields";
-import slugify from "slugify";
+import { isSignedIn, isAdmin } from "../access";
 
 export const ProposalCard = list({
   access: {
     operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: isSignedIn,
+    },
+    filter: {
+      // Admins: all; others: cards whose section.board they can access
+      query: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              section: {
+                board: {
+                  OR: [
+                    { creator: { id: { equals: session?.itemId } } },
+                    { author: { id: { equals: session?.itemId } } },
+                    {
+                      collaborators: {
+                        some: { id: { equals: session?.itemId } },
+                      },
+                    },
+                    {
+                      usedInClass: {
+                        OR: [
+                          { creator: { id: { equals: session?.itemId } } },
+                          {
+                            mentors: {
+                              some: { id: { equals: session?.itemId } },
+                            },
+                          },
+                          {
+                            students: {
+                              some: { id: { equals: session?.itemId } },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+      update: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              section: {
+                board: {
+                  OR: [
+                    { creator: { id: { equals: session?.itemId } } },
+                    { author: { id: { equals: session?.itemId } } },
+                    {
+                      collaborators: {
+                        some: { id: { equals: session?.itemId } },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+      delete: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              section: {
+                board: {
+                  creator: { id: { equals: session?.itemId } },
+                },
+              },
+            },
     },
   },
   fields: {
@@ -29,19 +94,6 @@ export const ProposalCard = list({
     revisedContent: text(),
     content: text(),
     comment: text(),
-    /**
-     * Settings JSON field for ProposalCard.
-     * 
-     * Expected structure:
-     * {
-     *   status?: string;                    // Card completion status: "Not started", "Completed", "In progress", etc.
-     *   includeInReport?: boolean;          // Whether card should be included in project reports
-     *   includeInReviewSteps?: string[];   // Array of review step types (e.g., ["ACTION_SUBMIT", "ACTION_PEER_FEEDBACK"])
-     * }
-     * 
-     * IMPORTANT: Settings merging is handled in the frontend (see mergeCardSettings utility).
-     * The frontend ensures that when updating settings, existing properties are preserved.
-     */
     settings: json(),
     section: relationship({
       ref: "ProposalSection.cards",

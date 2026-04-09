@@ -11,19 +11,13 @@ import {
 } from "@keystone-6/core/fields";
 import { Session } from "../types";
 
-
-// Will have to modify to new profile fields
 function getVisualFilterQuery(session: Session) {
   if (session?.data?.permissions?.some((p) => p.canAccessAdminUI)) return true;
   return {
     OR: [
-      // You're the author
       { author: { id: { equals: session?.itemId } } },
-      // Public visuals
       { privacy: { equals: "public" } },
-      // Unlisted visuals
       { privacy: { equals: "unlisted" } },
-      // You have liked & they are unlisted or for friends
       {
         AND: [
           { likes: { some: { id: { equals: session?.itemId } } } },
@@ -35,7 +29,6 @@ function getVisualFilterQuery(session: Session) {
           },
         ],
       },
-      // Made by a friend and with "friends" privacy
       {
         AND: [
           {
@@ -72,20 +65,26 @@ function getVisualFilterQuery(session: Session) {
 export const Visual = list({
   access: {
     operation: {
-      query: () => true,
-      update: () => true,
-      create: () => true,
-      delete: () => true,
+      query: ({ session }: { session?: Session }) => !!session,
+      update: ({ session }: { session?: Session }) => !!session,
+      create: ({ session }: { session?: Session }) => !!session,
+      delete: ({ session }: { session?: Session }) => !!session,
     },
     item: {
       update: ({ session, item }: { session?: Session; item: any }) =>
-        item.authorId == session?.itemId || session?.data?.permissions?.some((p) => p.canAccessAdminUI) || false,
-      create: ({ session }: { session?: Session }) => !!session,
+        !!session &&
+        (item.authorId == session.itemId ||
+          session.data?.permissions?.some((p) => p.canAccessAdminUI) ||
+          false),
       delete: ({ session, item }: { session?: Session; item: any }) =>
-        item.authorId == session?.itemId || session?.data?.permissions?.some((p) => p.canAccessAdminUI) || false,
+        !!session &&
+        (item.authorId == session.itemId ||
+          session.data?.permissions?.some((p) => p.canAccessAdminUI) ||
+          false),
     },
     filter: {
-      query: ({ session }) => getVisualFilterQuery(session),
+      query: ({ session }: { session?: Session }) =>
+        getVisualFilterQuery(session!),
     },
   },
   fields: {

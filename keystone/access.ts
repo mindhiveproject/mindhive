@@ -1,4 +1,4 @@
-// access functions, the access control returns yes or no
+// access functions
 
 import { permissionsList } from "./schemas/fields";
 import { ListAccessArgs } from "./types";
@@ -17,12 +17,9 @@ const generatedPermissions = Object.fromEntries(
           .filter((p) => !!p).length > 0
       );
     },
-  ])
+  ]),
 );
 
-// Permissions check if someone meets a criteria - yes or no
-// Issue #7: removed hardcoded `isAwesome` username bypass; use the
-// canAccessAdminUI permission flag stored on the user's Role instead.
 export const permissions = {
   ...generatedPermissions,
 };
@@ -54,27 +51,18 @@ export const rules = {
     }
     return "hidden";
   },
-  // Issue #8: removed the spoofable operationName bypass.
-  // Follow/unfollow operations must go through dedicated custom mutations
-  // that update only the relevant relationship fields on their own.
   canManageUsers({ session, item }: ListAccessArgs) {
     if (!isSignedIn({ session })) {
       return false;
     }
-    // 1. Do they have the admin permission
     if (permissions.canManageUsers({ session })) {
       return true;
     }
-    // 2. Otherwise, they may only update themselves
     if (item?.id === session?.itemId) {
       return true;
     }
     return false;
   },
-  // Issue #9: added explicit `return false` on all non-matching branches.
-  // Also replaced non-existent permission function calls (e.g. canManagePosts,
-  // canManageCollections) with canManageUsers — the only admin flag that exists
-  // in permissionsList and is actually evaluated.
   canManagePosts({ session, item }: ListAccessArgs) {
     if (!isSignedIn({ session })) {
       return false;

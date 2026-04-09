@@ -1,3 +1,5 @@
+// schemas/Profile.ts (or Profile.js with minor syntax changes)
+
 import { list } from "@keystone-6/core";
 import {
   text,
@@ -5,13 +7,12 @@ import {
   password,
   timestamp,
   select,
-  integer,
   checkbox,
   json,
   calendarDay,
   multiselect,
 } from "@keystone-6/core/fields";
-import { permissions, rules } from "../access";
+import { permissions, rules, isSignedIn, isAdmin } from "../access";
 
 import uniqid from "uniqid";
 import {
@@ -23,8 +24,8 @@ import {
 } from "unique-names-generator";
 
 const adjectives = baseAdjectives
-  .filter(w => !['booby', 'tasty'].includes(w))
-  .concat(['curious', 'kind']);
+  .filter((w) => !["booby", "tasty"].includes(w))
+  .concat(["curious", "kind"]);
 
 const customConfig: Config = {
   dictionaries: [adjectives, colors, animals],
@@ -35,34 +36,60 @@ const customConfig: Config = {
 export const Profile = list({
   ui: {
     listView: {
-      defaultFieldMode: ({ session }) => rules.canReadAdminUI({ session }),
+      // Only admins can see the list; others search only their own/public
+      defaultFieldMode: ({ session }) =>
+        isAdmin({ session }) ? "read" : "hidden",
     },
     itemView: {
-      defaultFieldMode: ({ session }) => rules.canEditAdminUI({ session }),
+      // Admins can edit; users can edit only their own record
+      defaultFieldMode: ({ session, item }) => {
+        if (isAdmin({ session })) return "edit";
+        if (session?.itemId === item.id) return "edit";
+        return "read";
+      },
     },
     createView: {
-      defaultFieldMode: ({ session }) => rules.canEditAdminUI({ session }),
+      // Profiles are normally created via signup flow, not via Admin UI
+      defaultFieldMode: ({ session }) =>
+        permissions.canManageUsers({ session }) ? "edit" : "hidden",
     },
   },
+
   access: {
     operation: {
-      query: () => true,
+      // Anyone can query, but filters below restrict which items they see
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: permissions.canManageUsers,
     },
-    item: {
-      create: () => true,
-      update: () => true,
-      delete: rules.canManageUsers,
+    filter: {
+      // What items a user can see in queries
+      query: rules.canReadProfiles,
+      // Who can update which profiles:
+      // - Admins: all
+      // - Others: only their own
+      update: ({ session }) =>
+        isAdmin({ session }) ? true : { id: { equals: session?.itemId } },
+      // Who can delete:
+      // - Admins via permission
+      // - Optionally allow self-delete; here we keep delete as admin-only
+      delete: ({ session }) =>
+        permissions.canManageUsers({ session }) ? true : false,
     },
   },
+
   fields: {
     username: text({ validation: { isRequired: true } }),
+
     publicId: text({
       isIndexed: "unique",
       isFilterable: true,
       access: {
-        read: () => true,
-        create: () => true,
-        update: () => true,
+        read: () => true, // safe public identifier
+        create: isSignedIn,
+        update: ({ session, item }) =>
+          isAdmin({ session }) || session?.itemId === item.id,
       },
       hooks: {
         async resolveInput({ operation }) {
@@ -72,13 +99,15 @@ export const Profile = list({
         },
       },
     }),
+
     publicReadableId: text({
       isIndexed: "unique",
       isFilterable: true,
       access: {
         read: () => true,
-        create: () => true,
-        update: () => true,
+        create: isSignedIn,
+        update: ({ session, item }) =>
+          isAdmin({ session }) || session?.itemId === item.id,
       },
       hooks: {
         async resolveInput({ operation }) {
@@ -88,22 +117,26 @@ export const Profile = list({
         },
       },
     }),
+
     type: select({
       options: [{ label: "User", value: "USER" }],
       defaultValue: "USER",
     }),
+
     email: text({
       validation: { isRequired: false },
       isIndexed: "unique",
       isFilterable: true,
       access: {
-        read: () => true,
-        create: () => true,
-        update: rules.canManageUsers,
+        // Only self or admins can see/change email
+        read: ({ session, item }) =>
+          isAdmin({ session }) || session?.itemId === item.id,
+        create: isSignedIn,
+        update: ({ session, item }) =>
+          isAdmin({ session }) || session?.itemId === item.id,
       },
       hooks: {
         resolveInput: ({ resolvedData }) => {
-          // Always lowercase email addresses on create and update
           if (resolvedData.email && typeof resolvedData.email === "string") {
             return resolvedData.email.toLowerCase().trim();
           }
@@ -111,32 +144,46 @@ export const Profile = list({
         },
       },
     }),
+
     permissions: relationship({
       ref: "Permission.assignedTo",
       many: true,
+      access: {
+        read: rules.canManageRoles,
+        update: rules.canManageRoles,
+      },
     }),
+
     info: json(),
     generalInfo: json(),
     studiesInfo: json(),
     consentsInfo: json(),
     tasksInfo: json(),
+
     isPublic: checkbox({ isFilterable: true }),
+
     password: password({
       validation: { isRequired: true },
       access: {
-        read: () => true,
+        read: () => false, // never expose password hash
+        // allow unauthenticated creation so new users can sign up
         create: () => true,
-        update: () => true,
+        // only signed-in owner or admin can change password later
+        update: ({ session, item }) =>
+          isAdmin({ session }) || session?.itemId === item.id,
       },
     }),
+
     facebook: text(),
     twitter: text(),
     instagram: text(),
     publicMail: text(),
     website: text(),
+
     dateCreated: timestamp({
       defaultValue: { kind: "now" },
     }),
+
     language: select({
       options: [
         { label: "English (American)", value: "EN-US" },
@@ -153,6 +200,7 @@ export const Profile = list({
       ],
       defaultValue: "EN-US",
     }),
+
     participantIn: relationship({
       ref: "Study.participants",
       many: true,
@@ -312,6 +360,7 @@ export const Profile = list({
       ref: "Datasource.author",
       many: true,
     }),
+
     profileType: select({
       options: [
         { label: "Individual", value: "individual" },
@@ -319,6 +368,7 @@ export const Profile = list({
       ],
       defaultValue: "individual",
     }),
+
     image: relationship({
       ref: "ProfileImage.profile",
       ui: {
@@ -328,6 +378,7 @@ export const Profile = list({
         inlineEdit: { fields: ["keystoneImage", "image", "altText"] },
       },
     }),
+
     firstName: text(),
     lastName: text(),
     pronouns: select({
@@ -344,9 +395,9 @@ export const Profile = list({
     bio: text(),
     bioInformal: text(),
     occupation: text(),
-    education: json(), // a list of institutions and degrees
-    languages: json(), // a list of languages
-    introVideo: json(), // an object with the link to the file system, timestampUploaded, timestampModified
+    education: json(),
+    languages: json(),
+    introVideo: json(),
     involvement: json(),
     mentorPreferGrade: select({
       options: [
@@ -400,6 +451,7 @@ export const Profile = list({
       ref: "Log.user",
       many: true,
     }),
+
     // YQ-related properties
     visuals: relationship({ ref: "Visual.author", many: true }),
     liked: relationship({ ref: "Visual.likes", many: true }),

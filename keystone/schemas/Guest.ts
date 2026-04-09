@@ -2,14 +2,10 @@ import { list } from "@keystone-6/core";
 import {
   text,
   relationship,
-  password,
   timestamp,
   select,
-  integer,
-  checkbox,
   json,
 } from "@keystone-6/core/fields";
-
 import uniqid from "uniqid";
 import {
   uniqueNamesGenerator,
@@ -18,6 +14,7 @@ import {
   colors,
   animals,
 } from "unique-names-generator";
+import { isSignedIn, isAdmin } from "../access";
 
 const customConfig: Config = {
   dictionaries: [adjectives, colors, animals],
@@ -28,10 +25,11 @@ const customConfig: Config = {
 export const Guest = list({
   access: {
     operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      // Reading guests probably only for admins; creating via participation flow
+      query: isAdmin,
+      create: () => true, // allow unauthenticated guest creation via public endpoint
+      update: isAdmin,
+      delete: isAdmin,
     },
   },
   fields: {
@@ -41,7 +39,7 @@ export const Guest = list({
       access: {
         read: () => true,
         create: () => true,
-        update: () => true,
+        update: isAdmin,
       },
       hooks: {
         async resolveInput({ operation }) {
@@ -57,7 +55,7 @@ export const Guest = list({
       access: {
         read: () => true,
         create: () => true,
-        update: () => true,
+        update: isAdmin,
       },
       hooks: {
         async resolveInput({ operation }) {
@@ -68,9 +66,7 @@ export const Guest = list({
       },
     }),
     type: select({
-      options: [
-        { label: "Guest", value: "GUEST" },
-      ],
+      options: [{ label: "Guest", value: "GUEST" }],
       defaultValue: "GUEST",
     }),
     info: json(),

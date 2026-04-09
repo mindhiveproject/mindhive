@@ -2,23 +2,50 @@ import { list } from "@keystone-6/core";
 import {
   text,
   relationship,
-  password,
   timestamp,
-  select,
-  integer,
   checkbox,
   json,
 } from "@keystone-6/core/fields";
-import slugify from "slugify";
 import uniqid from "uniqid";
+import { isSignedIn, isAdmin } from "../access";
 
 export const Consent = list({
   access: {
     operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: isSignedIn,
+    },
+    filter: {
+      // Admins: all; others: public consents or where they are author/collaborator
+      query: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              OR: [
+                { public: { equals: true } },
+                { author: { id: { equals: session?.itemId } } },
+                {
+                  collaborators: { some: { id: { equals: session?.itemId } } },
+                },
+              ],
+            },
+      update: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              OR: [
+                { author: { id: { equals: session?.itemId } } },
+                {
+                  collaborators: { some: { id: { equals: session?.itemId } } },
+                },
+              ],
+            },
+      delete: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { author: { id: { equals: session?.itemId } } },
     },
   },
   fields: {
@@ -28,7 +55,8 @@ export const Consent = list({
       access: {
         read: () => true,
         create: () => true,
-        update: () => true,
+        update: ({ session, item }) =>
+          isAdmin({ session }) || session?.itemId === item.authorId,
       },
       hooks: {
         async resolveInput({ operation }) {
@@ -62,7 +90,7 @@ export const Consent = list({
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
-            return { connect: { id: context.session.itemId } };
+            return inputData.collaborators;
           } else {
             return inputData.collaborators;
           }

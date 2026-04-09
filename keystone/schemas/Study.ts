@@ -1,27 +1,53 @@
+// schemas/Study.ts
+
 import { list } from "@keystone-6/core";
 import {
   text,
   relationship,
-  password,
   timestamp,
   select,
-  integer,
   checkbox,
   json,
 } from "@keystone-6/core/fields";
 import slugify from "slugify";
+import { isSignedIn, isAdmin, rules } from "../access";
 
 export const Study = list({
   access: {
     operation: {
-      query: () => true,
-      create: () => true,
-      update: () => true,
-      delete: () => true,
+      // Only authenticated users can interact with studies
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: isSignedIn,
+    },
+    filter: {
+      // What items a user can see:
+      // - Admins: all
+      // - Others: public studies, or where they are author or collaborator
+      query: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : {
+              OR: [
+                { public: { equals: true } },
+                { author: { id: { equals: session?.itemId } } },
+                {
+                  collaborators: { some: { id: { equals: session?.itemId } } },
+                },
+              ],
+            },
+      // Who can update/delete which studies:
+      // - Admins: all
+      // - Others: author or collaborator (rules.canManageOwnStudies)
+      update: rules.canManageOwnStudies,
+      delete: rules.canManageOwnStudies,
     },
   },
+
   fields: {
     title: text({ validation: { isRequired: true } }),
+
     slug: text({
       validation: { isRequired: true },
       isIndexed: "unique",
@@ -32,9 +58,9 @@ export const Study = list({
             const { title } = inputData;
             if (title) {
               let slug = slugify(title, {
-                remove: /[*+~.()'"!:@]/g, // remove characters that match regex
-                lower: true, // convert to lower case
-                strict: true, // strip special characters except replacement
+                remove: /[*+~.()'"!:@]/g,
+                lower: true,
+                strict: true,
               });
               const items = await context.query.Study.findMany({
                 where: { slug: { startsWith: slug } },
@@ -42,7 +68,7 @@ export const Study = list({
               });
               if (items.length) {
                 const re = new RegExp(`${slug}-*\\d*$`);
-                const slugs = items.filter((item) => item.slug.match(re));
+                const slugs = items.filter((item: any) => item.slug.match(re));
                 if (slugs.length) {
                   slug = `${slug}-${slugs.length}`;
                 }
@@ -55,8 +81,10 @@ export const Study = list({
         },
       },
     }),
+
     description: text(),
     shortDescription: text(),
+
     image: relationship({
       ref: "StudyImage.study",
       ui: {
@@ -66,27 +94,34 @@ export const Study = list({
         inlineEdit: { fields: ["keystoneImage", "image", "altText"] },
       },
     }),
+
     settings: json(),
     info: json(),
+
     public: checkbox({ isFilterable: true }),
     featured: checkbox({ isFilterable: true }),
     submitForPublishing: checkbox({ isFilterable: true }),
     isHidden: checkbox({ isFilterable: true }),
+
     components: json(),
     flow: json(),
     diagram: text(),
+
     author: relationship({
       ref: "Profile.researcherIn",
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
+            // Automatically set current user as author
             return { connect: { id: context.session.itemId } };
           } else {
+            // Allow explicit change only if already coming from input
             return inputData.author;
           }
         },
       },
     }),
+
     collaborators: relationship({
       ref: "Profile.collaboratorInStudy",
       many: true,
@@ -100,68 +135,80 @@ export const Study = list({
         },
       },
     }),
-    // tasks: relationship to tasks,
+
     participants: relationship({
       ref: "Profile.participantIn",
       many: true,
     }),
+
     guests: relationship({
       ref: "Guest.participantIn",
       many: true,
     }),
+
     consent: relationship({
       ref: "Consent.studies",
       many: true,
     }),
+
     proposal: relationship({
       ref: "ProposalBoard.study",
       many: true,
     }),
+
     proposalMain: relationship({
       ref: "ProposalBoard.studyMain",
     }),
+
     descriptionInProposalCard: relationship({
       ref: "ProposalCard.studyDescription",
     }),
+
     classes: relationship({
       ref: "Class.studies",
       many: true,
     }),
-    // messages: relationship to messages
+
     reviews: relationship({
       ref: "Review.study",
       many: true,
     }),
-    // scripts: relationship to script
-    // notebooks: relationship to notebook
+
     tags: relationship({
       ref: "Tag.studies",
       many: true,
     }),
+
     talks: relationship({
       ref: "Talk.studies",
       many: true,
     }),
+
     datasets: relationship({
       ref: "Dataset.study",
       many: true,
     }),
+
     summaryResults: relationship({
       ref: "SummaryResult.study",
       many: true,
     }),
+
     specs: relationship({
       ref: "Spec.studies",
       many: true,
     }),
+
     vizJournals: relationship({
       ref: "VizJournal.study",
       many: true,
     }),
+
     datasources: relationship({
       ref: "Datasource.study",
       many: true,
     }),
+
     proposalCards: relationship({
       ref: "ProposalCard.studies",
       many: true,
@@ -173,7 +220,9 @@ export const Study = list({
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),
+
     updatedAt: timestamp(),
+
     status: select({
       options: [
         { label: "Working", value: "WORKING" },
@@ -189,9 +238,11 @@ export const Study = list({
       ],
       defaultValue: "WORKING",
     }),
+
     currentVersion: text(),
     versionHistory: json(),
     projectName: text(),
+
     dataCollectionStatus: select({
       options: [
         { label: "Not started", value: "NOT_STARTED" },
@@ -201,6 +252,7 @@ export const Study = list({
       ],
       defaultValue: "NOT_STARTED",
     }),
+
     dataCollectionData: select({
       options: [
         { label: "Not defined", value: "NOT_DEFINED" },
@@ -210,7 +262,9 @@ export const Study = list({
       ],
       defaultValue: "NOT_DEFINED",
     }),
+
     dataCollectionOpenForParticipation: checkbox({ isFilterable: true }),
+
     logs: relationship({
       ref: "Log.study",
       many: true,

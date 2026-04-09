@@ -6,7 +6,7 @@ import {
   json,
   image,
 } from "@keystone-6/core/fields";
-import { rules } from "../access";
+import { rules, isSignedIn, isAdmin } from "../access";
 
 function hasManageUsersPermission(session: any) {
   const permissionRows = Array.isArray(session?.data?.permissions)
@@ -26,10 +26,25 @@ function hasManageUsersPermission(session: any) {
 export const MediaAsset = list({
   access: {
     operation: {
-      query: () => true,
-      create: ({ session }) => !!session?.itemId,
-      update: ({ session }) => !!session?.itemId,
-      delete: ({ session }) => !!session?.itemId,
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: isSignedIn,
+    },
+    filter: {
+      // Admins: all; others: assets they authored
+      query: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { author: { id: { equals: session?.itemId } } },
+      update: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { author: { id: { equals: session?.itemId } } },
+      delete: ({ session }) =>
+        isAdmin({ session })
+          ? true
+          : { author: { id: { equals: session?.itemId } } },
     },
     item: {
       update: ({ session, item }) => {
@@ -96,7 +111,7 @@ export const MediaAsset = list({
 
       const getResolvedOwnerState = (
         fieldName: string,
-        previousId: string | null
+        previousId: string | null,
       ) => {
         const update = resolvedData[fieldName];
         if (update === undefined) return previousId;
@@ -120,7 +135,7 @@ export const MediaAsset = list({
 
         if (!ownerValidationPassed) {
           addValidationError(
-            "MediaAsset must have exactly one createdIn* owner, except createdInCard + createdInBoard which are allowed together."
+            "MediaAsset must have exactly one createdIn* owner, except createdInCard + createdInBoard which are allowed together.",
           );
         }
         return;
@@ -128,7 +143,7 @@ export const MediaAsset = list({
 
       if (operation === "update" && item?.id) {
         const ownerPatchProvided = ownerFields.some(
-          (fieldName) => resolvedData[fieldName] !== undefined
+          (fieldName) => resolvedData[fieldName] !== undefined,
         );
         if (!ownerPatchProvided) return;
 
@@ -152,11 +167,11 @@ export const MediaAsset = list({
         }, 0);
         const nextCreatedInCardId = getResolvedOwnerState(
           "createdInCard",
-          current?.createdInCard?.id || null
+          current?.createdInCard?.id || null,
         );
         const nextCreatedInBoardId = getResolvedOwnerState(
           "createdInBoard",
-          current?.createdInBoard?.id || null
+          current?.createdInBoard?.id || null,
         );
         const hasCardAndBoardOwner =
           !!nextCreatedInCardId && !!nextCreatedInBoardId;
@@ -165,18 +180,15 @@ export const MediaAsset = list({
 
         if (!ownerValidationPassed) {
           addValidationError(
-            "MediaAsset must have exactly one createdIn* owner, except createdInCard + createdInBoard which are allowed together."
+            "MediaAsset must have exactly one createdIn* owner, except createdInCard + createdInBoard which are allowed together.",
           );
         }
       }
     },
   },
   fields: {
-    /** Original file name (without path), e.g. from upload */
     fileName: text(),
-    /** User-facing customizable title */
     title: text(),
-    /** Optional; may be null or incomplete (text() defaults to NOT NULL in Keystone unless db.isNullable is set). */
     description: text({
       db: { isNullable: true },
       validation: { isRequired: false },
@@ -226,7 +238,6 @@ export const MediaAsset = list({
         },
       },
     }),
-    /** Profiles who marked this asset as a favorite */
     favoriteBy: relationship({
       ref: "Profile.favoritedMediaAssets",
       many: true,
