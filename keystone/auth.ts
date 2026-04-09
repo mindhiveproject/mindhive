@@ -182,8 +182,14 @@ const session = statelessSessions({
   // secure: true ensures the cookie is only sent over HTTPS.
   // sameSite: 'strict' prevents the cookie from being sent in cross-site requests.
   // httpOnly is enforced by Keystone's iron-session by default, confirmed here.
+  // Domain is production-only so one session works for mindhive.science
+  // and backend.mindhive.science.
   secure: process.env.NODE_ENV === "production",
   sameSite: "strict",
+  domain:
+    process.env.NODE_ENV === "production"
+      ? process.env.SESSION_COOKIE_DOMAIN || ".mindhive.science"
+      : undefined,
 });
 
 export { withAuth, session };
