@@ -16,7 +16,7 @@ import { lists } from "./schema";
 // authentication is configured separately here too, but you might move this elsewhere
 // when you write your list-level access control functions, as they typically rely on session data
 import { withAuth, session } from "./auth";
-import { permissions } from "./access";
+import { rules, permissions } from "./access";
 
 const baseUrl =
   process.env.NODE_ENV === "development"
@@ -112,10 +112,10 @@ export default withAuth(
         storagePath: `study-images`,
       },
     },
-  })
-  // ui: {
-  //   isAccessAllowed: ({ session }) => {
-  //     return permissions.canAccessAdminUI({ session });
-  //   },
-  // },
+    ui: {
+      isAccessAllowed: ({ session }) => {
+        return rules.canAccessAdminUI({ session });
+      },
+    },
+  }),
 );

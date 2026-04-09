@@ -27,14 +27,16 @@ import { statelessSessions } from "@keystone-6/core/session";
 // Helper function to find teacher emails for a student
 async function findTeacherEmailsForStudent(
   studentEmail: string,
-  context?: any
+  context?: any,
 ): Promise<string[]> {
   // Normalize email to lowercase
   const normalizedEmail = studentEmail?.toLowerCase().trim();
   console.log(`[Password Reset] Checking student status for a user.`);
 
   if (!context || !context.query) {
-    console.log(`[Password Reset] WARNING: No context available. Cannot check student status.`);
+    console.log(
+      `[Password Reset] WARNING: No context available. Cannot check student status.`,
+    );
     return [];
   }
 
@@ -66,40 +68,55 @@ async function findTeacherEmailsForStudent(
     console.log(`[Password Reset] Found user profile.`);
 
     const isStudent = profile.permissions?.some(
-      (permission: { name: string }) => permission.name === "STUDENT"
+      (permission: { name: string }) => permission.name === "STUDENT",
     );
 
     if (!isStudent) {
-      console.log(`[Password Reset] User does NOT have STUDENT permission. Proceeding with normal reset.`);
+      console.log(
+        `[Password Reset] User does NOT have STUDENT permission. Proceeding with normal reset.`,
+      );
       return [];
     }
 
     console.log(`[Password Reset] User HAS STUDENT permission.`);
 
     if (!profile.studentIn || profile.studentIn.length === 0) {
-      console.log(`[Password Reset] Student is not enrolled in any classes. Proceeding with normal reset.`);
+      console.log(
+        `[Password Reset] Student is not enrolled in any classes. Proceeding with normal reset.`,
+      );
       return [];
     }
 
-    console.log(`[Password Reset] Student is enrolled in ${profile.studentIn.length} class(es).`);
+    console.log(
+      `[Password Reset] Student is enrolled in ${profile.studentIn.length} class(es).`,
+    );
 
     // Collect all unique teacher emails from the student's classes
     const teacherEmails = new Set<string>();
     for (const classItem of profile.studentIn) {
       if (classItem.creator?.email) {
         teacherEmails.add(classItem.creator.email);
-        console.log(`[Password Reset] Found a teacher for class ${classItem.id}.`);
+        console.log(
+          `[Password Reset] Found a teacher for class ${classItem.id}.`,
+        );
       } else {
-        console.log(`[Password Reset] WARNING: Class ${classItem.id} has no creator email.`);
+        console.log(
+          `[Password Reset] WARNING: Class ${classItem.id} has no creator email.`,
+        );
       }
     }
 
     const teacherEmailsArray = Array.from(teacherEmails);
-    console.log(`[Password Reset] Total unique teachers found: ${teacherEmailsArray.length}`);
+    console.log(
+      `[Password Reset] Total unique teachers found: ${teacherEmailsArray.length}`,
+    );
 
     return teacherEmailsArray;
   } catch (error) {
-    console.error(`[Password Reset] Error finding teacher emails for user:`, error instanceof Error ? error.message : "Unknown error");
+    console.error(
+      `[Password Reset] Error finding teacher emails for user:`,
+      error instanceof Error ? error.message : "Unknown error",
+    );
     return [];
   }
 }
@@ -126,15 +143,15 @@ const { withAuth } = createAuth({
 
   // WARNING: remove initFirstItem functionality in production
   //   see https://keystonejs.com/docs/config/auth#init-first-item for more
-  initFirstItem: {
-    // if there are no items in the database, by configuring this field
-    //   you are asking the Keystone AdminUI to create a new user
-    //   providing inputs for these fields
-    fields: ["username", "email", "password"],
+  // initFirstItem: {
+  // if there are no items in the database, by configuring this field
+  //   you are asking the Keystone AdminUI to create a new user
+  //   providing inputs for these fields
+  // fields: ["username", "email", "password"],
 
-    // it uses context.sudo() to do this, which bypasses any access control you might have
-    //   you shouldn't use this in production
-  },
+  // it uses context.sudo() to do this, which bypasses any access control you might have
+  //   you shouldn't use this in production
+  // },
   passwordResetLink: {
     async sendToken(args: any) {
       const { token, identity } = args;
@@ -149,19 +166,23 @@ const { withAuth } = createAuth({
       // Check if the user is a student and find their teachers
       const teacherEmails = await findTeacherEmailsForStudent(
         userEmail,
-        context
+        context,
       );
 
       if (teacherEmails.length > 0) {
         // User is a student — redirect reset email to teachers, CC the student
-        console.log(`[Password Reset] Redirecting to ${teacherEmails.length} teacher(s) with student CC'd.`);
+        console.log(
+          `[Password Reset] Redirecting to ${teacherEmails.length} teacher(s) with student CC'd.`,
+        );
         for (const teacherEmail of teacherEmails) {
           await sendPasswordResetEmail(token, teacherEmail, userEmail);
         }
         console.log(`[Password Reset] Reset email(s) sent.`);
       } else {
         // Normal flow — send directly to the requesting user
-        console.log(`[Password Reset] Normal flow: sending to requesting user.`);
+        console.log(
+          `[Password Reset] Normal flow: sending to requesting user.`,
+        );
         await sendPasswordResetEmail(token, userEmail);
         console.log(`[Password Reset] Reset email sent.`);
       }

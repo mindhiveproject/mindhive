@@ -202,4 +202,14 @@ export const rules = {
     if (item?.authorId === session?.itemId) return true;
     return false;
   },
+
+  canAccessAdminUI({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) {
+      return false;
+    }
+    if (permissions.canAccessAdminUI({ session })) {
+      return true;
+    }
+    return false;
+  },
 };
