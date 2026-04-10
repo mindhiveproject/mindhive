@@ -220,6 +220,8 @@ export default function RunStudy({ user, study, task, version }) {
     }
   }
 
+  console.log({ info });
+
   return (
     <StyledStudyRun>
       {info && user && (

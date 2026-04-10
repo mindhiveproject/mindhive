@@ -26,7 +26,7 @@ export const Guest = list({
   access: {
     operation: {
       // Reading guests probably only for admins; creating via participation flow
-      query: isAdmin,
+      query: () => true,
       create: () => true, // allow unauthenticated guest creation via public endpoint
       update: isAdmin,
       delete: isAdmin,

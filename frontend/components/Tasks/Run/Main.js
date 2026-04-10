@@ -15,12 +15,15 @@ export default function TaskRun({
   onFinish,
   isSavingData,
 }) {
+  console.log("task to participate");
   const { data, error, loading } = useQuery(TASK_TO_PARTICIPATE, {
     variables: { id },
   });
 
   const task = data?.task || undefined;
   const [script, setScript] = useState(undefined);
+
+  console.log({ task });
 
   // populate task with script
   useEffect(() => {

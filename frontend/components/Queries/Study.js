@@ -298,6 +298,39 @@ export const STUDY_TO_JOIN = gql`
   }
 `;
 
+export const STUDY_TO_PARTICIPATE = gql`
+  query STUDY_TO_PARTICIPATE($id: ID!) {
+    study(where: { id: $id }) {
+      id
+      title
+      slug
+      description
+      settings
+      status
+      info
+      components
+      flow
+    }
+  }
+`;
+
+export const STUDY_TO_RUN = gql`
+  query STUDY_TO_RUN($slug: String!) {
+    study(where: { slug: $slug }) {
+      id
+      title
+      slug
+      settings
+      description
+      info
+      flow
+      components
+      currentVersion
+      status
+    }
+  }
+`;
+
 // get study to clone
 export const STUDY_TO_CLONE = gql`
   query STUDY_TO_CLONE($slug: String!) {

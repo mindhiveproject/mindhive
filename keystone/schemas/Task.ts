@@ -16,7 +16,7 @@ export const Task = list({
   access: {
     operation: {
       // Only authenticated users can interact with tasks
-      query: isSignedIn,
+      query: () => true,
       create: isSignedIn,
       update: isSignedIn,
       delete: isSignedIn,

@@ -12,46 +12,62 @@ import {
 import slugify from "slugify";
 import { isSignedIn, isAdmin, rules } from "../access";
 
+const canReadStudyField = ({ session }: { session?: any }) => !!session;
+const canReadPublicInfo = () => true;
+
 export const Study = list({
   access: {
     operation: {
-      // Only authenticated users can interact with studies
-      query: isSignedIn,
+      // Everyone (including guests) can query studies, but
+      // filter.query below decides WHICH studies they see.
+      query: () => true,
       create: isSignedIn,
       update: isSignedIn,
       delete: isSignedIn,
     },
     filter: {
-      // What items a user can see:
+      // Which items a user can see:
       // - Admins: all
-      // - Others: public studies, or where they are author or collaborator
+      // - Signed‑in: public OR author OR collaborator
+      // - Anonymous/guest: only public
       query: ({ session }) =>
         isAdmin({ session })
           ? true
-          : {
-              OR: [
-                { public: { equals: true } },
-                { author: { id: { equals: session?.itemId } } },
-                {
-                  collaborators: { some: { id: { equals: session?.itemId } } },
-                },
-              ],
-            },
+          : session?.itemId
+            ? {
+                OR: [
+                  { public: { equals: true } },
+                  { author: { id: { equals: session.itemId } } },
+                  {
+                    collaborators: {
+                      some: { id: { equals: session.itemId } },
+                    },
+                  },
+                ],
+              }
+            : {
+                public: { equals: true },
+              },
       // Who can update/delete which studies:
       // - Admins: all
-      // - Others: author or collaborator (rules.canManageOwnStudies)
+      // - Others: author or collaborator
       update: rules.canManageOwnStudies,
       delete: rules.canManageOwnStudies,
     },
   },
 
   fields: {
-    title: text({ validation: { isRequired: true } }),
+    // PUBLICLY READABLE FIELDS (for guests)
+    title: text({
+      validation: { isRequired: true },
+      access: { read: canReadPublicInfo },
+    }),
 
     slug: text({
       validation: { isRequired: true },
       isIndexed: "unique",
       isFilterable: true,
+      access: { read: canReadPublicInfo },
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
@@ -82,11 +98,13 @@ export const Study = list({
       },
     }),
 
-    description: text(),
-    shortDescription: text(),
+    shortDescription: text({
+      access: { read: canReadPublicInfo },
+    }),
 
     image: relationship({
       ref: "StudyImage.study",
+      access: { read: canReadPublicInfo },
       ui: {
         displayMode: "cards",
         cardFields: ["keystoneImage", "image", "altText"],
@@ -95,27 +113,54 @@ export const Study = list({
       },
     }),
 
-    settings: json(),
-    info: json(),
+    // EVERYTHING BELOW REQUIRES A SIGNED‑IN SESSION
+    description: text({
+      access: { read: canReadStudyField },
+    }),
 
-    public: checkbox({ isFilterable: true }),
-    featured: checkbox({ isFilterable: true }),
-    submitForPublishing: checkbox({ isFilterable: true }),
-    isHidden: checkbox({ isFilterable: true }),
+    settings: json({
+      access: { read: canReadPublicInfo },
+    }),
 
-    components: json(),
-    flow: json(),
-    diagram: text(),
+    info: json({
+      access: { read: canReadStudyField },
+    }),
+
+    public: checkbox({
+      isFilterable: true,
+      access: { read: canReadStudyField },
+    }),
+    featured: checkbox({
+      isFilterable: true,
+      access: { read: canReadStudyField },
+    }),
+    submitForPublishing: checkbox({
+      isFilterable: true,
+      access: { read: canReadStudyField },
+    }),
+    isHidden: checkbox({
+      isFilterable: true,
+      access: { read: canReadStudyField },
+    }),
+
+    components: json({
+      access: { read: canReadPublicInfo },
+    }),
+    flow: json({
+      access: { read: canReadPublicInfo },
+    }),
+    diagram: text({
+      access: { read: canReadStudyField },
+    }),
 
     author: relationship({
       ref: "Profile.researcherIn",
+      access: { read: canReadStudyField },
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
-            // Automatically set current user as author
             return { connect: { id: context.session.itemId } };
           } else {
-            // Allow explicit change only if already coming from input
             return inputData.author;
           }
         },
@@ -125,8 +170,9 @@ export const Study = list({
     collaborators: relationship({
       ref: "Profile.collaboratorInStudy",
       many: true,
+      access: { read: canReadStudyField },
       hooks: {
-        async resolveInput({ context, operation, inputData }) {
+        async resolveInput({ operation, inputData }) {
           if (operation === "create") {
             return inputData.collaborators;
           } else {
@@ -139,89 +185,111 @@ export const Study = list({
     participants: relationship({
       ref: "Profile.participantIn",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     guests: relationship({
       ref: "Guest.participantIn",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     consent: relationship({
       ref: "Consent.studies",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     proposal: relationship({
       ref: "ProposalBoard.study",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     proposalMain: relationship({
       ref: "ProposalBoard.studyMain",
+      access: { read: canReadStudyField },
     }),
 
     descriptionInProposalCard: relationship({
       ref: "ProposalCard.studyDescription",
+      access: { read: canReadStudyField },
     }),
 
     classes: relationship({
       ref: "Class.studies",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     reviews: relationship({
       ref: "Review.study",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     tags: relationship({
       ref: "Tag.studies",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     talks: relationship({
       ref: "Talk.studies",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     datasets: relationship({
       ref: "Dataset.study",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     summaryResults: relationship({
       ref: "SummaryResult.study",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     specs: relationship({
       ref: "Spec.studies",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     vizJournals: relationship({
       ref: "VizJournal.study",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     datasources: relationship({
       ref: "Datasource.study",
       many: true,
+      access: { read: canReadStudyField },
     }),
 
     proposalCards: relationship({
       ref: "ProposalCard.studies",
       many: true,
+      access: { read: canReadStudyField },
     }),
+
     mediaAssetsUsed: relationship({
       ref: "MediaAsset.usedInStudies",
       many: true,
-    }),
-    createdAt: timestamp({
-      defaultValue: { kind: "now" },
+      access: { read: canReadStudyField },
     }),
 
-    updatedAt: timestamp(),
+    createdAt: timestamp({
+      defaultValue: { kind: "now" },
+      access: { read: canReadStudyField },
+    }),
+
+    updatedAt: timestamp({
+      access: { read: canReadStudyField },
+    }),
 
     status: select({
       options: [
@@ -237,20 +305,31 @@ export const Study = list({
         },
       ],
       defaultValue: "WORKING",
+      access: { read: canReadStudyField },
     }),
 
-    currentVersion: text(),
-    versionHistory: json(),
-    projectName: text(),
+    currentVersion: text({
+      access: { read: canReadStudyField },
+    }),
+    versionHistory: json({
+      access: { read: canReadStudyField },
+    }),
+    projectName: text({
+      access: { read: canReadStudyField },
+    }),
 
     dataCollectionStatus: select({
       options: [
         { label: "Not started", value: "NOT_STARTED" },
         { label: "In progress", value: "IN_PROGRESS" },
         { label: "Submitted", value: "SUBMITTED" },
-        { label: "Data collection is finished", value: "FINISHED" },
+        {
+          label: "Data collection is finished",
+          value: "FINISHED",
+        },
       ],
       defaultValue: "NOT_STARTED",
+      access: { read: canReadStudyField },
     }),
 
     dataCollectionData: select({
@@ -261,13 +340,18 @@ export const Study = list({
         { label: "Real data", value: "REAL_DATA" },
       ],
       defaultValue: "NOT_DEFINED",
+      access: { read: canReadStudyField },
     }),
 
-    dataCollectionOpenForParticipation: checkbox({ isFilterable: true }),
+    dataCollectionOpenForParticipation: checkbox({
+      isFilterable: true,
+      access: { read: canReadStudyField },
+    }),
 
     logs: relationship({
       ref: "Log.study",
       many: true,
+      access: { read: canReadStudyField },
     }),
   },
 });

@@ -210,20 +210,21 @@ export const GET_TEACHER_CLASSES = gql`
 
 export const GET_MENTOR_CLASSES = gql`
   query GET_MENTOR_CLASSES($userId: ID!) {
-    classes(where: { 
-      mentors: { 
-        some: { 
-          id: { 
-            equals: $userId 
-          }
-        }
-      } 
-    })
-    {
+    classes(where: { mentors: { some: { id: { equals: $userId } } } }) {
       id
       title
       code
       createdAt
+    }
+  }
+`;
+
+// get class with a unique code
+export const GET_CLASS_TO_JOIN = gql`
+  query GET_CLASS_TO_JOIN($code: String!) {
+    class(where: { code: $code }) {
+      id
+      title
     }
   }
 `;

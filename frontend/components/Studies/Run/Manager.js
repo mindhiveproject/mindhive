@@ -20,11 +20,14 @@ export default function Manager({
   studiesInfo,
   info,
 }) {
+  console.log({ study });
   // get the latest state of components (participants' conditions) with a query
   const { data: studyComponentsData } = useQuery(STUDY_COMPONENTS, {
     variables: { studyId: study?.id },
   });
   const components = { ...studyComponentsData?.study?.components } || {};
+
+  console.log({ studyComponentsData });
 
   const { path } = info;
   const [currentStep, setCurrentStep] = useState({});
@@ -36,7 +39,7 @@ export default function Manager({
         let step = {};
         const steps =
           path.filter(
-            (step) => step?.componentID === task && step?.testId === version
+            (step) => step?.componentID === task && step?.testId === version,
           ) || [];
         if (steps.length) {
           step = steps[0];

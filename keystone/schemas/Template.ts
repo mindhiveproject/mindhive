@@ -12,7 +12,7 @@ import { isSignedIn, isAdmin } from "../access";
 export const Template = list({
   access: {
     operation: {
-      query: isSignedIn,
+      query: () => true,
       create: isSignedIn,
       update: isSignedIn,
       delete: isSignedIn,
@@ -25,6 +25,7 @@ export const Template = list({
           ? true
           : {
               OR: [
+                { public: { equals: true } },
                 // you can add an isPublic flag later; for now just author/collaborators
                 { author: { id: { equals: session?.itemId } } },
                 {

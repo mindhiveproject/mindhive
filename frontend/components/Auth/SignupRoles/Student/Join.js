@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
 
-import { GET_CLASS } from "../../../Queries/Classes";
+import { GET_CLASS_TO_JOIN } from "../../../Queries/Classes";
 import { GET_CLASSES } from "../../../Queries/Classes";
 
 import {
@@ -20,9 +20,11 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
       ? { action: "select", code: classCode, i: invitationCode }
       : { action: "select", code: classCode };
 
-  const { data, loading, error } = useQuery(GET_CLASS, {
+  const { data, loading, error } = useQuery(GET_CLASS_TO_JOIN, {
     variables: { code: classCode },
   });
+
+  console.log({ data });
 
   const [joinClassAsStudent, { loading: joinClassAsStudentLoading }] =
     useMutation(JOIN_CLASS_AS_STUDENT_MUTATION, {
@@ -74,9 +76,7 @@ export default function JoinClass({ user, role, classCode, invitationCode }) {
       <div className="classFoundScreen">
         <h1>Do you want to join the following class as a {role}?</h1>
 
-        <div className="classInformation">
-          {myclass.title} - {myclass.creator.username}
-        </div>
+        <div className="classInformation">{myclass?.title}</div>
 
         <div className="navigationBtns">
           <Link href={`/signup/${role}`}>
