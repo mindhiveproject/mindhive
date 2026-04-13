@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 
 const defaultIconStyle = {
   width: "20px",
@@ -73,6 +74,45 @@ const POSITION_STYLES = {
 // When tooltip has an action, delay before hiding after pointer leaves trigger so user can cross the gap
 const INTERACTIVE_HIDE_DELAY_MS = 150;
 
+const PORTAL_Z_INDEX = 20000;
+
+/**
+ * Fixed placement for portaled tooltips (viewport coordinates from getBoundingClientRect).
+ * @param {string} position
+ * @param {DOMRect} rect
+ */
+function buildPortalFixedPlacement(position, rect) {
+  if (typeof window === "undefined") {
+    return { position: "fixed", top: 0, left: 0, margin: 0 };
+  }
+  const m = 8;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const auto = "auto";
+  const base = { position: "fixed", margin: 0 };
+
+  switch (position) {
+    case "right":
+      return { ...base, top: rect.top, left: rect.right + m, right: auto, bottom: auto };
+    case "left":
+      return { ...base, top: rect.top, left: rect.left - m, right: auto, bottom: auto };
+    case "bottomLeft":
+      return { ...base, top: rect.bottom + m, left: rect.left, right: auto, bottom: auto };
+    case "bottomRight":
+      return { ...base, top: rect.bottom + m, right: vw - rect.right, left: auto, bottom: auto };
+    case "topRight":
+      return {
+        ...base,
+        bottom: vh - rect.top + m,
+        right: vw - rect.right,
+        left: auto,
+        top: auto,
+      };
+    default:
+      return buildPortalFixedPlacement("bottomLeft", rect);
+  }
+}
+
 /**
  * Info icon with a hover tooltip, or a custom trigger with tooltip.
  *
@@ -87,7 +127,8 @@ const INTERACTIVE_HIDE_DELAY_MS = 150;
  * @param {object} [wrapperStyle] - Override styles for the wrapper (e.g. width when used as custom trigger).
  * @param {number} [delayMs=0] - Delay in milliseconds before the tooltip appears on hover. Leave before this time cancels showing.
  * @param {React.ReactNode} [action] - Optional node (e.g. link/button) rendered below the tooltip content. When present, the tooltip is interactive: it stays visible when the pointer is over the trigger or the tooltip so the user can click the action.
- * @param {"bottomLeft"|"bottomRight"|"topRight"} [position="bottomLeft"] - Tooltip placement: "bottomLeft" (below trigger, left-aligned), "bottomRight" (below trigger, right-aligned), or "topRight" (above trigger, right-aligned).
+ * @param {"left"|"right"|"bottomLeft"|"bottomRight"|"topRight"} [position="bottomLeft"] - Tooltip placement.
+ * @param {boolean} [portal=false] - Render the tooltip in `document.body` with `position: fixed` so it is not clipped by ancestor `overflow: hidden`. Ignored when `action` is set (interactive tooltips must stay inside the wrapper hover target).
  */
 export default function InfoTooltip({
   content,
@@ -99,13 +140,17 @@ export default function InfoTooltip({
   delayMs = 0,
   action,
   position = "bottomLeft",
+  portal = false,
 }) {
   const [triggerHover, setTriggerHover] = useState(false);
   const [tooltipHover, setTooltipHover] = useState(false);
+  const [portalRect, setPortalRect] = useState(null);
   const showTimeoutRef = useRef(null);
   const hideTimeoutRef = useRef(null);
+  const wrapperRef = useRef(null);
 
   const hover = action != null ? triggerHover || tooltipHover : triggerHover;
+  const usePortal = Boolean(portal && action == null);
 
   const clearShowTimeout = useCallback(() => {
     if (showTimeoutRef.current != null) {
@@ -157,19 +202,46 @@ export default function InfoTooltip({
     };
   }, [clearShowTimeout, clearHideTimeout]);
 
+  useLayoutEffect(() => {
+    if (!usePortal || !hover || wrapperRef.current == null) return;
+    setPortalRect(wrapperRef.current.getBoundingClientRect());
+  }, [usePortal, hover]);
+
+  useEffect(() => {
+    if (!usePortal || !hover) return;
+    const el = wrapperRef.current;
+    const update = () => {
+      if (el) setPortalRect(el.getBoundingClientRect());
+    };
+    window.addEventListener("resize", update);
+    window.addEventListener("scroll", update, true);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update, true);
+    };
+  }, [usePortal, hover]);
+
   const useCustomTrigger = content != null && children != null;
   const tooltipContent = useCustomTrigger ? content : content ?? children;
   const mergedIconStyle = { ...defaultIconStyle, ...iconStyle };
   const positionConfig = POSITION_STYLES[position] ?? POSITION_STYLES.bottomLeft;
   const { transformHidden, transformVisible, ...positionPlacement } =
     positionConfig;
+  const portalFixedPlacement =
+    usePortal && portalRect != null
+      ? buildPortalFixedPlacement(position, portalRect)
+      : null;
+  const portalTransformPrefix = position === "left" ? "translateX(-100%) " : "";
   const mergedTooltipStyle = {
     ...defaultTooltipStyle,
-    ...positionPlacement,
+    ...(portalFixedPlacement ?? positionPlacement),
     ...tooltipStyle,
     opacity: hover ? 1 : 0,
-    transform: hover ? transformVisible : transformHidden,
+    transform: hover
+      ? `${portalTransformPrefix}${transformVisible}`
+      : `${portalTransformPrefix}${transformHidden}`,
     ...(action != null && { pointerEvents: hover ? "auto" : "none" }),
+    ...(usePortal && { zIndex: PORTAL_Z_INDEX }),
   };
 
   const baseWrapperStyle = useCustomTrigger
@@ -182,8 +254,26 @@ export default function InfoTooltip({
       };
   const wrapperStyle = { ...baseWrapperStyle, ...wrapperStyleOverride };
 
+  const tooltipEl = (
+    <div
+      style={mergedTooltipStyle}
+      {...(action != null && {
+        onMouseEnter: handleTooltipMouseEnter,
+        onMouseLeave: handleTooltipMouseLeave,
+      })}
+    >
+      {typeof tooltipContent === "string" ? (
+        <span>{tooltipContent}</span>
+      ) : (
+        tooltipContent
+      )}
+      {action != null && <div style={{ marginTop: "8px" }}>{action}</div>}
+    </div>
+  );
+
   return (
     <div
+      ref={wrapperRef}
       style={wrapperStyle}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -193,20 +283,11 @@ export default function InfoTooltip({
       ) : (
         <img src={iconSrc} alt="info" style={mergedIconStyle} />
       )}
-      <div
-        style={mergedTooltipStyle}
-        {...(action != null && {
-          onMouseEnter: handleTooltipMouseEnter,
-          onMouseLeave: handleTooltipMouseLeave,
-        })}
-      >
-        {typeof tooltipContent === "string" ? (
-          <span>{tooltipContent}</span>
-        ) : (
-          tooltipContent
-        )}
-        {action != null && <div style={{ marginTop: "8px" }}>{action}</div>}
-      </div>
+      {!usePortal && tooltipEl}
+      {usePortal &&
+        typeof document !== "undefined" &&
+        portalRect != null &&
+        createPortal(tooltipEl, document.body)}
     </div>
   );
 }
