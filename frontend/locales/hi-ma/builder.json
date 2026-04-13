@@ -331,11 +331,62 @@
 			"widgetSettings": "विजेट सेटिंग्स"
 		},
 		"sideNav": {
-			"add": "",
+			"addJournal": "",
 			"addJournalScratch": "",
 			"addJournalTemplate": "",
+			"addWorkspace": "",
+			"addWorkspaceDropdown": "",
+			"addWorkspaceError": "",
+			"addWorkspaceLoading": "",
+			"addWorkspaceScratch": "",
+			"addWorkspaceTemplate": "",
 			"collapsePanel": "",
-			"noJournalsYet": ""
+			"componentFallbackName": "",
+			"dataOrigin": {
+				"SIMULATED": "",
+				"STUDY": "",
+				"TEMPLATE": "",
+				"UPLOADED": ""
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "",
+				"many": "",
+				"none": "",
+				"one": ""
+			},
+			"dataSourceLabel": "",
+			"dataSourceModal": {
+				"byAuthor": "",
+				"cancel": "",
+				"closeModal": "",
+				"error": "",
+				"lastUpdated": "",
+				"loading": "",
+				"neverUpdated": "",
+				"noDatasets": "",
+				"save": "",
+				"saving": "",
+				"title": "",
+				"unknownAuthor": "",
+				"untitledDataset": ""
+			},
+			"defaultWorkspaceTitle": "",
+			"deleteJournal": "",
+			"deleteJournalConfirm": "",
+			"deleteWorkspace": "",
+			"deleteWorkspaceConfirm": "",
+			"editJournal": "",
+			"editJournalCloseWithoutSaving": "",
+			"editJournalFieldDescription": "",
+			"editJournalFieldTitle": "",
+			"editJournalSaveClose": "",
+			"editJournalTemplateCheckbox": "",
+			"editJournalTitle": "",
+			"journalMore": "",
+			"lastUpdatedAt": "",
+			"noDataSources": "",
+			"noJournalsYet": "",
+			"workspaceMore": ""
 		},
 		"visualizationWidget": {
 			"unsupportedType": "असमर्थित विजेट प्रकार: {{type}}"

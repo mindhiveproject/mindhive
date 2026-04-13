@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { useQuery, useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
 
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
 import { UPDATE_VIZPART } from "../../../../Mutations/VizPart";
@@ -20,10 +22,24 @@ import {
 } from "../styles/StyledDataSourceModal"; // Adjust if moved
 
 export default function DataSourceModal({ isOpen, onClose, journal }) {
+  const { t } = useTranslation("builder");
   const { projectId, studyId } = useDataJournal(); // Use context
   const [selectedDatasources, setSelectedDatasources] = useState(
-    journal?.datasources?.map((ds) => ds.id) || []
+    () => journal?.datasources?.map((ds) => ds.id) || []
   );
+
+  const journalDatasourceIdsKey = useMemo(() => {
+    const list = journal?.datasources || [];
+    return [...list]
+      .map((d) => d.id)
+      .sort()
+      .join("|");
+  }, [journal?.datasources]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setSelectedDatasources((journal?.datasources || []).map((ds) => ds.id));
+  }, [isOpen, journal?.id, journalDatasourceIdsKey]);
 
   const { data, loading, error, refetch } = useQuery(GET_DATASOURCES, {
     variables: {
@@ -111,40 +127,83 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
     }
   };
 
-  // Origin labels
-  const originLabels = {
-    STUDY: "Study data",
-    SIMULATED: "Simulated",
-    UPLOADED: "Uploaded",
-    TEMPLATE: "Template",
-  };
-
   if (!isOpen) return null;
+  if (typeof document === "undefined") return null;
 
-  return (
-    <StyledModalOverlay>
-      <StyledModalContent>
+  const modalTree = (
+    <StyledModalOverlay
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <StyledModalContent
+        onClick={(e) => e.stopPropagation()}
+        onFocus={(e) => e.stopPropagation()}
+      >
         <StyledModalHeader>
-          <h2>Select Data Sources</h2>
-          <StyledModalClose onClick={onClose}>&times;</StyledModalClose>
+          <h2>
+            {t("dataJournal.sideNav.dataSourceModal.title", {}, {
+              default: "Select data sources",
+            })}
+          </h2>
+          <StyledModalClose
+            type="button"
+            aria-label={t("dataJournal.sideNav.dataSourceModal.closeModal", {}, {
+              default: "Close",
+            })}
+            onClick={onClose}
+          >
+            &times;
+          </StyledModalClose>
         </StyledModalHeader>
         <StyledModalBody>
-          {loading && <div>Loading datasets...</div>}
-          {error && <div>Error: {error.message}</div>}
-          {datasources?.length === 0 && <div>No datasets found</div>}
+          {loading && (
+            <div>
+              {t("dataJournal.sideNav.dataSourceModal.loading", {}, {
+                default: "Loading datasets...",
+              })}
+            </div>
+          )}
+          {error && (
+            <div>
+              {t(
+                "dataJournal.sideNav.dataSourceModal.error",
+                { message: error.message },
+                { default: "Error: {{message}}" }
+              )}
+            </div>
+          )}
+          {!loading && !error && datasources?.length === 0 && (
+            <div>
+              {t("dataJournal.sideNav.dataSourceModal.noDatasets", {}, {
+                default: "No datasets found",
+              })}
+            </div>
+          )}
           {!loading && !error && (
             <StyledDataSourceList>
               {datasources.map((datasource) => {
                 const isSelected = selectedDatasources.includes(datasource.id);
-                const originLabel =
-                  originLabels[datasource.dataOrigin] || datasource.dataOrigin;
+                const authorName =
+                  datasource.author?.username ||
+                  t("dataJournal.sideNav.dataSourceModal.unknownAuthor", {}, {
+                    default: "Unknown",
+                  });
+                const originKey = datasource.dataOrigin
+                  ? `dataJournal.sideNav.dataOrigin.${datasource.dataOrigin}`
+                  : null;
+                const originLabel = originKey
+                  ? t(originKey, {}, { default: datasource.dataOrigin })
+                  : datasource.dataOrigin;
                 const formattedDate = datasource.updatedAt
-                  ? new Date(datasource.updatedAt).toLocaleDateString("en-US", {
+                  ? new Date(datasource.updatedAt).toLocaleDateString(undefined, {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
                     })
-                  : "Never";
+                  : t("dataJournal.sideNav.dataSourceModal.neverUpdated", {}, {
+                      default: "Never",
+                    });
 
                 return (
                   <StyledDataSourceOption
@@ -163,15 +222,26 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
                     />
                     <div className="datasource-details">
                       <div className="datasource-title">
-                        {datasource.title || "Untitled Dataset"}
+                        {datasource.title ||
+                          t("dataJournal.sideNav.dataSourceModal.untitledDataset", {}, {
+                            default: "Untitled dataset",
+                          })}
                       </div>
                       <div className="datasource-meta">
                         <span className="origin-badge">{originLabel}</span>
                         <span className="author">
-                          by {datasource.author?.username || "Unknown"}
+                          {t(
+                            "dataJournal.sideNav.dataSourceModal.byAuthor",
+                            { author: authorName },
+                            { default: "by {{author}}" }
+                          )}
                         </span>
                         <span className="updated">
-                          • Last updated {formattedDate}
+                          {t(
+                            "dataJournal.sideNav.dataSourceModal.lastUpdated",
+                            { date: formattedDate },
+                            { default: "• Last updated {{date}}" }
+                          )}
                         </span>
                       </div>
                     </div>
@@ -183,17 +253,27 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
         </StyledModalBody>
         <StyledModalFooter>
           <StyledModalButton className="cancel" onClick={onClose}>
-            Cancel
+            {t("dataJournal.sideNav.dataSourceModal.cancel", {}, {
+              default: "Cancel",
+            })}
           </StyledModalButton>
           <StyledModalButton
             className="save"
             onClick={handleSave}
             disabled={updateLoading}
           >
-            {updateLoading ? "Saving..." : "Save"}
+            {updateLoading
+              ? t("dataJournal.sideNav.dataSourceModal.saving", {}, {
+                  default: "Saving...",
+                })
+              : t("dataJournal.sideNav.dataSourceModal.save", {}, {
+                  default: "Save",
+                })}
           </StyledModalButton>
         </StyledModalFooter>
       </StyledModalContent>
     </StyledModalOverlay>
   );
+
+  return createPortal(modalTree, document.body);
 }

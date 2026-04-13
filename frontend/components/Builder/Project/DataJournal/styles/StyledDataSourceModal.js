@@ -17,13 +17,16 @@ export const StyledModalContent = styled.div`
   background: white;
   border-radius: 8px;
   width: 90%;
-  max-width: 600px;
-  max-height: 80vh;
-  overflow-y: auto;
+  max-width: 800px;
+  max-height: 800px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 `;
 
 export const StyledModalHeader = styled.div`
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -33,16 +36,20 @@ export const StyledModalHeader = styled.div`
     margin: 0;
     font-family: Nunito;
     font-weight: 700;
-    font-size: 24px;
+    font-size: 20px;
     color: #333;
   }
 `;
 
 export const StyledModalBody = styled.div`
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   padding: 16px;
 `;
 
 export const StyledModalFooter = styled.div`
+  flex-shrink: 0;
   display: flex;
   justify-content: flex-end;
   padding: 16px;
@@ -91,14 +98,14 @@ export const StyledModalButton = styled.button`
 export const StyledDataSourceList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 `;
 
 export const StyledDataSourceOption = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
+  gap: 24px;
+  padding: 12px 14px;
   border: 1px solid #e6e6e6;
   border-radius: 8px;
   background: white;
@@ -109,16 +116,19 @@ export const StyledDataSourceOption = styled.div`
   }
   &.selected {
     border-color: #336f8a;
-    background: #f0f8f7;
+    // background: #f0f8f7;
   }
   input[type="checkbox"] {
     width: 16px;
     height: 16px;
+    margin-top: 3px;
+    flex-shrink: 0;
     cursor: pointer;
     pointer-events: auto; /* Ensure checkbox is clickable */
   }
   .datasource-details {
     flex: 1;
+    min-width: 0;
   }
   .datasource-title {
     font-family: Nunito;
@@ -126,20 +136,25 @@ export const StyledDataSourceOption = styled.div`
     font-size: 16px;
     line-height: 20px;
     color: #333;
+    overflow-wrap: break-word;
   }
   .datasource-meta {
     display: flex;
-    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 8px;
+    row-gap: 4px;
     font-size: 12px;
     color: #666;
     font-family: Inter;
-    margin-top: 4px;
+    margin-top: 6px;
   }
   .origin-badge {
     background: #f0f8f7;
     color: #336f8a;
     padding: 4px 8px;
     border-radius: 6px;
+    border: 1px solid #E6E6E6;
     font-size: 12px;
     font-weight: 500;
     font-family: Inter;

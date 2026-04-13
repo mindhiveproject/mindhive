@@ -162,11 +162,15 @@ export default function CreateJournal({
   const journalDropdownOptions = [
     {
       value: ADD_NEW_JOURNAL_VALUE,
-      label: t("dataJournal.sideNav.addJournalScratch", "Start from scratch"),
+      label: t("dataJournal.sideNav.addJournalScratch", {}, {
+        default: "Create a journal from scratch",
+      }),
     },
     {
       value: ADD_TEMPLATE_JOURNAL_VALUE,
-      label: t("dataJournal.sideNav.addJournalTemplate", "Use a template"),
+      label: t("dataJournal.sideNav.addJournalTemplate", {}, {
+        default: "Add a journal template",
+      }),
     },
   ];
 
@@ -176,12 +180,15 @@ export default function CreateJournal({
         value={journalDropdownValue}
         options={journalDropdownOptions}
         onChange={handleJournalDropdownChange}
-        ariaLabel={t("dataJournal.sideNav.add", "Add")}
-        placeholder={t("dataJournal.sideNav.add", "Add")}
+        ariaLabel={t("dataJournal.sideNav.addJournal", {}, {
+          default: "Journal",
+        })}
+        placeholder={t("dataJournal.sideNav.addJournal", {}, {
+          default: "Journal",
+        })}
         icon="+"
         triggerStyle={{ backgroundColor: "#F6F9F8", border: "none", fontWeight: 600, fontSize: "16px", color: "#5D5763" }}
       />
-
     </div>
   );
 }

@@ -46,56 +46,84 @@ export const StyledSidebar = styled.div`
     .journal {
       display: grid;
       grid-gap: 4px;
-      margin: 10px 0px 28px 0px;
+      margin: 8px 0 20px 0;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      background: #ffffff;
+      box-sizing: border-box;
+      transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .journal:not(.journal--selected):hover {
+      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+      box-shadow: var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.08));
+    }
+    .journal.journal--selected {
+      border: 1.5px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+    }
+    .journal.journal--selected:hover {
+      background: #F6F9F8;
+      border-color: var(--MH-Theme-Primary-Base, #E6E6E6);
+      // box-shadow: inset 4px 0 0 var(--MH-Theme-Primary-Base, #337c84),
+        var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.08));
     }
     .titleHeader {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: minmax(0, 1fr) auto;
       grid-gap: 8px;
       align-items: center;
     }
-    .title {
+    .journalTitleButton {
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: none;
+      text-align: left;
+      font: inherit;
+      color: inherit;
       cursor: pointer;
-      font-family: Nunito;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .journalTitleButton:focus-visible {
+      outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    .title { 
+      font-family: Inter, sans-serif;
       font-weight: 400;
-      font-style: Regular;
       font-size: 16px;
-      leading-trim: NONE;
       line-height: 24px;
-      letter-spacing: 0px;
-      color: grey;
+      letter-spacing: 0;
+      color: #888888;
     }
     .selectedTitle {
-      cursor: pointer;
-      font-family: Nunito;
+      font-family: Inter, sans-serif;
       font-weight: 700;
-      font-style: Bold;
       font-size: 16px;
-      leading-trim: NONE;
       line-height: 24px;
-      letter-spacing: 0px;
+      letter-spacing: 0;
+      color: inherit;
     }
-    .timestamp {
-      color: #888888;
-      font-family: Lato;
-      font-weight: 300;
-      font-style: Italic;
-      font-size: 10px;
-      leading-trim: NONE;
-      line-height: 140%;
-      letter-spacing: 0%;
+    .dataSourceRow {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      background: transparent;
+      // padding: 8px 10px;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
     }
-    .dataSource {
-      font-family: Nunito;
-      font-weight: 600;
-      font-style: SemiBold;
-      font-size: 12px;
-      leading-trim: NONE;
-      line-height: 16px;
-      letter-spacing: 0px;
-      background: #f6f9f8;
-      padding: 5px 10px;
-      width: fit-content;
+    .dataSourceChips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
     }
   }
   .workspaces {
@@ -116,6 +144,14 @@ export const StyledSidebar = styled.div`
       align-items: center;
     }
 
+    .workspaceRowLabel {
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
+    }
     .workspace {
       display: grid;
       cursor: pointer;
@@ -135,6 +171,39 @@ export const StyledSidebar = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 8px;
+
+    > div > button {
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    &:hover > div > button {
+      background-color: #e8eeec !important;
+      box-shadow: var(
+        --MH-Theme-Elevation-Medium,
+        0 1px 4px rgba(0, 0, 0, 0.08)
+      );
+    }
+  }
+
+  .addWorkspaceBtn {
+    display: flex;
+    width: fit-content;
+    justify-content: center;
+    align-items: right;
+    border-radius: 8px;
+
+    > div > button {
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    &:hover > div > button {
+      background-color: #e8eeec !important;
+      box-shadow: var(
+        --MH-Theme-Elevation-Medium,
+        0 1px 4px rgba(0, 0, 0, 0.08)
+      );
+    }
   }
 
   .components {

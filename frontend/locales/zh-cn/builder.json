@@ -331,11 +331,62 @@
 			"widgetSettings": "小部件设置"
 		},
 		"sideNav": {
-			"add": "添加",
-			"addJournalScratch": "从零开始",
-			"addJournalTemplate": "使用模板（待定）",
-			"collapsePanel": "折叠面板",
-			"noJournalsYet": "看来你仍然没有任何数据日志！"
+			"addJournal": "杂志",
+			"addJournalScratch": "从零开始创建一本日记",
+			"addJournalTemplate": "添加日志模板",
+			"addWorkspace": "添加工作区",
+			"addWorkspaceDropdown": "工作区",
+			"addWorkspaceError": "添加工作区时出错",
+			"addWorkspaceLoading": "添加...",
+			"addWorkspaceScratch": "从头开始创建一个工作区",
+			"addWorkspaceTemplate": "添加工作区模板",
+			"collapsePanel": "关闭",
+			"componentFallbackName": "组件名称",
+			"dataOrigin": {
+				"SIMULATED": "模拟",
+				"STUDY": "研究数据",
+				"TEMPLATE": "模板",
+				"UPLOADED": "已上传"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "选择与本期刊关联的数据集",
+				"many": "已链接的数据集：{{count}} ",
+				"none": "未链接任何数据集",
+				"one": "1 个已链接的数据集"
+			},
+			"dataSourceLabel": "数据源",
+			"dataSourceModal": {
+				"byAuthor": "由 {{author}}",
+				"cancel": "取消",
+				"closeModal": "关闭",
+				"error": "错误： {{message}}",
+				"lastUpdated": "• 最后更新时间： {{date}}",
+				"loading": "正在加载数据集……",
+				"neverUpdated": "绝不",
+				"noDatasets": "未找到数据集",
+				"save": "节省",
+				"saving": "保存...",
+				"title": "选择数据源",
+				"unknownAuthor": "未知",
+				"untitledDataset": "未命名数据集"
+			},
+			"defaultWorkspaceTitle": "未命名的工作区",
+			"deleteJournal": "删除",
+			"deleteJournalConfirm": "您确定要删除此日志吗？此日志中的所有工作区和组件也将被删除。",
+			"deleteWorkspace": "删除工作区",
+			"deleteWorkspaceConfirm": "您确定要删除此工作区吗？此工作区中的所有组件也将被删除。",
+			"editJournal": "编辑",
+			"editJournalCloseWithoutSaving": "关闭而不保存",
+			"editJournalFieldDescription": "描述",
+			"editJournalFieldTitle": "标题",
+			"editJournalSaveClose": "保存并关闭",
+			"editJournalTemplateCheckbox": "制作模板",
+			"editJournalTitle": "编辑日志",
+			"journalMore": "期刊期权",
+			"lastUpdatedAt": "上次更新时间： {{date}}",
+			"noDataSources": "无数据来源",
+			"noJournalsYet": "看来你仍然没有任何数据日志！",
+			"workspaceMore": "工作区选项"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "不支持的小部件类型：{{type}}"

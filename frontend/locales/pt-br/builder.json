@@ -331,11 +331,62 @@
 			"widgetSettings": "Configurações do widget"
 		},
 		"sideNav": {
-			"add": "Adicionar",
-			"addJournalScratch": "Comece do zero",
-			"addJournalTemplate": "Use um modelo (a definir)",
-			"collapsePanel": "Painel recolhido",
-			"noJournalsYet": "Parece que você ainda não tem nenhum diário de dados!"
+			"addJournal": "Diário",
+			"addJournalScratch": "Crie um diário do zero.",
+			"addJournalTemplate": "Adicionar um modelo de diário",
+			"addWorkspace": "Adicionar espaço de trabalho",
+			"addWorkspaceDropdown": "Espaço de trabalho",
+			"addWorkspaceError": "Erro ao adicionar espaço de trabalho",
+			"addWorkspaceLoading": "Adicionando...",
+			"addWorkspaceScratch": "Crie um espaço de trabalho do zero.",
+			"addWorkspaceTemplate": "Adicionar um modelo de espaço de trabalho",
+			"collapsePanel": "Fechar",
+			"componentFallbackName": "Nome do componente",
+			"dataOrigin": {
+				"SIMULATED": "Simulado",
+				"STUDY": "Dados do estudo",
+				"TEMPLATE": "Modelo",
+				"UPLOADED": "Enviado"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "Selecione conjuntos de dados vinculados a este periódico.",
+				"many": "{{count}} conjuntos de dados vinculados",
+				"none": "Nenhum conjunto de dados vinculado",
+				"one": "1 conjunto de dados vinculado"
+			},
+			"dataSourceLabel": "Fontes de dados",
+			"dataSourceModal": {
+				"byAuthor": "por {{author}}",
+				"cancel": "Cancelar",
+				"closeModal": "Fechar",
+				"error": "Erro: {{message}}",
+				"lastUpdated": "• Última atualização {{date}}",
+				"loading": "Carregando conjuntos de dados...",
+				"neverUpdated": "Nunca",
+				"noDatasets": "Nenhum conjunto de dados encontrado",
+				"save": "Salvar",
+				"saving": "Salvando...",
+				"title": "Selecionar fontes de dados",
+				"unknownAuthor": "Desconhecido",
+				"untitledDataset": "Conjunto de dados sem título"
+			},
+			"defaultWorkspaceTitle": "Espaço de trabalho sem nome",
+			"deleteJournal": "Excluir",
+			"deleteJournalConfirm": "Tem certeza de que deseja excluir este diário? Todos os espaços de trabalho e componentes deste diário também serão excluídos.",
+			"deleteWorkspace": "Excluir espaço de trabalho",
+			"deleteWorkspaceConfirm": "Tem certeza de que deseja excluir este espaço de trabalho? Todos os componentes deste espaço de trabalho também serão excluídos.",
+			"editJournal": "Editar",
+			"editJournalCloseWithoutSaving": "Fechar sem salvar",
+			"editJournalFieldDescription": "Descrição",
+			"editJournalFieldTitle": "Título",
+			"editJournalSaveClose": "Salvar e fechar",
+			"editJournalTemplateCheckbox": "Crie um modelo",
+			"editJournalTitle": "Editar diário",
+			"journalMore": "Opções de diário",
+			"lastUpdatedAt": "Última atualização: {{date}}",
+			"noDataSources": "Sem fontes de dados",
+			"noJournalsYet": "Parece que você ainda não tem nenhum diário de dados!",
+			"workspaceMore": "Opções de espaço de trabalho"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Tipo de widget não suportado: {{type}}"
