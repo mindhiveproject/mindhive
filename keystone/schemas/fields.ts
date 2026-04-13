@@ -37,6 +37,10 @@ export const permissionFields = {
     defaultValue: false,
     label: "User can manage journals",
   }),
+  canManageDatasets: checkbox({
+    defaultValue: false,
+    label: "User can manage datasets",
+  }),
 };
 
 export type Permission = keyof typeof permissionFields;

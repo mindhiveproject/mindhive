@@ -26,7 +26,6 @@ export const Template = list({
           : {
               OR: [
                 { public: { equals: true } },
-                // you can add an isPublic flag later; for now just author/collaborators
                 { author: { id: { equals: session?.itemId } } },
                 {
                   collaborators: { some: { id: { equals: session?.itemId } } },
@@ -122,5 +121,6 @@ export const Template = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+    public: checkbox(),
   },
 });

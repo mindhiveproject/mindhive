@@ -309,7 +309,7 @@ export const Study = list({
     }),
 
     currentVersion: text({
-      access: { read: canReadStudyField },
+      access: { read: canReadPublicInfo },
     }),
     versionHistory: json({
       access: { read: canReadStudyField },

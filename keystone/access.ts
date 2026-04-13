@@ -216,4 +216,11 @@ export const rules = {
     }
     return false;
   },
+
+  canReadOwnDatasets({ session, item }: ListAccessArgs & { item?: any }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageDatasets({ session })) return true;
+    if (item?.profileId === session?.itemId) return true;
+    return false;
+  },
 };

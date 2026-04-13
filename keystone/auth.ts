@@ -205,6 +205,10 @@ const session = statelessSessions({
   // httpOnly is enforced by Keystone's iron-session by default, confirmed here.
   secure: process.env.NODE_ENV === "production",
   sameSite: "strict",
+  domain:
+    process.env.NODE_ENV === "production"
+      ? process.env.SESSION_COOKIE_DOMAIN || ".mindhive.science"
+      : undefined,
 });
 
 export { withAuth, session };

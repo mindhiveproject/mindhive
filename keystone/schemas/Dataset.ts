@@ -11,27 +11,26 @@ import {
 } from "@keystone-6/core/fields";
 import { isSignedIn, isAdmin, rules } from "../access";
 
+const canUpdateStudyField = ({ session }: { session?: any }) => {
+  return isAdmin({ session })
+    ? true
+    : { profile: { id: { equals: session?.itemId } } };
+};
+const canUpdatePublicInfo = () => true;
+
 export const Dataset = list({
   access: {
     operation: {
-      // Only authenticated users can see/create; updates/deletes are restricted further
       query: isSignedIn,
-      create: isSignedIn, // typically via backend processes; you can tighten later if needed
-      update: isSignedIn,
+      create: () => true, // to allow guests to create a dataset
+      update: () => true, // to allow guests to update a dataset (isCompleted, when completed)
       delete: isSignedIn,
     },
     filter: {
-      // What items a user can see:
-      // - Admins: all
-      // - Others: datasets linked to their Profile (rules.canReadOwnDatasets)
       query: rules.canReadOwnDatasets,
-      // Who can update/delete:
-      // - Admins: all
-      // - Others: only their own datasets, and only for delete here
-      update: ({ session }) =>
-        isAdmin({ session })
-          ? true
-          : { profile: { id: { equals: session?.itemId } } },
+      update: ({ session }) => {
+        return true;
+      },
       delete: ({ session }) =>
         isAdmin({ session })
           ? true
@@ -44,9 +43,9 @@ export const Dataset = list({
       isIndexed: "unique",
       isFilterable: true,
       access: {
-        // Only admins can ever see or set the token
+        // Only admins can ever see or update the token
         read: isAdmin,
-        create: isAdmin,
+        create: () => true, // to allow guests to create a dataset
         update: isAdmin,
       },
     }),
@@ -90,7 +89,10 @@ export const Dataset = list({
 
     info: json(),
 
-    isCompleted: checkbox({ isFilterable: true }),
+    isCompleted: checkbox({
+      isFilterable: true,
+      access: { update: canUpdatePublicInfo },
+    }),
 
     isIncluded: checkbox({ isFilterable: true, defaultValue: false }),
 
@@ -116,6 +118,6 @@ export const Dataset = list({
       defaultValue: { kind: "now" },
     }),
 
-    completedAt: timestamp(),
+    completedAt: timestamp({ access: { update: canUpdatePublicInfo } }),
   },
 });

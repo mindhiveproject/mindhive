@@ -22,13 +22,18 @@ const customConfig: Config = {
   length: 3,
 };
 
+const canUpdateGuestField = ({ session }: { session?: any }) => {
+  return isAdmin({ session });
+};
+const canUpdatePublicInfo = () => true;
+
 export const Guest = list({
   access: {
     operation: {
       // Reading guests probably only for admins; creating via participation flow
       query: () => true,
       create: () => true, // allow unauthenticated guest creation via public endpoint
-      update: isAdmin,
+      update: () => true,
       delete: isAdmin,
     },
   },
@@ -71,7 +76,7 @@ export const Guest = list({
     }),
     info: json(),
     generalInfo: json(),
-    studiesInfo: json(),
+    studiesInfo: json({ access: { update: canUpdatePublicInfo } }),
     consentsInfo: json(),
     tasksInfo: json(),
     guestAccountExpiry: text(),
