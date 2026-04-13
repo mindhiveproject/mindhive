@@ -331,11 +331,62 @@
 			"widgetSettings": "إعدادات الأداة"
 		},
 		"sideNav": {
-			"add": "يضيف",
-			"addJournalScratch": "ابدأ من الصفر",
-			"addJournalTemplate": "استخدم قالبًا (سيتم تحديده لاحقًا)",
-			"collapsePanel": "لوحة قابلة للطي",
-			"noJournalsYet": "يبدو أنك لا تزال لا تملك أي سجلات بيانات!"
+			"addJournal": "مجلة",
+			"addJournalScratch": "أنشئ دفتر يوميات من الصفر",
+			"addJournalTemplate": "أضف قالبًا للمجلة",
+			"addWorkspace": "إضافة مساحة عمل",
+			"addWorkspaceDropdown": "مساحة العمل",
+			"addWorkspaceError": "خطأ في إضافة مساحة العمل",
+			"addWorkspaceLoading": "إضافة...",
+			"addWorkspaceScratch": "أنشئ مساحة عمل من الصفر",
+			"addWorkspaceTemplate": "أضف قالب مساحة عمل",
+			"collapsePanel": "يغلق",
+			"componentFallbackName": "اسم المكون",
+			"dataOrigin": {
+				"SIMULATED": "محاكاة",
+				"STUDY": "بيانات الدراسة",
+				"TEMPLATE": "نموذج",
+				"UPLOADED": "تم الرفع"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "اختر مجموعات البيانات المرتبطة بهذه المجلة",
+				"many": "{{count}} مجموعات البيانات المرتبطة",
+				"none": "لا توجد مجموعات بيانات مرتبطة",
+				"one": "مجموعة بيانات واحدة مرتبطة"
+			},
+			"dataSourceLabel": "مصادر البيانات",
+			"dataSourceModal": {
+				"byAuthor": "بواسطة {{author}}",
+				"cancel": "يلغي",
+				"closeModal": "يغلق",
+				"error": "خطأ: {{message}}",
+				"lastUpdated": "• آخر تحديث {{date}}",
+				"loading": "جارٍ تحميل مجموعات البيانات...",
+				"neverUpdated": "أبداً",
+				"noDatasets": "لم يتم العثور على مجموعات بيانات",
+				"save": "يحفظ",
+				"saving": "إنقاذ...",
+				"title": "تحديد مصادر البيانات",
+				"unknownAuthor": "مجهول",
+				"untitledDataset": "مجموعة بيانات بدون عنوان"
+			},
+			"defaultWorkspaceTitle": "مساحة عمل غير مسماة",
+			"deleteJournal": "يمسح",
+			"deleteJournalConfirm": "هل أنت متأكد من رغبتك في حذف هذه المدونة؟ سيتم حذف جميع مساحات العمل والمكونات الموجودة في هذه المدونة أيضًا.",
+			"deleteWorkspace": "حذف مساحة العمل",
+			"deleteWorkspaceConfirm": "هل أنت متأكد من رغبتك في حذف مساحة العمل هذه؟ سيتم حذف جميع المكونات الموجودة في مساحة العمل هذه أيضًا.",
+			"editJournal": "يحرر",
+			"editJournalCloseWithoutSaving": "إغلاق بدون حفظ",
+			"editJournalFieldDescription": "وصف",
+			"editJournalFieldTitle": "عنوان",
+			"editJournalSaveClose": "حفظ وإغلاق",
+			"editJournalTemplateCheckbox": "قم بإنشاء قالب",
+			"editJournalTitle": "تحرير المجلة",
+			"journalMore": "خيارات المجلة",
+			"lastUpdatedAt": "آخر تحديث: {{date}}",
+			"noDataSources": "لا توجد مصادر بيانات",
+			"noJournalsYet": "يبدو أنك لا تزال لا تملك أي سجلات بيانات!",
+			"workspaceMore": "خيارات مساحة العمل"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "نوع الأداة غير المدعوم: {{type}}"

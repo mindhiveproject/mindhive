@@ -331,11 +331,62 @@
 			"widgetSettings": "Widget Settings"
 		},
 		"sideNav": {
-			"add": "Add",
-			"addJournalScratch": "Start from scratch",
-			"addJournalTemplate": "Use a template (tbd)",
-			"collapsePanel": "Collapse panel",
-			"noJournalsYet": "It looks like you still don't have any data journals!"
+			"addJournal": "Journal",
+			"addJournalScratch": "Create a journal from scratch",
+			"addJournalTemplate": "Add a journal template",
+			"addWorkspace": "Add workspace",
+			"addWorkspaceDropdown": "Workspace",
+			"addWorkspaceError": "Error adding workspace",
+			"addWorkspaceLoading": "Adding…",
+			"addWorkspaceScratch": "Create a workspace from scratch",
+			"addWorkspaceTemplate": "Add a workspace template",
+			"collapsePanel": "Close",
+			"componentFallbackName": "Component name",
+			"dataOrigin": {
+				"SIMULATED": "Simulated",
+				"STUDY": "Study data",
+				"TEMPLATE": "Template",
+				"UPLOADED": "Uploaded"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "Choose datasets linked to this journal",
+				"many": "{{count}} datasets linked",
+				"none": "No datasets linked",
+				"one": "1 dataset linked"
+			},
+			"dataSourceLabel": "Data sources",
+			"dataSourceModal": {
+				"byAuthor": "by {{author}}",
+				"cancel": "Cancel",
+				"closeModal": "Close",
+				"error": "Error: {{message}}",
+				"lastUpdated": "• Last updated {{date}}",
+				"loading": "Loading datasets...",
+				"neverUpdated": "Never",
+				"noDatasets": "No datasets found",
+				"save": "Save",
+				"saving": "Saving...",
+				"title": "Select data sources",
+				"unknownAuthor": "Unknown",
+				"untitledDataset": "Untitled dataset"
+			},
+			"defaultWorkspaceTitle": "Unnamed workspace",
+			"deleteJournal": "Delete",
+			"deleteJournalConfirm": "Are you sure you want to delete this journal? All workspaces and components in this journal will be deleted as well.",
+			"deleteWorkspace": "Delete workspace",
+			"deleteWorkspaceConfirm": "Are you sure you want to delete this workspace? All components in this workspace will be deleted as well.",
+			"editJournal": "Edit",
+			"editJournalCloseWithoutSaving": "Close without saving",
+			"editJournalFieldDescription": "Description",
+			"editJournalFieldTitle": "Title",
+			"editJournalSaveClose": "Save and close",
+			"editJournalTemplateCheckbox": "Make a template",
+			"editJournalTitle": "Edit journal",
+			"journalMore": "Journal options",
+			"lastUpdatedAt": "Last updated: {{date}}",
+			"noDataSources": "No data sources",
+			"noJournalsYet": "It looks like you still don't have any data journals!",
+			"workspaceMore": "Workspace options"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Unsupported widget type: {{type}}"

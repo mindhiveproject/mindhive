@@ -331,11 +331,62 @@
 			"widgetSettings": "विजेट सेटिंग्स"
 		},
 		"sideNav": {
-			"add": "जोड़ना",
-			"addJournalScratch": "शून्य से शुरू करें",
-			"addJournalTemplate": "एक टेम्पलेट का उपयोग करें (तय होना बाकी है)",
-			"collapsePanel": "पैनल को बंद करें",
-			"noJournalsYet": "ऐसा लगता है कि आपके पास अभी भी कोई डेटा जर्नल नहीं है!"
+			"addJournal": "पत्रिका",
+			"addJournalScratch": "बिल्कुल शुरुआत से एक डायरी बनाएं",
+			"addJournalTemplate": "जर्नल टेम्पलेट जोड़ें",
+			"addWorkspace": "कार्यक्षेत्र जोड़ें",
+			"addWorkspaceDropdown": "कार्यस्थान",
+			"addWorkspaceError": "कार्यक्षेत्र जोड़ने में त्रुटि",
+			"addWorkspaceLoading": "जोड़ रहे हैं…",
+			"addWorkspaceScratch": "शुरू से एक कार्यक्षेत्र बनाएं",
+			"addWorkspaceTemplate": "वर्कस्पेस टेम्प्लेट जोड़ें",
+			"collapsePanel": "बंद करना",
+			"componentFallbackName": "घटक का नाम",
+			"dataOrigin": {
+				"SIMULATED": "नकली",
+				"STUDY": "अध्ययन डेटा",
+				"TEMPLATE": "ख़ाका",
+				"UPLOADED": "अपलोड किए गए"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "इस पत्रिका से संबंधित डेटासेट चुनें",
+				"many": "{{count}} डेटासेट लिंक किए गए",
+				"none": "कोई डेटासेट लिंक नहीं किया गया",
+				"one": "1 डेटासेट लिंक किया गया"
+			},
+			"dataSourceLabel": "डेटा स्रोत",
+			"dataSourceModal": {
+				"byAuthor": "द्वारा {{author}}",
+				"cancel": "रद्द करना",
+				"closeModal": "बंद करना",
+				"error": "त्रुटि: {{message}}",
+				"lastUpdated": "• अंतिम अद्यतन {{date}}",
+				"loading": "डेटासेट लोड हो रहे हैं...",
+				"neverUpdated": "कभी नहीं",
+				"noDatasets": "कोई डेटासेट नहीं मिला",
+				"save": "बचाना",
+				"saving": "सहेजा जा रहा है...",
+				"title": "डेटा स्रोत चुनें",
+				"unknownAuthor": "अज्ञात",
+				"untitledDataset": "शीर्षकहीन डेटासेट"
+			},
+			"defaultWorkspaceTitle": "अनाम कार्यक्षेत्र",
+			"deleteJournal": "मिटाना",
+			"deleteJournalConfirm": "क्या आप वाकई इस जर्नल को हटाना चाहते हैं? इस जर्नल में मौजूद सभी वर्कस्पेस और कंपोनेंट भी हटा दिए जाएंगे।",
+			"deleteWorkspace": "कार्यक्षेत्र हटाएं",
+			"deleteWorkspaceConfirm": "क्या आप वाकई इस वर्कस्पेस को हटाना चाहते हैं? इस वर्कस्पेस के सभी कंपोनेंट भी हटा दिए जाएंगे।",
+			"editJournal": "संपादन करना",
+			"editJournalCloseWithoutSaving": "बिना सहेजे बंद करें",
+			"editJournalFieldDescription": "विवरण",
+			"editJournalFieldTitle": "शीर्षक",
+			"editJournalSaveClose": "सहेजें और बंद करें",
+			"editJournalTemplateCheckbox": "एक टेम्पलेट बनाएं",
+			"editJournalTitle": "जर्नल संपादित करें",
+			"journalMore": "जर्नल विकल्प",
+			"lastUpdatedAt": "अंतिम अद्यतन: {{date}}",
+			"noDataSources": "कोई डेटा स्रोत नहीं",
+			"noJournalsYet": "ऐसा लगता है कि आपके पास अभी भी कोई डेटा जर्नल नहीं है!",
+			"workspaceMore": "कार्यक्षेत्र विकल्प"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "असमर्थित विजेट प्रकार: {{type}}"

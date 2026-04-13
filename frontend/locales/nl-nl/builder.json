@@ -331,11 +331,62 @@
 			"widgetSettings": "Widget-instellingen"
 		},
 		"sideNav": {
-			"add": "Toevoegen",
-			"addJournalScratch": "Begin helemaal opnieuw.",
-			"addJournalTemplate": "Gebruik een sjabloon (nog te bepalen)",
-			"collapsePanel": "Inklappaneel",
-			"noJournalsYet": "Het lijkt erop dat je nog steeds geen datalogboeken hebt!"
+			"addJournal": "Logboek",
+			"addJournalScratch": "Maak een dagboek helemaal zelf.",
+			"addJournalTemplate": "Voeg een dagboeksjabloon toe",
+			"addWorkspace": "Werkruimte toevoegen",
+			"addWorkspaceDropdown": "Werkruimte",
+			"addWorkspaceError": "Fout bij het toevoegen van de werkruimte",
+			"addWorkspaceLoading": "Toevoegen...",
+			"addWorkspaceScratch": "Creëer een werkruimte helemaal vanaf nul.",
+			"addWorkspaceTemplate": "Een werkruimtesjabloon toevoegen",
+			"collapsePanel": "Dichtbij",
+			"componentFallbackName": "Componentnaam",
+			"dataOrigin": {
+				"SIMULATED": "Gesimuleerd",
+				"STUDY": "Onderzoeksgegevens",
+				"TEMPLATE": "Sjabloon",
+				"UPLOADED": "Geüpload"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "Selecteer datasets die aan dit tijdschrift zijn gekoppeld.",
+				"many": "{{count}} gekoppelde datasets",
+				"none": "Geen gekoppelde datasets",
+				"one": "1 gekoppelde dataset"
+			},
+			"dataSourceLabel": "Gegevensbronnen",
+			"dataSourceModal": {
+				"byAuthor": "Door {{author}}",
+				"cancel": "Annuleren",
+				"closeModal": "Dichtbij",
+				"error": "Fout: {{message}}",
+				"lastUpdated": "• Laatst bijgewerkt {{date}}",
+				"loading": "Gegevenssets worden geladen...",
+				"neverUpdated": "Nooit",
+				"noDatasets": "Geen datasets gevonden",
+				"save": "Redden",
+				"saving": "Besparing...",
+				"title": "Selecteer gegevensbronnen",
+				"unknownAuthor": "Onbekend",
+				"untitledDataset": "Naamloze dataset"
+			},
+			"defaultWorkspaceTitle": "Naamloze werkruimte",
+			"deleteJournal": "Verwijderen",
+			"deleteJournalConfirm": "Weet je zeker dat je dit logboek wilt verwijderen? Alle werkruimten en componenten in dit logboek worden dan ook verwijderd.",
+			"deleteWorkspace": "Werkruimte verwijderen",
+			"deleteWorkspaceConfirm": "Weet je zeker dat je deze werkruimte wilt verwijderen? Alle componenten in deze werkruimte worden dan ook verwijderd.",
+			"editJournal": "Bewerking",
+			"editJournalCloseWithoutSaving": "Sluiten zonder opslaan",
+			"editJournalFieldDescription": "Beschrijving",
+			"editJournalFieldTitle": "Titel",
+			"editJournalSaveClose": "Opslaan en sluiten",
+			"editJournalTemplateCheckbox": "Maak een sjabloon",
+			"editJournalTitle": "Dagboek bewerken",
+			"journalMore": "Dagboekopties",
+			"lastUpdatedAt": "Laatst bijgewerkt: {{date}}",
+			"noDataSources": "Geen gegevensbronnen",
+			"noJournalsYet": "Het lijkt erop dat je nog steeds geen datalogboeken hebt!",
+			"workspaceMore": "Werkruimteopties"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Niet-ondersteund widgettype: {{type}}"

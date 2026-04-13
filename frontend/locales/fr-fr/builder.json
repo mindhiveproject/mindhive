@@ -331,11 +331,62 @@
 			"widgetSettings": "Paramètres des widgets"
 		},
 		"sideNav": {
-			"add": "Ajouter",
-			"addJournalScratch": "Partir de zéro",
-			"addJournalTemplate": "Utiliser un modèle (à préciser)",
-			"collapsePanel": "Réduire le panneau",
-			"noJournalsYet": "Il semblerait que vous n'ayez toujours pas de journaux de données !"
+			"addJournal": "Journal",
+			"addJournalScratch": "Créer un journal à partir de zéro",
+			"addJournalTemplate": "Ajouter un modèle de journal",
+			"addWorkspace": "Ajouter un espace de travail",
+			"addWorkspaceDropdown": "Espace de travail",
+			"addWorkspaceError": "Erreur lors de l'ajout de l'espace de travail",
+			"addWorkspaceLoading": "Ajout...",
+			"addWorkspaceScratch": "Créer un espace de travail à partir de zéro",
+			"addWorkspaceTemplate": "Ajouter un modèle d'espace de travail",
+			"collapsePanel": "Fermer",
+			"componentFallbackName": "Nom du composant",
+			"dataOrigin": {
+				"SIMULATED": "Simulé",
+				"STUDY": "Données de l'étude",
+				"TEMPLATE": "Modèle",
+				"UPLOADED": "Téléchargé"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "Choisissez les jeux de données liés à cette revue",
+				"many": "{{count}} jeux de données liés",
+				"none": "Aucun ensemble de données lié",
+				"one": "1 jeu de données lié"
+			},
+			"dataSourceLabel": "Les sources de données",
+			"dataSourceModal": {
+				"byAuthor": "par {{author}}",
+				"cancel": "Annuler",
+				"closeModal": "Fermer",
+				"error": "Erreur :  {{message}}",
+				"lastUpdated": "• Dernière mise à jour {{date}}",
+				"loading": "Chargement des ensembles de données...",
+				"neverUpdated": "Jamais",
+				"noDatasets": "Aucun ensemble de données trouvé",
+				"save": "Sauvegarder",
+				"saving": "Économie...",
+				"title": "Sélectionner les sources de données",
+				"unknownAuthor": "Inconnu",
+				"untitledDataset": "Ensemble de données sans titre"
+			},
+			"defaultWorkspaceTitle": "Espace de travail sans nom",
+			"deleteJournal": "SUPPRIMER",
+			"deleteJournalConfirm": "Êtes-vous sûr de vouloir supprimer ce journal ? Tous les espaces de travail et composants de ce journal seront également supprimés.",
+			"deleteWorkspace": "Supprimer l'espace de travail",
+			"deleteWorkspaceConfirm": "Êtes-vous sûr de vouloir supprimer cet espace de travail ? Tous les composants de cet espace de travail seront également supprimés.",
+			"editJournal": "Modifier",
+			"editJournalCloseWithoutSaving": "Fermer sans enregistrer",
+			"editJournalFieldDescription": "Description",
+			"editJournalFieldTitle": "Titre",
+			"editJournalSaveClose": "Sauver et fermer",
+			"editJournalTemplateCheckbox": "Créer un modèle",
+			"editJournalTitle": "Journal de modification",
+			"journalMore": "Options de journal",
+			"lastUpdatedAt": "Dernière mise à jour : {{date}}",
+			"noDataSources": "Aucune source de données",
+			"noJournalsYet": "Il semblerait que vous n'ayez toujours pas de journaux de données !",
+			"workspaceMore": "Options d'espace de travail"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Type de widget non pris en charge : {{type}}"

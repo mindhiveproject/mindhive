@@ -33,15 +33,15 @@ export default function SideNavigation({
             onClick={() => collapsePanel()}
             leadingIcon={<img src="/assets/dataviz/openPanel.svg" alt="" aria-hidden className="collapsePanelBtnIcon" />}
           >
-            {t("dataJournal.sideNav.collapsePanel", "Collapse panel")}
+            {t("dataJournal.sideNav.collapsePanel", "Close")}
           </Button>
         </div>
-        {journalCollections.length > 0 && (
+        {journalCollections.length >= 0 && (
           <div>
             <CreateJournal
               projectId={projectId}
               studyId={studyId}
-              createNewJournalCollection={false}
+              createNewJournalCollection={journalCollections.length === 0}
               journalCollections={journalCollections}
             />
           </div>
@@ -49,13 +49,13 @@ export default function SideNavigation({
       </div>
 
       {journalCollections.length === 0 && (
-        <div>
+        <div style={{margin: "16px" }}>
           <p>{t("dataJournal.sideNav.noJournalsYet", "It looks like you still don't have any data journals!")}</p>
-          <CreateJournal
+          {/* <CreateJournal
             projectId={projectId}
             studyId={studyId}
             createNewJournalCollection={true}
-          />
+          /> */}
         </div>
       )}
 

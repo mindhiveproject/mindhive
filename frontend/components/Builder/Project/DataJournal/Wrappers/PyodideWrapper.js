@@ -45,8 +45,10 @@ export default function PyodideWrapper({ children, user, projectId, studyId }) {
 
   if (isLoading) {
     return (
-      <div className="pyodideLoadingMessage">
-        <JustOneSecondNotice variant="librariesLoading" />
+      <div style={{ display: "grid", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <div className="pyodideLoadingMessage">
+          <JustOneSecondNotice variant="librariesLoading" />
+        </div>
       </div>
     );
   }

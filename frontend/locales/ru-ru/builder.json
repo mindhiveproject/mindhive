@@ -331,11 +331,62 @@
 			"widgetSettings": "Настройки виджета"
 		},
 		"sideNav": {
-			"add": "Добавлять",
-			"addJournalScratch": "Начать с нуля",
-			"addJournalTemplate": "Используйте шаблон (будет определено позже).",
-			"collapsePanel": "Свернуть панель",
-			"noJournalsYet": "Похоже, у вас до сих пор нет журналов данных!"
+			"addJournal": "ЖУРНАЛ",
+			"addJournalScratch": "Создайте дневник с нуля",
+			"addJournalTemplate": "Добавить шаблон журнала",
+			"addWorkspace": "Добавить рабочее пространство",
+			"addWorkspaceDropdown": "Рабочее пространство",
+			"addWorkspaceError": "Ошибка при добавлении рабочей области.",
+			"addWorkspaceLoading": "Добавляем…",
+			"addWorkspaceScratch": "Создайте рабочее пространство с нуля.",
+			"addWorkspaceTemplate": "Добавить шаблон рабочей области",
+			"collapsePanel": "Закрывать",
+			"componentFallbackName": "Название компонента",
+			"dataOrigin": {
+				"SIMULATED": "Смоделированный",
+				"STUDY": "Данные исследования",
+				"TEMPLATE": "Шаблон",
+				"UPLOADED": "Загружено"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "Выберите наборы данных, связанные с этим журналом.",
+				"many": "{{count}} связанных наборов данных",
+				"none": "Связанных наборов данных нет.",
+				"one": "1 связанный набор данных"
+			},
+			"dataSourceLabel": "Источники данных",
+			"dataSourceModal": {
+				"byAuthor": "по {{author}}",
+				"cancel": "Отмена",
+				"closeModal": "Закрывать",
+				"error": "Ошибка: {{message}}",
+				"lastUpdated": "• Последнее обновление {{date}}",
+				"loading": "Загрузка наборов данных...",
+				"neverUpdated": "Никогда",
+				"noDatasets": "Наборы данных не найдены",
+				"save": "Сохранять",
+				"saving": "Сохранение...",
+				"title": "Выберите источники данных",
+				"unknownAuthor": "Неизвестный",
+				"untitledDataset": "Набор данных без названия"
+			},
+			"defaultWorkspaceTitle": "Безымянное рабочее место",
+			"deleteJournal": "Удалить",
+			"deleteJournalConfirm": "Вы уверены, что хотите удалить этот журнал? Все рабочие области и компоненты в этом журнале также будут удалены.",
+			"deleteWorkspace": "Удалить рабочее пространство",
+			"deleteWorkspaceConfirm": "Вы уверены, что хотите удалить это рабочее пространство? Все компоненты в этом рабочем пространстве также будут удалены.",
+			"editJournal": "Редактировать",
+			"editJournalCloseWithoutSaving": "Закрыть без сохранения",
+			"editJournalFieldDescription": "Описание",
+			"editJournalFieldTitle": "Заголовок",
+			"editJournalSaveClose": "Сохранить и закрыть",
+			"editJournalTemplateCheckbox": "Создайте шаблон",
+			"editJournalTitle": "Редактировать журнал",
+			"journalMore": "Варианты журнала",
+			"lastUpdatedAt": "Последнее обновление: {{date}}",
+			"noDataSources": "Источники данных отсутствуют.",
+			"noJournalsYet": "Похоже, у вас до сих пор нет журналов данных!",
+			"workspaceMore": "Параметры рабочего пространства"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Неподдерживаемый тип виджета: {{type}}"
