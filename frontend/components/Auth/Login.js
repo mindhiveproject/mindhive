@@ -11,6 +11,13 @@ import { SIGNIN_MUTATION } from "../Mutations/User";
 import { CURRENT_USER_QUERY } from "../Queries/User";
 import LoginWithGoogle from "./GoogleLogin";
 import StyledAuth from "../styles/StyledAuth";
+import { endpoint, prodEndpoint } from "../../config";
+
+// Base URL for the Keystone backend (strip the /api/graphql suffix).
+const backendBase =
+  process.env.NODE_ENV === "development"
+    ? endpoint.replace("/api/graphql", "")
+    : prodEndpoint.replace("/api/graphql", "");
 
 export default function Login({ redirectType, redirectTo }) {
   const { t } = useTranslation("common");
@@ -30,6 +37,17 @@ export default function Login({ redirectType, redirectTo }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    // Cookie migration (2026-04-15): clear the old host-only keystonejs-session
+    // cookie that was set before the .mindhive.science domain migration. If it
+    // lingers it shadows the new domain-wide cookie and causes a login loop.
+    // TODO: remove after 2026-06-15.
+    try {
+      await fetch(`${backendBase}/api/clear-legacy-session`, {
+        credentials: "include",
+      });
+    } catch (_) {
+      // non-critical — proceed with login regardless
+    }
     // send the email and password to graphql api
     // Normalize email to lowercase
     const normalizedInputs = {
