@@ -319,7 +319,30 @@
 			"deleteDisabledPublicTemplate": "Deze dataset is gekoppeld aan een openbaar sjabloon en kan niet worden verwijderd.",
 			"deleteLabel": "Verwijderen",
 			"deleting": "Verwijderen...",
-			"editLabel": "Gegevensset bewerken"
+			"editLabel": "Gegevensset bewerken",
+			"errorLoading": "Fout: {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "Ook in deze lijst",
+				"otherTooltip": "Deze dataset voldeed op een andere manier aan het lijstfilter (bijvoorbeeld via een openbaar sjabloon). Het is mogelijk dat deze niet in dit project of onderzoek is opgeslagen.",
+				"viaPartLabel": "Gekoppeld vanuit een deel",
+				"viaPartTooltip": "Deze dataset is niet direct opgeslagen in dit project of onderzoek, maar minstens één onderdeel van een tijdschrift in deze werkruimte maakt er wel gebruik van.",
+				"workspaceLabel": "Deze werkruimte",
+				"workspaceTooltip": "Deze dataset is opgeslagen bij het huidige project of onderzoek.",
+				"yourLibraryLabel": "Uw dataset",
+				"yourLibraryTooltip": "U hebt deze dataset gemaakt, maar deze is momenteel niet gekoppeld aan dit project of onderzoek. De dataset wordt hier weergegeven zodat u deze kunt vinden en hergebruiken."
+			},
+			"listIntro": "Deze lijst bevat datasets die op deze werkruimte zijn opgeslagen, datasets die via tijdschriftonderdelen zijn gekoppeld en uw eigen datasets, zodat u deze opnieuw kunt gebruiken.",
+			"loading": "Gegevenssets worden geladen...",
+			"meta": {
+				"byAuthor": "Door {{author}}",
+				"byYou": "door jou",
+				"lastUpdated": "Laatst bijgewerkt {{date}}",
+				"lastUpdatedNever": "Nooit",
+				"unknownAuthor": "Onbekend"
+			},
+			"untitled": "Naamloze dataset"
 		},
 		"hypVis": {
 			"axes": {

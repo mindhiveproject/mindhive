@@ -1,6 +1,7 @@
 // components/DataJournal/Datasets/Main.js
 import { useQuery } from "@apollo/client";
 import { useState, useMemo } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import { buildDatasourcesWhere } from "../../../../../lib/dataJournalDatasources";
 import { useDataJournal } from "../Context/DataJournalContext";
@@ -20,6 +21,7 @@ import {
 } from "../styles/StyledDataJournal"; // Adjust if extracting to Datasets/styles.js
 
 export default function Datasets() {
+  const { t } = useTranslation("builder");
   const { user, projectId, studyId } = useDataJournal();
 
   const datasourcesWhere = useMemo(
@@ -64,8 +66,24 @@ export default function Datasets() {
     setViewingDataset(dataset);
   };
 
-  if (loading) return <div>Loading datasets...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (loading) {
+    return (
+      <div>
+        {t("dataJournal.datasets.loading", {}, { default: "Loading datasets…" })}
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div>
+        {t(
+          "dataJournal.datasets.errorLoading",
+          { message: error.message },
+          { default: "Error: {{message}}" },
+        )}
+      </div>
+    );
+  }
 
   return (
     <StyledDataArea>
@@ -73,12 +91,20 @@ export default function Datasets() {
         <StyledRightPanel>
           {!showAddDataset && !editingDataset && !viewingDataset ? (
             <div className="datasets">
+              <p className="datasets-list-intro">
+                {t("dataJournal.datasets.listIntro", {}, {
+                  default:
+                    "This list includes datasets stored on this workspace, datasets linked through journal parts, and your own datasets so you can reuse them.",
+                })}
+              </p>
               <StyledDatasetGrid>
                 {datasources.map((datasource) => (
                   <DatasetCard
                     key={datasource.id}
                     datasource={datasource}
                     user={user}
+                    projectId={projectId}
+                    studyId={studyId}
                     onEdit={handleEdit}
                     onView={handleView}
                   />

@@ -319,7 +319,30 @@
 			"deleteDisabledPublicTemplate": "Ce jeu de données est lié à un modèle public et ne peut pas être supprimé.",
 			"deleteLabel": "SUPPRIMER",
 			"deleting": "Suppression...",
-			"editLabel": "Modifier le jeu de données"
+			"editLabel": "Modifier le jeu de données",
+			"errorLoading": "Erreur :  {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "Également dans cette liste",
+				"otherTooltip": "Ces données correspondent au filtre de liste d'une autre manière (par exemple, via un modèle public). Elles ne sont peut-être pas stockées dans le cadre de ce projet ou de cette étude.",
+				"viaPartLabel": "Lié à partir d'une partie",
+				"viaPartTooltip": "Ces données ne sont pas stockées directement dans ce projet ou cette étude, mais au moins une partie de la revue dans cet espace de travail les utilise.",
+				"workspaceLabel": "Cet espace de travail",
+				"workspaceTooltip": "Ces données sont stockées dans le cadre du projet ou de l'étude en cours.",
+				"yourLibraryLabel": "Votre ensemble de données",
+				"yourLibraryTooltip": "Vous avez créé cet ensemble de données, mais il n'est actuellement pas associé à ce projet ou à cette étude. Il est présenté ici afin que vous puissiez le retrouver et le réutiliser."
+			},
+			"listIntro": "Cette liste comprend les jeux de données stockés sur cet espace de travail, les jeux de données liés par des parties de journal et vos propres jeux de données afin que vous puissiez les réutiliser.",
+			"loading": "Chargement des ensembles de données...",
+			"meta": {
+				"byAuthor": "par {{author}}",
+				"byYou": "par vous",
+				"lastUpdated": "Dernière mise à jour le {{date}}",
+				"lastUpdatedNever": "Jamais",
+				"unknownAuthor": "Inconnu"
+			},
+			"untitled": "Ensemble de données sans titre"
 		},
 		"hypVis": {
 			"axes": {

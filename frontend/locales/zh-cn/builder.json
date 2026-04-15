@@ -319,7 +319,30 @@
 			"deleteDisabledPublicTemplate": "该数据集链接到公共模板，无法删除。",
 			"deleteLabel": "删除",
 			"deleting": "正在删除...",
-			"editLabel": "编辑数据集"
+			"editLabel": "编辑数据集",
+			"errorLoading": "错误： {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "此外，此列表中还包含以下内容",
+				"otherTooltip": "该数据集以其他方式（例如，公共模板）匹配了列表筛选条件。它可能未存储在此项目或研究中。",
+				"viaPartLabel": "链接自某个部分",
+				"viaPartTooltip": "该数据集并未直接存储在本项目或研究中，但本工作空间中的至少一篇期刊文章使用了该数据集。",
+				"workspaceLabel": "此工作区",
+				"workspaceTooltip": "该数据集存储在当前项目或研究中。",
+				"yourLibraryLabel": "您的数据集",
+				"yourLibraryTooltip": "您创建了这个数据集，但它目前尚未关联到此项目或研究。它显示在此处，方便您查找和重复使用。"
+			},
+			"listIntro": "此列表包括存储在此工作区中的数据集、通过期刊部分链接的数据集以及您自己的数据集，以便您可以重复使用它们。",
+			"loading": "正在加载数据集……",
+			"meta": {
+				"byAuthor": "由 {{author}}",
+				"byYou": "由你",
+				"lastUpdated": "最后更新于 {{date}}",
+				"lastUpdatedNever": "绝不",
+				"unknownAuthor": "未知"
+			},
+			"untitled": "未命名数据集"
 		},
 		"hypVis": {
 			"axes": {

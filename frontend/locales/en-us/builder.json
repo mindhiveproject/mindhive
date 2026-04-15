@@ -319,7 +319,30 @@
 			"deleteDisabledPublicTemplate": "This dataset is linked to a public template and cannot be deleted.",
 			"deleteLabel": "Delete",
 			"deleting": "Deleting…",
-			"editLabel": "Edit dataset"
+			"editLabel": "Edit dataset",
+			"errorLoading": "Error: {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "Also in this list",
+				"otherTooltip": "This dataset matched the list filter in another way (for example a public template). It may not be stored on this project or study.",
+				"viaPartLabel": "Linked from a part",
+				"viaPartTooltip": "This dataset is not stored directly on this project or study, but at least one journal part in this workspace uses it.",
+				"workspaceLabel": "This workspace",
+				"workspaceTooltip": "This dataset is stored on the current project or study.",
+				"yourLibraryLabel": "Your dataset",
+				"yourLibraryTooltip": "You created this dataset, but it is not currently attached to this project or study. It appears here so you can find and reuse it."
+			},
+			"listIntro": "This list includes datasets stored on this workspace, datasets linked through journal parts, and your own datasets so you can reuse them.",
+			"loading": "Loading datasets…",
+			"meta": {
+				"byAuthor": "by {{author}}",
+				"byYou": "by you",
+				"lastUpdated": "Last updated {{date}}",
+				"lastUpdatedNever": "Never",
+				"unknownAuthor": "Unknown"
+			},
+			"untitled": "Untitled Dataset"
 		},
 		"hypVis": {
 			"axes": {

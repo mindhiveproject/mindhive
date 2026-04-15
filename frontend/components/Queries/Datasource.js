@@ -12,6 +12,12 @@ export const GET_DATASOURCES = gql`
         id
         username
       }
+      project {
+        id
+      }
+      study {
+        id
+      }
       journal {
         id
         isPublic

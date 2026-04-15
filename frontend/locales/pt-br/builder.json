@@ -319,7 +319,30 @@
 			"deleteDisabledPublicTemplate": "Este conjunto de dados está vinculado a um modelo público e não pode ser excluído.",
 			"deleteLabel": "Excluir",
 			"deleting": "Excluindo...",
-			"editLabel": "Editar conjunto de dados"
+			"editLabel": "Editar conjunto de dados",
+			"errorLoading": "Erro: {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "Também nesta lista",
+				"otherTooltip": "Este conjunto de dados correspondeu ao filtro da lista de outra forma (por exemplo, um modelo público). Ele pode não estar armazenado neste projeto ou estudo.",
+				"viaPartLabel": "Ligado a partir de uma parte",
+				"viaPartTooltip": "Este conjunto de dados não está armazenado diretamente neste projeto ou estudo, mas pelo menos uma seção do periódico neste espaço de trabalho o utiliza.",
+				"workspaceLabel": "Este espaço de trabalho",
+				"workspaceTooltip": "Este conjunto de dados está armazenado no projeto ou estudo atual.",
+				"yourLibraryLabel": "Seu conjunto de dados",
+				"yourLibraryTooltip": "Você criou este conjunto de dados, mas ele não está vinculado a este projeto ou estudo no momento. Ele aparece aqui para que você possa encontrá-lo e reutilizá-lo."
+			},
+			"listIntro": "Esta lista inclui conjuntos de dados armazenados neste espaço de trabalho, conjuntos de dados vinculados por meio de partes do diário e seus próprios conjuntos de dados para que você possa reutilizá-los.",
+			"loading": "Carregando conjuntos de dados...",
+			"meta": {
+				"byAuthor": "por {{author}}",
+				"byYou": "por você",
+				"lastUpdated": "Última atualização {{date}}",
+				"lastUpdatedNever": "Nunca",
+				"unknownAuthor": "Desconhecido"
+			},
+			"untitled": "Conjunto de dados sem título"
 		},
 		"hypVis": {
 			"axes": {

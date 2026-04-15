@@ -319,7 +319,30 @@
 			"deleteDisabledPublicTemplate": "",
 			"deleteLabel": "",
 			"deleting": "",
-			"editLabel": ""
+			"editLabel": "",
+			"errorLoading": "",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "",
+				"otherTooltip": "",
+				"viaPartLabel": "",
+				"viaPartTooltip": "",
+				"workspaceLabel": "",
+				"workspaceTooltip": "",
+				"yourLibraryLabel": "",
+				"yourLibraryTooltip": ""
+			},
+			"listIntro": "",
+			"loading": "",
+			"meta": {
+				"byAuthor": "",
+				"byYou": "",
+				"lastUpdated": "",
+				"lastUpdatedNever": "",
+				"unknownAuthor": ""
+			},
+			"untitled": ""
 		},
 		"hypVis": {
 			"axes": {

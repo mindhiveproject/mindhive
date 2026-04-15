@@ -84,3 +84,35 @@ export function getDatasourceDeleteDisabledReason(datasource, userId) {
 export function isDatasourceDeleteDisabled(datasource, userId) {
   return getDatasourceDeleteDisabledReason(datasource, userId) != null;
 }
+
+/**
+ * Why a datasource appears in the Data Journal list for the current context.
+ * Mirrors the broad OR in {@link buildDatasourcesWhere} using fields available on the list query
+ * (not a full re-evaluation of the GraphQL where clause).
+ *
+ * @param {{
+ *   project?: { id?: string | null } | null,
+ *   study?: { id?: string | null } | null,
+ *   journal?: unknown[] | null,
+ *   author?: { id?: string | null } | null,
+ * }} datasource
+ * @param {{ projectId?: string | null, studyId?: string | null, userId?: string | null }} context
+ * @returns {"workspace" | "viaPart" | "yourLibrary" | "other"}
+ */
+export function getDatasourceListInclusionKind(datasource, context) {
+  const { projectId, studyId, userId } = context || {};
+  const pid = datasource?.project?.id;
+  const sid = datasource?.study?.id;
+  const inWorkspace =
+    (projectId != null && projectId !== "" && pid === projectId) ||
+    (studyId != null && studyId !== "" && sid === studyId);
+
+  if (inWorkspace) return "workspace";
+
+  const journalCount = datasource?.journal?.length ?? 0;
+  if (journalCount > 0) return "viaPart";
+
+  if (userId && datasource?.author?.id === userId) return "yourLibrary";
+
+  return "other";
+}
