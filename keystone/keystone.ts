@@ -41,6 +41,21 @@ export default withAuth(
         origin: [mhFrontendURL, yqFrontendURL],
         credentials: true,
       },
+      // Cookie migration helper: clears old host-only keystonejs-session cookies
+      // that were set before the .mindhive.science domain migration (2026-04-15).
+      // Those cookies shadow the new domain-wide cookie and cause a login loop.
+      // The login page calls GET /api/clear-legacy-session before submitting
+      // credentials so the old cookie is gone before iron-session tries to read it.
+      // TODO: remove this route after 2026-06-15 (30-day cookie max-age has expired).
+      extendExpressApp: (app: any) => {
+        app.get("/api/clear-legacy-session", (_req: any, res: any) => {
+          res.setHeader(
+            "Set-Cookie",
+            "keystonejs-session=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict"
+          );
+          res.json({ ok: true });
+        });
+      },
     },
     db: {
       provider:
