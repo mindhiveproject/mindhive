@@ -20,6 +20,9 @@ export default function StudyPreview({ study, close }) {
             title="description"
             height="100%"
             width="100%"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-presentation allow-popups-to-escape-sandbox"
+            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            referrerPolicy="strict-origin-when-cross-origin"
           ></iframe>
         </StyledStudyPreview>
       </div>

@@ -190,7 +190,7 @@ export const StyledSidebar = styled.div`
     display: flex;
     width: fit-content;
     justify-content: center;
-    align-items: right;
+    align-items: center;
     border-radius: 8px;
 
     > div > button {
