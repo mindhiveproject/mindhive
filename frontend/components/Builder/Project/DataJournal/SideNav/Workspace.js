@@ -6,6 +6,7 @@ import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 
 import { useDataJournal } from "../Context/DataJournalContext";
 import { useDeleteWorkspace } from "../Helpers/DeleteWorkspace";
+import getVizComponentIconSrc from "../Helpers/getVizComponentIconSrc";
 
 export default function WorkspaceNavigation({
   journal,
@@ -40,6 +41,7 @@ export default function WorkspaceNavigation({
         <Button
           type="button"
           variant="text"
+          className="dataJournalWorkspaceRowBtn"
           style={{
             color: "#5D5763",
             fontWeight: 400,
@@ -100,7 +102,13 @@ export default function WorkspaceNavigation({
           {selectedWorkspace?.vizSections?.map((component) => (
             <div key={component.id} className="component">
               <div>
-                <img src="/assets/dataviz/sidebar/paragraph.svg" alt="" width={20} height={20} />
+                <img
+                  src={getVizComponentIconSrc(component)}
+                  alt=""
+                  width={20}
+                  height={20}
+                  aria-hidden
+                />
               </div>
               <div>
                 {component?.title ||
