@@ -3,6 +3,7 @@ import { Accordion, Icon, Dropdown, DropdownMenu } from "semantic-ui-react";
 import { saveAs } from "file-saver";
 import moment from "moment";
 import { jsonToCSV } from "react-papaparse";
+import useTranslation from "next-translate/useTranslation";
 
 import OperationModal from "./Menu/OperationModal";
 import Variable from "./Menu/Variable";
@@ -19,6 +20,7 @@ export default function Menu({
   setPage,
   onSave,
 }) {
+  const { t } = useTranslation("builder");
   const [activeIndex, setActiveIndex] = useState(
     components.map((_, index) => index) || []
   );
@@ -52,7 +54,10 @@ export default function Menu({
 
   const downloadData = () => {
     let userInput = prompt(
-      "Give a name to the CSV you're about to download\nNo need to add '.csv' we're taking care of that!"
+      t("dataJournal.datasetMenu.downloadPrompt", {}, {
+        default:
+          "Give a name to the CSV you're about to download\nNo need to add '.csv' we're taking care of that!",
+      })
     );
     const name = `${userInput}_${moment().format()}`;
     if (userInput !== null) {
@@ -78,9 +83,18 @@ export default function Menu({
     <div className="database">
       <div className="header">
         <div>
-          <img src="/assets/icons/visualize/database.svg" alt="Database" />
+          <img
+            src="/assets/icons/visualize/database.svg"
+            alt={t("dataJournal.datasetMenu.alt.database", {}, {
+              default: "Database",
+            })}
+          />
         </div>
-        <div>Active Data</div>
+        <div>
+          {t("dataJournal.datasetMenu.header.activeData", {}, {
+            default: "Active Data",
+          })}
+        </div>
         <div className="header-actions">
           <div
             className="dataButtonPart menuButtonThin blueFrame"
@@ -88,10 +102,16 @@ export default function Menu({
           >
             <img
               src="/assets/icons/visualize/folder_open_blue.svg"
-              alt="Return"
+              alt={t("dataJournal.datasetMenu.alt.return", {}, {
+                default: "Return",
+              })}
             />
             <div>
-              <a>Return to Navigation</a>
+              <a>
+                {t("dataJournal.datasetMenu.actions.returnToNavigation", {}, {
+                  default: "Return to Navigation",
+                })}
+              </a>
             </div>
           </div>
         </div>
@@ -108,9 +128,15 @@ export default function Menu({
               <div className="optionsButtonGreen">
                 <img
                   src="/assets/icons/visualize/add_notes.svg"
-                  alt="Add a column"
+                  alt={t("dataJournal.datasetMenu.alt.addColumn", {}, {
+                    default: "Add a column",
+                  })}
                 />
-                <div>Add a column</div>
+                <div>
+                  {t("dataJournal.datasetMenu.actions.addColumn", {}, {
+                    default: "Add a column",
+                  })}
+                </div>
               </div>
             }
             direction="left"
@@ -121,7 +147,9 @@ export default function Menu({
                 data={data}
                 variables={variables}
                 updateDataset={updateDataset}
-                title="Copy existing variable"
+                title={t("dataJournal.datasetMenu.operations.copyExisting", {}, {
+                  default: "Copy existing variable",
+                })}
                 iconSrc="/assets/icons/visualize/content_paste_go.svg"
               />
               <OperationModal
@@ -129,7 +157,9 @@ export default function Menu({
                 data={data}
                 variables={variables}
                 updateDataset={updateDataset}
-                title="Compute new variable"
+                title={t("dataJournal.datasetMenu.operations.computeNew", {}, {
+                  default: "Compute new variable",
+                })}
                 iconSrc="/assets/icons/visualize/table_chart_view.svg"
               />
               <OperationModal
@@ -137,7 +167,9 @@ export default function Menu({
                 data={data}
                 variables={variables}
                 updateDataset={updateDataset}
-                title="Reverse score"
+                title={t("dataJournal.datasetMenu.operations.reverseScore", {}, {
+                  default: "Reverse score",
+                })}
                 iconSrc="/assets/icons/visualize/database_reverse.svg"
               />
               <OperationModal
@@ -145,7 +177,9 @@ export default function Menu({
                 data={data}
                 variables={variables}
                 updateDataset={updateDataset}
-                title="Recode a variable"
+                title={t("dataJournal.datasetMenu.operations.recodeVariable", {}, {
+                  default: "Recode a variable",
+                })}
                 iconSrc="/assets/icons/visualize/database_recode.svg"
               />
             </DropdownMenu>
@@ -155,26 +189,42 @@ export default function Menu({
               <Icon name="download" color="grey" />
             </div>
             <div>
-              <a>Download</a>
+              <a>
+                {t("dataJournal.datasetMenu.actions.download", {}, {
+                  default: "Download",
+                })}
+              </a>
             </div>
           </div>
           <div className="optionsButtonYellow" onClick={hideAllColumns}>
             <Icon name="eye slash" color="grey" />
             <div>
-              <a>Hide all</a>
+              <a>
+                {t("dataJournal.datasetMenu.actions.hideAll", {}, {
+                  default: "Hide all",
+                })}
+              </a>
             </div>
           </div>
           <div className="optionsButtonYellow" onClick={showAllColumns}>
             <Icon name="eye" color="grey" />
             <div>
-              <a>Show all</a>
+              <a>
+                {t("dataJournal.datasetMenu.actions.showAll", {}, {
+                  default: "Show all",
+                })}
+              </a>
             </div>
           </div>
         </div>
       </div>
 
       <div className="variables-section">
-        <div className="section-header">User Variables</div>
+        <div className="section-header">
+          {t("dataJournal.datasetMenu.sections.userVariables", {}, {
+            default: "User Variables",
+          })}
+        </div>
         <div className="variables">
           {variables
             .filter((column) => column.type === "user")
@@ -189,7 +239,11 @@ export default function Menu({
       </div>
 
       <div className="variables-section">
-        <div className="section-header">General Variables</div>
+        <div className="section-header">
+          {t("dataJournal.datasetMenu.sections.generalVariables", {}, {
+            default: "General Variables",
+          })}
+        </div>
         <div className="variables">
           {variables
             .filter((column) => column.type === "general")
@@ -223,7 +277,11 @@ export default function Menu({
             </Accordion.Title>
             <Accordion.Content active={activeIndex.includes(index)}>
               <div className="variables-section">
-                <div className="section-header">Task Variables</div>
+                <div className="section-header">
+                  {t("dataJournal.datasetMenu.sections.taskVariables", {}, {
+                    default: "Task Variables",
+                  })}
+                </div>
                 <div className="variables">
                   {variables
                     .filter((column) => column.type === "task")

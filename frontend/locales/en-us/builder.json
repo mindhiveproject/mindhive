@@ -253,6 +253,74 @@
 			"unsupportedType": "Unsupported component type: {{type}}",
 			"untitled": "Untitled"
 		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "Cancel",
+				"create": "Create dataset"
+			},
+			"dataSourceLabel": "Data source",
+			"errorCreatingDataset": "Error creating dataset:",
+			"errorLoadingStudy": "Error loading study:",
+			"loadingDataSources": "Loading data sources…",
+			"nameHelp": "You can rename this later from the dataset settings.",
+			"nameLabel": "Dataset name",
+			"namePlaceholder": "e.g. Pre-test responses, Spring 2026",
+			"study": {
+				"currentStudy": "Study: {{title}}",
+				"currentStudyMissing": "No study linked to this project",
+				"optionDisabled": "No study is linked to this project. Link a study to enable this option.",
+				"optionTitle": "Use data from the current study"
+			},
+			"subtitle": "Name your dataset and choose where the data should come from.",
+			"template": {
+				"optionDescription": "Choose a template dataset (coming soon).",
+				"optionTitle": "Copy from an existing dataset"
+			},
+			"title": "New dataset",
+			"upload": {
+				"fileHelp": "First row should contain column names.",
+				"optionDescription": "Create a dataset from a file on your computer.",
+				"optionTitle": "Upload a CSV or JSON file"
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "Add a column",
+				"download": "Download",
+				"hideAll": "Hide all",
+				"returnToNavigation": "Return to Navigation",
+				"showAll": "Show all"
+			},
+			"alt": {
+				"addColumn": "Add a column",
+				"database": "Database",
+				"return": "Return"
+			},
+			"downloadPrompt": "Give a name to the CSV you're about to download\nNo need to add '.csv' we're taking care of that!",
+			"header": {
+				"activeData": "Active Data"
+			},
+			"operations": {
+				"computeNew": "Compute new variable",
+				"copyExisting": "Copy existing variable",
+				"recodeVariable": "Recode a variable",
+				"reverseScore": "Reverse score"
+			},
+			"sections": {
+				"generalVariables": "General Variables",
+				"taskVariables": "Task Variables",
+				"userVariables": "User Variables"
+			}
+		},
+		"datasets": {
+			"deleteConfirm": "Are you sure you want to delete this dataset?",
+			"deleteDataset": "Delete dataset",
+			"deleteDisabledNotOwner": "Only the creator of this dataset can delete it.",
+			"deleteDisabledPublicTemplate": "This dataset is linked to a public template and cannot be deleted.",
+			"deleteLabel": "Delete",
+			"deleting": "Deleting…",
+			"editLabel": "Edit dataset"
+		},
 		"hypVis": {
 			"axes": {
 				"abDesign": {
@@ -373,8 +441,12 @@
 			"defaultWorkspaceTitle": "Unnamed workspace",
 			"deleteJournal": "Delete",
 			"deleteJournalConfirm": "Are you sure you want to delete this journal? All workspaces and components in this journal will be deleted as well.",
+			"deleteJournalMissingId": "This journal cannot be deleted (missing id).",
+			"deleteJournalModalTitle": "Delete journal",
 			"deleteWorkspace": "Delete workspace",
 			"deleteWorkspaceConfirm": "Are you sure you want to delete this workspace? All components in this workspace will be deleted as well.",
+			"deleteWorkspaceMissingId": "This workspace cannot be deleted (missing id).",
+			"deleteWorkspaceModalTitle": "Delete workspace",
 			"editJournal": "Edit",
 			"editJournalCloseWithoutSaving": "Close without saving",
 			"editJournalFieldDescription": "Description",
@@ -384,12 +456,34 @@
 			"editJournalTitle": "Edit journal",
 			"journalMore": "Journal options",
 			"lastUpdatedAt": "Last updated: {{date}}",
+			"manageDatasets": "Manage datasets",
 			"noDataSources": "No data sources",
 			"noJournalsYet": "It looks like you still don't have any data journals!",
+			"renameWorkspace": "Rename workspace",
+			"renameWorkspaceModalTitle": "Rename workspace",
+			"renameWorkspaceSaving": "Saving…",
+			"templateModal": {
+				"copyError": "Could not create from template: {{message}}",
+				"copyTitlePrefix": "Copy of ",
+				"datasetsMany": "{{count}} datasets linked",
+				"datasetsNone": "No datasets linked",
+				"datasetsOne": "1 dataset linked",
+				"empty": "No templates are available yet. Mark a journal as a template (admin) or ask your team to add one.",
+				"loading": "Loading templates…",
+				"missingJournal": "No journal collection is available. Create a journal from scratch first.",
+				"newCollectionTitle": "Unnamed journal collection",
+				"queryError": "Error loading templates: {{message}}",
+				"title": "Choose a journal template",
+				"useTemplate": "Use template"
+			},
 			"workspaceMore": "Workspace options"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Unsupported widget type: {{type}}"
+		},
+		"workspaceArea": {
+			"error": "Could not load workspace: {{message}}",
+			"loading": "Loading workspace…"
 		}
 	},
 	"dataJournals": "Journals",

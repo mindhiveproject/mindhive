@@ -1,7 +1,8 @@
 // components/DataJournal/Datasets/Main.js
 import { useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
+import { buildDatasourcesWhere } from "../../../../../lib/dataJournalDatasources";
 import { useDataJournal } from "../Context/DataJournalContext";
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
 
@@ -21,22 +22,13 @@ import {
 export default function Datasets() {
   const { user, projectId, studyId } = useDataJournal();
 
+  const datasourcesWhere = useMemo(
+    () => buildDatasourcesWhere({ projectId, studyId, userId: user?.id }),
+    [projectId, studyId, user?.id],
+  );
+
   const { data, loading, error, refetch } = useQuery(GET_DATASOURCES, {
-    variables: {
-      where:
-        projectId && studyId
-          ? {
-              OR: [
-                { project: { id: { equals: projectId } } },
-                { study: { id: { equals: studyId } } },
-              ],
-            }
-          : projectId
-          ? { project: { id: { equals: projectId } } }
-          : studyId
-          ? { study: { id: { equals: studyId } } }
-          : null,
-    },
+    variables: { where: datasourcesWhere },
   });
 
   const datasources = data?.datasources || [];
@@ -86,6 +78,7 @@ export default function Datasets() {
                   <DatasetCard
                     key={datasource.id}
                     datasource={datasource}
+                    user={user}
                     onEdit={handleEdit}
                     onView={handleView}
                   />
@@ -106,6 +99,7 @@ export default function Datasets() {
           ) : editingDataset ? (
             <EditDataset
               dataset={editingDataset}
+              user={user}
               onCancel={handleCancel}
               refetchDatasources={refetch}
             />

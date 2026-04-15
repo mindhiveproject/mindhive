@@ -1,16 +1,21 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
+
+import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
 import {
   UPDATE_DATASOURCE,
   DELETE_DATASOURCE,
 } from "../../../../Mutations/Datasource";
+import { getDatasourceDeleteDisabledReason } from "../../../../../lib/dataJournalDatasources";
 import {
   StyledDataArea,
   StyledDataJournal,
   StyledRightPanel,
 } from "../styles/StyledDataJournal";
 
-export default function EditDataset({ dataset, onCancel, refetchDatasources }) {
+export default function EditDataset({ dataset, user, onCancel, refetchDatasources }) {
+  const { t } = useTranslation("builder");
   const [title, setTitle] = useState(dataset.title || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -42,9 +47,35 @@ export default function EditDataset({ dataset, onCancel, refetchDatasources }) {
     }).finally(() => setLoading(false));
   };
 
+  const deleteReason = getDatasourceDeleteDisabledReason(dataset, user?.id);
+  const deleteDisabled = deleteReason != null;
+
+  const deleteTooltip =
+    deleteReason === "publicTemplate"
+      ? t(
+          "dataJournal.datasets.deleteDisabledPublicTemplate",
+          {},
+          {
+            default:
+              "This dataset is linked to a public template and cannot be deleted.",
+          },
+        )
+      : deleteReason === "notOwner"
+        ? t(
+            "dataJournal.datasets.deleteDisabledNotOwner",
+            {},
+            {
+              default: "Only the creator of this dataset can delete it.",
+            },
+          )
+        : "";
+
   const handleDelete = () => {
+    if (deleteDisabled) return;
     const confirmed = confirm(
-      `Delete dataset "${dataset.title}"?\nThis cannot be undone.`,
+      t("dataJournal.datasets.deleteConfirm", {}, {
+        default: "Are you sure you want to delete this dataset?",
+      }),
     );
     if (!confirmed) return;
 
@@ -215,23 +246,55 @@ export default function EditDataset({ dataset, onCancel, refetchDatasources }) {
                 </button>
               </div>
 
-              <button
-                onClick={handleDelete}
-                disabled={loading}
-                type="button"
-                style={{
-                  padding: "8px 14px",
-                  borderRadius: "6px",
-                  border: "none",
-                  background: loading ? "#feb2b2" : "#e53e3e",
-                  color: "#fff",
-                  fontSize: "0.85rem",
-                  fontWeight: 500,
-                  cursor: loading ? "not-allowed" : "pointer",
-                }}
-              >
-                {loading ? "Deleting…" : "Delete dataset"}
-              </button>
+              {deleteDisabled ? (
+                <InfoTooltip content={deleteTooltip} position="topRight" portal>
+                  <span style={{ display: "inline-flex", cursor: "not-allowed" }}>
+                    <button
+                      type="button"
+                      disabled
+                      style={{
+                        padding: "8px 14px",
+                        borderRadius: "6px",
+                        border: "none",
+                        background: "#feb2b2",
+                        color: "#fff",
+                        fontSize: "0.85rem",
+                        fontWeight: 500,
+                        cursor: "not-allowed",
+                        pointerEvents: "none",
+                      }}
+                    >
+                      {t("dataJournal.datasets.deleteLabel", {}, {
+                        default: "Delete",
+                      })}
+                    </button>
+                  </span>
+                </InfoTooltip>
+              ) : (
+                <button
+                  onClick={handleDelete}
+                  disabled={loading}
+                  type="button"
+                  style={{
+                    padding: "8px 14px",
+                    borderRadius: "6px",
+                    border: "none",
+                    background: loading ? "#feb2b2" : "#e53e3e",
+                    color: "#fff",
+                    fontSize: "0.85rem",
+                    fontWeight: 500,
+                    cursor: loading ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {loading
+                    ? t("dataJournal.datasets.deleting", {}, {
+                        default: "Deleting…",
+                      })
+                    : t("dataJournal.datasets.deleteDataset", {}, {
+                        default: "Delete dataset",
+                      })}
+                </button>
+              )}
             </div>
           </div>
         </StyledRightPanel>

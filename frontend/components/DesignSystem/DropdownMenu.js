@@ -144,10 +144,12 @@ export default function DropdownMenu({
       }
     };
     if (dropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      // Use "click" (not "mousedown") so refs are valid and item handlers run
+      // first (bubble phase on document runs after the target's onClick).
+      document.addEventListener("click", handleClickOutside);
     }
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, [dropdownOpen]);
 
@@ -179,6 +181,7 @@ export default function DropdownMenu({
         createPortal(
           <div
             ref={dropdownPanelRef}
+            onMouseDown={(e) => e.stopPropagation()}
             style={{
               ...PANEL_STYLE,
               position: "fixed",
@@ -215,7 +218,13 @@ export default function DropdownMenu({
                   role="button"
                   tabIndex={0}
                   style={style}
-                  onClick={() => handleItemClick(item)}
+                  onClick={(e) => {
+                    // Portaled menu: native document listeners can fire before React’s
+                    // delegated handler; stop bubbling so outside-close does not unmount
+                    // the row before Journal’s onClick (e.g. delete) runs.
+                    e.stopPropagation();
+                    handleItemClick(item);
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();

@@ -53,7 +53,7 @@ export default function EditorHeader({
   onSaveFigureToMedia,
 }) {
   const { t } = useTranslation("builder");
-  const headerIconSrc = getHeaderIconSrc(activeComponent);
+  const headerIconSrc = getVizComponentIconSrc(activeComponent);
   const componentTypeLabel = getComponentTypeLabel(activeComponent, t);
 
   const [isEditing, setIsEditing] = useState(false);

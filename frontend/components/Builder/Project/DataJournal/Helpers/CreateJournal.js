@@ -7,6 +7,8 @@ import { CREATE_VIZJOURNAL } from "../../../../Mutations/VizJournal";
 import { ADD_VIZPART } from "../../../../Mutations/VizPart";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 
+import JournalTemplateModal from "./JournalTemplateModal";
+
 const ADD_NEW_JOURNAL_VALUE = "__add_new_journal__";
 const ADD_TEMPLATE_JOURNAL_VALUE = "__add_template_journal__";
 
@@ -139,8 +141,10 @@ export default function CreateJournal({
     }
   };
 
+  const [templateModalOpen, setTemplateModalOpen] = useState(false);
+
   const addNewJournalFromTemplate = () => {
-    console.log("addNewJournalFromTemplate");
+    setTemplateModalOpen(true);
   };
 
   const [journalDropdownValue, setJournalDropdownValue] = useState(undefined);
@@ -188,6 +192,14 @@ export default function CreateJournal({
         })}
         icon="+"
         triggerStyle={{ backgroundColor: "#F6F9F8", border: "none", fontWeight: 600, fontSize: "16px", color: "#5D5763" }}
+      />
+      <JournalTemplateModal
+        open={templateModalOpen}
+        onOpenChange={setTemplateModalOpen}
+        projectId={projectId}
+        studyId={studyId}
+        journalCollections={journalCollections}
+        createNewJournalCollection={createNewJournalCollection}
       />
     </div>
   );

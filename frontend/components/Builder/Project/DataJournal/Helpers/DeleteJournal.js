@@ -30,29 +30,43 @@ function refetchQueriesForJournal(projectId, studyId) {
 }
 
 /**
- * @param {{ projectId?: string, studyId?: string, part: { id?: string }, t: (k: string, f: string) => string }} args
+ * @param {{ projectId?: string, studyId?: string, part: { id?: string }, t: (key: string, query?: object, options?: { default?: string }) => string }} args
  */
 export function useDeleteJournal({ projectId, studyId, part, t }) {
-  const [deletePart] = useMutation(DELETE_VIZPART, {
+  const [deletePart, { loading: deleting }] = useMutation(DELETE_VIZPART, {
     variables: {},
     refetchQueries: refetchQueriesForJournal(projectId, studyId),
+    awaitRefetchQueries: true,
   });
 
-  const confirmAndDelete = useCallback(() => {
-    if (
-      !window.confirm(
-        t(
-          "dataJournal.sideNav.deleteJournalConfirm",
-          "Are you sure you want to delete this journal? All workspaces and components in this journal will be deleted as well.",
+  const runDeleteJournal = useCallback(async () => {
+    if (!part?.id) {
+      return {
+        ok: false,
+        message: t(
+          "dataJournal.sideNav.deleteJournalMissingId",
+          {},
+          { default: "This journal cannot be deleted (missing id)." },
         ),
-      )
-    ) {
-      return;
+      };
     }
-    deletePart({ variables: { id: part?.id } }).catch((err) => {
-      window.alert(err.message);
-    });
+    try {
+      const result = await deletePart({ variables: { id: part.id } });
+      const gqlErrors = result?.errors;
+      if (gqlErrors?.length) {
+        return {
+          ok: false,
+          message: gqlErrors.map((e) => e.message).join("\n"),
+        };
+      }
+      return { ok: true };
+    } catch (err) {
+      return {
+        ok: false,
+        message: err?.message ?? String(err),
+      };
+    }
   }, [deletePart, part?.id, t]);
 
-  return { confirmAndDelete };
+  return { runDeleteJournal, deleting };
 }

@@ -165,6 +165,10 @@ export const StyledSidebar = styled.div`
       font-weight: 700;
       font-style: Bold;
     }
+
+    .dataJournalWorkspaceRowBtn:hover {
+      background-color: #FDF2D0 !important;
+    }
   }
   
   .createJournalBtn {

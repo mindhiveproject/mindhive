@@ -14,7 +14,13 @@ export const Datasource = list({
       query: () => true,
       create: () => true,
       update: () => true,
-      delete: () => true,
+      delete: ({ session }) => !!session?.itemId,
+    },
+    item: {
+      delete: ({ session, item }) =>
+        !!session?.itemId &&
+        item.authorId != null &&
+        item.authorId === session.itemId,
     },
   },
   fields: {

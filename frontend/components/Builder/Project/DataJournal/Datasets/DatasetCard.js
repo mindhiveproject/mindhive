@@ -1,9 +1,15 @@
-import { useState } from "react";
 import { useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
+
+import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
 import { DELETE_DATASOURCE } from "../../../../Mutations/Datasource";
+import {
+  getDatasourceDeleteDisabledReason,
+} from "../../../../../lib/dataJournalDatasources";
 import { StyledDatasetCard } from "../styles/StyledDataJournal";
 
-export default function DatasetCard({ datasource, onEdit, onView }) {
+export default function DatasetCard({ datasource, user, onEdit, onView }) {
+  const { t } = useTranslation("builder");
   const [deleteDatasource, { loading }] = useMutation(DELETE_DATASOURCE);
 
   const handleEdit = () => {
@@ -14,13 +20,41 @@ export default function DatasetCard({ datasource, onEdit, onView }) {
     if (onView) onView(datasource);
   };
 
+  const deleteReason = getDatasourceDeleteDisabledReason(datasource, user?.id);
+  const deleteDisabled = deleteReason != null;
+
+  const deleteTooltip =
+    deleteReason === "publicTemplate"
+      ? t(
+          "dataJournal.datasets.deleteDisabledPublicTemplate",
+          {},
+          {
+            default:
+              "This dataset is linked to a public template and cannot be deleted.",
+          },
+        )
+      : deleteReason === "notOwner"
+        ? t(
+            "dataJournal.datasets.deleteDisabledNotOwner",
+            {},
+            {
+              default: "Only the creator of this dataset can delete it.",
+            },
+          )
+        : "";
+
   const handleDelete = async () => {
-    if (confirm("Are you sure you want to delete this dataset?")) {
-      await deleteDatasource({
-        variables: { id: datasource.id },
-        refetchQueries: ["GET_DATASOURCES"],
-      });
-    }
+    if (deleteDisabled) return;
+    const confirmed = confirm(
+      t("dataJournal.datasets.deleteConfirm", {}, {
+        default: "Are you sure you want to delete this dataset?",
+      }),
+    );
+    if (!confirmed) return;
+    await deleteDatasource({
+      variables: { id: datasource.id },
+      refetchQueries: ["GET_DATASOURCES"],
+    });
   };
 
   const originLabels = {
@@ -41,6 +75,24 @@ export default function DatasetCard({ datasource, onEdit, onView }) {
       })
     : "Never";
 
+  const deleteButton = (
+    <button
+      type="button"
+      className="delete-btn"
+      onClick={(e) => {
+        e.stopPropagation();
+        handleDelete();
+      }}
+      aria-label={t("dataJournal.datasets.deleteLabel", {}, {
+        default: "Delete",
+      })}
+      disabled={loading}
+    >
+      🗑️{" "}
+      {t("dataJournal.datasets.deleteLabel", {}, { default: "Delete" })}
+    </button>
+  );
+
   return (
     <StyledDatasetCard>
       <div className="dataset-card" onClick={handleView}>
@@ -50,26 +102,44 @@ export default function DatasetCard({ datasource, onEdit, onView }) {
           </h4>
           <div className="dataset-actions">
             <button
+              type="button"
               className="edit-btn"
               onClick={(e) => {
                 e.stopPropagation();
                 handleEdit();
               }}
-              title="Edit dataset"
+              aria-label={t("dataJournal.datasets.editLabel", {}, {
+                default: "Edit dataset",
+              })}
             >
-              ✏️ Edit
+              ✏️{" "}
+              {t("dataJournal.datasets.editLabel", {}, { default: "Edit dataset" })}
             </button>
-            <button
-              className="delete-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDelete();
-              }}
-              title="Delete dataset"
-              disabled={loading}
-            >
-              🗑️ Delete
-            </button>
+            {deleteDisabled ? (
+              <InfoTooltip content={deleteTooltip} position="topRight" portal>
+                <span
+                  style={{ display: "inline-flex", cursor: "not-allowed" }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    aria-label={t("dataJournal.datasets.deleteLabel", {}, {
+                      default: "Delete",
+                    })}
+                    disabled
+                    style={{ pointerEvents: "none" }}
+                  >
+                    🗑️{" "}
+                    {t("dataJournal.datasets.deleteLabel", {}, {
+                      default: "Delete",
+                    })}
+                  </button>
+                </span>
+              </InfoTooltip>
+            ) : (
+              deleteButton
+            )}
           </div>
         </div>
 

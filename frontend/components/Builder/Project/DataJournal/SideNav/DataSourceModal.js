@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
+import { buildDatasourcesWhere } from "../../../../../lib/dataJournalDatasources";
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
 import { UPDATE_VIZPART } from "../../../../Mutations/VizPart";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
@@ -23,7 +24,7 @@ import {
 
 export default function DataSourceModal({ isOpen, onClose, journal }) {
   const { t } = useTranslation("builder");
-  const { projectId, studyId } = useDataJournal(); // Use context
+  const { projectId, studyId, user } = useDataJournal();
   const [selectedDatasources, setSelectedDatasources] = useState(
     () => journal?.datasources?.map((ds) => ds.id) || []
   );
@@ -41,22 +42,30 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
     setSelectedDatasources((journal?.datasources || []).map((ds) => ds.id));
   }, [isOpen, journal?.id, journalDatasourceIdsKey]);
 
-  const { data, loading, error, refetch } = useQuery(GET_DATASOURCES, {
-    variables: {
-      where:
-        projectId && studyId
-          ? {
-              OR: [
-                { project: { id: { equals: projectId } } },
-                { study: { id: { equals: studyId } } },
-              ],
-            }
-          : projectId
+  const datasourcesWhere = useMemo(
+    () => buildDatasourcesWhere({ projectId, studyId, userId: user?.id }),
+    [projectId, studyId, user?.id],
+  );
+
+  const refetchQueriesWhere = useMemo(
+    () =>
+      projectId && studyId
+        ? {
+            OR: [
+              { project: { id: { equals: projectId } } },
+              { study: { id: { equals: studyId } } },
+            ],
+          }
+        : projectId
           ? { project: { id: { equals: projectId } } }
           : studyId
-          ? { study: { id: { equals: studyId } } }
-          : null,
-    },
+            ? { study: { id: { equals: studyId } } }
+            : null,
+    [projectId, studyId],
+  );
+
+  const { data, loading, error, refetch } = useQuery(GET_DATASOURCES, {
+    variables: { where: datasourcesWhere },
   });
 
   const [updateVizPart, { loading: updateLoading }] = useMutation(
@@ -65,21 +74,7 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
       refetchQueries: [
         {
           query: GET_DATA_JOURNALS,
-          variables: {
-            where:
-              projectId && studyId
-                ? {
-                    OR: [
-                      { project: { id: { equals: projectId } } },
-                      { study: { id: { equals: studyId } } },
-                    ],
-                  }
-                : projectId
-                ? { project: { id: { equals: projectId } } }
-                : studyId
-                ? { study: { id: { equals: studyId } } }
-                : null,
-          },
+          variables: { where: refetchQueriesWhere },
         },
       ],
     }

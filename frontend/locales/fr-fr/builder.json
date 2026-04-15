@@ -229,12 +229,12 @@
 		"addNotes": "Ajouter des notes",
 		"componentEditor": {
 			"close": "Fermer",
-			"componentName": "",
+			"componentName": "Nom du composant",
 			"delete": "SUPPRIMER",
 			"deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce composant ?",
 			"editComponent": "Modifier le composant",
 			"editParagraph": "Modifier le paragraphe",
-			"editTitle": "",
+			"editTitle": "Modifier le titre du composant",
 			"save": "Sauvegarder",
 			"saveFigureToMedia": "Enregistrer la figure dans la bibliothèque multimédia",
 			"typeLabel": {
@@ -252,6 +252,74 @@
 			},
 			"unsupportedType": "Type de composant non pris en charge : {{type}}",
 			"untitled": "Sans titre"
+		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "Annuler",
+				"create": "Créer un jeu de données"
+			},
+			"dataSourceLabel": "La source de données",
+			"errorCreatingDataset": "Erreur lors de la création du jeu de données :",
+			"errorLoadingStudy": "Étude sur les erreurs de chargement :",
+			"loadingDataSources": "Chargement des sources de données…",
+			"nameHelp": "Vous pourrez le renommer ultérieurement dans les paramètres du jeu de données.",
+			"nameLabel": "Nom du jeu de données",
+			"namePlaceholder": "Ex. : Réponses au pré-test, printemps 2026",
+			"study": {
+				"currentStudy": "Étude : {{title}}",
+				"currentStudyMissing": "Aucune étude n'est liée à ce projet.",
+				"optionDisabled": "Aucune étude n'est associée à ce projet. Associez une étude pour activer cette option.",
+				"optionTitle": "Utilisez les données de l'étude actuelle"
+			},
+			"subtitle": "Nommez votre ensemble de données et choisissez la provenance des données.",
+			"template": {
+				"optionDescription": "Choisissez un jeu de données modèle (bientôt disponible).",
+				"optionTitle": "Copier à partir d'un ensemble de données existant"
+			},
+			"title": "Nouveau jeu de données",
+			"upload": {
+				"fileHelp": "La première ligne doit contenir les noms des colonnes.",
+				"optionDescription": "Créez un jeu de données à partir d'un fichier sur votre ordinateur.",
+				"optionTitle": "Téléversez un fichier CSV ou JSON"
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "Ajouter une colonne",
+				"download": "Télécharger",
+				"hideAll": "Cacher tout",
+				"returnToNavigation": "Retour à la navigation",
+				"showAll": "Afficher tout"
+			},
+			"alt": {
+				"addColumn": "Ajouter une colonne",
+				"database": "Base de données",
+				"return": "Retour"
+			},
+			"downloadPrompt": "Donnez un nom au fichier CSV que vous allez télécharger.\n\nInutile d'ajouter l'extension « .csv », nous nous en chargeons !",
+			"header": {
+				"activeData": "Données actives"
+			},
+			"operations": {
+				"computeNew": "Calculer une nouvelle variable",
+				"copyExisting": "Copier la variable existante",
+				"recodeVariable": "Recoder une variable",
+				"reverseScore": "Score inversé"
+			},
+			"sections": {
+				"generalVariables": "Variables générales",
+				"taskVariables": "Variables de la tâche",
+				"userVariables": "Variables utilisateur"
+			}
+		},
+		"datasets": {
+			"deleteConfirm": "Êtes-vous sûr de vouloir supprimer cet ensemble de données ?",
+			"deleteDataset": "Supprimer l'ensemble de données",
+			"deleteDisabledNotOwner": "Seul le créateur de cet ensemble de données peut le supprimer.",
+			"deleteDisabledPublicTemplate": "Ce jeu de données est lié à un modèle public et ne peut pas être supprimé.",
+			"deleteLabel": "SUPPRIMER",
+			"deleting": "Suppression...",
+			"editLabel": "Modifier le jeu de données"
 		},
 		"hypVis": {
 			"axes": {
@@ -373,8 +441,12 @@
 			"defaultWorkspaceTitle": "Espace de travail sans nom",
 			"deleteJournal": "SUPPRIMER",
 			"deleteJournalConfirm": "Êtes-vous sûr de vouloir supprimer ce journal ? Tous les espaces de travail et composants de ce journal seront également supprimés.",
+			"deleteJournalMissingId": "Ce journal ne peut pas être supprimé (identifiant manquant).",
+			"deleteJournalModalTitle": "Supprimer le journal",
 			"deleteWorkspace": "Supprimer l'espace de travail",
 			"deleteWorkspaceConfirm": "Êtes-vous sûr de vouloir supprimer cet espace de travail ? Tous les composants de cet espace de travail seront également supprimés.",
+			"deleteWorkspaceMissingId": "Cet espace de travail ne peut pas être supprimé (identifiant manquant).",
+			"deleteWorkspaceModalTitle": "Supprimer l'espace de travail",
 			"editJournal": "Modifier",
 			"editJournalCloseWithoutSaving": "Fermer sans enregistrer",
 			"editJournalFieldDescription": "Description",
@@ -384,12 +456,34 @@
 			"editJournalTitle": "Journal de modification",
 			"journalMore": "Options de journal",
 			"lastUpdatedAt": "Dernière mise à jour : {{date}}",
+			"manageDatasets": "Gérer les ensembles de données",
 			"noDataSources": "Aucune source de données",
 			"noJournalsYet": "Il semblerait que vous n'ayez toujours pas de journaux de données !",
+			"renameWorkspace": "Renommer l'espace de travail",
+			"renameWorkspaceModalTitle": "Renommer l'espace de travail",
+			"renameWorkspaceSaving": "Économie...",
+			"templateModal": {
+				"copyError": "Impossible de créer à partir du modèle : {{message}}",
+				"copyTitlePrefix": "Copie de",
+				"datasetsMany": "{{count}} jeux de données liés",
+				"datasetsNone": "Aucun ensemble de données lié",
+				"datasetsOne": "1 jeu de données lié",
+				"empty": "Aucun modèle n'est disponible pour le moment. Marquez un journal comme modèle (administrateur) ou demandez à votre équipe d'en ajouter un.",
+				"loading": "Chargement des modèles...",
+				"missingJournal": "Aucune collection de journaux n'est disponible. Créez d'abord un journal de A à Z.",
+				"newCollectionTitle": "Collection de revues anonymes",
+				"queryError": "Erreur lors du chargement des modèles : {{message}}",
+				"title": "Choisissez un modèle de journal",
+				"useTemplate": "Utilise le modèle"
+			},
 			"workspaceMore": "Options d'espace de travail"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Type de widget non pris en charge : {{type}}"
+		},
+		"workspaceArea": {
+			"error": "Impossible de charger l'espace de travail : {{message}}",
+			"loading": "Chargement de l'espace de travail…"
 		}
 	},
 	"dataJournals": "Journaux",
