@@ -9,7 +9,19 @@ export const GET_DATASOURCES = gql`
       dataOrigin
       content
       author {
+        id
         username
+      }
+      project {
+        id
+      }
+      study {
+        id
+      }
+      journal {
+        id
+        isPublic
+        isTemplate
       }
       updatedAt
     }

@@ -229,12 +229,12 @@
 		"addNotes": "إضافة ملاحظات",
 		"componentEditor": {
 			"close": "يغلق",
-			"componentName": "",
+			"componentName": "اسم المكون",
 			"delete": "يمسح",
 			"deleteConfirm": "هل أنت متأكد من رغبتك في حذف هذا المكون؟",
 			"editComponent": "تعديل المكون",
 			"editParagraph": "تعديل الفقرة",
-			"editTitle": "",
+			"editTitle": "تعديل عنوان المكون",
 			"save": "يحفظ",
 			"saveFigureToMedia": "احفظ الشكل في مكتبة الوسائط",
 			"typeLabel": {
@@ -252,6 +252,97 @@
 			},
 			"unsupportedType": "نوع المكون غير مدعوم: {{type}}",
 			"untitled": "بدون عنوان"
+		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "يلغي",
+				"create": "إنشاء مجموعة بيانات"
+			},
+			"dataSourceLabel": "مصدر البيانات",
+			"errorCreatingDataset": "خطأ في إنشاء مجموعة البيانات:",
+			"errorLoadingStudy": "خطأ في تحميل الدراسة:",
+			"loadingDataSources": "جارٍ تحميل مصادر البيانات…",
+			"nameHelp": "يمكنك إعادة تسمية هذا لاحقًا من إعدادات مجموعة البيانات.",
+			"nameLabel": "اسم مجموعة البيانات",
+			"namePlaceholder": "مثال: إجابات ما قبل الاختبار، ربيع 2026",
+			"study": {
+				"currentStudy": "دراسة: {{title}}",
+				"currentStudyMissing": "لا توجد دراسة مرتبطة بهذا المشروع",
+				"optionDisabled": "لا توجد دراسة مرتبطة بهذا المشروع. اربط دراسة لتفعيل هذا الخيار.",
+				"optionTitle": "استخدم البيانات من الدراسة الحالية"
+			},
+			"subtitle": "قم بتسمية مجموعة البيانات الخاصة بك واختر مصدر البيانات.",
+			"template": {
+				"optionDescription": "اختر مجموعة بيانات نموذجية (قريبًا).",
+				"optionTitle": "نسخ من مجموعة بيانات موجودة"
+			},
+			"title": "مجموعة بيانات جديدة",
+			"upload": {
+				"fileHelp": "يجب أن يحتوي الصف الأول على أسماء الأعمدة.",
+				"optionDescription": "أنشئ مجموعة بيانات من ملف موجود على جهاز الكمبيوتر الخاص بك.",
+				"optionTitle": "قم بتحميل ملف CSV أو JSON"
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "أضف عمودًا",
+				"download": "تحميل",
+				"hideAll": "إخفاء الكل",
+				"returnToNavigation": "العودة إلى التنقل",
+				"showAll": "عرض الكل"
+			},
+			"alt": {
+				"addColumn": "أضف عمودًا",
+				"database": "قاعدة البيانات",
+				"return": "يعود"
+			},
+			"downloadPrompt": "قم بتسمية ملف CSV الذي ستنزله.\nلا داعي لإضافة \".csv\"، سنقوم بذلك تلقائيًا!",
+			"header": {
+				"activeData": "البيانات النشطة"
+			},
+			"operations": {
+				"computeNew": "احسب متغيرًا جديدًا",
+				"copyExisting": "نسخ المتغير الموجود",
+				"recodeVariable": "إعادة ترميز متغير",
+				"reverseScore": "النتيجة المعكوسة"
+			},
+			"sections": {
+				"generalVariables": "المتغيرات العامة",
+				"taskVariables": "متغيرات المهمة",
+				"userVariables": "متغيرات المستخدم"
+			}
+		},
+		"datasets": {
+			"deleteConfirm": "هل أنت متأكد من رغبتك في حذف مجموعة البيانات هذه؟",
+			"deleteDataset": "حذف مجموعة البيانات",
+			"deleteDisabledNotOwner": "لا يمكن حذف هذه المجموعة من البيانات إلا منشئها.",
+			"deleteDisabledPublicTemplate": "ترتبط مجموعة البيانات هذه بقالب عام ولا يمكن حذفها.",
+			"deleteLabel": "يمسح",
+			"deleting": "جاري الحذف...",
+			"editLabel": "تحرير مجموعة البيانات",
+			"errorLoading": "خطأ: {{message}}",
+			"inclusion": {
+				"journalLabel": "هذه المجلة",
+				"journalTooltip": "ترتبط مجموعة البيانات هذه بمجلة بيانات تعود لك.",
+				"otherLabel": "أيضًا في هذه القائمة",
+				"otherTooltip": "تظهر مجموعة البيانات هذه في القائمة لسبب آخر (مثلًا قالب عام). قد لا تكون مخزنة في هذا المشروع أو الدراسة.",
+				"viaPartLabel": "مرتبطة بقالب",
+				"viaPartTooltip": "ترتبط مجموعة البيانات هذه بقالب مجلة بيانات.",
+				"workspaceLabel": "مساحة العمل هذه",
+				"workspaceTooltip": "مجموعة البيانات هذه مخزنة في المشروع أو الدراسة الحالية.",
+				"yourLibraryLabel": "مجموعتك",
+				"yourLibraryTooltip": "أنشأتَ هذه المجموعة، لكنها غير مرتبطة حاليًا بهذا المشروع أو هذه الدراسة. تظهر هنا لتتمكن من العثور عليها وإعادة استخدامها."
+			},
+			"listIntro": "تتضمن هذه القائمة مجموعات البيانات المخزنة في مساحة العمل، والمجموعات المرتبطة عبر أجزاء المجلة، ومجموعاتك الخاصة لإعادة استخدامها.",
+			"loading": "جارٍ تحميل مجموعات البيانات…",
+			"meta": {
+				"byAuthor": "بواسطة {{author}}",
+				"byYou": "بواسطتك",
+				"lastUpdated": "آخر تحديث {{date}}",
+				"lastUpdatedNever": "أبدًا",
+				"unknownAuthor": "غير معروف"
+			},
+			"untitled": "مجموعة بيانات بلا عنوان"
 		},
 		"hypVis": {
 			"axes": {
@@ -373,8 +464,12 @@
 			"defaultWorkspaceTitle": "مساحة عمل غير مسماة",
 			"deleteJournal": "يمسح",
 			"deleteJournalConfirm": "هل أنت متأكد من رغبتك في حذف هذه المدونة؟ سيتم حذف جميع مساحات العمل والمكونات الموجودة في هذه المدونة أيضًا.",
+			"deleteJournalMissingId": "لا يمكن حذف هذه المدونة (المعرف مفقود).",
+			"deleteJournalModalTitle": "حذف السجل",
 			"deleteWorkspace": "حذف مساحة العمل",
 			"deleteWorkspaceConfirm": "هل أنت متأكد من رغبتك في حذف مساحة العمل هذه؟ سيتم حذف جميع المكونات الموجودة في مساحة العمل هذه أيضًا.",
+			"deleteWorkspaceMissingId": "لا يمكن حذف مساحة العمل هذه (المعرف مفقود).",
+			"deleteWorkspaceModalTitle": "حذف مساحة العمل",
 			"editJournal": "يحرر",
 			"editJournalCloseWithoutSaving": "إغلاق بدون حفظ",
 			"editJournalFieldDescription": "وصف",
@@ -384,12 +479,34 @@
 			"editJournalTitle": "تحرير المجلة",
 			"journalMore": "خيارات المجلة",
 			"lastUpdatedAt": "آخر تحديث: {{date}}",
+			"manageDatasets": "إدارة مجموعات البيانات",
 			"noDataSources": "لا توجد مصادر بيانات",
 			"noJournalsYet": "يبدو أنك لا تزال لا تملك أي سجلات بيانات!",
+			"renameWorkspace": "إعادة تسمية مساحة العمل",
+			"renameWorkspaceModalTitle": "إعادة تسمية مساحة العمل",
+			"renameWorkspaceSaving": "إنقاذ...",
+			"templateModal": {
+				"copyError": "تعذر الإنشاء من القالب: {{message}}",
+				"copyTitlePrefix": "نسخة من",
+				"datasetsMany": "{{count}} مجموعات البيانات المرتبطة",
+				"datasetsNone": "لا توجد مجموعات بيانات مرتبطة",
+				"datasetsOne": "مجموعة بيانات واحدة مرتبطة",
+				"empty": "لا توجد قوالب متاحة حتى الآن. حدد دفتر يوميات كقالب (للمسؤول) أو اطلب من فريقك إضافة قالب.",
+				"loading": "جارٍ تحميل القوالب...",
+				"missingJournal": "لا توجد مجموعة مذكرات متاحة. أنشئ مذكرة من الصفر أولاً.",
+				"newCollectionTitle": "مجموعة مجلات مجهولة الاسم",
+				"queryError": "خطأ في تحميل القوالب: {{message}}",
+				"title": "اختر قالب دفتر يوميات",
+				"useTemplate": "استخدم القالب"
+			},
 			"workspaceMore": "خيارات مساحة العمل"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "نوع الأداة غير المدعوم: {{type}}"
+		},
+		"workspaceArea": {
+			"error": "تعذر تحميل مساحة العمل: {{message}}",
+			"loading": "جارٍ تحميل مساحة العمل..."
 		}
 	},
 	"dataJournals": "المجلات",

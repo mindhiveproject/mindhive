@@ -229,12 +229,12 @@
 		"addNotes": "Adicionar notas",
 		"componentEditor": {
 			"close": "Fechar",
-			"componentName": "",
+			"componentName": "Nome do componente",
 			"delete": "Excluir",
 			"deleteConfirm": "Tem certeza de que deseja excluir este componente?",
 			"editComponent": "Editar componente",
 			"editParagraph": "Editar parágrafo",
-			"editTitle": "",
+			"editTitle": "Editar título do componente",
 			"save": "Salvar",
 			"saveFigureToMedia": "Salvar figura na biblioteca de mídia",
 			"typeLabel": {
@@ -252,6 +252,97 @@
 			},
 			"unsupportedType": "Tipo de componente não suportado: {{type}}",
 			"untitled": "Sem título"
+		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "Cancelar",
+				"create": "Criar conjunto de dados"
+			},
+			"dataSourceLabel": "Fonte de dados",
+			"errorCreatingDataset": "Erro ao criar o conjunto de dados:",
+			"errorLoadingStudy": "Estudo sobre carregamento de erros:",
+			"loadingDataSources": "Carregando fontes de dados…",
+			"nameHelp": "Você poderá renomeá-lo posteriormente nas configurações do conjunto de dados.",
+			"nameLabel": "Nome do conjunto de dados",
+			"namePlaceholder": "Exemplo: Respostas do pré-teste, Primavera de 2026",
+			"study": {
+				"currentStudy": "Estudo: {{title}}",
+				"currentStudyMissing": "Nenhum estudo relacionado a este projeto.",
+				"optionDisabled": "Nenhum estudo está vinculado a este projeto. Vincule um estudo para habilitar esta opção.",
+				"optionTitle": "Utilize os dados do estudo atual."
+			},
+			"subtitle": "Dê um nome ao seu conjunto de dados e escolha de onde os dados devem vir.",
+			"template": {
+				"optionDescription": "Escolha um conjunto de dados modelo (em breve).",
+				"optionTitle": "Copiar de um conjunto de dados existente"
+			},
+			"title": "Novo conjunto de dados",
+			"upload": {
+				"fileHelp": "A primeira linha deve conter os nomes das colunas.",
+				"optionDescription": "Crie um conjunto de dados a partir de um arquivo no seu computador.",
+				"optionTitle": "Faça o upload de um arquivo CSV ou JSON."
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "Adicionar uma coluna",
+				"download": "Download",
+				"hideAll": "Esconda tudo",
+				"returnToNavigation": "Voltar à navegação",
+				"showAll": "Mostre tudo"
+			},
+			"alt": {
+				"addColumn": "Adicionar uma coluna",
+				"database": "Base de dados",
+				"return": "Retornar"
+			},
+			"downloadPrompt": "Dê um nome ao arquivo CSV que você está prestes a baixar.\nNão precisa adicionar '.csv', nós cuidamos disso!",
+			"header": {
+				"activeData": "Dados ativos"
+			},
+			"operations": {
+				"computeNew": "Calcular nova variável",
+				"copyExisting": "Copiar variável existente",
+				"recodeVariable": "Recodificar uma variável",
+				"reverseScore": "Inverter pontuação"
+			},
+			"sections": {
+				"generalVariables": "Variáveis ​​gerais",
+				"taskVariables": "Variáveis ​​da Tarefa",
+				"userVariables": "Variáveis ​​do usuário"
+			}
+		},
+		"datasets": {
+			"deleteConfirm": "Tem certeza de que deseja excluir este conjunto de dados?",
+			"deleteDataset": "Excluir conjunto de dados",
+			"deleteDisabledNotOwner": "Somente o criador deste conjunto de dados pode excluí-lo.",
+			"deleteDisabledPublicTemplate": "Este conjunto de dados está vinculado a um modelo público e não pode ser excluído.",
+			"deleteLabel": "Excluir",
+			"deleting": "Excluindo...",
+			"editLabel": "Editar conjunto de dados",
+			"errorLoading": "Erro: {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "Também nesta lista",
+				"otherTooltip": "Este conjunto de dados correspondeu ao filtro da lista de outra forma (por exemplo, um modelo público). Ele pode não estar armazenado neste projeto ou estudo.",
+				"viaPartLabel": "Ligado a partir de uma parte",
+				"viaPartTooltip": "Este conjunto de dados não está armazenado diretamente neste projeto ou estudo, mas pelo menos uma seção do periódico neste espaço de trabalho o utiliza.",
+				"workspaceLabel": "Este espaço de trabalho",
+				"workspaceTooltip": "Este conjunto de dados está armazenado no projeto ou estudo atual.",
+				"yourLibraryLabel": "Seu conjunto de dados",
+				"yourLibraryTooltip": "Você criou este conjunto de dados, mas ele não está vinculado a este projeto ou estudo no momento. Ele aparece aqui para que você possa encontrá-lo e reutilizá-lo."
+			},
+			"listIntro": "Esta lista inclui conjuntos de dados armazenados neste espaço de trabalho, conjuntos de dados vinculados por meio de partes do diário e seus próprios conjuntos de dados para que você possa reutilizá-los.",
+			"loading": "Carregando conjuntos de dados...",
+			"meta": {
+				"byAuthor": "por {{author}}",
+				"byYou": "por você",
+				"lastUpdated": "Última atualização {{date}}",
+				"lastUpdatedNever": "Nunca",
+				"unknownAuthor": "Desconhecido"
+			},
+			"untitled": "Conjunto de dados sem título"
 		},
 		"hypVis": {
 			"axes": {
@@ -373,8 +464,12 @@
 			"defaultWorkspaceTitle": "Espaço de trabalho sem nome",
 			"deleteJournal": "Excluir",
 			"deleteJournalConfirm": "Tem certeza de que deseja excluir este diário? Todos os espaços de trabalho e componentes deste diário também serão excluídos.",
+			"deleteJournalMissingId": "Este diário não pode ser excluído (ID ausente).",
+			"deleteJournalModalTitle": "Excluir diário",
 			"deleteWorkspace": "Excluir espaço de trabalho",
 			"deleteWorkspaceConfirm": "Tem certeza de que deseja excluir este espaço de trabalho? Todos os componentes deste espaço de trabalho também serão excluídos.",
+			"deleteWorkspaceMissingId": "Este espaço de trabalho não pode ser excluído (ID ausente).",
+			"deleteWorkspaceModalTitle": "Excluir espaço de trabalho",
 			"editJournal": "Editar",
 			"editJournalCloseWithoutSaving": "Fechar sem salvar",
 			"editJournalFieldDescription": "Descrição",
@@ -384,12 +479,34 @@
 			"editJournalTitle": "Editar diário",
 			"journalMore": "Opções de diário",
 			"lastUpdatedAt": "Última atualização: {{date}}",
+			"manageDatasets": "Gerenciar conjuntos de dados",
 			"noDataSources": "Sem fontes de dados",
 			"noJournalsYet": "Parece que você ainda não tem nenhum diário de dados!",
+			"renameWorkspace": "Renomear espaço de trabalho",
+			"renameWorkspaceModalTitle": "Renomear espaço de trabalho",
+			"renameWorkspaceSaving": "Salvando...",
+			"templateModal": {
+				"copyError": "Não foi possível criar a partir do modelo: {{message}}",
+				"copyTitlePrefix": "Cópia de",
+				"datasetsMany": "{{count}} conjuntos de dados vinculados",
+				"datasetsNone": "Nenhum conjunto de dados vinculado",
+				"datasetsOne": "1 conjunto de dados vinculado",
+				"empty": "Ainda não há modelos disponíveis. Marque um diário como modelo (administrador) ou peça à sua equipe para adicionar um.",
+				"loading": "Carregando modelos…",
+				"missingJournal": "Não há nenhuma coleção de diários disponível. Crie um diário do zero primeiro.",
+				"newCollectionTitle": "Coleção de diários sem nome",
+				"queryError": "Erro ao carregar os modelos: {{message}}",
+				"title": "Escolha um modelo de diário",
+				"useTemplate": "Usar modelo"
+			},
 			"workspaceMore": "Opções de espaço de trabalho"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Tipo de widget não suportado: {{type}}"
+		},
+		"workspaceArea": {
+			"error": "Não foi possível carregar o espaço de trabalho: {{message}}",
+			"loading": "Carregando espaço de trabalho…"
 		}
 	},
 	"dataJournals": "Revistas",

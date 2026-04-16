@@ -229,12 +229,12 @@
 		"addNotes": "नोट्स जोड़ें",
 		"componentEditor": {
 			"close": "बंद करना",
-			"componentName": "",
+			"componentName": "घटक का नाम",
 			"delete": "मिटाना",
 			"deleteConfirm": "क्या आप वाकई इस कंपोनेंट को डिलीट करना चाहते हैं?",
 			"editComponent": "घटक संपादित करें",
 			"editParagraph": "पैराग्राफ संपादित करें",
-			"editTitle": "",
+			"editTitle": "घटक शीर्षक संपादित करें",
 			"save": "बचाना",
 			"saveFigureToMedia": "चित्र को मीडिया लाइब्रेरी में सहेजें",
 			"typeLabel": {
@@ -252,6 +252,97 @@
 			},
 			"unsupportedType": "असमर्थित घटक प्रकार: {{type}}",
 			"untitled": "शीर्षकहीन"
+		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "रद्द करना",
+				"create": "डेटासेट बनाएं"
+			},
+			"dataSourceLabel": "डेटा स्रोत",
+			"errorCreatingDataset": "डेटासेट बनाने में त्रुटि:",
+			"errorLoadingStudy": "अध्ययन लोड करने में त्रुटि:",
+			"loadingDataSources": "डेटा स्रोत लोड हो रहे हैं…",
+			"nameHelp": "आप बाद में डेटासेट सेटिंग्स से इसका नाम बदल सकते हैं।",
+			"nameLabel": "डेटासेट का नाम",
+			"namePlaceholder": "उदाहरण के लिए, पूर्व-परीक्षण प्रतिक्रियाएँ, वसंत 2026",
+			"study": {
+				"currentStudy": "अध्ययन: {{title}}",
+				"currentStudyMissing": "इस परियोजना से संबंधित कोई अध्ययन नहीं है।",
+				"optionDisabled": "इस परियोजना से कोई अध्ययन संबद्ध नहीं है। इस विकल्प को सक्रिय करने के लिए एक अध्ययन को संबद्ध करें।",
+				"optionTitle": "वर्तमान अध्ययन से प्राप्त आंकड़ों का उपयोग करें"
+			},
+			"subtitle": "अपने डेटासेट का नाम दें और चुनें कि डेटा कहाँ से आना चाहिए।",
+			"template": {
+				"optionDescription": "एक टेम्पलेट डेटासेट चुनें (जल्द ही उपलब्ध होगा)।",
+				"optionTitle": "मौजूदा डेटासेट से कॉपी करें"
+			},
+			"title": "नया डेटासेट",
+			"upload": {
+				"fileHelp": "पहली पंक्ति में कॉलम के नाम होने चाहिए।",
+				"optionDescription": "अपने कंप्यूटर पर मौजूद किसी फ़ाइल से डेटासेट बनाएं।",
+				"optionTitle": "एक CSV या JSON फ़ाइल अपलोड करें"
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "एक कॉलम जोड़ें",
+				"download": "डाउनलोड करना",
+				"hideAll": "सभी को छिपाएं",
+				"returnToNavigation": "नेविगेशन पर वापस लौटें",
+				"showAll": "सब दिखाएं"
+			},
+			"alt": {
+				"addColumn": "एक कॉलम जोड़ें",
+				"database": "डेटाबेस",
+				"return": "वापस करना"
+			},
+			"downloadPrompt": "डाउनलोड करने से पहले CSV फ़ाइल को एक नाम दें।\n'.csv' जोड़ने की कोई आवश्यकता नहीं है, हम इसका ध्यान रखेंगे!",
+			"header": {
+				"activeData": "सक्रिय डेटा"
+			},
+			"operations": {
+				"computeNew": "नए चर की गणना करें",
+				"copyExisting": "मौजूदा वेरिएबल की प्रतिलिपि बनाएँ",
+				"recodeVariable": "एक वेरिएबल को रिकोड करें",
+				"reverseScore": "रिवर्स स्कोर"
+			},
+			"sections": {
+				"generalVariables": "सामान्य चर",
+				"taskVariables": "कार्य चर",
+				"userVariables": "उपयोगकर्ता चर"
+			}
+		},
+		"datasets": {
+			"deleteConfirm": "क्या आप वाकई इस डेटासेट को हटाना चाहते हैं?",
+			"deleteDataset": "डेटासेट हटाएं",
+			"deleteDisabledNotOwner": "इस डेटासेट को केवल इसका निर्माता ही हटा सकता है।",
+			"deleteDisabledPublicTemplate": "यह डेटासेट एक सार्वजनिक टेम्पलेट से जुड़ा हुआ है और इसे हटाया नहीं जा सकता।",
+			"deleteLabel": "मिटाना",
+			"deleting": "हटाया जा रहा है...",
+			"editLabel": "डेटासेट संपादित करें",
+			"errorLoading": "त्रुटि: {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "इस सूची में भी शामिल हैं",
+				"otherTooltip": "यह डेटासेट सूची फ़िल्टर से किसी अन्य तरीके से मेल खाता है (उदाहरण के लिए एक सार्वजनिक टेम्पलेट)। यह इस परियोजना या अध्ययन में संग्रहीत नहीं हो सकता है।",
+				"viaPartLabel": "एक भाग से जुड़ा हुआ",
+				"viaPartTooltip": "यह डेटासेट सीधे इस परियोजना या अध्ययन पर संग्रहीत नहीं है, लेकिन इस कार्यक्षेत्र में कम से कम एक जर्नल भाग इसका उपयोग करता है।",
+				"workspaceLabel": "यह कार्यक्षेत्र",
+				"workspaceTooltip": "यह डेटासेट वर्तमान परियोजना या अध्ययन में संग्रहीत है।",
+				"yourLibraryLabel": "आपका डेटासेट",
+				"yourLibraryTooltip": "आपने यह डेटासेट बनाया है, लेकिन यह वर्तमान में इस प्रोजेक्ट या अध्ययन से जुड़ा नहीं है। यह यहाँ इसलिए दिखाया गया है ताकि आप इसे ढूंढकर दोबारा उपयोग कर सकें।"
+			},
+			"listIntro": "इस सूची में इस वर्कस्पेस पर संग्रहीत डेटासेट, जर्नल पार्ट्स के माध्यम से लिंक किए गए डेटासेट और आपके अपने डेटासेट शामिल हैं ताकि आप उनका पुन: उपयोग कर सकें।",
+			"loading": "डेटासेट लोड हो रहे हैं...",
+			"meta": {
+				"byAuthor": "द्वारा {{author}}",
+				"byYou": "आपके द्वारा",
+				"lastUpdated": "अंतिम बार अपडेट किया गया {{date}}",
+				"lastUpdatedNever": "कभी नहीं",
+				"unknownAuthor": "अज्ञात"
+			},
+			"untitled": "शीर्षकहीन डेटासेट"
 		},
 		"hypVis": {
 			"axes": {
@@ -373,8 +464,12 @@
 			"defaultWorkspaceTitle": "अनाम कार्यक्षेत्र",
 			"deleteJournal": "मिटाना",
 			"deleteJournalConfirm": "क्या आप वाकई इस जर्नल को हटाना चाहते हैं? इस जर्नल में मौजूद सभी वर्कस्पेस और कंपोनेंट भी हटा दिए जाएंगे।",
+			"deleteJournalMissingId": "इस जर्नल को हटाया नहीं जा सकता (आईडी उपलब्ध नहीं है)।",
+			"deleteJournalModalTitle": "जर्नल हटाएं",
 			"deleteWorkspace": "कार्यक्षेत्र हटाएं",
 			"deleteWorkspaceConfirm": "क्या आप वाकई इस वर्कस्पेस को हटाना चाहते हैं? इस वर्कस्पेस के सभी कंपोनेंट भी हटा दिए जाएंगे।",
+			"deleteWorkspaceMissingId": "इस वर्कस्पेस को हटाया नहीं जा सकता (आईडी मौजूद नहीं है)।",
+			"deleteWorkspaceModalTitle": "कार्यक्षेत्र हटाएं",
 			"editJournal": "संपादन करना",
 			"editJournalCloseWithoutSaving": "बिना सहेजे बंद करें",
 			"editJournalFieldDescription": "विवरण",
@@ -384,12 +479,34 @@
 			"editJournalTitle": "जर्नल संपादित करें",
 			"journalMore": "जर्नल विकल्प",
 			"lastUpdatedAt": "अंतिम अद्यतन: {{date}}",
+			"manageDatasets": "डेटासेट प्रबंधित करें",
 			"noDataSources": "कोई डेटा स्रोत नहीं",
 			"noJournalsYet": "ऐसा लगता है कि आपके पास अभी भी कोई डेटा जर्नल नहीं है!",
+			"renameWorkspace": "कार्यक्षेत्र का नाम बदलें",
+			"renameWorkspaceModalTitle": "कार्यक्षेत्र का नाम बदलें",
+			"renameWorkspaceSaving": "सहेजा जा रहा है...",
+			"templateModal": {
+				"copyError": "टेम्पलेट से निर्माण नहीं किया जा सका: {{message}}",
+				"copyTitlePrefix": "की प्रति",
+				"datasetsMany": "{{count}} डेटासेट लिंक किए गए",
+				"datasetsNone": "कोई डेटासेट लिंक नहीं किया गया",
+				"datasetsOne": "1 डेटासेट लिंक किया गया",
+				"empty": "अभी कोई टेम्पलेट उपलब्ध नहीं है। कृपया किसी जर्नल को टेम्पलेट के रूप में चिह्नित करें (प्रशासक) या अपनी टीम से एक टेम्पलेट जोड़ने के लिए कहें।",
+				"loading": "टेम्प्लेट लोड हो रहे हैं…",
+				"missingJournal": "कोई जर्नल संग्रह उपलब्ध नहीं है। कृपया पहले शुरू से एक जर्नल बनाएं।",
+				"newCollectionTitle": "अनाम जर्नल संग्रह",
+				"queryError": "टेम्प्लेट लोड करने में त्रुटि: {{message}}",
+				"title": "जर्नल टेम्पलेट चुनें",
+				"useTemplate": "टेम्पलेट का इस्तेमाल करें"
+			},
 			"workspaceMore": "कार्यक्षेत्र विकल्प"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "असमर्थित विजेट प्रकार: {{type}}"
+		},
+		"workspaceArea": {
+			"error": "वर्कस्पेस लोड नहीं हो सका: {{message}}",
+			"loading": "वर्कस्पेस लोड हो रहा है…"
 		}
 	},
 	"dataJournals": "पत्रिकाओं",

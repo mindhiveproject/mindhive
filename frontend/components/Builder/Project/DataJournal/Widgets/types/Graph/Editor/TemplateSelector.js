@@ -32,8 +32,6 @@ elif X not in df.columns or Y not in df.columns:
         showarrow=False, font_size=16
     )
 else:
-    print(f"DEBUG: Using X='{X}', Y='{Y}', Group='{Group}', trendline={trendline}")
-    
     # OLD logic: participant grouping/aggregation
     if 'participant' not in df.columns and 'id' not in df.columns:
         userDefWide = True
@@ -45,6 +43,8 @@ else:
     cols_to_use = [X, Y]
     if Group and Group in df.columns:
         cols_to_use.append(Group)
+
+    if not userDefWide and 'participant' in df.columns and 'participant' not in cols_to_use: cols_to_use.append('participant')
 
     df_plot = df[cols_to_use].copy()
     df_plot.replace('NaN', np.nan, inplace=True)
@@ -65,9 +65,6 @@ else:
         else:
             grouped_df = df_plot.groupby('participant').agg({X: agg_func, Y: agg_func}).reset_index()
             has_group = False
-
-    print(f"DEBUG: grouped_df shape: {grouped_df.shape}, NaNs in X/Y: {grouped_df[X].isna().sum()}/{len(grouped_df)}, {grouped_df[Y].isna().sum()}/{len(grouped_df)}")
-    print(f"DEBUG: has_group={has_group}, use_trendline={trendline}")
 
     # Configuration
     marginalPlot = get_or_default(marginalPlot)
@@ -98,7 +95,6 @@ else:
     fig_kwargs = common_kwargs.copy()
     if use_trendline:
         fig_kwargs["trendline"] = "lowess"
-        print("DEBUG: Adding lowess trendline")
 
     fig = px.scatter(**fig_kwargs)
 
@@ -157,11 +153,6 @@ except (ModuleNotFoundError, AttributeError, NameError):
 def get_or_default(var_value, default=""):
     return var_value if var_value not in (None, "", "undefined") else default
 
-# ── Debug input values ───────────────────────────────────────────────────────
-print(f"DEBUG barGraph: isWide={isWide}, dataFormat='{dataFormat}'")
-print(f"DEBUG barGraph: colToPlot='{colToPlot}', qualCol='{qualCol}', quantCol='{quantCol}'")
-print(f"DEBUG barGraph: errBar='{errBar}', color='{color}'")
-
 # ── Prepare figure ───────────────────────────────────────────────────────────
 fig = go.Figure()
 
@@ -176,9 +167,7 @@ if isWide:
     else:
         columns = [c.strip() for c in str(colToPlot).split(",") if c.strip()]
         valid_columns = [col for col in columns if col in df.columns]
-        
-        print(f"DEBUG wide: requested={columns}, valid={valid_columns}")
-        
+
         if not valid_columns:
             fig.add_annotation(
                 text="None of the selected columns exist in the data",
@@ -335,10 +324,6 @@ def get_or_default(var_value, default=""):
     if var_value in (None, "", "undefined", "None"):
         return default
     return var_value
-
-# ── Debug inputs ─────────────────────────────────────────────────────────────
-print(f"DEBUG histogram: X='{X}', Group='{Group}', marginalPlot='{marginalPlot}'")
-print(f"DEBUG histogram: bargap={bargap}, color='{color}'")
 
 # ── Initialize empty figure ─────────────────────────────────────────────────
 fig = go.Figure()

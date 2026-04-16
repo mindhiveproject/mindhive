@@ -165,6 +165,10 @@ export const StyledSidebar = styled.div`
       font-weight: 700;
       font-style: Bold;
     }
+
+    .dataJournalWorkspaceRowBtn:hover {
+      background-color: #FDF2D0 !important;
+    }
   }
   
   .createJournalBtn {
@@ -190,7 +194,7 @@ export const StyledSidebar = styled.div`
     display: flex;
     width: fit-content;
     justify-content: center;
-    align-items: right;
+    align-items: center;
     border-radius: 8px;
 
     > div > button {
@@ -380,6 +384,7 @@ export const StyledRightPanel = styled.div`
   display: grid;
   align-content: baseline;
   grid-gap: 10px;
+  margin: 16px;
   width: 100%;
   min-width: 0;
   min-height: 0;
@@ -503,6 +508,15 @@ export const StyledRightPanel = styled.div`
     .button {
       cursor: pointer;
     }
+  }
+
+  .datasets .datasets-list-intro {
+    margin: 0 0 16px;
+    max-width: 720px;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #4a5568;
   }
 `;
 
@@ -1284,6 +1298,7 @@ export const StyledAddDataset = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: fit-content;
   background: #f8f9f8;
   color: #336f8a;
   padding: 12px 24px;
@@ -1340,17 +1355,23 @@ export const StyledDatasetCard = styled.div`
 
   .edit-btn,
   .delete-btn {
-    background: #336f8a;
-    color: white;
     border: none;
-    padding: 6px 12px;
+    padding: 8px 16px;
     border-radius: 6px;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
     cursor: pointer;
-    font-family: Inter;
-    display: flex;
+    font-family: Inter, sans-serif;
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
+    gap: 6px;
+    color: #fff;
+  }
+
+  .edit-btn {
+    background: var(--MH-Theme-Primary-Dark, #336f8a);
 
     &:hover:not(:disabled) {
       background: #2a5a6f;
@@ -1358,15 +1379,22 @@ export const StyledDatasetCard = styled.div`
 
     &:disabled {
       background: #ccc;
+      color: #fff;
       cursor: not-allowed;
     }
   }
 
   .delete-btn {
-    background: #ff4d4d;
+    background: #e53e3e;
 
     &:hover:not(:disabled) {
-      background: #cc0000;
+      background: #c53030;
+    }
+
+    &:disabled {
+      background: #feb2b2;
+      color: #fff;
+      cursor: not-allowed;
     }
   }
 
@@ -1374,6 +1402,28 @@ export const StyledDatasetCard = styled.div`
     display: flex;
     flex-direction: column;
     gap: 8px;
+  }
+
+  .dataset-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .inclusion-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: Inter, sans-serif;
+    color: #4a5568;
+    background: #fff;
+    border: 1px solid #cbd5e0;
+    cursor: help;
+    max-width: fit-content;
   }
 
   .origin-badge {

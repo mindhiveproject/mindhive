@@ -229,12 +229,12 @@
 		"addNotes": "添加注释",
 		"componentEditor": {
 			"close": "关闭",
-			"componentName": "",
+			"componentName": "组件名称",
 			"delete": "删除",
 			"deleteConfirm": "您确定要删除此组件吗？",
 			"editComponent": "编辑组件",
 			"editParagraph": "编辑段落",
-			"editTitle": "",
+			"editTitle": "编辑组件标题",
 			"save": "节省",
 			"saveFigureToMedia": "将图片保存到媒体库",
 			"typeLabel": {
@@ -252,6 +252,97 @@
 			},
 			"unsupportedType": "不支持的组件类型： {{type}}",
 			"untitled": "无标题"
+		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "取消",
+				"create": "创建数据集"
+			},
+			"dataSourceLabel": "数据源",
+			"errorCreatingDataset": "创建数据集时出错：",
+			"errorLoadingStudy": "加载研究数据时出错：",
+			"loadingDataSources": "正在加载数据源…",
+			"nameHelp": "稍后您可以在数据集设置中重命名此项。",
+			"nameLabel": "数据集名称",
+			"namePlaceholder": "例如：2026年春季预测试回复",
+			"study": {
+				"currentStudy": "研究： {{title}}",
+				"currentStudyMissing": "没有与本项目相关的研究",
+				"optionDisabled": "本项目暂无关联研究。请添加研究以启用此选项。",
+				"optionTitle": "使用本研究的数据"
+			},
+			"subtitle": "给你的数据集命名，并选择数据来源。",
+			"template": {
+				"optionDescription": "选择模板数据集（即将推出）。",
+				"optionTitle": "从现有数据集复制"
+			},
+			"title": "新数据集",
+			"upload": {
+				"fileHelp": "第一行应包含列名。",
+				"optionDescription": "从计算机上的文件创建数据集。",
+				"optionTitle": "上传 CSV 或 JSON 文件"
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "添加一列",
+				"download": "下载",
+				"hideAll": "全部隐藏",
+				"returnToNavigation": "返回导航",
+				"showAll": "显示所有"
+			},
+			"alt": {
+				"addColumn": "添加一列",
+				"database": "数据库",
+				"return": "返回"
+			},
+			"downloadPrompt": "请给即将下载的 CSV 文件命名。\n\n无需添加“.csv”，我们会自动处理！",
+			"header": {
+				"activeData": "活动数据"
+			},
+			"operations": {
+				"computeNew": "计算新变量",
+				"copyExisting": "复制现有变量",
+				"recodeVariable": "重新编码变量",
+				"reverseScore": "反向得分"
+			},
+			"sections": {
+				"generalVariables": "一般变量",
+				"taskVariables": "任务变量",
+				"userVariables": "用户变量"
+			}
+		},
+		"datasets": {
+			"deleteConfirm": "您确定要删除此数据集吗？",
+			"deleteDataset": "删除数据集",
+			"deleteDisabledNotOwner": "只有该数据集的创建者才能删除它。",
+			"deleteDisabledPublicTemplate": "该数据集链接到公共模板，无法删除。",
+			"deleteLabel": "删除",
+			"deleting": "正在删除...",
+			"editLabel": "编辑数据集",
+			"errorLoading": "错误： {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "此外，此列表中还包含以下内容",
+				"otherTooltip": "该数据集以其他方式（例如，公共模板）匹配了列表筛选条件。它可能未存储在此项目或研究中。",
+				"viaPartLabel": "链接自某个部分",
+				"viaPartTooltip": "该数据集并未直接存储在本项目或研究中，但本工作空间中的至少一篇期刊文章使用了该数据集。",
+				"workspaceLabel": "此工作区",
+				"workspaceTooltip": "该数据集存储在当前项目或研究中。",
+				"yourLibraryLabel": "您的数据集",
+				"yourLibraryTooltip": "您创建了这个数据集，但它目前尚未关联到此项目或研究。它显示在此处，方便您查找和重复使用。"
+			},
+			"listIntro": "此列表包括存储在此工作区中的数据集、通过期刊部分链接的数据集以及您自己的数据集，以便您可以重复使用它们。",
+			"loading": "正在加载数据集……",
+			"meta": {
+				"byAuthor": "由 {{author}}",
+				"byYou": "由你",
+				"lastUpdated": "最后更新于 {{date}}",
+				"lastUpdatedNever": "绝不",
+				"unknownAuthor": "未知"
+			},
+			"untitled": "未命名数据集"
 		},
 		"hypVis": {
 			"axes": {
@@ -373,8 +464,12 @@
 			"defaultWorkspaceTitle": "未命名的工作区",
 			"deleteJournal": "删除",
 			"deleteJournalConfirm": "您确定要删除此日志吗？此日志中的所有工作区和组件也将被删除。",
+			"deleteJournalMissingId": "此日志无法删除（缺少 ID）。",
+			"deleteJournalModalTitle": "删除日记",
 			"deleteWorkspace": "删除工作区",
 			"deleteWorkspaceConfirm": "您确定要删除此工作区吗？此工作区中的所有组件也将被删除。",
+			"deleteWorkspaceMissingId": "此工作区无法删除（缺少 ID）。",
+			"deleteWorkspaceModalTitle": "删除工作区",
 			"editJournal": "编辑",
 			"editJournalCloseWithoutSaving": "关闭而不保存",
 			"editJournalFieldDescription": "描述",
@@ -384,12 +479,34 @@
 			"editJournalTitle": "编辑日志",
 			"journalMore": "期刊期权",
 			"lastUpdatedAt": "上次更新时间： {{date}}",
+			"manageDatasets": "管理数据集",
 			"noDataSources": "无数据来源",
 			"noJournalsYet": "看来你仍然没有任何数据日志！",
+			"renameWorkspace": "重命名工作区",
+			"renameWorkspaceModalTitle": "重命名工作区",
+			"renameWorkspaceSaving": "保存...",
+			"templateModal": {
+				"copyError": "无法从模板创建： {{message}}",
+				"copyTitlePrefix": "副本",
+				"datasetsMany": "已链接的数据集：{{count}} ",
+				"datasetsNone": "未链接任何数据集",
+				"datasetsOne": "1 个已链接的数据集",
+				"empty": "目前还没有可用的模板。您可以将某个期刊标记为模板（管理员），或者请您的团队添加模板。",
+				"loading": "正在加载模板...",
+				"missingJournal": "暂无日记本合集。请先从头开始创建日记本。",
+				"newCollectionTitle": "未命名的期刊合集",
+				"queryError": "加载模板时出错： {{message}}",
+				"title": "选择日记模板",
+				"useTemplate": "使用模板"
+			},
 			"workspaceMore": "工作区选项"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "不支持的小部件类型：{{type}}"
+		},
+		"workspaceArea": {
+			"error": "无法加载工作区： {{message}}",
+			"loading": "正在加载工作区…"
 		}
 	},
 	"dataJournals": "期刊",

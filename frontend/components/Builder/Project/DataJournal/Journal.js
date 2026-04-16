@@ -136,17 +136,22 @@ export default function Journal({
     registerData();
   }, [pyodide, mergedData, setData, setVariables, setSettings, initDataLength]);
 
+  const chapterIdsKey = (journal?.vizChapters || [])
+    .map((w) => w?.id)
+    .filter(Boolean)
+    .join(",");
+
   useEffect(() => {
-    function initWorkspace() {
-      if (workspaces && workspaces.length) {
-        const w = workspaces[0]; // Set the first workspace as the current one
-        setSelectedWorkspace(w);
+    const list = journal?.vizChapters || [];
+    setSelectedWorkspace((prev) => {
+      if (!list.length) return null;
+      if (prev?.id) {
+        const match = list.find((w) => w?.id === prev.id);
+        if (match) return match;
       }
-    }
-    if (workspaces && workspaces.length) {
-      initWorkspace();
-    }
-  }, [workspaces.length, setSelectedWorkspace]);
+      return list[0];
+    });
+  }, [chapterIdsKey, journal?.updatedAt, setSelectedWorkspace]);
 
   const selectWorkspaceById = ({ id }) => {
     const workspace = workspaces.find((w) => w?.id === id);

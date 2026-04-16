@@ -253,6 +253,97 @@
 			"unsupportedType": "",
 			"untitled": ""
 		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "",
+				"create": ""
+			},
+			"dataSourceLabel": "",
+			"errorCreatingDataset": "",
+			"errorLoadingStudy": "",
+			"loadingDataSources": "",
+			"nameHelp": "",
+			"nameLabel": "",
+			"namePlaceholder": "",
+			"study": {
+				"currentStudy": "",
+				"currentStudyMissing": "",
+				"optionDisabled": "",
+				"optionTitle": ""
+			},
+			"subtitle": "",
+			"template": {
+				"optionDescription": "",
+				"optionTitle": ""
+			},
+			"title": "",
+			"upload": {
+				"fileHelp": "",
+				"optionDescription": "",
+				"optionTitle": ""
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "",
+				"download": "",
+				"hideAll": "",
+				"returnToNavigation": "",
+				"showAll": ""
+			},
+			"alt": {
+				"addColumn": "",
+				"database": "",
+				"return": ""
+			},
+			"downloadPrompt": "",
+			"header": {
+				"activeData": ""
+			},
+			"operations": {
+				"computeNew": "",
+				"copyExisting": "",
+				"recodeVariable": "",
+				"reverseScore": ""
+			},
+			"sections": {
+				"generalVariables": "",
+				"taskVariables": "",
+				"userVariables": ""
+			}
+		},
+		"datasets": {
+			"deleteConfirm": "",
+			"deleteDataset": "",
+			"deleteDisabledNotOwner": "",
+			"deleteDisabledPublicTemplate": "",
+			"deleteLabel": "",
+			"deleting": "",
+			"editLabel": "",
+			"errorLoading": "",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "",
+				"otherTooltip": "",
+				"viaPartLabel": "",
+				"viaPartTooltip": "",
+				"workspaceLabel": "",
+				"workspaceTooltip": "",
+				"yourLibraryLabel": "",
+				"yourLibraryTooltip": ""
+			},
+			"listIntro": "",
+			"loading": "",
+			"meta": {
+				"byAuthor": "",
+				"byYou": "",
+				"lastUpdated": "",
+				"lastUpdatedNever": "",
+				"unknownAuthor": ""
+			},
+			"untitled": ""
+		},
 		"hypVis": {
 			"axes": {
 				"abDesign": {
@@ -373,8 +464,12 @@
 			"defaultWorkspaceTitle": "",
 			"deleteJournal": "",
 			"deleteJournalConfirm": "",
+			"deleteJournalMissingId": "",
+			"deleteJournalModalTitle": "",
 			"deleteWorkspace": "",
 			"deleteWorkspaceConfirm": "",
+			"deleteWorkspaceMissingId": "",
+			"deleteWorkspaceModalTitle": "",
 			"editJournal": "",
 			"editJournalCloseWithoutSaving": "",
 			"editJournalFieldDescription": "",
@@ -384,12 +479,34 @@
 			"editJournalTitle": "",
 			"journalMore": "",
 			"lastUpdatedAt": "",
+			"manageDatasets": "",
 			"noDataSources": "",
 			"noJournalsYet": "",
+			"renameWorkspace": "",
+			"renameWorkspaceModalTitle": "",
+			"renameWorkspaceSaving": "",
+			"templateModal": {
+				"copyError": "",
+				"copyTitlePrefix": "",
+				"datasetsMany": "",
+				"datasetsNone": "",
+				"datasetsOne": "",
+				"empty": "",
+				"loading": "",
+				"missingJournal": "",
+				"newCollectionTitle": "",
+				"queryError": "",
+				"title": "",
+				"useTemplate": ""
+			},
 			"workspaceMore": ""
 		},
 		"visualizationWidget": {
 			"unsupportedType": "असमर्थित विजेट प्रकार: {{type}}"
+		},
+		"workspaceArea": {
+			"error": "",
+			"loading": ""
 		}
 	},
 	"dataJournals": "",

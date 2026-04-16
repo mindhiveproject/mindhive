@@ -229,12 +229,12 @@
 		"addNotes": "Notities toevoegen",
 		"componentEditor": {
 			"close": "Dichtbij",
-			"componentName": "",
+			"componentName": "Componentnaam",
 			"delete": "Verwijderen",
 			"deleteConfirm": "Weet je zeker dat je dit onderdeel wilt verwijderen?",
 			"editComponent": "Component bewerken",
 			"editParagraph": "Alinea bewerken",
-			"editTitle": "",
+			"editTitle": "Bewerk de titel van het onderdeel",
 			"save": "Redden",
 			"saveFigureToMedia": "Afbeelding opslaan in de mediabibliotheek",
 			"typeLabel": {
@@ -252,6 +252,97 @@
 			},
 			"unsupportedType": "Niet-ondersteund componenttype: {{type}}",
 			"untitled": "Zonder titel"
+		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "Annuleren",
+				"create": "Gegevensset maken"
+			},
+			"dataSourceLabel": "Databron",
+			"errorCreatingDataset": "Fout bij het maken van de dataset:",
+			"errorLoadingStudy": "Fout bij het laden van gegevens: onderzoek",
+			"loadingDataSources": "Gegevensbronnen laden…",
+			"nameHelp": "Je kunt dit later hernoemen via de datasetinstellingen.",
+			"nameLabel": "Datasetnaam",
+			"namePlaceholder": "bijv. Reacties op de pretest, voorjaar 2026",
+			"study": {
+				"currentStudy": "Studie: {{title}}",
+				"currentStudyMissing": "Er is geen onderzoek aan dit project gekoppeld.",
+				"optionDisabled": "Er is geen onderzoek aan dit project gekoppeld. Koppel een onderzoek om deze optie in te schakelen.",
+				"optionTitle": "Gebruik de gegevens uit het huidige onderzoek."
+			},
+			"subtitle": "Geef je dataset een naam en kies waar de gegevens vandaan moeten komen.",
+			"template": {
+				"optionDescription": "Kies een sjabloongegevensset (binnenkort beschikbaar).",
+				"optionTitle": "Kopiëren vanuit een bestaande dataset"
+			},
+			"title": "Nieuwe dataset",
+			"upload": {
+				"fileHelp": "De eerste rij moet de kolomnamen bevatten.",
+				"optionDescription": "Maak een dataset van een bestand op je computer.",
+				"optionTitle": "Upload een CSV- of JSON-bestand"
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "Een kolom toevoegen",
+				"download": "Downloaden",
+				"hideAll": "Verberg alles",
+				"returnToNavigation": "Terug naar navigatie",
+				"showAll": "Toon alles"
+			},
+			"alt": {
+				"addColumn": "Een kolom toevoegen",
+				"database": "Database",
+				"return": "Opbrengst"
+			},
+			"downloadPrompt": "Geef een naam aan het CSV-bestand dat je gaat downloaden.\nJe hoeft geen '.csv' toe te voegen, wij doen dat voor je!",
+			"header": {
+				"activeData": "Actieve gegevens"
+			},
+			"operations": {
+				"computeNew": "Bereken een nieuwe variabele",
+				"copyExisting": "Kopieer bestaande variabele",
+				"recodeVariable": "Een variabele hercoderen",
+				"reverseScore": "Omgekeerde score"
+			},
+			"sections": {
+				"generalVariables": "Algemene variabelen",
+				"taskVariables": "Taakvariabelen",
+				"userVariables": "Gebruikersvariabelen"
+			}
+		},
+		"datasets": {
+			"deleteConfirm": "Weet je zeker dat je deze dataset wilt verwijderen?",
+			"deleteDataset": "Gegevensset verwijderen",
+			"deleteDisabledNotOwner": "Alleen de maker van deze dataset kan deze verwijderen.",
+			"deleteDisabledPublicTemplate": "Deze dataset is gekoppeld aan een openbaar sjabloon en kan niet worden verwijderd.",
+			"deleteLabel": "Verwijderen",
+			"deleting": "Verwijderen...",
+			"editLabel": "Gegevensset bewerken",
+			"errorLoading": "Fout: {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "Ook in deze lijst",
+				"otherTooltip": "Deze dataset voldeed op een andere manier aan het lijstfilter (bijvoorbeeld via een openbaar sjabloon). Het is mogelijk dat deze niet in dit project of onderzoek is opgeslagen.",
+				"viaPartLabel": "Gekoppeld vanuit een deel",
+				"viaPartTooltip": "Deze dataset is niet direct opgeslagen in dit project of onderzoek, maar minstens één onderdeel van een tijdschrift in deze werkruimte maakt er wel gebruik van.",
+				"workspaceLabel": "Deze werkruimte",
+				"workspaceTooltip": "Deze dataset is opgeslagen bij het huidige project of onderzoek.",
+				"yourLibraryLabel": "Uw dataset",
+				"yourLibraryTooltip": "U hebt deze dataset gemaakt, maar deze is momenteel niet gekoppeld aan dit project of onderzoek. De dataset wordt hier weergegeven zodat u deze kunt vinden en hergebruiken."
+			},
+			"listIntro": "Deze lijst bevat datasets die op deze werkruimte zijn opgeslagen, datasets die via tijdschriftonderdelen zijn gekoppeld en uw eigen datasets, zodat u deze opnieuw kunt gebruiken.",
+			"loading": "Gegevenssets worden geladen...",
+			"meta": {
+				"byAuthor": "Door {{author}}",
+				"byYou": "door jou",
+				"lastUpdated": "Laatst bijgewerkt {{date}}",
+				"lastUpdatedNever": "Nooit",
+				"unknownAuthor": "Onbekend"
+			},
+			"untitled": "Naamloze dataset"
 		},
 		"hypVis": {
 			"axes": {
@@ -373,8 +464,12 @@
 			"defaultWorkspaceTitle": "Naamloze werkruimte",
 			"deleteJournal": "Verwijderen",
 			"deleteJournalConfirm": "Weet je zeker dat je dit logboek wilt verwijderen? Alle werkruimten en componenten in dit logboek worden dan ook verwijderd.",
+			"deleteJournalMissingId": "Dit logboek kan niet worden verwijderd (ID ontbreekt).",
+			"deleteJournalModalTitle": "Dagboek verwijderen",
 			"deleteWorkspace": "Werkruimte verwijderen",
 			"deleteWorkspaceConfirm": "Weet je zeker dat je deze werkruimte wilt verwijderen? Alle componenten in deze werkruimte worden dan ook verwijderd.",
+			"deleteWorkspaceMissingId": "Deze werkruimte kan niet worden verwijderd (ID ontbreekt).",
+			"deleteWorkspaceModalTitle": "Werkruimte verwijderen",
 			"editJournal": "Bewerking",
 			"editJournalCloseWithoutSaving": "Sluiten zonder opslaan",
 			"editJournalFieldDescription": "Beschrijving",
@@ -384,12 +479,34 @@
 			"editJournalTitle": "Dagboek bewerken",
 			"journalMore": "Dagboekopties",
 			"lastUpdatedAt": "Laatst bijgewerkt: {{date}}",
+			"manageDatasets": "Gegevenssets beheren",
 			"noDataSources": "Geen gegevensbronnen",
 			"noJournalsYet": "Het lijkt erop dat je nog steeds geen datalogboeken hebt!",
+			"renameWorkspace": "Werkruimte hernoemen",
+			"renameWorkspaceModalTitle": "Werkruimte hernoemen",
+			"renameWorkspaceSaving": "Besparing...",
+			"templateModal": {
+				"copyError": "Kon niet maken vanuit sjabloon: {{message}}",
+				"copyTitlePrefix": "Kopie van",
+				"datasetsMany": "{{count}} gekoppelde datasets",
+				"datasetsNone": "Geen gekoppelde datasets",
+				"datasetsOne": "1 gekoppelde dataset",
+				"empty": "Er zijn nog geen sjablonen beschikbaar. Markeer een logboek als sjabloon (beheerder) of vraag je team om er een toe te voegen.",
+				"loading": "Sjablonen worden geladen…",
+				"missingJournal": "Er is geen verzameling tijdschriften beschikbaar. Maak eerst zelf een tijdschrift aan.",
+				"newCollectionTitle": "Naamloze tijdschriftencollectie",
+				"queryError": "Fout bij het laden van sjablonen: {{message}}",
+				"title": "Kies een sjabloon voor een dagboek.",
+				"useTemplate": "Gebruik sjabloon"
+			},
 			"workspaceMore": "Werkruimteopties"
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Niet-ondersteund widgettype: {{type}}"
+		},
+		"workspaceArea": {
+			"error": "Werkruimte kon niet worden geladen: {{message}}",
+			"loading": "Werkruimte laden…"
 		}
 	},
 	"dataJournals": "Tijdschriften",
