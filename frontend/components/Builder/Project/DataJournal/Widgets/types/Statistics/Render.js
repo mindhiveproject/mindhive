@@ -192,11 +192,11 @@ ${funcName}()
           color: "#2d3748",
         }}
       >
-        {result.title || "Dataset Summary"}
+        {result.title || "Summary"}
       </h3>
 
       {/* Overall dataset info */}
-      {result.overall && (
+      {/* {result.overall && (
         <div style={{ marginBottom: "1.5rem", textAlign: "center" }}>
           <p style={{ fontSize: "1.1em", color: "#4a5568" }}>
             <strong>{result.overall.n_rows}</strong> rows ×{" "}
@@ -210,7 +210,7 @@ ${funcName}()
             )}
           </p>
         </div>
-      )}
+      )} */}
 
       {/* Per-column summaries */}
       {result.columns?.map((col, idx) => (
@@ -341,7 +341,7 @@ ${funcName}()
       ))}
 
       {/* Footer note */}
-      <p
+      {/* <p
         style={{
           textAlign: "center",
           color: "#718096",
@@ -351,7 +351,7 @@ ${funcName}()
       >
         Summary based on selected columns. Missing values excluded from
         calculations.
-      </p>
+      </p> */}
     </div>
   );
 }

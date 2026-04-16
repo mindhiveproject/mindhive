@@ -31,13 +31,16 @@ data = data.to_py()
 df = pd.DataFrame(data)
 
 # indicate the name of the column where the participant id is defined
-if 'participant' not in df.columns: #
+if 'participant' in df.columns:
+  id_col = 'participant' # MH uses 'participant' but uploaded data may use 'id'
+  userDefWide = False
+elif 'id' in df.columns:
+  df.rename(columns={"id":"participant"}, inplace=True)
+  id_col = 'participant'
+  userDefWide = False
+else:
   print("No 'participant' or 'id' column, treating X and Y inputs as wide-df cols.")
   userDefWide = True
-else:
-  df.rename(columns={"id":"participant"}, inplace=True)
-  id_col = 'participant' # MH uses 'participant' but you uploaded data may use a different name!
-  userDefWide = False
 
 # convert string to numbers
 columns = [X, Y]
