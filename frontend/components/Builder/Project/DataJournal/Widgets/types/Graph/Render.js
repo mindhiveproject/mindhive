@@ -157,7 +157,22 @@ bargap = ${Number(s.bargap ?? 0.1)}
             .trim();
         };
 
-        const userCodeDedented = dedentCode(code);
+        let userCodeDedented = dedentCode(code);
+
+        // Persisted scatter templates: ensure participant is in cols_to_use before groupby (indent-safe).
+        if (
+          type === "scatterPlot" &&
+          userCodeDedented &&
+          /groupby\(\s*['"]participant['"]\s*\)/.test(userCodeDedented) &&
+          !/participant['"] not in cols_to_use/.test(userCodeDedented) &&
+          /df_plot\s*=\s*df\[cols_to_use\]\.copy\(\)/.test(userCodeDedented)
+        ) {
+          userCodeDedented = userCodeDedented.replace(
+            /^(\s*)(df_plot\s*=\s*df\[cols_to_use\]\.copy\(\))/m,
+            (match, indent, dfLine) =>
+              `${indent}if not userDefWide and 'participant' in df.columns and 'participant' not in cols_to_use: cols_to_use.append('participant')\n${indent}${dfLine}`,
+          );
+        }
 
         const pythonCode = `
 def ${funcName}():
@@ -171,7 +186,6 @@ ${
     return fig_json_output if 'fig_json_output' in locals() else None
 
 ${outputVar} = ${funcName}()
-print("[DEBUG ${sectionId}] fig_json_output exists:", ${outputVar} is not None)
         `.trim();
 
         await pyodide.runPythonAsync(pythonCode);
