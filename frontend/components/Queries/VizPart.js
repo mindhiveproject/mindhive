@@ -25,6 +25,11 @@ export const VIZPART_TEMPLATES = gql`
       }
       datasources {
         id
+        title
+        description
+        dataOrigin
+        settings
+        content
       }
       createdAt
       updatedAt
