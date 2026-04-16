@@ -8,6 +8,7 @@ import styled from "styled-components";
 
 import { CREATE_VIZJOURNAL } from "../../../../Mutations/VizJournal";
 import { ADD_VIZPART } from "../../../../Mutations/VizPart";
+import { CREATE_DATASOURCE } from "../../../../Mutations/Datasource";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 import { VIZPART_TEMPLATES } from "../../../../Queries/VizPart";
 
@@ -102,6 +103,9 @@ export default function JournalTemplateModal({
   const [createPart] = useMutation(ADD_VIZPART, {
     refetchQueries,
   });
+  const [createDatasource] = useMutation(CREATE_DATASOURCE, {
+    refetchQueries,
+  });
 
   const templates = data?.vizParts || [];
   const journalCollection = journalCollections?.[0];
@@ -161,9 +165,31 @@ export default function JournalTemplateModal({
         },
       }));
 
-      const datasourceConnect = (template.datasources || []).map((ds) => ({
-        id: ds.id,
-      }));
+      const clonedDatasourceIds = await Promise.all(
+        (template.datasources || []).map(async (ds) => {
+          const datasourceInput = {
+            title: ds?.title,
+            description: ds?.description,
+            dataOrigin: ds?.dataOrigin,
+            settings: ds?.settings,
+            content: ds?.content,
+            ...(projectId && { project: { connect: { id: projectId } } }),
+            ...(studyId && { study: { connect: { id: studyId } } }),
+          };
+
+          const result = await createDatasource({
+            variables: {
+              data: datasourceInput,
+            },
+          });
+
+          return result?.data?.createDatasource?.id;
+        }),
+      );
+
+      const datasourceConnect = clonedDatasourceIds
+        .filter(Boolean)
+        .map((id) => ({ id }));
 
       const input = {
         title:
