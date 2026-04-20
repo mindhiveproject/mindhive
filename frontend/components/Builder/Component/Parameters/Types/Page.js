@@ -1,15 +1,8 @@
 import uniqid from "uniqid";
 import JoditEditor from "../../../../Jodit/Editor";
 import useTranslation from "next-translate/useTranslation";
-// import JoditEditorPro from "../../../../Jodit/EditorPro";
 
-export default function Page({
-  name,
-  items,
-  timeout,
-  hideContinueBtn,
-  onChange,
-}) {
+export default function Page({ items, timeout, hideContinueBtn, onChange }) {
   const { t } = useTranslation("builder");
   const updateProps = ({ page, timeout, hideContinueBtn }) => {
     onChange({ page, timeout, hideContinueBtn });
@@ -25,11 +18,11 @@ export default function Page({
       const options = updatedOptions[0];
       options[id] = value;
       updatedItems = items.map((item) =>
-        item.id == name ? { ...item, [className]: options } : item
+        item.id == name ? { ...item, [className]: options } : item,
       );
     } else {
       updatedItems = items.map((item) =>
-        item.id == name ? { ...item, [className]: value } : item
+        item.id == name ? { ...item, [className]: value } : item,
       );
     }
     updateProps({
@@ -65,7 +58,7 @@ export default function Page({
       .map((opts) => opts.concat([""]));
     const options = updatedOptions[0];
     const updatedItems = items.map((item) =>
-      item.id == id ? { ...item, [className]: options } : item
+      item.id == id ? { ...item, [className]: options } : item,
     );
     updateProps({
       page: updatedItems,
@@ -80,10 +73,10 @@ export default function Page({
       .filter((item) => item.id == id)
       .map((item) => item[className]);
     const options = updatedOptions[0].filter(
-      (opts, number) => number !== parseInt(num)
+      (opts, number) => number !== parseInt(num),
     );
     const updatedItems = items.map((item) =>
-      item.id == id ? { ...item, [className]: options } : item
+      item.id == id ? { ...item, [className]: options } : item,
     );
     updateProps({
       page: updatedItems,
@@ -91,14 +84,6 @@ export default function Page({
       hideContinueBtn: hideContinueBtn,
     });
   };
-
-  const packTheObject = (value) => ({
-    target: {
-      name: name,
-      type: "survey",
-      value: JSON.stringify(value),
-    },
-  });
 
   const addItem = (e) => {
     e.preventDefault();
@@ -167,64 +152,58 @@ export default function Page({
     }
   };
 
-  if (items && items.length > 0) {
-    return (
-      <div>
-        <div className="hideContinueBtn">
-          <div>
-            <input
-              type="checkbox"
-              id="hideContinueBtn"
-              name="hideContinueBtn"
-              checked={hideContinueBtn}
-              onChange={handleHideContinueBtnChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="hideContinueBtn">{t("surveyBuilder.hideContinueBtn", "Hide Continue button")}</label>
-          </div>
+  return (
+    <div>
+      <div className="pageSettingsPanel">
+        <div className="pageSettingItem">
+          <input
+            type="checkbox"
+            id="hideContinueBtn"
+            name="hideContinueBtn"
+            checked={hideContinueBtn}
+            onChange={handleHideContinueBtnChange}
+          />
+          <label htmlFor="hideContinueBtn">
+            {t("surveyBuilder.hideContinueBtn", "Hide Continue button")}
+          </label>
         </div>
-        <div className="timeout">
-          <div>{t("surveyBuilder.pageTimeout", "Page timeout (in milliseconds)")}</div>
-          <div>
-            <input
-              type="number"
-              min="0"
-              name="timeout"
-              value={timeout}
-              onChange={handleTimeoutChange}
-              className="timeout"
-            />
-          </div>
+        <div className="pageSettingItem">
+          <label>{t("surveyBuilder.pageTimeout", "Timeout")}</label>
+          <input
+            type="number"
+            min="0"
+            name="timeout"
+            value={timeout}
+            onChange={handleTimeoutChange}
+          />
+          <span className="timeoutUnit">ms</span>
         </div>
+      </div>
 
+      {items && items.length > 0 && (
         <div>
           {items.map((item, number) => (
             <Item
               item={item}
-              key={number}
+              key={item.id || number}
               handleItemChange={handleChange}
               deleteItem={deleteItem}
               moveDown={moveDown}
               moveUp={moveUp}
               number={number}
+              totalItems={items.length}
               addNewOption={addNewOption}
               deleteOption={deleteOption}
               t={t}
             />
           ))}
         </div>
+      )}
 
-        <button className="addButton" onClick={addItem}>
-          {t("surveyBuilder.addItem", "+")}
-        </button>
-      </div>
-    );
-  }
-  return (
-    <button className="addButton" onClick={addItem}>
-      {t("surveyBuilder.addItem", "+")}
-    </button>
+      <button className="addItemButton" onClick={addItem}>
+        + {t("surveyBuilder.addItem", "Add question")}
+      </button>
+    </div>
   );
 }
 
@@ -235,6 +214,7 @@ function Item({
   moveDown,
   moveUp,
   number,
+  totalItems,
   addNewOption,
   deleteOption,
   t,
@@ -244,7 +224,6 @@ function Item({
     type,
     header,
     text,
-    question,
     min_rating_label,
     max_rating_label,
     min_value,
@@ -255,32 +234,70 @@ function Item({
   } = item;
 
   return (
-    <div className="surveyBuilderItemLine">
-      <div className="input">
-        <div>{t("surveyBuilder.type", "Type")}</div>
+    <div className={`surveyItemCard type-${type}`}>
+      <div className="surveyItemCardHeader">
+        <span className="itemNum">#{number + 1}</span>
+
         <select
-          type="text"
           name={id}
           value={type}
           onChange={handleItemChange}
           className="type"
         >
           <option value="text">{t("surveyBuilder.text", "Text")}</option>
-          <option value="select">{t("surveyBuilder.select", "Multiple choice (select one)")}</option>
-          <option value="checkbox">{t("surveyBuilder.checkbox", "Multiple choice (select many options)")}</option>
-          <option value="freeinput">{t("surveyBuilder.freeinput", "Text input")}</option>
+          <option value="select">
+            {t("surveyBuilder.select", "Multiple choice (select one)")}
+          </option>
+          <option value="checkbox">
+            {t("surveyBuilder.checkbox", "Multiple choice (select many)")}
+          </option>
+          <option value="freeinput">
+            {t("surveyBuilder.freeinput", "Text input")}
+          </option>
           <option value="vas">{t("surveyBuilder.vas", "Visual scale")}</option>
-          <option value="likert">{t("surveyBuilder.likert", "Likert scale")}</option>
+          <option value="likert">
+            {t("surveyBuilder.likert", "Likert scale")}
+          </option>
           <option value="block">{t("surveyBuilder.block", "Block")}</option>
         </select>
 
+        <div className="itemCardControls">
+          <button
+            className="itemMoveBtn"
+            onClick={(e) => moveUp(e, number)}
+            disabled={number === 0}
+            title="Move up"
+          >
+            ↑
+          </button>
+          <button
+            className="itemMoveBtn"
+            onClick={(e) => moveDown(e, number)}
+            disabled={number === totalItems - 1}
+            title="Move down"
+          >
+            ↓
+          </button>
+          <button
+            className="itemDeleteBtn"
+            onClick={(e) => deleteItem(e, number)}
+            title="Delete"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+
+      <div className="surveyItemCardBody">
         {(type === "freeinput" ||
           type === "select" ||
           type === "checkbox" ||
           type === "likert" ||
           type === "vas") && (
           <>
-            <div>{t("surveyBuilder.variableName", "Variable name")}</div>
+            <div className="fieldLabel">
+              {t("surveyBuilder.variableName", "Variable name")}
+            </div>
             <input
               type="text"
               name={id}
@@ -294,7 +311,9 @@ function Item({
 
         {type !== "block" && (
           <>
-            <div>{t("surveyBuilder.header", "Header")}</div>
+            <div className="fieldLabel">
+              {t("surveyBuilder.header", "Header")}
+            </div>
             <input
               type="text"
               name={id}
@@ -307,9 +326,10 @@ function Item({
 
         {type === "text" && (
           <>
-            <div>{t("surveyBuilder.textLabel", "Text")}</div>
+            <div className="fieldLabel">
+              {t("surveyBuilder.textLabel", "Text")}
+            </div>
             <textarea
-              type="text"
               name={id}
               value={text}
               onChange={handleItemChange}
@@ -320,11 +340,12 @@ function Item({
 
         {(type === "select" || type === "checkbox" || type === "likert") && (
           <>
-            <div>{t("surveyBuilder.options", "Options")}</div>
+            <div className="fieldLabel">
+              {t("surveyBuilder.options", "Options")}
+            </div>
             {options.map((option, num) => (
               <div key={num} className="optionRow">
                 <input
-                  key={num}
                   id={num}
                   type="text"
                   name={id}
@@ -332,25 +353,28 @@ function Item({
                   onChange={handleItemChange}
                   className="options"
                 />
-                <button onClick={(e) => deleteOption(e, id, num, "options")}> &times; </button>
+                <button onClick={(e) => deleteOption(e, id, num, "options")}>
+                  ×
+                </button>
               </div>
             ))}
             <button
               onClick={(e) => addNewOption(e, id, "options")}
-              className="addOptionButton"
+              className="addOptionLink"
             >
-              {t("surveyBuilder.addOption", "+ option")}
+              {t("surveyBuilder.addOption", "+ Add option")}
             </button>
           </>
         )}
 
         {type === "likert" && (
           <>
-            <div>{t("surveyBuilder.likertItems", "Items for the Likert Scale")}</div>
+            <div className="fieldLabel">
+              {t("surveyBuilder.likertItems", "Items for the Likert Scale")}
+            </div>
             {items.map((item, num) => (
               <div key={num} className="optionRow">
                 <input
-                  key={num}
                   id={num}
                   type="text"
                   name={id}
@@ -358,21 +382,25 @@ function Item({
                   onChange={handleItemChange}
                   className="items"
                 />
-                <button onClick={(e) => deleteOption(e, id, num, "items")}> &times; </button>
+                <button onClick={(e) => deleteOption(e, id, num, "items")}>
+                  ×
+                </button>
               </div>
             ))}
             <button
               onClick={(e) => addNewOption(e, id, "items")}
-              className="addOptionButton"
+              className="addOptionLink"
             >
-              {t("surveyBuilder.addItemBtn", "+ item")}
+              {t("surveyBuilder.addItemBtn", "+ Add item")}
             </button>
           </>
         )}
 
         {type === "vas" && (
           <>
-            <div>{t("surveyBuilder.minValueLabel", "Minimum value label")}</div>
+            <div className="fieldLabel">
+              {t("surveyBuilder.minValueLabel", "Minimum value label")}
+            </div>
             <input
               type="text"
               name={id}
@@ -381,7 +409,9 @@ function Item({
               className="min_rating_label"
             />
 
-            <div>{t("surveyBuilder.maxValueLabel", "Maximum value label")}</div>
+            <div className="fieldLabel">
+              {t("surveyBuilder.maxValueLabel", "Maximum value label")}
+            </div>
             <input
               type="text"
               name={id}
@@ -390,7 +420,9 @@ function Item({
               className="max_rating_label"
             />
 
-            <div>{t("surveyBuilder.minValue", "Minimum value")}</div>
+            <div className="fieldLabel">
+              {t("surveyBuilder.minValue", "Minimum value")}
+            </div>
             <input
               type="number"
               name={id}
@@ -399,7 +431,9 @@ function Item({
               className="min_value"
             />
 
-            <div>{t("surveyBuilder.maxValue", "Maximum value")}</div>
+            <div className="fieldLabel">
+              {t("surveyBuilder.maxValue", "Maximum value")}
+            </div>
             <input
               type="number"
               name={id}
@@ -420,15 +454,6 @@ function Item({
             }
           />
         )}
-      </div>
-      <div className="controlButtons">
-        <div className="deleteDiv">
-          <button onClick={(e) => deleteItem(e, number)}>&times;</button>
-        </div>
-        <div className="moveButtons">
-          <button onClick={(e) => moveUp(e, number)}>↑</button>
-          <button onClick={(e) => moveDown(e, number)}>↓</button>
-        </div>
       </div>
     </div>
   );

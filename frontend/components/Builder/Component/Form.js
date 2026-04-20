@@ -11,8 +11,7 @@ import Parameters from "./Parameters/Main";
 import Sharing from "./Sharing";
 
 import Template from "./Template/Main";
-// import TaskPreview from "../../Tasks/Preview/Main";
-import BuilderTaskPreview from "../../Tasks/Preview/BuilderVersion";
+import TaskPreview from "../../Tasks/Preview/Main";
 
 export default function ComponentForm({
   user,
@@ -30,7 +29,7 @@ export default function ComponentForm({
   const { t } = useTranslation("classes");
 
   const [tab, setTab] = useState(
-    isTemplateAuthor ? "template" : isInStudyBuilder ? "parameters" : "basic"
+    isTemplateAuthor ? "template" : isInStudyBuilder ? "parameters" : "basic",
   );
   const [isFullscreenPreviewOpen, setIsFullscreenPreviewOpen] = useState(false);
 
@@ -39,44 +38,12 @@ export default function ComponentForm({
   };
 
   if (isFullscreenPreviewOpen) {
-    // if (inputs?.isExternal) {
-    //   return (
-    //     <Labjs>
-    //       <StyledPreview>
-    //         <div className="frame"></div>
-    //         <div className="message">THIS IS A PREVIEW.</div>
-    //         <div className="closeBtn">
-    //           <span onClick={() => setIsFullscreenPreviewOpen(false)}>
-    //             &times;
-    //           </span>
-    //         </div>
-    //       </StyledPreview>
-    //       <div>
-    //         <p>Hello</p>
-    //       </div>
-    //     </Labjs>
-    //   );
-    // }
     return (
-      <BuilderTaskPreview
+      <TaskPreview
         user={user}
-        task={inputs}
+        id={inputs?.id}
         close={() => setIsFullscreenPreviewOpen(false)}
       />
-      // <Labjs>
-      //   <StyledPreview>
-      //     <div className="frame"></div>
-      //     <div className="message">
-      //       THIS IS A PREVIEW. YOUR DATA ARE NOT SAVED.
-      //     </div>
-      //     <div className="closeBtn">
-      //       <span onClick={() => setIsFullscreenPreviewOpen(false)}>
-      //         &times;
-      //       </span>
-      //     </div>
-      //   </StyledPreview>
-      //   <ExperimentWindow task={inputs} />
-      // </Labjs>
     );
   }
 
@@ -90,7 +57,7 @@ export default function ComponentForm({
           setTab={setTab}
           submitBtnName={submitBtnName}
           handleSubmit={handleSubmit}
-          openFullscreenPreview={openFullscreenPreview}
+          openFullscreenPreview={inputs?.id ? openFullscreenPreview : undefined}
           isTemplateAuthor={isTemplateAuthor}
           close={close}
           isInStudyBuilder={isInStudyBuilder}
