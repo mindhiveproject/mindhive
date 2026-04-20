@@ -1,6 +1,5 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import { Icon } from "semantic-ui-react";
 
 import { GET_RESOURCE } from "../../Queries/Resource";
 import { UPDATE_RESOURCE, mergeResourceSettings } from "../../Mutations/Resource";
@@ -10,6 +9,7 @@ import useTranslation from "next-translate/useTranslation";
 import useForm from "../../../lib/useForm";
 import ResourceForm from "./ResourceForm";
 import StyledResource from "../../styles/StyledResource";
+import Button from "../../DesignSystem/Button";
 
 export default function EditResource({
   selector,
@@ -50,15 +50,22 @@ export default function EditResource({
   async function handleSave(e) {
     e.preventDefault();
     await updateResource();
-    alert("Resource updated successfully");
+    alert(
+      t("boardManagement.changesSaved", {}, { default: "Changes saved successfully" }),
+    );
     router.push({ pathname: "/dashboard/resources" });
   }
 
   return (
     <StyledResource>
-      <button className="goBackBtn" onClick={goBack}>
-        <Icon name="arrow left" /> {t("boardManagement.goBackToResourceArea")}
-      </button>
+      <Button
+        className="goBackBtn"
+        variant="outline"
+        onClick={goBack}
+        // leadingIcon={<img src="/assets/icons/back.svg" alt="" aria-hidden width={18} height={18} />}
+      >
+        {t("boardManagement.goBackToResourceArea")}
+      </Button>
       <h1>{t("boardManagement.editResource")}</h1>
       <ResourceForm
         user={user}
@@ -66,9 +73,9 @@ export default function EditResource({
         handleChange={handleChange}
         isAdmin={isAdmin} // Pass isAdmin to show/hide isPublic checkbox
       />
-      <button onClick={handleSave} disabled={loading}>
-      {t("boardManagement.saveChanges")}
-      </button>
+      <Button onClick={handleSave} disabled={loading}>
+        {t("boardManagement.saveChanges")}
+      </Button>
     </StyledResource>
   );
 }

@@ -1,6 +1,5 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import { Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import { GET_RESOURCE } from "../../Queries/Resource";
 import { CREATE_RESOURCE, mergeResourceSettings } from "../../Mutations/Resource";
@@ -9,6 +8,7 @@ import { GET_MY_RESOURCES } from "../../Queries/Resource";
 import useForm from "../../../lib/useForm";
 import ResourceForm from "./ResourceForm";
 import StyledResource from "../../styles/StyledResource";
+import Button from "../../DesignSystem/Button";
 
 export default function DuplicateResource({ query, user, goBack }) {
   const router = useRouter();
@@ -46,12 +46,21 @@ export default function DuplicateResource({ query, user, goBack }) {
 
   return (
     <StyledResource>
-      <button className="goBackBtn" onClick={goBack}>
-        <Icon name="arrow left" /> {t("boardManagement.goBackToResourceArea")}
-      </button>
-      <h1>Duplicate Resource</h1>
-      <ResourceForm inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>Save Duplicate</button>
+      <Button
+        className="goBackBtn"
+        variant="outline"
+        onClick={goBack}
+        // leadingIcon={<img src="/assets/icons/back.svg" alt="" aria-hidden width={18} height={18} />}
+      >
+        {t("boardManagement.goBackToResourceArea")}
+      </Button>
+      <h1>
+        {t("boardManagement.duplicateResource", {}, { default: "Duplicate Resource" })}
+      </h1>
+      <ResourceForm user={user} inputs={inputs} handleChange={handleChange} />
+      <Button onClick={handleSave}>
+        {t("boardManagement.saveDuplicate", {}, { default: "Save Duplicate" })}
+      </Button>
     </StyledResource>
   );
 }
