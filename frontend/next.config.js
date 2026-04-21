@@ -49,7 +49,7 @@ const securityHeaders = [
       // files.pythonhosted.org: Pyodide micropip downloads wheel files from here
       "connect-src 'self' http://localhost:4444 https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science https://cdn.jsdelivr.net https://pypi.org https://files.pythonhosted.org https://api.cloudinary.com",
       // iframes for Google OAuth popup
-      "frame-src 'self' https://accounts.google.com https://www.youtube.com https://www.youtube-nocookie.com",
+      "frame-src 'self' https://accounts.google.com https://docs.google.com https://drive.google.com https://calendar.google.com https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com",
       // Workers needed by Pyodide (blob: for inline workers, cdn.jsdelivr.net for Pyodide worker scripts)
       "worker-src 'self' blob: https://cdn.jsdelivr.net",
       "object-src 'none'",
