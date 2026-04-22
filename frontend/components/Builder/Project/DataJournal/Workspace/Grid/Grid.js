@@ -216,6 +216,9 @@ export default function Grid({
           vizSections: [...components, newComponent],
         });
         setIsAddComponentPanelOpen(false);
+        if (newComponent?.type !== "TABLE") {
+          setActiveComponent(newComponent);
+        }
       }
     },
     [
@@ -224,6 +227,7 @@ export default function Grid({
       components,
       updateWorkspace,
       setIsAddComponentPanelOpen,
+      setActiveComponent,
     ],
   );
 

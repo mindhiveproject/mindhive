@@ -1,6 +1,7 @@
 // components/DataJournal/Widgets/types/Graph/Render.js
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import useTranslation from "next-translate/useTranslation";
 
 import JustOneSecondNotice from "../../../../../../DesignSystem/JustOneSecondNotice";
 
@@ -13,6 +14,7 @@ export default function Render({
   content,
   onFigureReadyChange,
 }) {
+  const { t } = useTranslation("builder");
   const [figJson, setFigJson] = useState(null);
   const [error, setError] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -235,8 +237,51 @@ ${outputVar} = ${funcName}()
           style={{ width: "100%", height: "100%" }}
         />
       ) : (
-        <div style={{ padding: "2rem", textAlign: "center", color: "#666" }}>
-          Select variables to render the graph
+        <div
+          style={{
+            padding: "2rem",
+            textAlign: "center",
+            color: "#4b5563",
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+            minHeight: 0,
+            gap: "0.5rem",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#DEF8FB",
+            borderRadius: "12px",
+            border: "1px solid #A1A1A1",
+            height: "100%",
+          }}
+     
+        >
+          <div style={{ fontWeight: 600, marginBottom: "1rem", fontSize: "16px" }}>
+            {t(
+              "dataJournal.graph.emptyState.title",
+              {},
+              { default: "Your graph is ready to be configured" },
+            )}
+          </div>
+          <div
+            style={{
+              background: "#ffffff",
+              padding: "0.35rem 0.65rem",
+              borderRadius: "6px",
+              color: "#3f3f46",
+              fontSize: "14px",
+              border: "2px solid #A1A1A1",
+            }}
+          >
+            {t(
+              "dataJournal.graph.emptyState.helper",
+              {},
+              {
+                default:
+                  "Click this component to open the editor, then choose variables to preview your visualization.",
+              },
+            )}
+          </div>
         </div>
       )}
     </div>
