@@ -32,6 +32,14 @@ function graphMediaCreatedWithKey(graphContentType) {
   return "graph";
 }
 
+const TITLE_TYPO = {
+  fontFamily: "Inter, sans-serif",
+  fontWeight: 500,
+  fontSize: "18px",
+  lineHeight: "150%",
+  color: "#000000",
+};
+
 export default function ComponentEditor({
   user,
   studyId,
@@ -154,9 +162,9 @@ export default function ComponentEditor({
       case "PARAGRAPH":
         // Placeholder for Paragraph editor (e.g., simple textarea)
         return (
-          <div>
-            <h3>
-              {t("dataJournal.componentEditor.editParagraph", "Edit Paragraph")}
+          <div style={{ boxSizing: "border-box", width: "100%", maxWidth: "100%", minWidth: 0 }}>
+            <h3 style={{ marginTop: 0, marginBottom: "0.25rem", ...TITLE_TYPO }}>
+              {t("dataJournal.componentEditor.editParagraph", {}, { default: "Edit Paragraph" })}
             </h3>
             <textarea
               value={content?.text || ""}
@@ -166,7 +174,13 @@ export default function ComponentEditor({
                   newContent: { text: e.target.value },
                 })
               }
-              style={{ width: "100%", height: "200px" }}
+              style={{
+                width: "100%",
+                maxWidth: "100%",
+                minWidth: 0,
+                boxSizing: "border-box",
+                height: "200px",
+              }}
             />
           </div>
         );
@@ -235,7 +249,7 @@ export default function ComponentEditor({
         disableSaveFigureToMedia={!canSaveFigureToMedia}
         onSaveFigureToMedia={handleSaveFigureToMedia}
       />
-      {renderEditor()}
+      <div className="editorPanelBody">{renderEditor()}</div>
       {showSaveFigureModal ? (
         <MediaLibraryModal
           open={saveFigureModalOpen}

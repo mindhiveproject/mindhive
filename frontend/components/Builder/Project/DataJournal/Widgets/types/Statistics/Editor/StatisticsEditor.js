@@ -47,10 +47,7 @@ export default function StatisticsEditor({ content, onChange, sectionId }) {
     <div className="graph">
       {/* <h3>Summary Statistics</h3> */}
       <div className="tabs">
-        <div
-          className="customTabs"
-          style={{ display: "flex", justifyContent: "space-between", gap: "8px", width: "100%" }}
-        >
+        <div className="customTabs">
           {tabItems.map((item, index) => (
             <Chip
               key={item.label}

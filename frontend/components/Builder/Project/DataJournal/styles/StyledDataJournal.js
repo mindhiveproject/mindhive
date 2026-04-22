@@ -1,4 +1,15 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+
+/** Keep overflow scroll behavior without showing scrollbars (Chrome / Firefox / legacy Edge). */
+const hideScrollbars = css`
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+`;
 
 export const StyledDataArea = styled.div`
   display: grid;
@@ -384,18 +395,34 @@ export const StyledRightPanel = styled.div`
   display: grid;
   align-content: baseline;
   grid-gap: 10px;
-  margin: 16px;
+  /* Horizontal margin + width:100% overflows the grid rail; keep vertical inset only */
+  margin: 0;
   width: 100%;
+  max-width: 100%;
   min-width: 0;
   min-height: 0;
-  padding: 0px 16px 16px 4px;
+  padding: 0 12px 16px 12px;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
+  ${hideScrollbars}
   height: 100%;
   align-self: stretch;
   & > * {
     min-width: 0;
+  }
+  .editorPanelBody {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e6e6e6;
+    padding: 12px 14px 16px;
+    overflow-x: auto;
+    overflow-y: visible;
+    ${hideScrollbars}
   }
   .editor-header {
     display: flex;
@@ -462,6 +489,10 @@ export const StyledRightPanel = styled.div`
   /* Optional: make sure CodeMirror doesn't fight the container */
   .editor-wrapper .cm-editor {
     width: 100% !important;
+  }
+
+  .editor-wrapper .cm-scroller {
+    ${hideScrollbars}
   }
 
   .editor-header {
@@ -772,6 +803,9 @@ export const StyledDataWorkspace = styled.div`
   }
   .graph {
     display: grid;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
 
     .displayContainer {
       display: grid;
@@ -867,7 +901,8 @@ export const StyledDataWorkspace = styled.div`
     }
     .selectorLine {
       display: grid;
-      grid-template-columns: minmax(max-content, 200px) 1fr;
+      grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+      max-width: 100%;
       border-radius: 8px;
       border: 1px solid #eaeaea;
       background: #fff;
@@ -884,8 +919,12 @@ export const StyledDataWorkspace = styled.div`
         justify-content: end;
         background: #eaeaea;
         padding: 9px 13px;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .select {
+        min-width: 0;
         .dropdown {
           border: 0;
         }
@@ -893,17 +932,36 @@ export const StyledDataWorkspace = styled.div`
           border: 0px;
           height: 100%;
           padding: 9px 13px;
-          min-width: 98%;
-          max-width: 200px;
+          min-width: 0;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
           overflow-wrap: break-word;
           word-wrap: break-word;
           word-break: break-word;
         }
       }
     }
+    .tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .tabs > .graph {
+      min-width: 0;
+      max-width: 100%;
+    }
     .customTabs {
-      display: grid;
-      grid-template-rows: auto 1fr;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
       /* .menu {
         display: grid;
         grid-template-columns: repeat(3, auto);
@@ -942,27 +1000,31 @@ export const StyledDataWorkspace = styled.div`
           font-weight: 700;
         }
       }
-      .tabContent {
-        padding: 20px;
-        background: white;
-        border-radius: 0 0 10px 10px;
-        box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
-        .styleLayoutContainer {
-          display: grid;
-          grid-gap: 10px;
-          h3 {
-            font-family: Nunito;
-            font-weight: 700;
-            font-size: 16px;
-            line-height: 24px;
-            color: #333;
-          }
-          p {
-            font-family: Inter;
-            font-size: 14px;
-            line-height: 150%;
-            color: #666;
-          }
+    }
+    .tabContent {
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow-x: auto;
+      ${hideScrollbars}
+      padding: 20px;
+      background: white;
+      border-radius: 0 0 10px 10px;
+      .styleLayoutContainer {
+        display: grid;
+        grid-gap: 10px;
+        h3 {
+          font-family: Inter;
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 24px;
+          color: #333;
+        }
+        p {
+          font-family: Inter;
+          font-size: 14px;
+          line-height: 150%;
+          color: #666;
         }
       }
     }
