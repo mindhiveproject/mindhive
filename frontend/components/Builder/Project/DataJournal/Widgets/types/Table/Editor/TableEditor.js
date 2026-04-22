@@ -35,7 +35,7 @@ const FIELD_LABEL_TYPO = {
 
 const ROW_LABEL_TYPO = {
   fontFamily: INTER,
-  fontWeight: 500,
+  fontWeight: 300,
   fontSize: "14px",
   lineHeight: "150%",
   color: "#000000",

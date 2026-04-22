@@ -576,6 +576,11 @@
 					"title": "Filtros simples",
 					"toggleAria": "Alternar filtros para {{column}}"
 				},
+				"search": {
+					"ariaLabel": "Columnas de búsqueda",
+					"noMatches": "No se encontraron columnas que coincidan con su búsqueda.",
+					"placeholder": "Columnas de búsqueda…"
+				},
 				"title": "Columnas"
 			}
 		},

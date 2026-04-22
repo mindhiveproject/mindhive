@@ -576,6 +576,11 @@
 					"title": "",
 					"toggleAria": ""
 				},
+				"search": {
+					"ariaLabel": "",
+					"noMatches": "",
+					"placeholder": ""
+				},
 				"title": ""
 			}
 		},

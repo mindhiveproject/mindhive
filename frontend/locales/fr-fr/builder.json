@@ -576,6 +576,11 @@
 					"title": "Filtres simples",
 					"toggleAria": "Activer/désactiver les filtres pour {{column}}"
 				},
+				"search": {
+					"ariaLabel": "Colonnes de recherche",
+					"noMatches": "Aucune colonne ne correspond à votre recherche.",
+					"placeholder": "Colonnes de recherche…"
+				},
 				"title": "Colonnes"
 			}
 		},

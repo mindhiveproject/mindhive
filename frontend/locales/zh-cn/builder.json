@@ -576,6 +576,11 @@
 					"title": "简单过滤器",
 					"toggleAria": "切换 {{column}}的过滤器"
 				},
+				"search": {
+					"ariaLabel": "搜索列",
+					"noMatches": "没有找到符合您搜索条件的列。",
+					"placeholder": "搜索列..."
+				},
 				"title": "列"
 			}
 		},

@@ -576,6 +576,11 @@
 					"title": "Eenvoudige filters",
 					"toggleAria": "Schakel filters in/uit voor {{column}}"
 				},
+				"search": {
+					"ariaLabel": "Zoekkolommen",
+					"noMatches": "Er zijn geen kolommen die overeenkomen met uw zoekopdracht.",
+					"placeholder": "Zoekkolommen…"
+				},
 				"title": "Kolommen"
 			}
 		},
