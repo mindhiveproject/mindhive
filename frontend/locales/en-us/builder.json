@@ -227,6 +227,13 @@
 	"dataJournal": {
 		"addComponent": "Add Component",
 		"addNotes": "Add Notes",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "Code"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "Close",
 			"componentName": "Component Name",
@@ -345,6 +352,20 @@
 			"untitled": "Untitled Dataset"
 		},
 		"graph": {
+			"codeEditor": {
+				"runCode": "Run the code"
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "Customize the appearance and layout of the graph.",
+					"title": "Style & Layout Options"
+				},
+				"tabs": {
+					"axes": "Axes",
+					"codeEditor": "Code editor",
+					"styleLayout": "Style & Layout"
+				}
+			},
 			"emptyState": {
 				"helper": "Click this component to open the editor, then choose variables to preview your visualization.",
 				"title": "Your graph is ready to be configured"
@@ -417,6 +438,10 @@
 			},
 			"editor": {
 				"codeTab": "Code",
+				"tabs": {
+					"code": "Code",
+					"variables": "Variables"
+				},
 				"variablesTab": "Variables"
 			},
 			"emptyState": {
@@ -511,10 +536,52 @@
 			},
 			"workspaceMore": "Workspace options"
 		},
+		"statistics": {
+			"editor": {
+				"tabs": {
+					"code": "Code",
+					"variables": "Variables"
+				}
+			}
+		},
 		"statTest": {
+			"editor": {
+				"tabs": {
+					"code": "Code",
+					"variables": "Variables"
+				}
+			},
 			"emptyState": {
 				"helper": "Click this component to open the editor, then choose variables to compute the test.",
 				"title": "Your statistical test is ready to be configured"
+			}
+		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "Clear all",
+					"selectAll": "Select all"
+				},
+				"description": "Quickly choose which columns this table should display.",
+				"empty": "No visible columns are available from the dataset.",
+				"filters": {
+					"allValues": "All values",
+					"clear": "Clear filters",
+					"close": "Close",
+					"description": "Numeric columns use min/max values. Categorical columns use a value dropdown.",
+					"dropdownAria": "Filter {{column}}",
+					"filterSettings": "Filter",
+					"maxLabel": "Max",
+					"minLabel": "Min",
+					"title": "Simple filters",
+					"toggleAria": "Toggle filters for {{column}}"
+				},
+				"search": {
+					"ariaLabel": "Search columns",
+					"noMatches": "No columns match your search.",
+					"placeholder": "Search columns…"
+				},
+				"title": "Columns"
 			}
 		},
 		"visualizationWidget": {

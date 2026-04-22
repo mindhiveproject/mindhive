@@ -11,6 +11,7 @@ import StatisticalTestEditor from "../Widgets/types/StatisticalTests/Editor/Stat
 import StatisticsEditor from "../Widgets/types/Statistics/Editor/StatisticsEditor";
 import CodeEditor from "../Widgets/types/Code/Editor/CodeEditor";
 import HypVisEditor from "../Widgets/types/HypVis/Editor/HypVisEditor";
+import TableEditor from "../Widgets/types/Table/Editor/TableEditor";
 import { figPngFileFromPyodide } from "../Widgets/types/HypVis/Editor/Axes/figHtmlFromPyodide";
 import { plotlyPngFileFromFigureSection } from "../Widgets/types/Graph/plotlyPngFileFromFigure";
 
@@ -30,6 +31,14 @@ function graphMediaCreatedWithKey(graphContentType) {
   if (graphContentType === "histogram") return "graph_histogram";
   return "graph";
 }
+
+const TITLE_TYPO = {
+  fontFamily: "Inter, sans-serif",
+  fontWeight: 500,
+  fontSize: "18px",
+  lineHeight: "150%",
+  color: "#000000",
+};
 
 export default function ComponentEditor({
   user,
@@ -153,9 +162,9 @@ export default function ComponentEditor({
       case "PARAGRAPH":
         // Placeholder for Paragraph editor (e.g., simple textarea)
         return (
-          <div>
-            <h3>
-              {t("dataJournal.componentEditor.editParagraph", "Edit Paragraph")}
+          <div style={{ boxSizing: "border-box", width: "100%", maxWidth: "100%", minWidth: 0 }}>
+            <h3 style={{ marginTop: 0, marginBottom: "0.25rem", ...TITLE_TYPO }}>
+              {t("dataJournal.componentEditor.editParagraph", {}, { default: "Edit Paragraph" })}
             </h3>
             <textarea
               value={content?.text || ""}
@@ -165,17 +174,19 @@ export default function ComponentEditor({
                   newContent: { text: e.target.value },
                 })
               }
-              style={{ width: "100%", height: "200px" }}
+              style={{
+                width: "100%",
+                maxWidth: "100%",
+                minWidth: 0,
+                boxSizing: "border-box",
+                height: "200px",
+              }}
             />
           </div>
         );
       case "TABLE":
-        // Placeholder for Table editor (e.g., configure columns/filters)
         return (
-          <div>
-            {/* <h3>Edit Table</h3> */}
-            {/* Add table-specific config here */}
-          </div>
+          <TableEditor content={content} onChange={onChange} sectionId={id} />
         );
       case "GRAPH":
         return (
@@ -238,7 +249,7 @@ export default function ComponentEditor({
         disableSaveFigureToMedia={!canSaveFigureToMedia}
         onSaveFigureToMedia={handleSaveFigureToMedia}
       />
-      {renderEditor()}
+      <div className="editorPanelBody">{renderEditor()}</div>
       {showSaveFigureModal ? (
         <MediaLibraryModal
           open={saveFigureModalOpen}

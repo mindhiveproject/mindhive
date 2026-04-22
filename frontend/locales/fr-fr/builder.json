@@ -227,6 +227,13 @@
 	"dataJournal": {
 		"addComponent": "Ajouter un composant",
 		"addNotes": "Ajouter des notes",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "Code"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "Fermer",
 			"componentName": "Nom du composant",
@@ -345,6 +352,20 @@
 			"untitled": "Ensemble de données sans titre"
 		},
 		"graph": {
+			"codeEditor": {
+				"runCode": ""
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "",
+					"title": ""
+				},
+				"tabs": {
+					"axes": "",
+					"codeEditor": "",
+					"styleLayout": ""
+				}
+			},
 			"emptyState": {
 				"helper": "Cliquez sur ce composant pour ouvrir l'éditeur, puis choisissez les variables pour prévisualiser votre visualisation.",
 				"title": "Votre graphique est prêt à être configuré."
@@ -417,6 +438,10 @@
 			},
 			"editor": {
 				"codeTab": "Code",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": "Variables"
 			},
 			"emptyState": {
@@ -511,10 +536,52 @@
 			},
 			"workspaceMore": "Options d'espace de travail"
 		},
+		"statistics": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			}
+		},
 		"statTest": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
 			"emptyState": {
 				"helper": "Cliquez sur ce composant pour ouvrir l'éditeur, puis choisissez les variables pour effectuer le test.",
 				"title": "Votre test statistique est prêt à être configuré."
+			}
+		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "Tout effacer",
+					"selectAll": "Tout sélectionner"
+				},
+				"description": "Choisissez rapidement les colonnes que ce tableau doit afficher.",
+				"empty": "Aucune colonne visible n'est disponible dans l'ensemble de données.",
+				"filters": {
+					"allValues": "Toutes les valeurs",
+					"clear": "Effacer les filtres",
+					"close": "Fermer",
+					"description": "Les colonnes numériques utilisent des valeurs min/max. Les colonnes catégorielles utilisent une liste déroulante.",
+					"dropdownAria": "Filtrer {{column}}",
+					"filterSettings": "Filtre",
+					"maxLabel": "Maximum",
+					"minLabel": "Min",
+					"title": "Filtres simples",
+					"toggleAria": "Activer/désactiver les filtres pour {{column}}"
+				},
+				"search": {
+					"ariaLabel": "Colonnes de recherche",
+					"noMatches": "Aucune colonne ne correspond à votre recherche.",
+					"placeholder": "Colonnes de recherche…"
+				},
+				"title": "Colonnes"
 			}
 		},
 		"visualizationWidget": {

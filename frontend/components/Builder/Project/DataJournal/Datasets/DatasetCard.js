@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
 import { DELETE_DATASOURCE } from "../../../../Mutations/Datasource";
 import {
   getDatasourceDeleteDisabledReason,
@@ -63,6 +65,7 @@ export default function DatasetCard({
 }) {
   const { t } = useTranslation("builder");
   const [deleteDatasource, { loading }] = useMutation(DELETE_DATASOURCE);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const handleEdit = () => {
     if (onEdit) onEdit(datasource);
@@ -97,16 +100,11 @@ export default function DatasetCard({
 
   const handleDelete = async () => {
     if (deleteDisabled) return;
-    const confirmed = confirm(
-      t("dataJournal.datasets.deleteConfirm", {}, {
-        default: "Are you sure you want to delete this dataset?",
-      }),
-    );
-    if (!confirmed) return;
     await deleteDatasource({
       variables: { id: datasource.id },
       refetchQueries: ["GET_DATASOURCES"],
     });
+    setDeleteConfirmOpen(false);
   };
 
   const originKey = datasource.dataOrigin
@@ -154,7 +152,7 @@ export default function DatasetCard({
       className="delete-btn"
       onClick={(e) => {
         e.stopPropagation();
-        handleDelete();
+        setDeleteConfirmOpen(true);
       }}
       aria-label={t("dataJournal.datasets.deleteLabel", {}, {
         default: "Delete",
@@ -239,6 +237,17 @@ export default function DatasetCard({
           </div>
         </div>
       </div>
+      <DeleteConfirmModal
+        open={deleteConfirmOpen}
+        title={t("dataJournal.datasets.deleteLabel", {}, { default: "Delete" })}
+        message={t("dataJournal.datasets.deleteConfirm", {}, {
+          default: "Are you sure you want to delete this dataset?",
+        })}
+        confirmLabel={t("dataJournal.datasets.deleteLabel", {}, { default: "Delete" })}
+        loading={loading}
+        onClose={() => setDeleteConfirmOpen(false)}
+        onConfirm={handleDelete}
+      />
     </StyledDatasetCard>
   );
 }

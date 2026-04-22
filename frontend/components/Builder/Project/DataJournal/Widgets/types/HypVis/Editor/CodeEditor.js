@@ -3,8 +3,9 @@ import { useState, useCallback } from "react";
 
 import { python } from "@codemirror/lang-python";
 import CodeMirror from "@uiw/react-codemirror";
-
+import useTranslation from "next-translate/useTranslation";
 export default function CodeEditor({ sectionId, code, onChange }) {
+  const { t } = useTranslation("builder");
   const [localCode, setLocalCode] = useState(code);
 
   // update the component with the local code
@@ -25,7 +26,9 @@ export default function CodeEditor({ sectionId, code, onChange }) {
   return (
     <>
       <div className="runCodeButton">
-        <button onClick={() => onRunCode({ code })}>Run the code</button>
+        <button type="button" onClick={onRunCode}>
+          {t("dataJournal.hypVis.codeEditor.runCode", {}, { default: "Run the code" })}
+        </button>
       </div>
       <div className="editor-wrapper">
         <CodeMirror

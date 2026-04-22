@@ -227,6 +227,13 @@
 	"dataJournal": {
 		"addComponent": "घटक जोड़ें",
 		"addNotes": "नोट्स जोड़ें",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "कोड"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "बंद करना",
 			"componentName": "घटक का नाम",
@@ -345,6 +352,20 @@
 			"untitled": "शीर्षकहीन डेटासेट"
 		},
 		"graph": {
+			"codeEditor": {
+				"runCode": ""
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "",
+					"title": ""
+				},
+				"tabs": {
+					"axes": "",
+					"codeEditor": "",
+					"styleLayout": ""
+				}
+			},
 			"emptyState": {
 				"helper": "एडिटर खोलने के लिए इस कंपोनेंट पर क्लिक करें, फिर अपने विज़ुअलाइज़ेशन का पूर्वावलोकन करने के लिए वैरिएबल चुनें।",
 				"title": "आपका ग्राफ़ कॉन्फ़िगरेशन के लिए तैयार है।"
@@ -417,6 +438,10 @@
 			},
 			"editor": {
 				"codeTab": "कोड",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": "चर"
 			},
 			"emptyState": {
@@ -511,10 +536,52 @@
 			},
 			"workspaceMore": "कार्यक्षेत्र विकल्प"
 		},
+		"statistics": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			}
+		},
 		"statTest": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
 			"emptyState": {
 				"helper": "एडिटर खोलने के लिए इस कंपोनेंट पर क्लिक करें, फिर टेस्ट की गणना करने के लिए वैरिएबल चुनें।",
 				"title": "आपका सांख्यिकीय परीक्षण कॉन्फ़िगरेशन के लिए तैयार है।"
+			}
+		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "सभी साफ करें",
+					"selectAll": "सबका चयन करें"
+				},
+				"description": "इस तालिका में प्रदर्शित होने वाले कॉलमों को शीघ्रता से चुनें।",
+				"empty": "डेटासेट से कोई दृश्यमान कॉलम उपलब्ध नहीं हैं।",
+				"filters": {
+					"allValues": "सभी मान",
+					"clear": "फ़िल्टर साफ़ करें",
+					"close": "बंद करना",
+					"description": "संख्यात्मक कॉलम न्यूनतम/अधिकतम मानों का उपयोग करते हैं। श्रेणीबद्ध कॉलम मान ड्रॉपडाउन का उपयोग करते हैं।",
+					"dropdownAria": "फ़िल्टर {{column}}",
+					"filterSettings": "फ़िल्टर",
+					"maxLabel": "अधिकतम",
+					"minLabel": "मिन",
+					"title": "सरल फ़िल्टर",
+					"toggleAria": " {{column}}के लिए फ़िल्टर टॉगल करें"
+				},
+				"search": {
+					"ariaLabel": "खोज कॉलम",
+					"noMatches": "आपकी खोज से कोई कॉलम मेल नहीं खाता।",
+					"placeholder": "खोज कॉलम…"
+				},
+				"title": "कॉलम"
 			}
 		},
 		"visualizationWidget": {
