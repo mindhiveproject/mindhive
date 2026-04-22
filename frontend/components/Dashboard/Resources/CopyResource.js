@@ -56,9 +56,9 @@ export default function CopyResource({ query, user, goBack }) {
     <StyledResource>
       <Button
         className="goBackBtn"
-        variant="text"
+        variant="outline"
         onClick={goBack}
-        leadingIcon={<img src="/assets/icons/back.svg" alt="" aria-hidden width={18} height={18} />}
+        // leadingIcon={<img src="/assets/icons/back.svg" alt="" aria-hidden width={18} height={18} />}
       >
         {t("boardManagement.goBackToResourceArea")}
       </Button>

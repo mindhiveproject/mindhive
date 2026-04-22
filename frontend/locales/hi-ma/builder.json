@@ -344,6 +344,12 @@
 			},
 			"untitled": ""
 		},
+		"graph": {
+			"emptyState": {
+				"helper": "",
+				"title": ""
+			}
+		},
 		"hypVis": {
 			"axes": {
 				"abDesign": {
@@ -412,6 +418,10 @@
 			"editor": {
 				"codeTab": "",
 				"variablesTab": ""
+			},
+			"emptyState": {
+				"helper": "",
+				"title": ""
 			},
 			"helpAriaLabel": ""
 		},
@@ -500,6 +510,12 @@
 				"useTemplate": ""
 			},
 			"workspaceMore": ""
+		},
+		"statTest": {
+			"emptyState": {
+				"helper": "",
+				"title": ""
+			}
 		},
 		"visualizationWidget": {
 			"unsupportedType": "असमर्थित विजेट प्रकार: {{type}}"
@@ -1340,7 +1356,6 @@
 		"addItemBtn": "+ आइटम",
 		"addOption": "+ विकल्प",
 		"addPage": "Add page",
-		"pages": "Pages",
 		"block": "अवरोध पैदा करना",
 		"checkbox": "बहुविकल्पी (कई विकल्प चुनें)",
 		"deletePage": "इस पृष्ठ को हटाएँ",
@@ -1355,6 +1370,7 @@
 		"minValueLabel": "न्यूनतम मान लेबल",
 		"options": "विकल्प",
 		"page": "पृष्ठ {{संख्या}}",
+		"pages": "Pages",
 		"pageTimeout": "पृष्ठ समय समाप्ति (मिलीसेकंड में)",
 		"preview": "Preview",
 		"select": "बहुविकल्पीय (एक का चयन करें)",

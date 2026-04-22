@@ -1,8 +1,10 @@
 // components/DataJournal/Widgets/types/StatisticTest/Render.js
 import { useEffect, useState } from "react";
 import { Message, Icon, Table } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Render({ code, pyodide, sectionId, content }) {
+  const { t } = useTranslation("builder");
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -187,17 +189,48 @@ ${funcName}()
     return (
       <div
         style={{
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#718096",
-          fontStyle: "italic",
           padding: "2rem",
           textAlign: "center",
+          color: "#4b5563",
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          minHeight: 0,
+          gap: "0.5rem",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#DEF8FB",
+          borderRadius: "12px",
+          border: "1px solid #A1A1A1",
+          height: "100%",
         }}
       >
-        Select variables in the editor panel to compute the test
+        <div style={{ fontWeight: 600, marginBottom: "1rem", fontSize: "16px" }}>
+          {t(
+            "dataJournal.statTest.emptyState.title",
+            {},
+            { default: "Your statistical test is ready to be configured" },
+          )}
+        </div>
+        <div
+          style={{
+            background: "#ffffff",
+            padding: "0.35rem 0.65rem",
+            borderRadius: "6px",
+            color: "#3f3f46",
+            fontSize: "14px",
+            border: "2px solid #A1A1A1",
+          }}
+        >
+          {t(
+            "dataJournal.statTest.emptyState.helper",
+            {},
+            {
+              default:
+                "Click this component to open the editor, then choose variables to compute the test.",
+            },
+          )}
+        </div>
       </div>
     );
   }
