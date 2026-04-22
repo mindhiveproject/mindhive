@@ -419,6 +419,10 @@
 				"codeTab": "Código",
 				"variablesTab": "Variáveis"
 			},
+			"emptyState": {
+				"helper": "Clique neste componente para abrir o editor e, em seguida, preencha as variáveis ​​para gerar a visualização.",
+				"title": "Seu visualizador de hipóteses está pronto para ser configurado."
+			},
 			"helpAriaLabel": "Mais Informações"
 		},
 		"settingsPanel": {
@@ -506,6 +510,12 @@
 				"useTemplate": "Usar modelo"
 			},
 			"workspaceMore": "Opções de espaço de trabalho"
+		},
+		"statTest": {
+			"emptyState": {
+				"helper": "Clique neste componente para abrir o editor e, em seguida, escolha as variáveis ​​para calcular o teste.",
+				"title": "Seu teste estatístico está pronto para ser configurado."
+			}
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Tipo de widget não suportado: {{type}}"

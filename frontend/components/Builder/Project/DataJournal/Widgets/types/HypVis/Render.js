@@ -1,6 +1,7 @@
 // components/DataJournal/Widgets/types/HypothesisVisualizer/Render.js
 import { useEffect, useState } from "react";
 import { Message, Icon } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Render({
   code,
@@ -9,6 +10,7 @@ export default function Render({
   content,
   onFigureReadyChange,
 }) {
+  const { t } = useTranslation("builder");
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -177,17 +179,48 @@ json.dumps(to_native(result))
     return (
       <div
         style={{
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#718096",
-          fontStyle: "italic",
           padding: "2rem",
           textAlign: "center",
+          color: "#4b5563",
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          minHeight: 0,
+          gap: "0.5rem",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#DEF8FB",
+          borderRadius: "12px",
+          border: "1px solid #A1A1A1",
+          height: "100%",
         }}
       >
-        Configure hypothesis parameters to generate visualization
+        <div style={{ fontWeight: 600, marginBottom: "1rem", fontSize: "16px" }}>
+          {t(
+            "dataJournal.hypVis.emptyState.title",
+            {},
+            { default: "Your hypothesis visualizer is ready to be configured" },
+          )}
+        </div>
+        <div
+          style={{
+            background: "#ffffff",
+            padding: "0.35rem 0.65rem",
+            borderRadius: "6px",
+            color: "#3f3f46",
+            fontSize: "14px",
+            border: "2px solid #A1A1A1",
+          }}
+        >
+          {t(
+            "dataJournal.hypVis.emptyState.helper",
+            {},
+            {
+              default:
+                "Click this component to open the editor, then complete the variables to generate the visualization.",
+            },
+          )}
+        </div>
       </div>
     );
   }

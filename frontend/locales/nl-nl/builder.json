@@ -419,6 +419,10 @@
 				"codeTab": "Code",
 				"variablesTab": "Variabelen"
 			},
+			"emptyState": {
+				"helper": "Klik op dit onderdeel om de editor te openen en vul vervolgens de variabelen in om de visualisatie te genereren.",
+				"title": "Uw hypothese-visualizer is klaar om geconfigureerd te worden."
+			},
 			"helpAriaLabel": "Meer informatie"
 		},
 		"settingsPanel": {
@@ -506,6 +510,12 @@
 				"useTemplate": "Gebruik sjabloon"
 			},
 			"workspaceMore": "Werkruimteopties"
+		},
+		"statTest": {
+			"emptyState": {
+				"helper": "Klik op dit onderdeel om de editor te openen en kies vervolgens de variabelen waarmee de test moet worden uitgevoerd.",
+				"title": "Uw statistische test is klaar om geconfigureerd te worden."
+			}
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Niet-ondersteund widgettype: {{type}}"

@@ -419,6 +419,10 @@
 				"codeTab": "Código",
 				"variablesTab": "Variables"
 			},
+			"emptyState": {
+				"helper": "Haz clic en este componente para abrir el editor y, a continuación, completa las variables para generar la visualización.",
+				"title": "Su visualizador de hipótesis está listo para ser configurado."
+			},
 			"helpAriaLabel": "Más información"
 		},
 		"settingsPanel": {
@@ -506,6 +510,12 @@
 				"useTemplate": "Usar plantilla"
 			},
 			"workspaceMore": "Opciones de espacio de trabajo"
+		},
+		"statTest": {
+			"emptyState": {
+				"helper": "Haz clic en este componente para abrir el editor y, a continuación, elige las variables para calcular la prueba.",
+				"title": "Su prueba estadística está lista para ser configurada."
+			}
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Tipo de widget no compatible: {{type}}"

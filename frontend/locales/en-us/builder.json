@@ -419,6 +419,10 @@
 				"codeTab": "Code",
 				"variablesTab": "Variables"
 			},
+			"emptyState": {
+				"helper": "Click this component to open the editor, then complete the variables to generate the visualization.",
+				"title": "Your hypothesis visualizer is ready to be configured"
+			},
 			"helpAriaLabel": "More information"
 		},
 		"settingsPanel": {
@@ -506,6 +510,12 @@
 				"useTemplate": "Use template"
 			},
 			"workspaceMore": "Workspace options"
+		},
+		"statTest": {
+			"emptyState": {
+				"helper": "Click this component to open the editor, then choose variables to compute the test.",
+				"title": "Your statistical test is ready to be configured"
+			}
 		},
 		"visualizationWidget": {
 			"unsupportedType": "Unsupported widget type: {{type}}"

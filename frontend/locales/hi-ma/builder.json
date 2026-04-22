@@ -419,6 +419,10 @@
 				"codeTab": "",
 				"variablesTab": ""
 			},
+			"emptyState": {
+				"helper": "",
+				"title": ""
+			},
 			"helpAriaLabel": ""
 		},
 		"settingsPanel": {
@@ -506,6 +510,12 @@
 				"useTemplate": ""
 			},
 			"workspaceMore": ""
+		},
+		"statTest": {
+			"emptyState": {
+				"helper": "",
+				"title": ""
+			}
 		},
 		"visualizationWidget": {
 			"unsupportedType": "असमर्थित विजेट प्रकार: {{type}}"

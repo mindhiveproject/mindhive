@@ -419,6 +419,10 @@
 				"codeTab": "代码",
 				"variablesTab": "变量"
 			},
+			"emptyState": {
+				"helper": "单击此组件打开编辑器，然后填写变量以生成可视化效果。",
+				"title": "您的假设可视化工具已准备就绪，可以进行配置。"
+			},
 			"helpAriaLabel": "更多信息"
 		},
 		"settingsPanel": {
@@ -506,6 +510,12 @@
 				"useTemplate": "使用模板"
 			},
 			"workspaceMore": "工作区选项"
+		},
+		"statTest": {
+			"emptyState": {
+				"helper": "单击此组件打开编辑器，然后选择要计算测试的变量。",
+				"title": "您的统计检验已准备就绪，可以进行配置了。"
+			}
 		},
 		"visualizationWidget": {
 			"unsupportedType": "不支持的小部件类型：{{type}}"
