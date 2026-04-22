@@ -556,6 +556,29 @@
 				"title": "Uw statistische test is klaar om geconfigureerd te worden."
 			}
 		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "Wis alles",
+					"selectAll": "Selecteer alles"
+				},
+				"description": "Kies snel welke kolommen deze tabel moet weergeven.",
+				"empty": "Er zijn geen zichtbare kolommen beschikbaar in de dataset.",
+				"filters": {
+					"allValues": "Alle waarden",
+					"clear": "Wis filters",
+					"close": "Dichtbij",
+					"description": "Numerieke kolommen gebruiken minimum- en maximumwaarden. Categorische kolommen gebruiken een keuzelijst met waarden.",
+					"dropdownAria": "Filteren {{column}}",
+					"filterSettings": "Filter",
+					"maxLabel": "Max",
+					"minLabel": "Min",
+					"title": "Eenvoudige filters",
+					"toggleAria": "Schakel filters in/uit voor {{column}}"
+				},
+				"title": "Kolommen"
+			}
+		},
 		"visualizationWidget": {
 			"unsupportedType": "Niet-ondersteund widgettype: {{type}}"
 		},

@@ -130,7 +130,7 @@ function Widget({
           <Paragraph content={content} handleContentChange={handleChange} />
         );
       case "TABLE":
-        return <Table />;
+        return <Table content={content} />;
       // for visualization of graphs
       case "GRAPH":
         return (

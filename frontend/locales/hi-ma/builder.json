@@ -556,6 +556,29 @@
 				"title": ""
 			}
 		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "",
+					"selectAll": ""
+				},
+				"description": "",
+				"empty": "",
+				"filters": {
+					"allValues": "",
+					"clear": "",
+					"close": "",
+					"description": "",
+					"dropdownAria": "",
+					"filterSettings": "",
+					"maxLabel": "",
+					"minLabel": "",
+					"title": "",
+					"toggleAria": ""
+				},
+				"title": ""
+			}
+		},
 		"visualizationWidget": {
 			"unsupportedType": "असमर्थित विजेट प्रकार: {{type}}"
 		},

@@ -171,9 +171,6 @@ export default function Grid({
 
   const handleComponentSelect = useCallback(
     (component) => {
-      if (component?.type === "TABLE") {
-        return; // do not open the component editor for tables
-      }
       if (activeComponent?.id === component?.id) {
         handleSaveComponent({
           componentId: component?.id,
@@ -216,9 +213,7 @@ export default function Grid({
           vizSections: [...components, newComponent],
         });
         setIsAddComponentPanelOpen(false);
-        if (newComponent?.type !== "TABLE") {
-          setActiveComponent(newComponent);
-        }
+        setActiveComponent(newComponent);
       }
     },
     [

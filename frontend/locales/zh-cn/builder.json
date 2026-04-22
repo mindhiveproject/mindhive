@@ -556,6 +556,29 @@
 				"title": "您的统计检验已准备就绪，可以进行配置了。"
 			}
 		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "清除全部",
+					"selectAll": "全选"
+				},
+				"description": "快速选择此表格应显示的列。",
+				"empty": "数据集中没有可见的列。",
+				"filters": {
+					"allValues": "所有值",
+					"clear": "清除筛选器",
+					"close": "关闭",
+					"description": "数值型列使用最小值/最大值。分类列使用下拉列表。",
+					"dropdownAria": "筛选 {{column}}",
+					"filterSettings": "筛选",
+					"maxLabel": "最大限度",
+					"minLabel": "分钟",
+					"title": "简单过滤器",
+					"toggleAria": "切换 {{column}}的过滤器"
+				},
+				"title": "列"
+			}
+		},
 		"visualizationWidget": {
 			"unsupportedType": "不支持的小部件类型：{{type}}"
 		},

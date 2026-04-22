@@ -11,6 +11,7 @@ import StatisticalTestEditor from "../Widgets/types/StatisticalTests/Editor/Stat
 import StatisticsEditor from "../Widgets/types/Statistics/Editor/StatisticsEditor";
 import CodeEditor from "../Widgets/types/Code/Editor/CodeEditor";
 import HypVisEditor from "../Widgets/types/HypVis/Editor/HypVisEditor";
+import TableEditor from "../Widgets/types/Table/Editor/TableEditor";
 import { figPngFileFromPyodide } from "../Widgets/types/HypVis/Editor/Axes/figHtmlFromPyodide";
 import { plotlyPngFileFromFigureSection } from "../Widgets/types/Graph/plotlyPngFileFromFigure";
 
@@ -170,12 +171,8 @@ export default function ComponentEditor({
           </div>
         );
       case "TABLE":
-        // Placeholder for Table editor (e.g., configure columns/filters)
         return (
-          <div>
-            {/* <h3>Edit Table</h3> */}
-            {/* Add table-specific config here */}
-          </div>
+          <TableEditor content={content} onChange={onChange} sectionId={id} />
         );
       case "GRAPH":
         return (

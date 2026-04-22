@@ -556,6 +556,29 @@
 				"title": "Your statistical test is ready to be configured"
 			}
 		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "Clear all",
+					"selectAll": "Select all"
+				},
+				"description": "Quickly choose which columns this table should display.",
+				"empty": "No visible columns are available from the dataset.",
+				"filters": {
+					"allValues": "All values",
+					"clear": "Clear filters",
+					"close": "Close",
+					"description": "Numeric columns use min/max values. Categorical columns use a value dropdown.",
+					"dropdownAria": "Filter {{column}}",
+					"filterSettings": "Filter",
+					"maxLabel": "Max",
+					"minLabel": "Min",
+					"title": "Simple filters",
+					"toggleAria": "Toggle filters for {{column}}"
+				},
+				"title": "Columns"
+			}
+		},
 		"visualizationWidget": {
 			"unsupportedType": "Unsupported widget type: {{type}}"
 		},

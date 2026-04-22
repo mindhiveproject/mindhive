@@ -556,6 +556,29 @@
 				"title": "Seu teste estatístico está pronto para ser configurado."
 			}
 		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "Limpar tudo",
+					"selectAll": "Selecionar tudo"
+				},
+				"description": "Escolha rapidamente quais colunas esta tabela deve exibir.",
+				"empty": "Não há colunas visíveis disponíveis no conjunto de dados.",
+				"filters": {
+					"allValues": "Todos os valores",
+					"clear": "Limpar filtros",
+					"close": "Fechar",
+					"description": "As colunas numéricas usam valores mínimo e máximo. As colunas categóricas usam uma lista suspensa.",
+					"dropdownAria": "Filtrar {{column}}",
+					"filterSettings": "Filtro",
+					"maxLabel": "Máx.",
+					"minLabel": "Min",
+					"title": "Filtros simples",
+					"toggleAria": "Alternar filtros para {{column}}"
+				},
+				"title": "Colunas"
+			}
+		},
 		"visualizationWidget": {
 			"unsupportedType": "Tipo de widget não suportado: {{type}}"
 		},

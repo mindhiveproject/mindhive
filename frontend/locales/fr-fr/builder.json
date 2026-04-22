@@ -556,6 +556,29 @@
 				"title": "Votre test statistique est prêt à être configuré."
 			}
 		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "Tout effacer",
+					"selectAll": "Tout sélectionner"
+				},
+				"description": "Choisissez rapidement les colonnes que ce tableau doit afficher.",
+				"empty": "Aucune colonne visible n'est disponible dans l'ensemble de données.",
+				"filters": {
+					"allValues": "Toutes les valeurs",
+					"clear": "Effacer les filtres",
+					"close": "Fermer",
+					"description": "Les colonnes numériques utilisent des valeurs min/max. Les colonnes catégorielles utilisent une liste déroulante.",
+					"dropdownAria": "Filtrer {{column}}",
+					"filterSettings": "Filtre",
+					"maxLabel": "Maximum",
+					"minLabel": "Min",
+					"title": "Filtres simples",
+					"toggleAria": "Activer/désactiver les filtres pour {{column}}"
+				},
+				"title": "Colonnes"
+			}
+		},
 		"visualizationWidget": {
 			"unsupportedType": "Type de widget non pris en charge : {{type}}"
 		},
