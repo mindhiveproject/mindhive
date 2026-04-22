@@ -89,7 +89,7 @@ export default function AxesScatterPlot({
         options={options}
         selectors={selectors}
         onSelectorChange={onSelectorChange}
-        title="Trend line"
+        title="Trendline"
         parameter="trendLine"
       />
       <Accordion>

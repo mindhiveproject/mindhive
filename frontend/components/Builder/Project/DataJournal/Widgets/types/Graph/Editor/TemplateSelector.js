@@ -94,14 +94,14 @@ else:
 
     fig_kwargs = common_kwargs.copy()
     if use_trendline:
-        fig_kwargs["trendline"] = "lowess"
+        fig_kwargs["trendline"] = "ols"
 
     fig = px.scatter(**fig_kwargs)
 
     # Bring trendline to front (common issue)
     if use_trendline:
         for trace in reversed(fig.data):
-            if 'lowess' in trace.name.lower():
+            if 'ols' in trace.name.lower():
                 fig.data = fig.data[-1:] + fig.data[:-1]
                 break
 
