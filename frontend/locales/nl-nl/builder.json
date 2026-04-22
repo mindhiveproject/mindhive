@@ -227,6 +227,13 @@
 	"dataJournal": {
 		"addComponent": "Component toevoegen",
 		"addNotes": "Notities toevoegen",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "Code"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "Dichtbij",
 			"componentName": "Componentnaam",
@@ -345,6 +352,20 @@
 			"untitled": "Naamloze dataset"
 		},
 		"graph": {
+			"codeEditor": {
+				"runCode": ""
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "",
+					"title": ""
+				},
+				"tabs": {
+					"axes": "",
+					"codeEditor": "",
+					"styleLayout": ""
+				}
+			},
 			"emptyState": {
 				"helper": "Klik op dit onderdeel om de editor te openen en kies vervolgens variabelen om een ​​voorbeeld van uw visualisatie te bekijken.",
 				"title": "Uw grafiek is klaar om geconfigureerd te worden."
@@ -417,6 +438,10 @@
 			},
 			"editor": {
 				"codeTab": "Code",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": "Variabelen"
 			},
 			"emptyState": {
@@ -511,7 +536,21 @@
 			},
 			"workspaceMore": "Werkruimteopties"
 		},
+		"statistics": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			}
+		},
 		"statTest": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
 			"emptyState": {
 				"helper": "Klik op dit onderdeel om de editor te openen en kies vervolgens de variabelen waarmee de test moet worden uitgevoerd.",
 				"title": "Uw statistische test is klaar om geconfigureerd te worden."

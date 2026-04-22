@@ -227,6 +227,13 @@
 	"dataJournal": {
 		"addComponent": "添加组件",
 		"addNotes": "添加注释",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "代码"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "关闭",
 			"componentName": "组件名称",
@@ -345,6 +352,20 @@
 			"untitled": "未命名数据集"
 		},
 		"graph": {
+			"codeEditor": {
+				"runCode": ""
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "",
+					"title": ""
+				},
+				"tabs": {
+					"axes": "",
+					"codeEditor": "",
+					"styleLayout": ""
+				}
+			},
 			"emptyState": {
 				"helper": "点击此组件打开编辑器，然后选择变量以预览可视化效果。",
 				"title": "您的图表已准备好进行配置。"
@@ -417,6 +438,10 @@
 			},
 			"editor": {
 				"codeTab": "代码",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": "变量"
 			},
 			"emptyState": {
@@ -511,7 +536,21 @@
 			},
 			"workspaceMore": "工作区选项"
 		},
+		"statistics": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			}
+		},
 		"statTest": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
 			"emptyState": {
 				"helper": "单击此组件打开编辑器，然后选择要计算测试的变量。",
 				"title": "您的统计检验已准备就绪，可以进行配置了。"

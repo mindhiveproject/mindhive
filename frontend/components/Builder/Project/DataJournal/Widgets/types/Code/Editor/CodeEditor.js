@@ -1,19 +1,21 @@
 // components/DataJournal/Widgets/types/Code/Editor/CodeEditor.js
 
-import { Tab } from "semantic-ui-react";
-import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
+import Chip from "../../../../../../../DesignSystem/Chip";
 import ScriptEditor from "./ScriptEditor";
 
 export default function CodeEditor({ content, onChange, sectionId }) {
-  const [activeTab, setActiveTab] = useState(0);
-
+  const { t } = useTranslation("builder");
   const code = content?.code || "";
 
-  const panes = [
+  const iconStyle = { width: 16, height: 16, display: "block" };
+
+  const tabItems = [
     {
-      menuItem: "Code",
-      render: () => (
+      label: t("dataJournal.code.editor.tabs.code", {}, { default: "Code" }),
+      icon: <img src="/assets/icons/code.svg" alt="" aria-hidden style={iconStyle} />,
+      content: (
         <ScriptEditor sectionId={sectionId} code={code} onChange={onChange} />
       ),
     },
@@ -22,12 +24,24 @@ export default function CodeEditor({ content, onChange, sectionId }) {
   return (
     <div className="graph">
       {/* <h3>Code</h3> */}
-
-      <Tab
-        panes={panes}
-        activeIndex={activeTab}
-        onTabChange={(e, { activeIndex }) => setActiveTab(activeIndex)}
-      />
+      <div className="tabs">
+        <div
+          className="customTabs"
+          style={{ display: "flex", justifyContent: "space-between", gap: "8px", width: "100%" }}
+        >
+          {tabItems.map((item) => (
+            <Chip
+              key={item.label}
+              label={item.label}
+              leading={item.icon}
+              selected
+              shape="square"
+              style={{ backgroundColor: "#F6F9F8" }}
+            />
+          ))}
+        </div>
+        {tabItems[0]?.content}
+      </div>
     </div>
   );
 }

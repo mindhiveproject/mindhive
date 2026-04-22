@@ -227,6 +227,13 @@
 	"dataJournal": {
 		"addComponent": "Добавить компонент",
 		"addNotes": "Добавить заметки",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "Код"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "Закрывать",
 			"componentName": "Название компонента",
@@ -345,6 +352,20 @@
 			"untitled": "Набор данных без названия"
 		},
 		"graph": {
+			"codeEditor": {
+				"runCode": ""
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "",
+					"title": ""
+				},
+				"tabs": {
+					"axes": "",
+					"codeEditor": "",
+					"styleLayout": ""
+				}
+			},
 			"emptyState": {
 				"helper": "Щелкните по этому компоненту, чтобы открыть редактор, затем выберите переменные для предварительного просмотра визуализации.",
 				"title": "Ваш график готов к настройке."
@@ -417,6 +438,10 @@
 			},
 			"editor": {
 				"codeTab": "Код",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": "Переменные"
 			},
 			"emptyState": {
@@ -511,7 +536,21 @@
 			},
 			"workspaceMore": "Параметры рабочего пространства"
 		},
+		"statistics": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			}
+		},
 		"statTest": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
 			"emptyState": {
 				"helper": "Щелкните по этому компоненту, чтобы открыть редактор, затем выберите переменные для вычисления теста.",
 				"title": "Ваш статистический тест готов к настройке."

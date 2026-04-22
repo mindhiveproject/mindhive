@@ -227,6 +227,13 @@
 	"dataJournal": {
 		"addComponent": "إضافة مكون",
 		"addNotes": "إضافة ملاحظات",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "شفرة"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "يغلق",
 			"componentName": "اسم المكون",
@@ -345,6 +352,20 @@
 			"untitled": "مجموعة بيانات بلا عنوان"
 		},
 		"graph": {
+			"codeEditor": {
+				"runCode": ""
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "",
+					"title": ""
+				},
+				"tabs": {
+					"axes": "",
+					"codeEditor": "",
+					"styleLayout": ""
+				}
+			},
 			"emptyState": {
 				"helper": "انقر فوق هذا المكون لفتح المحرر، ثم اختر المتغيرات لمعاينة التصور الخاص بك.",
 				"title": "الرسم البياني الخاص بك جاهز للتكوين."
@@ -417,6 +438,10 @@
 			},
 			"editor": {
 				"codeTab": "شفرة",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": "المتغيرات"
 			},
 			"emptyState": {
@@ -511,7 +536,21 @@
 			},
 			"workspaceMore": "خيارات مساحة العمل"
 		},
+		"statistics": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			}
+		},
 		"statTest": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
 			"emptyState": {
 				"helper": "انقر فوق هذا المكون لفتح المحرر، ثم اختر المتغيرات لحساب الاختبار.",
 				"title": "اختبارك الإحصائي جاهز للتكوين"

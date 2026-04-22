@@ -227,6 +227,13 @@
 	"dataJournal": {
 		"addComponent": "घटक जोड़ें",
 		"addNotes": "नोट्स जोड़ें",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": ""
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "",
 			"componentName": "",
@@ -345,6 +352,20 @@
 			"untitled": ""
 		},
 		"graph": {
+			"codeEditor": {
+				"runCode": ""
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "",
+					"title": ""
+				},
+				"tabs": {
+					"axes": "",
+					"codeEditor": "",
+					"styleLayout": ""
+				}
+			},
 			"emptyState": {
 				"helper": "",
 				"title": ""
@@ -417,6 +438,10 @@
 			},
 			"editor": {
 				"codeTab": "",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": ""
 			},
 			"emptyState": {
@@ -511,7 +536,21 @@
 			},
 			"workspaceMore": ""
 		},
+		"statistics": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			}
+		},
 		"statTest": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
 			"emptyState": {
 				"helper": "",
 				"title": ""

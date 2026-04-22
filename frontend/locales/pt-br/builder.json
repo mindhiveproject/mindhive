@@ -227,6 +227,13 @@
 	"dataJournal": {
 		"addComponent": "Adicionar componente",
 		"addNotes": "Adicionar notas",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "Código"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "Fechar",
 			"componentName": "Nome do componente",
@@ -345,6 +352,20 @@
 			"untitled": "Conjunto de dados sem título"
 		},
 		"graph": {
+			"codeEditor": {
+				"runCode": ""
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "",
+					"title": ""
+				},
+				"tabs": {
+					"axes": "",
+					"codeEditor": "",
+					"styleLayout": ""
+				}
+			},
 			"emptyState": {
 				"helper": "Clique neste componente para abrir o editor e, em seguida, escolha as variáveis ​​para pré-visualizar sua visualização.",
 				"title": "Seu gráfico está pronto para ser configurado."
@@ -417,6 +438,10 @@
 			},
 			"editor": {
 				"codeTab": "Código",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": "Variáveis"
 			},
 			"emptyState": {
@@ -511,7 +536,21 @@
 			},
 			"workspaceMore": "Opções de espaço de trabalho"
 		},
+		"statistics": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			}
+		},
 		"statTest": {
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
 			"emptyState": {
 				"helper": "Clique neste componente para abrir o editor e, em seguida, escolha as variáveis ​​para calcular o teste.",
 				"title": "Seu teste estatístico está pronto para ser configurado."
