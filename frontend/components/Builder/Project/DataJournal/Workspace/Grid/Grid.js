@@ -158,7 +158,7 @@ export default function Grid({
   const debouncedSave = useCallback(
     debounce(({ componentId, updatedComponents }) => {
       handleSaveComponent({ componentId, updatedComponents });
-    }, 3000),
+    }, 1000),
     [handleSaveComponent],
   );
 
