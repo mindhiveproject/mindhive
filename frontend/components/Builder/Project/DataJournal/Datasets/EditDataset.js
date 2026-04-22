@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
 import {
   UPDATE_DATASOURCE,
   DELETE_DATASOURCE,
@@ -19,6 +20,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
   const [title, setTitle] = useState(dataset.title || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const [updateDatasource] = useMutation(UPDATE_DATASOURCE, {
     onCompleted: () => {
@@ -72,17 +74,12 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
 
   const handleDelete = () => {
     if (deleteDisabled) return;
-    const confirmed = confirm(
-      t("dataJournal.datasets.deleteConfirm", {}, {
-        default: "Are you sure you want to delete this dataset?",
-      }),
-    );
-    if (!confirmed) return;
-
     setLoading(true);
     deleteDatasource({
       variables: { id: dataset.id },
-    }).finally(() => setLoading(false));
+    })
+      .then(() => setDeleteConfirmOpen(false))
+      .finally(() => setLoading(false));
   };
 
   const saveDisabled = loading || !title || title === dataset.title;
@@ -272,7 +269,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
                 </InfoTooltip>
               ) : (
                 <button
-                  onClick={handleDelete}
+                  onClick={() => setDeleteConfirmOpen(true)}
                   disabled={loading}
                   type="button"
                   style={{
@@ -296,6 +293,19 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
                 </button>
               )}
             </div>
+            <DeleteConfirmModal
+              open={deleteConfirmOpen}
+              title={t("dataJournal.datasets.deleteLabel", {}, { default: "Delete" })}
+              message={t("dataJournal.datasets.deleteConfirm", {}, {
+                default: "Are you sure you want to delete this dataset?",
+              })}
+              confirmLabel={t("dataJournal.datasets.deleteDataset", {}, {
+                default: "Delete dataset",
+              })}
+              loading={loading}
+              onClose={() => setDeleteConfirmOpen(false)}
+              onConfirm={handleDelete}
+            />
           </div>
         </StyledRightPanel>
       </StyledDataJournal>

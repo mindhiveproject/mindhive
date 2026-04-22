@@ -2,6 +2,7 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import CompactActionButton from "../../../../DesignSystem/CompactActionButton";
 import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
+import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
 import getVizComponentIconSrc from "../Helpers/getVizComponentIconSrc";
 
 function getComponentTypeLabel(activeComponent, t) {
@@ -58,6 +59,7 @@ export default function EditorHeader({
 
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(activeComponent?.title || "");
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -91,14 +93,7 @@ export default function EditorHeader({
   };
 
   const handleDeleteClick = () => {
-    const confirmed = window.confirm(
-      t(
-        "dataJournal.componentEditor.deleteConfirm",
-        "Are you sure you want to delete this component?",
-      ),
-    );
-    if (!confirmed) return;
-    onDelete();
+    setDeleteConfirmOpen(true);
   };
 
   return (
@@ -186,6 +181,19 @@ export default function EditorHeader({
           />
         </div>
       </div>
+      <DeleteConfirmModal
+        open={deleteConfirmOpen}
+        title={t("dataJournal.componentEditor.delete", {}, { default: "Delete" })}
+        message={t("dataJournal.componentEditor.deleteConfirm", {}, {
+          default: "Are you sure you want to delete this component?",
+        })}
+        confirmLabel={t("dataJournal.componentEditor.delete", {}, { default: "Delete" })}
+        onClose={() => setDeleteConfirmOpen(false)}
+        onConfirm={() => {
+          onDelete();
+          setDeleteConfirmOpen(false);
+        }}
+      />
     </div>
   );
 }
