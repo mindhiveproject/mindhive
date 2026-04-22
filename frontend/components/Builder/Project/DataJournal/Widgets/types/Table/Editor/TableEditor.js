@@ -61,6 +61,7 @@ export default function TableEditor({ content, onChange, sectionId }) {
   const { t } = useTranslation("builder");
   const { variables, data, settings } = useDataJournal();
   const [expandedFilterField, setExpandedFilterField] = useState(null);
+  const [columnSearch, setColumnSearch] = useState("");
 
   const availableColumns = variables.filter((column) => !column?.hide);
   const visibleColumns = content?.selectors?.visibleColumns;
@@ -109,7 +110,18 @@ export default function TableEditor({ content, onChange, sectionId }) {
     updateVisibleColumns(Array.from(nextSet));
   };
 
-  const allFields = availableColumns.map((column) => column?.field).filter(Boolean);
+  const filteredColumns = useMemo(() => {
+    const q = columnSearch.trim().toLowerCase();
+    if (!q) return availableColumns;
+    return availableColumns.filter((column) => {
+      const field = String(column?.field ?? "").toLowerCase();
+      const display = String(column?.displayName ?? "").toLowerCase();
+      return field.includes(q) || display.includes(q);
+    });
+  }, [availableColumns, columnSearch]);
+
+  const filteredFields = filteredColumns.map((column) => column?.field).filter(Boolean);
+
   const selectedColumns = availableColumns.filter((column) =>
     selectedSet.has(column?.field),
   );
@@ -187,6 +199,22 @@ export default function TableEditor({ content, onChange, sectionId }) {
           default: "Quickly choose which columns this table should display.",
         })}
       </p>
+      <input
+        type="search"
+        value={columnSearch}
+        onChange={(e) => setColumnSearch(e.target.value)}
+        placeholder={t("dataJournal.table.editor.search.placeholder", {}, {
+          default: "Search columns…",
+        })}
+        aria-label={t("dataJournal.table.editor.search.ariaLabel", {}, { default: "Search columns" })}
+        autoComplete="off"
+        style={{
+          width: "100%",
+          maxWidth: "100%",
+          marginBottom: "0.75rem",
+          ...INPUT_TYPO,
+        }}
+      />
       <div
         style={{
           display: "flex",
@@ -199,7 +227,11 @@ export default function TableEditor({ content, onChange, sectionId }) {
           type="button"
           variant="text"
           style={{ height: "32px", padding: "6px 12px" }}
-          onClick={() => updateVisibleColumns(allFields)}
+          onClick={() => {
+            const next = new Set(selectedSet);
+            filteredFields.forEach((f) => next.add(f));
+            updateVisibleColumns(Array.from(next));
+          }}
         >
           {t("dataJournal.table.editor.actions.selectAll", {}, { default: "Select all" })}
         </Button>
@@ -207,7 +239,14 @@ export default function TableEditor({ content, onChange, sectionId }) {
           type="button"
           variant="text"
           style={{ height: "32px", padding: "6px 12px" }}
-          onClick={() => updateVisibleColumns([])}
+          onClick={() => {
+            const remove = new Set(filteredFields);
+            updateVisibleColumns(
+              availableColumns
+                .map((c) => c?.field)
+                .filter((f) => f && selectedSet.has(f) && !remove.has(f)),
+            );
+          }}
         >
           {t("dataJournal.table.editor.actions.clearAll", {}, { default: "Clear all" })}
         </Button>
@@ -226,9 +265,15 @@ export default function TableEditor({ content, onChange, sectionId }) {
             default: "No visible columns are available from the dataset.",
           })}
         </div>
+      ) : filteredColumns.length === 0 ? (
+        <div style={{ ...BODY_TYPO }}>
+          {t("dataJournal.table.editor.search.noMatches", {}, {
+            default: "No columns match your search.",
+          })}
+        </div>
       ) : (
         <div style={{ display: "grid", gap: "0.5rem" }}>
-          {availableColumns.map((column) => {
+          {filteredColumns.map((column) => {
             const field = column?.field;
             if (!field) return null;
             const label = column?.displayName || field;
