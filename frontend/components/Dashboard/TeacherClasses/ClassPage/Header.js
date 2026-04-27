@@ -8,6 +8,8 @@ import useTranslation from "next-translate/useTranslation";
 import useForm from "../../../../lib/useForm";
 
 import Button from "../../../DesignSystem/Button";
+import Chip from "../../../DesignSystem/Chip";
+import InfoTooltip from "../../../DesignSystem/InfoTooltip";
 import { EDIT_CLASS } from "../../../Mutations/Classes";
 import { GET_CLASS } from "../../../Queries/Classes";
 import TipTapEditor from "../../../TipTap/Main";
@@ -22,6 +24,13 @@ function stripTags(html) {
 function stripHtml(html) {
   return stripTags(html).trim();
 }
+
+
+const HEADER_TONAL_SURFACE_STYLE = {
+  background: "#FFFFFF",
+  backgroundColor: "#FFFFFF",
+  border: "1px solid #E6E6E6",
+};
 
 export default function Header({ user, myclass }) {
   const { t } = useTranslation("classes");
@@ -131,6 +140,9 @@ export default function Header({ user, myclass }) {
   const titleDisplay =
     titleDisplayTrimmed ||
     t("header.titleFallback", "Untitled class");
+  const creatorImageUrl = myclass?.creator?.image?.url;
+  const teacherUsername = myclass?.creator?.username ?? "";
+  const mentors = (myclass?.mentors || []).filter((mentor) => mentor?.username);
 
   return (
     <div className="editableClassHeader">
@@ -197,6 +209,69 @@ export default function Header({ user, myclass }) {
           )}
         </div>
 
+        <div className="classHeaderMetaRow">
+          <InfoTooltip
+            content={t("header.teacherAccountTooltip", {}, { default: "Class teacher." })}
+            delayMs={300}
+          >
+            <Chip
+              label={teacherUsername}
+              leading={
+                creatorImageUrl ? (
+                  <img
+                    src={creatorImageUrl}
+                    alt={teacherUsername}
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : null
+              }
+              style={HEADER_TONAL_SURFACE_STYLE}
+            />
+          </InfoTooltip>
+          {mentors.length > 0 && (
+            <>
+              <span className="classHeaderMetaBullet" aria-hidden>
+                •
+              </span>
+              <InfoTooltip
+                content={t("header.mentorsPanelTooltip", {}, { default: "Mentor accounts associated with this class." })}
+                delayMs={500}
+                wrapperStyle={{ width: "fit-content", maxWidth: "100%" }}
+              >
+                <div className="classHeaderMentorsPanel" role="group" aria-label={t("header.mentors", {}, { default: "Mentors" })}>
+                  {mentors.map((mentor) => (
+                    <div className="classHeaderMentorItem" key={mentor?.id || mentor?.username}>
+                      <Chip
+                        label={mentor?.username ?? ""}
+                        leading={
+                          mentor?.image?.url ? (
+                            <img
+                              src={mentor.image.url}
+                              alt={mentor?.username ?? ""}
+                              style={{
+                                width: "24px",
+                                height: "24px",
+                                borderRadius: "50%",
+                                objectFit: "cover",
+                              }}
+                            />
+                          ) : null
+                        }
+                        style={HEADER_TONAL_SURFACE_STYLE}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </InfoTooltip>
+            </>
+          )}
+        </div>
+
         <label>
           <div
             ref={descriptionEditorContainerRef}
@@ -216,18 +291,16 @@ export default function Header({ user, myclass }) {
             ) : (
               <Button
                 type="button"
-                variant="text"
+                variant="tonal"
                 disabled={!canEditTitle}
                 onClick={() => setIsAddingDescription(true)}
+                style={canEditTitle ? HEADER_TONAL_SURFACE_STYLE : undefined}
               >
                 {t("header.addDescription", "Add a description to your class")}
               </Button>
             )}
           </div>
         </label>
-      </div>
-      <div className="teacher">
-        <p>{t("header.teacher")}:</p>{myclass?.creator?.username}
       </div>
     </div>
   );

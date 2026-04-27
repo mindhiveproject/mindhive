@@ -566,9 +566,12 @@
 	"emailAddress": "Endereço de email",
 	"header": {
 		"addDescription": "Adicionar descrição",
+		"mentors": "Mentores",
+		"mentorsPanelTooltip": "Contas de mentores associadas a esta turma.",
 		"save": "Salvar",
 		"teacher": "Professor",
-		"titleFallback": ""
+		"teacherAccountTooltip": "Professor(a) da turma.",
+		"titleFallback": "Classe sem título"
 	},
 	"homework": {
 		"allEntries": "Todas as inscrições",
@@ -609,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "Tarefas",
+		"classSectionsNav": "Turmas",
 		"dashboard": "Painel",
 		"mentors": "Mentores",
 		"projects": "Projetos",

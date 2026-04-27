@@ -566,9 +566,12 @@
 	"emailAddress": "Адрес электронной почты",
 	"header": {
 		"addDescription": "Добавить описание",
+		"mentors": "Наставники",
+		"mentorsPanelTooltip": "Наставнические аккаунты, связанные с этим курсом.",
 		"save": "Сохранять",
 		"teacher": "Учитель",
-		"titleFallback": ""
+		"teacherAccountTooltip": "Классный руководитель.",
+		"titleFallback": "Безымянный класс"
 	},
 	"homework": {
 		"allEntries": "Все записи",
@@ -609,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "Задания",
+		"classSectionsNav": "Разделы класса",
 		"dashboard": "Панель инструментов",
 		"mentors": "Наставники",
 		"projects": "Проекты",

@@ -566,9 +566,12 @@
 	"emailAddress": "عنوان البريد الإلكتروني",
 	"header": {
 		"addDescription": "اضف وصفا",
+		"mentors": "الموجهون",
+		"mentorsPanelTooltip": "حسابات الموجهين المرتبطة بهذه الدورة.",
 		"save": "يحفظ",
 		"teacher": "مدرس",
-		"titleFallback": ""
+		"teacherAccountTooltip": "معلم الصف.",
+		"titleFallback": "فئة بدون عنوان"
 	},
 	"homework": {
 		"allEntries": "جميع المشاركات",
@@ -609,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "المهام",
+		"classSectionsNav": "أقسام الصفوف",
 		"dashboard": "لوحة القيادة",
 		"mentors": "المرشدين",
 		"projects": "المشاريع",
