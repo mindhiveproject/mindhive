@@ -14,6 +14,14 @@ export default function Render({
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const hypVisType = content?.type;
+
+  const getHypVisEmptyStateImageSrc = (type) => {
+    if (type === "abDesign") return "/assets/dataviz/componentPanel/abDesign.svg";
+    if (type === "corStudy")
+      return "/assets/dataviz/componentPanel/correlationStudy.svg";
+    return "/assets/dataviz/componentPanel/abDesign.svg";
+  };
 
   const hasMeaningfulFigureHtml = (figHtml) => {
     if (typeof figHtml !== "string" || !figHtml.trim()) return false;
@@ -193,14 +201,40 @@ json.dumps(to_native(result))
           borderRadius: "12px",
           border: "1px solid #A1A1A1",
           height: "100%",
+          overflow: "clip",
         }}
       >
-        <div style={{ fontWeight: 600, marginBottom: "1rem", fontSize: "16px" }}>
-          {t(
-            "dataJournal.hypVis.emptyState.title",
-            {},
-            { default: "Your hypothesis visualizer is ready to be configured" },
-          )}
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "0.75rem",
+            marginBottom: "1rem",
+          }}
+        >
+          <div style={{ fontWeight: 600, fontSize: "16px", textAlign: "left" }}>
+            {t(
+              "dataJournal.hypVis.emptyState.title",
+              {},
+              { default: "Your hypothesis visualizer is ready to be configured" },
+            )}
+          </div>
+          <img
+            src={getHypVisEmptyStateImageSrc(hypVisType)}
+            alt={t(
+              "dataJournal.hypVis.emptyState.title",
+              {},
+              { default: "Your hypothesis visualizer is ready to be configured" },
+            )}
+            style={{
+              width: "88px",
+              height: "56px",
+              objectFit: "contain",
+              flexShrink: 0,
+            }}
+          />
         </div>
         <div
           style={{

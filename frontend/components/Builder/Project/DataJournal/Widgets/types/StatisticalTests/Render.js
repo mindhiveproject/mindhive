@@ -8,6 +8,16 @@ export default function Render({ code, pyodide, sectionId, content }) {
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const statTestType = content?.type;
+
+  const getStatTestEmptyStateImageSrc = (type) => {
+    if (type === "pearsonCorr")
+      return "/assets/dataviz/componentPanel/pearsonCorr.svg";
+    if (type === "tTest") return "/assets/dataviz/componentPanel/tTest.svg";
+    if (type === "oneWayAnova")
+      return "/assets/dataviz/componentPanel/oneWayAnova.svg";
+    return "/assets/dataviz/componentPanel/tTest.svg";
+  };
 
   const escapePy = (val) => {
     if (val == null || val === "") return "";
@@ -203,14 +213,40 @@ ${funcName}()
           borderRadius: "12px",
           border: "1px solid #A1A1A1",
           height: "100%",
+          overflow: "clip",
         }}
       >
-        <div style={{ fontWeight: 600, marginBottom: "1rem", fontSize: "16px" }}>
-          {t(
-            "dataJournal.statTest.emptyState.title",
-            {},
-            { default: "Your statistical test is ready to be configured" },
-          )}
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "0.75rem",
+            marginBottom: "1rem",
+          }}
+        >
+          <div style={{ fontWeight: 600, fontSize: "16px", textAlign: "left" }}>
+            {t(
+              "dataJournal.statTest.emptyState.title",
+              {},
+              { default: "Your statistical test is ready to be configured" },
+            )}
+          </div>
+          <img
+            src={getStatTestEmptyStateImageSrc(statTestType)}
+            alt={t(
+              "dataJournal.statTest.emptyState.title",
+              {},
+              { default: "Your statistical test is ready to be configured" },
+            )}
+            style={{
+              width: "88px",
+              height: "56px",
+              objectFit: "contain",
+              flexShrink: 0,
+            }}
+          />
         </div>
         <div
           style={{
