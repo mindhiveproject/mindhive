@@ -450,6 +450,9 @@
 			},
 			"helpAriaLabel": "معلومات اكثر"
 		},
+		"paragraphEditor": {
+			"emptyInvite": "انقر هنا للبدء بالكتابة."
+		},
 		"settingsPanel": {
 			"deleteWidget": "حذف الأداة",
 			"notes": "ملحوظات",

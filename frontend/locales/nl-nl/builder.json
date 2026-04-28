@@ -450,6 +450,9 @@
 			},
 			"helpAriaLabel": "Meer informatie"
 		},
+		"paragraphEditor": {
+			"emptyInvite": "Klik hier om te beginnen met schrijven."
+		},
 		"settingsPanel": {
 			"deleteWidget": "Widget verwijderen",
 			"notes": "Notities",

@@ -450,6 +450,9 @@
 			},
 			"helpAriaLabel": "अधिक जानकारी"
 		},
+		"paragraphEditor": {
+			"emptyInvite": "लिखना शुरू करने के लिए यहां क्लिक करें।"
+		},
 		"settingsPanel": {
 			"deleteWidget": "विजेट हटाएं",
 			"notes": "नोट्स",

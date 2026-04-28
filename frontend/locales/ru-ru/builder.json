@@ -450,6 +450,9 @@
 			},
 			"helpAriaLabel": "Более подробная информация"
 		},
+		"paragraphEditor": {
+			"emptyInvite": "Нажмите здесь, чтобы начать писать."
+		},
 		"settingsPanel": {
 			"deleteWidget": "Удалить виджет",
 			"notes": "Примечания",

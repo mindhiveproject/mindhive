@@ -450,6 +450,9 @@
 			},
 			"helpAriaLabel": "更多信息"
 		},
+		"paragraphEditor": {
+			"emptyInvite": "点击这里开始写作。"
+		},
 		"settingsPanel": {
 			"deleteWidget": "删除小部件",
 			"notes": "笔记",

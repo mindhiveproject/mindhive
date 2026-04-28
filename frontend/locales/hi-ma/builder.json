@@ -450,6 +450,9 @@
 			},
 			"helpAriaLabel": ""
 		},
+		"paragraphEditor": {
+			"emptyInvite": ""
+		},
 		"settingsPanel": {
 			"deleteWidget": "विजेट हटाएं",
 			"notes": "नोट्स",

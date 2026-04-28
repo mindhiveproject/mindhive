@@ -450,6 +450,9 @@
 			},
 			"helpAriaLabel": "More information"
 		},
+		"paragraphEditor": {
+			"emptyInvite": "Click here to start writing."
+		},
 		"settingsPanel": {
 			"deleteWidget": "Delete Widget",
 			"notes": "Notes",
