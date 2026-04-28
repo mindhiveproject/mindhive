@@ -232,15 +232,37 @@ export default function Grid({
         comp.id === componentId
           ? {
               ...comp,
-              content: { ...comp?.content, ...newContent },
-              title: newTitle,
+              ...(newContent != null
+                ? { content: { ...comp?.content, ...newContent } }
+                : {}),
+              ...(newTitle !== undefined ? { title: newTitle } : {}),
             }
           : comp,
       );
       updateWorkspace({ vizSections: updatedComponents });
+      // Keep activeComponent aligned with workspace on the same tick so TipTap (and
+      // other controlled props) never see stale content and re-hydrate over the user.
+      if (activeComponent?.id === componentId) {
+        setActiveComponent((prev) => {
+          if (!prev || prev.id !== componentId) return prev;
+          return {
+            ...prev,
+            ...(newContent != null
+              ? { content: { ...prev.content, ...newContent } }
+              : {}),
+            ...(newTitle !== undefined ? { title: newTitle } : {}),
+          };
+        });
+      }
       debouncedSave({ componentId, updatedComponents });
     },
-    [components, updateWorkspace, debouncedSave],
+    [
+      components,
+      updateWorkspace,
+      debouncedSave,
+      activeComponent?.id,
+      setActiveComponent,
+    ],
   );
 
   const handleRemoveComponent = useCallback(

@@ -32,7 +32,6 @@ export default function CodeEditor({ sectionId, code, onChange }) {
         </button>
       </div>
       <div className="editor-wrapper">
-        sdf
         <CodeMirror
           width="100%"
           value={code}

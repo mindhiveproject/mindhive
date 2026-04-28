@@ -403,7 +403,7 @@ export const StyledRightPanel = styled.div`
   min-height: 0;
   padding: 0 12px 16px 12px;
   box-sizing: border-box;
-  overflow-x: hidden;
+  overflow-x: visible; /* visible-x: allow TipTap toolbar to bleed left over the canvas; min-width:0 + children max-width contain grid */
   overflow-y: auto;
   ${hideScrollbars}
   height: 100%;
@@ -420,9 +420,56 @@ export const StyledRightPanel = styled.div`
     border-radius: 12px;
     border: 1px solid #e6e6e6;
     padding: 12px 14px 16px;
-    overflow-x: auto;
+    overflow-x: visible;
     overflow-y: visible;
     ${hideScrollbars}
+
+    /* TipTap (paragraph panel): flush content chrome; one vertical scroller on this panel */
+    .tiptapEditor {
+      max-width: 100%;
+      border-radius: 0;
+      border-top: 1px solid #E6E6E6;
+    }
+    .editorContainer {
+      margin-top: 0;
+    }
+    .tiptapEditor .ProseMirror {
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      max-height: none;
+      overflow-x: visible;
+      overflow-y: visible;
+    }
+
+    .tiptapEditorHost {
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      min-height: 5.5rem;
+    }
+    .tiptapEditorHost .tiptapEmptyInvite {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      margin: 1rem 0 0 0;
+      width: fit-content;
+      height: fit-content;
+      pointer-events: none;
+      color: #5D5763;
+      border: 1px solid #5D5763;
+      background-color: #F6F9F8;
+      border-radius: 12px;
+      padding: 0.5rem 1rem;
+      font-family: Inter, sans-serif;
+      font-size: 15px;
+      line-height: 150%;
+      font-weight: 400;
+      font-style: italic;
+    }
   }
   .editor-header {
     display: flex;
@@ -799,6 +846,24 @@ export const StyledDataWorkspace = styled.div`
         outline: 4px solid #e6e6e6;
         outline-offset: 2px;
       }
+    }
+
+    /* Paragraph widget on grid: match panel TipTap — no inner ProseMirror box chrome; WidgetContent scrolls */
+    .paragraph .tiptapEditor {
+      max-width: 100%;
+      border-radius: 0;
+    }
+    .paragraph .editorContainer {
+      margin-top: 0;
+    }
+    .paragraph .tiptapEditor .ProseMirror {
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      max-height: none;
+      overflow-x: visible;
+      overflow-y: visible;
     }
   }
   .graph {

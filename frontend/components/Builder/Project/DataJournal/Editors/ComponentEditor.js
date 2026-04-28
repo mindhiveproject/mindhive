@@ -12,6 +12,7 @@ import StatisticsEditor from "../Widgets/types/Statistics/Editor/StatisticsEdito
 import CodeEditor from "../Widgets/types/Code/Editor/CodeEditor";
 import HypVisEditor from "../Widgets/types/HypVis/Editor/HypVisEditor";
 import TableEditor from "../Widgets/types/Table/Editor/TableEditor";
+import ParagraphEditor from "../Widgets/types/Paragraph/Editor/ParagraphEditor";
 import { figPngFileFromPyodide } from "../Widgets/types/HypVis/Editor/Axes/figHtmlFromPyodide";
 import { plotlyPngFileFromFigureSection } from "../Widgets/types/Graph/plotlyPngFileFromFigure";
 
@@ -31,14 +32,6 @@ function graphMediaCreatedWithKey(graphContentType) {
   if (graphContentType === "histogram") return "graph_histogram";
   return "graph";
 }
-
-const TITLE_TYPO = {
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 500,
-  fontSize: "18px",
-  lineHeight: "150%",
-  color: "#000000",
-};
 
 export default function ComponentEditor({
   user,
@@ -160,29 +153,8 @@ export default function ComponentEditor({
   const renderEditor = () => {
     switch (type) {
       case "PARAGRAPH":
-        // Placeholder for Paragraph editor (e.g., simple textarea)
         return (
-          <div style={{ boxSizing: "border-box", width: "100%", maxWidth: "100%", minWidth: 0 }}>
-            <h3 style={{ marginTop: 0, marginBottom: "0.25rem", ...TITLE_TYPO }}>
-              {t("dataJournal.componentEditor.editParagraph", {}, { default: "Edit Paragraph" })}
-            </h3>
-            <textarea
-              value={content?.text || ""}
-              onChange={(e) =>
-                onChange({
-                  componentId: id,
-                  newContent: { text: e.target.value },
-                })
-              }
-              style={{
-                width: "100%",
-                maxWidth: "100%",
-                minWidth: 0,
-                boxSizing: "border-box",
-                height: "200px",
-              }}
-            />
-          </div>
+          <ParagraphEditor content={content} onChange={onChange} sectionId={id} />
         );
       case "TABLE":
         return (
