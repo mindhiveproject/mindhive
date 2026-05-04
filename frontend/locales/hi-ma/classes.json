@@ -566,8 +566,11 @@
 	"emailAddress": "मेल पता",
 	"header": {
 		"addDescription": "",
+		"mentors": "",
+		"mentorsPanelTooltip": "",
 		"save": "बचाना",
 		"teacher": "अध्यापक",
+		"teacherAccountTooltip": "",
 		"titleFallback": ""
 	},
 	"homework": {
@@ -609,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "कार्य",
+		"classSectionsNav": "",
 		"dashboard": "डैशबोर्ड",
 		"mentors": "मेंटर्स",
 		"projects": "परियोजनाओं",

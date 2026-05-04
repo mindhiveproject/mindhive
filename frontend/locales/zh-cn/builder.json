@@ -352,23 +352,152 @@
 			"untitled": "未命名数据集"
 		},
 		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "要绘制的列",
+					"dataFormat": {
+						"googleSlidesAlt": "谷歌幻灯片",
+						"hintLong": "如果要比较各列，请点击这里。",
+						"hintWide": "如果要比较同一列（变量）的不同组，请点击此处。",
+						"longDescription": "数据以每项观测值（例如学生的考试分数）单独占一行的方式组织，通常还会有一列标明类别（例如科目）。这种格式有利于跨类别进行详细分析。",
+						"longTitle": "长数据格式",
+						"sectionLabel": "数据布局",
+						"slidesLink": "点击此处查看讲义幻灯片",
+						"switchToLong": "切换到长格式",
+						"switchToWide": "切换到宽幅格式",
+						"wideDescription": "数据按类别（例如科目）单独列排列，每列通常代表一个观察值（例如学生）。这种格式便于在同一类别内快速比较。",
+						"wideTitle": "宽数据格式"
+					},
+					"errBar95": "95% 置信区间",
+					"errBar99": "99% 置信区间",
+					"errBarStdErr": "标准误差",
+					"errorBar": "误差线",
+					"errorBarWide": "误差线",
+					"qualitativeColumn": "定性专栏",
+					"quantitativeColumn": "定量柱",
+					"resources": {
+						"barPlotAlt": "外部链接",
+						"barPlotTitle": "什么是条形图？",
+						"confidenceIntervalsAlt": "外部链接",
+						"confidenceIntervalsTitle": "置信区间——它们是什么？",
+						"standardErrorAlt": "外部链接",
+						"standardErrorTitle": "关于标准误差的更多信息"
+					}
+				},
+				"header": {
+					"iconAlt": "轴",
+					"title": "轴"
+				},
+				"help": {
+					"ariaLabel": "资源和帮助",
+					"resourcesIntro": "如果提供链接，请使用下面的按钮在新标签页中打开参考文献。"
+				},
+				"histogram": {
+					"columnsToObserve": "要观察的列",
+					"groupByOptional": "分组依据（可选——按类别着色）",
+					"marginalBox": "箱线图",
+					"marginalNone": "没有任何",
+					"marginalPlot": "边缘地块",
+					"marginalRug": "地毯图案",
+					"resources": {
+						"histogramAlt": "外部链接",
+						"histogramTitle": "什么是直方图？"
+					}
+				},
+				"scatterPlot": {
+					"group": "团体",
+					"resources": {
+						"scatterPlotAlt": "散点图资源",
+						"scatterPlotTitle": "散点图",
+						"trendlineAlt": "趋势线资源外部链接",
+						"trendlineTitle": "趋势线"
+					},
+					"trendline": "趋势线",
+					"xAxis": "X轴",
+					"yAxis": "Y轴"
+				}
+			},
 			"codeEditor": {
-				"runCode": ""
+				"runCode": "运行代码"
+			},
+			"common": {
+				"axisSection": {
+					"x": "X轴",
+					"y": "Y轴"
+				},
+				"graphTitle": "图表标题",
+				"label": "标签",
+				"legendTitle": "图例标题",
+				"legendTitleHint": "（如不需要，请留空）",
+				"legendTitleSection": "图例标题",
+				"marginalPlot": "边缘地块",
+				"range": {
+					"label": "范围",
+					"max": "最大限度",
+					"min": "分钟"
+				},
+				"resources": {
+					"noLink": "无外部链接",
+					"openLink": "点击此处访问资源"
+				}
 			},
 			"editor": {
 				"styleLayout": {
-					"description": "",
-					"title": ""
+					"description": "自定义图表的外观和布局。",
+					"title": "样式和布局选项"
 				},
 				"tabs": {
-					"axes": "",
-					"codeEditor": "",
-					"styleLayout": ""
+					"axes": "轴",
+					"codeEditor": "代码编辑器",
+					"styleLayout": "风格与布局"
 				}
 			},
 			"emptyState": {
 				"helper": "点击此组件打开编辑器，然后选择变量以预览可视化效果。",
 				"title": "您的图表已准备好进行配置。"
+			},
+			"fields": {
+				"clearSelection": "没有任何",
+				"selectPlaceholder": "选择 {{field}}",
+				"selectVariablesPlaceholder": "选择变量"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- HEX 格式 [#28619E], [#D53533]",
+						"examplesNames": "- 颜色名称：[红色]、[粉色]",
+						"examplesRgb": "- RGB 值 [100,255,0], [0,120,80]",
+						"heading": "颜色",
+						"intro": "为条形图指定一个底色（删除方括号即可使用以下示例）。"
+					},
+					"header": {
+						"iconAlt": "选项",
+						"title": "选项"
+					},
+					"legendAndXAxisSection": "X轴标签和图例标题",
+					"yAxis": "Y轴"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "选项",
+						"title": "选项"
+					},
+					"legendSection": "传奇",
+					"legendTitleCombined": "图例标题（如果不需要，请留空）",
+					"yAxis": "Y轴"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "选项",
+						"title": "选项"
+					},
+					"marginal": {
+						"boxplot": "箱线图",
+						"none": "",
+						"rug": "小地毯"
+					},
+					"yAxis": "Y轴"
+				}
 			}
 		},
 		"hypVis": {
@@ -450,6 +579,9 @@
 			},
 			"helpAriaLabel": "更多信息"
 		},
+		"paragraphEditor": {
+			"emptyInvite": "点击这里开始写作。"
+		},
 		"settingsPanel": {
 			"deleteWidget": "删除小部件",
 			"notes": "笔记",
@@ -466,6 +598,7 @@
 			"addWorkspaceLoading": "添加...",
 			"addWorkspaceScratch": "从头开始创建一个工作区",
 			"addWorkspaceTemplate": "添加工作区模板",
+			"backToJournal": "返回日记",
 			"collapsePanel": "关闭",
 			"componentFallbackName": "组件名称",
 			"dataOrigin": {

@@ -225,7 +225,7 @@
 	},
 	"createStudyWithoutProject": "Create a study without a project",
 	"dataJournal": {
-		"addComponent": "Add Component",
+		"addComponent": "Component",
 		"addNotes": "Add Notes",
 		"code": {
 			"editor": {
@@ -352,8 +352,96 @@
 			"untitled": "Untitled Dataset"
 		},
 		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "Column(s) to plot",
+					"dataFormat": {
+						"chipLong": "Long",
+						"chipWide": "Wide",
+						"googleSlidesAlt": "Google Slides",
+						"hintLong": "If you want to compare columns, click here.",
+						"hintWide": "If you want to compare different groups for one column (variable), click here.",
+						"longDescription": "Data organized with each observation (like a student's test score) appearing on its own row, often with a column indicating categories (like subjects). This format is useful for detailed analysis across categories.",
+						"longTitle": "Long Data Format",
+						"panelRegionAriaLabel": "Change data layout: diagram and resources for the selected format",
+						"sectionLabel": "Change data layout",
+						"slidesLink": "Click here to see the lecture slides",
+						"toggleAriaLabel": "Show or hide data layout options",
+						"wideDescription": "Data organized with each category (like subjects) appearing as its own column, often with rows representing observations (like students). This format is simpler for quick comparisons within categories.",
+						"wideTitle": "Wide Data Format"
+					},
+					"errBar95": "95% confidence interval",
+					"errBar99": "99% confidence interval",
+					"errBarStdErr": "Standard error",
+					"errorBar": "Error bar",
+					"errorBarWide": "Error Bar",
+					"qualitativeColumn": "Qualitative Column",
+					"quantitativeColumn": "Quantitative Column",
+					"resources": {
+						"barPlotAlt": "External link",
+						"barPlotTitle": "What is a Bar Plot?",
+						"confidenceIntervalsAlt": "External link",
+						"confidenceIntervalsTitle": "Confidence intervals — what are they?",
+						"standardErrorAlt": "External link",
+						"standardErrorTitle": "More about the standard error"
+					}
+				},
+				"header": {
+					"iconAlt": "Axes",
+					"title": "Axes"
+				},
+				"help": {
+					"ariaLabel": "Resources and help",
+					"resourcesIntro": "Click on the resources below to learn more about this component"
+				},
+				"histogram": {
+					"columnsToObserve": "Column(s) to observe",
+					"groupByOptional": "Group by (optional — color by category)",
+					"marginalBox": "Box plot",
+					"marginalNone": "None",
+					"marginalPlot": "Marginal plot",
+					"marginalRug": "Rug plot",
+					"resources": {
+						"histogramAlt": "External link",
+						"histogramTitle": "What is a Histogram?"
+					}
+				},
+				"scatterPlot": {
+					"group": "Group",
+					"resources": {
+						"scatterPlotAlt": "Scatter plot resource",
+						"scatterPlotTitle": "Scatter Plot",
+						"trendlineAlt": "External link to trendline resource",
+						"trendlineTitle": "Trendline"
+					},
+					"trendline": "Trendline",
+					"xAxis": "X-Axis",
+					"yAxis": "Y-Axis"
+				}
+			},
 			"codeEditor": {
 				"runCode": "Run the code"
+			},
+			"common": {
+				"axisSection": {
+					"x": "X-Axis",
+					"y": "Y-Axis"
+				},
+				"graphTitle": "Graph Title",
+				"label": "Label",
+				"legendTitle": "Legend title",
+				"legendTitleHint": "(leave empty if not needed)",
+				"legendTitleSection": "Legend title",
+				"marginalPlot": "Marginal plot",
+				"range": {
+					"label": "Range",
+					"max": "Max",
+					"min": "Min"
+				},
+				"resources": {
+					"noLink": "No external link",
+					"openLink": "Click here to access the resource"
+				}
 			},
 			"editor": {
 				"styleLayout": {
@@ -369,10 +457,63 @@
 			"emptyState": {
 				"helper": "Click this component to open the editor, then choose variables to preview your visualization.",
 				"title": "Your graph is ready to be configured"
+			},
+			"fields": {
+				"clearSelection": "None",
+				"selectPlaceholder": "Select {{field}}",
+				"selectVariablesPlaceholder": "Select variable(s)"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- HEX format [#28619E], [#D53533]",
+						"examplesNames": "- Color names: [red], [pink]",
+						"examplesRgb": "- RGB value [100,255,0], [0,120,80]",
+						"heading": "Color",
+						"intro": "Give a base color for the bar (remove square brackets to use the examples below)."
+					},
+					"header": {
+						"iconAlt": "Options",
+						"title": "Options"
+					},
+					"legendAndXAxisSection": "X-axis labels and legend title",
+					"yAxis": "Y-Axis"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "Options",
+						"title": "Options"
+					},
+					"legendSection": "Legend",
+					"legendTitleCombined": "Legend title (leave empty if not needed)",
+					"yAxis": "Y-Axis"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "Options",
+						"title": "Options"
+					},
+					"marginal": {
+						"boxplot": "Boxplot",
+						"none": "",
+						"rug": "Rug"
+					},
+					"yAxis": "Y-Axis"
+				}
 			}
 		},
 		"hypVis": {
 			"axes": {
+				"common": {
+					"help": {
+						"ariaLabel": "Resources and help",
+						"resourcesIntro": "Use the buttons below to open a reference in a new tab when a link is available."
+					},
+					"resources": {
+						"noLink": "No external link",
+						"openLinkHint": "Click here to access the resource"
+					}
+				},
 				"abDesign": {
 					"clipboardAiCopied": "AI-reformulated hypothesis copied to clipboard: {{text}}",
 					"clipboardFigCopied": "Copied to clipboard!",
@@ -400,7 +541,17 @@
 					"yourHypothesisHelpIntro": "To build your experimental hypothesis, follow these steps:",
 					"yourHypothesisHelpStep1": "Name your IV and DV",
 					"yourHypothesisHelpStep2": "State how many conditions your IV has",
-					"yourHypothesisHelpStep3": "Predict the DV values for each condition of the IV"
+					"yourHypothesisHelpStep3": "Predict the DV values for each condition of the IV",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "Reference coming soon.",
+							"title": "What is an experimental hypothesis?"
+						},
+						"rankOrdering": {
+							"subtitle": "Reference coming soon.",
+							"title": "Rank-ordering predictions"
+						}
+					}
 				},
 				"clipboard": {
 					"abDesignConditionLine": "- {{condition}} will occupy rank #{{rank}}\n",
@@ -433,7 +584,26 @@
 					"loadingBlocks": "Loading block data...",
 					"sectionTitle": "Your correlational hypothesis",
 					"titleLabel": "Title",
-					"willBeRelatedTo": "will be related to"
+					"willBeRelatedTo": "will be related to",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "Reference coming soon.",
+							"title": "What is a correlational hypothesis?"
+						},
+						"directionality": {
+							"subtitle": "Reference coming soon.",
+							"title": "Choosing directionality terms"
+						}
+					}
+				},
+				"default": {
+					"group": "Group",
+					"header": {
+						"iconAlt": "Axes",
+						"title": "Axes"
+					},
+					"xAxis": "X-Axis",
+					"yAxis": "Y-Axis"
 				}
 			},
 			"editor": {
@@ -450,6 +620,9 @@
 			},
 			"helpAriaLabel": "More information"
 		},
+		"paragraphEditor": {
+			"emptyInvite": "Click here to start writing."
+		},
 		"settingsPanel": {
 			"deleteWidget": "Delete Widget",
 			"notes": "Notes",
@@ -457,6 +630,8 @@
 			"widgetSettings": "Widget Settings"
 		},
 		"sideNav": {
+			"addComponent": "Component",
+			"addComponentAria": "Add a component to this workspace",
 			"addJournal": "Journal",
 			"addJournalScratch": "Create a journal from scratch",
 			"addJournalTemplate": "Add a journal template",
@@ -466,6 +641,7 @@
 			"addWorkspaceLoading": "Adding…",
 			"addWorkspaceScratch": "Create a workspace from scratch",
 			"addWorkspaceTemplate": "Add a workspace template",
+			"backToJournal": "Back to journal",
 			"collapsePanel": "Close",
 			"componentFallbackName": "Component name",
 			"dataOrigin": {
@@ -545,6 +721,101 @@
 			}
 		},
 		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "Column(s) to include in ANOVA",
+					"dataFormat": {
+						"currentlyPerforming": "Currently performing:",
+						"long": {
+							"description": "In the example above, we would select the column 'attrib' as a grouping column. This grouping is performed on the 'value' column which contains values for the conditions c1, c2, and c3.",
+							"title": "Switch to using a label column to sort rows of a value column"
+						},
+						"summaryLong": {
+							"hint": "(Click here if you want to switch to comparing values in different columns)",
+							"main": "One-Way ANOVA on a column containing values using a grouping column containing the group's labels on each row"
+						},
+						"summaryWide": {
+							"between": "between",
+							"columns": " three or more columns.",
+							"hint": "(Click here to use a label column to group each rows per unique label)",
+							"prefix": "One-Way ANOVA "
+						},
+						"wide": {
+							"description": "In the example above, we would select the columns c1, c2, and c3 to perform a One-Way Anova on them.",
+							"title": "Switch to performing a One-Way Anova between three or more columns"
+						}
+					},
+					"groupingColumn": "Grouping Column",
+					"quantitativeColumn": "Quantitative Column",
+					"resources": {
+						"scribbrLinkAlt": "External link",
+						"scribbrLinkTitle": "What is a One-way ANOVA?"
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "Long",
+						"chipWide": "Wide",
+						"panelRegionAriaLabel": "Data layout: diagram for the selected format",
+						"sectionLabel": "Data layout",
+						"toggleAriaLabel": "Show or hide data layout options"
+					},
+					"header": {
+						"iconAlt": "Axes",
+						"title": "Axes"
+					},
+					"help": {
+						"ariaLabel": "Resources and help",
+						"resourcesIntro": "Learn more about this component with the resources below."
+					},
+					"resources": {
+						"noLink": "No external link",
+						"openLinkHint": "Click here to access the resource",
+						"sectionTitle": "Resources"
+					}
+				},
+				"default": {
+					"column1": "1st Column",
+					"column2": "2nd Column"
+				},
+				"pearson": {
+					"predictedColumn": "Predicted Column",
+					"predictorColumn": "Predictor Column",
+					"resources": {
+						"scribbrLinkAlt": "External link",
+						"scribbrLinkTitle": "What's a Pearson's correlation"
+					}
+				},
+				"tTest": {
+					"col1": "1st column",
+					"col2": "2nd column",
+					"dataFormat": {
+						"currentlyPerforming": "Currently performing:",
+						"long": {
+							"description": "In the example above, we would select the column 'attrib' as a grouping column. This grouping is performed on the 'value' column which contains values for both conditions",
+							"title": "Switch to using a label column to sort rows of a value column"
+						},
+						"summaryLong": {
+							"main": "T-Test on a column containing values using a grouping column containing labels for each row"
+						},
+						"summaryWide": {
+							"between": "between",
+							"columns": " two columns.",
+							"prefix": "T-Test "
+						},
+						"wide": {
+							"description": "In the example above, we would select the columns c1 and c2 to perform a t-test on them.",
+							"title": "Switch to performing a T-Test between two columns"
+						}
+					},
+					"groupingColumn": "Grouping Column",
+					"quantitativeColumn": "Quantitative Column",
+					"resources": {
+						"scribbrLinkAlt": "External link",
+						"scribbrLinkTitle": "Independent samples t-test"
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
 					"code": "Code",

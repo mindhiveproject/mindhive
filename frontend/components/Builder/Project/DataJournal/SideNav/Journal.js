@@ -13,6 +13,7 @@ import { useDataJournal } from "../Context/DataJournalContext";
 import WorkspaceNavigation from "./Workspace";
 import DataSourceModal from "./DataSourceModal";
 import AddWorkspace from "./AddWorkspace";
+import AddComponentButton from "./AddComponentButton";
 import EditJournal from "../Helpers/EditJournal";
 import { useDeleteJournal } from "../Helpers/DeleteJournal";
 import {
@@ -36,7 +37,15 @@ export default function JournalNavigation({
   const { t } = useTranslation("builder");
   const { t: tCommon } = useTranslation("common");
   const router = useRouter();
-  const { user, projectId, studyId } = useDataJournal();
+  const {
+    user,
+    projectId,
+    studyId,
+    setActiveComponent,
+    setIsAddComponentPanelOpen,
+    setLeftPanelMode,
+    setSidebarVisible,
+  } = useDataJournal();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -255,6 +264,19 @@ export default function JournalNavigation({
 
         {isJournalSelected && (
           <>
+            <div className="addActionsRow">
+              <AddWorkspace journalId={journal?.id} />
+              <AddComponentButton
+                disabled={!selectedWorkspace?.id}
+                onClick={() => {
+                  setActiveComponent(null);
+                  setLeftPanelMode("addComponent");
+                  setIsAddComponentPanelOpen(true);
+                  setSidebarVisible(true);
+                }}
+              />
+            </div>
+
             <div className="workspaces">
               {workspaces.map((workspace) => (
                 <WorkspaceNavigation
@@ -267,8 +289,6 @@ export default function JournalNavigation({
                 />
               ))}
             </div>
-
-            <AddWorkspace journalId={journal?.id} />
           </>
         )}
       </div>

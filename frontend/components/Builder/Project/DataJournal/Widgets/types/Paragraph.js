@@ -1,20 +1,19 @@
-import { useState } from "react";
-import JoditEditor from "../../../../../Jodit/Editor";
 import ReactHtmlParser from "react-html-parser";
 
-import { Radio, Icon } from "semantic-ui-react";
+import { StyledTipTap } from "../../../../../TipTap/StyledTipTap";
 
 export default function Paragraph({ content, handleContentChange }) {
-  const [isEditing, setIsEditing] = useState(!content?.text);
-
-  // update content in the local state
-  const handleChange = async (content) => {
-    handleContentChange(content);
-  };
-
   return (
     <div className="paragraph">
-      <div className="viewMode">{ReactHtmlParser(content?.text)}</div>
+      <StyledTipTap>
+        <div className="editorContainer">
+          <div className="tiptapEditor">
+            <div className="ProseMirror" aria-readonly>
+              {ReactHtmlParser(content?.text || "")}
+            </div>
+          </div>
+        </div>
+      </StyledTipTap>
     </div>
   );
 }

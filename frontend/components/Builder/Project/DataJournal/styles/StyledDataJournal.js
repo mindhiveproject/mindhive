@@ -11,6 +11,84 @@ const hideScrollbars = css`
   }
 `;
 
+/** Collapsible data layout panel (graph bar plot + statistical test axes under .selectorsStats) */
+const barPlotDataFormatPanelStyles = css`
+  .barPlotDataFormat {
+    display: grid;
+    grid-gap: 10px;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .barPlotDataFormat__panel {
+    display: grid;
+    grid-gap: 12px;
+    min-width: 0;
+    max-width: 100%;
+    padding-top: 2px;
+    box-sizing: border-box;
+  }
+  .barPlotDataFormat__card {
+    display: grid;
+    grid-gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #e6e6e6;
+    background: #ffffff;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .barPlotDataFormat__figureWrap {
+    width: 70%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+  .barPlotDataFormat__figure {
+    display: block;
+    width: 100%;
+    height: auto;
+    vertical-align: top;
+  }
+  .barPlotDataFormat__title {
+    margin: 0;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #171717;
+    overflow-wrap: break-word;
+  }
+  .barPlotDataFormat__desc {
+    margin: 0;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #5d5763;
+    overflow-wrap: break-word;
+  }
+  .barPlotDataFormat__slides {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-family: Inter, sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    min-width: 0;
+  }
+  .barPlotDataFormat__slides img {
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .barPlotDataFormat__slides a {
+    color: var(--MH-Theme-Primary-Base, #337c84);
+    text-decoration: underline;
+    word-break: break-word;
+  }
+`;
+
 export const StyledDataArea = styled.div`
   display: grid;
   align-content: baseline;
@@ -136,6 +214,13 @@ export const StyledSidebar = styled.div`
       gap: 8px;
       align-items: center;
     }
+    .addActionsRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 8px 0;
+    }
   }
   .workspaces {
     display: grid;
@@ -201,18 +286,21 @@ export const StyledSidebar = styled.div`
     }
   }
 
-  .addWorkspaceBtn {
+  .addWorkspaceBtn,
+  .addComponentBtn {
     display: flex;
     width: fit-content;
     justify-content: center;
     align-items: center;
     border-radius: 8px;
 
-    > div > button {
+    > div > button,
+    > button {
       transition: background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    &:hover > div > button {
+    &:hover > div > button,
+    &:hover > button {
       background-color: #e8eeec !important;
       box-shadow: var(
         --MH-Theme-Elevation-Medium,
@@ -282,9 +370,40 @@ export const StyledTopNavigation = styled.div`
   border-bottom: 1px solid #e6e6e6;
   background: white;
   .buttons {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-gap: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+  }
+  .topNavJournalActions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  /* TopNav is under StyledDataWorkspace, not StyledDataJournal — mirror journal pill hovers here */
+  .addWorkspaceBtn,
+  .addComponentBtn {
+    display: flex;
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+
+    > div > button,
+    > button {
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    &:hover > div > button,
+    &:hover > button {
+      background-color: #e8eeec !important;
+      box-shadow: var(
+        --MH-Theme-Elevation-Medium,
+        0 1px 4px rgba(0, 0, 0, 0.08)
+      );
+    }
   }
   .leftIconNav {
     margin: 0px 8px 0px 12px;
@@ -395,13 +514,12 @@ export const StyledRightPanel = styled.div`
   display: grid;
   align-content: baseline;
   grid-gap: 10px;
-  /* Horizontal margin + width:100% overflows the grid rail; keep vertical inset only */
   margin: 0;
   width: 100%;
   max-width: 100%;
   min-width: 0;
   min-height: 0;
-  padding: 0 12px 16px 12px;
+  padding: 12px;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
@@ -420,9 +538,56 @@ export const StyledRightPanel = styled.div`
     border-radius: 12px;
     border: 1px solid #e6e6e6;
     padding: 12px 14px 16px;
-    overflow-x: auto;
+    overflow-x: visible;
     overflow-y: visible;
     ${hideScrollbars}
+
+    /* TipTap (paragraph panel): flush content chrome; one vertical scroller on this panel */
+    .tiptapEditor {
+      max-width: 100%;
+      border-radius: 0;
+      border-top: 1px solid #E6E6E6;
+    }
+    .editorContainer {
+      margin-top: 0;
+    }
+    .tiptapEditor .ProseMirror {
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      max-height: none;
+      overflow-x: visible;
+      overflow-y: visible;
+    }
+
+    .tiptapEditorHost {
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      min-height: 5.5rem;
+    }
+    .tiptapEditorHost .tiptapEmptyInvite {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      margin: 1rem 0 0 0;
+      width: fit-content;
+      height: fit-content;
+      pointer-events: none;
+      color: #5D5763;
+      border: 1px solid #5D5763;
+      background-color: #F6F9F8;
+      border-radius: 12px;
+      padding: 0.5rem 1rem;
+      font-family: Inter, sans-serif;
+      font-size: 15px;
+      line-height: 150%;
+      font-weight: 400;
+      font-style: italic;
+    }
   }
   .editor-header {
     display: flex;
@@ -555,13 +720,14 @@ export const StyledComponentPanel = styled.div`
   display: grid;
   align-content: baseline;
   grid-gap: 10px;
-  min-width: 300px;
+  min-width: 0;
+  width: 100%;
   background: white;
-  padding: 16px;
+  padding: 12px;
   overflow-y: auto;
   height: 100%;
-  margin: 0px 8px 0px 0px;
-  box-shadow: 0px 2px 4px 0px #00000012;
+  margin: 0;
+  box-shadow: none;
   border-radius: 12px;
   border: 1px solid #e6e6e6;
   .panelHeader {
@@ -668,29 +834,14 @@ export const StyledDataWorkspace = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
   align-content: baseline;
   background: #f8f9f8;
   gap: 10px;
   --dashboard-gap: 10px;
   /* Space between the left journal sidebar and the grid canvas when the sidebar is open */
   --left-panel-canvas-gap: 16px;
-  --right-rail-width: clamp(380px, 36vw, 900px);
-
-  /* Left journal sidebar: never show a box-shadow (Semantic UI + themes often add one) */
-  .sidebar,
-  .dashboardPushable .ui.sidebar,
-  .dashboardPushable .ui.sidebar.visible,
-  .dashboardPushable .ui.sidebar.animating {
-    background: white;
-    border: 1px solid #e6e6e6;
-    border-left: none;
-    /* Flush to the left: no radius on the outer (left) edge; keep radius toward the canvas */
-    border-top-left-radius: 0 !important;
-    border-bottom-left-radius: 0 !important;
-    border-top-right-radius: 12px !important;
-    border-bottom-right-radius: 12px !important;
-    box-shadow: none !important;
-  }
+  --left-sidebar-width: 430px;
 
   .segment {
     border: none;
@@ -715,16 +866,15 @@ export const StyledDataWorkspace = styled.div`
     grid-template-rows: minmax(0, 1fr);
     gap: var(--dashboard-gap);
     align-content: stretch;
-    height: calc(100vh - 50px);
+    flex: 1 1 auto;
     min-width: 0;
     min-height: 0;
-
-    &.hasRightPanel {
-      grid-template-columns: minmax(0, 1fr) var(--right-rail-width);
-    }
+    overflow: hidden;
 
     .dashboardMain {
       min-width: 0;
+      min-height: 0;
+      overflow: hidden;
       position: relative;
       display: grid;
       grid-template-rows: minmax(0, 1fr);
@@ -747,45 +897,154 @@ export const StyledDataWorkspace = styled.div`
       box-shadow: 2px 2px 8px 0px #0000001a;
     }
 
-    /* Semantic UI can apply margin-top on .ui.segment.pushable when sidebar is hidden — removes “extra padding” at top */
-    .dashboardPushable.ui.segment.pushable {
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
-    }
-
-    .dashboardPushable {
+    /* Two-pane journal: flex row + container query so canvas width stays constant when rail collapses */
+    .journalShell {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      align-self: stretch;
       min-width: 0;
+      min-height: 0;
+      width: 100%;
       height: 100%;
+      max-height: 100%;
       overflow: hidden;
-    }
-
-    .dashboardPusher {
-      min-width: 0;
-      min-height: 0;
-      background: transparent;
-    }
-
-    &.hasLeftSidebar .dashboardPusher {
-      padding-left: var(--left-panel-canvas-gap);
       box-sizing: border-box;
+      gap: var(--left-panel-canvas-gap);
+      container-type: inline-size;
+      container-name: journal-shell;
     }
 
-    .dashboardRightRail {
+    .journalLeftRail {
+      flex: 0 0 var(--left-sidebar-width);
+      max-width: var(--left-sidebar-width);
       min-width: 0;
+      /* Let the rail shrink inside the flex row so inner .sidebarModeBody can scroll */
       min-height: 0;
+      max-height: 100%;
       height: 100%;
       overflow: hidden;
       display: grid;
       grid-template-rows: minmax(0, 1fr);
-      align-content: stretch;
+      box-sizing: border-box;
+      background: white;
+      border: 1px solid #e6e6e6;
+      border-left: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+      box-shadow: none;
+      transition:
+        flex-basis 0.2s ease,
+        max-width 0.2s ease,
+        opacity 0.15s ease,
+        border-color 0.15s ease;
+    }
+
+    &.noLeftSidebar .journalLeftRail {
+      flex: 0 0 0;
+      max-width: 0;
+      min-width: 0;
+      opacity: 0;
+      pointer-events: none;
+      border-color: transparent;
+    }
+
+    &.hasLeftSidebar .journalLeftRail {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .journalCanvasColumn {
+      flex: 1 1 auto;
+      min-width: 0;
+      min-height: 0;
+      max-height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+
+    &.hasLeftSidebar .journalCanvasColumn {
       align-items: stretch;
+    }
+
+    &.noLeftSidebar .journalCanvasColumn {
+      align-items: center;
+      /* Gutters without shrinking journalShell — keeps cqi stable when rail toggles */
+      margin-inline: 16px;
+    }
+
+    /* Width from full journal row (cqi), not remaining flex space — RGL does not resize when rail toggles */
+    .journalShell .canvas {
+      width: calc(
+        100cqi - var(--left-sidebar-width) - var(--left-panel-canvas-gap)
+      );
+      max-width: 100%;
+
+      flex: 1 1 0;
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* legacy Edge */
+
+      &::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+      }
+    }
+  }
+  .sidebarModeShell {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+  .sidebarModeHeader {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #ffffff;
+    border-bottom: 1px solid #e6e6e6;
+    margin: 0;
+    padding: 10px;
+  }
+  .navigationPanelHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    .collapsePanelBtn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-start;
+      .collapsePanelBtnIcon {
+        opacity: 0.5;
+      }
+    }
+  }
+  .sidebarModeBody {
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* legacy Edge */
+
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
     }
   }
   .canvas {
     display: grid;
     width: 100%;
     min-width: 0;
-    min-height: 80vh;
+    min-height: 0;
+    box-sizing: border-box;
 
     background: white;
     // box-shadow: 2px 2px 8px 0px #0000001a;
@@ -800,6 +1059,27 @@ export const StyledDataWorkspace = styled.div`
         outline-offset: 2px;
       }
     }
+
+    /* Paragraph widget on grid: match panel TipTap — no inner ProseMirror box chrome; WidgetContent scrolls */
+    .paragraph .tiptapEditor {
+      max-width: 100%;
+      border-radius: 0;
+    }
+    .paragraph .editorContainer {
+      margin-top: 0;
+    }
+    .paragraph .tiptapEditor .ProseMirror {
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      max-height: none;
+      overflow-x: visible;
+      overflow-y: visible;
+    }
+  }
+  .dashboard.noLeftSidebar .journalShell .canvas {
+    max-width: min(1380px, 100%);
   }
   .graph {
     display: grid;
@@ -879,8 +1159,12 @@ export const StyledDataWorkspace = styled.div`
     }
     .selectors {
       display: grid;
-      margin: 20px;
-      grid-gap: 21px;
+      margin: 0;
+      padding: 8px;
+      box-sizing: border-box;
+      grid-gap: 12px;
+      min-width: 0;
+      max-width: 100%;
       .header {
         display: grid;
         grid-gap: 10px;
@@ -889,49 +1173,108 @@ export const StyledDataWorkspace = styled.div`
         font-size: 18px;
         margin: 10px 0px 10px 0px;
       }
+
+      ${barPlotDataFormatPanelStyles}
     }
     .selectorsTestStats {
       display: grid;
-      grid-gap: 21px;
+      grid-gap: 12px;
     }
     .selectorsStats {
-      margin: 20px clamp(12px, 4vw, 48px) 50px;
+      margin: 0;
+      padding: 8px clamp(10px, 3vw, 24px) 16px;
+      box-sizing: border-box;
       display: grid;
-      grid-gap: 41px;
+      grid-gap: 16px;
+      min-width: 0;
+      max-width: 100%;
+
+      .statTestDataFormatSummary {
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        line-height: 1.45;
+        color: #000000;
+        min-width: 0;
+        max-width: 100%;
+      }
+      .statTestDataFormatSummary p {
+        margin: 0 0 8px 0;
+      }
+      .statTestDataFormatSummary p:last-child {
+        margin-bottom: 0;
+      }
+
+      ${barPlotDataFormatPanelStyles}
+    }
+    .graphEditorFieldRow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 100%;
+      min-width: 0;
+      grid-gap: 10px;
+      // border-radius: 12px;
+      // border: 1px solid #e6e6e6;
+      background: #fff;
+      // box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+      color: #171717;
+      font-family: Inter, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.4;
+      .graphEditorFieldRow__label {
+        display: block;
+        background: transparent;
+        color: #337c84;
+        font-weight: 600;
+        // padding: 10px 12px 4px;
+        min-width: 0;
+        overflow-wrap: break-word;
+      }
+      .graphEditorFieldRow__control {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        .dropdown {
+          border: 0;
+        }
+      }
+    }
+    .graphEditorNestedFields {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+      max-width: 100%;
     }
     .selectorLine {
       display: grid;
-      grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
+      grid-gap: 12px;
       max-width: 100%;
-      border-radius: 8px;
-      border: 1px solid #eaeaea;
       background: #fff;
-      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
-      color: #4bb3a3;
+      color: #171717;
       font-family: Inter;
-      font-size: 16px;
-      font-style: normal;
+      font-size: 14px;
       font-weight: 400;
-      line-height: 150%;
+      line-height: 1.4;
       .title {
-        display: grid;
-        align-content: center;
-        justify-content: end;
-        background: #eaeaea;
-        padding: 9px 13px;
+        display: block;
+        color: #337c84;
+        font-weight: 600;
+        background: transparent;
         min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow-wrap: break-word;
       }
       .select {
         min-width: 0;
+        padding: 0;
         .dropdown {
           border: 0;
         }
         select {
-          border: 0px;
-          height: 100%;
-          padding: 9px 13px;
+          min-height: 44px;
           min-width: 0;
           width: 100%;
           max-width: 100%;
@@ -1007,7 +1350,7 @@ export const StyledDataWorkspace = styled.div`
       box-sizing: border-box;
       overflow-x: auto;
       ${hideScrollbars}
-      padding: 20px;
+      padding: 8px;
       background: white;
       border-radius: 0 0 10px 10px;
       .styleLayoutContainer {
@@ -1031,7 +1374,11 @@ export const StyledDataWorkspace = styled.div`
   }
   .graphDashboard {
     display: grid;
-    margin: 0px 10px 20px 10px;
+    margin: 0 0 8px 0;
+    padding: 0 2px;
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
 
     .header {
       display: grid;
@@ -1042,21 +1389,36 @@ export const StyledDataWorkspace = styled.div`
       margin: 0px 0px 10px 0px;
     }
     .subheader {
-      background: #f1f7f6;
-      padding: 10px;
+      background: transparent;
+      padding: 2px 2px 0;
+      margin-top: 4px;
+      font-family: Inter, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #6a6a6a;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
     }
     .subsection {
       display: grid;
       grid-gap: 8px;
-      padding: 10px 10px;
+      padding: 4px 0 8px;
     }
     .title {
       color: #666666;
     }
     .ranges {
-      display: grid;
-      grid-gap: 10px;
-      grid-template-columns: 100px 100px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      input {
+        flex: 1;
+        min-width: 0;
+      }
     }
     label {
       display: block;
@@ -1068,17 +1430,17 @@ export const StyledDataWorkspace = styled.div`
     input,
     textarea,
     select {
-      font-family: Lato;
-      height: 48px;
+      font-family: Inter, sans-serif;
+      min-height: 44px;
       border: 1px solid #cccccc;
       border-radius: 10px;
       width: 100%;
-      font-size: 16px;
-      line-height: 24px;
-      padding: 12px;
+      font-size: 14px;
+      line-height: 20px;
+      padding: 10px 12px;
       &:focus {
         outline: 0;
-        border-color: ${(props) => props.theme.red};
+        border-color: #337c84;
       }
     }
   }
@@ -1091,7 +1453,6 @@ export const StyledDataWorkspace = styled.div`
     max-width: 100%;
     min-width: 0;
     align-self: stretch;
-    padding: 20px 16px;
     flex-direction: column;
     align-items: stretch;
     gap: 22px;

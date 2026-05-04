@@ -85,7 +85,7 @@ export default function HypVisEditor({
               selected={activeTab === index}
               onClick={() => setActiveTab(index)}
               shape="square"
-              style={activeTab === index ? { backgroundColor: "#F6F9F8" } : { border: "1px solid #F3F3F3" }}
+              style={activeTab === index ? { backgroundColor: "#FDF2D0" } : { border: "1px solid #F3F3F3" }}
             />
           ))}
         </div>

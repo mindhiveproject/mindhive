@@ -114,7 +114,7 @@ export default function GraphEditor({ content, onChange, sectionId }) {
                 selected={activeTab === index}
                 onClick={() => handleTabChange(index)}
                 shape="square"
-                style={activeTab === index ? { backgroundColor: "#F6F9F8" } : {border: "1px solid #F3F3F3"}}
+                style={activeTab === index ? { backgroundColor: "#FDF2D0" } : {border: "1px solid #F3F3F3"}}
 
               />
             ))}

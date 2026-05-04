@@ -566,9 +566,12 @@
 	"emailAddress": "E-mailadres",
 	"header": {
 		"addDescription": "Voeg een beschrijving toe",
+		"mentors": "Mentoren",
+		"mentorsPanelTooltip": "Mentoraccounts die aan deze cursus zijn gekoppeld.",
 		"save": "Redden",
 		"teacher": "Docent",
-		"titleFallback": ""
+		"teacherAccountTooltip": "Klasleraar.",
+		"titleFallback": "Naamloze klasse"
 	},
 	"homework": {
 		"allEntries": "Alle inzendingen",
@@ -609,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "Opdrachten",
+		"classSectionsNav": "Klassecties",
 		"dashboard": "Dashboard",
 		"mentors": "Mentoren",
 		"projects": "Projecten",

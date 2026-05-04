@@ -14,6 +14,8 @@ export const StyledTipTap = styled.div`
     position: absolute;
     top: -60px;
     left: 0;
+    right: 0;
+    max-width: 100%;
     z-index: 10000;
     pointer-events: auto;
     opacity: 0;
@@ -23,6 +25,18 @@ export const StyledTipTap = styled.div`
     &.visible {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  &[data-toolbar-align="right"] {
+    .floatingToolbar {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .toolbar {
+      width: auto;
+      margin-left: auto;
     }
   }
 
@@ -292,7 +306,7 @@ export const StyledTipTap = styled.div`
         li {
           // margin-bottom: 0.1rem;
           color: #434343;
-          font-size: 1.5rem;
+          font-size: 1rem;
         }
 
 

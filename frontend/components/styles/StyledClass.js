@@ -80,9 +80,67 @@ const StyledClass = styled.div`
     color: #666666;
   }
 
-  .upperMenu {
-    display: grid;
+  /* Class detail tabs — aligned with Builder project nav (StyledProject .secondLine) */
+  .classPageNav {
     margin-bottom: 30px;
+
+    .secondLine {
+      padding: 0 8px;
+      background: #f6f9f8;
+      border-bottom: 1px solid #e6e6e6;
+
+      .menu {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px;
+        row-gap: 8px;
+      }
+
+      .menuTitle {
+        display: flex;
+        align-items: center;
+        padding: 0px 8px 8px 8px;
+        border-bottom: 4px solid transparent;
+        cursor: pointer;
+
+        .titleWithIcon {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          white-space: nowrap;
+
+          img {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+          }
+
+          p {
+            font-family: Inter, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 20px;
+            color: #5D5763;
+            margin: 0;
+          }
+        }
+      }
+
+      .selectedMenuTitle {
+        border-bottom-color: #f2be42;
+      }
+
+      @media (max-width: 800px) {
+        .menuTitle {
+          flex: 1 1 45%;
+        }
+
+        .menuTitle .titleWithIcon {
+          white-space: normal;
+        }
+      }
+    }
   }
 
   .classListHeader {
@@ -237,6 +295,65 @@ const StyledClass = styled.div`
       //   background: #FDF2D0;
       // }
     }
+    .classHeaderMetaRow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      max-width: 100%;
+      margin: 0px 0 12px;
+      border-radius: 8px;
+      color: #171717;
+      flex-wrap: wrap;
+    }
+    .classHeaderMentorsPanel {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      max-width: 100%;
+      margin: 0;
+      flex-wrap: wrap;
+    }
+    .classHeaderMentorItem {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .classHeaderMetaBullet {
+      font-size: 16px;
+      line-height: 1;
+      color: #6a6a6a;
+      flex-shrink: 0;
+    }
+    .classHeaderMetaLabel {
+      font-family: Inter, sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      color: #274e5b;
+    }
+    .classHeaderMetaLabel::after {
+      content: ":";
+      margin-left: 2px;
+    }
+    .classHeaderMetaValue {
+      font-family: Inter, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      color: #171717;
+      word-break: break-word;
+    }
+    @media (max-width: 700px) {
+      .classHeaderMetaRow {
+        width: 100%;
+      }
+      .classHeaderMentorsPanel {
+        width: fit-content;
+      }
+    }
 
     .classHeaderDescriptionEditor .tiptapEditor {
       min-height: 120px;
@@ -296,9 +413,6 @@ const StyledClass = styled.div`
       text-align: left;
       color: #666666;
       margin-bottom: 8px;
-    }
-    .teacher {
-      font-family: Inter
     }
   }
 

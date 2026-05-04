@@ -566,9 +566,12 @@
 	"emailAddress": "Dirección de correo electrónico",
 	"header": {
 		"addDescription": "Añadir descripción",
+		"mentors": "Mentores",
+		"mentorsPanelTooltip": "Cuentas de mentor asociadas a esta clase.",
 		"save": "Ahorrar",
 		"teacher": "Maestro",
-		"titleFallback": ""
+		"teacherAccountTooltip": "Profesor de la clase.",
+		"titleFallback": "Clase sin título"
 	},
 	"homework": {
 		"allEntries": "Todas las entradas",
@@ -609,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "Tareas",
+		"classSectionsNav": "Secciones de clase",
 		"dashboard": "Panel",
 		"mentors": "Mentores",
 		"projects": "Proyectos",

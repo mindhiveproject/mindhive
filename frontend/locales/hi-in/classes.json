@@ -566,9 +566,12 @@
 	"emailAddress": "मेल पता",
 	"header": {
 		"addDescription": "विवरण जोड़ें",
+		"mentors": "मेंटर्स",
+		"mentorsPanelTooltip": "इस कक्षा से जुड़े मेंटर खाते।",
 		"save": "बचाना",
 		"teacher": "अध्यापक",
-		"titleFallback": ""
+		"teacherAccountTooltip": "क्लास - टीचर।",
+		"titleFallback": "शीर्षकहीन वर्ग"
 	},
 	"homework": {
 		"allEntries": "सभी प्रविष्टियों",
@@ -609,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "कार्य",
+		"classSectionsNav": "कक्षा अनुभाग",
 		"dashboard": "डैशबोर्ड",
 		"mentors": "मेंटर्स",
 		"projects": "परियोजनाओं",

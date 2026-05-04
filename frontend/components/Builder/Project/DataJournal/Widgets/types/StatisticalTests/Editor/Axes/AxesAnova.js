@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import {
-  Dropdown,
-  DropdownMenu,
-  Icon,
-  AccordionTitle,
-  AccordionContent,
-  Accordion,
-} from "semantic-ui-react";
+import { useEffect, useMemo, useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../../../../../../../DesignSystem/Button";
+import Chip from "../../../../../../../../DesignSystem/Chip";
+import ResourcesTooltipResourceButtons from "../../../_shared/ResourcesHelpLinks";
+import SectionHeader from "../../../_shared/SectionHeader";
 import SelectMultiple from "../Fields/SelectMultiple";
 import SelectOne from "../Fields/SelectOne";
+
+const G_COMMON = "dataJournal.statTest.axes.common";
+const G_A = "dataJournal.statTest.axes.anova";
 
 export default function AxesAnova({
   variables,
@@ -17,26 +17,64 @@ export default function AxesAnova({
   selectors,
   onChange,
 }) {
+  const { t } = useTranslation("builder");
+
   const [selectedDataFormat, setSelectedDataFormat] = useState(
-    selectors["dataFormat"] || "long",
+    selectors?.dataFormat || "long",
+  );
+  const [dataLayoutPanelOpen, setDataLayoutPanelOpen] = useState(false);
+
+  const dataLayoutPanelId = `stat-test-anova-data-layout-${sectionId}`;
+
+  useEffect(() => {
+    setSelectedDataFormat(selectors?.dataFormat || "long");
+  }, [selectors?.dataFormat]);
+
+  const dataFormatMenu = useMemo(
+    () => [
+      {
+        key: "long",
+        value: "long",
+        chipLabel: t(`${G_COMMON}.dataFormat.chipLong`, {}, { default: "Long" }),
+        title: t(`${G_A}.dataFormat.long.title`, {}, {
+          default: "Switch to using a label column to sort rows of a value column",
+        }),
+        description: t(`${G_A}.dataFormat.long.description`, {}, {
+          default:
+            "In the example above, we would select the column 'attrib' as a grouping column. This grouping is performed on the 'value' column which contains values for the conditions c1, c2, and c3.",
+        }),
+        img: "/assets/icons/visualize/dataAnovaLong.svg",
+      },
+      {
+        key: "wide",
+        value: "wide",
+        chipLabel: t(`${G_COMMON}.dataFormat.chipWide`, {}, { default: "Wide" }),
+        title: t(`${G_A}.dataFormat.wide.title`, {}, {
+          default: "Switch to performing a One-Way Anova between three or more columns",
+        }),
+        description: t(`${G_A}.dataFormat.wide.description`, {}, {
+          default:
+            "In the example above, we would select the columns c1, c2, and c3 to perform a One-Way Anova on them.",
+        }),
+        img: "/assets/icons/visualize/dataOneWayAnova.svg",
+      },
+    ],
+    [t],
   );
 
-  const [activeIndex, setActiveIndex] = useState(-1);
-
-  const handleClick = (e, titleProps) => {
-    const { index } = titleProps;
-    const newIndex = activeIndex === index ? -1 : index;
-    setActiveIndex(newIndex);
-  };
-
-  const resourcesList = [
-    {
-      title: "What is a One-way ANOVA?",
-      alt: "External link",
-      img: "/assets/icons/visualize/externalNewTab.svg",
-      link: "https://www.scribbr.com/statistics/one-way-anova/",
-    },
-  ];
+  const resourcesList = useMemo(
+    () => [
+      {
+        title: t(`${G_A}.resources.scribbrLinkTitle`, {}, {
+          default: "What is a One-way ANOVA?",
+        }),
+        alt: t(`${G_A}.resources.scribbrLinkAlt`, {}, { default: "External link" }),
+        img: "/assets/icons/visualize/externalNewTab.svg",
+        link: "https://www.scribbr.com/statistics/one-way-anova/",
+      },
+    ],
+    [t],
+  );
 
   const options = variables.map((variable) => ({
     key: variable?.field,
@@ -58,168 +96,173 @@ export default function AxesAnova({
     });
   };
 
+  const sectionLabel = t(`${G_COMMON}.dataFormat.sectionLabel`, {}, {
+    default: "Data layout",
+  });
+  const toggleTitle = t(`${G_COMMON}.dataFormat.toggleAriaLabel`, {}, {
+    default: "Show or hide data layout options",
+  });
+  const panelAria = t(`${G_COMMON}.dataFormat.panelRegionAriaLabel`, {}, {
+    default: "Data layout: diagram for the selected format",
+  });
+  const currentlyPerforming = t(`${G_A}.dataFormat.currentlyPerforming`, {}, {
+    default: "Currently performing:",
+  });
+  const openLinkLabel = t(`${G_COMMON}.resources.openLinkHint`, {}, {
+    default: "Click here to access the resource",
+  });
+  const noLinkHint = t(`${G_COMMON}.resources.noLink`, {}, { default: "No external link" });
+
+  const helpContent = useMemo(
+    () => (
+      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "#625B71" }}>
+        {t(`${G_COMMON}.help.resourcesIntro`, {}, {
+          default:
+            "Use the buttons below to open a reference in a new tab when a link is available.",
+        })}
+      </p>
+    ),
+    [t],
+  );
+  const helpAction = useMemo(
+    () => (
+      <ResourcesTooltipResourceButtons
+        items={resourcesList}
+        openLinkLabel={openLinkLabel}
+        noLinkHint={noLinkHint}
+      />
+    ),
+    [resourcesList, openLinkLabel, noLinkHint],
+  );
+
+  const currentFormatOption = useMemo(
+    () => dataFormatMenu.find((o) => o.value === selectedDataFormat) || dataFormatMenu[0],
+    [dataFormatMenu, selectedDataFormat],
+  );
+
   return (
     <div className="selectorsStats">
-      <Dropdown
-        icon={
-          <div className="dataFormatSelector">
-            {selectedDataFormat &&
-              (selectedDataFormat === "wide" ? (
-                <>
-                  <img
-                    src="/assets/icons/visualize/more_vert.svg"
-                    alt="Menu Icon"
-                  />
-                  <div>
-                    <div>
-                      <a>
-                        <b>Currently performing:</b> One-Way ANOVA{" "}
-                        <b>between</b> three or more columns.
-                      </a>
-                    </div>
-                    <div></div>
-                    <div>
-                      <a>
-                        (Click here to use a label column to group each rows per
-                        unique label)
-                      </a>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <img
-                    src="/assets/icons/visualize/more_vert.svg"
-                    alt="Menu Icon"
-                  />
-                  <div>
-                    <a>
-                      <b>Currently performing:</b> One-Way ANOVA on a column
-                      containing values using a grouping column containing the
-                      group's labels on each row
-                    </a>
-                  </div>
-                  <div></div>
-                  <div>
-                    <a>
-                      (Click here if you want to switch to comparing values in
-                      different columns)
-                    </a>
-                  </div>
-                </>
-              ))}
-          </div>
-        }
-      >
-        <DropdownMenu className="customDropdownMenu">
-          {[
-            {
-              key: "wide",
-              value: "wide",
-              title:
-                "Switch to performing a One-Way Anova between three or more columns",
-              description:
-                "In the example above, we would select the columns c1, c2, and c3 to perform a One-Way Anova on them.",
-              img: "/assets/icons/visualize/dataOneWayAnova.svg",
-              link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
-            },
-            {
-              key: "long",
-              value: "long",
-              title:
-                "Switch to using a label column to sort rows of a value column",
-              description:
-                "In the example above, we would select the column 'attrib' as a grouping column. This grouping is performed on the 'value' column which contains values for the conditions c1, c2, and c3.",
-              img: "/assets/icons/visualize/dataAnovaLong.svg",
-              link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
-            },
-          ]
-            .filter((option) => option.value !== selectedDataFormat)
-            .map((option) => (
-              <div className="customDropdownMenu">
-                <div
-                  key={option.key}
-                  className="menuItemDataType"
-                  onClick={() => onSelectorChoice(option)}
-                >
-                  <h3>{option.title}</h3>
-                  <img src={option.img} alt={option.title} />
-                  <p>{option.description}</p>
-                </div>
-              </div>
-            ))}
-        </DropdownMenu>
-      </Dropdown>
-      {selectedDataFormat &&
-        (selectedDataFormat == "long" ? (
-          <div className="selectorsTestStats">
-            <SelectOne
-              sectionId={sectionId}
-              options={options}
-              selectors={selectors}
-              onSelectorChange={onSelectorChange}
-              title="Quantitative Column"
-              parameter="valCol"
-            />
-            <SelectOne
-              sectionId={sectionId}
-              options={options}
-              selectors={selectors}
-              onSelectorChange={onSelectorChange}
-              title="Grouping Column"
-              parameter="groupcol"
-            />
-          </div>
+      <SectionHeader
+        title={t(`${G_COMMON}.header.title`, {}, { default: "Axes" })}
+        iconSrc="/assets/icons/visualize/axes.svg"
+        iconAlt={t(`${G_COMMON}.header.iconAlt`, {}, { default: "Axes" })}
+        helpContent={helpContent}
+        helpAction={helpAction}
+        helpAriaLabel={t(`${G_COMMON}.help.ariaLabel`, {}, { default: "Resources and help" })}
+      />
+      <div className="statTestDataFormatSummary">
+        {selectedDataFormat === "wide" ? (
+          <>
+            <p>
+              <strong>{currentlyPerforming}</strong>{" "}
+              {t(`${G_A}.dataFormat.summaryWide.prefix`, {}, { default: "One-Way ANOVA " })}
+              <strong>{t(`${G_A}.dataFormat.summaryWide.between`, {}, { default: "between" })}</strong>
+              {t(`${G_A}.dataFormat.summaryWide.columns`, {}, { default: " three or more columns." })}
+            </p>
+          </>
         ) : (
-          <div className="selectorsTestStats">
-            <SelectMultiple
-              sectionId={sectionId}
-              options={options}
-              selectors={selectors}
-              onSelectorChange={onSelectorChange}
-              title="Column(s) to include in ANOVA"
-              parameter="colToAnalyse"
-            />
+          <>
+            <p>
+              <strong>{currentlyPerforming}</strong>{" "}
+              {t(`${G_A}.dataFormat.summaryLong.main`, {}, {
+                default:
+                  "One-Way ANOVA on a column containing values using a grouping column containing the group's labels on each row",
+              })}
+            </p>
+          </>
+        )}
+      </div>
+      <div className="barPlotDataFormat">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setDataLayoutPanelOpen((open) => !open)}
+          aria-expanded={dataLayoutPanelOpen}
+          aria-controls={dataLayoutPanelId}
+          title={toggleTitle}
+          style={{ backgroundColor: "#F3F3F3", color: "#6A6A6A", border: "2px solid #E6E6E6" }}
+        >
+          {sectionLabel}
+        </Button>
+        {dataLayoutPanelOpen && currentFormatOption && (
+          <div
+            id={dataLayoutPanelId}
+            role="region"
+            aria-label={panelAria}
+            className="barPlotDataFormat__panel"
+          >
+            <div className="barPlotDataFormat__chips customTabs">
+              {dataFormatMenu.map((option) => (
+                <Chip
+                  key={option.key}
+                  label={option.chipLabel}
+                  selected={selectedDataFormat === option.value}
+                  onClick={() => onSelectorChoice(option)}
+                  shape="square"
+                  ariaLabel={option.title}
+                  style={
+                    selectedDataFormat === option.value
+                      ? { backgroundColor: "#FDF2D0" }
+                      : { border: "1px solid #F3F3F3" }
+                  }
+                />
+              ))}
+            </div>
+            <div className="barPlotDataFormat__card">
+              <div className="barPlotDataFormat__figureWrap">
+                <img
+                  className="barPlotDataFormat__figure"
+                  src={currentFormatOption.img}
+                  alt={currentFormatOption.title}
+                  decoding="async"
+                />
+              </div>
+              <h3 className="barPlotDataFormat__title">{currentFormatOption.title}</h3>
+              <p className="barPlotDataFormat__desc">{currentFormatOption.description}</p>
+            </div>
           </div>
-        ))}
+        )}
+      </div>
+
+      {selectedDataFormat === "long" ? (
+        <div className="selectorsTestStats">
+          <SelectOne
+            sectionId={sectionId}
+            options={options}
+            selectors={selectors}
+            onSelectorChange={onSelectorChange}
+            title={t(`${G_A}.quantitativeColumn`, {}, { default: "Quantitative Column" })}
+            parameter="valCol"
+          />
+          <SelectOne
+            sectionId={sectionId}
+            options={options}
+            selectors={selectors}
+            onSelectorChange={onSelectorChange}
+            title={t(`${G_A}.groupingColumn`, {}, { default: "Grouping Column" })}
+            parameter="groupcol"
+          />
+        </div>
+      ) : (
+        <div className="selectorsTestStats">
+          <SelectMultiple
+            sectionId={sectionId}
+            options={options}
+            selectors={selectors}
+            onSelectorChange={onSelectorChange}
+            title={t(`${G_A}.columnsToAnova`, {}, {
+              default: "Column(s) to include in ANOVA",
+            })}
+            parameter="colToAnalyse"
+          />
+        </div>
+      )}
+
       <input
         type="hidden"
         id={`dataFormat-${sectionId}`}
         value={selectedDataFormat}
       />
-      <Accordion>
-        <AccordionTitle
-          active={activeIndex === 0}
-          index={0}
-          onClick={handleClick}
-        >
-          <Icon name="dropdown" />
-          Resources
-        </AccordionTitle>
-        <AccordionContent active={activeIndex === 0}>
-          {resourcesList.map((option) => (
-            <a
-              className="resourcesCard"
-              href={option.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              key={option.link}
-            >
-              <img
-                className="resourcesCardImage"
-                src={option.img}
-                alt={option.alt}
-              />
-              <div>
-                <div className="resourcesCardTitle">{option.title}</div>
-                <div className="resourcesCardLink">
-                  Click here to access the resource
-                </div>
-              </div>
-            </a>
-          ))}
-        </AccordionContent>
-      </Accordion>
     </div>
   );
 }

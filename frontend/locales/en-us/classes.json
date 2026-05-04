@@ -566,8 +566,11 @@
 	"emailAddress": "Email address",
 	"header": {
 		"addDescription": "Add description",
+		"mentors": "Mentors",
+		"mentorsPanelTooltip": "Mentor accounts associated with this class.",
 		"save": "",
 		"teacher": "Teacher",
+		"teacherAccountTooltip": "Class teacher.",
 		"titleFallback": "Untitled class"
 	},
 	"homework": {
@@ -609,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "Assignments",
+		"classSectionsNav": "Class sections",
 		"dashboard": "Dashboard",
 		"mentors": "Mentors",
 		"projects": "Projects",

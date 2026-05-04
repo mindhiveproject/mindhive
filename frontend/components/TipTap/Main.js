@@ -83,13 +83,16 @@ export default function TipTapEditor({
   mediaLibraryId = null,
   mediaLibrarySource = null,
   mediaDisplayedInProposalCardId = null,
+  usedInVizSectionIds = null,
+  emptyInvite = null, /** When set, shown over the editor while the document is empty (pointer-events: none). */
+  toolbarAlign = "left",
 }) {
   const { t } = useTranslation("builder");
   const apolloClient = useApolloClient();
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [docEmpty, setDocEmpty] = useState(true);
   const [mediaLibraryModalOpen, setMediaLibraryModalOpen] = useState(false);
-  const editorRef = useRef(null);
   const pasteImageContextRef = useRef({});
   pasteImageContextRef.current = {
     onPasteImageNoMediaScope: () =>
@@ -117,6 +120,7 @@ export default function TipTapEditor({
         mediaLibrarySource,
         mediaCreatedWithOverride: "paste",
         mediaDisplayedInProposalCardId,
+        usedInVizSectionIds,
       });
       createData.image = { upload: file };
       const { data } = await apolloClient.mutate({
@@ -208,6 +212,19 @@ export default function TipTapEditor({
       }
     }
   }, [editor, content]);
+
+  // Keep empty-state invite in sync with document (e.g. paragraph panel).
+  useEffect(() => {
+    if (!editor || !emptyInvite) return;
+    const sync = () => setDocEmpty(editor.isEmpty);
+    sync();
+    editor.on("update", sync);
+    editor.on("transaction", sync);
+    return () => {
+      editor.off("update", sync);
+      editor.off("transaction", sync);
+    };
+  }, [editor, emptyInvite]);
 
   // Set "user has interacted" flag
   useEffect(() => {
@@ -440,7 +457,7 @@ export default function TipTapEditor({
     // Limited toolbar mode - only show: bold, italic, underline, link, bullet list, ordered list
     if (limitedToolbar) {
       return (
-        <div className={`floatingToolbar ${isFocused ? 'visible' : ''}`}>
+        <div className={`floatingToolbar ${isFocused ? "visible" : ""}`}>
           <div className="toolbar">
             <div
               className="toolbarGroup"
@@ -545,7 +562,7 @@ export default function TipTapEditor({
 
     // Full toolbar mode
     return (
-      <div className={`floatingToolbar ${isFocused ? 'visible' : ''}`}>
+      <div className={`floatingToolbar ${isFocused ? "visible" : ""}`}>
         <div className="toolbar">
           <div
             className="toolbarGroup"
@@ -826,16 +843,32 @@ export default function TipTapEditor({
     );
   };
 
+  const handleEditorHostMouseDown = (event) => {
+    if (!editor || !editor.isEditable) return;
+    if (event.target.closest(".ProseMirror")) return;
+    event.preventDefault();
+    editor.chain().focus().run();
+  };
   return (
     <>
-      <StyledTipTap ref={editorRef}>
+      <StyledTipTap data-toolbar-align={toolbarAlign}>
         <div className="editorContainer">
-          <EditorContent
-            editor={editor}
-            className="tiptapEditor"
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-          />
+          <div
+            className="tiptapEditorHost"
+            onMouseDown={handleEditorHostMouseDown}
+          >
+            <EditorContent
+              editor={editor}
+              className="tiptapEditor"
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+            />
+            {emptyInvite && editor && docEmpty && !isFocused ? (
+              <div className="tiptapEmptyInvite" role="note">
+                {emptyInvite}
+              </div>
+            ) : null}
+          </div>
           <Toolbar />
         </div>
       </StyledTipTap>
@@ -846,6 +879,7 @@ export default function TipTapEditor({
           mediaScopeId={mediaLibraryId}
           mediaLibrarySource={mediaLibrarySource}
           mediaDisplayedInProposalCardId={mediaDisplayedInProposalCardId}
+          usedInVizSectionIds={usedInVizSectionIds}
           onInsertMedia={({ id, url }) => {
             if (url && editor?.isEditable) {
               editor

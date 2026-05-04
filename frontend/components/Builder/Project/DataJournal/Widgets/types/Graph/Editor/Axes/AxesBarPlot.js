@@ -1,16 +1,15 @@
 // components/DataJournal/Widgets/types/Graph/Editor/Axes/AxesBarPlot.js
-import { useState } from "react";
-import {
-  Dropdown,
-  DropdownMenu,
-  Icon,
-  AccordionTitle,
-  AccordionContent,
-  Accordion,
-} from "semantic-ui-react";
+import { useEffect, useMemo, useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../../../../../../../DesignSystem/Button";
+import Chip from "../../../../../../../../DesignSystem/Chip";
+import SectionHeader from "../../../_shared/SectionHeader";
+import ResourcesTooltipResourceButtons from "../../../_shared/ResourcesHelpLinks";
 import SelectMultiple from "../Fields/SelectMultiple";
 import SelectOne from "../Fields/SelectOne";
+
+const G = "dataJournal.graph";
 
 export default function AxesBarPlot({
   variables,
@@ -18,44 +17,121 @@ export default function AxesBarPlot({
   selectors,
   onChange,
 }) {
+  const { t } = useTranslation("builder");
+
   const [selectedDataFormat, setSelectedDataFormat] = useState(
     selectors["dataFormat"] || "long",
   );
+  const [dataLayoutPanelOpen, setDataLayoutPanelOpen] = useState(false);
 
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const dataLayoutPanelId = `barPlot-data-layout-panel-${sectionId}`;
 
-  const handleClick = (e, titleProps) => {
-    const { index } = titleProps;
-    const newIndex = activeIndex === index ? -1 : index;
-    setActiveIndex(newIndex);
-  };
+  useEffect(() => {
+    const next = selectors?.dataFormat || "long";
+    setSelectedDataFormat(next);
+  }, [selectors?.dataFormat]);
 
-  const errBarsOptions = [
-    { value: "stdErr", text: "Standard error" },
-    { value: "95pi", text: "95% confidence interval" },
-    { value: "99pi", text: "99% confidence interval" },
-  ];
+  const errBarsOptions = useMemo(
+    () => [
+      {
+        value: "stdErr",
+        text: t(`${G}.axes.barPlot.errBarStdErr`, {}, { default: "Standard error" }),
+      },
+      {
+        value: "95pi",
+        text: t(`${G}.axes.barPlot.errBar95`, {}, { default: "95% confidence interval" }),
+      },
+      {
+        value: "99pi",
+        text: t(`${G}.axes.barPlot.errBar99`, {}, { default: "99% confidence interval" }),
+      },
+    ],
+    [t],
+  );
 
-  const resourcesList = [
-    {
-      title: "What is a Bar Plot?",
-      alt: "External link",
-      img: "/assets/icons/visualize/externalNewTab.svg",
-      link: "https://datavizcatalogue.com/methods/bar_chart.html",
-    },
-    {
-      title: "More about the Standard Error",
-      alt: "External link",
-      img: "/assets/icons/visualize/externalNewTab.svg",
-      link: "https://www.scribbr.com/statistics/standard-error/",
-    },
-    {
-      title: "Confidence Intervales, what are they?",
-      alt: "External link",
-      img: "/assets/icons/visualize/externalNewTab.svg",
-      link: "https://www.scribbr.com/statistics/confidence-interval/",
-    },
-  ];
+  const resourcesItems = useMemo(
+    () => [
+      {
+        title: t(`${G}.axes.barPlot.resources.barPlotTitle`, {}, { default: "What is a Bar Plot?" }),
+        alt: t(`${G}.axes.barPlot.resources.barPlotAlt`, {}, { default: "External link" }),
+        img: "/assets/icons/visualize/externalNewTab.svg",
+        link: "https://datavizcatalogue.com/methods/bar_chart.html",
+      },
+      {
+        title: t(`${G}.axes.barPlot.resources.standardErrorTitle`, {}, {
+          default: "More about the standard error",
+        }),
+        alt: t(`${G}.axes.barPlot.resources.standardErrorAlt`, {}, { default: "External link" }),
+        img: "/assets/icons/visualize/externalNewTab.svg",
+        link: "https://www.scribbr.com/statistics/standard-error/",
+      },
+      {
+        title: t(`${G}.axes.barPlot.resources.confidenceIntervalsTitle`, {}, {
+          default: "Confidence intervals — what are they?",
+        }),
+        alt: t(`${G}.axes.barPlot.resources.confidenceIntervalsAlt`, {}, { default: "External link" }),
+        img: "/assets/icons/visualize/externalNewTab.svg",
+        link: "https://www.scribbr.com/statistics/confidence-interval/",
+      },
+    ],
+    [t],
+  );
+
+  const openLinkLabel = t(`${G}.common.resources.openLink`, {}, {
+    default: "Click here to access the resource",
+  });
+  const noLinkHint = t(`${G}.common.resources.noLink`, {}, { default: "No external link" });
+
+  const helpContent = useMemo(
+    () => (
+      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "#625B71" }}>
+        {t(`${G}.axes.help.resourcesIntro`, {}, {
+          default: "Click on the resources below to learn more about this component",
+        })}
+      </p>
+    ),
+    [t],
+  );
+  const helpAction = useMemo(
+    () => (
+      <ResourcesTooltipResourceButtons
+        items={resourcesItems}
+        openLinkLabel={openLinkLabel}
+        noLinkHint={noLinkHint}
+      />
+    ),
+    [resourcesItems, openLinkLabel, noLinkHint],
+  );
+
+  const dataFormatMenu = useMemo(
+    () => [
+      {
+        key: "long",
+        value: "long",
+        chipLabel: t(`${G}.axes.barPlot.dataFormat.chipLong`, {}, { default: "Long" }),
+        title: t(`${G}.axes.barPlot.dataFormat.longTitle`, {}, { default: "Long Data Format" }),
+        description: t(`${G}.axes.barPlot.dataFormat.longDescription`, {}, {
+          default:
+            "Data organized with each observation (like a student's test score) appearing on its own row, often with a column indicating categories (like subjects). This format is useful for detailed analysis across categories.",
+        }),
+        img: "/assets/icons/visualize/dataStructLongDetailed.svg",
+        link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
+      },
+      {
+        key: "wide",
+        value: "wide",
+        chipLabel: t(`${G}.axes.barPlot.dataFormat.chipWide`, {}, { default: "Wide" }),
+        title: t(`${G}.axes.barPlot.dataFormat.wideTitle`, {}, { default: "Wide Data Format" }),
+        description: t(`${G}.axes.barPlot.dataFormat.wideDescription`, {}, {
+          default:
+            "Data organized with each category (like subjects) appearing as its own column, often with rows representing observations (like students). This format is simpler for quick comparisons within categories.",
+        }),
+        img: "/assets/icons/visualize/dataStructWideDetailed.svg",
+        link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
+      },
+    ],
+    [t],
+  );
 
   const options = variables.map((variable) => ({
     key: variable?.field,
@@ -77,92 +153,112 @@ export default function AxesBarPlot({
     });
   };
 
+  const slidesLinkText = t(`${G}.axes.barPlot.dataFormat.slidesLink`, {}, {
+    default: "Click here to see the lecture slides",
+  });
+  const googleSlidesAlt = t(`${G}.axes.barPlot.dataFormat.googleSlidesAlt`, {}, {
+    default: "Google Slides",
+  });
+
+  const dataFormatSectionLabel = t(`${G}.axes.barPlot.dataFormat.sectionLabel`, {}, {
+    default: "Change data layout",
+  });
+  const dataLayoutToggleAriaLabel = t(`${G}.axes.barPlot.dataFormat.toggleAriaLabel`, {}, {
+    default: "Show or hide data layout options",
+  });
+  const dataLayoutPanelAriaLabel = t(`${G}.axes.barPlot.dataFormat.panelRegionAriaLabel`, {}, {
+    default: "Change data layout: diagram and resources for the selected format",
+  });
+
+  const currentFormatOption = useMemo(
+    () => dataFormatMenu.find((o) => o.value === selectedDataFormat) || dataFormatMenu[0],
+    [dataFormatMenu, selectedDataFormat],
+  );
+
   return (
     <div className="selectors">
-      <div className="header">
-        <img src={`/assets/icons/visualize/axes.svg`} />
-        <div>Axes</div>
-      </div>
-      <Dropdown
-        className="dropdownMenu"
-        icon={
-          <div className="menuItemThreeDiv menuButton">
-            <img src={`/assets/icons/visualize/more_vert.svg`} />
-            <div>
-              {selectedDataFormat &&
-                (selectedDataFormat === "long" ? (
-                  <a>
-                    If you want to <b>compare columns</b> click here
-                  </a>
-                ) : (
-                  <a>
-                    {" "}
-                    If you want to{" "}
-                    <b>compare different groups for one column</b> (variable),
-                    click here.
-                  </a>
-                ))}
+      <SectionHeader
+        title={t(`${G}.axes.header.title`, {}, { default: "Axes" })}
+        iconSrc="/assets/icons/visualize/axes.svg"
+        iconAlt={t(`${G}.axes.header.iconAlt`, {}, { default: "Axes" })}
+        helpContent={helpContent}
+        helpAction={helpAction}
+        helpAriaLabel={t(`${G}.axes.help.ariaLabel`, {}, { default: "Resources and help" })}
+      />
+      <div className="barPlotDataFormat">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setDataLayoutPanelOpen((open) => !open)}
+          aria-expanded={dataLayoutPanelOpen}
+          aria-controls={dataLayoutPanelId}
+          title={dataLayoutToggleAriaLabel}
+          leadingIcon={<img src="/assets/dataviz/headerIcon/table.svg" alt="Data Layout" style={{ width: "20px", height: "20px", opacity: 0.8}} />}
+          style={{ backgroundColor: "#F3F3F3", color: "#6A6A6A", border: "2px solid #E6E6E6" }}
+        >
+          {dataFormatSectionLabel}
+        </Button>
+        {dataLayoutPanelOpen && selectedDataFormat && currentFormatOption && (
+          <div
+            id={dataLayoutPanelId}
+            role="region"
+            aria-label={dataLayoutPanelAriaLabel}
+            className="barPlotDataFormat__panel"
+          >
+            <div className="barPlotDataFormat__chips customTabs">
+              {dataFormatMenu.map((option) => (
+                <Chip
+                  key={option.key}
+                  label={option.chipLabel}
+                  selected={selectedDataFormat === option.value}
+                  onClick={() => onSelectorChoice(option)}
+                  shape="square"
+                  ariaLabel={option.title}
+                  style={
+                    selectedDataFormat === option.value
+                      ? { backgroundColor: "#FDF2D0" }
+                      : { border: "1px solid #F3F3F3" }
+                  }
+                />
+              ))}
+            </div>
+            <div className="barPlotDataFormat__card">
+              <div className="barPlotDataFormat__figureWrap">
+                <img
+                  className="barPlotDataFormat__figure"
+                  src={currentFormatOption.img}
+                  alt={currentFormatOption.title}
+                  decoding="async"
+                />
+              </div>
+              <h3 className="barPlotDataFormat__title">{currentFormatOption.title}</h3>
+              <p className="barPlotDataFormat__desc">{currentFormatOption.description}</p>
+              <div className="barPlotDataFormat__slides">
+                <img
+                  src="/assets/icons/visualize/googleSlides.svg"
+                  alt={googleSlidesAlt}
+                  width={20}
+                  height={20}
+                  decoding="async"
+                />
+                <a href={currentFormatOption.link} target="_blank" rel="noopener noreferrer">
+                  {slidesLinkText}
+                </a>
+              </div>
             </div>
           </div>
-        }
-      >
-        <DropdownMenu>
-          {[
-            {
-              key: "long",
-              value: "long",
-              title: "Long Data Format",
-              description:
-                "Data organized with each observation (like a student's test score) appearing on its own row, often with a column indicating categories (like subjects). This format is useful for detailed analysis across categories.",
-              img: "/assets/icons/visualize/dataStructLongDetailed.svg",
-              link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
-            },
-            {
-              key: "wide",
-              value: "wide",
-              title: "Wide Data Format",
-              description:
-                "Data organized with each category (like subjects) appearing as its own column, often with rows representing observations (like students). This format is simpler for quick comparisons within categories.",
-              img: "/assets/icons/visualize/dataStructWideDetailed.svg",
-              link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
-            },
-          ]
-            .filter((option) => option.value !== selectedDataFormat)
-            .map((option) => (
-              <div
-                key={option.key}
-                className="menuItemDataStruct menuButton"
-                onClick={() => onSelectorChoice(option)}
-              >
-                <img src={option.img} alt={option.title} />
-                <p>{option.description}</p>
-                <div className="slidesCard">
-                  <img
-                    src={`/assets/icons/visualize/googleSlides.svg`}
-                    alt="Google Slides"
-                  />
-                  <a
-                    href={option.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Click here to see the lecture slides
-                  </a>
-                </div>
-              </div>
-            ))}
-        </DropdownMenu>
-      </Dropdown>
+        )}
+      </div>
 
       {selectedDataFormat &&
         (selectedDataFormat === "long" ? (
-          <div className="selectors">
+          <div className="graphEditorNestedFields">
             <SelectOne
               sectionId={sectionId}
               options={options}
               selectors={selectors}
               onSelectorChange={onSelectorChange}
-              title="Qualitative Column"
+              title={t(`${G}.axes.barPlot.qualitativeColumn`, {}, { default: "Qualitative Column" })}
               parameter="qualCol"
             />
             <SelectOne
@@ -170,7 +266,7 @@ export default function AxesBarPlot({
               options={options}
               selectors={selectors}
               onSelectorChange={onSelectorChange}
-              title="Quantitative Column"
+              title={t(`${G}.axes.barPlot.quantitativeColumn`, {}, { default: "Quantitative Column" })}
               parameter="quantCol"
             />
             <SelectOne
@@ -178,18 +274,18 @@ export default function AxesBarPlot({
               options={errBarsOptions}
               selectors={selectors}
               onSelectorChange={onSelectorChange}
-              title="Error bar"
+              title={t(`${G}.axes.barPlot.errorBar`, {}, { default: "Error bar" })}
               parameter="errBar"
             />
           </div>
         ) : (
-          <div className="selectors">
+          <div className="graphEditorNestedFields">
             <SelectMultiple
               sectionId={sectionId}
               options={options}
               selectors={selectors}
               onSelectorChange={onSelectorChange}
-              title="Column(s) to plot"
+              title={t(`${G}.axes.barPlot.columnsToPlot`, {}, { default: "Column(s) to plot" })}
               parameter="colToPlot"
             />
             <SelectOne
@@ -197,7 +293,7 @@ export default function AxesBarPlot({
               options={errBarsOptions}
               selectors={selectors}
               onSelectorChange={onSelectorChange}
-              title="Error Bar"
+              title={t(`${G}.axes.barPlot.errorBarWide`, {}, { default: "Error Bar" })}
               parameter="errBar"
             />
           </div>
@@ -207,39 +303,6 @@ export default function AxesBarPlot({
         id={`dataFormat-${sectionId}`}
         value={selectedDataFormat}
       />
-      <Accordion>
-        <AccordionTitle
-          active={activeIndex === 0}
-          index={0}
-          onClick={handleClick}
-        >
-          <Icon name="dropdown" />
-          Resources
-        </AccordionTitle>
-        <AccordionContent active={activeIndex === 0}>
-          {resourcesList.map((option) => (
-            <a
-              className="resourcesCard"
-              href={option.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              key={option.link}
-            >
-              <img
-                className="resourcesCardImage"
-                src={option.img}
-                alt={option.alt}
-              />
-              <div>
-                <div className="resourcesCardTitle">{option.title}</div>
-                <div className="resourcesCardLink">
-                  Click here to access the resource
-                </div>
-              </div>
-            </a>
-          ))}
-        </AccordionContent>
-      </Accordion>
     </div>
   );
 }

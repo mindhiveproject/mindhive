@@ -352,8 +352,94 @@
 			"untitled": ""
 		},
 		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "",
+					"dataFormat": {
+						"googleSlidesAlt": "",
+						"hintLong": "",
+						"hintWide": "",
+						"longDescription": "",
+						"longTitle": "",
+						"sectionLabel": "",
+						"slidesLink": "",
+						"switchToLong": "",
+						"switchToWide": "",
+						"wideDescription": "",
+						"wideTitle": ""
+					},
+					"errBar95": "",
+					"errBar99": "",
+					"errBarStdErr": "",
+					"errorBar": "",
+					"errorBarWide": "",
+					"qualitativeColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"barPlotAlt": "",
+						"barPlotTitle": "",
+						"confidenceIntervalsAlt": "",
+						"confidenceIntervalsTitle": "",
+						"standardErrorAlt": "",
+						"standardErrorTitle": ""
+					}
+				},
+				"header": {
+					"iconAlt": "",
+					"title": ""
+				},
+				"help": {
+					"ariaLabel": "",
+					"resourcesIntro": ""
+				},
+				"histogram": {
+					"columnsToObserve": "",
+					"groupByOptional": "",
+					"marginalBox": "",
+					"marginalNone": "",
+					"marginalPlot": "",
+					"marginalRug": "",
+					"resources": {
+						"histogramAlt": "",
+						"histogramTitle": ""
+					}
+				},
+				"scatterPlot": {
+					"group": "",
+					"resources": {
+						"scatterPlotAlt": "",
+						"scatterPlotTitle": "",
+						"trendlineAlt": "",
+						"trendlineTitle": ""
+					},
+					"trendline": "",
+					"xAxis": "",
+					"yAxis": ""
+				}
+			},
 			"codeEditor": {
 				"runCode": ""
+			},
+			"common": {
+				"axisSection": {
+					"x": "",
+					"y": ""
+				},
+				"graphTitle": "",
+				"label": "",
+				"legendTitle": "",
+				"legendTitleHint": "",
+				"legendTitleSection": "",
+				"marginalPlot": "",
+				"range": {
+					"label": "",
+					"max": "",
+					"min": ""
+				},
+				"resources": {
+					"noLink": "",
+					"openLink": ""
+				}
 			},
 			"editor": {
 				"styleLayout": {
@@ -369,6 +455,49 @@
 			"emptyState": {
 				"helper": "",
 				"title": ""
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "",
+						"examplesNames": "",
+						"examplesRgb": "",
+						"heading": "",
+						"intro": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"legendAndXAxisSection": "",
+					"yAxis": ""
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"legendSection": "",
+					"legendTitleCombined": "",
+					"yAxis": ""
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"marginal": {
+						"boxplot": "",
+						"none": "",
+						"rug": ""
+					},
+					"yAxis": ""
+				}
 			}
 		},
 		"hypVis": {
@@ -450,6 +579,9 @@
 			},
 			"helpAriaLabel": ""
 		},
+		"paragraphEditor": {
+			"emptyInvite": ""
+		},
 		"settingsPanel": {
 			"deleteWidget": "विजेट हटाएं",
 			"notes": "नोट्स",
@@ -466,6 +598,7 @@
 			"addWorkspaceLoading": "",
 			"addWorkspaceScratch": "",
 			"addWorkspaceTemplate": "",
+			"backToJournal": "",
 			"collapsePanel": "",
 			"componentFallbackName": "",
 			"dataOrigin": {

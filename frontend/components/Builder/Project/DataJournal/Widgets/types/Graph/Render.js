@@ -18,6 +18,15 @@ export default function Render({
   const [figJson, setFigJson] = useState(null);
   const [error, setError] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
+  const graphType = content?.type;
+
+  const getGraphEmptyStateImageSrc = (type) => {
+    if (type === "barGraph") return "/assets/dataviz/componentPanel/barChart.svg";
+    if (type === "scatterPlot")
+      return "/assets/dataviz/componentPanel/scatterPlot.svg";
+    if (type === "histogram") return "/assets/dataviz/componentPanel/histogram.svg";
+    return "/assets/dataviz/componentPanel/barChart.svg";
+  };
 
   useEffect(() => {
     async function renderGraph() {
@@ -253,15 +262,41 @@ ${outputVar} = ${funcName}()
             borderRadius: "12px",
             border: "1px solid #A1A1A1",
             height: "100%",
+            overflow: "clip",
           }}
      
         >
-          <div style={{ fontWeight: 600, marginBottom: "1rem", fontSize: "16px" }}>
-            {t(
-              "dataJournal.graph.emptyState.title",
-              {},
-              { default: "Your graph is ready to be configured" },
-            )}
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "0.75rem",
+              marginBottom: "1rem",
+            }}
+          >
+            <div style={{ fontWeight: 600, fontSize: "16px", textAlign: "left" }}>
+              {t(
+                "dataJournal.graph.emptyState.title",
+                {},
+                { default: "Your graph is ready to be configured" },
+              )}
+            </div>
+            <img
+              src={getGraphEmptyStateImageSrc(graphType)}
+              alt={t(
+                "dataJournal.graph.emptyState.title",
+                {},
+                { default: "Your graph is ready to be configured" },
+              )}
+              style={{
+                width: "88px",
+                height: "56px",
+                objectFit: "contain",
+                flexShrink: 0,
+              }}
+            />
           </div>
           <div
             style={{
