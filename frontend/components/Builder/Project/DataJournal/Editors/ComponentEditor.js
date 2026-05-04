@@ -39,6 +39,7 @@ export default function ComponentEditor({
   onChange,
   onSave,
   onDelete,
+  onClose,
 }) {
   const { t } = useTranslation("builder");
   const {
@@ -57,8 +58,14 @@ export default function ComponentEditor({
   }, [activeComponent?.id]);
 
   const handleClosePanel = useCallback(
-    () => setActiveComponent(null),
-    [setActiveComponent],
+    () => {
+      if (typeof onClose === "function") {
+        onClose();
+        return;
+      }
+      setActiveComponent(null);
+    },
+    [onClose, setActiveComponent],
   );
 
   const closeSaveFigureModal = useCallback(() => {

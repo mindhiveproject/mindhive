@@ -469,6 +469,7 @@
 			"addWorkspaceLoading": "Ajout...",
 			"addWorkspaceScratch": "Créer un espace de travail à partir de zéro",
 			"addWorkspaceTemplate": "Ajouter un modèle d'espace de travail",
+			"backToJournal": "Retour au journal",
 			"collapsePanel": "Fermer",
 			"componentFallbackName": "Nom du composant",
 			"dataOrigin": {

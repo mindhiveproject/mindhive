@@ -41,6 +41,7 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
   const [area, setArea] = useState("journals"); // e.g., 'journals' or 'datasets'
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [isAddComponentPanelOpen, setIsAddComponentPanelOpen] = useState(false);
+  const [leftPanelMode, setLeftPanelMode] = useState("journal");
 
   // Additional states for user, projectId, studyId
   const [user, setUser] = useState(initialProps.user || null);
@@ -102,6 +103,18 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     resetFigureReadiness();
   }, [workspace?.id, resetFigureReadiness]);
 
+  useEffect(() => {
+    if (activeComponent) {
+      setLeftPanelMode("editor");
+      return;
+    }
+    if (isAddComponentPanelOpen) {
+      setLeftPanelMode("addComponent");
+      return;
+    }
+    setLeftPanelMode("journal");
+  }, [activeComponent, isAddComponentPanelOpen]);
+
   // Provide value to children
   const value = {
     workspace,
@@ -127,6 +140,8 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     setSidebarVisible,
     isAddComponentPanelOpen,
     setIsAddComponentPanelOpen,
+    leftPanelMode,
+    setLeftPanelMode,
     user,
     projectId,
     studyId,

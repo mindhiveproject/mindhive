@@ -44,6 +44,8 @@ export default function TopNavigation() {
     studyId,
     setIsAddComponentPanelOpen,
     setActiveComponent,
+    setLeftPanelMode,
+    setSidebarVisible,
   } = useDataJournal();
 
   const [editingTarget, setEditingTarget] = useState(null);
@@ -148,10 +150,15 @@ export default function TopNavigation() {
 
   const toggleComponentPanel = () => {
     setIsAddComponentPanelOpen((wasOpen) => {
-      if (!wasOpen) {
+      const nextOpen = !wasOpen;
+      if (nextOpen) {
         setActiveComponent(null);
+        setLeftPanelMode("addComponent");
+        setSidebarVisible(true);
+      } else {
+        setLeftPanelMode("journal");
       }
-      return !wasOpen;
+      return nextOpen;
     });
   };
 
@@ -241,7 +248,11 @@ export default function TopNavigation() {
       <div className="buttons">
         {area === "journals" && workspace?.id && (
           <div>
-            <Button variant="filled" onClick={toggleComponentPanel}>
+            <Button 
+            variant="filled" 
+            // variant="text"
+            // style={{ color: "#5D5763", fontWeight: 400 }}
+            onClick={toggleComponentPanel}>
               {t("dataJournal.topNav.addComponent", "Add a Component")}
             </Button>
           </div>

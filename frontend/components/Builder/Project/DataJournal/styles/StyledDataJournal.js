@@ -395,15 +395,14 @@ export const StyledRightPanel = styled.div`
   display: grid;
   align-content: baseline;
   grid-gap: 10px;
-  /* Horizontal margin + width:100% overflows the grid rail; keep vertical inset only */
   margin: 0;
   width: 100%;
   max-width: 100%;
   min-width: 0;
   min-height: 0;
-  padding: 0 12px 16px 12px;
+  padding: 12px;
   box-sizing: border-box;
-  overflow-x: visible; /* visible-x: allow TipTap toolbar to bleed left over the canvas; min-width:0 + children max-width contain grid */
+  overflow-x: hidden;
   overflow-y: auto;
   ${hideScrollbars}
   height: 100%;
@@ -602,13 +601,14 @@ export const StyledComponentPanel = styled.div`
   display: grid;
   align-content: baseline;
   grid-gap: 10px;
-  min-width: 300px;
+  min-width: 0;
+  width: 100%;
   background: white;
-  padding: 16px;
+  padding: 12px;
   overflow-y: auto;
   height: 100%;
-  margin: 0px 8px 0px 0px;
-  box-shadow: 0px 2px 4px 0px #00000012;
+  margin: 0;
+  box-shadow: none;
   border-radius: 12px;
   border: 1px solid #e6e6e6;
   .panelHeader {
@@ -721,13 +721,16 @@ export const StyledDataWorkspace = styled.div`
   --dashboard-gap: 10px;
   /* Space between the left journal sidebar and the grid canvas when the sidebar is open */
   --left-panel-canvas-gap: 16px;
-  --right-rail-width: clamp(380px, 36vw, 900px);
+  --left-sidebar-width: 430px;
 
   /* Left journal sidebar: never show a box-shadow (Semantic UI + themes often add one) */
   .sidebar,
   .dashboardPushable .ui.sidebar,
   .dashboardPushable .ui.sidebar.visible,
   .dashboardPushable .ui.sidebar.animating {
+    width: var(--left-sidebar-width) !important;
+    display: grid !important;
+    grid-template-rows: minmax(0, 1fr);
     background: white;
     border: 1px solid #e6e6e6;
     border-left: none;
@@ -766,10 +769,6 @@ export const StyledDataWorkspace = styled.div`
     min-width: 0;
     min-height: 0;
 
-    &.hasRightPanel {
-      grid-template-columns: minmax(0, 1fr) var(--right-rail-width);
-    }
-
     .dashboardMain {
       min-width: 0;
       position: relative;
@@ -802,14 +801,17 @@ export const StyledDataWorkspace = styled.div`
 
     .dashboardPushable {
       min-width: 0;
+      width: 100%;
       height: 100%;
       overflow: hidden;
     }
 
     .dashboardPusher {
+      width: 100%;
       min-width: 0;
       min-height: 0;
       background: transparent;
+      box-sizing: border-box;
     }
 
     &.hasLeftSidebar .dashboardPusher {
@@ -817,22 +819,53 @@ export const StyledDataWorkspace = styled.div`
       box-sizing: border-box;
     }
 
-    .dashboardRightRail {
-      min-width: 0;
-      min-height: 0;
-      height: 100%;
-      overflow: hidden;
-      display: grid;
-      grid-template-rows: minmax(0, 1fr);
-      align-content: stretch;
-      align-items: stretch;
+    &.noLeftSidebar .dashboardPusher {
+      padding-left: 16px;
+      padding-right: 16px;
+      display: flex;
+      justify-content: center;
     }
+  }
+  .sidebarModeShell {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 0;
+    height: 100%;
+  }
+  .sidebarModeHeader {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #ffffff;
+    border-bottom: 1px solid #e6e6e6;
+    margin: 0;
+    padding: 10px;
+  }
+  .navigationPanelHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    .collapsePanelBtn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-start;
+      .collapsePanelBtnIcon {
+        opacity: 0.5;
+      }
+    }
+  }
+  .sidebarModeBody {
+    min-height: 0;
+    overflow: auto;
   }
   .canvas {
     display: grid;
     width: 100%;
     min-width: 0;
     min-height: 80vh;
+    box-sizing: border-box;
 
     background: white;
     // box-shadow: 2px 2px 8px 0px #0000001a;
@@ -865,6 +898,10 @@ export const StyledDataWorkspace = styled.div`
       overflow-x: visible;
       overflow-y: visible;
     }
+  }
+  .dashboard.noLeftSidebar .canvas {
+    max-width: min(1380px, 100%);
+    width: 100%;
   }
   .graph {
     display: grid;
@@ -944,8 +981,12 @@ export const StyledDataWorkspace = styled.div`
     }
     .selectors {
       display: grid;
-      margin: 20px;
+      margin: 0;
+      padding: 12px;
+      box-sizing: border-box;
       grid-gap: 21px;
+      min-width: 0;
+      max-width: 100%;
       .header {
         display: grid;
         grid-gap: 10px;
@@ -960,7 +1001,9 @@ export const StyledDataWorkspace = styled.div`
       grid-gap: 21px;
     }
     .selectorsStats {
-      margin: 20px clamp(12px, 4vw, 48px) 50px;
+      margin: 0;
+      padding: 12px clamp(12px, 4vw, 48px) 24px;
+      box-sizing: border-box;
       display: grid;
       grid-gap: 41px;
     }
