@@ -356,15 +356,17 @@
 				"barPlot": {
 					"columnsToPlot": "Column(s) to plot",
 					"dataFormat": {
+						"chipLong": "Long",
+						"chipWide": "Wide",
 						"googleSlidesAlt": "Google Slides",
 						"hintLong": "If you want to compare columns, click here.",
 						"hintWide": "If you want to compare different groups for one column (variable), click here.",
 						"longDescription": "Data organized with each observation (like a student's test score) appearing on its own row, often with a column indicating categories (like subjects). This format is useful for detailed analysis across categories.",
 						"longTitle": "Long Data Format",
-						"sectionLabel": "Data layout",
+						"panelRegionAriaLabel": "Change data layout: diagram and resources for the selected format",
+						"sectionLabel": "Change data layout",
 						"slidesLink": "Click here to see the lecture slides",
-						"switchToLong": "Switch to long format",
-						"switchToWide": "Switch to wide format",
+						"toggleAriaLabel": "Show or hide data layout options",
 						"wideDescription": "Data organized with each category (like subjects) appearing as its own column, often with rows representing observations (like students). This format is simpler for quick comparisons within categories.",
 						"wideTitle": "Wide Data Format"
 					},
@@ -390,7 +392,7 @@
 				},
 				"help": {
 					"ariaLabel": "Resources and help",
-					"resourcesIntro": "Use the buttons below to open a reference in a new tab when a link is available."
+					"resourcesIntro": "Click on the resources below to learn more about this component"
 				},
 				"histogram": {
 					"columnsToObserve": "Column(s) to observe",
@@ -598,7 +600,7 @@
 			"addWorkspaceLoading": "Adding…",
 			"addWorkspaceScratch": "Create a workspace from scratch",
 			"addWorkspaceTemplate": "Add a workspace template",
-			"backToJournal": "",
+			"backToJournal": "Back to journal",
 			"collapsePanel": "Close",
 			"componentFallbackName": "Component name",
 			"dataOrigin": {

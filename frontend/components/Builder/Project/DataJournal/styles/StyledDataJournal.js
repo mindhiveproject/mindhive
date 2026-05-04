@@ -1054,6 +1054,82 @@ export const StyledDataWorkspace = styled.div`
         font-size: 18px;
         margin: 10px 0px 10px 0px;
       }
+
+      /* Bar plot: collapsible data layout + long/wide chips (diagram ~70% of rail content) */
+      .barPlotDataFormat {
+        display: grid;
+        grid-gap: 10px;
+        min-width: 0;
+        max-width: 100%;
+      }
+      .barPlotDataFormat__panel {
+        display: grid;
+        grid-gap: 12px;
+        min-width: 0;
+        max-width: 100%;
+        padding-top: 2px;
+        box-sizing: border-box;
+      }
+      .barPlotDataFormat__card {
+        display: grid;
+        grid-gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid #e6e6e6;
+        background: #ffffff;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .barPlotDataFormat__figureWrap {
+        width: 70%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        box-sizing: border-box;
+      }
+      .barPlotDataFormat__figure {
+        display: block;
+        width: 100%;
+        height: auto;
+        vertical-align: top;
+      }
+      .barPlotDataFormat__title {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.35;
+        color: #171717;
+        overflow-wrap: break-word;
+      }
+      .barPlotDataFormat__desc {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        line-height: 1.45;
+        color: #5d5763;
+        overflow-wrap: break-word;
+      }
+      .barPlotDataFormat__slides {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        flex-wrap: wrap;
+        font-family: Inter, sans-serif;
+        font-size: 13px;
+        line-height: 1.4;
+        min-width: 0;
+      }
+      .barPlotDataFormat__slides img {
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .barPlotDataFormat__slides a {
+        color: var(--MH-Theme-Primary-Base, #337c84);
+        text-decoration: underline;
+        word-break: break-word;
+      }
     }
     .selectorsTestStats {
       display: grid;

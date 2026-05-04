@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../../../../../../../DesignSystem/Button";
+import Chip from "../../../../../../../../DesignSystem/Chip";
 import SectionHeader from "../_shared/SectionHeader";
 import ResourcesTooltipResourceButtons from "../_shared/ResourcesHelpLinks";
 import SelectMultiple from "../Fields/SelectMultiple";
@@ -21,6 +22,9 @@ export default function AxesBarPlot({
   const [selectedDataFormat, setSelectedDataFormat] = useState(
     selectors["dataFormat"] || "long",
   );
+  const [dataLayoutPanelOpen, setDataLayoutPanelOpen] = useState(false);
+
+  const dataLayoutPanelId = `barPlot-data-layout-panel-${sectionId}`;
 
   useEffect(() => {
     const next = selectors?.dataFormat || "long";
@@ -82,7 +86,7 @@ export default function AxesBarPlot({
     () => (
       <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "#625B71" }}>
         {t(`${G}.axes.help.resourcesIntro`, {}, {
-          default: "Use the buttons below to open a reference in a new tab when a link is available.",
+          default: "Click on the resources below to learn more about this component",
         })}
       </p>
     ),
@@ -104,6 +108,7 @@ export default function AxesBarPlot({
       {
         key: "long",
         value: "long",
+        chipLabel: t(`${G}.axes.barPlot.dataFormat.chipLong`, {}, { default: "Long" }),
         title: t(`${G}.axes.barPlot.dataFormat.longTitle`, {}, { default: "Long Data Format" }),
         description: t(`${G}.axes.barPlot.dataFormat.longDescription`, {}, {
           default:
@@ -115,6 +120,7 @@ export default function AxesBarPlot({
       {
         key: "wide",
         value: "wide",
+        chipLabel: t(`${G}.axes.barPlot.dataFormat.chipWide`, {}, { default: "Wide" }),
         title: t(`${G}.axes.barPlot.dataFormat.wideTitle`, {}, { default: "Wide Data Format" }),
         description: t(`${G}.axes.barPlot.dataFormat.wideDescription`, {}, {
           default:
@@ -155,21 +161,17 @@ export default function AxesBarPlot({
   });
 
   const dataFormatSectionLabel = t(`${G}.axes.barPlot.dataFormat.sectionLabel`, {}, {
-    default: "Data layout",
+    default: "Change data layout",
   });
-  const switchToWideLabel = t(`${G}.axes.barPlot.dataFormat.switchToWide`, {}, {
-    default: "Switch to wide format",
+  const dataLayoutToggleAriaLabel = t(`${G}.axes.barPlot.dataFormat.toggleAriaLabel`, {}, {
+    default: "Show or hide data layout options",
   });
-  const switchToLongLabel = t(`${G}.axes.barPlot.dataFormat.switchToLong`, {}, {
-    default: "Switch to long format",
+  const dataLayoutPanelAriaLabel = t(`${G}.axes.barPlot.dataFormat.panelRegionAriaLabel`, {}, {
+    default: "Change data layout: diagram and resources for the selected format",
   });
 
   const currentFormatOption = useMemo(
     () => dataFormatMenu.find((o) => o.value === selectedDataFormat) || dataFormatMenu[0],
-    [dataFormatMenu, selectedDataFormat],
-  );
-  const alternateFormatOption = useMemo(
-    () => dataFormatMenu.find((o) => o.value !== selectedDataFormat),
     [dataFormatMenu, selectedDataFormat],
   );
 
@@ -183,54 +185,70 @@ export default function AxesBarPlot({
         helpAction={helpAction}
         helpAriaLabel={t(`${G}.axes.help.ariaLabel`, {}, { default: "Resources and help" })}
       />
-      {selectedDataFormat && currentFormatOption && (
-        <div className="barPlotDataFormat">
-          <div className="barPlotDataFormat__sectionLabel">{dataFormatSectionLabel}</div>
-          <div className="barPlotDataFormat__card">
-            <div className="barPlotDataFormat__figureWrap">
-              <img
-                className="barPlotDataFormat__figure"
-                src={currentFormatOption.img}
-                alt={currentFormatOption.title}
-                decoding="async"
-              />
-            </div>
-            <h3 className="barPlotDataFormat__title">{currentFormatOption.title}</h3>
-            <p className="barPlotDataFormat__desc">{currentFormatOption.description}</p>
-            <div className="barPlotDataFormat__slides">
-              <img
-                src="/assets/icons/visualize/googleSlides.svg"
-                alt={googleSlidesAlt}
-                width={20}
-                height={20}
-                decoding="async"
-              />
-              <a href={currentFormatOption.link} target="_blank" rel="noopener noreferrer">
-                {slidesLinkText}
-              </a>
-            </div>
-            {alternateFormatOption && (
-              <div className="barPlotDataFormat__actions">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => onSelectorChoice(alternateFormatOption)}
-                  style={{ width: "100%" }}
-                  aria-label={
-                    alternateFormatOption.value === "wide"
-                      ? switchToWideLabel
-                      : switchToLongLabel
+      <div className="barPlotDataFormat">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setDataLayoutPanelOpen((open) => !open)}
+          aria-expanded={dataLayoutPanelOpen}
+          aria-controls={dataLayoutPanelId}
+          title={dataLayoutToggleAriaLabel}
+          leadingIcon={<img src="/assets/dataviz/headerIcon/table.svg" alt="Data Layout" style={{ width: "20px", height: "20px", opacity: 0.8}} />}
+          style={{ backgroundColor: "#F3F3F3", color: "#6A6A6A", border: "2px solid #E6E6E6" }}
+        >
+          {dataFormatSectionLabel}
+        </Button>
+        {dataLayoutPanelOpen && selectedDataFormat && currentFormatOption && (
+          <div
+            id={dataLayoutPanelId}
+            role="region"
+            aria-label={dataLayoutPanelAriaLabel}
+            className="barPlotDataFormat__panel"
+          >
+            <div className="barPlotDataFormat__chips customTabs">
+              {dataFormatMenu.map((option) => (
+                <Chip
+                  key={option.key}
+                  label={option.chipLabel}
+                  selected={selectedDataFormat === option.value}
+                  onClick={() => onSelectorChoice(option)}
+                  shape="square"
+                  ariaLabel={option.title}
+                  style={
+                    selectedDataFormat === option.value
+                      ? { backgroundColor: "#FDF2D0" }
+                      : { border: "1px solid #F3F3F3" }
                   }
-                >
-                  {alternateFormatOption.value === "wide"
-                    ? switchToWideLabel
-                    : switchToLongLabel}
-                </Button>
+                />
+              ))}
+            </div>
+            <div className="barPlotDataFormat__card">
+              <div className="barPlotDataFormat__figureWrap">
+                <img
+                  className="barPlotDataFormat__figure"
+                  src={currentFormatOption.img}
+                  alt={currentFormatOption.title}
+                  decoding="async"
+                />
               </div>
-            )}
+              <h3 className="barPlotDataFormat__title">{currentFormatOption.title}</h3>
+              <p className="barPlotDataFormat__desc">{currentFormatOption.description}</p>
+              <div className="barPlotDataFormat__slides">
+                <img
+                  src="/assets/icons/visualize/googleSlides.svg"
+                  alt={googleSlidesAlt}
+                  width={20}
+                  height={20}
+                  decoding="async"
+                />
+                <a href={currentFormatOption.link} target="_blank" rel="noopener noreferrer">
+                  {slidesLinkText}
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {selectedDataFormat &&
         (selectedDataFormat === "long" ? (

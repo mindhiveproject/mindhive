@@ -51,7 +51,7 @@ export default function AxesHistogram({
   const helpContent = (
     <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "#625B71" }}>
       {t(`${G}.axes.help.resourcesIntro`, {}, {
-        default: "Use the buttons below to open a reference in a new tab when a link is available.",
+        default: "Click on the resources below to learn more about this component",
       })}
     </p>
   );
