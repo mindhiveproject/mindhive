@@ -352,8 +352,94 @@
 			"untitled": "Untitled Dataset"
 		},
 		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "Column(s) to plot",
+					"dataFormat": {
+						"googleSlidesAlt": "Google Slides",
+						"hintLong": "If you want to compare columns, click here.",
+						"hintWide": "If you want to compare different groups for one column (variable), click here.",
+						"longDescription": "Data organized with each observation (like a student's test score) appearing on its own row, often with a column indicating categories (like subjects). This format is useful for detailed analysis across categories.",
+						"longTitle": "Long Data Format",
+						"sectionLabel": "Data layout",
+						"slidesLink": "Click here to see the lecture slides",
+						"switchToLong": "Switch to long format",
+						"switchToWide": "Switch to wide format",
+						"wideDescription": "Data organized with each category (like subjects) appearing as its own column, often with rows representing observations (like students). This format is simpler for quick comparisons within categories.",
+						"wideTitle": "Wide Data Format"
+					},
+					"errBar95": "95% confidence interval",
+					"errBar99": "99% confidence interval",
+					"errBarStdErr": "Standard error",
+					"errorBar": "Error bar",
+					"errorBarWide": "Error Bar",
+					"qualitativeColumn": "Qualitative Column",
+					"quantitativeColumn": "Quantitative Column",
+					"resources": {
+						"barPlotAlt": "External link",
+						"barPlotTitle": "What is a Bar Plot?",
+						"confidenceIntervalsAlt": "External link",
+						"confidenceIntervalsTitle": "Confidence intervals — what are they?",
+						"standardErrorAlt": "External link",
+						"standardErrorTitle": "More about the standard error"
+					}
+				},
+				"header": {
+					"iconAlt": "Axes",
+					"title": "Axes"
+				},
+				"help": {
+					"ariaLabel": "Resources and help",
+					"resourcesIntro": "Use the buttons below to open a reference in a new tab when a link is available."
+				},
+				"histogram": {
+					"columnsToObserve": "Column(s) to observe",
+					"groupByOptional": "Group by (optional — color by category)",
+					"marginalBox": "Box plot",
+					"marginalNone": "None",
+					"marginalPlot": "Marginal plot",
+					"marginalRug": "Rug plot",
+					"resources": {
+						"histogramAlt": "External link",
+						"histogramTitle": "What is a Histogram?"
+					}
+				},
+				"scatterPlot": {
+					"group": "Group",
+					"resources": {
+						"scatterPlotAlt": "Scatter plot resource",
+						"scatterPlotTitle": "Scatter Plot",
+						"trendlineAlt": "External link to trendline resource",
+						"trendlineTitle": "Trendline"
+					},
+					"trendline": "Trendline",
+					"xAxis": "X-Axis",
+					"yAxis": "Y-Axis"
+				}
+			},
 			"codeEditor": {
 				"runCode": "Run the code"
+			},
+			"common": {
+				"axisSection": {
+					"x": "X-Axis",
+					"y": "Y-Axis"
+				},
+				"graphTitle": "Graph Title",
+				"label": "Label",
+				"legendTitle": "Legend title",
+				"legendTitleHint": "(leave empty if not needed)",
+				"legendTitleSection": "Legend title",
+				"marginalPlot": "Marginal plot",
+				"range": {
+					"label": "Range",
+					"max": "Max",
+					"min": "Min"
+				},
+				"resources": {
+					"noLink": "No external link",
+					"openLink": "Click here to access the resource"
+				}
 			},
 			"editor": {
 				"styleLayout": {
@@ -369,6 +455,48 @@
 			"emptyState": {
 				"helper": "Click this component to open the editor, then choose variables to preview your visualization.",
 				"title": "Your graph is ready to be configured"
+			},
+			"fields": {
+				"selectPlaceholder": "Select {{field}}",
+				"selectVariablesPlaceholder": "Select variable(s)"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- HEX format [#28619E], [#D53533]",
+						"examplesNames": "- Color names: [red], [pink]",
+						"examplesRgb": "- RGB value [100,255,0], [0,120,80]",
+						"heading": "Color",
+						"intro": "Give a base color for the bar (remove square brackets to use the examples below)."
+					},
+					"header": {
+						"iconAlt": "Options",
+						"title": "Options"
+					},
+					"legendAndXAxisSection": "X-axis labels and legend title",
+					"yAxis": "Y-Axis"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "Options",
+						"title": "Options"
+					},
+					"legendSection": "Legend",
+					"legendTitleCombined": "Legend title (leave empty if not needed)",
+					"yAxis": "Y-Axis"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "Options",
+						"title": "Options"
+					},
+					"marginal": {
+						"boxplot": "Boxplot",
+						"none": "",
+						"rug": "Rug"
+					},
+					"yAxis": "Y-Axis"
+				}
 			}
 		},
 		"hypVis": {
@@ -469,6 +597,7 @@
 			"addWorkspaceLoading": "Adding…",
 			"addWorkspaceScratch": "Create a workspace from scratch",
 			"addWorkspaceTemplate": "Add a workspace template",
+			"backToJournal": "",
 			"collapsePanel": "Close",
 			"componentFallbackName": "Component name",
 			"dataOrigin": {

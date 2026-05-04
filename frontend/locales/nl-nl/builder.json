@@ -352,23 +352,151 @@
 			"untitled": "Naamloze dataset"
 		},
 		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "Kolom/kolommen om te plotten",
+					"dataFormat": {
+						"googleSlidesAlt": "Google Slides",
+						"hintLong": "Als u kolommen wilt vergelijken, klik dan hier.",
+						"hintWide": "Als u verschillende groepen voor één kolom (variabele) wilt vergelijken, klik dan hier.",
+						"longDescription": "De gegevens zijn georganiseerd waarbij elke observatie (zoals een toetsresultaat van een leerling) op een eigen rij staat, vaak met een kolom die de categorieën (zoals vakken) aangeeft. Deze opmaak is handig voor gedetailleerde analyses over verschillende categorieën heen.",
+						"longTitle": "Lange gegevensindeling",
+						"sectionLabel": "Gegevensindeling",
+						"slidesLink": "Klik hier om de presentatieslides te bekijken.",
+						"switchToLong": "Schakel over naar de lange weergave",
+						"switchToWide": "Schakel over naar breedbeeldformaat",
+						"wideDescription": "De gegevens zijn georganiseerd waarbij elke categorie (zoals onderwerpen) een eigen kolom vormt, vaak met rijen die observaties (zoals studenten) weergeven. Deze opmaak is eenvoudiger voor snelle vergelijkingen binnen categorieën.",
+						"wideTitle": "Breed gegevensformaat"
+					},
+					"errBar95": "95% betrouwbaarheidsinterval",
+					"errBar99": "99% betrouwbaarheidsinterval",
+					"errBarStdErr": "Standaardfout",
+					"errorBar": "Foutbalk",
+					"errorBarWide": "Foutbalk",
+					"qualitativeColumn": "Kwalitatieve column",
+					"quantitativeColumn": "Kwantitatieve kolom",
+					"resources": {
+						"barPlotAlt": "Externe link",
+						"barPlotTitle": "Wat is een staafdiagram?",
+						"confidenceIntervalsAlt": "Externe link",
+						"confidenceIntervalsTitle": "Betrouwbaarheidsintervallen — wat zijn dat?",
+						"standardErrorAlt": "Externe link",
+						"standardErrorTitle": "Meer over de standaardfout"
+					}
+				},
+				"header": {
+					"iconAlt": "Assen",
+					"title": "Assen"
+				},
+				"help": {
+					"ariaLabel": "Bronnen en hulp",
+					"resourcesIntro": "Gebruik de onderstaande knoppen om een ​​artikel in een nieuw tabblad te openen wanneer er een link beschikbaar is."
+				},
+				"histogram": {
+					"columnsToObserve": "Kolom(len) om te observeren",
+					"groupByOptional": "Groeperen op (optioneel — kleuren op categorie)",
+					"marginalBox": "Boxplot",
+					"marginalNone": "Geen",
+					"marginalPlot": "Marginaal plot",
+					"marginalRug": "Tapijtplot",
+					"resources": {
+						"histogramAlt": "Externe link",
+						"histogramTitle": "Wat is een histogram?"
+					}
+				},
+				"scatterPlot": {
+					"group": "Groep",
+					"resources": {
+						"scatterPlotAlt": "Spreidingsdiagrambron",
+						"scatterPlotTitle": "Spreidingsdiagram",
+						"trendlineAlt": "Externe link naar de trendlijnbron",
+						"trendlineTitle": "Trendlijn"
+					},
+					"trendline": "Trendlijn",
+					"xAxis": "X-as",
+					"yAxis": "Y-as"
+				}
+			},
 			"codeEditor": {
-				"runCode": ""
+				"runCode": "Voer de code uit"
+			},
+			"common": {
+				"axisSection": {
+					"x": "X-as",
+					"y": "Y-as"
+				},
+				"graphTitle": "Grafiektitel",
+				"label": "Etiket",
+				"legendTitle": "Legendatitel",
+				"legendTitleHint": "(laat leeg indien niet nodig)",
+				"legendTitleSection": "Legendatitel",
+				"marginalPlot": "Marginaal plot",
+				"range": {
+					"label": "Bereik",
+					"max": "Max",
+					"min": "Min"
+				},
+				"resources": {
+					"noLink": "Geen externe link",
+					"openLink": "Klik hier om de bron te raadplegen."
+				}
 			},
 			"editor": {
 				"styleLayout": {
-					"description": "",
-					"title": ""
+					"description": "Pas het uiterlijk en de lay-out van de grafiek aan.",
+					"title": "Stijl- en lay-outopties"
 				},
 				"tabs": {
-					"axes": "",
-					"codeEditor": "",
-					"styleLayout": ""
+					"axes": "Assen",
+					"codeEditor": "Code-editor",
+					"styleLayout": "Stijl en lay-out"
 				}
 			},
 			"emptyState": {
 				"helper": "Klik op dit onderdeel om de editor te openen en kies vervolgens variabelen om een ​​voorbeeld van uw visualisatie te bekijken.",
 				"title": "Uw grafiek is klaar om geconfigureerd te worden."
+			},
+			"fields": {
+				"selectPlaceholder": "Selecteer {{field}}",
+				"selectVariablesPlaceholder": "Selecteer variabele(n)"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- HEX-formaat [#28619E], [#D53533]",
+						"examplesNames": "- Kleurnamen: [rood], [roze]",
+						"examplesRgb": "- RGB-waarde [100,255,0], [0,120,80]",
+						"heading": "Kleur",
+						"intro": "Geef een basiskleur op voor de balk (verwijder de vierkante haken om de onderstaande voorbeelden te gebruiken)."
+					},
+					"header": {
+						"iconAlt": "Opties",
+						"title": "Opties"
+					},
+					"legendAndXAxisSection": "Labels op de X-as en titel van de legenda",
+					"yAxis": "Y-as"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "Opties",
+						"title": "Opties"
+					},
+					"legendSection": "Legende",
+					"legendTitleCombined": "Legendatitel (laat leeg indien niet nodig)",
+					"yAxis": "Y-as"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "Opties",
+						"title": "Opties"
+					},
+					"marginal": {
+						"boxplot": "Boxplot",
+						"none": "",
+						"rug": "Tapijt"
+					},
+					"yAxis": "Y-as"
+				}
 			}
 		},
 		"hypVis": {

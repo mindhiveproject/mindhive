@@ -352,23 +352,151 @@
 			"untitled": "Ensemble de données sans titre"
 		},
 		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "Colonne(s) à tracer",
+					"dataFormat": {
+						"googleSlidesAlt": "Google Slides",
+						"hintLong": "Pour comparer les colonnes, cliquez ici.",
+						"hintWide": "Si vous souhaitez comparer différents groupes pour une colonne (variable), cliquez ici.",
+						"longDescription": "Les données sont organisées de manière à ce que chaque observation (comme la note d'un élève à un test) figure sur une ligne distincte, souvent accompagnée d'une colonne indiquant les catégories (comme les matières). Ce format est utile pour une analyse détaillée par catégorie.",
+						"longTitle": "Format de données long",
+						"sectionLabel": "Disposition des données",
+						"slidesLink": "Cliquez ici pour voir les diapositives du cours.",
+						"switchToLong": "Passer au format long",
+						"switchToWide": "Passez au format large",
+						"wideDescription": "Les données sont organisées de manière à ce que chaque catégorie (comme les matières) figure dans une colonne distincte, les lignes représentant souvent les observations (comme les étudiants). Ce format facilite les comparaisons rapides au sein des catégories.",
+						"wideTitle": "Format de données large"
+					},
+					"errBar95": "Intervalle de confiance à 95 %",
+					"errBar99": "intervalle de confiance à 99 %",
+					"errBarStdErr": "Erreur standard",
+					"errorBar": "Barre d'erreur",
+					"errorBarWide": "Barre d'erreur",
+					"qualitativeColumn": "Colonne qualitative",
+					"quantitativeColumn": "Colonne quantitative",
+					"resources": {
+						"barPlotAlt": "Lien externe",
+						"barPlotTitle": "Qu'est-ce qu'un graphique à barres ?",
+						"confidenceIntervalsAlt": "Lien externe",
+						"confidenceIntervalsTitle": "Intervalles de confiance — qu'est-ce que c'est ?",
+						"standardErrorAlt": "Lien externe",
+						"standardErrorTitle": "Plus d'informations sur l'erreur standard"
+					}
+				},
+				"header": {
+					"iconAlt": "Haches",
+					"title": "Haches"
+				},
+				"help": {
+					"ariaLabel": "Ressources et aide",
+					"resourcesIntro": "Utilisez les boutons ci-dessous pour ouvrir une référence dans un nouvel onglet lorsqu'un lien est disponible."
+				},
+				"histogram": {
+					"columnsToObserve": "Colonne(s) à observer",
+					"groupByOptional": "Grouper par (facultatif — couleur par catégorie)",
+					"marginalBox": "Diagramme en boîte",
+					"marginalNone": "Aucun",
+					"marginalPlot": "Parcelle marginale",
+					"marginalRug": "Plan de tapis",
+					"resources": {
+						"histogramAlt": "Lien externe",
+						"histogramTitle": "Qu'est-ce qu'un histogramme ?"
+					}
+				},
+				"scatterPlot": {
+					"group": "Groupe",
+					"resources": {
+						"scatterPlotAlt": "Ressource de diagramme de dispersion",
+						"scatterPlotTitle": "Nuage de points",
+						"trendlineAlt": "Lien externe vers la ressource Trendline",
+						"trendlineTitle": "Ligne de tendance"
+					},
+					"trendline": "Ligne de tendance",
+					"xAxis": "Axe X",
+					"yAxis": "Axe Y"
+				}
+			},
 			"codeEditor": {
-				"runCode": ""
+				"runCode": "Exécutez le code"
+			},
+			"common": {
+				"axisSection": {
+					"x": "Axe X",
+					"y": "Axe Y"
+				},
+				"graphTitle": "Titre du graphique",
+				"label": "Étiquette",
+				"legendTitle": "Titre légendaire",
+				"legendTitleHint": "(laisser vide si non nécessaire)",
+				"legendTitleSection": "Titre légendaire",
+				"marginalPlot": "Parcelle marginale",
+				"range": {
+					"label": "Gamme",
+					"max": "Maximum",
+					"min": "Min"
+				},
+				"resources": {
+					"noLink": "Aucun lien externe",
+					"openLink": "Cliquez ici pour accéder à la ressource"
+				}
 			},
 			"editor": {
 				"styleLayout": {
-					"description": "",
-					"title": ""
+					"description": "Personnalisez l'apparence et la mise en page du graphique.",
+					"title": "Options de style et de mise en page"
 				},
 				"tabs": {
-					"axes": "",
-					"codeEditor": "",
-					"styleLayout": ""
+					"axes": "Haches",
+					"codeEditor": "Éditeur de code",
+					"styleLayout": "Style et mise en page"
 				}
 			},
 			"emptyState": {
 				"helper": "Cliquez sur ce composant pour ouvrir l'éditeur, puis choisissez les variables pour prévisualiser votre visualisation.",
 				"title": "Votre graphique est prêt à être configuré."
+			},
+			"fields": {
+				"selectPlaceholder": "Sélectionnez {{field}}",
+				"selectVariablesPlaceholder": "Sélectionner la ou les variables"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- Format HEX [#28619E], [#D53533]",
+						"examplesNames": "- Noms des couleurs : [rouge], [rose]",
+						"examplesRgb": "- Valeur RGB [100,255,0], [0,120,80]",
+						"heading": "Couleur",
+						"intro": "Indiquez une couleur de base pour la barre (supprimez les crochets pour utiliser les exemples ci-dessous)."
+					},
+					"header": {
+						"iconAlt": "Possibilités",
+						"title": "Possibilités"
+					},
+					"legendAndXAxisSection": "Étiquettes de l'axe X et titre de la légende",
+					"yAxis": "Axe Y"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "Possibilités",
+						"title": "Possibilités"
+					},
+					"legendSection": "Légende",
+					"legendTitleCombined": "Titre de la légende (laisser vide si non nécessaire)",
+					"yAxis": "Axe Y"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "Possibilités",
+						"title": "Possibilités"
+					},
+					"marginal": {
+						"boxplot": "Diagramme en boîte",
+						"none": "",
+						"rug": "Tapis"
+					},
+					"yAxis": "Axe Y"
+				}
 			}
 		},
 		"hypVis": {

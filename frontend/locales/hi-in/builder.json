@@ -352,23 +352,151 @@
 			"untitled": "शीर्षकहीन डेटासेट"
 		},
 		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "प्लॉट करने के लिए कॉलम",
+					"dataFormat": {
+						"googleSlidesAlt": "गूगल स्लाइड्स",
+						"hintLong": "यदि आप कॉलम की तुलना करना चाहते हैं, तो यहां क्लिक करें।",
+						"hintWide": "यदि आप किसी एक कॉलम (चर) के लिए विभिन्न समूहों की तुलना करना चाहते हैं, तो यहां क्लिक करें।",
+						"longDescription": "डेटा को इस प्रकार व्यवस्थित किया गया है कि प्रत्येक अवलोकन (जैसे किसी छात्र का परीक्षा स्कोर) अपनी अलग पंक्ति में दिखाई देता है, और अक्सर एक कॉलम श्रेणियों (जैसे विषय) को दर्शाता है। यह प्रारूप विभिन्न श्रेणियों में विस्तृत विश्लेषण के लिए उपयोगी है।",
+						"longTitle": "लंबे डेटा प्रारूप",
+						"sectionLabel": "डेटा लेआउट",
+						"slidesLink": "लेक्चर स्लाइड्स देखने के लिए यहां क्लिक करें",
+						"switchToLong": "लंबे प्रारूप पर स्विच करें",
+						"switchToWide": "वाइड फॉर्मेट पर स्विच करें",
+						"wideDescription": "डेटा को इस प्रकार व्यवस्थित किया जाता है कि प्रत्येक श्रेणी (जैसे विषय) एक अलग कॉलम के रूप में दिखाई देती है, और अक्सर पंक्तियों में अवलोकन (जैसे छात्र) दर्शाए जाते हैं। यह प्रारूप श्रेणियों के भीतर त्वरित तुलना के लिए सरल है।",
+						"wideTitle": "व्यापक डेटा प्रारूप"
+					},
+					"errBar95": "95% विश्वास अंतराल",
+					"errBar99": "99% विश्वास अंतराल",
+					"errBarStdErr": "मानक त्रुटि",
+					"errorBar": "त्रुटि पट्टी",
+					"errorBarWide": "त्रुटि पट्टी",
+					"qualitativeColumn": "गुणात्मक स्तंभ",
+					"quantitativeColumn": "मात्रात्मक स्तंभ",
+					"resources": {
+						"barPlotAlt": "बाहरी लिंक",
+						"barPlotTitle": "बार प्लॉट क्या है?",
+						"confidenceIntervalsAlt": "बाहरी लिंक",
+						"confidenceIntervalsTitle": "कॉन्फिडेंस इंटरवल क्या होते हैं?",
+						"standardErrorAlt": "बाहरी लिंक",
+						"standardErrorTitle": "मानक त्रुटि के बारे में और अधिक जानकारी"
+					}
+				},
+				"header": {
+					"iconAlt": "कुल्हाड़ियों",
+					"title": "कुल्हाड़ियों"
+				},
+				"help": {
+					"ariaLabel": "संसाधन और सहायता",
+					"resourcesIntro": "लिंक उपलब्ध होने पर संदर्भ को नए टैब में खोलने के लिए नीचे दिए गए बटनों का उपयोग करें।"
+				},
+				"histogram": {
+					"columnsToObserve": "अवलोकन करने के लिए स्तंभ",
+					"groupByOptional": "(वैकल्पिक — श्रेणी के अनुसार रंग चुनें)",
+					"marginalBox": "रेखा - चित्र",
+					"marginalNone": "कोई नहीं",
+					"marginalPlot": "सीमांत भूखंड",
+					"marginalRug": "गलीचे का भूखंड",
+					"resources": {
+						"histogramAlt": "बाहरी लिंक",
+						"histogramTitle": "हिस्टोग्राम क्या है?"
+					}
+				},
+				"scatterPlot": {
+					"group": "समूह",
+					"resources": {
+						"scatterPlotAlt": "स्कैटर प्लॉट संसाधन",
+						"scatterPlotTitle": "स्कैटर प्लॉट",
+						"trendlineAlt": "ट्रेंडलाइन संसाधन का बाहरी लिंक",
+						"trendlineTitle": "ट्रेंडलाइन"
+					},
+					"trendline": "ट्रेंडलाइन",
+					"xAxis": "X- अक्ष",
+					"yAxis": "शाफ़्ट"
+				}
+			},
 			"codeEditor": {
-				"runCode": ""
+				"runCode": "कोड चलाएँ"
+			},
+			"common": {
+				"axisSection": {
+					"x": "X- अक्ष",
+					"y": "शाफ़्ट"
+				},
+				"graphTitle": "ग्राफ़ शीर्षक",
+				"label": "लेबल",
+				"legendTitle": "किंवदंती शीर्षक",
+				"legendTitleHint": "(यदि आवश्यक न हो तो खाली छोड़ दें)",
+				"legendTitleSection": "किंवदंती शीर्षक",
+				"marginalPlot": "सीमांत भूखंड",
+				"range": {
+					"label": "श्रेणी",
+					"max": "अधिकतम",
+					"min": "मिन"
+				},
+				"resources": {
+					"noLink": "कोई बाहरी लिंक नहीं",
+					"openLink": "संसाधन तक पहुँचने के लिए यहाँ क्लिक करें"
+				}
 			},
 			"editor": {
 				"styleLayout": {
-					"description": "",
-					"title": ""
+					"description": "ग्राफ की दिखावट और लेआउट को अपनी इच्छानुसार अनुकूलित करें।",
+					"title": "शैली और लेआउट विकल्प"
 				},
 				"tabs": {
-					"axes": "",
-					"codeEditor": "",
-					"styleLayout": ""
+					"axes": "कुल्हाड़ियों",
+					"codeEditor": "कोड संपादक",
+					"styleLayout": "शैली और लेआउट"
 				}
 			},
 			"emptyState": {
 				"helper": "एडिटर खोलने के लिए इस कंपोनेंट पर क्लिक करें, फिर अपने विज़ुअलाइज़ेशन का पूर्वावलोकन करने के लिए वैरिएबल चुनें।",
 				"title": "आपका ग्राफ़ कॉन्फ़िगरेशन के लिए तैयार है।"
+			},
+			"fields": {
+				"selectPlaceholder": " {{field}}का चयन करें",
+				"selectVariablesPlaceholder": "चर का चयन करें"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- हेक्स प्रारूप [#28619E], [#D53533]",
+						"examplesNames": "- रंगों के नाम: [लाल], [गुलाबी]",
+						"examplesRgb": "- RGB मान [100,255,0], [0,120,80]",
+						"heading": "रंग",
+						"intro": "बार के लिए एक आधार रंग दें (नीचे दिए गए उदाहरणों का उपयोग करने के लिए वर्गाकार कोष्ठक हटा दें)।"
+					},
+					"header": {
+						"iconAlt": "विकल्प",
+						"title": "विकल्प"
+					},
+					"legendAndXAxisSection": "एक्स-अक्ष लेबल और लीजेंड शीर्षक",
+					"yAxis": "शाफ़्ट"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "विकल्प",
+						"title": "विकल्प"
+					},
+					"legendSection": "दंतकथा",
+					"legendTitleCombined": "शीर्षक (आवश्यकता न होने पर खाली छोड़ दें)",
+					"yAxis": "शाफ़्ट"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "विकल्प",
+						"title": "विकल्प"
+					},
+					"marginal": {
+						"boxplot": "रेखा - चित्र",
+						"none": "",
+						"rug": "गलीचा"
+					},
+					"yAxis": "शाफ़्ट"
+				}
 			}
 		},
 		"hypVis": {

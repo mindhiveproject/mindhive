@@ -352,23 +352,151 @@
 			"untitled": "مجموعة بيانات بلا عنوان"
 		},
 		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "العمود (الأعمدة) المراد رسمها",
+					"dataFormat": {
+						"googleSlidesAlt": "عروض جوجل التقديمية",
+						"hintLong": "إذا كنت ترغب في مقارنة الأعمدة، فانقر هنا.",
+						"hintWide": "إذا كنت ترغب في مقارنة مجموعات مختلفة لعمود واحد (متغير)، فانقر هنا.",
+						"longDescription": "تُنظَّم البيانات بحيث تظهر كل ملاحظة (مثل درجة اختبار الطالب) في صف منفصل، وغالبًا ما يكون هناك عمود يشير إلى الفئات (مثل المواد الدراسية). يُعد هذا التنسيق مفيدًا لإجراء تحليل مفصل عبر الفئات.",
+						"longTitle": "تنسيق البيانات الطويلة",
+						"sectionLabel": "تخطيط البيانات",
+						"slidesLink": "انقر هنا للاطلاع على شرائح المحاضرة",
+						"switchToLong": "انتقل إلى التنسيق الطويل",
+						"switchToWide": "التبديل إلى التنسيق العريض",
+						"wideDescription": "تُنظَّم البيانات بحيث تظهر كل فئة (مثل المواد الدراسية) في عمود مستقل، وغالبًا ما تُمثِّل الصفوف عدد الملاحظات (مثل الطلاب). هذا التنسيق يُسهِّل إجراء مقارنات سريعة داخل الفئات.",
+						"wideTitle": "تنسيق البيانات العريض"
+					},
+					"errBar95": "فاصل الثقة 95%",
+					"errBar99": "فاصل الثقة 99%",
+					"errBarStdErr": "الخطأ المعياري",
+					"errorBar": "شريط الخطأ",
+					"errorBarWide": "شريط الخطأ",
+					"qualitativeColumn": "عمود نوعي",
+					"quantitativeColumn": "العمود الكمي",
+					"resources": {
+						"barPlotAlt": "رابط خارجي",
+						"barPlotTitle": "ما هو الرسم البياني الشريطي؟",
+						"confidenceIntervalsAlt": "رابط خارجي",
+						"confidenceIntervalsTitle": "فترات الثقة - ما هي؟",
+						"standardErrorAlt": "رابط خارجي",
+						"standardErrorTitle": "المزيد حول الخطأ المعياري"
+					}
+				},
+				"header": {
+					"iconAlt": "محاور",
+					"title": "محاور"
+				},
+				"help": {
+					"ariaLabel": "الموارد والمساعدة",
+					"resourcesIntro": "استخدم الأزرار أدناه لفتح مرجع في علامة تبويب جديدة عندما يكون الرابط متاحًا."
+				},
+				"histogram": {
+					"columnsToObserve": "العمود (الأعمدة) المراد مراقبتها",
+					"groupByOptional": "التجميع حسب (اختياري - التلوين حسب الفئة)",
+					"marginalBox": "مخطط الصندوق",
+					"marginalNone": "لا أحد",
+					"marginalPlot": "قطعة أرض هامشية",
+					"marginalRug": "مخطط السجاد",
+					"resources": {
+						"histogramAlt": "رابط خارجي",
+						"histogramTitle": "ما هو المدرج التكراري؟"
+					}
+				},
+				"scatterPlot": {
+					"group": "مجموعة",
+					"resources": {
+						"scatterPlotAlt": "مورد مخطط التشتت",
+						"scatterPlotTitle": "مخطط التشتت",
+						"trendlineAlt": "رابط خارجي لمورد خط الاتجاه",
+						"trendlineTitle": "خط الاتجاه"
+					},
+					"trendline": "خط الاتجاه",
+					"xAxis": "المحور السيني",
+					"yAxis": "المحور الصادي"
+				}
+			},
 			"codeEditor": {
-				"runCode": ""
+				"runCode": "قم بتشغيل الكود"
+			},
+			"common": {
+				"axisSection": {
+					"x": "المحور السيني",
+					"y": "المحور الصادي"
+				},
+				"graphTitle": "عنوان الرسم البياني",
+				"label": "ملصق",
+				"legendTitle": "عنوان الأسطورة",
+				"legendTitleHint": "(اتركه فارغًا إذا لم تكن هناك حاجة إليه)",
+				"legendTitleSection": "عنوان الأسطورة",
+				"marginalPlot": "قطعة أرض هامشية",
+				"range": {
+					"label": "يتراوح",
+					"max": "الأعلى",
+					"min": "دقيقة"
+				},
+				"resources": {
+					"noLink": "لا يوجد رابط خارجي",
+					"openLink": "انقر هنا للوصول إلى المورد"
+				}
 			},
 			"editor": {
 				"styleLayout": {
-					"description": "",
-					"title": ""
+					"description": "قم بتخصيص مظهر وتصميم الرسم البياني.",
+					"title": "خيارات التصميم والتخطيط"
 				},
 				"tabs": {
-					"axes": "",
-					"codeEditor": "",
-					"styleLayout": ""
+					"axes": "محاور",
+					"codeEditor": "محرر الأكواد",
+					"styleLayout": "التصميم والتخطيط"
 				}
 			},
 			"emptyState": {
 				"helper": "انقر فوق هذا المكون لفتح المحرر، ثم اختر المتغيرات لمعاينة التصور الخاص بك.",
 				"title": "الرسم البياني الخاص بك جاهز للتكوين."
+			},
+			"fields": {
+				"selectPlaceholder": "حدد {{field}}",
+				"selectVariablesPlaceholder": "حدد المتغير (المتغيرات)"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- تنسيق HEX [#28619E]، [#D53533]",
+						"examplesNames": "- أسماء الألوان: [أحمر]، [وردي]",
+						"examplesRgb": "- قيمة RGB [100,255,0]، [0,120,80]",
+						"heading": "لون",
+						"intro": "حدد لونًا أساسيًا للشريط (قم بإزالة الأقواس المربعة لاستخدام الأمثلة أدناه)."
+					},
+					"header": {
+						"iconAlt": "خيارات",
+						"title": "خيارات"
+					},
+					"legendAndXAxisSection": "تسميات المحور السيني وعنوان مفتاح الخريطة",
+					"yAxis": "المحور الصادي"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "خيارات",
+						"title": "خيارات"
+					},
+					"legendSection": "أسطورة",
+					"legendTitleCombined": "عنوان الأسطورة (اتركه فارغًا إذا لم يكن مطلوبًا)",
+					"yAxis": "المحور الصادي"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "خيارات",
+						"title": "خيارات"
+					},
+					"marginal": {
+						"boxplot": "مخطط الصندوق",
+						"none": "",
+						"rug": "بساط"
+					},
+					"yAxis": "المحور الصادي"
+				}
 			}
 		},
 		"hypVis": {
