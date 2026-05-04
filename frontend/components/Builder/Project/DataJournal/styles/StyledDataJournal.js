@@ -1041,9 +1041,9 @@ export const StyledDataWorkspace = styled.div`
     .selectors {
       display: grid;
       margin: 0;
-      padding: 12px;
+      padding: 8px;
       box-sizing: border-box;
-      grid-gap: 21px;
+      grid-gap: 12px;
       min-width: 0;
       max-width: 100%;
       .header {
@@ -1057,48 +1057,86 @@ export const StyledDataWorkspace = styled.div`
     }
     .selectorsTestStats {
       display: grid;
-      grid-gap: 21px;
+      grid-gap: 12px;
     }
     .selectorsStats {
       margin: 0;
-      padding: 12px clamp(12px, 4vw, 48px) 24px;
+      padding: 8px clamp(10px, 3vw, 24px) 16px;
       box-sizing: border-box;
       display: grid;
-      grid-gap: 41px;
+      grid-gap: 16px;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .graphEditorFieldRow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 100%;
+      min-width: 0;
+      grid-gap: 10px;
+      // border-radius: 12px;
+      // border: 1px solid #e6e6e6;
+      background: #fff;
+      // box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+      color: #171717;
+      font-family: Inter, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.4;
+      .graphEditorFieldRow__label {
+        display: block;
+        background: transparent;
+        color: #337c84;
+        font-weight: 600;
+        // padding: 10px 12px 4px;
+        min-width: 0;
+        overflow-wrap: break-word;
+      }
+      .graphEditorFieldRow__control {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        .dropdown {
+          border: 0;
+        }
+      }
+    }
+    .graphEditorNestedFields {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+      max-width: 100%;
     }
     .selectorLine {
       display: grid;
-      grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
+      grid-gap: 12px;
       max-width: 100%;
-      border-radius: 8px;
-      border: 1px solid #eaeaea;
       background: #fff;
-      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
-      color: #4bb3a3;
+      color: #171717;
       font-family: Inter;
-      font-size: 16px;
-      font-style: normal;
+      font-size: 14px;
       font-weight: 400;
-      line-height: 150%;
+      line-height: 1.4;
       .title {
-        display: grid;
-        align-content: center;
-        justify-content: end;
-        background: #eaeaea;
-        padding: 9px 13px;
+        display: block;
+        color: #337c84;
+        font-weight: 600;
+        background: transparent;
         min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow-wrap: break-word;
       }
       .select {
         min-width: 0;
+        padding: 0;
         .dropdown {
           border: 0;
         }
         select {
-          border: 0px;
-          height: 100%;
-          padding: 9px 13px;
+          min-height: 44px;
           min-width: 0;
           width: 100%;
           max-width: 100%;
@@ -1174,7 +1212,7 @@ export const StyledDataWorkspace = styled.div`
       box-sizing: border-box;
       overflow-x: auto;
       ${hideScrollbars}
-      padding: 20px;
+      padding: 8px;
       background: white;
       border-radius: 0 0 10px 10px;
       .styleLayoutContainer {
@@ -1198,7 +1236,11 @@ export const StyledDataWorkspace = styled.div`
   }
   .graphDashboard {
     display: grid;
-    margin: 0px 10px 20px 10px;
+    margin: 0 0 8px 0;
+    padding: 0 2px;
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
 
     .header {
       display: grid;
@@ -1209,21 +1251,36 @@ export const StyledDataWorkspace = styled.div`
       margin: 0px 0px 10px 0px;
     }
     .subheader {
-      background: #f1f7f6;
-      padding: 10px;
+      background: transparent;
+      padding: 2px 2px 0;
+      margin-top: 4px;
+      font-family: Inter, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #6a6a6a;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
     }
     .subsection {
       display: grid;
       grid-gap: 8px;
-      padding: 10px 10px;
+      padding: 4px 0 8px;
     }
     .title {
       color: #666666;
     }
     .ranges {
-      display: grid;
-      grid-gap: 10px;
-      grid-template-columns: 100px 100px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      input {
+        flex: 1;
+        min-width: 0;
+      }
     }
     label {
       display: block;
@@ -1235,17 +1292,17 @@ export const StyledDataWorkspace = styled.div`
     input,
     textarea,
     select {
-      font-family: Lato;
-      height: 48px;
+      font-family: Inter, sans-serif;
+      min-height: 44px;
       border: 1px solid #cccccc;
       border-radius: 10px;
       width: 100%;
-      font-size: 16px;
-      line-height: 24px;
-      padding: 12px;
+      font-size: 14px;
+      line-height: 20px;
+      padding: 10px 12px;
       &:focus {
         outline: 0;
-        border-color: ${(props) => props.theme.red};
+        border-color: #337c84;
       }
     }
   }

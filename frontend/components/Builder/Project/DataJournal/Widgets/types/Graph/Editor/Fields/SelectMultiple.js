@@ -1,5 +1,16 @@
-import { Dropdown } from "semantic-ui-react";
-import { useState, useEffect } from "react";
+"use client";
+
+import { useState, useEffect, useMemo } from "react";
+import useTranslation from "next-translate/useTranslation";
+
+import DropdownSelect from "../../../../../../../../DesignSystem/DropdownSelect";
+import FieldRow from "../_shared/FieldRow";
+
+function normalizeToStringArray(raw) {
+  if (Array.isArray(raw)) return raw.map(String).filter(Boolean);
+  if (raw === undefined || raw === null || raw === "") return [];
+  return [String(raw)];
+}
 
 export default function SelectMultiple({
   sectionId,
@@ -9,38 +20,55 @@ export default function SelectMultiple({
   title,
   parameter,
 }) {
-  const [selected, setSelected] = useState(selectors[parameter] || []);
+  const { t } = useTranslation("builder");
 
-  const handleChange = (event, data) => {
-    setSelected(data.value);
+  const [selected, setSelected] = useState(() =>
+    normalizeToStringArray(selectors[parameter]),
+  );
+
+  useEffect(() => {
+    setSelected(normalizeToStringArray(selectors[parameter]));
+  }, [selectors, parameter]);
+
+  const dropdownOptions = useMemo(
+    () =>
+      (options || []).map((o) => ({
+        value: String(o?.value ?? ""),
+        label: o?.text ?? String(o?.value ?? ""),
+      })),
+    [options],
+  );
+
+  const placeholder = t(
+    "dataJournal.graph.fields.selectVariablesPlaceholder",
+    {},
+    { default: "Select variable(s)" },
+  );
+
+  const handleChange = (nextArr) => {
+    const next = Array.isArray(nextArr) ? nextArr.map(String) : [];
+    setSelected(next);
     onSelectorChange({
       target: {
         name: parameter,
-        value: data.value,
+        value: next,
       },
     });
   };
 
+  const hiddenJoined = selected.join(",");
+
   return (
-    <div className="selectorLine">
-      <div className="title">{title}</div>
-      <div className="select">
-        <Dropdown
-          placeholder="Select variable(s)"
-          fluid
-          multiple
-          search
-          selection
-          options={options}
-          onChange={handleChange}
-          value={selected}
-        />
-        <input
-          type="hidden"
-          id={`${parameter}-${sectionId}`}
-          value={selected}
-        />
-      </div>
-    </div>
+    <FieldRow label={title}>
+      <DropdownSelect
+        multiple
+        ariaLabel={title}
+        placeholder={placeholder}
+        value={selected}
+        onChange={handleChange}
+        options={dropdownOptions}
+      />
+      <input type="hidden" id={`${parameter}-${sectionId}`} value={hiddenJoined} readOnly />
+    </FieldRow>
   );
 }
