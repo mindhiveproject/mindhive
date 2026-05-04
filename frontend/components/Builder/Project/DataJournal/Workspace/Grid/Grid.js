@@ -14,12 +14,6 @@ import {
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
-import {
-  SidebarPusher,
-  SidebarPushable,
-  Segment,
-  Sidebar,
-} from "semantic-ui-react";
 import { StyledDataWorkspace } from "../../styles/StyledDataJournal";
 import Button from "../../../../../DesignSystem/Button";
 
@@ -98,7 +92,7 @@ export default function Grid({
       resizeObserver.disconnect();
       window.removeEventListener("resize", updateWidth);
     };
-  }, []);
+  }, [sidebarVisible]);
 
   useEffect(() => {
     if (activeComponent) {
@@ -387,7 +381,12 @@ export default function Grid({
               journalCollections={journalCollections}
             />
           ) : (
-            <Button type="button" variant="text" onClick={handleResetToJournal}>
+            <Button 
+              type="button" 
+              variant="tonal" 
+              onClick={handleResetToJournal}
+              style={{ backgroundColor: "#F3F3F3", color: "#171717" }}
+            >
               {t("dataJournal.sideNav.backToJournal", {}, { default: "Back to Journal" })}
             </Button>
           )}
@@ -464,22 +463,18 @@ export default function Grid({
               </div>
             )}
 
-            <SidebarPushable as={Segment} className="dashboardPushable">
-              <Sidebar
-                animation="push"
-                icon="labeled"
-                inverted
-                vertical
-                visible={sidebarVisible}
-                width="wide"
+            <div className="journalShell">
+              <aside
+                className="journalLeftRail"
+                aria-hidden={!sidebarVisible}
+                inert={!sidebarVisible ? true : undefined}
               >
                 <div className="sidebarModeShell">
                   {renderSidebarHeader()}
                   <div className="sidebarModeBody">{renderLeftSidebarContent()}</div>
                 </div>
-              </Sidebar>
-
-              <SidebarPusher className="dashboardPusher">
+              </aside>
+              <div className="journalCanvasColumn">
                 <div className="canvas" ref={gridRef} onClick={handleCanvasClick}>
                   <GridLayout
                     className="layout"
@@ -533,8 +528,8 @@ export default function Grid({
                     })}
                   </GridLayout>
                 </div>
-              </SidebarPusher>
-            </SidebarPushable>
+              </div>
+            </div>
           </div>
         </div>
       )}

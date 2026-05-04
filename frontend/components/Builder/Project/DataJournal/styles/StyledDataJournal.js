@@ -715,6 +715,7 @@ export const StyledDataWorkspace = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
   align-content: baseline;
   background: #f8f9f8;
   gap: 10px;
@@ -722,25 +723,6 @@ export const StyledDataWorkspace = styled.div`
   /* Space between the left journal sidebar and the grid canvas when the sidebar is open */
   --left-panel-canvas-gap: 16px;
   --left-sidebar-width: 430px;
-
-  /* Left journal sidebar: never show a box-shadow (Semantic UI + themes often add one) */
-  .sidebar,
-  .dashboardPushable .ui.sidebar,
-  .dashboardPushable .ui.sidebar.visible,
-  .dashboardPushable .ui.sidebar.animating {
-    width: var(--left-sidebar-width) !important;
-    display: grid !important;
-    grid-template-rows: minmax(0, 1fr);
-    background: white;
-    border: 1px solid #e6e6e6;
-    border-left: none;
-    /* Flush to the left: no radius on the outer (left) edge; keep radius toward the canvas */
-    border-top-left-radius: 0 !important;
-    border-bottom-left-radius: 0 !important;
-    border-top-right-radius: 12px !important;
-    border-bottom-right-radius: 12px !important;
-    box-shadow: none !important;
-  }
 
   .segment {
     border: none;
@@ -765,12 +747,15 @@ export const StyledDataWorkspace = styled.div`
     grid-template-rows: minmax(0, 1fr);
     gap: var(--dashboard-gap);
     align-content: stretch;
-    height: calc(100vh - 50px);
+    flex: 1 1 auto;
     min-width: 0;
     min-height: 0;
+    overflow: hidden;
 
     .dashboardMain {
       min-width: 0;
+      min-height: 0;
+      overflow: hidden;
       position: relative;
       display: grid;
       grid-template-rows: minmax(0, 1fr);
@@ -793,37 +778,104 @@ export const StyledDataWorkspace = styled.div`
       box-shadow: 2px 2px 8px 0px #0000001a;
     }
 
-    /* Semantic UI can apply margin-top on .ui.segment.pushable when sidebar is hidden — removes “extra padding” at top */
-    .dashboardPushable.ui.segment.pushable {
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
-    }
-
-    .dashboardPushable {
-      min-width: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    .dashboardPusher {
-      width: 100%;
+    /* Two-pane journal: flex row + container query so canvas width stays constant when rail collapses */
+    .journalShell {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      align-self: stretch;
       min-width: 0;
       min-height: 0;
-      background: transparent;
+      width: 100%;
+      height: 100%;
+      max-height: 100%;
+      overflow: hidden;
       box-sizing: border-box;
+      gap: var(--left-panel-canvas-gap);
+      container-type: inline-size;
+      container-name: journal-shell;
     }
 
-    &.hasLeftSidebar .dashboardPusher {
-      padding-left: var(--left-panel-canvas-gap);
+    .journalLeftRail {
+      flex: 0 0 var(--left-sidebar-width);
+      max-width: var(--left-sidebar-width);
+      min-width: 0;
+      /* Let the rail shrink inside the flex row so inner .sidebarModeBody can scroll */
+      min-height: 0;
+      max-height: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr);
       box-sizing: border-box;
+      background: white;
+      border: 1px solid #e6e6e6;
+      border-left: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+      box-shadow: none;
+      transition:
+        flex-basis 0.2s ease,
+        max-width 0.2s ease,
+        opacity 0.15s ease,
+        border-color 0.15s ease;
     }
 
-    &.noLeftSidebar .dashboardPusher {
-      padding-left: 16px;
-      padding-right: 16px;
+    &.noLeftSidebar .journalLeftRail {
+      flex: 0 0 0;
+      max-width: 0;
+      min-width: 0;
+      opacity: 0;
+      pointer-events: none;
+      border-color: transparent;
+    }
+
+    &.hasLeftSidebar .journalLeftRail {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .journalCanvasColumn {
+      flex: 1 1 auto;
+      min-width: 0;
+      min-height: 0;
+      max-height: 100%;
+      overflow: hidden;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+
+    &.hasLeftSidebar .journalCanvasColumn {
+      align-items: stretch;
+    }
+
+    &.noLeftSidebar .journalCanvasColumn {
+      align-items: center;
+      /* Gutters without shrinking journalShell — keeps cqi stable when rail toggles */
+      margin-inline: 16px;
+    }
+
+    /* Width from full journal row (cqi), not remaining flex space — RGL does not resize when rail toggles */
+    .journalShell .canvas {
+      width: calc(
+        100cqi - var(--left-sidebar-width) - var(--left-panel-canvas-gap)
+      );
+      max-width: 100%;
+
+      flex: 1 1 0;
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* legacy Edge */
+
+      &::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+      }
     }
   }
   .sidebarModeShell {
@@ -831,6 +883,7 @@ export const StyledDataWorkspace = styled.div`
     grid-template-rows: auto minmax(0, 1fr);
     min-height: 0;
     height: 100%;
+    overflow: hidden;
   }
   .sidebarModeHeader {
     position: sticky;
@@ -858,13 +911,20 @@ export const StyledDataWorkspace = styled.div`
   }
   .sidebarModeBody {
     min-height: 0;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* legacy Edge */
+
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
   }
   .canvas {
     display: grid;
     width: 100%;
     min-width: 0;
-    min-height: 80vh;
+    min-height: 0;
     box-sizing: border-box;
 
     background: white;
@@ -899,9 +959,8 @@ export const StyledDataWorkspace = styled.div`
       overflow-y: visible;
     }
   }
-  .dashboard.noLeftSidebar .canvas {
+  .dashboard.noLeftSidebar .journalShell .canvas {
     max-width: min(1380px, 100%);
-    width: 100%;
   }
   .graph {
     display: grid;
