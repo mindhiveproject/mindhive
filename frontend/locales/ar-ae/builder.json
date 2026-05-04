@@ -457,6 +457,7 @@
 				"title": "الرسم البياني الخاص بك جاهز للتكوين."
 			},
 			"fields": {
+				"clearSelection": "لا أحد",
 				"selectPlaceholder": "حدد {{field}}",
 				"selectVariablesPlaceholder": "حدد المتغير (المتغيرات)"
 			},

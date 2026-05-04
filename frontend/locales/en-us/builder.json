@@ -457,6 +457,7 @@
 				"title": "Your graph is ready to be configured"
 			},
 			"fields": {
+				"clearSelection": "None",
 				"selectPlaceholder": "Select {{field}}",
 				"selectVariablesPlaceholder": "Select variable(s)"
 			},

@@ -457,6 +457,7 @@
 				"title": "您的图表已准备好进行配置。"
 			},
 			"fields": {
+				"clearSelection": "没有任何",
 				"selectPlaceholder": "选择 {{field}}",
 				"selectVariablesPlaceholder": "选择变量"
 			},

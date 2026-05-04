@@ -457,6 +457,7 @@
 				"title": "आपका ग्राफ़ कॉन्फ़िगरेशन के लिए तैयार है।"
 			},
 			"fields": {
+				"clearSelection": "कोई नहीं",
 				"selectPlaceholder": " {{field}}का चयन करें",
 				"selectVariablesPlaceholder": "चर का चयन करें"
 			},

@@ -457,6 +457,7 @@
 				"title": "Seu gráfico está pronto para ser configurado."
 			},
 			"fields": {
+				"clearSelection": "Nenhum",
 				"selectPlaceholder": "Selecione {{field}}",
 				"selectVariablesPlaceholder": "Selecione a(s) variável(eis)"
 			},

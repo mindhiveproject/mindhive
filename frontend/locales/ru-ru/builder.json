@@ -457,6 +457,7 @@
 				"title": "Ваш график готов к настройке."
 			},
 			"fields": {
+				"clearSelection": "Никто",
 				"selectPlaceholder": "Выберите {{field}}",
 				"selectVariablesPlaceholder": "Выберите переменную(ые)"
 			},

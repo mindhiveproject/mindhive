@@ -457,6 +457,7 @@
 				"title": ""
 			},
 			"fields": {
+				"clearSelection": "",
 				"selectPlaceholder": "",
 				"selectVariablesPlaceholder": ""
 			},

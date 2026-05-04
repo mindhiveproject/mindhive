@@ -457,6 +457,7 @@
 				"title": "Uw grafiek is klaar om geconfigureerd te worden."
 			},
 			"fields": {
+				"clearSelection": "Geen",
 				"selectPlaceholder": "Selecteer {{field}}",
 				"selectVariablesPlaceholder": "Selecteer variabele(n)"
 			},
