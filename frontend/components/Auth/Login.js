@@ -109,7 +109,7 @@ export default function Login({ redirectType, redirectTo }) {
             <input
               type="password"
               name="password"
-              autoComplete="password"
+              autoComplete="current-password"
               value={inputs.password}
               onChange={handleChange}
             />

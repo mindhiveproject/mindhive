@@ -119,6 +119,31 @@ export const StyledBuilderArea = styled.div`
         display: grid;
         align-items: center;
       }
+
+      .rightPanel {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        padding-right: 16px;
+
+        .submitButton button {
+          cursor: pointer;
+          padding: 8px 20px;
+          border-radius: 50px;
+          border: 2px solid #007c70;
+          background: #007c70;
+          color: #ffffff;
+          font-family: Lato;
+          font-size: 14px;
+          font-weight: 600;
+          white-space: nowrap;
+          &:hover {
+            background: #005a52;
+            border-color: #005a52;
+          }
+        }
+      }
     }
     .middle {
       display: grid;

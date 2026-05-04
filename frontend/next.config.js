@@ -55,13 +55,30 @@ const securityHeaders = [
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
+      // Clickjacking: restrict who may embed this site in a frame
+      "frame-ancestors 'self'",
     ].join("; "),
+  },
+  {
+    // Google OAuth uses a popup that posts back via window.opener.
+    // 'same-origin' would sever that channel; 'same-origin-allow-popups' keeps
+    // OAuth working while blocking external pages from adopting our opener.
+    key: "Cross-Origin-Opener-Policy",
+    value: "same-origin-allow-popups",
+  },
+  {
+    // Frontend (mindhive.science) and backend (backend.mindhive.science) share
+    // the same registrable domain, so 'same-site' permits cross-subdomain
+    // fetches while blocking cross-origin spectre-style reads.
+    key: "Cross-Origin-Resource-Policy",
+    value: "same-site",
   },
 ];
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  poweredByHeader: false,
   // Non-production: browser Apollo uses same-origin /api/graphql (see config.js). Proxy to Keystone.
   // `npm run dev` runs `node server` without NODE_ENV=development; rewrites must still apply.
   // Omit when NODE_ENV=production — client uses https://backend.mindhive.science via withData.js.
