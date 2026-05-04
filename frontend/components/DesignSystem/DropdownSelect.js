@@ -102,6 +102,7 @@ function getOptionLabelString(opt) {
  * @param {boolean} [multiple=false] - When true, value is `string[]`, options toggle on click, menu stays open until outside/Escape.
  * @param {string} [placeholder] - Shown in the trigger when nothing is selected: single-select (no matching `value`) or multi-select (empty array).
  * @param {boolean} [searchableMultiple=true] - When `multiple`, show a type-to-filter field above the options (default true).
+ * @param {boolean} [searchableSingle=false] - When not `multiple`, show a type-to-filter field above the options (default false).
  * @param {React.ReactNode} [icon] - Replaces the default chevron after the label. Omit for built-in chevron; pass `null` to show no trailing icon.
  */
 export default function DropdownSelect({
@@ -114,6 +115,7 @@ export default function DropdownSelect({
   multiple = false,
   placeholder = "",
   searchableMultiple = true,
+  searchableSingle = false,
   icon,
 }) {
   const { t } = useTranslation("common");
@@ -149,15 +151,17 @@ export default function DropdownSelect({
     return placeholder;
   }, [multiple, selectedIds, options, value, placeholder]);
 
+  const searchEnabled = multiple ? searchableMultiple : searchableSingle;
+
   const filteredOptions = useMemo(() => {
-    if (!multiple || !searchableMultiple || !searchQuery.trim()) {
+    if (!searchEnabled || !searchQuery.trim()) {
       return options;
     }
     const q = searchQuery.trim().toLowerCase();
     return options.filter((opt) =>
       getOptionLabelString(opt).toLowerCase().includes(q)
     );
-  }, [multiple, searchableMultiple, options, searchQuery]);
+  }, [searchEnabled, options, searchQuery]);
 
   useLayoutEffect(() => {
     if (open && triggerRef.current) {
@@ -168,20 +172,20 @@ export default function DropdownSelect({
   }, [open, displayLabel, value]);
 
   useEffect(() => {
-    if (open && multiple && searchableMultiple) {
+    if (open && searchEnabled) {
       setSearchQuery("");
     }
-  }, [open, multiple, searchableMultiple]);
+  }, [open, searchEnabled]);
 
   useEffect(() => {
-    if (open && multiple && searchableMultiple && searchInputRef.current) {
+    if (open && searchEnabled && searchInputRef.current) {
       const id = requestAnimationFrame(() => {
         searchInputRef.current?.focus();
       });
       return () => cancelAnimationFrame(id);
     }
     return undefined;
-  }, [open, multiple, searchableMultiple]);
+  }, [open, searchEnabled]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -304,7 +308,7 @@ export default function DropdownSelect({
               overflow: "hidden",
             }}
           >
-            {multiple && searchableMultiple && (
+            {searchEnabled && (
               <input
                 ref={searchInputRef}
                 type="search"
