@@ -76,6 +76,9 @@ const INTERACTIVE_HIDE_DELAY_MS = 150;
 
 const PORTAL_Z_INDEX = 20000;
 
+/** Marks the tooltip surface so tap-to-toggle does not fire when using controls inside the panel. */
+const TOOLTIP_PANEL_ATTR = "data-infotooltip-panel";
+
 /**
  * Fixed placement for portaled tooltips (viewport coordinates from getBoundingClientRect).
  * @param {string} position
@@ -126,7 +129,7 @@ function buildPortalFixedPlacement(position, rect) {
  * @param {object} [tooltipStyle] - Override styles for the tooltip container.
  * @param {object} [wrapperStyle] - Override styles for the wrapper (e.g. width when used as custom trigger).
  * @param {number} [delayMs=0] - Delay in milliseconds before the tooltip appears on hover. Leave before this time cancels showing.
- * @param {React.ReactNode} [action] - Optional node (e.g. link/button) rendered below the tooltip content. When present, the tooltip is interactive: it stays visible when the pointer is over the trigger or the tooltip so the user can click the action.
+ * @param {React.ReactNode} [action] - Optional node (e.g. link/button) rendered below the tooltip content. When present, the tooltip is interactive: it stays visible when the pointer is over the trigger or the tooltip so the user can click the action. The trigger is also keyboard-activatable and tap/click-to-toggle so touch users can open it; outside tap and Escape dismiss when opened that way.
  * @param {"left"|"right"|"bottomLeft"|"bottomRight"|"topRight"} [position="bottomLeft"] - Tooltip placement.
  * @param {boolean} [portal=false] - Render the tooltip in `document.body` with `position: fixed` so it is not clipped by ancestor `overflow: hidden`. Ignored when `action` is set (interactive tooltips must stay inside the wrapper hover target).
  */
@@ -144,13 +147,56 @@ export default function InfoTooltip({
 }) {
   const [triggerHover, setTriggerHover] = useState(false);
   const [tooltipHover, setTooltipHover] = useState(false);
+  /** Tap/click-to-open so tactile devices can use interactive tooltips (action prop). */
+  const [tapPinned, setTapPinned] = useState(false);
   const [portalRect, setPortalRect] = useState(null);
   const showTimeoutRef = useRef(null);
   const hideTimeoutRef = useRef(null);
   const wrapperRef = useRef(null);
 
-  const hover = action != null ? triggerHover || tooltipHover : triggerHover;
+  const visible =
+    action != null ? triggerHover || tooltipHover || tapPinned : triggerHover;
   const usePortal = Boolean(portal && action == null);
+
+  const handleTriggerClick = useCallback(
+    (e) => {
+      if (action == null) return;
+      e.stopPropagation();
+      setTapPinned((p) => !p);
+    },
+    [action]
+  );
+
+  const handleTriggerKeyDown = useCallback(
+    (e) => {
+      if (action == null) return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setTapPinned((p) => !p);
+      }
+    },
+    [action]
+  );
+
+  useEffect(() => {
+    if (action == null || !tapPinned) return;
+    const onPointerDown = (e) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setTapPinned(false);
+      }
+    };
+    document.addEventListener("pointerdown", onPointerDown, true);
+    return () => document.removeEventListener("pointerdown", onPointerDown, true);
+  }, [action, tapPinned]);
+
+  useEffect(() => {
+    if (action == null || !tapPinned) return;
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setTapPinned(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [action, tapPinned]);
 
   const clearShowTimeout = useCallback(() => {
     if (showTimeoutRef.current != null) {
@@ -203,12 +249,12 @@ export default function InfoTooltip({
   }, [clearShowTimeout, clearHideTimeout]);
 
   useLayoutEffect(() => {
-    if (!usePortal || !hover || wrapperRef.current == null) return;
+    if (!usePortal || !visible || wrapperRef.current == null) return;
     setPortalRect(wrapperRef.current.getBoundingClientRect());
-  }, [usePortal, hover]);
+  }, [usePortal, visible]);
 
   useEffect(() => {
-    if (!usePortal || !hover) return;
+    if (!usePortal || !visible) return;
     const el = wrapperRef.current;
     const update = () => {
       if (el) setPortalRect(el.getBoundingClientRect());
@@ -219,9 +265,27 @@ export default function InfoTooltip({
       window.removeEventListener("resize", update);
       window.removeEventListener("scroll", update, true);
     };
-  }, [usePortal, hover]);
+  }, [usePortal, visible]);
 
   const useCustomTrigger = content != null && children != null;
+
+  const handleInteractiveZoneClick = useCallback(
+    (e) => {
+      if (action == null || !useCustomTrigger) return;
+      const t = e.target;
+      if (!(t instanceof Element)) return;
+      if (t.closest(`[${TOOLTIP_PANEL_ATTR}]`)) return;
+      const nested = t.closest(
+        "button, a, input, select, textarea, [contenteditable='true']"
+      );
+      const root = wrapperRef.current;
+      if (nested && root && root.contains(nested) && nested !== root) return;
+      e.stopPropagation();
+      setTapPinned((p) => !p);
+    },
+    [action, useCustomTrigger]
+  );
+
   const tooltipContent = useCustomTrigger ? content : content ?? children;
   const mergedIconStyle = { ...defaultIconStyle, ...iconStyle };
   const positionConfig = POSITION_STYLES[position] ?? POSITION_STYLES.bottomLeft;
@@ -236,11 +300,11 @@ export default function InfoTooltip({
     ...defaultTooltipStyle,
     ...(portalFixedPlacement ?? positionPlacement),
     ...tooltipStyle,
-    opacity: hover ? 1 : 0,
-    transform: hover
+    opacity: visible ? 1 : 0,
+    transform: visible
       ? `${portalTransformPrefix}${transformVisible}`
       : `${portalTransformPrefix}${transformHidden}`,
-    ...(action != null && { pointerEvents: hover ? "auto" : "none" }),
+    ...(action != null && { pointerEvents: visible ? "auto" : "none" }),
     ...(usePortal && { zIndex: PORTAL_Z_INDEX }),
   };
 
@@ -256,6 +320,7 @@ export default function InfoTooltip({
 
   const tooltipEl = (
     <div
+      {...{ [TOOLTIP_PANEL_ATTR]: "" }}
       style={mergedTooltipStyle}
       {...(action != null && {
         onMouseEnter: handleTooltipMouseEnter,
@@ -277,9 +342,21 @@ export default function InfoTooltip({
       style={wrapperStyle}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={action != null && useCustomTrigger ? handleInteractiveZoneClick : undefined}
     >
       {useCustomTrigger ? (
         children
+      ) : action != null ? (
+        <span
+          role="button"
+          tabIndex={0}
+          aria-expanded={visible}
+          onClick={handleTriggerClick}
+          onKeyDown={handleTriggerKeyDown}
+          style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
+        >
+          <img src={iconSrc} alt="info" style={mergedIconStyle} />
+        </span>
       ) : (
         <img src={iconSrc} alt="info" style={mergedIconStyle} />
       )}
