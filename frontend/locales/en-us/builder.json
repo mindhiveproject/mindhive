@@ -680,6 +680,82 @@
 			}
 		},
 		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "Column(s) to include in ANOVA",
+					"dataFormat": {
+						"currentlyPerforming": "Currently performing:",
+						"long": {
+							"description": "In the example above, we would select the column 'attrib' as a grouping column. This grouping is performed on the 'value' column which contains values for the conditions c1, c2, and c3.",
+							"title": "Switch to using a label column to sort rows of a value column"
+						},
+						"summaryLong": {
+							"hint": "(Click here if you want to switch to comparing values in different columns)",
+							"main": "One-Way ANOVA on a column containing values using a grouping column containing the group's labels on each row"
+						},
+						"summaryWide": {
+							"between": "between",
+							"columns": " three or more columns.",
+							"hint": "(Click here to use a label column to group each rows per unique label)",
+							"prefix": "One-Way ANOVA "
+						},
+						"wide": {
+							"description": "In the example above, we would select the columns c1, c2, and c3 to perform a One-Way Anova on them.",
+							"title": "Switch to performing a One-Way Anova between three or more columns"
+						}
+					},
+					"groupingColumn": "Grouping Column",
+					"quantitativeColumn": "Quantitative Column",
+					"resources": {
+						"scribbrLinkAlt": "External link",
+						"scribbrLinkTitle": "What is a One-way ANOVA?"
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "Long",
+						"chipWide": "Wide",
+						"panelRegionAriaLabel": "Data layout: diagram for the selected format",
+						"sectionLabel": "Data layout",
+						"toggleAriaLabel": "Show or hide data layout options"
+					},
+					"resources": {
+						"openLinkHint": "Click here to access the resource",
+						"sectionTitle": "Resources"
+					}
+				},
+				"tTest": {
+					"col1": "1st column",
+					"col2": "2nd column",
+					"dataFormat": {
+						"currentlyPerforming": "Currently performing:",
+						"long": {
+							"description": "In the example above, we would select the column 'attrib' as a grouping column. This grouping is performed on the 'value' column which contains values for both conditions",
+							"title": "Switch to using a label column to sort rows of a value column"
+						},
+						"summaryLong": {
+							"hint": "(Click here if you want to switch to comparing values in two different columns)",
+							"main": "T-Test on a column containing values using a grouping column containing labels for each row"
+						},
+						"summaryWide": {
+							"between": "between",
+							"columns": " two columns.",
+							"hint": "(Click here to use a label column to group your rows)",
+							"prefix": "T-Test "
+						},
+						"wide": {
+							"description": "In the example above, we would select the columns c1 and c2 to perform a t-test on them.",
+							"title": "Switch to performing a T-Test between two columns"
+						}
+					},
+					"groupingColumn": "Grouping Column",
+					"quantitativeColumn": "Quantitative Column",
+					"resources": {
+						"scribbrLinkAlt": "External link",
+						"scribbrLinkTitle": "Independent samples t-test"
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
 					"code": "Code",
