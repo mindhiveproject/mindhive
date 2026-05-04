@@ -31,6 +31,7 @@ export default function Form({
               <input
                 type="text"
                 name="username"
+                autoComplete="username"
                 value={profile?.username}
                 onChange={handleChange}
                 required
@@ -42,6 +43,7 @@ export default function Form({
               <input
                 type="email"
                 name="email"
+                autoComplete="email"
                 value={profile?.email}
                 onChange={handleChange}
                 required
@@ -53,6 +55,7 @@ export default function Form({
               <input
                 type="password"
                 name="password"
+                autoComplete="new-password"
                 value={profile?.password}
                 onChange={handleChange}
                 required

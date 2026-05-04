@@ -6,7 +6,11 @@ const Meta = () => (
     <meta charSet="utf-8" />
     <link rel="shortcut icon" href="/favicon.png" />
     <title>MindHive</title>
-    <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+    <script
+      src="https://cdn.plot.ly/plotly-2.30.0.min.js"
+      integrity="sha384-H7GB7Kme/VbPI/0S4LNq7OixFNVRgRGE8kyqTntBuiXle1KBm8KWLQh/Ah6bXCYW"
+      crossOrigin="anonymous"
+    />
   </Head>
 );
 
