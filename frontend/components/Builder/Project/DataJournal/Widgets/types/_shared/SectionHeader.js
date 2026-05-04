@@ -1,6 +1,6 @@
 "use client";
 
-import InfoTooltip from "../../../../../../../../DesignSystem/InfoTooltip";
+import InfoTooltip from "../../../../../../DesignSystem/InfoTooltip";
 
 const TOOLTIP_STYLE = {
   maxWidth: "min(calc(100vw - 32px), 360px)",
@@ -11,7 +11,7 @@ const TOOLTIP_STYLE = {
 };
 
 /**
- * Graph editor section title row with optional resources/help tooltip (narrow sidebar friendly).
+ * Data journal widget editor section title row with optional resources/help tooltip (narrow sidebar friendly).
  * When `helpAction` is set, it is passed to InfoTooltip as `action` (interactive tooltip; portal disabled per design system).
  */
 export default function SectionHeader({
@@ -22,10 +22,22 @@ export default function SectionHeader({
   helpAction,
   helpAriaLabel,
 }) {
+  const hasIcon = Boolean(iconSrc);
+  const hasHelp = helpContent != null || helpAction != null;
+  const useInteractiveHelp = helpAction != null;
+
+  const gridCols =
+    hasIcon && hasHelp
+      ? "auto 1fr auto"
+      : hasIcon
+        ? "auto 1fr"
+        : hasHelp
+          ? "1fr auto"
+          : "1fr";
+
   const headerRowStyle = {
     display: "grid",
-    gridTemplateColumns:
-      helpContent != null || helpAction != null ? "auto 1fr auto" : "auto 1fr",
+    gridTemplateColumns: gridCols,
     alignItems: "center",
     gap: "10px",
     fontWeight: 700,
@@ -34,12 +46,11 @@ export default function SectionHeader({
     minWidth: 0,
   };
 
-  const hasHelp = helpContent != null || helpAction != null;
-  const useInteractiveHelp = helpAction != null;
-
   return (
     <div className="graphEditorSectionHeader" style={headerRowStyle}>
-      <img src={iconSrc} alt={iconAlt} style={{ display: "block", flexShrink: 0 }} />
+      {hasIcon ? (
+        <img src={iconSrc} alt={iconAlt} style={{ display: "block", flexShrink: 0 }} />
+      ) : null}
       <div style={{ minWidth: 0, overflowWrap: "break-word" }}>{title}</div>
       {hasHelp ? (
         <InfoTooltip

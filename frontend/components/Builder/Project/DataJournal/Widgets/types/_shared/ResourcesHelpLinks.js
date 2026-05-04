@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "../../../../../../../../DesignSystem/Button";
+import Button from "../../../../../../DesignSystem/Button";
 
 const LIST_STYLE = {
   display: "grid",

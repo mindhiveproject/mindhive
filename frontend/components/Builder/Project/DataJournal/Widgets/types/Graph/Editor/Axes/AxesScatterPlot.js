@@ -1,7 +1,7 @@
 import useTranslation from "next-translate/useTranslation";
 
-import SectionHeader from "../_shared/SectionHeader";
-import ResourcesTooltipResourceButtons from "../_shared/ResourcesHelpLinks";
+import SectionHeader from "../../../_shared/SectionHeader";
+import ResourcesTooltipResourceButtons from "../../../_shared/ResourcesHelpLinks";
 import SelectOne from "../Fields/SelectOne";
 import ToggleOne from "../Fields/ToggleOne";
 

@@ -1,23 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionTitle,
-} from "semantic-ui-react";
 
 import Button from "../../../../../../../../DesignSystem/Button";
 import Chip from "../../../../../../../../DesignSystem/Chip";
+import ResourcesTooltipResourceButtons from "../../../_shared/ResourcesHelpLinks";
+import SectionHeader from "../../../_shared/SectionHeader";
 import SelectOne from "../Fields/SelectOne";
 
 const G_COMMON = "dataJournal.statTest.axes.common";
 const G_T = "dataJournal.statTest.axes.tTest";
-
-const ACCORDION_CHEVRON = (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-    <path d="M7 10l5 5 5-5H7z" fill="currentColor" />
-  </svg>
-);
 
 export default function AxesTtest({
   variables,
@@ -31,18 +22,12 @@ export default function AxesTtest({
     selectors?.dataFormat || "long",
   );
   const [dataLayoutPanelOpen, setDataLayoutPanelOpen] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(-1);
 
   const dataLayoutPanelId = `stat-test-ttest-data-layout-${sectionId}`;
 
   useEffect(() => {
     setSelectedDataFormat(selectors?.dataFormat || "long");
   }, [selectors?.dataFormat]);
-
-  const handleAccordionClick = (e, titleProps) => {
-    const { index } = titleProps;
-    setActiveIndex(activeIndex === index ? -1 : index);
-  };
 
   const dataFormatMenu = useMemo(
     () => [
@@ -122,12 +107,32 @@ export default function AxesTtest({
   const currentlyPerforming = t(`${G_T}.dataFormat.currentlyPerforming`, {}, {
     default: "Currently performing:",
   });
-  const resourcesSectionTitle = t(`${G_COMMON}.resources.sectionTitle`, {}, {
-    default: "Resources",
-  });
-  const resourcesOpenHint = t(`${G_COMMON}.resources.openLinkHint`, {}, {
+  const openLinkLabel = t(`${G_COMMON}.resources.openLinkHint`, {}, {
     default: "Click here to access the resource",
   });
+  const noLinkHint = t(`${G_COMMON}.resources.noLink`, {}, { default: "No external link" });
+
+  const helpContent = useMemo(
+    () => (
+      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "#625B71" }}>
+        {t(`${G_COMMON}.help.resourcesIntro`, {}, {
+          default:
+            "Learn more about this component with the resources below.",
+        })}
+      </p>
+    ),
+    [t],
+  );
+  const helpAction = useMemo(
+    () => (
+      <ResourcesTooltipResourceButtons
+        items={resourcesList}
+        openLinkLabel={openLinkLabel}
+        noLinkHint={noLinkHint}
+      />
+    ),
+    [resourcesList, openLinkLabel, noLinkHint],
+  );
 
   const currentFormatOption = useMemo(
     () => dataFormatMenu.find((o) => o.value === selectedDataFormat) || dataFormatMenu[0],
@@ -136,6 +141,14 @@ export default function AxesTtest({
 
   return (
     <div className="selectorsStats">
+      <SectionHeader
+        title={t(`${G_COMMON}.header.title`, {}, { default: "Axes" })}
+        iconSrc="/assets/icons/visualize/axes.svg"
+        iconAlt={t(`${G_COMMON}.header.iconAlt`, {}, { default: "Axes" })}
+        helpContent={helpContent}
+        helpAction={helpAction}
+        helpAriaLabel={t(`${G_COMMON}.help.ariaLabel`, {}, { default: "Resources and help" })}
+      />
       <div className="statTestDataFormatSummary">
         {selectedDataFormat === "wide" ? (
           <>
@@ -153,12 +166,6 @@ export default function AxesTtest({
               {t(`${G_T}.dataFormat.summaryLong.main`, {}, {
                 default:
                   "T-Test on a column containing values using a grouping column containing labels for each row",
-              })}
-            </p>
-            <p>
-              {t(`${G_T}.dataFormat.summaryLong.hint`, {}, {
-                default:
-                  "(Click here if you want to switch to comparing values in two different columns)",
               })}
             </p>
           </>
@@ -261,54 +268,6 @@ export default function AxesTtest({
         id={`dataFormat-${sectionId}`}
         value={selectedDataFormat}
       />
-
-      <Accordion>
-        <AccordionTitle
-          active={activeIndex === 0}
-          index={0}
-          onClick={handleAccordionClick}
-        >
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <span
-              style={{
-                display: "inline-flex",
-                transform: activeIndex === 0 ? "rotate(180deg)" : "none",
-                transition: "transform 0.2s ease",
-              }}
-            >
-              {ACCORDION_CHEVRON}
-            </span>
-            {resourcesSectionTitle}
-          </span>
-        </AccordionTitle>
-        <AccordionContent active={activeIndex === 0}>
-          {resourcesList.map((option) => (
-            <a
-              className="resourcesCard"
-              href={option.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              key={option.link}
-            >
-              <img
-                className="resourcesCardImage"
-                src={option.img}
-                alt={option.alt}
-              />
-              <div>
-                <div className="resourcesCardTitle">{option.title}</div>
-                <div className="resourcesCardLink">{resourcesOpenHint}</div>
-              </div>
-            </a>
-          ))}
-        </AccordionContent>
-      </Accordion>
     </div>
   );
 }

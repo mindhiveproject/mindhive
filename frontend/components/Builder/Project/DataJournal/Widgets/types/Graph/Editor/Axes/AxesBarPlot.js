@@ -4,8 +4,8 @@ import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../../../../../../../DesignSystem/Button";
 import Chip from "../../../../../../../../DesignSystem/Chip";
-import SectionHeader from "../_shared/SectionHeader";
-import ResourcesTooltipResourceButtons from "../_shared/ResourcesHelpLinks";
+import SectionHeader from "../../../_shared/SectionHeader";
+import ResourcesTooltipResourceButtons from "../../../_shared/ResourcesHelpLinks";
 import SelectMultiple from "../Fields/SelectMultiple";
 import SelectOne from "../Fields/SelectOne";
 

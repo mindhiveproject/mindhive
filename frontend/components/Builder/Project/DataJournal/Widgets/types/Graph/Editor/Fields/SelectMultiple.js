@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import DropdownSelect from "../../../../../../../../DesignSystem/DropdownSelect";
-import FieldRow from "../_shared/FieldRow";
+import FieldRow from "../../../_shared/FieldRow";
 
 function normalizeToStringArray(raw) {
   if (Array.isArray(raw)) return raw.map(String).filter(Boolean);

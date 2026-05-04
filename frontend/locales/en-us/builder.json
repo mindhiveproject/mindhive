@@ -504,6 +504,16 @@
 		},
 		"hypVis": {
 			"axes": {
+				"common": {
+					"help": {
+						"ariaLabel": "Resources and help",
+						"resourcesIntro": "Use the buttons below to open a reference in a new tab when a link is available."
+					},
+					"resources": {
+						"noLink": "No external link",
+						"openLinkHint": "Click here to access the resource"
+					}
+				},
 				"abDesign": {
 					"clipboardAiCopied": "AI-reformulated hypothesis copied to clipboard: {{text}}",
 					"clipboardFigCopied": "Copied to clipboard!",
@@ -531,7 +541,17 @@
 					"yourHypothesisHelpIntro": "To build your experimental hypothesis, follow these steps:",
 					"yourHypothesisHelpStep1": "Name your IV and DV",
 					"yourHypothesisHelpStep2": "State how many conditions your IV has",
-					"yourHypothesisHelpStep3": "Predict the DV values for each condition of the IV"
+					"yourHypothesisHelpStep3": "Predict the DV values for each condition of the IV",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "Reference coming soon.",
+							"title": "What is an experimental hypothesis?"
+						},
+						"rankOrdering": {
+							"subtitle": "Reference coming soon.",
+							"title": "Rank-ordering predictions"
+						}
+					}
 				},
 				"clipboard": {
 					"abDesignConditionLine": "- {{condition}} will occupy rank #{{rank}}\n",
@@ -564,7 +584,26 @@
 					"loadingBlocks": "Loading block data...",
 					"sectionTitle": "Your correlational hypothesis",
 					"titleLabel": "Title",
-					"willBeRelatedTo": "will be related to"
+					"willBeRelatedTo": "will be related to",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "Reference coming soon.",
+							"title": "What is a correlational hypothesis?"
+						},
+						"directionality": {
+							"subtitle": "Reference coming soon.",
+							"title": "Choosing directionality terms"
+						}
+					}
+				},
+				"default": {
+					"group": "Group",
+					"header": {
+						"iconAlt": "Axes",
+						"title": "Axes"
+					},
+					"xAxis": "X-Axis",
+					"yAxis": "Y-Axis"
 				}
 			},
 			"editor": {
@@ -690,7 +729,6 @@
 							"title": "Switch to using a label column to sort rows of a value column"
 						},
 						"summaryLong": {
-							"hint": "(Click here if you want to switch to comparing values in different columns)",
 							"main": "One-Way ANOVA on a column containing values using a grouping column containing the group's labels on each row"
 						},
 						"summaryWide": {
@@ -719,9 +757,30 @@
 						"sectionLabel": "Data layout",
 						"toggleAriaLabel": "Show or hide data layout options"
 					},
+					"header": {
+						"iconAlt": "Axes",
+						"title": "Axes"
+					},
+					"help": {
+						"ariaLabel": "Resources and help",
+						"resourcesIntro": "Learn more about this component with the resources below."
+					},
 					"resources": {
+						"noLink": "No external link",
 						"openLinkHint": "Click here to access the resource",
 						"sectionTitle": "Resources"
+					}
+				},
+				"default": {
+					"column1": "1st Column",
+					"column2": "2nd Column"
+				},
+				"pearson": {
+					"predictedColumn": "Predicted Column",
+					"predictorColumn": "Predictor Column",
+					"resources": {
+						"scribbrLinkAlt": "External link",
+						"scribbrLinkTitle": "What's a Pearson's correlation"
 					}
 				},
 				"tTest": {
@@ -734,13 +793,11 @@
 							"title": "Switch to using a label column to sort rows of a value column"
 						},
 						"summaryLong": {
-							"hint": "(Click here if you want to switch to comparing values in two different columns)",
 							"main": "T-Test on a column containing values using a grouping column containing labels for each row"
 						},
 						"summaryWide": {
 							"between": "between",
 							"columns": " two columns.",
-							"hint": "(Click here to use a label column to group your rows)",
 							"prefix": "T-Test "
 						},
 						"wide": {

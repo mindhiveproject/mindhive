@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Width-safe label + control row for graph editor fields (replaces fixed .selectorLine grid).
+ * Width-safe label + control row for widget editor fields (replaces fixed .selectorLine grid).
  */
 export default function FieldRow({ label, children }) {
   return (

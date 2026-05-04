@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import DropdownSelect from "../../../../../../../../DesignSystem/DropdownSelect";
-import FieldRow from "../_shared/FieldRow";
+import FieldRow from "../../../_shared/FieldRow";
 
 /** Matches legacy native <select> first option value for Python / DOM bridges */
 const GRAPH_SELECT_NOT_SELECTED = "not selected";

@@ -1,7 +1,7 @@
 import useTranslation from "next-translate/useTranslation";
 
-import FieldRow from "../_shared/FieldRow";
-import SectionHeader from "../_shared/SectionHeader";
+import FieldRow from "../../../_shared/FieldRow";
+import SectionHeader from "../../../_shared/SectionHeader";
 
 const G = "dataJournal.graph";
 

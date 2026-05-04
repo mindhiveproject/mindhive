@@ -1412,7 +1412,6 @@ export const StyledDataWorkspace = styled.div`
     max-width: 100%;
     min-width: 0;
     align-self: stretch;
-    padding: 20px 16px;
     flex-direction: column;
     align-items: stretch;
     gap: 22px;
