@@ -304,6 +304,7 @@ function Item({
               value={name}
               onChange={handleItemChange}
               className="name"
+              placeholder={t("surveyBuilder.variableNamePlaceholder", "e.g. response_1 (used to store the answer)")}
               required
             />
           </>
@@ -320,6 +321,7 @@ function Item({
               value={header}
               onChange={handleItemChange}
               className="header"
+              placeholder={t("surveyBuilder.headerPlaceholder", "e.g. Question title shown above the item")}
             />
           </>
         )}
@@ -334,6 +336,7 @@ function Item({
               value={text}
               onChange={handleItemChange}
               className="text"
+              placeholder={t("surveyBuilder.textPlaceholder", "Enter descriptive or instructional text shown to participants")}
             />
           </>
         )}
@@ -352,6 +355,7 @@ function Item({
                   value={option}
                   onChange={handleItemChange}
                   className="options"
+                  placeholder={t("surveyBuilder.optionPlaceholder", "Option text")}
                 />
                 <button onClick={(e) => deleteOption(e, id, num, "options")}>
                   ×
@@ -381,6 +385,7 @@ function Item({
                   value={item}
                   onChange={handleItemChange}
                   className="items"
+                  placeholder={t("surveyBuilder.likertItemPlaceholder", "Statement to rate")}
                 />
                 <button onClick={(e) => deleteOption(e, id, num, "items")}>
                   ×
@@ -407,6 +412,7 @@ function Item({
               value={min_rating_label}
               onChange={handleItemChange}
               className="min_rating_label"
+              placeholder={t("surveyBuilder.minValueLabelPlaceholder", "e.g. Not at all")}
             />
 
             <div className="fieldLabel">
@@ -418,6 +424,7 @@ function Item({
               value={max_rating_label}
               onChange={handleItemChange}
               className="max_rating_label"
+              placeholder={t("surveyBuilder.maxValueLabelPlaceholder", "e.g. Very much")}
             />
 
             <div className="fieldLabel">
@@ -429,6 +436,7 @@ function Item({
               value={min_value}
               onChange={handleItemChange}
               className="min_value"
+              placeholder="0"
             />
 
             <div className="fieldLabel">
@@ -440,6 +448,7 @@ function Item({
               value={max_value}
               onChange={handleItemChange}
               className="max_value"
+              placeholder="100"
             />
           </>
         )}
