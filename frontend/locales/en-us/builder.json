@@ -225,7 +225,7 @@
 	},
 	"createStudyWithoutProject": "Create a study without a project",
 	"dataJournal": {
-		"addComponent": "Add Component",
+		"addComponent": "Component",
 		"addNotes": "Add Notes",
 		"code": {
 			"editor": {
@@ -630,6 +630,8 @@
 			"widgetSettings": "Widget Settings"
 		},
 		"sideNav": {
+			"addComponent": "Component",
+			"addComponentAria": "Add a component to this workspace",
 			"addJournal": "Journal",
 			"addJournalScratch": "Create a journal from scratch",
 			"addJournalTemplate": "Add a journal template",
@@ -729,6 +731,7 @@
 							"title": "Switch to using a label column to sort rows of a value column"
 						},
 						"summaryLong": {
+							"hint": "(Click here if you want to switch to comparing values in different columns)",
 							"main": "One-Way ANOVA on a column containing values using a grouping column containing the group's labels on each row"
 						},
 						"summaryWide": {

@@ -191,7 +191,7 @@ export default function CreateJournal({
           default: "Journal",
         })}
         icon="+"
-        triggerStyle={{ backgroundColor: "#F6F9F8", border: "none", fontWeight: 600, fontSize: "16px", color: "#5D5763" }}
+        triggerStyle={{ backgroundColor: "#F6F9F8", border: "2px solid #E6E6E6", fontWeight: 600, fontSize: "16px", color: "#5D5763" }}
       />
       <JournalTemplateModal
         open={templateModalOpen}

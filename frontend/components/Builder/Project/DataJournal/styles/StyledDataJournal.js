@@ -214,6 +214,13 @@ export const StyledSidebar = styled.div`
       gap: 8px;
       align-items: center;
     }
+    .addActionsRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 8px 0;
+    }
   }
   .workspaces {
     display: grid;
@@ -279,18 +286,21 @@ export const StyledSidebar = styled.div`
     }
   }
 
-  .addWorkspaceBtn {
+  .addWorkspaceBtn,
+  .addComponentBtn {
     display: flex;
     width: fit-content;
     justify-content: center;
     align-items: center;
     border-radius: 8px;
 
-    > div > button {
+    > div > button,
+    > button {
       transition: background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    &:hover > div > button {
+    &:hover > div > button,
+    &:hover > button {
       background-color: #e8eeec !important;
       box-shadow: var(
         --MH-Theme-Elevation-Medium,
@@ -360,9 +370,40 @@ export const StyledTopNavigation = styled.div`
   border-bottom: 1px solid #e6e6e6;
   background: white;
   .buttons {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-gap: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+  }
+  .topNavJournalActions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  /* TopNav is under StyledDataWorkspace, not StyledDataJournal — mirror journal pill hovers here */
+  .addWorkspaceBtn,
+  .addComponentBtn {
+    display: flex;
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+
+    > div > button,
+    > button {
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    &:hover > div > button,
+    &:hover > button {
+      background-color: #e8eeec !important;
+      box-shadow: var(
+        --MH-Theme-Elevation-Medium,
+        0 1px 4px rgba(0, 0, 0, 0.08)
+      );
+    }
   }
   .leftIconNav {
     margin: 0px 8px 0px 12px;

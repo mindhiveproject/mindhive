@@ -5,7 +5,6 @@ import useTranslation from "next-translate/useTranslation";
 
 import { StyledTopNavigation } from "../styles/StyledDataJournal"; // Adjust path
 import Chip from "../../../../DesignSystem/Chip";
-import Button from "../../../../DesignSystem/Button";
 import Breadcrumbs from "./Breadcrumbs/Main";
 
 import { UPDATE_VIZCHAPTER } from "../../../../Mutations/VizChapter";
@@ -15,6 +14,9 @@ import { GET_DATA_JOURNAL } from "../../../../Queries/DataJournal";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 
 import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
+
+import AddWorkspace from "../SideNav/AddWorkspace";
+import AddComponentButton from "../SideNav/AddComponentButton";
 
 function journalsWhereClause(projectId, studyId) {
   if (projectId && studyId) {
@@ -42,8 +44,8 @@ export default function TopNavigation() {
     workspace,
     projectId,
     studyId,
-    setIsAddComponentPanelOpen,
     setActiveComponent,
+    setIsAddComponentPanelOpen,
     setLeftPanelMode,
     setSidebarVisible,
   } = useDataJournal();
@@ -148,18 +150,11 @@ export default function TopNavigation() {
     }
   };
 
-  const toggleComponentPanel = () => {
-    setIsAddComponentPanelOpen((wasOpen) => {
-      const nextOpen = !wasOpen;
-      if (nextOpen) {
-        setActiveComponent(null);
-        setLeftPanelMode("addComponent");
-        setSidebarVisible(true);
-      } else {
-        setLeftPanelMode("journal");
-      }
-      return nextOpen;
-    });
+  const openAddComponentPanel = () => {
+    setActiveComponent(null);
+    setLeftPanelMode("addComponent");
+    setIsAddComponentPanelOpen(true);
+    setSidebarVisible(true);
   };
 
   return (
@@ -246,15 +241,13 @@ export default function TopNavigation() {
         )}
       </div>
       <div className="buttons">
-        {area === "journals" && workspace?.id && (
-          <div>
-            <Button 
-            variant="filled" 
-            // variant="text"
-            // style={{ color: "#5D5763", fontWeight: 400 }}
-            onClick={toggleComponentPanel}>
-              {t("dataJournal.topNav.addComponent", "Add a Component")}
-            </Button>
+        {area === "journals" && journal?.id && (
+          <div className="topNavJournalActions">
+            <AddWorkspace journalId={journal?.id} />
+            <AddComponentButton
+              disabled={!workspace?.id}
+              onClick={openAddComponentPanel}
+            />
           </div>
         )}
         {/* <SaveWorkspace workspace={workspace} /> */}

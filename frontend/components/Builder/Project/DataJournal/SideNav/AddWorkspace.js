@@ -11,7 +11,7 @@ const ADD_TEMPLATE_WORKSPACE_VALUE = "__add_template_workspace__";
 
 const WORKSPACE_DROPDOWN_TRIGGER_STYLE = {
   backgroundColor: "#F6F9F8",
-  border: "none",
+  border: "2px solid #E6E6E6",
   fontWeight: 600,
   fontSize: "16px",
   color: "#5D5763",
@@ -98,7 +98,7 @@ export default function AddWorkspace({ journalId }) {
   }
 
   return (
-    <div className="addWorkspaceBtn" style={{ marginTop: 8 }}>
+    <div className="addWorkspaceBtn">
       <DropdownSelect
         value={workspaceDropdownValue}
         options={workspaceDropdownOptions}
