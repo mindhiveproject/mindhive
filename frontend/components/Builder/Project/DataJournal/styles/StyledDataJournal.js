@@ -91,22 +91,25 @@ const barPlotDataFormatPanelStyles = css`
 
 export const StyledDataArea = styled.div`
   display: grid;
-  align-content: baseline;
+  grid-template-rows: minmax(0, 1fr);
+  align-content: stretch;
   background: #f8f9f8;
   height: 100%;
+  min-height: 0;
 `;
 
 export const StyledDataJournal = styled.div`
   display: grid;
-  align-content: baseline;
+  grid-template-rows: minmax(0, 1fr);
+  align-content: stretch;
   height: 100%;
+  min-height: 0;
 `;
 
 export const StyledSidebar = styled.div`
   display: flex;
   flex-direction: column;
   grid-gap: 10px;
-  padding: 10px;
   margin: 10px;
   font-family: "Inter";
   font-style: normal;
@@ -131,11 +134,10 @@ export const StyledSidebar = styled.div`
   }
   .journals {
     display: grid;
-    grid-gap: 10px;
     .journal {
       display: grid;
       grid-gap: 4px;
-      margin: 8px 0 20px 0;
+      margin-bottom: 20px;
       padding: 10px 12px;
       border-radius: 12px;
       border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
@@ -175,7 +177,12 @@ export const StyledSidebar = styled.div`
       min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+      white-space: normal;
+      word-break: break-word;
     }
     .journalTitleButton:focus-visible {
       outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
@@ -189,6 +196,14 @@ export const StyledSidebar = styled.div`
       line-height: 24px;
       letter-spacing: 0;
       color: #888888;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      word-break: break-word;
     }
     .selectedTitle {
       font-family: Inter, sans-serif;
@@ -197,6 +212,14 @@ export const StyledSidebar = styled.div`
       line-height: 24px;
       letter-spacing: 0;
       color: inherit;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      word-break: break-word;
     }
     .dataSourceRow {
       display: flex;
@@ -369,6 +392,7 @@ export const StyledTopNavigation = styled.div`
   align-items: center;
   border-bottom: 1px solid #e6e6e6;
   background: white;
+  padding: 8px;
   .buttons {
     display: flex;
     justify-content: flex-end;
@@ -406,7 +430,6 @@ export const StyledTopNavigation = styled.div`
     }
   }
   .leftIconNav {
-    margin: 0px 8px 0px 12px;
     padding-right: 10px;
     display: flex;
     align-items: center;
@@ -522,7 +545,6 @@ export const StyledRightPanel = styled.div`
   padding: 12px;
   box-sizing: border-box;
   overflow-x: hidden;
-  overflow-y: auto;
   ${hideScrollbars}
   height: 100%;
   align-self: stretch;
@@ -721,15 +743,21 @@ export const StyledComponentPanel = styled.div`
   align-content: baseline;
   grid-gap: 10px;
   min-width: 0;
-  width: 100%;
+  width: auto;
   background: white;
   padding: 12px;
   overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and legacy Edge */
   height: 100%;
-  margin: 0;
+  margin: 10px 8px 10px 8px;
+  box-sizing: border-box;
   box-shadow: none;
   border-radius: 12px;
   border: 1px solid #e6e6e6;
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
   .panelHeader {
     display: flex;
     align-items: center;
@@ -1058,6 +1086,30 @@ export const StyledDataWorkspace = styled.div`
         outline: 4px solid #e6e6e6;
         outline-offset: 2px;
       }
+    }
+
+    .react-grid-placeholder {
+      background: rgba(228, 223, 246, 0.45) !important;
+      border: 2px solid #e4dff6 !important;
+      border-radius: 14px !important;
+      opacity: 1 !important;
+    }
+
+    .react-grid-item.react-draggable-dragging {
+      z-index: 3 !important;
+      border-radius: 14px;
+      box-shadow: 0 0 0 3px rgba(228, 223, 246, 0.9) !important;
+    }
+
+    .react-grid-item.resizing {
+      z-index: 3 !important;
+      border-radius: 14px;
+      box-shadow: 0 0 0 3px rgba(228, 223, 246, 0.9) !important;
+    }
+
+    .react-resizable-handle::after {
+      border-right: 2px solid #e4dff6 !important;
+      border-bottom: 2px solid #e4dff6 !important;
     }
 
     /* Paragraph widget on grid: match panel TipTap — no inner ProseMirror box chrome; WidgetContent scrolls */
@@ -2042,4 +2094,136 @@ export const StyledDataSourceLabels = styled.span`
   font-size: 12px;
   color: #336f8a;
   margin-left: 8px;
+`;
+
+export const StyledTableEditor = styled.div`
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  font-family: Inter, sans-serif;
+
+  .tableEditorTitle {
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 150%;
+    color: #000000;
+  }
+
+  .tableEditorDescription,
+  .tableEditorEmptyState {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
+    color: #666666;
+  }
+
+  .tableEditorSearchInput,
+  .tableEditorNumericInput {
+    width: 100%;
+    max-width: 100%;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 150%;
+    color: #000000;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+  }
+
+  .tableEditorSearchInput {
+    margin-bottom: 0.75rem;
+  }
+
+  .tableEditorActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .tableEditorActionButton {
+    height: 32px;
+    padding: 6px 12px;
+  }
+
+  .tableEditorRows {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .tableEditorRow {
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    padding: 0.65rem 0.75rem;
+    box-sizing: border-box;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .tableEditorRowHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .tableEditorRowLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    min-width: 0;
+    flex: 1 1 auto;
+    font: inherit;
+    color: inherit;
+  }
+
+  .tableEditorRowName {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 150%;
+    color: #000000;
+  }
+
+  .tableEditorFilterChip {
+    flex: 0 0 auto;
+    height: 32px;
+    max-width: 100%;
+  }
+
+  .tableEditorFiltersPanel {
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid #f0f0f0;
+    min-width: 0;
+  }
+
+  .tableEditorRangeGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .tableEditorFieldLabel {
+    margin-bottom: 0.25rem;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 150%;
+    color: #6a6a6a;
+  }
 `;

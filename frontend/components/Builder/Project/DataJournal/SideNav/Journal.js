@@ -195,37 +195,23 @@ export default function JournalNavigation({
  
   };
 
-  const titleWithOptionalTooltip =
-    titleText.length > 48 ? (
-      <InfoTooltip
-        content={titleText}
-        position="right"
-        portal
-        wrapperStyle={{ minWidth: 0, maxWidth: "100%" }}
-      >
-        {titleButton}
-      </InfoTooltip>
-    ) : (
-      <span
-        style={{
-          display: "block",
-          maxWidth: "100%",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap"
-        }}
-        title={titleText.length > 48 ? titleText : undefined}
-      >
-        {titleButton}
-      </span>
- 
-    );
+  const titleWithTooltip = (
+    <InfoTooltip
+      content={titleText}
+      position="right"
+      portal
+      wrapperStyle={{ minWidth: 0, maxWidth: "100%", display: "block" }}
+      delay={900}
+    >
+      {titleButton}
+    </InfoTooltip>
+  );
 
   return (
     <>
       <div className={`journal${isJournalSelected ? " journal--selected" : ""}`}>
         <div className="titleHeader">
-          {titleWithOptionalTooltip}
+          {titleWithTooltip}
           <DropdownMenu
             ariaLabel={t("dataJournal.sideNav.journalMore", "Journal options")}
             trigger={
