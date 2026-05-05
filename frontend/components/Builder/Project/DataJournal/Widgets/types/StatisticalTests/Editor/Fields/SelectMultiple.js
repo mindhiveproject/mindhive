@@ -12,7 +12,7 @@ function normalizeToStringArray(raw) {
   return [String(raw)];
 }
 
-const G_FIELDS = "dataJournal.graph.fields";
+const ST_FIELDS = "dataJournal.statTest.fields";
 
 export default function SelectMultiple({
   sectionId,
@@ -42,7 +42,7 @@ export default function SelectMultiple({
   );
 
   const placeholder = t(
-    `${G_FIELDS}.selectVariablesPlaceholder`,
+    `${ST_FIELDS}.selectVariablesPlaceholder`,
     {},
     { default: "Select variable(s)" },
   );

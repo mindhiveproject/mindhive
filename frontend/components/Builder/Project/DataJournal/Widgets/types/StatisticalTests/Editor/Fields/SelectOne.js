@@ -8,7 +8,7 @@ import FieldRow from "../../../_shared/FieldRow";
 
 const SELECT_ONE_CLEAR_SENTINEL = "__mh_stat_test_select_one_clear__";
 
-const G_FIELDS = "dataJournal.graph.fields";
+const ST_FIELDS = "dataJournal.statTest.fields";
 
 export default function SelectOne({
   sectionId,
@@ -25,7 +25,7 @@ export default function SelectOne({
     stored === undefined || stored === null || stored === "" ? "" : String(stored);
 
   const dropdownOptions = useMemo(() => {
-    const clearLabel = t(`${G_FIELDS}.clearSelection`, {}, { default: "None" });
+    const clearLabel = t(`${ST_FIELDS}.clearSelection`, {}, { default: "None" });
     const clearRow = {
       value: SELECT_ONE_CLEAR_SENTINEL,
       label: clearLabel,
@@ -40,7 +40,7 @@ export default function SelectOne({
   }, [options, t]);
 
   const placeholder = t(
-    `${G_FIELDS}.selectPlaceholder`,
+    `${ST_FIELDS}.selectPlaceholder`,
     { field: title },
     { default: "Select {{field}}" },
   );

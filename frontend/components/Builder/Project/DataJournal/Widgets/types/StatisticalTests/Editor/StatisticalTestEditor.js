@@ -19,6 +19,7 @@ export default function StatisticalTestEditor({
 }) {
   const { t } = useTranslation("builder");
   const { variables } = useDataJournal();
+  const variablesToDisplay = variables.filter((column) => !column?.hide);
 
   const [activeTab, setActiveTab] = useState(0);
 
@@ -40,12 +41,12 @@ export default function StatisticalTestEditor({
       label: t("dataJournal.statTest.editor.tabs.variables", {}, { default: "Variables" }),
       icon: <img src="/assets/icons/settingsViz.svg" alt="" aria-hidden style={iconStyle} />,
       content: (
-        <div style={{ padding: "1rem" }}>
+        <div className="tabContent">
           <AxesComp
             sectionId={sectionId}
             selectors={content?.selectors || {}}
             onChange={onChange}
-            variables={variables}
+            variables={variablesToDisplay}
           />
         </div>
       ),
@@ -54,7 +55,9 @@ export default function StatisticalTestEditor({
       label: t("dataJournal.statTest.editor.tabs.code", {}, { default: "Code" }),
       icon: <img src="/assets/icons/code.svg" alt="" aria-hidden style={iconStyle} />,
       content: (
-        <CodeEditor sectionId={sectionId} code={code} onChange={onChange} />
+        <div className="tabContent">
+          <CodeEditor sectionId={sectionId} code={code} onChange={onChange} />
+        </div>
       ),
     },
   ];
