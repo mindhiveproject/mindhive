@@ -7,12 +7,6 @@ import DatasetForm from "./Add/DatasetForm";
 import { CREATE_DATASOURCE } from "../../../../Mutations/Datasource";
 import { STUDY_TO_JOIN } from "../../../../Queries/Study";
 
-import {
-  StyledDataArea,
-  StyledDataJournal,
-  StyledRightPanel,
-} from "../styles/StyledDataJournal";
-
 export default function AddDataset({
   projectId,
   studyId,
@@ -51,28 +45,22 @@ export default function AddDataset({
   );
 
   return (
-    <StyledDataArea>
-      <StyledDataJournal>
-        <StyledRightPanel>
-          <DatasetForm
-            datasetName={datasetName}
-            setDatasetName={setDatasetName}
-            dataOrigin={dataOrigin}
-            setDataOrigin={setDataOrigin}
-            file={file}
-            setFile={setFile}
-            createDatasource={createDatasource}
-            projectId={projectId}
-            studyId={studyId}
-            studyData={studyData}
-            studyLoading={studyLoading}
-            studyError={studyError}
-            loading={loading}
-            error={error}
-            onCancel={onCancel}
-          />
-        </StyledRightPanel>
-      </StyledDataJournal>
-    </StyledDataArea>
+    <DatasetForm
+      datasetName={datasetName}
+      setDatasetName={setDatasetName}
+      dataOrigin={dataOrigin}
+      setDataOrigin={setDataOrigin}
+      file={file}
+      setFile={setFile}
+      createDatasource={createDatasource}
+      projectId={projectId}
+      studyId={studyId}
+      studyData={studyData}
+      studyLoading={studyLoading}
+      studyError={studyError}
+      loading={loading}
+      error={error}
+      onCancel={onCancel}
+    />
   );
 }

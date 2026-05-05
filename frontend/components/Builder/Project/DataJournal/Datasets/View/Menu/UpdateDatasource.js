@@ -1,12 +1,23 @@
 import { useMutation } from "@apollo/client";
-
 import { customAlphabet } from "nanoid";
-const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
 import { UPDATE_DATASOURCE } from "../../../../../../Mutations/Datasource";
 
-export default function UpdateDatasource({ dataset, content }) {
-  const update = async () => {
+const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
+
+/**
+ * Hook that returns a `save` function persisting the modified dataset
+ * (variables, settings, and data) to the file system + Datasource record,
+ * and a `saving` boolean while the mutation is in flight.
+ *
+ * Pass an `onSaved` callback (e.g. a parent query's `refetch`) to refresh the
+ * dataset list once the mutation resolves so derived metadata like
+ * `updatedAt` propagates back to consumers.
+ */
+export function useDatasetSave({ dataset, content, onSaved }) {
+  const [updateDatasource, { loading }] = useMutation(UPDATE_DATASOURCE);
+
+  const save = async () => {
     let year, month, day, token;
 
     const address =
@@ -25,12 +36,11 @@ export default function UpdateDatasource({ dataset, content }) {
       address?.token &&
       !isTemplateData
     ) {
-      year = address?.year;
-      month = address?.month;
-      day = address?.day;
-      token = address?.token;
+      year = address.year;
+      month = address.month;
+      day = address.day;
+      token = address.token;
     } else {
-      // if there is no address, create an address in the file system
       const curDate = new Date();
       year = parseInt(curDate.getFullYear());
       month = parseInt(curDate.getMonth()) + 1;
@@ -57,13 +67,12 @@ export default function UpdateDatasource({ dataset, content }) {
       method: "POST",
       body: JSON.stringify(dataFile),
       headers: {
-        Accept: "application/json", // eslint-disable-line quote-props
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
     });
 
     if (res?.ok) {
-      // update the information about the type of saved data
       const prevContent = dataset?.content || {};
       await updateDatasource({
         variables: {
@@ -74,38 +83,21 @@ export default function UpdateDatasource({ dataset, content }) {
               isModified: true,
               isTemplateModified: dataset?.dataOrigin === "TEMPLATE",
               modified: {
-                address: {
-                  year,
-                  month,
-                  day,
-                  token,
-                },
+                address: { year, month, day, token },
                 metadata,
               },
             },
           },
         },
       });
+      if (typeof onSaved === "function") {
+        await onSaved();
+      }
       alert("The data has been updated");
     } else {
       alert(`There was an error: ${res?.statusText}`);
     }
   };
 
-  const [updateDatasource, { data, loading, error }] =
-    useMutation(UPDATE_DATASOURCE);
-
-  return (
-    <div
-      className="dataButtonPart menuButtonThin redSaveFrame"
-      onClick={update}
-    >
-      <div>
-        <img src="/assets/icons/visualize/save.svg" alt="Save" />
-      </div>
-      <div>
-        <a>Save</a>
-      </div>
-    </div>
-  );
+  return { save, saving: loading };
 }

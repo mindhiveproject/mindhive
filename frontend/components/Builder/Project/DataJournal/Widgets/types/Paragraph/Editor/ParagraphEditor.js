@@ -45,6 +45,7 @@ export default function ParagraphEditor({ content, onChange, sectionId }) {
         boxSizing: "border-box",
         maxWidth: "100%",
         minWidth: 0,
+        margin: "8px",
       }}
     >
       <h3 style={{ marginTop: 0, margin: "0.5rem 0 1rem 0", ...TITLE_TYPO }}>

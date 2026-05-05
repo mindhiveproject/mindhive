@@ -1,8 +1,18 @@
-import { Dropdown, DropdownMenu, DropdownItem, Icon } from "semantic-ui-react";
+import { Dropdown, DropdownMenu, DropdownItem } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Variable({ column, onVariableChange }) {
+  const { t } = useTranslation("builder");
+
+  const isHidden = !!column?.hide;
+  const label = column?.displayName || column?.field;
+
   const onRename = ({ variable }) => {
-    const newName = prompt("Please enter new name:");
+    const newName = prompt(
+      t("dataJournal.datasetMenu.variable.renamePrompt", {}, {
+        default: "Please enter new name:",
+      }),
+    );
     if (newName && newName !== "") {
       onVariableChange({
         variable,
@@ -20,103 +30,95 @@ export default function Variable({ column, onVariableChange }) {
     });
   };
 
+  const toggleVisibility = () => {
+    onVariableChange({
+      variable: column?.field,
+      property: "hide",
+      value: !isHidden,
+    });
+  };
+
+  const eyeIconSrc = isHidden
+    ? "/assets/icons/eye_close.svg"
+    : "/assets/icons/eye_open.svg";
+
+  const eyeAriaLabel = isHidden
+    ? t("dataJournal.datasetMenu.variable.showAria", { name: label }, {
+        default: "Show {{name}}",
+      })
+    : t("dataJournal.datasetMenu.variable.hideAria", { name: label }, {
+        default: "Hide {{name}}",
+      });
+
   return (
-    <div className={column?.hide ? `hidden variable` : `variable`}>
-      <div
-        className="name"
-        onClick={() =>
-          onVariableChange({
-            variable: column?.field,
-            property: "hide",
-            value: !column?.hide,
-          })
-        }
-      >
-        {/* <img src={`/assets/icons/visualize/tag.svg`} /> */}
-        <label htmlFor={column?.field}>
-          {column?.displayName || column?.field}
-        </label>
+    <div className={isHidden ? "variableRow hidden" : "variableRow"}>
+      <div className="variableRowHeader">
+        <div className="variableRowLabel">
+          <button
+            type="button"
+            className="variableEyeBtn"
+            onClick={toggleVisibility}
+            aria-label={eyeAriaLabel}
+            aria-pressed={!isHidden}
+            title={eyeAriaLabel}
+          >
+            <img src={eyeIconSrc} alt="" aria-hidden="true" />
+          </button>
+          <span className="variableRowName" title={label}>
+            {label}
+          </span>
+        </div>
+        <div className="variableRowActions">
+          <Dropdown
+            icon={
+              <img
+                src="/assets/icons/visualize/more_vert.svg"
+                alt=""
+                aria-hidden="true"
+              />
+            }
+            direction="left"
+          >
+            <DropdownMenu>
+              <DropdownItem
+                onClick={() => onRename({ variable: column?.field })}
+              >
+                <div className="menuItem">
+                  <img
+                    src="/assets/icons/visualize/edit.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                  <span className="menuItemLabel">
+                    {t("dataJournal.datasetMenu.variable.rename", {}, {
+                      default: "Rename",
+                    })}
+                  </span>
+                </div>
+              </DropdownItem>
+
+              {column?.type === "user" && (
+                <DropdownItem
+                  onClick={() => onDelete({ variable: column?.field })}
+                >
+                  <div className="menuItem">
+                    <img
+                      src="/assets/icons/visualize/delete.svg"
+                      alt=""
+                      aria-hidden="true"
+                    />
+                    <span className="menuItemLabel">
+                      {t("dataJournal.datasetMenu.variable.delete", {}, {
+                        default: "Delete",
+                      })}
+                    </span>
+                  </div>
+                </DropdownItem>
+              )}
+            </DropdownMenu>
+          </Dropdown>
+        </div>
       </div>
-      {!column?.hide ? (
-        <div className="icons">
-          <div
-            className="visibilityIcon"
-            onClick={() =>
-              onVariableChange({
-                variable: column?.field,
-                property: "hide",
-                value: !column?.hide,
-                })}>
-
-            {/* <img src={`/assets/icons/visualize/visibility.svg`} /> */}
-            <Icon name="eye" color="grey"  /> 
-          </div>
-
-          <div>
-            <Dropdown
-              icon={<img src={`/assets/icons/visualize/more_vert.svg`} />}
-              direction="left"
-            >
-              <DropdownMenu>
-                <DropdownItem
-                  onClick={() =>
-                    onVariableChange({
-                      variable: column?.field,
-                      property: "hide",
-                      value: !column?.hide,
-                    })
-                  }
-                >
-                  <div className="menuItem">
-                    {/* <img src={`/assets/icons/visualize/visibility.svg`} />*/}
-                    <Icon name="eye slash" color="grey"  /> 
-                    <div>Hide Column</div>
-                  </div>
-                </DropdownItem>
-
-                <DropdownItem
-                  onClick={() => onRename({ variable: column?.field })}
-                >
-                  <div className="menuItem">
-                    <img src={`/assets/icons/visualize/edit.svg`} />
-                    <div>Rename</div>
-                  </div>
-                </DropdownItem>
-
-                {column?.type === "user" && (
-                  <DropdownItem
-                    onClick={() =>
-                      onDelete({
-                        variable: column?.field,
-                      })
-                    }
-                  >
-                    <div className="menuItem">
-                      <img src={`/assets/icons/visualize/delete.svg`} />
-                      <div>Delete</div>
-                    </div>
-                  </DropdownItem>
-                )}
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        </div>
-      ) : (
-        <div className="icons">
-          <div
-              className="visibilityIcon"
-              onClick={() =>
-                onVariableChange({
-                  variable: column?.field,
-                  property: "hide",
-                  value: !column?.hide,
-                  })}>
-                    
-              <Icon name="eye slash" color="grey"  />
-          </div>
-          <div></div>
-        </div>
-      )}
     </div>
   );
 }

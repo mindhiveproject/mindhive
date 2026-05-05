@@ -542,7 +542,7 @@ export const StyledDataComponent = styled.div`
   }
 `;
 
-export const StyledRightPanel = styled.div`
+export const StyledComponentEditor = styled.div`
   display: grid;
   align-content: baseline;
   grid-gap: 10px;
@@ -551,7 +551,6 @@ export const StyledRightPanel = styled.div`
   max-width: 100%;
   min-width: 0;
   min-height: 0;
-  padding: 12px;
   box-sizing: border-box;
   overflow-x: hidden;
   ${hideScrollbars}
@@ -568,7 +567,8 @@ export const StyledRightPanel = styled.div`
     background: #ffffff;
     border-radius: 12px;
     border: 1px solid #e6e6e6;
-    padding: 12px 14px 16px;
+    margin: 0 8px;
+    padding: 8px;
     overflow-x: visible;
     overflow-y: visible;
     ${hideScrollbars}
@@ -627,6 +627,7 @@ export const StyledRightPanel = styled.div`
     justify-content: flex-start;
     gap: 12px;
     min-width: 0;
+    margin: 08px;
     h2 {
       margin: 0;
       min-width: 0;
@@ -737,8 +738,24 @@ export const StyledRightPanel = styled.div`
       cursor: pointer;
     }
   }
+`;
 
-  .datasets .datasets-list-intro {
+export const StyledDatasetsRoot = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 0 12px 12px;
+  box-sizing: border-box;
+  overflow-y: auto;
+
+  .datasets {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .datasets-list-intro {
     margin: 0 0 16px;
     max-width: 720px;
     font-family: Inter, sans-serif;
@@ -1126,6 +1143,7 @@ export const StyledDataWorkspace = styled.div`
     .paragraph .tiptapEditor {
       max-width: 100%;
       border-radius: 0;
+      
     }
     .paragraph .editorContainer {
       margin-top: 0;

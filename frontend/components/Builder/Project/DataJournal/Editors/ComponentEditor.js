@@ -16,7 +16,7 @@ import ParagraphEditor from "../Widgets/types/Paragraph/Editor/ParagraphEditor";
 import { figPngFileFromPyodide } from "../Widgets/types/HypVis/Editor/Axes/figHtmlFromPyodide";
 import { plotlyPngFileFromFigureSection } from "../Widgets/types/Graph/plotlyPngFileFromFigure";
 
-import { StyledRightPanel } from "../styles/StyledDataJournal"; // Adjust path if needed
+import { StyledComponentEditor } from "../styles/StyledDataJournal";
 
 /** Stored on MediaAsset.settings.createdWith for HypVis figure exports */
 function hypVisMediaCreatedWithKey(contentType) {
@@ -215,7 +215,7 @@ export default function ComponentEditor({
   };
 
   return (
-    <StyledRightPanel>
+    <StyledComponentEditor>
       <EditorHeader
         user={user}
         studyId={studyId}
@@ -241,6 +241,6 @@ export default function ComponentEditor({
           onInsertMedia={() => {}}
         />
       ) : null}
-    </StyledRightPanel>
+    </StyledComponentEditor>
   );
 }
