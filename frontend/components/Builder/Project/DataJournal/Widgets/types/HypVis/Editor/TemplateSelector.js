@@ -44,12 +44,14 @@ bar_values = [(max_height / max(1, n_conditions)) * rank for rank in conditionRa
 # ── Create the plot ─────────────────────────────────────────────────────────
 with plt.xkcd():
     fig, ax = plt.subplots(figsize=(5.4, 3.9), dpi=150)
+    brand_palette = ["#7D70AD", "#69BBC4", "#CF6D6A", "#F2BE42"]
+    bar_colors = [brand_palette[i % len(brand_palette)] for i in range(n_conditions)]
 
     bars = ax.bar(
         conditionNames,
         bar_values,
-        color=["#a6cee3", "#b2df8a", "#fb9a99", "#fdbf6f", "#cab2d6", "#ffff99", "#8dd3c7", "#bebada", "#fb8072", "#80b1d3"][:n_conditions],
-        edgecolor="navy",
+        color=bar_colors,
+        edgecolor="#7D70AD",
         linewidth=0.8,
         width=0.68
     )
@@ -70,7 +72,7 @@ with plt.xkcd():
             va="bottom",
             fontsize=10,
             fontweight="bold",
-            color="#2c3e50"
+            color="#7D70AD"
         )
 
     # Styling
@@ -131,13 +133,14 @@ else:
 # Plot
 with plt.xkcd():
     fig, ax = plt.subplots(figsize=(6.2, 4.4), dpi=140)
+    brand_palette = ["#7D70AD", "#69BBC4", "#CF6D6A", "#F2BE42"]
 
-    ax.scatter(x, y, s=45, color="#1f77b4", alpha=0.75, edgecolor="navy", linewidth=0.6)
+    ax.scatter(x, y, s=45, color=brand_palette[1], alpha=0.75, edgecolor=brand_palette[3], linewidth=0.6)
 
     # Trend line
     z = np.polyfit(x, y, 1)
     p = np.poly1d(z)
-    ax.plot(x, p(x), "--", color="#d62728", lw=1.8, label="Predicted trend")
+    ax.plot(x, p(x), "--", color=brand_palette[2], lw=1.8, label="Predicted trend")
 
     ax.set_title(title_text, fontsize=13, pad=14, wrap=True)
     ax.set_xlabel(iv_label, fontsize=11)
