@@ -10,6 +10,7 @@ import {
 
 import SelectMultiple from "../Fields/SelectMultiple";
 import SelectOne from "../Fields/SelectOne";
+import TruncatedTooltipText from "../../../_shared/TruncatedTooltipText";
 
 export default function Axes({ variables, sectionId, selectors, onChange }) {
   const [selectedDataFormat, setSelectedDataFormat] = useState(
@@ -112,7 +113,7 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
                 className="menuItemDataType menuButton"
                 onClick={() => onSelectorChoice(option)}
               >
-                <h3>{option.title}</h3>
+                <TruncatedTooltipText as="h3" text={option.title} />
                 <img src={option.img} alt={option.title} />
                 <p>{option.description}</p>
                 <div className="slidesCard">
@@ -177,7 +178,11 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
                 alt={option.alt}
               />
               <div>
-                <div className="resourcesCardTitle">{option.title}</div>
+                <TruncatedTooltipText
+                  as="div"
+                  className="resourcesCardTitle"
+                  text={option.title}
+                />
                 <div className="resourcesCardLink">
                   Click here to access the resource
                 </div>

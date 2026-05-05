@@ -58,7 +58,15 @@ const barPlotDataFormatPanelStyles = css`
     font-weight: 600;
     line-height: 1.35;
     color: #171717;
-    overflow-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    line-clamp: 4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
   .barPlotDataFormat__desc {
     margin: 0;
@@ -83,7 +91,7 @@ const barPlotDataFormatPanelStyles = css`
     margin-top: 1px;
   }
   .barPlotDataFormat__slides a {
-    color: var(--MH-Theme-Primary-Base, #337c84);
+    color: var(--MH-Theme-Primary-Base, #7D70AD);
     text-decoration: underline;
     word-break: break-word;
   }
@@ -156,8 +164,6 @@ export const StyledSidebar = styled.div`
     .journal.journal--selected:hover {
       background: #F6F9F8;
       border-color: var(--MH-Theme-Primary-Base, #E6E6E6);
-      // box-shadow: inset 4px 0 0 var(--MH-Theme-Primary-Base, #337c84),
-        var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.08));
     }
     .titleHeader {
       display: grid;
@@ -178,10 +184,11 @@ export const StyledSidebar = styled.div`
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 4;
       -webkit-box-orient: vertical;
-      line-clamp: 2;
+      line-clamp: 4;
       white-space: normal;
+      overflow-wrap: anywhere;
       word-break: break-word;
     }
     .journalTitleButton:focus-visible {
@@ -197,12 +204,13 @@ export const StyledSidebar = styled.div`
       letter-spacing: 0;
       color: #888888;
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 4;
       -webkit-box-orient: vertical;
-      line-clamp: 2;
+      line-clamp: 4;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: normal;
+      overflow-wrap: anywhere;
       word-break: break-word;
     }
     .selectedTitle {
@@ -213,12 +221,13 @@ export const StyledSidebar = styled.div`
       letter-spacing: 0;
       color: inherit;
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 4;
       -webkit-box-orient: vertical;
-      line-clamp: 2;
+      line-clamp: 4;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: normal;
+      overflow-wrap: anywhere;
       word-break: break-word;
     }
     .dataSourceRow {
@@ -716,8 +725,9 @@ export const StyledRightPanel = styled.div`
         min-width: 0;
         overflow: hidden;
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 4;
         -webkit-box-orient: vertical;
+        line-clamp: 4;
         text-overflow: ellipsis;
         white-space: normal;
         word-break: break-word;
@@ -1274,13 +1284,21 @@ export const StyledDataWorkspace = styled.div`
       font-weight: 400;
       line-height: 1.4;
       .graphEditorFieldRow__label {
-        display: block;
         background: transparent;
-        color: #337c84;
+        color: #0D3944;
         font-weight: 600;
         // padding: 10px 12px 4px;
         min-width: 0;
-        overflow-wrap: break-word;
+        max-width: 100%;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        line-clamp: 4;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
       .graphEditorFieldRow__control {
         min-width: 0;
@@ -1312,12 +1330,20 @@ export const StyledDataWorkspace = styled.div`
       font-weight: 400;
       line-height: 1.4;
       .title {
-        display: block;
-        color: #337c84;
+        color: #0D3944;
         font-weight: 600;
         background: transparent;
         min-width: 0;
-        overflow-wrap: break-word;
+        max-width: 100%;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        line-clamp: 4;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
       .select {
         min-width: 0;
@@ -1331,7 +1357,7 @@ export const StyledDataWorkspace = styled.div`
           width: 100%;
           max-width: 100%;
           box-sizing: border-box;
-          overflow-wrap: break-word;
+          overflow-wrap: anywhere;
           word-wrap: break-word;
           word-break: break-word;
         }
@@ -1492,7 +1518,7 @@ export const StyledDataWorkspace = styled.div`
       padding: 10px 12px;
       &:focus {
         outline: 0;
-        border-color: #337c84;
+        border-color: #0D3944;
       }
     }
   }
@@ -1515,6 +1541,22 @@ export const StyledDataWorkspace = styled.div`
     .ui.selection.dropdown {
       min-width: 0 !important;
       max-width: 100%;
+    }
+
+    .ui.selection.dropdown .text {
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .ui.multiple.selection.dropdown > .label,
+    .ui.multiple.selection.dropdown .label {
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .ui.selection.dropdown > .dropdown.icon {
@@ -1567,6 +1609,16 @@ export const StyledDataWorkspace = styled.div`
         font-style: normal;
         font-weight: 400;
         line-height: 16px; /* 133.333% */
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        line-clamp: 4;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       .input-box {

@@ -6,6 +6,7 @@ import Button from "../../../../../../../../DesignSystem/Button";
 import Chip from "../../../../../../../../DesignSystem/Chip";
 import SectionHeader from "../../../_shared/SectionHeader";
 import ResourcesTooltipResourceButtons from "../../../_shared/ResourcesHelpLinks";
+import TruncatedTooltipText from "../../../_shared/TruncatedTooltipText";
 import SelectMultiple from "../Fields/SelectMultiple";
 import SelectOne from "../Fields/SelectOne";
 
@@ -231,7 +232,11 @@ export default function AxesBarPlot({
                   decoding="async"
                 />
               </div>
-              <h3 className="barPlotDataFormat__title">{currentFormatOption.title}</h3>
+              <TruncatedTooltipText
+                as="h3"
+                className="barPlotDataFormat__title"
+                text={currentFormatOption.title}
+              />
               <p className="barPlotDataFormat__desc">{currentFormatOption.description}</p>
               <div className="barPlotDataFormat__slides">
                 <img
