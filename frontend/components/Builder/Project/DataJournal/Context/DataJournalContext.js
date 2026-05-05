@@ -50,6 +50,9 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
   const [figureReadinessByComponentId, setFigureReadinessByComponentId] =
     useState({});
 
+  /** Increments when a grid item finishes resize/drag so widgets can re-measure. */
+  const [widgetResizeTicks, setWidgetResizeTicks] = useState({});
+
   // Apollo mutation for updating workspace on server
   const [updateWorkspaceOnServer] = useMutation(UPDATE_WORKSPACE, {
     onError: (error) => console.error("Error updating workspace:", error),
@@ -98,6 +101,23 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
   const resetFigureReadiness = useCallback(() => {
     setFigureReadinessByComponentId({});
   }, []);
+
+  const bumpWidgetResizeTick = useCallback((componentId) => {
+    if (typeof componentId !== "string" || !componentId.trim()) return;
+    const key = componentId.trim();
+    setWidgetResizeTicks((prev) => ({
+      ...prev,
+      [key]: (prev[key] || 0) + 1,
+    }));
+  }, []);
+
+  const getWidgetResizeTick = useCallback(
+    (componentId) => {
+      if (typeof componentId !== "string" || !componentId.trim()) return 0;
+      return widgetResizeTicks[componentId.trim()] || 0;
+    },
+    [widgetResizeTicks],
+  );
 
   useEffect(() => {
     resetFigureReadiness();
@@ -149,6 +169,9 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     setComponentFigureReady,
     clearComponentFigureReady,
     resetFigureReadiness,
+    widgetResizeTicks,
+    bumpWidgetResizeTick,
+    getWidgetResizeTick,
   };
 
   return (

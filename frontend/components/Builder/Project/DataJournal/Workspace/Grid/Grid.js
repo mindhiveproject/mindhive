@@ -62,6 +62,7 @@ export default function Grid({
     setLeftPanelMode,
     projectId,
     studyId: contextStudyId,
+    bumpWidgetResizeTick,
   } = useDataJournal();
   const resolvedStudyId = studyId || contextStudyId;
 
@@ -177,6 +178,20 @@ export default function Grid({
       updateWorkspace({ layout: newLayout });
     },
     [updateWorkspace],
+  );
+
+  const handleResizeStop = useCallback(
+    (_layout, _oldItem, newItem) => {
+      if (newItem?.i) bumpWidgetResizeTick(String(newItem.i));
+    },
+    [bumpWidgetResizeTick],
+  );
+
+  const handleDragStop = useCallback(
+    (_layout, _oldItem, newItem) => {
+      if (newItem?.i) bumpWidgetResizeTick(String(newItem.i));
+    },
+    [bumpWidgetResizeTick],
   );
 
   const handleComponentSelect = useCallback(
@@ -349,7 +364,7 @@ export default function Grid({
     setIsAddComponentPanelOpen(false);
     setActiveComponent(null);
     setLeftPanelMode("journal");
-    setSidebarVisible(false);
+    setSidebarVisible(true);
   }, [
     setIsAddComponentPanelOpen,
     setActiveComponent,
@@ -483,6 +498,8 @@ export default function Grid({
                     rowHeight={30}
                     width={gridWidth}
                     onLayoutChange={handleLayoutChange}
+                    onResizeStop={handleResizeStop}
+                    onDragStop={handleDragStop}
                     isDraggable={true}
                     isResizable={true}
                     compactType="vertical"
