@@ -215,7 +215,7 @@ json.dumps(to_native(result))
           textAlign: "center",
           color: "#4b5563",
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
           flex: 1,
           minHeight: 0,
           gap: "0.5rem",
@@ -260,7 +260,7 @@ json.dumps(to_native(result))
             }}
           />
         </div>
-        <div
+        {/* <div
           style={{
             background: "#ffffff",
             padding: "0.35rem 0.65rem",
@@ -278,7 +278,7 @@ json.dumps(to_native(result))
                 "Click this component to open the editor, then complete the variables to generate the visualization.",
             },
           )}
-        </div>
+        </div> */}
       </div>
     );
   }

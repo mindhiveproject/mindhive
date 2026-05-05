@@ -271,7 +271,7 @@ ${outputVar} = ${funcName}()
             textAlign: "center",
             color: "#4b5563",
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
             flex: 1,
             minHeight: 0,
             gap: "0.5rem",
@@ -317,7 +317,7 @@ ${outputVar} = ${funcName}()
               }}
             />
           </div>
-          <div
+          {/* <div
             style={{
               background: "#ffffff",
               padding: "0.35rem 0.65rem",
@@ -335,7 +335,7 @@ ${outputVar} = ${funcName}()
                   "Click this component to open the editor, then choose variables to preview your visualization.",
               },
             )}
-          </div>
+          </div> */}
         </div>
       )}
     </div>
