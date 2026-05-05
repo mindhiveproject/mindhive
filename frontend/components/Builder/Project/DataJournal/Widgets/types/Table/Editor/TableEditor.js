@@ -5,53 +5,7 @@ import filterData from "../../../../Helpers/Filter";
 import Button from "../../../../../../../DesignSystem/Button";
 import Chip from "../../../../../../../DesignSystem/Chip";
 import DropdownSelect from "../../../../../../../DesignSystem/DropdownSelect";
-
-const INTER = "Inter, sans-serif";
-
-/** Match DataJournal graph editor in-panel title/description typography */
-const TITLE_TYPO = {
-  fontFamily: INTER,
-  fontWeight: 500,
-  fontSize: "18px",
-  lineHeight: "150%",
-  color: "#000000",
-};
-
-const BODY_TYPO = {
-  fontFamily: INTER,
-  fontWeight: 400,
-  fontSize: "14px",
-  lineHeight: "150%",
-  color: "#666666",
-};
-
-const FIELD_LABEL_TYPO = {
-  fontFamily: INTER,
-  fontWeight: 400,
-  fontSize: "12px",
-  lineHeight: "150%",
-  color: "#6A6A6A",
-};
-
-const ROW_LABEL_TYPO = {
-  fontFamily: INTER,
-  fontWeight: 300,
-  fontSize: "14px",
-  lineHeight: "150%",
-  color: "#000000",
-};
-
-const INPUT_TYPO = {
-  fontFamily: INTER,
-  fontWeight: 500,
-  fontSize: "14px",
-  lineHeight: "150%",
-  color: "#000000",
-  border: "1px solid #cccccc",
-  borderRadius: "10px",
-  padding: "10px 12px",
-  boxSizing: "border-box",
-};
+import { StyledTableEditor } from "../../../../styles/StyledDataJournal";
 
 const FUNNEL_CHIP_ICON = (
   <img src="/assets/icons/funnel.svg" width={16} height={16} alt="" aria-hidden />
@@ -181,20 +135,11 @@ export default function TableEditor({ content, onChange, sectionId }) {
   };
 
   return (
-    <div
-      style={{
-        boxSizing: "border-box",
-        width: "100%",
-        maxWidth: "100%",
-        minWidth: 0,
-        fontFamily: INTER,
-        padding: "20px",
-      }}
-    >
-      <h3 style={{ marginTop: 0, marginBottom: "0.25rem", ...TITLE_TYPO }}>
+    <StyledTableEditor>
+      <h3 className="tableEditorTitle">
         {t("dataJournal.table.editor.title", {}, { default: "Columns" })}
       </h3>
-      <p style={{ marginTop: 0, marginBottom: "0.75rem", ...BODY_TYPO }}>
+      <p className="tableEditorDescription">
         {t("dataJournal.table.editor.description", {}, {
           default: "Quickly choose which columns this table should display.",
         })}
@@ -208,25 +153,13 @@ export default function TableEditor({ content, onChange, sectionId }) {
         })}
         aria-label={t("dataJournal.table.editor.search.ariaLabel", {}, { default: "Search columns" })}
         autoComplete="off"
-        style={{
-          width: "100%",
-          maxWidth: "100%",
-          marginBottom: "0.75rem",
-          ...INPUT_TYPO,
-        }}
+        className="tableEditorSearchInput"
       />
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "0.5rem",
-          marginBottom: "0.75rem",
-        }}
-      >
+      <div className="tableEditorActions">
         <Button
           type="button"
           variant="text"
-          style={{ height: "32px", padding: "6px 12px" }}
+          className="tableEditorActionButton"
           onClick={() => {
             const next = new Set(selectedSet);
             filteredFields.forEach((f) => next.add(f));
@@ -238,7 +171,7 @@ export default function TableEditor({ content, onChange, sectionId }) {
         <Button
           type="button"
           variant="text"
-          style={{ height: "32px", padding: "6px 12px" }}
+          className="tableEditorActionButton"
           onClick={() => {
             const remove = new Set(filteredFields);
             updateVisibleColumns(
@@ -253,26 +186,26 @@ export default function TableEditor({ content, onChange, sectionId }) {
         <Button
           type="button"
           variant="text"
-          style={{ height: "32px", padding: "6px 12px" }}
+          className="tableEditorActionButton"
           onClick={clearAllFilters}
         >
           {t("dataJournal.table.editor.filters.clear", {}, { default: "Clear filters" })}
         </Button>
       </div>
       {availableColumns.length === 0 ? (
-        <div style={{ ...BODY_TYPO }}>
+        <div className="tableEditorEmptyState">
           {t("dataJournal.table.editor.empty", {}, {
             default: "No visible columns are available from the dataset.",
           })}
         </div>
       ) : filteredColumns.length === 0 ? (
-        <div style={{ ...BODY_TYPO }}>
+        <div className="tableEditorEmptyState">
           {t("dataJournal.table.editor.search.noMatches", {}, {
             default: "No columns match your search.",
           })}
         </div>
       ) : (
-        <div style={{ display: "grid", gap: "0.5rem" }}>
+        <div className="tableEditorRows">
           {filteredColumns.map((column) => {
             const field = column?.field;
             if (!field) return null;
@@ -281,25 +214,15 @@ export default function TableEditor({ content, onChange, sectionId }) {
             const isExpanded = expandedFilterField === field;
             const meta = metadataByField[field];
             return (
-              <div key={field} style={{ border: "1px solid #E6E6E6", borderRadius: "10px", padding: "0.65rem 0.75rem" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", justifyContent: "space-between" }}>
-                  <label
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                      margin: 0,
-                      flex: 1,
-                      font: "inherit",
-                      color: "inherit",
-                    }}
-                  >
+              <div key={field} className="tableEditorRow">
+                <div className="tableEditorRowHeader">
+                  <label className="tableEditorRowLabel">
                     <input
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => toggleColumn(field)}
                     />
-                    <span style={ROW_LABEL_TYPO}>{label}</span>
+                    <span className="tableEditorRowName" title={label}>{label}</span>
                   </label>
                   {isSelected ? (
                     <Chip
@@ -318,13 +241,13 @@ export default function TableEditor({ content, onChange, sectionId }) {
                       title={t("dataJournal.table.editor.filters.toggleAria", { column: label }, {
                         default: "Toggle filters for {{column}}",
                       })}
-                      style={{ flexShrink: 0, height: "32px" }}
+                      className="tableEditorFilterChip"
                     />
                   ) : null}
                 </div>
 
                 {isSelected && isExpanded && meta ? (
-                  <div style={{ marginTop: "0.6rem", paddingTop: "0.6rem", borderTop: "1px solid #F0F0F0" }}>
+                  <div className="tableEditorFiltersPanel">
                     {meta.kind === "numeric" ? (
                       (() => {
                         const min = meta.min;
@@ -338,9 +261,9 @@ export default function TableEditor({ content, onChange, sectionId }) {
                         const currentMin = Number.isFinite(savedMin) ? savedMin : min;
                         const currentMax = Number.isFinite(savedMax) ? savedMax : max;
                         return (
-                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
+                          <div className="tableEditorRangeGrid">
                             <div>
-                              <div style={{ ...FIELD_LABEL_TYPO, marginBottom: "0.25rem" }}>
+                              <div className="tableEditorFieldLabel">
                                 {t("dataJournal.table.editor.filters.minLabel", {}, { default: "Min" })}
                               </div>
                               <input
@@ -354,11 +277,11 @@ export default function TableEditor({ content, onChange, sectionId }) {
                                     max: currentMax,
                                   })
                                 }
-                                style={{ width: "100%", ...INPUT_TYPO }}
+                                className="tableEditorNumericInput"
                               />
                             </div>
                             <div>
-                              <div style={{ ...FIELD_LABEL_TYPO, marginBottom: "0.25rem" }}>
+                              <div className="tableEditorFieldLabel">
                                 {t("dataJournal.table.editor.filters.maxLabel", {}, { default: "Max" })}
                               </div>
                               <input
@@ -372,7 +295,7 @@ export default function TableEditor({ content, onChange, sectionId }) {
                                     max: Number(e.target.value),
                                   })
                                 }
-                                style={{ width: "100%", ...INPUT_TYPO }}
+                                className="tableEditorNumericInput"
                               />
                             </div>
                           </div>
@@ -406,6 +329,6 @@ export default function TableEditor({ content, onChange, sectionId }) {
           })}
         </div>
       )}
-    </div>
+    </StyledTableEditor>
   );
 }

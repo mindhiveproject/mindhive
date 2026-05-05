@@ -1,7 +1,31 @@
 // components/DataJournal/Widgets/types/HypothesisVisualizer/Render.js
 import { useEffect, useState } from "react";
+import styled from "styled-components";
 import { Message, Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
+
+const HypVisFigure = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  text-align: center;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+`;
 
 export default function Render({
   code,
@@ -191,7 +215,7 @@ json.dumps(to_native(result))
           textAlign: "center",
           color: "#4b5563",
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
           flex: 1,
           minHeight: 0,
           gap: "0.5rem",
@@ -236,7 +260,7 @@ json.dumps(to_native(result))
             }}
           />
         </div>
-        <div
+        {/* <div
           style={{
             background: "#ffffff",
             padding: "0.35rem 0.65rem",
@@ -254,7 +278,7 @@ json.dumps(to_native(result))
                 "Click this component to open the editor, then complete the variables to generate the visualization.",
             },
           )}
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -278,18 +302,11 @@ json.dumps(to_native(result))
   }
 
   return (
-    <div
-      style={{
-        padding: "1.5rem",
-        maxWidth: "900px",
-        margin: "0 auto",
-        textAlign: "center",
-      }}
-    >
+    <HypVisFigure>
       {/* <h3 style={{ marginBottom: "1.25rem", color: "#2d3748" }}>
         {result.title}
       </h3> */}
       <div dangerouslySetInnerHTML={{ __html: result.fig_html }} />
-    </div>
+    </HypVisFigure>
   );
 }

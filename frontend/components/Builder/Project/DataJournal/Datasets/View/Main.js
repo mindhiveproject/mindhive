@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react";
-import { useQuery, useMutation } from "@apollo/client";
-import { Icon } from "semantic-ui-react";
 
-import { UPDATE_DATASOURCE } from "../../../../../Mutations/Datasource";
 import { StyledDatasetView } from "../../styles/StyledDatasetView";
 
 import Menu from "./Menu";
 import Table from "./Table";
 import useDatasourceData from "../../DataLoader/useDatasourceData";
 
-export default function DatasetView({ dataset, onCancel, user }) {
+export default function DatasetView({ dataset, user, onSaved }) {
   const {
     data: fetchedData,
     variables: fetchedVariables,
@@ -41,8 +38,6 @@ export default function DatasetView({ dataset, onCancel, user }) {
     }
   }, [fetchError]);
 
-  const [updateDatasource] = useMutation(UPDATE_DATASOURCE);
-
   const updateDataset = ({
     updatedVariables,
     updatedSettings,
@@ -63,36 +58,6 @@ export default function DatasetView({ dataset, onCancel, user }) {
     updateDataset({ updatedVariables });
   };
 
-  const handleRefresh = () => {
-    setLoading(true);
-    refetch();
-  };
-
-  const handleSave = async () => {
-    try {
-      await updateDatasource({
-        variables: {
-          id: dataset.id,
-          data: {
-            content: data,
-            settings: {
-              ...settings,
-              variables,
-            },
-          },
-        },
-      });
-      handleRefresh();
-    } catch (err) {
-      console.error("Error saving dataset:", err);
-      setError("Failed to save changes.");
-    }
-  };
-
-  const handleClose = () => {
-    if (onCancel) onCancel();
-  };
-
   if (loading || fetchLoading) return <div>Loading dataset...</div>;
   if (error || fetchError)
     return (
@@ -103,10 +68,6 @@ export default function DatasetView({ dataset, onCancel, user }) {
 
   return (
     <StyledDatasetView>
-      <div className="dataset-view-header">
-        <h2>{dataset.title || "Untitled Dataset"}</h2>
-      </div>
-
       <div className="dataset-content">
         <div className="left-panel">
           <Menu
@@ -117,8 +78,7 @@ export default function DatasetView({ dataset, onCancel, user }) {
             components={[]}
             updateDataset={updateDataset}
             onVariableChange={onVariableChange}
-            setPage={handleClose}
-            onSave={handleSave}
+            onSaved={onSaved}
           />
         </div>
 
@@ -130,15 +90,6 @@ export default function DatasetView({ dataset, onCancel, user }) {
             updateDataset={updateDataset}
           />
         </div>
-      </div>
-
-      <div className="dataset-footer">
-        <p>
-          Data origin: {dataset.dataOrigin} | Last updated:{" "}
-          {dataset.updatedAt
-            ? new Date(dataset.updatedAt).toLocaleString()
-            : "Never"}
-        </p>
       </div>
     </StyledDatasetView>
   );

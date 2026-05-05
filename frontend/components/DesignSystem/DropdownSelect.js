@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect, useLayoutEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback } from "react";
 import { createPortal } from "react-dom";
 import useTranslation from "next-translate/useTranslation";
+
+import InfoTooltip from "./InfoTooltip";
 
 const CHEVRON = (
   <svg
@@ -34,12 +36,13 @@ const DEFAULT_TRIGGER_STYLE = {
   justifyContent: "space-between",
   gap: "8px",
   width: "100%",
+  minWidth: 0,
   boxSizing: "border-box",
 };
 
 const ITEM_STYLE = {
   display: "flex",
-  alignItems: "center",
+  alignItems: "flex-start",
   padding: "8px 12px",
   fontFamily: "Inter, sans-serif",
   fontWeight: 500,
@@ -53,6 +56,9 @@ const ITEM_STYLE = {
   textAlign: "left",
   background: "transparent",
   color: "#5D5763",
+  whiteSpace: "normal",
+  overflowWrap: "anywhere",
+  wordBreak: "break-word",
 };
 
 const PANEL_STYLE = {
@@ -79,6 +85,9 @@ const SEARCH_INPUT_STYLE = {
   outline: "none",
   background: "#ffffff",
 };
+
+const TRIGGER_LABEL_LINE_CLAMP = 3;
+const TRIGGER_TOOLTIP_DELAY_MS = 1500;
 
 function getOptionLabelString(opt) {
   if (!opt) return "";
@@ -122,9 +131,11 @@ export default function DropdownSelect({
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [rect, setRect] = useState(null);
+  const [isTriggerLabelTruncated, setIsTriggerLabelTruncated] = useState(false);
   const triggerRef = useRef(null);
   const panelRef = useRef(null);
   const searchInputRef = useRef(null);
+  const labelRef = useRef(null);
 
   const selectedIds = useMemo(() => {
     if (!multiple) return null;
@@ -204,6 +215,33 @@ export default function DropdownSelect({
     };
   }, [open]);
 
+  const measureTriggerLabel = useCallback(() => {
+    const el = labelRef.current;
+    if (!el) return;
+    const verticalOverflow = el.scrollHeight - el.clientHeight > 1;
+    const horizontalOverflow = el.scrollWidth - el.clientWidth > 1;
+    setIsTriggerLabelTruncated(verticalOverflow || horizontalOverflow);
+  }, []);
+
+  useLayoutEffect(() => {
+    measureTriggerLabel();
+  }, [displayLabel, measureTriggerLabel, open]);
+
+  useEffect(() => {
+    const el = labelRef.current;
+    if (!el) return;
+
+    if (typeof ResizeObserver !== "undefined") {
+      const observer = new ResizeObserver(() => measureTriggerLabel());
+      observer.observe(el);
+      return () => observer.disconnect();
+    }
+
+    const onResize = () => measureTriggerLabel();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [displayLabel, measureTriggerLabel]);
+
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") setOpen(false);
@@ -250,47 +288,85 @@ export default function DropdownSelect({
 
   const labelSpanStyle = fitContent
     ? {
-        flexShrink: 0,
+        flex: "1 1 0%",
+        minWidth: 0,
+        maxWidth: "100%",
         textAlign: "left",
-        whiteSpace: "nowrap",
+        whiteSpace: "normal",
+        overflowWrap: "anywhere",
+        wordBreak: "break-word",
         color: "#5D5763",
+        overflow: "hidden",
+        display: "-webkit-box",
+        WebkitBoxOrient: "vertical",
+        WebkitLineClamp: TRIGGER_LABEL_LINE_CLAMP,
+        lineClamp: TRIGGER_LABEL_LINE_CLAMP,
+        textOverflow: "ellipsis",
       }
     : {
-        flex: 1,
+        flex: "1 1 0%",
         minWidth: 0,
         textAlign: "left",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
         color: "#5D5763",
+        overflow: "hidden",
+        display: "-webkit-box",
+        WebkitBoxOrient: "vertical",
+        WebkitLineClamp: TRIGGER_LABEL_LINE_CLAMP,
+        lineClamp: TRIGGER_LABEL_LINE_CLAMP,
+        whiteSpace: "normal",
+        overflowWrap: "anywhere",
+        wordBreak: "break-word",
+        textOverflow: "ellipsis",
       };
 
   const triggerIcon = icon === undefined ? CHEVRON : icon;
+  const tooltipContent =
+    typeof displayLabel === "string" || typeof displayLabel === "number"
+      ? String(displayLabel)
+      : "";
+
+  const buttonNode = (
+    <button
+      type="button"
+      aria-haspopup="listbox"
+      aria-expanded={open}
+      aria-label={ariaLabel}
+      onClick={() => setOpen((prev) => !prev)}
+      style={triggerMerged}
+    >
+      <span ref={labelRef} style={labelSpanStyle}>
+        {displayLabel}
+      </span>
+      {triggerIcon != null ? (
+        <span
+          style={{
+            flexShrink: 0,
+            display: "inline-flex",
+            alignItems: "center",
+            lineHeight: 0,
+          }}
+        >
+          {triggerIcon}
+        </span>
+      ) : null}
+    </button>
+  );
 
   return (
     <div ref={triggerRef} style={rootStyle}>
-      <button
-        type="button"
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-label={ariaLabel}
-        onClick={() => setOpen((prev) => !prev)}
-        style={triggerMerged}
-      >
-        <span style={labelSpanStyle}>{displayLabel}</span>
-        {triggerIcon != null ? (
-          <span
-            style={{
-              flexShrink: 0,
-              display: "inline-flex",
-              alignItems: "center",
-              lineHeight: 0,
-            }}
-          >
-            {triggerIcon}
-          </span>
-        ) : null}
-      </button>
+      {tooltipContent && isTriggerLabelTruncated ? (
+        <InfoTooltip
+          content={tooltipContent}
+          position="right"
+          portal
+          delayMs={TRIGGER_TOOLTIP_DELAY_MS}
+          wrapperStyle={{ minWidth: 0, maxWidth: "100%", display: "block" }}
+        >
+          {buttonNode}
+        </InfoTooltip>
+      ) : (
+        buttonNode
+      )}
       {open &&
         rect &&
         createPortal(

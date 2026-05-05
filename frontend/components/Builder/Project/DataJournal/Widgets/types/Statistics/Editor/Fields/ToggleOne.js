@@ -1,5 +1,6 @@
 import React from 'react'
 import { Checkbox } from 'semantic-ui-react'
+import TruncatedTooltipText from "../../../_shared/TruncatedTooltipText";
 
 export default function ToggleOne({
   sectionId,
@@ -19,7 +20,7 @@ export default function ToggleOne({
 
   return (
     <div className="selectorLine">
-      <div className="title">{title}</div>
+      <TruncatedTooltipText as="div" className="title" text={title} />
       <div className="select" style={{ display: 'flex', justifyContent: 'left', alignItems: 'center' , marginLeft: '10px'}}>
         <Checkbox
           toggle

@@ -37,8 +37,8 @@ export default function OperationModal({
       trigger={
         <DropdownItem>
           <div className="menuItem">
-            <img src={iconSrc} />
-            <div>{title}</div>
+            <img src={iconSrc} alt="" aria-hidden="true" />
+            <span className="menuItemLabel">{title}</span>
           </div>
         </DropdownItem>
       }

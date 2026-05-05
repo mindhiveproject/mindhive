@@ -294,18 +294,23 @@
 			"actions": {
 				"addColumn": "Add a column",
 				"download": "Download",
-				"hideAll": "Hide all",
-				"returnToNavigation": "Return to Navigation",
-				"showAll": "Show all"
+				"hideAllVariables": "Hide all variables",
+				"save": "Save",
+				"saving": "Saving…",
+				"showAllVariables": "Show all variables"
 			},
 			"alt": {
 				"addColumn": "Add a column",
-				"database": "Database",
-				"return": "Return"
+				"database": "Database"
 			},
 			"downloadPrompt": "Give a name to the CSV you're about to download\nNo need to add '.csv' we're taking care of that!",
 			"header": {
-				"activeData": "Active Data"
+				"untitledDataset": "Untitled dataset"
+			},
+			"meta": {
+				"dataOrigin": "Origin: {{origin}}",
+				"lastUpdated": "Updated {{when}}",
+				"neverUpdated": "Never updated"
 			},
 			"operations": {
 				"computeNew": "Compute new variable",
@@ -317,6 +322,13 @@
 				"generalVariables": "General Variables",
 				"taskVariables": "Task Variables",
 				"userVariables": "User Variables"
+			},
+			"variable": {
+				"delete": "Delete",
+				"hideAria": "Hide {{name}}",
+				"rename": "Rename",
+				"renamePrompt": "Please enter new name:",
+				"showAria": "Show {{name}}"
 			}
 		},
 		"datasets": {
@@ -825,6 +837,11 @@
 			"emptyState": {
 				"helper": "Click this component to open the editor, then choose variables to compute the test.",
 				"title": "Your statistical test is ready to be configured"
+			},
+			"fields": {
+				"clearSelection": "None",
+				"selectPlaceholder": "Select {{field}}",
+				"selectVariablesPlaceholder": "Select variable(s)"
 			}
 		},
 		"table": {

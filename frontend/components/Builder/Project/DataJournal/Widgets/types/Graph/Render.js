@@ -1,9 +1,10 @@
 // components/DataJournal/Widgets/types/Graph/Render.js
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import useTranslation from "next-translate/useTranslation";
 
 import JustOneSecondNotice from "../../../../../../DesignSystem/JustOneSecondNotice";
+import { useWidgetSize } from "../../WidgetSizeContext";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
@@ -15,6 +16,8 @@ export default function Render({
   onFigureReadyChange,
 }) {
   const { t } = useTranslation("builder");
+  const { width, height, version } = useWidgetSize();
+  const graphDivRef = useRef(null);
   const [figJson, setFigJson] = useState(null);
   const [error, setError] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -228,6 +231,15 @@ ${outputVar} = ${funcName}()
     renderGraph();
   }, [pyodide, code, sectionId, content, onFigureReadyChange]);
 
+  const hasPlotData = Boolean(figJson?.data?.length);
+
+  // Grid/widget container resize does not fire window.resize; Plotly listens on window.
+  // Synthetic resize triggers react-plotly's useResizeHandler so the SVG tracks the widget.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(new Event("resize"));
+  }, [width, height, version, hasPlotData]);
+
   return (
     <div
       className="graphArea"
@@ -243,6 +255,13 @@ ${outputVar} = ${funcName}()
           data={figJson.data}
           layout={figJson.layout}
           config={{ responsive: true }}
+          useResizeHandler
+          onInitialized={(_, graphDiv) => {
+            graphDivRef.current = graphDiv;
+          }}
+          onUpdate={(_, graphDiv) => {
+            graphDivRef.current = graphDiv;
+          }}
           style={{ width: "100%", height: "100%" }}
         />
       ) : (
@@ -252,7 +271,7 @@ ${outputVar} = ${funcName}()
             textAlign: "center",
             color: "#4b5563",
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
             flex: 1,
             minHeight: 0,
             gap: "0.5rem",
@@ -298,7 +317,7 @@ ${outputVar} = ${funcName}()
               }}
             />
           </div>
-          <div
+          {/* <div
             style={{
               background: "#ffffff",
               padding: "0.35rem 0.65rem",
@@ -316,7 +335,7 @@ ${outputVar} = ${funcName}()
                   "Click this component to open the editor, then choose variables to preview your visualization.",
               },
             )}
-          </div>
+          </div> */}
         </div>
       )}
     </div>

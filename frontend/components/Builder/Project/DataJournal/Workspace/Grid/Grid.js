@@ -39,6 +39,7 @@ export default function Grid({
   selectWorkspaceById,
 }) {
   const gridRef = useRef(null);
+  const canvasRef = useRef(null);
   const [gridWidth, setGridWidth] = useState(1200); // fallback
   const [pendingFocusComponentId, setPendingFocusComponentId] = useState(null);
   const { t } = useTranslation("builder");
@@ -62,6 +63,7 @@ export default function Grid({
     setLeftPanelMode,
     projectId,
     studyId: contextStudyId,
+    bumpWidgetResizeTick,
   } = useDataJournal();
   const resolvedStudyId = studyId || contextStudyId;
 
@@ -179,6 +181,20 @@ export default function Grid({
     [updateWorkspace],
   );
 
+  const handleResizeStop = useCallback(
+    (_layout, _oldItem, newItem) => {
+      if (newItem?.i) bumpWidgetResizeTick(String(newItem.i));
+    },
+    [bumpWidgetResizeTick],
+  );
+
+  const handleDragStop = useCallback(
+    (_layout, _oldItem, newItem) => {
+      if (newItem?.i) bumpWidgetResizeTick(String(newItem.i));
+    },
+    [bumpWidgetResizeTick],
+  );
+
   const handleComponentSelect = useCallback(
     (component) => {
       if (activeComponent?.id === component?.id) {
@@ -226,19 +242,47 @@ export default function Grid({
       });
       const newComponent = res?.data?.createVizSection; // Assuming correct response field
       if (newComponent) {
+        const newLayoutItem = {
+          i: newComponent.id,
+          x: 0,
+          y: 0,
+          w: 4,
+          h: 10,
+          minW: 2,
+          minH: 5,
+          maxW: 12,
+          maxH: 20,
+        };
+        const shiftBy = newLayoutItem.h;
+        const shiftedLayout = (Array.isArray(layout) ? layout : []).map((item) => ({
+          ...item,
+          y: (Number.isFinite(item?.y) ? item.y : 0) + shiftBy,
+        }));
+
         // Update local workspace
         updateWorkspace({
           vizSections: [...components, newComponent],
+          layout: [newLayoutItem, ...shiftedLayout],
         });
         setIsAddComponentPanelOpen(false);
         setActiveComponent(newComponent);
         setLeftPanelMode("editor");
         setSidebarVisible(true);
+        window.requestAnimationFrame(() => {
+          const canvasEl = canvasRef.current;
+          if (!canvasEl) return;
+          if (typeof canvasEl.scrollTo === "function") {
+            canvasEl.scrollTo({ top: 0, behavior: "smooth" });
+            return;
+          }
+          canvasEl.scrollTop = 0;
+        });
       }
     },
     [
       createComponent,
       workspace?.id,
+      layout,
       components,
       updateWorkspace,
       setIsAddComponentPanelOpen,
@@ -349,7 +393,7 @@ export default function Grid({
     setIsAddComponentPanelOpen(false);
     setActiveComponent(null);
     setLeftPanelMode("journal");
-    setSidebarVisible(false);
+    setSidebarVisible(true);
   }, [
     setIsAddComponentPanelOpen,
     setActiveComponent,
@@ -475,7 +519,14 @@ export default function Grid({
                 </div>
               </aside>
               <div className="journalCanvasColumn">
-                <div className="canvas" ref={gridRef} onClick={handleCanvasClick}>
+                <div
+                  className="canvas"
+                  ref={(node) => {
+                    gridRef.current = node;
+                    canvasRef.current = node;
+                  }}
+                  onClick={handleCanvasClick}
+                >
                   <GridLayout
                     className="layout"
                     layout={layout}
@@ -483,6 +534,8 @@ export default function Grid({
                     rowHeight={30}
                     width={gridWidth}
                     onLayoutChange={handleLayoutChange}
+                    onResizeStop={handleResizeStop}
+                    onDragStop={handleDragStop}
                     isDraggable={true}
                     isResizable={true}
                     compactType="vertical"

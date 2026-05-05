@@ -1,3 +1,5 @@
+import TruncatedTooltipText from "../../../_shared/TruncatedTooltipText";
+
 export default function SelectOne({
   sectionId,
   options,
@@ -8,7 +10,7 @@ export default function SelectOne({
 }) {
   return (
     <div className="selectorLine">
-      <div className="title">{title}</div>
+      <TruncatedTooltipText as="div" className="title" text={title} />
       <div className="select">
         <select
           id={`${parameter}-${sectionId}`}

@@ -5,6 +5,7 @@ import Button from "../../../../../../../../DesignSystem/Button";
 import Chip from "../../../../../../../../DesignSystem/Chip";
 import ResourcesTooltipResourceButtons from "../../../_shared/ResourcesHelpLinks";
 import SectionHeader from "../../../_shared/SectionHeader";
+import TruncatedTooltipText from "../../../_shared/TruncatedTooltipText";
 import SelectMultiple from "../Fields/SelectMultiple";
 import SelectOne from "../Fields/SelectOne";
 
@@ -217,7 +218,11 @@ export default function AxesAnova({
                   decoding="async"
                 />
               </div>
-              <h3 className="barPlotDataFormat__title">{currentFormatOption.title}</h3>
+              <TruncatedTooltipText
+                as="h3"
+                className="barPlotDataFormat__title"
+                text={currentFormatOption.title}
+              />
               <p className="barPlotDataFormat__desc">{currentFormatOption.description}</p>
             </div>
           </div>

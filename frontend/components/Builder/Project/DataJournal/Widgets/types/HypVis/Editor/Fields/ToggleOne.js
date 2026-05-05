@@ -1,5 +1,6 @@
 import { Dropdown } from "semantic-ui-react";
 import { useState, useEffect } from "react";
+import TruncatedTooltipText from "../../../_shared/TruncatedTooltipText";
 
 export default function SelectMultiple({
   sectionId,
@@ -23,7 +24,7 @@ export default function SelectMultiple({
 
   return (
     <div className="selectorLine">
-      <div className="title">{title}</div>
+      <TruncatedTooltipText as="div" className="title" text={title} />
       <div className="select">
         <Dropdown
           placeholder="Select variable(s)"

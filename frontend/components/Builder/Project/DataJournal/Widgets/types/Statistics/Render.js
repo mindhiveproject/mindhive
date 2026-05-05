@@ -198,7 +198,7 @@ ${funcName}()
             }}
           />
         </div>
-        <div
+        {/* <div
           style={{
             background: "#ffffff",
             padding: "0.35rem 0.65rem",
@@ -216,7 +216,7 @@ ${funcName}()
                 "Click this component to open the editor, then select columns (and optional grouping) to compute the summary.",
             },
           )}
-        </div>
+        </div> */}
       </div>
     );
   }
