@@ -767,6 +767,8 @@
 			"axes": {
 				"default": {
 					"columnToSummarize": "Coluna para resumir",
+					"columnToSummarizeQual": "Coluna qualitativa para resumir",
+					"columnToSummarizeQuant": "Coluna quantitativa para resumir",
 					"dataLayout": {
 						"currentlyPerforming": "Resumindo:",
 						"long": {
@@ -789,10 +791,12 @@
 					"groupingVariable": "Variável de agrupamento",
 					"qualOption": {
 						"description": "Os dados qualitativos são representados em uma coluna preenchida com rótulos. Por exemplo, a qual condição experimental um sujeito pertence ou sua resposta a uma questão de múltipla escolha.",
+						"panelTitle": "Dados qualitativos",
 						"title": "Mudar para dados qualitativos"
 					},
 					"quantOption": {
 						"description": "Os dados quantitativos são representados em uma coluna preenchida com valores numéricos. Por exemplo, a idade do participante ou sua pontuação em uma pesquisa.",
+						"panelTitle": "Dados quantitativos",
 						"title": "Mudar para Dados Quantitativos"
 					},
 					"resources": {
@@ -802,6 +806,11 @@
 						"slidesLink": "Clique aqui para ver os slides da aula.",
 						"tableWhatAlt": "Link externo",
 						"tableWhatTitle": "O que é uma mesa?"
+					},
+					"summaryMethod": {
+						"panelAriaLabel": "Tipo de dados: valores de coluna quantitativos ou qualitativos",
+						"sectionLabel": "TIPO DE DADOS",
+						"toggleAriaLabel": "Mostrar ou ocultar opções de tipo de dados"
 					},
 					"valueMode": {
 						"qualLabel": "Qualitativo",

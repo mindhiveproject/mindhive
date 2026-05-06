@@ -767,6 +767,8 @@
 			"axes": {
 				"default": {
 					"columnToSummarize": "",
+					"columnToSummarizeQual": "",
+					"columnToSummarizeQuant": "",
 					"dataLayout": {
 						"currentlyPerforming": "",
 						"long": {
@@ -789,10 +791,12 @@
 					"groupingVariable": "",
 					"qualOption": {
 						"description": "",
+						"panelTitle": "",
 						"title": ""
 					},
 					"quantOption": {
 						"description": "",
+						"panelTitle": "",
 						"title": ""
 					},
 					"resources": {
@@ -802,6 +806,11 @@
 						"slidesLink": "",
 						"tableWhatAlt": "",
 						"tableWhatTitle": ""
+					},
+					"summaryMethod": {
+						"panelAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
 					},
 					"valueMode": {
 						"qualLabel": "",

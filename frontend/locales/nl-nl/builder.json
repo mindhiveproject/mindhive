@@ -767,6 +767,8 @@
 			"axes": {
 				"default": {
 					"columnToSummarize": "Kolom ter samenvatting",
+					"columnToSummarizeQual": "Kwalitatieve column ter samenvatting",
+					"columnToSummarizeQuant": "Kwantitatieve kolom ter samenvatting",
 					"dataLayout": {
 						"currentlyPerforming": "Momenteel bezig met samenvatten:",
 						"long": {
@@ -789,10 +791,12 @@
 					"groupingVariable": "Groeperingsvariabele",
 					"qualOption": {
 						"description": "Kwalitatieve gegevens worden weergegeven in een kolom met labels. Bijvoorbeeld tot welke experimentele conditie een proefpersoon behoort, of hun antwoord op een meerkeuzevraag.",
+						"panelTitle": "Kwalitatieve gegevens",
 						"title": "Schakel over naar kwalitatieve gegevens"
 					},
 					"quantOption": {
 						"description": "Kwantitatieve gegevens worden weergegeven in een kolom gevuld met numerieke waarden. Bijvoorbeeld de leeftijd van de deelnemer of zijn of haar score in een enquête.",
+						"panelTitle": "Kwantitatieve gegevens",
 						"title": "Schakel over naar kwantitatieve gegevens"
 					},
 					"resources": {
@@ -802,6 +806,11 @@
 						"slidesLink": "Klik hier om de presentatieslides te bekijken.",
 						"tableWhatAlt": "Externe link",
 						"tableWhatTitle": "Wat is een tafel?"
+					},
+					"summaryMethod": {
+						"panelAriaLabel": "Gegevenstype: kwantitatieve of kwalitatieve kolomwaarden",
+						"sectionLabel": "DATA TYPE",
+						"toggleAriaLabel": "Opties voor gegevenstypen weergeven of verbergen"
 					},
 					"valueMode": {
 						"qualLabel": "Kwalitatief",

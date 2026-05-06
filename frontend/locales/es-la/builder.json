@@ -767,6 +767,8 @@
 			"axes": {
 				"default": {
 					"columnToSummarize": "Columna para resumir",
+					"columnToSummarizeQual": "Columna cualitativa para resumir",
+					"columnToSummarizeQuant": "Columna cuantitativa para resumir",
 					"dataLayout": {
 						"currentlyPerforming": "Actualmente resumiendo:",
 						"long": {
@@ -789,10 +791,12 @@
 					"groupingVariable": "Variable de agrupación",
 					"qualOption": {
 						"description": "Los datos cualitativos se representan en una columna con etiquetas. Por ejemplo, a qué condición experimental pertenece un sujeto o su respuesta a una pregunta de opción múltiple.",
+						"panelTitle": "Datos cualitativos",
 						"title": "Cambiar a datos cualitativos"
 					},
 					"quantOption": {
 						"description": "Los datos cuantitativos se representan en una columna con valores numéricos. Por ejemplo, la edad del participante o su puntuación en una encuesta.",
+						"panelTitle": "Datos cuantitativos",
 						"title": "Cambiar a datos cuantitativos"
 					},
 					"resources": {
@@ -802,6 +806,11 @@
 						"slidesLink": "Haz clic aquí para ver las diapositivas de la presentación.",
 						"tableWhatAlt": "Enlace externo",
 						"tableWhatTitle": "¿Qué es una mesa?"
+					},
+					"summaryMethod": {
+						"panelAriaLabel": "Tipo de datos: valores de columna cuantitativos o cualitativos",
+						"sectionLabel": "TIPO DE DATOS",
+						"toggleAriaLabel": "Mostrar u ocultar opciones de tipo de datos"
 					},
 					"valueMode": {
 						"qualLabel": "Cualitativo",

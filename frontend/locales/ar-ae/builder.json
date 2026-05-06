@@ -767,6 +767,8 @@
 			"axes": {
 				"default": {
 					"columnToSummarize": "عمود للتلخيص",
+					"columnToSummarizeQual": "عمود نوعي لتلخيص",
+					"columnToSummarizeQuant": "عمود كمي لتلخيص البيانات",
 					"dataLayout": {
 						"currentlyPerforming": "أقوم حاليًا بتلخيص ما يلي:",
 						"long": {
@@ -789,10 +791,12 @@
 					"groupingVariable": "متغير التجميع",
 					"qualOption": {
 						"description": "تُعرض البيانات النوعية في عمود مليء بالتصنيفات. على سبيل المثال، المجموعة التجريبية التي ينتمي إليها الشخص، أو إجابته على سؤال متعدد الخيارات.",
+						"panelTitle": "البيانات النوعية",
 						"title": "التبديل إلى البيانات النوعية"
 					},
 					"quantOption": {
 						"description": "تُعرض البيانات الكمية في عمود مليء بالقيم العددية. على سبيل المثال، عمر المشارك أو نتيجته في استطلاع رأي.",
+						"panelTitle": "البيانات الكمية",
 						"title": "التبديل إلى البيانات الكمية"
 					},
 					"resources": {
@@ -802,6 +806,11 @@
 						"slidesLink": "انقر هنا للاطلاع على شرائح المحاضرة",
 						"tableWhatAlt": "رابط خارجي",
 						"tableWhatTitle": "ما هي الطاولة؟"
+					},
+					"summaryMethod": {
+						"panelAriaLabel": "نوع البيانات: قيم الأعمدة الكمية أو النوعية",
+						"sectionLabel": "نوع البيانات",
+						"toggleAriaLabel": "إظهار أو إخفاء خيارات نوع البيانات"
 					},
 					"valueMode": {
 						"qualLabel": "نوعي",

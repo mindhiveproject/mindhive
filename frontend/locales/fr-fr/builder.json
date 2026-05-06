@@ -767,6 +767,8 @@
 			"axes": {
 				"default": {
 					"columnToSummarize": "Colonne récapitulative",
+					"columnToSummarizeQual": "Colonne qualitative pour résumer",
+					"columnToSummarizeQuant": "Colonne quantitative pour résumer",
 					"dataLayout": {
 						"currentlyPerforming": "Résumé en cours :",
 						"long": {
@@ -789,10 +791,12 @@
 					"groupingVariable": "Variable de regroupement",
 					"qualOption": {
 						"description": "Les données qualitatives sont présentées dans une colonne comportant des étiquettes. Par exemple, la condition expérimentale à laquelle appartient un sujet ou sa réponse à une question à choix multiple.",
+						"panelTitle": "Données qualitatives",
 						"title": "Passer aux données qualitatives"
 					},
 					"quantOption": {
 						"description": "Les données quantitatives sont présentées dans une colonne contenant des valeurs numériques. Par exemple, l'âge du participant ou son score à un questionnaire.",
+						"panelTitle": "Données quantitatives",
 						"title": "Passer aux données quantitatives"
 					},
 					"resources": {
@@ -802,6 +806,11 @@
 						"slidesLink": "Cliquez ici pour voir les diapositives du cours.",
 						"tableWhatAlt": "Lien externe",
 						"tableWhatTitle": "Qu'est-ce qu'une table ?"
+					},
+					"summaryMethod": {
+						"panelAriaLabel": "Type de données : valeurs de colonne quantitatives ou qualitatives",
+						"sectionLabel": "Type de données",
+						"toggleAriaLabel": "Afficher ou masquer les options de type de données"
 					},
 					"valueMode": {
 						"qualLabel": "Qualitatif",

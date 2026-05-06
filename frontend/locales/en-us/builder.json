@@ -767,6 +767,8 @@
 			"axes": {
 				"default": {
 					"columnToSummarize": "Column to summarize",
+					"columnToSummarizeQual": "Qualitative column to summarize",
+					"columnToSummarizeQuant": "Quantitative column to summarize",
 					"dataLayout": {
 						"currentlyPerforming": "Currently summarizing:",
 						"long": {
@@ -789,10 +791,12 @@
 					"groupingVariable": "Grouping variable",
 					"qualOption": {
 						"description": "Qualitative data is represented in a column filled with labels. For example, which experimental condition a subject belongs to, or their answer to a multiple choice question.",
+						"panelTitle": "Qualitative data",
 						"title": "Switch to Qualitative Data"
 					},
 					"quantOption": {
 						"description": "Quantitative data is represented in a column filled with numerical values. For example, the age of the participant or their score in a survey.",
+						"panelTitle": "Quantitative data",
 						"title": "Switch to Quantitative Data"
 					},
 					"resources": {
@@ -802,6 +806,11 @@
 						"slidesLink": "Click here to see the lecture slides",
 						"tableWhatAlt": "External link",
 						"tableWhatTitle": "What is a table?"
+					},
+					"summaryMethod": {
+						"panelAriaLabel": "Data type: quantitative or qualitative column values",
+						"sectionLabel": "Data type",
+						"toggleAriaLabel": "Show or hide data type options"
 					},
 					"valueMode": {
 						"qualLabel": "Qualitative",

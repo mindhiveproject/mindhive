@@ -767,6 +767,8 @@
 			"axes": {
 				"default": {
 					"columnToSummarize": "汇总列",
+					"columnToSummarizeQual": "定性栏目总结",
+					"columnToSummarizeQuant": "定量列汇总",
 					"dataLayout": {
 						"currentlyPerforming": "当前正在汇总：",
 						"long": {
@@ -789,10 +791,12 @@
 					"groupingVariable": "分组变量",
 					"qualOption": {
 						"description": "定性数据以标签列的形式呈现。例如，受试者所属的实验条件，或者他们对多项选择题的回答。",
+						"panelTitle": "定性数据",
 						"title": "切换到定性数据"
 					},
 					"quantOption": {
 						"description": "定量数据以数值列的形式呈现。例如，参与者的年龄或他们在调查中的得分。",
+						"panelTitle": "定量数据",
 						"title": "切换到定量数据"
 					},
 					"resources": {
@@ -802,6 +806,11 @@
 						"slidesLink": "点击此处查看讲义幻灯片",
 						"tableWhatAlt": "外部链接",
 						"tableWhatTitle": "什么是表格？"
+					},
+					"summaryMethod": {
+						"panelAriaLabel": "数据类型：定量或定性列值",
+						"sectionLabel": "数据类型",
+						"toggleAriaLabel": "显示或隐藏数据类型选项"
 					},
 					"valueMode": {
 						"qualLabel": "定性",
