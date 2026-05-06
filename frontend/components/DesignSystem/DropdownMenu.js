@@ -1,7 +1,14 @@
 "use client";
 
-import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useReducer } from "react";
 import { createPortal } from "react-dom";
+
+import {
+  clampDropdownPanelRight,
+  computeDropdownVerticalPlacement,
+  DROPDOWN_VIEWPORT_GAP,
+  getIdealMaxPanelHeight,
+} from "./dropdownViewportPlacement";
 
 const ELLIPSIS_ICON = (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
@@ -104,6 +111,7 @@ const DIVIDER_STYLE = {
  * @param {boolean} [dividerAfterHeader=true] - Show a divider between `panelHeader` and items when `panelHeader` is set.
  * @param {Array<{ key: string, label: React.ReactNode, onClick?: () => void, danger?: boolean, static?: boolean }>} items - Menu items. `static: true` or missing `onClick` on a non-danger row renders a non-interactive row (does not close menu). Action items call `onClick` then close.
  * @param {React.CSSProperties} [triggerStyle] - Optional override for trigger button styles.
+ * @param {'auto'|'below'|'above'} [placement='auto'] - Vertical placement; `auto` flips when there is not enough space below.
  */
 export default function DropdownMenu({
   triggerLabel,
@@ -113,9 +121,11 @@ export default function DropdownMenu({
   dividerAfterHeader = true,
   items = [],
   triggerStyle = {},
+  placement = "auto",
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [dropdownRect, setDropdownRect] = useState(null);
+  const [panelLayout, setPanelLayout] = useState(null);
+  const [panelLayoutTick, bumpPanelLayout] = useReducer((n) => n + 1, 0);
   const dropdownRef = useRef(null);
   const dropdownPanelRef = useRef(null);
 
@@ -127,11 +137,42 @@ export default function DropdownMenu({
   };
 
   useLayoutEffect(() => {
-    if (dropdownOpen && dropdownRef.current) {
-      setDropdownRect(dropdownRef.current.getBoundingClientRect());
-    } else {
-      setDropdownRect(null);
+    if (!dropdownOpen) {
+      setPanelLayout(null);
+      return;
     }
+    const tr = dropdownRef.current?.getBoundingClientRect();
+    const panel = dropdownPanelRef.current;
+    if (!tr || !panel) return;
+
+    const innerH = window.innerHeight;
+    const innerW = window.innerWidth;
+    const measured = panel.offsetHeight;
+    const { top, maxHeight } = computeDropdownVerticalPlacement(
+      tr,
+      innerH,
+      measured,
+      placement,
+    );
+    const panelWidth = panel.offsetWidth;
+    const right = clampDropdownPanelRight(tr.right, panelWidth, innerW);
+    setPanelLayout({ top, maxHeight, right });
+  }, [dropdownOpen, items, panelHeader, dividerAfterHeader, placement, panelLayoutTick]);
+
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    let raf = 0;
+    const onViewportChange = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => bumpPanelLayout());
+    };
+    window.addEventListener("resize", onViewportChange);
+    window.addEventListener("scroll", onViewportChange, true);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onViewportChange);
+      window.removeEventListener("scroll", onViewportChange, true);
+    };
   }, [dropdownOpen]);
 
   useEffect(() => {
@@ -177,75 +218,99 @@ export default function DropdownMenu({
         )}
       </button>
       {dropdownOpen &&
-        dropdownRect &&
-        createPortal(
-          <div
-            ref={dropdownPanelRef}
-            onMouseDown={(e) => e.stopPropagation()}
-            style={{
-              ...PANEL_STYLE,
-              position: "fixed",
-              top: dropdownRect.bottom + 4,
-              right: window.innerWidth - dropdownRect.right,
-            }}
-          >
-            {panelHeader != null && (
-              <>
-                <div style={PANEL_HEADER_WRAPPER_STYLE}>{panelHeader}</div>
-                {dividerAfterHeader ? <div style={DIVIDER_STYLE} role="separator" /> : null}
-              </>
-            )}
-            {items.map((item) => {
-              const isDanger = item.danger === true;
-              const isStatic = item.static === true || typeof item.onClick !== "function";
-              const style = isStatic
-                ? STATIC_ITEM_STYLE
-                : isDanger
-                  ? { ...ITEM_STYLE, color: "#d32f2f" }
-                  : ITEM_STYLE;
+        (() => {
+          const tr = dropdownRef.current?.getBoundingClientRect();
+          if (!tr) return null;
+          const innerH = window.innerHeight;
+          const innerW = window.innerWidth;
+          const provisionalRight = clampDropdownPanelRight(tr.right, 200, innerW);
+          const provisional = {
+            top: tr.bottom + DROPDOWN_VIEWPORT_GAP,
+            maxHeight: getIdealMaxPanelHeight(innerH),
+            right: provisionalRight,
+          };
+          const fixed = panelLayout ?? provisional;
+          return createPortal(
+            <div
+              ref={dropdownPanelRef}
+              onMouseDown={(e) => e.stopPropagation()}
+              style={{
+                ...PANEL_STYLE,
+                position: "fixed",
+                top: fixed.top,
+                right: fixed.right,
+                maxHeight: fixed.maxHeight,
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+              }}
+            >
+              {panelHeader != null && (
+                <>
+                  <div style={PANEL_HEADER_WRAPPER_STYLE}>{panelHeader}</div>
+                  {dividerAfterHeader ? <div style={DIVIDER_STYLE} role="separator" /> : null}
+                </>
+              )}
+              <div
+                style={{
+                  overflowY: "auto",
+                  flex: 1,
+                  minHeight: 0,
+                }}
+              >
+                {items.map((item) => {
+                  const isDanger = item.danger === true;
+                  const isStatic = item.static === true || typeof item.onClick !== "function";
+                  const style = isStatic
+                    ? STATIC_ITEM_STYLE
+                    : isDanger
+                      ? { ...ITEM_STYLE, color: "#d32f2f" }
+                      : ITEM_STYLE;
 
-              if (isStatic) {
-                return (
-                  <div key={item.key} style={style}>
-                    {item.label}
-                  </div>
-                );
-              }
+                  if (isStatic) {
+                    return (
+                      <div key={item.key} style={style}>
+                        {item.label}
+                      </div>
+                    );
+                  }
 
-              return (
-                <div
-                  key={item.key}
-                  role="button"
-                  tabIndex={0}
-                  style={style}
-                  onClick={(e) => {
-                    // Portaled menu: native document listeners can fire before React’s
-                    // delegated handler; stop bubbling so outside-close does not unmount
-                    // the row before Journal’s onClick (e.g. delete) runs.
-                    e.stopPropagation();
-                    handleItemClick(item);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      handleItemClick(item);
-                    }
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#f5f5f5";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                  }}
-                >
-                  {isDanger && TRASH_ICON}
-                  <span>{item.label}</span>
-                </div>
-              );
-            })}
-          </div>,
-          document.body
-        )}
+                  return (
+                    <div
+                      key={item.key}
+                      role="button"
+                      tabIndex={0}
+                      style={style}
+                      onClick={(e) => {
+                        // Portaled menu: native document listeners can fire before React’s
+                        // delegated handler; stop bubbling so outside-close does not unmount
+                        // the row before Journal’s onClick (e.g. delete) runs.
+                        e.stopPropagation();
+                        handleItemClick(item);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleItemClick(item);
+                        }
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "#f5f5f5";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "transparent";
+                      }}
+                    >
+                      {isDanger && TRASH_ICON}
+                      <span>{item.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>,
+            document.body
+          );
+        })()}
     </div>
   );
 }
