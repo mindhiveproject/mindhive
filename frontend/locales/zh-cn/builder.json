@@ -295,8 +295,41 @@
 				"addColumn": "添加一列",
 				"download": "下载",
 				"hideAll": "全部隐藏",
+				"hideAllVariables": "",
 				"returnToNavigation": "返回导航",
-				"showAll": "显示所有"
+				"save": "",
+				"saving": "",
+				"showAll": "显示所有",
+				"showAllVariables": ""
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "第一个变量",
+					"operation": "手术",
+					"secondVariable": "第二个变量",
+					"variablesForAverage": "平均值的变量",
+					"variableToCopy": "要复制的变量",
+					"variableToRecode": "要重新编码的变量",
+					"variableToReverse": "反转变量"
+				},
+				"cancel": "取消",
+				"chooseAction": "选择操作",
+				"labels": {
+					"firstVariable": "第一个变量",
+					"operation": "手术",
+					"secondVariable": "第二个变量",
+					"sourceVariable": "选择要复制的变量",
+					"variablesForAverage": "选择变量",
+					"variableToRecode": "选择要重新编码的变量",
+					"variableToReverse": "选择要反转的变量"
+				},
+				"placeholders": {
+					"selectOperation": "选择操作",
+					"selectVariable": "选择变量",
+					"selectVariables": "选择变量"
+				},
+				"submit": "添加列",
+				"title": "添加一列"
 			},
 			"alt": {
 				"addColumn": "添加一列",
@@ -305,7 +338,13 @@
 			},
 			"downloadPrompt": "请给即将下载的 CSV 文件命名。\n\n无需添加“.csv”，我们会自动处理！",
 			"header": {
-				"activeData": "活动数据"
+				"activeData": "活动数据",
+				"untitledDataset": ""
+			},
+			"meta": {
+				"dataOrigin": "",
+				"lastUpdated": "",
+				"neverUpdated": ""
 			},
 			"operations": {
 				"computeNew": "计算新变量",
@@ -317,9 +356,17 @@
 				"generalVariables": "一般变量",
 				"taskVariables": "任务变量",
 				"userVariables": "用户变量"
+			},
+			"variable": {
+				"delete": "",
+				"hideAria": "",
+				"rename": "",
+				"renamePrompt": "",
+				"showAria": ""
 			}
 		},
 		"datasets": {
+			"addDataset": "添加数据集",
 			"deleteConfirm": "您确定要删除此数据集吗？",
 			"deleteDataset": "删除数据集",
 			"deleteDisabledNotOwner": "只有该数据集的创建者才能删除它。",
@@ -345,10 +392,12 @@
 			"meta": {
 				"byAuthor": "由 {{author}}",
 				"byYou": "由你",
+				"dataOrigin": "",
 				"lastUpdated": "最后更新于 {{date}}",
 				"lastUpdatedNever": "绝不",
 				"unknownAuthor": "未知"
 			},
+			"originTooltip": "",
 			"untitled": "未命名数据集"
 		},
 		"graph": {
@@ -356,15 +405,19 @@
 				"barPlot": {
 					"columnsToPlot": "要绘制的列",
 					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
 						"googleSlidesAlt": "谷歌幻灯片",
 						"hintLong": "如果要比较各列，请点击这里。",
 						"hintWide": "如果要比较同一列（变量）的不同组，请点击此处。",
 						"longDescription": "数据以每项观测值（例如学生的考试分数）单独占一行的方式组织，通常还会有一列标明类别（例如科目）。这种格式有利于跨类别进行详细分析。",
 						"longTitle": "长数据格式",
+						"panelRegionAriaLabel": "",
 						"sectionLabel": "数据布局",
 						"slidesLink": "点击此处查看讲义幻灯片",
 						"switchToLong": "切换到长格式",
 						"switchToWide": "切换到宽幅格式",
+						"toggleAriaLabel": "",
 						"wideDescription": "数据按类别（例如科目）单独列排列，每列通常代表一个观察值（例如学生）。这种格式便于在同一类别内快速比较。",
 						"wideTitle": "宽数据格式"
 					},
@@ -522,6 +575,16 @@
 					"rankHelpStep1": "请使用下拉菜单为每个条件命名（您也可以手动输入！）",
 					"rankHelpStep2": "使用标签右侧的滑块来指示在此条件下因变量相对于其他因变量的预期排名。",
 					"rankSectionTitle": "对你的条件进行排序",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"rankOrdering": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionHypothesisTitle": "你的实验假设",
 					"titleLabel": "标题",
 					"titlePlaceholder": "条件对变量的影响",
@@ -542,6 +605,16 @@
 					"fallbackIndependentVariable": "自变量",
 					"fallbackNumberOfConditions": "数量"
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": ""
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "已复制到剪贴板！",
 					"clipboardHypothesisCopied": "复制到剪贴板的文本： {{text}}",
@@ -560,9 +633,28 @@
 					"iPredictThat": "我预测",
 					"loading": "加载中...",
 					"loadingBlocks": "正在加载数据块...",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"directionality": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionTitle": "你的相关性假设",
 					"titleLabel": "标题",
 					"willBeRelatedTo": "将与"
+				},
+				"default": {
+					"group": "",
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"xAxis": "",
+					"yAxis": ""
 				}
 			},
 			"editor": {
@@ -589,6 +681,8 @@
 			"widgetSettings": "小部件设置"
 		},
 		"sideNav": {
+			"addComponent": "",
+			"addComponentAria": "",
 			"addJournal": "杂志",
 			"addJournalScratch": "从零开始创建一本日记",
 			"addJournalTemplate": "添加日志模板",
@@ -670,14 +764,163 @@
 			"workspaceMore": "工作区选项"
 		},
 		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "汇总列",
+					"dataLayout": {
+						"currentlyPerforming": "当前正在汇总：",
+						"long": {
+							"description": "每个观测值代表一行。选择一列数值进行汇总，还可以选择一列用于定义分组。",
+							"title": "长数据布局"
+						},
+						"summaryLong": {
+							"main": "每行一列数值，可选分组列（长格式）。"
+						},
+						"summaryWide": {
+							"between": "多种的",
+							"columns": "宽格式的列（每列一个变量）。",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "每个要汇总的变量都单独占一列。选择一列或多列，还可以选择分组变量。",
+							"title": "宽数据布局"
+						}
+					},
+					"groupingVariable": "分组变量",
+					"qualOption": {
+						"description": "定性数据以标签列的形式呈现。例如，受试者所属的实验条件，或者他们对多项选择题的回答。",
+						"title": "切换到定性数据"
+					},
+					"quantOption": {
+						"description": "定量数据以数值列的形式呈现。例如，参与者的年龄或他们在调查中的得分。",
+						"title": "切换到定量数据"
+					},
+					"resources": {
+						"googleSlidesAlt": "谷歌幻灯片",
+						"openLink": "点击此处访问资源",
+						"sectionTitle": "资源",
+						"slidesLink": "点击此处查看讲义幻灯片",
+						"tableWhatAlt": "外部链接",
+						"tableWhatTitle": "什么是表格？"
+					},
+					"valueMode": {
+						"qualLabel": "定性",
+						"quantLabel": "定量",
+						"triggerPrefix": "列值类型：",
+						"triggerSuffix": "（点击此处更改）"
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "代码",
+					"variables": "变量"
 				}
+			},
+			"fields": {
+				"clearSelection": "没有任何",
+				"qualColumnsLabel": "定性列",
+				"quantColumnsLabel": "定量柱",
+				"selectPlaceholder": "选择 {{field}}",
+				"selectVariablesPlaceholder": "选择变量"
 			}
 		},
 		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"hint": "",
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"hint": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": "",
+						"sectionTitle": ""
+					}
+				},
+				"default": {
+					"column1": "",
+					"column2": ""
+				},
+				"pearson": {
+					"predictedColumn": "",
+					"predictorColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"tTest": {
+					"col1": "",
+					"col2": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
 					"code": "",
@@ -687,6 +930,11 @@
 			"emptyState": {
 				"helper": "单击此组件打开编辑器，然后选择要计算测试的变量。",
 				"title": "您的统计检验已准备就绪，可以进行配置了。"
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
 			}
 		},
 		"table": {

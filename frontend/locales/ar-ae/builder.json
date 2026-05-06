@@ -295,8 +295,41 @@
 				"addColumn": "أضف عمودًا",
 				"download": "تحميل",
 				"hideAll": "إخفاء الكل",
+				"hideAllVariables": "",
 				"returnToNavigation": "العودة إلى التنقل",
-				"showAll": "عرض الكل"
+				"save": "",
+				"saving": "",
+				"showAll": "عرض الكل",
+				"showAllVariables": ""
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "المتغير الأول",
+					"operation": "عملية",
+					"secondVariable": "المتغير الثاني",
+					"variablesForAverage": "المتغيرات المستخدمة في حساب المتوسط",
+					"variableToCopy": "المتغير المراد نسخه",
+					"variableToRecode": "متغير لإعادة الترميز",
+					"variableToReverse": "متغير للعكس"
+				},
+				"cancel": "يلغي",
+				"chooseAction": "اختر إجراءً",
+				"labels": {
+					"firstVariable": "المتغير الأول",
+					"operation": "عملية",
+					"secondVariable": "المتغير الثاني",
+					"sourceVariable": "حدد المتغير المراد نسخه",
+					"variablesForAverage": "حدد المتغير (المتغيرات)",
+					"variableToRecode": "حدد المتغير لإعادة ترميزه",
+					"variableToReverse": "حدد المتغير المراد عكسه"
+				},
+				"placeholders": {
+					"selectOperation": "حدد العملية",
+					"selectVariable": "حدد المتغير",
+					"selectVariables": "حدد المتغير (المتغيرات)"
+				},
+				"submit": "إضافة عمود",
+				"title": "أضف عمودًا"
 			},
 			"alt": {
 				"addColumn": "أضف عمودًا",
@@ -305,7 +338,13 @@
 			},
 			"downloadPrompt": "قم بتسمية ملف CSV الذي ستنزله.\nلا داعي لإضافة \".csv\"، سنقوم بذلك تلقائيًا!",
 			"header": {
-				"activeData": "البيانات النشطة"
+				"activeData": "البيانات النشطة",
+				"untitledDataset": ""
+			},
+			"meta": {
+				"dataOrigin": "",
+				"lastUpdated": "",
+				"neverUpdated": ""
 			},
 			"operations": {
 				"computeNew": "احسب متغيرًا جديدًا",
@@ -317,9 +356,17 @@
 				"generalVariables": "المتغيرات العامة",
 				"taskVariables": "متغيرات المهمة",
 				"userVariables": "متغيرات المستخدم"
+			},
+			"variable": {
+				"delete": "",
+				"hideAria": "",
+				"rename": "",
+				"renamePrompt": "",
+				"showAria": ""
 			}
 		},
 		"datasets": {
+			"addDataset": "إضافة مجموعة بيانات",
 			"deleteConfirm": "هل أنت متأكد من رغبتك في حذف مجموعة البيانات هذه؟",
 			"deleteDataset": "حذف مجموعة البيانات",
 			"deleteDisabledNotOwner": "لا يمكن حذف هذه المجموعة من البيانات إلا منشئها.",
@@ -345,10 +392,12 @@
 			"meta": {
 				"byAuthor": "بواسطة {{author}}",
 				"byYou": "بواسطتك",
+				"dataOrigin": "",
 				"lastUpdated": "آخر تحديث {{date}}",
 				"lastUpdatedNever": "أبدًا",
 				"unknownAuthor": "غير معروف"
 			},
+			"originTooltip": "",
 			"untitled": "مجموعة بيانات بلا عنوان"
 		},
 		"graph": {
@@ -356,15 +405,19 @@
 				"barPlot": {
 					"columnsToPlot": "العمود (الأعمدة) المراد رسمها",
 					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
 						"googleSlidesAlt": "عروض جوجل التقديمية",
 						"hintLong": "إذا كنت ترغب في مقارنة الأعمدة، فانقر هنا.",
 						"hintWide": "إذا كنت ترغب في مقارنة مجموعات مختلفة لعمود واحد (متغير)، فانقر هنا.",
 						"longDescription": "تُنظَّم البيانات بحيث تظهر كل ملاحظة (مثل درجة اختبار الطالب) في صف منفصل، وغالبًا ما يكون هناك عمود يشير إلى الفئات (مثل المواد الدراسية). يُعد هذا التنسيق مفيدًا لإجراء تحليل مفصل عبر الفئات.",
 						"longTitle": "تنسيق البيانات الطويلة",
+						"panelRegionAriaLabel": "",
 						"sectionLabel": "تخطيط البيانات",
 						"slidesLink": "انقر هنا للاطلاع على شرائح المحاضرة",
 						"switchToLong": "انتقل إلى التنسيق الطويل",
 						"switchToWide": "التبديل إلى التنسيق العريض",
+						"toggleAriaLabel": "",
 						"wideDescription": "تُنظَّم البيانات بحيث تظهر كل فئة (مثل المواد الدراسية) في عمود مستقل، وغالبًا ما تُمثِّل الصفوف عدد الملاحظات (مثل الطلاب). هذا التنسيق يُسهِّل إجراء مقارنات سريعة داخل الفئات.",
 						"wideTitle": "تنسيق البيانات العريض"
 					},
@@ -522,6 +575,16 @@
 					"rankHelpStep1": "قم بتسمية كل شرط باستخدام القائمة المنسدلة (يمكنك الكتابة!).",
 					"rankHelpStep2": "استخدم شريط التمرير الموجود على الجانب الأيمن من الملصق لتحديد الترتيب المتوقع للمتغير التابع في هذه الحالة مقارنةً بالبقية.",
 					"rankSectionTitle": "رتب ظروفك",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"rankOrdering": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionHypothesisTitle": "فرضيتك التجريبية",
 					"titleLabel": "عنوان",
 					"titlePlaceholder": "تأثير الحالة على المتغير",
@@ -542,6 +605,16 @@
 					"fallbackIndependentVariable": "المتغير المستقل",
 					"fallbackNumberOfConditions": "عدد من"
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": ""
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "تمت نسخها إلى الحافظة!",
 					"clipboardHypothesisCopied": "النص المنسوخ إلى الحافظة: {{text}}",
@@ -560,9 +633,28 @@
 					"iPredictThat": "أتوقع ذلك",
 					"loading": "تحميل...",
 					"loadingBlocks": "جارٍ تحميل بيانات الكتلة...",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"directionality": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionTitle": "فرضيتك الارتباطية",
 					"titleLabel": "عنوان",
 					"willBeRelatedTo": "سيكون مرتبطًا بـ"
+				},
+				"default": {
+					"group": "",
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"xAxis": "",
+					"yAxis": ""
 				}
 			},
 			"editor": {
@@ -589,6 +681,8 @@
 			"widgetSettings": "إعدادات الأداة"
 		},
 		"sideNav": {
+			"addComponent": "",
+			"addComponentAria": "",
 			"addJournal": "مجلة",
 			"addJournalScratch": "أنشئ دفتر يوميات من الصفر",
 			"addJournalTemplate": "أضف قالبًا للمجلة",
@@ -670,14 +764,163 @@
 			"workspaceMore": "خيارات مساحة العمل"
 		},
 		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "عمود للتلخيص",
+					"dataLayout": {
+						"currentlyPerforming": "أقوم حاليًا بتلخيص ما يلي:",
+						"long": {
+							"description": "كل ملاحظة تمثل صفًا. اختر عمودًا واحدًا من القيم لتلخيصها، وعمودًا اختياريًا لتحديد المجموعات.",
+							"title": "تخطيط بيانات طويل"
+						},
+						"summaryLong": {
+							"main": "عمود واحد من القيم لكل صف مع عمود تجميع اختياري (تنسيق طويل)."
+						},
+						"summaryWide": {
+							"between": "عديد",
+							"columns": "أعمدة بتنسيق عريض (متغير واحد لكل عمود).",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "كل متغير يُراد تلخيصه يُمثل عموداً مستقلاً. اختر عموداً واحداً أو أكثر، ويمكنك اختيارياً اختيار متغير تجميع.",
+							"title": "تخطيط بيانات واسع"
+						}
+					},
+					"groupingVariable": "متغير التجميع",
+					"qualOption": {
+						"description": "تُعرض البيانات النوعية في عمود مليء بالتصنيفات. على سبيل المثال، المجموعة التجريبية التي ينتمي إليها الشخص، أو إجابته على سؤال متعدد الخيارات.",
+						"title": "التبديل إلى البيانات النوعية"
+					},
+					"quantOption": {
+						"description": "تُعرض البيانات الكمية في عمود مليء بالقيم العددية. على سبيل المثال، عمر المشارك أو نتيجته في استطلاع رأي.",
+						"title": "التبديل إلى البيانات الكمية"
+					},
+					"resources": {
+						"googleSlidesAlt": "عروض جوجل التقديمية",
+						"openLink": "انقر هنا للوصول إلى المورد",
+						"sectionTitle": "موارد",
+						"slidesLink": "انقر هنا للاطلاع على شرائح المحاضرة",
+						"tableWhatAlt": "رابط خارجي",
+						"tableWhatTitle": "ما هي الطاولة؟"
+					},
+					"valueMode": {
+						"qualLabel": "نوعي",
+						"quantLabel": "كمي",
+						"triggerPrefix": "نوع قيمة العمود:",
+						"triggerSuffix": "(انقر هنا للتغيير)"
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "شفرة",
+					"variables": "المتغيرات"
 				}
+			},
+			"fields": {
+				"clearSelection": "لا أحد",
+				"qualColumnsLabel": "عمود (أعمدة) نوعية",
+				"quantColumnsLabel": "عمود (أعمدة) كمي",
+				"selectPlaceholder": "حدد {{field}}",
+				"selectVariablesPlaceholder": "حدد المتغير (المتغيرات)"
 			}
 		},
 		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"hint": "",
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"hint": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": "",
+						"sectionTitle": ""
+					}
+				},
+				"default": {
+					"column1": "",
+					"column2": ""
+				},
+				"pearson": {
+					"predictedColumn": "",
+					"predictorColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"tTest": {
+					"col1": "",
+					"col2": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
 					"code": "",
@@ -687,6 +930,11 @@
 			"emptyState": {
 				"helper": "انقر فوق هذا المكون لفتح المحرر، ثم اختر المتغيرات لحساب الاختبار.",
 				"title": "اختبارك الإحصائي جاهز للتكوين"
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
 			}
 		},
 		"table": {

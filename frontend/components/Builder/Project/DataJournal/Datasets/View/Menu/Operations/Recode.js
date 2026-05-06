@@ -1,131 +1,160 @@
-import { useState, useEffect } from "react";
+"use client";
 
-import { Modal, Dropdown, Table } from "semantic-ui-react";
+import { useEffect, useMemo, useState } from "react";
 
+import useTranslation from "next-translate/useTranslation";
+
+import { Table } from "semantic-ui-react";
+
+import DropdownSelect from "../../../../../../../DesignSystem/DropdownSelect";
 import { StyledForm } from "../../../../../../../styles/StyledForm";
 
+const M = "dataJournal.datasetMenu.addColumnModal";
+
 export default function Recode({
-  title,
   data,
   variables,
   variablesOptions,
   inputs,
   handleChange,
   updateDataset,
-  setIsOpen,
-  resetForm,
+  submitRef,
+  onSuccess,
 }) {
+  const { t } = useTranslation("builder");
   const [uniqueValues, setUniqueValues] = useState([]);
   const [replacementValues, setReplacementValues] = useState({});
+
+  const variableSelectOptions = useMemo(
+    () =>
+      (variablesOptions || [])
+        .map((o) => ({
+          value: String(o.value ?? ""),
+          label: String(o.text ?? o.value ?? ""),
+        }))
+        .filter((o) => o.value !== ""),
+    [variablesOptions],
+  );
+
+  const sourceVariableLabel = t(`${M}.labels.variableToRecode`, {}, {
+    default: "Select variable to recode",
+  });
+
+  const variablePlaceholder = t(`${M}.placeholders.selectVariable`, {}, {
+    default: "Select variable",
+  });
+
+  const variableAria = t(`${M}.aria.variableToRecode`, {}, {
+    default: "Variable to recode",
+  });
 
   useEffect(() => {
     if (inputs?.oldVariable) {
       const uniqueVals = [
         ...new Set(data.map((row) => row[inputs?.oldVariable])),
       ];
-      const filteredUniqueVals = uniqueVals.filter((value) => value !== ""); // filter out empty strings
+      const filteredUniqueVals = uniqueVals.filter((value) => value !== "");
       setUniqueValues(filteredUniqueVals);
       const initialReplacements = filteredUniqueVals.reduce(
         (acc, val) => ({ ...acc, [val]: val }),
-        {}
+        {},
       );
       setReplacementValues(initialReplacements);
     }
   }, [inputs?.oldVariable, data]);
 
-  const recode = () => {
-    const updatedVariables = [
-      ...variables,
-      {
-        field: inputs?.name,
-        editable: true,
-        type: "user",
-      },
-    ];
-    const updatedData = data.map((row) => ({
-      ...row,
-      [inputs?.name]: replacementValues[row[inputs?.oldVariable]],
-    }));
-    updateDataset({
-      updatedVariables,
-      updatedData,
-    });
-    setIsOpen(false);
-    resetForm();
-  };
+  useEffect(() => {
+    submitRef.current = () => {
+      const updatedVariables = [
+        ...variables,
+        {
+          field: inputs?.name,
+          editable: true,
+          type: "user",
+        },
+      ];
+      const updatedData = data.map((row) => ({
+        ...row,
+        [inputs?.name]: replacementValues[row[inputs?.oldVariable]],
+      }));
+      updateDataset({
+        updatedVariables,
+        updatedData,
+      });
+      onSuccess();
+    };
+    return () => {
+      submitRef.current = null;
+    };
+  }, [
+    data,
+    variables,
+    inputs,
+    replacementValues,
+    updateDataset,
+    onSuccess,
+    submitRef,
+  ]);
+
+  const oldVarValue =
+    inputs?.oldVariable != null && inputs.oldVariable !== ""
+      ? String(inputs.oldVariable)
+      : "";
 
   return (
-    <>
-      <Modal.Header>
-        <h2>{title}</h2>
-      </Modal.Header>
+    <StyledForm>
+      <fieldset>
+        <label htmlFor="name">New variable name</label>
+        <input
+          type="text"
+          name="name"
+          value={inputs?.name}
+          onChange={handleChange}
+        />
 
-      <Modal.Content>
-        <Modal.Description>
-          <StyledForm>
-            <fieldset>
-              <label htmlFor="name">New variable name</label>
-              <input
-                type="text"
-                name="name"
-                value={inputs?.name}
-                onChange={handleChange}
-              />
+        <label>{sourceVariableLabel}</label>
+        <DropdownSelect
+          ariaLabel={variableAria}
+          placeholder={variablePlaceholder}
+          value={oldVarValue}
+          onChange={(next) =>
+            handleChange({
+              target: { name: "oldVariable", value: next },
+            })
+          }
+          options={variableSelectOptions}
+          searchableSingle
+        />
 
-              <label>Select variable to recode</label>
-              <Dropdown
-                placeholder="Select variable"
-                fluid
-                search
-                selection
-                options={variablesOptions}
-                onChange={(event, data) =>
-                  handleChange({
-                    target: { name: "oldVariable", value: data?.value },
-                  })
-                }
-              />
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Original Value</Table.HeaderCell>
+              <Table.HeaderCell>Replacement Value</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
 
-              <Table>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Original Value</Table.HeaderCell>
-                    <Table.HeaderCell>Replacement Value</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-
-                <Table.Body>
-                  {uniqueValues.map((value) => (
-                    <Table.Row key={value}>
-                      <Table.Cell>{value}</Table.Cell>
-                      <Table.Cell>
-                        <input
-                          type="text"
-                          value={replacementValues[value]}
-                          onChange={(e) =>
-                            setReplacementValues({
-                              ...replacementValues,
-                              [value]: e.target.value,
-                            })
-                          }
-                        />
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table>
-            </fieldset>
-          </StyledForm>
-        </Modal.Description>
-      </Modal.Content>
-
-      <Modal.Actions>
-        <div className="modalButtons">
-          <button className="secondaryBtn" onClick={() => recode()}>
-            Recode
-          </button>
-        </div>
-      </Modal.Actions>
-    </>
+          <Table.Body>
+            {uniqueValues.map((value) => (
+              <Table.Row key={String(value)}>
+                <Table.Cell>{value}</Table.Cell>
+                <Table.Cell>
+                  <input
+                    type="text"
+                    value={replacementValues[value] ?? ""}
+                    onChange={(e) =>
+                      setReplacementValues({
+                        ...replacementValues,
+                        [value]: e.target.value,
+                      })
+                    }
+                  />
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </fieldset>
+    </StyledForm>
   );
 }

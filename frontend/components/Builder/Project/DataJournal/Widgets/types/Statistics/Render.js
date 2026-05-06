@@ -30,20 +30,33 @@ export default function Render({ code, pyodide, sectionId, content }) {
 
       const s = content.selectors || {};
 
-      // For summary: we expect quantCols (comma-separated), groupVariable, dataType
-      let variablesCode = "";
-      let hasRequired = !!s.colMultiple; // minimal requirement
+      const dataLayout = s.dataLayout === "long" || s.dataLayout === "wide" ? s.dataLayout : "wide";
+      const valueMode =
+        s.valueMode === "quant" || s.valueMode === "qual"
+          ? s.valueMode
+          : s.dataFormat === "quant" || s.dataFormat === "qual"
+            ? s.dataFormat
+            : s.dataType === "quant" || s.dataType === "qual"
+              ? s.dataType
+              : "quant";
 
-      if (!hasRequired) {
+      let quantColsStr = "";
+      if (dataLayout === "long") {
+        quantColsStr = s.valCol != null && s.valCol !== "" ? String(s.valCol) : "";
+      } else {
+        quantColsStr = Array.isArray(s.colMultiple) ? s.colMultiple.join(",") : "";
+      }
+
+      if (!quantColsStr) {
         setResult(null);
         setIsRunning(false);
         return;
       }
 
-      variablesCode = `
-quantCols = "${escapePy(s.colMultiple?.join(",") || "")}"
+      const variablesCode = `
+quantCols = "${escapePy(quantColsStr)}"
 groupVariable = "${escapePy(s.groupVariable || "")}"
-dataType = "${escapePy(s.dataFormat || "quant")}"
+dataType = "${escapePy(valueMode)}"
 `;
 
       setIsRunning(true);

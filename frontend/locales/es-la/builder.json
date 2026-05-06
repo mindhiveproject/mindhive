@@ -295,8 +295,41 @@
 				"addColumn": "Agregar una columna",
 				"download": "Descargar",
 				"hideAll": "Ocultar todo",
+				"hideAllVariables": "",
 				"returnToNavigation": "Volver a la navegación",
-				"showAll": "Mostrar todo"
+				"save": "",
+				"saving": "",
+				"showAll": "Mostrar todo",
+				"showAllVariables": ""
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "Primera variable",
+					"operation": "Operación",
+					"secondVariable": "Segunda variable",
+					"variablesForAverage": "Variables para el promedio",
+					"variableToCopy": "Variable a copiar",
+					"variableToRecode": "Variable a recodificar",
+					"variableToReverse": "Variable a invertir"
+				},
+				"cancel": "Cancelar",
+				"chooseAction": "Elige una acción",
+				"labels": {
+					"firstVariable": "Primera variable",
+					"operation": "Operación",
+					"secondVariable": "Segunda variable",
+					"sourceVariable": "Seleccione la variable a copiar",
+					"variablesForAverage": "Seleccione variable(s)",
+					"variableToRecode": "Seleccione la variable a recodificar",
+					"variableToReverse": "Seleccione la variable a invertir"
+				},
+				"placeholders": {
+					"selectOperation": "Seleccionar operación",
+					"selectVariable": "Seleccionar variable",
+					"selectVariables": "Seleccione variable(s)"
+				},
+				"submit": "Añadir columna",
+				"title": "Agregar una columna"
 			},
 			"alt": {
 				"addColumn": "Agregar una columna",
@@ -305,7 +338,13 @@
 			},
 			"downloadPrompt": "Dale un nombre al archivo CSV que vas a descargar.\nNo es necesario añadir la extensión '.csv', ¡nosotros nos encargamos!",
 			"header": {
-				"activeData": "Datos activos"
+				"activeData": "Datos activos",
+				"untitledDataset": ""
+			},
+			"meta": {
+				"dataOrigin": "",
+				"lastUpdated": "",
+				"neverUpdated": ""
 			},
 			"operations": {
 				"computeNew": "Calcular nueva variable",
@@ -317,9 +356,17 @@
 				"generalVariables": "Variables generales",
 				"taskVariables": "Variables de la tarea",
 				"userVariables": "Variables de usuario"
+			},
+			"variable": {
+				"delete": "",
+				"hideAria": "",
+				"rename": "",
+				"renamePrompt": "",
+				"showAria": ""
 			}
 		},
 		"datasets": {
+			"addDataset": "Agregar conjunto de datos",
 			"deleteConfirm": "¿Está seguro de que desea eliminar este conjunto de datos?",
 			"deleteDataset": "Eliminar conjunto de datos",
 			"deleteDisabledNotOwner": "Solo el creador de este conjunto de datos puede eliminarlo.",
@@ -345,10 +392,12 @@
 			"meta": {
 				"byAuthor": "por {{author}}",
 				"byYou": "por ti",
+				"dataOrigin": "",
 				"lastUpdated": "Última actualización {{date}}",
 				"lastUpdatedNever": "Nunca",
 				"unknownAuthor": "Desconocido"
 			},
+			"originTooltip": "",
 			"untitled": "Conjunto de datos sin título"
 		},
 		"graph": {
@@ -356,15 +405,19 @@
 				"barPlot": {
 					"columnsToPlot": "Columna(s) a graficar",
 					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
 						"googleSlidesAlt": "Presentaciones de Google",
 						"hintLong": "Si desea comparar columnas, haga clic aquí.",
 						"hintWide": "Si desea comparar diferentes grupos para una columna (variable), haga clic aquí.",
 						"longDescription": "Los datos se organizan de manera que cada observación (como la calificación de un estudiante) aparezca en una fila independiente, a menudo con una columna que indica las categorías (como las asignaturas). Este formato resulta útil para realizar análisis detallados entre categorías.",
 						"longTitle": "Formato de datos largo",
+						"panelRegionAriaLabel": "",
 						"sectionLabel": "Diseño de datos",
 						"slidesLink": "Haz clic aquí para ver las diapositivas de la presentación.",
 						"switchToLong": "Cambiar a formato largo",
 						"switchToWide": "Cambiar a formato ancho",
+						"toggleAriaLabel": "",
 						"wideDescription": "Los datos se organizan de forma que cada categoría (como las asignaturas) aparece en una columna independiente, y a menudo las filas representan las observaciones (como los estudiantes). Este formato facilita las comparaciones rápidas dentro de cada categoría.",
 						"wideTitle": "Formato de datos amplio"
 					},
@@ -522,6 +575,16 @@
 					"rankHelpStep1": "Nombra cada condición usando el menú desplegable (¡puedes escribirla!).",
 					"rankHelpStep2": "Utilice el control deslizante del lado derecho de la etiqueta para indicar el rango esperado de la variable dependiente en esta condición en comparación con el resto.",
 					"rankSectionTitle": "Clasifique sus condiciones",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"rankOrdering": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionHypothesisTitle": "Tu hipótesis experimental",
 					"titleLabel": "Título",
 					"titlePlaceholder": "Efecto de la condición sobre la variable",
@@ -542,6 +605,16 @@
 					"fallbackIndependentVariable": "variable independiente",
 					"fallbackNumberOfConditions": "Número de"
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": ""
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "¡Copiado al portapapeles!",
 					"clipboardHypothesisCopied": "Texto copiado al portapapeles: {{text}}",
@@ -560,9 +633,28 @@
 					"iPredictThat": "Predigo que",
 					"loading": "Cargando...",
 					"loadingBlocks": "Cargando datos del bloque...",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"directionality": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionTitle": "Tu hipótesis de correlación",
 					"titleLabel": "Título",
 					"willBeRelatedTo": "estará relacionado con"
+				},
+				"default": {
+					"group": "",
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"xAxis": "",
+					"yAxis": ""
 				}
 			},
 			"editor": {
@@ -589,6 +681,8 @@
 			"widgetSettings": "Configuración del widget"
 		},
 		"sideNav": {
+			"addComponent": "",
+			"addComponentAria": "",
 			"addJournal": "Diario",
 			"addJournalScratch": "Crea un diario desde cero",
 			"addJournalTemplate": "Agregar una plantilla de diario",
@@ -670,14 +764,163 @@
 			"workspaceMore": "Opciones de espacio de trabajo"
 		},
 		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "Columna para resumir",
+					"dataLayout": {
+						"currentlyPerforming": "Actualmente resumiendo:",
+						"long": {
+							"description": "Cada observación es una fila. Elija una columna de valores para resumir y, opcionalmente, una columna que defina los grupos.",
+							"title": "Diseño de datos largo"
+						},
+						"summaryLong": {
+							"main": "Una columna de valores por fila con una columna de agrupación opcional (formato largo)."
+						},
+						"summaryWide": {
+							"between": "Múltiple",
+							"columns": "columnas en formato ancho (una variable por columna).",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "Cada variable a resumir corresponde a una columna independiente. Seleccione una o más columnas y, opcionalmente, una variable de agrupación.",
+							"title": "Diseño de datos amplio"
+						}
+					},
+					"groupingVariable": "Variable de agrupación",
+					"qualOption": {
+						"description": "Los datos cualitativos se representan en una columna con etiquetas. Por ejemplo, a qué condición experimental pertenece un sujeto o su respuesta a una pregunta de opción múltiple.",
+						"title": "Cambiar a datos cualitativos"
+					},
+					"quantOption": {
+						"description": "Los datos cuantitativos se representan en una columna con valores numéricos. Por ejemplo, la edad del participante o su puntuación en una encuesta.",
+						"title": "Cambiar a datos cuantitativos"
+					},
+					"resources": {
+						"googleSlidesAlt": "Presentaciones de Google",
+						"openLink": "Haz clic aquí para acceder al recurso.",
+						"sectionTitle": "Recursos",
+						"slidesLink": "Haz clic aquí para ver las diapositivas de la presentación.",
+						"tableWhatAlt": "Enlace externo",
+						"tableWhatTitle": "¿Qué es una mesa?"
+					},
+					"valueMode": {
+						"qualLabel": "Cualitativo",
+						"quantLabel": "Cuantitativo",
+						"triggerPrefix": "Tipo de valor de columna:",
+						"triggerSuffix": "(Haz clic aquí para cambiar)"
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "Código",
+					"variables": "Variables"
 				}
+			},
+			"fields": {
+				"clearSelection": "Ninguno",
+				"qualColumnsLabel": "Columna(s) cualitativa(s)",
+				"quantColumnsLabel": "Columna(s) cuantitativa(s)",
+				"selectPlaceholder": "Seleccione {{field}}",
+				"selectVariablesPlaceholder": "Seleccione variable(s)"
 			}
 		},
 		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"hint": "",
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"hint": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": "",
+						"sectionTitle": ""
+					}
+				},
+				"default": {
+					"column1": "",
+					"column2": ""
+				},
+				"pearson": {
+					"predictedColumn": "",
+					"predictorColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"tTest": {
+					"col1": "",
+					"col2": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
 					"code": "",
@@ -687,6 +930,11 @@
 			"emptyState": {
 				"helper": "Haz clic en este componente para abrir el editor y, a continuación, elige las variables para calcular la prueba.",
 				"title": "Su prueba estadística está lista para ser configurada."
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
 			}
 		},
 		"table": {

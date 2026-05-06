@@ -68,7 +68,12 @@ const PANEL_STYLE = {
   boxShadow: "0px 4px 8px rgba(0,0,0,0.1)",
   overflow: "hidden",
   minWidth: "200px",
-  zIndex: 10000,
+  /* Above Semantic UI modals/dimmers (~1000–1002) and nested overlays; avoids frosted-dimmer smearing portaled panels */
+  zIndex: 100050,
+  isolation: "isolate",
+  filter: "none",
+  backdropFilter: "none",
+  WebkitBackdropFilter: "none",
 };
 
 const SEARCH_INPUT_STYLE = {

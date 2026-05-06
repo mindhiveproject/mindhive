@@ -148,47 +148,6 @@ export const StyledDatasetView = styled.div`
             }
           }
         }
-
-        /* Semantic UI Dropdown emits a wrapping span around our button trigger;
-           strip its default padding/icon so the chip looks identical to the others. */
-        .ui.dropdown {
-          padding: 0;
-          border: none;
-          background: none;
-
-          > .toolbarChip {
-            margin: 0;
-          }
-        }
-
-        .ui.dropdown .menu > .item {
-          padding: 8px 12px !important;
-
-          .menuItem {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #000;
-            font-family: Inter, sans-serif;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 1;
-            white-space: nowrap;
-            cursor: pointer;
-          }
-
-          .menuItem img {
-            width: 16px;
-            height: 16px;
-            flex-shrink: 0;
-          }
-        }
-
-        .ui.dropdown > .menu {
-          left: auto !important;
-          right: 0 !important;
-          transform-origin: top right;
-        }
       }
 
       .variables-section {

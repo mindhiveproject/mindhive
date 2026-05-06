@@ -763,6 +763,12 @@ export const StyledDatasetsRoot = styled.div`
     line-height: 1.45;
     color: #4a5568;
   }
+
+  .add-dataset-row {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 4px;
+  }
 `;
 
 export const StyledComponentPanel = styled.div`
@@ -1839,156 +1845,76 @@ export const StyledDatasetGrid = styled.div`
   margin-bottom: 30px;
 `;
 
-export const StyledAddDataset = styled.div`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  background: #f8f9f8;
-  color: #336f8a;
-  padding: 12px 24px;
-  border: 2px dashed #336f8a;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: Nunito;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #336f8a;
-    color: white;
-  }
-`;
-
 export const StyledDatasetCard = styled.div`
-  background: white;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  border: 1px solid #e6e6e6;
-  transition: all 0.2s ease-in-out;
+  border: 1px solid #eceef2;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  padding: 18px 20px;
+  transition: box-shadow 0.18s ease-out, transform 0.18s ease-out,
+    border-color 0.18s ease-out;
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
+    border-color: #d8dde5;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
+  }
+
+  &:hover .dataset-actions,
+  &:focus-within .dataset-actions {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .dataset-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 12px;
+    gap: 12px;
+    margin-bottom: 14px;
   }
 
   .dataset-title {
-    font-family: Nunito;
+    font-family: Nunito, Inter, sans-serif;
     font-weight: 600;
     font-size: 16px;
-    line-height: 20px;
-    color: #333;
+    line-height: 22px;
+    color: #1f2937;
     margin: 0;
     flex: 1;
+    word-break: break-word;
   }
 
   .dataset-actions {
-    display: flex;
-    gap: 8px;
-    margin-left: 10px;
-  }
-
-  .edit-btn,
-  .delete-btn {
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.2;
-    cursor: pointer;
-    font-family: Inter, sans-serif;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 6px;
-    color: #fff;
-  }
-
-  .edit-btn {
-    background: var(--MH-Theme-Primary-Dark, #336f8a);
-
-    &:hover:not(:disabled) {
-      background: #2a5a6f;
-    }
-
-    &:disabled {
-      background: #ccc;
-      color: #fff;
-      cursor: not-allowed;
-    }
-  }
-
-  .delete-btn {
-    background: #e53e3e;
-
-    &:hover:not(:disabled) {
-      background: #c53030;
-    }
-
-    &:disabled {
-      background: #feb2b2;
-      color: #fff;
-      cursor: not-allowed;
-    }
+    flex-shrink: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease-out;
   }
 
   .dataset-meta {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
   }
 
   .dataset-badges {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
-  }
-
-  .inclusion-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 500;
-    font-family: Inter, sans-serif;
-    color: #4a5568;
-    background: #fff;
-    border: 1px solid #cbd5e0;
-    cursor: help;
-    max-width: fit-content;
-  }
-
-  .origin-badge {
-    background: #f0f8f7;
-    color: #336f8a;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 500;
-    font-family: Inter;
-    align-self: flex-start;
-    max-width: fit-content;
+    gap: 10px;
   }
 
   .dataset-info {
     display: flex;
     gap: 8px;
     font-size: 12px;
-    color: #666;
-    font-family: Inter;
+    color: #6b7280;
+    font-family: Inter, sans-serif;
   }
 
   .author {
@@ -1996,7 +1922,7 @@ export const StyledDatasetCard = styled.div`
   }
 
   .updated {
-    color: #999;
+    color: #9ca3af;
   }
 `;
 

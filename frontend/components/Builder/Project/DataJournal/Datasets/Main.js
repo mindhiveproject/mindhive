@@ -7,6 +7,8 @@ import { buildDatasourcesWhere } from "../../../../../lib/dataJournalDatasources
 import { useDataJournal } from "../Context/DataJournalContext";
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
 
+import Button from "../../../../DesignSystem/Button";
+
 import AddDataset from "./AddDataset";
 import DatasetCard from "./DatasetCard";
 import EditDataset from "./EditDataset";
@@ -15,7 +17,6 @@ import DatasetView from "./View/Main";
 import {
   StyledDatasetsRoot,
   StyledDatasetGrid,
-  StyledAddDataset,
 } from "../styles/StyledDataJournal";
 
 export default function Datasets() {
@@ -114,9 +115,24 @@ export default function Datasets() {
               />
             ))}
           </StyledDatasetGrid>
-          <StyledAddDataset onClick={handleAddDataset}>
-            + Add dataset
-          </StyledAddDataset>
+          <div className="add-dataset-row">
+            <Button
+              variant="tonal"
+              leadingIcon={
+                <img
+                  src="/assets/icons/add.svg"
+                  alt=""
+                  aria-hidden
+                  width={18}
+                  height={18}
+                  // style={{ filter: "brightness(0) invert(1)" }}
+                />
+              }
+              onClick={handleAddDataset}
+            >
+              {t("dataJournal.datasets.addDataset", {}, { default: "Add dataset" })}
+            </Button>
+          </div>
         </div>
       ) : showAddDataset ? (
         <AddDataset

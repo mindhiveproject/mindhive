@@ -295,8 +295,41 @@
 				"addColumn": "",
 				"download": "",
 				"hideAll": "",
+				"hideAllVariables": "",
 				"returnToNavigation": "",
-				"showAll": ""
+				"save": "",
+				"saving": "",
+				"showAll": "",
+				"showAllVariables": ""
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "",
+					"operation": "",
+					"secondVariable": "",
+					"variablesForAverage": "",
+					"variableToCopy": "",
+					"variableToRecode": "",
+					"variableToReverse": ""
+				},
+				"cancel": "",
+				"chooseAction": "",
+				"labels": {
+					"firstVariable": "",
+					"operation": "",
+					"secondVariable": "",
+					"sourceVariable": "",
+					"variablesForAverage": "",
+					"variableToRecode": "",
+					"variableToReverse": ""
+				},
+				"placeholders": {
+					"selectOperation": "",
+					"selectVariable": "",
+					"selectVariables": ""
+				},
+				"submit": "",
+				"title": ""
 			},
 			"alt": {
 				"addColumn": "",
@@ -305,7 +338,13 @@
 			},
 			"downloadPrompt": "",
 			"header": {
-				"activeData": ""
+				"activeData": "",
+				"untitledDataset": ""
+			},
+			"meta": {
+				"dataOrigin": "",
+				"lastUpdated": "",
+				"neverUpdated": ""
 			},
 			"operations": {
 				"computeNew": "",
@@ -317,9 +356,17 @@
 				"generalVariables": "",
 				"taskVariables": "",
 				"userVariables": ""
+			},
+			"variable": {
+				"delete": "",
+				"hideAria": "",
+				"rename": "",
+				"renamePrompt": "",
+				"showAria": ""
 			}
 		},
 		"datasets": {
+			"addDataset": "",
 			"deleteConfirm": "",
 			"deleteDataset": "",
 			"deleteDisabledNotOwner": "",
@@ -345,10 +392,12 @@
 			"meta": {
 				"byAuthor": "",
 				"byYou": "",
+				"dataOrigin": "",
 				"lastUpdated": "",
 				"lastUpdatedNever": "",
 				"unknownAuthor": ""
 			},
+			"originTooltip": "",
 			"untitled": ""
 		},
 		"graph": {
@@ -356,15 +405,19 @@
 				"barPlot": {
 					"columnsToPlot": "",
 					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
 						"googleSlidesAlt": "",
 						"hintLong": "",
 						"hintWide": "",
 						"longDescription": "",
 						"longTitle": "",
+						"panelRegionAriaLabel": "",
 						"sectionLabel": "",
 						"slidesLink": "",
 						"switchToLong": "",
 						"switchToWide": "",
+						"toggleAriaLabel": "",
 						"wideDescription": "",
 						"wideTitle": ""
 					},
@@ -522,6 +575,16 @@
 					"rankHelpStep1": "",
 					"rankHelpStep2": "",
 					"rankSectionTitle": "",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"rankOrdering": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionHypothesisTitle": "",
 					"titleLabel": "",
 					"titlePlaceholder": "",
@@ -542,6 +605,16 @@
 					"fallbackIndependentVariable": "",
 					"fallbackNumberOfConditions": ""
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": ""
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "",
 					"clipboardHypothesisCopied": "",
@@ -560,9 +633,28 @@
 					"iPredictThat": "",
 					"loading": "",
 					"loadingBlocks": "",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"directionality": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionTitle": "",
 					"titleLabel": "",
 					"willBeRelatedTo": ""
+				},
+				"default": {
+					"group": "",
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"xAxis": "",
+					"yAxis": ""
 				}
 			},
 			"editor": {
@@ -589,6 +681,8 @@
 			"widgetSettings": "विजेट सेटिंग्स"
 		},
 		"sideNav": {
+			"addComponent": "",
+			"addComponentAria": "",
 			"addJournal": "",
 			"addJournalScratch": "",
 			"addJournalTemplate": "",
@@ -670,14 +764,163 @@
 			"workspaceMore": ""
 		},
 		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "",
+					"dataLayout": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingVariable": "",
+					"qualOption": {
+						"description": "",
+						"title": ""
+					},
+					"quantOption": {
+						"description": "",
+						"title": ""
+					},
+					"resources": {
+						"googleSlidesAlt": "",
+						"openLink": "",
+						"sectionTitle": "",
+						"slidesLink": "",
+						"tableWhatAlt": "",
+						"tableWhatTitle": ""
+					},
+					"valueMode": {
+						"qualLabel": "",
+						"quantLabel": "",
+						"triggerPrefix": "",
+						"triggerSuffix": ""
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
 					"code": "",
 					"variables": ""
 				}
+			},
+			"fields": {
+				"clearSelection": "",
+				"qualColumnsLabel": "",
+				"quantColumnsLabel": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
 			}
 		},
 		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"hint": "",
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"hint": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": "",
+						"sectionTitle": ""
+					}
+				},
+				"default": {
+					"column1": "",
+					"column2": ""
+				},
+				"pearson": {
+					"predictedColumn": "",
+					"predictorColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"tTest": {
+					"col1": "",
+					"col2": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
 					"code": "",
@@ -687,6 +930,11 @@
 			"emptyState": {
 				"helper": "",
 				"title": ""
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
 			}
 		},
 		"table": {
