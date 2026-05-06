@@ -227,15 +227,21 @@
 	"dataJournal": {
 		"addComponent": "Agregar componente",
 		"addNotes": "Agregar notas",
-		"collapsePanel": "Panel colapsado",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "Código"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "Cerca",
-			"componentName": "",
+			"componentName": "Nombre del componente",
 			"delete": "BORRAR",
 			"deleteConfirm": "¿Está seguro de que desea eliminar este componente?",
 			"editComponent": "Editar componente",
 			"editParagraph": "Editar párrafo",
-			"editTitle": "",
+			"editTitle": "Editar título del componente",
 			"save": "Ahorrar",
 			"saveFigureToMedia": "Guardar la figura en la biblioteca multimedia.",
 			"typeLabel": {
@@ -253,6 +259,299 @@
 			},
 			"unsupportedType": "Tipo de componente no compatible: {{type}}",
 			"untitled": "Intitulado"
+		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "Cancelar",
+				"create": "Crear conjunto de datos"
+			},
+			"dataSourceLabel": "Fuente de datos",
+			"errorCreatingDataset": "Error al crear el conjunto de datos:",
+			"errorLoadingStudy": "Estudio de carga de errores:",
+			"loadingDataSources": "Cargando fuentes de datos…",
+			"nameHelp": "Puedes cambiarle el nombre más adelante desde la configuración del conjunto de datos.",
+			"nameLabel": "Nombre del conjunto de datos",
+			"namePlaceholder": "Por ejemplo, respuestas a la prueba previa, primavera de 2026.",
+			"study": {
+				"currentStudy": "Estudio: {{title}}",
+				"currentStudyMissing": "No existe ningún estudio vinculado a este proyecto.",
+				"optionDisabled": "Este proyecto no tiene ningún estudio vinculado. Vincule un estudio para activar esta opción.",
+				"optionTitle": "Utilice los datos del estudio actual."
+			},
+			"subtitle": "Nombra tu conjunto de datos y elige de dónde deben provenir los datos.",
+			"template": {
+				"optionDescription": "Seleccione un conjunto de datos de plantilla (próximamente).",
+				"optionTitle": "Copiar desde un conjunto de datos existente"
+			},
+			"title": "Nuevo conjunto de datos",
+			"upload": {
+				"fileHelp": "La primera fila debe contener los nombres de las columnas.",
+				"optionDescription": "Crea un conjunto de datos a partir de un archivo en tu ordenador.",
+				"optionTitle": "Sube un archivo CSV o JSON."
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "Agregar una columna",
+				"download": "Descargar",
+				"hideAll": "Ocultar todo",
+				"hideAllVariables": "",
+				"returnToNavigation": "Volver a la navegación",
+				"save": "",
+				"saving": "",
+				"showAll": "Mostrar todo",
+				"showAllVariables": ""
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "Primera variable",
+					"operation": "Operación",
+					"secondVariable": "Segunda variable",
+					"variablesForAverage": "Variables para el promedio",
+					"variableToCopy": "Variable a copiar",
+					"variableToRecode": "Variable a recodificar",
+					"variableToReverse": "Variable a invertir"
+				},
+				"cancel": "Cancelar",
+				"chooseAction": "Elige una acción",
+				"labels": {
+					"firstVariable": "Primera variable",
+					"operation": "Operación",
+					"secondVariable": "Segunda variable",
+					"sourceVariable": "Seleccione la variable a copiar",
+					"variablesForAverage": "Seleccione variable(s)",
+					"variableToRecode": "Seleccione la variable a recodificar",
+					"variableToReverse": "Seleccione la variable a invertir"
+				},
+				"placeholders": {
+					"selectOperation": "Seleccionar operación",
+					"selectVariable": "Seleccionar variable",
+					"selectVariables": "Seleccione variable(s)"
+				},
+				"submit": "Añadir columna",
+				"title": "Agregar una columna"
+			},
+			"alt": {
+				"addColumn": "Agregar una columna",
+				"database": "Base de datos",
+				"return": "Devolver"
+			},
+			"downloadPrompt": "Dale un nombre al archivo CSV que vas a descargar.\nNo es necesario añadir la extensión '.csv', ¡nosotros nos encargamos!",
+			"header": {
+				"activeData": "Datos activos",
+				"untitledDataset": ""
+			},
+			"meta": {
+				"dataOrigin": "",
+				"lastUpdated": "",
+				"neverUpdated": ""
+			},
+			"operations": {
+				"computeNew": "Calcular nueva variable",
+				"copyExisting": "Copiar variable existente",
+				"recodeVariable": "Recodificar una variable",
+				"reverseScore": "Puntuación inversa"
+			},
+			"sections": {
+				"generalVariables": "Variables generales",
+				"taskVariables": "Variables de la tarea",
+				"userVariables": "Variables de usuario"
+			},
+			"variable": {
+				"delete": "",
+				"hideAria": "",
+				"rename": "",
+				"renamePrompt": "",
+				"showAria": ""
+			}
+		},
+		"datasets": {
+			"addDataset": "Agregar conjunto de datos",
+			"deleteConfirm": "¿Está seguro de que desea eliminar este conjunto de datos?",
+			"deleteDataset": "Eliminar conjunto de datos",
+			"deleteDisabledNotOwner": "Solo el creador de este conjunto de datos puede eliminarlo.",
+			"deleteDisabledPublicTemplate": "Este conjunto de datos está vinculado a una plantilla pública y no se puede eliminar.",
+			"deleteLabel": "BORRAR",
+			"deleting": "Borrando...",
+			"editLabel": "Editar conjunto de datos",
+			"errorLoading": "Error: {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "También en esta lista",
+				"otherTooltip": "Este conjunto de datos coincidió con el filtro de la lista de otra manera (por ejemplo, una plantilla pública). Es posible que no esté almacenado en este proyecto o estudio.",
+				"viaPartLabel": "Enlazado desde una parte",
+				"viaPartTooltip": "Este conjunto de datos no está almacenado directamente en este proyecto o estudio, pero al menos una sección de la revista en este espacio de trabajo lo utiliza.",
+				"workspaceLabel": "Este espacio de trabajo",
+				"workspaceTooltip": "Este conjunto de datos está almacenado en el proyecto o estudio actual.",
+				"yourLibraryLabel": "Su conjunto de datos",
+				"yourLibraryTooltip": "Usted creó este conjunto de datos, pero actualmente no está asociado a este proyecto o estudio. Aparece aquí para que pueda encontrarlo y reutilizarlo."
+			},
+			"listIntro": "Esta lista incluye conjuntos de datos almacenados en este espacio de trabajo, conjuntos de datos vinculados a través de partes del diario y sus propios conjuntos de datos para que pueda reutilizarlos.",
+			"loading": "Cargando conjuntos de datos...",
+			"meta": {
+				"byAuthor": "por {{author}}",
+				"byYou": "por ti",
+				"dataOrigin": "",
+				"lastUpdated": "Última actualización {{date}}",
+				"lastUpdatedNever": "Nunca",
+				"unknownAuthor": "Desconocido"
+			},
+			"originTooltip": "",
+			"untitled": "Conjunto de datos sin título"
+		},
+		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "Columna(s) a graficar",
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"googleSlidesAlt": "Presentaciones de Google",
+						"hintLong": "Si desea comparar columnas, haga clic aquí.",
+						"hintWide": "Si desea comparar diferentes grupos para una columna (variable), haga clic aquí.",
+						"longDescription": "Los datos se organizan de manera que cada observación (como la calificación de un estudiante) aparezca en una fila independiente, a menudo con una columna que indica las categorías (como las asignaturas). Este formato resulta útil para realizar análisis detallados entre categorías.",
+						"longTitle": "Formato de datos largo",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "Diseño de datos",
+						"slidesLink": "Haz clic aquí para ver las diapositivas de la presentación.",
+						"switchToLong": "Cambiar a formato largo",
+						"switchToWide": "Cambiar a formato ancho",
+						"toggleAriaLabel": "",
+						"wideDescription": "Los datos se organizan de forma que cada categoría (como las asignaturas) aparece en una columna independiente, y a menudo las filas representan las observaciones (como los estudiantes). Este formato facilita las comparaciones rápidas dentro de cada categoría.",
+						"wideTitle": "Formato de datos amplio"
+					},
+					"errBar95": "Intervalo de confianza del 95%",
+					"errBar99": "intervalo de confianza del 99%",
+					"errBarStdErr": "Error estándar",
+					"errorBar": "Barra de error",
+					"errorBarWide": "Barra de error",
+					"qualitativeColumn": "Columna cualitativa",
+					"quantitativeColumn": "Columna cuantitativa",
+					"resources": {
+						"barPlotAlt": "Enlace externo",
+						"barPlotTitle": "¿Qué es un gráfico de barras?",
+						"confidenceIntervalsAlt": "Enlace externo",
+						"confidenceIntervalsTitle": "Intervalos de confianza: ¿qué son?",
+						"standardErrorAlt": "Enlace externo",
+						"standardErrorTitle": "Más información sobre el error estándar"
+					}
+				},
+				"header": {
+					"iconAlt": "Ejes",
+					"title": "Ejes"
+				},
+				"help": {
+					"ariaLabel": "Recursos y ayuda",
+					"resourcesIntro": "Utilice los botones que aparecen a continuación para abrir una referencia en una nueva pestaña cuando haya un enlace disponible."
+				},
+				"histogram": {
+					"columnsToObserve": "Columna(s) a observar",
+					"groupByOptional": "Agrupar por (opcional: color por categoría)",
+					"marginalBox": "Diagrama de caja",
+					"marginalNone": "Ninguno",
+					"marginalPlot": "Trama marginal",
+					"marginalRug": "Parcela de alfombra",
+					"resources": {
+						"histogramAlt": "Enlace externo",
+						"histogramTitle": "¿Qué es un histograma?"
+					}
+				},
+				"scatterPlot": {
+					"group": "Grupo",
+					"resources": {
+						"scatterPlotAlt": "Recurso de diagrama de dispersión",
+						"scatterPlotTitle": "Diagrama de dispersión",
+						"trendlineAlt": "Enlace externo al recurso de la línea de tendencia",
+						"trendlineTitle": "Línea de tendencia"
+					},
+					"trendline": "Línea de tendencia",
+					"xAxis": "Eje X",
+					"yAxis": "Eje Y"
+				}
+			},
+			"codeEditor": {
+				"runCode": "Ejecuta el código"
+			},
+			"common": {
+				"axisSection": {
+					"x": "Eje X",
+					"y": "Eje Y"
+				},
+				"graphTitle": "Título del gráfico",
+				"label": "Etiqueta",
+				"legendTitle": "Título de la leyenda",
+				"legendTitleHint": "(Dejar en blanco si no es necesario)",
+				"legendTitleSection": "Título de la leyenda",
+				"marginalPlot": "Trama marginal",
+				"range": {
+					"label": "Rango",
+					"max": "Máximo",
+					"min": "Min."
+				},
+				"resources": {
+					"noLink": "No hay enlace externo",
+					"openLink": "Haz clic aquí para acceder al recurso."
+				}
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "Personaliza la apariencia y el diseño del gráfico.",
+					"title": "Opciones de estilo y diseño"
+				},
+				"tabs": {
+					"axes": "Ejes",
+					"codeEditor": "Editor de código",
+					"styleLayout": "Estilo y diseño"
+				}
+			},
+			"emptyState": {
+				"helper": "Haz clic en este componente para abrir el editor y, a continuación, elige las variables para previsualizar tu visualización.",
+				"title": "Tu gráfico está listo para ser configurado."
+			},
+			"fields": {
+				"clearSelection": "Ninguno",
+				"selectPlaceholder": "Seleccione {{field}}",
+				"selectVariablesPlaceholder": "Seleccione variable(s)"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- Formato HEX [#28619E], [#D53533]",
+						"examplesNames": "- Nombres de los colores: [rojo], [rosa]",
+						"examplesRgb": "- Valor RGB [100,255,0], [0,120,80]",
+						"heading": "Color",
+						"intro": "Especifique un color base para la barra (elimine los corchetes para usar los ejemplos a continuación)."
+					},
+					"header": {
+						"iconAlt": "Opciones",
+						"title": "Opciones"
+					},
+					"legendAndXAxisSection": "Etiquetas del eje X y título de la leyenda",
+					"yAxis": "Eje Y"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "Opciones",
+						"title": "Opciones"
+					},
+					"legendSection": "Leyenda",
+					"legendTitleCombined": "Título de la leyenda (dejar en blanco si no es necesario)",
+					"yAxis": "Eje Y"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "Opciones",
+						"title": "Opciones"
+					},
+					"marginal": {
+						"boxplot": "Diagrama de caja",
+						"none": "",
+						"rug": "Alfombra"
+					},
+					"yAxis": "Eje Y"
+				}
+			}
 		},
 		"hypVis": {
 			"axes": {
@@ -276,6 +575,16 @@
 					"rankHelpStep1": "Nombra cada condición usando el menú desplegable (¡puedes escribirla!).",
 					"rankHelpStep2": "Utilice el control deslizante del lado derecho de la etiqueta para indicar el rango esperado de la variable dependiente en esta condición en comparación con el resto.",
 					"rankSectionTitle": "Clasifique sus condiciones",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"rankOrdering": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionHypothesisTitle": "Tu hipótesis experimental",
 					"titleLabel": "Título",
 					"titlePlaceholder": "Efecto de la condición sobre la variable",
@@ -296,6 +605,16 @@
 					"fallbackIndependentVariable": "variable independiente",
 					"fallbackNumberOfConditions": "Número de"
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": ""
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "¡Copiado al portapapeles!",
 					"clipboardHypothesisCopied": "Texto copiado al portapapeles: {{text}}",
@@ -314,16 +633,46 @@
 					"iPredictThat": "Predigo que",
 					"loading": "Cargando...",
 					"loadingBlocks": "Cargando datos del bloque...",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"directionality": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionTitle": "Tu hipótesis de correlación",
 					"titleLabel": "Título",
 					"willBeRelatedTo": "estará relacionado con"
+				},
+				"default": {
+					"group": "",
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"xAxis": "",
+					"yAxis": ""
 				}
 			},
 			"editor": {
 				"codeTab": "Código",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": "Variables"
 			},
+			"emptyState": {
+				"helper": "Haz clic en este componente para abrir el editor y, a continuación, completa las variables para generar la visualización.",
+				"title": "Su visualizador de hipótesis está listo para ser configurado."
+			},
 			"helpAriaLabel": "Más información"
+		},
+		"paragraphEditor": {
+			"emptyInvite": "Haz clic aquí para empezar a escribir."
 		},
 		"settingsPanel": {
 			"deleteWidget": "Eliminar widget",
@@ -331,8 +680,297 @@
 			"notesPlaceholder": "Introduce tus notas aquí...",
 			"widgetSettings": "Configuración del widget"
 		},
+		"sideNav": {
+			"addComponent": "",
+			"addComponentAria": "",
+			"addJournal": "Diario",
+			"addJournalScratch": "Crea un diario desde cero",
+			"addJournalTemplate": "Agregar una plantilla de diario",
+			"addWorkspace": "Agregar espacio de trabajo",
+			"addWorkspaceDropdown": "Espacio de trabajo",
+			"addWorkspaceError": "Error al agregar espacio de trabajo",
+			"addWorkspaceLoading": "Añadiendo...",
+			"addWorkspaceScratch": "Crea un espacio de trabajo desde cero",
+			"addWorkspaceTemplate": "Agregar una plantilla de espacio de trabajo",
+			"backToJournal": "Volver al diario",
+			"collapsePanel": "Cerca",
+			"componentFallbackName": "Nombre del componente",
+			"dataOrigin": {
+				"SIMULATED": "Simulado",
+				"STUDY": "Datos del estudio",
+				"TEMPLATE": "Plantilla",
+				"UPLOADED": "Subido"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "Seleccione conjuntos de datos vinculados a esta revista.",
+				"many": "{{count}} conjuntos de datos vinculados",
+				"none": "No hay conjuntos de datos vinculados",
+				"one": "1 conjunto de datos vinculado"
+			},
+			"dataSourceLabel": "Fuentes de datos",
+			"dataSourceModal": {
+				"byAuthor": "por {{author}}",
+				"cancel": "Cancelar",
+				"closeModal": "Cerca",
+				"error": "Error: {{message}}",
+				"lastUpdated": "• Última actualización {{date}}",
+				"loading": "Cargando conjuntos de datos...",
+				"neverUpdated": "Nunca",
+				"noDatasets": "No se encontraron conjuntos de datos",
+				"save": "Ahorrar",
+				"saving": "Ahorro...",
+				"title": "Seleccione fuentes de datos",
+				"unknownAuthor": "Desconocido",
+				"untitledDataset": "Conjunto de datos sin título"
+			},
+			"defaultWorkspaceTitle": "Espacio de trabajo sin nombre",
+			"deleteJournal": "BORRAR",
+			"deleteJournalConfirm": "¿Está seguro de que desea eliminar este diario? Todos los espacios de trabajo y componentes de este diario también se eliminarán.",
+			"deleteJournalMissingId": "Este diario no se puede eliminar (falta el ID).",
+			"deleteJournalModalTitle": "Borrar diario",
+			"deleteWorkspace": "Eliminar espacio de trabajo",
+			"deleteWorkspaceConfirm": "¿Está seguro de que desea eliminar este espacio de trabajo? Todos los componentes que contiene también se eliminarán.",
+			"deleteWorkspaceMissingId": "Este espacio de trabajo no se puede eliminar (falta el ID).",
+			"deleteWorkspaceModalTitle": "Eliminar espacio de trabajo",
+			"editJournal": "Editar",
+			"editJournalCloseWithoutSaving": "Cerrar sin guardar",
+			"editJournalFieldDescription": "Descripción",
+			"editJournalFieldTitle": "Título",
+			"editJournalSaveClose": "Guardar y cerrar",
+			"editJournalTemplateCheckbox": "Crear una plantilla",
+			"editJournalTitle": "Editar diario",
+			"journalMore": "Opciones de revista",
+			"lastUpdatedAt": "Última actualización: {{date}}",
+			"manageDatasets": "Gestionar conjuntos de datos",
+			"noDataSources": "No hay fuentes de datos",
+			"noJournalsYet": "¡Parece que todavía no tienes ningún registro de datos!",
+			"renameWorkspace": "Cambiar el nombre del espacio de trabajo",
+			"renameWorkspaceModalTitle": "Cambiar el nombre del espacio de trabajo",
+			"renameWorkspaceSaving": "Ahorro...",
+			"templateModal": {
+				"copyError": "No se pudo crear a partir de la plantilla: {{message}}",
+				"copyTitlePrefix": "Copia de",
+				"datasetsMany": "{{count}} conjuntos de datos vinculados",
+				"datasetsNone": "No hay conjuntos de datos vinculados",
+				"datasetsOne": "1 conjunto de datos vinculado",
+				"empty": "Aún no hay plantillas disponibles. Marca una publicación como plantilla (administrador) o solicita a tu equipo que añada una.",
+				"loading": "Cargando plantillas...",
+				"missingJournal": "No hay ninguna colección de diarios disponible. Primero, crea un diario desde cero.",
+				"newCollectionTitle": "Colección de revistas sin nombre",
+				"queryError": "Error al cargar las plantillas: {{message}}",
+				"title": "Elige una plantilla de diario",
+				"useTemplate": "Usar plantilla"
+			},
+			"workspaceMore": "Opciones de espacio de trabajo"
+		},
+		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "Columna para resumir",
+					"dataLayout": {
+						"currentlyPerforming": "Actualmente resumiendo:",
+						"long": {
+							"description": "Cada observación es una fila. Elija una columna de valores para resumir y, opcionalmente, una columna que defina los grupos.",
+							"title": "Diseño de datos largo"
+						},
+						"summaryLong": {
+							"main": "Una columna de valores por fila con una columna de agrupación opcional (formato largo)."
+						},
+						"summaryWide": {
+							"between": "Múltiple",
+							"columns": "columnas en formato ancho (una variable por columna).",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "Cada variable a resumir corresponde a una columna independiente. Seleccione una o más columnas y, opcionalmente, una variable de agrupación.",
+							"title": "Diseño de datos amplio"
+						}
+					},
+					"groupingVariable": "Variable de agrupación",
+					"qualOption": {
+						"description": "Los datos cualitativos se representan en una columna con etiquetas. Por ejemplo, a qué condición experimental pertenece un sujeto o su respuesta a una pregunta de opción múltiple.",
+						"title": "Cambiar a datos cualitativos"
+					},
+					"quantOption": {
+						"description": "Los datos cuantitativos se representan en una columna con valores numéricos. Por ejemplo, la edad del participante o su puntuación en una encuesta.",
+						"title": "Cambiar a datos cuantitativos"
+					},
+					"resources": {
+						"googleSlidesAlt": "Presentaciones de Google",
+						"openLink": "Haz clic aquí para acceder al recurso.",
+						"sectionTitle": "Recursos",
+						"slidesLink": "Haz clic aquí para ver las diapositivas de la presentación.",
+						"tableWhatAlt": "Enlace externo",
+						"tableWhatTitle": "¿Qué es una mesa?"
+					},
+					"valueMode": {
+						"qualLabel": "Cualitativo",
+						"quantLabel": "Cuantitativo",
+						"triggerPrefix": "Tipo de valor de columna:",
+						"triggerSuffix": "(Haz clic aquí para cambiar)"
+					}
+				}
+			},
+			"editor": {
+				"tabs": {
+					"code": "Código",
+					"variables": "Variables"
+				}
+			},
+			"fields": {
+				"clearSelection": "Ninguno",
+				"qualColumnsLabel": "Columna(s) cualitativa(s)",
+				"quantColumnsLabel": "Columna(s) cuantitativa(s)",
+				"selectPlaceholder": "Seleccione {{field}}",
+				"selectVariablesPlaceholder": "Seleccione variable(s)"
+			}
+		},
+		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"hint": "",
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"hint": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": "",
+						"sectionTitle": ""
+					}
+				},
+				"default": {
+					"column1": "",
+					"column2": ""
+				},
+				"pearson": {
+					"predictedColumn": "",
+					"predictorColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"tTest": {
+					"col1": "",
+					"col2": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				}
+			},
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
+			"emptyState": {
+				"helper": "Haz clic en este componente para abrir el editor y, a continuación, elige las variables para calcular la prueba.",
+				"title": "Su prueba estadística está lista para ser configurada."
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
+			}
+		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "Limpiar todo",
+					"selectAll": "Seleccionar todo"
+				},
+				"description": "Seleccione rápidamente las columnas que debe mostrar esta tabla.",
+				"empty": "No hay columnas visibles disponibles en el conjunto de datos.",
+				"filters": {
+					"allValues": "Todos los valores",
+					"clear": "Limpiar filtros",
+					"close": "Cerca",
+					"description": "Las columnas numéricas utilizan valores mínimos y máximos. Las columnas categóricas utilizan un menú desplegable de valores.",
+					"dropdownAria": "Filtro {{column}}",
+					"filterSettings": "Filtrar",
+					"maxLabel": "Máximo",
+					"minLabel": "Min.",
+					"title": "Filtros simples",
+					"toggleAria": "Alternar filtros para {{column}}"
+				},
+				"search": {
+					"ariaLabel": "Columnas de búsqueda",
+					"noMatches": "No se encontraron columnas que coincidan con su búsqueda.",
+					"placeholder": "Columnas de búsqueda…"
+				},
+				"title": "Columnas"
+			}
+		},
 		"visualizationWidget": {
 			"unsupportedType": "Tipo de widget no compatible: {{type}}"
+		},
+		"workspaceArea": {
+			"error": "No se pudo cargar el espacio de trabajo: {{message}}",
+			"loading": "Cargando espacio de trabajo…"
 		}
 	},
 	"dataJournals": "Revistas",
@@ -574,6 +1212,7 @@
 	"myTasks": "Mis tareas",
 	"navigation": {
 		"back": "atrás",
+		"cloneSavePrompt": "Cambia el nombre del estudio y haz clic en el botón Guardar.",
 		"enoughComments": "¿Suficientes comentarios? ¡Avísale a los revisores!",
 		"enoughParticipants": "¿Suficientes participantes?",
 		"lockFeedback": "Comentarios de bloqueo",
@@ -1160,31 +1799,41 @@
 		"unlockedForParticipation": "El estudio fue desbloqueado para la participación."
 	},
 	"surveyBuilder": {
-		"addFirstPage": "Añade tu primera página",
-		"addItem": "+",
-		"addItemBtn": "+ artículo",
+		"addExamplePage": "Mostrar ejemplo",
+		"addFirstPage": "Añade tu primera página para comenzar a crear la encuesta",
+		"addItem": "Añadir pregunta",
+		"addItemBtn": "+ elemento",
 		"addOption": "+ opción",
-		"addPage": "+",
-		"block": "Bloquear",
-		"checkbox": "Opción múltiple (seleccione muchas opciones)",
-		"deletePage": "Eliminar esta página",
+		"addPage": "Añadir página",
+		"block": "Bloque",
+		"checkbox": "Opción múltiple (seleccionar varias)",
+		"deletePage": "Eliminar página",
 		"freeinput": "Entrada de texto",
-		"header": "Encabezamiento",
-		"hideContinueBtn": "Ocultar el botón Continuar",
-		"likert": "Escala de Likert",
-		"likertItems": "Elementos para la escala de Likert",
+		"header": "Encabezado",
+		"headerPlaceholder": "ej. Título de la pregunta que aparece encima del elemento",
+		"hideContinueBtn": "Ocultar botón Continuar",
+		"likert": "Escala Likert",
+		"likertItemPlaceholder": "Afirmación a valorar",
+		"likertItems": "Ítems de la escala Likert",
 		"maxValue": "Valor máximo",
-		"maxValueLabel": "Etiqueta de valor máximo",
+		"maxValueLabel": "Etiqueta del valor máximo",
+		"maxValueLabelPlaceholder": "ej. Mucho",
 		"minValue": "Valor mínimo",
-		"minValueLabel": "Etiqueta de valor mínimo",
+		"minValueLabel": "Etiqueta del valor mínimo",
+		"minValueLabelPlaceholder": "ej. Para nada",
+		"optionPlaceholder": "Texto de la opción",
 		"options": "Opciones",
-		"page": "Número de página}}",
-		"pageTimeout": "Tiempo de espera de la página (en milisegundos)",
-		"select": "Opción múltiple (seleccione una)",
+		"page": "Página {{number}}",
+		"pages": "Páginas",
+		"pageTimeout": "Tiempo de espera de página (en milisegundos)",
+		"preview": "Vista previa",
+		"select": "Opción múltiple (seleccionar una)",
 		"text": "Texto",
 		"textLabel": "Texto",
+		"textPlaceholder": "Introduzca texto descriptivo o instruccional que se muestra a los participantes",
 		"type": "Tipo",
-		"variableName": "Nombre de la variable",
+		"variableName": "Nombre de variable",
+		"variableNamePlaceholder": "ej. respuesta_1 (usado para almacenar la respuesta)",
 		"vas": "Escala visual"
 	},
 	"surveyDescription": "En una encuesta, a los participantes se les hacen preguntas sobre sí mismos, sobre cómo se comportan o sobre cómo se sienten.",

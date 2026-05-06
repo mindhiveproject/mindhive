@@ -11,10 +11,12 @@ import StatisticalTestEditor from "../Widgets/types/StatisticalTests/Editor/Stat
 import StatisticsEditor from "../Widgets/types/Statistics/Editor/StatisticsEditor";
 import CodeEditor from "../Widgets/types/Code/Editor/CodeEditor";
 import HypVisEditor from "../Widgets/types/HypVis/Editor/HypVisEditor";
+import TableEditor from "../Widgets/types/Table/Editor/TableEditor";
+import ParagraphEditor from "../Widgets/types/Paragraph/Editor/ParagraphEditor";
 import { figPngFileFromPyodide } from "../Widgets/types/HypVis/Editor/Axes/figHtmlFromPyodide";
 import { plotlyPngFileFromFigureSection } from "../Widgets/types/Graph/plotlyPngFileFromFigure";
 
-import { StyledRightPanel } from "../styles/StyledDataJournal"; // Adjust path if needed
+import { StyledComponentEditor } from "../styles/StyledDataJournal";
 
 /** Stored on MediaAsset.settings.createdWith for HypVis figure exports */
 function hypVisMediaCreatedWithKey(contentType) {
@@ -37,6 +39,7 @@ export default function ComponentEditor({
   onChange,
   onSave,
   onDelete,
+  onClose,
 }) {
   const { t } = useTranslation("builder");
   const {
@@ -55,8 +58,14 @@ export default function ComponentEditor({
   }, [activeComponent?.id]);
 
   const handleClosePanel = useCallback(
-    () => setActiveComponent(null),
-    [setActiveComponent],
+    () => {
+      if (typeof onClose === "function") {
+        onClose();
+        return;
+      }
+      setActiveComponent(null);
+    },
+    [onClose, setActiveComponent],
   );
 
   const closeSaveFigureModal = useCallback(() => {
@@ -151,31 +160,12 @@ export default function ComponentEditor({
   const renderEditor = () => {
     switch (type) {
       case "PARAGRAPH":
-        // Placeholder for Paragraph editor (e.g., simple textarea)
         return (
-          <div>
-            <h3>
-              {t("dataJournal.componentEditor.editParagraph", "Edit Paragraph")}
-            </h3>
-            <textarea
-              value={content?.text || ""}
-              onChange={(e) =>
-                onChange({
-                  componentId: id,
-                  newContent: { text: e.target.value },
-                })
-              }
-              style={{ width: "100%", height: "200px" }}
-            />
-          </div>
+          <ParagraphEditor content={content} onChange={onChange} sectionId={id} />
         );
       case "TABLE":
-        // Placeholder for Table editor (e.g., configure columns/filters)
         return (
-          <div>
-            {/* <h3>Edit Table</h3> */}
-            {/* Add table-specific config here */}
-          </div>
+          <TableEditor content={content} onChange={onChange} sectionId={id} />
         );
       case "GRAPH":
         return (
@@ -225,7 +215,7 @@ export default function ComponentEditor({
   };
 
   return (
-    <StyledRightPanel>
+    <StyledComponentEditor>
       <EditorHeader
         user={user}
         studyId={studyId}
@@ -238,7 +228,7 @@ export default function ComponentEditor({
         disableSaveFigureToMedia={!canSaveFigureToMedia}
         onSaveFigureToMedia={handleSaveFigureToMedia}
       />
-      {renderEditor()}
+      <div className="editorPanelBody">{renderEditor()}</div>
       {showSaveFigureModal ? (
         <MediaLibraryModal
           open={saveFigureModalOpen}
@@ -251,6 +241,6 @@ export default function ComponentEditor({
           onInsertMedia={() => {}}
         />
       ) : null}
-    </StyledRightPanel>
+    </StyledComponentEditor>
   );
 }

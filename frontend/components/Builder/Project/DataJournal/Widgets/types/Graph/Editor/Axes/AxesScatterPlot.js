@@ -1,12 +1,11 @@
-import { useState } from "react";
-import {
-  Icon,
-  AccordionTitle,
-  AccordionContent,
-  Accordion,
-} from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
+
+import SectionHeader from "../../../_shared/SectionHeader";
+import ResourcesTooltipResourceButtons from "../../../_shared/ResourcesHelpLinks";
 import SelectOne from "../Fields/SelectOne";
 import ToggleOne from "../Fields/ToggleOne";
+
+const G = "dataJournal.graph";
 
 export default function AxesScatterPlot({
   variables,
@@ -14,36 +13,43 @@ export default function AxesScatterPlot({
   selectors,
   onChange,
 }) {
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const { t } = useTranslation("builder");
 
-  const handleClick = (e, titleProps) => {
-    const { index } = titleProps;
-    const newIndex = activeIndex === index ? -1 : index;
-    setActiveIndex(newIndex);
-  };
+  const options = variables.map((variable) => ({
+    key: variable?.field,
+    value: variable?.displayName || variable?.field,
+    text: variable?.displayName || variable?.field,
+  }));
 
-  const options = [
-    ...variables.map((variable) => ({
-      key: variable?.field,
-      value: variable?.displayName || variable?.field,
-      text: variable?.displayName || variable?.field,
-    })),
-  ];
-
-  const resourcesList = [
+  const resourcesItems = [
     {
-      title: "Scatter Plot",
-      alt: "External link to trendline resource",
+      title: t(`${G}.axes.scatterPlot.resources.scatterPlotTitle`, {}, { default: "Scatter Plot" }),
+      alt: t(`${G}.axes.scatterPlot.resources.scatterPlotAlt`, {}, { default: "Scatter plot resource" }),
       img: "/assets/icons/visualize/externalNewTab.svg",
-      link: "",
+      link: "https://en.wikipedia.org/wiki/Scatter_plot",
     },
     {
-      title: "Trendline",
-      alt: "External link to trendline resource",
+      title: t(`${G}.axes.scatterPlot.resources.trendlineTitle`, {}, { default: "Trendline" }),
+      alt: t(`${G}.axes.scatterPlot.resources.trendlineAlt`, {}, {
+        default: "External link to trendline resource",
+      }),
       img: "/assets/icons/visualize/externalNewTab.svg",
       link: "https://www.storytellingwithdata.com/blog/2020/10/20/thoughts-on-trendlines#:~:text=A%20trendline%20is%20a%20line,data%20(e.g.%20regression%20analysis)",
     },
   ];
+
+  const openLinkLabel = t(`${G}.common.resources.openLink`, {}, {
+    default: "Click here to access the resource",
+  });
+  const noLinkHint = t(`${G}.common.resources.noLink`, {}, { default: "No external link" });
+
+  const helpAction = (
+    <ResourcesTooltipResourceButtons
+      items={resourcesItems}
+      openLinkLabel={openLinkLabel}
+      noLinkHint={noLinkHint}
+    />
+  );
 
   const onSelectorChange = ({ target }) => {
     onChange({
@@ -56,16 +62,20 @@ export default function AxesScatterPlot({
 
   return (
     <div className="selectors">
-      <div className="header">
-        <img src={`/assets/icons/visualize/axes.svg`} />
-        <div>Axes</div>
-      </div>
+      <SectionHeader
+        title={t(`${G}.axes.header.title`, {}, { default: "Axes" })}
+        iconSrc="/assets/icons/visualize/axes.svg"
+        iconAlt={t(`${G}.axes.header.iconAlt`, {}, { default: "Axes" })}
+        helpContent={<></>}
+        helpAction={helpAction}
+        helpAriaLabel={t(`${G}.axes.help.ariaLabel`, {}, { default: "Resources and help" })}
+      />
       <SelectOne
         sectionId={sectionId}
         options={options}
         selectors={selectors}
         onSelectorChange={onSelectorChange}
-        title="X-Axis"
+        title={t(`${G}.axes.scatterPlot.xAxis`, {}, { default: "X-Axis" })}
         parameter="xVariable"
       />
       <SelectOne
@@ -73,7 +83,7 @@ export default function AxesScatterPlot({
         options={options}
         selectors={selectors}
         onSelectorChange={onSelectorChange}
-        title="Y-Axis"
+        title={t(`${G}.axes.scatterPlot.yAxis`, {}, { default: "Y-Axis" })}
         parameter="yVariable"
       />
       <SelectOne
@@ -81,7 +91,7 @@ export default function AxesScatterPlot({
         options={options}
         selectors={selectors}
         onSelectorChange={onSelectorChange}
-        title="Group"
+        title={t(`${G}.axes.scatterPlot.group`, {}, { default: "Group" })}
         parameter="groupVariable"
       />
       <ToggleOne
@@ -89,42 +99,9 @@ export default function AxesScatterPlot({
         options={options}
         selectors={selectors}
         onSelectorChange={onSelectorChange}
-        title="Trend line"
+        title={t(`${G}.axes.scatterPlot.trendline`, {}, { default: "Trendline" })}
         parameter="trendLine"
       />
-      <Accordion>
-        <AccordionTitle
-          active={activeIndex === 0}
-          index={0}
-          onClick={handleClick}
-        >
-          <Icon name="dropdown" />
-          Resources
-        </AccordionTitle>
-        <AccordionContent active={activeIndex === 0}>
-          {resourcesList.map((option) => (
-            <a
-              className="resourcesCard"
-              href={option.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              key={option.link}
-            >
-              <img
-                className="resourcesCardImage"
-                src={option.img}
-                alt={option.alt}
-              />
-              <div>
-                <div className="resourcesCardTitle">{option.title}</div>
-                <div className="resourcesCardLink">
-                  Click here to access the resource
-                </div>
-              </div>
-            </a>
-          ))}
-        </AccordionContent>
-      </Accordion>
     </div>
   );
 }

@@ -32,8 +32,7 @@ elif X not in df.columns or Y not in df.columns:
         showarrow=False, font_size=16
     )
 else:
-    print(f"DEBUG: Using X='{X}', Y='{Y}', Group='{Group}', trendline={trendline}")
-    
+    brand_palette = ["#7D70AD", "#69BBC4", "#CF6D6A", "#F2BE42"]
     # OLD logic: participant grouping/aggregation
     if 'participant' not in df.columns and 'id' not in df.columns:
         userDefWide = True
@@ -45,6 +44,8 @@ else:
     cols_to_use = [X, Y]
     if Group and Group in df.columns:
         cols_to_use.append(Group)
+
+    if not userDefWide and 'participant' in df.columns and 'participant' not in cols_to_use: cols_to_use.append('participant')
 
     df_plot = df[cols_to_use].copy()
     df_plot.replace('NaN', np.nan, inplace=True)
@@ -66,9 +67,6 @@ else:
             grouped_df = df_plot.groupby('participant').agg({X: agg_func, Y: agg_func}).reset_index()
             has_group = False
 
-    print(f"DEBUG: grouped_df shape: {grouped_df.shape}, NaNs in X/Y: {grouped_df[X].isna().sum()}/{len(grouped_df)}, {grouped_df[Y].isna().sum()}/{len(grouped_df)}")
-    print(f"DEBUG: has_group={has_group}, use_trendline={trendline}")
-
     # Configuration
     marginalPlot = get_or_default(marginalPlot)
     optional_params = {
@@ -81,7 +79,12 @@ else:
     title = get_or_default(graphTitle, f"{X} vs {Y}")
     use_trendline = bool(trendline) and str(trendline).lower() not in ("none", "false", "")
     color_param = Group if has_group else None
-    color_seq_param = [get_or_default(color)] if get_or_default(color) and not has_group else None
+    user_color = get_or_default(color)
+    if user_color == "pink":
+        user_color = ""
+    color_seq_param = (
+        brand_palette if has_group else [user_color or brand_palette[0]]
+    )
     showlegend = has_group
 
     common_kwargs = {
@@ -91,21 +94,20 @@ else:
         "color": color_param,
         "color_discrete_sequence": color_seq_param,
         "title": title,
-        "template": "seaborn",
+        "template": "plotly_white",
         **optional_params
     }
 
     fig_kwargs = common_kwargs.copy()
     if use_trendline:
-        fig_kwargs["trendline"] = "lowess"
-        print("DEBUG: Adding lowess trendline")
+        fig_kwargs["trendline"] = "ols"
 
     fig = px.scatter(**fig_kwargs)
 
     # Bring trendline to front (common issue)
     if use_trendline:
         for trace in reversed(fig.data):
-            if 'lowess' in trace.name.lower():
+            if 'ols' in trace.name.lower():
                 fig.data = fig.data[-1:] + fig.data[:-1]
                 break
 
@@ -138,7 +140,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
-import matplotlib.colors as mcolors
 
 if 'isWide' not in locals():
     isWide = False
@@ -157,11 +158,6 @@ except (ModuleNotFoundError, AttributeError, NameError):
 def get_or_default(var_value, default=""):
     return var_value if var_value not in (None, "", "undefined") else default
 
-# ── Debug input values ───────────────────────────────────────────────────────
-print(f"DEBUG barGraph: isWide={isWide}, dataFormat='{dataFormat}'")
-print(f"DEBUG barGraph: colToPlot='{colToPlot}', qualCol='{qualCol}', quantCol='{quantCol}'")
-print(f"DEBUG barGraph: errBar='{errBar}', color='{color}'")
-
 # ── Prepare figure ───────────────────────────────────────────────────────────
 fig = go.Figure()
 
@@ -176,9 +172,7 @@ if isWide:
     else:
         columns = [c.strip() for c in str(colToPlot).split(",") if c.strip()]
         valid_columns = [col for col in columns if col in df.columns]
-        
-        print(f"DEBUG wide: requested={columns}, valid={valid_columns}")
-        
+
         if not valid_columns:
             fig.add_annotation(
                 text="None of the selected columns exist in the data",
@@ -272,20 +266,18 @@ if 'categories' in locals() and len(categories) > 0:
         'Mean': y_values,
         'Error': error_values
     })
+    brand_palette = ["#7D70AD", "#69BBC4", "#CF6D6A", "#F2BE42"]
     
     show_error = any(e > 0 for e in error_values) and errBar != ""
     
     # Color generation
-    base_color = get_or_default(color, "#636EFA")  # default plotly blue-ish
-    try:
-        base_rgb = mcolors.to_rgb(base_color)
-        base_hsv = mcolors.rgb_to_hsv(base_rgb)
-        colors = []
-        for i in range(len(categories)):
-            h = (base_hsv[0] + i * 0.618) % 1.0   # golden angle for harmony
-            colors.append(mcolors.to_hex(mcolors.hsv_to_rgb((h, base_hsv[1], base_hsv[2]))))
-    except:
-        colors = px.colors.qualitative.Plotly[:len(categories)]  # fallback
+    user_color = get_or_default(color)
+    if user_color == "pink":
+        user_color = ""
+
+    colors = [brand_palette[i % len(brand_palette)] for i in range(len(categories))]
+    if user_color:
+        colors[0] = user_color
     
     fig = px.bar(
         df_bar,
@@ -299,7 +291,7 @@ if 'categories' in locals() and len(categories) > 0:
             'Category': get_or_default(xLabel, "Categories"),
             'Mean': get_or_default(yLabel, "Mean Value")
         },
-        template="seaborn"
+        template="plotly_white"
     )
     
     fig.update_layout(
@@ -336,10 +328,6 @@ def get_or_default(var_value, default=""):
         return default
     return var_value
 
-# ── Debug inputs ─────────────────────────────────────────────────────────────
-print(f"DEBUG histogram: X='{X}', Group='{Group}', marginalPlot='{marginalPlot}'")
-print(f"DEBUG histogram: bargap={bargap}, color='{color}'")
-
 # ── Initialize empty figure ─────────────────────────────────────────────────
 fig = go.Figure()
 
@@ -350,6 +338,7 @@ if not X or X not in df.columns:
         showarrow=False, font_size=18
     )
 else:
+    brand_palette = ["#7D70AD", "#69BBC4", "#CF6D6A", "#F2BE42"]
     # Prepare data
     df[X] = pd.to_numeric(df[X], errors='coerce')
     df.replace('NaN', np.nan, inplace=True)
@@ -357,6 +346,12 @@ else:
     # Grouping / coloring
     color_param = Group if Group and Group in df.columns else None
     showlegend = bool(color_param)
+    user_color = get_or_default(color)
+    if user_color == "pink":
+        user_color = ""
+    color_sequence = (
+        brand_palette if color_param else [user_color or brand_palette[0]]
+    )
 
     # Marginal plots
     marginal = "rug" if marginalPlot == "rug" else "box" if marginalPlot == "box" else None
@@ -374,9 +369,9 @@ else:
         marginal=marginal,
         title=title,
         labels={X: x_title, "count": y_title},
-        template="seaborn",
+        template="plotly_white",
         opacity=0.75,
-        color_discrete_sequence=[color] if color and not color_param else None
+        color_discrete_sequence=color_sequence
     )
 
     # Apply layout settings (including bargap)

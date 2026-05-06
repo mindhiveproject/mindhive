@@ -107,46 +107,150 @@ export const StyledBuilderArea = styled.div`
     }
     .firstLine {
       display: grid;
-      grid-template-columns: 1fr auto;
+      align-items: center;
+      grid-template-columns: auto 1fr auto;
       grid-gap: 20px;
-      padding: 7px 10px;
+      padding: 8px 0px 8px 16px;
+      min-height: 55px;
       background: #ffffff;
       box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
+
       .leftPanel {
         display: grid;
-        grid-gap: 20px;
-        grid-template-columns: auto 1fr;
         align-items: center;
-        .studyVersion {
-          margin: 0px 10px;
-          color: grey;
-        }
       }
+
       .rightPanel {
-        display: grid;
-        grid-gap: 20px;
-        grid-template-columns: auto auto auto auto;
-        .saveFirstMessage {
-          padding: 10px 10px;
-          border-radius: 10px;
-          background: white;
-          color: #b9261a;
-          border: solid 1px #b9261a;
-        }
-        .icon {
-          display: grid;
-          align-items: center;
-          justify-items: center;
-          width: 42px;
-          height: 42px;
-          background: #f3f5f6;
-          border-radius: 20px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        padding-right: 16px;
+
+        .submitButton button {
           cursor: pointer;
+          padding: 8px 20px;
+          border-radius: 50px;
+          border: 2px solid #007c70;
+          background: #007c70;
+          color: #ffffff;
+          font-family: Lato;
+          font-size: 14px;
+          font-weight: 600;
+          white-space: nowrap;
+          &:hover {
+            background: #005a52;
+            border-color: #005a52;
+          }
         }
       }
     }
+    .middle {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: center;
+      min-width: 0;
+
+      span.studyTitle {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+        font-family: Inter;
+        font-size: 22px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 28px;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+    }
+    .right {
+      display: grid;
+      grid-template-columns: auto auto auto auto;
+      grid-gap: 10px;
+      align-items: center;
+
+      .saveFirstMessage {
+        padding: 10px 10px;
+        border-radius: 10px;
+        background: white;
+        color: #b9261a;
+        border: solid 1px #b9261a;
+      }
+      .icon {
+        display: grid;
+        align-items: center;
+        justify-items: center;
+        width: 42px;
+        height: 42px;
+        background: #f3f5f6;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+    }
     .secondLine {
-      /* Second line styling is provided by child components (e.g. project journey tabs) */
+      padding: 0 8px;
+      background: #f6f9f8;
+      border-bottom: 1px solid #e6e6e6;
+      border-top: 1px solid #e6e6e6;
+
+      .menu {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .menuTitle {
+        display: flex;
+        align-items: center;
+        padding: 0px 8px 8px 8px;
+        border-bottom: 4px solid transparent;
+        cursor: pointer;
+
+        .titleWithIcon {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          white-space: nowrap;
+
+          img {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+          }
+
+          p {
+            font-family: Inter, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            color: #171717;
+            margin: 0;
+          }
+        }
+      }
+
+      .selectedMenuTitle {
+        border-bottom-color: #f2be42;
+      }
+
+      @media (max-width: 800px) {
+        .menu {
+          flex-wrap: wrap;
+          row-gap: 8px;
+        }
+
+        .menuTitle {
+          flex: 1 1 45%;
+        }
+
+        .menuTitle .titleWithIcon {
+          white-space: normal;
+        }
+      }
     }
   }
   .board {

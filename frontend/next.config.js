@@ -49,19 +49,36 @@ const securityHeaders = [
       // files.pythonhosted.org: Pyodide micropip downloads wheel files from here
       "connect-src 'self' http://localhost:4444 https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science https://cdn.jsdelivr.net https://pypi.org https://files.pythonhosted.org https://api.cloudinary.com",
       // iframes for Google OAuth popup
-      "frame-src 'self' https://accounts.google.com",
+      "frame-src 'self' https://accounts.google.com https://docs.google.com https://drive.google.com https://calendar.google.com https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com",
       // Workers needed by Pyodide (blob: for inline workers, cdn.jsdelivr.net for Pyodide worker scripts)
       "worker-src 'self' blob: https://cdn.jsdelivr.net",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
+      // Clickjacking: restrict who may embed this site in a frame
+      "frame-ancestors 'self'",
     ].join("; "),
+  },
+  {
+    // Google OAuth uses a popup that posts back via window.opener.
+    // 'same-origin' would sever that channel; 'same-origin-allow-popups' keeps
+    // OAuth working while blocking external pages from adopting our opener.
+    key: "Cross-Origin-Opener-Policy",
+    value: "same-origin-allow-popups",
+  },
+  {
+    // Frontend (mindhive.science) and backend (backend.mindhive.science) share
+    // the same registrable domain, so 'same-site' permits cross-subdomain
+    // fetches while blocking cross-origin spectre-style reads.
+    key: "Cross-Origin-Resource-Policy",
+    value: "same-site",
   },
 ];
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  poweredByHeader: false,
   // Non-production: browser Apollo uses same-origin /api/graphql (see config.js). Proxy to Keystone.
   // `npm run dev` runs `node server` without NODE_ENV=development; rewrites must still apply.
   // Omit when NODE_ENV=production — client uses https://backend.mindhive.science via withData.js.

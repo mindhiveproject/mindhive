@@ -1,8 +1,10 @@
 // components/DataJournal/Widgets/types/Graph/Render.js
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import useTranslation from "next-translate/useTranslation";
 
 import JustOneSecondNotice from "../../../../../../DesignSystem/JustOneSecondNotice";
+import { useWidgetSize } from "../../WidgetSizeContext";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
@@ -13,9 +15,21 @@ export default function Render({
   content,
   onFigureReadyChange,
 }) {
+  const { t } = useTranslation("builder");
+  const { width, height, version } = useWidgetSize();
+  const graphDivRef = useRef(null);
   const [figJson, setFigJson] = useState(null);
   const [error, setError] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
+  const graphType = content?.type;
+
+  const getGraphEmptyStateImageSrc = (type) => {
+    if (type === "barGraph") return "/assets/dataviz/componentPanel/barChart.svg";
+    if (type === "scatterPlot")
+      return "/assets/dataviz/componentPanel/scatterPlot.svg";
+    if (type === "histogram") return "/assets/dataviz/componentPanel/histogram.svg";
+    return "/assets/dataviz/componentPanel/barChart.svg";
+  };
 
   useEffect(() => {
     async function renderGraph() {
@@ -157,7 +171,22 @@ bargap = ${Number(s.bargap ?? 0.1)}
             .trim();
         };
 
-        const userCodeDedented = dedentCode(code);
+        let userCodeDedented = dedentCode(code);
+
+        // Persisted scatter templates: ensure participant is in cols_to_use before groupby (indent-safe).
+        if (
+          type === "scatterPlot" &&
+          userCodeDedented &&
+          /groupby\(\s*['"]participant['"]\s*\)/.test(userCodeDedented) &&
+          !/participant['"] not in cols_to_use/.test(userCodeDedented) &&
+          /df_plot\s*=\s*df\[cols_to_use\]\.copy\(\)/.test(userCodeDedented)
+        ) {
+          userCodeDedented = userCodeDedented.replace(
+            /^(\s*)(df_plot\s*=\s*df\[cols_to_use\]\.copy\(\))/m,
+            (match, indent, dfLine) =>
+              `${indent}if not userDefWide and 'participant' in df.columns and 'participant' not in cols_to_use: cols_to_use.append('participant')\n${indent}${dfLine}`,
+          );
+        }
 
         const pythonCode = `
 def ${funcName}():
@@ -171,7 +200,6 @@ ${
     return fig_json_output if 'fig_json_output' in locals() else None
 
 ${outputVar} = ${funcName}()
-print("[DEBUG ${sectionId}] fig_json_output exists:", ${outputVar} is not None)
         `.trim();
 
         await pyodide.runPythonAsync(pythonCode);
@@ -203,6 +231,15 @@ print("[DEBUG ${sectionId}] fig_json_output exists:", ${outputVar} is not None)
     renderGraph();
   }, [pyodide, code, sectionId, content, onFigureReadyChange]);
 
+  const hasPlotData = Boolean(figJson?.data?.length);
+
+  // Grid/widget container resize does not fire window.resize; Plotly listens on window.
+  // Synthetic resize triggers react-plotly's useResizeHandler so the SVG tracks the widget.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(new Event("resize"));
+  }, [width, height, version, hasPlotData]);
+
   return (
     <div
       className="graphArea"
@@ -218,11 +255,87 @@ print("[DEBUG ${sectionId}] fig_json_output exists:", ${outputVar} is not None)
           data={figJson.data}
           layout={figJson.layout}
           config={{ responsive: true }}
+          useResizeHandler
+          onInitialized={(_, graphDiv) => {
+            graphDivRef.current = graphDiv;
+          }}
+          onUpdate={(_, graphDiv) => {
+            graphDivRef.current = graphDiv;
+          }}
           style={{ width: "100%", height: "100%" }}
         />
       ) : (
-        <div style={{ padding: "2rem", textAlign: "center", color: "#666" }}>
-          Select variables to render the graph
+        <div
+          style={{
+            padding: "2rem",
+            textAlign: "center",
+            color: "#4b5563",
+            display: "flex",
+            flexDirection: "row",
+            flex: 1,
+            minHeight: 0,
+            gap: "0.5rem",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#DEF8FB",
+            borderRadius: "12px",
+            border: "1px solid #A1A1A1",
+            height: "100%",
+            overflow: "clip",
+          }}
+     
+        >
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "0.75rem",
+              marginBottom: "1rem",
+            }}
+          >
+            <div style={{ fontWeight: 600, fontSize: "16px", textAlign: "left" }}>
+              {t(
+                "dataJournal.graph.emptyState.title",
+                {},
+                { default: "Your graph is ready to be configured" },
+              )}
+            </div>
+            <img
+              src={getGraphEmptyStateImageSrc(graphType)}
+              alt={t(
+                "dataJournal.graph.emptyState.title",
+                {},
+                { default: "Your graph is ready to be configured" },
+              )}
+              style={{
+                width: "88px",
+                height: "56px",
+                objectFit: "contain",
+                flexShrink: 0,
+              }}
+            />
+          </div>
+          {/* <div
+            style={{
+              background: "#ffffff",
+              padding: "0.35rem 0.65rem",
+              borderRadius: "6px",
+              color: "#3f3f46",
+              fontSize: "14px",
+              border: "2px solid #A1A1A1",
+            }}
+          >
+            {t(
+              "dataJournal.graph.emptyState.helper",
+              {},
+              {
+                default:
+                  "Click this component to open the editor, then choose variables to preview your visualization.",
+              },
+            )}
+          </div> */}
         </div>
       )}
     </div>

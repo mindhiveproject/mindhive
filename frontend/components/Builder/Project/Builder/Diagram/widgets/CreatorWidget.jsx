@@ -39,7 +39,13 @@ export const CreatorWidget = props => {
 
   const onNodeDrop = event => {
     const dataString = event.dataTransfer.getData('storm-diagram-node');
-    const data = JSON.parse(dataString);
+    if (!dataString) return;
+    let data;
+    try {
+      data = JSON.parse(dataString);
+    } catch (e) {
+      return;
+    }
 
     // adding new component
     if (data.type === 'component') {

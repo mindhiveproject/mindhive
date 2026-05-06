@@ -1,6 +1,6 @@
 // Updated file: components/DataJournal/Journal.js
 import { useQuery } from "@apollo/client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 import { GET_DATA_JOURNAL } from "../../../Queries/DataJournal";
 import { StyledDataJournal } from "./styles/StyledDataJournal";
@@ -136,17 +136,67 @@ export default function Journal({
     registerData();
   }, [pyodide, mergedData, setData, setVariables, setSettings, initDataLength]);
 
+  const chapterIdsKey = (journal?.vizChapters || [])
+    .map((w) => w?.id)
+    .filter(Boolean)
+    .join(",");
+
+  /** Tracks last seen chapter id set per journal so we can focus a newly created workspace. */
+  const workspaceListBaselineRef = useRef({ journalId: null, chapterIdsKey: "" });
+
   useEffect(() => {
-    function initWorkspace() {
-      if (workspaces && workspaces.length) {
-        const w = workspaces[0]; // Set the first workspace as the current one
-        setSelectedWorkspace(w);
+    const list = journal?.vizChapters || [];
+    const baseline = workspaceListBaselineRef.current;
+    const switchedJournal = baseline.journalId !== journalId;
+
+    if (!journalId) {
+      workspaceListBaselineRef.current = { journalId: null, chapterIdsKey: "" };
+      setSelectedWorkspace(null);
+      return;
+    }
+
+    const prevKey = baseline.chapterIdsKey;
+    workspaceListBaselineRef.current = {
+      journalId,
+      chapterIdsKey: chapterIdsKey,
+    };
+
+    if (!list.length) {
+      workspaceListBaselineRef.current = {
+        journalId,
+        chapterIdsKey: "",
+      };
+      setSelectedWorkspace(null);
+      return;
+    }
+
+    if (switchedJournal) {
+      setSelectedWorkspace((prev) => {
+        if (prev?.id) {
+          const match = list.find((w) => w?.id === prev.id);
+          if (match) return match;
+        }
+        return list[0];
+      });
+      return;
+    }
+
+    const prevIds = new Set(prevKey.split(",").filter(Boolean));
+    const added = list.filter((w) => w?.id && !prevIds.has(w.id));
+
+    if (prevKey && added.length > 0) {
+      setSelectedWorkspace(added[added.length - 1]);
+      return;
+    }
+
+    setSelectedWorkspace((prev) => {
+      if (prev?.id) {
+        const match = list.find((w) => w?.id === prev.id);
+        if (match) return match;
       }
-    }
-    if (workspaces && workspaces.length) {
-      initWorkspace();
-    }
-  }, [workspaces.length, setSelectedWorkspace]);
+      return list[0];
+    });
+  }, [journalId, chapterIdsKey, journal?.updatedAt, setSelectedWorkspace]);
 
   const selectWorkspaceById = ({ id }) => {
     const workspace = workspaces.find((w) => w?.id === id);

@@ -296,6 +296,7 @@
 		"descGoToResourcesCenter": "تتيح لك هذه الصفحة ربط الموارد ببطاقات لوحة المشروع الخاصة بك - لإدارة الموارد، انتقل إلى مركز الموارد.",
 		"description": "وصف",
 		"duplicate": "ينسخ",
+		"duplicateResource": "مورد مكرر",
 		"edit": "يحرر",
 		"editExistingResource": "متابعة مع الإصدار المخصص الخاص بي",
 		"editResource": "تحرير المورد",
@@ -363,6 +364,7 @@
 		"save": "يحفظ",
 		"saveChanges": "حفظ التغييرات",
 		"savedRessource": "تم حفظ المورد",
+		"saveDuplicate": "حفظ نسخة مكررة",
 		"saveOwnRessource": "احفظ كمورد خاص بك",
 		"searchPlaceholder": "البحث حسب العنوان أو الوصف...",
 		"searchPlaceholderUser": "البحث حسب اسم المستخدم MindHive",
@@ -564,9 +566,12 @@
 	"emailAddress": "عنوان البريد الإلكتروني",
 	"header": {
 		"addDescription": "اضف وصفا",
+		"mentors": "الموجهون",
+		"mentorsPanelTooltip": "حسابات الموجهين المرتبطة بهذه الدورة.",
 		"save": "يحفظ",
 		"teacher": "مدرس",
-		"titleFallback": ""
+		"teacherAccountTooltip": "معلم الصف.",
+		"titleFallback": "فئة بدون عنوان"
 	},
 	"homework": {
 		"allEntries": "جميع المشاركات",
@@ -607,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "المهام",
+		"classSectionsNav": "أقسام الصفوف",
 		"dashboard": "لوحة القيادة",
 		"mentors": "المرشدين",
 		"projects": "المشاريع",

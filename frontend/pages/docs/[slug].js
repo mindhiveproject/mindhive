@@ -60,7 +60,16 @@ export const getStaticProps = async (context) => {
 
   const markdownWithMetadata = fs.readFileSync(filePath).toString();
   const parsedMarkdown = matter(markdownWithMetadata);
-  const htmlString = marked(parsedMarkdown.content);
+  const rawHtml = marked(parsedMarkdown.content);
+  // Ensure all external links opened in a new tab include rel="noopener noreferrer"
+  // to prevent the opened page from accessing window.opener.
+  const htmlString = rawHtml.replace(
+    /(<a\b[^>]*)\btarget="_blank"\b([^>]*>)/gi,
+    (_, before, after) =>
+      /\brel=/i.test(before + after)
+        ? _
+        : `${before}target="_blank" rel="noopener noreferrer"${after}`
+  );
   return {
     props: {
       content: htmlString,

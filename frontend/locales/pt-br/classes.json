@@ -296,6 +296,7 @@
 		"descGoToResourcesCenter": "Esta página permite que você vincule recursos aos cartões do seu quadro de projeto - para gerenciar recursos, acesse o centro de recursos.",
 		"description": "Descrição",
 		"duplicate": "Duplicado",
+		"duplicateResource": "Recurso duplicado",
 		"edit": "Editar",
 		"editExistingResource": "Continue com a minha versão personalizada.",
 		"editResource": "Editar recurso",
@@ -363,6 +364,7 @@
 		"save": "Salvar",
 		"saveChanges": "Salvar alterações",
 		"savedRessource": "O recurso é salvo",
+		"saveDuplicate": "Salvar duplicado",
 		"saveOwnRessource": "Salvar como seu próprio recurso",
 		"searchPlaceholder": "Pesquise por título ou descrição...",
 		"searchPlaceholderUser": "Pesquisar por nome de usuário MindHive",
@@ -564,9 +566,12 @@
 	"emailAddress": "Endereço de email",
 	"header": {
 		"addDescription": "Adicionar descrição",
+		"mentors": "Mentores",
+		"mentorsPanelTooltip": "Contas de mentores associadas a esta turma.",
 		"save": "Salvar",
 		"teacher": "Professor",
-		"titleFallback": ""
+		"teacherAccountTooltip": "Professor(a) da turma.",
+		"titleFallback": "Classe sem título"
 	},
 	"homework": {
 		"allEntries": "Todas as inscrições",
@@ -607,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "Tarefas",
+		"classSectionsNav": "Turmas",
 		"dashboard": "Painel",
 		"mentors": "Mentores",
 		"projects": "Projetos",

@@ -182,7 +182,7 @@ export default function TaskParameters({
           )}
           {!isInStudyBuilder && (
             <div>
-              <button onClick={setParametersFromTemplate}>
+              <button className="secondaryActionBtn" onClick={setParametersFromTemplate}>
                 {t(
                   "parameters.getFromTemplate",
                   "Get parameters from the template"

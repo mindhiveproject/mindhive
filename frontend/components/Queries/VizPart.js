@@ -23,6 +23,14 @@ export const VIZPART_TEMPLATES = gql`
           content
         }
       }
+      datasources {
+        id
+        title
+        description
+        dataOrigin
+        settings
+        content
+      }
       createdAt
       updatedAt
     }

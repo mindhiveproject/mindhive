@@ -1,9 +1,13 @@
 // components/DataJournal/Datasets/Main.js
 import { useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import useTranslation from "next-translate/useTranslation";
 
+import { buildDatasourcesWhere } from "../../../../../lib/dataJournalDatasources";
 import { useDataJournal } from "../Context/DataJournalContext";
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
+
+import Button from "../../../../DesignSystem/Button";
 
 import AddDataset from "./AddDataset";
 import DatasetCard from "./DatasetCard";
@@ -11,49 +15,46 @@ import EditDataset from "./EditDataset";
 import DatasetView from "./View/Main";
 
 import {
-  StyledDataArea,
-  StyledDataJournal,
-  StyledRightPanel,
+  StyledDatasetsRoot,
   StyledDatasetGrid,
-  StyledAddDataset,
-} from "../styles/StyledDataJournal"; // Adjust if extracting to Datasets/styles.js
+} from "../styles/StyledDataJournal";
 
 export default function Datasets() {
+  const { t } = useTranslation("builder");
   const { user, projectId, studyId } = useDataJournal();
 
+  const datasourcesWhere = useMemo(
+    () => buildDatasourcesWhere({ projectId, studyId, userId: user?.id }),
+    [projectId, studyId, user?.id],
+  );
+
   const { data, loading, error, refetch } = useQuery(GET_DATASOURCES, {
-    variables: {
-      where:
-        projectId && studyId
-          ? {
-              OR: [
-                { project: { id: { equals: projectId } } },
-                { study: { id: { equals: studyId } } },
-              ],
-            }
-          : projectId
-          ? { project: { id: { equals: projectId } } }
-          : studyId
-          ? { study: { id: { equals: studyId } } }
-          : null,
-    },
+    variables: { where: datasourcesWhere },
   });
 
   const datasources = data?.datasources || [];
   const [showAddDataset, setShowAddDataset] = useState(false);
   const [editingDataset, setEditingDataset] = useState(null);
-  const [viewingDataset, setViewingDataset] = useState(null);
+  const [viewingDatasetId, setViewingDatasetId] = useState(null);
+
+  const viewingDataset = useMemo(
+    () =>
+      viewingDatasetId
+        ? datasources.find((d) => d.id === viewingDatasetId) || null
+        : null,
+    [datasources, viewingDatasetId],
+  );
 
   const handleAddDataset = () => {
     setShowAddDataset(true);
     setEditingDataset(null);
-    setViewingDataset(null);
+    setViewingDatasetId(null);
   };
 
   const handleCancel = () => {
     setShowAddDataset(false);
     setEditingDataset(null);
-    setViewingDataset(null);
+    setViewingDatasetId(null);
   };
 
   const handleCreate = (newDatasource) => {
@@ -62,58 +63,95 @@ export default function Datasets() {
 
   const handleEdit = (dataset) => {
     setShowAddDataset(false);
-    setViewingDataset(null);
+    setViewingDatasetId(null);
     setEditingDataset(dataset);
   };
 
   const handleView = (dataset) => {
     setShowAddDataset(false);
     setEditingDataset(null);
-    setViewingDataset(dataset);
+    setViewingDatasetId(dataset?.id || null);
   };
 
-  if (loading) return <div>Loading datasets...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (loading) {
+    return (
+      <div>
+        {t("dataJournal.datasets.loading", {}, { default: "Loading datasets…" })}
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div>
+        {t(
+          "dataJournal.datasets.errorLoading",
+          { message: error.message },
+          { default: "Error: {{message}}" },
+        )}
+      </div>
+    );
+  }
 
   return (
-    <StyledDataArea>
-      <StyledDataJournal>
-        <StyledRightPanel>
-          {!showAddDataset && !editingDataset && !viewingDataset ? (
-            <div className="datasets">
-              <StyledDatasetGrid>
-                {datasources.map((datasource) => (
-                  <DatasetCard
-                    key={datasource.id}
-                    datasource={datasource}
-                    onEdit={handleEdit}
-                    onView={handleView}
-                  />
-                ))}
-              </StyledDatasetGrid>
-              <StyledAddDataset onClick={handleAddDataset}>
-                + Add dataset
-              </StyledAddDataset>
-            </div>
-          ) : showAddDataset ? (
-            <AddDataset
-              projectId={projectId}
-              studyId={studyId}
-              onCancel={handleCancel}
-              onCreate={handleCreate}
-              refetchDatasources={refetch}
-            />
-          ) : editingDataset ? (
-            <EditDataset
-              dataset={editingDataset}
-              onCancel={handleCancel}
-              refetchDatasources={refetch}
-            />
-          ) : (
-            <DatasetView dataset={viewingDataset} onCancel={handleCancel} />
-          )}
-        </StyledRightPanel>
-      </StyledDataJournal>
-    </StyledDataArea>
+    <StyledDatasetsRoot>
+      {!showAddDataset && !editingDataset && !viewingDatasetId ? (
+        <div className="datasets">
+          <p className="datasets-list-intro">
+            {t("dataJournal.datasets.listIntro", {}, {
+              default:
+                "This list includes datasets stored on this workspace, datasets linked through journal parts, and your own datasets so you can reuse them.",
+            })}
+          </p>
+          <StyledDatasetGrid>
+            {datasources.map((datasource) => (
+              <DatasetCard
+                key={datasource.id}
+                datasource={datasource}
+                user={user}
+                projectId={projectId}
+                studyId={studyId}
+                onEdit={handleEdit}
+                onView={handleView}
+              />
+            ))}
+          </StyledDatasetGrid>
+          <div className="add-dataset-row">
+            <Button
+              variant="tonal"
+              leadingIcon={
+                <img
+                  src="/assets/icons/add.svg"
+                  alt=""
+                  aria-hidden
+                  width={18}
+                  height={18}
+                  // style={{ filter: "brightness(0) invert(1)" }}
+                />
+              }
+              onClick={handleAddDataset}
+            >
+              {t("dataJournal.datasets.addDataset", {}, { default: "Add dataset" })}
+            </Button>
+          </div>
+        </div>
+      ) : showAddDataset ? (
+        <AddDataset
+          projectId={projectId}
+          studyId={studyId}
+          onCancel={handleCancel}
+          onCreate={handleCreate}
+          refetchDatasources={refetch}
+        />
+      ) : editingDataset ? (
+        <EditDataset
+          dataset={editingDataset}
+          user={user}
+          onCancel={handleCancel}
+          refetchDatasources={refetch}
+        />
+      ) : viewingDataset ? (
+        <DatasetView dataset={viewingDataset} onSaved={refetch} />
+      ) : null}
+    </StyledDatasetsRoot>
   );
 }

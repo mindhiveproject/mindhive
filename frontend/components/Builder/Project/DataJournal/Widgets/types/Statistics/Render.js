@@ -1,11 +1,19 @@
 // components/DataJournal/Widgets/types/Statistics/Render.js
 import { useEffect, useState } from "react";
 import { Message, Icon, Table } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Render({ code, pyodide, sectionId, content }) {
+  const { t } = useTranslation("builder");
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const summaryType = content?.type;
+
+  const getStatisticsEmptyStateImageSrc = (type) => {
+    if (type === "summary") return "/assets/dataviz/componentPanel/summary.svg";
+    return "/assets/dataviz/componentPanel/summary.svg";
+  };
 
   const escapePy = (val) => {
     if (val == null || val === "") return "";
@@ -22,20 +30,33 @@ export default function Render({ code, pyodide, sectionId, content }) {
 
       const s = content.selectors || {};
 
-      // For summary: we expect quantCols (comma-separated), groupVariable, dataType
-      let variablesCode = "";
-      let hasRequired = !!s.colMultiple; // minimal requirement
+      const dataLayout = s.dataLayout === "long" || s.dataLayout === "wide" ? s.dataLayout : "wide";
+      const valueMode =
+        s.valueMode === "quant" || s.valueMode === "qual"
+          ? s.valueMode
+          : s.dataFormat === "quant" || s.dataFormat === "qual"
+            ? s.dataFormat
+            : s.dataType === "quant" || s.dataType === "qual"
+              ? s.dataType
+              : "quant";
 
-      if (!hasRequired) {
+      let quantColsStr = "";
+      if (dataLayout === "long") {
+        quantColsStr = s.valCol != null && s.valCol !== "" ? String(s.valCol) : "";
+      } else {
+        quantColsStr = Array.isArray(s.colMultiple) ? s.colMultiple.join(",") : "";
+      }
+
+      if (!quantColsStr) {
         setResult(null);
         setIsRunning(false);
         return;
       }
 
-      variablesCode = `
-quantCols = "${escapePy(s.colMultiple?.join(",") || "")}"
+      const variablesCode = `
+quantCols = "${escapePy(quantColsStr)}"
 groupVariable = "${escapePy(s.groupVariable || "")}"
-dataType = "${escapePy(s.dataFormat || "quant")}"
+dataType = "${escapePy(valueMode)}"
 `;
 
       setIsRunning(true);
@@ -141,18 +162,74 @@ ${funcName}()
     return (
       <div
         style={{
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#718096",
-          fontStyle: "italic",
           padding: "2rem",
           textAlign: "center",
+          color: "#4b5563",
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          minHeight: 0,
+          gap: "0.5rem",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#DEF8FB",
+          borderRadius: "12px",
+          border: "1px solid #A1A1A1",
+          height: "100%",
+          overflow: "clip",
         }}
       >
-        Select columns (and optional grouping variable) in the editor panel to
-        compute summary
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "0.75rem",
+            marginBottom: "1rem",
+          }}
+        >
+          <div style={{ fontWeight: 600, fontSize: "16px", textAlign: "left" }}>
+            {t(
+              "dataJournal.statistics.emptyState.title",
+              {},
+              { default: "Your summary is ready to be configured" },
+            )}
+          </div>
+          <img
+            src={getStatisticsEmptyStateImageSrc(summaryType)}
+            alt={t(
+              "dataJournal.statistics.emptyState.title",
+              {},
+              { default: "Your summary is ready to be configured" },
+            )}
+            style={{
+              width: "88px",
+              height: "56px",
+              objectFit: "contain",
+              flexShrink: 0,
+            }}
+          />
+        </div>
+        {/* <div
+          style={{
+            background: "#ffffff",
+            padding: "0.35rem 0.65rem",
+            borderRadius: "6px",
+            color: "#3f3f46",
+            fontSize: "14px",
+            border: "2px solid #A1A1A1",
+          }}
+        >
+          {t(
+            "dataJournal.statistics.emptyState.helper",
+            {},
+            {
+              default:
+                "Click this component to open the editor, then select columns (and optional grouping) to compute the summary.",
+            },
+          )}
+        </div> */}
       </div>
     );
   }
@@ -192,11 +269,11 @@ ${funcName}()
           color: "#2d3748",
         }}
       >
-        {result.title || "Dataset Summary"}
+        {result.title || "Summary"}
       </h3>
 
       {/* Overall dataset info */}
-      {result.overall && (
+      {/* {result.overall && (
         <div style={{ marginBottom: "1.5rem", textAlign: "center" }}>
           <p style={{ fontSize: "1.1em", color: "#4a5568" }}>
             <strong>{result.overall.n_rows}</strong> rows ×{" "}
@@ -210,7 +287,7 @@ ${funcName}()
             )}
           </p>
         </div>
-      )}
+      )} */}
 
       {/* Per-column summaries */}
       {result.columns?.map((col, idx) => (
@@ -341,7 +418,7 @@ ${funcName}()
       ))}
 
       {/* Footer note */}
-      <p
+      {/* <p
         style={{
           textAlign: "center",
           color: "#718096",
@@ -351,7 +428,7 @@ ${funcName}()
       >
         Summary based on selected columns. Missing values excluded from
         calculations.
-      </p>
+      </p> */}
     </div>
   );
 }

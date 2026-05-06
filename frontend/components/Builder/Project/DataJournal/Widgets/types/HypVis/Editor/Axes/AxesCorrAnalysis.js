@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
@@ -7,27 +7,21 @@ import {
   GET_BLOCK_AGGVAR,
 } from "../../../../../../../../Queries/Study";
 
-import InfoTooltip from "../../../../../../../../DesignSystem/InfoTooltip";
+import ResourcesTooltipResourceButtons from "../../../_shared/ResourcesHelpLinks";
+import SectionHeader from "../../../_shared/SectionHeader";
 import AggregateVarSelector from "../Fields/AggregateVarSelector";
 
-const hypVisTooltipStyle = {
-  fontFamily: "Inter",
-  fontSize: "14px",
-  lineHeight: "20px",
-  maxWidth: "min(calc(100vw - 32px), 400px)",
-  width: "max-content",
-};
+const HV_COMMON = "dataJournal.hypVis.axes.common";
+const corr = "dataJournal.hypVis.axes.corr";
+const clip = "dataJournal.hypVis.axes.clipboard";
 
 export default function Axes({
   studyId,
-  variables,
   sectionId,
   selectors,
   onChange,
 }) {
   const { t } = useTranslation("builder");
-  const corr = "dataJournal.hypVis.axes.corr";
-  const clip = "dataJournal.hypVis.axes.clipboard";
 
   const router = useRouter();
   const currentLocale = router.locale || "en-us";
@@ -97,6 +91,59 @@ export default function Axes({
     };
   });
 
+  const topResourcesItems = useMemo(
+    () => [
+      {
+        title: t(`${corr}.resources.correlationalHypothesis.title`, {}, {
+          default: "What is a correlational hypothesis?",
+        }),
+        alt: t(`${corr}.resources.correlationalHypothesis.subtitle`, {}, {
+          default: "Reference coming soon.",
+        }),
+        img: "/assets/icons/visualize/externalNewTab.svg",
+        link: "",
+      },
+      {
+        title: t(`${corr}.resources.directionality.title`, {}, {
+          default: "Choosing directionality terms",
+        }),
+        alt: t(`${corr}.resources.directionality.subtitle`, {}, {
+          default: "Reference coming soon.",
+        }),
+        img: "/assets/icons/visualize/externalNewTab.svg",
+        link: "",
+      },
+    ],
+    [t],
+  );
+
+  const openLinkLabel = t(`${HV_COMMON}.resources.openLinkHint`, {}, {
+    default: "Click here to access the resource",
+  });
+  const noLinkHint = t(`${HV_COMMON}.resources.noLink`, {}, { default: "No external link" });
+
+  const topHelpContent = useMemo(
+    () => (
+      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "#625B71" }}>
+        {t(`${HV_COMMON}.help.resourcesIntro`, {}, {
+          default:
+            "Use the buttons below to open a reference in a new tab when a link is available.",
+        })}
+      </p>
+    ),
+    [t],
+  );
+  const topHelpAction = useMemo(
+    () => (
+      <ResourcesTooltipResourceButtons
+        items={topResourcesItems}
+        openLinkLabel={openLinkLabel}
+        noLinkHint={noLinkHint}
+      />
+    ),
+    [topResourcesItems, openLinkLabel, noLinkHint],
+  );
+
   const copyToClipboard = () => {
     const {
       ivDirectionality,
@@ -112,14 +159,18 @@ export default function Axes({
         dvDir: dvDirectionality || "",
         dv: dependentVariable || "",
       },
-      "I predict that {{ivDir}} {{iv}} will be related to {{dvDir}} {{dv}}.",
+      { default: "I predict that {{ivDir}} {{iv}} will be related to {{dvDir}} {{dv}}." },
     );
 
     navigator.clipboard
       .writeText(textContent)
       .then(() => {
         alert(
-          t(`${corr}.clipboardHypothesisCopied`, { text: textContent }, "Text copied to clipboard: {{text}}"),
+          t(
+            `${corr}.clipboardHypothesisCopied`,
+            { text: textContent },
+            { default: "Text copied to clipboard: {{text}}" },
+          ),
         );
       })
       .catch((err) => {
@@ -139,63 +190,65 @@ export default function Axes({
   const correlationalHelpContent = (
     <div>
       <p>
-        {t(
-          `${corr}.helpIntro`,
-          "Fill in the blanks to create your correlational hypothesis!",
-        )}
+        {t(`${corr}.helpIntro`, {}, {
+          default: "Fill in the blanks to create your correlational hypothesis!",
+        })}
       </p>
       <p>
-        {t(`${corr}.helpForInstance`, "For instance")}
+        {t(`${corr}.helpForInstance`, {}, { default: "For instance" })}
         <br />
         <q>
-          {t(
-            `${corr}.helpExampleQuote`,
-            "It is predicted that higher anxiety will be related to lower % of trials gambled.",
-          )}
+          {t(`${corr}.helpExampleQuote`, {}, {
+            default: "It is predicted that higher anxiety will be related to lower % of trials gambled.",
+          })}
         </q>
       </p>
       <p>
         <i>
-          {t(
-            `${corr}.helpNote`,
-            "Note that the options suggested under the variable fields are pulled from the public blocks in your study builder",
-          )}
+          {t(`${corr}.helpNote`, {}, {
+            default:
+              "Note that the options suggested under the variable fields are pulled from the public blocks in your study builder",
+          })}
         </i>
       </p>
     </div>
   );
 
-  if (loading) return <p>{t(`${corr}.loading`, "Loading...")}</p>;
+  const helpAria = t("dataJournal.hypVis.helpAriaLabel", {}, { default: "More information" });
+
+  if (loading) return <p>{t(`${corr}.loading`, {}, { default: "Loading..." })}</p>;
   if (error)
     return (
       <p>
-        {t(`${corr}.errorLoading`, { message: error.message }, "Error: {{message}}")}
+        {t(`${corr}.errorLoading`, { message: error.message }, { default: "Error: {{message}}" })}
       </p>
     );
   if (aggVarLoading)
-    return <p>{t(`${corr}.loadingBlocks`, "Loading block data...")}</p>;
+    return <p>{t(`${corr}.loadingBlocks`, {}, { default: "Loading block data..." })}</p>;
   if (aggVarError)
     return (
       <p>
         {t(
           `${corr}.errorLoadingBlocks`,
           { message: aggVarError.message },
-          "Error loading block data: {{message}}",
+          { default: "Error loading block data: {{message}}" },
         )}
       </p>
     );
 
   return (
     <div className="graph-dashboard">
-      <div className="header">
-        <img src="/assets/icons/visualize/hypVis_corrAnalysis.svg" alt="" />
-        <div className="header-title">
-          {t(`${corr}.headerTitle`, "Correlational Hypothesis")}
-        </div>
-      </div>
+      <SectionHeader
+        title={t(`${corr}.headerTitle`, {}, { default: "Correlational Hypothesis" })}
+        iconSrc="/assets/icons/visualize/hypVis_corrAnalysis.svg"
+        iconAlt=""
+        helpContent={topHelpContent}
+        helpAction={topHelpAction}
+        helpAriaLabel={t(`${HV_COMMON}.help.ariaLabel`, {}, { default: "Resources and help" })}
+      />
       <div className="text-input">
         <label htmlFor="graphTitle" className="header-text">
-          {t(`${corr}.titleLabel`, "Title")}
+          {t(`${corr}.titleLabel`, {}, { default: "Title" })}
         </label>
         <input
           className="input-box"
@@ -214,28 +267,18 @@ export default function Axes({
         />
       </div>
       <div className="parameter-panel">
-        <div className="header">
-          <div className="header-title">
-            {t(`${corr}.sectionTitle`, "Your correlational hypothesis")}
-          </div>
-          <InfoTooltip
-            content={correlationalHelpContent}
-            tooltipStyle={hypVisTooltipStyle}
-            position="bottomRight"
-          >
-            <img
-              src="/assets/icons/visualize/question_mark.svg"
-              alt={t("dataJournal.hypVis.helpAriaLabel", "More information")}
-            />
-          </InfoTooltip>
-        </div>
+        <SectionHeader
+          title={t(`${corr}.sectionTitle`, {}, { default: "Your correlational hypothesis" })}
+          helpContent={correlationalHelpContent}
+          helpAriaLabel={helpAria}
+        />
         <div className="fill-in-the-blanks">
           <div className="text">
-            {t(`${corr}.iPredictThat`, "I predict that")}
+            {t(`${corr}.iPredictThat`, {}, { default: "I predict that" })}
           </div>
 
           <AggregateVarSelector
-            placeholder={t(`${corr}.directionalityPlaceholder`, "directionality")}
+            placeholder={t(`${corr}.directionalityPlaceholder`, {}, { default: "directionality" })}
             isDirectionality={true}
             allowAdditions={false}
             optionsAggVar={formattedItems}
@@ -248,7 +291,7 @@ export default function Axes({
           <AggregateVarSelector
             placeholder={
               selectors.independentVariable ||
-              t(`${corr}.independentPlaceholder`, "independent variable")
+              t(`${corr}.independentPlaceholder`, {}, { default: "independent variable" })
             }
             isDirectionality={false}
             allowAdditions={true}
@@ -260,10 +303,10 @@ export default function Axes({
             }
           />
           <div className="text">
-            {t(`${corr}.willBeRelatedTo`, "will be related to")}
+            {t(`${corr}.willBeRelatedTo`, {}, { default: "will be related to" })}
           </div>
           <AggregateVarSelector
-            placeholder={t(`${corr}.directionalityPlaceholder`, "directionality")}
+            placeholder={t(`${corr}.directionalityPlaceholder`, {}, { default: "directionality" })}
             isDirectionality={true}
             allowAdditions={false}
             optionsAggVar={formattedItems}
@@ -276,7 +319,7 @@ export default function Axes({
           <AggregateVarSelector
             placeholder={
               selectors[`dependentVariable`] ||
-              t(`${corr}.dependentPlaceholder`, "dependent variable")
+              t(`${corr}.dependentPlaceholder`, {}, { default: "dependent variable" })
             }
             isDirectionality={false}
             allowAdditions={true}
@@ -292,7 +335,7 @@ export default function Axes({
       <div className="button-panel">
         <div className="clipboard-copy-button" onClick={copyToClipboard}>
           <div>
-            {t(`${corr}.copyHypothesis`, "Copy hypothesis text to clipboard")}
+            {t(`${corr}.copyHypothesis`, {}, { default: "Copy hypothesis text to clipboard" })}
           </div>
           <img src="/assets/icons/visualize/clipboard-copy.svg" alt="" />
         </div>

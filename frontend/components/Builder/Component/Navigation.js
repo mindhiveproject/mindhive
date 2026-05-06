@@ -69,7 +69,7 @@ export default function Navigation({
   const items = task?.isExternal
     ? itemsExternalTask
     : itemsInternalTaskSelected;
-  const router = useRouter();   
+  const router = useRouter();
   const { locale } = router;
   return (
     <div className="navigation">
@@ -92,25 +92,30 @@ export default function Navigation({
           )}
 
           <div>
-            <span className="studyTitle">{task?.i18nContent?.[locale]?.title || task?.title}</span>
+            <span className="studyTitle">
+              {task?.i18nContent?.[locale]?.title || task?.title}
+            </span>
           </div>
         </div>
         <div className="rightPanel">
-          {false && (
-            <div className="icon">
-              <img src="/assets/icons/chat.svg" />
-            </div>
-          )}
-
-          {task?.template?.script && (
-            <button onClick={() => openFullscreenPreview()}>
-              {t("fullscreenPreview")}
-            </button>
-          )}
-
           <div className="submitButton">
-            <button onClick={() => handleSubmit()}>{submitBtnName || t("submit")}</button>
+            <button onClick={() => handleSubmit()}>
+              {submitBtnName || t("submit")}
+            </button>
           </div>
+
+          {/* {openFullscreenPreview && (
+            <div className="submitButton">
+              <button
+                onClick={async () => {
+                  await handleSubmit();
+                  openFullscreenPreview();
+                }}
+              >
+                {t("saveAndPreview", "Save & Preview")}
+              </button>
+            </div>
+          )} */}
         </div>
       </div>
 

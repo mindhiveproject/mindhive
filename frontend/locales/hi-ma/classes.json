@@ -296,6 +296,7 @@
 		"descGoToResourcesCenter": "यह पृष्ठ आपको संसाधनों को अपने प्रोजेक्ट बोर्ड कार्ड से लिंक करने की अनुमति देता है - संसाधनों का प्रबंधन करने के लिए, संसाधन केंद्र पर जाएं।",
 		"description": "",
 		"duplicate": "",
+		"duplicateResource": "",
 		"edit": "",
 		"editExistingResource": "",
 		"editResource": "",
@@ -363,6 +364,7 @@
 		"save": "",
 		"saveChanges": "",
 		"savedRessource": "",
+		"saveDuplicate": "",
 		"saveOwnRessource": "",
 		"searchPlaceholder": "",
 		"searchPlaceholderUser": "MindHive उपयोगकर्ता नाम से खोजें",
@@ -564,8 +566,11 @@
 	"emailAddress": "मेल पता",
 	"header": {
 		"addDescription": "",
+		"mentors": "",
+		"mentorsPanelTooltip": "",
 		"save": "बचाना",
 		"teacher": "अध्यापक",
+		"teacherAccountTooltip": "",
 		"titleFallback": ""
 	},
 	"homework": {
@@ -607,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "कार्य",
+		"classSectionsNav": "",
 		"dashboard": "डैशबोर्ड",
 		"mentors": "मेंटर्स",
 		"projects": "परियोजनाओं",

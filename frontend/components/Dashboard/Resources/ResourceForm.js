@@ -1,15 +1,10 @@
-import JoditEditor from "../../Jodit/Editor";
 import { StyledInput } from "../../styles/StyledForm";
 import { Radio } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import TipTapEditor from "../../TipTap/Main";
 
-export default function ResourceForm({ user, inputs, handleChange, loading }) {
+export default function ResourceForm({ user, inputs, handleChange }) {
   const { t } = useTranslation("classes");
-  const setContent = (content) =>
-    handleChange({
-      target: { name: "content", value: { main: content } },
-    });
 
   return (
     <div>
@@ -62,6 +57,16 @@ export default function ResourceForm({ user, inputs, handleChange, loading }) {
       {t("boardManagement.content")}
       <TipTapEditor
         content={inputs.content?.main || ""}
+        mediaLibraryId={user?.id ?? null}
+        mediaLibrarySource={
+          user?.id
+            ? {
+                sourceType: "profile",
+                sourceId: user.id,
+                createdWith: "upload",
+              }
+            : null
+        }
         onUpdate={(newContent) =>
           handleChange({
             target: {

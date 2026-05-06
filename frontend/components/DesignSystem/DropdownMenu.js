@@ -30,6 +30,17 @@ const DEFAULT_TRIGGER_STYLE = {
   gap: "8px",
 };
 
+const ICON_TRIGGER_STYLE = {
+  borderRadius: "8px",
+  border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  background: "#ffffff",
+  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+  padding: "4px 6px",
+  minWidth: "32px",
+  minHeight: "32px",
+  justifyContent: "center",
+};
+
 const ITEM_STYLE = {
   display: "flex",
   alignItems: "center",
@@ -48,6 +59,15 @@ const ITEM_STYLE = {
   background: "transparent",
 };
 
+const STATIC_ITEM_STYLE = {
+  ...ITEM_STYLE,
+  cursor: "default",
+  color: "#6a6a6a",
+  fontWeight: 400,
+  fontSize: "12px",
+  lineHeight: "16px",
+};
+
 const PANEL_STYLE = {
   backgroundColor: "#ffffff",
   border: "1px solid #a1a1a1",
@@ -56,22 +76,55 @@ const PANEL_STYLE = {
   overflow: "hidden",
   minWidth: "200px",
   zIndex: 10000,
-  // padding: "10px 12px",
+};
+
+const PANEL_HEADER_WRAPPER_STYLE = {
+  padding: "8px 12px",
+  fontFamily: "Inter, sans-serif",
+  fontSize: "12px",
+  lineHeight: "16px",
+  color: "#6a6a6a",
+  borderBottom: "1px solid #e6e6e6",
+};
+
+const DIVIDER_STYLE = {
+  height: "1px",
+  background: "#e6e6e6",
+  margin: 0,
 };
 
 /**
  * Reusable dropdown menu with portal (avoids clipping in AG Grid / overflow containers).
  * Renders trigger button and, when open, a panel in document.body with position: fixed.
  *
- * @param {string} triggerLabel - Label for the trigger button (e.g. "See actions").
- * @param {Array<{ key: string, label: React.ReactNode, onClick: () => void, danger?: boolean }>} items - Menu items; danger items use red styling and trash icon.
+ * @param {string} [triggerLabel] - Label when using default trigger (with ellipsis). Omit when `trigger` is set.
+ * @param {React.ReactNode} [trigger] - Custom trigger content inside the button (e.g. icon). When set, `triggerLabel` and default ellipsis are not shown; provide `ariaLabel` for a11y.
+ * @param {string} [ariaLabel] - Accessible name for the trigger button (required when `trigger` is used without visible text).
+ * @param {React.ReactNode} [panelHeader] - Read-only block above menu items (e.g. metadata).
+ * @param {boolean} [dividerAfterHeader=true] - Show a divider between `panelHeader` and items when `panelHeader` is set.
+ * @param {Array<{ key: string, label: React.ReactNode, onClick?: () => void, danger?: boolean, static?: boolean }>} items - Menu items. `static: true` or missing `onClick` on a non-danger row renders a non-interactive row (does not close menu). Action items call `onClick` then close.
  * @param {React.CSSProperties} [triggerStyle] - Optional override for trigger button styles.
  */
-export default function DropdownMenu({ triggerLabel, items = [], triggerStyle = {} }) {
+export default function DropdownMenu({
+  triggerLabel,
+  trigger = null,
+  ariaLabel,
+  panelHeader = null,
+  dividerAfterHeader = true,
+  items = [],
+  triggerStyle = {},
+}) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownRect, setDropdownRect] = useState(null);
   const dropdownRef = useRef(null);
   const dropdownPanelRef = useRef(null);
+
+  const useCustomTrigger = trigger != null;
+  const mergedTriggerStyle = {
+    ...DEFAULT_TRIGGER_STYLE,
+    ...(useCustomTrigger ? ICON_TRIGGER_STYLE : {}),
+    ...triggerStyle,
+  };
 
   useLayoutEffect(() => {
     if (dropdownOpen && dropdownRef.current) {
@@ -91,15 +144,20 @@ export default function DropdownMenu({ triggerLabel, items = [], triggerStyle = 
       }
     };
     if (dropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      // Use "click" (not "mousedown") so refs are valid and item handlers run
+      // first (bubble phase on document runs after the target's onClick).
+      document.addEventListener("click", handleClickOutside);
     }
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, [dropdownOpen]);
 
   const handleItemClick = (item) => {
-    item.onClick?.();
+    if (item.static === true || typeof item.onClick !== "function") {
+      return;
+    }
+    item.onClick();
     setDropdownOpen(false);
   };
 
@@ -107,17 +165,23 @@ export default function DropdownMenu({ triggerLabel, items = [], triggerStyle = 
     <div ref={dropdownRef} style={{ position: "relative", zIndex: dropdownOpen ? 1001 : "auto" }}>
       <button
         type="button"
+        aria-label={ariaLabel}
         onClick={() => setDropdownOpen((prev) => !prev)}
-        style={{ ...DEFAULT_TRIGGER_STYLE, ...triggerStyle }}
+        style={mergedTriggerStyle}
       >
-        {triggerLabel}
-        {ELLIPSIS_ICON}
+        {useCustomTrigger ? trigger : (
+          <>
+            {triggerLabel}
+            {ELLIPSIS_ICON}
+          </>
+        )}
       </button>
       {dropdownOpen &&
         dropdownRect &&
         createPortal(
           <div
             ref={dropdownPanelRef}
+            onMouseDown={(e) => e.stopPropagation()}
             style={{
               ...PANEL_STYLE,
               position: "fixed",
@@ -125,16 +189,42 @@ export default function DropdownMenu({ triggerLabel, items = [], triggerStyle = 
               right: window.innerWidth - dropdownRect.right,
             }}
           >
+            {panelHeader != null && (
+              <>
+                <div style={PANEL_HEADER_WRAPPER_STYLE}>{panelHeader}</div>
+                {dividerAfterHeader ? <div style={DIVIDER_STYLE} role="separator" /> : null}
+              </>
+            )}
             {items.map((item) => {
               const isDanger = item.danger === true;
-              const style = isDanger ? { ...ITEM_STYLE, color: "#d32f2f" } : ITEM_STYLE;
+              const isStatic = item.static === true || typeof item.onClick !== "function";
+              const style = isStatic
+                ? STATIC_ITEM_STYLE
+                : isDanger
+                  ? { ...ITEM_STYLE, color: "#d32f2f" }
+                  : ITEM_STYLE;
+
+              if (isStatic) {
+                return (
+                  <div key={item.key} style={style}>
+                    {item.label}
+                  </div>
+                );
+              }
+
               return (
                 <div
                   key={item.key}
                   role="button"
                   tabIndex={0}
                   style={style}
-                  onClick={() => handleItemClick(item)}
+                  onClick={(e) => {
+                    // Portaled menu: native document listeners can fire before React’s
+                    // delegated handler; stop bubbling so outside-close does not unmount
+                    // the row before Journal’s onClick (e.g. delete) runs.
+                    e.stopPropagation();
+                    handleItemClick(item);
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();

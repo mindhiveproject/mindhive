@@ -5,36 +5,15 @@ export const StyledDatasetView = styled.div`
   flex-direction: column;
   height: 100%;
   background: #ffffff;
-  padding: 24px;
-
-  .dataset-view-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    background: #f8fafc;
-    border-bottom: 1px solid #e0e0e0;
-    border-radius: 12px 12px 0 0;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
-    h2 {
-      font-family: "Nunito", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      color: #1e293b;
-      margin: 0;
-    }
-  }
 
   .dataset-content {
     display: flex;
     flex: 1;
     width: 100%;
-    gap: 24px;
+    gap: 12px;
     overflow: hidden;
     background: #ffffff;
-    border-radius: 0 0 12px 12px;
+    border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   }
 
@@ -42,146 +21,130 @@ export const StyledDatasetView = styled.div`
     width: 40%;
     min-width: 320px;
     max-width: 480px;
-    background: #f8fafc;
+    background: #ffffff;
     border-radius: 12px 0 0 12px;
-    padding: 24px;
+    padding: 12px;
     overflow-y: auto;
     border-right: 1px solid #e0e0e0;
 
     .database {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 12px;
 
       .header {
-        display: flex;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
         align-items: center;
         gap: 12px;
-        font-family: "Nunito", sans-serif;
-        font-size: 18px;
-        font-weight: 700;
-        color: #1e293b;
-        margin-bottom: 16px;
         padding-bottom: 12px;
         border-bottom: 1px solid #e0e0e0;
 
-        img {
+        .header-icon {
           width: 24px;
           height: 24px;
+          flex-shrink: 0;
         }
 
-        .header-actions {
-          margin-left: auto;
+        .header-title {
+          font-family: "Nunito", sans-serif;
+          font-size: 18px;
+          font-weight: 700;
+          color: #1e293b;
+          margin: 0;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .metaStrip {
+          grid-column: 1 / -1;
           display: flex;
-          gap: 8px;
+          flex-wrap: wrap;
           align-items: center;
-
-          .save-icon,
-          .refresh-icon {
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-
-            &:hover {
-              background: #f1f5f9;
-            }
-
-            .ui.icon {
-              color: #666666;
-              font-size: 16px;
-            }
-          }
-
-          .dataButtonPart {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-family: "Nunito", sans-serif;
-            font-size: 14px;
-            color: #28619e;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-
-            &.blueFrame {
-              background: #ecf8fb;
-              border: 1px solid #28619e;
-
-              &:hover {
-                background: #d6eef2;
-              }
-            }
-
-            img {
-              width: 16px;
-              height: 16px;
-            }
-
-            a {
-              color: #28619e;
-              text-decoration: none;
-            }
-          }
+          gap: 6px;
+          margin-top: 2px;
+          font-family: Inter, sans-serif;
+          font-size: 12px;
+          line-height: 1.4;
+          color: #6a6a6a;
         }
       }
 
-      .options {
-        display: grid;
-        grid-template-columns: 1fr 5fr;
+      .primaryAction {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1px solid var(--MH-Theme-Primary-Dark, #336f8a);
+        background: var(--MH-Theme-Primary-Dark, #336f8a);
+        color: #ffffff;
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1;
+        cursor: pointer;
+        transition: background-color 0.15s ease, box-shadow 0.15s ease,
+          opacity 0.15s ease;
+
+        img {
+          width: 16px;
+          height: 16px;
+          filter: brightness(0) invert(1);
+        }
+
+        &:hover:not(:disabled) {
+          background: #285775;
+          border-color: #285775;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      .toolbar {
+        display: flex;
         flex-wrap: wrap;
-        gap: 12px;
-        margin-bottom: 20px;
+        gap: 8px;
+        align-items: center;
 
-        .optionsFrame {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 12px;
-          flex-wrap: wrap;
+        .toolbarChip {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 12px;
+          border-radius: 8px;
+          border: 1px solid #e0e0e0;
+          background: #ffffff;
+          color: #1e293b;
+          font-family: Inter, sans-serif;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 1;
+          cursor: pointer;
+          transition: background-color 0.15s ease, border-color 0.15s ease;
 
-          .optionsButtonGreen,
-          .optionsButtonYellow {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            border-radius: 4px;
-            font-family: "Nunito", sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
+          img {
+            width: 16px;
+            height: 16px;
+          }
 
-            &.optionsButtonGreen {
-              background: #f4f8f7;
-              color: #1e293b;
+          &:hover {
+            background: #f4f8f7;
+            border-color: #c4c4c4;
+          }
 
-              &:hover {
-                background: #e0e6e5;
-              }
-            }
+          &.toolbarChip--primary {
+            border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+            color: var(--MH-Theme-Primary-Dark, #336f8a);
 
-            &.optionsButtonYellow {
-              background: #fdf2d0;
-              color: #1e293b;
-
-              &:hover {
-                background: #f0e5b0;
-              }
-            }
-
-            img,
-            .ui.icon {
-              width: 16px;
-              height: 16px;
-              color: #666666;
+            &:hover {
+              background: #ecf3f5;
             }
           }
         }
@@ -190,91 +153,135 @@ export const StyledDatasetView = styled.div`
       .variables-section {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
 
         .section-header {
           font-family: "Nunito", sans-serif;
           font-size: 16px;
           font-weight: 600;
           color: #1e293b;
-          margin-bottom: 8px;
-          padding-bottom: 8px;
+          margin-bottom: 4px;
+          padding-bottom: 6px;
           border-bottom: 1px solid #e0e0e0;
         }
 
         .variables {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
+          display: grid;
+          gap: 0.5rem;
+          min-width: 0;
+        }
 
-          .variable {
-            display: flex;
-            justify-content: space-between;
+        .variableRow {
+          border: 1px solid #e6e6e6;
+          border-radius: 10px;
+          padding: 0.65rem 0.75rem;
+          background: #ffffff;
+          box-sizing: border-box;
+          min-width: 0;
+          width: 100%;
+          transition: background-color 0.15s ease, border-color 0.15s ease;
+
+          &.hidden {
+            opacity: 0.7;
+            background: #f8fafc;
+          }
+        }
+
+        .variableRowHeader {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.5rem;
+          min-width: 0;
+          width: 100%;
+        }
+
+        .variableRowLabel {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin: 0;
+          min-width: 0;
+          flex: 1 1 auto;
+        }
+
+        .variableRowName {
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-family: Inter, sans-serif;
+          font-weight: 300;
+          font-size: 14px;
+          line-height: 1.5;
+          color: #000000;
+        }
+
+        .variableEyeBtn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: none;
+          border: none;
+          padding: 4px;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: background-color 0.15s ease;
+
+          img {
+            width: 16px;
+            height: 16px;
+          }
+
+          &:hover {
+            background: #f1f5f9;
+          }
+        }
+
+        .variableRowActions {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          flex: 0 0 auto;
+
+          .ui.dropdown {
+            display: inline-flex;
             align-items: center;
-            padding: 12px;
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            transition: background-color 0.2s ease;
+            padding: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+
+            img {
+              width: 16px;
+              height: 16px;
+            }
 
             &:hover {
-              background: #f8fafc;
+              background: #f1f5f9;
             }
+          }
 
-            &.hidden {
-              opacity: 0.7;
-              background: #f8fafc;
-            }
+          .ui.dropdown .menu > .item {
+            padding: 8px 12px !important;
 
-            .name {
-              display: flex;
+            .menuItem {
+              display: inline-flex;
               align-items: center;
               gap: 8px;
+              color: #000;
+              font-family: Inter, sans-serif;
+              font-size: 14px;
+              font-weight: 400;
+              line-height: 1;
+              white-space: nowrap;
               cursor: pointer;
-
-              label {
-                font-family: "Nunito", sans-serif;
-                font-size: 14px;
-                font-weight: 500;
-                color: #1e293b;
-                margin: 0;
-              }
             }
 
-            .icons {
-              display: flex;
-              gap: 8px;
-
-              .visibilityIcon {
-                cursor: pointer;
-                padding: 6px;
-                border-radius: 4px;
-                transition: background-color 0.2s ease;
-
-                &:hover {
-                  background: #e0e0e0;
-                }
-
-                .ui.icon {
-                  width: 16px;
-                  height: 16px;
-                  color: #666666;
-                }
-              }
-
-              .ui.dropdown {
-                .icon {
-                  width: 16px;
-                  height: 16px;
-                  color: #666666;
-                }
-
-                &:hover {
-                  .icon {
-                    color: #1e293b;
-                  }
-                }
-              }
+            .menuItem img {
+              width: 16px;
+              height: 16px;
+              flex-shrink: 0;
             }
           }
         }
@@ -314,7 +321,7 @@ export const StyledDatasetView = styled.div`
 
   .right-panel {
     flex: 1;
-    padding: 24px;
+    padding: 8px;
     overflow-y: auto;
     border-radius: 0 12px 12px 0;
 
@@ -329,22 +336,9 @@ export const StyledDatasetView = styled.div`
       height: 100%;
       width: 100%;
       border-radius: 4px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
   }
 
-  .dataset-footer {
-    padding: 16px 24px;
-    background: #f8fafc;
-    border-top: 1px solid #e0e0e0;
-    border-radius: 0 0 12px 12px;
-    font-family: "Nunito", sans-serif;
-    font-size: 13px;
-    color: #666666;
-    margin-top: 24px;
-  }
-
-  /* Responsive design */
   @media (max-width: 1200px) {
     .left-panel {
       width: 35%;

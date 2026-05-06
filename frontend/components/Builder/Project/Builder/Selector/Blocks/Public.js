@@ -11,8 +11,8 @@ export default function PublicBlocks({
   isSurveyBuilder,
 }) {
   const router = useRouter();
-  const currentLocale = router.locale || 'en-us'; // fallback to en-us
-  
+  const currentLocale = router.locale || "en-us"; // fallback to en-us
+
   const { data, error, loading } = useQuery(PUBLIC_TASKS, {
     variables: {
       where:
@@ -49,8 +49,8 @@ export default function PublicBlocks({
     }
 
     // Fallback to en-us if current locale not found
-    if (currentLocale !== 'en-us') {
-      const fallbackContent = component.i18nContent['en-us'];
+    if (currentLocale !== "en-us") {
+      const fallbackContent = component.i18nContent["en-us"];
       if (fallbackContent && fallbackContent[fieldName] !== undefined) {
         return fallbackContent[fieldName];
       }
@@ -62,20 +62,20 @@ export default function PublicBlocks({
 
   const processComponentsWithI18n = (components) => {
     const i18nFields = [
-      'title',
-      'description', 
-      'descriptionForParticipants',
-      'settings',
-      'resources',
-      'aggregateVariables',
-      'addInfo',
-      'parameters'
+      "title",
+      "description",
+      "descriptionForParticipants",
+      "settings",
+      "resources",
+      "aggregateVariables",
+      "addInfo",
+      "parameters",
     ];
 
-    return components.map(component => {
+    return components.map((component) => {
       const localizedComponent = { ...component };
-      
-      i18nFields.forEach(fieldName => {
+
+      i18nFields.forEach((fieldName) => {
         localizedComponent[fieldName] = getLocalizedField(component, fieldName);
       });
 

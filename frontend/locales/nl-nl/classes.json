@@ -296,6 +296,7 @@
 		"descGoToResourcesCenter": "Op deze pagina kunt u bronnen koppelen aan uw projectbordkaarten. Om bronnen te beheren, gaat u naar het bronnencentrum.",
 		"description": "Beschrijving",
 		"duplicate": "Duplicaat",
+		"duplicateResource": "Dubbele bron",
 		"edit": "Bewerking",
 		"editExistingResource": "Ga door met mijn aangepaste versie",
 		"editResource": "Bron bewerken",
@@ -363,6 +364,7 @@
 		"save": "Redden",
 		"saveChanges": "Wijzigingen opslaan",
 		"savedRessource": "De bron is opgeslagen",
+		"saveDuplicate": "Opslaan duplicaat",
 		"saveOwnRessource": "Opslaan als uw eigen bron",
 		"searchPlaceholder": "Zoeken op titel of beschrijving...",
 		"searchPlaceholderUser": "Zoeken op MindHive-gebruikersnaam",
@@ -564,9 +566,12 @@
 	"emailAddress": "E-mailadres",
 	"header": {
 		"addDescription": "Voeg een beschrijving toe",
+		"mentors": "Mentoren",
+		"mentorsPanelTooltip": "Mentoraccounts die aan deze cursus zijn gekoppeld.",
 		"save": "Redden",
 		"teacher": "Docent",
-		"titleFallback": ""
+		"teacherAccountTooltip": "Klasleraar.",
+		"titleFallback": "Naamloze klasse"
 	},
 	"homework": {
 		"allEntries": "Alle inzendingen",
@@ -607,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "Opdrachten",
+		"classSectionsNav": "Klassecties",
 		"dashboard": "Dashboard",
 		"mentors": "Mentoren",
 		"projects": "Projecten",

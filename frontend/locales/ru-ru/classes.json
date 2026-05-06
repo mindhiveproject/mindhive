@@ -296,6 +296,7 @@
 		"descGoToResourcesCenter": "Эта страница позволяет вам привязывать ресурсы к карточкам доски проекта (для управления ресурсами перейдите в центр ресурсов.",
 		"description": "Описание",
 		"duplicate": "Дублировать",
+		"duplicateResource": "Дубликат ресурса",
 		"edit": "Редактировать",
 		"editExistingResource": "Продолжить с моей измененной версией",
 		"editResource": "Редактировать ресурс",
@@ -363,6 +364,7 @@
 		"save": "Сохранять",
 		"saveChanges": "Сохранить изменения",
 		"savedRessource": "Ресурс сохранен.",
+		"saveDuplicate": "Сохранить дубликат",
 		"saveOwnRessource": "Сохранить как свой собственный ресурс",
 		"searchPlaceholder": "Поиск по названию или описанию...",
 		"searchPlaceholderUser": "Поиск по имени пользователя MindHive",
@@ -564,9 +566,12 @@
 	"emailAddress": "Адрес электронной почты",
 	"header": {
 		"addDescription": "Добавить описание",
+		"mentors": "Наставники",
+		"mentorsPanelTooltip": "Наставнические аккаунты, связанные с этим курсом.",
 		"save": "Сохранять",
 		"teacher": "Учитель",
-		"titleFallback": ""
+		"teacherAccountTooltip": "Классный руководитель.",
+		"titleFallback": "Безымянный класс"
 	},
 	"homework": {
 		"allEntries": "Все записи",
@@ -607,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "Задания",
+		"classSectionsNav": "Разделы класса",
 		"dashboard": "Панель инструментов",
 		"mentors": "Наставники",
 		"projects": "Проекты",

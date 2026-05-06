@@ -41,6 +41,7 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
   const [area, setArea] = useState("journals"); // e.g., 'journals' or 'datasets'
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [isAddComponentPanelOpen, setIsAddComponentPanelOpen] = useState(false);
+  const [leftPanelMode, setLeftPanelMode] = useState("journal");
 
   // Additional states for user, projectId, studyId
   const [user, setUser] = useState(initialProps.user || null);
@@ -48,6 +49,9 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
   const [studyId, setStudyId] = useState(initialProps.studyId || null);
   const [figureReadinessByComponentId, setFigureReadinessByComponentId] =
     useState({});
+
+  /** Increments when a grid item finishes resize/drag so widgets can re-measure. */
+  const [widgetResizeTicks, setWidgetResizeTicks] = useState({});
 
   // Apollo mutation for updating workspace on server
   const [updateWorkspaceOnServer] = useMutation(UPDATE_WORKSPACE, {
@@ -98,9 +102,38 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     setFigureReadinessByComponentId({});
   }, []);
 
+  const bumpWidgetResizeTick = useCallback((componentId) => {
+    if (typeof componentId !== "string" || !componentId.trim()) return;
+    const key = componentId.trim();
+    setWidgetResizeTicks((prev) => ({
+      ...prev,
+      [key]: (prev[key] || 0) + 1,
+    }));
+  }, []);
+
+  const getWidgetResizeTick = useCallback(
+    (componentId) => {
+      if (typeof componentId !== "string" || !componentId.trim()) return 0;
+      return widgetResizeTicks[componentId.trim()] || 0;
+    },
+    [widgetResizeTicks],
+  );
+
   useEffect(() => {
     resetFigureReadiness();
   }, [workspace?.id, resetFigureReadiness]);
+
+  useEffect(() => {
+    if (activeComponent) {
+      setLeftPanelMode("editor");
+      return;
+    }
+    if (isAddComponentPanelOpen) {
+      setLeftPanelMode("addComponent");
+      return;
+    }
+    setLeftPanelMode("journal");
+  }, [activeComponent, isAddComponentPanelOpen]);
 
   // Provide value to children
   const value = {
@@ -127,6 +160,8 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     setSidebarVisible,
     isAddComponentPanelOpen,
     setIsAddComponentPanelOpen,
+    leftPanelMode,
+    setLeftPanelMode,
     user,
     projectId,
     studyId,
@@ -134,6 +169,9 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     setComponentFigureReady,
     clearComponentFigureReady,
     resetFigureReadiness,
+    widgetResizeTicks,
+    bumpWidgetResizeTick,
+    getWidgetResizeTick,
   };
 
   return (

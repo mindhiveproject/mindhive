@@ -227,15 +227,21 @@
 	"dataJournal": {
 		"addComponent": "Component toevoegen",
 		"addNotes": "Notities toevoegen",
-		"collapsePanel": "Inklappaneel",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "Code"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "Dichtbij",
-			"componentName": "",
+			"componentName": "Componentnaam",
 			"delete": "Verwijderen",
 			"deleteConfirm": "Weet je zeker dat je dit onderdeel wilt verwijderen?",
 			"editComponent": "Component bewerken",
 			"editParagraph": "Alinea bewerken",
-			"editTitle": "",
+			"editTitle": "Bewerk de titel van het onderdeel",
 			"save": "Redden",
 			"saveFigureToMedia": "Afbeelding opslaan in de mediabibliotheek",
 			"typeLabel": {
@@ -253,6 +259,299 @@
 			},
 			"unsupportedType": "Niet-ondersteund componenttype: {{type}}",
 			"untitled": "Zonder titel"
+		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "Annuleren",
+				"create": "Gegevensset maken"
+			},
+			"dataSourceLabel": "Databron",
+			"errorCreatingDataset": "Fout bij het maken van de dataset:",
+			"errorLoadingStudy": "Fout bij het laden van gegevens: onderzoek",
+			"loadingDataSources": "Gegevensbronnen laden…",
+			"nameHelp": "Je kunt dit later hernoemen via de datasetinstellingen.",
+			"nameLabel": "Datasetnaam",
+			"namePlaceholder": "bijv. Reacties op de pretest, voorjaar 2026",
+			"study": {
+				"currentStudy": "Studie: {{title}}",
+				"currentStudyMissing": "Er is geen onderzoek aan dit project gekoppeld.",
+				"optionDisabled": "Er is geen onderzoek aan dit project gekoppeld. Koppel een onderzoek om deze optie in te schakelen.",
+				"optionTitle": "Gebruik de gegevens uit het huidige onderzoek."
+			},
+			"subtitle": "Geef je dataset een naam en kies waar de gegevens vandaan moeten komen.",
+			"template": {
+				"optionDescription": "Kies een sjabloongegevensset (binnenkort beschikbaar).",
+				"optionTitle": "Kopiëren vanuit een bestaande dataset"
+			},
+			"title": "Nieuwe dataset",
+			"upload": {
+				"fileHelp": "De eerste rij moet de kolomnamen bevatten.",
+				"optionDescription": "Maak een dataset van een bestand op je computer.",
+				"optionTitle": "Upload een CSV- of JSON-bestand"
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "Een kolom toevoegen",
+				"download": "Downloaden",
+				"hideAll": "Verberg alles",
+				"hideAllVariables": "",
+				"returnToNavigation": "Terug naar navigatie",
+				"save": "",
+				"saving": "",
+				"showAll": "Toon alles",
+				"showAllVariables": ""
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "Eerste variabele",
+					"operation": "Operatie",
+					"secondVariable": "Tweede variabele",
+					"variablesForAverage": "Variabelen voor gemiddelde",
+					"variableToCopy": "Variabele om te kopiëren",
+					"variableToRecode": "Variabele om te hercoderen",
+					"variableToReverse": "Variabele omkeren"
+				},
+				"cancel": "Annuleren",
+				"chooseAction": "Kies een actie",
+				"labels": {
+					"firstVariable": "Eerste variabele",
+					"operation": "Operatie",
+					"secondVariable": "Tweede variabele",
+					"sourceVariable": "Selecteer de variabele die u wilt kopiëren",
+					"variablesForAverage": "Selecteer variabele(n)",
+					"variableToRecode": "Selecteer de variabele die u wilt hercoderen.",
+					"variableToReverse": "Selecteer de variabele die u wilt omkeren"
+				},
+				"placeholders": {
+					"selectOperation": "Selecteer de bewerking",
+					"selectVariable": "Selecteer variabele",
+					"selectVariables": "Selecteer variabele(n)"
+				},
+				"submit": "Kolom toevoegen",
+				"title": "Een kolom toevoegen"
+			},
+			"alt": {
+				"addColumn": "Een kolom toevoegen",
+				"database": "Database",
+				"return": "Opbrengst"
+			},
+			"downloadPrompt": "Geef een naam aan het CSV-bestand dat je gaat downloaden.\nJe hoeft geen '.csv' toe te voegen, wij doen dat voor je!",
+			"header": {
+				"activeData": "Actieve gegevens",
+				"untitledDataset": ""
+			},
+			"meta": {
+				"dataOrigin": "",
+				"lastUpdated": "",
+				"neverUpdated": ""
+			},
+			"operations": {
+				"computeNew": "Bereken een nieuwe variabele",
+				"copyExisting": "Kopieer bestaande variabele",
+				"recodeVariable": "Een variabele hercoderen",
+				"reverseScore": "Omgekeerde score"
+			},
+			"sections": {
+				"generalVariables": "Algemene variabelen",
+				"taskVariables": "Taakvariabelen",
+				"userVariables": "Gebruikersvariabelen"
+			},
+			"variable": {
+				"delete": "",
+				"hideAria": "",
+				"rename": "",
+				"renamePrompt": "",
+				"showAria": ""
+			}
+		},
+		"datasets": {
+			"addDataset": "Voeg dataset toe",
+			"deleteConfirm": "Weet je zeker dat je deze dataset wilt verwijderen?",
+			"deleteDataset": "Gegevensset verwijderen",
+			"deleteDisabledNotOwner": "Alleen de maker van deze dataset kan deze verwijderen.",
+			"deleteDisabledPublicTemplate": "Deze dataset is gekoppeld aan een openbaar sjabloon en kan niet worden verwijderd.",
+			"deleteLabel": "Verwijderen",
+			"deleting": "Verwijderen...",
+			"editLabel": "Gegevensset bewerken",
+			"errorLoading": "Fout: {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "Ook in deze lijst",
+				"otherTooltip": "Deze dataset voldeed op een andere manier aan het lijstfilter (bijvoorbeeld via een openbaar sjabloon). Het is mogelijk dat deze niet in dit project of onderzoek is opgeslagen.",
+				"viaPartLabel": "Gekoppeld vanuit een deel",
+				"viaPartTooltip": "Deze dataset is niet direct opgeslagen in dit project of onderzoek, maar minstens één onderdeel van een tijdschrift in deze werkruimte maakt er wel gebruik van.",
+				"workspaceLabel": "Deze werkruimte",
+				"workspaceTooltip": "Deze dataset is opgeslagen bij het huidige project of onderzoek.",
+				"yourLibraryLabel": "Uw dataset",
+				"yourLibraryTooltip": "U hebt deze dataset gemaakt, maar deze is momenteel niet gekoppeld aan dit project of onderzoek. De dataset wordt hier weergegeven zodat u deze kunt vinden en hergebruiken."
+			},
+			"listIntro": "Deze lijst bevat datasets die op deze werkruimte zijn opgeslagen, datasets die via tijdschriftonderdelen zijn gekoppeld en uw eigen datasets, zodat u deze opnieuw kunt gebruiken.",
+			"loading": "Gegevenssets worden geladen...",
+			"meta": {
+				"byAuthor": "Door {{author}}",
+				"byYou": "door jou",
+				"dataOrigin": "",
+				"lastUpdated": "Laatst bijgewerkt {{date}}",
+				"lastUpdatedNever": "Nooit",
+				"unknownAuthor": "Onbekend"
+			},
+			"originTooltip": "",
+			"untitled": "Naamloze dataset"
+		},
+		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "Kolom/kolommen om te plotten",
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"googleSlidesAlt": "Google Slides",
+						"hintLong": "Als u kolommen wilt vergelijken, klik dan hier.",
+						"hintWide": "Als u verschillende groepen voor één kolom (variabele) wilt vergelijken, klik dan hier.",
+						"longDescription": "De gegevens zijn georganiseerd waarbij elke observatie (zoals een toetsresultaat van een leerling) op een eigen rij staat, vaak met een kolom die de categorieën (zoals vakken) aangeeft. Deze opmaak is handig voor gedetailleerde analyses over verschillende categorieën heen.",
+						"longTitle": "Lange gegevensindeling",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "Gegevensindeling",
+						"slidesLink": "Klik hier om de presentatieslides te bekijken.",
+						"switchToLong": "Schakel over naar de lange weergave",
+						"switchToWide": "Schakel over naar breedbeeldformaat",
+						"toggleAriaLabel": "",
+						"wideDescription": "De gegevens zijn georganiseerd waarbij elke categorie (zoals onderwerpen) een eigen kolom vormt, vaak met rijen die observaties (zoals studenten) weergeven. Deze opmaak is eenvoudiger voor snelle vergelijkingen binnen categorieën.",
+						"wideTitle": "Breed gegevensformaat"
+					},
+					"errBar95": "95% betrouwbaarheidsinterval",
+					"errBar99": "99% betrouwbaarheidsinterval",
+					"errBarStdErr": "Standaardfout",
+					"errorBar": "Foutbalk",
+					"errorBarWide": "Foutbalk",
+					"qualitativeColumn": "Kwalitatieve column",
+					"quantitativeColumn": "Kwantitatieve kolom",
+					"resources": {
+						"barPlotAlt": "Externe link",
+						"barPlotTitle": "Wat is een staafdiagram?",
+						"confidenceIntervalsAlt": "Externe link",
+						"confidenceIntervalsTitle": "Betrouwbaarheidsintervallen — wat zijn dat?",
+						"standardErrorAlt": "Externe link",
+						"standardErrorTitle": "Meer over de standaardfout"
+					}
+				},
+				"header": {
+					"iconAlt": "Assen",
+					"title": "Assen"
+				},
+				"help": {
+					"ariaLabel": "Bronnen en hulp",
+					"resourcesIntro": "Gebruik de onderstaande knoppen om een ​​artikel in een nieuw tabblad te openen wanneer er een link beschikbaar is."
+				},
+				"histogram": {
+					"columnsToObserve": "Kolom(len) om te observeren",
+					"groupByOptional": "Groeperen op (optioneel — kleuren op categorie)",
+					"marginalBox": "Boxplot",
+					"marginalNone": "Geen",
+					"marginalPlot": "Marginaal plot",
+					"marginalRug": "Tapijtplot",
+					"resources": {
+						"histogramAlt": "Externe link",
+						"histogramTitle": "Wat is een histogram?"
+					}
+				},
+				"scatterPlot": {
+					"group": "Groep",
+					"resources": {
+						"scatterPlotAlt": "Spreidingsdiagrambron",
+						"scatterPlotTitle": "Spreidingsdiagram",
+						"trendlineAlt": "Externe link naar de trendlijnbron",
+						"trendlineTitle": "Trendlijn"
+					},
+					"trendline": "Trendlijn",
+					"xAxis": "X-as",
+					"yAxis": "Y-as"
+				}
+			},
+			"codeEditor": {
+				"runCode": "Voer de code uit"
+			},
+			"common": {
+				"axisSection": {
+					"x": "X-as",
+					"y": "Y-as"
+				},
+				"graphTitle": "Grafiektitel",
+				"label": "Etiket",
+				"legendTitle": "Legendatitel",
+				"legendTitleHint": "(laat leeg indien niet nodig)",
+				"legendTitleSection": "Legendatitel",
+				"marginalPlot": "Marginaal plot",
+				"range": {
+					"label": "Bereik",
+					"max": "Max",
+					"min": "Min"
+				},
+				"resources": {
+					"noLink": "Geen externe link",
+					"openLink": "Klik hier om de bron te raadplegen."
+				}
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "Pas het uiterlijk en de lay-out van de grafiek aan.",
+					"title": "Stijl- en lay-outopties"
+				},
+				"tabs": {
+					"axes": "Assen",
+					"codeEditor": "Code-editor",
+					"styleLayout": "Stijl en lay-out"
+				}
+			},
+			"emptyState": {
+				"helper": "Klik op dit onderdeel om de editor te openen en kies vervolgens variabelen om een ​​voorbeeld van uw visualisatie te bekijken.",
+				"title": "Uw grafiek is klaar om geconfigureerd te worden."
+			},
+			"fields": {
+				"clearSelection": "Geen",
+				"selectPlaceholder": "Selecteer {{field}}",
+				"selectVariablesPlaceholder": "Selecteer variabele(n)"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- HEX-formaat [#28619E], [#D53533]",
+						"examplesNames": "- Kleurnamen: [rood], [roze]",
+						"examplesRgb": "- RGB-waarde [100,255,0], [0,120,80]",
+						"heading": "Kleur",
+						"intro": "Geef een basiskleur op voor de balk (verwijder de vierkante haken om de onderstaande voorbeelden te gebruiken)."
+					},
+					"header": {
+						"iconAlt": "Opties",
+						"title": "Opties"
+					},
+					"legendAndXAxisSection": "Labels op de X-as en titel van de legenda",
+					"yAxis": "Y-as"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "Opties",
+						"title": "Opties"
+					},
+					"legendSection": "Legende",
+					"legendTitleCombined": "Legendatitel (laat leeg indien niet nodig)",
+					"yAxis": "Y-as"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "Opties",
+						"title": "Opties"
+					},
+					"marginal": {
+						"boxplot": "Boxplot",
+						"none": "",
+						"rug": "Tapijt"
+					},
+					"yAxis": "Y-as"
+				}
+			}
 		},
 		"hypVis": {
 			"axes": {
@@ -276,6 +575,16 @@
 					"rankHelpStep1": "Geef elke aandoening een naam met behulp van het keuzemenu (je kunt zelf tekst invullen!).",
 					"rankHelpStep2": "Gebruik de schuifregelaar aan de rechterkant van het label om de verwachte rangorde van de afhankelijke variabele in deze conditie aan te geven ten opzichte van de rest.",
 					"rankSectionTitle": "Rangschik uw voorwaarden",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"rankOrdering": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionHypothesisTitle": "Uw experimentele hypothese",
 					"titleLabel": "Titel",
 					"titlePlaceholder": "Invloed van de conditie op de variabele",
@@ -296,6 +605,16 @@
 					"fallbackIndependentVariable": "Onafhankelijke variabele",
 					"fallbackNumberOfConditions": "Aantal"
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": ""
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "Gekopieerd naar het klembord!",
 					"clipboardHypothesisCopied": "Tekst gekopieerd naar het klembord: {{text}}",
@@ -314,16 +633,46 @@
 					"iPredictThat": "Ik voorspel dat",
 					"loading": "Bezig met laden...",
 					"loadingBlocks": "Blokgegevens laden...",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"directionality": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionTitle": "Uw correlatiehypothese",
 					"titleLabel": "Titel",
 					"willBeRelatedTo": "zal verband houden met"
+				},
+				"default": {
+					"group": "",
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"xAxis": "",
+					"yAxis": ""
 				}
 			},
 			"editor": {
 				"codeTab": "Code",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": "Variabelen"
 			},
+			"emptyState": {
+				"helper": "Klik op dit onderdeel om de editor te openen en vul vervolgens de variabelen in om de visualisatie te genereren.",
+				"title": "Uw hypothese-visualizer is klaar om geconfigureerd te worden."
+			},
 			"helpAriaLabel": "Meer informatie"
+		},
+		"paragraphEditor": {
+			"emptyInvite": "Klik hier om te beginnen met schrijven."
 		},
 		"settingsPanel": {
 			"deleteWidget": "Widget verwijderen",
@@ -331,8 +680,297 @@
 			"notesPlaceholder": "Voer hier uw aantekeningen in...",
 			"widgetSettings": "Widget-instellingen"
 		},
+		"sideNav": {
+			"addComponent": "",
+			"addComponentAria": "",
+			"addJournal": "Logboek",
+			"addJournalScratch": "Maak een dagboek helemaal zelf.",
+			"addJournalTemplate": "Voeg een dagboeksjabloon toe",
+			"addWorkspace": "Werkruimte toevoegen",
+			"addWorkspaceDropdown": "Werkruimte",
+			"addWorkspaceError": "Fout bij het toevoegen van de werkruimte",
+			"addWorkspaceLoading": "Toevoegen...",
+			"addWorkspaceScratch": "Creëer een werkruimte helemaal vanaf nul.",
+			"addWorkspaceTemplate": "Een werkruimtesjabloon toevoegen",
+			"backToJournal": "Terug naar het dagboek",
+			"collapsePanel": "Dichtbij",
+			"componentFallbackName": "Componentnaam",
+			"dataOrigin": {
+				"SIMULATED": "Gesimuleerd",
+				"STUDY": "Onderzoeksgegevens",
+				"TEMPLATE": "Sjabloon",
+				"UPLOADED": "Geüpload"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "Selecteer datasets die aan dit tijdschrift zijn gekoppeld.",
+				"many": "{{count}} gekoppelde datasets",
+				"none": "Geen gekoppelde datasets",
+				"one": "1 gekoppelde dataset"
+			},
+			"dataSourceLabel": "Gegevensbronnen",
+			"dataSourceModal": {
+				"byAuthor": "Door {{author}}",
+				"cancel": "Annuleren",
+				"closeModal": "Dichtbij",
+				"error": "Fout: {{message}}",
+				"lastUpdated": "• Laatst bijgewerkt {{date}}",
+				"loading": "Gegevenssets worden geladen...",
+				"neverUpdated": "Nooit",
+				"noDatasets": "Geen datasets gevonden",
+				"save": "Redden",
+				"saving": "Besparing...",
+				"title": "Selecteer gegevensbronnen",
+				"unknownAuthor": "Onbekend",
+				"untitledDataset": "Naamloze dataset"
+			},
+			"defaultWorkspaceTitle": "Naamloze werkruimte",
+			"deleteJournal": "Verwijderen",
+			"deleteJournalConfirm": "Weet je zeker dat je dit logboek wilt verwijderen? Alle werkruimten en componenten in dit logboek worden dan ook verwijderd.",
+			"deleteJournalMissingId": "Dit logboek kan niet worden verwijderd (ID ontbreekt).",
+			"deleteJournalModalTitle": "Dagboek verwijderen",
+			"deleteWorkspace": "Werkruimte verwijderen",
+			"deleteWorkspaceConfirm": "Weet je zeker dat je deze werkruimte wilt verwijderen? Alle componenten in deze werkruimte worden dan ook verwijderd.",
+			"deleteWorkspaceMissingId": "Deze werkruimte kan niet worden verwijderd (ID ontbreekt).",
+			"deleteWorkspaceModalTitle": "Werkruimte verwijderen",
+			"editJournal": "Bewerking",
+			"editJournalCloseWithoutSaving": "Sluiten zonder opslaan",
+			"editJournalFieldDescription": "Beschrijving",
+			"editJournalFieldTitle": "Titel",
+			"editJournalSaveClose": "Opslaan en sluiten",
+			"editJournalTemplateCheckbox": "Maak een sjabloon",
+			"editJournalTitle": "Dagboek bewerken",
+			"journalMore": "Dagboekopties",
+			"lastUpdatedAt": "Laatst bijgewerkt: {{date}}",
+			"manageDatasets": "Gegevenssets beheren",
+			"noDataSources": "Geen gegevensbronnen",
+			"noJournalsYet": "Het lijkt erop dat je nog steeds geen datalogboeken hebt!",
+			"renameWorkspace": "Werkruimte hernoemen",
+			"renameWorkspaceModalTitle": "Werkruimte hernoemen",
+			"renameWorkspaceSaving": "Besparing...",
+			"templateModal": {
+				"copyError": "Kon niet maken vanuit sjabloon: {{message}}",
+				"copyTitlePrefix": "Kopie van",
+				"datasetsMany": "{{count}} gekoppelde datasets",
+				"datasetsNone": "Geen gekoppelde datasets",
+				"datasetsOne": "1 gekoppelde dataset",
+				"empty": "Er zijn nog geen sjablonen beschikbaar. Markeer een logboek als sjabloon (beheerder) of vraag je team om er een toe te voegen.",
+				"loading": "Sjablonen worden geladen…",
+				"missingJournal": "Er is geen verzameling tijdschriften beschikbaar. Maak eerst zelf een tijdschrift aan.",
+				"newCollectionTitle": "Naamloze tijdschriftencollectie",
+				"queryError": "Fout bij het laden van sjablonen: {{message}}",
+				"title": "Kies een sjabloon voor een dagboek.",
+				"useTemplate": "Gebruik sjabloon"
+			},
+			"workspaceMore": "Werkruimteopties"
+		},
+		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "Kolom ter samenvatting",
+					"dataLayout": {
+						"currentlyPerforming": "Momenteel bezig met samenvatten:",
+						"long": {
+							"description": "Elke observatie is een rij. Kies één kolom met waarden om samen te vatten en eventueel een kolom die groepen definieert.",
+							"title": "Lange gegevensindeling"
+						},
+						"summaryLong": {
+							"main": "Eén kolom met waarden per rij, met een optionele groeperingskolom (lange opmaak)."
+						},
+						"summaryWide": {
+							"between": "Meerdere",
+							"columns": "Kolommen in breed formaat (één variabele per kolom).",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "Elke variabele die u wilt samenvatten, krijgt een eigen kolom. Selecteer een of meer kolommen en eventueel een groeperingsvariabele.",
+							"title": "Brede gegevensindeling"
+						}
+					},
+					"groupingVariable": "Groeperingsvariabele",
+					"qualOption": {
+						"description": "Kwalitatieve gegevens worden weergegeven in een kolom met labels. Bijvoorbeeld tot welke experimentele conditie een proefpersoon behoort, of hun antwoord op een meerkeuzevraag.",
+						"title": "Schakel over naar kwalitatieve gegevens"
+					},
+					"quantOption": {
+						"description": "Kwantitatieve gegevens worden weergegeven in een kolom gevuld met numerieke waarden. Bijvoorbeeld de leeftijd van de deelnemer of zijn of haar score in een enquête.",
+						"title": "Schakel over naar kwantitatieve gegevens"
+					},
+					"resources": {
+						"googleSlidesAlt": "Google Slides",
+						"openLink": "Klik hier om de bron te raadplegen.",
+						"sectionTitle": "Bronnen",
+						"slidesLink": "Klik hier om de presentatieslides te bekijken.",
+						"tableWhatAlt": "Externe link",
+						"tableWhatTitle": "Wat is een tafel?"
+					},
+					"valueMode": {
+						"qualLabel": "Kwalitatief",
+						"quantLabel": "Kwantitatief",
+						"triggerPrefix": "Kolomwaardetype:",
+						"triggerSuffix": "(klik hier om te wijzigen)"
+					}
+				}
+			},
+			"editor": {
+				"tabs": {
+					"code": "Code",
+					"variables": "Variabelen"
+				}
+			},
+			"fields": {
+				"clearSelection": "Geen",
+				"qualColumnsLabel": "Kwalitatieve kolom(men)",
+				"quantColumnsLabel": "Kwantitatieve kolom(men)",
+				"selectPlaceholder": "Selecteer {{field}}",
+				"selectVariablesPlaceholder": "Selecteer variabele(n)"
+			}
+		},
+		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"hint": "",
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"hint": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": "",
+						"sectionTitle": ""
+					}
+				},
+				"default": {
+					"column1": "",
+					"column2": ""
+				},
+				"pearson": {
+					"predictedColumn": "",
+					"predictorColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"tTest": {
+					"col1": "",
+					"col2": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				}
+			},
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
+			"emptyState": {
+				"helper": "Klik op dit onderdeel om de editor te openen en kies vervolgens de variabelen waarmee de test moet worden uitgevoerd.",
+				"title": "Uw statistische test is klaar om geconfigureerd te worden."
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
+			}
+		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "Wis alles",
+					"selectAll": "Selecteer alles"
+				},
+				"description": "Kies snel welke kolommen deze tabel moet weergeven.",
+				"empty": "Er zijn geen zichtbare kolommen beschikbaar in de dataset.",
+				"filters": {
+					"allValues": "Alle waarden",
+					"clear": "Wis filters",
+					"close": "Dichtbij",
+					"description": "Numerieke kolommen gebruiken minimum- en maximumwaarden. Categorische kolommen gebruiken een keuzelijst met waarden.",
+					"dropdownAria": "Filteren {{column}}",
+					"filterSettings": "Filter",
+					"maxLabel": "Max",
+					"minLabel": "Min",
+					"title": "Eenvoudige filters",
+					"toggleAria": "Schakel filters in/uit voor {{column}}"
+				},
+				"search": {
+					"ariaLabel": "Zoekkolommen",
+					"noMatches": "Er zijn geen kolommen die overeenkomen met uw zoekopdracht.",
+					"placeholder": "Zoekkolommen…"
+				},
+				"title": "Kolommen"
+			}
+		},
 		"visualizationWidget": {
 			"unsupportedType": "Niet-ondersteund widgettype: {{type}}"
+		},
+		"workspaceArea": {
+			"error": "Werkruimte kon niet worden geladen: {{message}}",
+			"loading": "Werkruimte laden…"
 		}
 	},
 	"dataJournals": "Tijdschriften",
@@ -574,6 +1212,7 @@
 	"myTasks": "Mijn taken",
 	"navigation": {
 		"back": "rug",
+		"cloneSavePrompt": "Wijzig de naam van de studie en klik op de knop 'Opslaan'.",
 		"enoughComments": "Genoeg reacties? Laat het de reviewers weten.",
 		"enoughParticipants": "Genoeg deelnemers?",
 		"lockFeedback": "Vergrendelingsfeedback",
@@ -1160,31 +1799,41 @@
 		"unlockedForParticipation": "Het onderzoek is vrijgegeven voor deelname"
 	},
 	"surveyBuilder": {
-		"addFirstPage": "Voeg uw eerste pagina toe",
-		"addItem": "+",
-		"addItemBtn": "+ artikel",
+		"addExamplePage": "Voorbeeld tonen",
+		"addFirstPage": "Voeg je eerste pagina toe om de enquête te starten",
+		"addItem": "Vraag toevoegen",
+		"addItemBtn": "+ item",
 		"addOption": "+ optie",
-		"addPage": "+",
+		"addPage": "Pagina toevoegen",
 		"block": "Blok",
-		"checkbox": "Meerkeuzevragen (selecteer meerdere opties)",
-		"deletePage": "Deze pagina verwijderen",
+		"checkbox": "Meerkeuze (meerdere selecties)",
+		"deletePage": "Pagina verwijderen",
 		"freeinput": "Tekstinvoer",
 		"header": "Koptekst",
-		"hideContinueBtn": "Verberg Doorgaan-knop",
-		"likert": "Likertschaal",
-		"likertItems": "Items voor de Likertschaal",
-		"maxValue": "Maximale waarde",
-		"maxValueLabel": "Maximale waarde label",
-		"minValue": "Minimale waarde",
-		"minValueLabel": "Minimumwaarde label",
+		"headerPlaceholder": "bijv. Vraagtitel weergegeven boven het item",
+		"hideContinueBtn": "Doorgaan-knop verbergen",
+		"likert": "Likert-schaal",
+		"likertItemPlaceholder": "Stelling om te beoordelen",
+		"likertItems": "Items voor de Likert-schaal",
+		"maxValue": "Maximumwaarde",
+		"maxValueLabel": "Label voor maximumwaarde",
+		"maxValueLabelPlaceholder": "bijv. Heel erg",
+		"minValue": "Minimumwaarde",
+		"minValueLabel": "Label voor minimumwaarde",
+		"minValueLabelPlaceholder": "bijv. Helemaal niet",
+		"optionPlaceholder": "Optietekst",
 		"options": "Opties",
-		"page": "Pagina {{nummer}}",
-		"pageTimeout": "Pagina-time-out (in milliseconden)",
-		"select": "Meerkeuzevraag (selecteer één)",
+		"page": "Pagina {{number}}",
+		"pages": "Pagina's",
+		"pageTimeout": "Paginatime-out (in milliseconden)",
+		"preview": "Voorbeeld",
+		"select": "Meerkeuze (één selectie)",
 		"text": "Tekst",
 		"textLabel": "Tekst",
+		"textPlaceholder": "Voer beschrijvende of instructieve tekst in die aan deelnemers wordt getoond",
 		"type": "Type",
-		"variableName": "Variabele naam",
+		"variableName": "Variabelenaam",
+		"variableNamePlaceholder": "bijv. antwoord_1 (gebruikt om het antwoord op te slaan)",
 		"vas": "Visuele schaal"
 	},
 	"surveyDescription": "In een enquête worden deelnemers vragen gesteld over zichzelf, over hoe ze zich gedragen en hoe ze zich voelen.",

@@ -225,9 +225,15 @@
 	},
 	"createStudyWithoutProject": "Create a study without a project",
 	"dataJournal": {
-		"addComponent": "Add Component",
+		"addComponent": "Component",
 		"addNotes": "Add Notes",
-		"collapsePanel": "Collapse panel",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "Code"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "Close",
 			"componentName": "Component Name",
@@ -254,6 +260,299 @@
 			"unsupportedType": "Unsupported component type: {{type}}",
 			"untitled": "Untitled"
 		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "Cancel",
+				"create": "Create dataset"
+			},
+			"dataSourceLabel": "Data source",
+			"errorCreatingDataset": "Error creating dataset:",
+			"errorLoadingStudy": "Error loading study:",
+			"loadingDataSources": "Loading data sources…",
+			"nameHelp": "You can rename this later from the dataset settings.",
+			"nameLabel": "Dataset name",
+			"namePlaceholder": "e.g. Pre-test responses, Spring 2026",
+			"study": {
+				"currentStudy": "Study: {{title}}",
+				"currentStudyMissing": "No study linked to this project",
+				"optionDisabled": "No study is linked to this project. Link a study to enable this option.",
+				"optionTitle": "Use data from the current study"
+			},
+			"subtitle": "Name your dataset and choose where the data should come from.",
+			"template": {
+				"optionDescription": "Choose a template dataset (coming soon).",
+				"optionTitle": "Copy from an existing dataset"
+			},
+			"title": "New dataset",
+			"upload": {
+				"fileHelp": "First row should contain column names.",
+				"optionDescription": "Create a dataset from a file on your computer.",
+				"optionTitle": "Upload a CSV or JSON file"
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "Add a column",
+				"download": "Download",
+				"hideAll": "",
+				"hideAllVariables": "Hide all variables",
+				"returnToNavigation": "",
+				"save": "Save",
+				"saving": "Saving…",
+				"showAll": "",
+				"showAllVariables": "Show all variables"
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "First variable",
+					"operation": "Operation",
+					"secondVariable": "Second variable",
+					"variablesForAverage": "Variables for average",
+					"variableToCopy": "Variable to copy",
+					"variableToRecode": "Variable to recode",
+					"variableToReverse": "Variable to reverse"
+				},
+				"cancel": "Cancel",
+				"chooseAction": "Choose an action",
+				"labels": {
+					"firstVariable": "First variable",
+					"operation": "Operation",
+					"secondVariable": "Second variable",
+					"sourceVariable": "Select variable to copy",
+					"variablesForAverage": "Select variable(s)",
+					"variableToRecode": "Select variable to recode",
+					"variableToReverse": "Select variable to reverse"
+				},
+				"placeholders": {
+					"selectOperation": "Select operation",
+					"selectVariable": "Select variable",
+					"selectVariables": "Select variable(s)"
+				},
+				"submit": "Add column",
+				"title": "Add a column"
+			},
+			"alt": {
+				"addColumn": "Add a column",
+				"database": "Database",
+				"return": ""
+			},
+			"downloadPrompt": "Give a name to the CSV you're about to download\nNo need to add '.csv' we're taking care of that!",
+			"header": {
+				"activeData": "",
+				"untitledDataset": "Untitled dataset"
+			},
+			"meta": {
+				"dataOrigin": "Origin: {{origin}}",
+				"lastUpdated": "Updated {{when}}",
+				"neverUpdated": "Never updated"
+			},
+			"operations": {
+				"computeNew": "Compute new variable",
+				"copyExisting": "Copy existing variable",
+				"recodeVariable": "Recode a variable",
+				"reverseScore": "Reverse score"
+			},
+			"sections": {
+				"generalVariables": "General Variables",
+				"taskVariables": "Task Variables",
+				"userVariables": "User Variables"
+			},
+			"variable": {
+				"delete": "Delete",
+				"hideAria": "Hide {{name}}",
+				"rename": "Rename",
+				"renamePrompt": "Please enter new name:",
+				"showAria": "Show {{name}}"
+			}
+		},
+		"datasets": {
+			"addDataset": "Add dataset",
+			"deleteConfirm": "Are you sure you want to delete this dataset?",
+			"deleteDataset": "Delete dataset",
+			"deleteDisabledNotOwner": "Only the creator of this dataset can delete it.",
+			"deleteDisabledPublicTemplate": "This dataset is linked to a public template and cannot be deleted.",
+			"deleteLabel": "Delete",
+			"deleting": "Deleting…",
+			"editLabel": "Edit dataset",
+			"errorLoading": "Error: {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "Also in this list",
+				"otherTooltip": "This dataset matched the list filter in another way (for example a public template). It may not be stored on this project or study.",
+				"viaPartLabel": "Linked from a part",
+				"viaPartTooltip": "This dataset is not stored directly on this project or study, but at least one journal part in this workspace uses it.",
+				"workspaceLabel": "This workspace",
+				"workspaceTooltip": "This dataset is stored on the current project or study.",
+				"yourLibraryLabel": "Your dataset",
+				"yourLibraryTooltip": "You created this dataset, but it is not currently attached to this project or study. It appears here so you can find and reuse it."
+			},
+			"listIntro": "This list includes datasets stored on this workspace, datasets linked through journal parts, and your own datasets so you can reuse them.",
+			"loading": "Loading datasets…",
+			"meta": {
+				"byAuthor": "by {{author}}",
+				"byYou": "by you",
+				"dataOrigin": "Origin: {{origin}}",
+				"lastUpdated": "Last updated {{date}}",
+				"lastUpdatedNever": "Never",
+				"unknownAuthor": "Unknown"
+			},
+			"originTooltip": "How this dataset was created.",
+			"untitled": "Untitled Dataset"
+		},
+		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "Column(s) to plot",
+					"dataFormat": {
+						"chipLong": "Long",
+						"chipWide": "Wide",
+						"googleSlidesAlt": "Google Slides",
+						"hintLong": "If you want to compare columns, click here.",
+						"hintWide": "If you want to compare different groups for one column (variable), click here.",
+						"longDescription": "Data organized with each observation (like a student's test score) appearing on its own row, often with a column indicating categories (like subjects). This format is useful for detailed analysis across categories.",
+						"longTitle": "Long Data Format",
+						"panelRegionAriaLabel": "Change data layout: diagram and resources for the selected format",
+						"sectionLabel": "Change data layout",
+						"slidesLink": "Click here to see the lecture slides",
+						"switchToLong": "",
+						"switchToWide": "",
+						"toggleAriaLabel": "Show or hide data layout options",
+						"wideDescription": "Data organized with each category (like subjects) appearing as its own column, often with rows representing observations (like students). This format is simpler for quick comparisons within categories.",
+						"wideTitle": "Wide Data Format"
+					},
+					"errBar95": "95% confidence interval",
+					"errBar99": "99% confidence interval",
+					"errBarStdErr": "Standard error",
+					"errorBar": "Error bar",
+					"errorBarWide": "Error Bar",
+					"qualitativeColumn": "Qualitative Column",
+					"quantitativeColumn": "Quantitative Column",
+					"resources": {
+						"barPlotAlt": "External link",
+						"barPlotTitle": "What is a Bar Plot?",
+						"confidenceIntervalsAlt": "External link",
+						"confidenceIntervalsTitle": "Confidence intervals — what are they?",
+						"standardErrorAlt": "External link",
+						"standardErrorTitle": "More about the standard error"
+					}
+				},
+				"header": {
+					"iconAlt": "Axes",
+					"title": "Axes"
+				},
+				"help": {
+					"ariaLabel": "Resources and help",
+					"resourcesIntro": "Click on the resources below to learn more about this component"
+				},
+				"histogram": {
+					"columnsToObserve": "Column(s) to observe",
+					"groupByOptional": "Group by (optional — color by category)",
+					"marginalBox": "Box plot",
+					"marginalNone": "None",
+					"marginalPlot": "Marginal plot",
+					"marginalRug": "Rug plot",
+					"resources": {
+						"histogramAlt": "External link",
+						"histogramTitle": "What is a Histogram?"
+					}
+				},
+				"scatterPlot": {
+					"group": "Group",
+					"resources": {
+						"scatterPlotAlt": "Scatter plot resource",
+						"scatterPlotTitle": "Scatter Plot",
+						"trendlineAlt": "External link to trendline resource",
+						"trendlineTitle": "Trendline"
+					},
+					"trendline": "Trendline",
+					"xAxis": "X-Axis",
+					"yAxis": "Y-Axis"
+				}
+			},
+			"codeEditor": {
+				"runCode": "Run the code"
+			},
+			"common": {
+				"axisSection": {
+					"x": "X-Axis",
+					"y": "Y-Axis"
+				},
+				"graphTitle": "Graph Title",
+				"label": "Label",
+				"legendTitle": "Legend title",
+				"legendTitleHint": "(leave empty if not needed)",
+				"legendTitleSection": "Legend title",
+				"marginalPlot": "Marginal plot",
+				"range": {
+					"label": "Range",
+					"max": "Max",
+					"min": "Min"
+				},
+				"resources": {
+					"noLink": "No external link",
+					"openLink": "Click here to access the resource"
+				}
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "Customize the appearance and layout of the graph.",
+					"title": "Style & Layout Options"
+				},
+				"tabs": {
+					"axes": "Axes",
+					"codeEditor": "Code editor",
+					"styleLayout": "Style & Layout"
+				}
+			},
+			"emptyState": {
+				"helper": "Click this component to open the editor, then choose variables to preview your visualization.",
+				"title": "Your graph is ready to be configured"
+			},
+			"fields": {
+				"clearSelection": "None",
+				"selectPlaceholder": "Select {{field}}",
+				"selectVariablesPlaceholder": "Select variable(s)"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- HEX format [#28619E], [#D53533]",
+						"examplesNames": "- Color names: [red], [pink]",
+						"examplesRgb": "- RGB value [100,255,0], [0,120,80]",
+						"heading": "Color",
+						"intro": "Give a base color for the bar (remove square brackets to use the examples below)."
+					},
+					"header": {
+						"iconAlt": "Options",
+						"title": "Options"
+					},
+					"legendAndXAxisSection": "X-axis labels and legend title",
+					"yAxis": "Y-Axis"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "Options",
+						"title": "Options"
+					},
+					"legendSection": "Legend",
+					"legendTitleCombined": "Legend title (leave empty if not needed)",
+					"yAxis": "Y-Axis"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "Options",
+						"title": "Options"
+					},
+					"marginal": {
+						"boxplot": "Boxplot",
+						"none": "",
+						"rug": "Rug"
+					},
+					"yAxis": "Y-Axis"
+				}
+			}
+		},
 		"hypVis": {
 			"axes": {
 				"abDesign": {
@@ -276,6 +575,16 @@
 					"rankHelpStep1": "Name each condition using the dropdown (you can type in!)",
 					"rankHelpStep2": "Use the slider on the right side of the label to indicate the expected rank of the DV in this condition compared to the rest",
 					"rankSectionTitle": "Rank your conditions",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "Reference coming soon.",
+							"title": "What is an experimental hypothesis?"
+						},
+						"rankOrdering": {
+							"subtitle": "Reference coming soon.",
+							"title": "Rank-ordering predictions"
+						}
+					},
 					"sectionHypothesisTitle": "Your experimental hypothesis",
 					"titleLabel": "Title",
 					"titlePlaceholder": "Effect of condition on variable",
@@ -296,6 +605,16 @@
 					"fallbackIndependentVariable": "independent variable",
 					"fallbackNumberOfConditions": "number of"
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "Resources and help",
+						"resourcesIntro": "Use the buttons below to open a reference in a new tab when a link is available."
+					},
+					"resources": {
+						"noLink": "No external link",
+						"openLinkHint": "Click here to access the resource"
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "Copied to clipboard!",
 					"clipboardHypothesisCopied": "Text copied to clipboard: {{text}}",
@@ -314,16 +633,46 @@
 					"iPredictThat": "I predict that",
 					"loading": "Loading...",
 					"loadingBlocks": "Loading block data...",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "Reference coming soon.",
+							"title": "What is a correlational hypothesis?"
+						},
+						"directionality": {
+							"subtitle": "Reference coming soon.",
+							"title": "Choosing directionality terms"
+						}
+					},
 					"sectionTitle": "Your correlational hypothesis",
 					"titleLabel": "Title",
 					"willBeRelatedTo": "will be related to"
+				},
+				"default": {
+					"group": "Group",
+					"header": {
+						"iconAlt": "Axes",
+						"title": "Axes"
+					},
+					"xAxis": "X-Axis",
+					"yAxis": "Y-Axis"
 				}
 			},
 			"editor": {
 				"codeTab": "Code",
+				"tabs": {
+					"code": "Code",
+					"variables": "Variables"
+				},
 				"variablesTab": "Variables"
 			},
+			"emptyState": {
+				"helper": "Click this component to open the editor, then complete the variables to generate the visualization.",
+				"title": "Your hypothesis visualizer is ready to be configured"
+			},
 			"helpAriaLabel": "More information"
+		},
+		"paragraphEditor": {
+			"emptyInvite": "Click here to start writing."
 		},
 		"settingsPanel": {
 			"deleteWidget": "Delete Widget",
@@ -331,8 +680,297 @@
 			"notesPlaceholder": "Enter your notes here...",
 			"widgetSettings": "Widget Settings"
 		},
+		"sideNav": {
+			"addComponent": "Component",
+			"addComponentAria": "Add a component to this workspace",
+			"addJournal": "Journal",
+			"addJournalScratch": "Create a journal from scratch",
+			"addJournalTemplate": "Add a journal template",
+			"addWorkspace": "Add workspace",
+			"addWorkspaceDropdown": "Workspace",
+			"addWorkspaceError": "Error adding workspace",
+			"addWorkspaceLoading": "Adding…",
+			"addWorkspaceScratch": "Create a workspace from scratch",
+			"addWorkspaceTemplate": "Add a workspace template",
+			"backToJournal": "Back to journal",
+			"collapsePanel": "Close",
+			"componentFallbackName": "Component name",
+			"dataOrigin": {
+				"SIMULATED": "Simulated",
+				"STUDY": "Study data",
+				"TEMPLATE": "Template",
+				"UPLOADED": "Uploaded"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "Choose datasets linked to this journal",
+				"many": "{{count}} datasets linked",
+				"none": "No datasets linked",
+				"one": "1 dataset linked"
+			},
+			"dataSourceLabel": "Data sources",
+			"dataSourceModal": {
+				"byAuthor": "by {{author}}",
+				"cancel": "Cancel",
+				"closeModal": "Close",
+				"error": "Error: {{message}}",
+				"lastUpdated": "• Last updated {{date}}",
+				"loading": "Loading datasets...",
+				"neverUpdated": "Never",
+				"noDatasets": "No datasets found",
+				"save": "Save",
+				"saving": "Saving...",
+				"title": "Select data sources",
+				"unknownAuthor": "Unknown",
+				"untitledDataset": "Untitled dataset"
+			},
+			"defaultWorkspaceTitle": "Unnamed workspace",
+			"deleteJournal": "Delete",
+			"deleteJournalConfirm": "Are you sure you want to delete this journal? All workspaces and components in this journal will be deleted as well.",
+			"deleteJournalMissingId": "This journal cannot be deleted (missing id).",
+			"deleteJournalModalTitle": "Delete journal",
+			"deleteWorkspace": "Delete workspace",
+			"deleteWorkspaceConfirm": "Are you sure you want to delete this workspace? All components in this workspace will be deleted as well.",
+			"deleteWorkspaceMissingId": "This workspace cannot be deleted (missing id).",
+			"deleteWorkspaceModalTitle": "Delete workspace",
+			"editJournal": "Edit",
+			"editJournalCloseWithoutSaving": "Close without saving",
+			"editJournalFieldDescription": "Description",
+			"editJournalFieldTitle": "Title",
+			"editJournalSaveClose": "Save and close",
+			"editJournalTemplateCheckbox": "Make a template",
+			"editJournalTitle": "Edit journal",
+			"journalMore": "Journal options",
+			"lastUpdatedAt": "Last updated: {{date}}",
+			"manageDatasets": "Manage datasets",
+			"noDataSources": "No data sources",
+			"noJournalsYet": "It looks like you still don't have any data journals!",
+			"renameWorkspace": "Rename workspace",
+			"renameWorkspaceModalTitle": "Rename workspace",
+			"renameWorkspaceSaving": "Saving…",
+			"templateModal": {
+				"copyError": "Could not create from template: {{message}}",
+				"copyTitlePrefix": "Copy of ",
+				"datasetsMany": "{{count}} datasets linked",
+				"datasetsNone": "No datasets linked",
+				"datasetsOne": "1 dataset linked",
+				"empty": "No templates are available yet. Mark a journal as a template (admin) or ask your team to add one.",
+				"loading": "Loading templates…",
+				"missingJournal": "No journal collection is available. Create a journal from scratch first.",
+				"newCollectionTitle": "Unnamed journal collection",
+				"queryError": "Error loading templates: {{message}}",
+				"title": "Choose a journal template",
+				"useTemplate": "Use template"
+			},
+			"workspaceMore": "Workspace options"
+		},
+		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "Column to summarize",
+					"dataLayout": {
+						"currentlyPerforming": "Currently summarizing:",
+						"long": {
+							"description": "Each observation is a row. Choose one column of values to summarize and optionally a column that defines groups.",
+							"title": "Long data layout"
+						},
+						"summaryLong": {
+							"main": "One column of values per row with an optional grouping column (long format)."
+						},
+						"summaryWide": {
+							"between": "Multiple",
+							"columns": " columns in wide format (one variable per column).",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "Each variable to summarize is its own column. Pick one or more columns and optionally a grouping variable.",
+							"title": "Wide data layout"
+						}
+					},
+					"groupingVariable": "Grouping variable",
+					"qualOption": {
+						"description": "Qualitative data is represented in a column filled with labels. For example, which experimental condition a subject belongs to, or their answer to a multiple choice question.",
+						"title": "Switch to Qualitative Data"
+					},
+					"quantOption": {
+						"description": "Quantitative data is represented in a column filled with numerical values. For example, the age of the participant or their score in a survey.",
+						"title": "Switch to Quantitative Data"
+					},
+					"resources": {
+						"googleSlidesAlt": "Google Slides",
+						"openLink": "Click here to access the resource",
+						"sectionTitle": "Resources",
+						"slidesLink": "Click here to see the lecture slides",
+						"tableWhatAlt": "External link",
+						"tableWhatTitle": "What is a table?"
+					},
+					"valueMode": {
+						"qualLabel": "Qualitative",
+						"quantLabel": "Quantitative",
+						"triggerPrefix": "Column value type:",
+						"triggerSuffix": " (click here to change)"
+					}
+				}
+			},
+			"editor": {
+				"tabs": {
+					"code": "Code",
+					"variables": "Variables"
+				}
+			},
+			"fields": {
+				"clearSelection": "None",
+				"qualColumnsLabel": "Qualitative column(s)",
+				"quantColumnsLabel": "Quantitative column(s)",
+				"selectPlaceholder": "Select {{field}}",
+				"selectVariablesPlaceholder": "Select variable(s)"
+			}
+		},
+		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "Column(s) to include in ANOVA",
+					"dataFormat": {
+						"currentlyPerforming": "Currently performing:",
+						"long": {
+							"description": "In the example above, we would select the column 'attrib' as a grouping column. This grouping is performed on the 'value' column which contains values for the conditions c1, c2, and c3.",
+							"title": "Switch to using a label column to sort rows of a value column"
+						},
+						"summaryLong": {
+							"hint": "(Click here if you want to switch to comparing values in different columns)",
+							"main": "One-Way ANOVA on a column containing values using a grouping column containing the group's labels on each row"
+						},
+						"summaryWide": {
+							"between": "between",
+							"columns": " three or more columns.",
+							"hint": "(Click here to use a label column to group each rows per unique label)",
+							"prefix": "One-Way ANOVA "
+						},
+						"wide": {
+							"description": "In the example above, we would select the columns c1, c2, and c3 to perform a One-Way Anova on them.",
+							"title": "Switch to performing a One-Way Anova between three or more columns"
+						}
+					},
+					"groupingColumn": "Grouping Column",
+					"quantitativeColumn": "Quantitative Column",
+					"resources": {
+						"scribbrLinkAlt": "External link",
+						"scribbrLinkTitle": "What is a One-way ANOVA?"
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "Long",
+						"chipWide": "Wide",
+						"panelRegionAriaLabel": "Data layout: diagram for the selected format",
+						"sectionLabel": "Data layout",
+						"toggleAriaLabel": "Show or hide data layout options"
+					},
+					"header": {
+						"iconAlt": "Axes",
+						"title": "Axes"
+					},
+					"help": {
+						"ariaLabel": "Resources and help",
+						"resourcesIntro": "Learn more about this component with the resources below."
+					},
+					"resources": {
+						"noLink": "No external link",
+						"openLinkHint": "Click here to access the resource",
+						"sectionTitle": "Resources"
+					}
+				},
+				"default": {
+					"column1": "1st Column",
+					"column2": "2nd Column"
+				},
+				"pearson": {
+					"predictedColumn": "Predicted Column",
+					"predictorColumn": "Predictor Column",
+					"resources": {
+						"scribbrLinkAlt": "External link",
+						"scribbrLinkTitle": "What's a Pearson's correlation"
+					}
+				},
+				"tTest": {
+					"col1": "1st column",
+					"col2": "2nd column",
+					"dataFormat": {
+						"currentlyPerforming": "Currently performing:",
+						"long": {
+							"description": "In the example above, we would select the column 'attrib' as a grouping column. This grouping is performed on the 'value' column which contains values for both conditions",
+							"title": "Switch to using a label column to sort rows of a value column"
+						},
+						"summaryLong": {
+							"main": "T-Test on a column containing values using a grouping column containing labels for each row"
+						},
+						"summaryWide": {
+							"between": "between",
+							"columns": " two columns.",
+							"prefix": "T-Test "
+						},
+						"wide": {
+							"description": "In the example above, we would select the columns c1 and c2 to perform a t-test on them.",
+							"title": "Switch to performing a T-Test between two columns"
+						}
+					},
+					"groupingColumn": "Grouping Column",
+					"quantitativeColumn": "Quantitative Column",
+					"resources": {
+						"scribbrLinkAlt": "External link",
+						"scribbrLinkTitle": "Independent samples t-test"
+					}
+				}
+			},
+			"editor": {
+				"tabs": {
+					"code": "Code",
+					"variables": "Variables"
+				}
+			},
+			"emptyState": {
+				"helper": "Click this component to open the editor, then choose variables to compute the test.",
+				"title": "Your statistical test is ready to be configured"
+			},
+			"fields": {
+				"clearSelection": "None",
+				"selectPlaceholder": "Select {{field}}",
+				"selectVariablesPlaceholder": "Select variable(s)"
+			}
+		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "Clear all",
+					"selectAll": "Select all"
+				},
+				"description": "Quickly choose which columns this table should display.",
+				"empty": "No visible columns are available from the dataset.",
+				"filters": {
+					"allValues": "All values",
+					"clear": "Clear filters",
+					"close": "Close",
+					"description": "Numeric columns use min/max values. Categorical columns use a value dropdown.",
+					"dropdownAria": "Filter {{column}}",
+					"filterSettings": "Filter",
+					"maxLabel": "Max",
+					"minLabel": "Min",
+					"title": "Simple filters",
+					"toggleAria": "Toggle filters for {{column}}"
+				},
+				"search": {
+					"ariaLabel": "Search columns",
+					"noMatches": "No columns match your search.",
+					"placeholder": "Search columns…"
+				},
+				"title": "Columns"
+			}
+		},
 		"visualizationWidget": {
 			"unsupportedType": "Unsupported widget type: {{type}}"
+		},
+		"workspaceArea": {
+			"error": "Could not load workspace: {{message}}",
+			"loading": "Loading workspace…"
 		}
 	},
 	"dataJournals": "Journals",
@@ -574,6 +1212,7 @@
 	"myTasks": "My tasks",
 	"navigation": {
 		"back": "back",
+		"cloneSavePrompt": "Change the study name and click the Save button",
 		"enoughComments": "Enough comments? Let reviewers know",
 		"enoughParticipants": "Enough participants?",
 		"lockFeedback": "Lock Feedback",
@@ -1160,31 +1799,41 @@
 		"unlockedForParticipation": "The study was unlocked for participation"
 	},
 	"surveyBuilder": {
-		"addFirstPage": "Add your first page",
-		"addItem": "+",
+		"addExamplePage": "Show example",
+		"addFirstPage": "Add your first page to start building the survey",
+		"addItem": "Add question",
 		"addItemBtn": "+ item",
 		"addOption": "+ option",
-		"addPage": "+",
+		"addPage": "Add page",
 		"block": "Block",
-		"checkbox": "Multiple choice (select many options)",
-		"deletePage": "Delete this page",
+		"checkbox": "Multiple choice (select many)",
+		"deletePage": "Delete page",
 		"freeinput": "Text input",
 		"header": "Header",
+		"headerPlaceholder": "e.g. Question title shown above the item",
 		"hideContinueBtn": "Hide Continue button",
 		"likert": "Likert scale",
+		"likertItemPlaceholder": "Statement to rate",
 		"likertItems": "Items for the Likert Scale",
 		"maxValue": "Maximum value",
 		"maxValueLabel": "Maximum value label",
+		"maxValueLabelPlaceholder": "e.g. Very much",
 		"minValue": "Minimum value",
 		"minValueLabel": "Minimum value label",
+		"minValueLabelPlaceholder": "e.g. Not at all",
+		"optionPlaceholder": "Option text",
 		"options": "Options",
 		"page": "Page {{number}}",
+		"pages": "Pages",
 		"pageTimeout": "Page timeout (in milliseconds)",
+		"preview": "Preview",
 		"select": "Multiple choice (select one)",
 		"text": "Text",
 		"textLabel": "Text",
+		"textPlaceholder": "Enter descriptive or instructional text shown to participants",
 		"type": "Type",
 		"variableName": "Variable name",
+		"variableNamePlaceholder": "e.g. response_1 (used to store the answer)",
 		"vas": "Visual scale"
 	},
 	"surveyDescription": "In a survey, participants are asked questions about themselves, about how they behave, or about how they feel.",

@@ -21,6 +21,49 @@ import ProjectBoard from "./ProjectBoard/Main";
 
 import Dashboard from "./Dashboard/Main";
 
+const CLASS_PAGE_NAV_ITEMS = [
+  {
+    value: "students",
+    labelKey: "main.students",
+    iconSrc: "/assets/icons/profile/people.svg",
+  },
+  {
+    value: "dashboard",
+    labelKey: "main.dashboard",
+    iconSrc: "/assets/icons/visualize/bar_chart.svg",
+  },
+  {
+    value: "projects",
+    labelKey: "main.projects",
+    iconSrc: "/assets/icons/project.svg",
+  },
+  {
+    value: "mentors",
+    labelKey: "main.mentors",
+    iconSrc: "/assets/icons/user.svg",
+  },
+  {
+    value: "studies",
+    labelKey: "main.studies",
+    iconSrc: "/assets/icons/education.svg",
+  },
+  {
+    value: "assignments",
+    labelKey: "main.assignments",
+    iconSrc: "/assets/icons/document.svg",
+  },
+  {
+    value: "resources",
+    labelKey: "main.resources",
+    iconSrc: "/assets/icons/visualize/folder_open.svg",
+  },
+  {
+    value: "settings",
+    labelKey: "main.settings",
+    iconSrc: "/assets/icons/settings.svg",
+  },
+];
+
 export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
   const page = query?.page || "students";
@@ -46,137 +89,35 @@ export default function ClassPage({ code, user, query }) {
       >
         <div>
           <Header user={user} myclass={myclass} />
-          <div className="upperMenu">
-            <div className="menu">
-              <Link
-                href={{
-                  pathname: `/dashboard/myclasses/${code}`,
-                  query: {
-                    page: "students",
-                  },
-                }}
-                className={
-                  page === "students"
-                    ? "menuTitle selectedMenuTitle"
-                    : "menuTitle"
-                }
-              >
-                <p>{t("main.students")}</p>
-              </Link>
-
-              <Link
-                href={{
-                  pathname: `/dashboard/myclasses/${code}`,
-                  query: {
-                    page: "dashboard",
-                  },
-                }}
-                className={
-                  page === "dashboard"
-                    ? "menuTitle selectedMenuTitle"
-                    : "menuTitle"
-                }
-              >
-                <p>{t("main.dashboard")}</p>
-              </Link>
-
-              <Link
-                href={{
-                  pathname: `/dashboard/myclasses/${code}`,
-                  query: {
-                    page: "projects",
-                  },
-                }}
-                className={
-                  page === "projects"
-                    ? "menuTitle selectedMenuTitle"
-                    : "menuTitle"
-                }
-              >
-                <p>{t("main.projects")}</p>
-              </Link>
-
-              <Link
-                href={{
-                  pathname: `/dashboard/myclasses/${code}`,
-                  query: {
-                    page: "mentors",
-                  },
-                }}
-                className={
-                  page === "mentors"
-                    ? "menuTitle selectedMenuTitle"
-                    : "menuTitle"
-                }
-              >
-                <p>{t("main.mentors")}</p>
-              </Link>
-
-              <Link
-                href={{
-                  pathname: `/dashboard/myclasses/${code}`,
-                  query: {
-                    page: "studies",
-                  },
-                }}
-                className={
-                  page === "studies"
-                    ? "menuTitle selectedMenuTitle"
-                    : "menuTitle"
-                }
-              >
-                <p>{t("main.studies")}</p>
-              </Link>
-
-              <Link
-                href={{
-                  pathname: `/dashboard/myclasses/${code}`,
-                  query: {
-                    page: "assignments",
-                  },
-                }}
-                className={
-                  page === "assignments"
-                    ? "menuTitle selectedMenuTitle"
-                    : "menuTitle"
-                }
-              >
-                <p>{t("main.assignments")}</p>
-              </Link>
-
-              <Link
-                href={{
-                  pathname: `/dashboard/myclasses/${code}`,
-                  query: {
-                    page: "resources",
-                  },
-                }}
-                className={
-                  page === "resources"
-                    ? "menuTitle selectedMenuTitle"
-                    : "menuTitle"
-                }
-              >
-                <p>{t("main.resources")}</p>
-              </Link>
-
-              <Link
-                href={{
-                  pathname: `/dashboard/myclasses/${code}`,
-                  query: {
-                    page: "settings",
-                  },
-                }}
-                className={
-                  page === "settings"
-                    ? "menuTitle selectedMenuTitle"
-                    : "menuTitle"
-                }
-              >
-                <p>{t("main.settings")}</p>
-              </Link>
+          <nav className="classPageNav" aria-label={t("main.classSectionsNav")}>
+            <div className="secondLine">
+              <div className="menu">
+                {CLASS_PAGE_NAV_ITEMS.map((item) => (
+                  <Link
+                    key={item.value}
+                    href={{
+                      pathname: `/dashboard/myclasses/${code}`,
+                      query: { page: item.value },
+                    }}
+                    aria-current={page === item.value ? "page" : undefined}
+                  >
+                    <div
+                      className={
+                        page === item.value
+                          ? "menuTitle selectedMenuTitle"
+                          : "menuTitle"
+                      }
+                    >
+                      <div className="titleWithIcon">
+                        {/* <img src={item.iconSrc} alt="" /> */}
+                        <p>{t(item.labelKey)}</p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          </nav>
 
           <div>
             {page === "students" && (

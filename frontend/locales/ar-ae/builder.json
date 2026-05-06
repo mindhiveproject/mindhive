@@ -227,15 +227,21 @@
 	"dataJournal": {
 		"addComponent": "إضافة مكون",
 		"addNotes": "إضافة ملاحظات",
-		"collapsePanel": "لوحة قابلة للطي",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "شفرة"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "يغلق",
-			"componentName": "",
+			"componentName": "اسم المكون",
 			"delete": "يمسح",
 			"deleteConfirm": "هل أنت متأكد من رغبتك في حذف هذا المكون؟",
 			"editComponent": "تعديل المكون",
 			"editParagraph": "تعديل الفقرة",
-			"editTitle": "",
+			"editTitle": "تعديل عنوان المكون",
 			"save": "يحفظ",
 			"saveFigureToMedia": "احفظ الشكل في مكتبة الوسائط",
 			"typeLabel": {
@@ -253,6 +259,299 @@
 			},
 			"unsupportedType": "نوع المكون غير مدعوم: {{type}}",
 			"untitled": "بدون عنوان"
+		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "يلغي",
+				"create": "إنشاء مجموعة بيانات"
+			},
+			"dataSourceLabel": "مصدر البيانات",
+			"errorCreatingDataset": "خطأ في إنشاء مجموعة البيانات:",
+			"errorLoadingStudy": "خطأ في تحميل الدراسة:",
+			"loadingDataSources": "جارٍ تحميل مصادر البيانات…",
+			"nameHelp": "يمكنك إعادة تسمية هذا لاحقًا من إعدادات مجموعة البيانات.",
+			"nameLabel": "اسم مجموعة البيانات",
+			"namePlaceholder": "مثال: إجابات ما قبل الاختبار، ربيع 2026",
+			"study": {
+				"currentStudy": "دراسة: {{title}}",
+				"currentStudyMissing": "لا توجد دراسة مرتبطة بهذا المشروع",
+				"optionDisabled": "لا توجد دراسة مرتبطة بهذا المشروع. اربط دراسة لتفعيل هذا الخيار.",
+				"optionTitle": "استخدم البيانات من الدراسة الحالية"
+			},
+			"subtitle": "قم بتسمية مجموعة البيانات الخاصة بك واختر مصدر البيانات.",
+			"template": {
+				"optionDescription": "اختر مجموعة بيانات نموذجية (قريبًا).",
+				"optionTitle": "نسخ من مجموعة بيانات موجودة"
+			},
+			"title": "مجموعة بيانات جديدة",
+			"upload": {
+				"fileHelp": "يجب أن يحتوي الصف الأول على أسماء الأعمدة.",
+				"optionDescription": "أنشئ مجموعة بيانات من ملف موجود على جهاز الكمبيوتر الخاص بك.",
+				"optionTitle": "قم بتحميل ملف CSV أو JSON"
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "أضف عمودًا",
+				"download": "تحميل",
+				"hideAll": "إخفاء الكل",
+				"hideAllVariables": "",
+				"returnToNavigation": "العودة إلى التنقل",
+				"save": "",
+				"saving": "",
+				"showAll": "عرض الكل",
+				"showAllVariables": ""
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "المتغير الأول",
+					"operation": "عملية",
+					"secondVariable": "المتغير الثاني",
+					"variablesForAverage": "المتغيرات المستخدمة في حساب المتوسط",
+					"variableToCopy": "المتغير المراد نسخه",
+					"variableToRecode": "متغير لإعادة الترميز",
+					"variableToReverse": "متغير للعكس"
+				},
+				"cancel": "يلغي",
+				"chooseAction": "اختر إجراءً",
+				"labels": {
+					"firstVariable": "المتغير الأول",
+					"operation": "عملية",
+					"secondVariable": "المتغير الثاني",
+					"sourceVariable": "حدد المتغير المراد نسخه",
+					"variablesForAverage": "حدد المتغير (المتغيرات)",
+					"variableToRecode": "حدد المتغير لإعادة ترميزه",
+					"variableToReverse": "حدد المتغير المراد عكسه"
+				},
+				"placeholders": {
+					"selectOperation": "حدد العملية",
+					"selectVariable": "حدد المتغير",
+					"selectVariables": "حدد المتغير (المتغيرات)"
+				},
+				"submit": "إضافة عمود",
+				"title": "أضف عمودًا"
+			},
+			"alt": {
+				"addColumn": "أضف عمودًا",
+				"database": "قاعدة البيانات",
+				"return": "يعود"
+			},
+			"downloadPrompt": "قم بتسمية ملف CSV الذي ستنزله.\nلا داعي لإضافة \".csv\"، سنقوم بذلك تلقائيًا!",
+			"header": {
+				"activeData": "البيانات النشطة",
+				"untitledDataset": ""
+			},
+			"meta": {
+				"dataOrigin": "",
+				"lastUpdated": "",
+				"neverUpdated": ""
+			},
+			"operations": {
+				"computeNew": "احسب متغيرًا جديدًا",
+				"copyExisting": "نسخ المتغير الموجود",
+				"recodeVariable": "إعادة ترميز متغير",
+				"reverseScore": "النتيجة المعكوسة"
+			},
+			"sections": {
+				"generalVariables": "المتغيرات العامة",
+				"taskVariables": "متغيرات المهمة",
+				"userVariables": "متغيرات المستخدم"
+			},
+			"variable": {
+				"delete": "",
+				"hideAria": "",
+				"rename": "",
+				"renamePrompt": "",
+				"showAria": ""
+			}
+		},
+		"datasets": {
+			"addDataset": "إضافة مجموعة بيانات",
+			"deleteConfirm": "هل أنت متأكد من رغبتك في حذف مجموعة البيانات هذه؟",
+			"deleteDataset": "حذف مجموعة البيانات",
+			"deleteDisabledNotOwner": "لا يمكن حذف هذه المجموعة من البيانات إلا منشئها.",
+			"deleteDisabledPublicTemplate": "ترتبط مجموعة البيانات هذه بقالب عام ولا يمكن حذفها.",
+			"deleteLabel": "يمسح",
+			"deleting": "جاري الحذف...",
+			"editLabel": "تحرير مجموعة البيانات",
+			"errorLoading": "خطأ: {{message}}",
+			"inclusion": {
+				"journalLabel": "هذه المجلة",
+				"journalTooltip": "ترتبط مجموعة البيانات هذه بمجلة بيانات تعود لك.",
+				"otherLabel": "أيضًا في هذه القائمة",
+				"otherTooltip": "تظهر مجموعة البيانات هذه في القائمة لسبب آخر (مثلًا قالب عام). قد لا تكون مخزنة في هذا المشروع أو الدراسة.",
+				"viaPartLabel": "مرتبطة بقالب",
+				"viaPartTooltip": "ترتبط مجموعة البيانات هذه بقالب مجلة بيانات.",
+				"workspaceLabel": "مساحة العمل هذه",
+				"workspaceTooltip": "مجموعة البيانات هذه مخزنة في المشروع أو الدراسة الحالية.",
+				"yourLibraryLabel": "مجموعتك",
+				"yourLibraryTooltip": "أنشأتَ هذه المجموعة، لكنها غير مرتبطة حاليًا بهذا المشروع أو هذه الدراسة. تظهر هنا لتتمكن من العثور عليها وإعادة استخدامها."
+			},
+			"listIntro": "تتضمن هذه القائمة مجموعات البيانات المخزنة في مساحة العمل، والمجموعات المرتبطة عبر أجزاء المجلة، ومجموعاتك الخاصة لإعادة استخدامها.",
+			"loading": "جارٍ تحميل مجموعات البيانات…",
+			"meta": {
+				"byAuthor": "بواسطة {{author}}",
+				"byYou": "بواسطتك",
+				"dataOrigin": "",
+				"lastUpdated": "آخر تحديث {{date}}",
+				"lastUpdatedNever": "أبدًا",
+				"unknownAuthor": "غير معروف"
+			},
+			"originTooltip": "",
+			"untitled": "مجموعة بيانات بلا عنوان"
+		},
+		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "العمود (الأعمدة) المراد رسمها",
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"googleSlidesAlt": "عروض جوجل التقديمية",
+						"hintLong": "إذا كنت ترغب في مقارنة الأعمدة، فانقر هنا.",
+						"hintWide": "إذا كنت ترغب في مقارنة مجموعات مختلفة لعمود واحد (متغير)، فانقر هنا.",
+						"longDescription": "تُنظَّم البيانات بحيث تظهر كل ملاحظة (مثل درجة اختبار الطالب) في صف منفصل، وغالبًا ما يكون هناك عمود يشير إلى الفئات (مثل المواد الدراسية). يُعد هذا التنسيق مفيدًا لإجراء تحليل مفصل عبر الفئات.",
+						"longTitle": "تنسيق البيانات الطويلة",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "تخطيط البيانات",
+						"slidesLink": "انقر هنا للاطلاع على شرائح المحاضرة",
+						"switchToLong": "انتقل إلى التنسيق الطويل",
+						"switchToWide": "التبديل إلى التنسيق العريض",
+						"toggleAriaLabel": "",
+						"wideDescription": "تُنظَّم البيانات بحيث تظهر كل فئة (مثل المواد الدراسية) في عمود مستقل، وغالبًا ما تُمثِّل الصفوف عدد الملاحظات (مثل الطلاب). هذا التنسيق يُسهِّل إجراء مقارنات سريعة داخل الفئات.",
+						"wideTitle": "تنسيق البيانات العريض"
+					},
+					"errBar95": "فاصل الثقة 95%",
+					"errBar99": "فاصل الثقة 99%",
+					"errBarStdErr": "الخطأ المعياري",
+					"errorBar": "شريط الخطأ",
+					"errorBarWide": "شريط الخطأ",
+					"qualitativeColumn": "عمود نوعي",
+					"quantitativeColumn": "العمود الكمي",
+					"resources": {
+						"barPlotAlt": "رابط خارجي",
+						"barPlotTitle": "ما هو الرسم البياني الشريطي؟",
+						"confidenceIntervalsAlt": "رابط خارجي",
+						"confidenceIntervalsTitle": "فترات الثقة - ما هي؟",
+						"standardErrorAlt": "رابط خارجي",
+						"standardErrorTitle": "المزيد حول الخطأ المعياري"
+					}
+				},
+				"header": {
+					"iconAlt": "محاور",
+					"title": "محاور"
+				},
+				"help": {
+					"ariaLabel": "الموارد والمساعدة",
+					"resourcesIntro": "استخدم الأزرار أدناه لفتح مرجع في علامة تبويب جديدة عندما يكون الرابط متاحًا."
+				},
+				"histogram": {
+					"columnsToObserve": "العمود (الأعمدة) المراد مراقبتها",
+					"groupByOptional": "التجميع حسب (اختياري - التلوين حسب الفئة)",
+					"marginalBox": "مخطط الصندوق",
+					"marginalNone": "لا أحد",
+					"marginalPlot": "قطعة أرض هامشية",
+					"marginalRug": "مخطط السجاد",
+					"resources": {
+						"histogramAlt": "رابط خارجي",
+						"histogramTitle": "ما هو المدرج التكراري؟"
+					}
+				},
+				"scatterPlot": {
+					"group": "مجموعة",
+					"resources": {
+						"scatterPlotAlt": "مورد مخطط التشتت",
+						"scatterPlotTitle": "مخطط التشتت",
+						"trendlineAlt": "رابط خارجي لمورد خط الاتجاه",
+						"trendlineTitle": "خط الاتجاه"
+					},
+					"trendline": "خط الاتجاه",
+					"xAxis": "المحور السيني",
+					"yAxis": "المحور الصادي"
+				}
+			},
+			"codeEditor": {
+				"runCode": "قم بتشغيل الكود"
+			},
+			"common": {
+				"axisSection": {
+					"x": "المحور السيني",
+					"y": "المحور الصادي"
+				},
+				"graphTitle": "عنوان الرسم البياني",
+				"label": "ملصق",
+				"legendTitle": "عنوان الأسطورة",
+				"legendTitleHint": "(اتركه فارغًا إذا لم تكن هناك حاجة إليه)",
+				"legendTitleSection": "عنوان الأسطورة",
+				"marginalPlot": "قطعة أرض هامشية",
+				"range": {
+					"label": "يتراوح",
+					"max": "الأعلى",
+					"min": "دقيقة"
+				},
+				"resources": {
+					"noLink": "لا يوجد رابط خارجي",
+					"openLink": "انقر هنا للوصول إلى المورد"
+				}
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "قم بتخصيص مظهر وتصميم الرسم البياني.",
+					"title": "خيارات التصميم والتخطيط"
+				},
+				"tabs": {
+					"axes": "محاور",
+					"codeEditor": "محرر الأكواد",
+					"styleLayout": "التصميم والتخطيط"
+				}
+			},
+			"emptyState": {
+				"helper": "انقر فوق هذا المكون لفتح المحرر، ثم اختر المتغيرات لمعاينة التصور الخاص بك.",
+				"title": "الرسم البياني الخاص بك جاهز للتكوين."
+			},
+			"fields": {
+				"clearSelection": "لا أحد",
+				"selectPlaceholder": "حدد {{field}}",
+				"selectVariablesPlaceholder": "حدد المتغير (المتغيرات)"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- تنسيق HEX [#28619E]، [#D53533]",
+						"examplesNames": "- أسماء الألوان: [أحمر]، [وردي]",
+						"examplesRgb": "- قيمة RGB [100,255,0]، [0,120,80]",
+						"heading": "لون",
+						"intro": "حدد لونًا أساسيًا للشريط (قم بإزالة الأقواس المربعة لاستخدام الأمثلة أدناه)."
+					},
+					"header": {
+						"iconAlt": "خيارات",
+						"title": "خيارات"
+					},
+					"legendAndXAxisSection": "تسميات المحور السيني وعنوان مفتاح الخريطة",
+					"yAxis": "المحور الصادي"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "خيارات",
+						"title": "خيارات"
+					},
+					"legendSection": "أسطورة",
+					"legendTitleCombined": "عنوان الأسطورة (اتركه فارغًا إذا لم يكن مطلوبًا)",
+					"yAxis": "المحور الصادي"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "خيارات",
+						"title": "خيارات"
+					},
+					"marginal": {
+						"boxplot": "مخطط الصندوق",
+						"none": "",
+						"rug": "بساط"
+					},
+					"yAxis": "المحور الصادي"
+				}
+			}
 		},
 		"hypVis": {
 			"axes": {
@@ -276,6 +575,16 @@
 					"rankHelpStep1": "قم بتسمية كل شرط باستخدام القائمة المنسدلة (يمكنك الكتابة!).",
 					"rankHelpStep2": "استخدم شريط التمرير الموجود على الجانب الأيمن من الملصق لتحديد الترتيب المتوقع للمتغير التابع في هذه الحالة مقارنةً بالبقية.",
 					"rankSectionTitle": "رتب ظروفك",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"rankOrdering": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionHypothesisTitle": "فرضيتك التجريبية",
 					"titleLabel": "عنوان",
 					"titlePlaceholder": "تأثير الحالة على المتغير",
@@ -296,6 +605,16 @@
 					"fallbackIndependentVariable": "المتغير المستقل",
 					"fallbackNumberOfConditions": "عدد من"
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": ""
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "تمت نسخها إلى الحافظة!",
 					"clipboardHypothesisCopied": "النص المنسوخ إلى الحافظة: {{text}}",
@@ -314,16 +633,46 @@
 					"iPredictThat": "أتوقع ذلك",
 					"loading": "تحميل...",
 					"loadingBlocks": "جارٍ تحميل بيانات الكتلة...",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"directionality": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionTitle": "فرضيتك الارتباطية",
 					"titleLabel": "عنوان",
 					"willBeRelatedTo": "سيكون مرتبطًا بـ"
+				},
+				"default": {
+					"group": "",
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"xAxis": "",
+					"yAxis": ""
 				}
 			},
 			"editor": {
 				"codeTab": "شفرة",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": "المتغيرات"
 			},
+			"emptyState": {
+				"helper": "انقر فوق هذا المكون لفتح المحرر، ثم أكمل المتغيرات لإنشاء التصور.",
+				"title": "أداة عرض الفرضيات الخاصة بك جاهزة للتكوين."
+			},
 			"helpAriaLabel": "معلومات اكثر"
+		},
+		"paragraphEditor": {
+			"emptyInvite": "انقر هنا للبدء بالكتابة."
 		},
 		"settingsPanel": {
 			"deleteWidget": "حذف الأداة",
@@ -331,8 +680,297 @@
 			"notesPlaceholder": "أدخل ملاحظاتك هنا...",
 			"widgetSettings": "إعدادات الأداة"
 		},
+		"sideNav": {
+			"addComponent": "",
+			"addComponentAria": "",
+			"addJournal": "مجلة",
+			"addJournalScratch": "أنشئ دفتر يوميات من الصفر",
+			"addJournalTemplate": "أضف قالبًا للمجلة",
+			"addWorkspace": "إضافة مساحة عمل",
+			"addWorkspaceDropdown": "مساحة العمل",
+			"addWorkspaceError": "خطأ في إضافة مساحة العمل",
+			"addWorkspaceLoading": "إضافة...",
+			"addWorkspaceScratch": "أنشئ مساحة عمل من الصفر",
+			"addWorkspaceTemplate": "أضف قالب مساحة عمل",
+			"backToJournal": "العودة إلى المدونة",
+			"collapsePanel": "يغلق",
+			"componentFallbackName": "اسم المكون",
+			"dataOrigin": {
+				"SIMULATED": "محاكاة",
+				"STUDY": "بيانات الدراسة",
+				"TEMPLATE": "نموذج",
+				"UPLOADED": "تم الرفع"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "اختر مجموعات البيانات المرتبطة بهذه المجلة",
+				"many": "{{count}} مجموعات البيانات المرتبطة",
+				"none": "لا توجد مجموعات بيانات مرتبطة",
+				"one": "مجموعة بيانات واحدة مرتبطة"
+			},
+			"dataSourceLabel": "مصادر البيانات",
+			"dataSourceModal": {
+				"byAuthor": "بواسطة {{author}}",
+				"cancel": "يلغي",
+				"closeModal": "يغلق",
+				"error": "خطأ: {{message}}",
+				"lastUpdated": "• آخر تحديث {{date}}",
+				"loading": "جارٍ تحميل مجموعات البيانات...",
+				"neverUpdated": "أبداً",
+				"noDatasets": "لم يتم العثور على مجموعات بيانات",
+				"save": "يحفظ",
+				"saving": "إنقاذ...",
+				"title": "تحديد مصادر البيانات",
+				"unknownAuthor": "مجهول",
+				"untitledDataset": "مجموعة بيانات بدون عنوان"
+			},
+			"defaultWorkspaceTitle": "مساحة عمل غير مسماة",
+			"deleteJournal": "يمسح",
+			"deleteJournalConfirm": "هل أنت متأكد من رغبتك في حذف هذه المدونة؟ سيتم حذف جميع مساحات العمل والمكونات الموجودة في هذه المدونة أيضًا.",
+			"deleteJournalMissingId": "لا يمكن حذف هذه المدونة (المعرف مفقود).",
+			"deleteJournalModalTitle": "حذف السجل",
+			"deleteWorkspace": "حذف مساحة العمل",
+			"deleteWorkspaceConfirm": "هل أنت متأكد من رغبتك في حذف مساحة العمل هذه؟ سيتم حذف جميع المكونات الموجودة في مساحة العمل هذه أيضًا.",
+			"deleteWorkspaceMissingId": "لا يمكن حذف مساحة العمل هذه (المعرف مفقود).",
+			"deleteWorkspaceModalTitle": "حذف مساحة العمل",
+			"editJournal": "يحرر",
+			"editJournalCloseWithoutSaving": "إغلاق بدون حفظ",
+			"editJournalFieldDescription": "وصف",
+			"editJournalFieldTitle": "عنوان",
+			"editJournalSaveClose": "حفظ وإغلاق",
+			"editJournalTemplateCheckbox": "قم بإنشاء قالب",
+			"editJournalTitle": "تحرير المجلة",
+			"journalMore": "خيارات المجلة",
+			"lastUpdatedAt": "آخر تحديث: {{date}}",
+			"manageDatasets": "إدارة مجموعات البيانات",
+			"noDataSources": "لا توجد مصادر بيانات",
+			"noJournalsYet": "يبدو أنك لا تزال لا تملك أي سجلات بيانات!",
+			"renameWorkspace": "إعادة تسمية مساحة العمل",
+			"renameWorkspaceModalTitle": "إعادة تسمية مساحة العمل",
+			"renameWorkspaceSaving": "إنقاذ...",
+			"templateModal": {
+				"copyError": "تعذر الإنشاء من القالب: {{message}}",
+				"copyTitlePrefix": "نسخة من",
+				"datasetsMany": "{{count}} مجموعات البيانات المرتبطة",
+				"datasetsNone": "لا توجد مجموعات بيانات مرتبطة",
+				"datasetsOne": "مجموعة بيانات واحدة مرتبطة",
+				"empty": "لا توجد قوالب متاحة حتى الآن. حدد دفتر يوميات كقالب (للمسؤول) أو اطلب من فريقك إضافة قالب.",
+				"loading": "جارٍ تحميل القوالب...",
+				"missingJournal": "لا توجد مجموعة مذكرات متاحة. أنشئ مذكرة من الصفر أولاً.",
+				"newCollectionTitle": "مجموعة مجلات مجهولة الاسم",
+				"queryError": "خطأ في تحميل القوالب: {{message}}",
+				"title": "اختر قالب دفتر يوميات",
+				"useTemplate": "استخدم القالب"
+			},
+			"workspaceMore": "خيارات مساحة العمل"
+		},
+		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "عمود للتلخيص",
+					"dataLayout": {
+						"currentlyPerforming": "أقوم حاليًا بتلخيص ما يلي:",
+						"long": {
+							"description": "كل ملاحظة تمثل صفًا. اختر عمودًا واحدًا من القيم لتلخيصها، وعمودًا اختياريًا لتحديد المجموعات.",
+							"title": "تخطيط بيانات طويل"
+						},
+						"summaryLong": {
+							"main": "عمود واحد من القيم لكل صف مع عمود تجميع اختياري (تنسيق طويل)."
+						},
+						"summaryWide": {
+							"between": "عديد",
+							"columns": "أعمدة بتنسيق عريض (متغير واحد لكل عمود).",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "كل متغير يُراد تلخيصه يُمثل عموداً مستقلاً. اختر عموداً واحداً أو أكثر، ويمكنك اختيارياً اختيار متغير تجميع.",
+							"title": "تخطيط بيانات واسع"
+						}
+					},
+					"groupingVariable": "متغير التجميع",
+					"qualOption": {
+						"description": "تُعرض البيانات النوعية في عمود مليء بالتصنيفات. على سبيل المثال، المجموعة التجريبية التي ينتمي إليها الشخص، أو إجابته على سؤال متعدد الخيارات.",
+						"title": "التبديل إلى البيانات النوعية"
+					},
+					"quantOption": {
+						"description": "تُعرض البيانات الكمية في عمود مليء بالقيم العددية. على سبيل المثال، عمر المشارك أو نتيجته في استطلاع رأي.",
+						"title": "التبديل إلى البيانات الكمية"
+					},
+					"resources": {
+						"googleSlidesAlt": "عروض جوجل التقديمية",
+						"openLink": "انقر هنا للوصول إلى المورد",
+						"sectionTitle": "موارد",
+						"slidesLink": "انقر هنا للاطلاع على شرائح المحاضرة",
+						"tableWhatAlt": "رابط خارجي",
+						"tableWhatTitle": "ما هي الطاولة؟"
+					},
+					"valueMode": {
+						"qualLabel": "نوعي",
+						"quantLabel": "كمي",
+						"triggerPrefix": "نوع قيمة العمود:",
+						"triggerSuffix": "(انقر هنا للتغيير)"
+					}
+				}
+			},
+			"editor": {
+				"tabs": {
+					"code": "شفرة",
+					"variables": "المتغيرات"
+				}
+			},
+			"fields": {
+				"clearSelection": "لا أحد",
+				"qualColumnsLabel": "عمود (أعمدة) نوعية",
+				"quantColumnsLabel": "عمود (أعمدة) كمي",
+				"selectPlaceholder": "حدد {{field}}",
+				"selectVariablesPlaceholder": "حدد المتغير (المتغيرات)"
+			}
+		},
+		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"hint": "",
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"hint": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": "",
+						"sectionTitle": ""
+					}
+				},
+				"default": {
+					"column1": "",
+					"column2": ""
+				},
+				"pearson": {
+					"predictedColumn": "",
+					"predictorColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"tTest": {
+					"col1": "",
+					"col2": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				}
+			},
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
+			"emptyState": {
+				"helper": "انقر فوق هذا المكون لفتح المحرر، ثم اختر المتغيرات لحساب الاختبار.",
+				"title": "اختبارك الإحصائي جاهز للتكوين"
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
+			}
+		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "امسح الكل",
+					"selectAll": "اختر الكل"
+				},
+				"description": "اختر بسرعة الأعمدة التي يجب أن يعرضها هذا الجدول.",
+				"empty": "لا توجد أعمدة مرئية متاحة من مجموعة البيانات.",
+				"filters": {
+					"allValues": "جميع القيم",
+					"clear": "مسح المرشحات",
+					"close": "يغلق",
+					"description": "تستخدم الأعمدة الرقمية قيم الحد الأدنى/الأقصى. أما الأعمدة الفئوية فتستخدم قائمة منسدلة للقيم.",
+					"dropdownAria": "تصفية {{column}}",
+					"filterSettings": "منقي",
+					"maxLabel": "الأعلى",
+					"minLabel": "دقيقة",
+					"title": "مرشحات بسيطة",
+					"toggleAria": "تبديل عوامل التصفية لـ {{column}}"
+				},
+				"search": {
+					"ariaLabel": "أعمدة البحث",
+					"noMatches": "لا توجد أعمدة مطابقة لبحثك.",
+					"placeholder": "أعمدة البحث..."
+				},
+				"title": "أعمدة"
+			}
+		},
 		"visualizationWidget": {
 			"unsupportedType": "نوع الأداة غير المدعوم: {{type}}"
+		},
+		"workspaceArea": {
+			"error": "تعذر تحميل مساحة العمل: {{message}}",
+			"loading": "جارٍ تحميل مساحة العمل..."
 		}
 	},
 	"dataJournals": "المجلات",
@@ -574,6 +1212,7 @@
 	"myTasks": "مهامي",
 	"navigation": {
 		"back": "خلف",
+		"cloneSavePrompt": "غيّر اسم الدراسة وانقر على زر الحفظ",
 		"enoughComments": "هل يكفي من التعليقات؟ أخبر المراجعين.",
 		"enoughParticipants": "هل عدد المشاركين كافي؟",
 		"lockFeedback": "قفل التعليقات",
@@ -1160,32 +1799,42 @@
 		"unlockedForParticipation": "تم فتح الدراسة للمشاركة"
 	},
 	"surveyBuilder": {
-		"addFirstPage": "أضف صفحتك الأولى",
-		"addItem": "+",
+		"addExamplePage": "عرض مثال",
+		"addFirstPage": "أضف صفحتك الأولى لبدء إنشاء الاستبيان",
+		"addItem": "إضافة سؤال",
 		"addItemBtn": "+ عنصر",
 		"addOption": "+ خيار",
-		"addPage": "+",
-		"block": "حاجز",
-		"checkbox": "اختيار متعدد (اختر العديد من الخيارات)",
-		"deletePage": "حذف هذه الصفحة",
-		"freeinput": "إدخال النص",
-		"header": "رأس الصفحة",
+		"addPage": "إضافة صفحة",
+		"block": "كتلة",
+		"checkbox": "اختيار متعدد (تحديد عدة خيارات)",
+		"deletePage": "حذف الصفحة",
+		"freeinput": "إدخال نص",
+		"header": "عنوان",
+		"headerPlaceholder": "مثلاً: عنوان السؤال المعروض فوق العنصر",
 		"hideContinueBtn": "إخفاء زر المتابعة",
 		"likert": "مقياس ليكرت",
+		"likertItemPlaceholder": "عبارة للتقييم",
 		"likertItems": "عناصر مقياس ليكرت",
 		"maxValue": "القيمة القصوى",
 		"maxValueLabel": "تسمية القيمة القصوى",
+		"maxValueLabelPlaceholder": "مثلاً: كثيراً جداً",
 		"minValue": "القيمة الدنيا",
 		"minValueLabel": "تسمية القيمة الدنيا",
+		"minValueLabelPlaceholder": "مثلاً: ليس على الإطلاق",
+		"optionPlaceholder": "نص الخيار",
 		"options": "خيارات",
 		"page": "الصفحة {{number}}",
+		"pages": "الصفحات",
 		"pageTimeout": "مهلة الصفحة (بالمللي ثانية)",
-		"select": "اختيار متعدد (اختر واحداً)",
+		"preview": "معاينة",
+		"select": "اختيار متعدد (خيار واحد)",
 		"text": "نص",
 		"textLabel": "نص",
-		"type": "يكتب",
+		"textPlaceholder": "أدخل نصاً وصفياً أو إرشادياً يُعرض على المشاركين",
+		"type": "النوع",
 		"variableName": "اسم المتغير",
-		"vas": "المقياس البصري"
+		"variableNamePlaceholder": "مثلاً: response_1 (يُستخدم لتخزين الإجابة)",
+		"vas": "مقياس بصري"
 	},
 	"surveyDescription": "في الاستطلاع، يتم طرح أسئلة على المشاركين حول أنفسهم، أو حول سلوكهم، أو حول مشاعرهم.",
 	"tabs": {

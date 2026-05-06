@@ -1,7 +1,11 @@
+import useTranslation from "next-translate/useTranslation";
+
+import SectionHeader from "../../../_shared/SectionHeader";
 import SelectOne from "../Fields/SelectOne";
 
+const G_D = "dataJournal.hypVis.axes.default";
+
 export default function Axes({
-  type,
   variables,
   code,
   pyodide,
@@ -10,6 +14,8 @@ export default function Axes({
   selectors,
   handleContentChange,
 }) {
+  const { t } = useTranslation("builder");
+
   const connectSelectorsCode = `# get relevant html elements
 html_output = js.document.getElementById('figure-${sectionId}')
 X = js.document.getElementById("xVariable-${sectionId}").value
@@ -22,9 +28,9 @@ Group = js.document.getElementById("groupVariable-${sectionId}").value`;
     text: variable?.displayName || variable?.field,
   }));
 
-  const updateCode = async ({ code }) => {
+  const updateCode = async ({ code: codeArg }) => {
     await pyodide.runPythonAsync(connectSelectorsCode);
-    runCode({ code });
+    runCode({ code: codeArg });
   };
 
   const onSelectorChange = ({ target }) => {
@@ -38,16 +44,17 @@ Group = js.document.getElementById("groupVariable-${sectionId}").value`;
 
   return (
     <div className="selectors">
-      <div className="header">
-        <img src={`/assets/icons/visualize/axes.svg`} />
-        <div>Axes</div>
-      </div>
+      <SectionHeader
+        title={t(`${G_D}.header.title`, {}, { default: "Axes" })}
+        iconSrc="/assets/icons/visualize/axes.svg"
+        iconAlt={t(`${G_D}.header.iconAlt`, {}, { default: "Axes" })}
+      />
       <SelectOne
         sectionId={sectionId}
         options={options}
         selectors={selectors}
         onSelectorChange={onSelectorChange}
-        title="X-Axis"
+        title={t(`${G_D}.xAxis`, {}, { default: "X-Axis" })}
         parameter="xVariable"
       />
       <SelectOne
@@ -55,7 +62,7 @@ Group = js.document.getElementById("groupVariable-${sectionId}").value`;
         options={options}
         selectors={selectors}
         onSelectorChange={onSelectorChange}
-        title="Y-Axis"
+        title={t(`${G_D}.yAxis`, {}, { default: "Y-Axis" })}
         parameter="yVariable"
       />
       <SelectOne
@@ -63,7 +70,7 @@ Group = js.document.getElementById("groupVariable-${sectionId}").value`;
         options={options}
         selectors={selectors}
         onSelectorChange={onSelectorChange}
-        title="Group"
+        title={t(`${G_D}.group`, {}, { default: "Group" })}
         parameter="groupVariable"
       />
     </div>

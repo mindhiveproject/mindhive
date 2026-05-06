@@ -1,5 +1,5 @@
 // components/DataJournal/Widgets/Widget.js
-import { useCallback, memo, useEffect, useRef } from "react";
+import { useCallback, memo, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 // Widget type-specific renderers
@@ -11,6 +11,7 @@ import Statistics from "./types/Statistics/Statistics";
 import Code from "./types/Code/Code";
 import HypVis from "./types/HypVis/HypVis";
 import { useDataJournal } from "../Context/DataJournalContext";
+import { WidgetSizeProvider } from "./WidgetSizeContext";
 
 // Styled container for the widget
 const WidgetContainer = styled.div`
@@ -41,7 +42,54 @@ function Widget({
   onChange,
   // handleRemoveComponent, // Uncomment if needed
 }) {
-  const { setComponentFigureReady, clearComponentFigureReady } = useDataJournal();
+  const {
+    setComponentFigureReady,
+    clearComponentFigureReady,
+    widgetResizeTicks,
+  } = useDataJournal();
+  const gridResizeTick = widgetResizeTicks[id] || 0;
+
+  const containerRef = useRef(null);
+  const [widgetSize, setWidgetSize] = useState({
+    width: 0,
+    height: 0,
+    version: 0,
+  });
+
+  const measure = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    setWidgetSize((prev) => ({
+      width: rect.width,
+      height: rect.height,
+      version: prev.version + 1,
+    }));
+  }, []);
+
+  useEffect(() => {
+    measure();
+  }, [gridResizeTick, measure]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return undefined;
+
+    let timeoutId;
+    const scheduleMeasure = () => {
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => measure(), 150);
+    };
+
+    const ro = new ResizeObserver(scheduleMeasure);
+    ro.observe(el);
+    measure();
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      ro.disconnect();
+    };
+  }, [measure]);
   const gestureRef = useRef({
     isPointerDown: false,
     isDrag: false,
@@ -130,7 +178,7 @@ function Widget({
           <Paragraph content={content} handleContentChange={handleChange} />
         );
       case "TABLE":
-        return <Table />;
+        return <Table content={content} />;
       // for visualization of graphs
       case "GRAPH":
         return (
@@ -166,10 +214,13 @@ function Widget({
   return (
     <WidgetContainer className={isActive ? "active" : ""}>
       <WidgetContent
+        ref={containerRef}
         className="widget-content-handle"
         onMouseDown={handlePointerDown}
       >
-        {renderContent()}
+        <WidgetSizeProvider value={widgetSize}>
+          {renderContent()}
+        </WidgetSizeProvider>
       </WidgetContent>
     </WidgetContainer>
   );

@@ -1,6 +1,31 @@
 // components/DataJournal/Widgets/types/HypothesisVisualizer/Render.js
 import { useEffect, useState } from "react";
+import styled from "styled-components";
 import { Message, Icon } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
+
+const HypVisFigure = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  text-align: center;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+`;
 
 export default function Render({
   code,
@@ -9,9 +34,18 @@ export default function Render({
   content,
   onFigureReadyChange,
 }) {
+  const { t } = useTranslation("builder");
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const hypVisType = content?.type;
+
+  const getHypVisEmptyStateImageSrc = (type) => {
+    if (type === "abDesign") return "/assets/dataviz/componentPanel/abDesign.svg";
+    if (type === "corStudy")
+      return "/assets/dataviz/componentPanel/correlationStudy.svg";
+    return "/assets/dataviz/componentPanel/abDesign.svg";
+  };
 
   const hasMeaningfulFigureHtml = (figHtml) => {
     if (typeof figHtml !== "string" || !figHtml.trim()) return false;
@@ -177,17 +211,74 @@ json.dumps(to_native(result))
     return (
       <div
         style={{
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#718096",
-          fontStyle: "italic",
           padding: "2rem",
           textAlign: "center",
+          color: "#4b5563",
+          display: "flex",
+          flexDirection: "row",
+          flex: 1,
+          minHeight: 0,
+          gap: "0.5rem",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#DEF8FB",
+          borderRadius: "12px",
+          border: "1px solid #A1A1A1",
+          height: "100%",
+          overflow: "clip",
         }}
       >
-        Configure hypothesis parameters to generate visualization
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "0.75rem",
+            marginBottom: "1rem",
+          }}
+        >
+          <div style={{ fontWeight: 600, fontSize: "16px", textAlign: "left" }}>
+            {t(
+              "dataJournal.hypVis.emptyState.title",
+              {},
+              { default: "Your hypothesis visualizer is ready to be configured" },
+            )}
+          </div>
+          <img
+            src={getHypVisEmptyStateImageSrc(hypVisType)}
+            alt={t(
+              "dataJournal.hypVis.emptyState.title",
+              {},
+              { default: "Your hypothesis visualizer is ready to be configured" },
+            )}
+            style={{
+              width: "88px",
+              height: "56px",
+              objectFit: "contain",
+              flexShrink: 0,
+            }}
+          />
+        </div>
+        {/* <div
+          style={{
+            background: "#ffffff",
+            padding: "0.35rem 0.65rem",
+            borderRadius: "6px",
+            color: "#3f3f46",
+            fontSize: "14px",
+            border: "2px solid #A1A1A1",
+          }}
+        >
+          {t(
+            "dataJournal.hypVis.emptyState.helper",
+            {},
+            {
+              default:
+                "Click this component to open the editor, then complete the variables to generate the visualization.",
+            },
+          )}
+        </div> */}
       </div>
     );
   }
@@ -211,18 +302,11 @@ json.dumps(to_native(result))
   }
 
   return (
-    <div
-      style={{
-        padding: "1.5rem",
-        maxWidth: "900px",
-        margin: "0 auto",
-        textAlign: "center",
-      }}
-    >
+    <HypVisFigure>
       {/* <h3 style={{ marginBottom: "1.25rem", color: "#2d3748" }}>
         {result.title}
       </h3> */}
       <div dangerouslySetInnerHTML={{ __html: result.fig_html }} />
-    </div>
+    </HypVisFigure>
   );
 }

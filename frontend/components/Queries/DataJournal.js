@@ -18,6 +18,9 @@ export const GET_DATA_JOURNAL = gql`
       vizChapters {
         id
         title
+        vizSections {
+          id
+        }
       }
       updatedAt
     }

@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { Accordion, Icon, Dropdown, DropdownMenu } from "semantic-ui-react";
+import { Accordion, Icon } from "semantic-ui-react";
 import { saveAs } from "file-saver";
 import moment from "moment";
 import { jsonToCSV } from "react-papaparse";
+import useTranslation from "next-translate/useTranslation";
 
-import OperationModal from "./Menu/OperationModal";
+import AddColumnModal from "./Menu/AddColumnModal";
 import Variable from "./Menu/Variable";
-import UpdateDatasource from "./Menu/UpdateDatasource";
+import { useDatasetSave } from "./Menu/UpdateDatasource";
 
 export default function Menu({
   dataset,
@@ -16,12 +17,19 @@ export default function Menu({
   components,
   updateDataset,
   onVariableChange,
-  setPage,
-  onSave,
+  onSaved,
 }) {
+  const { t } = useTranslation("builder");
+  const [isAddColumnOpen, setIsAddColumnOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(
     components.map((_, index) => index) || []
   );
+
+  const { save, saving } = useDatasetSave({
+    dataset,
+    content: { modified: { data, variables, settings } },
+    onSaved,
+  });
 
   const handleClick = (e, titleProps) => {
     const { index } = titleProps;
@@ -52,7 +60,10 @@ export default function Menu({
 
   const downloadData = () => {
     let userInput = prompt(
-      "Give a name to the CSV you're about to download\nNo need to add '.csv' we're taking care of that!"
+      t("dataJournal.datasetMenu.downloadPrompt", {}, {
+        default:
+          "Give a name to the CSV you're about to download\nNo need to add '.csv' we're taking care of that!",
+      })
     );
     const name = `${userInput}_${moment().format()}`;
     if (userInput !== null) {
@@ -74,107 +85,151 @@ export default function Menu({
     }
   };
 
+  const datasetTitle =
+    dataset?.title ||
+    t("dataJournal.datasetMenu.header.untitledDataset", {}, {
+      default: "Untitled dataset",
+    });
+
+  const dataOriginLabel = t(
+    "dataJournal.datasetMenu.meta.dataOrigin",
+    { origin: dataset?.dataOrigin || "—" },
+    { default: "Origin: {{origin}}" },
+  );
+
+  const lastUpdatedLabel = dataset?.updatedAt
+    ? t(
+        "dataJournal.datasetMenu.meta.lastUpdated",
+        { when: moment(dataset.updatedAt).fromNow() },
+        { default: "Updated {{when}}" },
+      )
+    : t(
+        "dataJournal.datasetMenu.meta.neverUpdated",
+        {},
+        { default: "Never updated" },
+      );
+
   return (
     <div className="database">
       <div className="header">
-        <div>
-          <img src="/assets/icons/visualize/database.svg" alt="Database" />
-        </div>
-        <div>Active Data</div>
-        <div className="header-actions">
-          <div
-            className="dataButtonPart menuButtonThin blueFrame"
-            onClick={() => setPage("browse")}
-          >
-            <img
-              src="/assets/icons/visualize/folder_open_blue.svg"
-              alt="Return"
-            />
-            <div>
-              <a>Return to Navigation</a>
-            </div>
-          </div>
+        <img
+          className="header-icon"
+          src="/assets/icons/visualize/database.svg"
+          alt={t("dataJournal.datasetMenu.alt.database", {}, {
+            default: "Database",
+          })}
+        />
+        <h3 className="header-title" title={datasetTitle}>
+          {datasetTitle}
+        </h3>
+        <button
+          type="button"
+          className="primaryAction saveAction"
+          onClick={save}
+          disabled={saving}
+        >
+          <img
+            src="/assets/icons/visualize/save.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <span>
+            {saving
+              ? t("dataJournal.datasetMenu.actions.saving", {}, {
+                  default: "Saving…",
+                })
+              : t("dataJournal.datasetMenu.actions.save", {}, {
+                  default: "Save",
+                })}
+          </span>
+        </button>
+        <div className="metaStrip">
+          <span>{dataOriginLabel}</span>
+          <span aria-hidden="true">·</span>
+          <span>{lastUpdatedLabel}</span>
         </div>
       </div>
 
-      <div className="options">
-        <UpdateDatasource
-          dataset={dataset}
-          content={{ modified: { data, variables, settings } }}
+      <div className="toolbar">
+        <button
+          type="button"
+          className="toolbarChip toolbarChip--primary"
+          onClick={() => setIsAddColumnOpen(true)}
+        >
+          <img
+            src="/assets/icons/visualize/add_notes.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <span>
+            {t("dataJournal.datasetMenu.actions.addColumn", {}, {
+              default: "Add a column",
+            })}
+          </span>
+        </button>
+        <AddColumnModal
+          open={isAddColumnOpen}
+          onClose={() => setIsAddColumnOpen(false)}
+          data={data}
+          variables={variables}
+          updateDataset={updateDataset}
         />
-        <div className="optionsFrame">
-          <Dropdown
-            icon={
-              <div className="optionsButtonGreen">
-                <img
-                  src="/assets/icons/visualize/add_notes.svg"
-                  alt="Add a column"
-                />
-                <div>Add a column</div>
-              </div>
-            }
-            direction="left"
-          >
-            <DropdownMenu>
-              <OperationModal
-                type="copy"
-                data={data}
-                variables={variables}
-                updateDataset={updateDataset}
-                title="Copy existing variable"
-                iconSrc="/assets/icons/visualize/content_paste_go.svg"
-              />
-              <OperationModal
-                type="compute"
-                data={data}
-                variables={variables}
-                updateDataset={updateDataset}
-                title="Compute new variable"
-                iconSrc="/assets/icons/visualize/table_chart_view.svg"
-              />
-              <OperationModal
-                type="reverse"
-                data={data}
-                variables={variables}
-                updateDataset={updateDataset}
-                title="Reverse score"
-                iconSrc="/assets/icons/visualize/database_reverse.svg"
-              />
-              <OperationModal
-                type="recode"
-                data={data}
-                variables={variables}
-                updateDataset={updateDataset}
-                title="Recode a variable"
-                iconSrc="/assets/icons/visualize/database_recode.svg"
-              />
-            </DropdownMenu>
-          </Dropdown>
-          <div className="optionsButtonGreen" onClick={downloadData}>
-            <div>
-              <Icon name="download" color="grey" />
-            </div>
-            <div>
-              <a>Download</a>
-            </div>
-          </div>
-          <div className="optionsButtonYellow" onClick={hideAllColumns}>
-            <Icon name="eye slash" color="grey" />
-            <div>
-              <a>Hide all</a>
-            </div>
-          </div>
-          <div className="optionsButtonYellow" onClick={showAllColumns}>
-            <Icon name="eye" color="grey" />
-            <div>
-              <a>Show all</a>
-            </div>
-          </div>
-        </div>
+        <button
+          type="button"
+          className="toolbarChip"
+          onClick={downloadData}
+        >
+          <img
+            src="/assets/icons/download.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <span>
+            {t("dataJournal.datasetMenu.actions.download", {}, {
+              default: "Download",
+            })}
+          </span>
+        </button>
+        <button
+          type="button"
+          className="toolbarChip"
+          onClick={hideAllColumns}
+        >
+          <img
+            src="/assets/icons/eye_close.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <span>
+            {t("dataJournal.datasetMenu.actions.hideAllVariables", {}, {
+              default: "Hide all variables",
+            })}
+          </span>
+        </button>
+        <button
+          type="button"
+          className="toolbarChip"
+          onClick={showAllColumns}
+        >
+          <img
+            src="/assets/icons/eye_open.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <span>
+            {t("dataJournal.datasetMenu.actions.showAllVariables", {}, {
+              default: "Show all variables",
+            })}
+          </span>
+        </button>
       </div>
 
       <div className="variables-section">
-        <div className="section-header">User Variables</div>
+        <div className="section-header">
+          {t("dataJournal.datasetMenu.sections.userVariables", {}, {
+            default: "User Variables",
+          })}
+        </div>
         <div className="variables">
           {variables
             .filter((column) => column.type === "user")
@@ -189,7 +244,11 @@ export default function Menu({
       </div>
 
       <div className="variables-section">
-        <div className="section-header">General Variables</div>
+        <div className="section-header">
+          {t("dataJournal.datasetMenu.sections.generalVariables", {}, {
+            default: "General Variables",
+          })}
+        </div>
         <div className="variables">
           {variables
             .filter((column) => column.type === "general")
@@ -223,7 +282,11 @@ export default function Menu({
             </Accordion.Title>
             <Accordion.Content active={activeIndex.includes(index)}>
               <div className="variables-section">
-                <div className="section-header">Task Variables</div>
+                <div className="section-header">
+                  {t("dataJournal.datasetMenu.sections.taskVariables", {}, {
+                    default: "Task Variables",
+                  })}
+                </div>
                 <div className="variables">
                   {variables
                     .filter((column) => column.type === "task")

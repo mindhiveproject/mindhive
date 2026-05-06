@@ -296,6 +296,7 @@
 		"descGoToResourcesCenter": "此页面允许您将资源链接到您的项目板卡 - 要管理资源，请转到资源中心。",
 		"description": "描述",
 		"duplicate": "复制",
+		"duplicateResource": "重复资源",
 		"edit": "编辑",
 		"editExistingResource": "继续使用我的定制版本",
 		"editResource": "编辑资源",
@@ -363,6 +364,7 @@
 		"save": "节省",
 		"saveChanges": "保存更改",
 		"savedRessource": "资源已保存",
+		"saveDuplicate": "保存重复项",
 		"saveOwnRessource": "保存为您自己的资源",
 		"searchPlaceholder": "按标题或描述搜索...",
 		"searchPlaceholderUser": "按 MindHive 用户名搜索",
@@ -564,9 +566,12 @@
 	"emailAddress": "电子邮件",
 	"header": {
 		"addDescription": "添加描述",
+		"mentors": "导师",
+		"mentorsPanelTooltip": "与此课程相关的导师账号。",
 		"save": "节省",
 		"teacher": "老师",
-		"titleFallback": ""
+		"teacherAccountTooltip": "班主任。",
+		"titleFallback": "无标题类"
 	},
 	"homework": {
 		"allEntries": "所有条目",
@@ -607,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "作业",
+		"classSectionsNav": "班级",
 		"dashboard": "仪表板",
 		"mentors": "导师",
 		"projects": "项目",

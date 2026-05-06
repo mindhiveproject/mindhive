@@ -1,98 +1,120 @@
-import { Modal, Dropdown } from "semantic-ui-react";
+"use client";
 
+import { useEffect, useMemo } from "react";
+
+import useTranslation from "next-translate/useTranslation";
+
+import DropdownSelect from "../../../../../../../DesignSystem/DropdownSelect";
 import { StyledForm } from "../../../../../../../styles/StyledForm";
 
+const M = "dataJournal.datasetMenu.addColumnModal";
+
+const reverseValue = ({ column, maxValue }) => {
+  const columnValue = parseFloat(column);
+  if (isNaN(columnValue)) {
+    return null;
+  }
+  return maxValue - columnValue;
+};
+
 export default function Reverse({
-  title,
   data,
   variables,
   variablesOptions,
   inputs,
   handleChange,
   updateDataset,
-  setIsOpen,
-  resetForm,
+  submitRef,
+  onSuccess,
 }) {
-  const reverse = ({ column, maxValue }) => {
-    const columnValue = parseFloat(column);
-    if (isNaN(columnValue)) {
-      return null;
-    }
-    return maxValue - columnValue;
-  };
+  const { t } = useTranslation("builder");
 
-  const reverseColumn = () => {
-    const maxValue = parseInt(inputs?.maxValue);
-    if (isNaN(maxValue)) {
-      alert("Please enter a valid integer for the max value.");
-      return;
-    }
-    const updatedVariables = [
-      ...variables,
-      {
-        field: `${inputs?.variable}_reversed`,
-        editable: true,
-        type: "user",
-      },
-    ];
-    const updatedData = data.map((row) => ({
-      ...row,
-      [`${inputs?.variable}_reversed`]: reverse({
-        column: parseFloat(row[inputs?.variable]),
-        maxValue,
-      }),
-    }));
-    updateDataset({
-      updatedVariables,
-      updatedData,
-    });
-    setIsOpen(false);
-    resetForm();
-  };
+  const variableSelectOptions = useMemo(
+    () =>
+      (variablesOptions || [])
+        .map((o) => ({
+          value: String(o.value ?? ""),
+          label: String(o.text ?? o.value ?? ""),
+        }))
+        .filter((o) => o.value !== ""),
+    [variablesOptions],
+  );
+
+  const variableLabel = t(`${M}.labels.variableToReverse`, {}, {
+    default: "Select variable to reverse",
+  });
+
+  const variablePlaceholder = t(`${M}.placeholders.selectVariable`, {}, {
+    default: "Select variable",
+  });
+
+  const variableAria = t(`${M}.aria.variableToReverse`, {}, {
+    default: "Variable to reverse",
+  });
+
+  useEffect(() => {
+    submitRef.current = () => {
+      const maxValue = parseInt(inputs?.maxValue, 10);
+      if (isNaN(maxValue)) {
+        alert("Please enter a valid integer for the max value.");
+        return;
+      }
+      const updatedVariables = [
+        ...variables,
+        {
+          field: `${inputs?.variable}_reversed`,
+          editable: true,
+          type: "user",
+        },
+      ];
+      const updatedData = data.map((row) => ({
+        ...row,
+        [`${inputs?.variable}_reversed`]: reverseValue({
+          column: parseFloat(row[inputs?.variable]),
+          maxValue,
+        }),
+      }));
+      updateDataset({
+        updatedVariables,
+        updatedData,
+      });
+      onSuccess();
+    };
+    return () => {
+      submitRef.current = null;
+    };
+  }, [data, variables, inputs, updateDataset, onSuccess, submitRef]);
+
+  const variableValue =
+    inputs?.variable != null && inputs.variable !== ""
+      ? String(inputs.variable)
+      : "";
 
   return (
-    <>
-      <Modal.Header>
-        <h2>{title}</h2>
-      </Modal.Header>
-
-      <Modal.Content>
-        <Modal.Description>
-          <StyledForm>
-            <fieldset>
-              <label htmlFor="variable">Select variable to reverse</label>
-              <Dropdown
-                placeholder="Select variable"
-                fluid
-                search
-                selection
-                options={variablesOptions}
-                onChange={(event, data) =>
-                  handleChange({
-                    target: { name: "variable", value: data?.value },
-                  })
-                }
-              />
-              <label htmlFor="maxValue">Enter max value of the scale</label>
-              <input
-                type="number"
-                min={0}
-                name="maxValue"
-                value={inputs.maxValue}
-                onChange={handleChange}
-              />
-            </fieldset>
-          </StyledForm>
-        </Modal.Description>
-      </Modal.Content>
-
-      <Modal.Actions>
-        <div className="modalButtons">
-          <button className="secondaryBtn" onClick={() => reverseColumn()}>
-            Reverse
-          </button>
-        </div>
-      </Modal.Actions>
-    </>
+    <StyledForm>
+      <fieldset>
+        <label htmlFor="variable">{variableLabel}</label>
+        <DropdownSelect
+          ariaLabel={variableAria}
+          placeholder={variablePlaceholder}
+          value={variableValue}
+          onChange={(next) =>
+            handleChange({
+              target: { name: "variable", value: next },
+            })
+          }
+          options={variableSelectOptions}
+          searchableSingle
+        />
+        <label htmlFor="maxValue">Enter max value of the scale</label>
+        <input
+          type="number"
+          min={0}
+          name="maxValue"
+          value={inputs?.maxValue ?? ""}
+          onChange={handleChange}
+        />
+      </fieldset>
+    </StyledForm>
   );
 }

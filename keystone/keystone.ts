@@ -51,7 +51,7 @@ export default withAuth(
         app.get("/api/clear-legacy-session", (_req: any, res: any) => {
           res.setHeader(
             "Set-Cookie",
-            "keystonejs-session=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict"
+            "keystonejs-session=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict",
           );
           res.json({ ok: true });
         });

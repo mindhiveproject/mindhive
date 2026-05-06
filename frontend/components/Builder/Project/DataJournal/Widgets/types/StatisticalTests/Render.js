@@ -1,11 +1,23 @@
 // components/DataJournal/Widgets/types/StatisticTest/Render.js
 import { useEffect, useState } from "react";
 import { Message, Icon, Table } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 export default function Render({ code, pyodide, sectionId, content }) {
+  const { t } = useTranslation("builder");
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const statTestType = content?.type;
+
+  const getStatTestEmptyStateImageSrc = (type) => {
+    if (type === "pearsonCorr")
+      return "/assets/dataviz/componentPanel/pearsonCorr.svg";
+    if (type === "tTest") return "/assets/dataviz/componentPanel/tTest.svg";
+    if (type === "oneWayAnova")
+      return "/assets/dataviz/componentPanel/oneWayAnova.svg";
+    return "/assets/dataviz/componentPanel/tTest.svg";
+  };
 
   const escapePy = (val) => {
     if (val == null || val === "") return "";
@@ -187,17 +199,74 @@ ${funcName}()
     return (
       <div
         style={{
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#718096",
-          fontStyle: "italic",
           padding: "2rem",
           textAlign: "center",
+          color: "#4b5563",
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          minHeight: 0,
+          gap: "0.5rem",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#DEF8FB",
+          borderRadius: "12px",
+          border: "1px solid #A1A1A1",
+          height: "100%",
+          overflow: "clip",
         }}
       >
-        Select variables in the editor panel to compute the test
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "0.75rem",
+            marginBottom: "1rem",
+          }}
+        >
+          <div style={{ fontWeight: 600, fontSize: "16px", textAlign: "left" }}>
+            {t(
+              "dataJournal.statTest.emptyState.title",
+              {},
+              { default: "Your statistical test is ready to be configured" },
+            )}
+          </div>
+          <img
+            src={getStatTestEmptyStateImageSrc(statTestType)}
+            alt={t(
+              "dataJournal.statTest.emptyState.title",
+              {},
+              { default: "Your statistical test is ready to be configured" },
+            )}
+            style={{
+              width: "88px",
+              height: "56px",
+              objectFit: "contain",
+              flexShrink: 0,
+            }}
+          />
+        </div>
+        {/* <div
+          style={{
+            background: "#ffffff",
+            padding: "0.35rem 0.65rem",
+            borderRadius: "6px",
+            color: "#3f3f46",
+            fontSize: "14px",
+            border: "2px solid #A1A1A1",
+          }}
+        >
+          {t(
+            "dataJournal.statTest.emptyState.helper",
+            {},
+            {
+              default:
+                "Click this component to open the editor, then choose variables to compute the test.",
+            },
+          )}
+        </div> */}
       </div>
     );
   }

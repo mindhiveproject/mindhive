@@ -296,6 +296,7 @@
 		"descGoToResourcesCenter": "यह पृष्ठ आपको संसाधनों को अपने प्रोजेक्ट बोर्ड कार्ड से लिंक करने की अनुमति देता है - संसाधनों का प्रबंधन करने के लिए, संसाधन केंद्र पर जाएं।",
 		"description": "विवरण",
 		"duplicate": "डुप्लिकेट",
+		"duplicateResource": "डुप्लिकेट संसाधन",
 		"edit": "संपादन करना",
 		"editExistingResource": "मेरे अनुकूलित संस्करण के साथ जारी रखें",
 		"editResource": "संसाधन संपादित करें",
@@ -363,6 +364,7 @@
 		"save": "बचाना",
 		"saveChanges": "परिवर्तनों को सुरक्षित करें",
 		"savedRessource": "संसाधन सहेजा गया है",
+		"saveDuplicate": "डुप्लिकेट सहेजें",
 		"saveOwnRessource": "अपने स्वयं के संसाधन के रूप में सहेजें",
 		"searchPlaceholder": "शीर्षक या विवरण द्वारा खोजें...",
 		"searchPlaceholderUser": "MindHive उपयोगकर्ता नाम से खोजें",
@@ -564,9 +566,12 @@
 	"emailAddress": "मेल पता",
 	"header": {
 		"addDescription": "विवरण जोड़ें",
+		"mentors": "मेंटर्स",
+		"mentorsPanelTooltip": "इस कक्षा से जुड़े मेंटर खाते।",
 		"save": "बचाना",
 		"teacher": "अध्यापक",
-		"titleFallback": ""
+		"teacherAccountTooltip": "क्लास - टीचर।",
+		"titleFallback": "शीर्षकहीन वर्ग"
 	},
 	"homework": {
 		"allEntries": "सभी प्रविष्टियों",
@@ -607,6 +612,7 @@
 	},
 	"main": {
 		"assignments": "कार्य",
+		"classSectionsNav": "कक्षा अनुभाग",
 		"dashboard": "डैशबोर्ड",
 		"mentors": "मेंटर्स",
 		"projects": "परियोजनाओं",

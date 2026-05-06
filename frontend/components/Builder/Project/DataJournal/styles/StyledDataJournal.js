@@ -1,23 +1,123 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+
+/** Keep overflow scroll behavior without showing scrollbars (Chrome / Firefox / legacy Edge). */
+const hideScrollbars = css`
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+`;
+
+/** Collapsible data layout panel (graph bar plot + statistical test axes under .selectorsStats) */
+const barPlotDataFormatPanelStyles = css`
+  .barPlotDataFormat {
+    display: grid;
+    grid-gap: 10px;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .barPlotDataFormat__panel {
+    display: grid;
+    grid-gap: 12px;
+    min-width: 0;
+    max-width: 100%;
+    padding-top: 2px;
+    box-sizing: border-box;
+  }
+  .barPlotDataFormat__card {
+    display: grid;
+    grid-gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #e6e6e6;
+    background: #ffffff;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .barPlotDataFormat__figureWrap {
+    width: 70%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+  .barPlotDataFormat__figure {
+    display: block;
+    width: 100%;
+    height: auto;
+    vertical-align: top;
+  }
+  .barPlotDataFormat__title {
+    margin: 0;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #171717;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    line-clamp: 4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .barPlotDataFormat__desc {
+    margin: 0;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #5d5763;
+    overflow-wrap: break-word;
+  }
+  .barPlotDataFormat__slides {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-family: Inter, sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    min-width: 0;
+  }
+  .barPlotDataFormat__slides img {
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .barPlotDataFormat__slides a {
+    color: var(--MH-Theme-Primary-Base, #7D70AD);
+    text-decoration: underline;
+    word-break: break-word;
+  }
+`;
 
 export const StyledDataArea = styled.div`
   display: grid;
-  align-content: baseline;
+  grid-template-rows: minmax(0, 1fr);
+  align-content: stretch;
   background: #f8f9f8;
   height: 100%;
+  min-height: 0;
 `;
 
 export const StyledDataJournal = styled.div`
   display: grid;
-  align-content: baseline;
+  grid-template-rows: minmax(0, 1fr);
+  align-content: stretch;
   height: 100%;
+  min-height: 0;
 `;
 
 export const StyledSidebar = styled.div`
   display: flex;
   flex-direction: column;
   grid-gap: 10px;
-  padding: 10px;
   margin: 10px;
   font-family: "Inter";
   font-style: normal;
@@ -25,69 +125,133 @@ export const StyledSidebar = styled.div`
   font-size: 14px;
   line-height: 17px;
   border-radius: 16px;
-  .collapsePanelBtn {
+  .navigationPanelHeader {
     display: flex;
-    align-items: center;
+    align-items: baseline;
+    justify-content: space-between;
     gap: 8px;
-    margin: 10px 10px;
-    justify-content: flex-start;
+    .collapsePanelBtn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-start;
+      .collapsePanelBtnIcon {
+        opacity: 0.5;
+      }
+    }
   }
   .journals {
     display: grid;
-    grid-gap: 10px;
     .journal {
       display: grid;
       grid-gap: 4px;
-      margin: 10px 0px 28px 0px;
+      margin-bottom: 20px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      background: #ffffff;
+      box-sizing: border-box;
+      transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .journal:not(.journal--selected):hover {
+      background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+      box-shadow: var(--MH-Theme-Elevation-Medium, 2px 2px 8px rgba(0, 0, 0, 0.08));
+    }
+    .journal.journal--selected {
+      border: 1.5px solid var(--MH-Theme-Neutrals-Light, #E6E6E6);
+    }
+    .journal.journal--selected:hover {
+      background: #F6F9F8;
+      border-color: var(--MH-Theme-Primary-Base, #E6E6E6);
     }
     .titleHeader {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: minmax(0, 1fr) auto;
       grid-gap: 8px;
       align-items: center;
     }
-    .title {
+    .journalTitleButton {
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: none;
+      text-align: left;
+      font: inherit;
+      color: inherit;
       cursor: pointer;
-      font-family: Nunito;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      line-clamp: 4;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .journalTitleButton:focus-visible {
+      outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    .title { 
+      font-family: Inter, sans-serif;
       font-weight: 400;
-      font-style: Regular;
       font-size: 16px;
-      leading-trim: NONE;
       line-height: 24px;
-      letter-spacing: 0px;
-      color: grey;
+      letter-spacing: 0;
+      color: #888888;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      line-clamp: 4;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
     .selectedTitle {
-      cursor: pointer;
-      font-family: Nunito;
+      font-family: Inter, sans-serif;
       font-weight: 700;
-      font-style: Bold;
       font-size: 16px;
-      leading-trim: NONE;
       line-height: 24px;
-      letter-spacing: 0px;
+      letter-spacing: 0;
+      color: inherit;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      line-clamp: 4;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
-    .timestamp {
-      color: #888888;
-      font-family: Lato;
-      font-weight: 300;
-      font-style: Italic;
-      font-size: 10px;
-      leading-trim: NONE;
-      line-height: 140%;
-      letter-spacing: 0%;
+    .dataSourceRow {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      background: transparent;
+      // padding: 8px 10px;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
     }
-    .dataSource {
-      font-family: Nunito;
-      font-weight: 600;
-      font-style: SemiBold;
-      font-size: 12px;
-      leading-trim: NONE;
-      line-height: 16px;
-      letter-spacing: 0px;
-      background: #f6f9f8;
-      padding: 5px 10px;
-      width: fit-content;
+    .dataSourceChips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .addActionsRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 8px 0;
     }
   }
   .workspaces {
@@ -108,6 +272,14 @@ export const StyledSidebar = styled.div`
       align-items: center;
     }
 
+    .workspaceRowLabel {
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
+    }
     .workspace {
       display: grid;
       cursor: pointer;
@@ -120,6 +292,52 @@ export const StyledSidebar = styled.div`
       cursor: pointer;
       font-weight: 700;
       font-style: Bold;
+    }
+
+    .dataJournalWorkspaceRowBtn:hover {
+      background-color: #FDF2D0 !important;
+    }
+  }
+  
+  .createJournalBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+
+    > div > button {
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    &:hover > div > button {
+      background-color: #e8eeec !important;
+      box-shadow: var(
+        --MH-Theme-Elevation-Medium,
+        0 1px 4px rgba(0, 0, 0, 0.08)
+      );
+    }
+  }
+
+  .addWorkspaceBtn,
+  .addComponentBtn {
+    display: flex;
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+
+    > div > button,
+    > button {
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    &:hover > div > button,
+    &:hover > button {
+      background-color: #e8eeec !important;
+      box-shadow: var(
+        --MH-Theme-Elevation-Medium,
+        0 1px 4px rgba(0, 0, 0, 0.08)
+      );
     }
   }
 
@@ -183,13 +401,44 @@ export const StyledTopNavigation = styled.div`
   align-items: center;
   border-bottom: 1px solid #e6e6e6;
   background: white;
+  padding: 8px;
   .buttons {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-gap: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+  }
+  .topNavJournalActions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  /* TopNav is under StyledDataWorkspace, not StyledDataJournal — mirror journal pill hovers here */
+  .addWorkspaceBtn,
+  .addComponentBtn {
+    display: flex;
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+
+    > div > button,
+    > button {
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    &:hover > div > button,
+    &:hover > button {
+      background-color: #e8eeec !important;
+      box-shadow: var(
+        --MH-Theme-Elevation-Medium,
+        0 1px 4px rgba(0, 0, 0, 0.08)
+      );
+    }
   }
   .leftIconNav {
-    margin: 0px 8px 0px 12px;
     padding-right: 10px;
     display: flex;
     align-items: center;
@@ -293,21 +542,83 @@ export const StyledDataComponent = styled.div`
   }
 `;
 
-export const StyledRightPanel = styled.div`
+export const StyledComponentEditor = styled.div`
   display: grid;
   align-content: baseline;
   grid-gap: 10px;
+  margin: 0;
   width: 100%;
+  max-width: 100%;
   min-width: 0;
   min-height: 0;
-  padding: 0px 16px 16px 4px;
   box-sizing: border-box;
   overflow-x: hidden;
-  overflow-y: auto;
+  ${hideScrollbars}
   height: 100%;
   align-self: stretch;
   & > * {
     min-width: 0;
+  }
+  .editorPanelBody {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e6e6e6;
+    margin: 0 8px;
+    padding: 8px;
+    overflow-x: visible;
+    overflow-y: visible;
+    ${hideScrollbars}
+
+    /* TipTap (paragraph panel): flush content chrome; one vertical scroller on this panel */
+    .tiptapEditor {
+      max-width: 100%;
+      border-radius: 0;
+      border-top: 1px solid #E6E6E6;
+    }
+    .editorContainer {
+      margin-top: 0;
+    }
+    .tiptapEditor .ProseMirror {
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      max-height: none;
+      overflow-x: visible;
+      overflow-y: visible;
+    }
+
+    .tiptapEditorHost {
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      min-height: 5.5rem;
+    }
+    .tiptapEditorHost .tiptapEmptyInvite {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      margin: 1rem 0 0 0;
+      width: fit-content;
+      height: fit-content;
+      pointer-events: none;
+      color: #5D5763;
+      border: 1px solid #5D5763;
+      background-color: #F6F9F8;
+      border-radius: 12px;
+      padding: 0.5rem 1rem;
+      font-family: Inter, sans-serif;
+      font-size: 15px;
+      line-height: 150%;
+      font-weight: 400;
+      font-style: italic;
+    }
   }
   .editor-header {
     display: flex;
@@ -316,6 +627,7 @@ export const StyledRightPanel = styled.div`
     justify-content: flex-start;
     gap: 12px;
     min-width: 0;
+    margin: 08px;
     h2 {
       margin: 0;
       min-width: 0;
@@ -376,6 +688,10 @@ export const StyledRightPanel = styled.div`
     width: 100% !important;
   }
 
+  .editor-wrapper .cm-scroller {
+    ${hideScrollbars}
+  }
+
   .editor-header {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -410,8 +726,9 @@ export const StyledRightPanel = styled.div`
         min-width: 0;
         overflow: hidden;
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 4;
         -webkit-box-orient: vertical;
+        line-clamp: 4;
         text-overflow: ellipsis;
         white-space: normal;
         word-break: break-word;
@@ -423,19 +740,57 @@ export const StyledRightPanel = styled.div`
   }
 `;
 
+export const StyledDatasetsRoot = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 0 12px 12px;
+  box-sizing: border-box;
+  overflow-y: auto;
+
+  .datasets {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .datasets-list-intro {
+    margin: 0 0 16px;
+    max-width: 720px;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #4a5568;
+  }
+
+  .add-dataset-row {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 4px;
+  }
+`;
+
 export const StyledComponentPanel = styled.div`
   display: grid;
   align-content: baseline;
   grid-gap: 10px;
-  min-width: 300px;
+  min-width: 0;
+  width: auto;
   background: white;
-  padding: 16px;
+  padding: 12px;
   overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and legacy Edge */
   height: 100%;
-  margin: 0px 8px 0px 0px;
-  box-shadow: 0px 2px 4px 0px #00000012;
+  margin: 10px 8px 10px 8px;
+  box-sizing: border-box;
+  box-shadow: none;
   border-radius: 12px;
   border: 1px solid #e6e6e6;
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
   .panelHeader {
     display: flex;
     align-items: center;
@@ -540,29 +895,14 @@ export const StyledDataWorkspace = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
   align-content: baseline;
   background: #f8f9f8;
   gap: 10px;
   --dashboard-gap: 10px;
   /* Space between the left journal sidebar and the grid canvas when the sidebar is open */
   --left-panel-canvas-gap: 16px;
-  --right-rail-width: clamp(380px, 36vw, 900px);
-
-  /* Left journal sidebar: never show a box-shadow (Semantic UI + themes often add one) */
-  .sidebar,
-  .dashboardPushable .ui.sidebar,
-  .dashboardPushable .ui.sidebar.visible,
-  .dashboardPushable .ui.sidebar.animating {
-    background: white;
-    border: 1px solid #e6e6e6;
-    border-left: none;
-    /* Flush to the left: no radius on the outer (left) edge; keep radius toward the canvas */
-    border-top-left-radius: 0 !important;
-    border-bottom-left-radius: 0 !important;
-    border-top-right-radius: 12px !important;
-    border-bottom-right-radius: 12px !important;
-    box-shadow: none !important;
-  }
+  --left-sidebar-width: 430px;
 
   .segment {
     border: none;
@@ -587,16 +927,15 @@ export const StyledDataWorkspace = styled.div`
     grid-template-rows: minmax(0, 1fr);
     gap: var(--dashboard-gap);
     align-content: stretch;
-    height: calc(100vh - 50px);
+    flex: 1 1 auto;
     min-width: 0;
     min-height: 0;
-
-    &.hasRightPanel {
-      grid-template-columns: minmax(0, 1fr) var(--right-rail-width);
-    }
+    overflow: hidden;
 
     .dashboardMain {
       min-width: 0;
+      min-height: 0;
+      overflow: hidden;
       position: relative;
       display: grid;
       grid-template-rows: minmax(0, 1fr);
@@ -619,45 +958,154 @@ export const StyledDataWorkspace = styled.div`
       box-shadow: 2px 2px 8px 0px #0000001a;
     }
 
-    /* Semantic UI can apply margin-top on .ui.segment.pushable when sidebar is hidden — removes “extra padding” at top */
-    .dashboardPushable.ui.segment.pushable {
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
-    }
-
-    .dashboardPushable {
+    /* Two-pane journal: flex row + container query so canvas width stays constant when rail collapses */
+    .journalShell {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      align-self: stretch;
       min-width: 0;
+      min-height: 0;
+      width: 100%;
       height: 100%;
+      max-height: 100%;
       overflow: hidden;
-    }
-
-    .dashboardPusher {
-      min-width: 0;
-      min-height: 0;
-      background: transparent;
-    }
-
-    &.hasLeftSidebar .dashboardPusher {
-      padding-left: var(--left-panel-canvas-gap);
       box-sizing: border-box;
+      gap: var(--left-panel-canvas-gap);
+      container-type: inline-size;
+      container-name: journal-shell;
     }
 
-    .dashboardRightRail {
+    .journalLeftRail {
+      flex: 0 0 var(--left-sidebar-width);
+      max-width: var(--left-sidebar-width);
       min-width: 0;
+      /* Let the rail shrink inside the flex row so inner .sidebarModeBody can scroll */
       min-height: 0;
+      max-height: 100%;
       height: 100%;
       overflow: hidden;
       display: grid;
       grid-template-rows: minmax(0, 1fr);
-      align-content: stretch;
+      box-sizing: border-box;
+      background: white;
+      border: 1px solid #e6e6e6;
+      border-left: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+      box-shadow: none;
+      transition:
+        flex-basis 0.2s ease,
+        max-width 0.2s ease,
+        opacity 0.15s ease,
+        border-color 0.15s ease;
+    }
+
+    &.noLeftSidebar .journalLeftRail {
+      flex: 0 0 0;
+      max-width: 0;
+      min-width: 0;
+      opacity: 0;
+      pointer-events: none;
+      border-color: transparent;
+    }
+
+    &.hasLeftSidebar .journalLeftRail {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .journalCanvasColumn {
+      flex: 1 1 auto;
+      min-width: 0;
+      min-height: 0;
+      max-height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+
+    &.hasLeftSidebar .journalCanvasColumn {
       align-items: stretch;
+    }
+
+    &.noLeftSidebar .journalCanvasColumn {
+      align-items: center;
+      /* Gutters without shrinking journalShell — keeps cqi stable when rail toggles */
+      margin-inline: 16px;
+    }
+
+    /* Width from full journal row (cqi), not remaining flex space — RGL does not resize when rail toggles */
+    .journalShell .canvas {
+      width: calc(
+        100cqi - var(--left-sidebar-width) - var(--left-panel-canvas-gap)
+      );
+      max-width: 100%;
+
+      flex: 1 1 0;
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* legacy Edge */
+
+      &::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+      }
+    }
+  }
+  .sidebarModeShell {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+  .sidebarModeHeader {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #ffffff;
+    border-bottom: 1px solid #e6e6e6;
+    margin: 0;
+    padding: 10px;
+  }
+  .navigationPanelHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    .collapsePanelBtn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-start;
+      .collapsePanelBtnIcon {
+        opacity: 0.5;
+      }
+    }
+  }
+  .sidebarModeBody {
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* legacy Edge */
+
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
     }
   }
   .canvas {
     display: grid;
     width: 100%;
     min-width: 0;
-    min-height: 80vh;
+    min-height: 0;
+    box-sizing: border-box;
 
     background: white;
     // box-shadow: 2px 2px 8px 0px #0000001a;
@@ -672,9 +1120,58 @@ export const StyledDataWorkspace = styled.div`
         outline-offset: 2px;
       }
     }
+
+    .react-grid-placeholder {
+      background: rgba(228, 223, 246, 0.45) !important;
+      border: 2px solid #e4dff6 !important;
+      border-radius: 14px !important;
+      opacity: 1 !important;
+    }
+
+    .react-grid-item.react-draggable-dragging {
+      z-index: 3 !important;
+      border-radius: 14px;
+      box-shadow: 0 0 0 3px rgba(228, 223, 246, 0.9) !important;
+    }
+
+    .react-grid-item.resizing {
+      z-index: 3 !important;
+      border-radius: 14px;
+      box-shadow: 0 0 0 3px rgba(228, 223, 246, 0.9) !important;
+    }
+
+    .react-resizable-handle::after {
+      border-right: 2px solid #e4dff6 !important;
+      border-bottom: 2px solid #e4dff6 !important;
+    }
+
+    /* Paragraph widget on grid: match panel TipTap — no inner ProseMirror box chrome; WidgetContent scrolls */
+    .paragraph .tiptapEditor {
+      max-width: 100%;
+      border-radius: 0;
+      
+    }
+    .paragraph .editorContainer {
+      margin-top: 0;
+    }
+    .paragraph .tiptapEditor .ProseMirror {
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      max-height: none;
+      overflow-x: visible;
+      overflow-y: visible;
+    }
+  }
+  .dashboard.noLeftSidebar .journalShell .canvas {
+    max-width: min(1380px, 100%);
   }
   .graph {
     display: grid;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
 
     .displayContainer {
       display: grid;
@@ -748,8 +1245,12 @@ export const StyledDataWorkspace = styled.div`
     }
     .selectors {
       display: grid;
-      margin: 20px;
-      grid-gap: 21px;
+      margin: 0;
+      padding: 8px;
+      box-sizing: border-box;
+      grid-gap: 12px;
+      min-width: 0;
+      max-width: 100%;
       .header {
         display: grid;
         grid-gap: 10px;
@@ -758,55 +1259,154 @@ export const StyledDataWorkspace = styled.div`
         font-size: 18px;
         margin: 10px 0px 10px 0px;
       }
+
+      ${barPlotDataFormatPanelStyles}
     }
     .selectorsTestStats {
       display: grid;
-      grid-gap: 21px;
+      grid-gap: 12px;
     }
     .selectorsStats {
-      margin: 20px clamp(12px, 4vw, 48px) 50px;
+      margin: 0;
+      padding: 8px clamp(10px, 3vw, 24px) 16px;
+      box-sizing: border-box;
       display: grid;
-      grid-gap: 41px;
+      grid-gap: 16px;
+      min-width: 0;
+      max-width: 100%;
+
+      .statTestDataFormatSummary {
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        line-height: 1.45;
+        color: #000000;
+        min-width: 0;
+        max-width: 100%;
+      }
+      .statTestDataFormatSummary p {
+        margin: 0 0 8px 0;
+      }
+      .statTestDataFormatSummary p:last-child {
+        margin-bottom: 0;
+      }
+
+      ${barPlotDataFormatPanelStyles}
+    }
+    .graphEditorFieldRow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 100%;
+      min-width: 0;
+      grid-gap: 10px;
+      // border-radius: 12px;
+      // border: 1px solid #e6e6e6;
+      background: #fff;
+      // box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+      color: #171717;
+      font-family: Inter, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.4;
+      .graphEditorFieldRow__label {
+        background: transparent;
+        color: #0D3944;
+        font-weight: 600;
+        // padding: 10px 12px 4px;
+        min-width: 0;
+        max-width: 100%;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        line-clamp: 4;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .graphEditorFieldRow__control {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        .dropdown {
+          border: 0;
+        }
+      }
+    }
+    .graphEditorNestedFields {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+      max-width: 100%;
     }
     .selectorLine {
       display: grid;
-      grid-template-columns: minmax(max-content, 200px) 1fr;
-      border-radius: 8px;
-      border: 1px solid #eaeaea;
+      grid-template-columns: minmax(0, 1fr);
+      grid-gap: 12px;
+      max-width: 100%;
       background: #fff;
-      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
-      color: #4bb3a3;
+      color: #171717;
       font-family: Inter;
-      font-size: 16px;
-      font-style: normal;
+      font-size: 14px;
       font-weight: 400;
-      line-height: 150%;
+      line-height: 1.4;
       .title {
-        display: grid;
-        align-content: center;
-        justify-content: end;
-        background: #eaeaea;
-        padding: 9px 13px;
+        color: #0D3944;
+        font-weight: 600;
+        background: transparent;
+        min-width: 0;
+        max-width: 100%;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        line-clamp: 4;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
       .select {
+        min-width: 0;
+        padding: 0;
         .dropdown {
           border: 0;
         }
         select {
-          border: 0px;
-          height: 100%;
-          padding: 9px 13px;
-          min-width: 98%;
-          max-width: 200px;
-          overflow-wrap: break-word;
+          min-height: 44px;
+          min-width: 0;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          overflow-wrap: anywhere;
           word-wrap: break-word;
           word-break: break-word;
         }
       }
     }
+    .tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .tabs > .graph {
+      min-width: 0;
+      max-width: 100%;
+    }
     .customTabs {
-      display: grid;
-      grid-template-rows: auto 1fr;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
       /* .menu {
         display: grid;
         grid-template-columns: repeat(3, auto);
@@ -845,34 +1445,42 @@ export const StyledDataWorkspace = styled.div`
           font-weight: 700;
         }
       }
-      .tabContent {
-        padding: 20px;
-        background: white;
-        border-radius: 0 0 10px 10px;
-        box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
-        .styleLayoutContainer {
-          display: grid;
-          grid-gap: 10px;
-          h3 {
-            font-family: Nunito;
-            font-weight: 700;
-            font-size: 16px;
-            line-height: 24px;
-            color: #333;
-          }
-          p {
-            font-family: Inter;
-            font-size: 14px;
-            line-height: 150%;
-            color: #666;
-          }
+    }
+    .tabContent {
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow-x: auto;
+      ${hideScrollbars}
+      padding: 8px;
+      background: white;
+      border-radius: 0 0 10px 10px;
+      .styleLayoutContainer {
+        display: grid;
+        grid-gap: 10px;
+        h3 {
+          font-family: Inter;
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 24px;
+          color: #333;
+        }
+        p {
+          font-family: Inter;
+          font-size: 14px;
+          line-height: 150%;
+          color: #666;
         }
       }
     }
   }
   .graphDashboard {
     display: grid;
-    margin: 0px 10px 20px 10px;
+    margin: 0 0 8px 0;
+    padding: 0 2px;
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
 
     .header {
       display: grid;
@@ -883,21 +1491,36 @@ export const StyledDataWorkspace = styled.div`
       margin: 0px 0px 10px 0px;
     }
     .subheader {
-      background: #f1f7f6;
-      padding: 10px;
+      background: transparent;
+      padding: 2px 2px 0;
+      margin-top: 4px;
+      font-family: Inter, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #6a6a6a;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
     }
     .subsection {
       display: grid;
       grid-gap: 8px;
-      padding: 10px 10px;
+      padding: 4px 0 8px;
     }
     .title {
       color: #666666;
     }
     .ranges {
-      display: grid;
-      grid-gap: 10px;
-      grid-template-columns: 100px 100px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      input {
+        flex: 1;
+        min-width: 0;
+      }
     }
     label {
       display: block;
@@ -909,17 +1532,17 @@ export const StyledDataWorkspace = styled.div`
     input,
     textarea,
     select {
-      font-family: Lato;
-      height: 48px;
+      font-family: Inter, sans-serif;
+      min-height: 44px;
       border: 1px solid #cccccc;
       border-radius: 10px;
       width: 100%;
-      font-size: 16px;
-      line-height: 24px;
-      padding: 12px;
+      font-size: 14px;
+      line-height: 20px;
+      padding: 10px 12px;
       &:focus {
         outline: 0;
-        border-color: ${(props) => props.theme.red};
+        border-color: #0D3944;
       }
     }
   }
@@ -932,7 +1555,6 @@ export const StyledDataWorkspace = styled.div`
     max-width: 100%;
     min-width: 0;
     align-self: stretch;
-    padding: 20px 16px;
     flex-direction: column;
     align-items: stretch;
     gap: 22px;
@@ -943,6 +1565,22 @@ export const StyledDataWorkspace = styled.div`
     .ui.selection.dropdown {
       min-width: 0 !important;
       max-width: 100%;
+    }
+
+    .ui.selection.dropdown .text {
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .ui.multiple.selection.dropdown > .label,
+    .ui.multiple.selection.dropdown .label {
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .ui.selection.dropdown > .dropdown.icon {
@@ -995,6 +1633,16 @@ export const StyledDataWorkspace = styled.div`
         font-style: normal;
         font-weight: 400;
         line-height: 16px; /* 133.333% */
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        line-clamp: 4;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       .input-box {
@@ -1197,120 +1845,76 @@ export const StyledDatasetGrid = styled.div`
   margin-bottom: 30px;
 `;
 
-export const StyledAddDataset = styled.div`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: #f8f9f8;
-  color: #336f8a;
-  padding: 12px 24px;
-  border: 2px dashed #336f8a;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: Nunito;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #336f8a;
-    color: white;
-  }
-`;
-
 export const StyledDatasetCard = styled.div`
-  background: white;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  border: 1px solid #e6e6e6;
-  transition: all 0.2s ease-in-out;
+  border: 1px solid #eceef2;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  padding: 18px 20px;
+  transition: box-shadow 0.18s ease-out, transform 0.18s ease-out,
+    border-color 0.18s ease-out;
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
+    border-color: #d8dde5;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
+  }
+
+  &:hover .dataset-actions,
+  &:focus-within .dataset-actions {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .dataset-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 12px;
+    gap: 12px;
+    margin-bottom: 14px;
   }
 
   .dataset-title {
-    font-family: Nunito;
+    font-family: Nunito, Inter, sans-serif;
     font-weight: 600;
     font-size: 16px;
-    line-height: 20px;
-    color: #333;
+    line-height: 22px;
+    color: #1f2937;
     margin: 0;
     flex: 1;
+    word-break: break-word;
   }
 
   .dataset-actions {
-    display: flex;
-    gap: 8px;
-    margin-left: 10px;
-  }
-
-  .edit-btn,
-  .delete-btn {
-    background: #336f8a;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    font-family: Inter;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
-
-    &:hover:not(:disabled) {
-      background: #2a5a6f;
-    }
-
-    &:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-  }
-
-  .delete-btn {
-    background: #ff4d4d;
-
-    &:hover:not(:disabled) {
-      background: #cc0000;
-    }
+    gap: 6px;
+    flex-shrink: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease-out;
   }
 
   .dataset-meta {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
   }
 
-  .origin-badge {
-    background: #f0f8f7;
-    color: #336f8a;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 500;
-    font-family: Inter;
-    align-self: flex-start;
-    max-width: fit-content;
+  .dataset-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
   }
 
   .dataset-info {
     display: flex;
     gap: 8px;
     font-size: 12px;
-    color: #666;
-    font-family: Inter;
+    color: #6b7280;
+    font-family: Inter, sans-serif;
   }
 
   .author {
@@ -1318,7 +1922,7 @@ export const StyledDatasetCard = styled.div`
   }
 
   .updated {
-    color: #999;
+    color: #9ca3af;
   }
 `;
 
@@ -1486,4 +2090,136 @@ export const StyledDataSourceLabels = styled.span`
   font-size: 12px;
   color: #336f8a;
   margin-left: 8px;
+`;
+
+export const StyledTableEditor = styled.div`
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  font-family: Inter, sans-serif;
+
+  .tableEditorTitle {
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 150%;
+    color: #000000;
+  }
+
+  .tableEditorDescription,
+  .tableEditorEmptyState {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
+    color: #666666;
+  }
+
+  .tableEditorSearchInput,
+  .tableEditorNumericInput {
+    width: 100%;
+    max-width: 100%;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 150%;
+    color: #000000;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+  }
+
+  .tableEditorSearchInput {
+    margin-bottom: 0.75rem;
+  }
+
+  .tableEditorActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .tableEditorActionButton {
+    height: 32px;
+    padding: 6px 12px;
+  }
+
+  .tableEditorRows {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .tableEditorRow {
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    padding: 0.65rem 0.75rem;
+    box-sizing: border-box;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .tableEditorRowHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .tableEditorRowLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    min-width: 0;
+    flex: 1 1 auto;
+    font: inherit;
+    color: inherit;
+  }
+
+  .tableEditorRowName {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 150%;
+    color: #000000;
+  }
+
+  .tableEditorFilterChip {
+    flex: 0 0 auto;
+    height: 32px;
+    max-width: 100%;
+  }
+
+  .tableEditorFiltersPanel {
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid #f0f0f0;
+    min-width: 0;
+  }
+
+  .tableEditorRangeGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .tableEditorFieldLabel {
+    margin-bottom: 0.25rem;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 150%;
+    color: #6a6a6a;
+  }
 `;

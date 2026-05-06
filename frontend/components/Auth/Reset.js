@@ -77,16 +77,18 @@ export default function Reset({ query }) {
             type="password"
             name="password"
             placeholder="Enter your new password"
+            autoComplete="new-password"
             value={inputs?.password}
             onChange={handleChange}
           />
         </label>
-        <label htmlFor="password">
+        <label htmlFor="confirmPassword">
           Confirm Password
           <input
             type="password"
             name="confirmPassword"
             placeholder="Confirm your new password"
+            autoComplete="new-password"
             value={inputs?.confirmPassword}
             onChange={handleChange}
           />

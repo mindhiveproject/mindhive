@@ -2,29 +2,8 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import CompactActionButton from "../../../../DesignSystem/CompactActionButton";
 import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
-
-function getHeaderIconSrc(activeComponent) {
-  const type = activeComponent?.type;
-  const contentType = activeComponent?.content?.type;
-
-  if (type === "HYPVIS") return "/assets/dataviz/headerIcon/hypvis.svg";
-  if (type === "PARAGRAPH") return "/assets/dataviz/headerIcon/paragraph.svg";
-  if (type === "CODE") return "/assets/dataviz/headerIcon/code.svg";
-  if (type === "TABLE") return "/assets/dataviz/headerIcon/table.svg";
-
-  // Statistical test and summary-style components share the table/summary icon.
-  if (type === "STATTEST") return "/assets/dataviz/headerIcon/summary.svg";
-  if (type === "STATISTICS") return "/assets/dataviz/headerIcon/table.svg";
-
-  if (type === "GRAPH") {
-    if (contentType === "barGraph") return "/assets/dataviz/headerIcon/barChart.svg";
-    if (contentType === "scatterPlot") return "/assets/dataviz/headerIcon/scatterPlot.svg";
-    if (contentType === "histogram") return "/assets/dataviz/headerIcon/stackedBarChart.svg";
-    return "/assets/dataviz/headerIcon/defaultGraph.svg";
-  }
-
-  return "/assets/dataviz/headerIcon/defaultGraph.svg";
-}
+import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
+import getVizComponentIconSrc from "../Helpers/getVizComponentIconSrc";
 
 function getComponentTypeLabel(activeComponent, t) {
   const type = activeComponent?.type;
@@ -75,11 +54,12 @@ export default function EditorHeader({
   onSaveFigureToMedia,
 }) {
   const { t } = useTranslation("builder");
-  const headerIconSrc = getHeaderIconSrc(activeComponent);
+  const headerIconSrc = getVizComponentIconSrc(activeComponent);
   const componentTypeLabel = getComponentTypeLabel(activeComponent, t);
 
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(activeComponent?.title || "");
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -113,14 +93,7 @@ export default function EditorHeader({
   };
 
   const handleDeleteClick = () => {
-    const confirmed = window.confirm(
-      t(
-        "dataJournal.componentEditor.deleteConfirm",
-        "Are you sure you want to delete this component?",
-      ),
-    );
-    if (!confirmed) return;
-    onDelete();
+    setDeleteConfirmOpen(true);
   };
 
   return (
@@ -208,6 +181,19 @@ export default function EditorHeader({
           />
         </div>
       </div>
+      <DeleteConfirmModal
+        open={deleteConfirmOpen}
+        title={t("dataJournal.componentEditor.delete", {}, { default: "Delete" })}
+        message={t("dataJournal.componentEditor.deleteConfirm", {}, {
+          default: "Are you sure you want to delete this component?",
+        })}
+        confirmLabel={t("dataJournal.componentEditor.delete", {}, { default: "Delete" })}
+        onClose={() => setDeleteConfirmOpen(false)}
+        onConfirm={() => {
+          onDelete();
+          setDeleteConfirmOpen(false);
+        }}
+      />
     </div>
   );
 }

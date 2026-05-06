@@ -227,15 +227,21 @@
 	"dataJournal": {
 		"addComponent": "Добавить компонент",
 		"addNotes": "Добавить заметки",
-		"collapsePanel": "Свернуть панель",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "Код"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "Закрывать",
-			"componentName": "",
+			"componentName": "Название компонента",
 			"delete": "Удалить",
 			"deleteConfirm": "Вы уверены, что хотите удалить этот компонент?",
 			"editComponent": "Редактировать компонент",
 			"editParagraph": "Редактировать абзац",
-			"editTitle": "",
+			"editTitle": "Изменить заголовок компонента",
 			"save": "Сохранять",
 			"saveFigureToMedia": "Сохранить изображение в медиатеку",
 			"typeLabel": {
@@ -253,6 +259,299 @@
 			},
 			"unsupportedType": "Неподдерживаемый тип компонента: {{type}}",
 			"untitled": "Без названия"
+		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "Отмена",
+				"create": "Создать набор данных"
+			},
+			"dataSourceLabel": "Источник данных",
+			"errorCreatingDataset": "Ошибка при создании набора данных:",
+			"errorLoadingStudy": "Исследование ошибок загрузки:",
+			"loadingDataSources": "Загрузка источников данных…",
+			"nameHelp": "Переименовать его можно позже в настройках набора данных.",
+			"nameLabel": "Название набора данных",
+			"namePlaceholder": "Например, ответы на предварительные тесты, весна 2026 года.",
+			"study": {
+				"currentStudy": "Исследование: {{title}}",
+				"currentStudyMissing": "С данным проектом не связано ни одно исследование.",
+				"optionDisabled": "К этому проекту не привязано ни одно исследование. Чтобы включить эту опцию, привяжите исследование.",
+				"optionTitle": "Используйте данные из текущего исследования."
+			},
+			"subtitle": "Назовите свой набор данных и укажите, откуда должны поступать данные.",
+			"template": {
+				"optionDescription": "Выберите шаблонный набор данных (скоро будет доступен).",
+				"optionTitle": "Скопировать из существующего набора данных"
+			},
+			"title": "Новый набор данных",
+			"upload": {
+				"fileHelp": "В первой строке должны быть указаны названия столбцов.",
+				"optionDescription": "Создайте набор данных из файла на вашем компьютере.",
+				"optionTitle": "Загрузите CSV- или JSON-файл."
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "Добавить столбец",
+				"download": "Скачать",
+				"hideAll": "Скрыть все",
+				"hideAllVariables": "",
+				"returnToNavigation": "Вернуться к навигации",
+				"save": "",
+				"saving": "",
+				"showAll": "Показать все",
+				"showAllVariables": ""
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "Первая переменная",
+					"operation": "Операция",
+					"secondVariable": "Вторая переменная",
+					"variablesForAverage": "Переменные для среднего значения",
+					"variableToCopy": "Переменная для копирования",
+					"variableToRecode": "Переменная для перекодирования",
+					"variableToReverse": "Изменение переменной на обратную"
+				},
+				"cancel": "Отмена",
+				"chooseAction": "Выберите действие",
+				"labels": {
+					"firstVariable": "Первая переменная",
+					"operation": "Операция",
+					"secondVariable": "Вторая переменная",
+					"sourceVariable": "Выберите переменную для копирования",
+					"variablesForAverage": "Выберите переменную(ые)",
+					"variableToRecode": "Выберите переменную для перекодирования",
+					"variableToReverse": "Выберите переменную для инвертирования"
+				},
+				"placeholders": {
+					"selectOperation": "Выберите операцию",
+					"selectVariable": "Выберите переменную",
+					"selectVariables": "Выберите переменную(ые)"
+				},
+				"submit": "Добавить столбец",
+				"title": "Добавить столбец"
+			},
+			"alt": {
+				"addColumn": "Добавить столбец",
+				"database": "База данных",
+				"return": "Возвращаться"
+			},
+			"downloadPrompt": "Присвойте имя файлу CSV, который вы собираетесь загрузить.\nДобавлять расширение '.csv' не нужно, мы это сделаем сами!",
+			"header": {
+				"activeData": "Активные данные",
+				"untitledDataset": ""
+			},
+			"meta": {
+				"dataOrigin": "",
+				"lastUpdated": "",
+				"neverUpdated": ""
+			},
+			"operations": {
+				"computeNew": "Вычислите новую переменную",
+				"copyExisting": "Скопировать существующую переменную",
+				"recodeVariable": "Перекодировать переменную",
+				"reverseScore": "Обратный счет"
+			},
+			"sections": {
+				"generalVariables": "Общие переменные",
+				"taskVariables": "Переменные задачи",
+				"userVariables": "Пользовательские переменные"
+			},
+			"variable": {
+				"delete": "",
+				"hideAria": "",
+				"rename": "",
+				"renamePrompt": "",
+				"showAria": ""
+			}
+		},
+		"datasets": {
+			"addDataset": "Добавить набор данных",
+			"deleteConfirm": "Вы уверены, что хотите удалить этот набор данных?",
+			"deleteDataset": "Удалить набор данных",
+			"deleteDisabledNotOwner": "Удалить этот набор данных может только его создатель.",
+			"deleteDisabledPublicTemplate": "Этот набор данных связан с общедоступным шаблоном и не может быть удален.",
+			"deleteLabel": "Удалить",
+			"deleting": "Удаление...",
+			"editLabel": "Редактировать набор данных",
+			"errorLoading": "Ошибка: {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "Также в этом списке",
+				"otherTooltip": "Этот набор данных соответствовал фильтру списка другим способом (например, общедоступному шаблону). Он не может быть сохранен в рамках данного проекта или исследования.",
+				"viaPartLabel": "Связано с частью",
+				"viaPartTooltip": "Этот набор данных не хранится непосредственно в рамках данного проекта или исследования, но, по крайней мере, один раздел журнала в этом рабочем пространстве использует его.",
+				"workspaceLabel": "Это рабочее пространство",
+				"workspaceTooltip": "Этот набор данных хранится в рамках текущего проекта или исследования.",
+				"yourLibraryLabel": "Ваш набор данных",
+				"yourLibraryTooltip": "Вы создали этот набор данных, но в данный момент он не привязан к данному проекту или исследованию. Он отображается здесь, чтобы вы могли найти и использовать его повторно."
+			},
+			"listIntro": "В этот список входят наборы данных, хранящиеся в этом рабочем пространстве, наборы данных, связанные между собой через разделы журнала, а также ваши собственные наборы данных, которые вы можете использовать повторно.",
+			"loading": "Загрузка наборов данных...",
+			"meta": {
+				"byAuthor": "по {{author}}",
+				"byYou": "от тебя",
+				"dataOrigin": "",
+				"lastUpdated": "Последнее обновление {{date}}",
+				"lastUpdatedNever": "Никогда",
+				"unknownAuthor": "Неизвестный"
+			},
+			"originTooltip": "",
+			"untitled": "Набор данных без названия"
+		},
+		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "Столбец(ы) для построения графика",
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"googleSlidesAlt": "Google Слайды",
+						"hintLong": "Чтобы сравнить столбцы, нажмите здесь.",
+						"hintWide": "Если вы хотите сравнить разные группы по одному столбцу (переменной), нажмите здесь.",
+						"longDescription": "Данные организованы таким образом, что каждое наблюдение (например, оценка ученика за тест) отображается в отдельной строке, часто с столбцом, указывающим на категории (например, предметы). Такой формат удобен для детального анализа по категориям.",
+						"longTitle": "Длинный формат данных",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "Структура данных",
+						"slidesLink": "Нажмите здесь, чтобы посмотреть слайды лекции.",
+						"switchToLong": "Переключиться на длинный формат",
+						"switchToWide": "Переключиться на широкоформатный режим",
+						"toggleAriaLabel": "",
+						"wideDescription": "Данные организованы таким образом, что каждая категория (например, предметы) представлена ​​в отдельном столбце, а строки часто содержат данные наблюдений (например, студенты). Такой формат упрощает быстрое сравнение внутри категорий.",
+						"wideTitle": "Широкий формат данных"
+					},
+					"errBar95": "95% доверительный интервал",
+					"errBar99": "99% доверительный интервал",
+					"errBarStdErr": "Стандартная ошибка",
+					"errorBar": "Погрешность",
+					"errorBarWide": "Погрешность",
+					"qualitativeColumn": "Качественная колонка",
+					"quantitativeColumn": "Количественная колонка",
+					"resources": {
+						"barPlotAlt": "Внешняя ссылка",
+						"barPlotTitle": "Что такое столбчатая диаграмма?",
+						"confidenceIntervalsAlt": "Внешняя ссылка",
+						"confidenceIntervalsTitle": "Что такое доверительные интервалы?",
+						"standardErrorAlt": "Внешняя ссылка",
+						"standardErrorTitle": "Подробнее о стандартной ошибке"
+					}
+				},
+				"header": {
+					"iconAlt": "Оси",
+					"title": "Оси"
+				},
+				"help": {
+					"ariaLabel": "Ресурсы и помощь",
+					"resourcesIntro": "Используйте кнопки ниже, чтобы открыть ссылку в новой вкладке, если она доступна."
+				},
+				"histogram": {
+					"columnsToObserve": "Столбец(ы) для наблюдения",
+					"groupByOptional": "Группировка по (необязательно — цвет по категориям)",
+					"marginalBox": "Диаграмма размаха",
+					"marginalNone": "Никто",
+					"marginalPlot": "Маргинальный участок",
+					"marginalRug": "Сюжет ковра",
+					"resources": {
+						"histogramAlt": "Внешняя ссылка",
+						"histogramTitle": "Что такое гистограмма?"
+					}
+				},
+				"scatterPlot": {
+					"group": "Группа",
+					"resources": {
+						"scatterPlotAlt": "Ресурс для построения диаграмм рассеяния",
+						"scatterPlotTitle": "Диаграмма рассеяния",
+						"trendlineAlt": "Внешняя ссылка на ресурс с линиями тренда",
+						"trendlineTitle": "Трендлайн"
+					},
+					"trendline": "Трендлайн",
+					"xAxis": "Ось X",
+					"yAxis": "Ось Y"
+				}
+			},
+			"codeEditor": {
+				"runCode": "Запустите код"
+			},
+			"common": {
+				"axisSection": {
+					"x": "Ось X",
+					"y": "Ось Y"
+				},
+				"graphTitle": "Название графика",
+				"label": "Этикетка",
+				"legendTitle": "Легендарное название",
+				"legendTitleHint": "(Оставьте пустым, если не требуется)",
+				"legendTitleSection": "Легендарное название",
+				"marginalPlot": "Маргинальный участок",
+				"range": {
+					"label": "Диапазон",
+					"max": "Макс",
+					"min": "Мин"
+				},
+				"resources": {
+					"noLink": "Нет внешней ссылки",
+					"openLink": "Нажмите здесь, чтобы получить доступ к ресурсу."
+				}
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "Настройте внешний вид и расположение элементов графика.",
+					"title": "Варианты стиля и макета"
+				},
+				"tabs": {
+					"axes": "Оси",
+					"codeEditor": "Редактор кода",
+					"styleLayout": "Стиль и макет"
+				}
+			},
+			"emptyState": {
+				"helper": "Щелкните по этому компоненту, чтобы открыть редактор, затем выберите переменные для предварительного просмотра визуализации.",
+				"title": "Ваш график готов к настройке."
+			},
+			"fields": {
+				"clearSelection": "Никто",
+				"selectPlaceholder": "Выберите {{field}}",
+				"selectVariablesPlaceholder": "Выберите переменную(ые)"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- HEX-формат [#28619E], [#D53533]",
+						"examplesNames": "- Названия цветов: [красный], [розовый]",
+						"examplesRgb": "- Значение RGB [100,255,0], [0,120,80]",
+						"heading": "Цвет",
+						"intro": "Задайте базовый цвет для полосы (удалите квадратные скобки, чтобы использовать примеры ниже)."
+					},
+					"header": {
+						"iconAlt": "Параметры",
+						"title": "Параметры"
+					},
+					"legendAndXAxisSection": "Подписи оси X и заголовок легенды",
+					"yAxis": "Ось Y"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "Параметры",
+						"title": "Параметры"
+					},
+					"legendSection": "Легенда",
+					"legendTitleCombined": "Заголовок легенды (оставьте пустым, если не требуется)",
+					"yAxis": "Ось Y"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "Параметры",
+						"title": "Параметры"
+					},
+					"marginal": {
+						"boxplot": "Диаграмма размаха",
+						"none": "",
+						"rug": "Коврик"
+					},
+					"yAxis": "Ось Y"
+				}
+			}
 		},
 		"hypVis": {
 			"axes": {
@@ -276,6 +575,16 @@
 					"rankHelpStep1": "Назовите каждое условие, используя выпадающий список (вы также можете ввести текст!).",
 					"rankHelpStep2": "Используйте ползунок справа от метки, чтобы указать ожидаемый ранг зависимой переменной в данном состоянии по сравнению с остальными.",
 					"rankSectionTitle": "Оцените ваши условия по порядку.",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"rankOrdering": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionHypothesisTitle": "Ваша экспериментальная гипотеза",
 					"titleLabel": "Заголовок",
 					"titlePlaceholder": "Влияние условий на переменную",
@@ -296,6 +605,16 @@
 					"fallbackIndependentVariable": "Независимая переменная",
 					"fallbackNumberOfConditions": "Количество"
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": ""
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "Скопировано в буфер обмена!",
 					"clipboardHypothesisCopied": "Текст скопирован в буфер обмена: {{text}}",
@@ -314,16 +633,46 @@
 					"iPredictThat": "Я предсказываю, что",
 					"loading": "Загрузка...",
 					"loadingBlocks": "Загрузка данных блока...",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"directionality": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionTitle": "Ваша корреляционная гипотеза",
 					"titleLabel": "Заголовок",
 					"willBeRelatedTo": "будет связано с"
+				},
+				"default": {
+					"group": "",
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"xAxis": "",
+					"yAxis": ""
 				}
 			},
 			"editor": {
 				"codeTab": "Код",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": "Переменные"
 			},
+			"emptyState": {
+				"helper": "Щелкните по этому компоненту, чтобы открыть редактор, затем заполните переменные для создания визуализации.",
+				"title": "Ваш визуализатор гипотез готов к настройке."
+			},
 			"helpAriaLabel": "Более подробная информация"
+		},
+		"paragraphEditor": {
+			"emptyInvite": "Нажмите здесь, чтобы начать писать."
 		},
 		"settingsPanel": {
 			"deleteWidget": "Удалить виджет",
@@ -331,8 +680,297 @@
 			"notesPlaceholder": "Введите ваши заметки здесь...",
 			"widgetSettings": "Настройки виджета"
 		},
+		"sideNav": {
+			"addComponent": "",
+			"addComponentAria": "",
+			"addJournal": "ЖУРНАЛ",
+			"addJournalScratch": "Создайте дневник с нуля",
+			"addJournalTemplate": "Добавить шаблон журнала",
+			"addWorkspace": "Добавить рабочее пространство",
+			"addWorkspaceDropdown": "Рабочее пространство",
+			"addWorkspaceError": "Ошибка при добавлении рабочей области.",
+			"addWorkspaceLoading": "Добавляем…",
+			"addWorkspaceScratch": "Создайте рабочее пространство с нуля.",
+			"addWorkspaceTemplate": "Добавить шаблон рабочей области",
+			"backToJournal": "Вернуться в журнал",
+			"collapsePanel": "Закрывать",
+			"componentFallbackName": "Название компонента",
+			"dataOrigin": {
+				"SIMULATED": "Смоделированный",
+				"STUDY": "Данные исследования",
+				"TEMPLATE": "Шаблон",
+				"UPLOADED": "Загружено"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "Выберите наборы данных, связанные с этим журналом.",
+				"many": "{{count}} связанных наборов данных",
+				"none": "Связанных наборов данных нет.",
+				"one": "1 связанный набор данных"
+			},
+			"dataSourceLabel": "Источники данных",
+			"dataSourceModal": {
+				"byAuthor": "по {{author}}",
+				"cancel": "Отмена",
+				"closeModal": "Закрывать",
+				"error": "Ошибка: {{message}}",
+				"lastUpdated": "• Последнее обновление {{date}}",
+				"loading": "Загрузка наборов данных...",
+				"neverUpdated": "Никогда",
+				"noDatasets": "Наборы данных не найдены",
+				"save": "Сохранять",
+				"saving": "Сохранение...",
+				"title": "Выберите источники данных",
+				"unknownAuthor": "Неизвестный",
+				"untitledDataset": "Набор данных без названия"
+			},
+			"defaultWorkspaceTitle": "Безымянное рабочее место",
+			"deleteJournal": "Удалить",
+			"deleteJournalConfirm": "Вы уверены, что хотите удалить этот журнал? Все рабочие области и компоненты в этом журнале также будут удалены.",
+			"deleteJournalMissingId": "Этот журнал невозможно удалить (отсутствует идентификатор).",
+			"deleteJournalModalTitle": "Удалить журнал",
+			"deleteWorkspace": "Удалить рабочее пространство",
+			"deleteWorkspaceConfirm": "Вы уверены, что хотите удалить это рабочее пространство? Все компоненты в этом рабочем пространстве также будут удалены.",
+			"deleteWorkspaceMissingId": "Это рабочее пространство невозможно удалить (отсутствует идентификатор).",
+			"deleteWorkspaceModalTitle": "Удалить рабочее пространство",
+			"editJournal": "Редактировать",
+			"editJournalCloseWithoutSaving": "Закрыть без сохранения",
+			"editJournalFieldDescription": "Описание",
+			"editJournalFieldTitle": "Заголовок",
+			"editJournalSaveClose": "Сохранить и закрыть",
+			"editJournalTemplateCheckbox": "Создайте шаблон",
+			"editJournalTitle": "Редактировать журнал",
+			"journalMore": "Варианты журнала",
+			"lastUpdatedAt": "Последнее обновление: {{date}}",
+			"manageDatasets": "Управление наборами данных",
+			"noDataSources": "Источники данных отсутствуют.",
+			"noJournalsYet": "Похоже, у вас до сих пор нет журналов данных!",
+			"renameWorkspace": "Переименовать рабочую область",
+			"renameWorkspaceModalTitle": "Переименовать рабочую область",
+			"renameWorkspaceSaving": "Сохранение...",
+			"templateModal": {
+				"copyError": "Не удалось создать из шаблона: {{message}}",
+				"copyTitlePrefix": "Копия",
+				"datasetsMany": "{{count}} связанных наборов данных",
+				"datasetsNone": "Связанных наборов данных нет.",
+				"datasetsOne": "1 связанный набор данных",
+				"empty": "Шаблоны пока недоступны. Отметьте запись в журнале как шаблон (администратор) или попросите свою команду добавить его.",
+				"loading": "Загрузка шаблонов…",
+				"missingJournal": "Коллекция журналов недоступна. Сначала создайте журнал с нуля.",
+				"newCollectionTitle": "Безымянная коллекция журналов",
+				"queryError": "Ошибка загрузки шаблонов: {{message}}",
+				"title": "Выберите шаблон журнала",
+				"useTemplate": "Использовать шаблон"
+			},
+			"workspaceMore": "Параметры рабочего пространства"
+		},
+		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "Столбец для подведения итогов",
+					"dataLayout": {
+						"currentlyPerforming": "В данный момент ведётся подведение итогов:",
+						"long": {
+							"description": "Каждое наблюдение представляет собой строку. Выберите один столбец значений для суммирования и, при желании, столбец, определяющий группы.",
+							"title": "Длинная структура данных"
+						},
+						"summaryLong": {
+							"main": "В каждой строке — один столбец значений, с возможностью добавления столбца группировки (в длинном формате)."
+						},
+						"summaryWide": {
+							"between": "Несколько",
+							"columns": "столбцы в широком формате (одна переменная на столбец).",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "Каждая переменная для суммирования представляет собой отдельный столбец. Выберите один или несколько столбцов и, при необходимости, группирующую переменную.",
+							"title": "Широкая структура данных"
+						}
+					},
+					"groupingVariable": "Группирующая переменная",
+					"qualOption": {
+						"description": "Качественные данные представлены в столбце с подписями. Например, к какому экспериментальному условию относится испытуемый или его ответ на вопрос с несколькими вариантами ответа.",
+						"title": "Переключиться на качественные данные"
+					},
+					"quantOption": {
+						"description": "Количественные данные представлены в столбце, заполненном числовыми значениями. Например, возраст участника или его балл в опросе.",
+						"title": "Переключиться на количественные данные"
+					},
+					"resources": {
+						"googleSlidesAlt": "Google Слайды",
+						"openLink": "Нажмите здесь, чтобы получить доступ к ресурсу.",
+						"sectionTitle": "Ресурсы",
+						"slidesLink": "Нажмите здесь, чтобы посмотреть слайды лекции.",
+						"tableWhatAlt": "Внешняя ссылка",
+						"tableWhatTitle": "Что такое стол?"
+					},
+					"valueMode": {
+						"qualLabel": "Качественный",
+						"quantLabel": "Количественный",
+						"triggerPrefix": "Тип значения столбца:",
+						"triggerSuffix": "(нажмите здесь, чтобы изменить)"
+					}
+				}
+			},
+			"editor": {
+				"tabs": {
+					"code": "Код",
+					"variables": "Переменные"
+				}
+			},
+			"fields": {
+				"clearSelection": "Никто",
+				"qualColumnsLabel": "Качественный(е) столбец(ы)",
+				"quantColumnsLabel": "Количественный(е) столбец(ы)",
+				"selectPlaceholder": "Выберите {{field}}",
+				"selectVariablesPlaceholder": "Выберите переменную(ые)"
+			}
+		},
+		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"hint": "",
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"hint": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": "",
+						"sectionTitle": ""
+					}
+				},
+				"default": {
+					"column1": "",
+					"column2": ""
+				},
+				"pearson": {
+					"predictedColumn": "",
+					"predictorColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"tTest": {
+					"col1": "",
+					"col2": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				}
+			},
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
+			"emptyState": {
+				"helper": "Щелкните по этому компоненту, чтобы открыть редактор, затем выберите переменные для вычисления теста.",
+				"title": "Ваш статистический тест готов к настройке."
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
+			}
+		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "Очистить все",
+					"selectAll": "Выбрать все"
+				},
+				"description": "Быстро выберите, какие столбцы должна отображаться в этой таблице.",
+				"empty": "В наборе данных отсутствуют видимые столбцы.",
+				"filters": {
+					"allValues": "Все значения",
+					"clear": "Очистить фильтры",
+					"close": "Закрывать",
+					"description": "В числовых столбцах используются минимальные/максимальные значения. В категориальных столбцах используется выпадающий список значений.",
+					"dropdownAria": "Фильтр {{column}}",
+					"filterSettings": "Фильтр",
+					"maxLabel": "Макс",
+					"minLabel": "Мин",
+					"title": "Простые фильтры",
+					"toggleAria": "Переключить фильтры для {{column}}"
+				},
+				"search": {
+					"ariaLabel": "Поиск по столбцам",
+					"noMatches": "Ни один столбец не соответствует вашему запросу.",
+					"placeholder": "Поиск по столбцам…"
+				},
+				"title": "Колонны"
+			}
+		},
 		"visualizationWidget": {
 			"unsupportedType": "Неподдерживаемый тип виджета: {{type}}"
+		},
+		"workspaceArea": {
+			"error": "Не удалось загрузить рабочее пространство: {{message}}",
+			"loading": "Загрузка рабочего пространства…"
 		}
 	},
 	"dataJournals": "Журналы",
@@ -574,6 +1212,7 @@
 	"myTasks": "Мои задачи",
 	"navigation": {
 		"back": "назад",
+		"cloneSavePrompt": "Измените название исследования и нажмите кнопку «Сохранить».",
 		"enoughComments": "Достаточно комментариев? Дайте знать рецензентам.",
 		"enoughParticipants": "Достаточно участников?",
 		"lockFeedback": "Блокировка обратной связи",
@@ -1160,32 +1799,42 @@
 		"unlockedForParticipation": "Исследование было разблокировано для участия"
 	},
 	"surveyBuilder": {
-		"addFirstPage": "Добавьте свою первую страницу",
-		"addItem": "+",
-		"addItemBtn": "+ предмет",
-		"addOption": "+ опция",
-		"addPage": "+",
-		"block": "Блокировать",
-		"checkbox": "Множественный выбор (выберите несколько вариантов)",
-		"deletePage": "Удалить эту страницу",
-		"freeinput": "Ввод текста",
+		"addExamplePage": "Показать пример",
+		"addFirstPage": "Добавьте первую страницу, чтобы начать создание опроса",
+		"addItem": "Добавить вопрос",
+		"addItemBtn": "+ элемент",
+		"addOption": "+ вариант",
+		"addPage": "Добавить страницу",
+		"block": "Блок",
+		"checkbox": "Множественный выбор (несколько вариантов)",
+		"deletePage": "Удалить страницу",
+		"freeinput": "Текстовый ввод",
 		"header": "Заголовок",
-		"hideContinueBtn": "Скрыть кнопку «Продолжить»",
+		"headerPlaceholder": "напр. Заголовок вопроса, отображаемый над элементом",
+		"hideContinueBtn": "Скрыть кнопку Продолжить",
 		"likert": "Шкала Лайкерта",
-		"likertItems": "Пункты для шкалы Лайкерта",
+		"likertItemPlaceholder": "Утверждение для оценки",
+		"likertItems": "Элементы шкалы Лайкерта",
 		"maxValue": "Максимальное значение",
 		"maxValueLabel": "Метка максимального значения",
+		"maxValueLabelPlaceholder": "напр. Очень много",
 		"minValue": "Минимальное значение",
-		"minValueLabel": "Минимальная метка значения",
-		"options": "Параметры",
-		"page": "Страница {{номер}}",
-		"pageTimeout": "Время ожидания страницы (в миллисекундах)",
-		"select": "Множественный выбор (выберите один)",
+		"minValueLabel": "Метка минимального значения",
+		"minValueLabelPlaceholder": "напр. Совсем нет",
+		"optionPlaceholder": "Текст варианта",
+		"options": "Варианты",
+		"page": "Страница {{number}}",
+		"pages": "Страницы",
+		"pageTimeout": "Тайм-аут страницы (в миллисекундах)",
+		"preview": "Предпросмотр",
+		"select": "Множественный выбор (один вариант)",
 		"text": "Текст",
 		"textLabel": "Текст",
+		"textPlaceholder": "Введите описательный или инструктивный текст, отображаемый участникам",
 		"type": "Тип",
 		"variableName": "Имя переменной",
-		"vas": "Визуальный масштаб"
+		"variableNamePlaceholder": "напр. ответ_1 (используется для хранения ответа)",
+		"vas": "Визуальная шкала"
 	},
 	"surveyDescription": "В ходе опроса участникам задают вопросы о них самих, об их поведении или о том, что они чувствуют.",
 	"tabs": {

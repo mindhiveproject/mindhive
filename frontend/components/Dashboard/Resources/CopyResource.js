@@ -1,6 +1,5 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import { Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import { GET_RESOURCE } from "../../Queries/Resource";
 import { CREATE_RESOURCE } from "../../Mutations/Resource";
@@ -12,6 +11,7 @@ import {
 import useForm from "../../../lib/useForm";
 import ResourceForm from "./ResourceForm";
 import StyledResource from "../../styles/StyledResource";
+import Button from "../../DesignSystem/Button";
 
 export default function CopyResource({ query, user, goBack }) {
   const router = useRouter();
@@ -54,12 +54,17 @@ export default function CopyResource({ query, user, goBack }) {
 
   return (
     <StyledResource>
-      <button className="goBackBtn" onClick={goBack}>
-        <Icon name="arrow left" /> {t("boardManagement.goBackToResourceArea")}
-      </button>
+      <Button
+        className="goBackBtn"
+        variant="outline"
+        onClick={goBack}
+        // leadingIcon={<img src="/assets/icons/back.svg" alt="" aria-hidden width={18} height={18} />}
+      >
+        {t("boardManagement.goBackToResourceArea")}
+      </Button>
       <h1>{t("boardManagement.customizeRessource")}</h1>
       <ResourceForm user={user} inputs={inputs} handleChange={handleChange} />
-      <button onClick={handleSave}>{t("boardManagement.saveOwnRessource")}</button>
+      <Button onClick={handleSave}>{t("boardManagement.saveOwnRessource")}</Button>
     </StyledResource>
   );
 }

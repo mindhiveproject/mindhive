@@ -227,15 +227,21 @@
 	"dataJournal": {
 		"addComponent": "添加组件",
 		"addNotes": "添加注释",
-		"collapsePanel": "折叠面板",
+		"code": {
+			"editor": {
+				"tabs": {
+					"code": "代码"
+				}
+			}
+		},
 		"componentEditor": {
 			"close": "关闭",
-			"componentName": "",
+			"componentName": "组件名称",
 			"delete": "删除",
 			"deleteConfirm": "您确定要删除此组件吗？",
 			"editComponent": "编辑组件",
 			"editParagraph": "编辑段落",
-			"editTitle": "",
+			"editTitle": "编辑组件标题",
 			"save": "节省",
 			"saveFigureToMedia": "将图片保存到媒体库",
 			"typeLabel": {
@@ -253,6 +259,299 @@
 			},
 			"unsupportedType": "不支持的组件类型： {{type}}",
 			"untitled": "无标题"
+		},
+		"datasetForm": {
+			"actions": {
+				"cancel": "取消",
+				"create": "创建数据集"
+			},
+			"dataSourceLabel": "数据源",
+			"errorCreatingDataset": "创建数据集时出错：",
+			"errorLoadingStudy": "加载研究数据时出错：",
+			"loadingDataSources": "正在加载数据源…",
+			"nameHelp": "稍后您可以在数据集设置中重命名此项。",
+			"nameLabel": "数据集名称",
+			"namePlaceholder": "例如：2026年春季预测试回复",
+			"study": {
+				"currentStudy": "研究： {{title}}",
+				"currentStudyMissing": "没有与本项目相关的研究",
+				"optionDisabled": "本项目暂无关联研究。请添加研究以启用此选项。",
+				"optionTitle": "使用本研究的数据"
+			},
+			"subtitle": "给你的数据集命名，并选择数据来源。",
+			"template": {
+				"optionDescription": "选择模板数据集（即将推出）。",
+				"optionTitle": "从现有数据集复制"
+			},
+			"title": "新数据集",
+			"upload": {
+				"fileHelp": "第一行应包含列名。",
+				"optionDescription": "从计算机上的文件创建数据集。",
+				"optionTitle": "上传 CSV 或 JSON 文件"
+			}
+		},
+		"datasetMenu": {
+			"actions": {
+				"addColumn": "添加一列",
+				"download": "下载",
+				"hideAll": "全部隐藏",
+				"hideAllVariables": "",
+				"returnToNavigation": "返回导航",
+				"save": "",
+				"saving": "",
+				"showAll": "显示所有",
+				"showAllVariables": ""
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "第一个变量",
+					"operation": "手术",
+					"secondVariable": "第二个变量",
+					"variablesForAverage": "平均值的变量",
+					"variableToCopy": "要复制的变量",
+					"variableToRecode": "要重新编码的变量",
+					"variableToReverse": "反转变量"
+				},
+				"cancel": "取消",
+				"chooseAction": "选择操作",
+				"labels": {
+					"firstVariable": "第一个变量",
+					"operation": "手术",
+					"secondVariable": "第二个变量",
+					"sourceVariable": "选择要复制的变量",
+					"variablesForAverage": "选择变量",
+					"variableToRecode": "选择要重新编码的变量",
+					"variableToReverse": "选择要反转的变量"
+				},
+				"placeholders": {
+					"selectOperation": "选择操作",
+					"selectVariable": "选择变量",
+					"selectVariables": "选择变量"
+				},
+				"submit": "添加列",
+				"title": "添加一列"
+			},
+			"alt": {
+				"addColumn": "添加一列",
+				"database": "数据库",
+				"return": "返回"
+			},
+			"downloadPrompt": "请给即将下载的 CSV 文件命名。\n\n无需添加“.csv”，我们会自动处理！",
+			"header": {
+				"activeData": "活动数据",
+				"untitledDataset": ""
+			},
+			"meta": {
+				"dataOrigin": "",
+				"lastUpdated": "",
+				"neverUpdated": ""
+			},
+			"operations": {
+				"computeNew": "计算新变量",
+				"copyExisting": "复制现有变量",
+				"recodeVariable": "重新编码变量",
+				"reverseScore": "反向得分"
+			},
+			"sections": {
+				"generalVariables": "一般变量",
+				"taskVariables": "任务变量",
+				"userVariables": "用户变量"
+			},
+			"variable": {
+				"delete": "",
+				"hideAria": "",
+				"rename": "",
+				"renamePrompt": "",
+				"showAria": ""
+			}
+		},
+		"datasets": {
+			"addDataset": "添加数据集",
+			"deleteConfirm": "您确定要删除此数据集吗？",
+			"deleteDataset": "删除数据集",
+			"deleteDisabledNotOwner": "只有该数据集的创建者才能删除它。",
+			"deleteDisabledPublicTemplate": "该数据集链接到公共模板，无法删除。",
+			"deleteLabel": "删除",
+			"deleting": "正在删除...",
+			"editLabel": "编辑数据集",
+			"errorLoading": "错误： {{message}}",
+			"inclusion": {
+				"journalLabel": "",
+				"journalTooltip": "",
+				"otherLabel": "此外，此列表中还包含以下内容",
+				"otherTooltip": "该数据集以其他方式（例如，公共模板）匹配了列表筛选条件。它可能未存储在此项目或研究中。",
+				"viaPartLabel": "链接自某个部分",
+				"viaPartTooltip": "该数据集并未直接存储在本项目或研究中，但本工作空间中的至少一篇期刊文章使用了该数据集。",
+				"workspaceLabel": "此工作区",
+				"workspaceTooltip": "该数据集存储在当前项目或研究中。",
+				"yourLibraryLabel": "您的数据集",
+				"yourLibraryTooltip": "您创建了这个数据集，但它目前尚未关联到此项目或研究。它显示在此处，方便您查找和重复使用。"
+			},
+			"listIntro": "此列表包括存储在此工作区中的数据集、通过期刊部分链接的数据集以及您自己的数据集，以便您可以重复使用它们。",
+			"loading": "正在加载数据集……",
+			"meta": {
+				"byAuthor": "由 {{author}}",
+				"byYou": "由你",
+				"dataOrigin": "",
+				"lastUpdated": "最后更新于 {{date}}",
+				"lastUpdatedNever": "绝不",
+				"unknownAuthor": "未知"
+			},
+			"originTooltip": "",
+			"untitled": "未命名数据集"
+		},
+		"graph": {
+			"axes": {
+				"barPlot": {
+					"columnsToPlot": "要绘制的列",
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"googleSlidesAlt": "谷歌幻灯片",
+						"hintLong": "如果要比较各列，请点击这里。",
+						"hintWide": "如果要比较同一列（变量）的不同组，请点击此处。",
+						"longDescription": "数据以每项观测值（例如学生的考试分数）单独占一行的方式组织，通常还会有一列标明类别（例如科目）。这种格式有利于跨类别进行详细分析。",
+						"longTitle": "长数据格式",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "数据布局",
+						"slidesLink": "点击此处查看讲义幻灯片",
+						"switchToLong": "切换到长格式",
+						"switchToWide": "切换到宽幅格式",
+						"toggleAriaLabel": "",
+						"wideDescription": "数据按类别（例如科目）单独列排列，每列通常代表一个观察值（例如学生）。这种格式便于在同一类别内快速比较。",
+						"wideTitle": "宽数据格式"
+					},
+					"errBar95": "95% 置信区间",
+					"errBar99": "99% 置信区间",
+					"errBarStdErr": "标准误差",
+					"errorBar": "误差线",
+					"errorBarWide": "误差线",
+					"qualitativeColumn": "定性专栏",
+					"quantitativeColumn": "定量柱",
+					"resources": {
+						"barPlotAlt": "外部链接",
+						"barPlotTitle": "什么是条形图？",
+						"confidenceIntervalsAlt": "外部链接",
+						"confidenceIntervalsTitle": "置信区间——它们是什么？",
+						"standardErrorAlt": "外部链接",
+						"standardErrorTitle": "关于标准误差的更多信息"
+					}
+				},
+				"header": {
+					"iconAlt": "轴",
+					"title": "轴"
+				},
+				"help": {
+					"ariaLabel": "资源和帮助",
+					"resourcesIntro": "如果提供链接，请使用下面的按钮在新标签页中打开参考文献。"
+				},
+				"histogram": {
+					"columnsToObserve": "要观察的列",
+					"groupByOptional": "分组依据（可选——按类别着色）",
+					"marginalBox": "箱线图",
+					"marginalNone": "没有任何",
+					"marginalPlot": "边缘地块",
+					"marginalRug": "地毯图案",
+					"resources": {
+						"histogramAlt": "外部链接",
+						"histogramTitle": "什么是直方图？"
+					}
+				},
+				"scatterPlot": {
+					"group": "团体",
+					"resources": {
+						"scatterPlotAlt": "散点图资源",
+						"scatterPlotTitle": "散点图",
+						"trendlineAlt": "趋势线资源外部链接",
+						"trendlineTitle": "趋势线"
+					},
+					"trendline": "趋势线",
+					"xAxis": "X轴",
+					"yAxis": "Y轴"
+				}
+			},
+			"codeEditor": {
+				"runCode": "运行代码"
+			},
+			"common": {
+				"axisSection": {
+					"x": "X轴",
+					"y": "Y轴"
+				},
+				"graphTitle": "图表标题",
+				"label": "标签",
+				"legendTitle": "图例标题",
+				"legendTitleHint": "（如不需要，请留空）",
+				"legendTitleSection": "图例标题",
+				"marginalPlot": "边缘地块",
+				"range": {
+					"label": "范围",
+					"max": "最大限度",
+					"min": "分钟"
+				},
+				"resources": {
+					"noLink": "无外部链接",
+					"openLink": "点击此处访问资源"
+				}
+			},
+			"editor": {
+				"styleLayout": {
+					"description": "自定义图表的外观和布局。",
+					"title": "样式和布局选项"
+				},
+				"tabs": {
+					"axes": "轴",
+					"codeEditor": "代码编辑器",
+					"styleLayout": "风格与布局"
+				}
+			},
+			"emptyState": {
+				"helper": "点击此组件打开编辑器，然后选择变量以预览可视化效果。",
+				"title": "您的图表已准备好进行配置。"
+			},
+			"fields": {
+				"clearSelection": "没有任何",
+				"selectPlaceholder": "选择 {{field}}",
+				"selectVariablesPlaceholder": "选择变量"
+			},
+			"options": {
+				"barPlot": {
+					"color": {
+						"examplesHex": "- HEX 格式 [#28619E], [#D53533]",
+						"examplesNames": "- 颜色名称：[红色]、[粉色]",
+						"examplesRgb": "- RGB 值 [100,255,0], [0,120,80]",
+						"heading": "颜色",
+						"intro": "为条形图指定一个底色（删除方括号即可使用以下示例）。"
+					},
+					"header": {
+						"iconAlt": "选项",
+						"title": "选项"
+					},
+					"legendAndXAxisSection": "X轴标签和图例标题",
+					"yAxis": "Y轴"
+				},
+				"histogram": {
+					"header": {
+						"iconAlt": "选项",
+						"title": "选项"
+					},
+					"legendSection": "传奇",
+					"legendTitleCombined": "图例标题（如果不需要，请留空）",
+					"yAxis": "Y轴"
+				},
+				"scatterPlot": {
+					"header": {
+						"iconAlt": "选项",
+						"title": "选项"
+					},
+					"marginal": {
+						"boxplot": "箱线图",
+						"none": "",
+						"rug": "小地毯"
+					},
+					"yAxis": "Y轴"
+				}
+			}
 		},
 		"hypVis": {
 			"axes": {
@@ -276,6 +575,16 @@
 					"rankHelpStep1": "请使用下拉菜单为每个条件命名（您也可以手动输入！）",
 					"rankHelpStep2": "使用标签右侧的滑块来指示在此条件下因变量相对于其他因变量的预期排名。",
 					"rankSectionTitle": "对你的条件进行排序",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"rankOrdering": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionHypothesisTitle": "你的实验假设",
 					"titleLabel": "标题",
 					"titlePlaceholder": "条件对变量的影响",
@@ -296,6 +605,16 @@
 					"fallbackIndependentVariable": "自变量",
 					"fallbackNumberOfConditions": "数量"
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": ""
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "已复制到剪贴板！",
 					"clipboardHypothesisCopied": "复制到剪贴板的文本： {{text}}",
@@ -314,16 +633,46 @@
 					"iPredictThat": "我预测",
 					"loading": "加载中...",
 					"loadingBlocks": "正在加载数据块...",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"directionality": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionTitle": "你的相关性假设",
 					"titleLabel": "标题",
 					"willBeRelatedTo": "将与"
+				},
+				"default": {
+					"group": "",
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"xAxis": "",
+					"yAxis": ""
 				}
 			},
 			"editor": {
 				"codeTab": "代码",
+				"tabs": {
+					"code": "",
+					"variables": ""
+				},
 				"variablesTab": "变量"
 			},
+			"emptyState": {
+				"helper": "单击此组件打开编辑器，然后填写变量以生成可视化效果。",
+				"title": "您的假设可视化工具已准备就绪，可以进行配置。"
+			},
 			"helpAriaLabel": "更多信息"
+		},
+		"paragraphEditor": {
+			"emptyInvite": "点击这里开始写作。"
 		},
 		"settingsPanel": {
 			"deleteWidget": "删除小部件",
@@ -331,8 +680,297 @@
 			"notesPlaceholder": "在此输入您的注释...",
 			"widgetSettings": "小部件设置"
 		},
+		"sideNav": {
+			"addComponent": "",
+			"addComponentAria": "",
+			"addJournal": "杂志",
+			"addJournalScratch": "从零开始创建一本日记",
+			"addJournalTemplate": "添加日志模板",
+			"addWorkspace": "添加工作区",
+			"addWorkspaceDropdown": "工作区",
+			"addWorkspaceError": "添加工作区时出错",
+			"addWorkspaceLoading": "添加...",
+			"addWorkspaceScratch": "从头开始创建一个工作区",
+			"addWorkspaceTemplate": "添加工作区模板",
+			"backToJournal": "返回日记",
+			"collapsePanel": "关闭",
+			"componentFallbackName": "组件名称",
+			"dataOrigin": {
+				"SIMULATED": "模拟",
+				"STUDY": "研究数据",
+				"TEMPLATE": "模板",
+				"UPLOADED": "已上传"
+			},
+			"datasetsChip": {
+				"ariaOpenPicker": "选择与本期刊关联的数据集",
+				"many": "已链接的数据集：{{count}} ",
+				"none": "未链接任何数据集",
+				"one": "1 个已链接的数据集"
+			},
+			"dataSourceLabel": "数据源",
+			"dataSourceModal": {
+				"byAuthor": "由 {{author}}",
+				"cancel": "取消",
+				"closeModal": "关闭",
+				"error": "错误： {{message}}",
+				"lastUpdated": "• 最后更新时间： {{date}}",
+				"loading": "正在加载数据集……",
+				"neverUpdated": "绝不",
+				"noDatasets": "未找到数据集",
+				"save": "节省",
+				"saving": "保存...",
+				"title": "选择数据源",
+				"unknownAuthor": "未知",
+				"untitledDataset": "未命名数据集"
+			},
+			"defaultWorkspaceTitle": "未命名的工作区",
+			"deleteJournal": "删除",
+			"deleteJournalConfirm": "您确定要删除此日志吗？此日志中的所有工作区和组件也将被删除。",
+			"deleteJournalMissingId": "此日志无法删除（缺少 ID）。",
+			"deleteJournalModalTitle": "删除日记",
+			"deleteWorkspace": "删除工作区",
+			"deleteWorkspaceConfirm": "您确定要删除此工作区吗？此工作区中的所有组件也将被删除。",
+			"deleteWorkspaceMissingId": "此工作区无法删除（缺少 ID）。",
+			"deleteWorkspaceModalTitle": "删除工作区",
+			"editJournal": "编辑",
+			"editJournalCloseWithoutSaving": "关闭而不保存",
+			"editJournalFieldDescription": "描述",
+			"editJournalFieldTitle": "标题",
+			"editJournalSaveClose": "保存并关闭",
+			"editJournalTemplateCheckbox": "制作模板",
+			"editJournalTitle": "编辑日志",
+			"journalMore": "期刊期权",
+			"lastUpdatedAt": "上次更新时间： {{date}}",
+			"manageDatasets": "管理数据集",
+			"noDataSources": "无数据来源",
+			"noJournalsYet": "看来你仍然没有任何数据日志！",
+			"renameWorkspace": "重命名工作区",
+			"renameWorkspaceModalTitle": "重命名工作区",
+			"renameWorkspaceSaving": "保存...",
+			"templateModal": {
+				"copyError": "无法从模板创建： {{message}}",
+				"copyTitlePrefix": "副本",
+				"datasetsMany": "已链接的数据集：{{count}} ",
+				"datasetsNone": "未链接任何数据集",
+				"datasetsOne": "1 个已链接的数据集",
+				"empty": "目前还没有可用的模板。您可以将某个期刊标记为模板（管理员），或者请您的团队添加模板。",
+				"loading": "正在加载模板...",
+				"missingJournal": "暂无日记本合集。请先从头开始创建日记本。",
+				"newCollectionTitle": "未命名的期刊合集",
+				"queryError": "加载模板时出错： {{message}}",
+				"title": "选择日记模板",
+				"useTemplate": "使用模板"
+			},
+			"workspaceMore": "工作区选项"
+		},
+		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "汇总列",
+					"dataLayout": {
+						"currentlyPerforming": "当前正在汇总：",
+						"long": {
+							"description": "每个观测值代表一行。选择一列数值进行汇总，还可以选择一列用于定义分组。",
+							"title": "长数据布局"
+						},
+						"summaryLong": {
+							"main": "每行一列数值，可选分组列（长格式）。"
+						},
+						"summaryWide": {
+							"between": "多种的",
+							"columns": "宽格式的列（每列一个变量）。",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "每个要汇总的变量都单独占一列。选择一列或多列，还可以选择分组变量。",
+							"title": "宽数据布局"
+						}
+					},
+					"groupingVariable": "分组变量",
+					"qualOption": {
+						"description": "定性数据以标签列的形式呈现。例如，受试者所属的实验条件，或者他们对多项选择题的回答。",
+						"title": "切换到定性数据"
+					},
+					"quantOption": {
+						"description": "定量数据以数值列的形式呈现。例如，参与者的年龄或他们在调查中的得分。",
+						"title": "切换到定量数据"
+					},
+					"resources": {
+						"googleSlidesAlt": "谷歌幻灯片",
+						"openLink": "点击此处访问资源",
+						"sectionTitle": "资源",
+						"slidesLink": "点击此处查看讲义幻灯片",
+						"tableWhatAlt": "外部链接",
+						"tableWhatTitle": "什么是表格？"
+					},
+					"valueMode": {
+						"qualLabel": "定性",
+						"quantLabel": "定量",
+						"triggerPrefix": "列值类型：",
+						"triggerSuffix": "（点击此处更改）"
+					}
+				}
+			},
+			"editor": {
+				"tabs": {
+					"code": "代码",
+					"variables": "变量"
+				}
+			},
+			"fields": {
+				"clearSelection": "没有任何",
+				"qualColumnsLabel": "定性列",
+				"quantColumnsLabel": "定量柱",
+				"selectPlaceholder": "选择 {{field}}",
+				"selectVariablesPlaceholder": "选择变量"
+			}
+		},
+		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"hint": "",
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"hint": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": "",
+						"sectionTitle": ""
+					}
+				},
+				"default": {
+					"column1": "",
+					"column2": ""
+				},
+				"pearson": {
+					"predictedColumn": "",
+					"predictorColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"tTest": {
+					"col1": "",
+					"col2": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				}
+			},
+			"editor": {
+				"tabs": {
+					"code": "",
+					"variables": ""
+				}
+			},
+			"emptyState": {
+				"helper": "单击此组件打开编辑器，然后选择要计算测试的变量。",
+				"title": "您的统计检验已准备就绪，可以进行配置了。"
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
+			}
+		},
+		"table": {
+			"editor": {
+				"actions": {
+					"clearAll": "清除全部",
+					"selectAll": "全选"
+				},
+				"description": "快速选择此表格应显示的列。",
+				"empty": "数据集中没有可见的列。",
+				"filters": {
+					"allValues": "所有值",
+					"clear": "清除筛选器",
+					"close": "关闭",
+					"description": "数值型列使用最小值/最大值。分类列使用下拉列表。",
+					"dropdownAria": "筛选 {{column}}",
+					"filterSettings": "筛选",
+					"maxLabel": "最大限度",
+					"minLabel": "分钟",
+					"title": "简单过滤器",
+					"toggleAria": "切换 {{column}}的过滤器"
+				},
+				"search": {
+					"ariaLabel": "搜索列",
+					"noMatches": "没有找到符合您搜索条件的列。",
+					"placeholder": "搜索列..."
+				},
+				"title": "列"
+			}
+		},
 		"visualizationWidget": {
 			"unsupportedType": "不支持的小部件类型：{{type}}"
+		},
+		"workspaceArea": {
+			"error": "无法加载工作区： {{message}}",
+			"loading": "正在加载工作区…"
 		}
 	},
 	"dataJournals": "期刊",
@@ -574,6 +1212,7 @@
 	"myTasks": "我的任务",
 	"navigation": {
 		"back": "后退",
+		"cloneSavePrompt": "更改研究名称，然后单击“保存”按钮",
 		"enoughComments": "评论够多了？请告知评论者",
 		"enoughParticipants": "参与者够多吗？",
 		"lockFeedback": "锁定反馈",
@@ -1160,32 +1799,42 @@
 		"unlockedForParticipation": "该研究已解锁，可供参与"
 	},
 	"surveyBuilder": {
-		"addFirstPage": "添加您的第一页",
-		"addItem": "+",
-		"addItemBtn": "+ 项目",
+		"addExamplePage": "显示示例",
+		"addFirstPage": "添加第一页以开始创建问卷",
+		"addItem": "添加问题",
+		"addItemBtn": "+ 项",
 		"addOption": "+ 选项",
-		"addPage": "+",
-		"block": "堵塞",
-		"checkbox": "多项选择（选择多个选项）",
-		"deletePage": "删除此页面",
+		"addPage": "添加页面",
+		"block": "区块",
+		"checkbox": "多选（可选多个）",
+		"deletePage": "删除页面",
 		"freeinput": "文本输入",
-		"header": "标头",
-		"hideContinueBtn": "隐藏“继续”按钮",
+		"header": "标题",
+		"headerPlaceholder": "例如：显示在项目上方的问题标题",
+		"hideContinueBtn": "隐藏继续按钮",
 		"likert": "李克特量表",
-		"likertItems": "李克特量表的项目",
+		"likertItemPlaceholder": "待评分的陈述",
+		"likertItems": "李克特量表项目",
 		"maxValue": "最大值",
 		"maxValueLabel": "最大值标签",
+		"maxValueLabelPlaceholder": "例如：非常同意",
 		"minValue": "最小值",
 		"minValueLabel": "最小值标签",
+		"minValueLabelPlaceholder": "例如：完全不同意",
+		"optionPlaceholder": "选项文本",
 		"options": "选项",
-		"page": "页码}}",
+		"page": "第 {{number}} 页",
+		"pages": "页面",
 		"pageTimeout": "页面超时（毫秒）",
-		"select": "多项选择（选择一项）",
+		"preview": "预览",
+		"select": "单选（选择一个）",
 		"text": "文本",
 		"textLabel": "文本",
+		"textPlaceholder": "输入向参与者显示的描述性或说明性文字",
 		"type": "类型",
 		"variableName": "变量名",
-		"vas": "视觉尺度"
+		"variableNamePlaceholder": "例如：response_1（用于存储答案）",
+		"vas": "视觉量表"
 	},
 	"surveyDescription": "在调查中，参与者会被问及关于他们自己、他们的行为或感受的问题。",
 	"tabs": {

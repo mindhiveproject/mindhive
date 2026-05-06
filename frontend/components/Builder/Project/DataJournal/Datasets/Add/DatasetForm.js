@@ -1,6 +1,7 @@
 // Add/DatasetForm.js
 import Papa from "papaparse";
 import { customAlphabet } from "nanoid";
+import useTranslation from "next-translate/useTranslation";
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
 export default function DatasetForm({
@@ -20,6 +21,8 @@ export default function DatasetForm({
   error,
   onCancel,
 }) {
+  const { t } = useTranslation("builder");
+
   const toJson = (file) => {
     return new Promise((resolve, reject) => {
       Papa.parse(file, {
@@ -54,7 +57,8 @@ export default function DatasetForm({
       data: {
         title: datasetName,
         dataOrigin: dataOrigin,
-        project: { connect: { id: projectId } },
+        ...(projectId && { project: { connect: { id: projectId } } }),
+        ...(studyId && { study: { connect: { id: studyId } } }),
       },
     };
 
@@ -133,7 +137,11 @@ export default function DatasetForm({
   const hasStudy = !!studyData?.study;
   const currentStudyTitle = hasStudy
     ? studyData.study.title
-    : "No study linked to this project";
+    : t(
+        "dataJournal.datasetForm.study.currentStudyMissing",
+        {},
+        { default: "No study linked to this project" }
+      );
 
   const createDisabled =
     !datasetName ||
@@ -161,7 +169,7 @@ export default function DatasetForm({
           color: "#1a202c",
         }}
       >
-        New dataset
+        {t("dataJournal.datasetForm.title", {}, { default: "New dataset" })}
       </h3>
       <p
         style={{
@@ -171,7 +179,9 @@ export default function DatasetForm({
           color: "#4a5568",
         }}
       >
-        Name your dataset and choose where the data should come from.
+        {t("dataJournal.datasetForm.subtitle", {}, {
+          default: "Name your dataset and choose where the data should come from.",
+        })}
       </p>
 
       {/* Dataset name */}
@@ -185,13 +195,15 @@ export default function DatasetForm({
             color: "#2d3748",
           }}
         >
-          Dataset name
+          {t("dataJournal.datasetForm.nameLabel", {}, { default: "Dataset name" })}
         </label>
         <input
           type="text"
           value={datasetName}
           onChange={(e) => setDatasetName(e.target.value)}
-          placeholder="e.g. Pre-test responses, Spring 2026"
+          placeholder={t("dataJournal.datasetForm.namePlaceholder", {}, {
+            default: "e.g. Pre-test responses, Spring 2026",
+          })}
           style={{
             width: "100%",
             padding: "9px 11px",
@@ -209,7 +221,9 @@ export default function DatasetForm({
             color: "#a0aec0",
           }}
         >
-          You can rename this later from the dataset settings.
+          {t("dataJournal.datasetForm.nameHelp", {}, {
+            default: "You can rename this later from the dataset settings.",
+          })}
         </p>
       </div>
 
@@ -222,7 +236,9 @@ export default function DatasetForm({
             marginBottom: "10px",
           }}
         >
-          Loading data sources…
+          {t("dataJournal.datasetForm.loadingDataSources", {}, {
+            default: "Loading data sources…",
+          })}
         </p>
       )}
       {error && (
@@ -233,7 +249,10 @@ export default function DatasetForm({
             marginBottom: "10px",
           }}
         >
-          Error creating dataset: {error.message}
+          {t("dataJournal.datasetForm.errorCreatingDataset", {}, {
+            default: "Error creating dataset:",
+          })}{" "}
+          {error.message}
         </p>
       )}
       {studyError && (
@@ -244,7 +263,10 @@ export default function DatasetForm({
             marginBottom: "10px",
           }}
         >
-          Error loading study: {studyError.message}
+          {t("dataJournal.datasetForm.errorLoadingStudy", {}, {
+            default: "Error loading study:",
+          })}{" "}
+          {studyError.message}
         </p>
       )}
 
@@ -265,7 +287,9 @@ export default function DatasetForm({
             color: "#2d3748",
           }}
         >
-          Data source
+          {t("dataJournal.datasetForm.dataSourceLabel", {}, {
+            default: "Data source",
+          })}
         </legend>
 
         {/* Study option */}
@@ -292,7 +316,9 @@ export default function DatasetForm({
             <div
               style={{ fontWeight: 500, color: "#2d3748", fontSize: "0.95rem" }}
             >
-              Use data from the current study
+              {t("dataJournal.datasetForm.study.optionTitle", {}, {
+                default: "Use data from the current study",
+              })}
             </div>
             <div
               style={{
@@ -302,8 +328,15 @@ export default function DatasetForm({
               }}
             >
               {hasStudy
-                ? `Study: ${currentStudyTitle}`
-                : "No study is linked to this project. Link a study to enable this option."}
+                ? t(
+                    "dataJournal.datasetForm.study.currentStudy",
+                    { title: currentStudyTitle },
+                    { default: "Study: {{title}}" }
+                  )
+                : t("dataJournal.datasetForm.study.optionDisabled", {}, {
+                    default:
+                      "No study is linked to this project. Link a study to enable this option.",
+                  })}
             </div>
           </div>
         </label>
@@ -330,7 +363,9 @@ export default function DatasetForm({
             <div
               style={{ fontWeight: 500, color: "#2d3748", fontSize: "0.95rem" }}
             >
-              Upload a CSV or JSON file
+              {t("dataJournal.datasetForm.upload.optionTitle", {}, {
+                default: "Upload a CSV or JSON file",
+              })}
             </div>
             <div
               style={{
@@ -339,7 +374,9 @@ export default function DatasetForm({
                 marginTop: "2px",
               }}
             >
-              Create a dataset from a file on your computer.
+              {t("dataJournal.datasetForm.upload.optionDescription", {}, {
+                default: "Create a dataset from a file on your computer.",
+              })}
             </div>
 
             {dataOrigin === "UPLOADED" && (
@@ -357,7 +394,9 @@ export default function DatasetForm({
                     color: "#a0aec0",
                   }}
                 >
-                  First row should contain column names.
+                  {t("dataJournal.datasetForm.upload.fileHelp", {}, {
+                    default: "First row should contain column names.",
+                  })}
                 </div>
               </div>
             )}
@@ -386,7 +425,9 @@ export default function DatasetForm({
             <div
               style={{ fontWeight: 500, color: "#2d3748", fontSize: "0.95rem" }}
             >
-              Copy from an existing dataset
+              {t("dataJournal.datasetForm.template.optionTitle", {}, {
+                default: "Copy from an existing dataset",
+              })}
             </div>
             <div
               style={{
@@ -395,7 +436,9 @@ export default function DatasetForm({
                 marginTop: "2px",
               }}
             >
-              Choose a template dataset (coming soon).
+              {t("dataJournal.datasetForm.template.optionDescription", {}, {
+                default: "Choose a template dataset (coming soon).",
+              })}
             </div>
           </div>
         </label>
@@ -423,7 +466,7 @@ export default function DatasetForm({
             cursor: "pointer",
           }}
         >
-          Cancel
+          {t("dataJournal.datasetForm.actions.cancel", {}, { default: "Cancel" })}
         </button>
         <button
           onClick={handleCreateDataset}
@@ -440,7 +483,9 @@ export default function DatasetForm({
             cursor: createDisabled ? "not-allowed" : "pointer",
           }}
         >
-          Create dataset
+          {t("dataJournal.datasetForm.actions.create", {}, {
+            default: "Create dataset",
+          })}
         </button>
       </div>
     </div>
