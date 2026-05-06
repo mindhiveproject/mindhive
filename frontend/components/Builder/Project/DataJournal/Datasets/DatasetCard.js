@@ -189,8 +189,8 @@ export default function DatasetCard({
   );
 
   return (
-    <StyledDatasetCard>
-      <div className="dataset-card" onClick={handleView}>
+    <StyledDatasetCard onClick={handleView}>
+      <div className="dataset-card">
         <div className="dataset-header">
           <h4 className="dataset-title">
             {datasource.title ||
@@ -238,7 +238,7 @@ export default function DatasetCard({
         </div>
 
         <div className="dataset-meta">
-          <div className="dataset-badges" onClick={(e) => e.stopPropagation()}>
+          <div className="dataset-badges">
             <InfoTooltip
               content={t("dataJournal.datasets.originTooltip", {}, {
                 default: "How this dataset was created.",

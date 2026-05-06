@@ -209,27 +209,32 @@ export default function JournalNavigation({
 
   return (
     <>
-      <div className={`journal${isJournalSelected ? " journal--selected" : ""}`}>
+      <div
+        className={`journal${isJournalSelected ? " journal--selected" : ""}`}
+        onClick={() => selectJournalById({ id: journal?.id })}
+      >
         <div className="titleHeader">
           {titleWithTooltip}
-          <DropdownMenu
-            ariaLabel={t("dataJournal.sideNav.journalMore", "Journal options")}
-            trigger={
-              <img
-                src="/assets/dataviz/three-dots.svg"
-                alt=""
-                width={18}
-                height={18}
-                style={{
-                  opacity: isJournalSelected ? 1 : 0.3,
-                  transition: "opacity 0.2s"
-                }}
-              />
-            }
-      
-            panelHeader={panelHeader}
-            items={menuItems}
-          />
+          <div onClick={(e) => e.stopPropagation()}>
+            <DropdownMenu
+              ariaLabel={t("dataJournal.sideNav.journalMore", "Journal options")}
+              trigger={
+                <img
+                  src="/assets/dataviz/three-dots.svg"
+                  alt=""
+                  width={18}
+                  height={18}
+                  style={{
+                    opacity: isJournalSelected ? 1 : 0.3,
+                    transition: "opacity 0.2s"
+                  }}
+                />
+              }
+
+              panelHeader={panelHeader}
+              items={menuItems}
+            />
+          </div>
         </div>
 
         <div className="dataSourceRow">
@@ -238,7 +243,10 @@ export default function JournalNavigation({
               label={datasetsChipLabel}
               shape="square"
               selected={isJournalSelected}
-              onClick={handleOpenModal}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenModal();
+              }}
               disabled={!isJournalSelected}
               style={datasetsChipStyle}
               ariaLabel={t("dataJournal.sideNav.datasetsChip.ariaOpenPicker", {}, {
@@ -250,7 +258,7 @@ export default function JournalNavigation({
 
         {isJournalSelected && (
           <>
-            <div className="addActionsRow">
+            <div className="addActionsRow" onClick={(e) => e.stopPropagation()}>
               <AddWorkspace journalId={journal?.id} />
               <AddComponentButton
                 disabled={!selectedWorkspace?.id}
