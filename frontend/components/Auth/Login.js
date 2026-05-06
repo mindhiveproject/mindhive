@@ -11,13 +11,11 @@ import { SIGNIN_MUTATION } from "../Mutations/User";
 import { CURRENT_USER_QUERY } from "../Queries/User";
 import LoginWithGoogle from "./GoogleLogin";
 import StyledAuth from "../styles/StyledAuth";
-import { endpoint, prodEndpoint } from "../../config";
-
-// Base URL for the Keystone backend (strip the /api/graphql suffix).
 const backendBase =
   process.env.NODE_ENV === "development"
-    ? endpoint.replace("/api/graphql", "")
-    : prodEndpoint.replace("/api/graphql", "");
+    ? process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4444"
+    : process.env.NEXT_PUBLIC_BACKEND_URL_PRODUCTION ||
+      "https://backend.mindhive.science";
 
 export default function Login({ redirectType, redirectTo }) {
   const { t } = useTranslation("common");
