@@ -295,8 +295,41 @@
 				"addColumn": "Een kolom toevoegen",
 				"download": "Downloaden",
 				"hideAll": "Verberg alles",
+				"hideAllVariables": "",
 				"returnToNavigation": "Terug naar navigatie",
-				"showAll": "Toon alles"
+				"save": "",
+				"saving": "",
+				"showAll": "Toon alles",
+				"showAllVariables": ""
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "Eerste variabele",
+					"operation": "Operatie",
+					"secondVariable": "Tweede variabele",
+					"variablesForAverage": "Variabelen voor gemiddelde",
+					"variableToCopy": "Variabele om te kopiëren",
+					"variableToRecode": "Variabele om te hercoderen",
+					"variableToReverse": "Variabele omkeren"
+				},
+				"cancel": "Annuleren",
+				"chooseAction": "Kies een actie",
+				"labels": {
+					"firstVariable": "Eerste variabele",
+					"operation": "Operatie",
+					"secondVariable": "Tweede variabele",
+					"sourceVariable": "Selecteer de variabele die u wilt kopiëren",
+					"variablesForAverage": "Selecteer variabele(n)",
+					"variableToRecode": "Selecteer de variabele die u wilt hercoderen.",
+					"variableToReverse": "Selecteer de variabele die u wilt omkeren"
+				},
+				"placeholders": {
+					"selectOperation": "Selecteer de bewerking",
+					"selectVariable": "Selecteer variabele",
+					"selectVariables": "Selecteer variabele(n)"
+				},
+				"submit": "Kolom toevoegen",
+				"title": "Een kolom toevoegen"
 			},
 			"alt": {
 				"addColumn": "Een kolom toevoegen",
@@ -305,7 +338,13 @@
 			},
 			"downloadPrompt": "Geef een naam aan het CSV-bestand dat je gaat downloaden.\nJe hoeft geen '.csv' toe te voegen, wij doen dat voor je!",
 			"header": {
-				"activeData": "Actieve gegevens"
+				"activeData": "Actieve gegevens",
+				"untitledDataset": ""
+			},
+			"meta": {
+				"dataOrigin": "",
+				"lastUpdated": "",
+				"neverUpdated": ""
 			},
 			"operations": {
 				"computeNew": "Bereken een nieuwe variabele",
@@ -317,9 +356,17 @@
 				"generalVariables": "Algemene variabelen",
 				"taskVariables": "Taakvariabelen",
 				"userVariables": "Gebruikersvariabelen"
+			},
+			"variable": {
+				"delete": "",
+				"hideAria": "",
+				"rename": "",
+				"renamePrompt": "",
+				"showAria": ""
 			}
 		},
 		"datasets": {
+			"addDataset": "Voeg dataset toe",
 			"deleteConfirm": "Weet je zeker dat je deze dataset wilt verwijderen?",
 			"deleteDataset": "Gegevensset verwijderen",
 			"deleteDisabledNotOwner": "Alleen de maker van deze dataset kan deze verwijderen.",
@@ -345,10 +392,12 @@
 			"meta": {
 				"byAuthor": "Door {{author}}",
 				"byYou": "door jou",
+				"dataOrigin": "",
 				"lastUpdated": "Laatst bijgewerkt {{date}}",
 				"lastUpdatedNever": "Nooit",
 				"unknownAuthor": "Onbekend"
 			},
+			"originTooltip": "",
 			"untitled": "Naamloze dataset"
 		},
 		"graph": {
@@ -356,15 +405,19 @@
 				"barPlot": {
 					"columnsToPlot": "Kolom/kolommen om te plotten",
 					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
 						"googleSlidesAlt": "Google Slides",
 						"hintLong": "Als u kolommen wilt vergelijken, klik dan hier.",
 						"hintWide": "Als u verschillende groepen voor één kolom (variabele) wilt vergelijken, klik dan hier.",
 						"longDescription": "De gegevens zijn georganiseerd waarbij elke observatie (zoals een toetsresultaat van een leerling) op een eigen rij staat, vaak met een kolom die de categorieën (zoals vakken) aangeeft. Deze opmaak is handig voor gedetailleerde analyses over verschillende categorieën heen.",
 						"longTitle": "Lange gegevensindeling",
+						"panelRegionAriaLabel": "",
 						"sectionLabel": "Gegevensindeling",
 						"slidesLink": "Klik hier om de presentatieslides te bekijken.",
 						"switchToLong": "Schakel over naar de lange weergave",
 						"switchToWide": "Schakel over naar breedbeeldformaat",
+						"toggleAriaLabel": "",
 						"wideDescription": "De gegevens zijn georganiseerd waarbij elke categorie (zoals onderwerpen) een eigen kolom vormt, vaak met rijen die observaties (zoals studenten) weergeven. Deze opmaak is eenvoudiger voor snelle vergelijkingen binnen categorieën.",
 						"wideTitle": "Breed gegevensformaat"
 					},
@@ -522,6 +575,16 @@
 					"rankHelpStep1": "Geef elke aandoening een naam met behulp van het keuzemenu (je kunt zelf tekst invullen!).",
 					"rankHelpStep2": "Gebruik de schuifregelaar aan de rechterkant van het label om de verwachte rangorde van de afhankelijke variabele in deze conditie aan te geven ten opzichte van de rest.",
 					"rankSectionTitle": "Rangschik uw voorwaarden",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"rankOrdering": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionHypothesisTitle": "Uw experimentele hypothese",
 					"titleLabel": "Titel",
 					"titlePlaceholder": "Invloed van de conditie op de variabele",
@@ -542,6 +605,16 @@
 					"fallbackIndependentVariable": "Onafhankelijke variabele",
 					"fallbackNumberOfConditions": "Aantal"
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": ""
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "Gekopieerd naar het klembord!",
 					"clipboardHypothesisCopied": "Tekst gekopieerd naar het klembord: {{text}}",
@@ -560,9 +633,28 @@
 					"iPredictThat": "Ik voorspel dat",
 					"loading": "Bezig met laden...",
 					"loadingBlocks": "Blokgegevens laden...",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"directionality": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionTitle": "Uw correlatiehypothese",
 					"titleLabel": "Titel",
 					"willBeRelatedTo": "zal verband houden met"
+				},
+				"default": {
+					"group": "",
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"xAxis": "",
+					"yAxis": ""
 				}
 			},
 			"editor": {
@@ -589,6 +681,8 @@
 			"widgetSettings": "Widget-instellingen"
 		},
 		"sideNav": {
+			"addComponent": "",
+			"addComponentAria": "",
 			"addJournal": "Logboek",
 			"addJournalScratch": "Maak een dagboek helemaal zelf.",
 			"addJournalTemplate": "Voeg een dagboeksjabloon toe",
@@ -670,14 +764,163 @@
 			"workspaceMore": "Werkruimteopties"
 		},
 		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "Kolom ter samenvatting",
+					"dataLayout": {
+						"currentlyPerforming": "Momenteel bezig met samenvatten:",
+						"long": {
+							"description": "Elke observatie is een rij. Kies één kolom met waarden om samen te vatten en eventueel een kolom die groepen definieert.",
+							"title": "Lange gegevensindeling"
+						},
+						"summaryLong": {
+							"main": "Eén kolom met waarden per rij, met een optionele groeperingskolom (lange opmaak)."
+						},
+						"summaryWide": {
+							"between": "Meerdere",
+							"columns": "Kolommen in breed formaat (één variabele per kolom).",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "Elke variabele die u wilt samenvatten, krijgt een eigen kolom. Selecteer een of meer kolommen en eventueel een groeperingsvariabele.",
+							"title": "Brede gegevensindeling"
+						}
+					},
+					"groupingVariable": "Groeperingsvariabele",
+					"qualOption": {
+						"description": "Kwalitatieve gegevens worden weergegeven in een kolom met labels. Bijvoorbeeld tot welke experimentele conditie een proefpersoon behoort, of hun antwoord op een meerkeuzevraag.",
+						"title": "Schakel over naar kwalitatieve gegevens"
+					},
+					"quantOption": {
+						"description": "Kwantitatieve gegevens worden weergegeven in een kolom gevuld met numerieke waarden. Bijvoorbeeld de leeftijd van de deelnemer of zijn of haar score in een enquête.",
+						"title": "Schakel over naar kwantitatieve gegevens"
+					},
+					"resources": {
+						"googleSlidesAlt": "Google Slides",
+						"openLink": "Klik hier om de bron te raadplegen.",
+						"sectionTitle": "Bronnen",
+						"slidesLink": "Klik hier om de presentatieslides te bekijken.",
+						"tableWhatAlt": "Externe link",
+						"tableWhatTitle": "Wat is een tafel?"
+					},
+					"valueMode": {
+						"qualLabel": "Kwalitatief",
+						"quantLabel": "Kwantitatief",
+						"triggerPrefix": "Kolomwaardetype:",
+						"triggerSuffix": "(klik hier om te wijzigen)"
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "Code",
+					"variables": "Variabelen"
 				}
+			},
+			"fields": {
+				"clearSelection": "Geen",
+				"qualColumnsLabel": "Kwalitatieve kolom(men)",
+				"quantColumnsLabel": "Kwantitatieve kolom(men)",
+				"selectPlaceholder": "Selecteer {{field}}",
+				"selectVariablesPlaceholder": "Selecteer variabele(n)"
 			}
 		},
 		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"hint": "",
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"hint": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": "",
+						"sectionTitle": ""
+					}
+				},
+				"default": {
+					"column1": "",
+					"column2": ""
+				},
+				"pearson": {
+					"predictedColumn": "",
+					"predictorColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"tTest": {
+					"col1": "",
+					"col2": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
 					"code": "",
@@ -687,6 +930,11 @@
 			"emptyState": {
 				"helper": "Klik op dit onderdeel om de editor te openen en kies vervolgens de variabelen waarmee de test moet worden uitgevoerd.",
 				"title": "Uw statistische test is klaar om geconfigureerd te worden."
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
 			}
 		},
 		"table": {

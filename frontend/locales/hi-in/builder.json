@@ -295,8 +295,41 @@
 				"addColumn": "एक कॉलम जोड़ें",
 				"download": "डाउनलोड करना",
 				"hideAll": "सभी को छिपाएं",
+				"hideAllVariables": "",
 				"returnToNavigation": "नेविगेशन पर वापस लौटें",
-				"showAll": "सब दिखाएं"
+				"save": "",
+				"saving": "",
+				"showAll": "सब दिखाएं",
+				"showAllVariables": ""
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "पहला चर",
+					"operation": "संचालन",
+					"secondVariable": "दूसरा चर",
+					"variablesForAverage": "औसत के लिए चर",
+					"variableToCopy": "प्रतिलिपि बनाने के लिए चर",
+					"variableToRecode": "रिकोड करने के लिए चर",
+					"variableToReverse": "परिवर्तनीय को उलटना"
+				},
+				"cancel": "रद्द करना",
+				"chooseAction": "कोई कार्रवाई चुनें",
+				"labels": {
+					"firstVariable": "पहला चर",
+					"operation": "संचालन",
+					"secondVariable": "दूसरा चर",
+					"sourceVariable": "कॉपी करने के लिए वेरिएबल का चयन करें",
+					"variablesForAverage": "चर का चयन करें",
+					"variableToRecode": "रिकोड करने के लिए वेरिएबल का चयन करें",
+					"variableToReverse": "रिवर्स करने के लिए वेरिएबल का चयन करें"
+				},
+				"placeholders": {
+					"selectOperation": "संचालन का चयन करें",
+					"selectVariable": "चर का चयन करें",
+					"selectVariables": "चर का चयन करें"
+				},
+				"submit": "कॉलम जोड़ें",
+				"title": "एक कॉलम जोड़ें"
 			},
 			"alt": {
 				"addColumn": "एक कॉलम जोड़ें",
@@ -305,7 +338,13 @@
 			},
 			"downloadPrompt": "डाउनलोड करने से पहले CSV फ़ाइल को एक नाम दें।\n'.csv' जोड़ने की कोई आवश्यकता नहीं है, हम इसका ध्यान रखेंगे!",
 			"header": {
-				"activeData": "सक्रिय डेटा"
+				"activeData": "सक्रिय डेटा",
+				"untitledDataset": ""
+			},
+			"meta": {
+				"dataOrigin": "",
+				"lastUpdated": "",
+				"neverUpdated": ""
 			},
 			"operations": {
 				"computeNew": "नए चर की गणना करें",
@@ -317,9 +356,17 @@
 				"generalVariables": "सामान्य चर",
 				"taskVariables": "कार्य चर",
 				"userVariables": "उपयोगकर्ता चर"
+			},
+			"variable": {
+				"delete": "",
+				"hideAria": "",
+				"rename": "",
+				"renamePrompt": "",
+				"showAria": ""
 			}
 		},
 		"datasets": {
+			"addDataset": "डेटासेट जोड़ें",
 			"deleteConfirm": "क्या आप वाकई इस डेटासेट को हटाना चाहते हैं?",
 			"deleteDataset": "डेटासेट हटाएं",
 			"deleteDisabledNotOwner": "इस डेटासेट को केवल इसका निर्माता ही हटा सकता है।",
@@ -345,10 +392,12 @@
 			"meta": {
 				"byAuthor": "द्वारा {{author}}",
 				"byYou": "आपके द्वारा",
+				"dataOrigin": "",
 				"lastUpdated": "अंतिम बार अपडेट किया गया {{date}}",
 				"lastUpdatedNever": "कभी नहीं",
 				"unknownAuthor": "अज्ञात"
 			},
+			"originTooltip": "",
 			"untitled": "शीर्षकहीन डेटासेट"
 		},
 		"graph": {
@@ -356,15 +405,19 @@
 				"barPlot": {
 					"columnsToPlot": "प्लॉट करने के लिए कॉलम",
 					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
 						"googleSlidesAlt": "गूगल स्लाइड्स",
 						"hintLong": "यदि आप कॉलम की तुलना करना चाहते हैं, तो यहां क्लिक करें।",
 						"hintWide": "यदि आप किसी एक कॉलम (चर) के लिए विभिन्न समूहों की तुलना करना चाहते हैं, तो यहां क्लिक करें।",
 						"longDescription": "डेटा को इस प्रकार व्यवस्थित किया गया है कि प्रत्येक अवलोकन (जैसे किसी छात्र का परीक्षा स्कोर) अपनी अलग पंक्ति में दिखाई देता है, और अक्सर एक कॉलम श्रेणियों (जैसे विषय) को दर्शाता है। यह प्रारूप विभिन्न श्रेणियों में विस्तृत विश्लेषण के लिए उपयोगी है।",
 						"longTitle": "लंबे डेटा प्रारूप",
+						"panelRegionAriaLabel": "",
 						"sectionLabel": "डेटा लेआउट",
 						"slidesLink": "लेक्चर स्लाइड्स देखने के लिए यहां क्लिक करें",
 						"switchToLong": "लंबे प्रारूप पर स्विच करें",
 						"switchToWide": "वाइड फॉर्मेट पर स्विच करें",
+						"toggleAriaLabel": "",
 						"wideDescription": "डेटा को इस प्रकार व्यवस्थित किया जाता है कि प्रत्येक श्रेणी (जैसे विषय) एक अलग कॉलम के रूप में दिखाई देती है, और अक्सर पंक्तियों में अवलोकन (जैसे छात्र) दर्शाए जाते हैं। यह प्रारूप श्रेणियों के भीतर त्वरित तुलना के लिए सरल है।",
 						"wideTitle": "व्यापक डेटा प्रारूप"
 					},
@@ -522,6 +575,16 @@
 					"rankHelpStep1": "ड्रॉपडाउन का उपयोग करके प्रत्येक स्थिति का नाम दें (आप टाइप भी कर सकते हैं!)",
 					"rankHelpStep2": "लेबल के दाईं ओर स्थित स्लाइडर का उपयोग करके इस स्थिति में DV की अपेक्षित रैंक को बाकी की तुलना में इंगित करें।",
 					"rankSectionTitle": "अपनी स्थितियों को क्रमबद्ध करें",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"rankOrdering": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionHypothesisTitle": "आपकी प्रायोगिक परिकल्पना",
 					"titleLabel": "शीर्षक",
 					"titlePlaceholder": "स्थिति का चर पर प्रभाव",
@@ -542,6 +605,16 @@
 					"fallbackIndependentVariable": "स्वतंत्र चर",
 					"fallbackNumberOfConditions": "की संख्या"
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": ""
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "क्लिपबोर्ड पर कॉपी हो गया!",
 					"clipboardHypothesisCopied": "क्लिपबोर्ड पर कॉपी किया गया पाठ: {{text}}",
@@ -560,9 +633,28 @@
 					"iPredictThat": "मैं भविष्यवाणी करता हूँ कि",
 					"loading": "लोड हो रहा है...",
 					"loadingBlocks": "ब्लॉक डेटा लोड हो रहा है...",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"directionality": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionTitle": "आपकी सहसंबंधी परिकल्पना",
 					"titleLabel": "शीर्षक",
 					"willBeRelatedTo": "संबंधित होगा"
+				},
+				"default": {
+					"group": "",
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"xAxis": "",
+					"yAxis": ""
 				}
 			},
 			"editor": {
@@ -589,6 +681,8 @@
 			"widgetSettings": "विजेट सेटिंग्स"
 		},
 		"sideNav": {
+			"addComponent": "",
+			"addComponentAria": "",
 			"addJournal": "पत्रिका",
 			"addJournalScratch": "बिल्कुल शुरुआत से एक डायरी बनाएं",
 			"addJournalTemplate": "जर्नल टेम्पलेट जोड़ें",
@@ -670,14 +764,163 @@
 			"workspaceMore": "कार्यक्षेत्र विकल्प"
 		},
 		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "सारांशित करने के लिए कॉलम",
+					"dataLayout": {
+						"currentlyPerforming": "वर्तमान में सारांश प्रस्तुत किया जा रहा है:",
+						"long": {
+							"description": "प्रत्येक अवलोकन एक पंक्ति है। सारांशित करने के लिए मानों का एक स्तंभ चुनें और वैकल्पिक रूप से समूहों को परिभाषित करने वाला एक स्तंभ चुनें।",
+							"title": "लंबा डेटा लेआउट"
+						},
+						"summaryLong": {
+							"main": "प्रत्येक पंक्ति में मानों का एक स्तंभ, जिसमें एक वैकल्पिक समूहीकरण स्तंभ (लंबा प्रारूप) शामिल है।"
+						},
+						"summaryWide": {
+							"between": "विभिन्न",
+							"columns": "कॉलम विस्तृत प्रारूप में (प्रति कॉलम एक चर)।",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "सारांशित किए जाने वाले प्रत्येक चर के लिए एक अलग कॉलम होता है। एक या अधिक कॉलम चुनें और चाहें तो एक समूहीकरण चर भी चुन सकते हैं।",
+							"title": "विस्तृत डेटा लेआउट"
+						}
+					},
+					"groupingVariable": "समूहीकरण चर",
+					"qualOption": {
+						"description": "गुणात्मक डेटा को लेबल से भरे एक कॉलम में दर्शाया जाता है। उदाहरण के लिए, कोई प्रतिभागी किस प्रायोगिक स्थिति से संबंधित है, या किसी बहुविकल्पीय प्रश्न का उसका उत्तर।",
+						"title": "गुणात्मक डेटा पर स्विच करें"
+					},
+					"quantOption": {
+						"description": "मात्रात्मक डेटा को संख्यात्मक मानों से भरे एक कॉलम में दर्शाया जाता है। उदाहरण के लिए, प्रतिभागी की आयु या सर्वेक्षण में उनका स्कोर।",
+						"title": "मात्रात्मक डेटा पर स्विच करें"
+					},
+					"resources": {
+						"googleSlidesAlt": "गूगल स्लाइड्स",
+						"openLink": "संसाधन तक पहुँचने के लिए यहाँ क्लिक करें",
+						"sectionTitle": "संसाधन",
+						"slidesLink": "लेक्चर स्लाइड्स देखने के लिए यहां क्लिक करें",
+						"tableWhatAlt": "बाहरी लिंक",
+						"tableWhatTitle": "टेबल क्या होता है?"
+					},
+					"valueMode": {
+						"qualLabel": "गुणात्मक",
+						"quantLabel": "मात्रात्मक",
+						"triggerPrefix": "कॉलम मान प्रकार:",
+						"triggerSuffix": "(बदलने के लिए यहां क्लिक करें)"
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "कोड",
+					"variables": "चर"
 				}
+			},
+			"fields": {
+				"clearSelection": "कोई नहीं",
+				"qualColumnsLabel": "गुणात्मक स्तंभ(ओं)",
+				"quantColumnsLabel": "मात्रात्मक स्तंभ(ओं)",
+				"selectPlaceholder": " {{field}}का चयन करें",
+				"selectVariablesPlaceholder": "चर का चयन करें"
 			}
 		},
 		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"hint": "",
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"hint": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": "",
+						"sectionTitle": ""
+					}
+				},
+				"default": {
+					"column1": "",
+					"column2": ""
+				},
+				"pearson": {
+					"predictedColumn": "",
+					"predictorColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"tTest": {
+					"col1": "",
+					"col2": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
 					"code": "",
@@ -687,6 +930,11 @@
 			"emptyState": {
 				"helper": "एडिटर खोलने के लिए इस कंपोनेंट पर क्लिक करें, फिर टेस्ट की गणना करने के लिए वैरिएबल चुनें।",
 				"title": "आपका सांख्यिकीय परीक्षण कॉन्फ़िगरेशन के लिए तैयार है।"
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
 			}
 		},
 		"table": {

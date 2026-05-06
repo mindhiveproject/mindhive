@@ -295,8 +295,41 @@
 				"addColumn": "Добавить столбец",
 				"download": "Скачать",
 				"hideAll": "Скрыть все",
+				"hideAllVariables": "",
 				"returnToNavigation": "Вернуться к навигации",
-				"showAll": "Показать все"
+				"save": "",
+				"saving": "",
+				"showAll": "Показать все",
+				"showAllVariables": ""
+			},
+			"addColumnModal": {
+				"aria": {
+					"firstVariable": "Первая переменная",
+					"operation": "Операция",
+					"secondVariable": "Вторая переменная",
+					"variablesForAverage": "Переменные для среднего значения",
+					"variableToCopy": "Переменная для копирования",
+					"variableToRecode": "Переменная для перекодирования",
+					"variableToReverse": "Изменение переменной на обратную"
+				},
+				"cancel": "Отмена",
+				"chooseAction": "Выберите действие",
+				"labels": {
+					"firstVariable": "Первая переменная",
+					"operation": "Операция",
+					"secondVariable": "Вторая переменная",
+					"sourceVariable": "Выберите переменную для копирования",
+					"variablesForAverage": "Выберите переменную(ые)",
+					"variableToRecode": "Выберите переменную для перекодирования",
+					"variableToReverse": "Выберите переменную для инвертирования"
+				},
+				"placeholders": {
+					"selectOperation": "Выберите операцию",
+					"selectVariable": "Выберите переменную",
+					"selectVariables": "Выберите переменную(ые)"
+				},
+				"submit": "Добавить столбец",
+				"title": "Добавить столбец"
 			},
 			"alt": {
 				"addColumn": "Добавить столбец",
@@ -305,7 +338,13 @@
 			},
 			"downloadPrompt": "Присвойте имя файлу CSV, который вы собираетесь загрузить.\nДобавлять расширение '.csv' не нужно, мы это сделаем сами!",
 			"header": {
-				"activeData": "Активные данные"
+				"activeData": "Активные данные",
+				"untitledDataset": ""
+			},
+			"meta": {
+				"dataOrigin": "",
+				"lastUpdated": "",
+				"neverUpdated": ""
 			},
 			"operations": {
 				"computeNew": "Вычислите новую переменную",
@@ -317,9 +356,17 @@
 				"generalVariables": "Общие переменные",
 				"taskVariables": "Переменные задачи",
 				"userVariables": "Пользовательские переменные"
+			},
+			"variable": {
+				"delete": "",
+				"hideAria": "",
+				"rename": "",
+				"renamePrompt": "",
+				"showAria": ""
 			}
 		},
 		"datasets": {
+			"addDataset": "Добавить набор данных",
 			"deleteConfirm": "Вы уверены, что хотите удалить этот набор данных?",
 			"deleteDataset": "Удалить набор данных",
 			"deleteDisabledNotOwner": "Удалить этот набор данных может только его создатель.",
@@ -345,10 +392,12 @@
 			"meta": {
 				"byAuthor": "по {{author}}",
 				"byYou": "от тебя",
+				"dataOrigin": "",
 				"lastUpdated": "Последнее обновление {{date}}",
 				"lastUpdatedNever": "Никогда",
 				"unknownAuthor": "Неизвестный"
 			},
+			"originTooltip": "",
 			"untitled": "Набор данных без названия"
 		},
 		"graph": {
@@ -356,15 +405,19 @@
 				"barPlot": {
 					"columnsToPlot": "Столбец(ы) для построения графика",
 					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
 						"googleSlidesAlt": "Google Слайды",
 						"hintLong": "Чтобы сравнить столбцы, нажмите здесь.",
 						"hintWide": "Если вы хотите сравнить разные группы по одному столбцу (переменной), нажмите здесь.",
 						"longDescription": "Данные организованы таким образом, что каждое наблюдение (например, оценка ученика за тест) отображается в отдельной строке, часто с столбцом, указывающим на категории (например, предметы). Такой формат удобен для детального анализа по категориям.",
 						"longTitle": "Длинный формат данных",
+						"panelRegionAriaLabel": "",
 						"sectionLabel": "Структура данных",
 						"slidesLink": "Нажмите здесь, чтобы посмотреть слайды лекции.",
 						"switchToLong": "Переключиться на длинный формат",
 						"switchToWide": "Переключиться на широкоформатный режим",
+						"toggleAriaLabel": "",
 						"wideDescription": "Данные организованы таким образом, что каждая категория (например, предметы) представлена ​​в отдельном столбце, а строки часто содержат данные наблюдений (например, студенты). Такой формат упрощает быстрое сравнение внутри категорий.",
 						"wideTitle": "Широкий формат данных"
 					},
@@ -522,6 +575,16 @@
 					"rankHelpStep1": "Назовите каждое условие, используя выпадающий список (вы также можете ввести текст!).",
 					"rankHelpStep2": "Используйте ползунок справа от метки, чтобы указать ожидаемый ранг зависимой переменной в данном состоянии по сравнению с остальными.",
 					"rankSectionTitle": "Оцените ваши условия по порядку.",
+					"resources": {
+						"experimentalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"rankOrdering": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionHypothesisTitle": "Ваша экспериментальная гипотеза",
 					"titleLabel": "Заголовок",
 					"titlePlaceholder": "Влияние условий на переменную",
@@ -542,6 +605,16 @@
 					"fallbackIndependentVariable": "Независимая переменная",
 					"fallbackNumberOfConditions": "Количество"
 				},
+				"common": {
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": ""
+					}
+				},
 				"corr": {
 					"clipboardFigCopied": "Скопировано в буфер обмена!",
 					"clipboardHypothesisCopied": "Текст скопирован в буфер обмена: {{text}}",
@@ -560,9 +633,28 @@
 					"iPredictThat": "Я предсказываю, что",
 					"loading": "Загрузка...",
 					"loadingBlocks": "Загрузка данных блока...",
+					"resources": {
+						"correlationalHypothesis": {
+							"subtitle": "",
+							"title": ""
+						},
+						"directionality": {
+							"subtitle": "",
+							"title": ""
+						}
+					},
 					"sectionTitle": "Ваша корреляционная гипотеза",
 					"titleLabel": "Заголовок",
 					"willBeRelatedTo": "будет связано с"
+				},
+				"default": {
+					"group": "",
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"xAxis": "",
+					"yAxis": ""
 				}
 			},
 			"editor": {
@@ -589,6 +681,8 @@
 			"widgetSettings": "Настройки виджета"
 		},
 		"sideNav": {
+			"addComponent": "",
+			"addComponentAria": "",
 			"addJournal": "ЖУРНАЛ",
 			"addJournalScratch": "Создайте дневник с нуля",
 			"addJournalTemplate": "Добавить шаблон журнала",
@@ -670,14 +764,163 @@
 			"workspaceMore": "Параметры рабочего пространства"
 		},
 		"statistics": {
+			"axes": {
+				"default": {
+					"columnToSummarize": "Столбец для подведения итогов",
+					"dataLayout": {
+						"currentlyPerforming": "В данный момент ведётся подведение итогов:",
+						"long": {
+							"description": "Каждое наблюдение представляет собой строку. Выберите один столбец значений для суммирования и, при желании, столбец, определяющий группы.",
+							"title": "Длинная структура данных"
+						},
+						"summaryLong": {
+							"main": "В каждой строке — один столбец значений, с возможностью добавления столбца группировки (в длинном формате)."
+						},
+						"summaryWide": {
+							"between": "Несколько",
+							"columns": "столбцы в широком формате (одна переменная на столбец).",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "Каждая переменная для суммирования представляет собой отдельный столбец. Выберите один или несколько столбцов и, при необходимости, группирующую переменную.",
+							"title": "Широкая структура данных"
+						}
+					},
+					"groupingVariable": "Группирующая переменная",
+					"qualOption": {
+						"description": "Качественные данные представлены в столбце с подписями. Например, к какому экспериментальному условию относится испытуемый или его ответ на вопрос с несколькими вариантами ответа.",
+						"title": "Переключиться на качественные данные"
+					},
+					"quantOption": {
+						"description": "Количественные данные представлены в столбце, заполненном числовыми значениями. Например, возраст участника или его балл в опросе.",
+						"title": "Переключиться на количественные данные"
+					},
+					"resources": {
+						"googleSlidesAlt": "Google Слайды",
+						"openLink": "Нажмите здесь, чтобы получить доступ к ресурсу.",
+						"sectionTitle": "Ресурсы",
+						"slidesLink": "Нажмите здесь, чтобы посмотреть слайды лекции.",
+						"tableWhatAlt": "Внешняя ссылка",
+						"tableWhatTitle": "Что такое стол?"
+					},
+					"valueMode": {
+						"qualLabel": "Качественный",
+						"quantLabel": "Количественный",
+						"triggerPrefix": "Тип значения столбца:",
+						"triggerSuffix": "(нажмите здесь, чтобы изменить)"
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "Код",
+					"variables": "Переменные"
 				}
+			},
+			"fields": {
+				"clearSelection": "Никто",
+				"qualColumnsLabel": "Качественный(е) столбец(ы)",
+				"quantColumnsLabel": "Количественный(е) столбец(ы)",
+				"selectPlaceholder": "Выберите {{field}}",
+				"selectVariablesPlaceholder": "Выберите переменную(ые)"
 			}
 		},
 		"statTest": {
+			"axes": {
+				"anova": {
+					"columnsToAnova": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"hint": "",
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"hint": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"common": {
+					"dataFormat": {
+						"chipLong": "",
+						"chipWide": "",
+						"panelRegionAriaLabel": "",
+						"sectionLabel": "",
+						"toggleAriaLabel": ""
+					},
+					"header": {
+						"iconAlt": "",
+						"title": ""
+					},
+					"help": {
+						"ariaLabel": "",
+						"resourcesIntro": ""
+					},
+					"resources": {
+						"noLink": "",
+						"openLinkHint": "",
+						"sectionTitle": ""
+					}
+				},
+				"default": {
+					"column1": "",
+					"column2": ""
+				},
+				"pearson": {
+					"predictedColumn": "",
+					"predictorColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				},
+				"tTest": {
+					"col1": "",
+					"col2": "",
+					"dataFormat": {
+						"currentlyPerforming": "",
+						"long": {
+							"description": "",
+							"title": ""
+						},
+						"summaryLong": {
+							"main": ""
+						},
+						"summaryWide": {
+							"between": "",
+							"columns": "",
+							"prefix": ""
+						},
+						"wide": {
+							"description": "",
+							"title": ""
+						}
+					},
+					"groupingColumn": "",
+					"quantitativeColumn": "",
+					"resources": {
+						"scribbrLinkAlt": "",
+						"scribbrLinkTitle": ""
+					}
+				}
+			},
 			"editor": {
 				"tabs": {
 					"code": "",
@@ -687,6 +930,11 @@
 			"emptyState": {
 				"helper": "Щелкните по этому компоненту, чтобы открыть редактор, затем выберите переменные для вычисления теста.",
 				"title": "Ваш статистический тест готов к настройке."
+			},
+			"fields": {
+				"clearSelection": "",
+				"selectPlaceholder": "",
+				"selectVariablesPlaceholder": ""
 			}
 		},
 		"table": {

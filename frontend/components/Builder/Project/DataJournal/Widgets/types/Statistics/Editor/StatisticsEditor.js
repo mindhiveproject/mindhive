@@ -1,4 +1,4 @@
-// components/DataJournal/Widgets/types/StatisticTest/Controller/StatisticalTestEditor.js
+// components/DataJournal/Widgets/types/Statistics/Editor/StatisticsEditor.js
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
@@ -12,6 +12,7 @@ import AxesComponent from "./Axes/AxesDefault";
 export default function StatisticsEditor({ content, onChange, sectionId }) {
   const { t } = useTranslation("builder");
   const { variables } = useDataJournal();
+  const variablesToDisplay = variables.filter((column) => !column?.hide);
 
   const [activeTab, setActiveTab] = useState(0);
 
@@ -24,12 +25,12 @@ export default function StatisticsEditor({ content, onChange, sectionId }) {
       label: t("dataJournal.statistics.editor.tabs.variables", {}, { default: "Variables" }),
       icon: <img src="/assets/icons/settingsViz.svg" alt="" aria-hidden style={iconStyle} />,
       content: (
-        <div style={{ padding: "1rem" }}>
+        <div className="tabContent">
           <AxesComponent
             sectionId={sectionId}
             selectors={content?.selectors || {}}
             onChange={onChange}
-            variables={variables}
+            variables={variablesToDisplay}
           />
         </div>
       ),
@@ -38,14 +39,15 @@ export default function StatisticsEditor({ content, onChange, sectionId }) {
       label: t("dataJournal.statistics.editor.tabs.code", {}, { default: "Code" }),
       icon: <img src="/assets/icons/code.svg" alt="" aria-hidden style={iconStyle} />,
       content: (
-        <CodeEditor sectionId={sectionId} code={code} onChange={onChange} />
+        <div className="tabContent">
+          <CodeEditor sectionId={sectionId} code={code} onChange={onChange} />
+        </div>
       ),
     },
   ];
 
   return (
     <div className="graph">
-      {/* <h3>Summary Statistics</h3> */}
       <div className="tabs">
         <div className="customTabs">
           {tabItems.map((item, index) => (

@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Accordion, Icon, Dropdown, DropdownMenu } from "semantic-ui-react";
+import { Accordion, Icon } from "semantic-ui-react";
 import { saveAs } from "file-saver";
 import moment from "moment";
 import { jsonToCSV } from "react-papaparse";
 import useTranslation from "next-translate/useTranslation";
 
-import OperationModal from "./Menu/OperationModal";
+import AddColumnModal from "./Menu/AddColumnModal";
 import Variable from "./Menu/Variable";
 import { useDatasetSave } from "./Menu/UpdateDatasource";
 
@@ -20,6 +20,7 @@ export default function Menu({
   onSaved,
 }) {
   const { t } = useTranslation("builder");
+  const [isAddColumnOpen, setIsAddColumnOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(
     components.map((_, index) => index) || []
   );
@@ -150,66 +151,29 @@ export default function Menu({
       </div>
 
       <div className="toolbar">
-        <Dropdown
-          icon={
-            <button type="button" className="toolbarChip toolbarChip--primary">
-              <img
-                src="/assets/icons/visualize/add_notes.svg"
-                alt=""
-                aria-hidden="true"
-              />
-              <span>
-                {t("dataJournal.datasetMenu.actions.addColumn", {}, {
-                  default: "Add a column",
-                })}
-              </span>
-            </button>
-          }
-          direction="left"
+        <button
+          type="button"
+          className="toolbarChip toolbarChip--primary"
+          onClick={() => setIsAddColumnOpen(true)}
         >
-          <DropdownMenu>
-            <OperationModal
-              type="copy"
-              data={data}
-              variables={variables}
-              updateDataset={updateDataset}
-              title={t("dataJournal.datasetMenu.operations.copyExisting", {}, {
-                default: "Copy existing variable",
-              })}
-              iconSrc="/assets/icons/visualize/content_paste_go.svg"
-            />
-            <OperationModal
-              type="compute"
-              data={data}
-              variables={variables}
-              updateDataset={updateDataset}
-              title={t("dataJournal.datasetMenu.operations.computeNew", {}, {
-                default: "Compute new variable",
-              })}
-              iconSrc="/assets/icons/visualize/table_chart_view.svg"
-            />
-            <OperationModal
-              type="reverse"
-              data={data}
-              variables={variables}
-              updateDataset={updateDataset}
-              title={t("dataJournal.datasetMenu.operations.reverseScore", {}, {
-                default: "Reverse score",
-              })}
-              iconSrc="/assets/icons/visualize/database_reverse.svg"
-            />
-            <OperationModal
-              type="recode"
-              data={data}
-              variables={variables}
-              updateDataset={updateDataset}
-              title={t("dataJournal.datasetMenu.operations.recodeVariable", {}, {
-                default: "Recode a variable",
-              })}
-              iconSrc="/assets/icons/visualize/database_recode.svg"
-            />
-          </DropdownMenu>
-        </Dropdown>
+          <img
+            src="/assets/icons/visualize/add_notes.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <span>
+            {t("dataJournal.datasetMenu.actions.addColumn", {}, {
+              default: "Add a column",
+            })}
+          </span>
+        </button>
+        <AddColumnModal
+          open={isAddColumnOpen}
+          onClose={() => setIsAddColumnOpen(false)}
+          data={data}
+          variables={variables}
+          updateDataset={updateDataset}
+        />
         <button
           type="button"
           className="toolbarChip"

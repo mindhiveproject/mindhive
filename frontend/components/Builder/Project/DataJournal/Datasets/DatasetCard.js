@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
+import Chip from "../../../../DesignSystem/Chip";
+import CompactActionButton from "../../../../DesignSystem/CompactActionButton";
 import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
 import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
 import { DELETE_DATASOURCE } from "../../../../Mutations/Datasource";
@@ -10,6 +12,13 @@ import {
   getDatasourceListInclusionKind,
 } from "../../../../../lib/dataJournalDatasources";
 import { StyledDatasetCard } from "../styles/StyledDataJournal";
+
+const INCLUSION_ICON_SRC = {
+  workspace: "/assets/icons/project.svg",
+  viaPart: "/assets/icons/link.svg",
+  yourLibrary: "/assets/icons/user.svg",
+  other: "/assets/icons/info.svg",
+};
 
 function inclusionLabelAndTooltip(t, kind) {
   switch (kind) {
@@ -21,6 +30,7 @@ function inclusionLabelAndTooltip(t, kind) {
         tooltip: t("dataJournal.datasets.inclusion.journalTooltip", {}, {
           default: "This dataset is linked to a Data Journal you own.",
         }),
+        iconSrc: INCLUSION_ICON_SRC.workspace,
       };
     case "viaPart":
       return {
@@ -31,6 +41,7 @@ function inclusionLabelAndTooltip(t, kind) {
           default:
             "This dataset is linked to a Data Journal template.",
         }),
+        iconSrc: INCLUSION_ICON_SRC.viaPart,
       };
     case "yourLibrary":
       return {
@@ -41,6 +52,7 @@ function inclusionLabelAndTooltip(t, kind) {
           default:
             "You created this dataset, but it is not currently attached to this project or study. It appears here so you can find and reuse it.",
         }),
+        iconSrc: INCLUSION_ICON_SRC.yourLibrary,
       };
     default:
       return {
@@ -51,6 +63,7 @@ function inclusionLabelAndTooltip(t, kind) {
           default:
             "This dataset matched the list filter in another way (for example a public template). It may not be stored on this project or study.",
         }),
+        iconSrc: INCLUSION_ICON_SRC.other,
       };
   }
 }
@@ -127,8 +140,11 @@ export default function DatasetCard({
     studyId,
     userId: user?.id,
   });
-  const { label: inclusionLabel, tooltip: inclusionTooltip } =
-    inclusionLabelAndTooltip(t, inclusionKind);
+  const {
+    label: inclusionLabel,
+    tooltip: inclusionTooltip,
+    iconSrc: inclusionIconSrc,
+  } = inclusionLabelAndTooltip(t, inclusionKind);
 
   const authorIsUser =
     user?.id && datasource?.author?.id && datasource.author.id === user.id;
@@ -146,21 +162,30 @@ export default function DatasetCard({
         { default: "by {{author}}" },
       );
 
+  const editLabel = t("dataJournal.datasets.editLabel", {}, {
+    default: "Edit dataset",
+  });
+  const deleteLabel = t("dataJournal.datasets.deleteLabel", {}, {
+    default: "Delete",
+  });
+
   const deleteButton = (
-    <button
-      type="button"
-      className="delete-btn"
+    <CompactActionButton
+      kind="delete"
+      ariaLabel={deleteLabel}
+      title={deleteLabel}
+      disabled={loading}
       onClick={(e) => {
         e.stopPropagation();
         setDeleteConfirmOpen(true);
       }}
-      aria-label={t("dataJournal.datasets.deleteLabel", {}, {
-        default: "Delete",
-      })}
-      disabled={loading}
-    >
-      {t("dataJournal.datasets.deleteLabel", {}, { default: "Delete" })}
-    </button>
+    />
+  );
+
+  const originChipLabel = t(
+    "dataJournal.datasets.meta.dataOrigin",
+    { origin: originLabel },
+    { default: "Origin: {{origin}}" },
   );
 
   return (
@@ -173,39 +198,37 @@ export default function DatasetCard({
                 default: "Untitled Dataset",
               })}
           </h4>
-          <div className="dataset-actions">
-            <button
-              type="button"
-              className="edit-btn"
+          <div className="dataset-actions" onClick={(e) => e.stopPropagation()}>
+            <CompactActionButton
+              icon={
+                <img
+                  src="/assets/icons/pencil.svg"
+                  alt=""
+                  aria-hidden
+                  width={20}
+                  height={20}
+                />
+              }
+              ariaLabel={editLabel}
+              title={editLabel}
               onClick={(e) => {
                 e.stopPropagation();
                 handleEdit();
               }}
-              aria-label={t("dataJournal.datasets.editLabel", {}, {
-                default: "Edit dataset",
-              })}
-            >
-              {t("dataJournal.datasets.editLabel", {}, { default: "Edit dataset" })}
-            </button>
+            />
             {deleteDisabled ? (
               <InfoTooltip content={deleteTooltip} position="topLeft" portal>
                 <span
                   style={{ display: "inline-flex", cursor: "not-allowed" }}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <button
-                    type="button"
-                    className="delete-btn"
-                    aria-label={t("dataJournal.datasets.deleteLabel", {}, {
-                      default: "Delete",
-                    })}
+                  <CompactActionButton
+                    kind="delete"
+                    ariaLabel={deleteLabel}
+                    title={deleteLabel}
                     disabled
                     style={{ pointerEvents: "none" }}
-                  >
-                    {t("dataJournal.datasets.deleteLabel", {}, {
-                      default: "Delete",
-                    })}
-                  </button>
+                  />
                 </span>
               </InfoTooltip>
             ) : (
@@ -216,9 +239,48 @@ export default function DatasetCard({
 
         <div className="dataset-meta">
           <div className="dataset-badges" onClick={(e) => e.stopPropagation()}>
-            <div className="origin-badge">{originLabel}</div>
+            <InfoTooltip
+              content={t("dataJournal.datasets.originTooltip", {}, {
+                default: "How this dataset was created.",
+              })}
+              position="topLeft"
+              portal
+            >
+              <span style={{ display: "inline-flex" }}>
+                <Chip
+                  label={originChipLabel}
+                  leading={
+                    <img
+                      src="/assets/icons/document.svg"
+                      alt=""
+                      aria-hidden
+                      width={20}
+                      height={20}
+                      style={{ opacity: 0.8 }}
+                    />
+                  }
+                  shape="square"
+                  style={{ color: "#5D5763" }}
+                />
+              </span>
+            </InfoTooltip>
             <InfoTooltip content={inclusionTooltip} position="topLeft" portal>
-              <span className="inclusion-badge">{inclusionLabel}</span>
+              <span style={{ display: "inline-flex" }}>
+                <Chip
+                  label={inclusionLabel}
+                  leading={
+                    <img
+                      src={inclusionIconSrc}
+                      alt=""
+                      aria-hidden
+                      width={20}
+                      height={20}
+                    />
+                  }
+                  shape="square"
+                  style={{ opacity: 0.8 }}
+                />
+              </span>
             </InfoTooltip>
           </div>
           <div className="dataset-info">
