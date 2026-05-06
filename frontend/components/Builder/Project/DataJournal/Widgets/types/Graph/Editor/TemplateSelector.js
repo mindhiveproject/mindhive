@@ -314,6 +314,14 @@ import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
 
+# =============================================================================
+# Histogram — platform injects X as one string:
+#   - single column name, or
+#   - several names joined with commas (multi-select in the editor).
+# Parse X into a list, then branch: one column vs overlay of several.
+# "Group by" and marginal plots apply only when exactly one column is selected.
+# =============================================================================
+
 # ── Load data ────────────────────────────────────────────────────────────────
 try:
     import js_workspace as jsdata
@@ -328,22 +336,32 @@ def get_or_default(var_value, default=""):
         return default
     return var_value
 
-# ── Initialize empty figure ─────────────────────────────────────────────────
+brand_palette = ["#7D70AD", "#69BBC4", "#CF6D6A", "#F2BE42"]
+
+# ── Parse column name(s) from injected X (same idea as wide bar chart colToPlot) ─
+columns = [c.strip() for c in str(X).split(",") if c.strip()]
+valid_columns = [c for c in columns if c in df.columns]
+
 fig = go.Figure()
 
-if not X or X not in df.columns:
+if not valid_columns:
+    empty_msg = (
+        "Please select a valid column for the histogram"
+        if not columns
+        else "None of the selected columns exist in the data"
+    )
     fig.add_annotation(
-        text="Please select a valid column for the histogram",
+        text=empty_msg,
         xref="paper", yref="paper", x=0.5, y=0.5,
         showarrow=False, font_size=18
     )
-else:
-    brand_palette = ["#7D70AD", "#69BBC4", "#CF6D6A", "#F2BE42"]
-    # Prepare data
-    df[X] = pd.to_numeric(df[X], errors='coerce')
+
+# ── Single column: original behavior (Group, marginal, optional color) ───────
+elif len(valid_columns) == 1:
+    col = valid_columns[0]
+    df[col] = pd.to_numeric(df[col], errors='coerce')
     df.replace('NaN', np.nan, inplace=True)
 
-    # Grouping / coloring
     color_param = Group if Group and Group in df.columns else None
     showlegend = bool(color_param)
     user_color = get_or_default(color)
@@ -353,28 +371,24 @@ else:
         brand_palette if color_param else [user_color or brand_palette[0]]
     )
 
-    # Marginal plots
     marginal = "rug" if marginalPlot == "rug" else "box" if marginalPlot == "box" else None
 
-    # Titles & labels
-    title = get_or_default(graphTitle, f"Distribution of {X}")
-    x_title = get_or_default(xLabel, X)
+    title = get_or_default(graphTitle, f"Distribution of {col}")
+    x_title = get_or_default(xLabel, col)
     y_title = get_or_default(yLabel, "Count")
 
-    # Create histogram
     fig = px.histogram(
         df,
-        x=X,
+        x=col,
         color=color_param,
         marginal=marginal,
         title=title,
-        labels={X: x_title, "count": y_title},
+        labels={col: x_title, "count": y_title},
         template="plotly_white",
         opacity=0.75,
         color_discrete_sequence=color_sequence
     )
 
-    # Apply layout settings (including bargap)
     fig.update_layout(
         showlegend=showlegend,
         legend_title_text=get_or_default(legend_title_text, color_param or "Groups"),
@@ -389,8 +403,55 @@ else:
             float(yRangeMax) if yRangeMax else None
         ],
     )
+    fig.update_yaxes(rangemode="tozero")
 
-    # Common histogram preference: y starts at 0
+# ── Multiple columns: overlay histograms (Group / marginal not used here) ────
+else:
+    # When comparing several variables, color encodes which column each value came from.
+    # Group-by category would require a different chart design; keep this path simple.
+    for c in valid_columns:
+        df[c] = pd.to_numeric(df[c], errors='coerce')
+    df.replace('NaN', np.nan, inplace=True)
+
+    # Long-form: one row per observation, "series" = source column name
+    df_long = pd.DataFrame({
+        "series": np.concatenate([[name for _ in range(len(df[name]))] for name in valid_columns]),
+        "data": np.concatenate([df[name].values for name in valid_columns]),
+    })
+
+    cols_label = ", ".join(valid_columns)
+    title = get_or_default(graphTitle, f"Distribution of {cols_label}")
+    x_title = get_or_default(xLabel, cols_label)
+    y_title = get_or_default(yLabel, "Count")
+
+    # Marginals are ambiguous with overlaid series; omit for multi-column mode.
+    fig = px.histogram(
+        df_long,
+        x="data",
+        color="series",
+        barmode="overlay",
+        marginal=None,
+        title=title,
+        labels={"data": x_title, "count": y_title, "series": "Column"},
+        template="plotly_white",
+        opacity=0.75,
+        color_discrete_sequence=brand_palette
+    )
+
+    fig.update_layout(
+        showlegend=True,
+        legend_title_text=get_or_default(legend_title_text, "Column"),
+        bargap=float(bargap) if bargap else 0.1,
+        bargroupgap=0.05,
+        xaxis_range=[
+            float(xRangeMin) if xRangeMin else None,
+            float(xRangeMax) if xRangeMax else None
+        ],
+        yaxis_range=[
+            float(yRangeMin) if yRangeMin else None,
+            float(yRangeMax) if yRangeMax else None
+        ],
+    )
     fig.update_yaxes(rangemode="tozero")
 
 # ── Output ───────────────────────────────────────────────────────────────────
