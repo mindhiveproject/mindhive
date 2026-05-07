@@ -86,6 +86,108 @@ export function isDatasourceDeleteDisabled(datasource, userId) {
 }
 
 /**
+ * @param {{ collaboratorsCanEdit?: boolean | null, collaborators?: Array<{ id?: string | null }> | null, author?: { id?: string | null } | null }} datasource
+ * @param {string | undefined | null} userId
+ */
+export function isDatasourceEditableCollaborator(datasource, userId) {
+  if (!userId || !datasource?.collaboratorsCanEdit) return false;
+  return (datasource?.collaborators || []).some((c) => c?.id === userId);
+}
+
+/**
+ * @param {object} datasource
+ * @param {{ userId?: string | null, currentVizPartId?: string | null }} context
+ * @returns {"editable" | "copyOnWrite" | "readOnly"}
+ */
+export function getDatasourceWriteMode(datasource, context) {
+  const { userId, currentVizPartId } = context || {};
+  if (!userId) return "readOnly";
+  if (datasource?.author?.id === userId) return "editable";
+  if (isDatasourceEditableCollaborator(datasource, userId)) return "editable";
+  if (currentVizPartId) return "copyOnWrite";
+  return "readOnly";
+}
+
+/**
+ * Only the dataset author may rename (title).
+ */
+export function canRenameDatasource(datasource, userId) {
+  return Boolean(userId && datasource?.author?.id === userId);
+}
+
+/**
+ * Attach to a journal part: author or collaborator with edit rights.
+ */
+export function canAttachDatasourceToJournal(datasource, userId) {
+  if (!userId) return false;
+  if (datasource?.author?.id === userId) return true;
+  return isDatasourceEditableCollaborator(datasource, userId);
+}
+
+/**
+ * Collect profile ids to share with from study + project (for client-side create payload).
+ * @param {{ author?: { id?: string | null } | null, collaborators?: Array<{ id?: string | null }> | null } | null | undefined} study
+ * @param {{ author?: { id?: string | null } | null, collaborators?: Array<{ id?: string | null }> | null } | null | undefined} project
+ * @param {string | undefined | null} excludeUserId
+ * @returns {string[]}
+ */
+export function collectSharingProfileIdsFromStudyAndProject(
+  study,
+  project,
+  excludeUserId
+) {
+  const ids = new Set();
+  if (study?.author?.id) ids.add(study.author.id);
+  (study?.collaborators || []).forEach((c) => {
+    if (c?.id) ids.add(c.id);
+  });
+  if (project?.author?.id) ids.add(project.author.id);
+  (project?.collaborators || []).forEach((c) => {
+    if (c?.id) ids.add(c.id);
+  });
+  if (excludeUserId) ids.delete(excludeUserId);
+  return [...ids];
+}
+
+/**
+ * Recipients for UI tooltips when creating a dataset (study + project author/collaborators).
+ * @param {{ author?: { id?: string | null, username?: string | null } | null, collaborators?: Array<{ id?: string | null, username?: string | null }> | null } | null | undefined} study
+ * @param {{ author?: { id?: string | null, username?: string | null } | null, collaborators?: Array<{ id?: string | null, username?: string | null }> | null } | null | undefined} project
+ * @param {string | undefined | null} excludeUserId
+ * @returns {Array<{ id: string, username: string, roles: string[] }>}
+ */
+export function getSharingRecipientEntries(study, project, excludeUserId) {
+  /** @type {Map<string, { id: string, username: string, roles: string[] }>} */
+  const byId = new Map();
+  const add = (id, username, role) => {
+    if (!id || (excludeUserId && id === excludeUserId)) return;
+    const name = username || "";
+    if (!byId.has(id)) {
+      byId.set(id, { id, username: name, roles: [] });
+    }
+    const row = byId.get(id);
+    if (row && !row.roles.includes(role)) {
+      row.roles.push(role);
+    }
+  };
+
+  if (study?.author?.id) {
+    add(study.author.id, study.author.username, "studyAuthor");
+  }
+  (study?.collaborators || []).forEach((c) => {
+    if (c?.id) add(c.id, c.username, "studyCollaborator");
+  });
+  if (project?.author?.id) {
+    add(project.author.id, project.author.username, "projectAuthor");
+  }
+  (project?.collaborators || []).forEach((c) => {
+    if (c?.id) add(c.id, c.username, "projectCollaborator");
+  });
+
+  return [...byId.values()];
+}
+
+/**
  * Why a datasource appears in the Data Journal list for the current context.
  * Mirrors the broad OR in {@link buildDatasourcesWhere} using fields available on the list query
  * (not a full re-evaluation of the GraphQL where clause).

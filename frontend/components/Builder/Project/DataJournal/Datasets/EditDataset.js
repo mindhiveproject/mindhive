@@ -8,7 +8,10 @@ import {
   UPDATE_DATASOURCE,
   DELETE_DATASOURCE,
 } from "../../../../Mutations/Datasource";
-import { getDatasourceDeleteDisabledReason } from "../../../../../lib/dataJournalDatasources";
+import {
+  canRenameDatasource,
+  getDatasourceDeleteDisabledReason,
+} from "../../../../../lib/dataJournalDatasources";
 
 export default function EditDataset({ dataset, user, onCancel, refetchDatasources }) {
   const { t } = useTranslation("builder");
@@ -34,6 +37,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
   });
 
   const handleUpdate = () => {
+    if (renameDisabled) return;
     if (!title || title === dataset.title) return;
     setLoading(true);
     updateDatasource({
@@ -46,6 +50,8 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
 
   const deleteReason = getDatasourceDeleteDisabledReason(dataset, user?.id);
   const deleteDisabled = deleteReason != null;
+
+  const renameDisabled = !canRenameDatasource(dataset, user?.id);
 
   const deleteTooltip =
     deleteReason === "publicTemplate"
@@ -77,7 +83,8 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
       .finally(() => setLoading(false));
   };
 
-  const saveDisabled = loading || !title || title === dataset.title;
+  const saveDisabled =
+    renameDisabled || loading || !title || title === dataset.title;
 
   return (
     <div
@@ -125,6 +132,20 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
         </p>
       )}
 
+      {renameDisabled && (
+        <p
+          style={{
+            fontSize: "0.85rem",
+            color: "#718096",
+            marginBottom: "10px",
+          }}
+        >
+          {t("dataJournal.datasets.renameDisabledNotOwner", {}, {
+            default: "Only the creator of this dataset can rename it.",
+          })}
+        </p>
+      )}
+
       {/* Current info */}
       <div
         style={{
@@ -157,6 +178,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Dataset title"
+          disabled={renameDisabled}
           style={{
             width: "100%",
             padding: "9px 11px",
@@ -164,6 +186,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
             border: "1px solid #cbd5e0",
             fontSize: "0.95rem",
             outline: "none",
+            opacity: renameDisabled ? 0.65 : 1,
           }}
         />
         <p

@@ -8,7 +8,12 @@ export const GET_DATASOURCES = gql`
       title
       dataOrigin
       content
+      collaboratorsCanEdit
       author {
+        id
+        username
+      }
+      collaborators {
         id
         username
       }
@@ -37,6 +42,20 @@ export const GET_DATASOURCE_CONTENT = gql`
       dataOrigin
       content
       settings
+      collaboratorsCanEdit
+      author {
+        id
+        username
+      }
+      collaborators {
+        id
+        username
+      }
+      journal {
+        id
+        isPublic
+        isTemplate
+      }
       updatedAt
     }
   }

@@ -293,11 +293,13 @@
 		"datasetMenu": {
 			"actions": {
 				"addColumn": "Add a column",
+				"copying": "Copying…",
 				"download": "Download",
 				"hideAll": "",
 				"hideAllVariables": "Hide all variables",
 				"returnToNavigation": "",
 				"save": "Save",
+				"saveAsCopy": "Save as copy…",
 				"saving": "Saving…",
 				"showAll": "",
 				"showAllVariables": "Show all variables"
@@ -331,6 +333,10 @@
 				"submit": "Add column",
 				"title": "Add a column"
 			},
+			"alerts": {
+				"saveError": "There was an error: {{statusText}}",
+				"updated": "The data has been updated"
+			},
 			"alt": {
 				"addColumn": "Add a column",
 				"database": "Database",
@@ -344,7 +350,8 @@
 			"meta": {
 				"dataOrigin": "Origin: {{origin}}",
 				"lastUpdated": "Updated {{when}}",
-				"neverUpdated": "Never updated"
+				"neverUpdated": "Never updated",
+				"sharedWithCount": "Shared: {{count}}"
 			},
 			"operations": {
 				"computeNew": "Compute new variable",
@@ -352,6 +359,7 @@
 				"recodeVariable": "Recode a variable",
 				"reverseScore": "Reverse score"
 			},
+			"readOnlyToolbarHint": "Open this journal from a workspace to edit or copy this dataset.",
 			"sections": {
 				"generalVariables": "General Variables",
 				"taskVariables": "Task Variables",
@@ -367,6 +375,14 @@
 		},
 		"datasets": {
 			"addDataset": "Add dataset",
+			"copyConfirm": {
+				"confirm": "Save copy",
+				"message": "A new dataset you own will be created with your changes and linked to this journal. You can choose whether collaborators may edit the copy."
+			},
+			"copyOnSave": {
+				"successAlert": "We made a copy you own. You're now editing the copy."
+			},
+			"copyTitlePrefix": "Copy of ",
 			"deleteConfirm": "Are you sure you want to delete this dataset?",
 			"deleteDataset": "Delete dataset",
 			"deleteDisabledNotOwner": "Only the creator of this dataset can delete it.",
@@ -398,6 +414,22 @@
 				"unknownAuthor": "Unknown"
 			},
 			"originTooltip": "How this dataset was created.",
+			"renameDisabledNotOwner": "Only the creator of this dataset can rename it.",
+			"sharing": {
+				"allowEditingLabel": "Allow journal collaborators to edit this dataset",
+				"journalOnlyTooltip": "Collaborators from this journal’s study or project will be connected when you create the dataset.",
+				"roles": {
+					"projectAuthor": "Project author",
+					"projectCollaborator": "Project collaborator",
+					"studyAuthor": "Study author",
+					"studyCollaborator": "Study collaborator"
+				},
+				"rolesSeparator": ", ",
+				"summary": "This dataset will be shared with {{count}} people tied to this journal’s study or project.",
+				"summaryJournalOnly": "This dataset will be linked to your current journal; collaborators may be added automatically.",
+				"tooltipRow": "{{name}} — {{roles}}",
+				"whoTooltipAria": "Who will receive access"
+			},
 			"untitled": "Untitled Dataset"
 		},
 		"graph": {
@@ -709,6 +741,7 @@
 			},
 			"dataSourceLabel": "Data sources",
 			"dataSourceModal": {
+				"attachDisabledNotOwner": "You can only attach datasets you own or may edit as a collaborator.",
 				"byAuthor": "by {{author}}",
 				"cancel": "Cancel",
 				"closeModal": "Close",

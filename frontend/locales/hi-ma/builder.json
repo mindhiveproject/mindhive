@@ -293,11 +293,13 @@
 		"datasetMenu": {
 			"actions": {
 				"addColumn": "",
+				"copying": "",
 				"download": "",
 				"hideAll": "",
 				"hideAllVariables": "",
 				"returnToNavigation": "",
 				"save": "",
+				"saveAsCopy": "",
 				"saving": "",
 				"showAll": "",
 				"showAllVariables": ""
@@ -331,6 +333,10 @@
 				"submit": "",
 				"title": ""
 			},
+			"alerts": {
+				"saveError": "",
+				"updated": ""
+			},
 			"alt": {
 				"addColumn": "",
 				"database": "",
@@ -344,7 +350,8 @@
 			"meta": {
 				"dataOrigin": "",
 				"lastUpdated": "",
-				"neverUpdated": ""
+				"neverUpdated": "",
+				"sharedWithCount": ""
 			},
 			"operations": {
 				"computeNew": "",
@@ -352,6 +359,7 @@
 				"recodeVariable": "",
 				"reverseScore": ""
 			},
+			"readOnlyToolbarHint": "",
 			"sections": {
 				"generalVariables": "",
 				"taskVariables": "",
@@ -367,6 +375,14 @@
 		},
 		"datasets": {
 			"addDataset": "",
+			"copyConfirm": {
+				"confirm": "",
+				"message": ""
+			},
+			"copyOnSave": {
+				"successAlert": ""
+			},
+			"copyTitlePrefix": "",
 			"deleteConfirm": "",
 			"deleteDataset": "",
 			"deleteDisabledNotOwner": "",
@@ -398,6 +414,22 @@
 				"unknownAuthor": ""
 			},
 			"originTooltip": "",
+			"renameDisabledNotOwner": "",
+			"sharing": {
+				"allowEditingLabel": "",
+				"journalOnlyTooltip": "",
+				"roles": {
+					"projectAuthor": "",
+					"projectCollaborator": "",
+					"studyAuthor": "",
+					"studyCollaborator": ""
+				},
+				"rolesSeparator": "",
+				"summary": "",
+				"summaryJournalOnly": "",
+				"tooltipRow": "",
+				"whoTooltipAria": ""
+			},
 			"untitled": ""
 		},
 		"graph": {
@@ -709,6 +741,7 @@
 			},
 			"dataSourceLabel": "",
 			"dataSourceModal": {
+				"attachDisabledNotOwner": "",
 				"byAuthor": "",
 				"cancel": "",
 				"closeModal": "",

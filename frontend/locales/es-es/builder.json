@@ -293,14 +293,16 @@
 		"datasetMenu": {
 			"actions": {
 				"addColumn": "Agregar una columna",
+				"copying": "Proceso de copiar...",
 				"download": "Descargar",
 				"hideAll": "Ocultar todo",
-				"hideAllVariables": "",
+				"hideAllVariables": "Ocultar todas las variables",
 				"returnToNavigation": "Volver a la navegación",
-				"save": "",
-				"saving": "",
+				"save": "Ahorrar",
+				"saveAsCopy": "Guardar como copia…",
+				"saving": "Ahorro...",
 				"showAll": "Mostrar todo",
-				"showAllVariables": ""
+				"showAllVariables": "Mostrar todas las variables"
 			},
 			"addColumnModal": {
 				"aria": {
@@ -331,6 +333,10 @@
 				"submit": "Añadir columna",
 				"title": "Agregar una columna"
 			},
+			"alerts": {
+				"saveError": "Se produjo un error: {{statusText}}",
+				"updated": "Los datos han sido actualizados."
+			},
 			"alt": {
 				"addColumn": "Agregar una columna",
 				"database": "Base de datos",
@@ -339,12 +345,13 @@
 			"downloadPrompt": "Dale un nombre al archivo CSV que vas a descargar.\nNo es necesario añadir la extensión '.csv', ¡nosotros nos encargamos!",
 			"header": {
 				"activeData": "Datos activos",
-				"untitledDataset": ""
+				"untitledDataset": "Conjunto de datos sin título"
 			},
 			"meta": {
-				"dataOrigin": "",
-				"lastUpdated": "",
-				"neverUpdated": ""
+				"dataOrigin": "Origen: {{origin}}",
+				"lastUpdated": "Actualizado {{when}}",
+				"neverUpdated": "Nunca se actualizó",
+				"sharedWithCount": "Compartido: {{count}}"
 			},
 			"operations": {
 				"computeNew": "Calcular nueva variable",
@@ -352,21 +359,30 @@
 				"recodeVariable": "Recodificar una variable",
 				"reverseScore": "Puntuación inversa"
 			},
+			"readOnlyToolbarHint": "Abra este diario desde un espacio de trabajo para editar o copiar este conjunto de datos.",
 			"sections": {
 				"generalVariables": "Variables generales",
 				"taskVariables": "Variables de la tarea",
 				"userVariables": "Variables de usuario"
 			},
 			"variable": {
-				"delete": "",
-				"hideAria": "",
-				"rename": "",
-				"renamePrompt": "",
-				"showAria": ""
+				"delete": "BORRAR",
+				"hideAria": "Ocultar {{name}}",
+				"rename": "Rebautizar",
+				"renamePrompt": "Por favor, introduzca un nuevo nombre:",
+				"showAria": "Mostrar {{name}}"
 			}
 		},
 		"datasets": {
 			"addDataset": "Agregar conjunto de datos",
+			"copyConfirm": {
+				"confirm": "Guardar copia",
+				"message": "Se creará un nuevo conjunto de datos de su propiedad con sus cambios y se vinculará a esta revista. Usted puede elegir si los colaboradores pueden editar el texto."
+			},
+			"copyOnSave": {
+				"successAlert": "Hemos creado una copia que te pertenece. Ahora estás editando esa copia."
+			},
+			"copyTitlePrefix": "Copia de",
 			"deleteConfirm": "¿Está seguro de que desea eliminar este conjunto de datos?",
 			"deleteDataset": "Eliminar conjunto de datos",
 			"deleteDisabledNotOwner": "Solo el creador de este conjunto de datos puede eliminarlo.",
@@ -392,12 +408,28 @@
 			"meta": {
 				"byAuthor": "por {{author}}",
 				"byYou": "por ti",
-				"dataOrigin": "",
+				"dataOrigin": "Origen: {{origin}}",
 				"lastUpdated": "Última actualización {{date}}",
 				"lastUpdatedNever": "Nunca",
 				"unknownAuthor": "Desconocido"
 			},
-			"originTooltip": "",
+			"originTooltip": "Cómo se creó este conjunto de datos.",
+			"renameDisabledNotOwner": "Solo el creador de este conjunto de datos puede cambiarle el nombre.",
+			"sharing": {
+				"allowEditingLabel": "Permitir a los colaboradores de la revista editar este conjunto de datos.",
+				"journalOnlyTooltip": "Los colaboradores del estudio o proyecto de esta revista se conectarán automáticamente al crear el conjunto de datos.",
+				"roles": {
+					"projectAuthor": "Autor del proyecto",
+					"projectCollaborator": "Colaborador del proyecto",
+					"studyAuthor": "Autor del estudio",
+					"studyCollaborator": "Colaborador del estudio"
+				},
+				"rolesSeparator": ",",
+				"summary": "Este conjunto de datos se compartirá con {{count}} personas vinculadas al estudio o proyecto de esta revista.",
+				"summaryJournalOnly": "Este conjunto de datos estará vinculado a su revista actual; es posible que se añadan colaboradores automáticamente.",
+				"tooltipRow": "{{name}} — {{roles}}",
+				"whoTooltipAria": "¿Quién recibirá acceso?"
+			},
 			"untitled": "Conjunto de datos sin título"
 		},
 		"graph": {
@@ -709,6 +741,7 @@
 			},
 			"dataSourceLabel": "Fuentes de datos",
 			"dataSourceModal": {
+				"attachDisabledNotOwner": "Solo puedes adjuntar conjuntos de datos de tu propiedad o que puedas editar como colaborador.",
 				"byAuthor": "por {{author}}",
 				"cancel": "Cancelar",
 				"closeModal": "Cerca",

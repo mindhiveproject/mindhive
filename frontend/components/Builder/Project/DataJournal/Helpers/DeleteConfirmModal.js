@@ -19,6 +19,10 @@ export default function DeleteConfirmModal({
   onClose,
   loading = false,
   error = null,
+  /** When true, use primary (blue) styling instead of danger red — e.g. confirm copy. */
+  confirmPrimary = false,
+  /** Optional extra nodes below the message (e.g. checkbox). */
+  extraContent = null,
 }) {
   const { t } = useTranslation("common");
 
@@ -66,6 +70,9 @@ export default function DeleteConfirmModal({
               {error}
             </p>
           ) : null}
+          {extraContent ? (
+            <div style={{ marginTop: 14 }}>{extraContent}</div>
+          ) : null}
         </StyledModalBody>
         <StyledModalFooter>
           <StyledModalButton
@@ -81,6 +88,7 @@ export default function DeleteConfirmModal({
           <StyledModalButton
             type="button"
             disabled={loading}
+            className={confirmPrimary ? "save" : undefined}
             style={{
               marginLeft: 8,
               padding: "8px 16px",
@@ -89,8 +97,9 @@ export default function DeleteConfirmModal({
               cursor: loading ? "not-allowed" : "pointer",
               fontFamily: "Inter, sans-serif",
               fontSize: 14,
-              background: "#c62828",
-              color: "#fff",
+              ...(confirmPrimary
+                ? { background: "#3182ce", color: "#fff" }
+                : { background: "#c62828", color: "#fff" }),
             }}
             onClick={onConfirm}
           >

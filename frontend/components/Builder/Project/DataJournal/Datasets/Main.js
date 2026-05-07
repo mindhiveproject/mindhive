@@ -82,6 +82,11 @@ export default function Datasets() {
     setViewingDatasetId(dataset?.id || null);
   };
 
+  const handleDatasetCopied = async (newId) => {
+    await refetch();
+    if (newId) setViewingDatasetId(newId);
+  };
+
   if (loading) {
     return (
       <div>
@@ -159,7 +164,12 @@ export default function Datasets() {
           refetchDatasources={refetch}
         />
       ) : viewingDataset ? (
-        <DatasetView dataset={viewingDataset} onSaved={refetch} />
+        <DatasetView
+          dataset={viewingDataset}
+          user={user}
+          onSaved={refetch}
+          onCopied={handleDatasetCopied}
+        />
       ) : null}
     </StyledDatasetsRoot>
   );

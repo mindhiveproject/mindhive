@@ -271,6 +271,7 @@ export const STUDY_TO_JOIN = gql`
       }
       author {
         id
+        username
       }
       consent {
         id

@@ -1,7 +1,15 @@
 // Add/DatasetForm.js
 import Papa from "papaparse";
 import { customAlphabet } from "nanoid";
+import { useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
+
+import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
+import {
+  collectSharingProfileIdsFromStudyAndProject,
+  getSharingRecipientEntries,
+} from "../../../../../../lib/dataJournalDatasources";
+
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
 export default function DatasetForm({
@@ -17,11 +25,57 @@ export default function DatasetForm({
   studyData,
   studyLoading,
   studyError,
+  projectBoardForSharing,
+  selectedVizPartId,
+  currentUserId,
   loading,
   error,
   onCancel,
 }) {
   const { t } = useTranslation("builder");
+  const [collaboratorsCanEdit, setCollaboratorsCanEdit] = useState(true);
+
+  const sharingIds = useMemo(
+    () =>
+      collectSharingProfileIdsFromStudyAndProject(
+        studyData?.study,
+        projectBoardForSharing,
+        currentUserId,
+      ),
+    [studyData?.study, projectBoardForSharing, currentUserId],
+  );
+
+  const sharingRecipientsTooltip = useMemo(() => {
+    const entries = getSharingRecipientEntries(
+      studyData?.study,
+      projectBoardForSharing,
+      currentUserId,
+    );
+    if (!entries.length) return "";
+    return entries
+      .map((e) => {
+        const rolesLabel = e.roles
+          .map((role) =>
+            t(`dataJournal.datasets.sharing.roles.${role}`, {}, {
+              default: "Collaborator",
+            }),
+          )
+          .join(
+            t("dataJournal.datasets.sharing.rolesSeparator", {}, {
+              default: ", ",
+            }),
+          );
+        return t(
+          "dataJournal.datasets.sharing.tooltipRow",
+          {
+            name: e.username || e.id,
+            roles: rolesLabel,
+          },
+          { default: "{{name}} — {{roles}}" },
+        );
+      })
+      .join("\n");
+  }, [studyData?.study, projectBoardForSharing, currentUserId, t]);
 
   const toJson = (file) => {
     return new Promise((resolve, reject) => {
@@ -50,6 +104,21 @@ export default function DatasetForm({
     if (selectedFile) setFile(selectedFile);
   };
 
+  const buildSharingPayload = () => {
+    const payload = {
+      collaboratorsCanEdit,
+    };
+    if (sharingIds.length > 0) {
+      payload.collaborators = {
+        connect: sharingIds.map((id) => ({ id })),
+      };
+    }
+    if (selectedVizPartId) {
+      payload.journal = { connect: [{ id: selectedVizPartId }] };
+    }
+    return payload;
+  };
+
   const handleCreateDataset = async () => {
     if (!datasetName || !dataOrigin) return;
 
@@ -59,6 +128,7 @@ export default function DatasetForm({
         dataOrigin: dataOrigin,
         ...(projectId && { project: { connect: { id: projectId } } }),
         ...(studyId && { study: { connect: { id: studyId } } }),
+        ...buildSharingPayload(),
       },
     };
 
@@ -443,6 +513,135 @@ export default function DatasetForm({
           </div>
         </label>
       </fieldset>
+
+      {(sharingIds.length > 0 || selectedVizPartId) && (
+        <div
+          style={{
+            marginTop: 14,
+            padding: "10px 12px",
+            borderRadius: 8,
+            border: "1px solid #e2e8f0",
+            fontSize: "0.85rem",
+            color: "#4a5568",
+          }}
+        >
+          <p
+            style={{
+              margin: "0 0 8px",
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 8,
+            }}
+          >
+            <span style={{ flex: "1 1 auto" }}>
+              {sharingIds.length > 0
+                ? t(
+                    "dataJournal.datasets.sharing.summary",
+                    { count: sharingIds.length },
+                    {
+                      default:
+                        "This dataset will be shared with {{count}} people tied to this journal’s study or project.",
+                    },
+                  )
+                : t("dataJournal.datasets.sharing.summaryJournalOnly", {}, {
+                    default:
+                      "This dataset will be linked to your current journal; collaborators may be added automatically.",
+                  })}
+            </span>
+            {sharingIds.length > 0 && sharingRecipientsTooltip ? (
+              <InfoTooltip
+                content={sharingRecipientsTooltip}
+                position="topLeft"
+                portal
+              >
+                <button
+                  type="button"
+                  aria-label={t(
+                    "dataJournal.datasets.sharing.whoTooltipAria",
+                    {},
+                    { default: "Who will receive access" },
+                  )}
+                  style={{
+                    flex: "0 0 auto",
+                    margin: 0,
+                    padding: 2,
+                    border: "none",
+                    background: "transparent",
+                    cursor: "help",
+                    lineHeight: 0,
+                  }}
+                >
+                  <img
+                    src="/assets/icons/info.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                    style={{ display: "block", opacity: 0.65 }}
+                  />
+                </button>
+              </InfoTooltip>
+            ) : sharingIds.length === 0 && selectedVizPartId ? (
+              <InfoTooltip
+                content={t(
+                  "dataJournal.datasets.sharing.journalOnlyTooltip",
+                  {},
+                  {
+                    default:
+                      "Collaborators from this journal’s study or project will be connected when you create the dataset.",
+                  },
+                )}
+                position="topLeft"
+                portal
+              >
+                <button
+                  type="button"
+                  aria-label={t(
+                    "dataJournal.datasets.sharing.whoTooltipAria",
+                    {},
+                    { default: "Who will receive access" },
+                  )}
+                  style={{
+                    flex: "0 0 auto",
+                    margin: 0,
+                    padding: 2,
+                    border: "none",
+                    background: "transparent",
+                    cursor: "help",
+                    lineHeight: 0,
+                  }}
+                >
+                  <img
+                    src="/assets/icons/info.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                    style={{ display: "block", opacity: 0.65 }}
+                  />
+                </button>
+              </InfoTooltip>
+            ) : null}
+          </p>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 8,
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={collaboratorsCanEdit}
+              onChange={(e) => setCollaboratorsCanEdit(e.target.checked)}
+            />
+            <span>
+              {t("dataJournal.datasets.sharing.allowEditingLabel", {}, {
+                default: "Allow journal collaborators to edit this dataset",
+              })}
+            </span>
+          </label>
+        </div>
+      )}
 
       {/* Actions */}
       <div

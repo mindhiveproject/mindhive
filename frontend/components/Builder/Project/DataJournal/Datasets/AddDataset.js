@@ -5,7 +5,9 @@ import { useQuery, useMutation } from "@apollo/client";
 import DatasetForm from "./Add/DatasetForm";
 
 import { CREATE_DATASOURCE } from "../../../../Mutations/Datasource";
+import { PROPOSAL_BOARD_SHARING } from "../../../../Queries/Proposal";
 import { STUDY_TO_JOIN } from "../../../../Queries/Study";
+import { useDataJournal } from "../Context/DataJournalContext";
 
 export default function AddDataset({
   projectId,
@@ -14,6 +16,7 @@ export default function AddDataset({
   onCreate,
   refetchDatasources,
 }) {
+  const { selectedJournal, user } = useDataJournal();
   const [datasetName, setDatasetName] = useState("");
   const [dataOrigin, setDataOrigin] = useState("");
   const [file, setFile] = useState(null);
@@ -25,6 +28,11 @@ export default function AddDataset({
   } = useQuery(STUDY_TO_JOIN, {
     variables: { id: studyId },
     skip: !studyId,
+  });
+
+  const { data: boardSharingData } = useQuery(PROPOSAL_BOARD_SHARING, {
+    variables: { id: projectId },
+    skip: !projectId,
   });
 
   const [createDatasource, { loading, error }] = useMutation(
@@ -58,6 +66,9 @@ export default function AddDataset({
       studyData={studyData}
       studyLoading={studyLoading}
       studyError={studyError}
+      projectBoardForSharing={boardSharingData?.proposalBoard}
+      selectedVizPartId={selectedJournal?.id}
+      currentUserId={user?.id}
       loading={loading}
       error={error}
       onCancel={onCancel}

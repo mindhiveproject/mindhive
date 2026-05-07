@@ -293,14 +293,16 @@
 		"datasetMenu": {
 			"actions": {
 				"addColumn": "Ajouter une colonne",
+				"copying": "Copier...",
 				"download": "Télécharger",
 				"hideAll": "Cacher tout",
-				"hideAllVariables": "",
+				"hideAllVariables": "Masquer toutes les variables",
 				"returnToNavigation": "Retour à la navigation",
-				"save": "",
-				"saving": "",
+				"save": "Sauvegarder",
+				"saveAsCopy": "Enregistrer comme copie…",
+				"saving": "Économie...",
 				"showAll": "Afficher tout",
-				"showAllVariables": ""
+				"showAllVariables": "Afficher toutes les variables"
 			},
 			"addColumnModal": {
 				"aria": {
@@ -331,6 +333,10 @@
 				"submit": "Ajouter une colonne",
 				"title": "Ajouter une colonne"
 			},
+			"alerts": {
+				"saveError": "Une erreur s'est produite : {{statusText}}",
+				"updated": "Les données ont été mises à jour"
+			},
 			"alt": {
 				"addColumn": "Ajouter une colonne",
 				"database": "Base de données",
@@ -339,12 +345,13 @@
 			"downloadPrompt": "Donnez un nom au fichier CSV que vous allez télécharger.\n\nInutile d'ajouter l'extension « .csv », nous nous en chargeons !",
 			"header": {
 				"activeData": "Données actives",
-				"untitledDataset": ""
+				"untitledDataset": "Ensemble de données sans titre"
 			},
 			"meta": {
-				"dataOrigin": "",
-				"lastUpdated": "",
-				"neverUpdated": ""
+				"dataOrigin": "Origine : {{origin}}",
+				"lastUpdated": " {{when}}mis à jour ",
+				"neverUpdated": "Jamais mis à jour",
+				"sharedWithCount": "Partagé : {{count}}"
 			},
 			"operations": {
 				"computeNew": "Calculer une nouvelle variable",
@@ -352,21 +359,30 @@
 				"recodeVariable": "Recoder une variable",
 				"reverseScore": "Score inversé"
 			},
+			"readOnlyToolbarHint": "Ouvrez ce journal depuis un espace de travail pour modifier ou copier cet ensemble de données.",
 			"sections": {
 				"generalVariables": "Variables générales",
 				"taskVariables": "Variables de la tâche",
 				"userVariables": "Variables utilisateur"
 			},
 			"variable": {
-				"delete": "",
-				"hideAria": "",
-				"rename": "",
-				"renamePrompt": "",
-				"showAria": ""
+				"delete": "SUPPRIMER",
+				"hideAria": "Masquer {{name}}",
+				"rename": "Renommer",
+				"renamePrompt": "Veuillez saisir le nouveau nom :",
+				"showAria": "Afficher {{name}}"
 			}
 		},
 		"datasets": {
 			"addDataset": "Ajouter un jeu de données",
+			"copyConfirm": {
+				"confirm": "Enregistrer une copie",
+				"message": "Un nouveau jeu de données vous appartenant sera créé avec vos modifications et lié à cette revue. Vous pouvez choisir si vos collaborateurs peuvent modifier cette copie."
+			},
+			"copyOnSave": {
+				"successAlert": "Nous avons créé une copie dont vous êtes propriétaire. Vous êtes en train de modifier cette copie."
+			},
+			"copyTitlePrefix": "Copie de",
 			"deleteConfirm": "Êtes-vous sûr de vouloir supprimer cet ensemble de données ?",
 			"deleteDataset": "Supprimer l'ensemble de données",
 			"deleteDisabledNotOwner": "Seul le créateur de cet ensemble de données peut le supprimer.",
@@ -392,12 +408,28 @@
 			"meta": {
 				"byAuthor": "par {{author}}",
 				"byYou": "par vous",
-				"dataOrigin": "",
+				"dataOrigin": "Origine : {{origin}}",
 				"lastUpdated": "Dernière mise à jour le {{date}}",
 				"lastUpdatedNever": "Jamais",
 				"unknownAuthor": "Inconnu"
 			},
-			"originTooltip": "",
+			"originTooltip": "Comment ce jeu de données a été créé.",
+			"renameDisabledNotOwner": "Seul le créateur de cet ensemble de données peut le renommer.",
+			"sharing": {
+				"allowEditingLabel": "Autoriser les collaborateurs de la revue à modifier cet ensemble de données",
+				"journalOnlyTooltip": "Les collaborateurs de l’étude ou du projet publié dans cette revue seront mis en relation lorsque vous créerez l’ensemble de données.",
+				"roles": {
+					"projectAuthor": "Auteur du projet",
+					"projectCollaborator": "Collaborateur de projet",
+					"studyAuthor": "Auteur de l'étude",
+					"studyCollaborator": "Collaborateur de l'étude"
+				},
+				"rolesSeparator": ",",
+				"summary": "Cet ensemble de données sera partagé avec {{count}} personnes liées à l’étude ou au projet de cette revue.",
+				"summaryJournalOnly": "Ces données seront liées à votre revue actuelle ; des collaborateurs pourront être ajoutés automatiquement.",
+				"tooltipRow": "{{name}} — {{roles}}",
+				"whoTooltipAria": "Qui aura accès"
+			},
 			"untitled": "Ensemble de données sans titre"
 		},
 		"graph": {
@@ -709,6 +741,7 @@
 			},
 			"dataSourceLabel": "Les sources de données",
 			"dataSourceModal": {
+				"attachDisabledNotOwner": "Vous ne pouvez joindre que les jeux de données dont vous êtes propriétaire ou que vous pouvez modifier en tant que collaborateur.",
 				"byAuthor": "par {{author}}",
 				"cancel": "Annuler",
 				"closeModal": "Fermer",

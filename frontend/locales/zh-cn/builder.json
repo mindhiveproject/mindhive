@@ -293,14 +293,16 @@
 		"datasetMenu": {
 			"actions": {
 				"addColumn": "添加一列",
+				"copying": "正在复制...",
 				"download": "下载",
 				"hideAll": "全部隐藏",
-				"hideAllVariables": "",
+				"hideAllVariables": "隐藏所有变量",
 				"returnToNavigation": "返回导航",
-				"save": "",
-				"saving": "",
+				"save": "节省",
+				"saveAsCopy": "另存为副本…",
+				"saving": "保存...",
 				"showAll": "显示所有",
-				"showAllVariables": ""
+				"showAllVariables": "显示所有变量"
 			},
 			"addColumnModal": {
 				"aria": {
@@ -331,6 +333,10 @@
 				"submit": "添加列",
 				"title": "添加一列"
 			},
+			"alerts": {
+				"saveError": "出现错误： {{statusText}}",
+				"updated": "数据已更新"
+			},
 			"alt": {
 				"addColumn": "添加一列",
 				"database": "数据库",
@@ -339,12 +345,13 @@
 			"downloadPrompt": "请给即将下载的 CSV 文件命名。\n\n无需添加“.csv”，我们会自动处理！",
 			"header": {
 				"activeData": "活动数据",
-				"untitledDataset": ""
+				"untitledDataset": "未命名数据集"
 			},
 			"meta": {
-				"dataOrigin": "",
-				"lastUpdated": "",
-				"neverUpdated": ""
+				"dataOrigin": "来源： {{origin}}",
+				"lastUpdated": "已更新 {{when}}",
+				"neverUpdated": "从未更新",
+				"sharedWithCount": "共享： {{count}}"
 			},
 			"operations": {
 				"computeNew": "计算新变量",
@@ -352,21 +359,30 @@
 				"recodeVariable": "重新编码变量",
 				"reverseScore": "反向得分"
 			},
+			"readOnlyToolbarHint": "从工作区打开此日志，即可编辑或复制此数据集。",
 			"sections": {
 				"generalVariables": "一般变量",
 				"taskVariables": "任务变量",
 				"userVariables": "用户变量"
 			},
 			"variable": {
-				"delete": "",
-				"hideAria": "",
-				"rename": "",
-				"renamePrompt": "",
-				"showAria": ""
+				"delete": "删除",
+				"hideAria": "隐藏 {{name}}",
+				"rename": "改名",
+				"renamePrompt": "请输入新名称：",
+				"showAria": "显示 {{name}}"
 			}
 		},
 		"datasets": {
 			"addDataset": "添加数据集",
+			"copyConfirm": {
+				"confirm": "保存副本",
+				"message": "系统将根据您的更改创建一个新的数据集，并将其链接到本期刊。您可以选择是否允许合作者编辑该副本。"
+			},
+			"copyOnSave": {
+				"successAlert": "我们已创建一份副本，您拥有该副本的所有权。您现在正在编辑该副本。"
+			},
+			"copyTitlePrefix": "副本",
 			"deleteConfirm": "您确定要删除此数据集吗？",
 			"deleteDataset": "删除数据集",
 			"deleteDisabledNotOwner": "只有该数据集的创建者才能删除它。",
@@ -392,12 +408,28 @@
 			"meta": {
 				"byAuthor": "由 {{author}}",
 				"byYou": "由你",
-				"dataOrigin": "",
+				"dataOrigin": "来源： {{origin}}",
 				"lastUpdated": "最后更新于 {{date}}",
 				"lastUpdatedNever": "绝不",
 				"unknownAuthor": "未知"
 			},
-			"originTooltip": "",
+			"originTooltip": "该数据集是如何创建的。",
+			"renameDisabledNotOwner": "只有该数据集的创建者才能重命名它。",
+			"sharing": {
+				"allowEditingLabel": "允许期刊合作者编辑此数据集",
+				"journalOnlyTooltip": "创建数据集时，本期刊研究或项目的合作者将会被连接起来。",
+				"roles": {
+					"projectAuthor": "项目作者",
+					"projectCollaborator": "项目合作者",
+					"studyAuthor": "研究作者",
+					"studyCollaborator": "研究合作者"
+				},
+				"rolesSeparator": "，",
+				"summary": "该数据集将与与本期刊研究或项目相关的 {{count}} 人共享。",
+				"summaryJournalOnly": "该数据集将与您当前的期刊关联；合作者可能会自动添加。",
+				"tooltipRow": "{{name}} — {{roles}}",
+				"whoTooltipAria": "谁将获得访问权限"
+			},
 			"untitled": "未命名数据集"
 		},
 		"graph": {
@@ -709,6 +741,7 @@
 			},
 			"dataSourceLabel": "数据源",
 			"dataSourceModal": {
+				"attachDisabledNotOwner": "您只能附加您拥有或作为合作者可以编辑的数据集。",
 				"byAuthor": "由 {{author}}",
 				"cancel": "取消",
 				"closeModal": "关闭",

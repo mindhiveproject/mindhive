@@ -7,6 +7,11 @@ export const CREATE_DATASOURCE = gql`
       id
       title
       dataOrigin
+      collaboratorsCanEdit
+      collaborators {
+        id
+        username
+      }
     }
   }
 `;

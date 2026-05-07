@@ -1,20 +1,35 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
+import { getDatasourceWriteMode } from "../../../../../../lib/dataJournalDatasources";
+import { useDataJournal } from "../../Context/DataJournalContext";
 import { StyledDatasetView } from "../../styles/StyledDatasetView";
 
 import Menu from "./Menu";
 import Table from "./Table";
 import useDatasourceData from "../../DataLoader/useDatasourceData";
 
-export default function DatasetView({ dataset, user, onSaved }) {
+export default function DatasetView({ dataset, user, onSaved, onCopied }) {
+  const { user: ctxUser, projectId, studyId, selectedJournal } =
+    useDataJournal();
+  const effectiveUser = user || ctxUser;
+  const currentVizPartId = selectedJournal?.id ?? null;
+
+  const writeMode = useMemo(
+    () =>
+      getDatasourceWriteMode(dataset, {
+        userId: effectiveUser?.id,
+        currentVizPartId,
+      }),
+    [dataset, effectiveUser?.id, currentVizPartId],
+  );
+
   const {
     data: fetchedData,
     variables: fetchedVariables,
     settings: fetchedSettings,
     loading: fetchLoading,
     error: fetchError,
-    refetch,
-  } = useDatasourceData({ datasource: dataset, user });
+  } = useDatasourceData({ datasource: dataset, user: effectiveUser });
 
   const [data, setData] = useState([]);
   const [variables, setVariables] = useState([]);
@@ -58,6 +73,8 @@ export default function DatasetView({ dataset, user, onSaved }) {
     updateDataset({ updatedVariables });
   };
 
+  const gridReadOnly = writeMode === "readOnly";
+
   if (loading || fetchLoading) return <div>Loading dataset...</div>;
   if (error || fetchError)
     return (
@@ -79,6 +96,11 @@ export default function DatasetView({ dataset, user, onSaved }) {
             updateDataset={updateDataset}
             onVariableChange={onVariableChange}
             onSaved={onSaved}
+            onCopied={onCopied}
+            writeMode={writeMode}
+            currentVizPartId={currentVizPartId}
+            projectId={projectId}
+            studyId={studyId}
           />
         </div>
 
@@ -88,6 +110,7 @@ export default function DatasetView({ dataset, user, onSaved }) {
             variables={variables}
             settings={settings}
             updateDataset={updateDataset}
+            readOnly={gridReadOnly}
           />
         </div>
       </div>
