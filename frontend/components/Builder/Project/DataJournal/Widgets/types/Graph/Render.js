@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import JustOneSecondNotice from "../../../../../../DesignSystem/JustOneSecondNotice";
 import { useWidgetSize } from "../../WidgetSizeContext";
+import { DATAFRAME_SAFETY_PYTHON } from "../_shared/pyodideDataframeSafety";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
@@ -31,6 +32,45 @@ export default function Render({
     return "/assets/dataviz/componentPanel/barChart.svg";
   };
 
+  const normalizeGraphSelectors = (selectors, type) => {
+    const normalized = { ...(selectors || {}) };
+
+    if (type === "scatterPlot") {
+      const x = normalized.xVariable == null ? "" : String(normalized.xVariable).trim();
+      const y = normalized.yVariable == null ? "" : String(normalized.yVariable).trim();
+      const group =
+        normalized.groupVariable == null
+          ? ""
+          : String(normalized.groupVariable).trim();
+
+      normalized.xVariable = x;
+      normalized.yVariable = y && y !== x ? y : "";
+      normalized.groupVariable = group;
+    }
+
+    if (type === "barGraph" && Array.isArray(normalized.colToPlot)) {
+      const seen = new Set();
+      normalized.colToPlot = normalized.colToPlot.filter((value) => {
+        const next = value == null ? "" : String(value).trim();
+        if (!next || seen.has(next)) return false;
+        seen.add(next);
+        return true;
+      });
+    }
+
+    if (type === "histogram" && Array.isArray(normalized.X)) {
+      const seen = new Set();
+      normalized.X = normalized.X.filter((value) => {
+        const next = value == null ? "" : String(value).trim();
+        if (!next || seen.has(next)) return false;
+        seen.add(next);
+        return true;
+      });
+    }
+
+    return normalized;
+  };
+
   useEffect(() => {
     async function renderGraph() {
       if (!pyodide || !code || !content?.selectors || !sectionId) {
@@ -43,7 +83,7 @@ export default function Render({
       setIsRunning(true);
       onFigureReadyChange?.(false);
 
-      const s = content.selectors;
+      const s = normalizeGraphSelectors(content.selectors, content.type);
       const type = content.type;
 
       // ── Very defensive escaping for Python string literals ──────────────────
@@ -196,6 +236,8 @@ bargap = ${Number(s.bargap ?? 0.1)}
         }
 
         const pythonCode = `
+import pandas as pd
+${DATAFRAME_SAFETY_PYTHON}
 def ${funcName}():
 ${variablesCode ? "    " + variablesCode.trim().split("\n").join("\n    ") : ""}
 ${

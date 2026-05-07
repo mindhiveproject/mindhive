@@ -40,8 +40,8 @@ if isWide:
             "success": False,
             "message": "Please select both columns (wide format)"
         })
-    group_a = to_numeric_safe(df[col1]).dropna()
-    group_b = to_numeric_safe(df[col2]).dropna()
+    group_a = to_numeric_1d(df, col1).dropna()
+    group_b = to_numeric_1d(df, col2).dropna()
     name_a = col1
     name_b = col2
 else:
@@ -50,7 +50,7 @@ else:
             "success": False,
             "message": "Please select quantitative column and grouping column (long format)"
         })
-    df[quantCol] = to_numeric_safe(df[quantCol])
+    df[quantCol] = to_numeric_1d(df, quantCol)
     grouped = df.dropna(subset=[groupcol]).groupby(groupcol)[quantCol]
     if len(grouped) != 2:
         names = list(grouped.groups.keys())
@@ -152,7 +152,7 @@ if isWide:
             "message": "Please select columns to analyse (wide format)"
         })
     
-    columns = [c.strip() for c in colToAnalyse.split(",") if c.strip()]
+    columns = normalize_column_list([c.strip() for c in colToAnalyse.split(",") if c.strip()])
     if len(columns) < 2:
         return json.dumps({
             "success": False,
@@ -160,7 +160,7 @@ if isWide:
         })
     
     for col in columns:
-        series = to_numeric_safe(df[col]).dropna()
+        series = to_numeric_1d(df, col).dropna()
         if len(series) < 2:
             return json.dumps({
                 "success": False,
@@ -180,7 +180,7 @@ else:
             "message": "Please select quantitative column and grouping column (long format)"
         })
     
-    df[quantCol] = to_numeric_safe(df[quantCol])
+    df[quantCol] = to_numeric_1d(df, quantCol)
     grouped = df.dropna(subset=[groupcol]).groupby(groupcol)[quantCol]
     
     if len(grouped) < 2:
@@ -291,8 +291,8 @@ if not col1 or not col2:
     })
 
 # ── Prepare variables ───────────────────────────────────────────────────────
-x = pd.to_numeric(df[col1], errors='coerce')
-y = pd.to_numeric(df[col2], errors='coerce')
+x = to_numeric_1d(df, col1)
+y = to_numeric_1d(df, col2)
 
 # Create aligned clean versions using the converted series
 clean_df = pd.DataFrame({col1: x, col2: y}).dropna()

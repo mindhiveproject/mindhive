@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Message, Icon, Table } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
+import { DATAFRAME_SAFETY_PYTHON } from "../_shared/pyodideDataframeSafety";
 
 export default function Render({ code, pyodide, sectionId, content }) {
   const { t } = useTranslation("builder");
@@ -73,6 +74,7 @@ dataType = "${escapePy(valueMode)}"
 import json
 import numpy as np
 import pandas as pd
+${DATAFRAME_SAFETY_PYTHON}
 
 def to_native(obj):
     if isinstance(obj, (np.bool_, np.integer, np.floating)):

@@ -40,7 +40,7 @@ if not quantCols_str:
         "message": "No columns selected for summary"
     })
 
-columns = [c.strip() for c in quantCols_str.split(",") if c.strip()]
+columns = normalize_column_list([c.strip() for c in quantCols_str.split(",") if c.strip()])
 if not columns:
     return json.dumps({
         "success": False,
@@ -62,7 +62,7 @@ for col in columns:
     if col not in df.columns:
         continue
     
-    series = pd.to_numeric(df[col], errors='coerce') if is_quant_only else df[col]
+    series = to_numeric_1d(df, col) if is_quant_only else series_from_df(df, col)
     series_clean = series.dropna()
     
     if len(series_clean) == 0:
