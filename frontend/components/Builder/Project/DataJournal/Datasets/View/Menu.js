@@ -5,9 +5,11 @@ import moment from "moment";
 import { jsonToCSV } from "react-papaparse";
 import useTranslation from "next-translate/useTranslation";
 
+import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
 import AddColumnModal from "./Menu/AddColumnModal";
 import Variable from "./Menu/Variable";
-import { useDatasetSave } from "./Menu/UpdateDatasource";
+import { useDatasetSaveOrCopy } from "./Menu/UpdateDatasource";
+import DeleteConfirmModal from "../../Helpers/DeleteConfirmModal";
 
 export default function Menu({
   dataset,
@@ -18,18 +20,77 @@ export default function Menu({
   updateDataset,
   onVariableChange,
   onSaved,
+  onCopied,
+  writeMode,
+  currentVizPartId,
+  projectId,
+  studyId,
 }) {
   const { t } = useTranslation("builder");
   const [isAddColumnOpen, setIsAddColumnOpen] = useState(false);
+  const [copyModalOpen, setCopyModalOpen] = useState(false);
+  const [collaboratorsCanEditOnCopy, setCollaboratorsCanEditOnCopy] =
+    useState(true);
   const [activeIndex, setActiveIndex] = useState(
     components.map((_, index) => index) || []
   );
 
-  const { save, saving } = useDatasetSave({
+  const tAlerts = {
+    updated: t("dataJournal.datasetMenu.alerts.updated", {}, {
+      default: "The data has been updated",
+    }),
+    copySuccess: t("dataJournal.datasets.copyOnSave.successAlert", {}, {
+      default:
+        "We made a copy you own. You're now editing the copy.",
+    }),
+    error: (statusText) =>
+      t(
+        "dataJournal.datasetMenu.alerts.saveError",
+        { statusText: statusText || "" },
+        { default: "There was an error: {{statusText}}" },
+      ),
+  };
+
+  const { save, saveAsCopy, saving } = useDatasetSaveOrCopy({
     dataset,
     content: { modified: { data, variables, settings } },
+    writeMode,
+    currentVizPartId,
+    projectId,
+    studyId,
     onSaved,
+    onCopied,
+    tAlerts,
   });
+
+  const openCopyModal = () => {
+    setCollaboratorsCanEditOnCopy(dataset?.collaboratorsCanEdit !== false);
+    setCopyModalOpen(true);
+  };
+
+  const handleConfirmCopy = async () => {
+    const prefix = t("dataJournal.datasets.copyTitlePrefix", {}, {
+      default: "Copy of ",
+    });
+    const baseTitle =
+      dataset?.title ||
+      t("dataJournal.datasetMenu.header.untitledDataset", {}, {
+        default: "Untitled dataset",
+      });
+    await saveAsCopy({
+      copyTitle: `${prefix}${baseTitle}`,
+      collaboratorsCanEdit: collaboratorsCanEditOnCopy,
+    });
+    setCopyModalOpen(false);
+  };
+
+  const handleSaveClick = () => {
+    if (writeMode === "copyOnWrite") {
+      openCopyModal();
+      return;
+    }
+    save();
+  };
 
   const handleClick = (e, titleProps) => {
     const { index } = titleProps;
@@ -109,8 +170,82 @@ export default function Menu({
         { default: "Never updated" },
       );
 
+  const collabCount = dataset?.collaborators?.length ?? 0;
+  const sharedWithTooltip =
+    collabCount > 0
+      ? (dataset.collaborators || [])
+          .map((c) => c?.username || c?.id)
+          .filter(Boolean)
+          .join(", ")
+      : "";
+
+  const saveLabel =
+    writeMode === "copyOnWrite"
+      ? t("dataJournal.datasetMenu.actions.saveAsCopy", {}, {
+          default: "Save as copy…",
+        })
+      : t("dataJournal.datasetMenu.actions.save", {}, { default: "Save" });
+
+  const savingLabel =
+    writeMode === "copyOnWrite"
+      ? t("dataJournal.datasetMenu.actions.copying", {}, {
+          default: "Copying…",
+        })
+      : t("dataJournal.datasetMenu.actions.saving", {}, {
+          default: "Saving…",
+        });
+
+  const readOnlyToolbarHint = t(
+    "dataJournal.datasetMenu.readOnlyToolbarHint",
+    {},
+    {
+      default:
+        "Open this journal from a workspace to edit or copy this dataset.",
+    },
+  );
+
+  const canMutateStructure = writeMode === "editable" || writeMode === "copyOnWrite";
+
   return (
     <div className="database">
+      <DeleteConfirmModal
+        open={copyModalOpen}
+        title=""
+        message={t("dataJournal.datasets.copyConfirm.message", {}, {
+          default:
+            "A new dataset you own will be created with your changes and linked to this journal. Journal collaborators can be given access below.",
+        })}
+        confirmLabel={t("dataJournal.datasets.copyConfirm.confirm", {}, {
+          default: "Save copy",
+        })}
+        confirmPrimary
+        loading={saving}
+        onClose={() => setCopyModalOpen(false)}
+        onConfirm={handleConfirmCopy}
+        extraContent={
+          <label
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 8,
+              fontSize: 13,
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={collaboratorsCanEditOnCopy}
+              onChange={(e) => setCollaboratorsCanEditOnCopy(e.target.checked)}
+            />
+            <span>
+              {t("dataJournal.datasets.sharing.allowEditingLabel", {}, {
+                default: "Allow journal collaborators to edit this copy",
+              })}
+            </span>
+          </label>
+        }
+      />
+
       <div className="header">
         <img
           className="header-icon"
@@ -122,51 +257,83 @@ export default function Menu({
         <h3 className="header-title" title={datasetTitle}>
           {datasetTitle}
         </h3>
-        <button
-          type="button"
-          className="primaryAction saveAction"
-          onClick={save}
-          disabled={saving}
-        >
-          <img
-            src="/assets/icons/visualize/save.svg"
-            alt=""
-            aria-hidden="true"
-          />
-          <span>
-            {saving
-              ? t("dataJournal.datasetMenu.actions.saving", {}, {
-                  default: "Saving…",
-                })
-              : t("dataJournal.datasetMenu.actions.save", {}, {
-                  default: "Save",
-                })}
-          </span>
-        </button>
+        {writeMode !== "readOnly" ? (
+          <button
+            type="button"
+            className="primaryAction saveAction"
+            onClick={handleSaveClick}
+            disabled={saving}
+          >
+            <img
+              src="/assets/icons/visualize/save.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <span>{saving ? savingLabel : saveLabel}</span>
+          </button>
+        ) : null}
         <div className="metaStrip">
           <span>{dataOriginLabel}</span>
           <span aria-hidden="true">·</span>
           <span>{lastUpdatedLabel}</span>
+          {collabCount > 0 ? (
+            <>
+              <span aria-hidden="true">·</span>
+              <InfoTooltip content={sharedWithTooltip} position="topLeft" portal>
+                <span style={{ cursor: "default" }}>
+                  {t(
+                    "dataJournal.datasetMenu.meta.sharedWithCount",
+                    { count: collabCount },
+                    { default: "Shared: {{count}}" },
+                  )}
+                </span>
+              </InfoTooltip>
+            </>
+          ) : null}
         </div>
       </div>
 
       <div className="toolbar">
-        <button
-          type="button"
-          className="toolbarChip toolbarChip--primary"
-          onClick={() => setIsAddColumnOpen(true)}
-        >
-          <img
-            src="/assets/icons/visualize/add_notes.svg"
-            alt=""
-            aria-hidden="true"
-          />
-          <span>
-            {t("dataJournal.datasetMenu.actions.addColumn", {}, {
-              default: "Add a column",
-            })}
-          </span>
-        </button>
+        {canMutateStructure ? (
+          <button
+            type="button"
+            className="toolbarChip toolbarChip--primary"
+            onClick={() => setIsAddColumnOpen(true)}
+          >
+            <img
+              src="/assets/icons/visualize/add_notes.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <span>
+              {t("dataJournal.datasetMenu.actions.addColumn", {}, {
+                default: "Add a column",
+              })}
+            </span>
+          </button>
+        ) : (
+          <InfoTooltip content={readOnlyToolbarHint} position="topLeft" portal>
+            <span style={{ display: "inline-flex" }}>
+              <button
+                type="button"
+                className="toolbarChip toolbarChip--primary"
+                disabled
+                style={{ opacity: 0.55, cursor: "not-allowed" }}
+              >
+                <img
+                  src="/assets/icons/visualize/add_notes.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <span>
+                  {t("dataJournal.datasetMenu.actions.addColumn", {}, {
+                    default: "Add a column",
+                  })}
+                </span>
+              </button>
+            </span>
+          </InfoTooltip>
+        )}
         <AddColumnModal
           open={isAddColumnOpen}
           onClose={() => setIsAddColumnOpen(false)}
@@ -190,38 +357,42 @@ export default function Menu({
             })}
           </span>
         </button>
-        <button
-          type="button"
-          className="toolbarChip"
-          onClick={hideAllColumns}
-        >
-          <img
-            src="/assets/icons/eye_close.svg"
-            alt=""
-            aria-hidden="true"
-          />
-          <span>
-            {t("dataJournal.datasetMenu.actions.hideAllVariables", {}, {
-              default: "Hide all variables",
-            })}
-          </span>
-        </button>
-        <button
-          type="button"
-          className="toolbarChip"
-          onClick={showAllColumns}
-        >
-          <img
-            src="/assets/icons/eye_open.svg"
-            alt=""
-            aria-hidden="true"
-          />
-          <span>
-            {t("dataJournal.datasetMenu.actions.showAllVariables", {}, {
-              default: "Show all variables",
-            })}
-          </span>
-        </button>
+        {canMutateStructure ? (
+          <>
+            <button
+              type="button"
+              className="toolbarChip"
+              onClick={hideAllColumns}
+            >
+              <img
+                src="/assets/icons/eye_close.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>
+                {t("dataJournal.datasetMenu.actions.hideAllVariables", {}, {
+                  default: "Hide all variables",
+                })}
+              </span>
+            </button>
+            <button
+              type="button"
+              className="toolbarChip"
+              onClick={showAllColumns}
+            >
+              <img
+                src="/assets/icons/eye_open.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>
+                {t("dataJournal.datasetMenu.actions.showAllVariables", {}, {
+                  default: "Show all variables",
+                })}
+              </span>
+            </button>
+          </>
+        ) : null}
       </div>
 
       <div className="variables-section">

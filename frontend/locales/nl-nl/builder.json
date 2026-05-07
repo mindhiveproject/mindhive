@@ -293,14 +293,16 @@
 		"datasetMenu": {
 			"actions": {
 				"addColumn": "Een kolom toevoegen",
+				"copying": "Bezig met kopiëren…",
 				"download": "Downloaden",
 				"hideAll": "Verberg alles",
-				"hideAllVariables": "",
+				"hideAllVariables": "Verberg alle variabelen",
 				"returnToNavigation": "Terug naar navigatie",
-				"save": "",
-				"saving": "",
+				"save": "Redden",
+				"saveAsCopy": "Opslaan als kopie…",
+				"saving": "Besparing...",
 				"showAll": "Toon alles",
-				"showAllVariables": ""
+				"showAllVariables": "Toon alle variabelen"
 			},
 			"addColumnModal": {
 				"aria": {
@@ -331,6 +333,10 @@
 				"submit": "Kolom toevoegen",
 				"title": "Een kolom toevoegen"
 			},
+			"alerts": {
+				"saveError": "Er is een fout opgetreden: {{statusText}}",
+				"updated": "De gegevens zijn bijgewerkt."
+			},
 			"alt": {
 				"addColumn": "Een kolom toevoegen",
 				"database": "Database",
@@ -339,12 +345,13 @@
 			"downloadPrompt": "Geef een naam aan het CSV-bestand dat je gaat downloaden.\nJe hoeft geen '.csv' toe te voegen, wij doen dat voor je!",
 			"header": {
 				"activeData": "Actieve gegevens",
-				"untitledDataset": ""
+				"untitledDataset": "Naamloze dataset"
 			},
 			"meta": {
-				"dataOrigin": "",
-				"lastUpdated": "",
-				"neverUpdated": ""
+				"dataOrigin": "Oorsprong: {{origin}}",
+				"lastUpdated": "Bijgewerkt {{when}}",
+				"neverUpdated": "Nooit bijgewerkt",
+				"sharedWithCount": "Gedeeld: {{count}}"
 			},
 			"operations": {
 				"computeNew": "Bereken een nieuwe variabele",
@@ -352,21 +359,30 @@
 				"recodeVariable": "Een variabele hercoderen",
 				"reverseScore": "Omgekeerde score"
 			},
+			"readOnlyToolbarHint": "Open dit logboek vanuit een werkruimte om deze dataset te bewerken of te kopiëren.",
 			"sections": {
 				"generalVariables": "Algemene variabelen",
 				"taskVariables": "Taakvariabelen",
 				"userVariables": "Gebruikersvariabelen"
 			},
 			"variable": {
-				"delete": "",
-				"hideAria": "",
-				"rename": "",
-				"renamePrompt": "",
-				"showAria": ""
+				"delete": "Verwijderen",
+				"hideAria": "Verberg {{name}}",
+				"rename": "Hernoemen",
+				"renamePrompt": "Voer een nieuwe naam in:",
+				"showAria": "Toon {{name}}"
 			}
 		},
 		"datasets": {
 			"addDataset": "Voeg dataset toe",
+			"copyConfirm": {
+				"confirm": "Kopie opslaan",
+				"message": "Er wordt een nieuwe dataset van u aangemaakt met uw wijzigingen, die aan dit tijdschrift wordt gekoppeld. U kunt kiezen of medewerkers de kopie mogen bewerken."
+			},
+			"copyOnSave": {
+				"successAlert": "We hebben een kopie gemaakt die van jou is. Je bewerkt de kopie nu."
+			},
+			"copyTitlePrefix": "Kopie van",
 			"deleteConfirm": "Weet je zeker dat je deze dataset wilt verwijderen?",
 			"deleteDataset": "Gegevensset verwijderen",
 			"deleteDisabledNotOwner": "Alleen de maker van deze dataset kan deze verwijderen.",
@@ -392,12 +408,28 @@
 			"meta": {
 				"byAuthor": "Door {{author}}",
 				"byYou": "door jou",
-				"dataOrigin": "",
+				"dataOrigin": "Oorsprong: {{origin}}",
 				"lastUpdated": "Laatst bijgewerkt {{date}}",
 				"lastUpdatedNever": "Nooit",
 				"unknownAuthor": "Onbekend"
 			},
-			"originTooltip": "",
+			"originTooltip": "Hoe deze dataset is gemaakt.",
+			"renameDisabledNotOwner": "Alleen de maker van deze dataset kan deze hernoemen.",
+			"sharing": {
+				"allowEditingLabel": "Sta medewerkers van het tijdschrift toe om deze dataset te bewerken.",
+				"journalOnlyTooltip": "Bij het aanmaken van de dataset worden de medewerkers die aan dit onderzoek of project in dit tijdschrift hebben meegewerkt, met elkaar in contact gebracht.",
+				"roles": {
+					"projectAuthor": "Projectauteur",
+					"projectCollaborator": "Projectmedewerker",
+					"studyAuthor": "Studieauteur",
+					"studyCollaborator": "Studiemedewerker"
+				},
+				"rolesSeparator": ",",
+				"summary": "Deze dataset wordt gedeeld met {{count}} personen die verbonden zijn aan het onderzoek of project van dit tijdschrift.",
+				"summaryJournalOnly": "Deze dataset wordt gekoppeld aan uw huidige tijdschrift; medewerkers kunnen automatisch worden toegevoegd.",
+				"tooltipRow": "{{name}} — {{roles}}",
+				"whoTooltipAria": "Wie krijgt toegang?"
+			},
 			"untitled": "Naamloze dataset"
 		},
 		"graph": {
@@ -709,6 +741,7 @@
 			},
 			"dataSourceLabel": "Gegevensbronnen",
 			"dataSourceModal": {
+				"attachDisabledNotOwner": "Je kunt alleen datasets bijvoegen die je zelf bezit of die je als medewerker mag bewerken.",
 				"byAuthor": "Door {{author}}",
 				"cancel": "Annuleren",
 				"closeModal": "Dichtbij",
@@ -767,6 +800,8 @@
 			"axes": {
 				"default": {
 					"columnToSummarize": "Kolom ter samenvatting",
+					"columnToSummarizeQual": "Kwalitatieve column ter samenvatting",
+					"columnToSummarizeQuant": "Kwantitatieve kolom ter samenvatting",
 					"dataLayout": {
 						"currentlyPerforming": "Momenteel bezig met samenvatten:",
 						"long": {
@@ -789,10 +824,12 @@
 					"groupingVariable": "Groeperingsvariabele",
 					"qualOption": {
 						"description": "Kwalitatieve gegevens worden weergegeven in een kolom met labels. Bijvoorbeeld tot welke experimentele conditie een proefpersoon behoort, of hun antwoord op een meerkeuzevraag.",
+						"panelTitle": "Kwalitatieve gegevens",
 						"title": "Schakel over naar kwalitatieve gegevens"
 					},
 					"quantOption": {
 						"description": "Kwantitatieve gegevens worden weergegeven in een kolom gevuld met numerieke waarden. Bijvoorbeeld de leeftijd van de deelnemer of zijn of haar score in een enquête.",
+						"panelTitle": "Kwantitatieve gegevens",
 						"title": "Schakel over naar kwantitatieve gegevens"
 					},
 					"resources": {
@@ -802,6 +839,11 @@
 						"slidesLink": "Klik hier om de presentatieslides te bekijken.",
 						"tableWhatAlt": "Externe link",
 						"tableWhatTitle": "Wat is een tafel?"
+					},
+					"summaryMethod": {
+						"panelAriaLabel": "Gegevenstype: kwantitatieve of kwalitatieve kolomwaarden",
+						"sectionLabel": "DATA TYPE",
+						"toggleAriaLabel": "Opties voor gegevenstypen weergeven of verbergen"
 					},
 					"valueMode": {
 						"qualLabel": "Kwalitatief",

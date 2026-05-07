@@ -8,6 +8,7 @@ import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
 import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
 import { DELETE_DATASOURCE } from "../../../../Mutations/Datasource";
 import {
+  canRenameDatasource,
   getDatasourceDeleteDisabledReason,
   getDatasourceListInclusionKind,
 } from "../../../../../lib/dataJournalDatasources";
@@ -90,6 +91,13 @@ export default function DatasetCard({
 
   const deleteReason = getDatasourceDeleteDisabledReason(datasource, user?.id);
   const deleteDisabled = deleteReason != null;
+
+  const renameDisabled = !canRenameDatasource(datasource, user?.id);
+  const renameTooltip = renameDisabled
+    ? t("dataJournal.datasets.renameDisabledNotOwner", {}, {
+        default: "Only the creator of this dataset can rename it.",
+      })
+    : "";
 
   const deleteTooltip =
     deleteReason === "publicTemplate"
@@ -189,8 +197,8 @@ export default function DatasetCard({
   );
 
   return (
-    <StyledDatasetCard>
-      <div className="dataset-card" onClick={handleView}>
+    <StyledDatasetCard onClick={handleView}>
+      <div className="dataset-card">
         <div className="dataset-header">
           <h4 className="dataset-title">
             {datasource.title ||
@@ -199,23 +207,48 @@ export default function DatasetCard({
               })}
           </h4>
           <div className="dataset-actions" onClick={(e) => e.stopPropagation()}>
-            <CompactActionButton
-              icon={
-                <img
-                  src="/assets/icons/pencil.svg"
-                  alt=""
-                  aria-hidden
-                  width={20}
-                  height={20}
-                />
-              }
-              ariaLabel={editLabel}
-              title={editLabel}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleEdit();
-              }}
-            />
+            {renameDisabled ? (
+              <InfoTooltip content={renameTooltip} position="topLeft" portal>
+                <span
+                  style={{ display: "inline-flex", cursor: "not-allowed" }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <CompactActionButton
+                    icon={
+                      <img
+                        src="/assets/icons/pencil.svg"
+                        alt=""
+                        aria-hidden
+                        width={20}
+                        height={20}
+                      />
+                    }
+                    ariaLabel={editLabel}
+                    title={editLabel}
+                    disabled
+                    style={{ pointerEvents: "none" }}
+                  />
+                </span>
+              </InfoTooltip>
+            ) : (
+              <CompactActionButton
+                icon={
+                  <img
+                    src="/assets/icons/pencil.svg"
+                    alt=""
+                    aria-hidden
+                    width={20}
+                    height={20}
+                  />
+                }
+                ariaLabel={editLabel}
+                title={editLabel}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEdit();
+                }}
+              />
+            )}
             {deleteDisabled ? (
               <InfoTooltip content={deleteTooltip} position="topLeft" portal>
                 <span
@@ -238,7 +271,7 @@ export default function DatasetCard({
         </div>
 
         <div className="dataset-meta">
-          <div className="dataset-badges" onClick={(e) => e.stopPropagation()}>
+          <div className="dataset-badges">
             <InfoTooltip
               content={t("dataJournal.datasets.originTooltip", {}, {
                 default: "How this dataset was created.",

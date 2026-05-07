@@ -312,6 +312,10 @@ export const Profile = list({
       ref: "Datasource.author",
       many: true,
     }),
+    collaboratorInDatasource: relationship({
+      ref: "Datasource.collaborators",
+      many: true,
+    }),
     profileType: select({
       options: [
         { label: "Individual", value: "individual" },

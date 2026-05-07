@@ -117,7 +117,14 @@ legend_title = "${escaped(s.legend_title || s.legend_title_text || "")}"
 color = "${escaped(s.color || "pink")}"
         `;
       } else if (type === "histogram") {
-        hasRequiredSelectors = !!s.X;
+        // X may be a string (legacy) or string[] from multi-select; platform joins arrays
+        // to a comma-separated string for Python. Reject empty arrays (truthy in JS).
+        const hasHistogramX =
+          Array.isArray(s.X) && s.X.length > 0
+            ? s.X.some((v) => v != null && String(v).trim() !== "")
+            : s.X != null && String(s.X).trim() !== "";
+
+        hasRequiredSelectors = hasHistogramX;
 
         if (!hasRequiredSelectors) {
           setFigJson(null);
@@ -271,7 +278,7 @@ ${outputVar} = ${funcName}()
             textAlign: "center",
             color: "#4b5563",
             display: "flex",
-            flexDirection: "row",
+            flexDirection: "column",
             flex: 1,
             minHeight: 0,
             gap: "0.5rem",

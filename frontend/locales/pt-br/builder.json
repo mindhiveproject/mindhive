@@ -293,14 +293,16 @@
 		"datasetMenu": {
 			"actions": {
 				"addColumn": "Adicionar uma coluna",
+				"copying": "Copiando...",
 				"download": "Download",
 				"hideAll": "Esconda tudo",
-				"hideAllVariables": "",
+				"hideAllVariables": "Ocultar todas as variáveis",
 				"returnToNavigation": "Voltar à navegação",
-				"save": "",
-				"saving": "",
+				"save": "Salvar",
+				"saveAsCopy": "Salvar como cópia…",
+				"saving": "Salvando...",
 				"showAll": "Mostre tudo",
-				"showAllVariables": ""
+				"showAllVariables": "Mostrar todas as variáveis"
 			},
 			"addColumnModal": {
 				"aria": {
@@ -331,6 +333,10 @@
 				"submit": "Adicionar coluna",
 				"title": "Adicionar uma coluna"
 			},
+			"alerts": {
+				"saveError": "Ocorreu um erro: {{statusText}}",
+				"updated": "Os dados foram atualizados."
+			},
 			"alt": {
 				"addColumn": "Adicionar uma coluna",
 				"database": "Base de dados",
@@ -339,12 +345,13 @@
 			"downloadPrompt": "Dê um nome ao arquivo CSV que você está prestes a baixar.\nNão precisa adicionar '.csv', nós cuidamos disso!",
 			"header": {
 				"activeData": "Dados ativos",
-				"untitledDataset": ""
+				"untitledDataset": "Conjunto de dados sem título"
 			},
 			"meta": {
-				"dataOrigin": "",
-				"lastUpdated": "",
-				"neverUpdated": ""
+				"dataOrigin": "Origem: {{origin}}",
+				"lastUpdated": "Atualizado {{when}}",
+				"neverUpdated": "Nunca atualizado",
+				"sharedWithCount": "Compartilhado: {{count}}"
 			},
 			"operations": {
 				"computeNew": "Calcular nova variável",
@@ -352,21 +359,30 @@
 				"recodeVariable": "Recodificar uma variável",
 				"reverseScore": "Inverter pontuação"
 			},
+			"readOnlyToolbarHint": "Abra este diário a partir de um espaço de trabalho para editar ou copiar este conjunto de dados.",
 			"sections": {
 				"generalVariables": "Variáveis ​​gerais",
 				"taskVariables": "Variáveis ​​da Tarefa",
 				"userVariables": "Variáveis ​​do usuário"
 			},
 			"variable": {
-				"delete": "",
-				"hideAria": "",
-				"rename": "",
-				"renamePrompt": "",
-				"showAria": ""
+				"delete": "Excluir",
+				"hideAria": "Ocultar {{name}}",
+				"rename": "Renomear",
+				"renamePrompt": "Por favor, insira um novo nome:",
+				"showAria": "Mostrar {{name}}"
 			}
 		},
 		"datasets": {
 			"addDataset": "Adicionar conjunto de dados",
+			"copyConfirm": {
+				"confirm": "Salvar cópia",
+				"message": "Um novo conjunto de dados de sua propriedade será criado com suas alterações e vinculado a este periódico. Você poderá escolher se os colaboradores poderão editar a cópia."
+			},
+			"copyOnSave": {
+				"successAlert": "Criamos uma cópia que é sua. Agora você está editando essa cópia."
+			},
+			"copyTitlePrefix": "Cópia de",
 			"deleteConfirm": "Tem certeza de que deseja excluir este conjunto de dados?",
 			"deleteDataset": "Excluir conjunto de dados",
 			"deleteDisabledNotOwner": "Somente o criador deste conjunto de dados pode excluí-lo.",
@@ -392,12 +408,28 @@
 			"meta": {
 				"byAuthor": "por {{author}}",
 				"byYou": "por você",
-				"dataOrigin": "",
+				"dataOrigin": "Origem: {{origin}}",
 				"lastUpdated": "Última atualização {{date}}",
 				"lastUpdatedNever": "Nunca",
 				"unknownAuthor": "Desconhecido"
 			},
-			"originTooltip": "",
+			"originTooltip": "Como este conjunto de dados foi criado.",
+			"renameDisabledNotOwner": "Somente o criador deste conjunto de dados pode renomeá-lo.",
+			"sharing": {
+				"allowEditingLabel": "Permitir que os colaboradores da revista editem este conjunto de dados.",
+				"journalOnlyTooltip": "Os colaboradores deste estudo ou projeto da revista serão conectados quando você criar o conjunto de dados.",
+				"roles": {
+					"projectAuthor": "Autor do projeto",
+					"projectCollaborator": "Colaborador do projeto",
+					"studyAuthor": "Autor do estudo",
+					"studyCollaborator": "Colaborador do estudo"
+				},
+				"rolesSeparator": ",",
+				"summary": "Este conjunto de dados será compartilhado com {{count}} pessoas vinculadas ao estudo ou projeto desta revista.",
+				"summaryJournalOnly": "Este conjunto de dados será vinculado ao seu periódico atual; colaboradores poderão ser adicionados automaticamente.",
+				"tooltipRow": "{{name}} — {{roles}}",
+				"whoTooltipAria": "Quem terá acesso?"
+			},
 			"untitled": "Conjunto de dados sem título"
 		},
 		"graph": {
@@ -709,6 +741,7 @@
 			},
 			"dataSourceLabel": "Fontes de dados",
 			"dataSourceModal": {
+				"attachDisabledNotOwner": "Você só pode anexar conjuntos de dados que sejam de sua propriedade ou que você possa editar como colaborador.",
 				"byAuthor": "por {{author}}",
 				"cancel": "Cancelar",
 				"closeModal": "Fechar",
@@ -767,6 +800,8 @@
 			"axes": {
 				"default": {
 					"columnToSummarize": "Coluna para resumir",
+					"columnToSummarizeQual": "Coluna qualitativa para resumir",
+					"columnToSummarizeQuant": "Coluna quantitativa para resumir",
 					"dataLayout": {
 						"currentlyPerforming": "Resumindo:",
 						"long": {
@@ -789,10 +824,12 @@
 					"groupingVariable": "Variável de agrupamento",
 					"qualOption": {
 						"description": "Os dados qualitativos são representados em uma coluna preenchida com rótulos. Por exemplo, a qual condição experimental um sujeito pertence ou sua resposta a uma questão de múltipla escolha.",
+						"panelTitle": "Dados qualitativos",
 						"title": "Mudar para dados qualitativos"
 					},
 					"quantOption": {
 						"description": "Os dados quantitativos são representados em uma coluna preenchida com valores numéricos. Por exemplo, a idade do participante ou sua pontuação em uma pesquisa.",
+						"panelTitle": "Dados quantitativos",
 						"title": "Mudar para Dados Quantitativos"
 					},
 					"resources": {
@@ -802,6 +839,11 @@
 						"slidesLink": "Clique aqui para ver os slides da aula.",
 						"tableWhatAlt": "Link externo",
 						"tableWhatTitle": "O que é uma mesa?"
+					},
+					"summaryMethod": {
+						"panelAriaLabel": "Tipo de dados: valores de coluna quantitativos ou qualitativos",
+						"sectionLabel": "TIPO DE DADOS",
+						"toggleAriaLabel": "Mostrar ou ocultar opções de tipo de dados"
 					},
 					"valueMode": {
 						"qualLabel": "Qualitativo",

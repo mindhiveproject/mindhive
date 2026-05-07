@@ -293,14 +293,16 @@
 		"datasetMenu": {
 			"actions": {
 				"addColumn": "एक कॉलम जोड़ें",
+				"copying": "नकल...",
 				"download": "डाउनलोड करना",
 				"hideAll": "सभी को छिपाएं",
-				"hideAllVariables": "",
+				"hideAllVariables": "सभी चरों को छुपाएँ",
 				"returnToNavigation": "नेविगेशन पर वापस लौटें",
-				"save": "",
-				"saving": "",
+				"save": "बचाना",
+				"saveAsCopy": "कॉपी के रूप में सहेजें…",
+				"saving": "सहेजा जा रहा है...",
 				"showAll": "सब दिखाएं",
-				"showAllVariables": ""
+				"showAllVariables": "सभी चर दिखाएँ"
 			},
 			"addColumnModal": {
 				"aria": {
@@ -331,6 +333,10 @@
 				"submit": "कॉलम जोड़ें",
 				"title": "एक कॉलम जोड़ें"
 			},
+			"alerts": {
+				"saveError": "त्रुटि हुई: {{statusText}}",
+				"updated": "डेटा अपडेट कर दिया गया है"
+			},
 			"alt": {
 				"addColumn": "एक कॉलम जोड़ें",
 				"database": "डेटाबेस",
@@ -339,12 +345,13 @@
 			"downloadPrompt": "डाउनलोड करने से पहले CSV फ़ाइल को एक नाम दें।\n'.csv' जोड़ने की कोई आवश्यकता नहीं है, हम इसका ध्यान रखेंगे!",
 			"header": {
 				"activeData": "सक्रिय डेटा",
-				"untitledDataset": ""
+				"untitledDataset": "शीर्षकहीन डेटासेट"
 			},
 			"meta": {
-				"dataOrigin": "",
-				"lastUpdated": "",
-				"neverUpdated": ""
+				"dataOrigin": "उत्पत्ति: {{origin}}",
+				"lastUpdated": "अपडेट किया गया {{when}}",
+				"neverUpdated": "कभी अपडेट नहीं किया गया",
+				"sharedWithCount": "साझा: {{count}}"
 			},
 			"operations": {
 				"computeNew": "नए चर की गणना करें",
@@ -352,21 +359,30 @@
 				"recodeVariable": "एक वेरिएबल को रिकोड करें",
 				"reverseScore": "रिवर्स स्कोर"
 			},
+			"readOnlyToolbarHint": "इस डेटासेट को संपादित करने या कॉपी करने के लिए, इस जर्नल को किसी कार्यक्षेत्र से खोलें।",
 			"sections": {
 				"generalVariables": "सामान्य चर",
 				"taskVariables": "कार्य चर",
 				"userVariables": "उपयोगकर्ता चर"
 			},
 			"variable": {
-				"delete": "",
-				"hideAria": "",
-				"rename": "",
-				"renamePrompt": "",
-				"showAria": ""
+				"delete": "मिटाना",
+				"hideAria": "छुपाएँ {{name}}",
+				"rename": "नाम बदलें",
+				"renamePrompt": "कृपया नया नाम दर्ज करें:",
+				"showAria": "दिखाएँ {{name}}"
 			}
 		},
 		"datasets": {
 			"addDataset": "डेटासेट जोड़ें",
+			"copyConfirm": {
+				"confirm": "कॉपी सहेजें",
+				"message": "आपके द्वारा किए गए परिवर्तनों के साथ एक नया डेटासेट बनाया जाएगा, जिसका स्वामित्व आपके पास होगा और उसे इस जर्नल से लिंक किया जाएगा। आप यह चुन सकते हैं कि सहयोगी इस सामग्री को संपादित कर सकते हैं या नहीं।"
+			},
+			"copyOnSave": {
+				"successAlert": "हमने इसकी एक प्रति बनाई है, जो आपके पास है। अब आप इस प्रति को संपादित कर रहे हैं।"
+			},
+			"copyTitlePrefix": "की प्रति",
 			"deleteConfirm": "क्या आप वाकई इस डेटासेट को हटाना चाहते हैं?",
 			"deleteDataset": "डेटासेट हटाएं",
 			"deleteDisabledNotOwner": "इस डेटासेट को केवल इसका निर्माता ही हटा सकता है।",
@@ -392,12 +408,28 @@
 			"meta": {
 				"byAuthor": "द्वारा {{author}}",
 				"byYou": "आपके द्वारा",
-				"dataOrigin": "",
+				"dataOrigin": "उत्पत्ति: {{origin}}",
 				"lastUpdated": "अंतिम बार अपडेट किया गया {{date}}",
 				"lastUpdatedNever": "कभी नहीं",
 				"unknownAuthor": "अज्ञात"
 			},
-			"originTooltip": "",
+			"originTooltip": "यह डेटासेट कैसे बनाया गया।",
+			"renameDisabledNotOwner": "इस डेटासेट का नाम केवल इसका निर्माता ही बदल सकता है।",
+			"sharing": {
+				"allowEditingLabel": "जर्नल के सहयोगियों को इस डेटासेट को संपादित करने की अनुमति दें",
+				"journalOnlyTooltip": "जब आप डेटासेट बनाएंगे, तो इस जर्नल के अध्ययन या परियोजना के सहयोगी आपसे जुड़ जाएंगे।",
+				"roles": {
+					"projectAuthor": "परियोजना लेखक",
+					"projectCollaborator": "परियोजना सहयोगी",
+					"studyAuthor": "अध्ययन लेखक",
+					"studyCollaborator": "अध्ययन सहयोगी"
+				},
+				"rolesSeparator": ",",
+				"summary": "यह डेटासेट इस जर्नल के अध्ययन या परियोजना से जुड़े {{count}} लोगों के साथ साझा किया जाएगा।",
+				"summaryJournalOnly": "यह डेटासेट आपके वर्तमान जर्नल से लिंक हो जाएगा; सहयोगियों को स्वचालित रूप से जोड़ा जा सकता है।",
+				"tooltipRow": "{{name}} — {{roles}}",
+				"whoTooltipAria": "किसे एक्सेस मिलेगा?"
+			},
 			"untitled": "शीर्षकहीन डेटासेट"
 		},
 		"graph": {
@@ -709,6 +741,7 @@
 			},
 			"dataSourceLabel": "डेटा स्रोत",
 			"dataSourceModal": {
+				"attachDisabledNotOwner": "आप केवल उन्हीं डेटासेट को संलग्न कर सकते हैं जो आपके स्वामित्व में हैं या जिन्हें आप एक सहयोगी के रूप में संपादित कर सकते हैं।",
 				"byAuthor": "द्वारा {{author}}",
 				"cancel": "रद्द करना",
 				"closeModal": "बंद करना",
@@ -767,6 +800,8 @@
 			"axes": {
 				"default": {
 					"columnToSummarize": "सारांशित करने के लिए कॉलम",
+					"columnToSummarizeQual": "गुणात्मक स्तंभ सारांश प्रस्तुत करने के लिए",
+					"columnToSummarizeQuant": "सारांशित करने के लिए मात्रात्मक स्तंभ",
 					"dataLayout": {
 						"currentlyPerforming": "वर्तमान में सारांश प्रस्तुत किया जा रहा है:",
 						"long": {
@@ -789,10 +824,12 @@
 					"groupingVariable": "समूहीकरण चर",
 					"qualOption": {
 						"description": "गुणात्मक डेटा को लेबल से भरे एक कॉलम में दर्शाया जाता है। उदाहरण के लिए, कोई प्रतिभागी किस प्रायोगिक स्थिति से संबंधित है, या किसी बहुविकल्पीय प्रश्न का उसका उत्तर।",
+						"panelTitle": "गुणात्मक डेटा",
 						"title": "गुणात्मक डेटा पर स्विच करें"
 					},
 					"quantOption": {
 						"description": "मात्रात्मक डेटा को संख्यात्मक मानों से भरे एक कॉलम में दर्शाया जाता है। उदाहरण के लिए, प्रतिभागी की आयु या सर्वेक्षण में उनका स्कोर।",
+						"panelTitle": "मात्रात्मक डेटा",
 						"title": "मात्रात्मक डेटा पर स्विच करें"
 					},
 					"resources": {
@@ -802,6 +839,11 @@
 						"slidesLink": "लेक्चर स्लाइड्स देखने के लिए यहां क्लिक करें",
 						"tableWhatAlt": "बाहरी लिंक",
 						"tableWhatTitle": "टेबल क्या होता है?"
+					},
+					"summaryMethod": {
+						"panelAriaLabel": "डेटा प्रकार: मात्रात्मक या गुणात्मक स्तंभ मान",
+						"sectionLabel": "डेटा प्रकार",
+						"toggleAriaLabel": "डेटा प्रकार विकल्पों को दिखाएं या छिपाएं"
 					},
 					"valueMode": {
 						"qualLabel": "गुणात्मक",

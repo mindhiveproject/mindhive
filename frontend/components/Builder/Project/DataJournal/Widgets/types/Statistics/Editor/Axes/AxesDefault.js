@@ -1,12 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
-import {
-  Dropdown,
-  DropdownMenu,
-  AccordionTitle,
-  AccordionContent,
-  Accordion,
-} from "semantic-ui-react";
 
 import Button from "../../../../../../../../DesignSystem/Button";
 import Chip from "../../../../../../../../DesignSystem/Chip";
@@ -44,10 +37,11 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
   const [selectedValueMode, setSelectedValueMode] = useState(() =>
     resolveValueMode(selectors),
   );
-  const [dataLayoutPanelOpen, setDataLayoutPanelOpen] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(-1);
+  // const [dataLayoutPanelOpen, setDataLayoutPanelOpen] = useState(false);
+  const [valueModePanelOpen, setValueModePanelOpen] = useState(false);
 
-  const dataLayoutPanelId = `summary-data-layout-${sectionId}`;
+  // const dataLayoutPanelId = `summary-data-layout-${sectionId}`;
+  const valueModePanelId = `summary-value-mode-${sectionId}`;
 
   useEffect(() => {
     setSelectedDataLayout(resolveDataLayout(selectors));
@@ -72,22 +66,22 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
     });
   };
 
-  const onLayoutChoice = (option) => {
-    const v = option.value;
-    setSelectedDataLayout(v);
-    const next = {
-      ...selectors,
-      dataLayout: v,
-      ...(v === "long" ? { colMultiple: [] } : { valCol: "" }),
-    };
-    if (next.dataFormat === "long" || next.dataFormat === "wide") {
-      delete next.dataFormat;
-    }
-    onChange({
-      componentId: sectionId,
-      newContent: { selectors: next },
-    });
-  };
+  // const onLayoutChoice = (option) => {
+  //   const v = option.value;
+  //   setSelectedDataLayout(v);
+  //   const next = {
+  //     ...selectors,
+  //     dataLayout: v,
+  //     ...(v === "long" ? { colMultiple: [] } : { valCol: "" }),
+  //   };
+  //   if (next.dataFormat === "long" || next.dataFormat === "wide") {
+  //     delete next.dataFormat;
+  //   }
+  //   onChange({
+  //     componentId: sectionId,
+  //     newContent: { selectors: next },
+  //   });
+  // };
 
   const onValueModeChoice = (option) => {
     setSelectedValueMode(option.value);
@@ -101,68 +95,65 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
     });
   };
 
-  const handleClick = (e, titleProps) => {
-    const { index } = titleProps;
-    setActiveIndex(activeIndex === index ? -1 : index);
-  };
-
-  const valueModeMenu = useMemo(
+  const valueModePanelMenu = useMemo(
     () => [
       {
         key: "quant",
         value: "quant",
-        titleKey: `${G_STAT}.quantOption.title`,
-        titleDefault: "Switch to Quantitative Data",
-        descriptionKey: `${G_STAT}.quantOption.description`,
-        descriptionDefault:
-          "Quantitative data is represented in a column filled with numerical values. For example, the age of the participant or their score in a survey.",
+        chipLabel: t(`${G_STAT}.valueMode.quantLabel`, {}, { default: "Quantitative" }),
+        title: t(`${G_STAT}.quantOption.panelTitle`, {}, { default: "Quantitative data" }),
+        description: t(`${G_STAT}.quantOption.description`, {}, {
+          default:
+            "Quantitative data is represented in a column filled with numerical values. For example, the age of the participant or their score in a survey.",
+        }),
         img: "/assets/icons/visualize/dataStructWide.svg",
         link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
       },
       {
         key: "qual",
         value: "qual",
-        titleKey: `${G_STAT}.qualOption.title`,
-        titleDefault: "Switch to Qualitative Data",
-        descriptionKey: `${G_STAT}.qualOption.description`,
-        descriptionDefault:
-          "Qualitative data is represented in a column filled with labels. For example, which experimental condition a subject belongs to, or their answer to a multiple choice question.",
+        chipLabel: t(`${G_STAT}.valueMode.qualLabel`, {}, { default: "Qualitative" }),
+        title: t(`${G_STAT}.qualOption.panelTitle`, {}, { default: "Qualitative data" }),
+        description: t(`${G_STAT}.qualOption.description`, {}, {
+          default:
+            "Qualitative data is represented in a column filled with labels. For example, which experimental condition a subject belongs to, or their answer to a multiple choice question.",
+        }),
         img: "/assets/icons/visualize/dataTypeQual.svg",
-        link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
-      },
-    ],
-    [],
-  );
-
-  const dataLayoutMenu = useMemo(
-    () => [
-      {
-        key: "long",
-        value: "long",
-        chipLabel: t(`${G_COMMON}.dataFormat.chipLong`, {}, { default: "Long" }),
-        title: t(`${G_STAT}.dataLayout.long.title`, {}, { default: "Long data layout" }),
-        description: t(`${G_STAT}.dataLayout.long.description`, {}, {
-          default:
-            "Each observation is a row. Choose one column of values to summarize and optionally a column that defines groups.",
-        }),
-        img: "/assets/icons/visualize/dataStructLongDetailed.svg",
-        link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
-      },
-      {
-        key: "wide",
-        value: "wide",
-        chipLabel: t(`${G_COMMON}.dataFormat.chipWide`, {}, { default: "Wide" }),
-        title: t(`${G_STAT}.dataLayout.wide.title`, {}, { default: "Wide data layout" }),
-        description: t(`${G_STAT}.dataLayout.wide.description`, {}, {
-          default:
-            "Each variable to summarize is its own column. Pick one or more columns and optionally a grouping variable.",
-        }),
-        img: "/assets/icons/visualize/dataStructWideDetailed.svg",
         link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
       },
     ],
     [t],
   );
+
+  // const dataLayoutMenu = useMemo(
+  //   () => [
+  //     {
+  //       key: "long",
+  //       value: "long",
+  //       chipLabel: t(`${G_COMMON}.dataFormat.chipLong`, {}, { default: "Long" }),
+  //       title: t(`${G_STAT}.dataLayout.long.title`, {}, { default: "Long data layout" }),
+  //       description: t(`${G_STAT}.dataLayout.long.description`, {}, {
+  //         default:
+  //           "Each observation is a row. Choose one column of values to summarize and optionally a column that defines groups.",
+  //       }),
+  //       img: "/assets/icons/visualize/dataStructLongDetailed.svg",
+  //       link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
+  //     },
+  //     {
+  //       key: "wide",
+  //       value: "wide",
+  //       chipLabel: t(`${G_COMMON}.dataFormat.chipWide`, {}, { default: "Wide" }),
+  //       title: t(`${G_STAT}.dataLayout.wide.title`, {}, { default: "Wide data layout" }),
+  //       description: t(`${G_STAT}.dataLayout.wide.description`, {}, {
+  //         default:
+  //           "Each variable to summarize is its own column. Pick one or more columns and optionally a grouping variable.",
+  //       }),
+  //       img: "/assets/icons/visualize/dataStructWideDetailed.svg",
+  //       link: "https://docs.google.com/presentation/d/1II5OqHmhYO_si-_bgcJrocQZFXjFb6c4gi8wcTN86ZQ/edit?usp=sharing",
+  //     },
+  //   ],
+  //   [t],
+  // );
 
   const resourcesList = useMemo(
     () => [
@@ -177,31 +168,44 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
   );
 
   const groupingTitle = t(`${G_STAT}.groupingVariable`, {}, { default: "Grouping variable" });
-  const columnToSummarizeTitle = t(`${G_STAT}.columnToSummarize`, {}, {
-    default: "Column to summarize",
-  });
 
   const quantLabel = t(`${G_STAT}.valueMode.quantLabel`, {}, { default: "Quantitative" });
   const qualLabel = t(`${G_STAT}.valueMode.qualLabel`, {}, { default: "Qualitative" });
+  const valueModeTriggerPrefix = t(`${G_STAT}.valueMode.triggerPrefix`, {}, {
+    default: "Column value type:",
+  });
   const valueModeTriggerSuffix = t(`${G_STAT}.valueMode.triggerSuffix`, {}, {
     default: " (click here to change)",
   });
 
-  const resourcesTitle = t(`${G_STAT}.resources.sectionTitle`, {}, { default: "Resources" });
-  const openResourceHint = t(`${G_STAT}.resources.openLink`, {}, { default: "Click here to access the resource" });
+  const summaryMethodSectionLabel = t(`${G_STAT}.summaryMethod.sectionLabel`, {}, {
+    default: "Data type",
+  });
+  const summaryMethodToggleTitle = t(`${G_STAT}.summaryMethod.toggleAriaLabel`, {}, {
+    default: "Show or hide data type options",
+  });
+  const summaryMethodPanelAria = t(`${G_STAT}.summaryMethod.panelAriaLabel`, {}, {
+    default: "Data type: quantitative or qualitative column values",
+  });
+
+  const valColTitle =
+    selectedValueMode === "quant"
+      ? t(`${G_STAT}.columnToSummarizeQuant`, {}, { default: "Quantitative column to summarize" })
+      : t(`${G_STAT}.columnToSummarizeQual`, {}, { default: "Qualitative column to summarize" });
+
   const slidesLinkText = t(`${G_STAT}.resources.slidesLink`, {}, { default: "Click here to see the lecture slides" });
   const googleSlidesAlt = t(`${G_STAT}.resources.googleSlidesAlt`, {}, { default: "Google Slides" });
 
-  const sectionLabel = t(`${G_COMMON}.dataFormat.sectionLabel`, {}, { default: "Data layout" });
-  const toggleTitle = t(`${G_COMMON}.dataFormat.toggleAriaLabel`, {}, {
-    default: "Show or hide data layout options",
-  });
-  const panelAria = t(`${G_COMMON}.dataFormat.panelRegionAriaLabel`, {}, {
-    default: "Data layout: diagram for the selected format",
-  });
-  const currentlyPerforming = t(`${G_STAT}.dataLayout.currentlyPerforming`, {}, {
-    default: "Currently summarizing:",
-  });
+  // const sectionLabel = t(`${G_COMMON}.dataFormat.sectionLabel`, {}, { default: "Data layout" });
+  // const toggleTitle = t(`${G_COMMON}.dataFormat.toggleAriaLabel`, {}, {
+  //   default: "Show or hide data layout options",
+  // });
+  // const panelAria = t(`${G_COMMON}.dataFormat.panelRegionAriaLabel`, {}, {
+  //   default: "Data layout: diagram for the selected format",
+  // });
+  // const currentlyPerforming = t(`${G_STAT}.dataLayout.currentlyPerforming`, {}, {
+  //   default: "Currently summarizing:",
+  // });
 
   const openLinkLabel = t(`${G_COMMON}.resources.openLinkHint`, {}, {
     default: "Click here to access the resource",
@@ -229,9 +233,15 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
     [resourcesList, openLinkLabel, noLinkHint],
   );
 
-  const currentLayoutOption = useMemo(
-    () => dataLayoutMenu.find((o) => o.value === selectedDataLayout) || dataLayoutMenu[0],
-    [dataLayoutMenu, selectedDataLayout],
+  // const currentLayoutOption = useMemo(
+  //   () => dataLayoutMenu.find((o) => o.value === selectedDataLayout) || dataLayoutMenu[0],
+  //   [dataLayoutMenu, selectedDataLayout],
+  // );
+
+  const currentValueModeOption = useMemo(
+    () =>
+      valueModePanelMenu.find((o) => o.value === selectedValueMode) || valueModePanelMenu[0],
+    [valueModePanelMenu, selectedValueMode],
   );
 
   return (
@@ -246,6 +256,7 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
       />
 
       <div className="statTestDataFormatSummary">
+        {/* Data layout summary (wide vs long) — hidden while data layout control is commented out
         {selectedDataLayout === "wide" ? (
           <p>
             <strong>{currentlyPerforming}</strong>{" "}
@@ -264,21 +275,55 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
             })}
           </p>
         )}
+        */}
+        <p>
+          {valueModeTriggerPrefix}{" "}
+          <strong>{selectedValueMode === "quant" ? quantLabel : qualLabel}</strong>
+          {valueModeTriggerSuffix}
+        </p>
       </div>
 
-      <div className="barPlotDataFormat">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => setDataLayoutPanelOpen((open) => !open)}
-          aria-expanded={dataLayoutPanelOpen}
-          aria-controls={dataLayoutPanelId}
-          title={toggleTitle}
-          style={{ backgroundColor: "#F3F3F3", color: "#6A6A6A", border: "2px solid #E6E6E6" }}
-        >
-          {sectionLabel}
-        </Button>
-        {dataLayoutPanelOpen && currentLayoutOption && (
+      <div className="statisticsAxesFormatControls">
+        <div className="barPlotDataFormat barPlotDataFormat--buttonOnly">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setValueModePanelOpen((open) => !open);
+            }}
+            aria-expanded={valueModePanelOpen}
+            aria-controls={valueModePanelId}
+            title={summaryMethodToggleTitle}
+            style={{ backgroundColor: "#F3F3F3", color: "#6A6A6A", border: "2px solid #E6E6E6" }}
+          >
+            {summaryMethodSectionLabel}
+          </Button>
+        </div>
+        {/* Data layout button + panel (long / wide) — commented out
+        <div className="barPlotDataFormat barPlotDataFormat--buttonOnly">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setDataLayoutPanelOpen((open) => {
+                const next = !open;
+                if (next) setValueModePanelOpen(false);
+                return next;
+              });
+            }}
+            aria-expanded={dataLayoutPanelOpen}
+            aria-controls={dataLayoutPanelId}
+            title={toggleTitle}
+            style={{ backgroundColor: "#F3F3F3", color: "#6A6A6A", border: "2px solid #E6E6E6" }}
+          >
+            {sectionLabel}
+          </Button>
+        </div>
+        */}
+      </div>
+
+      {/* {dataLayoutPanelOpen && currentLayoutOption && (
+        <div className="barPlotDataFormat">
           <div
             id={dataLayoutPanelId}
             role="region"
@@ -325,8 +370,65 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )} */}
+
+      {valueModePanelOpen && currentValueModeOption && (
+        <div className="barPlotDataFormat">
+          <div
+            id={valueModePanelId}
+            role="region"
+            aria-label={summaryMethodPanelAria}
+            className="barPlotDataFormat__panel"
+          >
+            <div className="barPlotDataFormat__chips customTabs">
+              {valueModePanelMenu.map((option) => (
+                <Chip
+                  key={option.key}
+                  label={option.chipLabel}
+                  selected={selectedValueMode === option.value}
+                  onClick={() => onValueModeChoice(option)}
+                  shape="square"
+                  ariaLabel={option.title}
+                  style={
+                    selectedValueMode === option.value
+                      ? { backgroundColor: "#FDF2D0" }
+                      : { border: "1px solid #F3F3F3" }
+                  }
+                />
+              ))}
+            </div>
+            <div className="barPlotDataFormat__card">
+              <div className="barPlotDataFormat__figureWrap">
+                <img
+                  className="barPlotDataFormat__figure"
+                  src={currentValueModeOption.img}
+                  alt={currentValueModeOption.title}
+                  decoding="async"
+                />
+              </div>
+              <TruncatedTooltipText
+                as="h3"
+                className="barPlotDataFormat__title"
+                text={currentValueModeOption.title}
+              />
+              <p className="barPlotDataFormat__desc">{currentValueModeOption.description}</p>
+              <div className="barPlotDataFormat__slides">
+                <img
+                  src="/assets/icons/visualize/googleSlides.svg"
+                  alt={googleSlidesAlt}
+                  width={20}
+                  height={20}
+                  decoding="async"
+                />
+                <a href={currentValueModeOption.link} target="_blank" rel="noopener noreferrer">
+                  {slidesLinkText}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {selectedDataLayout === "long" ? (
         <div className="selectorsTestStats">
@@ -335,7 +437,7 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
             options={options}
             selectors={selectors}
             onSelectorChange={onSelectorChange}
-            title={columnToSummarizeTitle}
+            title={valColTitle}
             parameter="valCol"
           />
           <SelectOne
@@ -370,47 +472,6 @@ export default function Axes({ variables, sectionId, selectors, onChange }) {
 
       <input type="hidden" id={`dataLayout-${sectionId}`} value={selectedDataLayout} readOnly />
       <input type="hidden" id={`dataType-${sectionId}`} value={selectedValueMode} readOnly />
-
-      <Accordion>
-        <AccordionTitle active={activeIndex === 0} index={0} onClick={handleClick}>
-          <img
-            src="/assets/icons/profile/arrow.svg"
-            alt=""
-            aria-hidden
-            style={{
-              width: 16,
-              height: 16,
-              display: "inline-block",
-              marginRight: 6,
-              verticalAlign: "middle",
-              transform: activeIndex === 0 ? "rotate(90deg)" : "rotate(0deg)",
-              transition: "transform 0.15s ease",
-            }}
-          />
-          {resourcesTitle}
-        </AccordionTitle>
-        <AccordionContent active={activeIndex === 0}>
-          {resourcesList.map((option) => (
-            <a
-              className="resourcesCard"
-              href={option.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              key={option.link}
-            >
-              <img className="resourcesCardImage" src={option.img} alt={option.alt} />
-              <div>
-                <TruncatedTooltipText
-                  as="div"
-                  className="resourcesCardTitle"
-                  text={option.title}
-                />
-                <div className="resourcesCardLink">{openResourceHint}</div>
-              </div>
-            </a>
-          ))}
-        </AccordionContent>
-      </Accordion>
     </div>
   );
 }

@@ -1290,6 +1290,22 @@ export const StyledDataWorkspace = styled.div`
         margin-bottom: 0;
       }
 
+      .statisticsAxesFormatControls {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 10px;
+        min-width: 0;
+        max-width: 100%;
+      }
+      .statisticsAxesFormatControls .barPlotDataFormat--buttonOnly {
+        display: inline-flex;
+        width: auto;
+        max-width: 100%;
+        flex: 0 1 auto;
+        min-width: 0;
+      }
+
       ${barPlotDataFormatPanelStyles}
     }
     .graphEditorFieldRow {

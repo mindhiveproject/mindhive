@@ -1,6 +1,6 @@
 // components/DataJournal/Datasets/Main.js
 import { useQuery } from "@apollo/client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import { buildDatasourcesWhere } from "../../../../../lib/dataJournalDatasources";
@@ -21,7 +21,7 @@ import {
 
 export default function Datasets() {
   const { t } = useTranslation("builder");
-  const { user, projectId, studyId } = useDataJournal();
+  const { user, projectId, studyId, datasetsListNavNonce } = useDataJournal();
 
   const datasourcesWhere = useMemo(
     () => buildDatasourcesWhere({ projectId, studyId, userId: user?.id }),
@@ -36,6 +36,15 @@ export default function Datasets() {
   const [showAddDataset, setShowAddDataset] = useState(false);
   const [editingDataset, setEditingDataset] = useState(null);
   const [viewingDatasetId, setViewingDatasetId] = useState(null);
+
+  const lastDatasetsListNavNonceRef = useRef(datasetsListNavNonce);
+  useEffect(() => {
+    if (datasetsListNavNonce === lastDatasetsListNavNonceRef.current) return;
+    lastDatasetsListNavNonceRef.current = datasetsListNavNonce;
+    setShowAddDataset(false);
+    setEditingDataset(null);
+    setViewingDatasetId(null);
+  }, [datasetsListNavNonce]);
 
   const viewingDataset = useMemo(
     () =>
@@ -71,6 +80,11 @@ export default function Datasets() {
     setShowAddDataset(false);
     setEditingDataset(null);
     setViewingDatasetId(dataset?.id || null);
+  };
+
+  const handleDatasetCopied = async (newId) => {
+    await refetch();
+    if (newId) setViewingDatasetId(newId);
   };
 
   if (loading) {
@@ -150,7 +164,12 @@ export default function Datasets() {
           refetchDatasources={refetch}
         />
       ) : viewingDataset ? (
-        <DatasetView dataset={viewingDataset} onSaved={refetch} />
+        <DatasetView
+          dataset={viewingDataset}
+          user={user}
+          onSaved={refetch}
+          onCopied={handleDatasetCopied}
+        />
       ) : null}
     </StyledDatasetsRoot>
   );

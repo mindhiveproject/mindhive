@@ -26,6 +26,7 @@ export default function ProcessMain({
   variables,
   settings,
   updateDataset,
+  readOnly = false,
 }) {
   const { filter } = settings;
 
@@ -40,7 +41,7 @@ export default function ProcessMain({
   const colDefs = variables.map((variable) => ({
     field: variable?.field,
     hide: variable?.hide,
-    editable: variable?.editable,
+    editable: readOnly ? false : variable?.editable,
     headerName: variable?.displayName || variable?.field,
     headerTooltip: variable?.displayName || variable?.field,
     tooltipComponent: "customTooltip",
@@ -70,6 +71,7 @@ export default function ProcessMain({
   const paginationPageSizeSelector = [50, 100, 200, 500, 1000];
 
   const onFilterChanged = (params) => {
+    if (readOnly) return;
     const allFilterModels = params.api.getFilterModel();
     const updatedSettings = {
       ...settings,

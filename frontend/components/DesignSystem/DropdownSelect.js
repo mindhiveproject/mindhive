@@ -1,10 +1,16 @@
 "use client";
 
-import { useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useReducer } from "react";
 import { createPortal } from "react-dom";
 import useTranslation from "next-translate/useTranslation";
 
 import InfoTooltip from "./InfoTooltip";
+import {
+  clampDropdownPanelLeft,
+  computeDropdownVerticalPlacement,
+  DROPDOWN_VIEWPORT_GAP,
+  getIdealMaxPanelHeight,
+} from "./dropdownViewportPlacement";
 
 const CHEVRON = (
   <svg
@@ -118,6 +124,7 @@ function getOptionLabelString(opt) {
  * @param {boolean} [searchableMultiple=true] - When `multiple`, show a type-to-filter field above the options (default true).
  * @param {boolean} [searchableSingle=false] - When not `multiple`, show a type-to-filter field above the options (default false).
  * @param {React.ReactNode} [icon] - Replaces the default chevron after the label. Omit for built-in chevron; pass `null` to show no trailing icon.
+ * @param {'auto'|'below'|'above'} [placement='auto'] - Vertical placement; `auto` flips when there is not enough space below.
  */
 export default function DropdownSelect({
   value,
@@ -131,11 +138,13 @@ export default function DropdownSelect({
   searchableMultiple = true,
   searchableSingle = false,
   icon,
+  placement = "auto",
 }) {
   const { t } = useTranslation("common");
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [rect, setRect] = useState(null);
+  const [panelLayout, setPanelLayout] = useState(null);
+  const [panelLayoutTick, bumpPanelLayout] = useReducer((n) => n + 1, 0);
   const [isTriggerLabelTruncated, setIsTriggerLabelTruncated] = useState(false);
   const triggerRef = useRef(null);
   const panelRef = useRef(null);
@@ -180,12 +189,52 @@ export default function DropdownSelect({
   }, [searchEnabled, options, searchQuery]);
 
   useLayoutEffect(() => {
-    if (open && triggerRef.current) {
-      setRect(triggerRef.current.getBoundingClientRect());
-    } else {
-      setRect(null);
+    if (!open) {
+      setPanelLayout(null);
+      return;
     }
-  }, [open, displayLabel, value]);
+    const tr = triggerRef.current?.getBoundingClientRect();
+    const panel = panelRef.current;
+    if (!tr || !panel) return;
+
+    const innerH = window.innerHeight;
+    const innerW = window.innerWidth;
+    const measured = panel.offsetHeight;
+    const { top, maxHeight } = computeDropdownVerticalPlacement(
+      tr,
+      innerH,
+      measured,
+      placement,
+    );
+    const panelWidth = Math.max(tr.width, 200);
+    const left = clampDropdownPanelLeft(tr.left, panelWidth, innerW);
+    setPanelLayout({ top, maxHeight, left, width: panelWidth });
+  }, [
+    open,
+    displayLabel,
+    value,
+    filteredOptions.length,
+    searchEnabled,
+    searchQuery,
+    placement,
+    panelLayoutTick,
+  ]);
+
+  useEffect(() => {
+    if (!open) return;
+    let raf = 0;
+    const onViewportChange = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => bumpPanelLayout());
+    };
+    window.addEventListener("resize", onViewportChange);
+    window.addEventListener("scroll", onViewportChange, true);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onViewportChange);
+      window.removeEventListener("scroll", onViewportChange, true);
+    };
+  }, [open]);
 
   useEffect(() => {
     if (open && searchEnabled) {
@@ -373,17 +422,29 @@ export default function DropdownSelect({
         buttonNode
       )}
       {open &&
-        rect &&
-        createPortal(
+        (() => {
+          const tr = triggerRef.current?.getBoundingClientRect();
+          if (!tr) return null;
+          const innerH = window.innerHeight;
+          const innerW = window.innerWidth;
+          const panelWidth = Math.max(tr.width, 200);
+          const provisional = {
+            top: tr.bottom + DROPDOWN_VIEWPORT_GAP,
+            maxHeight: getIdealMaxPanelHeight(innerH),
+            left: clampDropdownPanelLeft(tr.left, panelWidth, innerW),
+            width: panelWidth,
+          };
+          const fixed = panelLayout ?? provisional;
+          return createPortal(
           <div
             ref={panelRef}
             style={{
               ...PANEL_STYLE,
               position: "fixed",
-              top: rect.bottom + 4,
-              left: rect.left,
-              width: Math.max(rect.width, 200),
-              maxHeight: "min(320px, 50vh)",
+              top: fixed.top,
+              left: fixed.left,
+              width: fixed.width,
+              maxHeight: fixed.maxHeight,
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
@@ -400,8 +461,8 @@ export default function DropdownSelect({
                     e.stopPropagation();
                   }
                 }}
-                placeholder={t("dropdownSelect.searchPlaceholder", "Search options")}
-                aria-label={t("dropdownSelect.searchPlaceholder", "Search options")}
+                placeholder={t("dropdownSelect.searchPlaceholder", {}, { default: "Search options" })}
+                aria-label={t("dropdownSelect.searchPlaceholder", {}, { default: "Search options" })}
                 autoComplete="off"
                 style={SEARCH_INPUT_STYLE}
               />
@@ -424,7 +485,7 @@ export default function DropdownSelect({
                     fontWeight: 400,
                   }}
                 >
-                  {t("dropdownSelect.noMatchingOptions", "No matching options")}
+                  {t("dropdownSelect.noMatchingOptions", {}, { default: "No matching options" })}
                 </div>
               ) : (
                 filteredOptions.map((opt) => {
@@ -458,7 +519,8 @@ export default function DropdownSelect({
             </div>
           </div>,
           document.body
-        )}
+          );
+        })()}
     </div>
   );
 }

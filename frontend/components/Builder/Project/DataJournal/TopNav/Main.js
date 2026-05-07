@@ -39,6 +39,7 @@ export default function TopNavigation() {
   const {
     area,
     setArea,
+    navigateToDatasets,
     selectedJournal: journal,
     setSelectedJournal,
     workspace,
@@ -190,7 +191,7 @@ export default function TopNavigation() {
           className="leftNavChip"
           label={t("dataJournal.topNav.datasets", "Datasets")}
           selected={area === "datasets"}
-          onClick={() => setArea("datasets")}
+          onClick={navigateToDatasets}
           shape="square"
           style={{
             border: "none",

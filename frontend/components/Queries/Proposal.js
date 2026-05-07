@@ -1,5 +1,22 @@
 import gql from "graphql-tag";
 
+/** Author + collaborators for Data Journal dataset sharing preview */
+export const PROPOSAL_BOARD_SHARING = gql`
+  query PROPOSAL_BOARD_SHARING($id: ID!) {
+    proposalBoard(where: { id: $id }) {
+      id
+      author {
+        id
+        username
+      }
+      collaborators {
+        id
+        username
+      }
+    }
+  }
+`;
+
 // get proposal templates
 export const PROPOSAL_TEMPLATES_QUERY = gql`
   query PROPOSAL_TEMPLATES_QUERY {

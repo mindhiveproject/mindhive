@@ -3,13 +3,17 @@ import { createPortal } from "react-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
-import { buildDatasourcesWhere } from "../../../../../lib/dataJournalDatasources";
+import {
+  buildDatasourcesWhere,
+  canAttachDatasourceToJournal,
+} from "../../../../../lib/dataJournalDatasources";
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
 import { UPDATE_VIZPART } from "../../../../Mutations/VizPart";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 
 import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
 
+import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
 import {
   StyledModalOverlay,
   StyledModalContent,
@@ -82,8 +86,21 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
 
   const datasources = data?.datasources || [];
 
-  const handleToggleDatasource = (datasourceId, event) => {
-    // Prevent double-toggling when clicking the checkbox
+  const attachDisabledHint = t(
+    "dataJournal.sideNav.dataSourceModal.attachDisabledNotOwner",
+    {},
+    {
+      default:
+        "You can only attach datasets you own or may edit as a collaborator.",
+    },
+  );
+
+  const canAttach = (datasource) =>
+    canAttachDatasourceToJournal(datasource, user?.id);
+
+  const handleToggleDatasource = (datasourceId, datasource, event) => {
+    const already = selectedDatasources.includes(datasourceId);
+    if (!canAttach(datasource) && !already) return;
     if (event.target.type !== "checkbox") {
       setSelectedDatasources((prev) =>
         prev.includes(datasourceId)
@@ -93,9 +110,10 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
     }
   };
 
-  const handleCheckboxChange = (datasourceId, event) => {
-    // Stop propagation to prevent card click handler from firing
+  const handleCheckboxChange = (datasourceId, datasource, event) => {
     event.stopPropagation();
+    const already = selectedDatasources.includes(datasourceId);
+    if (!canAttach(datasource) && !already) return;
     setSelectedDatasources((prev) =>
       prev.includes(datasourceId)
         ? prev.filter((id) => id !== datasourceId)
@@ -200,19 +218,30 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
                       default: "Never",
                     });
 
-                return (
+                const attachOk = canAttach(datasource);
+                const row = (
                   <StyledDataSourceOption
                     key={datasource.id}
                     className={isSelected ? "selected" : ""}
+                    style={
+                      !attachOk
+                        ? { opacity: 0.55, cursor: "not-allowed" }
+                        : undefined
+                    }
                     onClick={(event) =>
-                      handleToggleDatasource(datasource.id, event)
+                      handleToggleDatasource(datasource.id, datasource, event)
                     }
                   >
                     <input
                       type="checkbox"
                       checked={isSelected}
+                      disabled={!attachOk && !isSelected}
                       onChange={(event) =>
-                        handleCheckboxChange(datasource.id, event)
+                        handleCheckboxChange(
+                          datasource.id,
+                          datasource,
+                          event,
+                        )
                       }
                     />
                     <div className="datasource-details">
@@ -242,6 +271,19 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
                     </div>
                   </StyledDataSourceOption>
                 );
+                if (!attachOk && !isSelected) {
+                  return (
+                    <InfoTooltip
+                      key={datasource.id}
+                      content={attachDisabledHint}
+                      position="topLeft"
+                      portal
+                    >
+                      <span style={{ display: "block" }}>{row}</span>
+                    </InfoTooltip>
+                  );
+                }
+                return row;
               })}
             </StyledDataSourceList>
           )}

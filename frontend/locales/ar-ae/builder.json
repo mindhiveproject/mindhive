@@ -293,14 +293,16 @@
 		"datasetMenu": {
 			"actions": {
 				"addColumn": "أضف عمودًا",
+				"copying": "جارٍ النسخ...",
 				"download": "تحميل",
 				"hideAll": "إخفاء الكل",
-				"hideAllVariables": "",
+				"hideAllVariables": "إخفاء جميع المتغيرات",
 				"returnToNavigation": "العودة إلى التنقل",
-				"save": "",
-				"saving": "",
+				"save": "يحفظ",
+				"saveAsCopy": "حفظ كنسخة…",
+				"saving": "إنقاذ...",
 				"showAll": "عرض الكل",
-				"showAllVariables": ""
+				"showAllVariables": "عرض جميع المتغيرات"
 			},
 			"addColumnModal": {
 				"aria": {
@@ -331,6 +333,10 @@
 				"submit": "إضافة عمود",
 				"title": "أضف عمودًا"
 			},
+			"alerts": {
+				"saveError": "حدث خطأ: {{statusText}}",
+				"updated": "تم تحديث البيانات"
+			},
 			"alt": {
 				"addColumn": "أضف عمودًا",
 				"database": "قاعدة البيانات",
@@ -339,12 +345,13 @@
 			"downloadPrompt": "قم بتسمية ملف CSV الذي ستنزله.\nلا داعي لإضافة \".csv\"، سنقوم بذلك تلقائيًا!",
 			"header": {
 				"activeData": "البيانات النشطة",
-				"untitledDataset": ""
+				"untitledDataset": "مجموعة بيانات بدون عنوان"
 			},
 			"meta": {
-				"dataOrigin": "",
-				"lastUpdated": "",
-				"neverUpdated": ""
+				"dataOrigin": "الأصل: {{origin}}",
+				"lastUpdated": "تم التحديث {{when}}",
+				"neverUpdated": "لم يتم تحديثها مطلقا",
+				"sharedWithCount": "تمت المشاركة: {{count}}"
 			},
 			"operations": {
 				"computeNew": "احسب متغيرًا جديدًا",
@@ -352,21 +359,30 @@
 				"recodeVariable": "إعادة ترميز متغير",
 				"reverseScore": "النتيجة المعكوسة"
 			},
+			"readOnlyToolbarHint": "افتح هذه المدونة من مساحة العمل لتحرير أو نسخ مجموعة البيانات هذه.",
 			"sections": {
 				"generalVariables": "المتغيرات العامة",
 				"taskVariables": "متغيرات المهمة",
 				"userVariables": "متغيرات المستخدم"
 			},
 			"variable": {
-				"delete": "",
-				"hideAria": "",
-				"rename": "",
-				"renamePrompt": "",
-				"showAria": ""
+				"delete": "يمسح",
+				"hideAria": "إخفاء {{name}}",
+				"rename": "إعادة تسمية",
+				"renamePrompt": "الرجاء إدخال الاسم الجديد:",
+				"showAria": "عرض {{name}}"
 			}
 		},
 		"datasets": {
 			"addDataset": "إضافة مجموعة بيانات",
+			"copyConfirm": {
+				"confirm": "حفظ نسخة",
+				"message": "سيتم إنشاء مجموعة بيانات جديدة خاصة بك تتضمن التغييرات التي أجريتها، وسيتم ربطها بهذه المدونة. يمكنك تحديد ما إذا كان بإمكان المتعاونين تعديل النسخة."
+			},
+			"copyOnSave": {
+				"successAlert": "لقد أنشأنا نسخةً تملكها. أنت الآن تقوم بتحرير هذه النسخة."
+			},
+			"copyTitlePrefix": "نسخة من",
 			"deleteConfirm": "هل أنت متأكد من رغبتك في حذف مجموعة البيانات هذه؟",
 			"deleteDataset": "حذف مجموعة البيانات",
 			"deleteDisabledNotOwner": "لا يمكن حذف هذه المجموعة من البيانات إلا منشئها.",
@@ -392,12 +408,28 @@
 			"meta": {
 				"byAuthor": "بواسطة {{author}}",
 				"byYou": "بواسطتك",
-				"dataOrigin": "",
+				"dataOrigin": "الأصل: {{origin}}",
 				"lastUpdated": "آخر تحديث {{date}}",
 				"lastUpdatedNever": "أبدًا",
 				"unknownAuthor": "غير معروف"
 			},
-			"originTooltip": "",
+			"originTooltip": "كيف تم إنشاء مجموعة البيانات هذه.",
+			"renameDisabledNotOwner": "لا يمكن إعادة تسمية هذه المجموعة من البيانات إلا منشئها.",
+			"sharing": {
+				"allowEditingLabel": "السماح للمتعاونين في المجلة بتعديل مجموعة البيانات هذه",
+				"journalOnlyTooltip": "سيتم ربط المتعاونين من دراسة أو مشروع هذه المجلة عند إنشاء مجموعة البيانات.",
+				"roles": {
+					"projectAuthor": "مؤلف المشروع",
+					"projectCollaborator": "متعاون في المشروع",
+					"studyAuthor": "مؤلف الدراسة",
+					"studyCollaborator": "المتعاون في الدراسة"
+				},
+				"rolesSeparator": "،",
+				"summary": "ستتم مشاركة مجموعة البيانات هذه مع {{count}} أشخاص مرتبطين بدراسة أو مشروع هذه المجلة.",
+				"summaryJournalOnly": "سيتم ربط مجموعة البيانات هذه بمجلتك الحالية؛ وقد تتم إضافة المتعاونين تلقائيًا.",
+				"tooltipRow": "{{name}} — {{roles}}",
+				"whoTooltipAria": "من سيحصل على حق الوصول؟"
+			},
 			"untitled": "مجموعة بيانات بلا عنوان"
 		},
 		"graph": {
@@ -709,6 +741,7 @@
 			},
 			"dataSourceLabel": "مصادر البيانات",
 			"dataSourceModal": {
+				"attachDisabledNotOwner": "لا يمكنك إرفاق سوى مجموعات البيانات التي تملكها أو التي يمكنك تعديلها بصفتك متعاونًا.",
 				"byAuthor": "بواسطة {{author}}",
 				"cancel": "يلغي",
 				"closeModal": "يغلق",
@@ -767,6 +800,8 @@
 			"axes": {
 				"default": {
 					"columnToSummarize": "عمود للتلخيص",
+					"columnToSummarizeQual": "عمود نوعي لتلخيص",
+					"columnToSummarizeQuant": "عمود كمي لتلخيص البيانات",
 					"dataLayout": {
 						"currentlyPerforming": "أقوم حاليًا بتلخيص ما يلي:",
 						"long": {
@@ -789,10 +824,12 @@
 					"groupingVariable": "متغير التجميع",
 					"qualOption": {
 						"description": "تُعرض البيانات النوعية في عمود مليء بالتصنيفات. على سبيل المثال، المجموعة التجريبية التي ينتمي إليها الشخص، أو إجابته على سؤال متعدد الخيارات.",
+						"panelTitle": "البيانات النوعية",
 						"title": "التبديل إلى البيانات النوعية"
 					},
 					"quantOption": {
 						"description": "تُعرض البيانات الكمية في عمود مليء بالقيم العددية. على سبيل المثال، عمر المشارك أو نتيجته في استطلاع رأي.",
+						"panelTitle": "البيانات الكمية",
 						"title": "التبديل إلى البيانات الكمية"
 					},
 					"resources": {
@@ -802,6 +839,11 @@
 						"slidesLink": "انقر هنا للاطلاع على شرائح المحاضرة",
 						"tableWhatAlt": "رابط خارجي",
 						"tableWhatTitle": "ما هي الطاولة؟"
+					},
+					"summaryMethod": {
+						"panelAriaLabel": "نوع البيانات: قيم الأعمدة الكمية أو النوعية",
+						"sectionLabel": "نوع البيانات",
+						"toggleAriaLabel": "إظهار أو إخفاء خيارات نوع البيانات"
 					},
 					"valueMode": {
 						"qualLabel": "نوعي",
