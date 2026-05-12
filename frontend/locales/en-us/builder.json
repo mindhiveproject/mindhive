@@ -783,6 +783,7 @@
 			"manageDatasets": "Manage datasets",
 			"noDataSources": "No data sources",
 			"noJournalsYet": "It looks like you still don't have any data journals!",
+			"openComponentEditor": "Edit {{title}} on canvas",
 			"renameWorkspace": "Rename workspace",
 			"renameWorkspaceModalTitle": "Rename workspace",
 			"renameWorkspaceSaving": "Saving…",

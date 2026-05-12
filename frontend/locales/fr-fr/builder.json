@@ -783,6 +783,7 @@
 			"manageDatasets": "Gérer les ensembles de données",
 			"noDataSources": "Aucune source de données",
 			"noJournalsYet": "Il semblerait que vous n'ayez toujours pas de journaux de données !",
+			"openComponentEditor": "Modifier {{title}} sur le canevas",
 			"renameWorkspace": "Renommer l'espace de travail",
 			"renameWorkspaceModalTitle": "Renommer l'espace de travail",
 			"renameWorkspaceSaving": "Économie...",

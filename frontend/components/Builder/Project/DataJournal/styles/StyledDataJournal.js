@@ -360,6 +360,37 @@ export const StyledSidebar = styled.div`
       grid-template-columns: auto 1fr;
       grid-gap: 8px;
       align-items: center;
+      width: 100%;
+      padding: 4px 8px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+
+      .componentTitle {
+        min-width: 0;
+        overflow: visible;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &:hover {
+        background-color: #e8eeec;
+      }
+
+      &:focus-visible {
+        outline: 2px solid #5b8def;
+        outline-offset: 2px;
+      }
+
+      &.component--active {
+        background-color: #e8eeec;
+        font-weight: 600;
+      }
     }
   }
   /* Change the default styles of the Dropdown Menu */

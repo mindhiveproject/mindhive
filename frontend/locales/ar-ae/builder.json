@@ -783,6 +783,7 @@
 			"manageDatasets": "إدارة مجموعات البيانات",
 			"noDataSources": "لا توجد مصادر بيانات",
 			"noJournalsYet": "يبدو أنك لا تزال لا تملك أي سجلات بيانات!",
+			"openComponentEditor": "قم بتحرير {{title}} على اللوحة القماشية",
 			"renameWorkspace": "إعادة تسمية مساحة العمل",
 			"renameWorkspaceModalTitle": "إعادة تسمية مساحة العمل",
 			"renameWorkspaceSaving": "إنقاذ...",

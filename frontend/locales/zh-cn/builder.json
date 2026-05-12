@@ -783,6 +783,7 @@
 			"manageDatasets": "管理数据集",
 			"noDataSources": "无数据来源",
 			"noJournalsYet": "看来你仍然没有任何数据日志！",
+			"openComponentEditor": "在画布上编辑 {{title}} ",
 			"renameWorkspace": "重命名工作区",
 			"renameWorkspaceModalTitle": "重命名工作区",
 			"renameWorkspaceSaving": "保存...",

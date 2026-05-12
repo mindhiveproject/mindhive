@@ -783,6 +783,7 @@
 			"manageDatasets": "Gestionar conjuntos de datos",
 			"noDataSources": "No hay fuentes de datos",
 			"noJournalsYet": "¡Parece que todavía no tienes ningún registro de datos!",
+			"openComponentEditor": "Editar {{title}} en el lienzo",
 			"renameWorkspace": "Cambiar el nombre del espacio de trabajo",
 			"renameWorkspaceModalTitle": "Cambiar el nombre del espacio de trabajo",
 			"renameWorkspaceSaving": "Ahorro...",

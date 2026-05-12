@@ -783,6 +783,7 @@
 			"manageDatasets": "Управление наборами данных",
 			"noDataSources": "Источники данных отсутствуют.",
 			"noJournalsYet": "Похоже, у вас до сих пор нет журналов данных!",
+			"openComponentEditor": "Редактировать {{title}} на холсте",
 			"renameWorkspace": "Переименовать рабочую область",
 			"renameWorkspaceModalTitle": "Переименовать рабочую область",
 			"renameWorkspaceSaving": "Сохранение...",

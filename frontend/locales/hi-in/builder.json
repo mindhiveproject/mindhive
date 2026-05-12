@@ -783,6 +783,7 @@
 			"manageDatasets": "डेटासेट प्रबंधित करें",
 			"noDataSources": "कोई डेटा स्रोत नहीं",
 			"noJournalsYet": "ऐसा लगता है कि आपके पास अभी भी कोई डेटा जर्नल नहीं है!",
+			"openComponentEditor": "कैनवास पर {{title}} संपादित करें",
 			"renameWorkspace": "कार्यक्षेत्र का नाम बदलें",
 			"renameWorkspaceModalTitle": "कार्यक्षेत्र का नाम बदलें",
 			"renameWorkspaceSaving": "सहेजा जा रहा है...",

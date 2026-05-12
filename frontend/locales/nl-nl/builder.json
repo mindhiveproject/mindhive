@@ -783,6 +783,7 @@
 			"manageDatasets": "Gegevenssets beheren",
 			"noDataSources": "Geen gegevensbronnen",
 			"noJournalsYet": "Het lijkt erop dat je nog steeds geen datalogboeken hebt!",
+			"openComponentEditor": "Bewerk {{title}} op canvas",
 			"renameWorkspace": "Werkruimte hernoemen",
 			"renameWorkspaceModalTitle": "Werkruimte hernoemen",
 			"renameWorkspaceSaving": "Besparing...",
