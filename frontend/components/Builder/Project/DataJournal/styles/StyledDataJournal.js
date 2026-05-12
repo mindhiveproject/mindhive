@@ -576,7 +576,7 @@ export const StyledDataComponent = styled.div`
 export const StyledComponentEditor = styled.div`
   display: grid;
   align-content: baseline;
-  grid-gap: 10px;
+  // grid-gap: 10px;
   margin: 0;
   width: 100%;
   max-width: 100%;
@@ -595,9 +595,10 @@ export const StyledComponentEditor = styled.div`
     max-width: 100%;
     min-width: 0;
     background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e6e6e6;
-    margin: 0 8px;
+    // border-radius: 12px;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+    margin: 0;
     padding: 8px;
     overflow-x: visible;
     overflow-y: visible;
@@ -648,6 +649,10 @@ export const StyledComponentEditor = styled.div`
       font-weight: 400;
       font-style: italic;
     }
+  }
+  .datasetSourceSelect {
+    padding: 12px 12px;
+    box-sizing: border-box;
   }
   .editor-header {
     display: flex;
@@ -1470,6 +1475,7 @@ export const StyledDataWorkspace = styled.div`
       display: flex;
       flex-wrap: wrap;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       width: 100%;
       max-width: 100%;
@@ -1518,7 +1524,6 @@ export const StyledDataWorkspace = styled.div`
       min-width: 0;
       max-width: 100%;
       box-sizing: border-box;
-      padding: 8px;
       background: white;
       border-radius: 0 0 10px 10px;
       .styleLayoutContainer {

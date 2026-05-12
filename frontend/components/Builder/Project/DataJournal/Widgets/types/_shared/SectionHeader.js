@@ -1,6 +1,7 @@
 "use client";
 
 import InfoTooltip from "../../../../../../DesignSystem/InfoTooltip";
+import useTranslation from "next-translate/useTranslation";
 
 const TOOLTIP_STYLE = {
   maxWidth: "min(calc(100vw - 32px), 360px)",
@@ -9,6 +10,7 @@ const TOOLTIP_STYLE = {
   fontSize: "14px",
   lineHeight: "20px",
 };
+
 
 /**
  * Data journal widget editor section title row with optional resources/help tooltip (narrow sidebar friendly).
@@ -22,9 +24,12 @@ export default function SectionHeader({
   helpAction,
   helpAriaLabel,
 }) {
+  const { t } = useTranslation();
+
   const hasIcon = Boolean(iconSrc);
   const hasHelp = helpContent != null || helpAction != null;
   const useInteractiveHelp = helpAction != null;
+
 
   const gridCols =
     hasIcon && hasHelp
@@ -48,9 +53,9 @@ export default function SectionHeader({
 
   return (
     <div className="graphEditorSectionHeader" style={headerRowStyle}>
-      {hasIcon ? (
+      {/* {hasIcon ?  (
         <img src={iconSrc} alt={iconAlt} style={{ display: "block", flexShrink: 0 }} />
-      ) : null}
+      ) : null} */}
       <div style={{ minWidth: 0, overflowWrap: "break-word" }}>{title}</div>
       {hasHelp ? (
         <InfoTooltip

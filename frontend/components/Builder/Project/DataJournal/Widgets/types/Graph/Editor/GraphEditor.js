@@ -76,14 +76,6 @@ export default function GraphEditor({ content, onChange, sectionId }) {
       content: (
         <div className="tabContent">
           <div className="styleLayoutContainer">
-            <h3>
-              {t("dataJournal.graph.editor.styleLayout.title", {}, { default: "Style & Layout Options" })}
-            </h3>
-            <p>
-              {t("dataJournal.graph.editor.styleLayout.description", {}, {
-                default: "Customize the appearance and layout of the graph.",
-              })}
-            </p>
             <OptionsComponent
               sectionId={sectionId}
               selectors={selectors}

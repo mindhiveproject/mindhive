@@ -38,10 +38,10 @@ Group = js.document.getElementById("groupVariable-${sectionId}").value`;
 
   return (
     <div className="selectors">
-      <div className="header">
+      {/* <div className="header">
         <img src={`/assets/icons/visualize/axes.svg`} />
         <div>Axes</div>
-      </div>
+      </div> */}
       <SelectOne
         sectionId={sectionId}
         options={options}
