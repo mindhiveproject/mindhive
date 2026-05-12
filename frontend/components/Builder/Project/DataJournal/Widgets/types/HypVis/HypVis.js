@@ -5,7 +5,7 @@ import Render from "./Render";
 import { useDataJournal } from "../../../Context/DataJournalContext"; // adjust path
 
 export default function HypVis({ content, sectionId, onFigureReadyChange }) {
-  const { pyodide, data } = useDataJournal();
+  const { pyodide } = useDataJournal();
 
   const code = content?.code || "";
 
@@ -22,7 +22,6 @@ export default function HypVis({ content, sectionId, onFigureReadyChange }) {
   return (
     <div style={{ height: "100%", width: "100%" }}>
       <Render
-        data={data}
         code={code}
         pyodide={pyodide}
         sectionId={sectionId}

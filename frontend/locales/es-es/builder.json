@@ -237,6 +237,12 @@
 		"componentEditor": {
 			"close": "Cerca",
 			"componentName": "Nombre del componente",
+			"datasetSource": {
+				"ariaLabel": "Seleccione el conjunto de datos",
+				"label": "Conjunto de datos",
+				"optionFallback": "{{origin}} · {{idSuffix}}",
+				"placeholder": "Seleccione un conjunto de datos"
+			},
 			"delete": "BORRAR",
 			"deleteConfirm": "¿Está seguro de que desea eliminar este componente?",
 			"editComponent": "Editar componente",
@@ -392,8 +398,8 @@
 			"editLabel": "Editar conjunto de datos",
 			"errorLoading": "Error: {{message}}",
 			"inclusion": {
-				"journalLabel": "",
-				"journalTooltip": "",
+				"journalLabel": "Esta revista",
+				"journalTooltip": "Este conjunto de datos está vinculado a un Data Journal de su propiedad.",
 				"otherLabel": "También en esta lista",
 				"otherTooltip": "Este conjunto de datos coincidió con el filtro de la lista de otra manera (por ejemplo, una plantilla pública). Es posible que no esté almacenado en este proyecto o estudio.",
 				"viaPartLabel": "Enlazado desde una parte",

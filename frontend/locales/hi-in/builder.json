@@ -237,6 +237,12 @@
 		"componentEditor": {
 			"close": "बंद करना",
 			"componentName": "घटक का नाम",
+			"datasetSource": {
+				"ariaLabel": "डेटासेट चुनें",
+				"label": "डेटासेट",
+				"optionFallback": "{{origin}} · {{idSuffix}}",
+				"placeholder": "एक डेटासेट का चयन करें"
+			},
 			"delete": "मिटाना",
 			"deleteConfirm": "क्या आप वाकई इस कंपोनेंट को डिलीट करना चाहते हैं?",
 			"editComponent": "घटक संपादित करें",
@@ -392,8 +398,8 @@
 			"editLabel": "डेटासेट संपादित करें",
 			"errorLoading": "त्रुटि: {{message}}",
 			"inclusion": {
-				"journalLabel": "",
-				"journalTooltip": "",
+				"journalLabel": "यह पत्रिका",
+				"journalTooltip": "यह डेटासेट आपके स्वामित्व वाले डेटा जर्नल से जुड़ा हुआ है।",
 				"otherLabel": "इस सूची में भी शामिल हैं",
 				"otherTooltip": "यह डेटासेट सूची फ़िल्टर से किसी अन्य तरीके से मेल खाता है (उदाहरण के लिए एक सार्वजनिक टेम्पलेट)। यह इस परियोजना या अध्ययन में संग्रहीत नहीं हो सकता है।",
 				"viaPartLabel": "एक भाग से जुड़ा हुआ",

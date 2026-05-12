@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { Message, Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
+import { registerJsWorkspaceFromSlice, enqueueJsWorkspaceTask } from "../../../Helpers/pyodideWorkspaceRegistration";
+import useResolvedJournalSlice from "../../../Hooks/useResolvedJournalSlice";
+
 const HypVisFigure = styled.div`
   width: 100%;
   height: 100%;
@@ -35,6 +38,7 @@ export default function Render({
   onFigureReadyChange,
 }) {
   const { t } = useTranslation("builder");
+  const { slice, sliceReady } = useResolvedJournalSlice(content);
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -59,7 +63,14 @@ export default function Render({
 
   useEffect(() => {
     async function executeHypVis() {
-      if (!pyodide || !code?.trim() || !content?.selectors || !sectionId) {
+      if (
+        !pyodide ||
+        !code?.trim() ||
+        !content?.selectors ||
+        !sectionId ||
+        !sliceReady ||
+        !slice
+      ) {
         setResult(null);
         setIsRunning(false);
         onFigureReadyChange?.(false);
@@ -158,7 +169,10 @@ result = {
 json.dumps(to_native(result))
         `.trim();
 
-        const returned = await pyodide.runPythonAsync(pythonCode);
+        const returned = await enqueueJsWorkspaceTask(async () => {
+          await registerJsWorkspaceFromSlice(pyodide, slice);
+          return pyodide.runPythonAsync(pythonCode);
+        });
 
         if (typeof returned === "string" && returned.trim().startsWith("{")) {
           const parsed = JSON.parse(returned);
@@ -180,7 +194,17 @@ json.dumps(to_native(result))
     }
 
     executeHypVis();
-  }, [pyodide, code, content?.selectors, sectionId, content?.type, onFigureReadyChange]);
+  }, [
+    pyodide,
+    code,
+    content?.selectors,
+    sectionId,
+    content?.type,
+    content?.datasourceId,
+    onFigureReadyChange,
+    slice,
+    sliceReady,
+  ]);
 
   // ── Rendering ─────────────────────────────────────────────────────────────
   if (isRunning) {
@@ -215,7 +239,7 @@ json.dumps(to_native(result))
           textAlign: "center",
           color: "#4b5563",
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           flex: 1,
           minHeight: 0,
           gap: "0.5rem",

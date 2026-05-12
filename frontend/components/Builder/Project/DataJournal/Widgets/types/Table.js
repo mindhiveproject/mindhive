@@ -1,10 +1,16 @@
 import DataTable from "react-data-table-component";
 import filterData from "../../Helpers/Filter";
 
-import { useDataJournal } from "../../Context/DataJournalContext";
+import useResolvedJournalSlice from "../../Hooks/useResolvedJournalSlice";
 
 export default function Table({ content }) {
-  const { data, variables, settings } = useDataJournal();
+  const { slice, sliceReady } = useResolvedJournalSlice(content);
+  const data = sliceReady && slice ? (Array.isArray(slice.data) ? slice.data : []) : [];
+  const variables = sliceReady && slice ? (Array.isArray(slice.variables) ? slice.variables : []) : [];
+  const settings =
+    sliceReady && slice?.settings && typeof slice.settings === "object"
+      ? slice.settings
+      : {};
 
   const datasetVisibleColumns = variables.filter((column) => !column?.hide);
   const selectedVisibleColumns = content?.selectors?.visibleColumns;

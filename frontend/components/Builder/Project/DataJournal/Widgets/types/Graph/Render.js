@@ -4,7 +4,14 @@ import dynamic from "next/dynamic";
 import useTranslation from "next-translate/useTranslation";
 
 import JustOneSecondNotice from "../../../../../../DesignSystem/JustOneSecondNotice";
+import {
+  selectorListForPyodide,
+  selectorValueForPyodide,
+} from "../../../Helpers/selectorValueForPyodide";
+import { registerJsWorkspaceFromSlice, enqueueJsWorkspaceTask } from "../../../Helpers/pyodideWorkspaceRegistration";
+import useResolvedJournalSlice from "../../../Hooks/useResolvedJournalSlice";
 import { useWidgetSize } from "../../WidgetSizeContext";
+import { DATAFRAME_SAFETY_PYTHON } from "../_shared/pyodideDataframeSafety";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
@@ -16,6 +23,8 @@ export default function Render({
   onFigureReadyChange,
 }) {
   const { t } = useTranslation("builder");
+  const { slice, sliceReady } = useResolvedJournalSlice(content);
+  const djVariables = Array.isArray(slice?.variables) ? slice.variables : [];
   const { width, height, version } = useWidgetSize();
   const graphDivRef = useRef(null);
   const [figJson, setFigJson] = useState(null);
@@ -31,9 +40,55 @@ export default function Render({
     return "/assets/dataviz/componentPanel/barChart.svg";
   };
 
+  const normalizeGraphSelectors = (selectors, type) => {
+    const normalized = { ...(selectors || {}) };
+
+    if (type === "scatterPlot") {
+      const x = normalized.xVariable == null ? "" : String(normalized.xVariable).trim();
+      const y = normalized.yVariable == null ? "" : String(normalized.yVariable).trim();
+      const group =
+        normalized.groupVariable == null
+          ? ""
+          : String(normalized.groupVariable).trim();
+
+      normalized.xVariable = x;
+      normalized.yVariable = y && y !== x ? y : "";
+      normalized.groupVariable = group;
+    }
+
+    if (type === "barGraph" && Array.isArray(normalized.colToPlot)) {
+      const seen = new Set();
+      normalized.colToPlot = normalized.colToPlot.filter((value) => {
+        const next = value == null ? "" : String(value).trim();
+        if (!next || seen.has(next)) return false;
+        seen.add(next);
+        return true;
+      });
+    }
+
+    if (type === "histogram" && Array.isArray(normalized.X)) {
+      const seen = new Set();
+      normalized.X = normalized.X.filter((value) => {
+        const next = value == null ? "" : String(value).trim();
+        if (!next || seen.has(next)) return false;
+        seen.add(next);
+        return true;
+      });
+    }
+
+    return normalized;
+  };
+
   useEffect(() => {
     async function renderGraph() {
-      if (!pyodide || !code || !content?.selectors || !sectionId) {
+      if (
+        !pyodide ||
+        !code ||
+        !content?.selectors ||
+        !sectionId ||
+        !sliceReady ||
+        !slice
+      ) {
         setFigJson(null);
         setIsRunning(false);
         onFigureReadyChange?.(false);
@@ -43,8 +98,12 @@ export default function Render({
       setIsRunning(true);
       onFigureReadyChange?.(false);
 
-      const s = content.selectors;
+      const s = normalizeGraphSelectors(content.selectors, content.type);
       const type = content.type;
+
+      const pyCol = (raw) => selectorValueForPyodide(raw, djVariables);
+      const pyColsJoined = (arrOrCsv) =>
+        selectorListForPyodide(arrOrCsv, djVariables).join(",");
 
       // ── Very defensive escaping for Python string literals ──────────────────
       const escaped = (val) => {
@@ -68,9 +127,9 @@ export default function Render({
           return;
         }
         variablesCode = `
-X = "${escaped(s.xVariable)}"
-Y = "${escaped(s.yVariable)}"
-Group = "${escaped(s.groupVariable || "")}"
+X = "${escaped(pyCol(s.xVariable))}"
+Y = "${escaped(pyCol(s.yVariable))}"
+Group = "${escaped(pyCol(s.groupVariable))}"
 graphTitle = "${escaped(s.graphTitle || "")}"
 xLabel = "${escaped(s.xLabel || "")}"
 yLabel = "${escaped(s.yLabel || "")}"
@@ -104,9 +163,9 @@ trendline = ${s.trendLine ? "True" : "False"}
         variablesCode = `
 dataFormat = "${escaped(dataFormatStr)}"
 isWide = ${isWide ? "True" : "False"}
-qualCol = "${escaped(s.qualCol || "")}"
-quantCol = "${escaped(s.quantCol || "")}"
-colToPlot = "${escaped(s.colToPlot || "")}"
+qualCol = "${escaped(pyCol(s.qualCol))}"
+quantCol = "${escaped(pyCol(s.quantCol))}"
+colToPlot = "${escaped(pyColsJoined(s.colToPlot || ""))}"
 errBar = "${escaped(s.errBar || "")}"
 graphTitle = "${escaped(s.graphTitle || "")}"
 xLabel = "${escaped(s.xLabel || "")}"
@@ -134,8 +193,8 @@ color = "${escaped(s.color || "pink")}"
         }
 
         variablesCode = `
-X = "${escaped(s.X || "")}"
-Group = "${escaped(s.Group || "")}"
+X = "${escaped(pyColsJoined(s.X))}"
+Group = "${escaped(pyCol(s.Group))}"
 marginalPlot = "${escaped(s.marginalPlot || "")}"
 graphTitle = "${escaped(s.graphTitle || "")}"
 xLabel = "${escaped(s.xLabel || "")}"
@@ -196,6 +255,8 @@ bargap = ${Number(s.bargap ?? 0.1)}
         }
 
         const pythonCode = `
+import pandas as pd
+${DATAFRAME_SAFETY_PYTHON}
 def ${funcName}():
 ${variablesCode ? "    " + variablesCode.trim().split("\n").join("\n    ") : ""}
 ${
@@ -209,7 +270,10 @@ ${
 ${outputVar} = ${funcName}()
         `.trim();
 
-        await pyodide.runPythonAsync(pythonCode);
+        await enqueueJsWorkspaceTask(async () => {
+          await registerJsWorkspaceFromSlice(pyodide, slice);
+          await pyodide.runPythonAsync(pythonCode);
+        });
 
         const jsonStr = pyodide.globals.get(outputVar);
         if (jsonStr && typeof jsonStr === "string" && jsonStr.trim()) {
@@ -236,7 +300,17 @@ ${outputVar} = ${funcName}()
     }
 
     renderGraph();
-  }, [pyodide, code, sectionId, content, onFigureReadyChange]);
+  }, [
+    pyodide,
+    code,
+    sectionId,
+    content,
+    content?.datasourceId,
+    onFigureReadyChange,
+    djVariables,
+    slice,
+    sliceReady,
+  ]);
 
   const hasPlotData = Boolean(figJson?.data?.length);
 

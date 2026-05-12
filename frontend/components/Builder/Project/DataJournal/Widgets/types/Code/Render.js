@@ -2,10 +2,14 @@
 import { useEffect, useState } from "react";
 import { Message, Icon } from "semantic-ui-react";
 
+import { registerJsWorkspaceFromSlice, enqueueJsWorkspaceTask } from "../../../Helpers/pyodideWorkspaceRegistration";
+import useResolvedJournalSlice from "../../../Hooks/useResolvedJournalSlice";
+
 export default function Render({ content, sectionId, pyodide, code }) {
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const { slice, sliceReady } = useResolvedJournalSlice(content);
 
   useEffect(() => {
     async function executeCode() {
@@ -96,7 +100,12 @@ ${"            " + code.trim().replace(/\n/g, "\n            ")}
 ${funcName}()
 `.trim();
 
-        const returned = await pyodide.runPythonAsync(pythonCode);
+        const returned = await enqueueJsWorkspaceTask(async () => {
+          if (sliceReady && slice) {
+            await registerJsWorkspaceFromSlice(pyodide, slice);
+          }
+          return pyodide.runPythonAsync(pythonCode);
+        });
 
         if (typeof returned === "string") {
           try {
@@ -130,7 +139,7 @@ ${funcName}()
     }
 
     executeCode();
-  }, [pyodide, code, sectionId, content?.type]);
+  }, [pyodide, code, sectionId, content?.type, content?.datasourceId, slice, sliceReady]);
 
   // ── Rendering ─────────────────────────────────────────────────────────────
 

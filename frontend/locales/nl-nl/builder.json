@@ -237,6 +237,12 @@
 		"componentEditor": {
 			"close": "Dichtbij",
 			"componentName": "Componentnaam",
+			"datasetSource": {
+				"ariaLabel": "Kies een dataset",
+				"label": "Gegevensset",
+				"optionFallback": "{{origin}} · {{idSuffix}}",
+				"placeholder": "Selecteer een dataset"
+			},
 			"delete": "Verwijderen",
 			"deleteConfirm": "Weet je zeker dat je dit onderdeel wilt verwijderen?",
 			"editComponent": "Component bewerken",
@@ -392,8 +398,8 @@
 			"editLabel": "Gegevensset bewerken",
 			"errorLoading": "Fout: {{message}}",
 			"inclusion": {
-				"journalLabel": "",
-				"journalTooltip": "",
+				"journalLabel": "Dit tijdschrift",
+				"journalTooltip": "Deze dataset is gekoppeld aan een datajournaal dat u bezit.",
 				"otherLabel": "Ook in deze lijst",
 				"otherTooltip": "Deze dataset voldeed op een andere manier aan het lijstfilter (bijvoorbeeld via een openbaar sjabloon). Het is mogelijk dat deze niet in dit project of onderzoek is opgeslagen.",
 				"viaPartLabel": "Gekoppeld vanuit een deel",

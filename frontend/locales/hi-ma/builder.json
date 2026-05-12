@@ -237,6 +237,12 @@
 		"componentEditor": {
 			"close": "",
 			"componentName": "",
+			"datasetSource": {
+				"ariaLabel": "",
+				"label": "",
+				"optionFallback": "",
+				"placeholder": ""
+			},
 			"delete": "",
 			"deleteConfirm": "",
 			"editComponent": "",

@@ -16,6 +16,9 @@ export const UPDATE_DATA_COMPONENT = gql`
   mutation UPDATE_DATA_COMPONENT($id: ID!, $input: VizSectionUpdateInput!) {
     updateVizSection(where: { id: $id }, data: $input) {
       id
+      type
+      title
+      content
     }
   }
 `;

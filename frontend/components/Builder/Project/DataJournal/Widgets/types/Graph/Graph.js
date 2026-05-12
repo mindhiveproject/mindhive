@@ -7,7 +7,7 @@ import { useDataJournal } from "../../../Context/DataJournalContext"; // Adjust 
 const defaultCode = ``;
 
 export default function Graph({ content, sectionId, onFigureReadyChange }) {
-  const { pyodide, data } = useDataJournal();
+  const { pyodide } = useDataJournal();
 
   const [isRunning, setIsRunning] = useState(false);
   const [output, setOutput] = useState("");
@@ -34,7 +34,6 @@ export default function Graph({ content, sectionId, onFigureReadyChange }) {
     return (
       <div className="graphContainer">
         <Render
-          data={data}
           code={code}
           pyodide={pyodide}
           sectionId={sectionId}

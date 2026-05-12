@@ -47,10 +47,11 @@ else:
 
     if not userDefWide and 'participant' in df.columns and 'participant' not in cols_to_use: cols_to_use.append('participant')
 
-    df_plot = df[cols_to_use].copy()
+    cols_to_use = normalize_column_list(cols_to_use)
+    df_plot = safe_subset(df, cols_to_use)
     df_plot.replace('NaN', np.nan, inplace=True)
-    df_plot[X] = pd.to_numeric(df_plot[X], errors='coerce')
-    df_plot[Y] = pd.to_numeric(df_plot[Y], errors='coerce')
+    df_plot[X] = to_numeric_1d(df_plot, X)
+    df_plot[Y] = to_numeric_1d(df_plot, Y)
 
     def agg_func(x):
         non_nan_values = x.dropna()
@@ -182,7 +183,7 @@ if isWide:
         else:
             # Convert columns to numeric
             for col in valid_columns:
-                df[col] = pd.to_numeric(df[col], errors='coerce')
+                df[col] = to_numeric_1d(df, col)
             df.replace('NaN', np.nan, inplace=True)
             
             # Compute stats
@@ -226,7 +227,7 @@ else:
             showarrow=False, font_size=16
         )
     else:
-        df[quantCol] = pd.to_numeric(df[quantCol], errors='coerce')
+        df[quantCol] = to_numeric_1d(df, quantCol)
         df.replace('NaN', np.nan, inplace=True)
         
         groups = sorted(df[qualCol].dropna().unique())
@@ -359,7 +360,7 @@ if not valid_columns:
 # ── Single column: original behavior (Group, marginal, optional color) ───────
 elif len(valid_columns) == 1:
     col = valid_columns[0]
-    df[col] = pd.to_numeric(df[col], errors='coerce')
+    df[col] = to_numeric_1d(df, col)
     df.replace('NaN', np.nan, inplace=True)
 
     color_param = Group if Group and Group in df.columns else None
@@ -410,7 +411,7 @@ else:
     # When comparing several variables, color encodes which column each value came from.
     # Group-by category would require a different chart design; keep this path simple.
     for c in valid_columns:
-        df[c] = pd.to_numeric(df[c], errors='coerce')
+        df[c] = to_numeric_1d(df, c)
     df.replace('NaN', np.nan, inplace=True)
 
     # Long-form: one row per observation, "series" = source column name

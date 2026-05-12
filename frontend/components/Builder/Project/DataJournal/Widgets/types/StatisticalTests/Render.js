@@ -2,9 +2,13 @@
 import { useEffect, useState } from "react";
 import { Message, Icon, Table } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
+import { DATAFRAME_SAFETY_PYTHON } from "../_shared/pyodideDataframeSafety";
+import { registerJsWorkspaceFromSlice, enqueueJsWorkspaceTask } from "../../../Helpers/pyodideWorkspaceRegistration";
+import useResolvedJournalSlice from "../../../Hooks/useResolvedJournalSlice";
 
 export default function Render({ code, pyodide, sectionId, content }) {
   const { t } = useTranslation("builder");
+  const { slice, sliceReady } = useResolvedJournalSlice(content);
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -26,7 +30,14 @@ export default function Render({ code, pyodide, sectionId, content }) {
 
   useEffect(() => {
     async function executeTest() {
-      if (!pyodide || !code?.trim() || !content?.selectors || !sectionId) {
+      if (
+        !pyodide ||
+        !code?.trim() ||
+        !content?.selectors ||
+        !sectionId ||
+        !sliceReady ||
+        !slice
+      ) {
         setResult(null);
         setIsRunning(false);
         return;
@@ -110,6 +121,8 @@ col2 = "${escapePy(s.col2 || "")}"
         const pythonCode = `
 import json
 import numpy as np
+import pandas as pd
+${DATAFRAME_SAFETY_PYTHON}
 
 def to_native(obj):
     if isinstance(obj, (np.bool_, np.integer, np.floating)):
@@ -147,7 +160,10 @@ ${
 ${funcName}()
 `.trim();
 
-        const returned = await pyodide.runPythonAsync(pythonCode);
+        const returned = await enqueueJsWorkspaceTask(async () => {
+          await registerJsWorkspaceFromSlice(pyodide, slice);
+          return pyodide.runPythonAsync(pythonCode);
+        });
 
         if (typeof returned === "string" && returned.trim().startsWith("{")) {
           try {
@@ -168,7 +184,16 @@ ${funcName}()
     }
 
     executeTest();
-  }, [pyodide, code, content?.selectors, sectionId, content?.type]);
+  }, [
+    pyodide,
+    code,
+    content?.selectors,
+    sectionId,
+    content?.type,
+    content?.datasourceId,
+    slice,
+    sliceReady,
+  ]);
 
   // ── Rendering ─────────────────────────────────────────────────────────────
   if (isRunning) {

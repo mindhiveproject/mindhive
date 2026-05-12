@@ -8,6 +8,7 @@ export const GET_DATA_JOURNAL = gql`
       title
       datasources {
         id
+        title
         dataOrigin
         study {
           id

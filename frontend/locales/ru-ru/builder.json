@@ -237,6 +237,12 @@
 		"componentEditor": {
 			"close": "Закрывать",
 			"componentName": "Название компонента",
+			"datasetSource": {
+				"ariaLabel": "Выберите набор данных",
+				"label": "Набор данных",
+				"optionFallback": "{{origin}} · {{idSuffix}}",
+				"placeholder": "Выберите набор данных"
+			},
 			"delete": "Удалить",
 			"deleteConfirm": "Вы уверены, что хотите удалить этот компонент?",
 			"editComponent": "Редактировать компонент",
@@ -392,8 +398,8 @@
 			"editLabel": "Редактировать набор данных",
 			"errorLoading": "Ошибка: {{message}}",
 			"inclusion": {
-				"journalLabel": "",
-				"journalTooltip": "",
+				"journalLabel": "Этот журнал",
+				"journalTooltip": "Этот набор данных связан с вашим журналом данных.",
 				"otherLabel": "Также в этом списке",
 				"otherTooltip": "Этот набор данных соответствовал фильтру списка другим способом (например, общедоступному шаблону). Он не может быть сохранен в рамках данного проекта или исследования.",
 				"viaPartLabel": "Связано с частью",

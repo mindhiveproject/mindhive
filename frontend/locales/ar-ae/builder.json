@@ -237,6 +237,12 @@
 		"componentEditor": {
 			"close": "يغلق",
 			"componentName": "اسم المكون",
+			"datasetSource": {
+				"ariaLabel": "اختر مجموعة البيانات",
+				"label": "مجموعة البيانات",
+				"optionFallback": "{{origin}} · {{idSuffix}}",
+				"placeholder": "حدد مجموعة بيانات"
+			},
 			"delete": "يمسح",
 			"deleteConfirm": "هل أنت متأكد من رغبتك في حذف هذا المكون؟",
 			"editComponent": "تعديل المكون",

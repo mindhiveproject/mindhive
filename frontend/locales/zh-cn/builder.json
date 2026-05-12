@@ -237,6 +237,12 @@
 		"componentEditor": {
 			"close": "关闭",
 			"componentName": "组件名称",
+			"datasetSource": {
+				"ariaLabel": "选择数据集",
+				"label": "数据集",
+				"optionFallback": "{{origin}} · {{idSuffix}}",
+				"placeholder": "选择数据集"
+			},
 			"delete": "删除",
 			"deleteConfirm": "您确定要删除此组件吗？",
 			"editComponent": "编辑组件",
@@ -392,8 +398,8 @@
 			"editLabel": "编辑数据集",
 			"errorLoading": "错误： {{message}}",
 			"inclusion": {
-				"journalLabel": "",
-				"journalTooltip": "",
+				"journalLabel": "本刊",
+				"journalTooltip": "此数据集与您拥有的数据日志相关联。",
 				"otherLabel": "此外，此列表中还包含以下内容",
 				"otherTooltip": "该数据集以其他方式（例如，公共模板）匹配了列表筛选条件。它可能未存储在此项目或研究中。",
 				"viaPartLabel": "链接自某个部分",
