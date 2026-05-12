@@ -37,6 +37,10 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
   // Active component (for editing in Grid.js)
   const [activeComponent, setActiveComponent] = useState(null);
 
+  // Component id pending scroll-into-view on the canvas (consumed by Grid.js).
+  const [pendingCanvasFocusComponentId, setPendingCanvasFocusComponentId] =
+    useState(null);
+
   // Other UI states (e.g., from Grid.js)
   const [area, setArea] = useState("journals"); // e.g., 'journals' or 'datasets'
   /** Incremented when the user chooses the Datasets top-nav tab; Datasets/Main resets list vs detail state. */
@@ -171,6 +175,8 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     setSelectedWorkspace,
     activeComponent,
     setActiveComponent,
+    pendingCanvasFocusComponentId,
+    setPendingCanvasFocusComponentId,
     area,
     setArea,
     datasetsListNavNonce,

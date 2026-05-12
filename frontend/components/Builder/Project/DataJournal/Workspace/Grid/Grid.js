@@ -42,7 +42,6 @@ export default function Grid({
   const gridRef = useRef(null);
   const canvasRef = useRef(null);
   const [gridWidth, setGridWidth] = useState(1200); // fallback
-  const [pendingFocusComponentId, setPendingFocusComponentId] = useState(null);
   const { t } = useTranslation("builder");
 
   const {
@@ -54,6 +53,8 @@ export default function Grid({
     settings,
     activeComponent,
     setActiveComponent,
+    pendingCanvasFocusComponentId,
+    setPendingCanvasFocusComponentId,
     area,
     setArea,
     sidebarVisible,
@@ -112,8 +113,8 @@ export default function Grid({
   }, [components, activeComponent, setActiveComponent]);
 
   useEffect(() => {
-    const componentId = typeof pendingFocusComponentId === "string"
-      ? pendingFocusComponentId.trim()
+    const componentId = typeof pendingCanvasFocusComponentId === "string"
+      ? pendingCanvasFocusComponentId.trim()
       : "";
     if (!componentId) return;
     const raf = window.requestAnimationFrame(() => {
@@ -127,10 +128,10 @@ export default function Grid({
           inline: "nearest",
         });
       }
-      setPendingFocusComponentId(null);
+      setPendingCanvasFocusComponentId(null);
     });
     return () => window.cancelAnimationFrame(raf);
-  }, [pendingFocusComponentId]);
+  }, [pendingCanvasFocusComponentId, setPendingCanvasFocusComponentId]);
 
   const [createComponent] = useMutation(CREATE_DATA_COMPONENT, {
     variables: {},
@@ -223,7 +224,7 @@ export default function Grid({
         setActiveComponent(component);
         setLeftPanelMode("editor");
         setSidebarVisible(true);
-        setPendingFocusComponentId(component?.id || null);
+        setPendingCanvasFocusComponentId(component?.id || null);
       }
     },
     [
@@ -234,7 +235,7 @@ export default function Grid({
       setIsAddComponentPanelOpen,
       setLeftPanelMode,
       setSidebarVisible,
-      setPendingFocusComponentId,
+      setPendingCanvasFocusComponentId,
     ],
   );
 

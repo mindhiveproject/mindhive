@@ -568,6 +568,28 @@
 					"legendAndXAxisSection": "Étiquettes de l'axe X et titre de la légende",
 					"yAxis": "Axe Y"
 				},
+				"colors": {
+					"bar": {
+						"categorySwatch": "Barre : {{category}}"
+					},
+					"barNoCategories": "Configurez les axes pour afficher une seule couleur par barre.",
+					"dataNotReady": "Charger les données pour sélectionner les couleurs de chaque groupe.",
+					"histogram": {
+						"seriesSwatch": "Série : {{series}}",
+						"singleSeries": "Bars"
+					},
+					"histogramNoSeries": "Sélectionnez une ou plusieurs colonnes dans l'onglet Axes pour définir les couleurs de l'histogramme.",
+					"resetBar": "Réinitialiser les couleurs de la barre",
+					"resetHistogram": "Réinitialiser les couleurs de l'histogramme",
+					"resetScatter": "Réinitialiser les couleurs de dispersion",
+					"scatter": {
+						"groupSwatch": "Groupe : {{group}}",
+						"markerDots": "Points",
+						"noGroupLabel": "Aucune étiquette de groupe",
+						"trendline": "Ligne de tendance"
+					},
+					"sectionTitle": "Couleurs"
+				},
 				"histogram": {
 					"header": {
 						"iconAlt": "Possibilités",
@@ -783,6 +805,7 @@
 			"manageDatasets": "Gérer les ensembles de données",
 			"noDataSources": "Aucune source de données",
 			"noJournalsYet": "Il semblerait que vous n'ayez toujours pas de journaux de données !",
+			"openComponentEditor": "Modifier {{title}} sur le canevas",
 			"renameWorkspace": "Renommer l'espace de travail",
 			"renameWorkspaceModalTitle": "Renommer l'espace de travail",
 			"renameWorkspaceSaving": "Économie...",

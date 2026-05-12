@@ -555,11 +555,11 @@
 			"options": {
 				"barPlot": {
 					"color": {
-						"examplesHex": "- HEX format [#28619E], [#D53533]",
-						"examplesNames": "- Color names: [red], [pink]",
-						"examplesRgb": "- RGB value [100,255,0], [0,120,80]",
-						"heading": "Color",
-						"intro": "Give a base color for the bar (remove square brackets to use the examples below)."
+						"examplesHex": "",
+						"examplesNames": "",
+						"examplesRgb": "",
+						"heading": "",
+						"intro": ""
 					},
 					"header": {
 						"iconAlt": "Options",
@@ -567,6 +567,28 @@
 					},
 					"legendAndXAxisSection": "X-axis labels and legend title",
 					"yAxis": "Y-Axis"
+				},
+				"colors": {
+					"bar": {
+						"categorySwatch": "Bar: {{category}}"
+					},
+					"barNoCategories": "Configure axes to see one color slot per bar.",
+					"dataNotReady": "Load data to pick colors for each group.",
+					"histogram": {
+						"seriesSwatch": "Series: {{series}}",
+						"singleSeries": "Bars"
+					},
+					"histogramNoSeries": "Select column(s) on the Axes tab to set histogram colors.",
+					"resetBar": "Reset bar colors",
+					"resetHistogram": "Reset histogram colors",
+					"resetScatter": "Reset scatter colors",
+					"scatter": {
+						"groupSwatch": "Group: {{group}}",
+						"markerDots": "Dots",
+						"noGroupLabel": "No group label",
+						"trendline": "Trendline"
+					},
+					"sectionTitle": "Colors"
 				},
 				"histogram": {
 					"header": {
@@ -783,6 +805,7 @@
 			"manageDatasets": "Manage datasets",
 			"noDataSources": "No data sources",
 			"noJournalsYet": "It looks like you still don't have any data journals!",
+			"openComponentEditor": "Edit {{title}} on canvas",
 			"renameWorkspace": "Rename workspace",
 			"renameWorkspaceModalTitle": "Rename workspace",
 			"renameWorkspaceSaving": "Saving…",

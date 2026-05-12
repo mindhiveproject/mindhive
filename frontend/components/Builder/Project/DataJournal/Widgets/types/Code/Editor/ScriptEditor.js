@@ -1,17 +1,18 @@
 // components/DataJournal/Widgets/types/Code/Editor/ScriptEditor.js
 
-// https://uiwjs.github.io/react-codemirror/#/theme/home
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-import { python } from "@codemirror/lang-python";
-import CodeMirror from "@uiw/react-codemirror";
+import MonacoPythonEditor from "../../../../Helpers/MonacoPythonEditor";
 
-export default function CodeEditor({ sectionId, code, onChange }) {
+export default function ScriptEditor({ sectionId, code, onChange }) {
   const { t } = useTranslation("builder");
-  const [localCode, setLocalCode] = useState(code);
+  const [localCode, setLocalCode] = useState(() => code ?? "");
 
-  // update the component with the local code
+  useEffect(() => {
+    setLocalCode(code ?? "");
+  }, [code]);
+
   const onRunCode = () => {
     onChange({
       componentId: sectionId,
@@ -21,9 +22,8 @@ export default function CodeEditor({ sectionId, code, onChange }) {
     });
   };
 
-  // keep the local version of code
-  const onCodeChange = useCallback((val, viewUpdate) => {
-    setLocalCode(val);
+  const onCodeChange = useCallback((val) => {
+    setLocalCode(val ?? "");
   }, []);
 
   return (
@@ -34,13 +34,7 @@ export default function CodeEditor({ sectionId, code, onChange }) {
         </button>
       </div>
       <div className="editor-wrapper">
-        <CodeMirror
-          width="100%"
-          value={code}
-          extensions={python()}
-          onChange={onCodeChange}
-          theme="light"
-        />
+        <MonacoPythonEditor value={localCode} onChange={onCodeChange} />
       </div>
     </>
   );

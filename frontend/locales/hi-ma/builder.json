@@ -568,6 +568,28 @@
 					"legendAndXAxisSection": "",
 					"yAxis": ""
 				},
+				"colors": {
+					"bar": {
+						"categorySwatch": ""
+					},
+					"barNoCategories": "",
+					"dataNotReady": "",
+					"histogram": {
+						"seriesSwatch": "",
+						"singleSeries": ""
+					},
+					"histogramNoSeries": "",
+					"resetBar": "",
+					"resetHistogram": "",
+					"resetScatter": "",
+					"scatter": {
+						"groupSwatch": "",
+						"markerDots": "",
+						"noGroupLabel": "",
+						"trendline": ""
+					},
+					"sectionTitle": ""
+				},
 				"histogram": {
 					"header": {
 						"iconAlt": "",
@@ -783,6 +805,7 @@
 			"manageDatasets": "",
 			"noDataSources": "",
 			"noJournalsYet": "",
+			"openComponentEditor": "",
 			"renameWorkspace": "",
 			"renameWorkspaceModalTitle": "",
 			"renameWorkspaceSaving": "",

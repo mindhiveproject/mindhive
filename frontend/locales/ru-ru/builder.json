@@ -568,6 +568,28 @@
 					"legendAndXAxisSection": "Подписи оси X и заголовок легенды",
 					"yAxis": "Ось Y"
 				},
+				"colors": {
+					"bar": {
+						"categorySwatch": "Бар: {{category}}"
+					},
+					"barNoCategories": "Настройте оси таким образом, чтобы на каждом столбце отображался один цветовой сегмент.",
+					"dataNotReady": "Загрузите данные, чтобы выбрать цвета для каждой группы.",
+					"histogram": {
+						"seriesSwatch": "Серия: {{series}}",
+						"singleSeries": "Бары"
+					},
+					"histogramNoSeries": "Выберите столбец(ы) на вкладке «Оси», чтобы задать цвета гистограммы.",
+					"resetBar": "Сбросить цвета полос",
+					"resetHistogram": "Сбросить цвета гистограммы",
+					"resetScatter": "Сбросить цвета рассеивания",
+					"scatter": {
+						"groupSwatch": "Группа: {{group}}",
+						"markerDots": "Точки",
+						"noGroupLabel": "Нет групповой метки",
+						"trendline": "Трендлайн"
+					},
+					"sectionTitle": "Цвета"
+				},
 				"histogram": {
 					"header": {
 						"iconAlt": "Параметры",
@@ -783,6 +805,7 @@
 			"manageDatasets": "Управление наборами данных",
 			"noDataSources": "Источники данных отсутствуют.",
 			"noJournalsYet": "Похоже, у вас до сих пор нет журналов данных!",
+			"openComponentEditor": "Редактировать {{title}} на холсте",
 			"renameWorkspace": "Переименовать рабочую область",
 			"renameWorkspaceModalTitle": "Переименовать рабочую область",
 			"renameWorkspaceSaving": "Сохранение...",

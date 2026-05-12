@@ -568,6 +568,28 @@
 					"legendAndXAxisSection": "X轴标签和图例标题",
 					"yAxis": "Y轴"
 				},
+				"colors": {
+					"bar": {
+						"categorySwatch": "条形图： {{category}}"
+					},
+					"barNoCategories": "配置坐标轴，使每个条形图显示一个颜色槽。",
+					"dataNotReady": "加载数据，为每个组选择颜色。",
+					"histogram": {
+						"seriesSwatch": "系列： {{series}}",
+						"singleSeries": "酒吧"
+					},
+					"histogramNoSeries": "在“坐标轴”选项卡上选择列以设置直方图颜色。",
+					"resetBar": "重置条形颜色",
+					"resetHistogram": "重置直方图颜色",
+					"resetScatter": "重置散点颜色",
+					"scatter": {
+						"groupSwatch": "群组： {{group}}",
+						"markerDots": "点",
+						"noGroupLabel": "无组标签",
+						"trendline": "趋势线"
+					},
+					"sectionTitle": "颜色"
+				},
 				"histogram": {
 					"header": {
 						"iconAlt": "选项",
@@ -783,6 +805,7 @@
 			"manageDatasets": "管理数据集",
 			"noDataSources": "无数据来源",
 			"noJournalsYet": "看来你仍然没有任何数据日志！",
+			"openComponentEditor": "在画布上编辑 {{title}} ",
 			"renameWorkspace": "重命名工作区",
 			"renameWorkspaceModalTitle": "重命名工作区",
 			"renameWorkspaceSaving": "保存...",

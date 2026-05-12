@@ -46,7 +46,7 @@ export default function DatasetSourceSelect({
   const value = getEffectiveDatasourceId(content, list) || "";
 
   return (
-    <div style={{ padding: "0 12px 12px", boxSizing: "border-box" }}>
+    <div className="datasetSourceSelect">
       <div
         style={{
           fontSize: "13px",

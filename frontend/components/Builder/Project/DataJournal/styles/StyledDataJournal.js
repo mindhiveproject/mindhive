@@ -360,6 +360,37 @@ export const StyledSidebar = styled.div`
       grid-template-columns: auto 1fr;
       grid-gap: 8px;
       align-items: center;
+      width: 100%;
+      padding: 4px 8px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+
+      .componentTitle {
+        min-width: 0;
+        overflow: visible;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &:hover {
+        background-color: #e8eeec;
+      }
+
+      &:focus-visible {
+        outline: 2px solid #5b8def;
+        outline-offset: 2px;
+      }
+
+      &.component--active {
+        background-color: #e8eeec;
+        font-weight: 600;
+      }
     }
   }
   /* Change the default styles of the Dropdown Menu */
@@ -545,7 +576,7 @@ export const StyledDataComponent = styled.div`
 export const StyledComponentEditor = styled.div`
   display: grid;
   align-content: baseline;
-  grid-gap: 10px;
+  // grid-gap: 10px;
   margin: 0;
   width: 100%;
   max-width: 100%;
@@ -553,7 +584,6 @@ export const StyledComponentEditor = styled.div`
   min-height: 0;
   box-sizing: border-box;
   overflow-x: hidden;
-  ${hideScrollbars}
   height: 100%;
   align-self: stretch;
   & > * {
@@ -565,13 +595,13 @@ export const StyledComponentEditor = styled.div`
     max-width: 100%;
     min-width: 0;
     background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e6e6e6;
-    margin: 0 8px;
+    // border-radius: 12px;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+    margin: 0;
     padding: 8px;
     overflow-x: visible;
     overflow-y: visible;
-    ${hideScrollbars}
 
     /* TipTap (paragraph panel): flush content chrome; one vertical scroller on this panel */
     .tiptapEditor {
@@ -619,6 +649,10 @@ export const StyledComponentEditor = styled.div`
       font-weight: 400;
       font-style: italic;
     }
+  }
+  .datasetSourceSelect {
+    padding: 12px 12px;
+    box-sizing: border-box;
   }
   .editor-header {
     display: flex;
@@ -674,22 +708,45 @@ export const StyledComponentEditor = styled.div`
     width: 100%;
     max-width: 100%;
     margin: 0;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    overflow: hidden;
+    border: 1px solid #e6e6e6;
+    // border-radius: 8px;
+    /* overflow:visible — overflow:hidden clips Monaco’s transformed line DOM while scrolling */
+    overflow: visible;
+    // background: #fafbfc;
   }
+
+  .editor-wrapper .data-journal-monaco-root {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .editor-wrapper .data-journal-monaco-root > section {
+    width: 100% !important;
+  }
+
+  /* Monaco uses a textarea for IME/keyboard; form/global textarea rules (min-height, resize,
+     width:100%, borders) leak in and show a visible “ghost” box. Do not override Monaco’s
+     inline position/size with !important — only reset inherited form chrome. */
+  .editor-wrapper .monaco-editor textarea {
+    resize: none !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    outline: none !important;
+  }
+
   .runCodeButton {
     display: grid;
     margin: 10px 0px !important;
   }
 
-  /* Optional: make sure CodeMirror doesn't fight the container */
-  .editor-wrapper .cm-editor {
+  .editor-wrapper .monaco-editor {
     width: 100% !important;
-  }
-
-  .editor-wrapper .cm-scroller {
-    ${hideScrollbars}
   }
 
   .editor-header {
@@ -1418,6 +1475,7 @@ export const StyledDataWorkspace = styled.div`
       display: flex;
       flex-wrap: wrap;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       width: 100%;
       max-width: 100%;
@@ -1466,9 +1524,6 @@ export const StyledDataWorkspace = styled.div`
       min-width: 0;
       max-width: 100%;
       box-sizing: border-box;
-      overflow-x: auto;
-      ${hideScrollbars}
-      padding: 8px;
       background: white;
       border-radius: 0 0 10px 10px;
       .styleLayoutContainer {
@@ -1488,6 +1543,16 @@ export const StyledDataWorkspace = styled.div`
           color: #666;
         }
       }
+    }
+    /* Monaco (code tab): do not hide scrollbars on the tab pane — it breaks the editor’s
+       internal scroll layers and can make lines disappear while scrolling. */
+    .tabContent:not(:has(.editor-wrapper)) {
+      overflow-x: auto;
+      ${hideScrollbars}
+    }
+    .tabContent:has(.editor-wrapper) {
+      overflow-x: visible;
+      overflow-y: visible;
     }
   }
   .graphDashboard {
@@ -1559,6 +1624,79 @@ export const StyledDataWorkspace = styled.div`
       &:focus {
         outline: 0;
         border-color: #0D3944;
+      }
+    }
+
+    .graphColorHexRow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      padding: 4px 8px;
+      min-width: 0;
+      box-sizing: border-box;
+      border-radius: 8px;
+      border: 1px solid #e6e6e6;
+      background: #FFFFFF;
+    }
+    .graphColorHexRowLabel {
+      flex: 1;
+      min-width: 120px;
+      font-size: 14px;
+      line-height: 1.35;
+      color: #3f3f46;
+    }
+    .graphColorHexRowControls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .graphColorHexRowControls input[type="color"] {
+      width: 48px;
+      min-height: 40px;
+      height: 40px;
+      padding: 2px;
+      cursor: pointer;
+    }
+    .graphColorHexRowReset {
+      font-family: Inter, sans-serif;
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #cccccc;
+      background: #fff;
+      cursor: pointer;
+      color: #374151;
+      &:hover:not(:disabled) {
+        border-color: #0d3944;
+        color: #0d3944;
+      }
+      &:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+    }
+    .graphColorHint {
+      margin: 0.25rem 0 0;
+      color: #666666;
+      font-size: 14px;
+      line-height: 150%;
+    }
+    .graphColorResetAll {
+      margin-top: 4px;
+      font-family: Inter, sans-serif;
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #cccccc;
+      background: #f9fafb;
+      cursor: pointer;
+      &:hover {
+        border-color: #0d3944;
+        color: #0d3944;
       }
     }
   }

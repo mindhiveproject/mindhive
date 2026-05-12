@@ -568,6 +568,28 @@
 					"legendAndXAxisSection": "تسميات المحور السيني وعنوان مفتاح الخريطة",
 					"yAxis": "المحور الصادي"
 				},
+				"colors": {
+					"bar": {
+						"categorySwatch": "الشريط: {{category}}"
+					},
+					"barNoCategories": "قم بضبط المحاور لعرض خانة لون واحدة لكل شريط.",
+					"dataNotReady": "قم بتحميل البيانات لاختيار الألوان لكل مجموعة.",
+					"histogram": {
+						"seriesSwatch": "السلسلة: {{series}}",
+						"singleSeries": "الحانات"
+					},
+					"histogramNoSeries": "حدد العمود (الأعمدة) في علامة التبويب \"المحاور\" لتعيين ألوان الرسم البياني.",
+					"resetBar": "إعادة ضبط ألوان الشريط",
+					"resetHistogram": "إعادة ضبط ألوان الرسم البياني",
+					"resetScatter": "إعادة ضبط ألوان التشتت",
+					"scatter": {
+						"groupSwatch": "المجموعة: {{group}}",
+						"markerDots": "النقاط",
+						"noGroupLabel": "لا يوجد تصنيف للمجموعة",
+						"trendline": "خط الاتجاه"
+					},
+					"sectionTitle": "الألوان"
+				},
 				"histogram": {
 					"header": {
 						"iconAlt": "خيارات",
@@ -783,6 +805,7 @@
 			"manageDatasets": "إدارة مجموعات البيانات",
 			"noDataSources": "لا توجد مصادر بيانات",
 			"noJournalsYet": "يبدو أنك لا تزال لا تملك أي سجلات بيانات!",
+			"openComponentEditor": "قم بتحرير {{title}} على اللوحة القماشية",
 			"renameWorkspace": "إعادة تسمية مساحة العمل",
 			"renameWorkspaceModalTitle": "إعادة تسمية مساحة العمل",
 			"renameWorkspaceSaving": "إنقاذ...",

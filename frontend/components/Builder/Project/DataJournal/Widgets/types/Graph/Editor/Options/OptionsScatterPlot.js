@@ -3,10 +3,24 @@ import useTranslation from "next-translate/useTranslation";
 import DropdownSelect from "../../../../../../../../DesignSystem/DropdownSelect";
 import FieldRow from "../../../_shared/FieldRow";
 import SectionHeader from "../../../_shared/SectionHeader";
+import GraphColorHexRow from "../_shared/GraphColorHexRow";
+import { rowsForGraphColorKeys } from "../_shared/graphColorSliceRows";
+import {
+  normalizeHex,
+  SCATTER_GROUP_NO_LABEL_KEY,
+  scatterGroupKeys,
+} from "../_shared/graphColorUtils";
 
 const G = "dataJournal.graph";
 
-export default function OptionsScatterPlot({ sectionId, selectors, onChange }) {
+export default function OptionsScatterPlot({
+  sectionId,
+  selectors,
+  onChange,
+  slice = null,
+  sliceReady = false,
+  variables = [],
+}) {
   const { t } = useTranslation("builder");
 
   const onSelectorChange = ({ name, value }) => {
@@ -14,6 +28,20 @@ export default function OptionsScatterPlot({ sectionId, selectors, onChange }) {
       componentId: sectionId,
       newContent: {
         selectors: { ...selectors, [name]: value },
+      },
+    });
+  };
+
+  const patchGraphColors = (mutator) => {
+    const prev =
+      selectors.graphColors && typeof selectors.graphColors === "object"
+        ? { ...selectors.graphColors }
+        : { version: 1 };
+    const graphColors = mutator(prev);
+    onChange({
+      componentId: sectionId,
+      newContent: {
+        selectors: { ...selectors, graphColors },
       },
     });
   };
@@ -38,6 +66,29 @@ export default function OptionsScatterPlot({ sectionId, selectors, onChange }) {
   const legendHint = t(`${G}.common.legendTitleHint`, {}, {
     default: "(leave empty if not needed)",
   });
+
+  const rows = sliceReady && slice ? rowsForGraphColorKeys(slice) : [];
+  const groupKeys = scatterGroupKeys(rows, selectors.groupVariable, variables);
+  const hasGroup = groupKeys.length > 0;
+  const scatterGc = selectors.graphColors?.scatter || {};
+  const resetAllScatterColors = () => {
+    const prev = selectors.graphColors && typeof selectors.graphColors === "object"
+      ? { ...selectors.graphColors }
+      : {};
+    delete prev.scatter;
+    const restKeys = Object.keys(prev).filter((k) => k !== "version");
+    if (restKeys.length === 0) {
+      const { graphColors: _omit, ...sel } = selectors;
+      onChange({ componentId: sectionId, newContent: { selectors: sel } });
+    } else {
+      onChange({
+        componentId: sectionId,
+        newContent: {
+          selectors: { ...selectors, graphColors: { ...prev, version: 1 } },
+        },
+      });
+    }
+  };
 
   return (
     <div className="graphDashboard">
@@ -165,6 +216,89 @@ export default function OptionsScatterPlot({ sectionId, selectors, onChange }) {
           value={marginalValue}
           readOnly
         />
+      </div>
+
+      <div className="subheader">
+        {t(`${G}.options.colors.sectionTitle`, {}, { default: "Colors" })}
+      </div>
+      <div className="subsection">
+        {!sliceReady && (
+          <p className="graphColorHint">
+            {t(`${G}.options.colors.dataNotReady`, {}, {
+              default: "Load data to pick colors for each group.",
+            })}
+          </p>
+        )}
+        {!hasGroup && (
+          <GraphColorHexRow
+            sectionId={sectionId}
+            rowId={`scatter-marker-${sectionId}`}
+            label={t(`${G}.options.colors.scatter.markerDots`, {}, { default: "Dots" })}
+            value={scatterGc.markerDefault}
+            disabled={!sliceReady}
+            onChange={(hex) => {
+              patchGraphColors((prev) => {
+                const scatter = { ...(prev.scatter || {}) };
+                if (hex == null) delete scatter.markerDefault;
+                else scatter.markerDefault = hex;
+                return { ...prev, version: 1, scatter };
+              });
+            }}
+          />
+        )}
+        {selectors.trendLine && (
+          <GraphColorHexRow
+            sectionId={sectionId}
+            rowId={`scatter-trend-${sectionId}`}
+            label={t(`${G}.options.colors.scatter.trendline`, {}, { default: "Trendline" })}
+            value={scatterGc.trendline}
+            disabled={!sliceReady}
+            onChange={(hex) => {
+              patchGraphColors((prev) => {
+                const scatter = { ...(prev.scatter || {}) };
+                if (hex == null) delete scatter.trendline;
+                else scatter.trendline = hex;
+                return { ...prev, version: 1, scatter };
+              });
+            }}
+          />
+        )}
+        {hasGroup &&
+          groupKeys.map((gk) => (
+            <GraphColorHexRow
+              key={gk}
+              sectionId={sectionId}
+              rowId={`scatter-group-${sectionId}-${gk}`}
+              label={
+                gk === SCATTER_GROUP_NO_LABEL_KEY
+                  ? t(`${G}.options.colors.scatter.noGroupLabel`, {}, {
+                      default: "No group label",
+                    })
+                  : t(`${G}.options.colors.scatter.groupSwatch`, { group: gk }, {
+                      default: "Group: {{group}}",
+                    })
+              }
+              value={scatterGc.byGroup?.[gk]}
+              disabled={!sliceReady}
+              onChange={(hex) => {
+                patchGraphColors((prev) => {
+                  const scatter = { ...(prev.scatter || {}) };
+                  const byGroup = { ...(scatter.byGroup || {}) };
+                  if (hex == null) delete byGroup[gk];
+                  else byGroup[gk] = hex;
+                  scatter.byGroup = byGroup;
+                  return { ...prev, version: 1, scatter };
+                });
+              }}
+            />
+          ))}
+        {(normalizeHex(scatterGc.markerDefault) ||
+          normalizeHex(scatterGc.trendline) ||
+          (scatterGc.byGroup && Object.keys(scatterGc.byGroup).length > 0)) && (
+          <button type="button" className="graphColorResetAll" onClick={resetAllScatterColors}>
+            {t(`${G}.options.colors.resetScatter`, {}, { default: "Reset scatter colors" })}
+          </button>
+        )}
       </div>
 
       <div className="subheader">

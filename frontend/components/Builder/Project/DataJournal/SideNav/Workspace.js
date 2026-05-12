@@ -28,7 +28,14 @@ export default function WorkspaceNavigation({
 }) {
   const { t } = useTranslation("builder");
   const { t: tCommon } = useTranslation("common");
-  const { setSelectedWorkspace } = useDataJournal();
+  const {
+    setSelectedWorkspace,
+    activeComponent,
+    setActiveComponent,
+    setIsAddComponentPanelOpen,
+    setSidebarVisible,
+    setPendingCanvasFocusComponentId,
+  } = useDataJournal();
   const [renameOpen, setRenameOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
@@ -143,25 +150,46 @@ export default function WorkspaceNavigation({
 
           {selectedWorkspace?.vizSections?.length ? (
             <div className="components">
-              {selectedWorkspace?.vizSections?.map((component) => (
-                <div key={component.id} className="component">
-                  <div>
-                    <img
-                      src={getVizComponentIconSrc(component)}
-                      alt=""
-                      width={20}
-                      height={20}
-                      aria-hidden
-                    />
-                  </div>
-                  <div>
-                    {component?.title ||
-                      t("dataJournal.sideNav.componentFallbackName", {}, {
-                        default: "Component name",
-                      })}
-                  </div>
-                </div>
-              ))}
+              {selectedWorkspace?.vizSections?.map((component) => {
+                const componentTitle =
+                  component?.title ||
+                  t("dataJournal.sideNav.componentFallbackName", {}, {
+                    default: "Component name",
+                  });
+                const isActive = activeComponent?.id === component?.id;
+                return (
+                  <button
+                    key={component.id}
+                    type="button"
+                    className={`component${isActive ? " component--active" : ""}`}
+                    aria-label={t(
+                      "dataJournal.sideNav.openComponentEditor",
+                      { title: componentTitle },
+                      { default: "Edit {{title}} on canvas" },
+                    )}
+                    aria-pressed={isActive}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!component?.id) return;
+                      setIsAddComponentPanelOpen(false);
+                      setActiveComponent(component);
+                      setSidebarVisible(true);
+                      setPendingCanvasFocusComponentId(component.id);
+                    }}
+                  >
+                    <div>
+                      <img
+                        src={getVizComponentIconSrc(component)}
+                        alt=""
+                        width={20}
+                        height={20}
+                        aria-hidden
+                      />
+                    </div>
+                    <div className="componentTitle">{componentTitle}</div>
+                  </button>
+                );
+              })}
             </div>
           ) : null}
         </div>
