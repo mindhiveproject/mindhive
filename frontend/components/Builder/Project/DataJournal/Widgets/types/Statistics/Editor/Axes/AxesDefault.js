@@ -8,7 +8,6 @@ import SectionHeader from "../../../_shared/SectionHeader";
 import SelectMultiple from "../Fields/SelectMultiple";
 import SelectOne from "../Fields/SelectOne";
 import TruncatedTooltipText from "../../../_shared/TruncatedTooltipText";
-
 const G_STAT = "dataJournal.statistics.axes.default";
 const G_COMMON = "dataJournal.statTest.axes.common";
 

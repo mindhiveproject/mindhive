@@ -10,6 +10,7 @@ import {
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
 import { UPDATE_VIZPART } from "../../../../Mutations/VizPart";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
+import { GET_DATA_JOURNAL } from "../../../../Queries/DataJournal";
 
 import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
 
@@ -72,17 +73,7 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
     variables: { where: datasourcesWhere },
   });
 
-  const [updateVizPart, { loading: updateLoading }] = useMutation(
-    UPDATE_VIZPART,
-    {
-      refetchQueries: [
-        {
-          query: GET_DATA_JOURNALS,
-          variables: { where: refetchQueriesWhere },
-        },
-      ],
-    }
-  );
+  const [updateVizPart, { loading: updateLoading }] = useMutation(UPDATE_VIZPART);
 
   const datasources = data?.datasources || [];
 
@@ -123,6 +114,18 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
 
   const handleSave = async () => {
     try {
+      const refetchQueries = [
+        {
+          query: GET_DATA_JOURNALS,
+          variables: { where: refetchQueriesWhere },
+        },
+      ];
+      if (journal?.id) {
+        refetchQueries.push({
+          query: GET_DATA_JOURNAL,
+          variables: { id: journal.id },
+        });
+      }
       await updateVizPart({
         variables: {
           id: journal.id,
@@ -132,6 +135,8 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
             },
           },
         },
+        refetchQueries,
+        awaitRefetchQueries: true,
       });
       refetch();
       onClose();

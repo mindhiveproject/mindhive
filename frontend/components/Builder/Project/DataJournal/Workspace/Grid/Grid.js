@@ -10,6 +10,7 @@ import {
   DELETE_DATA_COMPONENT,
   UPDATE_DATA_COMPONENT,
 } from "../../../../../Mutations/DataComponent";
+import { GET_WORKSPACE } from "../../../../../Queries/DataWorkspace";
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
@@ -141,16 +142,14 @@ export default function Grid({
     refetchQueries: [],
   });
 
-  const [updateComponent] = useMutation(UPDATE_DATA_COMPONENT, {
-    refetchQueries: [],
-  });
+  const [updateComponent] = useMutation(UPDATE_DATA_COMPONENT);
 
   const handleSaveComponent = useCallback(
     async ({ componentId, updatedComponents }) => {
       const component = updatedComponents.find(
         (comp) => comp.id === componentId,
       );
-      // console.log({ component });
+      const wid = workspace?.id;
       if (component) {
         await updateComponent({
           variables: {
@@ -161,17 +160,30 @@ export default function Grid({
               content: component.content,
             },
           },
+          refetchQueries: wid
+            ? [{ query: GET_WORKSPACE, variables: { id: wid } }]
+            : [],
         });
       }
     },
-    [components, updateComponent],
+    [updateComponent, workspace?.id],
   );
 
-  const debouncedSave = useCallback(
-    debounce(({ componentId, updatedComponents }) => {
-      handleSaveComponent({ componentId, updatedComponents });
-    }, 1000),
-    [handleSaveComponent],
+  const debouncedSaveRef = useRef(null);
+  const debouncedSave = useMemo(() => {
+    debouncedSaveRef.current?.cancel?.();
+    const d = debounce((payload) => {
+      handleSaveComponent(payload);
+    }, 1000);
+    debouncedSaveRef.current = d;
+    return d;
+  }, [handleSaveComponent]);
+
+  useEffect(
+    () => () => {
+      debouncedSaveRef.current?.cancel?.();
+    },
+    [],
   );
 
   const handleLayoutChange = useCallback(
@@ -198,6 +210,7 @@ export default function Grid({
   const handleComponentSelect = useCallback(
     (component) => {
       if (activeComponent?.id === component?.id) {
+        debouncedSaveRef.current?.flush?.();
         handleSaveComponent({
           componentId: component?.id,
           updatedComponents: components,
@@ -215,6 +228,7 @@ export default function Grid({
     },
     [
       activeComponent,
+      components,
       setActiveComponent,
       handleSaveComponent,
       setIsAddComponentPanelOpen,
@@ -226,12 +240,18 @@ export default function Grid({
 
   const handleAddComponent = useCallback(
     async ({ title, type, content }) => {
+      const firstDsId = journal?.datasources?.[0]?.id;
+      const contentWithDs =
+        firstDsId && content && typeof content === "object"
+          ? { ...content, datasourceId: content.datasourceId || firstDsId }
+          : content;
+
       const res = await createComponent({
         variables: {
           input: {
             title: title,
             type: type,
-            content: content,
+            content: contentWithDs,
             vizChapter: {
               connect: {
                 id: workspace?.id,
@@ -281,6 +301,7 @@ export default function Grid({
     },
     [
       createComponent,
+      journal,
       workspace?.id,
       layout,
       components,
@@ -447,6 +468,7 @@ export default function Grid({
           studyId={resolvedStudyId}
           onChange={handleUpdateComponent}
           onSave={async () => {
+            debouncedSaveRef.current?.flush?.();
             await handleSaveComponent({
               componentId: activeComponent?.id,
               updatedComponents: components,
@@ -456,6 +478,7 @@ export default function Grid({
           }}
           onDelete={() => handleRemoveComponent(activeComponent?.id)}
           onClose={() => {
+            debouncedSaveRef.current?.flush?.();
             setActiveComponent(null);
             setLeftPanelMode("journal");
           }}

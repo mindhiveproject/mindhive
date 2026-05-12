@@ -1,4 +1,4 @@
-// Updated file: components/DataJournal/Journal.js
+// components/DataJournal/Journal.js
 import { useQuery } from "@apollo/client";
 import { useState, useEffect, useCallback, useRef } from "react";
 
@@ -8,47 +8,7 @@ import { StyledDataJournal } from "./styles/StyledDataJournal";
 import Workspace from "./Workspace/Workspace";
 import DatasourceDataLoader from "./DataLoader/DatasourceDataLoader";
 
-import filterData, { renameData } from "./Helpers/Filter";
 import { useDataJournal } from "./Context/DataJournalContext";
-
-const prepareDataCode = `
-import pandas as pd
-import js_workspace as data
-data = data.to_py()
-df = pd.DataFrame(data)
-`;
-
-function mergeSourceDatas(sourceDatas) {
-  let initData = [];
-  let initVariables = [];
-  let initSettings = {};
-
-  sourceDatas.forEach(({ data, variables, settings, prefix }) => {
-    // const prefixedData = data.map((row) => {
-    //   const newRow = {};
-    //   Object.keys(row).forEach((key) => {
-    //     const newKey = `${prefix}${key}`;
-    //     newRow[newKey] =
-    //       key === "participant" ? `${prefix}${row[key]}` : row[key];
-    //   });
-    //   return newRow;
-    // });
-
-    // initData = [...initData, ...prefixedData];
-    initData = [...initData, ...data];
-
-    // const prefixedVariables = variables.map((v) => ({
-    //   ...v,
-    //   field: `${prefix}${v.field}`,
-    // }));
-    // initVariables = [...initVariables, ...prefixedVariables];
-
-    initVariables = [...initVariables, ...variables];
-    initSettings = { ...initSettings, ...settings };
-  });
-
-  return { initData, initVariables, initSettings };
-}
 
 export default function Journal({
   user,
@@ -59,15 +19,16 @@ export default function Journal({
   selectJournalById,
 }) {
   const {
-    pyodide,
     selectedWorkspace,
     setSelectedWorkspace,
     setData,
     setVariables,
     setSettings,
+    setJournalDatasources,
+    setSourceDataByDatasourceId,
+    sourceDataByDatasourceId,
   } = useDataJournal();
 
-  // Get the data journal
   const {
     data: journalData,
     loading: queryLoading,
@@ -83,65 +44,101 @@ export default function Journal({
 
   const datasources = journal?.datasources || [];
   const workspaces = journal?.vizChapters || [];
+  const datasourceIds = datasources.map((ds) => ds?.id).filter(Boolean);
+  const datasourceIdsKey = datasourceIds.join(",");
 
-  // States for aggregating data from datasources
-  const [sourceDatas, setSourceDatas] = useState([]);
-  const [mergedData, setMergedData] = useState(null);
-  // Flag to gate rendering until data is registered in Pyodide
   const [registered, setRegistered] = useState(false);
+  const registerRunIdRef = useRef(0);
 
-  const initData = mergedData?.initData || [];
-  const initDataLength = initData.length;
+  const handleSourceData = useCallback(
+    (sourceData) => {
+      const datasourceId = sourceData?.datasourceId;
+      if (!datasourceId) return;
+      setSourceDataByDatasourceId((prev) => ({
+        ...prev,
+        [datasourceId]: sourceData,
+      }));
+    },
+    [setSourceDataByDatasourceId],
+  );
 
-  const handleSourceData = useCallback((sourceData) => {
-    setSourceDatas((prev) => {
-      // Avoid duplicates by checking if already added (e.g., via id or prefix)
-      if (prev.some((sd) => sd.prefix === sourceData.prefix)) return prev;
-      return [...prev, sourceData];
+  useEffect(() => {
+    setJournalDatasources(
+      datasources
+        .map((ds) => ({
+          id: ds?.id,
+          title: ds?.title || "",
+          dataOrigin: ds?.dataOrigin || "",
+        }))
+        .filter((d) => d.id),
+    );
+  }, [datasources, setJournalDatasources]);
+
+  useEffect(() => {
+    setRegistered(false);
+    setSourceDataByDatasourceId((prev) => {
+      const next = {};
+      datasourceIds.forEach((id) => {
+        if (prev[id]) next[id] = prev[id];
+      });
+      return next;
     });
-  }, []);
+  }, [journalId, datasourceIdsKey, setSourceDataByDatasourceId]);
+
+  const allSlicesReady =
+    datasources.length === 0 ||
+    datasourceIds.every((id) => sourceDataByDatasourceId[id] != null);
 
   useEffect(() => {
-    if (sourceDatas.length === datasources.length && datasources.length > 0) {
-      const merged = mergeSourceDatas(sourceDatas);
-      setMergedData(merged);
-    } else if (datasources.length === 0) {
-      // If no datasources, use empty defaults
-      setMergedData({ initData: [], initVariables: [], initSettings: {} });
-    }
-  }, [sourceDatas, datasources.length]);
+    const runId = registerRunIdRef.current + 1;
+    registerRunIdRef.current = runId;
+    let isCancelled = false;
 
-  // Register data in Pyodide after merging
-  useEffect(() => {
     async function registerData() {
-      if (pyodide && mergedData?.initData && initDataLength) {
-        const filteredData = filterData({
-          data: mergedData.initData,
-          settings: mergedData.initSettings,
-        });
-        const renamedData = renameData({
-          data: filteredData,
-          variables: mergedData.initVariables,
-        });
-        pyodide.registerJsModule("js_workspace", [...renamedData]);
-        // Make data available as data and df (pandas dataframe)
-        await pyodide.runPythonAsync(prepareDataCode);
-        // Update context with merged data
-        setData(mergedData.initData);
-        setVariables(mergedData.initVariables);
-        setSettings(mergedData.initSettings);
-        setRegistered(true);
+      if (!allSlicesReady) return;
+      if (isCancelled || registerRunIdRef.current !== runId) return;
+
+      const firstId = datasourceIds[0];
+      const firstSlice = firstId ? sourceDataByDatasourceId[firstId] : null;
+
+      if (isCancelled || registerRunIdRef.current !== runId) return;
+
+      if (firstSlice) {
+        setData(Array.isArray(firstSlice.data) ? firstSlice.data : []);
+        setVariables(
+          Array.isArray(firstSlice.variables) ? firstSlice.variables : [],
+        );
+        setSettings(
+          firstSlice.settings && typeof firstSlice.settings === "object"
+            ? firstSlice.settings
+            : {},
+        );
+      } else {
+        setData([]);
+        setVariables([]);
+        setSettings({});
       }
+      setRegistered(true);
     }
+
     registerData();
-  }, [pyodide, mergedData, setData, setVariables, setSettings, initDataLength]);
+    return () => {
+      isCancelled = true;
+    };
+  }, [
+    allSlicesReady,
+    datasourceIdsKey,
+    sourceDataByDatasourceId,
+    setData,
+    setVariables,
+    setSettings,
+  ]);
 
   const chapterIdsKey = (journal?.vizChapters || [])
     .map((w) => w?.id)
     .filter(Boolean)
     .join(",");
 
-  /** Tracks last seen chapter id set per journal so we can focus a newly created workspace. */
   const workspaceListBaselineRef = useRef({ journalId: null, chapterIdsKey: "" });
 
   useEffect(() => {
@@ -209,21 +206,22 @@ export default function Journal({
     return <div>Error loading journal</div>;
   }
 
+  const workspaceReady = !queryLoading && allSlicesReady && registered;
+
   return (
     <StyledDataJournal>
-      {/* Hidden loaders for each datasource */}
       <div style={{ display: "none" }}>
         {datasources.map((ds) => (
           <DatasourceDataLoader
             key={ds.id}
             datasource={ds}
-            user={user} // Assuming user is available from higher context or prop if needed
+            user={user}
             onDataReady={handleSourceData}
           />
         ))}
       </div>
 
-      {queryLoading || !mergedData || (initDataLength && !registered) ? (
+      {!workspaceReady ? (
         <div>Loading...</div>
       ) : (
         <Workspace

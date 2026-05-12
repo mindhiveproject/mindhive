@@ -2,9 +2,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useDataJournal } from "../Context/DataJournalContext";
+import { registerJsWorkspaceFromSlice, enqueueJsWorkspaceTask } from "../Helpers/pyodideWorkspaceRegistration";
+import { resetColumnBoundContentForType } from "../Helpers/resetContentForDatasourceSwitch";
+import useResolvedJournalSlice from "../Hooks/useResolvedJournalSlice";
 
 import MediaLibraryModal from "../../../../TipTap/MediaLibraryModal";
 import EditorHeader from "./Header";
+import DatasetSourceSelect, {
+  DATA_COMPONENT_TYPES,
+} from "./DatasetSourceSelect";
 
 import GraphEditor from "../Widgets/types/Graph/Editor/GraphEditor";
 import StatisticalTestEditor from "../Widgets/types/StatisticalTests/Editor/StatisticalTestEditor";
@@ -48,7 +54,47 @@ export default function ComponentEditor({
     pyodide,
     projectId,
     figureReadinessByComponentId,
+    journalDatasources,
   } = useDataJournal();
+
+  const activeContentForSlice =
+    activeComponent && DATA_COMPONENT_TYPES.has(activeComponent.type)
+      ? activeComponent.content
+      : null;
+
+  const { slice, sliceReady } = useResolvedJournalSlice(activeContentForSlice);
+
+  useEffect(() => {
+    if (!pyodide || !sliceReady || !slice) return;
+    if (!activeComponent?.type || !DATA_COMPONENT_TYPES.has(activeComponent.type)) {
+      return;
+    }
+    void enqueueJsWorkspaceTask(async () => {
+      await registerJsWorkspaceFromSlice(pyodide, slice);
+    });
+  }, [
+    pyodide,
+    activeComponent?.id,
+    activeComponent?.type,
+    activeComponent?.content?.datasourceId,
+    slice,
+    sliceReady,
+  ]);
+
+  const handleDatasetSourceChange = useCallback(
+    (nextId) => {
+      if (!activeComponent) return;
+      const reset = resetColumnBoundContentForType(activeComponent.type);
+      onChange({
+        componentId: activeComponent.id,
+        newContent: {
+          datasourceId: nextId,
+          ...reset,
+        },
+      });
+    },
+    [activeComponent, onChange],
+  );
 
   const [saveFigureModalOpen, setSaveFigureModalOpen] = useState(false);
   const [saveFigurePrefillFile, setSaveFigurePrefillFile] = useState(null);
@@ -126,6 +172,16 @@ export default function ComponentEditor({
     }
   }, [activeComponent, pyodide, t]);
 
+  const showSaveFigureButton =
+    activeComponent?.type === "HYPVIS" || activeComponent?.type === "GRAPH";
+  const canSaveFigureToMedia = useMemo(() => {
+    if (!showSaveFigureButton || !activeComponent?.id) return false;
+    const componentId =
+      typeof activeComponent.id === "string" ? activeComponent.id.trim() : "";
+    if (!componentId) return false;
+    return figureReadinessByComponentId?.[componentId] === true;
+  }, [showSaveFigureButton, activeComponent?.id, figureReadinessByComponentId]);
+
   if (!activeComponent) return null;
 
   const { id, type, content } = activeComponent;
@@ -147,14 +203,7 @@ export default function ComponentEditor({
         createdWith: saveFigureCreatedWith,
       };
 
-  const showSaveFigureButton = type === "HYPVIS" || type === "GRAPH";
   const showSaveFigureModal = type === "HYPVIS" || type === "GRAPH";
-  const canSaveFigureToMedia = useMemo(() => {
-    if (!showSaveFigureButton) return false;
-    const componentId = typeof id === "string" ? id.trim() : "";
-    if (!componentId) return false;
-    return figureReadinessByComponentId?.[componentId] === true;
-  }, [showSaveFigureButton, id, figureReadinessByComponentId]);
 
   // Render editor based on component type
   const renderEditor = () => {
@@ -229,6 +278,13 @@ export default function ComponentEditor({
         onSaveFigureToMedia={handleSaveFigureToMedia}
       />
       <div className="editorPanelBody">{renderEditor()}</div>
+      {DATA_COMPONENT_TYPES.has(type) ? (
+        <DatasetSourceSelect
+          journalDatasources={journalDatasources}
+          content={content}
+          onChangeId={handleDatasetSourceChange}
+        />
+      ) : null}
       {showSaveFigureModal ? (
         <MediaLibraryModal
           open={saveFigureModalOpen}

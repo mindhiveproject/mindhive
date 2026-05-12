@@ -4,7 +4,7 @@ import Render from "./Render";
 import { useDataJournal } from "../../../Context/DataJournalContext"; // adjust path
 
 export default function Statistics({ content, sectionId }) {
-  const { pyodide, data } = useDataJournal();
+  const { pyodide } = useDataJournal();
 
   const code = content?.code || "";
 
@@ -15,7 +15,6 @@ export default function Statistics({ content, sectionId }) {
   return (
     <div style={{ height: "100%", width: "100%" }}>
       <Render
-        data={data}
         code={code}
         pyodide={pyodide}
         sectionId={sectionId}

@@ -55,6 +55,12 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
   /** Increments when a grid item finishes resize/drag so widgets can re-measure. */
   const [widgetResizeTicks, setWidgetResizeTicks] = useState({});
 
+  /** Journal datasource list (id + title) for per-component dataset pickers. */
+  const [journalDatasources, setJournalDatasources] = useState([]);
+
+  /** Latest loaded slice per datasource id (from DatasourceDataLoader). */
+  const [sourceDataByDatasourceId, setSourceDataByDatasourceId] = useState({});
+
   // Apollo mutation for updating workspace on server
   const [updateWorkspaceOnServer] = useMutation(UPDATE_WORKSPACE, {
     onError: (error) => console.error("Error updating workspace:", error),
@@ -151,6 +157,10 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     setData,
     variables,
     setVariables,
+    journalDatasources,
+    setJournalDatasources,
+    sourceDataByDatasourceId,
+    setSourceDataByDatasourceId,
     settings,
     setSettings,
     pyodide,

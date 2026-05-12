@@ -237,6 +237,12 @@
 		"componentEditor": {
 			"close": "Fermer",
 			"componentName": "Nom du composant",
+			"datasetSource": {
+				"ariaLabel": "Choisir un jeu de données",
+				"label": "Base de données",
+				"optionFallback": "{{origin}} · {{idSuffix}}",
+				"placeholder": "Sélectionnez un ensemble de données"
+			},
 			"delete": "SUPPRIMER",
 			"deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce composant ?",
 			"editComponent": "Modifier le composant",
@@ -392,8 +398,8 @@
 			"editLabel": "Modifier le jeu de données",
 			"errorLoading": "Erreur :  {{message}}",
 			"inclusion": {
-				"journalLabel": "",
-				"journalTooltip": "",
+				"journalLabel": "Ce journal",
+				"journalTooltip": "Cet ensemble de données est lié à un journal de données dont vous êtes propriétaire.",
 				"otherLabel": "Également dans cette liste",
 				"otherTooltip": "Ces données correspondent au filtre de liste d'une autre manière (par exemple, via un modèle public). Elles ne sont peut-être pas stockées dans le cadre de ce projet ou de cette étude.",
 				"viaPartLabel": "Lié à partir d'une partie",

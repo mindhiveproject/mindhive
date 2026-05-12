@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
-import { useDataJournal } from "../../../../Context/DataJournalContext";
+import useResolvedJournalSlice from "../../../../Hooks/useResolvedJournalSlice";
 import filterData from "../../../../Helpers/Filter";
 import Button from "../../../../../../../DesignSystem/Button";
 import Chip from "../../../../../../../DesignSystem/Chip";
@@ -13,7 +13,15 @@ const FUNNEL_CHIP_ICON = (
 
 export default function TableEditor({ content, onChange, sectionId }) {
   const { t } = useTranslation("builder");
-  const { variables, data, settings } = useDataJournal();
+  const { slice, sliceReady } = useResolvedJournalSlice(content);
+  const variables =
+    sliceReady && slice ? (Array.isArray(slice.variables) ? slice.variables : []) : [];
+  const data =
+    sliceReady && slice ? (Array.isArray(slice.data) ? slice.data : []) : [];
+  const settings =
+    sliceReady && slice?.settings && typeof slice.settings === "object"
+      ? slice.settings
+      : {};
   const [expandedFilterField, setExpandedFilterField] = useState(null);
   const [columnSearch, setColumnSearch] = useState("");
 

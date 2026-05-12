@@ -3,6 +3,7 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import { useDataJournal } from "../../../../Context/DataJournalContext";
+import useResolvedJournalSlice from "../../../../Hooks/useResolvedJournalSlice";
 import Chip from "../../../../../../../DesignSystem/Chip";
 
 import CodeEditor from "./CodeEditor";
@@ -21,7 +22,9 @@ const defaultCode = ``;
 
 export default function GraphEditor({ content, onChange, sectionId }) {
   const { t } = useTranslation("builder");
-  const { pyodide, variables } = useDataJournal();
+  const { pyodide } = useDataJournal();
+  const { slice, sliceReady } = useResolvedJournalSlice(content);
+  const variables = sliceReady && slice ? slice.variables || [] : [];
 
   const [activeTab, setActiveTab] = useState(0);
 
