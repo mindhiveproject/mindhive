@@ -553,7 +553,6 @@ export const StyledComponentEditor = styled.div`
   min-height: 0;
   box-sizing: border-box;
   overflow-x: hidden;
-  ${hideScrollbars}
   height: 100%;
   align-self: stretch;
   & > * {
@@ -571,7 +570,6 @@ export const StyledComponentEditor = styled.div`
     padding: 8px;
     overflow-x: visible;
     overflow-y: visible;
-    ${hideScrollbars}
 
     /* TipTap (paragraph panel): flush content chrome; one vertical scroller on this panel */
     .tiptapEditor {
@@ -674,22 +672,45 @@ export const StyledComponentEditor = styled.div`
     width: 100%;
     max-width: 100%;
     margin: 0;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    overflow: hidden;
+    border: 1px solid #e6e6e6;
+    // border-radius: 8px;
+    /* overflow:visible — overflow:hidden clips Monaco’s transformed line DOM while scrolling */
+    overflow: visible;
+    // background: #fafbfc;
   }
+
+  .editor-wrapper .data-journal-monaco-root {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .editor-wrapper .data-journal-monaco-root > section {
+    width: 100% !important;
+  }
+
+  /* Monaco uses a textarea for IME/keyboard; form/global textarea rules (min-height, resize,
+     width:100%, borders) leak in and show a visible “ghost” box. Do not override Monaco’s
+     inline position/size with !important — only reset inherited form chrome. */
+  .editor-wrapper .monaco-editor textarea {
+    resize: none !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    outline: none !important;
+  }
+
   .runCodeButton {
     display: grid;
     margin: 10px 0px !important;
   }
 
-  /* Optional: make sure CodeMirror doesn't fight the container */
-  .editor-wrapper .cm-editor {
+  .editor-wrapper .monaco-editor {
     width: 100% !important;
-  }
-
-  .editor-wrapper .cm-scroller {
-    ${hideScrollbars}
   }
 
   .editor-header {
@@ -1466,8 +1487,6 @@ export const StyledDataWorkspace = styled.div`
       min-width: 0;
       max-width: 100%;
       box-sizing: border-box;
-      overflow-x: auto;
-      ${hideScrollbars}
       padding: 8px;
       background: white;
       border-radius: 0 0 10px 10px;
@@ -1488,6 +1507,16 @@ export const StyledDataWorkspace = styled.div`
           color: #666;
         }
       }
+    }
+    /* Monaco (code tab): do not hide scrollbars on the tab pane — it breaks the editor’s
+       internal scroll layers and can make lines disappear while scrolling. */
+    .tabContent:not(:has(.editor-wrapper)) {
+      overflow-x: auto;
+      ${hideScrollbars}
+    }
+    .tabContent:has(.editor-wrapper) {
+      overflow-x: visible;
+      overflow-y: visible;
     }
   }
   .graphDashboard {

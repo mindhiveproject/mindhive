@@ -84,8 +84,10 @@ export default function TipTapEditor({
   mediaLibrarySource = null,
   mediaDisplayedInProposalCardId = null,
   usedInVizSectionIds = null,
-  emptyInvite = null, /** When set, shown over the editor while the document is empty (pointer-events: none). */
-  toolbarAlign = "left",
+  /** When set, shown over the editor while the document is empty (pointer-events: none). */
+  emptyInvite = null,
+  floatingToolbarTop = null,
+  floatingToolbarAutoOffset = false,
 }) {
   const { t } = useTranslation("builder");
   const apolloClient = useApolloClient();
@@ -93,6 +95,9 @@ export default function TipTapEditor({
   const [isFocused, setIsFocused] = useState(false);
   const [docEmpty, setDocEmpty] = useState(true);
   const [mediaLibraryModalOpen, setMediaLibraryModalOpen] = useState(false);
+  const [computedFloatingToolbarTop, setComputedFloatingToolbarTop] = useState(null);
+  const editorRef = useRef(null);
+  const editorHostRef = useRef(null);
   const pasteImageContextRef = useRef({});
   pasteImageContextRef.current = {
     onPasteImageNoMediaScope: () =>
@@ -849,11 +854,52 @@ export default function TipTapEditor({
     event.preventDefault();
     editor.chain().focus().run();
   };
+
+  useEffect(() => {
+    if (!floatingToolbarAutoOffset || !toolbarVisible) return;
+
+    const resolveToolbarTop = (width) => {
+      if (width <= TOOLBAR_WIDTH_BREAKPOINTS.narrowMax) {
+        return TOOLBAR_TOP_BY_WIDTH.narrow;
+      }
+      if (width <= TOOLBAR_WIDTH_BREAKPOINTS.mediumMax) {
+        return TOOLBAR_TOP_BY_WIDTH.medium;
+      }
+      return TOOLBAR_TOP_BY_WIDTH.wide;
+    };
+
+    const updateOffsetFromWidth = () => {
+      const hostWidth = editorHostRef.current?.getBoundingClientRect?.().width;
+      const width = hostWidth || window.innerWidth;
+      setComputedFloatingToolbarTop(resolveToolbarTop(width));
+    };
+
+    updateOffsetFromWidth();
+    window.addEventListener("resize", updateOffsetFromWidth);
+
+    return () => {
+      window.removeEventListener("resize", updateOffsetFromWidth);
+    };
+  }, [floatingToolbarAutoOffset, toolbarVisible]);
+
   return (
     <>
-      <StyledTipTap data-toolbar-align={toolbarAlign}>
+      <StyledTipTap
+        ref={editorRef}
+        style={{
+          ...(floatingToolbarTop
+            ? { "--tiptap-floating-toolbar-top": floatingToolbarTop }
+            : {}),
+          ...(floatingToolbarAutoOffset && computedFloatingToolbarTop
+            ? {
+                "--tiptap-floating-toolbar-top": computedFloatingToolbarTop,
+              }
+            : {}),
+        }}
+      >
         <div className="editorContainer">
           <div
+            ref={editorHostRef}
             className="tiptapEditorHost"
             onMouseDown={handleEditorHostMouseDown}
           >
