@@ -568,6 +568,28 @@
 					"legendAndXAxisSection": "एक्स-अक्ष लेबल और लीजेंड शीर्षक",
 					"yAxis": "शाफ़्ट"
 				},
+				"colors": {
+					"bar": {
+						"categorySwatch": "बार: {{category}}"
+					},
+					"barNoCategories": "प्रत्येक बार में एक रंग स्लॉट देखने के लिए अक्षों को कॉन्फ़िगर करें।",
+					"dataNotReady": "प्रत्येक समूह के लिए रंग चुनने हेतु डेटा लोड करें।",
+					"histogram": {
+						"seriesSwatch": "श्रृंखला: {{series}}",
+						"singleSeries": "बार"
+					},
+					"histogramNoSeries": "हिस्टोग्राम के रंग निर्धारित करने के लिए एक्सिस टैब पर कॉलम चुनें।",
+					"resetBar": "बार के रंगों को रीसेट करें",
+					"resetHistogram": "हिस्टोग्राम के रंगों को रीसेट करें",
+					"resetScatter": "स्कैटर रंगों को रीसेट करें",
+					"scatter": {
+						"groupSwatch": "समूह: {{group}}",
+						"markerDots": "डॉट्स",
+						"noGroupLabel": "कोई समूह लेबल नहीं",
+						"trendline": "ट्रेंडलाइन"
+					},
+					"sectionTitle": "रंग"
+				},
 				"histogram": {
 					"header": {
 						"iconAlt": "विकल्प",

@@ -568,6 +568,28 @@
 					"legendAndXAxisSection": "Etiquetas del eje X y título de la leyenda",
 					"yAxis": "Eje Y"
 				},
+				"colors": {
+					"bar": {
+						"categorySwatch": "Barra: {{category}}"
+					},
+					"barNoCategories": "Configure los ejes para que muestren una ranura de color por barra.",
+					"dataNotReady": "Cargar datos para seleccionar los colores de cada grupo.",
+					"histogram": {
+						"seriesSwatch": "Serie: {{series}}",
+						"singleSeries": "Verja"
+					},
+					"histogramNoSeries": "Seleccione la(s) columna(s) en la pestaña Ejes para configurar los colores del histograma.",
+					"resetBar": "Restablecer colores de la barra",
+					"resetHistogram": "Restablecer los colores del histograma",
+					"resetScatter": "Restablecer colores de dispersión",
+					"scatter": {
+						"groupSwatch": "Grupo: {{group}}",
+						"markerDots": "Puntos",
+						"noGroupLabel": "Sin etiqueta de grupo",
+						"trendline": "Línea de tendencia"
+					},
+					"sectionTitle": "Colores"
+				},
 				"histogram": {
 					"header": {
 						"iconAlt": "Opciones",

@@ -568,6 +568,28 @@
 					"legendAndXAxisSection": "Labels op de X-as en titel van de legenda",
 					"yAxis": "Y-as"
 				},
+				"colors": {
+					"bar": {
+						"categorySwatch": "Balk: {{category}}"
+					},
+					"barNoCategories": "Configureer de assen zo dat er één kleurvak per balk zichtbaar is.",
+					"dataNotReady": "Laad gegevens in om kleuren voor elke groep te selecteren.",
+					"histogram": {
+						"seriesSwatch": "Serie: {{series}}",
+						"singleSeries": "Bars"
+					},
+					"histogramNoSeries": "Selecteer de kolom(men) op het tabblad Assen om de kleuren van het histogram in te stellen.",
+					"resetBar": "Kleuren van de balk opnieuw instellen",
+					"resetHistogram": "Kleuren van het histogram opnieuw instellen",
+					"resetScatter": "Kleuren van de strooiing opnieuw instellen",
+					"scatter": {
+						"groupSwatch": "Groep: {{group}}",
+						"markerDots": "Stippen",
+						"noGroupLabel": "Geen groepslabel",
+						"trendline": "Trendlijn"
+					},
+					"sectionTitle": "Kleuren"
+				},
 				"histogram": {
 					"header": {
 						"iconAlt": "Opties",

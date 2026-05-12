@@ -1621,6 +1621,79 @@ export const StyledDataWorkspace = styled.div`
         border-color: #0D3944;
       }
     }
+
+    .graphColorHexRow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      padding: 4px 8px;
+      min-width: 0;
+      box-sizing: border-box;
+      border-radius: 8px;
+      border: 1px solid #e6e6e6;
+      background: #FFFFFF;
+    }
+    .graphColorHexRowLabel {
+      flex: 1;
+      min-width: 120px;
+      font-size: 14px;
+      line-height: 1.35;
+      color: #3f3f46;
+    }
+    .graphColorHexRowControls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .graphColorHexRowControls input[type="color"] {
+      width: 48px;
+      min-height: 40px;
+      height: 40px;
+      padding: 2px;
+      cursor: pointer;
+    }
+    .graphColorHexRowReset {
+      font-family: Inter, sans-serif;
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #cccccc;
+      background: #fff;
+      cursor: pointer;
+      color: #374151;
+      &:hover:not(:disabled) {
+        border-color: #0d3944;
+        color: #0d3944;
+      }
+      &:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+    }
+    .graphColorHint {
+      margin: 0.25rem 0 0;
+      color: #666666;
+      font-size: 14px;
+      line-height: 150%;
+    }
+    .graphColorResetAll {
+      margin-top: 4px;
+      font-family: Inter, sans-serif;
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #cccccc;
+      background: #f9fafb;
+      cursor: pointer;
+      &:hover {
+        border-color: #0d3944;
+        color: #0d3944;
+      }
+    }
   }
 
   .graph-dashboard {

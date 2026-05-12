@@ -3,6 +3,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
+import json
 
 # Load df from js_workspace if available (OLD behavior), otherwise assume global df
 try:
@@ -15,6 +16,80 @@ except (ModuleNotFoundError, AttributeError, NameError):
 
 def get_or_default(var_value, default=""):
     return var_value if var_value else default
+
+
+def _load_graph_colors(graph_colors_json):
+    try:
+        return json.loads(graph_colors_json) if graph_colors_json else {}
+    except Exception:
+        return {}
+
+
+def _apply_scatter_graph_colors(fig, brand_palette, has_group, graph_colors_json, legacy_color, use_trendline):
+    gc = _load_graph_colors(graph_colors_json)
+    sc = gc.get("scatter") if isinstance(gc.get("scatter"), dict) else {}
+    by_group = sc.get("byGroup") if isinstance(sc.get("byGroup"), dict) else {}
+    marker_default = str(sc.get("markerDefault") or "").strip()
+    trend_hex = str(sc.get("trendline") or "").strip()
+    leg = legacy_color if legacy_color else ""
+    if leg == "pink":
+        leg = ""
+    if not marker_default.startswith("#") and isinstance(leg, str) and leg.startswith("#"):
+        marker_default = leg
+    scatter_names = []
+    for tr in fig.data:
+        if getattr(tr, "type", None) != "scatter":
+            continue
+        nm = str(tr.name or "")
+        if "ols" in nm.lower():
+            continue
+        scatter_names.append(nm)
+    seen = set()
+    ordered_names = []
+    for nm in scatter_names:
+        if nm not in seen:
+            seen.add(nm)
+            ordered_names.append(nm)
+    idx = 0
+    for tr in fig.data:
+        if getattr(tr, "type", None) != "scatter":
+            continue
+        nm = str(tr.name or "")
+        low = nm.lower()
+        if "ols" in low:
+            if use_trendline and trend_hex.startswith("#"):
+                tr.update(line=dict(color=trend_hex))
+            continue
+        if has_group:
+            nm_stripped = str(nm or "").strip()
+            low_nm = nm_stripped.lower()
+            if (
+                not nm_stripped
+                or low_nm == "nan"
+                or low_nm == "null"
+                or nm_stripped == "None"
+            ):
+                lookup_key = "__no_label__"
+            else:
+                lookup_key = nm_stripped
+            c = by_group.get(lookup_key)
+            if not (isinstance(c, str) and c.startswith("#")) and lookup_key != nm_stripped:
+                c = by_group.get(nm)
+            if not (isinstance(c, str) and c.startswith("#")):
+                try:
+                    ix = ordered_names.index(nm)
+                except Exception:
+                    ix = idx
+                c = brand_palette[ix % len(brand_palette)]
+            tr.update(marker=dict(color=c))
+            idx += 1
+        else:
+            c = marker_default if marker_default.startswith("#") else None
+            if not c and isinstance(leg, str) and leg.startswith("#"):
+                c = leg
+            if not c:
+                c = brand_palette[0]
+            tr.update(marker=dict(color=c))
 
 
 if not X or not Y:
@@ -133,6 +208,8 @@ else:
         None if yRangeMax == '' else yRangeMax
     ])
 
+    _apply_scatter_graph_colors(fig, brand_palette, has_group, graph_colors_json, color, use_trendline)
+
 fig_json_output = fig.to_json()
 `;
 
@@ -141,6 +218,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
+import json
 
 if 'isWide' not in locals():
     isWide = False
@@ -271,14 +349,24 @@ if 'categories' in locals() and len(categories) > 0:
     
     show_error = any(e > 0 for e in error_values) and errBar != ""
     
-    # Color generation
     user_color = get_or_default(color)
     if user_color == "pink":
         user_color = ""
-
-    colors = [brand_palette[i % len(brand_palette)] for i in range(len(categories))]
-    if user_color:
-        colors[0] = user_color
+    try:
+        _gc = json.loads(graph_colors_json) if graph_colors_json else {}
+    except Exception:
+        _gc = {}
+    bar_gc = _gc.get("bar") if isinstance(_gc.get("bar"), dict) else {}
+    by_cat = bar_gc.get("byCategory") if isinstance(bar_gc.get("byCategory"), dict) else {}
+    colors = []
+    for i, cat in enumerate(categories):
+        key = str(cat)
+        c = by_cat.get(key)
+        if not (isinstance(c, str) and c.startswith("#")):
+            c = brand_palette[i % len(brand_palette)]
+        colors.append(c)
+    if (not by_cat) and user_color and user_color.startswith("#"):
+        colors = [user_color] * len(categories)
     
     fig = px.bar(
         df_bar,
@@ -314,6 +402,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
+import json
 
 # =============================================================================
 # Histogram — platform injects X as one string:
@@ -368,9 +457,35 @@ elif len(valid_columns) == 1:
     user_color = get_or_default(color)
     if user_color == "pink":
         user_color = ""
-    color_sequence = (
-        brand_palette if color_param else [user_color or brand_palette[0]]
-    )
+    try:
+        _hroot = json.loads(graph_colors_json) if graph_colors_json else {}
+    except Exception:
+        _hroot = {}
+    hist_gc = _hroot.get("histogram") if isinstance(_hroot.get("histogram"), dict) else {}
+    by_series = hist_gc.get("bySeries") if isinstance(hist_gc.get("bySeries"), dict) else {}
+    group_order_ids = None
+    if color_param:
+        raw_ids = list(df[Group].dropna().unique())
+        try:
+            group_order_ids = sorted(raw_ids, key=lambda v: str(v))
+        except TypeError:
+            group_order_ids = raw_ids
+        color_sequence = []
+        for i, gk in enumerate(group_order_ids):
+            gk_str = str(gk)
+            c = by_series.get(gk_str)
+            if c is None:
+                c = by_series.get(gk)
+            if not (isinstance(c, str) and c.startswith("#")):
+                c = brand_palette[i % len(brand_palette)]
+            color_sequence.append(c)
+    else:
+        dfc = by_series.get("__default__")
+        if not (isinstance(dfc, str) and dfc.startswith("#")):
+            dfc = user_color if isinstance(user_color, str) and user_color.startswith("#") else None
+        if not dfc:
+            dfc = brand_palette[0]
+        color_sequence = [dfc]
 
     marginal = "rug" if marginalPlot == "rug" else "box" if marginalPlot == "box" else None
 
@@ -378,8 +493,8 @@ elif len(valid_columns) == 1:
     x_title = get_or_default(xLabel, col)
     y_title = get_or_default(yLabel, "Count")
 
-    fig = px.histogram(
-        df,
+    _hist_kw = dict(
+        data_frame=df,
         x=col,
         color=color_param,
         marginal=marginal,
@@ -387,8 +502,11 @@ elif len(valid_columns) == 1:
         labels={col: x_title, "count": y_title},
         template="plotly_white",
         opacity=0.75,
-        color_discrete_sequence=color_sequence
+        color_discrete_sequence=color_sequence,
     )
+    if color_param and group_order_ids is not None:
+        _hist_kw["category_orders"] = {Group: group_order_ids}
+    fig = px.histogram(**_hist_kw)
 
     fig.update_layout(
         showlegend=showlegend,
@@ -425,6 +543,19 @@ else:
     x_title = get_or_default(xLabel, cols_label)
     y_title = get_or_default(yLabel, "Count")
 
+    try:
+        _hroot2 = json.loads(graph_colors_json) if graph_colors_json else {}
+    except Exception:
+        _hroot2 = {}
+    hist_gc2 = _hroot2.get("histogram") if isinstance(_hroot2.get("histogram"), dict) else {}
+    by_series2 = hist_gc2.get("bySeries") if isinstance(hist_gc2.get("bySeries"), dict) else {}
+    multi_colors = []
+    for i, name in enumerate(valid_columns):
+        c = by_series2.get(str(name))
+        if not (isinstance(c, str) and c.startswith("#")):
+            c = brand_palette[i % len(brand_palette)]
+        multi_colors.append(c)
+
     # Marginals are ambiguous with overlaid series; omit for multi-column mode.
     fig = px.histogram(
         df_long,
@@ -436,7 +567,7 @@ else:
         labels={"data": x_title, "count": y_title, "series": "Column"},
         template="plotly_white",
         opacity=0.75,
-        color_discrete_sequence=brand_palette
+        color_discrete_sequence=multi_colors
     )
 
     fig.update_layout(

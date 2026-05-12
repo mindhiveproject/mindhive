@@ -2,10 +2,23 @@ import useTranslation from "next-translate/useTranslation";
 
 import FieldRow from "../../../_shared/FieldRow";
 import SectionHeader from "../../../_shared/SectionHeader";
+import GraphColorHexRow from "../_shared/GraphColorHexRow";
+import { rowsForGraphColorKeys } from "../_shared/graphColorSliceRows";
+import {
+  barLongCategoryKeys,
+  barWideCategoryKeys,
+} from "../_shared/graphColorUtils";
 
 const G = "dataJournal.graph";
 
-export default function OptionsBarPlot({ sectionId, selectors, onChange }) {
+export default function OptionsBarPlot({
+  sectionId,
+  selectors,
+  onChange,
+  slice = null,
+  sliceReady = false,
+  variables = [],
+}) {
   const { t } = useTranslation("builder");
 
   const patchSelectors = (partial) => {
@@ -15,6 +28,39 @@ export default function OptionsBarPlot({ sectionId, selectors, onChange }) {
         selectors: { ...selectors, ...partial },
       },
     });
+  };
+
+  const patchGraphColors = (mutator) => {
+    const prev =
+      selectors.graphColors && typeof selectors.graphColors === "object"
+        ? { ...selectors.graphColors }
+        : { version: 1 };
+    const graphColors = mutator(prev);
+    patchSelectors({ graphColors });
+  };
+
+  const dataFormatStr = String(selectors.dataFormat || "")
+    .trim()
+    .toLowerCase();
+  const isWide = dataFormatStr === "wide";
+  const rows = sliceReady && slice ? rowsForGraphColorKeys(slice) : [];
+  const barKeys = isWide
+    ? barWideCategoryKeys(selectors.colToPlot, variables)
+    : barLongCategoryKeys(rows, selectors.qualCol, variables);
+  const barGc = selectors.graphColors?.bar || {};
+
+  const resetBarColors = () => {
+    const prev = selectors.graphColors && typeof selectors.graphColors === "object"
+      ? { ...selectors.graphColors }
+      : {};
+    delete prev.bar;
+    const restKeys = Object.keys(prev).filter((k) => k !== "version");
+    if (restKeys.length === 0) {
+      const { graphColors: _omit, ...sel } = selectors;
+      patchSelectors(sel);
+    } else {
+      patchSelectors({ graphColors: { ...prev, version: 1 } });
+    }
   };
 
   return (
@@ -108,38 +154,51 @@ export default function OptionsBarPlot({ sectionId, selectors, onChange }) {
       </div>
 
       <div className="subheader">
-        {t(`${G}.options.barPlot.color.heading`, {}, { default: "Color" })}
+        {t(`${G}.options.colors.sectionTitle`, {}, { default: "Colors" })}
       </div>
       <div className="subsection">
-        <FieldRow label={t(`${G}.options.barPlot.color.intro`, {}, {
-          default:
-            "Give a base color for the bar (remove square brackets to use the examples below).",
-        })}>
-          <input
-            id={`color-${sectionId}`}
-            type="text"
-            name="color"
-            value={selectors["color"] ?? ""}
-            onChange={({ target }) => patchSelectors({ color: target.value })}
+        {!sliceReady && (
+          <p className="graphColorHint">
+            {t(`${G}.options.colors.dataNotReady`, {}, {
+              default: "Load data to pick colors for each group.",
+            })}
+          </p>
+        )}
+        {barKeys.length === 0 && sliceReady && (
+          <p className="graphColorHint">
+            {t(`${G}.options.colors.barNoCategories`, {}, {
+              default: "Configure axes to see one color slot per bar.",
+            })}
+          </p>
+        )}
+        {barKeys.map((cat) => (
+          <GraphColorHexRow
+            key={String(cat)}
+            sectionId={sectionId}
+            rowId={`bar-cat-${sectionId}-${String(cat)}`}
+            label={t(`${G}.options.colors.bar.categorySwatch`, { category: String(cat) }, {
+              default: "Bar: {{category}}",
+            })}
+            value={barGc.byCategory?.[String(cat)]}
+            disabled={!sliceReady}
+            onChange={(hex) => {
+              patchGraphColors((prev) => {
+                const bar = { ...(prev.bar || {}) };
+                const byCategory = { ...(bar.byCategory || {}) };
+                const k = String(cat);
+                if (hex == null) delete byCategory[k];
+                else byCategory[k] = hex;
+                bar.byCategory = byCategory;
+                return { ...prev, version: 1, bar };
+              });
+            }}
           />
-        </FieldRow>
-        <div className="graphEditorOptionsHintStack">
-          <p style={{ margin: "0.25rem 0 0", color: "#666666", fontSize: "14px", lineHeight: "150%" }}>
-            {t(`${G}.options.barPlot.color.examplesNames`, {}, {
-              default: "- Color names: [red], [pink]",
-            })}
-          </p>
-          <p style={{ margin: "0.25rem 0 0", color: "#666666", fontSize: "14px", lineHeight: "150%" }}>
-            {t(`${G}.options.barPlot.color.examplesRgb`, {}, {
-              default: "- RGB value [100,255,0], [0,120,80]",
-            })}
-          </p>
-          <p style={{ margin: "0.25rem 0 0", color: "#666666", fontSize: "14px", lineHeight: "150%" }}>
-            {t(`${G}.options.barPlot.color.examplesHex`, {}, {
-              default: "- HEX format [#28619E], [#D53533]",
-            })}
-          </p>
-        </div>
+        ))}
+        {barGc.byCategory && Object.keys(barGc.byCategory).length > 0 && (
+          <button type="button" className="graphColorResetAll" onClick={resetBarColors}>
+            {t(`${G}.options.colors.resetBar`, {}, { default: "Reset bar colors" })}
+          </button>
+        )}
       </div>
     </div>
   );

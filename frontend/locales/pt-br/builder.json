@@ -568,6 +568,28 @@
 					"legendAndXAxisSection": "Rótulos do eixo X e título da legenda",
 					"yAxis": "Eixo Y"
 				},
+				"colors": {
+					"bar": {
+						"categorySwatch": "Barra: {{category}}"
+					},
+					"barNoCategories": "Configure os eixos para exibir um espaço de cor por barra.",
+					"dataNotReady": "Carregar dados para selecionar cores para cada grupo.",
+					"histogram": {
+						"seriesSwatch": "Série: {{series}}",
+						"singleSeries": "Bares"
+					},
+					"histogramNoSeries": "Selecione a(s) coluna(s) na guia Eixos para definir as cores do histograma.",
+					"resetBar": "Redefinir cores da barra",
+					"resetHistogram": "Redefinir cores do histograma",
+					"resetScatter": "Redefinir cores de dispersão",
+					"scatter": {
+						"groupSwatch": "Grupo: {{group}}",
+						"markerDots": "Pontos",
+						"noGroupLabel": "Sem rótulo de grupo",
+						"trendline": "Linha de tendência"
+					},
+					"sectionTitle": "Cores"
+				},
 				"histogram": {
 					"header": {
 						"iconAlt": "Opções",

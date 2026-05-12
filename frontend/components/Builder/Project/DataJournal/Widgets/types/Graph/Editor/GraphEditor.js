@@ -88,6 +88,9 @@ export default function GraphEditor({ content, onChange, sectionId }) {
               sectionId={sectionId}
               selectors={selectors}
               onChange={onChange}
+              slice={slice}
+              sliceReady={sliceReady}
+              variables={variablesToDisplay}
             />
           </div>
         </div>

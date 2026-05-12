@@ -12,6 +12,7 @@ import { registerJsWorkspaceFromSlice, enqueueJsWorkspaceTask } from "../../../H
 import useResolvedJournalSlice from "../../../Hooks/useResolvedJournalSlice";
 import { useWidgetSize } from "../../WidgetSizeContext";
 import { DATAFRAME_SAFETY_PYTHON } from "../_shared/pyodideDataframeSafety";
+import { applyGraphColorsPlotlyFig } from "./applyGraphColorsPlotlyFig";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
@@ -126,6 +127,10 @@ export default function Render({
           onFigureReadyChange?.(false);
           return;
         }
+        const gcStrScatter = JSON.stringify(
+          s.graphColors != null && typeof s.graphColors === "object" ? s.graphColors : {},
+        );
+
         variablesCode = `
 X = "${escaped(pyCol(s.xVariable))}"
 Y = "${escaped(pyCol(s.yVariable))}"
@@ -140,6 +145,7 @@ yRangeMax = "${escaped(s.yRangeMax || "")}"
 marginalPlot = "${escaped(s.marginalPlot || "")}"
 legend_title_text = "${escaped(s.legend_title_text || "")}"
 color = "${escaped(s.color || "pink")}"
+graph_colors_json = "${escaped(gcStrScatter)}"
 trendline = ${s.trendLine ? "True" : "False"}
         `;
       } else if (type === "barGraph") {
@@ -160,6 +166,10 @@ trendline = ${s.trendLine ? "True" : "False"}
           return;
         }
 
+        const gcStrBar = JSON.stringify(
+          s.graphColors != null && typeof s.graphColors === "object" ? s.graphColors : {},
+        );
+
         variablesCode = `
 dataFormat = "${escaped(dataFormatStr)}"
 isWide = ${isWide ? "True" : "False"}
@@ -174,6 +184,7 @@ yRangeMin = "${escaped(s.yRangeMin || "")}"
 yRangeMax = "${escaped(s.yRangeMax || "")}"
 legend_title = "${escaped(s.legend_title || s.legend_title_text || "")}"
 color = "${escaped(s.color || "pink")}"
+graph_colors_json = "${escaped(gcStrBar)}"
         `;
       } else if (type === "histogram") {
         // X may be a string (legacy) or string[] from multi-select; platform joins arrays
@@ -192,6 +203,10 @@ color = "${escaped(s.color || "pink")}"
           return;
         }
 
+        const gcStrHist = JSON.stringify(
+          s.graphColors != null && typeof s.graphColors === "object" ? s.graphColors : {},
+        );
+
         variablesCode = `
 X = "${escaped(pyColsJoined(s.X))}"
 Group = "${escaped(pyCol(s.Group))}"
@@ -205,6 +220,7 @@ yRangeMin = "${escaped(s.yRangeMin || "")}"
 yRangeMax = "${escaped(s.yRangeMax || "")}"
 legend_title_text = "${escaped(s.legend_title_text || "")}"
 color = "${escaped(s.color || "")}"
+graph_colors_json = "${escaped(gcStrHist)}"
 bargap = ${Number(s.bargap ?? 0.1)}
         `;
       } else {
@@ -278,9 +294,10 @@ ${outputVar} = ${funcName}()
         const jsonStr = pyodide.globals.get(outputVar);
         if (jsonStr && typeof jsonStr === "string" && jsonStr.trim()) {
           const parsed = JSON.parse(jsonStr);
+          const withColors = applyGraphColorsPlotlyFig(parsed, content);
           const hasMeaningfulFigure =
-            Array.isArray(parsed?.data) && parsed.data.length > 0;
-          setFigJson(parsed);
+            Array.isArray(withColors?.data) && withColors.data.length > 0;
+          setFigJson(withColors);
           setError(null);
           onFigureReadyChange?.(hasMeaningfulFigure);
         } else {

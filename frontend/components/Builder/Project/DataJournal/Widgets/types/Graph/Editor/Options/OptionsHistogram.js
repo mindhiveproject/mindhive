@@ -2,10 +2,19 @@ import useTranslation from "next-translate/useTranslation";
 
 import FieldRow from "../../../_shared/FieldRow";
 import SectionHeader from "../../../_shared/SectionHeader";
+import GraphColorHexRow from "../_shared/GraphColorHexRow";
+import { histogramSeriesKeys } from "../_shared/graphColorUtils";
 
 const G = "dataJournal.graph";
 
-export default function OptionsHistogram({ sectionId, selectors, onChange }) {
+export default function OptionsHistogram({
+  sectionId,
+  selectors,
+  onChange,
+  slice = null,
+  sliceReady = false,
+  variables = [],
+}) {
   const { t } = useTranslation("builder");
 
   const patchSelectors = (partial) => {
@@ -14,6 +23,41 @@ export default function OptionsHistogram({ sectionId, selectors, onChange }) {
       newContent: {
         selectors: { ...selectors, ...partial },
       },
+    });
+  };
+
+  const patchGraphColors = (mutator) => {
+    const prev =
+      selectors.graphColors && typeof selectors.graphColors === "object"
+        ? { ...selectors.graphColors }
+        : { version: 1 };
+    const graphColors = mutator(prev);
+    patchSelectors({ graphColors });
+  };
+
+  const seriesKeys = histogramSeriesKeys(selectors, variables, slice);
+  const histGc = selectors.graphColors?.histogram || {};
+
+  const resetHistColors = () => {
+    const prev = selectors.graphColors && typeof selectors.graphColors === "object"
+      ? { ...selectors.graphColors }
+      : {};
+    delete prev.histogram;
+    const restKeys = Object.keys(prev).filter((k) => k !== "version");
+    if (restKeys.length === 0) {
+      const { graphColors: _omit, ...sel } = selectors;
+      patchSelectors(sel);
+    } else {
+      patchSelectors({ graphColors: { ...prev, version: 1 } });
+    }
+  };
+
+  const labelForSeriesKey = (key) => {
+    if (key === "__default__") {
+      return t(`${G}.options.colors.histogram.singleSeries`, {}, { default: "Bars" });
+    }
+    return t(`${G}.options.colors.histogram.seriesSwatch`, { series: key }, {
+      default: "Series: {{series}}",
     });
   };
 
@@ -107,6 +151,51 @@ export default function OptionsHistogram({ sectionId, selectors, onChange }) {
             />
           </div>
         </FieldRow>
+      </div>
+
+      <div className="subheader">
+        {t(`${G}.options.colors.sectionTitle`, {}, { default: "Colors" })}
+      </div>
+      <div className="subsection">
+        {!sliceReady && (
+          <p className="graphColorHint">
+            {t(`${G}.options.colors.dataNotReady`, {}, {
+              default: "Load data to pick colors for each group.",
+            })}
+          </p>
+        )}
+        {seriesKeys.length === 0 && sliceReady && (
+          <p className="graphColorHint">
+            {t(`${G}.options.colors.histogramNoSeries`, {}, {
+              default: "Select column(s) on the Axes tab to set histogram colors.",
+            })}
+          </p>
+        )}
+        {seriesKeys.map((sk) => (
+          <GraphColorHexRow
+            key={sk}
+            sectionId={sectionId}
+            rowId={`hist-series-${sectionId}-${sk}`}
+            label={labelForSeriesKey(sk)}
+            value={histGc.bySeries?.[sk]}
+            disabled={!sliceReady}
+            onChange={(hex) => {
+              patchGraphColors((prev) => {
+                const histogram = { ...(prev.histogram || {}) };
+                const bySeries = { ...(histogram.bySeries || {}) };
+                if (hex == null) delete bySeries[sk];
+                else bySeries[sk] = hex;
+                histogram.bySeries = bySeries;
+                return { ...prev, version: 1, histogram };
+              });
+            }}
+          />
+        ))}
+        {histGc.bySeries && Object.keys(histGc.bySeries).length > 0 && (
+          <button type="button" className="graphColorResetAll" onClick={resetHistColors}>
+            {t(`${G}.options.colors.resetHistogram`, {}, { default: "Reset histogram colors" })}
+          </button>
+        )}
       </div>
 
       <div className="subheader">
