@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import { Message, Icon, Table } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import { DATAFRAME_SAFETY_PYTHON } from "../_shared/pyodideDataframeSafety";
+import { selectorListForPyodide, selectorValueForPyodide } from "../../../Helpers/selectorValueForPyodide";
 import { registerJsWorkspaceFromSlice, enqueueJsWorkspaceTask } from "../../../Helpers/pyodideWorkspaceRegistration";
 import useResolvedJournalSlice from "../../../Hooks/useResolvedJournalSlice";
 
 export default function Render({ code, pyodide, sectionId, content }) {
   const { t } = useTranslation("builder");
   const { slice, sliceReady } = useResolvedJournalSlice(content);
+  const djVariables = Array.isArray(slice?.variables) ? slice.variables : [];
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -48,6 +50,9 @@ export default function Render({ code, pyodide, sectionId, content }) {
 
       let variablesCode = "";
       let hasRequired = true;
+      const pyCol = (raw) => selectorValueForPyodide(raw, djVariables);
+      const pyColsJoined = (raw) =>
+        selectorListForPyodide(raw, djVariables).join(",");
 
       if (type === "tTest" || type === "oneWayAnova") {
         const isWide = s.dataFormat === "wide";
@@ -64,7 +69,13 @@ export default function Render({ code, pyodide, sectionId, content }) {
           required = ["valCol", "groupcol"];
         }
 
-        hasRequired = required.every((key) => !!s[key]);
+        hasRequired = required.every((key) => {
+          const value = s[key];
+          if (Array.isArray(value)) {
+            return value.some((item) => item != null && String(item).trim());
+          }
+          return value != null && String(value).trim();
+        });
 
         if (!hasRequired) {
           setResult(null);
@@ -80,23 +91,25 @@ dataFormat = "${escapePy(s.dataFormat || "long")}"
         if (isWide) {
           if (type === "tTest") {
             variablesCode += `
-col1 = "${escapePy(s.col1 || "")}"
-col2 = "${escapePy(s.col2 || "")}"
+col1 = "${escapePy(pyCol(s.col1))}"
+col2 = "${escapePy(pyCol(s.col2))}"
             `;
           } else {
             variablesCode += `
-colToAnalyse = "${escapePy(s.colToAnalyse || "")}"
+colToAnalyse = "${escapePy(pyColsJoined(s.colToAnalyse))}"
             `;
           }
         } else {
           variablesCode += `
-quantCol = "${escapePy(s.valCol || "")}"
-groupcol = "${escapePy(s.groupcol || "")}"
+quantCol = "${escapePy(pyCol(s.valCol))}"
+groupcol = "${escapePy(pyCol(s.groupcol))}"
           `;
         }
       } else if (type === "pearsonCorr") {
         const required = ["col1", "col2"];
-        hasRequired = required.every((key) => !!s[key]);
+        hasRequired = required.every(
+          (key) => s[key] != null && String(s[key]).trim(),
+        );
 
         if (!hasRequired) {
           setResult(null);
@@ -106,8 +119,8 @@ groupcol = "${escapePy(s.groupcol || "")}"
 
         // No leading spaces before variable names!
         variablesCode = `
-col1 = "${escapePy(s.col1 || "")}"
-col2 = "${escapePy(s.col2 || "")}"
+col1 = "${escapePy(pyCol(s.col1))}"
+col2 = "${escapePy(pyCol(s.col2))}"
   `.trim(); // .trim() removes leading/trailing newlines & spaces
       }
 
@@ -191,6 +204,7 @@ ${funcName}()
     sectionId,
     content?.type,
     content?.datasourceId,
+    djVariables,
     slice,
     sliceReady,
   ]);
