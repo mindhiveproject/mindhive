@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Accordion, Icon } from "semantic-ui-react";
 import { saveAs } from "file-saver";
 import moment from "moment";
@@ -34,6 +34,55 @@ export default function Menu({
   const [activeIndex, setActiveIndex] = useState(
     components.map((_, index) => index) || []
   );
+  const [variableSearch, setVariableSearch] = useState("");
+
+  const userVariables = useMemo(
+    () => variables.filter((column) => column.type === "user"),
+    [variables],
+  );
+
+  const generalVariables = useMemo(
+    () => variables.filter((column) => column.type === "general"),
+    [variables],
+  );
+
+  const filterVariablesBySearch = (columns) => {
+    const q = variableSearch.trim().toLowerCase();
+    if (!q) return columns;
+    return columns.filter((column) => {
+      const display = String(column.displayName || "").toLowerCase();
+      const field = String(column.field || "").toLowerCase();
+      return display.includes(q) || field.includes(q);
+    });
+  };
+
+  const hasActiveVariableSearch = variableSearch.trim().length > 0;
+
+  const renderFilteredVariableRows = (sourceColumns, keyPrefix) => {
+    const filtered = filterVariablesBySearch(sourceColumns);
+    if (
+      filtered.length === 0 &&
+      sourceColumns.length > 0 &&
+      hasActiveVariableSearch
+    ) {
+      return (
+        <div className="variables-section__searchEmpty" role="status">
+          {t(
+            "dataJournal.datasetMenu.variablesSearch.noMatches",
+            {},
+            { default: "No variables match your search." },
+          )}
+        </div>
+      );
+    }
+    return filtered.map((column, index) => (
+      <Variable
+        key={column.field || `${keyPrefix}-${index}`}
+        column={column}
+        onVariableChange={onVariableChange}
+      />
+    ));
+  };
 
   const tAlerts = {
     updated: t("dataJournal.datasetMenu.alerts.updated", {}, {
@@ -395,6 +444,26 @@ export default function Menu({
         ) : null}
       </div>
 
+      <div className="variables-global-search">
+        <input
+          id="dataset-menu-variables-search"
+          type="search"
+          className="variables-global-search__input"
+          value={variableSearch}
+          onChange={(e) => setVariableSearch(e.target.value)}
+          placeholder={t(
+            "dataJournal.datasetMenu.variablesSearch.placeholder",
+            {},
+            { default: "Search variables…" },
+          )}
+          aria-label={t(
+            "dataJournal.datasetMenu.variablesSearch.ariaLabel",
+            {},
+            { default: "Search variables" },
+          )}
+        />
+      </div>
+
       <div className="variables-section">
         <div className="section-header">
           {t("dataJournal.datasetMenu.sections.userVariables", {}, {
@@ -402,15 +471,7 @@ export default function Menu({
           })}
         </div>
         <div className="variables">
-          {variables
-            .filter((column) => column.type === "user")
-            .map((column, num) => (
-              <Variable
-                key={num}
-                column={column}
-                onVariableChange={onVariableChange}
-              />
-            ))}
+          {renderFilteredVariableRows(userVariables, "user-var")}
         </div>
       </div>
 
@@ -421,15 +482,7 @@ export default function Menu({
           })}
         </div>
         <div className="variables">
-          {variables
-            .filter((column) => column.type === "general")
-            .map((column, num) => (
-              <Variable
-                key={num}
-                column={column}
-                onVariableChange={onVariableChange}
-              />
-            ))}
+          {renderFilteredVariableRows(generalVariables, "general-var")}
         </div>
       </div>
 
@@ -459,16 +512,14 @@ export default function Menu({
                   })}
                 </div>
                 <div className="variables">
-                  {variables
-                    .filter((column) => column.type === "task")
-                    .filter((column) => column.testId === task?.testId)
-                    .map((column, num) => (
-                      <Variable
-                        key={num}
-                        column={column}
-                        onVariableChange={onVariableChange}
-                      />
-                    ))}
+                  {renderFilteredVariableRows(
+                    variables.filter(
+                      (column) =>
+                        column.type === "task" &&
+                        column.testId === task?.testId,
+                    ),
+                    `task-var-${task?.testId ?? index}`,
+                  )}
                 </div>
               </div>
             </Accordion.Content>

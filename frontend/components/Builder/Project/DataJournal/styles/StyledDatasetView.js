@@ -112,6 +112,7 @@ export const StyledDatasetView = styled.div`
         flex-wrap: wrap;
         gap: 8px;
         align-items: center;
+        margin-bottom: 8px;
 
         .toolbarChip {
           display: inline-flex;
@@ -150,6 +151,37 @@ export const StyledDatasetView = styled.div`
         }
       }
 
+      .variables-global-search {
+        margin-top: 0;
+        margin-bottom: 2px;
+      }
+
+      .variables-global-search__input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1.5px solid #e0e0e0;
+        background: #ffffff;
+        color: #1e293b;
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.4;
+        min-width: 0;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+        &::placeholder {
+          color: #A1A1A1;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+          box-shadow: 0 0 0 2px rgba(51, 111, 138, 0.15);
+        }
+      }
+
       .variables-section {
         display: flex;
         flex-direction: column;
@@ -169,6 +201,14 @@ export const StyledDatasetView = styled.div`
           display: grid;
           gap: 0.5rem;
           min-width: 0;
+        }
+
+        .variables-section__searchEmpty {
+          font-family: Inter, sans-serif;
+          font-size: 13px;
+          line-height: 1.4;
+          color: #64748b;
+          padding: 8px 4px;
         }
 
         .variableRow {

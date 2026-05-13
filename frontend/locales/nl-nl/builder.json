@@ -377,6 +377,11 @@
 				"rename": "Hernoemen",
 				"renamePrompt": "Voer een nieuwe naam in:",
 				"showAria": "Toon {{name}}"
+			},
+			"variablesSearch": {
+				"ariaLabel": "Zoekvariabelen",
+				"noMatches": "Er zijn geen zoektermen gevonden die overeenkomen met uw zoekopdracht.",
+				"placeholder": "Zoekvariabelen…"
 			}
 		},
 		"datasets": {

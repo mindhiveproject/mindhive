@@ -377,6 +377,11 @@
 				"rename": "إعادة تسمية",
 				"renamePrompt": "الرجاء إدخال الاسم الجديد:",
 				"showAria": "عرض {{name}}"
+			},
+			"variablesSearch": {
+				"ariaLabel": "متغيرات البحث",
+				"noMatches": "لا توجد متغيرات تطابق بحثك.",
+				"placeholder": "متغيرات البحث..."
 			}
 		},
 		"datasets": {

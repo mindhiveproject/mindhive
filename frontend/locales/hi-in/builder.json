@@ -377,6 +377,11 @@
 				"rename": "नाम बदलें",
 				"renamePrompt": "कृपया नया नाम दर्ज करें:",
 				"showAria": "दिखाएँ {{name}}"
+			},
+			"variablesSearch": {
+				"ariaLabel": "खोज चर",
+				"noMatches": "आपकी खोज से मेल खाने वाले कोई चर नहीं हैं।",
+				"placeholder": "खोज चर…"
 			}
 		},
 		"datasets": {

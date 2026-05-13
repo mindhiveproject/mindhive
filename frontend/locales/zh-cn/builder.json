@@ -377,6 +377,11 @@
 				"rename": "改名",
 				"renamePrompt": "请输入新名称：",
 				"showAria": "显示 {{name}}"
+			},
+			"variablesSearch": {
+				"ariaLabel": "搜索变量",
+				"noMatches": "没有找到符合您搜索条件的变量。",
+				"placeholder": "搜索变量…"
 			}
 		},
 		"datasets": {

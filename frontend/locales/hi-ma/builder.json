@@ -377,6 +377,11 @@
 				"rename": "",
 				"renamePrompt": "",
 				"showAria": ""
+			},
+			"variablesSearch": {
+				"ariaLabel": "",
+				"noMatches": "",
+				"placeholder": ""
 			}
 		},
 		"datasets": {

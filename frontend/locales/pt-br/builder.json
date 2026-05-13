@@ -377,6 +377,11 @@
 				"rename": "Renomear",
 				"renamePrompt": "Por favor, insira um novo nome:",
 				"showAria": "Mostrar {{name}}"
+			},
+			"variablesSearch": {
+				"ariaLabel": "Variáveis ​​de pesquisa",
+				"noMatches": "Nenhuma variável corresponde à sua pesquisa.",
+				"placeholder": "Variáveis ​​de pesquisa…"
 			}
 		},
 		"datasets": {
