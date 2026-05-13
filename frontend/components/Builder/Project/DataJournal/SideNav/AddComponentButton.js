@@ -41,7 +41,7 @@ export default function AddComponentButton({ disabled = false, onClick }) {
   const label = t(
     "dataJournal.sideNav.addComponent",
     {},
-    { default: "Add a Component" },
+    { default: "Component" },
   );
   const ariaLabel = t(
     "dataJournal.sideNav.addComponentAria",

@@ -71,6 +71,7 @@ export function processRawData({
     );
 
     participantData.map((row) => {
+      // generate variables
       generalKeys = Object.keys(row?.general).map((k) => ({
         field: k,
         type: "general",
@@ -87,6 +88,7 @@ export function processRawData({
       }));
       resultKeys.forEach((key) => {
         let keyExtended = { ...key };
+        // if the key is already present, append a subtitle to the name of the key
         if (data[key?.field]) {
           keyExtended.field = key?.field + "_" + key?.subtitle;
         }
@@ -101,6 +103,7 @@ export function processRawData({
       });
     });
 
+    // append participant data that was modified or added by user
     let modifiedParticipantData = {};
     if (modifiedData?.length) {
       modifiedParticipantData = modifiedData.find(
@@ -120,6 +123,7 @@ export function processRawData({
 
   let variables = [];
   if (modifiedVariables?.length) {
+    // modified variables and new variables from the study data
     const modifiedStudyVariables = variableNames.map((variable) => {
       if (modifiedVariables.map((v) => v?.field).includes(variable?.field)) {
         const modifiedVariable = modifiedVariables.find(
@@ -137,6 +141,7 @@ export function processRawData({
         };
       }
     });
+    // new variables created by the user
     const customVariables = modifiedVariables.filter(
       (v) =>
         !variableNames.map((variable) => variable?.field).includes(v?.field)
