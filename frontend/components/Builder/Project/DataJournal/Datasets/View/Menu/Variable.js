@@ -1,34 +1,38 @@
-import { Dropdown, DropdownMenu, DropdownItem } from "semantic-ui-react";
+import { useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-export default function Variable({ column, onVariableChange }) {
+import DropdownMenu from "../../../../../../DesignSystem/DropdownMenu";
+
+export default function Variable({
+  column,
+  onVariableChange,
+  allowRename = false,
+}) {
   const { t } = useTranslation("builder");
 
   const isHidden = !!column?.hide;
   const label = column?.displayName || column?.field;
+  const hasDisplayName =
+    typeof column?.displayName === "string" &&
+    column.displayName.trim() !== "";
+  /** Display name is metadata; cell editing still uses `column.editable` in the grid. */
+  const canRename = allowRename && Boolean(column?.field);
+  const canDelete = column?.type === "user";
+  const showActionsMenu = canRename || canDelete;
+  const showOriginalNameInMenu =
+    hasDisplayName && Boolean(column?.field);
 
-  const onRename = ({ variable }) => {
-    const newName = prompt(
-      t("dataJournal.datasetMenu.variable.renamePrompt", {}, {
-        default: "Please enter new name:",
-      }),
-    );
-    if (newName && newName !== "") {
-      onVariableChange({
-        variable,
-        property: "displayName",
-        value: newName,
-      });
-    }
-  };
+  const originalNameInMenuLabel = t(
+    "dataJournal.datasetMenu.variable.originalNameInMenu",
+    { field: column?.field || "" },
+    { default: "Original name: {{field}}" },
+  );
 
-  const onDelete = ({ variable }) => {
-    onVariableChange({
-      variable,
-      property: "isDeleted",
-      value: true,
-    });
-  };
+  const moreMenuAria = t(
+    "dataJournal.datasetMenu.variable.moreActionsAria",
+    { name: label },
+    { default: "More actions for {{name}}" },
+  );
 
   const toggleVisibility = () => {
     onVariableChange({
@@ -50,6 +54,64 @@ export default function Variable({ column, onVariableChange }) {
         default: "Hide {{name}}",
       });
 
+  const menuItems = useMemo(() => {
+    const field = column?.field;
+    const items = [];
+    if (canRename) {
+      items.push({
+        key: "rename",
+        label: (
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <img
+              src="/assets/icons/visualize/edit.svg"
+              alt=""
+              aria-hidden="true"
+              width={16}
+              height={16}
+              style={{ flexShrink: 0 }}
+            />
+            <span>
+              {t("dataJournal.datasetMenu.variable.rename", {}, {
+                default: "Rename",
+              })}
+            </span>
+          </div>
+        ),
+        onClick: () => {
+          const newName = prompt(
+            t("dataJournal.datasetMenu.variable.renamePrompt", {}, {
+              default: "Please enter new name:",
+            }),
+          );
+          if (newName && newName !== "") {
+            onVariableChange({
+              variable: field,
+              property: "displayName",
+              value: newName,
+            });
+          }
+        },
+      });
+    }
+    if (canDelete) {
+      items.push({
+        key: "delete",
+        danger: true,
+        label: t("dataJournal.datasetMenu.variable.delete", {}, {
+          default: "Delete",
+        }),
+        onClick: () => {
+          onVariableChange({
+            variable: field,
+            property: "isDeleted",
+            value: true,
+          });
+        },
+      });
+    }
+    return items;
+  }, [allowRename, canRename, canDelete, column?.field, onVariableChange, t]);
+
   return (
     <div className={isHidden ? "variableRow hidden" : "variableRow"}>
       <div className="variableRowHeader">
@@ -68,56 +130,26 @@ export default function Variable({ column, onVariableChange }) {
             {label}
           </span>
         </div>
-        <div className="variableRowActions">
-          <Dropdown
-            icon={
-              <img
-                src="/assets/icons/visualize/more_vert.svg"
-                alt=""
-                aria-hidden="true"
-              />
-            }
-            direction="left"
-          >
-            <DropdownMenu>
-              <DropdownItem
-                onClick={() => onRename({ variable: column?.field })}
-              >
-                <div className="menuItem">
-                  <img
-                    src="/assets/icons/visualize/edit.svg"
-                    alt=""
-                    aria-hidden="true"
-                  />
-                  <span className="menuItemLabel">
-                    {t("dataJournal.datasetMenu.variable.rename", {}, {
-                      default: "Rename",
-                    })}
-                  </span>
-                </div>
-              </DropdownItem>
-
-              {column?.type === "user" && (
-                <DropdownItem
-                  onClick={() => onDelete({ variable: column?.field })}
-                >
-                  <div className="menuItem">
-                    <img
-                      src="/assets/icons/visualize/delete.svg"
-                      alt=""
-                      aria-hidden="true"
-                    />
-                    <span className="menuItemLabel">
-                      {t("dataJournal.datasetMenu.variable.delete", {}, {
-                        default: "Delete",
-                      })}
-                    </span>
-                  </div>
-                </DropdownItem>
-              )}
-            </DropdownMenu>
-          </Dropdown>
-        </div>
+        {showActionsMenu ? (
+          <div className="variableRowActions">
+            <DropdownMenu
+              ariaLabel={moreMenuAria}
+              trigger={
+                <img
+                  src="/assets/icons/visualize/more_vert.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                  aria-hidden="true"
+                />
+              }
+              panelHeader={
+                showOriginalNameInMenu ? originalNameInMenuLabel : null
+              }
+              items={menuItems}
+            />
+          </div>
+        ) : null}
       </div>
     </div>
   );

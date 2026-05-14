@@ -368,12 +368,24 @@
 			"readOnlyToolbarHint": "",
 			"sections": {
 				"generalVariables": "",
+				"originalVariables": "",
 				"taskVariables": "",
+				"uploadedVariables": "",
 				"userVariables": ""
+			},
+			"taskAccordion": {
+				"collapse": "",
+				"collapseChipAria": "",
+				"expand": "",
+				"expandChipAria": "",
+				"panelAriaLabel": ""
 			},
 			"variable": {
 				"delete": "",
 				"hideAria": "",
+				"moreActionsAria": "",
+				"originalField": "",
+				"originalNameInMenu": "",
 				"rename": "",
 				"renamePrompt": "",
 				"showAria": ""

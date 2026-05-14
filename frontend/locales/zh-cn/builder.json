@@ -368,12 +368,24 @@
 			"readOnlyToolbarHint": "从工作区打开此日志，即可编辑或复制此数据集。",
 			"sections": {
 				"generalVariables": "一般变量",
+				"originalVariables": "原始变量",
 				"taskVariables": "任务变量",
+				"uploadedVariables": "已上传变量",
 				"userVariables": "用户变量"
+			},
+			"taskAccordion": {
+				"collapse": "坍塌",
+				"collapseChipAria": "折叠 {{name}}的变量",
+				"expand": "扩张",
+				"expandChipAria": "展开 {{name}}的变量",
+				"panelAriaLabel": " {{name}}的变量"
 			},
 			"variable": {
 				"delete": "删除",
 				"hideAria": "隐藏 {{name}}",
+				"moreActionsAria": "针对 {{name}}的更多操作",
+				"originalField": "列 ID： {{field}}",
+				"originalNameInMenu": "原名： {{field}}",
 				"rename": "改名",
 				"renamePrompt": "请输入新名称：",
 				"showAria": "显示 {{name}}"

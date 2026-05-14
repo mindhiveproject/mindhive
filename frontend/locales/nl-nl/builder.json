@@ -368,12 +368,24 @@
 			"readOnlyToolbarHint": "Open dit logboek vanuit een werkruimte om deze dataset te bewerken of te kopiëren.",
 			"sections": {
 				"generalVariables": "Algemene variabelen",
+				"originalVariables": "Oorspronkelijke variabelen",
 				"taskVariables": "Taakvariabelen",
+				"uploadedVariables": "Geüploade variabelen",
 				"userVariables": "Gebruikersvariabelen"
+			},
+			"taskAccordion": {
+				"collapse": "Instorten",
+				"collapseChipAria": "Variabelen samenvouwen voor {{name}}",
+				"expand": "Uitbreiden",
+				"expandChipAria": "Variabelen uitbreiden voor {{name}}",
+				"panelAriaLabel": "Variabelen voor {{name}}"
 			},
 			"variable": {
 				"delete": "Verwijderen",
 				"hideAria": "Verberg {{name}}",
+				"moreActionsAria": "Meer acties voor {{name}}",
+				"originalField": "Kolom-ID: {{field}}",
+				"originalNameInMenu": "Oorspronkelijke naam: {{field}}",
 				"rename": "Hernoemen",
 				"renamePrompt": "Voer een nieuwe naam in:",
 				"showAria": "Toon {{name}}"

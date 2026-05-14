@@ -368,12 +368,24 @@
 			"readOnlyToolbarHint": "Откройте этот журнал из рабочей области, чтобы отредактировать или скопировать этот набор данных.",
 			"sections": {
 				"generalVariables": "Общие переменные",
+				"originalVariables": "Исходные переменные",
 				"taskVariables": "Переменные задачи",
+				"uploadedVariables": "Загруженные переменные",
 				"userVariables": "Пользовательские переменные"
+			},
+			"taskAccordion": {
+				"collapse": "Крах",
+				"collapseChipAria": "Свернуть переменные для {{name}}",
+				"expand": "Расширять",
+				"expandChipAria": "Разверните переменные для {{name}}",
+				"panelAriaLabel": "Переменные для {{name}}"
 			},
 			"variable": {
 				"delete": "Удалить",
 				"hideAria": "Скрыть {{name}}",
+				"moreActionsAria": "Дополнительные действия для {{name}}",
+				"originalField": "Идентификатор столбца: {{field}}",
+				"originalNameInMenu": "Оригинальное имя: {{field}}",
 				"rename": "Переименовать",
 				"renamePrompt": "Пожалуйста, введите новое имя:",
 				"showAria": "Показать {{name}}"

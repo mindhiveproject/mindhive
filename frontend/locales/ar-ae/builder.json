@@ -368,12 +368,24 @@
 			"readOnlyToolbarHint": "افتح هذه المدونة من مساحة العمل لتحرير أو نسخ مجموعة البيانات هذه.",
 			"sections": {
 				"generalVariables": "المتغيرات العامة",
+				"originalVariables": "المتغيرات الأصلية",
 				"taskVariables": "متغيرات المهمة",
+				"uploadedVariables": "المتغيرات التي تم تحميلها",
 				"userVariables": "متغيرات المستخدم"
+			},
+			"taskAccordion": {
+				"collapse": "ينهار",
+				"collapseChipAria": "قم بطي المتغيرات لـ {{name}}",
+				"expand": "يوسع",
+				"expandChipAria": "قم بتوسيع المتغيرات لـ {{name}}",
+				"panelAriaLabel": "المتغيرات لـ {{name}}"
 			},
 			"variable": {
 				"delete": "يمسح",
 				"hideAria": "إخفاء {{name}}",
+				"moreActionsAria": "المزيد من الإجراءات لـ {{name}}",
+				"originalField": "معرّف العمود: {{field}}",
+				"originalNameInMenu": "الاسم الأصلي: {{field}}",
 				"rename": "إعادة تسمية",
 				"renamePrompt": "الرجاء إدخال الاسم الجديد:",
 				"showAria": "عرض {{name}}"

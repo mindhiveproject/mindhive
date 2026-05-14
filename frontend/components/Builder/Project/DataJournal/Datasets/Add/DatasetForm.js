@@ -152,7 +152,7 @@ export default function DatasetForm({
       const variables = variableNames.map((variable) => ({
         field: variable,
         type: "general",
-        editable: false,
+        editable: true,
       }));
 
       const metadata = {

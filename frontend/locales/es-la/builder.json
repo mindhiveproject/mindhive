@@ -368,12 +368,24 @@
 			"readOnlyToolbarHint": "Abra este diario desde un espacio de trabajo para editar o copiar este conjunto de datos.",
 			"sections": {
 				"generalVariables": "Variables generales",
+				"originalVariables": "Variables originales",
 				"taskVariables": "Variables de la tarea",
+				"uploadedVariables": "Variables cargadas",
 				"userVariables": "Variables de usuario"
+			},
+			"taskAccordion": {
+				"collapse": "Colapsar",
+				"collapseChipAria": "Colapsar variables para {{name}}",
+				"expand": "Expandir",
+				"expandChipAria": "Expandir variables para {{name}}",
+				"panelAriaLabel": "Variables para {{name}}"
 			},
 			"variable": {
 				"delete": "BORRAR",
 				"hideAria": "Ocultar {{name}}",
+				"moreActionsAria": "Más acciones para {{name}}",
+				"originalField": "ID de columna: {{field}}",
+				"originalNameInMenu": "Nombre original: {{field}}",
 				"rename": "Rebautizar",
 				"renamePrompt": "Por favor, introduzca un nuevo nombre:",
 				"showAria": "Mostrar {{name}}"

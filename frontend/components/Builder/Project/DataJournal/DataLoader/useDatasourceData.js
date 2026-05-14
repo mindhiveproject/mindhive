@@ -71,7 +71,6 @@ export function processRawData({
     );
 
     participantData.map((row) => {
-      // generate variables
       generalKeys = Object.keys(row?.general).map((k) => ({
         field: k,
         type: "general",
@@ -88,7 +87,6 @@ export function processRawData({
       }));
       resultKeys.forEach((key) => {
         let keyExtended = { ...key };
-        // if the key is already present, append a subtitle to the name of the key
         if (data[key?.field]) {
           keyExtended.field = key?.field + "_" + key?.subtitle;
         }
@@ -103,7 +101,6 @@ export function processRawData({
       });
     });
 
-    // append participant data that was modified or added by user
     let modifiedParticipantData = {};
     if (modifiedData?.length) {
       modifiedParticipantData = modifiedData.find(
@@ -123,7 +120,6 @@ export function processRawData({
 
   let variables = [];
   if (modifiedVariables?.length) {
-    // modified variables and new variables from the study data
     const modifiedStudyVariables = variableNames.map((variable) => {
       if (modifiedVariables.map((v) => v?.field).includes(variable?.field)) {
         const modifiedVariable = modifiedVariables.find(
@@ -141,7 +137,6 @@ export function processRawData({
         };
       }
     });
-    // new variables created by the user
     const customVariables = modifiedVariables.filter(
       (v) =>
         !variableNames.map((variable) => variable?.field).includes(v?.field)
@@ -233,6 +228,7 @@ export default function useDatasourceData({ datasource, user }) {
           data: [],
           variables: [],
           settings: {},
+          components: [],
           loading: studyLoading,
           error: studyError,
         };
@@ -244,6 +240,7 @@ export default function useDatasourceData({ datasource, user }) {
             data: [],
             variables: [],
             settings: {},
+            components: [],
             loading: false,
             error: modifiedStudyFileErr,
           };
@@ -253,6 +250,7 @@ export default function useDatasourceData({ datasource, user }) {
             data: [],
             variables: [],
             settings: {},
+            components: [],
             loading: true,
             error: null,
           };
@@ -316,18 +314,26 @@ export default function useDatasourceData({ datasource, user }) {
         modifiedSettings,
       });
 
-      return { data, variables, settings, loading: false, error: null };
+      return { data, variables, settings, components, loading: false, error: null };
     }
 
     if (isUploadLike) {
       if (!uploadedUrl) {
-        return { data: [], variables: [], settings: {}, loading: false, error: null };
+        return {
+          data: [],
+          variables: [],
+          settings: {},
+          components: [],
+          loading: false,
+          error: null,
+        };
       }
       if (uploadedFileErr) {
         return {
           data: [],
           variables: [],
           settings: {},
+          components: [],
           loading: false,
           error: uploadedFileErr,
         };
@@ -337,6 +343,7 @@ export default function useDatasourceData({ datasource, user }) {
           data: [],
           variables: [],
           settings: {},
+          components: [],
           loading: true,
           error: null,
         };
@@ -346,6 +353,7 @@ export default function useDatasourceData({ datasource, user }) {
           data: [],
           variables: [],
           settings: {},
+          components: [],
           loading: false,
           error: new Error("Invalid data file"),
         };
@@ -363,18 +371,36 @@ export default function useDatasourceData({ datasource, user }) {
           data: [],
           variables: [],
           settings: {},
+          components: [],
           loading: false,
           error: e,
         };
       }
       const data = result?.data || [];
-      const variables = result?.metadata?.variables || [];
+      const rawVariables = result?.metadata?.variables || [];
+      const variables = rawVariables.map((v) =>
+        v?.type === "general" ? { ...v, editable: true } : v,
+      );
       const settings = result?.metadata?.settings || dsSettings || {};
 
-      return { data, variables, settings, loading: false, error: null };
+      return {
+        data,
+        variables,
+        settings,
+        components: [],
+        loading: false,
+        error: null,
+      };
     }
 
-    return { data: [], variables: [], settings: {}, loading: false, error: null };
+    return {
+      data: [],
+      variables: [],
+      settings: {},
+      components: [],
+      loading: false,
+      error: null,
+    };
   }, [
     isStudyLike,
     isUploadLike,

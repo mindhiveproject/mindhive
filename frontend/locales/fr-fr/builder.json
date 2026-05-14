@@ -368,12 +368,24 @@
 			"readOnlyToolbarHint": "Ouvrez ce journal depuis un espace de travail pour modifier ou copier cet ensemble de données.",
 			"sections": {
 				"generalVariables": "Variables générales",
+				"originalVariables": "Variables originales",
 				"taskVariables": "Variables de la tâche",
+				"uploadedVariables": "Variables téléchargées",
 				"userVariables": "Variables utilisateur"
+			},
+			"taskAccordion": {
+				"collapse": "Effondrement",
+				"collapseChipAria": "Réduire les variables pour {{name}}",
+				"expand": "Développer",
+				"expandChipAria": "Développer les variables pour {{name}}",
+				"panelAriaLabel": "Variables pour {{name}}"
 			},
 			"variable": {
 				"delete": "SUPPRIMER",
 				"hideAria": "Masquer {{name}}",
+				"moreActionsAria": "Plus d'actions pour {{name}}",
+				"originalField": "Identifiant de la colonne : {{field}}",
+				"originalNameInMenu": "Nom d'origine : {{field}}",
 				"rename": "Renommer",
 				"renamePrompt": "Veuillez saisir le nouveau nom :",
 				"showAria": "Afficher {{name}}"
