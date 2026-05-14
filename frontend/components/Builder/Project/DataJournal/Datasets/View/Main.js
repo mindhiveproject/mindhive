@@ -27,6 +27,7 @@ export default function DatasetView({ dataset, user, onSaved, onCopied }) {
     data: fetchedData,
     variables: fetchedVariables,
     settings: fetchedSettings,
+    components: fetchedComponents = [],
     loading: fetchLoading,
     error: fetchError,
   } = useDatasourceData({ datasource: dataset, user: effectiveUser });
@@ -34,17 +35,23 @@ export default function DatasetView({ dataset, user, onSaved, onCopied }) {
   const [data, setData] = useState([]);
   const [variables, setVariables] = useState([]);
   const [settings, setSettings] = useState({ filter: {} });
+  const [components, setComponents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (fetchedData && fetchedVariables && fetchedSettings) {
+    if (
+      fetchedData != null &&
+      fetchedVariables != null &&
+      fetchedSettings != null
+    ) {
       setData(fetchedData);
       setVariables(fetchedVariables);
       setSettings(fetchedSettings);
+      setComponents(Array.isArray(fetchedComponents) ? fetchedComponents : []);
       setLoading(false);
     }
-  }, [fetchedData, fetchedVariables, fetchedSettings]);
+  }, [fetchedData, fetchedVariables, fetchedSettings, fetchedComponents]);
 
   useEffect(() => {
     if (fetchError) {
@@ -92,7 +99,7 @@ export default function DatasetView({ dataset, user, onSaved, onCopied }) {
             data={data}
             variables={variables}
             settings={settings}
-            components={[]}
+            components={components}
             updateDataset={updateDataset}
             onVariableChange={onVariableChange}
             onSaved={onSaved}

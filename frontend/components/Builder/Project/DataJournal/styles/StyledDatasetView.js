@@ -25,7 +25,13 @@ export const StyledDatasetView = styled.div`
     border-radius: 12px 0 0 12px;
     padding: 12px;
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     border-right: 1px solid #e0e0e0;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     .database {
       display: flex;
@@ -112,6 +118,7 @@ export const StyledDatasetView = styled.div`
         flex-wrap: wrap;
         gap: 8px;
         align-items: center;
+        margin-bottom: 8px;
 
         .toolbarChip {
           display: inline-flex;
@@ -150,6 +157,37 @@ export const StyledDatasetView = styled.div`
         }
       }
 
+      .variables-global-search {
+        margin-top: 0;
+        margin-bottom: 2px;
+      }
+
+      .variables-global-search__input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1.5px solid #e0e0e0;
+        background: #ffffff;
+        color: #1e293b;
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.4;
+        min-width: 0;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+        &::placeholder {
+          color: #A1A1A1;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+          box-shadow: 0 0 0 2px rgba(51, 111, 138, 0.15);
+        }
+      }
+
       .variables-section {
         display: flex;
         flex-direction: column;
@@ -161,14 +199,24 @@ export const StyledDatasetView = styled.div`
           font-weight: 600;
           color: #1e293b;
           margin-bottom: 4px;
-          padding-bottom: 6px;
-          border-bottom: 1px solid #e0e0e0;
+          padding: 12px;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          background: #F3F3F3;
         }
 
         .variables {
           display: grid;
           gap: 0.5rem;
           min-width: 0;
+        }
+
+        .variables-section__searchEmpty {
+          font-family: Inter, sans-serif;
+          font-size: 13px;
+          line-height: 1.4;
+          color: #64748b;
+          padding: 8px 4px;
         }
 
         .variableRow {
@@ -243,47 +291,6 @@ export const StyledDatasetView = styled.div`
           align-items: center;
           gap: 4px;
           flex: 0 0 auto;
-
-          .ui.dropdown {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.15s ease;
-
-            img {
-              width: 16px;
-              height: 16px;
-            }
-
-            &:hover {
-              background: #f1f5f9;
-            }
-          }
-
-          .ui.dropdown .menu > .item {
-            padding: 8px 12px !important;
-
-            .menuItem {
-              display: inline-flex;
-              align-items: center;
-              gap: 8px;
-              color: #000;
-              font-family: Inter, sans-serif;
-              font-size: 14px;
-              font-weight: 400;
-              line-height: 1;
-              white-space: nowrap;
-              cursor: pointer;
-            }
-
-            .menuItem img {
-              width: 16px;
-              height: 16px;
-              flex-shrink: 0;
-            }
-          }
         }
       }
 
@@ -292,10 +299,16 @@ export const StyledDatasetView = styled.div`
           .task {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 8px;
-            font-family: "Nunito", sans-serif;
+            font-family: "Inter";
             font-size: 14px;
             color: #1e293b;
+            border: 1.5px solid #F3F3F3;
+            border-radius: 8px;
+            background: #F6F9F8;
+            margin-left: 8px;
+            padding: 8px;
 
             .ui.icon {
               color: #666666;
@@ -313,7 +326,7 @@ export const StyledDatasetView = styled.div`
         }
 
         .content {
-          padding: 12px;
+          padding: 8px;
         }
       }
     }
@@ -323,7 +336,13 @@ export const StyledDatasetView = styled.div`
     flex: 1;
     padding: 8px;
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     border-radius: 0 12px 12px 0;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     .ag-theme-quartz {
       --ag-font-family: "Nunito", sans-serif;
@@ -336,6 +355,23 @@ export const StyledDatasetView = styled.div`
       height: 100%;
       width: 100%;
       border-radius: 4px;
+
+      // .ag-body-vertical-scroll-viewport,
+      // .ag-body-horizontal-scroll-viewport,
+      // .ag-center-cols-viewport,
+      // .ag-body-viewport {
+      //   scrollbar-width: none;
+      //   -ms-overflow-style: none;
+      // }
+
+      // .ag-body-vertical-scroll-viewport::-webkit-scrollbar,
+      // .ag-body-horizontal-scroll-viewport::-webkit-scrollbar,
+      // .ag-center-cols-viewport::-webkit-scrollbar,
+      // .ag-body-viewport::-webkit-scrollbar {
+      //   width: 0;
+      //   height: 0;
+      //   display: none;
+      // }
     }
   }
 

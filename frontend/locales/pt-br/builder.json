@@ -368,15 +368,32 @@
 			"readOnlyToolbarHint": "Abra este diário a partir de um espaço de trabalho para editar ou copiar este conjunto de dados.",
 			"sections": {
 				"generalVariables": "Variáveis ​​gerais",
+				"originalVariables": "Variáveis ​​originais",
 				"taskVariables": "Variáveis ​​da Tarefa",
+				"uploadedVariables": "Variáveis ​​carregadas",
 				"userVariables": "Variáveis ​​do usuário"
+			},
+			"taskAccordion": {
+				"collapse": "Colapso",
+				"collapseChipAria": "Colapsar variáveis ​​para {{name}}",
+				"expand": "Expandir",
+				"expandChipAria": "Expandir variáveis ​​para {{name}}",
+				"panelAriaLabel": "Variáveis ​​para {{name}}"
 			},
 			"variable": {
 				"delete": "Excluir",
 				"hideAria": "Ocultar {{name}}",
+				"moreActionsAria": "Mais ações para {{name}}",
+				"originalField": "ID da coluna: {{field}}",
+				"originalNameInMenu": "Nome original: {{field}}",
 				"rename": "Renomear",
 				"renamePrompt": "Por favor, insira um novo nome:",
 				"showAria": "Mostrar {{name}}"
+			},
+			"variablesSearch": {
+				"ariaLabel": "Variáveis ​​de pesquisa",
+				"noMatches": "Nenhuma variável corresponde à sua pesquisa.",
+				"placeholder": "Variáveis ​​de pesquisa…"
 			}
 		},
 		"datasets": {

@@ -368,15 +368,32 @@
 			"readOnlyToolbarHint": "इस डेटासेट को संपादित करने या कॉपी करने के लिए, इस जर्नल को किसी कार्यक्षेत्र से खोलें।",
 			"sections": {
 				"generalVariables": "सामान्य चर",
+				"originalVariables": "मूल चर",
 				"taskVariables": "कार्य चर",
+				"uploadedVariables": "अपलोड किए गए चर",
 				"userVariables": "उपयोगकर्ता चर"
+			},
+			"taskAccordion": {
+				"collapse": "गिर जाना",
+				"collapseChipAria": " {{name}}के लिए चरों को संक्षिप्त करें",
+				"expand": "बढ़ाना",
+				"expandChipAria": " {{name}}के लिए चरों का विस्तार करें",
+				"panelAriaLabel": " {{name}}के लिए चर"
 			},
 			"variable": {
 				"delete": "मिटाना",
 				"hideAria": "छुपाएँ {{name}}",
+				"moreActionsAria": " {{name}}के लिए और अधिक क्रियाएँ",
+				"originalField": "कॉलम आईडी: {{field}}",
+				"originalNameInMenu": "मूल नाम: {{field}}",
 				"rename": "नाम बदलें",
 				"renamePrompt": "कृपया नया नाम दर्ज करें:",
 				"showAria": "दिखाएँ {{name}}"
+			},
+			"variablesSearch": {
+				"ariaLabel": "खोज चर",
+				"noMatches": "आपकी खोज से मेल खाने वाले कोई चर नहीं हैं।",
+				"placeholder": "खोज चर…"
 			}
 		},
 		"datasets": {

@@ -351,8 +351,8 @@ ${outputVar} = ${funcName}()
       ) : figJson ? (
         <Plot
           data={figJson.data}
-          layout={figJson.layout}
-          config={{ responsive: true }}
+          layout={{ ...figJson.layout, dragmode: false }}
+          config={{ responsive: true, scrollZoom: false, displayModeBar: false }}
           useResizeHandler
           onInitialized={(_, graphDiv) => {
             graphDivRef.current = graphDiv;

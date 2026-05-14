@@ -228,6 +228,7 @@ export default function useDatasourceData({ datasource, user }) {
           data: [],
           variables: [],
           settings: {},
+          components: [],
           loading: studyLoading,
           error: studyError,
         };
@@ -239,6 +240,7 @@ export default function useDatasourceData({ datasource, user }) {
             data: [],
             variables: [],
             settings: {},
+            components: [],
             loading: false,
             error: modifiedStudyFileErr,
           };
@@ -248,6 +250,7 @@ export default function useDatasourceData({ datasource, user }) {
             data: [],
             variables: [],
             settings: {},
+            components: [],
             loading: true,
             error: null,
           };
@@ -311,18 +314,26 @@ export default function useDatasourceData({ datasource, user }) {
         modifiedSettings,
       });
 
-      return { data, variables, settings, loading: false, error: null };
+      return { data, variables, settings, components, loading: false, error: null };
     }
 
     if (isUploadLike) {
       if (!uploadedUrl) {
-        return { data: [], variables: [], settings: {}, loading: false, error: null };
+        return {
+          data: [],
+          variables: [],
+          settings: {},
+          components: [],
+          loading: false,
+          error: null,
+        };
       }
       if (uploadedFileErr) {
         return {
           data: [],
           variables: [],
           settings: {},
+          components: [],
           loading: false,
           error: uploadedFileErr,
         };
@@ -332,6 +343,7 @@ export default function useDatasourceData({ datasource, user }) {
           data: [],
           variables: [],
           settings: {},
+          components: [],
           loading: true,
           error: null,
         };
@@ -341,6 +353,7 @@ export default function useDatasourceData({ datasource, user }) {
           data: [],
           variables: [],
           settings: {},
+          components: [],
           loading: false,
           error: new Error("Invalid data file"),
         };
@@ -358,18 +371,36 @@ export default function useDatasourceData({ datasource, user }) {
           data: [],
           variables: [],
           settings: {},
+          components: [],
           loading: false,
           error: e,
         };
       }
       const data = result?.data || [];
-      const variables = result?.metadata?.variables || [];
+      const rawVariables = result?.metadata?.variables || [];
+      const variables = rawVariables.map((v) =>
+        v?.type === "general" ? { ...v, editable: true } : v,
+      );
       const settings = result?.metadata?.settings || dsSettings || {};
 
-      return { data, variables, settings, loading: false, error: null };
+      return {
+        data,
+        variables,
+        settings,
+        components: [],
+        loading: false,
+        error: null,
+      };
     }
 
-    return { data: [], variables: [], settings: {}, loading: false, error: null };
+    return {
+      data: [],
+      variables: [],
+      settings: {},
+      components: [],
+      loading: false,
+      error: null,
+    };
   }, [
     isStudyLike,
     isUploadLike,

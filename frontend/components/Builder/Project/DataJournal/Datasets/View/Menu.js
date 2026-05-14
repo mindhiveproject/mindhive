@@ -1,4 +1,10 @@
-import { useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Accordion, Icon } from "semantic-ui-react";
 import { saveAs } from "file-saver";
 import moment from "moment";
@@ -6,10 +12,131 @@ import { jsonToCSV } from "react-papaparse";
 import useTranslation from "next-translate/useTranslation";
 
 import InfoTooltip from "../../../../../DesignSystem/InfoTooltip";
+import Chips from "../../../../../DesignSystem/Chip";
 import AddColumnModal from "./Menu/AddColumnModal";
 import Variable from "./Menu/Variable";
 import { useDatasetSaveOrCopy } from "./Menu/UpdateDatasource";
 import DeleteConfirmModal from "../../Helpers/DeleteConfirmModal";
+
+function TaskAccordionItem({
+  task,
+  index,
+  isOpen,
+  handleClick,
+  variables,
+  renderFilteredVariableRows,
+  t,
+}) {
+  const panelRef = useRef(null);
+  const wasOpenRef = useRef(isOpen);
+
+  useLayoutEffect(() => {
+    if (isOpen && !wasOpenRef.current) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          panelRef.current?.focus({ preventScroll: false });
+        });
+      });
+    }
+    wasOpenRef.current = isOpen;
+  }, [isOpen]);
+
+  const taskName = task?.name || "";
+  const panelId = `dj-dataset-task-vars-${task?.testId ?? index}`;
+  const triggerId = `${panelId}-trigger`;
+
+  const expandLabel = t(
+    "dataJournal.datasetMenu.taskAccordion.expand",
+    {},
+    { default: "Expand" },
+  );
+  const collapseLabel = t(
+    "dataJournal.datasetMenu.taskAccordion.collapse",
+    {},
+    { default: "Collapse" },
+  );
+  const chipAria = isOpen
+    ? t(
+        "dataJournal.datasetMenu.taskAccordion.collapseChipAria",
+        { name: taskName },
+        { default: "Collapse variables for {{name}}" },
+      )
+    : t(
+        "dataJournal.datasetMenu.taskAccordion.expandChipAria",
+        { name: taskName },
+        { default: "Expand variables for {{name}}" },
+      );
+  const panelAriaLabel = t(
+    "dataJournal.datasetMenu.taskAccordion.panelAriaLabel",
+    { name: taskName },
+    { default: "Variables for {{name}}" },
+  );
+
+  const taskColumns = variables.filter(
+    (column) =>
+      column.type === "task" && column.testId === task?.testId,
+  );
+
+  return (
+    <div>
+      <Accordion.Title
+        active={isOpen}
+        index={index}
+        onClick={handleClick}
+        id={triggerId}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+      >
+        <div className="task">
+          <div>
+            <div className="title">{task?.name}</div>
+            <div className="subtitle">
+              {task?.subtitle}
+              {isOpen &&
+              task?.testId != null &&
+              String(task.testId).trim() !== "" ? (
+                <>
+                  {task?.subtitle ? " - " : null}
+                  {task.testId}
+                </>
+              ) : null}
+            </div>
+          </div>
+          <Chips
+            label={isOpen ? collapseLabel : expandLabel}
+            selected={isOpen}
+            shape="square"
+            style={{ fontSize: "12px" }}
+            ariaLabel={chipAria}
+            leading={
+              isOpen ? (
+                <img src="/assets/icons/collapse.svg" alt="collapse" style={{opacity: 0.75, width: 16, height: 16}}/>
+              ) : (
+                <img src="/assets/icons/expand.svg" alt="expand" style={{opacity: 0.75, width: 16, height: 16}}/>
+              )
+            }
+       
+          />
+        </div>
+      </Accordion.Title>
+      <Accordion.Content active={isOpen}>
+        <div
+          ref={panelRef}
+          id={panelId}
+          tabIndex={-1}
+          className="variables"
+          role="region"
+          aria-label={panelAriaLabel}
+        >
+          {renderFilteredVariableRows(
+            taskColumns,
+            `task-var-${task?.testId ?? index}`,
+          )}
+        </div>
+      </Accordion.Content>
+    </div>
+  );
+}
 
 export default function Menu({
   dataset,
@@ -31,9 +158,99 @@ export default function Menu({
   const [copyModalOpen, setCopyModalOpen] = useState(false);
   const [collaboratorsCanEditOnCopy, setCollaboratorsCanEditOnCopy] =
     useState(true);
-  const [activeIndex, setActiveIndex] = useState(
-    components.map((_, index) => index) || []
+  const [activeIndex, setActiveIndex] = useState([]);
+  const [variableSearch, setVariableSearch] = useState("");
+
+  const dataOrigin = dataset?.dataOrigin;
+  const isUploadDataset =
+    dataOrigin === "UPLOADED" || dataOrigin === "SIMULATED";
+  const isStudyDataset = dataOrigin === "STUDY" || dataOrigin === "TEMPLATE";
+
+  const canMutateStructure =
+    writeMode === "editable" || writeMode === "copyOnWrite";
+
+  const userVariables = useMemo(
+    () => variables.filter((column) => column.type === "user"),
+    [variables],
   );
+
+  const generalVariables = useMemo(
+    () => variables.filter((column) => column.type === "general"),
+    [variables],
+  );
+
+  const uploadedVariables = useMemo(
+    () => (isUploadDataset ? generalVariables : []),
+    [isUploadDataset, generalVariables],
+  );
+
+  const originalVariables = useMemo(
+    () => (isStudyDataset ? generalVariables : []),
+    [isStudyDataset, generalVariables],
+  );
+
+  const hasAnyTaskVariables = useMemo(
+    () => variables.some((column) => column.type === "task"),
+    [variables],
+  );
+
+  const tasksWithVariables = useMemo(
+    () =>
+      (components || []).filter((task) =>
+        variables.some(
+          (column) =>
+            column.type === "task" && column.testId === task?.testId,
+        ),
+      ),
+    [components, variables],
+  );
+
+  const showTaskAccordion =
+    (components || []).length > 0 &&
+    tasksWithVariables.length > 0;
+
+  useEffect(() => {
+    setActiveIndex(tasksWithVariables.map((_, index) => index));
+  }, [dataset?.id, tasksWithVariables.length]);
+
+  const filterVariablesBySearch = (columns) => {
+    const q = variableSearch.trim().toLowerCase();
+    if (!q) return columns;
+    return columns.filter((column) => {
+      const display = String(column.displayName || "").toLowerCase();
+      const field = String(column.field || "").toLowerCase();
+      return display.includes(q) || field.includes(q);
+    });
+  };
+
+  const hasActiveVariableSearch = variableSearch.trim().length > 0;
+
+  const renderFilteredVariableRows = (sourceColumns, keyPrefix) => {
+    const filtered = filterVariablesBySearch(sourceColumns);
+    if (
+      filtered.length === 0 &&
+      sourceColumns.length > 0 &&
+      hasActiveVariableSearch
+    ) {
+      return (
+        <div className="variables-section__searchEmpty" role="status">
+          {t(
+            "dataJournal.datasetMenu.variablesSearch.noMatches",
+            {},
+            { default: "No variables match your search." },
+          )}
+        </div>
+      );
+    }
+    return filtered.map((column, index) => (
+      <Variable
+        key={column.field || `${keyPrefix}-${index}`}
+        column={column}
+        onVariableChange={onVariableChange}
+        allowRename={canMutateStructure}
+      />
+    ));
+  };
 
   const tAlerts = {
     updated: t("dataJournal.datasetMenu.alerts.updated", {}, {
@@ -203,8 +420,6 @@ export default function Menu({
         "Open this journal from a workspace to edit or copy this dataset.",
     },
   );
-
-  const canMutateStructure = writeMode === "editable" || writeMode === "copyOnWrite";
 
   return (
     <div className="database">
@@ -395,86 +610,88 @@ export default function Menu({
         ) : null}
       </div>
 
-      <div className="variables-section">
-        <div className="section-header">
-          {t("dataJournal.datasetMenu.sections.userVariables", {}, {
-            default: "User Variables",
-          })}
-        </div>
-        <div className="variables">
-          {variables
-            .filter((column) => column.type === "user")
-            .map((column, num) => (
-              <Variable
-                key={num}
-                column={column}
-                onVariableChange={onVariableChange}
-              />
-            ))}
-        </div>
+      <div className="variables-global-search">
+        <input
+          id="dataset-menu-variables-search"
+          type="search"
+          className="variables-global-search__input"
+          value={variableSearch}
+          onChange={(e) => setVariableSearch(e.target.value)}
+          placeholder={t(
+            "dataJournal.datasetMenu.variablesSearch.placeholder",
+            {},
+            { default: "Search variables…" },
+          )}
+          aria-label={t(
+            "dataJournal.datasetMenu.variablesSearch.ariaLabel",
+            {},
+            { default: "Search variables" },
+          )}
+        />
       </div>
 
-      <div className="variables-section">
-        <div className="section-header">
-          {t("dataJournal.datasetMenu.sections.generalVariables", {}, {
-            default: "General Variables",
-          })}
-        </div>
-        <div className="variables">
-          {variables
-            .filter((column) => column.type === "general")
-            .map((column, num) => (
-              <Variable
-                key={num}
-                column={column}
-                onVariableChange={onVariableChange}
-              />
-            ))}
-        </div>
-      </div>
-
-      <Accordion exclusive={false} fluid>
-        {components.map((task, index) => (
-          <div key={index}>
-            <Accordion.Title
-              active={activeIndex.includes(index)}
-              index={index}
-              onClick={handleClick}
-            >
-              <div className="task">
-                <Icon name="dropdown" />
-                <div>
-                  <div className="title">{task?.name}</div>
-                  <div className="subtitle">
-                    {task?.subtitle} - {task?.testId}
-                  </div>
-                </div>
-              </div>
-            </Accordion.Title>
-            <Accordion.Content active={activeIndex.includes(index)}>
-              <div className="variables-section">
-                <div className="section-header">
-                  {t("dataJournal.datasetMenu.sections.taskVariables", {}, {
-                    default: "Task Variables",
-                  })}
-                </div>
-                <div className="variables">
-                  {variables
-                    .filter((column) => column.type === "task")
-                    .filter((column) => column.testId === task?.testId)
-                    .map((column, num) => (
-                      <Variable
-                        key={num}
-                        column={column}
-                        onVariableChange={onVariableChange}
-                      />
-                    ))}
-                </div>
-              </div>
-            </Accordion.Content>
+      {isStudyDataset && originalVariables.length > 0 ? (
+        <div className="variables-section">
+          <div className="section-header">
+            {t("dataJournal.datasetMenu.sections.originalVariables", {}, {
+              default: "Original variables",
+            })}
           </div>
-        ))}
-      </Accordion>
+          <div className="variables">
+            {renderFilteredVariableRows(originalVariables, "original-var")}
+          </div>
+        </div>
+      ) : null}
+
+      {showTaskAccordion ? (
+        <div className="variables-section variables-section--taskAccordion">
+          <div className="section-header">
+            {t("dataJournal.datasetMenu.sections.taskVariables", {}, {
+              default: "Task Variables",
+            })}
+          </div>
+          <Accordion exclusive={false} fluid>
+            {tasksWithVariables.map((task, index) => (
+              <TaskAccordionItem
+                key={task?.testId ?? index}
+                task={task}
+                index={index}
+                isOpen={activeIndex.includes(index)}
+                handleClick={handleClick}
+                variables={variables}
+                renderFilteredVariableRows={renderFilteredVariableRows}
+                t={t}
+              />
+            ))}
+          </Accordion>
+        </div>
+      ) : null}
+
+      {isUploadDataset && uploadedVariables.length > 0 ? (
+        <div className="variables-section">
+          <div className="section-header">
+            {t("dataJournal.datasetMenu.sections.uploadedVariables", {}, {
+              default: "Uploaded variables",
+            })}
+          </div>
+          <div className="variables">
+            {renderFilteredVariableRows(uploadedVariables, "uploaded-var")}
+          </div>
+        </div>
+      ) : null}
+
+      {userVariables.length > 0 ? (
+        <div className="variables-section">
+          <div className="section-header">
+            {t("dataJournal.datasetMenu.sections.userVariables", {}, {
+              default: "User variables",
+            })}
+          </div>
+          <div className="variables">
+            {renderFilteredVariableRows(userVariables, "user-var")}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

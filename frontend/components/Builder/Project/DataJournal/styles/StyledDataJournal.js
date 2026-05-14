@@ -1094,6 +1094,10 @@ export const StyledDataWorkspace = styled.div`
       align-items: center;
       /* Gutters without shrinking journalShell — keeps cqi stable when rail toggles */
       margin-inline: 16px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      ${hideScrollbars}
     }
 
     /* Width from full journal row (cqi), not remaining flex space — RGL does not resize when rail toggles */
@@ -1222,7 +1226,10 @@ export const StyledDataWorkspace = styled.div`
     }
   }
   .dashboard.noLeftSidebar .journalShell .canvas {
+    flex: 0 0 auto;
+    min-height: 100%;
     max-width: min(1380px, 100%);
+    overflow-y: visible;
   }
   .graph {
     display: grid;

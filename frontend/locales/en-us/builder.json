@@ -367,16 +367,33 @@
 			},
 			"readOnlyToolbarHint": "Open this journal from a workspace to edit or copy this dataset.",
 			"sections": {
-				"generalVariables": "General Variables",
+				"generalVariables": "General variables",
+				"originalVariables": "Original variables",
 				"taskVariables": "Task Variables",
-				"userVariables": "User Variables"
+				"uploadedVariables": "Uploaded variables",
+				"userVariables": "User variables"
+			},
+			"taskAccordion": {
+				"collapse": "Collapse",
+				"collapseChipAria": "Collapse variables for {{name}}",
+				"expand": "Expand",
+				"expandChipAria": "Expand variables for {{name}}",
+				"panelAriaLabel": "Variables for {{name}}"
 			},
 			"variable": {
 				"delete": "Delete",
 				"hideAria": "Hide {{name}}",
+				"moreActionsAria": "More actions for {{name}}",
+				"originalField": "Column id: {{field}}",
+				"originalNameInMenu": "Original name: {{field}}",
 				"rename": "Rename",
 				"renamePrompt": "Please enter new name:",
 				"showAria": "Show {{name}}"
+			},
+			"variablesSearch": {
+				"ariaLabel": "Search variables",
+				"noMatches": "No variables match your search.",
+				"placeholder": "Search variables…"
 			}
 		},
 		"datasets": {
