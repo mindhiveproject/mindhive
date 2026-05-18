@@ -8,6 +8,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { GET_CONNECT_USERS } from "../../../Queries/User";
 import ProfileCard from "../ConnectProfileCard";
+import useConnectRole from "../useConnectRole";
 
 import PaginationUsers from "./Pagination";
 
@@ -35,6 +36,7 @@ const ConnectShell = styled.div`
 const NavigationBar = styled.div`
   display: flex;
   justify-content: flex-end;
+  gap: 12px;
   position: sticky;
   top: 0;
   background: rgba(247, 249, 248, 0.8);
@@ -209,6 +211,7 @@ const FooterControls = styled.div`
 
 export default function ConnectBankNew({ query, user }) {
   const { t } = useTranslation("connect");
+  const { isAdmin, isTeacher, isMentor, isStudent } = useConnectRole();
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -243,6 +246,51 @@ export default function ConnectBankNew({ query, user }) {
   return (
     <ConnectShell>
       <NavigationBar>
+        {(isMentor || isAdmin) && (
+          <Link
+            href={{
+              pathname: `/dashboard/connect/opportunities`,
+            }}
+          >
+            <button type="button">My opportunities</button>
+          </Link>
+        )}
+        {(isTeacher || isAdmin) && (
+          <Link
+            href={{
+              pathname: `/dashboard/connect/rounds`,
+            }}
+          >
+            <button type="button">Matching rounds</button>
+          </Link>
+        )}
+        {(isAdmin || isTeacher) && (
+          <Link
+            href={{
+              pathname: `/dashboard/connect/questions`,
+            }}
+          >
+            <button type="button">Question library</button>
+          </Link>
+        )}
+        {(isStudent || isAdmin) && (
+          <Link
+            href={{
+              pathname: `/dashboard/connect/participate`,
+            }}
+          >
+            <button type="button">Participate</button>
+          </Link>
+        )}
+        {(isTeacher || isAdmin) && (
+          <Link
+            href={{
+              pathname: `/dashboard/connect/matches`,
+            }}
+          >
+            <button type="button">Matches</button>
+          </Link>
+        )}
         <Link
           href={{
             pathname: `/dashboard/connect/my`,

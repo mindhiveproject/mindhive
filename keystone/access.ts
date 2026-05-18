@@ -207,4 +207,84 @@ export const rules = {
     }
     return false;
   },
+  // Connect: a profile's own preference / answers / team prefs are visible to:
+  // - themselves
+  // - the creator of the round (teacher)
+  // - admins
+  // Returns a filter, NOT a boolean — used as `access.filter.query`.
+  connectOwnerOrRoundCreator({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session.itemId;
+    return {
+      OR: [
+        { submitter: { id: { equals: me } } },
+        { round: { createdBy: { id: { equals: me } } } },
+      ],
+    };
+  },
+  // QuestionAnswer uses `respondent`, not `submitter`.
+  connectAnswerVisible({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session.itemId;
+    return {
+      OR: [
+        { respondent: { id: { equals: me } } },
+        { round: { createdBy: { id: { equals: me } } } },
+      ],
+    };
+  },
+  // ConnectMatch visible to: the matched student, the opportunity's mentor,
+  // the round creator, or admins.
+  connectMatchVisible({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session.itemId;
+    return {
+      OR: [
+        { student: { id: { equals: me } } },
+        { round: { createdBy: { id: { equals: me } } } },
+        { opportunity: { mentor: { id: { equals: me } } } },
+      ],
+    };
+  },
+  // ConnectRating: rater, opportunity mentor, round creator (via match.round),
+  // or a public rating — visible to anyone signed in.
+  connectRatingVisible({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session.itemId;
+    return {
+      OR: [
+        { rater: { id: { equals: me } } },
+        { isPublic: { equals: true } },
+        { opportunity: { mentor: { id: { equals: me } } } },
+        { match: { round: { createdBy: { id: { equals: me } } } } },
+      ],
+    };
+  },
+  // ConnectPreferenceItem inherits from its parent preference's submitter / round creator.
+  connectPreferenceItemVisible({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session.itemId;
+    return {
+      OR: [
+        { preference: { submitter: { id: { equals: me } } } },
+        { preference: { round: { createdBy: { id: { equals: me } } } } },
+      ],
+    };
+  },
+  // For mutate operations on the above lists: only the owner or admin.
+  // The relevant owner-field name is passed via closure.
+  connectOwnerMutate(ownerField: string) {
+    return function ({ session, item }: ListAccessArgs) {
+      if (!isSignedIn({ session })) return false;
+      if (permissions.canManageUsers({ session })) return true;
+      // item access fires per item; ownerField is e.g. "submitterId" / "respondentId" / "raterId" / "studentId"
+      if (item && item[ownerField] === session.itemId) return true;
+      return false;
+    };
+  },
 };

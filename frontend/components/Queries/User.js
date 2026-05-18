@@ -13,6 +13,15 @@ export const CURRENT_USER_QUERY = gql`
         type
         permissions {
           name
+          canManageUsers
+          canAccessAdminUI
+        }
+        profileKind
+        opportunitiesCreated {
+          id
+        }
+        connectRoundsCreated {
+          id
         }
         image {
           id

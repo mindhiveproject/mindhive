@@ -323,6 +323,58 @@ export const Profile = list({
       ],
       defaultValue: "individual",
     }),
+    profileKind: select({
+      options: [
+        { label: "Student", value: "student" },
+        { label: "Mentor", value: "mentor" },
+        { label: "Teacher", value: "teacher" },
+        { label: "Admin", value: "admin" },
+      ],
+    }),
+    opportunitiesCreated: relationship({
+      ref: "Opportunity.mentor",
+      many: true,
+    }),
+    connectRoundsCreated: relationship({
+      ref: "ConnectRound.createdBy",
+      many: true,
+    }),
+    questionsProposed: relationship({
+      ref: "ConnectQuestion.proposedBy",
+      many: true,
+    }),
+    questionsApproved: relationship({
+      ref: "ConnectQuestion.approvedBy",
+      many: true,
+    }),
+    questionAnswers: relationship({
+      ref: "QuestionAnswer.respondent",
+      many: true,
+    }),
+    connectPreferences: relationship({
+      ref: "ConnectPreference.submitter",
+      many: true,
+    }),
+    teamPreferencesSubmitted: relationship({
+      ref: "ConnectTeamPreference.submitter",
+      many: true,
+    }),
+    teamPreferencesReceived: relationship({
+      ref: "ConnectTeamPreference.preferredTeammate",
+      many: true,
+    }),
+    connectMatches: relationship({
+      ref: "ConnectMatch.student",
+      many: true,
+    }),
+    connectMatchesCreated: relationship({
+      ref: "ConnectMatch.createdBy",
+      many: true,
+    }),
+    connectRatingsGiven: relationship({
+      ref: "ConnectRating.rater",
+      many: true,
+    }),
     image: relationship({
       ref: "ProfileImage.profile",
       ui: {

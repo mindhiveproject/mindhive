@@ -36,6 +36,18 @@ export const ClassNetwork = list({
       },
     }),
     classes: relationship({ ref: "Class.networks", many: true }),
+    opportunities: relationship({
+      ref: "Opportunity.classNetworks",
+      many: true,
+    }),
+    connectRounds: relationship({
+      ref: "ConnectRound.classNetwork",
+      many: true,
+    }),
+    matches: relationship({
+      ref: "ConnectMatch.classNetwork",
+      many: true,
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

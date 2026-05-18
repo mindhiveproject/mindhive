@@ -49,6 +49,15 @@ import { Visual } from "./schemas/YQVisual";
 import { Friendship } from "./schemas/YQFriendship";
 import { YQGenAI } from "./schemas/YQGenAI";
 import { YQTag } from "./schemas/YQTag";
+import { Opportunity } from "./schemas/Opportunity";
+import { ConnectRound } from "./schemas/ConnectRound";
+import { ConnectQuestion } from "./schemas/ConnectQuestion";
+import { QuestionAnswer } from "./schemas/QuestionAnswer";
+import { ConnectPreference } from "./schemas/ConnectPreference";
+import { ConnectPreferenceItem } from "./schemas/ConnectPreferenceItem";
+import { ConnectTeamPreference } from "./schemas/ConnectTeamPreference";
+import { ConnectMatch } from "./schemas/ConnectMatch";
+import { ConnectRating } from "./schemas/ConnectRating";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -110,4 +119,13 @@ export const lists: Lists = {
   Friendship,
   YQTag,
   YQGenAI,
+  Opportunity,
+  ConnectRound,
+  ConnectQuestion,
+  QuestionAnswer,
+  ConnectPreference,
+  ConnectPreferenceItem,
+  ConnectTeamPreference,
+  ConnectMatch,
+  ConnectRating,
 };
