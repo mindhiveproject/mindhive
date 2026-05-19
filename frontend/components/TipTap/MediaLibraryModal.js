@@ -22,7 +22,9 @@ import {
   buildMediaAssetCreateData,
   mediaCreateHasOwnerFromSource,
   resolveMediaAssetUrl,
+  resolveMediaAssetExportDocumentUrl,
 } from "../Mutations/MediaAsset";
+import { isDataToolCanvaAsset } from "../Builder/Project/DataJournal/Export/mediaAssetCanva";
 
 const FAVORITE_ICON_OUTLINE = (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
@@ -125,8 +127,33 @@ function MediaLibraryThumbCell(params) {
 
   if (!data) return null;
   const insertAria = ctx.t("tiptap.mediaInsertThisAria", "Insert this image");
+  const isCanvaExport = isDataToolCanvaAsset(data);
+  const exportPdfUrl = resolveMediaAssetExportDocumentUrl(data);
 
   const resolvedUrl = resolveMediaAssetUrl(data);
+  if (!resolvedUrl && isCanvaExport && exportPdfUrl) {
+    return (
+      <div
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: 6,
+          background: "#EDF4F5",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 10,
+          fontWeight: 600,
+          color: "#336F8A",
+        }}
+        title={ctx.t("tiptap.mediaCanvaExportThumb", {}, { default: "Canva PDF export" })}
+        aria-hidden
+      >
+        PDF
+      </div>
+    );
+  }
+
   if (!resolvedUrl) {
     return (
       <div
@@ -181,7 +208,10 @@ function MediaLibraryThumbCell(params) {
       />
       <button
         type="button"
-        onClick={() => ctx.pick(data)}
+        onClick={() => {
+          if (!isCanvaExport) ctx.pick(data);
+        }}
+        disabled={isCanvaExport}
         aria-label={insertAria}
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
@@ -213,11 +243,28 @@ function MediaLibraryActionsCell(params) {
   if (!data) return null;
   const myProfileId = ctx.myProfileId;
   const isOwner = myProfileId && data.author?.id === myProfileId;
+  const isCanvaExport = isDataToolCanvaAsset(data);
+  const exportPdfUrl = resolveMediaAssetExportDocumentUrl(data);
   const isFav =
     myProfileId && (data.favoriteBy || []).some((f) => f.id === myProfileId);
   const favLabel = isFav
     ? ctx.t("tiptap.mediaUnfavoriteAria", "Remove favorite")
     : ctx.t("tiptap.mediaFavoriteAria", "Add favorite");
+
+  const handleDownloadPdf = () => {
+    if (!exportPdfUrl) return;
+    const anchor = document.createElement("a");
+    anchor.href = exportPdfUrl;
+    anchor.download =
+      data?.fileName?.trim() ||
+      data?.title?.trim() ||
+      "canva-export.pdf";
+    anchor.rel = "noopener noreferrer";
+    anchor.target = "_blank";
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+  };
 
   return (
     <div
@@ -253,12 +300,22 @@ function MediaLibraryActionsCell(params) {
           }}
         />
       )}
-      <Chip
-        shape="square"
-        label={ctx.t("tiptap.mediaInsert", "Insert")}
-        onClick={() => ctx.pick(data)}
-        style={{ flexShrink: 0, border: "1px solid #A1A1A1" }}
-      />
+      {!isCanvaExport ? (
+        <Chip
+          shape="square"
+          label={ctx.t("tiptap.mediaInsert", "Insert")}
+          onClick={() => ctx.pick(data)}
+          style={{ flexShrink: 0, border: "1px solid #A1A1A1" }}
+        />
+      ) : null}
+      {isCanvaExport && exportPdfUrl ? (
+        <Chip
+          shape="square"
+          label={ctx.t("tiptap.mediaDownloadPdf", {}, { default: "Download PDF" })}
+          onClick={handleDownloadPdf}
+          style={{ flexShrink: 0, border: "1px solid #336F8A" }}
+        />
+      ) : null}
       <Chip
         shape="square"
         label={ctx.t("tiptap.mediaEdit", "Edit")}
@@ -513,6 +570,9 @@ export default function MediaLibraryModal({
 
   const pick = useCallback(
     (img) => {
+      if (isDataToolCanvaAsset(img)) {
+        return;
+      }
       const resolvedUrl = resolveMediaAssetUrl(img);
       if (resolvedUrl && img?.id) {
         onInsertMedia?.({ id: img.id, url: resolvedUrl });
@@ -630,7 +690,11 @@ export default function MediaLibraryModal({
         });
         const created = createData?.createMediaAsset;
         const createdUrl = resolveMediaAssetUrl(created);
-        if (created?.id && createdUrl) {
+        if (
+          created?.id &&
+          createdUrl &&
+          !isDataToolCanvaAsset(created)
+        ) {
           onInsertMedia?.({ id: created.id, url: createdUrl });
           setPendingPreviewUrl((prev) => {
             if (prev) URL.revokeObjectURL(prev);

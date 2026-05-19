@@ -476,6 +476,32 @@
 			},
 			"untitled": "Conjunto de dados sem título"
 		},
+		"export": {
+			"button": "Exportar Canva para PDF",
+			"emptyCanvas": "Adicione pelo menos um componente à tela antes de exportar.",
+			"failed": "Não foi possível exportar a tela. Tente novamente.",
+			"fallbackWarning": "Exportação concluída. Alguns componentes utilizaram um modelo raster alternativo e podem diferir ligeiramente da tela em tempo real.",
+			"figuresNotReady": "Alguns gráficos ainda estão carregando. Aguarde até que todas as visualizações terminem de ser renderizadas e tente novamente.",
+			"mediaDescription": "Exportação de PDF do Data Journal para {{workspace}}. Gerenciado como um artefato de ferramenta de dados (não para inserção de texto).",
+			"menuLabel": "Exportar Canva para PDF",
+			"modal": {
+				"canvasUnavailable": "A tela não está disponível. Abra este espaço de trabalho na tela do diário e tente novamente.",
+				"confirmButton": "Exportar PDF",
+				"confirmWorkspace": "Exporte o layout atual de “{{workspace}}” como um PDF. As posições e tamanhos dos componentes na tela serão preservados.",
+				"saveToMediaLibrary": "Salve também uma cópia na minha biblioteca de mídia (exportação da ferramenta de dados, não para inserção de texto).",
+				"success": "Seu PDF foi baixado.",
+				"successWithMedia": "Seu PDF foi baixado e uma cópia foi salva em sua biblioteca de mídia.",
+				"title": "Exportar espaço de trabalho para PDF"
+			},
+			"progress": {
+				"composing": "Compondo um PDF…",
+				"done": "Exportação concluída",
+				"error": "Exportação falhou",
+				"preparing": "Preparando o layout…",
+				"rendering": "Renderizando componentes…",
+				"saving": "Salvando na biblioteca de mídia…"
+			}
+		},
 		"graph": {
 			"axes": {
 				"barPlot": {
@@ -2015,10 +2041,12 @@
 		"insertImageAria": "Inserir imagem",
 		"insertImagePrompt": "Insira o URL da imagem:",
 		"mediaCancelEdit": "Cancelar",
+		"mediaCanvaExportThumb": "",
 		"mediaDelete": "Excluir",
 		"mediaDeleteConfirm": "Excluir este conteúdo da sua biblioteca? Imagens já inseridas no conteúdo podem aparecer como quebradas.",
 		"mediaDeleteFailed": "Não foi possível excluir este arquivo.",
 		"mediaDescriptionPlaceholder": "Adicione notas, se desejar.",
+		"mediaDownloadPdf": "",
 		"mediaEdit": "Editar",
 		"mediaEditFieldsRequired": "O título e o nome do arquivo não podem estar vazios.",
 		"mediaEditMeta": "Editar Detalhes",

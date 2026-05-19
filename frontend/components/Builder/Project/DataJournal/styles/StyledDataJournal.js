@@ -480,6 +480,25 @@ export const StyledTopNavigation = styled.div`
     gap: 8px;
     justify-content: flex-end;
   }
+  .canvaExportControl {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    max-width: 220px;
+  }
+  .canvaExportMessage {
+    margin: 0;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: right;
+  }
+  .canvaExportMessageError {
+    color: #b42318;
+  }
+  .canvaExportMessageWarn {
+    color: #5d5763;
+  }
   /* TopNav is under StyledDataWorkspace, not StyledDataJournal — mirror journal pill hovers here */
   .addWorkspaceBtn,
   .addComponentBtn {

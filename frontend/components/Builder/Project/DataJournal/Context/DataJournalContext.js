@@ -1,5 +1,12 @@
 // components/DataJournal/Context/DataJournalContext.js
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useMutation } from "@apollo/client";
 
 import { UPDATE_WORKSPACE } from "../../../../Mutations/DataWorkspace";
@@ -68,6 +75,25 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
 
   /** Latest loaded slice per datasource id (from DatasourceDataLoader). */
   const [sourceDataByDatasourceId, setSourceDataByDatasourceId] = useState({});
+
+  /** Live canvas element + width for canva PDF export (registered by Grid.js). */
+  const canvaExportCanvasRef = useRef({
+    canvasElement: null,
+    gridWidth: 1200,
+  });
+
+  const registerCanvaExportCanvas = useCallback((canvasElement, gridWidth) => {
+    canvaExportCanvasRef.current = {
+      canvasElement: canvasElement || null,
+      gridWidth:
+        Number.isFinite(gridWidth) && gridWidth > 0 ? gridWidth : 1200,
+    };
+  }, []);
+
+  const getCanvaExportCanvas = useCallback(
+    () => canvaExportCanvasRef.current,
+    [],
+  );
 
   // Apollo mutation for updating workspace on server
   const [updateWorkspaceOnServer] = useMutation(UPDATE_WORKSPACE, {
@@ -210,6 +236,8 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     widgetResizeTicks,
     bumpWidgetResizeTick,
     getWidgetResizeTick,
+    registerCanvaExportCanvas,
+    getCanvaExportCanvas,
   };
 
   return (

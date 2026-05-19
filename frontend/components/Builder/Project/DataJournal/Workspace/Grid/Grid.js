@@ -66,6 +66,7 @@ export default function Grid({
     projectId,
     studyId: contextStudyId,
     bumpWidgetResizeTick,
+    registerCanvaExportCanvas,
   } = useDataJournal();
   const resolvedStudyId = studyId || contextStudyId;
 
@@ -97,6 +98,10 @@ export default function Grid({
       window.removeEventListener("resize", updateWidth);
     };
   }, [sidebarVisible]);
+
+  useEffect(() => {
+    registerCanvaExportCanvas(canvasRef.current, gridWidth);
+  }, [registerCanvaExportCanvas, gridWidth, layout, components.length]);
 
   useEffect(() => {
     if (activeComponent) {

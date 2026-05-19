@@ -476,6 +476,32 @@
 			},
 			"untitled": "Ensemble de données sans titre"
 		},
+		"export": {
+			"button": "Exporter Canva au format PDF",
+			"emptyCanvas": "Ajoutez au moins un composant au canevas avant d'exporter.",
+			"failed": "Impossible d'exporter le canevas. Veuillez réessayer.",
+			"fallbackWarning": "Exportation terminée. Certains composants ont utilisé une image raster de secours et peuvent différer légèrement du canevas en direct.",
+			"figuresNotReady": "Certains graphiques sont encore en cours de chargement. Veuillez patienter jusqu'à la fin du rendu de toutes les visualisations, puis réessayer.",
+			"mediaDescription": "Exportation PDF du Data Journal Canva pour {{workspace}}. Géré comme un artefact d'outil de données (non destiné à l'insertion de texte).",
+			"menuLabel": "Exporter Canva au format PDF",
+			"modal": {
+				"canvasUnavailable": "Le canevas est indisponible. Ouvrez cet espace de travail sur le canevas du journal et réessayez.",
+				"confirmButton": "Exporter un PDF",
+				"confirmWorkspace": "Exportez la mise en page actuelle de « {{workspace}} » au format PDF. Les positions et les tailles des composants sur le canevas seront conservées.",
+				"saveToMediaLibrary": "Enregistrez également une copie dans ma bibliothèque multimédia (exportation de données, et non pour l'insertion de texte).",
+				"success": "Votre fichier PDF a été téléchargé.",
+				"successWithMedia": "Votre fichier PDF a été téléchargé et une copie a été enregistrée dans votre bibliothèque multimédia.",
+				"title": "Exporter l'espace de travail au format PDF"
+			},
+			"progress": {
+				"composing": "Création d'un PDF…",
+				"done": "Exportation terminée",
+				"error": "L'exportation a échoué",
+				"preparing": "Préparation de la mise en page…",
+				"rendering": "Composants de rendu…",
+				"saving": "Enregistrement dans la médiathèque…"
+			}
+		},
 		"graph": {
 			"axes": {
 				"barPlot": {
@@ -2015,10 +2041,12 @@
 		"insertImageAria": "Insérer une image",
 		"insertImagePrompt": "Saisissez l'URL de l'image :",
 		"mediaCancelEdit": "Annuler",
+		"mediaCanvaExportThumb": "",
 		"mediaDelete": "SUPPRIMER",
 		"mediaDeleteConfirm": "Supprimer ce média de votre bibliothèque ? Les images déjà intégrées au contenu peuvent apparaître comme brisées.",
 		"mediaDeleteFailed": "Impossible de supprimer ce fichier multimédia.",
 		"mediaDescriptionPlaceholder": "Ajoutez des notes si vous le souhaitez.",
+		"mediaDownloadPdf": "",
 		"mediaEdit": "Modifier",
 		"mediaEditFieldsRequired": "Le titre et le nom du fichier ne peuvent pas être vides.",
 		"mediaEditMeta": "Modifier les détails",

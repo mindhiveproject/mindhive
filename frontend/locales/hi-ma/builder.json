@@ -476,6 +476,32 @@
 			},
 			"untitled": ""
 		},
+		"export": {
+			"button": "",
+			"emptyCanvas": "",
+			"failed": "",
+			"fallbackWarning": "",
+			"figuresNotReady": "",
+			"mediaDescription": "",
+			"menuLabel": "",
+			"modal": {
+				"canvasUnavailable": "",
+				"confirmButton": "",
+				"confirmWorkspace": "",
+				"saveToMediaLibrary": "",
+				"success": "",
+				"successWithMedia": "",
+				"title": ""
+			},
+			"progress": {
+				"composing": "",
+				"done": "",
+				"error": "",
+				"preparing": "",
+				"rendering": "",
+				"saving": ""
+			}
+		},
 		"graph": {
 			"axes": {
 				"barPlot": {
@@ -2015,10 +2041,12 @@
 		"insertImageAria": "",
 		"insertImagePrompt": "",
 		"mediaCancelEdit": "",
+		"mediaCanvaExportThumb": "",
 		"mediaDelete": "",
 		"mediaDeleteConfirm": "",
 		"mediaDeleteFailed": "",
 		"mediaDescriptionPlaceholder": "",
+		"mediaDownloadPdf": "",
 		"mediaEdit": "",
 		"mediaEditFieldsRequired": "",
 		"mediaEditMeta": "",

@@ -9,6 +9,7 @@ import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import { useDataJournal } from "../Context/DataJournalContext";
 import { useDeleteWorkspace } from "../Helpers/DeleteWorkspace";
 import RenameWorkspaceModal from "../Helpers/RenameWorkspaceModal";
+import CanvaExportModal from "../Export/CanvaExportModal";
 import getVizComponentIconSrc from "../Helpers/getVizComponentIconSrc";
 import {
   StyledModalBody,
@@ -37,6 +38,7 @@ export default function WorkspaceNavigation({
     setPendingCanvasFocusComponentId,
   } = useDataJournal();
   const [renameOpen, setRenameOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
 
@@ -54,6 +56,13 @@ export default function WorkspaceNavigation({
         default: "Rename workspace",
       }),
       onClick: () => setRenameOpen(true),
+    },
+    {
+      key: "exportPdf",
+      label: t("dataJournal.export.menuLabel", {}, {
+        default: "Export canva to PDF",
+      }),
+      onClick: () => setExportOpen(true),
     },
     {
       key: "delete",
@@ -199,6 +208,12 @@ export default function WorkspaceNavigation({
         open={renameOpen}
         onOpenChange={setRenameOpen}
         journal={journal}
+        workspace={workspace}
+      />
+
+      <CanvaExportModal
+        open={exportOpen}
+        onOpenChange={setExportOpen}
         workspace={workspace}
       />
 

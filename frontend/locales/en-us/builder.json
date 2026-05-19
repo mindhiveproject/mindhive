@@ -476,6 +476,32 @@
 			},
 			"untitled": "Untitled Dataset"
 		},
+		"export": {
+			"button": "Export canva to PDF",
+			"emptyCanvas": "Add at least one component to the canvas before exporting.",
+			"failed": "Could not export the canva. Please try again.",
+			"fallbackWarning": "Export completed. Some components used a raster fallback and may differ slightly from the live canvas.",
+			"figuresNotReady": "Some charts are still loading. Wait for all visualizations to finish rendering, then try again.",
+			"mediaDescription": "Data Journal canva PDF export for {{workspace}}. Managed as a data-tool artifact (not for text insertion).",
+			"menuLabel": "Export canva to PDF",
+			"modal": {
+				"canvasUnavailable": "The canvas is not available. Open this workspace on the journal canvas and try again.",
+				"confirmButton": "Export PDF",
+				"confirmWorkspace": "Export the current layout of “{{workspace}}” as a PDF. Component positions and sizes on the canvas will be preserved.",
+				"saveToMediaLibrary": "Also save a copy in my media library (data-tool export, not for text insertion)",
+				"success": "Your PDF has been downloaded.",
+				"successWithMedia": "Your PDF has been downloaded and a copy was saved to your media library.",
+				"title": "Export workspace to PDF"
+			},
+			"progress": {
+				"composing": "Composing PDF…",
+				"done": "Export complete",
+				"error": "Export failed",
+				"preparing": "Preparing layout…",
+				"rendering": "Rendering components…",
+				"saving": "Saving to media library…"
+			}
+		},
 		"graph": {
 			"axes": {
 				"barPlot": {
@@ -2015,10 +2041,12 @@
 		"insertImageAria": "Insert image",
 		"insertImagePrompt": "Enter image URL:",
 		"mediaCancelEdit": "Cancel",
+		"mediaCanvaExportThumb": "Canva PDF export",
 		"mediaDelete": "Delete",
 		"mediaDeleteConfirm": "Delete this media from your library? Images already placed in content may show as broken.",
 		"mediaDeleteFailed": "Could not delete this media.",
 		"mediaDescriptionPlaceholder": "Add notes if you like.",
+		"mediaDownloadPdf": "Download PDF",
 		"mediaEdit": "Edit",
 		"mediaEditFieldsRequired": "Title and file name cannot be empty.",
 		"mediaEditMeta": "Edit details",

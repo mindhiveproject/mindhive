@@ -476,6 +476,32 @@
 			},
 			"untitled": "未命名数据集"
 		},
+		"export": {
+			"button": "将 Canva 导出为 PDF",
+			"emptyCanvas": "导出前，至少在画布上添加一个组件。",
+			"failed": "无法导出 Canva 文件，请重试。",
+			"fallbackWarning": "导出完成。部分组件使用了栅格化替代方案，可能与实时画布略有不同。",
+			"figuresNotReady": "部分图表仍在加载中。请等待所有图表渲染完成后再试。",
+			"mediaDescription": "数据日志 Canva PDF 导出，适用于 {{workspace}}。作为数据工具进行管理（不用于文本插入）。",
+			"menuLabel": "将 Canva 导出为 PDF",
+			"modal": {
+				"canvasUnavailable": "画布不可用。请在日志画布上打开此工作区，然后重试。",
+				"confirmButton": "导出 PDF",
+				"confirmWorkspace": "将“{{workspace}}”的当前布局导出为PDF文件。画布上组件的位置和大小将保持不变。",
+				"saveToMediaLibrary": "同时在我的媒体库中保存一份副本（数据工具导出，而非用于文本插入）。",
+				"success": "您的PDF文件已下载。",
+				"successWithMedia": "您的PDF文件已下载，副本已保存到您的媒体库中。",
+				"title": "将工作区导出为 PDF"
+			},
+			"progress": {
+				"composing": "撰写PDF…",
+				"done": "导出完成",
+				"error": "导出失败",
+				"preparing": "准备布局……",
+				"rendering": "正在渲染组件…",
+				"saving": "正在保存到媒体库…"
+			}
+		},
 		"graph": {
 			"axes": {
 				"barPlot": {
@@ -2015,10 +2041,12 @@
 		"insertImageAria": "插入图片",
 		"insertImagePrompt": "请输入图片网址：",
 		"mediaCancelEdit": "取消",
+		"mediaCanvaExportThumb": "",
 		"mediaDelete": "删除",
 		"mediaDeleteConfirm": "是否从媒体库中删除此媒体？已添加到内容中的图像可能会显示为损坏状态。",
 		"mediaDeleteFailed": "无法删除此媒体文件。",
 		"mediaDescriptionPlaceholder": "可以添加备注。",
+		"mediaDownloadPdf": "",
 		"mediaEdit": "编辑",
 		"mediaEditFieldsRequired": "标题和文件名不能为空。",
 		"mediaEditMeta": "编辑详细信息",

@@ -476,6 +476,32 @@
 			},
 			"untitled": "Conjunto de datos sin título"
 		},
+		"export": {
+			"button": "Exportar Canva a PDF",
+			"emptyCanvas": "Agregue al menos un componente al lienzo antes de exportarlo.",
+			"failed": "No se pudo exportar el lienzo. Inténtalo de nuevo.",
+			"fallbackWarning": "Exportación completada. Algunos componentes utilizaron una representación rasterizada como alternativa y pueden diferir ligeramente del lienzo en vivo.",
+			"figuresNotReady": "Algunos gráficos aún se están cargando. Espere a que finalice la visualización de todos los elementos y vuelva a intentarlo.",
+			"mediaDescription": "Exportación a PDF de Data Journal en Canva para {{workspace}}. Gestionado como un artefacto de la herramienta de datos (no para inserción de texto).",
+			"menuLabel": "Exportar Canva a PDF",
+			"modal": {
+				"canvasUnavailable": "El lienzo no está disponible. Abra este espacio de trabajo en el lienzo del diario e inténtelo de nuevo.",
+				"confirmButton": "Exportar PDF",
+				"confirmWorkspace": "Exporta el diseño actual de “{{workspace}}” como un PDF. Se conservarán las posiciones y tamaños de los componentes en el lienzo.",
+				"saveToMediaLibrary": "También guardo una copia en mi biblioteca multimedia (exportación con la herramienta de datos, no para insertar texto).",
+				"success": "Su archivo PDF ha sido descargado.",
+				"successWithMedia": "Su archivo PDF se ha descargado y se ha guardado una copia en su biblioteca multimedia.",
+				"title": "Exportar espacio de trabajo a PDF"
+			},
+			"progress": {
+				"composing": "Creación de PDF…",
+				"done": "Exportación completada",
+				"error": "Exportación fallida",
+				"preparing": "Preparando el diseño…",
+				"rendering": "Renderizando componentes…",
+				"saving": "Guardando en la biblioteca multimedia…"
+			}
+		},
 		"graph": {
 			"axes": {
 				"barPlot": {
@@ -2015,10 +2041,12 @@
 		"insertImageAria": "Insertar imagen",
 		"insertImagePrompt": "Introduzca la URL de la imagen:",
 		"mediaCancelEdit": "Cancelar",
+		"mediaCanvaExportThumb": "",
 		"mediaDelete": "BORRAR",
 		"mediaDeleteConfirm": "¿Eliminar este contenido multimedia de tu biblioteca? Es posible que las imágenes ya insertadas en el contenido aparezcan dañadas.",
 		"mediaDeleteFailed": "No se pudo eliminar este archivo multimedia.",
 		"mediaDescriptionPlaceholder": "Si lo desea, puede añadir notas.",
+		"mediaDownloadPdf": "",
 		"mediaEdit": "Editar",
 		"mediaEditFieldsRequired": "El título y el nombre del archivo no pueden estar vacíos.",
 		"mediaEditMeta": "Editar detalles",
