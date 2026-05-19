@@ -2,7 +2,120 @@
  * Data Journal datasource list filters and delete eligibility helpers.
  */
 
+/** @typedef {"uploaded" | "sharedWithMe" | "myClass" | "classNetwork" | "public"} DatasetScope */
+
+/** @type {DatasetScope[]} */
+export const DATASET_SCOPES = [
+  "uploaded",
+  "sharedWithMe",
+  "myClass",
+  "classNetwork",
+  "public",
+];
+
 /**
+ * @param {string[]} classIds
+ * @returns {Record<string, unknown> | null}
+ */
+function studyOrProjectInClassesWhere(classIds) {
+  if (!classIds?.length) return null;
+  const or = [
+    { study: { classes: { some: { id: { in: classIds } } } } },
+    { project: { usedInClass: { id: { in: classIds } } } },
+    {
+      project: {
+        templateForClasses: { some: { id: { in: classIds } } },
+      },
+    },
+  ];
+  if (or.length === 1) return or[0];
+  return { OR: or };
+}
+
+/**
+ * @param {{ projectId?: string | null, studyId?: string | null }} params
+ * @returns {Record<string, unknown> | null}
+ */
+function attachedToCurrentContextWhere({ projectId, studyId }) {
+  const or = [];
+  if (projectId) or.push({ project: { id: { equals: projectId } } });
+  if (studyId) or.push({ study: { id: { equals: studyId } } });
+  if (or.length === 0) return null;
+  if (or.length === 1) return or[0];
+  return { OR: or };
+}
+
+/**
+ * @param {{
+ *   scope: DatasetScope,
+ *   projectId?: string | null,
+ *   studyId?: string | null,
+ *   userId?: string | null,
+ *   directClassIds?: string[],
+ *   networkClassIds?: string[],
+ * }} params
+ * @returns {Record<string, unknown> | null}
+ */
+export function buildDatasourcesWhereForScope({
+  scope,
+  projectId,
+  studyId,
+  userId,
+  directClassIds = [],
+  networkClassIds = [],
+}) {
+  switch (scope) {
+    case "uploaded":
+      if (!userId) return null;
+      return {
+        AND: [
+          { author: { id: { equals: userId } } },
+          { dataOrigin: { equals: "UPLOADED" } },
+        ],
+      };
+
+    case "sharedWithMe":
+      if (!userId) return null;
+      return {
+        AND: [
+          { collaborators: { some: { id: { equals: userId } } } },
+          { author: { id: { not: { equals: userId } } } },
+        ],
+      };
+
+    case "myClass": {
+      const classFilter = studyOrProjectInClassesWhere(directClassIds);
+      return classFilter ?? { id: { equals: "__no_matching_classes__" } };
+    }
+
+    case "classNetwork": {
+      const contextFilter = attachedToCurrentContextWhere({ projectId, studyId });
+      const networkFilter = studyOrProjectInClassesWhere(networkClassIds);
+      if (!contextFilter || !networkFilter) {
+        return { id: { equals: "__no_matching_class_network__" } };
+      }
+      return { AND: [contextFilter, networkFilter] };
+    }
+
+    case "public":
+      return {
+        journal: {
+          some: {
+            AND: [
+              { isPublic: { equals: true } },
+              { isTemplate: { equals: true } },
+            ],
+          },
+        },
+      };
+
+    default:
+      return buildDatasourcesWhere({ projectId, studyId, userId });
+  }
+}
+
+/**
+ * Broad list filter (journal attach modal, legacy). Prefer {@link buildDatasourcesWhereForScope} in dataset library tabs.
  * @param {{ projectId?: string | null, studyId?: string | null, userId?: string | null }} params
  * @returns {Record<string, unknown> | null}
  */

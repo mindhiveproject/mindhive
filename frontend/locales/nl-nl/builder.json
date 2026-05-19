@@ -438,6 +438,27 @@
 			},
 			"originTooltip": "Hoe deze dataset is gemaakt.",
 			"renameDisabledNotOwner": "Alleen de maker van deze dataset kan deze hernoemen.",
+			"scopes": {
+				"classNetwork": "Klassennetwerk",
+				"empty": {
+					"classNetwork": "Voor dit project of onderzoek zijn geen datasets uit het netwerk van je klas toegestaan.",
+					"myClass": "Er zijn nog geen datasets van je lessen beschikbaar.",
+					"public": "Geen openbare datasets gevonden.",
+					"sharedWithMe": "Er zijn geen datasets met u gedeeld.",
+					"uploaded": "Er zijn nog geen datasets geüpload."
+				},
+				"intro": {
+					"classNetwork": "Datasets voor dit project of onderzoek zijn afkomstig uit de lessen in uw klassennetwerk.",
+					"myClass": "Datasets die gekoppeld zijn aan studies of projecten in je lessen.",
+					"public": "Datasets afkomstig van openbare tijdschriftsjablonen.",
+					"sharedWithMe": "Datasets die anderen met je hebben gedeeld als samenwerkingspartner.",
+					"uploaded": "Datasets die u hebt geüpload."
+				},
+				"myClass": "Mijn klas",
+				"public": "Openbaar",
+				"sharedWithMe": "Gedeeld met mij",
+				"uploaded": "Geüpload"
+			},
 			"sharing": {
 				"allowEditingLabel": "Sta medewerkers van het tijdschrift toe om deze dataset te bewerken.",
 				"journalOnlyTooltip": "Bij het aanmaken van de dataset worden de medewerkers die aan dit onderzoek of project in dit tijdschrift hebben meegewerkt, met elkaar in contact gebracht.",

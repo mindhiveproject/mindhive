@@ -438,6 +438,27 @@
 			},
 			"originTooltip": "Como este conjunto de dados foi criado.",
 			"renameDisabledNotOwner": "Somente o criador deste conjunto de dados pode renomeá-lo.",
+			"scopes": {
+				"classNetwork": "Rede de classes",
+				"empty": {
+					"classNetwork": "Não há conjuntos de dados da sua rede de turma para este projeto ou estudo.",
+					"myClass": "Ainda não há conjuntos de dados das suas turmas.",
+					"public": "Nenhum conjunto de dados público encontrado.",
+					"sharedWithMe": "Nenhum conjunto de dados foi compartilhado com você.",
+					"uploaded": "Ainda não há conjuntos de dados carregados."
+				},
+				"intro": {
+					"classNetwork": "Conjuntos de dados sobre este projeto ou estudo de turmas em suas redes de classe.",
+					"myClass": "Conjuntos de dados relacionados a estudos ou projetos em suas aulas.",
+					"public": "Conjuntos de dados de modelos de periódicos públicos.",
+					"sharedWithMe": "Conjuntos de dados que outros compartilharam com você como colaborador.",
+					"uploaded": "Conjuntos de dados que você carregou."
+				},
+				"myClass": "Minha turma",
+				"public": "Público",
+				"sharedWithMe": "Compartilhou comigo",
+				"uploaded": "Enviado"
+			},
 			"sharing": {
 				"allowEditingLabel": "Permitir que os colaboradores da revista editem este conjunto de dados.",
 				"journalOnlyTooltip": "Os colaboradores deste estudo ou projeto da revista serão conectados quando você criar o conjunto de dados.",

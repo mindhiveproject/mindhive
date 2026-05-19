@@ -438,6 +438,27 @@
 			},
 			"originTooltip": "",
 			"renameDisabledNotOwner": "",
+			"scopes": {
+				"classNetwork": "",
+				"empty": {
+					"classNetwork": "",
+					"myClass": "",
+					"public": "",
+					"sharedWithMe": "",
+					"uploaded": ""
+				},
+				"intro": {
+					"classNetwork": "",
+					"myClass": "",
+					"public": "",
+					"sharedWithMe": "",
+					"uploaded": ""
+				},
+				"myClass": "",
+				"public": "",
+				"sharedWithMe": "",
+				"uploaded": ""
+			},
 			"sharing": {
 				"allowEditingLabel": "",
 				"journalOnlyTooltip": "",

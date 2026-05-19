@@ -433,6 +433,40 @@ export const StyledTopNavigation = styled.div`
   border-bottom: 1px solid #e6e6e6;
   background: white;
   padding: 8px;
+  &.withDatasetScopes {
+    height: auto;
+    min-height: 56px;
+    align-items: flex-start;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    .centerColumn {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      overflow-x: auto;
+      ${hideScrollbars}
+    }
+    .datasetScopeNavWithAdd {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      min-width: 0;
+    }
+    .addDatasetNavBtn {
+      flex-shrink: 0;
+    }
+    .datasetScopeNav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      min-width: 0;
+    }
+    .datasetScopeChip {
+      flex-shrink: 0;
+    }
+  }
   .buttons {
     display: flex;
     justify-content: flex-end;
@@ -819,6 +853,14 @@ export const StyledDatasetsRoot = styled.div`
     font-size: 14px;
     line-height: 1.45;
     color: #4a5568;
+  }
+
+  .datasets-list-empty {
+    margin: 0 0 16px;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #5d5763;
   }
 
   .add-dataset-row {

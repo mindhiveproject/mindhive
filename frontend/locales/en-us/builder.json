@@ -438,6 +438,27 @@
 			},
 			"originTooltip": "How this dataset was created.",
 			"renameDisabledNotOwner": "Only the creator of this dataset can rename it.",
+			"scopes": {
+				"classNetwork": "Class network",
+				"empty": {
+					"classNetwork": "No datasets from your class network for this project or study.",
+					"myClass": "No datasets from your classes yet.",
+					"public": "No public datasets found.",
+					"sharedWithMe": "No datasets have been shared with you.",
+					"uploaded": "No uploaded datasets yet."
+				},
+				"intro": {
+					"classNetwork": "Datasets on this project or study from classes in your class networks.",
+					"myClass": "Datasets linked to studies or projects in your classes.",
+					"public": "Datasets from public journal templates.",
+					"sharedWithMe": "Datasets others shared with you as a collaborator.",
+					"uploaded": "Datasets you uploaded."
+				},
+				"myClass": "My class",
+				"public": "Public",
+				"sharedWithMe": "Shared with me",
+				"uploaded": "Uploaded"
+			},
 			"sharing": {
 				"allowEditingLabel": "Allow journal collaborators to edit this dataset",
 				"journalOnlyTooltip": "Collaborators from this journal’s study or project will be connected when you create the dataset.",

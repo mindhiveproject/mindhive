@@ -43,8 +43,12 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
 
   // Other UI states (e.g., from Grid.js)
   const [area, setArea] = useState("journals"); // e.g., 'journals' or 'datasets'
+  /** Active dataset library tab when area === "datasets". */
+  const [datasetScope, setDatasetScope] = useState("uploaded");
   /** Incremented when the user chooses the Datasets top-nav tab; Datasets/Main resets list vs detail state. */
   const [datasetsListNavNonce, setDatasetsListNavNonce] = useState(0);
+  /** Incremented when Add dataset is clicked in top nav; Datasets/Main opens the add panel. */
+  const [datasetsAddRequestNonce, setDatasetsAddRequestNonce] = useState(0);
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [isAddComponentPanelOpen, setIsAddComponentPanelOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState("journal");
@@ -119,6 +123,11 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     setDatasetsListNavNonce((n) => n + 1);
   }, []);
 
+  const requestOpenAddDataset = useCallback(() => {
+    setArea("datasets");
+    setDatasetsAddRequestNonce((n) => n + 1);
+  }, []);
+
   const bumpWidgetResizeTick = useCallback((componentId) => {
     if (typeof componentId !== "string" || !componentId.trim()) return;
     const key = componentId.trim();
@@ -179,8 +188,12 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     setPendingCanvasFocusComponentId,
     area,
     setArea,
+    datasetScope,
+    setDatasetScope,
     datasetsListNavNonce,
+    datasetsAddRequestNonce,
     navigateToDatasets,
+    requestOpenAddDataset,
     sidebarVisible,
     setSidebarVisible,
     isAddComponentPanelOpen,

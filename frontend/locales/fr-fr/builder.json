@@ -438,6 +438,27 @@
 			},
 			"originTooltip": "Comment ce jeu de données a été créé.",
 			"renameDisabledNotOwner": "Seul le créateur de cet ensemble de données peut le renommer.",
+			"scopes": {
+				"classNetwork": "Réseau de classe",
+				"empty": {
+					"classNetwork": "Aucune donnée provenant de votre réseau de classe n'est disponible pour ce projet ou cette étude.",
+					"myClass": "Aucun jeu de données pour vos classes pour le moment.",
+					"public": "Aucun jeu de données public trouvé.",
+					"sharedWithMe": "Aucune donnée n'a été partagée avec vous.",
+					"uploaded": "Aucun jeu de données n'a encore été téléchargé."
+				},
+				"intro": {
+					"classNetwork": "Ensembles de données relatifs à ce projet ou à cette étude, provenant de classes appartenant à vos réseaux de classes.",
+					"myClass": "Jeux de données liés aux études ou aux projets de vos cours.",
+					"public": "Ensembles de données issus de modèles de revues publiques.",
+					"sharedWithMe": "Jeux de données partagés avec vous par d'autres collaborateurs.",
+					"uploaded": "Jeux de données que vous avez téléchargés."
+				},
+				"myClass": "Ma classe",
+				"public": "Publique",
+				"sharedWithMe": "Partagé avec moi",
+				"uploaded": "Téléchargé"
+			},
 			"sharing": {
 				"allowEditingLabel": "Autoriser les collaborateurs de la revue à modifier cet ensemble de données",
 				"journalOnlyTooltip": "Les collaborateurs de l’étude ou du projet publié dans cette revue seront mis en relation lorsque vous créerez l’ensemble de données.",
