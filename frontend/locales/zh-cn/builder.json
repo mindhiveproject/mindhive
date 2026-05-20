@@ -491,8 +491,11 @@
 				"saveToMediaLibrary": "同时在我的媒体库中保存一份副本（数据工具导出，而非用于文本插入）。",
 				"success": "您的PDF文件已下载。",
 				"successWithMedia": "您的PDF文件已下载，副本已保存到您的媒体库中。",
-				"title": "将工作区导出为 PDF"
+				"title": "将工作区导出为 PDF",
+				"unsupportedNotice": "此画布上的表格和代码组件不包含在导出的 PDF 中。",
+				"unsupportedSkipped": "PDF 文件中省略了表格和代码部分。"
 			},
+			"onlyUnsupportedTypes": "此画布仅包含表格和代码组件，无法导出为 PDF。请添加其他组件类型后重试。",
 			"progress": {
 				"composing": "撰写PDF…",
 				"done": "导出完成",

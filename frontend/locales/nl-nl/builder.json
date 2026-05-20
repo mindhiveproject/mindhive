@@ -491,8 +491,11 @@
 				"saveToMediaLibrary": "Ik sla ook een kopie op in mijn mediabibliotheek (export via data-tool, niet voor tekstinvoeging).",
 				"success": "Je pdf-bestand is gedownload.",
 				"successWithMedia": "Je pdf-bestand is gedownload en een kopie is opgeslagen in je mediabibliotheek.",
-				"title": "Exporteer je werkruimte naar PDF."
+				"title": "Exporteer je werkruimte naar PDF.",
+				"unsupportedNotice": "Tabellen en code-elementen op dit canvas worden niet opgenomen in de geëxporteerde PDF.",
+				"unsupportedSkipped": "Tabellen en codefragmenten zijn weggelaten uit het PDF-bestand."
 			},
+			"onlyUnsupportedTypes": "Dit Canva-sjabloon bevat alleen tabel- en codecomponenten, die niet naar PDF geëxporteerd kunnen worden. Voeg een ander componenttype toe en probeer het opnieuw.",
 			"progress": {
 				"composing": "PDF-bestand samenstellen…",
 				"done": "Export voltooid",

@@ -1,7 +1,7 @@
 import { buildCanvasExportManifest } from "./buildCanvasExportManifest";
 import { composeTiledPdf } from "./composeTiledPdf";
 import { exportWidgetArtifact } from "./adapters";
-import { FIGURE_READY_TYPES } from "./constants";
+import { FIGURE_READY_TYPES, UNSUPPORTED_EXPORT_TYPES } from "./constants";
 
 /**
  * @typedef {'idle'|'preparing'|'rendering'|'composing'|'saving'|'done'|'error'} ExportPhase
@@ -35,8 +35,6 @@ export function getExportReadinessIssues(
  *   layout: unknown[];
  *   components: Array<{ id: string; type: string; title?: string; content?: object }>;
  *   gridWidth: number;
- *   journalDatasources: unknown[];
- *   sourceDataByDatasourceId: Record<string, unknown>;
  *   onProgress?: (phase: string, detail?: object) => void;
  * }} params
  */
@@ -45,8 +43,6 @@ export async function exportCanvaToPdf({
   layout,
   components,
   gridWidth,
-  journalDatasources,
-  sourceDataByDatasourceId,
   onProgress,
 }) {
   onProgress?.("preparing");
@@ -72,12 +68,19 @@ export async function exportCanvaToPdf({
   onProgress?.("rendering", { total: manifest.items.length });
 
   for (const manifestItem of manifest.items) {
+    if (UNSUPPORTED_EXPORT_TYPES.has(manifestItem.type)) {
+      warnings.push({
+        componentId: manifestItem.componentId,
+        type: manifestItem.type,
+        reason: "unsupported_type",
+      });
+      continue;
+    }
+
     const component = componentsById.get(manifestItem.componentId);
     const artifact = await exportWidgetArtifact({
       manifestItem,
       component: component || { content: {} },
-      journalDatasources,
-      sourceDataByDatasourceId,
     });
 
     if (!artifact) {

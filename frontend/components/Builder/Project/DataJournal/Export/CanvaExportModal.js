@@ -11,6 +11,7 @@ import {
   StyledModalHeader,
   StyledModalOverlay,
 } from "../styles/StyledDataSourceModal";
+import { getUnsupportedExportComponents } from "./exportUnsupported";
 import useCanvaPdfExport from "./useCanvaPdfExport";
 
 const bodyTextStyle = {
@@ -19,6 +20,17 @@ const bodyTextStyle = {
   fontSize: 14,
   lineHeight: 1.5,
   color: "#333",
+};
+
+const noticeStyle = {
+  margin: "12px 0 0",
+  padding: "10px 12px",
+  borderRadius: 6,
+  background: "#f5f3f0",
+  fontFamily: "Inter, sans-serif",
+  fontSize: 13,
+  lineHeight: 1.45,
+  color: "#5D5763",
 };
 
 const checkboxRowStyle = {
@@ -86,7 +98,20 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
     });
   };
 
-  const hasWarnings = Array.isArray(warnings) && warnings.length > 0;
+  const unsupportedOnCanvas = getUnsupportedExportComponents(
+    workspace?.vizSections,
+  );
+  const hasUnsupportedOnCanvas = unsupportedOnCanvas.length > 0;
+
+  const unsupportedSkippedWarnings = (warnings || []).filter(
+    (w) => w?.reason === "unsupported_type",
+  );
+  const fallbackWarnings = (warnings || []).filter(
+    (w) => w?.reason === "raster_fallback",
+  );
+  const hasUnsupportedSkipped = unsupportedSkippedWarnings.length > 0;
+  const hasFallbackWarnings = fallbackWarnings.length > 0;
+
   const showResult = phase === "done" || phase === "error";
   const canSaveToLibrary = Boolean(projectId || workspace?.id);
 
@@ -124,10 +149,18 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
                   { workspace: workspaceTitle },
                   {
                     default:
-                      "Export the current layout of “{{workspace}}” as a PDF. Component positions and sizes on the canvas will be preserved.",
+                      "Export the current layout of “{{workspace}}” as a PDF.",
                   },
                 )}
               </p>
+              {hasUnsupportedOnCanvas ? (
+                <p style={noticeStyle} role="note">
+                  {t("dataJournal.export.modal.unsupportedNotice", {}, {
+                    default:
+                      "Table and code components on this canva are not included in the exported PDF.",
+                  })}
+                </p>
+              ) : null}
               {canSaveToLibrary ? (
                 <label style={checkboxRowStyle} htmlFor="canva-export-save-media">
                   <input
@@ -175,14 +208,25 @@ export default function CanvaExportModal({ open, onOpenChange, workspace }) {
                   {errorMessage}
                 </p>
               ) : null}
-              {phase === "done" && hasWarnings ? (
+              {phase === "done" && hasUnsupportedSkipped ? (
+                <p
+                  style={{ ...bodyTextStyle, marginTop: 12, color: "#5D5763" }}
+                  role="status"
+                >
+                  {t("dataJournal.export.modal.unsupportedSkipped", {}, {
+                    default:
+                      "Table and code components were omitted from the PDF.",
+                  })}
+                </p>
+              ) : null}
+              {phase === "done" && hasFallbackWarnings ? (
                 <p
                   style={{ ...bodyTextStyle, marginTop: 12, color: "#5D5763" }}
                   role="status"
                 >
                   {t("dataJournal.export.fallbackWarning", {}, {
                     default:
-                      "Some components used a raster fallback and may differ slightly from the live canvas.",
+                      "Export completed. Some components used a raster fallback and may differ slightly from the live canvas.",
                   })}
                 </p>
               ) : null}

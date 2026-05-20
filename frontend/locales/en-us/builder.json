@@ -491,8 +491,11 @@
 				"saveToMediaLibrary": "Also save a copy in my media library (data-tool export, not for text insertion)",
 				"success": "Your PDF has been downloaded.",
 				"successWithMedia": "Your PDF has been downloaded and a copy was saved to your media library.",
-				"title": "Export workspace to PDF"
+				"title": "Export workspace to PDF",
+				"unsupportedNotice": "Table and code components on this canva are not included in the exported PDF.",
+				"unsupportedSkipped": "Table and code components were omitted from the PDF."
 			},
+			"onlyUnsupportedTypes": "This canva only has table and code components, which cannot be exported to PDF. Add another component type and try again.",
 			"progress": {
 				"composing": "Composing PDF…",
 				"done": "Export complete",

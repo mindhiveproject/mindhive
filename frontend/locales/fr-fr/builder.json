@@ -491,8 +491,11 @@
 				"saveToMediaLibrary": "Enregistrez également une copie dans ma bibliothèque multimédia (exportation de données, et non pour l'insertion de texte).",
 				"success": "Votre fichier PDF a été téléchargé.",
 				"successWithMedia": "Votre fichier PDF a été téléchargé et une copie a été enregistrée dans votre bibliothèque multimédia.",
-				"title": "Exporter l'espace de travail au format PDF"
+				"title": "Exporter l'espace de travail au format PDF",
+				"unsupportedNotice": "Les éléments de tableau et de code présents sur ce canevas ne sont pas inclus dans le PDF exporté.",
+				"unsupportedSkipped": "Les tableaux et les éléments de code ont été omis du PDF."
 			},
+			"onlyUnsupportedTypes": "Ce canevas ne contient que des composants tableau et code, qui ne peuvent pas être exportés au format PDF. Ajoutez un autre type de composant et réessayez.",
 			"progress": {
 				"composing": "Création d'un PDF…",
 				"done": "Exportation terminée",

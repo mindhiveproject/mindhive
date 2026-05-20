@@ -2,8 +2,9 @@ import { exportGraphWidget } from "./graphAdapter";
 import { exportHypVisWidget } from "./hypvisAdapter";
 import { exportParagraphWidget } from "./paragraphAdapter";
 import { rasterizeWidgetElement } from "./rasterFallback";
-import { exportTableWidget } from "./tableAdapter";
+import { exportStatTestWidget } from "./statTestAdapter";
 import { htmlToPngArtifact } from "./htmlToPngArtifact";
+
 /**
  * Normalize any artifact to PNG bytes for PDF embedding.
  *
@@ -27,16 +28,9 @@ export async function artifactToPngBytes(artifact, width, height) {
  * @param {{
  *   manifestItem: { componentId: string; type: string; rect: { width: number; height: number } };
  *   component: { content?: object };
- *   journalDatasources: unknown[];
- *   sourceDataByDatasourceId: Record<string, unknown>;
  * }} params
  */
-export async function exportWidgetArtifact({
-  manifestItem,
-  component,
-  journalDatasources,
-  sourceDataByDatasourceId,
-}) {
+export async function exportWidgetArtifact({ manifestItem, component }) {
   const { componentId, type, rect } = manifestItem;
   const content = component?.content || {};
 
@@ -49,16 +43,21 @@ export async function exportWidgetArtifact({
     case "HYPVIS":
       artifact = await exportHypVisWidget({ componentId, rect });
       break;
-    case "TABLE":
-      artifact = await exportTableWidget({
-        content,
-        rect,
-        journalDatasources,
-        sourceDataByDatasourceId,
-      });
-      break;
     case "PARAGRAPH":
-      artifact = await exportParagraphWidget({ content, rect });
+      artifact = await exportParagraphWidget({ content, rect, componentId });
+      break;
+    case "STATTEST":
+      artifact = await exportStatTestWidget({ componentId, rect });
+      break;
+    case "STATISTICS":
+      artifact = await rasterizeWidgetElement(componentId, {
+        width: rect.width,
+        height: rect.height,
+      });
+      if (artifact) {
+        artifact.usedFallback = false;
+        artifact.source = "native";
+      }
       break;
     default:
       artifact = await rasterizeWidgetElement(componentId, {

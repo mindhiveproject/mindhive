@@ -491,8 +491,11 @@
 				"saveToMediaLibrary": "Salve também uma cópia na minha biblioteca de mídia (exportação da ferramenta de dados, não para inserção de texto).",
 				"success": "Seu PDF foi baixado.",
 				"successWithMedia": "Seu PDF foi baixado e uma cópia foi salva em sua biblioteca de mídia.",
-				"title": "Exportar espaço de trabalho para PDF"
+				"title": "Exportar espaço de trabalho para PDF",
+				"unsupportedNotice": "Os componentes de tabela e código nesta tela não estão incluídos no PDF exportado.",
+				"unsupportedSkipped": "Os componentes de tabela e código foram omitidos do PDF."
 			},
+			"onlyUnsupportedTypes": "Esta tela contém apenas componentes de tabela e código, que não podem ser exportados para PDF. Adicione outro tipo de componente e tente novamente.",
 			"progress": {
 				"composing": "Compondo um PDF…",
 				"done": "Exportação concluída",

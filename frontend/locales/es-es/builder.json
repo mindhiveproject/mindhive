@@ -491,8 +491,11 @@
 				"saveToMediaLibrary": "También guardo una copia en mi biblioteca multimedia (exportación con la herramienta de datos, no para insertar texto).",
 				"success": "Su archivo PDF ha sido descargado.",
 				"successWithMedia": "Su archivo PDF se ha descargado y se ha guardado una copia en su biblioteca multimedia.",
-				"title": "Exportar espacio de trabajo a PDF"
+				"title": "Exportar espacio de trabajo a PDF",
+				"unsupportedNotice": "Los componentes de tabla y código de este lienzo no se incluyen en el PDF exportado.",
+				"unsupportedSkipped": "Las tablas y los componentes de código se omitieron del PDF."
 			},
+			"onlyUnsupportedTypes": "Este lienzo solo contiene componentes de tabla y código, que no se pueden exportar a PDF. Añada otro tipo de componente e inténtelo de nuevo.",
 			"progress": {
 				"composing": "Creación de PDF…",
 				"done": "Exportación completada",

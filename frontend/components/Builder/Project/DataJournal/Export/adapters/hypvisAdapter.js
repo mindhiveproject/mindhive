@@ -1,4 +1,5 @@
 import { extractPngBase64FromFigHtml } from "../../Widgets/types/HypVis/Editor/Axes/figHtmlFromPyodide";
+import { EXPORT_RASTER_SCALE } from "../constants";
 import { fileToPngArtifact } from "../widgetArtifact";
 import { rasterizeWidgetElement } from "./rasterFallback";
 
@@ -54,7 +55,7 @@ export async function exportHypVisWidget({ componentId, rect }) {
   }
 
   return rasterizeWidgetElement(componentId, {
-    width: exportWidth,
-    height: exportHeight,
+    width: Math.max(1, Math.round(exportWidth * EXPORT_RASTER_SCALE)),
+    height: Math.max(1, Math.round(exportHeight * EXPORT_RASTER_SCALE)),
   });
 }

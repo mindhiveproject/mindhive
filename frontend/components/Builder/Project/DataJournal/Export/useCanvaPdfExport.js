@@ -13,6 +13,7 @@ import {
   exportCanvaToPdf,
   getExportReadinessIssues,
 } from "./exportCanvaToPdf";
+import { hasExportableComponents } from "./exportUnsupported";
 
 /**
  * @typedef {'idle'|'preparing'|'rendering'|'composing'|'saving'|'done'|'error'} ExportPhase
@@ -23,8 +24,6 @@ export default function useCanvaPdfExport() {
   const {
     workspace,
     projectId,
-    journalDatasources,
-    sourceDataByDatasourceId,
     figureReadinessByComponentId,
   } = useDataJournal();
 
@@ -83,6 +82,17 @@ export default function useCanvaPdfExport() {
         return;
       }
 
+      if (!hasExportableComponents(components)) {
+        setErrorMessage(
+          t("dataJournal.export.onlyUnsupportedTypes", {}, {
+            default:
+              "This canva only has table and code components, which cannot be exported to PDF. Add another component type and try again.",
+          }),
+        );
+        setPhase("error");
+        return;
+      }
+
       const notReady = getExportReadinessIssues(
         components,
         figureReadinessByComponentId,
@@ -109,8 +119,6 @@ export default function useCanvaPdfExport() {
           layout,
           components,
           gridWidth,
-          journalDatasources,
-          sourceDataByDatasourceId,
           onProgress: (nextPhase) => setPhase(nextPhase),
         });
 
@@ -201,8 +209,6 @@ export default function useCanvaPdfExport() {
     [
       workspace,
       projectId,
-      journalDatasources,
-      sourceDataByDatasourceId,
       figureReadinessByComponentId,
       createMediaAsset,
       t,

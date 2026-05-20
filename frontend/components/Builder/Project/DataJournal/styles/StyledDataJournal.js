@@ -1263,8 +1263,8 @@ export const StyledDataWorkspace = styled.div`
     }
 
     .react-resizable-handle::after {
-      border-right: 2px solid #e4dff6 !important;
-      border-bottom: 2px solid #e4dff6 !important;
+      border-right: 2px solid #0D3944 !important;
+      border-bottom: 2px solid #0D3944 !important;
     }
 
     /* Paragraph widget on grid: match panel TipTap — no inner ProseMirror box chrome; WidgetContent scrolls */

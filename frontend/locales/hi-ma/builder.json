@@ -491,8 +491,11 @@
 				"saveToMediaLibrary": "",
 				"success": "",
 				"successWithMedia": "",
-				"title": ""
+				"title": "",
+				"unsupportedNotice": "",
+				"unsupportedSkipped": ""
 			},
+			"onlyUnsupportedTypes": "",
 			"progress": {
 				"composing": "",
 				"done": "",

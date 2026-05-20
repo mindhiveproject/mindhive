@@ -5,28 +5,7 @@ import {
   PDF_PAGE_WIDTH_PT,
 } from "./constants";
 import { artifactToPngBytes } from "./adapters";
-
-/**
- * Fit dimensions inside a box preserving aspect ratio.
- */
-export function fitRectPreserveAspect(
-  intrinsicWidth,
-  intrinsicHeight,
-  boxWidth,
-  boxHeight,
-) {
-  if (intrinsicWidth <= 0 || intrinsicHeight <= 0) {
-    return { width: boxWidth, height: boxHeight };
-  }
-  const scale = Math.min(
-    boxWidth / intrinsicWidth,
-    boxHeight / intrinsicHeight,
-  );
-  return {
-    width: intrinsicWidth * scale,
-    height: intrinsicHeight * scale,
-  };
-}
+import { fitImageToWidgetRect } from "./fitImageToWidgetRect";
 
 /**
  * @param {ReturnType<import('./buildCanvasExportManifest').buildCanvasExportManifest>} manifest
@@ -96,7 +75,7 @@ export async function composeTiledPdf(manifest, artifactsByComponentId) {
         continue;
       }
 
-      const fitted = fitRectPreserveAspect(
+      const fitted = fitImageToWidgetRect(
         image.width,
         image.height,
         scaledWidth,
@@ -104,7 +83,8 @@ export async function composeTiledPdf(manifest, artifactsByComponentId) {
       );
 
       const yOnPage = scaledTop - pageTopScaled;
-      const drawX = PDF_PAGE_MARGIN_PT + scaledLeft;
+      const drawX =
+        PDF_PAGE_MARGIN_PT + scaledLeft + fitted.offsetX;
       const drawY =
         PDF_PAGE_HEIGHT_PT - PDF_PAGE_MARGIN_PT - yOnPage - fitted.height;
 

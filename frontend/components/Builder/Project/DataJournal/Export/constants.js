@@ -13,3 +13,9 @@ export const PDF_PAGE_HEIGHT_PT = 841.89;
 export const PDF_PAGE_MARGIN_PT = 36;
 
 export const FIGURE_READY_TYPES = new Set(["GRAPH", "HYPVIS"]);
+
+/** Widget types omitted from canva PDF export (layout cell left empty). */
+export const UNSUPPORTED_EXPORT_TYPES = new Set(["TABLE", "CODE"]);
+
+/** html2canvas / supersampled native export multiplier (capped for memory). */
+export const EXPORT_RASTER_SCALE = 3;
