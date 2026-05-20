@@ -7,6 +7,7 @@ import {
   buildDatasourcesWhere,
   canAttachDatasourceToJournal,
 } from "../../../../../lib/dataJournalDatasources";
+import { getLastUpdatedDate } from "../../../../../lib/dataJournalTimestamps";
 import { GET_DATASOURCES } from "../../../../Queries/Datasource";
 import { UPDATE_VIZPART } from "../../../../Mutations/VizPart";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
@@ -213,15 +214,14 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
                 const originLabel = originKey
                   ? t(originKey, {}, { default: datasource.dataOrigin })
                   : datasource.dataOrigin;
-                const formattedDate = datasource.updatedAt
-                  ? new Date(datasource.updatedAt).toLocaleDateString(undefined, {
+                const lastUpdatedAt = getLastUpdatedDate(datasource);
+                const formattedDate = lastUpdatedAt
+                  ? lastUpdatedAt.toLocaleDateString(undefined, {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
                     })
-                  : t("dataJournal.sideNav.dataSourceModal.neverUpdated", {}, {
-                      default: "Never",
-                    });
+                  : null;
 
                 const attachOk = canAttach(datasource);
                 const row = (
@@ -266,11 +266,17 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
                           )}
                         </span>
                         <span className="updated">
-                          {t(
-                            "dataJournal.sideNav.dataSourceModal.lastUpdated",
-                            { date: formattedDate },
-                            { default: "• Last updated {{date}}" }
-                          )}
+                          {formattedDate
+                            ? t(
+                                "dataJournal.sideNav.dataSourceModal.lastUpdated",
+                                { date: formattedDate },
+                                { default: "• Last updated {{date}}" },
+                              )
+                            : `• ${t(
+                                "dataJournal.sideNav.dataSourceModal.neverUpdated",
+                                {},
+                                { default: "Never" },
+                              )}`}
                         </span>
                       </div>
                     </div>

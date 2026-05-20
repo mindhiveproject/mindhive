@@ -28,6 +28,7 @@ export const GET_DATASOURCES = gql`
         isPublic
         isTemplate
       }
+      createdAt
       updatedAt
     }
   }
@@ -56,6 +57,7 @@ export const GET_DATASOURCE_CONTENT = gql`
         isPublic
         isTemplate
       }
+      createdAt
       updatedAt
     }
   }

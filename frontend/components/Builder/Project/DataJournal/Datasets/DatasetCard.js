@@ -12,6 +12,7 @@ import {
   getDatasourceDeleteDisabledReason,
   getDatasourceListInclusionKind,
 } from "../../../../../lib/dataJournalDatasources";
+import { getLastUpdatedDate } from "../../../../../lib/dataJournalTimestamps";
 import { StyledDatasetCard } from "../styles/StyledDataJournal";
 
 const INCLUSION_ICON_SRC = {
@@ -135,8 +136,9 @@ export default function DatasetCard({
     ? t(originKey, {}, { default: datasource.dataOrigin || "" })
     : datasource.dataOrigin;
 
-  const formattedDate = datasource.updatedAt
-    ? new Date(datasource.updatedAt).toLocaleDateString("en-US", {
+  const lastUpdatedAt = getLastUpdatedDate(datasource);
+  const formattedDate = lastUpdatedAt
+    ? lastUpdatedAt.toLocaleDateString("en-US", {
         year: "numeric",
         month: "short",
         day: "numeric",

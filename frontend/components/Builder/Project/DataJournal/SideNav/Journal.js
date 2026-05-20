@@ -9,6 +9,7 @@ import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import InfoTooltip from "../../../../DesignSystem/InfoTooltip";
 
 import { useDataJournal } from "../Context/DataJournalContext";
+import { getLastUpdatedDate } from "../../../../../lib/dataJournalTimestamps";
 
 import WorkspaceNavigation from "./Workspace";
 import DataSourceModal from "./DataSourceModal";
@@ -62,10 +63,9 @@ export default function JournalNavigation({
   const handleCloseModal = () => setIsModalOpen(false);
 
   const locale = router.locale || "en-us";
-  const timestampSource = journal?.updatedAt || journal?.createdAt;
-  const parsedAt = timestampSource ? new Date(timestampSource) : null;
+  const parsedAt = getLastUpdatedDate(journal);
   let formattedDate = "";
-  if (parsedAt && !Number.isNaN(parsedAt.getTime())) {
+  if (parsedAt) {
     const opts = { dateStyle: "medium", timeStyle: "short" };
     try {
       formattedDate = new Intl.DateTimeFormat(locale, opts).format(parsedAt);

@@ -23,6 +23,7 @@ export const GET_DATA_JOURNAL = gql`
           id
         }
       }
+      createdAt
       updatedAt
     }
   }

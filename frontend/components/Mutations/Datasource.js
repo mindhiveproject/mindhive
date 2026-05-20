@@ -12,6 +12,8 @@ export const CREATE_DATASOURCE = gql`
         id
         username
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -22,6 +24,7 @@ export const UPDATE_DATASOURCE = gql`
     updateDatasource(where: { id: $id }, data: $data) {
       id
       title
+      createdAt
       updatedAt
     }
   }
