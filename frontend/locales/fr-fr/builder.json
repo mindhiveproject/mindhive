@@ -438,6 +438,27 @@
 			},
 			"originTooltip": "Comment ce jeu de données a été créé.",
 			"renameDisabledNotOwner": "Seul le créateur de cet ensemble de données peut le renommer.",
+			"scopes": {
+				"classNetwork": "Réseau de classe",
+				"empty": {
+					"classNetwork": "Aucune donnée provenant de votre réseau de classe n'est disponible pour ce projet ou cette étude.",
+					"myClass": "Aucun jeu de données pour vos classes pour le moment.",
+					"public": "Aucun jeu de données public trouvé.",
+					"sharedWithMe": "Aucune donnée n'a été partagée avec vous.",
+					"uploaded": "Aucun jeu de données n'a encore été téléchargé."
+				},
+				"intro": {
+					"classNetwork": "Ensembles de données relatifs à ce projet ou à cette étude, provenant de classes appartenant à vos réseaux de classes.",
+					"myClass": "Jeux de données liés aux études ou aux projets de vos cours.",
+					"public": "Ensembles de données issus de modèles de revues publiques.",
+					"sharedWithMe": "Jeux de données partagés avec vous par d'autres collaborateurs.",
+					"uploaded": "Jeux de données que vous avez téléchargés."
+				},
+				"myClass": "Ma classe",
+				"public": "Publique",
+				"sharedWithMe": "Partagé avec moi",
+				"uploaded": "Téléchargé"
+			},
 			"sharing": {
 				"allowEditingLabel": "Autoriser les collaborateurs de la revue à modifier cet ensemble de données",
 				"journalOnlyTooltip": "Les collaborateurs de l’étude ou du projet publié dans cette revue seront mis en relation lorsque vous créerez l’ensemble de données.",
@@ -454,6 +475,35 @@
 				"whoTooltipAria": "Qui aura accès"
 			},
 			"untitled": "Ensemble de données sans titre"
+		},
+		"export": {
+			"button": "Exporter Canva au format PDF",
+			"emptyCanvas": "Ajoutez au moins un composant au canevas avant d'exporter.",
+			"failed": "Impossible d'exporter le canevas. Veuillez réessayer.",
+			"fallbackWarning": "Exportation terminée. Certains composants ont utilisé une image raster de secours et peuvent différer légèrement du canevas en direct.",
+			"figuresNotReady": "Certains graphiques sont encore en cours de chargement. Veuillez patienter jusqu'à la fin du rendu de toutes les visualisations, puis réessayer.",
+			"mediaDescription": "Exportation PDF du Data Journal Canva pour {{workspace}}. Géré comme un artefact d'outil de données (non destiné à l'insertion de texte).",
+			"menuLabel": "Exporter Canva au format PDF",
+			"modal": {
+				"canvasUnavailable": "Le canevas est indisponible. Ouvrez cet espace de travail sur le canevas du journal et réessayez.",
+				"confirmButton": "Exporter un PDF",
+				"confirmWorkspace": "Exportez la mise en page actuelle de « {{workspace}} » au format PDF. Les positions et les tailles des composants sur le canevas seront conservées.",
+				"saveToMediaLibrary": "Enregistrez également une copie dans ma bibliothèque multimédia (exportation de données, et non pour l'insertion de texte).",
+				"success": "Votre fichier PDF a été téléchargé.",
+				"successWithMedia": "Votre fichier PDF a été téléchargé et une copie a été enregistrée dans votre bibliothèque multimédia.",
+				"title": "Exporter l'espace de travail au format PDF",
+				"unsupportedNotice": "Les éléments de tableau et de code présents sur ce canevas ne sont pas inclus dans le PDF exporté.",
+				"unsupportedSkipped": "Les tableaux et les éléments de code ont été omis du PDF."
+			},
+			"onlyUnsupportedTypes": "Ce canevas ne contient que des composants tableau et code, qui ne peuvent pas être exportés au format PDF. Ajoutez un autre type de composant et réessayez.",
+			"progress": {
+				"composing": "Création d'un PDF…",
+				"done": "Exportation terminée",
+				"error": "L'exportation a échoué",
+				"preparing": "Préparation de la mise en page…",
+				"rendering": "Composants de rendu…",
+				"saving": "Enregistrement dans la médiathèque…"
+			}
 		},
 		"graph": {
 			"axes": {
@@ -1994,10 +2044,12 @@
 		"insertImageAria": "Insérer une image",
 		"insertImagePrompt": "Saisissez l'URL de l'image :",
 		"mediaCancelEdit": "Annuler",
+		"mediaCanvaExportThumb": "",
 		"mediaDelete": "SUPPRIMER",
 		"mediaDeleteConfirm": "Supprimer ce média de votre bibliothèque ? Les images déjà intégrées au contenu peuvent apparaître comme brisées.",
 		"mediaDeleteFailed": "Impossible de supprimer ce fichier multimédia.",
 		"mediaDescriptionPlaceholder": "Ajoutez des notes si vous le souhaitez.",
+		"mediaDownloadPdf": "",
 		"mediaEdit": "Modifier",
 		"mediaEditFieldsRequired": "Le titre et le nom du fichier ne peuvent pas être vides.",
 		"mediaEditMeta": "Modifier les détails",

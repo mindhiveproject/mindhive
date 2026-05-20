@@ -50,6 +50,10 @@ export const Datasource = list({
   },
   hooks: {
     async resolveInput({ operation, resolvedData, context, inputData }) {
+      if (operation === "create" || operation === "update") {
+        resolvedData.updatedAt = new Date().toISOString();
+      }
+
       if (operation !== "create") {
         return resolvedData;
       }

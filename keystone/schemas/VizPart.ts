@@ -54,4 +54,12 @@ export const VizPart = list({
       many: true,
     }),
   },
+  hooks: {
+    async resolveInput({ operation, resolvedData }) {
+      if (operation === "create" || operation === "update") {
+        resolvedData.updatedAt = new Date().toISOString();
+      }
+      return resolvedData;
+    },
+  },
 });

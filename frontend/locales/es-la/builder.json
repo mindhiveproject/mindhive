@@ -438,6 +438,27 @@
 			},
 			"originTooltip": "Cómo se creó este conjunto de datos.",
 			"renameDisabledNotOwner": "Solo el creador de este conjunto de datos puede cambiarle el nombre.",
+			"scopes": {
+				"classNetwork": "Red de clases",
+				"empty": {
+					"classNetwork": "No se permiten conjuntos de datos de la red de tu clase para este proyecto o estudio.",
+					"myClass": "Aún no hay conjuntos de datos de tus clases.",
+					"public": "No se encontraron conjuntos de datos públicos.",
+					"sharedWithMe": "No se le han compartido conjuntos de datos.",
+					"uploaded": "Aún no se han subido conjuntos de datos."
+				},
+				"intro": {
+					"classNetwork": "Conjuntos de datos sobre este proyecto o estudio de clases en sus redes de clase.",
+					"myClass": "Conjuntos de datos vinculados a estudios o proyectos de tus clases.",
+					"public": "Conjuntos de datos procedentes de plantillas de revistas públicas.",
+					"sharedWithMe": "Conjuntos de datos que otros compartieron contigo como colaborador.",
+					"uploaded": "Conjuntos de datos que has subido."
+				},
+				"myClass": "Mi clase",
+				"public": "Público",
+				"sharedWithMe": "Comparte conmigo",
+				"uploaded": "Subido"
+			},
 			"sharing": {
 				"allowEditingLabel": "Permitir a los colaboradores de la revista editar este conjunto de datos.",
 				"journalOnlyTooltip": "Los colaboradores del estudio o proyecto de esta revista se conectarán automáticamente al crear el conjunto de datos.",
@@ -454,6 +475,35 @@
 				"whoTooltipAria": "¿Quién recibirá acceso?"
 			},
 			"untitled": "Conjunto de datos sin título"
+		},
+		"export": {
+			"button": "Exportar Canva a PDF",
+			"emptyCanvas": "Agregue al menos un componente al lienzo antes de exportarlo.",
+			"failed": "No se pudo exportar el lienzo. Inténtalo de nuevo.",
+			"fallbackWarning": "Exportación completada. Algunos componentes utilizaron una representación rasterizada como alternativa y pueden diferir ligeramente del lienzo en vivo.",
+			"figuresNotReady": "Algunos gráficos aún se están cargando. Espere a que finalice la visualización de todos los elementos y vuelva a intentarlo.",
+			"mediaDescription": "Exportación a PDF de Data Journal en Canva para {{workspace}}. Gestionado como un artefacto de la herramienta de datos (no para inserción de texto).",
+			"menuLabel": "Exportar Canva a PDF",
+			"modal": {
+				"canvasUnavailable": "El lienzo no está disponible. Abra este espacio de trabajo en el lienzo del diario e inténtelo de nuevo.",
+				"confirmButton": "Exportar PDF",
+				"confirmWorkspace": "Exporta el diseño actual de “{{workspace}}” como un PDF. Se conservarán las posiciones y tamaños de los componentes en el lienzo.",
+				"saveToMediaLibrary": "También guardo una copia en mi biblioteca multimedia (exportación con la herramienta de datos, no para insertar texto).",
+				"success": "Su archivo PDF ha sido descargado.",
+				"successWithMedia": "Su archivo PDF se ha descargado y se ha guardado una copia en su biblioteca multimedia.",
+				"title": "Exportar espacio de trabajo a PDF",
+				"unsupportedNotice": "Los componentes de tabla y código de este lienzo no se incluyen en el PDF exportado.",
+				"unsupportedSkipped": "Las tablas y los componentes de código se omitieron del PDF."
+			},
+			"onlyUnsupportedTypes": "Este lienzo solo contiene componentes de tabla y código, que no se pueden exportar a PDF. Añada otro tipo de componente e inténtelo de nuevo.",
+			"progress": {
+				"composing": "Creación de PDF…",
+				"done": "Exportación completada",
+				"error": "Exportación fallida",
+				"preparing": "Preparando el diseño…",
+				"rendering": "Renderizando componentes…",
+				"saving": "Guardando en la biblioteca multimedia…"
+			}
 		},
 		"graph": {
 			"axes": {
@@ -1994,10 +2044,12 @@
 		"insertImageAria": "Insertar imagen",
 		"insertImagePrompt": "Introduzca la URL de la imagen:",
 		"mediaCancelEdit": "Cancelar",
+		"mediaCanvaExportThumb": "",
 		"mediaDelete": "BORRAR",
 		"mediaDeleteConfirm": "¿Eliminar este contenido multimedia de tu biblioteca? Es posible que las imágenes ya insertadas en el contenido aparezcan dañadas.",
 		"mediaDeleteFailed": "No se pudo eliminar este archivo multimedia.",
 		"mediaDescriptionPlaceholder": "Si lo desea, puede añadir notas.",
+		"mediaDownloadPdf": "",
 		"mediaEdit": "Editar",
 		"mediaEditFieldsRequired": "El título y el nombre del archivo no pueden estar vacíos.",
 		"mediaEditMeta": "Editar detalles",

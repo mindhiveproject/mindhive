@@ -2,6 +2,7 @@ node_modules
 .keystone
 public
 media-library
+media-library-exports
 profile-images
 study-images
 yq-visuals

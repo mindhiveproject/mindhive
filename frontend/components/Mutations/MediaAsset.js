@@ -25,6 +25,10 @@ export const MEDIA_ASSETS = gql`
         id
         url
       }
+      exportDocument {
+        url
+        filename
+      }
       createdAt
       settings
       author {
@@ -45,6 +49,10 @@ export const CREATE_MEDIA_ASSET = gql`
       image {
         id
         url
+      }
+      exportDocument {
+        url
+        filename
       }
       fileName
       title
@@ -176,4 +184,8 @@ export function buildMediaAssetCreateData({
 
 export function resolveMediaAssetUrl(asset) {
   return asset?.image?.url || asset?.url || "";
+}
+
+export function resolveMediaAssetExportDocumentUrl(asset) {
+  return asset?.exportDocument?.url || null;
 }

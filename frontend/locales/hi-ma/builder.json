@@ -438,6 +438,27 @@
 			},
 			"originTooltip": "",
 			"renameDisabledNotOwner": "",
+			"scopes": {
+				"classNetwork": "",
+				"empty": {
+					"classNetwork": "",
+					"myClass": "",
+					"public": "",
+					"sharedWithMe": "",
+					"uploaded": ""
+				},
+				"intro": {
+					"classNetwork": "",
+					"myClass": "",
+					"public": "",
+					"sharedWithMe": "",
+					"uploaded": ""
+				},
+				"myClass": "",
+				"public": "",
+				"sharedWithMe": "",
+				"uploaded": ""
+			},
 			"sharing": {
 				"allowEditingLabel": "",
 				"journalOnlyTooltip": "",
@@ -454,6 +475,35 @@
 				"whoTooltipAria": ""
 			},
 			"untitled": ""
+		},
+		"export": {
+			"button": "",
+			"emptyCanvas": "",
+			"failed": "",
+			"fallbackWarning": "",
+			"figuresNotReady": "",
+			"mediaDescription": "",
+			"menuLabel": "",
+			"modal": {
+				"canvasUnavailable": "",
+				"confirmButton": "",
+				"confirmWorkspace": "",
+				"saveToMediaLibrary": "",
+				"success": "",
+				"successWithMedia": "",
+				"title": "",
+				"unsupportedNotice": "",
+				"unsupportedSkipped": ""
+			},
+			"onlyUnsupportedTypes": "",
+			"progress": {
+				"composing": "",
+				"done": "",
+				"error": "",
+				"preparing": "",
+				"rendering": "",
+				"saving": ""
+			}
 		},
 		"graph": {
 			"axes": {
@@ -1994,10 +2044,12 @@
 		"insertImageAria": "",
 		"insertImagePrompt": "",
 		"mediaCancelEdit": "",
+		"mediaCanvaExportThumb": "",
 		"mediaDelete": "",
 		"mediaDeleteConfirm": "",
 		"mediaDeleteFailed": "",
 		"mediaDescriptionPlaceholder": "",
+		"mediaDownloadPdf": "",
 		"mediaEdit": "",
 		"mediaEditFieldsRequired": "",
 		"mediaEditMeta": "",

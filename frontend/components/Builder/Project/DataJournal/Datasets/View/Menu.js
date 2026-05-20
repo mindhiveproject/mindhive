@@ -17,6 +17,7 @@ import AddColumnModal from "./Menu/AddColumnModal";
 import Variable from "./Menu/Variable";
 import { useDatasetSaveOrCopy } from "./Menu/UpdateDatasource";
 import DeleteConfirmModal from "../../Helpers/DeleteConfirmModal";
+import { getLastUpdatedDate } from "../../../../../../lib/dataJournalTimestamps";
 
 function TaskAccordionItem({
   task,
@@ -375,10 +376,11 @@ export default function Menu({
     { default: "Origin: {{origin}}" },
   );
 
-  const lastUpdatedLabel = dataset?.updatedAt
+  const lastUpdatedAt = getLastUpdatedDate(dataset);
+  const lastUpdatedLabel = lastUpdatedAt
     ? t(
         "dataJournal.datasetMenu.meta.lastUpdated",
-        { when: moment(dataset.updatedAt).fromNow() },
+        { when: moment(lastUpdatedAt).fromNow() },
         { default: "Updated {{when}}" },
       )
     : t(

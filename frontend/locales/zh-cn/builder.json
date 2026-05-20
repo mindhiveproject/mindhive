@@ -438,6 +438,27 @@
 			},
 			"originTooltip": "该数据集是如何创建的。",
 			"renameDisabledNotOwner": "只有该数据集的创建者才能重命名它。",
+			"scopes": {
+				"classNetwork": "阶级网络",
+				"empty": {
+					"classNetwork": "本项目或研究没有来自您班级网络的数据集。",
+					"myClass": "您的课程还没有数据集。",
+					"public": "未找到公开数据集。",
+					"sharedWithMe": "没有与您共享任何数据集。",
+					"uploaded": "目前还没有上传的数据集。"
+				},
+				"intro": {
+					"classNetwork": "本项目或研究中的数据集来自您班级网络中的班级。",
+					"myClass": "与课堂学习或项目相关的数据集。",
+					"public": "来自公共期刊模板的数据集。",
+					"sharedWithMe": "其他人与您作为合作者共享的数据集。",
+					"uploaded": "您上传的数据集。"
+				},
+				"myClass": "我的班级",
+				"public": "民众",
+				"sharedWithMe": "与我分享",
+				"uploaded": "已上传"
+			},
 			"sharing": {
 				"allowEditingLabel": "允许期刊合作者编辑此数据集",
 				"journalOnlyTooltip": "创建数据集时，本期刊研究或项目的合作者将会被连接起来。",
@@ -454,6 +475,35 @@
 				"whoTooltipAria": "谁将获得访问权限"
 			},
 			"untitled": "未命名数据集"
+		},
+		"export": {
+			"button": "将 Canva 导出为 PDF",
+			"emptyCanvas": "导出前，至少在画布上添加一个组件。",
+			"failed": "无法导出 Canva 文件，请重试。",
+			"fallbackWarning": "导出完成。部分组件使用了栅格化替代方案，可能与实时画布略有不同。",
+			"figuresNotReady": "部分图表仍在加载中。请等待所有图表渲染完成后再试。",
+			"mediaDescription": "数据日志 Canva PDF 导出，适用于 {{workspace}}。作为数据工具进行管理（不用于文本插入）。",
+			"menuLabel": "将 Canva 导出为 PDF",
+			"modal": {
+				"canvasUnavailable": "画布不可用。请在日志画布上打开此工作区，然后重试。",
+				"confirmButton": "导出 PDF",
+				"confirmWorkspace": "将“{{workspace}}”的当前布局导出为PDF文件。画布上组件的位置和大小将保持不变。",
+				"saveToMediaLibrary": "同时在我的媒体库中保存一份副本（数据工具导出，而非用于文本插入）。",
+				"success": "您的PDF文件已下载。",
+				"successWithMedia": "您的PDF文件已下载，副本已保存到您的媒体库中。",
+				"title": "将工作区导出为 PDF",
+				"unsupportedNotice": "此画布上的表格和代码组件不包含在导出的 PDF 中。",
+				"unsupportedSkipped": "PDF 文件中省略了表格和代码部分。"
+			},
+			"onlyUnsupportedTypes": "此画布仅包含表格和代码组件，无法导出为 PDF。请添加其他组件类型后重试。",
+			"progress": {
+				"composing": "撰写PDF…",
+				"done": "导出完成",
+				"error": "导出失败",
+				"preparing": "准备布局……",
+				"rendering": "正在渲染组件…",
+				"saving": "正在保存到媒体库…"
+			}
 		},
 		"graph": {
 			"axes": {
@@ -1994,10 +2044,12 @@
 		"insertImageAria": "插入图片",
 		"insertImagePrompt": "请输入图片网址：",
 		"mediaCancelEdit": "取消",
+		"mediaCanvaExportThumb": "",
 		"mediaDelete": "删除",
 		"mediaDeleteConfirm": "是否从媒体库中删除此媒体？已添加到内容中的图像可能会显示为损坏状态。",
 		"mediaDeleteFailed": "无法删除此媒体文件。",
 		"mediaDescriptionPlaceholder": "可以添加备注。",
+		"mediaDownloadPdf": "",
 		"mediaEdit": "编辑",
 		"mediaEditFieldsRequired": "标题和文件名不能为空。",
 		"mediaEditMeta": "编辑详细信息",

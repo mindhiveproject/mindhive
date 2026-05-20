@@ -4,6 +4,7 @@ import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import { StyledTopNavigation } from "../styles/StyledDataJournal"; // Adjust path
+import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import Breadcrumbs from "./Breadcrumbs/Main";
 
@@ -13,6 +14,7 @@ import { GET_WORKSPACE } from "../../../../Queries/DataWorkspace";
 import { GET_DATA_JOURNAL } from "../../../../Queries/DataJournal";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 
+import { DATASET_SCOPES } from "../../../../../lib/dataJournalDatasources";
 import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
 
 import AddWorkspace from "../SideNav/AddWorkspace";
@@ -34,12 +36,44 @@ function journalsWhereClause(projectId, studyId) {
 
 const LEFT_NAV_SELECTED_BG = "#EDF4F5";
 
+const DATASET_SCOPE_META = {
+  uploaded: {
+    i18nKey: "dataJournal.datasets.scopes.uploaded",
+    defaultLabel: "Uploaded",
+    iconSrc: "/assets/icons/uploaded.svg",
+  },
+  sharedWithMe: {
+    i18nKey: "dataJournal.datasets.scopes.sharedWithMe",
+    defaultLabel: "Shared with me",
+    iconSrc: "/assets/icons/share.svg",
+  },
+  myClass: {
+    i18nKey: "dataJournal.datasets.scopes.myClass",
+    defaultLabel: "My class",
+    iconSrc: "/assets/icons/education.svg",
+  },
+  classNetwork: {
+    i18nKey: "dataJournal.datasets.scopes.classNetwork",
+    defaultLabel: "Class network",
+    iconSrc: "/assets/icons/group.svg",
+  },
+  public: {
+    i18nKey: "dataJournal.datasets.scopes.public",
+    defaultLabel: "Public",
+    iconSrc: "/assets/icons/status/publicTemplate.svg",
+  },
+};
+
 export default function TopNavigation() {
   const { t } = useTranslation("dataviz");
+  const { t: tBuilder } = useTranslation("builder");
   const {
     area,
     setArea,
     navigateToDatasets,
+    datasetScope,
+    setDatasetScope,
+    requestOpenAddDataset,
     selectedJournal: journal,
     setSelectedJournal,
     workspace,
@@ -159,7 +193,9 @@ export default function TopNavigation() {
   };
 
   return (
-    <StyledTopNavigation>
+    <StyledTopNavigation
+      className={area === "datasets" ? "withDatasetScopes" : undefined}
+    >
       <div className="leftIconNav">
         <Chip
           className="leftNavChip"
@@ -214,7 +250,59 @@ export default function TopNavigation() {
         />
       </div>
 
-      <div>
+      <div className="centerColumn">
+        {area === "datasets" && (
+          <div className="datasetScopeNavWithAdd">
+            <Button
+              type="button"
+              variant="tonal"
+              style={{ display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#336F8A", color: "#FFFFFF", border: "none", height: "fit-content", padding: "6px 12px" }}
+              className="addDatasetNavBtn"
+              leadingIcon={
+                <p style={{ fontSize: "24px", fontWeight: "700", lineHeight: "20px", letterSpacing: "0", color: "#FFFFFF" }}>+</p>
+              }
+              onClick={requestOpenAddDataset}
+            >
+              {tBuilder("dataJournal.datasets.addDataset", {}, {
+                default: "Add dataset",
+              })}
+            </Button>
+            <div className="datasetScopeNav" role="tablist">
+              <span style={{ fontSize: "14px", fontWeight: "400", lineHeight: "20px", letterSpacing: "0", color: "#5D5763" }}>Filter by:</span>
+            {DATASET_SCOPES.map((scope) => {
+              const meta = DATASET_SCOPE_META[scope];
+              return (
+              <Chip
+                key={scope}
+                className="datasetScopeChip"
+                role="tab"
+                aria-selected={datasetScope === scope}
+                label={tBuilder(meta.i18nKey, {}, { default: meta.defaultLabel })}
+                selected={datasetScope === scope}
+                onClick={() => setDatasetScope(scope)}
+                shape="square"
+                leading={
+                  <img
+                    src={meta.iconSrc}
+                    alt=""
+                    width="20"
+                    height="20"
+                    aria-hidden
+                  />
+                }
+                style={{
+                  border: "none",
+                  background:
+                    datasetScope === scope ? LEFT_NAV_SELECTED_BG : "transparent",
+                  backgroundColor:
+                    datasetScope === scope ? LEFT_NAV_SELECTED_BG : "transparent",
+                }}
+              />
+            );
+            })}
+            </div>
+          </div>
+        )}
         {area === "journals" && journal?.id && (
           <Breadcrumbs
             journalTitle={journal?.title}

@@ -108,6 +108,15 @@ export default withAuth(
         },
         storagePath: `media-library`,
       },
+      media_library_exports: {
+        kind: "local",
+        type: "file",
+        generateUrl: (path) => `${assetBaseUrl}/media-library-exports${path}`,
+        serverRoute: {
+          path: "/media-library-exports",
+        },
+        storagePath: `media-library-exports`,
+      },
       profile_images: {
         kind: "local",
         type: "image",

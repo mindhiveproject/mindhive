@@ -438,6 +438,27 @@
 			},
 			"originTooltip": "Hoe deze dataset is gemaakt.",
 			"renameDisabledNotOwner": "Alleen de maker van deze dataset kan deze hernoemen.",
+			"scopes": {
+				"classNetwork": "Klassennetwerk",
+				"empty": {
+					"classNetwork": "Voor dit project of onderzoek zijn geen datasets uit het netwerk van je klas toegestaan.",
+					"myClass": "Er zijn nog geen datasets van je lessen beschikbaar.",
+					"public": "Geen openbare datasets gevonden.",
+					"sharedWithMe": "Er zijn geen datasets met u gedeeld.",
+					"uploaded": "Er zijn nog geen datasets geüpload."
+				},
+				"intro": {
+					"classNetwork": "Datasets voor dit project of onderzoek zijn afkomstig uit de lessen in uw klassennetwerk.",
+					"myClass": "Datasets die gekoppeld zijn aan studies of projecten in je lessen.",
+					"public": "Datasets afkomstig van openbare tijdschriftsjablonen.",
+					"sharedWithMe": "Datasets die anderen met je hebben gedeeld als samenwerkingspartner.",
+					"uploaded": "Datasets die u hebt geüpload."
+				},
+				"myClass": "Mijn klas",
+				"public": "Openbaar",
+				"sharedWithMe": "Gedeeld met mij",
+				"uploaded": "Geüpload"
+			},
 			"sharing": {
 				"allowEditingLabel": "Sta medewerkers van het tijdschrift toe om deze dataset te bewerken.",
 				"journalOnlyTooltip": "Bij het aanmaken van de dataset worden de medewerkers die aan dit onderzoek of project in dit tijdschrift hebben meegewerkt, met elkaar in contact gebracht.",
@@ -454,6 +475,35 @@
 				"whoTooltipAria": "Wie krijgt toegang?"
 			},
 			"untitled": "Naamloze dataset"
+		},
+		"export": {
+			"button": "Exporteer Canva naar PDF",
+			"emptyCanvas": "Voeg ten minste één component toe aan het canvas voordat u exporteert.",
+			"failed": "Het exporteren van het canvas is niet gelukt. Probeer het opnieuw.",
+			"fallbackWarning": "Export voltooid. Sommige componenten maakten gebruik van een rasterterugvaloptie en kunnen daardoor enigszins afwijken van het live canvas.",
+			"figuresNotReady": "Sommige grafieken worden nog geladen. Wacht tot alle visualisaties volledig zijn weergegeven en probeer het dan opnieuw.",
+			"mediaDescription": "Data Journal canva PDF-export voor {{workspace}}. Beheerd als een data-tool artefact (niet voor tekstinvoeging).",
+			"menuLabel": "Exporteer Canva naar PDF",
+			"modal": {
+				"canvasUnavailable": "Het canvas is niet beschikbaar. Open deze werkruimte op het canvas van het dagboek en probeer het opnieuw.",
+				"confirmButton": "PDF exporteren",
+				"confirmWorkspace": "Exporteer de huidige lay-out van “{{workspace}}” als een PDF. De posities en afmetingen van de componenten op het canvas blijven behouden.",
+				"saveToMediaLibrary": "Ik sla ook een kopie op in mijn mediabibliotheek (export via data-tool, niet voor tekstinvoeging).",
+				"success": "Je pdf-bestand is gedownload.",
+				"successWithMedia": "Je pdf-bestand is gedownload en een kopie is opgeslagen in je mediabibliotheek.",
+				"title": "Exporteer je werkruimte naar PDF.",
+				"unsupportedNotice": "Tabellen en code-elementen op dit canvas worden niet opgenomen in de geëxporteerde PDF.",
+				"unsupportedSkipped": "Tabellen en codefragmenten zijn weggelaten uit het PDF-bestand."
+			},
+			"onlyUnsupportedTypes": "Dit Canva-sjabloon bevat alleen tabel- en codecomponenten, die niet naar PDF geëxporteerd kunnen worden. Voeg een ander componenttype toe en probeer het opnieuw.",
+			"progress": {
+				"composing": "PDF-bestand samenstellen…",
+				"done": "Export voltooid",
+				"error": "Exporteren mislukt",
+				"preparing": "Indeling voorbereiden…",
+				"rendering": "Componenten weergeven…",
+				"saving": "Opslaan in mediabibliotheek…"
+			}
 		},
 		"graph": {
 			"axes": {
@@ -1994,10 +2044,12 @@
 		"insertImageAria": "Afbeelding invoegen",
 		"insertImagePrompt": "Voer de URL van de afbeelding in:",
 		"mediaCancelEdit": "Annuleren",
+		"mediaCanvaExportThumb": "",
 		"mediaDelete": "Verwijderen",
 		"mediaDeleteConfirm": "Wilt u dit medium uit uw bibliotheek verwijderen? Afbeeldingen die al in de inhoud zijn geplaatst, worden mogelijk niet correct weergegeven.",
 		"mediaDeleteFailed": "Dit medium kon niet worden verwijderd.",
 		"mediaDescriptionPlaceholder": "Voeg gerust notities toe.",
+		"mediaDownloadPdf": "",
 		"mediaEdit": "Bewerking",
 		"mediaEditFieldsRequired": "De titel en bestandsnaam mogen niet leeg zijn.",
 		"mediaEditMeta": "Details bewerken",

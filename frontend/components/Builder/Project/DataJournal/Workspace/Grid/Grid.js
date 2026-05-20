@@ -66,6 +66,7 @@ export default function Grid({
     projectId,
     studyId: contextStudyId,
     bumpWidgetResizeTick,
+    registerCanvaExportCanvas,
   } = useDataJournal();
   const resolvedStudyId = studyId || contextStudyId;
 
@@ -97,6 +98,10 @@ export default function Grid({
       window.removeEventListener("resize", updateWidth);
     };
   }, [sidebarVisible]);
+
+  useEffect(() => {
+    registerCanvaExportCanvas(canvasRef.current, gridWidth);
+  }, [registerCanvaExportCanvas, gridWidth, layout, components.length]);
 
   useEffect(() => {
     if (activeComponent) {
@@ -567,6 +572,7 @@ export default function Grid({
                     margin={[16, 16]}
                     draggableHandle=".widget-content-handle"
                     draggableCancel=".widget-button,button,input,textarea,select,option,[contenteditable='true'],.react-resizable-handle"
+                    resizeHandles={["nw", "ne", "sw", "se"]}
                   >
                     {components.map((widget) => {
                       const layoutItem = layout.find(

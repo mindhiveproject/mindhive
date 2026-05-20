@@ -438,6 +438,27 @@
 			},
 			"originTooltip": "How this dataset was created.",
 			"renameDisabledNotOwner": "Only the creator of this dataset can rename it.",
+			"scopes": {
+				"classNetwork": "Class network",
+				"empty": {
+					"classNetwork": "No datasets from your class network for this project or study.",
+					"myClass": "No datasets from your classes yet.",
+					"public": "No public datasets found.",
+					"sharedWithMe": "No datasets have been shared with you.",
+					"uploaded": "No uploaded datasets yet."
+				},
+				"intro": {
+					"classNetwork": "Datasets on this project or study from classes in your class networks.",
+					"myClass": "Datasets linked to studies or projects in your classes.",
+					"public": "Datasets from public journal templates.",
+					"sharedWithMe": "Datasets others shared with you as a collaborator.",
+					"uploaded": "Datasets you uploaded."
+				},
+				"myClass": "My class",
+				"public": "Public",
+				"sharedWithMe": "Shared with me",
+				"uploaded": "Uploaded"
+			},
 			"sharing": {
 				"allowEditingLabel": "Allow journal collaborators to edit this dataset",
 				"journalOnlyTooltip": "Collaborators from this journal’s study or project will be connected when you create the dataset.",
@@ -454,6 +475,35 @@
 				"whoTooltipAria": "Who will receive access"
 			},
 			"untitled": "Untitled Dataset"
+		},
+		"export": {
+			"button": "Export canva to PDF",
+			"emptyCanvas": "Add at least one component to the canvas before exporting.",
+			"failed": "Could not export the canva. Please try again.",
+			"fallbackWarning": "Export completed. Some components used a raster fallback and may differ slightly from the live canvas.",
+			"figuresNotReady": "Some charts are still loading. Wait for all visualizations to finish rendering, then try again.",
+			"mediaDescription": "Data Journal canva PDF export for {{workspace}}. Managed as a data-tool artifact (not for text insertion).",
+			"menuLabel": "Export canva to PDF",
+			"modal": {
+				"canvasUnavailable": "The canvas is not available. Open this workspace on the journal canvas and try again.",
+				"confirmButton": "Export PDF",
+				"confirmWorkspace": "Export the current layout of “{{workspace}}” as a PDF. Component positions and sizes on the canvas will be preserved.",
+				"saveToMediaLibrary": "Also save a copy in my media library (data-tool export, not for text insertion)",
+				"success": "Your PDF has been downloaded.",
+				"successWithMedia": "Your PDF has been downloaded and a copy was saved to your media library.",
+				"title": "Export workspace to PDF",
+				"unsupportedNotice": "Table and code components on this canva are not included in the exported PDF.",
+				"unsupportedSkipped": "Table and code components were omitted from the PDF."
+			},
+			"onlyUnsupportedTypes": "This canva only has table and code components, which cannot be exported to PDF. Add another component type and try again.",
+			"progress": {
+				"composing": "Composing PDF…",
+				"done": "Export complete",
+				"error": "Export failed",
+				"preparing": "Preparing layout…",
+				"rendering": "Rendering components…",
+				"saving": "Saving to media library…"
+			}
 		},
 		"graph": {
 			"axes": {
@@ -1994,10 +2044,12 @@
 		"insertImageAria": "Insert image",
 		"insertImagePrompt": "Enter image URL:",
 		"mediaCancelEdit": "Cancel",
+		"mediaCanvaExportThumb": "Canva PDF export",
 		"mediaDelete": "Delete",
 		"mediaDeleteConfirm": "Delete this media from your library? Images already placed in content may show as broken.",
 		"mediaDeleteFailed": "Could not delete this media.",
 		"mediaDescriptionPlaceholder": "Add notes if you like.",
+		"mediaDownloadPdf": "Download PDF",
 		"mediaEdit": "Edit",
 		"mediaEditFieldsRequired": "Title and file name cannot be empty.",
 		"mediaEditMeta": "Edit details",

@@ -433,6 +433,40 @@ export const StyledTopNavigation = styled.div`
   border-bottom: 1px solid #e6e6e6;
   background: white;
   padding: 8px;
+  &.withDatasetScopes {
+    height: auto;
+    min-height: 56px;
+    align-items: flex-start;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    .centerColumn {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      overflow-x: auto;
+      ${hideScrollbars}
+    }
+    .datasetScopeNavWithAdd {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      min-width: 0;
+    }
+    .addDatasetNavBtn {
+      flex-shrink: 0;
+    }
+    .datasetScopeNav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      min-width: 0;
+    }
+    .datasetScopeChip {
+      flex-shrink: 0;
+    }
+  }
   .buttons {
     display: flex;
     justify-content: flex-end;
@@ -445,6 +479,25 @@ export const StyledTopNavigation = styled.div`
     align-items: center;
     gap: 8px;
     justify-content: flex-end;
+  }
+  .canvaExportControl {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    max-width: 220px;
+  }
+  .canvaExportMessage {
+    margin: 0;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: right;
+  }
+  .canvaExportMessageError {
+    color: #b42318;
+  }
+  .canvaExportMessageWarn {
+    color: #5d5763;
   }
   /* TopNav is under StyledDataWorkspace, not StyledDataJournal — mirror journal pill hovers here */
   .addWorkspaceBtn,
@@ -819,6 +872,14 @@ export const StyledDatasetsRoot = styled.div`
     font-size: 14px;
     line-height: 1.45;
     color: #4a5568;
+  }
+
+  .datasets-list-empty {
+    margin: 0 0 16px;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #5d5763;
   }
 
   .add-dataset-row {
@@ -1201,9 +1262,82 @@ export const StyledDataWorkspace = styled.div`
       box-shadow: 0 0 0 3px rgba(228, 223, 246, 0.9) !important;
     }
 
-    .react-resizable-handle::after {
-      border-right: 2px solid #e4dff6 !important;
-      border-bottom: 2px solid #e4dff6 !important;
+    .react-grid-item > .react-resizable-handle {
+      width: 40px;
+      height: 40px;
+      padding: 0 !important;
+      z-index: 4;
+      background: none !important;
+      background-image: none !important;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+      transform: none !important;
+    }
+
+    .react-grid-item:hover > .react-resizable-handle,
+    .react-grid-item:has(.active) > .react-resizable-handle,
+    .react-grid-item.resizing > .react-resizable-handle {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .react-grid-item > .react-resizable-handle-w,
+    .react-grid-item > .react-resizable-handle-e {
+      margin-top: -16px;
+    }
+
+    .react-grid-item > .react-resizable-handle-n,
+    .react-grid-item > .react-resizable-handle-s {
+      margin-left: -16px;
+    }
+
+    /* Override react-grid-layout default grey SE corner on every handle */
+    .react-grid-item > .react-resizable-handle::after {
+      content: "";
+      position: absolute;
+      display: block;
+      width: 14px;
+      height: 14px;
+      top: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      left: auto !important;
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none;
+    }
+
+    .react-grid-item > .react-resizable-handle-se::after {
+      right: 5px !important;
+      bottom: 5px !important;
+      border-right: 3px solid #A1A1A1 !important;
+      border-bottom: 3px solid #A1A1A1 !important;
+      border-bottom-right-radius: 8px;
+    }
+
+    .react-grid-item > .react-resizable-handle-sw::after {
+      left: 5px !important;
+      bottom: 5px !important;
+      border-left: 3px solid #A1A1A1!important;
+      border-bottom: 3px solid #A1A1A1 !important;
+      border-bottom-left-radius: 8px;
+    }
+
+    .react-grid-item > .react-resizable-handle-ne::after {
+      right: 5px !important;
+      top: 5px !important;
+      border-right: 3px solid #A1A1A1 !important;
+      border-top: 3px solid #A1A1A1 !important;
+      border-top-right-radius: 8px;
+    }
+
+    .react-grid-item > .react-resizable-handle-nw::after {
+      left: 5px !important;
+      top: 5px !important;
+      border-left: 3px solid #0d3944 !important;
+      border-top: 3px solid #0d3944 !important;
+      border-top-left-radius: 8px;
     }
 
     /* Paragraph widget on grid: match panel TipTap — no inner ProseMirror box chrome; WidgetContent scrolls */

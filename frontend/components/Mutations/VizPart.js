@@ -14,6 +14,10 @@ export const UPDATE_VIZPART = gql`
   mutation UPDATE_VIZPART($id: ID!, $input: VizPartUpdateInput!) {
     updateVizPart(where: { id: $id }, data: $input) {
       id
+      title
+      description
+      createdAt
+      updatedAt
     }
   }
 `;

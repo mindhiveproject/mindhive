@@ -33,7 +33,7 @@ function dataUrlToPngFile(dataUrl, fileName) {
 
 /**
  * @param {string} sectionId - VizSection / widget id (matches `figure-${sectionId}` in Graph/Render.js)
- * @param {{ fileName?: string, width?: number, height?: number }} [opts]
+ * @param {{ fileName?: string, width?: number, height?: number, scale?: number }} [opts]
  * @returns {Promise<File | null>}
  */
 export async function plotlyPngFileFromFigureSection(sectionId, opts = {}) {
@@ -56,12 +56,16 @@ export async function plotlyPngFileFromFigureSection(sectionId, opts = {}) {
 
     const width = opts.width ?? DEFAULT_WIDTH;
     const height = opts.height ?? DEFAULT_HEIGHT;
-
-    const dataUrl = await Plotly.toImage(gd, {
+    const toImageOpts = {
       format: "png",
       width,
       height,
-    });
+    };
+    if (typeof opts.scale === "number" && opts.scale > 1) {
+      toImageOpts.scale = opts.scale;
+    }
+
+    const dataUrl = await Plotly.toImage(gd, toImageOpts);
 
     return dataUrlToPngFile(dataUrl, opts.fileName || "graph-figure");
   } catch (err) {

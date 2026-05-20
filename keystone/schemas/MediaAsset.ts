@@ -5,6 +5,7 @@ import {
   timestamp,
   json,
   image,
+  file,
 } from "@keystone-6/core/fields";
 import { rules } from "../access";
 
@@ -183,6 +184,8 @@ export const MediaAsset = list({
     }),
     /** Keystone-managed uploaded image */
     image: image({ storage: "media_library_images" }),
+    /** Optional PDF export document (e.g. Data Journal canva export). */
+    exportDocument: file({ storage: "media_library_exports" }),
     /** Legacy URL kept temporarily for backward compatibility/migration. */
     url: text({
       db: { isNullable: true },

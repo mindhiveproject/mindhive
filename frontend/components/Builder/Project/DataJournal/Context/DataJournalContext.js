@@ -1,5 +1,12 @@
 // components/DataJournal/Context/DataJournalContext.js
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useMutation } from "@apollo/client";
 
 import { UPDATE_WORKSPACE } from "../../../../Mutations/DataWorkspace";
@@ -43,8 +50,12 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
 
   // Other UI states (e.g., from Grid.js)
   const [area, setArea] = useState("journals"); // e.g., 'journals' or 'datasets'
+  /** Active dataset library tab when area === "datasets". */
+  const [datasetScope, setDatasetScope] = useState("uploaded");
   /** Incremented when the user chooses the Datasets top-nav tab; Datasets/Main resets list vs detail state. */
   const [datasetsListNavNonce, setDatasetsListNavNonce] = useState(0);
+  /** Incremented when Add dataset is clicked in top nav; Datasets/Main opens the add panel. */
+  const [datasetsAddRequestNonce, setDatasetsAddRequestNonce] = useState(0);
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [isAddComponentPanelOpen, setIsAddComponentPanelOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState("journal");
@@ -64,6 +75,25 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
 
   /** Latest loaded slice per datasource id (from DatasourceDataLoader). */
   const [sourceDataByDatasourceId, setSourceDataByDatasourceId] = useState({});
+
+  /** Live canvas element + width for canva PDF export (registered by Grid.js). */
+  const canvaExportCanvasRef = useRef({
+    canvasElement: null,
+    gridWidth: 1200,
+  });
+
+  const registerCanvaExportCanvas = useCallback((canvasElement, gridWidth) => {
+    canvaExportCanvasRef.current = {
+      canvasElement: canvasElement || null,
+      gridWidth:
+        Number.isFinite(gridWidth) && gridWidth > 0 ? gridWidth : 1200,
+    };
+  }, []);
+
+  const getCanvaExportCanvas = useCallback(
+    () => canvaExportCanvasRef.current,
+    [],
+  );
 
   // Apollo mutation for updating workspace on server
   const [updateWorkspaceOnServer] = useMutation(UPDATE_WORKSPACE, {
@@ -117,6 +147,11 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
   const navigateToDatasets = useCallback(() => {
     setArea("datasets");
     setDatasetsListNavNonce((n) => n + 1);
+  }, []);
+
+  const requestOpenAddDataset = useCallback(() => {
+    setArea("datasets");
+    setDatasetsAddRequestNonce((n) => n + 1);
   }, []);
 
   const bumpWidgetResizeTick = useCallback((componentId) => {
@@ -179,8 +214,12 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     setPendingCanvasFocusComponentId,
     area,
     setArea,
+    datasetScope,
+    setDatasetScope,
     datasetsListNavNonce,
+    datasetsAddRequestNonce,
     navigateToDatasets,
+    requestOpenAddDataset,
     sidebarVisible,
     setSidebarVisible,
     isAddComponentPanelOpen,
@@ -197,6 +236,8 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     widgetResizeTicks,
     bumpWidgetResizeTick,
     getWidgetResizeTick,
+    registerCanvaExportCanvas,
+    getCanvaExportCanvas,
   };
 
   return (

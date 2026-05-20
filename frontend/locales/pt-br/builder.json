@@ -438,6 +438,27 @@
 			},
 			"originTooltip": "Como este conjunto de dados foi criado.",
 			"renameDisabledNotOwner": "Somente o criador deste conjunto de dados pode renomeá-lo.",
+			"scopes": {
+				"classNetwork": "Rede de classes",
+				"empty": {
+					"classNetwork": "Não há conjuntos de dados da sua rede de turma para este projeto ou estudo.",
+					"myClass": "Ainda não há conjuntos de dados das suas turmas.",
+					"public": "Nenhum conjunto de dados público encontrado.",
+					"sharedWithMe": "Nenhum conjunto de dados foi compartilhado com você.",
+					"uploaded": "Ainda não há conjuntos de dados carregados."
+				},
+				"intro": {
+					"classNetwork": "Conjuntos de dados sobre este projeto ou estudo de turmas em suas redes de classe.",
+					"myClass": "Conjuntos de dados relacionados a estudos ou projetos em suas aulas.",
+					"public": "Conjuntos de dados de modelos de periódicos públicos.",
+					"sharedWithMe": "Conjuntos de dados que outros compartilharam com você como colaborador.",
+					"uploaded": "Conjuntos de dados que você carregou."
+				},
+				"myClass": "Minha turma",
+				"public": "Público",
+				"sharedWithMe": "Compartilhou comigo",
+				"uploaded": "Enviado"
+			},
 			"sharing": {
 				"allowEditingLabel": "Permitir que os colaboradores da revista editem este conjunto de dados.",
 				"journalOnlyTooltip": "Os colaboradores deste estudo ou projeto da revista serão conectados quando você criar o conjunto de dados.",
@@ -454,6 +475,35 @@
 				"whoTooltipAria": "Quem terá acesso?"
 			},
 			"untitled": "Conjunto de dados sem título"
+		},
+		"export": {
+			"button": "Exportar Canva para PDF",
+			"emptyCanvas": "Adicione pelo menos um componente à tela antes de exportar.",
+			"failed": "Não foi possível exportar a tela. Tente novamente.",
+			"fallbackWarning": "Exportação concluída. Alguns componentes utilizaram um modelo raster alternativo e podem diferir ligeiramente da tela em tempo real.",
+			"figuresNotReady": "Alguns gráficos ainda estão carregando. Aguarde até que todas as visualizações terminem de ser renderizadas e tente novamente.",
+			"mediaDescription": "Exportação de PDF do Data Journal para {{workspace}}. Gerenciado como um artefato de ferramenta de dados (não para inserção de texto).",
+			"menuLabel": "Exportar Canva para PDF",
+			"modal": {
+				"canvasUnavailable": "A tela não está disponível. Abra este espaço de trabalho na tela do diário e tente novamente.",
+				"confirmButton": "Exportar PDF",
+				"confirmWorkspace": "Exporte o layout atual de “{{workspace}}” como um PDF. As posições e tamanhos dos componentes na tela serão preservados.",
+				"saveToMediaLibrary": "Salve também uma cópia na minha biblioteca de mídia (exportação da ferramenta de dados, não para inserção de texto).",
+				"success": "Seu PDF foi baixado.",
+				"successWithMedia": "Seu PDF foi baixado e uma cópia foi salva em sua biblioteca de mídia.",
+				"title": "Exportar espaço de trabalho para PDF",
+				"unsupportedNotice": "Os componentes de tabela e código nesta tela não estão incluídos no PDF exportado.",
+				"unsupportedSkipped": "Os componentes de tabela e código foram omitidos do PDF."
+			},
+			"onlyUnsupportedTypes": "Esta tela contém apenas componentes de tabela e código, que não podem ser exportados para PDF. Adicione outro tipo de componente e tente novamente.",
+			"progress": {
+				"composing": "Compondo um PDF…",
+				"done": "Exportação concluída",
+				"error": "Exportação falhou",
+				"preparing": "Preparando o layout…",
+				"rendering": "Renderizando componentes…",
+				"saving": "Salvando na biblioteca de mídia…"
+			}
 		},
 		"graph": {
 			"axes": {
@@ -1994,10 +2044,12 @@
 		"insertImageAria": "Inserir imagem",
 		"insertImagePrompt": "Insira o URL da imagem:",
 		"mediaCancelEdit": "Cancelar",
+		"mediaCanvaExportThumb": "",
 		"mediaDelete": "Excluir",
 		"mediaDeleteConfirm": "Excluir este conteúdo da sua biblioteca? Imagens já inseridas no conteúdo podem aparecer como quebradas.",
 		"mediaDeleteFailed": "Não foi possível excluir este arquivo.",
 		"mediaDescriptionPlaceholder": "Adicione notas, se desejar.",
+		"mediaDownloadPdf": "",
 		"mediaEdit": "Editar",
 		"mediaEditFieldsRequired": "O título e o nome do arquivo não podem estar vazios.",
 		"mediaEditMeta": "Editar Detalhes",
