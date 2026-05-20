@@ -1262,9 +1262,82 @@ export const StyledDataWorkspace = styled.div`
       box-shadow: 0 0 0 3px rgba(228, 223, 246, 0.9) !important;
     }
 
-    .react-resizable-handle::after {
-      border-right: 2px solid #0D3944 !important;
-      border-bottom: 2px solid #0D3944 !important;
+    .react-grid-item > .react-resizable-handle {
+      width: 40px;
+      height: 40px;
+      padding: 0 !important;
+      z-index: 4;
+      background: none !important;
+      background-image: none !important;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+      transform: none !important;
+    }
+
+    .react-grid-item:hover > .react-resizable-handle,
+    .react-grid-item:has(.active) > .react-resizable-handle,
+    .react-grid-item.resizing > .react-resizable-handle {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .react-grid-item > .react-resizable-handle-w,
+    .react-grid-item > .react-resizable-handle-e {
+      margin-top: -16px;
+    }
+
+    .react-grid-item > .react-resizable-handle-n,
+    .react-grid-item > .react-resizable-handle-s {
+      margin-left: -16px;
+    }
+
+    /* Override react-grid-layout default grey SE corner on every handle */
+    .react-grid-item > .react-resizable-handle::after {
+      content: "";
+      position: absolute;
+      display: block;
+      width: 14px;
+      height: 14px;
+      top: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      left: auto !important;
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none;
+    }
+
+    .react-grid-item > .react-resizable-handle-se::after {
+      right: 5px !important;
+      bottom: 5px !important;
+      border-right: 3px solid #A1A1A1 !important;
+      border-bottom: 3px solid #A1A1A1 !important;
+      border-bottom-right-radius: 8px;
+    }
+
+    .react-grid-item > .react-resizable-handle-sw::after {
+      left: 5px !important;
+      bottom: 5px !important;
+      border-left: 3px solid #A1A1A1!important;
+      border-bottom: 3px solid #A1A1A1 !important;
+      border-bottom-left-radius: 8px;
+    }
+
+    .react-grid-item > .react-resizable-handle-ne::after {
+      right: 5px !important;
+      top: 5px !important;
+      border-right: 3px solid #A1A1A1 !important;
+      border-top: 3px solid #A1A1A1 !important;
+      border-top-right-radius: 8px;
+    }
+
+    .react-grid-item > .react-resizable-handle-nw::after {
+      left: 5px !important;
+      top: 5px !important;
+      border-left: 3px solid #0d3944 !important;
+      border-top: 3px solid #0d3944 !important;
+      border-top-left-radius: 8px;
     }
 
     /* Paragraph widget on grid: match panel TipTap — no inner ProseMirror box chrome; WidgetContent scrolls */

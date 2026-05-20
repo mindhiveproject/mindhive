@@ -572,6 +572,7 @@ export default function Grid({
                     margin={[16, 16]}
                     draggableHandle=".widget-content-handle"
                     draggableCancel=".widget-button,button,input,textarea,select,option,[contenteditable='true'],.react-resizable-handle"
+                    resizeHandles={["nw", "ne", "sw", "se"]}
                   >
                     {components.map((widget) => {
                       const layoutItem = layout.find(
