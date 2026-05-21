@@ -28,4 +28,11 @@ def safe_subset(df, columns):
     if not cols:
         return df.iloc[:, 0:0].copy()
     return df[cols].copy()
+
+def _axis_range(min_val, max_val):
+    lo = float(min_val) if min_val != '' else None
+    hi = float(max_val) if max_val != '' else None
+    if lo is None and hi is None:
+        return None
+    return [lo, hi]
 `.trim();
