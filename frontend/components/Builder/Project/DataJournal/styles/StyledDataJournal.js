@@ -272,14 +272,6 @@ export const StyledSidebar = styled.div`
       align-items: center;
     }
 
-    .workspaceRowLabel {
-      min-width: 0;
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      text-align: left;
-    }
     .workspace {
       display: grid;
       cursor: pointer;
@@ -292,10 +284,22 @@ export const StyledSidebar = styled.div`
       cursor: pointer;
       font-weight: 700;
       font-style: Bold;
-    }
 
-    .dataJournalWorkspaceRowBtn:hover {
-      background-color: #FDF2D0 !important;
+      .titleHeader {
+        display: flex;
+        flex-direction: row; 
+        align-items: center; 
+        justify-content: flex-start;
+        gap: 8px; 
+        width: 100%;
+
+        .component {
+          min-width: 0;
+          flex: 1 1 0%;
+          align-items: center;
+        }
+      }
+      }
     }
   }
   
@@ -341,6 +345,44 @@ export const StyledSidebar = styled.div`
     }
   }
 
+  .component {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 8px;
+    align-items: center;
+    width: 100%;
+    padding: 4px 8px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    .componentTitle {
+      min-width: 0;
+      overflow: visible;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &:hover {
+      background-color: #e8eeec;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #5b8def;
+      outline-offset: 2px;
+    }
+
+    &.component--active {
+      background-color: #e8eeec;
+      font-weight: 600;
+    }
+  }
+
   .components {
     display: grid;
     grid-gap: 10px;
@@ -353,45 +395,6 @@ export const StyledSidebar = styled.div`
     leading-trim: NONE;
     line-height: 100%;
     letter-spacing: 0%;
-
-    .component {
-      margin: 0px 0px 5px 0px;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      grid-gap: 8px;
-      align-items: center;
-      width: 100%;
-      padding: 4px 8px;
-      border: none;
-      background: transparent;
-      border-radius: 6px;
-      color: inherit;
-      font: inherit;
-      text-align: left;
-      cursor: pointer;
-      transition: background-color 0.15s ease;
-
-      .componentTitle {
-        min-width: 0;
-        overflow: visible;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      &:hover {
-        background-color: #e8eeec;
-      }
-
-      &:focus-visible {
-        outline: 2px solid #5b8def;
-        outline-offset: 2px;
-      }
-
-      &.component--active {
-        background-color: #e8eeec;
-        font-weight: 600;
-      }
-    }
   }
   /* Change the default styles of the Dropdown Menu */
   .menu {
