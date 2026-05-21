@@ -1,6 +1,7 @@
 import { Modal, Dropdown } from "semantic-ui-react";
 
 import { StyledForm } from "../../../../../styles/StyledForm";
+import { normalizeVariableName } from "../../../../../../lib/normalizeVariableName";
 
 const operations = [
   { value: "zeroState", text: "" },
@@ -71,17 +72,19 @@ export default function Compute({
   }));
 
   const calculate = () => {
+    const name = normalizeVariableName(inputs?.name);
+    if (!name) return;
     const updatedVariables = [
       ...variables,
       {
-        field: inputs?.name,
+        field: name,
         editable: true,
         type: "user",
       },
     ];
     const updatedData = data.map((row) => ({
       ...row,
-      [inputs?.name]: compute({
+      [name]: compute({
         var1: parseFloat(row[inputs?.variable1]),
         var2: parseFloat(row[inputs?.variable2]),
         row: row,

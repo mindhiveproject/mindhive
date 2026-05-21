@@ -6,6 +6,10 @@ import { Dropdown, DropdownMenu } from "semantic-ui-react";
 
 import Papa from "papaparse";
 import { customAlphabet } from "nanoid";
+import {
+  columnNamesFromUploadData,
+  normalizeRowKeys,
+} from "../../../../../../lib/normalizeVariableName";
 import BrowseTemplates from "./BrowseTemplates";
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
@@ -62,15 +66,6 @@ export default function EmptyState({ studyId }) {
     });
   };
 
-  // helper function to get all column names of the given dataset
-  const getColumnNames = ({ data }) => {
-    const allKeys = data
-      .map((line) => Object.keys(line))
-      .reduce((a, b) => a.concat(b), []);
-    const keys = Array.from(new Set(allKeys)).sort();
-    return keys;
-  };
-
   const handleDataUpload = async (e) => {
     const form = e.currentTarget;
     const [file] = await form.files;
@@ -82,7 +77,8 @@ export default function EmptyState({ studyId }) {
     } else {
       data = await toJson(file);
     }
-    const variableNames = getColumnNames({ data });
+    const normalizedData = data.map(normalizeRowKeys);
+    const variableNames = columnNamesFromUploadData(normalizedData);
     const variables = variableNames.map((variable) => ({
       field: variable,
       type: "general",
@@ -97,7 +93,7 @@ export default function EmptyState({ studyId }) {
     };
     const dataFile = {
       metadata,
-      data: data,
+      data: normalizedData,
     };
 
     // get the current date for data saving

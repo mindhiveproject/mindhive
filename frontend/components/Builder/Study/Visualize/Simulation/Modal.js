@@ -9,6 +9,10 @@ const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
 import simulateDataWithAI from "./Main";
 import useForm from "../../../../../lib/useForm";
+import {
+  columnNamesFromUploadData,
+  normalizeRowKeys,
+} from "../../../../../lib/normalizeVariableName";
 
 import { StyledInput } from "../../../../styles/StyledForm";
 import { useState } from "react";
@@ -30,15 +34,6 @@ export default function PromptModal({
     refetchQueries: [{ query: STUDY_VIZJOURNAL, variables: { id: studyId } }],
   });
 
-  // helper function to get all column names of the given dataset
-  const getColumnNames = ({ data }) => {
-    const allKeys = data
-      .map((line) => Object.keys(line))
-      .reduce((a, b) => a.concat(b), []);
-    const keys = Array.from(new Set(allKeys)).sort();
-    return keys;
-  };
-
   const simulateData = async (e) => {
     if (inputs.hypothesisPrompt === "") {
       return alert("Please describe your hypothesis");
@@ -58,8 +53,8 @@ export default function PromptModal({
       sampleSize: inputs?.sampleSize,
     });
 
-    // generate artificial data using AI assistant
-    const variableNames = getColumnNames({ data });
+    const normalizedData = data.map(normalizeRowKeys);
+    const variableNames = columnNamesFromUploadData(normalizedData);
     const variables = variableNames.map((variable) => ({
       field: variable,
       type: "general",
@@ -74,7 +69,7 @@ export default function PromptModal({
     };
     const dataFile = {
       metadata,
-      data: data,
+      data: normalizedData,
     };
 
     // get the current date for data saving

@@ -1,5 +1,6 @@
 import { Modal, Dropdown, Table } from "semantic-ui-react";
 import { StyledForm } from "../../../../../styles/StyledForm";
+import { normalizeVariableName } from "../../../../../../lib/normalizeVariableName";
 import { useState, useEffect } from "react";
 
 export default function Recode({
@@ -32,17 +33,19 @@ export default function Recode({
   }, [inputs?.oldVariable, data]);
 
   const recode = () => {
+    const name = normalizeVariableName(inputs?.name);
+    if (!name) return;
     const updatedVariables = [
       ...variables,
       {
-        field: inputs?.name,
+        field: name,
         editable: true,
         type: "user",
       },
     ];
     const updatedData = data.map((row) => ({
       ...row,
-      [inputs?.name]: replacementValues[row[inputs?.oldVariable]],
+      [name]: replacementValues[row[inputs?.oldVariable]],
     }));
     updateDataset({
       updatedVariables,

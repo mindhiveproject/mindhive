@@ -9,6 +9,10 @@ import {
   collectSharingProfileIdsFromStudyAndProject,
   getSharingRecipientEntries,
 } from "../../../../../../lib/dataJournalDatasources";
+import {
+  columnNamesFromUploadData,
+  normalizeRowKeys,
+} from "../../../../../../lib/normalizeVariableName";
 
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
@@ -91,14 +95,6 @@ export default function DatasetForm({
     });
   };
 
-  const getColumnNames = ({ data }) => {
-    const allKeys = data
-      .map((line) => Object.keys(line))
-      .reduce((a, b) => a.concat(b), []);
-    const keys = Array.from(new Set(allKeys)).sort();
-    return keys;
-  };
-
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) setFile(selectedFile);
@@ -148,7 +144,8 @@ export default function DatasetForm({
         data = await toJson(file);
       }
 
-      const variableNames = getColumnNames({ data });
+      const normalizedData = data.map(normalizeRowKeys);
+      const variableNames = columnNamesFromUploadData(normalizedData);
       const variables = variableNames.map((variable) => ({
         field: variable,
         type: "general",
@@ -164,7 +161,7 @@ export default function DatasetForm({
 
       const dataFile = {
         metadata,
-        data: data,
+        data: normalizedData,
       };
 
       const curDate = new Date();

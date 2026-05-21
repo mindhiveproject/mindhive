@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import DropdownMenu from "../../../../../../DesignSystem/DropdownMenu";
+import { normalizeVariableName } from "../../../../../../../lib/normalizeVariableName";
 
 export default function Variable({
   column,
@@ -83,11 +84,12 @@ export default function Variable({
               default: "Please enter new name:",
             }),
           );
-          if (newName && newName !== "") {
+          const trimmed = normalizeVariableName(newName);
+          if (trimmed) {
             onVariableChange({
               variable: field,
               property: "displayName",
-              value: newName,
+              value: trimmed,
             });
           }
         },

@@ -8,6 +8,7 @@ import { Table } from "semantic-ui-react";
 
 import DropdownSelect from "../../../../../../../DesignSystem/DropdownSelect";
 import { StyledForm } from "../../../../../../../styles/StyledForm";
+import { normalizeVariableName } from "../../../../../../../../lib/normalizeVariableName";
 
 const M = "dataJournal.datasetMenu.addColumnModal";
 
@@ -65,17 +66,19 @@ export default function Recode({
 
   useEffect(() => {
     submitRef.current = () => {
+      const name = normalizeVariableName(inputs?.name);
+      if (!name) return;
       const updatedVariables = [
         ...variables,
         {
-          field: inputs?.name,
+          field: name,
           editable: true,
           type: "user",
         },
       ];
       const updatedData = data.map((row) => ({
         ...row,
-        [inputs?.name]: replacementValues[row[inputs?.oldVariable]],
+        [name]: replacementValues[row[inputs?.oldVariable]],
       }));
       updateDataset({
         updatedVariables,

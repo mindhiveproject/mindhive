@@ -6,6 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import DropdownSelect from "../../../../../../../DesignSystem/DropdownSelect";
 import { StyledForm } from "../../../../../../../styles/StyledForm";
+import { normalizeVariableName } from "../../../../../../../../lib/normalizeVariableName";
 
 const M = "dataJournal.datasetMenu.addColumnModal";
 
@@ -125,17 +126,19 @@ export default function Compute({
 
   useEffect(() => {
     submitRef.current = () => {
+      const name = normalizeVariableName(inputs?.name);
+      if (!name) return;
       const updatedVariables = [
         ...variables,
         {
-          field: inputs?.name,
+          field: name,
           editable: true,
           type: "user",
         },
       ];
       const updatedData = data.map((row) => ({
         ...row,
-        [inputs?.name]: computeValue({
+        [name]: computeValue({
           var1: parseFloat(row[inputs?.variable1]),
           var2: parseFloat(row[inputs?.variable2]),
           row,
