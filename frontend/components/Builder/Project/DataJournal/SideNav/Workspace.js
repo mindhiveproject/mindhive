@@ -54,6 +54,7 @@ export default function WorkspaceNavigation({
       label: t("dataJournal.sideNav.renameWorkspace", {}, {
         default: "Rename workspace",
       }),
+      icon: <img src="/assets/icons/visualize/edit.svg" alt="" width={20} height={20} aria-hidden />,
       onClick: () => setRenameOpen(true),
     },
     {
@@ -61,6 +62,7 @@ export default function WorkspaceNavigation({
       label: t("dataJournal.export.menuLabel", {}, {
         default: "Export canva to PDF",
       }),
+      icon: <img src="/assets/icons/pdf.svg" alt="" width={20} height={20} aria-hidden />,
       onClick: () => setExportOpen(true),
     },
     {
