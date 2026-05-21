@@ -3,7 +3,6 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import useTranslation from "next-translate/useTranslation";
 
-import Button from "../../../../DesignSystem/Button";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 
 import { useDataJournal } from "../Context/DataJournalContext";
@@ -55,6 +54,7 @@ export default function WorkspaceNavigation({
       label: t("dataJournal.sideNav.renameWorkspace", {}, {
         default: "Rename workspace",
       }),
+      icon: <img src="/assets/icons/visualize/edit.svg" alt="" width={20} height={20} aria-hidden />,
       onClick: () => setRenameOpen(true),
     },
     {
@@ -62,6 +62,7 @@ export default function WorkspaceNavigation({
       label: t("dataJournal.export.menuLabel", {}, {
         default: "Export canva to PDF",
       }),
+      icon: <img src="/assets/icons/pdf.svg" alt="" width={20} height={20} aria-hidden />,
       onClick: () => setExportOpen(true),
     },
     {
@@ -81,71 +82,42 @@ export default function WorkspaceNavigation({
     <>
       {!isWorkspaceSelected ? (
         <div className="workspace">
-          <div style={{ minWidth: 0, width: "100%" }}>
-            <Button
+          <button
+            type="button"
+            className="component"
+            onClick={() => selectWorkspaceById({ id: workspace?.id })}
+          >
+            <div>
+              <img
+                src={"/assets/dataviz/sidebar/workspace.svg"}
+                alt=""
+                width={20}
+                height={20}
+                aria-hidden
+              />
+            </div>
+            <div className="componentTitle">{workspace?.title}</div>
+          </button>
+        </div>
+      ) : (
+        <div className="selectedWorkspace">
+          <div className="titleHeader">
+            <button
               type="button"
-              variant="text"
-              className="dataJournalWorkspaceRowBtn"
-              style={{
-                color: "#5D5763",
-                fontWeight: 400,
-                height: "auto",
-                minHeight: "32px",
-                padding: "4px 8px",
-                justifyContent: "flex-start",
-                width: "100%",
-              }}
+              className="component component--active"
               onClick={() => selectWorkspaceById({ id: workspace?.id })}
-              leadingIcon={
+            >
+              <div>
                 <img
                   src={"/assets/dataviz/sidebar/workspace.svg"}
                   alt=""
                   width={20}
                   height={20}
                   aria-hidden
-                  style={{ flexShrink: 0 }}
                 />
-              }
-            >
-              <span className="workspaceRowLabel">{workspace?.title}</span>
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <div className="selectedWorkspace">
-          <div className="titleHeader">
-            <div style={{ minWidth: 0 }}>
-              <Button
-                type="button"
-                variant="text"
-                className="dataJournalWorkspaceRowBtn"
-                style={{
-                  color: "#5D5763",
-                  fontWeight: 700,
-                  height: "auto",
-                  minHeight: "32px",
-                  padding: "4px 8px",
-                  justifyContent: "flex-start",
-                  width: "100%",
-                  minWidth: 0,
-                }}
-                onClick={() => selectWorkspaceById({ id: workspace?.id })}
-                leadingIcon={
-                  <img
-                    src={"/assets/dataviz/sidebar/workspace.svg"}
-                    alt=""
-                    width={20}
-                    height={20}
-                    aria-hidden
-                    style={{ flexShrink: 0 }}
-                  />
-                }
-              >
-                <span className="workspaceRowLabel" style={{ fontWeight: 700 }}>
-                  {workspace?.title}
-                </span>
-              </Button>
-            </div>
+              </div>
+              <div className="componentTitle">{workspace?.title}</div>
+            </button>
             <DropdownMenu
               ariaLabel={t("dataJournal.sideNav.workspaceMore", {}, {
                 default: "Workspace options",

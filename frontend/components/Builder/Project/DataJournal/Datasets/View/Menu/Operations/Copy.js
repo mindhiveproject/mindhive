@@ -6,6 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import DropdownSelect from "../../../../../../../DesignSystem/DropdownSelect";
 import { StyledForm } from "../../../../../../../styles/StyledForm";
+import { normalizeVariableName } from "../../../../../../../../lib/normalizeVariableName";
 
 const M = "dataJournal.datasetMenu.addColumnModal";
 
@@ -48,17 +49,19 @@ export default function Copy({
 
   useEffect(() => {
     submitRef.current = () => {
+      const name = normalizeVariableName(inputs?.name);
+      if (!name) return;
       const updatedVariables = [
         ...variables,
         {
-          field: inputs?.name,
+          field: name,
           editable: true,
           type: "user",
         },
       ];
       const updatedData = data.map((row) => ({
         ...row,
-        [inputs?.name]: row[inputs?.oldVariable],
+        [name]: row[inputs?.oldVariable],
       }));
       updateDataset({
         updatedVariables,

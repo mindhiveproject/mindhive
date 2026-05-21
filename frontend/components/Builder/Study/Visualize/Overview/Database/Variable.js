@@ -1,13 +1,16 @@
 import { Dropdown, DropdownMenu, DropdownItem, Icon } from "semantic-ui-react";
 
+import { normalizeVariableName } from "../../../../../../lib/normalizeVariableName";
+
 export default function Variable({ column, onVariableChange }) {
   const onRename = ({ variable }) => {
     const newName = prompt("Please enter new name:");
-    if (newName && newName !== "") {
+    const trimmed = normalizeVariableName(newName);
+    if (trimmed) {
       onVariableChange({
         variable,
         property: "displayName",
-        value: newName,
+        value: trimmed,
       });
     }
   };

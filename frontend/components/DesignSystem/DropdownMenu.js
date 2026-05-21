@@ -100,6 +100,27 @@ const DIVIDER_STYLE = {
   margin: 0,
 };
 
+const LEADING_ICON_STYLE = {
+  display: "inline-flex",
+  flexShrink: 0,
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+function renderLeadingIcon(item) {
+  if (item.icon != null) {
+    return (
+      <span style={LEADING_ICON_STYLE} aria-hidden="true">
+        {item.icon}
+      </span>
+    );
+  }
+  if (item.danger === true) {
+    return TRASH_ICON;
+  }
+  return null;
+}
+
 /**
  * Reusable dropdown menu with portal (avoids clipping in AG Grid / overflow containers).
  * Renders trigger button and, when open, a panel in document.body with position: fixed.
@@ -109,7 +130,7 @@ const DIVIDER_STYLE = {
  * @param {string} [ariaLabel] - Accessible name for the trigger button (required when `trigger` is used without visible text).
  * @param {React.ReactNode} [panelHeader] - Read-only block above menu items (e.g. metadata).
  * @param {boolean} [dividerAfterHeader=true] - Show a divider between `panelHeader` and items when `panelHeader` is set.
- * @param {Array<{ key: string, label: React.ReactNode, onClick?: () => void, danger?: boolean, static?: boolean }>} items - Menu items. `static: true` or missing `onClick` on a non-danger row renders a non-interactive row (does not close menu). Action items call `onClick` then close.
+ * @param {Array<{ key: string, label: React.ReactNode, icon?: React.ReactNode, onClick?: () => void, danger?: boolean, static?: boolean }>} items - Menu items. Optional `icon` renders as a leading icon before `label`. `static: true` or missing `onClick` on a non-danger row renders a non-interactive row (does not close menu). Action items call `onClick` then close. `danger: true` shows a trash icon when `icon` is omitted.
  * @param {React.CSSProperties} [triggerStyle] - Optional override for trigger button styles.
  * @param {'auto'|'below'|'above'} [placement='auto'] - Vertical placement; `auto` flips when there is not enough space below.
  */
@@ -267,10 +288,13 @@ export default function DropdownMenu({
                       ? { ...ITEM_STYLE, color: "#d32f2f" }
                       : ITEM_STYLE;
 
+                  const leadingIcon = renderLeadingIcon(item);
+
                   if (isStatic) {
                     return (
                       <div key={item.key} style={style}>
-                        {item.label}
+                        {leadingIcon}
+                        <span>{item.label}</span>
                       </div>
                     );
                   }
@@ -301,7 +325,7 @@ export default function DropdownMenu({
                         e.currentTarget.style.backgroundColor = "transparent";
                       }}
                     >
-                      {isDanger && TRASH_ICON}
+                      {leadingIcon}
                       <span>{item.label}</span>
                     </div>
                   );

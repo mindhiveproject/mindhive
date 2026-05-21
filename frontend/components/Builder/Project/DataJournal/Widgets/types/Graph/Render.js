@@ -270,6 +270,24 @@ bargap = ${Number(s.bargap ?? 0.1)}
           );
         }
 
+        // Persisted scatter templates: skip empty range=[None, None] which clips negative values.
+        if (
+          type === "scatterPlot" &&
+          userCodeDedented &&
+          /fig\.update_xaxes\(range=\[/.test(userCodeDedented) &&
+          !/x_rng = _axis_range\(/.test(userCodeDedented)
+        ) {
+          userCodeDedented = userCodeDedented.replace(
+            /fig\.update_xaxes\(range=\[[\s\S]*?\]\)\s*\n\s*fig\.update_yaxes\(range=\[[\s\S]*?\]\)/m,
+            `x_rng = _axis_range(xRangeMin, xRangeMax)
+    if x_rng is not None:
+        fig.update_xaxes(range=x_rng)
+    y_rng = _axis_range(yRangeMin, yRangeMax)
+    if y_rng is not None:
+        fig.update_yaxes(range=y_rng)`,
+          );
+        }
+
         const pythonCode = `
 import pandas as pd
 ${DATAFRAME_SAFETY_PYTHON}

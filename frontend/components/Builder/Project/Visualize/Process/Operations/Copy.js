@@ -1,6 +1,7 @@
 import { Modal, Dropdown } from "semantic-ui-react";
 
 import { StyledForm } from "../../../../../styles/StyledForm";
+import { normalizeVariableName } from "../../../../../../lib/normalizeVariableName";
 
 export default function Copy({
   title,
@@ -14,17 +15,19 @@ export default function Copy({
   resetForm,
 }) {
   const copy = () => {
+    const name = normalizeVariableName(inputs?.name);
+    if (!name) return;
     const updatedVariables = [
       ...variables,
       {
-        field: inputs?.name,
+        field: name,
         editable: true,
         type: "user",
       },
     ];
     const updatedData = data.map((row) => ({
       ...row,
-      [inputs?.name]: row[inputs?.oldVariable],
+      [name]: row[inputs?.oldVariable],
     }));
     updateDataset({
       updatedVariables,

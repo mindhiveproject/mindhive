@@ -1,3 +1,5 @@
+import { normalizeVariableName } from "../../../../../lib/normalizeVariableName";
+
 // filter the array of data according to the settings
 
 // an example structure of the filter object inside the settings
@@ -96,7 +98,10 @@ export function renameData({ data, variables }) {
     const newObj = {};
     Object.keys(obj).forEach((key) => {
       const mapping = variables.find((m) => m.field === key);
-      const newKey = mapping && mapping.displayName ? mapping.displayName : key;
+      const newKey = mapping?.displayName
+        ? normalizeVariableName(mapping.displayName) ||
+          normalizeVariableName(key)
+        : normalizeVariableName(key);
       newObj[newKey] = obj[key];
     });
     return newObj;

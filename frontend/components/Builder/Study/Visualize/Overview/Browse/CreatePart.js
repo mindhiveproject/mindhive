@@ -3,6 +3,10 @@ import { STUDY_VIZJOURNAL } from "../../../../../Queries/VizJournal";
 
 import Papa from "papaparse";
 import { customAlphabet } from "nanoid";
+import {
+  columnNamesFromUploadData,
+  normalizeRowKeys,
+} from "../../../../../../lib/normalizeVariableName";
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
 import { useMutation } from "@apollo/client";
@@ -55,15 +59,6 @@ export default function CreatePart({
     });
   };
 
-  // helper function to get all column names of the given dataset
-  const getColumnNames = ({ data }) => {
-    const allKeys = data
-      .map((line) => Object.keys(line))
-      .reduce((a, b) => a.concat(b), []);
-    const keys = Array.from(new Set(allKeys)).sort();
-    return keys;
-  };
-
   const handleDataUpload = async (e) => {
     const form = e.currentTarget;
     const [file] = await form.files;
@@ -75,7 +70,8 @@ export default function CreatePart({
     } else {
       data = await toJson(file);
     }
-    const variableNames = getColumnNames({ data });
+    const normalizedData = data.map(normalizeRowKeys);
+    const variableNames = columnNamesFromUploadData(normalizedData);
     const variables = variableNames.map((variable) => ({
       field: variable,
       type: "general",
@@ -90,7 +86,7 @@ export default function CreatePart({
     };
     const dataFile = {
       metadata,
-      data: data,
+      data: normalizedData,
     };
 
     // get the current date for data saving

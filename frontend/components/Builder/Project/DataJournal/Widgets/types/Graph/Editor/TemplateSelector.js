@@ -199,14 +199,12 @@ else:
     yRangeMin = get_or_default(yRangeMin)
     yRangeMax = get_or_default(yRangeMax)
 
-    fig.update_xaxes(range=[
-        None if xRangeMin == '' else xRangeMin,
-        None if xRangeMax == '' else xRangeMax
-    ])
-    fig.update_yaxes(range=[
-        None if yRangeMin == '' else yRangeMin,
-        None if yRangeMax == '' else yRangeMax
-    ])
+    x_rng = _axis_range(xRangeMin, xRangeMax)
+    if x_rng is not None:
+        fig.update_xaxes(range=x_rng)
+    y_rng = _axis_range(yRangeMin, yRangeMax)
+    if y_rng is not None:
+        fig.update_yaxes(range=y_rng)
 
     _apply_scatter_graph_colors(fig, brand_palette, has_group, graph_colors_json, color, use_trendline)
 
