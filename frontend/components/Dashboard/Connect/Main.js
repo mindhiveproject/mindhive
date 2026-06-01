@@ -6,6 +6,8 @@ import RoundsMain from "./Rounds/Main";
 import QuestionsMain from "./Questions/Main";
 import ParticipateMain from "./Participate/Main";
 import MatchesMain from "./Matches/Main";
+import MentorMatchesMain from "./MentorMatches/Main";
+import ExploreMain from "./Explore/Main";
 
 export default function ConnectMain({ query, user }) {
   const { selector } = query;
@@ -36,6 +38,14 @@ export default function ConnectMain({ query, user }) {
 
   if (selector === "matches") {
     return <MatchesMain query={query} user={user} />;
+  }
+
+  if (selector === "my-matches") {
+    return <MentorMatchesMain query={query} user={user} />;
+  }
+
+  if (selector === "explore") {
+    return <ExploreMain query={query} user={user} />;
   }
 
   return <ConnectBank query={query} user={user} />;

@@ -6,6 +6,8 @@ media-library-exports
 profile-images
 study-images
 yq-visuals
+opportunity-covers
+opportunity-videos
 keystone.db
 *.log
 .env

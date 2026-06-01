@@ -246,6 +246,13 @@ export default function ConnectBankNew({ query, user }) {
   return (
     <ConnectShell>
       <NavigationBar>
+        <Link
+          href={{
+            pathname: `/dashboard/connect/explore`,
+          }}
+        >
+          <button type="button">Explore opportunities</button>
+        </Link>
         {(isMentor || isAdmin) && (
           <Link
             href={{
@@ -253,6 +260,15 @@ export default function ConnectBankNew({ query, user }) {
             }}
           >
             <button type="button">My opportunities</button>
+          </Link>
+        )}
+        {(isMentor || isAdmin) && (
+          <Link
+            href={{
+              pathname: `/dashboard/connect/my-matches`,
+            }}
+          >
+            <button type="button">My matched students</button>
           </Link>
         )}
         {(isTeacher || isAdmin) && (

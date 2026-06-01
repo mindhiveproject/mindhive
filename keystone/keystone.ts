@@ -5,6 +5,8 @@
 // Keystone imports the default export of this file, expecting a Keystone configuration object
 //   you can find out more at https://keystonejs.com/docs/apis/config
 import "dotenv/config";
+import { mkdirSync } from "fs";
+import path from "path";
 import { config } from "@keystone-6/core";
 import depthLimit from "graphql-depth-limit";
 
@@ -33,6 +35,39 @@ const mhFrontendURL =
   process.env.NODE_ENV === "development"
     ? process.env.FRONTEND_URL_DEV
     : process.env.FRONTEND_URL;
+
+// Date-partitioned name generator for local file/image storage.
+//
+// Local storage in Keystone 6 uses fs.writeFile directly and does NOT create
+// parent directories, so we mkdirSync(recursive) before returning the path.
+//
+// Image fields append the detected file extension to whatever the transform
+// returns (so it must NOT include the extension), while File fields use the
+// returned name verbatim (so it MUST include the extension). One factory,
+// two behaviors via `includeExtension`.
+const makeDatePartitionedName =
+  (storagePath: string, includeExtension: boolean) =>
+  (originalFilename: string) => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const rand = Math.random().toString(36).slice(2, 10);
+
+    try {
+      mkdirSync(path.join(process.cwd(), storagePath, String(year), month), {
+        recursive: true,
+      });
+    } catch {
+      // ignore — Keystone will surface a clearer error if write still fails
+    }
+
+    const base = `${year}/${month}/${Date.now()}-${rand}`;
+    if (!includeExtension) return base;
+    const dot = originalFilename.lastIndexOf(".");
+    const ext =
+      dot >= 0 ? originalFilename.slice(dot + 1).toLowerCase() : "bin";
+    return `${base}.${ext}`;
+  };
 
 export default withAuth(
   config({
@@ -134,6 +169,22 @@ export default withAuth(
           path: "/study-images",
         },
         storagePath: `study-images`,
+      },
+      opportunity_covers: {
+        kind: "local",
+        type: "image",
+        generateUrl: (path) => `${assetBaseUrl}/opportunity-covers${path}`,
+        serverRoute: { path: "/opportunity-covers" },
+        storagePath: "opportunity-covers",
+        transformName: makeDatePartitionedName("opportunity-covers", false),
+      },
+      opportunity_videos: {
+        kind: "local",
+        type: "file",
+        generateUrl: (path) => `${assetBaseUrl}/opportunity-videos${path}`,
+        serverRoute: { path: "/opportunity-videos" },
+        storagePath: "opportunity-videos",
+        transformName: makeDatePartitionedName("opportunity-videos", true),
       },
     },
   }),

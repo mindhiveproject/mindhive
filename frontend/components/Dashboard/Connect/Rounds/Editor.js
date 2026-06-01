@@ -205,6 +205,30 @@ const ALGO_OPTIONS = [
   { key: "teacher_curated", text: "Teacher-curated", value: "teacher_curated" },
 ];
 
+const ALGO_DESCRIPTIONS = {
+  stable_matching: {
+    title: "Stable matching (Gale-Shapley)",
+    body:
+      "Produces an assignment where no student-Opportunity pair would both rather swap with another pair. " +
+      "Students propose to their top choice; Opportunities tentatively accept up to capacity and reject lower-scoring " +
+      "candidates as better ones arrive. Strong fairness guarantees — defensible to students who ask why they didn't get their first pick.",
+  },
+  score_based: {
+    title: "Score-based (greedy)",
+    body:
+      "Computes a score for every (student, Opportunity) pair from rank (1 = top, weighted ×10) plus stars (×2), " +
+      "then walks the sorted candidates and assigns greedily while respecting each Opportunity's capacity. " +
+      "Simple and transparent — a teacher can hand-verify any pair's score. May produce slightly less stable groupings than the stable algorithm.",
+  },
+  teacher_curated: {
+    title: "Teacher-curated",
+    body:
+      "The system proposes ranked candidates per Opportunity but does NOT assign anyone automatically. " +
+      "You manually drag students into Opportunities yourself. Best when the round is small or when you have important " +
+      "context the algorithm can't see (a student's prior relationship with a mentor, accessibility needs, etc.).",
+  },
+};
+
 const EMPTY_FORM = {
   title: "",
   description: "",
@@ -229,6 +253,28 @@ function toIsoOrNull(dateStr) {
     return new Date(dateStr).toISOString();
   } catch {
     return null;
+  }
+}
+
+function formatDateShort(iso) {
+  if (!iso) return null;
+  try {
+    return new Date(iso).toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return null;
+  }
+}
+
+function isExpired(iso) {
+  if (!iso) return false;
+  try {
+    return new Date(iso).getTime() < Date.now();
+  } catch {
+    return false;
   }
 }
 
@@ -509,7 +555,9 @@ export default function RoundEditor({ roundId }) {
           <Field>
             <span className="label-text">Matching algorithm</span>
             <span className="hint">
-              Used when you trigger matching after preferences close.
+              The algorithm runs when you click <strong>Run matching</strong>{" "}
+              on the matches dashboard — not now. You can change this anytime
+              before then, including after the round opens for preferences.
             </span>
             <Dropdown
               selection
@@ -519,6 +567,27 @@ export default function RoundEditor({ roundId }) {
                 handleMultipleUpdate({ matchingAlgorithm: value })
               }
             />
+            {ALGO_DESCRIPTIONS[inputs.matchingAlgorithm] && (
+              <div
+                style={{
+                  marginTop: 8,
+                  padding: "10px 14px",
+                  border: "1px solid #d3dae0",
+                  borderRadius: 12,
+                  background: "#f7f9f8",
+                  fontSize: 13,
+                  lineHeight: 1.5,
+                  color: "#5f6871",
+                }}
+              >
+                <strong style={{ color: "#171717" }}>
+                  {ALGO_DESCRIPTIONS[inputs.matchingAlgorithm].title}
+                </strong>
+                <div style={{ marginTop: 4 }}>
+                  {ALGO_DESCRIPTIONS[inputs.matchingAlgorithm].body}
+                </div>
+              </div>
+            )}
           </Field>
         </Row>
       </Card>
@@ -543,6 +612,9 @@ export default function RoundEditor({ roundId }) {
               const checked = selectedOpportunities.includes(opportunity.id);
               const mentorName =
                 opportunity.mentor?.firstName || opportunity.mentor?.username;
+              const from = formatDateShort(opportunity.availableFrom);
+              const to = formatDateShort(opportunity.availableTo);
+              const expired = isExpired(opportunity.availableTo);
               return (
                 <OpportunityRow
                   key={opportunity.id}
@@ -554,7 +626,25 @@ export default function RoundEditor({ roundId }) {
                     onChange={() => toggleOpportunity(opportunity.id)}
                   />
                   <div className="body">
-                    <div className="title">{opportunity.title}</div>
+                    <div className="title">
+                      {opportunity.title}
+                      {expired && (
+                        <span
+                          style={{
+                            marginLeft: 8,
+                            display: "inline-block",
+                            padding: "2px 8px",
+                            borderRadius: 100,
+                            background: "#f8e1e1",
+                            color: "#b3261e",
+                            fontSize: 11,
+                            fontWeight: 600,
+                          }}
+                        >
+                          Expired
+                        </span>
+                      )}
+                    </div>
                     {opportunity.shortDescription && (
                       <div className="meta">
                         {opportunity.shortDescription}
@@ -569,6 +659,16 @@ export default function RoundEditor({ roundId }) {
                         opportunity.status !== "published" &&
                         ` · ${opportunity.status}`}
                     </div>
+                    {(from || to) && (
+                      <div
+                        className="meta"
+                        style={{ color: expired ? "#b3261e" : "#5f6871" }}
+                      >
+                        Available {from || "—"} → {to || "—"}
+                        {opportunity.timeCommitment &&
+                          ` · ${opportunity.timeCommitment}`}
+                      </div>
+                    )}
                   </div>
                 </OpportunityRow>
               );

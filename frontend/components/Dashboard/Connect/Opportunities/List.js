@@ -1,10 +1,12 @@
+import { useMemo, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import styled from "styled-components";
-import { Icon, Label } from "semantic-ui-react";
+import { Icon, Label, Dropdown } from "semantic-ui-react";
 
 import { MY_OPPORTUNITIES } from "../../../Queries/Opportunity";
 import { DELETE_OPPORTUNITY } from "../../../Mutations/Opportunity";
+import FilterBar from "../FilterBar";
 
 const Shell = styled.div`
   display: flex;
@@ -132,6 +134,7 @@ const Empty = styled.div`
   color: #5f6871;
 `;
 
+
 const STATUS_COLORS = {
   draft: "grey",
   pending_review: "yellow",
@@ -165,6 +168,39 @@ export default function OpportunitiesList({ user }) {
 
   const opportunities = data?.authenticatedItem?.opportunitiesCreated || [];
 
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [networkFilter, setNetworkFilter] = useState(null);
+
+  const networkOptions = useMemo(() => {
+    const seen = new Map();
+    opportunities.forEach((o) => {
+      (o.classNetworks || []).forEach((n) => {
+        if (n?.id && !seen.has(n.id)) seen.set(n.id, n);
+      });
+    });
+    return Array.from(seen.values()).map((n) => ({
+      key: n.id,
+      text: n.title,
+      value: n.id,
+    }));
+  }, [opportunities]);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return opportunities.filter((o) => {
+      if (q && !(o.title || "").toLowerCase().includes(q)) return false;
+      if (statusFilter && o.status !== statusFilter) return false;
+      if (
+        networkFilter &&
+        !(o.classNetworks || []).some((n) => n.id === networkFilter)
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [opportunities, search, statusFilter, networkFilter]);
+
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this opportunity? This cannot be undone.")) {
       return;
@@ -190,6 +226,40 @@ export default function OpportunitiesList({ user }) {
         </Link>
       </TopBar>
 
+      {opportunities.length > 0 && (
+        <FilterBar>
+          <input
+            className="search"
+            placeholder="Search by title…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Dropdown
+            selection
+            clearable
+            placeholder="All statuses"
+            options={Object.entries(STATUS_LABELS).map(([value, text]) => ({
+              key: value,
+              text,
+              value,
+            }))}
+            value={statusFilter}
+            onChange={(_, { value }) => setStatusFilter(value || null)}
+          />
+          {networkOptions.length > 0 && (
+            <Dropdown
+              selection
+              clearable
+              search
+              placeholder="All networks"
+              options={networkOptions}
+              value={networkFilter}
+              onChange={(_, { value }) => setNetworkFilter(value || null)}
+            />
+          )}
+        </FilterBar>
+      )}
+
       {loading && opportunities.length === 0 && <Empty>Loading…</Empty>}
 
       {!loading && opportunities.length === 0 && (
@@ -200,12 +270,29 @@ export default function OpportunitiesList({ user }) {
         </Empty>
       )}
 
+      {!loading && opportunities.length > 0 && filtered.length === 0 && (
+        <Empty>No opportunities match the current filters.</Empty>
+      )}
+
       <Grid>
-        {opportunities.map((opportunity) => {
+        {filtered.map((opportunity) => {
           const from = formatDate(opportunity.availableFrom);
           const to = formatDate(opportunity.availableTo);
+          const coverSrc =
+            opportunity.coverImage?.url || opportunity.coverImageUrl || null;
           return (
             <Card key={opportunity.id}>
+              {coverSrc && (
+                <div
+                  style={{
+                    margin: "-20px -20px 12px",
+                    height: 120,
+                    overflow: "hidden",
+                    borderRadius: "16px 16px 0 0",
+                    background: `url(${coverSrc}) center/cover no-repeat #eef1f2`,
+                  }}
+                />
+              )}
               <h3>{opportunity.title}</h3>
               <Label
                 color={STATUS_COLORS[opportunity.status] || "grey"}
@@ -238,6 +325,14 @@ export default function OpportunitiesList({ user }) {
                     <Icon name="sitemap" />
                     {opportunity.classNetworks.length} network
                     {opportunity.classNetworks.length === 1 ? "" : "s"}
+                  </span>
+                )}
+                {opportunity.publicRatingCount > 0 && (
+                  <span>
+                    <span style={{ color: "#f5b800" }}>★</span>
+                    {opportunity.publicRatingAverage?.toFixed(1)} ·{" "}
+                    {opportunity.publicRatingCount} rating
+                    {opportunity.publicRatingCount === 1 ? "" : "s"}
                   </span>
                 )}
               </CardMeta>

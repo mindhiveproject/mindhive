@@ -70,11 +70,25 @@ export const GET_PARTICIPATE_VIEW = gql`
         title
         shortDescription
         coverImageUrl
+        coverImage {
+          id
+          url
+          width
+          height
+        }
         videoUrl
+        videoFile {
+          url
+          filename
+        }
         timeCommitment
+        availableFrom
+        availableTo
         studentCapacity
         teamSize
         allowsTeamPreferences
+        publicRatingAverage
+        publicRatingCount
         mentor {
           id
           username
@@ -155,11 +169,26 @@ export const GET_PARTICIPATE_VIEW = gql`
             id
             title
             shortDescription
+            teamSize
             mentor {
               id
               username
               firstName
               lastName
+            }
+            matches(
+              where: {
+                round: { id: { equals: $roundId } }
+                status: { in: ["active", "completed", "proposed"] }
+              }
+            ) {
+              id
+              student {
+                id
+                username
+                firstName
+                lastName
+              }
             }
           }
           ratings {
@@ -167,8 +196,12 @@ export const GET_PARTICIPATE_VIEW = gql`
             rater {
               id
             }
+            raterRole
             opportunityRating
+            mentorRating
+            teammateRatings
             feedback
+            tags
             isPublic
           }
         }

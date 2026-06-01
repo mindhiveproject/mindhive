@@ -43,13 +43,16 @@ const securityHeaders = [
       "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:",
       // Images: self + data URIs + any HTTPS (Cloudinary, profile images, etc.)
       "img-src 'self' http://localhost:4444 data: blob: https:",
+      // Media (video/audio): self + Keystone backend (Connect Opportunity uploads)
+      // + any HTTPS (covers external direct video URLs and future CDN-served files).
+      "media-src 'self' http://localhost:4444 https: data: blob:",
       // Fetch/XHR: self + MindHive backends + Google auth
       // cdn.jsdelivr.net: Pyodide fetches .wasm and package files at runtime
       // pypi.org: Pyodide micropip queries PyPI to resolve Python package metadata
       // files.pythonhosted.org: Pyodide micropip downloads wheel files from here
       "connect-src 'self' http://localhost:4444 https://*.mindhive.science https://accounts.google.com https://apis.google.com wss://*.mindhive.science https://cdn.jsdelivr.net https://pypi.org https://files.pythonhosted.org https://api.cloudinary.com",
-      // iframes for Google OAuth popup
-      "frame-src 'self' https://accounts.google.com https://docs.google.com https://drive.google.com https://calendar.google.com https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com",
+      // iframes for Google OAuth popup + supported Connect Opportunity video embeds
+      "frame-src 'self' https://accounts.google.com https://docs.google.com https://drive.google.com https://calendar.google.com https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com https://www.loom.com",
       // Workers needed by Pyodide (blob: for inline workers, cdn.jsdelivr.net for Pyodide worker scripts)
       "worker-src 'self' blob: https://cdn.jsdelivr.net",
       "object-src 'none'",
@@ -86,10 +89,24 @@ const nextConfig = {
     if (process.env.NODE_ENV === "production") {
       return [];
     }
+    const keystoneOrigin =
+      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4444";
     return [
       {
         source: "/api/graphql",
-        destination: "http://localhost:4444/api/graphql",
+        destination: `${keystoneOrigin}/api/graphql`,
+      },
+      // Connect Opportunity media is stored on the Keystone host's local
+      // filesystem. The storage adapter returns relative URLs (e.g.
+      // /opportunity-covers/2026/06/abc.jpg) — proxy them through so the
+      // browser doesn't try to fetch from the Next.js origin.
+      {
+        source: "/opportunity-covers/:path*",
+        destination: `${keystoneOrigin}/opportunity-covers/:path*`,
+      },
+      {
+        source: "/opportunity-videos/:path*",
+        destination: `${keystoneOrigin}/opportunity-videos/:path*`,
       },
     ];
   },

@@ -1,10 +1,12 @@
+import { useMemo, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import styled from "styled-components";
-import { Icon, Label } from "semantic-ui-react";
+import { Icon, Label, Dropdown } from "semantic-ui-react";
 
 import { QUESTION_LIBRARY } from "../../../Queries/ConnectQuestion";
 import { DELETE_QUESTION } from "../../../Mutations/ConnectQuestion";
+import FilterBar from "../FilterBar";
 
 const Shell = styled.div`
   display: flex;
@@ -135,6 +137,7 @@ const Empty = styled.div`
   color: #5f6871;
 `;
 
+
 const STATUS_COLORS = {
   draft: "grey",
   proposed: "yellow",
@@ -160,6 +163,20 @@ export default function QuestionsList() {
   const [deleteQuestion] = useMutation(DELETE_QUESTION);
 
   const questions = data?.connectQuestions || [];
+
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [typeFilter, setTypeFilter] = useState(null);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return questions.filter((qn) => {
+      if (q && !(qn.prompt || "").toLowerCase().includes(q)) return false;
+      if (statusFilter && qn.status !== statusFilter) return false;
+      if (typeFilter && qn.questionType !== typeFilter) return false;
+      return true;
+    });
+  }, [questions, search, statusFilter, typeFilter]);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this question? This cannot be undone.")) {
@@ -192,6 +209,43 @@ export default function QuestionsList() {
         </Link>
       </TopBar>
 
+      {questions.length > 0 && (
+        <FilterBar>
+          <input
+            className="search"
+            placeholder="Search by prompt…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Dropdown
+            selection
+            clearable
+            placeholder="All statuses"
+            options={[
+              { key: "draft", text: "Draft", value: "draft" },
+              { key: "proposed", text: "Proposed", value: "proposed" },
+              { key: "approved", text: "Approved", value: "approved" },
+              { key: "rejected", text: "Rejected", value: "rejected" },
+              { key: "archived", text: "Archived", value: "archived" },
+            ]}
+            value={statusFilter}
+            onChange={(_, { value }) => setStatusFilter(value || null)}
+          />
+          <Dropdown
+            selection
+            clearable
+            placeholder="All types"
+            options={Object.entries(TYPE_LABELS).map(([value, text]) => ({
+              key: value,
+              text,
+              value,
+            }))}
+            value={typeFilter}
+            onChange={(_, { value }) => setTypeFilter(value || null)}
+          />
+        </FilterBar>
+      )}
+
       {loading && questions.length === 0 && <Empty>Loading…</Empty>}
 
       {!loading && questions.length === 0 && (
@@ -201,8 +255,12 @@ export default function QuestionsList() {
         </Empty>
       )}
 
+      {!loading && questions.length > 0 && filtered.length === 0 && (
+        <Empty>No questions match the current filters.</Empty>
+      )}
+
       <Grid>
-        {questions.map((question) => {
+        {filtered.map((question) => {
           const optionCount = Array.isArray(question.options)
             ? question.options.length
             : 0;

@@ -1,10 +1,12 @@
+import { useMemo, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import styled from "styled-components";
-import { Icon, Label } from "semantic-ui-react";
+import { Icon, Label, Dropdown } from "semantic-ui-react";
 
 import { MY_CONNECT_ROUNDS } from "../../../Queries/ConnectRound";
 import { DELETE_CONNECT_ROUND } from "../../../Mutations/ConnectRound";
+import FilterBar from "../FilterBar";
 
 const Shell = styled.div`
   display: flex;
@@ -138,6 +140,7 @@ const Empty = styled.div`
   color: #5f6871;
 `;
 
+
 const STATUS_COLORS = {
   preferences_open: "green",
   preferences_closed: "yellow",
@@ -170,6 +173,34 @@ export default function RoundsList() {
   const [deleteConnectRound] = useMutation(DELETE_CONNECT_ROUND);
 
   const rounds = data?.authenticatedItem?.connectRoundsCreated || [];
+
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [networkFilter, setNetworkFilter] = useState(null);
+
+  const networkOptions = useMemo(() => {
+    const seen = new Map();
+    rounds.forEach((r) => {
+      if (r.classNetwork?.id && !seen.has(r.classNetwork.id)) {
+        seen.set(r.classNetwork.id, r.classNetwork);
+      }
+    });
+    return Array.from(seen.values()).map((n) => ({
+      key: n.id,
+      text: n.title,
+      value: n.id,
+    }));
+  }, [rounds]);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return rounds.filter((r) => {
+      if (q && !(r.title || "").toLowerCase().includes(q)) return false;
+      if (statusFilter && r.status !== statusFilter) return false;
+      if (networkFilter && r.classNetwork?.id !== networkFilter) return false;
+      return true;
+    });
+  }, [rounds, search, statusFilter, networkFilter]);
 
   const handleDelete = async (id) => {
     if (
@@ -204,6 +235,40 @@ export default function RoundsList() {
         </Link>
       </TopBar>
 
+      {rounds.length > 0 && (
+        <FilterBar>
+          <input
+            className="search"
+            placeholder="Search by title…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Dropdown
+            selection
+            clearable
+            placeholder="All statuses"
+            options={Object.entries(STATUS_LABELS).map(([value, text]) => ({
+              key: value,
+              text,
+              value,
+            }))}
+            value={statusFilter}
+            onChange={(_, { value }) => setStatusFilter(value || null)}
+          />
+          {networkOptions.length > 0 && (
+            <Dropdown
+              selection
+              clearable
+              search
+              placeholder="All networks"
+              options={networkOptions}
+              value={networkFilter}
+              onChange={(_, { value }) => setNetworkFilter(value || null)}
+            />
+          )}
+        </FilterBar>
+      )}
+
       {loading && rounds.length === 0 && <Empty>Loading…</Empty>}
 
       {!loading && rounds.length === 0 && (
@@ -213,8 +278,12 @@ export default function RoundsList() {
         </Empty>
       )}
 
+      {!loading && rounds.length > 0 && filtered.length === 0 && (
+        <Empty>No rounds match the current filters.</Empty>
+      )}
+
       <Grid>
-        {rounds.map((round) => {
+        {filtered.map((round) => {
           const open = formatDate(round.openAt);
           const close = formatDate(round.closeAt);
           return (

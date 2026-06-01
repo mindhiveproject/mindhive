@@ -1,4 +1,4 @@
-import { list } from "@keystone-6/core";
+import { list, graphql } from "@keystone-6/core";
 import {
   text,
   relationship,
@@ -8,6 +8,9 @@ import {
   checkbox,
   json,
   multiselect,
+  image,
+  file,
+  virtual,
 } from "@keystone-6/core/fields";
 
 export const Opportunity = list({
@@ -24,7 +27,9 @@ export const Opportunity = list({
     shortDescription: text(),
     description: text({ ui: { displayMode: "textarea" } }),
     coverImageUrl: text(),
+    coverImage: image({ storage: "opportunity_covers" }),
     videoUrl: text(),
+    videoFile: file({ storage: "opportunity_videos" }),
 
     mentor: relationship({
       ref: "Profile.opportunitiesCreated",
@@ -75,6 +80,51 @@ export const Opportunity = list({
     ratings: relationship({
       ref: "ConnectRating.opportunity",
       many: true,
+    }),
+
+    favoriteByProfiles: relationship({
+      ref: "Profile.favoriteOpportunities",
+      many: true,
+    }),
+
+    // Average of all public student ratings for this opportunity.
+    // Null when no eligible ratings exist.
+    publicRatingAverage: virtual({
+      field: graphql.field({
+        type: graphql.Float,
+        async resolve(item, _args, context) {
+          const ratings = await context.db.ConnectRating.findMany({
+            where: {
+              opportunity: { id: { equals: item.id } },
+              isPublic: { equals: true },
+            },
+          });
+          const valid = ratings.filter(
+            (r) => typeof r.opportunityRating === "number",
+          );
+          if (!valid.length) return null;
+          const sum = valid.reduce(
+            (acc, r) => acc + (r.opportunityRating || 0),
+            0,
+          );
+          return sum / valid.length;
+        },
+      }),
+    }),
+
+    // Number of public ratings (regardless of whether opportunityRating is set).
+    publicRatingCount: virtual({
+      field: graphql.field({
+        type: graphql.Int,
+        async resolve(item, _args, context) {
+          return context.db.ConnectRating.count({
+            where: {
+              opportunity: { id: { equals: item.id } },
+              isPublic: { equals: true },
+            },
+          });
+        },
+      }),
     }),
 
     availableFrom: timestamp(),

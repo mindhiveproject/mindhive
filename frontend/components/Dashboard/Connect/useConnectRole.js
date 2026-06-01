@@ -2,33 +2,27 @@ import { useContext, useMemo } from "react";
 
 import { UserContext } from "../../Global/Authorized";
 
+// MindHive identifies user roles via named Permission records attached to a
+// Profile (Profile.permissions[].name). The four canonical names are uppercase
+// — see e.g. components/Builder/Project/ProjectBoard/Board/Builder/AddCollaboratorModal.js
+// for the same pattern used elsewhere on the platform.
+const ROLE_PERMISSION_NAME = {
+  student: "STUDENT",
+  mentor: "MENTOR",
+  teacher: "TEACHER",
+  admin: "ADMIN",
+};
+
+function hasPermission(user, name) {
+  return !!user?.permissions?.some((p) => p?.name === name);
+}
+
 export function deriveRoles(user) {
-  if (!user) {
-    return {
-      isAdmin: false,
-      isTeacher: false,
-      isMentor: false,
-      isStudent: false,
-    };
-  }
-
-  const profileKind = user.profileKind || "";
-  const adminFlag = (user.permissions || []).some(
-    (p) => p?.canManageUsers || p?.canAccessAdminUI
-  );
-
   return {
-    isAdmin: adminFlag || profileKind === "admin",
-    isTeacher:
-      profileKind === "teacher" ||
-      (user.teacherIn?.length || 0) > 0 ||
-      (user.connectRoundsCreated?.length || 0) > 0,
-    isMentor:
-      profileKind === "mentor" ||
-      (user.mentorIn?.length || 0) > 0 ||
-      (user.opportunitiesCreated?.length || 0) > 0,
-    isStudent:
-      profileKind === "student" || (user.studentIn?.length || 0) > 0,
+    isAdmin: hasPermission(user, ROLE_PERMISSION_NAME.admin),
+    isTeacher: hasPermission(user, ROLE_PERMISSION_NAME.teacher),
+    isMentor: hasPermission(user, ROLE_PERMISSION_NAME.mentor),
+    isStudent: hasPermission(user, ROLE_PERMISSION_NAME.student),
   };
 }
 

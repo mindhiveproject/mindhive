@@ -86,6 +86,9 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
       status
       studentCapacity
       teamSize
+      availableFrom
+      availableTo
+      timeCommitment
       mentor {
         id
         username

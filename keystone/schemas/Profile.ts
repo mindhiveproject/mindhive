@@ -323,16 +323,12 @@ export const Profile = list({
       ],
       defaultValue: "individual",
     }),
-    profileKind: select({
-      options: [
-        { label: "Student", value: "student" },
-        { label: "Mentor", value: "mentor" },
-        { label: "Teacher", value: "teacher" },
-        { label: "Admin", value: "admin" },
-      ],
-    }),
     opportunitiesCreated: relationship({
       ref: "Opportunity.mentor",
+      many: true,
+    }),
+    favoriteOpportunities: relationship({
+      ref: "Opportunity.favoriteByProfiles",
       many: true,
     }),
     connectRoundsCreated: relationship({

@@ -19,6 +19,7 @@ import {
   CREATE_QUESTION,
   DELETE_QUESTION,
 } from "../../../Mutations/ConnectQuestion";
+import TipTapEditor from "../../../TipTap/Main";
 
 const Shell = styled.div`
   display: flex;
@@ -269,6 +270,68 @@ export default function OpportunityEditor({ opportunityId }) {
   const [selectedClassTypes, setSelectedClassTypes] = useState([]);
   const [selectedNetworks, setSelectedNetworks] = useState([]);
 
+  const [coverImageUpload, setCoverImageUpload] = useState(null);
+  const [videoFileUpload, setVideoFileUpload] = useState(null);
+
+  const MAX_COVER_BYTES = 10 * 1024 * 1024; // 10 MB
+  const MAX_VIDEO_BYTES = 500 * 1024 * 1024; // 500 MB
+
+  // Tolerant URL validator: accepts http/https, returns a friendly hint when
+  // the input looks wrong. Used as a non-blocking warning.
+  const urlHint = (raw) => {
+    if (!raw) return null;
+    const trimmed = String(raw).trim();
+    if (!trimmed) return null;
+    if (/^<iframe/i.test(trimmed)) {
+      return "This looks like an embed code. Paste just the URL — we'll embed it for you.";
+    }
+    try {
+      const u = new URL(trimmed);
+      if (u.protocol !== "http:" && u.protocol !== "https:") {
+        return "URL should start with http:// or https://";
+      }
+      return null;
+    } catch {
+      return "That doesn't look like a valid URL.";
+    }
+  };
+
+  const pickCoverImage = (file) => {
+    if (!file) {
+      setCoverImageUpload(null);
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      alert("Please pick an image file (JPG, PNG, WEBP, etc.).");
+      return;
+    }
+    if (file.size > MAX_COVER_BYTES) {
+      alert(
+        `Cover image is too large (${Math.round(file.size / 1024 / 1024)} MB). Maximum is ${MAX_COVER_BYTES / 1024 / 1024} MB. Compress it or pick a smaller image.`,
+      );
+      return;
+    }
+    setCoverImageUpload(file);
+  };
+
+  const pickVideoFile = (file) => {
+    if (!file) {
+      setVideoFileUpload(null);
+      return;
+    }
+    if (!file.type.startsWith("video/")) {
+      alert("Please pick a video file (MP4, WEBM, MOV, etc.).");
+      return;
+    }
+    if (file.size > MAX_VIDEO_BYTES) {
+      alert(
+        `Video is too large (${Math.round(file.size / 1024 / 1024)} MB). Maximum is ${MAX_VIDEO_BYTES / 1024 / 1024} MB. Either compress the video or paste a YouTube / Vimeo / Loom URL below.`,
+      );
+      return;
+    }
+    setVideoFileUpload(file);
+  };
+
   const [questionDraft, setQuestionDraft] = useState({
     prompt: "",
     questionType: "short_text",
@@ -408,13 +471,14 @@ export default function OpportunityEditor({ opportunityId }) {
       return;
     }
 
-    const variables = {
+    const networkConnect = selectedNetworks.map((id) => ({ id }));
+
+    const baseInput = {
       title: inputs.title,
       shortDescription: inputs.shortDescription || "",
       description: inputs.description || "",
       coverImageUrl: inputs.coverImageUrl || "",
       videoUrl: inputs.videoUrl || "",
-      classNetworks: selectedNetworks.map((id) => ({ id })),
       availableFrom: toIsoOrNull(inputs.availableFrom),
       availableTo: toIsoOrNull(inputs.availableTo),
       timeCommitment: inputs.timeCommitment || "",
@@ -427,8 +491,26 @@ export default function OpportunityEditor({ opportunityId }) {
       status: inputs.status || "draft",
     };
 
+    // Only include the upload fields when the user actually picked a new file.
+    // Keystone rejects an empty image/file input object.
+    if (coverImageUpload) {
+      baseInput.coverImage = { upload: coverImageUpload };
+    }
+    if (videoFileUpload) {
+      baseInput.videoFile = { upload: videoFileUpload };
+    }
+
     if (isNew) {
-      const { data: created } = await createOpportunity({ variables });
+      const { data: created } = await createOpportunity({
+        variables: {
+          input: {
+            ...baseInput,
+            classNetworks: networkConnect.length
+              ? { connect: networkConnect }
+              : undefined,
+          },
+        },
+      });
       if (created?.createOpportunity?.id) {
         router.replace({
           pathname: "/dashboard/connect/opportunities",
@@ -437,9 +519,12 @@ export default function OpportunityEditor({ opportunityId }) {
     } else {
       await updateOpportunity({
         variables: {
-          ...variables,
           id: opportunityId,
-          updatedAt: new Date().toISOString(),
+          input: {
+            ...baseInput,
+            classNetworks: { set: networkConnect },
+            updatedAt: new Date().toISOString(),
+          },
         },
       });
       router.replace({
@@ -495,33 +580,129 @@ export default function OpportunityEditor({ opportunityId }) {
         </Field>
         <Field>
           <span className="label-text">Full description</span>
-          <textarea
-            name="description"
-            value={inputs.description}
-            onChange={handleChange}
+          <span className="hint">
+            Use formatting (headings, lists, links, etc.) to make the project
+            easy to skim.
+          </span>
+          <TipTapEditor
+            content={inputs.description}
             placeholder="What will students do? What will they learn?"
+            onUpdate={(newContent) =>
+              handleMultipleUpdate({ description: newContent })
+            }
           />
         </Field>
         <Row $cols="1fr 1fr">
           <Field>
-            <span className="label-text">Cover image URL</span>
-            <span className="hint">Direct link to an image (upload coming).</span>
+            <span className="label-text">Cover image</span>
+            <span className="hint">
+              Upload a file (stored on our cloud bucket) or paste a direct
+              image URL below. Uploaded files take priority if both are set.
+            </span>
+            {opportunity?.coverImage?.url && !coverImageUpload && (
+              <div
+                style={{
+                  marginBottom: 8,
+                  borderRadius: 12,
+                  overflow: "hidden",
+                  border: "1px solid #d3dae0",
+                  maxWidth: 280,
+                }}
+              >
+                <img
+                  src={opportunity.coverImage.url}
+                  alt={inputs.title || "Cover"}
+                  style={{ display: "block", width: "100%", height: "auto" }}
+                />
+              </div>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => pickCoverImage(e.target.files?.[0] || null)}
+            />
+            {coverImageUpload && (
+              <div style={{ fontSize: 12, color: "#1d8f47", marginTop: 4 }}>
+                Ready to upload: {coverImageUpload.name} (
+                {Math.round(coverImageUpload.size / 1024)} KB)
+              </div>
+            )}
+            <span className="hint" style={{ marginTop: 8 }}>
+              Or paste a URL (max {MAX_COVER_BYTES / 1024 / 1024} MB for
+              uploads):
+            </span>
             <input
               type="text"
               name="coverImageUrl"
               value={inputs.coverImageUrl}
               onChange={handleChange}
+              placeholder="https://…"
             />
+            {urlHint(inputs.coverImageUrl) && (
+              <div style={{ fontSize: 12, color: "#b3261e", marginTop: 4 }}>
+                <Icon name="warning circle" />{" "}
+                {urlHint(inputs.coverImageUrl)}
+              </div>
+            )}
           </Field>
           <Field>
-            <span className="label-text">Video URL</span>
-            <span className="hint">YouTube, Vimeo, or other embed link.</span>
+            <span className="label-text">Intro video</span>
+            <span className="hint">
+              Upload a video file or paste an embed URL (YouTube, Vimeo).
+              Uploaded files are stored on our cloud bucket.
+            </span>
+            {opportunity?.videoFile?.url && !videoFileUpload && (
+              <div
+                style={{
+                  marginBottom: 8,
+                  padding: 10,
+                  borderRadius: 10,
+                  border: "1px solid #d3dae0",
+                  background: "#f7f9f8",
+                  fontSize: 13,
+                  color: "#5f6871",
+                }}
+              >
+                <Icon name="film" /> Current upload:{" "}
+                <a
+                  href={opportunity.videoFile.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "#336f8a" }}
+                >
+                  {opportunity.videoFile.filename || "video file"}
+                </a>
+              </div>
+            )}
+            <input
+              type="file"
+              accept="video/*"
+              onChange={(e) => pickVideoFile(e.target.files?.[0] || null)}
+            />
+            {videoFileUpload && (
+              <div style={{ fontSize: 12, color: "#1d8f47", marginTop: 4 }}>
+                Ready to upload: {videoFileUpload.name} (
+                {Math.round(videoFileUpload.size / 1024 / 1024)} MB)
+              </div>
+            )}
+            <span className="hint" style={{ marginTop: 8 }}>
+              Or paste a video URL (the URL itself — not the full{" "}
+              <code>&lt;iframe&gt;</code> embed code). Supports YouTube, Vimeo,
+              Loom, Google Drive, or a direct .mp4/.webm link. Maximum upload
+              size: {MAX_VIDEO_BYTES / 1024 / 1024} MB.
+            </span>
             <input
               type="text"
               name="videoUrl"
               value={inputs.videoUrl}
               onChange={handleChange}
+              placeholder="https://youtube.com/watch?v=…"
             />
+            {urlHint(inputs.videoUrl) && (
+              <div style={{ fontSize: 12, color: "#b3261e", marginTop: 4 }}>
+                <Icon name="warning circle" /> {urlHint(inputs.videoUrl)}
+              </div>
+            )}
           </Field>
         </Row>
       </Card>
