@@ -363,7 +363,7 @@
 	},
 	"tasksAndSurveys": "Taken en enquêtes",
 	"terms": {
-		"byClicking": "Door op {btnName} te klikken, gaat u akkoord met de voorwaarden van MindHive.",
+		"byClicking": "Door op {{btnName}} te klikken, gaat u akkoord met de voorwaarden van MindHive.",
 		"includingOur": "inclusief onze",
 		"privacyPolicy": "Privacybeleid",
 		"termsOfService": "Servicevoorwaarden"

@@ -1,5 +1,29 @@
 import gql from "graphql-tag";
 
+// Lightweight onboarding state for sponsor accounts. Used by the dashboard
+// home to show a two-step guidance card until the user has completed both
+// their profile and created their first opportunity.
+export const SPONSOR_ONBOARDING_STATE = gql`
+  query SPONSOR_ONBOARDING_STATE {
+    authenticatedItem {
+      ... on Profile {
+        id
+        firstName
+        lastName
+        profileType
+        organization
+        bio
+        permissions {
+          name
+        }
+        opportunitiesCreated {
+          id
+        }
+      }
+    }
+  }
+`;
+
 // get the current user
 export const CURRENT_USER_QUERY = gql`
   query {
@@ -984,6 +1008,9 @@ export const GET_PROFILE = gql`
         bioInformal
         location
         organization
+        department
+        primaryDomain
+        timeCommitment
         tagline
         passion
         involvement

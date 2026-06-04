@@ -363,7 +363,7 @@
 	},
 	"tasksAndSurveys": "Задачи и опросы",
 	"terms": {
-		"byClicking": "Нажимая кнопку {btnName}, вы соглашаетесь с условиями MindHive",
+		"byClicking": "Нажимая кнопку {{btnName}}, вы соглашаетесь с условиями MindHive",
 		"includingOur": "включая наши",
 		"privacyPolicy": "политика конфиденциальности",
 		"termsOfService": "Условия обслуживания"

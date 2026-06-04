@@ -363,7 +363,7 @@
 	},
 	"tasksAndSurveys": "कार्य और सर्वेक्षण",
 	"terms": {
-		"byClicking": "{btnName} पर क्लिक करके आप माइंडहाइव के साथ सहमति जताते हैं",
+		"byClicking": "{{btnName}} पर क्लिक करके आप माइंडहाइव के साथ सहमति जताते हैं",
 		"includingOur": "हमारे सहित",
 		"privacyPolicy": "गोपनीयता नीति",
 		"termsOfService": "सेवा की शर्तें"

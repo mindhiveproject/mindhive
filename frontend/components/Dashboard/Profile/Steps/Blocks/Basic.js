@@ -27,7 +27,13 @@ export default function BasicInformation({ query, user }) {
     organization: user?.organization,
     tagline: user?.tagline,
     profileType: query?.type || user?.profileType,
+    department: user?.department,
+    primaryDomain: user?.primaryDomain,
+    timeCommitment: user?.timeCommitment,
   });
+
+  const isOrganization =
+    (query?.type || user?.profileType) === "organization";
 
   const handleUpdate = (data) => {
     setChanged(true);
@@ -187,6 +193,51 @@ export default function BasicInformation({ query, user }) {
               required
             />
           </div>
+
+          {isOrganization && (
+            <>
+              <div className="inputLineBlock">
+                <h3>Department / Division</h3>
+                <input
+                  type="text"
+                  name="department"
+                  value={inputs?.department || ""}
+                  onChange={handleUpdate}
+                  placeholder="e.g., Urban Mobility Lab"
+                />
+              </div>
+              <div className="inputLineBlock">
+                <h3>Primary domain</h3>
+                <Dropdown
+                  fluid
+                  selection
+                  options={[
+                    { key: "academic", text: "Academic Institution", value: "academic" },
+                    { key: "government", text: "Government Agency", value: "government" },
+                    { key: "industry", text: "Industry (Private / Start-Up)", value: "industry" },
+                    { key: "nonprofit", text: "Nonprofit", value: "nonprofit" },
+                    { key: "other", text: "Other", value: "other" },
+                  ]}
+                  value={inputs?.primaryDomain || ""}
+                  onChange={(_, data) => {
+                    handleUpdate({
+                      target: { name: "primaryDomain", value: data.value },
+                    });
+                  }}
+                />
+              </div>
+              <div className="inputLineBlock">
+                <h3>Time commitment</h3>
+                <input
+                  type="text"
+                  name="timeCommitment"
+                  value={inputs?.timeCommitment || ""}
+                  onChange={handleUpdate}
+                  placeholder="e.g., 5 hours / week"
+                />
+              </div>
+            </>
+          )}
 
           <div className="inputLineBlock">
             <h3>{t("basic.tagline")}</h3>

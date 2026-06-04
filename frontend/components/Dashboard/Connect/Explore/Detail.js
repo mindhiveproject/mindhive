@@ -625,6 +625,205 @@ export default function ExploreDetail({ opportunityId }) {
         </Card>
       )}
 
+      {(opp.researchQuestion ||
+        opp.relevance ||
+        opp.competencies ||
+        opp.learningOutcomes) && (
+        <Card>
+          <h2>Project scope</h2>
+          {opp.researchQuestion && (
+            <div>
+              <h3
+                style={{
+                  margin: "0 0 6px",
+                  fontSize: 14,
+                  color: "#171717",
+                  fontWeight: 600,
+                }}
+              >
+                Research question
+              </h3>
+              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
+                {opp.researchQuestion}
+              </p>
+            </div>
+          )}
+          {opp.relevance && (
+            <div>
+              <h3
+                style={{
+                  margin: "0 0 6px",
+                  fontSize: 14,
+                  color: "#171717",
+                  fontWeight: 600,
+                }}
+              >
+                Why this matters
+              </h3>
+              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
+                {opp.relevance}
+              </p>
+            </div>
+          )}
+          {opp.competencies && (
+            <div>
+              <h3
+                style={{
+                  margin: "0 0 6px",
+                  fontSize: 14,
+                  color: "#171717",
+                  fontWeight: 600,
+                }}
+              >
+                Skills that help
+              </h3>
+              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
+                {opp.competencies}
+              </p>
+            </div>
+          )}
+          {opp.learningOutcomes && (
+            <div>
+              <h3
+                style={{
+                  margin: "0 0 6px",
+                  fontSize: 14,
+                  color: "#171717",
+                  fontWeight: 600,
+                }}
+              >
+                What you&apos;ll deliver
+              </h3>
+              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
+                {opp.learningOutcomes}
+              </p>
+            </div>
+          )}
+        </Card>
+      )}
+
+      {(opp.dataRequirements ||
+        opp.backgroundMethodology ||
+        opp.techRequirements ||
+        opp.dataSecurityConcerns === "yes" ||
+        opp.dataSecurityConcerns === "maybe" ||
+        opp.fieldWorkLikelihood) && (
+        <Card>
+          <h2>Data, tech & logistics</h2>
+          {opp.dataRequirements && (
+            <div>
+              <h3
+                style={{
+                  margin: "0 0 6px",
+                  fontSize: 14,
+                  color: "#171717",
+                  fontWeight: 600,
+                }}
+              >
+                Data requirements
+              </h3>
+              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
+                {opp.dataRequirements}
+              </p>
+            </div>
+          )}
+          {opp.backgroundMethodology && (
+            <div>
+              <h3
+                style={{
+                  margin: "0 0 6px",
+                  fontSize: 14,
+                  color: "#171717",
+                  fontWeight: 600,
+                }}
+              >
+                Background & methodology
+              </h3>
+              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
+                {opp.backgroundMethodology}
+              </p>
+            </div>
+          )}
+          {opp.techRequirements && (
+            <div>
+              <h3
+                style={{
+                  margin: "0 0 6px",
+                  fontSize: 14,
+                  color: "#171717",
+                  fontWeight: 600,
+                }}
+              >
+                Tech requirements
+              </h3>
+              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
+                {opp.techRequirements}
+              </p>
+            </div>
+          )}
+          <div
+            style={{ display: "flex", gap: 12, flexWrap: "wrap", fontSize: 13 }}
+          >
+            {(opp.dataSecurityConcerns === "yes" ||
+              opp.dataSecurityConcerns === "maybe") && (
+              <span
+                style={{
+                  padding: "4px 12px",
+                  borderRadius: 100,
+                  background: "#fdf6e3",
+                  color: "#7a5b00",
+                }}
+              >
+                Data security: {opp.dataSecurityConcerns}
+                {opp.dataSecurityNotes ? ` — ${opp.dataSecurityNotes}` : ""}
+              </span>
+            )}
+            {opp.fieldWorkLikelihood && (
+              <span
+                style={{
+                  padding: "4px 12px",
+                  borderRadius: 100,
+                  background: "#eef5f9",
+                  color: "#336f8a",
+                }}
+              >
+                Field work likelihood: {opp.fieldWorkLikelihood} / 5
+              </span>
+            )}
+          </div>
+        </Card>
+      )}
+
+      {Array.isArray(opp.relevantLinks) && opp.relevantLinks.length > 0 && (
+        <Card>
+          <h2>Relevant links</h2>
+          <ul
+            style={{
+              margin: 0,
+              paddingLeft: 18,
+              color: "#5f6871",
+              fontSize: 14,
+              display: "flex",
+              flexDirection: "column",
+              gap: 6,
+            }}
+          >
+            {opp.relevantLinks.map((link, idx) => (
+              <li key={idx}>
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "#336f8a", textDecoration: "underline" }}
+                >
+                  {link.label || link.url}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+
       <Card>
         <h2>Your mentor</h2>
         <MentorPanel>
@@ -641,7 +840,15 @@ export default function ExploreDetail({ opportunityId }) {
               <span className="tagline">{opp.mentor.tagline}</span>
             )}
             {opp.mentor?.organization && (
-              <span className="org">{opp.mentor.organization}</span>
+              <span className="org">
+                {opp.mentor.organization}
+                {opp.mentor.department ? ` · ${opp.mentor.department}` : ""}
+              </span>
+            )}
+            {opp.mentor?.timeCommitment && (
+              <span className="org">
+                Time commitment: {opp.mentor.timeCommitment}
+              </span>
             )}
           </div>
           {opp.mentor?.publicReadableId && (

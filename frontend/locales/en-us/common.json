@@ -302,6 +302,7 @@
 		"loginHere": "Login here",
 		"participant": "Study participant",
 		"scientist": "Scientist",
+		"sponsor": "Sponsor",
 		"student": "Student",
 		"teacher": "Teacher",
 		"title": "Which role best describes you?"
@@ -363,7 +364,7 @@
 	},
 	"tasksAndSurveys": "Tasks & Surveys",
 	"terms": {
-		"byClicking": "By clicking on {btnName} you agree to MindHive’s",
+		"byClicking": "By clicking on {{btnName}} you agree to MindHive’s",
 		"includingOur": "including our",
 		"privacyPolicy": "Privacy Policy",
 		"termsOfService": "Terms of Service"

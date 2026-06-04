@@ -169,6 +169,35 @@ export const Opportunity = list({
       defaultValue: "draft",
     }),
 
+    // --- CUSP capstone sponsor application fields (Q21–Q38) ---
+    // Sponsor is also the day-to-day mentor (true when one user fills both
+    // roles — the current MindHive default).
+    sponsorIsMentor: checkbox({ defaultValue: true }),
+    mentorNotes: text({ ui: { displayMode: "textarea" } }),
+    researchQuestion: text({ ui: { displayMode: "textarea" } }),
+    relevance: text({ ui: { displayMode: "textarea" } }),
+    dataRequirements: text({ ui: { displayMode: "textarea" } }),
+    backgroundMethodology: text({ ui: { displayMode: "textarea" } }),
+    dataSecurityConcerns: select({
+      options: [
+        { label: "Yes", value: "yes" },
+        { label: "Maybe", value: "maybe" },
+        { label: "No", value: "no" },
+      ],
+      defaultValue: "no",
+    }),
+    dataSecurityNotes: text({ ui: { displayMode: "textarea" } }),
+    techRequirements: text({ ui: { displayMode: "textarea" } }),
+    fieldWorkLikelihood: integer(),
+    competencies: text({ ui: { displayMode: "textarea" } }),
+    learningOutcomes: text({ ui: { displayMode: "textarea" } }),
+    relevantLinks: json(),
+    additionalNotes: text({ ui: { displayMode: "textarea" } }),
+    // Q39 — guidelines acknowledgment for the audit trail.
+    guidelinesAcknowledged: checkbox({ defaultValue: false }),
+    guidelinesAcknowledgedAt: timestamp(),
+    requestsAppointment: checkbox({ defaultValue: false }),
+
     extraDetails: json(),
 
     createdAt: timestamp({

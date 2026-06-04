@@ -228,7 +228,45 @@ const EMPTY_FORM = {
   allowsTeamPreferences: false,
   preferGroupFormat: "either",
   status: "draft",
+  // CUSP capstone fields
+  sponsorIsMentor: true,
+  mentorNotes: "",
+  researchQuestion: "",
+  relevance: "",
+  dataRequirements: "",
+  backgroundMethodology: "",
+  dataSecurityConcerns: "no",
+  dataSecurityNotes: "",
+  techRequirements: "",
+  fieldWorkLikelihood: 1,
+  competencies: "",
+  learningOutcomes: "",
+  additionalNotes: "",
+  guidelinesAcknowledged: false,
+  requestsAppointment: false,
 };
+
+function wordCount(value) {
+  if (!value) return 0;
+  return String(value)
+    .replace(/<[^>]+>/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
+}
+
+function WordHint({ value, max }) {
+  const count = wordCount(value);
+  const over = count > max;
+  return (
+    <span
+      className="hint"
+      style={{ color: over ? "#b3261e" : "#888", fontSize: 11 }}
+    >
+      {count} / {max} words {over ? "— consider trimming" : ""}
+    </span>
+  );
+}
 
 function toDateInputValue(iso) {
   if (!iso) return "";
@@ -358,6 +396,8 @@ export default function OpportunityEditor({ opportunityId }) {
     EMPTY_FORM
   );
 
+  const [relevantLinks, setRelevantLinks] = useState([]);
+
   useEffect(() => {
     if (!opportunity) return;
     handleMultipleUpdate({
@@ -374,11 +414,30 @@ export default function OpportunityEditor({ opportunityId }) {
       allowsTeamPreferences: !!opportunity.allowsTeamPreferences,
       preferGroupFormat: opportunity.preferGroupFormat || "either",
       status: opportunity.status || "draft",
+      // CUSP capstone fields
+      sponsorIsMentor: opportunity.sponsorIsMentor ?? true,
+      mentorNotes: opportunity.mentorNotes || "",
+      researchQuestion: opportunity.researchQuestion || "",
+      relevance: opportunity.relevance || "",
+      dataRequirements: opportunity.dataRequirements || "",
+      backgroundMethodology: opportunity.backgroundMethodology || "",
+      dataSecurityConcerns: opportunity.dataSecurityConcerns || "no",
+      dataSecurityNotes: opportunity.dataSecurityNotes || "",
+      techRequirements: opportunity.techRequirements || "",
+      fieldWorkLikelihood: opportunity.fieldWorkLikelihood ?? 1,
+      competencies: opportunity.competencies || "",
+      learningOutcomes: opportunity.learningOutcomes || "",
+      additionalNotes: opportunity.additionalNotes || "",
+      guidelinesAcknowledged: !!opportunity.guidelinesAcknowledged,
+      requestsAppointment: !!opportunity.requestsAppointment,
     });
     setSelectedGrades(opportunity.preferGradeLevels || []);
     setSelectedClassTypes(opportunity.preferClassType || []);
     setSelectedNetworks(
       (opportunity.classNetworks || []).map((n) => n.id)
+    );
+    setRelevantLinks(
+      Array.isArray(opportunity.relevantLinks) ? opportunity.relevantLinks : []
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opportunity?.id]);
@@ -470,6 +529,12 @@ export default function OpportunityEditor({ opportunityId }) {
       alert("Title is required.");
       return;
     }
+    if (inputs.status === "published" && !inputs.guidelinesAcknowledged) {
+      alert(
+        "Please tick the guidelines acknowledgment in the Publishing card before publishing this opportunity.",
+      );
+      return;
+    }
 
     const networkConnect = selectedNetworks.map((id) => ({ id }));
 
@@ -489,6 +554,29 @@ export default function OpportunityEditor({ opportunityId }) {
       preferGroupFormat: inputs.preferGroupFormat || "either",
       preferClassType: selectedClassTypes,
       status: inputs.status || "draft",
+      // CUSP capstone fields
+      sponsorIsMentor: !!inputs.sponsorIsMentor,
+      mentorNotes: inputs.mentorNotes || "",
+      researchQuestion: inputs.researchQuestion || "",
+      relevance: inputs.relevance || "",
+      dataRequirements: inputs.dataRequirements || "",
+      backgroundMethodology: inputs.backgroundMethodology || "",
+      dataSecurityConcerns: inputs.dataSecurityConcerns || "no",
+      dataSecurityNotes: inputs.dataSecurityNotes || "",
+      techRequirements: inputs.techRequirements || "",
+      fieldWorkLikelihood: Number(inputs.fieldWorkLikelihood) || null,
+      competencies: inputs.competencies || "",
+      learningOutcomes: inputs.learningOutcomes || "",
+      relevantLinks: relevantLinks.length ? relevantLinks : null,
+      additionalNotes: inputs.additionalNotes || "",
+      guidelinesAcknowledged: !!inputs.guidelinesAcknowledged,
+      // Stamp the acknowledgement time on first tick (audit trail).
+      guidelinesAcknowledgedAt:
+        inputs.guidelinesAcknowledged &&
+        !opportunity?.guidelinesAcknowledgedAt
+          ? new Date().toISOString()
+          : opportunity?.guidelinesAcknowledgedAt || null,
+      requestsAppointment: !!inputs.requestsAppointment,
     };
 
     // Only include the upload fields when the user actually picked a new file.
@@ -560,6 +648,7 @@ export default function OpportunityEditor({ opportunityId }) {
         <h2>Basics</h2>
         <Field>
           <span className="label-text">Title</span>
+          <span className="hint">Aim for 15 words or fewer — be engaging.</span>
           <input
             type="text"
             name="title"
@@ -567,22 +656,26 @@ export default function OpportunityEditor({ opportunityId }) {
             onChange={handleChange}
             placeholder="e.g. Neuroscience summer mentorship"
           />
+          <WordHint value={inputs.title} max={15} />
         </Field>
         <Field>
-          <span className="label-text">Short description</span>
-          <span className="hint">One-sentence summary shown on cards.</span>
+          <span className="label-text">Short description (abstract)</span>
+          <span className="hint">
+            One-sentence summary shown on cards. Aim for 100 words or fewer.
+          </span>
           <input
             type="text"
             name="shortDescription"
             value={inputs.shortDescription}
             onChange={handleChange}
           />
+          <WordHint value={inputs.shortDescription} max={100} />
         </Field>
         <Field>
           <span className="label-text">Full description</span>
           <span className="hint">
             Use formatting (headings, lists, links, etc.) to make the project
-            easy to skim.
+            easy to skim. Aim for 250 words or fewer.
           </span>
           <TipTapEditor
             content={inputs.description}
@@ -591,6 +684,7 @@ export default function OpportunityEditor({ opportunityId }) {
               handleMultipleUpdate({ description: newContent })
             }
           />
+          <WordHint value={inputs.description} max={250} />
         </Field>
         <Row $cols="1fr 1fr">
           <Field>
@@ -858,6 +952,264 @@ export default function OpportunityEditor({ opportunityId }) {
       </Card>
 
       <Card>
+        <h2>Project scope</h2>
+        <Field>
+          <span className="label-text">Research question / problem to address</span>
+          <span className="hint">
+            What is the scope you want students to explore?
+          </span>
+          <textarea
+            name="researchQuestion"
+            value={inputs.researchQuestion}
+            onChange={handleChange}
+          />
+        </Field>
+        <Field>
+          <span className="label-text">Relevance</span>
+          <span className="hint">
+            Why does this issue matter? Connect it to the broader context
+            students will care about.
+          </span>
+          <textarea
+            name="relevance"
+            value={inputs.relevance}
+            onChange={handleChange}
+          />
+        </Field>
+        <Field>
+          <span className="label-text">Competencies / skills helpful for this project</span>
+          <span className="hint">
+            e.g., GIS, Python, qualitative interviews, user research…
+          </span>
+          <textarea
+            name="competencies"
+            value={inputs.competencies}
+            onChange={handleChange}
+          />
+        </Field>
+        <Field>
+          <span className="label-text">Learning outcomes / deliverables</span>
+          <span className="hint">
+            2–3 outcomes the team should achieve (e.g., dashboard, report,
+            prototype).
+          </span>
+          <textarea
+            name="learningOutcomes"
+            value={inputs.learningOutcomes}
+            onChange={handleChange}
+          />
+        </Field>
+      </Card>
+
+      <Card>
+        <h2>Data, tech & logistics</h2>
+        <Field>
+          <span className="label-text">Data requirements</span>
+          <span className="hint">
+            What datasets will the team use, and who provides them?
+          </span>
+          <textarea
+            name="dataRequirements"
+            value={inputs.dataRequirements}
+            onChange={handleChange}
+          />
+        </Field>
+        <Field>
+          <span className="label-text">Background & methodology</span>
+          <span className="hint">
+            Important context, research approaches, data-collection
+            techniques, and tools.
+          </span>
+          <textarea
+            name="backgroundMethodology"
+            value={inputs.backgroundMethodology}
+            onChange={handleChange}
+          />
+        </Field>
+        <Row $cols="1fr 1fr">
+          <Field>
+            <span className="label-text">Data security concerns?</span>
+            <Dropdown
+              selection
+              options={[
+                { key: "no", text: "No", value: "no" },
+                { key: "maybe", text: "Maybe", value: "maybe" },
+                { key: "yes", text: "Yes", value: "yes" },
+              ]}
+              value={inputs.dataSecurityConcerns}
+              onChange={(_, { value }) =>
+                handleMultipleUpdate({ dataSecurityConcerns: value })
+              }
+            />
+          </Field>
+          <Field>
+            <span className="label-text">Field-work / site-visit likelihood</span>
+            <span className="hint">1 = very unlikely, 5 = very likely</span>
+            <Dropdown
+              selection
+              options={[1, 2, 3, 4, 5].map((n) => ({
+                key: n,
+                text: String(n),
+                value: n,
+              }))}
+              value={Number(inputs.fieldWorkLikelihood) || 1}
+              onChange={(_, { value }) =>
+                handleMultipleUpdate({ fieldWorkLikelihood: value })
+              }
+            />
+          </Field>
+        </Row>
+        {(inputs.dataSecurityConcerns === "yes" ||
+          inputs.dataSecurityConcerns === "maybe") && (
+          <Field>
+            <span className="label-text">Describe the security concerns</span>
+            <textarea
+              name="dataSecurityNotes"
+              value={inputs.dataSecurityNotes}
+              onChange={handleChange}
+            />
+          </Field>
+        )}
+        <Field>
+          <span className="label-text">Tech infrastructure / software requirements</span>
+          <span className="hint">
+            e.g., ArcGIS, RShiny, a specific cloud environment, or "no
+            preference".
+          </span>
+          <textarea
+            name="techRequirements"
+            value={inputs.techRequirements}
+            onChange={handleChange}
+          />
+        </Field>
+      </Card>
+
+      <Card>
+        <h2>More info</h2>
+        <Field>
+          <label
+            style={{
+              display: "inline-flex",
+              gap: 8,
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="checkbox"
+              name="sponsorIsMentor"
+              checked={!!inputs.sponsorIsMentor}
+              onChange={toggleBoolean}
+            />
+            <span>
+              I&apos;m also the day-to-day mentor for this project (uncheck if
+              someone else will be mentoring)
+            </span>
+          </label>
+        </Field>
+        {!inputs.sponsorIsMentor && (
+          <Field>
+            <span className="label-text">Mentor notes</span>
+            <span className="hint">
+              Name, title, contact, and availability of the day-to-day mentor.
+              If no mentor is available, describe the gaps and CUSP can help
+              identify support.
+            </span>
+            <textarea
+              name="mentorNotes"
+              value={inputs.mentorNotes}
+              onChange={handleChange}
+            />
+          </Field>
+        )}
+        <Field>
+          <span className="label-text">Relevant links</span>
+          <span className="hint">
+            Project websites, GitHub repos, papers, etc. We may include QR
+            codes in the brochure.
+          </span>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {relevantLinks.map((link, idx) => (
+              <div
+                key={idx}
+                style={{ display: "grid", gridTemplateColumns: "1fr 2fr auto", gap: 8 }}
+              >
+                <input
+                  type="text"
+                  placeholder="Label"
+                  value={link.label || ""}
+                  onChange={(e) => {
+                    const next = [...relevantLinks];
+                    next[idx] = { ...next[idx], label: e.target.value };
+                    setRelevantLinks(next);
+                  }}
+                />
+                <input
+                  type="text"
+                  placeholder="https://…"
+                  value={link.url || ""}
+                  onChange={(e) => {
+                    const next = [...relevantLinks];
+                    next[idx] = { ...next[idx], url: e.target.value };
+                    setRelevantLinks(next);
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setRelevantLinks(
+                      relevantLinks.filter((_, i) => i !== idx),
+                    )
+                  }
+                  style={{
+                    padding: "6px 12px",
+                    borderRadius: 100,
+                    border: "1px solid #e8c4c4",
+                    background: "#fff",
+                    color: "#b3261e",
+                    fontFamily: "Nunito",
+                    fontWeight: 600,
+                    fontSize: 12,
+                    cursor: "pointer",
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() =>
+                setRelevantLinks([...relevantLinks, { label: "", url: "" }])
+              }
+              style={{
+                alignSelf: "flex-start",
+                padding: "6px 14px",
+                borderRadius: 100,
+                border: "1px dashed #d3dae0",
+                background: "#fff",
+                color: "#336f8a",
+                fontFamily: "Nunito",
+                fontWeight: 600,
+                fontSize: 12,
+                cursor: "pointer",
+              }}
+            >
+              + Add link
+            </button>
+          </div>
+        </Field>
+        <Field>
+          <span className="label-text">Additional information</span>
+          <textarea
+            name="additionalNotes"
+            value={inputs.additionalNotes}
+            onChange={handleChange}
+          />
+        </Field>
+      </Card>
+
+      <Card>
         <h2>Custom application questions</h2>
         <p style={{ color: "#5f6871", fontSize: 14, margin: 0 }}>
           Optional questions students answer when they rank this opportunity.
@@ -1034,6 +1386,73 @@ export default function OpportunityEditor({ opportunityId }) {
             }
           />
         </Field>
+        <Field>
+          <label
+            style={{
+              display: "inline-flex",
+              gap: 8,
+              alignItems: "flex-start",
+              cursor: "pointer",
+              fontSize: 14,
+              color: "#171717",
+            }}
+          >
+            <input
+              type="checkbox"
+              name="guidelinesAcknowledged"
+              checked={!!inputs.guidelinesAcknowledged}
+              onChange={toggleBoolean}
+              style={{ marginTop: 3 }}
+            />
+            <span>
+              I have read and understood the Capstone proposal guidelines in
+              full, including the Sponsor FAQs and Mutual Expectations
+              agreement, and agree to abide by them. *
+            </span>
+          </label>
+          {opportunity?.guidelinesAcknowledgedAt && (
+            <span className="hint" style={{ marginLeft: 26 }}>
+              Acknowledged{" "}
+              {new Date(opportunity.guidelinesAcknowledgedAt).toLocaleString()}
+            </span>
+          )}
+        </Field>
+        <Field>
+          <label
+            style={{
+              display: "inline-flex",
+              gap: 8,
+              alignItems: "flex-start",
+              cursor: "pointer",
+              fontSize: 14,
+              color: "#171717",
+            }}
+          >
+            <input
+              type="checkbox"
+              name="requestsAppointment"
+              checked={!!inputs.requestsAppointment}
+              onChange={toggleBoolean}
+              style={{ marginTop: 3 }}
+            />
+            <span>Request an appointment to discuss further.</span>
+          </label>
+        </Field>
+        {inputs.status === "published" && !inputs.guidelinesAcknowledged && (
+          <div
+            style={{
+              padding: "10px 14px",
+              borderRadius: 10,
+              background: "#fdf1f1",
+              border: "1px solid #f1c8c8",
+              color: "#b3261e",
+              fontSize: 13,
+            }}
+          >
+            <Icon name="warning circle" /> Tick the guidelines checkbox before
+            publishing.
+          </div>
+        )}
       </Card>
 
       <Actions>

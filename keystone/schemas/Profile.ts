@@ -323,6 +323,18 @@ export const Profile = list({
       ],
       defaultValue: "individual",
     }),
+    // CUSP Capstone sponsor fields — only shown to organization profiles.
+    department: text(),
+    primaryDomain: select({
+      options: [
+        { label: "Academic Institution", value: "academic" },
+        { label: "Government Agency", value: "government" },
+        { label: "Industry (Private / Start-Up)", value: "industry" },
+        { label: "Nonprofit", value: "nonprofit" },
+        { label: "Other", value: "other" },
+      ],
+    }),
+    timeCommitment: text(),
     opportunitiesCreated: relationship({
       ref: "Opportunity.mentor",
       many: true,

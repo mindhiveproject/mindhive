@@ -14,7 +14,7 @@ export default function ProfileType({}) {
           <div>
             <Link
               href={{
-                pathname: `/dashboard/profile/create`,
+                pathname: `/dashboard/profile/edit`,
                 query: {
                   page: "about",
                   type: "organization",

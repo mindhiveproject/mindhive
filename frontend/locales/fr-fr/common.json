@@ -363,7 +363,7 @@
 	},
 	"tasksAndSurveys": "Tâches et enquêtes",
 	"terms": {
-		"byClicking": "En cliquant sur {btnName}, vous acceptez les conditions générales de MindHive.",
+		"byClicking": "En cliquant sur {{btnName}}, vous acceptez les conditions générales de MindHive.",
 		"includingOur": "y compris notre",
 		"privacyPolicy": "politique de confidentialité",
 		"termsOfService": "Conditions d'utilisation"

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Sponsor organization">
+  <!-- Banner pole -->
+  <rect x="31" y="6" width="2" height="10" fill="#274E5B"/>
+  <!-- Banner / flag (suggesting sponsorship) -->
+  <path d="M33 7 L48 7 L44 11 L48 15 L33 15 Z" fill="#ED6B59"/>
+  <!-- Building body -->
+  <rect x="12" y="16" width="40" height="42" rx="2" fill="#5E8C9A"/>
+  <!-- Roofline accent -->
+  <rect x="10" y="16" width="44" height="4" rx="1" fill="#274E5B"/>
+  <!-- Windows: 3 rows x 3 columns -->
+  <g fill="#FDBA32">
+    <rect x="17" y="24" width="6" height="6" rx="1"/>
+    <rect x="29" y="24" width="6" height="6" rx="1"/>
+    <rect x="41" y="24" width="6" height="6" rx="1"/>
+    <rect x="17" y="34" width="6" height="6" rx="1"/>
+    <rect x="29" y="34" width="6" height="6" rx="1"/>
+    <rect x="41" y="34" width="6" height="6" rx="1"/>
+  </g>
+  <!-- Window panes (cross) -->
+  <g stroke="#274E5B" stroke-width="0.8" opacity="0.5">
+    <line x1="20" y1="24" x2="20" y2="30"/>
+    <line x1="17" y1="27" x2="23" y2="27"/>
+    <line x1="32" y1="24" x2="32" y2="30"/>
+    <line x1="29" y1="27" x2="35" y2="27"/>
+    <line x1="44" y1="24" x2="44" y2="30"/>
+    <line x1="41" y1="27" x2="47" y2="27"/>
+    <line x1="20" y1="34" x2="20" y2="40"/>
+    <line x1="17" y1="37" x2="23" y2="37"/>
+    <line x1="32" y1="34" x2="32" y2="40"/>
+    <line x1="29" y1="37" x2="35" y2="37"/>
+    <line x1="44" y1="34" x2="44" y2="40"/>
+    <line x1="41" y1="37" x2="47" y2="37"/>
+  </g>
+  <!-- Door -->
+  <rect x="27" y="45" width="10" height="13" rx="1" fill="#274E5B"/>
+  <!-- Door handle -->
+  <circle cx="34" cy="52" r="0.8" fill="#FDBA32"/>
+  <!-- Steps -->
+  <rect x="24" y="58" width="16" height="2" fill="#7C66C2" opacity="0.6"/>
+</svg>

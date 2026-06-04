@@ -78,6 +78,24 @@ export const GET_OPPORTUNITY = gql`
         firstName
         lastName
       }
+      # CUSP capstone fields
+      sponsorIsMentor
+      mentorNotes
+      researchQuestion
+      relevance
+      dataRequirements
+      backgroundMethodology
+      dataSecurityConcerns
+      dataSecurityNotes
+      techRequirements
+      fieldWorkLikelihood
+      competencies
+      learningOutcomes
+      relevantLinks
+      additionalNotes
+      guidelinesAcknowledged
+      guidelinesAcknowledgedAt
+      requestsAppointment
       createdAt
       updatedAt
     }
@@ -212,6 +230,9 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
         bio
         tagline
         organization
+        department
+        primaryDomain
+        timeCommitment
         publicReadableId
         image {
           keystoneImage {
@@ -226,6 +247,21 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
         id
         title
       }
+      # CUSP capstone fields (read-only display for students)
+      sponsorIsMentor
+      mentorNotes
+      researchQuestion
+      relevance
+      dataRequirements
+      backgroundMethodology
+      dataSecurityConcerns
+      dataSecurityNotes
+      techRequirements
+      fieldWorkLikelihood
+      competencies
+      learningOutcomes
+      relevantLinks
+      additionalNotes
       ratings(
         where: { isPublic: { equals: true } }
         orderBy: { createdAt: desc }

@@ -49,6 +49,15 @@ export default function Sign() {
             <div>{t("signup.teacher")}</div>
           </SignupButton>
         </Link>
+
+        <Link href="/signup/sponsor">
+          <SignupButton>
+            <div>
+              <img src="/assets/signup/sponsor.svg" alt="icon" height="20" />
+            </div>
+            <div>{t("signup.sponsor")}</div>
+          </SignupButton>
+        </Link>
       </div>
 
       <span>

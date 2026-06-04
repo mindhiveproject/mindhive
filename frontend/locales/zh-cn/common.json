@@ -363,7 +363,7 @@
 	},
 	"tasksAndSurveys": "任务和调查",
 	"terms": {
-		"byClicking": "点击{btnName}即表示您同意MindHive的",
+		"byClicking": "点击{{btnName}}即表示您同意MindHive的",
 		"includingOur": "包括我们的",
 		"privacyPolicy": "隐私政策",
 		"termsOfService": "服务条款"

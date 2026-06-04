@@ -363,7 +363,7 @@
 	},
 	"tasksAndSurveys": "Tarefas e Pesquisas",
 	"terms": {
-		"byClicking": "Ao clicar em {btnName} você concorda com os Termos de Uso da MindHive",
+		"byClicking": "Ao clicar em {{btnName}} você concorda com os Termos de Uso da MindHive",
 		"includingOur": "incluindo nosso",
 		"privacyPolicy": "política de Privacidade",
 		"termsOfService": "Termos de Serviço"

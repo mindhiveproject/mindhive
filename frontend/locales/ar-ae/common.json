@@ -363,7 +363,7 @@
 	},
 	"tasksAndSurveys": "المهام والاستطلاعات",
 	"terms": {
-		"byClicking": "بالنقر على {btnName} فإنك توافق على شروط وأحكام MindHive",
+		"byClicking": "بالنقر على {{btnName}} فإنك توافق على شروط وأحكام MindHive",
 		"includingOur": "بما في ذلك لدينا",
 		"privacyPolicy": "سياسة الخصوصية",
 		"termsOfService": "شروط الخدمة"

@@ -6,23 +6,30 @@ import { UserContext } from "../../Global/Authorized";
 // Profile (Profile.permissions[].name). The four canonical names are uppercase
 // — see e.g. components/Builder/Project/ProjectBoard/Board/Builder/AddCollaboratorModal.js
 // for the same pattern used elsewhere on the platform.
-const ROLE_PERMISSION_NAME = {
-  student: "STUDENT",
-  mentor: "MENTOR",
-  teacher: "TEACHER",
-  admin: "ADMIN",
+//
+// SPONSOR: organization accounts that signed up via /signup/sponsor. For
+// Connect role-gating they get the same surface as MENTOR (they create
+// Opportunities, see "My matched students", etc.). Keeping the SPONSOR name
+// distinct lets us tell apart "individual mentor" from "organization sponsor"
+// later (e.g., on profile cards) without affecting access.
+const ROLE_PERMISSION_NAMES = {
+  student: ["STUDENT"],
+  mentor: ["MENTOR", "SPONSOR"],
+  teacher: ["TEACHER"],
+  admin: ["ADMIN"],
 };
 
-function hasPermission(user, name) {
-  return !!user?.permissions?.some((p) => p?.name === name);
+function hasAnyPermission(user, names) {
+  return !!user?.permissions?.some((p) => names.includes(p?.name));
 }
 
 export function deriveRoles(user) {
   return {
-    isAdmin: hasPermission(user, ROLE_PERMISSION_NAME.admin),
-    isTeacher: hasPermission(user, ROLE_PERMISSION_NAME.teacher),
-    isMentor: hasPermission(user, ROLE_PERMISSION_NAME.mentor),
-    isStudent: hasPermission(user, ROLE_PERMISSION_NAME.student),
+    isAdmin: hasAnyPermission(user, ROLE_PERMISSION_NAMES.admin),
+    isTeacher: hasAnyPermission(user, ROLE_PERMISSION_NAMES.teacher),
+    isMentor: hasAnyPermission(user, ROLE_PERMISSION_NAMES.mentor),
+    isStudent: hasAnyPermission(user, ROLE_PERMISSION_NAMES.student),
+    isSponsor: hasAnyPermission(user, ["SPONSOR"]),
   };
 }
 
