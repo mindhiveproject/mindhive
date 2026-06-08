@@ -86,16 +86,14 @@ export default function ProposalCard({
   );
 
   const router = useRouter();
-  // check whether the card is locked - after 1 hour it is allowed to edit
-  const releaseTime =
-    new Date(proposalCard?.lastTimeEdited)?.getTime() + 60 * 60 * 1000;
-  const outsideTimeWindow = Date.now() > releaseTime;
 
-  // check whether the card is locked by the user
+  // Card editing is no longer gated by a single-editor lock — real-time
+  // collaborative editing (Yjs/Hocuspocus) lets multiple users edit the same
+  // card concurrently, so edits are always allowed.
   const [lockedByUser, setLockedByUser] = useState(false);
   const [wasLockedOnFocus, setWasLockedOnFocus] = useState(false);
   const [hasContentChanged, setHasContentChanged] = useState(false);
-  const areEditsAllowed = lockedByUser || outsideTimeWindow;
+  const areEditsAllowed = true;
 
   // useEffect
   useEffect(() => {
@@ -111,6 +109,21 @@ export default function ProposalCard({
   const revisedContent = useRef(
     proposalCard?.revisedContent || proposalCard?.content,
   );
+
+  // Collaborative editing: the ProposalCard-backed editors (content,
+  // revisedContent, comment) share one Yjs doc per card; each binds its own
+  // named fragment. Homework editors below write to per-student Homework
+  // records, so they are intentionally NOT collaborative here.
+  const collabDocumentName = proposalCard?.id
+    ? `proposalCard:${proposalCard?.id}`
+    : null;
+  const collaborationUser = {
+    id: user?.id || null,
+    name:
+      user?.username ||
+      [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
+      "Editor",
+  };
 
   const [updateCard, { loading: updateLoading }] = useMutation(
     UPDATE_CARD_CONTENT,
@@ -1394,36 +1407,6 @@ export default function ProposalCard({
       />
       <StyledProposal>
         <div className="post">
-          {!areEditsAllowed && (
-            <div className="lockedMessage">
-              <div>
-                {t(
-                  "mainCard.lockedMessage",
-                  "The card is currently being edited by",
-                )}{" "}
-                <span className="username">
-                  {proposalCard?.isEditedBy?.username}
-                </span>
-                .{" "}
-                {t(
-                  "mainCard.askToClose",
-                  "Ask the user to close the card or wait until the card is released.",
-                )}{" "}
-                {t("mainCard.cardWillBeReleased", "The card will be released")}{" "}
-                <span className="username">{moment().to(releaseTime)}</span>.{" "}
-                {t(
-                  "mainCard.refreshAfterRelease",
-                  "After the card is released, refresh the page to get the latest version of the card.",
-                )}
-              </div>
-              <div className="buttonHolder">
-                <button onClick={() => refreshPage()}>
-                  {t("mainCard.refresh", "Refresh")}
-                </button>
-              </div>
-            </div>
-          )}
-
           <div className="proposalCardBoard">
             <div className="textBoard">
               <div className="cardHeader">{inputs?.title}</div>
@@ -1500,6 +1483,15 @@ export default function ProposalCard({
                     <div onFocus={handleFocus}>
                       <TipTapEditor
                         content={content?.current}
+                        collaboration={
+                          collabDocumentName
+                            ? {
+                                documentName: collabDocumentName,
+                                field: "content",
+                              }
+                            : null
+                        }
+                        collaborationUser={collaborationUser}
                         onUpdate={(newContent) =>
                           handleContentChange({
                             contentType: "content",
@@ -1531,6 +1523,15 @@ export default function ProposalCard({
                     <div onFocus={handleFocus}>
                       <TipTapEditor
                         content={revisedContent?.current}
+                        collaboration={
+                          collabDocumentName
+                            ? {
+                                documentName: collabDocumentName,
+                                field: "revisedContent",
+                              }
+                            : null
+                        }
+                        collaborationUser={collaborationUser}
                         onUpdate={(newContent) =>
                           handleContentChange({
                             contentType: "revisedContent",
@@ -1611,6 +1612,12 @@ export default function ProposalCard({
                 </div>
                 <TipTapEditor
                   content={inputs.comment}
+                  collaboration={
+                    collabDocumentName
+                      ? { documentName: collabDocumentName, field: "comment" }
+                      : null
+                  }
+                  collaborationUser={collaborationUser}
                   onUpdate={(newContent) => {
                     if (!hasContentChanged) {
                       setHasContentChanged(true);

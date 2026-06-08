@@ -10,8 +10,12 @@ import { Table } from "@tiptap/extension-table";
 import { TableRow } from "@tiptap/extension-table-row";
 import { TableHeader } from "@tiptap/extension-table-header";
 import { TableCell } from "@tiptap/extension-table-cell";
+import Collaboration from "@tiptap/extension-collaboration";
+import { HocuspocusProvider } from "@hocuspocus/provider";
 import { Button, Dropdown } from "semantic-ui-react";
 import { useApolloClient } from "@apollo/client";
+
+import CollaborationCursorExtension from "./CollaborationCursorExtension";
 
 import DesignSystemButton from "../DesignSystem/Button";
 import { StyledTipTap } from "./StyledTipTap";
@@ -71,6 +75,39 @@ const CustomLink = Link.extend({
   },
 });
   
+// ── Collaborative editing helpers ─────────────────────────────────────────────
+
+// Derive the collaboration WebSocket URL from the backend HTTP URL.
+function getCollaborationUrl() {
+  const backendUrl =
+    (process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_BACKEND_URL_PRODUCTION
+      : process.env.NEXT_PUBLIC_BACKEND_URL) || "http://localhost:4444";
+  return `${backendUrl.replace(/^http/, "ws")}/collaboration`;
+}
+
+// Mirrors the server-side cursor colour assignment (keystone/lib/hocuspocus.ts).
+const CURSOR_COLORS = [
+  "#f97316",
+  "#8b5cf6",
+  "#06b6d4",
+  "#10b981",
+  "#ef4444",
+  "#ec4899",
+  "#f59e0b",
+  "#3b82f6",
+];
+
+function getUserColor(userId) {
+  if (!userId) return CURSOR_COLORS[0];
+  let hash = 0;
+  const str = String(userId);
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return CURSOR_COLORS[Math.abs(hash) % CURSOR_COLORS.length];
+}
+
 export default function TipTapEditor({
   content,
   onUpdate,
@@ -88,6 +125,17 @@ export default function TipTapEditor({
   emptyInvite = null,
   floatingToolbarTop = null,
   floatingToolbarAutoOffset = false,
+  /**
+   * Enables real-time collaborative editing for this editor instance.
+   * Shape: { documentName: string, field: string }
+   *   - documentName: the shared Yjs doc, e.g. `proposalCard:<id>`
+   *   - field: the named Yjs fragment for this editor, e.g. "description"
+   * When set, Yjs owns the content (the `content` prop is ignored and not
+   * hydrated) and the Hocuspocus server mirrors it back to the HTML field.
+   */
+  collaboration = null,
+  /** Identity for the remote cursor label: { id, name }. */
+  collaborationUser = null,
 }) {
   const { t } = useTranslation("builder");
   const apolloClient = useApolloClient();
@@ -98,6 +146,36 @@ export default function TipTapEditor({
   const [computedFloatingToolbarTop, setComputedFloatingToolbarTop] = useState(null);
   const editorRef = useRef(null);
   const editorHostRef = useRef(null);
+
+  // ── Collaboration provider lifecycle ────────────────────────────────────────
+  // One Hocuspocus provider per collaborative editor instance. Multiple editors
+  // on the same card share the server-side Yjs doc (same documentName) but bind
+  // different named fragments via `field`, and each gets its own awareness so
+  // remote cursors don't collide across the card's editors.
+  const collabDocumentName = collaboration?.documentName || null;
+  const collabField = collaboration?.field || null;
+  const [provider, setProvider] = useState(null);
+
+  useEffect(() => {
+    if (!collabDocumentName || !collabField) {
+      setProvider(null);
+      return undefined;
+    }
+    const p = new HocuspocusProvider({
+      url: getCollaborationUrl(),
+      name: collabDocumentName,
+      // Auth travels with the session cookie on the WS upgrade — no token needed.
+      token: "",
+    });
+    setProvider(p);
+    return () => {
+      p.destroy();
+      setProvider(null);
+    };
+  }, [collabDocumentName, collabField]);
+
+  const collabEnabled = !!(provider && collabField);
+
   const pasteImageContextRef = useRef({});
   pasteImageContextRef.current = {
     onPasteImageNoMediaScope: () =>
@@ -139,11 +217,19 @@ export default function TipTapEditor({
     },
   };
 
+  const collabUserId = collaborationUser?.id || null;
+  const collabUserName = collaborationUser?.name || "Editor";
+  const collabUserColor = getUserColor(collabUserId);
+
   const extensions = useMemo(
     () => [
       StarterKit.configure({
         link: false,
         underline: false,
+        // Yjs provides shared undo/redo history; StarterKit's UndoRedo extension
+        // must be disabled when collaboration is on or the two conflict. (In
+        // TipTap v3 this option is `undoRedo`, renamed from v2's `history`.)
+        ...(collabEnabled ? { undoRedo: false } : {}),
       }),
       Underline,
       CustomLink.configure({
@@ -168,8 +254,20 @@ export default function TipTapEditor({
       TableRow,
       TableHeader,
       TableCell,
+      ...(collabEnabled
+        ? [
+            Collaboration.configure({
+              document: provider.document,
+              field: collabField,
+            }),
+            CollaborationCursorExtension.configure({
+              provider,
+              user: { name: collabUserName, color: collabUserColor },
+            }),
+          ]
+        : []),
     ],
-    [],
+    [collabEnabled, provider, collabField, collabUserName, collabUserColor],
   );
 
   const editor = useEditor({
@@ -208,15 +306,19 @@ export default function TipTapEditor({
     return () => editor.off("blur", handleBlur);
   }, [editor, onUpdate, onBlurCallback]);
 
-  // Set content when editor + content are ready
+  // Set content when editor + content are ready.
+  // In collaborative mode Yjs owns the document — never hydrate from the `content`
+  // prop, or we'd duplicate the shared content into the local fragment.
   useEffect(() => {
+    if (collabEnabled) return;
     if (editor && content) {
       const currentContent = editor.getHTML();
       if (currentContent !== content) {
-        editor.commands.setContent(content, false); // hydrate without triggering onUpdate
+        // hydrate without triggering onUpdate (v3 options-object signature)
+        editor.commands.setContent(content, { emitUpdate: false });
       }
     }
-  }, [editor, content]);
+  }, [editor, content, collabEnabled]);
 
   // Keep empty-state invite in sync with document (e.g. paragraph panel).
   useEffect(() => {

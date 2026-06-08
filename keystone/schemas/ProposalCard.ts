@@ -30,6 +30,19 @@ export const ProposalCard = list({
     content: text(),
     comment: text(),
     /**
+     * Base64-encoded Yjs document state for collaborative editing of this card's
+     * rich-text fields (description, content, comment). Managed by the Hocuspocus
+     * server (keystone/lib/hocuspocus.ts); the HTML fields above are kept in sync
+     * as a derived mirror on every save. Hidden from the Admin UI.
+     */
+    yjsState: text({
+      ui: {
+        createView: { fieldMode: "hidden" },
+        itemView: { fieldMode: "hidden" },
+        listView: { fieldMode: "hidden" },
+      },
+    }),
+    /**
      * Settings JSON field for ProposalCard.
      * 
      * Expected structure:

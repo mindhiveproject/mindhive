@@ -15,6 +15,9 @@ import { extendGraphqlSchema } from "./mutations/index";
 // to keep this file tidy, we define our schema in a different file
 import { lists } from "./schema";
 
+// Collaborative editing (Yjs/Hocuspocus) for ProposalCard rich-text fields
+import { createHocuspocusServer } from "./lib/hocuspocus";
+
 // authentication is configured separately here too, but you might move this elsewhere
 // when you write your list-level access control functions, as they typically rely on session data
 import { withAuth, session } from "./auth";
@@ -89,6 +92,16 @@ export default withAuth(
             "keystonejs-session=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict",
           );
           res.json({ ok: true });
+        });
+      },
+      // Collaborative editing: route WebSocket upgrades on /collaboration to the
+      // Hocuspocus server. Auth is handled inside via the keystonejs-session cookie.
+      extendHttpServer: (httpServer: any, commonContext: any) => {
+        const { handleUpgrade } = createHocuspocusServer(commonContext);
+        httpServer.on("upgrade", (request: any, socket: any, head: any) => {
+          if (request.url?.startsWith("/collaboration")) {
+            handleUpgrade(request, socket, head);
+          }
         });
       },
     },
