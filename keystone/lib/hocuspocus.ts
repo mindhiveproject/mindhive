@@ -1,15 +1,17 @@
 // Collaborative editing backend for ProposalCard rich-text fields.
 //
-// Architecture (Option B — Yjs is the live source of truth, HTML is mirrored):
+// Architecture: the server is a thin, DOM-free Yjs persistence + auth layer.
 //   • One Yjs document per ProposalCard, named `proposalCard:<id>`.
-//   • Each editable rich-text field (description, content, comment) lives in a
-//     named Yjs XML fragment whose name equals the field name.
-//   • onLoadDocument seeds fragments from the persisted yjsState blob, or — for
-//     a card that has never been edited collaboratively — from the existing HTML
-//     fields, so propagation/copy results show up on first open.
-//   • onStoreDocument serialises every fragment back to HTML and writes both the
-//     HTML fields and the base64 yjsState blob, so all the existing read-only /
-//     export / propagation flows keep reading current HTML with no changes.
+//   • onLoadDocument restores the document from the persisted `yjsState` blob.
+//   • onStoreDocument writes the `yjsState` blob back (plus edit metadata).
+//
+// IMPORTANT: no HTML <-> Yjs conversion happens here. Converting ProseMirror
+// content to/from HTML needs a DOM, and the only Node DOM @tiptap/html supports
+// (happy-dom) is ESM-only, which breaks Keystone's CommonJS build. So the client
+// (which already has a real browser DOM and the editor) owns HTML:
+//   • it seeds an empty shared document from the existing HTML on first open;
+//   • it mirrors the editor HTML back into the ProposalCard columns on save.
+// The server is the single source of truth for the collaborative `yjsState`.
 //
 // Auth reuses Keystone's stateless session cookie (`keystonejs-session`), sealed
 // with @hapi/iron + SESSION_SECRET — the same mechanism Keystone uses — so the
@@ -19,23 +21,8 @@ import { Hocuspocus } from "@hocuspocus/server";
 import { WebSocketServer } from "ws";
 import * as Y from "yjs";
 import Iron from "@hapi/iron";
-import { getSchema } from "@tiptap/core";
-// IMPORTANT: use the `/server` entry — the default `@tiptap/html` export refuses
-// to run outside a browser ("generateJSON can only be used in a browser
-// environment"), which silently breaks fragment seeding + HTML mirroring in the
-// production Node process.
-import { generateHTML, generateJSON } from "@tiptap/html/server";
-import {
-  prosemirrorJSONToYXmlFragment,
-  yXmlFragmentToProsemirrorJSON,
-} from "y-prosemirror";
 import type { IncomingMessage } from "http";
 import type { Duplex } from "stream";
-
-import {
-  tiptapServerExtensions,
-  COLLAB_FIELDS,
-} from "./tiptapServerExtensions";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -79,15 +66,6 @@ function displayName(profile: any): string {
   if (!profile) return "Editor";
   const full = [profile.firstName, profile.lastName].filter(Boolean).join(" ");
   return full || profile.username || "Editor";
-}
-
-// Build the ProseMirror schema once — needed to turn HTML/JSON into Yjs fragments.
-const pmSchema = getSchema(tiptapServerExtensions as any);
-
-// An empty editor serialises to "<p></p>"; treat that (and "") as empty so we
-// don't gratuitously rewrite untouched fields.
-function isEmptyHtml(html: string | null | undefined): boolean {
-  return !html || html === "<p></p>";
 }
 
 // ── Server factory ───────────────────────────────────────────────────────────
@@ -164,41 +142,12 @@ export function createHocuspocusServer(commonContext: any) {
         where: { id: cardId },
       });
 
-      const ydoc = document as unknown as Y.Doc;
-
-      // Resume from the durable CRDT state, if any.
       if (record?.yjsState) {
         const update = Buffer.from(record.yjsState as string, "base64");
-        Y.applyUpdate(ydoc, update);
+        Y.applyUpdate(document as unknown as Y.Doc, update);
       }
-
-      // Backfill any still-empty fragment from the current HTML. This covers two
-      // cases safely and idempotently:
-      //   • first-ever open (no yjsState): seed all fields from HTML, so existing
-      //     content — incl. anything just propagated/copied — is preserved;
-      //   • a field added to COLLAB_FIELDS after this card already had yjsState:
-      //     seed just that field rather than letting onStore overwrite its HTML
-      //     with an empty string.
-      // A fragment that is legitimately empty because the user cleared it has an
-      // empty HTML mirror too (isEmptyHtml), so it is not re-seeded.
-      for (const field of COLLAB_FIELDS) {
-        if (ydoc.getXmlFragment(field).length > 0) continue;
-        const html = (record as any)?.[field] as string | undefined;
-        if (isEmptyHtml(html)) continue;
-        try {
-          const json = generateJSON(html as string, tiptapServerExtensions as any);
-          prosemirrorJSONToYXmlFragment(
-            pmSchema,
-            json,
-            ydoc.getXmlFragment(field),
-          );
-        } catch (err) {
-          console.error(
-            `[collab] failed to seed fragment "${field}" for card ${cardId}:`,
-            err instanceof Error ? err.message : err,
-          );
-        }
-      }
+      // No yjsState yet: leave the document empty. The client seeds it from the
+      // card's existing HTML once it connects (browser-side, where a DOM exists).
 
       return document;
     },
@@ -206,27 +155,10 @@ export function createHocuspocusServer(commonContext: any) {
     // ── Store ─────────────────────────────────────────────────────────────
     async onStoreDocument({ documentName, document, context }) {
       const cardId = cardIdFromName(documentName);
-      const ydoc = document as unknown as Y.Doc;
-
-      const state = Y.encodeStateAsUpdate(ydoc);
+      const state = Y.encodeStateAsUpdate(document as unknown as Y.Doc);
       const yjsState = Buffer.from(state).toString("base64");
 
       const data: Record<string, unknown> = { yjsState };
-
-      // Mirror each fragment back into its HTML field.
-      for (const field of COLLAB_FIELDS) {
-        try {
-          const json = yXmlFragmentToProsemirrorJSON(ydoc.getXmlFragment(field));
-          const html = generateHTML(json, tiptapServerExtensions as any);
-          data[field] = isEmptyHtml(html) ? "" : html;
-        } catch (err) {
-          console.error(
-            `[collab] failed to serialise fragment "${field}" for card ${cardId}:`,
-            err instanceof Error ? err.message : err,
-          );
-        }
-      }
-
       if (context.user?.id) {
         data.isEditedBy = { connect: { id: context.user.id } };
         data.lastTimeEdited = new Date().toISOString();

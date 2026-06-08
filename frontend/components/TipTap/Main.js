@@ -166,6 +166,11 @@ export default function TipTapEditor({
   const collabDocumentName = collaboration?.documentName || null;
   const collabField = collaboration?.field || null;
   const [provider, setProvider] = useState(null);
+  // Guards one-time seeding of an empty shared document from the initial HTML.
+  const collabSeededRef = useRef(false);
+  useEffect(() => {
+    collabSeededRef.current = false;
+  }, [collabDocumentName, collabField]);
 
   useEffect(() => {
     if (!collabDocumentName || !collabField) {
@@ -319,7 +324,7 @@ export default function TipTapEditor({
 
   // Set content when editor + content are ready.
   // In collaborative mode Yjs owns the document — never hydrate from the `content`
-  // prop, or we'd duplicate the shared content into the local fragment.
+  // prop here, or we'd duplicate the shared content into the local fragment.
   useEffect(() => {
     if (collabEnabled) return;
     if (editor && content) {
@@ -330,6 +335,39 @@ export default function TipTapEditor({
       }
     }
   }, [editor, content, collabEnabled]);
+
+  // Collaborative first-load seeding. The server keeps no DOM and never converts
+  // HTML, so when a card is opened for the very first time (no yjsState yet) the
+  // shared document is empty. The browser seeds it once from the card's existing
+  // HTML so the content appears and becomes the CRDT baseline. If yjsState (or a
+  // peer's edits) already populated the doc, we skip seeding.
+  // Note: if two clients open a never-edited card at the exact same moment they
+  // could both seed and duplicate it — rare in practice (the author edits first;
+  // peers join once yjsState exists).
+  useEffect(() => {
+    if (!collabEnabled || !editor || !provider) return undefined;
+    if (collabSeededRef.current) return undefined;
+
+    const trySeed = () => {
+      if (collabSeededRef.current) return;
+      if (!provider.synced) return; // wait for the initial sync
+      if (!editor.isEmpty) {
+        // yjsState or a peer already provided content — nothing to seed.
+        collabSeededRef.current = true;
+        return;
+      }
+      if (!content) return; // initial HTML not available yet; retry on change
+      editor.commands.setContent(content, { emitUpdate: true });
+      collabSeededRef.current = true;
+    };
+
+    trySeed();
+    if (!provider.synced) {
+      provider.on("synced", trySeed);
+      return () => provider.off("synced", trySeed);
+    }
+    return undefined;
+  }, [collabEnabled, editor, provider, content]);
 
   // Keep empty-state invite in sync with document (e.g. paragraph panel).
   useEffect(() => {

@@ -281,29 +281,19 @@ export default function ProposalCard({
         inputs?.settings,
       );
 
-      // The rich-text fields content/revisedContent/comment are owned by the
-      // collaborative Yjs document (the Hocuspocus server mirrors them back to
-      // these HTML columns). The client must NOT also write them here, or the
-      // two writers diverge and a stale value can mask the latest edits on
-      // reload. Strip them from the payload while still saving everything else.
-      const collabManaged = !!collabDocumentName;
-      const {
-        content: _omitContent,
-        revisedContent: _omitRevised,
-        comment: _omitComment,
-        ...inputsWithoutCollabFields
-      } = inputs;
-
+      // content/revisedContent/comment are edited collaboratively (Yjs is the
+      // source of truth on reload), but the server stays DOM-free and does not
+      // mirror them to these HTML columns. So the client writes the current
+      // editor HTML here to keep the columns up to date for the read-only /
+      // export / propagation flows. This does not cause the old reload
+      // divergence: onLoadDocument always restores the editor from yjsState, not
+      // from these columns.
       await updateCard({
         variables: {
-          ...(collabManaged ? inputsWithoutCollabFields : inputs),
+          ...inputs,
           internalContent: internalContent?.current,
-          ...(collabManaged
-            ? {}
-            : {
-                content: content?.current,
-                revisedContent: revisedContent?.current,
-              }),
+          content: content?.current,
+          revisedContent: revisedContent?.current,
           settings: mergedSettings,
           assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
           resources: inputs?.resources?.map((resource) => ({
