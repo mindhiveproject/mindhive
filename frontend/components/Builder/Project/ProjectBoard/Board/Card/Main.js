@@ -281,12 +281,29 @@ export default function ProposalCard({
         inputs?.settings,
       );
 
+      // The rich-text fields content/revisedContent/comment are owned by the
+      // collaborative Yjs document (the Hocuspocus server mirrors them back to
+      // these HTML columns). The client must NOT also write them here, or the
+      // two writers diverge and a stale value can mask the latest edits on
+      // reload. Strip them from the payload while still saving everything else.
+      const collabManaged = !!collabDocumentName;
+      const {
+        content: _omitContent,
+        revisedContent: _omitRevised,
+        comment: _omitComment,
+        ...inputsWithoutCollabFields
+      } = inputs;
+
       await updateCard({
         variables: {
-          ...inputs,
+          ...(collabManaged ? inputsWithoutCollabFields : inputs),
           internalContent: internalContent?.current,
-          content: content?.current,
-          revisedContent: revisedContent?.current,
+          ...(collabManaged
+            ? {}
+            : {
+                content: content?.current,
+                revisedContent: revisedContent?.current,
+              }),
           settings: mergedSettings,
           assignedTo: inputs?.assignedTo?.map((a) => ({ id: a?.id })),
           resources: inputs?.resources?.map((resource) => ({
