@@ -163,9 +163,9 @@
 	"searchPlaceholder": "Search by name, topic, or area of interest",
 	"skillsTab": "Skills and Preferences",
 	"steps": {
-		"aboutMe": "2. About Me",
+		"aboutMe": "About Me",
 		"complete": "4. Complete",
-		"interests": "3. Interests",
+		"interests": "Interests",
 		"profileType": "1. Profile Type"
 	},
 	"studiesTab": "Studies",

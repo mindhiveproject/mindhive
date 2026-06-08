@@ -13,12 +13,16 @@ export default function EditProfile({ query }) {
   const { t } = useTranslation("connect");
   const { selector, page } = query;
 
-  const steps = [
-    { step: 1, label: t("steps.profileType"), percent: 20, page: "type" },
-    { step: 2, label: t("steps.aboutMe"), percent: 36, page: "about" },
-    { step: 3, label: t("steps.interests"), percent: 61, page: "interests" },
-    { step: 4, label: t("steps.complete"), percent: 80, page: "complete" },
+  const progressSteps = [
+    { label: t("steps.aboutMe"), page: "about" },
+    { label: t("steps.interests"), page: "interests" },
   ];
+
+  const currentStepIndex = progressSteps.findIndex((s) => s.page === page);
+  const percent =
+    currentStepIndex >= 0
+      ? ((currentStepIndex + 1) / progressSteps.length) * 100
+      : 0;
 
   // query the full profile of the user
   const { data } = useQuery(GET_PROFILE);
@@ -30,15 +34,10 @@ export default function EditProfile({ query }) {
         <h1>{t("createProfile")}</h1>
         {page !== "type" && (
           <div className="progressBar">
-            <Progress
-              percent={steps
-                .filter((s) => s?.page === page)
-                .map((s) => s?.percent)}
-              size="large"
-            >
+            <Progress percent={percent} size="large">
               <div className="progressLabels">
-                {steps.map((step) => (
-                  <div key={step.step}>{step?.label}</div>
+                {progressSteps.map((step) => (
+                  <div key={step.page}>{step.label}</div>
                 ))}
               </div>
             </Progress>

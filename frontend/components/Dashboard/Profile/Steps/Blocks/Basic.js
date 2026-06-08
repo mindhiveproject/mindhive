@@ -60,11 +60,11 @@ export default function BasicInformation({ query, user }) {
   return (
     <div className="profileBlock">
       <div>
-        <p>{t("basic.description")}</p>
         <div className="title">{t("basic.title")}</div>
-        <p>{t("basic.subtitle")}</p>
+        <p>{t("basic.description")}</p>
+        {/* <p>{t("basic.subtitle")}</p> */}
       </div>
-      <Divider />
+      {/* <Divider /> */}
       <h3>{t("basic.profilePhoto")}</h3>
       <div>
         {profileImageUrl ? (

@@ -218,10 +218,10 @@ export const StyledCreateProfileFlow = styled.div`
     }
     .progressLabels {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       justify-items: center;
       margin-top: 16px;
-      font-family: Lato;
+      font-family: Inter;
       font-size: 13px;
       font-weight: 500;
       line-height: 18px;
@@ -254,7 +254,7 @@ export const StyledCreateProfileFlow = styled.div`
         border: 2px solid var(--sds-color-border-default-default);
         background: var(--neutral_white, #fff);
         color: var(--neutral_black1, #171717);
-        font-family: Lato;
+        font-family: Inter;
         font-size: 17px;
         font-style: normal;
         font-weight: 600;
@@ -264,7 +264,7 @@ export const StyledCreateProfileFlow = styled.div`
       p {
         color: var(--neutral_black1, #171717);
         text-align: center;
-        font-family: Lato;
+        font-family: Inter;
         font-size: 15px;
         font-style: normal;
         font-weight: 400;
@@ -274,7 +274,7 @@ export const StyledCreateProfileFlow = styled.div`
     h2 {
       color: var(--neutral_black1, #171717);
       /* H2 */
-      font-family: Lato;
+      font-family: Inter;
       font-size: 40px;
       font-style: normal;
       font-weight: 600;
@@ -313,7 +313,7 @@ export const StyledCreateProfileFlow = styled.div`
       }
       .title {
         color: var(--neutral_black1, #171717);
-        font-family: Lato;
+        font-family: Inter;
         font-size: 24px;
         font-style: normal;
         font-weight: 600;
@@ -322,7 +322,7 @@ export const StyledCreateProfileFlow = styled.div`
       }
       .subtitle {
         color: var(--neutral_black1, #171717);
-        font-family: Lato;
+        font-family: Inter;
         font-size: 15px;
         font-style: normal;
         font-weight: 400;
@@ -340,7 +340,7 @@ export const StyledCreateProfileFlow = styled.div`
         p {
           color: var(--SECONDARY_BLUE1, #28619e);
           /* BUTTON_1 */
-          font-family: Lato;
+          font-family: Inter;
           font-size: 17px;
           font-style: normal;
           font-weight: 600;
@@ -350,7 +350,7 @@ export const StyledCreateProfileFlow = styled.div`
       p {
         color: var(--neutral_black1, #171717);
         /* BODY_1 */
-        font-family: Lato;
+        font-family: Inter;
         font-size: 15px;
         font-style: normal;
         font-weight: 400;
@@ -359,14 +359,14 @@ export const StyledCreateProfileFlow = styled.div`
       h3 {
         color: var(--neutral_black1, #171717);
         /* H3 */
-        font-family: Lato;
+        font-family: Inter;
         font-size: 24px;
         font-style: normal;
         font-weight: 400;
         line-height: 32px; /* 133.333% */
       }
       .ui.fluid.dropdown {
-        font-family: Lato;
+        font-family: Inter;
         border: 1px solid #cccccc;
         border-radius: 4px;
         width: 100%;
@@ -377,7 +377,7 @@ export const StyledCreateProfileFlow = styled.div`
       }
       .ui.checkbox input.hidden + label {
         color: var(--neutral_black1, #171717);
-        font-family: Lato;
+        font-family: Inter;
         font-size: 15px;
         font-style: normal;
         font-weight: 500;
@@ -396,7 +396,7 @@ export const StyledCreateProfileFlow = styled.div`
       justify-items: center;
       .h40 {
         //styleName: H2;
-        font-family: Lato;
+        font-family: Inter;
         font-size: 40px;
         font-weight: 600;
         line-height: 50px;
@@ -405,7 +405,7 @@ export const StyledCreateProfileFlow = styled.div`
       }
       .p15 {
         //styleName: BODY_1;
-        font-family: Lato;
+        font-family: Inter;
         font-size: 15px;
         font-weight: 400;
         line-height: 20px;
@@ -448,7 +448,7 @@ export const StyledCreateProfileFlow = styled.div`
     }
     .primary {
       text-align: center;
-      font-family: Lato;
+      font-family: Inter;
       font-size: 18px;
       font-style: normal;
       font-weight: 500;
@@ -458,7 +458,7 @@ export const StyledCreateProfileFlow = styled.div`
       background: var(--neutral_white5, #f7f9f8);
       color: var(--Button-Green, #347a70);
       text-align: center;
-      font-family: Lato;
+      font-family: Inter;
       font-size: 18px;
       font-style: normal;
       font-weight: 500;
