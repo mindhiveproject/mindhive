@@ -20,7 +20,11 @@ import { WebSocketServer } from "ws";
 import * as Y from "yjs";
 import Iron from "@hapi/iron";
 import { getSchema } from "@tiptap/core";
-import { generateHTML, generateJSON } from "@tiptap/html";
+// IMPORTANT: use the `/server` entry — the default `@tiptap/html` export refuses
+// to run outside a browser ("generateJSON can only be used in a browser
+// environment"), which silently breaks fragment seeding + HTML mirroring in the
+// production Node process.
+import { generateHTML, generateJSON } from "@tiptap/html/server";
 import {
   prosemirrorJSONToYXmlFragment,
   yXmlFragmentToProsemirrorJSON,
