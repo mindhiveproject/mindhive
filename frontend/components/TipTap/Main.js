@@ -16,6 +16,7 @@ import { Button, Dropdown } from "semantic-ui-react";
 import { useApolloClient } from "@apollo/client";
 
 import CollaborationCursorExtension from "./CollaborationCursorExtension";
+import { endpoint, prodEndpoint } from "../../config";
 
 import DesignSystemButton from "../DesignSystem/Button";
 import { StyledTipTap } from "./StyledTipTap";
@@ -77,13 +78,23 @@ const CustomLink = Link.extend({
   
 // ── Collaborative editing helpers ─────────────────────────────────────────────
 
-// Derive the collaboration WebSocket URL from the backend HTTP URL.
+// Derive the collaboration WebSocket URL from the SAME backend Apollo talks to
+// (config.js endpoint/prodEndpoint). Deriving it independently risks pointing
+// collaboration at a different server/database than where the card content (and
+// its yjsState) actually lives. Strip the `/api/graphql` path, swap http→ws, and
+// append `/collaboration`.
 function getCollaborationUrl() {
-  const backendUrl =
-    (process.env.NODE_ENV === "production"
-      ? process.env.NEXT_PUBLIC_BACKEND_URL_PRODUCTION
-      : process.env.NEXT_PUBLIC_BACKEND_URL) || "http://localhost:4444";
-  return `${backendUrl.replace(/^http/, "ws")}/collaboration`;
+  // Mirror Apollo's exact endpoint selection (lib/withData.js): use the dev
+  // endpoint ONLY when NODE_ENV is explicitly "development", otherwise the prod
+  // endpoint. The client bundle's NODE_ENV can be undefined in production, so an
+  // inverted `=== "production"` check would wrongly fall back to localhost.
+  const gql =
+    process.env.NODE_ENV === "development" ? endpoint : prodEndpoint;
+  const base = (gql || "http://localhost:4444/api/graphql").replace(
+    /\/api\/graphql\/?$/,
+    "",
+  );
+  return `${base.replace(/^http/, "ws")}/collaboration`;
 }
 
 // Mirrors the server-side cursor colour assignment (keystone/lib/hocuspocus.ts).
