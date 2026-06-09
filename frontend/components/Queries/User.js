@@ -1004,6 +1004,8 @@ export const GET_PROFILE = gql`
           id
         }
         profileType
+        website
+        publicMail
         bio
         bioInformal
         location

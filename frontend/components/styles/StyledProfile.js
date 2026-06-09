@@ -356,6 +356,62 @@ export const StyledCreateProfileFlow = styled.div`
         font-weight: 400;
         line-height: 20px; /* 133.333% */
       }
+      .fieldLabel {
+        color: var(--neutral_black1, #171717);
+        font-family: Inter;
+        font-size: 17px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 22px;
+        margin: 0 0 8px;
+      }
+      .chipRadioGroup {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 8px;
+
+        label {
+          display: inline-flex;
+          align-items: center;
+          padding: 10px 16px;
+          border: 1px solid var(--neutral_grey3, #d3dae0);
+          border-radius: 8px;
+          background: var(--neutral_white, #fff);
+          cursor: pointer;
+          font-family: Inter;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 20px;
+          color: var(--neutral_black1, #171717);
+          transition:
+            border-color 0.15s ease,
+            background 0.15s ease,
+            box-shadow 0.15s ease;
+
+          input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+          }
+
+          &.active {
+            border-color: var(--SECONDARY_BLUE2, #5381b1);
+            background: #f0f6fa;
+            box-shadow: 0 0 0 1px var(--SECONDARY_BLUE2, #5381b1);
+          }
+
+          &:hover:not(.active) {
+            border-color: var(--SECONDARY_BLUE1, #28619e);
+          }
+        }
+      }
+      .categoryOtherField {
+        margin-top: 12px;
+        max-width: 480px;
+      }
       h3 {
         color: var(--neutral_black1, #171717);
         /* H3 */

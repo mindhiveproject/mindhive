@@ -1,11 +1,12 @@
 import { useState } from "react";
 import useForm from "../../../../../lib/useForm";
 import { useMutation } from "@apollo/client";
-import { Divider, Icon } from "semantic-ui-react";
+import { Divider } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../../Mutations/User";
+import { resolveProfileType } from "../../../../../lib/profileEditNavigation";
 
 import { StyledInput } from "../../../../styles/StyledForm";
 import { StyledSaveButton } from "../../../../styles/StyledProfile";
@@ -14,29 +15,40 @@ export default function Background({ query, user }) {
   const { t } = useTranslation("connect");
   const [changed, setChanged] = useState(false);
 
-  const { inputs, handleChange } = useForm({
-    bioInformal: user?.bioInformal,
-    bio: user?.bio,
-    occupation: user?.occupation,
-    education: user?.education || [{ institution: "", degree: "" }],
-    languages: user?.languages || [{ language: "" }],
-  });
+  const profileType = resolveProfileType(query, user);
+  const isOrganization = profileType === "organization";
+
+  const { inputs, handleChange } = useForm(
+    isOrganization
+      ? {
+          firstName: user?.firstName,
+          lastName: user?.lastName,
+          occupation: user?.occupation,
+          passion: user?.passion,
+          publicMail: user?.publicMail,
+          timeCommitment: user?.timeCommitment,
+        }
+      : {
+          bioInformal: user?.bioInformal,
+          bio: user?.bio,
+          occupation: user?.occupation,
+          education: user?.education || [{ institution: "", degree: "" }],
+          languages: user?.languages || [{ language: "" }],
+        },
+  );
 
   const handleUpdate = (data) => {
     setChanged(true);
     handleChange(data);
   };
 
-  const [updateProfile, { data, loading, error }] = useMutation(
-    UPDATE_PROFILE,
-    {
-      variables: {
-        id: user?.id,
-        input: { ...inputs },
-      },
-      refetchQueries: [{ query: GET_PROFILE }],
-    }
-  );
+  const [updateProfile] = useMutation(UPDATE_PROFILE, {
+    variables: {
+      id: user?.id,
+      input: { ...inputs },
+    },
+    refetchQueries: [{ query: GET_PROFILE }],
+  });
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -44,207 +56,156 @@ export default function Background({ query, user }) {
     setChanged(false);
   }
 
-  const handleArrayChange = ({ variable, property, position, value }) => {
-    handleUpdate({
-      target: {
-        name: variable,
-        value: inputs[variable].map((edu, num) => {
-          if (num === position) {
-            return {
-              ...edu,
-              [property]: value,
-            };
-          } else {
-            return edu;
-          }
-        }),
-      },
-    });
-  };
-
-  const addToArray = ({ variable }) => {
-    let newObj;
-    if (variable === "education") {
-      newObj = { institution: "", degree: "" };
-    }
-    if (variable === "languages") {
-      newObj = { language: "" };
-    }
-    if (newObj) {
-      handleUpdate({
-        target: {
-          name: variable,
-          value: [...inputs[variable], newObj],
-        },
-      });
-    }
-  };
-
-  const removeFromArray = ({ variable, position }) => {
-    handleUpdate({
-      target: {
-        name: variable,
-        value: inputs[variable].filter((edu, num) => num !== position),
-      },
-    });
-  };
-
   return (
     <div className="profileBlock">
       <div>
-        <div className="title">{t("background.title")}</div>
-        <p>{t("background.description")}</p>
+        <div className="title">
+          {isOrganization
+            ? t("createProfileFlow.background.organization.title", {}, { default: t("background.title") })
+            : t("background.title")}
+        </div>
+        {isOrganization && (
+          <p>
+            {t("createProfileFlow.background.organization.primaryProjectLead", {}, {
+              default: "Sponsor's Primary Project Lead",
+            })}
+          </p>
+        )}
+        {!isOrganization && <p>{t("background.description")}</p>}
       </div>
-      <Divider />
 
       <StyledInput>
-        <div>
-          <div className="inputLineBlock">
-            <h3>{t("background.officialBio.title")}</h3>
-            <p>{t("background.officialBio.description")}</p>
+        {isOrganization ? (
+          <>
+            <p>
+              {t("createProfileFlow.background.organization.intro1", {}, {
+                default: "To ensure a successful capstone experience, each sponsoring organization must designate a primary sponsor who will serve as a stakeholder and point of contact for the student team. The designated sponsor will be the key liaison for all project-related communications.",
+              })}
+            </p>
+            <p>
+              {t("createProfileFlow.background.organization.intro2", {}, {
+                default: "Capstone projects are most successful when sponsors provide high-level strategic guidance while mentors offer day-to-day insights and support. Your involvement is essential to both student learning and project success.",
+              })}
+            </p>
+
+            <div className="inputLineBlock">
+              <div className="twoColumnsInput">
+                <div>
+                  <p className="fieldLabel">
+                    {t("createProfileFlow.background.organization.firstName", {}, { default: t("basic.firstName") })}
+                  </p>
+                  <input
+                    type="text"
+                    name="firstName"
+                    autoComplete="given-name"
+                    value={inputs?.firstName || ""}
+                    onChange={handleUpdate}
+                    required
+                  />
+                </div>
+                <div>
+                  <p className="fieldLabel">
+                    {t("createProfileFlow.background.organization.lastName", {}, { default: t("basic.lastName") })}
+                  </p>
+                  <input
+                    type="text"
+                    name="lastName"
+                    autoComplete="family-name"
+                    value={inputs?.lastName || ""}
+                    onChange={handleUpdate}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="inputLineBlock">
+              <p className="fieldLabel">
+                {t("createProfileFlow.background.organization.leadTitle", {}, { default: "Title" })}
+              </p>
+              <input
+                type="text"
+                name="occupation"
+                value={inputs?.occupation || ""}
+                onChange={handleUpdate}
+                required
+              />
+            </div>
+
+            <div className="inputLineBlock">
+              <p className="fieldLabel">
+                {t("createProfileFlow.background.organization.leadExpertise", {}, { default: "Area of expertise" })}
+              </p>
+              <input
+                type="text"
+                name="passion"
+                value={inputs?.passion || ""}
+                onChange={handleUpdate}
+                required
+              />
+            </div>
+
+            <div className="inputLineBlock">
+              <p className="fieldLabel">
+                {t("createProfileFlow.background.organization.leadEmail", {}, { default: "Email address" })}
+              </p>
+              <input
+                type="email"
+                name="publicMail"
+                autoComplete="email"
+                value={inputs?.publicMail || ""}
+                onChange={handleUpdate}
+                required
+              />
+            </div>
+
+            <div className="inputLineBlock">
+              <p className="fieldLabel">
+                {t("createProfileFlow.background.organization.leadAvailability", {}, {
+                  default: "Expected availability/time commitment during project",
+                })}
+              </p>
+              <p>
+                {t("createProfileFlow.background.organization.leadAvailabilityDescription", {}, {
+                  default: 'Please estimate a numerical time per week or per month. Refrain from answering "meet when available" or similar response.',
+                })}
+              </p>
+              <input
+                type="text"
+                name="timeCommitment"
+                value={inputs?.timeCommitment || ""}
+                onChange={handleUpdate}
+                required
+              />
+            </div>
+          </>
+        ) : (
+          <div>
+            <div className="inputLineBlock">
+              <p className="fieldLabel">{t("background.officialBio.title")}</p>
+              <p>{t("background.officialBio.description")}</p>
+              <textarea
+                id="bio"
+                rows="5"
+                name="bio"
+                placeholder=""
+                value={inputs?.bio || ""}
+                onChange={handleUpdate}
+              />
+            </div>
+
+            <p className="fieldLabel">{t("background.unofficialBio.title")}</p>
+            <p>{t("background.unofficialBio.description")}</p>
             <textarea
-              id="bio"
+              id="bioInformal"
               rows="5"
-              name="bio"
+              name="bioInformal"
               placeholder=""
-              value={inputs?.bio || ""}
+              value={inputs?.bioInformal || ""}
               onChange={handleUpdate}
             />
           </div>
-
-          <h3>{t("background.unofficialBio.title")}</h3>
-          <p>{t("background.unofficialBio.description")}</p>
-          <textarea
-            id="bioInformal"
-            rows="5"
-            name="bioInformal"
-            placeholder=""
-            value={inputs?.bioInformal || ""}
-            onChange={handleUpdate}
-          />
-        </div>
-
-        {/* <div className="inputLineBlock">
-          <h3>{t("background.occupation.title")}</h3>
-          <input
-            type="text"
-            name="occupation"
-            value={inputs?.occupation || ""}
-            onChange={handleUpdate}
-          />
-        </div>
-
-        <div className="inputLineBlock">
-          <h3>{t("background.education.title")}</h3>
-          <div>
-            {inputs.education.map((edu, num) => (
-              <div className="twoColumnsInputWithIcon">
-                <div>
-                  <div className="subtitle">{t("background.education.institution")}</div>
-                  <input
-                    type="text"
-                    name={`institution-${num}`}
-                    value={edu?.institution || ""}
-                    onChange={({ target }) =>
-                      handleArrayChange({
-                        variable: "education",
-                        property: "institution",
-                        position: num,
-                        value: target?.value,
-                      })
-                    }
-                  />
-                </div>
-
-                <div>
-                  <div className="subtitle">{t("background.education.degree")}</div>
-                  <input
-                    type="text"
-                    name={`degree-${num}`}
-                    value={edu?.degree || ""}
-                    onChange={({ target }) =>
-                      handleArrayChange({
-                        variable: "education",
-                        property: "degree",
-                        position: num,
-                        value: target?.value,
-                      })
-                    }
-                  />
-                </div>
-
-                <div>
-                  <Icon
-                    name="remove"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      removeFromArray({ variable: "education", position: num });
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
-
-            <div
-              className="addLink"
-              onClick={(e) => {
-                e.preventDefault();
-                addToArray({ variable: "education" });
-              }}
-            >
-              <div>
-                <img src={`/assets/icons/profile/plus.svg`} />
-              </div>
-              <p>{t("background.education.addInstitution")}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="inputLineBlock">
-          <h3>{t("background.languages.title")}</h3>
-          {inputs.languages.map((lang, num) => (
-            <div className="oneColumnInputWithIcon">
-              <label htmlFor={`language-${num}`}>
-                <input
-                  type="text"
-                  name={`language-${num}`}
-                  value={lang?.language || ""}
-                  onChange={({ target }) =>
-                    handleArrayChange({
-                      variable: "languages",
-                      property: "language",
-                      position: num,
-                      value: target?.value,
-                    })
-                  }
-                />
-              </label>
-
-              <div>
-                <Icon
-                  name="remove"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    removeFromArray({ variable: "languages", position: num });
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-
-          <div
-            className="addLink"
-            onClick={(e) => {
-              e.preventDefault();
-              addToArray({ variable: "languages" });
-            }}
-          >
-            <div>
-              <img src={`/assets/icons/profile/plus.svg`} />
-            </div>
-            <p>{t("background.languages.addLanguage")}</p>
-          </div>
-        </div> */}
+        )}
 
         <StyledSaveButton changed={changed}>
           <button onClick={handleSubmit} disabled={!changed}>

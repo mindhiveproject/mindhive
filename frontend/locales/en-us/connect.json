@@ -59,6 +59,136 @@
 	"connectSubtitle": "Search for, discover, and connect with the MindHive community",
 	"connectWithPeople": "Connect with people",
 	"createProfile": "Create Profile",
+	"createProfileFlow": {
+		"background": {
+			"organization": {
+				"firstName": "First Name",
+				"intro1": "To ensure a successful capstone experience, each sponsoring organization must designate a primary sponsor who will serve as a stakeholder and point of contact for the student team. The designated sponsor will be the key liaison for all project-related communications.",
+				"intro2": "Capstone projects are most successful when sponsors provide high-level strategic guidance while mentors offer day-to-day insights and support. Your involvement is essential to both student learning and project success.",
+				"lastName": "Last Name",
+				"leadAvailability": "Expected availability/time commitment during project",
+				"leadAvailabilityDescription": "Please estimate a numerical time per week or per month. Refrain from answering \"meet when available\" or similar response.",
+				"leadEmail": "Email address",
+				"leadExpertise": "Area of expertise",
+				"leadTitle": "Title",
+				"primaryProjectLead": "Sponsor's Primary Project Lead",
+				"title": "Point of Contact"
+			}
+		},
+		"basic": {
+			"description": {
+				"individual": "Please complete the following items to create your profile and connect with the MindHive community.",
+				"organization": "Please complete the following items to create your organization's profile and connect with the MindHive community."
+			},
+			"organizationFields": {
+				"companyName": "Organization/Company Name",
+				"companyPicture": "Company picture",
+				"department": "Department / Division",
+				"departmentPlaceholder": "e.g., Urban Mobility Lab",
+				"location": "Where is your organization located?",
+				"locationDescription": "Please list the city and state/country where you'll be operating from.",
+				"mission": "Organization/Company Mission or Description",
+				"missionDescription": "Please describe your organization or unit including mission, key program activities, and nature of work.",
+				"primaryDomain": "Sponsor's Primary Domain",
+				"primaryDomainOptions": {
+					"academic": "Academic Institution",
+					"government": "Government Agency",
+					"industry": "Industry (Private / Start-Up)",
+					"nonprofit": "Nonprofit",
+					"other": "Other"
+				},
+				"website": "Organization/Company Website"
+			},
+			"title": {
+				"individual": "Basic Information",
+				"organization": "Organization Information"
+			}
+		},
+		"sponsorMentor": {
+			"additionalNotes": "Is there any additional information you would like to highlight?",
+			"backgroundMethodology": "Background & Methodology",
+			"backgroundMethodologyDescription": "Please include any important contextual information related to your project, and outline your methodologies including specific research approaches, data collection techniques, tools, and technologies.",
+			"categorization": "Categorization",
+			"categorizationDescription": "Which category does your project align with?",
+			"categorizationOptions": {
+				"other": "Other",
+				"urbanEnvironment": "Urban Environment",
+				"urbanHealth": "Urban Health",
+				"urbanInfrastructure": "Urban Infrastructure"
+			},
+			"categorizationOther": "Other category",
+			"competencies": "Competencies",
+			"competenciesDescription": "List any specific skills or qualifications that would be useful for students to have in order to successfully address this problem and complete the capstone project. For example, user experience design, software programming, economics/financial analysis, public policy analysis, quantitative research/analysis, engineering skills (mechanical, electrical, etc). Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
+			"dataRequirements": "What are the anticipated data requirements for the project, and how will each required data resource be provided to the capstone team?",
+			"dataRequirementsDescription": "Please describe what datasets will be used. For example, existing source data will be provided by the sponsor, existing source data is free and open (public), etc. Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
+			"dataSecurityConcerns": "Does the sponsor have any anticipated data security concerns to be cleared for student team?",
+			"dataSecurityNotes": "If yes or maybe, please describe concerns.",
+			"dataSecurityOptions": {
+				"maybe": "Maybe",
+				"no": "No",
+				"yes": "Yes"
+			},
+			"fieldWorkLikelihood": "How likely would the project require field work or site visits (either within NYC or outside)?",
+			"fieldWorkScale": {
+				"likely": "Very likely",
+				"unlikely": "Very unlikely"
+			},
+			"guidelinesAgree": "I agree with this statement.",
+			"guidelinesDescription": "I have read and understood the Capstone proposal guidelines in full, including all of the Capstone Sponsor FAQs and Mutual Expectations agreement and agree to abide by them.",
+			"guidelinesRequestAppointment": "I request an appointment to discuss further.",
+			"guidelinesTitle": "Understanding of Proposal Guidelines",
+			"intro1": "Sponsors who wish to take on a more hands-on role in guiding students can indicate their interest by selecting the checkbox below. By doing so, they acknowledge their understanding of the mentor's responsibilities and time commitment. As a mentor, sponsors will provide students with regular feedback, subject matter expertise, and practical insights to help them navigate project challenges and refine their work.",
+			"intro2": "This role requires active engagement throughout the capstone experience, ensuring students receive the support needed to produce meaningful outcomes. If selected, sponsors will serve as both the primary stakeholder and a mentor, bridging strategic direction with day-to-day guidance.",
+			"learningOutcomes": "Learning Outcomes/Deliverables",
+			"learningOutcomesDescription": "Provide 2-3 learning outcomes or expected deliverables. For example, an interactive dashboard or a website showcasing data analysis outcomes. Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
+			"projectAbstract": "Capstone Project Abstract",
+			"projectAbstractDescription": "100 words maximum. Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
+			"projectDescription": "Capstone Project Description & Overview",
+			"projectDescriptionDescription": "250 words maximum. Describe the scope and nature of the capstone project. Please ensure that the project is achievable within the academic timeframe and with the resources available. Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
+			"projectTitle": "Project Title",
+			"projectTitleDescription": "15 words maximum. Tips: Be engaging for student appeal",
+			"relevance": "Relevance",
+			"relevanceDescription": "Describe why this issue is of relevance to CUSP's mission and urban science.",
+			"relevantLinks": "Relevant Links",
+			"relevantLinksAdd": "Add link",
+			"relevantLinksDescription": "This can include a project website, GitHub repository, or other online presence where one can learn more about the project. We'll include QR codes in the brochure.",
+			"relevantLinksLabel": "Label",
+			"relevantLinksRemove": "Remove",
+			"relevantLinksUrl": "URL",
+			"researchQuestion": "What is the research question/scope to be explored OR what is the problem that you want to address?",
+			"saveChanges": "Save changes",
+			"sponsorIsMentor": "I understand the time commitment and intend to serve as the sponsor AND mentor.",
+			"techRequirements": "Does the sponsor have technology infrastructure and/or software application requirements for this project?",
+			"techRequirementsDescription": "For example, the project requires GIS data analysis and the sponsor uses ArcGIS or RShiny for mapping. If the sponsor has no preferences as to data tools used, please indicate.",
+			"title": "Sponsor & Mentor",
+			"wordCountOver": "— consider trimming",
+			"wordCountTemplate": "{{count}} / {{max}} words"
+		},
+		"interests": {
+			"description": {
+				"individual": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions.",
+				"organization": "What topics would you like your organization to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions."
+			},
+			"title": {
+				"individual": "Where can you help?",
+				"organization": "Where can your organization help?"
+			}
+		},
+		"steps": {
+			"aboutMe": {
+				"individual": "About Me",
+				"organization": "About your organization"
+			},
+			"interests": {
+				"individual": "Interests",
+				"organization": "Areas of focus"
+			}
+		},
+		"title": {
+			"individual": "Create Individual Profile",
+			"organization": "Create Organization Profile"
+		}
+	},
 	"exploreConnect": "Explore Connect",
 	"interests": {
 		"description": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions.",

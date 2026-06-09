@@ -293,7 +293,7 @@ export const SignupButton = styled.div`
 export const StyledInput = styled.div`
   display: grid;
   grid-gap: 10px;
-  margin: 0px 0px 20px 0px;
+  margin: 0;
   fieldset {
     border: 0;
     padding: 0;

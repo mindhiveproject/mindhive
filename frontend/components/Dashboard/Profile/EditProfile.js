@@ -6,16 +6,35 @@ import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../Queries/User";
 import { StyledCreateProfileFlow } from "../../styles/StyledProfile";
+import { resolveProfileType } from "../../../lib/profileEditNavigation";
 
 import { Progress } from "semantic-ui-react";
 
 export default function EditProfile({ query }) {
   const { t } = useTranslation("connect");
-  const { selector, page } = query;
+  const { page } = query;
+
+  const { data } = useQuery(GET_PROFILE);
+  const user = data?.authenticatedItem;
+  const profileType = resolveProfileType(query, user);
+
+  const pageTitle = profileType
+    ? t(`createProfileFlow.title.${profileType}`, {}, { default: t("createProfile") })
+    : t("createProfile");
 
   const progressSteps = [
-    { label: t("steps.aboutMe"), page: "about" },
-    { label: t("steps.interests"), page: "interests" },
+    {
+      label: profileType
+        ? t(`createProfileFlow.steps.aboutMe.${profileType}`, {}, { default: t("steps.aboutMe") })
+        : t("steps.aboutMe"),
+      page: "about",
+    },
+    {
+      label: profileType
+        ? t(`createProfileFlow.steps.interests.${profileType}`, {}, { default: t("steps.interests") })
+        : t("steps.interests"),
+      page: "interests",
+    },
   ];
 
   const currentStepIndex = progressSteps.findIndex((s) => s.page === page);
@@ -24,14 +43,10 @@ export default function EditProfile({ query }) {
       ? ((currentStepIndex + 1) / progressSteps.length) * 100
       : 0;
 
-  // query the full profile of the user
-  const { data } = useQuery(GET_PROFILE);
-  const user = data?.authenticatedItem;
-
   return (
     <StyledCreateProfileFlow>
       <div>
-        <h1>{t("createProfile")}</h1>
+        <h1>{pageTitle}</h1>
         {page !== "type" && (
           <div className="progressBar">
             <Progress percent={percent} size="large">
