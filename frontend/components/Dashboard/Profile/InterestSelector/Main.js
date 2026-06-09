@@ -8,10 +8,15 @@ import useTranslation from "next-translate/useTranslation";
 import { GET_PROFILE } from "../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../Mutations/User";
 import { GET_TAGS } from "../../../Queries/Tag";
+import {
+  profileEditHref,
+  resolveProfileType,
+} from "../../../../lib/profileEditNavigation";
 
-export default function InterestSelector({ user }) {
+export default function InterestSelector({ query, user }) {
   const { t } = useTranslation("connect");
   const router = useRouter();
+  const profileType = resolveProfileType(query, user);
   const { inputs, handleChange } = useForm({
     interests: user?.interests.map((i) => ({ id: i?.id })) || [],
   });
@@ -130,14 +135,7 @@ export default function InterestSelector({ user }) {
       )}
 
       <div className="navButtons">
-        <Link
-          href={{
-            pathname: `/dashboard/profile/edit`,
-            query: {
-              page: "about",
-            },
-          }}
-        >
+        <Link href={profileEditHref({ page: "about", type: profileType })}>
           <button className="secondary">{t("interestSelector.navButtons.previous")}</button>
         </Link>
         <button onClick={complete}>{t("interestSelector.navButtons.complete")}</button>

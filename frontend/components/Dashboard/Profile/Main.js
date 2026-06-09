@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import IdentIcon from "../../Account/IdentIcon";
-import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../Queries/User";
@@ -58,9 +57,6 @@ export default function Profile() {
             {t("welcome")}{isProfileComplete && ` back`}
             {user.username ? `, ${user.username}` : `, MindHive User`}
           </div>
-          <div className="p20">
-            {t("editProfile")}
-          </div>
         </div>
 
         <div>
@@ -98,50 +94,6 @@ export default function Profile() {
           )}
         </div>
       </div>
-
-      {(user?.permissions?.map((p) => p?.name).includes("ADMIN") ||
-        user?.permissions?.map((p) => p?.name).includes("MENTOR") ||
-        user?.permissions?.map((p) => p?.name).includes("SPONSOR") ||
-        user?.permissions?.map((p) => p?.name).includes("SCIENTIST")) && (
-        <div className="createProfileAreaWrapper">
-          <Link
-            href={{
-              pathname: `/dashboard/profile/edit`,
-              query: {
-                page: "type",
-              },
-            }}
-          >
-            <div className="createProfileArea">
-              <div>
-                <div className="h32">
-                  {isProfileComplete ? t("editYourProfile") : t("createYourProfile")}
-                </div>
-                <div className="p18">
-                  {isProfileComplete
-                    ? t("updateProfileDescription")
-                    : t("createProfileDescription")}
-                </div>
-              </div>
-            </div>
-          </Link>
-
-          {/* <Link
-            href={{
-              pathname: `/dashboard/profile/set`,
-            }}
-          >
-            <div className="createProfileArea">
-              <div>
-                <div className="h32">{t("setAvail")}</div>
-                <div className="p18">
-                  {t("setAvailDescription")}
-                </div>
-              </div>
-            </div>
-          </Link> */}
-        </div>
-      )}
     </>
   );
 }

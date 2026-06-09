@@ -169,7 +169,7 @@ export default function SponsorOnboarding() {
   return (
     <Card>
       <div>
-        <h2>Welcome — let&apos;s get you set up</h2>
+        <h2>Let&apos;s get you set up</h2>
         <p className="subtitle">
           Two quick steps and you&apos;re ready to host opportunities for
           students through MindHive Connect.

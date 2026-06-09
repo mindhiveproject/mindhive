@@ -16,8 +16,18 @@ const ROLE_PERMISSION_NAMES = {
   student: ["STUDENT"],
   mentor: ["MENTOR", "SPONSOR"],
   teacher: ["TEACHER"],
+  scientist: ["SCIENTIST"],
   admin: ["ADMIN"],
 };
+
+// Full opportunity editor (availability, audience, custom questions, etc.) is
+// shown only to individual mentors/teachers/scientists — not sponsor-only org
+// accounts that only carry the SPONSOR permission.
+const EXPANDED_OPPORTUNITY_EDITOR_PERMISSIONS = [
+  "TEACHER",
+  "SCIENTIST",
+  "MENTOR",
+];
 
 function hasAnyPermission(user, names) {
   return !!user?.permissions?.some((p) => names.includes(p?.name));
@@ -27,9 +37,14 @@ export function deriveRoles(user) {
   return {
     isAdmin: hasAnyPermission(user, ROLE_PERMISSION_NAMES.admin),
     isTeacher: hasAnyPermission(user, ROLE_PERMISSION_NAMES.teacher),
+    isScientist: hasAnyPermission(user, ROLE_PERMISSION_NAMES.scientist),
     isMentor: hasAnyPermission(user, ROLE_PERMISSION_NAMES.mentor),
     isStudent: hasAnyPermission(user, ROLE_PERMISSION_NAMES.student),
     isSponsor: hasAnyPermission(user, ["SPONSOR"]),
+    hasExpandedOpportunityEditor: hasAnyPermission(
+      user,
+      EXPANDED_OPPORTUNITY_EDITOR_PERMISSIONS,
+    ),
   };
 }
 
