@@ -18,6 +18,18 @@ import { lists } from "./schema";
 // Collaborative editing (Yjs/Hocuspocus) for ProposalCard rich-text fields
 import { createHocuspocusServer } from "./lib/hocuspocus";
 
+// Stability guard: a single malformed request must not crash the whole backend.
+// e.g. a bot POSTing bad multipart to /api/graphql makes graphql-upload throw
+// asynchronously ("Missing multipart field 'operations'"), and Node 18 exits on
+// unhandled rejections by default — which restarts the process and drops every
+// collaboration WebSocket. Log and keep serving instead.
+process.on("unhandledRejection", (reason: any) => {
+  console.error(
+    "[unhandledRejection]",
+    reason instanceof Error ? `${reason.name}: ${reason.message}` : reason,
+  );
+});
+
 // authentication is configured separately here too, but you might move this elsewhere
 // when you write your list-level access control functions, as they typically rely on session data
 import { withAuth, session } from "./auth";
