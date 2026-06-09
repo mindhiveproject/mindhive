@@ -351,10 +351,9 @@ export async function syncCardsToClone(
             position,
             ...(overwriteContent ? { content: tc.content ?? undefined } : {}),
             // Drop any collaborative Yjs state so the next time this clone card is
-            // opened in the collaborative editor it re-seeds from the freshly
-            // propagated HTML (description is always synced; content when in the
-            // update set). Without this, a stale yjsState blob would mask the
-            // propagated text. See keystone/lib/hocuspocus.ts onLoadDocument.
+            // opened in the collaborative editor it re-seeds (browser-side) from
+            // the freshly propagated HTML. Without this, a stale yjsState blob
+            // would mask the propagated text. See keystone/collab-server.js.
             yjsState: null,
             publicId: tc.publicId ?? uniqid(),
             settings: mergedSettings,

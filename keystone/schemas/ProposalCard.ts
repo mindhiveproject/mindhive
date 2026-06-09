@@ -31,9 +31,9 @@ export const ProposalCard = list({
     comment: text(),
     /**
      * Base64-encoded Yjs document state for collaborative editing of this card's
-     * rich-text fields (description, content, comment). Managed by the Hocuspocus
-     * server (keystone/lib/hocuspocus.ts); the HTML fields above are kept in sync
-     * as a derived mirror on every save. Hidden from the Admin UI.
+     * rich-text fields. Managed by the standalone collaboration server
+     * (keystone/collab-server.js). The HTML columns above are kept in sync by the
+     * browser editor on save (the server stays DOM-free). Hidden from the Admin UI.
      */
     yjsState: text({
       ui: {
