@@ -52,6 +52,13 @@ export const Opportunity = list({
       },
     }),
 
+    // Sponsoring Organization. One-to-many — each Opportunity has at most one
+    // org; an Org has many Opportunities. Auto-attached during opportunity
+    // creation if the mentor belongs to exactly one org.
+    organization: relationship({
+      ref: "Organization.opportunities",
+    }),
+
     classNetworks: relationship({
       ref: "ClassNetwork.opportunities",
       many: true,
@@ -171,12 +178,17 @@ export const Opportunity = list({
       options: [
         { label: "Draft", value: "draft" },
         { label: "Pending Review", value: "pending_review" },
+        // Admin has accepted the proposal — mentor now completes the
+        // post-acceptance details before the opportunity goes live.
+        { label: "Accepted", value: "accepted" },
         { label: "Published", value: "published" },
         { label: "Closed", value: "closed" },
         { label: "Archived", value: "archived" },
       ],
       defaultValue: "draft",
     }),
+    // Stamped automatically when status transitions to "accepted".
+    acceptedAt: timestamp(),
 
     // --- CUSP capstone sponsor application fields (Q21–Q38) ---
     // Sponsor is also the day-to-day mentor (true when one user fills both
@@ -206,6 +218,21 @@ export const Opportunity = list({
     guidelinesAcknowledged: checkbox({ defaultValue: false }),
     guidelinesAcknowledgedAt: timestamp(),
     requestsAppointment: checkbox({ defaultValue: false }),
+
+    // --- Special considerations (filled at proposal time) ---
+    specialConsiderations: text({ ui: { displayMode: "textarea" } }),
+    designedForSpecificStudents: text({ ui: { displayMode: "textarea" } }),
+    anticipatedObstacles: text({ ui: { displayMode: "textarea" } }),
+    requiresBusinessHours: text({ ui: { displayMode: "textarea" } }),
+    privateClientDataNotes: text({ ui: { displayMode: "textarea" } }),
+    fieldResearchTravelDetails: text({ ui: { displayMode: "textarea" } }),
+    expectedDeliverables: text({ ui: { displayMode: "textarea" } }),
+
+    // --- Post-acceptance details (filled after admin accepts) ---
+    scopeDescription: text({ ui: { displayMode: "textarea" } }),
+    issueRelevance: text({ ui: { displayMode: "textarea" } }),
+    potentialActivities: text({ ui: { displayMode: "textarea" } }),
+    specificSkills: text({ ui: { displayMode: "textarea" } }),
 
     extraDetails: json(),
 

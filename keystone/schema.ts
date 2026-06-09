@@ -58,6 +58,8 @@ import { ConnectPreferenceItem } from "./schemas/ConnectPreferenceItem";
 import { ConnectTeamPreference } from "./schemas/ConnectTeamPreference";
 import { ConnectMatch } from "./schemas/ConnectMatch";
 import { ConnectRating } from "./schemas/ConnectRating";
+import { Organization } from "./schemas/Organization";
+import { OrganizationInvite } from "./schemas/OrganizationInvite";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -128,4 +130,6 @@ export const lists: Lists = {
   ConnectTeamPreference,
   ConnectMatch,
   ConnectRating,
+  Organization,
+  OrganizationInvite,
 };

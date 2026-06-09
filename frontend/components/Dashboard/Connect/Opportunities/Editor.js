@@ -12,6 +12,7 @@ import {
   MY_OPPORTUNITIES,
 } from "../../../Queries/Opportunity";
 import { QUESTIONS_FOR_OPPORTUNITY } from "../../../Queries/ConnectQuestion";
+import { GET_MY_ORGANIZATION } from "../../../Queries/Organization";
 import {
   CREATE_OPPORTUNITY,
   UPDATE_OPPORTUNITY,
@@ -251,6 +252,19 @@ const EMPTY_FORM = {
   additionalNotes: "",
   guidelinesAcknowledged: false,
   requestsAppointment: false,
+  // Special considerations (proposal-time)
+  specialConsiderations: "",
+  designedForSpecificStudents: "",
+  anticipatedObstacles: "",
+  requiresBusinessHours: "",
+  privateClientDataNotes: "",
+  fieldResearchTravelDetails: "",
+  expectedDeliverables: "",
+  // Post-acceptance details (only after admin accepts)
+  scopeDescription: "",
+  issueRelevance: "",
+  potentialActivities: "",
+  specificSkills: "",
 };
 
 function wordCount(value) {
@@ -266,7 +280,8 @@ function RequiredMark() {
   return <span style={{ color: "#b3261e" }}> *</span>;
 }
 
-function WordHint({ value, max, t }) {
+function WordHint({ value, max }) {
+  const { t } = useTranslation("connect");
   const count = wordCount(value);
   const over = count > max;
   return (
@@ -372,15 +387,36 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
   const isNew = opportunityId === "new";
-  const { hasExpandedOpportunityEditor } = deriveRoles(user);
+  const { hasExpandedOpportunityEditor, isAdmin } = deriveRoles(user);
 
-  const statusOptions = [
+  // Sponsors decide between drafting and submitting for review. Everything
+  // beyond — accepting, publishing, closing — is reserved for admins so a
+  // sponsor can't unilaterally accept or publish their own opportunity.
+  const sponsorStatusOptions = [
     {
       key: "draft",
       text: t("opportunityEditor.statusOptions.draft", {}, {
         default: "Draft (not visible to students)",
       }),
       value: "draft",
+    },
+    {
+      key: "pending_review",
+      text: t("opportunityEditor.statusOptions.submitted", {}, {
+        default: "Submitted for review",
+      }),
+      value: "pending_review",
+    },
+  ];
+
+  const adminStatusOptions = [
+    ...sponsorStatusOptions,
+    {
+      key: "accepted",
+      text: t("opportunityEditor.statusOptions.accepted", {}, {
+        default: "Accepted (complete post-acceptance details)",
+      }),
+      value: "accepted",
     },
     {
       key: "published",
@@ -396,7 +432,24 @@ export default function OpportunityEditor({ opportunityId, user }) {
       }),
       value: "closed",
     },
+    {
+      key: "archived",
+      text: t("opportunityEditor.statusOptions.archived", {}, {
+        default: "Archived",
+      }),
+      value: "archived",
+    },
   ];
+
+  const statusOptions = isAdmin ? adminStatusOptions : sponsorStatusOptions;
+  // Statuses only an admin can move to. Used at render time to lock the
+  // dropdown for sponsors when their opportunity is in one of these states.
+  const ADMIN_ONLY_STATUSES = new Set([
+    "accepted",
+    "published",
+    "closed",
+    "archived",
+  ]);
 
   const { data: existing, loading: loadingOpportunity } = useQuery(
     GET_OPPORTUNITY,
@@ -409,6 +462,12 @@ export default function OpportunityEditor({ opportunityId, user }) {
 
   const { data: networksData } = useQuery(MY_CLASS_NETWORKS_FOR_OPPORTUNITY);
   const allNetworks = networksData?.classNetworks || [];
+
+  // The current user's first Organization — auto-attached to new opportunities
+  // so sponsors don't have to pick their own org on every create.
+  const { data: myOrgData } = useQuery(GET_MY_ORGANIZATION);
+  const myOrganizationId =
+    myOrgData?.authenticatedItem?.organizations?.[0]?.id || null;
 
   const opportunity = existing?.opportunity;
 
@@ -540,6 +599,21 @@ export default function OpportunityEditor({ opportunityId, user }) {
       additionalNotes: opportunity.additionalNotes || "",
       guidelinesAcknowledged: !!opportunity.guidelinesAcknowledged,
       requestsAppointment: !!opportunity.requestsAppointment,
+      // Special considerations
+      specialConsiderations: opportunity.specialConsiderations || "",
+      designedForSpecificStudents:
+        opportunity.designedForSpecificStudents || "",
+      anticipatedObstacles: opportunity.anticipatedObstacles || "",
+      requiresBusinessHours: opportunity.requiresBusinessHours || "",
+      privateClientDataNotes: opportunity.privateClientDataNotes || "",
+      fieldResearchTravelDetails:
+        opportunity.fieldResearchTravelDetails || "",
+      expectedDeliverables: opportunity.expectedDeliverables || "",
+      // Post-acceptance details
+      scopeDescription: opportunity.scopeDescription || "",
+      issueRelevance: opportunity.issueRelevance || "",
+      potentialActivities: opportunity.potentialActivities || "",
+      specificSkills: opportunity.specificSkills || "",
     });
     setSelectedGrades(opportunity.preferGradeLevels || []);
     setSelectedClassTypes(opportunity.preferClassType || []);
@@ -684,11 +758,14 @@ export default function OpportunityEditor({ opportunityId, user }) {
       return;
     }
     if (!validateCapstoneSponsorFields()) return;
-    if (inputs.status === "published" && !inputs.guidelinesAcknowledged) {
+    // Acknowledgment is required for any progression past Draft — both when a
+    // sponsor submits for review AND when an admin publishes. Keeps the
+    // mutual-expectations check at the gate of the first non-draft state.
+    if (inputs.status !== "draft" && !inputs.guidelinesAcknowledged) {
       alert(
         t("opportunityEditor.validation.guidelines", {}, {
           default:
-            "Please tick the guidelines acknowledgment in the Publishing card before publishing this opportunity.",
+            "Please tick the guidelines acknowledgment in the Publishing card before changing the status away from Draft.",
         }),
       );
       return;
@@ -740,6 +817,26 @@ export default function OpportunityEditor({ opportunityId, user }) {
           ? new Date().toISOString()
           : opportunity?.guidelinesAcknowledgedAt || null,
       requestsAppointment: !!inputs.requestsAppointment,
+      // Special considerations
+      specialConsiderations: inputs.specialConsiderations || "",
+      designedForSpecificStudents: inputs.designedForSpecificStudents || "",
+      anticipatedObstacles: inputs.anticipatedObstacles || "",
+      requiresBusinessHours: inputs.requiresBusinessHours || "",
+      privateClientDataNotes: inputs.privateClientDataNotes || "",
+      fieldResearchTravelDetails: inputs.fieldResearchTravelDetails || "",
+      expectedDeliverables: inputs.expectedDeliverables || "",
+      // Post-acceptance details
+      scopeDescription: inputs.scopeDescription || "",
+      issueRelevance: inputs.issueRelevance || "",
+      potentialActivities: inputs.potentialActivities || "",
+      specificSkills: inputs.specificSkills || "",
+      // Auto-stamp the acceptance time when status first transitions to
+      // "accepted" (this typically happens via an admin tool, but if it's
+      // set in the editor we still mark the moment).
+      acceptedAt:
+        inputs.status === "accepted" && !opportunity?.acceptedAt
+          ? new Date().toISOString()
+          : opportunity?.acceptedAt || null,
     };
 
     // Only include the upload fields when the user actually picked a new file.
@@ -758,6 +855,11 @@ export default function OpportunityEditor({ opportunityId, user }) {
             ...baseInput,
             classNetworks: networkConnect.length
               ? { connect: networkConnect }
+              : undefined,
+            // Auto-attach the sponsor's organization (if any) so students
+            // see the institutional identity on the opportunity card.
+            organization: myOrganizationId
+              ? { connect: { id: myOrganizationId } }
               : undefined,
           },
         },
@@ -833,7 +935,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
               default: "e.g. Neuroscience summer mentorship",
             })}
           />
-          <WordHint value={inputs.title} max={15} t={t} />
+          <WordHint value={inputs.title} max={15} />
         </Field>
         <Field>
           <span className="label-text">
@@ -853,7 +955,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
             value={inputs.shortDescription}
             onChange={handleChange}
           />
-          <WordHint value={inputs.shortDescription} max={100} t={t} />
+          <WordHint value={inputs.shortDescription} max={100} />
         </Field>
         <Field>
           <span className="label-text">
@@ -877,7 +979,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
               handleMultipleUpdate({ description: newContent })
             }
           />
-          <WordHint value={inputs.description} max={250} t={t} />
+          <WordHint value={inputs.description} max={250} />
         </Field>
         <Field>
           <span className="label-text">
@@ -1819,19 +1921,244 @@ export default function OpportunityEditor({ opportunityId, user }) {
       )}
 
       <Card>
+        <h2>Special considerations</h2>
+        <p style={{ color: "#5f6871", fontSize: 14, margin: 0 }}>
+          Tell us anything the Capstone Project Team should know that
+          doesn&apos;t fit elsewhere. Optional but very helpful for matching.
+        </p>
+
+        <Field>
+          <span className="label-text">Special considerations</span>
+          <span className="hint">
+            If applicable, describe anything the Capstone Project Team should
+            be aware of.
+          </span>
+          <textarea
+            name="specialConsiderations"
+            value={inputs.specialConsiderations}
+            onChange={handleChange}
+          />
+        </Field>
+
+        <Field>
+          <span className="label-text">
+            Designed with specific NYU CUSP students in mind?
+          </span>
+          <span className="hint">
+            If yes, list the student names. Aim for 15 words or fewer.
+          </span>
+          <textarea
+            name="designedForSpecificStudents"
+            value={inputs.designedForSpecificStudents}
+            onChange={handleChange}
+            rows={2}
+          />
+          <WordHint value={inputs.designedForSpecificStudents} max={15} />
+        </Field>
+
+        <Field>
+          <span className="label-text">Anticipated obstacles</span>
+          <span className="hint">
+            Things a Capstone Team might run into — incomplete data, lack of
+            buy-in, staff turnover, etc. Aim for 250 words or fewer.
+          </span>
+          <textarea
+            name="anticipatedObstacles"
+            value={inputs.anticipatedObstacles}
+            onChange={handleChange}
+          />
+          <WordHint value={inputs.anticipatedObstacles} max={250} />
+        </Field>
+
+        <Field>
+          <span className="label-text">
+            Significant research during business hours?
+          </span>
+          <span className="hint">
+            Many students work full-time. Tell us if daytime availability is
+            needed. Aim for 50 words or fewer.
+          </span>
+          <textarea
+            name="requiresBusinessHours"
+            value={inputs.requiresBusinessHours}
+            onChange={handleChange}
+            rows={3}
+          />
+          <WordHint value={inputs.requiresBusinessHours} max={50} />
+        </Field>
+
+        <Field>
+          <span className="label-text">Private client data access</span>
+          <span className="hint">
+            Will the team access private client data? When/how will approval
+            be in place? Aim for 100 words or fewer.
+          </span>
+          <textarea
+            name="privateClientDataNotes"
+            value={inputs.privateClientDataNotes}
+            onChange={handleChange}
+          />
+          <WordHint value={inputs.privateClientDataNotes} max={100} />
+        </Field>
+
+        <Field>
+          <span className="label-text">Field research and travel</span>
+          <span className="hint">
+            Will the team need to visit other locations? Where? Aim for 250
+            words or fewer.
+          </span>
+          <textarea
+            name="fieldResearchTravelDetails"
+            value={inputs.fieldResearchTravelDetails}
+            onChange={handleChange}
+          />
+          <WordHint value={inputs.fieldResearchTravelDetails} max={250} />
+        </Field>
+
+        <Field>
+          <span className="label-text">Expected deliverables</span>
+          <span className="hint">
+            What will the team produce at the end — instruments, policies,
+            datasets, a report, recommendations? Aim for 250 words or fewer.
+          </span>
+          <textarea
+            name="expectedDeliverables"
+            value={inputs.expectedDeliverables}
+            onChange={handleChange}
+          />
+          <WordHint value={inputs.expectedDeliverables} max={250} />
+        </Field>
+      </Card>
+
+      {(inputs.status === "accepted" ||
+        inputs.status === "published" ||
+        inputs.status === "closed" ||
+        opportunity?.acceptedAt) && (
+        <Card>
+          <h2>You&apos;ve been accepted — let&apos;s lock in the details</h2>
+          <div
+            style={{
+              padding: "10px 14px",
+              borderRadius: 10,
+              background: "#e3f4ec",
+              border: "1px solid #b6dec7",
+              color: "#1d6b3a",
+              fontSize: 13,
+            }}
+          >
+            <Icon name="check circle" /> Your proposal was accepted
+            {opportunity?.acceptedAt
+              ? ` on ${new Date(opportunity.acceptedAt).toLocaleDateString()}`
+              : ""}
+            . Please complete the four sections below — they help students
+            understand what they&apos;ll be doing before you publish.
+          </div>
+
+          <Field>
+            <span className="label-text">Scope of the project</span>
+            <span className="hint">
+              Best Capstone proposals are important but not urgent, achievable
+              within the academic timeframe, have a clear problem definition,
+              a realistic scope, and specify tangible deliverables.
+            </span>
+            <textarea
+              name="scopeDescription"
+              value={inputs.scopeDescription}
+              onChange={handleChange}
+            />
+          </Field>
+
+          <Field>
+            <span className="label-text">
+              Why is this issue of particular relevance to your organization?
+            </span>
+            <span className="hint">
+              Implications for your agency. Aim for 500 words or fewer.
+            </span>
+            <textarea
+              name="issueRelevance"
+              value={inputs.issueRelevance}
+              onChange={handleChange}
+            />
+            <WordHint value={inputs.issueRelevance} max={500} />
+          </Field>
+
+          <Field>
+            <span className="label-text">Potential activities</span>
+            <span className="hint">
+              What the team might do: literature review, survey, program
+              evaluation, dataset analysis, etc. Aim for 500 words or fewer.
+            </span>
+            <textarea
+              name="potentialActivities"
+              value={inputs.potentialActivities}
+              onChange={handleChange}
+            />
+            <WordHint value={inputs.potentialActivities} max={500} />
+          </Field>
+
+          <Field>
+            <span className="label-text">
+              Specific skills or qualifications
+            </span>
+            <span className="hint">
+              Software knowledge, statistics, issue-area experience, etc. Aim
+              for 500 words or fewer.
+            </span>
+            <textarea
+              name="specificSkills"
+              value={inputs.specificSkills}
+              onChange={handleChange}
+            />
+            <WordHint value={inputs.specificSkills} max={500} />
+          </Field>
+        </Card>
+      )}
+
+      <Card>
         <h2>{t("opportunityEditor.publishing", {}, { default: "Publishing" })}</h2>
         <Field>
           <span className="label-text">
             {t("opportunityEditor.status", {}, { default: "Status" })}
           </span>
-          <Dropdown
-            selection
-            options={statusOptions}
-            value={inputs.status}
-            onChange={(_, { value }) =>
-              handleMultipleUpdate({ status: value })
-            }
-          />
+          {!isAdmin && ADMIN_ONLY_STATUSES.has(inputs.status) ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "10px 14px",
+                borderRadius: 10,
+                background: "#f7f9f8",
+                border: "1px solid #d3dae0",
+                color: "#171717",
+                fontSize: 14,
+              }}
+            >
+              <Icon name="lock" />
+              <strong style={{ textTransform: "capitalize" }}>
+                {inputs.status.replace("_", " ")}
+              </strong>
+              <span style={{ color: "#5f6871", fontSize: 13 }}>
+                — locked. Ask an admin to change the status.
+              </span>
+            </div>
+          ) : (
+            <Dropdown
+              selection
+              options={statusOptions}
+              value={inputs.status}
+              onChange={(_, { value }) =>
+                handleMultipleUpdate({ status: value })
+              }
+            />
+          )}
+          {!isAdmin && (
+            <span className="hint" style={{ marginTop: 4 }}>
+              Set to <strong>Submitted for review</strong> when your proposal
+              is ready — an admin will review and publish it.
+            </span>
+          )}
         </Field>
         <Field>
           <span className="label-text">
@@ -1928,7 +2255,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
             </span>
           </label>
         </Field>
-        {inputs.status === "published" && !inputs.guidelinesAcknowledged && (
+        {inputs.status !== "draft" && !inputs.guidelinesAcknowledged && (
           <div
             style={{
               padding: "10px 14px",
@@ -1941,7 +2268,8 @@ export default function OpportunityEditor({ opportunityId, user }) {
           >
             <Icon name="warning circle" />{" "}
             {t("opportunityEditor.guidelinesWarning", {}, {
-              default: "Tick the guidelines checkbox before publishing.",
+              default:
+                "Tick the guidelines checkbox before moving the status away from Draft.",
             })}
           </div>
         )}

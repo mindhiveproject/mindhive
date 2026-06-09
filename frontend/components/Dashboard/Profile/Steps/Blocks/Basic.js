@@ -7,6 +7,10 @@ import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../../Mutations/User";
+import {
+  CREATE_ORGANIZATION,
+  UPDATE_ORGANIZATION,
+} from "../../../../Mutations/Organization";
 
 import { StyledInput } from "../../../../styles/StyledForm";
 import { StyledSaveButton } from "../../../../styles/StyledProfile";
@@ -30,15 +34,25 @@ export default function BasicInformation({ query, user }) {
   const profileType = resolveProfileType(query, user);
   const isOrganization = profileType === "organization";
 
+  // For org-type profiles, source the displayed values from the first linked
+  // Organization (with a fallback to the legacy Profile-level fields so users
+  // who haven't migrated yet still see their old data).
+  const existingOrg = (user?.organizations || [])[0];
+
+  // Pending logo file (set when the user picks one but before they hit Save).
+  const [logoUpload, setLogoUpload] = useState(null);
+  const MAX_LOGO_BYTES = 10 * 1024 * 1024; // 10 MB
+
   const { inputs, handleChange } = useForm(
     isOrganization
       ? {
-          organization: user?.organization,
-          department: user?.department,
-          website: user?.website,
-          location: user?.location,
-          primaryDomain: user?.primaryDomain,
-          bio: user?.bio,
+          organization: existingOrg?.name || user?.organization,
+          department: existingOrg?.department || user?.department,
+          website: existingOrg?.website || user?.website,
+          location: existingOrg?.location || user?.location,
+          primaryDomain:
+            existingOrg?.primaryDomain || user?.primaryDomain,
+          bio: existingOrg?.mission || user?.bio,
           profileType,
         }
       : {
@@ -75,16 +89,61 @@ export default function BasicInformation({ query, user }) {
   };
 
   const [updateProfile] = useMutation(UPDATE_PROFILE, {
-    variables: {
-      id: user?.id,
-      input: { ...inputs },
-    },
+    refetchQueries: [{ query: GET_PROFILE }],
+  });
+  const [createOrganization] = useMutation(CREATE_ORGANIZATION, {
+    refetchQueries: [{ query: GET_PROFILE }],
+  });
+  const [updateOrganization] = useMutation(UPDATE_ORGANIZATION, {
     refetchQueries: [{ query: GET_PROFILE }],
   });
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await updateProfile();
+    if (isOrganization) {
+      // Org-type profiles: write the org-level fields to an Organization
+      // record. Create one if the user doesn't have one yet (auto-migration
+      // for legacy sponsor accounts), otherwise update the existing one.
+      // Only profileType is written to the Profile itself.
+      const orgInput = {
+        name: inputs?.organization || "",
+        department: inputs?.department || "",
+        website: inputs?.website || "",
+        location: inputs?.location || "",
+        primaryDomain: inputs?.primaryDomain || null,
+        mission: inputs?.bio || "",
+        updatedAt: new Date().toISOString(),
+      };
+      // Only include the logo field when the user actually picked a new file.
+      if (logoUpload) {
+        orgInput.logo = { upload: logoUpload };
+      }
+      if (existingOrg?.id) {
+        await updateOrganization({
+          variables: { id: existingOrg.id, input: orgInput },
+        });
+      } else if (orgInput.name) {
+        await createOrganization({
+          variables: {
+            input: {
+              ...orgInput,
+              members: { connect: [{ id: user?.id }] },
+            },
+          },
+        });
+      }
+      setLogoUpload(null);
+      await updateProfile({
+        variables: {
+          id: user?.id,
+          input: { profileType: "organization" },
+        },
+      });
+    } else {
+      await updateProfile({
+        variables: { id: user?.id, input: { ...inputs } },
+      });
+    }
     setChanged(false);
   }
 
@@ -150,6 +209,70 @@ export default function BasicInformation({ query, user }) {
                 onChange={handleUpdate}
                 required
               />
+            </div>
+
+            <div className="inputLineBlock">
+              <p className="fieldLabel">Organization logo</p>
+              <p style={{ fontSize: 13, color: "#5f6871", marginTop: 0 }}>
+                A square logo works best (JPG, PNG, or WEBP). Up to{" "}
+                {MAX_LOGO_BYTES / 1024 / 1024} MB.
+              </p>
+              {(existingOrg?.logo?.url || logoUpload) && (
+                <div style={{ marginBottom: 8 }}>
+                  <img
+                    src={
+                      logoUpload
+                        ? URL.createObjectURL(logoUpload)
+                        : existingOrg?.logo?.url
+                    }
+                    alt="Organization logo preview"
+                    style={{
+                      width: 96,
+                      height: 96,
+                      objectFit: "cover",
+                      borderRadius: 12,
+                      border: "1px solid #d3dae0",
+                    }}
+                  />
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  if (!file) {
+                    setLogoUpload(null);
+                    return;
+                  }
+                  if (!file.type.startsWith("image/")) {
+                    alert("Please pick an image file (JPG, PNG, WEBP, etc.).");
+                    return;
+                  }
+                  if (file.size > MAX_LOGO_BYTES) {
+                    alert(
+                      `Logo is too large (${Math.round(
+                        file.size / 1024 / 1024,
+                      )} MB). Maximum is ${MAX_LOGO_BYTES / 1024 / 1024} MB.`,
+                    );
+                    return;
+                  }
+                  setLogoUpload(file);
+                  setChanged(true);
+                }}
+              />
+              {logoUpload && (
+                <div
+                  style={{
+                    fontSize: 12,
+                    color: "#1d8f47",
+                    marginTop: 4,
+                  }}
+                >
+                  Ready to upload: {logoUpload.name} (
+                  {Math.round(logoUpload.size / 1024)} KB)
+                </div>
+              )}
             </div>
 
             <div className="inputLineBlock">

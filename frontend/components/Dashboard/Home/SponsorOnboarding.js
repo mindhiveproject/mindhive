@@ -142,11 +142,12 @@ export default function SponsorOnboarding() {
   if (!isSponsor) return null;
 
   // Step 1 — "completed" if the user has gone through the profile-type chooser
-  // and saved either an organization name (Organization path) or first/last
-  // name (Individual path).
+  // and either created an Organization (Organization path) or filled in
+  // first + last name (Individual path).
+  const orgRecord = (me?.organizations || [])[0];
   const orgPathComplete =
     me?.profileType === "organization" &&
-    !!(me?.organization || "").trim();
+    !!(orgRecord?.name || me?.organization || "").trim();
   const individualPathComplete =
     me?.profileType === "individual" &&
     !!(me?.firstName || "").trim() &&

@@ -103,5 +103,11 @@ export const Tag = list({
       ref: "Profile.interests",
       many: true,
     }),
+    // Organizations that picked this tag as one of their areas of focus
+    // ("Where can your organization help?"). Mirrors Profile.interests.
+    organizations: relationship({
+      ref: "Organization.interests",
+      many: true,
+    }),
   },
 });

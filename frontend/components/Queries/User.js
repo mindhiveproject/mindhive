@@ -16,6 +16,10 @@ export const SPONSOR_ONBOARDING_STATE = gql`
         permissions {
           name
         }
+        organizations {
+          id
+          name
+        }
         opportunitiesCreated {
           id
         }
@@ -1023,8 +1027,41 @@ export const GET_PROFILE = gql`
         mentorPreferGrade
         mentorPreferGroup
         mentorPreferClass
+        publicMail
         interests {
           id
+        }
+        organizations {
+          id
+          name
+          tagline
+          department
+          website
+          location
+          mission
+          primaryDomain
+          verified
+          logo {
+            url
+          }
+          interests {
+            id
+          }
+          members {
+            id
+            username
+            firstName
+            lastName
+            email
+            image {
+              keystoneImage {
+                url
+              }
+              image {
+                publicUrlTransformed
+              }
+            }
+          }
         }
       }
     }

@@ -8,6 +8,7 @@ import ParticipateMain from "./Participate/Main";
 import MatchesMain from "./Matches/Main";
 import MentorMatchesMain from "./MentorMatches/Main";
 import ExploreMain from "./Explore/Main";
+import OrganizationsMain from "./Organizations/Main";
 
 export default function ConnectMain({ query, user }) {
   const { selector } = query;
@@ -46,6 +47,10 @@ export default function ConnectMain({ query, user }) {
 
   if (selector === "explore") {
     return <ExploreMain query={query} user={user} />;
+  }
+
+  if (selector === "organizations") {
+    return <OrganizationsMain query={query} user={user} />;
   }
 
   return <ConnectBank query={query} user={user} />;

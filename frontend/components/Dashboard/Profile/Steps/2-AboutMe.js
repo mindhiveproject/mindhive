@@ -5,6 +5,7 @@ import Background from "./Blocks/Background";
 import BasicInformation from "./Blocks/Basic";
 import IntroductionVideo from "./Blocks/Introduction";
 import Preferences from "./Blocks/Preferences";
+import Members from "./Blocks/Members";
 import {
   profileEditHref,
   resolveProfileType,
@@ -14,12 +15,16 @@ export default function About({ query, user }) {
   const { t } = useTranslation("connect");
   const profileType = resolveProfileType(query, user);
   const isOrganization = profileType === "organization";
+  const organization = (user?.organizations || [])[0];
 
   return (
     <>
       <div className="aboutMe">
         <BasicInformation query={query} user={user} />
         <Background query={query} user={user} />
+        {isOrganization && (
+          <Members user={user} organization={organization} />
+        )}
         {!isOrganization && (
           <>
             <IntroductionVideo query={query} user={user} />

@@ -23,8 +23,8 @@ import {
 } from "unique-names-generator";
 
 const adjectives = baseAdjectives
-  .filter(w => !['booby', 'tasty'].includes(w))
-  .concat(['curious', 'kind']);
+  .filter((w) => !["booby", "tasty"].includes(w))
+  .concat(["curious", "kind"]);
 
 const customConfig: Config = {
   dictionaries: [adjectives, colors, animals],
@@ -337,6 +337,21 @@ export const Profile = list({
     timeCommitment: text(),
     opportunitiesCreated: relationship({
       ref: "Opportunity.mentor",
+      many: true,
+    }),
+    // Connect / Organization membership. Many-to-many: a Profile can belong
+    // to several Organizations (rare in practice but supported).
+    organizations: relationship({
+      ref: "Organization.members",
+      many: true,
+    }),
+    organizationsCreated: relationship({
+      ref: "Organization.createdBy",
+      many: true,
+    }),
+    // Invites this profile has sent to other people.
+    organizationInvitesSent: relationship({
+      ref: "OrganizationInvite.invitedBy",
       many: true,
     }),
     favoriteOpportunities: relationship({

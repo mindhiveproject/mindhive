@@ -264,6 +264,16 @@ export const rules = {
       ],
     };
   },
+  // Organization: only members (and admins) can update or delete.
+  // Read access stays open — anyone can browse organizations.
+  connectOrganizationMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session.itemId;
+    return {
+      members: { some: { id: { equals: me } } },
+    };
+  },
   // ConnectPreferenceItem inherits from its parent preference's submitter / round creator.
   connectPreferenceItemVisible({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) return false;

@@ -80,6 +80,20 @@ export const GET_OPPORTUNITY = gql`
         firstName
         lastName
       }
+      organization {
+        id
+        name
+        tagline
+        department
+        website
+        location
+        mission
+        primaryDomain
+        verified
+        logo {
+          url
+        }
+      }
       # CUSP capstone fields
       sponsorIsMentor
       mentorNotes
@@ -98,6 +112,20 @@ export const GET_OPPORTUNITY = gql`
       guidelinesAcknowledged
       guidelinesAcknowledgedAt
       requestsAppointment
+      acceptedAt
+      # Special considerations
+      specialConsiderations
+      designedForSpecificStudents
+      anticipatedObstacles
+      requiresBusinessHours
+      privateClientDataNotes
+      fieldResearchTravelDetails
+      expectedDeliverables
+      # Post-acceptance details
+      scopeDescription
+      issueRelevance
+      potentialActivities
+      specificSkills
       createdAt
       updatedAt
     }
@@ -247,6 +275,20 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
           }
         }
       }
+      organization {
+        id
+        name
+        tagline
+        department
+        website
+        location
+        mission
+        primaryDomain
+        verified
+        logo {
+          url
+        }
+      }
       classNetworks {
         id
         title
@@ -266,6 +308,19 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
       learningOutcomes
       relevantLinks
       additionalNotes
+      # Special considerations (visible to students once published)
+      specialConsiderations
+      designedForSpecificStudents
+      anticipatedObstacles
+      requiresBusinessHours
+      privateClientDataNotes
+      fieldResearchTravelDetails
+      expectedDeliverables
+      # Post-acceptance details
+      scopeDescription
+      issueRelevance
+      potentialActivities
+      specificSkills
       ratings(
         where: { isPublic: { equals: true } }
         orderBy: { createdAt: desc }

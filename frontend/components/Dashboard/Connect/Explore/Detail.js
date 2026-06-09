@@ -824,8 +824,97 @@ export default function ExploreDetail({ opportunityId }) {
         </Card>
       )}
 
+      {opp.organization && (
+        <Card>
+          <h2>Hosted by</h2>
+          <MentorPanel>
+            {opp.organization?.logo?.url ? (
+              <img
+                src={opp.organization.logo.url}
+                alt={opp.organization.name}
+              />
+            ) : (
+              <span className="placeholder">
+                {(opp.organization.name || "?").charAt(0).toUpperCase()}
+              </span>
+            )}
+            <div className="info">
+              <span className="name">
+                {opp.organization.name}
+                {opp.organization.verified && (
+                  <Icon
+                    name="check circle"
+                    style={{
+                      color: "#1d6b3a",
+                      marginLeft: 6,
+                    }}
+                    title="Verified organization"
+                  />
+                )}
+              </span>
+              {opp.organization.tagline && (
+                <span className="tagline">{opp.organization.tagline}</span>
+              )}
+              {(opp.organization.department ||
+                opp.organization.location) && (
+                <span className="org">
+                  {opp.organization.department || ""}
+                  {opp.organization.department && opp.organization.location
+                    ? " · "
+                    : ""}
+                  {opp.organization.location || ""}
+                </span>
+              )}
+            </div>
+            <div
+              style={{
+                marginLeft: "auto",
+                display: "inline-flex",
+                gap: 12,
+                alignItems: "center",
+              }}
+            >
+              {opp.organization.website && (
+                <a
+                  href={opp.organization.website}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="profile-link"
+                >
+                  Website <Icon name="external alternate" />
+                </a>
+              )}
+              <Link
+                href={{
+                  pathname: "/dashboard/connect/organizations",
+                  query: { org: opp.organization.id },
+                }}
+                passHref
+                legacyBehavior
+              >
+                <a className="profile-link">
+                  View organization <Icon name="arrow right" />
+                </a>
+              </Link>
+            </div>
+          </MentorPanel>
+          {opp.organization.mission && (
+            <div
+              style={{
+                color: "#5f6871",
+                fontSize: 14,
+                lineHeight: 1.5,
+                whiteSpace: "pre-wrap",
+              }}
+            >
+              {opp.organization.mission}
+            </div>
+          )}
+        </Card>
+      )}
+
       <Card>
-        <h2>Your mentor</h2>
+        <h2>Your contact</h2>
         <MentorPanel>
           {mentorAvatar ? (
             <img src={mentorAvatar} alt={mentorName} />

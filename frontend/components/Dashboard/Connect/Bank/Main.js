@@ -253,6 +253,13 @@ export default function ConnectBankNew({ query, user }) {
         >
           <button type="button">Explore opportunities</button>
         </Link>
+        <Link
+          href={{
+            pathname: `/dashboard/connect/organizations`,
+          }}
+        >
+          <button type="button">Organizations</button>
+        </Link>
         {(isMentor || isAdmin) && (
           <Link
             href={{

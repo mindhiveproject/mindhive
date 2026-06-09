@@ -7,6 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../../Queries/User";
 import { UPDATE_PROFILE } from "../../../Mutations/User";
+import { UPDATE_ORGANIZATION } from "../../../Mutations/Organization";
 import { GET_TAGS } from "../../../Queries/Tag";
 import {
   profileEditHref,
@@ -17,8 +18,15 @@ export default function InterestSelector({ query, user }) {
   const { t } = useTranslation("connect");
   const router = useRouter();
   const profileType = resolveProfileType(query, user);
+  const isOrganization = profileType === "organization";
+  // For org-type profiles, the interests live on the Organization rather than
+  // the Profile ("Where can your organization help?").
+  const existingOrg = (user?.organizations || [])[0];
+  const sourceInterests = isOrganization
+    ? existingOrg?.interests || []
+    : user?.interests || [];
   const { inputs, handleChange } = useForm({
-    interests: user?.interests.map((i) => ({ id: i?.id })) || [],
+    interests: sourceInterests.map((i) => ({ id: i?.id })),
   });
 
   const { data, loading, error } = useQuery(GET_TAGS);
@@ -29,25 +37,12 @@ export default function InterestSelector({ query, user }) {
     value: tag.id,
   }));
 
-  const [updateProfile, { data: updateProfileData }] = useMutation(
-    UPDATE_PROFILE,
-    {
-      variables: {
-        id: user?.id,
-        input: {
-          interests:
-            user?.interests && user?.interests.length
-              ? {
-                  set: inputs?.interests,
-                }
-              : {
-                  connect: inputs?.interests,
-                },
-        },
-      },
-      refetchQueries: [{ query: GET_PROFILE }],
-    }
-  );
+  const [updateProfile] = useMutation(UPDATE_PROFILE, {
+    refetchQueries: [{ query: GET_PROFILE }],
+  });
+  const [updateOrganization] = useMutation(UPDATE_ORGANIZATION, {
+    refetchQueries: [{ query: GET_PROFILE }],
+  });
 
   const handleTagsUpdate = (value) => {
     handleChange({
@@ -71,7 +66,28 @@ export default function InterestSelector({ query, user }) {
   };
 
   const complete = async () => {
-    await updateProfile();
+    if (isOrganization && existingOrg?.id) {
+      // Use `set` so the org's interests are replaced with the current
+      // selection (handles both adds and removes).
+      await updateOrganization({
+        variables: {
+          id: existingOrg.id,
+          input: { interests: { set: inputs?.interests } },
+        },
+      });
+    } else if (!isOrganization) {
+      await updateProfile({
+        variables: {
+          id: user?.id,
+          input: {
+            interests:
+              user?.interests && user?.interests.length
+                ? { set: inputs?.interests }
+                : { connect: inputs?.interests },
+          },
+        },
+      });
+    }
     router.push({
       pathname: "/dashboard",
     });
