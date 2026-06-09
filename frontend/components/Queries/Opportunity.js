@@ -43,6 +43,8 @@ export const GET_OPPORTUNITY = gql`
       title
       shortDescription
       description
+      projectCategory
+      projectCategoryOther
       coverImageUrl
       coverImage {
         id
@@ -199,6 +201,8 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
       title
       shortDescription
       description
+      projectCategory
+      projectCategoryOther
       status
       coverImageUrl
       coverImage {
