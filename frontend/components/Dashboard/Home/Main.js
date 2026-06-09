@@ -14,14 +14,10 @@ export default function Home({ query, user }) {
 
   return (
     <StyledHome>
-      <SponsorOnboarding />
-
       <Profile />
-
+      <SponsorOnboarding />
       <FavoritePeople user={user} />
-
       <FavoriteTasks user={user} />
-
       <MyUpdates user={user} />
 
       <div className="header">

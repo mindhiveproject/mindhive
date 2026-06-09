@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import { Icon, Dropdown } from "semantic-ui-react";
 
@@ -20,6 +21,7 @@ import {
   DELETE_QUESTION,
 } from "../../../Mutations/ConnectQuestion";
 import TipTapEditor from "../../../TipTap/Main";
+import { deriveRoles } from "../useConnectRole";
 
 const Shell = styled.div`
   display: flex;
@@ -208,16 +210,21 @@ const GROUP_FORMAT_OPTIONS = [
   { key: "either", text: "Either", value: "either" },
 ];
 
-const STATUS_OPTIONS = [
-  { key: "draft", text: "Draft (not visible to students)", value: "draft" },
-  { key: "published", text: "Published", value: "published" },
-  { key: "closed", text: "Closed", value: "closed" },
+const CATEGORY_OPTIONS = [
+  { value: "urban_health", key: "urbanHealth" },
+  { value: "urban_environment", key: "urbanEnvironment" },
+  { value: "urban_infrastructure", key: "urbanInfrastructure" },
+  { value: "other", key: "other" },
 ];
+
+const DATA_SECURITY_OPTIONS = ["yes", "maybe", "no"];
 
 const EMPTY_FORM = {
   title: "",
   shortDescription: "",
   description: "",
+  projectCategory: "",
+  projectCategoryOther: "",
   coverImageUrl: "",
   videoUrl: "",
   availableFrom: "",
@@ -255,7 +262,11 @@ function wordCount(value) {
     .filter(Boolean).length;
 }
 
-function WordHint({ value, max }) {
+function RequiredMark() {
+  return <span style={{ color: "#b3261e" }}> *</span>;
+}
+
+function WordHint({ value, max, t }) {
   const count = wordCount(value);
   const over = count > max;
   return (
@@ -263,10 +274,81 @@ function WordHint({ value, max }) {
       className="hint"
       style={{ color: over ? "#b3261e" : "#888", fontSize: 11 }}
     >
-      {count} / {max} words {over ? "— consider trimming" : ""}
+      {t("opportunityEditor.wordCountTemplate", { count, max }, {
+        default: "{{count}} / {{max}} words",
+      })}{" "}
+      {over
+        ? t("opportunityEditor.wordCountOver", {}, { default: "— consider trimming" })
+        : ""}
     </span>
   );
 }
+
+const LinkChipRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border: 1px solid #d3dae0;
+    border-radius: 100px;
+    background: #ffffff;
+    color: #336f8a;
+    font-family: "Nunito", sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      background: #eef5f9;
+      border-color: #336f8a;
+    }
+  }
+`;
+
+const ScaleRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #888;
+  }
+
+  .scale-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .scale-btn {
+    flex: 1;
+    min-width: 40px;
+    padding: 8px 0;
+    border: 1px solid #d3dae0;
+    border-radius: 8px;
+    background: #ffffff;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    color: #171717;
+    cursor: pointer;
+    text-align: center;
+
+    &.active {
+      background: #336f8a;
+      color: #ffffff;
+      border-color: #336f8a;
+    }
+  }
+`;
 
 function toDateInputValue(iso) {
   if (!iso) return "";
@@ -286,9 +368,35 @@ function toIsoOrNull(dateStr) {
   }
 }
 
-export default function OpportunityEditor({ opportunityId }) {
+export default function OpportunityEditor({ opportunityId, user }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
   const isNew = opportunityId === "new";
+  const { hasExpandedOpportunityEditor } = deriveRoles(user);
+
+  const statusOptions = [
+    {
+      key: "draft",
+      text: t("opportunityEditor.statusOptions.draft", {}, {
+        default: "Draft (not visible to students)",
+      }),
+      value: "draft",
+    },
+    {
+      key: "published",
+      text: t("opportunityEditor.statusOptions.published", {}, {
+        default: "Published",
+      }),
+      value: "published",
+    },
+    {
+      key: "closed",
+      text: t("opportunityEditor.statusOptions.closed", {}, {
+        default: "Closed",
+      }),
+      value: "closed",
+    },
+  ];
 
   const { data: existing, loading: loadingOpportunity } = useQuery(
     GET_OPPORTUNITY,
@@ -404,6 +512,8 @@ export default function OpportunityEditor({ opportunityId }) {
       title: opportunity.title || "",
       shortDescription: opportunity.shortDescription || "",
       description: opportunity.description || "",
+      projectCategory: opportunity.projectCategory || "",
+      projectCategoryOther: opportunity.projectCategoryOther || "",
       coverImageUrl: opportunity.coverImageUrl || "",
       videoUrl: opportunity.videoUrl || "",
       availableFrom: toDateInputValue(opportunity.availableFrom),
@@ -519,19 +629,67 @@ export default function OpportunityEditor({ opportunityId }) {
   };
 
   const handleDeleteQuestion = async (id) => {
-    if (!window.confirm("Delete this question?")) return;
+    if (
+      !window.confirm(
+        t("opportunityEditor.customQuestions.deleteConfirm", {}, {
+          default: "Delete this question?",
+        }),
+      )
+    )
+      return;
     await deleteQuestion({ variables: { id } });
     refetchQuestions();
   };
 
+  const validateCapstoneSponsorFields = () => {
+    if (hasExpandedOpportunityEditor) return true;
+    const checks = [
+      [!inputs.shortDescription?.trim(), "validation.projectAbstract"],
+      [!inputs.description?.trim(), "validation.projectDescription"],
+      [!inputs.researchQuestion?.trim(), "validation.researchQuestion"],
+      [!inputs.projectCategory, "validation.category"],
+      [
+        inputs.projectCategory === "other" && !inputs.projectCategoryOther?.trim(),
+        "validation.categoryOther",
+      ],
+      [!inputs.relevance?.trim(), "validation.relevance"],
+      [!inputs.dataRequirements?.trim(), "validation.dataRequirements"],
+      [!inputs.backgroundMethodology?.trim(), "validation.backgroundMethodology"],
+      [!inputs.competencies?.trim(), "validation.competencies"],
+      [!inputs.learningOutcomes?.trim(), "validation.learningOutcomes"],
+      [
+        !relevantLinks.some((l) => l.url?.trim()),
+        "validation.relevantLinks",
+      ],
+      [!inputs.additionalNotes?.trim(), "validation.additionalNotes"],
+    ];
+    for (const [failed, key] of checks) {
+      if (failed) {
+        alert(
+          t(`opportunityEditor.${key}`, {}, {
+            default: "Please complete all required fields.",
+          }),
+        );
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleSave = async () => {
     if (!inputs.title?.trim()) {
-      alert("Title is required.");
+      alert(
+        t("opportunityEditor.validation.title", {}, { default: "Title is required." }),
+      );
       return;
     }
+    if (!validateCapstoneSponsorFields()) return;
     if (inputs.status === "published" && !inputs.guidelinesAcknowledged) {
       alert(
-        "Please tick the guidelines acknowledgment in the Publishing card before publishing this opportunity.",
+        t("opportunityEditor.validation.guidelines", {}, {
+          default:
+            "Please tick the guidelines acknowledgment in the Publishing card before publishing this opportunity.",
+        }),
       );
       return;
     }
@@ -542,6 +700,11 @@ export default function OpportunityEditor({ opportunityId }) {
       title: inputs.title,
       shortDescription: inputs.shortDescription || "",
       description: inputs.description || "",
+      projectCategory: inputs.projectCategory || null,
+      projectCategoryOther:
+        inputs.projectCategory === "other"
+          ? inputs.projectCategoryOther || ""
+          : "",
       coverImageUrl: inputs.coverImageUrl || "",
       videoUrl: inputs.videoUrl || "",
       availableFrom: toIsoOrNull(inputs.availableFrom),
@@ -628,7 +791,7 @@ export default function OpportunityEditor({ opportunityId }) {
   if (!isNew && loadingOpportunity && !opportunity) {
     return (
       <Shell>
-        <p>Loading opportunity…</p>
+        <p>{t("opportunityEditor.loading", {}, { default: "Loading opportunity…" })}</p>
       </Shell>
     );
   }
@@ -638,60 +801,108 @@ export default function OpportunityEditor({ opportunityId }) {
       <TopBar>
         <div>
           <BackLink type="button" onClick={handleCancel}>
-            <Icon name="arrow left" /> Back to opportunities
+            <Icon name="arrow left" />{" "}
+            {t("opportunityEditor.backLink", {}, { default: "Back to opportunities" })}
           </BackLink>
-          <h1>{isNew ? "New opportunity" : "Edit opportunity"}</h1>
+          <h1>
+            {isNew
+              ? t("opportunityEditor.pageTitleNew", {}, { default: "New opportunity" })
+              : t("opportunityEditor.pageTitleEdit", {}, { default: "Edit opportunity" })}
+          </h1>
         </div>
       </TopBar>
 
       <Card>
-        <h2>Basics</h2>
+        <h2>{t("opportunityEditor.basics", {}, { default: "Basics" })}</h2>
         <Field>
-          <span className="label-text">Title</span>
-          <span className="hint">Aim for 15 words or fewer — be engaging.</span>
+          <span className="label-text">
+            {t("opportunityEditor.projectTitle", {}, { default: "Project Title" })}
+            <RequiredMark />
+          </span>
+          <span className="hint">
+            {t("opportunityEditor.projectTitleDescription", {}, {
+              default: "15 words maximum. Tips: Be engaging for student appeal",
+            })}
+          </span>
           <input
             type="text"
             name="title"
             value={inputs.title}
             onChange={handleChange}
-            placeholder="e.g. Neuroscience summer mentorship"
+            placeholder={t("opportunityEditor.projectTitlePlaceholder", {}, {
+              default: "e.g. Neuroscience summer mentorship",
+            })}
           />
-          <WordHint value={inputs.title} max={15} />
+          <WordHint value={inputs.title} max={15} t={t} />
         </Field>
         <Field>
-          <span className="label-text">Short description (abstract)</span>
-          <span className="hint">
-            One-sentence summary shown on cards. Aim for 100 words or fewer.
+          <span className="label-text">
+            {t("opportunityEditor.projectAbstract", {}, {
+              default: "Capstone Project Abstract",
+            })}
+            <RequiredMark />
           </span>
-          <input
-            type="text"
+          <span className="hint">
+            {t("opportunityEditor.projectAbstractDescription", {}, {
+              default:
+                "100 words maximum. Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
+            })}
+          </span>
+          <textarea
             name="shortDescription"
             value={inputs.shortDescription}
             onChange={handleChange}
           />
-          <WordHint value={inputs.shortDescription} max={100} />
+          <WordHint value={inputs.shortDescription} max={100} t={t} />
         </Field>
         <Field>
-          <span className="label-text">Full description</span>
+          <span className="label-text">
+            {t("opportunityEditor.projectDescription", {}, {
+              default: "Capstone Project Description & Overview",
+            })}
+            <RequiredMark />
+          </span>
           <span className="hint">
-            Use formatting (headings, lists, links, etc.) to make the project
-            easy to skim. Aim for 250 words or fewer.
+            {t("opportunityEditor.projectDescriptionDescription", {}, {
+              default:
+                "250 words maximum. Describe the scope and nature of the capstone project. Please ensure that the project is achievable within the academic timeframe and with the resources available. Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
+            })}
           </span>
           <TipTapEditor
             content={inputs.description}
-            placeholder="What will students do? What will they learn?"
+            placeholder={t("opportunityEditor.descriptionPlaceholder", {}, {
+              default: "What will students do? What will they learn?",
+            })}
             onUpdate={(newContent) =>
               handleMultipleUpdate({ description: newContent })
             }
           />
-          <WordHint value={inputs.description} max={250} />
+          <WordHint value={inputs.description} max={250} t={t} />
+        </Field>
+        <Field>
+          <span className="label-text">
+            {t("opportunityEditor.researchQuestion", {}, {
+              default:
+                "What is the research question/scope to be explored OR what is the problem that you want to address?",
+            })}
+            <RequiredMark />
+          </span>
+          <textarea
+            name="researchQuestion"
+            value={inputs.researchQuestion}
+            onChange={handleChange}
+          />
         </Field>
         <Row $cols="1fr 1fr">
           <Field>
-            <span className="label-text">Cover image</span>
+            <span className="label-text">
+              {t("opportunityEditor.coverImage", {}, { default: "Cover image" })}
+            </span>
             <span className="hint">
-              Upload a file (stored on our cloud bucket) or paste a direct
-              image URL below. Uploaded files take priority if both are set.
+              {t("opportunityEditor.coverImageHint", {}, {
+                default:
+                  "Upload a file (stored on our cloud bucket) or paste a direct image URL below. Uploaded files take priority if both are set.",
+              })}
             </span>
             {opportunity?.coverImage?.url && !coverImageUpload && (
               <div
@@ -722,8 +933,11 @@ export default function OpportunityEditor({ opportunityId }) {
               </div>
             )}
             <span className="hint" style={{ marginTop: 8 }}>
-              Or paste a URL (max {MAX_COVER_BYTES / 1024 / 1024} MB for
-              uploads):
+              {t("opportunityEditor.coverImageUrlHint", {
+                maxMb: MAX_COVER_BYTES / 1024 / 1024,
+              }, {
+                default: "Or paste a URL (max {{maxMb}} MB for uploads):",
+              })}
             </span>
             <input
               type="text"
@@ -740,10 +954,14 @@ export default function OpportunityEditor({ opportunityId }) {
             )}
           </Field>
           <Field>
-            <span className="label-text">Intro video</span>
+            <span className="label-text">
+              {t("opportunityEditor.introVideo", {}, { default: "Intro video" })}
+            </span>
             <span className="hint">
-              Upload a video file or paste an embed URL (YouTube, Vimeo).
-              Uploaded files are stored on our cloud bucket.
+              {t("opportunityEditor.introVideoHint", {}, {
+                default:
+                  "Upload a video file or paste an embed URL (YouTube, Vimeo). Uploaded files are stored on our cloud bucket.",
+              })}
             </span>
             {opportunity?.videoFile?.url && !videoFileUpload && (
               <div
@@ -757,7 +975,10 @@ export default function OpportunityEditor({ opportunityId }) {
                   color: "#5f6871",
                 }}
               >
-                <Icon name="film" /> Current upload:{" "}
+                <Icon name="film" />{" "}
+                {t("opportunityEditor.videoCurrentUpload", {}, {
+                  default: "Current upload:",
+                })}{" "}
                 <a
                   href={opportunity.videoFile.url}
                   target="_blank"
@@ -780,10 +1001,12 @@ export default function OpportunityEditor({ opportunityId }) {
               </div>
             )}
             <span className="hint" style={{ marginTop: 8 }}>
-              Or paste a video URL (the URL itself — not the full{" "}
-              <code>&lt;iframe&gt;</code> embed code). Supports YouTube, Vimeo,
-              Loom, Google Drive, or a direct .mp4/.webm link. Maximum upload
-              size: {MAX_VIDEO_BYTES / 1024 / 1024} MB.
+              {t("opportunityEditor.introVideoUrlHint", {
+                maxMb: MAX_VIDEO_BYTES / 1024 / 1024,
+              }, {
+                default:
+                  "Or paste a video URL (the URL itself — not the full <iframe> embed code). Supports YouTube, Vimeo, Loom, Google Drive, or a direct .mp4/.webm link. Maximum upload size: {{maxMb}} MB.",
+              })}
             </span>
             <input
               type="text"
@@ -802,10 +1025,67 @@ export default function OpportunityEditor({ opportunityId }) {
       </Card>
 
       <Card>
-        <h2>Availability & capacity</h2>
+        <h2>
+          {t("opportunityEditor.categorization", {}, { default: "Categorization" })}
+          <RequiredMark />
+        </h2>
+        <Field>
+          <span className="hint">
+            {t("opportunityEditor.categorizationDescription", {}, {
+              default: "Which category does your project align with?",
+            })}
+          </span>
+          <CheckboxRow>
+            {CATEGORY_OPTIONS.map((opt) => (
+              <label
+                key={opt.value}
+                className={inputs.projectCategory === opt.value ? "active" : ""}
+              >
+                <input
+                  type="radio"
+                  name="projectCategory"
+                  checked={inputs.projectCategory === opt.value}
+                  onChange={() =>
+                    handleMultipleUpdate({ projectCategory: opt.value })
+                  }
+                />
+                {t(`opportunityEditor.categorizationOptions.${opt.key}`, {}, {
+                  default: opt.key,
+                })}
+              </label>
+            ))}
+          </CheckboxRow>
+        </Field>
+        {inputs.projectCategory === "other" && (
+          <Field>
+            <span className="label-text">
+              {t("opportunityEditor.categorizationOther", {}, {
+                default: "Other category",
+              })}
+              <RequiredMark />
+            </span>
+            <input
+              type="text"
+              name="projectCategoryOther"
+              value={inputs.projectCategoryOther}
+              onChange={handleChange}
+            />
+          </Field>
+        )}
+      </Card>
+
+      {hasExpandedOpportunityEditor && (
+      <Card>
+        <h2>
+          {t("opportunityEditor.availabilityCapacity", {}, {
+            default: "Availability & capacity",
+          })}
+        </h2>
         <Row $cols="1fr 1fr">
           <Field>
-            <span className="label-text">Available from</span>
+            <span className="label-text">
+              {t("opportunityEditor.availableFrom", {}, { default: "Available from" })}
+            </span>
             <input
               type="date"
               name="availableFrom"
@@ -814,7 +1094,9 @@ export default function OpportunityEditor({ opportunityId }) {
             />
           </Field>
           <Field>
-            <span className="label-text">Available to</span>
+            <span className="label-text">
+              {t("opportunityEditor.availableTo", {}, { default: "Available to" })}
+            </span>
             <input
               type="date"
               name="availableTo"
@@ -824,18 +1106,24 @@ export default function OpportunityEditor({ opportunityId }) {
           </Field>
         </Row>
         <Field>
-          <span className="label-text">Time commitment</span>
+          <span className="label-text">
+            {t("opportunityEditor.timeCommitment", {}, { default: "Time commitment" })}
+          </span>
           <input
             type="text"
             name="timeCommitment"
             value={inputs.timeCommitment}
             onChange={handleChange}
-            placeholder="e.g. 3 hours per week for 8 weeks"
+            placeholder={t("opportunityEditor.timeCommitmentPlaceholder", {}, {
+              default: "e.g. 3 hours per week for 8 weeks",
+            })}
           />
         </Field>
         <Row $cols="1fr 1fr 1fr">
           <Field>
-            <span className="label-text">Student capacity</span>
+            <span className="label-text">
+              {t("opportunityEditor.studentCapacity", {}, { default: "Student capacity" })}
+            </span>
             <input
               type="number"
               name="studentCapacity"
@@ -845,8 +1133,12 @@ export default function OpportunityEditor({ opportunityId }) {
             />
           </Field>
           <Field>
-            <span className="label-text">Team size</span>
-            <span className="hint">1 = solo placement.</span>
+            <span className="label-text">
+              {t("opportunityEditor.teamSize", {}, { default: "Team size" })}
+            </span>
+            <span className="hint">
+              {t("opportunityEditor.teamSizeHint", {}, { default: "1 = solo placement." })}
+            </span>
             <input
               type="number"
               name="teamSize"
@@ -856,7 +1148,9 @@ export default function OpportunityEditor({ opportunityId }) {
             />
           </Field>
           <Field>
-            <span className="label-text">Group format</span>
+            <span className="label-text">
+              {t("opportunityEditor.groupFormat", {}, { default: "Group format" })}
+            </span>
             <Dropdown
               selection
               options={GROUP_FORMAT_OPTIONS}
@@ -883,16 +1177,29 @@ export default function OpportunityEditor({ opportunityId }) {
               onChange={toggleBoolean}
             />
             <span>
-              Allow students to nominate preferred teammates for this opportunity
+              {t("opportunityEditor.teamPreferences", {}, {
+                default:
+                  "Allow students to nominate preferred teammates for this opportunity",
+              })}
             </span>
           </label>
         </Field>
       </Card>
+      )}
 
+      {hasExpandedOpportunityEditor && (
       <Card>
-        <h2>Audience preferences</h2>
+        <h2>
+          {t("opportunityEditor.audiencePreferences", {}, {
+            default: "Audience preferences",
+          })}
+        </h2>
         <Field>
-          <span className="label-text">Preferred grade levels</span>
+          <span className="label-text">
+            {t("opportunityEditor.preferredGrades", {}, {
+              default: "Preferred grade levels",
+            })}
+          </span>
           <CheckboxRow>
             {GRADE_OPTIONS.map((opt) => (
               <label
@@ -910,7 +1217,11 @@ export default function OpportunityEditor({ opportunityId }) {
           </CheckboxRow>
         </Field>
         <Field>
-          <span className="label-text">Preferred class types</span>
+          <span className="label-text">
+            {t("opportunityEditor.preferredClassTypes", {}, {
+              default: "Preferred class types",
+            })}
+          </span>
           <CheckboxRow>
             {CLASS_TYPE_OPTIONS.map((opt) => (
               <label
@@ -930,9 +1241,15 @@ export default function OpportunityEditor({ opportunityId }) {
           </CheckboxRow>
         </Field>
         <Field>
-          <span className="label-text">Offered in class networks</span>
+          <span className="label-text">
+            {t("opportunityEditor.offeredInNetworks", {}, {
+              default: "Offered in class networks",
+            })}
+          </span>
           <span className="hint">
-            Pick which networks can see this opportunity.
+            {t("opportunityEditor.offeredInNetworksHint", {}, {
+              default: "Pick which networks can see this opportunity.",
+            })}
           </span>
           <Dropdown
             placeholder="Select class networks"
@@ -950,25 +1267,20 @@ export default function OpportunityEditor({ opportunityId }) {
           />
         </Field>
       </Card>
+      )}
 
       <Card>
-        <h2>Project scope</h2>
+        <h2>{t("opportunityEditor.questionnaire", {}, { default: "Questionnaire" })}</h2>
         <Field>
-          <span className="label-text">Research question / problem to address</span>
-          <span className="hint">
-            What is the scope you want students to explore?
+          <span className="label-text">
+            {t("opportunityEditor.relevance", {}, { default: "Relevance" })}
+            <RequiredMark />
           </span>
-          <textarea
-            name="researchQuestion"
-            value={inputs.researchQuestion}
-            onChange={handleChange}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">Relevance</span>
           <span className="hint">
-            Why does this issue matter? Connect it to the broader context
-            students will care about.
+            {t("opportunityEditor.relevanceDescription", {}, {
+              default:
+                "Describe why this issue is of relevance to CUSP's mission and urban science.",
+            })}
           </span>
           <textarea
             name="relevance"
@@ -977,36 +1289,18 @@ export default function OpportunityEditor({ opportunityId }) {
           />
         </Field>
         <Field>
-          <span className="label-text">Competencies / skills helpful for this project</span>
-          <span className="hint">
-            e.g., GIS, Python, qualitative interviews, user research…
+          <span className="label-text">
+            {t("opportunityEditor.dataRequirements", {}, {
+              default:
+                "What are the anticipated data requirements for the project, and how will each required data resource be provided to the capstone team?",
+            })}
+            <RequiredMark />
           </span>
-          <textarea
-            name="competencies"
-            value={inputs.competencies}
-            onChange={handleChange}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">Learning outcomes / deliverables</span>
           <span className="hint">
-            2–3 outcomes the team should achieve (e.g., dashboard, report,
-            prototype).
-          </span>
-          <textarea
-            name="learningOutcomes"
-            value={inputs.learningOutcomes}
-            onChange={handleChange}
-          />
-        </Field>
-      </Card>
-
-      <Card>
-        <h2>Data, tech & logistics</h2>
-        <Field>
-          <span className="label-text">Data requirements</span>
-          <span className="hint">
-            What datasets will the team use, and who provides them?
+            {t("opportunityEditor.dataRequirementsDescription", {}, {
+              default:
+                "Please describe what datasets will be used. For example, existing source data will be provided by the sponsor, existing source data is free and open (public), etc. Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
+            })}
           </span>
           <textarea
             name="dataRequirements"
@@ -1015,10 +1309,17 @@ export default function OpportunityEditor({ opportunityId }) {
           />
         </Field>
         <Field>
-          <span className="label-text">Background & methodology</span>
+          <span className="label-text">
+            {t("opportunityEditor.backgroundMethodology", {}, {
+              default: "Background & Methodology",
+            })}
+            <RequiredMark />
+          </span>
           <span className="hint">
-            Important context, research approaches, data-collection
-            techniques, and tools.
+            {t("opportunityEditor.backgroundMethodologyDescription", {}, {
+              default:
+                "Please include any important contextual information related to your project, and outline your methodologies including specific research approaches, data collection techniques, tools, and technologies.",
+            })}
           </span>
           <textarea
             name="backgroundMethodology"
@@ -1026,43 +1327,45 @@ export default function OpportunityEditor({ opportunityId }) {
             onChange={handleChange}
           />
         </Field>
-        <Row $cols="1fr 1fr">
-          <Field>
-            <span className="label-text">Data security concerns?</span>
-            <Dropdown
-              selection
-              options={[
-                { key: "no", text: "No", value: "no" },
-                { key: "maybe", text: "Maybe", value: "maybe" },
-                { key: "yes", text: "Yes", value: "yes" },
-              ]}
-              value={inputs.dataSecurityConcerns}
-              onChange={(_, { value }) =>
-                handleMultipleUpdate({ dataSecurityConcerns: value })
-              }
-            />
-          </Field>
-          <Field>
-            <span className="label-text">Field-work / site-visit likelihood</span>
-            <span className="hint">1 = very unlikely, 5 = very likely</span>
-            <Dropdown
-              selection
-              options={[1, 2, 3, 4, 5].map((n) => ({
-                key: n,
-                text: String(n),
-                value: n,
-              }))}
-              value={Number(inputs.fieldWorkLikelihood) || 1}
-              onChange={(_, { value }) =>
-                handleMultipleUpdate({ fieldWorkLikelihood: value })
-              }
-            />
-          </Field>
-        </Row>
+        <Field>
+          <span className="label-text">
+            {t("opportunityEditor.dataSecurityConcerns", {}, {
+              default:
+                "Does the sponsor have any anticipated data security concerns to be cleared for student team?",
+            })}
+            <RequiredMark />
+          </span>
+          <CheckboxRow>
+            {DATA_SECURITY_OPTIONS.map((value) => (
+              <label
+                key={value}
+                className={
+                  inputs.dataSecurityConcerns === value ? "active" : ""
+                }
+              >
+                <input
+                  type="radio"
+                  name="dataSecurityConcerns"
+                  checked={inputs.dataSecurityConcerns === value}
+                  onChange={() =>
+                    handleMultipleUpdate({ dataSecurityConcerns: value })
+                  }
+                />
+                {t(`opportunityEditor.dataSecurityOptions.${value}`, {}, {
+                  default: value,
+                })}
+              </label>
+            ))}
+          </CheckboxRow>
+        </Field>
         {(inputs.dataSecurityConcerns === "yes" ||
           inputs.dataSecurityConcerns === "maybe") && (
           <Field>
-            <span className="label-text">Describe the security concerns</span>
+            <span className="label-text">
+              {t("opportunityEditor.dataSecurityNotes", {}, {
+                default: "If yes or maybe, please describe concerns.",
+              })}
+            </span>
             <textarea
               name="dataSecurityNotes"
               value={inputs.dataSecurityNotes}
@@ -1071,10 +1374,17 @@ export default function OpportunityEditor({ opportunityId }) {
           </Field>
         )}
         <Field>
-          <span className="label-text">Tech infrastructure / software requirements</span>
+          <span className="label-text">
+            {t("opportunityEditor.techRequirements", {}, {
+              default:
+                "Does the sponsor have technology infrastructure and/or software application requirements for this project?",
+            })}
+          </span>
           <span className="hint">
-            e.g., ArcGIS, RShiny, a specific cloud environment, or "no
-            preference".
+            {t("opportunityEditor.techRequirementsDescription", {}, {
+              default:
+                "For example, the project requires GIS data analysis and the sponsor uses ArcGIS or RShiny for mapping. If the sponsor has no preferences as to data tools used, please indicate.",
+            })}
           </span>
           <textarea
             name="techRequirements"
@@ -1082,51 +1392,91 @@ export default function OpportunityEditor({ opportunityId }) {
             onChange={handleChange}
           />
         </Field>
-      </Card>
-
-      <Card>
-        <h2>More info</h2>
         <Field>
-          <label
-            style={{
-              display: "inline-flex",
-              gap: 8,
-              alignItems: "center",
-              cursor: "pointer",
-            }}
-          >
-            <input
-              type="checkbox"
-              name="sponsorIsMentor"
-              checked={!!inputs.sponsorIsMentor}
-              onChange={toggleBoolean}
-            />
-            <span>
-              I&apos;m also the day-to-day mentor for this project (uncheck if
-              someone else will be mentoring)
-            </span>
-          </label>
+          <span className="label-text">
+            {t("opportunityEditor.fieldWorkLikelihood", {}, {
+              default:
+                "How likely would the project require field work or site visits (either within NYC or outside)?",
+            })}
+            <RequiredMark />
+          </span>
+          <ScaleRow>
+            <div className="scale-labels">
+              <span>
+                {t("opportunityEditor.fieldWorkScale.unlikely", {}, {
+                  default: "Very unlikely",
+                })}
+              </span>
+              <span>
+                {t("opportunityEditor.fieldWorkScale.likely", {}, {
+                  default: "Very likely",
+                })}
+              </span>
+            </div>
+            <div className="scale-buttons">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  className={`scale-btn${
+                    Number(inputs.fieldWorkLikelihood) === n ? " active" : ""
+                  }`}
+                  onClick={() =>
+                    handleMultipleUpdate({ fieldWorkLikelihood: n })
+                  }
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          </ScaleRow>
         </Field>
-        {!inputs.sponsorIsMentor && (
-          <Field>
-            <span className="label-text">Mentor notes</span>
-            <span className="hint">
-              Name, title, contact, and availability of the day-to-day mentor.
-              If no mentor is available, describe the gaps and CUSP can help
-              identify support.
-            </span>
-            <textarea
-              name="mentorNotes"
-              value={inputs.mentorNotes}
-              onChange={handleChange}
-            />
-          </Field>
-        )}
         <Field>
-          <span className="label-text">Relevant links</span>
+          <span className="label-text">
+            {t("opportunityEditor.competencies", {}, { default: "Competencies" })}
+            <RequiredMark />
+          </span>
           <span className="hint">
-            Project websites, GitHub repos, papers, etc. We may include QR
-            codes in the brochure.
+            {t("opportunityEditor.competenciesDescription", {}, {
+              default:
+                "List any specific skills or qualifications that would be useful for students to have in order to successfully address this problem and complete the capstone project. For example, user experience design, software programming, economics/financial analysis, public policy analysis, quantitative research/analysis, engineering skills (mechanical, electrical, etc). Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
+            })}
+          </span>
+          <textarea
+            name="competencies"
+            value={inputs.competencies}
+            onChange={handleChange}
+          />
+        </Field>
+        <Field>
+          <span className="label-text">
+            {t("opportunityEditor.learningOutcomes", {}, {
+              default: "Learning Outcomes/Deliverables",
+            })}
+            <RequiredMark />
+          </span>
+          <span className="hint">
+            {t("opportunityEditor.learningOutcomesDescription", {}, {
+              default:
+                "Provide 2-3 learning outcomes or expected deliverables. For example, an interactive dashboard or a website showcasing data analysis outcomes. Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
+            })}
+          </span>
+          <textarea
+            name="learningOutcomes"
+            value={inputs.learningOutcomes}
+            onChange={handleChange}
+          />
+        </Field>
+        <Field>
+          <span className="label-text">
+            {t("opportunityEditor.relevantLinks", {}, { default: "Relevant Links" })}
+            <RequiredMark />
+          </span>
+          <span className="hint">
+            {t("opportunityEditor.relevantLinksDescription", {}, {
+              default:
+                "This can include a project website, GitHub repository, or other online presence where one can learn more about the project. We'll include QR codes in the brochure.",
+            })}
           </span>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {relevantLinks.map((link, idx) => (
@@ -1136,7 +1486,9 @@ export default function OpportunityEditor({ opportunityId }) {
               >
                 <input
                   type="text"
-                  placeholder="Label"
+                  placeholder={t("opportunityEditor.relevantLinksLabel", {}, {
+                    default: "Label",
+                  })}
                   value={link.label || ""}
                   onChange={(e) => {
                     const next = [...relevantLinks];
@@ -1173,7 +1525,9 @@ export default function OpportunityEditor({ opportunityId }) {
                     cursor: "pointer",
                   }}
                 >
-                  Remove
+                  {t("opportunityEditor.relevantLinksRemove", {}, {
+                    default: "Remove",
+                  })}
                 </button>
               </div>
             ))}
@@ -1195,12 +1549,17 @@ export default function OpportunityEditor({ opportunityId }) {
                 cursor: "pointer",
               }}
             >
-              + Add link
+              + {t("opportunityEditor.relevantLinksAdd", {}, { default: "Add link" })}
             </button>
           </div>
         </Field>
         <Field>
-          <span className="label-text">Additional information</span>
+          <span className="label-text">
+            {t("opportunityEditor.additionalNotes", {}, {
+              default: "Is there any additional information you would like to highlight?",
+            })}
+            <RequiredMark />
+          </span>
           <textarea
             name="additionalNotes"
             value={inputs.additionalNotes}
@@ -1209,16 +1568,71 @@ export default function OpportunityEditor({ opportunityId }) {
         </Field>
       </Card>
 
+      {hasExpandedOpportunityEditor && (
       <Card>
-        <h2>Custom application questions</h2>
+        <Field>
+          <label
+            style={{
+              display: "inline-flex",
+              gap: 8,
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="checkbox"
+              name="sponsorIsMentor"
+              checked={!!inputs.sponsorIsMentor}
+              onChange={toggleBoolean}
+            />
+            <span>
+              {t("opportunityEditor.sponsorIsMentor", {}, {
+                default:
+                  "I'm also the day-to-day mentor for this project (uncheck if someone else will be mentoring)",
+              })}
+            </span>
+          </label>
+        </Field>
+        {!inputs.sponsorIsMentor && (
+          <Field>
+            <span className="label-text">
+              {t("opportunityEditor.mentorNotes", {}, { default: "Mentor notes" })}
+            </span>
+            <span className="hint">
+              {t("opportunityEditor.mentorNotesDescription", {}, {
+                default:
+                  "Name, title, contact, and availability of the day-to-day mentor. If no mentor is available, describe the gaps and CUSP can help identify support.",
+              })}
+            </span>
+            <textarea
+              name="mentorNotes"
+              value={inputs.mentorNotes}
+              onChange={handleChange}
+            />
+          </Field>
+        )}
+      </Card>
+      )}
+
+      {hasExpandedOpportunityEditor && (
+      <Card>
+        <h2>
+          {t("opportunityEditor.customQuestions.title", {}, {
+            default: "Custom application questions",
+          })}
+        </h2>
         <p style={{ color: "#5f6871", fontSize: 14, margin: 0 }}>
-          Optional questions students answer when they rank this opportunity.
-          Used by the matching algorithm.
+          {t("opportunityEditor.customQuestions.description", {}, {
+            default:
+              "Optional questions students answer when they rank this opportunity. Used by the matching algorithm.",
+          })}
         </p>
         {isNew ? (
           <p style={{ color: "#5f6871", fontSize: 14 }}>
-            Save the opportunity first, then come back here to add custom
-            questions.
+            {t("opportunityEditor.customQuestions.saveFirst", {}, {
+              default:
+                "Save the opportunity first, then come back here to add custom questions.",
+            })}
           </p>
         ) : (
           <>
@@ -1262,7 +1676,9 @@ export default function OpportunityEditor({ opportunityId }) {
                         cursor: "pointer",
                       }}
                     >
-                      Delete
+                      {t("opportunityEditor.customQuestions.delete", {}, {
+                        default: "Delete",
+                      })}
                     </button>
                   </div>
                 ))}
@@ -1279,9 +1695,17 @@ export default function OpportunityEditor({ opportunityId }) {
                 gap: 10,
               }}
             >
-              <strong style={{ color: "#171717" }}>Add a question</strong>
+              <strong style={{ color: "#171717" }}>
+                {t("opportunityEditor.customQuestions.addPrompt", {}, {
+                  default: "Add a question",
+                })}
+              </strong>
               <Field>
-                <span className="label-text">Prompt</span>
+                <span className="label-text">
+                  {t("opportunityEditor.customQuestions.prompt", {}, {
+                    default: "Prompt",
+                  })}
+                </span>
                 <input
                   type="text"
                   value={questionDraft.prompt}
@@ -1291,11 +1715,19 @@ export default function OpportunityEditor({ opportunityId }) {
                       prompt: e.target.value,
                     })
                   }
-                  placeholder="e.g. Why are you interested in this project?"
+                  placeholder={t(
+                    "opportunityEditor.customQuestions.promptPlaceholder",
+                    {},
+                    { default: "e.g. Why are you interested in this project?" },
+                  )}
                 />
               </Field>
               <Field>
-                <span className="label-text">Question type</span>
+                <span className="label-text">
+                  {t("opportunityEditor.customQuestions.questionType", {}, {
+                    default: "Question type",
+                  })}
+                </span>
                 <Dropdown
                   selection
                   options={[
@@ -1325,7 +1757,11 @@ export default function OpportunityEditor({ opportunityId }) {
               </Field>
               {SELECT_TYPES.includes(questionDraft.questionType) && (
                 <Field>
-                  <span className="label-text">Options (one per line)</span>
+                  <span className="label-text">
+                    {t("opportunityEditor.customQuestions.options", {}, {
+                      default: "Options (one per line)",
+                    })}
+                  </span>
                   <textarea
                     value={questionDraft.optionsText}
                     onChange={(e) =>
@@ -1356,7 +1792,11 @@ export default function OpportunityEditor({ opportunityId }) {
                     })
                   }
                 />
-                <span>Required</span>
+                <span>
+                  {t("opportunityEditor.customQuestions.isRequired", {}, {
+                    default: "Required",
+                  })}
+                </span>
               </label>
               <div>
                 <Button
@@ -1365,21 +1805,28 @@ export default function OpportunityEditor({ opportunityId }) {
                   onClick={handleAddQuestion}
                   disabled={addingQuestion}
                 >
-                  {addingQuestion ? "Adding…" : "Add question"}
+                  {addingQuestion
+                    ? t("opportunityEditor.saving", {}, { default: "Saving…" })
+                    : t("opportunityEditor.customQuestions.add", {}, {
+                        default: "Add question",
+                      })}
                 </Button>
               </div>
             </div>
           </>
         )}
       </Card>
+      )}
 
       <Card>
-        <h2>Publishing</h2>
+        <h2>{t("opportunityEditor.publishing", {}, { default: "Publishing" })}</h2>
         <Field>
-          <span className="label-text">Status</span>
+          <span className="label-text">
+            {t("opportunityEditor.status", {}, { default: "Status" })}
+          </span>
           <Dropdown
             selection
-            options={STATUS_OPTIONS}
+            options={statusOptions}
             value={inputs.status}
             onChange={(_, { value }) =>
               handleMultipleUpdate({ status: value })
@@ -1387,6 +1834,38 @@ export default function OpportunityEditor({ opportunityId }) {
           />
         </Field>
         <Field>
+          <span className="label-text">
+            {t("opportunityEditor.guidelinesTitle", {}, {
+              default: "Understanding of Proposal Guidelines",
+            })}
+            <RequiredMark />
+          </span>
+          <span style={{ fontSize: 14, color: "#171717", lineHeight: 1.5 }}>
+            {t("opportunityEditor.guidelinesDescription", {}, {
+              default:
+                "I have read and understood the Capstone proposal guidelines in full, including all of the Capstone Sponsor FAQs and Mutual Expectations agreement and agree to abide by them.",
+            })}
+          </span>
+          <LinkChipRow>
+            <a
+              href="https://engineering.nyu.edu/research-innovation/centers/cusp/research/capstone-projects"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {t("opportunityEditor.guidelinesFaqsChip", {}, {
+                default: "Capstone Sponsor FAQs",
+              })}
+            </a>
+            <a
+              href="https://engineering.nyu.edu/research-innovation/centers/cusp/research/capstone-projects/cusp-capstone-mutual-expectations"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {t("opportunityEditor.guidelinesMutualExpectationsChip", {}, {
+                default: "Mutual Expectations agreement",
+              })}
+            </a>
+          </LinkChipRow>
           <label
             style={{
               display: "inline-flex",
@@ -1405,15 +1884,22 @@ export default function OpportunityEditor({ opportunityId }) {
               style={{ marginTop: 3 }}
             />
             <span>
-              I have read and understood the Capstone proposal guidelines in
-              full, including the Sponsor FAQs and Mutual Expectations
-              agreement, and agree to abide by them. *
+              <strong>
+                {t("opportunityEditor.guidelinesAgree", {}, {
+                  default: "I agree with this statement.",
+                })}
+              </strong>
             </span>
           </label>
           {opportunity?.guidelinesAcknowledgedAt && (
             <span className="hint" style={{ marginLeft: 26 }}>
-              Acknowledged{" "}
-              {new Date(opportunity.guidelinesAcknowledgedAt).toLocaleString()}
+              {t("opportunityEditor.guidelinesAcknowledgedAt", {
+                date: new Date(
+                  opportunity.guidelinesAcknowledgedAt,
+                ).toLocaleString(),
+              }, {
+                default: "Acknowledged {{date}}",
+              })}
             </span>
           )}
         </Field>
@@ -1435,7 +1921,11 @@ export default function OpportunityEditor({ opportunityId }) {
               onChange={toggleBoolean}
               style={{ marginTop: 3 }}
             />
-            <span>Request an appointment to discuss further.</span>
+            <span>
+              {t("opportunityEditor.guidelinesRequestAppointment", {}, {
+                default: "I request an appointment to discuss further.",
+              })}
+            </span>
           </label>
         </Field>
         {inputs.status === "published" && !inputs.guidelinesAcknowledged && (
@@ -1449,18 +1939,24 @@ export default function OpportunityEditor({ opportunityId }) {
               fontSize: 13,
             }}
           >
-            <Icon name="warning circle" /> Tick the guidelines checkbox before
-            publishing.
+            <Icon name="warning circle" />{" "}
+            {t("opportunityEditor.guidelinesWarning", {}, {
+              default: "Tick the guidelines checkbox before publishing.",
+            })}
           </div>
         )}
       </Card>
 
       <Actions>
         <Button type="button" onClick={handleCancel} disabled={saving}>
-          Cancel
+          {t("opportunityEditor.cancel", {}, { default: "Cancel" })}
         </Button>
         <Button type="button" $primary onClick={handleSave} disabled={saving}>
-          {saving ? "Saving…" : isNew ? "Create opportunity" : "Save changes"}
+          {saving
+            ? t("opportunityEditor.saving", {}, { default: "Saving…" })
+            : isNew
+            ? t("opportunityEditor.create", {}, { default: "Create opportunity" })
+            : t("opportunityEditor.save", {}, { default: "Save changes" })}
         </Button>
       </Actions>
     </Shell>

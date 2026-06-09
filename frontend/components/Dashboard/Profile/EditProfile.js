@@ -6,39 +6,53 @@ import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../Queries/User";
 import { StyledCreateProfileFlow } from "../../styles/StyledProfile";
+import { resolveProfileType } from "../../../lib/profileEditNavigation";
 
 import { Progress } from "semantic-ui-react";
 
 export default function EditProfile({ query }) {
   const { t } = useTranslation("connect");
-  const { selector, page } = query;
+  const { page } = query;
 
-  const steps = [
-    { step: 1, label: t("steps.profileType"), percent: 20, page: "type" },
-    { step: 2, label: t("steps.aboutMe"), percent: 36, page: "about" },
-    { step: 3, label: t("steps.interests"), percent: 61, page: "interests" },
-    { step: 4, label: t("steps.complete"), percent: 80, page: "complete" },
-  ];
-
-  // query the full profile of the user
   const { data } = useQuery(GET_PROFILE);
   const user = data?.authenticatedItem;
+  const profileType = resolveProfileType(query, user);
+
+  const pageTitle = profileType
+    ? t(`createProfileFlow.title.${profileType}`, {}, { default: t("createProfile") })
+    : t("createProfile");
+
+  const progressSteps = [
+    {
+      label: profileType
+        ? t(`createProfileFlow.steps.aboutMe.${profileType}`, {}, { default: t("steps.aboutMe") })
+        : t("steps.aboutMe"),
+      page: "about",
+    },
+    {
+      label: profileType
+        ? t(`createProfileFlow.steps.interests.${profileType}`, {}, { default: t("steps.interests") })
+        : t("steps.interests"),
+      page: "interests",
+    },
+  ];
+
+  const currentStepIndex = progressSteps.findIndex((s) => s.page === page);
+  const percent =
+    currentStepIndex >= 0
+      ? ((currentStepIndex + 1) / progressSteps.length) * 100
+      : 0;
 
   return (
     <StyledCreateProfileFlow>
       <div>
-        <h1>{t("createProfile")}</h1>
+        <h1>{pageTitle}</h1>
         {page !== "type" && (
           <div className="progressBar">
-            <Progress
-              percent={steps
-                .filter((s) => s?.page === page)
-                .map((s) => s?.percent)}
-              size="large"
-            >
+            <Progress percent={percent} size="large">
               <div className="progressLabels">
-                {steps.map((step) => (
-                  <div key={step.step}>{step?.label}</div>
+                {progressSteps.map((step) => (
+                  <div key={step.page}>{step.label}</div>
                 ))}
               </div>
             </Progress>

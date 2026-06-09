@@ -26,6 +26,15 @@ export const Opportunity = list({
     title: text({ validation: { isRequired: true } }),
     shortDescription: text(),
     description: text({ ui: { displayMode: "textarea" } }),
+    projectCategory: select({
+      options: [
+        { label: "Urban Health", value: "urban_health" },
+        { label: "Urban Environment", value: "urban_environment" },
+        { label: "Urban Infrastructure", value: "urban_infrastructure" },
+        { label: "Other", value: "other" },
+      ],
+    }),
+    projectCategoryOther: text(),
     coverImageUrl: text(),
     coverImage: image({ storage: "opportunity_covers" }),
     videoUrl: text(),
