@@ -23,7 +23,7 @@ export default function PaginationUsers({
     },
     skip: totalCount !== undefined, // Skip query if totalCount is provided
   });
-  
+
   const countUsers = totalCount !== undefined ? totalCount : (data?.profilesCount || 0);
   const pageCount = Math.ceil(countUsers / perPage);
 
