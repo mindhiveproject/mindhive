@@ -104,6 +104,17 @@
 				"organization": "Organization Information"
 			}
 		},
+		"interests": {
+			"description": {
+				"individual": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions.",
+				"organization": "What topics would you like your organization to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions."
+			},
+			"title": {
+				"individual": "Where can you help?",
+				"organization": "Where can your organization help?"
+			}
+		},
+		"saveError": "Something went wrong while saving. Please try again.",
 		"sponsorMentor": {
 			"additionalNotes": "Is there any additional information you would like to highlight?",
 			"backgroundMethodology": "Background & Methodology",
@@ -164,16 +175,6 @@
 			"wordCountOver": "— consider trimming",
 			"wordCountTemplate": "{{count}} / {{max}} words"
 		},
-		"interests": {
-			"description": {
-				"individual": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions.",
-				"organization": "What topics would you like your organization to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions."
-			},
-			"title": {
-				"individual": "Where can you help?",
-				"organization": "Where can your organization help?"
-			}
-		},
 		"steps": {
 			"aboutMe": {
 				"individual": "About Me",
@@ -187,17 +188,66 @@
 		"title": {
 			"individual": "Create Profile",
 			"organization": "Create Profile"
-		}
+		},
+		"unsavedChangesWarning": "Your unsaved changes will be lost. Click Cancel to return and save your changes."
 	},
+	"exploreConnect": "Explore Connect",
+	"interests": {
+		"description": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions.",
+		"interests": "Interests",
+		"title": "Where can you help?"
+	},
+	"interestSelector": {
+		"add": "add",
+		"minMax": "Min 3, Max 10",
+		"navButtons": {
+			"complete": "Complete",
+			"previous": "Previous"
+		},
+		"placeholder": "Begin typing to search for interests",
+		"searchTitle": "Search interests",
+		"suggestedTitle": "Suggested interests"
+	},
+	"introduction": {
+		"description": "We'd love for you to upload an introduction video to share with students and fellow MindHive members. You can use it to share a project you think students might get excited about.",
+		"passion": {
+			"description": "For example, you can briefly describe a science project you are working on. Or you can tell us about your experience bringing science to the public. This is your space to showcase what you're currently working on and how it shapes the expertise you bring to our community.",
+			"title": "What are you passionate about right now?"
+		},
+		"saveChanges": "Save changes",
+		"title": "Introduction Video",
+		"videoNotSupported": "Your browser does not support the video tag."
+	},
+	"introductionVideo": "Introduction Video",
+	"locationFilter": "Location",
+	"nav": {
+		"exploreOpportunities": "Explore opportunities",
+		"matches": "Matches",
+		"matchingRounds": "Matching rounds",
+		"myMatchedStudents": "My matched students",
+		"myOpportunities": "My opportunities",
+		"organizations": "Organizations",
+		"participate": "Participate",
+		"questionLibrary": "Question library"
+	},
+	"navigation": {
+		"next": "Next",
+		"previous": "Previous"
+	},
+	"noOfficialBio": "No official bio",
+	"noResults": "No results found.",
+	"noUnofficialBio": "No unofficial bio",
+	"noVideoPlaceholder": "No Video Placeholder",
+	"officialBio": "Official Bio",
 	"opportunityEditor": {
 		"additionalNotes": "Is there any additional information you would like to highlight?",
-		"availabilityCapacity": "Availability & capacity",
 		"audiencePreferences": "Audience preferences",
+		"availabilityCapacity": "Availability & capacity",
 		"availableFrom": "Available from",
 		"availableTo": "Available to",
-		"backLink": "Back to opportunities",
 		"backgroundMethodology": "Background & Methodology",
 		"backgroundMethodologyDescription": "Please include any important contextual information related to your project, and outline your methodologies including specific research approaches, data collection techniques, tools, and technologies.",
+		"backLink": "Back to opportunities",
 		"basics": "Basics",
 		"cancel": "Cancel",
 		"categorization": "Categorization",
@@ -323,56 +373,6 @@
 		"wordCountOver": "— consider trimming",
 		"wordCountTemplate": "{{count}} / {{max}} words"
 	},
-	"exploreConnect": "Explore Connect",
-	"interests": {
-		"description": "What topics would you like to support students with? Select some topics and areas of interest from the list below to let other community members know where you're excited to contribute. This will help us connect you with students and peers who share your passions.",
-		"interests": "Interests",
-		"title": "Where can you help?"
-	},
-	"interestSelector": {
-		"add": "add",
-		"minMax": "Min 3, Max 10",
-		"navButtons": {
-			"complete": "Complete",
-			"previous": "Previous"
-		},
-		"placeholder": "Begin typing to search for interests",
-		"searchTitle": "Search interests",
-		"suggestedTitle": "Suggested interests"
-	},
-	"introduction": {
-		"description": "We'd love for you to upload an introduction video to share with students and fellow MindHive members. You can use it to share a project you think students might get excited about.",
-		"passion": {
-			"description": "For example, you can briefly describe a science project you are working on. Or you can tell us about your experience bringing science to the public. This is your space to showcase what you're currently working on and how it shapes the expertise you bring to our community.",
-			"title": "What are you passionate about right now?"
-		},
-		"saveChanges": "Save changes",
-		"title": "Introduction Video",
-		"videoNotSupported": "Your browser does not support the video tag."
-	},
-	"introductionVideo": "Introduction Video",
-	"locationFilter": "Location",
-	"savedConnections": "Saved Connections",
-	"savedConnectionsSubtitle": "Search through your connections to find the perfect collaborator, mentor, or scientist for you.",
-	"nav": {
-		"exploreOpportunities": "Explore opportunities",
-		"matches": "Matches",
-		"matchingRounds": "Matching rounds",
-		"myMatchedStudents": "My matched students",
-		"myOpportunities": "My opportunities",
-		"organizations": "Organizations",
-		"participate": "Participate",
-		"questionLibrary": "Question library"
-	},
-	"navigation": {
-		"next": "Next",
-		"previous": "Previous"
-	},
-	"noOfficialBio": "No official bio",
-	"noResults": "No results found.",
-	"noUnofficialBio": "No unofficial bio",
-	"noVideoPlaceholder": "No Video Placeholder",
-	"officialBio": "Official Bio",
 	"passionNow": "What are you passionate about right now?",
 	"preferences": {
 		"availability": {
@@ -429,11 +429,13 @@
 			"title": "Individual"
 		},
 		"organization": {
-			"description": "This profile is most appropriate when you are creating an account to represent a community organization or company.",
+			"description": "Create an account to represent an organization or community",
 			"title": "Organization"
 		}
 	},
 	"returnDashboard": "Return to Dashboard",
+	"savedConnections": "Saved Connections",
+	"savedConnectionsSubtitle": "Search through your connections to find the perfect collaborator, mentor, or scientist for you.",
 	"searchPlaceholder": "Search by name, topic, or area of interest",
 	"skillsTab": "Skills and Preferences",
 	"steps": {

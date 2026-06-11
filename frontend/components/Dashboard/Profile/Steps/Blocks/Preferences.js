@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useForm from "../../../../../lib/useForm";
 import {
   FormField,
@@ -37,27 +37,27 @@ const optionsMentorPreferClass = [
   { label: "no", value: "no" },
 ];
 
-export default function Preferences({ query, user }) {
+export default function Preferences({ query, user, onDirtyChange }) {
   const { t } = useTranslation("connect");
   const [changed, setChanged] = useState(false);
 
-  const { inputs, handleChange } = useForm({
-    mentorPreferGrade: user?.mentorPreferGrade || undefined,
-    mentorPreferGroup: user?.mentorPreferGroup || undefined,
-    mentorPreferClass: user?.mentorPreferClass || undefined,
-    involvement: user?.involvement,
-  });
-
-  const [updateProfile, { data, loading, error }] = useMutation(
-    UPDATE_PROFILE,
+  const { inputs, handleChange } = useForm(
     {
-      variables: {
-        id: user?.id,
-        input: { ...inputs },
-      },
-      refetchQueries: [{ query: GET_PROFILE }],
-    }
+      mentorPreferGrade: user?.mentorPreferGrade || undefined,
+      mentorPreferGroup: user?.mentorPreferGroup || undefined,
+      mentorPreferClass: user?.mentorPreferClass || undefined,
+      involvement: user?.involvement,
+    },
+    { freezeInitialSync: changed },
   );
+
+  useEffect(() => {
+    onDirtyChange?.(changed);
+  }, [changed, onDirtyChange]);
+
+  const [updateProfile] = useMutation(UPDATE_PROFILE, {
+    refetchQueries: [{ query: GET_PROFILE }],
+  });
 
   const handleUpdate = (data) => {
     setChanged(true);
@@ -66,8 +66,26 @@ export default function Preferences({ query, user }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await updateProfile();
-    setChanged(false);
+    try {
+      await updateProfile({
+        variables: {
+          id: user?.id,
+          input: {
+            mentorPreferGrade: inputs?.mentorPreferGrade,
+            mentorPreferGroup: inputs?.mentorPreferGroup,
+            mentorPreferClass: inputs?.mentorPreferClass,
+            involvement: inputs?.involvement,
+          },
+        },
+      });
+      setChanged(false);
+    } catch {
+      alert(
+        t("createProfileFlow.saveError", {}, {
+          default: "Something went wrong while saving. Please try again.",
+        }),
+      );
+    }
   }
 
   const setChecked = ({ name, checked }) => {

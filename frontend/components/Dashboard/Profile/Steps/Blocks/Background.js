@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useForm from "../../../../../lib/useForm";
 import { useMutation } from "@apollo/client";
 import { Divider } from "semantic-ui-react";
@@ -11,7 +11,7 @@ import { resolveProfileType } from "../../../../../lib/profileEditNavigation";
 import { StyledInput } from "../../../../styles/StyledForm";
 import { StyledSaveButton } from "../../../../styles/StyledProfile";
 
-export default function Background({ query, user }) {
+export default function Background({ query, user, onDirtyChange }) {
   const { t } = useTranslation("connect");
   const [changed, setChanged] = useState(false);
 
@@ -35,7 +35,12 @@ export default function Background({ query, user }) {
           education: user?.education || [{ institution: "", degree: "" }],
           languages: user?.languages || [{ language: "" }],
         },
+    { freezeInitialSync: changed },
   );
+
+  useEffect(() => {
+    onDirtyChange?.(changed);
+  }, [changed, onDirtyChange]);
 
   const handleUpdate = (data) => {
     setChanged(true);
@@ -43,17 +48,43 @@ export default function Background({ query, user }) {
   };
 
   const [updateProfile] = useMutation(UPDATE_PROFILE, {
-    variables: {
-      id: user?.id,
-      input: { ...inputs },
-    },
     refetchQueries: [{ query: GET_PROFILE }],
   });
 
+  function buildPayload() {
+    if (isOrganization) {
+      return {
+        firstName: inputs?.firstName,
+        lastName: inputs?.lastName,
+        occupation: inputs?.occupation,
+        passion: inputs?.passion,
+        publicMail: inputs?.publicMail,
+        timeCommitment: inputs?.timeCommitment,
+      };
+    }
+    return {
+      bio: inputs?.bio,
+      bioInformal: inputs?.bioInformal,
+    };
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
-    await updateProfile();
-    setChanged(false);
+    try {
+      await updateProfile({
+        variables: {
+          id: user?.id,
+          input: buildPayload(),
+        },
+      });
+      setChanged(false);
+    } catch {
+      alert(
+        t("createProfileFlow.saveError", {}, {
+          default: "Something went wrong while saving. Please try again.",
+        }),
+      );
+    }
   }
 
   return (

@@ -114,6 +114,7 @@
 				"organization": ""
 			}
 		},
+		"saveError": "",
 		"sponsorMentor": {
 			"additionalNotes": "",
 			"backgroundMethodology": "",
@@ -187,7 +188,8 @@
 		"title": {
 			"individual": "",
 			"organization": ""
-		}
+		},
+		"unsavedChangesWarning": ""
 	},
 	"exploreConnect": "Explorer Connect",
 	"interests": {
@@ -218,6 +220,16 @@
 	},
 	"introductionVideo": "Vidéo d'introduction",
 	"locationFilter": "Emplacement",
+	"nav": {
+		"exploreOpportunities": "",
+		"matches": "",
+		"matchingRounds": "",
+		"myMatchedStudents": "",
+		"myOpportunities": "",
+		"organizations": "",
+		"participate": "",
+		"questionLibrary": ""
+	},
 	"navigation": {
 		"next": "Suivant",
 		"previous": "Précédent"
@@ -417,7 +429,7 @@
 			"title": "Individuel"
 		},
 		"organization": {
-			"description": "Ce profil est particulièrement approprié lorsque vous créez un compte pour représenter une organisation communautaire ou une entreprise.",
+			"description": "Créez un compte pour représenter une organisation ou une communauté",
 			"title": "Organisation"
 		}
 	},

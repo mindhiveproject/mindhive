@@ -114,6 +114,7 @@
 				"organization": ""
 			}
 		},
+		"saveError": "",
 		"sponsorMentor": {
 			"additionalNotes": "",
 			"backgroundMethodology": "",
@@ -187,7 +188,8 @@
 		"title": {
 			"individual": "",
 			"organization": ""
-		}
+		},
+		"unsavedChangesWarning": ""
 	},
 	"exploreConnect": "探索连接",
 	"interests": {
@@ -218,6 +220,16 @@
 	},
 	"introductionVideo": "介绍视频",
 	"locationFilter": "地点",
+	"nav": {
+		"exploreOpportunities": "",
+		"matches": "",
+		"matchingRounds": "",
+		"myMatchedStudents": "",
+		"myOpportunities": "",
+		"organizations": "",
+		"participate": "",
+		"questionLibrary": ""
+	},
 	"navigation": {
 		"next": "下一个",
 		"previous": "以前的"
@@ -417,7 +429,7 @@
 			"title": "个人"
 		},
 		"organization": {
-			"description": "当您创建帐户来代表社区组织或公司时，此配置文件最为合适。",
+			"description": "创建账户以代表组织或社区",
 			"title": "组织"
 		}
 	},

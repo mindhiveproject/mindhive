@@ -114,6 +114,7 @@
 				"organization": ""
 			}
 		},
+		"saveError": "",
 		"sponsorMentor": {
 			"additionalNotes": "",
 			"backgroundMethodology": "",
@@ -187,7 +188,8 @@
 		"title": {
 			"individual": "",
 			"organization": ""
-		}
+		},
+		"unsavedChangesWarning": ""
 	},
 	"exploreConnect": "कनेक्ट का अन्वेषण करें",
 	"interests": {
@@ -218,6 +220,16 @@
 	},
 	"introductionVideo": "परिचय वीडियो",
 	"locationFilter": "जगह",
+	"nav": {
+		"exploreOpportunities": "",
+		"matches": "",
+		"matchingRounds": "",
+		"myMatchedStudents": "",
+		"myOpportunities": "",
+		"organizations": "",
+		"participate": "",
+		"questionLibrary": ""
+	},
 	"navigation": {
 		"next": "अगला",
 		"previous": "पहले का"
@@ -417,7 +429,7 @@
 			"title": "व्यक्ति"
 		},
 		"organization": {
-			"description": "यह प्रोफ़ाइल तब सबसे उपयुक्त है जब आप किसी सामुदायिक संगठन या कंपनी का प्रतिनिधित्व करने के लिए खाता बना रहे हों।",
+			"description": "किसी संगठन या समुदाय का प्रतिनिधित्व करने के लिए खाता बनाएं",
 			"title": "संगठन"
 		}
 	},
