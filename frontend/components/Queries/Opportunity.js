@@ -113,6 +113,13 @@ export const GET_OPPORTUNITY = gql`
       guidelinesAcknowledgedAt
       requestsAppointment
       acceptedAt
+      preSelectedAt
+      reviewedBy {
+        id
+        firstName
+        lastName
+        username
+      }
       # Special considerations
       specialConsiderations
       designedForSpecificStudents
@@ -434,6 +441,42 @@ export const MY_CLASS_NETWORKS_FOR_OPPORTUNITY = gql`
     classNetworks {
       id
       title
+    }
+  }
+`;
+
+// Teacher / admin review queue. Future: filter by classNetworks once sponsors
+// can tag target networks — see plan future-proofing note.
+export const PENDING_OPPORTUNITIES_FOR_REVIEW = gql`
+  query PENDING_OPPORTUNITIES_FOR_REVIEW {
+    opportunities(
+      where: {
+        status: { in: ["pending_review", "pre_selected", "accepted"] }
+      }
+      orderBy: { updatedAt: desc }
+    ) {
+      id
+      title
+      shortDescription
+      projectCategory
+      projectCategoryOther
+      status
+      updatedAt
+      preSelectedAt
+      acceptedAt
+      potentialActivities
+      specificSkills
+      scopeDescription
+      mentor {
+        id
+        username
+        firstName
+        lastName
+      }
+      organization {
+        id
+        name
+      }
     }
   }
 `;

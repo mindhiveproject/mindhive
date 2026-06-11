@@ -43,11 +43,15 @@ export const Opportunity = list({
     mentor: relationship({
       ref: "Profile.opportunitiesCreated",
       hooks: {
-        async resolveInput({ context, operation, inputData }) {
-          if (operation === "create" && !inputData.mentor) {
-            return { connect: { id: context.session.itemId } };
+        async resolveInput({ context, operation, resolvedData, fieldKey }) {
+          const current = resolvedData[fieldKey];
+          if (operation === "create") {
+            if (current?.connect?.id) return current;
+            if (context.session?.itemId) {
+              return { connect: { id: context.session.itemId } };
+            }
           }
-          return inputData.mentor;
+          return current;
         },
       },
     }),
@@ -178,8 +182,10 @@ export const Opportunity = list({
       options: [
         { label: "Draft", value: "draft" },
         { label: "Pending Review", value: "pending_review" },
-        // Admin has accepted the proposal — mentor now completes the
-        // post-acceptance details before the opportunity goes live.
+        // Teacher has pre-selected the proposal — sponsor completes follow-up
+        // questionnaire before full acceptance.
+        { label: "Pre-selected", value: "pre_selected" },
+        // Teacher or admin has accepted — sponsor completes final scope.
         { label: "Accepted", value: "accepted" },
         { label: "Published", value: "published" },
         { label: "Closed", value: "closed" },
@@ -187,8 +193,13 @@ export const Opportunity = list({
       ],
       defaultValue: "draft",
     }),
+    // Stamped automatically when status transitions to "pre_selected".
+    preSelectedAt: timestamp(),
     // Stamped automatically when status transitions to "accepted".
     acceptedAt: timestamp(),
+    reviewedBy: relationship({
+      ref: "Profile.opportunitiesReviewed",
+    }),
 
     // --- CUSP capstone sponsor application fields (Q21–Q38) ---
     // Sponsor is also the day-to-day mentor (true when one user fills both
@@ -240,5 +251,43 @@ export const Opportunity = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+  },
+  hooks: {
+    async resolveInput({ operation, inputData, resolvedData, item }) {
+      // List hooks run after field hooks — must spread resolvedData so auto-set
+      // fields (e.g. mentor from session) are not wiped by raw GraphQL input.
+      const data = { ...resolvedData };
+
+      // GraphQL multiselect inputs arrive as arrays; SQLite stores JSON strings.
+      if (Array.isArray(data.preferGradeLevels)) {
+        data.preferGradeLevels = JSON.stringify(data.preferGradeLevels);
+      }
+      if (Array.isArray(data.preferClassType)) {
+        data.preferClassType = JSON.stringify(data.preferClassType);
+      }
+
+      if (operation !== "update" || !data.status) {
+        return data;
+      }
+      const nextStatus = data.status;
+      const prevStatus = item?.status;
+      if (nextStatus === prevStatus) return data;
+
+      if (
+        nextStatus === "pre_selected" &&
+        prevStatus !== "pre_selected" &&
+        !item?.preSelectedAt
+      ) {
+        data.preSelectedAt = new Date().toISOString();
+      }
+      if (
+        nextStatus === "accepted" &&
+        prevStatus !== "accepted" &&
+        !item?.acceptedAt
+      ) {
+        data.acceptedAt = new Date().toISOString();
+      }
+      return data;
+    },
   },
 });
