@@ -2,7 +2,7 @@ import useForm from "../../../../../lib/useForm";
 import UpdateAvatarModal from "../../../../Account/AvatarEditor/AvatarModal";
 import IdentIcon from "../../../../Account/IdentIcon";
 import { Dropdown } from "semantic-ui-react";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_PROFILE } from "../../../../Queries/User";
@@ -11,12 +11,16 @@ import {
   CREATE_ORGANIZATION,
   UPDATE_ORGANIZATION,
 } from "../../../../Mutations/Organization";
+import { FIND_ORG_FOR_PROFILE_SAVE } from "../../../../Queries/Organization";
 
 import { StyledInput } from "../../../../styles/StyledForm";
 import { StyledSaveButton } from "../../../../styles/StyledProfile";
 import { useState, useEffect } from "react";
 import { getProfileImageUrl } from "../../../../../lib/profileStudyImageUrls";
-import { resolveProfileType } from "../../../../../lib/profileEditNavigation";
+import {
+  resolveLinkedOrganization,
+  resolveProfileType,
+} from "../../../../../lib/profileEditNavigation";
 
 const PRIMARY_DOMAIN_KEYS = [
   "academic",
@@ -28,7 +32,9 @@ const PRIMARY_DOMAIN_KEYS = [
 
 export default function BasicInformation({ query, user, onDirtyChange }) {
   const { t } = useTranslation("connect");
+  const apolloClient = useApolloClient();
   const [changed, setChanged] = useState(false);
+  const [savedOrgId, setSavedOrgId] = useState(null);
   const profileImageUrl = getProfileImageUrl(user);
 
   const profileType = resolveProfileType(query, user);
@@ -37,7 +43,9 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
   // For org-type profiles, source the displayed values from the first linked
   // Organization (with a fallback to the legacy Profile-level fields so users
   // who haven't migrated yet still see their old data).
-  const existingOrg = (user?.organizations || [])[0];
+  const linkedOrg = resolveLinkedOrganization(user);
+  const orgId = linkedOrg?.id || savedOrgId;
+  const existingOrg = linkedOrg || (savedOrgId ? { id: savedOrgId } : null);
 
   // Pending logo file (set when the user picks one but before they hit Save).
   const [logoUpload, setLogoUpload] = useState(null);
@@ -124,12 +132,33 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
         if (logoUpload) {
           orgInput.logo = { upload: logoUpload };
         }
-        if (existingOrg?.id) {
-          await updateOrganization({
-            variables: { id: existingOrg.id, input: orgInput },
+        let targetOrgId = orgId;
+
+        // Legacy / partial saves: org may exist in the DB without appearing on
+        // user.organizations (e.g. created on a prior save before refetch).
+        if (!targetOrgId && orgInput.name && user?.id) {
+          const { data: lookupData } = await apolloClient.query({
+            query: FIND_ORG_FOR_PROFILE_SAVE,
+            variables: { name: orgInput.name, profileId: user.id },
+            fetchPolicy: "network-only",
           });
+          targetOrgId = lookupData?.organizations?.[0]?.id || null;
+        }
+
+        if (targetOrgId) {
+          const updateInput = { ...orgInput };
+          const isMember = (user?.organizations || []).some(
+            (org) => org?.id === targetOrgId,
+          );
+          if (!isMember) {
+            updateInput.members = { connect: [{ id: user?.id }] };
+          }
+          await updateOrganization({
+            variables: { id: targetOrgId, input: updateInput },
+          });
+          setSavedOrgId(targetOrgId);
         } else if (orgInput.name) {
-          await createOrganization({
+          const { data: createData } = await createOrganization({
             variables: {
               input: {
                 ...orgInput,
@@ -137,6 +166,7 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
               },
             },
           });
+          setSavedOrgId(createData?.createOrganization?.id || null);
         }
         setLogoUpload(null);
         await updateProfile({
@@ -189,7 +219,7 @@ export default function BasicInformation({ query, user, onDirtyChange }) {
           >
             <img
               src={profileImageUrl}
-              alt={user?.name}
+              alt={user?.username}
               style={{
                 borderRadius: "50%",
                 width: "120px",

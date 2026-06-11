@@ -1066,6 +1066,23 @@ export const GET_PROFILE = gql`
             }
           }
         }
+        organizationsCreated {
+          id
+          name
+          tagline
+          department
+          website
+          location
+          mission
+          primaryDomain
+          verified
+          logo {
+            url
+          }
+          interests {
+            id
+          }
+        }
       }
     }
   }
