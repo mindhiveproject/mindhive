@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import styled from "styled-components";
 import { Icon } from "semantic-ui-react";
@@ -7,7 +6,6 @@ import { Icon } from "semantic-ui-react";
 import { PUBLIC_USER_QUERY } from "../../../Queries/User";
 import { languageOptions } from "../../../User/LanguageSelector";
 import useTranslation from "next-translate/useTranslation";
-import Chip from "../../../DesignSystem/Chip";
 import ManageFavorite from "../ManageFavorite";
 import { getProfileImageUrl } from "../../../../lib/profileStudyImageUrls";
 
@@ -61,24 +59,6 @@ const ConnectShell = styled.div`
   }
 `;
 
-const NavigationBar = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 12px;
-  position: sticky;
-  top: 0;
-  background: rgba(247, 249, 248, 0.8);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 10;
-  padding-top: 16px;
-  padding-bottom: 16px;
-
-  a {
-    text-decoration: none;
-  }
-`;
 export default function ProfilePage({ query, user }) {
   
   const { id } = query;
@@ -129,22 +109,6 @@ export default function ProfilePage({ query, user }) {
 
   return (
     <ConnectShell>
-      <NavigationBar>
-        <Link
-          href={{
-            pathname: `/dashboard/connect/bank`,
-          }}
-        >
-          <Chip shape="square" label={t("exploreConnect")} />
-        </Link>
-        <Link
-          href={{
-            pathname: `/dashboard/connect/my`,
-          }}
-        >
-          <Chip shape="square" label={t("savedConnections")} />
-        </Link>
-      </NavigationBar>
       <ProfileShell>
         <ProfileCard>
           <HeaderSection>

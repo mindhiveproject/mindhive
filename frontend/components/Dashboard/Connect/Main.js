@@ -9,49 +9,41 @@ import MatchesMain from "./Matches/Main";
 import MentorMatchesMain from "./MentorMatches/Main";
 import ExploreMain from "./Explore/Main";
 import OrganizationsMain from "./Organizations/Main";
+import ConnectNavigationBar from "./ConnectNavigationBar";
 
 export default function ConnectMain({ query, user }) {
   const { selector } = query;
 
+  let content;
+
   if (selector === "my") {
-    return <Connections query={query} user={user} />;
+    content = <Connections query={query} user={user} />;
+  } else if (selector === "with") {
+    content = <ProfilePage query={query} user={user} />;
+  } else if (selector === "opportunities") {
+    content = <OpportunitiesMain query={query} user={user} />;
+  } else if (selector === "rounds") {
+    content = <RoundsMain query={query} user={user} />;
+  } else if (selector === "questions") {
+    content = <QuestionsMain query={query} user={user} />;
+  } else if (selector === "participate") {
+    content = <ParticipateMain query={query} user={user} />;
+  } else if (selector === "matches") {
+    content = <MatchesMain query={query} user={user} />;
+  } else if (selector === "my-matches") {
+    content = <MentorMatchesMain query={query} user={user} />;
+  } else if (selector === "explore") {
+    content = <ExploreMain query={query} user={user} />;
+  } else if (selector === "organizations") {
+    content = <OrganizationsMain query={query} user={user} />;
+  } else {
+    content = <ConnectBank query={query} user={user} />;
   }
 
-  if (selector === "with") {
-    return <ProfilePage query={query} user={user} />;
-  }
-
-  if (selector === "opportunities") {
-    return <OpportunitiesMain query={query} user={user} />;
-  }
-
-  if (selector === "rounds") {
-    return <RoundsMain query={query} user={user} />;
-  }
-
-  if (selector === "questions") {
-    return <QuestionsMain query={query} user={user} />;
-  }
-
-  if (selector === "participate") {
-    return <ParticipateMain query={query} user={user} />;
-  }
-
-  if (selector === "matches") {
-    return <MatchesMain query={query} user={user} />;
-  }
-
-  if (selector === "my-matches") {
-    return <MentorMatchesMain query={query} user={user} />;
-  }
-
-  if (selector === "explore") {
-    return <ExploreMain query={query} user={user} />;
-  }
-
-  if (selector === "organizations") {
-    return <OrganizationsMain query={query} user={user} />;
-  }
-
-  return <ConnectBank query={query} user={user} />;
+  return (
+    <>
+      <ConnectNavigationBar />
+      {content}
+    </>
+  );
 }

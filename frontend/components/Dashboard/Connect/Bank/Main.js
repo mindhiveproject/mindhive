@@ -1,15 +1,12 @@
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
 import debounce from "lodash.debounce";
-import Link from "next/link";
 import styled from "styled-components";
 import { Dropdown, Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
-import Chip from "../../../DesignSystem/Chip";
 import { GET_CONNECT_USERS } from "../../../Queries/User";
 import ProfileCard from "../ConnectProfileCard";
-import useConnectRole from "../useConnectRole";
 
 import PaginationUsers from "./Pagination";
 
@@ -31,24 +28,6 @@ const ConnectShell = styled.div`
 
   @media (max-width: 1024px) {
     padding: 32px 24px 48px;
-  }
-`;
-
-const NavigationBar = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  position: sticky;
-  top: 0;
-  background: rgba(247, 249, 248, 0.8);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 10;
-  padding-top: 16px;
-  padding-bottom: 16px;
-
-  a {
-    text-decoration: none;
   }
 `;
 
@@ -191,7 +170,6 @@ const FooterControls = styled.div`
 
 export default function ConnectBankNew({ query, user }) {
   const { t } = useTranslation("connect");
-  const { isAdmin, isTeacher, isMentor, isStudent } = useConnectRole();
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -225,103 +203,6 @@ export default function ConnectBankNew({ query, user }) {
 
   return (
     <ConnectShell>
-      <NavigationBar>
-        <Link
-          href={{
-            pathname: `/dashboard/connect/explore`,
-          }}
-        >
-          <Chip
-          shape="square"
-            label={t("nav.exploreOpportunities", {}, { default: "Explore opportunities" })}
-          />
-        </Link>
-        <Link
-          href={{
-            pathname: `/dashboard/connect/organizations`,
-          }}
-        >
-          <Chip
-          shape="square" label={t("nav.organizations", {}, { default: "Organizations" })} />
-        </Link>
-        {(isMentor || isAdmin) && (
-          <Link
-            href={{
-              pathname: `/dashboard/connect/opportunities`,
-            }}
-          >
-            <Chip
-            shape="square"
-              label={t("nav.myOpportunities", {}, { default: "My opportunities" })}
-            />
-          </Link>
-        )}
-        {(isMentor || isAdmin) && (
-          <Link
-            href={{
-              pathname: `/dashboard/connect/my-matches`,
-            }}
-          >
-            <Chip
-            shape="square"
-              label={t("nav.myMatchedStudents", {}, { default: "My matched students" })}
-            />
-          </Link>
-        )}
-        {(isTeacher || isAdmin) && (
-          <Link
-            href={{
-              pathname: `/dashboard/connect/rounds`,
-            }}
-          >
-            <Chip
-            shape="square"
-              label={t("nav.matchingRounds", {}, { default: "Matching rounds" })}
-            />
-          </Link>
-        )}
-        {(isAdmin || isTeacher) && (
-          <Link
-            href={{
-              pathname: `/dashboard/connect/questions`,
-            }}
-          >
-            <Chip
-            shape="square"
-              label={t("nav.questionLibrary", {}, { default: "Question library" })}
-            />
-          </Link>
-        )}
-        {(isStudent || isAdmin) && (
-          <Link
-            href={{
-              pathname: `/dashboard/connect/participate`,
-            }}
-          >
-            <Chip
-            shape="square" label={t("nav.participate", {}, { default: "Participate" })} />
-          </Link>
-        )}
-        {(isTeacher || isAdmin) && (
-          <Link
-            href={{
-              pathname: `/dashboard/connect/matches`,
-            }}
-          >
-            <Chip
-            shape="square" label={t("nav.matches", {}, { default: "Matches" })} />
-          </Link>
-        )}
-        <Link
-          href={{
-            pathname: `/dashboard/connect/my`,
-          }}
-        >
-          <Chip
-          shape="square" label={t("savedConnections")} />
-        </Link>
-      </NavigationBar>
-
       <Header>
         <h1>{t("connectWithPeople")}</h1>
         <p>{t("connectSubtitle")}</p>
