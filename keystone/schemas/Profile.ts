@@ -339,6 +339,10 @@ export const Profile = list({
       ref: "Opportunity.mentor",
       many: true,
     }),
+    opportunitiesReviewed: relationship({
+      ref: "Opportunity.reviewedBy",
+      many: true,
+    }),
     // Connect / Organization membership. Many-to-many: a Profile can belong
     // to several Organizations (rare in practice but supported).
     organizations: relationship({

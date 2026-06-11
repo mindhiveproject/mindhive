@@ -11,7 +11,7 @@ export function dataURItoBlob(dataURI) {
   return new Blob([new Uint8Array(array)], { type: "image/jpeg" });
 }
 
-export default function useForm(initial = {}) {
+export default function useForm(initial = {}, { freezeInitialSync = false } = {}) {
   // create a state object for our inputs
   const { t } = useTranslation('common');
   const [inputs, setInputs] = useState(initial);
@@ -19,9 +19,10 @@ export default function useForm(initial = {}) {
 
   // use effect to update the data (when they are coming)
   useEffect(() => {
+    if (freezeInitialSync) return;
     // this function runs when the things we are watching change
     setInputs(initial);
-  }, [initialValues]);
+  }, [initialValues, freezeInitialSync]);
 
   function handleChange(e) {
     let { value, name, type } = e.target;

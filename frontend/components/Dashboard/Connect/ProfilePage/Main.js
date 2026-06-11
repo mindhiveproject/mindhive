@@ -7,6 +7,7 @@ import { Icon } from "semantic-ui-react";
 import { PUBLIC_USER_QUERY } from "../../../Queries/User";
 import { languageOptions } from "../../../User/LanguageSelector";
 import useTranslation from "next-translate/useTranslation";
+import Chip from "../../../DesignSystem/Chip";
 import ManageFavorite from "../ManageFavorite";
 import { getProfileImageUrl } from "../../../../lib/profileStudyImageUrls";
 
@@ -77,28 +78,6 @@ const NavigationBar = styled.div`
   a {
     text-decoration: none;
   }
-
-  button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 24px;
-    border-radius: 100px;
-    border: 1px solid #336f8a;
-    background: #ffffff;
-    color: #336f8a;
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      background: #336f8a;
-      color: #ffffff;
-    }
-  }
 `;
 export default function ProfilePage({ query, user }) {
   
@@ -156,14 +135,14 @@ export default function ProfilePage({ query, user }) {
             pathname: `/dashboard/connect/bank`,
           }}
         >
-          <button type="button">{t("exploreConnect")}</button>
+          <Chip shape="square" label={t("exploreConnect")} />
         </Link>
         <Link
           href={{
             pathname: `/dashboard/connect/my`,
           }}
         >
-          <button type="button">{t("myConnections")}</button>
+          <Chip shape="square" label={t("savedConnections")} />
         </Link>
       </NavigationBar>
       <ProfileShell>
@@ -271,7 +250,7 @@ export default function ProfilePage({ query, user }) {
                       <SectionTitle>{t("interests.interests")}</SectionTitle>
                       <ChipList>
                         {interestChips.map((label) => (
-                          <Chip key={label}>{label}</Chip>
+                          <InterestTag key={label}>{label}</InterestTag>
                         ))}
                       </ChipList>
                     </ChipContainer>
@@ -540,6 +519,7 @@ const Section = styled.div`
 
 const SectionTitle = styled.h3`
   margin: 0;
+  justify-content: flex-end;
   font-family: "Lato", sans-serif;
   font-weight: 600;
   font-size: 16px;
@@ -557,32 +537,43 @@ const BodyCopy = styled.p`
 
 const ChipContainer = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   flex-direction: column;
   gap: 8px;
 `;
 
 const ChipList = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: wrap;
   gap: 8px;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
 `;
 
-const Chip = styled.span`
+const InterestTag = styled.span`
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  height: 32px;
+  width: fit-content;
+  min-width: fit-content;
+  min-height: 32px;
+  height: fit-content;
+  max-height: 64px;
   padding: 6px 12px;
   border-radius: 8px;
-  border: 1px solid #a1a1a1;
+  // border: 1px solid #a1a1a1;
   background: #f3f3f3;
   color: #171717;
   font-family: "Nunito", sans-serif;
   font-weight: 600;
   font-size: 12px;
   line-height: 20px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const Tabs = styled.div`

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import { Dropdown } from "semantic-ui-react";
 import { useQuery, useMutation } from "@apollo/client";
 import useForm from "../../../../lib/useForm";
@@ -13,6 +14,18 @@ import {
   profileEditHref,
   resolveProfileType,
 } from "../../../../lib/profileEditNavigation";
+import {
+  confirmLeaveIfDirty,
+  useUnsavedChangesGuard,
+} from "../../../../lib/useUnsavedChangesGuard";
+
+function interestIdsKey(interests = []) {
+  return interests
+    .map((i) => i?.id)
+    .filter(Boolean)
+    .sort()
+    .join(",");
+}
 
 export default function InterestSelector({ query, user }) {
   const { t } = useTranslation("connect");
@@ -25,9 +38,29 @@ export default function InterestSelector({ query, user }) {
   const sourceInterests = isOrganization
     ? existingOrg?.interests || []
     : user?.interests || [];
-  const { inputs, handleChange } = useForm({
-    interests: sourceInterests.map((i) => ({ id: i?.id })),
-  });
+
+  const initialInterestIds = useMemo(
+    () => interestIdsKey(sourceInterests),
+    [sourceInterests],
+  );
+
+  const [syncFrozen, setSyncFrozen] = useState(false);
+
+  const { inputs, handleChange: baseHandleChange } = useForm(
+    {
+      interests: sourceInterests.map((i) => ({ id: i?.id })),
+    },
+    { freezeInitialSync: syncFrozen },
+  );
+
+  const changed = interestIdsKey(inputs?.interests) !== initialInterestIds;
+
+  const handleChange = (e) => {
+    baseHandleChange(e);
+    setSyncFrozen(true);
+  };
+
+  useUnsavedChangesGuard(changed);
 
   const { data, loading, error } = useQuery(GET_TAGS);
   const tags = data?.tags || [];
@@ -65,32 +98,54 @@ export default function InterestSelector({ query, user }) {
     }
   };
 
-  const complete = async () => {
-    if (isOrganization && existingOrg?.id) {
-      // Use `set` so the org's interests are replaced with the current
-      // selection (handles both adds and removes).
-      await updateOrganization({
-        variables: {
-          id: existingOrg.id,
-          input: { interests: { set: inputs?.interests } },
-        },
-      });
-    } else if (!isOrganization) {
-      await updateProfile({
-        variables: {
-          id: user?.id,
-          input: {
-            interests:
-              user?.interests && user?.interests.length
-                ? { set: inputs?.interests }
-                : { connect: inputs?.interests },
-          },
-        },
-      });
+  const tryToLeave = (e) => {
+    if (
+      changed &&
+      !confirmLeaveIfDirty(
+        t("createProfileFlow.unsavedChangesWarning", {}, {
+          default:
+            "Your unsaved changes will be lost. Click Cancel to return and save your changes.",
+        }),
+      )
+    ) {
+      e.preventDefault();
     }
-    router.push({
-      pathname: "/dashboard",
-    });
+  };
+
+  const complete = async () => {
+    try {
+      if (isOrganization && existingOrg?.id) {
+        // Use `set` so the org's interests are replaced with the current
+        // selection (handles both adds and removes).
+        await updateOrganization({
+          variables: {
+            id: existingOrg.id,
+            input: { interests: { set: inputs?.interests } },
+          },
+        });
+      } else if (!isOrganization) {
+        await updateProfile({
+          variables: {
+            id: user?.id,
+            input: {
+              interests:
+                user?.interests && user?.interests.length
+                  ? { set: inputs?.interests }
+                  : { connect: inputs?.interests },
+            },
+          },
+        });
+      }
+      router.push({
+        pathname: "/dashboard",
+      });
+    } catch {
+      alert(
+        t("createProfileFlow.saveError", {}, {
+          default: "Something went wrong while saving. Please try again.",
+        }),
+      );
+    }
   };
 
   return (
@@ -151,7 +206,10 @@ export default function InterestSelector({ query, user }) {
       )}
 
       <div className="navButtons">
-        <Link href={profileEditHref({ page: "about", type: profileType })}>
+        <Link
+          href={profileEditHref({ page: "about", type: profileType })}
+          onClick={tryToLeave}
+        >
           <button className="secondary">{t("interestSelector.navButtons.previous")}</button>
         </Link>
         <button onClick={complete}>{t("interestSelector.navButtons.complete")}</button>

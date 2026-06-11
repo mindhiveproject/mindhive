@@ -14,7 +14,7 @@ import {
 
 import { StyledInput } from "../../../../styles/StyledForm";
 import { StyledSaveButton } from "../../../../styles/StyledProfile";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getProfileImageUrl } from "../../../../../lib/profileStudyImageUrls";
 import { resolveProfileType } from "../../../../../lib/profileEditNavigation";
 
@@ -26,7 +26,7 @@ const PRIMARY_DOMAIN_KEYS = [
   "other",
 ];
 
-export default function BasicInformation({ query, user }) {
+export default function BasicInformation({ query, user, onDirtyChange }) {
   const { t } = useTranslation("connect");
   const [changed, setChanged] = useState(false);
   const profileImageUrl = getProfileImageUrl(user);
@@ -65,7 +65,12 @@ export default function BasicInformation({ query, user }) {
           tagline: user?.tagline,
           profileType,
         },
+    { freezeInitialSync: changed },
   );
+
+  useEffect(() => {
+    onDirtyChange?.(changed);
+  }, [changed, onDirtyChange]);
 
   const basicTitle = profileType
     ? t(`createProfileFlow.basic.title.${profileType}`, {}, { default: t("basic.title") })
@@ -100,51 +105,59 @@ export default function BasicInformation({ query, user }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (isOrganization) {
-      // Org-type profiles: write the org-level fields to an Organization
-      // record. Create one if the user doesn't have one yet (auto-migration
-      // for legacy sponsor accounts), otherwise update the existing one.
-      // Only profileType is written to the Profile itself.
-      const orgInput = {
-        name: inputs?.organization || "",
-        department: inputs?.department || "",
-        website: inputs?.website || "",
-        location: inputs?.location || "",
-        primaryDomain: inputs?.primaryDomain || null,
-        mission: inputs?.bio || "",
-        updatedAt: new Date().toISOString(),
-      };
-      // Only include the logo field when the user actually picked a new file.
-      if (logoUpload) {
-        orgInput.logo = { upload: logoUpload };
-      }
-      if (existingOrg?.id) {
-        await updateOrganization({
-          variables: { id: existingOrg.id, input: orgInput },
-        });
-      } else if (orgInput.name) {
-        await createOrganization({
-          variables: {
-            input: {
-              ...orgInput,
-              members: { connect: [{ id: user?.id }] },
+    try {
+      if (isOrganization) {
+        // Org-type profiles: write the org-level fields to an Organization
+        // record. Create one if the user doesn't have one yet (auto-migration
+        // for legacy sponsor accounts), otherwise update the existing one.
+        // Only profileType is written to the Profile itself.
+        const orgInput = {
+          name: inputs?.organization || "",
+          department: inputs?.department || "",
+          website: inputs?.website || "",
+          location: inputs?.location || "",
+          primaryDomain: inputs?.primaryDomain || null,
+          mission: inputs?.bio || "",
+          updatedAt: new Date().toISOString(),
+        };
+        // Only include the logo field when the user actually picked a new file.
+        if (logoUpload) {
+          orgInput.logo = { upload: logoUpload };
+        }
+        if (existingOrg?.id) {
+          await updateOrganization({
+            variables: { id: existingOrg.id, input: orgInput },
+          });
+        } else if (orgInput.name) {
+          await createOrganization({
+            variables: {
+              input: {
+                ...orgInput,
+                members: { connect: [{ id: user?.id }] },
+              },
             },
+          });
+        }
+        setLogoUpload(null);
+        await updateProfile({
+          variables: {
+            id: user?.id,
+            input: { profileType: "organization" },
           },
         });
+      } else {
+        await updateProfile({
+          variables: { id: user?.id, input: { ...inputs } },
+        });
       }
-      setLogoUpload(null);
-      await updateProfile({
-        variables: {
-          id: user?.id,
-          input: { profileType: "organization" },
-        },
-      });
-    } else {
-      await updateProfile({
-        variables: { id: user?.id, input: { ...inputs } },
-      });
+      setChanged(false);
+    } catch {
+      alert(
+        t("createProfileFlow.saveError", {}, {
+          default: "Something went wrong while saving. Please try again.",
+        }),
+      );
     }
-    setChanged(false);
   }
 
   const photoLabel = isOrganization

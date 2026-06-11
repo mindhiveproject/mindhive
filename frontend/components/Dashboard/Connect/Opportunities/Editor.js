@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Icon, Dropdown } from "semantic-ui-react";
 
 import useForm from "../../../../lib/useForm";
+import useEmail from "../../../../lib/useEmail";
 import {
   GET_OPPORTUNITY,
   MY_CLASS_NETWORKS_FOR_OPPORTUNITY,
@@ -21,7 +22,6 @@ import {
   CREATE_QUESTION,
   DELETE_QUESTION,
 } from "../../../Mutations/ConnectQuestion";
-import TipTapEditor from "../../../TipTap/Main";
 import { deriveRoles } from "../useConnectRole";
 
 const Shell = styled.div`
@@ -220,6 +220,29 @@ const CATEGORY_OPTIONS = [
 
 const DATA_SECURITY_OPTIONS = ["yes", "maybe", "no"];
 
+const WORD_LIMITS = {
+  title: 15,
+  shortDescription: 100,
+  issueRelevance: 100,
+  expectedDeliverables: 250,
+  designedForSpecificStudents: 15,
+  anticipatedObstacles: 250,
+  requiresBusinessHours: 50,
+  privateClientDataNotes: 100,
+  fieldResearchTravelDetails: 250,
+  potentialActivities: 500,
+  specificSkills: 500,
+  scopeDescription: 500,
+};
+
+const SPONSOR_LOCKED_STATUSES = new Set([
+  "pre_selected",
+  "accepted",
+  "published",
+  "closed",
+  "archived",
+]);
+
 const EMPTY_FORM = {
   title: "",
   shortDescription: "",
@@ -274,6 +297,37 @@ function wordCount(value) {
     .trim()
     .split(/\s+/)
     .filter(Boolean).length;
+}
+
+function exceedsWordLimit(value, max) {
+  return wordCount(value) > max;
+}
+
+function StatusBanner({ children, variant = "success" }) {
+  const styles =
+    variant === "success"
+      ? {
+          background: "#e3f4ec",
+          border: "1px solid #b6dec7",
+          color: "#1d6b3a",
+        }
+      : {
+          background: "#eef5f9",
+          border: "1px solid #c5dde8",
+          color: "#336f8a",
+        };
+  return (
+    <div
+      style={{
+        padding: "10px 14px",
+        borderRadius: 10,
+        fontSize: 13,
+        ...styles,
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
 function RequiredMark() {
@@ -386,8 +440,10 @@ function toIsoOrNull(dateStr) {
 export default function OpportunityEditor({ opportunityId, user }) {
   const router = useRouter();
   const { t } = useTranslation("connect");
+  const { sendEmail } = useEmail();
   const isNew = opportunityId === "new";
-  const { hasExpandedOpportunityEditor, isAdmin } = deriveRoles(user);
+  const isReviewRoute = router.query?.review === "1";
+  const { hasExpandedOpportunityEditor, isAdmin, isTeacher } = deriveRoles(user);
 
   // Sponsors decide between drafting and submitting for review. Everything
   // beyond — accepting, publishing, closing — is reserved for admins so a
@@ -412,9 +468,16 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const adminStatusOptions = [
     ...sponsorStatusOptions,
     {
+      key: "pre_selected",
+      text: t("opportunityEditor.statusOptions.pre_selected", {}, {
+        default: "Pre-selected (complete follow-up questions)",
+      }),
+      value: "pre_selected",
+    },
+    {
       key: "accepted",
       text: t("opportunityEditor.statusOptions.accepted", {}, {
-        default: "Accepted (complete post-acceptance details)",
+        default: "Accepted (complete final scope)",
       }),
       value: "accepted",
     },
@@ -442,14 +505,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
   ];
 
   const statusOptions = isAdmin ? adminStatusOptions : sponsorStatusOptions;
-  // Statuses only an admin can move to. Used at render time to lock the
-  // dropdown for sponsors when their opportunity is in one of these states.
-  const ADMIN_ONLY_STATUSES = new Set([
-    "accepted",
-    "published",
-    "closed",
-    "archived",
-  ]);
+  const ADMIN_ONLY_STATUSES = SPONSOR_LOCKED_STATUSES;
 
   const { data: existing, loading: loadingOpportunity } = useQuery(
     GET_OPPORTUNITY,
@@ -470,6 +526,14 @@ export default function OpportunityEditor({ opportunityId, user }) {
     myOrgData?.authenticatedItem?.organizations?.[0]?.id || null;
 
   const opportunity = existing?.opportunity;
+
+  const isReviewMode =
+    !isNew &&
+    isReviewRoute &&
+    (isTeacher || isAdmin) &&
+    opportunity?.mentor?.id &&
+    opportunity.mentor.id !== user?.id;
+  const isFieldReadOnly = isReviewMode && !isAdmin;
 
   const [selectedGrades, setSelectedGrades] = useState([]);
   const [selectedClassTypes, setSelectedClassTypes] = useState([]);
@@ -562,6 +626,15 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const { inputs, handleChange, handleMultipleUpdate, toggleBoolean } = useForm(
     EMPTY_FORM
   );
+
+  const showFollowUp =
+    ["pre_selected", "accepted", "published", "closed"].includes(
+      inputs.status,
+    ) || !!opportunity?.preSelectedAt;
+  const showFinalScope =
+    ["accepted", "published", "closed"].includes(inputs.status) ||
+    !!opportunity?.acceptedAt;
+  const fieldDisabled = isFieldReadOnly;
 
   const [relevantLinks, setRelevantLinks] = useState([]);
 
@@ -715,27 +788,76 @@ export default function OpportunityEditor({ opportunityId, user }) {
     refetchQuestions();
   };
 
-  const validateCapstoneSponsorFields = () => {
-    if (hasExpandedOpportunityEditor) return true;
+  const validateWordLimits = () => {
+    const checks = [
+      ["title", inputs.title, WORD_LIMITS.title],
+      ["shortDescription", inputs.shortDescription, WORD_LIMITS.shortDescription],
+      ["issueRelevance", inputs.issueRelevance, WORD_LIMITS.issueRelevance],
+      [
+        "expectedDeliverables",
+        inputs.expectedDeliverables,
+        WORD_LIMITS.expectedDeliverables,
+      ],
+      [
+        "designedForSpecificStudents",
+        inputs.designedForSpecificStudents,
+        WORD_LIMITS.designedForSpecificStudents,
+      ],
+      [
+        "anticipatedObstacles",
+        inputs.anticipatedObstacles,
+        WORD_LIMITS.anticipatedObstacles,
+      ],
+      [
+        "requiresBusinessHours",
+        inputs.requiresBusinessHours,
+        WORD_LIMITS.requiresBusinessHours,
+      ],
+      [
+        "privateClientDataNotes",
+        inputs.privateClientDataNotes,
+        WORD_LIMITS.privateClientDataNotes,
+      ],
+      [
+        "fieldResearchTravelDetails",
+        inputs.fieldResearchTravelDetails,
+        WORD_LIMITS.fieldResearchTravelDetails,
+      ],
+      [
+        "potentialActivities",
+        inputs.potentialActivities,
+        WORD_LIMITS.potentialActivities,
+      ],
+      ["specificSkills", inputs.specificSkills, WORD_LIMITS.specificSkills],
+      [
+        "scopeDescription",
+        inputs.scopeDescription,
+        WORD_LIMITS.scopeDescription,
+      ],
+    ];
+    for (const [field, value, max] of checks) {
+      if (exceedsWordLimit(value, max)) {
+        alert(
+          t("opportunityEditor.validation.wordLimit", { field, max }, {
+            default: "{{field}} exceeds the {{max}}-word limit.",
+          }),
+        );
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const validateSponsorSubmission = () => {
     const checks = [
       [!inputs.shortDescription?.trim(), "validation.projectAbstract"],
-      [!inputs.description?.trim(), "validation.projectDescription"],
-      [!inputs.researchQuestion?.trim(), "validation.researchQuestion"],
       [!inputs.projectCategory, "validation.category"],
       [
         inputs.projectCategory === "other" && !inputs.projectCategoryOther?.trim(),
         "validation.categoryOther",
       ],
-      [!inputs.relevance?.trim(), "validation.relevance"],
-      [!inputs.dataRequirements?.trim(), "validation.dataRequirements"],
-      [!inputs.backgroundMethodology?.trim(), "validation.backgroundMethodology"],
-      [!inputs.competencies?.trim(), "validation.competencies"],
-      [!inputs.learningOutcomes?.trim(), "validation.learningOutcomes"],
-      [
-        !relevantLinks.some((l) => l.url?.trim()),
-        "validation.relevantLinks",
-      ],
-      [!inputs.additionalNotes?.trim(), "validation.additionalNotes"],
+      [!inputs.issueRelevance?.trim(), "validation.issueRelevance"],
+      [!inputs.expectedDeliverables?.trim(), "validation.expectedDeliverables"],
     ];
     for (const [failed, key] of checks) {
       if (failed) {
@@ -747,7 +869,31 @@ export default function OpportunityEditor({ opportunityId, user }) {
         return false;
       }
     }
-    return true;
+    return validateWordLimits();
+  };
+
+  const validateFollowUpComplete = () => {
+    if (!inputs.potentialActivities?.trim() || !inputs.specificSkills?.trim()) {
+      alert(
+        t("opportunityEditor.validation.followUpIncomplete", {}, {
+          default: "Please complete the follow-up questionnaire before saving.",
+        }),
+      );
+      return false;
+    }
+    return validateWordLimits();
+  };
+
+  const validateScopeComplete = () => {
+    if (!inputs.scopeDescription?.trim()) {
+      alert(
+        t("opportunityEditor.validation.scopeDescription", {}, {
+          default: "Project scope is required.",
+        }),
+      );
+      return false;
+    }
+    return validateWordLimits();
   };
 
   const handleSave = async () => {
@@ -757,7 +903,27 @@ export default function OpportunityEditor({ opportunityId, user }) {
       );
       return;
     }
-    if (!validateCapstoneSponsorFields()) return;
+    if (exceedsWordLimit(inputs.title, WORD_LIMITS.title)) {
+      return validateWordLimits();
+    }
+    if (inputs.status === "pending_review" && !validateSponsorSubmission()) {
+      return;
+    }
+    if (
+      showFollowUp &&
+      ["pre_selected", "accepted", "published"].includes(inputs.status) &&
+      !validateFollowUpComplete()
+    ) {
+      return;
+    }
+    if (
+      showFinalScope &&
+      ["accepted", "published"].includes(inputs.status) &&
+      !validateScopeComplete()
+    ) {
+      return;
+    }
+    if (!validateWordLimits()) return;
     // Acknowledgment is required for any progression past Draft — both when a
     // sponsor submits for review AND when an admin publishes. Keeps the
     // mutual-expectations check at the gate of the first non-draft state.
@@ -837,6 +1003,10 @@ export default function OpportunityEditor({ opportunityId, user }) {
         inputs.status === "accepted" && !opportunity?.acceptedAt
           ? new Date().toISOString()
           : opportunity?.acceptedAt || null,
+      preSelectedAt:
+        inputs.status === "pre_selected" && !opportunity?.preSelectedAt
+          ? new Date().toISOString()
+          : opportunity?.preSelectedAt || null,
     };
 
     // Only include the upload fields when the user actually picked a new file.
@@ -853,6 +1023,9 @@ export default function OpportunityEditor({ opportunityId, user }) {
         variables: {
           input: {
             ...baseInput,
+            ...(user?.id
+              ? { mentor: { connect: { id: user.id } } }
+              : {}),
             classNetworks: networkConnect.length
               ? { connect: networkConnect }
               : undefined,
@@ -887,7 +1060,141 @@ export default function OpportunityEditor({ opportunityId, user }) {
   };
 
   const handleCancel = () => {
+    if (isReviewMode) {
+      router.replace({
+        pathname: "/dashboard/connect/opportunities",
+        query: { tab: "review" },
+      });
+      return;
+    }
     router.replace({ pathname: "/dashboard/connect/opportunities" });
+  };
+
+  const notifySponsor = async ({ titleKey, messageKey, defaultTitle, defaultMessage }) => {
+    const mentorId = opportunity?.mentor?.id;
+    if (!mentorId) return;
+    const link = `/dashboard/connect/opportunities?op=${opportunityId}`;
+    try {
+      await sendEmail({
+        receiverId: mentorId,
+        title: t(titleKey, {}, { default: defaultTitle }),
+        message: t(messageKey, {}, { default: defaultMessage }),
+        link,
+      });
+    } catch (e) {
+      console.error("Opportunity review notification failed:", e);
+    }
+  };
+
+  const handleReviewAction = async (nextStatus) => {
+    if (nextStatus === "pre_selected") {
+      if (
+        !window.confirm(
+          t("opportunityEditor.review.preSelectConfirm", {}, {
+            default:
+              "Pre-select this sponsor? They will be notified to complete the follow-up questionnaire.",
+          }),
+        )
+      ) {
+        return;
+      }
+    } else if (nextStatus === "accepted") {
+      if (!inputs.potentialActivities?.trim() || !inputs.specificSkills?.trim()) {
+        alert(
+          t("opportunityEditor.review.followUpIncomplete", {}, {
+            default:
+              "The sponsor must complete the follow-up questionnaire before you can accept.",
+          }),
+        );
+        return;
+      }
+      if (
+        !window.confirm(
+          t("opportunityEditor.review.acceptConfirm", {}, {
+            default:
+              "Accept this proposal? The sponsor will be notified to complete the final scope.",
+          }),
+        )
+      ) {
+        return;
+      }
+    } else if (nextStatus === "published") {
+      if (!inputs.scopeDescription?.trim()) {
+        alert(
+          t("opportunityEditor.review.scopeIncomplete", {}, {
+            default:
+              "The sponsor must complete the project scope before you can publish.",
+          }),
+        );
+        return;
+      }
+      if (
+        !window.confirm(
+          t("opportunityEditor.review.publishConfirm", {}, {
+            default: "Publish this opportunity so students can see it?",
+          }),
+        )
+      ) {
+        return;
+      }
+    }
+
+    const reviewInput = {
+      status: nextStatus,
+      updatedAt: new Date().toISOString(),
+      preSelectedAt:
+        nextStatus === "pre_selected" && !opportunity?.preSelectedAt
+          ? new Date().toISOString()
+          : opportunity?.preSelectedAt || null,
+      acceptedAt:
+        nextStatus === "accepted" && !opportunity?.acceptedAt
+          ? new Date().toISOString()
+          : opportunity?.acceptedAt || null,
+      reviewedBy: user?.id ? { connect: { id: user.id } } : undefined,
+    };
+
+    await updateOpportunity({
+      variables: {
+        id: opportunityId,
+        input: reviewInput,
+      },
+    });
+
+    if (nextStatus === "pre_selected") {
+      await notifySponsor({
+        titleKey: "opportunityEditor.review.emailPreSelectTitle",
+        messageKey: "opportunityEditor.review.emailPreSelectMessage",
+        defaultTitle: "Your Capstone proposal was pre-selected",
+        defaultMessage:
+          "A teacher has pre-selected your Capstone proposal. Please log in to complete the follow-up questionnaire.",
+      });
+      alert(
+        t("opportunityEditor.review.preSelectSuccess", {}, {
+          default: "Sponsor pre-selected and notified.",
+        }),
+      );
+    } else if (nextStatus === "accepted") {
+      await notifySponsor({
+        titleKey: "opportunityEditor.review.emailAcceptTitle",
+        messageKey: "opportunityEditor.review.emailAcceptMessage",
+        defaultTitle: "Your Capstone proposal was accepted",
+        defaultMessage:
+          "Your Capstone proposal has been accepted. Please log in to complete the final project scope.",
+      });
+      alert(
+        t("opportunityEditor.review.acceptSuccess", {}, {
+          default: "Proposal accepted and sponsor notified.",
+        }),
+      );
+    } else if (nextStatus === "published") {
+      alert(
+        t("opportunityEditor.review.publishSuccess", {}, {
+          default: "Opportunity published.",
+        }),
+      );
+    }
+
+    handleMultipleUpdate({ status: nextStatus });
   };
 
   if (!isNew && loadingOpportunity && !opportunity) {
@@ -904,18 +1211,42 @@ export default function OpportunityEditor({ opportunityId, user }) {
         <div>
           <BackLink type="button" onClick={handleCancel}>
             <Icon name="arrow left" />{" "}
-            {t("opportunityEditor.backLink", {}, { default: "Back to opportunities" })}
+            {isReviewMode
+              ? t("opportunityEditor.review.backLink", {}, {
+                  default: "Back to review queue",
+                })
+              : t("opportunityEditor.backLink", {}, {
+                  default: "Back to opportunities",
+                })}
           </BackLink>
           <h1>
-            {isNew
-              ? t("opportunityEditor.pageTitleNew", {}, { default: "New opportunity" })
-              : t("opportunityEditor.pageTitleEdit", {}, { default: "Edit opportunity" })}
+            {isReviewMode
+              ? t("opportunityEditor.review.pageTitle", {}, {
+                  default: "Review opportunities",
+                })
+              : isNew
+              ? t("opportunityEditor.pageTitleNew", {}, {
+                  default: "New opportunity",
+                })
+              : t("opportunityEditor.pageTitleEdit", {}, {
+                  default: "Edit opportunity",
+                })}
           </h1>
         </div>
       </TopBar>
 
+      {isReviewMode && (
+        <StatusBanner variant="info">
+          {t("opportunityEditor.review.modeBanner", {}, {
+            default: "You are reviewing this opportunity as a teacher.",
+          })}
+        </StatusBanner>
+      )}
+
       <Card>
-        <h2>{t("opportunityEditor.basics", {}, { default: "Basics" })}</h2>
+        <h2>
+          {t("opportunityEditor.projectBasics", {}, { default: "Project basics" })}
+        </h2>
         <Field>
           <span className="label-text">
             {t("opportunityEditor.projectTitle", {}, { default: "Project Title" })}
@@ -931,11 +1262,12 @@ export default function OpportunityEditor({ opportunityId, user }) {
             name="title"
             value={inputs.title}
             onChange={handleChange}
+            disabled={fieldDisabled}
             placeholder={t("opportunityEditor.projectTitlePlaceholder", {}, {
               default: "e.g. Neuroscience summer mentorship",
             })}
           />
-          <WordHint value={inputs.title} max={15} />
+          <WordHint value={inputs.title} max={WORD_LIMITS.title} />
         </Field>
         <Field>
           <span className="label-text">
@@ -946,55 +1278,374 @@ export default function OpportunityEditor({ opportunityId, user }) {
           </span>
           <span className="hint">
             {t("opportunityEditor.projectAbstractDescription", {}, {
-              default:
-                "100 words maximum. Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
+              default: "100 words maximum.",
             })}
           </span>
           <textarea
             name="shortDescription"
             value={inputs.shortDescription}
             onChange={handleChange}
+            disabled={fieldDisabled}
           />
-          <WordHint value={inputs.shortDescription} max={100} />
+          <WordHint value={inputs.shortDescription} max={WORD_LIMITS.shortDescription} />
         </Field>
         <Field>
           <span className="label-text">
-            {t("opportunityEditor.projectDescription", {}, {
-              default: "Capstone Project Description & Overview",
+            {t("opportunityEditor.categorization", {}, { default: "Classification" })}
+            <RequiredMark />
+          </span>
+          <span className="hint">
+            {t("opportunityEditor.categorizationDescription", {}, {
+              default: "Which category does your project align with?",
+            })}
+          </span>
+          <CheckboxRow>
+            {CATEGORY_OPTIONS.map((opt) => (
+              <label
+                key={opt.value}
+                className={inputs.projectCategory === opt.value ? "active" : ""}
+              >
+                <input
+                  type="radio"
+                  name="projectCategory"
+                  checked={inputs.projectCategory === opt.value}
+                  disabled={fieldDisabled}
+                  onChange={() =>
+                    handleMultipleUpdate({ projectCategory: opt.value })
+                  }
+                />
+                {t(`opportunityEditor.categorizationOptions.${opt.key}`, {}, {
+                  default: opt.key,
+                })}
+              </label>
+            ))}
+          </CheckboxRow>
+        </Field>
+        {inputs.projectCategory === "other" && (
+          <Field>
+            <span className="label-text">
+              {t("opportunityEditor.categorizationOther", {}, {
+                default: "Other category",
+              })}
+              <RequiredMark />
+            </span>
+            <input
+              type="text"
+              name="projectCategoryOther"
+              value={inputs.projectCategoryOther}
+              onChange={handleChange}
+              disabled={fieldDisabled}
+            />
+          </Field>
+        )}
+        <Field>
+          <span className="label-text">
+            {t("opportunityEditor.issueRelevance", {}, {
+              default: "Organizational relevance",
             })}
             <RequiredMark />
           </span>
           <span className="hint">
-            {t("opportunityEditor.projectDescriptionDescription", {}, {
+            {t("opportunityEditor.issueRelevanceDescription", {}, {
               default:
-                "250 words maximum. Describe the scope and nature of the capstone project. Please ensure that the project is achievable within the academic timeframe and with the resources available. Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
+                "Why is this challenge of particular relevance to your organization? What are the implications of this issue or problem for your agency? 100 words maximum.",
             })}
           </span>
-          <TipTapEditor
-            content={inputs.description}
-            placeholder={t("opportunityEditor.descriptionPlaceholder", {}, {
-              default: "What will students do? What will they learn?",
-            })}
-            onUpdate={(newContent) =>
-              handleMultipleUpdate({ description: newContent })
-            }
+          <textarea
+            name="issueRelevance"
+            value={inputs.issueRelevance}
+            onChange={handleChange}
+            disabled={fieldDisabled}
           />
-          <WordHint value={inputs.description} max={250} />
+          <WordHint value={inputs.issueRelevance} max={WORD_LIMITS.issueRelevance} />
         </Field>
         <Field>
           <span className="label-text">
-            {t("opportunityEditor.researchQuestion", {}, {
-              default:
-                "What is the research question/scope to be explored OR what is the problem that you want to address?",
+            {t("opportunityEditor.expectedDeliverables", {}, {
+              default: "Expected deliverables",
             })}
             <RequiredMark />
           </span>
+          <span className="hint">
+            {t("opportunityEditor.expectedDeliverablesDescription", {}, {
+              default:
+                "Please describe the deliverables that are expected of the Capstone Team at the completion of the project. Approximately 250 words.",
+            })}
+          </span>
           <textarea
-            name="researchQuestion"
-            value={inputs.researchQuestion}
+            name="expectedDeliverables"
+            value={inputs.expectedDeliverables}
             onChange={handleChange}
+            disabled={fieldDisabled}
+          />
+          <WordHint
+            value={inputs.expectedDeliverables}
+            max={WORD_LIMITS.expectedDeliverables}
           />
         </Field>
+      </Card>
+
+      <Card>
+        <h2>
+          {t("opportunityEditor.specialConsiderations.title", {}, {
+            default: "Special considerations",
+          })}
+        </h2>
+        <p style={{ color: "#5f6871", fontSize: 14, margin: 0 }}>
+          {t("opportunityEditor.specialConsiderations.intro", {}, {
+            default:
+              "If applicable, please describe any special considerations that NYU Wagner and/or the Capstone Project Team should be aware of.",
+          })}
+        </p>
+        <Field>
+          <span className="label-text">
+            {t("opportunityEditor.specialConsiderations.general", {}, {
+              default: "Special considerations",
+            })}
+          </span>
+          <span className="hint">
+            {t("opportunityEditor.specialConsiderations.generalHint", {}, {
+              default:
+                "If applicable, describe anything the Capstone Project Team should be aware of.",
+            })}
+          </span>
+          <textarea
+            name="specialConsiderations"
+            value={inputs.specialConsiderations}
+            onChange={handleChange}
+            disabled={fieldDisabled}
+          />
+        </Field>
+        <Field>
+          <span className="label-text">
+            {t("opportunityEditor.specialConsiderations.designedForStudents", {}, {
+              default: "Designed with specific NYU CUSP students in mind?",
+            })}
+          </span>
+          <span className="hint">
+            {t("opportunityEditor.specialConsiderations.designedForStudentsHint", {}, {
+              default: "If yes, please list student names. 15 words maximum.",
+            })}
+          </span>
+          <textarea
+            name="designedForSpecificStudents"
+            value={inputs.designedForSpecificStudents}
+            onChange={handleChange}
+            disabled={fieldDisabled}
+            rows={2}
+          />
+          <WordHint
+            value={inputs.designedForSpecificStudents}
+            max={WORD_LIMITS.designedForSpecificStudents}
+          />
+        </Field>
+        <Field>
+          <span className="label-text">
+            {t("opportunityEditor.specialConsiderations.anticipatedObstacles", {}, {
+              default: "Anticipated obstacles",
+            })}
+          </span>
+          <span className="hint">
+            {t("opportunityEditor.specialConsiderations.anticipatedObstaclesHint", {}, {
+              default:
+                "Can you anticipate obstacles that a Capstone Team might encounter while working on this project? 250 words maximum.",
+            })}
+          </span>
+          <textarea
+            name="anticipatedObstacles"
+            value={inputs.anticipatedObstacles}
+            onChange={handleChange}
+            disabled={fieldDisabled}
+          />
+          <WordHint
+            value={inputs.anticipatedObstacles}
+            max={WORD_LIMITS.anticipatedObstacles}
+          />
+        </Field>
+        <Field>
+          <span className="label-text">
+            {t("opportunityEditor.specialConsiderations.requiresBusinessHours", {}, {
+              default: "Research during business hours?",
+            })}
+          </span>
+          <span className="hint">
+            {t("opportunityEditor.specialConsiderations.requiresBusinessHoursHint", {}, {
+              default:
+                "Must a significant portion of research and data gathering be done during regular business hours? 50 words maximum.",
+            })}
+          </span>
+          <textarea
+            name="requiresBusinessHours"
+            value={inputs.requiresBusinessHours}
+            onChange={handleChange}
+            disabled={fieldDisabled}
+            rows={3}
+          />
+          <WordHint
+            value={inputs.requiresBusinessHours}
+            max={WORD_LIMITS.requiresBusinessHours}
+          />
+        </Field>
+        <Field>
+          <span className="label-text">
+            {t("opportunityEditor.specialConsiderations.privateClientData", {}, {
+              default: "Private client data access",
+            })}
+          </span>
+          <span className="hint">
+            {t("opportunityEditor.specialConsiderations.privateClientDataHint", {}, {
+              default:
+                "Will the Capstone Team have access to private client data? 100 words maximum.",
+            })}
+          </span>
+          <textarea
+            name="privateClientDataNotes"
+            value={inputs.privateClientDataNotes}
+            onChange={handleChange}
+            disabled={fieldDisabled}
+          />
+          <WordHint
+            value={inputs.privateClientDataNotes}
+            max={WORD_LIMITS.privateClientDataNotes}
+          />
+        </Field>
+        <Field>
+          <span className="label-text">
+            {t("opportunityEditor.specialConsiderations.fieldResearchTravel", {}, {
+              default: "Field research and travel",
+            })}
+          </span>
+          <span className="hint">
+            {t("opportunityEditor.specialConsiderations.fieldResearchTravelHint", {}, {
+              default:
+                "Will the Capstone Team be required to conduct field research and/or visit multiple locations? 250 words maximum.",
+            })}
+          </span>
+          <textarea
+            name="fieldResearchTravelDetails"
+            value={inputs.fieldResearchTravelDetails}
+            onChange={handleChange}
+            disabled={fieldDisabled}
+          />
+          <WordHint
+            value={inputs.fieldResearchTravelDetails}
+            max={WORD_LIMITS.fieldResearchTravelDetails}
+          />
+        </Field>
+      </Card>
+
+      {showFollowUp && (
+        <Card>
+          <h2>
+            {t("opportunityEditor.followUpQuestionnaire.title", {}, {
+              default: "Follow-up questionnaire",
+            })}
+          </h2>
+          {!isReviewMode && (
+            <StatusBanner>
+              {t("opportunityEditor.followUpQuestionnaire.banner", {}, {
+                default:
+                  "You've been pre-selected — please complete the follow-up questions below.",
+              })}
+            </StatusBanner>
+          )}
+          <Field>
+            <span className="label-text">
+              {t("opportunityEditor.followUpQuestionnaire.potentialActivities", {}, {
+                default: "Potential activities",
+              })}
+              <RequiredMark />
+            </span>
+            <span className="hint">
+              {t("opportunityEditor.followUpQuestionnaire.potentialActivitiesHint", {}, {
+                default:
+                  "Please describe potential activities in which the Capstone Team might engage. 500 words maximum.",
+              })}
+            </span>
+            <textarea
+              name="potentialActivities"
+              value={inputs.potentialActivities}
+              onChange={handleChange}
+              disabled={fieldDisabled}
+            />
+            <WordHint
+              value={inputs.potentialActivities}
+              max={WORD_LIMITS.potentialActivities}
+            />
+          </Field>
+          <Field>
+            <span className="label-text">
+              {t("opportunityEditor.followUpQuestionnaire.specificSkills", {}, {
+                default: "Specific skills or qualifications",
+              })}
+              <RequiredMark />
+            </span>
+            <span className="hint">
+              {t("opportunityEditor.followUpQuestionnaire.specificSkillsHint", {}, {
+                default:
+                  "Specific skills or qualifications that would be helpful for the Capstone Team. 500 words maximum.",
+              })}
+            </span>
+            <textarea
+              name="specificSkills"
+              value={inputs.specificSkills}
+              onChange={handleChange}
+              disabled={fieldDisabled}
+            />
+            <WordHint value={inputs.specificSkills} max={WORD_LIMITS.specificSkills} />
+          </Field>
+        </Card>
+      )}
+
+      {showFinalScope && (
+        <Card>
+          <h2>
+            {t("opportunityEditor.finalScope.title", {}, { default: "Project scope" })}
+          </h2>
+          {!isReviewMode && (
+            <StatusBanner>
+              {opportunity?.acceptedAt
+                ? t("opportunityEditor.finalScope.bannerDate", {
+                    date: new Date(opportunity.acceptedAt).toLocaleDateString(),
+                  }, {
+                    default: "Your proposal was accepted on {{date}}.",
+                  })
+                : t("opportunityEditor.finalScope.banner", {}, {
+                    default:
+                      "You've been accepted — describe the project scope below.",
+                  })}
+            </StatusBanner>
+          )}
+          <Field>
+            <span className="label-text">
+              {t("opportunityEditor.finalScope.scopeDescription", {}, {
+                default: "Scope of the project",
+              })}
+              <RequiredMark />
+            </span>
+            <span className="hint">
+              {t("opportunityEditor.finalScope.scopeDescriptionHint", {}, {
+                default:
+                  "Describe the scope of the project for which you would like a Capstone Project Team to focus.",
+              })}
+            </span>
+            <textarea
+              name="scopeDescription"
+              value={inputs.scopeDescription}
+              onChange={handleChange}
+              disabled={fieldDisabled}
+            />
+            <WordHint
+              value={inputs.scopeDescription}
+              max={WORD_LIMITS.scopeDescription}
+            />
+          </Field>
+        </Card>
+      )}
+
+      {hasExpandedOpportunityEditor && (
+      <Card>
+        <h2>{t("opportunityEditor.basics", {}, { default: "Media" })}</h2>
         <Row $cols="1fr 1fr">
           <Field>
             <span className="label-text">
@@ -1003,7 +1654,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
             <span className="hint">
               {t("opportunityEditor.coverImageHint", {}, {
                 default:
-                  "Upload a file (stored on our cloud bucket) or paste a direct image URL below. Uploaded files take priority if both are set.",
+                  "Upload a file or paste a direct image URL below.",
               })}
             </span>
             {opportunity?.coverImage?.url && !coverImageUpload && (
@@ -1030,17 +1681,9 @@ export default function OpportunityEditor({ opportunityId, user }) {
             />
             {coverImageUpload && (
               <div style={{ fontSize: 12, color: "#1d8f47", marginTop: 4 }}>
-                Ready to upload: {coverImageUpload.name} (
-                {Math.round(coverImageUpload.size / 1024)} KB)
+                Ready to upload: {coverImageUpload.name}
               </div>
             )}
-            <span className="hint" style={{ marginTop: 8 }}>
-              {t("opportunityEditor.coverImageUrlHint", {
-                maxMb: MAX_COVER_BYTES / 1024 / 1024,
-              }, {
-                default: "Or paste a URL (max {{maxMb}} MB for uploads):",
-              })}
-            </span>
             <input
               type="text"
               name="coverImageUrl"
@@ -1048,12 +1691,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
               onChange={handleChange}
               placeholder="https://…"
             />
-            {urlHint(inputs.coverImageUrl) && (
-              <div style={{ fontSize: 12, color: "#b3261e", marginTop: 4 }}>
-                <Icon name="warning circle" />{" "}
-                {urlHint(inputs.coverImageUrl)}
-              </div>
-            )}
           </Field>
           <Field>
             <span className="label-text">
@@ -1061,55 +1698,14 @@ export default function OpportunityEditor({ opportunityId, user }) {
             </span>
             <span className="hint">
               {t("opportunityEditor.introVideoHint", {}, {
-                default:
-                  "Upload a video file or paste an embed URL (YouTube, Vimeo). Uploaded files are stored on our cloud bucket.",
+                default: "Upload a video file or paste an embed URL.",
               })}
             </span>
-            {opportunity?.videoFile?.url && !videoFileUpload && (
-              <div
-                style={{
-                  marginBottom: 8,
-                  padding: 10,
-                  borderRadius: 10,
-                  border: "1px solid #d3dae0",
-                  background: "#f7f9f8",
-                  fontSize: 13,
-                  color: "#5f6871",
-                }}
-              >
-                <Icon name="film" />{" "}
-                {t("opportunityEditor.videoCurrentUpload", {}, {
-                  default: "Current upload:",
-                })}{" "}
-                <a
-                  href={opportunity.videoFile.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ color: "#336f8a" }}
-                >
-                  {opportunity.videoFile.filename || "video file"}
-                </a>
-              </div>
-            )}
             <input
               type="file"
               accept="video/*"
               onChange={(e) => pickVideoFile(e.target.files?.[0] || null)}
             />
-            {videoFileUpload && (
-              <div style={{ fontSize: 12, color: "#1d8f47", marginTop: 4 }}>
-                Ready to upload: {videoFileUpload.name} (
-                {Math.round(videoFileUpload.size / 1024 / 1024)} MB)
-              </div>
-            )}
-            <span className="hint" style={{ marginTop: 8 }}>
-              {t("opportunityEditor.introVideoUrlHint", {
-                maxMb: MAX_VIDEO_BYTES / 1024 / 1024,
-              }, {
-                default:
-                  "Or paste a video URL (the URL itself — not the full <iframe> embed code). Supports YouTube, Vimeo, Loom, Google Drive, or a direct .mp4/.webm link. Maximum upload size: {{maxMb}} MB.",
-              })}
-            </span>
             <input
               type="text"
               name="videoUrl"
@@ -1117,64 +1713,10 @@ export default function OpportunityEditor({ opportunityId, user }) {
               onChange={handleChange}
               placeholder="https://youtube.com/watch?v=…"
             />
-            {urlHint(inputs.videoUrl) && (
-              <div style={{ fontSize: 12, color: "#b3261e", marginTop: 4 }}>
-                <Icon name="warning circle" /> {urlHint(inputs.videoUrl)}
-              </div>
-            )}
           </Field>
         </Row>
       </Card>
-
-      <Card>
-        <h2>
-          {t("opportunityEditor.categorization", {}, { default: "Categorization" })}
-          <RequiredMark />
-        </h2>
-        <Field>
-          <span className="hint">
-            {t("opportunityEditor.categorizationDescription", {}, {
-              default: "Which category does your project align with?",
-            })}
-          </span>
-          <CheckboxRow>
-            {CATEGORY_OPTIONS.map((opt) => (
-              <label
-                key={opt.value}
-                className={inputs.projectCategory === opt.value ? "active" : ""}
-              >
-                <input
-                  type="radio"
-                  name="projectCategory"
-                  checked={inputs.projectCategory === opt.value}
-                  onChange={() =>
-                    handleMultipleUpdate({ projectCategory: opt.value })
-                  }
-                />
-                {t(`opportunityEditor.categorizationOptions.${opt.key}`, {}, {
-                  default: opt.key,
-                })}
-              </label>
-            ))}
-          </CheckboxRow>
-        </Field>
-        {inputs.projectCategory === "other" && (
-          <Field>
-            <span className="label-text">
-              {t("opportunityEditor.categorizationOther", {}, {
-                default: "Other category",
-              })}
-              <RequiredMark />
-            </span>
-            <input
-              type="text"
-              name="projectCategoryOther"
-              value={inputs.projectCategoryOther}
-              onChange={handleChange}
-            />
-          </Field>
-        )}
-      </Card>
+      )}
 
       {hasExpandedOpportunityEditor && (
       <Card>
@@ -1371,305 +1913,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
       </Card>
       )}
 
-      <Card>
-        <h2>{t("opportunityEditor.questionnaire", {}, { default: "Questionnaire" })}</h2>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.relevance", {}, { default: "Relevance" })}
-            <RequiredMark />
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.relevanceDescription", {}, {
-              default:
-                "Describe why this issue is of relevance to CUSP's mission and urban science.",
-            })}
-          </span>
-          <textarea
-            name="relevance"
-            value={inputs.relevance}
-            onChange={handleChange}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.dataRequirements", {}, {
-              default:
-                "What are the anticipated data requirements for the project, and how will each required data resource be provided to the capstone team?",
-            })}
-            <RequiredMark />
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.dataRequirementsDescription", {}, {
-              default:
-                "Please describe what datasets will be used. For example, existing source data will be provided by the sponsor, existing source data is free and open (public), etc. Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
-            })}
-          </span>
-          <textarea
-            name="dataRequirements"
-            value={inputs.dataRequirements}
-            onChange={handleChange}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.backgroundMethodology", {}, {
-              default: "Background & Methodology",
-            })}
-            <RequiredMark />
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.backgroundMethodologyDescription", {}, {
-              default:
-                "Please include any important contextual information related to your project, and outline your methodologies including specific research approaches, data collection techniques, tools, and technologies.",
-            })}
-          </span>
-          <textarea
-            name="backgroundMethodology"
-            value={inputs.backgroundMethodology}
-            onChange={handleChange}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.dataSecurityConcerns", {}, {
-              default:
-                "Does the sponsor have any anticipated data security concerns to be cleared for student team?",
-            })}
-            <RequiredMark />
-          </span>
-          <CheckboxRow>
-            {DATA_SECURITY_OPTIONS.map((value) => (
-              <label
-                key={value}
-                className={
-                  inputs.dataSecurityConcerns === value ? "active" : ""
-                }
-              >
-                <input
-                  type="radio"
-                  name="dataSecurityConcerns"
-                  checked={inputs.dataSecurityConcerns === value}
-                  onChange={() =>
-                    handleMultipleUpdate({ dataSecurityConcerns: value })
-                  }
-                />
-                {t(`opportunityEditor.dataSecurityOptions.${value}`, {}, {
-                  default: value,
-                })}
-              </label>
-            ))}
-          </CheckboxRow>
-        </Field>
-        {(inputs.dataSecurityConcerns === "yes" ||
-          inputs.dataSecurityConcerns === "maybe") && (
-          <Field>
-            <span className="label-text">
-              {t("opportunityEditor.dataSecurityNotes", {}, {
-                default: "If yes or maybe, please describe concerns.",
-              })}
-            </span>
-            <textarea
-              name="dataSecurityNotes"
-              value={inputs.dataSecurityNotes}
-              onChange={handleChange}
-            />
-          </Field>
-        )}
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.techRequirements", {}, {
-              default:
-                "Does the sponsor have technology infrastructure and/or software application requirements for this project?",
-            })}
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.techRequirementsDescription", {}, {
-              default:
-                "For example, the project requires GIS data analysis and the sponsor uses ArcGIS or RShiny for mapping. If the sponsor has no preferences as to data tools used, please indicate.",
-            })}
-          </span>
-          <textarea
-            name="techRequirements"
-            value={inputs.techRequirements}
-            onChange={handleChange}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.fieldWorkLikelihood", {}, {
-              default:
-                "How likely would the project require field work or site visits (either within NYC or outside)?",
-            })}
-            <RequiredMark />
-          </span>
-          <ScaleRow>
-            <div className="scale-labels">
-              <span>
-                {t("opportunityEditor.fieldWorkScale.unlikely", {}, {
-                  default: "Very unlikely",
-                })}
-              </span>
-              <span>
-                {t("opportunityEditor.fieldWorkScale.likely", {}, {
-                  default: "Very likely",
-                })}
-              </span>
-            </div>
-            <div className="scale-buttons">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  className={`scale-btn${
-                    Number(inputs.fieldWorkLikelihood) === n ? " active" : ""
-                  }`}
-                  onClick={() =>
-                    handleMultipleUpdate({ fieldWorkLikelihood: n })
-                  }
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-          </ScaleRow>
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.competencies", {}, { default: "Competencies" })}
-            <RequiredMark />
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.competenciesDescription", {}, {
-              default:
-                "List any specific skills or qualifications that would be useful for students to have in order to successfully address this problem and complete the capstone project. For example, user experience design, software programming, economics/financial analysis, public policy analysis, quantitative research/analysis, engineering skills (mechanical, electrical, etc). Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
-            })}
-          </span>
-          <textarea
-            name="competencies"
-            value={inputs.competencies}
-            onChange={handleChange}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.learningOutcomes", {}, {
-              default: "Learning Outcomes/Deliverables",
-            })}
-            <RequiredMark />
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.learningOutcomesDescription", {}, {
-              default:
-                "Provide 2-3 learning outcomes or expected deliverables. For example, an interactive dashboard or a website showcasing data analysis outcomes. Info provided here may be used on the CUSP website, in other promotional materials, and in Urban Science Intensive course descriptions for students.",
-            })}
-          </span>
-          <textarea
-            name="learningOutcomes"
-            value={inputs.learningOutcomes}
-            onChange={handleChange}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.relevantLinks", {}, { default: "Relevant Links" })}
-            <RequiredMark />
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.relevantLinksDescription", {}, {
-              default:
-                "This can include a project website, GitHub repository, or other online presence where one can learn more about the project. We'll include QR codes in the brochure.",
-            })}
-          </span>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {relevantLinks.map((link, idx) => (
-              <div
-                key={idx}
-                style={{ display: "grid", gridTemplateColumns: "1fr 2fr auto", gap: 8 }}
-              >
-                <input
-                  type="text"
-                  placeholder={t("opportunityEditor.relevantLinksLabel", {}, {
-                    default: "Label",
-                  })}
-                  value={link.label || ""}
-                  onChange={(e) => {
-                    const next = [...relevantLinks];
-                    next[idx] = { ...next[idx], label: e.target.value };
-                    setRelevantLinks(next);
-                  }}
-                />
-                <input
-                  type="text"
-                  placeholder="https://…"
-                  value={link.url || ""}
-                  onChange={(e) => {
-                    const next = [...relevantLinks];
-                    next[idx] = { ...next[idx], url: e.target.value };
-                    setRelevantLinks(next);
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    setRelevantLinks(
-                      relevantLinks.filter((_, i) => i !== idx),
-                    )
-                  }
-                  style={{
-                    padding: "6px 12px",
-                    borderRadius: 100,
-                    border: "1px solid #e8c4c4",
-                    background: "#fff",
-                    color: "#b3261e",
-                    fontFamily: "Nunito",
-                    fontWeight: 600,
-                    fontSize: 12,
-                    cursor: "pointer",
-                  }}
-                >
-                  {t("opportunityEditor.relevantLinksRemove", {}, {
-                    default: "Remove",
-                  })}
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() =>
-                setRelevantLinks([...relevantLinks, { label: "", url: "" }])
-              }
-              style={{
-                alignSelf: "flex-start",
-                padding: "6px 14px",
-                borderRadius: 100,
-                border: "1px dashed #d3dae0",
-                background: "#fff",
-                color: "#336f8a",
-                fontFamily: "Nunito",
-                fontWeight: 600,
-                fontSize: 12,
-                cursor: "pointer",
-              }}
-            >
-              + {t("opportunityEditor.relevantLinksAdd", {}, { default: "Add link" })}
-            </button>
-          </div>
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.additionalNotes", {}, {
-              default: "Is there any additional information you would like to highlight?",
-            })}
-            <RequiredMark />
-          </span>
-          <textarea
-            name="additionalNotes"
-            value={inputs.additionalNotes}
-            onChange={handleChange}
-          />
-        </Field>
-      </Card>
-
       {hasExpandedOpportunityEditor && (
       <Card>
         <Field>
@@ -1834,7 +2077,11 @@ export default function OpportunityEditor({ opportunityId, user }) {
                   selection
                   options={[
                     { key: "short_text", text: "Short text", value: "short_text" },
-                    { key: "long_text", text: "Long text", value: "long_text" },
+                    {
+                      key: "long_text",
+                      text: "Long text",
+                      value: "long_text",
+                    },
                     {
                       key: "single_select",
                       text: "Single select",
@@ -1845,15 +2092,10 @@ export default function OpportunityEditor({ opportunityId, user }) {
                       text: "Multi select",
                       value: "multi_select",
                     },
-                    { key: "scale_1_5", text: "1-5 scale", value: "scale_1_5" },
-                    { key: "yes_no", text: "Yes / no", value: "yes_no" },
                   ]}
                   value={questionDraft.questionType}
                   onChange={(_, { value }) =>
-                    setQuestionDraft({
-                      ...questionDraft,
-                      questionType: value,
-                    })
+                    setQuestionDraft({ ...questionDraft, questionType: value })
                   }
                 />
               </Field>
@@ -1881,12 +2123,11 @@ export default function OpportunityEditor({ opportunityId, user }) {
                   gap: 8,
                   alignItems: "center",
                   cursor: "pointer",
-                  fontSize: 14,
                 }}
               >
                 <input
                   type="checkbox"
-                  checked={questionDraft.isRequired}
+                  checked={!!questionDraft.isRequired}
                   onChange={(e) =>
                     setQuestionDraft({
                       ...questionDraft,
@@ -1920,201 +2161,55 @@ export default function OpportunityEditor({ opportunityId, user }) {
       </Card>
       )}
 
-      <Card>
-        <h2>Special considerations</h2>
-        <p style={{ color: "#5f6871", fontSize: 14, margin: 0 }}>
-          Tell us anything the Capstone Project Team should know that
-          doesn&apos;t fit elsewhere. Optional but very helpful for matching.
-        </p>
-
-        <Field>
-          <span className="label-text">Special considerations</span>
-          <span className="hint">
-            If applicable, describe anything the Capstone Project Team should
-            be aware of.
-          </span>
-          <textarea
-            name="specialConsiderations"
-            value={inputs.specialConsiderations}
-            onChange={handleChange}
-          />
-        </Field>
-
-        <Field>
-          <span className="label-text">
-            Designed with specific NYU CUSP students in mind?
-          </span>
-          <span className="hint">
-            If yes, list the student names. Aim for 15 words or fewer.
-          </span>
-          <textarea
-            name="designedForSpecificStudents"
-            value={inputs.designedForSpecificStudents}
-            onChange={handleChange}
-            rows={2}
-          />
-          <WordHint value={inputs.designedForSpecificStudents} max={15} />
-        </Field>
-
-        <Field>
-          <span className="label-text">Anticipated obstacles</span>
-          <span className="hint">
-            Things a Capstone Team might run into — incomplete data, lack of
-            buy-in, staff turnover, etc. Aim for 250 words or fewer.
-          </span>
-          <textarea
-            name="anticipatedObstacles"
-            value={inputs.anticipatedObstacles}
-            onChange={handleChange}
-          />
-          <WordHint value={inputs.anticipatedObstacles} max={250} />
-        </Field>
-
-        <Field>
-          <span className="label-text">
-            Significant research during business hours?
-          </span>
-          <span className="hint">
-            Many students work full-time. Tell us if daytime availability is
-            needed. Aim for 50 words or fewer.
-          </span>
-          <textarea
-            name="requiresBusinessHours"
-            value={inputs.requiresBusinessHours}
-            onChange={handleChange}
-            rows={3}
-          />
-          <WordHint value={inputs.requiresBusinessHours} max={50} />
-        </Field>
-
-        <Field>
-          <span className="label-text">Private client data access</span>
-          <span className="hint">
-            Will the team access private client data? When/how will approval
-            be in place? Aim for 100 words or fewer.
-          </span>
-          <textarea
-            name="privateClientDataNotes"
-            value={inputs.privateClientDataNotes}
-            onChange={handleChange}
-          />
-          <WordHint value={inputs.privateClientDataNotes} max={100} />
-        </Field>
-
-        <Field>
-          <span className="label-text">Field research and travel</span>
-          <span className="hint">
-            Will the team need to visit other locations? Where? Aim for 250
-            words or fewer.
-          </span>
-          <textarea
-            name="fieldResearchTravelDetails"
-            value={inputs.fieldResearchTravelDetails}
-            onChange={handleChange}
-          />
-          <WordHint value={inputs.fieldResearchTravelDetails} max={250} />
-        </Field>
-
-        <Field>
-          <span className="label-text">Expected deliverables</span>
-          <span className="hint">
-            What will the team produce at the end — instruments, policies,
-            datasets, a report, recommendations? Aim for 250 words or fewer.
-          </span>
-          <textarea
-            name="expectedDeliverables"
-            value={inputs.expectedDeliverables}
-            onChange={handleChange}
-          />
-          <WordHint value={inputs.expectedDeliverables} max={250} />
-        </Field>
-      </Card>
-
-      {(inputs.status === "accepted" ||
-        inputs.status === "published" ||
-        inputs.status === "closed" ||
-        opportunity?.acceptedAt) && (
+      {isReviewMode && (
         <Card>
-          <h2>You&apos;ve been accepted — let&apos;s lock in the details</h2>
-          <div
-            style={{
-              padding: "10px 14px",
-              borderRadius: 10,
-              background: "#e3f4ec",
-              border: "1px solid #b6dec7",
-              color: "#1d6b3a",
-              fontSize: 13,
-            }}
-          >
-            <Icon name="check circle" /> Your proposal was accepted
-            {opportunity?.acceptedAt
-              ? ` on ${new Date(opportunity.acceptedAt).toLocaleDateString()}`
-              : ""}
-            . Please complete the four sections below — they help students
-            understand what they&apos;ll be doing before you publish.
-          </div>
-
-          <Field>
-            <span className="label-text">Scope of the project</span>
-            <span className="hint">
-              Best Capstone proposals are important but not urgent, achievable
-              within the academic timeframe, have a clear problem definition,
-              a realistic scope, and specify tangible deliverables.
-            </span>
-            <textarea
-              name="scopeDescription"
-              value={inputs.scopeDescription}
-              onChange={handleChange}
-            />
-          </Field>
-
-          <Field>
-            <span className="label-text">
-              Why is this issue of particular relevance to your organization?
-            </span>
-            <span className="hint">
-              Implications for your agency. Aim for 500 words or fewer.
-            </span>
-            <textarea
-              name="issueRelevance"
-              value={inputs.issueRelevance}
-              onChange={handleChange}
-            />
-            <WordHint value={inputs.issueRelevance} max={500} />
-          </Field>
-
-          <Field>
-            <span className="label-text">Potential activities</span>
-            <span className="hint">
-              What the team might do: literature review, survey, program
-              evaluation, dataset analysis, etc. Aim for 500 words or fewer.
-            </span>
-            <textarea
-              name="potentialActivities"
-              value={inputs.potentialActivities}
-              onChange={handleChange}
-            />
-            <WordHint value={inputs.potentialActivities} max={500} />
-          </Field>
-
-          <Field>
-            <span className="label-text">
-              Specific skills or qualifications
-            </span>
-            <span className="hint">
-              Software knowledge, statistics, issue-area experience, etc. Aim
-              for 500 words or fewer.
-            </span>
-            <textarea
-              name="specificSkills"
-              value={inputs.specificSkills}
-              onChange={handleChange}
-            />
-            <WordHint value={inputs.specificSkills} max={500} />
-          </Field>
+          <h2>
+            {t("opportunityEditor.review.pageTitle", {}, {
+              default: "Review opportunities",
+            })}
+          </h2>
+          <Actions style={{ justifyContent: "flex-start" }}>
+            {inputs.status === "pending_review" && (
+              <Button
+                type="button"
+                $primary
+                onClick={() => handleReviewAction("pre_selected")}
+                disabled={updating}
+              >
+                {t("opportunityEditor.review.preSelect", {}, {
+                  default: "Pre-select sponsor",
+                })}
+              </Button>
+            )}
+            {inputs.status === "pre_selected" && (
+              <Button
+                type="button"
+                $primary
+                onClick={() => handleReviewAction("accepted")}
+                disabled={updating}
+              >
+                {t("opportunityEditor.review.accept", {}, {
+                  default: "Accept proposal",
+                })}
+              </Button>
+            )}
+            {inputs.status === "accepted" && (
+              <Button
+                type="button"
+                $primary
+                onClick={() => handleReviewAction("published")}
+                disabled={updating}
+              >
+                {t("opportunityEditor.review.publish", {}, {
+                  default: "Publish opportunity",
+                })}
+              </Button>
+            )}
+          </Actions>
         </Card>
       )}
 
+      {!isReviewMode && (
       <Card>
         <h2>{t("opportunityEditor.publishing", {}, { default: "Publishing" })}</h2>
         <Field>
@@ -2140,7 +2235,10 @@ export default function OpportunityEditor({ opportunityId, user }) {
                 {inputs.status.replace("_", " ")}
               </strong>
               <span style={{ color: "#5f6871", fontSize: 13 }}>
-                — locked. Ask an admin to change the status.
+                {t("opportunityEditor.sponsorStatusLocked", {}, {
+                  default:
+                    "— locked. A teacher or admin will update the status.",
+                })}
               </span>
             </div>
           ) : (
@@ -2153,10 +2251,12 @@ export default function OpportunityEditor({ opportunityId, user }) {
               }
             />
           )}
-          {!isAdmin && (
+          {!isAdmin && !isTeacher && (
             <span className="hint" style={{ marginTop: 4 }}>
-              Set to <strong>Submitted for review</strong> when your proposal
-              is ready — an admin will review and publish it.
+              {t("opportunityEditor.sponsorStatusHint", {}, {
+                default:
+                  "Set to Submitted for review when your proposal is ready — a teacher will review it.",
+              })}
             </span>
           )}
         </Field>
@@ -2274,7 +2374,9 @@ export default function OpportunityEditor({ opportunityId, user }) {
           </div>
         )}
       </Card>
+      )}
 
+      {!isReviewMode && (
       <Actions>
         <Button type="button" onClick={handleCancel} disabled={saving}>
           {t("opportunityEditor.cancel", {}, { default: "Cancel" })}
@@ -2287,6 +2389,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
             : t("opportunityEditor.save", {}, { default: "Save changes" })}
         </Button>
       </Actions>
+      )}
     </Shell>
   );
 }

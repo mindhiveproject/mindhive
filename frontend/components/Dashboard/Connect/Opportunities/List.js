@@ -3,10 +3,12 @@ import { useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import styled from "styled-components";
 import { Icon, Label, Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { MY_OPPORTUNITIES } from "../../../Queries/Opportunity";
 import { DELETE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import FilterBar from "../FilterBar";
+import { deriveRoles } from "../useConnectRole";
 
 const Shell = styled.div`
   display: flex;
@@ -138,6 +140,8 @@ const Empty = styled.div`
 const STATUS_COLORS = {
   draft: "grey",
   pending_review: "yellow",
+  pre_selected: "orange",
+  accepted: "olive",
   published: "green",
   closed: "blue",
   archived: "black",
@@ -146,6 +150,8 @@ const STATUS_COLORS = {
 const STATUS_LABELS = {
   draft: "Draft",
   pending_review: "Pending Review",
+  pre_selected: "Pre-selected",
+  accepted: "Accepted",
   published: "Published",
   closed: "Closed",
   archived: "Archived",
@@ -160,7 +166,34 @@ function formatDate(value) {
   }
 }
 
+const TabRow = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  a {
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 1px solid #d3dae0;
+    background: #ffffff;
+    color: #336f8a;
+    font-family: "Nunito", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+
+    &.active {
+      background: #336f8a;
+      color: #ffffff;
+      border-color: #336f8a;
+    }
+  }
+`;
+
 export default function OpportunitiesList({ user }) {
+  const { t } = useTranslation("connect");
+  const { isTeacher, isAdmin } = deriveRoles(user);
+  const showReviewTab = isTeacher || isAdmin;
   const { data, loading, refetch } = useQuery(MY_OPPORTUNITIES, {
     fetchPolicy: "cache-and-network",
   });
@@ -213,17 +246,33 @@ export default function OpportunitiesList({ user }) {
     <Shell>
       <TopBar>
         <h1>My Opportunities</h1>
-        <Link
-          href={{
-            pathname: "/dashboard/connect/opportunities",
-            query: { op: "new" },
-          }}
-        >
-          <PrimaryButton type="button">
-            <Icon name="plus" />
-            New opportunity
-          </PrimaryButton>
-        </Link>
+        <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+          {showReviewTab && (
+            <TabRow>
+              <Link href="/dashboard/connect/opportunities" className="active">
+                {t("opportunityEditor.listTabs.mine", {}, {
+                  default: "My opportunities",
+                })}
+              </Link>
+              <Link href="/dashboard/connect/opportunities?tab=review">
+                {t("opportunityEditor.listTabs.review", {}, {
+                  default: "Review queue",
+                })}
+              </Link>
+            </TabRow>
+          )}
+          <Link
+            href={{
+              pathname: "/dashboard/connect/opportunities",
+              query: { op: "new" },
+            }}
+          >
+            <PrimaryButton type="button">
+              <Icon name="plus" />
+              New opportunity
+            </PrimaryButton>
+          </Link>
+        </div>
       </TopBar>
 
       {opportunities.length > 0 && (

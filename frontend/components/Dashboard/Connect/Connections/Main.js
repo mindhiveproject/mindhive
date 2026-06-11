@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Dropdown, Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
+import Chip from "../../../DesignSystem/Chip";
 import { MY_FAVORITE_PEOPLE } from "../../../Queries/User";
 import ProfileCard from "../ConnectProfileCard";
 import PaginationUsers from "../Bank/Pagination";
@@ -46,28 +47,6 @@ const NavigationBar = styled.div`
 
   a {
     text-decoration: none;
-  }
-
-  button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 24px;
-    border-radius: 100px;
-    border: 1px solid #336f8a;
-    background: #ffffff;
-    color: #336f8a;
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      background: #336f8a;
-      color: #ffffff;
-    }
   }
 `;
 
@@ -236,13 +215,13 @@ export default function Connections({ query, user }) {
             pathname: `/dashboard/connect/bank`,
           }}
         >
-          <button type="button">{t("exploreConnect")}</button>
+          <Chip shape="square" label={t("exploreConnect")} />
         </Link>
       </NavigationBar>
 
       <Header>
-        <h1>{t("myConnections")}</h1>
-        <p>{t("myConnectionsSubtitle")}</p>
+        <h1>{t("savedConnections")}</h1>
+        <p>{t("savedConnectionsSubtitle")}</p>
       </Header>
 
       <FiltersRow>

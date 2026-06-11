@@ -59,6 +59,138 @@
 	"connectSubtitle": "搜索、发现并联系 MindHive 社区",
 	"connectWithPeople": "与人联系",
 	"createProfile": "创建个人资料",
+	"createProfileFlow": {
+		"background": {
+			"organization": {
+				"firstName": "",
+				"intro1": "",
+				"intro2": "",
+				"lastName": "",
+				"leadAvailability": "",
+				"leadAvailabilityDescription": "",
+				"leadEmail": "",
+				"leadExpertise": "",
+				"leadTitle": "",
+				"primaryProjectLead": "",
+				"title": ""
+			}
+		},
+		"basic": {
+			"description": {
+				"individual": "",
+				"organization": ""
+			},
+			"organizationFields": {
+				"companyName": "",
+				"companyPicture": "",
+				"department": "",
+				"departmentPlaceholder": "",
+				"location": "",
+				"locationDescription": "",
+				"mission": "",
+				"missionDescription": "",
+				"primaryDomain": "",
+				"primaryDomainOptions": {
+					"academic": "",
+					"government": "",
+					"industry": "",
+					"nonprofit": "",
+					"other": ""
+				},
+				"website": ""
+			},
+			"title": {
+				"individual": "",
+				"organization": ""
+			}
+		},
+		"interests": {
+			"description": {
+				"individual": "",
+				"organization": ""
+			},
+			"title": {
+				"individual": "",
+				"organization": ""
+			}
+		},
+		"saveError": "",
+		"sponsorMentor": {
+			"additionalNotes": "",
+			"backgroundMethodology": "",
+			"backgroundMethodologyDescription": "",
+			"categorization": "",
+			"categorizationDescription": "",
+			"categorizationOptions": {
+				"other": "",
+				"urbanEnvironment": "",
+				"urbanHealth": "",
+				"urbanInfrastructure": ""
+			},
+			"categorizationOther": "",
+			"competencies": "",
+			"competenciesDescription": "",
+			"dataRequirements": "",
+			"dataRequirementsDescription": "",
+			"dataSecurityConcerns": "",
+			"dataSecurityNotes": "",
+			"dataSecurityOptions": {
+				"maybe": "",
+				"no": "",
+				"yes": ""
+			},
+			"fieldWorkLikelihood": "",
+			"fieldWorkScale": {
+				"likely": "",
+				"unlikely": ""
+			},
+			"guidelinesAgree": "",
+			"guidelinesDescription": "",
+			"guidelinesRequestAppointment": "",
+			"guidelinesTitle": "",
+			"intro1": "",
+			"intro2": "",
+			"learningOutcomes": "",
+			"learningOutcomesDescription": "",
+			"projectAbstract": "",
+			"projectAbstractDescription": "",
+			"projectDescription": "",
+			"projectDescriptionDescription": "",
+			"projectTitle": "",
+			"projectTitleDescription": "",
+			"relevance": "",
+			"relevanceDescription": "",
+			"relevantLinks": "",
+			"relevantLinksAdd": "",
+			"relevantLinksDescription": "",
+			"relevantLinksLabel": "",
+			"relevantLinksRemove": "",
+			"relevantLinksUrl": "",
+			"researchQuestion": "",
+			"saveChanges": "",
+			"sponsorIsMentor": "",
+			"techRequirements": "",
+			"techRequirementsDescription": "",
+			"title": "",
+			"wordCountOver": "",
+			"wordCountTemplate": ""
+		},
+		"steps": {
+			"aboutMe": {
+				"individual": "",
+				"organization": ""
+			},
+			"interests": {
+				"individual": "",
+				"organization": ""
+			}
+		},
+		"title": {
+			"individual": "",
+			"organization": ""
+		},
+		"unsavedChangesWarning": ""
+	},
 	"exploreConnect": "探索连接",
 	"interests": {
 		"description": "您想在哪些主题上为学生提供支持？请从下方列表中选择一些您感兴趣的主题和领域，让其他社区成员了解您乐于贡献的内容。这有助于我们将您与志同道合的学生和同学联系起来。",
@@ -88,8 +220,16 @@
 	},
 	"introductionVideo": "介绍视频",
 	"locationFilter": "地点",
-	"myConnections": "我的联系人",
-	"myConnectionsSubtitle": "利用你的人脉关系，找到最适合你的合作者、导师或科学家。",
+	"nav": {
+		"exploreOpportunities": "",
+		"matches": "",
+		"matchingRounds": "",
+		"myMatchedStudents": "",
+		"myOpportunities": "",
+		"organizations": "",
+		"participate": "",
+		"questionLibrary": ""
+	},
 	"navigation": {
 		"next": "下一个",
 		"previous": "以前的"
@@ -99,6 +239,140 @@
 	"noUnofficialBio": "没有非官方传记",
 	"noVideoPlaceholder": "无视频占位符",
 	"officialBio": "官方简介",
+	"opportunityEditor": {
+		"additionalNotes": "",
+		"audiencePreferences": "",
+		"availabilityCapacity": "",
+		"availableFrom": "",
+		"availableTo": "",
+		"backgroundMethodology": "",
+		"backgroundMethodologyDescription": "",
+		"backLink": "",
+		"basics": "",
+		"cancel": "",
+		"categorization": "",
+		"categorizationDescription": "",
+		"categorizationOptions": {
+			"other": "",
+			"urbanEnvironment": "",
+			"urbanHealth": "",
+			"urbanInfrastructure": ""
+		},
+		"categorizationOther": "",
+		"competencies": "",
+		"competenciesDescription": "",
+		"coverImage": "",
+		"coverImageHint": "",
+		"coverImageUrlHint": "",
+		"create": "",
+		"customQuestions": {
+			"add": "",
+			"addPrompt": "",
+			"delete": "",
+			"deleteConfirm": "",
+			"description": "",
+			"isRequired": "",
+			"options": "",
+			"prompt": "",
+			"promptPlaceholder": "",
+			"questionType": "",
+			"saveFirst": "",
+			"title": ""
+		},
+		"dataRequirements": "",
+		"dataRequirementsDescription": "",
+		"dataSecurityConcerns": "",
+		"dataSecurityNotes": "",
+		"dataSecurityOptions": {
+			"maybe": "",
+			"no": "",
+			"yes": ""
+		},
+		"descriptionPlaceholder": "",
+		"fieldWorkLikelihood": "",
+		"fieldWorkScale": {
+			"likely": "",
+			"unlikely": ""
+		},
+		"groupFormat": "",
+		"guidelinesAcknowledgedAt": "",
+		"guidelinesAgree": "",
+		"guidelinesDescription": "",
+		"guidelinesFaqsChip": "",
+		"guidelinesMutualExpectationsChip": "",
+		"guidelinesRequestAppointment": "",
+		"guidelinesTitle": "",
+		"guidelinesWarning": "",
+		"introVideo": "",
+		"introVideoHint": "",
+		"introVideoUrlHint": "",
+		"learningOutcomes": "",
+		"learningOutcomesDescription": "",
+		"loading": "",
+		"mentorNotes": "",
+		"mentorNotesDescription": "",
+		"offeredInNetworks": "",
+		"offeredInNetworksHint": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"preferredClassTypes": "",
+		"preferredGrades": "",
+		"projectAbstract": "",
+		"projectAbstractDescription": "",
+		"projectDescription": "",
+		"projectDescriptionDescription": "",
+		"projectTitle": "",
+		"projectTitleDescription": "",
+		"projectTitlePlaceholder": "",
+		"publishing": "",
+		"questionnaire": "",
+		"relevance": "",
+		"relevanceDescription": "",
+		"relevantLinks": "",
+		"relevantLinksAdd": "",
+		"relevantLinksDescription": "",
+		"relevantLinksLabel": "",
+		"relevantLinksRemove": "",
+		"relevantLinksUrl": "",
+		"researchQuestion": "",
+		"save": "",
+		"saving": "",
+		"sponsorIsMentor": "",
+		"status": "",
+		"statusOptions": {
+			"closed": "",
+			"draft": "",
+			"published": ""
+		},
+		"studentCapacity": "",
+		"teamPreferences": "",
+		"teamSize": "",
+		"teamSizeHint": "",
+		"techRequirements": "",
+		"techRequirementsDescription": "",
+		"timeCommitment": "",
+		"timeCommitmentPlaceholder": "",
+		"validation": {
+			"additionalNotes": "",
+			"backgroundMethodology": "",
+			"category": "",
+			"categoryOther": "",
+			"competencies": "",
+			"dataRequirements": "",
+			"guidelines": "",
+			"learningOutcomes": "",
+			"projectAbstract": "",
+			"projectDescription": "",
+			"relevance": "",
+			"relevantLinks": "",
+			"researchQuestion": "",
+			"title": ""
+		},
+		"videoCurrentUpload": "",
+		"videoReadyUpload": "",
+		"wordCountOver": "",
+		"wordCountTemplate": ""
+	},
 	"passionNow": "您现在对什么事情充满热情？",
 	"preferences": {
 		"availability": {
@@ -155,11 +429,13 @@
 			"title": "个人"
 		},
 		"organization": {
-			"description": "当您创建帐户来代表社区组织或公司时，此配置文件最为合适。",
+			"description": "创建账户以代表组织或社区",
 			"title": "组织"
 		}
 	},
 	"returnDashboard": "返回仪表板",
+	"savedConnections": "已保存的连接",
+	"savedConnectionsSubtitle": "利用你的人脉关系，找到最适合你的合作者、导师或科学家。",
 	"searchPlaceholder": "按名称、主题或感兴趣的领域搜索",
 	"skillsTab": "技能和偏好",
 	"steps": {

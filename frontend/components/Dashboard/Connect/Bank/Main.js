@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Dropdown, Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
+import Chip from "../../../DesignSystem/Chip";
 import { GET_CONNECT_USERS } from "../../../Queries/User";
 import ProfileCard from "../ConnectProfileCard";
 import useConnectRole from "../useConnectRole";
@@ -48,28 +49,6 @@ const NavigationBar = styled.div`
 
   a {
     text-decoration: none;
-  }
-
-  button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 24px;
-    border-radius: 100px;
-    border: 1px solid #336f8a;
-    background: #ffffff;
-    color: #336f8a;
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      background: #336f8a;
-      color: #ffffff;
-    }
   }
 `;
 
@@ -136,6 +115,7 @@ const SearchField = styled.div`
     right: 16px;
     height: 24px;
     width: 24px;
+    margin-bottom: 6px;
     color: #434343;
   }
 `;
@@ -251,14 +231,18 @@ export default function ConnectBankNew({ query, user }) {
             pathname: `/dashboard/connect/explore`,
           }}
         >
-          <button type="button">Explore opportunities</button>
+          <Chip
+          shape="square"
+            label={t("nav.exploreOpportunities", {}, { default: "Explore opportunities" })}
+          />
         </Link>
         <Link
           href={{
             pathname: `/dashboard/connect/organizations`,
           }}
         >
-          <button type="button">Organizations</button>
+          <Chip
+          shape="square" label={t("nav.organizations", {}, { default: "Organizations" })} />
         </Link>
         {(isMentor || isAdmin) && (
           <Link
@@ -266,7 +250,10 @@ export default function ConnectBankNew({ query, user }) {
               pathname: `/dashboard/connect/opportunities`,
             }}
           >
-            <button type="button">My opportunities</button>
+            <Chip
+            shape="square"
+              label={t("nav.myOpportunities", {}, { default: "My opportunities" })}
+            />
           </Link>
         )}
         {(isMentor || isAdmin) && (
@@ -275,7 +262,10 @@ export default function ConnectBankNew({ query, user }) {
               pathname: `/dashboard/connect/my-matches`,
             }}
           >
-            <button type="button">My matched students</button>
+            <Chip
+            shape="square"
+              label={t("nav.myMatchedStudents", {}, { default: "My matched students" })}
+            />
           </Link>
         )}
         {(isTeacher || isAdmin) && (
@@ -284,7 +274,10 @@ export default function ConnectBankNew({ query, user }) {
               pathname: `/dashboard/connect/rounds`,
             }}
           >
-            <button type="button">Matching rounds</button>
+            <Chip
+            shape="square"
+              label={t("nav.matchingRounds", {}, { default: "Matching rounds" })}
+            />
           </Link>
         )}
         {(isAdmin || isTeacher) && (
@@ -293,7 +286,10 @@ export default function ConnectBankNew({ query, user }) {
               pathname: `/dashboard/connect/questions`,
             }}
           >
-            <button type="button">Question library</button>
+            <Chip
+            shape="square"
+              label={t("nav.questionLibrary", {}, { default: "Question library" })}
+            />
           </Link>
         )}
         {(isStudent || isAdmin) && (
@@ -302,7 +298,8 @@ export default function ConnectBankNew({ query, user }) {
               pathname: `/dashboard/connect/participate`,
             }}
           >
-            <button type="button">Participate</button>
+            <Chip
+            shape="square" label={t("nav.participate", {}, { default: "Participate" })} />
           </Link>
         )}
         {(isTeacher || isAdmin) && (
@@ -311,7 +308,8 @@ export default function ConnectBankNew({ query, user }) {
               pathname: `/dashboard/connect/matches`,
             }}
           >
-            <button type="button">Matches</button>
+            <Chip
+            shape="square" label={t("nav.matches", {}, { default: "Matches" })} />
           </Link>
         )}
         <Link
@@ -319,7 +317,8 @@ export default function ConnectBankNew({ query, user }) {
             pathname: `/dashboard/connect/my`,
           }}
         >
-          <button type="button">{t("myConnections")}</button>
+          <Chip
+          shape="square" label={t("savedConnections")} />
         </Link>
       </NavigationBar>
 

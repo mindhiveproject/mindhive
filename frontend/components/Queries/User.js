@@ -480,6 +480,21 @@ export const GET_ALL_USERS = gql`
   }
 `;
 
+// Shared search filter for Connect Bank list + pagination count queries.
+const CONNECT_USERS_SEARCH_OR = `
+        OR: [
+          { username: { contains: $search } }
+          { publicReadableId: { contains: $search } }
+          { publicId: { contains: $search } }
+          { firstName: { contains: $search } }
+          { lastName: { contains: $search } }
+          { location: { contains: $search } }
+          { organization: { contains: $search } }
+          { bio: { contains: $search } }
+          { bioInformal: { contains: $search } }
+          { interests: { some: { title: { contains: $search } } } }
+        ]`;
+
 // query to get public non-student users for Connect Bank
 export const GET_CONNECT_USERS = gql`
   query GET_CONNECT_USERS($skip: Int, $take: Int, $search: String) {
@@ -497,13 +512,7 @@ export const GET_CONNECT_USERS = gql`
             }
           }
         ]
-        OR: [
-          { username: { contains: $search } }
-          { publicReadableId: { contains: $search } }
-          { publicId: { contains: $search } }
-          { firstName: { contains: $search } }
-          { lastName: { contains: $search } }
-        ]
+        ${CONNECT_USERS_SEARCH_OR}
       }
     ) {
       id
@@ -546,13 +555,7 @@ export const PAGINATION_CONNECT_USERS_QUERY = gql`
           { isPublic: { equals: true } }
           { NOT: { permissions: { some: { name: { equals: "STUDENT" } } } } }
         ]
-        OR: [
-          { username: { contains: $search } }
-          { publicReadableId: { contains: $search } }
-          { publicId: { contains: $search } }
-          { firstName: { contains: $search } }
-          { lastName: { contains: $search } }
-        ]
+        ${CONNECT_USERS_SEARCH_OR}
       }
     )
   }
