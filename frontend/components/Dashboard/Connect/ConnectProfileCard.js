@@ -84,8 +84,10 @@ const FavoriteWrapper = styled.div`
 `;
 
 const NameBlock = styled.div`
-  flex: 1;
-  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
 
   .name {
     margin: 0;
@@ -94,9 +96,11 @@ const NameBlock = styled.div`
     font-size: 15px;
     color: #1d1b20;
     letter-spacing: 0.015em;
-    white-space: nowrap;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .subtitle {
@@ -106,9 +110,11 @@ const NameBlock = styled.div`
     font-size: 13px;
     color: #49454f;
     letter-spacing: 0.02em;
-    white-space: nowrap;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
   }
 `;
 

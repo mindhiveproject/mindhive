@@ -59,6 +59,136 @@
 	"connectSubtitle": "Pesquise, descubra e conecte-se com a comunidade MindHive",
 	"connectWithPeople": "Conecte-se com as pessoas",
 	"createProfile": "Criar perfil",
+	"createProfileFlow": {
+		"background": {
+			"organization": {
+				"firstName": "",
+				"intro1": "",
+				"intro2": "",
+				"lastName": "",
+				"leadAvailability": "",
+				"leadAvailabilityDescription": "",
+				"leadEmail": "",
+				"leadExpertise": "",
+				"leadTitle": "",
+				"primaryProjectLead": "",
+				"title": ""
+			}
+		},
+		"basic": {
+			"description": {
+				"individual": "",
+				"organization": ""
+			},
+			"organizationFields": {
+				"companyName": "",
+				"companyPicture": "",
+				"department": "",
+				"departmentPlaceholder": "",
+				"location": "",
+				"locationDescription": "",
+				"mission": "",
+				"missionDescription": "",
+				"primaryDomain": "",
+				"primaryDomainOptions": {
+					"academic": "",
+					"government": "",
+					"industry": "",
+					"nonprofit": "",
+					"other": ""
+				},
+				"website": ""
+			},
+			"title": {
+				"individual": "",
+				"organization": ""
+			}
+		},
+		"interests": {
+			"description": {
+				"individual": "",
+				"organization": ""
+			},
+			"title": {
+				"individual": "",
+				"organization": ""
+			}
+		},
+		"sponsorMentor": {
+			"additionalNotes": "",
+			"backgroundMethodology": "",
+			"backgroundMethodologyDescription": "",
+			"categorization": "",
+			"categorizationDescription": "",
+			"categorizationOptions": {
+				"other": "",
+				"urbanEnvironment": "",
+				"urbanHealth": "",
+				"urbanInfrastructure": ""
+			},
+			"categorizationOther": "",
+			"competencies": "",
+			"competenciesDescription": "",
+			"dataRequirements": "",
+			"dataRequirementsDescription": "",
+			"dataSecurityConcerns": "",
+			"dataSecurityNotes": "",
+			"dataSecurityOptions": {
+				"maybe": "",
+				"no": "",
+				"yes": ""
+			},
+			"fieldWorkLikelihood": "",
+			"fieldWorkScale": {
+				"likely": "",
+				"unlikely": ""
+			},
+			"guidelinesAgree": "",
+			"guidelinesDescription": "",
+			"guidelinesRequestAppointment": "",
+			"guidelinesTitle": "",
+			"intro1": "",
+			"intro2": "",
+			"learningOutcomes": "",
+			"learningOutcomesDescription": "",
+			"projectAbstract": "",
+			"projectAbstractDescription": "",
+			"projectDescription": "",
+			"projectDescriptionDescription": "",
+			"projectTitle": "",
+			"projectTitleDescription": "",
+			"relevance": "",
+			"relevanceDescription": "",
+			"relevantLinks": "",
+			"relevantLinksAdd": "",
+			"relevantLinksDescription": "",
+			"relevantLinksLabel": "",
+			"relevantLinksRemove": "",
+			"relevantLinksUrl": "",
+			"researchQuestion": "",
+			"saveChanges": "",
+			"sponsorIsMentor": "",
+			"techRequirements": "",
+			"techRequirementsDescription": "",
+			"title": "",
+			"wordCountOver": "",
+			"wordCountTemplate": ""
+		},
+		"steps": {
+			"aboutMe": {
+				"individual": "",
+				"organization": ""
+			},
+			"interests": {
+				"individual": "",
+				"organization": ""
+			}
+		},
+		"title": {
+			"individual": "",
+			"organization": ""
+		}
+	},
 	"exploreConnect": "Explorar Conectar",
 	"interests": {
 		"description": "Em quais tópicos você gostaria de apoiar os alunos? Selecione alguns tópicos e áreas de interesse da lista abaixo para que outros membros da comunidade saibam em quais áreas você tem interesse em contribuir. Isso nos ajudará a conectar você com alunos e colegas que compartilham suas paixões.",
@@ -88,8 +218,6 @@
 	},
 	"introductionVideo": "Vídeo de introdução",
 	"locationFilter": "Localização",
-	"myConnections": "Minhas conexões",
-	"myConnectionsSubtitle": "Procure em sua rede de contatos o colaborador, mentor ou cientista ideal para você.",
 	"navigation": {
 		"next": "Próximo",
 		"previous": "Anterior"
@@ -99,6 +227,140 @@
 	"noUnofficialBio": "Sem biografia não oficial",
 	"noVideoPlaceholder": "Sem espaço reservado para vídeo",
 	"officialBio": "Biografia oficial",
+	"opportunityEditor": {
+		"additionalNotes": "",
+		"audiencePreferences": "",
+		"availabilityCapacity": "",
+		"availableFrom": "",
+		"availableTo": "",
+		"backgroundMethodology": "",
+		"backgroundMethodologyDescription": "",
+		"backLink": "",
+		"basics": "",
+		"cancel": "",
+		"categorization": "",
+		"categorizationDescription": "",
+		"categorizationOptions": {
+			"other": "",
+			"urbanEnvironment": "",
+			"urbanHealth": "",
+			"urbanInfrastructure": ""
+		},
+		"categorizationOther": "",
+		"competencies": "",
+		"competenciesDescription": "",
+		"coverImage": "",
+		"coverImageHint": "",
+		"coverImageUrlHint": "",
+		"create": "",
+		"customQuestions": {
+			"add": "",
+			"addPrompt": "",
+			"delete": "",
+			"deleteConfirm": "",
+			"description": "",
+			"isRequired": "",
+			"options": "",
+			"prompt": "",
+			"promptPlaceholder": "",
+			"questionType": "",
+			"saveFirst": "",
+			"title": ""
+		},
+		"dataRequirements": "",
+		"dataRequirementsDescription": "",
+		"dataSecurityConcerns": "",
+		"dataSecurityNotes": "",
+		"dataSecurityOptions": {
+			"maybe": "",
+			"no": "",
+			"yes": ""
+		},
+		"descriptionPlaceholder": "",
+		"fieldWorkLikelihood": "",
+		"fieldWorkScale": {
+			"likely": "",
+			"unlikely": ""
+		},
+		"groupFormat": "",
+		"guidelinesAcknowledgedAt": "",
+		"guidelinesAgree": "",
+		"guidelinesDescription": "",
+		"guidelinesFaqsChip": "",
+		"guidelinesMutualExpectationsChip": "",
+		"guidelinesRequestAppointment": "",
+		"guidelinesTitle": "",
+		"guidelinesWarning": "",
+		"introVideo": "",
+		"introVideoHint": "",
+		"introVideoUrlHint": "",
+		"learningOutcomes": "",
+		"learningOutcomesDescription": "",
+		"loading": "",
+		"mentorNotes": "",
+		"mentorNotesDescription": "",
+		"offeredInNetworks": "",
+		"offeredInNetworksHint": "",
+		"pageTitleEdit": "",
+		"pageTitleNew": "",
+		"preferredClassTypes": "",
+		"preferredGrades": "",
+		"projectAbstract": "",
+		"projectAbstractDescription": "",
+		"projectDescription": "",
+		"projectDescriptionDescription": "",
+		"projectTitle": "",
+		"projectTitleDescription": "",
+		"projectTitlePlaceholder": "",
+		"publishing": "",
+		"questionnaire": "",
+		"relevance": "",
+		"relevanceDescription": "",
+		"relevantLinks": "",
+		"relevantLinksAdd": "",
+		"relevantLinksDescription": "",
+		"relevantLinksLabel": "",
+		"relevantLinksRemove": "",
+		"relevantLinksUrl": "",
+		"researchQuestion": "",
+		"save": "",
+		"saving": "",
+		"sponsorIsMentor": "",
+		"status": "",
+		"statusOptions": {
+			"closed": "",
+			"draft": "",
+			"published": ""
+		},
+		"studentCapacity": "",
+		"teamPreferences": "",
+		"teamSize": "",
+		"teamSizeHint": "",
+		"techRequirements": "",
+		"techRequirementsDescription": "",
+		"timeCommitment": "",
+		"timeCommitmentPlaceholder": "",
+		"validation": {
+			"additionalNotes": "",
+			"backgroundMethodology": "",
+			"category": "",
+			"categoryOther": "",
+			"competencies": "",
+			"dataRequirements": "",
+			"guidelines": "",
+			"learningOutcomes": "",
+			"projectAbstract": "",
+			"projectDescription": "",
+			"relevance": "",
+			"relevantLinks": "",
+			"researchQuestion": "",
+			"title": ""
+		},
+		"videoCurrentUpload": "",
+		"videoReadyUpload": "",
+		"wordCountOver": "",
+		"wordCountTemplate": ""
+	},
 	"passionNow": "O que te apaixona atualmente?",
 	"preferences": {
 		"availability": {
@@ -160,6 +422,8 @@
 		}
 	},
 	"returnDashboard": "Voltar ao painel",
+	"savedConnections": "Conexões salvas",
+	"savedConnectionsSubtitle": "Procure em sua rede de contatos o colaborador, mentor ou cientista ideal para você.",
 	"searchPlaceholder": "Pesquise por nome, tópico ou área de interesse",
 	"skillsTab": "Habilidades e preferências",
 	"steps": {

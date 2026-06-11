@@ -185,8 +185,8 @@
 			}
 		},
 		"title": {
-			"individual": "Create Individual Profile",
-			"organization": "Create Organization Profile"
+			"individual": "Create Profile",
+			"organization": "Create Profile"
 		}
 	},
 	"opportunityEditor": {
@@ -352,8 +352,18 @@
 	},
 	"introductionVideo": "Introduction Video",
 	"locationFilter": "Location",
-	"myConnections": "My Connections",
-	"myConnectionsSubtitle": "Search through your connections to find the perfect collaborator, mentor, or scientist for you.",
+	"savedConnections": "Saved Connections",
+	"savedConnectionsSubtitle": "Search through your connections to find the perfect collaborator, mentor, or scientist for you.",
+	"nav": {
+		"exploreOpportunities": "Explore opportunities",
+		"matches": "Matches",
+		"matchingRounds": "Matching rounds",
+		"myMatchedStudents": "My matched students",
+		"myOpportunities": "My opportunities",
+		"organizations": "Organizations",
+		"participate": "Participate",
+		"questionLibrary": "Question library"
+	},
 	"navigation": {
 		"next": "Next",
 		"previous": "Previous"
