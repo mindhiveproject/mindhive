@@ -23,6 +23,15 @@ import {
   DELETE_QUESTION,
 } from "../../../Mutations/ConnectQuestion";
 import { deriveRoles } from "../useConnectRole";
+import Chip from "../../../DesignSystem/Chip";
+import OpportunityWorkflowStepper from "./OpportunityWorkflowStepper";
+import OpportunityProposalSection from "./OpportunityProposalSection";
+import {
+  PROPOSAL_EMPTY_FORM,
+  PROPOSAL_WORD_LIMITS,
+  buildProposalData,
+  hydrateProposalInputs,
+} from "./OpportunityProposalConfig";
 
 const Shell = styled.div`
   display: flex;
@@ -211,25 +220,8 @@ const GROUP_FORMAT_OPTIONS = [
   { key: "either", text: "Either", value: "either" },
 ];
 
-const CATEGORY_OPTIONS = [
-  { value: "urban_health", key: "urbanHealth" },
-  { value: "urban_environment", key: "urbanEnvironment" },
-  { value: "urban_infrastructure", key: "urbanInfrastructure" },
-  { value: "other", key: "other" },
-];
-
-const DATA_SECURITY_OPTIONS = ["yes", "maybe", "no"];
-
 const WORD_LIMITS = {
-  title: 15,
-  shortDescription: 100,
-  issueRelevance: 100,
-  expectedDeliverables: 250,
-  designedForSpecificStudents: 15,
-  anticipatedObstacles: 250,
-  requiresBusinessHours: 50,
-  privateClientDataNotes: 100,
-  fieldResearchTravelDetails: 250,
+  ...PROPOSAL_WORD_LIMITS,
   potentialActivities: 500,
   specificSkills: 500,
   scopeDescription: 500,
@@ -244,9 +236,8 @@ const SPONSOR_LOCKED_STATUSES = new Set([
 ]);
 
 const EMPTY_FORM = {
-  title: "",
+  ...PROPOSAL_EMPTY_FORM,
   shortDescription: "",
-  description: "",
   projectCategory: "",
   projectCategoryOther: "",
   coverImageUrl: "",
@@ -259,33 +250,11 @@ const EMPTY_FORM = {
   allowsTeamPreferences: false,
   preferGroupFormat: "either",
   status: "draft",
-  // CUSP capstone fields
   sponsorIsMentor: true,
   mentorNotes: "",
-  researchQuestion: "",
-  relevance: "",
-  dataRequirements: "",
-  backgroundMethodology: "",
-  dataSecurityConcerns: "no",
-  dataSecurityNotes: "",
-  techRequirements: "",
-  fieldWorkLikelihood: 1,
-  competencies: "",
-  learningOutcomes: "",
-  additionalNotes: "",
   guidelinesAcknowledged: false,
   requestsAppointment: false,
-  // Special considerations (proposal-time)
-  specialConsiderations: "",
-  designedForSpecificStudents: "",
-  anticipatedObstacles: "",
-  requiresBusinessHours: "",
-  privateClientDataNotes: "",
-  fieldResearchTravelDetails: "",
-  expectedDeliverables: "",
-  // Post-acceptance details (only after admin accepts)
   scopeDescription: "",
-  issueRelevance: "",
   potentialActivities: "",
   specificSkills: "",
 };
@@ -353,6 +322,21 @@ function WordHint({ value, max }) {
   );
 }
 
+const GUIDELINE_DOCUMENTS = [
+  {
+    value: "faqs",
+    url: "https://engineering.nyu.edu/research-innovation/centers/cusp/research/capstone-projects",
+    labelKey: "opportunityEditor.guidelinesFaqsChip",
+    defaultLabel: "Capstone Sponsor FAQs",
+  },
+  {
+    value: "mutual-expectations",
+    url: "https://engineering.nyu.edu/research-innovation/centers/cusp/research/capstone-projects/cusp-capstone-mutual-expectations",
+    labelKey: "opportunityEditor.guidelinesMutualExpectationsChip",
+    defaultLabel: "Mutual Expectations agreement",
+  },
+];
+
 const LinkChipRow = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -361,22 +345,8 @@ const LinkChipRow = styled.div`
 
   a {
     display: inline-flex;
-    align-items: center;
-    padding: 6px 12px;
-    border: 1px solid #d3dae0;
-    border-radius: 100px;
-    background: #ffffff;
-    color: #336f8a;
-    font-family: "Nunito", sans-serif;
-    font-weight: 600;
-    font-size: 13px;
     text-decoration: none;
-    cursor: pointer;
-
-    &:hover {
-      background: #eef5f9;
-      border-color: #336f8a;
-    }
+    color: inherit;
   }
 `;
 
@@ -470,7 +440,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
     {
       key: "pre_selected",
       text: t("opportunityEditor.statusOptions.pre_selected", {}, {
-        default: "Pre-selected (complete follow-up questions)",
+        default: "Pre-selected (awaiting acceptance)",
       }),
       value: "pre_selected",
     },
@@ -627,23 +597,20 @@ export default function OpportunityEditor({ opportunityId, user }) {
     EMPTY_FORM
   );
 
-  const showFollowUp =
-    ["pre_selected", "accepted", "published", "closed"].includes(
-      inputs.status,
-    ) || !!opportunity?.preSelectedAt;
   const showFinalScope =
     ["accepted", "published", "closed"].includes(inputs.status) ||
     !!opportunity?.acceptedAt;
+  const scopeComplete = !!inputs.scopeDescription?.trim();
   const fieldDisabled = isFieldReadOnly;
-
-  const [relevantLinks, setRelevantLinks] = useState([]);
 
   useEffect(() => {
     if (!opportunity) return;
+    const proposal = hydrateProposalInputs(opportunity);
     handleMultipleUpdate({
       title: opportunity.title || "",
-      shortDescription: opportunity.shortDescription || "",
       description: opportunity.description || "",
+      ...proposal,
+      shortDescription: opportunity.shortDescription || "",
       projectCategory: opportunity.projectCategory || "",
       projectCategoryOther: opportunity.projectCategoryOther || "",
       coverImageUrl: opportunity.coverImageUrl || "",
@@ -656,35 +623,11 @@ export default function OpportunityEditor({ opportunityId, user }) {
       allowsTeamPreferences: !!opportunity.allowsTeamPreferences,
       preferGroupFormat: opportunity.preferGroupFormat || "either",
       status: opportunity.status || "draft",
-      // CUSP capstone fields
       sponsorIsMentor: opportunity.sponsorIsMentor ?? true,
       mentorNotes: opportunity.mentorNotes || "",
-      researchQuestion: opportunity.researchQuestion || "",
-      relevance: opportunity.relevance || "",
-      dataRequirements: opportunity.dataRequirements || "",
-      backgroundMethodology: opportunity.backgroundMethodology || "",
-      dataSecurityConcerns: opportunity.dataSecurityConcerns || "no",
-      dataSecurityNotes: opportunity.dataSecurityNotes || "",
-      techRequirements: opportunity.techRequirements || "",
-      fieldWorkLikelihood: opportunity.fieldWorkLikelihood ?? 1,
-      competencies: opportunity.competencies || "",
-      learningOutcomes: opportunity.learningOutcomes || "",
-      additionalNotes: opportunity.additionalNotes || "",
       guidelinesAcknowledged: !!opportunity.guidelinesAcknowledged,
       requestsAppointment: !!opportunity.requestsAppointment,
-      // Special considerations
-      specialConsiderations: opportunity.specialConsiderations || "",
-      designedForSpecificStudents:
-        opportunity.designedForSpecificStudents || "",
-      anticipatedObstacles: opportunity.anticipatedObstacles || "",
-      requiresBusinessHours: opportunity.requiresBusinessHours || "",
-      privateClientDataNotes: opportunity.privateClientDataNotes || "",
-      fieldResearchTravelDetails:
-        opportunity.fieldResearchTravelDetails || "",
-      expectedDeliverables: opportunity.expectedDeliverables || "",
-      // Post-acceptance details
       scopeDescription: opportunity.scopeDescription || "",
-      issueRelevance: opportunity.issueRelevance || "",
       potentialActivities: opportunity.potentialActivities || "",
       specificSkills: opportunity.specificSkills || "",
     });
@@ -692,9 +635,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
     setSelectedClassTypes(opportunity.preferClassType || []);
     setSelectedNetworks(
       (opportunity.classNetworks || []).map((n) => n.id)
-    );
-    setRelevantLinks(
-      Array.isArray(opportunity.relevantLinks) ? opportunity.relevantLinks : []
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opportunity?.id]);
@@ -791,37 +731,12 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const validateWordLimits = () => {
     const checks = [
       ["title", inputs.title, WORD_LIMITS.title],
-      ["shortDescription", inputs.shortDescription, WORD_LIMITS.shortDescription],
-      ["issueRelevance", inputs.issueRelevance, WORD_LIMITS.issueRelevance],
-      [
-        "expectedDeliverables",
-        inputs.expectedDeliverables,
-        WORD_LIMITS.expectedDeliverables,
-      ],
-      [
-        "designedForSpecificStudents",
-        inputs.designedForSpecificStudents,
-        WORD_LIMITS.designedForSpecificStudents,
-      ],
+      ["description", inputs.description, WORD_LIMITS.description],
+      ["relevance", inputs.relevance, WORD_LIMITS.relevance],
       [
         "anticipatedObstacles",
         inputs.anticipatedObstacles,
         WORD_LIMITS.anticipatedObstacles,
-      ],
-      [
-        "requiresBusinessHours",
-        inputs.requiresBusinessHours,
-        WORD_LIMITS.requiresBusinessHours,
-      ],
-      [
-        "privateClientDataNotes",
-        inputs.privateClientDataNotes,
-        WORD_LIMITS.privateClientDataNotes,
-      ],
-      [
-        "fieldResearchTravelDetails",
-        inputs.fieldResearchTravelDetails,
-        WORD_LIMITS.fieldResearchTravelDetails,
       ],
       [
         "potentialActivities",
@@ -850,14 +765,18 @@ export default function OpportunityEditor({ opportunityId, user }) {
 
   const validateSponsorSubmission = () => {
     const checks = [
-      [!inputs.shortDescription?.trim(), "validation.projectAbstract"],
-      [!inputs.projectCategory, "validation.category"],
+      [!inputs.description?.trim(), "validation.projectDescription"],
+      [!inputs.relevance?.trim(), "validation.relevance"],
+      [!inputs.requiresSpecialResources, "validation.requiresSpecialResources"],
+      [!inputs.datasetProvision?.length, "validation.datasetProvision"],
       [
-        inputs.projectCategory === "other" && !inputs.projectCategoryOther?.trim(),
-        "validation.categoryOther",
+        !inputs.expectedDeliverables?.length,
+        "validation.expectedDeliverables",
       ],
-      [!inputs.issueRelevance?.trim(), "validation.issueRelevance"],
-      [!inputs.expectedDeliverables?.trim(), "validation.expectedDeliverables"],
+      [!inputs.anticipatedObstacles?.trim(), "validation.anticipatedObstacles"],
+      [!inputs.fieldResearchRequired, "validation.fieldResearchRequired"],
+      [!inputs.requiredSoftware?.length, "validation.requiredSoftware"],
+      [!inputs.requiredHardware?.length, "validation.requiredHardware"],
     ];
     for (const [failed, key] of checks) {
       if (failed) {
@@ -868,18 +787,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
         );
         return false;
       }
-    }
-    return validateWordLimits();
-  };
-
-  const validateFollowUpComplete = () => {
-    if (!inputs.potentialActivities?.trim() || !inputs.specificSkills?.trim()) {
-      alert(
-        t("opportunityEditor.validation.followUpIncomplete", {}, {
-          default: "Please complete the follow-up questionnaire before saving.",
-        }),
-      );
-      return false;
     }
     return validateWordLimits();
   };
@@ -910,13 +817,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
       return;
     }
     if (
-      showFollowUp &&
-      ["pre_selected", "accepted", "published"].includes(inputs.status) &&
-      !validateFollowUpComplete()
-    ) {
-      return;
-    }
-    if (
       showFinalScope &&
       ["accepted", "published"].includes(inputs.status) &&
       !validateScopeComplete()
@@ -939,9 +839,19 @@ export default function OpportunityEditor({ opportunityId, user }) {
 
     const networkConnect = selectedNetworks.map((id) => ({ id }));
 
+    const shortDescription =
+      inputs.shortDescription?.trim() ||
+      String(inputs.description || "")
+        .replace(/<[^>]+>/g, " ")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 100)
+        .join(" ");
+
     const baseInput = {
       title: inputs.title,
-      shortDescription: inputs.shortDescription || "",
+      shortDescription,
       description: inputs.description || "",
       projectCategory: inputs.projectCategory || null,
       projectCategoryOther:
@@ -960,40 +870,17 @@ export default function OpportunityEditor({ opportunityId, user }) {
       preferGroupFormat: inputs.preferGroupFormat || "either",
       preferClassType: selectedClassTypes,
       status: inputs.status || "draft",
-      // CUSP capstone fields
+      proposalData: buildProposalData(inputs),
       sponsorIsMentor: !!inputs.sponsorIsMentor,
       mentorNotes: inputs.mentorNotes || "",
-      researchQuestion: inputs.researchQuestion || "",
-      relevance: inputs.relevance || "",
-      dataRequirements: inputs.dataRequirements || "",
-      backgroundMethodology: inputs.backgroundMethodology || "",
-      dataSecurityConcerns: inputs.dataSecurityConcerns || "no",
-      dataSecurityNotes: inputs.dataSecurityNotes || "",
-      techRequirements: inputs.techRequirements || "",
-      fieldWorkLikelihood: Number(inputs.fieldWorkLikelihood) || null,
-      competencies: inputs.competencies || "",
-      learningOutcomes: inputs.learningOutcomes || "",
-      relevantLinks: relevantLinks.length ? relevantLinks : null,
-      additionalNotes: inputs.additionalNotes || "",
       guidelinesAcknowledged: !!inputs.guidelinesAcknowledged,
-      // Stamp the acknowledgement time on first tick (audit trail).
       guidelinesAcknowledgedAt:
         inputs.guidelinesAcknowledged &&
         !opportunity?.guidelinesAcknowledgedAt
           ? new Date().toISOString()
           : opportunity?.guidelinesAcknowledgedAt || null,
       requestsAppointment: !!inputs.requestsAppointment,
-      // Special considerations
-      specialConsiderations: inputs.specialConsiderations || "",
-      designedForSpecificStudents: inputs.designedForSpecificStudents || "",
-      anticipatedObstacles: inputs.anticipatedObstacles || "",
-      requiresBusinessHours: inputs.requiresBusinessHours || "",
-      privateClientDataNotes: inputs.privateClientDataNotes || "",
-      fieldResearchTravelDetails: inputs.fieldResearchTravelDetails || "",
-      expectedDeliverables: inputs.expectedDeliverables || "",
-      // Post-acceptance details
       scopeDescription: inputs.scopeDescription || "",
-      issueRelevance: inputs.issueRelevance || "",
       potentialActivities: inputs.potentialActivities || "",
       specificSkills: inputs.specificSkills || "",
       // Auto-stamp the acceptance time when status first transitions to
@@ -1092,22 +979,13 @@ export default function OpportunityEditor({ opportunityId, user }) {
         !window.confirm(
           t("opportunityEditor.review.preSelectConfirm", {}, {
             default:
-              "Pre-select this sponsor? They will be notified to complete the follow-up questionnaire.",
+              "Pre-select this sponsor? They will be notified of your decision.",
           }),
         )
       ) {
         return;
       }
     } else if (nextStatus === "accepted") {
-      if (!inputs.potentialActivities?.trim() || !inputs.specificSkills?.trim()) {
-        alert(
-          t("opportunityEditor.review.followUpIncomplete", {}, {
-            default:
-              "The sponsor must complete the follow-up questionnaire before you can accept.",
-          }),
-        );
-        return;
-      }
       if (
         !window.confirm(
           t("opportunityEditor.review.acceptConfirm", {}, {
@@ -1166,7 +1044,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
         messageKey: "opportunityEditor.review.emailPreSelectMessage",
         defaultTitle: "Your Capstone proposal was pre-selected",
         defaultMessage:
-          "A teacher has pre-selected your Capstone proposal. Please log in to complete the follow-up questionnaire.",
+          "A teacher has pre-selected your Capstone proposal. They will review it for acceptance next.",
       });
       alert(
         t("opportunityEditor.review.preSelectSuccess", {}, {
@@ -1245,357 +1123,17 @@ export default function OpportunityEditor({ opportunityId, user }) {
 
       <Card>
         <h2>
-          {t("opportunityEditor.projectBasics", {}, { default: "Project basics" })}
-        </h2>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.projectTitle", {}, { default: "Project Title" })}
-            <RequiredMark />
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.projectTitleDescription", {}, {
-              default: "15 words maximum. Tips: Be engaging for student appeal",
-            })}
-          </span>
-          <input
-            type="text"
-            name="title"
-            value={inputs.title}
-            onChange={handleChange}
-            disabled={fieldDisabled}
-            placeholder={t("opportunityEditor.projectTitlePlaceholder", {}, {
-              default: "e.g. Neuroscience summer mentorship",
-            })}
-          />
-          <WordHint value={inputs.title} max={WORD_LIMITS.title} />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.projectAbstract", {}, {
-              default: "Capstone Project Abstract",
-            })}
-            <RequiredMark />
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.projectAbstractDescription", {}, {
-              default: "100 words maximum.",
-            })}
-          </span>
-          <textarea
-            name="shortDescription"
-            value={inputs.shortDescription}
-            onChange={handleChange}
-            disabled={fieldDisabled}
-          />
-          <WordHint value={inputs.shortDescription} max={WORD_LIMITS.shortDescription} />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.categorization", {}, { default: "Classification" })}
-            <RequiredMark />
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.categorizationDescription", {}, {
-              default: "Which category does your project align with?",
-            })}
-          </span>
-          <CheckboxRow>
-            {CATEGORY_OPTIONS.map((opt) => (
-              <label
-                key={opt.value}
-                className={inputs.projectCategory === opt.value ? "active" : ""}
-              >
-                <input
-                  type="radio"
-                  name="projectCategory"
-                  checked={inputs.projectCategory === opt.value}
-                  disabled={fieldDisabled}
-                  onChange={() =>
-                    handleMultipleUpdate({ projectCategory: opt.value })
-                  }
-                />
-                {t(`opportunityEditor.categorizationOptions.${opt.key}`, {}, {
-                  default: opt.key,
-                })}
-              </label>
-            ))}
-          </CheckboxRow>
-        </Field>
-        {inputs.projectCategory === "other" && (
-          <Field>
-            <span className="label-text">
-              {t("opportunityEditor.categorizationOther", {}, {
-                default: "Other category",
-              })}
-              <RequiredMark />
-            </span>
-            <input
-              type="text"
-              name="projectCategoryOther"
-              value={inputs.projectCategoryOther}
-              onChange={handleChange}
-              disabled={fieldDisabled}
-            />
-          </Field>
-        )}
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.issueRelevance", {}, {
-              default: "Organizational relevance",
-            })}
-            <RequiredMark />
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.issueRelevanceDescription", {}, {
-              default:
-                "Why is this challenge of particular relevance to your organization? What are the implications of this issue or problem for your agency? 100 words maximum.",
-            })}
-          </span>
-          <textarea
-            name="issueRelevance"
-            value={inputs.issueRelevance}
-            onChange={handleChange}
-            disabled={fieldDisabled}
-          />
-          <WordHint value={inputs.issueRelevance} max={WORD_LIMITS.issueRelevance} />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.expectedDeliverables", {}, {
-              default: "Expected deliverables",
-            })}
-            <RequiredMark />
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.expectedDeliverablesDescription", {}, {
-              default:
-                "Please describe the deliverables that are expected of the Capstone Team at the completion of the project. Approximately 250 words.",
-            })}
-          </span>
-          <textarea
-            name="expectedDeliverables"
-            value={inputs.expectedDeliverables}
-            onChange={handleChange}
-            disabled={fieldDisabled}
-          />
-          <WordHint
-            value={inputs.expectedDeliverables}
-            max={WORD_LIMITS.expectedDeliverables}
-          />
-        </Field>
-      </Card>
-
-      <Card>
-        <h2>
-          {t("opportunityEditor.specialConsiderations.title", {}, {
-            default: "Special considerations",
+          {t("opportunityEditor.overview.title", {}, {
+            default: "Overview of Capstone Project Proposal",
           })}
         </h2>
-        <p style={{ color: "#5f6871", fontSize: 14, margin: 0 }}>
-          {t("opportunityEditor.specialConsiderations.intro", {}, {
-            default:
-              "If applicable, please describe any special considerations that NYU Wagner and/or the Capstone Project Team should be aware of.",
-          })}
-        </p>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.specialConsiderations.general", {}, {
-              default: "Special considerations",
-            })}
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.specialConsiderations.generalHint", {}, {
-              default:
-                "If applicable, describe anything the Capstone Project Team should be aware of.",
-            })}
-          </span>
-          <textarea
-            name="specialConsiderations"
-            value={inputs.specialConsiderations}
-            onChange={handleChange}
-            disabled={fieldDisabled}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.specialConsiderations.designedForStudents", {}, {
-              default: "Designed with specific NYU CUSP students in mind?",
-            })}
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.specialConsiderations.designedForStudentsHint", {}, {
-              default: "If yes, please list student names. 15 words maximum.",
-            })}
-          </span>
-          <textarea
-            name="designedForSpecificStudents"
-            value={inputs.designedForSpecificStudents}
-            onChange={handleChange}
-            disabled={fieldDisabled}
-            rows={2}
-          />
-          <WordHint
-            value={inputs.designedForSpecificStudents}
-            max={WORD_LIMITS.designedForSpecificStudents}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.specialConsiderations.anticipatedObstacles", {}, {
-              default: "Anticipated obstacles",
-            })}
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.specialConsiderations.anticipatedObstaclesHint", {}, {
-              default:
-                "Can you anticipate obstacles that a Capstone Team might encounter while working on this project? 250 words maximum.",
-            })}
-          </span>
-          <textarea
-            name="anticipatedObstacles"
-            value={inputs.anticipatedObstacles}
-            onChange={handleChange}
-            disabled={fieldDisabled}
-          />
-          <WordHint
-            value={inputs.anticipatedObstacles}
-            max={WORD_LIMITS.anticipatedObstacles}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.specialConsiderations.requiresBusinessHours", {}, {
-              default: "Research during business hours?",
-            })}
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.specialConsiderations.requiresBusinessHoursHint", {}, {
-              default:
-                "Must a significant portion of research and data gathering be done during regular business hours? 50 words maximum.",
-            })}
-          </span>
-          <textarea
-            name="requiresBusinessHours"
-            value={inputs.requiresBusinessHours}
-            onChange={handleChange}
-            disabled={fieldDisabled}
-            rows={3}
-          />
-          <WordHint
-            value={inputs.requiresBusinessHours}
-            max={WORD_LIMITS.requiresBusinessHours}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.specialConsiderations.privateClientData", {}, {
-              default: "Private client data access",
-            })}
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.specialConsiderations.privateClientDataHint", {}, {
-              default:
-                "Will the Capstone Team have access to private client data? 100 words maximum.",
-            })}
-          </span>
-          <textarea
-            name="privateClientDataNotes"
-            value={inputs.privateClientDataNotes}
-            onChange={handleChange}
-            disabled={fieldDisabled}
-          />
-          <WordHint
-            value={inputs.privateClientDataNotes}
-            max={WORD_LIMITS.privateClientDataNotes}
-          />
-        </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.specialConsiderations.fieldResearchTravel", {}, {
-              default: "Field research and travel",
-            })}
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.specialConsiderations.fieldResearchTravelHint", {}, {
-              default:
-                "Will the Capstone Team be required to conduct field research and/or visit multiple locations? 250 words maximum.",
-            })}
-          </span>
-          <textarea
-            name="fieldResearchTravelDetails"
-            value={inputs.fieldResearchTravelDetails}
-            onChange={handleChange}
-            disabled={fieldDisabled}
-          />
-          <WordHint
-            value={inputs.fieldResearchTravelDetails}
-            max={WORD_LIMITS.fieldResearchTravelDetails}
-          />
-        </Field>
+        <OpportunityProposalSection
+          inputs={inputs}
+          handleChange={handleChange}
+          handleMultipleUpdate={handleMultipleUpdate}
+          disabled={fieldDisabled}
+        />
       </Card>
-
-      {showFollowUp && (
-        <Card>
-          <h2>
-            {t("opportunityEditor.followUpQuestionnaire.title", {}, {
-              default: "Follow-up questionnaire",
-            })}
-          </h2>
-          {!isReviewMode && (
-            <StatusBanner>
-              {t("opportunityEditor.followUpQuestionnaire.banner", {}, {
-                default:
-                  "You've been pre-selected — please complete the follow-up questions below.",
-              })}
-            </StatusBanner>
-          )}
-          <Field>
-            <span className="label-text">
-              {t("opportunityEditor.followUpQuestionnaire.potentialActivities", {}, {
-                default: "Potential activities",
-              })}
-              <RequiredMark />
-            </span>
-            <span className="hint">
-              {t("opportunityEditor.followUpQuestionnaire.potentialActivitiesHint", {}, {
-                default:
-                  "Please describe potential activities in which the Capstone Team might engage. 500 words maximum.",
-              })}
-            </span>
-            <textarea
-              name="potentialActivities"
-              value={inputs.potentialActivities}
-              onChange={handleChange}
-              disabled={fieldDisabled}
-            />
-            <WordHint
-              value={inputs.potentialActivities}
-              max={WORD_LIMITS.potentialActivities}
-            />
-          </Field>
-          <Field>
-            <span className="label-text">
-              {t("opportunityEditor.followUpQuestionnaire.specificSkills", {}, {
-                default: "Specific skills or qualifications",
-              })}
-              <RequiredMark />
-            </span>
-            <span className="hint">
-              {t("opportunityEditor.followUpQuestionnaire.specificSkillsHint", {}, {
-                default:
-                  "Specific skills or qualifications that would be helpful for the Capstone Team. 500 words maximum.",
-              })}
-            </span>
-            <textarea
-              name="specificSkills"
-              value={inputs.specificSkills}
-              onChange={handleChange}
-              disabled={fieldDisabled}
-            />
-            <WordHint value={inputs.specificSkills} max={WORD_LIMITS.specificSkills} />
-          </Field>
-        </Card>
-      )}
 
       {showFinalScope && (
         <Card>
@@ -2168,6 +1706,11 @@ export default function OpportunityEditor({ opportunityId, user }) {
               default: "Review opportunities",
             })}
           </h2>
+          <OpportunityWorkflowStepper
+            status={inputs.status}
+            scopeComplete={scopeComplete}
+            viewerRole="teacher"
+          />
           <Actions style={{ justifyContent: "flex-start" }}>
             {inputs.status === "pending_review" && (
               <Button
@@ -2212,6 +1755,13 @@ export default function OpportunityEditor({ opportunityId, user }) {
       {!isReviewMode && (
       <Card>
         <h2>{t("opportunityEditor.publishing", {}, { default: "Publishing" })}</h2>
+        {!isNew && (
+          <OpportunityWorkflowStepper
+            status={inputs.status}
+            scopeComplete={scopeComplete}
+            viewerRole="sponsor"
+          />
+        )}
         <Field>
           <span className="label-text">
             {t("opportunityEditor.status", {}, { default: "Status" })}
@@ -2274,24 +1824,28 @@ export default function OpportunityEditor({ opportunityId, user }) {
             })}
           </span>
           <LinkChipRow>
-            <a
-              href="https://engineering.nyu.edu/research-innovation/centers/cusp/research/capstone-projects"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {t("opportunityEditor.guidelinesFaqsChip", {}, {
-                default: "Capstone Sponsor FAQs",
-              })}
-            </a>
-            <a
-              href="https://engineering.nyu.edu/research-innovation/centers/cusp/research/capstone-projects/cusp-capstone-mutual-expectations"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {t("opportunityEditor.guidelinesMutualExpectationsChip", {}, {
-                default: "Mutual Expectations agreement",
-              })}
-            </a>
+            {GUIDELINE_DOCUMENTS.map((doc) => (
+              <a
+                key={doc.value}
+                href={doc.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Chip
+                  shape="square"
+                  label={t(doc.labelKey, {}, { default: doc.defaultLabel })}
+                  leading={
+                    <img
+                      src="/assets/icons/document.svg"
+                      alt=""
+                      aria-hidden
+                      width={24}
+                      height={24}
+                    />
+                  }
+                />
+              </a>
+            ))}
           </LinkChipRow>
           <label
             style={{

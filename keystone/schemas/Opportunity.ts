@@ -201,13 +201,19 @@ export const Opportunity = list({
       ref: "Profile.opportunitiesReviewed",
     }),
 
-    // --- CUSP capstone sponsor application fields (Q21–Q38) ---
-    // Sponsor is also the day-to-day mentor (true when one user fills both
-    // roles — the current MindHive default).
+    // Overview of Capstone Project Proposal — unified sponsor application form.
+    // Shape matches frontend OpportunityProposalConfig (title/description stay
+    // on top-level fields for listings and search).
+    // Migration: before deploying this schema change, backfill proposalData from
+    // the removed flat columns (relevance, expectedDeliverables, etc.) via a
+    // one-time script; records without proposalData will show empty proposal
+    // fields until re-saved or migrated.
+    proposalData: json(),
+
+    // Legacy CUSP fields (kept for existing records; no longer in the editor form)
     sponsorIsMentor: checkbox({ defaultValue: true }),
     mentorNotes: text({ ui: { displayMode: "textarea" } }),
     researchQuestion: text({ ui: { displayMode: "textarea" } }),
-    relevance: text({ ui: { displayMode: "textarea" } }),
     dataRequirements: text({ ui: { displayMode: "textarea" } }),
     backgroundMethodology: text({ ui: { displayMode: "textarea" } }),
     dataSecurityConcerns: select({
@@ -224,20 +230,15 @@ export const Opportunity = list({
     competencies: text({ ui: { displayMode: "textarea" } }),
     learningOutcomes: text({ ui: { displayMode: "textarea" } }),
     relevantLinks: json(),
-    additionalNotes: text({ ui: { displayMode: "textarea" } }),
-    // Q39 — guidelines acknowledgment for the audit trail.
+    specialConsiderations: text({ ui: { displayMode: "textarea" } }),
+    designedForSpecificStudents: text({ ui: { displayMode: "textarea" } }),
+    requiresBusinessHours: text({ ui: { displayMode: "textarea" } }),
+    privateClientDataNotes: text({ ui: { displayMode: "textarea" } }),
+
+    // Guidelines acknowledgment for the audit trail.
     guidelinesAcknowledged: checkbox({ defaultValue: false }),
     guidelinesAcknowledgedAt: timestamp(),
     requestsAppointment: checkbox({ defaultValue: false }),
-
-    // --- Special considerations (filled at proposal time) ---
-    specialConsiderations: text({ ui: { displayMode: "textarea" } }),
-    designedForSpecificStudents: text({ ui: { displayMode: "textarea" } }),
-    anticipatedObstacles: text({ ui: { displayMode: "textarea" } }),
-    requiresBusinessHours: text({ ui: { displayMode: "textarea" } }),
-    privateClientDataNotes: text({ ui: { displayMode: "textarea" } }),
-    fieldResearchTravelDetails: text({ ui: { displayMode: "textarea" } }),
-    expectedDeliverables: text({ ui: { displayMode: "textarea" } }),
 
     // --- Post-acceptance details (filled after admin accepts) ---
     scopeDescription: text({ ui: { displayMode: "textarea" } }),
@@ -259,11 +260,11 @@ export const Opportunity = list({
       const data = { ...resolvedData };
 
       // GraphQL multiselect inputs arrive as arrays; SQLite stores JSON strings.
-      if (Array.isArray(data.preferGradeLevels)) {
-        data.preferGradeLevels = JSON.stringify(data.preferGradeLevels);
-      }
-      if (Array.isArray(data.preferClassType)) {
-        data.preferClassType = JSON.stringify(data.preferClassType);
+      const multiselectFields = ["preferGradeLevels", "preferClassType"];
+      for (const key of multiselectFields) {
+        if (Array.isArray(data[key])) {
+          data[key] = JSON.stringify(data[key]);
+        }
       }
 
       if (operation !== "update" || !data.status) {
