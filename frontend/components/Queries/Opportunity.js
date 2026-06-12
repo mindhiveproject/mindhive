@@ -94,21 +94,10 @@ export const GET_OPPORTUNITY = gql`
           url
         }
       }
-      # CUSP capstone fields
-      sponsorIsMentor
-      mentorNotes
-      researchQuestion
-      relevance
-      dataRequirements
-      backgroundMethodology
-      dataSecurityConcerns
-      dataSecurityNotes
-      techRequirements
-      fieldWorkLikelihood
-      competencies
-      learningOutcomes
-      relevantLinks
-      additionalNotes
+      proposalData
+      # Legacy fallbacks for proposalData migration (editor only)
+      issueRelevance
+      specialConsiderations
       guidelinesAcknowledged
       guidelinesAcknowledgedAt
       requestsAppointment
@@ -120,17 +109,8 @@ export const GET_OPPORTUNITY = gql`
         lastName
         username
       }
-      # Special considerations
-      specialConsiderations
-      designedForSpecificStudents
-      anticipatedObstacles
-      requiresBusinessHours
-      privateClientDataNotes
-      fieldResearchTravelDetails
-      expectedDeliverables
-      # Post-acceptance details
+      # Post-acceptance / workflow (follow-up TBD)
       scopeDescription
-      issueRelevance
       potentialActivities
       specificSkills
       createdAt
@@ -300,32 +280,9 @@ export const EXPLORE_OPPORTUNITY_DETAIL = gql`
         id
         title
       }
-      # CUSP capstone fields (read-only display for students)
-      sponsorIsMentor
-      mentorNotes
-      researchQuestion
-      relevance
-      dataRequirements
-      backgroundMethodology
-      dataSecurityConcerns
-      dataSecurityNotes
-      techRequirements
-      fieldWorkLikelihood
-      competencies
-      learningOutcomes
-      relevantLinks
-      additionalNotes
-      # Special considerations (visible to students once published)
-      specialConsiderations
-      designedForSpecificStudents
-      anticipatedObstacles
-      requiresBusinessHours
-      privateClientDataNotes
-      fieldResearchTravelDetails
-      expectedDeliverables
+      proposalData
       # Post-acceptance details
       scopeDescription
-      issueRelevance
       potentialActivities
       specificSkills
       ratings(
@@ -458,15 +415,10 @@ export const PENDING_OPPORTUNITIES_FOR_REVIEW = gql`
       id
       title
       shortDescription
-      projectCategory
-      projectCategoryOther
       status
       updatedAt
       preSelectedAt
       acceptedAt
-      potentialActivities
-      specificSkills
-      scopeDescription
       mentor {
         id
         username

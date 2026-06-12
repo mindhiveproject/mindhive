@@ -8,6 +8,7 @@ import { Icon, Label } from "semantic-ui-react";
 import { EXPLORE_OPPORTUNITY_DETAIL } from "../../../Queries/Opportunity";
 import { TOGGLE_FAVORITE_OPPORTUNITY } from "../../../Mutations/Opportunity";
 import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
+import { hydrateProposalInputs } from "../Opportunities/OpportunityProposalConfig";
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogg|ogv)(\?|#|$)/i;
 
@@ -367,6 +368,8 @@ export default function ExploreDetail({ opportunityId }) {
     );
   }
 
+  const proposal = hydrateProposalInputs(opp);
+
   const coverSrc = opp.coverImage?.url || opp.coverImageUrl || null;
   const cleanVideoUrl = extractUrl(opp.videoUrl);
   const directVideoSrc =
@@ -625,202 +628,74 @@ export default function ExploreDetail({ opportunityId }) {
         </Card>
       )}
 
-      {(opp.researchQuestion ||
-        opp.relevance ||
-        opp.competencies ||
-        opp.learningOutcomes) && (
+      {proposal.relevance && (
         <Card>
-          <h2>Project scope</h2>
-          {opp.researchQuestion && (
-            <div>
-              <h3
-                style={{
-                  margin: "0 0 6px",
-                  fontSize: 14,
-                  color: "#171717",
-                  fontWeight: 600,
-                }}
-              >
-                Research question
-              </h3>
-              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
-                {opp.researchQuestion}
-              </p>
-            </div>
-          )}
-          {opp.relevance && (
-            <div>
-              <h3
-                style={{
-                  margin: "0 0 6px",
-                  fontSize: 14,
-                  color: "#171717",
-                  fontWeight: 600,
-                }}
-              >
-                Why this matters
-              </h3>
-              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
-                {opp.relevance}
-              </p>
-            </div>
-          )}
-          {opp.competencies && (
-            <div>
-              <h3
-                style={{
-                  margin: "0 0 6px",
-                  fontSize: 14,
-                  color: "#171717",
-                  fontWeight: 600,
-                }}
-              >
-                Skills that help
-              </h3>
-              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
-                {opp.competencies}
-              </p>
-            </div>
-          )}
-          {opp.learningOutcomes && (
-            <div>
-              <h3
-                style={{
-                  margin: "0 0 6px",
-                  fontSize: 14,
-                  color: "#171717",
-                  fontWeight: 600,
-                }}
-              >
-                What you&apos;ll deliver
-              </h3>
-              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
-                {opp.learningOutcomes}
-              </p>
-            </div>
-          )}
+          <h2>Relevance to CUSP</h2>
+          <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
+            {proposal.relevance}
+          </p>
         </Card>
       )}
 
-      {(opp.dataRequirements ||
-        opp.backgroundMethodology ||
-        opp.techRequirements ||
-        opp.dataSecurityConcerns === "yes" ||
-        opp.dataSecurityConcerns === "maybe" ||
-        opp.fieldWorkLikelihood) && (
+      {(proposal.expectedDeliverables.length > 0 ||
+        proposal.requiredSoftware.length > 0 ||
+        proposal.requiredHardware.length > 0) && (
         <Card>
-          <h2>Data, tech & logistics</h2>
-          {opp.dataRequirements && (
-            <div>
-              <h3
-                style={{
-                  margin: "0 0 6px",
-                  fontSize: 14,
-                  color: "#171717",
-                  fontWeight: 600,
-                }}
-              >
-                Data requirements
-              </h3>
-              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
-                {opp.dataRequirements}
-              </p>
-            </div>
-          )}
-          {opp.backgroundMethodology && (
-            <div>
-              <h3
-                style={{
-                  margin: "0 0 6px",
-                  fontSize: 14,
-                  color: "#171717",
-                  fontWeight: 600,
-                }}
-              >
-                Background & methodology
-              </h3>
-              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
-                {opp.backgroundMethodology}
-              </p>
-            </div>
-          )}
-          {opp.techRequirements && (
-            <div>
-              <h3
-                style={{
-                  margin: "0 0 6px",
-                  fontSize: 14,
-                  color: "#171717",
-                  fontWeight: 600,
-                }}
-              >
-                Tech requirements
-              </h3>
-              <p style={{ margin: 0, color: "#5f6871", whiteSpace: "pre-wrap" }}>
-                {opp.techRequirements}
-              </p>
-            </div>
-          )}
-          <div
-            style={{ display: "flex", gap: 12, flexWrap: "wrap", fontSize: 13 }}
-          >
-            {(opp.dataSecurityConcerns === "yes" ||
-              opp.dataSecurityConcerns === "maybe") && (
-              <span
-                style={{
-                  padding: "4px 12px",
-                  borderRadius: 100,
-                  background: "#fdf6e3",
-                  color: "#7a5b00",
-                }}
-              >
-                Data security: {opp.dataSecurityConcerns}
-                {opp.dataSecurityNotes ? ` — ${opp.dataSecurityNotes}` : ""}
-              </span>
-            )}
-            {opp.fieldWorkLikelihood && (
-              <span
-                style={{
-                  padding: "4px 12px",
-                  borderRadius: 100,
-                  background: "#eef5f9",
-                  color: "#336f8a",
-                }}
-              >
-                Field work likelihood: {opp.fieldWorkLikelihood} / 5
-              </span>
-            )}
-          </div>
-        </Card>
-      )}
-
-      {Array.isArray(opp.relevantLinks) && opp.relevantLinks.length > 0 && (
-        <Card>
-          <h2>Relevant links</h2>
-          <ul
-            style={{
-              margin: 0,
-              paddingLeft: 18,
-              color: "#5f6871",
-              fontSize: 14,
-              display: "flex",
-              flexDirection: "column",
-              gap: 6,
-            }}
-          >
-            {opp.relevantLinks.map((link, idx) => (
-              <li key={idx}>
-                <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ color: "#336f8a", textDecoration: "underline" }}
+          <h2>Project requirements</h2>
+          {proposal.expectedDeliverables.length > 0 && (
+              <div>
+                <h3
+                  style={{
+                    margin: "0 0 6px",
+                    fontSize: 14,
+                    color: "#171717",
+                    fontWeight: 600,
+                  }}
                 >
-                  {link.label || link.url}
-                </a>
-              </li>
-            ))}
-          </ul>
+                  Expected deliverables
+                </h3>
+                <p style={{ margin: 0, color: "#5f6871" }}>
+                  {proposal.expectedDeliverables.join(", ")}
+                  {proposal.expectedDeliverablesOther
+                    ? ` — ${proposal.expectedDeliverablesOther}`
+                    : ""}
+                </p>
+              </div>
+            )}
+          {proposal.requiredSoftware.length > 0 && (
+              <div style={{ marginTop: 12 }}>
+                <h3
+                  style={{
+                    margin: "0 0 6px",
+                    fontSize: 14,
+                    color: "#171717",
+                    fontWeight: 600,
+                  }}
+                >
+                  Software
+                </h3>
+                <p style={{ margin: 0, color: "#5f6871" }}>
+                  {proposal.requiredSoftware.join(", ")}
+                </p>
+              </div>
+            )}
+          {proposal.requiredHardware.length > 0 && (
+              <div style={{ marginTop: 12 }}>
+                <h3
+                  style={{
+                    margin: "0 0 6px",
+                    fontSize: 14,
+                    color: "#171717",
+                    fontWeight: 600,
+                  }}
+                >
+                  Hardware
+                </h3>
+                <p style={{ margin: 0, color: "#5f6871" }}>
+                  {proposal.requiredHardware.join(", ")}
+                </p>
+              </div>
+            )}
         </Card>
       )}
 

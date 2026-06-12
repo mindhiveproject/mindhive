@@ -80,6 +80,26 @@ export const FIND_PROFILE_BY_EMAIL = gql`
   }
 `;
 
+// Resolve an org the current user may edit before create (avoids unique-name errors
+// when membership/createdBy links are missing from the profile cache).
+export const FIND_ORG_FOR_PROFILE_SAVE = gql`
+  query FIND_ORG_FOR_PROFILE_SAVE($name: String!, $profileId: ID!) {
+    organizations(
+      where: {
+        name: { equals: $name }
+        OR: [
+          { members: { some: { id: { equals: $profileId } } } }
+          { createdBy: { id: { equals: $profileId } } }
+        ]
+      }
+      take: 1
+    ) {
+      id
+      name
+    }
+  }
+`;
+
 export const GET_MY_ORGANIZATION = gql`
   query GET_MY_ORGANIZATION {
     authenticatedItem {

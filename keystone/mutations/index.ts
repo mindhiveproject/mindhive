@@ -12,6 +12,7 @@ import setAssignmentTemplateCards from "./setAssignmentTemplateCards";
 import setResourceTemplateCards from "./setResourceTemplateCards";
 import applyTemplateBoardChanges from "./applyTemplateBoardChanges";
 import backfillMediaAssetOrigins from "./backfillMediaAssetOrigins";
+import backfillOpportunityProposalData from "./backfillOpportunityProposalData";
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
 import { GraphQLSchema } from "graphql";
@@ -72,6 +73,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           cardIdsWithContentUpdate: [ID!]
         ): ApplyTemplateBoardChangesResult
         backfillMediaAssetOrigins(limit: Int): Int!
+        backfillOpportunityProposalData(limit: Int, dryRun: Boolean): Int!
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
       }
@@ -90,6 +92,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         setResourceTemplateCards,
         applyTemplateBoardChanges,
         backfillMediaAssetOrigins,
+        backfillOpportunityProposalData,
         followUser,
         unfollowUser,
       },

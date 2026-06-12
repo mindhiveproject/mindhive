@@ -100,6 +100,7 @@ const CLOSE_BUTTON_STYLE = {
  * @param {string} [className] - Optional class for the root (e.g. for parent layout).
  * @param {string} [ariaLabel] - Optional accessible name (e.g. icon-only chips).
  * @param {string} [title] - Optional native tooltip on the root.
+ * @param {number} [labelLines=1] - Max lines for label text (1 = single line, no wrap).
  *
  * @example
  * // Removable chip
@@ -126,6 +127,7 @@ export default function Chip({
   className,
   ariaLabel,
   title,
+  labelLines = 1,
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -153,6 +155,31 @@ export default function Chip({
     rootStyle = { ...rootStyle, ...CHIP_WITH_CLOSE };
   }
   rootStyle = { ...rootStyle, borderRadius, ...style };
+
+  const multilineLabel = labelLines > 1;
+  if (multilineLabel) {
+    rootStyle = {
+      ...rootStyle,
+      display: "flex",
+      width: "100%",
+      height: "auto",
+      minHeight: 32,
+      alignItems: "center",
+    };
+  }
+
+  const labelStyle = multilineLabel
+    ? {
+        flex: 1,
+        minWidth: 0,
+        display: "-webkit-box",
+        WebkitLineClamp: labelLines,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+        whiteSpace: "normal",
+        overflowWrap: "break-word",
+      }
+    : { flexShrink: 0 };
 
   const isClickable = !disabled && onClick;
   const handleRootClick = (e) => {
@@ -192,7 +219,7 @@ export default function Chip({
       onMouseLeave={() => setHovered(false)}
     >
       {leading && <span style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>{leading}</span>}
-      <span style={{ flexShrink: 0 }}>{label}</span>
+      <span style={labelStyle}>{label}</span>
       {trailing != null && (
         <span
           data-chip-trailing

@@ -9,6 +9,7 @@ import Preferences from "./Blocks/Preferences";
 import Members from "./Blocks/Members";
 import {
   profileEditHref,
+  resolveLinkedOrganization,
   resolveProfileType,
 } from "../../../../lib/profileEditNavigation";
 import {
@@ -20,15 +21,35 @@ export default function About({ query, user }) {
   const { t } = useTranslation("connect");
   const profileType = resolveProfileType(query, user);
   const isOrganization = profileType === "organization";
-  const organization = (user?.organizations || [])[0];
+  const organization = resolveLinkedOrganization(user);
 
   const [dirtySections, setDirtySections] = useState({});
   const hasUnsavedChanges = Object.values(dirtySections).some(Boolean);
 
   useUnsavedChangesGuard(hasUnsavedChanges);
 
-  const setSectionDirty = useCallback((section) => (isDirty) => {
-    setDirtySections((prev) => ({ ...prev, [section]: isDirty }));
+  const setBasicDirty = useCallback((isDirty) => {
+    setDirtySections((prev) =>
+      prev.basic === isDirty ? prev : { ...prev, basic: isDirty },
+    );
+  }, []);
+
+  const setBackgroundDirty = useCallback((isDirty) => {
+    setDirtySections((prev) =>
+      prev.background === isDirty ? prev : { ...prev, background: isDirty },
+    );
+  }, []);
+
+  const setIntroductionDirty = useCallback((isDirty) => {
+    setDirtySections((prev) =>
+      prev.introduction === isDirty ? prev : { ...prev, introduction: isDirty },
+    );
+  }, []);
+
+  const setPreferencesDirty = useCallback((isDirty) => {
+    setDirtySections((prev) =>
+      prev.preferences === isDirty ? prev : { ...prev, preferences: isDirty },
+    );
   }, []);
 
   const tryToLeave = (e) => {
@@ -51,12 +72,12 @@ export default function About({ query, user }) {
         <BasicInformation
           query={query}
           user={user}
-          onDirtyChange={setSectionDirty("basic")}
+          onDirtyChange={setBasicDirty}
         />
         <Background
           query={query}
           user={user}
-          onDirtyChange={setSectionDirty("background")}
+          onDirtyChange={setBackgroundDirty}
         />
         {isOrganization && (
           <Members user={user} organization={organization} />
@@ -66,12 +87,12 @@ export default function About({ query, user }) {
             <IntroductionVideo
               query={query}
               user={user}
-              onDirtyChange={setSectionDirty("introduction")}
+              onDirtyChange={setIntroductionDirty}
             />
             <Preferences
               query={query}
               user={user}
-              onDirtyChange={setSectionDirty("preferences")}
+              onDirtyChange={setPreferencesDirty}
             />
           </>
         )}

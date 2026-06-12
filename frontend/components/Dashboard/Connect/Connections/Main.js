@@ -1,12 +1,10 @@
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
 import debounce from "lodash.debounce";
-import Link from "next/link";
 import styled from "styled-components";
 import { Dropdown, Icon } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
-import Chip from "../../../DesignSystem/Chip";
 import { MY_FAVORITE_PEOPLE } from "../../../Queries/User";
 import ProfileCard from "../ConnectProfileCard";
 import PaginationUsers from "../Bank/Pagination";
@@ -28,25 +26,6 @@ const ConnectShell = styled.div`
 
   @media (max-width: 1024px) {
     padding: 32px 24px 48px;
-  }
-`;
-
-const NavigationBar = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 12px;
-  position: sticky;
-  top: 0;
-  background: rgba(247, 249, 248, 0.8);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 10;
-  padding-top: 16px;
-  padding-bottom: 16px;
-
-  a {
-    text-decoration: none;
   }
 `;
 
@@ -209,16 +188,6 @@ export default function Connections({ query, user }) {
 
   return (
     <ConnectShell>
-      <NavigationBar>
-        <Link
-          href={{
-            pathname: `/dashboard/connect/bank`,
-          }}
-        >
-          <Chip shape="square" label={t("exploreConnect")} />
-        </Link>
-      </NavigationBar>
-
       <Header>
         <h1>{t("savedConnections")}</h1>
         <p>{t("savedConnectionsSubtitle")}</p>

@@ -12,6 +12,7 @@ import { UPDATE_ORGANIZATION } from "../../../Mutations/Organization";
 import { GET_TAGS } from "../../../Queries/Tag";
 import {
   profileEditHref,
+  resolveLinkedOrganization,
   resolveProfileType,
 } from "../../../../lib/profileEditNavigation";
 import {
@@ -34,7 +35,7 @@ export default function InterestSelector({ query, user }) {
   const isOrganization = profileType === "organization";
   // For org-type profiles, the interests live on the Organization rather than
   // the Profile ("Where can your organization help?").
-  const existingOrg = (user?.organizations || [])[0];
+  const existingOrg = resolveLinkedOrganization(user);
   const sourceInterests = isOrganization
     ? existingOrg?.interests || []
     : user?.interests || [];

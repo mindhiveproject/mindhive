@@ -76,7 +76,7 @@ export default function Profile() {
             >
               <img
                 src={profileImageUrl}
-                alt={user?.name}
+                alt={user?.username}
                 style={{
                   borderRadius: "50%",
                   width: "120px",
@@ -89,7 +89,7 @@ export default function Profile() {
             </div>
           ) : (
             <div>
-              <IdentIcon size="120" value={user?.name} />
+              <IdentIcon size="120" value={user?.username} />
             </div>
           )}
         </div>
