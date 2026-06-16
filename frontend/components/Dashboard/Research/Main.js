@@ -5,6 +5,7 @@ import Chip from "../../DesignSystem/Chip";
 import StyledResearch from "./StyledResearch";
 import ClassExport from "./ClassExport";
 import BoardExport from "./BoardExport";
+import PlatformMetrics from "./PlatformMetrics";
 import {
   hasResearchAccess,
 } from "./exportUtils";
@@ -48,9 +49,15 @@ export default function ResearchMain({ query, user }) {
       </div>
 
       <p className="intro">
-        {t("intro", {
-          defaultValue: "Pull proposal content and review data directly from the MindHive platform. Choose the class, pick your data scope, and export downloadable CSV files formatted for analysis.",
-        })}
+        {filterMode === "platformMetrics"
+          ? t("metrics.pageIntro", {}, {
+              defaultValue:
+                "Review platform usage counts by class. Filter by class network, inspect student, study, and board metrics, and export results as CSV.",
+            })
+          : t("intro", {
+              defaultValue:
+                "Pull proposal content and review data directly from the MindHive platform. Choose the class, pick your data scope, and export downloadable CSV files formatted for analysis.",
+            })}
       </p>
 
       <div className="filterModeRow">
@@ -70,9 +77,21 @@ export default function ResearchMain({ query, user }) {
           selected={filterMode === "byBoard"}
           onClick={() => setFilterMode("byBoard")}
         />
+        <Chip
+          shape="square"
+          label={t("metrics.tabLabel", {}, { default: "Platform metrics" })}
+          selected={filterMode === "platformMetrics"}
+          onClick={() => setFilterMode("platformMetrics")}
+        />
       </div>
 
-      {filterMode === "byClass" ? <ClassExport /> : <BoardExport />}
+      {filterMode === "platformMetrics" ? (
+        <PlatformMetrics />
+      ) : filterMode === "byClass" ? (
+        <ClassExport />
+      ) : (
+        <BoardExport />
+      )}
     </StyledResearch>
   );
 }
