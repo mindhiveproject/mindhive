@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import styled from "styled-components";
 import { Icon, Label } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import { EXPLORE_ORGANIZATION_DETAIL } from "../../../Queries/Organization";
 
@@ -29,6 +30,11 @@ const BackLink = styled.button`
   cursor: pointer;
   padding: 0;
   width: max-content;
+
+  &:focus-visible {
+    outline: 2px solid #336f8a;
+    outline-offset: 2px;
+  }
 `;
 
 const Hero = styled.div`
@@ -106,6 +112,11 @@ const Hero = styled.div`
     a {
       color: #336f8a;
       text-decoration: none;
+
+      &:focus-visible {
+        outline: 2px solid #336f8a;
+        outline-offset: 2px;
+      }
     }
   }
 `;
@@ -184,6 +195,12 @@ const Members = styled.div`
   a {
     text-decoration: none;
     color: inherit;
+
+    &:focus-visible {
+      outline: 2px solid #336f8a;
+      outline-offset: 2px;
+      border-radius: 8px;
+    }
   }
 `;
 
@@ -206,6 +223,11 @@ const OppCard = styled.a`
 
   &:hover {
     border-color: #336f8a;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #336f8a;
+    outline-offset: 2px;
   }
 
   .cover {
@@ -249,20 +271,16 @@ const OppCard = styled.a`
   }
 `;
 
-const DOMAIN_LABELS = {
-  academic: "Academic Institution",
-  government: "Government Agency",
-  industry: "Industry / Start-Up",
-  nonprofit: "Nonprofit",
-  other: "Other",
+const DOMAIN_KEYS = {
+  academic: "academic",
+  government: "government",
+  industry: "industry",
+  nonprofit: "nonprofit",
+  other: "other",
 };
 
-function displayName(profile) {
-  if (!profile) return "Unknown";
-  return (
-    `${profile.firstName || ""} ${profile.lastName || ""}`.trim() ||
-    profile.username
-  );
+function DecorativeIcon({ name }) {
+  return <Icon name={name} aria-hidden />;
 }
 
 function formatDate(value) {
@@ -276,39 +294,70 @@ function formatDate(value) {
 
 export default function OrganizationDetail({ organizationId }) {
   const router = useRouter();
+  const { t } = useTranslation("connect");
   const { data, loading } = useQuery(EXPLORE_ORGANIZATION_DETAIL, {
     variables: { id: organizationId },
     fetchPolicy: "cache-and-network",
   });
   const org = data?.organization;
 
+  const domainLabel = (domain) => {
+    const key = DOMAIN_KEYS[domain];
+    if (!key) return domain;
+    return t(`organizationsList.domains.${key}`, {}, { default: domain });
+  };
+
+  const displayName = (profile) => {
+    if (!profile) {
+      return t("organizationsDetail.unknownMember", {}, { default: "Unknown" });
+    }
+    return (
+      `${profile.firstName || ""} ${profile.lastName || ""}`.trim() ||
+      profile.username ||
+      t("organizationsDetail.unknownMember", {}, { default: "Unknown" })
+    );
+  };
+
   if (loading && !org) {
     return (
       <Shell>
-        <p>Loading organization…</p>
+        <p>
+          {t("organizationsDetail.loading", {}, {
+            default: "Loading organization…",
+          })}
+        </p>
       </Shell>
     );
   }
   if (!org) {
     return (
       <Shell>
-        <p>Organization not found.</p>
+        <p>
+          {t("organizationsDetail.notFound", {}, {
+            default: "Organization not found.",
+          })}
+        </p>
       </Shell>
     );
   }
 
+  const opensInNewTab = t("a11y.opensInNewTab", {}, {
+    default: "(opens in new tab)",
+  });
+
   return (
     <Shell>
       <BackLink type="button" onClick={() => router.back()}>
-        <Icon name="arrow left" /> Back
+        <DecorativeIcon name="arrow left" />
+        {t("organizationsDetail.back", {}, { default: "Back" })}
       </BackLink>
 
       <Hero>
         <div className="logo">
           {org.logo?.url ? (
-            <img src={org.logo.url} alt={org.name} />
+            <img src={org.logo.url} alt="" />
           ) : (
-            <span className="placeholder">
+            <span className="placeholder" aria-hidden>
               {(org.name || "?").charAt(0).toUpperCase()}
             </span>
           )}
@@ -318,7 +367,8 @@ export default function OrganizationDetail({ organizationId }) {
             {org.name}
             {org.verified && (
               <Label color="green" size="tiny">
-                <Icon name="check circle" /> Verified
+                <DecorativeIcon name="check circle" />
+                {t("a11y.verified", {}, { default: "Verified" })}
               </Label>
             )}
           </h1>
@@ -326,25 +376,31 @@ export default function OrganizationDetail({ organizationId }) {
           <div className="meta">
             {org.department && (
               <span>
-                <Icon name="building" /> {org.department}
+                <DecorativeIcon name="building" /> {org.department}
               </span>
             )}
             {org.location && (
               <span>
-                <Icon name="map marker alternate" /> {org.location}
+                <DecorativeIcon name="map marker alternate" /> {org.location}
               </span>
             )}
             {org.primaryDomain && (
               <span>
-                <Icon name="tag" />{" "}
-                {DOMAIN_LABELS[org.primaryDomain] || org.primaryDomain}
+                <DecorativeIcon name="tag" /> {domainLabel(org.primaryDomain)}
               </span>
             )}
             {org.website && (
               <span>
-                <Icon name="globe" />
-                <a href={org.website} target="_blank" rel="noreferrer">
-                  Website
+                <DecorativeIcon name="globe" />
+                <a
+                  href={org.website}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`${t("organizationsDetail.website", {}, {
+                    default: "Website",
+                  })} ${opensInNewTab}`}
+                >
+                  {t("organizationsDetail.website", {}, { default: "Website" })}
                 </a>
               </span>
             )}
@@ -354,7 +410,9 @@ export default function OrganizationDetail({ organizationId }) {
 
       {org.mission && (
         <Card>
-          <h2>About</h2>
+          <h2>
+            {t("organizationsDetail.about", {}, { default: "About" })}
+          </h2>
           <p
             style={{
               margin: 0,
@@ -371,9 +429,14 @@ export default function OrganizationDetail({ organizationId }) {
 
       {org.members?.length > 0 && (
         <Card>
-          <h2>Members</h2>
+          <h2>
+            {t("organizationsDetail.members", {}, { default: "Members" })}
+          </h2>
           <p className="helper">
-            People at {org.name} who manage this organization on MindHive.
+            {t("organizationsDetail.membersHelper", { name: org.name }, {
+              default:
+                "People at {{name}} who manage this organization on MindHive.",
+            })}
           </p>
           <Members>
             {org.members.map((member) => {
@@ -386,9 +449,9 @@ export default function OrganizationDetail({ organizationId }) {
                 <div className="member">
                   <div className="avatar">
                     {avatar ? (
-                      <img src={avatar} alt={name} />
+                      <img src={avatar} alt="" />
                     ) : (
-                      <span className="placeholder">
+                      <span className="placeholder" aria-hidden>
                         {name.charAt(0).toUpperCase()}
                       </span>
                     )}
@@ -410,7 +473,13 @@ export default function OrganizationDetail({ organizationId }) {
                     passHref
                     legacyBehavior
                   >
-                    <a>{inner}</a>
+                    <a
+                      aria-label={t("profileCard.viewProfile", { name }, {
+                        default: "View profile of {{name}}",
+                      })}
+                    >
+                      {inner}
+                    </a>
                   </Link>
                 );
               }
@@ -421,7 +490,11 @@ export default function OrganizationDetail({ organizationId }) {
       )}
 
       <Card>
-        <h2>Opportunities</h2>
+        <h2>
+          {t("organizationsDetail.opportunities", {}, {
+            default: "Opportunities",
+          })}
+        </h2>
         {org.opportunities?.length > 0 ? (
           <OpportunityGrid>
             {org.opportunities.map((opp) => {
@@ -440,7 +513,11 @@ export default function OrganizationDetail({ organizationId }) {
                   legacyBehavior
                 >
                   <OppCard $src={coverSrc}>
-                    <div className="cover" />
+                    <div
+                      className="cover"
+                      role={coverSrc ? "img" : undefined}
+                      aria-label={coverSrc ? opp.title : undefined}
+                    />
                     <div className="body">
                       <div className="title">{opp.title}</div>
                       {opp.shortDescription && (
@@ -448,9 +525,19 @@ export default function OrganizationDetail({ organizationId }) {
                       )}
                       <div className="meta">
                         {opp.teamSize > 1 ? (
-                          <span>Team of {opp.teamSize}</span>
+                          <span>
+                            {t("organizationsDetail.teamOf", {
+                              size: opp.teamSize,
+                            }, {
+                              default: "Team of {{size}}",
+                            })}
+                          </span>
                         ) : (
-                          <span>Solo</span>
+                          <span>
+                            {t("organizationsDetail.solo", {}, {
+                              default: "Solo",
+                            })}
+                          </span>
                         )}
                         {(from || to) && (
                           <span>
@@ -459,7 +546,9 @@ export default function OrganizationDetail({ organizationId }) {
                         )}
                         {opp.publicRatingCount > 0 && (
                           <span>
-                            <span style={{ color: "#f5b800" }}>★</span>
+                            <span style={{ color: "#f5b800" }} aria-hidden>
+                              ★
+                            </span>
                             {opp.publicRatingAverage?.toFixed(1)} (
                             {opp.publicRatingCount})
                           </span>
@@ -473,7 +562,9 @@ export default function OrganizationDetail({ organizationId }) {
           </OpportunityGrid>
         ) : (
           <p className="helper">
-            {org.name} hasn&apos;t published any opportunities yet.
+            {t("organizationsDetail.noOpportunities", { name: org.name }, {
+              default: "{{name}} hasn't published any opportunities yet.",
+            })}
           </p>
         )}
       </Card>

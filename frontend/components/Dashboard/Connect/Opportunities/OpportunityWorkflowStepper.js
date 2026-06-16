@@ -225,7 +225,7 @@ export default function OpportunityWorkflowStepper({
             <StepItem
               key={step.key}
               $connectorDone={connectorDone}
-              aria-current={visual === "active" || visual === "waiting" ? "step" : undefined}
+              aria-current={visual === "active" ? "step" : undefined}
             >
               <Circle
                 $visual={visual}

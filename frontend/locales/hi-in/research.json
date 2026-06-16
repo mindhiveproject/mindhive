@@ -32,6 +32,93 @@
 	"includeBoardTitle": "बोर्ड शीर्षक शामिल करें",
 	"intro": "माइंडहाइव प्लेटफ़ॉर्म से सीधे प्रस्ताव सामग्री और समीक्षा डेटा प्राप्त करें। वर्ग चुनें, अपना डेटा दायरा चुनें, और विश्लेषण के लिए डाउनलोड करने योग्य CSV फ़ाइलें फ़ॉर्मेट करके निर्यात करें।",
 	"json": "JSON (यदि वास्तव में आवश्यक हो)",
+	"metrics": {
+		"allClasses": "",
+		"allClassesWarning": "",
+		"classDisabledHint": "",
+		"classFilter": "",
+		"columns": {
+			"assignments": "",
+			"boards_isMain": "",
+			"boards_total": "",
+			"boardsPeerFeedback": {
+				"FINISHED": "",
+				"IN_PROGRESS": "",
+				"NOT_STARTED": "",
+				"SUBMITTED": ""
+			},
+			"boardsProjectReport": {
+				"FINISHED": "",
+				"IN_PROGRESS": "",
+				"NOT_STARTED": "",
+				"SUBMITTED": ""
+			},
+			"boardsProposal": {
+				"FINISHED": "",
+				"IN_PROGRESS": "",
+				"NOT_STARTED": "",
+				"SUBMITTED": ""
+			},
+			"classCode": "",
+			"classTitle": "",
+			"createdAt": "",
+			"dataJournals": "",
+			"hasTemplateBoard": "",
+			"mentors": "",
+			"networks": "",
+			"resources": "",
+			"students": "",
+			"studies_participants_total": "",
+			"studies_total": "",
+			"studiesDataCollection": {
+				"FINISHED": "",
+				"IN_PROGRESS": "",
+				"NOT_STARTED": "",
+				"SUBMITTED": ""
+			},
+			"studiesStatus": {
+				"COLLECTING_DATA": "",
+				"DATA_COLLECTION_IS_COMPLETED": "",
+				"IN_REVIEW": "",
+				"READY_FOR_REVIEW": "",
+				"REVIEWED": "",
+				"SUBMITTED_AS_PROPOSAL": "",
+				"WORKING": ""
+			}
+		},
+		"createdFrom": "",
+		"createdTo": "",
+		"errors": {
+			"loadFailed": "",
+			"loadNetworks": "",
+			"noNetwork": "",
+			"noResults": ""
+		},
+		"exportCsv": "",
+		"intro": "",
+		"loading": "",
+		"loadingClasses": "",
+		"loadingNetworks": "",
+		"loadMetrics": "",
+		"networkDisabledHint": "",
+		"networkFilter": "",
+		"pageIntro": "",
+		"resultsCount": "",
+		"resultsTitle": "",
+		"searchClass": "",
+		"searchClassPlaceholder": "",
+		"selectClass": "",
+		"selectNetwork": "",
+		"success": {
+			"exported": "",
+			"loaded": ""
+		},
+		"summary": {
+			"displayedRows": ""
+		},
+		"tabLabel": "",
+		"title": ""
+	},
 	"noResearchAccess": "निर्यात टूल तक पहुँचने के लिए आपको शोध-स्तर की अनुमतियों की आवश्यकता होगी",
 	"noStatusFilter": "कोई स्थिति फ़िल्टर नहीं",
 	"outputFormat": "आउटपुट स्वरूप",

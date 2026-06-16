@@ -36,7 +36,7 @@ const TopBar = styled.div`
   }
 `;
 
-const PrimaryButton = styled.button`
+const PrimaryLink = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -49,9 +49,15 @@ const PrimaryButton = styled.button`
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
+  text-decoration: none;
 
   &:hover {
     background: #244f63;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #171717;
+    outline-offset: 2px;
   }
 `;
 
@@ -120,6 +126,11 @@ const CardActions = styled.div`
     cursor: pointer;
     text-align: center;
     text-decoration: none;
+
+    &:focus-visible {
+      outline: 2px solid #336f8a;
+      outline-offset: 2px;
+    }
   }
 
   button.danger {
@@ -136,7 +147,6 @@ const Empty = styled.div`
   color: #5f6871;
 `;
 
-
 const STATUS_COLORS = {
   draft: "grey",
   pending_review: "yellow",
@@ -147,7 +157,17 @@ const STATUS_COLORS = {
   archived: "black",
 };
 
-const STATUS_LABELS = {
+const STATUS_KEYS = {
+  draft: "draft",
+  pending_review: "pendingReview",
+  pre_selected: "preSelected",
+  accepted: "accepted",
+  published: "published",
+  closed: "closed",
+  archived: "archived",
+};
+
+const STATUS_DEFAULTS = {
   draft: "Draft",
   pending_review: "Pending Review",
   pre_selected: "Pre-selected",
@@ -187,8 +207,17 @@ const TabRow = styled.div`
       color: #ffffff;
       border-color: #336f8a;
     }
+
+    &:focus-visible {
+      outline: 2px solid #336f8a;
+      outline-offset: 2px;
+    }
   }
 `;
+
+function DecorativeIcon({ name }) {
+  return <Icon name={name} aria-hidden />;
+}
 
 export default function OpportunitiesList({ user }) {
   const { t } = useTranslation("connect");
@@ -204,6 +233,14 @@ export default function OpportunitiesList({ user }) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState(null);
   const [networkFilter, setNetworkFilter] = useState(null);
+
+  const statusLabel = (status) => {
+    const key = STATUS_KEYS[status];
+    if (!key) return status;
+    return t(`myOpportunitiesList.status.${key}`, {}, {
+      default: STATUS_DEFAULTS[status] || status,
+    });
+  };
 
   const networkOptions = useMemo(() => {
     const seen = new Map();
@@ -235,7 +272,13 @@ export default function OpportunitiesList({ user }) {
   }, [opportunities, search, statusFilter, networkFilter]);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this opportunity? This cannot be undone.")) {
+    if (
+      !window.confirm(
+        t("myOpportunitiesList.deleteConfirm", {}, {
+          default: "Delete this opportunity? This cannot be undone.",
+        })
+      )
+    ) {
       return;
     }
     await deleteOpportunity({ variables: { id } });
@@ -245,33 +288,45 @@ export default function OpportunitiesList({ user }) {
   return (
     <Shell>
       <TopBar>
-        <h1>My Opportunities</h1>
+        <h1>
+          {t("myOpportunitiesList.pageTitle", {}, {
+            default: "My Opportunities",
+          })}
+        </h1>
         <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
           {showReviewTab && (
-            <TabRow>
-              <Link href="/dashboard/connect/opportunities" className="active">
+            <TabRow role="tablist" aria-label={t("opportunityEditor.listTabs.mine", {}, { default: "My opportunities" })}>
+              <Link
+                href="/dashboard/connect/opportunities"
+                className="active"
+                role="tab"
+                aria-current="page"
+              >
                 {t("opportunityEditor.listTabs.mine", {}, {
                   default: "My opportunities",
                 })}
               </Link>
-              <Link href="/dashboard/connect/opportunities?tab=review">
+              <Link
+                href="/dashboard/connect/opportunities?tab=review"
+                role="tab"
+              >
                 {t("opportunityEditor.listTabs.review", {}, {
                   default: "Review queue",
                 })}
               </Link>
             </TabRow>
           )}
-          <Link
+          <PrimaryLink
             href={{
               pathname: "/dashboard/connect/opportunities",
               query: { op: "new" },
             }}
           >
-            <PrimaryButton type="button">
-              <Icon name="plus" />
-              New opportunity
-            </PrimaryButton>
-          </Link>
+            <DecorativeIcon name="plus" />
+            {t("myOpportunitiesList.newButton", {}, {
+              default: "New opportunity",
+            })}
+          </PrimaryLink>
         </div>
       </TopBar>
 
@@ -279,17 +334,30 @@ export default function OpportunitiesList({ user }) {
         <FilterBar>
           <input
             className="search"
-            placeholder="Search by title…"
+            type="search"
+            placeholder={t("myOpportunitiesList.searchPlaceholder", {}, {
+              default: "Search by title…",
+            })}
+            aria-label={t("myOpportunitiesList.searchLabel", {}, {
+              default: "Search opportunities by title",
+            })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <Dropdown
             selection
             clearable
-            placeholder="All statuses"
-            options={Object.entries(STATUS_LABELS).map(([value, text]) => ({
+            placeholder={t("myOpportunitiesList.statusFilterPlaceholder", {}, {
+              default: "All statuses",
+            })}
+            aria-label={t("myOpportunitiesList.statusFilterLabel", {}, {
+              default: "Filter by status",
+            })}
+            options={Object.entries(STATUS_KEYS).map(([value, key]) => ({
               key: value,
-              text,
+              text: t(`myOpportunitiesList.status.${key}`, {}, {
+                default: STATUS_DEFAULTS[value],
+              }),
               value,
             }))}
             value={statusFilter}
@@ -300,7 +368,12 @@ export default function OpportunitiesList({ user }) {
               selection
               clearable
               search
-              placeholder="All networks"
+              placeholder={t("myOpportunitiesList.networkFilterPlaceholder", {}, {
+                default: "All networks",
+              })}
+              aria-label={t("myOpportunitiesList.networkFilterLabel", {}, {
+                default: "Filter by network",
+              })}
               options={networkOptions}
               value={networkFilter}
               onChange={(_, { value }) => setNetworkFilter(value || null)}
@@ -309,18 +382,27 @@ export default function OpportunitiesList({ user }) {
         </FilterBar>
       )}
 
-      {loading && opportunities.length === 0 && <Empty>Loading…</Empty>}
+      {loading && opportunities.length === 0 && (
+        <Empty>
+          {t("myOpportunitiesList.loading", {}, { default: "Loading…" })}
+        </Empty>
+      )}
 
       {!loading && opportunities.length === 0 && (
         <Empty>
-          You haven&apos;t created any opportunities yet. Click{" "}
-          <strong>New opportunity</strong> to publish your first project for
-          students.
+          {t("myOpportunitiesList.empty", {}, {
+            default:
+              "You haven't created any opportunities yet. Click New opportunity to publish your first project for students.",
+          })}
         </Empty>
       )}
 
       {!loading && opportunities.length > 0 && filtered.length === 0 && (
-        <Empty>No opportunities match the current filters.</Empty>
+        <Empty>
+          {t("myOpportunitiesList.emptyFiltered", {}, {
+            default: "No opportunities match the current filters.",
+          })}
+        </Empty>
       )}
 
       <Grid>
@@ -329,10 +411,14 @@ export default function OpportunitiesList({ user }) {
           const to = formatDate(opportunity.availableTo);
           const coverSrc =
             opportunity.coverImage?.url || opportunity.coverImageUrl || null;
+          const networkCount = opportunity.classNetworks?.length || 0;
+          const ratingCount = opportunity.publicRatingCount || 0;
           return (
             <Card key={opportunity.id}>
               {coverSrc && (
                 <div
+                  role="img"
+                  aria-label={opportunity.title}
                   style={{
                     margin: "-20px -20px 12px",
                     height: 120,
@@ -347,7 +433,7 @@ export default function OpportunitiesList({ user }) {
                 color={STATUS_COLORS[opportunity.status] || "grey"}
                 size="tiny"
               >
-                {STATUS_LABELS[opportunity.status] || opportunity.status}
+                {statusLabel(opportunity.status)}
               </Label>
               {opportunity.shortDescription && (
                 <p>{opportunity.shortDescription}</p>
@@ -355,33 +441,66 @@ export default function OpportunitiesList({ user }) {
               <CardMeta>
                 {(from || to) && (
                   <span>
-                    <Icon name="calendar outline" />
+                    <DecorativeIcon name="calendar outline" />
                     {from || "—"} → {to || "—"}
                   </span>
                 )}
                 <span>
-                  <Icon name="users" />
-                  Capacity {opportunity.studentCapacity ?? 1}
+                  <DecorativeIcon name="users" />
+                  {t("myOpportunitiesList.capacity", {
+                    count: opportunity.studentCapacity ?? 1,
+                  }, {
+                    default: "Capacity {{count}}",
+                  })}
                 </span>
                 {opportunity.teamSize > 1 && (
                   <span>
-                    <Icon name="group" />
-                    Team of {opportunity.teamSize}
+                    <DecorativeIcon name="group" />
+                    {t("myOpportunitiesList.teamOf", {
+                      size: opportunity.teamSize,
+                    }, {
+                      default: "Team of {{size}}",
+                    })}
                   </span>
                 )}
-                {opportunity.classNetworks?.length > 0 && (
+                {networkCount > 0 && (
                   <span>
-                    <Icon name="sitemap" />
-                    {opportunity.classNetworks.length} network
-                    {opportunity.classNetworks.length === 1 ? "" : "s"}
+                    <DecorativeIcon name="sitemap" />
+                    {networkCount === 1
+                      ? t(
+                          "myOpportunitiesList.networkCount.one",
+                          { count: networkCount },
+                          { default: "{{count}} network" }
+                        )
+                      : t(
+                          "myOpportunitiesList.networkCount.many",
+                          { count: networkCount },
+                          { default: "{{count}} networks" }
+                        )}
                   </span>
                 )}
-                {opportunity.publicRatingCount > 0 && (
+                {ratingCount > 0 && (
                   <span>
-                    <span style={{ color: "#f5b800" }}>★</span>
-                    {opportunity.publicRatingAverage?.toFixed(1)} ·{" "}
-                    {opportunity.publicRatingCount} rating
-                    {opportunity.publicRatingCount === 1 ? "" : "s"}
+                    <span style={{ color: "#f5b800" }} aria-hidden>
+                      ★
+                    </span>
+                    {ratingCount === 1
+                      ? t(
+                          "myOpportunitiesList.rating.one",
+                          {
+                            average: opportunity.publicRatingAverage?.toFixed(1),
+                            count: ratingCount,
+                          },
+                          { default: "{{average}} · {{count}} rating" }
+                        )
+                      : t(
+                          "myOpportunitiesList.rating.many",
+                          {
+                            average: opportunity.publicRatingAverage?.toFixed(1),
+                            count: ratingCount,
+                          },
+                          { default: "{{average}} · {{count}} ratings" }
+                        )}
                   </span>
                 )}
               </CardMeta>
@@ -392,14 +511,14 @@ export default function OpportunitiesList({ user }) {
                     query: { op: opportunity.id },
                   }}
                 >
-                  Edit
+                  {t("myOpportunitiesList.edit", {}, { default: "Edit" })}
                 </Link>
                 <button
                   type="button"
                   className="danger"
                   onClick={() => handleDelete(opportunity.id)}
                 >
-                  Delete
+                  {t("myOpportunitiesList.delete", {}, { default: "Delete" })}
                 </button>
               </CardActions>
             </Card>

@@ -1,4 +1,12 @@
 {
+	"a11y": {
+		"favorite": {
+			"add": "أضف إلى المفضلة",
+			"remove": "إزالة من المفضلة"
+		},
+		"opensInNewTab": "(يفتح في علامة تبويب جديدة)",
+		"verified": "تم التحقق"
+	},
 	"asyncAnsweringQuestions": "الرد على أسئلة الطلاب (بناءً على ملفك الشخصي).",
 	"asyncProvidingFeedback": "تقديم ملاحظات حول مشاريع الطلاب",
 	"availability": "التوفر",
@@ -220,9 +228,46 @@
 	},
 	"introductionVideo": "فيديو المقدمة",
 	"locationFilter": "موقع",
+	"myOpportunitiesList": {
+		"capacity": "",
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"emptyFiltered": "",
+		"loading": "",
+		"networkCount": {
+			"many": "",
+			"one": ""
+		},
+		"networkFilterLabel": "",
+		"networkFilterPlaceholder": "",
+		"newButton": "",
+		"pageTitle": "",
+		"rating": {
+			"many": "",
+			"one": ""
+		},
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"status": {
+			"accepted": "",
+			"archived": "",
+			"closed": "",
+			"draft": "",
+			"pendingReview": "",
+			"preSelected": "",
+			"published": ""
+		},
+		"statusFilterLabel": "",
+		"statusFilterPlaceholder": "",
+		"teamOf": "",
+		"unknownSponsor": ""
+	},
 	"nav": {
 		"connect": "يتصل",
 		"exploreOpportunities": "استكشف الفرص",
+		"mainNavAriaLabel": "",
 		"matches": "المباريات",
 		"matchingRounds": "جولات متطابقة",
 		"myMatchedStudents": "طلابي المتطابقون",
@@ -566,6 +611,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} كلمة",
 		"workflow": {
 			"context": {
+				"archived": "",
+				"closed": "",
 				"published": "تم نشر هذه الفرصة للطلاب.",
 				"sponsorFollowUp": "أكمل استبيان المتابعة أدناه.",
 				"sponsorScope": "أكمل نطاق المشروع أدناه.",
@@ -599,6 +646,45 @@
 			},
 			"title": "سير عمل مراجعة الفرص"
 		}
+	},
+	"organizationsDetail": {
+		"about": "",
+		"back": "",
+		"loading": "",
+		"members": "",
+		"membersHelper": "",
+		"noOpportunities": "",
+		"notFound": "",
+		"opportunities": "",
+		"solo": "",
+		"teamOf": "",
+		"unknownMember": "",
+		"website": ""
+	},
+	"organizationsList": {
+		"description": "",
+		"domainFilterLabel": "",
+		"domainFilterPlaceholder": "",
+		"domains": {
+			"academic": "",
+			"government": "",
+			"industry": "",
+			"nonprofit": "",
+			"other": ""
+		},
+		"emptyFiltered": "",
+		"loading": "",
+		"next": "",
+		"opportunityCount": {
+			"many": "",
+			"one": ""
+		},
+		"pageTitle": "",
+		"paginationInfo": "",
+		"paginationLabel": "",
+		"previous": "",
+		"searchLabel": "",
+		"searchPlaceholder": ""
 	},
 	"passionNow": "ما الذي أنت شغوف به في الوقت الحالي؟",
 	"preferences": {
@@ -648,6 +734,12 @@
 		"saveChanges": "حفظ التغييرات",
 		"title": "مشاركتك"
 	},
+	"profileCard": {
+		"defaultCommunity": "",
+		"defaultName": "",
+		"defaultSummary": "",
+		"viewProfile": ""
+	},
 	"profileType": {
 		"chooseType": "اختر نوع ملفك الشخصي",
 		"description": "أنشئ ملفك الشخصي على MindHive باختيار أحد الخيارات أدناه. هل تُنشئ ملفًا شخصيًا لنفسك، أم تُنشئ صفحةً لمنظمتك؟",
@@ -661,6 +753,17 @@
 		}
 	},
 	"returnDashboard": "العودة إلى لوحة المعلومات",
+	"roleGuard": {
+		"backLink": "",
+		"description": "",
+		"roles": {
+			"admin": "",
+			"mentor": "",
+			"student": "",
+			"teacher": ""
+		},
+		"title": ""
+	},
 	"savedConnections": "الاتصالات المحفوظة",
 	"savedConnectionsSubtitle": "ابحث من خلال اتصالاتك للعثور على المتعاون أو المرشد أو العالم المثالي لك.",
 	"searchPlaceholder": "البحث حسب الاسم أو الموضوع أو مجال الاهتمام",

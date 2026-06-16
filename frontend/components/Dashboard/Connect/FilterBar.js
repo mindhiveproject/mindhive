@@ -32,6 +32,10 @@ const FilterBar = styled.div`
     &:focus {
       border-color: #336f8a;
     }
+    &:focus-visible {
+      outline: 2px solid #336f8a;
+      outline-offset: 2px;
+    }
   }
 
   /* Normalize Semantic UI Dropdown to match the search input.
@@ -68,6 +72,11 @@ const FilterBar = styled.div`
       box-shadow: none;
       /* Keep the pill shape even when the menu is open. */
       border-radius: 12px;
+    }
+
+    &:focus-within {
+      outline: 2px solid #336f8a;
+      outline-offset: 2px;
     }
 
     /* The visible label area */
@@ -134,6 +143,11 @@ const FilterBar = styled.div`
       outline: none;
       border-radius: 12px;
       flex: none;
+
+      &:focus-visible {
+        outline: 2px solid #336f8a;
+        outline-offset: 2px;
+      }
     }
 
     /* The popout menu */

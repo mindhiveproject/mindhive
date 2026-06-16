@@ -1,8 +1,27 @@
 import Link from "next/link";
 import styled from "styled-components";
-import { Icon } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 
 import useConnectRole from "./useConnectRole";
+
+function LockIcon() {
+  return (
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#5f6871"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  );
+}
 
 const Shell = styled.div`
   display: flex;
@@ -43,10 +62,22 @@ const Shell = styled.div`
     font-weight: 600;
     font-size: 14px;
     text-decoration: none;
+
+    &:focus-visible {
+      outline: 2px solid #171717;
+      outline-offset: 2px;
+    }
   }
 `;
 
-const ROLE_LABELS = {
+const ROLE_KEYS = {
+  student: "roleGuard.roles.student",
+  mentor: "roleGuard.roles.mentor",
+  teacher: "roleGuard.roles.teacher",
+  admin: "roleGuard.roles.admin",
+};
+
+const ROLE_DEFAULTS = {
   student: "students",
   mentor: "mentors",
   teacher: "teachers",
@@ -54,6 +85,7 @@ const ROLE_LABELS = {
 };
 
 export default function RoleGuard({ allow, children }) {
+  const { t } = useTranslation("connect");
   const roles = useConnectRole();
   const allowed = (allow || []).some((r) => {
     if (r === "admin") return roles.isAdmin;
@@ -63,22 +95,33 @@ export default function RoleGuard({ allow, children }) {
     return false;
   });
 
-  // Admins always pass — they need to administer everything
   if (roles.isAdmin || allowed) {
     return children;
   }
 
-  const labels = (allow || []).map((r) => ROLE_LABELS[r] || r).join(", ");
+  const labels = (allow || [])
+    .map((r) =>
+      t(ROLE_KEYS[r] || r, {}, { default: ROLE_DEFAULTS[r] || r })
+    )
+    .join(", ");
 
   return (
-    <Shell>
-      <Icon name="lock" size="big" style={{ color: "#5f6871" }} />
-      <h1>This area is for {labels}</h1>
+    <Shell role="alert">
+      <LockIcon />
+      <h1>
+        {t("roleGuard.title", { roles: labels }, {
+          default: "This area is for {{roles}}",
+        })}
+      </h1>
       <p>
-        Your account doesn&apos;t have access to this section yet. If you
-        think this is a mistake, ask your teacher or an administrator.
+        {t("roleGuard.description", {}, {
+          default:
+            "Your account doesn't have access to this section yet. If you think this is a mistake, ask your teacher or an administrator.",
+        })}
       </p>
-      <Link href="/dashboard/connect">Back to Connect</Link>
+      <Link href="/dashboard/connect">
+        {t("roleGuard.backLink", {}, { default: "Back to Connect" })}
+      </Link>
     </Shell>
   );
 }

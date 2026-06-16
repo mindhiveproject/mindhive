@@ -1,4 +1,12 @@
 {
+	"a11y": {
+		"favorite": {
+			"add": "Agregar a los favoritos",
+			"remove": "Quitar de favoritos"
+		},
+		"opensInNewTab": "(Se abre en una pestaña nueva)",
+		"verified": "Verificado"
+	},
 	"asyncAnsweringQuestions": "Responder preguntas de los estudiantes (según su perfil).",
 	"asyncProvidingFeedback": "Proporcionar retroalimentación sobre los proyectos de los estudiantes",
 	"availability": "Disponibilidad",
@@ -220,9 +228,46 @@
 	},
 	"introductionVideo": "Vídeo de introducción",
 	"locationFilter": "Ubicación",
+	"myOpportunitiesList": {
+		"capacity": "",
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"emptyFiltered": "",
+		"loading": "",
+		"networkCount": {
+			"many": "",
+			"one": ""
+		},
+		"networkFilterLabel": "",
+		"networkFilterPlaceholder": "",
+		"newButton": "",
+		"pageTitle": "",
+		"rating": {
+			"many": "",
+			"one": ""
+		},
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"status": {
+			"accepted": "",
+			"archived": "",
+			"closed": "",
+			"draft": "",
+			"pendingReview": "",
+			"preSelected": "",
+			"published": ""
+		},
+		"statusFilterLabel": "",
+		"statusFilterPlaceholder": "",
+		"teamOf": "",
+		"unknownSponsor": ""
+	},
 	"nav": {
 		"connect": "Conectar",
 		"exploreOpportunities": "Explorar oportunidades",
+		"mainNavAriaLabel": "",
 		"matches": "Partidos",
 		"matchingRounds": "Rondas coincidentes",
 		"myMatchedStudents": "Mis alumnos emparejados",
@@ -566,6 +611,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} palabras",
 		"workflow": {
 			"context": {
+				"archived": "",
+				"closed": "",
 				"published": "Esta oportunidad ha sido publicada para estudiantes.",
 				"sponsorFollowUp": "Complete el cuestionario de seguimiento a continuación.",
 				"sponsorScope": "Complete el alcance del proyecto a continuación.",
@@ -599,6 +646,45 @@
 			},
 			"title": "Flujo de trabajo de revisión de oportunidades"
 		}
+	},
+	"organizationsDetail": {
+		"about": "",
+		"back": "",
+		"loading": "",
+		"members": "",
+		"membersHelper": "",
+		"noOpportunities": "",
+		"notFound": "",
+		"opportunities": "",
+		"solo": "",
+		"teamOf": "",
+		"unknownMember": "",
+		"website": ""
+	},
+	"organizationsList": {
+		"description": "",
+		"domainFilterLabel": "",
+		"domainFilterPlaceholder": "",
+		"domains": {
+			"academic": "",
+			"government": "",
+			"industry": "",
+			"nonprofit": "",
+			"other": ""
+		},
+		"emptyFiltered": "",
+		"loading": "",
+		"next": "",
+		"opportunityCount": {
+			"many": "",
+			"one": ""
+		},
+		"pageTitle": "",
+		"paginationInfo": "",
+		"paginationLabel": "",
+		"previous": "",
+		"searchLabel": "",
+		"searchPlaceholder": ""
 	},
 	"passionNow": "¿Qué te apasiona ahora mismo?",
 	"preferences": {
@@ -648,6 +734,12 @@
 		"saveChanges": "Guardar cambios",
 		"title": "Su participación"
 	},
+	"profileCard": {
+		"defaultCommunity": "",
+		"defaultName": "",
+		"defaultSummary": "",
+		"viewProfile": ""
+	},
 	"profileType": {
 		"chooseType": "Elige tu tipo de perfil",
 		"description": "Configura tu perfil de MindHive seleccionando una de las opciones a continuación. ¿Estás creando un perfil personal o una página para tu organización?",
@@ -661,6 +753,17 @@
 		}
 	},
 	"returnDashboard": "Regresar al panel de control",
+	"roleGuard": {
+		"backLink": "",
+		"description": "",
+		"roles": {
+			"admin": "",
+			"mentor": "",
+			"student": "",
+			"teacher": ""
+		},
+		"title": ""
+	},
 	"savedConnections": "Conexiones guardadas",
 	"savedConnectionsSubtitle": "Busca en tu red de contactos el colaborador, mentor o científico perfecto para ti.",
 	"searchPlaceholder": "Buscar por nombre, tema o área de interés",

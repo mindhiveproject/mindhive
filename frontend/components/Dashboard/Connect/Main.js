@@ -43,7 +43,7 @@ export default function ConnectMain({ query, user }) {
   return (
     <>
       <ConnectNavigationBar />
-      {content}
+      <main id="connect-main">{content}</main>
     </>
   );
 }
