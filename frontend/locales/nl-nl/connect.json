@@ -1,4 +1,12 @@
 {
+	"a11y": {
+		"favorite": {
+			"add": "Toevoegen aan favorieten",
+			"remove": "Verwijderen uit favorieten"
+		},
+		"opensInNewTab": "(opent in een nieuw tabblad)",
+		"verified": "Geverifieerd"
+	},
 	"asyncAnsweringQuestions": "Vragen van studenten beantwoorden (op basis van jouw profiel).",
 	"asyncProvidingFeedback": "Feedback geven op studentenprojecten",
 	"availability": "Beschikbaarheid",
@@ -220,9 +228,46 @@
 	},
 	"introductionVideo": "Introductievideo",
 	"locationFilter": "Plaats",
+	"myOpportunitiesList": {
+		"capacity": "",
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"emptyFiltered": "",
+		"loading": "",
+		"networkCount": {
+			"many": "",
+			"one": ""
+		},
+		"networkFilterLabel": "",
+		"networkFilterPlaceholder": "",
+		"newButton": "",
+		"pageTitle": "",
+		"rating": {
+			"many": "",
+			"one": ""
+		},
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"status": {
+			"accepted": "",
+			"archived": "",
+			"closed": "",
+			"draft": "",
+			"pendingReview": "",
+			"preSelected": "",
+			"published": ""
+		},
+		"statusFilterLabel": "",
+		"statusFilterPlaceholder": "",
+		"teamOf": "",
+		"unknownSponsor": ""
+	},
 	"nav": {
 		"connect": "Aansluiten",
 		"exploreOpportunities": "Ontdek de mogelijkheden",
+		"mainNavAriaLabel": "",
 		"matches": "Wedstrijden",
 		"matchingRounds": "Overeenkomende rondes",
 		"myMatchedStudents": "Mijn gekoppelde studenten",
@@ -566,6 +611,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} woorden",
 		"workflow": {
 			"context": {
+				"archived": "",
+				"closed": "",
 				"published": "Deze vacature is speciaal voor studenten gepubliceerd.",
 				"sponsorFollowUp": "Vul de onderstaande vervolgvragenlijst in.",
 				"sponsorScope": "Vul de projectomschrijving hieronder in.",
@@ -599,6 +646,45 @@
 			},
 			"title": "Werkproces voor het beoordelen van kansen"
 		}
+	},
+	"organizationsDetail": {
+		"about": "",
+		"back": "",
+		"loading": "",
+		"members": "",
+		"membersHelper": "",
+		"noOpportunities": "",
+		"notFound": "",
+		"opportunities": "",
+		"solo": "",
+		"teamOf": "",
+		"unknownMember": "",
+		"website": ""
+	},
+	"organizationsList": {
+		"description": "",
+		"domainFilterLabel": "",
+		"domainFilterPlaceholder": "",
+		"domains": {
+			"academic": "",
+			"government": "",
+			"industry": "",
+			"nonprofit": "",
+			"other": ""
+		},
+		"emptyFiltered": "",
+		"loading": "",
+		"next": "",
+		"opportunityCount": {
+			"many": "",
+			"one": ""
+		},
+		"pageTitle": "",
+		"paginationInfo": "",
+		"paginationLabel": "",
+		"previous": "",
+		"searchLabel": "",
+		"searchPlaceholder": ""
 	},
 	"passionNow": "Waar ben je momenteel gepassioneerd over?",
 	"preferences": {
@@ -648,6 +734,12 @@
 		"saveChanges": "Wijzigingen opslaan",
 		"title": "Uw betrokkenheid"
 	},
+	"profileCard": {
+		"defaultCommunity": "",
+		"defaultName": "",
+		"defaultSummary": "",
+		"viewProfile": ""
+	},
 	"profileType": {
 		"chooseType": "Kies uw profieltype",
 		"description": "Stel je MindHive-profiel in door een van de onderstaande opties te selecteren. Maak je een persoonlijk profiel voor jezelf aan of maak je een pagina aan voor je organisatie?",
@@ -661,6 +753,17 @@
 		}
 	},
 	"returnDashboard": "Terug naar dashboard",
+	"roleGuard": {
+		"backLink": "",
+		"description": "",
+		"roles": {
+			"admin": "",
+			"mentor": "",
+			"student": "",
+			"teacher": ""
+		},
+		"title": ""
+	},
 	"savedConnections": "Opgeslagen verbindingen",
 	"savedConnectionsSubtitle": "Doorzoek uw connecties om de perfecte medewerker, mentor of wetenschapper voor u te vinden.",
 	"searchPlaceholder": "Zoeken op naam, onderwerp of interessegebied",

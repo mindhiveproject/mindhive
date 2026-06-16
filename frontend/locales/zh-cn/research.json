@@ -32,6 +32,93 @@
 	"includeBoardTitle": "包括董事会标题",
 	"intro": "直接从 MindHive 平台提取提案内容和审核数据。选择类别，选择数据范围，并导出可用于分析的 CSV 文件。",
 	"json": "JSON（如果确实需要的话）",
+	"metrics": {
+		"allClasses": "",
+		"allClassesWarning": "",
+		"classDisabledHint": "",
+		"classFilter": "",
+		"columns": {
+			"assignments": "",
+			"boards_isMain": "",
+			"boards_total": "",
+			"boardsPeerFeedback": {
+				"FINISHED": "",
+				"IN_PROGRESS": "",
+				"NOT_STARTED": "",
+				"SUBMITTED": ""
+			},
+			"boardsProjectReport": {
+				"FINISHED": "",
+				"IN_PROGRESS": "",
+				"NOT_STARTED": "",
+				"SUBMITTED": ""
+			},
+			"boardsProposal": {
+				"FINISHED": "",
+				"IN_PROGRESS": "",
+				"NOT_STARTED": "",
+				"SUBMITTED": ""
+			},
+			"classCode": "",
+			"classTitle": "",
+			"createdAt": "",
+			"dataJournals": "",
+			"hasTemplateBoard": "",
+			"mentors": "",
+			"networks": "",
+			"resources": "",
+			"students": "",
+			"studies_participants_total": "",
+			"studies_total": "",
+			"studiesDataCollection": {
+				"FINISHED": "",
+				"IN_PROGRESS": "",
+				"NOT_STARTED": "",
+				"SUBMITTED": ""
+			},
+			"studiesStatus": {
+				"COLLECTING_DATA": "",
+				"DATA_COLLECTION_IS_COMPLETED": "",
+				"IN_REVIEW": "",
+				"READY_FOR_REVIEW": "",
+				"REVIEWED": "",
+				"SUBMITTED_AS_PROPOSAL": "",
+				"WORKING": ""
+			}
+		},
+		"createdFrom": "",
+		"createdTo": "",
+		"errors": {
+			"loadFailed": "",
+			"loadNetworks": "",
+			"noNetwork": "",
+			"noResults": ""
+		},
+		"exportCsv": "",
+		"intro": "",
+		"loading": "",
+		"loadingClasses": "",
+		"loadingNetworks": "",
+		"loadMetrics": "",
+		"networkDisabledHint": "",
+		"networkFilter": "",
+		"pageIntro": "",
+		"resultsCount": "",
+		"resultsTitle": "",
+		"searchClass": "",
+		"searchClassPlaceholder": "",
+		"selectClass": "",
+		"selectNetwork": "",
+		"success": {
+			"exported": "",
+			"loaded": ""
+		},
+		"summary": {
+			"displayedRows": ""
+		},
+		"tabLabel": "",
+		"title": ""
+	},
 	"noResearchAccess": "您需要研究级别的权限才能访问导出工具。",
 	"noStatusFilter": "无状态筛选器",
 	"outputFormat": "输出格式",

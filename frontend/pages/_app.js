@@ -18,6 +18,7 @@ import "../components/styles/maplibre-gl-vendor.css";
 import Site from "../components/Global/Site";
 import Authorized from "../components/Global/Authorized";
 import HelpCenter from "../components/Global/HelpCenter";
+import { localeToBcp47 } from "../lib/localeToBcp47";
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -39,8 +40,18 @@ function useSyncUserLanguage() {
   }, [user, lang]);
 }
 
+function useDocumentLang() {
+  const router = useRouter();
+  const { lang } = useTranslation();
+
+  useEffect(() => {
+    document.documentElement.lang = localeToBcp47(router.locale || lang);
+  }, [router.locale, lang]);
+}
+
 function LanguageSyncWrapper({ children }) {
   useSyncUserLanguage();
+  useDocumentLang();
   return children;
 }
 

@@ -1,4 +1,12 @@
 {
+	"a11y": {
+		"favorite": {
+			"add": "Add to favorites",
+			"remove": "Remove from favorites"
+		},
+		"opensInNewTab": "(opens in new tab)",
+		"verified": "Verified"
+	},
 	"asyncAnsweringQuestions": "Answering student questions (based on your profile).",
 	"asyncProvidingFeedback": "Providing feedback on student projects",
 	"availability": "Availability",
@@ -220,9 +228,46 @@
 	},
 	"introductionVideo": "Introduction Video",
 	"locationFilter": "Location",
+	"myOpportunitiesList": {
+		"capacity": "Capacity {{count}}",
+		"delete": "Delete",
+		"deleteConfirm": "Delete this opportunity? This cannot be undone.",
+		"edit": "Edit",
+		"empty": "You haven't created any opportunities yet. Click New opportunity to publish your first project for students.",
+		"emptyFiltered": "No opportunities match the current filters.",
+		"loading": "Loading…",
+		"networkCount": {
+			"many": "{{count}} networks",
+			"one": "{{count}} network"
+		},
+		"networkFilterLabel": "Filter by network",
+		"networkFilterPlaceholder": "All networks",
+		"newButton": "New opportunity",
+		"pageTitle": "My Opportunities",
+		"rating": {
+			"many": "{{average}} · {{count}} ratings",
+			"one": "{{average}} · {{count}} rating"
+		},
+		"searchLabel": "Search opportunities by title",
+		"searchPlaceholder": "Search by title…",
+		"status": {
+			"accepted": "Accepted",
+			"archived": "Archived",
+			"closed": "Closed",
+			"draft": "Draft",
+			"pendingReview": "Pending Review",
+			"preSelected": "Pre-selected",
+			"published": "Published"
+		},
+		"statusFilterLabel": "Filter by status",
+		"statusFilterPlaceholder": "All statuses",
+		"teamOf": "Team of {{size}}",
+		"unknownSponsor": "Unknown"
+	},
 	"nav": {
 		"connect": "Connect",
 		"exploreOpportunities": "Explore opportunities",
+		"mainNavAriaLabel": "Connect sections",
 		"matches": "Matches",
 		"matchingRounds": "Matching rounds",
 		"myMatchedStudents": "My matched students",
@@ -318,6 +363,8 @@
 		"guidelinesAcknowledgedAt": "Acknowledged {{date}}",
 		"guidelinesAgree": "I agree with this statement.",
 		"guidelinesDescription": "I have read and understood the Capstone proposal guidelines in full, including all of the Capstone Sponsor FAQs and Mutual Expectations agreement and agree to abide by them.",
+		"guidelinesDocsAriaLabel": "",
+		"guidelinesDocsPlaceholder": "",
 		"guidelinesFaqsChip": "Capstone Sponsor FAQs",
 		"guidelinesMutualExpectationsChip": "Mutual Expectations agreement",
 		"guidelinesRequestAppointment": "I request an appointment to discuss further.",
@@ -476,6 +523,7 @@
 			"emailPreSelectMessage": "A teacher has pre-selected your Capstone proposal. They will review it for acceptance next.",
 			"emailPreSelectTitle": "Your Capstone proposal was pre-selected",
 			"empty": "No opportunities are waiting for review.",
+			"followUpIncomplete": "",
 			"modeBanner": "You are reviewing this opportunity as a teacher.",
 			"pageTitle": "Review opportunities",
 			"preSelect": "Pre-select sponsor",
@@ -539,6 +587,7 @@
 			"datasetProvision": "Please indicate how datasets will be provided.",
 			"expectedDeliverables": "Please select at least one expected deliverable.",
 			"fieldResearchRequired": "Please indicate whether field research or travel is expected.",
+			"followUpIncomplete": "",
 			"guidelines": "Please tick the guidelines acknowledgment in the Publishing card before submitting this opportunity.",
 			"issueRelevance": "",
 			"learningOutcomes": "",
@@ -565,11 +614,13 @@
 				"archived": "This opportunity is archived.",
 				"closed": "This opportunity is closed.",
 				"published": "This opportunity has been published for students.",
+				"sponsorFollowUp": "",
 				"sponsorScope": "Complete the project scope below.",
 				"sponsorSubmit": "Submit your proposal when you're ready for teacher review.",
 				"teacherAccept": "Review the proposal and accept it.",
 				"teacherPreSelect": "Review the proposal and pre-select this sponsor.",
 				"teacherPublish": "Review the scope and publish the opportunity.",
+				"waitingFollowUp": "",
 				"waitingScope": "Waiting for the sponsor to complete the project scope.",
 				"waitingTeacherAccept": "Waiting for a teacher to accept your proposal.",
 				"waitingTeacherPreSelect": "Waiting for a teacher to review and pre-select your proposal.",
@@ -587,6 +638,7 @@
 			},
 			"steps": {
 				"accept": "Accept",
+				"followUp": "",
 				"preSelect": "Pre-select",
 				"publish": "Publish",
 				"scope": "Scope",
@@ -594,6 +646,45 @@
 			},
 			"title": "Opportunity review workflow"
 		}
+	},
+	"organizationsDetail": {
+		"about": "About",
+		"back": "Back",
+		"loading": "Loading organization…",
+		"members": "Members",
+		"membersHelper": "People at {{name}} who manage this organization on MindHive.",
+		"noOpportunities": "{{name}} hasn't published any opportunities yet.",
+		"notFound": "Organization not found.",
+		"opportunities": "Opportunities",
+		"solo": "Solo",
+		"teamOf": "Team of {{size}}",
+		"unknownMember": "Unknown",
+		"website": "Website"
+	},
+	"organizationsList": {
+		"description": "Browse the sponsors who host opportunities on MindHive Connect — see their mission, the team behind them, and every project they've published.",
+		"domainFilterLabel": "Filter by domain",
+		"domainFilterPlaceholder": "All domains",
+		"domains": {
+			"academic": "Academic Institution",
+			"government": "Government Agency",
+			"industry": "Industry / Start-Up",
+			"nonprofit": "Nonprofit",
+			"other": "Other"
+		},
+		"emptyFiltered": "No organizations match the current filters.",
+		"loading": "Loading…",
+		"next": "Next",
+		"opportunityCount": {
+			"many": "{{count}} opportunities",
+			"one": "{{count}} opportunity"
+		},
+		"pageTitle": "Organizations",
+		"paginationInfo": "Page {{page}} of {{totalPages}} · {{total}} total",
+		"paginationLabel": "Organizations pagination",
+		"previous": "Previous",
+		"searchLabel": "Search organizations",
+		"searchPlaceholder": "Search organizations…"
 	},
 	"passionNow": "What are you passionate about right now?",
 	"preferences": {
@@ -643,6 +734,12 @@
 		"saveChanges": "Save changes",
 		"title": "Your Involvement"
 	},
+	"profileCard": {
+		"defaultCommunity": "MindHive Community",
+		"defaultName": "MindHive Member",
+		"defaultSummary": "Click to view profile",
+		"viewProfile": "View profile of {{name}}"
+	},
 	"profileType": {
 		"chooseType": "Choose your profile type",
 		"description": "Set up your MindHive profile by selecting one of the options below. Are you creating a personal profile for yourself, or setting up a page for your organization?",
@@ -656,6 +753,17 @@
 		}
 	},
 	"returnDashboard": "Return to Dashboard",
+	"roleGuard": {
+		"backLink": "Back to Connect",
+		"description": "Your account doesn't have access to this section yet. If you think this is a mistake, ask your teacher or an administrator.",
+		"roles": {
+			"admin": "admins",
+			"mentor": "mentors",
+			"student": "students",
+			"teacher": "teachers"
+		},
+		"title": "This area is for {{roles}}"
+	},
 	"savedConnections": "Saved Connections",
 	"savedConnectionsSubtitle": "Search through your connections to find the perfect collaborator, mentor, or scientist for you.",
 	"searchPlaceholder": "Search by name, topic, or area of interest",

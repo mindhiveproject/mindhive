@@ -32,6 +32,93 @@
 	"includeBoardTitle": "تضمين عنوان اللوحة",
 	"intro": "استخرج محتوى المقترحات وراجع البيانات مباشرةً من منصة MindHive. اختر الفئة، ونطاق بياناتك، ثم صدّره بصيغة CSV قابلة للتنزيل ومُهيأة للتحليل.",
 	"json": "JSON (إذا لزم الأمر حقًا)",
+	"metrics": {
+		"allClasses": "",
+		"allClassesWarning": "",
+		"classDisabledHint": "",
+		"classFilter": "",
+		"columns": {
+			"assignments": "",
+			"boards_isMain": "",
+			"boards_total": "",
+			"boardsPeerFeedback": {
+				"FINISHED": "",
+				"IN_PROGRESS": "",
+				"NOT_STARTED": "",
+				"SUBMITTED": ""
+			},
+			"boardsProjectReport": {
+				"FINISHED": "",
+				"IN_PROGRESS": "",
+				"NOT_STARTED": "",
+				"SUBMITTED": ""
+			},
+			"boardsProposal": {
+				"FINISHED": "",
+				"IN_PROGRESS": "",
+				"NOT_STARTED": "",
+				"SUBMITTED": ""
+			},
+			"classCode": "",
+			"classTitle": "",
+			"createdAt": "",
+			"dataJournals": "",
+			"hasTemplateBoard": "",
+			"mentors": "",
+			"networks": "",
+			"resources": "",
+			"students": "",
+			"studies_participants_total": "",
+			"studies_total": "",
+			"studiesDataCollection": {
+				"FINISHED": "",
+				"IN_PROGRESS": "",
+				"NOT_STARTED": "",
+				"SUBMITTED": ""
+			},
+			"studiesStatus": {
+				"COLLECTING_DATA": "",
+				"DATA_COLLECTION_IS_COMPLETED": "",
+				"IN_REVIEW": "",
+				"READY_FOR_REVIEW": "",
+				"REVIEWED": "",
+				"SUBMITTED_AS_PROPOSAL": "",
+				"WORKING": ""
+			}
+		},
+		"createdFrom": "",
+		"createdTo": "",
+		"errors": {
+			"loadFailed": "",
+			"loadNetworks": "",
+			"noNetwork": "",
+			"noResults": ""
+		},
+		"exportCsv": "",
+		"intro": "",
+		"loading": "",
+		"loadingClasses": "",
+		"loadingNetworks": "",
+		"loadMetrics": "",
+		"networkDisabledHint": "",
+		"networkFilter": "",
+		"pageIntro": "",
+		"resultsCount": "",
+		"resultsTitle": "",
+		"searchClass": "",
+		"searchClassPlaceholder": "",
+		"selectClass": "",
+		"selectNetwork": "",
+		"success": {
+			"exported": "",
+			"loaded": ""
+		},
+		"summary": {
+			"displayedRows": ""
+		},
+		"tabLabel": "",
+		"title": ""
+	},
 	"noResearchAccess": "تحتاج إلى أذونات على مستوى البحث للوصول إلى أدوات التصدير",
 	"noStatusFilter": "لا يوجد فلتر للحالة",
 	"outputFormat": "تنسيق الإخراج",
