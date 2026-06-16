@@ -20,6 +20,7 @@
 //   COLLAB_PORT      – optional, defaults to 4445
 // For local dev against Keystone's sqlite, run with DATABASE_URL=file:./keystone.db
 
+
 require("dotenv/config");
 
 const http = require("http");
@@ -74,6 +75,16 @@ function cardIdFromName(documentName) {
   return documentName.replace("proposalCard:", "");
 }
 
+/**
+ * Splits the document into name and ID. Has to be sent with ":" in-between
+ * @param {string} documentName 
+ * @returns {{name: string, id: string}} The parsed document name and ID
+ */
+function itemIdFromName(documentName) {
+  const splitName = documentName.split(":");
+  return { name: splitName[0], id: splitName[1] }
+}
+
 function displayName(profile) {
   if (!profile) return "Editor";
   const full = [profile.firstName, profile.lastName].filter(Boolean).join(" ");
@@ -116,43 +127,48 @@ const hocuspocus = new Hocuspocus({
     const profileId = payload && payload.itemId;
     if (!profileId) throw new Error("Unauthorized: missing profile id");
 
-    const cardId = cardIdFromName(documentName);
-
-    // The card must exist. (ProposalCard access is currently open; tighten to
-    // author/collaborator here once that is the desired policy.)
-    const card = await prisma.proposalCard.findUnique({
-      where: { id: cardId },
-      select: { id: true },
-    });
-    if (!card) throw new Error("Access denied: card not found");
-
     const profile = await prisma.profile.findUnique({
       where: { id: profileId },
       select: { username: true, firstName: true, lastName: true },
     });
 
+    // I think this is being set in the frontend? So we might be safe deleting it!
     context.user = {
       id: profileId,
       name: displayName(profile),
       color: getUserColor(profileId),
     };
+
+    const itemInfo = itemIdFromName(documentName);
+
+    const item = await prisma[itemInfo.name].findUnique({
+      where: { id: itemInfo.id },
+      select: { id: true },
+    });
+
+    if (!item) throw new Error("Access denied: item not found");
+    
+
   },
 
   async onLoadDocument({ documentName, document }) {
-    const cardId = cardIdFromName(documentName);
-    const record = await prisma.proposalCard.findUnique({
-      where: { id: cardId },
+    const item = itemIdFromName(documentName);
+    const record = await prisma[item.name].findUnique({
+      where: { id: item.id },
       select: { yjsState: true },
     });
+
     if (record && record.yjsState) {
+      console.log("Loading document from yjs-state");
       Y.applyUpdate(document, Buffer.from(record.yjsState, "base64"));
     }
-    // No yjsState yet: leave empty — the browser seeds from the card's HTML.
+    // No yjsState yet: leave empty — the client seeds from HTML or other files
+    
     return document;
   },
 
   async onStoreDocument({ documentName, document, context }) {
-    const cardId = cardIdFromName(documentName);
+    const item = itemIdFromName(documentName);
     const state = Y.encodeStateAsUpdate(document);
     const yjsState = Buffer.from(state).toString("base64");
 
@@ -162,7 +178,9 @@ const hocuspocus = new Hocuspocus({
       data.lastTimeEdited = new Date();
     }
 
-    await prisma.proposalCard.update({ where: { id: cardId }, data });
+    console.log("Storing document changes");
+    
+    await prisma[item.name].update({ where: { id: item.id }, data });
   },
 });
 

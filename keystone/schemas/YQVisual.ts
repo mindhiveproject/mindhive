@@ -11,7 +11,6 @@ import {
 } from "@keystone-6/core/fields";
 import { Session } from "../types";
 
-
 // Will have to modify to new profile fields
 function getVisualFilterQuery(session: Session) {
   if (session?.data?.permissions?.some((p) => p.canAccessAdminUI)) return true;
@@ -79,10 +78,14 @@ export const Visual = list({
     },
     item: {
       update: ({ session, item }: { session?: Session; item: any }) =>
-        item.authorId == session?.itemId || session?.data?.permissions?.some((p) => p.canAccessAdminUI) || false,
+        item.authorId == session?.itemId ||
+        session?.data?.permissions?.some((p) => p.canAccessAdminUI) ||
+        false,
       create: ({ session }: { session?: Session }) => !!session,
       delete: ({ session, item }: { session?: Session; item: any }) =>
-        item.authorId == session?.itemId || session?.data?.permissions?.some((p) => p.canAccessAdminUI) || false,
+        item.authorId == session?.itemId ||
+        session?.data?.permissions?.some((p) => p.canAccessAdminUI) ||
+        false,
     },
     filter: {
       query: ({ session }) => getVisualFilterQuery(session),
@@ -110,6 +113,15 @@ export const Visual = list({
     docs: json(),
     docsVisible: checkbox(),
     published: checkbox(),
+    lastTimeEdited: timestamp(),
+    yjsState: text({
+      ui: {
+        createView: { fieldMode: "hidden" },
+        itemView: { fieldMode: "hidden" },
+        listView: { fieldMode: "hidden" },
+      },
+    }),
+    isEditedBy: relationship({ref: "Profile.editsVisual"}),
     tags: relationship({ ref: "YQTag.visuals", many: true }),
     privacy: select({
       options: [
