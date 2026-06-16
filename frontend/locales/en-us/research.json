@@ -61,5 +61,92 @@
 		"singleBoardSelection": "Single board selected for export."
 	},
 	"whichBoardsToInclude": "Which boards should be included?",
-	"workflowStage": "Select which stage to filter by"
+	"workflowStage": "Select which stage to filter by",
+	"metrics": {
+		"tabLabel": "Platform metrics",
+		"pageIntro": "Review platform usage counts by class. Filter by class network, inspect student, study, and board metrics, and export results as CSV.",
+		"title": "Platform metrics",
+		"intro": "Filter classes by network and review platform counts per class.",
+		"networkFilter": "Class network",
+		"classFilter": "Single class",
+		"selectNetwork": "Select a network",
+		"selectClass": "Select a class",
+		"loadingNetworks": "Loading networks…",
+		"loadingClasses": "Loading classes…",
+		"allClasses": "All classes",
+		"allClassesWarning": "Loading all classes may take longer on large platforms. Prefer a class network when possible.",
+		"networkDisabledHint": "Network filter is disabled while a single class is selected.",
+		"classDisabledHint": "Class filter is disabled while a class network is selected.",
+		"searchClass": "Search class",
+		"searchClassPlaceholder": "Filter by class code or title",
+		"createdFrom": "Created from",
+		"createdTo": "Created to",
+		"loadMetrics": "Load metrics",
+		"loading": "Loading metrics…",
+		"exportCsv": "Export CSV",
+		"resultsTitle": "Results",
+		"resultsCount": "{{count}} classes",
+		"errors": {
+			"noNetwork": "Select a class network, choose a class, or choose 'All classes' before loading metrics.",
+			"noResults": "No classes matched the current filters.",
+			"loadFailed": "Unexpected error while loading metrics.",
+			"loadNetworks": "Could not load class networks."
+		},
+		"summary": {
+			"displayedRows": "{{count}} class displayed."
+		},
+		"success": {
+			"loaded": "{{count}} class rows loaded.",
+			"exported": "Exported {{count}} class rows to CSV."
+		},
+		"columns": {
+			"classCode": "Class code",
+			"classTitle": "Class title",
+			"networks": "Networks",
+			"createdAt": "Created",
+			"students": "Students",
+			"mentors": "Mentors",
+			"assignments": "Assignments",
+			"resources": "Resources",
+			"hasTemplateBoard": "Template board",
+			"dataJournals": "Data journals",
+			"studies_total": "Studies (total)",
+			"studies_participants_total": "Study participants",
+			"boards_total": "Boards (total)",
+			"boards_isMain": "Main boards",
+			"studiesStatus": {
+				"WORKING": "Studies: working",
+				"SUBMITTED_AS_PROPOSAL": "Studies: proposal",
+				"READY_FOR_REVIEW": "Studies: ready for review",
+				"IN_REVIEW": "Studies: in review",
+				"REVIEWED": "Studies: reviewed",
+				"COLLECTING_DATA": "Studies: collecting data",
+				"DATA_COLLECTION_IS_COMPLETED": "Studies: data collection done"
+			},
+			"studiesDataCollection": {
+				"NOT_STARTED": "Studies DC: not started",
+				"IN_PROGRESS": "Studies DC: in progress",
+				"SUBMITTED": "Studies DC: submitted",
+				"FINISHED": "Studies DC: finished"
+			},
+			"boardsProposal": {
+				"NOT_STARTED": "Proposal: not started",
+				"IN_PROGRESS": "Proposal: in progress",
+				"SUBMITTED": "Proposal: submitted",
+				"FINISHED": "Proposal: finished"
+			},
+			"boardsPeerFeedback": {
+				"NOT_STARTED": "Peer feedback: not started",
+				"IN_PROGRESS": "Peer feedback: in progress",
+				"SUBMITTED": "Peer feedback: submitted",
+				"FINISHED": "Peer feedback: finished"
+			},
+			"boardsProjectReport": {
+				"NOT_STARTED": "Report: not started",
+				"IN_PROGRESS": "Report: in progress",
+				"SUBMITTED": "Report: submitted",
+				"FINISHED": "Report: finished"
+			}
+		}
+	}
 }
