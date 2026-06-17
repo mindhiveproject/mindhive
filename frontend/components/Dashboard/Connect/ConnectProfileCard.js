@@ -1,6 +1,7 @@
-import { useMemo, useCallback } from "react";
-import { useRouter } from "next/router";
+import { useMemo } from "react";
+import Link from "next/link";
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 
 import ManageFavorite from "./ManageFavorite";
 import { getProfileImageUrl } from "../../../lib/profileStudyImageUrls";
@@ -29,7 +30,7 @@ const getGradientForProfile = (profileKey) => {
   return FALLBACK_COLORS[index];
 };
 
-const CardContainer = styled.div`
+const CardContainer = styled.article`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -41,7 +42,6 @@ const CardContainer = styled.div`
   box-shadow: 0px 7px 64px rgba(0, 0, 0, 0.07);
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
 
   &:hover {
     transform: translateY(-8px);
@@ -57,13 +57,6 @@ const CardHeader = styled.div`
   gap: 16px;
 `;
 
-const FavoriteAndName = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex: 1;
-`;
-
 const FavoriteWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -73,13 +66,20 @@ const FavoriteWrapper = styled.div`
   border-radius: 50%;
   background: transparent;
   flex-shrink: 0;
+`;
 
-  > div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
+const CardLink = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid #336f8a;
+    outline-offset: -2px;
   }
 `;
 
@@ -88,6 +88,7 @@ const NameBlock = styled.div`
   flex-direction: column;
   gap: 0;
   width: 100%;
+  padding: 0 16px 8px;
 
   .name {
     margin: 0;
@@ -159,21 +160,22 @@ const Description = styled.div`
 `;
 
 export default function ConnectProfileCard({ user, profile }) {
-  const router = useRouter();
+  const { t } = useTranslation("connect");
   const fullName =
     profile?.firstName || profile?.lastName
       ? `${profile?.firstName || ""} ${profile?.lastName || ""}`.trim()
-      : profile?.name || "MindHive Member";
+      : profile?.name ||
+        t("profileCard.defaultName", {}, { default: "MindHive Member" });
 
   const subtitle =
     profile?.organization ||
     profile?.permissions?.map((p) => p?.name).join(", ") ||
-    "MindHive Community";
+    t("profileCard.defaultCommunity", {}, { default: "MindHive Community" });
 
   const summary =
     profile?.bioInformal ||
     profile?.bio ||
-    "Click to view profile"
+    t("profileCard.defaultSummary", {}, { default: "Click to view profile" });
 
   const avatar = getProfileImageUrl(profile);
   const fallbackLetter = fullName.charAt(0).toUpperCase();
@@ -182,62 +184,53 @@ export default function ConnectProfileCard({ user, profile }) {
     return getGradientForProfile(key);
   }, [profile?.id, profile?.publicId, fullName]);
 
-  const handleNavigate = useCallback(() => {
-    if (!profile?.publicId) {
-      return;
-    }
+  if (!profile?.publicId) {
+    return null;
+  }
 
-    router.push({
-      pathname: `/dashboard/connect/with`,
-      query: {
-        id: profile?.publicId,
-      },
-    });
-  }, [router, profile?.publicId]);
+  const profileHref = {
+    pathname: "/dashboard/connect/with",
+    query: { id: profile.publicId },
+  };
 
-  const handleKeyDown = useCallback(
-    (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        handleNavigate();
-      }
-    },
-    [handleNavigate]
+  const viewProfileLabel = t(
+    "profileCard.viewProfile",
+    { name: fullName },
+    { default: "View profile of {{name}}" }
   );
 
   return (
-    <CardContainer
-      role="button"
-      tabIndex={0}
-      onClick={handleNavigate}
-      onKeyDown={handleKeyDown}
-    >
+    <CardContainer>
       <CardHeader>
-        <FavoriteAndName>
-          <FavoriteWrapper>
-            <ManageFavorite user={user} profileId={profile?.id} />
-          </FavoriteWrapper>
-          <NameBlock>
-            <p className="name">{fullName}</p>
-            <p className="subtitle">{subtitle}</p>
-          </NameBlock>
-        </FavoriteAndName>
+        <FavoriteWrapper>
+          <ManageFavorite user={user} profileId={profile?.id} />
+        </FavoriteWrapper>
       </CardHeader>
 
-      <Media>
-        {avatar ? (
-          <img src={avatar} alt={fullName} />
-        ) : (
-          <div className="fallback" style={{ background: fallbackGradient }}>
-            {fallbackLetter}
-          </div>
-        )}
-      </Media>
+      <CardLink href={profileHref} aria-label={viewProfileLabel}>
+        <NameBlock>
+          <p className="name">{fullName}</p>
+          <p className="subtitle">{subtitle}</p>
+        </NameBlock>
 
-      <Description>
-        <p>{summary}</p>
-      </Description>
+        <Media>
+          {avatar ? (
+            <img src={avatar} alt="" />
+          ) : (
+            <div
+              className="fallback"
+              style={{ background: fallbackGradient }}
+              aria-hidden
+            >
+              {fallbackLetter}
+            </div>
+          )}
+        </Media>
+
+        <Description>
+          <p>{summary}</p>
+        </Description>
+      </CardLink>
     </CardContainer>
   );
 }
-

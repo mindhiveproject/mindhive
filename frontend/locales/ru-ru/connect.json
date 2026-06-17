@@ -1,4 +1,12 @@
 {
+	"a11y": {
+		"favorite": {
+			"add": "Добавить в избранное",
+			"remove": "Удалить из Избранного"
+		},
+		"opensInNewTab": "(откроется в новой вкладке)",
+		"verified": "Проверено"
+	},
 	"asyncAnsweringQuestions": "Ответы на вопросы студентов (на основе вашего профиля).",
 	"asyncProvidingFeedback": "Предоставление отзывов о студенческих проектах",
 	"availability": "Доступность",
@@ -220,9 +228,46 @@
 	},
 	"introductionVideo": "Вводное видео",
 	"locationFilter": "Расположение",
+	"myOpportunitiesList": {
+		"capacity": "",
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"emptyFiltered": "",
+		"loading": "",
+		"networkCount": {
+			"many": "",
+			"one": ""
+		},
+		"networkFilterLabel": "",
+		"networkFilterPlaceholder": "",
+		"newButton": "",
+		"pageTitle": "",
+		"rating": {
+			"many": "",
+			"one": ""
+		},
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"status": {
+			"accepted": "",
+			"archived": "",
+			"closed": "",
+			"draft": "",
+			"pendingReview": "",
+			"preSelected": "",
+			"published": ""
+		},
+		"statusFilterLabel": "",
+		"statusFilterPlaceholder": "",
+		"teamOf": "",
+		"unknownSponsor": ""
+	},
 	"nav": {
 		"connect": "Соединять",
 		"exploreOpportunities": "Изучите возможности",
+		"mainNavAriaLabel": "",
 		"matches": "Матчи",
 		"matchingRounds": "Соответствующие раунды",
 		"myMatchedStudents": "Мои подобранные студенты",
@@ -566,6 +611,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} слов",
 		"workflow": {
 			"context": {
+				"archived": "",
+				"closed": "",
 				"published": "Данная возможность доступна для студентов.",
 				"sponsorFollowUp": "Заполните приведенную ниже анкету для последующего наблюдения.",
 				"sponsorScope": "Заполните описание объема проекта ниже.",
@@ -599,6 +646,45 @@
 			},
 			"title": "Процесс анализа возможностей"
 		}
+	},
+	"organizationsDetail": {
+		"about": "",
+		"back": "",
+		"loading": "",
+		"members": "",
+		"membersHelper": "",
+		"noOpportunities": "",
+		"notFound": "",
+		"opportunities": "",
+		"solo": "",
+		"teamOf": "",
+		"unknownMember": "",
+		"website": ""
+	},
+	"organizationsList": {
+		"description": "",
+		"domainFilterLabel": "",
+		"domainFilterPlaceholder": "",
+		"domains": {
+			"academic": "",
+			"government": "",
+			"industry": "",
+			"nonprofit": "",
+			"other": ""
+		},
+		"emptyFiltered": "",
+		"loading": "",
+		"next": "",
+		"opportunityCount": {
+			"many": "",
+			"one": ""
+		},
+		"pageTitle": "",
+		"paginationInfo": "",
+		"paginationLabel": "",
+		"previous": "",
+		"searchLabel": "",
+		"searchPlaceholder": ""
 	},
 	"passionNow": "Чем вы увлечены прямо сейчас?",
 	"preferences": {
@@ -648,6 +734,12 @@
 		"saveChanges": "Сохранить изменения",
 		"title": "Ваше участие"
 	},
+	"profileCard": {
+		"defaultCommunity": "",
+		"defaultName": "",
+		"defaultSummary": "",
+		"viewProfile": ""
+	},
 	"profileType": {
 		"chooseType": "Выберите тип вашего профиля",
 		"description": "Настройте свой профиль MindHive, выбрав один из вариантов ниже. Вы создаёте личный профиль для себя или страницу для своей организации?",
@@ -661,6 +753,17 @@
 		}
 	},
 	"returnDashboard": "Вернуться на панель инструментов",
+	"roleGuard": {
+		"backLink": "",
+		"description": "",
+		"roles": {
+			"admin": "",
+			"mentor": "",
+			"student": "",
+			"teacher": ""
+		},
+		"title": ""
+	},
 	"savedConnections": "Сохраненные подключения",
 	"savedConnectionsSubtitle": "Просмотрите свои связи, чтобы найти идеального для вас соратника, наставника или ученого.",
 	"searchPlaceholder": "Поиск по имени, теме или области интересов",

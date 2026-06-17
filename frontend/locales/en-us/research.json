@@ -32,6 +32,93 @@
 	"includeBoardTitle": "Include board title",
 	"intro": "Pull proposal content and review data directly from the MindHive platform. Choose the class, pick your data scope, and export downloadable CSV files formatted for analysis.",
 	"json": "JSON (if needed really)",
+	"metrics": {
+		"allClasses": "All classes",
+		"allClassesWarning": "Loading all classes may take longer on large platforms. Prefer a class network when possible.",
+		"classDisabledHint": "Class filter is disabled while a class network is selected.",
+		"classFilter": "Single class",
+		"columns": {
+			"assignments": "Assignments",
+			"boards_isMain": "Main boards",
+			"boards_total": "Boards (total)",
+			"boardsPeerFeedback": {
+				"FINISHED": "Peer feedback: finished",
+				"IN_PROGRESS": "Peer feedback: in progress",
+				"NOT_STARTED": "Peer feedback: not started",
+				"SUBMITTED": "Peer feedback: submitted"
+			},
+			"boardsProjectReport": {
+				"FINISHED": "Report: finished",
+				"IN_PROGRESS": "Report: in progress",
+				"NOT_STARTED": "Report: not started",
+				"SUBMITTED": "Report: submitted"
+			},
+			"boardsProposal": {
+				"FINISHED": "Proposal: finished",
+				"IN_PROGRESS": "Proposal: in progress",
+				"NOT_STARTED": "Proposal: not started",
+				"SUBMITTED": "Proposal: submitted"
+			},
+			"classCode": "Class code",
+			"classTitle": "Class title",
+			"createdAt": "Created",
+			"dataJournals": "Data journals",
+			"hasTemplateBoard": "Template board",
+			"mentors": "Mentors",
+			"networks": "Networks",
+			"resources": "Resources",
+			"students": "Students",
+			"studies_participants_total": "Study participants",
+			"studies_total": "Studies (total)",
+			"studiesDataCollection": {
+				"FINISHED": "Studies DC: finished",
+				"IN_PROGRESS": "Studies DC: in progress",
+				"NOT_STARTED": "Studies DC: not started",
+				"SUBMITTED": "Studies DC: submitted"
+			},
+			"studiesStatus": {
+				"COLLECTING_DATA": "Studies: collecting data",
+				"DATA_COLLECTION_IS_COMPLETED": "Studies: data collection done",
+				"IN_REVIEW": "Studies: in review",
+				"READY_FOR_REVIEW": "Studies: ready for review",
+				"REVIEWED": "Studies: reviewed",
+				"SUBMITTED_AS_PROPOSAL": "Studies: proposal",
+				"WORKING": "Studies: working"
+			}
+		},
+		"createdFrom": "Created from",
+		"createdTo": "Created to",
+		"errors": {
+			"loadFailed": "Unexpected error while loading metrics.",
+			"loadNetworks": "Could not load class networks.",
+			"noNetwork": "Select a class network, choose a class, or choose 'All classes' before loading metrics.",
+			"noResults": "No classes matched the current filters."
+		},
+		"exportCsv": "Export CSV",
+		"intro": "Filter classes by network and review platform counts per class.",
+		"loading": "Loading metrics…",
+		"loadingClasses": "Loading classes…",
+		"loadingNetworks": "Loading networks…",
+		"loadMetrics": "Load metrics",
+		"networkDisabledHint": "Network filter is disabled while a single class is selected.",
+		"networkFilter": "Class network",
+		"pageIntro": "Review platform usage counts by class. Filter by class network, inspect student, study, and board metrics, and export results as CSV.",
+		"resultsCount": "{{count}} classes",
+		"resultsTitle": "Results",
+		"searchClass": "Search class",
+		"searchClassPlaceholder": "Filter by class code or title",
+		"selectClass": "Select a class",
+		"selectNetwork": "Select a network",
+		"success": {
+			"exported": "Exported {{count}} class rows to CSV.",
+			"loaded": "{{count}} class rows loaded."
+		},
+		"summary": {
+			"displayedRows": "{{count}} class displayed."
+		},
+		"tabLabel": "Platform metrics",
+		"title": "Platform metrics"
+	},
 	"noResearchAccess": "You need research-level permissions to access the export tools",
 	"noStatusFilter": "No status filter",
 	"outputFormat": "Output Format",

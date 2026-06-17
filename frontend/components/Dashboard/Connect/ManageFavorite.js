@@ -1,12 +1,30 @@
-import { Icon } from "semantic-ui-react";
 import styled from "styled-components";
+import useTranslation from "next-translate/useTranslation";
 
 import { MANAGE_FAVORITE_PEOPLE } from "../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 
 import { useMutation } from "@apollo/client";
 
-const FavoriteButton = styled.div`
+function StarIcon({ filled }) {
+  return (
+    <svg
+      width="19"
+      height="19"
+      viewBox="0 0 24 24"
+      fill={filled ? "#F2BE42" : "none"}
+      stroke={filled ? "#F2BE42" : "#625B71"}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  );
+}
+
+const FavoriteButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,8 +32,9 @@ const FavoriteButton = styled.div`
   height: 40px;
   border-radius: 100px;
   padding: 8px;
+  border: none;
   cursor: pointer;
-  background: ${(props) => (props.selected ? "#FDF2D0" : "#EFEFEF")};
+  background: ${(props) => (props.$selected ? "#FDF2D0" : "#EFEFEF")};
   transition: background 0.2s ease;
 
   .icon-wrapper {
@@ -27,29 +46,32 @@ const FavoriteButton = styled.div`
     line-height: 1;
   }
 
-  .star-icon {
-    color: ${(props) => (props.selected ? "#F2BE42" : "#625B71")} !important;
-    font-size: 19px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 1 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    vertical-align: middle !important;
+  &:focus-visible {
+    outline: 2px solid #336f8a;
+    outline-offset: 2px;
   }
 `;
 
 export default function ManageFavorite({ user, profileId }) {
-  const isFavorite = user?.favoritePeople.map((t) => t?.id).includes(profileId);
+  const { t } = useTranslation("connect");
+  const isFavorite = user?.favoritePeople
+    .map((person) => person?.id)
+    .includes(profileId);
 
   const [manageFavorite] = useMutation(MANAGE_FAVORITE_PEOPLE, {
     refetchQueries: [{ query: CURRENT_USER_QUERY }],
   });
 
+  const label = isFavorite
+    ? t("a11y.favorite.remove", {}, { default: "Remove from favorites" })
+    : t("a11y.favorite.add", {}, { default: "Add to favorites" });
+
   return (
     <FavoriteButton
-      selected={isFavorite}
+      type="button"
+      $selected={isFavorite}
+      aria-label={label}
+      aria-pressed={isFavorite}
       onClick={async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -63,9 +85,9 @@ export default function ManageFavorite({ user, profileId }) {
         });
       }}
     >
-      <div className="icon-wrapper">
-        <Icon name="star" className="star-icon" />
-      </div>
+      <span className="icon-wrapper">
+        <StarIcon filled={isFavorite} />
+      </span>
     </FavoriteButton>
   );
 }

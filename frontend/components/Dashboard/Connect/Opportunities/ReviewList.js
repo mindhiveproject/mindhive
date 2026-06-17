@@ -53,6 +53,11 @@ const TabRow = styled.div`
       color: #ffffff;
       border-color: #336f8a;
     }
+
+    &:focus-visible {
+      outline: 2px solid #336f8a;
+      outline-offset: 2px;
+    }
   }
 `;
 
@@ -111,6 +116,11 @@ const CardActions = styled.div`
     font-size: 13px;
     text-align: center;
     text-decoration: none;
+
+    &:focus-visible {
+      outline: 2px solid #336f8a;
+      outline-offset: 2px;
+    }
   }
 `;
 
@@ -150,10 +160,16 @@ function formatDate(value) {
   }
 }
 
-function sponsorName(mentor) {
-  if (!mentor) return "Unknown";
+function sponsorName(mentor, t) {
+  if (!mentor) {
+    return t("myOpportunitiesList.unknownSponsor", {}, { default: "Unknown" });
+  }
   const full = [mentor.firstName, mentor.lastName].filter(Boolean).join(" ");
-  return full || mentor.username || "Unknown";
+  return (
+    full ||
+    mentor.username ||
+    t("myOpportunitiesList.unknownSponsor", {}, { default: "Unknown" })
+  );
 }
 
 export default function ReviewList() {
@@ -172,8 +188,11 @@ export default function ReviewList() {
             default: "Review opportunities",
           })}
         </h1>
-        <TabRow>
-          <Link href="/dashboard/connect/opportunities">
+        <TabRow role="tablist">
+          <Link
+            href="/dashboard/connect/opportunities"
+            role="tab"
+          >
             {t("opportunityEditor.listTabs.mine", {}, {
               default: "My opportunities",
             })}
@@ -181,6 +200,8 @@ export default function ReviewList() {
           <Link
             href="/dashboard/connect/opportunities?tab=review"
             className="active"
+            role="tab"
+            aria-current="page"
           >
             {t("opportunityEditor.listTabs.review", {}, {
               default: "Review queue",
@@ -231,7 +252,7 @@ export default function ReviewList() {
                   {t("opportunityEditor.review.sponsorLabel", {}, {
                     default: "Sponsor",
                   })}
-                  : {sponsorName(opportunity.mentor)}
+                  : {sponsorName(opportunity.mentor, t)}
                 </span>
                 {opportunity.organization?.name && (
                   <span>{opportunity.organization.name}</span>

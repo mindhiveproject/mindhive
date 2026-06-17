@@ -125,6 +125,7 @@ function getOptionLabelString(opt) {
  * @param {boolean} [searchableSingle=false] - When not `multiple`, show a type-to-filter field above the options (default false).
  * @param {React.ReactNode} [icon] - Replaces the default chevron after the label. Omit for built-in chevron; pass `null` to show no trailing icon.
  * @param {'auto'|'below'|'above'} [placement='auto'] - Vertical placement; `auto` flips when there is not enough space below.
+ * @param {boolean} [disabled=false] - Disables trigger interactions and closes the menu when true.
  */
 export default function DropdownSelect({
   value,
@@ -139,6 +140,7 @@ export default function DropdownSelect({
   searchableSingle = false,
   icon,
   placement = "auto",
+  disabled = false,
 }) {
   const { t } = useTranslation("common");
   const [open, setOpen] = useState(false);
@@ -297,6 +299,11 @@ export default function DropdownSelect({
   }, [displayLabel, measureTriggerLabel]);
 
   useEffect(() => {
+    if (!disabled) return;
+    setOpen(false);
+  }, [disabled]);
+
+  useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") setOpen(false);
     };
@@ -338,6 +345,12 @@ export default function DropdownSelect({
         }
       : {}),
     ...triggerStyle,
+    ...(disabled
+      ? {
+          opacity: 0.6,
+          cursor: "not-allowed",
+        }
+      : {}),
   };
 
   const labelSpanStyle = fitContent
@@ -382,10 +395,15 @@ export default function DropdownSelect({
   const buttonNode = (
     <button
       type="button"
+      disabled={disabled}
+      aria-disabled={disabled}
       aria-haspopup="listbox"
       aria-expanded={open}
       aria-label={ariaLabel}
-      onClick={() => setOpen((prev) => !prev)}
+      onClick={() => {
+        if (disabled) return;
+        setOpen((prev) => !prev);
+      }}
       style={triggerMerged}
     >
       <span ref={labelRef} style={labelSpanStyle}>
@@ -421,7 +439,7 @@ export default function DropdownSelect({
       ) : (
         buttonNode
       )}
-      {open &&
+      {open && !disabled &&
         (() => {
           const tr = triggerRef.current?.getBoundingClientRect();
           if (!tr) return null;

@@ -2,6 +2,8 @@ import Document from "next/document";
 import { ServerStyleSheet } from "styled-components";
 import { Html, Head, Main, NextScript } from "next/document";
 
+import { localeToBcp47 } from "../lib/localeToBcp47";
+
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet();
@@ -17,6 +19,7 @@ export default class MyDocument extends Document {
       const initialProps = await Document.getInitialProps(ctx);
       return {
         ...initialProps,
+        locale: ctx.locale,
         styles: (
           <>
             {initialProps.styles}
@@ -29,8 +32,9 @@ export default class MyDocument extends Document {
     }
   }
   render() {
+    const { locale } = this.props;
     return (
-      <Html>
+      <Html lang={localeToBcp47(locale)}>
         <Head>
           <link
             rel="stylesheet"

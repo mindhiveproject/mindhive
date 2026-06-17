@@ -1,4 +1,12 @@
 {
+	"a11y": {
+		"favorite": {
+			"add": "添加到收藏夹",
+			"remove": "从收藏夹中删除"
+		},
+		"opensInNewTab": "（在新标签页中打开）",
+		"verified": "已验证"
+	},
 	"asyncAnsweringQuestions": "回答学生的问题（根据您的个人资料）。",
 	"asyncProvidingFeedback": "为学生项目提供反馈",
 	"availability": "可用性",
@@ -220,9 +228,46 @@
 	},
 	"introductionVideo": "介绍视频",
 	"locationFilter": "地点",
+	"myOpportunitiesList": {
+		"capacity": "",
+		"delete": "",
+		"deleteConfirm": "",
+		"edit": "",
+		"empty": "",
+		"emptyFiltered": "",
+		"loading": "",
+		"networkCount": {
+			"many": "",
+			"one": ""
+		},
+		"networkFilterLabel": "",
+		"networkFilterPlaceholder": "",
+		"newButton": "",
+		"pageTitle": "",
+		"rating": {
+			"many": "",
+			"one": ""
+		},
+		"searchLabel": "",
+		"searchPlaceholder": "",
+		"status": {
+			"accepted": "",
+			"archived": "",
+			"closed": "",
+			"draft": "",
+			"pendingReview": "",
+			"preSelected": "",
+			"published": ""
+		},
+		"statusFilterLabel": "",
+		"statusFilterPlaceholder": "",
+		"teamOf": "",
+		"unknownSponsor": ""
+	},
 	"nav": {
 		"connect": "连接",
 		"exploreOpportunities": "探索机会",
+		"mainNavAriaLabel": "",
 		"matches": "火柴",
 		"matchingRounds": "匹配轮",
 		"myMatchedStudents": "我匹配的学生",
@@ -566,6 +611,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} 个字",
 		"workflow": {
 			"context": {
+				"archived": "",
+				"closed": "",
 				"published": "这项机会已向学生公布。",
 				"sponsorFollowUp": "请完成以下后续问卷。",
 				"sponsorScope": "请完成以下项目范围说明。",
@@ -599,6 +646,45 @@
 			},
 			"title": "机会审查工作流程"
 		}
+	},
+	"organizationsDetail": {
+		"about": "",
+		"back": "",
+		"loading": "",
+		"members": "",
+		"membersHelper": "",
+		"noOpportunities": "",
+		"notFound": "",
+		"opportunities": "",
+		"solo": "",
+		"teamOf": "",
+		"unknownMember": "",
+		"website": ""
+	},
+	"organizationsList": {
+		"description": "",
+		"domainFilterLabel": "",
+		"domainFilterPlaceholder": "",
+		"domains": {
+			"academic": "",
+			"government": "",
+			"industry": "",
+			"nonprofit": "",
+			"other": ""
+		},
+		"emptyFiltered": "",
+		"loading": "",
+		"next": "",
+		"opportunityCount": {
+			"many": "",
+			"one": ""
+		},
+		"pageTitle": "",
+		"paginationInfo": "",
+		"paginationLabel": "",
+		"previous": "",
+		"searchLabel": "",
+		"searchPlaceholder": ""
 	},
 	"passionNow": "您现在对什么事情充满热情？",
 	"preferences": {
@@ -648,6 +734,12 @@
 		"saveChanges": "保存更改",
 		"title": "您的参与"
 	},
+	"profileCard": {
+		"defaultCommunity": "",
+		"defaultName": "",
+		"defaultSummary": "",
+		"viewProfile": ""
+	},
 	"profileType": {
 		"chooseType": "选择您的个人资料类型",
 		"description": "选择以下选项之一，设置您的 MindHive 个人资料。您是要为自己创建个人资料，还是要为您的组织设置页面？",
@@ -661,6 +753,17 @@
 		}
 	},
 	"returnDashboard": "返回仪表板",
+	"roleGuard": {
+		"backLink": "",
+		"description": "",
+		"roles": {
+			"admin": "",
+			"mentor": "",
+			"student": "",
+			"teacher": ""
+		},
+		"title": ""
+	},
 	"savedConnections": "已保存的连接",
 	"savedConnectionsSubtitle": "利用你的人脉关系，找到最适合你的合作者、导师或科学家。",
 	"searchPlaceholder": "按名称、主题或感兴趣的领域搜索",

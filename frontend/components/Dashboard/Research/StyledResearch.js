@@ -100,20 +100,42 @@ const StyledResearch = styled.div`
         color: #3a3a3a;
       }
 
-      input[type="text"] {
+      input[type="text"],
+      input[type="date"],
+      select {
         width: 100%;
         padding: 12px 14px;
         border: 1px solid #d4d4d5;
         border-radius: 12px;
         font-size: 15px;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        background: #ffffff;
 
         &:focus {
           outline: none;
           border-color: #336f8a;
           box-shadow: 0 0 0 3px rgba(51, 111, 138, 0.15);
         }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
       }
+
+      span {
+        margin-top: -4px;
+        font-size: 12px;
+        color: #6f6f6f;
+      }
+    }
+
+    .metricsDateRow {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    .metricsWarning {
+      margin: 0;
     }
 
     .checkboxGroup {
@@ -261,6 +283,61 @@ const StyledResearch = styled.div`
     }
   }
 
+  .metricsResultsCard {
+    overflow: hidden;
+  }
+
+  .metricsTableWrap {
+    overflow-x: auto;
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+  }
+
+  .metricsTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 960px;
+
+    thead {
+      background: #336f8a;
+      color: #ffffff;
+
+      th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        padding: 10px 12px;
+        text-align: left;
+        font-weight: 600;
+        white-space: nowrap;
+        background: #336f8a;
+      }
+    }
+
+    tbody {
+      tr:nth-child(even) {
+        background: #f8fafb;
+      }
+
+      td {
+        padding: 10px 12px;
+        border-top: 1px solid #ececec;
+        white-space: nowrap;
+        color: #333333;
+      }
+    }
+
+    .metricsTotalsRow {
+      background: #eef4f7;
+      font-weight: 700;
+
+      td {
+        border-top: 2px solid #336f8a;
+      }
+    }
+  }
+
   .toast {
     padding: 14px 18px;
     border-radius: 12px;
@@ -280,6 +357,13 @@ const StyledResearch = styled.div`
       border: 1px solid #bbf7d0;
       color: #166534;
     }
+  }
+
+  .metricsSummaryList {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 4px;
   }
 
   @media (max-width: 768px) {

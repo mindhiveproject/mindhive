@@ -39,7 +39,7 @@ function NavDropdownIcon({ src, width = 24, height = 24 }) {
   );
 }
 
-const NavigationBar = styled.div`
+const NavigationBar = styled.nav`
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -181,7 +181,9 @@ export default function ConnectNavigationBar() {
   }, [t, isAdmin, isTeacher, isMentor, isStudent]);
 
   return (
-    <NavigationBar>
+    <NavigationBar
+      aria-label={t("nav.mainNavAriaLabel", {}, { default: "Connect sections" })}
+    >
       <ConnectNavDropdown
         placeholderKey="nav.organizations"
         placeholderDefault="Organizations"
