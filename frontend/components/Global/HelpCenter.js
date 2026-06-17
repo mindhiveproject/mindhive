@@ -79,7 +79,7 @@ export default function HelpCenter() {
 
   function getActions(user, theme, openModal) {
     const permissions = user?.permissions?.map((p) => p?.name) || ['UNAUTHENTICATED'];
-    //Existing roles: ["ADMIN", "STUDENT", "MENTOR", "SCIENTIST", "TEACHER", "UNAUTHENTICATED", "PARTICIPANT"]
+    //Existing roles: ["ADMIN", "STUDENT", "MENTOR", "SCIENTIST", "TEACHER", "SPONSOR", "UNAUTHENTICATED", "PARTICIPANT"]
 
     const actions = [
       {
@@ -101,7 +101,7 @@ export default function HelpCenter() {
         tooltip: t('helpCenter.reportIssue'),
         bgColor: theme.primaryRed,
         action: () => openModal(t('helpCenter.reportIssue'), 'report'),
-        allowedRoles: ["ADMIN", "MENTOR", "SCIENTIST", "TEACHER"]
+        allowedRoles: ["ADMIN", "MENTOR", "SCIENTIST", "TEACHER", "SPONSOR"]
       },
       {
         icon: '/assets/helpCenter/aichat.svg',

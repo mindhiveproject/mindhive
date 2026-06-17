@@ -159,7 +159,6 @@ const hocuspocus = new Hocuspocus({
     });
 
     if (record && record.yjsState) {
-      console.log("Loading document from yjs-state");
       Y.applyUpdate(document, Buffer.from(record.yjsState, "base64"));
     }
     // No yjsState yet: leave empty — the client seeds from HTML or other files
@@ -178,7 +177,6 @@ const hocuspocus = new Hocuspocus({
       data.lastTimeEdited = new Date();
     }
 
-    console.log("Storing document changes");
     
     await prisma[item.name].update({ where: { id: item.id }, data });
   },
@@ -214,7 +212,6 @@ server.on("upgrade", (request, socket, head) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`[collab] standalone collaboration server listening on :${PORT}`);
 });
 
 // A stray bad message/connection must never take the whole collab server down.
@@ -226,7 +223,6 @@ process.on("unhandledRejection", (reason) => {
 });
 
 async function shutdown(signal) {
-  console.log(`[collab] ${signal} received, shutting down…`);
   try {
     await prisma.$disconnect();
   } catch {
