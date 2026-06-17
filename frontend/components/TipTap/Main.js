@@ -16,7 +16,7 @@ import { Button, Dropdown } from "semantic-ui-react";
 import { useApolloClient } from "@apollo/client";
 
 import CollaborationCursorExtension from "./CollaborationCursorExtension";
-import { endpoint, prodEndpoint } from "../../config";
+import { collabEndpoint, endpoint, prodEndpoint } from "../../config";
 
 import DesignSystemButton from "../DesignSystem/Button";
 import { StyledTipTap } from "./StyledTipTap";
@@ -89,8 +89,12 @@ function getCollaborationUrl() {
   // endpoint. The client bundle's NODE_ENV can be undefined in production, so an
   // inverted `=== "production"` check would wrongly fall back to localhost.
   const gql =
-    process.env.NODE_ENV === "development" ? endpoint : prodEndpoint;
-  const base = (gql || "http://localhost:4444/api/graphql").replace(
+    process.env.NODE_ENV === "development" ? collabEndpoint : prodEndpoint;
+
+  // We should replace this with a more proper "collabEndpoint" and "prodCollabEndpoint"
+  // Where the local collab endpoint is ws://localhost:4445/collaboration
+  // And the production is the same as the backend endpoint but with wss and the /collaboration extension
+  const base = (gql || "http://localhost:4445/api/graphql").replace(
     /\/api\/graphql\/?$/,
     "",
   );
