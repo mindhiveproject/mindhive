@@ -391,6 +391,8 @@
 		"viewAndCopy": "عرض ونسخ",
 		"viewOrEdit": "عرض أو تحرير"
 	},
+	"boardSettings": "إعدادات اللوحة",
+	"boardSettingsDescription": "سيتم تطبيق هذه الإعدادات على جميع لوحات المشاريع في هذه الفئة.",
 	"cancel": "يلغي",
 	"cardAssignmentDisabled": "لا يمكن تخصيص البطاقات للطلاب",
 	"cardAssignmentEnabled": "يمكن تخصيص البطاقات للطلاب",
@@ -682,6 +684,7 @@
 		"noProjectsYet": "لم يقم الطلاب بإنشاء أي مشاريع بعد.",
 		"projectTitle": "عنوان المشروع"
 	},
+	"proposalCardsAssignableQuestion": "هل ينبغي أن تكون بطاقات الاقتراح قابلة للتخصيص للطلاب؟",
 	"resource": {
 		"action": "فعل",
 		"actions": "أجراءات",

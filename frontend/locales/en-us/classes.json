@@ -391,6 +391,8 @@
 		"viewAndCopy": "View & Copy",
 		"viewOrEdit": "View or Edit"
 	},
+	"boardSettings": "Board settings",
+	"boardSettingsDescription": "These settings will be applied to all project boards in this class.",
 	"cancel": "Cancel",
 	"cardAssignmentDisabled": "Cards cannot be assigned to students",
 	"cardAssignmentEnabled": "Cards can be assigned to students",
@@ -682,6 +684,7 @@
 		"noProjectsYet": "The students haven't created any projects yet.",
 		"projectTitle": "Project title"
 	},
+	"proposalCardsAssignableQuestion": "Should proposal cards be assignable to students?",
 	"resource": {
 		"action": "Action",
 		"actions": "Actions",

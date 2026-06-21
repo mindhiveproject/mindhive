@@ -391,6 +391,8 @@
 		"viewAndCopy": "Afficher et copier",
 		"viewOrEdit": "Afficher ou modifier"
 	},
+	"boardSettings": "Paramètres du tableau",
+	"boardSettingsDescription": "Ces paramètres seront appliqués à tous les tableaux de projet de cette classe.",
 	"cancel": "Annuler",
 	"cardAssignmentDisabled": "Les cartes ne peuvent pas être attribuées aux élèves",
 	"cardAssignmentEnabled": "Des cartes peuvent être attribuées aux élèves",
@@ -682,6 +684,7 @@
 		"noProjectsYet": "Les étudiants n'ont pas encore créé de projets.",
 		"projectTitle": "Titre du projet"
 	},
+	"proposalCardsAssignableQuestion": "Les fiches de proposition devraient-elles pouvoir être attribuées aux étudiants ?",
 	"resource": {
 		"action": "Action",
 		"actions": "Actions",

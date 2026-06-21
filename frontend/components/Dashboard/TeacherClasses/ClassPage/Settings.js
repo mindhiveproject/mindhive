@@ -169,11 +169,11 @@ export default function Settings({ myclass, user }) {
         </div>
       )}
 
-      <h3>{t("Board settings")}</h3>
-      <p>{t("These settings will be applied to all project boards in this class.")}</p>
+      <h3>{t("boardSettings", {}, { default: "Board settings" })}</h3>
+      <p>{t("boardSettingsDescription", {}, { default: "These settings will be applied to all project boards in this class." })}</p>
       <div className="informationBlock">
         <div className="block">
-          <p>{t("Should proposal cards be assignable to students?")}</p>
+          <p>{t("proposalCardsAssignableQuestion", {}, { default: "Should proposal cards be assignable to students?" })}</p>
           <CheckboxGroup>
             <label className={assignableToStudents ? "active" : ""}>
               <input

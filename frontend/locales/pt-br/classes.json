@@ -391,6 +391,8 @@
 		"viewAndCopy": "Ver e Copiar",
 		"viewOrEdit": "Ver ou Editar"
 	},
+	"boardSettings": "Configurações do tabuleiro",
+	"boardSettingsDescription": "Essas configurações serão aplicadas a todos os quadros de projeto desta turma.",
 	"cancel": "Cancelar",
 	"cardAssignmentDisabled": "Não é possível atribuir cartões a alunos.",
 	"cardAssignmentEnabled": "Os cartões podem ser atribuídos aos alunos.",
@@ -682,6 +684,7 @@
 		"noProjectsYet": "Os alunos ainda não criaram nenhum projeto.",
 		"projectTitle": "Título do projeto"
 	},
+	"proposalCardsAssignableQuestion": "Os cartões de proposta devem ser atribuíveis aos alunos?",
 	"resource": {
 		"action": "Ação",
 		"actions": "Ações",

@@ -391,6 +391,8 @@
 		"viewAndCopy": "Bekijken en kopiëren",
 		"viewOrEdit": "Bekijken of bewerken"
 	},
+	"boardSettings": "Bestuursinstellingen",
+	"boardSettingsDescription": "Deze instellingen worden toegepast op alle projectborden in deze cursus.",
 	"cancel": "Annuleren",
 	"cardAssignmentDisabled": "Kaarten kunnen niet aan studenten worden toegewezen.",
 	"cardAssignmentEnabled": "Kaarten kunnen aan studenten worden toegewezen.",
@@ -682,6 +684,7 @@
 		"noProjectsYet": "De studenten hebben nog geen projecten aangemaakt.",
 		"projectTitle": "Projecttitel"
 	},
+	"proposalCardsAssignableQuestion": "Moeten voorstelkaarten aan studenten kunnen worden toegewezen?",
 	"resource": {
 		"action": "Actie",
 		"actions": "Acties",

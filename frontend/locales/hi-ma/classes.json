@@ -391,6 +391,8 @@
 		"viewAndCopy": "",
 		"viewOrEdit": ""
 	},
+	"boardSettings": "",
+	"boardSettingsDescription": "",
 	"cancel": "रद्द करना",
 	"cardAssignmentDisabled": "",
 	"cardAssignmentEnabled": "",
@@ -682,6 +684,7 @@
 		"noProjectsYet": "छात्रों ने अभी तक कोई प्रोजेक्ट नहीं बनाया है।",
 		"projectTitle": "परियोजना का शीर्षक"
 	},
+	"proposalCardsAssignableQuestion": "",
 	"resource": {
 		"action": "",
 		"actions": "",
