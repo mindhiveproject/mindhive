@@ -485,6 +485,7 @@ export const Profile = list({
     }),
     // YQ-related properties
     visuals: relationship({ ref: "Visual.author", many: true }),
+    collaboratorInVisual: relationship({ ref: "Visual.collaborators", many: true }),
     liked: relationship({ ref: "Visual.likes", many: true }),
     following: relationship({ ref: "Friendship.requester", many: true }),
     followers: relationship({ ref: "Friendship.recipient", many: true }),
