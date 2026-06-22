@@ -391,6 +391,8 @@
 		"viewAndCopy": "Ver y copiar",
 		"viewOrEdit": "Ver o editar"
 	},
+	"boardSettings": "Configuración del tablero",
+	"boardSettingsDescription": "Estos ajustes se aplicarán a todos los tableros de proyecto de esta clase.",
 	"cancel": "Cancelar",
 	"cardAssignmentDisabled": "Las tarjetas no se pueden asignar a estudiantes",
 	"cardAssignmentEnabled": "Las tarjetas se pueden asignar a los estudiantes.",
@@ -431,6 +433,12 @@
 		"title": "Nuevo nombre de clase"
 	},
 	"createdByOn": "Creado por {{username}} el {{date}}",
+	"curriculumTypeMentorNote": "Esto determina el cuestionario de retroalimentación para mentores que se utiliza en el centro de retroalimentación. Si tiene alguna pregunta, comuníquese con un miembro del equipo de MindHive.",
+	"curriculumTypeMindHive": "MindHive",
+	"curriculumTypeNyuCusp": "NYU CUSP (Proyecto final)",
+	"curriculumTypeQuestion": "¿Qué tipo de plan de estudios se aplica a los paneles de proyectos en esta clase?",
+	"curriculumTypeUpdateError": "No se pudo actualizar el tipo de plan de estudios.",
+	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
 		"allowed": "Permitido",
 		"assignToExistingProject": "Asignar a un proyecto existente",
@@ -564,6 +572,7 @@
 	"deleteClassWarning": "Al eliminar tu clase, se eliminará permanentemente de \"Mis Clases\". Esta acción no se puede deshacer.",
 	"deleteYourClass": "Eliminar tu clase",
 	"emailAddress": "Dirección de correo electrónico",
+	"failedToUpdateSettings": "No se pudo actualizar la configuración.",
 	"header": {
 		"addDescription": "Añadir descripción",
 		"mentors": "Mentores",
@@ -682,6 +691,7 @@
 		"noProjectsYet": "Los estudiantes aún no han creado ningún proyecto.",
 		"projectTitle": "Título del proyecto"
 	},
+	"proposalCardsAssignableQuestion": "¿Deberían poder asignarse tarjetas de propuestas a los estudiantes?",
 	"resource": {
 		"action": "ACCIÓN",
 		"actions": "Comportamiento",

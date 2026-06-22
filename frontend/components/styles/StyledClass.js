@@ -919,14 +919,289 @@ const StyledClass = styled.div`
     }
   }
   .settings {
+    display: grid;
+    gap: 28px;
+    max-width: 980px;
+    padding-bottom: 40px;
+    font-family: "Inter", sans-serif;
+
+    .settingsSection {
+      display: grid;
+      gap: 16px;
+      padding: 24px;
+      border: 1px solid #e6e6e6;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfbfa 100%);
+      box-shadow: 0 10px 30px rgba(23, 23, 23, 0.06);
+    }
+
+    .settingsSectionHeader {
+      display: grid;
+      gap: 6px;
+      max-width: 720px;
+
+      h3 {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 30px;
+        color: #171717;
+      }
+
+      p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 22px;
+        color: #625b71;
+      }
+    }
+
     .informationBlock {
       display: grid;
-      grid-gap: 20px;
-      grid-template-columns: 1fr 1fr;
-      margin-bottom: 20px;
+      gap: 16px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       .block {
+        display: grid;
+        align-content: start;
+        gap: 14px;
         padding: 20px;
-        background: white;
+        border: 1px solid #ece9e6;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 6px 18px rgba(23, 23, 23, 0.04);
+
+        p {
+          margin: 0;
+        }
+
+        ul {
+          display: grid;
+          gap: 8px;
+          margin: 0;
+          padding-left: 20px;
+          color: #3d3d3d;
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+      .curriculumTypeBlock {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .settingsQuestion {
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 22px;
+      color: #171717;
+    }
+
+    .settingsChoiceGroup {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+      label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 48px;
+        padding: 12px 14px;
+        border: 1px solid #d9d6d2;
+        border-radius: 14px;
+        background: #f9faf9;
+        color: #333333;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        transition: border-color 0.2s ease, background-color 0.2s ease,
+          box-shadow 0.2s ease, color 0.2s ease;
+
+        input {
+          flex-shrink: 0;
+          width: 17px;
+          height: 17px;
+          margin: 0;
+          accent-color: var(--MH-Theme-Primary-Dark, #336f8a);
+        }
+
+        &:hover {
+          border-color: rgba(51, 111, 138, 0.45);
+          background: #f6f9f8;
+        }
+
+        &.active {
+          border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+          background: rgba(51, 111, 138, 0.08);
+          color: #265568;
+          box-shadow: 0 8px 20px rgba(51, 111, 138, 0.14);
+        }
+      }
+    }
+
+    .networkCard {
+      display: grid;
+      gap: 8px;
+      padding: 20px;
+      border: 1px solid #e6e6e6;
+      border-radius: 16px;
+      background: #ffffff;
+
+      h2,
+      p {
+        margin: 0;
+      }
+
+      .classNetworkChip {
+        justify-self: start;
+      }
+
+      h2 {
+        font-size: 18px;
+        line-height: 24px;
+        color: #171717;
+      }
+    }
+
+    .curriculumTypeSelector {
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .curriculumTypeLegend {
+      font-family: "Inter", sans-serif;
+      font-weight: 600;
+      font-size: 17px;
+      line-height: 24px;
+      color: #171717;
+      margin: 0 0 4px 0;
+      padding: 0;
+    }
+
+    .curriculumTypeHelp {
+      font-family: "Inter", sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      color: #625b71;
+      margin: 0 0 16px 0;
+    }
+
+    .curriculumTypeOptions {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .curriculumTypeOption {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid #a1a1a1;
+      border-radius: 16px;
+      background: #ffffff;
+      cursor: pointer;
+      transition: border-color 0.2s, background-color 0.2s,
+        box-shadow 0.2s;
+
+      input {
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        accent-color: var(--MH-Theme-Primary-Dark, #336f8a);
+      }
+
+      &:hover {
+        background: #f6f9f8;
+        border-color: rgba(51, 111, 138, 0.45);
+      }
+
+      &.curriculumTypeOptionSelected {
+        border-color: var(--MH-Theme-Primary-Yellow, #f9d978);
+        background: #fffaf0;
+        box-shadow: 0 8px 20px rgba(242, 190, 66, 0.18);
+      }
+    }
+
+    .curriculumTypeOptionContent {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .curriculumTypeLogo {
+      width: min(200px, 100%);
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .curriculumTypeLabel {
+      font-family: "Inter", sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 20px;
+      color: #171717;
+    }
+
+    .curriculumTypeFallbackNote {
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: #625b71;
+    }
+
+    .settingsDangerSection {
+      border-color: #f2d2d1;
+      background: linear-gradient(180deg, #fffefe 0%, #fff8f7 100%);
+
+      .block {
+        border-color: #f3dfdd;
+      }
+    }
+
+    .settingsDeleteButton {
+      justify-self: start;
+      min-height: 44px;
+      padding: 0 18px;
+      border: 1px solid #b62524;
+      border-radius: 12px;
+      background: #d53533;
+      color: #ffffff;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background: #b62524;
+        border-color: #9f1f1f;
+        box-shadow: 0 8px 20px rgba(213, 53, 51, 0.2);
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .settingsSection {
+        padding: 18px;
+        border-radius: 14px;
+      }
+
+      .informationBlock {
+        grid-template-columns: 1fr;
       }
     }
   }

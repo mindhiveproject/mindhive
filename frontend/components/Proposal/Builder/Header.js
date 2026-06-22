@@ -61,12 +61,21 @@ export default function ProposalHeader({
   };
 
   // save and edit the study information
-  const { inputs, handleChange, handleMultipleUpdate, toggleBoolean, toggleSettingsBoolean } =
+  const { inputs, handleChange, toggleBoolean, toggleSettingsBoolean } =
     useForm({
       ...proposal,
     });
 
-  const boardTypeSelection = inputs.settings?.curriculumType === 'youquantified' ? 'youquantified' : 'mindhive';
+  const settingsEqual = (a, b) => {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+    return (
+      (a.allowMovingSections === b.allowMovingSections) &&
+      (a.allowMovingCards === b.allowMovingCards) &&
+      (a.allowAddingSections === b.allowAddingSections) &&
+      (a.allowAddingCards === b.allowAddingCards)
+    );
+  };
 
   const [updateProposal, { loading }] = useMutation(UPDATE_PROPOSAL_BOARD, {
     variables: {
@@ -77,20 +86,6 @@ export default function ProposalHeader({
       ...refetchQueries,
     ],
   });
-
-  const settingsEqual = (a, b) => {
-    if (a == null && b == null) return true;
-    if (a == null || b == null) return false;
-    const curriculumA = a?.curriculumType ?? 'mindhive';
-    const curriculumB = b?.curriculumType ?? 'mindhive';
-    return (
-      (a.allowMovingSections === b.allowMovingSections) &&
-      (a.allowMovingCards === b.allowMovingCards) &&
-      (a.allowAddingSections === b.allowAddingSections) &&
-      (a.allowAddingCards === b.allowAddingCards) &&
-      curriculumA === curriculumB
-    );
-  };
 
   const hasUnsavedChanges =
     inputs.title !== proposal?.title ||
@@ -226,12 +221,6 @@ export default function ProposalHeader({
                     onClick={() => setTemplateBannerSection("studentSettings")}
                   />
                 )}
-                <Chip
-                  shape="square"
-                  label={t("proposal.templateSectionBoardType", "Board type")}
-                  selected={templateBannerSection === "boardType"}
-                  onClick={() => setTemplateBannerSection("boardType")}
-                />
                 {proposalBuildMode && user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
                   <Chip
                     shape="square"
@@ -362,56 +351,6 @@ export default function ProposalHeader({
                         onChange={(_, { name }) => toggleBoolean({ target: { name } })}
                         label={t("proposal.makeTemplate", "Make this project board a public template")}
                       />
-                    </div>
-                  </div>
-                )}
-                {templateBannerSection === "boardType" && (
-                  <div className="templateBannerBoardTypeOptions">
-                    <p className="templateBannerBoardTypeIntro">
-                      {t("proposal.boardTypeIntro", "Please indicate here if this board manages a MindHive or YouQuantified project.")}
-                    </p>
-                    <p className="templateBannerBoardTypeMentorNote">
-                      {t("proposal.boardTypeMentorNote", "This is relevant for mentors giving feedback to your student boards. If you have any questions, please contact a MindHive member.")}
-                    </p>
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      className={`templateBannerBoardTypeOption ${boardTypeSelection === 'mindhive' ? 'templateBannerBoardTypeOptionSelected' : ''}`}
-                      onClick={() => handleMultipleUpdate({ settings: { ...inputs.settings, curriculumType: 'mindhive' } })}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handleMultipleUpdate({ settings: { ...inputs.settings, curriculumType: 'mindhive' } });
-                        }
-                      }}
-                      aria-pressed={boardTypeSelection === 'mindhive'}
-                    >
-                      <div className="templateBannerBoardTypeOptionLogos">
-                        <img src="/logo.png" alt="" className="templateBannerBoardTypeLogo" />
-                      </div>
-                      {/* <span className="templateBannerBoardTypeOptionLabel">
-                        {t("proposal.boardTypeMindHive", "MindHive")}
-                      </span> */}
-                    </div>
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      className={`templateBannerBoardTypeOption ${boardTypeSelection === 'youquantified' ? 'templateBannerBoardTypeOptionSelected' : ''}`}
-                      onClick={() => handleMultipleUpdate({ settings: { ...inputs.settings, curriculumType: 'youquantified' } })}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handleMultipleUpdate({ settings: { ...inputs.settings, curriculumType: 'youquantified' } });
-                        }
-                      }}
-                      aria-pressed={boardTypeSelection === 'youquantified'}
-                    >
-                      <div className="templateBannerBoardTypeOptionLogos">
-                        <img src="/logo_yq.svg" alt="" className="templateBannerBoardTypeLogo" />
-                      </div>
-                      {/* <span className="templateBannerBoardTypeOptionLabel">
-                        {t("proposal.boardTypeYouQuantified", "YouQuantified")}
-                      </span> */}
                     </div>
                   </div>
                 )}

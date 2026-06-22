@@ -1,21 +1,23 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
+import { useEffect } from "react";
 
 import { GET_REVIEW } from "../../../Queries/Review";
 
 import Navigation from "./Navigation";
 import StudyDetails from "./StudyDetails/Main";
-// import Comments from "./Comments/Main";
 import Questions from "./Review/Main";
 
 import useForm from "../../../../lib/useForm";
 
 import { useTemplateQuestions } from "./Review/Template";
-import { useEffect } from "react";
 import Feedback from "../Feedback/Main";
+import {
+  getCurriculumType,
+  mergeReviewContentWithTemplate,
+} from "../../../../lib/curriculumTypes";
 
-// getting the state of the user review
 export default function UserReview({
   query,
   user,
@@ -26,12 +28,13 @@ export default function UserReview({
   canReview,
 }) {
   const { t } = useTranslation("builder");
-  // try to get the user review
-  const { data, loading, error } = useQuery(GET_REVIEW, {
+  const curriculumType = getCurriculumType(project);
+
+  const { data } = useQuery(GET_REVIEW, {
     variables: {
       projectId: project?.id,
       authorId: user?.id,
-      stage: project?.status,
+      stage: status,
     },
     fetchPolicy: "network-only",
   });
@@ -39,29 +42,33 @@ export default function UserReview({
   const reviews = data?.reviews || [];
   const review = reviews.length ? reviews[0] : {};
 
-  // Use the template hook for translated questions
-  const templates = useTemplateQuestions();
-  const defaultContent = templates[status];
+  const templates = useTemplateQuestions(curriculumType);
+  const defaultContent = templates[status] || [];
 
-  const { inputs, handleChange, resetForm, handleMultipleUpdate } = useForm({
-    id: review?.id,
-    content: defaultContent,
-    authorId: user?.id,
-    projectId: project?.id,
-    stage: status,
-  });
+  const { inputs, handleChange, resetForm, handleMultipleUpdate } = useForm(
+    {
+      id: review?.id,
+      content: defaultContent,
+      authorId: user?.id,
+      projectId: project?.id,
+      stage: status,
+    },
+    { freezeInitialSync: true }
+  );
 
   useEffect(() => {
-    async function updateContent() {
-      handleMultipleUpdate({
-        id: review?.id,
-        content: review?.content,
-      });
+    if (!defaultContent?.length) {
+      return;
     }
-    if (review?.content) {
-      updateContent();
-    }
-  }, [review?.content]);
+    const merged = mergeReviewContentWithTemplate(
+      review?.content,
+      defaultContent
+    );
+    handleMultipleUpdate({
+      id: review?.id,
+      content: merged,
+    });
+  }, [review?.id, review?.content, curriculumType, status]);
 
   const handleItemChange = ({ className, name, value }) => {
     const updatedContent = [...inputs?.content];
@@ -147,6 +154,7 @@ export default function UserReview({
               user={user}
               projectId={project?.id}
               status={status}
+              curriculumType={curriculumType}
               reviews={
                 project?.reviews?.filter((review) => review.stage === status) ||
                 []

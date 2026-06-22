@@ -391,6 +391,8 @@
 		"viewAndCopy": "View & Copy",
 		"viewOrEdit": "View or Edit"
 	},
+	"boardSettings": "Board settings",
+	"boardSettingsDescription": "These settings will be applied to all project boards in this class.",
 	"cancel": "Cancel",
 	"cardAssignmentDisabled": "Cards cannot be assigned to students",
 	"cardAssignmentEnabled": "Cards can be assigned to students",
@@ -431,6 +433,12 @@
 		"title": "New class name"
 	},
 	"createdByOn": "Created by {{username}} on {{date}}",
+	"curriculumTypeMentorNote": "This determines the mentor feedback questionnaire used in the feedback center. If you have questions, contact a MindHive team member.",
+	"curriculumTypeMindHive": "MindHive",
+	"curriculumTypeNyuCusp": "NYU CUSP (Capstone)",
+	"curriculumTypeQuestion": "Which curriculum type applies to project boards in this class?",
+	"curriculumTypeUpdateError": "Failed to update curriculum type",
+	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
 		"allowed": "Allowed",
 		"assignToExistingProject": "Assign to Existing Project",
@@ -564,6 +572,7 @@
 	"deleteClassWarning": "Deleting your class will permanently delete your class within the \"My Classes\" area. This action cannot be undone.",
 	"deleteYourClass": "Delete your class",
 	"emailAddress": "Email address",
+	"failedToUpdateSettings": "Failed to update settings",
 	"header": {
 		"addDescription": "Add description",
 		"mentors": "Mentors",
@@ -682,6 +691,7 @@
 		"noProjectsYet": "The students haven't created any projects yet.",
 		"projectTitle": "Project title"
 	},
+	"proposalCardsAssignableQuestion": "Should proposal cards be assignable to students?",
 	"resource": {
 		"action": "Action",
 		"actions": "Actions",

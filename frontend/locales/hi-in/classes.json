@@ -391,6 +391,8 @@
 		"viewAndCopy": "देखें और कॉपी करें",
 		"viewOrEdit": "देखें या संपादित करें"
 	},
+	"boardSettings": "बोर्ड सेटिंग्स",
+	"boardSettingsDescription": "ये सेटिंग्स इस कक्षा के सभी प्रोजेक्ट बोर्डों पर लागू होंगी।",
 	"cancel": "रद्द करना",
 	"cardAssignmentDisabled": "छात्रों को कार्ड आवंटित नहीं किए जा सकते।",
 	"cardAssignmentEnabled": "कार्ड छात्रों को आवंटित किए जा सकते हैं",
@@ -431,6 +433,12 @@
 		"title": "नया वर्ग नाम"
 	},
 	"createdByOn": "{{उपयोगकर्ता नाम}} द्वारा {{दिनांक}} को बनाया गया",
+	"curriculumTypeMentorNote": "इससे फीडबैक सेंटर में उपयोग किए जाने वाले मेंटर फीडबैक प्रश्नावली का निर्धारण होता है। यदि आपके कोई प्रश्न हैं, तो माइंडहाइव टीम के किसी सदस्य से संपर्क करें।",
+	"curriculumTypeMindHive": "माइंडहाइव",
+	"curriculumTypeNyuCusp": "एनवाईयू सीयूएसपी (कैपस्टोन)",
+	"curriculumTypeQuestion": "इस कक्षा में प्रोजेक्ट बोर्ड के लिए किस प्रकार का पाठ्यक्रम लागू होता है?",
+	"curriculumTypeUpdateError": "पाठ्यक्रम प्रकार को अपडेट करने में विफल",
+	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
 		"allowed": "अनुमत",
 		"assignToExistingProject": "मौजूदा परियोजना को असाइन करें",
@@ -564,6 +572,7 @@
 	"deleteClassWarning": "अपनी कक्षा हटाने से \"मेरी कक्षाएँ\" क्षेत्र में आपकी कक्षा स्थायी रूप से हट जाएगी। इस क्रिया को पूर्ववत नहीं किया जा सकता।",
 	"deleteYourClass": "अपनी कक्षा हटाएँ",
 	"emailAddress": "मेल पता",
+	"failedToUpdateSettings": "सेटिंग्स अपडेट करने में विफल",
 	"header": {
 		"addDescription": "विवरण जोड़ें",
 		"mentors": "मेंटर्स",
@@ -682,6 +691,7 @@
 		"noProjectsYet": "छात्रों ने अभी तक कोई प्रोजेक्ट नहीं बनाया है।",
 		"projectTitle": "परियोजना का शीर्षक"
 	},
+	"proposalCardsAssignableQuestion": "क्या प्रस्ताव कार्ड छात्रों को सौंपे जाने योग्य होने चाहिए?",
 	"resource": {
 		"action": "कार्रवाई",
 		"actions": "कार्रवाई",

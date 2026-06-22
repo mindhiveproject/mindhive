@@ -391,6 +391,8 @@
 		"viewAndCopy": "Bekijken en kopiëren",
 		"viewOrEdit": "Bekijken of bewerken"
 	},
+	"boardSettings": "Bestuursinstellingen",
+	"boardSettingsDescription": "Deze instellingen worden toegepast op alle projectborden in deze cursus.",
 	"cancel": "Annuleren",
 	"cardAssignmentDisabled": "Kaarten kunnen niet aan studenten worden toegewezen.",
 	"cardAssignmentEnabled": "Kaarten kunnen aan studenten worden toegewezen.",
@@ -431,6 +433,12 @@
 		"title": "Nieuwe klassenaam"
 	},
 	"createdByOn": "Gemaakt door {{username}} op {{date}}",
+	"curriculumTypeMentorNote": "Dit bepaalt de vragenlijst voor mentorfeedback die in het feedbackcentrum wordt gebruikt. Neem bij vragen contact op met een medewerker van MindHive.",
+	"curriculumTypeMindHive": "MindHive",
+	"curriculumTypeNyuCusp": "NYU CUSP (Afstudeerproject)",
+	"curriculumTypeQuestion": "Welk type curriculum is van toepassing op projectborden in deze les?",
+	"curriculumTypeUpdateError": "Het bijwerken van het curriculumtype is mislukt.",
+	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
 		"allowed": "Toegestaan",
 		"assignToExistingProject": "Toewijzen aan bestaand project",
@@ -564,6 +572,7 @@
 	"deleteClassWarning": "Als u uw klas verwijdert, wordt deze permanent verwijderd uit het gedeelte 'Mijn klassen'. Deze actie kan niet ongedaan worden gemaakt.",
 	"deleteYourClass": "Verwijder uw klas",
 	"emailAddress": "E-mailadres",
+	"failedToUpdateSettings": "Instellingen bijwerken mislukt",
 	"header": {
 		"addDescription": "Voeg een beschrijving toe",
 		"mentors": "Mentoren",
@@ -682,6 +691,7 @@
 		"noProjectsYet": "De studenten hebben nog geen projecten aangemaakt.",
 		"projectTitle": "Projecttitel"
 	},
+	"proposalCardsAssignableQuestion": "Moeten voorstelkaarten aan studenten kunnen worden toegewezen?",
 	"resource": {
 		"action": "Actie",
 		"actions": "Acties",

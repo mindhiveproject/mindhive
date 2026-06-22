@@ -11,7 +11,13 @@ import { Modal, Button } from "semantic-ui-react";
 import StyledModal from "../../../styles/StyledModal";
 
 import { useRouter } from "next/router";
-import styled from "styled-components";
+
+import Chip from "../../../DesignSystem/Chip";
+import CurriculumTypeSelector from "./CurriculumTypeSelector";
+import {
+  DEFAULT_CURRICULUM_TYPE,
+  normalizeCurriculumType,
+} from "../../../../lib/curriculumTypes";
 
 export default function Settings({ myclass, user }) {
   const { t } = useTranslation("classes");
@@ -22,6 +28,9 @@ export default function Settings({ myclass, user }) {
   );
   const [studentsCanAssignToCards, setStudentsCanAssignToCards] = useState(
     myclass?.settings?.studentsCanAssignToCards ?? false
+  );
+  const [curriculumType, setCurriculumType] = useState(
+    normalizeCurriculumType(myclass?.settings?.curriculumType)
   );
 
   // Sync from server when myclass (e.g. after refetch) changes
@@ -38,6 +47,12 @@ export default function Settings({ myclass, user }) {
       value === undefined || value === null ? false : !!value
     );
   }, [myclass?.settings?.studentsCanAssignToCards]);
+
+  useEffect(() => {
+    setCurriculumType(
+      normalizeCurriculumType(myclass?.settings?.curriculumType)
+    );
+  }, [myclass?.settings?.curriculumType]);
 
   const handleChange = (e) => {
     setInputValue(e.target.value);
@@ -69,7 +84,14 @@ export default function Settings({ myclass, user }) {
       variables: {
         settings: newSettings,
       },
-    }).catch((err) => alert(err?.message || "Failed to update settings"));
+    }).catch((err) =>
+      alert(
+        err?.message ||
+          t("failedToUpdateSettings", {}, {
+            default: "Failed to update settings",
+          })
+      )
+    );
   };
 
   const updateStudentsCanAssignToCards = (value) => {
@@ -82,7 +104,35 @@ export default function Settings({ myclass, user }) {
       variables: {
         settings: { ...existingSettings, studentsCanAssignToCards: value },
       },
-    }).catch((err) => alert(err?.message || "Failed to update settings"));
+    }).catch((err) =>
+      alert(
+        err?.message ||
+          t("failedToUpdateSettings", {}, {
+            default: "Failed to update settings",
+          })
+      )
+    );
+  };
+
+  const updateCurriculumType = (value) => {
+    const normalized = normalizeCurriculumType(value);
+    setCurriculumType(normalized);
+    const existingSettings =
+      myclass?.settings && typeof myclass.settings === "object"
+        ? myclass.settings
+        : {};
+    updateClassSettings({
+      variables: {
+        settings: { ...existingSettings, curriculumType: normalized },
+      },
+    }).catch((err) =>
+      alert(
+        err?.message ||
+          t("curriculumTypeUpdateError", {}, {
+            default: "Failed to update curriculum type",
+          })
+      )
+    );
   };
 
   const [deleteClass, { loading }] = useMutation(DELETE_CLASS, {
@@ -109,48 +159,21 @@ export default function Settings({ myclass, user }) {
       },
     ],
   });
-
-  const CheckboxGroup = styled.div`
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-
-    label {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
-      border: 1px solid #d4d4d5;
-      border-radius: 16px;
-      background: #f6f7f8;
-      cursor: pointer;
-      font-size: 14px;
-      color: #333333;
-      transition: all 0.2s ease;
-
-      input {
-        width: 16px;
-        height: 16px; 
-      }
-
-      &.active {
-        border-color: #336f8a;
-        background: rgba(51, 111, 138, 0.1);
-        color: #265568;
-        box-shadow: 0 2px 6px rgba(51, 111, 138, 0.25);
-      }
-    }
-  }
-  `;
   
   return (
     <div className="settings">
       {myclass?.networks.length > 0 && (
-        <div>
-          <h3>{t("classNetworks")}</h3>
+        <section className="settingsSection">
+          <div className="settingsSectionHeader">
+            <h3>{t("classNetworks")}</h3>
+          </div>
           {myclass?.networks.map((network) => (
-            <div>
-              <h2>{network?.title}</h2>
+            <div className="networkCard" key={network?.id || network?.title}>
+              <Chip
+                className="classNetworkChip"
+                label={network?.title}
+                shape="square"
+              />
               <p>{network?.description}</p>
               <p>
                 {t("createdByOn", {
@@ -161,103 +184,141 @@ export default function Settings({ myclass, user }) {
               <p>{t("classes")}</p>
               <ul>
                 {network?.classes.map((cl) => (
-                  <li>{cl?.title}</li>
+                  <li key={cl?.id || cl?.title}>{cl?.title}</li>
                 ))}
               </ul>
             </div>
           ))}
-        </div>
+        </section>
       )}
 
-      <h3>{t("Board settings")}</h3>
-      <p>{t("These settings will be applied to all project boards in this class.")}</p>
-      <div className="informationBlock">
-        <div className="block">
-          <p>{t("Should proposal cards be assignable to students?")}</p>
-          <CheckboxGroup>
-            <label className={assignableToStudents ? "active" : ""}>
-              <input
-                type="checkbox"
-                checked={assignableToStudents}
-                disabled={updatingSettings}
-                onChange={(event) =>
-                  updateAssignableToStudents(event.target.checked)
-                }
-              />
-              {t("cardAssignmentEnabled", "Cards can be assigned to students")}
-            </label>
-            <label className={!assignableToStudents ? "active" : ""}>
-              <input
-                type="checkbox"
-                checked={!assignableToStudents}
-                disabled={updatingSettings}
-                onChange={(event) =>
-                  updateAssignableToStudents(!event.target.checked)
-                }
-              />
-              {t("cardAssignmentDisabled", "Cards cannot be assigned to students")}
-            </label>
-          </CheckboxGroup>
+      <section className="settingsSection">
+        <div className="settingsSectionHeader">
+          <h3>{t("boardSettings", {}, { default: "Board settings" })}</h3>
+          <p>
+            {t("boardSettingsDescription", {}, {
+              default:
+                "These settings will be applied to all project boards in this class.",
+            })}
+          </p>
         </div>
-        {assignableToStudents && (
-          <div className="block">
-            <p>{t("whoCanAssignCards", "Who can assign profiles to cards?")}</p>
-            <CheckboxGroup>
-              <label className={studentsCanAssignToCards ? "active" : ""}>
-                <input
-                  type="checkbox"
-                  checked={studentsCanAssignToCards}
-                  disabled={updatingSettings}
-                  onChange={(event) =>
-                    updateStudentsCanAssignToCards(event.target.checked)
-                  }
-                />
-                {t("studentsCanAssignCards", "Students can assign cards")}
-              </label>
-              <label className={!studentsCanAssignToCards ? "active" : ""}>
-                <input
-                  type="checkbox"
-                  checked={!studentsCanAssignToCards}
-                  disabled={updatingSettings}
-                  onChange={(event) =>
-                    updateStudentsCanAssignToCards(!event.target.checked)
-                  }
-                />
-                {t("onlyTeachersMentorsAssignCards", "Only teachers and mentors can assign cards")}
-              </label>
-            </CheckboxGroup>
+        <div className="informationBlock">
+          <div className="block curriculumTypeBlock">
+            <CurriculumTypeSelector
+              curriculumType={curriculumType || DEFAULT_CURRICULUM_TYPE}
+              disabled={updatingSettings}
+              onChange={updateCurriculumType}
+            />
           </div>
-        )}
-      </div>
+          <div className="block">
+            <p className="settingsQuestion">
+              {t("proposalCardsAssignableQuestion", {}, {
+                default: "Should proposal cards be assignable to students?",
+              })}
+            </p>
+            <div className="settingsChoiceGroup">
+              <label className={assignableToStudents ? "active" : ""}>
+                <input
+                  type="checkbox"
+                  checked={assignableToStudents}
+                  disabled={updatingSettings}
+                  onChange={(event) =>
+                    updateAssignableToStudents(event.target.checked)
+                  }
+                />
+                {t("cardAssignmentEnabled", {}, {
+                  default: "Cards can be assigned to students",
+                })}
+              </label>
+              <label className={!assignableToStudents ? "active" : ""}>
+                <input
+                  type="checkbox"
+                  checked={!assignableToStudents}
+                  disabled={updatingSettings}
+                  onChange={(event) =>
+                    updateAssignableToStudents(!event.target.checked)
+                  }
+                />
+                {t("cardAssignmentDisabled", {}, {
+                  default: "Cards cannot be assigned to students",
+                })}
+              </label>
+            </div>
+          </div>
+          {assignableToStudents && (
+            <div className="block">
+              <p className="settingsQuestion">
+                {t("whoCanAssignCards", {}, {
+                  default: "Who can assign profiles to cards?",
+                })}
+              </p>
+              <div className="settingsChoiceGroup">
+                <label className={studentsCanAssignToCards ? "active" : ""}>
+                  <input
+                    type="checkbox"
+                    checked={studentsCanAssignToCards}
+                    disabled={updatingSettings}
+                    onChange={(event) =>
+                      updateStudentsCanAssignToCards(event.target.checked)
+                    }
+                  />
+                  {t("studentsCanAssignCards", {}, {
+                    default: "Students can assign cards",
+                  })}
+                </label>
+                <label className={!studentsCanAssignToCards ? "active" : ""}>
+                  <input
+                    type="checkbox"
+                    checked={!studentsCanAssignToCards}
+                    disabled={updatingSettings}
+                    onChange={(event) =>
+                      updateStudentsCanAssignToCards(!event.target.checked)
+                    }
+                  />
+                  {t("onlyTeachersMentorsAssignCards", {}, {
+                    default: "Only teachers and mentors can assign cards",
+                  })}
+                </label>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
 
-      <h3>{t("deleteYourClass")}</h3>
-      <p>{t("deleteClassWarning")}</p>
-
-      <div className="informationBlock">
-        <div className="block">
-          <p>{t("noAccessTo")}</p>
-          <ul>
-            <li>{t("yourClass")}</li>
-            <li>{t("anyStudiesOrResults")}</li>
-          </ul>
+      <section className="settingsSection settingsDangerSection">
+        <div className="settingsSectionHeader">
+          <h3>{t("deleteYourClass")}</h3>
+          <p>{t("deleteClassWarning")}</p>
         </div>
 
-        <div className="block">
-          <p>{t("studentsWillHaveAccessTo")}</p>
-          <ul>
-            <li>{t("theirWorkspaceAndStudies")}</li>
-            <li>{t("noteNewStudents")}</li>
-          </ul>
-        </div>
-      </div>
+        <div className="informationBlock">
+          <div className="block">
+            <p className="settingsQuestion">{t("noAccessTo")}</p>
+            <ul>
+              <li>{t("yourClass")}</li>
+              <li>{t("anyStudiesOrResults")}</li>
+            </ul>
+          </div>
 
-      <div>
+          <div className="block">
+            <p className="settingsQuestion">{t("studentsWillHaveAccessTo")}</p>
+            <ul>
+              <li>{t("theirWorkspaceAndStudies")}</li>
+              <li>{t("noteNewStudents")}</li>
+            </ul>
+          </div>
+        </div>
+
         <Modal
           onClose={() => setOpen(false)}
           onOpen={() => setOpen(true)}
           open={open}
           size="small"
-          trigger={<button disabled={loading}>{t("deleteClass")}</button>}
+          trigger={
+            <button className="settingsDeleteButton" disabled={loading}>
+              {t("deleteClass")}
+            </button>
+          }
         >
           <Modal.Content>
             <Modal.Description>
@@ -293,11 +354,10 @@ export default function Settings({ myclass, user }) {
                 setOpen(false);
               }}
             />
-            <Button content={t("cancel")}
-              onClick={() => setOpen(false)} />
+            <Button content={t("cancel")} onClick={() => setOpen(false)} />
           </Modal.Actions>
         </Modal>
-      </div>
+      </section>
     </div>
   );
 }
