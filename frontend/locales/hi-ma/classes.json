@@ -433,6 +433,12 @@
 		"title": "नया वर्ग नाम"
 	},
 	"createdByOn": "{{उपयोगकर्ता नाम}} द्वारा {{दिनांक}} को बनाया गया",
+	"curriculumTypeMentorNote": "",
+	"curriculumTypeMindHive": "",
+	"curriculumTypeNyuCusp": "",
+	"curriculumTypeQuestion": "",
+	"curriculumTypeUpdateError": "",
+	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
 		"allowed": "अनुमत",
 		"assignToExistingProject": "मौजूदा परियोजना को असाइन करें",
@@ -566,6 +572,7 @@
 	"deleteClassWarning": "अपनी कक्षा हटाने से \"मेरी कक्षाएँ\" क्षेत्र में आपकी कक्षा स्थायी रूप से हट जाएगी। इस क्रिया को पूर्ववत नहीं किया जा सकता।",
 	"deleteYourClass": "अपनी कक्षा हटाएँ",
 	"emailAddress": "मेल पता",
+	"failedToUpdateSettings": "",
 	"header": {
 		"addDescription": "",
 		"mentors": "",

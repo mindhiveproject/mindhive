@@ -433,6 +433,12 @@
 		"title": "Новое имя класса"
 	},
 	"createdByOn": "Создано пользователем {{имя пользователя}} {{дата}}",
+	"curriculumTypeMentorNote": "Это определяет анкету для обратной связи от наставника, используемую в центре обратной связи. Если у вас есть вопросы, свяжитесь с членом команды MindHive.",
+	"curriculumTypeMindHive": "MindHive",
+	"curriculumTypeNyuCusp": "NYU CUSP (дипломная работа)",
+	"curriculumTypeQuestion": "Какой тип учебной программы применяется к проектным доскам в этом классе?",
+	"curriculumTypeUpdateError": "Не удалось обновить тип учебной программы.",
+	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
 		"allowed": "Допустимый",
 		"assignToExistingProject": "Назначить существующему проекту",
@@ -566,6 +572,7 @@
 	"deleteClassWarning": "Удаление вашего курса приведёт к его безвозвратному удалению из раздела «Мои курсы». Это действие нельзя отменить.",
 	"deleteYourClass": "Удалить свой класс",
 	"emailAddress": "Адрес электронной почты",
+	"failedToUpdateSettings": "Не удалось обновить настройки.",
 	"header": {
 		"addDescription": "Добавить описание",
 		"mentors": "Наставники",

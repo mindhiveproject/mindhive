@@ -312,6 +312,7 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
       projectReportStatus
       projectReportOpenForComments
       checklist
+      settings
       author {
         username
       }
@@ -323,6 +324,10 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
         id
         title
         slug
+      }
+      usedInClass {
+        id
+        settings
       }
       sections {
         id

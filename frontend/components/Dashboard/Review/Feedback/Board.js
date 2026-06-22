@@ -1,58 +1,36 @@
-import { Icon } from "semantic-ui-react";
-
 import { useQuery, useMutation } from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
+
 import { EDIT_REVIEW } from "../../../Mutations/Review";
 import { PROPOSAL_REVIEWS_QUERY } from "../../../Queries/Proposal";
 import { ALL_PUBLIC_TASKS } from "../../../Queries/Task";
 
 import StyledFeedback from "../../../styles/StyledFeedback";
 import ManageFavorite from "../../../User/ManageFavorite";
-import useTranslation from 'next-translate/useTranslation';
+import { useTemplateQuestions } from "../ProjectReview/Review/Template";
 
+function getQuestionTitle(card, status, templates) {
+  if (card?.question) {
+    return card.question;
+  }
 
+  const templateItem = templates[status]?.find((item) => item.name === card?.name);
+  return templateItem?.question || "";
+}
 
-export default function Board({ user, projectId, status, reviews }) {
-  const { t } = useTranslation('builder');
+export default function Board({
+  user,
+  projectId,
+  status,
+  reviews,
+  curriculumType,
+}) {
+  const { t } = useTranslation("builder");
+  const templates = useTemplateQuestions(curriculumType);
   const { data: publicTasksData } = useQuery(ALL_PUBLIC_TASKS);
   const publicTasks = publicTasksData?.tasks || [];
 
-  const questionTitles = {
-    SUBMITTED_AS_PROPOSAL: {
-      1: {
-        title: t('reviewTemplate.proposalReadyQuestion'),
-      },
-      2: { title: t('reviewTemplate.whatDoesStudyDoWell') },
-      3: {
-        title: t('reviewTemplate.isQuestionAnswerable'),
-      },
-      4: {
-        title: t('reviewTemplate.isQuestionAnswerable'),
-      },
-      5: { title: t('reviewTemplate.additionalComments') },
-    },
-    PEER_REVIEW: {
-      1: {
-        title: t('reviewTemplate.importanceQuestion'),
-      },
-      2: {
-        title: t('reviewTemplate.hypothesisQuestion'),
-      },
-      3: {
-        title: t('reviewTemplate.designQuestion'),
-      },
-      4: {
-        title: t('reviewTemplate.confoundsQuestion'),
-      },
-      5: {
-        title: t('reviewTemplate.respectQuestion'),
-      },
-      6: {
-        title: t('reviewTemplate.participationQuestion'),
-      },
-    },
-  };
-
-  const [editReview, { data }] = useMutation(EDIT_REVIEW, {});
+  const [editReview] = useMutation(EDIT_REVIEW, {});
 
   const voteReview = async ({ id, votedBefore }) => {
     await editReview({
@@ -99,7 +77,11 @@ export default function Board({ user, projectId, status, reviews }) {
                       width="30px"
                     />
                   ) : (
-                    <img src="/assets/icons/profile/user.svg" width="30px" />
+                    <img
+                      src="/assets/icons/profile/user.svg"
+                      alt=""
+                      width="30px"
+                    />
                   )}
                   <div>
                     <a
@@ -113,20 +95,30 @@ export default function Board({ user, projectId, status, reviews }) {
                   </div>
                 </div>
               ) : (
-                <div className="reviewer">Anonymous reviewer</div>
+                <div className="reviewer">
+                  {t("reviewDetail.anonymousReviewer", {}, {
+                    default: "Anonymous reviewer",
+                  })}
+                </div>
               )}
 
               <div>
                 {review.content
                   .filter((card) => card.responseType === "selectOne")
                   .filter((card) => card.answer)
-                  .map((card, num) => {
+                  .map((card, cardNum) => {
                     const [option] = card?.responseOptions.filter(
                       (option) => option?.value === card?.answer
                     );
                     return (
-                      <div key={num} className={`status  ${option?.value}`}>
-                        <img src={`/assets/icons/status/${option?.icon}.svg`} />
+                      <div
+                        key={cardNum}
+                        className={`status  ${option?.value}`}
+                      >
+                        <img
+                          src={`/assets/icons/status/${option?.icon}.svg`}
+                          alt=""
+                        />
                         <div>
                           <div className="title">{option?.title}</div>
                         </div>
@@ -136,24 +128,32 @@ export default function Board({ user, projectId, status, reviews }) {
               </div>
 
               <div className="voteArea">
-                <div
+                <button
+                  type="button"
+                  className={`voteButton${votedBefore ? " voteButtonActive" : ""}`}
                   onClick={() => voteReview({ id: review?.id, votedBefore })}
+                  aria-pressed={votedBefore}
+                  aria-label={t("review.upvoteFeedback", {}, {
+                    default: "Upvote this feedback",
+                  })}
                 >
-                  {votedBefore ? (
-                    <Icon name="thumbs up" size="large" />
-                  ) : (
-                    <img src="/assets/icons/thumbsUp.svg" />
-                  )}
-                </div>
+                  <img src="/assets/icons/thumbsUp.svg" alt="" />
+                </button>
 
                 <div className="votesCounter">{review?.upvotedBy?.length}</div>
               </div>
             </div>
 
-            <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end",}}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+              }}
+            >
               {recommendedTasks.length > 0 && (
                 <>
-                  <p>{t('review.suggestedTasks')}</p>
+                  <p>{t("review.suggestedTasks")}</p>
                   <div className="tasksArea">
                     {recommendedTasks.map((id) => {
                       const tasksWithId = publicTasks.filter(
@@ -187,11 +187,10 @@ export default function Board({ user, projectId, status, reviews }) {
                     card.responseType !== "taskSelector"
                 )
                 .filter((card) => card.answer)
-                .map((card, num) => (
-                  <div key={num} className="reviewerComment">
+                .map((card, cardNum) => (
+                  <div key={cardNum} className="reviewerComment">
                     <div className="questionTitle">
-                      {questionTitles[status] &&
-                        questionTitles[status][card?.name]?.title}
+                      {getQuestionTitle(card, status, templates)}
                     </div>
                     <div className="questionAnswer">{card?.answer}</div>
                   </div>

@@ -433,6 +433,12 @@
 		"title": "New class name"
 	},
 	"createdByOn": "Created by {{username}} on {{date}}",
+	"curriculumTypeMentorNote": "This determines the mentor feedback questionnaire used in the feedback center. If you have questions, contact a MindHive team member.",
+	"curriculumTypeMindHive": "MindHive",
+	"curriculumTypeNyuCusp": "NYU CUSP (Capstone)",
+	"curriculumTypeQuestion": "Which curriculum type applies to project boards in this class?",
+	"curriculumTypeUpdateError": "Failed to update curriculum type",
+	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
 		"allowed": "Allowed",
 		"assignToExistingProject": "Assign to Existing Project",
@@ -566,6 +572,7 @@
 	"deleteClassWarning": "Deleting your class will permanently delete your class within the \"My Classes\" area. This action cannot be undone.",
 	"deleteYourClass": "Delete your class",
 	"emailAddress": "Email address",
+	"failedToUpdateSettings": "Failed to update settings",
 	"header": {
 		"addDescription": "Add description",
 		"mentors": "Mentors",

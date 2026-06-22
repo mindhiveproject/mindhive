@@ -43,6 +43,19 @@ const StyledFeedback = styled.div`
         border: 1px solid #a1a1a1;
         border-radius: 4px;
         padding: 5px;
+        .voteButton {
+          border: none;
+          background: transparent;
+          padding: 0;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0.7;
+        }
+        .voteButtonActive {
+          opacity: 1;
+        }
         .votesCounter {
           border-left: 1px solid #a1a1a1;
           text-align: center;

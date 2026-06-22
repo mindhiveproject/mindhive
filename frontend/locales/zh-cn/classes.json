@@ -433,6 +433,12 @@
 		"title": "新班级名称"
 	},
 	"createdByOn": "由 {{username}} 于 {{date}} 创建",
+	"curriculumTypeMentorNote": "这将决定反馈中心使用的导师反馈问卷。如有任何疑问，请联系 MindHive 团队成员。",
+	"curriculumTypeMindHive": "MindHive",
+	"curriculumTypeNyuCusp": "纽约大学 CUSP（毕业设计）",
+	"curriculumTypeQuestion": "本课程的项目看板属于哪种课程类型？",
+	"curriculumTypeUpdateError": "课程类型更新失败",
+	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
 		"allowed": "允许",
 		"assignToExistingProject": "分配至现有项目",
@@ -566,6 +572,7 @@
 	"deleteClassWarning": "删除课程将会永久删除“我的课程”区域中的课程。此操作无法撤消。",
 	"deleteYourClass": "删除你的班级",
 	"emailAddress": "电子邮件",
+	"failedToUpdateSettings": "设置更新失败",
 	"header": {
 		"addDescription": "添加描述",
 		"mentors": "导师",

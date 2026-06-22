@@ -433,6 +433,12 @@
 		"title": "اسم الفصل الجديد"
 	},
 	"createdByOn": "تم إنشاؤه بواسطة {{username}} في {{date}}",
+	"curriculumTypeMentorNote": "يُحدد هذا استبيان تقييم الموجهين المستخدم في مركز التقييم. إذا كانت لديك أي أسئلة، فتواصل مع أحد أعضاء فريق MindHive.",
+	"curriculumTypeMindHive": "مايندهيف",
+	"curriculumTypeNyuCusp": "برنامج NYU CUSP (المشروع النهائي)",
+	"curriculumTypeQuestion": "ما نوع المنهج الدراسي الذي ينطبق على لوحات المشاريع في هذه الدورة؟",
+	"curriculumTypeUpdateError": "فشل تحديث نوع المنهج الدراسي",
+	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
 		"allowed": "مسموح",
 		"assignToExistingProject": "تعيين إلى مشروع موجود",
@@ -566,6 +572,7 @@
 	"deleteClassWarning": "سيؤدي حذف صفك إلى حذفه نهائيًا من قسم \"صفوفي\". لا يمكن التراجع عن هذا الإجراء.",
 	"deleteYourClass": "حذف صفك",
 	"emailAddress": "عنوان البريد الإلكتروني",
+	"failedToUpdateSettings": "فشل تحديث الإعدادات",
 	"header": {
 		"addDescription": "اضف وصفا",
 		"mentors": "الموجهون",

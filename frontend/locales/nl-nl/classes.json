@@ -433,6 +433,12 @@
 		"title": "Nieuwe klassenaam"
 	},
 	"createdByOn": "Gemaakt door {{username}} op {{date}}",
+	"curriculumTypeMentorNote": "Dit bepaalt de vragenlijst voor mentorfeedback die in het feedbackcentrum wordt gebruikt. Neem bij vragen contact op met een medewerker van MindHive.",
+	"curriculumTypeMindHive": "MindHive",
+	"curriculumTypeNyuCusp": "NYU CUSP (Afstudeerproject)",
+	"curriculumTypeQuestion": "Welk type curriculum is van toepassing op projectborden in deze les?",
+	"curriculumTypeUpdateError": "Het bijwerken van het curriculumtype is mislukt.",
+	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
 		"allowed": "Toegestaan",
 		"assignToExistingProject": "Toewijzen aan bestaand project",
@@ -566,6 +572,7 @@
 	"deleteClassWarning": "Als u uw klas verwijdert, wordt deze permanent verwijderd uit het gedeelte 'Mijn klassen'. Deze actie kan niet ongedaan worden gemaakt.",
 	"deleteYourClass": "Verwijder uw klas",
 	"emailAddress": "E-mailadres",
+	"failedToUpdateSettings": "Instellingen bijwerken mislukt",
 	"header": {
 		"addDescription": "Voeg een beschrijving toe",
 		"mentors": "Mentoren",

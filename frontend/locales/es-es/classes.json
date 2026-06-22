@@ -433,6 +433,12 @@
 		"title": "Nuevo nombre de clase"
 	},
 	"createdByOn": "Creado por {{username}} el {{date}}",
+	"curriculumTypeMentorNote": "Esto determina el cuestionario de retroalimentación para mentores que se utiliza en el centro de retroalimentación. Si tiene alguna pregunta, comuníquese con un miembro del equipo de MindHive.",
+	"curriculumTypeMindHive": "MindHive",
+	"curriculumTypeNyuCusp": "NYU CUSP (Proyecto final)",
+	"curriculumTypeQuestion": "¿Qué tipo de plan de estudios se aplica a los paneles de proyectos en esta clase?",
+	"curriculumTypeUpdateError": "No se pudo actualizar el tipo de plan de estudios.",
+	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
 		"allowed": "Permitido",
 		"assignToExistingProject": "Asignar a un proyecto existente",
@@ -566,6 +572,7 @@
 	"deleteClassWarning": "Al eliminar tu clase, se eliminará permanentemente de \"Mis Clases\". Esta acción no se puede deshacer.",
 	"deleteYourClass": "Eliminar tu clase",
 	"emailAddress": "Dirección de correo electrónico",
+	"failedToUpdateSettings": "No se pudo actualizar la configuración.",
 	"header": {
 		"addDescription": "Añadir descripción",
 		"mentors": "Mentores",
