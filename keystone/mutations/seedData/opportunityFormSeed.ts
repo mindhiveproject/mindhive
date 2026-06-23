@@ -158,6 +158,36 @@ const STATUS_OPTIONS_SPONSOR: Option[] = [
   { value: "pending_review", label: "Submitted for review" },
 ];
 
+// HTML for the "Understanding of Proposal Guidelines" read-only field on
+// the Publishing card. Renders the agreement statement + clickable link
+// chips to the FAQ and Mutual Expectations documents. Mirrors the
+// legacy GUIDELINE_DOCUMENTS array in
+// frontend/components/Dashboard/Connect/Opportunities/Editor.js. Admins
+// can edit this HTML in the form-definition editor to update URLs.
+const CHIP_STYLE =
+  "display:inline-flex;align-items:center;gap:6px;padding:8px 14px;" +
+  "border:1px solid #d3dae0;border-radius:100px;background:#ffffff;" +
+  "color:#336f8a;text-decoration:none;font-weight:600;font-size:13px;" +
+  "font-family:Nunito,sans-serif;";
+
+const GUIDELINES_HTML = [
+  '<p style="margin:0 0 12px;color:#171717;font-size:14px;line-height:1.5;">',
+  "I have read and understood the Capstone proposal guidelines in full, ",
+  "including all of the Capstone Sponsor FAQs and Mutual Expectations ",
+  "agreement and agree to abide by them.",
+  "</p>",
+  '<div style="display:flex;gap:8px;flex-wrap:wrap;">',
+  '<a href="https://engineering.nyu.edu/research-innovation/centers/cusp/research/capstone-projects" ',
+  `target="_blank" rel="noopener noreferrer" style="${CHIP_STYLE}">`,
+  "📄 Capstone Sponsor FAQs",
+  "</a>",
+  '<a href="https://engineering.nyu.edu/research-innovation/centers/cusp/research/capstone-projects/cusp-capstone-mutual-expectations" ',
+  `target="_blank" rel="noopener noreferrer" style="${CHIP_STYLE}">`,
+  "📄 Mutual Expectations agreement",
+  "</a>",
+  "</div>",
+].join("");
+
 const STATUS_OPTIONS_ADMIN: Option[] = [
   { value: "draft", label: "Draft" },
   { value: "pending_review", label: "Submitted for review" },
@@ -563,19 +593,28 @@ export const OPPORTUNITY_FORM_SEED: FormSeed = {
           options: STATUS_OPTIONS_SPONSOR,
           isRequired: true,
         },
+        // Renders the proposal-guidelines statement + clickable link
+        // chips. Admins can edit the helperText (HTML) to swap URLs or
+        // add more documents.
+        {
+          name: "proposal_guidelines_info",
+          fieldType: "read_only_html",
+          label: "Understanding of Proposal Guidelines",
+          helperText: GUIDELINES_HTML,
+          storage: "json_bucket",
+          storageBucket: "extraDetails",
+        },
         {
           name: "guidelinesAcknowledged",
           fieldType: "checkbox",
-          label:
-            "I've read the sponsor guidelines and mutual expectations.",
+          label: "I agree with this statement.",
           storage: "column",
           storageColumn: "guidelinesAcknowledged",
         },
         {
           name: "requestsAppointment",
           fieldType: "checkbox",
-          label:
-            "Please schedule a 15-minute call with the MindHive team before publishing.",
+          label: "I request an appointment to discuss further.",
           storage: "column",
           storageColumn: "requestsAppointment",
         },
@@ -594,6 +633,14 @@ export const OPPORTUNITY_FORM_SEED: FormSeed = {
           storageColumn: "status",
           options: STATUS_OPTIONS_ADMIN,
           isRequired: true,
+        },
+        {
+          name: "proposal_guidelines_info_admin",
+          fieldType: "read_only_html",
+          label: "Proposal guidelines (sponsor-facing)",
+          helperText: GUIDELINES_HTML,
+          storage: "json_bucket",
+          storageBucket: "extraDetails",
         },
         {
           name: "guidelinesAcknowledged",

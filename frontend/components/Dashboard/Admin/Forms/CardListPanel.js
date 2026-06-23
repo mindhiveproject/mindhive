@@ -23,21 +23,21 @@ import { ADMIN_FORM_DEFINITION } from "../../../Queries/FormDefinition";
 const Shell = styled.aside`
   display: flex;
   flex-direction: column;
-  gap: 6px;
   background: #ffffff;
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
-  overflow-y: auto;
   max-height: calc(100vh - 200px);
+  gap: 12px;
 
   h3 {
-    margin: 0 0 8px;
+    margin: 0;
     font-family: "Lato", sans-serif;
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: #5f6871;
+    flex-shrink: 0;
   }
 
   .empty {
@@ -49,6 +49,18 @@ const Shell = styled.aside`
   .smooth-dnd-container {
     min-height: 4px;
   }
+`;
+
+// The cards list scrolls; the "Add card" button stays pinned outside
+// the scroll area so admins always see it even when the form has many
+// cards.
+const ScrollArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 `;
 
 const CardItem = styled.div`
@@ -132,35 +144,46 @@ const DragHandle = styled.span`
   }
 `;
 
-const IconButton = styled.button`
-  background: none;
-  border: 1px solid transparent;
-  color: #888;
-  cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-family: "Nunito", sans-serif;
-
-  &:hover {
-    background: #eef1f2;
-    color: #171717;
-    border-color: #d3dae0;
-  }
-`;
-
 const AddCardButton = styled.button`
-  margin-top: 8px;
-  padding: 10px 12px;
+  padding: 12px 16px;
   border-radius: 8px;
   border: 1px dashed #336f8a;
   background: #eef5f9;
   color: #336f8a;
   font-family: "Nunito", sans-serif;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   width: 100%;
+  flex-shrink: 0;
+
+  &:hover {
+    background: #d9e8f0;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const AddFieldButton = styled.button`
+  padding: 6px 10px 6px 22px;
+  border-radius: 6px;
+  border: 1px dashed #d3dae0;
+  background: transparent;
+  color: #336f8a;
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: left;
+  margin: 2px 0 6px;
+
+  &:hover {
+    background: #f7f9f8;
+    border-color: #336f8a;
+  }
 
   &:disabled {
     opacity: 0.5;
@@ -273,98 +296,98 @@ export default function CardListPanel({
   return (
     <Shell>
       <h3>Cards & fields</h3>
-      {cards.length === 0 ? (
-        <div className="empty">No cards yet. Add one below.</div>
-      ) : null}
+      <ScrollArea>
+        {cards.length === 0 ? (
+          <div className="empty">No cards yet. Use the button below to add one.</div>
+        ) : null}
 
-      <Container
-        onDrop={onCardDrop}
-        dragHandleSelector=".card-drag-handle"
-        dropPlaceholder={{ animationDuration: 150, showOnTop: true }}
-      >
-        {cards.map((card) => {
-          const isCardSelected =
-            selected?.type === "card" && selected.id === card.id;
-          const isFieldsCard = card.cardType === "fields";
-          const fields = isFieldsCard ? card.fields || [] : [];
-          return (
-            <Draggable key={card.id}>
-              <CardItem $selected={isCardSelected}>
-                <div
-                  className="header"
-                  onClick={(e) => {
-                    if (e.target.closest(".no-select")) return;
-                    onSelect({ type: "card", id: card.id });
-                  }}
-                >
-                  <DragHandle className="card-drag-handle no-select" title="Drag to reorder">
-                    ≡
-                  </DragHandle>
-                  <span className="title-text">
-                    {card.title || <em>(untitled card)</em>}
-                  </span>
-                  <span className="meta">
-                    {card.cardType === "fields"
-                      ? `${fields.length} fields`
-                      : card.cardType}
-                  </span>
+        <Container
+          onDrop={onCardDrop}
+          dragHandleSelector=".card-drag-handle"
+          dropPlaceholder={{ animationDuration: 150, showOnTop: true }}
+        >
+          {cards.map((card) => {
+            const isCardSelected =
+              selected?.type === "card" && selected.id === card.id;
+            const isFieldsCard = card.cardType === "fields";
+            const fields = isFieldsCard ? card.fields || [] : [];
+            return (
+              <Draggable key={card.id}>
+                <CardItem $selected={isCardSelected}>
+                  <div
+                    className="header"
+                    onClick={(e) => {
+                      if (e.target.closest(".no-select")) return;
+                      onSelect({ type: "card", id: card.id });
+                    }}
+                  >
+                    <DragHandle className="card-drag-handle no-select" title="Drag to reorder">
+                      ≡
+                    </DragHandle>
+                    <span className="title-text">
+                      {card.title || <em>(untitled card)</em>}
+                    </span>
+                    <span className="meta">
+                      {card.cardType === "fields"
+                        ? `${fields.length} fields`
+                        : card.cardType}
+                    </span>
+                  </div>
+                  {isFieldsCard && fields.length > 0 ? (
+                    <Container
+                      onDrop={onFieldDrop(card.id, fields)}
+                      dragHandleSelector=".field-drag-handle"
+                      dropPlaceholder={{
+                        animationDuration: 150,
+                        showOnTop: true,
+                      }}
+                    >
+                      {fields.map((field) => {
+                        const isFieldSelected =
+                          selected?.type === "field" &&
+                          selected.id === field.id;
+                        return (
+                          <Draggable key={field.id}>
+                            <FieldRow
+                              $selected={isFieldSelected}
+                              onClick={(e) => {
+                                if (e.target.closest(".no-select")) return;
+                                onSelect({ type: "field", id: field.id });
+                              }}
+                            >
+                              <DragHandle
+                                className="field-drag-handle no-select"
+                                title="Drag to reorder"
+                              >
+                                ≡
+                              </DragHandle>
+                              <span className="name-text">
+                                {field.label || field.name}
+                              </span>
+                              <span className="type">{field.fieldType}</span>
+                            </FieldRow>
+                          </Draggable>
+                        );
+                      })}
+                    </Container>
+                  ) : null}
                   {isFieldsCard ? (
-                    <IconButton
-                      className="no-select"
+                    <AddFieldButton
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         addField(card);
                       }}
-                      title="Add field"
                     >
-                      +
-                    </IconButton>
+                      + Add field
+                    </AddFieldButton>
                   ) : null}
-                </div>
-                {isFieldsCard && fields.length > 0 ? (
-                  <Container
-                    onDrop={onFieldDrop(card.id, fields)}
-                    dragHandleSelector=".field-drag-handle"
-                    dropPlaceholder={{
-                      animationDuration: 150,
-                      showOnTop: true,
-                    }}
-                  >
-                    {fields.map((field) => {
-                      const isFieldSelected =
-                        selected?.type === "field" &&
-                        selected.id === field.id;
-                      return (
-                        <Draggable key={field.id}>
-                          <FieldRow
-                            $selected={isFieldSelected}
-                            onClick={(e) => {
-                              if (e.target.closest(".no-select")) return;
-                              onSelect({ type: "field", id: field.id });
-                            }}
-                          >
-                            <DragHandle
-                              className="field-drag-handle no-select"
-                              title="Drag to reorder"
-                            >
-                              ≡
-                            </DragHandle>
-                            <span className="name-text">
-                              {field.label || field.name}
-                            </span>
-                            <span className="type">{field.fieldType}</span>
-                          </FieldRow>
-                        </Draggable>
-                      );
-                    })}
-                  </Container>
-                ) : null}
-              </CardItem>
-            </Draggable>
-          );
-        })}
-      </Container>
+                </CardItem>
+              </Draggable>
+            );
+          })}
+        </Container>
+      </ScrollArea>
 
       <AddCardButton type="button" onClick={addCard} disabled={addingCard}>
         {addingCard ? "Adding…" : "+ Add card"}
