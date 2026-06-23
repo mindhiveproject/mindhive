@@ -106,7 +106,6 @@ export default async function generateAiFeedbackHelp(
       data: {
         threadId,
         assistantId: "feedback_helper",
-        proposalId,
         proposal: { connect: { id: proposalId } },
         questionNumber,
         questionName: input.questionName || "",

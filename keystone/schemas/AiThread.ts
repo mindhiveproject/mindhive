@@ -26,7 +26,6 @@ export const AiThread = list({
       validation: { isRequired: true },
       defaultValue: "feedback_helper",
     }),
-    proposalId: text({ isFilterable: true }),
     proposal: relationship({ ref: "ProposalBoard.aiThreads" }),
     questionNumber: text({ isFilterable: true }),
     questionName: text(),
