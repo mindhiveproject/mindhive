@@ -62,6 +62,23 @@ export const DELETE_FORM_FIELD = gql`
   }
 `;
 
+// Self-service seeder. Inserts only baseline definitions that are
+// completely missing from the DB (any scope, any status). Safe to call
+// without confirmation — never clobbers admin-edited definitions.
+// Used by the "Seed default forms" button on the admin list page.
+export const SEED_MISSING_FORMS = gql`
+  mutation SEED_MISSING_FORMS {
+    seedMissingForms {
+      id
+      key
+      title
+      scope
+      status
+      version
+    }
+  }
+`;
+
 // Custom mutation that clones a FormDefinition + all its cards + fields
 // as a new draft (status="draft", version+1). See keystone/mutations/
 // duplicateFormDefinition.ts.

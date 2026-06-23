@@ -18,6 +18,7 @@ import unfollowUser from "./unfollowUser";
 import resolveFormDefinition from "./resolveFormDefinition";
 import seedOpportunityForm from "./seedOpportunityForm";
 import seedProfileForms from "./seedProfileForms";
+import seedMissingForms from "./seedMissingForms";
 import duplicateFormDefinition from "./duplicateFormDefinition";
 import publishFormDefinition from "./publishFormDefinition";
 import { GraphQLSchema } from "graphql";
@@ -87,6 +88,11 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # One-off seeder for global Profile FormDefinitions (individual
         # variant in Phase 5; organization variant in Phase 5b).
         seedProfileForms(force: Boolean): [FormDefinition!]!
+        # Self-service seeder for the admin UI. Inserts only baseline
+        # definitions that don't already exist — never clobbers
+        # admin-edited definitions. Returns the list of inserted rows
+        # (empty if nothing was missing).
+        seedMissingForms: [FormDefinition!]!
         # Clone a FormDefinition + its cards + fields as a new draft.
         duplicateFormDefinition(id: ID!): FormDefinition
         # Atomic publish — promotes this row to status=published and
@@ -130,6 +136,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         unfollowUser,
         seedOpportunityForm,
         seedProfileForms,
+        seedMissingForms,
         duplicateFormDefinition,
         publishFormDefinition,
       },

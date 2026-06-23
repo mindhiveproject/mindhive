@@ -10,9 +10,16 @@ import { ADMIN_FORM_DEFINITIONS } from "../../../Queries/FormDefinition";
 import {
   DELETE_FORM_DEFINITION,
   DUPLICATE_FORM_DEFINITION,
+  SEED_MISSING_FORMS,
 } from "../../../Mutations/FormDefinition";
 import NewDefinitionForm from "./NewDefinitionForm";
 import { PrimaryButton, SecondaryButton } from "./EditorPanelStyles";
+
+const BASELINE_KEYS = [
+  "opportunity",
+  "profile_individual",
+  "profile_organization",
+];
 
 const Shell = styled.div`
   display: flex;
@@ -111,6 +118,53 @@ const TopRow = styled.div`
   flex-wrap: wrap;
 `;
 
+const SeedPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 24px;
+  border-radius: 16px;
+  background: #eef5f9;
+  border: 1px solid #cfdfe7;
+
+  h2 {
+    margin: 0;
+    font-family: "Lato", sans-serif;
+    font-size: 18px;
+    color: #171717;
+  }
+
+  p {
+    margin: 0;
+    color: #5f6871;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .feedback {
+    color: #1d6b3a;
+    font-size: 13px;
+  }
+
+  .error {
+    color: #871b16;
+    font-size: 13px;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 18px;
+    color: #5f6871;
+    font-size: 13px;
+  }
+`;
+
 const FilterBar = styled.div`
   display: flex;
   gap: 12px;
@@ -205,6 +259,32 @@ export default function ListPage() {
       awaitRefetchQueries: true,
     }
   );
+  const [
+    seedMissing,
+    { loading: seeding, data: seedData, error: seedError, reset: resetSeed },
+  ] = useMutation(SEED_MISSING_FORMS, {
+    refetchQueries: [{ query: ADMIN_FORM_DEFINITIONS }],
+    awaitRefetchQueries: true,
+  });
+
+  const existingKeys = useMemo(() => {
+    const seen = new Set();
+    for (const r of allRows) seen.add(r.key);
+    return seen;
+  }, [allRows]);
+
+  const missingBaselines = useMemo(
+    () => BASELINE_KEYS.filter((k) => !existingKeys.has(k)),
+    [existingKeys]
+  );
+
+  const handleSeedMissing = async () => {
+    try {
+      await seedMissing();
+    } catch {
+      // Apollo populates seedError; rendered below.
+    }
+  };
 
   const handleDuplicate = async (row) => {
     const res = await duplicateDef({ variables: { id: row.id } });
@@ -237,6 +317,55 @@ export default function ListPage() {
         </PrimaryButton>
       </TopRow>
       <NewDefinitionForm open={newOpen} onClose={() => setNewOpen(false)} />
+
+      {missingBaselines.length > 0 ? (
+        <SeedPanel>
+          <h2>Seed default forms</h2>
+          <p>
+            {missingBaselines.length === BASELINE_KEYS.length
+              ? "Nothing seeded yet. Click below to install the default forms (Opportunity, Profile — individual, Profile — organization). They publish as version 1 immediately."
+              : "Some default forms are missing. Clicking below will only install the ones that don't already exist — your edited definitions stay untouched."}
+          </p>
+          <ul>
+            {missingBaselines.map((k) => (
+              <li key={k}>
+                <code>{k}</code>
+              </li>
+            ))}
+          </ul>
+          <div className="actions">
+            <PrimaryButton
+              type="button"
+              onClick={handleSeedMissing}
+              disabled={seeding}
+            >
+              {seeding ? "Seeding…" : `Seed ${missingBaselines.length} missing form${missingBaselines.length === 1 ? "" : "s"}`}
+            </PrimaryButton>
+            {seedError ? (
+              <span className="error">
+                {seedError.message?.replace(/^Error: /, "") ||
+                  String(seedError)}
+              </span>
+            ) : null}
+          </div>
+        </SeedPanel>
+      ) : null}
+
+      {seedData?.seedMissingForms?.length > 0 ? (
+        <SeedPanel style={{ background: "#e9f5ec", borderColor: "#a9d3b5" }}>
+          <p className="feedback">
+            Seeded {seedData.seedMissingForms.length} form
+            {seedData.seedMissingForms.length === 1 ? "" : "s"}:{" "}
+            {seedData.seedMissingForms.map((d) => d.key).join(", ")}.
+          </p>
+          <div className="actions">
+            <SecondaryButton type="button" onClick={() => resetSeed()}>
+              Dismiss
+            </SecondaryButton>
+          </div>
+        </SeedPanel>
+      ) : null}
+
       <p className="intro">
         Customize the Profile and Opportunity forms across MindHive Connect.
         Edit a definition to change which fields appear, in what order, with
