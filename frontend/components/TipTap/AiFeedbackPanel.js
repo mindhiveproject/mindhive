@@ -8,7 +8,7 @@ import { GENERATE_AI_FEEDBACK_HELP } from "../Mutations/Review";
 
 const AI_ICON = (
   <img
-    src="/assets/icons/review/brain-and-head-green.svg"
+    src="/assets/helpcenter/aichat.svg"
     alt=""
     width={24}
     height={24}
@@ -81,12 +81,13 @@ export default function AiFeedbackPanel({
       </div>
 
       <DesignSystemButton
-        variant="tonal"
+        variant="outline"
         type="button"
         onClick={handleGenerate}
         disabled={loading || !proposalId || !questionNumber}
         leadingIcon={AI_ICON}
         aria-label={t("aiFeedback.generateAria", {}, { default: "Generate AI feedback help" })}
+        style={{ background: "#336F8A", color: "#F3F3F3" }}
       >
         {loading
           ? t("aiFeedback.loading", {}, { default: "Generating..." })
