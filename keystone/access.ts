@@ -286,6 +286,48 @@ export const rules = {
       ],
     };
   },
+  // Connect customizable forms — FormDefinition mutate.
+  // Admins (canManageUsers) can manage any definition. Users with
+  // canManageForms can manage scope=organization definitions for orgs
+  // they are members of. Global and class_network scopes are admin-only.
+  formDefinitionMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    if (!permissions.canManageForms({ session })) return false;
+    const me = session.itemId;
+    return {
+      scope: { equals: "organization" },
+      organization: { members: { some: { id: { equals: me } } } },
+    };
+  },
+  // FormCard mutate inherits the same rule via the parent definition.
+  formCardMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    if (!permissions.canManageForms({ session })) return false;
+    const me = session.itemId;
+    return {
+      definition: {
+        scope: { equals: "organization" },
+        organization: { members: { some: { id: { equals: me } } } },
+      },
+    };
+  },
+  // FormField mutate inherits via card.definition.
+  formFieldMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    if (!permissions.canManageForms({ session })) return false;
+    const me = session.itemId;
+    return {
+      card: {
+        definition: {
+          scope: { equals: "organization" },
+          organization: { members: { some: { id: { equals: me } } } },
+        },
+      },
+    };
+  },
   // For mutate operations on the above lists: only the owner or admin.
   // The relevant owner-field name is passed via closure.
   connectOwnerMutate(ownerField: string) {

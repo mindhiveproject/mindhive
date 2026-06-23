@@ -41,6 +41,7 @@ export const CURRENT_USER_QUERY = gql`
         type
         permissions {
           name
+          canManageForms
         }
         image {
           id

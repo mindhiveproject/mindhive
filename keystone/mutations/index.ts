@@ -15,6 +15,11 @@ import backfillMediaAssetOrigins from "./backfillMediaAssetOrigins";
 import backfillOpportunityProposalData from "./backfillOpportunityProposalData";
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
+import resolveFormDefinition from "./resolveFormDefinition";
+import seedOpportunityForm from "./seedOpportunityForm";
+import seedProfileForms from "./seedProfileForms";
+import duplicateFormDefinition from "./duplicateFormDefinition";
+import publishFormDefinition from "./publishFormDefinition";
 import { GraphQLSchema } from "graphql";
 
 // make a fake gql tagged template literal
@@ -76,9 +81,37 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityProposalData(limit: Int, dryRun: Boolean): Int!
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
+        # One-off seeder for the global Opportunity FormDefinition.
+        # Idempotent unless force=true (which deletes and recreates).
+        seedOpportunityForm(force: Boolean): FormDefinition
+        # One-off seeder for global Profile FormDefinitions (individual
+        # variant in Phase 5; organization variant in Phase 5b).
+        seedProfileForms(force: Boolean): [FormDefinition!]!
+        # Clone a FormDefinition + its cards + fields as a new draft.
+        duplicateFormDefinition(id: ID!): FormDefinition
+        # Atomic publish — promotes this row to status=published and
+        # archives any other published row sharing the same (key, scope,
+        # organization, classNetwork) tuple. Optionally records a
+        # changelog entry on the published row.
+        publishFormDefinition(id: ID!, changelog: String): FormDefinition
+      }
+      extend type Query {
+        # Resolve the most-specific published FormDefinition for the
+        # current viewer's scope. Pass organizationId / classNetworkId
+        # when known to allow per-org or per-network overrides; otherwise
+        # the global definition is returned. Returns null when nothing
+        # is published at any scope.
+        resolveFormDefinition(
+          key: String!
+          organizationId: ID
+          classNetworkId: ID
+        ): FormDefinition
       }
     `,
     resolvers: {
+      Query: {
+        resolveFormDefinition,
+      },
       Mutation: {
         sendEmail,
         copyProposalBoard,
@@ -95,6 +128,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityProposalData,
         followUser,
         unfollowUser,
+        seedOpportunityForm,
+        seedProfileForms,
+        duplicateFormDefinition,
+        publishFormDefinition,
       },
     },
   });

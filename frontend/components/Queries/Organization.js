@@ -1,5 +1,17 @@
 import gql from "graphql-tag";
 
+// Lean "all orgs" query for admin pickers (e.g. scope=organization
+// in the form-definition editor). Just id + name — no nested members
+// or opportunities.
+export const ALL_ORGANIZATIONS_LITE = gql`
+  query ALL_ORGANIZATIONS_LITE {
+    organizations(orderBy: { name: asc }) {
+      id
+      name
+    }
+  }
+`;
+
 // Pending invites for a specific organization. Used by the Members section
 // to show "Sent invites" with revoke buttons.
 export const PENDING_INVITES_FOR_ORG = gql`

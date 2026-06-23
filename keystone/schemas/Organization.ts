@@ -6,6 +6,7 @@ import {
   select,
   checkbox,
   image,
+  json,
 } from "@keystone-6/core/fields";
 import { rules, isSignedIn } from "../access";
 
@@ -44,6 +45,10 @@ export const Organization = list({
     }),
     logo: image({ storage: "opportunity_covers" }),
     verified: checkbox({ defaultValue: false }),
+
+    // Flexible bucket for custom fields added by admins via the Connect
+    // customizable-forms system. Keyed by FormField.name.
+    extraDetails: json(),
 
     // Many-to-many: a Profile can belong to several Orgs, an Org has many
     // members. Any member can edit the Org for now (no owner gating yet).

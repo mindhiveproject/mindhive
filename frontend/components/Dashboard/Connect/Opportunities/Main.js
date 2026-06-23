@@ -1,5 +1,5 @@
 import OpportunitiesList from "./List";
-import OpportunityEditor from "./Editor";
+import OpportunityEditor from "./EditorSwitch";
 import ReviewList from "./ReviewList";
 import RoleGuard from "../RoleGuard";
 import { deriveRoles } from "../useConnectRole";

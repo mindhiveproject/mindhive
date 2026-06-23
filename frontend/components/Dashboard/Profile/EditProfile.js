@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import ProfileType from "./Steps/1-ProfileType";
-import About from "./Steps/2-AboutMe";
+import About from "./Steps/AboutSwitch";
 import Interests from "./Steps/3-Interests";
 import useTranslation from "next-translate/useTranslation";
 

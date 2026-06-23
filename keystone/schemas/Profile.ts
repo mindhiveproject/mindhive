@@ -358,6 +358,15 @@ export const Profile = list({
       ref: "OrganizationInvite.invitedBy",
       many: true,
     }),
+    // Connect customizable forms — audit relationships.
+    formDefinitionsCreated: relationship({
+      ref: "FormDefinition.createdBy",
+      many: true,
+    }),
+    formDefinitionsPublished: relationship({
+      ref: "FormDefinition.publishedBy",
+      many: true,
+    }),
     favoriteOpportunities: relationship({
       ref: "Opportunity.favoriteByProfiles",
       many: true,

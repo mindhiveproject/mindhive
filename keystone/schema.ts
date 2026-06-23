@@ -60,6 +60,9 @@ import { ConnectMatch } from "./schemas/ConnectMatch";
 import { ConnectRating } from "./schemas/ConnectRating";
 import { Organization } from "./schemas/Organization";
 import { OrganizationInvite } from "./schemas/OrganizationInvite";
+import { FormDefinition } from "./schemas/FormDefinition";
+import { FormCard } from "./schemas/FormCard";
+import { FormField } from "./schemas/FormField";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -132,4 +135,7 @@ export const lists: Lists = {
   ConnectRating,
   Organization,
   OrganizationInvite,
+  FormDefinition,
+  FormCard,
+  FormField,
 };
