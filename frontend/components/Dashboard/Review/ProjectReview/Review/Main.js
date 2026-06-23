@@ -4,6 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 
 export default function QuestionsMain({
   projectId,
+  user,
   review,
   reviewContent,
   status,
@@ -29,6 +30,8 @@ export default function QuestionsMain({
           {reviewContent?.map((item, i) => (
             <Question
               key={`${projectId}-${i}`}
+              projectId={projectId}
+              user={user}
               stage={status}
               item={item}
               handleItemChange={handleItemChange}

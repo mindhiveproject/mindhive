@@ -34,3 +34,19 @@ export const EDIT_REVIEW = gql`
     }
   }
 `;
+
+export const GENERATE_AI_FEEDBACK_HELP = gql`
+  mutation GENERATE_AI_FEEDBACK_HELP($input: AiFeedbackHelpInput!) {
+    generateAiFeedbackHelp(input: $input) {
+      threadId
+      status
+      result {
+        textDisplay
+        buttonsArray {
+          text
+          action
+        }
+      }
+    }
+  }
+`;

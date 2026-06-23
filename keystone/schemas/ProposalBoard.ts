@@ -183,6 +183,10 @@ export const ProposalBoard = list({
       ref: "Review.proposal",
       many: true,
     }),
+    aiThreads: relationship({
+      ref: "AiThread.proposal",
+      many: true,
+    }),
     templateForClasses: relationship({
       ref: "Class.templateProposal",
       many: true,

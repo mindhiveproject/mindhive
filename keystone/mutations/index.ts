@@ -15,6 +15,7 @@ import backfillMediaAssetOrigins from "./backfillMediaAssetOrigins";
 import backfillOpportunityProposalData from "./backfillOpportunityProposalData";
 import followUser from "./followUser";
 import unfollowUser from "./unfollowUser";
+import generateAiFeedbackHelp from "./generateAiFeedbackHelp";
 import { GraphQLSchema } from "graphql";
 
 // make a fake gql tagged template literal
@@ -28,6 +29,25 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         id: ID!
         updatedCloneCount: Int!
         errors: [String!]!
+      }
+      input AiFeedbackHelpInput {
+        proposalId: ID!
+        questionNumber: String!
+        questionName: String
+        currentTextContent: String
+      }
+      type AiFeedbackHelpButton {
+        text: String!
+        action: String
+      }
+      type AiFeedbackHelpResult {
+        textDisplay: String!
+        buttonsArray: [AiFeedbackHelpButton!]!
+      }
+      type AiFeedbackHelpPayload {
+        threadId: String!
+        status: String!
+        result: AiFeedbackHelpResult
       }
       type Mutation {
         sendEmail(
@@ -76,6 +96,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityProposalData(limit: Int, dryRun: Boolean): Int!
         followUser(userId: ID!): Friendship
         unfollowUser(userId: ID!): Boolean
+        generateAiFeedbackHelp(
+          input: AiFeedbackHelpInput!
+        ): AiFeedbackHelpPayload!
       }
     `,
     resolvers: {
@@ -95,6 +118,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityProposalData,
         followUser,
         unfollowUser,
+        generateAiFeedbackHelp,
       },
     },
   });

@@ -60,6 +60,7 @@ import { ConnectMatch } from "./schemas/ConnectMatch";
 import { ConnectRating } from "./schemas/ConnectRating";
 import { Organization } from "./schemas/Organization";
 import { OrganizationInvite } from "./schemas/OrganizationInvite";
+import { AiThread } from "./schemas/AiThread";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -132,4 +133,5 @@ export const lists: Lists = {
   ConnectRating,
   Organization,
   OrganizationInvite,
+  AiThread,
 };

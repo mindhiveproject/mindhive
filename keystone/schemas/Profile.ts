@@ -489,6 +489,7 @@ export const Profile = list({
     following: relationship({ ref: "Friendship.requester", many: true }),
     followers: relationship({ ref: "Friendship.recipient", many: true }),
     yqGenAI: relationship({ ref: "YQGenAI.author", many: true }),
+    aiThreads: relationship({ ref: "AiThread.profile", many: true }),
     editsVisual: relationship({
       ref: "Visual.isEditedBy",
       many: true,
