@@ -17,6 +17,7 @@ import {
   CREATE_CONNECT_ROUND,
   UPDATE_CONNECT_ROUND,
 } from "../../../Mutations/ConnectRound";
+import ReviewersPanel from "./ReviewersPanel";
 
 const Shell = styled.div`
   display: flex;
@@ -717,6 +718,8 @@ export default function RoundEditor({ roundId }) {
           </div>
         )}
       </Card>
+
+      {!isNew && round ? <ReviewersPanel round={round} /> : null}
 
       <Actions>
         <Button type="button" onClick={handleCancel} disabled={saving}>

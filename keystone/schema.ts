@@ -63,6 +63,7 @@ import { OrganizationInvite } from "./schemas/OrganizationInvite";
 import { FormDefinition } from "./schemas/FormDefinition";
 import { FormCard } from "./schemas/FormCard";
 import { FormField } from "./schemas/FormField";
+import { OpportunityReviewNote } from "./schemas/OpportunityReviewNote";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -138,4 +139,5 @@ export const lists: Lists = {
   FormDefinition,
   FormCard,
   FormField,
+  OpportunityReviewNote,
 };

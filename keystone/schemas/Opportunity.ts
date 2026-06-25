@@ -12,6 +12,21 @@ import {
   file,
   virtual,
 } from "@keystone-6/core/fields";
+import { sendNotificationEmail } from "../lib/mail";
+
+const frontendUrl = () =>
+  (process.env.NODE_ENV === "development"
+    ? process.env.FRONTEND_URL_DEV
+    : process.env.FRONTEND_URL) || "https://mindhive.science";
+
+function reviewerDisplayName(p: any) {
+  if (!p) return "there";
+  return (
+    `${p.firstName || ""} ${p.lastName || ""}`.trim() ||
+    p.username ||
+    "there"
+  );
+}
 
 export const Opportunity = list({
   access: {
@@ -104,6 +119,14 @@ export const Opportunity = list({
 
     favoriteByProfiles: relationship({
       ref: "Profile.favoriteOpportunities",
+      many: true,
+    }),
+
+    // Notes left by round reviewers (see OpportunityReviewNote schema).
+    // Scoped per-(opportunity, round) so the same opp reviewed in two
+    // rounds keeps separate audit trails.
+    reviewNotes: relationship({
+      ref: "OpportunityReviewNote.opportunity",
       many: true,
     }),
 
@@ -289,6 +312,68 @@ export const Opportunity = list({
         data.acceptedAt = new Date().toISOString();
       }
       return data;
+    },
+    // Email reviewers when an opportunity transitions to "pending_review"
+    // (the sponsor submits it). Wrapped in try/catch so a flaky email
+    // service can't break the mutation. The mentor is skipped — they
+    // already know they just clicked submit.
+    async afterOperation({ operation, item, originalItem, context }) {
+      try {
+        if (operation !== "update" || !item) return;
+        const becamePending =
+          item.status === "pending_review" &&
+          originalItem?.status !== "pending_review";
+        if (!becamePending) return;
+
+        const fresh = await context.sudo().query.Opportunity.findOne({
+          where: { id: String(item.id) },
+          query: `
+            id
+            title
+            mentor { id firstName lastName username }
+            rounds {
+              id
+              title
+              reviewers { id email firstName lastName username }
+            }
+          `,
+        });
+        if (!fresh) return;
+
+        const mentorId = fresh.mentor?.id;
+        const mentorName = reviewerDisplayName(fresh.mentor);
+        const seen = new Set<string>();
+
+        for (const round of fresh.rounds || []) {
+          for (const reviewer of round.reviewers || []) {
+            if (!reviewer?.email) continue;
+            if (reviewer.id === mentorId) continue; // skip self-spam
+            if (seen.has(reviewer.id)) continue;
+            seen.add(reviewer.id);
+
+            const link = `${frontendUrl()}/dashboard/connect/review?op=${fresh.id}&round=${round.id}`;
+            try {
+              await sendNotificationEmail(
+                reviewer.email,
+                `New opportunity to review: "${fresh.title}"`,
+                `Hi ${reviewerDisplayName(reviewer)},\n\n` +
+                  `${mentorName} just submitted "${fresh.title}" for review in the round "${round.title}". ` +
+                  `Open the link below to read the proposal, leave notes, and change its status.`,
+                link
+              );
+            } catch (e) {
+              // eslint-disable-next-line no-console
+              console.error(
+                `Reviewer notification failed for ${reviewer.email}:`,
+                e
+              );
+            }
+          }
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error("Opportunity afterOperation hook failed:", e);
+      }
     },
   },
 });

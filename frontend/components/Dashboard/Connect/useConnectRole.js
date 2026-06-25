@@ -41,6 +41,10 @@ export function deriveRoles(user) {
     isMentor: hasAnyPermission(user, ROLE_PERMISSION_NAMES.mentor),
     isStudent: hasAnyPermission(user, ROLE_PERMISSION_NAMES.student),
     isSponsor: hasAnyPermission(user, ["SPONSOR"]),
+    // Reviewer status is determined by per-round assignment, not a
+    // global permission (decision A in the Reviewer plan). True when
+    // the round creator has added this profile to at least one round.
+    isReviewer: (user?.connectRoundsReviewing?.length || 0) > 0,
     hasExpandedOpportunityEditor: hasAnyPermission(
       user,
       EXPANDED_OPPORTUNITY_EDITOR_PERMISSIONS,

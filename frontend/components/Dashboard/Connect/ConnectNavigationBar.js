@@ -100,7 +100,8 @@ function ConnectNavDropdown({
 
 export default function ConnectNavigationBar() {
   const { t } = useTranslation("connect");
-  const { isAdmin, isTeacher, isMentor, isStudent } = useConnectRole();
+  const { isAdmin, isTeacher, isMentor, isStudent, isReviewer } =
+    useConnectRole();
 
   const connectOptions = useMemo(
     () => [
@@ -173,12 +174,18 @@ export default function ConnectNavigationBar() {
         href: "/dashboard/connect/matches",
         visible: isTeacher || isAdmin,
       },
+      {
+        value: "reviewQueue",
+        label: t("nav.reviewQueue", {}, { default: "Review queue" }),
+        href: "/dashboard/connect/review-queue",
+        visible: isReviewer || isAdmin,
+      },
     ];
 
     return items
       .filter((item) => item.visible)
       .map(({ value, label, href }) => ({ value, label, href }));
-  }, [t, isAdmin, isTeacher, isMentor, isStudent]);
+  }, [t, isAdmin, isTeacher, isMentor, isStudent, isReviewer]);
 
   return (
     <NavigationBar

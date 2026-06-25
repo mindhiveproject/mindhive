@@ -9,6 +9,8 @@ import MatchesMain from "./Matches/Main";
 import MentorMatchesMain from "./MentorMatches/Main";
 import ExploreMain from "./Explore/Main";
 import OrganizationsMain from "./Organizations/Main";
+import ReviewQueueMain from "./ReviewQueue/Main";
+import ReviewOpportunityMain from "./ReviewOpportunity/Main";
 import ConnectNavigationBar from "./ConnectNavigationBar";
 
 export default function ConnectMain({ query, user }) {
@@ -36,6 +38,10 @@ export default function ConnectMain({ query, user }) {
     content = <ExploreMain query={query} user={user} />;
   } else if (selector === "organizations") {
     content = <OrganizationsMain query={query} user={user} />;
+  } else if (selector === "review-queue") {
+    content = <ReviewQueueMain />;
+  } else if (selector === "review") {
+    content = <ReviewOpportunityMain query={query} />;
   } else {
     content = <ConnectBank query={query} user={user} />;
   }

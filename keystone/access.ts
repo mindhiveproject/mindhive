@@ -286,6 +286,36 @@ export const rules = {
       ],
     };
   },
+  // OpportunityReviewNote query: visible to the author, any reviewer on
+  // the same round, the round creator, the opportunity's mentor, or admins.
+  // (Notes are scoped to a (opportunity, round) pair so cross-round
+  // leakage isn't a concern.)
+  connectReviewNoteVisible({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session.itemId;
+    return {
+      OR: [
+        { author: { id: { equals: me } } },
+        { round: { createdBy: { id: { equals: me } } } },
+        { round: { reviewers: { some: { id: { equals: me } } } } },
+        { opportunity: { mentor: { id: { equals: me } } } },
+      ],
+    };
+  },
+  // OpportunityReviewNote mutate: only the author or an admin can edit
+  // or delete a note. Reviewers can leave their own notes (the create
+  // operation is gated separately via the round-reviewer check at the
+  // application layer; here we just stop users from editing other
+  // reviewers' notes).
+  connectReviewNoteMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    const me = session.itemId;
+    return {
+      author: { id: { equals: me } },
+    };
+  },
   // Connect customizable forms — FormDefinition mutate.
   // Admins (canManageUsers) can manage any definition. Users with
   // canManageForms can manage scope=organization definitions for orgs

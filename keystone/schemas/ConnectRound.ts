@@ -92,6 +92,22 @@ export const ConnectRound = list({
       },
     }),
 
+    // Reviewers: Profiles the round creator has invited to oversee
+    // opportunities submitted to this round. Per-round assignment (no
+    // global REVIEWER permission). Reviewers can read opportunities in
+    // the round, change their status, and leave OpportunityReviewNote
+    // records — they cannot edit opportunity content (that stays with
+    // the mentor).
+    reviewers: relationship({
+      ref: "Profile.connectRoundsReviewing",
+      many: true,
+    }),
+
+    reviewNotes: relationship({
+      ref: "OpportunityReviewNote.round",
+      many: true,
+    }),
+
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

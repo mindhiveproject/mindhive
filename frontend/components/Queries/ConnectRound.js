@@ -67,8 +67,62 @@ export const GET_CONNECT_ROUND = gql`
         id
         username
       }
+      reviewers {
+        id
+        username
+        firstName
+        lastName
+        email
+      }
       createdAt
       updatedAt
+    }
+  }
+`;
+
+// Rounds the current user is assigned to as a reviewer, with their
+// opportunities (grouped client-side by status in the review queue).
+export const MY_REVIEW_QUEUE = gql`
+  query MY_REVIEW_QUEUE {
+    authenticatedItem {
+      ... on Profile {
+        id
+        connectRoundsReviewing(orderBy: { updatedAt: desc }) {
+          id
+          title
+          description
+          status
+          openAt
+          closeAt
+          classNetwork {
+            id
+            title
+          }
+          createdBy {
+            id
+            firstName
+            lastName
+            username
+          }
+          opportunities {
+            id
+            title
+            shortDescription
+            status
+            updatedAt
+            mentor {
+              id
+              firstName
+              lastName
+              username
+            }
+            organization {
+              id
+              name
+            }
+          }
+        }
+      }
     }
   }
 `;

@@ -375,6 +375,16 @@ export const Profile = list({
       ref: "ConnectRound.createdBy",
       many: true,
     }),
+    // Rounds this profile has been added to as a reviewer (R1 of the
+    // Reviewer feature). Per-round assignment by the round creator.
+    connectRoundsReviewing: relationship({
+      ref: "ConnectRound.reviewers",
+      many: true,
+    }),
+    opportunityReviewNotes: relationship({
+      ref: "OpportunityReviewNote.author",
+      many: true,
+    }),
     questionsProposed: relationship({
       ref: "ConnectQuestion.proposedBy",
       many: true,

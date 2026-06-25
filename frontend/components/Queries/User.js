@@ -66,6 +66,9 @@ export const CURRENT_USER_QUERY = gql`
         mentorIn {
           id
         }
+        connectRoundsReviewing {
+          id
+        }
         favoriteTasks {
           id
         }
