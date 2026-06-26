@@ -203,7 +203,7 @@ export default function ClassStudents({ myclass, user, query }) {
                 <div className="classTabInviteLink">
                   {origin}/signup/student/?code={myclass.code}
                 </div>
-                <CopyButton variant="outline" value={studentSignupLink}>
+                <CopyButton value={studentSignupLink} style={{ fontWeight: 500 }}>
                   {t("studentsTab.copy")}
                 </CopyButton>
               </div>
@@ -213,7 +213,7 @@ export default function ClassStudents({ myclass, user, query }) {
             <p className="classTabInviteLabel">{t("studentsTab.code")}</p>
             <div className="classTabCopyArea">
               <p className="classTabCodeValue">{myclass.code}</p>
-              <CopyButton variant="outline" value={myclass.code}>
+              <CopyButton value={myclass.code} style={{ fontWeight: 500 }}>
                 {t("studentsTab.copy")}
               </CopyButton>
             </div>

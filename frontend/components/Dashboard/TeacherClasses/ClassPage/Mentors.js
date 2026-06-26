@@ -146,7 +146,7 @@ export default function ClassMentors({ myclass, user }) {
                     {origin}/signup/mentor?code={myclass.code}&i=
                     {mentorInvitationCode}
                   </div>
-                  <CopyButton variant="outline" value={mentorSignupLink}>
+                  <CopyButton value={mentorSignupLink} style={{ fontWeight: 500 }}>
                     {t("mentors.copy")}
                   </CopyButton>
                 </div>

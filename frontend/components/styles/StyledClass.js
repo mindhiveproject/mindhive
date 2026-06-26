@@ -1034,8 +1034,8 @@ const StyledClass = styled.div`
     .classTabCodeValue {
       margin: 0;
       font-family: "Inter", sans-serif;
-      font-size: 28px;
-      font-weight: 700;
+      font-size: 24px;
+      font-weight: 600;
       line-height: 36px;
       color: #171717;
       letter-spacing: 0.04em;

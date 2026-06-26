@@ -409,7 +409,7 @@
 		"sortByLabel": "Sorted by:",
 		"sortDateChipHintNewest": "Showing most recent first. Click to show least recent first.",
 		"sortDateChipHintOldest": "Showing least recent first. Click to show most recent first.",
-		"sortDateChipLabelNewest": "Newest first",
+		"sortDateChipLabelNewest": "Most recent first",
 		"sortDateChipLabelOldest": "Oldest first",
 		"teacher": "Teacher"
 	},
@@ -637,13 +637,18 @@
 		"copy": "Copy",
 		"createLink": "Create link",
 		"createNewInvitationLink": "👋 Create a new invitation link for mentors to join your class",
+		"createNewLink": "Create a new link",
 		"creating": "Creating ...",
 		"emailAddress": "Email address",
 		"linkCopied": "The link is copied",
 		"mentorUsername": "Mentor/Username",
+		"newLinkCreated": "New link created",
 		"newLinkWillInvalidate": "⚠️ Creating a new link will invalidate the current one",
+		"noMentorsYet": "No mentors have joined this class yet. Create an invitation link above.",
 		"removeFromClass": "Remove from this class",
 		"removeMentorConfirm": "Are you sure you want to remove this mentor from the class?",
+		"roster": "Mentor roster",
+		"rosterDescription": "{{count}} mentors associated with this class.",
 		"shareLinkWithMentors": "Share the link below with mentors to invite them to join your class"
 	},
 	"myClasses": "My classes",
@@ -687,9 +692,11 @@
 	"projects": {
 		"collaborators": "Collaborator(s)",
 		"dateCreated": "Date created",
+		"listDescription": "{{count}} student project boards in this class.",
 		"manageClassProjectBoard": "Manage the class project board",
 		"noProjectsYet": "The students haven't created any projects yet.",
-		"projectTitle": "Project title"
+		"projectTitle": "Project title",
+		"studentBoards": "Student boards"
 	},
 	"proposalCardsAssignableQuestion": "Should proposal cards be assignable to students?",
 	"resource": {
@@ -801,11 +808,16 @@
 		"classResources": "Class resources",
 		"code": "Class access code",
 		"completionOverview": "Study completion overview",
+		"copiedCode": "The class code is copied",
 		"copiedLink": "The link is copied",
 		"copy": "Copy",
 		"email": "Email address",
+		"noStudentsYet": "No students have joined this class yet. Share the invite link above.",
+		"quickActions": "Quick actions",
 		"removeFromClass": "Remove from this class",
 		"removeStudent": "Are you sure you want to remove this student from the class?",
+		"roster": "Class roster",
+		"rosterDescription": "{{count}} students enrolled in this class.",
 		"shareMessage": "Share the link below with your students to invite them to join your class",
 		"student": "Student/Username",
 		"tab": "Students"
@@ -815,6 +827,7 @@
 	"studies": {
 		"collaborators": "Collaborator(s)",
 		"dateCreated": "Date created",
+		"listDescription": "{{count}} studies created by students in this class.",
 		"noStudiesYet": "The students haven't created any studies yet.",
 		"participants": "Participants",
 		"studyBuilder": "Study builder",
