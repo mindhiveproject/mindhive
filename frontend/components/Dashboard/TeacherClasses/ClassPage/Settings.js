@@ -219,7 +219,7 @@ export default function Settings({ myclass, user }) {
             <div className="settingsChoiceGroup">
               <label className={assignableToStudents ? "active" : ""}>
                 <input
-                  type="checkbox"
+                  type="radio"
                   checked={assignableToStudents}
                   disabled={updatingSettings}
                   onChange={(event) =>
@@ -232,7 +232,7 @@ export default function Settings({ myclass, user }) {
               </label>
               <label className={!assignableToStudents ? "active" : ""}>
                 <input
-                  type="checkbox"
+                  type="radio"
                   checked={!assignableToStudents}
                   disabled={updatingSettings}
                   onChange={(event) =>
@@ -253,22 +253,9 @@ export default function Settings({ myclass, user }) {
                 })}
               </p>
               <div className="settingsChoiceGroup">
-                <label className={studentsCanAssignToCards ? "active" : ""}>
-                  <input
-                    type="checkbox"
-                    checked={studentsCanAssignToCards}
-                    disabled={updatingSettings}
-                    onChange={(event) =>
-                      updateStudentsCanAssignToCards(event.target.checked)
-                    }
-                  />
-                  {t("studentsCanAssignCards", {}, {
-                    default: "Students can assign cards",
-                  })}
-                </label>
                 <label className={!studentsCanAssignToCards ? "active" : ""}>
                   <input
-                    type="checkbox"
+                    type="radio"
                     checked={!studentsCanAssignToCards}
                     disabled={updatingSettings}
                     onChange={(event) =>
@@ -277,6 +264,19 @@ export default function Settings({ myclass, user }) {
                   />
                   {t("onlyTeachersMentorsAssignCards", {}, {
                     default: "Only teachers and mentors can assign cards",
+                  })}
+                </label>
+                <label className={studentsCanAssignToCards ? "active" : ""}>
+                  <input
+                    type="radio"
+                    checked={studentsCanAssignToCards}
+                    disabled={updatingSettings}
+                    onChange={(event) =>
+                      updateStudentsCanAssignToCards(event.target.checked)
+                    }
+                  />
+                  {t("studentsCanAssignCards", {}, {
+                    default: "Students can assign cards",
                   })}
                 </label>
               </div>

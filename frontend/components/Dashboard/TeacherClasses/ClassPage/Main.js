@@ -23,24 +23,24 @@ import Dashboard from "./Dashboard/Main";
 
 const CLASS_PAGE_NAV_ITEMS = [
   {
-    value: "students",
-    labelKey: "main.students",
-    iconSrc: "/assets/icons/profile/people.svg",
-  },
-  {
     value: "dashboard",
     labelKey: "main.dashboard",
     iconSrc: "/assets/icons/visualize/bar_chart.svg",
   },
   {
-    value: "projects",
-    labelKey: "main.projects",
-    iconSrc: "/assets/icons/project.svg",
+    value: "students",
+    labelKey: "main.students",
+    iconSrc: "/assets/icons/profile/people.svg",
   },
   {
     value: "mentors",
     labelKey: "main.mentors",
     iconSrc: "/assets/icons/user.svg",
+  },
+  {
+    value: "projects",
+    labelKey: "main.projects",
+    iconSrc: "/assets/icons/project.svg",
   },
   {
     value: "studies",
@@ -120,13 +120,13 @@ export default function ClassPage({ code, user, query }) {
           </nav>
 
           <div>
-            {page === "students" && (
-              <ClassStudents myclass={myclass} user={user} query={query} />
+            {page === "dashboard" && (
+              <Dashboard myclass={myclass} user={user} query={query} />
             )}
           </div>
           <div>
-            {page === "dashboard" && (
-              <Dashboard myclass={myclass} user={user} query={query} />
+            {page === "students" && (
+              <ClassStudents myclass={myclass} user={user} query={query} />
             )}
           </div>
           <div>
