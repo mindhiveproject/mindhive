@@ -251,6 +251,17 @@ export const StyledForm = styled.form`
     color: #171717;
   }
 
+  .infoPane .classFormField {
+    margin-bottom: 8px;
+  }
+
+  .infoPane .classFormFieldLabel {
+    margin-bottom: 8px;
+    font-size: 18px;
+    line-height: 24px;
+    color: #171717;
+  }
+
   .infoPane .editorContainer {
     margin-top: 8px;
   }

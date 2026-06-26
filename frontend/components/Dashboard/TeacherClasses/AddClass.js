@@ -64,13 +64,17 @@ export default function AddClass({ user }) {
     ],
   });
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e, latestInputs = inputs) {
     e.preventDefault();
     setClientError(null);
-    const titlePlain = stripHtml(inputs.title).trim();
+    const titlePlain = stripHtml(latestInputs.title).trim();
     if (!titlePlain) {
       setClientError({
-        message: t("classForm.titleRequired", "Please enter a class title."),
+        message: t(
+          "classForm.titleRequired",
+          {},
+          { default: "Please enter a class title." },
+        ),
       });
       return;
     }
@@ -78,7 +82,7 @@ export default function AddClass({ user }) {
       variables: {
         code: nanoid(),
         title: titlePlain,
-        description: normalizeClassDescriptionForSubmit(inputs.description),
+        description: normalizeClassDescriptionForSubmit(latestInputs.description),
         settings: { assignableToStudents: false },
       },
     });
@@ -89,13 +93,15 @@ export default function AddClass({ user }) {
 
   return (
     <>
-      <h1 style={{ fontSize: "32px", fontWeight: "500", marginBottom: "16px" }}>{t("addClass.addNewClass")}</h1>
+      <h1 style={{ fontSize: "32px", fontWeight: "500", marginBottom: "16px" }}>
+        {t("addClass.addNewClass", {}, { default: "Add new class" })}
+      </h1>
       <ClassForm
         user={user}
         inputs={inputs}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
-        submitBtnName={t("addClass.create")}
+        submitBtnName={t("addClass.create", {}, { default: "Create" })}
         loading={loading}
         error={clientError || error}
       />
