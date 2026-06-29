@@ -918,6 +918,164 @@ const StyledClass = styled.div`
       }
     }
   }
+  .classTabPage {
+    display: grid;
+    gap: 28px;
+    width: 100%;
+    max-width: 100%;
+    padding-bottom: 40px;
+    font-family: "Inter", sans-serif;
+
+    .classTabSection {
+      display: grid;
+      gap: 16px;
+      padding: 24px;
+      border: 1px solid #e6e6e6;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfbfa 100%);
+      box-shadow: 0 10px 30px rgba(23, 23, 23, 0.06);
+    }
+
+    .classTabSectionHeader {
+      display: grid;
+      gap: 6px;
+      max-width: 100%;
+
+      h3 {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 30px;
+        color: #171717;
+      }
+
+      p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 22px;
+        color: #625b71;
+      }
+    }
+
+    .classTabActionBar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .classTabInformationBlock {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      align-items: stretch;
+
+      .block {
+        display: grid;
+        align-content: start;
+        gap: 14px;
+        padding: 20px;
+        border: 1px solid #ece9e6;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 6px 18px rgba(23, 23, 23, 0.04);
+
+        p {
+          margin: 0;
+        }
+
+        &:only-child {
+          grid-column: 1 / -1;
+        }
+      }
+    }
+
+    .classTabCopyArea {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+
+      .classTabCodeValue,
+      .classTabInfoText {
+        flex: 1;
+        min-width: 120px;
+        margin: 0;
+      }
+    }
+
+    .classTabInviteBlock {
+      display: grid;
+      gap: 12px;
+
+      .classTabInviteLabel {
+        margin: 0;
+        font-size: 15px;
+        line-height: 22px;
+        color: #625b71;
+      }
+
+      .classTabInviteLink {
+        flex: 1;
+        min-width: 200px;
+        padding: 12px 16px;
+        border: 1px solid #d9d6d2;
+        border-radius: 12px;
+        background: #f9faf9;
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        line-height: 20px;
+        color: #171717;
+        word-break: break-all;
+      }
+    }
+
+    .classTabCodeValue {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 36px;
+      color: #171717;
+      letter-spacing: 0.04em;
+    }
+
+    .classTabInfoText {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: #625b71;
+    }
+
+    .classTabTable {
+      width: 100%;
+      min-height: 400px;
+      height: 600px;
+    }
+
+    .classTabEmpty {
+      display: grid;
+      gap: 16px;
+      justify-items: start;
+      padding: 8px 0;
+      color: #625b71;
+      font-size: 15px;
+      line-height: 22px;
+    }
+
+    @media (max-width: 760px) {
+      .classTabSection {
+        padding: 18px;
+        border-radius: 14px;
+      }
+
+      .classTabInformationBlock {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
   .settings {
     display: grid;
     gap: 28px;
@@ -938,7 +1096,7 @@ const StyledClass = styled.div`
     .settingsSectionHeader {
       display: grid;
       gap: 6px;
-      max-width: 720px;
+      max-width: 100%;
 
       h3 {
         margin: 0;

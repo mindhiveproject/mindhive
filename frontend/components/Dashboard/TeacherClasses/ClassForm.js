@@ -1,11 +1,11 @@
 "use client";
 
+import { useRef } from "react";
 import { StyledForm } from "../../styles/StyledForm";
 import DisplayError from "../../ErrorMessage";
 import useTranslation from "next-translate/useTranslation";
 import TipTapEditor from "../../TipTap/Main";
 import Button from "../../DesignSystem/Button";
-import { descriptionValueForState } from "../../Proposal/Card/Forms/utils";
 
 export default function ClassForm({
   user,
@@ -17,51 +17,67 @@ export default function ClassForm({
   error,
 }) {
   const { t } = useTranslation("classes");
+  const titleRef = useRef(inputs?.title ?? "");
+  const descriptionRef = useRef(inputs?.description ?? "");
 
-// Strip HTML tags from text
-  const stripHtml = (html) => {
-    if (!html) return "";
-    return html.replace(/<[^>]*>/g, "").trim();
-  };
-
-  const handleTitleChange = (content) => {
-    handleChange({ target: { name: "title", value: stripHtml(content) } });
+  const handleTitleChange = (event) => {
+    titleRef.current = event.target.value;
+    handleChange(event);
   };
 
   const handleDescriptionChange = (content) => {
+    descriptionRef.current = content;
+  };
+
+  const handleDescriptionBlur = () => {
     handleChange({
       target: {
         name: "description",
-        value: content,
+        value: descriptionRef.current,
       },
+    });
+  };
+
+  const handleFormSubmit = (event) => {
+    handleSubmit(event, {
+      ...inputs,
+      title: titleRef.current,
+      description: descriptionRef.current,
     });
   };
 
   return (
     <div>
-      <StyledForm method="POST" onSubmit={handleSubmit}>
+      <StyledForm method="POST" onSubmit={handleFormSubmit}>
         <DisplayError error={error} />
 
         <fieldset disabled={loading} aria-busy={loading}>
           <div className="infoPane">
-            <label>
-              {t("classForm.title", "Title")}
+            <div className="classFormField">
+              <label htmlFor="class-title">
+                {t("classForm.title", {}, { default: "Title" })}
+              </label>
               <div className="classFormTitleEditor">
-                <TipTapEditor
-                  content={inputs?.title ?? ""}
-                  onUpdate={handleTitleChange}
-                  isEditable={!loading}
-                  toolbarVisible={false}
+                <input
+                  id="class-title"
+                  type="text"
+                  name="title"
+                  value={inputs?.title ?? ""}
+                  onChange={handleTitleChange}
+                  disabled={loading}
                 />
               </div>
-            </label>
+            </div>
 
-            <label>
-              {t("classForm.description", "Description")}
+            <div className="classFormField">
+              <div className="classFormFieldLabel">
+                {t("classForm.description", {}, { default: "Description" })}
+              </div>
               <div className="classFormDescriptionEditor">
                 <TipTapEditor
-                  content={inputs?.description ?? ""}
+                  content=""
                   onUpdate={handleDescriptionChange}
+                  onBlur={handleDescriptionBlur}
                   isEditable={!loading}
                   mediaLibraryId={user?.id ?? null}
                   mediaLibrarySource={
@@ -75,7 +91,7 @@ export default function ClassForm({
                   }
                 />
               </div>
-            </label>
+            </div>
 
             <div className="submitButton">
               <Button type="submit">{submitBtnName}</Button>
