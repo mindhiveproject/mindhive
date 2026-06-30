@@ -66,9 +66,11 @@ export const GET_CLASS = gql`
         slug
         title
         author {
+          id
           username
         }
         collaborators {
+          id
           username
         }
         participants {
