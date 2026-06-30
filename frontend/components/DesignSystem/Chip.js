@@ -154,8 +154,6 @@ export default function Chip({
   if (hasClose) {
     rootStyle = { ...rootStyle, ...CHIP_WITH_CLOSE };
   }
-  rootStyle = { ...rootStyle, borderRadius, ...style };
-
   const multilineLabel = labelLines > 1;
   if (multilineLabel) {
     rootStyle = {
@@ -167,6 +165,7 @@ export default function Chip({
       alignItems: "center",
     };
   }
+  rootStyle = { ...rootStyle, borderRadius, ...style };
 
   const labelStyle = multilineLabel
     ? {

@@ -32,6 +32,12 @@ const HEADER_TONAL_SURFACE_STYLE = {
   border: "1px solid #E6E6E6",
 };
 
+const HEADER_META_CHIP_STYLE = {
+  ...HEADER_TONAL_SURFACE_STYLE,
+  width: "fit-content",
+  maxWidth: "100%",
+};
+
 export default function Header({ user, myclass }) {
   const { t } = useTranslation("classes");
 
@@ -139,10 +145,13 @@ export default function Header({ user, myclass }) {
   const titleDisplayTrimmed = stripHtml(inputs?.title ?? "");
   const titleDisplay =
     titleDisplayTrimmed ||
-    t("header.titleFallback", "Untitled class");
+    t("header.titleFallback", {}, { default: "Untitled class" });
   const creatorImageUrl = myclass?.creator?.image?.url;
   const teacherUsername = myclass?.creator?.username ?? "";
   const mentors = (myclass?.mentors || []).filter((mentor) => mentor?.username);
+  const mentorTooltip = t("header.mentorsPanelTooltip", {}, {
+    default: "Mentor accounts associated with this class.",
+  });
 
   return (
     <div className="editableClassHeader">
@@ -180,7 +189,7 @@ export default function Header({ user, myclass }) {
                 }
               }}
               autoFocus
-              aria-label={t("classForm.title", "Title")}
+              aria-label={t("classForm.title", {}, { default: "Title" })}
             />
           ) : (
             <h1
@@ -230,7 +239,8 @@ export default function Header({ user, myclass }) {
                   />
                 ) : null
               }
-              style={HEADER_TONAL_SURFACE_STYLE}
+              style={HEADER_META_CHIP_STYLE}
+              labelLines={2}
             />
           </InfoTooltip>
           {mentors.length > 0 && (
@@ -238,36 +248,38 @@ export default function Header({ user, myclass }) {
               <span className="classHeaderMetaBullet" aria-hidden>
                 •
               </span>
-              <InfoTooltip
-                content={t("header.mentorsPanelTooltip", {}, { default: "Mentor accounts associated with this class." })}
-                delayMs={500}
-                wrapperStyle={{ width: "fit-content", maxWidth: "100%" }}
-              >
-                <div className="classHeaderMentorsPanel" role="group" aria-label={t("header.mentors", {}, { default: "Mentors" })}>
-                  {mentors.map((mentor) => (
-                    <div className="classHeaderMentorItem" key={mentor?.id || mentor?.username}>
-                      <Chip
-                        label={mentor?.username ?? ""}
-                        leading={
-                          mentor?.image?.url ? (
-                            <img
-                              src={mentor.image.url}
-                              alt={mentor?.username ?? ""}
-                              style={{
-                                width: "24px",
-                                height: "24px",
-                                borderRadius: "50%",
-                                objectFit: "cover",
-                              }}
-                            />
-                          ) : null
-                        }
-                        style={HEADER_TONAL_SURFACE_STYLE}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </InfoTooltip>
+              {mentors.map((mentor) => (
+                <InfoTooltip
+                  key={mentor?.id || mentor?.username}
+                  content={mentorTooltip}
+                  delayMs={500}
+                >
+                  <Chip
+                    label={mentor?.username ?? ""}
+                    leading={
+                      mentor?.image?.url ? (
+                        <img
+                          src={mentor.image.url}
+                          alt={mentor?.username ?? ""}
+                          style={{
+                            width: "24px",
+                            height: "24px",
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : null
+                    }
+                    style={HEADER_META_CHIP_STYLE}
+                    labelLines={2}
+                    ariaLabel={t(
+                      "header.mentorAccount",
+                      { username: mentor?.username ?? "" },
+                      { default: "Mentor account: {{username}}" }
+                    )}
+                  />
+                </InfoTooltip>
+              ))}
             </>
           )}
         </div>
@@ -296,7 +308,9 @@ export default function Header({ user, myclass }) {
                 onClick={() => setIsAddingDescription(true)}
                 style={canEditTitle ? HEADER_TONAL_SURFACE_STYLE : undefined}
               >
-                {t("header.addDescription", "Add a description to your class")}
+                {t("header.addDescription", {}, {
+                  default: "Add a description to your class",
+                })}
               </Button>
             )}
           </div>
