@@ -20,11 +20,14 @@ export default function ClassProjects({ myclass }) {
   const projects = data?.proposalBoards || [];
 
   const getCollaborators = (project) => {
-    const names = [
-      project?.author?.username,
-      ...(project?.collaborators || []).map((c) => c?.username),
-    ].filter(Boolean);
-    return names.join(", ");
+    const collaboratorMap = new Map();
+    [project?.author, ...(project?.collaborators || [])].forEach((profile) => {
+      const key = profile?.id || profile?.username;
+      if (key && profile?.username) {
+        collaboratorMap.set(key, profile.username);
+      }
+    });
+    return Array.from(collaboratorMap.values()).join(", ");
   };
 
   const columnDefs = [

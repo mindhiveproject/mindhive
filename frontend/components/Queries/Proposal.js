@@ -635,9 +635,11 @@ export const CLASS_PROJECTS_QUERY = gql`
       isSubmitted
       settings
       author {
+        id
         username
       }
       collaborators {
+        id
         username
       }
       study {
