@@ -150,7 +150,11 @@ export const PROPOSAL_QUERY = gql`
       peerFeedbackOpenForComments
       projectReportStatus
       projectReportOpenForComments
+      milestoneStatus
       isTemplate
+      clonedFrom {
+        id
+      }
       prototypeFor {
         id
       }
@@ -212,6 +216,17 @@ export const PROPOSAL_QUERY = gql`
           publicId
           type
           title
+          milestone {
+            id
+            key
+            actionCardType
+            reviewStage
+            statusTarget
+            legacyBoardStatusField
+            legacyOpenForCommentsField
+            logEventName
+            title
+          }
           content
           revisedContent
           comment
@@ -250,6 +265,17 @@ export const GET_CARD_CONTENT = gql`
       id
       type
       title
+      milestone {
+        id
+        key
+        actionCardType
+        reviewStage
+        statusTarget
+        legacyBoardStatusField
+        legacyOpenForCommentsField
+        logEventName
+        title
+      }
       publicId
       description
       internalContent
@@ -311,6 +337,7 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
       peerFeedbackOpenForComments
       projectReportStatus
       projectReportOpenForComments
+      milestoneStatus
       checklist
       settings
       author {
@@ -764,6 +791,7 @@ export const PROJECTS_QUERY = gql`
       peerFeedbackOpenForComments
       projectReportStatus
       projectReportOpenForComments
+      milestoneStatus
       settings
       study {
         featured

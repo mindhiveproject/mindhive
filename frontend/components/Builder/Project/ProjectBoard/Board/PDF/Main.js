@@ -1,6 +1,9 @@
 import absoluteUrl from "next-absolute-url";
 import { useQuery, useMutation } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
+import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
+import { buildSubmitStatuses } from "../../../../../../../lib/milestoneStatus";
+import { cardIncludedInReviewStep } from "../../../../../../../lib/milestones";
 import { EDIT_CLASS } from "../../../../../Mutations/Classes";
 import moment from "moment";
 import Head from "next/head";
@@ -24,6 +27,7 @@ export default function ProposalPDF({
   const { data, loading, error } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
   });
+  const { milestones } = useBoardMilestones(proposalId);
 
   const proposal = data?.proposalBoard || {};
   const title = proposal?.title || "";
@@ -176,12 +180,8 @@ export default function ProposalPDF({
     },
   ];
 
-  // Submit statuses from proposal
-  const submitStatuses = {
-    ACTION_SUBMIT: proposal?.submitProposalStatus,
-    ACTION_PEER_FEEDBACK: proposal?.peerFeedbackStatus,
-    ACTION_PROJECT_REPORT: proposal?.projectReportStatus,
-  };
+  // Submit statuses from proposal (milestone-aware, dual-keyed for legacy steps)
+  const submitStatuses = buildSubmitStatuses(proposal, milestones);
 
   // Order sections by position
   const orderedSections = [...sections].sort((a, b) => a.position - b.position);
@@ -223,7 +223,7 @@ export default function ProposalPDF({
           card?.settings?.includeInReport &&
           (effectiveSelectedReviewSteps.length === 0 ||
             effectiveSelectedReviewSteps.some((step) =>
-              card?.settings?.includeInReviewSteps?.includes(step)
+              cardIncludedInReviewStep(card, step, milestones)
             )) &&
           (effectiveSelectedAssignedUsers.length === 0 ||
             effectiveSelectedAssignedUsers.some((userId) =>
@@ -280,7 +280,7 @@ export default function ProposalPDF({
           card?.settings?.includeInReport &&
           (effectiveSelectedReviewSteps.length === 0 ||
             effectiveSelectedReviewSteps.some((step) =>
-              card?.settings?.includeInReviewSteps?.includes(step)
+              cardIncludedInReviewStep(card, step, milestones)
             )) &&
           (effectiveSelectedAssignedUsers.length === 0 ||
             effectiveSelectedAssignedUsers.some((userId) =>

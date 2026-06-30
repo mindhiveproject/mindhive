@@ -8,8 +8,14 @@ import useTranslation from "next-translate/useTranslation";
 
 import Card from "./Card";
 import ActionCard from "./ActionCard";
+import CreateCardModal from "./CreateCardModal";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
+import {
+  CREATE_TEMPLATE_MILESTONE,
+  RESOLVE_MILESTONES_FOR_BOARD,
+} from "../../Queries/Milestone";
+import { isActionCard } from "../../../lib/milestones";
 
 import {
   CREATE_CARD,
@@ -18,6 +24,7 @@ import {
 } from "../../Mutations/Proposal";
 
 const Section = ({
+  board,
   section,
   sections,
   boardId,
@@ -40,12 +47,15 @@ const Section = ({
   const numOfCards = cards.length;
   // const sortedCards = sortBy(cards, item => item.position);
 
-  const [cardName, setCardName] = useState("");
+  const [createCardModalOpen, setCreateCardModalOpen] = useState(false);
   const [isEditingSectionTitle, setIsEditingSectionTitle] = useState(false);
   const [editingSectionTitle, setEditingSectionTitle] = useState("");
 
   const client = useApolloClient();
   const [createCard, createCardState] = useMutation(CREATE_CARD);
+  const [createTemplateMilestone, createTemplateMilestoneState] = useMutation(
+    CREATE_TEMPLATE_MILESTONE
+  );
   const [updateCard, updateCardState] = useMutation(UPDATE_CARD_POSITION);
   const [deleteCard, deleteCardState] = useMutation(DELETE_CARD);
 
@@ -221,24 +231,59 @@ const Section = ({
     }
   };
 
-  const addCardMutation = async (sectionId, title) => {
-    if (!title) {
-      return alert(t("section.enterNewTitle", "Please enter a title"));
+  const finishAfterCardCreate = async (cardId) => {
+    const openCreatedCard = () => {
+      if (cardId) {
+        openCard({ id: cardId });
+      }
+    };
+
+    const proposalQuery = await client.query({
+      query: PROPOSAL_QUERY,
+      variables: { id: boardId },
+      fetchPolicy: "network-only",
+    });
+    const proposal = proposalQuery?.data?.proposalBoard;
+
+    if (proposalBuildMode && proposal?.prototypeFor?.length > 0) {
+      if (autoUpdateStudentBoards && propagateToClones) {
+        try {
+          await propagateToClones();
+        } catch (error) {
+          console.error("Auto-propagate after card add failed:", error);
+        }
+        openCreatedCard();
+      } else {
+        onTemplateChangedWithoutPropagation?.();
+        openCreatedCard();
+      }
+    } else {
+      openCreatedCard();
     }
-    setCardName("");
+  };
+
+  const addCardMutation = async ({ sectionId, title, type, milestoneId }) => {
+    if (!title) {
+      return alert(
+        t("section.enterNewTitle", {}, { default: "Please enter a title" })
+      );
+    }
 
     const publicId = uuidv1();
+    const position =
+      cards && cards.length > 0
+        ? cards[cards.length - 1].position + 16384
+        : 16384;
 
     const newCard = await createCard({
       variables: {
         boardId,
         title,
         sectionId,
-        position:
-          cards && cards.length > 0
-            ? cards[cards.length - 1].position + 16384
-            : 16384,
+        position,
         publicId,
+        type,
+        milestone: milestoneId ? { connect: { id: milestoneId } } : null,
         settings: { status: "Not started" },
       },
       update: (cache, { data: { createProposalCard } }) => {
@@ -281,14 +326,18 @@ const Section = ({
           boardId,
           title,
           content: null,
-          position:
-            cards && cards.length > 0
-              ? cards[cards.length - 1].position + 16384
-              : 16384,
+          type,
+          position,
           section: {
             __typename: "ProposalSection",
             id: sectionId,
           },
+          milestone: milestoneId
+            ? {
+                __typename: "Milestone",
+                id: milestoneId,
+              }
+            : null,
           assignedTo: [],
           settings: { status: "Not started" },
           publicId,
@@ -296,27 +345,49 @@ const Section = ({
       },
     });
 
-    const proposalQuery = await client.query({
-      query: PROPOSAL_QUERY,
-      variables: { id: boardId },
-    });
-    const proposal = proposalQuery?.data?.proposalBoard;
+    setCreateCardModalOpen(false);
+    await finishAfterCardCreate(newCard?.data?.createProposalCard?.id);
+  };
 
-    if (proposalBuildMode && proposal?.prototypeFor?.length > 0) {
-      if (autoUpdateStudentBoards && propagateToClones) {
-        try {
-          await propagateToClones();
-        } catch (error) {
-          console.error("Auto-propagate after card add failed:", error);
-        }
-        openCard({ id: newCard?.data?.createProposalCard?.id });
-      } else {
-        onTemplateChangedWithoutPropagation?.();
-        openCard({ id: newCard?.data?.createProposalCard?.id });
-      }
-    } else {
-      openCard({ id: newCard?.data?.createProposalCard?.id });
+  const createCustomMilestone = async ({
+    title,
+    description,
+    sectionId,
+    clonedFromMilestoneId,
+    sourceFormDefinitionKey,
+    canReviewPermissionNames,
+  }) => {
+    if (!title) {
+      return alert(
+        t("section.enterNewTitle", {}, { default: "Please enter a title" })
+      );
     }
+
+    const result = await createTemplateMilestone({
+      variables: {
+        input: {
+          templateBoardId: boardId,
+          title,
+          description,
+          sectionId,
+          clonedFromMilestoneId,
+          sourceFormDefinitionKey,
+          canReviewPermissionNames,
+          showInFeedbackCenter: true,
+          statusTarget: "board",
+        },
+      },
+      refetchQueries: [
+        { query: PROPOSAL_QUERY, variables: { id: boardId } },
+        { query: RESOLVE_MILESTONES_FOR_BOARD, variables: { boardId } },
+      ],
+      awaitRefetchQueries: true,
+    });
+
+    const actionCardId =
+      result?.data?.createTemplateMilestone?.actionCards?.[0]?.id || null;
+    setCreateCardModalOpen(false);
+    await finishAfterCardCreate(actionCardId);
   };
 
   const deleteCardMutation = (id) => {
@@ -447,12 +518,7 @@ const Section = ({
         >
           {cards && cards.length ? (
             cards.map((card) => {
-              if (
-                card?.type === "ACTION_SUBMIT" ||
-                card?.type === "ACTION_PEER_FEEDBACK" ||
-                card?.type === "ACTION_COLLECTING_DATA" ||
-                card?.type === "ACTION_PROJECT_REPORT"
-              ) {
+              if (isActionCard(card)) {
                 return (
                   <ActionCard
                     key={card.id}
@@ -491,27 +557,34 @@ const Section = ({
       </div>
       {(proposalBuildMode || (!isPreview && settings?.allowAddingCards)) && (
         <div className="newInput">
-          <input
-            id={`input-${section.id}`}
-            type="text"
-            name={`input-${section.id}`}
-            value={cardName}
-            onChange={(e) => setCardName(e.target.value)}
-            placeholder={t(
-              "section.newCardPlaceholder",
-              "Enter a new card title"
-            )}
-          />
           <div
             className="addBtn"
-            onClick={() => {
-              addCardMutation(section.id, cardName);
+            onClick={() => setCreateCardModalOpen(true)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setCreateCardModalOpen(true);
+              }
             }}
           >
-            {t("section.addCardBtn", "[ Click to add a card ]")}
+            {t("section.addCard", {}, { default: "Add card" })}
           </div>
         </div>
       )}
+      <CreateCardModal
+        board={board}
+        creating={
+          createCardState.loading || createTemplateMilestoneState.loading
+        }
+        onClose={() => setCreateCardModalOpen(false)}
+        onCreateCard={addCardMutation}
+        onCreateCustomMilestone={createCustomMilestone}
+        open={createCardModalOpen}
+        sectionId={section.id}
+        sections={sections}
+      />
       {(proposalBuildMode || settings?.allowAddingSections) && (
         <div className="deleteBtn">
           <img

@@ -32,16 +32,12 @@ export const Review = list({
     }),
     settings: json(),
     content: json(),
-    stage: select({
-      options: [
-        { label: "Individual", value: "INDIVIDUAL" },
-        { label: "Synthesis", value: "SYNTHESIS" },
-        { label: "Proposal", value: "SUBMITTED_AS_PROPOSAL" },
-        { label: "Peer Review", value: "PEER_REVIEW" },
-        { label: "Data Collection", value: "DATA_COLLECTION" },
-        { label: "Project Report", value: "PROJECT_REPORT" },
-        { label: "In review", value: "IN_REVIEW" },
-      ],
+    stage: text({
+      isFilterable: true,
+      isIndexed: true,
+    }),
+    milestone: relationship({
+      ref: "Milestone.reviews",
     }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },

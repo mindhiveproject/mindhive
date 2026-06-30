@@ -64,6 +64,7 @@ import { FormDefinition } from "./schemas/FormDefinition";
 import { FormCard } from "./schemas/FormCard";
 import { FormField } from "./schemas/FormField";
 import { OpportunityReviewNote } from "./schemas/OpportunityReviewNote";
+import { Milestone } from "./schemas/Milestone";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -140,4 +141,5 @@ export const lists: Lists = {
   FormCard,
   FormField,
   OpportunityReviewNote,
+  Milestone,
 };

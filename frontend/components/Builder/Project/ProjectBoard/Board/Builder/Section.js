@@ -16,6 +16,7 @@ import {
   DELETE_CARD,
 } from "../../../../../Mutations/Proposal";
 import ActionCard from "./Actions/ActionCard";
+import { isActionCard } from "../../../../../../../lib/milestones";
 
 const Section = ({
   section,
@@ -34,17 +35,13 @@ const Section = ({
   const { t } = useTranslation("builder");
   const { cards } = section;
 
-  const actionCards = cards
-    ?.filter(
-      (card) =>
-        card?.type === "ACTION_SUBMIT" ||
-        card?.type === "ACTION_PEER_FEEDBACK" ||
-        card?.type === "ACTION_COLLECTING_DATA" ||
-        card?.type === "ACTION_PROJECT_REPORT"
-    )
-    .map((c) => c?.type);
-  const submissionStage = (actionCards?.length && actionCards[0]) || undefined;
-  const submissionStatus = submitStatuses[submissionStage];
+  const actionCards = cards?.filter((card) => isActionCard(card)) || [];
+  const firstActionCard = actionCards[0];
+  const submissionStage =
+    firstActionCard?.milestone?.key || firstActionCard?.type;
+  const submissionStatus =
+    submitStatuses[submissionStage] ||
+    (firstActionCard?.type && submitStatuses[firstActionCard.type]);
 
   const [cardName, setCardName] = useState("");
   const [createCard, createCardState] = useMutation(CREATE_CARD);
@@ -372,12 +369,7 @@ const Section = ({
         >
           {cards && cards.length ? (
             cards.map((card) => {
-              if (
-                card?.type === "ACTION_SUBMIT" ||
-                card?.type === "ACTION_PEER_FEEDBACK" ||
-                card?.type === "ACTION_COLLECTING_DATA" ||
-                card?.type === "ACTION_PROJECT_REPORT"
-              ) {
+              if (isActionCard(card)) {
                 return (
                   <React.Fragment key={card.id}>
                     <hr style={{ margin: "16px 8px 16px 8px", border: "1px solid #EFEFEF" }} />

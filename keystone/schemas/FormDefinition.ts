@@ -69,6 +69,10 @@ export const FormDefinition = list({
       ref: "FormCard.definition",
       many: true,
     }),
+    milestones: relationship({
+      ref: "Milestone.formDefinition",
+      many: true,
+    }),
     createdBy: relationship({
       ref: "Profile.formDefinitionsCreated",
       hooks: {

@@ -4,6 +4,7 @@ import { Dropdown, Checkbox } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 
 import { PROJECTS_QUERY } from "../../../../Queries/Proposal";
+import { getProjectsQueryFilterForTab } from "../../../../../lib/milestoneStatus";
 import Card from "./Card";
 
 function containsAny(arr1, arr2) {
@@ -38,34 +39,14 @@ export default function ProjectsBoard({
   // Store the previous selector value to detect tab switches
   const prevSelector = useRef(selector);
 
-  let whereStatus, status, isOpenForCommentsQuery;
-  switch (selector) {
-    case "proposals":
-      whereStatus = { submitProposalStatus: { in: ["SUBMITTED"] } };
-      status = "SUBMITTED_AS_PROPOSAL";
-      isOpenForCommentsQuery = "submitProposalOpenForComments";
-      break;
-    case "inreview":
-      whereStatus = { peerFeedbackStatus: { in: ["SUBMITTED"] } };
-      status = "PEER_REVIEW";
-      isOpenForCommentsQuery = "peerFeedbackOpenForComments";
-      break;
-    case "report":
-      whereStatus = { projectReportStatus: { in: ["SUBMITTED"] } };
-      status = "PROJECT_REPORT";
-      isOpenForCommentsQuery = "projectReportOpenForComments";
-      break;
-    default:
-      whereStatus = { submitProposalStatus: { in: ["SUBMITTED"] } };
-      status = "SUBMITTED_AS_PROPOSAL";
-      isOpenForCommentsQuery = "submitProposalOpenForComments";
-  }
+  const { whereStatus, status, isOpenForCommentsQuery, useMilestoneStatusJson } =
+    getProjectsQueryFilterForTab(selector);
 
   const { data, loading, error, refetch } = useQuery(PROJECTS_QUERY, {
     variables: {
       where: {
         AND: [
-          whereStatus,
+          ...(Object.keys(whereStatus).length ? [whereStatus] : []),
           {
             OR: [
               { study: { featured: { equals: true } } },
@@ -77,7 +58,11 @@ export default function ProjectsBoard({
     },
   });
 
-  const projects = data?.proposalBoards || [];
+  const projects = (data?.proposalBoards || []).filter((project) => {
+    if (!useMilestoneStatusJson) return true;
+    const entry = project?.milestoneStatus?.[status];
+    return entry?.status === "SUBMITTED";
+  });
 
   // Initialize state from URL on mount
   useEffect(() => {

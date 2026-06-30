@@ -20,7 +20,11 @@ export default function ActionCard({
   const { t } = useTranslation("builder");
 
   // Get card variant
-  const variant = getActionCardVariant(card?.type, submitStatuses);
+  const variant = getActionCardVariant(
+    card?.type,
+    submitStatuses,
+    card?.milestone?.key
+  );
 
   // Choose clipboard icon based on variant
   const clipboardIcon = variant === "ACTION_SUBMITTED" ? (
@@ -82,6 +86,17 @@ export default function ActionCard({
                       "actionCard.submitForProjectReport",
                       "Submit for Project Report"
                     )}
+                  </div>
+                )}
+                {card?.type === "ACTION" && (
+                  <div>
+                    {card?.title ||
+                      card?.milestone?.title ||
+                      t(
+                        "actionCard.submitForCustomMilestone",
+                        {},
+                        { default: "Submit for review" }
+                      )}
                   </div>
                 )}
               </div>

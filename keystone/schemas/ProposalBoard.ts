@@ -157,6 +157,7 @@ export const ProposalBoard = list({
       defaultValue: "NOT_STARTED",
     }),
     projectReportOpenForComments: checkbox({ isFilterable: true }),
+    milestoneStatus: json(),
     checklist: json(),
     settings: json(),
     creator: relationship({
@@ -177,6 +178,10 @@ export const ProposalBoard = list({
     }),
     sections: relationship({
       ref: "ProposalSection.board",
+      many: true,
+    }),
+    templateMilestones: relationship({
+      ref: "Milestone.templateBoard",
       many: true,
     }),
     reviews: relationship({

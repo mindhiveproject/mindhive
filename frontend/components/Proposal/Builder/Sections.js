@@ -143,6 +143,7 @@ class Sections extends Component {
           {sections.map((section) => (
             <Draggable key={section.id}>
               <Section
+                board={this.props.board}
                 boardId={this.props.boardId}
                 sections={sections}
                 section={section}

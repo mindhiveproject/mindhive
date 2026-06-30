@@ -32,7 +32,11 @@ export default function QuestionsMain({
               stage={status}
               item={item}
               handleItemChange={handleItemChange}
-              answer={item?.answer || ""}
+              answer={
+                item?.responseType === "dualTextarea"
+                  ? item?.answer || { subA: "", subB: "" }
+                  : item?.answer || ""
+              }
             />
           ))}
         </div>

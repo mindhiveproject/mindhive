@@ -3,6 +3,9 @@ import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
+import { getMilestoneFromCard } from "../../../../../../../lib/milestones";
+import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
+import { buildSubmitStatuses } from "../../../../../../../lib/milestoneStatus";
 
 import { StyledActionCard } from "../../../../../../styles/StyledProposal";
 import { getActionCardVariant } from "../../../../../../Utils/cardVariants";
@@ -46,14 +49,23 @@ export default function ActionCard({
   onDeleteCard,
   settings,
   boardId,
-  submitStatuses,
+  submitStatuses: submitStatusesProp,
 }) {
   const router = useRouter();
   const { t } = useTranslation("builder");
-  
-  // Get card variant
-  const variant = getActionCardVariant(card?.type, submitStatuses);
-  const isSubmitted = variant === "ACTION_SUBMITTED";
+
+  const { milestones } = useBoardMilestones(boardId);
+  const cardMilestone = getMilestoneFromCard(card, milestones);
+
+  const getCardMeta = () => {
+    if (cardMilestone) {
+      return {
+        title: cardMilestone.title,
+        reviewStage: cardMilestone.reviewStage || cardMilestone.key,
+      };
+    }
+    return cardTypes[card?.type] || {};
+  };
 
   const { data } = useQuery(PROPOSAL_REVIEWS_QUERY, {
     variables: {
@@ -62,8 +74,21 @@ export default function ActionCard({
   });
 
   const project = data?.proposalBoard || { sections: [] };
+
+  const submitStatuses =
+    submitStatusesProp || buildSubmitStatuses(project, milestones);
+
+  // Get card variant
+  const statusKey =
+    cardMilestone?.key ||
+    cardMilestone?.actionCardType ||
+    card?.type;
+  const variant = getActionCardVariant(card?.type, submitStatuses, statusKey);
+  const isSubmitted = variant === "ACTION_SUBMITTED";
+
+  const cardMeta = getCardMeta();
   const comments = project?.reviews?.filter(
-    (review) => review.stage === cardTypes[card?.type].reviewStage
+    (review) => review.stage === cardMeta.reviewStage
   );
 
   const cardTitle = {
@@ -71,7 +96,13 @@ export default function ActionCard({
     ACTION_PEER_FEEDBACK: t("actionCard.peerFeedback"),
     ACTION_COLLECTING_DATA: t("actionCard.dataCollection"),
     ACTION_PROJECT_REPORT: t("actionCard.projectReport"),
+    ACTION: cardMilestone?.title || card?.title,
   };
+  const displayTitle =
+    cardTitle[card?.type] ||
+    cardMilestone?.title ||
+    card?.title ||
+    t("actionCard.customStep", {}, { default: "Review step" });
 
   // Choose clipboard icon based on variant
   const clipboardIcon = variant === "ACTION_SUBMITTED" ? (
@@ -115,14 +146,14 @@ export default function ActionCard({
           </div>
           <div className="card-content">
             <div className="card-title">
-              {t("actionCard.submitFor", { title: cardTitle[card?.type] })}
+              {t("actionCard.submitFor", { title: displayTitle })}
             </div>
             <div className="card-subtitle">
               {isSubmitted 
                 ? (card?.type !== "ACTION_COLLECTING_DATA" && comments?.length > 0
                     ? t("actionCard.viewCountComments", { count: comments.length })
                     : t("actionCard.viewComments"))
-                : t("actionCard.clickToSubmit", { title: cardTitle[card?.type] })}
+                : t("actionCard.clickToSubmit", { title: displayTitle })}
             </div>
           </div>
           <div className="card-right-section">

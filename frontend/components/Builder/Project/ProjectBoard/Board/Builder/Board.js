@@ -4,10 +4,12 @@ import useTranslation from "next-translate/useTranslation";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
+import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
 import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
 import { v1 as uuidv1 } from "uuid";
 
 import Inner from "./Inner";
+import TemplateMilestoneManager from "./TemplateMilestoneManager";
 
 import {
   CREATE_SECTION,
@@ -33,12 +35,12 @@ const Board = ({
   });
   const proposal = data?.proposalBoard || undefined;
 
-  const submitStatuses = {
-    ACTION_SUBMIT: proposal?.submitProposalStatus,
-    ACTION_PEER_FEEDBACK: proposal?.peerFeedbackStatus,
-    ACTION_COLLECTING_DATA: proposal?.study?.dataCollectionStatus,
-    ACTION_PROJECT_REPORT: proposal?.projectReportStatus,
-  };
+  const { milestones: resolvedMilestones } = useBoardMilestones(proposalId);
+  const submitStatuses = buildSubmitStatuses(proposal, resolvedMilestones);
+  const showTemplateMilestoneManager =
+    !isPreview &&
+    proposalBuildMode &&
+    isClassTemplateBoard(proposal);
 
   const [sections, setSections] = useState([]);
   const [createSectionMut, createSectionState] = useMutation(CREATE_SECTION);
@@ -177,19 +179,24 @@ const Board = ({
   if (error) return t("board.error", { message: error.message });
 
   return (
-    <Inner
-      board={proposal}
-      sections={sections}
-      onCreateSection={createSection}
-      onUpdateSection={updateSection}
-      onSetSections={setSections}
-      onDeleteSection={deleteSection}
-      openCard={openCard}
-      proposalBuildMode={proposalBuildMode}
-      adminMode={adminMode}
-      isPreview={isPreview}
-      submitStatuses={submitStatuses}
-    />
+    <>
+      {showTemplateMilestoneManager && (
+        <TemplateMilestoneManager templateBoardId={proposalId} />
+      )}
+      <Inner
+        board={proposal}
+        sections={sections}
+        onCreateSection={createSection}
+        onUpdateSection={updateSection}
+        onSetSections={setSections}
+        onDeleteSection={deleteSection}
+        openCard={openCard}
+        proposalBuildMode={proposalBuildMode}
+        adminMode={adminMode}
+        isPreview={isPreview}
+        submitStatuses={submitStatuses}
+      />
+    </>
   );
 };
 

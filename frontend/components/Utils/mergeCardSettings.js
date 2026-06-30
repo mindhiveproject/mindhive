@@ -1,3 +1,17 @@
+import { normalizeReviewStepKey } from "../../lib/milestones";
+
+/**
+ * Maps legacy ACTION_* review step values to milestone keys when milestones are available.
+ *
+ * @param {string[]} steps - includeInReviewSteps from card settings
+ * @param {Object[]} milestones - active milestones from GET_MILESTONES
+ * @returns {string[]} normalized step keys (milestone keys when known)
+ */
+export function normalizeIncludeInReviewSteps(steps, milestones = []) {
+  if (!Array.isArray(steps)) return [];
+  return steps.map((step) => normalizeReviewStepKey(step, milestones));
+}
+
 /**
  * Safely merges ProposalCard settings, ensuring all properties are preserved.
  * 

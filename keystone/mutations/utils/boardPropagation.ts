@@ -39,6 +39,7 @@ const TEMPLATE_QUERY = `
       position
       content
       settings
+      milestone { id }
       resources { id }
       assignments { id }
       studies { id }
@@ -361,6 +362,9 @@ export async function syncCardsToClone(
             assignments: { set: (tc.assignments ?? []).map((a) => ({ id: a.id })) },
             studies: { set: (tc.studies ?? []).map((s) => ({ id: s.id })) },
             tasks: { set: (tc.tasks ?? []).map((t) => ({ id: t.id })) },
+            ...((tc as any).milestone?.id
+              ? { milestone: { connect: { id: (tc as any).milestone.id } } }
+              : {}),
           },
         });
       } else {
@@ -375,6 +379,9 @@ export async function syncCardsToClone(
             position,
             content: tc.content ?? undefined,
             settings,
+            ...((tc as any).milestone?.id
+              ? { milestone: { connect: { id: (tc as any).milestone.id } } }
+              : {}),
             resources: {
               connect: (tc.resources ?? []).map((r) => ({ id: r.id })),
             },

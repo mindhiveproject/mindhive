@@ -91,6 +91,7 @@ function Inner(props) {
     <div className="inner">
       <div className="scrollable">
         <Sections
+          board={board}
           boardId={board?.id}
           sections={sections}
           onSetSections={props.onSetSections}

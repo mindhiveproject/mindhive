@@ -9,9 +9,15 @@ import ProjectsBoard from "./Projects/Main";
 import StudiesBoard from "./Studies/Main";
 import useTranslation from "next-translate/useTranslation";
 import { reviewOverviewTours } from "./tours";
+import { FEEDBACK_CENTER_TABS, buildFeedbackCenterTabs } from "../../../../lib/feedbackCenterTabs";
+import { GET_MILESTONES } from "../../../Queries/Milestone";
 
 export default function Overview({ query, user }) {
   const { t } = useTranslation("builder");
+  const { data: milestonesData } = useQuery(GET_MILESTONES);
+  const globalMilestones = milestonesData?.milestones || [];
+  const feedbackTabs = buildFeedbackCenterTabs(globalMilestones, t);
+  const legacySelectors = FEEDBACK_CENTER_TABS.map((tab) => tab.selector);
 
   useEffect(() => {
     let currentTour = null;
@@ -128,31 +134,26 @@ export default function Overview({ query, user }) {
       <div className="h24">{t("review.overviewIntro")}</div>
 
       <div id="options" className="menu">
-        <Link href="/dashboard/review/proposals" id="proposal">
-          <div
-            className={
-              selector === "proposals" || !selector
-                ? "menuTitle selectedMenuTitle"
-                : "menuTitle"
-            }
+        {feedbackTabs.map((tab) => (
+          <Link
+            key={tab.selector}
+            href={`/dashboard/review/${tab.selector}`}
+            id={tab.selector === "proposals" ? "proposal" : tab.selector}
           >
-            <p>{t("review.proposals")}</p>
-          </div>
-        </Link>
+            <div
+              className={
+                selector === tab.selector ||
+                (!selector && tab.selector === "proposals")
+                  ? "menuTitle selectedMenuTitle"
+                  : "menuTitle"
+              }
+            >
+              <p>{tab.label || t(tab.labelKey, {}, { default: tab.milestoneKey })}</p>
+            </div>
+          </Link>
+        ))}
 
-        <Link href="/dashboard/review/inreview" id="peerReview">
-          <div
-            className={
-              selector === "inreview"
-                ? "menuTitle selectedMenuTitle"
-                : "menuTitle"
-            }
-          >
-            <p>{t("review.inReview")}</p>
-          </div>
-        </Link>
-
-        <Link href="/dashboard/review/collectingdata"  id="collectData">
+        <Link href="/dashboard/review/collectingdata" id="collectData">
           <div
             className={
               selector === "collectingdata"
@@ -164,23 +165,12 @@ export default function Overview({ query, user }) {
           </div>
         </Link>
 
-        <Link href="/dashboard/review/report" id="report">
-          <div
-            className={
-              selector === "report"
-                ? "menuTitle selectedMenuTitle"
-                : "menuTitle"
-            }
-          >
-            <p>{t("review.projectReport")}</p>
-          </div>
-        </Link>
+        {/* collectingdata tab is study-based, not milestone-driven */}
       </div>
 
       {(!selector ||
-        selector === "proposals" ||
-        selector === "inreview" ||
-        selector === "report") && (
+        legacySelectors.includes(selector) ||
+        feedbackTabs.some((tab) => tab.selector === selector)) && (
         <ProjectsBoard
           selector={selector}
           allUniqueClassIds={allUniqueClassIds}

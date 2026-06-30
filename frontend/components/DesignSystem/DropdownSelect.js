@@ -115,7 +115,7 @@ function getOptionLabelString(opt) {
  *
  * @param {string|string[]} value - Selected value(s). When `multiple`, use `string[]`.
  * @param {(next: string) => void | (next: string[]) => void} onChange - Called with the new value or array when user picks option(s).
- * @param {Array<{ value: string, label: React.ReactNode }>} options - Selectable options.
+ * @param {Array<{ value: string, label: React.ReactNode, disabled?: boolean }>} options - Selectable options.
  * @param {string} [ariaLabel] - Accessible name for the trigger (required for a11y if no visible label).
  * @param {React.CSSProperties} [triggerStyle] - Optional override for trigger button styles.
  * @param {boolean} [fitContent=false] - When true, the control sizes to its label (no full-width stretch).
@@ -314,6 +314,9 @@ export default function DropdownSelect({
   }, [open]);
 
   const handleSelect = (next) => {
+    const selectedOption = options.find((opt) => String(opt.value) === String(next));
+    if (selectedOption?.disabled) return;
+
     if (multiple) {
       const current = Array.isArray(value) ? [...value] : [];
       const idx = current.findIndex((v) => String(v) === String(next));
@@ -510,20 +513,25 @@ export default function DropdownSelect({
                   const isSelected = multiple
                     ? (selectedIds ?? []).some((id) => String(id) === String(opt.value))
                     : opt.value === value;
+                  const isDisabled = !!opt.disabled;
                   return (
                     <button
                       key={String(opt.value)}
                       type="button"
+                      disabled={isDisabled}
                       role="option"
                       aria-selected={isSelected}
+                      aria-disabled={isDisabled}
                       style={{
                         ...ITEM_STYLE,
                         fontWeight: isSelected ? 600 : 500,
                         backgroundColor: isSelected ? "#def8fb" : "transparent",
+                        color: isDisabled ? "#A1A1A1" : ITEM_STYLE.color,
+                        cursor: isDisabled ? "not-allowed" : ITEM_STYLE.cursor,
                       }}
                       onClick={() => handleSelect(opt.value)}
                       onMouseEnter={(e) => {
-                        if (!isSelected) e.currentTarget.style.backgroundColor = "#f5f5f5";
+                        if (!isSelected && !isDisabled) e.currentTarget.style.backgroundColor = "#f5f5f5";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.backgroundColor = isSelected ? "#def8fb" : "transparent";
