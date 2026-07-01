@@ -239,6 +239,15 @@ export default function EditorPage({ milestoneId }) {
             </strong>
             {milestone.legacyOpenForCommentsField || "—"}
           </div>
+          {milestone.clonedFrom ? (
+            <div>
+              <strong>
+                {t("adminMilestones.readOnlyClonedFrom", {}, { default: "Cloned from" })}
+              </strong>
+              {milestone.clonedFrom.title || milestone.clonedFrom.key}
+              {milestone.clonedFrom.scope ? ` (${milestone.clonedFrom.scope})` : ""}
+            </div>
+          ) : null}
         </ReadOnlyGrid>
 
         <FieldRow>

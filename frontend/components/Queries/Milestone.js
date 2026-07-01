@@ -1,5 +1,35 @@
 import gql from "graphql-tag";
 
+// Board resolver returns milestone scalars from context.query; requesting
+// formDefinition or clonedFrom on that path triggers a Keystone batching bug.
+export const MILESTONE_BOARD_FIELDS = `
+  id
+  key
+  title
+  description
+  scope
+  actionCardType
+  reviewStage
+  statusTarget
+  legacyBoardStatusField
+  legacyOpenForCommentsField
+  logEventName
+  position
+  showInFeedbackCenter
+  formDefinitionKeyPattern
+  isActive
+  canReview {
+    id
+    name
+  }
+  actionCards {
+    id
+    publicId
+    type
+    title
+  }
+`;
+
 export const MILESTONE_FIELDS = `
   id
   key
@@ -16,6 +46,16 @@ export const MILESTONE_FIELDS = `
   showInFeedbackCenter
   formDefinitionKeyPattern
   isActive
+  formDefinition {
+    id
+    key
+  }
+  clonedFrom {
+    id
+    key
+    title
+    scope
+  }
   canReview {
     id
     name
@@ -55,7 +95,7 @@ export const ADMIN_MILESTONE = gql`
 export const RESOLVE_MILESTONES_FOR_BOARD = gql`
   query RESOLVE_MILESTONES_FOR_BOARD($boardId: ID!) {
     resolveMilestonesForBoard(boardId: $boardId) {
-      ${MILESTONE_FIELDS}
+      ${MILESTONE_BOARD_FIELDS}
     }
   }
 `;
@@ -63,7 +103,7 @@ export const RESOLVE_MILESTONES_FOR_BOARD = gql`
 export const CREATE_TEMPLATE_MILESTONE = gql`
   mutation CREATE_TEMPLATE_MILESTONE($input: CreateTemplateMilestoneInput!) {
     createTemplateMilestone(input: $input) {
-      ${MILESTONE_FIELDS}
+      ${MILESTONE_BOARD_FIELDS}
     }
   }
 `;
@@ -71,7 +111,7 @@ export const CREATE_TEMPLATE_MILESTONE = gql`
 export const UPDATE_TEMPLATE_MILESTONE = gql`
   mutation UPDATE_TEMPLATE_MILESTONE($input: UpdateTemplateMilestoneInput!) {
     updateTemplateMilestone(input: $input) {
-      ${MILESTONE_FIELDS}
+      ${MILESTONE_BOARD_FIELDS}
     }
   }
 `;

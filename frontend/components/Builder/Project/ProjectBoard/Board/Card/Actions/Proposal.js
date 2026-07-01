@@ -17,7 +17,7 @@ import {
 import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
 import {
   cardIncludedInReviewStep,
-  getMilestoneFromCard,
+  resolveMilestoneFromCard,
 } from "../../../../../../../lib/milestones";
 
 import Navigation from "./Navigation";
@@ -40,7 +40,7 @@ export default function Proposal({
   const { t } = useTranslation("builder");
 
   const { milestones } = useBoardMilestones(proposal?.id || proposalId);
-  const milestone = getMilestoneFromCard(proposalCard, milestones);
+  const milestone = resolveMilestoneFromCard(proposalCard, milestones);
   const reviewStepKey =
     milestone?.key ||
     milestone?.actionCardType ||

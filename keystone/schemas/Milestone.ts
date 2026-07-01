@@ -91,6 +91,8 @@ export const Milestone = list({
       many: true,
     }),
     isActive: checkbox({ defaultValue: true, isFilterable: true }),
+    clonedFrom: relationship({ ref: "Milestone.clones" }),
+    clones: relationship({ ref: "Milestone.clonedFrom", many: true }),
   },
   hooks: {
     async validateInput({ resolvedData, operation, item, context, addValidationError }) {

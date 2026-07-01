@@ -146,6 +146,8 @@ async function copyProposalBoard(
         "id"
       );
       // create cards of this section
+      // Milestone FK rules: global milestones are reused by id; template-scoped
+      // milestones stay on the template board (student boards resolve via clonedFrom).
       await Promise.all(
         templateSection.cards.map(async (card: any, i: number) => {
           const templateCard = section.cards[i];

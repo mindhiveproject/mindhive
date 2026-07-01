@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
-import { getMilestoneFromCard } from "../../../../../../../lib/milestones";
+import { resolveMilestoneFromCard } from "../../../../../../../lib/milestones";
 import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
 import { buildSubmitStatuses } from "../../../../../../../lib/milestoneStatus";
 
@@ -55,7 +55,7 @@ export default function ActionCard({
   const { t } = useTranslation("builder");
 
   const { milestones } = useBoardMilestones(boardId);
-  const cardMilestone = getMilestoneFromCard(card, milestones);
+  const cardMilestone = resolveMilestoneFromCard(card, milestones);
 
   const getCardMeta = () => {
     if (cardMilestone) {

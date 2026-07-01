@@ -34,7 +34,7 @@ function mergeMilestones(globalMs: any[], templateMs: any[]) {
   return merged.filter((m) => m.isActive !== false);
 }
 
-const MILESTONE_QUERY = `
+const MILESTONE_RESOLVE_SCALAR_QUERY = `
   id
   key
   title
@@ -50,7 +50,13 @@ const MILESTONE_QUERY = `
   showInFeedbackCenter
   formDefinitionKeyPattern
   isActive
+`;
+
+const MILESTONE_QUERY = `
+  ${MILESTONE_RESOLVE_SCALAR_QUERY.trim()}
   canReview { id name }
+  formDefinition { id key }
+  clonedFrom { id key title scope }
   actionCards { id publicId type title }
 `;
 
@@ -72,7 +78,7 @@ async function resolveMilestonesForBoard(
       scope: { equals: "global" },
       isActive: { equals: true },
     },
-    query: MILESTONE_QUERY,
+    query: MILESTONE_RESOLVE_SCALAR_QUERY,
   });
 
   let templateMs: any[] = [];
@@ -83,7 +89,7 @@ async function resolveMilestonesForBoard(
         templateBoard: { id: { equals: templateBoardId } },
         isActive: { equals: true },
       },
-      query: MILESTONE_QUERY,
+      query: MILESTONE_RESOLVE_SCALAR_QUERY,
       orderBy: [{ position: "asc" }],
     });
   }
@@ -136,4 +142,4 @@ export function slugifyMilestoneKey(title: string, fallback: string) {
   return base || fallback;
 }
 
-export { MILESTONE_QUERY, mergeMilestones, getTemplateBoardId };
+export { MILESTONE_QUERY, MILESTONE_RESOLVE_SCALAR_QUERY, mergeMilestones, getTemplateBoardId };

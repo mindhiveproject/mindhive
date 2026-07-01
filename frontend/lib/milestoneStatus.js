@@ -26,6 +26,10 @@ export const LEGACY_STATUS_FIELDS = {
 
 const DEFAULT_STATUS = "NOT_STARTED";
 
+/**
+ * Read board status for a milestone key.
+ * Stack: (1) board.milestoneStatus JSON, (2) legacy board/study columns.
+ */
 export function readMilestoneStatus(board, milestoneKey, milestones = []) {
   const fromJson = board?.milestoneStatus?.[milestoneKey];
   if (fromJson && typeof fromJson.status === "string") {
@@ -168,33 +172,24 @@ export function buildSubmitStatuses(board, milestones = []) {
   return result;
 }
 
+/**
+ * Feedback Center tab filter config. Status matching uses readMilestoneStatus
+ * client-side (milestoneStatus JSON first, legacy columns as fallback).
+ */
 export function getProjectsQueryFilterForTab(selector) {
   const tab = getTabBySelector(selector) || getTabBySelector("proposals");
   const milestoneKey = tab?.milestoneKey || selector || "SUBMITTED_AS_PROPOSAL";
   const legacy = LEGACY_STATUS_FIELDS[milestoneKey];
 
-  if (legacy?.statusField && legacy.statusTarget === "board") {
-    return {
-      whereStatus: { [legacy.statusField]: { in: ["SUBMITTED"] } },
-      status: milestoneKey,
-      isOpenForCommentsQuery: legacy.openField,
-      useMilestoneStatusJson: false,
-    };
-  }
-
-  if (!LEGACY_STATUS_FIELDS[selector] && selector && selector !== "proposals") {
-    return {
-      whereStatus: {},
-      status: milestoneKey,
-      isOpenForCommentsQuery: null,
-      useMilestoneStatusJson: true,
-    };
-  }
-
   return {
-    whereStatus: { submitProposalStatus: { in: ["SUBMITTED"] } },
-    status: "SUBMITTED_AS_PROPOSAL",
-    isOpenForCommentsQuery: "submitProposalOpenForComments",
-    useMilestoneStatusJson: false,
+    whereStatus: {},
+    status: milestoneKey,
+    milestoneKey,
+    isOpenForCommentsQuery: legacy?.openField || null,
   };
+}
+
+/** @see readMilestoneStatus */
+export function resolveBoardStatusForMilestone(board, milestoneKey, milestones = []) {
+  return readMilestoneStatus(board, milestoneKey, milestones);
 }

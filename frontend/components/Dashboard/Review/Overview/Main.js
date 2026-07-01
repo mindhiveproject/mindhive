@@ -176,6 +176,7 @@ export default function Overview({ query, user }) {
           allUniqueClassIds={allUniqueClassIds}
           myClassesIds={myClasses.map((cl) => cl?.id)}
           allUniqueClasses={allUniqueClasses}
+          milestones={globalMilestones}
         />
       )}
 

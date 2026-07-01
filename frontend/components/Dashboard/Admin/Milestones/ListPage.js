@@ -9,7 +9,11 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
 import { ADMIN_MILESTONES } from "../../../Queries/Milestone";
-import { SEED_MISSING_MILESTONES } from "../../../Mutations/Milestone";
+import {
+  SEED_MISSING_MILESTONES,
+  BACKFILL_LINK_ACTION_CARDS_TO_MILESTONES,
+  BACKFILL_MILESTONE_STATUS,
+} from "../../../Mutations/Milestone";
 import {
   PrimaryButton,
   SecondaryButton,
@@ -62,6 +66,12 @@ const GridShell = styled.div`
     font-family: "Nunito", sans-serif;
     font-weight: 600;
     color: #171717;
+  }
+
+  .ag-theme-quartz .milestone-form-pattern {
+    font-family: "Nunito", sans-serif;
+    font-size: 12px;
+    color: #336f8a;
   }
 
   .ag-theme-quartz .milestone-edit-link {
@@ -213,6 +223,40 @@ export default function ListPage() {
     }
   };
 
+  const [
+    backfillCardLinks,
+    { loading: backfillingLinks, data: backfillLinksData, error: backfillLinksError },
+  ] = useMutation(BACKFILL_LINK_ACTION_CARDS_TO_MILESTONES, {
+    refetchQueries: [{ query: ADMIN_MILESTONES }],
+  });
+
+  const [
+    backfillStatus,
+    { loading: backfillingStatus, data: backfillStatusData, error: backfillStatusError },
+  ] = useMutation(BACKFILL_MILESTONE_STATUS, {
+    refetchQueries: [{ query: ADMIN_MILESTONES }],
+  });
+
+  const handleBackfillLinks = async () => {
+    try {
+      await backfillCardLinks({ variables: { dryRun: false } });
+    } catch {
+      // Apollo populates backfillLinksError.
+    }
+  };
+
+  const handleBackfillStatus = async () => {
+    try {
+      await backfillStatus({ variables: { dryRun: false } });
+    } catch {
+      // Apollo populates backfillStatusError.
+    }
+  };
+
+  const backfillLinksCount =
+    backfillLinksData?.backfillLinkActionCardsToMilestones ?? null;
+  const backfillStatusCount = backfillStatusData?.backfillMilestoneStatus ?? null;
+
   const seedCount = seedData?.seedMissingMilestones?.length || 0;
   const seededKeys =
     seedData?.seedMissingMilestones?.map((m) => m.key).join(", ") || "";
@@ -263,10 +307,8 @@ export default function ListPage() {
         filter: true,
         sortable: true,
         minWidth: 220,
-        cellRenderer: (params) => {
-          const value = params.value || "—";
-          return `<code>${value}</code>`;
-        },
+        cellClass: "milestone-form-pattern",
+        valueFormatter: (p) => p.value || "—",
       },
       {
         field: "isActive",
@@ -402,6 +444,72 @@ export default function ListPage() {
           </div>
         </SeedPanel>
       ) : null}
+
+      <SeedPanel style={{ background: "#f5f0eb", borderColor: "#e0d4c8" }}>
+        <h2>
+          {t("adminMilestones.backfillPanelTitle", {}, { default: "Backfill existing boards" })}
+        </h2>
+        <p>
+          {t(
+            "adminMilestones.backfillPanelBody",
+            {},
+            {
+              default:
+                "Link action cards on class templates to global milestones and copy legacy board status columns into milestoneStatus JSON.",
+            }
+          )}
+        </p>
+        <div className="actions">
+          <SecondaryButton
+            type="button"
+            onClick={handleBackfillLinks}
+            disabled={backfillingLinks || backfillingStatus}
+          >
+            {backfillingLinks
+              ? t("adminMilestones.backfilling", {}, { default: "Running…" })
+              : t("adminMilestones.backfillLinksButton", {}, { default: "Link action cards" })}
+          </SecondaryButton>
+          <SecondaryButton
+            type="button"
+            onClick={handleBackfillStatus}
+            disabled={backfillingLinks || backfillingStatus}
+          >
+            {backfillingStatus
+              ? t("adminMilestones.backfilling", {}, { default: "Running…" })
+              : t("adminMilestones.backfillStatusButton", {}, { default: "Backfill milestone status" })}
+          </SecondaryButton>
+        </div>
+        {backfillLinksCount != null ? (
+          <p className="feedback">
+            {t(
+              "adminMilestones.backfillLinksSuccess",
+              { count: backfillLinksCount },
+              { default: "Linked {{count}} action cards to milestones." }
+            )}
+          </p>
+        ) : null}
+        {backfillStatusCount != null ? (
+          <p className="feedback">
+            {t(
+              "adminMilestones.backfillStatusSuccess",
+              { count: backfillStatusCount },
+              { default: "Updated milestone status on {{count}} boards." }
+            )}
+          </p>
+        ) : null}
+        {backfillLinksError ? (
+          <span className="error">
+            {backfillLinksError.message?.replace(/^Error: /, "") ||
+              String(backfillLinksError)}
+          </span>
+        ) : null}
+        {backfillStatusError ? (
+          <span className="error">
+            {backfillStatusError.message?.replace(/^Error: /, "") ||
+              String(backfillStatusError)}
+          </span>
+        ) : null}
+      </SeedPanel>
 
       <p className="intro">
         {t(

@@ -1,5 +1,6 @@
 // Links existing ACTION_* cards on template boards to global Milestones by actionCardType.
 import { MILESTONE_SEEDS } from "./seedData/milestoneSeed";
+import { isClassTemplateBoard } from "./utils/boardPropagation";
 
 const ACTION_TYPES = MILESTONE_SEEDS.map((s) => s.actionCardType);
 
@@ -8,6 +9,7 @@ async function backfillLinkActionCardsToMilestones(
   { limit, dryRun }: { limit?: number; dryRun?: boolean },
   context: any
 ) {
+  const take = Math.min(Math.max(limit ?? 500, 1), 1000);
   const session = context.session;
   if (!session?.itemId) {
     throw new Error("You must be signed in.");
@@ -33,11 +35,9 @@ async function backfillLinkActionCardsToMilestones(
   );
 
   const boards = await context.query.ProposalBoard.findMany({
-    where: {
-      templateForClasses: { some: { id: { not: { equals: "" } } } },
-    },
     query: `
       id
+      templateForClasses { id }
       sections {
         cards {
           id
@@ -46,11 +46,12 @@ async function backfillLinkActionCardsToMilestones(
         }
       }
     `,
-    take: limit || 500,
+    take,
   });
 
   let updated = 0;
   for (const board of boards) {
+    if (!isClassTemplateBoard(board)) continue;
     for (const section of board.sections || []) {
       for (const card of section.cards || []) {
         if (!ACTION_TYPES.includes(card.type)) continue;

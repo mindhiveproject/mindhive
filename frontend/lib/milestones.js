@@ -47,6 +47,10 @@ export function resolveMilestonesFromQuery(data) {
   return mergeMilestones(globalMs, []);
 }
 
+/**
+ * Resolve the milestone for an action card.
+ * Stack: (1) card.milestone FK, (2) match card.type to milestone.actionCardType.
+ */
 export function getMilestoneFromCard(card, milestones = []) {
   if (card?.milestone?.id) {
     return (
@@ -57,6 +61,17 @@ export function getMilestoneFromCard(card, milestones = []) {
     return getMilestoneByActionCardType(card.type, milestones);
   }
   return null;
+}
+
+/** @see getMilestoneFromCard */
+export const resolveMilestoneFromCard = getMilestoneFromCard;
+
+/**
+ * Resolve the review form definition key for a milestone.
+ * Stack: (1) milestone.formDefinition.key, (2) formDefinitionKeyPattern + curriculum.
+ */
+export function resolveFormKeyForMilestone(milestone, curriculumType) {
+  return resolveReviewFormKey(milestone, curriculumType);
 }
 
 export function getMilestoneByActionCardType(actionCardType, milestones = []) {

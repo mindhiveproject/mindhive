@@ -276,6 +276,11 @@ async function createTemplateMilestone(
         formDefinition: copiedFormDefinition?.id
           ? { connect: { id: copiedFormDefinition.id } }
           : undefined,
+        ...(input.clonedFromMilestoneId
+          ? {
+              clonedFrom: { connect: { id: input.clonedFromMilestoneId } },
+            }
+          : {}),
         canReview: permissionIds.length
           ? { connect: permissionIds.map((id: string) => ({ id })) }
           : undefined,

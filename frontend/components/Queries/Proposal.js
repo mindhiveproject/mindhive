@@ -225,7 +225,12 @@ export const PROPOSAL_QUERY = gql`
             legacyBoardStatusField
             legacyOpenForCommentsField
             logEventName
+            formDefinitionKeyPattern
             title
+            formDefinition {
+              id
+              key
+            }
           }
           content
           revisedContent
@@ -274,7 +279,12 @@ export const GET_CARD_CONTENT = gql`
         legacyBoardStatusField
         legacyOpenForCommentsField
         logEventName
+        formDefinitionKeyPattern
         title
+        formDefinition {
+          id
+          key
+        }
       }
       publicId
       description
