@@ -1,6 +1,7 @@
 {
 	"actionCard": {
 		"clickToSubmit": "Haga clic para enviar para {{title}}",
+		"customStep": "Paso de revisión",
 		"dataCollection": "Recopilación de datos",
 		"deleteCardConfirmation": "¿Estás seguro de que quieres eliminar esta tarjeta? Esta acción no se puede deshacer.",
 		"deleteConfirm": "¿Estás seguro de que quieres eliminar esta tarjeta? Esta acción no se puede deshacer.",
@@ -8,6 +9,7 @@
 		"projectReport": "Informe del proyecto",
 		"proposalFeedback": "Comentarios sobre la propuesta",
 		"submitFor": "Enviar para {{title}}",
+		"submitForCustomMilestone": "Enviar para revisión",
 		"submitForDataCollection": "Presentar para recopilación de datos",
 		"submitForPeerFeedback": "Enviar para retroalimentación de pares",
 		"submitForProjectReport": "Presentar informe del proyecto",
@@ -26,7 +28,7 @@
 	"assigned": {
 		"addUser": "Añadir personas",
 		"assignCard": "Asignar esta tarjeta a un colaborador de este proyecto",
-		"canAssignTooltip": "",
+		"canAssignTooltip": "Puedes asignar perfiles a esta tarjeta.",
 		"cancel": "Cancelar",
 		"noCollaborators": "No hay colaboradores disponibles para este tablero.",
 		"noUsersFound": "No se encontró ningún perfil",
@@ -56,6 +58,8 @@
 			"close": "Cerrar",
 			"connect": "Conectar",
 			"content": "Contenido",
+			"customMilestone": "Paso de revisión personalizada",
+			"customMilestoneDescription": "Paso de revisión personalizado definido en esta plantilla.",
 			"disconnect": "Desconecte",
 			"done": "Hecho",
 			"linkItems": "Enlaces",
@@ -510,19 +514,19 @@
 				"barPlot": {
 					"columnsToPlot": "Columna(s) a graficar",
 					"dataFormat": {
-						"chipLong": "",
-						"chipWide": "",
+						"chipLong": "Largo",
+						"chipWide": "Ancho",
 						"googleSlidesAlt": "Presentaciones de Google",
 						"hintLong": "Si desea comparar columnas, haga clic aquí.",
 						"hintWide": "Si desea comparar diferentes grupos para una columna (variable), haga clic aquí.",
 						"longDescription": "Los datos se organizan de manera que cada observación (como la calificación de un estudiante) aparezca en una fila independiente, a menudo con una columna que indica las categorías (como las asignaturas). Este formato resulta útil para realizar análisis detallados entre categorías.",
 						"longTitle": "Formato de datos largo",
-						"panelRegionAriaLabel": "",
+						"panelRegionAriaLabel": "Cambiar la disposición de los datos: diagrama y recursos para el formato seleccionado.",
 						"sectionLabel": "Diseño de datos",
 						"slidesLink": "Haz clic aquí para ver las diapositivas de la presentación.",
 						"switchToLong": "Cambiar a formato largo",
 						"switchToWide": "Cambiar a formato ancho",
-						"toggleAriaLabel": "",
+						"toggleAriaLabel": "Mostrar u ocultar opciones de diseño de datos",
 						"wideDescription": "Los datos se organizan de forma que cada categoría (como las asignaturas) aparece en una columna independiente, y a menudo las filas representan las observaciones (como los estudiantes). Este formato facilita las comparaciones rápidas dentro de cada categoría.",
 						"wideTitle": "Formato de datos amplio"
 					},
@@ -704,12 +708,12 @@
 					"rankSectionTitle": "Clasifique sus condiciones",
 					"resources": {
 						"experimentalHypothesis": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "Próximamente habrá referencias.",
+							"title": "¿Qué es una hipótesis experimental?"
 						},
 						"rankOrdering": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "Próximamente habrá referencias.",
+							"title": "Predicciones de ordenación de rangos"
 						}
 					},
 					"sectionHypothesisTitle": "Tu hipótesis experimental",
@@ -734,12 +738,12 @@
 				},
 				"common": {
 					"help": {
-						"ariaLabel": "",
-						"resourcesIntro": ""
+						"ariaLabel": "Recursos y ayuda",
+						"resourcesIntro": "Utilice los botones que aparecen a continuación para abrir una referencia en una nueva pestaña cuando haya un enlace disponible."
 					},
 					"resources": {
-						"noLink": "",
-						"openLinkHint": ""
+						"noLink": "No hay enlace externo",
+						"openLinkHint": "Haz clic aquí para acceder al recurso."
 					}
 				},
 				"corr": {
@@ -762,12 +766,12 @@
 					"loadingBlocks": "Cargando datos del bloque...",
 					"resources": {
 						"correlationalHypothesis": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "Próximamente habrá referencias.",
+							"title": "¿Qué es una hipótesis correlacional?"
 						},
 						"directionality": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "Próximamente habrá referencias.",
+							"title": "Elección de términos de direccionalidad"
 						}
 					},
 					"sectionTitle": "Tu hipótesis de correlación",
@@ -775,20 +779,20 @@
 					"willBeRelatedTo": "estará relacionado con"
 				},
 				"default": {
-					"group": "",
+					"group": "Grupo",
 					"header": {
-						"iconAlt": "",
-						"title": ""
+						"iconAlt": "Ejes",
+						"title": "Ejes"
 					},
-					"xAxis": "",
-					"yAxis": ""
+					"xAxis": "Eje X",
+					"yAxis": "Eje Y"
 				}
 			},
 			"editor": {
 				"codeTab": "Código",
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "Código",
+					"variables": "Variables"
 				},
 				"variablesTab": "Variables"
 			},
@@ -808,8 +812,8 @@
 			"widgetSettings": "Configuración del widget"
 		},
 		"sideNav": {
-			"addComponent": "",
-			"addComponentAria": "",
+			"addComponent": "Componente",
+			"addComponentAria": "Agregue un componente a este espacio de trabajo.",
 			"addJournal": "Diario",
 			"addJournalScratch": "Crea un diario desde cero",
 			"addJournalTemplate": "Agregar una plantilla de diario",
@@ -966,103 +970,103 @@
 		"statTest": {
 			"axes": {
 				"anova": {
-					"columnsToAnova": "",
+					"columnsToAnova": "Columna(s) a incluir en el ANOVA",
 					"dataFormat": {
-						"currentlyPerforming": "",
+						"currentlyPerforming": "Actualmente realizando:",
 						"long": {
-							"description": "",
-							"title": ""
+							"description": "En el ejemplo anterior, seleccionaríamos la columna 'attrib' como columna de agrupación. Esta agrupación se realiza sobre la columna 'value', que contiene los valores para las condiciones c1, c2 y c3.",
+							"title": "Cambie a usar una columna de etiquetas para ordenar las filas de una columna de valores."
 						},
 						"summaryLong": {
-							"hint": "",
-							"main": ""
+							"hint": "(Haz clic aquí si quieres comparar valores en columnas diferentes)",
+							"main": "ANOVA unidireccional en una columna que contiene valores utilizando una columna de agrupación que contiene las etiquetas del grupo en cada fila."
 						},
 						"summaryWide": {
-							"between": "",
-							"columns": "",
-							"hint": "",
-							"prefix": ""
+							"between": "Entre",
+							"columns": "tres o más columnas.",
+							"hint": "(Haga clic aquí para usar una columna de etiquetas y agrupar cada fila por etiqueta única)",
+							"prefix": "Anova unidireccional"
 						},
 						"wide": {
-							"description": "",
-							"title": ""
+							"description": "En el ejemplo anterior, seleccionaríamos las columnas c1, c2 y c3 para realizar un ANOVA unidireccional sobre ellas.",
+							"title": "Cambie a realizar un ANOVA unidireccional entre tres o más columnas."
 						}
 					},
-					"groupingColumn": "",
-					"quantitativeColumn": "",
+					"groupingColumn": "Columna de agrupación",
+					"quantitativeColumn": "Columna cuantitativa",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "Enlace externo",
+						"scribbrLinkTitle": "¿Qué es un ANOVA unidireccional?"
 					}
 				},
 				"common": {
 					"dataFormat": {
-						"chipLong": "",
-						"chipWide": "",
-						"panelRegionAriaLabel": "",
-						"sectionLabel": "",
-						"toggleAriaLabel": ""
+						"chipLong": "Largo",
+						"chipWide": "Ancho",
+						"panelRegionAriaLabel": "Diseño de datos: diagrama para el formato seleccionado",
+						"sectionLabel": "Diseño de datos",
+						"toggleAriaLabel": "Mostrar u ocultar opciones de diseño de datos"
 					},
 					"header": {
-						"iconAlt": "",
-						"title": ""
+						"iconAlt": "Ejes",
+						"title": "Ejes"
 					},
 					"help": {
-						"ariaLabel": "",
-						"resourcesIntro": ""
+						"ariaLabel": "Recursos y ayuda",
+						"resourcesIntro": "Obtenga más información sobre este componente con los recursos que se muestran a continuación."
 					},
 					"resources": {
-						"noLink": "",
-						"openLinkHint": "",
-						"sectionTitle": ""
+						"noLink": "No hay enlace externo",
+						"openLinkHint": "Haz clic aquí para acceder al recurso.",
+						"sectionTitle": "Recursos"
 					}
 				},
 				"default": {
-					"column1": "",
-					"column2": ""
+					"column1": "Primera columna",
+					"column2": "Segunda columna"
 				},
 				"pearson": {
-					"predictedColumn": "",
-					"predictorColumn": "",
+					"predictedColumn": "Columna prevista",
+					"predictorColumn": "Columna predictora",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "Enlace externo",
+						"scribbrLinkTitle": "¿Qué es la correlación de Pearson?"
 					}
 				},
 				"tTest": {
-					"col1": "",
-					"col2": "",
+					"col1": "Primera columna",
+					"col2": "Segunda columna",
 					"dataFormat": {
-						"currentlyPerforming": "",
+						"currentlyPerforming": "Actualmente realizando:",
 						"long": {
-							"description": "",
-							"title": ""
+							"description": "En el ejemplo anterior, seleccionaríamos la columna 'attrib' como columna de agrupación. Esta agrupación se realiza en la columna 'value', que contiene valores para ambas condiciones.",
+							"title": "Cambie a usar una columna de etiquetas para ordenar las filas de una columna de valores."
 						},
 						"summaryLong": {
-							"main": ""
+							"main": "Prueba t en una columna que contiene valores utilizando una columna de agrupación que contiene etiquetas para cada fila."
 						},
 						"summaryWide": {
-							"between": "",
-							"columns": "",
-							"prefix": ""
+							"between": "Entre",
+							"columns": "dos columnas.",
+							"prefix": "Prueba t"
 						},
 						"wide": {
-							"description": "",
-							"title": ""
+							"description": "En el ejemplo anterior, seleccionaríamos las columnas c1 y c2 para realizar una prueba t sobre ellas.",
+							"title": "Cambiar a realizar una prueba t entre dos columnas."
 						}
 					},
-					"groupingColumn": "",
-					"quantitativeColumn": "",
+					"groupingColumn": "Columna de agrupación",
+					"quantitativeColumn": "Columna cuantitativa",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "Enlace externo",
+						"scribbrLinkTitle": "Prueba t para muestras independientes"
 					}
 				}
 			},
 			"editor": {
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "Código",
+					"variables": "Variables"
 				}
 			},
 			"emptyState": {
@@ -1070,9 +1074,9 @@
 				"title": "Su prueba estadística está lista para ser configurada."
 			},
 			"fields": {
-				"clearSelection": "",
-				"selectPlaceholder": "",
-				"selectVariablesPlaceholder": ""
+				"clearSelection": "Ninguno",
+				"selectPlaceholder": "Seleccione {{field}}",
+				"selectVariablesPlaceholder": "Seleccione variable(s)"
 			}
 		},
 		"table": {
@@ -1224,7 +1228,7 @@
 		"allowMovingCards": "Permitir mover tarjetas",
 		"allowMovingSections": "Permitir secciones móviles",
 		"cancel": "Cancelar",
-		"classTemplateReadOnly": "",
+		"classTemplateReadOnly": "Plantilla de clase (utilizada por el tablero de clase)",
 		"collaborators": "Colaboradores",
 		"copyLink": "Copiar enlace del estudio",
 		"createYourStudyProposal": "Crea aquí tu propuesta de estudio para comenzar tu viaje de investigación",
@@ -1381,7 +1385,7 @@
 		"noNotes": "Aún no hay notas ingresadas. Haz clic derecho para agregar notas."
 	},
 	"noVideoPlaceholder": "No hay vídeo de introducción disponible.",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "Los estudiantes no pueden asignar sus tarjetas a otras personas.",
 	"overview": {
 		"actions": "Comportamiento",
 		"copy": "Copiar",
@@ -1515,7 +1519,7 @@
 		"boardTypeMentorNote": "Esto es relevante para los mentores que brindan retroalimentación a sus juntas estudiantiles. Si tiene alguna pregunta, comuníquese con un miembro de MindHive.",
 		"boardTypeMindHive": "",
 		"boardTypeYouQuantified": "",
-		"classTemplateLabel": "",
+		"classTemplateLabel": "Este tablero es una plantilla de clase",
 		"copy": "Copiar",
 		"create": "Crear una nueva propuesta",
 		"dateCreated": "Fecha de creación",
@@ -1605,11 +1609,11 @@
 			"assignedTo": {
 				"disable": "Desactivar asignación de estudiantes a tarjetas",
 				"disableStudentsAssign": "Restringir a profesores y mentores",
-				"empty": "",
+				"empty": "Aún no hay personas asignadas en este tablero.",
 				"enable": "Activar asignación de estudiantes a tarjetas",
 				"enableStudentsAssign": "Permitir a estudiantes asignar tarjetas"
 			},
-			"emptyState": "",
+			"emptyState": "No se encontraron tarjetas que coincidan con los filtros seleccionados. Ajuste su estado, el paso de revisión o los filtros asignados para ver las tarjetas.",
 			"reviewSteps": "Pasos de revisión",
 			"title": "Filtrar por"
 		}
@@ -1864,6 +1868,42 @@
 		"card": "tarjeta",
 		"cards": "tarjetas",
 		"cardsCount": "{{count}} tarjeta{{count == 1 ? '' : 's'}}",
+		"createCardModal": {
+			"alreadyAddedLabel": "{{label}} (ya añadido)",
+			"cancel": "Cancelar",
+			"create": "Crear",
+			"creating": "Creando...",
+			"custom": {
+				"canReview": "¿Quién puede revisar?",
+				"cloneFrom": "Copiar un formulario existente",
+				"description": "Descripción",
+				"fromScratch": "Empezar desde el principio",
+				"label": "Etiqueta de acción",
+				"labelPlaceholder": "Introduzca una etiqueta de acción",
+				"selectSource": "Formulario para copiar",
+				"selectSourcePlaceholder": "Seleccione un paso de revisión"
+			},
+			"customPreview": "Crea un paso de revisión personalizado con su propia etiqueta de hito.",
+			"noPreview": "Este tipo de tarjeta no tiene ningún formulario de reseña vinculado.",
+			"previewLabel": "Vista previa del formulario de revisión",
+			"previewLoading": "Cargando vista previa...",
+			"proposalPreview": "Agrega una tarjeta de propuesta estándar con campos de contenido para los estudiantes.",
+			"scratchPreview": "Crea un formulario de revisión preliminar con una tarjeta vacía, vinculada a este paso. Publica el formulario en el panel de administración antes de que aparezca en revisión.",
+			"templateSourceLabel": "{{title}} (personalizado)",
+			"title": "Crear una nueva tarjeta",
+			"titleLabel": "Título de la tarjeta",
+			"titlePlaceholder": "Introduzca el título de la tarjeta",
+			"typeLabel": "Tipo de tarjeta",
+			"typePlaceholder": "Seleccione un tipo de tarjeta",
+			"types": {
+				"actionCollectingData": "Acción predeterminada: Iniciar la recopilación de datos",
+				"actionPeerFeedback": "Acción predeterminada: Enviar para recibir comentarios de otros usuarios.",
+				"actionProjectReport": "Acción predeterminada: Enviar informe del proyecto",
+				"actionSubmit": "Acción predeterminada: Enviar para recibir comentarios sobre la propuesta.",
+				"custom": "Crea tu propio paso de revisión",
+				"proposal": "Tarjeta de propuesta"
+			}
+		},
 		"deleteSectionConfirm": "¿Seguro que desea eliminar esta sección de propuestas? Todas las tarjetas de esta sección también se eliminarán. Esta acción no se puede deshacer.",
 		"enterNewTitle": "Por favor, introduzca un título",
 		"newCard": "Nueva tarjeta",
@@ -2137,18 +2177,30 @@
 		"uploadLabjs": "Primero cargue un archivo json lab.js",
 		"vasBuilder": "Constructor de VAS"
 	},
+	"templateMilestones": {
+		"addStep": "Agregar paso de revisión",
+		"cancel": "Cancelar",
+		"canReview": "¿Quién puede revisar?",
+		"create": "Crear paso",
+		"deactivate": "Desactivar",
+		"description": "Añade pasos de revisión personalizados a esta plantilla de clase. Cada paso crea una tarjeta de acción que los estudiantes utilizan para enviar sus trabajos y recibir comentarios.",
+		"hasActionCard": "Tarjeta de acción vinculada",
+		"stepDescription": "Descripción",
+		"stepTitle": "Título del paso",
+		"title": "Pasos de revisión"
+	},
 	"templateTab": "Plantilla",
 	"testAndCollect": "Prueba y recopila",
 	"tiptap": {
 		"insertImageAria": "Insertar imagen",
 		"insertImagePrompt": "Introduzca la URL de la imagen:",
 		"mediaCancelEdit": "Cancelar",
-		"mediaCanvaExportThumb": "",
+		"mediaCanvaExportThumb": "Exportación a PDF de Canva",
 		"mediaDelete": "BORRAR",
 		"mediaDeleteConfirm": "¿Eliminar este contenido multimedia de tu biblioteca? Es posible que las imágenes ya insertadas en el contenido aparezcan dañadas.",
 		"mediaDeleteFailed": "No se pudo eliminar este archivo multimedia.",
 		"mediaDescriptionPlaceholder": "Si lo desea, puede añadir notas.",
-		"mediaDownloadPdf": "",
+		"mediaDownloadPdf": "Descargar PDF",
 		"mediaEdit": "Editar",
 		"mediaEditFieldsRequired": "El título y el nombre del archivo no pueden estar vacíos.",
 		"mediaEditMeta": "Editar detalles",

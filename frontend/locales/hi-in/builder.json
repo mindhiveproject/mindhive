@@ -1,6 +1,7 @@
 {
 	"actionCard": {
 		"clickToSubmit": "{{शीर्षक}} सबमिट करने के लिए क्लिक करें",
+		"customStep": "समीक्षा चरण",
 		"dataCollection": "डेटा संग्रहण",
 		"deleteCardConfirmation": "क्या आप वाकई इस कार्ड को हटाना चाहते हैं? इस कार्रवाई को पूर्ववत नहीं किया जा सकता।",
 		"deleteConfirm": "क्या आप वाकई इस कार्ड को हटाना चाहते हैं? इस कार्रवाई को पूर्ववत नहीं किया जा सकता।",
@@ -8,6 +9,7 @@
 		"projectReport": "परियोजना रिपोर्ट",
 		"proposalFeedback": "प्रस्ताव प्रतिक्रिया",
 		"submitFor": "{{शीर्षक}} के लिए सबमिट करें",
+		"submitForCustomMilestone": "समीक्षा के लिए प्रस्तुत करें",
 		"submitForDataCollection": "डेटा संग्रह के लिए सबमिट करें",
 		"submitForPeerFeedback": "सहकर्मी प्रतिक्रिया के लिए सबमिट करें",
 		"submitForProjectReport": "परियोजना रिपोर्ट के लिए सबमिट करें",
@@ -26,7 +28,7 @@
 	"assigned": {
 		"addUser": "लोगों को जोड़ें",
 		"assignCard": "इस कार्ड को इस प्रोजेक्ट के किसी सहयोगी को सौंपें",
-		"canAssignTooltip": "",
+		"canAssignTooltip": "आप इस कार्ड को प्रोफाइल असाइन कर सकते हैं।",
 		"cancel": "रद्द करना",
 		"noCollaborators": "इस बोर्ड के लिए कोई सहयोगी उपलब्ध नहीं हैं।",
 		"noUsersFound": "कोई प्रोफ़ाइल नहीं मिली",
@@ -56,6 +58,8 @@
 			"close": "बंद करना",
 			"connect": "जोड़ना",
 			"content": "सामग्री",
+			"customMilestone": "कस्टम समीक्षा चरण",
+			"customMilestoneDescription": "इस टेम्पलेट पर कस्टम समीक्षा चरण परिभाषित किया गया है।",
 			"disconnect": "डिस्कनेक्ट",
 			"done": "हो गया",
 			"linkItems": "लिंक आइटम",
@@ -510,19 +514,19 @@
 				"barPlot": {
 					"columnsToPlot": "प्लॉट करने के लिए कॉलम",
 					"dataFormat": {
-						"chipLong": "",
-						"chipWide": "",
+						"chipLong": "लंबा",
+						"chipWide": "चौड़ा",
 						"googleSlidesAlt": "गूगल स्लाइड्स",
 						"hintLong": "यदि आप कॉलम की तुलना करना चाहते हैं, तो यहां क्लिक करें।",
 						"hintWide": "यदि आप किसी एक कॉलम (चर) के लिए विभिन्न समूहों की तुलना करना चाहते हैं, तो यहां क्लिक करें।",
 						"longDescription": "डेटा को इस प्रकार व्यवस्थित किया गया है कि प्रत्येक अवलोकन (जैसे किसी छात्र का परीक्षा स्कोर) अपनी अलग पंक्ति में दिखाई देता है, और अक्सर एक कॉलम श्रेणियों (जैसे विषय) को दर्शाता है। यह प्रारूप विभिन्न श्रेणियों में विस्तृत विश्लेषण के लिए उपयोगी है।",
 						"longTitle": "लंबे डेटा प्रारूप",
-						"panelRegionAriaLabel": "",
+						"panelRegionAriaLabel": "डेटा लेआउट बदलें: चयनित प्रारूप के लिए आरेख और संसाधन",
 						"sectionLabel": "डेटा लेआउट",
 						"slidesLink": "लेक्चर स्लाइड्स देखने के लिए यहां क्लिक करें",
 						"switchToLong": "लंबे प्रारूप पर स्विच करें",
 						"switchToWide": "वाइड फॉर्मेट पर स्विच करें",
-						"toggleAriaLabel": "",
+						"toggleAriaLabel": "डेटा लेआउट विकल्प दिखाएं या छिपाएं",
 						"wideDescription": "डेटा को इस प्रकार व्यवस्थित किया जाता है कि प्रत्येक श्रेणी (जैसे विषय) एक अलग कॉलम के रूप में दिखाई देती है, और अक्सर पंक्तियों में अवलोकन (जैसे छात्र) दर्शाए जाते हैं। यह प्रारूप श्रेणियों के भीतर त्वरित तुलना के लिए सरल है।",
 						"wideTitle": "व्यापक डेटा प्रारूप"
 					},
@@ -704,12 +708,12 @@
 					"rankSectionTitle": "अपनी स्थितियों को क्रमबद्ध करें",
 					"resources": {
 						"experimentalHypothesis": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "संदर्भ जल्द ही उपलब्ध होगा।",
+							"title": "प्रायोगिक परिकल्पना क्या है?"
 						},
 						"rankOrdering": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "संदर्भ जल्द ही उपलब्ध होगा।",
+							"title": "भविष्यवाणियों का क्रम निर्धारण"
 						}
 					},
 					"sectionHypothesisTitle": "आपकी प्रायोगिक परिकल्पना",
@@ -734,12 +738,12 @@
 				},
 				"common": {
 					"help": {
-						"ariaLabel": "",
-						"resourcesIntro": ""
+						"ariaLabel": "संसाधन और सहायता",
+						"resourcesIntro": "लिंक उपलब्ध होने पर संदर्भ को नए टैब में खोलने के लिए नीचे दिए गए बटनों का उपयोग करें।"
 					},
 					"resources": {
-						"noLink": "",
-						"openLinkHint": ""
+						"noLink": "कोई बाहरी लिंक नहीं",
+						"openLinkHint": "संसाधन तक पहुँचने के लिए यहाँ क्लिक करें"
 					}
 				},
 				"corr": {
@@ -762,12 +766,12 @@
 					"loadingBlocks": "ब्लॉक डेटा लोड हो रहा है...",
 					"resources": {
 						"correlationalHypothesis": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "संदर्भ जल्द ही उपलब्ध होगा।",
+							"title": "सहसंबंधी परिकल्पना क्या है?"
 						},
 						"directionality": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "संदर्भ जल्द ही उपलब्ध होगा।",
+							"title": "दिशात्मकता शब्दों का चयन करना"
 						}
 					},
 					"sectionTitle": "आपकी सहसंबंधी परिकल्पना",
@@ -775,20 +779,20 @@
 					"willBeRelatedTo": "संबंधित होगा"
 				},
 				"default": {
-					"group": "",
+					"group": "समूह",
 					"header": {
-						"iconAlt": "",
-						"title": ""
+						"iconAlt": "कुल्हाड़ियों",
+						"title": "कुल्हाड़ियों"
 					},
-					"xAxis": "",
-					"yAxis": ""
+					"xAxis": "X- अक्ष",
+					"yAxis": "शाफ़्ट"
 				}
 			},
 			"editor": {
 				"codeTab": "कोड",
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "कोड",
+					"variables": "चर"
 				},
 				"variablesTab": "चर"
 			},
@@ -808,8 +812,8 @@
 			"widgetSettings": "विजेट सेटिंग्स"
 		},
 		"sideNav": {
-			"addComponent": "",
-			"addComponentAria": "",
+			"addComponent": "अवयव",
+			"addComponentAria": "इस वर्कस्पेस में एक कंपोनेंट जोड़ें",
 			"addJournal": "पत्रिका",
 			"addJournalScratch": "बिल्कुल शुरुआत से एक डायरी बनाएं",
 			"addJournalTemplate": "जर्नल टेम्पलेट जोड़ें",
@@ -966,103 +970,103 @@
 		"statTest": {
 			"axes": {
 				"anova": {
-					"columnsToAnova": "",
+					"columnsToAnova": "ANOVA में शामिल किए जाने वाले स्तंभ",
 					"dataFormat": {
-						"currentlyPerforming": "",
+						"currentlyPerforming": "वर्तमान में प्रदर्शन कर रहे हैं:",
 						"long": {
-							"description": "",
-							"title": ""
+							"description": "ऊपर दिए गए उदाहरण में, हम 'attrib' कॉलम को ग्रुपिंग कॉलम के रूप में चुनेंगे। यह ग्रुपिंग 'value' कॉलम पर की जाएगी जिसमें c1, c2 और c3 शर्तों के लिए मान शामिल हैं।",
+							"title": "किसी मान स्तंभ की पंक्तियों को सॉर्ट करने के लिए लेबल कॉलम का उपयोग करना शुरू करें"
 						},
 						"summaryLong": {
-							"hint": "",
-							"main": ""
+							"hint": "(विभिन्न कॉलमों में मानों की तुलना करने के लिए यहां क्लिक करें)",
+							"main": "एक पंक्ति में समूह के लेबल वाले समूहीकरण स्तंभ का उपयोग करके मानों वाले स्तंभ पर एकतरफ़ा एनोवा (One-Way ANOVA) विश्लेषण किया गया।"
 						},
 						"summaryWide": {
-							"between": "",
-							"columns": "",
-							"hint": "",
-							"prefix": ""
+							"between": "बीच में",
+							"columns": "तीन या अधिक स्तंभ।",
+							"hint": "(प्रत्येक पंक्ति को विशिष्ट लेबल के अनुसार समूहित करने के लिए लेबल कॉलम का उपयोग करने के लिए यहां क्लिक करें)",
+							"prefix": "वन-वे एनोवा"
 						},
 						"wide": {
-							"description": "",
-							"title": ""
+							"description": "ऊपर दिए गए उदाहरण में, हम c1, c2 और c3 कॉलम का चयन करेंगे और उन पर वन-वे एनोवा विश्लेषण करेंगे।",
+							"title": "तीन या अधिक स्तंभों के बीच एक-तरफ़ा एनोवा विश्लेषण करने के लिए स्विच करें।"
 						}
 					},
-					"groupingColumn": "",
-					"quantitativeColumn": "",
+					"groupingColumn": "समूहीकरण स्तंभ",
+					"quantitativeColumn": "मात्रात्मक स्तंभ",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "बाहरी लिंक",
+						"scribbrLinkTitle": "वन-वे एनोवा क्या है?"
 					}
 				},
 				"common": {
 					"dataFormat": {
-						"chipLong": "",
-						"chipWide": "",
-						"panelRegionAriaLabel": "",
-						"sectionLabel": "",
-						"toggleAriaLabel": ""
+						"chipLong": "लंबा",
+						"chipWide": "चौड़ा",
+						"panelRegionAriaLabel": "डेटा लेआउट: चयनित प्रारूप के लिए आरेख",
+						"sectionLabel": "डेटा लेआउट",
+						"toggleAriaLabel": "डेटा लेआउट विकल्प दिखाएं या छिपाएं"
 					},
 					"header": {
-						"iconAlt": "",
-						"title": ""
+						"iconAlt": "कुल्हाड़ियों",
+						"title": "कुल्हाड़ियों"
 					},
 					"help": {
-						"ariaLabel": "",
-						"resourcesIntro": ""
+						"ariaLabel": "संसाधन और सहायता",
+						"resourcesIntro": "नीचे दिए गए संसाधनों की मदद से इस घटक के बारे में और अधिक जानें।"
 					},
 					"resources": {
-						"noLink": "",
-						"openLinkHint": "",
-						"sectionTitle": ""
+						"noLink": "कोई बाहरी लिंक नहीं",
+						"openLinkHint": "संसाधन तक पहुँचने के लिए यहाँ क्लिक करें",
+						"sectionTitle": "संसाधन"
 					}
 				},
 				"default": {
-					"column1": "",
-					"column2": ""
+					"column1": "पहला स्तंभ",
+					"column2": "दूसरा स्तंभ"
 				},
 				"pearson": {
-					"predictedColumn": "",
-					"predictorColumn": "",
+					"predictedColumn": "अनुमानित स्तंभ",
+					"predictorColumn": "भविष्यवक्ता स्तंभ",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "बाहरी लिंक",
+						"scribbrLinkTitle": "पियर्सन सहसंबंध क्या है?"
 					}
 				},
 				"tTest": {
-					"col1": "",
-					"col2": "",
+					"col1": "पहला स्तंभ",
+					"col2": "दूसरा स्तंभ",
 					"dataFormat": {
-						"currentlyPerforming": "",
+						"currentlyPerforming": "वर्तमान में प्रदर्शन कर रहे हैं:",
 						"long": {
-							"description": "",
-							"title": ""
+							"description": "ऊपर दिए गए उदाहरण में, हम 'attrib' कॉलम को ग्रुपिंग कॉलम के रूप में चुनेंगे। यह ग्रुपिंग 'value' कॉलम पर की जाएगी जिसमें दोनों शर्तों के लिए मान शामिल हैं।",
+							"title": "किसी मान स्तंभ की पंक्तियों को सॉर्ट करने के लिए लेबल कॉलम का उपयोग करना शुरू करें"
 						},
 						"summaryLong": {
-							"main": ""
+							"main": "प्रत्येक पंक्ति के लिए लेबल वाले समूहीकरण कॉलम का उपयोग करके मानों वाले कॉलम पर टी-टेस्ट करें"
 						},
 						"summaryWide": {
-							"between": "",
-							"columns": "",
-							"prefix": ""
+							"between": "बीच में",
+							"columns": "दो स्तंभ।",
+							"prefix": "T- परीक्षण"
 						},
 						"wide": {
-							"description": "",
-							"title": ""
+							"description": "ऊपर दिए गए उदाहरण में, हम कॉलम c1 और c2 का चयन करके उन पर t-परीक्षण करेंगे।",
+							"title": "दो स्तंभों के बीच टी-टेस्ट करने के लिए स्विच करें"
 						}
 					},
-					"groupingColumn": "",
-					"quantitativeColumn": "",
+					"groupingColumn": "समूहीकरण स्तंभ",
+					"quantitativeColumn": "मात्रात्मक स्तंभ",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "बाहरी लिंक",
+						"scribbrLinkTitle": "स्वतंत्र नमूने टी-परीक्षण"
 					}
 				}
 			},
 			"editor": {
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "कोड",
+					"variables": "चर"
 				}
 			},
 			"emptyState": {
@@ -1070,9 +1074,9 @@
 				"title": "आपका सांख्यिकीय परीक्षण कॉन्फ़िगरेशन के लिए तैयार है।"
 			},
 			"fields": {
-				"clearSelection": "",
-				"selectPlaceholder": "",
-				"selectVariablesPlaceholder": ""
+				"clearSelection": "कोई नहीं",
+				"selectPlaceholder": " {{field}}का चयन करें",
+				"selectVariablesPlaceholder": "चर का चयन करें"
 			}
 		},
 		"table": {
@@ -1224,7 +1228,7 @@
 		"allowMovingCards": "कार्डों को स्थानांतरित करने की अनुमति दें",
 		"allowMovingSections": "गतिशील अनुभागों की अनुमति दें",
 		"cancel": "रद्द करना",
-		"classTemplateReadOnly": "",
+		"classTemplateReadOnly": "कक्षा टेम्पलेट (कक्षा बोर्ड द्वारा उपयोग किया जाता है)",
 		"collaborators": "सहयोगियों",
 		"copyLink": "अध्ययन लिंक कॉपी करें",
 		"createYourStudyProposal": "अपनी शोध यात्रा शुरू करने के लिए यहां अपना अध्ययन प्रस्ताव बनाएं",
@@ -1381,7 +1385,7 @@
 		"noNotes": "अभी तक कोई नोट दर्ज नहीं किया गया है। नोट जोड़ने के लिए राइट-क्लिक करें।"
 	},
 	"noVideoPlaceholder": "कोई परिचयात्मक वीडियो उपलब्ध नहीं है।",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "छात्र स्वयं दूसरों को अपने कार्ड आवंटित नहीं कर सकते।",
 	"overview": {
 		"actions": "कार्रवाई",
 		"copy": "प्रतिलिपि",
@@ -1515,7 +1519,7 @@
 		"boardTypeMentorNote": "यह आपके छात्र बोर्ड को प्रतिक्रिया देने वाले सलाहकारों के लिए प्रासंगिक है। यदि आपके कोई प्रश्न हैं, तो कृपया माइंडहाइव के किसी सदस्य से संपर्क करें।",
 		"boardTypeMindHive": "",
 		"boardTypeYouQuantified": "",
-		"classTemplateLabel": "",
+		"classTemplateLabel": "यह बोर्ड एक क्लास टेम्प्लेट है।",
 		"copy": "प्रतिलिपि",
 		"create": "एक नया प्रस्ताव बनाएँ",
 		"dateCreated": "बनाया गया दिनांक",
@@ -1605,11 +1609,11 @@
 			"assignedTo": {
 				"disable": "कार्ड असाइन करने से छात्रों को अक्षम करें",
 				"disableStudentsAssign": "केवल शिक्षकों और मेंटर्स तक सीमित करें",
-				"empty": "",
+				"empty": "इस बोर्ड पर अभी तक किसी को भी नियुक्त नहीं किया गया है।",
 				"enable": "कार्ड असाइन करने के लिए छात्रों को सक्षम करें",
 				"enableStudentsAssign": "छात्रों को कार्ड असाइन करने की अनुमति दें"
 			},
-			"emptyState": "",
+			"emptyState": "चयनित फ़िल्टरों से कोई कार्ड मेल नहीं खाते। कार्ड देखने के लिए कृपया अपनी स्थिति, समीक्षा चरण या निर्धारित फ़िल्टरों को समायोजित करें।",
 			"reviewSteps": "समीक्षा चरण",
 			"title": "फिल्टर के द्वारा"
 		}
@@ -1864,6 +1868,42 @@
 		"card": "कार्ड",
 		"cards": "पत्ते",
 		"cardsCount": "{{count}} कार्ड{{count == 1 ? '' : 's'}}",
+		"createCardModal": {
+			"alreadyAddedLabel": "{{label}} (पहले ही जोड़ा जा चुका है)",
+			"cancel": "रद्द करना",
+			"create": "बनाएं",
+			"creating": "सृजन...",
+			"custom": {
+				"canReview": "कौन समीक्षा कर सकता है?",
+				"cloneFrom": "मौजूदा फॉर्म की प्रतिलिपि बनाएँ",
+				"description": "विवरण",
+				"fromScratch": "शून्य से शुरू करें",
+				"label": "क्रिया लेबल",
+				"labelPlaceholder": "एक क्रिया लेबल दर्ज करें",
+				"selectSource": "प्रतिलिपि बनाने के लिए फ़ॉर्म",
+				"selectSourcePlaceholder": "समीक्षा चरण का चयन करें"
+			},
+			"customPreview": "यह अपने स्वयं के माइलस्टोन लेबल के साथ एक कस्टम समीक्षा चरण बनाता है।",
+			"noPreview": "इस कार्ड प्रकार से कोई समीक्षा प्रपत्र संबद्ध नहीं है।",
+			"previewLabel": "समीक्षा प्रपत्र का पूर्वावलोकन",
+			"previewLoading": "पूर्वावलोकन लोड हो रहा है...",
+			"proposalPreview": "छात्रों के लिए सामग्री फ़ील्ड के साथ एक नियमित प्रस्ताव कार्ड जोड़ता है।",
+			"scratchPreview": "इस चरण से जुड़ा एक खाली कार्ड वाला ड्राफ्ट समीक्षा फॉर्म तैयार करता है। समीक्षा में प्रदर्शित होने से पहले फॉर्म को एडमिन में प्रकाशित करें।",
+			"templateSourceLabel": "{{title}} (कस्टम)",
+			"title": "नया कार्ड बनाएं",
+			"titleLabel": "कार्ड शीर्षक",
+			"titlePlaceholder": "कार्ड का शीर्षक दर्ज करें",
+			"typeLabel": "कार्ड का प्रकार",
+			"typePlaceholder": "कार्ड का प्रकार चुनें",
+			"types": {
+				"actionCollectingData": "डिफ़ॉल्ट कार्रवाई: डेटा एकत्र करना शुरू करें",
+				"actionPeerFeedback": "डिफ़ॉल्ट कार्रवाई: सहकर्मी प्रतिक्रिया के लिए सबमिट करें",
+				"actionProjectReport": "डिफ़ॉल्ट कार्रवाई: प्रोजेक्ट रिपोर्ट सबमिट करें",
+				"actionSubmit": "डिफ़ॉल्ट कार्रवाई: प्रस्ताव पर प्रतिक्रिया के लिए सबमिट करें",
+				"custom": "अपना खुद का समीक्षा चरण बनाएं",
+				"proposal": "प्रस्ताव कार्ड"
+			}
+		},
 		"deleteSectionConfirm": "क्या आप वाकई इस प्रस्ताव अनुभाग को हटाना चाहते हैं? इस अनुभाग के सभी कार्ड भी हटा दिए जाएँगे। इस कार्रवाई को पूर्ववत नहीं किया जा सकता।",
 		"enterNewTitle": "कृपया शीर्षक दर्ज करें",
 		"newCard": "नया कार्ड",
@@ -2137,18 +2177,30 @@
 		"uploadLabjs": "कृपया पहले lab.js json फ़ाइल अपलोड करें",
 		"vasBuilder": "वीएएस बिल्डर"
 	},
+	"templateMilestones": {
+		"addStep": "समीक्षा चरण जोड़ें",
+		"cancel": "रद्द करना",
+		"canReview": "कौन समीक्षा कर सकता है?",
+		"create": "चरण बनाएं",
+		"deactivate": "निष्क्रिय करें",
+		"description": "इस क्लास टेम्प्लेट में कस्टम समीक्षा चरण जोड़ें। प्रत्येक चरण एक एक्शन कार्ड बनाता है जिसका उपयोग छात्र प्रतिक्रिया के लिए अपना कार्य जमा करने के लिए करते हैं।",
+		"hasActionCard": "एक्शन कार्ड लिंक किया गया",
+		"stepDescription": "विवरण",
+		"stepTitle": "चरण शीर्षक",
+		"title": "समीक्षा चरण"
+	},
 	"templateTab": "खाका",
 	"testAndCollect": "परीक्षण और संग्रह",
 	"tiptap": {
 		"insertImageAria": "चित्र डालें",
 		"insertImagePrompt": "छवि का URL दर्ज करें:",
 		"mediaCancelEdit": "रद्द करना",
-		"mediaCanvaExportThumb": "",
+		"mediaCanvaExportThumb": "कैनवा पीडीएफ निर्यात",
 		"mediaDelete": "मिटाना",
 		"mediaDeleteConfirm": "क्या आप इस मीडिया को अपनी लाइब्रेरी से हटाना चाहते हैं? सामग्री में पहले से मौजूद छवियां टूटी हुई दिखाई दे सकती हैं।",
 		"mediaDeleteFailed": "इस मीडिया को हटाया नहीं जा सका।",
 		"mediaDescriptionPlaceholder": "आप चाहें तो नोट्स जोड़ सकते हैं।",
-		"mediaDownloadPdf": "",
+		"mediaDownloadPdf": "पीडीएफ डाउनलोड करें",
 		"mediaEdit": "संपादन करना",
 		"mediaEditFieldsRequired": "शीर्षक और फ़ाइल नाम खाली नहीं हो सकते।",
 		"mediaEditMeta": "विवरण संपादित करें",

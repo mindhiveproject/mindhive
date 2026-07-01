@@ -229,45 +229,45 @@
 	"introductionVideo": "Vidéo d'introduction",
 	"locationFilter": "Emplacement",
 	"myOpportunitiesList": {
-		"capacity": "",
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"emptyFiltered": "",
-		"loading": "",
+		"capacity": "Capacité {{count}}",
+		"delete": "SUPPRIMER",
+		"deleteConfirm": "Supprimer cette opportunité ? C'est irréversible.",
+		"edit": "Modifier",
+		"empty": "Vous n'avez pas encore créé d'opportunités. Cliquez sur « Nouvelle opportunité » pour publier votre premier projet destiné aux étudiants.",
+		"emptyFiltered": "Aucune opportunité ne correspond aux filtres actuels.",
+		"loading": "Chargement...",
 		"networkCount": {
-			"many": "",
-			"one": ""
+			"many": "réseaux{{count}} ",
+			"one": "réseau{{count}} "
 		},
-		"networkFilterLabel": "",
-		"networkFilterPlaceholder": "",
-		"newButton": "",
-		"pageTitle": "",
+		"networkFilterLabel": "Filtrer par réseau",
+		"networkFilterPlaceholder": "Tous les réseaux",
+		"newButton": "Nouvelle opportunité",
+		"pageTitle": "Mes opportunités",
 		"rating": {
-			"many": "",
-			"one": ""
+			"many": "{{average}} · {{count}} évaluations",
+			"one": "{{average}} · {{count}} évaluation"
 		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
+		"searchLabel": "Opportunités de recherche par titre",
+		"searchPlaceholder": "Recherche par titre...",
 		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": ""
+			"accepted": "Accepté",
+			"archived": "Archive",
+			"closed": "Fermé",
+			"draft": "Brouillon",
+			"pendingReview": "En attente de révision",
+			"preSelected": "Présélectionné",
+			"published": "Publié"
 		},
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "Filtrer par statut",
+		"statusFilterPlaceholder": "Tous les statuts",
+		"teamOf": "Équipe de {{size}}",
+		"unknownSponsor": "Inconnu"
 	},
 	"nav": {
 		"connect": "Connecter",
 		"exploreOpportunities": "Explorez les opportunités",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "Sections de connexion",
 		"matches": "Allumettes",
 		"matchingRounds": "Tours assortis",
 		"myMatchedStudents": "Mes étudiants jumelés",
@@ -611,8 +611,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} mots",
 		"workflow": {
 			"context": {
-				"archived": "",
-				"closed": "",
+				"archived": "Cette opportunité est archivée.",
+				"closed": "Cette opportunité est terminée.",
 				"published": "Cette offre d'emploi a été publiée à l'intention des étudiants.",
 				"sponsorFollowUp": "Veuillez compléter le questionnaire de suivi ci-dessous.",
 				"sponsorScope": "Complétez le périmètre du projet ci-dessous.",
@@ -648,43 +648,43 @@
 		}
 	},
 	"organizationsDetail": {
-		"about": "",
-		"back": "",
-		"loading": "",
-		"members": "",
-		"membersHelper": "",
-		"noOpportunities": "",
-		"notFound": "",
-		"opportunities": "",
-		"solo": "",
-		"teamOf": "",
-		"unknownMember": "",
-		"website": ""
+		"about": "À propos",
+		"back": "Dos",
+		"loading": "Chargement de l'organisation…",
+		"members": "Membres",
+		"membersHelper": "Les personnes chez {{name}} qui gèrent cette organisation sur MindHive.",
+		"noOpportunities": "{{name}} n'a encore publié aucune opportunité.",
+		"notFound": "Organisation introuvable.",
+		"opportunities": "Opportunités",
+		"solo": "Solo",
+		"teamOf": "Équipe de {{size}}",
+		"unknownMember": "Inconnu",
+		"website": "Site Web"
 	},
 	"organizationsList": {
-		"description": "",
-		"domainFilterLabel": "",
-		"domainFilterPlaceholder": "",
+		"description": "Parcourez la liste des sponsors qui proposent des opportunités sur MindHive Connect : découvrez leur mission, l’équipe qui les compose et tous les projets qu’ils ont publiés.",
+		"domainFilterLabel": "Filtrer par domaine",
+		"domainFilterPlaceholder": "Tous les domaines",
 		"domains": {
-			"academic": "",
-			"government": "",
-			"industry": "",
-			"nonprofit": "",
-			"other": ""
+			"academic": "Établissement académique",
+			"government": "Agence gouvernementale",
+			"industry": "Industrie / Start-up",
+			"nonprofit": "À but non lucratif",
+			"other": "Autre"
 		},
-		"emptyFiltered": "",
-		"loading": "",
-		"next": "",
+		"emptyFiltered": "Aucune organisation ne correspond aux filtres actuels.",
+		"loading": "Chargement...",
+		"next": "Suivant",
 		"opportunityCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} opportunités",
+			"one": "{{count}} opportunité"
 		},
-		"pageTitle": "",
-		"paginationInfo": "",
-		"paginationLabel": "",
-		"previous": "",
-		"searchLabel": "",
-		"searchPlaceholder": ""
+		"pageTitle": "Organisations",
+		"paginationInfo": "Page {{page}} sur {{totalPages}} · {{total}} au total",
+		"paginationLabel": "Pagination des organisations",
+		"previous": "Précédent",
+		"searchLabel": "Organisations de recherche",
+		"searchPlaceholder": "Rechercher des organisations..."
 	},
 	"passionNow": "Qu'est-ce qui vous passionne en ce moment ?",
 	"preferences": {
@@ -735,10 +735,10 @@
 		"title": "Votre implication"
 	},
 	"profileCard": {
-		"defaultCommunity": "",
-		"defaultName": "",
-		"defaultSummary": "",
-		"viewProfile": ""
+		"defaultCommunity": "Communauté MindHive",
+		"defaultName": "Membre de MindHive",
+		"defaultSummary": "Cliquez pour voir le profil",
+		"viewProfile": "Voir le profil de {{name}}"
 	},
 	"profileType": {
 		"chooseType": "Choisissez votre type de profil",
@@ -754,15 +754,15 @@
 	},
 	"returnDashboard": "Retour au tableau de bord",
 	"roleGuard": {
-		"backLink": "",
-		"description": "",
+		"backLink": "Retour à la page de connexion",
+		"description": "Votre compte ne vous donne pas encore accès à cette section. Si vous pensez qu'il s'agit d'une erreur, veuillez contacter votre professeur ou un administrateur.",
 		"roles": {
-			"admin": "",
-			"mentor": "",
-			"student": "",
-			"teacher": ""
+			"admin": "Administrateurs",
+			"mentor": "Mentors",
+			"student": "Étudiants",
+			"teacher": "Enseignants"
 		},
-		"title": ""
+		"title": "Cette zone est réservée à {{roles}}"
 	},
 	"savedConnections": "Connexions enregistrées",
 	"savedConnectionsSubtitle": "Explorez votre réseau pour trouver le collaborateur, le mentor ou le scientifique idéal pour vous.",

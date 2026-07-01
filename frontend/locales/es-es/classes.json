@@ -9,7 +9,7 @@
 		"action": "ACCIÓN",
 		"actions": "Comportamiento",
 		"addAssignment": "Agregar tarea",
-		"bulkActions": "",
+		"bulkActions": "Acciones masivas",
 		"bulkActionsModal": {
 			"applying": "Aplicando...",
 			"applyToCount": "Aplicar a {{count}} tareas",
@@ -66,7 +66,7 @@
 		"dateUpdated": "Fecha de actualización",
 		"delete": "Borrar",
 		"deleteConfirm": "¿Está seguro de que desea eliminar esta tarea?",
-		"edit": "",
+		"edit": "Editar",
 		"editAssignment": "Editar tarea",
 		"editSuccess": "¡Tarea actualizada exitosamente!",
 		"error": "Error",
@@ -102,10 +102,10 @@
 		"placeholder": "Crea un marcador de posición para que tus alumnos empiecen sus deberes con ...",
 		"placeholderDescription": "Marcador de posición presentado a los estudiantes",
 		"placeholderInstructions": "Escriba un marcador de posición para el cuadro de respuestas de sus estudiantes",
-		"preview": "",
+		"preview": "Avance",
 		"projectCard": "Tarjeta de proyecto",
-		"publish": "",
-		"published": "",
+		"publish": "Publicar",
+		"published": "Publicado",
 		"publishToStudents": "Publicar para estudiantes",
 		"publishUnpublish": "Publicar/Anular publicación",
 		"removeCardColumnFilter": "Quitar el filtro de tarjeta/columna",
@@ -123,7 +123,7 @@
 		"showLinkedProjectCards": "Show linked project cards",
 		"startFromScratch": "Empezar desde el principio",
 		"startFromScratchDescription": "Crea una tarea completamente nueva con control total sobre el título, las instrucciones y el contenido del marcador. Ideal para algo completamente único para tu clase.",
-		"status": "",
+		"status": "Estado",
 		"studentEntry": "Entrada del estudiante",
 		"submit": "Entregar",
 		"submitConfirm": "¿Estás seguro de que quieres enviar esta tarea? Los estudiantes podrán verla.",
@@ -132,13 +132,13 @@
 		"titlePlaceholder": "Introduzca el título de la tarea...",
 		"typeClassName": "Nombre de clase de tipo",
 		"unpublish": "Anular publicación",
-		"unpublished": "",
+		"unpublished": "Inédito",
 		"unsavedChanges": "¡Cambios no guardados!",
 		"visibleForStudents": "La tarea es visible para los estudiantes."
 	},
 	"assignments": {
-		"noAssignments": "",
-		"open": ""
+		"noAssignments": "No hay tareas disponibles",
+		"open": "Abierto"
 	},
 	"assignmentsTab": "Tareas",
 	"board": {
@@ -422,7 +422,7 @@
 	"classNetworks": "Redes de clases",
 	"collaborators": "Colaborador(es)",
 	"common": {
-		"errorLoading": "",
+		"errorLoading": "Error al cargar la asignación",
 		"loading": "Cargando..."
 	},
 	"create": {
@@ -653,13 +653,13 @@
 	},
 	"myClasses": "Mis clases",
 	"noAccessTo": "No tendrás acceso a:",
-	"noAssignments": "",
+	"noAssignments": "No hay tareas disponibles",
 	"noClasses": "Aún no te has unido a ninguna clase.",
-	"noResources": "",
+	"noResources": "No hay recursos públicos.",
 	"noStudies": "Los estudiantes aún no han creado ningún estudio.",
 	"noteNewStudents": "Nota: Los estudiantes nuevos no podrán unirse a su clase.",
 	"numberOfStudents": "Número de estudiantes",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "Sólo los profesores y mentores pueden asignar tarjetas",
 	"participants": "Participantes",
 	"pleaseTypeDelete": "Por favor escribe SUPR para eliminar tu clase",
 	"projectBoard": {
@@ -801,7 +801,7 @@
 		"goBack": "Regresar a clases",
 		"username": "Nombre de usuario"
 	},
-	"studentsCanAssignCards": "",
+	"studentsCanAssignCards": "Los estudiantes pueden asignar tarjetas",
 	"studentsTab": {
 		"addToClass": "Añadir a la clase",
 		"assignToClass": "¿Estás seguro de que quieres asignar a este alumno a la otra clase?",
@@ -827,7 +827,7 @@
 	"studies": {
 		"collaborators": "Colaborador(es)",
 		"dateCreated": "Fecha de creación",
-		"listDescription": "",
+		"listDescription": "{{count}} estudios creados por estudiantes de esta clase.",
 		"noStudiesYet": "Los estudiantes aún no han creado ningún estudio.",
 		"participants": "Participantes",
 		"studyBuilder": "Constructor de estudios",
@@ -852,7 +852,7 @@
 		"lastUpdated": "Última actualización",
 		"needsFeedback": "Necesita retroalimentación",
 		"notStarted": "No iniciado",
-		"requestFeedback": "",
+		"requestFeedback": "Solicitar comentarios",
 		"saveAndClose": "Guardar y cerrar",
 		"saving": "Ahorrando...",
 		"selectStatus": "Seleccionar estado",

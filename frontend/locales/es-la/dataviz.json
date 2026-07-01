@@ -1,7 +1,7 @@
 {
 	"dataJournal": {
 		"components": {
-			"closePanel": "",
+			"closePanel": "Cerrar panel de componentes",
 			"descriptions": {
 				"barChart": "Visualiza la relación entre una variable cualitativa y una cuantitativa mediante barras agrupadas.",
 				"codeFromScratch": "Escriba código personalizado para crear análisis o visualizaciones totalmente adaptados a sus necesidades.",

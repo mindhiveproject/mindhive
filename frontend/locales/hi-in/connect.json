@@ -229,45 +229,45 @@
 	"introductionVideo": "परिचय वीडियो",
 	"locationFilter": "जगह",
 	"myOpportunitiesList": {
-		"capacity": "",
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"emptyFiltered": "",
-		"loading": "",
+		"capacity": "क्षमता {{count}}",
+		"delete": "मिटाना",
+		"deleteConfirm": "क्या इस अवसर को मिटाना संभव है? इसे बदला नहीं जा सकता।",
+		"edit": "संपादन करना",
+		"empty": "आपने अभी तक कोई अवसर नहीं बनाया है। छात्रों के लिए अपना पहला प्रोजेक्ट प्रकाशित करने के लिए 'नया अवसर' पर क्लिक करें।",
+		"emptyFiltered": "वर्तमान फ़िल्टरों से मेल खाने वाले कोई अवसर नहीं हैं।",
+		"loading": "लोड हो रहा है...",
 		"networkCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} नेटवर्क",
+			"one": "{{count}} नेटवर्क"
 		},
-		"networkFilterLabel": "",
-		"networkFilterPlaceholder": "",
-		"newButton": "",
-		"pageTitle": "",
+		"networkFilterLabel": "नेटवर्क के आधार पर फ़िल्टर करें",
+		"networkFilterPlaceholder": "सभी नेटवर्क",
+		"newButton": "नया मौका",
+		"pageTitle": "मेरे अवसर",
 		"rating": {
-			"many": "",
-			"one": ""
+			"many": "{{average}} · {{count}} रेटिंग",
+			"one": "{{average}} · {{count}} रेटिंग"
 		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
+		"searchLabel": "पदनाम के आधार पर अवसरों की खोज करें",
+		"searchPlaceholder": "शीर्षक के आधार पर खोजें...",
 		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": ""
+			"accepted": "स्वीकृत",
+			"archived": "संग्रहीत",
+			"closed": "बंद किया हुआ",
+			"draft": "मसौदा",
+			"pendingReview": "समीक्षा लंबित है",
+			"preSelected": "पूर्व-चयनित",
+			"published": "प्रकाशित"
 		},
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "स्थिति के अनुसार फ़िल्टर करें",
+		"statusFilterPlaceholder": "सभी स्थितियाँ",
+		"teamOf": " {{size}}की टीम",
+		"unknownSponsor": "अज्ञात"
 	},
 	"nav": {
 		"connect": "जोड़ना",
 		"exploreOpportunities": "अवसरों का पता लगाएं",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "अनुभागों को जोड़ें",
 		"matches": "माचिस",
 		"matchingRounds": "मिलान दौर",
 		"myMatchedStudents": "मेरे चयनित छात्र",
@@ -611,8 +611,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} शब्द",
 		"workflow": {
 			"context": {
-				"archived": "",
-				"closed": "",
+				"archived": "यह अवसर संग्रहीत कर दिया गया है।",
+				"closed": "यह अवसर अब उपलब्ध नहीं है।",
 				"published": "यह अवसर छात्रों के लिए प्रकाशित किया गया है।",
 				"sponsorFollowUp": "नीचे दिए गए अनुवर्ती प्रश्नावली को पूरा करें।",
 				"sponsorScope": "नीचे दिए गए प्रोजेक्ट स्कोप को पूरा करें।",
@@ -648,43 +648,43 @@
 		}
 	},
 	"organizationsDetail": {
-		"about": "",
-		"back": "",
-		"loading": "",
-		"members": "",
-		"membersHelper": "",
-		"noOpportunities": "",
-		"notFound": "",
-		"opportunities": "",
-		"solo": "",
-		"teamOf": "",
-		"unknownMember": "",
-		"website": ""
+		"about": "के बारे में",
+		"back": "पीछे",
+		"loading": "संगठन लोड हो रहा है…",
+		"members": "सदस्यों",
+		"membersHelper": " {{name}} पर वे लोग जो MindHive पर इस संगठन का प्रबंधन करते हैं।",
+		"noOpportunities": "{{name}} ने अभी तक कोई अवसर प्रकाशित नहीं किया है।",
+		"notFound": "संगठन नहीं मिला।",
+		"opportunities": "अवसर",
+		"solo": "एकल",
+		"teamOf": " {{size}}की टीम",
+		"unknownMember": "अज्ञात",
+		"website": "वेबसाइट"
 	},
 	"organizationsList": {
-		"description": "",
-		"domainFilterLabel": "",
-		"domainFilterPlaceholder": "",
+		"description": "MindHive Connect पर अवसर प्रदान करने वाले प्रायोजकों को ब्राउज़ करें — उनका मिशन, उनके पीछे की टीम और उनके द्वारा प्रकाशित प्रत्येक परियोजना देखें।",
+		"domainFilterLabel": "डोमेन के आधार पर फ़िल्टर करें",
+		"domainFilterPlaceholder": "सभी डोमेन",
 		"domains": {
-			"academic": "",
-			"government": "",
-			"industry": "",
-			"nonprofit": "",
-			"other": ""
+			"academic": "शैक्षिक संस्था",
+			"government": "सरकारी एजेंसी",
+			"industry": "उद्योग / स्टार्टअप",
+			"nonprofit": "ग़ैर-लाभकारी",
+			"other": "अन्य"
 		},
-		"emptyFiltered": "",
-		"loading": "",
-		"next": "",
+		"emptyFiltered": "वर्तमान फ़िल्टरों से कोई संगठन मेल नहीं खाता।",
+		"loading": "लोड हो रहा है...",
+		"next": "अगला",
 		"opportunityCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} अवसर",
+			"one": "{{count}} अवसर"
 		},
-		"pageTitle": "",
-		"paginationInfo": "",
-		"paginationLabel": "",
-		"previous": "",
-		"searchLabel": "",
-		"searchPlaceholder": ""
+		"pageTitle": "संगठनों",
+		"paginationInfo": "पृष्ठ {{page}} का {{totalPages}} · कुल {{total}} ",
+		"paginationLabel": "संगठनों का पृष्ठीकरण",
+		"previous": "पहले का",
+		"searchLabel": "खोज संगठन",
+		"searchPlaceholder": "संगठनों की खोज करें…"
 	},
 	"passionNow": "इस समय आप किस चीज़ के प्रति जुनूनी हैं?",
 	"preferences": {
@@ -735,10 +735,10 @@
 		"title": "आपकी भागीदारी"
 	},
 	"profileCard": {
-		"defaultCommunity": "",
-		"defaultName": "",
-		"defaultSummary": "",
-		"viewProfile": ""
+		"defaultCommunity": "माइंडहाइव समुदाय",
+		"defaultName": "माइंडहाइव सदस्य",
+		"defaultSummary": "प्रोफ़ाइल देखने के लिए क्लिक करें",
+		"viewProfile": " {{name}}की प्रोफ़ाइल देखें"
 	},
 	"profileType": {
 		"chooseType": "अपना प्रोफ़ाइल प्रकार चुनें",
@@ -754,15 +754,15 @@
 	},
 	"returnDashboard": "डैशबोर्ड पर लौटें",
 	"roleGuard": {
-		"backLink": "",
-		"description": "",
+		"backLink": "कनेक्ट पर वापस जाएँ",
+		"description": "आपके खाते को अभी इस अनुभाग तक पहुंच नहीं है। यदि आपको लगता है कि यह कोई गलती है, तो अपने शिक्षक या प्रशासक से पूछें।",
 		"roles": {
-			"admin": "",
-			"mentor": "",
-			"student": "",
-			"teacher": ""
+			"admin": "व्यवस्थापक",
+			"mentor": "मेंटर्स",
+			"student": "छात्र",
+			"teacher": "शिक्षकों"
 		},
-		"title": ""
+		"title": "यह क्षेत्र {{roles}}के लिए है"
 	},
 	"savedConnections": "सहेजे गए कनेक्शन",
 	"savedConnectionsSubtitle": "अपने संपर्कों के माध्यम से अपने लिए उपयुक्त सहयोगी, मार्गदर्शक या वैज्ञानिक खोजें।",

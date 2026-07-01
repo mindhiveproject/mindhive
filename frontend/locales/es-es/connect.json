@@ -229,45 +229,45 @@
 	"introductionVideo": "Vídeo de introducción",
 	"locationFilter": "Ubicación",
 	"myOpportunitiesList": {
-		"capacity": "",
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"emptyFiltered": "",
-		"loading": "",
+		"capacity": "Capacidad {{count}}",
+		"delete": "BORRAR",
+		"deleteConfirm": "¿Eliminar esta oportunidad? Esto no se puede deshacer.",
+		"edit": "Editar",
+		"empty": "Aún no has creado ninguna oportunidad. Haz clic en Nueva oportunidad para publicar tu primer proyecto para estudiantes.",
+		"emptyFiltered": "No hay oportunidades que coincidan con los filtros actuales.",
+		"loading": "Cargando...",
 		"networkCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} redes",
+			"one": "Red{{count}} "
 		},
-		"networkFilterLabel": "",
-		"networkFilterPlaceholder": "",
-		"newButton": "",
-		"pageTitle": "",
+		"networkFilterLabel": "Filtrar por red",
+		"networkFilterPlaceholder": "Todas las redes",
+		"newButton": "Nueva oportunidad",
+		"pageTitle": "Mis oportunidades",
 		"rating": {
-			"many": "",
-			"one": ""
+			"many": "{{average}} · {{count}} calificaciones",
+			"one": "{{average}} · {{count}} calificación"
 		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
+		"searchLabel": "Buscar oportunidades por título",
+		"searchPlaceholder": "Buscar por título...",
 		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": ""
+			"accepted": "Aceptado",
+			"archived": "Archivado",
+			"closed": "Cerrado",
+			"draft": "Borrador",
+			"pendingReview": "Pendiente de revisión",
+			"preSelected": "Preseleccionado",
+			"published": "Publicado"
 		},
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "Filtrar por estado",
+		"statusFilterPlaceholder": "Todos los estados",
+		"teamOf": "Equipo de {{size}}",
+		"unknownSponsor": "Desconocido"
 	},
 	"nav": {
 		"connect": "Conectar",
 		"exploreOpportunities": "Explorar oportunidades",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "Conectar secciones",
 		"matches": "Partidos",
 		"matchingRounds": "Rondas coincidentes",
 		"myMatchedStudents": "Mis alumnos emparejados",
@@ -611,8 +611,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} palabras",
 		"workflow": {
 			"context": {
-				"archived": "",
-				"closed": "",
+				"archived": "Esta oportunidad está archivada.",
+				"closed": "Esta oportunidad ya no está disponible.",
 				"published": "Esta oportunidad ha sido publicada para estudiantes.",
 				"sponsorFollowUp": "Complete el cuestionario de seguimiento a continuación.",
 				"sponsorScope": "Complete el alcance del proyecto a continuación.",
@@ -648,43 +648,43 @@
 		}
 	},
 	"organizationsDetail": {
-		"about": "",
-		"back": "",
-		"loading": "",
-		"members": "",
-		"membersHelper": "",
-		"noOpportunities": "",
-		"notFound": "",
-		"opportunities": "",
-		"solo": "",
-		"teamOf": "",
-		"unknownMember": "",
-		"website": ""
+		"about": "Acerca de",
+		"back": "Atrás",
+		"loading": "Cargando organización…",
+		"members": "Miembros",
+		"membersHelper": "Personas en {{name}} que administran esta organización en MindHive.",
+		"noOpportunities": "{{name}} aún no ha publicado ninguna oportunidad.",
+		"notFound": "Organización no encontrada.",
+		"opportunities": "Oportunidades",
+		"solo": "Solo",
+		"teamOf": "Equipo de {{size}}",
+		"unknownMember": "Desconocido",
+		"website": "Sitio web"
 	},
 	"organizationsList": {
-		"description": "",
-		"domainFilterLabel": "",
-		"domainFilterPlaceholder": "",
+		"description": "Explora los patrocinadores que ofrecen oportunidades en MindHive Connect: descubre su misión, el equipo que los respalda y todos los proyectos que han publicado.",
+		"domainFilterLabel": "Filtrar por dominio",
+		"domainFilterPlaceholder": "Todos los dominios",
 		"domains": {
-			"academic": "",
-			"government": "",
-			"industry": "",
-			"nonprofit": "",
-			"other": ""
+			"academic": "Institución académica",
+			"government": "Agencia gubernamental",
+			"industry": "Industria / Empresa emergente",
+			"nonprofit": "No lucrativo",
+			"other": "Otro"
 		},
-		"emptyFiltered": "",
-		"loading": "",
-		"next": "",
+		"emptyFiltered": "Ninguna organización coincide con los filtros actuales.",
+		"loading": "Cargando...",
+		"next": "Próximo",
 		"opportunityCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} oportunidades",
+			"one": "{{count}} oportunidad"
 		},
-		"pageTitle": "",
-		"paginationInfo": "",
-		"paginationLabel": "",
-		"previous": "",
-		"searchLabel": "",
-		"searchPlaceholder": ""
+		"pageTitle": "Organizaciones",
+		"paginationInfo": "Página {{page}} de {{totalPages}} · {{total}} en total",
+		"paginationLabel": "Paginación de organizaciones",
+		"previous": "Anterior",
+		"searchLabel": "Organizaciones de búsqueda",
+		"searchPlaceholder": "Buscar organizaciones..."
 	},
 	"passionNow": "¿Qué te apasiona ahora mismo?",
 	"preferences": {
@@ -735,10 +735,10 @@
 		"title": "Su participación"
 	},
 	"profileCard": {
-		"defaultCommunity": "",
-		"defaultName": "",
-		"defaultSummary": "",
-		"viewProfile": ""
+		"defaultCommunity": "Comunidad MindHive",
+		"defaultName": "Miembro de MindHive",
+		"defaultSummary": "Haz clic para ver el perfil.",
+		"viewProfile": "Ver perfil de {{name}}"
 	},
 	"profileType": {
 		"chooseType": "Elige tu tipo de perfil",
@@ -754,15 +754,15 @@
 	},
 	"returnDashboard": "Regresar al panel de control",
 	"roleGuard": {
-		"backLink": "",
-		"description": "",
+		"backLink": "Volver a conectar",
+		"description": "Tu cuenta aún no tiene acceso a esta sección. Si crees que se trata de un error, consulta con tu profesor o un administrador.",
 		"roles": {
-			"admin": "",
-			"mentor": "",
-			"student": "",
-			"teacher": ""
+			"admin": "Administradores",
+			"mentor": "Mentores",
+			"student": "Estudiantes",
+			"teacher": "Profesores"
 		},
-		"title": ""
+		"title": "Esta área es para {{roles}}"
 	},
 	"savedConnections": "Conexiones guardadas",
 	"savedConnectionsSubtitle": "Busca en tu red de contactos el colaborador, mentor o científico perfecto para ti.",

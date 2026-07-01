@@ -229,45 +229,45 @@
 	"introductionVideo": "Introductievideo",
 	"locationFilter": "Plaats",
 	"myOpportunitiesList": {
-		"capacity": "",
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"emptyFiltered": "",
-		"loading": "",
+		"capacity": "Capaciteit {{count}}",
+		"delete": "Verwijderen",
+		"deleteConfirm": "Deze kans verwijderen? Dit kan niet ongedaan gemaakt worden.",
+		"edit": "Bewerking",
+		"empty": "Je hebt nog geen mogelijkheden gecreëerd. Klik op Nieuwe mogelijkheid om je eerste project voor studenten te publiceren.",
+		"emptyFiltered": "Er zijn geen vacatures die aan de huidige filters voldoen.",
+		"loading": "Bezig met laden...",
 		"networkCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} netwerken",
+			"one": "{{count}} netwerk"
 		},
-		"networkFilterLabel": "",
-		"networkFilterPlaceholder": "",
-		"newButton": "",
-		"pageTitle": "",
+		"networkFilterLabel": "Filteren op netwerk",
+		"networkFilterPlaceholder": "Alle netwerken",
+		"newButton": "Nieuwe kans",
+		"pageTitle": "Mijn kansen",
 		"rating": {
-			"many": "",
-			"one": ""
+			"many": "{{average}} · {{count}} beoordelingen",
+			"one": "{{average}} · {{count}} beoordeling"
 		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
+		"searchLabel": "Zoek vacatures op functietitel",
+		"searchPlaceholder": "Zoeken op titel...",
 		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": ""
+			"accepted": "Geaccepteerd",
+			"archived": "Gearchiveerd",
+			"closed": "Gesloten",
+			"draft": "Voorlopige versie",
+			"pendingReview": "In afwachting van beoordeling",
+			"preSelected": "Vooraf geselecteerd",
+			"published": "Gepubliceerd"
 		},
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "Filter op status",
+		"statusFilterPlaceholder": "Alle statussen",
+		"teamOf": "Team van {{size}}",
+		"unknownSponsor": "Onbekend"
 	},
 	"nav": {
 		"connect": "Aansluiten",
 		"exploreOpportunities": "Ontdek de mogelijkheden",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "Verbind secties",
 		"matches": "Wedstrijden",
 		"matchingRounds": "Overeenkomende rondes",
 		"myMatchedStudents": "Mijn gekoppelde studenten",
@@ -611,8 +611,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} woorden",
 		"workflow": {
 			"context": {
-				"archived": "",
-				"closed": "",
+				"archived": "Deze vacature is gearchiveerd.",
+				"closed": "Deze mogelijkheid is niet meer beschikbaar.",
 				"published": "Deze vacature is speciaal voor studenten gepubliceerd.",
 				"sponsorFollowUp": "Vul de onderstaande vervolgvragenlijst in.",
 				"sponsorScope": "Vul de projectomschrijving hieronder in.",
@@ -648,43 +648,43 @@
 		}
 	},
 	"organizationsDetail": {
-		"about": "",
-		"back": "",
-		"loading": "",
-		"members": "",
-		"membersHelper": "",
-		"noOpportunities": "",
-		"notFound": "",
-		"opportunities": "",
-		"solo": "",
-		"teamOf": "",
-		"unknownMember": "",
-		"website": ""
+		"about": "Over",
+		"back": "Rug",
+		"loading": "Organisatie laden…",
+		"members": "Leden",
+		"membersHelper": "Mensen bij {{name}} die deze organisatie beheren op MindHive.",
+		"noOpportunities": "{{name}} heeft nog geen vacatures gepubliceerd.",
+		"notFound": "Organisatie niet gevonden.",
+		"opportunities": "Mogelijkheden",
+		"solo": "Solo",
+		"teamOf": "Team van {{size}}",
+		"unknownMember": "Onbekend",
+		"website": "Website"
 	},
 	"organizationsList": {
-		"description": "",
-		"domainFilterLabel": "",
-		"domainFilterPlaceholder": "",
+		"description": "Bekijk de sponsors die mogelijkheden bieden op MindHive Connect — ontdek hun missie, het team erachter en alle projecten die ze hebben gepubliceerd.",
+		"domainFilterLabel": "Filteren op domein",
+		"domainFilterPlaceholder": "Alle domeinen",
 		"domains": {
-			"academic": "",
-			"government": "",
-			"industry": "",
-			"nonprofit": "",
-			"other": ""
+			"academic": "Academische instelling",
+			"government": "Overheidsinstantie",
+			"industry": "Industrie / Start-up",
+			"nonprofit": "Non-profit",
+			"other": "Ander"
 		},
-		"emptyFiltered": "",
-		"loading": "",
-		"next": "",
+		"emptyFiltered": "Er zijn geen organisaties die aan de huidige filters voldoen.",
+		"loading": "Bezig met laden...",
+		"next": "Volgende",
 		"opportunityCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} mogelijkheden",
+			"one": "{{count}} kans"
 		},
-		"pageTitle": "",
-		"paginationInfo": "",
-		"paginationLabel": "",
-		"previous": "",
-		"searchLabel": "",
-		"searchPlaceholder": ""
+		"pageTitle": "Organisaties",
+		"paginationInfo": "Pagina {{page}} van {{totalPages}} · {{total}} totaal",
+		"paginationLabel": "Organisaties paginering",
+		"previous": "Vorig",
+		"searchLabel": "Zoekorganisaties",
+		"searchPlaceholder": "Zoek organisaties…"
 	},
 	"passionNow": "Waar ben je momenteel gepassioneerd over?",
 	"preferences": {
@@ -735,10 +735,10 @@
 		"title": "Uw betrokkenheid"
 	},
 	"profileCard": {
-		"defaultCommunity": "",
-		"defaultName": "",
-		"defaultSummary": "",
-		"viewProfile": ""
+		"defaultCommunity": "MindHive-gemeenschap",
+		"defaultName": "MindHive-lid",
+		"defaultSummary": "Klik om het profiel te bekijken",
+		"viewProfile": "Bekijk het profiel van {{name}}"
 	},
 	"profileType": {
 		"chooseType": "Kies uw profieltype",
@@ -754,15 +754,15 @@
 	},
 	"returnDashboard": "Terug naar dashboard",
 	"roleGuard": {
-		"backLink": "",
-		"description": "",
+		"backLink": "Terug naar Verbinden",
+		"description": "Je account heeft nog geen toegang tot dit gedeelte. Als je denkt dat dit een fout is, neem dan contact op met je docent of een beheerder.",
 		"roles": {
-			"admin": "",
-			"mentor": "",
-			"student": "",
-			"teacher": ""
+			"admin": "Beheerders",
+			"mentor": "Mentoren",
+			"student": "studenten",
+			"teacher": "leraren"
 		},
-		"title": ""
+		"title": "Dit gebied is voor {{roles}}"
 	},
 	"savedConnections": "Opgeslagen verbindingen",
 	"savedConnectionsSubtitle": "Doorzoek uw connecties om de perfecte medewerker, mentor of wetenschapper voor u te vinden.",

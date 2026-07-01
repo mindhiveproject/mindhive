@@ -9,7 +9,7 @@
 		"action": "行动",
 		"actions": "操作",
 		"addAssignment": "添加作业",
-		"bulkActions": "",
+		"bulkActions": "批量操作",
 		"bulkActionsModal": {
 			"applying": "正在申请...",
 			"applyToCount": "适用于 {{count}} 个任务",
@@ -66,7 +66,7 @@
 		"dateUpdated": "更新日期",
 		"delete": "删除",
 		"deleteConfirm": "您确定要删除此作业吗？",
-		"edit": "",
+		"edit": "编辑",
 		"editAssignment": "编辑作业",
 		"editSuccess": "作业更新成功！",
 		"error": "错误",
@@ -102,10 +102,10 @@
 		"placeholder": "为学生创建一个占位符，让他们从这里开始做作业...",
 		"placeholderDescription": "向学生展示占位符",
 		"placeholderInstructions": "为学生的答案框写一个占位符",
-		"preview": "",
+		"preview": "预览",
 		"projectCard": "项目卡",
-		"publish": "",
-		"published": "",
+		"publish": "发布",
+		"published": "发布",
 		"publishToStudents": "发布给学生",
 		"publishUnpublish": "发布/取消发布",
 		"removeCardColumnFilter": "移除卡片/列筛选器",
@@ -123,7 +123,7 @@
 		"showLinkedProjectCards": "Show linked project cards",
 		"startFromScratch": "从零开始",
 		"startFromScratchDescription": "创建全新的作业，完全掌控标题、说明和占位符内容。最适合创建班级独有的作业。",
-		"status": "",
+		"status": "地位",
 		"studentEntry": "学生参赛作品",
 		"submit": "提交",
 		"submitConfirm": "您确定要提交此作业吗？学生将可以看到此作业。",
@@ -132,13 +132,13 @@
 		"titlePlaceholder": "输入作业标题...",
 		"typeClassName": "类型类名",
 		"unpublish": "取消发布",
-		"unpublished": "",
+		"unpublished": "未发表",
 		"unsavedChanges": "未保存的更改！",
 		"visibleForStudents": "学生可以看到作业"
 	},
 	"assignments": {
-		"noAssignments": "",
-		"open": ""
+		"noAssignments": "暂无任务分配",
+		"open": "打开"
 	},
 	"assignmentsTab": "作业",
 	"board": {
@@ -422,7 +422,7 @@
 	"classNetworks": "类网络",
 	"collaborators": "合作者",
 	"common": {
-		"errorLoading": "",
+		"errorLoading": "加载分配时出错",
 		"loading": "加载中..."
 	},
 	"create": {
@@ -653,13 +653,13 @@
 	},
 	"myClasses": "我的课程",
 	"noAccessTo": "您将无权访问：",
-	"noAssignments": "",
+	"noAssignments": "没有可用的任务。",
 	"noClasses": "您尚未加入任何课程。",
-	"noResources": "",
+	"noResources": "没有公共资源。",
 	"noStudies": "学生尚未创建任何研究。",
 	"noteNewStudents": "注意：新生将无法加入你的班级",
 	"numberOfStudents": "学生人数",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "只有教师和导师才能分配卡片。",
 	"participants": "参与者",
 	"pleaseTypeDelete": "请输入 DELETE 来删除您的班级",
 	"projectBoard": {
@@ -801,7 +801,7 @@
 		"goBack": "回教室",
 		"username": "用户名"
 	},
-	"studentsCanAssignCards": "",
+	"studentsCanAssignCards": "学生可以分配卡片。",
 	"studentsTab": {
 		"addToClass": "添加到班级",
 		"assignToClass": "您确定要将这名学生分配到另一个班级吗？",
@@ -827,7 +827,7 @@
 	"studies": {
 		"collaborators": "合作者",
 		"dateCreated": "创建日期",
-		"listDescription": "",
+		"listDescription": "本课程学生创作了{{count}} 项研究。",
 		"noStudiesYet": "学生尚未创建任何研究。",
 		"participants": "参与者",
 		"studyBuilder": "学习建设者",
@@ -852,7 +852,7 @@
 		"lastUpdated": "上次更新",
 		"needsFeedback": "需要反馈",
 		"notStarted": "未开始",
-		"requestFeedback": "",
+		"requestFeedback": "请求反馈",
 		"saveAndClose": "保存并关闭",
 		"saving": "正在保存...",
 		"selectStatus": "选择状态",

@@ -9,7 +9,7 @@
 		"action": "فعل",
 		"actions": "أجراءات",
 		"addAssignment": "إضافة مهمة",
-		"bulkActions": "",
+		"bulkActions": "الإجراءات المجمعة",
 		"bulkActionsModal": {
 			"applying": "جاري التقديم...",
 			"applyToCount": "ينطبق على {{count}} مهمة",
@@ -66,7 +66,7 @@
 		"dateUpdated": "تاريخ التحديث",
 		"delete": "يمسح",
 		"deleteConfirm": "هل أنت متأكد أنك تريد حذف هذه المهمة؟",
-		"edit": "",
+		"edit": "يحرر",
 		"editAssignment": "تحرير المهمة",
 		"editSuccess": "تم تحديث المهمة بنجاح!",
 		"error": "خطأ",
@@ -102,10 +102,10 @@
 		"placeholder": "أنشئ عنصرًا نائبًا لطلابك لبدء واجباتهم المنزلية بـ ...",
 		"placeholderDescription": "تم تقديم العنصر النائب للطلاب",
 		"placeholderInstructions": "اكتب مكانًا لمربع إجابة طلابك",
-		"preview": "",
+		"preview": "معاينة",
 		"projectCard": "بطاقة المشروع",
-		"publish": "",
-		"published": "",
+		"publish": "ينشر",
+		"published": "نشرت",
 		"publishToStudents": "نشر للطلاب",
 		"publishUnpublish": "نشر/إلغاء النشر",
 		"removeCardColumnFilter": "إزالة فلتر البطاقة/العمود",
@@ -123,7 +123,7 @@
 		"showLinkedProjectCards": "Show linked project cards",
 		"startFromScratch": "ابدأ من الصفر",
 		"startFromScratchDescription": "أنشئ مهمة جديدة تمامًا مع تحكم كامل في العنوان والتعليمات والمحتوى الافتراضي. هذا الخيار مثالي لمهمة فريدة تمامًا لطلاب صفك.",
-		"status": "",
+		"status": "حالة",
 		"studentEntry": "مشاركة الطالب",
 		"submit": "يُقدِّم",
 		"submitConfirm": "هل أنت متأكد من رغبتك في تسليم هذه المهمة؟ ستكون المهمة مرئية للطلاب.",
@@ -132,13 +132,13 @@
 		"titlePlaceholder": "أدخل عنوان المهمة...",
 		"typeClassName": "اسم فئة النوع",
 		"unpublish": "إلغاء النشر",
-		"unpublished": "",
+		"unpublished": "غير منشور",
 		"unsavedChanges": "تغييرات غير محفوظة",
 		"visibleForStudents": "المهمة مرئية للطلاب"
 	},
 	"assignments": {
-		"noAssignments": "",
-		"open": ""
+		"noAssignments": "لا توجد مهام متاحة",
+		"open": "يفتح"
 	},
 	"assignmentsTab": "المهام",
 	"board": {
@@ -422,7 +422,7 @@
 	"classNetworks": "شبكات الطبقات",
 	"collaborators": "المتعاونون",
 	"common": {
-		"errorLoading": "",
+		"errorLoading": "حدث خطأ أثناء تحميل المهمة",
 		"loading": "تحميل..."
 	},
 	"create": {
@@ -653,13 +653,13 @@
 	},
 	"myClasses": "فصولي الدراسية",
 	"noAccessTo": "لن يكون لديك حق الوصول إلى:",
-	"noAssignments": "",
+	"noAssignments": "لا توجد مهام متاحة.",
 	"noClasses": "لم تنضم إلى أي فصول بعد.",
-	"noResources": "",
+	"noResources": "لا توجد موارد عامة.",
 	"noStudies": "لم يقم الطلاب بإنشاء أي دراسات بعد.",
 	"noteNewStudents": "ملاحظة: لن يتمكن الطلاب الجدد من الانضمام إلى صفك",
 	"numberOfStudents": "عدد الطلاب",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "لا يُسمح إلا للمعلمين والموجهين بتوزيع البطاقات",
 	"participants": "مشاركون",
 	"pleaseTypeDelete": "الرجاء كتابة DELETE لحذف صفك",
 	"projectBoard": {
@@ -801,7 +801,7 @@
 		"goBack": "ارجع إلى الفصل",
 		"username": "اسم المستخدم"
 	},
-	"studentsCanAssignCards": "",
+	"studentsCanAssignCards": "يمكن للطلاب تخصيص البطاقات",
 	"studentsTab": {
 		"addToClass": "إضافة إلى الفصل",
 		"assignToClass": "هل أنت متأكد من أنك تريد تعيين هذا الطالب في الفصل الآخر؟",
@@ -827,7 +827,7 @@
 	"studies": {
 		"collaborators": "المتعاونون",
 		"dateCreated": "تاريخ الإنشاء",
-		"listDescription": "",
+		"listDescription": "{{count}} دراسات أنشأها الطلاب في هذا الفصل.",
 		"noStudiesYet": "لم يقم الطلاب بإنشاء أية دراسات بعد.",
 		"participants": "مشاركون",
 		"studyBuilder": "منشئ الدراسة",
@@ -852,7 +852,7 @@
 		"lastUpdated": "آخر تحديث",
 		"needsFeedback": "يحتاج إلى ردود فعل",
 		"notStarted": "لم يتم البدء",
-		"requestFeedback": "",
+		"requestFeedback": "طلب ملاحظات",
 		"saveAndClose": "حفظ وإغلاق",
 		"saving": "جاري الحفظ ...",
 		"selectStatus": "حدد الحالة",

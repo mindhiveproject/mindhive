@@ -9,7 +9,7 @@
 		"action": "Действие",
 		"actions": "Действия",
 		"addAssignment": "Добавить задание",
-		"bulkActions": "",
+		"bulkActions": "Массовые действия",
 		"bulkActionsModal": {
 			"applying": "Подача заявления...",
 			"applyToCount": "Применить к {{count}} заданиям",
@@ -66,7 +66,7 @@
 		"dateUpdated": "Дата обновления",
 		"delete": "Удалить",
 		"deleteConfirm": "Вы уверены, что хотите удалить это задание?",
-		"edit": "",
+		"edit": "Редактировать",
 		"editAssignment": "Редактировать задание",
 		"editSuccess": "Задание успешно обновлено!",
 		"error": "Ошибка",
@@ -102,10 +102,10 @@
 		"placeholder": "Создайте для учеников место для начала выполнения домашнего задания...",
 		"placeholderDescription": "Заполнитель, представленный студентам",
 		"placeholderInstructions": "Напишите заполнитель для поля ответа вашего ученика.",
-		"preview": "",
+		"preview": "Предварительный просмотр",
 		"projectCard": "Проектная карта",
-		"publish": "",
-		"published": "",
+		"publish": "Публиковать",
+		"published": "Опубликовано",
 		"publishToStudents": "Опубликовать для студентов",
 		"publishUnpublish": "Опубликовать/Снять с публикации",
 		"removeCardColumnFilter": "Удалить фильтр карточек/столбцов",
@@ -123,7 +123,7 @@
 		"showLinkedProjectCards": "Show linked project cards",
 		"startFromScratch": "Начать с нуля",
 		"startFromScratchDescription": "Создайте совершенно новое задание, полностью контролируя заголовок, инструкции и содержимое-заполнитель. Идеально подходит для чего-то совершенно уникального для вашего класса.",
-		"status": "",
+		"status": "Положение дел",
 		"studentEntry": "Вступление студента",
 		"submit": "Представлять на рассмотрение",
 		"submitConfirm": "Вы уверены, что хотите отправить это задание? Задание будет видно студентам.",
@@ -132,13 +132,13 @@
 		"titlePlaceholder": "Введите название задания...",
 		"typeClassName": "Имя класса типа",
 		"unpublish": "Отменить публикацию",
-		"unpublished": "",
+		"unpublished": "Неопубликовано",
 		"unsavedChanges": "Несохраненные изменения!",
 		"visibleForStudents": "Задание видно студентам"
 	},
 	"assignments": {
-		"noAssignments": "",
-		"open": ""
+		"noAssignments": "Заданий нет",
+		"open": "Открыть"
 	},
 	"assignmentsTab": "Задания",
 	"board": {
@@ -422,7 +422,7 @@
 	"classNetworks": "Классовые сети",
 	"collaborators": "Соавторы",
 	"common": {
-		"errorLoading": "",
+		"errorLoading": "Ошибка загрузки задания",
 		"loading": "Загрузка..."
 	},
 	"create": {
@@ -653,13 +653,13 @@
 	},
 	"myClasses": "Мои занятия",
 	"noAccessTo": "У вас не будет доступа к:",
-	"noAssignments": "",
+	"noAssignments": "Нет доступных заданий.",
 	"noClasses": "Вы еще не присоединились ни к одному занятию.",
-	"noResources": "",
+	"noResources": "Государственных ресурсов нет.",
 	"noStudies": "Студенты пока не создали ни одного исследования.",
 	"noteNewStudents": "Примечание: новые ученики не смогут присоединиться к вашему классу.",
 	"numberOfStudents": "Количество студентов",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "Только учителя и наставники могут выдавать карточки.",
 	"participants": "Участники",
 	"pleaseTypeDelete": "Пожалуйста, введите DELETE, чтобы удалить свой класс.",
 	"projectBoard": {
@@ -801,7 +801,7 @@
 		"goBack": "Вернитесь в класс",
 		"username": "Имя пользователя"
 	},
-	"studentsCanAssignCards": "",
+	"studentsCanAssignCards": "Студенты могут назначать карточки",
 	"studentsTab": {
 		"addToClass": "Добавить в класс",
 		"assignToClass": "Вы уверены, что хотите перевести этого ученика в другой класс?",
@@ -827,7 +827,7 @@
 	"studies": {
 		"collaborators": "Соавторы",
 		"dateCreated": "Дата создания",
-		"listDescription": "",
+		"listDescription": "{{count}} исследований, созданных студентами этого класса.",
 		"noStudiesYet": "Студенты пока не создали ни одного исследования.",
 		"participants": "Участники",
 		"studyBuilder": "Создатель исследований",
@@ -852,7 +852,7 @@
 		"lastUpdated": "Последнее обновление",
 		"needsFeedback": "Нужна обратная связь",
 		"notStarted": "Не начато",
-		"requestFeedback": "",
+		"requestFeedback": "Запросить обратную связь",
 		"saveAndClose": "Сохранить и закрыть",
 		"saving": "Сохранение ...",
 		"selectStatus": "Выберите статус",
