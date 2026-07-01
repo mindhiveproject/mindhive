@@ -134,6 +134,21 @@ function FormDefinitionPreview({
     );
   }
 
+  if (selectedType === CUSTOM_CARD_TYPE && customMode === "scratch") {
+    return (
+      <div style={previewShellStyle}>
+        {t(
+          "section.createCardModal.scratchPreview",
+          {},
+          {
+            default:
+              "Creates a draft review form with one empty card, linked to this step. Publish the form in Admin before it appears in review.",
+          }
+        )}
+      </div>
+    );
+  }
+
   if (selectedType === CUSTOM_CARD_TYPE && customMode !== "clone") {
     return (
       <div style={previewShellStyle}>

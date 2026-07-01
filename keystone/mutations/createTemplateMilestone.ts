@@ -52,84 +52,58 @@ async function uniqueCopiedFormKey(context: any, milestoneKey: string) {
   }
 }
 
-async function copyFormDefinitionForMilestone(
-  context: any,
-  sourceFormDefinitionId: string | null,
-  milestoneKey: string,
-  milestoneTitle: string
-): Promise<{ id: string; key: string } | null> {
-  if (!sourceFormDefinitionId) return null;
-
-  const source = await context.query.FormDefinition.findOne({
-    where: { id: sourceFormDefinitionId },
-    query: `
+const FORM_DEFINITION_NESTED_QUERY = `
+  id
+  key
+  title
+  description
+  cards(orderBy: { order: asc }) {
+    id
+    cardType
+    title
+    titleI18n
+    description
+    descriptionI18n
+    visibleWhenStatus
+    roleVisibility
+    order
+    fields(orderBy: { order: asc }) {
       id
-      key
-      title
-      description
-      cards(orderBy: { order: asc }) {
-        id
-        cardType
-        title
-        titleI18n
-        description
-        descriptionI18n
-        visibleWhenStatus
-        roleVisibility
-        order
-        fields(orderBy: { order: asc }) {
-          id
-          name
-          fieldType
-          label
-          labelI18n
-          helperText
-          helperTextI18n
-          placeholder
-          placeholderI18n
-          isRequired
-          order
-          storage
-          storageColumn
-          storageBucket
-          storageEntity
-          options
-          validation
-          defaultValue
-          showWhen
-          jsonArraySchema
-          visibilityRoles
-        }
-      }
-    `,
-  });
-  if (!source) return null;
+      name
+      fieldType
+      label
+      labelI18n
+      helperText
+      helperTextI18n
+      placeholder
+      placeholderI18n
+      isRequired
+      order
+      storage
+      storageColumn
+      storageBucket
+      storageEntity
+      options
+      validation
+      defaultValue
+      showWhen
+      jsonArraySchema
+      visibilityRoles
+    }
+  }
+`;
 
-  const copiedKey = await uniqueCopiedFormKey(context, milestoneKey);
-  const sessionId = context.session?.itemId;
-  const definition = await context.db.FormDefinition.createOne(
-    {
-      data: {
-        key: copiedKey,
-        title: `${milestoneTitle} review form`,
-        description: source.description || "",
-        scope: "global",
-        status: "published",
-        version: 1,
-        publishedAt: new Date().toISOString(),
-        ...(sessionId ? { createdBy: { connect: { id: sessionId } } } : {}),
-        ...(sessionId ? { publishedBy: { connect: { id: sessionId } } } : {}),
-        changelog: `Copied from form definition ${source.id} (${source.key}) for template milestone ${milestoneKey}.`,
-      },
-    },
-    "id"
-  );
-
+async function copyFormCardsAndFields(
+  sudo: any,
+  source: { cards?: any[] },
+  definitionId: string
+) {
+  let cardsCreated = 0;
   for (const card of source.cards || []) {
-    const newCard = await context.db.FormCard.createOne(
+    const newCard = await sudo.db.FormCard.createOne(
       {
         data: {
-          definition: { connect: { id: definition.id } },
+          definition: { connect: { id: definitionId } },
           cardType: card.cardType || "fields",
           title: card.title || "",
           titleI18n: card.titleI18n || null,
@@ -142,9 +116,10 @@ async function copyFormDefinitionForMilestone(
       },
       "id"
     );
+    cardsCreated += 1;
 
     for (const field of card.fields || []) {
-      await context.db.FormField.createOne(
+      await sudo.db.FormField.createOne(
         {
           data: {
             card: { connect: { id: newCard.id } },
@@ -175,7 +150,89 @@ async function copyFormDefinitionForMilestone(
     }
   }
 
-  return { id: definition.id, key: copiedKey };
+  if ((source.cards || []).length > 0 && cardsCreated === 0) {
+    throw new Error("Failed to copy form cards from source definition.");
+  }
+}
+
+async function provisionFormDefinitionForMilestone(
+  context: any,
+  sudo: any,
+  {
+    sourceFormDefinitionId,
+    milestoneKey,
+    milestoneTitle,
+  }: {
+    sourceFormDefinitionId: string | null;
+    milestoneKey: string;
+    milestoneTitle: string;
+  }
+): Promise<{ id: string; key: string }> {
+  const sessionId = context.session?.itemId;
+  const formKey = await uniqueCopiedFormKey(sudo, milestoneKey);
+
+  if (sourceFormDefinitionId) {
+    const source = await sudo.query.FormDefinition.findOne({
+      where: { id: sourceFormDefinitionId },
+      query: FORM_DEFINITION_NESTED_QUERY,
+    });
+    if (!source) {
+      throw new Error(
+        `Source form definition ${sourceFormDefinitionId} not found.`
+      );
+    }
+
+    const definition = await sudo.db.FormDefinition.createOne(
+      {
+        data: {
+          key: formKey,
+          title: `${milestoneTitle} review form`,
+          description: source.description || "",
+          scope: "global",
+          status: "published",
+          version: 1,
+          publishedAt: new Date().toISOString(),
+          ...(sessionId ? { createdBy: { connect: { id: sessionId } } } : {}),
+          ...(sessionId ? { publishedBy: { connect: { id: sessionId } } } : {}),
+          changelog: `Copied from form definition ${source.id} (${source.key}) for template milestone ${milestoneKey}.`,
+        },
+      },
+      "id"
+    );
+
+    await copyFormCardsAndFields(sudo, source, definition.id);
+    return { id: definition.id, key: formKey };
+  }
+
+  const definition = await sudo.db.FormDefinition.createOne(
+    {
+      data: {
+        key: formKey,
+        title: `${milestoneTitle} review form`,
+        description: "",
+        scope: "global",
+        status: "draft",
+        version: 1,
+        ...(sessionId ? { createdBy: { connect: { id: sessionId } } } : {}),
+        changelog: `Draft form created for template milestone ${milestoneKey}.`,
+      },
+    },
+    "id"
+  );
+
+  await sudo.db.FormCard.createOne(
+    {
+      data: {
+        definition: { connect: { id: definition.id } },
+        cardType: "fields",
+        title: "",
+        order: 0,
+      },
+    },
+    "id"
+  );
+
+  return { id: definition.id, key: formKey };
 }
 
 type CreateTemplateMilestoneInput = {
@@ -198,6 +255,7 @@ async function createTemplateMilestone(
   context: any
 ) {
   await assertTemplateBoardTeacher(context, input.templateBoardId);
+  const sudo = context.sudo();
 
   const existingTemplate = await context.query.Milestone.findMany({
     where: {
@@ -251,14 +309,17 @@ async function createTemplateMilestone(
       context,
       input.sourceFormDefinitionKey
     ));
-  const copiedFormDefinition = await copyFormDefinitionForMilestone(
+  const formDefinition = await provisionFormDefinitionForMilestone(
     context,
-    sourceFormDefinitionId,
-    key,
-    input.title
+    sudo,
+    {
+      sourceFormDefinitionId,
+      milestoneKey: key,
+      milestoneTitle: input.title,
+    }
   );
 
-  const milestone = await context.db.Milestone.createOne(
+  const milestone = await sudo.db.Milestone.createOne(
     {
       data: {
         key,
@@ -271,11 +332,8 @@ async function createTemplateMilestone(
         logEventName: `MILESTONE_SUBMITTED_${key.toUpperCase()}`,
         position: nextPosition,
         showInFeedbackCenter: input.showInFeedbackCenter ?? true,
-        formDefinitionKeyPattern:
-          copiedFormDefinition?.key || "review_{{key}}_{{curriculumType}}",
-        formDefinition: copiedFormDefinition?.id
-          ? { connect: { id: copiedFormDefinition.id } }
-          : undefined,
+        formDefinitionKeyPattern: formDefinition.key,
+        formDefinition: { connect: { id: formDefinition.id } },
         ...(input.clonedFromMilestoneId
           ? {
               clonedFrom: { connect: { id: input.clonedFromMilestoneId } },
