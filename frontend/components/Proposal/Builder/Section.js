@@ -9,6 +9,7 @@ import useTranslation from "next-translate/useTranslation";
 import Card from "./Card";
 import ActionCard from "./ActionCard";
 import CreateCardModal from "./CreateCardModal";
+import Button from "../../DesignSystem/Button";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 import {
@@ -557,20 +558,13 @@ const Section = ({
       </div>
       {(proposalBuildMode || (!isPreview && settings?.allowAddingCards)) && (
         <div className="newInput">
-          <div
-            className="addBtn"
+          <Button
             onClick={() => setCreateCardModalOpen(true)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setCreateCardModalOpen(true);
-              }
-            }}
+            variant="primary"
+            size="small"
           >
             {t("section.addCard", {}, { default: "Add card" })}
-          </div>
+          </Button>
         </div>
       )}
       <CreateCardModal

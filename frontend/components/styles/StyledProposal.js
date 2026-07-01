@@ -258,6 +258,21 @@ export const StyledProposal = styled.div`
     }
   }
 
+  .boardInner {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1;
+    .boardInnerToolbar {
+      padding: 0 15px 8px;
+    }
+    .scrollable {
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+    }
+  }
+
   .sections {
   }
 
