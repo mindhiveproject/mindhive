@@ -16,7 +16,7 @@ import {
   DELETE_CARD,
 } from "../../../../../Mutations/Proposal";
 import ActionCard from "./Actions/ActionCard";
-import { isActionCard } from "../../../../../../../lib/milestones";
+import { isActionCard } from "../../../../../../lib/milestones";
 
 const Section = ({
   section,

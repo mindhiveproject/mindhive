@@ -1,9 +1,9 @@
 import absoluteUrl from "next-absolute-url";
 import { useQuery, useMutation } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
-import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
-import { buildSubmitStatuses } from "../../../../../../../lib/milestoneStatus";
-import { cardIncludedInReviewStep } from "../../../../../../../lib/milestones";
+import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
+import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
+import { cardIncludedInReviewStep } from "../../../../../../lib/milestones";
 import { EDIT_CLASS } from "../../../../../Mutations/Classes";
 import moment from "moment";
 import Head from "next/head";

@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
 
 import { GET_CARD_CONTENT } from "../../../../../Queries/Proposal";
-import { buildSubmitStatuses } from "../../../../../../../lib/milestoneStatus";
-import { getMilestoneFromCard, isActionCard } from "../../../../../../../lib/milestones";
-import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
+import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
+import { getMilestoneFromCard, isActionCard } from "../../../../../../lib/milestones";
+import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
 
 import ProposalCard from "./Main";
 import IndividualCard from "./Individual/Main";

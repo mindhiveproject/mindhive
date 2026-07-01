@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useQuery, useMutation } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
 import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
+import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
 import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
 import { v1 as uuidv1 } from "uuid";
 

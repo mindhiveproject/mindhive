@@ -7,8 +7,8 @@ import {
   UPDATE_TEMPLATE_MILESTONE,
   RESOLVE_MILESTONES_FOR_BOARD,
 } from "../../../../../Queries/Milestone";
-import { resolveMilestonesFromQuery } from "../../../../../lib/milestones";
-import Button from "../../../../DesignSystem/Button";
+import { resolveMilestonesFromQuery } from "../../../../../../lib/milestones";
+import Button from "../../../../../DesignSystem/Button";
 
 const PERMISSION_OPTIONS = [
   "MENTOR",
