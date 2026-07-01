@@ -36,6 +36,22 @@ export const GET_MILESTONES = gql`
   }
 `;
 
+export const ADMIN_MILESTONES = gql`
+  query ADMIN_MILESTONES {
+    milestones(orderBy: [{ key: asc }]) {
+      ${MILESTONE_FIELDS}
+    }
+  }
+`;
+
+export const ADMIN_MILESTONE = gql`
+  query ADMIN_MILESTONE($id: ID!) {
+    milestone(where: { id: $id }) {
+      ${MILESTONE_FIELDS}
+    }
+  }
+`;
+
 export const RESOLVE_MILESTONES_FOR_BOARD = gql`
   query RESOLVE_MILESTONES_FOR_BOARD($boardId: ID!) {
     resolveMilestonesForBoard(boardId: $boardId) {

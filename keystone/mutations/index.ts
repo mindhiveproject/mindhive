@@ -23,6 +23,7 @@ import seedMissingForms from "./seedMissingForms";
 import duplicateFormDefinition from "./duplicateFormDefinition";
 import publishFormDefinition from "./publishFormDefinition";
 import seedMilestones from "./seedMilestones";
+import seedMissingMilestones from "./seedMissingMilestones";
 import backfillMilestoneStatus from "./backfillMilestoneStatus";
 import resolveMilestonesForBoard from "./resolveMilestonesForBoard";
 import createTemplateMilestone from "./createTemplateMilestone";
@@ -114,6 +115,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # One-off seeder for baseline Milestone inventory.
         # Idempotent unless force=true (which deletes and recreates).
         seedMilestones(force: Boolean): [Milestone!]!
+        # Self-service seeder for the admin UI. Inserts only baseline
+        # milestones that don't already exist — never clobbers edits.
+        seedMissingMilestones: [Milestone!]!
         # Backfill ProposalBoard.milestoneStatus from legacy columns.
         backfillMilestoneStatus(limit: Int, dryRun: Boolean): Int!
         backfillLinkActionCardsToMilestones(limit: Int, dryRun: Boolean): Int!
@@ -185,6 +189,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         duplicateFormDefinition,
         publishFormDefinition,
         seedMilestones,
+        seedMissingMilestones,
         backfillMilestoneStatus,
         backfillLinkActionCardsToMilestones,
         createTemplateMilestone,
