@@ -1,4 +1,4 @@
-import { assertTemplateBoardTeacher, MILESTONE_QUERY } from "./resolveMilestonesForBoard";
+import { assertTemplateBoardTeacher } from "./resolveMilestonesForBoard";
 
 type UpdateTemplateMilestoneInput = {
   id: string;
@@ -49,10 +49,10 @@ async function updateTemplateMilestone(
     data,
   });
 
-  return context.query.Milestone.findOne({
-    where: { id: input.id },
-    query: MILESTONE_QUERY,
-  });
+  // See resolveMilestonesForBoard — context.db (raw Prisma) avoids the
+  // pre-serialized-value trap that breaks GraphQL sub-selection
+  // resolution on custom-mutation returns.
+  return context.db.Milestone.findOne({ where: { id: String(input.id) } });
 }
 
 export default updateTemplateMilestone;

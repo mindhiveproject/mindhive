@@ -22,6 +22,14 @@ const ENTITY_FOR_KEY: Record<string, string> = {
   profile_organization: "Profile",
 };
 
+// Review-form keys follow the pattern review_<STAGE>_<CURRICULUM>
+// (e.g. review_SUBMITTED_AS_PROPOSAL_mindhive). All of them target the
+// Review entity's `content` json bucket, so we resolve them by prefix
+// rather than listing every combination.
+function entityForReviewKey(key: string): string | null {
+  return key.startsWith("review_") ? "Review" : null;
+}
+
 // Whitelist of column names per entity. Must be writable via the
 // auto-generated Keystone update inputs (so no virtual fields, no
 // relationship inverses).
@@ -129,30 +137,27 @@ const ALLOWED_BUCKETS: Record<string, string[]> = {
     "tasksInfo",
   ],
   Organization: ["extraDetails"],
+  // Review answers all land in Review.content — that's the single
+  // json() column on the Review schema used by every review form.
+  Review: ["content"],
 };
 
-const ALLOWED_FIELD_TYPES = new Set([
-  "text",
-  "textarea",
-  "rich_text",
-  "number",
-  "date",
-  "select",
-  "multiselect",
-  "checkbox",
-  "image",
-  "file",
-  "video_url",
-  "tag_multiselect",
-  "json_array",
-  "read_only_html",
-]);
+// Derived automatically from the schema so this file can't drift out of
+// sync with FormField.fieldType and FormCard.cardType. Adding a new
+// field type in FormField.ts is now the only step needed on the
+// backend — the validator picks it up on next boot.
+import {
+  FIELD_TYPE_OPTIONS,
+  CARD_TYPE_OPTIONS,
+} from "../schemas/FormField";
 
-const ALLOWED_CARD_TYPES = new Set([
-  "fields",
-  "members_panel",
-  "interest_selector",
-]);
+const ALLOWED_FIELD_TYPES = new Set<string>(
+  FIELD_TYPE_OPTIONS.map((o) => o.value)
+);
+
+const ALLOWED_CARD_TYPES = new Set<string>(
+  CARD_TYPE_OPTIONS.map((o) => o.value)
+);
 
 type FormFieldRow = {
   id: string;
@@ -181,7 +186,11 @@ type FormDefinitionRow = {
 // Resolve which entity a (definition, storageEntity) pair targets.
 function entityFor(definition: FormDefinitionRow, storageEntity?: string | null) {
   if (storageEntity === "organization") return "Organization";
-  return ENTITY_FOR_KEY[definition.key] || null;
+  return (
+    ENTITY_FOR_KEY[definition.key] ||
+    entityForReviewKey(definition.key) ||
+    null
+  );
 }
 
 export function validateFormDefinition(

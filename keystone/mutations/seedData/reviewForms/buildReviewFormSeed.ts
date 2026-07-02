@@ -4,10 +4,14 @@
 // Field types mirror the legacy Template.js review questionnaires:
 // textarea, select_one_icon, task_selector, dual_textarea.
 
+// Kinds are lowercase snake_case to match milestone reviewStage values
+// (slugifyMilestoneKey lowercases titles by default). Keeps composed
+// keys like `review_peer_review_mindhive` uniform across seed / template
+// / manual admin flows.
 export type ReviewFormKind =
-  | "SUBMITTED_AS_PROPOSAL"
-  | "PEER_REVIEW"
-  | "PROJECT_REPORT";
+  | "submitted_as_proposal"
+  | "peer_review"
+  | "project_report";
 
 export type ReviewCurriculum = "mindhive" | "youquantified" | "nyu_cusp";
 
@@ -159,9 +163,9 @@ export function buildReviewFormSeed({
   cards: CardSeed[];
 }): FormSeed {
   const kindLabel =
-    kind === "SUBMITTED_AS_PROPOSAL"
+    kind === "submitted_as_proposal"
       ? "Proposal review"
-      : kind === "PEER_REVIEW"
+      : kind === "peer_review"
         ? "Peer review"
         : "Project report";
 
@@ -195,7 +199,7 @@ export function blankProjectReportSeed(
   curriculumTitle: string
 ): FormSeed {
   return buildReviewFormSeed({
-    kind: "PROJECT_REPORT",
+    kind: "project_report",
     curriculum,
     curriculumI18nPrefix,
     curriculumTitle,

@@ -18,6 +18,22 @@ export const PROPOSAL_BOARD_SHARING = gql`
 `;
 
 // get proposal templates
+// Template proposal boards — boards flagged with isTemplate=true.
+// Used by the admin form scope picker to attach a project_board-scoped
+// FormDefinition to a specific template. Student clones of these boards
+// inherit the form automatically via the resolver's clonedFrom walk.
+export const TEMPLATE_PROPOSAL_BOARDS_LITE = gql`
+  query TEMPLATE_PROPOSAL_BOARDS_LITE {
+    proposalBoards(
+      where: { isTemplate: { equals: true } }
+      orderBy: { title: asc }
+    ) {
+      id
+      title
+    }
+  }
+`;
+
 export const PROPOSAL_TEMPLATES_QUERY = gql`
   query PROPOSAL_TEMPLATES_QUERY {
     proposalBoards(where: { isTemplate: { equals: true } }) {

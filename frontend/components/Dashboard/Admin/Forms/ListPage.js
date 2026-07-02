@@ -11,23 +11,34 @@ import {
   DELETE_FORM_DEFINITION,
   DUPLICATE_FORM_DEFINITION,
   SEED_MISSING_FORMS,
+  BACKFILL_PROJECT_BOARD_FORM_SCOPE,
 } from "../../../Mutations/FormDefinition";
 import NewDefinitionForm from "./NewDefinitionForm";
 import { PrimaryButton, SecondaryButton } from "./EditorPanelStyles";
 
+const SURFACE_LABEL = {
+  profile_individual: "Individual profile",
+  profile_organization: "Organization profile",
+  opportunity: "Opportunity",
+  feedback: "Feedback",
+};
+
+// Keys are lowercase everywhere post-unification. If you add a new
+// baseline key here, also add its seed data in
+// keystone/mutations/seedData/ and the seedMissingForms mutation.
 const BASELINE_KEYS = [
   "opportunity",
   "profile_individual",
   "profile_organization",
-  "review_SUBMITTED_AS_PROPOSAL_mindhive",
-  "review_PEER_REVIEW_mindhive",
-  "review_PROJECT_REPORT_mindhive",
-  "review_SUBMITTED_AS_PROPOSAL_youquantified",
-  "review_PEER_REVIEW_youquantified",
-  "review_PROJECT_REPORT_youquantified",
-  "review_SUBMITTED_AS_PROPOSAL_nyu_cusp",
-  "review_PEER_REVIEW_nyu_cusp",
-  "review_PROJECT_REPORT_nyu_cusp",
+  "review_submitted_as_proposal_mindhive",
+  "review_peer_review_mindhive",
+  "review_project_report_mindhive",
+  "review_submitted_as_proposal_youquantified",
+  "review_peer_review_youquantified",
+  "review_project_report_youquantified",
+  "review_submitted_as_proposal_nyu_cusp",
+  "review_peer_review_nyu_cusp",
+  "review_project_report_nyu_cusp",
 ];
 
 const Shell = styled.div`
@@ -233,6 +244,7 @@ export default function ListPage() {
   const [keyFilter, setKeyFilter] = useState("");
   const [scopeFilter, setScopeFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [surfaceFilter, setSurfaceFilter] = useState("");
   const { data, loading, error } = useQuery(ADMIN_FORM_DEFINITIONS, {
     fetchPolicy: "cache-and-network",
   });
@@ -250,9 +262,10 @@ export default function ListPage() {
       if (keyFilter && r.key !== keyFilter) return false;
       if (scopeFilter && r.scope !== scopeFilter) return false;
       if (statusFilter && r.status !== statusFilter) return false;
+      if (surfaceFilter && r.surface !== surfaceFilter) return false;
       return true;
     });
-  }, [allRows, keyFilter, scopeFilter, statusFilter]);
+  }, [allRows, keyFilter, scopeFilter, statusFilter, surfaceFilter]);
 
   const [duplicateDef, { loading: duplicating }] = useMutation(
     DUPLICATE_FORM_DEFINITION,
@@ -275,6 +288,34 @@ export default function ListPage() {
     refetchQueries: [{ query: ADMIN_FORM_DEFINITIONS }],
     awaitRefetchQueries: true,
   });
+
+  const [
+    runBackfill,
+    { loading: backfilling, data: backfillData, error: backfillError, reset: resetBackfill },
+  ] = useMutation(BACKFILL_PROJECT_BOARD_FORM_SCOPE, {
+    refetchQueries: [{ query: ADMIN_FORM_DEFINITIONS }],
+    awaitRefetchQueries: true,
+  });
+
+  const [backfillPanelOpen, setBackfillPanelOpen] = useState(false);
+  const [backfillMode, setBackfillMode] = useState(null); // "preview" | "applied"
+
+  const backfillChanges = backfillData?.backfillProjectBoardFormScope || [];
+
+  const handleBackfillPreview = async () => {
+    try {
+      resetBackfill();
+      await runBackfill({ variables: { dryRun: true } });
+      setBackfillMode("preview");
+    } catch {}
+  };
+  const handleBackfillApply = async () => {
+    try {
+      resetBackfill();
+      await runBackfill({ variables: { dryRun: false } });
+      setBackfillMode("applied");
+    } catch {}
+  };
 
   const existingKeys = useMemo(() => {
     const seen = new Set();
@@ -375,12 +416,118 @@ export default function ListPage() {
         </SeedPanel>
       ) : null}
 
+      {/* Admin backfill: project-board scope migration. */}
+      <SeedPanel
+        style={{
+          background: backfillPanelOpen ? "#fff8e6" : "#f7f9f8",
+          borderColor: backfillPanelOpen ? "#f0d39a" : "#d3dae0",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 12,
+            flexWrap: "wrap",
+          }}
+        >
+          <div>
+            <h2 style={{ margin: 0 }}>Backfill: project-board form scope</h2>
+            <p style={{ margin: "4px 0 0" }}>
+              Legacy auto-provisioned template-milestone forms live at
+              scope=global with unique keys. This migration relocates them
+              to scope=project_board with the correct proposalBoard set.
+              Idempotent + reversible via Keystone admin.
+            </p>
+          </div>
+          <SecondaryButton
+            type="button"
+            onClick={() => {
+              setBackfillPanelOpen((v) => !v);
+              if (!backfillPanelOpen) {
+                resetBackfill();
+                setBackfillMode(null);
+              }
+            }}
+          >
+            {backfillPanelOpen ? "Close" : "Show tool"}
+          </SecondaryButton>
+        </div>
+
+        {backfillPanelOpen ? (
+          <>
+            <div className="actions">
+              <PrimaryButton
+                type="button"
+                onClick={handleBackfillPreview}
+                disabled={backfilling}
+              >
+                {backfilling && backfillMode !== "applied"
+                  ? "Previewing…"
+                  : "Preview changes (dry-run)"}
+              </PrimaryButton>
+              <PrimaryButton
+                type="button"
+                onClick={handleBackfillApply}
+                disabled={
+                  backfilling || backfillMode !== "preview" ||
+                  backfillChanges.length === 0
+                }
+                style={{ background: "#8a6d3b" }}
+              >
+                {backfilling && backfillMode === "applied"
+                  ? "Applying…"
+                  : "Apply"}
+              </PrimaryButton>
+              {backfillError ? (
+                <span className="error">
+                  {backfillError.message?.replace(/^Error: /, "") ||
+                    String(backfillError)}
+                </span>
+              ) : null}
+            </div>
+            {backfillChanges.length > 0 ? (
+              <ul style={{ marginTop: 6, paddingLeft: 20 }}>
+                {backfillChanges.map((line, i) => (
+                  <li
+                    key={i}
+                    style={{
+                      fontFamily:
+                        i === 0 ? "inherit" : "'Nunito', monospace",
+                      fontSize: 13,
+                      color: i === 0 ? "#171717" : "#5f6871",
+                      marginBottom: 2,
+                    }}
+                  >
+                    {line}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </>
+        ) : null}
+      </SeedPanel>
+
       <p className="intro">
         Customize the Profile and Opportunity forms across MindHive Connect.
         Edit a definition to change which fields appear, in what order, with
         what labels and validation. Publish a draft to make it live.
       </p>
       <FilterBar>
+        <label>
+          Surface
+          <select
+            value={surfaceFilter}
+            onChange={(e) => setSurfaceFilter(e.target.value)}
+          >
+            <option value="">All</option>
+            <option value="profile_individual">Individual profile</option>
+            <option value="profile_organization">Organization profile</option>
+            <option value="opportunity">Opportunity</option>
+            <option value="feedback">Feedback (review)</option>
+          </select>
+        </label>
         <label>
           Key
           <select
@@ -405,6 +552,7 @@ export default function ListPage() {
             <option value="global">Global</option>
             <option value="organization">Organization</option>
             <option value="class_network">Class network</option>
+            <option value="project_board">Project board</option>
           </select>
         </label>
         <label>
@@ -419,12 +567,13 @@ export default function ListPage() {
             <option value="archived">Archived</option>
           </select>
         </label>
-        {(keyFilter || scopeFilter || statusFilter) && (
+        {(keyFilter || scopeFilter || statusFilter || surfaceFilter) && (
           <SecondaryButton
             type="button"
             onClick={() => {
               setKeyFilter("");
               setScopeFilter("");
+              setSurfaceFilter("");
               setStatusFilter("");
             }}
           >
@@ -445,6 +594,7 @@ export default function ListPage() {
         <Table>
           <thead>
             <tr>
+              <th>Surface</th>
               <th>Key</th>
               <th>Title</th>
               <th>Scope</th>
@@ -457,6 +607,7 @@ export default function ListPage() {
           <tbody>
             {rows.map((r) => (
               <tr key={r.id} className={r.status === "archived" ? "muted" : ""}>
+                <td>{SURFACE_LABEL[r.surface] || "—"}</td>
                 <td className="key">{r.key}</td>
                 <td>{r.title}</td>
                 <td>
@@ -464,7 +615,9 @@ export default function ListPage() {
                     ? `org: ${r.organization.name}`
                     : r.scope === "class_network" && r.classNetwork?.title
                       ? `network: ${r.classNetwork.title}`
-                      : r.scope}
+                      : r.scope === "project_board" && r.proposalBoard?.title
+                        ? `board: ${r.proposalBoard.title}`
+                        : r.scope}
                 </td>
                 <td>v{r.version}</td>
                 <td>

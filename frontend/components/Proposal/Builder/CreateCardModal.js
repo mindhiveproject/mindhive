@@ -7,6 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
 import CardRenderer from "../../Forms/DefinitionForm/CardRenderer";
+import FormDefinitionEditor from "../../Dashboard/Admin/Forms/FormDefinitionEditor";
 import { RESOLVE_FORM_DEFINITION } from "../../Queries/FormDefinition";
 import { isClassTemplateBoard } from "../../Utils/proposalBoard";
 import { useBoardMilestones } from "../../../lib/useBoardMilestones";
@@ -41,7 +42,11 @@ const overlayStyle = {
 };
 
 const modalStyle = {
-  width: "min(760px, 100%)",
+  // Fluid width up to 90vw so the chip wizard rows breathe on wide
+  // displays. Hard-capped at 1400px so it doesn't turn into a
+  // full-screen sheet on ultra-wide monitors (chip content would
+  // sprawl and become harder to scan).
+  width: "min(1400px, 90vw)",
   maxHeight: "90vh",
   overflowY: "auto",
   scrollbarWidth: "none",
@@ -560,7 +565,7 @@ function PermissionsAndTemplateStep({
               {},
               {
                 default:
-                  "Creates a draft review form with one empty card, linked to this step. Publish the form in Admin before it appears in review.",
+                  "Creates an empty draft review form linked to this step. Once you click Create you'll build the form's cards and fields right here in the modal, then Publish. Student clones inherit whatever you publish.",
               }
             )}
           </div>
@@ -576,17 +581,24 @@ export default function CreateCardModal({
   onClose,
   onCreateCard,
   onCreateCustomMilestone,
+  onFinishCustomMilestoneEdit,
   open,
   sectionId,
   sections = [],
 }) {
   const { t } = useTranslation("builder");
+  const router = useRouter();
   const [cardCategory, setCardCategory] = useState("");
   const [checkpointChoice, setCheckpointChoice] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedPermissions, setSelectedPermissions] = useState(DEFAULT_PERMISSIONS);
   const [selectedTemplateKey, setSelectedTemplateKey] = useState("");
+  // When the "new checkpoint" flow succeeds, we hold onto the created
+  // milestone (with its formDefinition) and pivot the modal into an
+  // embedded form-builder step. The user builds cards/fields, then
+  // clicks Finish which fires onFinishCustomMilestoneEdit.
+  const [createdMilestone, setCreatedMilestone] = useState(null);
 
   const { milestones, loading: milestonesLoading } = useBoardMilestones(
     board?.id,
@@ -639,6 +651,7 @@ export default function CreateCardModal({
     setDescription("");
     setSelectedPermissions(DEFAULT_PERMISSIONS);
     setSelectedTemplateKey("");
+    setCreatedMilestone(null);
   }, [open]);
 
   useEffect(() => {
@@ -722,7 +735,7 @@ export default function CreateCardModal({
           ? getMilestoneForCardType(selectedTemplateKey, milestones)
           : null;
 
-      await onCreateCustomMilestone({
+      const created = await onCreateCustomMilestone({
         title: trimmedTitle,
         description: description.trim(),
         sectionId,
@@ -732,6 +745,12 @@ export default function CreateCardModal({
           : null,
         canReviewPermissionNames: selectedPermissions,
       });
+      // Pivot into the embedded form-editor step. Falls back to the
+      // old behaviour (parent closes the modal after the mutation) if
+      // no formDefinition came back — nothing to edit inline anyway.
+      if (created?.formDefinition?.id) {
+        setCreatedMilestone(created);
+      }
       return;
     }
 
@@ -755,6 +774,69 @@ export default function CreateCardModal({
           display: none;
         }
       `}</style>
+      {createdMilestone ? (
+        <div
+          className="createCardModalForm"
+          style={{ ...modalStyle, display: "flex", flexDirection: "column", gap: 16 }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 16,
+              flexWrap: "wrap",
+            }}
+          >
+            <div>
+              <h2
+                style={{
+                  margin: 0,
+                  fontFamily: "Inter, sans-serif",
+                  fontSize: 24,
+                  fontWeight: 800,
+                  color: "#000",
+                }}
+              >
+                {t(
+                  "section.createCardModal.buildFormTitle",
+                  { title: createdMilestone.title || createdMilestone.key },
+                  { default: 'Build the review form: "{{title}}"' }
+                )}
+              </h2>
+              <div style={{ marginTop: 4, color: "#5f6871", fontSize: 13 }}>
+                {t(
+                  "section.createCardModal.buildFormSubtitle",
+                  {},
+                  {
+                    default:
+                      "Scoped to this template board. Add cards + fields below. Student clones will inherit whatever you publish.",
+                  }
+                )}
+              </div>
+            </div>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() =>
+                onFinishCustomMilestoneEdit &&
+                onFinishCustomMilestoneEdit(createdMilestone)
+              }
+            >
+              {t(
+                "section.createCardModal.finishBuilding",
+                {},
+                { default: "Finish" }
+              )}
+            </Button>
+          </div>
+
+          <FormDefinitionEditor
+            definitionId={createdMilestone.formDefinition?.id}
+            locale={router?.locale || "en-us"}
+          />
+        </div>
+      ) : (
       <form
         className="createCardModalForm"
         style={modalStyle}
@@ -870,6 +952,7 @@ export default function CreateCardModal({
           </Button>
         </div>
       </form>
+      )}
     </div>,
     document.body
   );

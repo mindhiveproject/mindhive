@@ -1906,7 +1906,7 @@
 			"previewLabel": "Review form preview",
 			"previewLoading": "Loading preview...",
 			"proposalPreview": "Adds a regular proposal card with content fields for students.",
-			"scratchPreview": "Creates a draft review form with one empty card, linked to this step. Publish the form in Admin before it appears in review.",
+			"scratchPreview": "Creates an empty draft review form linked to this step. Once you click Create you'll build the form's cards and fields right here in the modal, then Publish. Student clones inherit whatever you publish.",
 			"steps": {
 				"cardType": "Card type",
 				"checkpoint": "Checkpoint",

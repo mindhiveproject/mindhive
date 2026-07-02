@@ -10,7 +10,6 @@ import { UPDATE_CARD_EDIT } from "../../../../../Mutations/Proposal";
 import { v1 as uuidv1 } from "uuid";
 
 import Inner from "./Inner";
-import TemplateMilestoneManager from "./TemplateMilestoneManager";
 
 import {
   CREATE_SECTION,
@@ -38,10 +37,6 @@ const Board = ({
 
   const { milestones: resolvedMilestones } = useBoardMilestones(proposalId);
   const submitStatuses = buildSubmitStatuses(proposal, resolvedMilestones);
-  const showTemplateMilestoneManager =
-    !isPreview &&
-    proposalBuildMode &&
-    isClassTemplateBoard(proposal);
 
   const [sections, setSections] = useState([]);
   const [createSectionMut, createSectionState] = useMutation(CREATE_SECTION);
@@ -71,7 +66,7 @@ const Board = ({
       propagateToClones,
       hasClones,
       onTemplateChangedWithoutPropagation,
-    ]
+    ],
   );
 
   const deleteSection = useCallback(
@@ -94,7 +89,7 @@ const Board = ({
       propagateToClones,
       hasClones,
       onTemplateChangedWithoutPropagation,
-    ]
+    ],
   );
 
   const updateSection = useCallback(
@@ -117,7 +112,7 @@ const Board = ({
       propagateToClones,
       hasClones,
       onTemplateChangedWithoutPropagation,
-    ]
+    ],
   );
 
   const backfillPublicIdDoneRef = useRef(null);
@@ -168,7 +163,7 @@ const Board = ({
         // eslint-disable-next-line no-console
         console.error(
           "Failed to backfill card publicId in ProjectBoard Builder:",
-          e
+          e,
         );
       });
     });
@@ -181,9 +176,6 @@ const Board = ({
 
   return (
     <>
-      {showTemplateMilestoneManager && (
-        <TemplateMilestoneManager templateBoardId={proposalId} />
-      )}
       <Inner
         board={proposal}
         sections={sections}

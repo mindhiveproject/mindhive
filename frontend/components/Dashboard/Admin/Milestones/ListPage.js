@@ -9,6 +9,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
 import { ADMIN_MILESTONES } from "../../../Queries/Milestone";
+import NewMilestoneForm from "./NewMilestoneForm";
 import {
   SEED_MISSING_MILESTONES,
   BACKFILL_LINK_ACTION_CARDS_TO_MILESTONES,
@@ -19,11 +20,13 @@ import {
   SecondaryButton,
 } from "../Forms/EditorPanelStyles";
 
+// Lowercase to match the unified naming convention (see
+// keystone/mutations/seedData/milestoneSeed.ts).
 const BASELINE_KEYS = [
-  "SUBMITTED_AS_PROPOSAL",
-  "PEER_REVIEW",
-  "DATA_COLLECTION",
-  "PROJECT_REPORT",
+  "submitted_as_proposal",
+  "peer_review",
+  "data_collection",
+  "project_report",
 ];
 
 const Shell = styled.div`
@@ -356,9 +359,26 @@ export default function ListPage() {
     []
   );
 
+  const [newOpen, setNewOpen] = useState(false);
+
   return (
     <Shell>
-      <h1>{t("adminMilestones.pageTitle", {}, { default: "Milestones" })}</h1>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 16,
+          flexWrap: "wrap",
+        }}
+      >
+        <h1>{t("adminMilestones.pageTitle", {}, { default: "Milestones" })}</h1>
+        <PrimaryButton type="button" onClick={() => setNewOpen((v) => !v)}>
+          {newOpen ? "Close form" : "+ New milestone"}
+        </PrimaryButton>
+      </div>
+
+      <NewMilestoneForm open={newOpen} onClose={() => setNewOpen(false)} />
 
       {missingBaselines.length > 0 ? (
         <SeedPanel>

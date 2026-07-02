@@ -59,10 +59,7 @@ async function seedMissingForms(root: any, _args: {}, context: any) {
     return [];
   }
 
-  return context.query.FormDefinition.findMany({
-    where: { id: { in: inserted } },
-    query: "id key title scope status version",
-  });
+  return context.db.FormDefinition.findMany({ where: { id: { in: inserted } } });
 }
 
 export default seedMissingForms;

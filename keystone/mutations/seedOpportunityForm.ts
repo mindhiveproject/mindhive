@@ -69,7 +69,7 @@ async function seedOpportunityForm(
       scope: "global",
       status: "published",
       version: 1,
-      publishedAt: new Date().toISOString(),
+      publishedAt: new Date(),
       publishedBy: { connect: { id: session.itemId } },
       changelog: "Initial seed from Editor.js — Phase 4.",
     },
@@ -119,11 +119,9 @@ async function seedOpportunityForm(
     }
   }
 
-  return context.query.FormDefinition.findOne({
-    where: { id: definition.id },
-    query:
-      "id key title scope status version publishedAt cards { id title order fields { id name fieldType order } }",
-  });
+  // context.db returns Date objects the DateTime scalar can serialize;
+  // context.query hands back pre-serialized ISO strings that fail.
+  return context.db.FormDefinition.findOne({ where: { id: definition.id } });
 }
 
 export default seedOpportunityForm;

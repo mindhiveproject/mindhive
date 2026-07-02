@@ -10,6 +10,40 @@ import {
 } from "@keystone-6/core/fields";
 import { permissions, rules, isSignedIn } from "../access";
 
+// Single source of truth for the FormField.fieldType select options.
+// Referenced here for the Keystone schema AND by
+// keystone/mutations/formValidation.ts so the pre-publish check stays
+// in sync automatically. When you add a new field type, add it here
+// and register the runtime renderer in
+// frontend/components/Forms/DefinitionForm/fields/index.js.
+export const FIELD_TYPE_OPTIONS = [
+  { label: "Text", value: "text" },
+  { label: "Textarea", value: "textarea" },
+  { label: "Rich Text", value: "rich_text" },
+  { label: "Number", value: "number" },
+  { label: "Date", value: "date" },
+  { label: "Select", value: "select" },
+  { label: "Multiselect", value: "multiselect" },
+  { label: "Checkbox", value: "checkbox" },
+  { label: "Image", value: "image" },
+  { label: "File", value: "file" },
+  { label: "Video URL", value: "video_url" },
+  { label: "Tag Multiselect", value: "tag_multiselect" },
+  { label: "JSON Array", value: "json_array" },
+  { label: "Read-only HTML", value: "read_only_html" },
+  { label: "Select One Icon", value: "select_one_icon" },
+  { label: "Task Selector", value: "task_selector" },
+  { label: "Dual Textarea", value: "dual_textarea" },
+] as const;
+
+// Same idea for the card-type select — used by FormCard and the
+// validator's ALLOWED_CARD_TYPES.
+export const CARD_TYPE_OPTIONS = [
+  { label: "Fields", value: "fields" },
+  { label: "Members Panel", value: "members_panel" },
+  { label: "Interest Selector", value: "interest_selector" },
+] as const;
+
 // A single field within a FormCard. The `storage` flag splits the world
 // in two: `column` writes to a typed column on the target entity (used
 // for anything queried, filtered, sorted, or reported on); `json_bucket`
@@ -44,25 +78,7 @@ export const FormField = list({
     // within a FormDefinition.
     name: text({ validation: { isRequired: true } }),
     fieldType: select({
-      options: [
-        { label: "Text", value: "text" },
-        { label: "Textarea", value: "textarea" },
-        { label: "Rich Text", value: "rich_text" },
-        { label: "Number", value: "number" },
-        { label: "Date", value: "date" },
-        { label: "Select", value: "select" },
-        { label: "Multiselect", value: "multiselect" },
-        { label: "Checkbox", value: "checkbox" },
-        { label: "Image", value: "image" },
-        { label: "File", value: "file" },
-        { label: "Video URL", value: "video_url" },
-        { label: "Tag Multiselect", value: "tag_multiselect" },
-        { label: "JSON Array", value: "json_array" },
-        { label: "Read-only HTML", value: "read_only_html" },
-        { label: "Select One Icon", value: "select_one_icon" },
-        { label: "Task Selector", value: "task_selector" },
-        { label: "Dual Textarea", value: "dual_textarea" },
-      ],
+      options: FIELD_TYPE_OPTIONS.map((o) => ({ ...o })),
       defaultValue: "text",
       validation: { isRequired: true },
     }),

@@ -36,7 +36,7 @@ export async function insertSeed(
       scope: "global",
       status: "published",
       version: 1,
-      publishedAt: new Date().toISOString(),
+      publishedAt: new Date(),
       publishedBy: { connect: { id: session.itemId } },
       changelog,
     },

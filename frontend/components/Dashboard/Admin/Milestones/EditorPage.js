@@ -6,7 +6,10 @@ import useTranslation from "next-translate/useTranslation";
 import { useMutation, useQuery } from "@apollo/client";
 
 import { ADMIN_MILESTONE, ADMIN_MILESTONES } from "../../../Queries/Milestone";
-import { UPDATE_MILESTONE } from "../../../Mutations/Milestone";
+import {
+  UPDATE_MILESTONE,
+  DELETE_MILESTONE,
+} from "../../../Mutations/Milestone";
 import {
   EditorPanelShell,
   FieldRow,
@@ -105,6 +108,35 @@ export default function EditorPage({ milestoneId }) {
     awaitRefetchQueries: true,
   });
 
+  const [deleteMilestone, { loading: deleting }] = useMutation(
+    DELETE_MILESTONE,
+    {
+      refetchQueries: [{ query: ADMIN_MILESTONES }],
+      awaitRefetchQueries: true,
+    }
+  );
+
+  const handleDelete = async () => {
+    if (!milestone) return;
+    const actionCardCount = milestone.actionCards?.length ?? 0;
+    const cardNote =
+      actionCardCount > 0
+        ? `${actionCardCount} action card${actionCardCount === 1 ? "" : "s"} link to this milestone — their link becomes null after deletion (the cards themselves stay). Any linked Review rows lose their milestone reference too.`
+        : "No action cards link to this milestone.";
+    const ok = window.confirm(
+      `Delete milestone "${milestone.title || milestone.key}"?\n\n` +
+        `${cardNote}\n\n` +
+        `This can't be undone. To hide it instead, untick "isActive".`
+    );
+    if (!ok) return;
+    try {
+      await deleteMilestone({ variables: { id: milestone.id } });
+      router.push("/dashboard/admin-milestones");
+    } catch (e) {
+      window.alert(`Delete failed: ${e?.message || "unknown error"}`);
+    }
+  };
+
   if (loading && !milestone) {
     return (
       <Shell>
@@ -194,6 +226,16 @@ export default function EditorPage({ milestoneId }) {
             onClick={() => router.push("/dashboard/admin-milestones")}
           >
             {t("adminMilestones.backToList", {}, { default: "← Back to list" })}
+          </SecondaryButton>
+          <SecondaryButton
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting || saving}
+            style={{ color: "#c0392b", borderColor: "#f5c2bf" }}
+          >
+            {deleting
+              ? t("adminMilestones.deleting", {}, { default: "Deleting…" })
+              : t("adminMilestones.delete", {}, { default: "Delete milestone" })}
           </SecondaryButton>
           <PrimaryButton type="submit" form="milestone-editor" disabled={saving}>
             {saving

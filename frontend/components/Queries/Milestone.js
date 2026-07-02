@@ -28,6 +28,12 @@ export const MILESTONE_BOARD_FIELDS = `
     type
     title
   }
+  formDefinition {
+    id
+    key
+    scope
+    status
+  }
 `;
 
 export const MILESTONE_FIELDS = `

@@ -29,6 +29,8 @@ import resolveMilestonesForBoard from "./resolveMilestonesForBoard";
 import createTemplateMilestone from "./createTemplateMilestone";
 import updateTemplateMilestone from "./updateTemplateMilestone";
 import backfillLinkActionCardsToMilestones from "./backfillLinkActionCardsToMilestones";
+import backfillLowercaseKeys from "./backfillLowercaseKeys";
+import backfillProjectBoardFormScope from "./backfillProjectBoardFormScope";
 import { GraphQLSchema } from "graphql";
 
 // make a fake gql tagged template literal
@@ -121,6 +123,16 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # Backfill ProposalBoard.milestoneStatus from legacy columns.
         backfillMilestoneStatus(limit: Int, dryRun: Boolean): Int!
         backfillLinkActionCardsToMilestones(limit: Int, dryRun: Boolean): Int!
+        # One-shot: lowercase Milestone.key/reviewStage and any
+        # FormDefinition.key that starts with review_*. Dry-run by
+        # default; pass dryRun:false to apply. Returns a list of change
+        # descriptions for the log.
+        backfillLowercaseKeys(dryRun: Boolean): [String!]!
+        # One-shot: relocate auto-provisioned FormDefinitions (created
+        # by createTemplateMilestone before project_board scope existed)
+        # from scope=global to scope=project_board with proposalBoard
+        # set from the owning template milestone.
+        backfillProjectBoardFormScope(dryRun: Boolean): [String!]!
         createTemplateMilestone(input: CreateTemplateMilestoneInput!): Milestone
         updateTemplateMilestone(input: UpdateTemplateMilestoneInput!): Milestone
       }
@@ -150,14 +162,15 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       extend type Query {
         resolveMilestonesForBoard(boardId: ID!): [Milestone!]!
         # Resolve the most-specific published FormDefinition for the
-        # current viewer's scope. Pass organizationId / classNetworkId
-        # when known to allow per-org or per-network overrides; otherwise
-        # the global definition is returned. Returns null when nothing
-        # is published at any scope.
+        # current viewer's scope. Pass any subset of the scope IDs the
+        # caller knows about; the resolver picks the winner as
+        # project_board > class_network > organization > global.
+        # Returns null when nothing is published at any scope.
         resolveFormDefinition(
           key: String!
           organizationId: ID
           classNetworkId: ID
+          proposalBoardId: ID
         ): FormDefinition
       }
     `,
@@ -192,6 +205,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         seedMissingMilestones,
         backfillMilestoneStatus,
         backfillLinkActionCardsToMilestones,
+        backfillLowercaseKeys,
+        backfillProjectBoardFormScope,
         createTemplateMilestone,
         updateTemplateMilestone,
       },

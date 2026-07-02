@@ -2,7 +2,6 @@ import uniqid from "uniqid";
 import {
   assertTemplateBoardTeacher,
   slugifyMilestoneKey,
-  MILESTONE_QUERY,
 } from "./resolveMilestonesForBoard";
 
 async function resolvePermissionIds(
@@ -162,14 +161,26 @@ async function provisionFormDefinitionForMilestone(
     sourceFormDefinitionId,
     milestoneKey,
     milestoneTitle,
+    proposalBoardId,
   }: {
     sourceFormDefinitionId: string | null;
     milestoneKey: string;
     milestoneTitle: string;
+    proposalBoardId: string;
   }
 ): Promise<{ id: string; key: string }> {
   const sessionId = context.session?.itemId;
   const formKey = await uniqueCopiedFormKey(sudo, milestoneKey);
+
+  // Every auto-provisioned form is scoped to the specific template
+  // board that owns the milestone. This keeps per-board customisation
+  // isolated (project_board > class_network > organization > global at
+  // resolve time) instead of polluting the global namespace with N
+  // uniquely-keyed forms.
+  const boardScopeData = {
+    scope: "project_board" as const,
+    proposalBoard: { connect: { id: proposalBoardId } },
+  };
 
   if (sourceFormDefinitionId) {
     const source = await sudo.query.FormDefinition.findOne({
@@ -188,10 +199,10 @@ async function provisionFormDefinitionForMilestone(
           key: formKey,
           title: `${milestoneTitle} review form`,
           description: source.description || "",
-          scope: "global",
+          ...boardScopeData,
           status: "published",
           version: 1,
-          publishedAt: new Date().toISOString(),
+          publishedAt: new Date(),
           ...(sessionId ? { createdBy: { connect: { id: sessionId } } } : {}),
           ...(sessionId ? { publishedBy: { connect: { id: sessionId } } } : {}),
           changelog: `Copied from form definition ${source.id} (${source.key}) for template milestone ${milestoneKey}.`,
@@ -210,7 +221,7 @@ async function provisionFormDefinitionForMilestone(
         key: formKey,
         title: `${milestoneTitle} review form`,
         description: "",
-        scope: "global",
+        ...boardScopeData,
         status: "draft",
         version: 1,
         ...(sessionId ? { createdBy: { connect: { id: sessionId } } } : {}),
@@ -316,6 +327,7 @@ async function createTemplateMilestone(
       sourceFormDefinitionId,
       milestoneKey: key,
       milestoneTitle: input.title,
+      proposalBoardId: input.templateBoardId,
     }
   );
 
@@ -395,9 +407,13 @@ async function createTemplateMilestone(
     "id"
   );
 
-  return context.query.Milestone.findOne({
-    where: { id: milestone.id },
-    query: MILESTONE_QUERY,
+  // Use context.db (raw Prisma) not context.query. context.query hands
+  // back pre-serialized values which cause the framework to re-resolve
+  // relationship fields (like formDefinition) and hit "Prisma error"
+  // when reconciling. context.db returns raw rows; GraphQL resolves
+  // sub-selections cleanly via the auto-generated field resolvers.
+  return context.db.Milestone.findOne({
+    where: { id: String(milestone.id) },
   });
 }
 

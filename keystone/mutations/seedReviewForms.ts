@@ -31,7 +31,7 @@ async function insertReviewFormSeed(
       scope: "global",
       status: "published",
       version: 1,
-      publishedAt: new Date().toISOString(),
+      publishedAt: new Date(),
       publishedBy: { connect: { id: session.itemId } },
       changelog: "Initial seed — review forms.",
     },
@@ -138,11 +138,7 @@ async function seedReviewForms(
 
   const allIds = [...insertedIds, ...keptIds];
 
-  return context.query.FormDefinition.findMany({
-    where: { id: { in: allIds } },
-    query:
-      "id key title scope status version publishedAt cards { id title order fields { id name fieldType order } }",
-  });
+  return context.db.FormDefinition.findMany({ where: { id: { in: allIds } } });
 }
 
 export default seedReviewForms;

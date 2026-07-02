@@ -34,32 +34,6 @@ function mergeMilestones(globalMs: any[], templateMs: any[]) {
   return merged.filter((m) => m.isActive !== false);
 }
 
-const MILESTONE_RESOLVE_SCALAR_QUERY = `
-  id
-  key
-  title
-  description
-  scope
-  actionCardType
-  reviewStage
-  statusTarget
-  legacyBoardStatusField
-  legacyOpenForCommentsField
-  logEventName
-  position
-  showInFeedbackCenter
-  formDefinitionKeyPattern
-  isActive
-`;
-
-const MILESTONE_QUERY = `
-  ${MILESTONE_RESOLVE_SCALAR_QUERY.trim()}
-  canReview { id name }
-  formDefinition { id key }
-  clonedFrom { id key title scope }
-  actionCards { id publicId type title }
-`;
-
 async function resolveMilestonesForBoard(
   _root: unknown,
   { boardId }: { boardId: string },
@@ -73,23 +47,27 @@ async function resolveMilestonesForBoard(
 
   const templateBoardId = getTemplateBoardId(board);
 
-  const globalMs = await context.query.Milestone.findMany({
+  // context.db (raw Prisma) — NOT context.query. context.query hands
+  // back pre-serialized rows that break when GraphQL re-resolves
+  // relationship sub-fields (like formDefinition) on the mutation's
+  // return. Raw Prisma rows expose the scalar columns mergeMilestones
+  // needs (key, scope, position, isActive) and let GraphQL resolve
+  // relationships lazily via the auto-generated field resolvers.
+  const globalMs = await context.db.Milestone.findMany({
     where: {
       scope: { equals: "global" },
       isActive: { equals: true },
     },
-    query: MILESTONE_RESOLVE_SCALAR_QUERY,
   });
 
   let templateMs: any[] = [];
   if (templateBoardId) {
-    templateMs = await context.query.Milestone.findMany({
+    templateMs = await context.db.Milestone.findMany({
       where: {
         scope: { equals: "template" },
         templateBoard: { id: { equals: templateBoardId } },
         isActive: { equals: true },
       },
-      query: MILESTONE_RESOLVE_SCALAR_QUERY,
       orderBy: [{ position: "asc" }],
     });
   }
@@ -142,4 +120,4 @@ export function slugifyMilestoneKey(title: string, fallback: string) {
   return base || fallback;
 }
 
-export { MILESTONE_QUERY, MILESTONE_RESOLVE_SCALAR_QUERY, mergeMilestones, getTemplateBoardId };
+export { mergeMilestones, getTemplateBoardId };

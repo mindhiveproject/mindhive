@@ -17,7 +17,7 @@ const CURRICULUM = "nyu_cusp" as const;
 const TITLE = "NYU CUSP";
 
 const SUBMITTED_AS_PROPOSAL: FormSeed = buildReviewFormSeed({
-  kind: "SUBMITTED_AS_PROPOSAL",
+  kind: "submitted_as_proposal",
   curriculum: CURRICULUM,
   curriculumI18nPrefix: PREFIX,
   curriculumTitle: TITLE,
@@ -63,7 +63,7 @@ const SUBMITTED_AS_PROPOSAL: FormSeed = buildReviewFormSeed({
 });
 
 const PEER_REVIEW: FormSeed = buildReviewFormSeed({
-  kind: "PEER_REVIEW",
+  kind: "peer_review",
   curriculum: CURRICULUM,
   curriculumI18nPrefix: PREFIX,
   curriculumTitle: TITLE,

@@ -160,6 +160,10 @@ export function useReviewFormDefinition(
       key: formKey,
       organizationId: scopeContext.organizationId || null,
       classNetworkId: scopeContext.classNetworkId || null,
+      // Passing the student's proposal board (or template board's id
+      // for previews) lets project_board-scoped forms win over
+      // class_network / organization / global variants.
+      proposalBoardId: scopeContext.proposalBoardId || null,
     },
     skip: !formKey,
   });

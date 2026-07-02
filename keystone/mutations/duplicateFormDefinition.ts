@@ -149,10 +149,9 @@ async function duplicateFormDefinition(
     }
   }
 
-  return context.query.FormDefinition.findOne({
-    where: { id: newDef.id },
-    query: "id key title scope status version",
-  });
+  // See publishFormDefinition — context.db avoids the DateTime scalar
+  // re-serialize issue.
+  return context.db.FormDefinition.findOne({ where: { id: newDef.id } });
 }
 
 export default duplicateFormDefinition;

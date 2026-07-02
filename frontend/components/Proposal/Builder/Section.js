@@ -359,9 +359,10 @@ const Section = ({
     canReviewPermissionNames,
   }) => {
     if (!title) {
-      return alert(
+      alert(
         t("section.enterNewTitle", {}, { default: "Please enter a title" })
       );
+      return null;
     }
 
     const result = await createTemplateMilestone({
@@ -385,8 +386,15 @@ const Section = ({
       awaitRefetchQueries: true,
     });
 
-    const actionCardId =
-      result?.data?.createTemplateMilestone?.actionCards?.[0]?.id || null;
+    // Return the created milestone (including formDefinition.id) so the
+    // modal can transition to the embedded form-editor step. The modal
+    // stays open; final close + finishAfterCardCreate happens once the
+    // user clicks Finish (via onFinishCustomMilestoneEdit below).
+    return result?.data?.createTemplateMilestone || null;
+  };
+
+  const finishCustomMilestoneEdit = async (milestone) => {
+    const actionCardId = milestone?.actionCards?.[0]?.id || null;
     setCreateCardModalOpen(false);
     await finishAfterCardCreate(actionCardId);
   };
@@ -575,6 +583,7 @@ const Section = ({
         onClose={() => setCreateCardModalOpen(false)}
         onCreateCard={addCardMutation}
         onCreateCustomMilestone={createCustomMilestone}
+        onFinishCustomMilestoneEdit={finishCustomMilestoneEdit}
         open={createCardModalOpen}
         sectionId={section.id}
         sections={sections}
