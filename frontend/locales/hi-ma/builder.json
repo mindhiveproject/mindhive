@@ -1870,7 +1870,12 @@
 		"cardsCount": "{{count}} कार्ड{{count == 1 ? '' : 's'}}",
 		"createCardModal": {
 			"alreadyAddedLabel": "",
+			"alreadyAddedTooltip": "",
 			"cancel": "",
+			"categories": {
+				"action": "",
+				"proposal": ""
+			},
 			"create": "",
 			"creating": "",
 			"custom": {
@@ -1884,11 +1889,30 @@
 				"selectSourcePlaceholder": ""
 			},
 			"customPreview": "",
+			"editForm": "",
+			"editFormHint": "",
+			"formTemplate": {
+				"blank": "",
+				"defaultLabel": "",
+				"label": ""
+			},
+			"milestone": {
+				"actionLabel": "",
+				"configureFormNext": "",
+				"description": ""
+			},
+			"newCheckpoint": "",
 			"noPreview": "",
 			"previewLabel": "",
 			"previewLoading": "",
 			"proposalPreview": "",
 			"scratchPreview": "",
+			"steps": {
+				"cardType": "",
+				"checkpoint": "",
+				"milestone": "",
+				"permissions": ""
+			},
 			"templateSourceLabel": "",
 			"title": "",
 			"titleLabel": "",

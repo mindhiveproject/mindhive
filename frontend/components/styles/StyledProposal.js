@@ -122,7 +122,14 @@ export const StyledProposal = styled.div`
     align-content: start;
     margin: 20px;
     min-height: 0;
-    
+    --proposal-section-width: 500px;
+    --proposal-section-margin: 15px;
+    --proposal-visible-columns: 2;
+    --proposal-board-content-max-width: calc(
+      var(--proposal-visible-columns) *
+      (var(--proposal-section-width) + 2 * var(--proposal-section-margin))
+    );
+
     .narrowButton {
       height: 40px;
       padding: 8px 24px 8px 16px;
@@ -262,8 +269,12 @@ export const StyledProposal = styled.div`
     display: flex;
     flex-direction: column;
     min-height: 0;
+    width: 100%;
+    max-width: var(--proposal-board-content-max-width);
     flex: 1;
     .boardInnerToolbar {
+      display: flex;
+      justify-content: flex-end;
       padding: 0 15px 8px;
     }
     .scrollable {
@@ -285,9 +296,9 @@ export const StyledProposal = styled.div`
     border: 1px solid #A1A1A1;
     border-radius: 8px;
     min-width: 250px;
-    width: 410px;
-    max-width: 410px;
-    margin: 15px;
+    width: var(--proposal-section-width);
+    max-width: var(--proposal-section-width);
+    margin: var(--proposal-section-margin);
     padding: 24px;
     & > div {
       width: 100%;
@@ -329,6 +340,7 @@ export const StyledProposal = styled.div`
         font-family: Inter;
         font-size: 22px;
         font-weight: 600;
+        color: #171717;
         line-height: 28px;
         letter-spacing: 0.05em;
         text-align: left;
@@ -393,6 +405,7 @@ export const StyledProposal = styled.div`
     height: fit-content;
     .headerContent {
       width: 100%;
+      max-width: var(--proposal-board-content-max-width);
     }
     .headerMainContent {
       display: flex;

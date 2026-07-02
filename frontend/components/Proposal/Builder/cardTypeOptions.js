@@ -3,6 +3,10 @@ import { getMilestoneByActionCardType } from "../../../lib/milestones";
 
 export const PROPOSAL_CARD_TYPE = "PROPOSAL";
 export const CUSTOM_CARD_TYPE = "CUSTOM";
+export const CARD_CATEGORY_PROPOSAL = "PROPOSAL";
+export const CARD_CATEGORY_ACTION = "ACTION";
+export const NEW_CHECKPOINT_VALUE = "NEW";
+export const BLANK_TEMPLATE_VALUE = "BLANK";
 
 export const DEFAULT_ACTION_CARD_TYPES = [
   "ACTION_SUBMIT",
@@ -100,4 +104,25 @@ export function getCreateCardTypeOptions({ t, board, sections }) {
 export function getMilestoneForCardType(type, milestones = []) {
   if (!isDefaultActionCardType(type)) return null;
   return getMilestoneByActionCardType(type, milestones);
+}
+
+export function getDefaultCheckpointOptions({ t, sections }) {
+  const existingDefaults = getExistingDefaultActionTypes(sections);
+
+  return CARD_TYPE_DEFINITIONS.filter((definition) => definition.isDefaultAction).map(
+    (definition) => ({
+      value: definition.value,
+      label: t(definition.labelKey, {}, { default: definition.defaultLabel }),
+      disabled: existingDefaults.has(definition.value),
+    })
+  );
+}
+
+export function getDefaultFormTemplateOptions({ t }) {
+  return CARD_TYPE_DEFINITIONS.filter((definition) => definition.isDefaultAction).map(
+    (definition) => ({
+      value: definition.value,
+      label: t(definition.labelKey, {}, { default: definition.defaultLabel }),
+    })
+  );
 }

@@ -1870,7 +1870,12 @@
 		"cardsCount": "{{count}} 张卡{{count == 1 ? '' : 's'}}",
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} （已添加）",
+			"alreadyAddedTooltip": "这个检查点已经标记在棋盘上了。",
 			"cancel": "取消",
+			"categories": {
+				"action": "行动",
+				"proposal": "求婚卡"
+			},
 			"create": "创造",
 			"creating": "正在创建...",
 			"custom": {
@@ -1884,11 +1889,30 @@
 				"selectSourcePlaceholder": "选择复习步骤"
 			},
 			"customPreview": "创建带有自定义里程碑标签的自定义审核步骤。",
+			"editForm": "编辑表单",
+			"editFormHint": "表单编辑功能可在其他地方使用。",
+			"formTemplate": {
+				"blank": "空白表格",
+				"defaultLabel": "{{label}}",
+				"label": "表单模板"
+			},
+			"milestone": {
+				"actionLabel": "行动标签",
+				"configureFormNext": "下一步将配置审核表单。",
+				"description": "描述"
+			},
+			"newCheckpoint": "+ 新行动卡",
 			"noPreview": "此卡片类型未关联任何评价表单。",
 			"previewLabel": "审核表单预览",
 			"previewLoading": "正在加载预览...",
 			"proposalPreview": "为学生添加带有内容字段的常规提案卡。",
 			"scratchPreview": "创建一个包含一张空白卡片的草稿审核表单，并将其链接到此步骤。在表单出现在审核流程之前，请先在管理后台发布该表单。",
+			"steps": {
+				"cardType": "卡类型",
+				"checkpoint": "检查点",
+				"milestone": "里程碑",
+				"permissions": "权限和表单模板"
+			},
 			"templateSourceLabel": "{{title}} （自定义）",
 			"title": "创建新卡片",
 			"titleLabel": "卡片标题",

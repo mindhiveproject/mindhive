@@ -1870,7 +1870,12 @@
 		"cardsCount": "{{count}} kaart{{count == 1 ? '' : 's'}}",
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (reeds toegevoegd)",
+			"alreadyAddedTooltip": "Dit controlepunt staat al op het bord.",
 			"cancel": "Annuleren",
+			"categories": {
+				"action": "Actie",
+				"proposal": "Voorstelkaart"
+			},
 			"create": "Creëren",
 			"creating": "Aan het creëren...",
 			"custom": {
@@ -1884,11 +1889,30 @@
 				"selectSourcePlaceholder": "Selecteer een beoordelingsstap"
 			},
 			"customPreview": "Hiermee wordt een aangepaste beoordelingsstap met een eigen mijlpaallabel aangemaakt.",
+			"editForm": "Formulier bewerken",
+			"editFormHint": "Het bewerken van formulieren is elders mogelijk.",
+			"formTemplate": {
+				"blank": "Leeg formulier",
+				"defaultLabel": "{{label}}",
+				"label": "Formuliersjabloon"
+			},
+			"milestone": {
+				"actionLabel": "Actielabel",
+				"configureFormNext": "Het beoordelingsformulier wordt in de volgende stap geconfigureerd.",
+				"description": "Beschrijving"
+			},
+			"newCheckpoint": "+ Nieuwe actiekaart",
 			"noPreview": "Er is geen beoordelingsformulier gekoppeld aan dit kaarttype.",
 			"previewLabel": "Voorbeeld van het beoordelingsformulier",
 			"previewLoading": "Voorbeeld laden...",
 			"proposalPreview": "Voegt een standaard voorstelkaart toe met inhoudsvelden voor studenten.",
 			"scratchPreview": "Hiermee wordt een conceptbeoordelingsformulier aangemaakt met één lege kaart, gekoppeld aan deze stap. Publiceer het formulier in het beheerscherm voordat het ter beoordeling verschijnt.",
+			"steps": {
+				"cardType": "Kaarttype",
+				"checkpoint": "Controlepost",
+				"milestone": "Mijlpaal",
+				"permissions": "Toestemmingen & formuliersjabloon"
+			},
 			"templateSourceLabel": "{{title}} (aangepast)",
 			"title": "Maak een nieuwe kaart aan",
 			"titleLabel": "Kaarttitel",

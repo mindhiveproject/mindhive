@@ -1870,7 +1870,12 @@
 		"cardsCount": "{{count}} carta{{count == 1 ? '' : 's'}}",
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (já adicionado)",
+			"alreadyAddedTooltip": "Este ponto de controle já está no quadro.",
 			"cancel": "Cancelar",
+			"categories": {
+				"action": "Ação",
+				"proposal": "Cartão de proposta"
+			},
 			"create": "Criar",
 			"creating": "Criando...",
 			"custom": {
@@ -1884,11 +1889,30 @@
 				"selectSourcePlaceholder": "Selecione uma etapa de revisão"
 			},
 			"customPreview": "Cria uma etapa de revisão personalizada com seu próprio rótulo de marco.",
+			"editForm": "Editar formulário",
+			"editFormHint": "A edição de formulários está disponível em outro local.",
+			"formTemplate": {
+				"blank": "Formulário em branco",
+				"defaultLabel": "{{label}}",
+				"label": "Modelo de formulário"
+			},
+			"milestone": {
+				"actionLabel": "Rótulo de ação",
+				"configureFormNext": "O formulário de avaliação será configurado na próxima etapa.",
+				"description": "Descrição"
+			},
+			"newCheckpoint": "+ Novo Cartão de Ação",
 			"noPreview": "Não há formulário de avaliação vinculado a este tipo de cartão.",
 			"previewLabel": "Pré-visualização do formulário de revisão",
 			"previewLoading": "Carregando visualização...",
 			"proposalPreview": "Adiciona um cartão de proposta padrão com campos de conteúdo para os alunos.",
 			"scratchPreview": "Cria um formulário de revisão em rascunho com um cartão vazio, vinculado a esta etapa. Publica o formulário no painel de administração antes que ele apareça na revisão.",
+			"steps": {
+				"cardType": "Tipo de cartão",
+				"checkpoint": "Ponto de verificação",
+				"milestone": "Março",
+				"permissions": "Permissões e modelo de formulário"
+			},
 			"templateSourceLabel": "{{title}} (personalizado)",
 			"title": "Criar um novo cartão",
 			"titleLabel": "Título do cartão",

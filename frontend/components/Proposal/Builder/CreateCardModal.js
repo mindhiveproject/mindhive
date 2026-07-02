@@ -5,24 +5,27 @@ import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../DesignSystem/Button";
-import DropdownSelect from "../../DesignSystem/DropdownSelect";
+import Chip from "../../DesignSystem/Chip";
 import CardRenderer from "../../Forms/DefinitionForm/CardRenderer";
 import { RESOLVE_FORM_DEFINITION } from "../../Queries/FormDefinition";
+import { isClassTemplateBoard } from "../../Utils/proposalBoard";
 import { useBoardMilestones } from "../../../lib/useBoardMilestones";
-import {
-  getMilestoneByKey,
-  resolveReviewFormKey,
-} from "../../../lib/milestones";
+import { resolveReviewFormKey } from "../../../lib/milestones";
 import { getCurriculumType } from "../../../lib/curriculumTypes";
 import {
-  CUSTOM_CARD_TYPE,
-  getCreateCardTypeOptions,
+  BLANK_TEMPLATE_VALUE,
+  CARD_CATEGORY_ACTION,
+  CARD_CATEGORY_PROPOSAL,
+  getDefaultCheckpointOptions,
+  getDefaultFormTemplateOptions,
   getMilestoneForCardType,
   isDefaultActionCardType,
+  NEW_CHECKPOINT_VALUE,
   PROPOSAL_CARD_TYPE,
 } from "./cardTypeOptions";
 
 const PERMISSION_OPTIONS = ["MENTOR", "TEACHER", "SCIENTIST", "STUDENT"];
+const DEFAULT_PERMISSIONS = ["MENTOR", "TEACHER", "SCIENTIST"];
 
 const overlayStyle = {
   position: "fixed",
@@ -41,12 +44,19 @@ const modalStyle = {
   width: "min(760px, 100%)",
   maxHeight: "90vh",
   overflowY: "auto",
+  scrollbarWidth: "none",
+  msOverflowStyle: "none",
   background: "#fff",
   border: "1px solid #A1A1A1",
   borderRadius: 16,
   boxShadow: "0 16px 48px rgba(0, 0, 0, 0.18)",
   padding: 32,
   fontFamily: "Inter, sans-serif",
+};
+
+const newActionCardChipStyle = {
+  border: "2px solid #A1A1A1",
+  fontWeight: 700,
 };
 
 const inputStyle = {
@@ -70,37 +80,45 @@ const labelStyle = {
   fontWeight: 600,
 };
 
-function getMilestoneForPreview({
-  selectedType,
-  selectedSourceMilestoneId,
-  customMode,
-  milestones,
-}) {
-  if (isDefaultActionCardType(selectedType)) {
-    return getMilestoneForCardType(selectedType, milestones);
-  }
-  if (selectedType === CUSTOM_CARD_TYPE && customMode === "clone") {
-    return getMilestoneByKey(selectedSourceMilestoneId, milestones);
-  }
-  return null;
+const chipRowStyle = {
+  display: "flex",
+  gap: 10,
+  flexWrap: "wrap",
+};
+
+const previewShellStyle = {
+  border: "1px solid #E6E6E6",
+  borderRadius: 12,
+  background: "#F7F9F8",
+  color: "#5D5763",
+  fontSize: 14,
+  lineHeight: "20px",
+  padding: 16,
+  maxHeight: 260,
+  overflowY: "auto",
+};
+
+const helperTextStyle = {
+  margin: 0,
+  color: "#5D5763",
+  fontSize: 14,
+  lineHeight: "20px",
+  fontWeight: 400,
+};
+
+function StepSection({ label, children }) {
+  return (
+    <div style={{ display: "grid", gap: 10 }}>
+      <div style={{ ...labelStyle, marginBottom: 0 }}>{label}</div>
+      {children}
+    </div>
+  );
 }
 
-function FormDefinitionPreview({
-  board,
-  customMode,
-  milestones,
-  selectedSourceMilestoneId,
-  selectedType,
-}) {
+function FormDefinitionPreview({ board, milestone }) {
   const { t } = useTranslation("builder");
   const router = useRouter();
   const curriculumType = getCurriculumType(board);
-  const milestone = getMilestoneForPreview({
-    selectedType,
-    selectedSourceMilestoneId,
-    customMode,
-    milestones,
-  });
 
   const formKey = useMemo(() => {
     if (!milestone) return null;
@@ -117,52 +135,7 @@ function FormDefinitionPreview({
     skip: !formKey,
   });
 
-  if (!selectedType) return null;
-
-  if (selectedType === PROPOSAL_CARD_TYPE) {
-    return (
-      <div style={previewShellStyle}>
-        {t(
-          "section.createCardModal.proposalPreview",
-          {},
-          {
-            default:
-              "Adds a regular proposal card with content fields for students.",
-          }
-        )}
-      </div>
-    );
-  }
-
-  if (selectedType === CUSTOM_CARD_TYPE && customMode === "scratch") {
-    return (
-      <div style={previewShellStyle}>
-        {t(
-          "section.createCardModal.scratchPreview",
-          {},
-          {
-            default:
-              "Creates a draft review form with one empty card, linked to this step. Publish the form in Admin before it appears in review.",
-          }
-        )}
-      </div>
-    );
-  }
-
-  if (selectedType === CUSTOM_CARD_TYPE && customMode !== "clone") {
-    return (
-      <div style={previewShellStyle}>
-        {t(
-          "section.createCardModal.customPreview",
-          {},
-          {
-            default:
-              "Creates a custom review step with its own milestone label.",
-          }
-        )}
-      </div>
-    );
-  }
+  if (!milestone) return null;
 
   if (!formKey) {
     return (
@@ -179,7 +152,11 @@ function FormDefinitionPreview({
   if (loading) {
     return (
       <div style={previewShellStyle}>
-        {t("section.createCardModal.previewLoading", {}, { default: "Loading preview..." })}
+        {t(
+          "section.createCardModal.previewLoading",
+          {},
+          { default: "Loading preview..." }
+        )}
       </div>
     );
   }
@@ -226,17 +203,372 @@ function FormDefinitionPreview({
   );
 }
 
-const previewShellStyle = {
-  border: "1px solid #E6E6E6",
-  borderRadius: 12,
-  background: "#F7F9F8",
-  color: "#5D5763",
-  fontSize: 14,
-  lineHeight: "20px",
-  padding: 16,
-  maxHeight: 260,
-  overflowY: "auto",
-};
+function CardTypeStep({ cardCategory, onSelect, t }) {
+  return (
+    <StepSection
+      label={t(
+        "section.createCardModal.steps.cardType",
+        {},
+        { default: "Card type" }
+      )}
+    >
+      <div style={chipRowStyle}>
+        <Chip
+          shape="square"
+          label={t(
+            "section.createCardModal.categories.proposal",
+            {},
+            { default: "Proposal card" }
+          )}
+          selected={cardCategory === CARD_CATEGORY_PROPOSAL}
+          onClick={() => onSelect(CARD_CATEGORY_PROPOSAL)}
+        />
+        <Chip
+          shape="square"
+          label={t(
+            "section.createCardModal.categories.action",
+            {},
+            { default: "Action" }
+          )}
+          selected={cardCategory === CARD_CATEGORY_ACTION}
+          onClick={() => onSelect(CARD_CATEGORY_ACTION)}
+        />
+      </div>
+    </StepSection>
+  );
+}
+
+function CheckpointStep({
+  checkpointChoice,
+  checkpointOptions,
+  canCreateNew,
+  onSelect,
+  t,
+}) {
+  return (
+    <StepSection
+      label={t(
+        "section.createCardModal.steps.checkpoint",
+        {},
+        { default: "Checkpoint" }
+      )}
+    >
+      <div style={chipRowStyle}>
+        {checkpointOptions.map((option) => (
+          <Chip
+            key={option.value}
+            shape="square"
+            label={option.label}
+            selected={checkpointChoice === option.value}
+            disabled={option.disabled}
+            title={
+              option.disabled
+                ? t(
+                    "section.createCardModal.alreadyAddedTooltip",
+                    {},
+                    { default: "This checkpoint is already on the board" }
+                  )
+                : undefined
+            }
+            onClick={() => {
+              if (!option.disabled) onSelect(option.value);
+            }}
+          />
+        ))}
+        {canCreateNew ? (
+          <Chip
+            shape="square"
+            label={t(
+              "section.createCardModal.newCheckpoint",
+              {},
+              { default: "+ New Action Card" }
+            )}
+            selected={checkpointChoice === NEW_CHECKPOINT_VALUE}
+            onClick={() => onSelect(NEW_CHECKPOINT_VALUE)}
+            style={newActionCardChipStyle}
+          />
+        ) : null}
+      </div>
+    </StepSection>
+  );
+}
+
+function MilestonePreviewStep({
+  board,
+  checkpointChoice,
+  description,
+  isNewCheckpoint,
+  milestone,
+  onDescriptionChange,
+  onTitleChange,
+  title,
+  t,
+}) {
+  if (!checkpointChoice) return null;
+
+  if (isNewCheckpoint) {
+    return (
+      <StepSection
+        label={t(
+          "section.createCardModal.steps.milestone",
+          {},
+          { default: "Milestone" }
+        )}
+      >
+        <div style={{ display: "grid", gap: 14 }}>
+          <label style={labelStyle}>
+            {t(
+              "section.createCardModal.milestone.actionLabel",
+              {},
+              { default: "Action label" }
+            )}
+            <input
+              autoFocus
+              type="text"
+              value={title}
+              onChange={(e) => onTitleChange(e.target.value)}
+              placeholder={t(
+                "section.createCardModal.custom.labelPlaceholder",
+                {},
+                { default: "Enter an action label" }
+              )}
+              style={inputStyle}
+            />
+          </label>
+          <label style={labelStyle}>
+            {t(
+              "section.createCardModal.milestone.description",
+              {},
+              { default: "Description" }
+            )}
+            <textarea
+              value={description}
+              onChange={(e) => onDescriptionChange(e.target.value)}
+              style={{ ...inputStyle, minHeight: 96, resize: "vertical" }}
+            />
+          </label>
+          <p style={helperTextStyle}>
+            {t(
+              "section.createCardModal.milestone.configureFormNext",
+              {},
+              { default: "The review form is configured in the next step." }
+            )}
+          </p>
+        </div>
+      </StepSection>
+    );
+  }
+
+  if (!milestone) return null;
+
+  return (
+    <StepSection
+      label={t(
+        "section.createCardModal.steps.milestone",
+        {},
+        { default: "Milestone" }
+      )}
+    >
+      <div style={{ display: "grid", gap: 14 }}>
+        <label style={labelStyle}>
+          {t(
+            "section.createCardModal.milestone.actionLabel",
+            {},
+            { default: "Action label" }
+          )}
+          <input
+            type="text"
+            value={milestone.title || ""}
+            readOnly
+            disabled
+            style={{ ...inputStyle, background: "#F3F3F3", color: "#5D5763" }}
+          />
+        </label>
+        {milestone.description ? (
+          <label style={labelStyle}>
+            {t(
+              "section.createCardModal.milestone.description",
+              {},
+              { default: "Description" }
+            )}
+            <textarea
+              value={milestone.description}
+              readOnly
+              disabled
+              style={{
+                ...inputStyle,
+                minHeight: 96,
+                resize: "vertical",
+                background: "#F3F3F3",
+                color: "#5D5763",
+              }}
+            />
+          </label>
+        ) : null}
+        <FormDefinitionPreview board={board} milestone={milestone} />
+        <Button
+          type="button"
+          variant="outline"
+          disabled
+          title={t(
+            "section.createCardModal.editFormHint",
+            {},
+            { default: "Form editing is available elsewhere" }
+          )}
+        >
+          {t("section.createCardModal.editForm", {}, { default: "Edit form" })}
+        </Button>
+      </div>
+    </StepSection>
+  );
+}
+
+function PermissionsAndTemplateStep({
+  board,
+  checkpointChoice,
+  formTemplateOptions,
+  isNewCheckpoint,
+  milestone,
+  selectedPermissions,
+  selectedTemplateKey,
+  onTemplateSelect,
+  onTogglePermission,
+  previewMilestone,
+  t,
+}) {
+  const resolvedTemplateLabel = (() => {
+    if (!checkpointChoice) return "";
+    if (isNewCheckpoint) {
+      if (selectedTemplateKey === BLANK_TEMPLATE_VALUE) {
+        return t(
+          "section.createCardModal.formTemplate.blank",
+          {},
+          { default: "Blank form" }
+        );
+      }
+      const templateOption = formTemplateOptions.find(
+        (option) => option.value === selectedTemplateKey
+      );
+      return templateOption?.label || "";
+    }
+    const templateOption = formTemplateOptions.find(
+      (option) => option.value === checkpointChoice
+    );
+    return templateOption?.label || milestone?.title || "";
+  })();
+
+  if (!checkpointChoice) return null;
+
+  const permissionsDisabled = !isNewCheckpoint;
+  const permissionNames = isNewCheckpoint
+    ? selectedPermissions
+    : (milestone?.canReview || []).map((p) => p?.name).filter(Boolean);
+
+  return (
+    <StepSection
+      label={t(
+        "section.createCardModal.steps.permissions",
+        {},
+        { default: "Permissions & form template" }
+      )}
+    >
+      <div style={{ display: "grid", gap: 14 }}>
+        <div style={labelStyle}>
+          {t(
+            "section.createCardModal.custom.canReview",
+            {},
+            { default: "Who can review" }
+          )}
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            {PERMISSION_OPTIONS.map((permission) => (
+              <label
+                key={permission}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  fontWeight: 500,
+                  opacity: permissionsDisabled ? 0.7 : 1,
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={permissionNames.includes(permission)}
+                  disabled={permissionsDisabled}
+                  onChange={() => onTogglePermission(permission)}
+                />
+                {permission}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div style={labelStyle}>
+          {t(
+            "section.createCardModal.formTemplate.label",
+            {},
+            { default: "Form template" }
+          )}
+          {isNewCheckpoint ? (
+            <div style={chipRowStyle}>
+              {formTemplateOptions.map((option) => (
+                <Chip
+                  key={option.value}
+                  shape="square"
+                  label={option.label}
+                  selected={selectedTemplateKey === option.value}
+                  onClick={() => onTemplateSelect(option.value)}
+                />
+              ))}
+              <Chip
+                shape="square"
+                label={t(
+                  "section.createCardModal.formTemplate.blank",
+                  {},
+                  { default: "Blank form" }
+                )}
+                selected={selectedTemplateKey === BLANK_TEMPLATE_VALUE}
+                onClick={() => onTemplateSelect(BLANK_TEMPLATE_VALUE)}
+              />
+            </div>
+          ) : (
+            <div style={chipRowStyle}>
+              <Chip
+                shape="square"
+                label={t(
+                  "section.createCardModal.formTemplate.defaultLabel",
+                  { label: resolvedTemplateLabel },
+                  { default: "{{label}}" }
+                )}
+                disabled
+              />
+            </div>
+          )}
+        </div>
+
+        {isNewCheckpoint &&
+        selectedTemplateKey &&
+        selectedTemplateKey !== BLANK_TEMPLATE_VALUE &&
+        previewMilestone ? (
+          <FormDefinitionPreview board={board} milestone={previewMilestone} />
+        ) : null}
+
+        {isNewCheckpoint && selectedTemplateKey === BLANK_TEMPLATE_VALUE ? (
+          <div style={previewShellStyle}>
+            {t(
+              "section.createCardModal.scratchPreview",
+              {},
+              {
+                default:
+                  "Creates a draft review form with one empty card, linked to this step. Publish the form in Admin before it appears in review.",
+              }
+            )}
+          </div>
+        ) : null}
+      </div>
+    </StepSection>
+  );
+}
 
 export default function CreateCardModal({
   board,
@@ -249,93 +581,120 @@ export default function CreateCardModal({
   sections = [],
 }) {
   const { t } = useTranslation("builder");
+  const [cardCategory, setCardCategory] = useState("");
+  const [checkpointChoice, setCheckpointChoice] = useState("");
   const [title, setTitle] = useState("");
-  const [selectedType, setSelectedType] = useState("");
-  const [customMode, setCustomMode] = useState("clone");
   const [description, setDescription] = useState("");
-  const [selectedSourceMilestoneId, setSelectedSourceMilestoneId] = useState("");
-  const [selectedPermissions, setSelectedPermissions] = useState([
-    "MENTOR",
-    "TEACHER",
-    "SCIENTIST",
-  ]);
+  const [selectedPermissions, setSelectedPermissions] = useState(DEFAULT_PERMISSIONS);
+  const [selectedTemplateKey, setSelectedTemplateKey] = useState("");
 
   const { milestones, loading: milestonesLoading } = useBoardMilestones(
     board?.id,
     { skip: !open || !board?.id }
   );
 
+  const curriculumType = getCurriculumType(board);
+  const canCreateNew = isClassTemplateBoard(board);
+  const isNewCheckpoint = checkpointChoice === NEW_CHECKPOINT_VALUE;
+  const isDefaultCheckpoint = isDefaultActionCardType(checkpointChoice);
+  const selectedMilestone = isDefaultCheckpoint
+    ? getMilestoneForCardType(checkpointChoice, milestones)
+    : null;
+  const templatePreviewMilestone =
+    isNewCheckpoint &&
+    selectedTemplateKey &&
+    selectedTemplateKey !== BLANK_TEMPLATE_VALUE
+      ? getMilestoneForCardType(selectedTemplateKey, milestones)
+      : null;
+
+  const checkpointOptions = useMemo(
+    () => getDefaultCheckpointOptions({ t, sections }),
+    [sections, t]
+  );
+
+  const formTemplateOptions = useMemo(
+    () => getDefaultFormTemplateOptions({ t }),
+    [t]
+  );
+
+  const resetDownstreamFromCategory = () => {
+    setCheckpointChoice("");
+    setTitle("");
+    setDescription("");
+    setSelectedPermissions(DEFAULT_PERMISSIONS);
+    setSelectedTemplateKey("");
+  };
+
+  const resetDownstreamFromCheckpoint = () => {
+    setTitle("");
+    setDescription("");
+    setSelectedTemplateKey("");
+  };
+
   useEffect(() => {
     if (open) return;
+    setCardCategory("");
+    setCheckpointChoice("");
     setTitle("");
-    setSelectedType("");
-    setCustomMode("clone");
     setDescription("");
-    setSelectedSourceMilestoneId("");
-    setSelectedPermissions(["MENTOR", "TEACHER", "SCIENTIST"]);
+    setSelectedPermissions(DEFAULT_PERMISSIONS);
+    setSelectedTemplateKey("");
   }, [open]);
 
-  const typeOptions = useMemo(() => {
-    return getCreateCardTypeOptions({ t, board, sections }).map((option) => ({
-      value: option.value,
-      label: option.label,
-      disabled: option.disabled,
-    }));
-  }, [board, sections, t]);
-
-  const cloneSourceOptions = useMemo(() => {
-    return (milestones || [])
-      .filter((milestone) => milestone?.id && milestone?.isActive !== false)
-      .map((milestone) => ({
-        value: milestone.id,
-        label:
-          milestone.scope === "template"
-            ? t(
-                "section.createCardModal.templateSourceLabel",
-                { title: milestone.title || milestone.key },
-                { default: "{{title}} (custom)" }
-              )
-            : milestone.title || milestone.key,
-      }));
-  }, [milestones, t]);
+  useEffect(() => {
+    if (!isDefaultCheckpoint || !selectedMilestone) return;
+    const names = (selectedMilestone.canReview || [])
+      .map((p) => p?.name)
+      .filter(Boolean);
+    if (names.length > 0) {
+      setSelectedPermissions(names);
+    }
+  }, [checkpointChoice, isDefaultCheckpoint, selectedMilestone]);
 
   useEffect(() => {
-    if (
-      selectedType === CUSTOM_CARD_TYPE &&
-      customMode === "clone" &&
-      !selectedSourceMilestoneId &&
-      cloneSourceOptions.length > 0
-    ) {
-      setSelectedSourceMilestoneId(cloneSourceOptions[0].value);
+    if (!isNewCheckpoint) return;
+    setSelectedPermissions(DEFAULT_PERMISSIONS);
+    if (!selectedTemplateKey) {
+      setSelectedTemplateKey(BLANK_TEMPLATE_VALUE);
     }
-  }, [cloneSourceOptions, customMode, selectedSourceMilestoneId, selectedType]);
+  }, [isNewCheckpoint, selectedTemplateKey]);
 
   if (!open || typeof document === "undefined") return null;
 
-  const curriculumType = getCurriculumType(board);
   const trimmedTitle = title.trim();
-  const selectedMilestone = getMilestoneForCardType(selectedType, milestones);
-  const selectedSourceMilestone =
-    selectedType === CUSTOM_CARD_TYPE && customMode === "clone"
-      ? getMilestoneByKey(selectedSourceMilestoneId, milestones)
-      : null;
-  const selectedOption = typeOptions.find(
-    (option) => option.value === selectedType
-  );
-  const requiresTitle =
-    selectedType === PROPOSAL_CARD_TYPE || selectedType === CUSTOM_CARD_TYPE;
   const createDisabled =
     creating ||
     !sectionId ||
-    !selectedType ||
-    selectedOption?.disabled ||
-    (requiresTitle && !trimmedTitle) ||
-    (selectedType === CUSTOM_CARD_TYPE &&
-      customMode === "clone" &&
-      !selectedSourceMilestone?.id) ||
-    (isDefaultActionCardType(selectedType) && !selectedMilestone?.id);
+    milestonesLoading ||
+    !cardCategory ||
+    (cardCategory === CARD_CATEGORY_PROPOSAL && !trimmedTitle) ||
+    (cardCategory === CARD_CATEGORY_ACTION &&
+      (!checkpointChoice ||
+        (isDefaultCheckpoint &&
+          (!selectedMilestone?.id ||
+            checkpointOptions.find((o) => o.value === checkpointChoice)
+              ?.disabled)) ||
+        (isNewCheckpoint &&
+          (!trimmedTitle || selectedPermissions.length === 0))));
+
+  const handleCardCategorySelect = (category) => {
+    if (category === cardCategory) return;
+    setCardCategory(category);
+    resetDownstreamFromCategory();
+  };
+
+  const handleCheckpointSelect = (choice) => {
+    if (choice === checkpointChoice) return;
+    setCheckpointChoice(choice);
+    resetDownstreamFromCheckpoint();
+    if (choice === NEW_CHECKPOINT_VALUE) {
+      setSelectedPermissions(DEFAULT_PERMISSIONS);
+      setSelectedTemplateKey(BLANK_TEMPLATE_VALUE);
+    }
+  };
 
   const togglePermission = (name) => {
+    if (!isNewCheckpoint) return;
     setSelectedPermissions((prev) =>
       prev.includes(name)
         ? prev.filter((permission) => permission !== name)
@@ -347,17 +706,30 @@ export default function CreateCardModal({
     e.preventDefault();
     if (createDisabled) return;
 
-    if (selectedType === CUSTOM_CARD_TYPE) {
+    if (cardCategory === CARD_CATEGORY_PROPOSAL) {
+      await onCreateCard({
+        sectionId,
+        title: trimmedTitle,
+        type: PROPOSAL_CARD_TYPE,
+        milestoneId: null,
+      });
+      return;
+    }
+
+    if (isNewCheckpoint) {
+      const templateMilestone =
+        selectedTemplateKey && selectedTemplateKey !== BLANK_TEMPLATE_VALUE
+          ? getMilestoneForCardType(selectedTemplateKey, milestones)
+          : null;
+
       await onCreateCustomMilestone({
         title: trimmedTitle,
         description: description.trim(),
         sectionId,
-        clonedFromMilestoneId:
-          customMode === "clone" ? selectedSourceMilestone?.id : null,
-        sourceFormDefinitionKey:
-          customMode === "clone" && selectedSourceMilestone
-            ? resolveReviewFormKey(selectedSourceMilestone, curriculumType)
-            : null,
+        clonedFromMilestoneId: null,
+        sourceFormDefinitionKey: templateMilestone
+          ? resolveReviewFormKey(templateMilestone, curriculumType)
+          : null,
         canReviewPermissionNames: selectedPermissions,
       });
       return;
@@ -365,10 +737,8 @@ export default function CreateCardModal({
 
     await onCreateCard({
       sectionId,
-      title: requiresTitle
-        ? trimmedTitle
-        : selectedMilestone?.title || selectedType,
-      type: selectedType,
+      title: selectedMilestone?.title || checkpointChoice,
+      type: checkpointChoice,
       milestoneId: selectedMilestone?.id || null,
     });
   };
@@ -380,7 +750,16 @@ export default function CreateCardModal({
         if (e.target === e.currentTarget && !creating) onClose();
       }}
     >
-      <form style={modalStyle} onSubmit={handleSubmit}>
+      <style>{`
+        .createCardModalForm::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
+      <form
+        className="createCardModalForm"
+        style={modalStyle}
+        onSubmit={handleSubmit}
+      >
         <h2
           style={{
             margin: "0 0 24px",
@@ -394,170 +773,74 @@ export default function CreateCardModal({
           {t("section.createCardModal.title", {}, { default: "Create a new card" })}
         </h2>
 
-        <div style={{ display: "grid", gap: 16 }}>
-          <label style={labelStyle}>
-            {t(
-              "section.createCardModal.typeLabel",
-              {},
-              { default: "Card type" }
-            )}
-            <DropdownSelect
-              value={selectedType}
-              onChange={setSelectedType}
-              options={typeOptions}
-              placeholder={t(
-                "section.createCardModal.typePlaceholder",
-                {},
-                { default: "Select a card type" }
-              )}
-              ariaLabel={t(
-                "section.createCardModal.typePlaceholder",
-                {},
-                { default: "Select a card type" }
-              )}
-              disabled={milestonesLoading}
-            />
-          </label>
+        <div style={{ display: "grid", gap: 20 }}>
+          <CardTypeStep
+            cardCategory={cardCategory}
+            onSelect={handleCardCategorySelect}
+            t={t}
+          />
 
-          {requiresTitle ? (
+          {cardCategory === CARD_CATEGORY_PROPOSAL ? (
             <label style={labelStyle}>
-              {selectedType === CUSTOM_CARD_TYPE
-                ? t(
-                    "section.createCardModal.custom.label",
-                    {},
-                    { default: "Action label" }
-                  )
-                : t(
-                    "section.createCardModal.titleLabel",
-                    {},
-                    { default: "Card title" }
-                  )}
+              {t(
+                "section.createCardModal.titleLabel",
+                {},
+                { default: "Card title" }
+              )}
               <input
                 autoFocus
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder={
-                  selectedType === CUSTOM_CARD_TYPE
-                    ? t(
-                        "section.createCardModal.custom.labelPlaceholder",
-                        {},
-                        { default: "Enter an action label" }
-                      )
-                    : t(
-                        "section.createCardModal.titlePlaceholder",
-                        {},
-                        { default: "Enter a card title" }
-                      )
-                }
+                placeholder={t(
+                  "section.createCardModal.titlePlaceholder",
+                  {},
+                  { default: "Enter a card title" }
+                )}
                 style={inputStyle}
               />
             </label>
           ) : null}
 
-          {selectedType === CUSTOM_CARD_TYPE ? (
-            <div style={{ display: "grid", gap: 14 }}>
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                <Button
-                  type="button"
-                  variant={customMode === "clone" ? "filled" : "outline"}
-                  onClick={() => setCustomMode("clone")}
-                >
-                  {t(
-                    "section.createCardModal.custom.cloneFrom",
-                    {},
-                    { default: "Copy an existing form" }
-                  )}
-                </Button>
-                <Button
-                  type="button"
-                  variant={customMode === "scratch" ? "filled" : "outline"}
-                  onClick={() => setCustomMode("scratch")}
-                >
-                  {t(
-                    "section.createCardModal.custom.fromScratch",
-                    {},
-                    { default: "Start from scratch" }
-                  )}
-                </Button>
-              </div>
-
-              {customMode === "clone" ? (
-                <label style={labelStyle}>
-                  {t(
-                    "section.createCardModal.custom.selectSource",
-                    {},
-                    { default: "Form to copy" }
-                  )}
-                  <DropdownSelect
-                    value={selectedSourceMilestoneId}
-                    onChange={setSelectedSourceMilestoneId}
-                    options={cloneSourceOptions}
-                    placeholder={t(
-                      "section.createCardModal.custom.selectSourcePlaceholder",
-                      {},
-                      { default: "Select a review step" }
-                    )}
-                    ariaLabel={t(
-                      "section.createCardModal.custom.selectSourcePlaceholder",
-                      {},
-                      { default: "Select a review step" }
-                    )}
-                    disabled={milestonesLoading || cloneSourceOptions.length === 0}
-                  />
-                </label>
-              ) : (
-                <label style={labelStyle}>
-                  {t(
-                    "section.createCardModal.custom.description",
-                    {},
-                    { default: "Description" }
-                  )}
-                  <textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    style={{ ...inputStyle, minHeight: 96, resize: "vertical" }}
-                  />
-                </label>
-              )}
-
-              <div style={labelStyle}>
-                {t(
-                  "section.createCardModal.custom.canReview",
-                  {},
-                  { default: "Who can review" }
-                )}
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                  {PERMISSION_OPTIONS.map((permission) => (
-                    <label
-                      key={permission}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 6,
-                        fontWeight: 500,
-                      }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedPermissions.includes(permission)}
-                        onChange={() => togglePermission(permission)}
-                      />
-                      {permission}
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
+          {cardCategory === CARD_CATEGORY_ACTION ? (
+            <CheckpointStep
+              checkpointChoice={checkpointChoice}
+              checkpointOptions={checkpointOptions}
+              canCreateNew={canCreateNew}
+              onSelect={handleCheckpointSelect}
+              t={t}
+            />
           ) : null}
 
-          <FormDefinitionPreview
-            board={board}
-            customMode={customMode}
-            milestones={milestones}
-            selectedSourceMilestoneId={selectedSourceMilestoneId}
-            selectedType={selectedType}
-          />
+          {cardCategory === CARD_CATEGORY_ACTION ? (
+            <MilestonePreviewStep
+              board={board}
+              checkpointChoice={checkpointChoice}
+              description={description}
+              isNewCheckpoint={isNewCheckpoint}
+              milestone={selectedMilestone}
+              onDescriptionChange={setDescription}
+              onTitleChange={setTitle}
+              title={title}
+              t={t}
+            />
+          ) : null}
+
+          {cardCategory === CARD_CATEGORY_ACTION ? (
+            <PermissionsAndTemplateStep
+              board={board}
+              checkpointChoice={checkpointChoice}
+              formTemplateOptions={formTemplateOptions}
+              isNewCheckpoint={isNewCheckpoint}
+              milestone={selectedMilestone}
+              selectedPermissions={selectedPermissions}
+              selectedTemplateKey={selectedTemplateKey}
+              onTemplateSelect={setSelectedTemplateKey}
+              onTogglePermission={togglePermission}
+              previewMilestone={templatePreviewMilestone}
+              t={t}
+            />
+          ) : null}
         </div>
 
         <div

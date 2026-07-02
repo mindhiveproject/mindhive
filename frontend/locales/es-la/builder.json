@@ -1870,7 +1870,12 @@
 		"cardsCount": "{{count}} tarjeta{{count == 1 ? '' : 's'}}",
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (ya añadido)",
+			"alreadyAddedTooltip": "Este punto de control ya está en el tablero.",
 			"cancel": "Cancelar",
+			"categories": {
+				"action": "ACCIÓN",
+				"proposal": "Tarjeta de propuesta"
+			},
 			"create": "Crear",
 			"creating": "Creando...",
 			"custom": {
@@ -1884,11 +1889,30 @@
 				"selectSourcePlaceholder": "Seleccione un paso de revisión"
 			},
 			"customPreview": "Crea un paso de revisión personalizado con su propia etiqueta de hito.",
+			"editForm": "Editar formulario",
+			"editFormHint": "La edición de formularios está disponible en otro lugar.",
+			"formTemplate": {
+				"blank": "Formulario en blanco",
+				"defaultLabel": "{{label}}",
+				"label": "Plantilla de formulario"
+			},
+			"milestone": {
+				"actionLabel": "Etiqueta de acción",
+				"configureFormNext": "El formulario de revisión se configura en el siguiente paso.",
+				"description": "Descripción"
+			},
+			"newCheckpoint": "+ Nueva tarjeta de acción",
 			"noPreview": "Este tipo de tarjeta no tiene ningún formulario de reseña vinculado.",
 			"previewLabel": "Vista previa del formulario de revisión",
 			"previewLoading": "Cargando vista previa...",
 			"proposalPreview": "Agrega una tarjeta de propuesta estándar con campos de contenido para los estudiantes.",
 			"scratchPreview": "Crea un formulario de revisión preliminar con una tarjeta vacía, vinculada a este paso. Publica el formulario en el panel de administración antes de que aparezca en revisión.",
+			"steps": {
+				"cardType": "Tipo de tarjeta",
+				"checkpoint": "Control",
+				"milestone": "Hito",
+				"permissions": "Plantilla de formulario y permisos"
+			},
 			"templateSourceLabel": "{{title}} (personalizado)",
 			"title": "Crear una nueva tarjeta",
 			"titleLabel": "Título de la tarjeta",

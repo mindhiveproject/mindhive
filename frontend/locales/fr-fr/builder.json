@@ -1870,7 +1870,12 @@
 		"cardsCount": "{{count}} carte{{count == 1 ? '' : 's'}}",
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (déjà ajouté)",
+			"alreadyAddedTooltip": "Ce point de contrôle est déjà sur le tableau de bord",
 			"cancel": "Annuler",
+			"categories": {
+				"action": "Action",
+				"proposal": "Carte de proposition"
+			},
 			"create": "Créer",
 			"creating": "Créer...",
 			"custom": {
@@ -1884,11 +1889,30 @@
 				"selectSourcePlaceholder": "Sélectionnez une étape de révision"
 			},
 			"customPreview": "Crée une étape de révision personnalisée avec sa propre étiquette d'étape clé.",
+			"editForm": "Modifier le formulaire",
+			"editFormHint": "L'édition de formulaires est disponible ailleurs",
+			"formTemplate": {
+				"blank": "Formulaire vierge",
+				"defaultLabel": "{{label}}",
+				"label": "Modèle de formulaire"
+			},
+			"milestone": {
+				"actionLabel": "Étiquette d'action",
+				"configureFormNext": "Le formulaire d'évaluation est configuré à l'étape suivante.",
+				"description": "Description"
+			},
+			"newCheckpoint": "+ Nouvelle carte d'action",
 			"noPreview": "Aucun formulaire d'évaluation n'est associé à ce type de carte.",
 			"previewLabel": "Aperçu du formulaire d'avis",
 			"previewLoading": "Chargement de l'aperçu...",
 			"proposalPreview": "Ajoute une fiche de proposition standard avec des champs de contenu pour les étudiants.",
 			"scratchPreview": "Crée un formulaire de révision brouillon avec une carte vide, lié à cette étape. Publiez le formulaire dans l'interface d'administration avant qu'il n'apparaisse dans la section révision.",
+			"steps": {
+				"cardType": "Type de carte",
+				"checkpoint": "Point de contrôle",
+				"milestone": "Jalon",
+				"permissions": "Modèle d'autorisations et de formulaire"
+			},
 			"templateSourceLabel": "{{title}} (personnalisé)",
 			"title": "Créer une nouvelle carte",
 			"titleLabel": "Titre de la carte",

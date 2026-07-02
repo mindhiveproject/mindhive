@@ -1870,7 +1870,12 @@
 		"cardsCount": "{{count}} بطاقة{{count == 1 ? '' : 's'}}",
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (تمت إضافته بالفعل)",
+			"alreadyAddedTooltip": "هذه نقطة التفتيش موجودة بالفعل على اللوحة",
 			"cancel": "يلغي",
+			"categories": {
+				"action": "فعل",
+				"proposal": "بطاقة اقتراح"
+			},
 			"create": "يخلق",
 			"creating": "جارٍ الإنشاء...",
 			"custom": {
@@ -1884,11 +1889,30 @@
 				"selectSourcePlaceholder": "اختر خطوة مراجعة"
 			},
 			"customPreview": "يُنشئ خطوة مراجعة مخصصة مع تسمية خاصة بها.",
+			"editForm": "نموذج التعديل",
+			"editFormHint": "تتوفر خاصية تعديل النماذج في مكان آخر",
+			"formTemplate": {
+				"blank": "نموذج فارغ",
+				"defaultLabel": "{{label}}",
+				"label": "نموذج استمارات"
+			},
+			"milestone": {
+				"actionLabel": "علامة الإجراء",
+				"configureFormNext": "يتم إعداد نموذج المراجعة في الخطوة التالية.",
+				"description": "وصف"
+			},
+			"newCheckpoint": "+ بطاقة حركة جديدة",
 			"noPreview": "لا يوجد نموذج تقييم مرتبط بهذا النوع من البطاقات.",
 			"previewLabel": "معاينة نموذج المراجعة",
 			"previewLoading": "جاري تحميل المعاينة...",
 			"proposalPreview": "يضيف بطاقة اقتراح عادية مع حقول محتوى للطلاب.",
 			"scratchPreview": "أنشئ نموذج مراجعة مبدئيًا يحتوي على بطاقة فارغة واحدة، واربطه بهذه الخطوة. انشر النموذج في لوحة التحكم قبل ظهوره في قسم المراجعة.",
+			"steps": {
+				"cardType": "نوع البطاقة",
+				"checkpoint": "نقطة تفتيش",
+				"milestone": "منعطف",
+				"permissions": "نموذج الأذونات والنموذج"
+			},
 			"templateSourceLabel": "{{title}} (مخصص)",
 			"title": "إنشاء بطاقة جديدة",
 			"titleLabel": "عنوان البطاقة",
