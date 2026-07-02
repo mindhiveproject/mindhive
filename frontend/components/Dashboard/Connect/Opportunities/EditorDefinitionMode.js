@@ -60,18 +60,6 @@ const BackLink = styled.button`
   padding: 0;
 `;
 
-const ModeBadge = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 100px;
-  background: #eef5f9;
-  color: #336f8a;
-  font-size: 12px;
-  font-weight: 600;
-`;
-
 function rolesForViewer(connectRole) {
   const roles = [];
   if (connectRole.isAdmin) roles.push("admin");
@@ -154,7 +142,6 @@ export default function EditorDefinitionMode({ opportunityId }) {
           ← Back
         </BackLink>
         <h1>{isNew ? "New opportunity" : opportunity?.title || "Opportunity"}</h1>
-        <ModeBadge>Definition-driven form</ModeBadge>
       </TopBar>
       {flash ? (
         <div style={{ color: "#1d6b3a", fontSize: 14 }}>{flash}</div>

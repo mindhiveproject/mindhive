@@ -64,10 +64,15 @@ export const PROFILE_ORGANIZATION_FORM_SEED: FormSeed = {
     "write to the Profile row; organization fields (name, mission, " +
     "primary domain, logo, interests) write to the linked Organization.",
   cards: [
+    // ─── ORGANIZATION SECTION ────────────────────────────────────────
+    // Cards below with storageEntity="organization" all write to the
+    // linked Organization row. Card titles are prefixed "Your
+    // organization —" so sponsors don't confuse them with the
+    // personal-account card further down.
     {
-      title: "Organization",
+      title: "Your organization — public profile",
       description:
-        "Public-facing details about your organization. Visible to students browsing opportunities.",
+        "About the ORGANIZATION you represent. These details are public to students browsing opportunities. This is NOT your personal profile — that comes further down.",
       fields: [
         {
           name: "name",
@@ -81,7 +86,7 @@ export const PROFILE_ORGANIZATION_FORM_SEED: FormSeed = {
         {
           name: "tagline",
           fieldType: "text",
-          label: "Tagline",
+          label: "Organization tagline",
           placeholder: "One short line — appears under the name on cards",
           storage: "column",
           storageColumn: "tagline",
@@ -117,7 +122,7 @@ export const PROFILE_ORGANIZATION_FORM_SEED: FormSeed = {
         {
           name: "location",
           fieldType: "text",
-          label: "Where are you based?",
+          label: "Where is the organization based?",
           placeholder: "City, country",
           storage: "column",
           storageColumn: "location",
@@ -126,7 +131,7 @@ export const PROFILE_ORGANIZATION_FORM_SEED: FormSeed = {
         {
           name: "mission",
           fieldType: "rich_text",
-          label: "Mission",
+          label: "Organization mission",
           helperText: "What does your organization do? Why does it exist?",
           storage: "column",
           storageColumn: "mission",
@@ -135,24 +140,19 @@ export const PROFILE_ORGANIZATION_FORM_SEED: FormSeed = {
         {
           name: "logo",
           fieldType: "image",
-          label: "Logo",
+          label: "Organization logo",
           helperText: "Square works best. Max ~10MB.",
           storage: "column",
           storageColumn: "logo",
           storageEntity: "organization",
           validation: { maxFileSize: 10 * 1024 * 1024 },
         },
-      ],
-    },
-    {
-      title: "Interests",
-      description:
-        "Where can your organization help students? Pick all that apply.",
-      fields: [
         {
           name: "interests",
           fieldType: "tag_multiselect",
-          label: "Topics of interest",
+          label: "Topics your organization can support",
+          helperText:
+            "Where can your organization help students? Pick all that apply.",
           storage: "column",
           storageColumn: "interests",
           storageEntity: "organization",
@@ -160,14 +160,23 @@ export const PROFILE_ORGANIZATION_FORM_SEED: FormSeed = {
       ],
     },
     {
-      title: "Point of contact",
+      title: "Your organization — team members",
       description:
-        "Your personal details. Students won't see your private email — only the public contact below.",
+        "Invite colleagues at your organization to manage opportunities together. These are other organization admins, not students.",
+      cardType: "members_panel",
+    },
+    // ─── PERSONAL ACCOUNT SECTION ────────────────────────────────────
+    // Fields below default to storageEntity="self" and write to the
+    // sponsor's own Profile row.
+    {
+      title: "About YOU (personal account)",
+      description:
+        "Your personal profile as the sponsor account holder. This is separate from your organization above — these details describe you, not the organization.",
       fields: [
         {
           name: "firstName",
           fieldType: "text",
-          label: "First name",
+          label: "Your first name",
           isRequired: true,
           storage: "column",
           storageColumn: "firstName",
@@ -175,7 +184,7 @@ export const PROFILE_ORGANIZATION_FORM_SEED: FormSeed = {
         {
           name: "lastName",
           fieldType: "text",
-          label: "Last name",
+          label: "Your last name",
           isRequired: true,
           storage: "column",
           storageColumn: "lastName",
@@ -190,9 +199,9 @@ export const PROFILE_ORGANIZATION_FORM_SEED: FormSeed = {
         {
           name: "publicMail",
           fieldType: "text",
-          label: "Public contact email",
+          label: "Your public contact email",
           helperText:
-            "Shown to students who reach out about opportunities you host.",
+            "Shown to students who reach out about opportunities you host. Your private login email is not shared.",
           placeholder: "you@example.org",
           storage: "column",
           storageColumn: "publicMail",
@@ -200,26 +209,20 @@ export const PROFILE_ORGANIZATION_FORM_SEED: FormSeed = {
         {
           name: "passion",
           fieldType: "textarea",
-          label: "What draws you to this work?",
-          helperText: "Optional — but it helps mentees connect with you.",
+          label: "What draws YOU to this work?",
+          helperText: "Optional — but it helps mentees connect with you personally.",
           storage: "column",
           storageColumn: "passion",
         },
         {
           name: "timeCommitment",
           fieldType: "text",
-          label: "Time you can commit per week",
+          label: "Time YOU can commit per week",
           placeholder: "e.g. 2 hours / week",
           storage: "column",
           storageColumn: "timeCommitment",
         },
       ],
-    },
-    {
-      title: "Team members",
-      description:
-        "Invite colleagues at your organization to manage opportunities together.",
-      cardType: "members_panel",
     },
   ],
 };
