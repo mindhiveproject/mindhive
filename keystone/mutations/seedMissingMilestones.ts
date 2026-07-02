@@ -4,7 +4,6 @@
 import {
   MILESTONE_SEEDS,
   createMilestoneFromSeed,
-  MILESTONE_SEED_RETURN_QUERY,
 } from "./seedData/milestoneSeedHelpers";
 
 async function seedMissingMilestones(_root: unknown, _args: {}, context: any) {
@@ -43,9 +42,13 @@ async function seedMissingMilestones(_root: unknown, _args: {}, context: any) {
     return [];
   }
 
-  return context.query.Milestone.findMany({
+  // context.db (raw Prisma) — NOT context.query. context.query hands
+  // back pre-serialized rows that break when GraphQL re-resolves
+  // relationship sub-fields (like formDefinition) on the mutation's
+  // return. Raw Prisma rows let GraphQL resolve relationships lazily
+  // via the auto-generated field resolvers.
+  return context.db.Milestone.findMany({
     where: { id: { in: inserted } },
-    query: MILESTONE_SEED_RETURN_QUERY,
     orderBy: [{ key: "asc" }],
   });
 }

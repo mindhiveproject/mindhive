@@ -6,7 +6,6 @@
 import {
   MILESTONE_SEEDS,
   createMilestoneFromSeed,
-  MILESTONE_SEED_RETURN_QUERY,
 } from "./seedData/milestoneSeedHelpers";
 
 async function seedMilestones(
@@ -43,9 +42,10 @@ async function seedMilestones(
   });
 
   if (existing.length > 0 && !force) {
-    return context.query.Milestone.findMany({
+    // See resolveMilestonesForBoard — context.db avoids the
+    // pre-serialized-value trap on custom-mutation returns.
+    return context.db.Milestone.findMany({
       where: { key: { in: keys } },
-      query: MILESTONE_SEED_RETURN_QUERY,
       orderBy: [{ key: "asc" }],
     });
   }
@@ -60,9 +60,10 @@ async function seedMilestones(
     await createMilestoneFromSeed(context, seed);
   }
 
-  return context.query.Milestone.findMany({
+  // See resolveMilestonesForBoard — context.db avoids the
+  // pre-serialized-value trap on custom-mutation returns.
+  return context.db.Milestone.findMany({
     where: { key: { in: keys } },
-    query: MILESTONE_SEED_RETURN_QUERY,
     orderBy: [{ key: "asc" }],
   });
 }
