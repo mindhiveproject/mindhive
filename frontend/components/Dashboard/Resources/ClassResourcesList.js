@@ -54,7 +54,8 @@ export default function ClassResourcesList({
           href={{
             pathname: `/dashboard/myclasses/${classSlug}`,
             query: {
-              page: "board",
+              page: "projects",
+              action: "create",
             },
           }}
         >

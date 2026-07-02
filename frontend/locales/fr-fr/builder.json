@@ -1873,7 +1873,7 @@
 			"alreadyAddedTooltip": "Ce point de contrôle est déjà sur le tableau de bord",
 			"cancel": "Annuler",
 			"categories": {
-				"action": "Action",
+				"action": "Carte Action",
 				"proposal": "Carte de proposition"
 			},
 			"create": "Créer",

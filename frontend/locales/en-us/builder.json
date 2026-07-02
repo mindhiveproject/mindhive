@@ -1376,9 +1376,14 @@
 		"nameMessage": "Give your project a name. This is not the study's title, but what you want to call your work space.",
 		"namePlaceholder": "The name of my project is ",
 		"nameYourProject": "Name your project",
-		"noTemplatesSubtitle": "To start a project, you need a project board template. Your teacher may not have a project board template linked to this class.",
-		"noTemplatesTitle": "There are no project board templates in the class",
+		"noTemplatesSubtitle": "To start a project, you need a project board template. Your teacher may not have made any templates visible in your classes.",
+		"noTemplatesTitle": "There are no project board templates available",
 		"selectClass": "Select the class",
+		"selectTemplate": "Select template",
+		"selectTemplateAlert": "Please choose the proposal template",
+		"selectTemplateHelp": "Choose a project board template suggested by your teacher.",
+		"templateClassLabel": "Class: {{className}}",
+		"templateOptionLabel": "{{templateName}} — {{className}}",
 		"untitledProject": "Untitled Project"
 	},
 	"notes": {
@@ -1873,7 +1878,7 @@
 			"alreadyAddedTooltip": "This checkpoint is already on the board",
 			"cancel": "Cancel",
 			"categories": {
-				"action": "Action",
+				"action": "Action card",
 				"proposal": "Proposal card"
 			},
 			"create": "Create",

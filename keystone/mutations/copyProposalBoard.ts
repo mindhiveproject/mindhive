@@ -1,4 +1,5 @@
 import uniqid from "uniqid";
+import { syncClassTemplateBoards } from "./utils/classTemplateBoards";
 
 async function copyProposalBoard(
   root: any,
@@ -54,14 +55,32 @@ async function copyProposalBoard(
   const template = await context.query.ProposalBoard.findOne({
     where: { id: id },
     query:
-      "id publicId slug title description isTemplate settings resources { id } templateForClasses { id } sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } assignments { id title content placeholder settings public isTemplate tags { id } } studies { id } tasks { id } milestone { id } } }",
+      "id publicId slug title description isTemplate settings resources { id } templateForClasses { id } templatesForClass { id } sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } assignments { id title content placeholder settings public isTemplate tags { id } } studies { id } tasks { id } milestone { id } } }",
   });
+
+  let boardSettings = template.settings;
+  if (classIdTemplate) {
+    const classRecord = await context.query.Class.findOne({
+      where: { id: classIdTemplate },
+      query: "id templateProposal { id }",
+    });
+    if (!classRecord?.templateProposal?.id) {
+      const mergedSettings =
+        template.settings && typeof template.settings === "object"
+          ? { ...template.settings }
+          : {};
+      boardSettings = {
+        ...mergedSettings,
+        visibleToStudentInClassIds: [classIdTemplate],
+      };
+    }
+  }
 
   // make a full copy
   const argumentsToCopy = {
     title: title || template.title,
     description: template.description,
-    settings: template.settings,
+    settings: boardSettings,
     slug: `${template.slug}-${Date.now()}-${Math.round(
       Math.random() * 100000
     )}`,
@@ -77,12 +96,17 @@ async function copyProposalBoard(
             id: sesh.itemId,
           },
         },
+        creator: {
+          connect: {
+            id: sesh.itemId,
+          },
+        },
         collaborators: collaborators
           ? {
               connect: collaborators.map((c) => ({ id: c })),
             }
           : null,
-        templateForClasses: classIdTemplate
+        templatesForClass: classIdTemplate
           ? {
               connect: {
                 id: classIdTemplate,
@@ -127,6 +151,26 @@ async function copyProposalBoard(
     },
     "id"
   );
+
+  if (classIdTemplate) {
+    const classRecord = await context.query.Class.findOne({
+      where: { id: classIdTemplate },
+      query: "id templateProposal { id }",
+    });
+    if (!classRecord?.templateProposal?.id) {
+      await context.db.Class.updateOne({
+        where: { id: classIdTemplate },
+        data: {
+          templateProposal: { connect: { id: board.id } },
+          classTemplateBoards: { connect: { id: board.id } },
+        },
+      });
+    }
+  }
+
+  if (classIdTemplate) {
+    await syncClassTemplateBoards(context, classIdTemplate);
+  }
 
   // create new sections
   await Promise.all(
@@ -217,7 +261,9 @@ async function copyProposalBoard(
           // immediately appear in the class assignment context.
           if (templateCard.assignments?.length > 0) {
             // Check if the template board is a class template (has templateForClasses set)
-            const isClassTemplate = template.templateForClasses && template.templateForClasses.length > 0;
+            const isClassTemplate =
+              (template.templateForClasses && template.templateForClasses.length > 0)
+              || (template.templatesForClass && template.templatesForClass.length > 0);
             
             if (isClassTemplate) {
               // Student copying from teacher's template: reuse the same assignment IDs

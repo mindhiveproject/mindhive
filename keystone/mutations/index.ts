@@ -31,6 +31,7 @@ import updateTemplateMilestone from "./updateTemplateMilestone";
 import backfillLinkActionCardsToMilestones from "./backfillLinkActionCardsToMilestones";
 import backfillLowercaseKeys from "./backfillLowercaseKeys";
 import backfillProjectBoardFormScope from "./backfillProjectBoardFormScope";
+import syncClassTemplateBoards from "./syncClassTemplateBoards";
 import { GraphQLSchema } from "graphql";
 
 // make a fake gql tagged template literal
@@ -88,6 +89,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           templateBoardId: ID!
           cardIdsWithContentUpdate: [ID!]
         ): ApplyTemplateBoardChangesResult
+        syncClassTemplateBoards(classId: ID!): Class
         backfillMediaAssetOrigins(limit: Int): Int!
         backfillOpportunityProposalData(limit: Int, dryRun: Boolean): Int!
         followUser(userId: ID!): Friendship
@@ -191,6 +193,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         setAssignmentTemplateCards,
         setResourceTemplateCards,
         applyTemplateBoardChanges,
+        syncClassTemplateBoards,
         backfillMediaAssetOrigins,
         backfillOpportunityProposalData,
         followUser,

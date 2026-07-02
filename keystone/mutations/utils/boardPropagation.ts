@@ -3,25 +3,17 @@
  * Used by applyTemplateBoardChanges mutation.
  */
 
-const uniqid = require("uniqid") as () => string;
+import { isClassTemplateBoard } from "./classTemplateBoards";
 
-/**
- * Returns true when the board is used as a class template (has at least one
- * class in templateForClasses). Use this instead of isTemplate for class-template
- * logic; isTemplate is reserved for platform-wide templates (admin-only).
- */
-export function isClassTemplateBoard(board: {
-  templateForClasses?: Array<{ id: string }> | null;
-} | null): boolean {
-  return Boolean(
-    board?.templateForClasses && board.templateForClasses.length > 0
-  );
-}
+export { isClassTemplateBoard };
+
+const uniqid = require("uniqid") as () => string;
 
 const TEMPLATE_QUERY = `
   id
   publicId
   templateForClasses { id }
+  templatesForClass { id }
   clonedFrom { id }
   sections {
     id
@@ -74,6 +66,7 @@ export type TemplateBoard = {
   id: string;
   publicId?: string | null;
   templateForClasses?: Array<{ id: string }>;
+  templatesForClass?: Array<{ id: string }>;
   clonedFrom?: { id: string } | null;
   sections: Array<{
     id: string;

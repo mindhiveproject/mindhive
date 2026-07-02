@@ -28,12 +28,21 @@ export const EDIT_CLASS = gql`
     $title: String
     $description: String
     $settings: JSON
+    $templateProposal: ProposalBoardRelateToOneForUpdateInput
   ) {
     updateClass(
       where: { id: $id }
-      data: { title: $title, description: $description, settings: $settings }
+      data: {
+        title: $title
+        description: $description
+        settings: $settings
+        templateProposal: $templateProposal
+      }
     ) {
       id
+      templateProposal {
+        id
+      }
     }
   }
 `;

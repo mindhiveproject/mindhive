@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { Dropdown } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
@@ -14,11 +14,20 @@ export default function CreateProposal({
   copyProposalId,
   templates,
   isCopy,
+  onBack,
   goToOverview,
+  initialTemplateId,
 }) {
   const { t } = useTranslation("classes");
-  const [proposalId, setProposalId] = useState(copyProposalId || null);
-  const [template, setTemplate] = useState(null);
+  const handleBack = onBack || goToOverview;
+  const [proposalId, setProposalId] = useState(
+    copyProposalId || initialTemplateId || null
+  );
+  const [template, setTemplate] = useState(
+    initialTemplateId
+      ? templates.filter((item) => item?.id == initialTemplateId)[0] || null
+      : null
+  );
 
   const [copyProposal, { loading }] = useMutation(COPY_PROPOSAL_MUTATION, {
     variables: {
@@ -50,7 +59,7 @@ export default function CreateProposal({
     }
     const res = await copyProposal();
     if (res?.data?.copyProposalBoard) {
-      goToOverview();
+      handleBack();
     }
   };
 
@@ -58,7 +67,7 @@ export default function CreateProposal({
     <>
       <div className="empty">
         <div className="closeBtn">
-          <span onClick={goToOverview}>&times;</span>
+          <span onClick={handleBack}>&times;</span>
         </div>
 
         <h3>

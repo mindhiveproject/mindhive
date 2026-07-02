@@ -38,6 +38,7 @@ async function backfillLinkActionCardsToMilestones(
     query: `
       id
       templateForClasses { id }
+      templatesForClass { id }
       sections {
         cards {
           id

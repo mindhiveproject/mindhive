@@ -79,6 +79,14 @@ export const APPLY_TEMPLATE_BOARD_CHANGES = gql`
   }
 `;
 
+export const SYNC_CLASS_TEMPLATE_BOARDS = gql`
+  mutation SYNC_CLASS_TEMPLATE_BOARDS($classId: ID!) {
+    syncClassTemplateBoards(classId: $classId) {
+      id
+    }
+  }
+`;
+
 export const UPDATE_PROPOSAL_BOARD = gql`
   mutation UPDATE_PROPOSAL_BOARD(
     $id: ID!

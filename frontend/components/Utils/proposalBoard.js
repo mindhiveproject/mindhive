@@ -16,3 +16,22 @@ export function isClassTemplateBoard(proposal) {
   const classes = proposal?.templateForClasses;
   return Array.isArray(classes) && classes.length > 0;
 }
+
+export function userIsProposalAdmin(user) {
+  return (user?.permissions || []).some(
+    (permission) =>
+      permission?.canManageUsers
+      || permission?.name === "ADMIN"
+  );
+}
+
+export function canDeleteProposalBoard(board, userId, { isAdmin = false } = {}) {
+  if (!board?.id || !userId) return false;
+  if (isAdmin) return true;
+  if (board.isTemplate) return false;
+
+  return (
+    board.creator?.id === userId
+    || board.author?.id === userId
+  );
+}

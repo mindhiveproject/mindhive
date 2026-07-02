@@ -89,6 +89,13 @@ export const GET_CLASS = gql`
       }
       templateProposal {
         id
+        title
+        settings
+      }
+      classTemplateBoards {
+        id
+        title
+        settings
       }
       settings
       createdAt

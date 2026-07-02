@@ -3,7 +3,7 @@ import slugify from "slugify";
 
 function getTemplateBoardId(board: any): string | null {
   if (!board) return null;
-  if (board.templateForClasses?.length) {
+  if (board.templateForClasses?.length || board.templatesForClass?.length) {
     return board.id;
   }
   return board.clonedFrom?.id || null;
@@ -41,7 +41,7 @@ async function resolveMilestonesForBoard(
 ) {
   const board = await context.query.ProposalBoard.findOne({
     where: { id: boardId },
-    query: "id clonedFrom { id } templateForClasses { id }",
+    query: "id clonedFrom { id } templateForClasses { id } templatesForClass { id }",
   });
   if (!board) return [];
 
@@ -97,15 +97,16 @@ export async function assertTemplateBoardTeacher(
 
   const board = await context.query.ProposalBoard.findOne({
     where: { id: templateBoardId },
-    query: "id templateForClasses { id creator { id } }",
+    query: "id templateForClasses { id creator { id } } templatesForClass { id creator { id } }",
   });
   if (!board) {
     throw new Error("Template board not found.");
   }
 
-  const isCreator = (board.templateForClasses || []).some(
-    (c: any) => c?.creator?.id === session.itemId
-  );
+  const isCreator = [
+    ...(board.templateForClasses || []),
+    ...(board.templatesForClass || []),
+  ].some((c: any) => c?.creator?.id === session.itemId);
   if (!isCreator) {
     throw new Error("Forbidden: you must be the class creator for this template.");
   }

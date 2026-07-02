@@ -50,7 +50,8 @@ export const StyledBuilderArea = styled.div`
       background: #ffffff;
       padding: 24px 32px;
       border-radius: 8px;
-      max-width: 360px;
+      max-width: 520px;
+      width: min(520px, calc(100vw - 32px));
       .title {
         font-family: Lato;
         font-size: 18px;
@@ -78,6 +79,46 @@ export const StyledBuilderArea = styled.div`
         line-height: 18px;
         text-align: center;
         color: #ffffff;
+      }
+      .templateOptionCards {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .templateOptionCard {
+        display: grid;
+        gap: 4px;
+        width: 100%;
+        padding: 16px 18px;
+        text-align: left;
+        border: 1px solid #e6e6e6;
+        border-radius: 12px;
+        background: #f7f9f8;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+        font-family: Lato, sans-serif;
+      }
+      .templateOptionCard:hover {
+        border-color: #336f8a;
+        background: #f0f8fa;
+      }
+      .templateOptionCardSelected {
+        border: 2px solid #336f8a;
+        background: rgba(222, 248, 251, 0.45);
+        box-shadow: 0 0 0 1px rgba(51, 111, 138, 0.12);
+      }
+      .templateOptionCardTitle {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 22px;
+        color: #171717;
+        word-break: break-word;
+      }
+      .templateOptionCardClass {
+        font-size: 13px;
+        line-height: 18px;
+        color: #625b71;
+        word-break: break-word;
       }
     }
   }

@@ -40,6 +40,8 @@ export const PROPOSAL_TEMPLATES_QUERY = gql`
       id
       title
       description
+      createdAt
+      updatedAt
       sections {
         id
         title
@@ -187,6 +189,10 @@ export const PROPOSAL_QUERY = gql`
         }
         templateProposal {
           id
+        }
+        classTemplateBoards {
+          id
+          title
         }
       }
       templateForClasses {
@@ -651,7 +657,12 @@ export const TEACHER_PROJECT_BOARDS = gql`
 export const CLASS_TEMPLATE_PROJECTS_QUERY = gql`
   query CLASS_TEMPLATE_PROJECTS_QUERY($classId: ID!) {
     proposalBoards(
-      where: { templateForClasses: { some: { id: { equals: $classId } } } }
+      where: {
+        OR: [
+          { templatesForClass: { some: { id: { equals: $classId } } } }
+          { templateForClasses: { some: { id: { equals: $classId } } } }
+        ]
+      }
     ) {
       id
       title
@@ -660,7 +671,11 @@ export const CLASS_TEMPLATE_PROJECTS_QUERY = gql`
       isSubmitted
       isTemplate
       settings
+      creator {
+        id
+      }
       author {
+        id
         username
       }
       collaborators {

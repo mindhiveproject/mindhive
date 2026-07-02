@@ -1873,7 +1873,7 @@
 			"alreadyAddedTooltip": "这个检查点已经标记在棋盘上了。",
 			"cancel": "取消",
 			"categories": {
-				"action": "行动",
+				"action": "行动卡",
 				"proposal": "求婚卡"
 			},
 			"create": "创造",

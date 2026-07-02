@@ -1873,7 +1873,7 @@
 			"alreadyAddedTooltip": "Este punto de control ya está en el tablero.",
 			"cancel": "Cancelar",
 			"categories": {
-				"action": "ACCIÓN",
+				"action": "Tarjeta de acción",
 				"proposal": "Tarjeta de propuesta"
 			},
 			"create": "Crear",

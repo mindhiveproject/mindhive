@@ -1,17 +1,40 @@
 import { useQuery } from "@apollo/client";
 import moment from "moment";
-import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
 
-import { CLASS_PROJECTS_QUERY } from "../../../Queries/Proposal";
-import Button from "../../../DesignSystem/Button";
+import {
+  CLASS_PROJECTS_QUERY,
+} from "../../../Queries/Proposal";
+import ProjectsTemplatePanel from "./ProjectsTemplatePanel";
+import ProjectsBoardEditor from "./ProjectsBoardEditor";
+import ProjectsBoardCreate from "./ProjectsBoardCreate";
 
-export default function ClassProjects({ myclass }) {
+export default function ClassProjects({ myclass, user, query }) {
   const { t } = useTranslation("classes");
+  const { action, board } = query || {};
+
+  if (action === "edit" && board) {
+    return (
+      <ProjectsBoardEditor
+        myclass={myclass}
+        user={user}
+        boardId={board}
+      />
+    );
+  }
+
+  if (action === "create") {
+    return (
+      <ProjectsBoardCreate
+        myclass={myclass}
+        query={query}
+      />
+    );
+  }
 
   const { data } = useQuery(CLASS_PROJECTS_QUERY, {
     variables: { classId: myclass?.id },
@@ -79,32 +102,7 @@ export default function ClassProjects({ myclass }) {
   return (
     <div className="classTabPage projects">
       <section className="classTabSection">
-        <div className="classTabSectionHeader">
-          <h3>{t("navigation.projects", {}, { default: "Projects" })}</h3>
-          <p>
-            {t(
-              "projects.listDescription",
-              { count: projects.length },
-              {
-                default:
-                  "{{count}} student project boards in this class.",
-              }
-            )}
-          </p>
-        </div>
-        <div className="classTabActionBar">
-          <Link
-            href={{
-              pathname: `/dashboard/myclasses/${myclass?.code}`,
-              query: { page: "board" },
-            }}
-            style={{ textDecoration: "none" }}
-          >
-            <Button variant="filled">
-              {t("projects.manageClassProjectBoard")}
-            </Button>
-          </Link>
-        </div>
+        <ProjectsTemplatePanel myclass={myclass} user={user} />
       </section>
 
       <section className="classTabSection">
@@ -112,6 +110,15 @@ export default function ClassProjects({ myclass }) {
           <h3>
             {t("projects.studentBoards", {}, { default: "Student boards" })}
           </h3>
+          <p>
+            {t(
+              "projects.listDescription",
+              { count: projects.length },
+              {
+                default: "{{count}} student project boards in this class.",
+              }
+            )}
+          </p>
         </div>
         {projects.length === 0 ? (
           <div className="classTabEmpty">

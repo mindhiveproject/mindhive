@@ -17,7 +17,7 @@ import ConnectResourceToCardModal from "./ConnectResourceToCardModal";
 import BulkActionsModal from "./BulkActionsModal";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import Chip from "../../../../DesignSystem/Chip";
-import Button from "../../../../DesignSystem/Button";
+import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 
 const SecondaryButton = styled.button`
   display: inline-flex;
@@ -234,7 +234,7 @@ export default function ResourceTab({ resources, myclass, user }) {
     return html.replace(/<[^>]*>/g, "").trim();
   };
 
-  const templateBoardId = myclass?.templateProposal?.id;
+  const templateBoardId = getPrimaryTemplateBoardId(myclass);
 
   const filteredResources = (() => {
     let list =
@@ -443,7 +443,7 @@ export default function ResourceTab({ resources, myclass, user }) {
 
   const LinkedToCardRenderer = (params) => {
     const resource = params?.data;
-    const boardId = params?.context?.templateBoardId ?? myclass?.templateProposal?.id;
+    const boardId = params?.context?.templateBoardId ?? getPrimaryTemplateBoardId(myclass);
     const templateCards = !boardId
       ? []
       : (resource?.proposalCards || []).filter(
@@ -555,7 +555,7 @@ export default function ResourceTab({ resources, myclass, user }) {
 
   const ChangeLinkRenderer = (params) => {
     const resource = params?.data;
-    const templateBoardId = params?.context?.templateBoardId ?? myclass?.templateProposal?.id;
+    const templateBoardId = params?.context?.templateBoardId ?? getPrimaryTemplateBoardId(myclass);
     const handleClick = () => {
       if (!templateBoardId) {
         router.push({
@@ -1036,7 +1036,7 @@ export default function ResourceTab({ resources, myclass, user }) {
               if (e.api) setSelectedResources(e.api.getSelectedRows());
             }}
             context={{
-              templateBoardId: myclass?.templateProposal?.id,
+              templateBoardId: getPrimaryTemplateBoardId(myclass),
               onTogglePublishStatus: handleOpenPublishConfirm,
               updatingStatusResourceId,
               copyingResourceId,

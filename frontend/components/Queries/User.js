@@ -102,6 +102,13 @@ export const GET_USER_CLASSES = gql`
           }
           templateProposal {
             id
+            title
+            settings
+          }
+          classTemplateBoards {
+            id
+            title
+            settings
           }
         }
         teacherIn {
@@ -117,6 +124,10 @@ export const GET_USER_CLASSES = gql`
           }
           templateProposal {
             id
+          }
+          classTemplateBoards {
+            id
+            title
           }
         }
         mentorIn {

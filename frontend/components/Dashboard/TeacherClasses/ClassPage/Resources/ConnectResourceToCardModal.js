@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import StyledModal from "../../../../styles/StyledModal";
 import { UPDATE_RESOURCE, SET_RESOURCE_TEMPLATE_CARDS } from "../../../../Mutations/Resource";
 import { GET_CLASS_RESOURCES } from "../../../../Queries/Resource";
+import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 import TemplateBoardCardPicker from "../Assignments/TemplateBoardCardPicker";
 
 function getTemplateCardIds(resource, templateBoardId) {
@@ -24,7 +25,7 @@ export default function ConnectResourceToCardModal({
 }) {
   const { t } = useTranslation("classes");
   const client = useApolloClient();
-  const templateBoardId = myclass?.templateProposal?.id;
+  const templateBoardId = getPrimaryTemplateBoardId(myclass);
   const [selectedCardIds, setSelectedCardIds] = useState([]);
 
   useEffect(() => {

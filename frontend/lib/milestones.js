@@ -9,7 +9,9 @@ export { GET_MILESTONES, RESOLVE_MILESTONES_FOR_BOARD };
 
 export function getTemplateBoardId(board) {
   if (!board) return null;
-  if (board.templateForClasses?.length) return board.id;
+  if (board.templateForClasses?.length || board.templatesForClass?.length) {
+    return board.id;
+  }
   return board.clonedFrom?.id || null;
 }
 
