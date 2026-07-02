@@ -1,7 +1,7 @@
 {
 	"dataJournal": {
 		"components": {
-			"closePanel": "",
+			"closePanel": "Componentenpaneel sluiten",
 			"descriptions": {
 				"barChart": "Visualiseer de relatie tussen een kwalitatieve en een kwantitatieve variabele met behulp van gegroepeerde balken.",
 				"codeFromScratch": "Schrijf aangepaste code om volledig op maat gemaakte analyses of visualisaties te creëren.",

@@ -229,45 +229,45 @@
 	"introductionVideo": "فيديو المقدمة",
 	"locationFilter": "موقع",
 	"myOpportunitiesList": {
-		"capacity": "",
-		"delete": "",
-		"deleteConfirm": "",
-		"edit": "",
-		"empty": "",
-		"emptyFiltered": "",
-		"loading": "",
+		"capacity": "السعة {{count}}",
+		"delete": "يمسح",
+		"deleteConfirm": "هل يمكن حذف هذه الفرصة؟ لا يمكن التراجع عن هذا القرار.",
+		"edit": "يحرر",
+		"empty": "لم تُنشئ أي فرص بعد. انقر على \"فرصة جديدة\" لنشر مشروعك الأول للطلاب.",
+		"emptyFiltered": "لا توجد فرص تتطابق مع المعايير الحالية.",
+		"loading": "تحميل...",
 		"networkCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} شبكات",
+			"one": "{{count}} الشبكة"
 		},
-		"networkFilterLabel": "",
-		"networkFilterPlaceholder": "",
-		"newButton": "",
-		"pageTitle": "",
+		"networkFilterLabel": "تصفية حسب الشبكة",
+		"networkFilterPlaceholder": "جميع الشبكات",
+		"newButton": "فرصة جديدة",
+		"pageTitle": "فرصي",
 		"rating": {
-			"many": "",
-			"one": ""
+			"many": "{{average}} · {{count}} تقييمات",
+			"one": "{{average}} · {{count}} تقييم"
 		},
-		"searchLabel": "",
-		"searchPlaceholder": "",
+		"searchLabel": "ابحث عن الفرص حسب العنوان",
+		"searchPlaceholder": "البحث حسب العنوان...",
 		"status": {
-			"accepted": "",
-			"archived": "",
-			"closed": "",
-			"draft": "",
-			"pendingReview": "",
-			"preSelected": "",
-			"published": ""
+			"accepted": "قبلت",
+			"archived": "مؤرشف",
+			"closed": "مغلق",
+			"draft": "مسودة",
+			"pendingReview": "قيد المراجعة",
+			"preSelected": "مختارة مسبقاً",
+			"published": "نشرت"
 		},
-		"statusFilterLabel": "",
-		"statusFilterPlaceholder": "",
-		"teamOf": "",
-		"unknownSponsor": ""
+		"statusFilterLabel": "تصفية حسب الحالة",
+		"statusFilterPlaceholder": "جميع الحالات",
+		"teamOf": "فريق من {{size}}",
+		"unknownSponsor": "مجهول"
 	},
 	"nav": {
 		"connect": "يتصل",
 		"exploreOpportunities": "استكشف الفرص",
-		"mainNavAriaLabel": "",
+		"mainNavAriaLabel": "ربط الأقسام",
 		"matches": "المباريات",
 		"matchingRounds": "جولات متطابقة",
 		"myMatchedStudents": "طلابي المتطابقون",
@@ -611,8 +611,8 @@
 		"wordCountTemplate": "{{count}} / {{max}} كلمة",
 		"workflow": {
 			"context": {
-				"archived": "",
-				"closed": "",
+				"archived": "هذه الفرصة مؤرشفة.",
+				"closed": "انتهت هذه الفرصة.",
 				"published": "تم نشر هذه الفرصة للطلاب.",
 				"sponsorFollowUp": "أكمل استبيان المتابعة أدناه.",
 				"sponsorScope": "أكمل نطاق المشروع أدناه.",
@@ -648,43 +648,43 @@
 		}
 	},
 	"organizationsDetail": {
-		"about": "",
-		"back": "",
-		"loading": "",
-		"members": "",
-		"membersHelper": "",
-		"noOpportunities": "",
-		"notFound": "",
-		"opportunities": "",
-		"solo": "",
-		"teamOf": "",
-		"unknownMember": "",
-		"website": ""
+		"about": "عن",
+		"back": "خلف",
+		"loading": "جارٍ تحميل المنظمة...",
+		"members": "أعضاء",
+		"membersHelper": "الأشخاص في {{name}} الذين يديرون هذه المنظمة على منصة MindHive.",
+		"noOpportunities": "لم ينشر{{name}} أي فرص حتى الآن.",
+		"notFound": "لم يتم العثور على المنظمة.",
+		"opportunities": "فرص",
+		"solo": "منفرد",
+		"teamOf": "فريق من {{size}}",
+		"unknownMember": "مجهول",
+		"website": "موقع إلكتروني"
 	},
 	"organizationsList": {
-		"description": "",
-		"domainFilterLabel": "",
-		"domainFilterPlaceholder": "",
+		"description": "تصفح الرعاة الذين يستضيفون فرصًا على منصة MindHive Connect - اطلع على مهمتهم، والفريق الذي يقف وراءهم، وكل مشروع قاموا بنشره.",
+		"domainFilterLabel": "تصفية حسب النطاق",
+		"domainFilterPlaceholder": "جميع النطاقات",
 		"domains": {
-			"academic": "",
-			"government": "",
-			"industry": "",
-			"nonprofit": "",
-			"other": ""
+			"academic": "مؤسسة أكاديمية",
+			"government": "وكالة حكومية",
+			"industry": "الصناعة / الشركات الناشئة",
+			"nonprofit": "منظمة غير ربحية",
+			"other": "آخر"
 		},
-		"emptyFiltered": "",
-		"loading": "",
-		"next": "",
+		"emptyFiltered": "لا توجد منظمات تتطابق مع المعايير الحالية.",
+		"loading": "تحميل...",
+		"next": "التالي",
 		"opportunityCount": {
-			"many": "",
-			"one": ""
+			"many": "{{count}} فرص",
+			"one": "{{count}} فرصة"
 		},
-		"pageTitle": "",
-		"paginationInfo": "",
-		"paginationLabel": "",
-		"previous": "",
-		"searchLabel": "",
-		"searchPlaceholder": ""
+		"pageTitle": "المنظمات",
+		"paginationInfo": "الصفحة {{page}} من {{totalPages}} · {{total}} إجمالي",
+		"paginationLabel": "ترقيم صفحات المنظمات",
+		"previous": "سابق",
+		"searchLabel": "ابحث عن النساء",
+		"searchPlaceholder": "ابحث عن المنظمات..."
 	},
 	"passionNow": "ما الذي أنت شغوف به في الوقت الحالي؟",
 	"preferences": {
@@ -735,10 +735,10 @@
 		"title": "مشاركتك"
 	},
 	"profileCard": {
-		"defaultCommunity": "",
-		"defaultName": "",
-		"defaultSummary": "",
-		"viewProfile": ""
+		"defaultCommunity": "مجتمع مايندهيف",
+		"defaultName": "عضو في MindHive",
+		"defaultSummary": "انقر لعرض الملف الشخصي",
+		"viewProfile": "عرض ملف تعريف {{name}}"
 	},
 	"profileType": {
 		"chooseType": "اختر نوع ملفك الشخصي",
@@ -754,15 +754,15 @@
 	},
 	"returnDashboard": "العودة إلى لوحة المعلومات",
 	"roleGuard": {
-		"backLink": "",
-		"description": "",
+		"backLink": "العودة إلى صفحة الاتصال",
+		"description": "لا يملك حسابك صلاحية الوصول إلى هذا القسم بعد. إذا كنت تعتقد أن هذا خطأ، فاسأل معلمك أو أحد المشرفين.",
 		"roles": {
-			"admin": "",
-			"mentor": "",
-			"student": "",
-			"teacher": ""
+			"admin": "المسؤولون",
+			"mentor": "الموجهون",
+			"student": "طلاب",
+			"teacher": "مُعلّم"
 		},
-		"title": ""
+		"title": "هذه المنطقة مخصصة لـ {{roles}}"
 	},
 	"savedConnections": "الاتصالات المحفوظة",
 	"savedConnectionsSubtitle": "ابحث من خلال اتصالاتك للعثور على المتعاون أو المرشد أو العالم المثالي لك.",

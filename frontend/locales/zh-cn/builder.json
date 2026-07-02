@@ -1,6 +1,7 @@
 {
 	"actionCard": {
 		"clickToSubmit": "点击提交 {{title}}",
+		"customStep": "复习步骤",
 		"dataCollection": "数据收集",
 		"deleteCardConfirmation": "您确定要删除此卡吗？此操作无法撤消。",
 		"deleteConfirm": "您确定要删除此卡吗？此操作无法撤消。",
@@ -8,6 +9,7 @@
 		"projectReport": "项目报告",
 		"proposalFeedback": "提案反馈",
 		"submitFor": "提交 {{title}}",
+		"submitForCustomMilestone": "提交审核",
 		"submitForDataCollection": "提交数据收集",
 		"submitForPeerFeedback": "提交同行反馈",
 		"submitForProjectReport": "提交项目报告",
@@ -26,7 +28,7 @@
 	"assigned": {
 		"addUser": "添加人员",
 		"assignCard": "将此卡片分配给此项目的合作者",
-		"canAssignTooltip": "",
+		"canAssignTooltip": "您可以为这张卡片分配个人资料。",
 		"cancel": "取消",
 		"noCollaborators": "该董事会暂无合作者。",
 		"noUsersFound": "未找到个人资料",
@@ -56,6 +58,8 @@
 			"close": "关闭",
 			"connect": "连接",
 			"content": "内容",
+			"customMilestone": "自定义审核步骤",
+			"customMilestoneDescription": "此模板中定义了自定义审核步骤。",
 			"disconnect": "断开",
 			"done": "完成的",
 			"linkItems": "链接项目",
@@ -510,19 +514,19 @@
 				"barPlot": {
 					"columnsToPlot": "要绘制的列",
 					"dataFormat": {
-						"chipLong": "",
-						"chipWide": "",
+						"chipLong": "长的",
+						"chipWide": "宽的",
 						"googleSlidesAlt": "谷歌幻灯片",
 						"hintLong": "如果要比较各列，请点击这里。",
 						"hintWide": "如果要比较同一列（变量）的不同组，请点击此处。",
 						"longDescription": "数据以每项观测值（例如学生的考试分数）单独占一行的方式组织，通常还会有一列标明类别（例如科目）。这种格式有利于跨类别进行详细分析。",
 						"longTitle": "长数据格式",
-						"panelRegionAriaLabel": "",
+						"panelRegionAriaLabel": "更改数据布局：所选格式的图表和资源",
 						"sectionLabel": "数据布局",
 						"slidesLink": "点击此处查看讲义幻灯片",
 						"switchToLong": "切换到长格式",
 						"switchToWide": "切换到宽幅格式",
-						"toggleAriaLabel": "",
+						"toggleAriaLabel": "显示或隐藏数据布局选项",
 						"wideDescription": "数据按类别（例如科目）单独列排列，每列通常代表一个观察值（例如学生）。这种格式便于在同一类别内快速比较。",
 						"wideTitle": "宽数据格式"
 					},
@@ -704,12 +708,12 @@
 					"rankSectionTitle": "对你的条件进行排序",
 					"resources": {
 						"experimentalHypothesis": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "参考资料即将发布。",
+							"title": "什么是实验假设？"
 						},
 						"rankOrdering": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "参考资料即将发布。",
+							"title": "预测排名"
 						}
 					},
 					"sectionHypothesisTitle": "你的实验假设",
@@ -734,12 +738,12 @@
 				},
 				"common": {
 					"help": {
-						"ariaLabel": "",
-						"resourcesIntro": ""
+						"ariaLabel": "资源和帮助",
+						"resourcesIntro": "如果提供链接，请使用下面的按钮在新标签页中打开参考文献。"
 					},
 					"resources": {
-						"noLink": "",
-						"openLinkHint": ""
+						"noLink": "无外部链接",
+						"openLinkHint": "点击此处访问资源"
 					}
 				},
 				"corr": {
@@ -762,12 +766,12 @@
 					"loadingBlocks": "正在加载数据块...",
 					"resources": {
 						"correlationalHypothesis": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "参考资料即将发布。",
+							"title": "什么是相关性假设？"
 						},
 						"directionality": {
-							"subtitle": "",
-							"title": ""
+							"subtitle": "参考资料即将发布。",
+							"title": "选择方向性术语"
 						}
 					},
 					"sectionTitle": "你的相关性假设",
@@ -775,20 +779,20 @@
 					"willBeRelatedTo": "将与"
 				},
 				"default": {
-					"group": "",
+					"group": "团体",
 					"header": {
-						"iconAlt": "",
-						"title": ""
+						"iconAlt": "轴",
+						"title": "轴"
 					},
-					"xAxis": "",
-					"yAxis": ""
+					"xAxis": "X轴",
+					"yAxis": "Y轴"
 				}
 			},
 			"editor": {
 				"codeTab": "代码",
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "代码",
+					"variables": "变量"
 				},
 				"variablesTab": "变量"
 			},
@@ -808,8 +812,8 @@
 			"widgetSettings": "小部件设置"
 		},
 		"sideNav": {
-			"addComponent": "",
-			"addComponentAria": "",
+			"addComponent": "成分",
+			"addComponentAria": "向此工作区添加组件",
 			"addJournal": "杂志",
 			"addJournalScratch": "从零开始创建一本日记",
 			"addJournalTemplate": "添加日志模板",
@@ -966,103 +970,103 @@
 		"statTest": {
 			"axes": {
 				"anova": {
-					"columnsToAnova": "",
+					"columnsToAnova": "方差分析中要包含的列",
 					"dataFormat": {
-						"currentlyPerforming": "",
+						"currentlyPerforming": "当前正在执行：",
 						"long": {
-							"description": "",
-							"title": ""
+							"description": "在上面的示例中，我们将选择“attrib”列作为分组列。此分组基于“value”列执行，该列包含条件 c1、c2 和 c3 的值。",
+							"title": "改用标签列对值列的行进行排序"
 						},
 						"summaryLong": {
-							"hint": "",
-							"main": ""
+							"hint": "（点击此处可切换至比较不同列中的值）",
+							"main": "对包含值的列进行单因素方差分析，分组列包含每行的组标签。"
 						},
 						"summaryWide": {
-							"between": "",
-							"columns": "",
-							"hint": "",
-							"prefix": ""
+							"between": "之间",
+							"columns": "三列或更多列。",
+							"hint": "（点击此处使用标签列，按唯一标签对每行进行分组）",
+							"prefix": "单因素方差分析"
 						},
 						"wide": {
-							"description": "",
-							"title": ""
+							"description": "在上面的例子中，我们将选择列 c1、c2 和 c3 对它们进行单因素方差分析。",
+							"title": "切换到对三列或更多列执行单因素方差分析"
 						}
 					},
-					"groupingColumn": "",
-					"quantitativeColumn": "",
+					"groupingColumn": "分组列",
+					"quantitativeColumn": "定量柱",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "外部链接",
+						"scribbrLinkTitle": "什么是单因素方差分析？"
 					}
 				},
 				"common": {
 					"dataFormat": {
-						"chipLong": "",
-						"chipWide": "",
-						"panelRegionAriaLabel": "",
-						"sectionLabel": "",
-						"toggleAriaLabel": ""
+						"chipLong": "长的",
+						"chipWide": "宽的",
+						"panelRegionAriaLabel": "数据布局：所选格式的图表",
+						"sectionLabel": "数据布局",
+						"toggleAriaLabel": "显示或隐藏数据布局选项"
 					},
 					"header": {
-						"iconAlt": "",
-						"title": ""
+						"iconAlt": "轴",
+						"title": "轴"
 					},
 					"help": {
-						"ariaLabel": "",
-						"resourcesIntro": ""
+						"ariaLabel": "资源和帮助",
+						"resourcesIntro": "请参考以下资源，了解有关此组件的更多信息。"
 					},
 					"resources": {
-						"noLink": "",
-						"openLinkHint": "",
-						"sectionTitle": ""
+						"noLink": "无外部链接",
+						"openLinkHint": "点击此处访问资源",
+						"sectionTitle": "资源"
 					}
 				},
 				"default": {
-					"column1": "",
-					"column2": ""
+					"column1": "第一列",
+					"column2": "第二列"
 				},
 				"pearson": {
-					"predictedColumn": "",
-					"predictorColumn": "",
+					"predictedColumn": "预测列",
+					"predictorColumn": "预测列",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "外部链接",
+						"scribbrLinkTitle": "什么是皮尔逊相关系数"
 					}
 				},
 				"tTest": {
-					"col1": "",
-					"col2": "",
+					"col1": "第一列",
+					"col2": "第二列",
 					"dataFormat": {
-						"currentlyPerforming": "",
+						"currentlyPerforming": "当前正在执行：",
 						"long": {
-							"description": "",
-							"title": ""
+							"description": "在上面的示例中，我们将选择“attrib”列作为分组列。此分组基于“value”列执行，该列包含两种条件下的值。",
+							"title": "改用标签列对值列的行进行排序"
 						},
 						"summaryLong": {
-							"main": ""
+							"main": "对包含值的列进行 t 检验，使用包含每行标签的分组列进行分组。"
 						},
 						"summaryWide": {
-							"between": "",
-							"columns": "",
-							"prefix": ""
+							"between": "之间",
+							"columns": "两列。",
+							"prefix": "T检验"
 						},
 						"wide": {
-							"description": "",
-							"title": ""
+							"description": "在上面的例子中，我们将选择列 c1 和 c2 对它们进行 t 检验。",
+							"title": "切换到对两列进行 T 检验"
 						}
 					},
-					"groupingColumn": "",
-					"quantitativeColumn": "",
+					"groupingColumn": "分组列",
+					"quantitativeColumn": "定量柱",
 					"resources": {
-						"scribbrLinkAlt": "",
-						"scribbrLinkTitle": ""
+						"scribbrLinkAlt": "外部链接",
+						"scribbrLinkTitle": "独立样本t检验"
 					}
 				}
 			},
 			"editor": {
 				"tabs": {
-					"code": "",
-					"variables": ""
+					"code": "代码",
+					"variables": "变量"
 				}
 			},
 			"emptyState": {
@@ -1070,9 +1074,9 @@
 				"title": "您的统计检验已准备就绪，可以进行配置了。"
 			},
 			"fields": {
-				"clearSelection": "",
-				"selectPlaceholder": "",
-				"selectVariablesPlaceholder": ""
+				"clearSelection": "没有任何",
+				"selectPlaceholder": "选择 {{field}}",
+				"selectVariablesPlaceholder": "选择变量"
 			}
 		},
 		"table": {
@@ -1224,7 +1228,7 @@
 		"allowMovingCards": "允许移动卡片",
 		"allowMovingSections": "允许移动部分",
 		"cancel": "取消",
-		"classTemplateReadOnly": "",
+		"classTemplateReadOnly": "班级模板（班级委员会使用）",
 		"collaborators": "合作者",
 		"copyLink": "复制学习链接",
 		"createYourStudyProposal": "在此创建您的研究计划以开始您的研究之旅",
@@ -1381,7 +1385,7 @@
 		"noNotes": "尚未输入任何注释。右键单击即可添加注释。"
 	},
 	"noVideoPlaceholder": "暂无介绍视频。",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "学生不能自行将卡片分配给他人。",
 	"overview": {
 		"actions": "行动",
 		"copy": "复制",
@@ -1515,7 +1519,7 @@
 		"boardTypeMentorNote": "这对于导师向学生委员会提供反馈意见至关重要。如有任何疑问，请联系 MindHive 成员。",
 		"boardTypeMindHive": "",
 		"boardTypeYouQuantified": "",
-		"classTemplateLabel": "",
+		"classTemplateLabel": "此板为课堂模板",
 		"copy": "复制",
 		"create": "创建新提案",
 		"dateCreated": "创建日期",
@@ -1605,11 +1609,11 @@
 			"assignedTo": {
 				"disable": "禁用将学生分配到卡片",
 				"disableStudentsAssign": "仅限教师和导师",
-				"empty": "",
+				"empty": "该董事会目前还没有指定人员。",
 				"enable": "启用将学生分配到卡片",
 				"enableStudentsAssign": "允许学生分配卡片"
 			},
-			"emptyState": "",
+			"emptyState": "没有卡片符合所选筛选条件。请调整您的状态、审核步骤或已分配的筛选条件以查看卡片。",
 			"reviewSteps": "复习步骤",
 			"title": "过滤"
 		}
@@ -1864,6 +1868,66 @@
 		"card": "卡片",
 		"cards": "牌",
 		"cardsCount": "{{count}} 张卡{{count == 1 ? '' : 's'}}",
+		"createCardModal": {
+			"alreadyAddedLabel": "{{label}} （已添加）",
+			"alreadyAddedTooltip": "这个检查点已经标记在棋盘上了。",
+			"cancel": "取消",
+			"categories": {
+				"action": "行动",
+				"proposal": "求婚卡"
+			},
+			"create": "创造",
+			"creating": "正在创建...",
+			"custom": {
+				"canReview": "谁可以审核",
+				"cloneFrom": "复制现有表单",
+				"description": "描述",
+				"fromScratch": "从零开始",
+				"label": "行动标签",
+				"labelPlaceholder": "输入操作标签",
+				"selectSource": "表格副本",
+				"selectSourcePlaceholder": "选择复习步骤"
+			},
+			"customPreview": "创建带有自定义里程碑标签的自定义审核步骤。",
+			"editForm": "编辑表单",
+			"editFormHint": "表单编辑功能可在其他地方使用。",
+			"formTemplate": {
+				"blank": "空白表格",
+				"defaultLabel": "{{label}}",
+				"label": "表单模板"
+			},
+			"milestone": {
+				"actionLabel": "行动标签",
+				"configureFormNext": "下一步将配置审核表单。",
+				"description": "描述"
+			},
+			"newCheckpoint": "+ 新行动卡",
+			"noPreview": "此卡片类型未关联任何评价表单。",
+			"previewLabel": "审核表单预览",
+			"previewLoading": "正在加载预览...",
+			"proposalPreview": "为学生添加带有内容字段的常规提案卡。",
+			"scratchPreview": "创建一个包含一张空白卡片的草稿审核表单，并将其链接到此步骤。在表单出现在审核流程之前，请先在管理后台发布该表单。",
+			"steps": {
+				"cardType": "卡类型",
+				"checkpoint": "检查点",
+				"milestone": "里程碑",
+				"permissions": "权限和表单模板"
+			},
+			"templateSourceLabel": "{{title}} （自定义）",
+			"title": "创建新卡片",
+			"titleLabel": "卡片标题",
+			"titlePlaceholder": "输入卡片标题",
+			"typeLabel": "卡类型",
+			"typePlaceholder": "选择卡片类型",
+			"types": {
+				"actionCollectingData": "默认操作：开始收集数据",
+				"actionPeerFeedback": "默认操作：提交以获取同伴反馈",
+				"actionProjectReport": "默认操作：提交项目报告",
+				"actionSubmit": "默认操作：提交以获取提案反馈",
+				"custom": "创建您自己的复习步骤",
+				"proposal": "求婚卡"
+			}
+		},
 		"deleteSectionConfirm": "您确定要删除此提案部分吗？此部分中的所有卡片也将被删除。此操作无法撤消。",
 		"enterNewTitle": "请输入标题",
 		"newCard": "新卡",
@@ -2137,18 +2201,30 @@
 		"uploadLabjs": "请先上传 lab.js json 文件",
 		"vasBuilder": "增值服务构建器"
 	},
+	"templateMilestones": {
+		"addStep": "添加审核步骤",
+		"cancel": "取消",
+		"canReview": "谁可以审核",
+		"create": "创建步骤",
+		"deactivate": "停用",
+		"description": "向此课程模板添加自定义复习步骤。每个步骤都会生成一张行动卡，学生可以使用该卡片提交作业以获得反馈。",
+		"hasActionCard": "链接的行动卡",
+		"stepDescription": "描述",
+		"stepTitle": "步骤标题",
+		"title": "复习步骤"
+	},
 	"templateTab": "模板",
 	"testAndCollect": "测试和收集",
 	"tiptap": {
 		"insertImageAria": "插入图片",
 		"insertImagePrompt": "请输入图片网址：",
 		"mediaCancelEdit": "取消",
-		"mediaCanvaExportThumb": "",
+		"mediaCanvaExportThumb": "Canva PDF导出",
 		"mediaDelete": "删除",
 		"mediaDeleteConfirm": "是否从媒体库中删除此媒体？已添加到内容中的图像可能会显示为损坏状态。",
 		"mediaDeleteFailed": "无法删除此媒体文件。",
 		"mediaDescriptionPlaceholder": "可以添加备注。",
-		"mediaDownloadPdf": "",
+		"mediaDownloadPdf": "下载 PDF",
 		"mediaEdit": "编辑",
 		"mediaEditFieldsRequired": "标题和文件名不能为空。",
 		"mediaEditMeta": "编辑详细信息",

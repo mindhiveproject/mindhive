@@ -9,7 +9,7 @@
 		"action": "Actie",
 		"actions": "Acties",
 		"addAssignment": "Opdracht toevoegen",
-		"bulkActions": "",
+		"bulkActions": "Bulkacties",
 		"bulkActionsModal": {
 			"applying": "Aanvragen…",
 			"applyToCount": "Solliciteer op {{count}} opdrachten",
@@ -66,7 +66,7 @@
 		"dateUpdated": "Datum bijgewerkt",
 		"delete": "Verwijderen",
 		"deleteConfirm": "Weet u zeker dat u deze toewijzing wilt verwijderen?",
-		"edit": "",
+		"edit": "Bewerking",
 		"editAssignment": "Opdracht bewerken",
 		"editSuccess": "Opdracht succesvol bijgewerkt!",
 		"error": "Fout",
@@ -102,10 +102,10 @@
 		"placeholder": "Maak een plaatshouder voor je leerlingen om hun huiswerk mee te beginnen ...",
 		"placeholderDescription": "Tijdelijke aanduiding gepresenteerd aan studenten",
 		"placeholderInstructions": "Schrijf een tijdelijke aanduiding voor het antwoordvak van uw studenten",
-		"preview": "",
+		"preview": "Voorbeeld",
 		"projectCard": "Projectkaart",
-		"publish": "",
-		"published": "",
+		"publish": "Publiceren",
+		"published": "Gepubliceerd",
 		"publishToStudents": "Publiceren voor studenten",
 		"publishUnpublish": "Publiceren/Depubliceren",
 		"removeCardColumnFilter": "Verwijder het kaart-/kolomfilter",
@@ -123,7 +123,7 @@
 		"showLinkedProjectCards": "Show linked project cards",
 		"startFromScratch": "Begin helemaal opnieuw.",
 		"startFromScratchDescription": "Maak een gloednieuwe opdracht met volledige controle over de titel, instructies en voorbeeldtekst. Ideaal voor iets dat volledig uniek is voor jouw klas.",
-		"status": "",
+		"status": "Toestand",
 		"studentEntry": "Inzending van de student",
 		"submit": "Indienen",
 		"submitConfirm": "Weet je zeker dat je deze opdracht wilt inleveren? De opdracht is zichtbaar voor de studenten.",
@@ -132,13 +132,13 @@
 		"titlePlaceholder": "Voer de titel van de opdracht in...",
 		"typeClassName": "Type klassenaam",
 		"unpublish": "Niet publiceren",
-		"unpublished": "",
+		"unpublished": "Niet gepubliceerd",
 		"unsavedChanges": "Niet-opgeslagen wijzigingen!",
 		"visibleForStudents": "De opdracht is zichtbaar voor studenten"
 	},
 	"assignments": {
-		"noAssignments": "",
-		"open": ""
+		"noAssignments": "Geen opdrachten beschikbaar",
+		"open": "Open"
 	},
 	"assignmentsTab": "Opdrachten",
 	"board": {
@@ -422,7 +422,7 @@
 	"classNetworks": "Klassenetwerken",
 	"collaborators": "Medewerker(s)",
 	"common": {
-		"errorLoading": "",
+		"errorLoading": "Fout bij het laden van de toewijzing",
 		"loading": "Bezig met laden..."
 	},
 	"create": {
@@ -653,13 +653,13 @@
 	},
 	"myClasses": "Mijn lessen",
 	"noAccessTo": "U heeft geen toegang tot:",
-	"noAssignments": "",
+	"noAssignments": "Er zijn geen opdrachten beschikbaar.",
 	"noClasses": "Je hebt nog geen lessen gevolgd.",
-	"noResources": "",
+	"noResources": "Geen publieke middelen.",
 	"noStudies": "De studenten hebben nog geen studies gemaakt.",
 	"noteNewStudents": "Let op: Nieuwe studenten kunnen niet aan uw klas deelnemen",
 	"numberOfStudents": "Aantal studenten",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "Alleen docenten en mentoren kunnen kaarten toewijzen.",
 	"participants": "Deelnemers",
 	"pleaseTypeDelete": "Typ DELETE om uw klas te verwijderen",
 	"projectBoard": {
@@ -801,7 +801,7 @@
 		"goBack": "Ga terug naar de les",
 		"username": "Gebruikersnaam"
 	},
-	"studentsCanAssignCards": "",
+	"studentsCanAssignCards": "Leerlingen kunnen kaarten toewijzen.",
 	"studentsTab": {
 		"addToClass": "Toevoegen aan klas",
 		"assignToClass": "Weet je zeker dat je deze leerling aan de andere klas wilt toewijzen?",
@@ -827,7 +827,7 @@
 	"studies": {
 		"collaborators": "Medewerker(s)",
 		"dateCreated": "Datum aangemaakt",
-		"listDescription": "",
+		"listDescription": "{{count}} studies gemaakt door studenten in deze klas.",
 		"noStudiesYet": "De studenten hebben nog geen studies aangemaakt.",
 		"participants": "Deelnemers",
 		"studyBuilder": "Studiebouwer",
@@ -852,7 +852,7 @@
 		"lastUpdated": "Laatst bijgewerkt",
 		"needsFeedback": "Feedback nodig",
 		"notStarted": "Niet gestart",
-		"requestFeedback": "",
+		"requestFeedback": "Vraag om feedback",
 		"saveAndClose": "Opslaan en sluiten",
 		"saving": "Opslaan ...",
 		"selectStatus": "Selecteer status",

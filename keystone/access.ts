@@ -358,6 +358,22 @@ export const rules = {
       },
     };
   },
+  // Template-scoped milestones: admins, canManageForms, or class creators
+  // whose class uses the linked template board.
+  milestoneMutate({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManageUsers({ session })) return true;
+    if (permissions.canManageForms({ session })) return true;
+    const me = session.itemId;
+    return {
+      scope: { equals: "template" },
+      templateBoard: {
+        templateForClasses: {
+          some: { creator: { id: { equals: me } } },
+        },
+      },
+    };
+  },
   // For mutate operations on the above lists: only the owner or admin.
   // The relevant owner-field name is passed via closure.
   connectOwnerMutate(ownerField: string) {

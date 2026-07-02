@@ -189,6 +189,8 @@ export const CREATE_CARD = gql`
     $position: Float!
     $settings: JSON
     $publicId: String
+    $type: String
+    $milestone: MilestoneRelateToOneForCreateInput
   ) {
     createProposalCard(
       data: {
@@ -198,14 +200,20 @@ export const CREATE_CARD = gql`
         position: $position
         settings: $settings
         publicId: $publicId
+        type: $type
+        milestone: $milestone
       }
     ) {
       id
       title
       content
+      type
       position
       settings
       publicId
+      milestone {
+        id
+      }
       section {
         id
       }
@@ -323,6 +331,13 @@ export const UPDATE_PROJECT_BOARD = gql`
   mutation UPDATE_PROJECT_BOARD($id: ID!, $input: ProposalBoardUpdateInput!) {
     updateProposalBoard(where: { id: $id }, data: $input) {
       id
+      milestoneStatus
+      submitProposalStatus
+      submitProposalOpenForComments
+      peerFeedbackStatus
+      peerFeedbackOpenForComments
+      projectReportStatus
+      projectReportOpenForComments
     }
   }
 `;

@@ -19,6 +19,15 @@ const BASELINE_KEYS = [
   "opportunity",
   "profile_individual",
   "profile_organization",
+  "review_SUBMITTED_AS_PROPOSAL_mindhive",
+  "review_PEER_REVIEW_mindhive",
+  "review_PROJECT_REPORT_mindhive",
+  "review_SUBMITTED_AS_PROPOSAL_youquantified",
+  "review_PEER_REVIEW_youquantified",
+  "review_PROJECT_REPORT_youquantified",
+  "review_SUBMITTED_AS_PROPOSAL_nyu_cusp",
+  "review_PEER_REVIEW_nyu_cusp",
+  "review_PROJECT_REPORT_nyu_cusp",
 ];
 
 const Shell = styled.div`
@@ -323,7 +332,7 @@ export default function ListPage() {
           <h2>Seed default forms</h2>
           <p>
             {missingBaselines.length === BASELINE_KEYS.length
-              ? "Nothing seeded yet. Click below to install the default forms (Opportunity, Profile — individual, Profile — organization). They publish as version 1 immediately."
+              ? "Nothing seeded yet. Click below to install the default forms (Opportunity, Profile — individual, Profile — organization, and review forms for proposal, peer, and project report across MindHive, YouQuantified, and NYU CUSP). They publish as version 1 immediately."
               : "Some default forms are missing. Clicking below will only install the ones that don't already exist — your edited definitions stay untouched."}
           </p>
           <ul>

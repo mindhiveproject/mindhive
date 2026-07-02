@@ -18,9 +18,17 @@ import unfollowUser from "./unfollowUser";
 import resolveFormDefinition from "./resolveFormDefinition";
 import seedOpportunityForm from "./seedOpportunityForm";
 import seedProfileForms from "./seedProfileForms";
+import seedReviewForms from "./seedReviewForms";
 import seedMissingForms from "./seedMissingForms";
 import duplicateFormDefinition from "./duplicateFormDefinition";
 import publishFormDefinition from "./publishFormDefinition";
+import seedMilestones from "./seedMilestones";
+import seedMissingMilestones from "./seedMissingMilestones";
+import backfillMilestoneStatus from "./backfillMilestoneStatus";
+import resolveMilestonesForBoard from "./resolveMilestonesForBoard";
+import createTemplateMilestone from "./createTemplateMilestone";
+import updateTemplateMilestone from "./updateTemplateMilestone";
+import backfillLinkActionCardsToMilestones from "./backfillLinkActionCardsToMilestones";
 import { GraphQLSchema } from "graphql";
 
 // make a fake gql tagged template literal
@@ -88,6 +96,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # One-off seeder for global Profile FormDefinitions (individual
         # variant in Phase 5; organization variant in Phase 5b).
         seedProfileForms(force: Boolean): [FormDefinition!]!
+        # One-off seeder for global Review FormDefinitions (3 stages × 3
+        # curricula). Idempotent unless force=true (which deletes and
+        # recreates).
+        seedReviewForms(force: Boolean): [FormDefinition!]!
         # Self-service seeder for the admin UI. Inserts only baseline
         # definitions that don't already exist — never clobbers
         # admin-edited definitions. Returns the list of inserted rows
@@ -100,8 +112,43 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # organization, classNetwork) tuple. Optionally records a
         # changelog entry on the published row.
         publishFormDefinition(id: ID!, changelog: String): FormDefinition
+        # One-off seeder for baseline Milestone inventory.
+        # Idempotent unless force=true (which deletes and recreates).
+        seedMilestones(force: Boolean): [Milestone!]!
+        # Self-service seeder for the admin UI. Inserts only baseline
+        # milestones that don't already exist — never clobbers edits.
+        seedMissingMilestones: [Milestone!]!
+        # Backfill ProposalBoard.milestoneStatus from legacy columns.
+        backfillMilestoneStatus(limit: Int, dryRun: Boolean): Int!
+        backfillLinkActionCardsToMilestones(limit: Int, dryRun: Boolean): Int!
+        createTemplateMilestone(input: CreateTemplateMilestoneInput!): Milestone
+        updateTemplateMilestone(input: UpdateTemplateMilestoneInput!): Milestone
+      }
+      input CreateTemplateMilestoneInput {
+        templateBoardId: ID!
+        title: String!
+        description: String
+        formDefinitionId: ID
+        sourceFormDefinitionKey: String
+        clonedFromMilestoneId: ID
+        canReviewPermissionIds: [ID!]
+        canReviewPermissionNames: [String!]
+        showInFeedbackCenter: Boolean
+        statusTarget: String
+        sectionId: ID
+      }
+      input UpdateTemplateMilestoneInput {
+        id: ID!
+        title: String
+        description: String
+        formDefinitionId: ID
+        canReviewPermissionIds: [ID!]
+        showInFeedbackCenter: Boolean
+        isActive: Boolean
+        position: Int
       }
       extend type Query {
+        resolveMilestonesForBoard(boardId: ID!): [Milestone!]!
         # Resolve the most-specific published FormDefinition for the
         # current viewer's scope. Pass organizationId / classNetworkId
         # when known to allow per-org or per-network overrides; otherwise
@@ -117,6 +164,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
     resolvers: {
       Query: {
         resolveFormDefinition,
+        resolveMilestonesForBoard,
       },
       Mutation: {
         sendEmail,
@@ -136,9 +184,16 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         unfollowUser,
         seedOpportunityForm,
         seedProfileForms,
+        seedReviewForms,
         seedMissingForms,
         duplicateFormDefinition,
         publishFormDefinition,
+        seedMilestones,
+        seedMissingMilestones,
+        backfillMilestoneStatus,
+        backfillLinkActionCardsToMilestones,
+        createTemplateMilestone,
+        updateTemplateMilestone,
       },
     },
   });

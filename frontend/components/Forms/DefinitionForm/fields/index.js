@@ -19,6 +19,9 @@ import VideoUrl from "./VideoUrl";
 import RichText from "./RichText";
 import JsonArray from "./JsonArray";
 import TagMultiselect from "./TagMultiselect";
+import SelectOneIcon from "./SelectOneIcon";
+import TaskSelectorField from "./TaskSelectorField";
+import DualTextarea from "./DualTextarea";
 import { FieldShell } from "../styles";
 import { fieldLabel } from "../i18n";
 
@@ -49,6 +52,9 @@ const REGISTRY = {
   rich_text: RichText,
   json_array: JsonArray,
   tag_multiselect: TagMultiselect,
+  select_one_icon: SelectOneIcon,
+  task_selector: TaskSelectorField,
+  dual_textarea: DualTextarea,
 };
 
 export function getFieldComponent(fieldType) {

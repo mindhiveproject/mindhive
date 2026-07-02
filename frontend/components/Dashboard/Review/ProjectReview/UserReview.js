@@ -1,7 +1,8 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { useRouter } from "next/router";
 
 import { GET_REVIEW } from "../../../Queries/Review";
 
@@ -12,6 +13,10 @@ import Questions from "./Review/Main";
 import useForm from "../../../../lib/useForm";
 
 import { useTemplateQuestions } from "./Review/Template";
+import {
+  useReviewFormDefinition,
+  reviewContentFromFormDefinition,
+} from "./Review/MilestoneReviewForm";
 import Feedback from "../Feedback/Main";
 import {
   getCurriculumType,
@@ -26,9 +31,27 @@ export default function UserReview({
   status,
   actionCardType,
   canReview,
+  milestone,
 }) {
   const { t } = useTranslation("builder");
+  const router = useRouter();
+  const locale = router.locale || "en-us";
   const curriculumType = getCurriculumType(project);
+
+  const scopeContext = useMemo(
+    () => ({
+      organizationId: project?.usedInClass?.creator?.organization?.id || null,
+      classNetworkId: project?.usedInClass?.networks?.[0]?.id || null,
+    }),
+    [project]
+  );
+
+  const { definition, loading: definitionLoading } = useReviewFormDefinition(
+    status,
+    curriculumType,
+    scopeContext,
+    { milestone }
+  );
 
   const { data } = useQuery(GET_REVIEW, {
     variables: {
@@ -43,7 +66,17 @@ export default function UserReview({
   const review = reviews.length ? reviews[0] : {};
 
   const templates = useTemplateQuestions(curriculumType);
-  const defaultContent = templates[status] || [];
+  const templateFallback = templates[status] || [];
+  const defaultContent = useMemo(() => {
+    if (definition) {
+      return reviewContentFromFormDefinition(
+        review?.content,
+        definition,
+        locale
+      );
+    }
+    return templateFallback;
+  }, [definition, review?.content, locale, templateFallback]);
 
   const { inputs, handleChange, resetForm, handleMultipleUpdate } = useForm(
     {
@@ -57,18 +90,25 @@ export default function UserReview({
   );
 
   useEffect(() => {
-    if (!defaultContent?.length) {
+    if (!defaultContent?.length || definitionLoading) {
       return;
     }
-    const merged = mergeReviewContentWithTemplate(
-      review?.content,
-      defaultContent
-    );
+    const merged = definition
+      ? defaultContent
+      : mergeReviewContentWithTemplate(review?.content, defaultContent);
     handleMultipleUpdate({
       id: review?.id,
       content: merged,
     });
-  }, [review?.id, review?.content, curriculumType, status]);
+  }, [
+    review?.id,
+    review?.content,
+    curriculumType,
+    status,
+    definition,
+    definitionLoading,
+    defaultContent,
+  ]);
 
   const handleItemChange = ({ className, name, value }) => {
     const updatedContent = [...inputs?.content];

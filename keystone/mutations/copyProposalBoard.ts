@@ -54,7 +54,7 @@ async function copyProposalBoard(
   const template = await context.query.ProposalBoard.findOne({
     where: { id: id },
     query:
-      "id publicId slug title description isTemplate settings resources { id } templateForClasses { id } sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } assignments { id title content placeholder settings public isTemplate tags { id } } studies { id } tasks { id } } }",
+      "id publicId slug title description isTemplate settings resources { id } templateForClasses { id } sections { id publicId title position cards { id publicId type shareType title description settings position content comment resources { id } assignments { id title content placeholder settings public isTemplate tags { id } } studies { id } tasks { id } milestone { id } } }",
   });
 
   // make a full copy
@@ -146,6 +146,8 @@ async function copyProposalBoard(
         "id"
       );
       // create cards of this section
+      // Milestone FK rules: global milestones are reused by id; template-scoped
+      // milestones stay on the template board (student boards resolve via clonedFrom).
       await Promise.all(
         templateSection.cards.map(async (card: any, i: number) => {
           const templateCard = section.cards[i];
@@ -166,6 +168,13 @@ async function copyProposalBoard(
                 content: templateCard.content,
                 comment: templateCard.comment,
                 position: templateCard.position,
+                ...(templateCard.milestone?.id
+                  ? {
+                      milestone: {
+                        connect: { id: templateCard.milestone.id },
+                      },
+                    }
+                  : {}),
                 resources:
                   templateCard.resources?.length > 0
                     ? {

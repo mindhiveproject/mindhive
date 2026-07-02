@@ -71,6 +71,49 @@ export default function Question({ stage, item, handleItemChange, answer }) {
     );
   }
 
+  if (responseType === "dualTextarea") {
+    const answerObj =
+      answer && typeof answer === "object"
+        ? { subA: answer.subA ?? "", subB: answer.subB ?? "" }
+        : { subA: "", subB: "" };
+
+    const updateSubAnswer = (subKey, value) => {
+      handleItemChange({
+        className: "answer",
+        name: item.name,
+        value: { ...answerObj, [subKey]: value },
+      });
+    };
+
+    return (
+      <div className="reviewItem">
+        <div className="question">{item.question}</div>
+        {item.subQuestionA && (
+          <div className="subtitle">{item.subQuestionA}</div>
+        )}
+        <textarea
+          type="text"
+          id={`${item.name}-subA`}
+          name={`${item.name}-subA`}
+          value={answerObj.subA}
+          className="answer"
+          onChange={({ target }) => updateSubAnswer("subA", target.value)}
+        />
+        {item.subQuestionB && (
+          <div className="subtitle">{item.subQuestionB}</div>
+        )}
+        <textarea
+          type="text"
+          id={`${item.name}-subB`}
+          name={`${item.name}-subB`}
+          value={answerObj.subB}
+          className="answer"
+          onChange={({ target }) => updateSubAnswer("subB", target.value)}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="reviewItem">
       <div>

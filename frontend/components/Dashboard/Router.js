@@ -26,6 +26,7 @@ import ResearchMain from "./Research/Main";
 // admin area
 import ManagementMain from "./Management/Main";
 import AdminFormsMain from "./Admin/Forms/Main";
+import AdminMilestonesMain from "./Admin/Milestones/Main";
 import Profile from "./Profile/Router";
 
 export default function DashboardRouter({ query }) {
@@ -102,6 +103,10 @@ export default function DashboardRouter({ query }) {
 
   if (area === "admin-forms") {
     return <AdminFormsMain query={query} user={user} />;
+  }
+
+  if (area === "admin-milestones") {
+    return <AdminMilestonesMain query={query} user={user} />;
   }
 
   if (area === "tags") {

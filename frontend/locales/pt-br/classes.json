@@ -9,7 +9,7 @@
 		"action": "Ação",
 		"actions": "Ações",
 		"addAssignment": "Adicionar tarefa",
-		"bulkActions": "",
+		"bulkActions": "Ações em massa",
 		"bulkActionsModal": {
 			"applying": "Candidatando-se…",
 			"applyToCount": "Aplicar a {{count}} tarefas",
@@ -66,7 +66,7 @@
 		"dateUpdated": "Data de atualização",
 		"delete": "Excluir",
 		"deleteConfirm": "Tem certeza de que deseja excluir esta tarefa?",
-		"edit": "",
+		"edit": "Editar",
 		"editAssignment": "Editar tarefa",
 		"editSuccess": "Tarefa atualizada com sucesso!",
 		"error": "Erro",
@@ -102,10 +102,10 @@
 		"placeholder": "Crie um espaço reservado para que seus alunos iniciem a lição de casa com ...",
 		"placeholderDescription": "Espaço reservado apresentado aos alunos",
 		"placeholderInstructions": "Escreva um espaço reservado para a caixa de resposta dos seus alunos",
-		"preview": "",
+		"preview": "Visualização",
 		"projectCard": "Cartão do projeto",
-		"publish": "",
-		"published": "",
+		"publish": "Publicar",
+		"published": "Publicados",
 		"publishToStudents": "Publicar para estudantes",
 		"publishUnpublish": "Publicar/Cancelar publicação",
 		"removeCardColumnFilter": "Remover filtro de cartão/coluna",
@@ -123,7 +123,7 @@
 		"showLinkedProjectCards": "Show linked project cards",
 		"startFromScratch": "Comece do zero",
 		"startFromScratchDescription": "Crie uma nova tarefa com controle total sobre o título, as instruções e o conteúdo de exemplo. Ideal para algo completamente exclusivo da sua turma.",
-		"status": "",
+		"status": "Status",
 		"studentEntry": "Entrada do aluno",
 		"submit": "Enviar",
 		"submitConfirm": "Tem certeza de que deseja enviar esta tarefa? Ela ficará visível para os alunos.",
@@ -132,13 +132,13 @@
 		"titlePlaceholder": "Digite o título da tarefa...",
 		"typeClassName": "Nome da classe de tipo",
 		"unpublish": "Despublicar",
-		"unpublished": "",
+		"unpublished": "Não publicado",
 		"unsavedChanges": "Alterações não salvas!",
 		"visibleForStudents": "A tarefa é visível para os alunos"
 	},
 	"assignments": {
-		"noAssignments": "",
-		"open": ""
+		"noAssignments": "Nenhuma tarefa disponível",
+		"open": "Abrir"
 	},
 	"assignmentsTab": "Tarefas",
 	"board": {
@@ -422,7 +422,7 @@
 	"classNetworks": "Redes de classes",
 	"collaborators": "Colaborador(es)",
 	"common": {
-		"errorLoading": "",
+		"errorLoading": "Erro ao carregar a atribuição",
 		"loading": "Carregando..."
 	},
 	"create": {
@@ -653,13 +653,13 @@
 	},
 	"myClasses": "Minhas aulas",
 	"noAccessTo": "Você não terá acesso a:",
-	"noAssignments": "",
+	"noAssignments": "Nenhuma tarefa disponível.",
 	"noClasses": "Você ainda não se inscreveu em nenhuma aula.",
-	"noResources": "",
+	"noResources": "Sem recursos públicos.",
 	"noStudies": "Os alunos ainda não criaram nenhum estudo.",
 	"noteNewStudents": "Observação: novos alunos não poderão ingressar na sua turma.",
 	"numberOfStudents": "Número de alunos",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "Somente professores e mentores podem atribuir cartões.",
 	"participants": "Participantes",
 	"pleaseTypeDelete": "Por favor, digite DELETE para excluir sua classe",
 	"projectBoard": {
@@ -801,7 +801,7 @@
 		"goBack": "Voltar para a aula",
 		"username": "Nome de usuário"
 	},
-	"studentsCanAssignCards": "",
+	"studentsCanAssignCards": "Os alunos podem atribuir cartões.",
 	"studentsTab": {
 		"addToClass": "Adicionar à classe",
 		"assignToClass": "Tem certeza de que deseja designar esse aluno para a outra classe?",
@@ -827,7 +827,7 @@
 	"studies": {
 		"collaborators": "Colaborador(es)",
 		"dateCreated": "Data de criação",
-		"listDescription": "",
+		"listDescription": "{{count}} estudos criados por alunos desta turma.",
 		"noStudiesYet": "Os alunos ainda não criaram nenhum estudo.",
 		"participants": "Participantes",
 		"studyBuilder": "Construtor de estudos",
@@ -852,7 +852,7 @@
 		"lastUpdated": "Última atualização",
 		"needsFeedback": "Precisa de feedback",
 		"notStarted": "Não iniciado",
-		"requestFeedback": "",
+		"requestFeedback": "Solicitar feedback",
 		"saveAndClose": "Salvar e fechar",
 		"saving": "Salvando...",
 		"selectStatus": "Selecione o status",

@@ -9,7 +9,7 @@
 		"action": "Action",
 		"actions": "Actions",
 		"addAssignment": "Ajouter un devoir",
-		"bulkActions": "",
+		"bulkActions": "Actions en masse",
 		"bulkActionsModal": {
 			"applying": "Candidature...",
 			"applyToCount": "Appliquer aux devoirs {{count}} ",
@@ -66,7 +66,7 @@
 		"dateUpdated": "Date de mise à jour",
 		"delete": "Supprimer",
 		"deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce devoir ?",
-		"edit": "",
+		"edit": "Modifier",
 		"editAssignment": "Modifier la mission",
 		"editSuccess": "Devoir mis à jour avec succès !",
 		"error": "Erreur",
@@ -102,10 +102,10 @@
 		"placeholder": "Créez un espace réservé pour que vos élèves puissent commencer leurs devoirs avec ...",
 		"placeholderDescription": "Espace réservé présenté aux étudiants",
 		"placeholderInstructions": "Écrivez un espace réservé pour la boîte de réponse de vos élèves",
-		"preview": "",
+		"preview": "Aperçu",
 		"projectCard": "Carte de projet",
-		"publish": "",
-		"published": "",
+		"publish": "Publier",
+		"published": "Publié",
 		"publishToStudents": "Publier pour les étudiants",
 		"publishUnpublish": "Publier/Dépublier",
 		"removeCardColumnFilter": "Supprimer le filtre de carte/colonne",
@@ -123,7 +123,7 @@
 		"showLinkedProjectCards": "Show linked project cards",
 		"startFromScratch": "Partir de zéro",
 		"startFromScratchDescription": "Créez un devoir inédit en contrôlant entièrement le titre, les consignes et le contenu fictif. Idéal pour un exercice totalement unique pour votre classe.",
-		"status": "",
+		"status": "Statut",
 		"studentEntry": "Entrée des étudiants",
 		"submit": "Soumettre",
 		"submitConfirm": "Êtes-vous sûr de vouloir soumettre ce devoir ? Il sera visible par les élèves.",
@@ -132,13 +132,13 @@
 		"titlePlaceholder": "Entrez le titre de la tâche...",
 		"typeClassName": "Tapez le nom de la classe",
 		"unpublish": "Annuler la publication",
-		"unpublished": "",
+		"unpublished": "Inédit",
 		"unsavedChanges": "Changements non sauvegardés !",
 		"visibleForStudents": "Le devoir est visible pour les étudiants"
 	},
 	"assignments": {
-		"noAssignments": "",
-		"open": ""
+		"noAssignments": "Aucune mission disponible",
+		"open": "Ouvrir"
 	},
 	"assignmentsTab": "Devoirs",
 	"board": {
@@ -422,7 +422,7 @@
 	"classNetworks": "Réseaux de classes",
 	"collaborators": "Collaborateur(s)",
 	"common": {
-		"errorLoading": "",
+		"errorLoading": "Erreur lors du chargement de l'affectation",
 		"loading": "Chargement..."
 	},
 	"create": {
@@ -653,13 +653,13 @@
 	},
 	"myClasses": "Mes cours",
 	"noAccessTo": "Vous n'aurez pas accès à :",
-	"noAssignments": "",
+	"noAssignments": "Aucune mission disponible.",
 	"noClasses": "Vous n’avez pas encore rejoint de cours.",
-	"noResources": "",
+	"noResources": "Aucune ressource publique.",
 	"noStudies": "Les étudiants n’ont pas encore créé d’études.",
 	"noteNewStudents": "Remarque : les nouveaux étudiants ne pourront pas rejoindre votre classe.",
 	"numberOfStudents": "Nombre d'étudiants",
-	"onlyTeachersMentorsAssignCards": "",
+	"onlyTeachersMentorsAssignCards": "Seuls les enseignants et les mentors peuvent attribuer des cartes",
 	"participants": "Participants",
 	"pleaseTypeDelete": "Veuillez taper SUPPRIMER pour supprimer votre classe",
 	"projectBoard": {
@@ -801,7 +801,7 @@
 		"goBack": "Retournez en classe",
 		"username": "Nom d'utilisateur"
 	},
-	"studentsCanAssignCards": "",
+	"studentsCanAssignCards": "Les élèves peuvent attribuer des cartes",
 	"studentsTab": {
 		"addToClass": "Ajouter à la classe",
 		"assignToClass": "Êtes-vous sûr de vouloir affecter cet élève à l'autre classe ?",
@@ -827,7 +827,7 @@
 	"studies": {
 		"collaborators": "Collaborateur(s)",
 		"dateCreated": "Date de création",
-		"listDescription": "",
+		"listDescription": "{{count}} études créées par les étudiants de cette classe.",
 		"noStudiesYet": "Les étudiants n'ont pas encore créé d'études.",
 		"participants": "Participants",
 		"studyBuilder": "Constructeur d'études",
@@ -852,7 +852,7 @@
 		"lastUpdated": "Dernière mise à jour",
 		"needsFeedback": "Besoin de commentaires",
 		"notStarted": "Pas commencé",
-		"requestFeedback": "",
+		"requestFeedback": "Demander des commentaires",
 		"saveAndClose": "Enregistrer et fermer",
 		"saving": "Économies ...",
 		"selectStatus": "Sélectionnez le statut",

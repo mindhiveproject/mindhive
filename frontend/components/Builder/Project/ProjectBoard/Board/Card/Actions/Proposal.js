@@ -9,6 +9,16 @@ import {
 import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 import { PROPOSAL_REVIEWS_QUERY } from "../../../../../../Queries/Proposal";
 import { CREATE_LOG } from "../../../../../../Mutations/Log";
+import {
+  buildDualWriteUpdate,
+  isMilestoneSubmitted,
+  isOpenForComments,
+} from "../../../../../../../lib/milestoneStatus";
+import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
+import {
+  cardIncludedInReviewStep,
+  resolveMilestoneFromCard,
+} from "../../../../../../../lib/milestones";
 
 import Navigation from "./Navigation";
 import { cardTypes } from "../../Builder/Actions/ActionCard";
@@ -17,53 +27,6 @@ import TipTapEditor from "../../../../../../TipTap/Main";
 import { StyledActionPage } from "../../../../../../styles/StyledReview";
 import Feedback from "../../../../../../Dashboard/Review/Feedback/Main";
 import Status from "../Forms/Status";
-
-const submitOptions = {
-  ACTION_SUBMIT: {
-    event: "PROPOSAL_SUBMITTED_FOR_REVIEW",
-    updateInput: {
-      submitProposalStatus: "SUBMITTED",
-      submitProposalOpenForComments: true,
-    },
-    name: "expert feedback",
-    description:
-      "Expert mentors will provide feedback & comments will appear here.",
-    status: "SUBMITTED_AS_PROPOSAL",
-  },
-  ACTION_PEER_FEEDBACK: {
-    event: "PROPOSAL_SUBMITTED_FOR_PEER_REVIEW",
-    updateInput: {
-      peerFeedbackStatus: "SUBMITTED",
-      peerFeedbackOpenForComments: true,
-    },
-    name: "peer feedback",
-    description:
-      "Your peers will provide feedback & comments will appear here.",
-    status: "PEER_REVIEW",
-  },
-  ACTION_COLLECTING_DATA: {
-    event: "STUDY_SUBMITTED_FOR_DATA_COLLECTION",
-    updateInput: {
-      // should be updated in study
-      dataCollectionStatus: "SUBMITTED",
-      dataCollectionData: "REAL_DATA",
-      dataCollectionOpenForParticipation: true,
-    },
-    name: "data collection",
-    description: "",
-    status: "DATA_COLLECTION",
-  },
-  ACTION_PROJECT_REPORT: {
-    event: "PROJECT_SUBMITTED_FOR_REPORT",
-    updateInput: {
-      projectReportStatus: "SUBMITTED",
-      projectReportOpenForComments: true,
-    },
-    name: "project report",
-    description: "",
-    status: "PROJECT_REPORT",
-  },
-};
 
 export default function Proposal({
   query,
@@ -76,6 +39,18 @@ export default function Proposal({
 }) {
   const { t } = useTranslation("builder");
 
+  const { milestones } = useBoardMilestones(proposal?.id || proposalId);
+  const milestone = resolveMilestoneFromCard(proposalCard, milestones);
+  const reviewStepKey =
+    milestone?.key ||
+    milestone?.actionCardType ||
+    proposalCard?.type;
+  const reviewStage =
+    milestone?.reviewStage || cardTypes[proposalCard?.type]?.reviewStage;
+  const previewTitle =
+    milestone?.title || cardTypes[proposalCard?.type]?.previewTitle;
+  const submitName = milestone?.title?.toLowerCase() || proposalCard?.type;
+
   // Filter cards to show only those that are included in this specific review step
   // Cards must have this action card type in their includeInReviewSteps array
   // The includeInReport flag is for the final project report, not for intermediate review steps
@@ -85,10 +60,8 @@ export default function Proposal({
       ?.sort((a, b) => (a?.position ?? 0) - (b?.position ?? 0))
       ?.flatMap((section) =>
         section?.cards
-          ?.filter(
-            (card) =>
-              // Only show cards that explicitly include this action card type in their review steps
-              card?.settings?.includeInReviewSteps?.includes(proposalCard?.type)
+          ?.filter((card) =>
+            cardIncludedInReviewStep(card, reviewStepKey, milestones)
           )
           ?.sort((a, b) => (a?.position ?? 0) - (b?.position ?? 0)) || []
       ) || [];
@@ -108,11 +81,12 @@ export default function Proposal({
   const allCardsCompleted =
     cards?.filter((card) => card?.settings?.status !== "Completed").length ===
     0;
-  const isProposalSubmitted =
-    proposal[cardTypes[proposalCard?.type].proposalSubmitStatusQuery] ===
-    "SUBMITTED";
-  const isFeedbackLocked =
-    !proposal[cardTypes[proposalCard?.type].proposalOpenForCommentsQuery];
+  const isProposalSubmitted = isMilestoneSubmitted(
+    proposal,
+    milestone,
+    milestones
+  );
+  const isFeedbackLocked = !isOpenForComments(proposal, milestone, milestones);
 
   const { data } = useQuery(PROPOSAL_REVIEWS_QUERY, {
     variables: {
@@ -135,16 +109,26 @@ export default function Proposal({
   const [updateCardContent] = useMutation(UPDATE_CARD_EDIT);
 
   const submitProposal = async () => {
+    const updateInput = buildDualWriteUpdate(
+      milestone,
+      {
+        status: "SUBMITTED",
+        openForComments: true,
+        openForParticipation: proposalCard?.type === "ACTION_COLLECTING_DATA",
+      },
+      proposal?.milestoneStatus
+    );
+
     const res = await updateProposal({
       variables: {
         id: proposal?.id,
-        input: submitOptions[proposalCard.type]?.updateInput,
+        input: updateInput,
       },
     });
     await createLog({
       variables: {
         input: {
-          event: submitOptions[proposalCard.type]?.event,
+          event: milestone?.logEventName || "PROPOSAL_SUBMITTED_FOR_REVIEW",
           user: {
             connect: { id: user?.id },
           },
@@ -166,12 +150,19 @@ export default function Proposal({
   };
 
   const switchFeedbackLock = async () => {
+    const updateInput = buildDualWriteUpdate(
+      milestone,
+      {
+        status: "SUBMITTED",
+        openForComments: isFeedbackLocked,
+      },
+      proposal?.milestoneStatus
+    );
+
     const res = await updateProposal({
       variables: {
         id: proposal?.id,
-        input: {
-          submitProposalOpenForComments: isFeedbackLocked,
-        },
+        input: updateInput,
       },
     });
     if (res?.data?.updateProposalBoard?.id) {
@@ -515,7 +506,7 @@ export default function Proposal({
         tab={tab}
         proposalId={proposalId}
         cardId={cardId}
-        saveBtnName={t("proposalAction.submitFor", { title: cardTypes[proposalCard?.type].title }, `Submit for ${cardTypes[proposalCard?.type].title}`)}
+        saveBtnName={t("proposalAction.submitFor", { title: cardTypes[proposalCard?.type]?.title || previewTitle }, `Submit for ${cardTypes[proposalCard?.type]?.title || previewTitle}`)}
         saveBtnFunction={() => {
           submitProposal();
         }}
@@ -529,9 +520,7 @@ export default function Proposal({
           <div className="proposal">
             <div className="iconTitle">
               <img src="/assets/icons/project.svg" />
-              <div className="title">
-                {cardTypes[proposalCard?.type].previewTitle}
-              </div>
+              <div className="title">{previewTitle}</div>
             </div>
 
             <div className="subtitle">
@@ -691,12 +680,10 @@ export default function Proposal({
                   <Feedback
                     user={user}
                     projectId={project?.id}
-                    status={submitOptions[proposalCard.type]?.status}
+                    status={reviewStage}
                     reviews={
                       project?.reviews?.filter(
-                        (review) =>
-                          review.stage ===
-                          cardTypes[proposalCard?.type].reviewStage
+                        (review) => review.stage === reviewStage
                       ) || []
                     }
                   />
@@ -706,16 +693,16 @@ export default function Proposal({
               <>
                 <div className="title">
                   {t("proposalAction.submitForTitle", {
-                    name: submitOptions[proposalCard.type]?.name,
-                  }, `Submit your proposal for ${submitOptions[proposalCard.type]?.name}`)}
+                    name: submitName,
+                  }, `Submit your proposal for ${submitName}`)}
                 </div>
 
                 <div className="subtitle">
                   {t("proposalAction.submitForFeedbackIntro", "Once you submit your proposal for feedback:")}
                   <ul>
                     <li>{t("proposalAction.appearInFeedbackCenter", "Your proposal will appear in the Feedback Center.")}</li>
-                    {submitOptions[proposalCard.type]?.description && (
-                      <li>{submitOptions[proposalCard.type]?.description}</li>
+                    {milestone?.description && (
+                      <li>{milestone.description}</li>
                     )}
                     <li>{t("proposalAction.cardsLocked", "The cards that are included in the Proposal will be locked. Your teacher can unlock them.")}</li>
                   </ul>
