@@ -1,11 +1,10 @@
 import { createPortal } from "react-dom";
 import useTranslation from "next-translate/useTranslation";
 
+import ActionCardTypeBadge from "./ActionCardTypeBadge";
 import Button from "../../../DesignSystem/Button";
-import Chip from "../../../DesignSystem/Chip";
 import {
   getActionCardLabel,
-  getActionCardTypeLabel,
   resolveActionCardMilestone,
 } from "../../../../lib/templateBoardActionCards";
 
@@ -199,7 +198,6 @@ export default function TemplateBoardMilestonesManageModal({
             <div style={cardListStyle}>
               {actionCards.map(({ card, section }) => {
                 const actionLabel = getActionCardLabel(card, tBuilder);
-                const typeLabel = getActionCardTypeLabel(card, t);
                 const sectionLabel = getSectionLabel(section, t);
                 const milestone = resolveActionCardMilestone(card, milestones);
 
@@ -207,7 +205,10 @@ export default function TemplateBoardMilestonesManageModal({
                   <div key={card.id} style={cardStyle}>
                     <div style={cardTitleRowStyle}>
                       <h3 style={cardTitleStyle}>{actionLabel}</h3>
-                      <Chip label={typeLabel} />
+                      <ActionCardTypeBadge
+                        card={card}
+                        style={{ fontSize: 12, padding: "3px 10px" }}
+                      />
                     </div>
                     <p style={metaStyle}>
                       {t(

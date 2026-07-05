@@ -6,15 +6,15 @@
 // other published rows that share the same (key, scope, organization,
 // classNetwork) tuple — only one "live" version per scope at a time.
 //
-// Permission: canManageUsers OR canManageForms (the latter must also be
-// a member of the scoped organization when scope=organization; that's
-// enforced by the FormDefinition update rule via context.query).
+// Permission: canManageUsers OR canManageForms (organization scope), or
+// the class creator for a project_board-scoped template form.
 //
 // Before flipping status, runs validateFormDefinition() — refuses to
 // publish a definition with broken field wiring (typo'd storageColumn,
 // missing options on a select, etc.). All errors surface together so
 // the admin can fix them in one pass.
 import { validateFormDefinition } from "./formValidation";
+import { canMutateFormDefinition } from "../access";
 
 async function publishFormDefinition(
   root: any,
@@ -33,14 +33,9 @@ async function publishFormDefinition(
     where: { id: session.itemId },
     query: "permissions { canManageUsers canManageForms }",
   });
-  const canManage = (profile?.permissions || []).some(
+  const isAdminOrFormManager = (profile?.permissions || []).some(
     (p: any) => p.canManageUsers || p.canManageForms
   );
-  if (!canManage) {
-    throw new Error(
-      "Forbidden: you need canManageUsers or canManageForms to publish forms."
-    );
-  }
 
   const target = await context.query.FormDefinition.findOne({
     where: { id },
@@ -50,9 +45,16 @@ async function publishFormDefinition(
       scope
       version
       status
-      organization { id }
+      organization {
+        id
+        members { id }
+      }
       classNetwork { id }
-      proposalBoard { id }
+      proposalBoard {
+        id
+        templateForClasses { creator { id } }
+        templatesForClass { creator { id } }
+      }
       cards(orderBy: { order: asc }) {
         id
         title
@@ -72,6 +74,15 @@ async function publishFormDefinition(
   });
   if (!target) {
     throw new Error(`FormDefinition ${id} not found.`);
+  }
+
+  if (
+    !isAdminOrFormManager &&
+    !canMutateFormDefinition(context.session, target)
+  ) {
+    throw new Error(
+      "Forbidden: you cannot publish this form definition."
+    );
   }
 
   // Validate field wiring before flipping status. A typo'd storageColumn

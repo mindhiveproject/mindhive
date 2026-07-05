@@ -69,6 +69,12 @@ export function getActionCardTypeLabel(card, tClasses) {
       });
 }
 
+export function getActionCardTypeBadgeStyle(card) {
+  return isDefaultActionCard(card)
+    ? { background: "#DEF8FB", color: "#336F8A" }
+    : { background: "#E4DFF6", color: "#625B71" };
+}
+
 export function getActionCardStatusLine(card, tBuilder, tClasses) {
   const actionLabel = getActionCardLabel(card, tBuilder);
   const typeLabel = getActionCardTypeLabel(card, tClasses);

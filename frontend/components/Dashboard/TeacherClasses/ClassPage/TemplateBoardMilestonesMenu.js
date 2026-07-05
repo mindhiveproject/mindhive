@@ -9,12 +9,23 @@ import TemplateBoardMilestonesManageModal from "./TemplateBoardMilestonesManageM
 import { DELETE_CARD } from "../../../Mutations/Proposal";
 import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../Queries/Proposal";
 import { useBoardMilestones } from "../../../../lib/useBoardMilestones";
+import ActionCardTypeBadge from "./ActionCardTypeBadge";
 import {
   getActionCardsFromBoard,
   getActionCardLabel,
-  getActionCardStatusLine,
   resolveActionCardMilestone,
 } from "../../../../lib/templateBoardActionCards";
+
+const MANAGE_MILESTONES_ICON = (
+  <img
+    src="/assets/icons/settings.svg"
+    alt=""
+    width={18}
+    height={18}
+    aria-hidden
+    style={{ display: "block" }}
+  />
+);
 
 function buildAddMilestoneHref(classCode, boardId) {
   return {
@@ -108,7 +119,13 @@ export default function TemplateBoardMilestonesMenu({ board, classCode, classId 
         const actionLabel = getActionCardLabel(card, tBuilder);
         items.push({
           key: `milestone-${card.id}`,
-          label: getActionCardStatusLine(card, tBuilder, t),
+          label: (
+            <>
+              {actionLabel}
+              {" · "}
+              <ActionCardTypeBadge card={card} />
+            </>
+          ),
           onClick: () => {
             openPreview({
               card,
@@ -122,6 +139,7 @@ export default function TemplateBoardMilestonesMenu({ board, classCode, classId 
 
     items.push({
       key: "manage",
+      icon: MANAGE_MILESTONES_ICON,
       label: t("projects.milestonesMenu.manageMilestones", {}, {
         default: "Manage milestones",
       }),

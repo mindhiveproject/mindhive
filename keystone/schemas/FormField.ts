@@ -8,7 +8,7 @@ import {
   checkbox,
   json,
 } from "@keystone-6/core/fields";
-import { permissions, rules, isSignedIn } from "../access";
+import { rules, isSignedIn } from "../access";
 
 // Single source of truth for the FormField.fieldType select options.
 // Referenced here for the Keystone schema AND by
@@ -57,12 +57,12 @@ export const FormField = list({
   access: {
     operation: {
       query: () => true,
-      create: ({ session }) =>
-        !!session &&
-        (permissions.canManageUsers({ session }) ||
-          permissions.canManageForms({ session })),
+      create: isSignedIn,
       update: isSignedIn,
       delete: isSignedIn,
+    },
+    item: {
+      create: rules.formFieldCreate,
     },
     filter: {
       update: rules.formFieldMutate,
