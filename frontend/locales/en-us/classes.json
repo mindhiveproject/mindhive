@@ -697,6 +697,18 @@
 		"collaborators": "Collaborator(s)",
 		"confirmHideLastTemplate": "This is the only template students can copy. Prevent copy anyway? Students will not be able to start new projects until you allow copy for at least one template.",
 		"createTemplateBoard": "Create template board",
+		"createTemplateModal": {
+			"blankDescription": "Start with an empty project board and build your class template from scratch. You will be taken to the editor after creation.",
+			"blankTemplate": "Blank template",
+			"cancel": "Cancel",
+			"createBlank": "Create blank template",
+			"creating": "Creating…",
+			"fromLibrary": "From template library",
+			"previewLabel": "Preview",
+			"selectToPreview": "Select a template above to preview its structure before adding it to your class.",
+			"sourceLabel": "Template source",
+			"title": "Create template board"
+		},
 		"cannotDeleteTemplate": "Only the creator can remove this template from the class.",
 		"dateCreated": "Date created",
 		"dateUpdated": "Updated",

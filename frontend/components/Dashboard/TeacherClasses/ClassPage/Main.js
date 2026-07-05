@@ -85,8 +85,7 @@ export default function ClassPage({ code, user, query }) {
   }, [page, code, router]);
 
   const isProjectsFullscreen =
-    page === "projects" &&
-    ((action === "edit" && board) || action === "create");
+    page === "projects" && action === "edit" && board;
 
   if (page === "board") {
     return null;

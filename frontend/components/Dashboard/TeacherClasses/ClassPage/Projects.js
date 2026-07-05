@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
@@ -11,11 +12,19 @@ import {
 } from "../../../Queries/Proposal";
 import ProjectsTemplatePanel from "./ProjectsTemplatePanel";
 import ProjectsBoardEditor from "./ProjectsBoardEditor";
-import ProjectsBoardCreate from "./ProjectsBoardCreate";
+import CreateTemplateBoardModal from "./CreateTemplateBoardModal";
 
 export default function ClassProjects({ myclass, user, query }) {
   const { t } = useTranslation("classes");
-  const { action, board } = query || {};
+  const router = useRouter();
+  const { action, board, template } = query || {};
+
+  const closeCreateModal = () => {
+    router.replace({
+      pathname: `/dashboard/myclasses/${myclass?.code}`,
+      query: { page: "projects" },
+    });
+  };
 
   if (action === "edit" && board) {
     return (
@@ -23,15 +32,6 @@ export default function ClassProjects({ myclass, user, query }) {
         myclass={myclass}
         user={user}
         boardId={board}
-      />
-    );
-  }
-
-  if (action === "create") {
-    return (
-      <ProjectsBoardCreate
-        myclass={myclass}
-        query={query}
       />
     );
   }
@@ -101,6 +101,14 @@ export default function ClassProjects({ myclass, user, query }) {
 
   return (
     <div className="classTabPage projects">
+      <CreateTemplateBoardModal
+        open={action === "create"}
+        onClose={closeCreateModal}
+        myclass={myclass}
+        user={user}
+        initialTemplateId={template || null}
+      />
+
       <section className="classTabSection">
         <ProjectsTemplatePanel myclass={myclass} user={user} />
       </section>
