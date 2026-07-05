@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import moment from "moment";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useTranslation from "next-translate/useTranslation";
 
@@ -9,6 +10,7 @@ import {
   PROPOSAL_TEMPLATES_QUERY,
 } from "../../../Queries/Proposal";
 import {
+  DELETE_COMPLETE_PROPOSAL,
   SYNC_CLASS_TEMPLATE_BOARDS,
   UPDATE_PROPOSAL_BOARD,
 } from "../../../Mutations/Proposal";
@@ -24,10 +26,12 @@ import {
 } from "../../../Utils/proposalBoard";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
-import DeleteProposal from "./ProjectBoard/Delete";
+import DropdownMenu from "../../../DesignSystem/DropdownMenu";
 
 export default function ProjectsTemplatePanel({ myclass, user }) {
   const { t } = useTranslation("classes");
+  const { t: tBuilder } = useTranslation("builder");
+  const router = useRouter();
   const classId = myclass?.id;
   const code = myclass?.code;
   const isAdmin = userIsProposalAdmin(user);
@@ -65,15 +69,17 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
     }
   );
 
+  const [deleteProposalBoard] = useMutation(DELETE_COMPLETE_PROPOSAL, {
+    refetchQueries: [
+      {
+        query: CLASS_TEMPLATE_PROJECTS_QUERY,
+        variables: { classId },
+      },
+    ],
+  });
+
   const classTemplates = classTemplatesData?.proposalBoards || [];
   const libraryTemplates = libraryData?.proposalBoards || [];
-
-  const refetchQueries = [
-    {
-      query: CLASS_TEMPLATE_PROJECTS_QUERY,
-      variables: { classId },
-    },
-  ];
 
   const createHref = {
     pathname: `/dashboard/myclasses/${code}`,
@@ -110,7 +116,7 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
           {},
           {
             default:
-              "This is the only template visible to students. Hide it anyway? Students will not be able to start new projects until you make a template visible.",
+              "This is the only template students can copy. Prevent copy anyway? Students will not be able to start new projects until you allow copy for at least one template.",
           }
         )
       );
@@ -155,10 +161,61 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
       alert(
         err?.message
           || t("projects.toggleVisibilityError", {}, {
-            default: "Failed to update template visibility.",
+            default: "Failed to update template copy setting.",
           })
       );
     }
+  };
+
+  const handleDeleteTemplate = async (boardId) => {
+    if (!boardId) return;
+    if (!confirm(tBuilder("deleteProposal.confirm"))) return;
+    try {
+      await deleteProposalBoard({ variables: { id: boardId } });
+    } catch (err) {
+      alert(err?.message);
+    }
+  };
+
+  const getCopyStatusLabel = (isVisible) =>
+    isVisible
+      ? t("projects.visibleToStudents", {}, {
+          default: "Students can copy this template",
+        })
+      : t("projects.notVisibleToStudents", {}, {
+          default: "Students cannot copy this template",
+        });
+
+  const buildTemplateMenuItems = (board, isVisible, canDelete) => {
+    const items = [
+      {
+        key: "toggleCopy",
+        label: isVisible
+          ? t("projects.hideFromStudents", {}, { default: "Prevent copy" })
+          : t("projects.showToStudents", {}, { default: "Allow copy" }),
+        onClick: () => {
+          if (!updatingVisibility) {
+            handleToggleVisibility(board);
+          }
+        },
+      },
+      {
+        key: "edit",
+        label: t("projects.editTemplate", {}, { default: "Edit template" }),
+        onClick: () => router.push(editHref(board.id)),
+      },
+    ];
+
+    if (canDelete) {
+      items.push({
+        key: "delete",
+        label: t("projectBoard.delete", {}, { default: "Delete" }),
+        danger: true,
+        onClick: () => handleDeleteTemplate(board.id),
+      });
+    }
+
+    return items;
   };
 
   return (
@@ -179,7 +236,7 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
             {},
             {
               default:
-                "Students can choose from templates you make visible when starting a new project.",
+                "Choose which templates students can copy when starting a new project.",
             }
           )}
         </p>
@@ -213,6 +270,7 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                 classTemplateBoards: classTemplates,
               });
               const canDelete = canDeleteProposalBoard(board, user?.id, { isAdmin });
+              const copyStatusLabel = getCopyStatusLabel(isVisible);
               return (
                 <div
                   key={board.id}
@@ -224,48 +282,53 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                 >
                   <div className="classTabTemplateCardRow">
                     <div className="classTabTemplateCardTitleGroup">
-                      <h5 className="classTabTemplateCardTitle">{board.title}</h5>
+                      <Link
+                        href={editHref(board.id)}
+                        className="classTabTemplateCardTitleLink"
+                      >
+                        <h5 className="classTabTemplateCardTitle">{board.title}</h5>
+                      </Link>
                       <Chip
-                        label={
-                          isVisible
-                            ? t("projects.visibleToStudents", {}, {
-                                default: "Visible to students",
-                              })
-                            : t("projects.notVisibleToStudents", {}, {
-                                default: "Not visible to students",
-                              })
-                        }
+                        style={{ 
+                          backgroundColor: isVisible ? "#FFFFFF" : "#F3F3F3",
+                          fontSize: "12px", 
+                          fontWeight: isVisible ? "600" : "500",
+                          color: isVisible ? "#1C1B1F" : "#666666" }}
+                        label={copyStatusLabel}
                       />
                     </div>
                     <div className="classTabTemplateCardActions">
-                      <Button
-                        variant="outline"
-                        onClick={() => handleToggleVisibility(board)}
-                        disabled={updatingVisibility}
-                      >
-                        {isVisible
-                          ? t("projects.hideFromStudents", {}, {
-                              default: "Hide from students",
-                            })
-                          : t("projects.showToStudents", {}, {
-                              default: "Show to students",
-                            })}
-                      </Button>
-                      <Link href={editHref(board.id)} style={{ textDecoration: "none" }}>
-                        <Button variant="filled">
-                          {t("projects.editTemplate", {}, { default: "Edit template" })}
-                        </Button>
-                      </Link>
-                      {canDelete ? (
-                        <DeleteProposal
-                          proposalId={board.id}
-                          refetchQueries={refetchQueries}
-                        >
-                          <Button variant="outline">
-                            {t("projectBoard.delete", {}, { default: "Delete" })}
-                          </Button>
-                        </DeleteProposal>
-                      ) : null}
+                      <DropdownMenu
+                        ariaLabel={t("projects.templateOptions", {}, {
+                          default: "Template options",
+                        })}
+                        triggerStyle={{
+                          gap: "2px",
+                          padding: "6px 10px",
+                          minWidth: "auto",
+                        }}
+                        trigger={
+                          <>
+                            <span
+                              style={{
+                                fontSize: "14px",
+                                lineHeight: "16px",
+                                fontWeight: 500,
+                              }}
+                            >
+                              {t("main.settings", {}, { default: "Settings" })}
+                            </span>
+                            <img
+                              src="/assets/dataviz/three-dots.svg"
+                              alt=""
+                              width={18}
+                              height={18}
+                            />
+                          </>
+                        }
+                        panelHeader={copyStatusLabel}
+                        items={buildTemplateMenuItems(board, isVisible, canDelete)}
+                      />
                     </div>
                   </div>
                   <div className="classTabTemplateCardMeta">

@@ -60,20 +60,20 @@ async function copyProposalBoard(
 
   let boardSettings = template.settings;
   if (classIdTemplate) {
-    const classRecord = await context.query.Class.findOne({
-      where: { id: classIdTemplate },
-      query: "id templateProposal { id }",
-    });
-    if (!classRecord?.templateProposal?.id) {
-      const mergedSettings =
-        template.settings && typeof template.settings === "object"
-          ? { ...template.settings }
-          : {};
-      boardSettings = {
-        ...mergedSettings,
-        visibleToStudentInClassIds: [classIdTemplate],
-      };
+    const mergedSettings =
+      template.settings && typeof template.settings === "object"
+        ? { ...template.settings }
+        : {};
+    const existingIds = Array.isArray(mergedSettings.visibleToStudentInClassIds)
+      ? [...mergedSettings.visibleToStudentInClassIds]
+      : [];
+    if (!existingIds.includes(classIdTemplate)) {
+      existingIds.push(classIdTemplate);
     }
+    boardSettings = {
+      ...mergedSettings,
+      visibleToStudentInClassIds: existingIds,
+    };
   }
 
   // make a full copy

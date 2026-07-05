@@ -96,8 +96,9 @@ function Inner(props) {
               variant="primary"
               size="small"
               onClick={() => setAddSectionModalOpen(true)}
+              leadingIcon={<img src="../../assets/icons/add_column.svg" alt="Add section" style={{filter: "invert(1)"}}/>}
             >
-              {t("inner.addSection", {}, { default: "Add section" })}
+             {t("inner.addSection", {}, { default: "Add section" })}
             </Button>
           </div>
         )}

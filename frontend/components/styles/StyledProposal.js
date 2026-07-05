@@ -274,7 +274,7 @@ export const StyledProposal = styled.div`
     flex: 1;
     .boardInnerToolbar {
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start ;
       padding: 0 15px 8px;
     }
     .scrollable {

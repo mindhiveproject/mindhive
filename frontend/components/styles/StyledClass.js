@@ -1150,6 +1150,17 @@ const StyledClass = styled.div`
       word-break: break-word;
     }
 
+    .classTabTemplateCardTitleLink {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+
+      &:hover .classTabTemplateCardTitle {
+        color: #336f8a;
+        text-decoration: underline;
+      }
+    }
+
     .classTabTemplateCardTitleGroup {
       display: flex;
       flex-wrap: wrap;

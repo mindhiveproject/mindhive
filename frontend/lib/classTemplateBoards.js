@@ -50,14 +50,17 @@ export function isTemplateVisibleToStudents(board, classId, myclass) {
     && typeof settings === "object"
     && "visibleToStudentInClassIds" in settings;
 
-  if (classHasExplicitTemplateVisibility(myclass)) {
-    if (!hasOwnVisibility) return false;
+  if (hasOwnVisibility) {
     const ids = settings.visibleToStudentInClassIds;
     return Array.isArray(ids) && ids.includes(classId);
   }
 
-  const primaryId = getPrimaryTemplateBoardId(myclass);
-  return board.id === primaryId;
+  if (!classHasExplicitTemplateVisibility(myclass)) {
+    const boards = getClassTemplateBoards(myclass);
+    return boards.some((b) => b.id === board.id);
+  }
+
+  return false;
 }
 
 export function getVisibleTemplateBoards(myclass) {

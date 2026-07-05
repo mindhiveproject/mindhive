@@ -169,7 +169,7 @@ export default function StartProject({ query, user }) {
           selector: res?.data?.copyProposalBoard?.id,
         },
       });
-      
+
     }
   };
 
@@ -235,7 +235,7 @@ export default function StartProject({ query, user }) {
                   </div>
                   <div className="message">
                     {t("newProject.selectTemplateHelp", {}, {
-                      default: "Choose a project board template suggested by your teacher.",
+                      default: "Choose a project board template your teacher has made available to copy.",
                     })}
                   </div>
                   <TemplateOptionCards
