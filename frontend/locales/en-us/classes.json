@@ -752,7 +752,17 @@
 		"templateCopyPermission": "Student copy permission",
 		"templateCopyPermissionDescription": "Control whether students can start new projects from this template.",
 		"templateLibrary": "Template library",
+		"templateLibraryCategory": {
+			"mine": "Mine ({{count}})",
+			"network": "Network ({{count}})",
+			"networkDisabledHint": "Network templates coming soon",
+			"public": "Public ({{count}})"
+		},
 		"templateLibraryCount": "{{count}} available",
+		"templateLibraryNoMine": "You don't have any class templates in your other classes yet.",
+		"templatePreviewModal": {
+			"title": "Preview — {{title}}"
+		},
 		"templateManagement": "Template management",
 		"templateOptions": "Template options",
 		"templateUses": "{{count}} uses",

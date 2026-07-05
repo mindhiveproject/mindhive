@@ -14,6 +14,8 @@ import { StyledProposal } from "../../../styles/StyledProposal";
 import {
   PROPOSAL_TEMPLATES_QUERY,
   CLASS_TEMPLATE_PROJECTS_QUERY,
+  OVERVIEW_PROPOSAL_BOARD_QUERY,
+  GET_MY_AUTHORED_PROJECT_BOARDS,
 } from "../../../Queries/Proposal";
 import {
   COPY_PROPOSAL_MUTATION,
@@ -124,7 +126,51 @@ export default function CreateTemplateBoardModal({
   const { data, loading } = useQuery(PROPOSAL_TEMPLATES_QUERY, {
     skip: !open,
   });
-  const templates = data?.proposalBoards || [];
+  const publicTemplates = data?.proposalBoards || [];
+
+  const { data: authoredData } = useQuery(GET_MY_AUTHORED_PROJECT_BOARDS, {
+    variables: { userId: user?.id },
+    skip: !open || !user?.id,
+  });
+
+  const { data: classTemplatesData } = useQuery(CLASS_TEMPLATE_PROJECTS_QUERY, {
+    variables: { classId },
+    skip: !open || !classId,
+  });
+
+  const classTemplateIds = useMemo(() => {
+    const boards = classTemplatesData?.proposalBoards || [];
+    return new Set(boards.map((board) => board.id));
+  }, [classTemplatesData]);
+
+  const mineTemplates = useMemo(() => {
+    const authoredBoards = authoredData?.proposalBoards || [];
+    return authoredBoards.filter(
+      (board) =>
+        !board.isTemplate
+        && board.templateForClasses?.length > 0
+        && !classTemplateIds.has(board.id)
+    );
+  }, [authoredData, classTemplateIds]);
+
+  const templates = useMemo(() => {
+    const byId = new Map();
+    publicTemplates.forEach((item) => byId.set(item.id, item));
+    mineTemplates.forEach((item) => {
+      if (!byId.has(item.id)) byId.set(item.id, item);
+    });
+    return Array.from(byId.values());
+  }, [publicTemplates, mineTemplates]);
+
+  const isPreselectedLibraryTemplate =
+    !!initialTemplateId
+    && !publicTemplates.some((item) => item.id === initialTemplateId);
+
+  const { data: preselectedBoardData, loading: preselectedBoardLoading } =
+    useQuery(OVERVIEW_PROPOSAL_BOARD_QUERY, {
+      variables: { id: initialTemplateId },
+      skip: !open || !initialTemplateId || !isPreselectedLibraryTemplate,
+    });
 
   const templateOptions = useMemo(
     () =>
@@ -135,10 +181,18 @@ export default function CreateTemplateBoardModal({
     [templates]
   );
 
-  const selectedTemplate = useMemo(
-    () => templates.find((item) => item?.id === proposalId) || null,
-    [templates, proposalId]
-  );
+  const selectedTemplate = useMemo(() => {
+    if (!proposalId) return null;
+    const fromLibrary = templates.find((item) => item?.id === proposalId);
+    if (fromLibrary) return fromLibrary;
+    if (
+      proposalId === initialTemplateId
+      && preselectedBoardData?.proposalBoard
+    ) {
+      return preselectedBoardData.proposalBoard;
+    }
+    return null;
+  }, [templates, proposalId, initialTemplateId, preselectedBoardData]);
 
   useEffect(() => {
     if (!open) return;
@@ -262,7 +316,10 @@ export default function CreateTemplateBoardModal({
 
   const primaryDisabled =
     mode === MODE_LIBRARY
-      ? isBusy || !proposalId || templates.length === 0
+      ? isBusy
+        || !proposalId
+        || (templates.length === 0 && !initialTemplateId)
+        || (isPreselectedLibraryTemplate && preselectedBoardLoading)
       : isBusy;
 
   return createPortal(
@@ -349,30 +406,32 @@ export default function CreateTemplateBoardModal({
                     }),
                   }}
                 />
-              ) : templates.length === 0 ? (
+              ) : templates.length === 0 && !initialTemplateId ? (
                 <InDev
                   header={t("projectBoard.noTemplatesHeader")}
                   message={t("projectBoard.noTemplatesMessage")}
                 />
               ) : (
                 <>
-                  <StepSection
-                    label={t("projectBoard.selectProjectTemplate", {}, {
-                      default: "Select project template",
-                    })}
-                  >
-                    <DropdownSelect
-                      value={proposalId || ""}
-                      onChange={handleTemplateChange}
-                      options={templateOptions}
-                      placeholder={t("projectBoard.selectProjectTemplate", {}, {
+                  {!initialTemplateId ? (
+                    <StepSection
+                      label={t("projectBoard.selectProjectTemplate", {}, {
                         default: "Select project template",
                       })}
-                      ariaLabel={t("projectBoard.selectProjectTemplate", {}, {
-                        default: "Select project template",
-                      })}
-                    />
-                  </StepSection>
+                    >
+                      <DropdownSelect
+                        value={proposalId || ""}
+                        onChange={handleTemplateChange}
+                        options={templateOptions}
+                        placeholder={t("projectBoard.selectProjectTemplate", {}, {
+                          default: "Select project template",
+                        })}
+                        ariaLabel={t("projectBoard.selectProjectTemplate", {}, {
+                          default: "Select project template",
+                        })}
+                      />
+                    </StepSection>
+                  ) : null}
 
                   {selectedTemplate ? (
                     <StepSection
@@ -390,6 +449,14 @@ export default function CreateTemplateBoardModal({
                         </StyledProposal>
                       </div>
                     </StepSection>
+                  ) : initialTemplateId && preselectedBoardLoading ? (
+                    <JustOneSecondNotice
+                      message={{
+                        h1: t("projectBoard.loading", {}, {
+                          default: "Loading project board...",
+                        }),
+                      }}
+                    />
                   ) : (
                     <p style={helperTextStyle}>
                       {t("projects.createTemplateModal.selectToPreview", {}, {

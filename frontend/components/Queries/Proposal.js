@@ -925,6 +925,7 @@ export const GET_MY_AUTHORED_PROJECT_BOARDS = gql`
       slug
       description
       isSubmitted
+      isTemplate
       settings
       author {
         username

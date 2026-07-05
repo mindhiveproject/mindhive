@@ -2,11 +2,12 @@ import { useMutation, useQuery } from "@apollo/client";
 import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import {
   CLASS_TEMPLATE_PROJECTS_QUERY,
+  GET_MY_AUTHORED_PROJECT_BOARDS,
   PROPOSAL_TEMPLATES_QUERY,
 } from "../../../Queries/Proposal";
 import {
@@ -22,6 +23,7 @@ import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import DropdownMenu from "../../../DesignSystem/DropdownMenu";
 import TemplateBoardMilestonesMenu from "./TemplateBoardMilestonesMenu";
+import TemplateBoardPreviewModal from "./TemplateBoardPreviewModal";
 import TemplateBoardSettingsModal from "./TemplateBoardSettingsModal";
 
 export default function ProjectsTemplatePanel({ myclass, user }) {
@@ -32,6 +34,8 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
   const code = myclass?.code;
   const isAdmin = userIsProposalAdmin(user);
   const [settingsModalBoardId, setSettingsModalBoardId] = useState(null);
+  const [previewTemplate, setPreviewTemplate] = useState(null);
+  const [libraryCategory, setLibraryCategory] = useState("public");
 
   const { data: classTemplatesData } = useQuery(CLASS_TEMPLATE_PROJECTS_QUERY, {
     variables: { classId },
@@ -39,6 +43,11 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
   });
 
   const { data: libraryData } = useQuery(PROPOSAL_TEMPLATES_QUERY);
+
+  const { data: authoredData } = useQuery(GET_MY_AUTHORED_PROJECT_BOARDS, {
+    variables: { userId: user?.id },
+    skip: !user?.id,
+  });
 
   const [syncClassTemplateBoards] = useMutation(SYNC_CLASS_TEMPLATE_BOARDS, {
     refetchQueries: [
@@ -64,7 +73,26 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
   });
 
   const classTemplates = classTemplatesData?.proposalBoards || [];
-  const libraryTemplates = libraryData?.proposalBoards || [];
+
+  const classTemplateIds = useMemo(
+    () => new Set(classTemplates.map((board) => board.id)),
+    [classTemplates]
+  );
+
+  const publicTemplates = libraryData?.proposalBoards || [];
+
+  const mineTemplates = useMemo(() => {
+    const authoredBoards = authoredData?.proposalBoards || [];
+    return authoredBoards.filter(
+      (board) =>
+        !board.isTemplate
+        && board.templateForClasses?.length > 0
+        && !classTemplateIds.has(board.id)
+    );
+  }, [authoredData, classTemplateIds]);
+
+  const displayedTemplates =
+    libraryCategory === "mine" ? mineTemplates : publicTemplates;
 
   const createHref = {
     pathname: `/dashboard/myclasses/${code}`,
@@ -106,6 +134,11 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
   const buildTemplateMenuItems = (board, canDelete) => {
     const items = [
       {
+        key: "preview",
+        label: t("projectBoard.preview", {}, { default: "Preview" }),
+        onClick: () => setPreviewTemplate(board),
+      },
+      {
         key: "boardSettings",
         label: t("projects.boardSettingsAndPermissions", {}, {
           default: "Board settings & permissions",
@@ -139,6 +172,12 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
         boardId={settingsModalBoardId}
         myclass={myclass}
         classTemplates={classTemplates}
+      />
+
+      <TemplateBoardPreviewModal
+        open={!!previewTemplate}
+        onClose={() => setPreviewTemplate(null)}
+        board={previewTemplate}
       />
 
       <div className="classTabSectionHeader">
@@ -285,13 +324,45 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
             <h4 className="classTabSubsectionTitle">
               {t("projects.templateLibrary", {}, { default: "Template library" })}
             </h4>
-            <Chip
-              label={t(
-                "projects.templateLibraryCount",
-                { count: libraryTemplates.length },
-                { default: "{{count}} available" }
-              )}
-            />
+            <div
+              style={{ display: "flex", gap: 10, flexWrap: "wrap" }}
+              role="tablist"
+            >
+              <Chip
+                shape="square"
+                selected={libraryCategory === "public"}
+                onClick={() => setLibraryCategory("public")}
+                label={t(
+                  "projects.templateLibraryCategory.public",
+                  { count: publicTemplates.length },
+                  { default: "Public ({{count}})" }
+                )}
+              />
+              <Chip
+                shape="square"
+                selected={libraryCategory === "mine"}
+                onClick={() => setLibraryCategory("mine")}
+                label={t(
+                  "projects.templateLibraryCategory.mine",
+                  { count: mineTemplates.length },
+                  { default: "Mine ({{count}})" }
+                )}
+              />
+              <Chip
+                shape="square"
+                disabled
+                label={t(
+                  "projects.templateLibraryCategory.network",
+                  { count: 0 },
+                  { default: "Network ({{count}})" }
+                )}
+                title={t(
+                  "projects.templateLibraryCategory.networkDisabledHint",
+                  {},
+                  { default: "Network templates coming soon" }
+                )}
+              />
+            </div>
           </div>
           <Link href={createHref} style={{ textDecoration: "none" }}>
             <Button variant="primary">
@@ -302,13 +373,20 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
           </Link>
         </div>
 
-        {libraryTemplates.length === 0 ? (
+        {displayedTemplates.length === 0 ? (
           <div className="classTabEmpty">
-            <div>{t("projectBoard.noTemplatesHeader")}</div>
+            <div>
+              {libraryCategory === "mine"
+                ? t("projects.templateLibraryNoMine", {}, {
+                    default:
+                      "You don't have any class templates in your other classes yet.",
+                  })
+                : t("projectBoard.noTemplatesHeader")}
+            </div>
           </div>
         ) : (
           <div className="classTabTemplateList">
-            {libraryTemplates.map((template) => (
+            {displayedTemplates.map((template) => (
               <div key={template.id} className="classTabTemplateCard">
                 <div className="classTabTemplateCardRow">
                   <div>
@@ -319,7 +397,17 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                       </p>
                     ) : null}
                   </div>
-                  <div className="classTabTemplateCardActions">
+                  <div
+                    className="classTabTemplateCardActions"
+                    style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
+                  >
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setPreviewTemplate(template)}
+                    >
+                      {t("projectBoard.preview", {}, { default: "Preview" })}
+                    </Button>
                     <Link
                       href={addTemplateHref(template.id)}
                       style={{ textDecoration: "none" }}
