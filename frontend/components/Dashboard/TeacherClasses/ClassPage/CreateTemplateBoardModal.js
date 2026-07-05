@@ -245,7 +245,9 @@ export default function CreateTemplateBoardModal({
   if (!open || typeof document === "undefined") return null;
 
   const createLabel = initialTemplateId
-    ? t("projects.addTemplateToClass", {}, { default: "Add to class" })
+    ? t("projects.addTemplateToClass", {}, {
+        default: "Copy template to class",
+      })
     : t("projectBoard.create", {}, { default: "Create" });
 
   const primaryAction =

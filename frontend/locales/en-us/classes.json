@@ -690,8 +690,12 @@
 		"submittedAndLocked": "The proposal has been submitted and locked 🔒"
 	},
 	"projects": {
-		"addTemplateToClass": "Add to class",
+		"addTemplateToClass": "Copy template to class",
 		"backToProjects": "Back to projects",
+		"boardSettingsAndPermissions": "Board settings & permissions",
+		"boardSettingsModalClose": "Close",
+		"boardSettingsModalDescription": "These settings apply to projects students start from \"{{title}}\".",
+		"boardSettingsSectionDescription": "Configure curriculum and card assignment for projects created from this template.",
 		"cannotDeleteTemplate": "Only the creator can remove this template from the class.",
 		"classTemplates": "Class templates",
 		"classTemplatesDescription": "Choose which templates students can copy when starting a new project.",
@@ -713,7 +717,7 @@
 		"dateCreated": "Date created",
 		"dateUpdated": "Updated",
 		"editTemplate": "Edit template",
-		"hideFromStudents": "Prevent students from copying",
+		"hideFromStudents": "Prevent students from copying this template",
 		"listDescription": "{{count}} student project boards in this class.",
 		"manageClassProjectBoard": "Manage the class project board",
 		"milestonesMenu": {
@@ -734,7 +738,7 @@
 			"trigger": "{{count}} milestones",
 			"unnamedColumn": "Untitled column"
 		},
-		"newTemplate": "New template",
+		"newTemplate": "Create new class template",
 		"noClassTemplatesDescription": "Create a template board for students in this class to use as a starting point.",
 		"noClassTemplatesYet": "You haven't created any class template boards yet.",
 		"noProjectsYet": "The students haven't created any projects yet.",
@@ -743,8 +747,10 @@
 		"projectTitle": "Project title",
 		"setPrimaryError": "Failed to set primary template.",
 		"setPrimaryTemplate": "Set as primary",
-		"showToStudents": "Allow students to copy",
+		"showToStudents": "Allow students to make copies of this template",
 		"studentBoards": "Student boards",
+		"templateCopyPermission": "Student copy permission",
+		"templateCopyPermissionDescription": "Control whether students can start new projects from this template.",
 		"templateLibrary": "Template library",
 		"templateLibraryCount": "{{count}} available",
 		"templateManagement": "Template management",

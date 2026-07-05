@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import {
@@ -12,14 +12,8 @@ import {
 import {
   DELETE_COMPLETE_PROPOSAL,
   SYNC_CLASS_TEMPLATE_BOARDS,
-  UPDATE_PROPOSAL_BOARD,
 } from "../../../Mutations/Proposal";
-import {
-  classHasExplicitTemplateVisibility,
-  getVisibleTemplateBoards,
-  isTemplateVisibleToStudents,
-  setTemplateVisibilityForClass,
-} from "../../../../lib/classTemplateBoards";
+import { isTemplateVisibleToStudents } from "../../../../lib/classTemplateBoards";
 import {
   canDeleteProposalBoard,
   userIsProposalAdmin,
@@ -28,6 +22,7 @@ import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import DropdownMenu from "../../../DesignSystem/DropdownMenu";
 import TemplateBoardMilestonesMenu from "./TemplateBoardMilestonesMenu";
+import TemplateBoardSettingsModal from "./TemplateBoardSettingsModal";
 
 export default function ProjectsTemplatePanel({ myclass, user }) {
   const { t } = useTranslation("classes");
@@ -36,6 +31,7 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
   const classId = myclass?.id;
   const code = myclass?.code;
   const isAdmin = userIsProposalAdmin(user);
+  const [settingsModalBoardId, setSettingsModalBoardId] = useState(null);
 
   const { data: classTemplatesData } = useQuery(CLASS_TEMPLATE_PROJECTS_QUERY, {
     variables: { classId },
@@ -57,18 +53,6 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
     if (!classId) return;
     syncClassTemplateBoards({ variables: { classId } }).catch(() => {});
   }, [classId]);
-
-  const [updateProposalBoard, { loading: updatingVisibility }] = useMutation(
-    UPDATE_PROPOSAL_BOARD,
-    {
-      refetchQueries: [
-        {
-          query: CLASS_TEMPLATE_PROJECTS_QUERY,
-          variables: { classId },
-        },
-      ],
-    }
-  );
 
   const [deleteProposalBoard] = useMutation(DELETE_COMPLETE_PROPOSAL, {
     refetchQueries: [
@@ -100,74 +84,6 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
   const formatDate = (value) =>
     value ? moment(value).format("M/D/YYYY") : "";
 
-  const handleToggleVisibility = async (board) => {
-    if (!classId || !board?.id) return;
-
-    const classContext = {
-      ...myclass,
-      classTemplateBoards: classTemplates,
-    };
-    const isVisible = isTemplateVisibleToStudents(board, classId, classContext);
-    const visibleCount = getVisibleTemplateBoards(classContext).length;
-
-    if (isVisible && visibleCount <= 1) {
-      const confirmed = window.confirm(
-        t(
-          "projects.confirmHideLastTemplate",
-          {},
-          {
-            default:
-              "This is the only template students can copy. Prevent copy anyway? Students will not be able to start new projects until you allow copy for at least one template.",
-          }
-        )
-      );
-      if (!confirmed) return;
-    }
-
-    try {
-      const enteringExplicitMode = !classHasExplicitTemplateVisibility(classContext);
-      const boardsToUpdate = enteringExplicitMode
-        ? classTemplates.map((templateBoard) => ({
-            id: templateBoard.id,
-            settings: setTemplateVisibilityForClass(
-              templateBoard.settings,
-              classId,
-              templateBoard.id === board.id
-                ? !isVisible
-                : isTemplateVisibleToStudents(templateBoard, classId, classContext)
-            ),
-          }))
-        : [
-            {
-              id: board.id,
-              settings: setTemplateVisibilityForClass(
-                board.settings,
-                classId,
-                !isVisible
-              ),
-            },
-          ];
-
-      await Promise.all(
-        boardsToUpdate.map((item) =>
-          updateProposalBoard({
-            variables: {
-              id: item.id,
-              settings: item.settings,
-            },
-          })
-        )
-      );
-    } catch (err) {
-      alert(
-        err?.message
-          || t("projects.toggleVisibilityError", {}, {
-            default: "Failed to update template copy setting.",
-          })
-      );
-    }
-  };
-
   const handleDeleteTemplate = async (boardId) => {
     if (!boardId) return;
     if (!confirm(tBuilder("deleteProposal.confirm"))) return;
@@ -187,18 +103,14 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
           default: "Students cannot copy this template",
         });
 
-  const buildTemplateMenuItems = (board, isVisible, canDelete) => {
+  const buildTemplateMenuItems = (board, canDelete) => {
     const items = [
       {
-        key: "toggleCopy",
-        label: isVisible
-          ? t("projects.hideFromStudents", {}, { default: "Prevent copy" })
-          : t("projects.showToStudents", {}, { default: "Allow copy" }),
-        onClick: () => {
-          if (!updatingVisibility) {
-            handleToggleVisibility(board);
-          }
-        },
+        key: "boardSettings",
+        label: t("projects.boardSettingsAndPermissions", {}, {
+          default: "Board settings & permissions",
+        }),
+        onClick: () => setSettingsModalBoardId(board.id),
       },
       {
         key: "edit",
@@ -221,6 +133,14 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
 
   return (
     <>
+      <TemplateBoardSettingsModal
+        open={!!settingsModalBoardId}
+        onClose={() => setSettingsModalBoardId(null)}
+        boardId={settingsModalBoardId}
+        myclass={myclass}
+        classTemplates={classTemplates}
+      />
+
       <div className="classTabSectionHeader">
         <h3>
           {t("projects.templateManagement", {}, { default: "Template management" })}
@@ -332,8 +252,7 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                             />
                           </>
                         }
-                        panelHeader={copyStatusLabel}
-                        items={buildTemplateMenuItems(board, isVisible, canDelete)}
+                        items={buildTemplateMenuItems(board, canDelete)}
                       />
                     </div>
                   </div>
@@ -375,8 +294,10 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
             />
           </div>
           <Link href={createHref} style={{ textDecoration: "none" }}>
-            <Button variant="outline">
-              {t("projects.newTemplate", {}, { default: "New template" })}
+            <Button variant="primary">
+              {t("projects.newTemplate", {}, {
+                default: "Create new class template",
+              })}
             </Button>
           </Link>
         </div>
@@ -405,7 +326,7 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                     >
                       <Button variant="outline">
                         {t("projects.addTemplateToClass", {}, {
-                          default: "Add to class",
+                          default: "Copy template to class",
                         })}
                       </Button>
                     </Link>

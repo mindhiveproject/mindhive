@@ -1,10 +1,15 @@
 import absoluteUrl from "next-absolute-url";
 import { useQuery, useMutation } from "@apollo/client";
 import { PROPOSAL_QUERY } from "../../../../../Queries/Proposal";
+import { UPDATE_PROPOSAL_BOARD } from "../../../../../Mutations/Proposal";
 import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
 import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
 import { cardIncludedInReviewStep } from "../../../../../../lib/milestones";
-import { EDIT_CLASS } from "../../../../../Mutations/Classes";
+import {
+  getBoardAssignableToStudents,
+  getBoardStudentsCanAssignToCards,
+  mergeBoardSettings,
+} from "../../../../../../lib/proposalBoardSettings";
 import moment from "moment";
 import Head from "next/head";
 import Preview from "./Preview/Main";
@@ -42,13 +47,17 @@ export default function ProposalPDF({
     user?.id &&
     (usedInClass?.creator?.id === user?.id ||
       usedInClass?.mentors?.some((m) => m?.id === user?.id));
-  const assignableToStudents =
-    usedInClass?.settings?.assignableToStudents === true;
-  const studentsCanAssignToCards =
-    usedInClass?.settings?.studentsCanAssignToCards === true;
+  const assignableToStudents = getBoardAssignableToStudents(
+    proposal,
+    usedInClass
+  );
+  const studentsCanAssignToCards = getBoardStudentsCanAssignToCards(
+    proposal,
+    usedInClass
+  );
 
-  const [updateClassSettings, { loading: updatingAssignable }] = useMutation(
-    EDIT_CLASS,
+  const [updateProposalBoard, { loading: updatingAssignable }] = useMutation(
+    UPDATE_PROPOSAL_BOARD,
     {
       refetchQueries: [
         { query: PROPOSAL_QUERY, variables: { id: proposalId } },
@@ -57,23 +66,15 @@ export default function ProposalPDF({
   );
 
   const handleToggleAssignable = () => {
-    const existingSettings =
-      usedInClass?.settings && typeof usedInClass.settings === "object"
-        ? usedInClass.settings
-        : {};
     const newAssignableToStudents = !assignableToStudents;
-    const newSettings = {
-      ...existingSettings,
-      assignableToStudents: newAssignableToStudents,
-    };
-    // When enabling, default to students cannot assign (only teachers/mentors can)
+    const patch = { assignableToStudents: newAssignableToStudents };
     if (newAssignableToStudents) {
-      newSettings.studentsCanAssignToCards = false;
+      patch.studentsCanAssignToCards = false;
     }
-    updateClassSettings({
+    updateProposalBoard({
       variables: {
-        id: usedInClass.id,
-        settings: newSettings,
+        id: proposalId,
+        settings: mergeBoardSettings(proposal.settings, patch),
       },
     }).catch((err) =>
       alert(err?.message || "Failed to update settings")
@@ -81,17 +82,12 @@ export default function ProposalPDF({
   };
 
   const handleToggleStudentsCanAssign = () => {
-    const existingSettings =
-      usedInClass?.settings && typeof usedInClass.settings === "object"
-        ? usedInClass.settings
-        : {};
-    updateClassSettings({
+    updateProposalBoard({
       variables: {
-        id: usedInClass.id,
-        settings: {
-          ...existingSettings,
+        id: proposalId,
+        settings: mergeBoardSettings(proposal.settings, {
           studentsCanAssignToCards: !studentsCanAssignToCards,
-        },
+        }),
       },
     }).catch((err) =>
       alert(err?.message || "Failed to update settings")
