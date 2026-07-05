@@ -749,6 +749,7 @@
 		"setPrimaryTemplate": "Set as primary",
 		"showToStudents": "Allow students to make copies of this template",
 		"studentBoards": "Student boards",
+		"viewBoard": "View board",
 		"templateCopyPermission": "Student copy permission",
 		"templateCopyPermissionDescription": "Control whether students can start new projects from this template.",
 		"templateLibrary": "Template library",

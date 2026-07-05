@@ -2,10 +2,42 @@ import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
+import styled from "styled-components";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridReact } from "ag-grid-react";
+
+const LinkButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  font-family: Lato, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0.05em;
+  text-align: center;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  background: #ffffff;
+  color: #5d5763;
+  border: 1.5px solid #5d5763;
+
+  &:hover {
+    background: #f5f5f5;
+    border-color: #b3b3b3;
+    color: #666666;
+  }
+
+  &:active {
+    background: #e0f2f1;
+    border-color: #4db6ac;
+    color: #4db6ac;
+  }
+`;
 
 import {
   CLASS_PROJECTS_QUERY,
@@ -47,7 +79,21 @@ export default function ClassProjects({ myclass, user, query }) {
       project?.author?.username,
       ...(project?.collaborators || []).map((c) => c?.username),
     ].filter(Boolean);
-    return names.join(", ");
+    return [...new Set(names)].join(", ");
+  };
+
+  const ProjectBoardRenderer = (params) => {
+    const project = params?.data;
+    if (!project?.id) return null;
+    return (
+      <LinkButton
+        href={`/builder/projects?selector=${project.id}`}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {t("projects.viewBoard", {}, { default: "View board" })}
+      </LinkButton>
+    );
   };
 
   const columnDefs = [
@@ -96,6 +142,21 @@ export default function ClassProjects({ myclass, user, query }) {
       sortable: true,
       flex: 1,
       minWidth: 150,
+    },
+    {
+      field: "viewBoard",
+      headerName: t("projects.viewBoard", {}, { default: "View board" }),
+      cellRenderer: ProjectBoardRenderer,
+      suppressFilter: true,
+      sortable: false,
+      flex: 0,
+      minWidth: 130,
+      maxWidth: 150,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
     },
   ];
 
