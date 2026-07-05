@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import sortBy from "lodash/sortBy";
 
 import { useQuery, useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 import { UPDATE_CARD_EDIT } from "../../Mutations/Proposal";
 import { v1 as uuidv1 } from "uuid";
@@ -28,8 +29,13 @@ const Board = ({
   autoUpdateStudentBoards,
   propagateToClones,
   onTemplateChangedWithoutPropagation,
+  autoOpenAddMilestone = false,
 }) => {
   const { t } = useTranslation("builder");
+  const router = useRouter();
+  const [addMilestoneTargetSectionId, setAddMilestoneTargetSectionId] =
+    useState(null);
+  const addMilestoneHandledRef = useRef(false);
   const { loading, error, data } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposalId },
     pollInterval: 20000, // get new data every 20 seconds
@@ -111,6 +117,32 @@ const Board = ({
       setSections(sortedCardsSections);
     }
   }, [proposal]);
+
+  useEffect(() => {
+    if (
+      !autoOpenAddMilestone ||
+      !sections.length ||
+      addMilestoneHandledRef.current
+    ) {
+      return;
+    }
+
+    addMilestoneHandledRef.current = true;
+    setAddMilestoneTargetSectionId(sections[sections.length - 1].id);
+
+    const { addMilestone, ...restQuery } = router.query;
+    if (addMilestone) {
+      router.replace(
+        { pathname: router.pathname, query: restQuery },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [autoOpenAddMilestone, sections, router]);
+
+  const handleAddMilestoneModalOpened = useCallback(() => {
+    setAddMilestoneTargetSectionId(null);
+  }, []);
 
   useEffect(() => {
     if (!proposal?.id || !isClassTemplateBoard(proposal)) return;
@@ -230,6 +262,8 @@ const Board = ({
         propagateToClones={propagateToClones}
         onTemplateChangedWithoutPropagation={onTemplateChangedWithoutPropagation}
         hasClones={hasClones}
+        addMilestoneTargetSectionId={addMilestoneTargetSectionId}
+        onAddMilestoneModalOpened={handleAddMilestoneModalOpened}
       />
     </>
   );

@@ -27,6 +27,7 @@ import {
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import DropdownMenu from "../../../DesignSystem/DropdownMenu";
+import TemplateBoardMilestonesMenu from "./TemplateBoardMilestonesMenu";
 
 export default function ProjectsTemplatePanel({ myclass, user }) {
   const { t } = useTranslation("classes");
@@ -298,6 +299,11 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                       />
                     </div>
                     <div className="classTabTemplateCardActions">
+                      <TemplateBoardMilestonesMenu
+                        board={board}
+                        classCode={code}
+                        classId={classId}
+                      />
                       <DropdownMenu
                         ariaLabel={t("projects.templateOptions", {}, {
                           default: "Template options",

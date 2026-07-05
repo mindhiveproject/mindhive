@@ -1379,6 +1379,11 @@
 		"noTemplatesSubtitle": "Чтобы начать проект, вам понадобится шаблон доски проекта. У вашего преподавателя может не быть шаблона доски проекта, связанного с этим курсом.",
 		"noTemplatesTitle": "В классе нет шаблонов проектных досок.",
 		"selectClass": "Выберите класс",
+		"selectTemplate": "",
+		"selectTemplateAlert": "",
+		"selectTemplateHelp": "",
+		"templateClassLabel": "",
+		"templateOptionLabel": "",
 		"untitledProject": "Проект без названия"
 	},
 	"notes": {

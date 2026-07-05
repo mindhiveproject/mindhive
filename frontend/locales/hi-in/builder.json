@@ -1379,6 +1379,11 @@
 		"noTemplatesSubtitle": "प्रोजेक्ट शुरू करने के लिए, आपको एक प्रोजेक्ट बोर्ड टेम्पलेट की आवश्यकता होगी। हो सकता है कि आपके शिक्षक के पास इस कक्षा से जुड़ा कोई प्रोजेक्ट बोर्ड टेम्पलेट न हो।",
 		"noTemplatesTitle": "कक्षा में कोई प्रोजेक्ट बोर्ड टेम्पलेट नहीं हैं",
 		"selectClass": "कक्षा का चयन करें",
+		"selectTemplate": "",
+		"selectTemplateAlert": "",
+		"selectTemplateHelp": "",
+		"templateClassLabel": "",
+		"templateOptionLabel": "",
 		"untitledProject": "शीर्षकहीन परियोजना"
 	},
 	"notes": {

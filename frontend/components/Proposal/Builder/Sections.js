@@ -159,6 +159,10 @@ class Sections extends Component {
                 propagateToClones={this.props.propagateToClones}
                 onTemplateChangedWithoutPropagation={this.props.onTemplateChangedWithoutPropagation}
                 hasClones={this.props.hasClones}
+                autoOpenCreateCardAction={
+                  section.id === this.props.addMilestoneTargetSectionId
+                }
+                onAddMilestoneModalOpened={this.props.onAddMilestoneModalOpened}
               />
             </Draggable>
           ))}

@@ -1379,6 +1379,11 @@
 		"noTemplatesSubtitle": "Om een ​​project te starten, heb je een projectbordsjabloon nodig. Het is mogelijk dat je docent geen projectbordsjabloon aan deze les heeft gekoppeld.",
 		"noTemplatesTitle": "Er zijn geen projectbordsjablonen in de klas",
 		"selectClass": "Selecteer de klas",
+		"selectTemplate": "",
+		"selectTemplateAlert": "",
+		"selectTemplateHelp": "",
+		"templateClassLabel": "",
+		"templateOptionLabel": "",
 		"untitledProject": "Ongetiteld project"
 	},
 	"notes": {

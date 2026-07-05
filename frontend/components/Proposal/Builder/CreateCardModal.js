@@ -1,14 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../DesignSystem/Button";
 import Chip from "../../DesignSystem/Chip";
-import CardRenderer from "../../Forms/DefinitionForm/CardRenderer";
+import FormDefinitionPreview from "../../Forms/DefinitionForm/FormDefinitionPreview";
 import FormDefinitionEditor from "../../Dashboard/Admin/Forms/FormDefinitionEditor";
-import { RESOLVE_FORM_DEFINITION } from "../../Queries/FormDefinition";
 import { isClassTemplateBoard } from "../../Utils/proposalBoard";
 import { useBoardMilestones } from "../../../lib/useBoardMilestones";
 import { resolveReviewFormKey } from "../../../lib/milestones";
@@ -116,94 +114,6 @@ function StepSection({ label, children }) {
     <div style={{ display: "grid", gap: 10 }}>
       <div style={{ ...labelStyle, marginBottom: 0 }}>{label}</div>
       {children}
-    </div>
-  );
-}
-
-function FormDefinitionPreview({ board, milestone }) {
-  const { t } = useTranslation("builder");
-  const router = useRouter();
-  const curriculumType = getCurriculumType(board);
-
-  const formKey = useMemo(() => {
-    if (!milestone) return null;
-    if (milestone.formDefinition?.key) return milestone.formDefinition.key;
-    return resolveReviewFormKey(milestone, curriculumType);
-  }, [curriculumType, milestone]);
-
-  const { data, loading } = useQuery(RESOLVE_FORM_DEFINITION, {
-    variables: {
-      key: formKey || "",
-      organizationId: null,
-      classNetworkId: null,
-    },
-    skip: !formKey,
-  });
-
-  if (!milestone) return null;
-
-  if (!formKey) {
-    return (
-      <div style={previewShellStyle}>
-        {t(
-          "section.createCardModal.noPreview",
-          {},
-          { default: "No review form is linked to this card type." }
-        )}
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div style={previewShellStyle}>
-        {t(
-          "section.createCardModal.previewLoading",
-          {},
-          { default: "Loading preview..." }
-        )}
-      </div>
-    );
-  }
-
-  const definition = data?.resolveFormDefinition;
-  if (!definition?.cards?.length) {
-    return (
-      <div style={previewShellStyle}>
-        {t(
-          "section.createCardModal.noPreview",
-          {},
-          { default: "No review form is linked to this card type." }
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <div style={previewShellStyle}>
-      <div style={{ fontWeight: 700, marginBottom: 12 }}>
-        {t(
-          "section.createCardModal.previewLabel",
-          {},
-          { default: "Review form preview" }
-        )}
-      </div>
-      <div style={{ display: "grid", gap: 12, pointerEvents: "none" }}>
-        {definition.cards.map((card) => (
-          <CardRenderer
-            key={card.id}
-            card={card}
-            locale={router.locale || "en-us"}
-            viewerRoles={["admin"]}
-            entityStatus={null}
-            values={{}}
-            errors={{}}
-            onFieldChange={() => {}}
-            disabled
-            specialCardComponents={{}}
-          />
-        ))}
-      </div>
     </div>
   );
 }
@@ -585,6 +495,7 @@ export default function CreateCardModal({
   open,
   sectionId,
   sections = [],
+  initialCardCategory = "",
 }) {
   const { t } = useTranslation("builder");
   const router = useRouter();
@@ -644,15 +555,20 @@ export default function CreateCardModal({
   };
 
   useEffect(() => {
-    if (open) return;
-    setCardCategory("");
-    setCheckpointChoice("");
-    setTitle("");
-    setDescription("");
-    setSelectedPermissions(DEFAULT_PERMISSIONS);
-    setSelectedTemplateKey("");
-    setCreatedMilestone(null);
-  }, [open]);
+    if (!open) {
+      setCardCategory("");
+      setCheckpointChoice("");
+      setTitle("");
+      setDescription("");
+      setSelectedPermissions(DEFAULT_PERMISSIONS);
+      setSelectedTemplateKey("");
+      setCreatedMilestone(null);
+      return;
+    }
+    if (initialCardCategory) {
+      setCardCategory(initialCardCategory);
+    }
+  }, [open, initialCardCategory]);
 
   useEffect(() => {
     if (!isDefaultCheckpoint || !selectedMilestone) return;

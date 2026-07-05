@@ -1379,6 +1379,11 @@
 		"noTemplatesSubtitle": "要启动项目，你需要一个项目板模板。你的老师可能没有链接到此课程的项目板模板。",
 		"noTemplatesTitle": "课堂上没有项目板模板",
 		"selectClass": "选择班级",
+		"selectTemplate": "",
+		"selectTemplateAlert": "",
+		"selectTemplateHelp": "",
+		"templateClassLabel": "",
+		"templateOptionLabel": "",
 		"untitledProject": "无标题项目"
 	},
 	"notes": {

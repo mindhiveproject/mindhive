@@ -19,6 +19,7 @@ export default function ProposalBuilder({
   proposalBuildMode,
   isPreview,
   refetchQueries,
+  autoOpenAddMilestone = false,
 }) {
   const { t } = useTranslation("builder");
   const {
@@ -140,6 +141,7 @@ export default function ProposalBuilder({
               autoUpdateStudentBoards={autoUpdateStudentBoards}
               propagateToClones={propagateToClones}
               onTemplateChangedWithoutPropagation={markUnpropagatedChange}
+              autoOpenAddMilestone={autoOpenAddMilestone}
             />
           )}
         </>

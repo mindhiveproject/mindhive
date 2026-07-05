@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactHTMLParser from "react-html-parser";
 import { useMutation, useApolloClient } from "@apollo/client";
 import sortBy from "lodash/sortBy";
@@ -10,6 +10,7 @@ import Card from "./Card";
 import ActionCard from "./ActionCard";
 import CreateCardModal from "./CreateCardModal";
 import Button from "../../DesignSystem/Button";
+import { CARD_CATEGORY_ACTION } from "./cardTypeOptions";
 
 import { PROPOSAL_QUERY } from "../../Queries/Proposal";
 import {
@@ -42,6 +43,8 @@ const Section = ({
   propagateToClones,
   onTemplateChangedWithoutPropagation,
   hasClones,
+  autoOpenCreateCardAction = false,
+  onAddMilestoneModalOpened,
 }) => {
   const { t } = useTranslation("builder");
   const { cards } = section;
@@ -49,6 +52,16 @@ const Section = ({
   // const sortedCards = sortBy(cards, item => item.position);
 
   const [createCardModalOpen, setCreateCardModalOpen] = useState(false);
+  const [createCardInitialCategory, setCreateCardInitialCategory] = useState("");
+  const addMilestoneOpenedRef = useRef(false);
+
+  useEffect(() => {
+    if (!autoOpenCreateCardAction || addMilestoneOpenedRef.current) return;
+    addMilestoneOpenedRef.current = true;
+    setCreateCardInitialCategory(CARD_CATEGORY_ACTION);
+    setCreateCardModalOpen(true);
+    onAddMilestoneModalOpened?.();
+  }, [autoOpenCreateCardAction, onAddMilestoneModalOpened]);
   const [isEditingSectionTitle, setIsEditingSectionTitle] = useState(false);
   const [editingSectionTitle, setEditingSectionTitle] = useState("");
 
@@ -580,13 +593,17 @@ const Section = ({
         creating={
           createCardState.loading || createTemplateMilestoneState.loading
         }
-        onClose={() => setCreateCardModalOpen(false)}
+        onClose={() => {
+          setCreateCardModalOpen(false);
+          setCreateCardInitialCategory("");
+        }}
         onCreateCard={addCardMutation}
         onCreateCustomMilestone={createCustomMilestone}
         onFinishCustomMilestoneEdit={finishCustomMilestoneEdit}
         open={createCardModalOpen}
         sectionId={section.id}
         sections={sections}
+        initialCardCategory={createCardInitialCategory}
       />
       {(proposalBuildMode || settings?.allowAddingSections) && (
         <div className="deleteBtn">

@@ -1379,6 +1379,11 @@
 		"noTemplatesSubtitle": "Para empezar un proyecto, necesitas una plantilla de tablero de proyecto. Es posible que tu profesor no tenga una plantilla de tablero de proyecto vinculada a esta clase.",
 		"noTemplatesTitle": "No hay plantillas de tableros de proyectos en la clase.",
 		"selectClass": "Seleccione la clase",
+		"selectTemplate": "",
+		"selectTemplateAlert": "",
+		"selectTemplateHelp": "",
+		"templateClassLabel": "",
+		"templateOptionLabel": "",
 		"untitledProject": "Proyecto sin título"
 	},
 	"notes": {

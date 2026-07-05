@@ -13,6 +13,7 @@ export default function ProposalPage({
   showBackButton = true,
   proposalBuildMode,
   refetchQueries,
+  autoOpenAddMilestone = false,
 }) {
   const { t } = useTranslation("classes");
   const handleBack = onBack || goToOverview;
@@ -43,6 +44,7 @@ export default function ProposalPage({
           onClose={handleBack}
           proposalBuildMode={proposalBuildMode}
           refetchQueries={refetchQueries}
+          autoOpenAddMilestone={autoOpenAddMilestone}
         />
       )}
     </div>

@@ -1379,6 +1379,11 @@
 		"noTemplatesSubtitle": "لبدء مشروع، ستحتاج إلى قالب لوحة مشروع. قد لا يتوفر لدى معلمك قالب لوحة مشروع مرتبط بهذه الحصة.",
 		"noTemplatesTitle": "لا توجد قوالب لوحة المشروع في الفصل",
 		"selectClass": "حدد الفصل",
+		"selectTemplate": "",
+		"selectTemplateAlert": "",
+		"selectTemplateHelp": "",
+		"templateClassLabel": "",
+		"templateOptionLabel": "",
 		"untitledProject": "مشروع بلا عنوان"
 	},
 	"notes": {

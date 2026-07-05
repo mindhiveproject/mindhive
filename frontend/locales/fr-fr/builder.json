@@ -1379,6 +1379,11 @@
 		"noTemplatesSubtitle": "Pour démarrer un projet, vous avez besoin d'un modèle de tableau de projet. Votre enseignant n'a peut-être pas de modèle de tableau de projet associé à ce cours.",
 		"noTemplatesTitle": "Il n'y a pas de modèles de tableau de projet dans la classe",
 		"selectClass": "Sélectionnez la classe",
+		"selectTemplate": "",
+		"selectTemplateAlert": "",
+		"selectTemplateHelp": "",
+		"templateClassLabel": "",
+		"templateOptionLabel": "",
 		"untitledProject": "Projet sans titre"
 	},
 	"notes": {

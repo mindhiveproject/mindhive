@@ -121,6 +121,8 @@ function Inner(props) {
               props.onTemplateChangedWithoutPropagation
             }
             hasClones={props.hasClones}
+            addMilestoneTargetSectionId={props.addMilestoneTargetSectionId}
+            onAddMilestoneModalOpened={props.onAddMilestoneModalOpened}
           />
         </div>
       </div>

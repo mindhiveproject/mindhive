@@ -1379,6 +1379,11 @@
 		"noTemplatesSubtitle": "Para iniciar um projeto, você precisa de um modelo de quadro de projeto. Seu professor pode não ter um modelo de quadro de projeto vinculado a esta turma.",
 		"noTemplatesTitle": "Não há modelos de quadro de projeto na classe",
 		"selectClass": "Selecione a classe",
+		"selectTemplate": "",
+		"selectTemplateAlert": "",
+		"selectTemplateHelp": "",
+		"templateClassLabel": "",
+		"templateOptionLabel": "",
 		"untitledProject": "Projeto sem título"
 	},
 	"notes": {

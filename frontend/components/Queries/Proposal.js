@@ -683,6 +683,28 @@ export const CLASS_TEMPLATE_PROJECTS_QUERY = gql`
       }
       createdAt
       updatedAt
+      sections(orderBy: [{ position: asc }]) {
+        id
+        title
+        position
+        cards(orderBy: [{ position: asc }]) {
+          id
+          type
+          title
+          position
+          milestone {
+            id
+            key
+            actionCardType
+            title
+            formDefinitionKeyPattern
+            formDefinition {
+              id
+              key
+            }
+          }
+        }
+      }
     }
   }
 `;

@@ -11,6 +11,7 @@ import ProposalPage from "./ProjectBoard/ProposalPage";
 export default function ProjectsBoardEditor({ myclass, user, boardId }) {
   const router = useRouter();
   const { t } = useTranslation("classes");
+  const autoOpenAddMilestone = router.query.addMilestone === "1";
 
   const projectsHref = {
     pathname: `/dashboard/myclasses/${myclass?.code}`,
@@ -43,6 +44,7 @@ export default function ProjectsBoardEditor({ myclass, user, boardId }) {
           showBackButton={false}
           proposalBuildMode
           refetchQueries={refetchQueries}
+          autoOpenAddMilestone={autoOpenAddMilestone}
         />
       </StyledProposal>
     </Sidebar.Pushable>
