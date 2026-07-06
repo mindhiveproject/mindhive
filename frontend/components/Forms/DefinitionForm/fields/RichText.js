@@ -33,21 +33,17 @@ export default function RichText({
       {fieldHelper(field, locale) ? (
         <span className="hint">{fieldHelper(field, locale)}</span>
       ) : null}
-      <div
-        style={{
-          border: "1px solid #d3dae0",
-          borderRadius: 8,
-          overflow: "hidden",
-          background: "#ffffff",
-        }}
-      >
-        <TipTapEditor
-          content={typeof value === "string" ? value : ""}
-          onUpdate={handleUpdate}
-          isEditable={!disabled}
-          toolbarVisible
-        />
-      </div>
+      {/* TipTapEditor renders its own styled container (border,
+          border-radius, background). Wrapping it in another styled
+          <div> caused visible double-rounding — the outer radius +
+          overflow-hidden clipped the inner element's own rounded
+          corners at a different radius. Let TipTap own its chrome. */}
+      <TipTapEditor
+        content={typeof value === "string" ? value : ""}
+        onUpdate={handleUpdate}
+        isEditable={!disabled}
+        toolbarVisible
+      />
       {error ? <span className="error">{error}</span> : null}
     </FieldShell>
   );

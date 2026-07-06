@@ -299,7 +299,7 @@ const StyledClass = styled.div`
       display: flex;
       align-items: center;
       gap: 8px;
-      width: fit-content;
+      width: 100%;
       max-width: 100%;
       margin: 0px 0 12px;
       border-radius: 8px;

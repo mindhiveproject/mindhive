@@ -30,19 +30,6 @@ const Shell = styled.div`
   padding: 16px 0;
 `;
 
-const ModeBadge = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 100px;
-  background: #eef5f9;
-  color: #336f8a;
-  font-size: 12px;
-  font-weight: 600;
-  align-self: flex-start;
-`;
-
 function rolesForViewer(user) {
   const roles = deriveRoles(user);
   const out = [];
@@ -127,7 +114,6 @@ export default function OrgAboutDefinitionMode({ user }) {
 
   return (
     <Shell>
-      <ModeBadge>Definition-driven form</ModeBadge>
       <DefinitionForm
         definitionKey="profile_organization"
         entity={user}

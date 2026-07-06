@@ -134,7 +134,15 @@ export function buildUpdate(values, fields, entity, related) {
       // Tag multiselect → Keystone relationship `set` input.
       if (f.fieldType === "tag_multiselect") {
         const ids = Array.isArray(v) ? v.filter(Boolean) : [];
-        target.columns[col] = { set: ids.map((id) => ({ id })) };
+        // Keystone's Create relationship input doesn't accept `set`
+        // (only Update does). Detect first-save-of-this-entity via the
+        // sourceEntity's id — if there's no id yet, we're a create and
+        // need `connect`. Otherwise `set` is right because it replaces
+        // the whole list.
+        const isCreate = !sourceEntity?.id;
+        target.columns[col] = isCreate
+          ? { connect: ids.map((id) => ({ id })) }
+          : { set: ids.map((id) => ({ id })) };
         continue;
       }
 

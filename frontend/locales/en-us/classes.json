@@ -575,6 +575,7 @@
 	"failedToUpdateSettings": "Failed to update settings",
 	"header": {
 		"addDescription": "Add description",
+		"mentorAccount": "Mentor account: {{username}}",
 		"mentors": "Mentors",
 		"mentorsPanelTooltip": "Mentor accounts associated with this class.",
 		"save": "",
@@ -903,7 +904,7 @@
 		"noStudiesYet": "The students haven't created any studies yet.",
 		"participants": "Participants",
 		"studyBuilder": "Study builder",
-		"studyPage": "Study page",
+		"studyPage": "Participant page",
 		"studyTitle": "Study title"
 	},
 	"studiesTab": "Studies",

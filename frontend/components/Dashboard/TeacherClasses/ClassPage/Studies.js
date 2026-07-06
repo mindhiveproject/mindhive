@@ -43,11 +43,14 @@ export default function Studies({ myclass }) {
   const studies = myclass?.studies || [];
 
   const getCollaborators = (study) => {
-    const names = [
-      study?.author?.username,
-      ...(study?.collaborators || []).map((c) => c?.username),
-    ].filter(Boolean);
-    return names.join(", ");
+    const collaboratorMap = new Map();
+    [study?.author, ...(study?.collaborators || [])].forEach((profile) => {
+      const key = profile?.id || profile?.username;
+      if (key && profile?.username) {
+        collaboratorMap.set(key, profile.username);
+      }
+    });
+    return Array.from(collaboratorMap.values()).join(", ");
   };
 
   const StudyPageRenderer = (params) => {
