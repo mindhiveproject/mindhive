@@ -159,6 +159,21 @@
 		"commentsComment": "سيؤدي هذا إلى ملء مربع التعليقات مسبقًا للطلاب. يمكنك حذف التعليقات لاحقًا.",
 		"editMode": "أنت في وضع التحرير",
 		"expendedCard": {
+			"actionCard": {
+				"actionCardLabel": "",
+				"defaultFormReadOnly": "",
+				"editReviewForm": "",
+				"editReviewFormHint": "",
+				"includedCardsEmpty": "",
+				"includedCardsHelper": "",
+				"includedCardsTitle": "",
+				"milestoneDescription": "",
+				"publish": "",
+				"reviewFormPreview": "",
+				"scopedFormOnly": "",
+				"statusDraft": "",
+				"statusPublished": ""
+			},
 			"addExistingResources": "إضافة الموارد الموجودة (انظر الموارد في جزء التنقل)",
 			"addLinkedItems": "إضافة الواجبات أو المهام أو الدراسات أو الموارد الحالية",
 			"addToFavorites": "أضف إلى المفضلة",
@@ -575,6 +590,7 @@
 	"failedToUpdateSettings": "فشل تحديث الإعدادات",
 	"header": {
 		"addDescription": "اضف وصفا",
+		"mentorAccount": "",
 		"mentors": "الموجهون",
 		"mentorsPanelTooltip": "حسابات الموجهين المرتبطة بهذه الدورة.",
 		"save": "يحفظ",
@@ -752,11 +768,22 @@
 		"templateCopyPermission": "",
 		"templateCopyPermissionDescription": "",
 		"templateLibrary": "",
+		"templateLibraryCategory": {
+			"myBoards": "",
+			"network": "",
+			"networkDisabledHint": "",
+			"public": ""
+		},
 		"templateLibraryCount": "",
+		"templateLibraryNoMine": "",
 		"templateManagement": "",
 		"templateOptions": "",
+		"templatePreviewModal": {
+			"title": ""
+		},
 		"templateUses": "",
 		"toggleVisibilityError": "",
+		"viewBoard": "",
 		"visibleToStudents": ""
 	},
 	"proposalCardsAssignableQuestion": "هل ينبغي أن تكون بطاقات الاقتراح قابلة للتخصيص للطلاب؟",

@@ -189,23 +189,81 @@ export const MILESTONE_CARD_BUILDER_META = {
   },
 };
 
-export function cardIncludedInReviewStep(card, actionCardOrMilestone, milestones = []) {
-  const steps = card?.settings?.includeInReviewSteps || [];
-  if (!steps.length || !actionCardOrMilestone) return false;
+export function parseCardSettings(card) {
+  const settings = card?.settings;
+  if (!settings) return {};
+  if (typeof settings === "string") {
+    try {
+      return JSON.parse(settings);
+    } catch {
+      return {};
+    }
+  }
+  return settings;
+}
+
+export function expandReviewStepAliases(stepKey, milestones = []) {
+  const aliases = new Set();
+  if (!stepKey) return aliases;
+
+  aliases.add(stepKey);
+
+  const normalizedKey = normalizeReviewStepKey(stepKey, milestones);
+  if (normalizedKey) aliases.add(normalizedKey);
 
   const milestone =
-    getMilestoneFromCard({ type: actionCardOrMilestone, milestone: null }, milestones) ||
-    getMilestoneByKey(actionCardOrMilestone, milestones) ||
-    getMilestoneByActionCardType(actionCardOrMilestone, milestones);
+    getMilestoneByKey(stepKey, milestones) ||
+    getMilestoneByActionCardType(stepKey, milestones);
 
-  const keysToMatch = [
-    actionCardOrMilestone,
-    milestone?.key,
-    milestone?.id,
-    milestone?.actionCardType,
-  ].filter(Boolean);
+  if (milestone) {
+    if (milestone.key) aliases.add(milestone.key);
+    if (milestone.id) aliases.add(milestone.id);
+    if (milestone.actionCardType) aliases.add(milestone.actionCardType);
+    if (milestone.reviewStage) aliases.add(milestone.reviewStage);
+  }
 
-  return steps.some((step) => keysToMatch.includes(step));
+  const meta = MILESTONE_CARD_BUILDER_META[stepKey];
+  if (meta?.key) aliases.add(meta.key);
+
+  return aliases;
+}
+
+export function cardIncludedInReviewStep(card, actionCardOrMilestone, milestones = []) {
+  const settings = parseCardSettings(card);
+  const steps = settings?.includeInReviewSteps || [];
+  if (!steps.length || !actionCardOrMilestone) return false;
+
+  const targetAliases = new Set();
+
+  const addTargetAliases = (key) => {
+    expandReviewStepAliases(key, milestones).forEach((alias) =>
+      targetAliases.add(alias)
+    );
+  };
+
+  if (
+    typeof actionCardOrMilestone === "object" &&
+    actionCardOrMilestone !== null
+  ) {
+    const actionCard = actionCardOrMilestone;
+    if (actionCard.type) addTargetAliases(actionCard.type);
+    const resolvedMilestone = getMilestoneFromCard(actionCard, milestones);
+    if (resolvedMilestone?.key) addTargetAliases(resolvedMilestone.key);
+    if (resolvedMilestone?.id) addTargetAliases(resolvedMilestone.id);
+    if (resolvedMilestone?.actionCardType) {
+      addTargetAliases(resolvedMilestone.actionCardType);
+    }
+    if (resolvedMilestone?.reviewStage) {
+      addTargetAliases(resolvedMilestone.reviewStage);
+    }
+  } else {
+    addTargetAliases(actionCardOrMilestone);
+  }
+
+  return steps.some((step) => {
+    const stepAliases = expandReviewStepAliases(step, milestones);
+    return [...stepAliases].some((alias) => targetAliases.has(alias));
+  });
 }
 
 export function getReviewStepOptions(milestones = [], t) {

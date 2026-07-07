@@ -1876,6 +1876,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (já adicionado)",
 			"alreadyAddedTooltip": "Este ponto de controle já está no quadro.",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
 			"cancel": "Cancelar",
 			"categories": {
 				"action": "Cartão de ação",
@@ -1896,6 +1898,8 @@
 			"customPreview": "Cria uma etapa de revisão personalizada com seu próprio rótulo de marco.",
 			"editForm": "Editar formulário",
 			"editFormHint": "A edição de formulários está disponível em outro local.",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
 			"formTemplate": {
 				"blank": "Formulário em branco",
 				"defaultLabel": "{{label}}",
@@ -1911,7 +1915,22 @@
 			"previewLabel": "Pré-visualização do formulário de revisão",
 			"previewLoading": "Carregando visualização...",
 			"proposalPreview": "Adiciona um cartão de proposta padrão com campos de conteúdo para os alunos.",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
 			"scratchPreview": "Cria um formulário de revisão em rascunho com um cartão vazio, vinculado a esta etapa. Publica o formulário no painel de administração antes que ele apareça na revisão.",
+			"statusDraft": "",
+			"statusPublished": "",
 			"steps": {
 				"cardType": "Tipo de cartão",
 				"checkpoint": "Ponto de verificação",

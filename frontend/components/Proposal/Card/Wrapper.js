@@ -3,10 +3,12 @@ import { useQuery, useMutation } from "@apollo/client";
 import { GET_CARD_CONTENT } from "../../Queries/Proposal";
 
 import CardBuilder from "./Builder";
+import ActionCardBuilder from "./ActionCardBuilder";
 import ProposalCard from "./Main";
 
 import IndividualCard from "./Individual/Main";
 import OverviewOfIndividualCards from "./Overview/Main";
+import { isActionCard } from "../../../lib/milestones";
 
 export default function CardWrapper({
   user,
@@ -62,6 +64,19 @@ export default function CardWrapper({
       }
     } else {
       if (proposalBuildMode) {
+        if (isActionCard(proposalCard)) {
+          return (
+            <ActionCardBuilder
+              user={user}
+              proposal={proposal}
+              proposalCard={proposalCard}
+              closeCard={closeCard}
+              autoUpdateStudentBoards={autoUpdateStudentBoards}
+              propagateToClones={propagateToClones}
+              onTemplateChangedWithoutPropagation={onTemplateChangedWithoutPropagation}
+            />
+          );
+        }
         return (
           <CardBuilder
             user={user}

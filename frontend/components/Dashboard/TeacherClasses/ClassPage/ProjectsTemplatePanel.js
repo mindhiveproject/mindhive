@@ -135,20 +135,50 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
     const items = [
       {
         key: "preview",
+        icon: (
+          <img
+            src="/assets/icons/eye_open.svg"
+            alt=""
+            width={18}
+            height={18}
+            aria-hidden
+            style={{ display: "block" }}
+          />
+        ),
         label: t("projectBoard.preview", {}, { default: "Preview" }),
         onClick: () => setPreviewTemplate(board),
       },
       {
+        key: "edit",
+        icon: (
+          <img
+            src="/assets/icons/pencil.svg"
+            alt=""
+            width={18}
+            height={18}
+            aria-hidden
+            style={{ display: "block" }}
+          />
+        ),
+        label: t("projects.editTemplate", {}, { default: "Edit template" }),
+        onClick: () => router.push(editHref(board.id)),
+      },
+      {
         key: "boardSettings",
+        icon: (
+          <img
+            src="/assets/icons/settings.svg"
+            alt=""
+            width={18}
+            height={18}
+            aria-hidden
+            style={{ display: "block" }}
+          />
+        ),
         label: t("projects.boardSettingsAndPermissions", {}, {
           default: "Board settings & permissions",
         }),
         onClick: () => setSettingsModalBoardId(board.id),
-      },
-      {
-        key: "edit",
-        label: t("projects.editTemplate", {}, { default: "Edit template" }),
-        onClick: () => router.push(editHref(board.id)),
       },
     ];
 
@@ -252,7 +282,7 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                         style={{ 
                           backgroundColor: isVisible ? "#FFFFFF" : "#F3F3F3",
                           fontSize: "12px", 
-                          fontWeight: isVisible ? "600" : "500",
+                          fontWeight: isVisible ? "500" : "400",
                           color: isVisible ? "#1C1B1F" : "#666666" }}
                         label={copyStatusLabel}
                       />
@@ -343,9 +373,9 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                 selected={libraryCategory === "mine"}
                 onClick={() => setLibraryCategory("mine")}
                 label={t(
-                  "projects.templateLibraryCategory.mine",
+                  "projects.templateLibraryCategory.myBoards",
                   { count: mineTemplates.length },
-                  { default: "Mine ({{count}})" }
+                  { default: "My boards ({{count}})" }
                 )}
               />
               <Chip
@@ -389,7 +419,7 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
             {displayedTemplates.map((template) => (
               <div key={template.id} className="classTabTemplateCard">
                 <div className="classTabTemplateCardRow">
-                  <div>
+                  <div className="classTabTemplateCardTitleGroup">
                     <h5 className="classTabTemplateCardTitle">{template.title}</h5>
                     {template.description ? (
                       <p className="classTabTemplateCardDescription">
@@ -397,13 +427,10 @@ export default function ProjectsTemplatePanel({ myclass, user }) {
                       </p>
                     ) : null}
                   </div>
-                  <div
-                    className="classTabTemplateCardActions"
-                    style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
-                  >
+                  <div className="classTabTemplateCardActions">
                     <Button
                       type="button"
-                      variant="outline"
+                      variant="text"
                       onClick={() => setPreviewTemplate(template)}
                     >
                       {t("projectBoard.preview", {}, { default: "Preview" })}

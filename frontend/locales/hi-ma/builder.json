@@ -1876,6 +1876,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "",
 			"alreadyAddedTooltip": "",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
 			"cancel": "",
 			"categories": {
 				"action": "",
@@ -1896,6 +1898,8 @@
 			"customPreview": "",
 			"editForm": "",
 			"editFormHint": "",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
 			"formTemplate": {
 				"blank": "",
 				"defaultLabel": "",
@@ -1911,7 +1915,22 @@
 			"previewLabel": "",
 			"previewLoading": "",
 			"proposalPreview": "",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
 			"scratchPreview": "",
+			"statusDraft": "",
+			"statusPublished": "",
 			"steps": {
 				"cardType": "",
 				"checkpoint": "",

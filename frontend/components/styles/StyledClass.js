@@ -1079,7 +1079,7 @@ const StyledClass = styled.div`
     .classTabSubsectionTitle {
       margin: 0;
       font-family: "Inter", sans-serif;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 700;
       line-height: 22px;
       color: #171717;
@@ -1133,11 +1133,10 @@ const StyledClass = styled.div`
     }
 
     .classTabTemplateCardRow {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 12px 16px;
     }
 
     .classTabTemplateCardTitle {
@@ -1148,9 +1147,16 @@ const StyledClass = styled.div`
       line-height: 24px;
       color: #171717;
       word-break: break-word;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .classTabTemplateCardTitleLink {
+      display: block;
+      min-width: 0;
+      max-width: 100%;
       text-decoration: none;
       color: inherit;
       cursor: pointer;
@@ -1163,9 +1169,10 @@ const StyledClass = styled.div`
 
     .classTabTemplateCardTitleGroup {
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
+      flex-direction: column;
+      align-items: flex-start;
       gap: 8px;
+      min-width: 0;
     }
 
     .classTabTemplateCardDescription {
@@ -1178,10 +1185,11 @@ const StyledClass = styled.div`
 
     .classTabTemplateCardActions {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       align-items: center;
       justify-content: flex-end;
       gap: 12px;
+      flex-shrink: 0;
     }
 
     .classTabTemplateCardMeta {
@@ -1202,6 +1210,15 @@ const StyledClass = styled.div`
 
       .classTabInformationBlock {
         grid-template-columns: 1fr;
+      }
+
+      .classTabTemplateCardRow {
+        grid-template-columns: 1fr;
+      }
+
+      .classTabTemplateCardActions {
+        justify-content: flex-start;
+        flex-wrap: wrap;
       }
     }
   }

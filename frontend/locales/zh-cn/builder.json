@@ -1876,6 +1876,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} （已添加）",
 			"alreadyAddedTooltip": "这个检查点已经标记在棋盘上了。",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
 			"cancel": "取消",
 			"categories": {
 				"action": "行动卡",
@@ -1896,6 +1898,8 @@
 			"customPreview": "创建带有自定义里程碑标签的自定义审核步骤。",
 			"editForm": "编辑表单",
 			"editFormHint": "表单编辑功能可在其他地方使用。",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
 			"formTemplate": {
 				"blank": "空白表格",
 				"defaultLabel": "{{label}}",
@@ -1911,7 +1915,22 @@
 			"previewLabel": "审核表单预览",
 			"previewLoading": "正在加载预览...",
 			"proposalPreview": "为学生添加带有内容字段的常规提案卡。",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
 			"scratchPreview": "创建一个包含一张空白卡片的草稿审核表单，并将其链接到此步骤。在表单出现在审核流程之前，请先在管理后台发布该表单。",
+			"statusDraft": "",
+			"statusPublished": "",
 			"steps": {
 				"cardType": "卡类型",
 				"checkpoint": "检查点",

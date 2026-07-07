@@ -1876,6 +1876,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (ya añadido)",
 			"alreadyAddedTooltip": "Este punto de control ya está en el tablero.",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
 			"cancel": "Cancelar",
 			"categories": {
 				"action": "Tarjeta de acción",
@@ -1896,6 +1898,8 @@
 			"customPreview": "Crea un paso de revisión personalizado con su propia etiqueta de hito.",
 			"editForm": "Editar formulario",
 			"editFormHint": "La edición de formularios está disponible en otro lugar.",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
 			"formTemplate": {
 				"blank": "Formulario en blanco",
 				"defaultLabel": "{{label}}",
@@ -1911,7 +1915,22 @@
 			"previewLabel": "Vista previa del formulario de revisión",
 			"previewLoading": "Cargando vista previa...",
 			"proposalPreview": "Agrega una tarjeta de propuesta estándar con campos de contenido para los estudiantes.",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
 			"scratchPreview": "Crea un formulario de revisión preliminar con una tarjeta vacía, vinculada a este paso. Publica el formulario en el panel de administración antes de que aparezca en revisión.",
+			"statusDraft": "",
+			"statusPublished": "",
 			"steps": {
 				"cardType": "Tipo de tarjeta",
 				"checkpoint": "Control",

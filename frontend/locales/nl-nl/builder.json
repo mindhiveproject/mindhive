@@ -1876,6 +1876,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (reeds toegevoegd)",
 			"alreadyAddedTooltip": "Dit controlepunt staat al op het bord.",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
 			"cancel": "Annuleren",
 			"categories": {
 				"action": "Actiekaart",
@@ -1896,6 +1898,8 @@
 			"customPreview": "Hiermee wordt een aangepaste beoordelingsstap met een eigen mijlpaallabel aangemaakt.",
 			"editForm": "Formulier bewerken",
 			"editFormHint": "Het bewerken van formulieren is elders mogelijk.",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
 			"formTemplate": {
 				"blank": "Leeg formulier",
 				"defaultLabel": "{{label}}",
@@ -1911,7 +1915,22 @@
 			"previewLabel": "Voorbeeld van het beoordelingsformulier",
 			"previewLoading": "Voorbeeld laden...",
 			"proposalPreview": "Voegt een standaard voorstelkaart toe met inhoudsvelden voor studenten.",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
 			"scratchPreview": "Hiermee wordt een conceptbeoordelingsformulier aangemaakt met één lege kaart, gekoppeld aan deze stap. Publiceer het formulier in het beheerscherm voordat het ter beoordeling verschijnt.",
+			"statusDraft": "",
+			"statusPublished": "",
 			"steps": {
 				"cardType": "Kaarttype",
 				"checkpoint": "Controlepost",

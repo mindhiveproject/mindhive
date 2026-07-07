@@ -1876,6 +1876,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (पहले ही जोड़ा जा चुका है)",
 			"alreadyAddedTooltip": "यह चेकपॉइंट पहले से ही बोर्ड पर अंकित है।",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
 			"cancel": "रद्द करना",
 			"categories": {
 				"action": "एक्शन कार्ड",
@@ -1896,6 +1898,8 @@
 			"customPreview": "यह अपने स्वयं के माइलस्टोन लेबल के साथ एक कस्टम समीक्षा चरण बनाता है।",
 			"editForm": "फ़ॉर्म संपादित करें",
 			"editFormHint": "फॉर्म संपादन की सुविधा अन्यत्र उपलब्ध है।",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
 			"formTemplate": {
 				"blank": "रिक्त फॉर्म",
 				"defaultLabel": "{{label}}",
@@ -1911,7 +1915,22 @@
 			"previewLabel": "समीक्षा प्रपत्र का पूर्वावलोकन",
 			"previewLoading": "पूर्वावलोकन लोड हो रहा है...",
 			"proposalPreview": "छात्रों के लिए सामग्री फ़ील्ड के साथ एक नियमित प्रस्ताव कार्ड जोड़ता है।",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
 			"scratchPreview": "इस चरण से जुड़ा एक खाली कार्ड वाला ड्राफ्ट समीक्षा फॉर्म तैयार करता है। समीक्षा में प्रदर्शित होने से पहले फॉर्म को एडमिन में प्रकाशित करें।",
+			"statusDraft": "",
+			"statusPublished": "",
 			"steps": {
 				"cardType": "कार्ड का प्रकार",
 				"checkpoint": "जांच की चौकी",

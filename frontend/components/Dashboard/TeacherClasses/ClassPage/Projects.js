@@ -24,12 +24,13 @@ const LinkButton = styled.a`
   text-decoration: none;
   background: #ffffff;
   color: #5d5763;
-  border: 1.5px solid #5d5763;
+  // border: 1.5px solid #5d5763;
 
   &:hover {
-    background: #f5f5f5;
+    background: #FDF2D0;
     border-color: #b3b3b3;
-    color: #666666;
+    color: #171717;
+    font-weight: 600;
   }
 
   &:active {

@@ -16,6 +16,7 @@ import { GET_CLASS_RESOURCES, GET_RESOURCE } from "../../../../Queries/Resource"
 import ConnectResourceToCardModal from "./ConnectResourceToCardModal";
 import BulkActionsModal from "./BulkActionsModal";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
+import Button from "../../../../DesignSystem/Button";
 import Chip from "../../../../DesignSystem/Chip";
 import { getPrimaryTemplateBoardId } from "../../../../../lib/classTemplateBoards";
 

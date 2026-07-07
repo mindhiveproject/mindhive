@@ -21,6 +21,7 @@ import { GET_CLASS_ASSIGNMENTS } from "../../../../Queries/Assignment";
 import ConnectAssignmentToCardModal from "./ConnectAssignmentToCardModal";
 import BulkActionsModal from "./BulkActionsModal";
 import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
+import Button from "../../../../DesignSystem/Button";
 
 const SecondaryButton = styled.button`
   display: inline-flex;

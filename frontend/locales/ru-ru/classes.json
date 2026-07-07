@@ -159,6 +159,21 @@
 		"commentsComment": "Это автоматически заполнит поле для комментариев для учащихся. Вы сможете удалить комментарии позже.",
 		"editMode": "Вы находитесь в режиме редактирования",
 		"expendedCard": {
+			"actionCard": {
+				"actionCardLabel": "",
+				"defaultFormReadOnly": "",
+				"editReviewForm": "",
+				"editReviewFormHint": "",
+				"includedCardsEmpty": "",
+				"includedCardsHelper": "",
+				"includedCardsTitle": "",
+				"milestoneDescription": "",
+				"publish": "",
+				"reviewFormPreview": "",
+				"scopedFormOnly": "",
+				"statusDraft": "",
+				"statusPublished": ""
+			},
 			"addExistingResources": "Добавить существующие ресурсы (см. Ресурсы на панели навигации)",
 			"addLinkedItems": "Добавляйте существующие задания, задачи, исследования или ресурсы.",
 			"addToFavorites": "Добавить в избранное",
@@ -575,6 +590,7 @@
 	"failedToUpdateSettings": "Не удалось обновить настройки.",
 	"header": {
 		"addDescription": "Добавить описание",
+		"mentorAccount": "",
 		"mentors": "Наставники",
 		"mentorsPanelTooltip": "Наставнические аккаунты, связанные с этим курсом.",
 		"save": "Сохранять",
@@ -752,11 +768,22 @@
 		"templateCopyPermission": "Разрешение на копирование студентами",
 		"templateCopyPermissionDescription": "Контролируйте, могут ли студенты начинать новые проекты на основе этого шаблона.",
 		"templateLibrary": "Библиотека шаблонов",
+		"templateLibraryCategory": {
+			"myBoards": "",
+			"network": "",
+			"networkDisabledHint": "",
+			"public": ""
+		},
 		"templateLibraryCount": "{{count}} доступно",
+		"templateLibraryNoMine": "",
 		"templateManagement": "Управление шаблонами",
 		"templateOptions": "Опции шаблона",
+		"templatePreviewModal": {
+			"title": ""
+		},
 		"templateUses": "{{count}} использований",
 		"toggleVisibilityError": "Не удалось обновить настройку копирования шаблона.",
+		"viewBoard": "",
 		"visibleToStudents": "Студенты могут копировать этот шаблон"
 	},
 	"proposalCardsAssignableQuestion": "Следует ли разрешить студентам передавать карточки с предложениями о поступлении?",

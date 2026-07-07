@@ -159,6 +159,21 @@
 		"commentsComment": "Cela préremplira la zone de commentaires des élèves. Vous pourrez supprimer les commentaires ultérieurement.",
 		"editMode": "Vous êtes en mode édition",
 		"expendedCard": {
+			"actionCard": {
+				"actionCardLabel": "",
+				"defaultFormReadOnly": "",
+				"editReviewForm": "",
+				"editReviewFormHint": "",
+				"includedCardsEmpty": "",
+				"includedCardsHelper": "",
+				"includedCardsTitle": "",
+				"milestoneDescription": "",
+				"publish": "",
+				"reviewFormPreview": "",
+				"scopedFormOnly": "",
+				"statusDraft": "",
+				"statusPublished": ""
+			},
 			"addExistingResources": "Ajouter des ressources existantes (voir Ressources dans le volet de navigation)",
 			"addLinkedItems": "Ajouter des missions, des tâches, des études ou des ressources existantes",
 			"addToFavorites": "Ajouter aux Favoris",
@@ -575,6 +590,7 @@
 	"failedToUpdateSettings": "Échec de la mise à jour des paramètres",
 	"header": {
 		"addDescription": "Ajouter une description",
+		"mentorAccount": "",
 		"mentors": "Mentors",
 		"mentorsPanelTooltip": "Comptes de mentors associés à ce cours.",
 		"save": "Sauvegarder",
@@ -752,11 +768,22 @@
 		"templateCopyPermission": "Permission de copie pour les étudiants",
 		"templateCopyPermissionDescription": "Contrôlez si les étudiants peuvent démarrer de nouveaux projets à partir de ce modèle.",
 		"templateLibrary": "Bibliothèque de modèles",
+		"templateLibraryCategory": {
+			"myBoards": "",
+			"network": "",
+			"networkDisabledHint": "",
+			"public": ""
+		},
 		"templateLibraryCount": "{{count}} disponible(s)",
+		"templateLibraryNoMine": "",
 		"templateManagement": "Gestion des modèles",
 		"templateOptions": "Options du modèle",
+		"templatePreviewModal": {
+			"title": ""
+		},
 		"templateUses": "{{count}} utilisations",
 		"toggleVisibilityError": "Échec de la mise à jour du paramètre de copie du modèle.",
+		"viewBoard": "",
 		"visibleToStudents": "Les étudiants peuvent copier ce modèle"
 	},
 	"proposalCardsAssignableQuestion": "Les fiches de proposition devraient-elles pouvoir être attribuées aux étudiants ?",

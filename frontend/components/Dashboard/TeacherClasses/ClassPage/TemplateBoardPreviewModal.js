@@ -41,6 +41,11 @@ const headerStyle = {
   marginBottom: 20,
 };
 
+const titleBlockStyle = {
+  flex: 1,
+  minWidth: 0,
+};
+
 const titleStyle = {
   margin: 0,
   fontFamily: "Inter, sans-serif",
@@ -48,6 +53,15 @@ const titleStyle = {
   lineHeight: "32px",
   fontWeight: 700,
   color: "#171717",
+};
+
+const descriptionStyle = {
+  margin: "8px 0 0",
+  fontFamily: "Inter, sans-serif",
+  fontSize: 14,
+  lineHeight: "20px",
+  fontWeight: 400,
+  color: "#625b71",
 };
 
 const previewShellStyle = {
@@ -80,22 +94,6 @@ export default function TemplateBoardPreviewModal({ open, onClose, board }) {
         .templateBoardPreviewModal .proposalBoard {
           margin: 0;
         }
-        .templateBoardPreviewModal .proposalBoard h2 {
-          margin: 0 0 8px;
-          font-family: Inter, sans-serif;
-          font-size: 18px;
-          font-weight: 600;
-          color: #171717;
-        }
-        .templateBoardPreviewModal .proposalBoard h2 .templateName {
-          color: #336f8a;
-        }
-        .templateBoardPreviewModal .proposalBoard > p {
-          margin: 0 0 16px;
-          font-size: 14px;
-          line-height: 20px;
-          color: #625b71;
-        }
       `}</style>
       <div
         className="templateBoardPreviewModal"
@@ -106,13 +104,18 @@ export default function TemplateBoardPreviewModal({ open, onClose, board }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div style={headerStyle}>
-          <h2 id="template-board-preview-title" style={titleStyle}>
-            {t(
-              "projects.templatePreviewModal.title",
-              { title: board?.title || "" },
-              { default: "Preview — {{title}}" }
-            )}
-          </h2>
+          <div style={titleBlockStyle}>
+            <h2 id="template-board-preview-title" style={titleStyle}>
+              {t(
+                "projects.templatePreviewModal.title",
+                { title: board?.title || "" },
+                { default: "Preview — {{title}}" }
+              )}
+            </h2>
+            {board?.description ? (
+              <p style={descriptionStyle}>{board.description}</p>
+            ) : null}
+          </div>
           <Button type="button" variant="outline" onClick={onClose}>
             {t("projects.boardSettingsModalClose", {}, { default: "Close" })}
           </Button>
@@ -125,6 +128,7 @@ export default function TemplateBoardPreviewModal({ open, onClose, board }) {
                 proposalId={board.id}
                 proposal={board}
                 isPreview
+                hidePreviewHeader
               />
             </StyledProposal>
           </div>

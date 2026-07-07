@@ -1876,6 +1876,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (déjà ajouté)",
 			"alreadyAddedTooltip": "Ce point de contrôle est déjà sur le tableau de bord",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
 			"cancel": "Annuler",
 			"categories": {
 				"action": "Carte Action",
@@ -1896,6 +1898,8 @@
 			"customPreview": "Crée une étape de révision personnalisée avec sa propre étiquette d'étape clé.",
 			"editForm": "Modifier le formulaire",
 			"editFormHint": "L'édition de formulaires est disponible ailleurs",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
 			"formTemplate": {
 				"blank": "Formulaire vierge",
 				"defaultLabel": "{{label}}",
@@ -1911,7 +1915,22 @@
 			"previewLabel": "Aperçu du formulaire d'avis",
 			"previewLoading": "Chargement de l'aperçu...",
 			"proposalPreview": "Ajoute une fiche de proposition standard avec des champs de contenu pour les étudiants.",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
 			"scratchPreview": "Crée un formulaire de révision brouillon avec une carte vide, lié à cette étape. Publiez le formulaire dans l'interface d'administration avant qu'il n'apparaisse dans la section révision.",
+			"statusDraft": "",
+			"statusPublished": "",
 			"steps": {
 				"cardType": "Type de carte",
 				"checkpoint": "Point de contrôle",

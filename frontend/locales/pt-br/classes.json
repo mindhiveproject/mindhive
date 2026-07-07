@@ -159,6 +159,21 @@
 		"commentsComment": "Isso preencherá previamente a Caixa de Comentários para os alunos. Você poderá excluir os comentários mais tarde.",
 		"editMode": "Você está no modo de edição",
 		"expendedCard": {
+			"actionCard": {
+				"actionCardLabel": "",
+				"defaultFormReadOnly": "",
+				"editReviewForm": "",
+				"editReviewFormHint": "",
+				"includedCardsEmpty": "",
+				"includedCardsHelper": "",
+				"includedCardsTitle": "",
+				"milestoneDescription": "",
+				"publish": "",
+				"reviewFormPreview": "",
+				"scopedFormOnly": "",
+				"statusDraft": "",
+				"statusPublished": ""
+			},
 			"addExistingResources": "Adicionar recursos existentes (consulte Recursos no Painel de Navegação)",
 			"addLinkedItems": "Adicionar atribuições, tarefas, estudos ou recursos existentes",
 			"addToFavorites": "Adicionar aos favoritos",
@@ -575,6 +590,7 @@
 	"failedToUpdateSettings": "Falha ao atualizar as configurações",
 	"header": {
 		"addDescription": "Adicionar descrição",
+		"mentorAccount": "",
 		"mentors": "Mentores",
 		"mentorsPanelTooltip": "Contas de mentores associadas a esta turma.",
 		"save": "Salvar",
@@ -752,11 +768,22 @@
 		"templateCopyPermission": "Permissão de cópia para alunos",
 		"templateCopyPermissionDescription": "Controle se os alunos podem iniciar novos projetos a partir deste modelo.",
 		"templateLibrary": "Biblioteca de modelos",
+		"templateLibraryCategory": {
+			"myBoards": "",
+			"network": "",
+			"networkDisabledHint": "",
+			"public": ""
+		},
 		"templateLibraryCount": "{{count}} disponível(is)",
+		"templateLibraryNoMine": "",
 		"templateManagement": "Gerenciamento de modelos",
 		"templateOptions": "Opções do modelo",
+		"templatePreviewModal": {
+			"title": ""
+		},
 		"templateUses": "{{count}} usos",
 		"toggleVisibilityError": "Falha ao atualizar a configuração de cópia do modelo.",
+		"viewBoard": "",
 		"visibleToStudents": "Os alunos podem copiar este modelo"
 	},
 	"proposalCardsAssignableQuestion": "Os cartões de proposta devem ser atribuíveis aos alunos?",

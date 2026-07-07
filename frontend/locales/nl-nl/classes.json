@@ -159,6 +159,21 @@
 		"commentsComment": "Hiermee wordt het opmerkingenveld voor studenten automatisch ingevuld. Je kunt reacties later verwijderen.",
 		"editMode": "U bevindt zich in de bewerkingsmodus",
 		"expendedCard": {
+			"actionCard": {
+				"actionCardLabel": "",
+				"defaultFormReadOnly": "",
+				"editReviewForm": "",
+				"editReviewFormHint": "",
+				"includedCardsEmpty": "",
+				"includedCardsHelper": "",
+				"includedCardsTitle": "",
+				"milestoneDescription": "",
+				"publish": "",
+				"reviewFormPreview": "",
+				"scopedFormOnly": "",
+				"statusDraft": "",
+				"statusPublished": ""
+			},
 			"addExistingResources": "Bestaande bronnen toevoegen (zie Bronnen in navigatievenster)",
 			"addLinkedItems": "Bestaande opdrachten, taken, studies of bronnen toevoegen",
 			"addToFavorites": "Toevoegen aan favorieten",
@@ -575,6 +590,7 @@
 	"failedToUpdateSettings": "Instellingen bijwerken mislukt",
 	"header": {
 		"addDescription": "Voeg een beschrijving toe",
+		"mentorAccount": "",
 		"mentors": "Mentoren",
 		"mentorsPanelTooltip": "Mentoraccounts die aan deze cursus zijn gekoppeld.",
 		"save": "Redden",
@@ -752,11 +768,22 @@
 		"templateCopyPermission": "Toestemming voor kopiëren door studenten",
 		"templateCopyPermissionDescription": "Beheer of studenten nieuwe projecten kunnen starten vanuit deze sjabloon.",
 		"templateLibrary": "Sjabloonbibliotheek",
+		"templateLibraryCategory": {
+			"myBoards": "",
+			"network": "",
+			"networkDisabledHint": "",
+			"public": ""
+		},
 		"templateLibraryCount": "{{count}} beschikbaar",
+		"templateLibraryNoMine": "",
 		"templateManagement": "Sjabloonbeheer",
 		"templateOptions": "Sjabloonopties",
+		"templatePreviewModal": {
+			"title": ""
+		},
 		"templateUses": "{{count}} keer gebruikt",
 		"toggleVisibilityError": "Kon instelling voor kopiëren van sjabloon niet bijwerken.",
+		"viewBoard": "",
 		"visibleToStudents": "Studenten kunnen deze sjabloon kopiëren"
 	},
 	"proposalCardsAssignableQuestion": "Moeten voorstelkaarten aan studenten kunnen worden toegewezen?",

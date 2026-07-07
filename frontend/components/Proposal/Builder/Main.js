@@ -18,6 +18,7 @@ export default function ProposalBuilder({
   onClose,
   proposalBuildMode,
   isPreview,
+  hidePreviewHeader = false,
   refetchQueries,
   autoOpenAddMilestone = false,
 }) {
@@ -110,15 +111,19 @@ export default function ProposalBuilder({
     <>
       {page === "board" ? (
         <>
-          {isPreview ? (
+          {isPreview && !hidePreviewHeader ? (
             <>
               <h2>
-                {t("proposal.previewHeader", "Preview of proposal template")}{" "}
+                {t(
+                  "proposal.previewHeader",
+                  {},
+                  { default: "Preview of proposal template" }
+                )}{" "}
                 <span className="templateName">{proposal.title}</span>
               </h2>
-              <p>{proposal.description}</p>
+              {proposal.description ? <p>{proposal.description}</p> : null}
             </>
-          ) : (
+          ) : !isPreview ? (
             <ProposalHeader
               user={user}
               proposal={proposal}
@@ -131,7 +136,7 @@ export default function ProposalBuilder({
               onPropagationSuccess={clearUnpropagatedChange}
               isPropagatingToClones={propagateLoading}
             />
-          )}
+          ) : null}
           {proposal && (
             <ProposalBoard
               proposalId={proposal?.id}

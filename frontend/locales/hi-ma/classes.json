@@ -159,6 +159,21 @@
 		"commentsComment": "इससे छात्रों के लिए टिप्पणी बॉक्स पहले से भर जाएगा। आप बाद में टिप्पणियाँ हटा सकते हैं।",
 		"editMode": "",
 		"expendedCard": {
+			"actionCard": {
+				"actionCardLabel": "",
+				"defaultFormReadOnly": "",
+				"editReviewForm": "",
+				"editReviewFormHint": "",
+				"includedCardsEmpty": "",
+				"includedCardsHelper": "",
+				"includedCardsTitle": "",
+				"milestoneDescription": "",
+				"publish": "",
+				"reviewFormPreview": "",
+				"scopedFormOnly": "",
+				"statusDraft": "",
+				"statusPublished": ""
+			},
 			"addExistingResources": "मौजूदा संसाधन जोड़ें (नेविगेशन पैन में संसाधन देखें)",
 			"addLinkedItems": "",
 			"addToFavorites": "",
@@ -575,6 +590,7 @@
 	"failedToUpdateSettings": "",
 	"header": {
 		"addDescription": "",
+		"mentorAccount": "",
 		"mentors": "",
 		"mentorsPanelTooltip": "",
 		"save": "बचाना",
@@ -752,11 +768,22 @@
 		"templateCopyPermission": "",
 		"templateCopyPermissionDescription": "",
 		"templateLibrary": "",
+		"templateLibraryCategory": {
+			"myBoards": "",
+			"network": "",
+			"networkDisabledHint": "",
+			"public": ""
+		},
 		"templateLibraryCount": "",
+		"templateLibraryNoMine": "",
 		"templateManagement": "",
 		"templateOptions": "",
+		"templatePreviewModal": {
+			"title": ""
+		},
 		"templateUses": "",
 		"toggleVisibilityError": "",
+		"viewBoard": "",
 		"visibleToStudents": ""
 	},
 	"proposalCardsAssignableQuestion": "",

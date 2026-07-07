@@ -1876,6 +1876,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (уже добавлено)",
 			"alreadyAddedTooltip": "Этот контрольный пункт уже отмечен на доске.",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
 			"cancel": "Отмена",
 			"categories": {
 				"action": "Карта действий",
@@ -1896,6 +1898,8 @@
 			"customPreview": "Создает пользовательский этап проверки со своей собственной меткой этапа.",
 			"editForm": "Редактировать форму",
 			"editFormHint": "Редактирование форм доступно в других местах.",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
 			"formTemplate": {
 				"blank": "Пустой бланк",
 				"defaultLabel": "{{label}}",
@@ -1911,7 +1915,22 @@
 			"previewLabel": "Предварительный просмотр формы отзыва",
 			"previewLoading": "Загрузка предварительного просмотра...",
 			"proposalPreview": "Добавляет обычную карточку предложения с полями для ввода информации для студентов.",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
 			"scratchPreview": "Создает черновой вариант формы проверки с одной пустой карточкой, связанной с этим шагом. Опубликует форму в разделе «Администрирование» до того, как она появится на этапе проверки.",
+			"statusDraft": "",
+			"statusPublished": "",
 			"steps": {
 				"cardType": "Тип карты",
 				"checkpoint": "Контрольно-пропускной пункт",

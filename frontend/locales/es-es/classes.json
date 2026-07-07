@@ -159,6 +159,21 @@
 		"commentsComment": "Esto rellenará automáticamente el cuadro de comentarios para los estudiantes. Puedes eliminar los comentarios más tarde.",
 		"editMode": "Estás en modo de edición",
 		"expendedCard": {
+			"actionCard": {
+				"actionCardLabel": "",
+				"defaultFormReadOnly": "",
+				"editReviewForm": "",
+				"editReviewFormHint": "",
+				"includedCardsEmpty": "",
+				"includedCardsHelper": "",
+				"includedCardsTitle": "",
+				"milestoneDescription": "",
+				"publish": "",
+				"reviewFormPreview": "",
+				"scopedFormOnly": "",
+				"statusDraft": "",
+				"statusPublished": ""
+			},
 			"addExistingResources": "Agregar recursos existentes (Ver Recursos en el panel de navegación)",
 			"addLinkedItems": "Añadir asignaciones, tareas, estudios o recursos existentes",
 			"addToFavorites": "Agregar a los favoritos",
@@ -575,6 +590,7 @@
 	"failedToUpdateSettings": "No se pudo actualizar la configuración.",
 	"header": {
 		"addDescription": "Añadir descripción",
+		"mentorAccount": "",
 		"mentors": "Mentores",
 		"mentorsPanelTooltip": "Cuentas de mentor asociadas a esta clase.",
 		"save": "Ahorrar",
@@ -752,11 +768,22 @@
 		"templateCopyPermission": "Permiso de copia para estudiantes",
 		"templateCopyPermissionDescription": "Controla si los estudiantes pueden iniciar nuevos proyectos a partir de esta plantilla.",
 		"templateLibrary": "Biblioteca de plantillas",
+		"templateLibraryCategory": {
+			"myBoards": "",
+			"network": "",
+			"networkDisabledHint": "",
+			"public": ""
+		},
 		"templateLibraryCount": "{{count}} disponibles",
+		"templateLibraryNoMine": "",
 		"templateManagement": "Gestión de plantillas",
 		"templateOptions": "Opciones de plantilla",
+		"templatePreviewModal": {
+			"title": ""
+		},
 		"templateUses": "{{count}} usos",
 		"toggleVisibilityError": "No se pudo actualizar la configuración de copia de la plantilla.",
+		"viewBoard": "",
 		"visibleToStudents": "Los estudiantes pueden copiar esta plantilla"
 	},
 	"proposalCardsAssignableQuestion": "¿Deberían poder asignarse tarjetas de propuestas a los estudiantes?",

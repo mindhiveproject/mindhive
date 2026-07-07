@@ -159,6 +159,21 @@
 		"commentsComment": "这将预先填充学生的评论框。您可以稍后删除评论。",
 		"editMode": "您处于编辑模式",
 		"expendedCard": {
+			"actionCard": {
+				"actionCardLabel": "",
+				"defaultFormReadOnly": "",
+				"editReviewForm": "",
+				"editReviewFormHint": "",
+				"includedCardsEmpty": "",
+				"includedCardsHelper": "",
+				"includedCardsTitle": "",
+				"milestoneDescription": "",
+				"publish": "",
+				"reviewFormPreview": "",
+				"scopedFormOnly": "",
+				"statusDraft": "",
+				"statusPublished": ""
+			},
 			"addExistingResources": "添加现有资源（参见导航窗格中的资源）",
 			"addLinkedItems": "添加现有作业、任务、研究或资源",
 			"addToFavorites": "添加到收藏夹",
@@ -575,6 +590,7 @@
 	"failedToUpdateSettings": "设置更新失败",
 	"header": {
 		"addDescription": "添加描述",
+		"mentorAccount": "",
 		"mentors": "导师",
 		"mentorsPanelTooltip": "与此课程相关的导师账号。",
 		"save": "节省",
@@ -752,11 +768,22 @@
 		"templateCopyPermission": "学生复制权限",
 		"templateCopyPermissionDescription": "控制学生是否可以从此模板开始新项目。",
 		"templateLibrary": "模板库",
+		"templateLibraryCategory": {
+			"myBoards": "",
+			"network": "",
+			"networkDisabledHint": "",
+			"public": ""
+		},
 		"templateLibraryCount": "{{count}} 可用",
+		"templateLibraryNoMine": "",
 		"templateManagement": "模板管理",
 		"templateOptions": "模板选项",
+		"templatePreviewModal": {
+			"title": ""
+		},
 		"templateUses": "{{count}} 次使用",
 		"toggleVisibilityError": "更新模板复制设置失败。",
+		"viewBoard": "",
 		"visibleToStudents": "学生可以复制此模板"
 	},
 	"proposalCardsAssignableQuestion": "提案卡是否应该分配给学生？",

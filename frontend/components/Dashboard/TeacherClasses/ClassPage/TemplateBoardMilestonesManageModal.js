@@ -240,7 +240,7 @@ export default function TemplateBoardMilestonesManageModal({
                               default: "Removing…",
                             })
                           : t("projects.milestonesMenu.deleteMilestone", {}, {
-                              default: "Remove from template",
+                              default: "Remove from template board",
                             })}
                       </Button>
                     </div>

@@ -159,6 +159,21 @@
 		"commentsComment": "इससे छात्रों के लिए टिप्पणी बॉक्स पहले से भर जाएगा। आप बाद में टिप्पणियाँ हटा सकते हैं।",
 		"editMode": "आप संपादन मोड में हैं",
 		"expendedCard": {
+			"actionCard": {
+				"actionCardLabel": "",
+				"defaultFormReadOnly": "",
+				"editReviewForm": "",
+				"editReviewFormHint": "",
+				"includedCardsEmpty": "",
+				"includedCardsHelper": "",
+				"includedCardsTitle": "",
+				"milestoneDescription": "",
+				"publish": "",
+				"reviewFormPreview": "",
+				"scopedFormOnly": "",
+				"statusDraft": "",
+				"statusPublished": ""
+			},
 			"addExistingResources": "मौजूदा संसाधन जोड़ें (नेविगेशन पैन में संसाधन देखें)",
 			"addLinkedItems": "मौजूदा असाइनमेंट, कार्य, अध्ययन या संसाधन जोड़ें",
 			"addToFavorites": "पसंदीदा में जोड़े",
@@ -575,6 +590,7 @@
 	"failedToUpdateSettings": "सेटिंग्स अपडेट करने में विफल",
 	"header": {
 		"addDescription": "विवरण जोड़ें",
+		"mentorAccount": "",
 		"mentors": "मेंटर्स",
 		"mentorsPanelTooltip": "इस कक्षा से जुड़े मेंटर खाते।",
 		"save": "बचाना",
@@ -752,11 +768,22 @@
 		"templateCopyPermission": "",
 		"templateCopyPermissionDescription": "",
 		"templateLibrary": "",
+		"templateLibraryCategory": {
+			"myBoards": "",
+			"network": "",
+			"networkDisabledHint": "",
+			"public": ""
+		},
 		"templateLibraryCount": "",
+		"templateLibraryNoMine": "",
 		"templateManagement": "",
 		"templateOptions": "",
+		"templatePreviewModal": {
+			"title": ""
+		},
 		"templateUses": "",
 		"toggleVisibilityError": "",
+		"viewBoard": "",
 		"visibleToStudents": ""
 	},
 	"proposalCardsAssignableQuestion": "क्या प्रस्ताव कार्ड छात्रों को सौंपे जाने योग्य होने चाहिए?",

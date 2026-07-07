@@ -141,6 +141,7 @@ const StyledBoardSettings = styled.div`
 
   .curriculumTypeOptions {
     display: grid;
+    margin-top: 16px;
     gap: 12px;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }

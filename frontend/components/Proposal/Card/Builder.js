@@ -591,10 +591,12 @@ export default function BuilderProposalCard({
             />
           </div>
 
-          <div className="proposalCardComments">
-            <div className="cardHeader">{t("board.expendedCard.type")}</div>
-            <CardType type={inputs?.type} handleChange={handleChange} />
-          </div>
+          {user?.permissions?.map((p) => p?.name).includes("ADMIN") && (
+            <div className="proposalCardComments">
+              <div className="cardHeader">{t("board.expendedCard.type")}</div>
+              <CardType type={inputs?.type} handleChange={handleChange} />
+            </div>
+          )}
           {/* Student Answer Box panel */}
           <div className="visibilityPanel">
             <div className="visibilityPanelHeader">

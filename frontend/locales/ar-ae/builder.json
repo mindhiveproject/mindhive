@@ -1876,6 +1876,8 @@
 		"createCardModal": {
 			"alreadyAddedLabel": "{{label}} (تمت إضافته بالفعل)",
 			"alreadyAddedTooltip": "هذه نقطة التفتيش موجودة بالفعل على اللوحة",
+			"buildFormSubtitle": "",
+			"buildFormTitle": "",
 			"cancel": "يلغي",
 			"categories": {
 				"action": "بطاقة الحركة",
@@ -1896,6 +1898,8 @@
 			"customPreview": "يُنشئ خطوة مراجعة مخصصة مع تسمية خاصة بها.",
 			"editForm": "نموذج التعديل",
 			"editFormHint": "تتوفر خاصية تعديل النماذج في مكان آخر",
+			"finishBuilding": "",
+			"finishDraftConfirm": "",
 			"formTemplate": {
 				"blank": "نموذج فارغ",
 				"defaultLabel": "{{label}}",
@@ -1911,7 +1915,22 @@
 			"previewLabel": "معاينة نموذج المراجعة",
 			"previewLoading": "جاري تحميل المعاينة...",
 			"proposalPreview": "يضيف بطاقة اقتراح عادية مع حقول محتوى للطلاب.",
+			"publish": "",
+			"publishing": "",
+			"publishModal": {
+				"body": "",
+				"cancel": "",
+				"changelogLabel": "",
+				"changelogPlaceholder": "",
+				"confirm": "",
+				"confirmBusy": "",
+				"errorHeading": "",
+				"siblingWarning": "",
+				"title": ""
+			},
 			"scratchPreview": "أنشئ نموذج مراجعة مبدئيًا يحتوي على بطاقة فارغة واحدة، واربطه بهذه الخطوة. انشر النموذج في لوحة التحكم قبل ظهوره في قسم المراجعة.",
+			"statusDraft": "",
+			"statusPublished": "",
 			"steps": {
 				"cardType": "نوع البطاقة",
 				"checkpoint": "نقطة تفتيش",
