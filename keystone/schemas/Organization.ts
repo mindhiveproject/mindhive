@@ -78,6 +78,11 @@ export const Organization = list({
       many: true,
     }),
 
+    memberOfClassNetworks: relationship({
+      ref: "ClassNetwork.memberOrganizations",
+      many: true,
+    }),
+
     // Audit-only: who first created the org record. Doesn't gate access.
     createdBy: relationship({
       ref: "Profile.organizationsCreated",
@@ -95,5 +100,39 @@ export const Organization = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+  },
+  hooks: {
+    // When a sponsor creates their org, inherit class-network memberships from
+    // the creator profile (e.g. from /signup/sponsor?classNetwork=...).
+    async afterOperation({ operation, item, context }) {
+      if (operation !== "create" || !item?.id) return;
+      try {
+        const org = await context.sudo().query.Organization.findOne({
+          where: { id: item.id },
+          query: `
+            createdBy { id memberOfClassNetworks { id } }
+            memberOfClassNetworks { id }
+          `,
+        });
+        const creatorNetworks =
+          org?.createdBy?.memberOfClassNetworks?.map((n) => n.id) || [];
+        const existingIds = new Set(
+          (org?.memberOfClassNetworks || []).map((n) => n.id),
+        );
+        const toConnect = creatorNetworks.filter((id) => !existingIds.has(id));
+        if (toConnect.length === 0) return;
+        await context.sudo().query.Organization.updateOne({
+          where: { id: item.id },
+          data: {
+            memberOfClassNetworks: {
+              connect: toConnect.map((id) => ({ id })),
+            },
+          },
+        });
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error("Organization classNetwork sync failed:", e);
+      }
+    },
   },
 });

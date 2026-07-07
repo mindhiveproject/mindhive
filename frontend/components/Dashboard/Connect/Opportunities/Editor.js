@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -10,6 +10,7 @@ import useEmail from "../../../../lib/useEmail";
 import {
   GET_OPPORTUNITY,
   MY_CLASS_NETWORKS_FOR_OPPORTUNITY,
+  MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY,
   MY_OPPORTUNITIES,
 } from "../../../Queries/Opportunity";
 import { QUESTIONS_FOR_OPPORTUNITY } from "../../../Queries/ConnectQuestion";
@@ -32,6 +33,26 @@ import {
   buildProposalData,
   hydrateProposalInputs,
 } from "./OpportunityProposalConfig";
+
+const WarningCallout = styled.div`
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #fef9ee;
+  border: 1px solid #fcd34d;
+  color: #92400e;
+  font-size: 13px;
+  line-height: 1.5;
+`;
+
+function dedupeNetworks(networks) {
+  const seen = new Map();
+  (networks || []).forEach((network) => {
+    if (network?.id && !seen.has(network.id)) {
+      seen.set(network.id, network);
+    }
+  });
+  return Array.from(seen.values());
+}
 
 const Shell = styled.div`
   display: flex;
@@ -413,7 +434,8 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const { sendEmail } = useEmail();
   const isNew = opportunityId === "new";
   const isReviewRoute = router.query?.review === "1";
-  const { hasExpandedOpportunityEditor, isAdmin, isTeacher } = deriveRoles(user);
+  const { hasExpandedOpportunityEditor, isAdmin, isTeacher, isSponsor } =
+    deriveRoles(user);
 
   // Sponsors decide between drafting and submitting for review. Everything
   // beyond — accepting, publishing, closing — is reserved for admins so a
@@ -486,8 +508,25 @@ export default function OpportunityEditor({ opportunityId, user }) {
     }
   );
 
-  const { data: networksData } = useQuery(MY_CLASS_NETWORKS_FOR_OPPORTUNITY);
-  const allNetworks = networksData?.classNetworks || [];
+  const { data: networksData } = useQuery(MY_CLASS_NETWORKS_FOR_OPPORTUNITY, {
+    skip: isSponsor,
+  });
+  const { data: memberNetworksData } = useQuery(
+    MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY,
+    { skip: !isSponsor },
+  );
+
+  const availableNetworks = useMemo(() => {
+    if (isSponsor) {
+      const me = memberNetworksData?.authenticatedItem;
+      const fromProfile = me?.memberOfClassNetworks || [];
+      const fromOrgs = (me?.organizations || []).flatMap(
+        (org) => org.memberOfClassNetworks || [],
+      );
+      return dedupeNetworks([...fromProfile, ...fromOrgs]);
+    }
+    return networksData?.classNetworks || [];
+  }, [isSponsor, memberNetworksData, networksData]);
 
   // The current user's first Organization — auto-attached to new opportunities
   // so sponsors don't have to pick their own org on every create.
@@ -1422,6 +1461,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
             ))}
           </CheckboxRow>
         </Field>
+        {hasExpandedOpportunityEditor && !isSponsor && (
         <Field>
           <span className="label-text">
             {t("opportunityEditor.offeredInNetworks", {}, {
@@ -1439,7 +1479,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
             multiple
             selection
             search
-            options={allNetworks.map((n) => ({
+            options={availableNetworks.map((n) => ({
               key: n.id,
               text: n.title,
               value: n.id,
@@ -1448,6 +1488,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
             onChange={(_, { value }) => setSelectedNetworks(value)}
           />
         </Field>
+        )}
       </Card>
       )}
 
@@ -1750,6 +1791,57 @@ export default function OpportunityEditor({ opportunityId, user }) {
             )}
           </Actions>
         </Card>
+      )}
+
+      {!isReviewMode && isSponsor && (
+      <Card>
+        <h2>
+          {t("opportunityEditor.classNetworksTitle", {}, {
+            default: "Class networks",
+          })}
+        </h2>
+        <Field>
+          <span className="hint">
+            {t("opportunityEditor.classNetworksHint", {}, {
+              default:
+                "Select one or more class networks you belong to. Teachers in those networks can review this opportunity.",
+            })}
+          </span>
+          {availableNetworks.length === 0 ? (
+            <WarningCallout>
+              {t("opportunityEditor.classNetworksNoMembership", {}, {
+                default:
+                  "You are not a member of any class networks yet. Ask a teacher to share a sponsor signup link so you can join a network before offering opportunities.",
+              })}
+            </WarningCallout>
+          ) : (
+            <Dropdown
+              placeholder={t("opportunityEditor.offeredInNetworks", {}, {
+                default: "Offered in class networks",
+              })}
+              fluid
+              multiple
+              selection
+              search
+              options={availableNetworks.map((n) => ({
+                key: n.id,
+                text: n.title,
+                value: n.id,
+              }))}
+              value={selectedNetworks}
+              onChange={(_, { value }) => setSelectedNetworks(value)}
+            />
+          )}
+          {selectedNetworks.length === 0 && availableNetworks.length > 0 && (
+            <WarningCallout>
+              {t("opportunityEditor.classNetworksEmptyWarning", {}, {
+                default:
+                  "Teachers will not see this opportunity in their review queue until you select at least one class network.",
+              })}
+            </WarningCallout>
+          )}
+        </Field>
+      </Card>
       )}
 
       {!isReviewMode && (
