@@ -79,6 +79,7 @@ export const GET_CLASS = gql`
         createdAt
       }
       networks {
+        id
         title
         description
         creator {
