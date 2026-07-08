@@ -164,6 +164,10 @@ export const Profile = list({
       ref: "ClassNetwork.creator",
       many: true,
     }),
+    memberOfClassNetworks: relationship({
+      ref: "ClassNetwork.memberProfiles",
+      many: true,
+    }),
     journals: relationship({
       ref: "Journal.creator",
       many: true,

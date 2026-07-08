@@ -640,6 +640,7 @@
 		"classSectionsNav": "Class sections",
 		"dashboard": "Dashboard",
 		"mentors": "Mentors",
+		"opportunities": "Opportunities",
 		"projects": "Projects",
 		"resources": "Resources",
 		"settings": "Settings",
@@ -676,6 +677,13 @@
 	"noteNewStudents": "Note: New students will not be able to join your class",
 	"numberOfStudents": "Number of students",
 	"onlyTeachersMentorsAssignCards": "Only teachers and mentors can assign cards",
+	"opportunities": {
+		"copyLink": "Copy",
+		"noNetworks": "This class is not linked to any class networks yet. A network admin can add this class to a network.",
+		"sponsorLinkLabel": "Sponsor signup link",
+		"sponsorSignupDescription": "Share the link below with sponsors so they can sign up and join your class network on MindHive Connect.",
+		"sponsorSignupTitle": "Invite sponsors"
+	},
 	"participants": "Participants",
 	"pleaseTypeDelete": "Please type DELETE to delete your class",
 	"projectBoard": {

@@ -402,8 +402,45 @@ export const MY_CLASS_NETWORKS_FOR_OPPORTUNITY = gql`
   }
 `;
 
-// Teacher / admin review queue. Future: filter by classNetworks once sponsors
-// can tag target networks — see plan future-proofing note.
+export const MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY = gql`
+  query MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY {
+    authenticatedItem {
+      ... on Profile {
+        memberOfClassNetworks {
+          id
+          title
+        }
+        organizations {
+          memberOfClassNetworks {
+            id
+            title
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const OPPORTUNITY_EDITOR_CLASS_NETWORKS = gql`
+  query OPPORTUNITY_EDITOR_CLASS_NETWORKS {
+    authenticatedItem {
+      ... on Profile {
+        memberOfClassNetworks {
+          id
+          title
+        }
+        organizations {
+          memberOfClassNetworks {
+            id
+            title
+          }
+        }
+      }
+    }
+  }
+`;
+
+// Teacher review queue — client filters by classNetworks overlap with reviewer.
 export const PENDING_OPPORTUNITIES_FOR_REVIEW = gql`
   query PENDING_OPPORTUNITIES_FOR_REVIEW {
     opportunities(
@@ -428,6 +465,10 @@ export const PENDING_OPPORTUNITIES_FOR_REVIEW = gql`
       organization {
         id
         name
+      }
+      classNetworks {
+        id
+        title
       }
     }
   }

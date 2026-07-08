@@ -9,6 +9,7 @@ import { Icon } from "semantic-ui-react";
 import { SIGNUP_MUTATION, SIGNIN_MUTATION } from "../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 import { GET_INVITE_BY_TOKEN } from "../../Queries/Organization";
+import { GET_NETWORK } from "../../Queries/ClassNetwork";
 import {
   ACCEPT_ORG_INVITE,
   UPDATE_ORGANIZATION,
@@ -50,7 +51,13 @@ const InviteBanner = styled.div`
 `;
 
 export default function RoleSignup(query) {
-  const { role, redirectType, redirectTo, invite: inviteToken } = query;
+  const {
+    role,
+    redirectType,
+    redirectTo,
+    invite: inviteToken,
+    classNetwork: classNetworkId,
+  } = query;
 
   const user = useContext(UserContext);
   const router = useRouter();
@@ -72,6 +79,16 @@ export default function RoleSignup(query) {
   });
   const invite = inviteData?.organizationInvites?.[0];
   const isInvitePending = invite?.status === "pending";
+
+  const { data: networkData, loading: networkLoading } = useQuery(GET_NETWORK, {
+    variables: { id: classNetworkId || "" },
+    skip: !classNetworkId || role !== "sponsor",
+    fetchPolicy: "cache-and-network",
+  });
+  const classNetwork = networkData?.classNetwork;
+  const isClassNetworkValid = !!classNetwork?.id;
+  const isClassNetworkInvalid =
+    role === "sponsor" && classNetworkId && !networkLoading && !isClassNetworkValid;
 
   // Pre-fill the email field once the invite resolves (only if user hasn't
   // started typing yet, so we never overwrite their input).
@@ -97,6 +114,7 @@ export default function RoleSignup(query) {
 
   async function handleSubmit({ e, classCode }) {
     e.preventDefault();
+    if (isClassNetworkInvalid) return;
     // Normalize email to lowercase
     const normalizedEmail = inputs.email?.toLowerCase().trim();
     // Sponsor signup grants the SPONSOR permission. The user later picks
@@ -117,6 +135,10 @@ export default function RoleSignup(query) {
           mentorIn:
             role === "mentor" && classCode
               ? { connect: { code: classCode } }
+              : null,
+          memberOfClassNetworks:
+            role === "sponsor" && isClassNetworkValid
+              ? { connect: [{ id: classNetworkId }] }
               : null,
         },
       },
@@ -153,7 +175,16 @@ export default function RoleSignup(query) {
           await attachToOrg({
             variables: {
               id: pendingInvite.organization.id,
-              input: { members: { connect: [{ id: newProfileId }] } },
+              input: {
+                members: { connect: [{ id: newProfileId }] },
+                ...(classNetworkId && role === "sponsor"
+                  ? {
+                      memberOfClassNetworks: {
+                        connect: [{ id: classNetworkId }],
+                      },
+                    }
+                  : {}),
+              },
             },
           });
           await acceptInvite({
@@ -201,6 +232,37 @@ export default function RoleSignup(query) {
     </InviteBanner>
   ) : null;
 
+  const classNetworkBanner =
+    role === "sponsor" && isClassNetworkValid ? (
+      <InviteBanner>
+        <Icon name="sitemap" size="large" style={{ marginTop: 2 }} />
+        <div className="body">
+          <strong>
+            You&apos;re signing up to join {classNetwork.title}
+          </strong>
+          <span>
+            {classNetwork.description
+              ? classNetwork.description
+              : "Once your account is created, you will be associated with this class network."}
+          </span>
+        </div>
+      </InviteBanner>
+    ) : null;
+
+  const classNetworkError =
+    isClassNetworkInvalid ? (
+      <InviteBanner style={{ background: "#fef2f2", borderColor: "#fecaca", color: "#991b1b" }}>
+        <Icon name="warning sign" size="large" style={{ marginTop: 2, color: "#991b1b" }} />
+        <div className="body">
+          <strong style={{ color: "#991b1b" }}>Invalid class network link</strong>
+          <span style={{ color: "#991b1b" }}>
+            This signup link references a class network that could not be found.
+            Please ask your teacher for a new link.
+          </span>
+        </div>
+      </InviteBanner>
+    ) : null;
+
   if (role === "student" || role === "mentor") {
     return (
       <StyledAuth>
@@ -223,6 +285,8 @@ export default function RoleSignup(query) {
   return (
     <StyledAuth>
       {inviteBanner}
+      {classNetworkBanner}
+      {classNetworkError}
       <h1>Sign up as a {role}</h1>
       <Form
         role={role}
@@ -232,6 +296,7 @@ export default function RoleSignup(query) {
         submitBtnName={"Create account"}
         loading={loading}
         error={error}
+        submitDisabled={isClassNetworkInvalid}
       />
     </StyledAuth>
   );

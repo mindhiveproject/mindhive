@@ -1,10 +1,15 @@
+import { useMemo } from "react";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
-import { Icon, Label } from "semantic-ui-react";
+import { Label } from "semantic-ui-react";
 
-import { PENDING_OPPORTUNITIES_FOR_REVIEW } from "../../../Queries/Opportunity";
+import {
+  EXPLORE_CONTEXT,
+  PENDING_OPPORTUNITIES_FOR_REVIEW,
+} from "../../../Queries/Opportunity";
+import { deriveRoles } from "../useConnectRole";
 
 const Shell = styled.div`
   display: flex;
@@ -172,13 +177,43 @@ function sponsorName(mentor, t) {
   );
 }
 
-export default function ReviewList() {
+function collectReviewerNetworkIds(me) {
+  const ids = new Set();
+  const groups = [me?.studentIn || [], me?.mentorIn || [], me?.teacherIn || []];
+  groups.forEach((classes) => {
+    classes.forEach((cls) => {
+      (cls.networks || []).forEach((network) => {
+        if (network?.id) ids.add(network.id);
+      });
+    });
+  });
+  return ids;
+}
+
+export default function ReviewList({ user }) {
   const { t } = useTranslation("connect");
+  const { isAdmin } = deriveRoles(user);
   const { data, loading } = useQuery(PENDING_OPPORTUNITIES_FOR_REVIEW, {
     fetchPolicy: "cache-and-network",
   });
+  const { data: ctxData } = useQuery(EXPLORE_CONTEXT, {
+    fetchPolicy: "cache-and-network",
+  });
 
-  const opportunities = data?.opportunities || [];
+  const reviewerNetworkIds = useMemo(
+    () => collectReviewerNetworkIds(ctxData?.authenticatedItem),
+    [ctxData],
+  );
+
+  const opportunities = useMemo(() => {
+    const all = data?.opportunities || [];
+    if (isAdmin) return all;
+    return all.filter((opportunity) => {
+      const oppNetworkIds = (opportunity.classNetworks || []).map((n) => n.id);
+      if (oppNetworkIds.length === 0) return false;
+      return oppNetworkIds.some((id) => reviewerNetworkIds.has(id));
+    });
+  }, [data, isAdmin, reviewerNetworkIds]);
 
   return (
     <Shell>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -9,7 +9,7 @@ import useForm from "../../../../lib/useForm";
 import useEmail from "../../../../lib/useEmail";
 import {
   GET_OPPORTUNITY,
-  MY_CLASS_NETWORKS_FOR_OPPORTUNITY,
+  OPPORTUNITY_EDITOR_CLASS_NETWORKS,
   MY_OPPORTUNITIES,
 } from "../../../Queries/Opportunity";
 import { QUESTIONS_FOR_OPPORTUNITY } from "../../../Queries/ConnectQuestion";
@@ -26,6 +26,8 @@ import { deriveRoles } from "../useConnectRole";
 import Chip from "../../../DesignSystem/Chip";
 import OpportunityWorkflowStepper from "./OpportunityWorkflowStepper";
 import OpportunityProposalSection from "./OpportunityProposalSection";
+import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
+import { collectMemberClassNetworks } from "../../../../lib/opportunityClassNetworks";
 import {
   PROPOSAL_EMPTY_FORM,
   PROPOSAL_WORD_LIMITS,
@@ -486,8 +488,15 @@ export default function OpportunityEditor({ opportunityId, user }) {
     }
   );
 
-  const { data: networksData } = useQuery(MY_CLASS_NETWORKS_FOR_OPPORTUNITY);
-  const allNetworks = networksData?.classNetworks || [];
+  const { data: editorNetworksData } = useQuery(
+    OPPORTUNITY_EDITOR_CLASS_NETWORKS,
+  );
+
+  const availableNetworks = useMemo(
+    () =>
+      collectMemberClassNetworks(editorNetworksData?.authenticatedItem),
+    [editorNetworksData],
+  );
 
   // The current user's first Organization — auto-attached to new opportunities
   // so sponsors don't have to pick their own org on every create.
@@ -1422,32 +1431,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
             ))}
           </CheckboxRow>
         </Field>
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.offeredInNetworks", {}, {
-              default: "Offered in class networks",
-            })}
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.offeredInNetworksHint", {}, {
-              default: "Pick which networks can see this opportunity.",
-            })}
-          </span>
-          <Dropdown
-            placeholder="Select class networks"
-            fluid
-            multiple
-            selection
-            search
-            options={allNetworks.map((n) => ({
-              key: n.id,
-              text: n.title,
-              value: n.id,
-            }))}
-            value={selectedNetworks}
-            onChange={(_, { value }) => setSelectedNetworks(value)}
-          />
-        </Field>
       </Card>
       )}
 
@@ -1750,6 +1733,15 @@ export default function OpportunityEditor({ opportunityId, user }) {
             )}
           </Actions>
         </Card>
+      )}
+
+      {!isReviewMode && (
+        <OpportunityClassNetworksField
+          availableNetworks={availableNetworks}
+          selectedNetworks={selectedNetworks}
+          onChange={setSelectedNetworks}
+          readOnly={isFieldReadOnly}
+        />
       )}
 
       {!isReviewMode && (

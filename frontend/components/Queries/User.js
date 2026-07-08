@@ -66,6 +66,10 @@ export const CURRENT_USER_QUERY = gql`
         mentorIn {
           id
         }
+        memberOfClassNetworks {
+          id
+          title
+        }
         connectRoundsReviewing {
           id
         }
@@ -1059,6 +1063,10 @@ export const GET_PROFILE = gql`
           mission
           primaryDomain
           verified
+          memberOfClassNetworks {
+            id
+            title
+          }
           logo {
             url
           }
@@ -1080,6 +1088,10 @@ export const GET_PROFILE = gql`
               }
             }
           }
+        }
+        memberOfClassNetworks {
+          id
+          title
         }
         organizationsCreated {
           id

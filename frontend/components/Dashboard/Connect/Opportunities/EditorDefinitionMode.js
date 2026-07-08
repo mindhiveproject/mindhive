@@ -6,19 +6,28 @@
 // (media, rich text, custom application questions). EditorSwitch picks
 // which one renders based on the NEXT_PUBLIC_USE_CUSTOMIZABLE_FORMS
 // env flag.
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 
 import DefinitionForm from "../../../Forms/DefinitionForm";
-import { GET_OPPORTUNITY, MY_OPPORTUNITIES } from "../../../Queries/Opportunity";
+import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
+import {
+  GET_OPPORTUNITY,
+  MY_OPPORTUNITIES,
+  OPPORTUNITY_EDITOR_CLASS_NETWORKS,
+} from "../../../Queries/Opportunity";
 import { GET_MY_ORGANIZATION } from "../../../Queries/Organization";
 import {
   CREATE_OPPORTUNITY,
   UPDATE_OPPORTUNITY,
 } from "../../../Mutations/Opportunity";
 import useConnectRole from "../useConnectRole";
+import {
+  buildClassNetworksMutationInput,
+  collectMemberClassNetworks,
+} from "../../../../lib/opportunityClassNetworks";
 
 const Shell = styled.div`
   display: flex;
@@ -84,6 +93,23 @@ export default function EditorDefinitionMode({ opportunityId }) {
   });
   const opportunity = oppData?.opportunity;
 
+  const { data: editorNetworksData } = useQuery(
+    OPPORTUNITY_EDITOR_CLASS_NETWORKS,
+  );
+  const availableNetworks = useMemo(
+    () =>
+      collectMemberClassNetworks(editorNetworksData?.authenticatedItem),
+    [editorNetworksData],
+  );
+
+  const [selectedNetworks, setSelectedNetworks] = useState([]);
+
+  useEffect(() => {
+    setSelectedNetworks(
+      (opportunity?.classNetworks || []).map((network) => network.id),
+    );
+  }, [opportunity?.id]);
+
   // Resolve the viewer's organization so per-org definition variants
   // can be picked up when they exist.
   const { data: orgData } = useQuery(GET_MY_ORGANIZATION, {
@@ -106,7 +132,16 @@ export default function EditorDefinitionMode({ opportunityId }) {
   const [flash, setFlash] = useState(null);
 
   const handleSubmit = async (result) => {
-    const input = result?.self || {};
+    const baseInput = result?.self || {};
+    const classNetworks = buildClassNetworksMutationInput(
+      selectedNetworks,
+      isNew,
+    );
+    const input = {
+      ...baseInput,
+      ...(classNetworks ? { classNetworks } : {}),
+    };
+
     setFlash(null);
     if (isNew) {
       const res = await createOpportunity({ variables: { input } });
@@ -146,6 +181,11 @@ export default function EditorDefinitionMode({ opportunityId }) {
       {flash ? (
         <div style={{ color: "#1d6b3a", fontSize: 14 }}>{flash}</div>
       ) : null}
+      <OpportunityClassNetworksField
+        availableNetworks={availableNetworks}
+        selectedNetworks={selectedNetworks}
+        onChange={setSelectedNetworks}
+      />
       <DefinitionForm
         definitionKey="opportunity"
         entity={opportunity || null}

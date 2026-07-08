@@ -36,6 +36,14 @@ export const ClassNetwork = list({
       },
     }),
     classes: relationship({ ref: "Class.networks", many: true }),
+    memberProfiles: relationship({
+      ref: "Profile.memberOfClassNetworks",
+      many: true,
+    }),
+    memberOrganizations: relationship({
+      ref: "Organization.memberOfClassNetworks",
+      many: true,
+    }),
     opportunities: relationship({
       ref: "Opportunity.classNetworks",
       many: true,

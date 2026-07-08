@@ -280,6 +280,82 @@ export const StyledForm = styled.form`
   }
 `;
 
+export const SponsorSignupRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 10px;
+  width: 100%;
+`;
+
+export const SponsorRecommendation = styled.div`
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 14px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  background: #E4DFF6;
+  border: 1px solid #6F26CE;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #1a1a1a;
+  text-align: left;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    left: calc(3rem + 10px);
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+  }
+
+  &::after {
+    bottom: -9px;
+    border-top: 9px solid #6F26CE;
+  }
+
+  &::before {
+    bottom: -7px;
+    z-index: 1;
+    border-left-width: 8px;
+    border-right-width: 8px;
+    border-top: 8px solid #6F26CE;
+  }
+
+  p {
+    margin: 0;
+    flex: 1;
+  }
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+
+    img {
+      width: 14px;
+      height: 14px;
+      display: block;
+    }
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+`;
+
 export const SignupButton = styled.div`
   display: grid;
   grid-template-columns: 20px auto;

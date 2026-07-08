@@ -13,6 +13,7 @@ export default function Form({
   loading,
   error,
   classCode,
+  submitDisabled = false,
 }) {
   const { t } = useTranslation("common");
 
@@ -24,7 +25,7 @@ export default function Form({
       >
         <DisplayError error={error} />
 
-        <fieldset disabled={loading} aria-busy={loading}>
+        <fieldset disabled={loading || submitDisabled} aria-busy={loading}>
           <div className="infoPane">
             <label htmlFor="username">
               {t("auth.username")}

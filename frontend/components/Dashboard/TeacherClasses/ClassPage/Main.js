@@ -11,6 +11,7 @@ import ClassStudies from "./Studies";
 import ClassProjects from "./Projects";
 import ClassAssignments from "./Assignments/Main";
 import ClassResources from "./Resources/Main";
+import ClassOpportunities from "./Opportunities";
 import ClassSettings from "./Settings";
 
 import { GET_CLASS } from "../../../Queries/Classes";
@@ -19,6 +20,7 @@ import RestrictedAccess from "../../../Global/Restricted";
 import StyledClass from "../../../styles/StyledClass";
 
 import Dashboard from "./Dashboard/Main";
+import { deriveRoles } from "../../Connect/useConnectRole";
 
 const CLASS_PAGE_NAV_ITEMS = [
   {
@@ -55,6 +57,11 @@ const CLASS_PAGE_NAV_ITEMS = [
     value: "resources",
     labelKey: "main.resources",
     iconSrc: "/assets/icons/visualize/folder_open.svg",
+  },
+  {
+    value: "opportunities",
+    labelKey: "main.opportunities",
+    iconSrc: "/assets/icons/group.svg",
   },
   {
     value: "settings",
@@ -113,7 +120,7 @@ export default function ClassPage({ code, user, query }) {
           <nav className="classPageNav" aria-label={t("main.classSectionsNav")}>
             <div className="secondLine">
               <div className="menu">
-                {CLASS_PAGE_NAV_ITEMS.map((item) => (
+                {navItems.map((item) => (
                   <Link
                     key={item.value}
                     href={{
@@ -172,6 +179,11 @@ export default function ClassPage({ code, user, query }) {
           <div>
             {page === "resources" && (
               <ClassResources myclass={myclass} user={user} query={query} />
+            )}
+          </div>
+          <div>
+            {page === "opportunities" && showOpportunitiesTab && (
+              <ClassOpportunities myclass={myclass} user={user} />
             )}
           </div>
           <div>

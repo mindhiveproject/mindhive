@@ -384,6 +384,10 @@
 		"loading": "Loading opportunity…",
 		"mentorNotes": "Mentor notes",
 		"mentorNotesDescription": "Name, title, contact, and availability of the day-to-day mentor. If no mentor is available, describe the gaps and CUSP can help identify support.",
+		"classNetworksEmptyWarning": "Teachers will not see this opportunity in their review queue until you select at least one class network.",
+		"classNetworksHint": "Select one or more class networks you belong to. Teachers in those networks can review this opportunity.",
+		"classNetworksNoMembership": "You are not a member of any class networks yet.",
+		"classNetworksTitle": "Class networks",
 		"offeredInNetworks": "Offered in class networks",
 		"offeredInNetworksHint": "Pick which networks can see this opportunity.",
 		"overview": {
