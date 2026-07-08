@@ -690,6 +690,7 @@
 			"notFound": "Opportunity not found, or no longer available.",
 			"organization": "Organization",
 			"preferences": "Student preferences",
+			"opportunityDetails": "Opportunity details",
 			"projectCategory": "Project category",
 			"publicRating": "Public rating",
 			"ratingsTitle": "What past participants said",
@@ -699,6 +700,7 @@
 			"teamSizeTeam": "Team of {{size}}",
 			"timeCommitment": "Time commitment",
 			"verifiedOrganization": "Verified organization",
+			"viewOrganization": "View organization {{name}}",
 			"yes": "Yes"
 		},
 		"rowMeta": {

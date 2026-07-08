@@ -46,6 +46,11 @@ function toOptionKey(value) {
 }
 
 const META_ITEM_STYLE = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-start",
+  width: "auto",
+  justifyContent: "space-between",
   padding: "10px 14px",
   borderRadius: 10,
   background: "#f7f9f8",
@@ -287,6 +292,14 @@ export default function OpportunityPreviewModal({ open, opportunityId, onClose }
     opp?.mentor?.image?.image?.publicUrlTransformed ||
     null;
   const orgLogo = opp?.organization?.logo?.url || null;
+  const mentorProfileId = opp?.mentor?.publicReadableId || null;
+  const orgId = opp?.organization?.id || null;
+  const mentorProfileUrl = mentorProfileId
+    ? `/dashboard/connect/with?id=${encodeURIComponent(mentorProfileId)}`
+    : null;
+  const orgProfileUrl = orgId
+    ? `/dashboard/connect/organizations?org=${encodeURIComponent(orgId)}`
+    : null;
 
   const from = formatDate(opp?.availableFrom);
   const to = formatDate(opp?.availableTo);
@@ -362,8 +375,8 @@ export default function OpportunityPreviewModal({ open, opportunityId, onClose }
   return (
     <Modal open={open} onClose={onClose} size="large">
       <Modal.Header>
-        <div style={{ display: "grid", gap: 12 }}>
-          <div style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.3, color: "#171717" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12}}>
+          <div style={{ fontSize: 24, fontWeight: 700, lineHeight: 1.3, color: "#171717" }}>
             {opp?.title ||
               t("opportunities.networkOpportunitiesTitle", {}, {
                 default: "Network opportunities",
@@ -381,15 +394,39 @@ export default function OpportunityPreviewModal({ open, opportunityId, onClose }
               {mentorName ? (
                 <Chip
                   label={mentorName}
-                  shape="square"
+                  shape="pill"
                   leading={chipLeadingImage(mentorAvatar, mentorName)}
+                  onClick={
+                    mentorProfileUrl
+                      ? () => window.open(mentorProfileUrl, "_blank", "noopener,noreferrer")
+                      : undefined
+                  }
+                  ariaLabel={
+                    mentorProfileUrl
+                      ? tConnect("profileCard.viewProfile", { name: mentorName }, {
+                          default: "View profile of {{name}}",
+                        })
+                      : undefined
+                  }
                 />
               ) : null}
               {orgName ? (
                 <Chip
                   label={orgName}
-                  shape="square"
+                  shape="pill"
                   leading={chipLeadingImage(orgLogo, orgName)}
+                  onClick={
+                    orgProfileUrl
+                      ? () => window.open(orgProfileUrl, "_blank", "noopener,noreferrer")
+                      : undefined
+                  }
+                  ariaLabel={
+                    orgProfileUrl
+                      ? t("opportunities.preview.viewOrganization", { name: orgName }, {
+                          default: "View organization {{name}}",
+                        })
+                      : undefined
+                  }
                 />
               ) : null}
             </div>
@@ -431,6 +468,9 @@ export default function OpportunityPreviewModal({ open, opportunityId, onClose }
                 </p>
               ) : null}
 
+              <PreviewSection
+                title={t("opportunities.preview.opportunityDetails", {}, { default: "Opportunity details" })}
+              >
               <div
                 style={{
                   display: "grid",
@@ -495,7 +535,7 @@ export default function OpportunityPreviewModal({ open, opportunityId, onClose }
                   />
                 ) : null}
               </div>
-
+              </PreviewSection>
               {(gradeLevelsLabel || classTypesLabel || groupFormatLabel) && (
                 <PreviewSection
                   title={t("opportunities.preview.preferences", {}, { default: "Student preferences" })}
