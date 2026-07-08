@@ -9,8 +9,7 @@ import useForm from "../../../../lib/useForm";
 import useEmail from "../../../../lib/useEmail";
 import {
   GET_OPPORTUNITY,
-  MY_CLASS_NETWORKS_FOR_OPPORTUNITY,
-  MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY,
+  OPPORTUNITY_EDITOR_CLASS_NETWORKS,
   MY_OPPORTUNITIES,
 } from "../../../Queries/Opportunity";
 import { QUESTIONS_FOR_OPPORTUNITY } from "../../../Queries/ConnectQuestion";
@@ -27,32 +26,14 @@ import { deriveRoles } from "../useConnectRole";
 import Chip from "../../../DesignSystem/Chip";
 import OpportunityWorkflowStepper from "./OpportunityWorkflowStepper";
 import OpportunityProposalSection from "./OpportunityProposalSection";
+import OpportunityClassNetworksField from "./OpportunityClassNetworksField";
+import { collectMemberClassNetworks } from "../../../../lib/opportunityClassNetworks";
 import {
   PROPOSAL_EMPTY_FORM,
   PROPOSAL_WORD_LIMITS,
   buildProposalData,
   hydrateProposalInputs,
 } from "./OpportunityProposalConfig";
-
-const WarningCallout = styled.div`
-  padding: 12px 16px;
-  border-radius: 12px;
-  background: #fef9ee;
-  border: 1px solid #fcd34d;
-  color: #92400e;
-  font-size: 13px;
-  line-height: 1.5;
-`;
-
-function dedupeNetworks(networks) {
-  const seen = new Map();
-  (networks || []).forEach((network) => {
-    if (network?.id && !seen.has(network.id)) {
-      seen.set(network.id, network);
-    }
-  });
-  return Array.from(seen.values());
-}
 
 const Shell = styled.div`
   display: flex;
@@ -434,8 +415,7 @@ export default function OpportunityEditor({ opportunityId, user }) {
   const { sendEmail } = useEmail();
   const isNew = opportunityId === "new";
   const isReviewRoute = router.query?.review === "1";
-  const { hasExpandedOpportunityEditor, isAdmin, isTeacher, isSponsor } =
-    deriveRoles(user);
+  const { hasExpandedOpportunityEditor, isAdmin, isTeacher } = deriveRoles(user);
 
   // Sponsors decide between drafting and submitting for review. Everything
   // beyond — accepting, publishing, closing — is reserved for admins so a
@@ -508,25 +488,15 @@ export default function OpportunityEditor({ opportunityId, user }) {
     }
   );
 
-  const { data: networksData } = useQuery(MY_CLASS_NETWORKS_FOR_OPPORTUNITY, {
-    skip: isSponsor,
-  });
-  const { data: memberNetworksData } = useQuery(
-    MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY,
-    { skip: !isSponsor },
+  const { data: editorNetworksData } = useQuery(
+    OPPORTUNITY_EDITOR_CLASS_NETWORKS,
   );
 
-  const availableNetworks = useMemo(() => {
-    if (isSponsor) {
-      const me = memberNetworksData?.authenticatedItem;
-      const fromProfile = me?.memberOfClassNetworks || [];
-      const fromOrgs = (me?.organizations || []).flatMap(
-        (org) => org.memberOfClassNetworks || [],
-      );
-      return dedupeNetworks([...fromProfile, ...fromOrgs]);
-    }
-    return networksData?.classNetworks || [];
-  }, [isSponsor, memberNetworksData, networksData]);
+  const availableNetworks = useMemo(
+    () =>
+      collectMemberClassNetworks(editorNetworksData?.authenticatedItem),
+    [editorNetworksData],
+  );
 
   // The current user's first Organization — auto-attached to new opportunities
   // so sponsors don't have to pick their own org on every create.
@@ -1461,34 +1431,6 @@ export default function OpportunityEditor({ opportunityId, user }) {
             ))}
           </CheckboxRow>
         </Field>
-        {hasExpandedOpportunityEditor && !isSponsor && (
-        <Field>
-          <span className="label-text">
-            {t("opportunityEditor.offeredInNetworks", {}, {
-              default: "Offered in class networks",
-            })}
-          </span>
-          <span className="hint">
-            {t("opportunityEditor.offeredInNetworksHint", {}, {
-              default: "Pick which networks can see this opportunity.",
-            })}
-          </span>
-          <Dropdown
-            placeholder="Select class networks"
-            fluid
-            multiple
-            selection
-            search
-            options={availableNetworks.map((n) => ({
-              key: n.id,
-              text: n.title,
-              value: n.id,
-            }))}
-            value={selectedNetworks}
-            onChange={(_, { value }) => setSelectedNetworks(value)}
-          />
-        </Field>
-        )}
       </Card>
       )}
 
@@ -1793,55 +1735,13 @@ export default function OpportunityEditor({ opportunityId, user }) {
         </Card>
       )}
 
-      {!isReviewMode && isSponsor && (
-      <Card>
-        <h2>
-          {t("opportunityEditor.classNetworksTitle", {}, {
-            default: "Class networks",
-          })}
-        </h2>
-        <Field>
-          <span className="hint">
-            {t("opportunityEditor.classNetworksHint", {}, {
-              default:
-                "Select one or more class networks you belong to. Teachers in those networks can review this opportunity.",
-            })}
-          </span>
-          {availableNetworks.length === 0 ? (
-            <WarningCallout>
-              {t("opportunityEditor.classNetworksNoMembership", {}, {
-                default:
-                  "You are not a member of any class networks yet. Ask a teacher to share a sponsor signup link so you can join a network before offering opportunities.",
-              })}
-            </WarningCallout>
-          ) : (
-            <Dropdown
-              placeholder={t("opportunityEditor.offeredInNetworks", {}, {
-                default: "Offered in class networks",
-              })}
-              fluid
-              multiple
-              selection
-              search
-              options={availableNetworks.map((n) => ({
-                key: n.id,
-                text: n.title,
-                value: n.id,
-              }))}
-              value={selectedNetworks}
-              onChange={(_, { value }) => setSelectedNetworks(value)}
-            />
-          )}
-          {selectedNetworks.length === 0 && availableNetworks.length > 0 && (
-            <WarningCallout>
-              {t("opportunityEditor.classNetworksEmptyWarning", {}, {
-                default:
-                  "Teachers will not see this opportunity in their review queue until you select at least one class network.",
-              })}
-            </WarningCallout>
-          )}
-        </Field>
-      </Card>
+      {!isReviewMode && (
+        <OpportunityClassNetworksField
+          availableNetworks={availableNetworks}
+          selectedNetworks={selectedNetworks}
+          onChange={setSelectedNetworks}
+          readOnly={isFieldReadOnly}
+        />
       )}
 
       {!isReviewMode && (

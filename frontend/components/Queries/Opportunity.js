@@ -421,6 +421,25 @@ export const MY_MEMBER_CLASS_NETWORKS_FOR_OPPORTUNITY = gql`
   }
 `;
 
+export const OPPORTUNITY_EDITOR_CLASS_NETWORKS = gql`
+  query OPPORTUNITY_EDITOR_CLASS_NETWORKS {
+    authenticatedItem {
+      ... on Profile {
+        memberOfClassNetworks {
+          id
+          title
+        }
+        organizations {
+          memberOfClassNetworks {
+            id
+            title
+          }
+        }
+      }
+    }
+  }
+`;
+
 // Teacher review queue — client filters by classNetworks overlap with reviewer.
 export const PENDING_OPPORTUNITIES_FOR_REVIEW = gql`
   query PENDING_OPPORTUNITIES_FOR_REVIEW {
