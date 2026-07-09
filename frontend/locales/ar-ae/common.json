@@ -78,6 +78,17 @@
 		"question": "كيف تريدنا أن نستخدم بياناتك؟",
 		"science": "يمكنك استخدام بياناتي لأغراض علمية و/أو تعليمية"
 	},
+	"definitionForm": {
+		"fieldRequired": "",
+		"fixMultipleFields": "",
+		"fixSingleField": "",
+		"invalidFormat": "",
+		"max": "",
+		"maxLength": "",
+		"min": "",
+		"saveFailed": "",
+		"wordLimit": ""
+	},
 	"discoverDescription": "تصفح مجموعتنا من الدراسات والمهام والاستطلاعات التي أعدّها طلاب المرحلة الثانوية في برنامج MindHive وعلماء شركائنا. شارك في الدراسات أو استعرض المهام والاستطلاعات.",
 	"discoverHeader": "اكتشف الدراسات والمهام والاستطلاعات",
 	"documents": {
@@ -304,6 +315,7 @@
 		"participant": "مشارك في الدراسة",
 		"scientist": "عالم",
 		"sponsor": "",
+		"sponsorNyuCuspRecommendation": "",
 		"student": "طالب",
 		"teacher": "مدرس",
 		"title": "ما هو الدور الذي يصفك بشكل أفضل؟"

@@ -6,6 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import CopyButton from "../../../DesignSystem/CopyButton";
 import Chip from "../../../DesignSystem/Chip";
 import { NETWORK_OPPORTUNITIES_FOR_ROUND } from "../../../Queries/ConnectRound";
+import ClassMatchingRoundSection from "./ClassMatchingRoundSection";
 import OpportunityPreviewModal from "./OpportunityPreviewModal";
 
 const GLOBE_ICON = (
@@ -117,14 +118,14 @@ export default function ClassOpportunities({ myclass }) {
           <section className="classTabSection">
             <div className="classTabSectionHeader">
               <h3>
-                {t("opportunities.networkOpportunitiesTitle", {}, {
-                  default: "Network opportunities",
+                {t("opportunities.networkSection.title", {}, {
+                  default: "Class network",
                 })}
               </h3>
               <p>
-                {t("opportunities.networkOpportunitiesDescription", {}, {
+                {t("opportunities.networkSection.description", {}, {
                   default:
-                    "Opportunities published to this class network. Click one to preview its content.",
+                    "Choose a class network to manage matching, browse opportunities, and invite sponsors.",
                 })}
               </p>
             </div>
@@ -148,6 +149,52 @@ export default function ClassOpportunities({ myclass }) {
                   ariaLabel={network.title}
                 />
               ))}
+            </div>
+
+            {selectedNetwork ? (
+              <div className="classTabNetworkInvite">
+                <div className="networkInviteText">
+                  <p className="networkInviteTitle">
+                    {t("opportunities.compactInvite.title", {}, {
+                      default: "Invite sponsors",
+                    })}
+                  </p>
+                  <p className="networkInviteDescription">
+                    {t("opportunities.compactInvite.description", {}, {
+                      default:
+                        "Copy the link to share with sponsors so they can join the selected class network.",
+                    })}
+                  </p>
+                </div>
+                <div className="networkInviteActions">
+                  <CopyButton value={sponsorSignupLink} style={{ fontWeight: 500 }}>
+                    {t("opportunities.copyLink", {}, { default: "Copy link" })}
+                  </CopyButton>
+                </div>
+              </div>
+            ) : null}
+          </section>
+
+          <ClassMatchingRoundSection
+            myclass={myclass}
+            selectedNetworkId={selectedNetworkId}
+            selectedNetwork={selectedNetwork}
+            onPreviewOpportunity={setPreviewOpportunityId}
+          />
+
+          <section className="classTabSection">
+            <div className="classTabSectionHeader">
+              <h3>
+                {t("opportunities.networkOpportunitiesTitle", {}, {
+                  default: "Network opportunities",
+                })}
+              </h3>
+              <p>
+                {t("opportunities.networkOpportunitiesDescription", {}, {
+                  default:
+                    "Opportunities are published to class networks. A matching round draws from opportunities in the selected network. Click one to preview its content.",
+                })}
+              </p>
             </div>
 
             {!selectedNetworkId ? (
@@ -236,60 +283,6 @@ export default function ClassOpportunities({ myclass }) {
                     </button>
                   );
                 })}
-              </div>
-            )}
-          </section>
-
-          <section className="classTabSection">
-            <div className="classTabSectionHeader">
-              <h3>
-                {t("opportunities.sponsorSignupTitle", {}, {
-                  default: "Invite sponsors",
-                })}
-              </h3>
-              <p>
-                {t("opportunities.sponsorSignupDescription", {}, {
-                  default:
-                    "Share the link below with sponsors so they can sign up and join your class network on MindHive Connect.",
-                })}
-              </p>
-            </div>
-
-            {!selectedNetwork ? (
-              <div className="classTabEmpty">
-                <p>
-                  {t("opportunities.selectNetworkFirst", {}, {
-                    default: "Select a class network above to continue.",
-                  })}
-                </p>
-              </div>
-            ) : (
-              <div className="classTabInformationBlock">
-                <div className="block">
-                  <div className="classTabInviteBlock">
-                    {selectedNetwork.description ? (
-                      <p className="classTabInfoText">
-                        {selectedNetwork.description}
-                      </p>
-                    ) : null}
-                    <p className="classTabInviteLabel">
-                      {t("opportunities.sponsorLinkLabel", {}, {
-                        default: "Sponsor signup link",
-                      })}
-                    </p>
-                    <div className="classTabCopyArea">
-                      <div className="classTabInviteLink">
-                        {origin}/signup/sponsor?classNetwork={selectedNetwork.id}
-                      </div>
-                      <CopyButton
-                        value={sponsorSignupLink}
-                        style={{ fontWeight: 500 }}
-                      >
-                        {t("opportunities.copyLink", {}, { default: "Copy" })}
-                      </CopyButton>
-                    </div>
-                  </div>
-                </div>
               </div>
             )}
           </section>

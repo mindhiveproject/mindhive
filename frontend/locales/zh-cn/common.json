@@ -78,6 +78,17 @@
 		"question": "您希望我们如何使用您的数据？",
 		"science": "您可以将我的数据用于科学和/或教育目的"
 	},
+	"definitionForm": {
+		"fieldRequired": "",
+		"fixMultipleFields": "",
+		"fixSingleField": "",
+		"invalidFormat": "",
+		"max": "",
+		"maxLength": "",
+		"min": "",
+		"saveFailed": "",
+		"wordLimit": ""
+	},
 	"discoverDescription": "浏览我们由 MindHive 项目中的高中生和合作科学家创建的一系列研究、任务和调查问卷。参与研究或预览任务和调查问卷。",
 	"discoverHeader": "发现研究、任务和调查",
 	"documents": {
@@ -304,6 +315,7 @@
 		"participant": "研究参与者",
 		"scientist": "科学家",
 		"sponsor": "",
+		"sponsorNyuCuspRecommendation": "",
 		"student": "学生",
 		"teacher": "老师",
 		"title": "哪个角色最能描述您？"

@@ -306,6 +306,10 @@
 			"urbanInfrastructure": "Stedelijke infrastructuur"
 		},
 		"categorizationOther": "Overige categorie",
+		"classNetworksEmptyWarning": "",
+		"classNetworksHint": "",
+		"classNetworksNoMembership": "",
+		"classNetworksTitle": "",
 		"competencies": "Competenties",
 		"competenciesDescription": "Vermeld alle specifieke vaardigheden of kwalificaties die nuttig zouden zijn voor studenten om dit probleem succesvol aan te pakken en het afstudeerproject te voltooien. Bijvoorbeeld: gebruikerservaringontwerp, softwareprogrammering, economie/financiële analyse, analyse van overheidsbeleid, kwantitatief onderzoek/analyse, technische vaardigheden (mechanisch, elektrisch, enz.). De hier verstrekte informatie kan worden gebruikt op de CUSP-website, in ander promotiemateriaal en in cursusbeschrijvingen van de Urban Science Intensive voor studenten.",
 		"coverImage": "Omslagafbeelding",

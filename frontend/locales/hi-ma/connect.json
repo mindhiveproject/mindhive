@@ -306,6 +306,10 @@
 			"urbanInfrastructure": ""
 		},
 		"categorizationOther": "",
+		"classNetworksEmptyWarning": "",
+		"classNetworksHint": "",
+		"classNetworksNoMembership": "",
+		"classNetworksTitle": "",
 		"competencies": "",
 		"competenciesDescription": "",
 		"coverImage": "",

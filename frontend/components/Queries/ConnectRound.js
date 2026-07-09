@@ -153,6 +153,10 @@ export const NETWORK_OPPORTUNITIES_FOR_ROUND = gql`
         firstName
         lastName
       }
+      organization {
+        id
+        name
+      }
     }
   }
 `;
