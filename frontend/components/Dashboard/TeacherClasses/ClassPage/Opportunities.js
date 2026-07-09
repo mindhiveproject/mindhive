@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useCallback, useEffect, useRef, useState } from "react";
 import absoluteUrl from "next-absolute-url";
 import useTranslation from "next-translate/useTranslation";
 
 import CopyButton from "../../../DesignSystem/CopyButton";
 import Chip from "../../../DesignSystem/Chip";
-import { NETWORK_OPPORTUNITIES_FOR_ROUND } from "../../../Queries/ConnectRound";
 import ClassMatchingRoundSection from "./ClassMatchingRoundSection";
 import OpportunityPreviewModal from "./OpportunityPreviewModal";
 
@@ -18,35 +16,6 @@ const GLOBE_ICON = (
     height={24}
   />
 );
-
-const HIDDEN_OPPORTUNITY_STATUSES = new Set(["draft", "closed", "archived"]);
-
-const STATUS_KEYS = {
-  draft: "draft",
-  pending_review: "pendingReview",
-  pre_selected: "preSelected",
-  accepted: "accepted",
-  published: "published",
-  closed: "closed",
-  archived: "archived",
-};
-
-function displayName(profile) {
-  if (!profile) return null;
-  return (
-    `${profile.firstName || ""} ${profile.lastName || ""}`.trim() ||
-    profile.username
-  );
-}
-
-function formatDate(value) {
-  if (!value) return null;
-  try {
-    return new Date(value).toLocaleDateString();
-  } catch {
-    return null;
-  }
-}
 
 export default function ClassOpportunities({ myclass }) {
   const { t } = useTranslation("classes");
@@ -84,32 +53,6 @@ export default function ClassOpportunities({ myclass }) {
   const selectedNetwork = networks.find(
     (network) => network.id === selectedNetworkId,
   );
-
-  const { data: opportunitiesData, loading: loadingOpportunities } = useQuery(
-    NETWORK_OPPORTUNITIES_FOR_ROUND,
-    {
-      variables: { classNetworkId: selectedNetworkId },
-      skip: !selectedNetworkId,
-      fetchPolicy: "cache-and-network",
-    },
-  );
-
-  const opportunities = useMemo(() => {
-    const list = (opportunitiesData?.opportunities || []).filter(
-      (opportunity) => !HIDDEN_OPPORTUNITY_STATUSES.has(opportunity.status),
-    );
-    return [...list].sort((a, b) =>
-      (a.title || "").localeCompare(b.title || "", undefined, {
-        sensitivity: "base",
-      }),
-    );
-  }, [opportunitiesData]);
-
-  const statusLabel = (status) => {
-    const key = STATUS_KEYS[status];
-    if (!key) return status;
-    return t(`opportunities.status.${key}`, {}, { default: status });
-  };
 
   const sponsorSignupLink = selectedNetworkId
     ? `${origin}/signup/sponsor?classNetwork=${selectedNetworkId}`
@@ -196,111 +139,6 @@ export default function ClassOpportunities({ myclass }) {
             onRegisterNavigationGuard={handleRegisterNavigationGuard}
             onMatchingRoundContextChange={setMatchingRoundContext}
           />
-
-          <section className="classTabSection">
-            <div className="classTabSectionHeader">
-              <h3>
-                {t("opportunities.networkOpportunitiesTitle", {}, {
-                  default: "Network opportunities",
-                })}
-              </h3>
-              <p>
-                {t("opportunities.networkOpportunitiesDescription", {}, {
-                  default:
-                    "Opportunities are published to class networks. A matching round draws from opportunities in the selected network. Click one to preview its content.",
-                })}
-              </p>
-            </div>
-
-            {!selectedNetworkId ? (
-              <div className="classTabEmpty">
-                <p>
-                  {t("opportunities.selectNetworkFirst", {}, {
-                    default: "Select a class network above to continue.",
-                  })}
-                </p>
-              </div>
-            ) : loadingOpportunities && opportunities.length === 0 ? (
-              <div className="classTabEmpty">
-                <p>
-                  {t("opportunities.loadingOpportunities", {}, {
-                    default: "Loading opportunities…",
-                  })}
-                </p>
-              </div>
-            ) : opportunities.length === 0 ? (
-              <div className="classTabEmpty">
-                <p>
-                  {t("opportunities.noOpportunities", {}, {
-                    default:
-                      "No opportunities have been added to this class network yet. Mentors can publish opportunities and select this network as a destination.",
-                  })}
-                </p>
-              </div>
-            ) : (
-              <div className="classTabOpportunityList">
-                {opportunities.map((opportunity) => {
-                  const mentorName = displayName(opportunity.mentor);
-                  const from = formatDate(opportunity.availableFrom);
-                  const to = formatDate(opportunity.availableTo);
-                  const isPublished = opportunity.status === "published";
-
-                  return (
-                    <button
-                      key={opportunity.id}
-                      type="button"
-                      className="classTabOpportunityRow"
-                      onClick={() => setPreviewOpportunityId(opportunity.id)}
-                    >
-                      <div className="rowTitle">
-                        <span>{opportunity.title}</span>
-                        {opportunity.status ? (
-                          <span
-                            className={`rowStatus${
-                              isPublished ? " rowStatusPublished" : ""
-                            }`}
-                          >
-                            {statusLabel(opportunity.status)}
-                          </span>
-                        ) : null}
-                      </div>
-                      {opportunity.shortDescription ? (
-                        <p className="rowDescription">
-                          {opportunity.shortDescription}
-                        </p>
-                      ) : null}
-                      <p className="rowMeta">
-                        {mentorName
-                          ? t(
-                              "opportunities.rowMeta.byMentor",
-                              { name: mentorName },
-                              { default: "By {{name}}" },
-                            )
-                          : null}
-                        {mentorName ? " · " : ""}
-                        {t(
-                          "opportunities.rowMeta.capacity",
-                          { count: opportunity.studentCapacity ?? 1 },
-                          { default: "Capacity {{count}}" },
-                        )}
-                        {opportunity.teamSize > 1
-                          ? ` · ${t(
-                              "opportunities.rowMeta.teamOf",
-                              { size: opportunity.teamSize },
-                              { default: "Team of {{size}}" },
-                            )}`
-                          : ""}
-                        {(from || to) && ` · ${from || "—"} → ${to || "—"}`}
-                        {opportunity.timeCommitment
-                          ? ` · ${opportunity.timeCommitment}`
-                          : ""}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </section>
         </>
       )}
 
