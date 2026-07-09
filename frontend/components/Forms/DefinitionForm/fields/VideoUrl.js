@@ -4,7 +4,7 @@
 // Opportunity Explore Detail uses; kept local here so the field stays
 // self-contained.
 import { fieldLabel, fieldHelper, fieldPlaceholder } from "../i18n";
-import { FieldShell } from "../styles";
+import { FieldShell, fieldShellErrorProps } from "../styles";
 
 // Pull an embeddable URL out of either a raw URL or a pasted
 // <iframe src="..."> snippet.
@@ -68,7 +68,7 @@ export default function VideoUrl({
 }) {
   const embed = detectEmbed(value);
   return (
-    <FieldShell>
+    <FieldShell {...fieldShellErrorProps(error)}>
       <span className="label-text">
         {fieldLabel(field, locale)}
         {field.isRequired && <span className="required">*</span>}

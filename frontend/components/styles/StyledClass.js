@@ -1064,6 +1064,78 @@ const StyledClass = styled.div`
       line-height: 22px;
     }
 
+    .classTabNetworkChipRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .classTabOpportunityList {
+      display: grid;
+      gap: 10px;
+    }
+
+    .classTabOpportunityRow {
+      display: grid;
+      gap: 6px;
+      width: 100%;
+      padding: 16px 18px;
+      border: 1px solid #ece9e6;
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: 0 4px 14px rgba(23, 23, 23, 0.04);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        transform 0.15s ease;
+
+      &:hover,
+      &:focus-visible {
+        border-color: #c8d8df;
+        box-shadow: 0 8px 22px rgba(23, 23, 23, 0.08);
+        transform: translateY(-1px);
+        outline: none;
+      }
+
+      .rowTitle {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 22px;
+        color: #171717;
+      }
+
+      .rowStatus {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 8px;
+        border-radius: 100px;
+        background: #f0f4f6;
+        color: #5f6871;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 16px;
+        text-transform: capitalize;
+      }
+
+      .rowStatusPublished {
+        background: #e3f4ec;
+        color: #1d6b3a;
+      }
+
+      .rowDescription,
+      .rowMeta {
+        margin: 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: #625b71;
+      }
+    }
+
     @media (max-width: 760px) {
       .classTabSection {
         padding: 18px;

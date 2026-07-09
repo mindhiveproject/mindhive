@@ -5,7 +5,7 @@
 //   - object {url, filename}: existing file from GraphQL query
 //   - null:        no file
 import { fieldLabel, fieldHelper } from "../i18n";
-import { FieldShell } from "../styles";
+import { FieldShell, fieldShellErrorProps } from "../styles";
 
 function describeExisting(value) {
   if (!value) return null;
@@ -61,7 +61,7 @@ export default function FileUpload({
   };
 
   return (
-    <FieldShell as="div">
+    <FieldShell as="div" {...fieldShellErrorProps(error)}>
       <span className="label-text">
         {fieldLabel(field, locale)}
         {field.isRequired && <span className="required">*</span>}

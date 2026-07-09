@@ -16,7 +16,7 @@
 // the simple types are realistic to embed here. Complex nested types
 // (image, json_array recursion, rich_text) are not allowed in v1.
 import { fieldLabel, fieldHelper } from "../i18n";
-import { FieldShell } from "../styles";
+import { FieldShell, fieldShellErrorProps } from "../styles";
 import { TextInput, TextareaInput, NumberInput, DateInput, SelectInput } from "./inputs";
 
 const SUBFIELD_REGISTRY = {
@@ -73,7 +73,7 @@ export default function JsonArray({
   };
 
   return (
-    <FieldShell as="div">
+    <FieldShell as="div" {...fieldShellErrorProps(error)}>
       <span className="label-text">
         {fieldLabel(field, locale)}
         {field.isRequired && <span className="required">*</span>}

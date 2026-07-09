@@ -6,17 +6,7 @@
 import { Card } from "./styles";
 import { cardTitle, cardDescription } from "./i18n";
 import { getFieldComponent } from "./fields";
-
-function rolesIntersect(allowed, viewerRoles) {
-  if (!Array.isArray(allowed) || allowed.length === 0) return true;
-  if (!Array.isArray(viewerRoles) || viewerRoles.length === 0) return false;
-  return allowed.some((r) => viewerRoles.includes(r));
-}
-
-function statusMatches(allowed, entityStatus) {
-  if (!Array.isArray(allowed) || allowed.length === 0) return true;
-  return allowed.includes(entityStatus);
-}
+import { isCardVisible, rolesIntersect } from "./visibility";
 
 export default function CardRenderer({
   card,
@@ -29,8 +19,7 @@ export default function CardRenderer({
   disabled,
   specialCardComponents,
 }) {
-  if (!rolesIntersect(card.roleVisibility, viewerRoles)) return null;
-  if (!statusMatches(card.visibleWhenStatus, entityStatus)) return null;
+  if (!isCardVisible(card, { viewerRoles, entityStatus })) return null;
 
   if (card.cardType !== "fields") {
     const SpecialComponent = specialCardComponents?.[card.cardType];
