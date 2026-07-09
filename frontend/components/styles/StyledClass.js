@@ -1071,6 +1071,137 @@ const StyledClass = styled.div`
       line-height: 22px;
     }
 
+    .classTabSubsection {
+      display: grid;
+      gap: 12px;
+    }
+
+    .classTabSubsectionTitle {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 22px;
+      color: #171717;
+    }
+
+    .classTabSubsectionDescription {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: #625b71;
+    }
+
+    .classTabSubsectionHeaderRow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .classTabSubsectionHeaderGroup {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .classTabSubsectionDivider {
+      margin: 8px 0;
+      border-top: 1px solid #ece9e6;
+    }
+
+    .classTabTemplateList {
+      display: grid;
+      gap: 16px;
+    }
+
+    .classTabTemplateCard {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border: 1px solid #e6e6e6;
+      border-radius: 14px;
+      background: #f3f3f3;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .classTabTemplateCardActive {
+      border: 2px solid #336f8a;
+      background: rgba(222, 248, 251, 0.3);
+    }
+
+    .classTabTemplateCardRow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 12px 16px;
+    }
+
+    .classTabTemplateCardTitle {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+      color: #171717;
+      word-break: break-word;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .classTabTemplateCardTitleLink {
+      display: block;
+      min-width: 0;
+      max-width: 100%;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+
+      &:hover .classTabTemplateCardTitle {
+        color: #336f8a;
+        text-decoration: underline;
+      }
+    }
+
+    .classTabTemplateCardTitleGroup {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .classTabTemplateCardDescription {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: #625b71;
+      word-break: break-word;
+    }
+
+    .classTabTemplateCardActions {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .classTabTemplateCardMeta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      line-height: 16px;
+      color: #8a8a8a;
+    }
+
     .classTabNetworkChipRow {
       display: flex;
       flex-wrap: wrap;

@@ -74,6 +74,11 @@ export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
   const page = query?.page || "students";
+  const { isTeacher, isSponsor } = deriveRoles(user);
+  const showOpportunitiesTab = isTeacher && isSponsor;
+  const navItems = CLASS_PAGE_NAV_ITEMS.filter(
+    (item) => item.value !== "opportunities" || showOpportunitiesTab,
+  );
   const { action, board } = query || {};
 
   const { data } = useQuery(GET_CLASS, {
