@@ -275,9 +275,46 @@ function chipLeadingImage(src, alt) {
   );
 }
 
-export default function OpportunityPreviewModal({ open, opportunityId, onClose }) {
+export default function OpportunityPreviewModal({
+  open,
+  opportunityId,
+  onClose,
+  matchingRoundContext,
+}) {
   const { t } = useTranslation("classes");
   const { t: tConnect } = useTranslation("connect");
+
+  const isInMatchingRound =
+    opportunityId &&
+    matchingRoundContext?.selectedOpportunityIds?.includes(opportunityId);
+  const isToggling =
+    matchingRoundContext?.togglingOpportunityId === opportunityId;
+  const canManage = matchingRoundContext?.canManageOpportunities;
+  const showNoRoundHint = matchingRoundContext?.noRoundForNetwork;
+  const showMatchingRoundSection = Boolean(matchingRoundContext);
+
+  const handleToggleMatchingRound = () => {
+    if (!opportunityId || !canManage || isToggling) return;
+    matchingRoundContext?.toggleOpportunity?.(opportunityId);
+  };
+
+  const matchingRoundTitle =
+    matchingRoundContext?.roundTitle ||
+    t("opportunities.matchingRound.title", {}, { default: "Matching round" });
+
+  const matchingRoundButtonLabel = isToggling
+    ? t("opportunities.preview.matchingRound.saving", {}, { default: "Saving…" })
+    : isInMatchingRound
+      ? t(
+          "opportunities.preview.matchingRound.removeFromRound",
+          { title: matchingRoundTitle },
+          { default: "Remove from {{title}}" },
+        )
+      : t(
+          "opportunities.preview.matchingRound.addToRound",
+          { title: matchingRoundTitle },
+          { default: "Add to {{title}}" },
+        );
 
   const { data, loading } = useQuery(EXPLORE_OPPORTUNITY_DETAIL, {
     variables: { id: opportunityId },
@@ -862,9 +899,42 @@ export default function OpportunityPreviewModal({ open, opportunityId, onClose }
         </StyledModal>
       </Modal.Content>
       <Modal.Actions style={{ padding: "1rem 1.5rem", gap: "8px" }}>
-        <Button variant="outline" onClick={onClose}>
-          {t("opportunities.preview.close", {}, { default: "Close" })}
-        </Button>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            width: "100%",
+            flexWrap: "wrap",
+          }}
+        >
+          {showMatchingRoundSection ? (
+            showNoRoundHint ? (
+              <span style={{ fontSize: 13, color: "#5f6871" }}>
+                {t("opportunities.preview.matchingRound.noRoundHint", {}, {
+                  default:
+                    "Create a matching round above to include this opportunity.",
+                })}
+              </span>
+            ) : canManage ? (
+              <Button
+                variant={isInMatchingRound ? "outline" : "filled"}
+                onClick={handleToggleMatchingRound}
+                disabled={isToggling}
+              >
+                {matchingRoundButtonLabel}
+              </Button>
+            ) : (
+              <span />
+            )
+          ) : (
+            <span />
+          )}
+          <Button variant="outline" onClick={onClose}>
+            {t("opportunities.preview.close", {}, { default: "Close" })}
+          </Button>
+        </div>
       </Modal.Actions>
     </Modal>
   );

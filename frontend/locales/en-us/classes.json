@@ -705,7 +705,8 @@
 					"review": "Review",
 					"sponsor": "Sponsor"
 				},
-				"review": "Review"
+				"review": "Review",
+				"remove": "Remove"
 			},
 			"loading": "Loading matching round…",
 			"manageMatches": "Manage matches",
@@ -717,9 +718,12 @@
 			"panels": {
 				"questions": "Additional student questions",
 				"reviewOpportunities": "Review opportunities",
+				"reviewOpportunitiesWithCount": "Review opportunities ({{count}})",
 				"selectedOpportunities": "Selected opportunities",
+				"selectedOpportunitiesWithCount": "Selected opportunities ({{count}})",
 				"settings": "Settings"
 			},
+			"reviewOpportunitiesEmpty": "All network opportunities are already in this round. Remove some from Selected opportunities to review more.",
 			"roundSwitcherLabel": "Matching round",
 			"saveFailed": "Could not save the matching round. Please try again.",
 			"saveRound": "Save changes",
@@ -767,6 +771,13 @@
 			},
 			"hostedBy": "Hosted by",
 			"loading": "Loading opportunity…",
+			"matchingRound": {
+				"addToRound": "Select for {{title}}",
+				"noRoundHint": "Create a matching round above to include this opportunity.",
+				"removeFromRound": "Remove from {{title}}",
+				"saving": "Saving…",
+				"toggleFailed": "Could not update this matching round. Please try again."
+			},
 			"mentor": "Mentor",
 			"mentorContact": "Your contact",
 			"no": "No",

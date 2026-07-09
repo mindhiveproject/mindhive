@@ -125,12 +125,21 @@ function snapshotsEqual(a, b) {
   );
 }
 
+function sortOpportunitiesByTitle(opportunities) {
+  return [...opportunities].sort((a, b) =>
+    (a.title || "").localeCompare(b.title || "", undefined, {
+      sensitivity: "base",
+    }),
+  );
+}
+
 export default function ClassMatchingRoundSection({
   myclass,
   selectedNetworkId,
   selectedNetwork,
   onPreviewOpportunity,
   onRegisterNavigationGuard,
+  onMatchingRoundContextChange,
 }) {
   const { t } = useTranslation("classes");
   const [activeRoundId, setActiveRoundId] = useState(null);
@@ -141,6 +150,7 @@ export default function ClassMatchingRoundSection({
   const [expanded, setExpanded] = useState(false);
   const [activePanel, setActivePanel] = useState(PANELS.settings);
   const [snapshotRevision, setSnapshotRevision] = useState(0);
+  const [togglingOpportunityId, setTogglingOpportunityId] = useState(null);
   const savedSnapshotRef = useRef(null);
 
   const classNetworkIds = useMemo(
@@ -270,6 +280,8 @@ export default function ClassMatchingRoundSection({
     if (!selectedNetworkId) return;
 
     if (isNew) {
+      if (formInitialized) return;
+
       const defaults = buildSuggestedRoundDefaults(
         myclass?.title,
         selectedNetwork?.title,
@@ -283,6 +295,7 @@ export default function ClassMatchingRoundSection({
     }
 
     if (!round || round.id !== activeRoundId) return;
+    if (formInitialized) return;
 
     const nextInputs = {
       title: round.title || "",
@@ -301,7 +314,15 @@ export default function ClassMatchingRoundSection({
     setFormInitialized(true);
     captureSnapshot(nextInputs, nextOpportunities, nextQuestions);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isNew, round?.id, activeRoundId, selectedNetworkId, myclass?.title, selectedNetwork?.title]);
+  }, [
+    isNew,
+    round?.id,
+    activeRoundId,
+    selectedNetworkId,
+    formInitialized,
+    myclass?.title,
+    selectedNetwork?.title,
+  ]);
 
   const { data: libraryData } = useQuery(QUESTION_LIBRARY, {
     fetchPolicy: "cache-and-network",
@@ -320,13 +341,19 @@ export default function ClassMatchingRoundSection({
   );
   const networkOpportunities = opportunitiesData?.opportunities || [];
 
-  const selectedNetworkOpportunities = useMemo(
-    () =>
-      networkOpportunities.filter((opportunity) =>
-        selectedOpportunities.includes(opportunity.id),
-      ),
-    [networkOpportunities, selectedOpportunities],
-  );
+  const selectedNetworkOpportunities = useMemo(() => {
+    const selectedSet = new Set(selectedOpportunities);
+    return sortOpportunitiesByTitle(
+      networkOpportunities.filter((opportunity) => selectedSet.has(opportunity.id)),
+    );
+  }, [networkOpportunities, selectedOpportunities]);
+
+  const reviewNetworkOpportunities = useMemo(() => {
+    const selectedSet = new Set(selectedOpportunities);
+    return sortOpportunitiesByTitle(
+      networkOpportunities.filter((opportunity) => !selectedSet.has(opportunity.id)),
+    );
+  }, [networkOpportunities, selectedOpportunities]);
 
   const statusOptions = useMemo(
     () =>
@@ -358,17 +385,26 @@ export default function ClassMatchingRoundSection({
       },
       {
         id: PANELS.review,
-        label: t("opportunities.matchingRound.panels.reviewOpportunities", {}, {
-          default: "Review opportunities",
-        }),
+        label:
+          reviewNetworkOpportunities.length > 0
+            ? t(
+                "opportunities.matchingRound.panels.reviewOpportunitiesWithCount",
+                { count: reviewNetworkOpportunities.length },
+                { default: "Review opportunities ({{count}})" },
+              )
+            : t("opportunities.matchingRound.panels.reviewOpportunities", {}, {
+                default: "Review opportunities",
+              }),
       },
       {
         id: PANELS.selected,
         label:
           selectedOpportunities.length > 0
-            ? `${t("opportunities.matchingRound.panels.selectedOpportunities", {}, {
-                default: "Selected opportunities",
-              })} (${selectedOpportunities.length})`
+            ? t(
+                "opportunities.matchingRound.panels.selectedOpportunitiesWithCount",
+                { count: selectedOpportunities.length },
+                { default: "Selected opportunities ({{count}})" },
+              )
             : t("opportunities.matchingRound.panels.selectedOpportunities", {}, {
                 default: "Selected opportunities",
               }),
@@ -380,7 +416,7 @@ export default function ClassMatchingRoundSection({
         }),
       },
     ],
-    [selectedOpportunities.length, t],
+    [reviewNetworkOpportunities.length, selectedOpportunities.length, t],
   );
 
   const [createConnectRound, { loading: creating }] = useMutation(
@@ -401,9 +437,92 @@ export default function ClassMatchingRoundSection({
   );
   const saving = creating || updating;
 
-  const handleOpportunitySelectionChange = (ids) => {
-    setSelectedOpportunities(ids);
-  };
+  const persistOpportunitySelection = useCallback(
+    async (nextIds, togglingId = null) => {
+      const sortedCurrent = [...selectedOpportunities].sort();
+      const sortedNext = [...nextIds].sort();
+      if (JSON.stringify(sortedCurrent) === JSON.stringify(sortedNext)) {
+        return;
+      }
+
+      if (isNew || !activeRoundId) {
+        setSelectedOpportunities(nextIds);
+        return;
+      }
+
+      if (togglingOpportunityId) return;
+
+      setTogglingOpportunityId(togglingId);
+      try {
+        await updateConnectRound({
+          variables: {
+            id: activeRoundId,
+            input: {
+              opportunities: { set: nextIds.map((id) => ({ id })) },
+              updatedAt: new Date().toISOString(),
+            },
+          },
+        });
+        setSelectedOpportunities(nextIds);
+        captureSnapshot(inputs, nextIds, selectedQuestions);
+      } catch (error) {
+        console.error("Failed to update matching round opportunities", error);
+        alert(
+          t("opportunities.preview.matchingRound.toggleFailed", {}, {
+            default: "Could not update this matching round. Please try again.",
+          }),
+        );
+        throw error;
+      } finally {
+        setTogglingOpportunityId(null);
+      }
+    },
+    [
+      selectedOpportunities,
+      isNew,
+      activeRoundId,
+      togglingOpportunityId,
+      updateConnectRound,
+      inputs,
+      selectedQuestions,
+      captureSnapshot,
+      t,
+    ],
+  );
+
+  const handleReviewSelectionChange = useCallback(
+    async (checkedReviewIds) => {
+      const reviewIds = new Set(reviewNetworkOpportunities.map((o) => o.id));
+      const unchanged = selectedOpportunities.filter((id) => !reviewIds.has(id));
+      const nextIds = [...unchanged, ...checkedReviewIds];
+
+      const prevSet = new Set(selectedOpportunities);
+      const nextSet = new Set(nextIds);
+      const togglingId =
+        nextIds.find((id) => !prevSet.has(id)) ||
+        selectedOpportunities.find((id) => !nextSet.has(id)) ||
+        null;
+
+      try {
+        await persistOpportunitySelection(nextIds, togglingId);
+      } catch {
+        // Grid resyncs from selectedOpportunities via selectedIds.
+      }
+    },
+    [reviewNetworkOpportunities, selectedOpportunities, persistOpportunitySelection],
+  );
+
+  const handleRemoveFromRound = useCallback(
+    async (opportunityId) => {
+      const nextIds = selectedOpportunities.filter((id) => id !== opportunityId);
+      try {
+        await persistOpportunitySelection(nextIds, opportunityId);
+      } catch {
+        // Selection state unchanged on failure.
+      }
+    },
+    [selectedOpportunities, persistOpportunitySelection],
+  );
 
   const toggleQuestion = (id) => {
     setSelectedQuestions((prev) =>
@@ -584,6 +703,58 @@ export default function ClassMatchingRoundSection({
       ? inputs.title
       : null);
 
+  const canManageOpportunities = Boolean(
+    selectedNetworkId &&
+      formInitialized &&
+      !loadingRounds &&
+      !loading &&
+      activeRoundId &&
+      !isNew,
+  );
+
+  const toggleOpportunityInRound = useCallback(
+    async (opportunityId) => {
+      if (togglingOpportunityId) return;
+
+      const isCurrentlySelected = selectedOpportunities.includes(opportunityId);
+      const nextIds = isCurrentlySelected
+        ? selectedOpportunities.filter((id) => id !== opportunityId)
+        : [...selectedOpportunities, opportunityId];
+
+      try {
+        await persistOpportunitySelection(nextIds, opportunityId);
+      } catch {
+        // Modal and grids stay on previous selection.
+      }
+    },
+    [selectedOpportunities, togglingOpportunityId, persistOpportunitySelection],
+  );
+
+  useEffect(() => {
+    if (!onMatchingRoundContextChange) return;
+
+    onMatchingRoundContextChange({
+      roundTitle: displayRoundTitle,
+      activeRoundId,
+      selectedOpportunityIds: selectedOpportunities,
+      canManageOpportunities,
+      noRoundForNetwork: Boolean(noRoundForNetwork),
+      togglingOpportunityId,
+      toggleOpportunity: toggleOpportunityInRound,
+    });
+
+    return () => onMatchingRoundContextChange(null);
+  }, [
+    onMatchingRoundContextChange,
+    displayRoundTitle,
+    activeRoundId,
+    selectedOpportunities,
+    canManageOpportunities,
+    noRoundForNetwork,
+    togglingOpportunityId,
+    toggleOpportunityInRound,
+  ]);
+
   const cardHeaderTitle = selectedNetworkId
     ? noRoundForNetwork
       ? t("opportunities.matchingRound.noRoundForNetwork", {}, {
@@ -701,10 +872,16 @@ export default function ClassMatchingRoundSection({
         </p>
       ) : (
         <MatchingRoundOpportunitiesGrid
-          opportunities={networkOpportunities}
-          selectedIds={selectedOpportunities}
-          onSelectionChange={handleOpportunitySelectionChange}
+          opportunities={reviewNetworkOpportunities}
+          selectedIds={[]}
+          onSelectionChange={handleReviewSelectionChange}
           onPreview={onPreviewOpportunity}
+          selectionDisabled={Boolean(togglingOpportunityId)}
+          togglingOpportunityId={togglingOpportunityId}
+          emptyMessage={t("opportunities.matchingRound.reviewOpportunitiesEmpty", {}, {
+            default:
+              "All network opportunities are already in this round. Remove some from Selected opportunities to review more.",
+          })}
         />
       )}
     </div>
@@ -717,6 +894,8 @@ export default function ClassMatchingRoundSection({
         selectedIds={selectedOpportunities}
         selectionMode="readOnly"
         onPreview={onPreviewOpportunity}
+        onRemove={canManageOpportunities ? handleRemoveFromRound : undefined}
+        togglingOpportunityId={togglingOpportunityId}
         emptyMessage={t("opportunities.matchingRound.selectedOpportunitiesEmpty", {}, {
           default:
             "No opportunities selected yet. Use Review opportunities to add some.",
@@ -988,7 +1167,8 @@ export default function ClassMatchingRoundSection({
                   })}
                 </p>
               ) : null}
-              {!isNew && (
+              {/* TODO: Add back in when we have a matches dashboard */}
+              {/* {!isNew && (
                 <Link
                   href={{
                     pathname: "/dashboard/connect/matches",
@@ -1000,7 +1180,8 @@ export default function ClassMatchingRoundSection({
                     default: "Manage matches",
                   })}
                 </Link>
-              )}
+              )} */}
+              {isDirty ? (
               <Button
                 variant="filled"
                 onClick={handleSave}
@@ -1018,6 +1199,7 @@ export default function ClassMatchingRoundSection({
                         default: "Save changes",
                       })}
               </Button>
+              ) : null}
             </div>
           </div>
         </div>

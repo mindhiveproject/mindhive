@@ -91,7 +91,10 @@ export default function MatchingRoundOpportunitiesGrid({
   selectedIds,
   onSelectionChange,
   onPreview,
+  onRemove,
   selectionMode = "multi",
+  selectionDisabled = false,
+  togglingOpportunityId = null,
   emptyMessage,
 }) {
   const { t } = useTranslation("classes");
@@ -173,8 +176,44 @@ export default function MatchingRoundOpportunitiesGrid({
     [onPreview, t],
   );
 
-  const columnDefs = useMemo(
-    () => [
+  const RemoveButtonRenderer = useCallback(
+    (params) => {
+      const opportunity = params?.data;
+      if (!opportunity?.id || !onRemove) return null;
+
+      const isSaving = togglingOpportunityId === opportunity.id;
+
+      return (
+        <Button
+          variant="text"
+          disabled={Boolean(togglingOpportunityId)}
+          style={{
+            padding: 0,
+            minWidth: 0,
+            width: "fit-content",
+            height: "fit-content",
+            fontSize: "14px",
+            fontWeight: 500,
+            color: togglingOpportunityId ? "#a1a1a1" : "#171717",
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(opportunity.id);
+          }}
+        >
+          {isSaving
+            ? t("opportunities.matchingRound.saving", {}, { default: "Saving…" })
+            : t("opportunities.matchingRound.grid.remove", {}, {
+                default: "Remove",
+              })}
+        </Button>
+      );
+    },
+    [onRemove, togglingOpportunityId, t],
+  );
+
+  const columnDefs = useMemo(() => {
+    const cols = [
       {
         field: "title",
         headerName: t("opportunities.matchingRound.grid.columns.name", {}, {
@@ -207,12 +246,29 @@ export default function MatchingRoundOpportunitiesGrid({
         flex: 1.2,
         minWidth: 140,
       },
-      {
+    ];
+
+    if (onRemove) {
+      cols.push({
+        field: "remove",
+        headerName: "",
+        cellRenderer: RemoveButtonRenderer,
+        sortable: false,
+        filter: false,
+        width: 120,
+        pinned: "right",
+        cellStyle: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      });
+    }
+
+    if (onPreview) {
+      cols.push({
         field: "review",
         headerName: "",
-        // headerName: t("opportunities.matchingRound.grid.columns.review", {}, {
-        //   default: "Review",
-        // }),
         cellRenderer: ReviewButtonRenderer,
         sortable: false,
         filter: false,
@@ -223,36 +279,52 @@ export default function MatchingRoundOpportunitiesGrid({
           alignItems: "center",
           justifyContent: "center",
         },
+      });
+    }
+
+    cols.push({
+      field: "info",
+      headerName: "",
+      cellRenderer: InfoButtonRenderer,
+      sortable: false,
+      filter: false,
+      width: 52,
+      maxWidth: 52,
+      pinned: "right",
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 0,
       },
-      {
-        field: "info",
-        headerName: "",
-        cellRenderer: InfoButtonRenderer,
-        sortable: false,
-        filter: false,
-        width: 52,
-        maxWidth: 52,
-        pinned: "right",
-        cellStyle: {
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 0,
-        },
-      },
-    ],
-    [InfoButtonRenderer, ReviewButtonRenderer, t],
-  );
+    });
+
+    return cols;
+  }, [
+    InfoButtonRenderer,
+    RemoveButtonRenderer,
+    ReviewButtonRenderer,
+    onPreview,
+    onRemove,
+    t,
+  ]);
 
   const handleSelectionChanged = useCallback(
     (event) => {
+      if (selectionDisabled) return;
+
       const ids = event.api
         .getSelectedRows()
         .map((row) => row.id)
         .filter(Boolean);
       onSelectionChange?.(ids);
     },
-    [onSelectionChange],
+    [onSelectionChange, selectionDisabled],
+  );
+
+  const isRowSelectable = useCallback(
+    () => !selectionDisabled,
+    [selectionDisabled],
   );
 
   useEffect(() => {
@@ -286,6 +358,7 @@ export default function MatchingRoundOpportunitiesGrid({
                 mode: "multiRow",
                 checkboxes: true,
                 headerCheckbox: true,
+                isRowSelectable,
               },
               onSelectionChanged: handleSelectionChanged,
             }
@@ -295,6 +368,11 @@ export default function MatchingRoundOpportunitiesGrid({
         paginationPageSizeSelector={[10, 20, 50]}
         autoSizeStrategy={{ type: "fitGridWidth", defaultMinWidth: 100 }}
         defaultColDef={{ resizable: true }}
+        initialState={{
+          sort: {
+            sortModel: [{ colId: "title", sort: "asc" }],
+          },
+        }}
       />
     </div>
   );

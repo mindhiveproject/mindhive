@@ -55,6 +55,7 @@ export default function ClassOpportunities({ myclass }) {
 
   const [selectedNetworkId, setSelectedNetworkId] = useState(null);
   const [previewOpportunityId, setPreviewOpportunityId] = useState(null);
+  const [matchingRoundContext, setMatchingRoundContext] = useState(null);
   const navigationGuardRef = useRef(null);
 
   const handleNetworkSelect = useCallback((networkId) => {
@@ -193,6 +194,7 @@ export default function ClassOpportunities({ myclass }) {
             selectedNetwork={selectedNetwork}
             onPreviewOpportunity={setPreviewOpportunityId}
             onRegisterNavigationGuard={handleRegisterNavigationGuard}
+            onMatchingRoundContextChange={setMatchingRoundContext}
           />
 
           <section className="classTabSection">
@@ -306,6 +308,7 @@ export default function ClassOpportunities({ myclass }) {
         open={!!previewOpportunityId}
         opportunityId={previewOpportunityId}
         onClose={() => setPreviewOpportunityId(null)}
+        matchingRoundContext={matchingRoundContext}
       />
     </div>
   );
